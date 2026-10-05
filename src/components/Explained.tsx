@@ -20,14 +20,14 @@ export default function Explained({ kind, source, asOf, assumption, methodAnchor
   const id = useId();
   return (
     <div>
-      <div className="flex flex-col-reverse sm:flex-row sm:items-start gap-2">
+      <div className="flex flex-col-reverse lg:flex-row lg:items-start gap-2">
         <div className="flex-1 min-w-0">{children}</div>
         <button
           type="button"
           aria-expanded={open}
           aria-controls={id}
           onClick={() => setOpen((o) => !o)}
-          className="self-end sm:self-auto shrink-0 text-xs border border-paper-line rounded-full px-2 py-1 text-ink-soft hover:text-ink hover:border-ink-faint"
+          className="self-end lg:self-auto shrink-0 text-xs border border-paper-line rounded-full px-2 py-1 text-ink-soft hover:text-ink hover:border-ink-faint"
         >
           {open ? "סגירת ההסבר" : "איך זה חושב?"}
         </button>

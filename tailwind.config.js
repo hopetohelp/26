@@ -1,15 +1,24 @@
 /** @type {import('tailwindcss').Config} */
+// הצבעים והגופנים הם משתני CSS — שלושת העיצובים (לוח · טבלה · קופסאות) מחליפים אותם ב-src/index.css
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: { sans: ["Heebo", "system-ui", "Arial", "sans-serif"] },
-      colors: {
-        ink: { DEFAULT: "#1d2433", soft: "#4b5568", faint: "#7a8496" },
-        paper: { DEFAULT: "#f7f6f2", card: "#ffffff", line: "#e3e1da" },
-        accent: { DEFAULT: "#1f5f8b", soft: "#e6f0f6" },
-        warn: { DEFAULT: "#8a4b00", soft: "#fff3e0" },
+      fontFamily: {
+        sans: ["var(--font-body)", "system-ui", "Arial", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-body)", "sans-serif"],
+        num: ["var(--font-num)", "var(--font-body)", "sans-serif"],
       },
+      colors: {
+        ink: { DEFAULT: v("ink"), soft: v("ink-soft"), faint: v("ink-faint") },
+        paper: { DEFAULT: v("paper"), card: v("card"), line: v("line") },
+        accent: { DEFAULT: v("accent"), soft: v("accent-soft") },
+        warn: { DEFAULT: v("warn"), soft: v("warn-soft") },
+        frame: { DEFAULT: v("frame"), ink: v("frame-ink"), soft: v("frame-soft"), line: v("frame-line") },
+        signal: { DEFAULT: v("signal"), ink: v("signal-ink") },
+      },
+      borderRadius: { theme: "var(--radius)" },
     },
   },
   plugins: [],

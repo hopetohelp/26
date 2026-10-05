@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import { SeatRangeBars } from "../components/charts";
+import ListsView, { type ListRow } from "../components/ListsView";
+import modelFile from "../data/model.json";
+import { useTheme } from "../lib/theme";
 import { Badge, Card, Note, PageTitle } from "../components/ui";
 import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, pollsterLabel, results, seatsIn, summarize, type Poll } from "../lib/data";
 import { date, dateLong, dateRange, num, seatsFmt } from "../lib/format";
@@ -17,6 +20,19 @@ function govSum(p: Poll): number | undefined {
   }
   return s;
 }
+
+interface ModelLite {
+  asof: string;
+  polls: number;
+  pollsters: number;
+  central: { seats: Record<string, number> };
+  scenarios: { lists: Record<string, { seats: number[]; pass: number; share: number[] }>; wasted: number[]; bloc: { seats: number[]; atLeast61: number } };
+}
+const model = modelFile as unknown as ModelLite;
+const modelRows: ListRow[] = Object.keys(model.scenarios.lists)
+  .map((id) => ({ id, name: "", central: model.central.seats[id], lo: model.scenarios.lists[id].seats[0], hi: model.scenarios.lists[id].seats[2], pass: model.scenarios.lists[id].pass }))
+  .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].share[1] - model.scenarios.lists[a.id].share[1]);
+const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 
 const k25 = results[results.length - 1];
 const passing2022 = k25.lists.filter((l) => l.seats > 0).reduce((a, l) => a + l.votes, 0);
@@ -35,14 +51,58 @@ export default function Home() {
     .filter((x): x is { p: Poll; v: number } => typeof x.v === "number")
     .sort((a, b) => b.v - a.v);
   const asOfText = `הסקרים שפורסמו עד ${dateLong(asOf)}`;
+  const [theme] = useTheme();
+  const rows = modelRows.map((r) => ({ ...r, name: listName(r.id) }));
+  const edge = rows.filter((r) => r.pass > 0.005 && r.pass < 0.995);
+  const sc = model.scenarios;
 
   return (
     <>
-      <PageTitle lead={`הסקר האחרון של כל מכון סקרים ב-${WINDOW_DAYS} הימים שעד ${dateLong(asOf)} — ${latest.length} מכונים. לכל רשימה: החציון בין המכונים, והטווח מהנמוך לגבוה.`}>
-        המצב היום — לפי הסקרים האחרונים
+      <PageTitle
+        lead={`לפי ממוצע הסקרים מאז הגשת הרשימות: ${model.polls} סקרים מאומתים של ${model.pollsters} מכונים, עד ${dateLong(model.asof)}. לכל רשימה — כמה מנדטים לפי הממוצע, הטווח ב-80% מהתרחישים, והאם היא עוברת את אחוז החסימה.`}
+      >
+        המצב היום
       </PageTitle>
 
-      <Card title="מנדטים לכל רשימה">
+      <section aria-label="הרשימות היום" className="mb-6">
+        <Explained
+          kind="תרחיש"
+          source={`${model.polls} סקרים מאומתים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-${num(20000)} תרחישים`}
+          asOf={`הסקרים עד ${dateLong(model.asof)}`}
+          assumption="מנדטים לפי הממוצע של המודל; הטווח והסטטוס — מתוך התרחישים ליום הבחירות. לא תחזית ולא סיכוי."
+          methodAnchor="model"
+        >
+          <ListsView rows={rows} theme={theme} />
+        </Explained>
+      </section>
+
+      <Card title="מה רואים היום">
+        <ul className="space-y-2 text-base leading-relaxed">
+          {edge.length > 0 && (
+            <li>
+              {edge.length === 1 ? "רשימה אחת על הסף" : `${edge.length} רשימות על הסף`}:{" "}
+              {edge.map((r) => `${r.name} עוברת ב-${Math.round(r.pass * 100)}% מהתרחישים`).join(", ")}.
+            </li>
+          )}
+          <li>
+            בחציון התרחישים, כ-{r1(sc.wasted[1])}% מהקולות הכשרים לא יהפכו למנדטים, כי ילכו לרשימות שלא עוברות את הסף (ב-2022:{" "}
+            {r1((wasted2022 / k25.valid) * 100)}%).
+          </li>
+          <li>
+            מפלגות הממשלה היוצאת: {sc.bloc.seats[1]} מנדטים בחציון התרחישים, ובין {sc.bloc.seats[0]} ל-{sc.bloc.seats[2]} ב-80% מהם.
+          </li>
+        </ul>
+        <p className="mt-3">
+          <Link to="/scenarios" className="font-bold">
+            כל התרחישים, הטווחים ובדיקת העבר
+          </Link>
+        </p>
+      </Card>
+
+      <Card title="לפי המכונים: הסקר האחרון של כל אחד">
+        <p className="text-sm text-ink-soft mb-3">
+          {`הסקר האחרון של כל מכון ב-${WINDOW_DAYS} הימים שעד ${dateLong(asOf)} — ${latest.length} מכונים. החציון בין המכונים, והטווח מהנמוך לגבוה.`}
+        </p>
         <Explained
           kind="סיכום סקרים"
           source="טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר"

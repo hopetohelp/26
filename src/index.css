@@ -2,9 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * שלושה עיצובים שהגולש בוחר ביניהם (src/lib/theme.ts). כל אחד הוא עולם שלם — לא שילוב:
+ * board  — לוח המודיעין בתחנה: מסגרת כחול-לילה, ספרות מתהפכות בצהוב-נורה, דף בהיר ושקט לקריאה.
+ * league — טבלת הליגה: לבן נקי, ספרות ספורט עבות, קו אחוז החסימה המקווקו בכתום.
+ * boxes  — קיר הקופסאות: קרטון כתום, תוויות לבנות, שורת "מידות" מונוספייס לטווחים.
+ * הצבעים כערוצי RGB, כדי ש-Tailwind יוכל להוסיף שקיפות (bg-ink/70).
+ */
+:root,
+[data-theme="board"] {
+  --paper: 231 235 240;
+  --card: 255 255 255;
+  --line: 203 211 220;
+  --ink: 11 34 57;
+  --ink-soft: 61 81 104;
+  --ink-faint: 84 101 120;
+  --accent: 29 79 128;
+  --accent-soft: 227 236 245;
+  --warn: 138 75 0;
+  --warn-soft: 255 244 220;
+  --frame: 11 34 57;
+  --frame-ink: 244 246 248;
+  --frame-soft: 184 196 209;
+  --frame-line: 22 56 90;
+  --signal: 255 184 28;
+  --signal-ink: 11 34 57;
+  --font-display: "Karantina";
+  --font-body: "Heebo";
+  --font-num: "Karantina";
+  --radius: 10px;
+  --grid: 216 222 230;
+}
+[data-theme="league"] {
+  --paper: 238 241 245;
+  --card: 255 255 255;
+  --line: 213 219 227;
+  --ink: 19 23 29;
+  --ink-soft: 74 85 99;
+  --ink-faint: 92 101 114;
+  --accent: 27 58 140;
+  --accent-soft: 230 236 248;
+  --warn: 163 78 0;
+  --warn-soft: 255 244 232;
+  --frame: 255 255 255;
+  --frame-ink: 19 23 29;
+  --frame-soft: 74 85 99;
+  --frame-line: 213 219 227;
+  --signal: 232 119 14;
+  --signal-ink: 19 23 29;
+  --font-display: "Secular One";
+  --font-body: "Assistant";
+  --font-num: "Secular One";
+  --radius: 12px;
+  --grid: 226 230 236;
+}
+[data-theme="boxes"] {
+  --paper: 217 98 43;
+  --card: 255 255 255;
+  --line: 233 219 202;
+  --ink: 26 26 26;
+  --ink-soft: 43 20 8;
+  --ink-faint: 90 70 48;
+  --accent: 26 26 26;
+  --accent-soft: 246 226 211;
+  --warn: 154 52 18;
+  --warn-soft: 253 235 221;
+  --frame: 26 26 26;
+  --frame-ink: 255 255 255;
+  --frame-soft: 232 226 217;
+  --frame-line: 60 60 60;
+  --signal: 242 193 78;
+  --signal-ink: 26 26 26;
+  --font-display: "Karantina";
+  --font-body: "Heebo";
+  --font-num: "JetBrains Mono";
+  --radius: 4px;
+  --grid: 233 225 214;
+}
+
 @layer base {
   html {
-    font-family: Heebo, system-ui, Arial, sans-serif;
+    font-family: var(--font-body), system-ui, Arial, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper text-ink;
   }
   a {
     @apply text-accent underline underline-offset-2;
@@ -13,12 +95,32 @@
     @apply text-ink;
   }
   :focus-visible {
-    outline: 3px solid #1f5f8b;
+    outline: 3px solid rgb(var(--signal));
     outline-offset: 2px;
+  }
+  [data-theme="league"] :focus-visible {
+    outline-color: rgb(var(--accent));
+  }
+  /* המיקוד עובר ל-main אחרי כל ניווט (לקורא מסך) — בלי מסגרת שנראית כמו באג */
+  [tabindex="-1"]:focus,
+  [tabindex="-1"]:focus-visible {
+    outline: none;
   }
   input[type="number"] {
     direction: ltr;
     text-align: right;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* ספרות מתהפכות של לוח המודיעין: תנועה אחת, רק כשהערך מופיע */
+  @keyframes flap {
+    0% { transform: rotateX(-90deg); }
+    100% { transform: rotateX(0deg); }
+  }
+  .flap {
+    animation: flap 420ms cubic-bezier(.2, .8, .2, 1) both;
+    transform-origin: 50% 50%;
   }
   @media (prefers-reduced-motion: reduce) {
     * {
