@@ -24,11 +24,13 @@ VALID = 5_000_000  # מספר קולות כשרים לצורך ההרצה במנ
 
 # ---------------------------------------------------------------- מנוע מהיר במספרים שלמים
 
-def fast_seats(votes: list[int], valid: int, pairs: list[tuple[int, int]], seats: int = SEATS) -> list[int]:
+def fast_seats(votes: list[int], valid: int, pairs: list[tuple[int, int]], seats: int = SEATS,
+               threshold: tuple[int, int] = THRESHOLD) -> list[int]:
     """אותה חלוקה כמו bader_ofer.allocate (סעיפים 81–82), במספרים שלמים בלבד — לדגימה המהירה.
-    שוויון מנות (מקרה של אפס-מידה בדגימה) נשבר לפי מספר הקולות, כמו במנוע המחקרי. נבדק מולו ב-test_model.py."""
+    שוויון מנות (מקרה של אפס-מידה בדגימה) נשבר לפי מספר הקולות, כמו במנוע המחקרי. נבדק מולו ב-test_model.py.
+    threshold: (מונה, מכנה) — 3.25% מאז 2015; 2% ב-2013 (לבדיקת העבר של מודל החיזוי)."""
     n = len(votes)
-    num, den = THRESHOLD
+    num, den = threshold
     passing = [i for i in range(n) if votes[i] * den >= num * valid]
     pset = set(passing)
     total = sum(votes[i] for i in passing)
@@ -106,7 +108,7 @@ class ObsConfig:
 
 def observe_poll(poll_id: str, pollster: str, day: int, values: dict[str, dict], others_pct: float | None,
                  pairs: list[tuple[str, str]], ref: str, cfg: ObsConfig, rng: random.Random,
-                 sample: int | None = None) -> PollObs:
+                 sample: int | None = None, threshold: tuple[int, int] = THRESHOLD) -> PollObs:
     """values: {רשימה: {"s": מנדטים} או {"p": אחוז}}. רשימה שלא נשאלה — לא מופיעה."""
     seats = {k: v["s"] for k, v in values.items() if isinstance(v.get("s"), int) and v["s"] > 0}
     below = {k: v["p"] / 100 for k, v in values.items() if k not in seats and isinstance(v.get("p"), (int, float))}
@@ -144,10 +146,10 @@ def observe_poll(poll_id: str, pollster: str, day: int, values: dict[str, dict],
             continue
         shares = [xi / sx * passing_share for xi in x] + [below[k] for k in below] + zero_sh
         votes = [max(0, int(round(sh * VALID))) for sh in shares]
-        res_with = fast_seats(votes, VALID, ipairs)
+        res_with = fast_seats(votes, VALID, ipairs, threshold=threshold)
         l1 = sum(abs(a - b) for a, b in zip(res_with, target))
         if ipairs and l1:
-            res_without = fast_seats(votes, VALID, [])
+            res_without = fast_seats(votes, VALID, [], threshold=threshold)
             l1 = min(l1, sum(abs(a - b) for a, b in zip(res_without, target)))  # לא ידוע אם המכון הפעיל הסכמים
         w = math.exp(-cfg.kernel * l1)
         if w < 1e-12:

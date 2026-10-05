@@ -1,0 +1,495 @@
+{
+ "version": 1,
+ "about": "מפרט מודל החיזוי — נקבע לפני ההרצה. כל שינוי = גרסה חדשה (version) ונרשם ביומן pipeline/forecast_runs.jsonl. close-family#2445.",
+ "elections": {
+  "19": {
+   "date": "2013-01-22",
+   "threshold": [
+    2,
+    100
+   ],
+   "file": "k19_expb.csv",
+   "skipColumns": [
+    "שם ישוב",
+    "סמל ישוב",
+    "מספר קלפי"
+   ],
+   "agreements": [
+    [
+     "אמת",
+     "פה"
+    ],
+    [
+     "מחל",
+     "טב"
+    ],
+    [
+     "ו",
+     "ד"
+    ],
+    [
+     "ג",
+     "שס"
+    ],
+    [
+     "כן",
+     "ץ"
+    ],
+    [
+     "צפ",
+     "מרץ"
+    ]
+   ],
+   "officialSeats": {
+    "מחל": 31,
+    "פה": 19,
+    "אמת": 15,
+    "טב": 12,
+    "שס": 11,
+    "ג": 7,
+    "צפ": 6,
+    "מרץ": 6,
+    "עם": 4,
+    "ו": 4,
+    "ד": 3,
+    "כן": 2
+   },
+   "lists": {
+    "מחל": {
+     "bloc": "right_religious"
+    },
+    "פה": {
+     "bloc": "center_left",
+     "party": "yesh_atid"
+    },
+    "אמת": {
+     "bloc": "center_left",
+     "party": "labor"
+    },
+    "טב": {
+     "bloc": "right_religious",
+     "party": "jewish_home"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "צפ": {
+     "bloc": "center_left"
+    },
+    "מרץ": {
+     "bloc": "center_left",
+     "party": "meretz"
+    },
+    "עם": {
+     "bloc": "arab"
+    },
+    "ו": {
+     "bloc": "arab"
+    },
+    "ד": {
+     "bloc": "arab"
+    },
+    "כן": {
+     "bloc": "center_left"
+    },
+    "נץ": {
+     "bloc": "right_religious"
+    },
+    "ץ": {
+     "bloc": "none"
+    }
+   }
+  },
+  "20": {
+   "date": "2015-03-17",
+   "threshold": [
+    325,
+    10000
+   ],
+   "file": "k20_expc.csv",
+   "skipColumns": [
+    "שם ישוב",
+    "סמל ישוב"
+   ],
+   "agreements": [
+    [
+     "אמת",
+     "מרצ"
+    ],
+    [
+     "מחל",
+     "טב"
+    ],
+    [
+     "ג",
+     "שס"
+    ],
+    [
+     "ל",
+     "כ"
+    ]
+   ],
+   "officialSeats": {
+    "מחל": 30,
+    "אמת": 24,
+    "ודעם": 13,
+    "פה": 11,
+    "כ": 10,
+    "טב": 8,
+    "שס": 7,
+    "ל": 6,
+    "ג": 6,
+    "מרצ": 5
+   },
+   "lists": {
+    "מחל": {
+     "bloc": "right_religious",
+     "party": "likud"
+    },
+    "אמת": {
+     "bloc": "center_left"
+    },
+    "ודעם": {
+     "bloc": "arab"
+    },
+    "פה": {
+     "bloc": "center_left",
+     "party": "yesh_atid"
+    },
+    "כ": {
+     "bloc": "none",
+     "party": "kulanu"
+    },
+    "טב": {
+     "bloc": "right_religious",
+     "party": "jewish_home"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "ל": {
+     "bloc": "right_religious",
+     "party": "yb"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "מרצ": {
+     "bloc": "center_left",
+     "party": "meretz"
+    },
+    "קץ": {
+     "bloc": "right_religious"
+    }
+   }
+  },
+  "21": {
+   "date": "2019-04-09",
+   "threshold": [
+    325,
+    10000
+   ],
+   "lists": {
+    "מחל": {
+     "bloc": "right_religious",
+     "party": "likud"
+    },
+    "פה": {
+     "bloc": "center_left"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "ום": {
+     "bloc": "arab",
+     "party": "hadash_taal"
+    },
+    "אמת": {
+     "bloc": "center_left",
+     "party": "labor"
+    },
+    "ל": {
+     "bloc": "right_religious",
+     "party": "yb"
+    },
+    "טב": {
+     "bloc": "right_religious"
+    },
+    "מרצ": {
+     "bloc": "center_left",
+     "party": "meretz"
+    },
+    "כ": {
+     "bloc": "right_religious",
+     "party": "kulanu"
+    },
+    "דעם": {
+     "bloc": "arab"
+    },
+    "נ": {
+     "bloc": "right_religious"
+    },
+    "ז": {
+     "bloc": "none"
+    },
+    "נר": {
+     "bloc": "none"
+    }
+   }
+  },
+  "22": {
+   "date": "2019-09-17",
+   "threshold": [
+    325,
+    10000
+   ],
+   "lists": {
+    "פה": {
+     "bloc": "center_left"
+    },
+    "מחל": {
+     "bloc": "right_religious",
+     "party": "likud"
+    },
+    "ודעם": {
+     "bloc": "arab"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "ל": {
+     "bloc": "none",
+     "party": "yb"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "טב": {
+     "bloc": "right_religious"
+    },
+    "אמת": {
+     "bloc": "center_left"
+    },
+    "מרצ": {
+     "bloc": "center_left"
+    },
+    "כף": {
+     "bloc": "right_religious"
+    }
+   }
+  },
+  "23": {
+   "date": "2020-03-02",
+   "threshold": [
+    325,
+    10000
+   ],
+   "lists": {
+    "מחל": {
+     "bloc": "right_religious",
+     "party": "likud"
+    },
+    "פה": {
+     "bloc": "center_left"
+    },
+    "ודעם": {
+     "bloc": "arab"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "אמת": {
+     "bloc": "center_left"
+    },
+    "ל": {
+     "bloc": "none",
+     "party": "yb"
+    },
+    "טב": {
+     "bloc": "right_religious"
+    },
+    "נץ": {
+     "bloc": "right_religious"
+    }
+   }
+  },
+  "24": {
+   "date": "2021-03-23",
+   "threshold": [
+    325,
+    10000
+   ],
+   "lists": {
+    "מחל": {
+     "bloc": "right_religious",
+     "party": "likud"
+    },
+    "פה": {
+     "bloc": "center_left",
+     "party": "yesh_atid"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "כן": {
+     "bloc": "center_left"
+    },
+    "ב": {
+     "bloc": "none"
+    },
+    "אמת": {
+     "bloc": "center_left",
+     "party": "labor"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "ל": {
+     "bloc": "center_left",
+     "party": "yb"
+    },
+    "ט": {
+     "bloc": "right_religious"
+    },
+    "ודעם": {
+     "bloc": "arab"
+    },
+    "ת": {
+     "bloc": "center_left"
+    },
+    "מרצ": {
+     "bloc": "center_left",
+     "party": "meretz"
+    },
+    "עם": {
+     "bloc": "arab",
+     "party": "raam"
+    },
+    "יז": {
+     "bloc": "none"
+    }
+   }
+  },
+  "25": {
+   "date": "2022-11-01",
+   "threshold": [
+    325,
+    10000
+   ],
+   "lists": {
+    "מחל": {
+     "bloc": "right_religious",
+     "party": "likud"
+    },
+    "פה": {
+     "bloc": "center_left",
+     "party": "yesh_atid"
+    },
+    "ט": {
+     "bloc": "right_religious"
+    },
+    "כן": {
+     "bloc": "center_left"
+    },
+    "שס": {
+     "bloc": "right_religious",
+     "party": "shas"
+    },
+    "ג": {
+     "bloc": "right_religious",
+     "party": "utj"
+    },
+    "ל": {
+     "bloc": "center_left",
+     "party": "yb"
+    },
+    "עם": {
+     "bloc": "arab",
+     "party": "raam"
+    },
+    "ום": {
+     "bloc": "arab",
+     "party": "hadash_taal"
+    },
+    "אמת": {
+     "bloc": "center_left",
+     "party": "labor"
+    },
+    "מרצ": {
+     "bloc": "center_left",
+     "party": "meretz"
+    },
+    "ד": {
+     "bloc": "arab"
+    },
+    "ב": {
+     "bloc": "right_religious"
+    }
+   }
+  }
+ },
+ "blocRule": "גוש לפי מידע שהיה ידוע לפני הבחירות: רשימה ערבית ⇐ arab; הצהרה על תמיכה בנתניהו לראשות הממשלה ⇐ right_religious; הצהרה נגדו ⇐ center_left; אחרת ⇐ none. party = רק המשכיות ודאית (אותה מפלגה, בלי איחוד או פיצול).",
+ "data": {
+  "cutoffDaysBefore": 4,
+  "windowDays": 7,
+  "validStatuses": [
+   "match",
+   "corrected"
+  ],
+  "sourceLevels": [
+   "primary",
+   "aggregator"
+  ]
+ },
+ "validity": {
+  "minSeries": 3
+ },
+ "model": {
+  "seed": 2445,
+  "shrinkStrength": 4,
+  "clrEpsilon": 0.0005,
+  "weights": {
+   "minRelative": 0.5,
+   "maxRelative": 2.0,
+   "maxShare": 0.4
+  },
+  "threshold": {
+   "bandPoints": 1.5,
+   "minCases": 3
+  }
+ },
+ "gate": {
+  "elections": [
+   21,
+   22,
+   23,
+   24,
+   25
+  ],
+  "primaryVariant": "V3",
+  "minVoteAccuracy": 0.95,
+  "minSeatAccuracy": 0.9,
+  "unitMinShare": 0.01
+ }
+}
