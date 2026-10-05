@@ -10,10 +10,12 @@ export interface ListRow {
   hi: number;
   /** 0–1 */
   pass: number;
+  /** כל הסקרים האחרונים נותנים לרשימה מנדטים ⇐ "עוברת" ולא "על הסף", גם כשיש תרחישים קיצוניים שבהם לא */
+  sure?: boolean;
 }
 
 const passPct = (p: number) => Math.round(p * 100);
-const isEdge = (r: ListRow) => r.pass > 0.005 && r.pass < 0.995;
+const isEdge = (r: ListRow) => !r.sure && r.pass > 0.005 && r.pass < 0.995;
 const isOut = (r: ListRow) => r.pass <= 0.005;
 const range = (r: ListRow) => (r.hi > 0 ? `${r.lo}–${r.hi}` : "—");
 const statusText = (r: ListRow) => (isOut(r) ? "מתחת לסף" : isEdge(r) ? `על הסף, עוברת ב-${passPct(r.pass)}%` : "עוברת");

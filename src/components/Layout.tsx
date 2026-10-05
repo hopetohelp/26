@@ -7,26 +7,14 @@ import { dateLong } from "../lib/format";
 import { THEMES, useTheme, type ThemeId } from "../lib/theme";
 import { colorOf } from "../lib/colors";
 import modelFile from "../data/model.json";
+import { PAGES } from "../lib/pages";
 
-const NAV = [
-  { to: "/", label: "המצב היום" },
-  { to: "/polls", label: "ארכיון הסקרים" },
-  { to: "/trends", label: "מגמות" },
-  { to: "/scenarios", label: "תרחישים" },
-  { to: "/forecast", label: "תחזית" },
-  { to: "/changes", label: "מה השתנה מאז 2022" },
-  { to: "/calculator", label: "מחשבון מנדטים" },
-  { to: "/results", label: "תוצאות אמת" },
-  { to: "/accuracy", label: "דיוק הסקרים" },
-  { to: "/voters", label: "מצביעים" },
-  { to: "/method", label: "שיטה ומקורות" },
-  { to: "/about", label: "אודות" },
-];
+const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label }))];
 /** הלשוניות בתחתית המסך בטלפון; "עוד" פותח את כל העמודים */
 const TABS = [
-  { to: "/", label: "המצב היום", icon: "board" },
+  { to: "/", label: "בית", icon: "home" },
+  { to: "/today", label: "המצב היום", icon: "board" },
   { to: "/polls", label: "סקרים", icon: "bars" },
-  { to: "/scenarios", label: "תרחישים", icon: "wave" },
 ];
 
 const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
@@ -44,6 +32,7 @@ function daysLeft(now = new Date()): string {
 
 function Icon({ name }: { name: string }) {
   const p = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  if (name === "home") return <svg {...p}><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /><path d="M10 20v-6h4v6" /></svg>;
   if (name === "board") return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 10h18M9 4v16" /></svg>;
   if (name === "bars") return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;

@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import Today from "./pages/Today";
 import Polls from "./pages/Polls";
 import Trends from "./pages/Trends";
 import Calculator from "./pages/Calculator";
@@ -30,6 +31,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="today" element={<Today />} />
           <Route path="polls" element={<Polls />} />
           <Route path="trends" element={<Trends />} />
           <Route

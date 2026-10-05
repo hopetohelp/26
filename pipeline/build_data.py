@@ -672,6 +672,7 @@ def main() -> None:
         "freezeEnd": FREEZE_END.isoformat(),
         "frozen": FROZEN_FROM <= build_time < FREEZE_END,
         "lists2026": LISTS_2026, "agreements2026": AGREEMENTS_2026, "historyNames": HISTORY_NAMES,
+        "historyPolls": sum(len(c["polls"]) for c in history["cycles"]),  # לריבוע "דיוק הסקרים" במסך הבית, בלי לטעון את הקובץ הגדול
     }
     outputs = [("results", results), ("polls", polls), ("registry", registry), ("meta", meta), ("history", history)]
     if model_out is not None:

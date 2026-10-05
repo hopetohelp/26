@@ -67,6 +67,7 @@ export const meta = metaFile as unknown as {
   lists2026: ListInfo[];
   agreements2026: { pair: [string, string]; status: string; source: string }[];
   historyNames: Record<string, string>;
+  historyPolls?: number;
 };
 export const results = resultsFile;
 export const registry = registryFile;
@@ -112,6 +113,12 @@ export function seatsIn(p: Poll, id: string): number | undefined {
   if (typeof v.s === "number") return v.s;
   if (typeof v.p === "number") return 0;
   return undefined;
+}
+
+/** האם כל הסקרים (שנשאלו על הרשימה) נותנים לה מנדטים — אז היא "עוברת" בוודאות, לא "על הסף" (הכרעת בעלים) */
+export function passesInAll(ps: Poll[], id: string): boolean {
+  const xs = ps.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
+  return xs.length > 0 && xs.every((x) => x > 0);
 }
 
 export interface PartySummary {
