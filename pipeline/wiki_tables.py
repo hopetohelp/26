@@ -46,6 +46,11 @@ def cell_parts(raw):
         attrs, content = parts[0], "|".join(parts[1:])
     else:
         attrs, content = "", raw
+    # תא פגום נפוץ בוויקיפדיה: מאפיין בלי "|" לפני התוכן, למשל colspan=2{{N/A}} — מפרידים ידנית
+    if not attrs:
+        m = re.match(r'^\s*((?:colspan|rowspan)\s*=\s*"?\d+"?)\s*(\{\{.*|\d.*)$', content, re.S)
+        if m:
+            attrs, content = m.group(1), m.group(2).strip()
     cs = re.search(r'colspan\s*=\s*"?(\d+)', attrs)
     rs = re.search(r'rowspan\s*=\s*"?(\d+)', attrs)
     return attrs, content.strip(), int(cs.group(1)) if cs else 1, int(rs.group(1)) if rs else 1

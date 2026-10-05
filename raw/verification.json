@@ -1,0 +1,1371 @@
+[
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-02-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Text: \"הדמוקרטים יורדת במנדט אחד ומקבלת תשעה מנדטים\", \"ישראל ביתנו יורדת במנדט אחד ומקבלת שבעה מנדטים\". Wikipedia row sums to 122 seats. HaMadad aggregator also has YB 7 / Dems 9.",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-7cad3b3e",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "moe": "±4.2% (95%)",
+   "population": "522 נדגמים בוגרים (18+) מדגם מייצג של האוכלוסייה בישראל",
+   "published": "2026-09-02 17:25 UTC",
+   "sample_respondents": 522
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-02-lri-p4a-walla",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Fieldwork stated as 1-2 September 2026 (Wikipedia: 2 Sep only).",
+  "source": "https://news.walla.co.il/item/3865040",
+  "sourceDetails": {
+   "asked_to_participate": 3402,
+   "method": "Panel4All (online panel)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2026-09-02 12:32",
+   "sample_respondents": 500
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "none",
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-02-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "Cited link is a video page whose own title says \"מהדורה מרכזית 26.08.26\" - apparently the 26 Aug broadcast, not the 2 Sep poll. HaMadad row 02/09/2026 (n=552) has identical seats.",
+  "source": "https://www.ch16.co.il/vod.html?id=430a18f3-fe1e-498b-9587-218e51b73cbf",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-02-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905340911/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "3.4%",
+   "population": null,
+   "published": "2026-09-02 21:00",
+   "sample_respondents": 940
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-03-kantar-israel-hayom",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "No below-threshold % in text or charts. Charts also carry two hypothetical-merger scenarios.",
+  "source": "https://www.israelhayom.co.il/news/politics/article/21348438",
+  "sourceDetails": {
+   "asked_to_participate": 2349,
+   "method": "דגימה אינטרנטית",
+   "moe": "4.2%",
+   "population": "גברים ונשים בגילאי 18 ומעלה, כולל המגזר הערבי",
+   "published": "2026-09-03 14:46 UTC",
+   "sample_respondents": 555
+  },
+  "status": "partial"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-03-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.c14.co.il/article/1690265",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "865 בוגרים מכלל האוכלוסייה",
+   "published": "2026-09-03 20:28",
+   "sample_respondents": 865
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-03-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": null,
+  "source": "https://www.zman.co.il/720592/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "500 משיבים יהודים וערבים; פולח לפי גיל, דת, מגדר ואזור",
+   "published": "2026-09-03 17:30",
+   "sample_respondents": 500
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-04-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Article text says fieldwork 2-3 September (chart titled 3.9.26); Wikipedia has 3-4 Sep (probably publication-based).",
+  "source": "https://www.maariv.co.il/news/politics/article-1362890",
+  "sourceDetails": {
+   "asked_to_participate": 4102,
+   "method": "Panel4ALL",
+   "moe": "4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2026-09-04 06:01",
+   "sample_respondents": 600
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-06-kantar-kan-11",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.kan.org.il/content/kan-news/politic/1096840/",
+  "sourceDetails": {
+   "asked_to_participate": 2450,
+   "method": "דגימה אינטרנטית",
+   "moe": "4.2%",
+   "population": "גברים ונשים בגילאי 18 ומעלה, כולל המגזר הערבי",
+   "published": "2026-09-06 20:24",
+   "sample_respondents": 551
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-07-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-067c7eb8e9c70a1026.htm",
+  "sourceDetails": {
+   "asked_to_participate": 2490,
+   "method": "אינטרנטי + טלפוני",
+   "moe": "±4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל מגיל 18 ומעלה",
+   "published": "2026-09-07 21:09",
+   "sample_respondents": 503
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-07-s-m-l-t-x",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Wikipedia labels the firm \"S.M.L.T.\"; the filed report names the pollster \"מכון DRI\" (Wikipedia's own citation says work=D.R.I. Consulting).",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election59/he/Survey_4135.pdf",
+  "sourceDetails": {
+   "asked_to_participate": 16196,
+   "method": "מערכת איסוף דיגיטלית אינטרנטית בשילוב פאנל; דגימת שכבות",
+   "moe": "±3.5% (95%)",
+   "population": "בוגרים (18+), מדגם מייצג של אזרחי ישראל בעלי זכות בחירה",
+   "published": "PDF created 2026-09-10",
+   "sample_respondents": 2185
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-07-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.c14.co.il/article/1693697",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "1057 בוגרים מכלל האוכלוסייה",
+   "published": "2026-09-07 20:49",
+   "sample_respondents": 1057
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-08-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Queue record values for Amcha/Haredi Public carry a stray leading \"|\" from a doubled pipe in the wiki row; numbers themselves (2.8%, 0.4%) are right.",
+  "source": "https://www.maariv.co.il/news/politics/article-1364250",
+  "sourceDetails": {
+   "asked_to_participate": 4052,
+   "method": "Panel4ALL",
+   "moe": "4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2026-09-08 12:17",
+   "sample_respondents": 600
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-a92f58d0",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "moe": "±3.0% (95%)",
+   "population": "1,054 נדגמים בוגרים (18+) מדגם מייצג של האוכלוסייה בישראל",
+   "published": "2026-09-09 17:24 UTC",
+   "sample_respondents": 1054
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-kantar-kan-11",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.kan.org.il/content/kan-news/politic/1098105/",
+  "sourceDetails": {
+   "asked_to_participate": 2300,
+   "method": "דגימה אינטרנטית",
+   "moe": "4.2%",
+   "population": "גברים ונשים בגילאי 18 ומעלה, כולל המגזר הערבי",
+   "published": "2026-09-09 20:25",
+   "sample_respondents": 554
+  },
+  "status": "partial"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-lri-p4a-walla",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Queue record had no URL because the Wikipedia row reuses a named <ref>.",
+  "source": "https://www.maariv.co.il/news/politics/article-1364694",
+  "sourceDetails": {
+   "asked_to_participate": 3603,
+   "method": "Panel4All (online panel)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל, יהודים וערבים",
+   "published": "2026-09-09 14:26",
+   "sample_respondents": 506
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "none",
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "Cited vod.html URL returns 404 to a plain request and has no Wayback copy. HaMadad row dated 10/09/2026 (n=500) has identical seats.",
+  "source": "https://www.ch16.co.il/vod.html?id=aab4640f-335f-44c1-8f41-c4fbf4671081",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-c27dc00e8c680a1026.htm",
+  "sourceDetails": {
+   "asked_to_participate": 2507,
+   "method": "אינטרנטי + טלפוני",
+   "moe": "±4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל מגיל 18 ומעלה",
+   "published": "2026-09-09 21:00",
+   "sample_respondents": 504
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://13tv.co.il/item/news/politics/politics/z10wm-905351997/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "2.9%",
+   "population": null,
+   "published": "2026-09-09 20:30",
+   "sample_respondents": 1119
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-09-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.c14.co.il/article/1697000",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "537 בוגרים מכלל האוכלוסייה",
+   "published": "2026-09-09 20:09",
+   "sample_respondents": 537
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-10-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Source internally inconsistent on Blue&White: article text says 1.3%, embedded chart says 1.1% (Wikipedia uses 1.1%).",
+  "source": "https://www.maariv.co.il/news/politics/article-1365318",
+  "sourceDetails": {
+   "asked_to_participate": 4329,
+   "method": "Panel4ALL",
+   "moe": "4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2026-09-11 06:01",
+   "sample_respondents": 601
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-10-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Chart title gives the question: \"לאיזו מפלגה תצביע/י אם הבחירות היו היום\".",
+  "source": "https://www.zman.co.il/723041/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "500 משיבים יהודים וערבים; פולח לפי גיל, דת, מגדר ואזור",
+   "published": "2026-09-10 17:00",
+   "sample_respondents": 500
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-14-kantar-kan-11",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "n=550 only in the graphic caption (\"וכלל 550 נשאלים\"); Wikipedia leaves sample blank.",
+  "source": "https://www.kan.org.il/content/kan-news/politic/1099439/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2026-09-14 20:26",
+   "sample_respondents": 550
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-14-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Wikipedia cites only the next-day analysis piece (which lacks most figures) and leaves sample blank.",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-f91e6c26f80a0a1027.htm",
+  "sourceDetails": {
+   "asked_to_participate": 2514,
+   "method": "אינטרנטי + טלפוני",
+   "moe": "±4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל מגיל 18 ומעלה",
+   "published": "2026-09-14 21:02",
+   "sample_respondents": 502
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-15-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Graphic is dated 16.9.26 (publication); text says fieldwork was \"yesterday\".",
+  "source": "https://13tv.co.il/item/news/politics/politics/uo4p5-905360485/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "3.3%",
+   "population": null,
+   "published": "2026-09-16 20:47",
+   "sample_respondents": 886
+  },
+  "status": "partial"
+ },
+ {
+  "access": [
+   "direct",
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-15-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Source states right-wing bloc = 64 (Likud 30 + RZP 8 + Otzma 8 + Shas 10 + UTJ 8 = 64); Wikipedia Gov. column says 63.",
+  "source": "https://www.c14.co.il/article/1706627",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "483 בוגרים (per c14 17 Sep article)",
+   "published": "2026-09-15 17:19 UTC (ch10)",
+   "sample_respondents": 483
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-16-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Wikipedia cites only the aggregator; no original Channel 16 text exists (broadcast).",
+  "source": "https://themadad.com/allpolls/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": 500
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-17-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-5b0e5baa",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "moe": "±4.2% (95%)",
+   "population": "519 נדגמים בוגרים (18+) מדגם מייצג של האוכלוסייה הכללית",
+   "published": "2026-09-17 16:32 UTC",
+   "sample_respondents": 519
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-17-kantar-israel-hayom",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "No below-threshold % anywhere in the article or charts.",
+  "source": "https://www.israelhayom.co.il/news/politics/article/21444759",
+  "sourceDetails": {
+   "asked_to_participate": 2489,
+   "method": null,
+   "moe": "4.2%",
+   "population": "גברים ונשים בגילאי 18 ומעלה, כולל המגזר הערבי",
+   "published": "2026-09-17 13:52 UTC",
+   "sample_respondents": 551
+  },
+  "status": "partial"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-17-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Below-threshold % only in the embedded Infogram chart; methodology paragraph only in the page's embedded articleBody JSON (rendered client-side).",
+  "source": "https://www.maariv.co.il/news/politics/article-1368599",
+  "sourceDetails": {
+   "asked_to_participate": 4089,
+   "method": "Panel4ALL",
+   "moe": "4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2026-09-18 06:00",
+   "sample_respondents": 600
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-17-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Same article states the previous Channel 14 poll (Tue 15 Sep) had 483 adults - confirms row #23 sample.",
+  "source": "https://www.c14.co.il/article/1706627",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "817 בוגרים מכלל האוכלוסייה",
+   "published": "2026-09-17 20:13",
+   "sample_respondents": 817
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-17-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": null,
+  "source": "https://www.zman.co.il/725468/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "500 משיבים יהודים וערבים; פולח לפי גיל, דת, מגדר ואזור",
+   "published": "2026-09-17 17:30",
+   "sample_respondents": 500
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-22-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-fad59e819c9c0a1027.htm",
+  "sourceDetails": {
+   "asked_to_participate": 2498,
+   "method": "אינטרנטי + טלפוני (mixed)",
+   "moe": "±4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל מגיל 18 ומעלה",
+   "published": "2026-09-22 21:07 (updated 23.09 00:56)",
+   "sample_respondents": 501
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-23-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Original: \"שלוש מפלגות זוכות ל-8 מנדטים כל אחת: הרשימה המשותפת, ישראל ביתנו ויהדות התורה ... ש\"ס ... 7 מנדטים\". Wikipedia has Shas 8 / UTJ 7 (swapped); ToI and the HaMadad aggregator agree with the original.",
+  "source": "https://13tv.co.il/item/news/politics/politics/hcp4l-905367553/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "2.5%",
+   "population": null,
+   "published": "2026-09-23 20:47",
+   "sample_respondents": 1503
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-23-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.c14.co.il/article/1711606",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "647 בוגרים מכלל האוכלוסייה",
+   "published": "2026-09-23 20:48",
+   "sample_respondents": 647
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-24-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-5d1d4577",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "moe": "±4.2% (95%)",
+   "population": "537 נדגמים בוגרים (18+) מדגם מייצג של האוכלוסייה הכללית בישראל",
+   "published": "2026-09-24 16:53 UTC",
+   "sample_respondents": 537
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-24-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Vote question quoted verbatim: \"אם היו מתקיימות היום בחירות לכנסת, לאיזו מפלגה היית מצביע?\"",
+  "source": "https://www.maariv.co.il/news/elections-2026/article-1370546",
+  "sourceDetails": {
+   "asked_to_participate": 4217,
+   "method": "Panel4ALL (online panel)",
+   "moe": "4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת במדינת ישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2026-09-25 06:00",
+   "sample_respondents": 610
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-24-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "Original is a video page without text. HaMadad aggregator row (24/09/2026, Channel 16, Yitzhak Katz) has the same seats but n=500 (Wikipedia: 553).",
+  "source": "https://www.ch16.co.il/player/episode/6ab5727cc711a7bf85e73ac3",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "partial"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-24-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Wikipedia row has a malformed cell \"colspan=2{{N/A}}\" (missing pipe), so the queue record is shifted: \"New Economic Party=4\" is really Amcha=4 and \"Others=49\" is really Gov.=49. Compared against the intended values.",
+  "source": "https://www.timesofisrael.com/netanyahus-coalition-and-rival-change-bloc-draw-level-in-latest-toi-poll/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "±4.4%",
+   "population": null,
+   "published": "2026-09-24 (Thursday)",
+   "sample_respondents": 500
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-27-kantar-kan-11",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Shas/UTJ/JL/Ra'am seats only in the graphic.",
+  "source": "https://www.kan.org.il/content/kan-news/politic/1103667/",
+  "sourceDetails": {
+   "asked_to_participate": 2118,
+   "method": "דגימה אינטרנטית (online)",
+   "moe": "4.2%",
+   "population": "גברים ונשים בגילאי 18 ומעלה, כולל המגזר הערבי",
+   "published": "2026-09-27 20:34",
+   "sample_respondents": 552
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-28-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": null,
+  "source": "https://www.c14.co.il/article/1716250",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "573 בוגרים מכלל האוכלוסייה",
+   "published": "2026-09-28 20:28",
+   "sample_respondents": 573
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-29-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "Page is a video player (\"מהדורה מרכזית\") with no poll text; numbers exist only in the broadcast. Site terms forbid automated scraping, so no further extraction was attempted.",
+  "source": "https://www.ch16.co.il/player/episode/6abc0121d203dfa22727649b",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "partial"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-09-30-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Original: \"המילואימניקים-הכלכלית ... מקבלת 2.8% מהקולות\"; Wikipedia has 2.5%.",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905376242/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "2.5% (as printed; looks copied from the 1,503-respondent poll - n=1,013 implies ~3.1%)",
+   "population": null,
+   "published": "2026-09-30 21:05",
+   "sample_respondents": 1013
+  },
+  "status": "mismatch"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-10-01-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Hebrew original says Reservists-NEP 1.8%; the English secondary (and Wikipedia) say 1.81% - consistent after rounding.",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-761931ef",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "מערכת דיגיטלית בשילוב פאנל (online+panel)",
+   "moe": "±4.3% (95%)",
+   "population": "504 נדגמים בוגרים (18+) המהווים מדגם מייצג של האוכלוסייה בישראל",
+   "published": "2026-10-01 16:53 UTC",
+   "sample_respondents": 504
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "direct",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-10-01-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "JPost English version carries the same figures.",
+  "source": "https://www.maariv.co.il/news/elections-2026/article-1372750",
+  "sourceDetails": {
+   "asked_to_participate": 4413,
+   "method": "פאנל משיבים אינטרנטי Panel4ALL; דגימת שכבות",
+   "moe": "4%",
+   "population": "מדגם מייצג של כלל אוכלוסיית ישראל בני 18 ומעלה, יהודים וערבים",
+   "published": "2026-10-02 06:00",
+   "sample_respondents": 602
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-10-01-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "Wikipedia cites c14 article 1716250 (published 28 Sep, the previous poll) with this poll's title; the correct article is 1720749.",
+  "source": "https://www.c14.co.il/article/1720749",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "2,175 בוגרים מכלל האוכלוסייה",
+   "published": "2026-10-01 21:03",
+   "sample_respondents": 2175
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-10-01-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "Chart title gives the vote question verbatim (\"לאיזו מפלגה תצביע/י אם הבחירות היו היום\").",
+  "source": "https://www.zman.co.il/729422/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "500 משיבים יהודים וערבים; פולח לפי גיל, דת, מגדר ואזור",
+   "published": "2026-10-01 17:00",
+   "sample_respondents": 500
+  },
+  "status": "match"
+ },
+ {
+  "access": [
+   "wayback",
+   "direct"
+  ],
+  "checkedAt": "2026-10-05",
+  "id": "2026-10-04-kantar-kan-11",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "Text gives Yashar 23, Likud 21, Together 12, Dems 8, JL 8, Otzma 8, RZP 6, Res 4, Ra'am 5, Amcha below threshold; Shas/UTJ/YB only in the article graphic, whose side caption reads \"הסקר נערך ע\"י מכון קנטאר בראשות דודי חסיד וכלל 554 נשאלים\".",
+  "source": "https://www.kan.org.il/content/kan-news/politic/1105927/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2026-10-04 20:30 (+03:00)",
+   "sample_respondents": 554
+  },
+  "status": "mismatch"
+ }
+]

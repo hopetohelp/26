@@ -25,7 +25,29 @@ export interface Poll {
   eligibleToShow: boolean;
   urls: string[];
   verified: boolean;
+  verification?: {
+    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch";
+    checkedAt: string;
+    source: string | null;
+    details: { published?: string | null; population?: string | null; moe?: string | number | null; method?: string | null; sample_respondents?: number | null };
+  };
+  corrections?: { field: string; from: unknown; to: unknown; source: string | null }[];
   source: { page: string; tableLine: number };
+}
+
+export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "warn" | "neutral" }> = {
+  match: { text: "אומת מול המקור", tone: "ok" },
+  corrected: { text: "תוקן לפי המקור", tone: "ok" },
+  partial: { text: "אומת חלקית", tone: "neutral" },
+  unreachable: { text: "המקור אינו נגיש", tone: "warn" },
+  mismatch: { text: "לא תואם למקור", tone: "warn" },
+};
+
+/** תיאור שדה מתוקן בעברית, למשל "ש"ס (מנדטים)" */
+export function fieldLabel(field: string): string {
+  const parts = field.split(".");
+  if (parts[0] === "values") return `${listName(parts[1])} (${parts[2] === "s" ? "מנדטים" : "אחוז"})`;
+  return ({ sample: "גודל המדגם", start: "תחילת העבודה בשטח", end: "סיום העבודה בשטח", firmHe: "עורך הסקר", gov: "סך מפלגות הממשלה", "others.pct": "אחרות (אחוז)" } as Record<string, string>)[field] ?? field;
 }
 
 export interface ListInfo {
