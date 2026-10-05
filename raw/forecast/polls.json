@@ -7752,6 +7752,231 @@
   "source": "https://www.ynet.co.il/articles/0,7340,L-5588152,00.html"
  },
  {
+  "id": "k23-2020-01-28-direct-polls-israel-hayom",
+  "knesset": 23,
+  "series": "direct_polls",
+  "fieldEnd": "2020-01-28",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 35
+   },
+   "נץ": {
+    "p": 1.32
+   },
+   "פה": {
+    "s": 33
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/25th-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-7/"
+ },
+ {
+  "id": "k23-2020-01-29-kantar-kan-11",
+  "knesset": 23,
+  "series": "kantar",
+  "fieldEnd": "2020-01-29",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 33
+   },
+   "נץ": {
+    "p": 1.1
+   },
+   "פה": {
+    "s": 34
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/26th-poll-of-2020-election-blue-white-34-likud-33-joint-list-14-shas-8-utj-8-yisrael-beitenu-8-labor-gesher-meretz-8-yamina-7/"
+ },
+ {
+  "id": "k23-2020-01-29-midgam-channel-12",
+  "knesset": 23,
+  "series": "midgam",
+  "fieldEnd": "2020-01-29",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "טב": {
+    "s": 8
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 33
+   },
+   "נץ": {
+    "p": 2.2
+   },
+   "פה": {
+    "s": 35
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/28th-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-yamina-8-shas-8-yisrael-beitenu-8-labor-gesher-meretz-8-utj-7/"
+ },
+ {
+  "id": "k23-2020-01-29-midgam-project-channel-13",
+  "knesset": 23,
+  "series": "midgam_project",
+  "fieldEnd": "2020-01-29",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 34
+   },
+   "נץ": {
+    "p": 2.1
+   },
+   "פה": {
+    "s": 35
+   },
+   "שס": {
+    "s": 7
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/27th-poll-of-2020-election-blue-white-35-likud-34-joint-list-12-labor-gesher-meretz-10-yisrael-beitenu-8-yamina-7-shas-7-utj-7/"
+ },
+ {
+  "id": "k23-2020-01-29-panels-politics-maariv",
+  "knesset": 23,
+  "series": "panels_politics",
+  "fieldEnd": "2020-01-29",
+  "values": {
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 33
+   },
+   "פה": {
+    "s": 36
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/Article-744323; https://knessetjeremy.com/2020/02/01/ (30th poll)"
+ },
+ {
+  "id": "k23-2020-01-30-maagar-mochot-103fm",
+  "knesset": 23,
+  "series": "maagar_mochot",
+  "fieldEnd": "2020-01-30",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "טב": {
+    "s": 9
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 31
+   },
+   "נץ": {
+    "p": 1.5
+   },
+   "פה": {
+    "s": 34
+   },
+   "שס": {
+    "s": 9
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/30/29th-poll-of-2020-election-blue-white-34-likud-31-joint-list-14-yamina-9-shas-9-labor-gesher-meretz-9-utj-7-yisrael-beitenu-7/"
+ },
+ {
   "id": "k23-2020-02-05-midgam-walla",
   "knesset": 23,
   "series": "midgam",
@@ -8092,6 +8317,44 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.maariv.co.il/elections2020/polls/Article-748077"
+ },
+ {
+  "id": "k23-2020-02-14-panels-politics-103fm",
+  "knesset": 23,
+  "series": "panels_politics",
+  "fieldEnd": "2020-02-14",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "טב": {
+    "s": 8
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 32
+   },
+   "נץ": {
+    "p": 2.8
+   },
+   "פה": {
+    "s": 35
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HLILFI&c41t4nzVQ=GJL; https://knessetjeremy.com/2020/02/16/ (40th poll)"
  },
  {
   "id": "k23-2020-02-17-midgam-project-channel-13",
@@ -8702,6 +8965,165 @@
   "source": "https://knessetjeremy.com/2020/02/28/57th-poll-of-2020-election-likud-34-blue-white-34-joint-list-13-shas-9-labor-gesher-meretz-9-yamina-7-utj-7-yisrael-beitenu-7/"
  },
  {
+  "id": "k24-2021-02-15-camil-fuchs-channel-13",
+  "knesset": 24,
+  "series": "camil_fuchs",
+  "fieldEnd": "2021-02-15",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 11
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ט": {
+    "s": 5
+   },
+   "יז": {
+    "p": 1.8
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 17
+   },
+   "שס": {
+    "s": 7
+   },
+   "ת": {
+    "s": 13
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/elections-survey-1210736/; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/"
+ },
+ {
+  "id": "k24-2021-02-16-midgam-channel-12",
+  "knesset": 24,
+  "series": "midgam",
+  "fieldEnd": "2021-02-16",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ט": {
+    "s": 5
+   },
+   "יז": {
+    "p": 1.9
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 29
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "p": 1.8
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 13
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021-election_polls/Article-b2d65c5c29ba771027.htm; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/"
+ },
+ {
+  "id": "k24-2021-02-18-panels-politics-maariv",
+  "knesset": 24,
+  "series": "panels_politics",
+  "fieldEnd": "2021-02-18",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "s": 12
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ט": {
+    "s": 5
+   },
+   "יז": {
+    "p": 1.9
+   },
+   "כן": {
+    "p": 2.5
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "p": 2.1
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 15
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-822896; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/"
+ },
+ {
   "id": "k24-2021-02-23-kantar-kan-11",
   "knesset": 24,
   "series": "kantar",
@@ -8803,6 +9225,59 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.mako.co.il/news-israel-elections/2021_q1/Article-10186dc76dfc771026.htm"
+ },
+ {
+  "id": "k24-2021-02-23-panels-politics-103fm",
+  "knesset": 24,
+  "series": "panels_politics",
+  "fieldEnd": "2021-02-23",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 12
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ט": {
+    "s": 4
+   },
+   "יז": {
+    "p": 1.3
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "p": 2.0
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 13
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFHIJL&c41t4nzVQ=GJL; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/"
  },
  {
   "id": "k24-2021-02-25-camil-fuchs-channel-13",
@@ -8911,6 +9386,59 @@
   "source": "https://www.maariv.co.il/elections-2021/Article-824391"
  },
  {
+  "id": "k24-2021-02-28-panels-politics-103fm",
+  "knesset": 24,
+  "series": "panels_politics",
+  "fieldEnd": "2021-02-28",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 11
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ט": {
+    "s": 4
+   },
+   "יז": {
+    "p": 1.9
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "p": 2.3
+   },
+   "פה": {
+    "s": 19
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 13
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFIDMI&c41t4nzVQ=GJL&gntVQ=IDL (graphic SEKER-010321-2.jpg); https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/"
+ },
+ {
   "id": "k24-2021-03-02-camil-fuchs-channel-13",
   "knesset": 24,
   "series": "camil_fuchs",
@@ -8962,6 +9490,112 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://web.archive.org/web/20210303061301/https://13news.co.il/item/news/politics/state-policy/elections-survey-1218362/"
+ },
+ {
+  "id": "k24-2021-03-02-maagar-mochot-channel-20",
+  "knesset": 24,
+  "series": "maagar_mochot",
+  "fieldEnd": "2021-03-02",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 10
+   },
+   "ט": {
+    "s": 4
+   },
+   "יז": {
+    "p": 0.5
+   },
+   "כן": {
+    "s": 5
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 29
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "p": 2.1
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 13
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.20il.co.il/שלושה-שבועות-לבחירות-רוב-לממשלת-שמאל/ (404; Wayback unreachable this session); https://knessetjeremy.com/2021/03/15/8-polls-for-1st-week-of-march/"
+ },
+ {
+  "id": "k24-2021-03-02-midgam-channel-12",
+  "knesset": 24,
+  "series": "midgam",
+  "fieldEnd": "2021-03-02",
+  "values": {
+   "אמת": {
+    "s": 7
+   },
+   "ב": {
+    "s": 12
+   },
+   "ג": {
+    "s": 6
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ט": {
+    "s": 5
+   },
+   "יז": {
+    "p": 1.8
+   },
+   "כן": {
+    "s": 5
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "p": 2.5
+   },
+   "עם": {
+    "p": 2.8
+   },
+   "פה": {
+    "s": 19
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 14
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021-election_polls/Article-0ef19cf03d3f771027.htm; https://knessetjeremy.com/2021/03/15/8-polls-for-1st-week-of-march/"
  },
  {
   "id": "k24-2021-03-03-direct-polls-x",
@@ -9229,6 +9863,59 @@
   "source": "https://www.maariv.co.il/elections-2021/Article-825896"
  },
  {
+  "id": "k24-2021-03-08-panels-politics-103fm",
+  "knesset": 24,
+  "series": "panels_politics",
+  "fieldEnd": "2021-03-08",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 12
+   },
+   "ג": {
+    "s": 6
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ט": {
+    "s": 4
+   },
+   "יז": {
+    "p": 1.2
+   },
+   "כן": {
+    "s": 5
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "p": 2.6
+   },
+   "פה": {
+    "s": 20
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 11
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-826564 (incl. graphic https://images.maariv.co.il/image/upload/f_jpg/622951); https://knessetjeremy.com/2021/03/15/7-polls-for-2nd-week-of-march/"
+ },
+ {
   "id": "k24-2021-03-09-camil-fuchs-channel-13",
   "knesset": 24,
   "series": "camil_fuchs",
@@ -9492,6 +10179,165 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.maariv.co.il/elections-2021/Article-827333"
+ },
+ {
+  "id": "k24-2021-03-14-camil-fuchs-channel-13",
+  "knesset": 24,
+  "series": "camil_fuchs",
+  "fieldEnd": "2021-03-14",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 11
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ט": {
+    "s": 6
+   },
+   "יז": {
+    "p": 2.1
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 20
+   },
+   "שס": {
+    "s": 6
+   },
+   "ת": {
+    "s": 9
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-towards-elections-day-1223224/; https://knessetjeremy.com/2021/03/15/7-polls-for-2nd-week-of-march/"
+ },
+ {
+  "id": "k24-2021-03-15-panels-politics-103fm",
+  "knesset": 24,
+  "series": "panels_politics",
+  "fieldEnd": "2021-03-15",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "s": 11
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ט": {
+    "s": 5
+   },
+   "יז": {
+    "p": 1.5
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 20
+   },
+   "שס": {
+    "s": 7
+   },
+   "ת": {
+    "s": 10
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFJKHM&c41t4nzVQ=GJL (graphic SEKER-160321-LO.jpg); https://knessetjeremy.com/2021/03/19/last-polls-for-2021-knesset-election/"
+ },
+ {
+  "id": "k24-2021-03-16-midgam-channel-12",
+  "knesset": 24,
+  "series": "midgam",
+  "fieldEnd": "2021-03-16",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ט": {
+    "s": 4
+   },
+   "יז": {
+    "p": 1.4
+   },
+   "כן": {
+    "s": 4
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 30
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 8
+   },
+   "ת": {
+    "s": 10
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021_q1/Article-7394d5f12bb3871027.htm; https://knessetjeremy.com/2021/03/19/last-polls-for-2021-knesset-election/"
  },
  {
   "id": "k24-2021-03-18-direct-polls-x",
@@ -9862,6 +10708,206 @@
   "source": "https://www.mako.co.il/news-israel-elections/2021/Article-3288575c4cb4871027.htm"
  },
  {
+  "id": "k25-2022-09-28-midgam-hahadashot-12",
+  "knesset": 25,
+  "series": "midgam",
+  "fieldEnd": "2022-09-28",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.1
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 12
+   },
+   "כן": {
+    "s": 13
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-4262db62dc48381027.htm; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/"
+ },
+ {
+  "id": "k25-2022-09-29-direct-polls-channel-14",
+  "knesset": 25,
+  "series": "direct_polls",
+  "fieldEnd": "2022-09-29",
+  "values": {
+   "אמת": {
+    "s": 4
+   },
+   "ב": {
+    "p": 2.4
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.5
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 11
+   },
+   "כן": {
+    "s": 13
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 35
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 23
+   },
+   "שס": {
+    "s": 9
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.ice.co.il/elections2022/news/article/896776; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/"
+ },
+ {
+  "id": "k25-2022-09-29-panels-politics-maariv",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-09-29",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.9
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.6
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 13
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-949083; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/"
+ },
+ {
+  "id": "k25-2022-09-29-panels-politics-mako-knesset-channel",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-09-29",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.6
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_29.9.pdf; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/"
+ },
+ {
   "id": "k25-2022-10-01-kantar-kan-11",
   "knesset": 25,
   "series": "kantar",
@@ -10060,6 +11106,56 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://web.archive.org/web/20221006011514/https://www.israelhayom.co.il/news/politics/article/13137422"
+ },
+ {
+  "id": "k25-2022-10-04-panels-politics-mako-knesset-channel",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-10-04",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ב": {
+    "p": 2.3
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.3
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 11
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_6.10.pdf; https://knessetjeremy.com/2022/10/09/4-polls-from-the-week/"
  },
  {
   "id": "k25-2022-10-06-direct-polls-channel-14",
@@ -10262,6 +11358,106 @@
   "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-d3f89620728c381026.htm"
  },
  {
+  "id": "k25-2022-10-11-panels-politics-103fm",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-10-11",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 2.6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.2
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 11
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 25
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IMEKDL&c41t4nzVQ=GJL; https://knessetjeremy.com/2022/10/14/7-polls-from-this-week/"
+ },
+ {
+  "id": "k25-2022-10-12-panels-politics-mako-knesset-channel",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-10-12",
+  "values": {
+   "אמת": {
+    "s": 4
+   },
+   "ב": {
+    "p": 2.4
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 0.7
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 25
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_12.10.pdf; https://knessetjeremy.com/2022/10/14/7-polls-from-this-week/"
+ },
+ {
   "id": "k25-2022-10-13-camil-fuchs-channel-13",
   "knesset": 25,
   "series": "camil_fuchs",
@@ -10462,6 +11658,56 @@
   "source": "https://web.archive.org/web/20230206052005/https://www.kan.org.il/Item/?itemId=136341"
  },
  {
+  "id": "k25-2022-10-18-midgam-hahadashot-12",
+  "knesset": 25,
+  "series": "midgam",
+  "fieldEnd": "2022-10-18",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.2
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 30
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 25
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-caf7ecdd6cbe381027.htm; https://knessetjeremy.com/2022/10/23/7-polls-2-weeks-out/"
+ },
+ {
   "id": "k25-2022-10-19-midgam-keshet",
   "knesset": 25,
   "series": "midgam",
@@ -10510,6 +11756,56 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-0285379d2d3f381027.htm"
+ },
+ {
+  "id": "k25-2022-10-19-panels-politics-mako-knesset-channel",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-10-19",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.9
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.4
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 11
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_19.10.pdf; https://knessetjeremy.com/2022/10/23/7-polls-2-weeks-out/"
  },
  {
   "id": "k25-2022-10-20-camil-fuchs-channel-13",
@@ -10660,6 +11956,407 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.maariv.co.il/elections-2022/Article-952955"
+ },
+ {
+  "id": "k25-2022-10-23-kantar-kan-11",
+  "knesset": 25,
+  "series": "kantar",
+  "fieldEnd": "2022-10-23",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.8
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 9
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.kan.org.il/Item/?itemId=136638 (403, redirects to old.kan.org.il; Wayback unreachable); https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
+ },
+ {
+  "id": "k25-2022-10-23-panels-politics-maariv",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-10-23",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.7
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 23
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-953516; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
+ },
+ {
+  "id": "k25-2022-10-24-direct-polls-channel-14",
+  "knesset": 25,
+  "series": "direct_polls",
+  "fieldEnd": "2022-10-24",
+  "values": {
+   "אמת": {
+    "s": 4
+   },
+   "ב": {
+    "p": 1.9
+   },
+   "ג": {
+    "s": 6
+   },
+   "ד": {
+    "p": 2.0
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 12
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 35
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 23
+   },
+   "שס": {
+    "s": 9
+   }
+  },
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_channel14_seker24_10.pdf; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/ (now14 article not accessed - scraping forbidden)"
+ },
+ {
+  "id": "k25-2022-10-24-midgam-hahadashot-12",
+  "knesset": 25,
+  "series": "midgam",
+  "fieldEnd": "2022-10-24",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 2.0
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 13
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2022_q4/Article-989f30b39aa0481027.htm; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
+ },
+ {
+  "id": "k25-2022-10-25-camil-fuchs-channel-13",
+  "knesset": 25,
+  "series": "camil_fuchs",
+  "fieldEnd": "2022-10-25",
+  "values": {
+   "אמת": {
+    "s": 4
+   },
+   "ב": {
+    "p": 2.2
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 2.3
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 11
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 27
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/m47r5-903303576/?pid=517&cid=902986281; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
+ },
+ {
+  "id": "k25-2022-10-25-midgam-galei-tzahal",
+  "knesset": 25,
+  "series": "midgam",
+  "fieldEnd": "2022-10-25",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.4
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 25
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/political-news/429706; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
+ },
+ {
+  "id": "k25-2022-10-25-panels-politics-mako-knesset-channel",
+  "knesset": 25,
+  "series": "panels_politics",
+  "fieldEnd": "2022-10-25",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 2.1
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 6
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 24
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221027182720id_/https://makospecial.co.il/mako_election2022?makoOpenChromeTabs=1; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
+ },
+ {
+  "id": "k25-2022-10-25-smith-galei-israel",
+  "knesset": 25,
+  "series": "smith",
+  "fieldEnd": "2022-10-25",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ב": {
+    "p": 1.8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ד": {
+    "p": 1.7,
+    "pMax": 2.1
+   },
+   "ום": {
+    "s": 4
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 12
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "פה": {
+    "s": 25
+   },
+   "שס": {
+    "s": 9
+   }
+  },
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.gly.co.il/item?id=18072; https://t.me/amitsegal/19810 (image of Smith's report letter); https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/"
  },
  {
   "id": "k25-2022-10-26-maagar-mochot-israel-hayom",

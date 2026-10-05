@@ -1,0 +1,455 @@
+[
+ {
+  "id": "k23-2020-02-14-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HLILFI&c41t4nzVQ=GJL; https://knessetjeremy.com/2020/02/16/ (40th poll)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 526,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "103FM page dated 16/02/2020: Panels (Menachem Lazar), fieldwork 13-14 Feb 2020, MoE 4.4%. Text: B&W 35, Likud 32, JL 14, Labor-Gesher-Meretz/Yamina/Shas/UTJ 8 each, YB 7, Otzma 2.8% - all match. Sample 526 from KnessetJeremy. High confidence."
+ },
+ {
+  "id": "k23-2020-01-30-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/30/29th-poll-of-2020-election-blue-white-34-likud-31-joint-list-14-yamina-9-shas-9-labor-gesher-meretz-9-utj-7-yisrael-beitenu-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 613,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "KnessetJeremy (contemporaneous): Maagar Mochot, 613 resp., MoE 4.4%, broadcast by 103FM on 30.1.2020: B&W 34, Likud 31, JL 14, Labor-Gesher-Meretz 9, Shas 9, Yamina 9, YB 7, UTJ 7, Otzma 1.5% - all match. Primary 103FM page not located."
+ },
+ {
+  "id": "k23-2020-01-29-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/Article-744323; https://knessetjeremy.com/2020/02/01/ (30th poll)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 537,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "Maariv article 31/01/2020 (Panels, Menachem Lazar): poll as if elections held Wednesday (29.1). B&W 36, Likud 33, JL 13, YB 8, UTJ 8, Shas 8, Yamina 7, Labor-Gesher-Meretz 7 - match. 537 respondents, MoE 4.4%. High confidence."
+ },
+ {
+  "id": "k23-2020-01-29-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/27th-poll-of-2020-election-blue-white-35-likud-34-joint-list-12-labor-gesher-meretz-10-yisrael-beitenu-8-yamina-7-shas-7-utj-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 743,
+  "moe": "3.6%",
+  "duplicate_of": null,
+  "note": "KnessetJeremy: Project HaMidgam, 743 resp., MoE 3.6%, broadcast by Channel 13 on 29.1.2020: B&W 35, Likud 34, JL 12, LGM 10, YB 8, Shas 7, Yamina 7, UTJ 7, Otzma 2.1% - all match. 13tv page not located."
+ },
+ {
+  "id": "k23-2020-01-29-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/28th-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-yamina-8-shas-8-yisrael-beitenu-8-labor-gesher-meretz-8-utj-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 503,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "KnessetJeremy: Midgam, 503 resp., MoE 4.4%, broadcast by Channel 12 on 29.1.2020: B&W 35, Likud 33, JL 13, LGM 8, Shas 8, YB 8, Yamina 8, UTJ 7, Otzma 2.2% - all match. mako article not located."
+ },
+ {
+  "id": "k23-2020-01-29-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/26th-poll-of-2020-election-blue-white-34-likud-33-joint-list-14-shas-8-utj-8-yisrael-beitenu-8-labor-gesher-meretz-8-yamina-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 553,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "KnessetJeremy: Kantar, 553 resp., MoE 4.4%, broadcast by Kan 11 on 29.1.2020: B&W 34, Likud 33, JL 14, LGM 8, Shas 8, YB 8, UTJ 8, Yamina 7, Otzma 1.1% - all match. Kan site blocked (403)."
+ },
+ {
+  "id": "k23-2020-01-28-direct-polls-israel-hayom",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/01/29/25th-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 557,
+  "moe": "4.3%",
+  "duplicate_of": null,
+  "note": "KnessetJeremy: Direct Polls, 557 resp., MoE 4.3%, conducted Jan 28, published by Israel Hayom 29.1.2020: Likud 35, B&W 33, JL 13, LGM 9, Shas 8, UTJ 8, YB 7, Yamina 7, Otzma 1.32% - all match. Web search snippet of israelhayom.co.il/article/728877 confirms Likud 35 vs B&W 33 (page itself 403)."
+ },
+ {
+  "id": "k24-2021-03-16-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021_q1/Article-7394d5f12bb3871027.htm; https://knessetjeremy.com/2021/03/19/last-polls-for-2021-knesset-election/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "N12/mako, broadcast Tue 16.3.21 (Midgam/iPanel): Likud 30, YA 18, Yamina 10, NH 10, JL 8, Shas 8, UTJ 7, YB 7, Labor 6, RZ/B&W/Meretz/Ra'am 4, New Economy 1.4% - all match. Sample/MoE from KnessetJeremy. High confidence."
+ },
+ {
+  "id": "k24-2021-03-15-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFJKHM&c41t4nzVQ=GJL (graphic SEKER-160321-LO.jpg); https://knessetjeremy.com/2021/03/19/last-polls-for-2021-knesset-election/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 994,
+  "moe": "3.2%",
+  "duplicate_of": null,
+  "note": "103FM page/graphic dated 16.03.2021, fieldwork 'yesterday (Mon)' = 15.3, 994 respondents. Likud 28, YA 20, Yamina 11, NH 10, JL 8, YB/UTJ/Shas 7, Labor 5, RZ 5, B&W/Meretz/Ra'am 4 - match. New Economy 1.5% confirmed by KnessetJeremy (MoE 3.2% from KJ). High confidence."
+ },
+ {
+  "id": "k24-2021-03-14-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-towards-elections-day-1223224/; https://knessetjeremy.com/2021/03/15/7-polls-for-2nd-week-of-march/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 707,
+  "moe": "3.6%",
+  "duplicate_of": null,
+  "note": "Channel 13 article 14.3.2021 (Camil Fuchs; 707 resp., MoE 3.6%): Likud 28, YA 20, Yamina 11, NH 9, JL 8, YB 7, UTJ 7, Labor 6, Shas 6, RZ 6, Meretz/B&W/Ra'am 4 - match. New Economy 2.1% confirmed by KnessetJeremy (article only says below threshold). High confidence."
+ },
+ {
+  "id": "k24-2021-03-08-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-826564 (incl. graphic https://images.maariv.co.il/image/upload/f_jpg/622951); https://knessetjeremy.com/2021/03/15/7-polls-for-2nd-week-of-march/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "duplicate_of": null,
+  "note": "Maariv/103FM article dated 09/03/2021 with Panels graphic: Likud 28, YA 20, Yamina 12, NH 11, JL 8, Shas 8, YB 8, UTJ 6, Labor 6, B&W 5, Meretz 4, RZ 4; Ra'am 2.6%, New Economy 1.2% - all match. (Article prose oddly says UTJ fell to 7, but graphic shows 6; KnessetJeremy has JL 9, a typo - sums to 121.) Publication 9.3; field date not stated. High confidence."
+ },
+ {
+  "id": "k24-2021-03-02-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021-election_polls/Article-0ef19cf03d3f771027.htm; https://knessetjeremy.com/2021/03/15/8-polls-for-1st-week-of-march/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 506,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "N12/mako, broadcast Tue 2.3.21 (Midgam/iPanel): Likud 28, YA 19, NH 14, Yamina 12, JL 9, Shas 8, YB 7, Labor 7, UTJ 6, RZ 5, B&W 5; Ra'am 2.8%, Meretz 2.5%, New Economy 1.8% - all match. Sample from KJ. High confidence."
+ },
+ {
+  "id": "k24-2021-03-02-maagar-mochot-channel-20",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.20il.co.il/שלושה-שבועות-לבחירות-רוב-לממשלת-שמאל/ (404; Wayback unreachable this session); https://knessetjeremy.com/2021/03/15/8-polls-for-1st-week-of-march/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1907,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "Cited Channel 20 page is dead (404). KnessetJeremy: Maagar Mochot poll broadcast by Channel 20 on 2.3.2021 - Likud 29, YA 18, NH 13, Yamina 10, JL 10, Shas 8, UTJ 7, YB 7, Labor 5, B&W 5, RZ 4, Meretz 4; Ra'am 2.1%, New Economy 0.5% - all match. KJ's '1907 people with 4.4% MoE' is internally inconsistent (4.4% implies ~500) - treat sample as uncertain."
+ },
+ {
+  "id": "k24-2021-02-28-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFIDMI&c41t4nzVQ=GJL&gntVQ=IDL (graphic SEKER-010321-2.jpg); https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 574,
+  "moe": "4.3%",
+  "duplicate_of": null,
+  "note": "103FM page dated 01/03/2021: Panels fieldwork 'yesterday (Sun)' = 28.2, 574 respondents, MoE 4.3%. Graphic: Likud 28, YA 19, NH 13, Yamina 11, JL 9, Shas 8, UTJ 7, YB 7, Labor 6, B&W/Meretz/RZ 4 - match. Ra'am 2.3% and New Economy 1.9% confirmed via KnessetJeremy only. High confidence."
+ },
+ {
+  "id": "k24-2021-02-23-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFHIJL&c41t4nzVQ=GJL; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 558,
+  "moe": "4.3%",
+  "duplicate_of": null,
+  "note": "103FM page dated 24/02/2021, fieldwork 'yesterday (Tue)' = 23.2, 558 respondents. Text: Likud 28, YA 18, NH 13, Yamina 12, JL 9, Shas 8, UTJ 7, YB 7, Labor 6, RZ/Meretz/B&W 4, New Economy 1.3%, Ra'am 2% - all match. MoE 4.3% from KJ. High confidence."
+ },
+ {
+  "id": "k24-2021-02-18-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-822896; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 587,
+  "moe": "4.2%",
+  "duplicate_of": null,
+  "note": "Maariv-Sofhashavua article 19/02/2021 (Panels): Likud 28, YA 18, NH 15, Yamina 12, JL 9, YB 8, UTJ 7, RZ 5, Meretz 5; B&W 2.5%, Ra'am 2.1%, New Economy 1.9% - match. Shas 8 and Labor 5 (in embedded infogram) confirmed by KnessetJeremy. 587 respondents, MoE 4.2%. Field date not stated. High confidence."
+ },
+ {
+  "id": "k24-2021-02-16-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021-election_polls/Article-b2d65c5c29ba771027.htm; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 503,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "Queue had no URL; found N12/mako article 'סקר בחירות נכון ל-16.2.21' (Midgam/iPanel, broadcast Tue 16.2): Likud 29, YA 18, NH 13, Yamina 10, JL 9, Shas 8, UTJ 7, YB 7, Labor 6, RZ 5, Meretz 4, B&W 4; New Economy 1.9%, Ra'am 1.8% - all match. Sample/MoE from KJ. High confidence."
+ },
+ {
+  "id": "k24-2021-02-15-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/elections-survey-1210736/; https://knessetjeremy.com/2021/03/15/9-polls-for-2nd-half-of-feb/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 703,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "Channel 13 article 15.2.2021 (Camil Fuchs; 703 resp. = 603 Jewish + 100 non-Jewish; MoE 3.7%): Likud 28, YA 17, NH 13, Yamina 11, JL 8, Shas 7, UTJ 7, Labor 6, Meretz 5, YB 5, RZ 5, B&W 4, Ra'am 4, New Economy 1.8% - all match. High confidence."
+ },
+ {
+  "id": "k25-2022-10-25-smith-galei-israel",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.gly.co.il/item?id=18072; https://t.me/amitsegal/19810 (image of Smith's report letter); https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 700,
+  "moe": "3.8%",
+  "duplicate_of": null,
+  "note": "Galei Israel page + Smith Consulting report letter (dated 25/10/2022, fieldwork 25.10.2022, 700 resp., MoE 3.8%): Likud 32, YA 25, RZ 13, NU 12, Shas 9, UTJ 7, YB 5, Labor 5, Meretz 4, Ra'am 4, H-T 4, Jewish Home 1.8% - all match. Balad (queue 1.7%) is NOT reported anywhere in the source (below-threshold list gives only JH 1.8, New Economy 1.5, Free Economy 0.7, Burning Youth 0.2); KnessetJeremy also omits Balad. Balad value unconfirmed/possibly invented - consider dropping it."
+ },
+ {
+  "id": "k25-2022-10-25-panels-politics-mako-knesset-channel",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221027182720id_/https://makospecial.co.il/mako_election2022?makoOpenChromeTabs=1; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [
+   {
+    "list": "הבית היהודי",
+    "wikipedia": 2.1,
+    "source": 1.8
+   },
+   {
+    "list": "בל\"ד",
+    "wikipedia": 1.8,
+    "source": 2.1
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": 709,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "Archived mako/Knesset Channel page (27.10.2022): Jewish Home 'loses a tenth vs last week - 1.8%'; Balad 'rises to 2.1%' - Wikipedia swapped these two values. KnessetJeremy agrees (JH 1.8, Balad 2.1). Seat figures (Likud 31, RZ 14, NU 12, YB 6, Labor/Meretz 5, blocs 60-56) consistent with the queue; seat chart itself is a Lottie animation, seats confirmed via text deltas + KJ. Sample/MoE from KJ. High confidence on the swap."
+ },
+ {
+  "id": "k25-2022-10-25-midgam-galei-tzahal",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/political-news/429706; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [
+   {
+    "list": "הציונות הדתית",
+    "wikipedia": 12,
+    "source": 13
+   },
+   {
+    "list": "המחנה הממלכתי",
+    "wikipedia": 13,
+    "source": 12
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": 505,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "Kikar HaShabbat 26.10.22 reporting the Galei Tzahal (Army Radio) poll published that morning (Midgam/iPanel, 505 resp., MoE 4.4%): Likud 31, YA 25, RZ 13, NU 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4; JH 1.8%, Balad 1.4%. Blocs 59/57/4 confirm RZ 13 and NU 12 (queue's 12/13 swapped; would give 58/58). KnessetJeremy agrees. High confidence."
+ },
+ {
+  "id": "k25-2022-10-25-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/m47r5-903303576/?pid=517&cid=902986281; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 801,
+  "moe": "3.5%",
+  "duplicate_of": null,
+  "note": "Channel 13 article 25.10.2022 (Prof. Camil Fuchs; 801 resp. = 600 Jewish + 201 non-Jewish; MoE 3.5%): Likud 31, YA 27, RZ 14, NU 11, Shas 8, UTJ 7, YB 6, H-T/Ra'am/Labor/Meretz 4; Jewish Home 2.2%, Balad 2.3% - all match. Read via fetch tool (direct curl 403); KJ identical. High confidence."
+ },
+ {
+  "id": "k25-2022-10-24-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2022_q4/Article-989f30b39aa0481027.htm; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 503,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "N12/mako, broadcast Mon 24.10 (Midgam): Likud 32, YA 24, RZ 13, Shas 8, UTJ 7, YB/Labor/Meretz 5, Ra'am/H-T 4, Balad 2%, Jewish Home 1.8% - match. National Unity stated as '+2' (=13 by arithmetic; KJ lists 13). MoE 4.4%, sample from KJ. High confidence."
+ },
+ {
+  "id": "k25-2022-10-24-direct-polls-channel-14",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_channel14_seker24_10.pdf; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/ (now14 article not accessed - scraping forbidden)",
+  "differences": [
+   {
+    "list": "הליכוד",
+    "wikipedia": 34,
+    "source": 35
+   },
+   {
+    "list": "יהדות התורה",
+    "wikipedia": 7,
+    "source": 6
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": 1084,
+  "moe": "4.3%",
+  "duplicate_of": null,
+  "note": "Direct Polls' official report to Channel 14 filed with the Central Elections Committee (dated 24.10.2022, fieldwork 24.10, 1,084 resp., MoE 4.3%): Likud 35, YA 23, NU 12, RZ 12, Shas 9, UTJ 6, YB 6, Meretz 5, Labor 4, H-T 4, Ra'am 4; Balad 2.0%, JH 1.9%. Matches queue except Likud (35 vs 34) and UTJ (6 vs 7). But KnessetJeremy (from the broadcast, same 1,084 sample) also has Likud 34 / UTJ 7 (while giving Labor 5 / Meretz 4, which the filing contradicts). Likely the broadcast/now14 article differed from the CEC filing; Likud and UTJ unresolved - differences listed are vs the CEC filing. Medium confidence."
+ },
+ {
+  "id": "k25-2022-10-23-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-953516; https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "duplicate_of": null,
+  "note": "Maariv article published Mon 24/10/2022 morning: Likud 32, YA 23, RZ 14, NU 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, Ra'am 4, H-T 4; Jewish Home 1.6%, Balad 1.7% - all match. (KnessetJeremy lists YA 24, a typo - sums to 121.) Field date and sample not stated. High confidence."
+ },
+ {
+  "id": "k25-2022-10-23-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.kan.org.il/Item/?itemId=136638 (403, redirects to old.kan.org.il; Wayback unreachable); https://knessetjeremy.com/2022/10/28/11-polls-from-monday-thursday/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 752,
+  "moe": "3.6%",
+  "duplicate_of": null,
+  "note": "Kan page blocked (403) and archive.org unreachable this session; no CEC filing found on gov.il. KnessetJeremy (contemporaneous): Kantar, 752 resp., MoE 3.6%, broadcast by Kan 11 on 24.10.2022 - Likud 31, YA 24, RZ 13, NU 12, Shas 9, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4, JH 1.6%, Balad 1.8% - all match. Broadcast date 24.10 (queue fieldEnd 23.10 not contradicted). Medium-high confidence."
+ },
+ {
+  "id": "k25-2022-10-19-panels-politics-mako-knesset-channel",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_19.10.pdf; https://knessetjeremy.com/2022/10/23/7-polls-2-weeks-out/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 702,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "Panels' official report to the Central Elections Committee for Knesset Channel: fieldwork 18.10.22 12:00 - 19.10.22 10:00, 702 actual respondents, MoE 3.7%. Likud 32, YA 24, RZ 13, NU 11, Shas 8, UTJ 7, YB 7, Meretz 5, Labor 5, H-T 4, Ra'am 4; Jewish Home 1.9%, Balad 1.4% - all match (KJ says 712 resp.). High confidence."
+ },
+ {
+  "id": "k25-2022-10-18-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-caf7ecdd6cbe381027.htm; https://knessetjeremy.com/2022/10/23/7-polls-2-weeks-out/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 510,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "N12/mako, broadcast Tue 18.10 (Midgam/iPanel): Likud 30, YA 25, RZ 14, NU 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4; Jewish Home 1.7%, Balad 1.2% - all match. Sample from KJ. High confidence."
+ },
+ {
+  "id": "k25-2022-10-12-panels-politics-mako-knesset-channel",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_12.10.pdf; https://knessetjeremy.com/2022/10/14/7-polls-from-this-week/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 712,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "Panels' CEC report for Knesset Channel: fieldwork 11.10.22 11:00 - 12.10.22 09:00, 712 respondents, MoE 3.7%. Likud 32, YA 25, RZ 13, NU 12, Shas 8, UTJ 7, YB 6, Meretz 5, Labor 4, H-T 4, Ra'am 4; Jewish Home 2.4%, Balad 0.7% - all match. Distinct from the Panels/103FM poll of 11.10 (700 resp., different numbers). High confidence."
+ },
+ {
+  "id": "k25-2022-10-11-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IMEKDL&c41t4nzVQ=GJL; https://knessetjeremy.com/2022/10/14/7-polls-from-this-week/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 700,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "103FM page dated 12/10/2022: Panels fieldwork 'yesterday (Tue)' = 11.10, 700 respondents, MoE 3.7%. Likud 32, YA 25, RZ 13, NU 11, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4; Jewish Home 2.6%, Balad 1.2% - all match. High confidence."
+ },
+ {
+  "id": "k25-2022-10-04-panels-politics-mako-knesset-channel",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_6.10.pdf; https://knessetjeremy.com/2022/10/09/4-polls-from-the-week/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 715,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "Panels' CEC report (dated 06/10/2022) for Knesset Channel: fieldwork 03.10.22 09:00 - 04.10.22 11:00, 715 respondents, MoE 3.7%. Likud 32, YA 24, RZ 13, NU 11, Shas 8, UTJ 7, Labor 6, YB 6, Meretz 5, Ra'am 4, H-T 4; Jewish Home 2.3%, Balad 1.3% - all match. (KJ dates broadcast 6.10.) High confidence."
+ },
+ {
+  "id": "k25-2022-09-29-panels-politics-mako-knesset-channel",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_knessetchannel_report_29.9.pdf; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 700,
+  "moe": "3.7%",
+  "duplicate_of": null,
+  "note": "Panels' CEC report for Knesset Channel: fieldwork 28.09.22 09:00 - 29.09.22 10:00, 700 respondents, MoE 3.7%. Likud 32, YA 24, RZ 13, NU 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4; Jewish Home 1.8%, Balad 1.6% - all match (KJ: 720 resp., dated 28.9). Separate poll from Panels/Maariv of same dates (1,433 resp.; Likud 31, NU 13). High confidence."
+ },
+ {
+  "id": "k25-2022-09-29-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-949083; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1433,
+  "moe": "2.6%",
+  "duplicate_of": null,
+  "note": "Maariv article 30/09/2022 (Panels), fieldwork 28-29 Sep 2022, 1,433 respondents, MoE 2.6%. Likud 31, YA 24, RZ 13, NU 13, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4, Jewish Home 1.9% - match (KJ's 2.0% for Jewish Home is wrong; article says fell from 2% to 1.9%). Balad 1.6% not in article text, confirmed by KJ only. Distinct from the same-dates Panels/Knesset Channel poll (720 resp.). High confidence."
+ },
+ {
+  "id": "k25-2022-09-29-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.ice.co.il/elections2022/news/article/896776; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 590,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "ice.co.il 29/9/2022 20:28 reporting the Now14/Direct Polls poll published that evening (Thu): Likud 35, YA 23, NU 13, RZ 11, Shas 9, UTJ 7, YB 6, Labor/Meretz/H-T/Ra'am 4, Jewish Home 2.4%, Balad 1.49% (~1.5) - all match; KJ identical (590 resp., 4.4%). now14 not scraped per rules. High confidence."
+ },
+ {
+  "id": "k25-2022-09-28-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-4262db62dc48381027.htm; https://knessetjeremy.com/2022/10/02/5-weekend-polls-netanyahu-bloc-takes-slight-losses/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 504,
+  "moe": "4.4%",
+  "duplicate_of": null,
+  "note": "N12/mako, broadcast Wed 28.9 (Midgam): Likud 32, YA 24, NU 13, RZ 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, H-T 4, Ra'am 4; Jewish Home 1.6%, Balad 1.1% - all match. Sample from KJ. High confidence."
+ }
+]

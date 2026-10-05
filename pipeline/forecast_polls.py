@@ -66,6 +66,8 @@ def build() -> list[dict]:
                 letters = names[k].get(d.get("list"))
                 if letters and isinstance(d.get("source"), int):
                     values[letters] = {"s": d["source"]}
+                elif letters and isinstance(d.get("source"), float):  # רשימה מתחת לסף: אחוז מתוקן
+                    values[letters] = {"p": d["source"]}
             out.append({"id": q["id"], "knesset": k, "series": p["firmKey"],
                         "fieldEnd": r.get("fieldEndSource") or p["end"], "values": values,
                         "status": r["status"], "sourceLevel": r.get("sourceLevel") or level_from_note(r.get("note")),
