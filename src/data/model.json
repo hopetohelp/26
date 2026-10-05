@@ -1,0 +1,1394 @@
+{
+ "asof": "2026-10-01",
+ "central": {
+  "date": "2026-10-01",
+  "seats": {
+   "amcha": 4,
+   "bluewhite": 0,
+   "democrats": 9,
+   "haredi_public": 0,
+   "joint": 8,
+   "likud": 22,
+   "otzma": 7,
+   "raam": 5,
+   "reservists": 0,
+   "rzp": 6,
+   "shas": 8,
+   "together": 12,
+   "utj": 8,
+   "yashar": 23,
+   "yb": 8
+  },
+  "shares": {
+   "amcha": 3.41,
+   "bluewhite": 0.91,
+   "democrats": 7.53,
+   "haredi_public": 0.66,
+   "joint": 6.05,
+   "likud": 17.37,
+   "otzma": 6.11,
+   "raam": 4.23,
+   "reservists": 2.96,
+   "rzp": 4.78,
+   "shas": 6.31,
+   "together": 9.05,
+   "utj": 6.17,
+   "yashar": 17.36,
+   "yb": 6.61
+  }
+ },
+ "electionDay": "2026-10-27",
+ "house": [
+  {
+   "firmHe": "דיירקט פולס",
+   "polls": 4,
+   "pollster": "Direct Polls|i24 News",
+   "publisherHe": "i24NEWS",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 10,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 26,
+    "otzma": 8,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 7,
+    "together": 10,
+    "utj": 8,
+    "yashar": 21,
+    "yb": 7
+   }
+  },
+  {
+   "firmHe": "קנטר",
+   "polls": 1,
+   "pollster": "Kantar|Israel Hayom",
+   "publisherHe": "ישראל היום",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 8,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 7,
+    "yashar": 23,
+    "yb": 8
+   }
+  },
+  {
+   "firmHe": "קנטר",
+   "polls": 3,
+   "pollster": "Kantar|Kan 11",
+   "publisherHe": "כאן 11",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 7,
+    "together": 12,
+    "utj": 8,
+    "yashar": 24,
+    "yb": 8
+   }
+  },
+  {
+   "firmHe": "לזר מחקרים + Panel4All",
+   "polls": 4,
+   "pollster": "LRI+P4A|Maariv",
+   "publisherHe": "מעריב",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 10,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 20,
+    "otzma": 8,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 7,
+    "together": 13,
+    "utj": 7,
+    "yashar": 23,
+    "yb": 9
+   }
+  },
+  {
+   "firmHe": "לזר מחקרים + Panel4All",
+   "polls": 1,
+   "pollster": "LRI+P4A|Walla",
+   "publisherHe": "וואלה",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 7,
+    "yashar": 23,
+    "yb": 9
+   }
+  },
+  {
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "polls": 4,
+   "pollster": "MP+TM+SN+A|Channel 13",
+   "publisherHe": "חדשות 13",
+   "seats": {
+    "amcha": 5,
+    "bluewhite": 0,
+    "democrats": 10,
+    "haredi_public": 0,
+    "joint": 9,
+    "likud": 20,
+    "otzma": 8,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 7,
+    "together": 12,
+    "utj": 8,
+    "yashar": 22,
+    "yb": 8
+   }
+  },
+  {
+   "firmHe": "מאגר מוחות",
+   "polls": 3,
+   "pollster": "Maagar Mochot|Channel 16",
+   "publisherHe": "ערוץ 16",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 20,
+    "otzma": 8,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 13,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   }
+  },
+  {
+   "firmHe": "מדגם מחקר וייעוץ",
+   "polls": 3,
+   "pollster": "Midgam R&C|HaHadashot 12",
+   "publisherHe": "חדשות 12",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 10,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 5,
+    "shas": 7,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 9
+   }
+  },
+  {
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "polls": 6,
+   "pollster": "SF+ND|Channel 14",
+   "publisherHe": "ערוץ 14",
+   "seats": {
+    "amcha": 0,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 29,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 7,
+    "shas": 10,
+    "together": 9,
+    "utj": 8,
+    "yashar": 21,
+    "yb": 7
+   }
+  },
+  {
+   "firmHe": "יוסי טטיקה",
+   "polls": 4,
+   "pollster": "Yossi Tatika|Zman Yisrael",
+   "publisherHe": "זמן ישראל",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 5,
+    "shas": 9,
+    "together": 12,
+    "utj": 8,
+    "yashar": 22,
+    "yb": 9
+   }
+  }
+ ],
+ "others": 0.5,
+ "params": {
+  "draws": 1500,
+  "histSdLarge": 0.1743,
+  "histSdSmall": 0.308,
+  "houseSd": 0.15,
+  "kernel": 1.5,
+  "nonsamplingSd": 0.1,
+  "scenarios": 20000,
+  "walkSd": 0.025
+ },
+ "polls": 33,
+ "pollsters": 10,
+ "scenarios": {
+  "agreementsMoveSeat": 0.6916,
+  "bloc": {
+   "atLeast61": 0.0333,
+   "lists": [
+    "likud",
+    "shas",
+    "utj",
+    "otzma",
+    "rzp"
+   ],
+   "seats": [
+    45,
+    51,
+    58
+   ]
+  },
+  "horizonDays": 26,
+  "lists": {
+   "amcha": {
+    "agreementGain": -0.053,
+    "pass": 0.5232,
+    "seats": [
+     0,
+     4,
+     6
+    ],
+    "seatsMean": 2.74,
+    "share": [
+     2.14,
+     3.32,
+     5.13
+    ]
+   },
+   "bluewhite": {
+    "agreementGain": 0.0,
+    "pass": 0.0001,
+    "seats": [
+     0,
+     0,
+     0
+    ],
+    "seatsMean": 0.0,
+    "share": [
+     0.56,
+     0.88,
+     1.4
+    ]
+   },
+   "democrats": {
+    "agreementGain": -0.035,
+    "pass": 0.9997,
+    "seats": [
+     7,
+     9,
+     12
+    ],
+    "seatsMean": 9.49,
+    "share": [
+     5.49,
+     7.29,
+     9.63
+    ]
+   },
+   "haredi_public": {
+    "agreementGain": 0.0,
+    "pass": 0.0001,
+    "seats": [
+     0,
+     0,
+     0
+    ],
+    "seatsMean": 0.0,
+    "share": [
+     0.4,
+     0.64,
+     1.01
+    ]
+   },
+   "joint": {
+    "agreementGain": 0.064,
+    "pass": 0.995,
+    "seats": [
+     5,
+     7,
+     10
+    ],
+    "seatsMean": 7.63,
+    "share": [
+     4.39,
+     5.87,
+     7.8
+    ]
+   },
+   "likud": {
+    "agreementGain": -0.089,
+    "pass": 1.0,
+    "seats": [
+     18,
+     22,
+     27
+    ],
+    "seatsMean": 22.34,
+    "share": [
+     13.72,
+     16.88,
+     20.59
+    ]
+   },
+   "otzma": {
+    "agreementGain": -0.148,
+    "pass": 0.9961,
+    "seats": [
+     5,
+     7,
+     10
+    ],
+    "seatsMean": 7.51,
+    "share": [
+     4.45,
+     5.93,
+     7.9
+    ]
+   },
+   "raam": {
+    "agreementGain": 0.075,
+    "pass": 0.7547,
+    "seats": [
+     0,
+     5,
+     8
+    ],
+    "seatsMean": 4.58,
+    "share": [
+     2.66,
+     4.11,
+     6.27
+    ]
+   },
+   "reservists": {
+    "agreementGain": -0.03,
+    "pass": 0.3578,
+    "seats": [
+     0,
+     0,
+     5
+    ],
+    "seatsMean": 1.75,
+    "share": [
+     1.86,
+     2.88,
+     4.42
+    ]
+   },
+   "rzp": {
+    "agreementGain": -0.011,
+    "pass": 0.8583,
+    "seats": [
+     0,
+     6,
+     9
+    ],
+    "seatsMean": 5.58,
+    "share": [
+     3.03,
+     4.64,
+     7.06
+    ]
+   },
+   "shas": {
+    "agreementGain": 0.098,
+    "pass": 0.9978,
+    "seats": [
+     6,
+     8,
+     11
+    ],
+    "seatsMean": 8.03,
+    "share": [
+     4.6,
+     6.12,
+     8.12
+    ]
+   },
+   "together": {
+    "agreementGain": 0.062,
+    "pass": 1.0,
+    "seats": [
+     8,
+     11,
+     15
+    ],
+    "seatsMean": 11.65,
+    "share": [
+     6.63,
+     8.81,
+     11.58
+    ]
+   },
+   "utj": {
+    "agreementGain": 0.093,
+    "pass": 0.9969,
+    "seats": [
+     6,
+     8,
+     10
+    ],
+    "seatsMean": 7.83,
+    "share": [
+     4.49,
+     5.99,
+     7.95
+    ]
+   },
+   "yashar": {
+    "agreementGain": -0.074,
+    "pass": 1.0,
+    "seats": [
+     17,
+     22,
+     28
+    ],
+    "seatsMean": 22.5,
+    "share": [
+     13.09,
+     16.9,
+     21.5
+    ]
+   },
+   "yb": {
+    "agreementGain": 0.049,
+    "pass": 0.9983,
+    "seats": [
+     6,
+     8,
+     11
+    ],
+    "seatsMean": 8.37,
+    "share": [
+     4.82,
+     6.43,
+     8.48
+    ]
+   }
+  },
+  "n": 20000,
+  "wasted": [
+   3.18,
+   6.22,
+   9.67
+  ]
+ },
+ "signature": "2ad4f2dc13e5e58a",
+ "skipped": [],
+ "start": "2026-09-09",
+ "trend": [
+  {
+   "date": "2026-09-09",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.43,
+    "bluewhite": 0.93,
+    "democrats": 7.33,
+    "haredi_public": 0.66,
+    "joint": 5.77,
+    "likud": 17.06,
+    "otzma": 6.15,
+    "raam": 4.25,
+    "reservists": 2.87,
+    "rzp": 4.7,
+    "shas": 6.21,
+    "together": 9.6,
+    "utj": 6.15,
+    "yashar": 17.9,
+    "yb": 6.5
+   }
+  },
+  {
+   "date": "2026-09-10",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.43,
+    "bluewhite": 0.93,
+    "democrats": 7.33,
+    "haredi_public": 0.66,
+    "joint": 5.78,
+    "likud": 17.04,
+    "otzma": 6.14,
+    "raam": 4.25,
+    "reservists": 2.88,
+    "rzp": 4.71,
+    "shas": 6.22,
+    "together": 9.61,
+    "utj": 6.15,
+    "yashar": 17.88,
+    "yb": 6.5
+   }
+  },
+  {
+   "date": "2026-09-11",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.43,
+    "bluewhite": 0.93,
+    "democrats": 7.34,
+    "haredi_public": 0.66,
+    "joint": 5.79,
+    "likud": 17.02,
+    "otzma": 6.14,
+    "raam": 4.25,
+    "reservists": 2.89,
+    "rzp": 4.72,
+    "shas": 6.23,
+    "together": 9.59,
+    "utj": 6.14,
+    "yashar": 17.85,
+    "yb": 6.5
+   }
+  },
+  {
+   "date": "2026-09-12",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.44,
+    "bluewhite": 0.93,
+    "democrats": 7.35,
+    "haredi_public": 0.66,
+    "joint": 5.8,
+    "likud": 17.01,
+    "otzma": 6.14,
+    "raam": 4.25,
+    "reservists": 2.9,
+    "rzp": 4.74,
+    "shas": 6.24,
+    "together": 9.58,
+    "utj": 6.14,
+    "yashar": 17.82,
+    "yb": 6.51
+   }
+  },
+  {
+   "date": "2026-09-13",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.45,
+    "bluewhite": 0.93,
+    "democrats": 7.35,
+    "haredi_public": 0.66,
+    "joint": 5.82,
+    "likud": 16.99,
+    "otzma": 6.15,
+    "raam": 4.25,
+    "reservists": 2.91,
+    "rzp": 4.75,
+    "shas": 6.24,
+    "together": 9.56,
+    "utj": 6.14,
+    "yashar": 17.79,
+    "yb": 6.51
+   }
+  },
+  {
+   "date": "2026-09-14",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.45,
+    "bluewhite": 0.92,
+    "democrats": 7.36,
+    "haredi_public": 0.66,
+    "joint": 5.83,
+    "likud": 16.98,
+    "otzma": 6.15,
+    "raam": 4.25,
+    "reservists": 2.93,
+    "rzp": 4.77,
+    "shas": 6.25,
+    "together": 9.55,
+    "utj": 6.13,
+    "yashar": 17.76,
+    "yb": 6.51
+   }
+  },
+  {
+   "date": "2026-09-15",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.46,
+    "bluewhite": 0.92,
+    "democrats": 7.37,
+    "haredi_public": 0.66,
+    "joint": 5.84,
+    "likud": 16.98,
+    "otzma": 6.16,
+    "raam": 4.25,
+    "reservists": 2.93,
+    "rzp": 4.79,
+    "shas": 6.26,
+    "together": 9.53,
+    "utj": 6.13,
+    "yashar": 17.71,
+    "yb": 6.51
+   }
+  },
+  {
+   "date": "2026-09-16",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.46,
+    "bluewhite": 0.92,
+    "democrats": 7.37,
+    "haredi_public": 0.66,
+    "joint": 5.85,
+    "likud": 16.99,
+    "otzma": 6.15,
+    "raam": 4.25,
+    "reservists": 2.94,
+    "rzp": 4.78,
+    "shas": 6.27,
+    "together": 9.52,
+    "utj": 6.14,
+    "yashar": 17.68,
+    "yb": 6.52
+   }
+  },
+  {
+   "date": "2026-09-17",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.46,
+    "bluewhite": 0.92,
+    "democrats": 7.37,
+    "haredi_public": 0.66,
+    "joint": 5.86,
+    "likud": 17.02,
+    "otzma": 6.15,
+    "raam": 4.25,
+    "reservists": 2.94,
+    "rzp": 4.78,
+    "shas": 6.28,
+    "together": 9.48,
+    "utj": 6.14,
+    "yashar": 17.64,
+    "yb": 6.54
+   }
+  },
+  {
+   "date": "2026-09-18",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.45,
+    "bluewhite": 0.92,
+    "democrats": 7.39,
+    "haredi_public": 0.66,
+    "joint": 5.88,
+    "likud": 17.03,
+    "otzma": 6.13,
+    "raam": 4.25,
+    "reservists": 2.95,
+    "rzp": 4.77,
+    "shas": 6.28,
+    "together": 9.44,
+    "utj": 6.14,
+    "yashar": 17.65,
+    "yb": 6.55
+   }
+  },
+  {
+   "date": "2026-09-19",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.45,
+    "bluewhite": 0.92,
+    "democrats": 7.41,
+    "haredi_public": 0.66,
+    "joint": 5.89,
+    "likud": 17.05,
+    "otzma": 6.12,
+    "raam": 4.26,
+    "reservists": 2.96,
+    "rzp": 4.77,
+    "shas": 6.28,
+    "together": 9.39,
+    "utj": 6.14,
+    "yashar": 17.65,
+    "yb": 6.56
+   }
+  },
+  {
+   "date": "2026-09-20",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.45,
+    "bluewhite": 0.92,
+    "democrats": 7.42,
+    "haredi_public": 0.66,
+    "joint": 5.9,
+    "likud": 17.07,
+    "otzma": 6.11,
+    "raam": 4.26,
+    "reservists": 2.96,
+    "rzp": 4.77,
+    "shas": 6.29,
+    "together": 9.35,
+    "utj": 6.13,
+    "yashar": 17.65,
+    "yb": 6.58
+   }
+  },
+  {
+   "date": "2026-09-21",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.44,
+    "bluewhite": 0.92,
+    "democrats": 7.44,
+    "haredi_public": 0.66,
+    "joint": 5.92,
+    "likud": 17.08,
+    "otzma": 6.1,
+    "raam": 4.26,
+    "reservists": 2.97,
+    "rzp": 4.76,
+    "shas": 6.29,
+    "together": 9.31,
+    "utj": 6.13,
+    "yashar": 17.65,
+    "yb": 6.59
+   }
+  },
+  {
+   "date": "2026-09-22",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.44,
+    "bluewhite": 0.91,
+    "democrats": 7.45,
+    "haredi_public": 0.65,
+    "joint": 5.93,
+    "likud": 17.1,
+    "otzma": 6.08,
+    "raam": 4.26,
+    "reservists": 2.97,
+    "rzp": 4.76,
+    "shas": 6.3,
+    "together": 9.26,
+    "utj": 6.13,
+    "yashar": 17.65,
+    "yb": 6.6
+   }
+  },
+  {
+   "date": "2026-09-23",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.43,
+    "bluewhite": 0.91,
+    "democrats": 7.47,
+    "haredi_public": 0.65,
+    "joint": 5.94,
+    "likud": 17.12,
+    "otzma": 6.08,
+    "raam": 4.26,
+    "reservists": 2.97,
+    "rzp": 4.76,
+    "shas": 6.31,
+    "together": 9.21,
+    "utj": 6.13,
+    "yashar": 17.65,
+    "yb": 6.6
+   }
+  },
+  {
+   "date": "2026-09-24",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.43,
+    "bluewhite": 0.91,
+    "democrats": 7.48,
+    "haredi_public": 0.65,
+    "joint": 5.96,
+    "likud": 17.14,
+    "otzma": 6.09,
+    "raam": 4.26,
+    "reservists": 2.97,
+    "rzp": 4.76,
+    "shas": 6.3,
+    "together": 9.19,
+    "utj": 6.12,
+    "yashar": 17.63,
+    "yb": 6.61
+   }
+  },
+  {
+   "date": "2026-09-25",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.43,
+    "bluewhite": 0.91,
+    "democrats": 7.49,
+    "haredi_public": 0.65,
+    "joint": 5.97,
+    "likud": 17.17,
+    "otzma": 6.09,
+    "raam": 4.26,
+    "reservists": 2.97,
+    "rzp": 4.77,
+    "shas": 6.3,
+    "together": 9.17,
+    "utj": 6.13,
+    "yashar": 17.58,
+    "yb": 6.61
+   }
+  },
+  {
+   "date": "2026-09-26",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.42,
+    "bluewhite": 0.91,
+    "democrats": 7.5,
+    "haredi_public": 0.65,
+    "joint": 5.98,
+    "likud": 17.21,
+    "otzma": 6.09,
+    "raam": 4.25,
+    "reservists": 2.97,
+    "rzp": 4.77,
+    "shas": 6.3,
+    "together": 9.15,
+    "utj": 6.13,
+    "yashar": 17.54,
+    "yb": 6.61
+   }
+  },
+  {
+   "date": "2026-09-27",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.42,
+    "bluewhite": 0.91,
+    "democrats": 7.51,
+    "haredi_public": 0.65,
+    "joint": 5.99,
+    "likud": 17.24,
+    "otzma": 6.09,
+    "raam": 4.25,
+    "reservists": 2.97,
+    "rzp": 4.78,
+    "shas": 6.3,
+    "together": 9.14,
+    "utj": 6.14,
+    "yashar": 17.5,
+    "yb": 6.61
+   }
+  },
+  {
+   "date": "2026-09-28",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.42,
+    "bluewhite": 0.91,
+    "democrats": 7.52,
+    "haredi_public": 0.65,
+    "joint": 6.01,
+    "likud": 17.27,
+    "otzma": 6.09,
+    "raam": 4.24,
+    "reservists": 2.97,
+    "rzp": 4.78,
+    "shas": 6.3,
+    "together": 9.12,
+    "utj": 6.15,
+    "yashar": 17.46,
+    "yb": 6.6
+   }
+  },
+  {
+   "date": "2026-09-29",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.42,
+    "bluewhite": 0.91,
+    "democrats": 7.53,
+    "haredi_public": 0.65,
+    "joint": 6.03,
+    "likud": 17.3,
+    "otzma": 6.1,
+    "raam": 4.24,
+    "reservists": 2.97,
+    "rzp": 4.78,
+    "shas": 6.3,
+    "together": 9.1,
+    "utj": 6.16,
+    "yashar": 17.42,
+    "yb": 6.6
+   }
+  },
+  {
+   "date": "2026-09-30",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.42,
+    "bluewhite": 0.91,
+    "democrats": 7.53,
+    "haredi_public": 0.66,
+    "joint": 6.04,
+    "likud": 17.33,
+    "otzma": 6.1,
+    "raam": 4.23,
+    "reservists": 2.96,
+    "rzp": 4.78,
+    "shas": 6.31,
+    "together": 9.07,
+    "utj": 6.17,
+    "yashar": 17.38,
+    "yb": 6.61
+   }
+  },
+  {
+   "date": "2026-10-01",
+   "seats": {
+    "amcha": 4,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 22,
+    "otzma": 7,
+    "raam": 5,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.41,
+    "bluewhite": 0.91,
+    "democrats": 7.53,
+    "haredi_public": 0.66,
+    "joint": 6.05,
+    "likud": 17.37,
+    "otzma": 6.11,
+    "raam": 4.23,
+    "reservists": 2.96,
+    "rzp": 4.78,
+    "shas": 6.31,
+    "together": 9.05,
+    "utj": 6.17,
+    "yashar": 17.36,
+    "yb": 6.61
+   }
+  }
+ ]
+}

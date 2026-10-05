@@ -505,6 +505,61 @@ def build_history(results: list[dict]) -> dict:
         })
     return {"cycles": cycles}
 
+# ---------------------------------------------------------------- המודל ותרחישי יום הבחירות
+
+# המודל מתחיל ביום שאחרי הגשת רשימות המועמדים — מאז הרשימות בקלפי ידועות (שורת האירוע בדף הסקרים בוויקיפדיה)
+LIST_SUBMISSION_2026 = "2026-09-08"
+MODEL_SEED = 26
+
+
+def build_model(polls: list[dict]) -> dict:
+    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). רק סקרים מאומתים, עקביים, שעברו 24 שעות מפרסומם."""
+    import model as M
+
+    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]
+    inputs = [M.ModelInput(p["id"], f"{p['firm']}|{p['publisher'] or ''}", p["end"], p["values"],
+                           (p.get("others") or {}).get("pct"), p.get("sample")) for p in use]
+    lists = [l["id"] for l in LISTS_2026]
+    pairs = [tuple(a["pair"]) for a in AGREEMENTS_2026]
+    gov = [l["id"] for l in LISTS_2026 if l["gov37"]]
+    start = (datetime.fromisoformat(LIST_SUBMISSION_2026) + timedelta(days=1)).date().isoformat()
+    asof = max(p.end for p in inputs)
+    obs_cfg, agg_cfg = M.ObsConfig(), M.AggConfig()
+    fit = M.fit_average(inputs, lists, "likud", pairs, start, asof, obs_cfg, agg_cfg, MODEL_SEED)
+    backtest = json.loads((OUT / "backtest.json").read_text(encoding="utf-8"))
+    sc_cfg = M.ScenarioConfig(hist_sd_small=backtest["histSd"]["small"], hist_sd_large=backtest["histSd"]["large"])
+    sc = M.scenarios(fit, lists, "likud", pairs, "2026-10-27", agg_cfg, sc_cfg, MODEL_SEED, bloc=gov)
+    reported_others = sorted(p.others_pct for p in inputs if p.others_pct is not None)
+    others = reported_others[len(reported_others) // 2] / 100 if reported_others else 0.008
+    trend = M.central_seats(fit, lists, "likud", pairs, others)
+    day0 = datetime.fromisoformat(start)
+    for point in trend:
+        point["date"] = (day0 + timedelta(days=point.pop("day"))).date().isoformat()
+    # "אילו הממוצע היה מעוגן במכון X": הממוצע + אפקט הבית של המכון ⇐ המנוע ⇐ מנדטים
+    level, _ = M.level_at_end(fit)
+    model_lists = ["likud"] + [k for k in lists if k in level]
+    labels = {f"{p['firm']}|{p['publisher'] or ''}": (p["firmHe"], p["publisherHe"]) for p in use}
+    counts = {}
+    for o in fit["observed"]:
+        counts[o.pollster] = counts.get(o.pollster, 0) + 1
+    house = []
+    for h in fit["pollsters"]:
+        lr = {k: level[k] + fit["dims"][k].house.get(h, 0.0) for k in model_lists if k != "likud"}
+        sh = M._shares_from_lr(model_lists, "likud", lr, others)
+        idx = {k: i for i, k in enumerate(model_lists)}
+        seats = M.fast_seats([int(round(sh[k] * M.VALID)) for k in model_lists], M.VALID,
+                             [(idx[a], idx[b]) for a, b in pairs if a in idx and b in idx])
+        house.append({"pollster": h, "firmHe": labels[h][0], "publisherHe": labels[h][1], "polls": counts.get(h, 0),
+                      "seats": {k: seats[idx[k]] for k in model_lists}})
+    return {
+        "signature": backtest["modelSignature"], "electionDay": "2026-10-27", "start": start, "asof": asof,
+        "polls": len(fit["observed"]), "skipped": fit["skipped"], "pollsters": len(fit["pollsters"]),
+        "others": round(others * 100, 2), "central": trend[-1], "trend": trend, "scenarios": sc, "house": house,
+        "params": {"draws": obs_cfg.draws, "kernel": obs_cfg.kernel, "walkSd": agg_cfg.walk_sd, "houseSd": agg_cfg.house_sd,
+                   "nonsamplingSd": agg_cfg.nonsampling_sd, "histSdSmall": sc_cfg.hist_sd_small,
+                   "histSdLarge": sc_cfg.hist_sd_large, "scenarios": sc_cfg.n},
+    }
+
 # ---------------------------------------------------------------- פנקס הבוחרים
 
 def build_registry(results: list[dict]) -> dict:
@@ -529,6 +584,8 @@ def main() -> None:
     apply_corrections(polls["polls"], build_time)
     apply_verification(polls["polls"])
     history = build_history(results)
+    # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
+    model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"])
     missing = sorted({n for p in polls["polls"] for n in (p["firmHe"], p["publisherHe"]) if untranslated(n)})
     if missing:
         print("⚠️ שמות בלי תרגום לעברית (להוסיף ל-FIRM_HE/PUB_HE):", ", ".join(missing))
@@ -541,8 +598,10 @@ def main() -> None:
         "frozen": FROZEN_FROM <= build_time < FREEZE_END,
         "lists2026": LISTS_2026, "agreements2026": AGREEMENTS_2026, "historyNames": HISTORY_NAMES,
     }
-    for name, obj in [("results", results), ("polls", polls), ("registry", registry), ("meta", meta),
-                      ("history", history)]:
+    outputs = [("results", results), ("polls", polls), ("registry", registry), ("meta", meta), ("history", history)]
+    if model_out is not None:
+        outputs.append(("model", model_out))
+    for name, obj in outputs:
         indent = None if name in ("polls", "history") else 1  # קובצי הסקרים גדולים — נשמרים מכווצים
         (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=indent,
                                                      separators=(",", ":") if indent is None else None) + "\n",

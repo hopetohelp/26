@@ -14,7 +14,7 @@ POLLS = ROOT / "src" / "data" / "polls.json"
 
 
 def build(at: str) -> tuple[dict, list]:
-    env = {**os.environ, "BUILD_TIME": at}
+    env = {**os.environ, "BUILD_TIME": at, "SKIP_MODEL": "1"}  # המודל אינו תלוי בהקפאה מעבר לסקרים שנכנסים
     subprocess.run([sys.executable, str(ROOT / "pipeline" / "build_data.py")], check=True, env=env,
                    stdout=subprocess.DEVNULL)
     return json.loads(META.read_text()), json.loads(POLLS.read_text())["polls"]

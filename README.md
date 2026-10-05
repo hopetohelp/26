@@ -21,6 +21,7 @@ npm ci
 python3 pipeline/build_data.py   # בונה את קובצי הנתונים
 npm test                         # בדיקות המנוע (שחזור 5 מערכות + מקרי קצה) ודיוק הסקרים
 python3 pipeline/test_freeze.py  # בדיקות ההקפאה בשעון מזויף
+python3 pipeline/test_model.py   # המודל: מנוע מהיר, תצפית, בדיקת עבר עדכנית
 npm run dev
 ```
 

@@ -76,10 +76,20 @@ export function TrendChart({
   const x = (t: number) => m.left + ((t - from) / Math.max(1, to - from)) * (W - m.left - m.right);
   const y = (v: number) => m.top + (1 - v / yMax) * (H - m.top - m.bottom);
   const yTicks = Array.from({ length: Math.floor(yMax / 5) + 1 }, (_, i) => i * 5);
+  // תוויות ציר הזמן: בטווח קצר (עד כ-10 שבועות) — כל שבוע, "יום.חודש"; בטווח ארוך — תחילת כל חודש, "חודש.שנה"
+  const short = to - from <= 70 * 86_400_000;
   const months: number[] = [];
   const d0 = new Date(from);
-  for (let d = new Date(Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth() + 1, 1)); d.getTime() <= to; d.setUTCMonth(d.getUTCMonth() + 1)) months.push(d.getTime());
+  if (short) {
+    for (let t = from + 3 * 86_400_000; t <= to - 2 * 86_400_000; t += 7 * 86_400_000) months.push(t);
+  } else {
+    for (let d = new Date(Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth() + 1, 1)); d.getTime() <= to; d.setUTCMonth(d.getUTCMonth() + 1)) months.push(d.getTime());
+  }
   const monthStep = Math.max(1, Math.ceil(months.length / 8));
+  const tick = (t: number) => {
+    const d = new Date(t);
+    return short ? `${d.getUTCDate()}.${d.getUTCMonth() + 1}` : `${d.getUTCMonth() + 1}.${String(d.getUTCFullYear()).slice(2)}`;
+  };
   // פיזור תוויות הקצה כדי שלא יעלו זו על זו
   const labels = series
     .filter((s) => s.points.length && !s.dashed)
@@ -104,7 +114,7 @@ export function TrendChart({
       {months.map((t, i) =>
         i % monthStep === 0 ? (
           <text key={t} x={x(t)} y={H - 10} textAnchor="middle" fontSize="11" fill="#7a8496">
-            {`${new Date(t).getUTCMonth() + 1}.${String(new Date(t).getUTCFullYear()).slice(2)}`}
+            {tick(t)}
           </text>
         ) : null,
       )}
@@ -197,6 +207,55 @@ export function EstimateVsActual({ rows, maxSeats = 40, caption }: { rows: GapRo
             </li>
           );
         })}
+      </ul>
+    </figure>
+  );
+}
+
+export interface ScenarioRow {
+  id: string;
+  name: string;
+  /** המנדטים לפי הממוצע עצמו */
+  central: number;
+  /** טווח 80% של התרחישים */
+  lo: number;
+  hi: number;
+  /** שיעור התרחישים שבהם הרשימה עוברת את אחוז החסימה (0–1) */
+  pass: number;
+}
+
+/** תרחישים: רצועה = טווח 80% של התרחישים, קו = המנדטים לפי הממוצע. רצועה שמתחילה באפס = סיכון לא לעבור את הסף */
+export function ScenarioRanges({ rows, maxSeats = 35, caption }: { rows: ScenarioRow[]; maxSeats?: number; caption: string }) {
+  const w = (x: number) => `${Math.max(0, Math.min(100, (x / maxSeats) * 100))}%`;
+  const pct = (x: number) => (x >= 0.995 ? "כמעט בכולם" : x < 0.005 ? "כמעט באף אחד" : `${Math.round(x * 100)}%`);
+  return (
+    <figure>
+      <figcaption className="sr-only">{caption}</figcaption>
+      <ul className="space-y-2">
+        {rows.map((r, i) => (
+          <li
+            key={r.id}
+            className="grid grid-cols-[1fr_auto] md:grid-cols-[11rem_1fr_7rem_7rem] items-center gap-x-2 gap-y-1 [grid-template-areas:'name_nums'_'bar_bar'_'pass_pass'] md:[grid-template-areas:'name_bar_nums_pass']"
+          >
+            <span className="font-medium truncate [grid-area:name]" title={r.name}>
+              {r.name}
+            </span>
+            <span className="relative h-6 bg-paper rounded [grid-area:bar]" aria-hidden="true">
+              {r.hi > 0 && (
+                <span className="absolute inset-y-1 rounded opacity-40" style={{ right: w(r.lo), width: `calc(${w(r.hi)} - ${w(r.lo)})`, background: colorOf(r.id, i), minWidth: "3px" }} />
+              )}
+              <span className="absolute inset-y-0 w-1 rounded" style={{ right: `calc(${w(r.central)} - 2px)`, background: colorOf(r.id, i) }} />
+            </span>
+            <span className="text-sm tabular-nums whitespace-nowrap [grid-area:nums]">
+              <strong>{r.central}</strong>
+              <span className="text-ink-soft"> ({r.lo}–{r.hi})</span>
+            </span>
+            <span className={`text-sm whitespace-nowrap [grid-area:pass] ${r.pass > 0.005 && r.pass < 0.995 ? "text-warn font-bold" : "text-ink-soft"}`}>
+              עוברת: {pct(r.pass)}
+            </span>
+            <span className="sr-only">{`. לפי הממוצע ${r.central} מנדטים; ב-80% מהתרחישים בין ${r.lo} ל-${r.hi}; עוברת את אחוז החסימה ב-${pct(r.pass)} מהתרחישים`}</span>
+          </li>
+        ))}
       </ul>
     </figure>
   );
