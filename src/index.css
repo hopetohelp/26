@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: Heebo, system-ui, Arial, sans-serif;
+  }
+  a {
+    @apply text-accent underline underline-offset-2;
+  }
+  a:hover {
+    @apply text-ink;
+  }
+  :focus-visible {
+    outline: 3px solid #1f5f8b;
+    outline-offset: 2px;
+  }
+  input[type="number"] {
+    direction: ltr;
+    text-align: right;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

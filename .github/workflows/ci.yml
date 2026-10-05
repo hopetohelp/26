@@ -1,0 +1,37 @@
+name: בדיקות
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: npm ci
+      - name: הנתונים נבנים מחדש זהה מחומר הגלם (דטרמיניזם)
+        run: |
+          AS_OF=$(python3 -c "import json;print(json.load(open('src/data/meta.json'))['dataAsOf'])")
+          BUILD_TIME="$AS_OF" python3 pipeline/build_data.py
+          git diff --exit-code -- src/data
+      - name: הקפאה לפי 16ה(ח) — שעון מזויף
+        run: python3 pipeline/test_freeze.py
+      - name: טיפוסים
+        run: npx tsc --noEmit -p tsconfig.json
+      - name: בדיקות המנוע
+        run: npm test
+      - name: בנייה
+        run: npm run build

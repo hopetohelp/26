@@ -1,0 +1,3174 @@
+{{Short description|none}}
+{{see also|Opinion polling for the 2026 Israeli legislative election}}
+In the run up to the [[2026 Israeli legislative election]], various organisations are conducting [[opinion poll]]ing to gauge voting intention in [[Israel]] during the term of the [[List of members of the twenty-fifth Knesset|twenty-fifth Knesset]]. This article lists the results of such polls between 3 January and 27 December 2024. In keeping with the [[election silence]] law, no polls may be published from the end of the Friday before the election until the [[polling station]]s close on election day at 22:00.<ref name=silence>[[s:he:חוק הבחירות (דרכי תעמולה)#סעיף 16ה]] (ח) (in Hebrew)</ref>
+
+Polls are listed in reverse chronological order, showing the most recent first and using the dates when the survey fieldwork was done, as opposed to the date of publication. Where the fieldwork dates are unknown, the date of publication is given instead. The highest figure in each polling survey is displayed in bold with its background shaded in the leading party's colour. If a tie ensues, this is applied to the highest figures. When a poll has no information on a certain party, that party is instead marked by a dash (–).
+
+== Seat projections ==
+This section displays voting intention estimates referring to the next [[Knesset]] election. The figures listed are Knesset seat counts rather than percentages, unless otherwise stated. Scenario polls are not included here. For parties not crossing the [[electoral threshold]] (3.25%) in any given poll, the number of seats is calculated as a percentage of the 120 total seats.
+
+=== Polls ===
+Poll results are listed in the table below. Parties that fall below the [[electoral threshold]] of 3.25% are denoted by the percentage of votes that they received (N%) rather than the number of seats they would have received.
+
+;Legend
+* '''Government'''
+** Sum of the [[Thirty-seventh government of Israel|37th government]]  parties: [[Likud]], [[Religious Zionist Party]], [[Otzma Yehudit]], [[Shas]], [[United Torah Judaism]] and [[New Hope (Israel)|New Hope]]. The coalition parties are highlighted in blue.
+* '''Opposition bloc'''
+** Sum of the [[Thirty-sixth government of Israel|36th government]] parties (often referred to in media as the "opposition bloc" to the 37th government): [[Yesh Atid]], [[National Unity (Israel)|National Unity]], [[Yisrael Beiteinu]], and [[The Democrats (Israel)|The Democrats]] (a merger of [[Israeli Labor Party|Labor]] and [[Meretz]]). For more recent polls, this sum also includes [[Bennett 2026]], a new party founded by [[Naftali Bennett]] (who served as prime minister of the 36th government).
+
+This excludes the non-government parties [[Ra'am]], [[Hadash–Ta'al]], and [[Balad (political party)|Balad]].
+
+61 seats are required for a majority in the Knesset. If a bloc has a majority, the sum is displayed in bold with its background shaded in the leading party's colour.
+
+=== 2024 ===
+{{sticky header}}
+{| class="wikitable sticky-header-multi sortable" style="text-align:center;font-size:90%;line-height:12px"
+! rowspan="2" style="width:60px;" | Fieldwork<br/>date
+! rowspan="2" style="width:120px;" | Polling firm
+! rowspan="2" style="width:110px;" | Publisher
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Likud]]
+! class="unsortable" style="width:40px;" | {{small|[[Yesh Atid]]}}
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Religious Zionist Party|RZP]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | {{small|[[Otzma Yehudit|Otzma]]}}
+! class="unsortable" style="width:40px;" | {{small|[[National Unity (Israel)|National Unity]]}}
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Shas]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[United Torah Judaism|UTJ]]
+! class="unsortable" style="width:40px;" | {{small|[[Yisrael Beiteinu]]}}
+! class="unsortable" style="width:40px;" | [[Ra'am]]
+! class="unsortable" style="width:40px;" | {{small|[[Hadash–Ta'al|Hadash<br>–Ta'al]]}}
+! class="unsortable" style="width:40px;" | [[The Democrats (Israel)|Dems]]
+! class="unsortable" style="width:40px;" | [[Balad (political party)|Balad]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | {{small|[[New Hope (Israel)|New Hope]]{{efn|Joined the government in 30 September}}}}
+! class="unsortable" style="width:40px;" | {{small|[[Bennett 2026|Bennett party]]}}
+! rowspan="2" style="width:40px;" | Lead
+! class="unsortable" style="width:40px; background:#D9D9F8;" | Gov.
+|-
+! style="background:{{party color|Likud}}" |
+! style="background:{{party color|Yesh Atid}}" |
+! style="background:{{party color|Religious Zionist Party}}" |
+! style="background:{{party color|Otzma Yehudit}}" |
+! style="background:{{party color|National Unity (Israel)}}" |
+! style="background:{{party color|Shas}}" |
+! style="background:{{party color|United Torah Judaism}}" |
+! style="background:{{party color|Yisrael Beiteinu}}" |
+! style="background:{{party color|United Arab List}}" |
+! style="background:{{party color|Hadash–Ta'al}}" |
+! style="background:{{party color|The Democrats (Israel)}}" |
+! style="background:{{party color|Balad (political party)}}" |
+! style="background:{{party color|New Hope (Israel)}}" |
+! style="background:#44C5BF" |
+! style="background:#0000CD" |
+|-
+| rowspan="2" {{Opdrts||27|Dec|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv27December">{{cite news| author=Moshe Cohen| title=בשיאו: בנט משאיר את נתניהו והליכוד הרחק מאחור|url=https://www.maariv.co.il/news/politics/article-1159464| language=he| access-date=27 December 2024| date=27 December 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|16
+|–
+|8
+|20
+|10
+|7
+|15
+|4
+|6
+|11
+|–
+|–
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|48
+|-
+|21
+|11
+|{{small|(1.8%)}}
+|7
+|13
+|9
+|7
+|8
+|5
+|6
+|9
+|–
+|{{small|(0.9%)}}
+| style="background:#C7EEEC" | '''24'''
+| style="background:#44C5BF; color:white;" | 3
+|44
+|-
+| {{Opdrts||26|Dec|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref>{{Cite web |date=26 December 2024 |title=סקר חדשות 14: הקואליציה נחלשת, ליברמן ויאיר גולן מתחזקים |url=https://www.c14.co.il/article/1081073 |access-date=20 September 2025 |website=Channel 14 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''32'''
+|9
+|4
+|8
+|13
+|10
+|8
+|13
+|5
+|5
+|13
+|{{small|(2.4%)}}
+|{{small|(0.5%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 19
+| style="background:#CCCCF5" |'''62'''
+|-
+| rowspan="2" {{Opdrts||25|Dec|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Dec25">{{cite news|author=Daphne Lial| title=Radware Block Page | script-title=he:סקר חדשות 12: הליכוד נחלש, הציונות הדתית עוברת את אחוז החסימהlang=he| url=https://www.mako.co.il/news-politics/2024_q4/Article-2301bdfa49ef391027.htm| work=Mako / N12 | publisher=[[Keshet Media Group]]| access-date=27 December 2024| date=25 December 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|15
+|4
+|8
+|19	 
+|9
+|7
+|14
+|5
+|5
+|11
+|{{small|(3.0%)}}
+|{{small|(0.6%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|51
+|-
+| style="background:#BBCDE4" |'''22'''
+|11
+|{{small|(3.0%)}}
+|8
+|12
+|9
+|7
+|10
+|5
+|5
+|10
+|{{small|(3.0%)}}
+|{{small|(0.5%)}}
+|21
+| style="background:{{party color|Likud}}; color:white;" | 1
+|46
+|-
+| rowspan="2" {{Opdrts|18|19|Dec|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv18December">{{cite news| author=Moshe Cohen| title=סקר מנדטים: הליכוד ממשיכה להיחלש, איבדה מנדט נוסף באמת|url=https://www.maariv.co.il/news/politics/article-1157681| language=he| access-date=20 December 2024| date=20 December 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|15
+|{{small|(1.6%)}}
+|9
+|20
+|9
+|7
+|14
+|4
+|6
+|12
+|{{small|(2.2%)}}
+|{{small|(1.8%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|49
+|-
+|21
+|11
+|{{small|(1.3%)}}
+|8
+|13
+|8
+|7
+|8
+|4
+|6
+|9
+|–
+|{{small|(0.4%)}}
+| style="background:#C7EEEC" | '''25'''
+| style="background:#44C5BF; color:white;" | 4
+|44
+|-
+| rowspan="2" {{Opdrts||13|Dec|2024}}
+| rowspan="2" style="background:burlywood" |Kantar
+| rowspan="2" | [[Kan 11]]<ref name="Kan11December13">{{Cite news |author=Suleiman Maswadeh
+|title=נתניהו עם נתון שיא מאז תחילת המלחמה, מפלגה בראשות בנט תקבל 22 מושבים|url=https://www.kan.org.il/content/kan-news/politic/835758/|access-date=13 December 2024 |date=13 December 2024 |website=Israeli Public Broadcasting Corporation|language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|15
+|{{small|(2.8%)}}
+|8
+|19
+|10
+|8
+|14
+|5
+|5
+|10
+|{{small|(2.1%)}}
+|{{small|(1.3%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 7
+|52
+|-
+| style="background:#BBCDE4" |'''24'''
+|9
+|{{small|(1.8%)}}
+|8
+|10
+|10
+|8
+|9
+|5
+|5
+|10
+|{{small|(2.0%)}}
+|{{small|(1.5%)}}
+|22
+| style="background:{{party color|Likud}}; color:white;" | 2
+|50
+|-
+| {{Opdrts||12|Dec|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Dec12">{{Citation |title=סקר דרמטי: הקואליציה בנתון שיא מאז הקמת הממשלה, ליברמן נחלש|url=https://www.now14.co.il/article/1071576 |access-date=13 December 2024 |date=12 December 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''34'''
+|10
+|5
+|6
+|14
+|10
+|8
+|11
+|5
+|5
+|12
+|{{small|(2.2%)}}
+|{{small|(0.2%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 20
+| style="background:#CCCCF5" |'''63'''
+|-
+| rowspan="2" {{Opdrts||12|Dec|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Dec12">{{cite news |author=Daphne Lial |title=הליכוד יציבה עם 25 מנדטים, הקואליציה עם מפלגת בנט מחזקת את האופוזיציה |language=he |url=https://www.mako.co.il/news-politics/2024_q4/Article-3a2514386bbb391026.htm| work=Mako / N12 |publisher=[[Keshet Media Group]] |access-date=12 December 2024 |date=12 December 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|16
+|{{small|(2.1%)}}
+|9
+|19	 
+|9
+|8
+|13
+|5
+|5
+|11
+|{{small|(2.4%)}}
+|{{small|(1.0%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 6
+|51
+|-
+| style="background:#BBCDE4" |'''23'''
+|11
+|–
+|8
+|11
+|9
+|8
+|8
+|5
+|5
+|10
+|–
+|–
+|22
+| style="background:{{party color|Likud}}; color:white;" | 1
+|48
+|-
+| rowspan="2" {{Opdrts|11|12|Dec|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv11December">{{cite news| author=Moshe Cohen| title=נתניהו מתחזק, אך גורם אחד בקואליציה מונע ממנו לשמוח באמת|url=https://www.maariv.co.il/news/politics/article-1155847| language=he| access-date=12 December 2024| date=13 December 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|14
+|{{small|(2.4%)}}
+|8
+|19
+|10
+|7
+|14
+|5
+|5
+|13
+|{{small|(2.0%)}}
+|{{small|(0.6%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 6
+|50
+|-
+|21
+|11
+|{{small|(1.3%)}}
+|8
+|13
+|8
+|7
+|8
+|4
+|6
+|9
+|–
+|{{small|(0.4%)}}
+| style="background:#C7EEEC" | '''25'''
+| style="background:#44C5BF; color:white;" | 4
+|44
+|-
+| rowspan="2" {{Opdrts||11|Dec|2024}}
+| rowspan="2" style="background:#BAD1E6" |MM+SN
+| rowspan="2" | [[Channel 13 (Israel)|Channel 13]]<ref>{{Cite web |title=סקר חדשות 13: נתניהו מתחזק – והאם הציבור מעדיף ועדה פוליטית? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/f9cra-904374629/ |access-date=12 December 2024 |website=רשת 13 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|13
+|5
+|9
+|19
+|10
+|7
+|12
+|4
+|5
+|10
+|{{small|(2.9%)}}
+|{{small|(0.8%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 7
+|57
+|-
+|24
+|8
+|5
+|8
+|9
+|9
+|7
+|7
+|4
+|5
+|8
+|–
+|–
+| style="background:#C7EEEC" | '''26'''
+| style="background:#44C5BF; color:white;" | 2
+|53
+|-
+| rowspan="2" {{Opdrts|4|5|Dec|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv5December">{{cite news| author=Moshe Cohen| title=תרחיש הבלהות של נתניהו: נפתלי בנט בנתון שיא|url=https://www.maariv.co.il/news/politics/article-1154006| language=he| access-date=5 December 2024| date=6 December 2024}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|15
+|4
+|7
+|19
+|9
+|8
+|14
+|5
+|5
+|12
+|{{small|(2.0%)}}
+|{{small|(1.9%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|50
+|-
+|20
+|11
+|{{small|(2.5%)}}
+|7
+|13
+|8
+|7
+|7
+|5
+|5
+| 10
+|{{small|(2.1%)}}
+|{{small|(1.4%)}}
+| style="background:#C7EEEC" |'''27'''
+| style="background:#44C5BF; color:white;" | 7
+|42
+|-
+| rowspan="2" {{Opdrts||29|Nov|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv29November">{{cite news| author=Moshe Cohen| title=כשהוא עדיין מתחמם על הקווים: בנט ממשיך להשאיר את נתניהו הרחק מאחור עולה|url=https://www.maariv.co.il/news/politics/article-1152123| language=he| access-date=29 November 2024| date=29 November 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|15
+|4
+|7
+|19
+|9
+|7
+|14
+|5
+|5
+|11
+|{{small|(1.7%)}}
+|{{small|(1.1%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 5
+|51
+|-
+|21 
+|12
+|–
+|7
+|13
+|8
+|8
+|7
+|5
+|5
+| 9
+|–
+|–
+| style="background:#C7EEEC" |'''25'''
+| style="background:#44C5BF; color:white;" | 4
+|44
+|-
+| {{Opdrts||28|Nov|2024}}
+|style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Nov28">{{Citation |title=ברקע ההסכם עם לבנון: עוצמה יהודית מתחזקת על חשבון הליכוד |url=https://www.now14.co.il/article/1061025 |access-date=13 December 2024 |date=28 November 2024 |language=he-IL}}</ref><ref name="Ch14Nov28YouTube">{{Citation |title=סקר חדשות 14: גוש הימין נחלש לאחר ההסכם מול חיזבאללה, בן גביר מתחזק|url=https://www.youtube.com/watch?v=cChkP4cWceU |access-date=13 December 2024 |date=28 November 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''31'''
+|8
+|4
+|8
+|14
+|10
+|8
+|15
+|5
+|5
+|12
+|{{small|(1.9%)}}
+|{{small|(0.3%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 16
+| style="background:#CCCCF5" |'''61'''
+|-
+| rowspan="2" {{Opdrts||26|Nov|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Nov26">{{cite news|author=Daphne Lial| title=Radware Block Page | script-title=he:סקר חדשות 12: מפת המנדטים - ומה הציבור חושב על ההסכם עם לבנוןlang=he| url=https://www.mako.co.il/news-politics/2024_q4/Article-d02e860b0d96391026.htm| work=Mako / N12 | publisher=[[Keshet Media Group]]| access-date=27 November 2024| date=26 November 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|15
+|{{small|(2.3%)}}
+|9
+|18	 
+|9
+|8
+|14
+|5
+|5
+|12
+|{{small|(1.7%)}}
+|{{small|(1.1%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 7
+|51
+|-
+| style="background:#BBCDE4" |'''23'''
+|10
+|{{small|(2.0%)}}
+|7
+|10
+|9
+|8
+|9
+|5
+|5
+| 11
+|{{small|(1.7%)}}
+|{{small|(0.6%)}}
+| style="background:#C7EEEC" |'''23'''
+| Tie
+|47
+|-
+| rowspan="2" {{Opdrts|20|21|Nov|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv20November">{{cite news| author=Moshe Cohen| title=בזמן שנתניהו עסוק עם צו המעצר: בנט ממשיך להשאיר אותו מאחור עולה|url=https://www.maariv.co.il/news/politics/article-1150208| language=he| access-date=22 November 2024| date=22 November 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|15
+|{{small|(3.0%)}}
+|8
+|19
+|9
+|8
+|14
+|5
+|5
+|12
+|{{small|(2.4%)}}
+|{{small|(0.6%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 6
+|50
+|-
+|21 
+|12
+|–
+|7
+|14
+|8
+|8
+|7
+|5
+|5
+| 9
+|–
+|–
+| style="background:#C7EEEC" |'''24'''
+| style="background:#44C5BF; color:white;" | 3
+|44
+|-
+| {{Opdrts||19|Nov|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Nov19">{{Citation |title=סקר חדשות 14: הקואליציה נשארת יציבה על 62 מנדטים |url=https://www.now14.co.il/article/1056245 |access-date=21 November 2024 |date=19 November 2024 |language=he-IL}}</ref><ref name="Ch14Nov19YouTube">{{Citation |title=סקר חדשות 14: קואליציה יציבה עם 62 מנדטים, הליכוד- 33, לפיד עם 8 מנדטים בלבד |url=https://www.youtube.com/watch?v=_3RiIaCnjDg |access-date=21 November 2024 |date=19 November 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''33'''
+|8
+|4
+|6
+|14
+|11
+|8
+|14
+|5
+|5
+|12
+|{{small|(2.2%)}}
+|{{small|(0.7%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 19
+| style="background:#CCCCF5" |'''62'''
+|-
+| rowspan="2" {{Opdrts||18|Nov|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Nov18">{{cite news|author=Daphne Lial| title=Radware Block Page | script-title=he:כמה מנדטים תקבל מפלגה בראשות גלנט, ומה הציבור חושב על האפשרות לפטר את היועמ"שיתlang=he| url=https://www.mako.co.il/news-politics/2024_q4/Article-7fb2ef2d6704391027.htm| work=Mako / N12 | publisher=[[Keshet Media Group]]| access-date=18 November 2024| date=18 November 2024}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|15
+|{{small|(2.8%)}}
+|8
+|19	 
+|9
+|8
+|13
+|5
+|5
+|12
+|{{small|(2.4%)}}
+|{{small|(0.9%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 7
+|51
+|-
+| style="background:#BBCDE4" |'''24'''
+|10
+|–
+|6
+|10
+|9
+|8
+|9
+|5
+|5
+| 11
+|–
+|–
+|23
+| style="background:{{party color|Likud}}; color:white;" | 1
+|47
+|-
+| rowspan="2" {{Opdrts||15|Nov|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv15November">{{cite news| author=Moshe Cohen| title=נפתלי בנט לוקח את כל הקופה: הסקר שמטריד את נתניהו עולה|url=https://www.maariv.co.il/news/politics/article-1148311| language=he| access-date=15 November 2024| date=15 November 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|14
+|{{small|(2.2%)}}
+|8
+|20
+|10
+|7
+|15
+|5
+|5
+|13
+|{{small|(1.8%)}}
+|{{small|(3.0%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|48
+|-
+|21 
+|11
+|–
+|7
+|13
+|9
+|7
+|7
+|5
+|5
+| 9
+|–
+|–
+| style="background:#C7EEEC" |'''26'''
+| style="background:#44C5BF; color:white;" | 5
+|44
+|-
+| {{Opdrts||8|Nov|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv8November">{{cite news| author=Moshe Cohen| title=אחרי פיטורי גלנט: הקואליציה יורדת לשפל, האופוזיציה עולה|url=https://www.maariv.co.il/news/politics/article-1146356| language=he| access-date=10 November 2024| date=8 November 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|15
+|{{small|(2.9%)}}
+|8
+|19
+|10
+|7
+|14
+|5
+|5
+|13
+|{{small|(1.6%)}}
+|{{small|(1.9%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 5
+|49
+|-
+| {{Opdrts||6|Nov|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Nov6">{{Citation |title=סקר חדשות 14 : לאחר פיטורי גלנט: גוש הימין שומר על כוחו עם 62 מנדטים |url=https://www.youtube.com/watch?v=j_z6nBpmGts |access-date=6 November 2024 |date=6 November 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''33'''
+|8
+|5
+|6
+|16
+|10
+|8
+|14
+|5
+|5
+|10
+|{{small|(2.2%)}}
+|{{small|(0.7%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 17
+| style="background:#CCCCF5" |'''62'''
+|-
+| rowspan="2" {{Opdrts||6|Nov|2024}}
+| rowspan="2" style="background:#BAD1E6" |MM+SN
+| rowspan="2" | [[i24NEWS (Israeli TV channel)|i24 News]]<ref name="i24November6">{{cite news |author=Miri Michaeli |title=סקר: המפלגה שתיכנס בבחירות – ותוכל להרכיב קואליציה |url=https://www.i24news.tv/he/news/news/politics/artc-50d140b0 |website=i24 News |access-date=7 November 2024 |date=6 November 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|12
+|{{small|(3.0%)}}
+|10
+|20
+|10
+|7
+|16
+|5
+|5
+|9
+|{{small|(2.8%)}}
+|{{small|(1.7%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 6
+|53
+|-
+|23
+|8
+|–
+|9
+|12
+|9
+|7
+|8
+|5
+|4
+| 8
+|–
+|–
+| style="background:#C7EEEC" |'''27'''
+| style="background:#44C5BF; color:white;" | 4
+|48
+|-
+| {{Opdrts||6|Nov|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Nov6">{{cite news|author=Daphne Lial| title=Radware Block Page| script-title=he:הרוב בעד טראמפ – ונגד הדחת גלנט: כך השפיעו הפיטורים על מפת הגושים {{!}} סקר חדשות 12| language=he| url=https://www.mako.co.il/news-politics/2024_q4/Article-759495f75a20391027.htm| work=Mako / N12 | publisher=[[Keshet Media Group]]| access-date=7 November 2024| date=6 November 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|15
+|{{small|(2.9%)}}
+|8
+|20
+|10
+|8
+|13
+|5
+|5
+|11
+|{{small|(2.8%)}}
+|{{small|(1.3%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 5
+|51
+|-
+| rowspan="2" {{Opdrts|30|31|Oct|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv30October">{{cite news| author=Moshe Cohen| title=למרות רצף החיסולים: ההיחלשות המפתיעה של נתניהו, ועד כמה הקואליציה מתחזקת?|url=https://www.maariv.co.il/news/politics/article-1144488| language=he| access-date=1 November 2024| date=1 November 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|13
+|4
+|8
+|20
+|10
+|7
+|14
+|5
+|5
+|11
+|–
+|–
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|52
+|-
+|19 
+|10
+|–
+|7
+|15
+|10
+|7
+|8
+|5
+|5
+| 10
+|–
+|–
+| style="background:#C7EEEC" |'''24'''
+| style="background:#44C5BF; color:white;" | 5
+|43
+|-
+| rowspan="2" {{Opdrts||28|Oct|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Oct28">{{cite news| author=Daphne Lial| title=סקר חדשות 12: הקואליציה מתחזקת; נתניהו מוביל בהתאמה לראשות הממשלה| language=he| url=https://www.mako.co.il/news-politics/2024_q4/Article-cf44ce1f1e3d291027.htm| website=N12| access-date=29 October 2024| date=28 October 2024}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|13
+|{{small|(2.9%)}}
+|8
+|22	 
+|10
+|8
+|13
+|5
+|5
+|10
+|{{small|(2.6%)}}
+|{{small|(1.0%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|52
+|-
+| style="background:#BBCDE4" |'''24'''
+|10
+|{{small|(2.8%)}}
+|7
+|13
+|10
+|8
+|8
+|5
+|5
+| 9
+|{{small|(2.6%)}}
+|{{small|(0.8%)}}
+|21
+| style="background:{{party color|Likud}}; color:white;" | 3
+|49
+|-
+| {{Opdrts||27|Oct|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Oct27">{{cite news |title=סקר חדשות 14: הימין מתייצב על 62 מנדטים |language=he |url=https://www.now14.co.il/article/1045565 |website= |access-date=3 November 2024 |date=27 October 2024}}</ref>
+| style="background:#BBCDE4" |'''33'''
+|9
+|5
+|6
+|14
+|10
+|8
+|14
+|5
+|5
+|11
+|{{small|(2.0%)}}
+|{{small|(1.0%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 19
+| style="background:#CCCCF5" |'''62'''
+|-
+| {{Opdrts|22|23|Oct|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv23October">{{cite news| author=Moshe Cohen| title=הכטב"ם למעון הרים את המנדטים? נתניהו מתחזק - סקר "מעריב"|url=https://www.maariv.co.il/news/politics/article-1142556| website=Maariv| language=he| access-date=25 October 2024| date=25 October 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|14
+|{{small|(2.2%)}}
+|8
+|21
+|10
+|7
+|15
+|5
+|5
+|10
+|{{small|(1.6%)}}
+|{{small|(1.9%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|50
+|-
+| {{Opdrts||19|Oct|2024}}
+| style="background:#BAD1E6" |MM+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13October19">{{cite news| author1=Raviv Drucker|author2=Moriah Ashraf| title=סקר חדשות 13: ההתחזקות של נתניהו והציון של קברניטי המלחמה|url=https://13tv.co.il/item/news/politics/politics/otgj6-904303425/ |website=Channel 13 |access-date=21 October 2024 |date=19 October 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|13
+|5
+|8
+|21
+|10
+|7
+|13
+|4
+|5
+|9
+|–
+|–
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|55
+|-
+| rowspan="2" {{Opdrts||18|Oct|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv18October">{{cite news| author=Moshe Cohen| title=הליכוד ממשיכה להיחלש, אך מי המפלגה שעולה על הגל?|url=https://www.maariv.co.il/news/politics/article-1140916| website=Maariv| language=he| access-date=18 October 2024| date=18 October 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|14
+|4 
+|7
+|20
+|10
+|7
+|14
+|5
+|6
+|10
+|{{small|(1.2%)}}
+|{{small|(1.5%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|51
+|-
+|18 
+|11
+|4
+|7
+|13
+|10
+|7
+|9
+|5
+|5
+| 8
+|–
+|–
+| style="background:#C7EEEC" |'''23'''
+| style="background:#44C5BF; color:white;" | 5
+|46
+|-
+| {{Opdrts||15|Oct|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Oct15">{{cite news |author=טוביה יגלניק |title=סקר מנדטים דרמטי: גוש הימין עולה ל-62 מנדטים בצל המלחמה |language=he |url=https://www.now14.co.il/article/1041415 |website= |access-date=3 November 2024 |date=15 October 2024}}</ref>
+| style="background:#BBCDE4" |'''33'''
+|8
+|4
+|7
+|15
+|10
+|8
+|15
+|5
+|5
+|10
+|{{small|(2.2%)}}
+|{{small|(0.7%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 18
+| style="background:#CCCCF5" |'''62'''
+|-
+| {{Opdrts|9|10|Oct|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv10October">{{cite news| author=Anna Brasky| title=סקר "מעריב": בנט מוביל בקאמבק מפתיע, אך מי המפלגה שמידרדרת מטה?|url=https://www.maariv.co.il/news/politics/article-1139462| website=Maariv| language=he| access-date=11 October 2024| date=11 October 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|14
+|4 
+|7
+|20
+|10
+|7
+|14
+|5
+|5
+|10
+|{{small|(1.8%)}}
+|{{small|(2.1%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|52
+|-
+| rowspan="2" {{Opdrts||30|Sep|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv30September">{{cite news |author=Moshe Cohen |title=איך השפיע השבוע הדרמטי בצפון על מצבה של הליכוד? |url=https://www.maariv.co.il/news/politics/article-1137180 |website=Maariv |language=he |access-date=2 October 2024 |date=2 October 2024}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|14
+|4 
+|7
+|19
+|10
+|7
+|14
+|5
+|5
+|9
+|{{small|(1.4%)}}
+|{{small|(1.2%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 7
+|54
+|-
+| style="background:#BBCDE4" |'''23'''
+|11
+|4
+|7
+|13
+|8
+|7
+|10
+|5
+|5
+| 7
+|–
+|–
+|20
+| style="background:{{party color|Likud}}; color:white;" | 3
+|49
+|-
+| {{Opdrts||30|Sep|2024}}
+| colspan="18" |New Hope rejoins the government<ref name="auto16">{{cite web |url=https://www.timesofisrael.com/saar-rejoins-government-bolstering-netanyahu-as-longtime-rivals-say-rifts-mended/ |title=Sa'ar rejoins government, bolstering Netanyahu; longtime rivals both say rifts mended |date=30 September 2024 |access-date=30 September 2024 |work=The Times of Israel}}</ref>
+|-
+| {{Opdrts||29|Sep|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Sep29">{{Citation |title=סקר דרמטי: גוש הימין מגיע לראשונה ל-61 מנדטים |url=https://www.now14.co.il/article/1032552 |access-date=30 September 2024
+|date=29 September 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''31'''
+|9
+|5
+|6
+|15
+|11
+|8
+|15
+|5
+|5
+|10
+|{{small|(2.3%)}}
+|{{small|(0.6%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 16
+| style="background:#CCCCF5" |'''61'''
+|-
+| rowspan="2" {{Opdrts||29|Sep|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Sep29">{{cite news| author=Daphne Lial| title=סקר חדשות 12: הליכוד מוביל בפער, רוב מוחץ להשארת גלנט בתפקיד שר הביטחון| language=he| url=https://www.mako.co.il/news-politics/2024_q3/Article-7ba05781b4e3291027.htm| website=N12| access-date=30 September 2024| date=29 September 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|15
+|{{small|(2.0%)}}
+|6
+|21	 
+|10
+|8
+|14
+|5
+|5
+|11
+|{{small|(2.2%)}}
+|{{small|(2.4%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 4
+|49
+|-
+| style="background:#BBCDE4" |'''23'''
+|12
+|{{small|(2.0%)}}
+|5
+|13
+|10
+|8
+|9
+|5
+|5
+| 10
+|{{small|(2.2%)}}
+|{{small|(0.4%)}}
+|20
+| style="background:{{party color|Likud}}; color:white;" | 3
+|46
+|-
+| {{Opdrts||26|Sep|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Sep26">{{Citation |title=לראשונה מתחילת 2023: גוש הימין מגיע ל-60 מנדטים |url=https://www.now14.co.il/article/1030911 |access-date=3 November 2024 |date=26 September 2024 |language=he-IL}}</ref><ref name="Ch14Sep26YouTube">{{Citation |title=סקר דרמטי של חדשות 14. לראשונה מתחילת 2023: גוש הימין מגיע ל-60 מנדטים|url=https://www.youtube.com/watch?v=SVTmI4V4N5Y |access-date=3 November 2024 |date=26 September 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''30'''
+|9
+|5
+|7
+|15
+|10
+|8
+|15
+|6
+|4
+|11
+|{{small|(2.5%)}}
+|{{small|(0.4%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 15
+|60
+|-
+| rowspan="2" {{Opdrts|25|26|Sep|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv26September">{{cite news| author=Moshe Cohen| title=מר ביטחון חזר? הליכוד נוסקת לשיא חדש לאחר ההשפלות לחיזבאללה
+|url=https://www.maariv.co.il/news/politics/article-1135765| website=Maariv| language=he| access-date=26 September 2024| date=27 September 2024}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|15
+|4
+|8
+|19
+|10
+|6
+|14
+|4
+|6
+|9
+|{{small|(2.2%)}}
+|{{small|(1.8%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 6
+|53
+|-
+|20
+|12
+|4
+|8
+|12
+|9
+|7
+|10
+|4
+|6
+| 7
+|–
+|–
+| style="background:#C7EEEC" |'''21'''
+| style="background:#44C5BF; color:white;" | 1
+|48
+|-
+| {{Opdrts||19|Sep|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Sep19">{{Citation |title=סקר דרמטי: הליכוד עם 30 מנדטים, מחנה הימין על סף גוש חוסם |url=https://www.now14.co.il/article/1025700 |access-date=3 November 2024 |date=19 September 2024 |language=he-IL}}</ref><ref name="Ch14Sep19YouTube">{{Citation |title=סקר דרמטי של חדשות 14: הליכוד עם 30 מנדטים, מחנה הימין על סף גוש חוסם |url=https://www.youtube.com/watch?v=5GcTXbEBlzA |access-date=3 November 2024 |date=19 September 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''30'''
+|10
+|5
+|6
+|17
+|10
+|8
+|13
+|5
+|5
+|11
+|{{small|(2.1%)}}
+|{{small|(0.2%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 13
+|59
+|-
+| rowspan="2" {{Opdrts|18|19|Sep|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv18September">{{cite news| author=Moshe Cohen| title=לאחר אירועי השבוע האחרון - רוב גדול בעד קואליציית בנט
+|url=https://www.maariv.co.il/news/politics/article-1133895| website=Maariv| language=he| access-date=20 September 2024| date=20 September 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|15
+|4
+|8
+|21	 
+|9
+|7
+|14
+|4
+|5
+|9
+|{{small|(1.8%)}}
+|{{small|(1.6%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|52
+|-
+|20
+|11
+|4
+|8
+|13
+|8
+|7
+|11
+|4
+|5
+| 8
+|–
+|–
+| style="background:#C7EEEC" |'''21'''
+| style="background:#44C5BF; color:white;" | 1
+|47
+|-
+| {{Opdrts||16|Sep|2024}}
+| style="background:#BAD1E6" |MM+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13September16">{{cite news| author=Raviv Drucker, Moriah Asraf| title=סקר חדשות 13: מי מוביל במנדטים - וכמה מתנגדים להדחת גלנט?|url=https://13tv.co.il/item/news/politics/politics/sqbwq-904257105/ |website=Channel 13 |access-date=17 September 2024 |date=16 September 2024 |language=he-IL}}</ref>
+|21
+|13
+|5
+|9
+| style="background:#b2eaf5" |'''22'''
+|10
+|7
+|14
+|6
+|5
+|8
+|–
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|52
+|-
+| {{Opdrts|11|12|Sep|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv13September">{{cite news| author=Moshe Cohen| title=תניהו יכול לחייך מאוזן לאוזן: הישג שיא לליכוד מאז תחילת המלחמה
+|url=https://www.maariv.co.il/news/politics/Article-1132136| website=Maariv| language=he| access-date=13 September 2024| date=13 September 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|15
+|4
+|9
+|21	 
+|9
+|7
+|14
+|4
+|5
+|8
+|{{small|(1.7%)}}
+|{{small|(1.2%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 3
+|53
+|-
+| rowspan="2" {{Opdrts||9|Sep|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Sep9">{{cite news| author=Daphne Lial| title=סקר חדשות 12: הליכוד חוזר להוביל, בנט מנצח בהתאמה לראשות הממשלה| language=he| url=https://www.mako.co.il/news-politics/2024_q3/Article-f3ddd748997d191027.htm| website=N12| access-date=9 September 2024| date=9 September 2024}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|15
+|{{small|(2.7%)}}
+|9
+|21	 
+|10
+|8
+|14
+|5
+|5
+|11
+|{{small|(2.4%)}}
+|{{small|(1.2%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 1
+|49
+|-
+| style="background:#BBCDE4" |'''20'''
+|11
+|{{small|(2.5%)}}
+|8
+|13
+|10
+|8
+|9
+|5
+|5
+| 11
+|{{small|(2.4%)}}
+|{{small|(0.3%)}}
+| style="background:#C7EEEC" |'''20'''
+| Tie
+|46
+|-
+| {{Opdrts||5|Sep|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Sep5">{{Citation |title=סקר מנדטים: ליברמן יציב במקום השלישי, לפיד ממשיך לרדת |url=https://www.youtube.com/watch?v=TXg2Aqj_bl0 |access-date=12 September 2024 |date=12 September 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''29'''
+|10
+|5
+|7
+|18
+|9
+|8
+|13
+|6
+|4
+|11
+|{{small|(2.2%)}}
+|{{small|(1.2%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 11
+|58
+|-
+| {{Opdrts|4|5|Sep|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv4September">{{cite news| author=Moshe Cohen| title="נאום פילדלפי" עשה פלאים לנתניהו, אבל יש מי שמוביל עליו - ובגדול
+|url=https://www.maariv.co.il/news/politics/Article-1130414| website=Maariv| language=he| access-date=5 September 2024| date=6 September 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|13
+|4
+|9
+|22	 
+|9
+|7
+|15
+|4
+|6
+|8
+|{{small|(1.4%)}}
+|{{small|(1.3%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 1
+|52
+|-
+| {{Opdrts||4|Sep|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref name="Kan11September4">{{Cite news |author=Suleiman Maswadeh|title=53% תומכים ביציאה מציר פילדלפי כדי להגיע לעסקת חטופים|url=https://www.kan.org.il/content/kan-news/politic/796672/|access-date=4 September 2024 |date=4 September 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|22
+|14
+|4
+|8
+| style="background:#b2eaf5" |'''23'''
+|10
+|7
+|14
+|5
+|5
+|8
+|–
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|51
+|-
+| rowspan="2" {{Opdrts||30|Aug|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv30August">{{cite news| author=Anna Brasky| title=בנט ממשיך לדהור, אבל מרסק את האופוזיציה; גנץ עובר את נתניהו באחד על אחד
+|url=https://www.maariv.co.il/news/politics/Article-1128682| website=Maariv| language=he| access-date=29 August 2024| date=30 August 2024}}</ref>
+| style="background:#BBCDE4" |'''21'''
+|14
+|4
+|9
+| style="background:#b2eaf5" |'''21'''
+|9
+|8
+|15
+|4
+|6
+|9
+|{{small|(1.8%)}}
+|{{small|(1.9%)}}
+|–
+| Tie
+|51
+|-
+|19
+|11
+|4
+|8
+|14
+|9
+|7
+|9
+|4
+|6
+| 6
+|–
+|–
+| style="background:#C7EEEC" |'''23'''
+| style="background:#44C5BF; color:white;" | 4
+|47
+|-
+| {{Opdrts||29|Aug|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Aug29">{{Citation |title=סקר דרמטי: הליכוד עם 30 מנדטים, הציונות הדתית על סף אחוז החסימה |url=https://www.youtube.com/watch?v=t_Mqs-jSo2w |access-date=29 August 2024 |date=29 August 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''30'''
+|11
+|4
+|6
+|17
+|10
+|8
+|13
+|5
+|5
+|11
+|{{small|(2.4%)}}
+|{{small|(1.8%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 13
+|58
+|-
+| rowspan="2" {{Opdrts|26|27|Aug|2024}}
+| rowspan="2" style="background:#BAD1E6" |MM+SN
+| rowspan="2" | [[i24NEWS (Israeli TV channel)|i24 News]]<ref name="i24August26">{{cite news |author=Miri Michaeli |title=סקר i24NEWS: הנתונים על חזרתו האפשרית של בנט לפוליטיקה, והאם הציבור מעדיף אותו על פני נתניהו? |url=https://www.i24news.tv/he/news/news/politics/artc-8e175a25 |website=i24 News |access-date=28 August 2024 |date=27 August 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|11
+|5
+|8
+|21	 
+|9
+|8
+|14
+|5
+|6
+|11
+|{{small|(2.0%)}}
+|{{small|(1.0%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 1
+|52
+|-
+|18
+|7
+|5
+|6
+|12
+|9
+|8
+|9
+|4
+|6
+| 9
+|{{small|(1.0%)}}
+|{{small|(1.0%)}}
+| style="background:#C7EEEC" |'''27'''
+| style="background:#44C5BF; color:white;" | 9
+|46
+|-
+| rowspan="2" {{Opdrts||22|Aug|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" | [[HaHadashot 12]]<ref name="Ch12Aug22">{{cite news| author=Ofer Haddad| title=סקר חדשות 12: שוויון בצמרת, וכמה מנדטים היה מקבל בנט| language=he| url=https://www.mako.co.il/news-politics/2024_q3/Article-8946c5821fa7191026.htm| website=N12| access-date=22 August 2024| date=22 August 2024}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|15
+|{{small|(2.8%)}}
+|8
+| style="background:#b2eaf5" |'''22'''
+|10
+|8
+|14
+|5
+|5
+|11
+|{{small|(2.5%)}}
+|{{small|(2.2%)}}
+|–
+| Tie
+|48
+|-
+|19
+|11
+|{{small|(2.5%)}}
+|7
+|13
+|10
+|8
+|10
+|5
+|5
+| 11
+|{{small|(2.5%)}}
+|{{small|(1.0%)}}
+| style="background:#C7EEEC" |'''21'''
+| style="background:#44C5BF; color:white;" | 2
+|44
+|-
+| {{Opdrts|21|22|Aug|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv22August">{{cite news| author=Moshe Cohen| title=נץ ממשיך לאבד גובה - הקואליציה מצמצמת פערים
+|url=https://www.maariv.co.il/news/politics/Article-1126966| website=Maariv| language=he| access-date=23 August 2024| date=23 August 2024}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|15
+|4
+|10
+|20
+|9
+|7
+|14
+|5
+|5
+|9
+|{{small|(1.8%)}}
+|{{small|(1.9%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 2
+|52
+|-
+| {{Opdrts||16|Aug|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv16August">{{cite news |author=Moshe Cohen |title=65 המפץ הגדול: מפלגה בראשות בנט מותירה את כולם מאחור עם כמות מנדטים מפתיעה |url=https://www.maariv.co.il/news/politics/Article-1125268 |website=Maariv |language=he |access-date=16 August 2024 |date=16 August 2024}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|14
+|4
+|9
+|21
+|9
+|7
+|15
+|4
+|6
+|9
+|{{small|(1.7%)}}
+|{{small|(2.4%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 1
+|51
+|-
+| {{Opdrts||15|Aug|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Aug15">{{Citation |title=סקר מנדטים: לפיד נחלש, נתניהו שומר על כוחו – בן גביר מתחזק |work=עכשיו 14 |url=https://www.now14.co.il/%d7%a1%d7%a7%d7%a8-%d7%9e%d7%a0%d7%93%d7%98%d7%99%d7%9d-%d7%9c%d7%a4%d7%99%d7%93-%d7%a0%d7%97%d7%9c%d7%a9-%d7%a0%d7%aa%d7%a0%d7%99%d7%94%d7%95-%d7%a9%d7%95%d7%9e%d7%a8-%d7%a2%d7%9c-%d7%9b%d7%95/ |access-date=23 August 2024 |date=15 August 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''28'''
+|12
+|4
+|8
+|16
+|10
+|8
+|14
+|6
+|4
+|10
+|{{small|(2.7%)}}
+|{{small|(0.8%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 12
+|58
+|-
+| rowspan="2" {{Opdrts||12|Aug|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" | ''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv12August">{{cite news| author=Anna Brasky| title=65 מנדטים: הסקר שהולך להמם את גוש נתניהו בבחירות הבאות
+|url=https://www.maariv.co.il/news/politics/Article-1124241| website=Maariv| language=he| access-date=12 August 2024| date=12 August 2024}}</ref>
+|23
+|12
+|4
+|10
+| style="background:#b2eaf5" |'''24'''
+|9
+|7
+|14
+|4
+|5
+|8
+|{{small|(1.4%)}}
+|{{small|(2.9%)}}
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|53
+|-
+|21
+|10
+|{{small|(1.9%)}}
+|9
+|15
+|9
+|7
+|11
+|4
+|5
+|7
+|{{small|(1.4%)}}
+|{{small|(1.7%)}}
+| style="background:#C7EEEC" | '''24'''
+| style="background:#44C5BF; color:white;" | 3
+|46
+|-
+| {{Opdrts||8|Aug|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Aug8">{{Citation |title=סקר חדשות 14: נתניהו נחלש, ליברמן ולפיד בתיקו – גוש הימין מתרחק מ-61 |url=https://www.youtube.com/watch?v=Kouy2YqVJ90 |access-date=13 July 2024 |date=4 July 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''28'''
+|13
+|5
+|7
+|16
+|10
+|8
+|14
+|6
+|4
+|9
+|{{small|(2.7%)}}
+|{{small|(0.7%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 12
+|58
+|-
+| {{Opdrts|7|8|Aug|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv7August">{{cite news| author=Moshe Cohen| title=נתניהו נחלש, ליברמן שומר על כוחו – לפיד מתקרב לחד ספרתי
+|url=https://www.maariv.co.il/news/politics/Article-1123591| website=Maariv| language=he| access-date=10 August 2024| date=8 August 2024}}</ref>
+| style="background:#BBCDE4" |'''22'''
+|13
+|4
+|10
+|20	 
+|10
+|7
+|15
+|5
+|5
+|9
+|{{small|(2.0%)}}
+|{{small|(2.5%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 2
+|53
+|-
+| {{Opdrts||31|Jul|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv31July">{{cite news |author=Moshe Cohen |title=לא נתניהו ולא גנץ: אלו המרוויחים הגדולים של השבוע הדרמטי |url=https://www.maariv.co.il/news/politics/Article-1121872 |website=Maariv |language=he |access-date=1 August 2024 |date=31 July 2024}}</ref>
+|21 
+|13
+|4
+|10
+| style="background:#b2eaf5" |'''22'''
+|10
+|7
+|15
+|5
+|5
+|8
+|{{small|(1.8%)}}
+|{{small|(1.6%)}}
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|52
+|-
+| {{Opdrts||26|Jul|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv26July">{{cite news |author=Moshe Cohen |title=לאחר הנאום בקונגרס: הליכוד בהישג משמעותי מאז 7 באוקטובר |url=https://www.maariv.co.il/news/politics/Article-1120115 |website=Maariv |language=he |access-date=25 July 2024 |date=26 July 2024}}</ref>
+| style="background:#BBCDE4" |'''23'''
+|14
+|4
+|9
+| style="background:#b2eaf5" |'''23'''
+|10
+|7
+|12
+|4
+|6
+|8
+|{{small|(2.2%)}}
+|{{small|(1.9%)}}
+|–
+| Tie
+|53
+|-
+| {{Opdrts||25|Jul|2024}}
+| style="background:#BAD1E6" |MM+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13July25">{{cite news| author=Sefi Ovadia| title=סקר חדשות 13: כיצד השפיע נאום נתניהו בקונגרס על המצביעים?|url=https://13tv.co.il/item/news/politics/politics/13-poll-904167962/ |website=Channel 13 |access-date=7 July 2024 |date=7 July 2024 |language=he-IL}}</ref>
+|21
+|13
+|5
+|11
+| style="background:#b2eaf5" |'''23'''
+|9
+|7
+|12
+|5
+|6
+|8
+|{{small|(2.9%)}}
+|{{small|(2.6%)}}
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 2
+|53
+|-
+| {{Opdrts|16|17|Jul|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv16July">{{cite news| author=Moshe Cohen| title=סקר מעריב: נתניהו יכול לחייך, גנץ נחלש, ומי מתחזק על חשבונו?|url=https://www.maariv.co.il/news/politics/Article-1118321| website=Maariv| language=he| access-date=19 July 2024| date=19 July 2024}}</ref>
+|21
+|13
+|4
+|10
+| style="background:#b2eaf5" |'''23'''
+|9
+|7
+|14
+|4
+|6
+|9
+|{{small|(1.8%)}}
+|{{small|(2.3%)}}
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 2
+|51
+|-
+| {{Opdrts||12|Jul|2024}}
+| colspan="18" |Delegates from [[Israeli Labor Party|Labor]] and [[Meretz]] approve a merger and form The Democrats<ref name="auto12">{{cite web |url=https://www.jpost.com/israel-news/politics-and-diplomacy/article-810075 |title=With an overwhelming majority, Meretz and Labor approve merge, becoming the Democrats |date=12 July 2024 |access-date=12 July 2024 |work=The Jerusalem Post |author1=Tal Shalev}}</ref>
+|-
+| {{Opdrts|10|11|Jul|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv10July">{{cite news |author=Moshe Cohen |title=סיוט ברחוב עזה: מצביעי הימין כבר מסמנים את היורש הפוטנציאלי לנתניהו |url=https://www.maariv.co.il/news/politics/Article-1114520 |website=Maariv |language=he |access-date=11 July 2024 |date=12 July 2024}}</ref>
+|20
+|13
+|4
+|10
+| style="background:#b2eaf5" |'''24'''
+|9
+|7
+|14
+|5
+|5
+|9
+|{{small|(1.4%)}}
+|{{small|(1.7%)}}
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 4
+|50
+|-
+| {{Opdrts||9|Jul|2024}}
+| style="background:#8DE67E" |Timor Group
+|[[i24NEWS (Israeli TV channel)|i24 News]]<ref name="i24July9">{{cite news| author=Nadav Elimelech| title=סקר המנדטים של i24NEWS: המפלגה החדשה שטורפת את כל הקלפים, ומי גובר על נתניהו? |url=https://www.i24news.tv/he/news/news/politics/artc-0fdc0476 |website=i24 News |access-date=9 July 2024 |date=9 July 2024 |language=he-IL}}</ref>
+|21
+|15
+|–
+|10
+| style="background:#b2eaf5" |'''22'''
+|11
+|8
+|14
+|6
+|5
+|8
+|–
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|50
+|-
+| {{Opdrts||7|Jul|2024}}
+| style="background:#BAD1E6" |MM+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13July6">{{cite news |author=Sefi Ovadia |title=סקר חדשות 13: גנץ עם 25 מנדטים - והאם הציבור תומך בעסקה? |url=https://13tv.co.il/item/news/politics/politics/d2htt-904137831/ |website=Channel 13 |access-date=7 July 2024 |date=7 July 2024 |language=he-IL}}</ref>
+|21
+|13
+|4
+|10
+| style="background:#b2eaf5" |'''25'''
+|10
+|8
+|12
+|4
+|4
+|9
+|{{small|(2.7%)}}
+|{{small|(2.2%)}}
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 4
+|53
+|-
+| {{Opdrts||4|Jul|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Aug8" />
+| style="background:#BBCDE4" |'''24'''
+|13
+|6
+|9
+|17
+|10
+|8
+|13
+|6
+|4
+|10
+|{{small|(2.5%)}}
+|{{small|(0.9%)}}
+|–
+| style="background:{{party color|Likud}}; color:white;" | 7
+|57
+|}
+{{sticky header}}
+{| class="wikitable sticky-header-multi sortable" style="text-align:center;font-size:90%;line-height:12px"
+! rowspan="2" style="width:60px;" | Fieldwork<br/>date
+! rowspan="2" style="width:120px;" | Polling firm
+! rowspan="2" style="width:110px;" | Publisher
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Likud]]
+! class="unsortable" style="width:40px;" | {{small|[[Yesh Atid]]}}
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Religious Zionist Party|RZP]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | {{small|[[Otzma Yehudit|Otzma]]}}
+! class="unsortable" style="width:40px;" | {{small|[[National Unity (Israel)|National Unity]]}}
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Shas]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[United Torah Judaism|UTJ]]
+! class="unsortable" style="width:40px;" | {{small|[[Yisrael Beiteinu]]}}
+! class="unsortable" style="width:40px;" | [[Ra'am]]
+! class="unsortable" style="width:40px;" | {{small|[[Hadash–Ta'al|Hadash<br>–Ta'al]]}}
+! class="unsortable" style="width:40px;" | [[Israeli Labor Party|Labor]]
+! class="unsortable" style="width:40px;" | [[Meretz]]
+! class="unsortable" style="width:40px;" | [[Balad (political party)|Balad]]
+! class="unsortable" style="width:40px;" | {{small|[[New Hope (Israel)|New Hope]]}}
+! rowspan="2" style="width:40px;" | Lead
+! class="unsortable" style="width:40px; background:#D9D9F8;" | Gov.
+|-
+! style="background:{{party color|Likud}}" |
+! style="background:{{party color|Yesh Atid}}" |
+! style="background:{{party color|Religious Zionist Party}}" |
+! style="background:{{party color|Otzma Yehudit}}" |
+! style="background:{{party color|National Unity (Israel)}}" |
+! style="background:{{party color|Shas}}" |
+! style="background:{{party color|United Torah Judaism}}" |
+! style="background:{{party color|Yisrael Beiteinu}}" |
+! style="background:{{party color|United Arab List}}" |
+! style="background:{{party color|Hadash–Ta'al}}" |
+! style="background:{{party color|Israeli Labor Party}}" |
+! style="background:{{party color|Meretz}}" |
+! style="background:{{party color|Balad (political party)}}" |
+! style="background:{{party color|New Hope (Israel)}}" |
+! style="background:#0000CD" |
+|-
+| {{Opdrts||28|Jun|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv28June">{{cite news| author=Moshe Cohen| title=תם עידן נתניהו? האיחוד הפוליטי שטורף את כל הקלפים| url=https://www.maariv.co.il/news/israel/Article-1110771| website=Maariv| language=he| access-date=28 June 2024| date=28 June 2024}}</ref>
+|21
+|15
+|{{small|(2.4%)}}
+|9
+| style="background:#b2eaf5" |'''24'''
+|10
+|7
+|14
+|5
+|5
+|6
+|4
+|{{small|(1.7%)}}
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|47
+|-
+| {{Opdrts||25|Jun|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14June25a">{{cite web |title=סקר בחירות דרמטי: לפיד מתרסק, ליברמן יכול לאיים על נתניהו? |url=https://www.ice.co.il/research/news/article/1017982 |website=Ice |access-date=25 June 2024 |language=he |date=25 June 2024}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|13
+|6
+|8
+|17
+|10
+|8
+|14
+|6
+|4
+|8
+|{{small|(1.4%)}}
+|{{small|(2.4%)}}
+|{{small|(1.0%)}}
+| style="background:{{party color|Likud}}; color:white;" | 9
+|58
+|-
+| {{Opdrts||24|Jun|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Jun24">{{cite news| author=Daphna Liel| title=סקר חדשות 12: מפלגת ימין חדשה - הגדולה ביותר; בנט מתחזק בהתאמה לראשות הממשלה| language=he| url=https://www.mako.co.il/news-politics/2024_q2/Article-c00d1cc3bea4091027.htm| website=N12| access-date=26 June 2024| date=24 June 2024}}</ref>
+|20
+|15
+|{{small|(2.0%)}}
+|9
+| style="background:#b2eaf5" |'''23'''
+|10
+|8
+| 14
+|5
+|5
+| colspan="2" |11
+|{{small|(2.6%)}}
+|{{small|(2.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|47
+|-
+| {{Opdrts||23|Jun|2024}}
+| style="background:#BAD1E6" |MM+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13June23">{{cite news |title=סקר חדשות 13: המחנה הממלכתי זוכה ל-25 מנדטים, הליכוד עם 21 |url=https://13tv.co.il/item/news/politics/politics/wn4gc-904115718/ |website=Channel 13 |access-date=25 June 2024 |date=23 June 2024 |language=he-IL}}</ref>
+|21
+|12
+|5
+|10
+| style="background:#b2eaf5" |'''25'''
+|9
+|8
+|11
+|4
+|5
+| colspan="2" |10
+|{{small|(2.9%)}}
+|{{small|(2.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 4
+|53
+|-
+| {{Opdrts||20|Jun|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14June20">{{Cite news |author=אלחנן מזוז |title=ברקע המשבר הפוליטי: גוש הימין נחלש, נתניהו בפער קטן מעל גנץ |url=https://www.now14.co.il/ברקע-המשבר-הפוליטי-גוש-הימין-נחלש-נתני/ |access-date=21 June 2024 |date=20 June 2024 |website=Now 14 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|13
+|5
+|10
+|18
+|10
+|8
+|14
+|6
+|4
+|8
+|{{small|(2.1%)}}
+|{{small|(2.5%)}}
+|{{small|(1.3%)}}
+| style="background:{{party color|Likud}}; color:white;" | 6
+|57
+|-
+| {{Opdrts||19|Jun|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv21June">{{cite news| author=Moshe Cohen| title=הפער בין גנץ לנתניהו כמעט נסגר, אז למה רה"מ צריך להיות מודאג? {{!}} סקר מעריב| url=https://www.maariv.co.il/news/politics/Article-1108870| website=Maariv| language=he| access-date=21 June 2024| date=21 June 2024}}</ref>
+|22
+|16
+|{{small|(2.7%)}}
+|9
+| style="background:#b2eaf5" |'''23'''
+|10
+|7
+|14
+|5
+|5
+|5
+|4
+|{{small|(1.5%)}}
+|{{small|(2.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|48
+|-
+| {{Opdrts||13|Jun|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv14June">{{cite news |author=Moshe Cohen |title=לנתניהו וגנץ אין סיבה לחייך: מישהו אחר "שתה" להם את המנדטים {{!}} סקר מעריב |url=https://www.maariv.co.il/news/politics/Article-1106957 |website=Maariv |language=he |access-date=14 June 2024 |date=14 June 2024}}</ref>
+|21
+|15
+|5
+|9
+| style="background:#b2eaf5" |'''24'''
+|10
+|7
+|14
+|5
+|5
+|5
+|{{small|(1.9%)}}
+|{{small|(1.6%)}}
+|{{small|(2.7%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|52
+|-
+| {{Opdrts||10|Jun|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref name="Kan11June10">{{Cite news |author1=Suleiman Maswadeh|author2=Michael Shemesh|title=סקר כאן חדשות: אחרי הפרישה – גנץ מאבד גובה|url=https://www.kan.org.il/content/kan-news/politic/759800/|access-date=11 June 2024 |date=10 June 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|22
+|16
+|4
+|9
+| style="background:#b2eaf5" |'''23'''
+|10
+|7
+|12
+|5
+|5
+|7
+|{{small|(1.8%)}}
+|{{small|(2.8%)}}
+|{{small|(1.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|52
+|-
+| {{Opdrts||10|Jun|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12June10">{{cite news |author=[[Amit Segal]] |title=סקר חדשות 12: גנץ ונתניהו נחלשים, ליברמן ולפיד מתחזקים |url=https://www.mako.co.il/news-politics/2024_q2/Article-4f8915577f20091026.htm |website=N12 |access-date=10 June 2024 |date=10 June 2024 |language=he-IL}}</ref>
+|19
+|15
+|4
+|10
+| style="background:#b2eaf5" |'''22'''
+|10
+|8
+|13
+|5
+|5
+| colspan="2" |9
+|{{small|(2.6%)}}
+|{{small|(1.6%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|51
+|-
+| {{Opdrts||10|Jun|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14June10">{{Cite news |author=ציפורה סימן טוב |title=אחרי פרישת גנץ מהממשלה: גוש הימין על סף 60 מנדטים |url=https://www.now14.co.il/אחרי-פרישת-גנץ-מהממשלה-גוש-הימין-על-סף-60/ |access-date=10 June 2024 |date=10 June 2024 |website=Now 14 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|12
+|5
+|10
+|17
+|10
+|8
+|13
+|6
+|4
+|9
+|{{small|(1.2%)}}
+|{{small|(2.8%)}}
+|{{small|(2.9%)}}
+| style="background:{{party color|Likud}}; color:white;" | 9
+|59
+|-
+| {{Opdrts||10|Jun|2024}}
+| style="background:#BAD1E6" |MM+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13June9">{{Cite news |author=Sefi Ovadia, [[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref>
+|20
+|13
+|5
+|9
+| style="background:#b2eaf5" |'''25'''
+|10
+|7
+|12
+|5
+|5
+| colspan="2" |9
+|{{small|(2.8%)}}
+|{{small|(2.6%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 5
+|51
+|-
+| {{Opdrts||9|Jun|2024}}
+| colspan="18" |National Unity leaves the government<ref>{{Cite news |last1=Young|first1=Eve|last2=Lazaroff|first2=Tovah|title=Benny Gantz resigns from wartime government|url=https://www.timesofisrael.com/urging-elections-gantz-quits-wartime-government-accuses-pm-of-botching-war-effort/|website=[[The Jerusalem Post]] |date=9 June 2024 |language=en|accessdate=9 June 2024}}</ref>
+|-
+| {{Opdrts|5|6|Jun|2024}}
+| style="background:#F86B61" |Lazar
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv5June">{{cite news| author=Moshe Cohen| title=נתניהו צריך לדאוג? המפלגה שעולה בסקרים והמתחרה הצמודה שצונחת {{!}} הנתונים המלאים| url=https://www.maariv.co.il/news/politics/Article-1105321| website=Maariv| language=he| access-date=6 June 2024| date=7 June 2024}}</ref>
+|20
+|15
+|4
+|10
+| style="background:#b2eaf5" |'''27'''
+|10
+|7
+|11
+|5
+|5
+|6
+|{{small|(2.8%)}}
+|{{small|(1.6%)}}
+|{{small|(2.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 7
+|51
+|-
+| {{Opdrts||2|Jun|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref name="KanBetJune2">{{Cite news |author1= Suleiman Maswadeh|author2=Michael Shemesh|title=הסקר: 40% מהישראלים בעד עסקה לשחרור חטופים; נתניהו מצמצם פערים מגנץ|url=https://www.kan.org.il/content/kan-news/politic/756611/|access-date=2 June 2024 |date=2 June 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|21
+|14
+|4
+|9
+| style="background:#b2eaf5" |'''27'''
+|10
+|7
+|12
+|5
+|5
+|6
+|–
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 6
+|51
+|-
+| {{Opdrts||30|May|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14May30">{{Cite news |author=שמעון הללי |title=מפלגת הליכוד מתקרבת ל-30 מנדטים, גנץ ממשיך להיחלש |url=https://www.now14.co.il/מפלגת-הליכוד-מתקרבת-ל-30-מנדטים-גנץ-ממשי/ |access-date=31 May 2024 |date=30 May 2024 |website=Now 14 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''27'''
+|12
+|4
+|9
+|19
+|10
+|8
+|13
+|6
+|4
+|8
+|{{small|(1.5%)}}
+|{{small|(2.4%)}}
+|{{small|(1.8%)}}
+| style="background:{{party color|Likud}}; color:white;" | 8
+|58
+|-
+| rowspan="2" {{Opdrts|29|30|May|2024}}
+| rowspan="2" style="background:#F86B61" |LRI+P4A
+| rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv29May">{{cite news| author=Moshe Cohen| title=סקר מעריב: המחנה הממלכתי קורס, הליכוד מזנק, והאיחוד שיטרוף את הקלפים| url=https://www.maariv.co.il/journalists/Article-1103361| website=Maariv| language=he| access-date=31 May 2024| date=31 May 2024}}</ref>
+|22
+|14
+|4
+|10
+| style="background:#b2eaf5" |'''25'''
+|10
+|7
+|10
+|4
+|5
+|5
+|4
+|{{small|(1.8%)}}
+|{{small|(2.3%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|53
+|-
+|22
+|13
+|4
+|10
+| style="background:#b2eaf5" |'''25'''
+|10
+|7
+|10
+|4
+|5
+| colspan="2" |10
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|53
+|-
+| {{Opdrts||29|May|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12May29">{{cite news| author=[[Amit Segal]]| title=סקר חדשות 12: פער של 4 מנדטים בין גנץ לנתניהו - והאם איחוד בגוש הימין ישנה את המפה?| url=https://www.mako.co.il/news-politics/2024_q2/Article-80fafbb7815cf81027.htm| website=N12| access-date=30 May 2024| date=29 May 2024| language=he-IL}}</ref>
+|21
+|13
+|5
+|9
+| style="background:#b2eaf5" |'''25'''
+|10
+|7
+|10
+|5
+|5
+| colspan="2" |10
+|{{small|(2.0%)}}
+|{{small|(2.5%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 4
+|52
+|-
+| {{Opdrts||28|May|2024}}
+| colspan="18" |[[Yair Golan]] is [[2024 Israeli Labor Party leadership election|elected]] leader of the Labor Party<ref name="auto1">{{Cite news |author=Sam Sokol| date=28 May 2024 |title=Yair Golan wins landslide victory in Labor primary with promise to unite the left|url=https://www.timesofisrael.com/yair-golan-wins-landslide-victory-in-labor-primary-with-promise-to-unite-the-left/ |access-date=28 May 2024 |work=[[The Times of Israel]]}}</ref>
+|-
+| {{Opdrts||23|May|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref name="KanBetMay24">{{Cite news |author1= Rina Matzliach|author2=Akiva Novick|title=הפתרון ליום שאחרי, וכיצד על הממשלה לפעול להשבת החטופים?|url=https://www.kan.org.il/content/kan-news/local/752647/|access-date=24 May 2024 |date=23 May 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|22
+|16
+|4
+|9
+| style="background:#b2eaf5" |'''29'''
+|10
+|7
+|10
+|4
+|5
+|{{small|(1.5%)}}
+|4
+|{{small|(2.9%)}}
+|{{small|(2.5%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 7
+|52
+|-
+| {{Opdrts|22|23|May|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv22May">{{cite news| author=Moshe Cohen| title=גנץ צריך לחשוש? הליכוד ממשיכה להתחזק, ומי מהקואליציה נשאר בחוץ? | url=https://www.maariv.co.il/news/politics/Article-1101530| website=Maariv| language=he| access-date=24 May 2024| date=24 May 2024}}</ref>
+|20
+|14
+|{{small|(2.7%)}}
+|10
+| style="background:#b2eaf5" |'''29'''
+|9
+|7
+|11
+|5
+|6
+|4
+|5
+|{{small|(1.8%)}}
+|{{small|(2.9%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 9
+|46
+|-
+| {{Opdrts||16|May|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14May16">{{Cite news| author=שמעון הללי| title=סקר חדשות 14: נתניהו מתחזק, גוש הימין מתקרב ל-60 מנדטים| url=https://www.now14.co.il/סקר-חדשות-14-נתניהו-מתחזק-גוש-הימין-מתקר/| access-date=16 May 2024| date=16 May 2024| website=Now 14| language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|14
+|5
+|10
+|20
+|10
+|8
+|8
+|6
+|4
+|6
+|4
+|{{small|(2.6%)}}
+|{{small|(1.9%)}}
+| style="background:{{party color|Likud}}; color:white;" | 5
+|58
+|-
+| rowspan="2" {{Opdrts||16|May|2024}}
+| rowspan="2" style="background:#FFDFCC" |Midgam R&C
+| rowspan="2" |[[HaHadashot 12]]<ref name="Ch12May16">{{cite news| author=[[Amit Segal]]| title=סקר חדשות 12: גנץ מוביל עם 29 מנדטים, נתניהו עם 19 – וכמה יקבל גלנט אם יקים מפלגה משלו?| url=https://www.mako.co.il/news-politics/2024_q2/Article-cc4205ed6428f81027.htm| website=N12| access-date=16 May 2024| date=16 May 2024| language=he-IL}}</ref>
+|19
+|16
+|4
+|9
+| style="background:#b2eaf5" |'''29'''
+|10
+|8
+|11
+|5
+|5
+|{{small|(1.8%)}}
+|4
+|{{small|(2.5%)}}
+|{{small|(1.0%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 10
+|50
+|-
+|19
+|14
+|4
+|9
+| style="background:#b2eaf5" |'''27'''
+|10
+|8
+|11
+|5
+|5
+| colspan="2" |8
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 10
+|50
+|-
+| {{Opdrts|15|16|May|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv15May">{{cite news |author=Maariv Online |title=הקואליציה מתחזקת, נתניהו סוגר את הפער מגנץ |url=https://www.maariv.co.il/news/politics/Article-1099648 |website=Maariv |language=he |access-date=16 May 2024 |date=17 May 2024}}</ref>
+|19
+|14
+|5
+|9
+| style="background:#b2eaf5" |'''30'''
+|9
+|7
+|12
+|5
+|5
+|{{small|(2.3%)}}
+|5
+|{{small|(2%)}}
+|{{small|(2.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 11
+|49
+|-
+| {{Opdrts||10|May|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv10May">{{cite news |author=Moshe Cohen |title=הליכוד בירידה, האופוזיציה בעלייה - ומפלגה מפתיעה עוברת את אחוז החסימה |url=https://www.maariv.co.il/news/politics/Article-1098002 |website=Maariv |language=he |access-date=2 May 2024 |date=3 May 2024}}</ref>
+|17
+|13
+|4
+|9
+| style="background:#b2eaf5" |'''32'''
+|10
+|7
+|11
+|4
+|5
+|4
+|4
+|{{small|(1.7%)}}
+|{{small|(2.1%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 15
+|47
+|-
+| {{Opdrts||9|May|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14May9">{{Cite news |author=ציפורה סימן טוב |title=סקר חדשות 14: הליכוד ונתניהו בראש, סמוטריץ' ממשיך לדשדש |url=https://www.now14.co.il/סקר-חדשות-14-הליכוד-ונתניהו-בראש-סמוטרי/ |access-date=9 May 2024 |date=9 May 2024 |website=Now 14 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|13
+|5
+|9
+|23
+|10
+|8
+|8
+|6
+|4
+|5
+|4
+|–
+|–
+| style="background:{{party color|Likud}}; color:white;" | 2
+|57
+|-
+| {{Opdrts||7|May|2024}}
+| style="background:DarkSeaGreen;font-size:90%" |Midgam Project & Stat Net
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13May7">{{Cite news |author=[[Hila Korach]], Sefi Ovadia, [[Raviv Drucker]] |title=סקר חדשות 13: גוש נתניהו מתחזק, גנץ בולם את הירידה |url=https://13tv.co.il/item/news/politics/politics/pdwl9-904047095/ |access-date=7 May 2024 |date=7 May 2024 |website=Reshet 13 |language=he-IL}}</ref>
+|19
+|15
+|6
+|12
+| style="background:#b2eaf5" |'''30'''
+|10
+|7
+|10
+|6
+|5
+|{{small|(2.5%)}}
+|{{small|(2.1%)}}
+|{{small|(2.9%)}}
+|{{small|(1.5%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 11
+|54
+|-
+| {{Opdrts|1|2|May|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv01May">{{cite news| author=Moshe Cohen| title=המגמה שוב משתנה: גנץ מתחזק, נתניהו נחלש| url=https://www.maariv.co.il/news/politics/Article-1096225| website=Maariv| language=he| access-date=2 May 2024| date=3 May 2024}}</ref>
+|19
+|13
+|5
+|10
+| style="background:#b2eaf5" |'''31'''
+|9
+|7
+|12
+|5
+|5
+|{{small|(1.9%)}}
+|4
+|{{small|(1.5%)}}
+|{{small|(1.6%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 12
+|50
+|-
+| {{Opdrts||30|Apr|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Apr30">{{cite news |author=[[Amit Segal]] |title=כמה תקבל מפלגת ימין חדשה ומה הפער בין גנץ לנתניהו - סקר מנדטים של חדשות 12 |url=https://www.mako.co.il/news-politics/2024_q2/Article-7a820acc6bf2f81027.htm |website=N12 |access-date=2 May 2024 |date=30 April 2024 |language=he-IL}}</ref>
+|18
+|15
+|4
+|10
+| style="background:#b2eaf5" |'''31'''
+|10
+|8
+|10
+|5
+|5
+|{{small|(2.2%)}}
+|4
+|{{small|(2.3%)}}
+|{{small|(2.2%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 13
+|50
+|-
+| {{Opdrts||30|Apr|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref>{{Cite news |author=Suleiman Maswadeh |title=מה חושב הציבור על עסקת חטופים - והאם נתניהו עושה מספיק לשחרורם? |url=https://www.kan.org.il/content/kan-news/politic/743646/ |access-date=2 May 2024 |date=30 April 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|21
+|15
+|5
+|9
+| style="background:#b2eaf5" |'''29'''
+|10
+|7
+|11
+|4
+|5
+|{{small|(2.1%)}}
+|4
+|{{small|(1.9%)}}
+|{{small|(2.5%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 8
+|52
+|-
+| {{Opdrts||26|Apr|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv26Apr">{{cite news| author=Moshe Cohen| title=לצד התייצבות הליכוד: האם מפלגות האופוזיציה היו יכולות להרכיב ממשלה?| url=https://www.maariv.co.il/news/politics/Article-1094764| website=Maariv| language=he| access-date=26 April 2024| date=26 April 2024}}</ref>
+|21
+|13
+|4
+|9
+| style="background:#b2eaf5" |'''29'''
+|9
+|7
+|11
+|4
+|5
+|{{small|(2.6%)}}
+|4
+|{{small|(1.8%)}}
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 8
+|50
+|-
+| {{Opdrts||21|Apr|2024}}
+| style="background:DarkSeaGreen;font-size:90%" |Midgam Project & Stat Net
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13Apr21">{{Cite news |script-title=he:סקר חדשות 13: איחוד בימין טורף את הקלפים - על חשבון גנץ|url=https://13tv.co.il/item/news/politics/politics/new-poll-904029248/ |access-date=22 April 2024 |date=21 April 2024 |work=[[Channel 13 (Israel)]] News |language=he }}</ref>
+|20
+|15
+|7
+|9
+| style="background:#b2eaf5" |'''30'''
+|8
+|7
+|11
+|4
+|5
+|4
+|–
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 10
+|51
+|-
+| {{Opdrts|17|18|Apr|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv18Apr">{{cite news| author=Moshe Cohen| title=נתניהו יכול לחייך: הליכוד בשיא מאז פרוץ המלחמה| url=https://www.maariv.co.il/news/politics/Article-1093180| website=Maariv| language=he| access-date=19 April 2024| date=19 April 2024}}</ref>
+|21
+|13
+|4
+|9
+| style="background:#b2eaf5" |'''31'''
+|9
+|7
+|12
+|5
+|5
+|{{small|(2.1%)}}
+|4
+|{{small|(1.8%)}}
+|{{small|(2.0%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 10
+|50
+|-
+| {{Opdrts||14|Apr|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="15Apr14">{{Cite tweet |author=((Now 14)) |user=Now14Israel |number=1779936191019712637 |date=15 April 2024 |title=לאחר המתקפה הכושלת של איראן על ישראל: מפלגת הליכוד מזנקת, גוש הימין מתחזק |language=he |access-date=19 April 2024}}</ref>
+| style="background:#BBCDE4" |'''26'''
+|11
+|5
+|9
+|22
+|10
+|8
+|11
+|6
+|4
+|4
+|4
+|{{small|(2.9%)}}
+|{{small|(1.5%)}}
+| style="background:{{party color|Likud}}; color:white;" | 4
+|58
+|-
+| {{Opdrts|10|11|Apr|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv12Apr">{{cite news| author=Moshe Cohen| title=הדשדוש והמחאה: המחנה הממלכתי ממשיכה להיחלש - ומה עם הליכוד?| url=https://www.maariv.co.il/news/politics/Article-1091303| website=Maariv| language=he| access-date=12 April 2024| date=12 April 2024}}</ref>
+|19
+|15
+|{{small|(2.7%)}}
+|10
+| style="background:#b2eaf5" |'''30'''
+|9
+|7
+|12
+|5
+|5
+|{{small|(2.0%)}}
+|4
+|{{small|(1.4%)}}
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 11
+|45
+|-
+| {{Opdrts||7|Apr|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Apr7">{{Cite news| author=אלחנן מזוז| title=המחנה הממלכתי שוב בראש, נתניהו מוביל בשאלת ההתאמה לתפקיד| url=https://www.now14.co.il/המחנה-הממלכתי-שוב-בראש-נתניהו-מוביל-בש/| work=Now 14| access-date=19 April 2024| date=7 April 2024| language=he-IL}}</ref>
+|22
+|11
+|5
+|10
+| style="background:#b2eaf5" |'''23'''
+|10
+|8
+|8
+|6
+|4
+|4
+|5
+|–
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 1
+|55
+|-
+| {{Opdrts||7|Apr|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Apr07">{{cite news |author=Daphna Liel |title=סקר חדשות 12 - חצי שנה למלחמה: המחנה הממלכתי נחלש, הליכוד ויש עתיד מתחזקות |url=https://www.mako.co.il/news-politics/2024_q2/Article-2ca5b638779be81027.htm |website=N12 |access-date=7 April 2024 |date=7 April 2024 |language=he-IL}}</ref>
+|19
+|15
+|–
+|9
+| style="background:#b2eaf5" |'''32'''
+|11
+|8
+|11
+|5
+|5
+|–
+|5
+|–
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 13
+|47
+|-
+| {{Opdrts||7|Apr|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref>{{Cite news |author1=Michael Shemesh |author2=Suleiman Maswadeh |title=סקר כאן חדשות: מה חושב הציבור על הקדמת הבחירות - ומי אשם במחדל? |url=https://www.kan.org.il/content/kan-news/politic/734896/ |access-date=7 April 2024 |date=7 April 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|21
+|14
+|{{small|(2.7%)}}
+|10
+| style="background:#b2eaf5" |'''30'''
+|10
+|7
+|10
+|5
+|5
+|{{small|(2.4%)}}
+|4
+|{{small|(1.8%)}}
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 9
+|48
+|-
+| {{Opdrts||3|Apr|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news| author=Moshe Cohen| title=הצניחה נמשכת: רק 32 מנדטים לגנץ, וכמה נתניהו קיבל?| url=https://www.maariv.co.il/news/politics/Article-1089501| website=Maariv| language=he| access-date=5 April 2024| date=5 April 2024}}</ref>
+|17
+|15
+|4
+|9
+| style="background:#b2eaf5" |'''32'''
+|9
+|6
+|11
+|4
+|5
+|{{small|(3.0%)}}
+|4
+|{{small|(1.4%)}}
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 15
+|45
+|-
+| {{Opdrts||31|Mar|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="31Mar31">{{Cite tweet |author=((Now 14)) |user=Now14Israel |number=1774495463699366365 |date=31 March 2024 |title=סקר חדשות 14: סער לא עובר את אחוז החסימה, גוש הימין מתחזק |language=he |access-date=31 March 2024}}</ref>
+| style="background:#BBCDE4" |'''24'''
+|13
+|6
+|10
+|22
+|10
+|8
+|8
+|6
+|4
+|5
+|4
+|{{small|(2.7%)}}
+|{{small|(3.0%)}}
+| style="background:{{party color|Likud}}; color:white;" | 2
+|58
+|-
+| {{Opdrts||28|Mar|2024}}
+| colspan="18" |[[Yair Lapid]] [[2024 Yesh Atid leadership election|wins reelection]] as leader of Yesh Atid<ref name="auto13">{{Cite news |author=Sam Sokol |date=28 March 2024 |title=In surprise primary result, Lapid holds on to party leadership by a mere 29 votes| url=https://www.timesofisrael.com/in-surprise-primary-result-lapid-holds-on-to-party-leadership-by-a-mere-29-votes/ |access-date=28 March 2024 |work=[[The Times of Israel]]}}</ref>
+|-
+| {{Opdrts|27|28|Mar|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv28Mar">{{cite news |author=Moshe Cohen |title=חדשות טובות לגדעון סער, סמוטריץ' לא מצליח להתאושש
+|url=https://www.maariv.co.il/news/politics/Article-1087651|website=Maariv |language=he |access-date=29 March 2024 |date=29 March 2024}}</ref>
+|19
+|12
+|{{small|(2.9%)}}
+|10
+| style="background:#b2eaf5" |'''33'''
+|10
+|7
+|10
+|5
+|5
+|{{small|(2.4%)}}
+|5
+|{{small|(2.0%)}}
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 14
+|46
+|-
+| {{Opdrts||25|Mar|2024}}
+| colspan="18" |New Hope leaves the government<ref name="auto11">{{Cite news |author=Sam Sokol| date=25 March 2024 |title=Gideon Sa'ar quits coalition after Netanyahu fails to appoint him to war cabinet| url=https://www.timesofisrael.com/gideon-saar-quits-coalition-after-netanyahu-fails-to-appoint-him-to-war-cabinet/ |access-date=25 March 2024 |work=[[The Times of Israel]]}}</ref>
+|-
+| {{Opdrts|20|21|Mar|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv21Mar">{{cite news |author=Moshe Cohen |title=סקר "מעריב": גנץ צולל, לפיד עולה, וכמה קיבל נתניהו? |url=https://www.maariv.co.il/news/politics/Article-1085814 |website=Maariv |language=he |access-date=22 March 2024 |date=22 March 2024}}</ref>
+|17
+|12
+|5
+|10
+| style="background:#b2eaf5" |'''35'''
+|10
+|6
+|10
+|5
+|5
+|{{small|(1.9%)}}
+|5
+|{{small|(2.4%)}}
+|{{small|(2.7%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 18
+|48
+|-
+| {{Opdrts|13|14|Mar|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv15Mar">{{cite news |author=Moshe Cohen |title=אחרי הפיצול: סער מקבל 4 מנדטים - כיצד זה משפיע על גנץ? |url=https://www.maariv.co.il/news/politics/Article-1083952 |website=Maariv |language=he |access-date=15 March 2024 |date=15 March 2024}}</ref>
+|18
+|11
+|4
+|9
+| style="background:#b2eaf5" |'''36'''
+|10
+|6
+|9
+|4
+|5
+|{{small|(1.8%)}}
+|4
+|{{small|(1.9%)}}
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 18
+|47
+|-
+| {{Opdrts||13|Mar|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref>{{Cite news |author=Michael Shemesh |title=סקר כאן חדשות: עמדת פתיחה חלשה לסער |url=https://www.kan.org.il/content/kan-news/politic/722543/ |access-date=13 March 2024 |date=13 March 2024 |website=Israeli Public Broadcasting Corporation|language=he-IL}}</ref>
+|21
+|14
+|{{small|(2.8%)}}
+|8
+| style="background:#b2eaf5" |'''30'''
+|10
+|7
+|11
+|5
+|5
+|{{small|(1.8%)}}
+|4
+|{{small|(1.9%)}}
+|5
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 9
+|46
+|-
+| {{Opdrts||13|Mar|2024}}
+| style="background:#FFCCFF" |CF+MP+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13Mar13">{{Cite news |author=[[Hila Korach]], [[Raviv Drucker]] |title=סקר חדשות 13: כמה מנדטים מקבלים גנץ וסער אחרי הפיצול?| url=https://13tv.co.il/item/news/politics/politics/13-poll-903974537/ |work=Channel 13 |access-date=14 March 2024 |date=13 March 2024 |language=he-IL}}</ref>
+|17
+|14
+|4
+|9
+| style="background:#b2eaf5" |'''34'''
+|9
+|7
+|8
+|4
+|4
+|–
+|4
+|–
+|6
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 17
+|46
+|-
+| {{Opdrts||13|Mar|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Mar13">{{cite news| author=[[Amit Segal]]| title=סקר חדשות 12: כך הפרישה של סער מהמחנה הממלכתי משפיעה על מפת המנדטים| url=https://www.mako.co.il/news-politics/2024_q1/Article-ed2ad3cc6b83e81027.htm| website=N12| access-date=13 March 2024| date=13 March 2024| language=he-IL}}</ref>
+|18
+|13
+|{{small|(2.9%)}}
+|8
+| style="background:#b2eaf5" |'''33'''
+|11
+|7
+|11
+|5
+|5
+|{{small|(1.8%)}}
+|4
+|{{small|(1.7%)}}
+|5
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 15
+|44
+|-
+| {{Opdrts||13|Mar|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="Ch14Mar13">{{Cite news |title=אחרי הפרידה מגנץ: כמה מנדטים מקבל הימין הממלכתי של סער? |url=https://www.now14.co.il/אחרי-הפרידה-מגנץ-כמה-מנדטים-מקבל-הימין/ |work=Now 14 |access-date=13 March 2024 |date=13 March 2024 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''25'''
+|12
+|4
+|9
+|22
+|10
+|8
+|9
+|6
+|4
+|{{small|(1.9%)}}
+|5
+|{{small|(2.8%)}}
+|6
+| style="background:{{party color|Likud}}; color:white;" | 3
+|56
+|-
+| {{Opdrts||13|Mar|2024}}
+| colspan="18" |New Hope splits from National Unity<ref name="tjp13march">{{cite news |author=Eliav Breuer |date=13 March 2024 |title=Benny Gantz on Gideon Sa'ar breaking away: Not the time for politics |url=https://www.jpost.com/israel-news/politics-and-diplomacy/article-791737 |access-date=19 January 2025 |work=[[The Jerusalem Post]]}}</ref>
+|}
+
+{| class="wikitable sticky-header-multi sortable" style="text-align:center;font-size:90%;line-height:12px"
+! rowspan="2" style="width:60px;" | Fieldwork<br/>date
+! rowspan="2" style="width:120px;" | Polling firm
+! rowspan="2" style="width:110px;" | Publisher
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Likud]]
+! class="unsortable" style="width:40px;" | {{small|[[Yesh Atid]]}}
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Religious Zionist Party|RZP]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | {{small|[[Otzma Yehudit|Otzma]]}}
+! class="unsortable" style="width:40px;" | {{small|[[National Unity (Israel)|National Unity]]}}
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Shas]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[United Torah Judaism|UTJ]]
+! class="unsortable" style="width:40px;" | {{small|[[Yisrael Beiteinu]]}}
+! class="unsortable" style="width:40px;" | [[Ra'am]]
+! class="unsortable" style="width:40px;" | {{small|[[Hadash–Ta'al|Hadash<br>–Ta'al]]}}
+! class="unsortable" style="width:40px;" | [[Israeli Labor Party|Labor]]
+! class="unsortable" style="width:40px;" | [[Meretz]]
+! class="unsortable" style="width:40px;" | [[Balad (political party)|Balad]]
+! rowspan="2" style="width:40px;" | Lead
+! class="unsortable" style="width:40px; background:#D9D9F8;" | Gov.
+|-
+! style="background:{{party color|Likud}}" |
+! style="background:{{party color|Yesh Atid}}" |
+! style="background:{{party color|Religious Zionist Party}}" |
+! style="background:{{party color|Otzma Yehudit}}" |
+! style="background:{{party color|National Unity (Israel)}}" |
+! style="background:{{party color|Shas}}" |
+! style="background:{{party color|United Torah Judaism}}" |
+! style="background:{{party color|Yisrael Beiteinu}}" |
+! style="background:{{party color|United Arab List}}" |
+! style="background:{{party color|Hadash–Ta'al}}" |
+! style="background:{{party color|Israeli Labor Party}}" |
+! style="background:{{party color|Meretz}}" |
+! style="background:{{party color|Balad (political party)}}" |
+! style="background:#0000CD" |
+|-
+| {{Opdrts||12|Mar|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Mar12">{{cite news |author=[[Amit Segal]] |title=סקר חדשות 12: 40% מתומכי גוש נתניהו בעד הקדמת הבחירות
+|url=https://www.mako.co.il/news-politics/2024_q1/Article-e633fb704833e81026.htm |website=N12 |access-date=12 March 2024 |date=12 March 2024 |language=he-IL}}</ref>
+|19
+|14
+|{{small|(2.9%)}}
+|9
+| style="background:#b2eaf5" |'''35'''
+|11
+|7
+|10
+|5
+|5
+|{{small|(1.7%)}}
+|5
+|{{small|(2.0%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 16
+|46
+|-
+| {{Opdrts||7|Mar|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[The Jerusalem Post]]''<ref name="JPost7Mar">{{cite news |author=Eliav Breuer |title=Bennett, Yossi Cohen vying to head Israel's right-wing after Netanyahu - poll |url=https://www.jpost.com/israel-news/article-790754 |website=The Jerusalem Post |access-date=13 March 2024 |date=7 March 2024}}</ref>
+|18
+|10
+|4
+|9
+| style="background:#b2eaf5" |'''41'''
+|10
+|6
+|9
+|4
+|5
+|4
+|{{small|(2.9%)}}
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 23
+|47
+|-
+| {{Opdrts|6|7|Mar|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv8Mar">{{cite news |author=Moshe Cohen |title=הליכוד שומר על כוחו למרות דו"ח מירון; לפיד מתרסק |url=https://www.maariv.co.il/news/politics/Article-1082104 |website=Maariv |language=he |access-date=8 March 2024 |date=8 March 2024}}</ref>
+|18
+|10
+|4
+|9
+| style="background:#b2eaf5" |'''40'''
+|10
+|6
+|9
+|5
+|5
+|{{small|(1.9%)}}
+|4
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 22
+|47
+|-
+| {{Opdrts||3|Mar|2024}}
+| style="background:#FFCCFF" |CF+MP+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13Mar3">{{Cite news |author=Udi Segal, Lior Keinan, Sefi Ovadia, [[Raviv Drucker]] |title=סקר חדשות 13: הרוב סבור שנתניהו מתנהל משיקולי שרידות פוליטית |url=https://13tv.co.il/item/news/politics/politics/survey-903958942/ |work=Channel 13 |access-date=4 March 2024 |date=3 March 2024 |language=he-IL}}</ref>
+|17
+|12
+|5
+|9
+| style="background:#b2eaf5" |'''39'''
+|9
+|7
+|9
+|5
+|4
+|–
+|4
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 22
+|47
+|-
+| {{Opdrts|28|29|Feb|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv1Mar">{{cite news |author=Matan Wasserman |title=המחנה הממלכתי מתחזקת ב־2 מנדטים; זה הפער מהליכוד
+|url=https://www.maariv.co.il/news/israel/Article-1080267 |website=Maariv |language=he |access-date=1 March 2024 |date=1 March 2024}}</ref>
+|18
+|12
+|{{small|(2.8%)}}
+|9
+| style="background:#b2eaf5" |'''41'''
+|10
+|6
+|10
+|4
+|5
+|{{small|(2.5%)}}
+|5
+|{{small|(1.7%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 23
+|43
+|-
+| {{Opdrts||27|Feb|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref>{{Cite news |author=אלחנן מזוז |title=סקר מנדטים ענק: לפיד ממשיך לצלול, ליברמן במקום השלישי |url=https://www.now14.co.il/סקר-מנדטים-ענק-לפיד-ממשיך-לצלול-ליברמן/ |work=Now 14 |access-date=4 March 2024 |date=2 March 2024 |language=he-IL}}</ref>
+|24
+|10
+|5
+|10
+| style="background:#b2eaf5" |'''27'''
+|10
+|8
+|11
+|5
+|{{small|(3.1%)}}
+|{{small|(1.9%)}}
+|6
+|4
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|57
+|-
+| {{Opdrts||27|Feb|2024}}
+| colspan="17" |[[2024 Israeli municipal elections]]
+|-
+| {{Opdrts|21|22|Feb|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv23Feb">{{cite news |author=Moshe Cohen |title=שבוע שני ברצף: סמוטריץ' לא עובר את אחוז החסימה |url=https://www.maariv.co.il/news/politics/Article-1078520 |website=Maariv |language=he |access-date=23 February 2024 |date=23 February 2024}}</ref>
+|18
+|13
+|{{small|(2.9%)}}
+|10
+| style="background:#b2eaf5" |'''39'''
+|10
+|6
+|10
+|4
+|5
+|{{small|(1.6%)}}
+|5
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 21
+|44
+|-
+| {{Opdrts|14|15|Feb|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv16Feb">{{cite news |author=Moshe Cohen |title=מקבינט המלחמה לבלפור? גנץ מגדיל משמעותית את הפער מנתניהו |url=https://www.maariv.co.il/news/politics/Article-1076685 |website=Maariv |language=he |access-date=16 February 2024 |date=16 February 2024}}</ref>
+|18
+|12
+|{{small|(2.9%)}}
+|10
+| style="background:#b2eaf5" |'''40'''
+|9
+|7
+|10
+|5
+|5
+|{{small|(1.0%)}}
+|4
+|{{small|(1.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 22
+|44
+|-
+| {{Opdrts||13|Feb|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="14Feb13">{{Cite news |author=שמעון הללי |title=סקר מנדטים: גוש הימין מתחזק – לפיד ממשיך להתרסק |url=https://www.now14.co.il/סקר-מנדטים-גוש-הימין-מתחזק-לפיד-ממשיך/ |access-date=15 February 2024 |date=13 February 2024 |website=Now 14 |language=he-IL}}</ref>
+| style="background:#BBCDE4" |'''28'''
+|12
+|5
+|9
+|26
+|9
+|8
+|9
+|6
+|4
+|{{small|(2.3%)}}
+|4
+|{{small|(2.2%)}}
+| style="background:{{party color|Likud}}; color:white;" | 2
+|59
+|-
+| {{Opdrts||11|Feb|2024}}
+| style="background:#FFCCFF" |CF+MP+SN
+| [[Channel 13 (Israel)|Channel 13]]<ref name="Ch13Feb11">{{Cite news |work=[[Channel 13 (Israel)]] News |script-title=he:סקר חדשות 13: גנץ ממשיך להוביל - וכמה בעד בחירות באופן מיידי? |url=https://13tv.co.il/item/news/politics/politics/zyd3x-903930533/ |access-date=13 February 2024 |date=11 February 2024 |language=he-IL}}</ref>
+|18
+|13
+|6
+|8
+| style="background:#b2eaf5" |'''37'''
+|9
+|7
+|10
+|4
+|4
+|–
+|4
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 19
+|48
+|-
+| {{Opdrts||11|Feb|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Feb11">{{cite news |author=Yaron Avraham |title=סקר חדשות 12: סמוטריץ' מתחת לאחוז החסימה, רוב להקדמת הבחירות
+|url=https://www.mako.co.il/news-politics/2024_q1/Article-92762bb37e89d81026.htm |website=N12 |access-date=13 February 2024 |date=11 February 2024 |language=he-IL}}</ref>
+|18
+|15
+|{{small|(2.3%)}}
+|9
+| style="background:#b2eaf5" |'''37'''
+|11
+|7
+|9
+|5
+|5
+|{{small|(1.4%)}}
+|4
+|{{small|(1.3%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 19
+|45
+|-
+| {{Opdrts|7|8|Feb|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv9Feb">{{cite news |author=Moshe Cohen |title=סקר "מעריב": נמשכת מגמת ההיחלשות של המחנה הממלכתי |url=https://www.maariv.co.il/news/politics/Article-1074831 |website=Maariv |language=he |access-date=9 February 2024 |date=9 February 2024}}</ref>
+|17
+|12
+|5
+|10
+| style="background:#b2eaf5" |'''36'''
+|9
+|7
+|10
+|5
+|5
+|{{small|(1.4%)}}
+|4
+|{{small|(1.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 19
+|48
+|-
+| {{Opdrts|31|1|Feb|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv2Feb">{{cite news |author=Moshe Cohen |title=שינוי מגמה? גנץ נחלש, הליכוד מתחזק ולפיד בשפל |url=https://www.maariv.co.il/news/politics/Article-1073006 |website=Maariv |language=he |access-date=2 February 2024 |date=2 February 2024}}</ref>
+|18
+|12
+|4
+|9
+| style="background:#b2eaf5" |'''38'''
+|9
+|6
+|10
+|5
+|5
+|{{small|(1.2%)}}
+|4
+|{{small|(1.5%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 20
+|46
+|-
+| {{Opdrts||30|Jan|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Jan30">{{cite news |author=[[Amit Segal]] |title=גנץ מטפס, ש"ס וישראל ביתנו נחלשות |url=https://www.mako.co.il/news-politics/2024_q1/Article-10f9b5ce83b5d81027.htm |website=N12 |access-date=2 February 2024 |date=30 January 2024 |language=he-IL}}</ref>
+|18
+|14
+|4
+|8
+| style="background:#b2eaf5" |'''37'''
+|10
+|7
+|8
+|5
+|5
+|{{small|(1.6%)}}
+|4
+|{{small|(2.3%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 19
+|47
+|-
+| {{Opdrts|24|25|Jan|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv26Jan">{{cite news |author=Moshe Cohen |title=סקר מעריב: גנץ ממשיך לעלות, כמה קיבלה הליכוד? |url=https://www.maariv.co.il/news/politics/Article-1071131 |website=Maariv |language=he |access-date=26 January 2024 |date=26 January 2024}}</ref>
+|16
+|13
+|4
+|8
+| style="background:#b2eaf5" |'''40'''
+|9
+|7
+|9
+|5
+|5
+|{{small|(1.4%)}}
+|4
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 24
+|44
+|-
+| {{Opdrts||21|Jan|2024}}
+| style="background:#FFCCFF" |CF+MP+SN
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13Jan21">{{Cite news |author=Udi Segal, Lior Keinan, Sefi Ovadia, [[Raviv Drucker]]
+|title=סקר חדשות 13: גנץ ממשיך להוביל, הליכוד עם 16 מנדטים בלבד
+|url=https://13tv.co.il/item/news/politics/politics/survey-903902650/ |access-date=24 January 2024 |date=21 January 2024 |website=Reshet 13 |language=he-IL}}</ref>
+|16
+|14
+|6
+|8
+| style="background:#b2eaf5" |'''37'''
+|9
+|7
+|9
+|5
+|5
+|–
+|4
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 21
+|46
+|-
+| {{Opdrts|17|18|Jan|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv19Jan">{{cite news |author=Moshe Cohen |title=האופוזיציה ממשיכה לגבור על הקואליציה, וכמה קיבלה הליכוד? |url=https://www.maariv.co.il/news/politics/Article-1069268 |website=Maariv |language=he |access-date=19 January 2024 |date=19 January 2024}}</ref>
+|16
+|13
+|4
+|9
+| style="background:#b2eaf5" |'''39'''
+|9
+|6
+|10
+|5
+|5
+|{{small|(1.4%)}}
+|4
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 23
+|44
+|-
+| {{Opdrts||14|Jan|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="14Jan14">{{Cite tweet |author=Direct Polls |user=Direct_Polls |number=1746610063366558130 |date=14 January 2024 |title=100 ימים למלחמה |language=he |access-date=15 January 2024}}</ref>
+|26
+|14
+|4
+|8
+| style="background:#b2eaf5" |'''29'''
+|10
+|8
+|9
+|4
+|4
+|{{small|(2.0%)}}
+|4
+|{{small|(2.4%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 3
+|56
+|-
+| {{Opdrts||11|Jan|2024}}
+| style="background:#FFDFCC" |Midgam R&C
+|[[HaHadashot 12]]<ref name="Ch12Jan11">{{cite news |author=[[Amit Segal]] |title=סקר חדשות 12: גנץ יציב, סמוטריץ' מגרד את אחוז החסימה |url=https://www.mako.co.il/news-politics/2024_q1/Article-bed4556b239fc81027.htm |website=N12 |access-date=12 January 2024 |date=11 January 2024 |language=he-IL}}</ref>
+|18
+|14
+|4
+|8
+| style="background:#b2eaf5" |'''35'''
+|11
+|7
+|9
+|5
+|5
+|{{small|(1.6%)}}
+|4
+|{{small|(2.0%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 17
+|48
+|-
+| {{Opdrts|10|11|Jan|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv12Jan">{{cite news |author=Moshe Cohen |title=שפל חסר תקדים: הליכוד ונתניהו לא מצליחים להתרומם |url=https://www.maariv.co.il/news/politics/Article-1067289 |website=Maariv |language=he |access-date=12 January 2024 |date=12 January 2024}}</ref>
+|16
+|13
+|4
+|8
+| style="background:#b2eaf5" |'''39'''
+|9
+|7
+|10
+|5
+|5
+|–
+|4
+|–
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 23
+|44
+|-
+| {{Opdrts||7|Jan|2024}}
+| style="background:burlywood" |Kantar
+|[[Kan 11]]<ref name="Kan7Jan">{{Cite news |author1=Michael Shemesh|author2=Yaara Shapira |title=סקר כאן חדשות {{!}} גנץ עם 33 מנדטים, נתניהו מתרסק; ומה חושב הציבור על תפקוד נתניהו במלחמה? |url=https://www.kan.org.il/content/kan-news/politic/679589/ |access-date=7 January 2024 |date=7 January 2024 |website=Israeli Public Broadcasting Corporation |language=he-IL}}</ref>
+|20
+|14
+|4
+|8
+| style="background:#b2eaf5" |'''33'''
+|10
+|7
+|10
+|5
+|5
+|{{small|(1.5%)}}
+|4
+|{{small|(1.2%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 13
+|49
+|-
+| {{Opdrts||6|Jan|2024}}
+| style="background:Gold" |SF+DP
+| [[Channel 14 (Israel)|Channel 14]]<ref name="14Jan06">{{Cite news |title=סקר מנדטים: בן גביר וסמוטריץ' מתחזקים על חשבון הליכוד |url=https://www.now14.co.il/סקר-מנדטים-בן-גביר-וסמוטריץ-מתחזקים-ע/ |access-date=7 January 2024 |date=6 January 2024 |website=Now 14 |language=he-IL}}</ref>
+|25
+|14
+|5
+|9
+| style="background:#b2eaf5" |'''27'''
+|9
+|8
+|10
+|5
+|4
+|{{small|(0.5%)}}
+|4
+|{{small|(1.8%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 2
+|56
+|-
+| {{Opdrts|3|4|Jan|2024}}
+| style="background:#F86B61" |LRI+P4A
+|''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv5Jan">{{cite news |author=Moshe Cohen |title=בעקבות פסיקות בג"ץ והחיסול בביירות: הקואליציה מתאוששת |url=https://www.maariv.co.il/news/politics/Article-1065435 |website=Maariv |language=he |access-date=5 January 2024 |date=5 January 2024}}</ref>
+|19
+|14
+|4
+|8
+| style="background:#b2eaf5" |'''36'''
+|9
+|6
+|10
+|5
+|5
+|{{small|(1.2%)}}
+|4
+|{{small|(1.7%)}}
+| style="background:{{party color|National Unity (Israel)}}; color:white;" | 17
+|46
+|}
+
+==Notes==
+{{notelist}}
+
+==References==
+{{reflist}}
+
+{{Opinion polling for Israeli elections}}
+{{Future opinion polling}}
+{{Portal bar|Israel|Modern history|Politics}}
+
+[[Category:Opinion polling in Israel|Opinion polling for the 2024]]
+[[Category:2026 Israeli legislative election|Opinion 2024]]

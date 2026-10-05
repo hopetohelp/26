@@ -1,0 +1,55 @@
+{
+ "k26": {
+  "eligible": 7560000,
+  "note": "דווח \"כ-7.56 מיליון\" (11% יותר מ-2022) בכתבה מ-28.9.2026; טרם אומת מול פרסום רשמי של ועדת הבחירות",
+  "source": "https://israeled.org/38-party-lists-israels-2026-parliamentary-election/",
+  "status": "reported_estimate"
+ },
+ "series": [
+  {
+   "date": "2019-04-09",
+   "eligible": 6339729,
+   "id": "k21",
+   "invalid": 30983,
+   "label": "אפריל 2019",
+   "valid": 4309270,
+   "voted": 4340253
+  },
+  {
+   "date": "2019-09-17",
+   "eligible": 6394030,
+   "id": "k22",
+   "invalid": 28362,
+   "label": "ספטמבר 2019",
+   "valid": 4436806,
+   "voted": 4465168
+  },
+  {
+   "date": "2020-03-02",
+   "eligible": 6453255,
+   "id": "k23",
+   "invalid": 25073,
+   "label": "מרץ 2020",
+   "valid": 4590062,
+   "voted": 4615135
+  },
+  {
+   "date": "2021-03-23",
+   "eligible": 6578084,
+   "id": "k24",
+   "invalid": 26313,
+   "label": "מרץ 2021",
+   "valid": 4410052,
+   "voted": 4436365
+  },
+  {
+   "date": "2022-11-01",
+   "eligible": 6788804,
+   "id": "k25",
+   "invalid": 29851,
+   "label": "נובמבר 2022",
+   "valid": 4764742,
+   "voted": 4794593
+  }
+ ]
+}

@@ -1,0 +1,158 @@
+{
+ "agreements2026": [
+  {
+   "pair": [
+    "likud",
+    "rzp"
+   ],
+   "source": "ויקיפדיה העברית; מעריב, 9.9.2026",
+   "status": "reported"
+  },
+  {
+   "pair": [
+    "together",
+    "yb"
+   ],
+   "source": "ויקיפדיה העברית; ynet, 10.9.2026",
+   "status": "reported"
+  },
+  {
+   "pair": [
+    "yashar",
+    "democrats"
+   ],
+   "source": "ויקיפדיה העברית; ynet, 10.9.2026",
+   "status": "reported"
+  },
+  {
+   "pair": [
+    "raam",
+    "joint"
+   ],
+   "source": "ויקיפדיה העברית; ynet, 11.9.2026",
+   "status": "reported"
+  },
+  {
+   "pair": [
+    "shas",
+    "utj"
+   ],
+   "source": "JDN (מקור יחיד, טרם אומת)",
+   "status": "reported_single_source"
+  }
+ ],
+ "dataAsOf": "2026-10-05T15:15:38+03:00",
+ "electionDay": "2026-10-27",
+ "freezeEnd": "2026-10-27T22:00:00+02:00",
+ "freezeStart": "2026-10-24T00:00:00+03:00",
+ "frozen": false,
+ "historyNames": {
+  "balad": "בל\"ד",
+  "bennett": "בנט 2026",
+  "hadash_taal": "חד\"ש-תע\"ל",
+  "joint_with_raam": "המשותפת עם רע\"ם",
+  "labor": "העבודה",
+  "labor_meretz": "העבודה + מרצ",
+  "meretz": "מרצ",
+  "national_unity": "המחנה הממלכתי",
+  "nep": "הכלכלית החדשה",
+  "new_hope": "תקווה חדשה",
+  "raam_hadash_taal": "רע\"ם + חד\"ש-תע\"ל",
+  "rzp_otzma": "הציונות הדתית + עוצמה",
+  "unity": "האחדות",
+  "yesh_atid": "יש עתיד",
+  "zehut": "זהות"
+ },
+ "lists2026": [
+  {
+   "gov37": true,
+   "id": "likud",
+   "leader": "בנימין נתניהו",
+   "name": "הליכוד"
+  },
+  {
+   "gov37": false,
+   "id": "yashar",
+   "leader": "גדי איזנקוט",
+   "name": "ישר!"
+  },
+  {
+   "gov37": false,
+   "id": "together",
+   "leader": "נפתלי בנט (עם יאיר לפיד)",
+   "name": "ביחד"
+  },
+  {
+   "gov37": false,
+   "id": "democrats",
+   "leader": "יאיר גולן",
+   "name": "הדמוקרטים"
+  },
+  {
+   "gov37": false,
+   "id": "yb",
+   "leader": "אביגדור ליברמן",
+   "name": "ישראל ביתנו"
+  },
+  {
+   "gov37": true,
+   "id": "shas",
+   "leader": "אריה דרעי",
+   "name": "ש\"ס"
+  },
+  {
+   "gov37": true,
+   "id": "utj",
+   "leader": "",
+   "name": "יהדות התורה"
+  },
+  {
+   "gov37": true,
+   "id": "otzma",
+   "leader": "איתמר בן גביר",
+   "name": "עוצמה יהודית"
+  },
+  {
+   "gov37": true,
+   "id": "rzp",
+   "leader": "בצלאל סמוטריץ' ומשה פייגלין",
+   "name": "הציונות הדתית-זהות"
+  },
+  {
+   "gov37": false,
+   "id": "joint",
+   "leader": "חד\"ש, תע\"ל, בל\"ד",
+   "name": "הרשימה המשותפת"
+  },
+  {
+   "gov37": false,
+   "id": "raam",
+   "leader": "מנסור עבאס",
+   "name": "רע\"ם"
+  },
+  {
+   "gov37": false,
+   "id": "reservists",
+   "leader": "יועז הנדל וירון זליכה",
+   "name": "המילואימניקים-הכלכלית"
+  },
+  {
+   "gov37": false,
+   "id": "bluewhite",
+   "leader": "בני גנץ",
+   "name": "כחול לבן"
+  },
+  {
+   "gov37": false,
+   "id": "amcha",
+   "leader": "עופר וינטר",
+   "name": "עמך ישראל"
+  },
+  {
+   "gov37": false,
+   "id": "haredi_public",
+   "leader": "",
+   "name": "הציבור החרדי"
+  }
+ ]
+}

@@ -1,0 +1,136 @@
+import pollsFile from "../data/polls.json";
+import metaFile from "../data/meta.json";
+import resultsFile from "../data/results.json";
+import registryFile from "../data/registry.json";
+
+export interface PollValue {
+  /** מנדטים */
+  s?: number;
+  /** אחוז (מפלגה מתחת לסף) */
+  p?: number;
+}
+
+export interface Poll {
+  id: string;
+  start: string;
+  end: string;
+  firm: string;
+  firmHe: string;
+  publisher: string | null;
+  publisherHe: string | null;
+  sample: number | null;
+  values: Record<string, PollValue>;
+  gov: number | null;
+  consistent: boolean;
+  eligibleToShow: boolean;
+  urls: string[];
+  verified: boolean;
+  source: { page: string; tableLine: number };
+}
+
+export interface ListInfo {
+  id: string;
+  name: string;
+  leader: string;
+  gov37: boolean;
+}
+
+export const polls = pollsFile.polls as unknown as Poll[];
+export const meta = metaFile as unknown as {
+  dataAsOf: string;
+  electionDay: string;
+  freezeStart: string;
+  freezeEnd: string;
+  frozen?: boolean;
+  lists2026: ListInfo[];
+  agreements2026: { pair: [string, string]; status: string; source: string }[];
+  historyNames: Record<string, string>;
+};
+export const results = resultsFile;
+export const registry = registryFile;
+
+export const lists2026 = meta.lists2026;
+export const listName = (id: string) =>
+  lists2026.find((l) => l.id === id)?.name ?? meta.historyNames[id] ?? id;
+
+/** סקרים שמותר ונכון להציג בניתוח: עברו 24 שעות מהפרסום ועקביים (סכום ≈ 120) */
+export const usablePolls = polls.filter((p) => p.eligibleToShow && p.consistent);
+
+export const pollsterKey = (p: Poll) => `${p.firm}|${p.publisher ?? ""}`;
+export const pollsterLabel = (p: Poll) => `${p.firmHe}${p.publisherHe ? ` · ${p.publisherHe}` : ""}`;
+
+export function median(xs: number[]): number {
+  if (!xs.length) return NaN;
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+}
+
+const DAY = 86_400_000;
+export const toTime = (d: string) => Date.parse(d + "T12:00:00Z");
+
+/** הסקר האחרון של כל מכון+מזמין בחלון של `days` ימים עד `asOf` */
+export function latestPerPollster(asOf: string, days = 14): Poll[] {
+  const end = toTime(asOf);
+  const map = new Map<string, Poll>();
+  for (const p of usablePolls) {
+    const t = toTime(p.end);
+    if (t > end || t <= end - days * DAY) continue;
+    const k = pollsterKey(p);
+    const cur = map.get(k);
+    if (!cur || p.end > cur.end) map.set(k, p);
+  }
+  return [...map.values()].sort((a, b) => (a.end < b.end ? 1 : -1));
+}
+
+/** מנדטים בסקר: מפלגה מתחת לסף = 0; לא נשאלה = undefined */
+export function seatsIn(p: Poll, id: string): number | undefined {
+  const v = p.values[id];
+  if (!v) return undefined;
+  if (typeof v.s === "number") return v.s;
+  if (typeof v.p === "number") return 0;
+  return undefined;
+}
+
+export interface PartySummary {
+  id: string;
+  median: number;
+  min: number;
+  max: number;
+  n: number;
+  belowCount: number;
+}
+
+export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
+  return ids
+    .map((id) => {
+      const xs = ps.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
+      return {
+        id,
+        median: median(xs),
+        min: xs.length ? Math.min(...xs) : NaN,
+        max: xs.length ? Math.max(...xs) : NaN,
+        n: xs.length,
+        belowCount: ps.filter((p) => typeof p.values[id]?.p === "number").length,
+      };
+    })
+    .filter((s) => s.n > 0)
+    .sort((a, b) => b.median - a.median || b.max - a.max);
+}
+
+/** חציון מתגלגל של מנדטים — חלון של `days` ימים, נקודה כל `step` ימים */
+export function rollingMedian(id: string, from: string, to: string, days = 14, step = 3, source = usablePolls) {
+  const out: { t: number; v: number; n: number }[] = [];
+  for (let t = toTime(from); t <= toTime(to); t += step * DAY) {
+    const xs = source
+      .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
+      .map((p) => seatsIn(p, id))
+      .filter((x): x is number => typeof x === "number");
+    if (xs.length >= 3) out.push({ t, v: median(xs), n: xs.length });
+  }
+  return out;
+}
+
+export function lastPollDate(): string {
+  return usablePolls.length ? usablePolls[0].end : meta.dataAsOf.slice(0, 10);
+}

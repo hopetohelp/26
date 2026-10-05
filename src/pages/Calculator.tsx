@@ -1,0 +1,271 @@
+import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import Explained from "../components/Explained";
+import { Badge, Card, Note, PageTitle } from "../components/ui";
+import { allocate, votesToNextSeat, type Agreement } from "../engine/baderOfer";
+import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, registry, summarize } from "../lib/data";
+import { dateLong, num, pct } from "../lib/format";
+
+const IDS = lists2026.map((l) => l.id);
+const OTHERS_DEFAULT = 1.5;
+
+/** נקודת המוצא: חציון המנדטים בסקרים האחרונים, מומר לאחוזים בקירוב שמתחשב בבאדר-עופר. שנו כרצונכם. */
+function startingShares(): Record<string, number> {
+  const latest = latestPerPollster(lastPollDate(), 14);
+  const sum = summarize(latest, IDS);
+  const shares: Record<string, number> = {};
+  let below = 0;
+  for (const s of sum) {
+    if (s.median === 0) {
+      const ps = latest.map((p) => p.values[s.id]?.p).filter((x): x is number => typeof x === "number");
+      shares[s.id] = ps.length ? Math.round(median(ps) * 10) / 10 : 1;
+      below += shares[s.id];
+    }
+  }
+  const above = sum.filter((s) => s.median > 0);
+  const weight = above.reduce((a, s) => a + s.median + 0.5, 0);
+  const room = 100 - below - OTHERS_DEFAULT;
+  for (const s of above) shares[s.id] = Math.round(((s.median + 0.5) / weight) * room * 10) / 10;
+  for (const id of IDS) if (!(id in shares)) shares[id] = 0;
+  return shares;
+}
+
+const AGREEMENTS = meta.agreements2026;
+
+function encode(shares: Record<string, number>, turnout: number, eligible: number, ag: boolean[]) {
+  return {
+    s: IDS.map((id) => shares[id] ?? 0).join("_"),
+    t: String(turnout),
+    e: String(eligible),
+    a: ag.map((x) => (x ? "1" : "0")).join(""),
+  };
+}
+
+export default function Calculator() {
+  const [params, setParams] = useSearchParams();
+  const initial = useMemo(() => {
+    const def = startingShares();
+    const s = params.get("s")?.split("_").map(Number);
+    const shares = s && s.length === IDS.length && s.every((x) => Number.isFinite(x)) ? Object.fromEntries(IDS.map((id, i) => [id, s[i]])) : def;
+    return {
+      shares,
+      turnout: Number(params.get("t")) || 70,
+      eligible: Number(params.get("e")) || registry.k26.eligible,
+      ag: params.get("a")?.length === AGREEMENTS.length ? [...params.get("a")!].map((c) => c === "1") : AGREEMENTS.map(() => true),
+      def,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const [shares, setShares] = useState<Record<string, number>>(initial.shares);
+  const [turnout, setTurnout] = useState(initial.turnout);
+  const [eligible, setEligible] = useState(initial.eligible);
+  const [ag, setAg] = useState<boolean[]>(initial.ag);
+  const [nextSeat, setNextSeat] = useState<Record<string, number | null>>({});
+
+  const sync = (s = shares, t = turnout, e = eligible, a = ag) => setParams(encode(s, t, e, a), { replace: true });
+
+  const listSum = IDS.reduce((a, id) => a + (shares[id] || 0), 0);
+  const others = Math.max(0, 100 - listSum);
+  const over = listSum > 100.0001;
+  const valid = Math.round(eligible * (turnout / 100) * (1 - 0.006));
+  const votes = Object.fromEntries(IDS.map((id) => [id, Math.round(((shares[id] || 0) / 100) * valid)]));
+  const agreements: Agreement[] = AGREEMENTS.filter((_, i) => ag[i]).map((a) => a.pair as unknown as Agreement);
+  const r = over ? null : allocate(votes, valid, agreements);
+  const r0 = over ? null : allocate(votes, valid, []);
+  const gov = r ? lists2026.filter((l) => l.gov37).reduce((a, l) => a + (r.seats[l.id] ?? 0), 0) : 0;
+
+  const setShare = (id: string, v: number) => {
+    const next = { ...shares, [id]: Math.max(0, Math.min(100, Math.round(v * 10) / 10)) };
+    setShares(next);
+    setNextSeat({});
+    sync(next);
+  };
+
+  return (
+    <>
+      <PageTitle lead="מכניסים אחוזי הצבעה לכל רשימה (מתוך הקולות הכשרים), והמחשבון מחלק 120 מנדטים לפי חוק הבחירות: אחוז החסימה, הסכמי העודפים ושיטת באדר-עופר. המנוע נבדק מול חמש מערכות הבחירות 2019–2022 ומשחזר אותן בדיוק.">
+        מחשבון מנדטים
+      </PageTitle>
+
+      <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
+        <Card title="הקלט">
+          <p className="text-sm text-ink-soft mb-3">
+            נקודת המוצא: חציון הסקרים האחרונים (עד {dateLong(lastPollDate())}), מומר לאחוזים בקירוב. זו הערכה גסה — שנו כרצונכם.
+          </p>
+          <table className="w-full text-sm">
+            <caption className="sr-only">אחוז לכל רשימה</caption>
+            <thead>
+              <tr className="text-right border-b border-paper-line">
+                <th scope="col" className="py-1">רשימה</th>
+                <th scope="col">אחוז מהכשרים</th>
+              </tr>
+            </thead>
+            <tbody>
+              {IDS.map((id) => (
+                <tr key={id} className="border-b border-paper-line/60">
+                  <th scope="row" className="text-right font-medium py-1">
+                    <label htmlFor={`share-${id}`}>{listName(id)}</label>
+                  </th>
+                  <td>
+                    <input
+                      id={`share-${id}`}
+                      type="number"
+                      inputMode="decimal"
+                      step={0.1}
+                      min={0}
+                      max={100}
+                      value={shares[id] ?? 0}
+                      onChange={(e) => setShare(id, Number(e.target.value))}
+                      className="w-24 border border-paper-line rounded px-2 py-1 tabular-nums"
+                    />
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <th scope="row" className="text-right py-1 text-ink-soft">אחרות (מחושב)</th>
+                <td className={`tabular-nums ${over ? "text-red-700 font-bold" : ""}`}>{over ? `חריגה: ${pct(listSum)}` : pct(others)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            <label className="text-sm flex flex-col">
+              בעלי זכות בחירה
+              <input type="number" step={10000} value={eligible} onChange={(e) => { const v = Number(e.target.value) || 0; setEligible(v); sync(shares, turnout, v); }} className="border border-paper-line rounded px-2 py-1 mt-1 tabular-nums" />
+            </label>
+            <label className="text-sm flex flex-col">
+              שיעור הצבעה (%)
+              <input type="number" step={0.5} min={40} max={90} value={turnout} onChange={(e) => { const v = Number(e.target.value) || 0; setTurnout(v); sync(shares, v); }} className="border border-paper-line rounded px-2 py-1 mt-1 tabular-nums" />
+            </label>
+          </div>
+          <Note>
+            ברירת המחדל: {num(registry.k26.eligible)} בעלי זכות — מספר שדווח בתקשורת וטרם אומת מול פרסום רשמי. פסולים: 0.6% (כמו בבחירות
+            האחרונות). סך הקולות הכשרים בתרחיש: <strong>{num(valid)}</strong>.
+          </Note>
+          <fieldset className="mt-4">
+            <legend className="text-sm font-bold">הסכמי עודפים</legend>
+            {AGREEMENTS.map((a, i) => (
+              <label key={a.pair.join()} className="flex items-center gap-2 text-sm mt-1">
+                <input
+                  type="checkbox"
+                  checked={ag[i]}
+                  onChange={() => {
+                    const next = ag.map((x, j) => (j === i ? !x : x));
+                    setAg(next);
+                    setNextSeat({});
+                    sync(shares, turnout, eligible, next);
+                  }}
+                />
+                {listName(a.pair[0])} – {listName(a.pair[1])}
+                <Badge tone="warn">{a.status === "reported_single_source" ? "דווח במקור יחיד" : "דווח, טרם רשמי"}</Badge>
+              </label>
+            ))}
+            <Note>ההסכמים הרשמיים מוגשים לוועדה עד 16.10.2026 ומתפרסמים עד 19.10.2026.</Note>
+          </fieldset>
+          <button type="button" className="mt-4 border border-paper-line rounded px-3 py-2 text-sm" onClick={() => { setShares(initial.def); setNextSeat({}); sync(initial.def); }}>
+            חזרה לנקודת המוצא
+          </button>
+        </Card>
+
+        <div>
+          <Card title="התוצאה">
+            {over && <p className="text-red-700 font-bold">סכום האחוזים עולה על 100 — יש להקטין אחת הרשימות.</p>}
+            {r && r.status === "invalid_input" && <p className="text-red-700 font-bold">{r.error}</p>}
+            {r && r.status === "lottery_required" && <p className="text-warn font-bold">שוויון מנות מדויק — לפי החוק מכריעה הגרלה של ועדת הבחירות.</p>}
+            {r && r0 && r.status !== "invalid_input" && (
+              <Explained
+                kind="חישוב לפי החוק"
+                source="חוק הבחירות לכנסת, סעיפים 81–82; המנוע נבדק מול תוצאות 2019–2022"
+                asOf="מחושב עכשיו מהקלט שלכם"
+                assumption="האחוזים הם מתוך הקולות הכשרים. 'בלי הסכמים' = אותה חלוקה בלי אף הסכם עודפים."
+                methodAnchor="engine"
+              >
+                <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <caption className="sr-only">מנדטים לכל רשימה</caption>
+                  <thead>
+                    <tr className="text-right border-b border-paper-line">
+                      <th scope="col" className="py-1">רשימה</th>
+                      <th scope="col">קולות</th>
+                      <th scope="col">מנדטים</th>
+                      <th scope="col">בלי הסכמים</th>
+                      <th scope="col">קולות למנדט הבא</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...IDS].sort((a, b) => (r.seats[b] ?? 0) - (r.seats[a] ?? 0) || votes[b] - votes[a]).map((id) => {
+                      const passed = r.passing.includes(id);
+                      const d = (r.seats[id] ?? 0) - (r0.seats[id] ?? 0);
+                      return (
+                        <tr key={id} className="border-b border-paper-line/60">
+                          <th scope="row" className="text-right py-1 font-medium">
+                            {listName(id)} {!passed && votes[id] > 0 && <Badge tone="warn">מתחת לסף</Badge>}
+                          </th>
+                          <td className="tabular-nums">{num(votes[id])}</td>
+                          <td className="tabular-nums font-bold">{r.seats[id] ?? 0}</td>
+                          <td className="tabular-nums">
+                            {r0.seats[id] ?? 0}
+                            {d !== 0 && <span className={d > 0 ? "text-green-800" : "text-red-700"}> (<bdi dir="ltr">{d > 0 ? `+${d}` : d}</bdi>)</span>}
+                          </td>
+                          <td className="tabular-nums">
+                            {passed ? (
+                              id in nextSeat ? (
+                                nextSeat[id] === null ? "—" : num(nextSeat[id]!)
+                              ) : (
+                                <button type="button" className="underline text-accent" onClick={() => setNextSeat((m) => ({ ...m, [id]: votesToNextSeat(votes, valid, id, agreements) }))}>
+                                  חישוב
+                                </button>
+                              )
+                            ) : (
+                              "—"
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                </div>
+              </Explained>
+            )}
+            {r && r.status !== "invalid_input" && (
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mt-4">
+                <dt className="text-ink-soft">מפלגות הממשלה היוצאת</dt>
+                <dd className="font-bold">{gov} מנדטים {gov >= 61 ? "(רוב)" : ""}</dd>
+                <dt className="text-ink-soft">אחוז החסימה בקולות</dt>
+                <dd className="tabular-nums">{num(r.thresholdVotes)}</dd>
+                <dt className="text-ink-soft">המודד (קולות למנדט שלם)</dt>
+                <dd className="tabular-nums">{num(r.quota)}</dd>
+                <dt className="text-ink-soft">קולות לרשימות שלא עברו</dt>
+                <dd className="tabular-nums">
+                  {num(r.wasted)} ({pct((r.wasted / valid) * 100)})
+                </dd>
+              </dl>
+            )}
+            {r && r.inactiveAgreements.length > 0 && (
+              <Note>הסכמים שאינם פעילים: {r.inactiveAgreements.map((x) => `${listName(x.pair[0])}–${listName(x.pair[1])} (${x.reason.replace(/[a-z_]+/g, (m) => listName(m))})`).join(" · ")}</Note>
+            )}
+            <Note>"קולות למנדט הבא" = כמה קולות צריך להוסיף לרשימה, כשכל השאר נשארות קבועות, כדי שתקבל מנדט נוסף (אחוז החסימה והמודד זזים בהתאם).</Note>
+          </Card>
+
+          {r && r.status === "ok" && (
+            <Card title="צעד אחר צעד: חלוקת המנדטים העודפים">
+              <p className="text-sm mb-2">
+                שלב 1: כל רשימה שעברה מקבלת מנדט שלם לכל {num(r.quota)} קולות ({Object.values(r.whole).reduce((a, b) => a + b, 0)} מנדטים). שלב 2: את
+                {" "}
+                {r.trace.length} הנותרים מקבלת בכל פעם הרשימה (או זוג העודפים) עם המנה הגבוהה ביותר — קולות חלקי (מנדטים + 1):
+              </p>
+              <ol className="text-sm list-decimal ps-6 space-y-0.5">
+                {r.trace.map((t) => (
+                  <li key={t.step}>
+                    {t.unit.split("+").map((x) => listName(x)).join(" + ")} — מנה {num(t.quotient)}
+                  </li>
+                ))}
+              </ol>
+              <Note>מנדט שזכה בו זוג עודפים מתחלק אחר כך בין שתי הרשימות באותה שיטה (סעיף 82(ב) לחוק).</Note>
+            </Card>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
