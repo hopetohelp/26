@@ -225,6 +225,7 @@ class Fitted:
     party_bias: dict[str, float]
     threshold_bias: float
     threshold_cases: int
+    others_share: float = 0.0  # מסת הקולות לרשימות שלא הופיעו בסקרים (גרסה 2)
 
 
 def correct_poll(sh: dict[str, float], series: str, lists: dict[str, dict], f: Fitted, spec: dict,
@@ -320,8 +321,16 @@ def fit(history: list[tuple[Election, dict[str, dict[str, float]]]], t_index: fl
                 thr_pts.append(math.log((v + eps) / (act[k] + eps)))
     n_thr = len(thr_pts)
     thr_bias = (sum(thr_pts) / n_thr) * (n_thr / (n_thr + strength)) if n_thr else 0.0
-    # 5. משקלים: 1/טעות², יחסית לממוצע, קטום, מנורמל, ותקרה
-    return Fitted({}, pollster_error, bloc_bias_shared, bloc_bias_series, party_bias, thr_bias, n_thr)
+    # 5. "אחרים": סקרים אינם מציגים רשימות מתחת לסף, ולכן מסתן חסרה באופן מבני. ממוצע (בלי כיווץ לאפס — ידוע שהיא חיובית)
+    #    של 1 − סך הקולות בפועל של הרשימות שהופיעו בסקרי אותה מערכת
+    oth = []
+    for e, polls in history:
+        named = {k for sh in polls.values() for k, v in sh.items() if v > 0}
+        act = e.shares()
+        oth.append(max(0.0, 1 - sum(act.get(k, 0.0) for k in named)))
+    others = sum(oth) / len(oth) if oth else 0.0
+    # 6. משקלים: נגזרים מ-pollster_error ב-weights_for
+    return Fitted({}, pollster_error, bloc_bias_shared, bloc_bias_series, party_bias, thr_bias, n_thr, others)
 
 
 def weights_for(series: list[str], f: Fitted, spec: dict) -> dict[str, float]:
@@ -371,6 +380,8 @@ def forecast(variant: str, polls: dict[str, dict[str, float]], lists: dict[str, 
         else:
             corrected = {s: correct_poll(p, s, lists, f, spec, thr_share, use) for s, p in polls.items()}
             sh = combine(corrected, weights_for(list(polls), f, spec))
+            if variant in spec["model"].get("others", {}).get("variants", []):
+                sh = {k: v * (1 - f.others_share) for k, v in sh.items()}
     return sh, seats_from_shares(sh, agreements, threshold)
 
 
