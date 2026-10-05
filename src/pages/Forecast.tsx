@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import ListsView, { type ListRow } from "../components/ListsView";
 import forecastFile from "../data/forecast.json";
-import { listName } from "../lib/data";
+import { lastPollDate, latestPerPollster, listName, passesInAll } from "../lib/data";
 import { dateLong, num } from "../lib/format";
 import { useTheme } from "../lib/theme";
 import { Badge, Card, Note, PageTitle } from "../components/ui";
@@ -40,8 +40,10 @@ const ELECTION: Record<string, string> = {
 const p1 = (x: number) => `${(Math.round(x * 1000) / 10).toLocaleString("he-IL")}%`;
 const LOG_URL = "https://github.com/hopetohelp/26/blob/main/pipeline/forecast_runs.jsonl";
 
+/** הסקר האחרון של כל מכון בשבועיים האחרונים — לכלל "עוברת בכל הסקרים" */
+const recent = latestPerPollster(lastPollDate(), 14);
 const rows: ListRow[] = Object.entries(fc.lists)
-  .map(([id, v]) => ({ id, name: listName(id), central: v.seats, lo: v.seatsRange[0], hi: v.seatsRange[2], pass: v.pass }))
+  .map(([id, v]) => ({ id, name: listName(id), central: v.seats, lo: v.seatsRange[0], hi: v.seatsRange[2], pass: v.pass, sure: passesInAll(recent, id) }))
   .sort((a, b) => b.central - a.central || fc.lists[b.id].share - fc.lists[a.id].share);
 
 export default function Forecast() {
