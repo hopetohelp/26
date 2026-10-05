@@ -1,0 +1,3062 @@
+{
+ "histSd": {
+  "large": 0.1743,
+  "small": 0.308
+ },
+ "horizons": [
+  21,
+  14,
+  7,
+  1
+ ],
+ "modelSignature": "066772d78b08fd78",
+ "rows": [
+  {
+   "asof": "2019-03-19",
+   "baselineMae": {
+    "avg7": 2.714,
+    "lastPoll": 2.714,
+    "median14": 2.286
+   },
+   "bloc": {
+    "actual": 65,
+    "baselines": {
+     "avg7": 54.3,
+     "lastPoll": 58.0,
+     "median14": 57.0
+    },
+    "model": [
+     45,
+     54,
+     62
+    ]
+   },
+   "brier": 0.1528,
+   "coverage80": 1.0,
+   "cycle": "k21",
+   "horizon": 21,
+   "label": "אפריל 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 9,
+     "pass": 0.997,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    },
+    "ג": {
+     "actual": 8,
+     "central": 7,
+     "pass": 0.9157,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "דעם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.3767,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "ום": {
+     "actual": 6,
+     "central": 8,
+     "pass": 0.9968,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    },
+    "ז": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.4853,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "טב": {
+     "actual": 5,
+     "central": 7,
+     "pass": 0.923,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "כ": {
+     "actual": 4,
+     "central": 4,
+     "pass": 0.5433,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 5,
+     "central": 0,
+     "pass": 0.3545,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "מחל": {
+     "actual": 35,
+     "central": 31,
+     "pass": 1.0,
+     "seats": [
+      24,
+      30,
+      36
+     ]
+    },
+    "מרצ": {
+     "actual": 4,
+     "central": 6,
+     "pass": 0.8103,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "נ": {
+     "actual": 0,
+     "central": 7,
+     "pass": 0.8832,
+     "seats": [
+      0,
+      6,
+      10
+     ]
+    },
+    "נר": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.134,
+     "seats": [
+      0,
+      0,
+      4
+     ]
+    },
+    "פה": {
+     "actual": 35,
+     "central": 35,
+     "pass": 1.0,
+     "seats": [
+      25,
+      33,
+      42
+     ]
+    },
+    "שס": {
+     "actual": 8,
+     "central": 6,
+     "pass": 0.7925,
+     "seats": [
+      0,
+      5,
+      9
+     ]
+    }
+   },
+   "mae": 2.286,
+   "polls": 22
+  },
+  {
+   "asof": "2019-03-26",
+   "baselineMae": {
+    "avg7": 2.64,
+    "lastPoll": 3.143,
+    "median14": 2.357
+   },
+   "bloc": {
+    "actual": 65,
+    "baselines": {
+     "avg7": 52.8,
+     "lastPoll": 52.0,
+     "median14": 55.0
+    },
+    "model": [
+     45,
+     54,
+     62
+    ]
+   },
+   "brier": 0.1631,
+   "coverage80": 0.923,
+   "cycle": "k21",
+   "horizon": 14,
+   "label": "אפריל 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 9,
+     "pass": 0.9998,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "ג": {
+     "actual": 8,
+     "central": 7,
+     "pass": 0.919,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "דעם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.418,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "ום": {
+     "actual": 6,
+     "central": 8,
+     "pass": 0.9978,
+     "seats": [
+      6,
+      8,
+      10
+     ]
+    },
+    "ז": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.6745,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "טב": {
+     "actual": 5,
+     "central": 7,
+     "pass": 0.92,
+     "seats": [
+      4,
+      7,
+      10
+     ]
+    },
+    "כ": {
+     "actual": 4,
+     "central": 4,
+     "pass": 0.603,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 5,
+     "central": 0,
+     "pass": 0.343,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "מחל": {
+     "actual": 35,
+     "central": 30,
+     "pass": 1.0,
+     "seats": [
+      24,
+      29,
+      36
+     ]
+    },
+    "מרצ": {
+     "actual": 4,
+     "central": 6,
+     "pass": 0.779,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "נ": {
+     "actual": 0,
+     "central": 6,
+     "pass": 0.8622,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "נר": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.2117,
+     "seats": [
+      0,
+      0,
+      5
+     ]
+    },
+    "פה": {
+     "actual": 35,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      24,
+      31,
+      39
+     ]
+    },
+    "שס": {
+     "actual": 8,
+     "central": 6,
+     "pass": 0.7752,
+     "seats": [
+      0,
+      5,
+      9
+     ]
+    }
+   },
+   "mae": 2.857,
+   "polls": 29
+  },
+  {
+   "asof": "2019-04-02",
+   "baselineMae": {
+    "avg7": 2.609,
+    "lastPoll": 3.286,
+    "median14": 2.321
+   },
+   "bloc": {
+    "actual": 65,
+    "baselines": {
+     "avg7": 54.4,
+     "lastPoll": 51.0,
+     "median14": 55.5
+    },
+    "model": [
+     46,
+     54,
+     62
+    ]
+   },
+   "brier": 0.1564,
+   "coverage80": 0.923,
+   "cycle": "k21",
+   "horizon": 7,
+   "label": "אפריל 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "ג": {
+     "actual": 8,
+     "central": 7,
+     "pass": 0.9135,
+     "seats": [
+      4,
+      7,
+      10
+     ]
+    },
+    "דעם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.4265,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "ום": {
+     "actual": 6,
+     "central": 8,
+     "pass": 0.9992,
+     "seats": [
+      6,
+      7,
+      10
+     ]
+    },
+    "ז": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.7295,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "טב": {
+     "actual": 5,
+     "central": 7,
+     "pass": 0.8982,
+     "seats": [
+      0,
+      6,
+      10
+     ]
+    },
+    "כ": {
+     "actual": 4,
+     "central": 5,
+     "pass": 0.6468,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 5,
+     "central": 0,
+     "pass": 0.4037,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "מחל": {
+     "actual": 35,
+     "central": 30,
+     "pass": 1.0,
+     "seats": [
+      24,
+      30,
+      36
+     ]
+    },
+    "מרצ": {
+     "actual": 4,
+     "central": 6,
+     "pass": 0.7997,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "נ": {
+     "actual": 0,
+     "central": 6,
+     "pass": 0.8595,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "נר": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.1427,
+     "seats": [
+      0,
+      0,
+      4
+     ]
+    },
+    "פה": {
+     "actual": 35,
+     "central": 31,
+     "pass": 1.0,
+     "seats": [
+      24,
+      31,
+      38
+     ]
+    },
+    "שס": {
+     "actual": 8,
+     "central": 6,
+     "pass": 0.8227,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    }
+   },
+   "mae": 3.0,
+   "polls": 36
+  },
+  {
+   "asof": "2019-04-08",
+   "baselineMae": {
+    "avg7": 2.797,
+    "lastPoll": 2.571,
+    "median14": 2.643
+   },
+   "bloc": {
+    "actual": 65,
+    "baselines": {
+     "avg7": 53.3,
+     "lastPoll": 55.0,
+     "median14": 54.0
+    },
+    "model": [
+     46,
+     54,
+     61
+    ]
+   },
+   "brier": 0.1657,
+   "coverage80": 0.923,
+   "cycle": "k21",
+   "horizon": 1,
+   "label": "אפריל 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 10,
+     "pass": 1.0,
+     "seats": [
+      7,
+      10,
+      12
+     ]
+    },
+    "ג": {
+     "actual": 8,
+     "central": 7,
+     "pass": 0.9277,
+     "seats": [
+      4,
+      7,
+      10
+     ]
+    },
+    "דעם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.421,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "ום": {
+     "actual": 6,
+     "central": 8,
+     "pass": 0.9633,
+     "seats": [
+      5,
+      7,
+      11
+     ]
+    },
+    "ז": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.7847,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "טב": {
+     "actual": 5,
+     "central": 6,
+     "pass": 0.9087,
+     "seats": [
+      4,
+      6,
+      10
+     ]
+    },
+    "כ": {
+     "actual": 4,
+     "central": 5,
+     "pass": 0.686,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 5,
+     "central": 0,
+     "pass": 0.383,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "מחל": {
+     "actual": 35,
+     "central": 30,
+     "pass": 1.0,
+     "seats": [
+      24,
+      29,
+      35
+     ]
+    },
+    "מרצ": {
+     "actual": 4,
+     "central": 6,
+     "pass": 0.8205,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "נ": {
+     "actual": 0,
+     "central": 6,
+     "pass": 0.8822,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "נר": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.1575,
+     "seats": [
+      0,
+      0,
+      4
+     ]
+    },
+    "פה": {
+     "actual": 35,
+     "central": 31,
+     "pass": 1.0,
+     "seats": [
+      24,
+      30,
+      37
+     ]
+    },
+    "שס": {
+     "actual": 8,
+     "central": 6,
+     "pass": 0.8027,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    }
+   },
+   "mae": 3.0,
+   "polls": 44
+  },
+  {
+   "asof": "2019-08-27",
+   "baselineMae": {
+    "avg7": 1.4,
+    "lastPoll": 1.2,
+    "median14": 1.6
+   },
+   "bloc": {
+    "actual": 55,
+    "baselines": {
+     "avg7": 56.6,
+     "lastPoll": 56.0,
+     "median14": 56.0
+    },
+    "model": [
+     49,
+     56,
+     63
+    ]
+   },
+   "brier": 0.0026,
+   "coverage80": 0.889,
+   "cycle": "k22",
+   "horizon": 21,
+   "label": "ספטמבר 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.8748,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.9925,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 13,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      8,
+      11,
+      14
+     ]
+    },
+    "טב": {
+     "actual": 7,
+     "central": 10,
+     "pass": 1.0,
+     "seats": [
+      8,
+      10,
+      14
+     ]
+    },
+    "כף": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.086,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ל": {
+     "actual": 8,
+     "central": 10,
+     "pass": 0.9998,
+     "seats": [
+      7,
+      10,
+      13
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 31,
+     "pass": 1.0,
+     "seats": [
+      24,
+      30,
+      37
+     ]
+    },
+    "מרצ": {
+     "actual": 5,
+     "central": 7,
+     "pass": 0.9515,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 30,
+     "pass": 1.0,
+     "seats": [
+      23,
+      30,
+      38
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 7,
+     "pass": 0.9915,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    }
+   },
+   "mae": 1.6,
+   "polls": 18
+  },
+  {
+   "asof": "2019-09-03",
+   "baselineMae": {
+    "avg7": 1.4,
+    "lastPoll": 1.4,
+    "median14": 1.4
+   },
+   "bloc": {
+    "actual": 55,
+    "baselines": {
+     "avg7": 55.7,
+     "lastPoll": 56.0,
+     "median14": 56.0
+    },
+    "model": [
+     49,
+     56,
+     63
+    ]
+   },
+   "brier": 0.0036,
+   "coverage80": 1.0,
+   "cycle": "k22",
+   "horizon": 14,
+   "label": "ספטמבר 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.8855,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.9948,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 13,
+     "central": 10,
+     "pass": 1.0,
+     "seats": [
+      7,
+      10,
+      14
+     ]
+    },
+    "טב": {
+     "actual": 7,
+     "central": 10,
+     "pass": 0.9998,
+     "seats": [
+      7,
+      10,
+      13
+     ]
+    },
+    "כף": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.1427,
+     "seats": [
+      0,
+      0,
+      4
+     ]
+    },
+    "ל": {
+     "actual": 8,
+     "central": 10,
+     "pass": 0.9998,
+     "seats": [
+      7,
+      10,
+      13
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 31,
+     "pass": 1.0,
+     "seats": [
+      25,
+      31,
+      37
+     ]
+    },
+    "מרצ": {
+     "actual": 5,
+     "central": 7,
+     "pass": 0.9507,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 31,
+     "pass": 1.0,
+     "seats": [
+      24,
+      30,
+      38
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 7,
+     "pass": 0.9935,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    }
+   },
+   "mae": 1.6,
+   "polls": 24
+  },
+  {
+   "asof": "2019-09-10",
+   "baselineMae": {
+    "avg7": 1.489,
+    "lastPoll": 1.6,
+    "median14": 1.5
+   },
+   "bloc": {
+    "actual": 55,
+    "baselines": {
+     "avg7": 54.8,
+     "lastPoll": 53.0,
+     "median14": 54.0
+    },
+    "model": [
+     48,
+     55,
+     63
+    ]
+   },
+   "brier": 0.0137,
+   "coverage80": 1.0,
+   "cycle": "k22",
+   "horizon": 7,
+   "label": "ספטמבר 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.8755,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.997,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 13,
+     "central": 10,
+     "pass": 1.0,
+     "seats": [
+      7,
+      10,
+      13
+     ]
+    },
+    "טב": {
+     "actual": 7,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "כף": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.3375,
+     "seats": [
+      0,
+      0,
+      5
+     ]
+    },
+    "ל": {
+     "actual": 8,
+     "central": 10,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      25,
+      31,
+      38
+     ]
+    },
+    "מרצ": {
+     "actual": 5,
+     "central": 6,
+     "pass": 0.9215,
+     "seats": [
+      4,
+      6,
+      10
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      25,
+      31,
+      39
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 7,
+     "pass": 0.958,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    }
+   },
+   "mae": 1.2,
+   "polls": 33
+  },
+  {
+   "asof": "2019-09-16",
+   "baselineMae": {
+    "avg7": 1.271,
+    "lastPoll": 1.4,
+    "median14": 1.4
+   },
+   "bloc": {
+    "actual": 55,
+    "baselines": {
+     "avg7": 55.4,
+     "lastPoll": 55.0,
+     "median14": 55.5
+    },
+    "model": [
+     49,
+     56,
+     63
+    ]
+   },
+   "brier": 0.0231,
+   "coverage80": 1.0,
+   "cycle": "k22",
+   "horizon": 1,
+   "label": "ספטמבר 2019",
+   "lists": {
+    "אמת": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.829,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.9985,
+     "seats": [
+      6,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 13,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      8,
+      10,
+      14
+     ]
+    },
+    "טב": {
+     "actual": 7,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      11
+     ]
+    },
+    "כף": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.4348,
+     "seats": [
+      0,
+      0,
+      5
+     ]
+    },
+    "ל": {
+     "actual": 8,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      39
+     ]
+    },
+    "מרצ": {
+     "actual": 5,
+     "central": 6,
+     "pass": 0.892,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      25,
+      31,
+      39
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 7,
+     "pass": 0.9673,
+     "seats": [
+      5,
+      7,
+      11
+     ]
+    }
+   },
+   "mae": 1.0,
+   "polls": 41
+  },
+  {
+   "asof": "2020-02-10",
+   "baselineMae": {
+    "avg7": 1.333,
+    "lastPoll": 1.333,
+    "median14": 1.333
+   },
+   "bloc": {
+    "actual": 58,
+    "baselines": {
+     "avg7": 55.8,
+     "lastPoll": 53.0,
+     "median14": 57.0
+    },
+    "model": [
+     49,
+     56,
+     63
+    ]
+   },
+   "brier": 0.0003,
+   "coverage80": 1.0,
+   "cycle": "k23",
+   "horizon": 21,
+   "label": "מרץ 2020",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 9,
+     "pass": 0.9982,
+     "seats": [
+      6,
+      9,
+      12
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.9948,
+     "seats": [
+      5,
+      8,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 15,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      9,
+      13,
+      17
+     ]
+    },
+    "טב": {
+     "actual": 6,
+     "central": 8,
+     "pass": 0.9948,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9945,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "מחל": {
+     "actual": 36,
+     "central": 33,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      39
+     ]
+    },
+    "נץ": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0525,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 34,
+     "pass": 1.0,
+     "seats": [
+      27,
+      34,
+      42
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 0.9962,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 1.333,
+   "polls": 19
+  },
+  {
+   "asof": "2020-02-17",
+   "baselineMae": {
+    "avg7": 1.238,
+    "lastPoll": 1.333,
+    "median14": 1.111
+   },
+   "bloc": {
+    "actual": 58,
+    "baselines": {
+     "avg7": 55.9,
+     "lastPoll": 56.0,
+     "median14": 56.0
+    },
+    "model": [
+     49,
+     56,
+     63
+    ]
+   },
+   "brier": 0.0005,
+   "coverage80": 1.0,
+   "cycle": "k23",
+   "horizon": 14,
+   "label": "מרץ 2020",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 9,
+     "pass": 0.9988,
+     "seats": [
+      6,
+      9,
+      11
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.9978,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    },
+    "ודעם": {
+     "actual": 15,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      10,
+      13,
+      17
+     ]
+    },
+    "טב": {
+     "actual": 6,
+     "central": 7,
+     "pass": 0.9968,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9932,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "מחל": {
+     "actual": 36,
+     "central": 33,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      40
+     ]
+    },
+    "נץ": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0658,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 35,
+     "pass": 1.0,
+     "seats": [
+      27,
+      34,
+      42
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 0.999,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 1.333,
+   "polls": 26
+  },
+  {
+   "asof": "2020-02-24",
+   "baselineMae": {
+    "avg7": 1.069,
+    "lastPoll": 1.333,
+    "median14": 1.111
+   },
+   "bloc": {
+    "actual": 58,
+    "baselines": {
+     "avg7": 56.2,
+     "lastPoll": 56.0,
+     "median14": 55.5
+    },
+    "model": [
+     50,
+     56,
+     63
+    ]
+   },
+   "brier": 0.0002,
+   "coverage80": 1.0,
+   "cycle": "k23",
+   "horizon": 7,
+   "label": "מרץ 2020",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.997,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 15,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      10,
+      13,
+      17
+     ]
+    },
+    "טב": {
+     "actual": 6,
+     "central": 7,
+     "pass": 0.9972,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9968,
+     "seats": [
+      5,
+      7,
+      9
+     ]
+    },
+    "מחל": {
+     "actual": 36,
+     "central": 34,
+     "pass": 1.0,
+     "seats": [
+      27,
+      33,
+      40
+     ]
+    },
+    "נץ": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0377,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 34,
+     "pass": 1.0,
+     "seats": [
+      27,
+      33,
+      41
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 0.9998,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 1.111,
+   "polls": 34
+  },
+  {
+   "asof": "2020-03-01",
+   "baselineMae": {
+    "avg7": 0.889,
+    "lastPoll": 0.667,
+    "median14": 0.833
+   },
+   "bloc": {
+    "actual": 58,
+    "baselines": {
+     "avg7": 57.2,
+     "lastPoll": 58.0,
+     "median14": 56.0
+    },
+    "model": [
+     50,
+     57,
+     64
+    ]
+   },
+   "brier": 0.0003,
+   "coverage80": 1.0,
+   "cycle": "k23",
+   "horizon": 1,
+   "label": "מרץ 2020",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 8,
+     "pass": 0.9992,
+     "seats": [
+      6,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 15,
+     "central": 14,
+     "pass": 1.0,
+     "seats": [
+      10,
+      14,
+      17
+     ]
+    },
+    "טב": {
+     "actual": 6,
+     "central": 7,
+     "pass": 0.9988,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9583,
+     "seats": [
+      4,
+      7,
+      10
+     ]
+    },
+    "מחל": {
+     "actual": 36,
+     "central": 34,
+     "pass": 1.0,
+     "seats": [
+      27,
+      33,
+      41
+     ]
+    },
+    "נץ": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.037,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "פה": {
+     "actual": 33,
+     "central": 33,
+     "pass": 1.0,
+     "seats": [
+      26,
+      33,
+      40
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 1.0,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 0.889,
+   "polls": 43
+  },
+  {
+   "asof": "2021-03-02",
+   "baselineMae": {
+    "avg7": 2.167,
+    "lastPoll": 2.571,
+    "median14": 2.179
+   },
+   "bloc": {
+    "actual": 52,
+    "baselines": {
+     "avg7": 46.8,
+     "lastPoll": 47.0,
+     "median14": 47.5
+    },
+    "model": [
+     42,
+     48,
+     54
+    ]
+   },
+   "brier": 0.0913,
+   "coverage80": 0.615,
+   "cycle": "k24",
+   "horizon": 21,
+   "label": "מרץ 2021",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 6,
+     "pass": 0.868,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "ב": {
+     "actual": 7,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      9,
+      11,
+      14
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9513,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 6,
+     "central": 9,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      12
+     ]
+    },
+    "ט": {
+     "actual": 6,
+     "central": 5,
+     "pass": 0.6875,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "יז": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0278,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "כן": {
+     "actual": 8,
+     "central": 4,
+     "pass": 0.6065,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9427,
+     "seats": [
+      4,
+      7,
+      10
+     ]
+    },
+    "מחל": {
+     "actual": 30,
+     "central": 28,
+     "pass": 1.0,
+     "seats": [
+      24,
+      28,
+      33
+     ]
+    },
+    "מרצ": {
+     "actual": 6,
+     "central": 4,
+     "pass": 0.569,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "עם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.0963,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "פה": {
+     "actual": 17,
+     "central": 18,
+     "pass": 1.0,
+     "seats": [
+      14,
+      18,
+      23
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 0.999,
+     "seats": [
+      6,
+      8,
+      10
+     ]
+    },
+    "ת": {
+     "actual": 6,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      10,
+      13,
+      17
+     ]
+    }
+   },
+   "mae": 2.143,
+   "polls": 14
+  },
+  {
+   "asof": "2021-03-09",
+   "baselineMae": {
+    "avg7": 2.163,
+    "lastPoll": 1.714,
+    "median14": 2.071
+   },
+   "bloc": {
+    "actual": 52,
+    "baselines": {
+     "avg7": 47.3,
+     "lastPoll": 47.0,
+     "median14": 48.0
+    },
+    "model": [
+     41,
+     47,
+     53
+    ]
+   },
+   "brier": 0.0797,
+   "coverage80": 0.692,
+   "cycle": "k24",
+   "horizon": 14,
+   "label": "מרץ 2021",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 6,
+     "pass": 0.8852,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "ב": {
+     "actual": 7,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      9,
+      12,
+      14
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.954,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 6,
+     "central": 8,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      11
+     ]
+    },
+    "ט": {
+     "actual": 6,
+     "central": 5,
+     "pass": 0.6695,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "יז": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.018,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "כן": {
+     "actual": 8,
+     "central": 5,
+     "pass": 0.697,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9633,
+     "seats": [
+      5,
+      7,
+      11
+     ]
+    },
+    "מחל": {
+     "actual": 30,
+     "central": 28,
+     "pass": 1.0,
+     "seats": [
+      24,
+      29,
+      33
+     ]
+    },
+    "מרצ": {
+     "actual": 6,
+     "central": 4,
+     "pass": 0.4983,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "עם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.196,
+     "seats": [
+      0,
+      0,
+      4
+     ]
+    },
+    "פה": {
+     "actual": 17,
+     "central": 19,
+     "pass": 1.0,
+     "seats": [
+      15,
+      19,
+      24
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 0.9998,
+     "seats": [
+      6,
+      8,
+      10
+     ]
+    },
+    "ת": {
+     "actual": 6,
+     "central": 12,
+     "pass": 1.0,
+     "seats": [
+      10,
+      12,
+      15
+     ]
+    }
+   },
+   "mae": 2.0,
+   "polls": 19
+  },
+  {
+   "asof": "2021-03-16",
+   "baselineMae": {
+    "avg7": 1.857,
+    "lastPoll": 1.429,
+    "median14": 1.679
+   },
+   "bloc": {
+    "actual": 52,
+    "baselines": {
+     "avg7": 47.7,
+     "lastPoll": 49.0,
+     "median14": 48.0
+    },
+    "model": [
+     42,
+     48,
+     54
+    ]
+   },
+   "brier": 0.0741,
+   "coverage80": 0.692,
+   "cycle": "k24",
+   "horizon": 7,
+   "label": "מרץ 2021",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 6,
+     "pass": 0.8905,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "ב": {
+     "actual": 7,
+     "central": 12,
+     "pass": 1.0,
+     "seats": [
+      9,
+      11,
+      14
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.956,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 6,
+     "central": 8,
+     "pass": 1.0,
+     "seats": [
+      7,
+      9,
+      11
+     ]
+    },
+    "ט": {
+     "actual": 6,
+     "central": 5,
+     "pass": 0.701,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "יז": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.017,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "כן": {
+     "actual": 8,
+     "central": 5,
+     "pass": 0.7075,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.969,
+     "seats": [
+      5,
+      7,
+      11
+     ]
+    },
+    "מחל": {
+     "actual": 30,
+     "central": 28,
+     "pass": 1.0,
+     "seats": [
+      24,
+      29,
+      34
+     ]
+    },
+    "מרצ": {
+     "actual": 6,
+     "central": 4,
+     "pass": 0.4985,
+     "seats": [
+      0,
+      0,
+      6
+     ]
+    },
+    "עם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.228,
+     "seats": [
+      0,
+      0,
+      5
+     ]
+    },
+    "פה": {
+     "actual": 17,
+     "central": 19,
+     "pass": 1.0,
+     "seats": [
+      15,
+      19,
+      23
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 0.9998,
+     "seats": [
+      6,
+      8,
+      10
+     ]
+    },
+    "ת": {
+     "actual": 6,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      9,
+      12,
+      14
+     ]
+    }
+   },
+   "mae": 2.0,
+   "polls": 22
+  },
+  {
+   "asof": "2021-03-22",
+   "baselineMae": {
+    "avg7": 1.393,
+    "lastPoll": 1.429,
+    "median14": 1.429
+   },
+   "bloc": {
+    "actual": 52,
+    "baselines": {
+     "avg7": 50.5,
+     "lastPoll": 51.0,
+     "median14": 50.0
+    },
+    "model": [
+     44,
+     49,
+     55
+    ]
+   },
+   "brier": 0.0569,
+   "coverage80": 0.692,
+   "cycle": "k24",
+   "horizon": 1,
+   "label": "מרץ 2021",
+   "lists": {
+    "אמת": {
+     "actual": 7,
+     "central": 6,
+     "pass": 0.849,
+     "seats": [
+      0,
+      6,
+      8
+     ]
+    },
+    "ב": {
+     "actual": 7,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      9,
+      11,
+      13
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9613,
+     "seats": [
+      5,
+      7,
+      10
+     ]
+    },
+    "ודעם": {
+     "actual": 6,
+     "central": 8,
+     "pass": 1.0,
+     "seats": [
+      7,
+      8,
+      10
+     ]
+    },
+    "ט": {
+     "actual": 6,
+     "central": 5,
+     "pass": 0.734,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "יז": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0125,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "כן": {
+     "actual": 8,
+     "central": 5,
+     "pass": 0.7488,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "ל": {
+     "actual": 7,
+     "central": 7,
+     "pass": 1.0,
+     "seats": [
+      6,
+      8,
+      9
+     ]
+    },
+    "מחל": {
+     "actual": 30,
+     "central": 30,
+     "pass": 1.0,
+     "seats": [
+      25,
+      30,
+      35
+     ]
+    },
+    "מרצ": {
+     "actual": 6,
+     "central": 4,
+     "pass": 0.5855,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "עם": {
+     "actual": 4,
+     "central": 0,
+     "pass": 0.3167,
+     "seats": [
+      0,
+      0,
+      5
+     ]
+    },
+    "פה": {
+     "actual": 17,
+     "central": 19,
+     "pass": 1.0,
+     "seats": [
+      16,
+      19,
+      23
+     ]
+    },
+    "שס": {
+     "actual": 9,
+     "central": 8,
+     "pass": 1.0,
+     "seats": [
+      6,
+      8,
+      10
+     ]
+    },
+    "ת": {
+     "actual": 6,
+     "central": 10,
+     "pass": 1.0,
+     "seats": [
+      8,
+      10,
+      13
+     ]
+    }
+   },
+   "mae": 1.714,
+   "polls": 26
+  },
+  {
+   "asof": "2022-10-11",
+   "baselineMae": {
+    "avg7": 1.015,
+    "lastPoll": 1.077,
+    "median14": 0.923
+   },
+   "bloc": {
+    "actual": 64,
+    "baselines": {
+     "avg7": 60.4,
+     "lastPoll": 60.0,
+     "median14": 60.0
+    },
+    "model": [
+     54,
+     61,
+     70
+    ]
+   },
+   "brier": 0.0747,
+   "coverage80": 1.0,
+   "cycle": "k25",
+   "horizon": 21,
+   "label": "נובמבר 2022",
+   "lists": {
+    "אמת": {
+     "actual": 4,
+     "central": 5,
+     "pass": 0.771,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "ב": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0835,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9403,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "ד": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0095,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ום": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.5645,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "ט": {
+     "actual": 14,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      9,
+      13,
+      17
+     ]
+    },
+    "כן": {
+     "actual": 12,
+     "central": 12,
+     "pass": 1.0,
+     "seats": [
+      9,
+      12,
+      16
+     ]
+    },
+    "ל": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.8632,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      40
+     ]
+    },
+    "מרצ": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.7183,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "עם": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.572,
+     "seats": [
+      0,
+      4,
+      7
+     ]
+    },
+    "פה": {
+     "actual": 24,
+     "central": 24,
+     "pass": 1.0,
+     "seats": [
+      18,
+      24,
+      31
+     ]
+    },
+    "שס": {
+     "actual": 11,
+     "central": 8,
+     "pass": 0.9992,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 0.923,
+   "polls": 23
+  },
+  {
+   "asof": "2022-10-18",
+   "baselineMae": {
+    "avg7": 0.949,
+    "lastPoll": 1.077,
+    "median14": 1.0
+   },
+   "bloc": {
+    "actual": 64,
+    "baselines": {
+     "avg7": 60.0,
+     "lastPoll": 59.0,
+     "median14": 60.0
+    },
+    "model": [
+     54,
+     62,
+     70
+    ]
+   },
+   "brier": 0.0745,
+   "coverage80": 1.0,
+   "cycle": "k25",
+   "horizon": 14,
+   "label": "נובמבר 2022",
+   "lists": {
+    "אמת": {
+     "actual": 4,
+     "central": 5,
+     "pass": 0.7505,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "ב": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0818,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.9417,
+     "seats": [
+      4,
+      7,
+      11
+     ]
+    },
+    "ד": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0097,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ום": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.558,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "ט": {
+     "actual": 14,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      10,
+      13,
+      17
+     ]
+    },
+    "כן": {
+     "actual": 12,
+     "central": 12,
+     "pass": 1.0,
+     "seats": [
+      9,
+      12,
+      16
+     ]
+    },
+    "ל": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.87,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      40
+     ]
+    },
+    "מרצ": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.697,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "עם": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.5555,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "פה": {
+     "actual": 24,
+     "central": 24,
+     "pass": 1.0,
+     "seats": [
+      19,
+      25,
+      32
+     ]
+    },
+    "שס": {
+     "actual": 11,
+     "central": 8,
+     "pass": 0.998,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 0.923,
+   "polls": 29
+  },
+  {
+   "asof": "2022-10-25",
+   "baselineMae": {
+    "avg7": 0.899,
+    "lastPoll": 0.923,
+    "median14": 0.962
+   },
+   "bloc": {
+    "actual": 64,
+    "baselines": {
+     "avg7": 60.3,
+     "lastPoll": 61.0,
+     "median14": 59.5
+    },
+    "model": [
+     54,
+     62,
+     70
+    ]
+   },
+   "brier": 0.0746,
+   "coverage80": 1.0,
+   "cycle": "k25",
+   "horizon": 7,
+   "label": "נובמבר 2022",
+   "lists": {
+    "אמת": {
+     "actual": 4,
+     "central": 5,
+     "pass": 0.7352,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "ב": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.056,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.953,
+     "seats": [
+      5,
+      7,
+      11
+     ]
+    },
+    "ד": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0205,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ום": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.5563,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "ט": {
+     "actual": 14,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      10,
+      13,
+      17
+     ]
+    },
+    "כן": {
+     "actual": 12,
+     "central": 12,
+     "pass": 1.0,
+     "seats": [
+      9,
+      12,
+      16
+     ]
+    },
+    "ל": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.8715,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      39
+     ]
+    },
+    "מרצ": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.7083,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "עם": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.5765,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "פה": {
+     "actual": 24,
+     "central": 24,
+     "pass": 1.0,
+     "seats": [
+      19,
+      25,
+      32
+     ]
+    },
+    "שס": {
+     "actual": 11,
+     "central": 8,
+     "pass": 0.9992,
+     "seats": [
+      6,
+      8,
+      11
+     ]
+    }
+   },
+   "mae": 0.923,
+   "polls": 42
+  },
+  {
+   "asof": "2022-10-31",
+   "baselineMae": {
+    "avg7": 0.993,
+    "lastPoll": 1.077,
+    "median14": 1.077
+   },
+   "bloc": {
+    "actual": 64,
+    "baselines": {
+     "avg7": 60.3,
+     "lastPoll": 60.0,
+     "median14": 60.0
+    },
+    "model": [
+     55,
+     62,
+     70
+    ]
+   },
+   "brier": 0.0714,
+   "coverage80": 1.0,
+   "cycle": "k25",
+   "horizon": 1,
+   "label": "נובמבר 2022",
+   "lists": {
+    "אמת": {
+     "actual": 4,
+     "central": 5,
+     "pass": 0.7545,
+     "seats": [
+      0,
+      5,
+      8
+     ]
+    },
+    "ב": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.05,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ג": {
+     "actual": 7,
+     "central": 7,
+     "pass": 0.945,
+     "seats": [
+      5,
+      7,
+      11
+     ]
+    },
+    "ד": {
+     "actual": 0,
+     "central": 0,
+     "pass": 0.0255,
+     "seats": [
+      0,
+      0,
+      0
+     ]
+    },
+    "ום": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.5627,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "ט": {
+     "actual": 14,
+     "central": 13,
+     "pass": 1.0,
+     "seats": [
+      10,
+      14,
+      18
+     ]
+    },
+    "כן": {
+     "actual": 12,
+     "central": 11,
+     "pass": 1.0,
+     "seats": [
+      9,
+      12,
+      15
+     ]
+    },
+    "ל": {
+     "actual": 6,
+     "central": 6,
+     "pass": 0.8672,
+     "seats": [
+      0,
+      6,
+      9
+     ]
+    },
+    "מחל": {
+     "actual": 32,
+     "central": 32,
+     "pass": 1.0,
+     "seats": [
+      26,
+      32,
+      39
+     ]
+    },
+    "מרצ": {
+     "actual": 0,
+     "central": 5,
+     "pass": 0.6743,
+     "seats": [
+      0,
+      5,
+      7
+     ]
+    },
+    "עם": {
+     "actual": 5,
+     "central": 4,
+     "pass": 0.5555,
+     "seats": [
+      0,
+      4,
+      6
+     ]
+    },
+    "פה": {
+     "actual": 24,
+     "central": 25,
+     "pass": 1.0,
+     "seats": [
+      20,
+      25,
+      32
+     ]
+    },
+    "שס": {
+     "actual": 11,
+     "central": 8,
+     "pass": 0.9992,
+     "seats": [
+      6,
+      9,
+      11
+     ]
+    }
+   },
+   "mae": 1.077,
+   "polls": 49
+  }
+ ],
+ "scenarios": 4000,
+ "summary": {
+  "1": {
+   "baselineMae": {
+    "avg7": 1.469,
+    "lastPoll": 1.429,
+    "median14": 1.476
+   },
+   "blocCovered": 4,
+   "brier": 0.0635,
+   "coverage80": 0.923,
+   "mae": 1.536
+  },
+  "14": {
+   "baselineMae": {
+    "avg7": 1.678,
+    "lastPoll": 1.733,
+    "median14": 1.588
+   },
+   "blocCovered": 4,
+   "brier": 0.0643,
+   "coverage80": 0.923,
+   "mae": 1.743
+  },
+  "21": {
+   "baselineMae": {
+    "avg7": 1.726,
+    "lastPoll": 1.779,
+    "median14": 1.664
+   },
+   "blocCovered": 4,
+   "brier": 0.0643,
+   "coverage80": 0.901,
+   "mae": 1.657
+  },
+  "7": {
+   "baselineMae": {
+    "avg7": 1.585,
+    "lastPoll": 1.714,
+    "median14": 1.515
+   },
+   "blocCovered": 4,
+   "brier": 0.0638,
+   "coverage80": 0.923,
+   "mae": 1.647
+  }
+ }
+}

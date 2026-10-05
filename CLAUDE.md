@@ -23,6 +23,6 @@
 
 ## בדיקות מקומיות לפני כל PR
 ```bash
-python3 pipeline/build_data.py && python3 pipeline/test_freeze.py
+python3 pipeline/build_data.py && python3 pipeline/test_freeze.py && python3 pipeline/test_model.py
 npx tsc --noEmit -p tsconfig.json && npm test && npm run build
 ```

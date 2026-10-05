@@ -29,6 +29,8 @@ jobs:
           git diff --exit-code -- src/data
       - name: הקפאה לפי 16ה(ח) — שעון מזויף
         run: python3 pipeline/test_freeze.py
+      - name: המודל — מנוע מהיר זהה למנוע המחקרי, בדיקת עבר עדכנית
+        run: python3 pipeline/test_model.py
       - name: טיפוסים
         run: npx tsc --noEmit -p tsconfig.json
       - name: בדיקות המנוע

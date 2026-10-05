@@ -8,6 +8,7 @@ const NAV = [
   { to: "/", label: "המצב היום" },
   { to: "/polls", label: "ארכיון הסקרים" },
   { to: "/trends", label: "מגמות" },
+  { to: "/scenarios", label: "תרחישים" },
   { to: "/calculator", label: "מחשבון מנדטים" },
   { to: "/results", label: "תוצאות אמת" },
   { to: "/accuracy", label: "דיוק הסקרים" },

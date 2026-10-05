@@ -153,7 +153,13 @@ export default function Home() {
         </Note>
       </Card>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 [&>*]:min-w-0">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 [&>*]:min-w-0">
+        <Card title="תרחישים ליום הבחירות">
+          <p className="text-sm">אלפי תרחישים שעוברים במנוע החוק: טווח מנדטים לכל רשימה, ובכמה מהם היא עוברת את אחוז החסימה.</p>
+          <Link to="/scenarios" className="font-bold">
+            לתרחישים
+          </Link>
+        </Card>
         <Card title="מחשבון מנדטים">
           <p className="text-sm">משנים אחוזים ורואים את החלוקה לפי החוק: אחוז חסימה, הסכמי עודפים ובאדר-עופר.</p>
           <Link to="/calculator" className="font-bold">
