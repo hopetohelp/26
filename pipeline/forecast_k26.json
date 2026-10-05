@@ -1,0 +1,69 @@
+{
+ "about": "מודל החיזוי — נתוני הכנסת ה-26 שהמודל צריך ואינם במפרט (המפרט קפוא; הקובץ הזה אינו משפיע על בדיקת העבר). גוש ומפלגה לפי blocRule שבמפרט.",
+ "date": "2026-10-27",
+ "threshold": [
+  325,
+  10000
+ ],
+ "blocNote": "right_religious = מפלגות ממשלה 37, שהצהירו על תמיכה בנתניהו. arab = רשימות ערביות. השאר none עד שתאומת הצהרה פומבית לפני הבחירות (כלל זהיר: רשימה בלי גוש אינה מקבלת תיקון גוש).",
+ "lists": {
+  "likud": {
+   "bloc": "right_religious",
+   "party": "likud"
+  },
+  "shas": {
+   "bloc": "right_religious",
+   "party": "shas"
+  },
+  "utj": {
+   "bloc": "right_religious",
+   "party": "utj"
+  },
+  "otzma": {
+   "bloc": "right_religious"
+  },
+  "rzp": {
+   "bloc": "right_religious"
+  },
+  "yb": {
+   "bloc": "none",
+   "party": "yb"
+  },
+  "raam": {
+   "bloc": "arab",
+   "party": "raam"
+  },
+  "joint": {
+   "bloc": "arab"
+  },
+  "yashar": {
+   "bloc": "none"
+  },
+  "together": {
+   "bloc": "none"
+  },
+  "democrats": {
+   "bloc": "none"
+  },
+  "reservists": {
+   "bloc": "none"
+  },
+  "bluewhite": {
+   "bloc": "none"
+  },
+  "amcha": {
+   "bloc": "none"
+  },
+  "haredi_public": {
+   "bloc": "none"
+  }
+ },
+ "seriesMap": {
+  "Kantar": "kantar",
+  "Direct Polls": "direct_polls",
+  "Maagar Mochot": "maagar_mochot",
+  "Midgam R&C": "midgam",
+  "LRI+P4A": "panels_politics"
+ },
+ "seriesNote": "שם מכון של 2026 ⇐ סדרה היסטורית רק כשהזהות ודאית; ספק ⇐ סדרה נפרדת בלי עבר (כלל המפרט). הראיות וההכרעה לכל שם: raw/forecast/series_identity.md"
+}

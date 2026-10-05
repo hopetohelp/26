@@ -17,20 +17,21 @@ const isEdge = (r: ListRow) => r.pass > 0.005 && r.pass < 0.995;
 const isOut = (r: ListRow) => r.pass <= 0.005;
 const range = (r: ListRow) => (r.hi > 0 ? `${r.lo}–${r.hi}` : "—");
 const statusText = (r: ListRow) => (isOut(r) ? "מתחת לסף" : isEdge(r) ? `על הסף, עוברת ב-${passPct(r.pass)}%` : "עוברת");
-const srRow = (r: ListRow) =>
-  `${r.name}: ${r.central} מנדטים לפי הממוצע; ב-80% מהתרחישים ${r.hi > 0 ? `בין ${r.lo} ל-${r.hi}` : "אפס"}; ${statusText(r)}`;
+const srRow = (r: ListRow, basis: string) =>
+  `${r.name}: ${r.central} מנדטים לפי ${basis}; ב-80% מהתרחישים ${r.hi > 0 ? `בין ${r.lo} ל-${r.hi}` : "אפס"}; ${statusText(r)}`;
 
-/** שלוש תצוגות של אותם נתונים — אחת לכל עיצוב. אותו מידע בדיוק, כולל לקורא מסך. */
-export default function ListsView({ rows, theme }: { rows: ListRow[]; theme: ThemeId }) {
-  if (theme === "league") return <League rows={rows} />;
-  if (theme === "boxes") return <Boxes rows={rows} />;
-  return <Board rows={rows} />;
+/** שלוש תצוגות של אותם נתונים — אחת לכל עיצוב. אותו מידע בדיוק, כולל לקורא מסך.
+ *  basis: מקור המספר המרכזי, כפי שנקרא ("הממוצע" בעמוד הראשי, "התחזית" בעמוד התחזית). */
+export default function ListsView({ rows, theme, basis = "הממוצע" }: { rows: ListRow[]; theme: ThemeId; basis?: string }) {
+  if (theme === "league") return <League rows={rows} basis={basis} />;
+  if (theme === "boxes") return <Boxes rows={rows} basis={basis} />;
+  return <Board rows={rows} basis={basis} />;
 }
 
 /* ---------- לוח המודיעין ---------- */
-function Board({ rows }: { rows: ListRow[] }) {
+function Board({ rows, basis }: { rows: ListRow[]; basis: string }) {
   return (
-    <div className="bg-frame text-frame-ink rounded-theme overflow-hidden" role="table" aria-label="הרשימות: מנדטים לפי הממוצע, טווח וסטטוס">
+    <div className="bg-frame text-frame-ink rounded-theme overflow-hidden" role="table" aria-label={`הרשימות: מנדטים לפי ${basis}, טווח וסטטוס`}>
       <div role="row" className="grid grid-cols-[minmax(0,1fr)_auto_5.5rem] md:grid-cols-[minmax(0,1fr)_auto_6rem_12rem] gap-x-3 px-4 py-2 text-[11px] md:text-xs text-frame-soft">
         <span role="columnheader">רשימה</span>
         <span role="columnheader">מנדטים</span>
@@ -85,7 +86,7 @@ function Board({ rows }: { rows: ListRow[] }) {
 }
 
 /* ---------- טבלת הליגה ---------- */
-function League({ rows }: { rows: ListRow[] }) {
+function League({ rows, basis }: { rows: ListRow[]; basis: string }) {
   const max = Math.max(30, ...rows.map((r) => r.hi));
   const w = (x: number) => `${(Math.min(x, max) / max) * 100}%`;
   const safe = rows.filter((r) => !isEdge(r) && !isOut(r));
@@ -95,7 +96,7 @@ function League({ rows }: { rows: ListRow[] }) {
       <ol className="flex flex-col gap-1.5" aria-label="רשימות שעוברות את הסף כמעט בכל התרחישים">
         {safe.map((r, i) => (
           <li key={r.id} className="grid grid-cols-[1.4rem_1fr_minmax(5rem,9rem)_2.8rem] md:grid-cols-[2rem_14rem_1fr_3.5rem] items-center gap-2 bg-paper-card rounded-theme px-3 py-2.5">
-            <span className="sr-only">{srRow(r)}</span>
+            <span className="sr-only">{srRow(r, basis)}</span>
             <span className="text-sm text-ink-faint tabular" aria-hidden="true">{i + 1}</span>
             <span className="font-bold text-base" aria-hidden="true">{r.name}</span>
             <span className="relative h-2 bg-paper rounded" aria-hidden="true">
@@ -120,7 +121,7 @@ function League({ rows }: { rows: ListRow[] }) {
               className={`grid grid-cols-[1.4rem_1fr_auto_2.8rem] md:grid-cols-[2rem_14rem_1fr_3.5rem] items-center gap-2 rounded-theme px-3 py-2.5 ${out ? "bg-paper-card/60" : "bg-warn-soft"}`}
               style={out ? undefined : { backgroundImage: "repeating-linear-gradient(135deg, rgb(var(--signal) / .08) 0 6px, transparent 6px 12px)" }}
             >
-              <span className="sr-only">{srRow(r)}</span>
+              <span className="sr-only">{srRow(r, basis)}</span>
               <span className="text-sm text-ink-faint tabular" aria-hidden="true">{safe.length + i + 1}</span>
               <span className={`font-bold text-base ${out ? "text-ink-faint" : ""}`} aria-hidden="true">{r.name}</span>
               <span className={`text-sm font-bold ${out ? "text-ink-faint" : "text-warn"}`} aria-hidden="true">
@@ -136,9 +137,9 @@ function League({ rows }: { rows: ListRow[] }) {
 }
 
 /* ---------- קיר הקופסאות ---------- */
-function Boxes({ rows }: { rows: ListRow[] }) {
+function Boxes({ rows, basis }: { rows: ListRow[]; basis: string }) {
   return (
-    <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 [&>*]:min-w-0" aria-label="הרשימות: מנדטים לפי הממוצע וטווח התרחישים">
+    <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 [&>*]:min-w-0" aria-label={`הרשימות: מנדטים לפי ${basis} וטווח התרחישים`}>
       {rows.map((r, i) => {
         const out = isOut(r);
         const edge = isEdge(r);
@@ -150,7 +151,7 @@ function Boxes({ rows }: { rows: ListRow[] }) {
         }
         return (
           <li key={r.id} className={`flex flex-col gap-2 rounded-theme px-3 pt-2.5 pb-3 shadow-[inset_0_-4px_0_rgba(0,0,0,.12)] ${out ? "bg-accent-soft" : "bg-paper-card"}`}>
-            <span className="sr-only">{srRow(r)}</span>
+            <span className="sr-only">{srRow(r, basis)}</span>
             <span className="flex flex-wrap justify-between items-baseline gap-x-2 gap-y-1" aria-hidden="true">
               <span className="font-display text-[32px] leading-[0.95] flex items-center gap-2 min-w-0 break-words">
                 <span className="w-3 h-3 rounded-full" style={{ background: colorOf(r.id, i) }} />

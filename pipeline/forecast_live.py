@@ -1,0 +1,184 @@
+"""מודל החיזוי — התחזית החיה לכנסת ה-26 (src/data/forecast.json), ונתוני הגילוי הנאות מיומן ההרצות.
+
+אותו מודל בדיוק כמו בבדיקת העבר (forecast.py, המפרט הנוכחי): הפרמטרים נאמדים מכל המערכות 2013–2022 באופק המתאים
+למרחק מהבחירות, והסקרים הם הסקר האחרון של כל סדרה בשבוע שמסתיים ביום הבנייה. נקרא מ-build_data.py.
+
+הטווח: תרחישים — לכל רשימה טעות בלוג-יחס, לפי שאריות המודל עצמו בבדיקת העבר באותו אופק (רשימות קטנות וגדולות
+בנפרד), מוגדלת ב-inflation, מהתפלגות t עם df דרגות חופש (זנבות עבים: החטאות כמו 2015 ו-2019א).
+"""
+from __future__ import annotations
+
+import json
+import math
+import random
+from datetime import date, timedelta
+from pathlib import Path
+
+import forecast as F
+import model as M
+
+HERE = Path(__file__).resolve().parent
+K26 = json.loads((HERE / "forecast_k26.json").read_text(encoding="utf-8"))
+SCENARIOS = {"n": 10000, "inflation": 1.25, "df": 4, "smallShare": 0.05}
+
+
+def horizon_for(days: int, grid: list[int]) -> int:
+    """האופק הקטן ביותר שגדול או שווה למרחק מהבחירות (מפרט: horizonsNote); מעבר לגדול ביותר — הגדול ביותר."""
+    fit = [h for h in sorted(grid) if h >= days]
+    return fit[0] if fit else max(grid)
+
+
+def log_rows() -> list[dict]:
+    path = HERE / "forecast_runs.jsonl"
+    return [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()] if path.exists() else []
+
+
+def residual_sd(bt: dict, spec: dict) -> dict[str, float]:
+    """שורש ממוצע ריבועי השאריות של הגרסה הראשית, במערכות שאינן התחלה קרה. רשימה גדולה — בלוג-יחס (הטעות יחסית
+    לגודל); רשימה קטנה (מתחת ל-smallShare בתחזית) — בנקודות אחוז, כי לוג-יחס של רשימה שקרסה לאפס מתפוצץ."""
+    eps = spec["model"]["clrEpsilon"]
+    v = spec["gate"]["primaryVariant"]
+    elections = F.load_elections(spec)
+    small, large = [], []
+    for r in bt["rows"]:
+        if r["coldStart"]:
+            continue
+        pred = r["variants"][v]["shares"]
+        act = elections[r["knesset"]].shares()
+        for k in F.units(pred, act, spec["gate"]["unitMinShare"]):
+            if pred.get(k, 0) < SCENARIOS["smallShare"]:
+                small.append(act.get(k, 0) - pred.get(k, 0))
+            else:
+                large.append(math.log((act.get(k, 0) + eps) / (pred.get(k, 0) + eps)))
+    rms = lambda xs: math.sqrt(sum(x * x for x in xs) / len(xs)) if xs else 0.0
+    return {"small": rms(small), "large": rms(large), "nSmall": len(small), "nLarge": len(large)}
+
+
+def t_draw(rng: random.Random, df: int) -> float:
+    """t עם df דרגות חופש, מנורמל לסטיית תקן 1."""
+    z = rng.gauss(0, 1)
+    chi = sum(rng.gauss(0, 1) ** 2 for _ in range(df))
+    return z / math.sqrt(chi / df) / math.sqrt(df / (df - 2))
+
+
+def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[str], build_day: date) -> dict:
+    spec = F.load_spec()
+    seed = spec["model"]["seed"]
+    eday = date.fromisoformat(K26["date"])
+    days = (eday - build_day).days
+    grid = spec["data"]["horizons"]
+    h = horizon_for(max(days, 0), grid)
+    thr = tuple(K26["threshold"])
+    lists = K26["lists"]
+    win = spec["data"]["windowDays"]
+    lag = spec["model"]["momentum"]["lagDays"]
+
+    def window(end: date) -> dict[str, dict[str, float]]:
+        last: dict[str, dict] = {}
+        for p in polls:
+            fe = date.fromisoformat(p["end"])
+            s = series_of(p["firm"])
+            if end - timedelta(days=win) < fe <= end and (s not in last or p["end"] > last[s]["end"]):
+                last[s] = p
+        out = {}
+        for s, p in last.items():
+            vals = {k: v for k, v in p["values"].items() if k in lists}
+            sh = F.poll_shares(F.Poll(p["id"], 26, s, p["end"], vals), list(lists), pairs, thr, seed)
+            if sh:
+                out[s] = sh
+        return out
+
+    now, before = window(build_day), window(build_day - timedelta(days=lag))
+    # הפרמטרים: מכל המערכות התקפות באופק h (אותה פונקציה כמו בבדיקת העבר; t = 26)
+    bt = F.run_backtest(spec, h)
+    elections = F.load_elections(spec)
+    hist = []
+    for k in sorted(elections):
+        if bt["validity"][str(k)]["valid"]:
+            e = elections[k]
+            fw = F.final_week(F.load_polls(spec), e, spec, h)
+            obs = {p.series: F.poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in fw}
+            prev = F.final_week(F.load_polls(spec), e, spec, h + lag)
+            pobs = {p.series: F.poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in prev}
+            obs = {s: v for s, v in obs.items() if v}
+            hist.append((e, obs, F.momentum(obs, {s: v for s, v in pobs.items() if v}, spec["model"]["momentum"]["minSeries"])))
+    f = F.fit([(e, o) for e, o, _ in hist], 26, spec)
+    beta, n_mom = F.fit_momentum(hist, spec)
+    mom = F.momentum(now, before, spec["model"]["momentum"]["minSeries"])
+    enough = len(now) >= spec["validity"]["minSeries"]
+    primary = spec["gate"]["primaryVariant"]
+    sh = {}
+    if enough:
+        sh3, _ = F.forecast("V3", now, lists, f, spec, thr, pairs)
+        sh = F.apply_momentum(sh3, mom, beta) if primary == "V4" else sh3
+    central = F.seats_from_shares(sh, pairs, thr) if sh else {}
+
+    # תרחישים
+    sd = residual_sd(bt, spec)
+    rng = random.Random(f"{seed}|live|{build_day.isoformat()}")
+    names = [k for k in lists if sh.get(k, 0) > 0]
+    idx = {k: i for i, k in enumerate(names)}
+    pidx = [(idx[a], idx[b]) for a, b in pairs if a in idx and b in idx]
+    tot = sum(sh.values())
+    seat_draws = {k: [] for k in names}
+    share_draws = {k: [] for k in names}
+    bloc_draws, wasted = [], []
+    for _ in range(SCENARIOS["n"] if sh else 0):
+        x = {}
+        for k in names:
+            t = SCENARIOS["inflation"] * t_draw(rng, SCENARIOS["df"])
+            x[k] = (max(0.0, sh[k] + t * sd["small"]) if sh[k] < SCENARIOS["smallShare"]
+                    else sh[k] * math.exp(t * sd["large"]))
+        norm = tot / sum(x.values())
+        votes = [int(round(x[k] * norm * M.VALID)) for k in names]
+        seats = M.fast_seats(votes, M.VALID, pidx, threshold=thr)
+        for k in names:
+            seat_draws[k].append(seats[idx[k]])
+            share_draws[k].append(x[k] * norm * 100)
+        bloc_draws.append(sum(seats[idx[k]] for k in gov if k in idx))
+        wasted.append(sum(x[k] * norm for k in names if seats[idx[k]] == 0) * 100 + (1 - tot) * 100)
+
+    def q(xs: list[float], p: float) -> float:
+        ys = sorted(xs)
+        return ys[min(len(ys) - 1, int(p * len(ys)))]
+
+    out_lists = {}
+    for k in names:
+        out_lists[k] = {"share": round(sh[k] * 100, 2), "seats": central.get(k, 0),
+                        "seatsRange": [q(seat_draws[k], 0.1), q(seat_draws[k], 0.5), q(seat_draws[k], 0.9)],
+                        "shareRange": [round(q(share_draws[k], 0.1), 2), round(q(share_draws[k], 0.9), 2)],
+                        "pass": round(sum(1 for s in seat_draws[k] if s > 0) / len(seat_draws[k]), 4)}
+
+    # הגילוי הנאות: יומן ההרצות
+    rows = log_rows()
+    cur = [r for r in rows if r["specVersion"] == spec["version"]]
+    by_h = {}
+    for r in cur:
+        by_h[str(r["horizon"])] = {"passed": r["passed"], "valid": r["valid"], "runAt": r["runAt"], "commit": r["commit"],
+                                   "summary": {v: r["summary"][v] for v in ("V0", primary) if v in r["summary"]},
+                                   "perElection": {k: v[primary] for k, v in r["perElection"].items()}}
+    attempts = sorted({r["specVersion"] for r in rows})
+    best = max((r["summary"].get(F_primary(r), {}).get("voteAccuracy", 0) for r in rows), default=0)
+    return {
+        "asof": build_day.isoformat(), "electionDay": K26["date"], "daysToElection": days, "horizon": h,
+        "specVersion": spec["version"], "variant": primary,
+        "series": sorted(now), "seriesBefore": sorted(before), "enough": enough,
+        "params": {"others": round(f.others_share * 100, 2), "beta": round(beta, 4), "betaElections": n_mom,
+                   "trainedOn": [e.knesset for e, _, _ in hist], "residualSd": {k: round(v, 4) if isinstance(v, float) else v for k, v in sd.items()},
+                   "weights": {s: round(w, 4) for s, w in F.weights_for(sorted(now), f, spec).items()},
+                   "scenarios": SCENARIOS},
+        "lists": out_lists,
+        "bloc": {"lists": gov, "seats": [q(bloc_draws, 0.1), q(bloc_draws, 0.5), q(bloc_draws, 0.9)] if bloc_draws else [],
+                 "atLeast61": round(sum(1 for b in bloc_draws if b >= 61) / len(bloc_draws), 4) if bloc_draws else None,
+                 "central": sum(central.get(k, 0) for k in gov)},
+        "wasted": [round(q(wasted, 0.1), 2), round(q(wasted, 0.5), 2), round(q(wasted, 0.9), 2)] if wasted else [],
+        "gate": {"elections": spec["gate"]["elections"], "minVote": spec["gate"]["minVoteAccuracy"],
+                 "minSeat": spec["gate"]["minSeatAccuracy"], "byHorizon": by_h,
+                 "passedAtHorizon": by_h.get(str(h), {}).get("passed")},
+        "attempts": {"versions": attempts, "runs": len(rows), "bestVoteAccuracy": round(best, 5)},
+    }
+
+
+def F_primary(row: dict) -> str:
+    """הגרסה הראשית של שורה ביומן: V4 מגרסה 4, V3 לפני כן."""
+    return "V4" if row["specVersion"] >= 4 else "V3"

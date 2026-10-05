@@ -472,6 +472,7 @@ def run_backtest(spec: dict, horizon: int) -> dict:
                 "voteAccuracy": round(vote_accuracy(sh, e.shares(), spec["gate"]["unitMinShare"]), 5),
                 "seatAccuracy": round(seat_accuracy(se, e.seats), 5),
                 "seats": {k2: v2 for k2, v2 in se.items() if v2},
+                "shares": {k2: round(v2, 6) for k2, v2 in sh.items() if v2 > 0},
             }
         if f is not None:
             row["weights"] = {s: round(w, 4) for s, w in weights_for(sorted(obs[k]), f, spec).items()}

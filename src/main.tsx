@@ -18,6 +18,7 @@ const Accuracy = lazy(() => import("./pages/Accuracy"));
 const Scenarios = lazy(() => import("./pages/Scenarios"));
 const Changes = lazy(() => import("./pages/Changes"));
 const MyFeedback = lazy(() => import("./pages/MyFeedback"));
+const Forecast = lazy(() => import("./pages/Forecast"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -49,6 +50,7 @@ createRoot(document.getElementById("root")!).render(
           />
           <Route path="feedback" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
           <Route path="feedback/:token" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
+          <Route path="forecast" element={<Suspense fallback={null}><Forecast /></Suspense>} />
           <Route path="calculator" element={<Calculator />} />
           <Route path="results" element={<Results />} />
           <Route
