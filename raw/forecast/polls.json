@@ -70,6 +70,350 @@
   "source": "https://imra.org.il/story.php?id=55384"
  },
  {
+  "id": "k19-2012-12-10-f7",
+  "knesset": 19,
+  "series": "dialog",
+  "fieldEnd": "2012-12-09",
+  "values": {
+   "מחל": {
+    "s": 39
+   },
+   "אמת": {
+    "s": 17
+   },
+   "שס": {
+    "s": 12
+   },
+   "טב": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 9
+   },
+   "פה": {
+    "s": 6
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 3
+   },
+   "כן": {
+    "s": 2
+   },
+   "נץ": {
+    "s": 0
+   }
+  },
+  "status": "inconsistent",
+  "sourceLevel": "primary",
+  "source": "https://www.haaretz.co.il/news/elections/1.1882765 (Yossi Verter 10.12.2012, live, paywalled; text gives LB 39, Labor 17, Hatnuah 9) ; https://www.imra.org.il/story.php?id=59364 (IMRA 10.12.2012, full table) ; https://knessetjeremy.com/2012/12/10/"
+ },
+ {
+  "id": "k19-2012-12-11-f6",
+  "knesset": 19,
+  "series": "kantar",
+  "fieldEnd": "2012-12-10",
+  "values": {
+   "מחל": {
+    "s": 38
+   },
+   "אמת": {
+    "s": 17
+   },
+   "שס": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 11
+   },
+   "פה": {
+    "s": 11
+   },
+   "טב": {
+    "s": 9
+   },
+   "ג": {
+    "s": 5
+   },
+   "עם": {
+    "s": 5
+   },
+   "כן": {
+    "s": 4
+   },
+   "ו": {
+    "s": 3
+   },
+   "ד": {
+    "s": 3
+   },
+   "מרץ": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 0
+   },
+   "נץ": {
+    "s": 0
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "http://news.walla.co.il/elections/?w=/2780/2595389 -> https://www.walla.co.il/news/israel/2595389 (live, Liron Maroz 11/12/2012 06:00) ; https://knessetjeremy.com/2012/12/11/"
+ },
+ {
+  "id": "k19-2012-12-12-f5",
+  "knesset": 19,
+  "series": "smith",
+  "fieldEnd": "2012-12-12",
+  "values": {
+   "מחל": {
+    "s": 39
+   },
+   "אמת": {
+    "s": 19
+   },
+   "טב": {
+    "s": 10
+   },
+   "שס": {
+    "s": 10
+   },
+   "פה": {
+    "s": 9
+   },
+   "צפ": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 4
+   },
+   "ו": {
+    "s": 4
+   },
+   "ד": {
+    "s": 4
+   },
+   "עם": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 0
+   },
+   "כן": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000810043 (Globes 27.12.2012, table of 'the previous survey on December 13') ; https://www.imra.org.il/story.php?id=59404 (IMRA 15.12.2012) ; https://knessetjeremy.com/2012/12/13/"
+ },
+ {
+  "id": "k19-2012-12-14-f3",
+  "knesset": 19,
+  "series": "geocartography",
+  "fieldEnd": "2012-12-12",
+  "values": {
+   "מחל": {
+    "s": 35
+   },
+   "אמת": {
+    "s": 17
+   },
+   "טב": {
+    "s": 16
+   },
+   "פה": {
+    "s": 12
+   },
+   "שס": {
+    "s": 10
+   },
+   "צפ": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 6
+   },
+   "כן": {
+    "s": 0
+   },
+   "ץ": {
+    "s": 0
+   },
+   "נץ": {
+    "s": 0
+   }
+  },
+  "status": "inconsistent",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=295918 (dead, redirects; Wayback blocked by egress policy in this session) ; https://www.imra.org.il/story.php?id=59404 (IMRA 15.12.2012) ; https://www.algemeiner.com/2012/12/14/poll-likud-beiteinu-down-to-35-seats-bayit-yehudi-climbs-to-16/ (JPost excerpt) ; https://knessetjeremy.com/2012/12/14/"
+ },
+ {
+  "id": "k19-2012-12-13-f4",
+  "knesset": 19,
+  "series": "panels_politics",
+  "fieldEnd": "2012-12-13",
+  "values": {
+   "מחל": {
+    "s": 36
+   },
+   "אמת": {
+    "s": 18
+   },
+   "טב": {
+    "s": 13
+   },
+   "שס": {
+    "s": 9
+   },
+   "צפ": {
+    "s": 9
+   },
+   "פה": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "עם": {
+    "s": 5
+   },
+   "מרץ": {
+    "s": 5
+   },
+   "ו": {
+    "s": 4
+   },
+   "ד": {
+    "s": 2
+   },
+   "נץ": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 2
+   },
+   "כן": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/248374 (Arutz 7 Hebrew, live) ; https://knessetjeremy.com/2012/12/13/"
+ },
+ {
+  "id": "k19-2012-12-14-f1",
+  "knesset": 19,
+  "series": "dahaf",
+  "fieldEnd": "2012-12-13",
+  "values": {
+   "מחל": {
+    "s": 35
+   },
+   "אמת": {
+    "s": 19
+   },
+   "שס": {
+    "s": 11
+   },
+   "טב": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 11
+   },
+   "פה": {
+    "s": 8
+   },
+   "ג": {
+    "s": 6
+   },
+   "ו": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "מרץ": {
+    "s": 4
+   },
+   "ד": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 2
+   },
+   "ץ": {
+    "s": 0
+   },
+   "כן": {
+    "s": 0
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-4319783,00.html (live, published 2012-12-14 10:02) ; https://www.imra.org.il/story.php?id=59399 (IMRA 14.12.2012) ; https://knessetjeremy.com/2012/12/14/"
+ },
+ {
+  "id": "k19-2012-12-14-f2",
+  "knesset": 19,
+  "series": "maagar_mochot",
+  "fieldEnd": "2012-12-13",
+  "values": {
+   "מחל": {
+    "s": 38
+   },
+   "אמת": {
+    "s": 20
+   },
+   "שס": {
+    "s": 12
+   },
+   "טב": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 9
+   },
+   "פה": {
+    "s": 8
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 1
+   },
+   "נץ": {
+    "s": 1
+   },
+   "כן": {
+    "s": 1
+   }
+  },
+  "status": "inconsistent",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php3?id=59400 (IMRA 14.12.2012, live) ; https://knessetjeremy.com/2012/12/14/"
+ },
+ {
   "id": "k19-2012-12-18-x3",
   "knesset": 19,
   "series": "dahaf",
@@ -2178,6 +2522,256 @@
   "source": "https://knessetjeremy.com/2014/03/07/panels-poll-likud-beitenu-30-labor-21-bayit-yehudi-15-yesh-atid-12-meretz-11/"
  },
  {
+  "id": "k20-2015-01-30-f10",
+  "knesset": 20,
+  "series": "smith",
+  "fieldEnd": "2015-01-29",
+  "values": {
+   "מחל": {
+    "s": 26
+   },
+   "אמת": {
+    "s": 26
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 8
+   },
+   "כ": {
+    "s": 7
+   },
+   "טב": {
+    "s": 15
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 5
+   },
+   "ג": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 0
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "aggregator",
+  "source": "http://www.nrg.co.il/online/1/ART2/673/223.html (HTTP 403; makorrishon.co.il mirror 403; Wayback blocked by egress policy) ; https://knessetjeremy.com/2015/01/30/"
+ },
+ {
+  "id": "k20-2015-01-30-f11",
+  "knesset": 20,
+  "series": "kantar",
+  "fieldEnd": "2015-01-29",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 26
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 8
+   },
+   "כ": {
+    "s": 7
+   },
+   "טב": {
+    "s": 12
+   },
+   "שס": {
+    "s": 7
+   },
+   "ל": {
+    "s": 6
+   },
+   "ג": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "http://elections.walla.co.il/item/2824785 (live, Omri Nahmias 30.1.2015 8:23) ; https://knessetjeremy.com/2015/01/30/"
+ },
+ {
+  "id": "k20-2015-01-30-f12",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-01-30",
+  "values": {
+   "מחל": {
+    "s": 25
+   },
+   "אמת": {
+    "s": 24
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 8
+   },
+   "טב": {
+    "s": 14
+   },
+   "שס": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "ג": {
+    "s": 8
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "קץ": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/190706 (Arutz Sheva, Jan 30 2015 8:32, live) ; https://knessetjeremy.com/2015/01/30/"
+ },
+ {
+  "id": "k20-2015-01-30-f16",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-01-30",
+  "values": {},
+  "status": "out_of_window",
+  "sourceLevel": "aggregator",
+  "source": "http://knessetjeremy.com/2014/01/30/bb-nb-aftermath-poll-likud-beitenu-30-labor-19-bayit-yehudi-17-yesh-atid-12-meretz-11/"
+ },
+ {
+  "id": "k20-2015-01-31-f15",
+  "knesset": 20,
+  "series": "smith",
+  "fieldEnd": "2015-01-31",
+  "values": {},
+  "status": "out_of_window",
+  "sourceLevel": "aggregator",
+  "source": "http://electograph.blogspot.dk/2014/01/israel-january-2014-smith.html (cited URL, January 2014) ; https://knessetjeremy.com/2014/01/31/"
+ },
+ {
+  "id": "k20-2015-02-01-f9",
+  "knesset": 20,
+  "series": "dialog",
+  "fieldEnd": "2015-02-02",
+  "values": {
+   "מחל": {
+    "s": 25
+   },
+   "אמת": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 9
+   },
+   "כ": {
+    "s": 8
+   },
+   "טב": {
+    "s": 14
+   },
+   "שס": {
+    "s": 6
+   },
+   "ל": {
+    "s": 6
+   },
+   "ג": {
+    "s": 8
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=66297 (IMRA 2.2.2015) ; http://www.israelnationalnews.com/News/News.aspx/190836 (Arutz Sheva, Feb 2 2015 8:40 PM, live) ; https://knessetjeremy.com/2015/02/03/"
+ },
+ {
+  "id": "k20-2015-02-03-f14",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-02-03",
+  "values": {},
+  "status": "out_of_window",
+  "sourceLevel": "aggregator",
+  "source": "http://knessetjeremy.com/2014/02/03/panels-poll-likud-beitenu-30-labor-19-bayit-yehudi-16-yesh-atid-13-meretz-11/"
+ },
+ {
+  "id": "k20-2015-02-03-f8",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-02-03",
+  "values": {
+   "מחל": {
+    "s": 25
+   },
+   "אמת": {
+    "s": 24
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 8
+   },
+   "טב": {
+    "s": 13
+   },
+   "שס": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "ג": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/190863 (Arutz Sheva, Feb 3 2015 2:11 PM, live) ; https://knessetjeremy.com/2015/02/03/"
+ },
+ {
   "id": "k20-2015-02-09-x7",
   "knesset": 20,
   "series": "unknown-k20-the-times-of-israel",
@@ -2220,6 +2814,324 @@
   "status": "corrected",
   "sourceLevel": "primary",
   "source": "https://www.timesofisrael.com/1-in-4-israelis-still-undecided-but-more-of-them-leaning-toward-herzog/ (Wayback 20150209135333, incl. chart-1.jpg)"
+ },
+ {
+  "id": "k20-2015-02-05-f7",
+  "knesset": 20,
+  "series": "kantar",
+  "fieldEnd": "2015-02-04",
+  "values": {
+   "מחל": {
+    "s": 26
+   },
+   "אמת": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 10
+   },
+   "כ": {
+    "s": 8
+   },
+   "טב": {
+    "s": 12
+   },
+   "שס": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "http://elections.walla.co.il/item/2826639 (live, Omri Nahmias 5.2.2015 10:30) ; https://knessetjeremy.com/2015/02/05/"
+ },
+ {
+  "id": "k20-2015-02-06-f6",
+  "knesset": 20,
+  "series": "midgam",
+  "fieldEnd": "2015-02-04",
+  "values": {
+   "מחל": {
+    "s": 24
+   },
+   "אמת": {
+    "s": 25
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 7
+   },
+   "טב": {
+    "s": 12
+   },
+   "שס": {
+    "s": 7
+   },
+   "ל": {
+    "s": 6
+   },
+   "ג": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "http://www.ynetnews.com/articles/0,7340,L-4623699,00.html (live) ; http://www.inn.co.il/News/News.aspx/292513 (live) ; https://knessetjeremy.com/2015/02/05/"
+ },
+ {
+  "id": "k20-2015-02-06-f4",
+  "knesset": 20,
+  "series": "smith",
+  "fieldEnd": "2015-02-05",
+  "values": {
+   "מחל": {
+    "s": 26
+   },
+   "אמת": {
+    "s": 25
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 9
+   },
+   "כ": {
+    "s": 7
+   },
+   "טב": {
+    "s": 14
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 5
+   },
+   "ג": {
+    "s": 8
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 0
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "aggregator",
+  "source": "http://www.iba.org.il/bet/bet.aspx?type=1&entity=1073940 (HTTP 403; Wayback blocked by egress policy) ; https://www.imra.org.il/story.php?id=66345 (IMRA 6.2.2015, field date) ; https://knessetjeremy.com/2015/02/06/"
+ },
+ {
+  "id": "k20-2015-02-06-f13",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-02-06",
+  "values": {},
+  "status": "out_of_window",
+  "sourceLevel": "aggregator",
+  "source": "http://knessetjeremy.com/2014/02/06/panels-poll-likud-beitenu-32-labor-18-bayit-yehudi-15-yesh-atid-14-meretz-11/"
+ },
+ {
+  "id": "k20-2015-02-06-f3",
+  "knesset": 20,
+  "series": "maagar_mochot",
+  "fieldEnd": "2015-02-06",
+  "values": {
+   "מחל": {
+    "s": 25
+   },
+   "אמת": {
+    "s": 24
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 8
+   },
+   "טב": {
+    "s": 14
+   },
+   "שס": {
+    "s": 6
+   },
+   "ל": {
+    "s": 4
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "http://www.nrg.co.il/online/1/ART2/674/647.html (HTTP 403; mirror makorrishon.co.il/nrg/online/1/ART2/674/647.html also 403; Wayback blocked by egress policy in this session) ; https://knessetjeremy.com/2015/02/06/"
+ },
+ {
+  "id": "k20-2015-02-06-f5",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-02-06",
+  "values": {
+   "מחל": {
+    "s": 26
+   },
+   "אמת": {
+    "s": 22
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 7
+   },
+   "טב": {
+    "s": 13
+   },
+   "שס": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "ג": {
+    "s": 8
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.inn.co.il/News/News.aspx/292513 (Arutz 7 Hebrew, live) ; https://knessetjeremy.com/2015/02/05/"
+ },
+ {
+  "id": "k20-2015-02-07-f2",
+  "knesset": 20,
+  "series": "kantar",
+  "fieldEnd": "2015-02-07",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 7
+   },
+   "טב": {
+    "s": 11
+   },
+   "שס": {
+    "s": 6
+   },
+   "ל": {
+    "s": 6
+   },
+   "ג": {
+    "s": 8
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/191044 (Arutz Sheva, Feb 8 2015 7:32, live) ; https://knessetjeremy.com/2015/02/07/"
+ },
+ {
+  "id": "k20-2015-02-08-f1",
+  "knesset": 20,
+  "series": "midgam_project",
+  "fieldEnd": "2015-02-08",
+  "values": {
+   "מחל": {
+    "s": 23
+   },
+   "אמת": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 10
+   },
+   "כ": {
+    "s": 10
+   },
+   "טב": {
+    "s": 14
+   },
+   "שס": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/191086 (Arutz Sheva EN, Feb 9 2015, live) ; https://www.inn.co.il/news/292628 (Arutz 7 HE, live) ; https://knessetjeremy.com/2015/02/08/"
  },
  {
   "id": "k20-2015-02-10-x6",

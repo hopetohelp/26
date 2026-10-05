@@ -1,0 +1,1140 @@
+[
+ {
+  "id": "k19-2012-12-14-f1",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 39,
+  "pollCell": "Yedioth Ahronoth/Dahaf",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-14",
+  "wikipediaSeats": {
+   "Likud+Yisrael Beiteinu": {
+    "seats": 35
+   },
+   "Israeli Labor Party": {
+    "seats": 19
+   },
+   "Shas": {
+    "seats": 11
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 11
+   },
+   "United Arab List": {
+    "seats": 4
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "Balad (political party)": {
+    "seats": 3
+   },
+   "Meretz": {
+    "seats": 4
+   },
+   "Yesh Atid": {
+    "seats": 8
+   },
+   "Otzma Yehudit": {
+    "seats": 2
+   },
+   "Hatnuah": {
+    "seats": 11
+   }
+  },
+  "urls": [
+   "https://www.ynet.co.il/articles/0,7340,L-4319783,00.html"
+  ]
+ },
+ {
+  "id": "k19-2012-12-14-f2",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 39,
+  "pollCell": "Maariv/Maagar",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-14",
+  "wikipediaSeats": {
+   "Kadima": {
+    "seats": 1
+   },
+   "Likud+Yisrael Beiteinu": {
+    "seats": 38
+   },
+   "Israeli Labor Party": {
+    "seats": 20
+   },
+   "Shas": {
+    "seats": 12
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 11
+   },
+   "United Arab List+Hadash+Balad (political party)": {
+    "seats": 10
+   },
+   "Meretz": {
+    "seats": 3
+   },
+   "Yesh Atid": {
+    "seats": 8
+   },
+   "Otzma Yehudit": {
+    "seats": 1
+   },
+   "Am Shalem": {
+    "seats": 1
+   },
+   "Hatnuah": {
+    "seats": 9
+   }
+  },
+  "urls": [
+   "https://www.imra.org.il/story.php3?id=59400"
+  ]
+ },
+ {
+  "id": "k19-2012-12-14-f3",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 39,
+  "pollCell": "Jerusalem Post/Geocartography",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-14",
+  "wikipediaSeats": {
+   "Kadima": {
+    "seats": 0
+   },
+   "Likud+Yisrael Beiteinu": {
+    "seats": 35
+   },
+   "Israeli Labor Party": {
+    "seats": 17
+   },
+   "Shas": {
+    "seats": 10
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 16
+   },
+   "United Arab List": {
+    "seats": 4
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "Balad (political party)": {
+    "seats": 3
+   },
+   "Meretz": {
+    "seats": 6
+   },
+   "Yesh Atid": {
+    "seats": 12
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   },
+   "Am Shalem": {
+    "seats": 0
+   },
+   "Hatnuah": {
+    "seats": 7
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=295918"
+  ]
+ },
+ {
+  "id": "k19-2012-12-13-f4",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 40,
+  "pollCell": "Knesset Channel/Panels",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-13",
+  "wikipediaSeats": {
+   "Kadima": {
+    "seats": 0
+   },
+   "Likud+Yisrael Beiteinu": {
+    "seats": 36
+   },
+   "Israeli Labor Party": {
+    "seats": 18
+   },
+   "Shas": {
+    "seats": 9
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 13
+   },
+   "United Arab List": {
+    "seats": 5
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "Balad (political party)": {
+    "seats": 2
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 7
+   },
+   "Otzma Yehudit": {
+    "seats": 3
+   },
+   "Am Shalem": {
+    "seats": 2
+   },
+   "Hatnuah": {
+    "seats": 9
+   }
+  },
+  "urls": [
+   "https://www.inn.co.il/News/News.aspx/248374"
+  ]
+ },
+ {
+  "id": "k19-2012-12-12-f5",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 41,
+  "pollCell": "Jerusalem Post/Smith Research",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-12",
+  "wikipediaSeats": {
+   "Kadima": {
+    "seats": 0
+   },
+   "Likud+Yisrael Beiteinu": {
+    "seats": 39
+   },
+   "Israeli Labor Party": {
+    "seats": 19
+   },
+   "Shas": {
+    "seats": 10
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 10
+   },
+   "United Arab List": {
+    "seats": 3
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "Balad (political party)": {
+    "seats": 4
+   },
+   "Meretz": {
+    "seats": 4
+   },
+   "Yesh Atid": {
+    "seats": 9
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   },
+   "Am Shalem": {
+    "seats": 3
+   },
+   "Hatnuah": {
+    "seats": 9
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k19-2012-12-11-f6",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 42,
+  "pollCell": "Walla/Tns-Teleseker",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-11",
+  "wikipediaSeats": {
+   "Kadima": {
+    "seats": 4
+   },
+   "Likud+Yisrael Beiteinu": {
+    "seats": 38
+   },
+   "Israeli Labor Party": {
+    "seats": 17
+   },
+   "Shas": {
+    "seats": 11
+   },
+   "United Torah Judaism": {
+    "seats": 5
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 9
+   },
+   "United Arab List": {
+    "seats": 5
+   },
+   "Hadash": {
+    "seats": 3
+   },
+   "Balad (political party)": {
+    "seats": 3
+   },
+   "Meretz": {
+    "seats": 3
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   },
+   "Am Shalem": {
+    "seats": 0
+   },
+   "Hatnuah": {
+    "seats": 11
+   }
+  },
+  "urls": [
+   "http://news.walla.co.il/elections/?w=/2780/2595389"
+  ]
+ },
+ {
+  "id": "k19-2012-12-10-f7",
+  "knesset": 19,
+  "electionDate": "2013-01-22",
+  "daysBefore": 43,
+  "pollCell": "Haaretz/Dialog",
+  "publisherCell": null,
+  "fieldEnd": "2012-12-10",
+  "wikipediaSeats": {
+   "Kadima": {
+    "seats": 2
+   },
+   "Likud+Yisrael Beiteinu": {
+    "seats": 39
+   },
+   "Israeli Labor Party": {
+    "seats": 17
+   },
+   "Shas": {
+    "seats": 12
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "National Union (Israel)+The Jewish Home": {
+    "seats": 11
+   },
+   "United Arab List": {
+    "seats": 5
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "Balad (political party)": {
+    "seats": 3
+   },
+   "Meretz": {
+    "seats": 3
+   },
+   "Yesh Atid": {
+    "seats": 6
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   },
+   "Am Shalem": {
+    "seats": 3
+   },
+   "Hatnuah": {
+    "seats": 9
+   }
+  },
+  "urls": [
+   "https://www.haaretz.co.il/news/elections/1.1882765"
+  ]
+ },
+ {
+  "id": "k20-2015-02-08-f1",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 37,
+  "pollCell": "Midgam/Channel 10",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-08",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 23
+   },
+   "Yisrael Beiteinu": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 10
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 23
+   },
+   "The Jewish Home": {
+    "seats": 14
+   },
+   "Shas": {
+    "seats": 6
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 13
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 5
+   },
+   "Kulanu": {
+    "seats": 10
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/191086#.VNhvQiyGMXh"
+  ]
+ },
+ {
+  "id": "k20-2015-02-07-f2",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 38,
+  "pollCell": "Teleseker/Channel 1",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-07",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 27
+   },
+   "Yisrael Beiteinu": {
+    "seats": 6
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 23
+   },
+   "The Jewish Home": {
+    "seats": 11
+   },
+   "Shas": {
+    "seats": 6
+   },
+   "United Torah Judaism": {
+    "seats": 8
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 7
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/191044#.VNcD8yyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-02-06-f3",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 39,
+  "pollCell": "Maagar Mochot/NRG",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-06",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 25
+   },
+   "Yisrael Beiteinu": {
+    "seats": 4
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 24
+   },
+   "The Jewish Home": {
+    "seats": 14
+   },
+   "Shas": {
+    "seats": 6
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "Meretz": {
+    "seats": 6
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 8
+   }
+  },
+  "urls": [
+   "http://www.nrg.co.il/online/1/ART2/674/647.html?hp=1&cat=404&loc=1"
+  ]
+ },
+ {
+  "id": "k20-2015-02-06-f4",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 39,
+  "pollCell": "Smith/Israel Radio",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-06",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 26
+   },
+   "Yisrael Beiteinu": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 9
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 25
+   },
+   "The Jewish Home": {
+    "seats": 14
+   },
+   "Shas": {
+    "seats": 9
+   },
+   "United Torah Judaism": {
+    "seats": 8
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 0
+   },
+   "Kulanu": {
+    "seats": 7
+   }
+  },
+  "urls": [
+   "http://www.iba.org.il/bet/bet.aspx?type=1&entity=1073940"
+  ]
+ },
+ {
+  "id": "k20-2015-02-06-f5",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 39,
+  "pollCell": "Panels/Maariv",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-06",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 26
+   },
+   "Yisrael Beiteinu": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 22
+   },
+   "The Jewish Home": {
+    "seats": 13
+   },
+   "Shas": {
+    "seats": 6
+   },
+   "United Torah Judaism": {
+    "seats": 8
+   },
+   "Meretz": {
+    "seats": 6
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 7
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k20-2015-02-06-f6",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 39,
+  "pollCell": "Midgam/Yedioth Ahronoth",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-06",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 24
+   },
+   "Yisrael Beiteinu": {
+    "seats": 6
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 25
+   },
+   "The Jewish Home": {
+    "seats": 12
+   },
+   "Shas": {
+    "seats": 7
+   },
+   "United Torah Judaism": {
+    "seats": 7
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 7
+   }
+  },
+  "urls": [
+   "http://www.inn.co.il/News/News.aspx/292513",
+   "http://www.ynetnews.com/articles/0,7340,L-4623699,00.html"
+  ]
+ },
+ {
+  "id": "k20-2015-02-05-f7",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 40,
+  "pollCell": "Teleseker/Walla",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-05",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 26
+   },
+   "Yisrael Beiteinu": {
+    "seats": 7
+   },
+   "Yesh Atid": {
+    "seats": 10
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 23
+   },
+   "The Jewish Home": {
+    "seats": 12
+   },
+   "Shas": {
+    "seats": 7
+   },
+   "United Torah Judaism": {
+    "seats": 7
+   },
+   "Meretz": {
+    "seats": 4
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 8
+   }
+  },
+  "urls": [
+   "http://elections.walla.co.il/item/2826639"
+  ]
+ },
+ {
+  "id": "k20-2015-02-03-f8",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 42,
+  "pollCell": "Panels/Knesset Channel",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-03",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 25
+   },
+   "Yisrael Beiteinu": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 24
+   },
+   "The Jewish Home": {
+    "seats": 13
+   },
+   "Shas": {
+    "seats": 6
+   },
+   "United Torah Judaism": {
+    "seats": 7
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 8
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190863#.VNEOWCyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-02-01-f9",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 44,
+  "pollCell": "Dialog/Haaretz",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-01",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 25
+   },
+   "Yisrael Beiteinu": {
+    "seats": 6
+   },
+   "Yesh Atid": {
+    "seats": 9
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 23
+   },
+   "The Jewish Home": {
+    "seats": 14
+   },
+   "Shas": {
+    "seats": 6
+   },
+   "United Torah Judaism": {
+    "seats": 8
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 8
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190836#.VM_L5CyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-30-f10",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 46,
+  "pollCell": "Smith/Israel Radio",
+  "publisherCell": null,
+  "fieldEnd": "2015-01-30",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 26
+   },
+   "Yisrael Beiteinu": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 8
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 26
+   },
+   "The Jewish Home": {
+    "seats": 15
+   },
+   "Shas": {
+    "seats": 9
+   },
+   "United Torah Judaism": {
+    "seats": 7
+   },
+   "Meretz": {
+    "seats": 5
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 0
+   },
+   "Kulanu": {
+    "seats": 7
+   }
+  },
+  "urls": [
+   "http://www.nrg.co.il/online/1/ART2/673/223.html?hp=1&cat=676&loc=65"
+  ]
+ },
+ {
+  "id": "k20-2015-01-30-f11",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 46,
+  "pollCell": "Teleseker/Walla",
+  "publisherCell": null,
+  "fieldEnd": "2015-01-30",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 27
+   },
+   "Yisrael Beiteinu": {
+    "seats": 6
+   },
+   "Yesh Atid": {
+    "seats": 8
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 26
+   },
+   "The Jewish Home": {
+    "seats": 12
+   },
+   "Shas": {
+    "seats": 7
+   },
+   "United Torah Judaism": {
+    "seats": 7
+   },
+   "Meretz": {
+    "seats": 4
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit+Yachad": {
+    "seats": 4
+   },
+   "Kulanu": {
+    "seats": 7
+   }
+  },
+  "urls": [
+   "http://elections.walla.co.il/item/2824785"
+  ]
+ },
+ {
+  "id": "k20-2015-01-30-f12",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 46,
+  "pollCell": "Panels/Maariv",
+  "publisherCell": null,
+  "fieldEnd": "2015-01-30",
+  "wikipediaSeats": {
+   "Likud": {
+    "seats": 25
+   },
+   "Yisrael Beiteinu": {
+    "seats": 5
+   },
+   "Yesh Atid": {
+    "seats": 11
+   },
+   "Israeli Labor Party+Hatnuah": {
+    "seats": 24
+   },
+   "The Jewish Home": {
+    "seats": 14
+   },
+   "Shas": {
+    "seats": 7
+   },
+   "United Torah Judaism": {
+    "seats": 8
+   },
+   "Meretz": {
+    "seats": 6
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 12
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   },
+   "Yachad": {
+    "seats": 0
+   },
+   "Kulanu": {
+    "seats": 8
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190706#.VMtI4Zt0zug"
+  ]
+ },
+ {
+  "id": "k20-2015-02-06-f13",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 39,
+  "pollCell": "Panels/Knesset Channel",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-06",
+  "wikipediaSeats": {
+   "Likud+Yisrael Beiteinu": {
+    "seats": 32
+   },
+   "Yesh Atid": {
+    "seats": 14
+   },
+   "Israeli Labor Party": {
+    "seats": 18
+   },
+   "Hatnuah": {
+    "seats": 4
+   },
+   "The Jewish Home": {
+    "seats": 15
+   },
+   "Shas": {
+    "seats": 7
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "Meretz": {
+    "seats": 11
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "United Arab List": {
+    "seats": 4
+   },
+   "Balad (political party)": {
+    "seats": 3
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/02/06/panels-poll-likud-beitenu-32-labor-18-bayit-yehudi-15-yesh-atid-14-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2015-02-03-f14",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 42,
+  "pollCell": "Panels/Knesset Channel",
+  "publisherCell": null,
+  "fieldEnd": "2015-02-03",
+  "wikipediaSeats": {
+   "Likud+Yisrael Beiteinu": {
+    "seats": 30
+   },
+   "Yesh Atid": {
+    "seats": 13
+   },
+   "Israeli Labor Party": {
+    "seats": 19
+   },
+   "Hatnuah": {
+    "seats": 5
+   },
+   "The Jewish Home": {
+    "seats": 16
+   },
+   "Shas": {
+    "seats": 9
+   },
+   "United Torah Judaism": {
+    "seats": 6
+   },
+   "Meretz": {
+    "seats": 11
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "United Arab List": {
+    "seats": 3
+   },
+   "Balad (political party)": {
+    "seats": 4
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/02/03/panels-poll-likud-beitenu-30-labor-19-bayit-yehudi-16-yesh-atid-13-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2015-01-31-f15",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 45,
+  "pollCell": "Smith Poll",
+  "publisherCell": null,
+  "fieldEnd": "2015-01-31",
+  "wikipediaSeats": {
+   "Likud+Yisrael Beiteinu": {
+    "seats": 36
+   },
+   "Yesh Atid": {
+    "seats": 12
+   },
+   "Israeli Labor Party": {
+    "seats": 17
+   },
+   "Hatnuah": {
+    "seats": 4
+   },
+   "The Jewish Home": {
+    "seats": 11
+   },
+   "Shas": {
+    "seats": 11
+   },
+   "United Torah Judaism": {
+    "seats": 8
+   },
+   "Meretz": {
+    "seats": 10
+   },
+   "Hadash+United Arab List+Balad (political party)": {
+    "seats": 11
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   }
+  },
+  "urls": [
+   "http://electograph.blogspot.dk/2014/01/israel-january-2014-smith.html"
+  ]
+ },
+ {
+  "id": "k20-2015-01-30-f16",
+  "knesset": 20,
+  "electionDate": "2015-03-17",
+  "daysBefore": 46,
+  "pollCell": "Panels/Knesset Channel",
+  "publisherCell": null,
+  "fieldEnd": "2015-01-30",
+  "wikipediaSeats": {
+   "Likud+Yisrael Beiteinu": {
+    "seats": 30
+   },
+   "Yesh Atid": {
+    "seats": 12
+   },
+   "Israeli Labor Party": {
+    "seats": 19
+   },
+   "Hatnuah": {
+    "seats": 4
+   },
+   "The Jewish Home": {
+    "seats": 17
+   },
+   "Shas": {
+    "seats": 7
+   },
+   "United Torah Judaism": {
+    "seats": 7
+   },
+   "Meretz": {
+    "seats": 11
+   },
+   "Hadash": {
+    "seats": 4
+   },
+   "United Arab List": {
+    "seats": 3
+   },
+   "Balad (political party)": {
+    "seats": 4
+   },
+   "Otzma Yehudit": {
+    "seats": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/01/30/bb-nb-aftermath-poll-likud-beitenu-30-labor-19-bayit-yehudi-17-yesh-atid-12-meretz-11/"
+  ]
+ }
+]
