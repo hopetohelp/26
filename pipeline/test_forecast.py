@@ -43,6 +43,14 @@ def test_momentum_learns_continuation():
     assert n == 3 and up > 0 > down, (up, down)
 
 
+def test_poll_letters_are_official():
+    """כל אות רשימה בסקר שנכנס למודל קיימת בתוצאות הרשמיות של אותה מערכת — אחרת הסקר "מאבד" רשימה בשקט."""
+    spec = F.load_spec()
+    E = F.load_elections(spec)
+    bad = [(p.id, k) for p in F.load_polls(spec) for k in p.values if k not in E[p.knesset].votes]
+    assert not bad, bad[:5]
+
+
 def test_log_integrity():
     rs = rows()
     for r in rs:

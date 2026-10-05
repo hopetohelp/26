@@ -24,6 +24,10 @@ FIRM_SERIES = [
 ]
 
 
+# כתיב אותיות שונה בין המקורות לקובץ הרשמי של ועדת הבחירות (2013: מרצ נכתבת שם "מרץ")
+LETTER_ALIASES = {19: {"מרצ": "מרץ"}}
+
+
 def series_of(firm: str | None, knesset: int, publisher: str | None) -> str:
     f = (firm or "").lower()
     for pat, key in FIRM_SERIES:
@@ -84,7 +88,8 @@ def build() -> list[dict]:
             q = queue.get(r["id"], {})
             k = q.get("knesset") or int(r["id"][1:3])
             seats = r.get("seatsByLetters") or {}
-            values = {kk: {"s": v} for kk, v in seats.items() if isinstance(v, (int, float))}
+            alias = LETTER_ALIASES.get(k, {})
+            values = {alias.get(kk, kk): {"s": v} for kk, v in seats.items() if isinstance(v, (int, float))}
             total = sum(v["s"] for v in values.values())
             status = r["status"] if 118 <= total <= 122 else ("inconsistent" if r["status"] in ("match", "corrected") else r["status"])
             out.append({"id": r["id"], "knesset": k, "series": series_of(r.get("firm"), k, r.get("publisher")),

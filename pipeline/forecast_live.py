@@ -153,6 +153,7 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
     rows = log_rows()
     logged = [r for r in rows if r["specVersion"] == spec["version"] and r["horizon"] == h and r["summary"] == bt["summary"]]
     at_h = {"passed": bt["passed"], "valid": bt["valid"], "logged": bool(logged),
+            "invalidElections": [int(k) for k, v in bt["validity"].items() if not v["valid"] and int(k) in spec["gate"]["elections"]],
             "summary": {v: bt["summary"][v] for v in ("V0", primary) if v in bt["summary"]},
             "perElection": {str(r["knesset"]): [r["variants"][primary]["voteAccuracy"], r["variants"][primary]["seatAccuracy"]]
                             for r in bt["rows"]}}

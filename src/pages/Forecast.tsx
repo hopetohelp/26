@@ -11,6 +11,7 @@ interface GateRow {
   passed: boolean;
   valid: boolean;
   logged: boolean;
+  invalidElections: number[];
   summary: Record<string, { voteAccuracy: number; seatAccuracy: number }>;
   perElection: Record<string, [number, number]>;
 }
@@ -91,6 +92,12 @@ export default function Forecast() {
               100% פחות מחצית סכום הפערים בין האחוז החזוי לאחוז בפועל; דיוק במנדטים = 100% פחות סכום פערי המנדטים חלקי 240.
             </p>
           </>
+        ) : gate && !gate.valid ? (
+          <p className="text-base font-bold text-warn">
+            במרחק של {fc.horizon} ימים מהבחירות אי אפשר לבדוק את המודל כראוי: בבחירות{" "}
+            {gate.invalidElections.map((k) => ELECTION[String(k)] ?? k).join(", ")} פורסמו באותו שבוע סקרים של פחות משלושה מכונים (הכלל שנקבע
+            מראש). לכן אין היום נתון דיוק להצגה — אין להסתמך על התחזית.
+          </p>
         ) : (
           <p className="text-base font-bold text-warn">הבדיקה על הבחירות הקודמות טרם הורצה באופק הזה — אין להסתמך על התחזית.</p>
         )}

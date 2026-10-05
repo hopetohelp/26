@@ -70,6 +70,162 @@
   "source": "https://imra.org.il/story.php?id=55384"
  },
  {
+  "id": "k19-2012-12-18-x3",
+  "knesset": 19,
+  "series": "dahaf",
+  "fieldEnd": "2012-12-18",
+  "values": {
+   "מחל": {
+    "s": 35
+   },
+   "אמת": {
+    "s": 19
+   },
+   "טב": {
+    "s": 12
+   },
+   "שס": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 10
+   },
+   "פה": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "עם": {
+    "s": 4
+   },
+   "ו": {
+    "s": 4
+   },
+   "מרץ": {
+    "s": 3
+   },
+   "ד": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 2
+   },
+   "ץ": {
+    "s": 2
+   },
+   "כן": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.haaretz.co.il/news/elections/1.1888975 (Wayback 20121220103054) ; https://knessetjeremy.com/2012/12/18/channel-2-poll-after-liberman-resignation-likud-beitenu-35-labor-19-jewish-home-12-shas-11-movement-10-yesh-atid-9/"
+ },
+ {
+  "id": "k19-2012-12-20-x2",
+  "knesset": 19,
+  "series": "dialog",
+  "fieldEnd": "2012-12-20",
+  "values": {
+   "מחל": {
+    "s": 36
+   },
+   "אמת": {
+    "s": 19
+   },
+   "שס": {
+    "s": 11
+   },
+   "טב": {
+    "s": 11
+   },
+   "פה": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 4
+   },
+   "ו": {
+    "s": 4
+   },
+   "ד": {
+    "s": 3
+   },
+   "עם": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.iba.org.il/bet/bet.aspx?type=1&entity=895352&topic=954&page=292 (HTTP 403, no Wayback capture) ; https://www.kikar.co.il/political-news/107556 ; https://knessetjeremy.com/2012/12/20/smith-poll-likud-beitenu-36-labor-19-jewish-home-11-shas-11-yesh-atid-11-movement-9/"
+ },
+ {
+  "id": "k19-2012-12-21-x1",
+  "knesset": 19,
+  "series": "maagar_mochot",
+  "fieldEnd": "2012-12-21",
+  "values": {
+   "מחל": {
+    "s": 37
+   },
+   "אמת": {
+    "s": 20
+   },
+   "טב": {
+    "s": 12
+   },
+   "שס": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 9
+   },
+   "פה": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "ו": {
+    "s": 4
+   },
+   "מרץ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 3
+   },
+   "ד": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 2
+   },
+   "כן": {
+    "s": 1
+   },
+   "ץ": {
+    "s": 1
+   }
+  },
+  "status": "partial",
+  "sourceLevel": "aggregator",
+  "source": "http://www.nrg.co.il/online/1/ART2/423/697.html (live 403; Wayback 20121231052103 - seat table is an image, /images/archive/465x349/1/479/175-178.jpg, not archived) ; https://knessetjeremy.com/2012/12/21/maariv-poll-likud-beitenu-37-labor-20-jewish-home-12-shas-11-movement-9-yesh-atid-7/ ; https://www.kikar.co.il/political-news/107586"
+ },
+ {
   "id": "k19-2012-12-25-w52",
   "knesset": 19,
   "series": "dialog",
@@ -2020,6 +2176,324 @@
   "status": "out_of_window",
   "sourceLevel": "aggregator",
   "source": "https://knessetjeremy.com/2014/03/07/panels-poll-likud-beitenu-30-labor-21-bayit-yehudi-15-yesh-atid-12-meretz-11/"
+ },
+ {
+  "id": "k20-2015-02-09-x7",
+  "knesset": 20,
+  "series": "unknown-k20-the-times-of-israel",
+  "fieldEnd": "2015-02-03",
+  "values": {
+   "אמת": {
+    "s": 27
+   },
+   "מחל": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 11
+   },
+   "טב": {
+    "s": 11
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 10
+   },
+   "ל": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "שס": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   },
+   "מרצ": {
+    "s": 4
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.timesofisrael.com/1-in-4-israelis-still-undecided-but-more-of-them-leaning-toward-herzog/ (Wayback 20150209135333, incl. chart-1.jpg)"
+ },
+ {
+  "id": "k20-2015-02-10-x6",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-02-10",
+  "values": {
+   "אמת": {
+    "s": 23
+   },
+   "מחל": {
+    "s": 23
+   },
+   "פה": {
+    "s": 12
+   },
+   "טב": {
+    "s": 12
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "כ": {
+    "s": 9
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.youtube.com/watch?v=AWutIfU-Tsk (broadcast video, not transcribed) ; https://knessetjeremy.com/2015/02/10/panelsknesset-channel-poll-likud-23-zionist-union-23-yesh-atid-12-bayit-yehudi-12-united-arab-list-12-koolanu-9/"
+ },
+ {
+  "id": "k20-2015-02-11-x5",
+  "knesset": 20,
+  "series": "kantar",
+  "fieldEnd": "2015-02-11",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "טב": {
+    "s": 11
+   },
+   "פה": {
+    "s": 10
+   },
+   "כ": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "ג": {
+    "s": 8
+   },
+   "שס": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.nrg.co.il/online/1/ART2/675/881.html (live 403; Wayback 20150211233618) ; https://knessetjeremy.com/2015/02/11/telesekerchannel-1-poll-likud-27-zionist-union-23-united-arab-list-12-bayit-yehudi-11-yesh-atid-10-utj-8/"
+ },
+ {
+  "id": "k20-2015-02-11-x8",
+  "knesset": 20,
+  "series": "kantar",
+  "fieldEnd": "2015-02-11",
+  "values": {},
+  "status": "out_of_window",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2014/02/12/telesekerwalla-poll-likud-beitenu-35-yesh-atid-15-labor-15-bayit-yehudi-14-shas-11/"
+ },
+ {
+  "id": "k20-2015-02-12-x4",
+  "knesset": 20,
+  "series": "smith",
+  "fieldEnd": "2015-02-12",
+  "values": {
+   "מחל": {
+    "s": 24
+   },
+   "אמת": {
+    "s": 24
+   },
+   "טב": {
+    "s": 13
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 9
+   },
+   "כ": {
+    "s": 8
+   },
+   "שס": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/191280 ; https://knessetjeremy.com/2015/02/12/smithglobes-poll-likud-24-zionist-union-24-bayit-yehudi-13-united-arab-list-12-yesh-atid-9/"
+ },
+ {
+  "id": "k20-2015-02-13-x2",
+  "knesset": 20,
+  "series": "kantar",
+  "fieldEnd": "2015-02-12",
+  "values": {
+   "מחל": {
+    "s": 25
+   },
+   "אמת": {
+    "s": 23
+   },
+   "טב": {
+    "s": 13
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 9
+   },
+   "כ": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "שס": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "http://elections.walla.co.il/item/2829307 (live text + Wayback chart image 1855296-5.jpg 'סקר וואלה 12.2.15') ; https://knessetjeremy.com/2015/02/13/telesekerwalla-poll-likud-25-zionist-union-23-bayit-yehudi-13-united-arab-list-12-yesh-atid-9-koolanu-8/"
+ },
+ {
+  "id": "k20-2015-02-13-x1",
+  "knesset": 20,
+  "series": "smith",
+  "fieldEnd": "2015-02-13",
+  "values": {
+   "מחל": {
+    "s": 25
+   },
+   "אמת": {
+    "s": 24
+   },
+   "טב": {
+    "s": 13
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 9
+   },
+   "שס": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "כ": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "http://www.iba.org.il/bet/bet.aspx?type=1&entity=1075404 (HTTP 403, no Wayback capture) ; https://knessetjeremy.com/2015/02/13/smithreshet-bet-radio-poll-likud-25-zionist-union-24-bayit-yehudi-13-united-arab-list-13-yesh-atid-9/"
+ },
+ {
+  "id": "k20-2015-02-13-x3",
+  "knesset": 20,
+  "series": "panels_politics",
+  "fieldEnd": "2015-02-13",
+  "values": {
+   "מחל": {
+    "s": 24
+   },
+   "אמת": {
+    "s": 23
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 12
+   },
+   "טב": {
+    "s": 11
+   },
+   "כ": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "שס": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "ל": {
+    "s": 6
+   },
+   "קץ": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/191303 ; https://knessetjeremy.com/2015/02/12/panelsmaarivjerusalem-post-poll-likud-24-zionist-union-23-united-arab-list-13-yesh-atid-12-bayit-yehudi-11/"
  },
  {
   "id": "k20-2015-02-15-w28",
