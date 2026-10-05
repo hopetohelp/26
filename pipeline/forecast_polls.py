@@ -74,6 +74,8 @@ def build() -> list[dict]:
             continue
         queue = {q["id"]: q for q in json.loads((VER / qf).read_text(encoding="utf-8"))}
         for r in json.loads((VER / rf).read_text(encoding="utf-8")):
+            if r.get("duplicate_of"):  # אותו סקר כבר נספר ברשומה אחרת
+                continue
             q = queue.get(r["id"], {})
             k = q.get("knesset") or int(r["id"][1:3])
             seats = r.get("seatsByLetters") or {}
