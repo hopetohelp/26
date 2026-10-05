@@ -1,258 +1,5 @@
 [
  {
-  "id": "k19-2013-01-15-x1",
-  "knesset": 19,
-  "series": "midgam",
-  "fieldEnd": null,
-  "values": {
-   "מחל": {
-    "s": 33
-   },
-   "אמת": {
-    "s": 17
-   },
-   "טב": {
-    "s": 14
-   },
-   "פה": {
-    "s": 12
-   },
-   "שס": {
-    "s": 11
-   },
-   "צפ": {
-    "s": 9
-   },
-   "ג": {
-    "s": 6
-   },
-   "מרץ": {
-    "s": 5
-   },
-   "ו": {
-    "s": 4
-   },
-   "עם": {
-    "s": 4
-   },
-   "ד": {
-    "s": 4
-   },
-   "כן": {
-    "s": 2
-   },
-   "נץ": {
-    "s": 2
-   },
-   "ץ": {
-    "s": 0
-   }
-  },
-  "status": "partial",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2013/01/16/channel-1-poll-likud-beitenu-33-labor-17-bayit-yehudi-14-yesh-atid-12-shas-11-movement-9/"
- },
- {
-  "id": "k19-2013-01-16-x2",
-  "knesset": 19,
-  "series": "unknown-k19-channel-2-program-nissim-mishal",
-  "fieldEnd": null,
-  "values": {
-   "מחל": {
-    "s": 35
-   },
-   "אמת": {
-    "s": 17
-   },
-   "טב": {
-    "s": 14
-   },
-   "שס": {
-    "s": 11
-   },
-   "פה": {
-    "s": 11
-   },
-   "צפ": {
-    "s": 6
-   },
-   "ג": {
-    "s": 6
-   },
-   "מרץ": {
-    "s": 6
-   },
-   "כן": {
-    "s": 6
-   },
-   "נץ": {
-    "s": 2
-   }
-  },
-  "status": "partial",
-  "sourceLevel": "press",
-  "source": "https://www.kikar.co.il/political-news/109470"
- },
- {
-  "id": "k19-2013-01-17-x3",
-  "knesset": 19,
-  "series": "geocartography",
-  "fieldEnd": null,
-  "values": {
-   "מחל": {
-    "s": 32
-   },
-   "טב": {
-    "s": 17.5
-   },
-   "אמת": {
-    "s": 16
-   },
-   "פה": {
-    "s": 10.5
-   },
-   "שס": {
-    "s": 10
-   },
-   "צפ": {
-    "s": 6
-   },
-   "ג": {
-    "s": 6
-   },
-   "מרץ": {
-    "s": 6
-   },
-   "ד": {
-    "s": 5
-   },
-   "ו": {
-    "s": 4
-   },
-   "עם": {
-    "s": 3
-   },
-   "כן": {
-    "s": 2
-   },
-   "נץ": {
-    "s": 2
-   },
-   "ץ": {
-    "s": 0
-   }
-  },
-  "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://www.srugim.co.il/40801-סקר-הליכוד-יורד-ל-32-הבית-היהודי-המפלגה-ה ; https://knessetjeremy.com/2013/01/17/geocartography-poll-likud-beitenu-32-bayit-yehudi-175-labor-16-yesh-atid-10-5-shas-10/"
- },
- {
-  "id": "k19-2013-01-17-x4",
-  "knesset": 19,
-  "series": "maagar_mochot",
-  "fieldEnd": null,
-  "values": {
-   "מחל": {
-    "s": 37
-   },
-   "אמת": {
-    "s": 16
-   },
-   "טב": {
-    "s": 13
-   },
-   "שס": {
-    "s": 11
-   },
-   "פה": {
-    "s": 9
-   },
-   "ג": {
-    "s": 6
-   },
-   "מרץ": {
-    "s": 6
-   },
-   "צפ": {
-    "s": 5
-   },
-   "כן": {
-    "s": 3
-   },
-   "נץ": {
-    "s": 3
-   },
-   "ו": {
-    "s": 4
-   },
-   "עם": {
-    "s": 3
-   },
-   "ד": {
-    "s": 3
-   },
-   "ץ": {
-    "s": 0
-   }
-  },
-  "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://www.kikar.co.il/political-news/109395 ; https://knessetjeremy.com/2013/01/17/maagar-mochotreshet-bet-poll-likud-beitenu-37-labor-16-bayit-yehudi-13-shas-11-yesh-atid-9/"
- },
- {
-  "id": "k19-2013-01-18-x6",
-  "knesset": 19,
-  "series": "panels_politics",
-  "fieldEnd": null,
-  "values": {
-   "מחל": {
-    "s": 34
-   },
-   "אמת": {
-    "s": 16
-   },
-   "טב": {
-    "s": 14
-   },
-   "פה": {
-    "s": 11
-   },
-   "שס": {
-    "s": 10
-   },
-   "צפ": {
-    "s": 7
-   },
-   "ג": {
-    "s": 6
-   },
-   "מרץ": {
-    "s": 6
-   },
-   "ו": {
-    "s": 4
-   },
-   "עם": {
-    "s": 4
-   },
-   "ד": {
-    "s": 3
-   },
-   "נץ": {
-    "s": 3
-   },
-   "כן": {
-    "s": 2
-   },
-   "ץ": {
-    "s": 0
-   }
-  },
-  "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2013/01/18/panelsyisrael-post-poll-likud-beitenu-34-labor-16-bayit-yehudi-14-yesh-atid-11-shas-10-movement-7/"
- },
- {
   "id": "k19-2013-01-18-26",
   "knesset": 19,
   "series": "unknown-k19-channel-10-orly-guy-morning-program",
@@ -369,6 +116,60 @@
   "source": "https://knessetjeremy.com/2013/01/15/panelsknesset-channel-poll-likud-beitenu-35-labor-17-bayit-yehudi-14-yesh-atid-11-shas-9-movement-8/"
  },
  {
+  "id": "k19-2013-01-15-x1",
+  "knesset": 19,
+  "series": "midgam",
+  "fieldEnd": "2013-01-14",
+  "values": {
+   "מחל": {
+    "s": 33
+   },
+   "אמת": {
+    "s": 17
+   },
+   "טב": {
+    "s": 14
+   },
+   "פה": {
+    "s": 12
+   },
+   "שס": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 5
+   },
+   "ו": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "ד": {
+    "s": 4
+   },
+   "כן": {
+    "s": 2
+   },
+   "נץ": {
+    "s": 2
+   },
+   "ץ": {
+    "s": 0
+   }
+  },
+  "status": "partial",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2013/01/16/channel-1-poll-likud-beitenu-33-labor-17-bayit-yehudi-14-yesh-atid-12-shas-11-movement-9/",
+  "fieldEndInferred": true
+ },
+ {
   "id": "k19-2013-01-16-22",
   "knesset": 19,
   "series": "kantar",
@@ -475,6 +276,48 @@
   "source": "https://www.mako.co.il/news-elections-2013/articles/Article-f4b298baf2f3c31004.htm"
  },
  {
+  "id": "k19-2013-01-16-x2",
+  "knesset": 19,
+  "series": "unknown-k19-channel-2-program-nissim-mishal",
+  "fieldEnd": "2013-01-15",
+  "values": {
+   "מחל": {
+    "s": 35
+   },
+   "אמת": {
+    "s": 17
+   },
+   "טב": {
+    "s": 14
+   },
+   "שס": {
+    "s": 11
+   },
+   "פה": {
+    "s": 11
+   },
+   "צפ": {
+    "s": 6
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 6
+   },
+   "כן": {
+    "s": 6
+   },
+   "נץ": {
+    "s": 2
+   }
+  },
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/political-news/109470",
+  "fieldEndInferred": true
+ },
+ {
   "id": "k19-2013-01-16-21",
   "knesset": 19,
   "series": "dialog",
@@ -579,6 +422,114 @@
   "status": "match",
   "sourceLevel": "aggregator",
   "source": "https://knessetjeremy.com/2013/01/17/smithjerusalem-post-poll-likud-beitenu-34-labor-17-bayit-yehudi-13-shas-11-yesh-atid-11-movement-7/ ; https://www.jpost.com/national-news/final-post-poll-likud-beytenu-livni-fall-again/article-300041"
+ },
+ {
+  "id": "k19-2013-01-17-x3",
+  "knesset": 19,
+  "series": "geocartography",
+  "fieldEnd": "2013-01-16",
+  "values": {
+   "מחל": {
+    "s": 32
+   },
+   "טב": {
+    "s": 17.5
+   },
+   "אמת": {
+    "s": 16
+   },
+   "פה": {
+    "s": 10.5
+   },
+   "שס": {
+    "s": 10
+   },
+   "צפ": {
+    "s": 6
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 6
+   },
+   "ד": {
+    "s": 5
+   },
+   "ו": {
+    "s": 4
+   },
+   "עם": {
+    "s": 3
+   },
+   "כן": {
+    "s": 2
+   },
+   "נץ": {
+    "s": 2
+   },
+   "ץ": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.srugim.co.il/40801-סקר-הליכוד-יורד-ל-32-הבית-היהודי-המפלגה-ה ; https://knessetjeremy.com/2013/01/17/geocartography-poll-likud-beitenu-32-bayit-yehudi-175-labor-16-yesh-atid-10-5-shas-10/",
+  "fieldEndInferred": true
+ },
+ {
+  "id": "k19-2013-01-17-x4",
+  "knesset": 19,
+  "series": "maagar_mochot",
+  "fieldEnd": "2013-01-16",
+  "values": {
+   "מחל": {
+    "s": 37
+   },
+   "אמת": {
+    "s": 16
+   },
+   "טב": {
+    "s": 13
+   },
+   "שס": {
+    "s": 11
+   },
+   "פה": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 6
+   },
+   "צפ": {
+    "s": 5
+   },
+   "כן": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 3
+   },
+   "ו": {
+    "s": 4
+   },
+   "עם": {
+    "s": 3
+   },
+   "ד": {
+    "s": 3
+   },
+   "ץ": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.kikar.co.il/political-news/109395 ; https://knessetjeremy.com/2013/01/17/maagar-mochotreshet-bet-poll-likud-beitenu-37-labor-16-bayit-yehudi-13-shas-11-yesh-atid-9/",
+  "fieldEndInferred": true
  },
  {
   "id": "k19-2013-01-17-17",
@@ -866,6 +817,60 @@
   "source": "https://www.ynet.co.il/articles/0,7340,L-4334096,00.html"
  },
  {
+  "id": "k19-2013-01-18-x6",
+  "knesset": 19,
+  "series": "panels_politics",
+  "fieldEnd": "2013-01-17",
+  "values": {
+   "מחל": {
+    "s": 34
+   },
+   "אמת": {
+    "s": 16
+   },
+   "טב": {
+    "s": 14
+   },
+   "פה": {
+    "s": 11
+   },
+   "שס": {
+    "s": 10
+   },
+   "צפ": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "מרץ": {
+    "s": 6
+   },
+   "ו": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "ד": {
+    "s": 3
+   },
+   "נץ": {
+    "s": 3
+   },
+   "כן": {
+    "s": 2
+   },
+   "ץ": {
+    "s": 0
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2013/01/18/panelsyisrael-post-poll-likud-beitenu-34-labor-16-bayit-yehudi-14-yesh-atid-11-shas-10-movement-7/",
+  "fieldEndInferred": true
+ },
+ {
   "id": "k19-2013-01-18-x7",
   "knesset": 19,
   "series": "smith",
@@ -917,50 +922,6 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.jpost.com/national-news/final-post-poll-likud-beytenu-livni-fall-again/article-300041"
- },
- {
-  "id": "k20-2015-03-10-x1",
-  "knesset": 20,
-  "series": "tri",
-  "fieldEnd": null,
-  "values": {
-   "מחל": {
-    "s": 24
-   },
-   "אמת": {
-    "s": 24
-   },
-   "פה": {
-    "s": 14
-   },
-   "ודעם": {
-    "s": 12
-   },
-   "טב": {
-    "s": 12
-   },
-   "כ": {
-    "s": 8
-   },
-   "ג": {
-    "s": 7
-   },
-   "מרצ": {
-    "s": 6
-   },
-   "שס": {
-    "s": 5
-   },
-   "קץ": {
-    "s": 4
-   },
-   "ל": {
-    "s": 4
-   }
-  },
-  "status": "match",
-  "sourceLevel": "primary",
-  "source": "https://www.bizportal.co.il/electioneconomy/news/article/404282"
  },
  {
   "id": "k20-2015-03-07-15",
@@ -1015,6 +976,51 @@
   "status": "match",
   "sourceLevel": "press",
   "source": "https://www.inn.co.il/flashes/479722"
+ },
+ {
+  "id": "k20-2015-03-10-x1",
+  "knesset": 20,
+  "series": "tri",
+  "fieldEnd": "2015-03-09",
+  "values": {
+   "מחל": {
+    "s": 24
+   },
+   "אמת": {
+    "s": 24
+   },
+   "פה": {
+    "s": 14
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "טב": {
+    "s": 12
+   },
+   "כ": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "שס": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.bizportal.co.il/electioneconomy/news/article/404282",
+  "fieldEndInferred": true
  },
  {
   "id": "k20-2015-03-10-12",

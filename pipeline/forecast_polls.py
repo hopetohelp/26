@@ -36,6 +36,13 @@ def level_from_note(note: str | None) -> str:
     return "aggregator" if re.search(r"knesset\s*jeremy|knessetjeremy", note or "", re.I) else "primary"
 
 
+def infer_field_end(poll_id: str) -> str | None:
+    """המקור לא ציין תאריכי שטח ⇐ יום לפני הפרסום (התאריך שבמזהה). כלל קבוע, מסומן ברשומה כ-fieldEndInferred."""
+    from datetime import date, timedelta
+    m = re.search(r"(\d{4})-(\d{2})-(\d{2})", poll_id)
+    return (date(*map(int, m.groups())) - timedelta(days=1)).isoformat() if m else None
+
+
 def build() -> list[dict]:
     history = json.loads((ROOT / "src" / "data" / "history.json").read_text(encoding="utf-8"))
     by_id = {p["id"]: (c["knesset"], p) for c in history["cycles"] for p in c["polls"]}
@@ -76,6 +83,9 @@ def build() -> list[dict]:
             out.append({"id": r["id"], "knesset": k, "series": series_of(r.get("firm"), k, r.get("publisher")),
                         "fieldEnd": r.get("fieldEnd") or q.get("fieldEnd"), "values": values, "status": status,
                         "sourceLevel": r.get("sourceLevel") or "primary", "source": r.get("source")})
+    for r in out:
+        if not r["fieldEnd"]:
+            r["fieldEnd"], r["fieldEndInferred"] = infer_field_end(r["id"]), True
     out.sort(key=lambda x: (x["knesset"], x["fieldEnd"] or "", x["id"]))
     return out
 
