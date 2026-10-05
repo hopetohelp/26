@@ -360,7 +360,7 @@ def weights_for(series: list[str], f: Fitted, spec: dict) -> dict[str, float]:
 
 # ---------------------------------------------------------------- תחזית ובדיקת עבר
 
-VARIANTS = ("V0", "V1", "V2", "V3")
+VARIANTS = ("V0", "V1", "V2", "V3", "V4")
 
 
 def forecast(variant: str, polls: dict[str, dict[str, float]], lists: dict[str, dict], f: Fitted | None,
@@ -387,18 +387,67 @@ def forecast(variant: str, polls: dict[str, dict[str, float]], lists: dict[str, 
     return sh, seats_from_shares(sh, agreements, threshold)
 
 
+def median_shares(polls: dict[str, dict[str, float]]) -> dict[str, float]:
+    keys = set().union(*[set(v) for v in polls.values()]) if polls else set()
+    med = {k: median([sh.get(k, 0.0) for sh in polls.values()]) for k in keys}
+    tot = sum(med.values())
+    return {k: v / tot for k, v in med.items()} if tot > 0 else {}
+
+
+def momentum(now: dict[str, dict[str, float]], before: dict[str, dict[str, float]], min_series: int) -> dict[str, float]:
+    """התנועה בין החלון הקודם לחלון האחרון (חציון מנורמל בכל אחד). פחות מ-min_series סדרות באחד מהם ⇐ אין מגמה."""
+    if len(now) < min_series or len(before) < min_series:
+        return {}
+    a, b = median_shares(now), median_shares(before)
+    return {k: a.get(k, 0.0) - b.get(k, 0.0) for k in set(a) | set(b)}
+
+
+def fit_momentum(history: list[tuple[Election, dict[str, dict[str, float]], dict[str, float]]], spec: dict) -> tuple[float, int]:
+    """מקדם ההמשכה β: כמה מהתנועה האחרונה המשיכה עד יום הבחירות בעבר. ריבועים פחותים דרך הראשית של
+    (תוצאה − חציון החלון האחרון) על התנועה, ברשימות שמעל סף היחידה; מכווץ ל-0 ב-n/(n+חוזק), n = מספר המערכות."""
+    min_share = spec["gate"]["unitMinShare"]
+    sxy = sxx = 0.0
+    n = 0
+    for e, polls, mom in history:
+        if not mom:
+            continue
+        n += 1
+        med = median_shares(polls)
+        act = e.shares()
+        for k in units(med, act, min_share):
+            m = mom.get(k, 0.0)
+            sxy += (act.get(k, 0.0) - med.get(k, 0.0)) * m
+            sxx += m * m
+    if n == 0 or sxx == 0:
+        return 0.0, n
+    lo, hi = spec["model"]["momentum"]["betaRange"]
+    beta = min(max(sxy / sxx, lo), hi)
+    return beta * n / (n + spec["model"]["shrinkStrength"]), n
+
+
+def apply_momentum(sh: dict[str, float], mom: dict[str, float], beta: float) -> dict[str, float]:
+    tot = sum(sh.values())
+    new = {k: max(0.0, v + beta * mom.get(k, 0.0)) for k, v in sh.items()}
+    s2 = sum(new.values())
+    return {k: v * tot / s2 for k, v in new.items()} if s2 > 0 else sh
+
+
 def run_backtest(spec: dict, horizon: int) -> dict:
     elections = load_elections(spec)
     polls = load_polls(spec)
     seed = spec["model"]["seed"]
     order = sorted(elections)
     obs: dict[int, dict[str, dict[str, float]]] = {}
+    moms: dict[int, dict[str, float]] = {}
     validity: dict[int, dict] = {}
     for k in order:
         e = elections[k]
         fw = final_week(polls, e, spec, horizon)
         obs[k] = {p.series: poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in fw}
         obs[k] = {s: sh for s, sh in obs[k].items() if sh}
+        prev = final_week(polls, e, spec, horizon + spec["model"]["momentum"]["lagDays"])
+        prev_obs = {p.series: poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in prev}
+        moms[k] = momentum(obs[k], {s: sh for s, sh in prev_obs.items() if sh}, spec["model"]["momentum"]["minSeries"])
         n = len(obs[k])
         validity[k] = {"series": n, "valid": n >= spec["validity"]["minSeries"]}
     rows = []
@@ -410,8 +459,15 @@ def run_backtest(spec: dict, horizon: int) -> dict:
         f = fit(hist, k, spec) if hist else None
         row = {"knesset": k, "date": e.date, "series": sorted(obs[k]), "trainedOn": [h[0].knesset for h in hist],
                "coldStart": not hist, "variants": {}}
+        beta, n_mom = fit_momentum([(elections[j], obs[j], moms[j]) for j in order[:i] if validity[j]["valid"]], spec)
+        row["momentum"] = {"beta": round(beta, 4), "elections": n_mom, "available": bool(moms[k])}
         for v in VARIANTS:
-            sh, se = forecast(v, obs[k], e.lists, f, spec, e.threshold, e.agreements)
+            if v == "V4":
+                sh3, _ = forecast("V3", obs[k], e.lists, f, spec, e.threshold, e.agreements)
+                sh = apply_momentum(sh3, moms[k], beta) if f is not None else sh3
+                se = seats_from_shares(sh, e.agreements, e.threshold)
+            else:
+                sh, se = forecast(v, obs[k], e.lists, f, spec, e.threshold, e.agreements)
             row["variants"][v] = {
                 "voteAccuracy": round(vote_accuracy(sh, e.shares(), spec["gate"]["unitMinShare"]), 5),
                 "seatAccuracy": round(seat_accuracy(se, e.seats), 5),
