@@ -63,8 +63,8 @@ export default function Layout() {
             תוצאות האמת — מקובצי ועדת הבחירות המרכזית.
           </p>
           <p>
-            הנתונים נכונים ל-{dateLong(meta.dataAsOf)} · <a href="https://github.com/hopetohelp/elections-26">הקוד והנתונים פתוחים</a> ·{" "}
-            <a href="https://github.com/hopetohelp/elections-26/issues">דיווח על טעות</a>
+            הנתונים נכונים ל-{dateLong(meta.dataAsOf)} · <a href="https://github.com/hopetohelp/26">הקוד והנתונים פתוחים</a> ·{" "}
+            <a href="https://github.com/hopetohelp/26/issues">דיווח על טעות</a>
           </p>
         </div>
       </footer>

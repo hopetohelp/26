@@ -16,8 +16,8 @@ export default function About() {
           </p>
           <p>
             כל הקוד והנתונים פתוחים לעיון ב-
-            <a href="https://github.com/hopetohelp/elections-26">github.com/hopetohelp/elections-26</a>. מצאתם טעות? אפשר לדווח{" "}
-            <a href="https://github.com/hopetohelp/elections-26/issues">כאן</a>, וכל תיקון נרשם בהיסטוריה של הריפו.
+            <a href="https://github.com/hopetohelp/26">github.com/hopetohelp/26</a>. מצאתם טעות? אפשר לדווח{" "}
+            <a href="https://github.com/hopetohelp/26/issues">כאן</a>, וכל תיקון נרשם בהיסטוריה של הריפו.
           </p>
           <p>מקורות הנתונים ושיטת החישוב — בעמוד "שיטה ומקורות". שימוש חוזר בנתונים — עם ציון המקור.</p>
         </div>
