@@ -31,6 +31,9 @@ jobs:
         run: python3 pipeline/build_data.py
       - run: npm test
       - run: npm run build
+        env:
+          # כפתור "הערה?" — השרת הקטן ב-worker/feedback (Cloudflare). בלי המשתנה הכפתור אינו מוצג.
+          VITE_FEEDBACK_URL: https://elections26-feedback.hopetohelp-il.workers.dev
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
