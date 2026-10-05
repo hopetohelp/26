@@ -1,0 +1,2358 @@
+{{Short description|none}}
+{{main| Israeli legislative election, 2013}}
+Polls may not add up to 120 seats due to rounding or omitted parties that dropped out or did not poll consistently.
+
+==Polling==
+=== By party ===
+{|class=wikitable style="text-align:center; font-size:90%"
+|-
+! Date
+! Poll
+! [[Kadima]]
+! [[Likud]]
+! [[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+! [[Israeli Labor Party|Labor]]
+! [[Shas]]
+! [[United Torah Judaism|UTJ]]
+! [[National Union (Israel)|National<br />Union]]
+! [[Jewish Home|Jewish<br />Home]]
+! [[United Arab List|UAL]]<br />-[[Ta'al]]
+! [[Hadash]]
+! [[Balad (political party)|Balad]]
+! [[Meretz]]
+! [[Yesh Atid|Yesh<br />Atid]]
+! [[Otzma LeYisrael|Otzma]]
+! [[Am Shalem|Am<br />Shalem]]
+! [[Hatnuah]]
+|-
+!
+! 
+! class="unsortable" style="color:inherit;background:{{party color|Kadima}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Likud}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Yisrael Beiteinu}};" |
+! class="unsortable" style="color:inherit;background:{{party color|Israeli Labor Party}};" |
+! class="unsortable" style="color:inherit;background:{{party color|Shas}};" |
+! class="unsortable" style="color:inherit;background:{{party color|United Torah Judaism}};" |
+! class="unsortable" style="color:inherit;background:{{party color|National Union (Israel)}};" |
+! class="unsortable" style="color:inherit;background:{{party color|The Jewish Home}};"|
+! class="unsortable" style="color:inherit;background:{{party color|United Arab List}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Hadash}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Balad (political party)}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Meretz}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Yesh Atid}};"|
+! class="unsortable" style="color:inherit;background:{{party color|Otzma Yehudit}};" |
+! class="unsortable" style="color:inherit;background:{{party color|Shas}};" |
+! class="unsortable" style="color:inherit;background:{{party color|Hatnuah}};" |
+|-
+|colspan=2| [[2009 Israeli legislative election|2009 election results]]
+| '''28'''
+|27
+|15
+|13
+|11
+|5
+| 4
+|3
+| 4
+| 4
+| 3
+| 3
+| {{N/A}}
+| {{N/A}}
+| {{N/A}}
+| {{N/A}}
+|-
+|colspan=2| Seats in the outgoing Knesset
+| 21
+| '''27'''
+| 15
+| 8
+| 10
+| 5
+| 2
+| 3
+| 4
+| 4
+| 3
+| 3
+| {{N/A}}
+| 2
+| 1
+| 7
+|-
+|colspan=2|Final results<ref>{{citation |title=תוצאות הבחירות לכנסת התשע עשרה |trans-title=Election Results for the 19th Knesset |work=[[Israeli Central Elections Committee|Central Elections Committee]] |url=http://www.bechirot.gov.il/elections19/heb/list/ResultsAppendix.pdf |date=22 January 2013 |access-date=27 March 2013}}</ref>
+| 2             <!-- Kadima -->
+|style="background:#B0CEFF" colspan=2| '''31'''   <!-- Likud-Beiteinu -->
+| 15             <!-- Labor -->
+| 11             <!-- Shas -->
+| 7             <!-- UTJ -->
+|style="background:#B0CEFF" colspan=2| 12   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+|style="background:#B0CEFF"| 19            <!-- Yesh Atid -->
+| 0             <!-- Otzma LeYisrael -->
+| 0             <!-- Whole Nation -->
+|style="background:#B0CEFF"| 6             <!-- Hatnuah -->
+|-
+|colspan=21| '''2013'''
+|-
+|22 Jan
+|Channel 1 exit poll<ref name="exitpolls">{{cite news |title=Israel election exit polls reveal tight race between left and right |url=https://www.haaretz.co.il/news/elections/1.1909581 |work=Haaretz |date=22 January 2013 |access-date=27 March 2013}}</ref>
+| 0             <!-- Kadima -->
+|colspan=2| '''31'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 2             <!-- Balad -->
+| 7             <!-- Meretz -->
+| 19            <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+| 0             <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|22 Jan
+|Channel 2 exit poll<ref name="exitpolls" />
+| 0             <!-- Kadima -->
+|colspan=2| '''31'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 12             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 2             <!-- Balad -->
+| 7             <!-- Meretz -->
+| 19            <!-- Yesh Atid -->
+| 0             <!-- Otzma LeYisrael -->
+| 0             <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|22 Jan
+|Channel 10 exit poll<ref name="exitpolls" />
+| 0             <!-- Kadima -->
+|colspan=2| '''31'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 13             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 5             <!-- Hadash -->
+| 2             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 18            <!-- Yesh Atid -->
+| 0             <!-- Otzma LeYisrael -->
+| 0             <!-- Whole Nation -->
+| 6             <!-- Hatnuah -->
+|-
+|colspan=21|
+|-
+|18 Jan
+|Yedioth Ahronot/Dahaf<ref>{{cite news|url=https://www.ynet.co.il/articles/0,7340,L-4334096,00.html |title=סקר: הפער בין השמאל-מרכז לימין הצטמצם |work=Ynet |date=2013-01-18 |access-date=2013-03-27}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''32'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 13            <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 8             <!-- Hatnuah -->
+|-
+|17 Jan
+|Haaretz/Dialogue<ref>{{cite news|url=https://www.haaretz.co.il/news/elections/1.1909581 |title=סקר בחירות הארץ: גוש הימין יורד ל-63 מנדטים; 15% עוד מתלבטים - הארץ |work=Haaretz |date=2013-01-17 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''32'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 12             <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 5             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 12            <!-- Yesh Atid -->
+|              <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 8             <!-- Hatnuah -->
+|-
+|17 Jan
+|Knesset Channel/Panels Politics
+| 3             <!-- Kadima -->
+|colspan=2| '''34'''   <!-- Likud-Beiteinu -->
+| 16             <!-- Labor -->
+| 10             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 11            <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|17 Jan
+|Israel Hayom/The New Wave<ref>{{cite web|url=http://www.israelhayom.co.il/site/newsletter_article.php?id=25891&hp=1&newsletter=17.01.2013 |title=ישראל היום בנימין נתניהו: "תנו לי את הכוח להנהיג" |publisher=Israel Hayom |date=2013-01-17 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''35'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 15   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 12            <!-- Yesh Atid -->
+|              <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|17 Jan
+|Maariv/Ma'agar Mochot<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/429/713.html?hp=1&cat=404&loc=1 |title=חדשות - פוליטי/מדיני nrg - ...הליכוד נחלש ל-37 מנדטים |publisher=NRG |access-date=2013-01-22}}</ref>
+| 3             <!-- Kadima -->
+|colspan=2| '''37'''   <!-- Likud-Beiteinu -->
+| 15             <!-- Labor -->
+| 12             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 7             <!-- Meretz -->
+| 8             <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+| 1             <!-- Whole Nation -->
+| 5             <!-- Hatnuah -->
+|-
+|16 Jan
+|Channel 10/Dialogue<ref>{{cite web|url=http://news.nana10.co.il/Article/?ArticleID=951884 |title=נענע10 - סקר חדשות 10: הליכוד-ביתנו רק עם 32, העבודה 16, הבית היהודי 14 - חדשות |publisher=NANA10 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''32'''   <!-- Likud-Beiteinu -->
+| 16             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|16 Jan
+|Walla!/TNS-Teleseker<ref>{{cite web|url=http://news.walla.co.il/elections/?w=/2780/2607313 |title=סקר וואלה! חדשות: לבני צונחת, כמעט רבע מהמצביעים עוד מתלבטים |date=16 January 2013 |publisher=Walla |access-date=2013-01-22}}</ref>
+| 3             <!-- Kadima -->
+|colspan=2| '''34'''   <!-- Likud-Beiteinu -->
+| 18             <!-- Labor -->
+| 10             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 15   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+|              <!-- Otzma LeYisrael -->
+| 2             <!-- Whole Nation -->
+| 6             <!-- Hatnuah -->
+|-
+|15 Jan
+|Channel 2/Dahaf<ref>{{cite web|url=http://www.mako.co.il/news-elections-2013/articles/Article-f4b298baf2f3c31004.htm&sCh=31750a2610f26110&pId=1363207701 |title=חדשות 2 - שבוע לבחירות: ניצחונו של נתניהו נראה מובטח |date=15 January 2013 |publisher=Mako |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''33'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|14 Jan
+|Knesset Channel/Panels Politics<ref>{{cite web|author=amit mendelsohn |url=http://megafon-news.co.il/asys/archives/115653 |title=סקר ערוץ הכנסת: הליכוד ביתנו – 35 מנדטים, העבודה – 17 |date=14 January 2013 |publisher=Megafon |access-date=2013-01-22}}</ref>
+| 3             <!-- Kadima -->
+|colspan=2| '''35'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 9             <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 3             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 8             <!-- Hatnuah -->
+|-
+|12 Jan
+|Channel1/Midgam<ref>{{cite web|url=https://knessetjeremy.com/2013/01/12/channel-1-poll-likud-beitenu-33-labor-16-bayit-yehudi-15-shas-10-yesh-atid-10-movement-9/ |title=Channel 1 Poll: Likud Beitenu 33, Labor 16, Bayit Yehudi 15, Shas 10, Yesh Atid 10, Movement 9 |publisher=Knesset |date=12 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''33'''   <!-- Likud-Beiteinu -->
+| 16             <!-- Labor -->
+| 10             <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 15   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 10             <!-- Yesh Atid -->
+| 3             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|11 Jan
+|Yisrael Post/Sof Hashavua<ref>{{cite web|url=https://knessetjeremy.com/2013/01/11/yisrael-postsof-hashavua-poll-likud-beitenu-34-labor-17-bayit-yehudi-14-yesh-atid-11-shas-9-movement-9/ |title=Yisrael Post/Sof Hashavua Poll: Likud Beitenu 34, Labor 17, Bayit Yehudi 14, Yesh Atid 11, Shas 9, Movement 9 |publisher=Knesset |date=11 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 9             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 3             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|11 Jan
+|Jerusalem Post/Smith<ref>{{cite web|url=https://knessetjeremy.com/2013/01/11/smithjerusalem-post-poll-likud-beitenu-34-labor-18-bayit-yehudi-14-shas-10-yesh-atid-10-movement-8/ |title=Smith/Jerusalem Post Poll: Likud Beitenu 34, Labor 18, Bayit Yehudi 14, Shas 10, Yesh Atid 10, Movement 8 |publisher=Knesset |date=11 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''34'''   <!-- Likud-Beiteinu -->
+| 18             <!-- Labor -->
+| 10             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 10             <!-- Yesh Atid -->
+|              <!-- Otzma LeYisrael -->
+| 3             <!-- Whole Nation -->
+| 8             <!-- Hatnuah -->
+|-
+|11 Jan
+|Yediot/Dahaf<ref>{{cite web|url=https://knessetjeremy.com/2013/01/11/dahafyediot-achronot-poll-likud-beitenu-33-labor-18-bayit-yehudi-14-yesh-atid-11-shas-10-movement-8/ |title=Dahaf/Yediot Achronot Poll: Likud Beitenu 33, Labor 18, Bayit Yehudi 14, Yesh Atid 11, Shas 10, Movement 8 |publisher=Knesset |date=11 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''33'''   <!-- Likud-Beiteinu -->
+| 18             <!-- Labor -->
+| 10             <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 8             <!-- Hatnuah -->
+|-
+|11 Jan
+|Yisrael Hayom/New Wave<ref>{{cite web|url=https://knessetjeremy.com/2013/01/11/new-waveyisrael-hayom-poll-likud-beitenu-35-labor-17-bayit-yehudi-14-shas-11-yesh-atid-11-movement-9/ |title=New Wave/Yisrael Hayom Poll: Likud Beitenu 35, Labor 17, Bayit Yehudi 14, Shas 11, Yesh Atid 11, Movement 9 |publisher=Knesset |date=11 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''35'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+|              <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|11 Jan
+|Maariv/Maagar<ref>{{cite web|url=https://knessetjeremy.com/2013/01/11/maarivmaagar-mochot-poll-likud-beitenu-38-labor-16-bayit-yehudi-13-shas-12-yesh-atid-8-movement-7/ |title=Maariv/Maagar Mochot Poll: Likud Beitenu 38, Labor 16, Bayit Yehudi 13, Shas 12, Yesh Atid 8, Movement 7 « Jeremy's Knesset Insider |publisher=Knesset |date=11 January 2013 |access-date=2013-01-22}}</ref>
+| 3             <!-- Kadima -->
+|colspan=2| '''38'''   <!-- Likud-Beiteinu -->
+| 16             <!-- Labor -->
+| 12             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 13   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 8             <!-- Yesh Atid -->
+| 1             <!-- Otzma LeYisrael -->
+| 1             <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|10 Jan
+|Geocartography<ref>{{cite web|url=https://knessetjeremy.com/2013/01/10/geocartography-poll-likud-beitenu-34-labor-16-5-bayit-yehudi-15-yesh-atid-12-shas-11/ |title=Geocartography Poll: Likud Beitenu 34, Labor 16.5, Bayit Yehudi 15, Yesh Atid 12, Shas 11 |publisher=Knesset |date=10 January 2013 |access-date=2013-01-22}}</ref>
+|              <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 16.5             <!-- Labor -->
+| 11             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 15   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 5             <!-- Balad -->
+| 5.5             <!-- Meretz -->
+| 12             <!-- Yesh Atid -->
+|              <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 5             <!-- Hatnuah -->
+|-
+|10 Jan
+|Mako & Channel2/Panels<ref>{{cite web|url=https://knessetjeremy.com/2013/01/10/panels-poll-likud-beitenu-33-labor-16-bayit-yehudi-15-shas-10-yesh-atid-10-movement-8/ |title=Panels Poll: Likud Beitenu 33, Labor 16, Bayit Yehudi 15, Shas 10, Yesh Atid 10, Movement 8 |publisher=Knesset |date=10 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''33'''   <!-- Likud-Beiteinu -->
+| 16             <!-- Labor -->
+| 10             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 15   <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 10             <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+| 2             <!-- Whole Nation -->
+| 8             <!-- Hatnuah -->
+|-
+|10 Jan
+|Reshet Bet/Sarid<ref>{{cite web|url=https://knessetjeremy.com/2013/01/10/saridreshet-bet-poll-likud-beitenu-34-labor-17-bayit-yehudi-14-shas-9-yesh-atid-9/ |title=Sarid/Reshet Bet Poll: Likud Beitenu 34, Labor 17, Bayit Yehudi 14, Shas 9, Yesh Atid 9 |publisher=Knesset |date=10 January 2013 |access-date=2013-01-22}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''34'''   <!-- Likud-Beiteinu -->
+| 17             <!-- Labor -->
+| 9             <!-- Shas -->
+| 7             <!-- UTJ -->
+|colspan=2| 14   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+| 2             <!-- Otzma LeYisrael -->
+| 1             <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|10 Jan
+|[[Channel 2 (Israel)|Channel 2]]/Dahaf<ref>{{cite news |url=https://www.ynetnews.com/articles/0,7340,L-4331258,00.html |title=Poll: Labor, Meretz, Habayit Hayehudi gaining ground |work=Ynetnews |date=11 January 2013 |access-date=11 January 2013}}</ref>
+| 2              <!-- Kadima -->
+|colspan=2| '''33'''  <!-- Likud-Beiteinu -->
+| 18            <!-- Labor -->
+| 10            <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 14  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 11            <!-- Yesh Atid -->
+| 2              <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 11            <!-- Hatnuah -->
+|-
+|9 Jan
+|[[News1]]/Reshet Bet/Machon Sarid<ref>{{cite news |url=http://www.news1.co.il/Archive/001-D-318925-00.html |title=סקר רחב עבור רשת ב' כח להשפיע מפתיעה עם 4 מנדטים |trans-title=Comprehensive Poll on Behalf of Reshet Bet: Koah LeHashpi'a Stuns with 4 Mandates |language=he |work=News1 |date=10 January 2013 |access-date=10 January 2013}}</ref>
+| 2              <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 9            <!-- Shas -->
+| 7             <!-- UTJ -->
+|colspan=2| 14  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 9            <!-- Yesh Atid -->
+| 2              <!-- Otzma LeYisrael -->
+|              <!-- Whole Nation -->
+| 7            <!-- Hatnuah -->
+|-
+|8 Jan
+|[[Walla]]/TNS-Teleseker<ref>{{cite news |url=http://news.walla.co.il/?w=/2780/2604590 |title=סקר וואלה!: למרות מגעי האיחוד - הימין שומר על כוחו; בנט יורד |trans-title=Walla! Poll: Despite union negotiations - right wing maintains its strength; Bennett drops |language=he |work=Walla |date=8 January 2013 |access-date=8 January 2013}}</ref>
+|               <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 18            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 13  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 2             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 11            <!-- Yesh Atid -->
+|               <!-- Otzma LeYisrael -->
+| 2             <!-- Whole Nation -->
+| 11            <!-- Hatnuah -->
+|-
+|7 Jan
+|[[Channel 10 (Israel)|Channel 10]]/Dialog<ref>{{cite news |url=http://news.nana10.co.il/Article/?ArticleID=949807 |title=סקר חדשות 10: נבלמה הנפילה בליכוד, 24 מנדטים עדיין מתלבטים |trans-title=Channel 10 News Poll: Likud downfall halted, 24 seats still undecided |language=he |work=Nana 10 |date=7 January 2013 |access-date=8 January 2013}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''35'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 12            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 11            <!-- Yesh Atid -->
+|               <!-- Otzma LeYisrael -->
+|               <!-- Whole Nation -->
+| 7             <!-- Hatnuah -->
+|-
+|7 Jan
+|Panels Politics, Mako<ref>{{cite news |url=https://www.israelnationalnews.com/News/News.aspx/163953 |title= New Poll: Bennett Tied With Labor for Second Largest Faction |work= Israel National News|date=7 January 2012 }}</ref>
+|               <!-- Kadima -->
+|colspan=2| '''32'''  <!-- Likud-Beiteinu -->
+| 16            <!-- Labor -->
+| 10            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 16  <!-- National Union/Jewish Home -->
+|colspan=3| 11  <!-- Arab parties -->
+| 5             <!-- Meretz -->
+| 10            <!-- Yesh Atid -->
+| 3             <!-- Otzma LeYisrael -->
+| 2             <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|7 Jan
+|[[Times of Israel]]<ref>{{cite news |url=https://www.timesofisrael.com/two-weeks-before-election-day-huge-31-of-likely-voters-are-still-undecided-times-of-israel-poll-reveals/ |title=Two weeks before election day huge 31% of likely voters are still undecided, Times of Israel poll reveals |work=Times of Israel |first=Stephan |last=Miller |date=7 January 2012 |access-date= 8 January 2013}}</ref>
+|               <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 21            <!-- Labor -->
+| 10            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 15  <!-- National Union/Jewish Home -->
+|colspan=3| 12  <!-- Arab parties -->
+| 6             <!-- Meretz -->
+| 11            <!-- Yesh Atid -->
+|               <!-- Otzma LeYisrael -->
+|               <!-- Whole Nation -->
+| 5             <!-- Hatnuah -->
+|-
+|3 Jan
+|[[Jerusalem Post]], [[Globes (newspaper)|Globes]]/Smith<ref>{{cite news |url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=298341 |title='Post' poll: Likud-Beytenu hits new low of 32 seats |work=The Jerusalem Post |date=3 January 2013 |access-date=7 January 2013}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''32'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 10            <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 16  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 10            <!-- Yesh Atid -->
+|               <!-- Otzma LeYisrael -->
+| 3             <!-- Whole Nation -->
+| 10            <!-- Hatnuah -->
+|-
+|3 Jan
+|[[Israel Radio]]/Geocartography<ref>{{cite news |url=https://www.timesofisrael.com/new-poll-puts-jewish-home-tied-as-second-largest-party/ |title=New poll puts Jewish Home tied as second-largest party |work=Times of Israel|date=3 January 2013 }}</ref>
+|               <!-- Kadima -->
+|colspan=2| '''35'''  <!-- Likud-Beiteinu -->
+| 18            <!-- Labor -->
+| 8             <!-- Shas -->
+| 7             <!-- UTJ -->
+|colspan=2| 18  <!-- National Union/Jewish Home -->
+|colspan=3| 11  <!-- Arab parties -->
+| 7             <!-- Meretz -->
+| 5             <!-- Yesh Atid -->
+| 6             <!-- Otzma LeYisrael -->
+|               <!-- Whole Nation -->
+| 6             <!-- Hatnuah -->
+|-
+|2 Jan
+|[[Haaretz]]/Dialog<ref>{{cite news |url=https://www.haaretz.co.il/news/elections/1.1898565#fromelement=hp_firstarticle |title= דצמבר השחור של הליכוד-ביתנו: איבדה חמישה מנדטים; בנט ממשיך להתחזק |trans-title=Likud's Black December - our house: lost five seats; Bennett continues to strengthen|language=he |date=27 December 2012 }}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 16            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+| 2            <!-- Otzma LeYisrael -->
+|             <!-- Whole Nation -->
+| 10             <!-- Hatnuah -->
+|-
+|1 Jan
+|[[Channel 2 (Israel)|Channel 2]]/Dahaf<ref>{{cite news |url=https://www.haaretz.co.il/news/elections/1.1888975 |title=שלושה שבועות לבחירות: הליכוד והעבודה נחלשות, הבית היהודי מתחזקת  |trans-title=Three weeks before the elections: Likud, Labor weaken, Bayit Yehudi strengthens |language=he |work=Channel 2 |date=1 January 2013 |access-date=1 January 2013}}</ref><!-- 800 polled, 3.7% error -->
+|               <!-- Kadima -->
+|colspan=2| '''33'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 13  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5            <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 2            <!-- Otzma LeYisrael -->
+|             <!-- Whole Nation -->
+| 11             <!-- Hatnuah -->
+|-
+|colspan=21| '''2012'''
+|-
+|27 Dec
+|Globes/Rafi Smith<ref>{{cite news |url=http://www.globes.co.il/news/article.aspx?did=1000809947#fromelement=hp_firstarticle |title=סקר "גלובס": הליכוד צונח ל-34 מנדטים, בנט נוסק ל-14 |date=27 December 2012}}</ref>
+|               <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 18            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 14  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 4            <!-- Meretz -->
+| 10             <!-- Yesh Atid -->
+|              <!-- Strong Israel -->
+| 2            <!-- Whole Nation -->
+| 10             <!-- Hatnuah -->
+|-
+|27 Dec
+|[[Reshet Bet]]/Meno Geva<ref>{{cite news |url=https://www.haaretz.co.il/news/elections/1.1894951 |title=סקר רשת ב': בנט עולה עם 15 מנדטים, העבודה צונחת |date=27 December 2012 }}</ref>
+|               <!-- Kadima -->
+|colspan=2| '''34'''  <!-- Likud-Beiteinu -->
+| 16            <!-- Labor -->
+| 13            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 15  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+|              <!-- Strong Israel -->
+|              <!-- Whole Nation -->
+| 11             <!-- Hatnuah -->
+|-
+|25 Dec
+|Dialog<ref>{{cite news |url=https://www.imra.org.il/story.php3?id=59534 |title=Dialog Poll: Bayit Yehudi 13 seats National camp 67  |date=25 December 2012 }}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''35'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 13            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 13  <!-- National Union/Jewish Home -->
+|colspan=3| 11  <!-- Arab parties -->
+| 4             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+|              <!-- Strong Israel -->
+|              <!-- Whole Nation -->
+| 10             <!-- Hatnuah -->
+|-
+|21 Dec
+|[[Maariv (newspaper)|Maariv]]/Maagar<ref>{{cite news |url=http://www.nrg.co.il/online/1/ART2/423/697.html |title=סקר מעריב: הפרופיל המפתיע של מצביעי גוש הימין |trans-title=Ma'ariv poll: right wing voters' surprising profile |language=he |work=Maariv |date=21 December 2012 |access-date=27 December 2012}}</ref>
+|              <!-- Kadima -->
+|colspan=2| '''37'''  <!-- Likud-Beiteinu -->
+| 20            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 7             <!-- Yesh Atid -->
+| 2             <!-- Strong Israel -->
+|              <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+
+|20 Dec
+|Reshet Bet<ref>{{cite news |url=http://www.iba.org.il/bet/bet.aspx?type=1&entity=895352&topic=954&page=292 |title=סקר רשת ב': עם שלם 3 מנדטים |trans-title=Reshet Bet poll: Am Shalem gets 3 seats |language=he |work=Reshet Bet |date=20 December 2012 |access-date=27 December 2012}}</ref>
+|              <!-- Kadima -->
+|colspan=2| '''36'''  <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 11            <!-- Yesh Atid -->
+|               <!-- Strong Israel -->
+| 3             <!-- Whole Nation -->
+| 9            <!-- Hatnuah -->
+|-
+|18 Dec
+|Channel 2/Dahaf<ref>{{cite news |url=https://www.haaretz.co.il/news/elections/1.1888975 |title=סקר ערוץ 2: הבית היהודי הופכת למפלגה ה-3 בגודלה  |trans-title=Channel 2 Poll: Jewish Home becomes the 3rd largest party |language=he |work=Haaretz |date=18 December 2012 |access-date=27 December 2012}}</ref>
+|              <!-- Kadima -->
+|colspan=2| '''35'''  <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 3             <!-- Meretz -->
+| 9            <!-- Yesh Atid -->
+| 2             <!-- Strong Israel -->
+| 2             <!-- Whole Nation -->
+| 10            <!-- Hatnuah -->
+|-
+|14 Dec
+|[[Yedioth Ahronoth]]/Dahaf<ref>{{cite news |url=https://www.ynet.co.il/articles/0,7340,L-4319783,00.html |title=הליכוד-ביתנו נחלש, "הישראלים" מפתיעים |trans-title=Likud-Beitenu down, HaYisraelim surprise |language=he |work=Ynet |date=14 December 2012 |access-date=27 December 2012}}</ref>
+|              <!-- Kadima -->
+|colspan=2| '''35'''  <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 8             <!-- Yesh Atid -->
+| 2             <!-- Strong Israel -->
+|              <!-- Whole Nation -->
+| 11            <!-- Hatnuah -->
+|-
+|14 Dec
+|Maariv/Maagar<ref>{{cite web|url=https://www.imra.org.il/story.php3?id=59400 |title=Friday, December 14, 2012 Maagar Poll: Livni party 9 seats |publisher=IMRA |access-date=2013-01-03}}</ref>
+| 1             <!-- Kadima -->
+|colspan=2| '''38'''  <!-- Likud-Beiteinu -->
+| 20            <!-- Labor -->
+| 12            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11  <!-- National Union/Jewish Home -->
+|colspan=3| 10  <!-- Arab parties -->
+| 3             <!-- Meretz -->
+| 8             <!-- Yesh Atid -->
+| 1             <!-- Strong Israel -->
+| 1             <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|14 Dec
+|Jerusalem Post/Geocartography<ref name="jpost">{{cite news |url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=295918 |title=Poll: Likud Beytenu down to 35 seats |work=The Jerusalem Post |date=14 December 2012 |access-date=27 December 2012}}</ref>
+| 0             <!-- Kadima -->
+|colspan=2| '''35'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 10            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 16  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 6             <!-- Meretz -->
+| 12            <!-- Yesh Atid -->
+| 0             <!-- Strong Israel -->
+| 0             <!-- Whole Nation -->
+| 7           <!-- Hatnuah -->
+|-
+|13 Dec
+|[[Knesset Channel]]/Panels<ref>{{cite news |url=https://www.inn.co.il/News/News.aspx/248374 |title=סקר: הליכוד - 36, הבית היהודי - 13 |trans-title=Likud - 36, Jewish Home - 13 |language=he |work=Arutz Sheva |date=13 December 2012 |access-date=27 December 2012}}</ref>
+| 0             <!-- Kadima -->
+|colspan=2| '''36'''  <!-- Likud-Beiteinu -->
+| 18            <!-- Labor -->
+| 9             <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 13  <!-- National Union/Jewish Home -->
+| 5             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 2             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 7             <!-- Yesh Atid -->
+| 3             <!-- Strong Israel -->
+| 2             <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|12 Dec
+|Jerusalem Post/Smith Research<ref name="jpost" />
+| 0             <!-- Kadima -->
+|colspan=2| '''39'''  <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 10            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 10  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+| 0             <!-- Strong Israel -->
+| 3             <!-- Whole Nation -->
+| 9             <!-- Hatnuah -->
+|-
+|11 Dec
+|Walla/Tns-Teleseker<ref>{{cite news |url=http://news.walla.co.il/elections/?w=/2780/2595389 |title=סקר וואלה:הפער בין הגושים מצטמצם |trans-title=Walla Poll: The gap between the blocs is narrowing |work=Walla |language=he |date=11 December 2012 |access-date=11 December 2012}}</ref>
+| 4             <!-- Kadima -->
+|colspan=2| '''38'''  <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 11            <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 9  <!-- National Union/Jewish Home -->
+| 5             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 3             <!-- Meretz -->
+| 11             <!-- Yesh Atid -->
+| 0             <!-- Strong Israel -->
+| 0             <!-- Am Shalem -->
+| 11             <!-- Hatnuah -->
+|-
+|10 Dec
+|Haaretz/Dialog<ref>{{cite news |url=https://www.haaretz.co.il/news/elections/1.1882765 |title=רוב הנשאלים: נתניהו ייבחר מחדש |trans-title=Haaretz poll: Majority of Israelis say Netanyahu will retain premiership |work=Haaretz |language=he |date=10 December 2012 |access-date=10 December 2012}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''39''' <!-- Likud-Beiteinu -->
+| 17            <!-- Labor -->
+| 12            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11  <!-- National Union/Jewish Home -->
+| 5             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 3             <!-- Meretz -->
+| 6             <!-- Yesh Atid -->
+| 0             <!-- Strong Israel -->
+| 3             <!-- Am Shalem -->
+| 9             <!-- Hatnuah -->
+|-
+|6 Dec
+|Channel 2<ref>{{cite web|url=http://www.news-israel.net/Article.asp?code=33857 |title=סקר ראשון אחרי הצטרפות פרץ ללבני - עניין מרכזי |publisher=News-israel.net |access-date=2013-01-03}}</ref><ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/420/858.html |title=חדשות - פוליטי/מדיני nrg - ...סקר: ניצחון מוחץ לימין |publisher=Nrg.co.il |access-date=2013-01-03}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''38'''  <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 13            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 12  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 2             <!-- Meretz -->
+| 5             <!-- Yesh Atid -->
+| 1             <!-- Strong Israel -->
+| 3             <!-- Am Shalem -->
+| 10            <!-- Hatnuah -->
+|- style="background:silver"
+| 6 Dec
+|colspan=20|''[[Atzmaut]] announces withdrawal''
+|-
+|6 Dec
+|Knesset Channel/Panels<ref>{{cite web|url=http://www.bhol.co.il/Article.aspx?id=47752 |title=סקרים: בן ארי נוגס בליכוד, בנט עובר את ש"ס - בחירות תשע"ג - בחדרי חרדים |publisher=Bhol.co.il |access-date=2013-01-03}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''36''' <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 10            <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 12  <!-- National Union/Jewish Home -->
+|colspan=3| 11  <!-- Arab parties -->
+| 5             <!-- Meretz -->
+| 8             <!-- Yesh Atid -->
+| 3             <!-- Strong Israel -->
+| 3             <!-- Am Shalem -->
+| 6             <!-- Hatnuah -->
+|-
+|6 Dec
+|Reshet Bet/Meno Geva<ref>{{cite news |url=http://www.iba.org.il/bet/bet.aspx?type=1&entity=891995&topic=307 |title=סקר רשת בית |trans-title=Reshet Bet Poll |work=Reshet Bet |language=he |date=6 December 2012 |access-date=6 December 2012}}</ref>
+| 0             <!-- Kadima -->
+|colspan=2| '''36'''  <!-- Likud-Beiteinu -->
+| 20            <!-- Labor -->
+| 10            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 3             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+| 3             <!-- Strong Israel -->
+| 2             <!-- Am Shalem -->
+| 9             <!-- Hatnuah -->
+|-
+|5 Dec
+|Channel 10/Dialog<ref>{{cite news |url=http://news.nana10.co.il/Article/?ArticleID=942519 |title=סקר חדשות 10: הליכוד-ביתנו נחלשת ל-37, העבודה עולה ל-20, כמעט שוויון בגושים |trans-title=Channel 10 News Poll: Likud - Beiteinu weakens to 37, Labor up to 20, blocs almost equal |work=Channel 10 |language=he |date=5 December 2012 |access-date=6 December 2012}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''37'''  <!-- Likud-Beiteinu -->
+| 20            <!-- Labor -->
+| 10            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11  <!-- National Union/Jewish Home -->
+| 5             <!-- UAL - Ta'al -->
+| 3             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 7             <!-- Yesh Atid -->
+| 0             <!-- Strong Israel -->
+| 3             <!-- Am Shalem -->
+| 9             <!-- Hatnuah -->
+|-
+|29 Nov
+|[[Yisrael Hayom]]/New Wave<ref name=walla30Nov>{{cite news |url=http://news.walla.co.il/elections/?w=/2780/2591825 |title=סקר: לבני הכי חזקה מול נתניהו, אך מקבלת רק 9 מנדטים |trans-title=Poll: Livni polls strongest vs. Netanyahu, but gets only 9 seats |language=he |work =Walla! |date=30 November 2012 |access-date=30 November 2012}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''39'''  <!-- Likud-Beiteinu -->
+| 20            <!-- Labor -->
+| 11            <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 10  <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 4             <!-- Meretz -->
+| 10            <!-- Yesh Atid -->
+| 0             <!-- Strong Israel -->
+| 2             <!-- Am Shalem -->
+| 7             <!-- Hatnuah -->
+|-
+|29 Nov
+|Yedioth Ahronoth/Dahaf<ref name=walla30Nov />
+| 0             <!-- Kadima -->
+|colspan=2| '''37'''  <!-- Likud-Beiteinu -->
+| 19            <!-- Labor -->
+| 11            <!-- Shas -->
+| 5             <!-- UTJ -->
+|colspan=2| 10  <!-- National Union/Jewish Home -->
+| 4             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 3             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 9             <!-- Yesh Atid -->
+| 2             <!-- Strong Israel -->
+| 2             <!-- Am Shalem -->
+| 9             <!-- Hatnuah -->
+|-
+|29 Nov
+|Globes/Smith<ref>{{cite news |url=http://www.globes.co.il/serveen/globes/docview.asp?did=1000802532&fid=1725 |work=Globes |title=Livni fails to take off - poll |first=Lilach |last=Weissman |date=29 November 2012 |access-date=30 November 2012}}</ref>
+| 0             <!-- Kadima -->
+|colspan=2| '''37'''  <!-- Likud-Beiteinu -->
+| 20            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 11   <!-- National Union/Jewish Home -->
+| 3             <!-- UAL - Ta'al -->
+| 4             <!-- Hadash -->
+| 4             <!-- Balad -->
+| 5             <!-- Meretz -->
+| 10             <!-- Yesh Atid -->
+|               <!-- Strong Israel -->
+| 3             <!-- Am Shalem -->
+| 6             <!-- Hatnuah -->
+|-
+|28 Nov
+|Haaretz/Dialog<ref>{{cite web|url=http://www.jewishpress.com/news/life-with-tzipi-likud-gaining-in-wednesdays-poll-labor-down/2012/11/28/ |title=Life with Tzipi: Likud Gaining in Wednesday's Poll, Labor Down |publisher=JewishPress |date=2012-09-20 |access-date=2012-11-28}}</ref>
+| 2             <!-- Kadima -->
+|colspan=2| '''39'''  <!-- Likud-Beiteinu -->
+| 18            <!-- Labor -->
+| 11            <!-- Shas -->
+| 6             <!-- UTJ -->
+|colspan=2| 8   <!-- National Union/Jewish Home -->
+|colspan=3| 11  <!-- Arab parties -->
+| 5             <!-- Meretz -->
+| 8             <!-- Yesh Atid -->
+| 2             <!-- Strong Israel -->
+| 3             <!-- Am Shalem -->
+| 7             <!-- Hatnuah -->
+|-
+|22 Nov
+|Knesset Channel/Panels<ref>[http://www.jewishpress.com/news/breaking-news/israel-election-polls/2012/11/23/ Latest Israel Election Polls | JewishPress]</ref>
+| 0 <!-- Kadima -->
+|colspan=2| '''33''' <!-- Likud-Beiteinu -->
+| 24 <!-- Labor -->
+| 10 <!-- Shas -->
+| 6 <!-- UTJ -->
+|colspan=2| 13 <!-- National Union/Jewish Home -->
+|colspan=3| 10 <!-- Arab parties -->
+| 6 <!-- Meretz -->
+| 11 <!-- Yesh Atid -->
+| 4 <!-- Strong Israel -->
+| 3 <!-- Am Shalem-->
+|
+|-
+|18 Nov
+|Panels<ref>[http://www.bhol.co.il/Article.aspx?id=47008 סקר: עוצמה לישראל עוברת - 3 מנדטים - בחירות תשע"ג - בחדרי חרדים]</ref>
+| 0 <!-- Kadima -->
+|colspan=2| '''38''' <!-- Likud-Beiteinu -->
+| 22 <!-- Labor -->
+| 9 <!-- Shas -->
+| 5 <!-- UTJ -->
+|colspan=2| 11 <!-- National Union/Jewish Home -->
+|colspan=3| 10 <!-- Arab parties -->
+| 5 <!-- Meretz -->
+| 13 <!-- Yesh Atid -->
+| 3<!-- Strong Israel -->
+| 4 <!-- Am Shalem -->
+|
+|-
+|18 Nov
+|Haaretz/Dialogue<ref>{{cite news |url=https://www.haaretz.com/2012-11-19/ty-article/.premium/a-suspended-election-campaign/0000017f-e6f9-d62c-a1ff-fefbef620000 |work=Haaretz |first=Anshel |last=Pfeffer |title=A suspended election campaign |date=19 November 2012 |access-date=20 November 2012}}</ref>
+| 3 <!-- Kadima -->
+|colspan=2| '''41''' <!-- Likud-Beiteinu -->
+| 21 <!-- Labor -->
+| 12 <!-- Shas -->
+| 5 <!-- UTJ -->
+|colspan=2| 8 <!-- National Union/Jewish Home -->
+| 5 <!-- UAL-Ta'al -->
+| 3 <!-- Hadash -->
+| 4 <!-- Balad -->
+| 4 <!-- Meretz -->
+| 9 <!-- Yesh Atid -->
+| <!-- Strong Israel -->
+| 3 <!-- Am Shalem -->
+|
+|-
+|13 Nov
+|MAKO/Panels<ref>[https://www.imra.org.il/story.php3?id=58966 IMRA - Tuesday, November 13, 2012 Panels Poll: Joint Jewish Home-NRP-National Union tickets get 12 seats, national camp total 66 seats]</ref>
+| 2 <!-- Kadima -->
+|colspan=2| '''36''' <!-- Likud-Beiteinu -->
+| 21 <!-- Labor -->
+| 10 <!-- Shas -->
+| 5 <!-- UTJ -->
+|colspan=2| 12 <!-- National Union/Jewish Home -->
+|colspan=3| 9 <!-- Arab parties -->
+| 5 <!-- Meretz -->
+| 15 <!-- Yesh Atid -->
+| <!-- Ben-Gvir/Eldad party -->
+| 3 <!-- Am Shalem -->
+|
+|-
+|8 Nov
+|Knesset Channel/Panels<ref>[https://www.israelnationalnews.com/News/News.aspx/161872 Poll Gives United Religious Zionist List 13 MKs - Inside Israel - News - Israel National News]</ref>
+| 0 <!-- Kadima -->
+|colspan=2| '''36''' <!-- Likud-Beiteinu -->
+| 23 <!-- Labor -->
+| 10 <!-- Shas -->
+| 5 <!-- UTJ -->
+|colspan=2| 13 <!-- National Union/Jewish Home -->
+|colspan=3| 11 <!-- Arab parties -->
+| 5 <!-- Meretz -->
+| 13 <!-- Yesh Atid -->
+| <!-- Ben-Gvir/Eldad party -->
+| 4 <!-- Am Shalem -->
+|
+|-
+|6 Nov
+|Channel 2/Maagar<ref name="imra58903">{{cite web|url=https://imra.org.il/story.php3?id=58903|title= Maagar Poll after Obama victory: National Camp 69 seats |access-date=10 November 2012}}</ref>
+| 3 <!-- Kadima -->
+|colspan=2| '''39''' <!-- Likud-Beiteinu -->
+| 22 <!-- Labor -->
+| 14 <!-- Shas -->
+| 6 <!-- UTJ -->
+|colspan=2| 7 <!-- National Union/Jewish Home -->
+|colspan=3| 10 <!-- Arab parties -->
+| 3 <!-- Meretz -->
+| 10 <!-- Yesh Atid -->
+| <!-- Ben-Gvir/Eldad party -->
+|
+|
+|-
+|5–6 Nov
+|Maagar<ref name="imra58883">{{cite web|url=https://imra.org.il/story.php3?id=58883|title=Maagar Poll: Candidacy of Olmert and/or Livni would not significantly impact national camp majority|access-date=10 November 2012}}</ref>
+| 4 <!-- Kadima -->
+|colspan=2| '''39''' <!-- Likud-Beiteinu -->
+| 22 <!-- Labor -->
+| 15 <!-- Shas -->
+| 6 <!-- UTJ -->
+|colspan=2| 7 <!-- National Union/Jewish Home -->
+|colspan=3| 9 <!-- Arab parties -->
+| 2 <!-- Meretz -->
+| 10 <!-- Yesh Atid -->
+| <!-- Ben-Gvir/Eldad party -->
+|
+|
+|-
+|4 Nov
+|Yedioth Ahronoth<ref>{{cite web|url=https://www.ynetnews.com/articles/0,7340,L-4300376,00.html |title=Poll: Kahlon to get 13 Knesset seats - Israel News, Ynetnews |publisher=Ynetnews.com |access-date=2012-11-28}}</ref><ref>[http://news.walla.co.il/?w=/2686/2581739 סקר: 13 מנדטים למשה כחלון אם ירוץ, קדימה נמחקת - וואלה! חדשות]</ref><ref>{{cite web|url=https://www.ynet.co.il/articles/0,7340,L-4300359,00.html |title=ynet סקר: 13 מנדטים לכחלון, פוגע בעיקר בליכוד - חדשות |publisher=Ynet.co.il |access-date=2012-11-28}}</ref>
+| 0 <!-- Kadima -->
+|colspan=2| '''35''' <!-- Likud-Beiteinu -->
+| 24 <!-- Labor -->
+| 13 <!-- Shas -->
+| 6 <!-- UTJ -->
+|colspan=2| 5 <!-- National Union/Jewish Home -->
+|colspan=3| 11 <!-- Arab parties -->
+| 4 <!-- Meretz -->
+| 15 <!-- Yesh Atid -->
+| 2 <!-- Ben-Gvir/Eldad party -->
+|
+|
+|-
+|28 Oct
+|Maariv/Teleseker<ref name="imra58773">{{cite web|url=https://imra.org.il/story.php3?id=58773|title=Teleseker poll: Likud & Yisrael Beiteinu 43, Likud voters support joint ticket 73.2%:20.9%|access-date=29 October 2012}}</ref>
+| 4 <!-- Kadima -->
+|colspan=2| '''43''' <!-- Likud-Beiteinu -->
+| 20 <!-- Labor -->
+| 10 <!-- Shas -->
+| 6 <!-- UTJ -->
+|colspan=2| 8 <!-- National Union/Jewish Home -->
+|colspan=3| 11 <!-- Arab parties -->
+| 3 <!-- Meretz -->
+| 15 <!-- Yesh Atid -->
+| 
+|
+|
+|-
+|28 Oct
+|Channel 2/Maagar<ref name="imra59768">{{cite web|url=https://imra.org.il/story.php3?id=58768|title=Maagar Poll after announced merger: Likud & Yisrael Beiteinu 42|access-date=29 October 2012}}</ref>
+| 3 <!-- Kadima -->
+|colspan=2| '''42''' <!-- Likud-Beiteinu -->
+| 23 <!-- Labor -->
+| 13 <!-- Shas -->
+| 5 <!-- UTJ -->
+|colspan=2| 5 <!-- National Union/Jewish Home       -->
+|colspan=3| 10 <!-- Arab parties -->
+| 6 <!-- Meretz -->
+| 9 <!-- Yesh Atid -->
+| 
+|
+|
+|-
+|28 Oct
+|Channel 10/Panels<ref name="imra58765">{{cite web|url=https://imra.org.il/story.php3?id=58765|title=Panels Poll moments after announced merger: Likud & Yisrael Beiteinu 33 Jewish Home/NRP & National Union 13 Left 50 Arabs 10|access-date=29 October 2012}}</ref>
+| 5 <!-- Kadima -->
+|colspan=2| '''35''' <!-- Likud-Beiteinu  -->
+| 23 <!-- Labor -->
+| 14 <!-- Shas -->
+| 6 <!-- UTJ -->
+|colspan=2| 9 <!-- National Union/Jewish Home -->
+|colspan=3| 11 <!-- Arab parties -->
+| 4 <!-- Meretz -->
+| 13 <!-- Yesh Atid -->
+| 
+|
+|
+|- style="background:silver"
+| 25 Oct
+|colspan=20| ''[[Likud]] and [[Yisrael Beiteinu]] announce joint list''
+|-
+|18 Oct
+|Haaretz/Dialog<ref name=Dialog18Oct>{{cite news |url=https://www.haaretz.com/2012-10-18/ty-article/.premium/poll-livni-olmert-lapid-would-beat-likud/0000017f-e3d0-df7c-a5ff-e3fa04790000 |title= Haaretz poll: A Livni-Olmert-Lapid 'super-party' would outscore Likud |first=Yossi |last=Verter |work=Haaretz |date=18 October 2012 |access-date=21 October 2012}}</ref>
+| 9
+| '''29'''
+| 13
+| 20
+| 11
+| 6
+|colspan=2| 6
+| 4
+| 4
+| 3
+| 5
+| 11
+| 
+|
+|
+|-
+|17 Oct
+|Globes<ref>{{cite web|url=https://www.globes.co.il/serveen/globes/docview.asp?did=1000791038|title=Aryeh Deri spooks Likud|access-date=23 October 2012}}</ref>
+| 3
+| '''25'''
+| 15
+| 18
+| 13<ref group="lower-alpha" name=Deri>If [[Aryeh Deri]] leads [[Shas]].</ref>
+| 6
+| 4
+| 5
+|colspan=3| 11<ref group="lower-alpha" name=Hadash>[[Hadash]] polled at 4 seats.</ref>
+| 4
+| 14
+|  
+|
+|
+|-
+|11 Oct
+|Maariv/Teleseker<ref>{{cite web|url=https://knessetjeremy.com/2012/10/11/teleseker-maariv-polls-likud-29-labor-1716-ya-1713-yb-1312/|title=Teleseker Maariv Polls: Likud 29, Labor 17/16, YA 17/13, YB 13/12|date=11 October 2012|publisher=Knesset Jeremy|access-date=23 October 2012}}</ref>
+| 6
+| '''29'''
+| 13
+| 17
+| 10
+| 5
+| 2
+| 5
+| 4
+| 3
+| 3
+| 4
+| 17
+|  
+|
+|
+|-
+|10 Oct
+|Haaretz/Dialog<ref name=imra58562>{{cite news |url=https://www.haaretz.com/2012-10-11/ty-article/.premium/polls-show-bibi-is-a-shoo-in/0000017f-f97b-dcea-a7ff-fdfb13da0000 |title= Haaretz poll: Netanyahu beats election rivals, right-wing bloc grows stronger |first=Yossi |last=Verter |work=Haaretz |date=11 October 2012 |access-date=12 October 2012}}</ref>
+| 7
+| '''29'''
+| 15
+| 19
+| 10
+| 6
+|colspan=2| 8
+| 5
+| 4
+| 2
+| 4
+| 11
+| 
+|
+|
+|-
+|28 Sept
+|Haaretz/Dialog<ref name=verter>{{cite news |url=https://www.haaretz.com/2012-09-28/ty-article/in-polls-netanyahu-stands-strong/0000017f-f00b-d497-a1ff-f28b7cb70000 |title=As early elections loom, Netanyahu's standing in polls is stronger than ever |first=Yossi |last=Verter |work=Haaretz |date=28 September 2012 |access-date=29 September 2012}}</ref>
+| 8
+| '''28'''
+| 14
+| 20
+| 11
+| 7
+|colspan=2| 6
+| 5
+| 4
+| 2
+| 5
+| 8
+| 
+|
+|
+|-
+|1 Aug
+|Globes<ref name=globes762012>{{cite web|url=https://www.globes.co.il/serveen/globes/docview.asp?did=1000771357|title=Likud weakens, Labor gains, Kadima collapses|access-date=3 August 2012}}</ref>
+| 4
+| '''27'''
+| 15
+| 19
+| 9
+| 6
+| 4
+| 5
+|colspan=3| 11
+| 4
+| 13
+| 
+|
+|
+|-
+|31 Jul
+|Haaretz/Dialog<ref name=diag832012>{{cite news |title=Relatively speaking, King Bibi is in trouble |first=Yossi |last=Verter |url=https://www.haaretz.com/weekend/week-s-end/relatively-speaking-king-bibi-is-in-trouble-1.455759 |archive-url=https://web.archive.org/web/20120915100929/http://www.haaretz.com/weekend/week-s-end/relatively-speaking-king-bibi-is-in-trouble-1.455759 |url-status=dead |archive-date=September 15, 2012 |newspaper=Haaretz |date=3 August 2012 |access-date=26 October 2012}}</ref>
+| 7
+| '''25'''
+| 15
+| 21
+| 11
+| 6
+|colspan=2| 7
+| 4
+| 4
+| 2
+| 4
+| 12
+| 
+|
+|
+|-
+|26 Jul
+|Globes<ref name="globes762012"/>
+| 7
+| '''28'''
+| 16
+| 18
+| 9
+| 6
+| 3
+| 4
+|colspan=3| 11
+| 4
+| 11
+| 
+|
+|
+|-
+|20 Jul
+|Yediot Aharonot/Dahaf<ref name=imra120720>{{cite web|url=https://imra.org.il/story.php3?id=57554|title=Poll: 54% Do not advance elections, national camp 62 seats|access-date=28 July 2012}}</ref>
+| 7
+| '''25'''
+| 13
+| 21
+| 10
+| 4
+| 6
+| 4
+|colspan=3| 11
+| 4
+| 13
+| 
+|
+|
+|-
+|17 Jul
+|Maariv/Maagar<ref name=imra120717>{{cite web|url=https://imra.org.il/story.php3?id=57553|title=Poll: Do not advance elections 45%:31%|access-date=28 July 2012}}</ref>
+| 7
+| '''27'''
+| 16
+| 17
+| 9
+| 6
+| 3
+| 3
+|colspan=3| 10
+| 4
+| 11
+| 
+|
+|
+|- style="background:silver"
+| 17 Jul
+|colspan=20| ''[[Kadima]] leaves the coalition''
+|-
+| 17 May
+| Knesset Channel/Panels<ref>{{cite news |url=http://www.nrg.co.il/online/1/ART2/369/292.html |title=אפקט האחדות: קדימה מתרסקת ומקבלת 3 מנדטים בסקר חדש |trans-title=The unity effect: Kadima crashes and gets 3 seats in new poll |language=he |work=nrg Maariv |date=17 May 2012 |access-date=18 May 2012}}</ref>
+| 3
+| '''30'''
+| 12
+| 20
+| 6
+| 5
+| 6
+| 3
+| 3
+| 4
+| 3
+| 6
+| 17
+| 
+|
+|
+|-
+| 13 May
+| Globes/Smith<ref>{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=269799|title=Smith poll: Netanyahu saved Kadima with unity deal|access-date=15 May 2012}}</ref>
+| 9
+| '''31'''
+| 13
+| 17
+| 7
+| 5
+| 3
+| 3
+|colspan=3| 10
+| 4
+| 11
+| 
+|
+|
+|-
+| 8 May
+| Maariv/[[Taylor Nelson Sofres|TNS]]<ref>{{cite web|url=https://imra.org.il/story.php3?id=56721|title=TNS Poll: 50.9%:34.8% Establishment of National Unity Government Justified|access-date=11 May 2012}}</ref>
+| 10
+| '''30'''
+| 12
+| 20
+| 7
+| 6
+| 4
+| 4
+|colspan=3| 11
+| 4
+| 12
+| 
+|
+|
+|-
+| 8 May
+| Haaretz/Dialog<ref>{{cite news |url=https://www.haaretz.co.il/news/politi/1.1703572 |title=סקר "הארץ" בעקבות האחדות: 63%: נתניהו ומופז פועלים ממניעים פוליטיים ולא מדאגה למדינה |trans-title=Haaretz poll: Israelis see Netanyahu, Mofaz motivated by political gain |language=he |work=Haaretz |first=Yossi |last=Verter |date=9 May 2012 |access-date=9 May 2012}}</ref>
+| 11
+| '''33'''
+| 15
+| 19
+| 8
+| 6
+|colspan=2| 5
+|colspan=3| 10
+| 6
+| 6
+|
+|
+|
+|- style="background:silver"
+| 8 May
+|colspan=20| ''[[Kadima]] joins the coalition''
+|-
+| 1 May
+| Maariv/TNS<ref name="maarivtns">{{cite web|url=https://imra.org.il/story.php3?id=56679|title=TNS Poll: Most Israelis want elections in November 2013|access-date=8 May 2012}}</ref>
+| 11
+| '''31'''
+| 12
+| 18
+| 8
+| 6
+| 4
+| 4
+|colspan=3| 10
+| 5
+| 11
+| 
+|
+|
+|-
+| 1 May
+| Haaretz/Dialog<ref>{{cite web|url=https://www.haaretz.co.il/news/politi/1.1701222 |title=סקר "הארץ": 32 מנדטים לליכוד, 19 לעבודה, 11 לקדימה, 10 ללפיד |trans-title=Haaretz Poll: Likud 32 Labor 19 Kadima 11 Lapid 10 |work=Haaretz |language=he |date=3 May 2012 |access-date=9 May 2012}}</ref>
+| 11
+| '''32'''
+| 14
+| 19
+| 8
+| 6
+|colspan=2|5
+| 4
+| 4
+| 2
+| 5
+| 10
+| 
+|
+|
+|-
+| 30 Apr
+| [[Ynet]]/Dahaf<ref>{{cite news |url=https://www.ynet.co.il/articles/0,7340,L-4222374,00.html |title=סקר: עם ציפי לבני, יאיר לפיד מזנק למקום השני |trans-title=Poll: With Tzipi Livni, Yair Lapid leaps to second place |language=he |work=Ynet |date=30 April 2012 |access-date=1 May 2012}}</ref>
+| 11
+| '''30'''
+| 13
+| 18
+| 7
+| 6
+| 2
+| 2
+|colspan=3| 11
+| 5
+| 11
+| 
+|
+|
+|-
+| 26 Apr
+| Israel Hayom/[[The New Wave Research|New Wave]]<ref name="imra29apr">{{cite web|url=https://www.imra.org.il/story.php3?id=56628|title=New Wave Poll: Right has 64 mandates, 4.6% think Shaul Mofaz most appropriate to be next PM|access-date=1 May 2012}}</ref>
+| 13
+| '''31'''
+| 14
+| 17
+| 9
+| 5
+| 3
+| 2
+|colspan=3| 10
+| 4
+| 12
+| 
+|
+|
+|-
+| 22–23 Apr
+| [[JPost]]/Smith<ref name="Hoffman28apr12">{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=267706|title='Likud gets double the support of other parties'|last=Hoffman|first=Gil|date=27 April 2012|work=jpost.com|publisher=Jerusalem Post|access-date=28 April 2012}}</ref>
+| 13
+| '''31'''
+| 15
+| 15
+| 8
+| 6
+| 4
+| 3
+| colspan=3|11
+| 3
+| 11
+| 
+|
+|
+|-
+| 29 Mar
+| [[Taylor Nelson Sofres|TNS]]<ref name="Lerner290312">{{cite web|url=https://imra.org.il/story.php3?id=56260|title=Teleseker Poll: Netanyahu only party head considered appropriate to be PM, Kadima drops to 13 seats Likud up to 30|last=Lerner|first=Aaron|date=29 March 2012|work=imra.org.il|publisher=Independent Media Review and Analysis|access-date=3 April 2012}}</ref>
+| 13
+| '''30'''
+| 13
+| 18
+| 7
+| 6
+| 4
+| 4
+| colspan=3|10
+| 4
+| 11
+| 
+|
+|
+|-
+| 28 Mar
+| Dahaf<ref name="Lerner280312">{{cite web|url=https://imra.org.il/story.php3?id=56242|title=Poll after Kadima primaries: Kadima 12 seats, most appropriate to be PM: Mofaz 16% Netanyahu 54% |last=Lerner|first=Aaron|date=29 March 2012|work=imra.org.il|publisher=Independent Media Review and Analysis|access-date=3 April 2012}}</ref>
+| 12
+| '''29'''
+| 13
+| 18
+| 8
+| 6
+| 4
+| 2
+| colspan=3|11
+| 3
+| 12
+| 
+|
+|
+|-
+| 28 Mar
+| Channel 10/Dialog<ref name="Droqer">{{cite web|url=http://news.nana10.co.il/Article/?ArticleID=886931|title=סקר חדשות 10: מופז לוקח מנדטים מהליכוד – אך קדימה עדיין מתכווצת|last=Droqer|first=Raviv|date=28 March 2012|work=news.nana10.co.il|publisher=Channel 10|language=he|access-date=28 March 2012}}</ref>
+| 15
+| '''32'''
+| 14
+| 15
+| 9
+| 5
+| colspan=2|5
+| colspan=3|
+| 5
+| 9
+|
+|
+|
+|- style="background:silver"
+| 27 Mar
+|colspan=20| ''[[Shaul Mofaz]] wins [[2012 Kadima leadership election]]''
+|-
+| 21 Mar
+| Yedioth Ahronoth<ref name=ynet23mar12>{{cite web|url=https://www.ynetnews.com/articles/0,7340,L-4206904,00.html|title=Poll: Kadima with Livni – 15 mandates, 12 with Mofaz|date=23 March 2012|work=ynetnews.com|publisher=Yedioth Ahronoth|access-date=25 March 2012}}</ref>
+| 12
+| '''29'''
+| 14
+| 13
+| 8
+| 6
+| 3
+| 3
+| colspan=3|11
+| 3
+| 14
+| 
+|
+|
+|-
+| 9 Mar
+| [[Teleseker]]<ref name="Lerner090312">{{cite web|url=https://imra.org.il/story.php3?id=55990|title=Teleseker Poll: National Camp between 71 and 74 seats - Kadima 10 with Livni (radically different from Dialogue poll)|last=Lerner|first=Aaron|date=9 March 2012|work=imra.org.il|publisher=Independent Media Review and Analysis|access-date=14 March 2012}}</ref>
+| 14
+| '''27'''
+| 14
+| 14
+| 8
+| 4
+| 4
+| 4
+| colspan=3|10
+| 5
+| 11
+| 
+|
+|
+|-
+| 4–5 Mar
+| Haaretz/Dialog<ref name=dialog9mar12>{{cite news |url=https://www.haaretz.co.il/magazine/1.1659921 |title=סקר הפופולריות של "הארץ" - תמיכה חסרת תקדים בנשיא פרס, לבני הידרדרה לתחתית הרשימה |trans-title="Haaretz" popularity poll - unprecedented support for president Peres, Livni has slipped to the bottom of the list |language=he |work=Haaretz |date=9 March 2012 |access-date=9 March 2012}}</ref>
+| 12
+| '''35'''
+| 15
+| 14
+| 9
+| 7
+|colspan=2| 5
+| 3
+| 5
+| 2
+| 5
+| 8
+| 
+|
+|
+|-
+| 29 Feb
+| Globes/Smith<ref name=globesfeb>{{cite news |url=https://www.globes.co.il/serveen/globes/docview.asp?did=1000729713 |title=Likud stays strong |last=Weissman|first=Lilach|date=1 March 2012|work=globes.co.il|publisher=Globes |access-date=2 March 2012}}</ref>
+| 15
+| '''29'''
+| 15
+| 14
+| 10
+| 5
+| 4
+| 4
+| colspan=3|10
+| 3
+| 11
+| 
+|
+|
+|-
+| 17 Feb
+| Geocartography<ref name="Harkov">{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=258465|title='Likud would win 39 seats, Lapid only 6,' poll finds|last=Harkov|first=Lahav|date=19 February 2012|work=jpost.com|publisher=Jerusalem Post|access-date=19 February 2012}}</ref>
+| 12
+| '''39'''
+| 13
+| 12
+| 9
+| 5
+|colspan=2| 10
+|colspan=3| 10
+| 4
+| 6
+|
+|
+|
+|- style="background:silver"
+| 31 Jan
+|colspan=20| ''[[Benjamin Netanyahu]] wins [[2012 Likud leadership election]]''
+|-
+| 27 Jan
+| Globes/Smith<ref name=globesjan>{{cite news |url=https://www.globes.co.il/news/article.aspx?did=1000719386 |title=סקר: יאיר לפיד צריך להתחיל להזיע - יורד ל-11 מנדטים בלבד; האם חבירה לאריה דרעי היא הפתרון? |trans-title=Poll: Yair Lapid should begin sweating - down to 11 seats; Is joining Aryeh Deri the solution? |language=he |work=Globes |date=27 January 2012}}</ref>
+| 13
+| '''30'''
+| 14
+| 15
+| 10
+| 6
+| 5
+| 3
+| 3
+| 4
+| 3
+| 3
+| 11
+| 
+|
+|
+|-
+| 18 Jan
+| Maagar<ref name="Lerner190112">{{cite web|url=https://imra.org.il/story.php3?id=55384|title=Poll: Livni heads Kadima: National camp 67 Left: 42 Arabs: 11|last=Lerner|first=Aaron|date=19 January 2012|work=imra.org.il|publisher=Independent Media Review & Analysis|access-date=19 January 2012}}</ref>
+| 9
+| '''28'''
+| 17
+| 15
+| 7
+| 6
+| 5
+| 4
+|colspan=3| 11
+| 3
+| 8
+| 
+|
+|
+|-
+| 17 Jan
+| Geocartography<ref name=yeshayahou>{{cite web|url=https://www.globes.co.il/serveen/globes/docview.asp?did=1000716497|title=New poll sees Likud strengthening|last=Yeshayahou|first=Koby|date=17 January 2012|work=globes.co.il|publisher=Globes|access-date=2 March 2012}}</ref>
+| 11
+| '''33'''
+| 16
+| 13
+| 8
+| 6
+| 2
+| 3
+|colspan=3| 11
+| 4
+| 13
+| 
+|
+|
+|-
+| 10 Jan
+| New Wave<ref name=lerner100112>{{cite web|url=https://imra.org.il/story.php3?id=55297|title=New Wave Poll: National camp total: 61 Left: 49 Arabs: 10|last=Lerner|first=Aaron|date=13 January 2012|work=imra.org.il|publisher=Independent Media Review & Analysis|access-date=19 January 2012}}</ref>
+| 14
+| '''28'''
+| 14
+| 15
+| 9
+| 5
+| 2
+| 3
+|colspan=3| 10
+| 5
+| 15
+| 
+|
+|
+|-
+| 9 Jan
+| Dahaf<ref name="Lerner100112">{{cite web|url=https://imra.org.il/story.php3?id=55263|title=Dahaf Poll: If Lapid runs with Kadima national camp has 58 seats |last=Lerner|first=Aaron|date=10 January 2012|work=imra.org.il|publisher=Independent Media Review & Analysis|access-date=19 January 2012}}</ref>
+| 8
+| '''28'''
+| 16
+| 14
+| 6
+| 6
+| 2
+| 4
+|colspan=3| 11
+| 4
+| 14
+| 
+|
+|
+|-
+| 9 Jan
+| Teleseker<ref name="Lerner100112a">{{cite web|url=https://imra.org.il/story.php3?id=55262|title=Teleseker Poll: Lapid party 12 Deri party 4 National camp total: 62-59|last=Lerner|first=Aaron|date=10 January 2012|work=imra.org.il|publisher=Independent Media Review & Analysis|access-date=20 January 2012}}</ref>
+| 15
+| '''26'''
+| 14
+| 17
+| 7
+| 4
+|colspan=2| 8
+|colspan=3| 10
+| 3
+| 12
+| 
+|
+|
+|-
+| 9 Jan
+| Panels<ref name="Omer">{{cite web|url=https://www.globes.co.il/serveen/globes/docview.asp?did=1000714188|title=Poll shows Yair Lapid hitting Kadima|last=Omer|first=Inbal|date=9 January 2012|work=globes.co.il|publisher=Globes|access-date=2 March 2012}}</ref>
+| 9
+| '''29'''
+| 13
+| 12
+| 8
+| 
+| 
+| 
+|colspan=3| 
+| 
+| 20
+| 
+|
+|
+|-
+| 8 Jan
+| Maagar<ref name="Lerner090112">{{cite web|url=https://imra.org.il/story.php3?id=55241|title=Poll: With Lapid and Deri parties National camp total: 66 Left: 43 Arabs: 11|last=Lerner|first=Aaron|date=9 January 2012|work=imra.org.il|publisher=Independent Media Review & Analysis|access-date=19 January 2012}}</ref>
+| 12
+| '''27'''
+| 17
+| 14
+| 7
+| 6
+| 5
+| 4
+|colspan=3| 11
+| 3
+| 7
+| 
+|
+|
+|-
+| 8 Jan
+| Haaretz<ref name="Bar-Zohar">{{cite web|url=https://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168|archive-url=https://web.archive.org/web/20120109061901/http://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168|url-status=dead|archive-date=January 9, 2012|title=Veteran Israeli anchor Yair Lapid leaves Channel 2 to enter politics|last=Bar-Zohar|first=Ophir|date=8 January 2012|publisher=Haaretz|access-date=17 January 2012|display-authors=etal}}</ref>
+| 10
+| '''24'''
+| 14
+| 15
+| 
+| 
+|
+|
+|
+| 
+|
+|
+| 15
+| 
+|
+|
+|-
+|-
+|colspan=21| '''2011'''
+|-
+| 29 Dec
+| Globes/Smith<ref name=globesjan />
+| 19
+| '''31'''
+| 14
+| 18
+| 11
+| 6
+| 4
+| 3
+| colspan=3| 10
+| 4
+| 
+| 
+|
+|
+|-
+| 27 Oct
+| Channel 2/Sarid<ref name="Ronen">{{cite web|url=https://www.israelnationalnews.com/News/News.aspx/149120#.Tqizg08TN1M|title=Poll: Likud Up to 37 Knesset Seats|last=Ronen|first=Gil|date=27 October 2011|work=Israel National News|publisher=Arutz Sheva|access-date=17 January 2012}}</ref>
+| 17
+| '''37'''
+| 15
+| 22
+|
+|
+|
+|
+|
+|
+|
+|
+|
+| 
+|
+|
+|-
+| 26 Sept
+| Maagar<ref name="Lerner090112" />
+| 17
+| '''27'''
+| 17
+| 19
+| 9
+| 6
+| 4
+| 3
+|colspan=3| 9
+| 4
+| 2
+|
+|
+|
+|- style="background:silver"
+| 21 Sept
+|colspan=20| ''[[Shelly Yachimovich]] wins [[2011 Israeli Labor Party leadership election]]''
+|-
+| 5 Aug
+| Maagar<ref name="Lerner050811">{{cite web|url=https://www.imra.org.il/story.php3?id=53353|title=Maagar Mohot poll: Likud 29 Kadima 25 (National camp 70)|last=Lerner|first=Aaron|work=imra.org.il|publisher=Independent Media Review & Analysis|access-date=8 March 2012}}</ref>
+| 25
+| '''29'''
+| 16
+| 11
+| 13
+| 5
+| 4
+| 3
+|colspan=3|9
+| 4
+| 
+| 
+|
+|
+|-
+| 2 May
+| Globes/Smith<ref name="Ben Gedalyahu">{{cite web|url=https://www.israelnationalnews.com/News/News.aspx/143844|title=Yisrael Beiteinu Gains in Polls despite Indictment of Lieberman|last=Ben Gedalyahu|first=Tzvi|date=2 May 2011|work=Israel National News|publisher=Arutz Sheva|access-date=17 January 2012}}</ref>
+| 26
+| '''29'''
+| 18
+| 8
+| 11
+| 5
+| 5
+| 4
+|colspan=3|10
+| 3
+| 
+| 
+| 
+|
+|-
+| 17 Jan
+| Channel 10/Dialog<ref>{{cite web|url=https://www.israelnationalnews.com/News/News.aspx/141791|title=Poll: New Barak Faction Would Barely Survive Elections|last=Ronen|first=Gil|date=17 January 2011|work=Israel National News|publisher=Arutz Sheva|access-date=17 January 2012}}</ref>
+| 27
+| '''30'''
+| 17
+| 6
+|
+|
+|
+| 6
+|
+|
+|
+|
+|
+| 
+|
+|
+|-
+|colspan=21| 
+|-
+|colspan=2| [[2009 Israeli legislative election|2009 election results]]
+| 28
+| '''27'''
+| 15
+| 13
+| 11
+| 5
+| 4
+| 3
+| 4
+| 4
+| 3
+| 3
+| {{N/A}}
+| {{N/A}}
+| {{N/A}}
+| {{N/A}}
+|-
+|colspan=2| Seats in the outgoing Knesset
+| 21
+| '''27'''
+| 15
+| 8
+| 10
+| 5
+| 2
+| 3
+| 4
+| 4
+| 3
+| 3
+| {{N/A}}
+| 2
+| 1
+| 7
+|-
+! Date
+! Poll
+! [[Kadima]]
+! [[Likud]]
+! [[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+! [[Israeli Labor Party|Labor]]
+! [[Shas]]
+! [[United Torah Judaism|UTJ]]
+! [[National Union (Israel)|National<br />Union]]
+! [[Jewish Home|Jewish<br />Home]]
+! [[United Arab List|UAL]]<br />-[[Ta'al]]
+! [[Hadash]]
+! [[Balad (political party)|Balad]]
+! [[Meretz]]
+! [[Yesh Atid|Yesh<br />Atid]]
+! [[Otzma LeYisrael|Otzma]]
+! [[Am Shalem|Am<br />Shalem]]
+! [[Hatnuah]]
+|}
+;Notes
+{{reflist|group="lower-alpha"}}
+
+;Hypothetical polling
+The following table contains polls if Tzipi Livni had been leader of Kadima.
+
+{|class=wikitable style="text-align:center; font-size:90%"
+|-
+! Date
+! Poll
+! [[Kadima]]
+! [[Likud]]
+! [[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+! [[Israeli Labor Party|Labor]]
+! [[Shas]]
+! [[United Torah Judaism|UTJ]]
+! [[National Union (Israel)|National<br />Union]]
+! [[Jewish Home|Jewish<br />Home]]
+! [[United Arab List|UAL]]<br />-[[Ta'al]]
+! [[Hadash]]
+! [[Balad (political party)|Balad]]
+! [[Meretz]]
+! [[Yesh Atid|Yesh<br />Atid]]
+! [[Aryeh Deri|Aryeh<br />Deri]]
+|-
+|colspan=2| Seats won in 2009
+| 28
+| 27
+| 15
+| 13
+| 11
+| 5
+| 4
+| 3
+| 4
+| 4
+| 3
+| 3
+| 
+| 
+|-
+|colspan=17| '''2012'''
+|- style="background:silver"
+| 27 Mar
+|colspan=16| ''[[Shaul Mofaz]] wins [[2012 Kadima leadership election]]''
+|-
+| 21 Mar
+| [[Yedioth Ahronoth]]<ref name=ynet23mar12 />
+| 15
+| '''29'''
+| 12
+| 13
+| 8
+| 6
+| 3
+| 3
+| colspan=3|11
+| 4
+| 13
+| 2
+|-
+| 9 Mar
+| [[Teleseker]]<ref name="Lerner090312" />
+| 16
+| '''27'''
+| 14
+| 14
+| 8
+| 4
+| 4
+| 4
+| colspan=3|10
+| 5
+| 10
+|
+|-
+| 4–5 Mar
+| Haaretz/Dialog<ref name=dialog9mar12 />
+| 10
+| '''37'''
+| 16
+| 14
+| 9
+| 7
+|colspan=2| 5
+| 3
+| 5
+| 2
+| 5
+| 7
+|
+|- style="background:silver"
+| 31 Jan
+|colspan=16| ''[[Benjamin Netanyahu]] wins [[2012 Likud leadership election]]''
+|-
+| 18 Jan
+| Maagar<ref name="Lerner190112" />
+| 13
+| '''26'''
+| 17
+| 14
+| 7
+| 6
+| 5
+| 4
+|colspan=3| 11
+| 3
+| 7
+| 3
+|-
+| 9 Jan
+| Dahaf<ref name="Lerner100112" />
+| 13
+| '''28'''
+| 15
+| 13
+| 6
+| 6
+| 2
+| 4
+|colspan=3| 11
+| 4
+| 11
+| 5
+|-
+| 9 Jan
+| Teleseker<ref name="Lerner100112a" />
+| 15
+| '''27'''
+| 14
+| 18
+| 8
+| 5
+|colspan=2| 8
+|colspan=3| 10
+| 3
+| 12
+| 
+|}
+
+=== For prime minister ===
+Incumbent Prime Minister Benjamin Netanyahu has maintained a healthy plurality lead in every poll to date.
+
+{|class=wikitable style="text-align:center; font-size:90%"
+|- valign="top"
+! Date
+! Poll
+! [[Benjamin Netanyahu|Netanyahu]]
+! [[Shaul Mofaz|Mofaz]]
+! [[Shelly Yachimovich|Yachimovich]]
+! [[Avigdor Lieberman|Lieberman]]
+! [[Yair Lapid|Lapid]]
+! Neither/Don't know
+|-
+|colspan=17| '''2012'''
+|-
+| 28-29 Nov
+| Yisrael Hayom/New Wave<ref name=walla30Nov />
+| '''32.8%''' <!-- Netanyahu -->
+| 4.6% <!-- Mofaz -->
+| 11.8% <!--Yachimovich -->
+| 3.8% <!-- Lieberman -->
+| 3.8% <!-- Lapid -->
+| 22.6% <!-- dont know -->
+|-
+|rowspan=2| 28-29 Nov
+|rowspan=2| Maariv/Dahaf<ref name=walla30Nov />
+| '''62%''' <!-- Netanyahu -->
+| - <!-- Mofaz -->
+| 19% <!--Yachimovich -->
+| - <!-- Lieberman -->
+| - <!-- Lapid -->
+| 19% <!-- dont know -->
+|-
+| '''68%''' <!-- Netanyahu -->
+| - <!-- Mofaz -->
+| - <!--Yachimovich -->
+| - <!-- Lieberman -->
+| 17% <!-- Lapid -->
+| 15% <!-- dont know -->
+|-
+| 5–6 Nov
+| Maagar<ref name="imra58883" />
+| '''44%''' <!-- Netanyahu -->
+| 1% <!-- Mofaz -->
+| 8% <!--Yachimovich -->
+| - <!-- Lieberman -->
+| 1% <!-- Lapid -->
+| 21% <!-- dont know -->
+|-
+|rowspan=2| 10 Oct
+|rowspan=2| Haaretz/Dialog<ref name=imra58562 /><ref name="Times of Israel Dialog">{{cite news|last=Ben Zion|first=Ilan|title=Polls show Netanyahu poised for big election win, with Livni edging Olmert in the trailing field|url=https://www.timesofisrael.com/polls-show-netanyahu-far-ahead-with-livni-edging-olmert-in-the-trailing-field/|access-date=12 October 2012|newspaper=The Times of Israel|date=11 October 2012}}</ref>
+|rowspan=2| '''57-62%'''
+| 16%
+| -
+| -
+| -
+| -
+|-
+| -
+| 17%
+| -
+| -
+| n/a
+|-
+| 23 Sept
+| Haaretz/Dialog<ref name=verter />
+| '''35%'''
+| 6%
+| 16%
+| 8%
+| -
+| 31%
+|-
+| 31 Jul
+| Haaretz/Dialog<ref name=diag832012 />
+| '''29%'''
+| 5%
+| 16%
+| 14%
+| 7%
+| 28%
+|-
+|rowspan=3| 17 Jul
+|rowspan=3| Maariv/Maagar<ref name=imra120720 />
+| '''41%'''
+| -
+| 7%
+| -
+| -
+| 52%
+|-
+| '''44%'''
+| 6%
+| -
+| -
+| -
+| 50%
+|-
+| '''37%'''
+| -
+| -
+| 16%
+| -
+| 47%
+|- style="background:silver"
+| 17 Jul
+|colspan=17| ''[[Kadima]] leaves the coalition''
+|- style="background:silver"
+| 8 May
+|colspan=17| ''[[Kadima]] joins the coalition''
+|-
+| 8 May
+| New Wave<ref>{{cite web|url=https://imra.org.il/story.php3?id=56720|title=Poll: 39.6%:31.9% Support postponing elections and forming national unity government|access-date=11 May 2012}}</ref>
+| '''39.8%'''
+| 4.5%
+| 11.3%
+| 4.2%
+| 7.2%
+| 28%
+|-
+|rowspan=3| 1 May
+|rowspan=3| Maariv/TNS<ref name="maarivtns" />
+| '''63.5%'''
+| 16.3%
+| -
+| -
+| -
+| 16.6%
+|-
+| '''62.0%'''
+| -
+| 22.8%
+| -
+| -
+| 12.1%
+|-
+| '''70.6%'''
+| -
+| -
+| 9.5%
+| -
+| 18.1%
+|-
+| 26 Apr
+| New Wave<ref name="imra29apr" />
+| '''29.1%'''
+| 4.6%
+| 9.2%
+| 9.2%
+| 7%
+| 40.9%
+|-
+| 28 Mar
+| Dahaf<ref name="Lerner280312" />
+| '''54%'''
+| 16%
+| -
+| -
+| -
+| 30%
+|- style="background:silver"
+| 27 Mar
+|colspan=17| ''[[Shaul Mofaz]] wins [[2012 Kadima leadership election]]''
+|-
+| 9 Mar
+| Teleseker<ref name="Lerner090312" />
+| '''66.4%'''
+| 10.3%
+| -
+| -
+| -
+| 21.2%
+|- style="background:silver"
+| 31 Jan
+|colspan=17| ''[[Benjamin Netanyahu]] wins [[2012 Likud leadership election]]''
+|-
+| rowspan=2| 9 Jan
+| rowspan=2| Teleseker<ref name="Lerner100112a" />
+| '''60.5%'''
+| 9.6%
+| -
+| -
+| -
+| 29.9%
+|-
+| '''57.7%'''
+| -
+| -
+| -
+| 19.7%
+| 22.6%
+|}
+
+;Hypothetical polling
+The following table contains polls if Tzipi Livni had been leader of Kadima.
+
+{|class=wikitable style="text-align:center; font-size:90%"
+|- valign="top"
+! Date
+! Poll
+! [[Benjamin Netanyahu|Netanyahu]]
+! [[Tzipi Livni|Livni]]
+! [[Shelly Yachimovich|Yachimovich]]
+! [[Avigdor Lieberman|Lieberman]]
+! Don't know
+|-
+|colspan=17| '''2012'''
+|-
+| 28-29 Nov
+| Maariv/Dahaf<ref name=walla30Nov />
+| '''55%''' <!-- Netanyahu -->
+| 30% <!-- Livni -->
+| - <!--Yachimovich -->
+| - <!-- Lieberman -->
+| 15% <!-- dont know -->
+|- style="background:silver"
+| 27 Mar
+|colspan=17| ''[[Shaul Mofaz]] wins [[2012 Kadima leadership election]]''
+|-
+| 9 Mar
+| Teleseker<ref name="Lerner090312" />
+| '''62.2%'''
+| 24.6%
+| -
+| -
+| 11.7%
+|- style="background:silver"
+| 31 Jan
+|colspan=17| ''[[Benjamin Netanyahu]] wins [[2012 Likud leadership election]]''
+|-
+| 9 Jan
+| Teleseker<ref name="Lerner100112a" />
+| '''55%'''
+| 23.5%
+| -
+| -
+| 21.5%
+|-
+|colspan=17| '''2011'''
+|-
+| 10 Oct
+| Channel 10/Dialog<ref>{{cite web|url=https://www.jpost.com/Headlines/Article.aspx?id=241220|title=Sheetrit: Polls make Kadima primary urgent|last=Hoffman|first=Gil|date=10 October 2011|work=jpost.com|publisher=Jerusalem Post|access-date=19 January 2012}}</ref>
+| '''36%'''
+| 13%
+| 17%
+| 14%
+| 20%
+|-
+| 5 Aug
+| Maagar<ref name="Lerner050811" />
+| '''51%'''
+| 28%
+| 4%
+| 17%
+| -
+|}
+
+== See also ==
+* [[2013 Israeli legislative election]]
+
+==References==
+{{reflist|colwidth=30em}}
+{{Opinion polling for Israeli elections}}
+[[Category:Politics of Israel]]
+[[Category:Opinion polling for elections|Israel]]
+[[Category:Opinion polling in Israel]]

@@ -218,6 +218,8 @@ def header_columns(rows):
             key = f"{top_label}#{c}"
         if name and party and name != party and cell_is_sub(grid, c):
             key = name  # שם מפורש בשורה העמוקה (למשל Ra'am תחת Joint List) גובר על צבע הקבוצה
+        if any(x["key"] == key for x in cols) and name and name != key:
+            key = name  # שתי עמודות עם אותו צבע מפלגה (עם שלם תחת צבע ש"ס ב-2013) — מבדילים לפי השם
         cols.append({"key": key, "label": name or top_label, "group": group})
     return cols, len(h)
 
@@ -228,7 +230,8 @@ def cell_is_sub(grid, c):
         if cell: deepest = cell; break
     return bool(deepest and deepest["label"] and deepest["cs"] == 1 and len(grid) >= 3)
 
-def parse_table(table):
+def parse_table(table, year_of_month=None):
+    """year_of_month: לדפים ישנים שבהם התאריך נכתב בלי שנה ובלי ערך מיון ("17 Mar") — פונקציה מחודש לשנה."""
     rows = rows_of(table)
     cols, nh = header_columns(rows)
     if not cols: return []
@@ -259,6 +262,11 @@ def parse_table(table):
         fill_pending()
         if grid[0] is None: continue
         date = parse_date(grid[0][1], grid[0][0])
+        if date is None and year_of_month:
+            mm = re.findall(r"([A-Za-z]{3,9})", link_text(strip_refs(grid[0][1])))
+            mon = MONTHS.get(mm[-1][:3].lower()) if mm else None
+            if mon:
+                date = parse_plain_date(grid[0][1] + " " + str(year_of_month(mon)))
         # שורת-אירוע: תא אחד רחב אחרי התאריך
         if grid[1] is not None and grid[1][2] >= 5:
             data.append({"type": "event", "date": date, "text": link_text(strip_refs(grid[1][1]))[:300]}); continue

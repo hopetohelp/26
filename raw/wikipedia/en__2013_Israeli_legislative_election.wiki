@@ -1,0 +1,1244 @@
+{{short description|none}}
+{{Use dmy dates|date=October 2020}}
+{{Infobox legislative election
+| previous_election = [[2009 Israeli legislative election|2009]]
+| next_election = [[2015 Israeli legislative election|2015]]
+| election_date = {{Start date|2013|01|22|df=y}}
+| seats_for_election = All 120 seats in the [[Knesset]]
+| majority_seats = 61
+| turnout = 67.77% ({{gain}} 3.05[[Percentage point|pp]])
+| country = Israel
+
+| party1 = {{nowrap|[[Likud Yisrael Beiteinu]]}}
+| color1 = {{party color|Likud}}
+| leader1 = {{nowrap|[[Benjamin Netanyahu]]}}
+| seats1 = 31
+| last_election1 = 42
+| percentage1 = 23.34
+
+| party2 = Yesh Atid
+| leader2 = [[Yair Lapid]]
+| seats2 = 19
+| last_election2 = new
+| percentage2 = 14.33
+
+| party3 = Israeli Labor Party
+| leader3 = [[Shelly Yachimovich]]
+| seats3 = 15
+| last_election3 = 13
+| percentage3 = 11.39
+
+| party4 = The Jewish Home
+| leader4 = [[Naftali Bennett]]
+| seats4 = 12
+| last_election4 = 7
+| percentage4 = 9.12
+
+| party5 = Shas
+| leader5 = [[Eli Yishai]]
+| seats5 = 11
+| last_election5 = 10
+| percentage5 = 8.75
+
+| party6 = United Torah Judaism
+| leader6 = [[Yaakov Litzman]]
+| seats6 = 7
+| last_election6 = 5
+| percentage6 = 5.16
+
+| party7 = Hatnua
+| leader7 = [[Tzipi Livni]]
+| seats7 = 6
+| last_election7 = new
+| percentage7 = 4.99
+
+| party8 = Meretz
+| leader8 = [[Zehava Gal-On]]
+| seats8 = 6
+| last_election8 = 3
+| percentage8 = 4.55
+
+| party9 = Ra'am
+| leader9 = [[Ibrahim Sarsur]]
+| seats9 = 4
+| last_election9 = 4
+| percentage9 = 3.65
+
+| party10 = Hadash
+| leader10 = [[Mohammad Barakeh]]
+| seats10 = 4
+| last_election10 = 4
+| percentage10 = 2.99
+
+| party11 = Balad (political party)
+| leader11 = [[Jamal Zahalka]]
+| seats11 = 3
+| last_election11 = 3
+| percentage11 = 2.56
+
+| party12 = Kadima
+| leader12 = [[Shaul Mofaz]]
+| seats12 = 2
+| last_election12 = 28
+| percentage12 = 2.09
+
+| before_election = [[Benjamin Netanyahu]]
+| before_party = [[Likud]]
+| after_election = [[Benjamin Netanyahu]]
+| after_party = [[Likud Yisrael Beiteinu]]
+| title = [[Prime Minister of Israel|Prime Minister]]
+}}
+{{Politics of Israel}}
+
+Early legislative elections were held in [[Israel]] on 22 January 2013 to elect the 120 members of the nineteenth [[Knesset]].<ref>{{cite news|last=Lis|first=Jonathan|title=Israel's next election to be held on January 22, 2013|url=https://www.haaretz.com/2012-10-11/ty-article/.premium/election-to-be-held-on-january-22/0000017f-e391-df7c-a5ff-e3fbfd150000|newspaper=Haaretz|access-date=11 October 2012}}</ref><ref name="yahoo">{{cite news |title=Netanyahu announces early Israeli election |first=Jeffrey |last=Heller |url=https://news.yahoo.com/netanyahu-announces-early-israeli-election-182721150.html |newspaper=Yahoo! News |date=9 October 2012 |access-date=26 October 2012}}</ref> Public debate over the [[Tal Law]] had nearly led to early elections in 2012, but they were aborted at the last moment after [[Kadima]] briefly joined the government. The elections were later called in early October 2012 after failure to agree on the budget for the 2013 fiscal year.
+
+The elections saw the [[Likud Yisrael Beiteinu]] alliance emerge as the largest faction in the Knesset, winning 31 of the 120 seats. Likud leader [[Benjamin Netanyahu]] formed the country's [[Thirty-third government of Israel|thirty-third government]] after establishing a coalition with [[Yesh Atid]], [[the Jewish Home]], and [[Hatnua]], which between them held 68 seats.
+
+==Background==
+Following the [[2009 Israeli legislative election|2009 elections]], in which right-wing and religious parties won the majority (65 out of 120, or 54%) of the seats, [[Leader of the Opposition (Israel)|opposition leader]] [[Benjamin Netanyahu]] established [[Thirty-second government of Israel|a government]] including right-wing parties [[Likud]], [[Yisrael Beiteinu]], the ultra-orthodox [[Shas]] and [[United Torah Judaism]], the [[Religious Zionism|religious Zionist]] [[The Jewish Home|Jewish Home]], and the centre-left [[Israeli Labor Party|Labor Party]].
+
+Although there were disagreements between the coalition parties on issues of national security and the [[Peace process in the Israeli–Palestinian conflict|peace process]], and [[separation of church and state]], the government was relatively stable and was able to overcome several political and national security related crises with no real threat from the opposition. The stability of the coalition government increased after [[Ehud Barak#Leaving the Labor Party|a split in the Labor Party]] when five of its members led by [[Ehud Barak]] left to establish the [[Independence (Israeli political party)|Independence Party]].<ref>{{cite news|url=https://www.telegraph.co.uk/news/worldnews/middleeast/israel/8263702/Israel-defence-minister-Ehud-Barak-forms-new-party.html |title=Israel defence minister Ehud Barak forms new party |work=The Telegraph|date=17 January 2011 |access-date=19 May 2012 |location=London}}</ref> Whilst the Labor Party subsequently left the coalition, Independence remained within it, allowing the government to maintain a majority of 66 of the 120 seats in the Knesset.
+
+Prime Minister Netanyahu's initial popularity remained stable, as he managed to overcome various events that could have endangered the stability of his government—such as the [[Benjamin_Netanyahu#Bar-Ilan_speech|political speech at the Bar-Ilan University]] at the beginning of his term in which he endorsed the idea of a [[Palestinian state]] alongside Israel for the first time,<ref name=lays>{{cite news |title=PM Lays Down Conditions For Peace in Foreign Policy Address |url=http://www.vosizneias.com/33397/2009/06/14/jerusalem-pm-lays-down-conditions-for-peace-in-foreign-policy-address/ |newspaper=Vos Iz Neias? |date=14 June 2009 |access-date=26 October 2012}}</ref> the government's agreement to freeze [[Israeli settlement|construction]] in the [[West Bank]],<ref>{{cite web|url=http://www.inn.co.il/News/Flash.aspx/273016 |title=סקר: 46% מהציבור מתנגדים להקפאה לעומת 31% שתומכים - מבזקים |website=Arutz Sheva |date=16 December 2009 |access-date=19 May 2012}}</ref> in light of the common belief of the Israeli public that the diplomatic relations between the [[United States]] and Israel had worsened during Netanyahu's term,<ref>{{cite news|author=אלוף בן 09.11.2009 05:42 עודכן ב: 06:40 הוסף תגובה |url=https://www.haaretz.co.il/news/politics/1.1289204 |title=פגישת ראש הממשלה, בנימין נתניהו, ונשיא ארה"ב, ברק אובמה, חשפה משבר ביחסי שתי המדינות - מדיני-ביטחוני - הארץ |newspaper=Haaretz |access-date=19 May 2012}}</ref> the [[2010 Gaza flotilla raid|2010 Gaza flotilla incident]] and its implications,<ref>{{cite news |script-title=he:סקר "הארץ-דיאלוג": אירועי המשט לעזה היטיבו עם הצמרת הישראלית |url=https://www.haaretz.co.il/misc/1.1206484 |newspaper=Haaretz |date=11 June 2010 |access-date=26 October 2012 |language=he |last1=ורטר |first1=יוסי }}</ref> the outbreak of the [[2010 Mount Carmel forest fire]] and the various government oversights which were attributed to this blunder,<ref>{{cite news |script-title=he:סקר : נתניהו מתחזק בעקבות השריפה בכרמל |url=http://news.walla.co.il/?w=/2687/1764270 |newspaper=Walla! |date=6 December 2010 |access-date=26 October 2012 |language=he}}</ref> as well as the growing debate within the Israeli public about a pre-emptive attack on Iran.
+
+However, a decline in the popularity of Netanyahu and his government occurred in summer 2011 following the [[2011 Israeli social justice protests|protests about social justice]].<ref>{{cite web |url=http://news.nana10.co.il/Article/?ArticleID=822149 |title=נענע10 - שפל בפופולריות של נתניהו: רק 29% תומכים בראש הממשלה - חדשות |website=Nana10 |access-date=19 May 2012 |archive-date=3 February 2016 |archive-url=https://web.archive.org/web/20160203034046/http://news.nana10.co.il/Article/?ArticleID=822149 |url-status=dead }}</ref> Nevertheless, the decline passed quickly after Netanyahu's speech at the [[General debate of the sixty-sixth session of the United Nations General Assembly]] in September 2011 following the [[Palestine 194|Palestinian diplomatic campaign]] to gain full membership of the United Nations,<ref>{{cite news |script-title=he:סקר "הארץ": יחימוביץ' עוקפת את לבני. נתניהו מתחזק |url=https://www.haaretz.co.il/news/politics/1.1483375 |newspaper=Haaretz |date=26 September 2011 |access-date=26 October 2012 |language=he |last1=ורטר |first1=יוסי }}</ref> and following [[2011 southern Israel cross-border attacks|cross-border attacks]] in the south of the country in August 2011. In addition, Netanyahu's popularity was increased after the [[Gilad Shalit prisoner exchange]] was approved and [[Gilad Shalit|Shalit]] was released. These events led to the highest level of public support Netanyahu had received since the start of his term in office.<ref>{{cite web|url=http://www.mako.co.il/news-military/politics/Article-7207a8151414331017.htm |title=חדשות 2 - אחרי שליט: הליכוד מתחזק דרמטית, קדימה מתרסקת |date=26 October 2011 |website=Mako |access-date=19 May 2012}}</ref>
+
+As a result of the high levels of support for the government, Netanyahu announced that early [[Partisan primary|primaries]] would be held in the Likud party, a move which slightly surprised the Israeli political establishment and led to speculations about the possibility that Netanyahu would announce early general elections,<ref>{{cite news |script-title=he:הפריימריז בליכוד הוקדמו: "צעד מסוכן של נתניהו" |url=http://www.ynet.co.il/articles/0,7340,L-4157528,00.html |newspaper=Ynet |date=6 December 2011 |access-date=26 October 2012 |language=he|last1=שומפלבי |first1=אטילה }}</ref> due to his high approval ratings.
+
+<gallery widths="220px" heights="180px">
+File:Clinton Netanyahu Abbas Mitchell 2 Sep 2010.jpg|Netanyahu, together with [[Mahmoud Abbas]], [[Hillary Clinton]] and [[George J. Mitchell]] at the start of the [[Direct negotiations between Israel and the Palestinians in 2010|direct talks]] on 2 September 2010.
+File:Flickr - Israel Defense Forces - Gilad Shalit Salutes Israel Prime Minister Benjamin Netanyahu.jpg|[[Gilad Shalit prisoner exchange]]
+File:Israel Housing Protests Tel Aviv August 6 2011b.jpg|[[2011 Israeli social justice protests]]
+</gallery>
+
+===Tal Law controversy and implications===
+Prior to the decision to dissolve the Knesset, attempts to amend the [[Tal Law]], which allows Haredi to indefinitely defer [[national service]], by [[Yisrael Beiteinu]] and Kadima were struck down by the High Court of Justice.<ref name="jpostdiss"/> It was also supported by the Independence party, but failed after Shas appealed an expedited process pass through the Ministerial Committee on Legislative Affairs, which meant it would have to be rediscussed and could not pass.<ref>{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=269007 |title=Shas, elections bill undercut Tal... |website=The Jerusalem Post |access-date=19 May 2012}}</ref> The dissolution of parliament would force an automatic extension of the law, due to expire on 1 August, for another six to eight months. Netanyahu said a new law should "make the burden [of serving in the IDF or civilian service] more equal and fair". Yisrael Beiteinu said the dissolution should have been postponed so that its proposed Equal National Service for All bill could be voted upon. Similarly, Kadima chairman Shaul Mofaz told the "Suckers Camp" (מאהל הפראיירים) protesters outside Likud's political convention that this was an "historic opportunity to clean the moral stain that is the Tal Law". He also said that the motion to dissolve the legislature at this state was a "stinky political trick" by Netanyahu, Yacimovich, and the [[Haredi]] parties. [[Dalia Itzik]] of Kadima also reiterated calls to have a new law before the election.<ref name="jpostdiss">{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=268990 |title=Knesset c'tee expedites bill on e. |date=7 May 2012 |website=The Jerusalem Post |access-date=19 May 2012}}</ref>
+
+On 7 May the Knesset voted on a series of bills relating to its dissolution and holding the election on 4 September, which passed;<ref>{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4226086,00.html |title=Knesset passes dissolution bills |newspaper=Ynetnews|date=20 June 1995 |access-date=19 May 2012|last1=Azulay |first1=Moran }}</ref> however, in the early morning of 8 May, a few hours before the Knesset was expected to approve the bill which would bring the 18th Knesset's term to its end, Prime Minister Benjamin Netanyahu reached an agreement with the Kadima leader Shaul Mofaz to join the current government, thus canceling the early election supposed to be held in September.<ref name=autogenerated2>{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4226125,00.html |title=No elections: Kadima to join government |newspaper=Ynetnews |date=20 June 1995 |access-date=19 May 2012|last1=Somfalvi |first1=Attila }}</ref>
+
+On 17 July, after the failure of parties to reach a compromise on the issue, Kadima voted to pull out of the coalition.<ref>{{cite news |title=Mofaz announces Kadima leaving Netanyahu coalition |first=Jonathan |last=Lis |url=https://www.haaretz.com/news/national/mofaz-announces-kadima-leaving-netanyahu-coalition-1.451777 |archive-url=https://web.archive.org/web/20120717171005/http://www.haaretz.com/news/national/mofaz-announces-kadima-leaving-netanyahu-coalition-1.451777 |url-status=dead |archive-date=17 July 2012 |newspaper=Haaretz |date=17 July 2012 |access-date=26 October 2012}}</ref> The coalition did, however, still have a majority of seats even without Kadima. Nevertheless, the reduced coalition which was now divided between nationalist groups such as [[Yisrael Beiteinu]] and [[Haredi]] groups such as [[Shas]], cast doubts regarding the coalition's ability to pass a budget for 2013 on the date prescribed by law. This situation, of the inability to pass the budget, revived the possibility that early elections might be held – a possibility which Prime Minister Netanyahu expressed his support of during a special speech he delivered from his public office on 9 October.<ref>{{cite news |script-title=he:נתניהו: הבחירות יוקדמו, "טובת המדינה מחייבת" |url=http://news.walla.co.il/?w=/90/2573920 |newspaper=Walla! |date=9 October 2012 |access-date=26 October 2012 |language=he}}</ref>
+
+==Parliament factions==
+{{main list|List of political parties in Israel}}
+The table below lists the parliamentary factions represented in the [[18th Knesset]].
+{| class="wikitable"
+|-
+! rowspan="2" colspan=2| Name
+! rowspan="2"| Ideology
+! rowspan="2"| Symbol
+! rowspan="2"| Leader
+! colspan="2"| 2009 result
+! rowspan="2" |Seats at 2012<br />dissolution
+|-
+! Votes (%)
+! Seats
+|-
+| style="background:{{party color|Kadima}};"|
+| [[Kadima]]
+| [[Liberalism]]
+| {{Script/Hebrew|כן}}
+| [[Shaul Mofaz]]
+|rowspan=2 style="text-align:center;"|22.47%
+| {{Composition bar|28|120|{{party color|Kadima}}}}
+|{{Composition bar|21|120|{{party color|Kadima}}}}
+|-
+| style="background:{{party color|Hatnua}};"|
+| [[Hatnua]]
+| [[Liberalism]]
+| {{Script/Hebrew|צפ}}
+| [[Tzipi Livni]]
+| {{Composition bar|0|120|{{party color|Hatnua}}}}
+|{{Composition bar|7|120|{{party color|Hatnua}}}}
+|-
+| style="background:{{party color|Likud}};"|
+| [[Likud]]
+| [[National liberalism]]
+| {{Script/Hebrew|מחל}}
+| [[Benjamin Netanyahu]]
+| style="text-align:center;"|21.61%
+| {{Composition bar|27|120|{{party color|Likud}}}}
+|{{Composition bar|27|120|{{party color|Likud}}}}
+|-
+| style="background:{{party color|Yisrael Beiteinu}};"|
+| [[Yisrael Beiteinu]]
+| [[Nationalism]]<br />[[Secularism]]
+| {{Script/Hebrew|ל}}
+| [[Avigdor Lieberman]]
+| style="text-align:center;"|11.70%
+| {{Composition bar|15|120|{{party color|Yisrael Beiteinu}}}}
+|{{Composition bar|15|120|{{party color|Yisrael Beiteinu}}}}
+|-
+| style="background:{{party color|Israeli Labor Party}};"|
+| [[Israeli Labor Party|Labor]]
+| [[Social democracy]]
+| {{Script/Hebrew|אמת}}
+| [[Shelly Yachimovich]]
+| rowspan=2 style="text-align:center;"|9.93%
+| {{Composition bar|13|120|{{party color|Israeli Labor Party}}}}
+|{{Composition bar|8|120|{{party color|Israeli Labor Party}}}}
+|-
+| style="background:#0047AB;"|
+| [[Independence (Israeli political party)|Independence]]
+| [[Liberalism]]<br />[[Third way]]
+| style="text-align:center;"|-
+| [[Ehud Barak]]
+| {{Composition bar|0|120|#0047AB}}
+|{{Composition bar|5|120|#0047AB}}
+|-
+| style="background:{{party color|Shas}};"|
+| [[Shas]]
+| [[Religious conservatism]]
+| {{Script/Hebrew|שס}}
+| [[Eli Yishai]]
+| rowspan=2 style="text-align:center;"|8.49%
+| {{Composition bar|11|120|{{party color|Shas}}}}
+|{{Composition bar|10|120|{{party color|Shas}}}}
+|-
+| style="background:#000F4C;"|
+| [[Haim Amsalem|Am Shalem]]
+| [[Religious liberalism]]
+| {{Script/Hebrew|ץ}}
+| [[Haim Amsalem]]
+| {{Composition bar|0|120|#000F4C}}
+|{{Composition bar|1|120|#000F4C}}
+|-
+| style="background:{{party color|United Torah Judaism}};"|
+| [[United Torah Judaism|UTJ]]
+| [[Religious conservatism]]
+| {{Script/Hebrew|ג}}
+| [[Yaakov Litzman]]
+| style="text-align:center;"|4.39%
+| {{Composition bar|5|120|{{party color|United Torah Judaism}}}}
+|{{Composition bar|5|120|{{party color|United Torah Judaism}}}}
+|-
+| style="background:{{party color|United Arab List}};"|
+| [[Ra'am]]-[[Ta'al]]
+| [[Arab nationalism]]<br />[[Islamism]]
+| {{Script/Hebrew|עם}}
+| [[Ibrahim Sarsur]]
+| style="text-align:center;"|3.38%
+| {{Composition bar|4|120|{{party color|United Arab List}}}}
+|{{Composition bar|4|120|{{party color|United Arab List}}}}
+|-
+| style="background:{{party color|National Union (Israel)}};"|
+| [[National Union (Israel)|National Union]]
+| [[Right-wing populism]]<br />[[National conservatism]]
+| {{Script/Hebrew|ט}}
+| [[Ya'akov Katz (politician born 1951)|Yaakov Katz]]
+| rowspan=2 style="text-align:center;"|3.34%
+| {{Composition bar|4|120|{{party color|National Union (Israel)}}}}
+|{{Composition bar|2|120|{{party color|National Union (Israel)}}}}
+|-
+| style="background:{{party color|Otzma Yehudit}};"|
+| [[Otzma Yehudit|Otzma LeYisrael]]
+| [[Religious Zionism]]<br />[[Kahanism]]
+| {{Script/Hebrew|נץ}}
+| [[Aryeh Eldad]]
+| {{Composition bar|0|120|{{party color|Otzma Yehudit}}}}
+|{{Composition bar|2|120|{{party color|Otzma Yehudit}}}}
+|-
+| style="background:{{party color|Hadash}};"|
+| [[Hadash]]
+| [[Communism]]<br />[[Socialism]]
+| {{Script/Hebrew|ו}}
+| [[Mohammad Barakeh]]
+| style="text-align:center;"|3.32%
+| {{Composition bar|4|120|{{party color|Hadash}}}}
+|{{Composition bar|4|120|{{party color|Hadash}}}}
+|-
+| style="background:{{party color|Meretz}};"|
+| [[Meretz]]
+| [[Social democracy]]<br />[[Secularism]]
+| {{Script/Hebrew|מרצ}}
+| [[Zehava Gal-On]]
+| style="text-align:center;"|2.95%
+| {{Composition bar|3|120|{{party color|Meretz}}}}
+|{{Composition bar|3|120|{{party color|Meretz}}}}
+|-
+| style="background:{{party color|The Jewish Home}};"|
+| [[The Jewish Home]]
+| [[Religious Zionism]]<br />[[National conservatism]]
+| {{Script/Hebrew|ב}}
+| [[Naftali Bennett]]
+| style="text-align:center;"|2.87%
+| {{Composition bar|3|120|{{party color|The Jewish Home}}}}
+|{{Composition bar|3|120|{{party color|The Jewish Home}}}}
+|-
+| style="background:{{party color|Balad (political party)}};"|
+| [[Balad (political party)|Balad]]
+| [[Arab nationalism]]<br />[[Pan-arabism]]
+| {{Script/Hebrew|ד}}
+| [[Jamal Zahalka]]
+| style="text-align:center;"|2.48%
+| {{Composition bar|3|120|{{party color|Balad (political party)}}}}
+|{{Composition bar|3|120|{{party color|Balad (political party)}}}}
+|}
+
+==Date==
+Since the term of the 17th Knesset ended prematurely, the term of the 18th Knesset is four full years plus eight more months,{{citation needed|date=August 2012}} starting from the month of its election (February 2009). The expected date for a regular election was to be on 22 October 2013,<ref>{{cite news |title=Israel's Netanyahu forms unity government, staving off elections |first=Jeff |last=Abramowitz |url=http://en.europeonline-magazine.eu/netanyahu-and-mofaz-surprise_208362.html |date=8 May 2012 |access-date=26 October 2012}}</ref> but an early election was announced.<ref>{{cite news |title=Israel sets early election amid Netanyahu popularity |url=http://www.france24.com/en/20121016-israel-early-election-date-amid-netanyahu-popularity-january-likud-polls-bibi-iran |newspaper=France 24 |date=16 October 2012 |access-date=26 October 2012}}</ref>
+
+Likud's coalition chairman MK [[Ze'ev Elkin]] wanted the election to be scheduled for 4 September 2012.<ref>{{cite web|last1=Fisher |first1=Gabe |url=https://www.timesofisrael.com/likud-sources-elections-on-september-4/|title=Likud sources say elections will be called for September 4|website=[[The Times of Israel]] |date=May 2012 |access-date=1 May 2012}}</ref> He got support for the motion from Yisrael Beiteinu, Shas and Labor; however, Kadima wanted the election 16 September. Meretz, Labor and Elkin submitted different motions for dissolution.<ref name="indep">{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4223840,00.html |title=Parties agree on September 4 vote |newspaper=Ynetnews |date=2 May 2012 |access-date=19 May 2012|last1=Azulay |first1=Moran }}</ref> Netanyahu told the Likud party on 7 May that he would like an early election saying that he does not "want there to be a year-and-a-half of political instability accompanied by blackmail and populism. I'd prefer a short electoral campaign of four months that will ensure political stability.<ref>{{cite web|url=http://www.aljazeera.com/news/middleeast/2012/05/201256153559227245.html |title=Israeli PM calls for early general elections |website=Al Jazeera English |access-date=19 May 2012}}</ref> I would have been very happy if we could have completed the term, which was also my goal, but it is no secret that with the start of the government's fourth year, the coalition is fraying somewhat.<ref name="jta">{{cite web|url=https://www.jta.org/news/article/2012/05/07/3094816/israels-knesset-dissolved-new-elections-called-for-sept-4 |title=Israel's Knesset dissolved, new elections called for Sept. 4 |website=Jewish Telegraphic Agency |date=7 May 2012 |access-date=19 May 2012}}</ref> The achievements of this government are a result of a joint vision and a partnership that was possible due to political stability. We have not had such a stable government in decades. We are proposing 4 September, after which, God and voters willing, we will receive a mandate."<ref name="jpostdiss"/>
+
+The Knesset House Committee's approval on 7 May for the expedition of the bill to dissolve the 18th Knesset allowing for plenum vote. The committee bill was approved by a vote of 13 to four.<ref name="jpostdiss"/> Though Shas voted against the measure, a party member said that "Shas' unambiguous stance is to support the early elections and the legislation. [Shas MKs] abstained due to confusion. We support the bill."<ref name="ynet"/>
+
+On 9 October, Netanyahu made a televised address in which he reacted to the inability to pass a budget for the next fiscal year by the deadline of 31 December. He said: "I have decided that it is in Israel's better interest to go to elections now and as quickly as possible. For Israel, it is preferable to have as short a campaign as possible, one of three months over one that would last in practice an entire year and damage Israel's economy." Reactions to the announcement included the Labor Party's Shelley Yachimovich who said that despite lagging in opinion polls to Likud there was a "reasonable probability" of winning and that "the public today understands that security is not just on the borders, but is also job and income security and health and education security". Kadima's Shaul Mofaz told [[Channel 10 (Israel)|Channel 10]]: "I think the decision for early elections is a day of hope for the citizens of Israel. It is an opportunity to replace the bad Netanyahu government that has isolated Israel politically over the past four years, damaged Israel's deterrence, and deteriorated the middle class."<ref name="aljazoct12"/>
+
+==Calendar==
+* 6 December 2012 – the last day for submission of the lists of candidates for the Knesset to the [[Israeli Central Elections Committee|Central Election Commission]].
+* 10 January 2013 – '''Election day only members of the Israeli diplomatic missions'''
+* 18 January 2013 – after this date the publication of polls and predictions is prohibited.
+* 21 January 2013 – starting from 19:00 campaigning using assemblies, meetings, speakers, and media is prohibited.
+* 22 January 2013 – '''Election Day'''. Polling stations open from 7:00 to 22:00.
+* 5 February 2013 – the general meeting of the newly elected Knesset.
+* 6 February 2013 – the last day to request formation of a new Israeli government from one of the leaders of the factions.
+* 20 March 2013 – the last day to report about the task to form a new government by a faction leader to the President.
+
+==Surplus-vote agreements==
+{{Further|Hagenbach-Bischoff system}}
+Two parties can make an agreement [[Apparentment|so that the sum of both parties' surplus votes are combined]], and if the combined surplus votes amounts to an extra seat, then the extra seat goes to the party with the larger number of surplus votes.<ref>[https://www.knesset.gov.il/lexicon/eng/seats_eng.htm The Distribution of Knesset Seats Among the Lists – the Bader-Offer Method], [[Knesset]] website</ref> Several agreements were signed by parties prior to the election:
+
+* [[Likud Yisrael Beiteinu]] and [[The Jewish Home]]<ref>[http://www.kipa.co.il/now/50195.html נחתם הסכם עודפים בין "הבית היהודי" ל"ליכוד ביתנו"], Kipa, 5 December 2012</ref>
+* [[Hatnua]] and [[Meretz]]<ref>[https://www.haaretz.com/2012-12-17/ty-article/.premium/meretz-states-will-not-join-netanyahu/0000017f-ef98-da6f-a77f-ff9edcf30000 Meretz leader reaffirms: We will not join Netanyahu's coalition] Haaretz, 17 December 2012</ref>
+* [[Israeli Labor Party]] and [[Yesh Atid]]<ref>{{Cite web|url=https://www.jpost.com/diplomacy-and-politics/parties-begin-submitting-knesset-lists|archive-url=https://web.archive.org/web/20121212191843/http://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=294662 |url-status=dead |title=Parties begin submitting Knesset lists|archive-date=12 December 2012|website=The Jerusalem Post &#124; JPost.com}}</ref>
+* [[Am Shalem]] and [[Kadima]]<ref>[https://www.jpost.com/Headlines/Article.aspx?id=295327 Kadima, Am Shalem parties sign vote-sharing agreement] ''The Jerusalem Post'', 10 December 2012</ref>
+* [[Hadash]] and [[Balad (political party)|Balad]]<ref>[https://web.archive.org/web/20211022165330/https://maki.org.il/he/party/137-news/14819-q-q----- חד"ש ובל"ד חתמו על הסכם עודפים], Maki, 14 December 2012</ref>
+* [[United Torah Judaism]] and [[Shas]]<ref name="bechirotil">[http://www.bechirot.gov.il/elections19/eng/cec/Notice140113_eng.aspx Main Israeli election website]</ref>
+* [[Gil (political party)|Dor Bonei Haaretz]] and [[Social Justice (political party)|Tzedek Hevrati]]<ref name="bechirotil"/>
+
+==Campaign==
+The decision to have an early election was read as influential over the issue of an attack on Iran. A victory for Likud could bolster the case for an armed strike;<ref>{{cite news|author=Harriet Sherwood|url=https://www.theguardian.com/world/2012/may/03/israel-prime-minister-early-elections |title=Israel's prime minister is considering early elections. Why the hurry? |work=The guardian|access-date=19 May 2012 |location=London |date=3 May 2012}}</ref> however, it was also risky during an election. It would, however, be an election issue.<ref>{{cite news |title=Israel's move toward vote may shelve an Iran strike |first=Edmund |last=Sanders |url=https://articles.latimes.com/2012/may/03/world/la-fg-israel-iran-elections-20120503 |archive-url=https://web.archive.org/web/20120505134738/http://articles.latimes.com/2012/may/03/world/la-fg-israel-iran-elections-20120503 |url-status=dead |archive-date=5 May 2012 |newspaper=Los Angeles Times |date=3 May 2012 |access-date=26 October 2012}}</ref>
+
+Likud's Netanyahu said that in a new government he would seek to have as large and stable a governing coalition as possible in order to "deal with the great challenges that we will face". He also said that his other priority would be to tackle the still high levels of crime. "We know that there has been a reduction of 30% in the incidence of murder, but these cases are brutal and underline our acknowledged need to battle these occurrences full force." He said that Internal Security Minister [[Yitzhak Aharonovitch]] and Police Commissioner Yohanan Danino were tasked with compiling a report into the 37 murders in 2012, in comparison to 52 in 2011, and said he was confident in curbing the trend.<ref name="ynet">{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4225733,00.html |title=Ministers approve early elections bill |newspaper=Ynetnews |date=20 June 1995 |access-date=19 May 2012|last1=Somfalvi |first1=Attila }}</ref>
+
+Campaign issues, particularly in regards to attacking the [[Thirty-second government of Israel|Netanyahu government]], are expected to be Netanyahu's relationship with U.S. President [[Barack Obama]] over [[Israel-Iran relations]] in light of the controversy over the [[Iranian nuclear program]]me, the stalling of the [[Israel-Palestinian peace process]], the [[2011 Israeli social justice protests]] and the aforementioned Tal law.<ref name="aljazoct12">{{cite news |title=Israeli PM Netanyahu calls early election |url=http://www.aljazeera.com/news/middleeast/2012/10/201210918522162262.html |newspaper=Al Jazeera English |date=10 October 2012 |access-date=26 October 2012}}</ref>
+
+===Likud and Yisrael Beiteinu present common list===
+{{main|Likud Yisrael Beiteinu}}
+On 25 October 2012, Prime Minister and [[Likud]] chairman [[Benjamin Netanyahu]] and [[Yisrael Beiteinu]] chairman [[Avigdor Lieberman]] announced that Yisrael Beiteinu and Likud would present a common list (without merging) in the 2013 general elections.
+"A joining of forces will give us the strength to defend Israel from military threats, and the strength to spearhead social and economic changes in the country", Netanyahu said.<ref name="timesofisrael">{{cite web|last=Leshem|first=Elie|title=Netanyahu, Liberman announce they'll run joint list for Knesset|url=https://www.timesofisrael.com/netanyahu-announces-merger-with-israel-beytenu-promises-to-lead-with-strength/|website=The Times of Israel|date=25 October 2012 |access-date=27 October 2012}}</ref> "In view of the challenges we're facing, we need responsibility on a national level ... We're providing a true alternative, and an opportunity for the citizens to stabilize leadership and government", Lieberman said.<ref name="timesofisrael" />
+
+===Operation Pillar of Defense===
+{{Main|Operation Pillar of Defense}}
+[[File:Operation Pillar of Defense.png|thumbnail|upright|A map of the areas affected by the conflict.]]
+In November 2012, following Gaza militants rocket and mortar fire at Israeli towns and villages and attacks committed against Israeli soldiers stationed near the border with the Gaza Strip,<ref>{{cite web|url=http://www.mfa.gov.il/MFA/Government/Speeches+by+Israeli+leaders/2012/Operation_Pillar_of_Defense-Statements.htm|title=Operation Pillar of Defense - Selected statements|website=Ministry of Foreign Affairs|date=20 November 2012|access-date=20 November 2012}}</ref><ref>{{cite news|title=Gaza groups pound Israel with over 100 rockets|url=https://www.jpost.com/Defense/Article.aspx?id=291300|newspaper=The Jerusalem Post|date=2012-11-12}}</ref><ref name="pound">{{cite news|url=https://www.jpost.com/Defense/Article.aspx?id=291300|title=Gaza groups pound Israel with over 100 rockets|work=The Jerusalem Post|date=12 November 2012|access-date=14 November 2012|last=Lappin|first=Yaacov}}</ref><ref>{{cite web|url=https://abcnews.go.com/International/wireStory/israel-tunnel-explodes-gaza-border-17686902#.UKnxEIefvuE|title=Israel: Tunnel Explodes on Gaza Border|website=ABC News|date=10 November 2012|access-date=20 November 2012}}</ref> the Israeli political leadership ordered the [[Israel Defense Forces|IDF]] to launch [[Operation Pillar of Defense]], during which the [[Israeli Air Force|IAF]] conducted a series of air strikes against militant targets of the [[Hamas]] and against the organization's leaders, including the head of the organization's military wing [[Ahmed Jabari]], who was assassinated while he was driving his car in [[Gaza City]]. As a result, Hamas responded by firing rockets and mortars at various localities in Israel, especially in the southern Israel region, but also in addition, for the first time in the Israeli–Palestinian conflict, managed to shoot rockets at Israel's [[Gush Dan|biggest metropolitan area]] in the central region of Israel.
+
+The operation in the Gaza Strip gained the support of most parties, including various opposition parties. However, some parties, including [[Meretz]], [[Hadash]], and all Israeli Arab parties, expressed their strong opposition to the operation. Some left-wing figures stated that the operation was actually an "Election War" aimed at putting aside socio-economic issues and replacing them with a defense agenda, and claimed that the operation would not help Israel in the long term.<ref>{{Cite news|url=https://www.haaretz.co.il/opinions/1.1864921|title=בסרט הזה כבר היינו|newspaper=Haaretz}}</ref><ref>{{Cite news|url=https://www.haaretz.co.il/opinions/1.1864907|title=מלחמת בחירות|newspaper=Haaretz}}</ref>
+
+After the Israeli government signed the ceasefire agreement with Hamas, a number of figures in the Israeli right-wing political spectrum, including [[Naftali Bennett]] and [[Aryeh Eldad]], criticized the government's decision.<ref>{{cite news|url=http://www.ynet.co.il/articles/0,7340,L-4309598,00.html |title= בנט נגד נתניהו: "אובדן רוח לחימה בעזה" |newspaper=Ynet |date=21 November 2012 |access-date=28 November 2012}}</ref><ref>{{Cite web|url=https://www.mako.co.il/video-blogs-mati-shemoelof/Article-3bf891d191e1b31004.htm|title=מפלגת עוצמה לישראל מציגה: פאשיזם יהודי|date=20 November 2012|website=Mako}}</ref> During the operation and the shelling of southern Israel, various parties declared that they would suspend their political campaign until the operation would end—among them the Likud Party<ref>{{Cite web|url=https://www.inn.co.il/flashes/385935|title=אלקין משהה את קמפיין הפריימריז נוכח המצב בדרום|website=Arutz 7|date=15 November 2012 }}</ref> and the opposition parties [[Kadima]] and the Labor party.<ref>{{Cite web|url=https://news.walla.co.il/item/2586282|title=בגלל ההסלמה: המפלגות מקפיאות את קמפיין הבחירות|date=15 November 2012|website=Walla}}</ref>
+
+===Independence withdrawal===
+{{Further|Independence (Israeli political party)}}
+[[File:Ehud Barak at Pentagon, 11-2009.jpg|thumb|left|150px|Party leader [[Ehud Barak]] announced on 26 November that he would retire from politics and that Independence was pulling out of the 2013 Israeli legislative elections.]]
+On 26 November, [[Independence (Israeli political party)|Independence]] leader [[Ehud Barak]] announced that he would retire from politics after the next Minister of Defense was appointed,<ref>{{cite web|url=http://news.walla.co.il/elections/?w=/2780/2590240 |title=אהוד ברק: "החלטתי לפרוש מהחיים הפוליטיים"  |date=26 November 2012 |website=Walla |access-date=3 January 2013}}</ref> and that the party's political campaign was suspended.<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/418/196.html |title=...הלם בעצמאות בעקבות פרישת ברק |website=NRG |date=26 November 2012 |access-date=3 January 2013}}</ref> Subsequently, [[Shalom Simhon]] became the chairman of the party, but on 6 December, he announced that he was retiring from politics and that Independence was pulling out of the elections.
+
+===Palestinian statehood recognition===
+[[File:Haneen Zoubi cropped.JPG|thumb|150px|On 19 December MK [[Haneen Zoabi]] was initially disqualified from being re-elected in the 2013 election for "supporting [[Palestinian political violence|terrorism]] and rejecting Israel as a Jewish and democratic state".]]
+{{main|United Nations General Assembly resolution 67/19|E1 (Jerusalem)}}
+In the General Assembly of the United Nations held on 29 November 2012, the 67th session adopted a resolution that upgraded [[Palestine]] to non-member observer state status at the [[United Nations]].<ref>{{cite web |url=http://documents-dds-ny.un.org/doc/UNDOC/GEN/N12/479/74/pdf/N1247974.pdf?OpenElement |title=Resolution adopted by the General Assembly on 29 November 2012: 67/19. Status of Palestine in the United Nations|website=United Nations General Assembly |access-date=3 January 2013}}</ref> The new status equates Palestine's with that of the [[Holy See]].<ref>{{cite magazine |last=Vick |first=Karl |url=https://world.time.com/2012/11/29/why-palestine-will-win-big-at-the-un/ |title=Why Palestine Won Big at the U.N. |magazine=[[Time (magazine)|Time]] |date=29 November 2012 |access-date=3 January 2013 |archive-date=25 January 2013 |archive-url=https://web.archive.org/web/20130125172445/http://world.time.com/2012/11/29/why-palestine-will-win-big-at-the-un/ |url-status=dead }}</ref> In response, the inner cabinet approved the building of housing units in [[E1 (Jerusalem)|area E1]], connecting Jerusalem and [[Ma'aleh Adumim]].<ref>{{Cite news | url = https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=294118 | title = Diplomacy & politics | newspaper = The Jerusalem Post | url-status = dead | archive-url = https://web.archive.org/web/20121203030817/http://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=294118 | archive-date = 3 December 2012}}</ref><ref>{{Cite news | url = http://www.al-monitor.com/pulse/originals/2012/al-monitor/israel-pa-e-1-zone-settlements.html | title = E1 Zone No-Build Policy 'No Longer Relevant' for Israel | date= 2 December 2012 | website = Al-Monitor}}</ref>
+
+===Disqualification petitions===
+The ultra-orthodox parties [[Shas]] and [[United Torah Judaism]] had men-only party lists, based on their belief that women in the Knesset would violate modesty laws. Because of this, the [[Israeli Central Elections Committee|Central Elections Committee]] received petitions in December 2012 to disqualify both parties for being discriminatory. Likewise, the [[Otzma LeYisrael]] party, headed by Aryeh Eldad and Michael Ben-Ari, has come under scrutiny due to its alleged denial of Israel as both a Jewish and democratic state. On 20 December, the Committee declared it would not ban any of those parties.<ref name="Bid-to-disqualify Ynet">{{cite news|title=Bid to disqualify Otzma LeYisrael rejected|url=http://www.ynetnews.com/articles/0,7340,L-4322628,00.html|access-date=3 January 2013|newspaper=Ynet|date=20 December 2012}}</ref>
+
+On 19 December, the Committee voted to disqualify the Israeli Arab MK [[Haneen Zoabi]] from being re-elected on grounds of "supporting [[Palestinian political violence|terrorism]] and rejecting Israel as a Jewish and democratic state".<ref name="Zoabi-banned JPost">{{cite news|title=C'tee bars Zoabi from polls for supporting terror|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=296553|access-date=3 January 2013|newspaper=[[The Jerusalem Post]]|date=19 December 2012}}</ref> However, the ban was later overturned by the Supreme Court.<ref name="court-ruling J-Press">{{cite news|title=Unanimous Supreme Court: Zoabi Not Disqualified|url=http://www.jewishpress.com/news/breaking-news/unanimous-supreme-court-zoabi-not-disqualified/2012/12/30/|access-date=3 January 2013|newspaper=[[Jewish Press]]|date=30 December 2012}}</ref>
+
+==Participating parties==
+The National Election Commission announced that 34 parties had filed to run, and the election is expected to cost 250 million [[New Israeli shekel|shekels]].<ref>{{cite web|url=http://i.imgur.com/lperD.gif|title=34 Parties to Run for Knesset|access-date=7 December 2012}}</ref><ref>{{cite web|url=http://www.israelnationalnews.com/News/News.aspx/161412|title=Pricetag for Israeli Elections: NIS 250 Million|date=28 October 2012|access-date=29 October 2012}}</ref>
+
+The parties listed below are ordered by the number of seats each of these parties eventually received in the 2013 Israeli legislative elections:
+
+===Likud Yisrael Beiteinu===
+
+{{main|2012 Likud leadership election|Likud Yisrael Beiteinu}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:310px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''Likud leadership election'''
+|- style="text-align:center;"
+| style="width:50%;" | <u>'''Netanyahu'''</u> || style="text-align:center; width:50%;" | <u>'''Feiglin'''</u>
+|- style="text-align:center;"
+| style="width:50%;" | 76.8% (<small>48,490</small>) || style="text-align:center; width:50%;" | 23.2% (<small>14,660</small>)
+|-
+| colspan="2" style="background: #EEE; text-align: center;" | '''The "[[Likud Yisrael Beiteinu]]" List'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Benjamin Netanyahu]]
+| style="width:8px" | 2
+| style= | [[Avigdor Lieberman]]
+|-
+| 3
+| [[Gideon Sa'ar]]
+| 4
+| [[Yair Shamir]]
+|-
+| 5
+| [[Gilad Erdan]]
+| 6
+| [[Silvan Shalom]]
+|-
+| 7
+| [[Uzi Landau]]
+| 8
+| [[Yisrael Katz (politician born 1955)|Yisrael Katz]]
+|-
+| 9
+| [[Danny Danon]]
+| 10
+| [[Sofa Landver]]
+|-
+| 11
+| [[Reuven Rivlin]]
+| 12
+| [[Moshe Ya'alon]]
+|-
+| 13
+| {{nowrap|[[Yitzhak Aharonovich]]}}
+| 14
+| [[Ze'ev Elkin]]
+|-
+| 15
+| [[Tzipi Hotovely]]
+| 16
+| [[Orly Levy]]
+|-
+| 17
+| [[Yariv Levin]]
+| 18
+| [[Yuli-Yoel Edelstein]]
+|-
+| 19
+| [[Faina Kirschenbaum]]
+| 20
+| [[Haim Katz]]
+|-
+| 21
+| [[Miri Regev]]
+| 22
+| [[David Rotem]]
+|-
+| 23
+| [[Moshe Feiglin]]
+| 24
+| [[Yuval Steinitz]]
+|-
+| 25
+| [[Robert Ilatov]]
+| 26
+| [[Tzachi Hanegbi]]
+|-
+| 27
+| [[Limor Livnat]]
+| 28
+| [[Hamad Amar]]
+|-
+| 29
+| [[Ofir Akunis]]
+| 30
+| [[Gila Gamliel]]
+|-
+| 31
+| [[Shimon Ohayon]]
+| 32
+| [[Carmel Shama]]
+|-
+| 33
+| [[Alex Miller (Israeli politician)|Alex Miller]]
+| 34
+| [[Leon Litinetski]]
+|-
+| 35
+| [[David Bitan]]
+| 36
+| Uri Faraj
+|-
+| 37
+| [[Yulia Malinovsky]]
+| 38
+| [[Keti Shitrit]]
+|-
+| 39
+| [[Ayoob Kara]]
+| 40
+| {{nowrap|Smadar Bat Adam Levitan}}
+|-
+| 41
+| Shuki Ohana
+| 42
+| [[Dudu Amsalem]]
+|-
+| 43
+| [[Oded Forer]]
+| 44
+| Victor Ifraimov
+|-
+| 45
+| Yitzhak Danino
+| 46
+| [[Moshe Matalon (politician)|Moshe Matalon]]
+|-
+| 47
+| [[Keren Barak]]
+| 48
+| [[Avraham Neguise]]
+|-
+| 49
+| [[Lia Shemtov]]
+| 50
+| David Even Tzur
+|}</div>
+|}
+[[File:Defense.gov photo essay 110325-D-XH843-010.jpg|thumb|left|The winner of the [[Likud]] leadership election and number one of the [[Likud Beiteinu]] list - [[Benjamin Netanyahu]].]]
+In early December 2011, Prime Minister Benjamin Netanyahu initially announced that early primaries would be held for the leadership of the Likud Party<ref name=autogenerated1>{{cite web |url=http://news.nana10.co.il/Article/?ArticleID=851443 |title=נענע10 - נתניהו מפתיע: הקדים את הפריימריז בליכוד ל-31 בינואר 2012 - חדשות |website=Nana10 |date=17 June 2009 |access-date=19 May 2012 |archive-date=8 January 2012 |archive-url=https://web.archive.org/web/20120108185736/http://news.nana10.co.il/Article/?ArticleID=851443 |url-status=dead }}</ref> – this announcement was later supported and approved by the [[Likud|Likud's Central Committee]] later that month.<ref name=autogenerated1 /> The date of the Likud primaries was set for 31 January 2012. Netanyahu's main political opponent in the Likud party, [[Silvan Shalom]], was surprised by the move and even declared it to be illegal, but eventually announced that he would not be running against Netanyahu for the leadership of the party,<ref>{{cite web|url=http://news.walla.co.il/?w=/9/1885841 |title=מסתמן: סילבן שלום לא יתמודד בפריימריז בליכוד  |date=16 December 2011 |website=Walla |access-date=19 May 2012}}</ref> thus leaving [[Moshe Feiglin]] as Netanyahu's sole competitor.
+
+During the election day Netanyahu repeatedly attempted to spur the Likud members to come to the polls and vote,<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/332/354.html |title= ...נתניהו קרא לבוחרי הליכוד |website=NRG |access-date=19 May 2012}}</ref> nevertheless the turnout remained low. As a result, and due to various many failures at the opening of polling stations across Israel, the voting time was extended by two hours in some places.<ref>{{cite news|url=http://www.ynet.co.il/articles/0,7340,L-4183346,00.html |title=ynet 42% הצבעה בפריימריז בליכוד, הוארכו עד 23:00 - חדשות |newspaper=Ynet  |date=20 June 1995 |access-date=19 May 2012}}</ref> Nevertheless, at the end of the day the voter turnout was 50% of the total eligible voters. Despite Netanyahu's fears of a low voter turnout, the vast majority{{Vague|date=May 2012}} of voters supported him, while Moshe Feiglin gained relatively low support.<ref>{{cite news |script-title=he:תוצאות בחירות סופיות |url=http://www.likudnik.co.il/component/k2/item/7487-תוצאות-בחירות-סופיות |date=1 February 2012 |access-date=26 October 2012 |language=he |archive-url=https://web.archive.org/web/20130130102207/http://www.likudnik.co.il/component/k2/item/7487-%D7%AA%D7%95%D7%A6%D7%90%D7%95%D7%AA-%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA-%D7%A1%D7%95%D7%A4%D7%99%D7%95%D7%AA |archive-date=30 January 2013 |url-status=dead}}</ref>
+
+In early May, Netanyahu's attempts to head the Likud central committee were dealt blow as party members called for a [[secret ballot]], which was seen as an hindrance to him in beating out [[Danny Danon]].<ref name="jta"/> Popular [[Ministry of Communications (Israel)|Communications]] and [[Ministry of Welfare and Social Services|Welfare & Social Services Minister]] and Likud MK [[Moshe Kahlon]] declared he will not contest the upcoming election. The decision was considered surprising, with Likud officials speculating that Kahlon was passed over by Netanyahu for the post of [[Ministry of Finance (Israel)|Minister of Finance]].<ref>{{cite news |url=https://www.haaretz.com/2012-10-17/ty-article/.premium/likud-party-star-exits-the-stage/0000017f-e3b8-d804-ad7f-f3fa71730000 |title=Likud party star, Moshe Kahlon, exits the stage |first=Zvi |last=Zrahiya |date=17 October 2012 |access-date= 21 October 2012}}</ref>
+
+On 25 October 2012, Prime Minister and [[Likud]] chairman [[Benjamin Netanyahu]] and Foreign Minister and [[Yisrael Beiteinu]] chairman [[Avigdor Lieberman]] announced the unification of their two parties which would run as a single bloc for the upcoming election.<ref name="merger">{{cite news |title=Israeli prime minister announces alliance with ultranationalists ahead of January election |url=https://www.washingtonpost.com/world/middle_east/israeli-media-premiers-party-merging-with-hard-line-foreign-ministers-faction-for-election/2012/10/25/d87cc5e4-1ec6-11e2-8817-41b9a7aaabc7_story.html |archive-url=https://web.archive.org/web/20181225073636/https://www.washingtonpost.com/world/middle_east/israeli-media-premiers-party-merging-with-hard-line-foreign-ministers-faction-for-election/2012/10/25/d87cc5e4-1ec6-11e2-8817-41b9a7aaabc7_story.html |url-status=dead |archive-date=25 December 2018 |newspaper=The Washington Post |date=26 October 2012 |access-date=26 October 2012}}</ref> The new party will be called [[Likud Beiteinu]] ("The Likud Is Our Home"),<ref name="merger2">{{cite news|url=https://www.reuters.com/article/us-israel-elections-idUSBRE89O18Y20121025|title=Israel's Netanyahu, ally Lieberman merge parties | work=Reuters | date=25 October 2012}}</ref> with Netanyahu number one on the list followed by Lieberman as number two.<ref name="bbc">{{cite news |title=Israel's Likud Party and Yisrael Beitenu to join forces |url=https://www.bbc.co.uk/news/world-middle-east-20090316 |newspaper=BBC News Online |date=26 October 2012 |access-date=26 October 2012}}</ref><ref name="jewishpress">{{cite news |title=Likud and Yisrael Beiteinu Join Forces |url=http://www.jewishpress.com/news/breaking-news/likud-and-yisrael-beiteinu-join-forces/2012/10/25/ |newspaper=The Jewish Press |date=25 October 2012 |access-date=26 October 2012 |archive-url=https://web.archive.org/web/20121027020534/http://www.jewishpress.com/news/breaking-news/likud-and-yisrael-beiteinu-join-forces/2012/10/25/ |archive-date=27 October 2012 |url-status=dead }}</ref>
+
+The results of the Likud primaries indicated the absence of prominent Likud members currently serving as ministers from the top positions in the new Likud list (namely, [[Benny Begin]], [[Michael Eitan]], [[Dan Meridor]] and [[Avi Dichter]]), and on the other hand the entry of two other politicians who were positioned in top positions in the new Likud list - [[Tzachi Hanegbi]] (who left the Kadima party and joined the Likud party), and [[Moshe Feiglin]], who is considered a political hardliner with a unique political perspective that emphasizes policies that reflect Israel's Jewish identity.
+
+On 14 December [[Avigdor Lieberman]] resigned as the [[Israel]]i [[Foreign Affairs Minister of Israel|Foreign Affairs Minister]] and as [[Deputy leaders of Israel|Deputy Prime Minister]] following an [[indictment]] for [[fraud]].<ref>{{cite news|author=Kevin Connolly |url=https://www.bbc.co.uk/news/world-middle-east-20731396 |title=Israel Foreign Minister Avigdor Lieberman resigns |website=BBS News |date=14 December 2012 |access-date=3 January 2013}}</ref>
+
+===Yesh Atid===
+
+{{Further|Yesh Atid}}
+
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:250px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Yesh Atid list'''
+|-
+| colspan="2" | <hr />
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Yair Lapid]]
+| style="width:8px" | 2
+| style= | [[Shai Piron]]
+|-
+| 3
+| [[Yael German]]
+| 4
+| [[Meir Cohen (politician)|Meir Cohen]]
+|-
+| 5
+| [[Yaakov Peri]]
+| 6
+| [[Ofer Shelah]]
+|-
+| 7
+| [[Aliza Lavi]]
+| 8
+| [[Yoel Razvozov]]
+|-
+| 9
+| [[Adi Koll]]
+| 10
+| [[Karin Elharar]]
+|-
+| 11
+| [[Mickey Levy]]
+| 12
+| [[Shimon Solomon]]
+|-
+| 13
+| [[Ruth Calderon]]
+| 14
+| [[Pnina Tamano-Shata]]
+|-
+| 15
+| [[Rina Frenkel]]
+| 16
+| [[Yifat Kariv]]
+|-
+| 17
+| [[Dov Lipman]]
+| 18
+| [[Boaz Toporovsky]]
+|-
+| 19
+| [[Ronen Hoffman]]
+| 20
+| Tal El-Al
+|}</div>
+|}
+[[File:Yair Lapid - portrait.jpg|thumb|170px|left|In January 2012 TV personality [[Yair Lapid]] announced that he was leaving his journalism career in order to enter politics.<ref>{{cite news | url=https://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168 | archive-url=https://web.archive.org/web/20120109061901/http://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168 | url-status=dead | archive-date=9 January 2012 | title=Veteran Israeli anchor Yair Lapid leaves Channel 2 to enter politics | work=[[Haaretz]] | date=8 January 2012 | access-date=8 January 2012}}</ref>]]
+During the term of the Israeli 32nd government speculation arose concerning the possibility that Israeli journalist and television personality Lapid would end his career in journalism and begin a career in Israeli politics. Initially, Lapid dismissed these reports and speculations.<ref>{{cite news|url=http://www.globes.co.il/news/article.aspx?did=1000656744 |title=יאיר לפיד: "אני בדרך לפוליטיקה? זו שטות מוחלטת" - גלובס |newspaper=Globes |date=22 June 2011 |access-date=19 May 2012}}</ref><ref>{{cite web|url=http://news.walla.co.il/?w=/9/1874725 |title=ערוץ 10: קרנית גולדווסר ויעל גרמן ברשימה העתידית של יאיר לפיד  |date=7 November 2011 |website=Walla |access-date=19 May 2012}}</ref>
+
+Due to the ethical conflict between Lapid's functioning as a journalist and his political aspirations, Lapid informed [[Channel 2 (Israel)|Channel 2]]'s CEO that he would resign six months before entering politics.<ref>{{cite web|url=http://b.walla.co.il/?w=//1686444 |title=לפיד לחדשות 2: "אני מחיל על עצמי את חוק הצינון" |date=14 June 2010 |website= Walla |access-date=19 May 2012}}</ref> Lapid's commitment did not stop the Knesset legislation proceedings aimed at preventing the influx of Israeli journalists running for a position in the Knesset during their first year after they ended their journalist careers.<ref>{{cite web|url=https://www.haaretz.co.il/news/politics/1.1596934 |title=ניסיון להשיב את "חוק לפיד" להליך החקיקה - מדיני-ביטחוני - הארץ |website=Haaretz |date=16 May 2011 |access-date=19 May 2012}}</ref>
+
+Despite Lapid's denials about going into politics and in light of his obligations to end his journalism career long before that, Lapid officially announced in early January 2012 that he was leaving his journalism career in order to enter politics and that he would lead a new party.<ref>{{cite news|url=http://www.ynet.co.il/articles/0,7340,L-4172789,00.html |title=ynet יאיר לפיד בדרך לפוליטיקה: פורש מחדשות 2 - חדשות |newspaper=Ynet |date=20 June 1995 |access-date=19 May 2012|last1=שכניק |first1=רז }}</ref><ref name="Bar-Zohar">{{cite web|url=https://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168|archive-url=https://web.archive.org/web/20120109061901/http://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168|url-status=dead|archive-date=9 January 2012|title=Veteran Israeli anchor Yair Lapid leaves Channel 2 to enter politics|last=Bar-Zohar|first=Ophir|date=8 January 2012|website=Haaretz|access-date=17 January 2012|display-authors=etal}}</ref> Lapid continued to write his weekly column in Yediot Aharonot until the elections were officially announced.
+
+Lapid ultimately decided to name his party ''[[Yesh Atid]]''.<ref>{{cite web|last=Harkov |first=Lahav |url=https://www.jpost.com/breaking-news/lapid-registers-new-party-yesh-atid |title=Lapid registers new party, 'Yesh Atid'|website=The Jerusalem Post |date=29 April 2012 |access-date=19 May 2012}}</ref> His father's ([[Tommy Lapid]]) secular movement party [[Shinui]] used the election symbol 'yesh'. The party will have to submit a list of 100 founders and will be capped at raising 13.5 million shekels during this election cycle.<ref name="Hoffman1">{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=266158|title=Yair Lapid looks to the future with new Atid party|last=Hoffman|first=Gil|date=15 April 2012|work=The Jerusalem Post|access-date=16 April 2012}}</ref>
+{{Clear}}
+
+===Labor Party===
+
+{{main|2011 Israeli Labor Party leadership election|2012 Israeli Labor Party primary}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''Israeli Labor Party leadership election'''
+|- style="text-align:center;"
+| style="width:50%;" | <u>'''Yachimovich'''</u> || style="text-align:center; width:50%;" | <u>'''Peretz'''</u>
+|- style="text-align:center;"
+| style="width:50%;" | 54.2% (<small>22,257</small>) || style="text-align:center; width:50%;" | 45.8% (<small>18,822</small>)
+|-
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Labor Party list'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Shelly Yachimovich]]
+| style="width:8px" | 2
+| style="width:40%" | [[Isaac Herzog]]
+|-
+| 3
+| [[Eitan Cabel]]
+| 4
+| [[Merav Michaeli]]
+|-
+| 5
+| {{nowrap|[[Benjamin Ben-Eliezer]]}}
+| 6
+| [[Yehiel Bar]]
+|-
+| 7
+| [[Omer Bar-Lev]]
+| 8
+| [[Stav Shaffir]]
+|-
+| 9
+| [[Avishai Braverman]]
+| 10
+| [[Erel Margalit]]
+|-
+| 11
+| [[Itzik Shmuli]]
+| 12
+| [[Mickey Rosenthal]]
+|-
+| 13
+| [[Michal Biran]]
+| 14
+| [[Nachman Shai]]
+|-
+| 15
+| [[Moshe Mizrahi (politician)|Moshe Mizrahi]]
+| 16
+| [[Danny Atar]]
+|-
+| 17
+| [[Raleb Majadele]]
+| 18
+| [[Nadia Hilou]]
+|-
+| 19
+| [[Nino Abesadze]]
+| 20
+| [[Yossi Yona]]
+|-
+| 21
+| [[Daniel Ben-Simon]]
+| 22
+| Ofer Kornfeld
+|-
+| 23
+| [[Hili Tropper]]
+| 24
+| Yona Prital
+|-
+| 25
+| [[Saleh Saad]]
+| 26
+| [[Yariv Oppenheimer]]
+|-
+| 27
+| [[Gilad Kariv]]
+| 28
+| Estee Kirmair
+|-
+| 29
+| Baruch Zelts
+| 30
+| Eran Charamuni
+|}</div>
+|}
+
+At the start of 2011, Labor leader [[Ehud Barak]] began to face dissent from his party over its presence in the coalition. On 17 January 2011, disillusionment with Barak, over his support for coalition policies, especially regarding the peace process, led to his resignation from the Labor Party with four other Knesset members to establish a new "centrist, Zionist and democratic" party named [[Independence (Israeli political party)|Independence]].<ref>{{cite web|url=https://www.jpost.com/VideoArticles/Article.aspx?id=203946|title=Barak: New faction to be 'centralist, Zionist, democratic'|last=Hoffman|first=Gil|author2=Herb Keinon|date=17 January 2011|work=The Jerusalem Post|access-date=17 January 2012}}</ref> Following this move, all Labor Party government ministers resigned. Splitting the Labour Party enabled Barak to keep a faction of Labour MKs loyal to him within Netanyahu's coalition, preventing the departure of all 13 Labour MKs from the coalition. Due to the split, the party remained without a chairman for a while and was even regarded in the public and the media as a party in demise. However, Barak's departure led to increased interest in the party, particularly since the remaining members began campaigning to win the position of party chairman.<ref>{{cite web |url=http://news.nana10.co.il/Article/?ArticleID=828832 |title=נענע10 - יממה לפני הפריימריז בעבודה: 4 המתמודדים מתכוננים, וכולם בטוחים בניצחון - חדשות|website=Nana10 |date=17 June 2009 |access-date=19 May 2012 |archive-date=4 April 2015 |archive-url=https://web.archive.org/web/20150404154603/http://news.nana10.co.il/Article/?ArticleID=828832 |url-status=dead }}</ref>
+
+In the first round of voting, which was held on 12 September 2011, MK Shelly Yacimovich managed to get first position, narrowly defeating runner-up [[Amir Peretz]]. In the third and fourth places were [[Isaac Herzog]] and [[Amram Mitzna]].<ref>{{cite web|url=http://news.walla.co.il/?w=//1859672 |title=וידאו: פריימריז בעבודה &#124; סיבוב שני בין יחימוביץ' לפרץ  |date=12 September 2011 |website=Walla |access-date=19 May 2012}}</ref> Since no candidate topped the 40% threshold required, a second round was held a week later on 21 September 2011, in which Yachimovich was able to beat Peretz in a gap of about 10%.<ref>{{cite web|url=http://news.walla.co.il/?w=//1862608 |title=שלי יחימוביץ' ניצחה בפריימריז לעבודה בפער גדול |date=22 September 2011 |website=Walla |access-date=19 May 2012}}</ref><ref name="Lis">{{cite web|url=https://www.haaretz.com/news/national/shelly-yachimovich-elected-as-new-leader-of-israel-s-labor-party-1.385901|archive-url=https://web.archive.org/web/20110922152329/http://www.haaretz.com/news/national/shelly-yachimovich-elected-as-new-leader-of-israel-s-labor-party-1.385901|url-status=dead|archive-date=22 September 2011|title=Shelly Yachimovich elected as new leader of Israel's Labor Party|last=Lis|first=Jonathan|date=22 September 2011|website=Haaretz|access-date=17 January 2012}}</ref>
+
+Yachimovich's victory, which placed the emphasis of the party on social values rather than issues of national security, brought a renewed interest in the party following the 2011 social protest and as a result, many polls predicted that the party might win nearly 20 seats,<ref>{{cite web|url=http://news.walla.co.il/?w=/9/1863857 |title=סקר: יחימוביץ' גורפת 22 מנדטים, קדימה יורדת ל-18  |date=26 September 2011 |website=Walla |access-date=19 May 2012}}</ref> which would make the party become the second largest party after Likud on the account of Kadima. Down the road, and especially after [[Yair Lapid]] declared that he would enter politics, Yachimovich's popularity and the popularity of the party were slightly moderated.<ref>{{cite web |url=http://news.nana10.co.il/Article/?ArticleID=857779 |title=הליכוד מקבל 30 מנדטים, יאיר לפיד שני עם 16 - חדשות |website=Nana10 |date=17 June 2009 |access-date=19 May 2012 |archive-date=18 May 2012 |archive-url=https://web.archive.org/web/20120518101218/http://news.nana10.co.il/Article/?ArticleID=857779 |url-status=dead }}</ref> In January 2012 the party got a lot of media attention after [[Noam Shalit]] (father of [[Gilad Shalit]]) and former head of the [[Unit of International Crime Investigations]] Moshe Mizrahi both announced that they would be joining the party.<ref>{{cite web|url=http://b.walla.co.il/?w=//1682056 |title=שמונה קבוצות רכשו את ספר המכרז לערוץ בערבית ברנז'ה |date=2 June 2010 |website=Walla |access-date=19 May 2012}}</ref><ref>{{cite web|url=http://news.walla.co.il/?w=/9/1893285 |title=ניצב בדימוס משה מזרחי יתמודד לרשימת מפלגת העבודה לכנסת הבאה  |date=11 January 2012 |website=Walla |access-date=19 May 2012}}</ref>
+
+===The Jewish Home===
+
+{{Further|2012 The Jewish Home leadership election|The Jewish Home|National Union (Israel)}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="3" style="background: #EEE; text-align: center;" | '''The Jewish Home leadership election'''
+|- style="text-align:center;"
+| style="width:50%;" | <u>'''Bennett'''</u> || style="text-align:center; width:50%;" | <u>'''Orlev'''</u>
+|- style="text-align:center;"
+| style="width:50%;" | 67.1% (<small>23,645</small>) || style="text-align:center; width:50%;" | 32.7% (<small>11,501</small>)
+|-
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Jewish Home List'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Naftali Bennett]]
+| style="width:8px" | 2
+| style= | [[Uri Ariel]]
+|-
+| 3
+| [[Nissan Slomiansky]]
+| 4
+| [[Eli Ben-Dahan]]
+|-
+| 5
+| [[Ayelet Shaked]]
+| 6
+| [[Uri Orbach]]
+|-
+| 7
+| [[Zevulun Kalpa]]
+| 8
+| [[Avi Vartzman]]
+|-
+| 9
+| [[Moti Yogev]]
+| 10
+| [[Orit Strook]]
+|-
+| 11
+| [[Yoni Chetboun]]
+| 12
+| [[Shuli Mualem]]
+|-
+| 13
+| [[Hillel Horowitz]]
+| 14
+| [[Jeremy Gimpel]]
+|-
+| 15
+| Nachi Eyal
+| 16
+| Rabbi Rachamim Nissimi
+|-
+| 17
+| Amiti Cohen
+| 18
+| [[Gila Finkelstein]]
+|-
+| 19
+| Uri Bank
+| 20
+| Doron Daneinu
+|}</div>
+|}
+[[File:Naftali Bennett HUJI Election Debate 2.jpg|thumb|left|The winner of The Jewish Home party primaries – [[Naftali Bennett]].]]
+[[The Jewish Home]] and the [[National Union (Israel)|National Union]] (an [[Political alliance|alliance]] of four parties – [[Tkuma (political party)|Tkuma]], [[Hatikva (political party)|Hatikva]], [[Eretz Yisrael Shelanu]], and [[Moledet]]) began preparing for the possibility of running in a joint list for the 2013 elections during the term of the 18th Knesset.<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART1/953/417.html |title= ...מגעים לאיחוד בין הבית היהודי |website=NRG |access-date=19 May 2012}}</ref> While negotiations were successful in principle and the two parties reached consensus,<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/128/799.html |title=חדשות ...הבית היהודי והאיחוד הלאומי |website=NRG |access-date=19 May 2012}}</ref> disagreements arose regarding the selection of candidates for the Knesset, as The Jewish Home supported the idea of running open primaries<ref>{{cite news |script-title=he:לראשונה בתולדותיה תקיים סיעת הבית היהודי-המפד"ל פריימריז |url=http://www.srugim.co.il/27287-לראשונה-בתולדותיה-תקיים-סיעת-הבית-היה |date=11 January 2012 |access-date=26 October 2012 |language=he}}</ref> while The National Union opposed it.<ref>{{cite news |script-title=he:תקומה-האיחוד הלאומי: אצלנו בשום אופן לא יהיה פריימריז |url=http://www.srugim.co.il/27479-האיחוד-הלאומי-אצלנו-בשום-אופן-לא-יהיה-פ |date=18 January 2012 |access-date=26 October 2012 |language=he}}</ref> In September 2012, [[Ya'akov Katz (politician born 1951)|Ya'akov Katz]] (Moledet) signed an agreement with Jewish Home leadership candidate [[Naftali Bennett]] to form a joint list for the elections. On 12 October 2012, [[Michael Ben-Ari]] ([[Eretz Yisrael Shelanu]]) announced that due to not being placed in realistic spots, he and [[Aryeh Eldad]] ([[Hatikva (political party)|Hatikva]]) would be running in a separate pro-Land-of-Israel alliance, called [[Otzma LeYisrael]].<ref>{{cite web|url=http://www.israelnationalnews.com/News/News.aspx/160825#.UHtWEG_Mi4E |title=Ben-Ari Leaves National Union, Will Run with Eldad |date=12 October 2012 |website=Israel National News |access-date=15 October 2012}}</ref>
+Meanwhile, [[Tkuma (political party)|Tkuma]] decided to run together with the Jewish Home. As part of the agreement, it was established that [[Naftali Bennett]] would serve as the alliance's chairman while [[Uri Ariel]] would be in the second position of the list and that after the elections both parties would merge into a single party.<ref>{{Cite web|url=https://www.srugim.co.il/38787-%d7%99%d7%a9-%d7%90%d7%99%d7%97%d7%95%d7%93-%d7%a0%d7%97%d7%aa%d7%9d-%d7%94%d7%a1%d7%9b%d7%9d-%d7%91%d7%99%d7%9f-%d7%94%d7%91%d7%99%d7%aa-%d7%94%d7%99%d7%94%d7%95%d7%93%d7%99-%d7%9c%d7%aa%d7%a7%d7%95|title=יש איחוד: נחתם הסכם בין הבית היהודי לאיחוד הלאומי|date=29 November 2012}}</ref> Uri Bank and his Moledet party also joined.<ref name=2013Elections>{{Cite news |title = Moledet Strengthens Unity in Religious Camp |work = Israelnationalnews |access-date = 1 May 2013|year=2012 |url = http://www.israelnationalnews.com/News/News.aspx/161884#.UL5Yd-RwqCl}}</ref>
+
+The primaries were held on 6 November 2012 for the position of the party's chairman. [[Naftali Bennett]] was elected as the chairman with 67.1% of the votes. [[Zevulun Orlev]], who was second with 32.7% of the votes, declared that he would end his political career following his defeat.<ref>{{cite web|url=http://www.israelhayom.co.il/site/newsletter_article.php?id=23182&hp=1&newsletter=07.11.2012 |title=ישראל היום &#124; דרעי ובנט סיכמו לשתף פעולה |website=Israel Hayom |access-date=28 November 2012}}</ref>
+
+===Shas===
+
+{{Further|Shas}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Shas list'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Eli Yishai]]
+| style="width:8px" | 2
+| style= | [[Aryeh Deri]]
+|-
+| 3
+| [[Ariel Atias]]
+| 4
+| [[Yitzhak Cohen]]
+|-
+| 5
+| [[Meshulam Nahari]]
+| 6
+| [[Amnon Cohen]]
+|-
+|7||[[Ya'akov Margi]]||8||[[David Azulai]]
+|-
+|9||[[Yitzhak Vaknin]]||10||[[Nissim Ze'ev]]
+|-
+|11||[[Avraham Michaeli]]||12||[[Yoav Ben Tzur]]
+|-
+|13||[[Lior Edri]]||14||Ami Iluz
+|-
+|15||Eli Dadoun||16||Gershon Levi
+|}</div>
+|}
+[[File:Eli Yishai 2009.jpg|thumb|left|Shas party leader [[Eli Yishai]]]]
+After [[Aryeh Deri]] announced his return to politics, and following a series of highly publicised events that led to an increase in the tensions between the [[Haredi Judaism|Haredi public]] and the non-Haredi public, Shas's popularity began to falter according to most polls. As a result, Shas chairman [[Eli Yishai]] requested that Aryeh Deri join the party instead of establishing an independent party.<ref>{{cite news |script-title=he:אלי ישי: "ש"ס היא ביתו הטבעי של אריה דרעי, קורא לו לחזור" |url=http://www.kikarhashabat.co.il/אלי-ישי-שס-היא-ביתו-הטבעי-של-א.html |date=9 January 2012 |access-date=26 October 2012 |language=he}}</ref> Shas spiritual leader [[Ovadia Yosef]] offered Aryeh Deri the 3rd position on the party list, but Deri rejected it at first and was believed to want to lead the party, start his own party (which according to polls might win as many as 7 seats), or not participate in the election at all.<ref name=autogenerated3>{{cite web|url=http://www.israelnationalnews.com/News/News.aspx/155260#.T53dCr8a5e4|title=Deri Rejects Rav Ovadia's Offer for #3 Slot|date=29 April 2012 |access-date=1 May 2012}}</ref> On 16 October a compromise was reached: Shas would not have a formal chairman, but would instead be jointly led by Deri, Yishai, and [[Ministry of Housing and Construction|Housing and Construction Minister]] [[Ariel Atias]].<ref>{{cite news |url=https://www.haaretz.com/2012-10-17/ty-article/.premium/shas-seals-deal-on-joint-leadership/0000017f-e3cc-d9aa-afff-fbdce2ae0000 |title=As Israeli elections near, Shas party seals deal on joint leadership |first=Yair |last=Ettinger |work=Haaretz |date=17 October 2012 |access-date=21 October 2012}}</ref> The direction of the election campaign is in debate, with reports suggesting that Yishai wishes to focus on fighting [[Illegal immigration from Africa to Israel|illegal immigration]], and Deri favoring focusing on social justice issues while avoiding mentions of Shas's treatment of [[Sudanese refugees in Israel]].<ref>{{cite news |url=https://www.haaretz.com/2012-10-21/ty-article/.premium/shas-campaign-to-focus-on-ethnic-inequity/0000017f-f454-d223-a97f-fddddb360000 |title=New Shas leader to focus party's campaign on ethnic discrimination |first=Yair |last=Ettinger |work=Haaretz |date=21 October 2012 |access-date=21 October 2012}}</ref><ref>{{cite news |url=http://www.ynetnews.com/articles/0,7340,L-4294333,00.html |title=Deri, Yishai said to be at odds over Shas campaign |work=Ynetnews |first=Akiva |last=Novick |date=19 October 2012 |access-date=21 October 2012}}</ref>
+{{clear}}
+
+===United Torah Judaism===
+
+{{Further|United Torah Judaism}}
+
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The UTJ list'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Yaakov Litzman]]
+| style="width:8px" | 2
+| style= | [[Moshe Gafni]]
+|-
+|3||[[Meir Porush]]||4||[[Uri Maklev]]
+|-
+|5||[[Eliezer Moses]]||6||[[Yisrael Eichler]]
+|-
+|7||[[Ya'akov Asher]]||8||Ya'akov Guterman
+|}</div>
+|}
+[[File:YAAKOV LITZMAN.jpg|thumb|left|upright|United Torah Judaism's chairman – [[Yaakov Litzman]].]]
+[[United Torah Judaism]] is an [[Political alliance|alliance]] of two Haredi parties, the Hasidic [[Agudat Israel]] party and the Lithuanian [[Degel HaTorah]] party.
+
+In 2012, a split occurred among the Lithuanian Haredi public, as a group within the [[Degel HaTorah]] party which regards itself as the successor of Rabbi [[Elazar Shach]] and affiliated with Rabbi [[Shmuel Auerbach]], felt that it is not represented by the party. After it was announced that early elections would be held, a group of people associated with Rabbi Auerbach registered a new party under the name [[#netzah|Netzah]]. After Menachem Carmel, who is affiliated with this group, did not win the third position in the United Torah Judaism list, it was officially announced that the "Netzah" would be running in the 2013 Israeli legislative election.
+{{clear}}
+
+===Hatnua===
+
+{{Further|Hatnua}}
+
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The "Hatnua" List'''
+|-
+| colspan="2" | <hr />
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Tzipi Livni]]
+| style="width:8px" | 2
+| style= | [[Amram Mitzna]]
+|-
+| 3
+| [[Amir Peretz]]
+| 4
+| [[Elazar Stern]]
+|-
+| 5
+| [[Meir Sheetrit]]
+| 6
+| [[David Tzur]]
+|-
+| 7
+| [[Yoel Hasson]]
+| 8
+| [[Shlomo Molla]]
+|-
+| 9
+| [[Meirav Cohen]]
+| 10
+| [[Orit Zuaretz]]
+|-
+| 11
+| Aharon Valensi
+| 12
+| [[Majalli Wahabi]]
+|-
+| 13
+| [[Alon Tal]]
+| 14
+| [[Robert Tiviaev]]
+|}</div>
+|}
+[[File:Tzipi Livni - WEF Annual Meeting Davos 2008.jpg|thumb|left|[[Tzipi Livni]]]]
+Since she lost the primaries for the leadership of the [[Kadima]] party and resigned from the Knesset, many reports spread in the Israeli media of Tzipi Livni's possible return to politics as the head of a new party of her own. Those reports eventually turned out to be true on 27 November, when the logo for her new party titled "Hatnua - headed by Tzipi Livni" was initially published.<ref>{{Cite web|url=https://news.walla.co.il/item/2590697|title=לבני מקימה תנועה חדשה: "באתי להילחם למען ישראל" |date=27 November 2012|website=Walla}}</ref> At a press conference held during the same day, Livni officially announced the establishment of the Hatnua party which would be headed by her and which would participate in the upcoming elections. "Hatnua" (התנועה) means "The Movement" in Hebrew.
+
+Immediately after the establishment of Hatnua party, seven Knesset members from the [[Kadima]] ([[Meir Shitrit]], [[Yoel Hasson]], [[Shlomo Molla]], [[Robert Tiviaev]], [[Majalli Wahabi]], [[Rachel Adato]] and [[Orit Zuaretz]]) announced that they have left the [[Kadima]] party and joined Livni's party. On 1 December, it was announced that the Former Labor chairman [[Amram Mitzna]] joined Livni's party.<ref>{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4314088,00.html |title=Amram Mitzna joins Livni's new party - Israel News, Ynetnews |newspaper=Ynetnews |date=20 June 1995 |access-date=3 January 2013|last1=Karni |first1=Yoval }}</ref>
+{{clear}}
+
+===Meretz===
+{{Further|2012 Meretz leadership election|Meretz}}
+
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''Primaries for the leadership of Meretz'''
+|- style="text-align:center;"
+| style="width:50%;" | <u>'''Gal-On'''</u> || style="text-align:center; width:50%;" | <u>'''Gilon'''</u>
+|- style="text-align:center;"
+| style="width:50%;" | 60.6% (<small>506</small>) || style="text-align:center; width:50%;" | 36.6% (<small>306</small>)
+|-
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Meretz List'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Zehava Gal-On]]
+| style="width:8px" | 2
+| style= | [[Ilan Gilon]]
+|-
+| 3
+| [[Nitzan Horowitz]]
+| 4
+| [[Michal Rozin]]
+|-
+| 5
+| [[Issawi Frej]]
+| 6
+| [[Tamar Zandberg]]
+|-
+| 7
+| [[Avshalom Vilan]]
+| 8
+| [[Mossi Raz]]
+|-
+| 9
+| Yifat Solel
+| 10
+| Uri Zaki
+|}</div>
+|}
+[[File:Zahava Galon.jpg|thumb|left|upright|The winner of the Meretz leadership election - [[Zehava Gal-On]].]]Following the party's poor performance in the 2009 legislative elections,<ref>{{cite web|url=http://www.mako.co.il/news-elections-2009/news/Article-f0a18f79b256f11004.htm |title=חדשות 2 - גלאון: "זה בוקר קשה עבורי" |date=11 February 2009 |website=Mako |access-date=19 May 2012}}</ref> some of the party members called for the resignation of the party chairman [[Chaim Oron]] and to give way for Zehava Gal-On. Haim Oron indeed left the Knesset<ref>{{cite web|url=http://knesset.gov.il/spokesman/heb/Result.asp?HodID=8724 |title=פרידה בדמעות מג'ומס: "אחד הפרלמנטרים הבולטים שעיצבו את הכנסת" |website=Knesset |date=23 March 2011 |access-date=19 May 2012}}</ref> and later left the chairmanship of the party. As a result, MKs [[Zehava Gal-On]], [[Ilan Gilon]], and youth activist Ori Ophir began campaigning to win the position of the party chairman.<ref>{{cite web|url=https://www.jpost.com/Headlines/Article.aspx?id=251310|title=Young activist joins Meretz leadership race|last=Hoffman|first=Gil|date=28 December 2011|work=The Jerusalem Post|access-date=20 January 2012}}</ref>
+
+The primaries were held on 7 February 2012 for the position of the party's chairman.<ref>{{cite web |url=http://www.myparty.org.il/aspx/article.aspx?id=1499 |title=מרצ - הבחירות לראשות מרצ יתקיימו ב-7 בפברואר |website=Meretz |date=23 March 2009 |access-date=19 May 2012 |archive-date=25 July 2018 |archive-url=https://web.archive.org/web/20180725110639/http://www.myparty.org.il/aspx/article.aspx?id=1499 |url-status=dead }}</ref> Zehava Gal-On was elected as the chairman with 60.6% of the votes. Ilan Gilon was second with 36.6% of the votes, and Uri Ofir was third with 2.8% of the votes.
+
+Primaries were held on 11 November 2012 for the party list for the upcoming elections. The party list is as follows (in order): [[Zehava Gal-On]], [[Ilan Gilon]], [[Nitzan Horowitz]], Michal Rozin, Issawi Frej, Tamar Zandberg, [[Avshalom Vilan]], [[Mossi Raz]], Yifat Solel and Uri Zaki.<ref>{{cite web|title=רשימת מרצ לכנסת ה-19|url=http://www.newmeretz.org.il/aspx/article.aspx?id=2065|work=Official Meretz Website|access-date=25 November 2012|archive-date=26 October 2021|archive-url=https://web.archive.org/web/20211026203522/http://www.newmeretz.org.il/aspx/article.aspx?id=2065|url-status=dead}}</ref>
+
+''[[Haaretz]]'' endorsed Meretz for the 2013 election, and gave honorable mention to [[Tzipi Livni]]'s [[Hatnua]].<ref>{{cite news|url=https://www.haaretz.com/print-edition/opinion/weaken-the-right-1.494756|archive-url=https://web.archive.org/web/20130118155034/http://www.haaretz.com/print-edition/opinion/weaken-the-right-1.494756|url-status=dead|archive-date=18 January 2013|title=Weaken the right|website=Haaretz|date=18 January 2013|quote=Meretz has presented the most suitable platform, with uncompromising support for ending the occupation, dividing the Land of Israel into two nations, separating religion from state and strengthening civil rights, including those of the Arab minority. ... Those who don't want to vote for opposition parties can choose between Tzipi Livni's Hatnua, Yair Lapid's Yesh Atid and Kadima, headed by Shaul Mofaz, in the hope they will join with Netanyahu and moderate the influence of the extreme right and Haredim. Out of all of them, Livni has stood out in her exhortations for an agreement with the Palestinians and rebuilding the relationship with the United States."}}</ref>
+{{clear}}
+
+===Ra'am–Ta'al===
+
+{{Further|Ra'am|Ta'al}}
+Ra'am–Ta'al is an [[Political alliance|alliance]] of the two Arab parties [[Ra'am]] and [[Ta'al]] which was first formed prior to the [[2006 Israeli legislative election]]s. The party list is as follows (in order): [[Ibrahim Sarsur]] (party chairman), [[Ahmed Tibi]], [[Masud Ghnaim]], Taleb Abu Arar, [[Taleb el-Sana]], Muhammad Cnaan.
+
+===Hadash===
+
+{{Further|Hadash| 2012 Hadash leadership election}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Hadash list'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Mohammad Barakeh]]
+| style="width:8px" | 2
+| style= | [[Hana Sweid]]
+|-
+| 3
+| [[Dov Khenin]]
+| 4
+| [[Afu Agbaria]]
+|-
+| 5
+| Nabila Espanioly
+| 6
+| [[Ayman Odeh]]
+|}</div>
+|}
+[[File:Mohammad Barakeh 2011.jpg|thumb|115px|left|upright|Hadash's chairman – [[Mohammad Barakeh]].]]
+Primaries were held on 10 November 2012 for the party list for the upcoming elections. The party list is as follows (in order): [[Mohammad Barakeh]] (party chairman), [[Hana Sweid]], [[Dov Khenin]], [[Afu Agbaria]], [[Nabila Espanioly]], and [[Ayman Odeh]].
+
+The party delegates also voted to decline the proposal to reserve a certain number of seats in the list for female representatives (79% were against this proposal).
+{{Clear}}
+
+===Balad===
+
+{{Further|Balad (political party)}}
+[[File:Jamal Zhalka2009.JPG|thumb|100px|left|upright|Balad's chairman – [[Jamal Zahalka]].]]
+The party list is as follows (in order): [[Jamal Zahalka]] (party chairman), [[Haneen Zoabi]], [[Basel Ghattas]], Juma Azbargh, and Abed Fukra. In December 2012, it was announced that the Central Elections Committee and a panel of Supreme Court judges would hold discussions on whether to disqualify Haneen Zoabi, as well as the Balad party, from the 2013 election. The request for her disqualification, submitted by MK [[Ofir Akunis]] ([[Likud]]) and which obtained the necessary number of signatures, stated that, "throughout her years in the Knesset, Zoabi has constantly undermined the [[State of Israel]] and has openly incited against the government, its institutions, and [[Israel Defense Forces|IDF]] soldiers". The request further alleged that Zoabi rejects Israel's existence as a [[Jewish state|Jewish]] and [[Democracy|democratic]] state, which makes Knesset candidates eligible for disqualification.<ref>{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4317728,00.html |title=Elections Committee to discuss Zoabi's disqualification - Israel News, Ynetnews |newspaper=Ynetnews |date=20 June 1995 |access-date=3 January 2013|last1=Yahav |first1=Telem }}</ref> Zoabi called the sponsors of the request fascists and said that "for whoever does not want citizens to have free elections, I am one of many targets ..."<ref>{{Cite web|url=https://www.jpost.com/diplomacy-and-politics/election-committee-to-debate-disqualifying-zoabi|title=Election committee to debate disqualifying Zoabi|website=The Jerusalem Post &#124; JPost.com|date=10 December 2012 }}</ref> After hearing the case, the Central Elections Committee disqualified Zoabi in a 19–9 vote.<ref>{{Cite web|url=http://www.theguardian.com/world/2012/dec/19/haneen-zoabi-disqualified-re-election-knesset|title=Arab-Israeli politician Haneen Zoabi disqualified from re-election|date=19 December 2012|website=the Guardian}}</ref> The [[Supreme Court of Israel|Israeli Supreme Court]] unanimously overturned the disqualification.<ref>{{Cite news|url=https://www.ynetnews.com/articles/0,7340,L-4326059,00.html|title=Supreme Court: MK Zoabi can run for Knesset|first=Aviel|last=Magnezi|newspaper=Ynetnews |date=30 December 2012}}</ref>
+
+===Kadima===
+{{further|2012 Kadima leadership election}}
+
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:300px;" class="toccolours"
+| colspan="3" style="background: #EEE; text-align: center;" | '''Kadima leadership election'''
+|- style="text-align:center;"
+| style="width:50%;" | <u>'''Mofaz'''</u> || style="text-align:center; width:50%;" | <u>'''Livni'''</u>
+|- style="text-align:center;"
+| style="width:50%;" | 62.3% (<small>23,987</small>) || style="text-align:center; width:50%;" | 37.7% (<small>14,516</small>)
+|-
+| colspan="2" style="background: #EEE; text-align: center;" | '''The [[Kadima]] list'''
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Shaul Mofaz]]
+| style="width:8px" | 2
+| style="width:40%" | [[Yisrael Hasson]]
+|-
+| 3
+| [[Yohanan Plesner]]
+| 4
+| [[Ronit Tirosh]]
+|-
+| 5
+| [[Shai Hermesh]]
+| 6
+| [[Yuval Tzelner]]
+|-
+| 7
+| [[Doron Avital]]
+| 8
+| [[Akram Hasson]]
+|-
+| 9
+| [[Ahmad Dabbah]]
+| 10
+| [[Eti Livni]]
+|}</div>
+|}
+[[File:Mofaz portrait.jpg|thumb|left|upright|The winner of the Kadima primaries - [[Shaul Mofaz]].]]
+Prime Minister Netanyahu's announcement about having early primaries in the Likud started a debate among the Kadima party members over when to hold leadership elections for their party.<ref>{{cite web|url=http://www.yallakadima.co.il/fullArticleDetails.aspx?id=2029 |title=יאללה קדימה &#124; נתניהו יצליח היכן שמופז ודיכטר כשלו? |website=Yalla Kadima |access-date=19 May 2012}}</ref> Following increasing pressure to hold the election, party leader Tzipi Livni announced that the election for the leadership of Kadima would be held on 27 March 2012.<ref>{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=253268|title=Livni mulls March Kadima race|last=Hoffman|first=Gil|date=12 January 2012|work=The Jerusalem Post|access-date=17 January 2012}}</ref><ref>{{cite web|url=http://www.israelhayom.co.il/site/newsletter_article.php?id=14093&newsletter=07.12.2011 |title=ח"כים בקדימה: "המפלגה תתפרק אם הפריימריז לא יוקדמו" |website=Israel Hayom |access-date=19 May 2012}}</ref><ref>{{cite web|url=http://news.walla.co.il/?w=/9/2501460 |title=ציפי לבני: לא אכנע לפוליטיקה קטנה, אנצח בפריימריז  |date=18 January 2012 |website=Walla |access-date=19 May 2012}}</ref> In addition to Livni, party members [[Shaul Mofaz]] and [[Avi Dichter]] announced their intention to run for chairman position of the party.
+
+Mofaz won the election 62.3% to 37.7% with a turnout of approximately 40%.<ref name="result">{{cite web|url=http://www.israelnationalnews.com/News/News.aspx/154231#.T3JFNo6aPws|title=Mofaz Wins Kadima Leadership|last=Benari|first=Elad|date=28 March 2012|website=Israel National News|access-date=27 March 2012}}</ref> Livni later resigned from her seat in Knesset complaining that Israel was sitting "on a volcano. The international clock is ticking and the existence of Israel as a Jewish and democratic state is in danger. For years, Israeli leaders have been burying their heads in the sand, occupying themselves with political exercises and spin and in that time the threat to Israel has only grown."<ref>{{cite web|url=http://www.aljazeera.com/news/middleeast/2012/05/20125254033816352.html |title=Ex-Kadima leader Livni resigns as Israeli MP - Middle East |website=Al Jazeera English |access-date=19 May 2012}}</ref>
+{{Clear}}
+
+===Otzma LeYisrael===
+
+{{Further|Otzma LeYisrael}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:250px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Otzma LeYisrael list'''
+|-
+| colspan="2" | <hr />
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Aryeh Eldad]]
+| style="width:8px" | 2
+| style= | [[Michael Ben-Ari]]
+|-
+| 3
+| [[Baruch Marzel]]
+| 4
+| [[Aryeh King]]
+|}</div>
+|}
+
+Following the negotiations between the National Union alliance and The Jewish Home party, MK [[Michael Ben-Ari]], along with [[Baruch Marzel]] and [[Itamar Ben-Gvir]] (all [[Eretz Yisrael Shelanu]] members), announced that they do not plan to stay in such an alliance, and they would form an independent party. MK [[Aryeh Eldad]] from the [[Hatikva (political party)|Hatikva]] party decided also not to take part in the alliance.
+
+On 13 November 2012, they announced that they formed a new joint list called [[Otzma LeYisrael]].<ref>{{cite web|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=291611|title=Eldad, Ben-Ari form new party: Strong Israel|last=Harkov|first=Lahav|date=4 December 2012|work=The Jerusalem Post|access-date=4 December 2012|url-status=dead|archive-url=https://web.archive.org/web/20121130083356/http://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=291611|archive-date=30 November 2012}}</ref>
+{{Clear}}
+
+===Am Shalem===
+
+{{Further|Am Shalem}}
+{| style="float: right; margin: 0 0 0.5em 1em; clear:left; width:250px;" class="toccolours"
+| colspan="2" style="background: #EEE; text-align: center;" | '''The Am Shalem list'''
+|-
+| colspan="2" | <hr />
+|-
+| colspan="2" |
+<div style="overflow-y:scroll;height:75px;">
+{| style="width:100%; font-size: 8pt"
+|-
+| style="width:8px" | 1
+| style= | [[Haim Amsalem]]
+| style="width:8px" | 2
+| style= | Moshe Tsarfati
+|-
+| 3
+| Reuven Agasi
+| 4
+| Daniela Yekira
+|}</div>
+|}
+[[File:Amsalem haim.jpg|thumb|upright|left|[[Haim Amsalem]]]]
+Rabbi [[Haim Amsalem]] was elected to the Knesset as a [[Shas]] member during the 17th and 18th legislative elections, as the representative of Rabbi Meir Mazoz, the head of the Kisseh Rachamim yeshiva. During the 18th Knesset, Amsalem began to publicly hold controversial positions on key issues such as conversions to Judaism (he would not require a pledge to follow Torah laws), the enforcement of Haredi public integration in the work force, the status of women in Israel, etc. His positions caused a rift between him and the Shas party, which eventually led the Council of Torah Sages (מועצת חכמי התורה) to call for his resignation, and lead to complaints against him from public Haredi bodies. On the other hand, in 2011, he received the Knight of Quality Government Award on behalf of the [[Movement for Quality Government in Israel]].
+
+After Amsalem quit the Shas party, he established a new political movement called "[[Am Shalem]]" (a play of words on his last name), and announced that it would take part in the election.<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/174/863.html |title=...יש חיים אחרי ש"ס: המפלגה החדשה של |website=NRG |access-date=19 May 2012}}</ref>
+{{clear}}
+
+===Other parties===
+
+* [[Ale Yarok]] - merged with members of New Liberal Movement under the name "Ale Yarok-The Liberal List" (עלה ירוק-הרשימה הליברלית). The party has never passed the threshold, and in the 18th elections, it won only 13 thousand votes.
+* [[Da'am Workers Party]] - a Left Party which was active in the [[2011 Israeli social justice protests]]. The head of the party is the Israeli Arab journalist [[Asma Agbarieh]], who is the only Israeli Arab woman to ever head a political party. The party has been running since the 2001 Israeli legislative election, but has failed so far in passing the threshold.
+* [[Gil (political party)|Dor – The new Pensioners party]] – the [[Gil (political party)|Gil]] party, which was one of the big successful parties in the 2006 Israeli legislative election and vanished from Israeli politics following its system failure in the 2009 Israeli legislative election, announced that it intends to run once again with the chairman [[Rafi Eitan]] under the new name "Dor – The new Pensioners party" (דור - מפלגת הגמלאים החדשה).<ref>{{cite web|url=http://www.nrg.co.il/online/1/ART2/410/725.html |title=...הגמלאים שבים: "ציבור שלם נותר |website=NRG |date=23 October 2012 |access-date=3 January 2013}}</ref>
+* The Finance Party – In May 2012, a new party called The Finance Party was formed in Israel by [[Daniel Goldstein (politician)|Danny Goldstein]] the leader of the party and {{anchor|Benny Goldstein}}Benny Goldstein, two mattress dealers from Ashkelon. The party focuses on a better financial economy for all citizen and peace between Israel and its Arab and Palestinian neighbors, which its platform states can be attained through joint business ventures such as [[shopping malls]] on Israel's borders with its neighbors; these businesses would be open to customers of both nationalities.<ref name="calcala">{{Cite web|url=https://thejerusalemreview.com/2012/10/22/in-the-israeli-elections-political-newcomers-look-to-gain-a-foothold/|title=In the Israeli Elections, Political Newcomers Look to Gain a Foothold|date=22 October 2012}}</ref> The party has been described as being influenced by American ideas. Yossi Bublil, a top contestant on the Israeli ''[[Big Brother (Israel)|Big Brother]]'' television program, was third on the party's list behind the Goldstein brothers.<ref name="bublil">{{Cite web|url=https://www.jpost.com/diplomacy-and-politics/bublil-of-big-brother-runs-for-knesset|title=Bublil of 'Big Brother' runs for Knesset|website=The Jerusalem Post &#124; JPost.com|date=8 November 2012 }}</ref> However, Bublil subsequently resigned from the party because he insisted on getting the number 2 spot.<ref name="nobublil">{{Cite web|url=https://www.israelnationalnews.com/News/Flash.aspx/255975|title=Yossi Bublil Resigns from Calcala Party|website=Israel National News|date=26 November 2012 }}</ref> He was replaced by children's entertainer Yuval Hamevulbal.<ref name="clown">{{Cite web|url=https://www.timesofisrael.com/bona-fide-clown-eyes-knesset-seat/|title=Bona fide clown eyes Knesset seat|first=Gabe|last=Fisher|website=The Times of Israel |date=5 December 2012 }}</ref> Aspiring Israeli pollster Yair Michaeli has said that he believes Calcala has "a fighting chance" of getting into the Knesset, although it will be an uphill battle.<ref name="michaeli">{{cite web|url=http://www.jewishpress.com/indepth/opinions/a-big-time-pollster-in-the-making/2012/11/28/?src=ataglance|title=A Big-Time Pollster in the Making?|date=28 November 2012 }}</ref> The party was headed by [[Yulia Shamalov-Berkovich]].<ref>[https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=294968 Center-Left fails to unite; no serious contender for PM] {{webarchive|url=https://web.archive.org/web/20130320092233/http://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=294968 |date=20 March 2013 }} ''The Jerusalem Post'', 6 December 2012</ref>
+* [[Eretz Hadasha]] ("New Land") – a new left-center party established by the film director Rani Blair and the attorney Eldad Yaniv, who headed the Israeli political movement [[The National Left]]. As part of the party's election online campaign, it published various provocative online videos about the alleged conduct of the current government officials.<ref>{{cite web|url=https://www.haaretz.co.il/1.1843864 |title=נתניהו מאיים בתביעת דיבה נגד אלדד יניב - פוליטי - הארץ |website=Haaretz|date=16 October 2012 |access-date=3 January 2013}}</ref>
+* Kulanu Chaveirim – In October 2012, a new party called Kulanu Chaveirim ("We are all friends") was formed. The party is represented by members of the [[Na Nach]] [[Hasidic Judaism|Hasidic]] group, followers of [[Nachman of Breslov|Rebbe Nachman of Breslov]], who are known for driving around Israel in colorful vans, blasting music, dancing in the streets, and selling the books of Rebbe Nachman and of Rabbi [[Yisroel Ber Odesser]]. The party's stated objectives are faith, trust, joy and unity amongst Jews. Sharon Kanaffo, one of the party's founders, said, "We believe the Israeli people love Rebbe Nachman of Breslov... we would love to have experts in security or economy join us, but only if they have good intentions and no secret agenda. The point is to make what we do all throughout the year on a larger scale... we want to have a positive impact on people's lives". Asked about the party's agenda, Kanaffo said, "Our list for the Knesset is full of people who only want to do good and help others... though we haven't thought of any specific law we would like to put forward yet".<ref>{{cite news|url=http://www.ynetnews.com/articles/0,7340,L-4301382,00.html |title=Breslovs Hasidim form new political party - Israel News, Ynetnews |newspaper=Ynetnews |date=20 June 1995 |access-date=28 November 2012|last1=Novick |first1=Akiva }}</ref>
+* Netzah – Followers of Lithuanian Haredi rabbi [[Shmuel Auerbach]] launched a new party, called Netzah, that plans to run for the Knesset. ''[[Haaretz]]'' described this party as part of a general trend toward fragmentation of Haredi politics as a result of divisions between so-called "New Haredim" and the more traditionally minded factions.<ref name="netzah">{{Cite news|url=https://www.haaretz.com/2012-10-28/ty-article/.premium/haredi-parties-face-huge-challenge-younguns/0000017f-f658-d5bd-a17f-f67ab4730000|title='New' Generation Shaking Up Israel's ultra-Orthodox Political Scene|newspaper=Haaretz}}</ref>
+* The People's Party (מפלגת העם) – reunited prior to the 2009 election with some of the politicians who left the [[Ale Yarok]] party and ran then under the name "[[Holocaust Survivors and Grown-Up Green Leaf Party]]" (ניצולי השואה עם בוגרי עלה ירוק). In these elections, the party intends to run independently together with some of the main activists from the [[2011 Israeli social justice protests]].
+* Pirate Party – In July 2012 former members of "Ale Yarok" and the "[[Holocaust Survivors and Grown-Up Green Leaf Party]]" applied to be officially recognized as a political party in time for the next Knesset election. They adopted the ideology and name of the Pirate parties around the world. The Pirate Party says it supports "the freedom to share and copy" and "the [[copyright infringement|pirating sector]]".<ref name="arrmatey">{{Cite news|url=https://www.haaretz.com/pirates-party-prepares-for-elections-1.5271118|archive-url=https://web.archive.org/web/20180125134655/https://www.haaretz.com/pirates-party-prepares-for-elections-1.5271118|url-status=dead|archive-date=25 January 2018|title=Israel's Pirates Party Registers for Knesset Elections|newspaper=Haaretz}}</ref>
+* Additional parties running in the 19th Israeli legislative election include: Ahim Anahnu ("We are brothers"), [[Brit Olam|Brit Olam LeGe'ulat Yisrael]] ("Covenant for the Redemption of Israel"), Haim BeKavod ("Living with Dignity"), HaTikva LeShinui ("The Hope for Change"), [[HaYisraelim]], [[Koah Lehashpi'a]], [[Or (political party)|Or]], [[Leader (political party)|Progressive Liberal-Democratic]], [[Moreshet Avot]], [[Atid Ehad]], [[Social Justice (political party)|Tzedek Hevrati]], [[The Greens (Israel)|The Green and Young for a Green Future in Israel]].
+
+==Opinion polls==
+{{main|Opinion polling for the 2013 Israeli legislative election}}
+
+===Predictions===
+In 2013, during the elections to the Nineteenth [[Knesset]], mentalist [[Lior Suchard]] was invited to predict the results of the elections about ten days before counting the votes. He wrote the results on a note enclosed in an envelope that was placed in a vault under strict guard at the [[Dizengoff Center]] in Tel Aviv throughout the days leading up to the election. After the counting of votes, it was revealed that Suchard had accurately predicted the results.<ref>{{cite web|url=http://www.mako.co.il/entertainment-celebs/local/Article-86847c2f08c6c31006.htm|title=ליאור סושרד חזה במדויק את תוצאות הבחירות|date=24 January 2013|website=Mako|accessdate=12 May 2024|language=Hebrew}}</ref><ref>{{cite web|url=https://www.jpost.com/diaspora/lior-suchard-revamps-natl-geos-brain-games-616923|title=Lior Suchard revamps Nat'l Geo's 'Brain Games'|website=Jerusalem Post|date=11 February 2020 |access-date=12 May 2024}}</ref>
+
+==Conduct==
+Election day was a public holiday. With few exceptions, voting centres were scheduled to be open from 7:00 until 22:00, whilst in communities with a population of less than 350, as well as in hospitals, prisons and detention centres, voting hours might start later and end earlier.<ref>[http://www.bechirot.gov.il/elections19/eng/about/ElectoralSystemCec_eng.aspx Elections for the 19th Knesset] Central Elections Committee</ref> Voters who reside more than 20 kilometres from voting centres were eligible for free transport vouchers from the day before the election with the return ticket valid until the next day.<ref>[http://www.bechirot.gov.il/elections19/eng/cec/Notice010113_eng.aspx Free Transportation of Voters on Elections Day] Central Elections Committee</ref> As of 11:00, 11.4% of voters had voted, an increase on the previous two elections.<ref>[http://www.bechirot.gov.il/elections19/eng/about/PercentVote19_eng.aspx Cumulative Voting Percentages on Elections Day Central Elections Committee]</ref>
+
+A total of 5,656,705 people were eligible to vote in the 10,132 polling stations in Israel and 96 overseas. The cost of the election was estimated to be around 1.5–2 billion [[Israeli new shekel|NIS]], with around 180 million NIS spent on campaigning, of which 59.4 million was spent by the Likud Yisrael Beiteinu alliance.<ref name=Globes>{{cite news |script-title=he:בחירות במספרים הבחירות ה19|newspaper= Globes |date= 21 January 2013|page= 3 |language= he|trans-title= The Elections in Numbers}}</ref>
+
+==Results==
+{{Election results
+|image=[[File:Israel Knesset 2013.svg]]
+|party1=[[Likud]] [[Yisrael Beiteinu]]|votes1=885054|seats1=31|sc1=–11
+|party2=[[Yesh Atid]]|votes2=543458|seats2=19|sc2=New
+|party3=[[Israeli Labor Party|Labor Party]]|votes3=432118|seats3=15|sc3=+2
+|party4=[[The Jewish Home]]|votes4=345985|seats4=12|sc4=+9
+|party5=[[Shas]]|votes5=331868|seats5=11|sc5=0
+|party6=[[United Torah Judaism]]|votes6=195892|seats6=7|sc6=+2
+|party7=[[Hatnua]]|votes7=189167|seats7=6|sc7=New
+|party8=[[Meretz]]|votes8=172403|seats8=6|sc8=+3
+|party9=[[Ra'am]]|votes9=138450|seats9=4|sc9=0
+|party10=[[Hadash]]|votes10=113439|seats10=4|sc10=0
+|party11=[[Balad (political party)|Balad]]|votes11=97030|seats11=3|sc11=0
+|party12=[[Kadima]]|votes12=79081|seats12=2|sc12=–26
+|party14=[[Otzma Yehudit|Otzma LeYisrael]]|votes14=66775|seats14=0|sc14=New
+|party15=[[Am Shalem]]|votes15=45690|seats15=0|sc15=New
+|party16=[[Ale Yarok]]–The Liberal List|votes16=43734|seats16=0|sc16=0
+|party17=[[Eretz Hadasha]]|votes17=28080|seats17=0|sc17=New
+|party18=[[Koah Lehashpi'a]]|votes18=28049|seats18=0|sc18=0
+|party19=[[HaYisraelim]]|votes19=18941|seats19=0|sc19=0
+|party20=[[The Greens (Israel)|The Greens and the Youth]]|votes20=8117|seats20=0|sc20=0
+|party21=[[Dor (political party)|Dor]]|votes21=5975|seats21=0|sc21=0
+|party22=Living with Dignity|votes22=3640|seats22=0|sc22=New
+|party23=[[Da'am Workers Party]]|votes23=3546|seats23=0|sc23=0
+|party24=We are Brothers|votes24=2899|seats24=0|sc24=New
+|party25=[[Social Justice (political party)|Social Justice]]|votes25=2877|seats25=0|sc25=New
+|party26=We are all Friends|votes26=2176|seats26=0|sc26=New
+|party27=[[Pirate Party of Israel|Pirate Party]]|votes27=2076|seats27=0|sc27=New|color27=black
+|party28=Finance Party|votes28=1972|seats28=0|sc28=New
+|party29=[[Leader (political party)|Leader]]|votes29=1352|seats29=0|sc29=0
+|party30=[[Or (political party)|Or]]|votes30=1027|seats30=0|sc30=0
+|party31=[[Brit Olam]]|votes31=761|seats31=0|sc31=0
+|party32=Hope for Change|votes32=649|seats32=0|sc32=New
+|party33=[[Yosef Ba-Gad|Moreshet Avot]]|votes33=461|seats33=0|sc33=New
+|invalid=40904
+|total_sc=0
+|electorate=5656705
+|source=[https://web.archive.org/web/20180124070928/http://www.bechirot.gov.il/elections19/eng/list/results_eng.aspx CEC]
+}}
+
+==Government formation==
+{{main|Thirty-third government of Israel}}
+[[File:Yesh Atid Election Night Party.jpg|thumb|Party supporters celebrate the success of the centrist [[Yesh Atid]] party.|300px]]
+After the election, Netanyahu, the previous prime minister and leader of the largest bloc, announced that he wished to form "as broad a coalition as possible" and that he was willing to work with Yesh Atid. Labour chairwoman [[Shelly Yachimovich]] said she had made contacts with the aim of forming a centre-left coalition excluding Likud Yisrael Beitenu. Lapid, leader of Yesh Atid, announced that he would not join a coalition aimed at preventing Netanyahu from forming a new government. He also said that he would only join a government committed to reviving the peace process and to reforming the Tal Law.<ref>[https://www.bbc.co.uk/news/world-middle-east-21172798 Yair Lapid 'rules out forming an anti-Netanyahu bloc'] BBC News, 23 January 2013</ref>
+
+Several days after the election, domestic media reported that Netanyahu's former chief of staff Natan Eshel would be involved in the negotiations. This move was criticised since Eshel had been involved in a sexual harassment scandal the year before, which resulted in him being banned from public service. Yesh Atid announced that it would not meet with Eshel under any circumstances.<ref name="eshel">{{Cite web|url=https://theworld.org/stories/2016/07/31/israel-netanyahu-enmeshed-aides-sex-scandal|title=Israel: Netanyahu enmeshed in aide's sex scandal|website=www.pri.org |date=31 July 2016 }}</ref>
+
+In consultation meetings with [[President of Israel|President]] [[Shimon Peres]], six parties representing 82 MKs (Likud Yisrael Beiteinu, Yesh Atid, The Jewish Home, Shas, United Torah Judaism, and Kadima) recommended that Netanyahu be asked to form a government, whilst the Labor Party, Hatnua, Meretz, Hadash, and the two Arab parties (38 MKs) did not recommend anyone.<ref>[https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=301728 Peres set to ask Netanyahu to build next coalition] ''The Jerusalem Post'', 31 January 2013</ref> On 2 February, Peres formally tasked Netanyahu with forming a government.<ref>{{Cite web|url=https://www.jpost.com/opinion/op-ed-contributors/a-third-term-for-netanyahu|title=A third term for Netanyahu|website=The Jerusalem Post &#124; JPost.com|date=3 February 2013 }}</ref>
+{|class="wikitable"
+|+
+!Party
+!Party Leader
+!Seats
+!Recommended
+|-
+|[[Likud Yisrael Beiteinu]]
+|[[Benjamin Netanyahu]]
+|31
+|[[Benjamin Netanyahu]]
+|-
+|[[Yesh Atid]]
+|[[Yair Lapid]]
+|19
+|[[Benjamin Netanyahu]]
+|-
+|[[Israeli Labor Party]]
+|[[Shelly Yachimovich]]
+|15
+|No one
+|-
+|[[The Jewish Home]]
+|[[Naftali Bennett]]
+|12
+|[[Benjamin Netanyahu]]
+|-
+|[[Shas]]
+|[[Eli Yishai]]
+|11
+|[[Benjamin Netanyahu]]
+|-
+|[[United Torah Judaism|UTJ]]
+|[[Yaakov Litzman]]
+|7
+|[[Benjamin Netanyahu]]
+|-
+|[[Meretz]]
+|[[Zehava Gal-On]]
+|6
+|No one
+|-
+|[[Ra'am]]
+|[[Ibrahim Sarsur]]
+|4
+|No one
+|-
+|[[Hadash]]
+|[[Mohammad Barakeh]]
+|4
+|No one
+|-
+|[[Balad (political party)|Balad]]
+|[[Jamal Zahalka]]
+|3
+|No one
+|-
+|[[Kadima]]
+|[[Shaul Mofaz]]
+|2
+|[[Benjamin Netanyahu]]
+|-
+|
+|
+|
+|
+|-
+|
+|
+|82
+|[[Benjamin Netanyahu]]
+|-
+|
+|
+|38
+|No one
+|}
+
+On 19 February Netanyahu reached a coalition deal with [[Tzipi Livni]], in which [[Hatnua]] agreed to join the coalition and Livni would be named as Justice Minister, placing her in charge of negotiations with the Palestinians. This was Netanyahu's first coalition deal. Likud Yisrael Beiteinu and Hatnua together controlled 37 seats, 24 short of the 61 needed to form a government.<ref name="livni">{{Cite web|url=https://news.yahoo.com/netanyahu-reaches-first-deal-israel-government-source-165442854.html|title=Netanyahu reaches first deal on new Israel government: source}}</ref> [[The Jewish Home]] issued a statement criticizing the coalition and saying that Livni's inclusion made the Bennett-led party less likely to join.<ref name="tjh">{{Cite web|url=https://www.jpost.com/diplomacy-and-politics/bayit-yehudi-to-blame-for-livni-joining-govt-1st|title='Bayit Yehudi to blame for Livni joining gov't 1st'|website=The Jerusalem Post &#124; JPost.com|date=20 February 2013 }}</ref>
+
+Yesh Atid and The Jewish Home announced a pact that neither would join the government without the other. This prevented Netanyahu from forming a coalition with only one of those parties along with the Haredi parties (Shas and United Torah Judaism), though Yesh Atid's Lapid was quoted as saying he would not join a government with the Haredim<ref name=JP25Feb>{{cite news|title=Netanyahu backs down, invites Lapid to join gov't|url=https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=304394|newspaper=[[The Jerusalem Post]]|date=25 February 2013}}</ref> and such a scenario was considered unlikely given Yesh Atid's platform of ending Haredi exemptions from military service and personal animosities between the parties' leaders.<ref name="shas">{{Cite web|url=https://www.timesofisrael.com/shas-rabbi-attacks-wicked-yeshiva-hating-lapid/|title=Shas rabbi attacks 'wicked, yeshiva-hating' Lapid|website=The Times of Israel |date=9 February 2013 }}</ref> On 25 February Likud announced that it had invited Yesh Atid and The Jewish Home to join the government.<ref name=JP25Feb /> Netanyahu needed the support of both parties to have enough support to form a government.
+
+By 5 March, [[Shas]] and [[United Torah Judaism|UTJ]] had reportedly been informed they would not be joining the government. [[Yesh Atid]] began demanding more policy changes for the next government: public transportation on the [[Sabbath]], an easier process for [[conversion to Judaism]], and changes to the [[Chief Rabbinate]].<ref>Ron Friedman, [https://www.timesofisrael.com/lapid-takes-on-religious-status-quo/ Lapid Takes on religious Status Quo], Times of Israel, 3/5/2013</ref>
+
+A coalition of Likud Yisrael Beiteinu, Yesh Atid, The Jewish Home, and Hatnua was announced on 14 March 2013.<ref>{{cite news| url=https://www.bbc.co.uk/news/world-middle-east-21745344 | work=BBC News | title=Israel PM Netanyahu 'reaches coalition deal' | date=14 March 2013}}</ref> This coalition won a vote of confidence in the Knesset on 18 March, and was sworn in later that day.
+
+==References==
+{{reflist}}
+
+==External links==
+{{Commons category}}
+* [https://www.knesset.gov.il/elections19/eng/home_eng.aspx Elections for the Nineteenth Knesset], [[Israeli Central Elections Committee]]
+
+{{Israeli elections}}
+
+[[Category:2013 elections in Israel|Legislative]]
+[[Category:Legislative elections in Israel]]
+[[Category:January 2013 in Israel|Legislative]]
