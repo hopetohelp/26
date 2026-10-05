@@ -4041,6 +4041,418 @@
   "source": "https://knessetjeremy.com/2015/03/12/telesekerchannel-1-poll-zionist-union-25-likud-22-yesh-atid-12-the-joint-arab-list-12-bayit-yehudi-11-kulanu-9-shas-8/"
  },
  {
+  "id": "k21-2019-03-05-kantar-kan",
+  "knesset": 21,
+  "series": "kantar",
+  "fieldEnd": "2019-03-05",
+  "values": {
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 8
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "p": 2.0
+   },
+   "מחל": {
+    "s": 30
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "p": 2.0
+   },
+   "פה": {
+    "s": 35
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20191113001357id_/https://www.kan.org.il/Item/?itemId=48160 ; https://knessetjeremy.com/2019/03/06/kan-teleseker-poll-blue-white-35-likud-30-hadash-taal-8-labor-7-utj-7-right-religious-bloc-61/"
+ },
+ {
+  "id": "k21-2019-03-05-midgam-channel-12",
+  "knesset": 21,
+  "series": "midgam",
+  "fieldEnd": "2019-03-05",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 8
+   },
+   "ז": {
+    "p": 2.0
+   },
+   "טב": {
+    "s": 6
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "p": 2.7
+   },
+   "מחל": {
+    "s": 30
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "p": 2.2
+   },
+   "פה": {
+    "s": 36
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/06/channel-12-poll-blue-white-36-likud-30-labor-9-hadash-taal-8-utj-7-right-religious-bloc-59/"
+ },
+ {
+  "id": "k21-2019-03-05-panels-politics-walla-news",
+  "knesset": 21,
+  "series": "panels_politics",
+  "fieldEnd": "2019-03-05",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "p": 1.6
+   },
+   "ום": {
+    "s": 9
+   },
+   "ז": {
+    "p": 2.6
+   },
+   "טב": {
+    "s": 7
+   },
+   "כ": {
+    "s": 6
+   },
+   "ל": {
+    "p": 2.8
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "p": 2.7
+   },
+   "פה": {
+    "s": 36
+   },
+   "שס": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/259935 ; https://knessetjeremy.com/2019/03/05/ (KJ Walla post)"
+ },
+ {
+  "id": "k21-2019-03-05-smith-channel-20",
+  "knesset": 21,
+  "series": "smith",
+  "fieldEnd": "2019-03-05",
+  "values": {
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 9
+   },
+   "ז": {
+    "p": 3.0
+   },
+   "טב": {
+    "s": 6
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   },
+   "מחל": {
+    "s": 29
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "s": 4
+   },
+   "פה": {
+    "s": 31
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/06/channel-20-poll-blue-white-31-likud-29-hadash-taal-9-labor-7-3-tied-at-6-right-religious-bloc-60/"
+ },
+ {
+  "id": "k21-2019-03-07-dialog-haaretz",
+  "knesset": 21,
+  "series": "dialog",
+  "fieldEnd": "2019-03-07",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 8
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 8
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "p": 2.0
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "נ": {
+    "s": 7
+   },
+   "נר": {
+    "p": 1.8
+   },
+   "פה": {
+    "s": 31
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.haaretz.com/israel-news/elections/2019-03-11/ty-article/.premium/haaretz-election-poll-support-for-gantz-drops-dramatically-right-wing-bloc-leads/0000017f-e2c4-d75c-a7ff-fecdf8c60000 ; https://knessetjeremy.com/2019/03/09/haaretz-poll-blue-white-31-likud-28-labor-10-hadash-taal-8-url-8-right-religious-bloc-63/"
+ },
+ {
+  "id": "k21-2019-03-07-maagar-mochot-israel-hayom-i24-news",
+  "knesset": 21,
+  "series": "maagar_mochot",
+  "fieldEnd": "2019-03-07",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "דעם": {
+    "p": 2.0
+   },
+   "ום": {
+    "s": 9
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 8
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "p": 1.0
+   },
+   "מחל": {
+    "s": 26
+   },
+   "מרצ": {
+    "s": 8
+   },
+   "נ": {
+    "s": 8
+   },
+   "נר": {
+    "p": 2.0
+   },
+   "פה": {
+    "s": 33
+   },
+   "שס": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/08/yisrael-hayom-i24-news-poll-blue-white-33-likud-26-hadash-taal-9-5-parties-tied-at-8-right-religious-bloc-62/ ; israelhayom.co.il/article/639217 blocked (403), Wayback captures are bot-challenge pages"
+ },
+ {
+  "id": "k21-2019-03-08-maagar-mochot-radio-103fm",
+  "knesset": 21,
+  "series": "maagar_mochot",
+  "fieldEnd": "2019-03-08",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "ום": {
+    "s": 9
+   },
+   "טב": {
+    "s": 7
+   },
+   "כ": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 29
+   },
+   "מרצ": {
+    "s": 7
+   },
+   "נ": {
+    "s": 6
+   },
+   "פה": {
+    "s": 35
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "not_a_poll",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HIIEED&c41t4nzVQ=EL&gntVQ=IDL"
+ },
+ {
+  "id": "k21-2019-03-08-midgam-yediot-ahronot",
+  "knesset": 21,
+  "series": "midgam",
+  "fieldEnd": "2019-03-08",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 7
+   },
+   "ז": {
+    "p": 3.1
+   },
+   "טב": {
+    "s": 6
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   },
+   "מחל": {
+    "s": 29
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "p": 2.0
+   },
+   "פה": {
+    "s": 33
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.ynetnews.com/articles/0,7340,L-5476443,00.html ; https://knessetjeremy.com/2019/03/10/yediot-poll-blue-white-33-likud-29-labor-10-utj-7-hadash-taal-7-right-religious-bloc-61/"
+ },
+ {
   "id": "k21-2019-03-11-midgam-project-channel-13",
   "knesset": 21,
   "series": "midgam_project",
@@ -4359,6 +4771,59 @@
   "source": "https://web.archive.org/web/20190327224110/https://bechirot21.bechirot.gov.il/election/Decisions/Documents/סקרים/המדגם%20של%20ישראל%20-%2016-18.3.19.pdf"
  },
  {
+  "id": "k21-2019-03-19-panels-politics-walla",
+  "knesset": 21,
+  "series": "panels_politics",
+  "fieldEnd": "2019-03-19",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "p": 2.5
+   },
+   "ום": {
+    "s": 9
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 7
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "p": 2.9
+   },
+   "פה": {
+    "s": 29
+   },
+   "שס": {
+    "s": 4
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3225459 ; https://knessetjeremy.com/2019/03/19/walla-poll-likud-32-blue-white-29-hadash-taal-9-labor-8-url-7/"
+ },
+ {
   "id": "k21-2019-03-20-midgam-channel-12",
   "knesset": 21,
   "series": "midgam",
@@ -4618,6 +5083,112 @@
   "source": "https://knessetjeremy.com/2019/03/22/maariv-poll-likud-31-blue-white-30-labor-9-hadash-taal-9-utj-7-right-religious-bloc-66/"
  },
  {
+  "id": "k21-2019-03-24-midgam-channel-12",
+  "knesset": 21,
+  "series": "midgam",
+  "fieldEnd": "2019-03-24",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 7
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "p": 2.6
+   },
+   "ל": {
+    "s": 4
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "s": 4
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/25/channel-12-poll-blue-white-32-likud-28-labor-10-hadash-taal-7-utj-7-right-religious-bloc-59/"
+ },
+ {
+  "id": "k21-2019-03-24-midgam-project-channel-13",
+  "knesset": 21,
+  "series": "midgam_project",
+  "fieldEnd": "2019-03-24",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 7
+   },
+   "ז": {
+    "s": 6
+   },
+   "טב": {
+    "s": 8
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "p": 2.4
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "p": 1.6
+   },
+   "פה": {
+    "s": 31
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20190622015148id_/https://13news.co.il/10news/news/183747"
+ },
+ {
   "id": "k21-2019-03-26-kantar-kan",
   "knesset": 21,
   "series": "kantar",
@@ -4669,6 +5240,59 @@
   "status": "match",
   "sourceLevel": "aggregator",
   "source": "https://web.archive.org/web/20190327090357/https://www.kan.org.il/item/?itemid=49303 + KnessetJeremy 2019/03/27"
+ },
+ {
+  "id": "k21-2019-03-26-midgam-army-radio",
+  "knesset": 21,
+  "series": "midgam",
+  "fieldEnd": "2019-03-26",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "p": 1.6
+   },
+   "ום": {
+    "s": 8
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "s": 4
+   },
+   "פה": {
+    "s": 30
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/27/ (KJ post: Army Radio poll); glz.co.il blocked by Incapsula and Wayback capture is a JS shell"
  },
  {
   "id": "k21-2019-03-26-miskar-x",
@@ -4828,6 +5452,59 @@
   "status": "match",
   "sourceLevel": "aggregator",
   "source": "https://knessetjeremy.com/2019/03/29/ (Makor Rishon Poll post)"
+ },
+ {
+  "id": "k21-2019-03-28-maagar-mochot-israel-hayom-i24-news",
+  "knesset": 21,
+  "series": "maagar_mochot",
+  "fieldEnd": "2019-03-28",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "p": 2.0
+   },
+   "ום": {
+    "s": 6
+   },
+   "ז": {
+    "s": 6
+   },
+   "טב": {
+    "s": 6
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "p": 1.0
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/29/yisrael-hayom-i24-news-poll-blue-white-32-likud-28-labor-8-7-tied-at-6-right-religious-bloc-68/ ; israelhayom.co.il/article/645167 blocked (Akamai 403) and all Wayback captures (incl. 2019-03-29) are bot-challenge pages"
  },
  {
   "id": "k21-2019-03-28-midgam-project-channel-13",
@@ -5036,6 +5713,165 @@
   "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HIJMMM&c41t4nzVQ=EL&gntVQ=IDL"
  },
  {
+  "id": "k21-2019-03-31-midgam-channel-12",
+  "knesset": 21,
+  "series": "midgam",
+  "fieldEnd": "2019-03-31",
+  "values": {
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 7
+   },
+   "ז": {
+    "s": 5
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "s": 4
+   },
+   "מחל": {
+    "s": 28
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "p": 1.6
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q1_2019/Article-2afad7fadb4d961004.htm"
+ },
+ {
+  "id": "k21-2019-03-31-panels-politics-channel-12",
+  "knesset": 21,
+  "series": "panels_politics",
+  "fieldEnd": "2019-03-31",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "p": 2.1
+   },
+   "ום": {
+    "s": 9
+   },
+   "ז": {
+    "s": 5
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "p": 2.2
+   },
+   "פה": {
+    "s": 30
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/tv-morning-news/articles/Article-caa965cb707d961006.htm"
+ },
+ {
+  "id": "k21-2019-04-02-midgam-project-channel-13",
+  "knesset": 21,
+  "series": "midgam_project",
+  "fieldEnd": "2019-04-02",
+  "values": {
+   "אמת": {
+    "s": 14
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 6
+   },
+   "ז": {
+    "s": 6
+   },
+   "טב": {
+    "s": 7
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "p": 2.2
+   },
+   "מחל": {
+    "s": 29
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "p": 2.9
+   },
+   "פה": {
+    "s": 28
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/elections-2019/seker-election-2019-33786/"
+ },
+ {
   "id": "k21-2019-04-03-dialog-haaretz",
   "knesset": 21,
   "series": "dialog",
@@ -5195,6 +6031,112 @@
   "source": "https://knessetjeremy.com/2019/04/05/channel-11-poll-likud-31-blue-white-30-labor-8-hadash-taal-8-5-tied-at-6-right-religious-bloc-64/"
  },
  {
+  "id": "k21-2019-04-04-maagar-mochot-israel-hayom-i24-news",
+  "knesset": 21,
+  "series": "maagar_mochot",
+  "fieldEnd": "2019-04-04",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 8
+   },
+   "דעם": {
+    "p": 2.0
+   },
+   "ום": {
+    "s": 6
+   },
+   "ז": {
+    "s": 6
+   },
+   "טב": {
+    "s": 6
+   },
+   "כ": {
+    "s": 6
+   },
+   "ל": {
+    "p": 2.0
+   },
+   "מחל": {
+    "s": 27
+   },
+   "מרצ": {
+    "s": 8
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "p": 2.0
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/04/05/page/2/ (KJ post: Maagar Mochot / Yisrael HaYom); israelhayom.co.il/article/646977 blocked (Akamai 403) and Wayback captures are bot-challenge pages"
+ },
+ {
+  "id": "k21-2019-04-04-midgam-channel-12",
+  "knesset": 21,
+  "series": "midgam",
+  "fieldEnd": "2019-04-04",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 7
+   },
+   "ז": {
+    "s": 5
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 26
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 6
+   },
+   "נר": {
+    "p": 2.6
+   },
+   "פה": {
+    "s": 30
+   },
+   "שס": {
+    "s": 5
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/04/05/channel-12-poll-blue-white-30-likud-26-labor-10-utj-7-hadash-taal-7-right-religious-bloc-64/"
+ },
+ {
   "id": "k21-2019-04-04-midgam-yedioth-ahronoth",
   "knesset": 21,
   "series": "midgam",
@@ -5299,6 +6241,59 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://web.archive.org/web/20191115034853/https://www.jewishpress.com/news/politics/latest-miskar-poll-4500-respondents-bibi-31-gantz-28-feiglin-8-bennett-7/2019/04/04/"
+ },
+ {
+  "id": "k21-2019-04-04-smith-jerusalem-post",
+  "knesset": 21,
+  "series": "smith",
+  "fieldEnd": "2019-04-04",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 6
+   },
+   "ז": {
+    "s": 4
+   },
+   "טב": {
+    "s": 6
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "s": 5
+   },
+   "מחל": {
+    "s": 27
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "נ": {
+    "s": 5
+   },
+   "נר": {
+    "s": 4
+   },
+   "פה": {
+    "s": 28
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/Israel-News/Post-poll-predicts-easy-win-for-Right-585821"
  },
  {
   "id": "k21-2019-04-05-maagar-mochot-radio-103fm",
@@ -5451,6 +6446,129 @@
   "source": "https://www.maariv.co.il/elections2019/polls/Article-692912"
  },
  {
+  "id": "k22-2019-08-13-midgam-channel-12",
+  "knesset": 22,
+  "series": "midgam",
+  "fieldEnd": "2019-08-12",
+  "values": {
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 11
+   },
+   "טב": {
+    "s": 11
+   },
+   "כף": {
+    "p": 2.7
+   },
+   "ל": {
+    "s": 10
+   },
+   "מחל": {
+    "s": 30
+   },
+   "מרצ": {
+    "s": 7
+   },
+   "פה": {
+    "s": 29
+   },
+   "שס": {
+    "s": 7
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/08/13/channel-12-poll-likud-30-blue-white-29-yamina-11-joint-list-11-yisrael-beitenu-10/"
+ },
+ {
+  "id": "k22-2019-08-15-midgam-project-channel-13",
+  "knesset": 22,
+  "series": "midgam_project",
+  "fieldEnd": "2019-08-15",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "טב": {
+    "s": 12
+   },
+   "כף": {
+    "p": 2.1
+   },
+   "ל": {
+    "s": 11
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 8
+   },
+   "פה": {
+    "s": 31
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/267471 ; https://knessetjeremy.com/2019/08/16/ (KJ Channel 13 post)"
+ },
+ {
+  "id": "k22-2019-08-15-smith-103fm",
+  "knesset": 22,
+  "series": "smith",
+  "fieldEnd": "2019-08-15",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 11
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "p": 1.7
+   },
+   "ל": {
+    "s": 10
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 7
+   },
+   "פה": {
+    "s": 30
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/267486 ; https://knessetjeremy.com/2019/08/16/ (KJ Smith/103FM post)"
+ },
+ {
   "id": "k22-2019-08-18-direct-polls-makor-rishon",
   "knesset": 22,
   "series": "direct_polls",
@@ -5490,6 +6608,47 @@
   "status": "match",
   "sourceLevel": "aggregator",
   "source": "https://knessetjeremy.com/2019/08/19/makor-rishon-poll-likud-31-blue-white-29-yamina-11-joint-list-10-yisrael-beitenu-9/"
+ },
+ {
+  "id": "k22-2019-08-21-midgam-walla",
+  "knesset": 22,
+  "series": "midgam",
+  "fieldEnd": "2019-08-21",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 11
+   },
+   "טב": {
+    "s": 11
+   },
+   "כף": {
+    "p": 2.0
+   },
+   "ל": {
+    "s": 9
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 7
+   },
+   "פה": {
+    "s": 30
+   },
+   "שס": {
+    "s": 7
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/267703 ; https://knessetjeremy.com/2019/08/22/ (KJ Walla post)"
  },
  {
   "id": "k22-2019-08-22-maagar-mochot-israel-hayom",
@@ -5817,6 +6976,88 @@
   "source": "https://web.archive.org/web/20191212190654/https://www.kan.org.il/item/?itemid=58120"
  },
  {
+  "id": "k22-2019-09-01-midgam-project-channel-13",
+  "knesset": 22,
+  "series": "midgam_project",
+  "fieldEnd": "2019-09-01",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 10
+   },
+   "טב": {
+    "s": 10
+   },
+   "כף": {
+    "p": 2.8
+   },
+   "ל": {
+    "s": 11
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 7
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20190919151503id_/https://13news.co.il/item/news/politics/state-policy/reelection-2019/survey-347047/"
+ },
+ {
+  "id": "k22-2019-09-02-midgam-walla",
+  "knesset": 22,
+  "series": "midgam",
+  "fieldEnd": "2019-09-02",
+  "values": {
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 10
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "p": 2.7
+   },
+   "ל": {
+    "s": 9
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 7
+   },
+   "פה": {
+    "s": 31
+   },
+   "שס": {
+    "s": 7
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3310542"
+ },
+ {
   "id": "k22-2019-09-04-panels-politics-knesset-channel",
   "knesset": 22,
   "series": "panels_politics",
@@ -6022,6 +7263,170 @@
   "source": "https://knessetjeremy.com/2019/09/06/103-fm-maariv-poll-likud-32-blue-white-32-yisrael-beitenu-10-yamina-9-joint-list-9/"
  },
  {
+  "id": "k22-2019-09-09-kantar-kan-11",
+  "knesset": 22,
+  "series": "kantar",
+  "fieldEnd": "2019-09-09",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 10
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "s": 4
+   },
+   "ל": {
+    "s": 9
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 7
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/09/10/channel-11-poll-blue-white-32-likud-31-joint-list-10-yamina-9-yisrael-beitenu-9/"
+ },
+ {
+  "id": "k22-2019-09-09-midgam-walla",
+  "knesset": 22,
+  "series": "midgam",
+  "fieldEnd": "2019-09-09",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "s": 4
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 32
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "פה": {
+    "s": 33
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3311677"
+ },
+ {
+  "id": "k22-2019-09-10-midgam-channel-12",
+  "knesset": 22,
+  "series": "midgam",
+  "fieldEnd": "2019-09-10",
+  "values": {
+   "אמת": {
+    "s": 6
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "s": 4
+   },
+   "ל": {
+    "s": 9
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 7
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-f891a9579fb1d61027.htm ; https://knessetjeremy.com/2019/09/11/channel-12-poll-blue-white-32-likud-31-yamina-9-joint-list-9-yisrael-beitenu-9/"
+ },
+ {
+  "id": "k22-2019-09-10-midgam-project-channel-13",
+  "knesset": 22,
+  "series": "midgam_project",
+  "fieldEnd": "2019-09-10",
+  "values": {
+   "אמת": {
+    "s": 5
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 11
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "s": 4
+   },
+   "ל": {
+    "s": 9
+   },
+   "מחל": {
+    "s": 31
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 6
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20190919151349id_/https://13news.co.il/item/news/politics/state-policy/reelection-2019/survey-election-355016/"
+ },
+ {
   "id": "k22-2019-09-11-maagar-mochot-israel-hayom",
   "knesset": 22,
   "series": "maagar_mochot",
@@ -6140,6 +7545,47 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://www.maariv.co.il/elections2019/polls/Article-718773"
+ },
+ {
+  "id": "k22-2019-09-12-smith-103fm",
+  "knesset": 22,
+  "series": "smith",
+  "fieldEnd": "2019-09-12",
+  "values": {
+   "אמת": {
+    "s": 4
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "טב": {
+    "s": 9
+   },
+   "כף": {
+    "p": 2.9
+   },
+   "ל": {
+    "s": 9
+   },
+   "מחל": {
+    "s": 33
+   },
+   "מרצ": {
+    "s": 6
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/09/13/103-fm-poll-likud-33-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-9/"
  },
  {
   "id": "k22-2019-09-12-smith-maariv",
@@ -6686,6 +8132,44 @@
   "source": "https://web.archive.org/web/20210703231657/https://13news.co.il/item/news/politics/state-policy/2020-elections/election-poll-1008508/"
  },
  {
+  "id": "k23-2020-02-17-midgam-walla",
+  "knesset": 23,
+  "series": "midgam",
+  "fieldEnd": "2020-02-17",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 33
+   },
+   "נץ": {
+    "p": 2.5
+   },
+   "פה": {
+    "s": 34
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3341421"
+ },
+ {
   "id": "k23-2020-02-19-midgam-channel-12",
   "knesset": 23,
   "series": "midgam",
@@ -6838,6 +8322,120 @@
   "source": "https://web.archive.org/web/20250707202059/https://www.israelhayom.com/2020/02/21/israel-hayom-i24news-election-poll-could-mean-a-lot-more-political-drama-down-the-road/ + KnessetJeremy 2020/02/21"
  },
  {
+  "id": "k23-2020-02-23-kantar-kan-11",
+  "knesset": 23,
+  "series": "kantar",
+  "fieldEnd": "2020-02-23",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "טב": {
+    "s": 6
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 35
+   },
+   "נץ": {
+    "p": 1.3
+   },
+   "פה": {
+    "s": 34
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://web.archive.org/web/20200224013555/https://www.haaretz.com/israel-news/elections/a-week-to-election-polls-show-netanyahu-pulls-ahead-of-gantz-for-first-time-1.8567410 ; https://knessetjeremy.com/2020/02/27/47th-poll-of-2020-election-likud-35-blue-white-34-joint-list-14-labor-gesher-meretz-9-shas-8-utj-7-yisrael-beitenu-7-yamina-6/"
+ },
+ {
+  "id": "k23-2020-02-23-midgam-channel-12",
+  "knesset": 23,
+  "series": "midgam",
+  "fieldEnd": "2020-02-23",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 8
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 34
+   },
+   "נץ": {
+    "p": 1.5
+   },
+   "פה": {
+    "s": 33
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2020/Article-4cb6d4000237071027.htm"
+ },
+ {
+  "id": "k23-2020-02-24-kantar-kan-11",
+  "knesset": 23,
+  "series": "kantar",
+  "fieldEnd": "2020-02-24",
+  "values": {
+   "אמת": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "טב": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "מחל": {
+    "s": 34
+   },
+   "נץ": {
+    "p": 1.9
+   },
+   "פה": {
+    "s": 33
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/02/27/50th-poll-of-2020-election-likud-34-blue-white-33-joint-list-14-labor-gesher-meretz-10-shas-8-yamina-7-utj-7-yisrael-beitenu-7/"
+ },
+ {
   "id": "k23-2020-02-24-midgam-project-channel-13",
   "knesset": 23,
   "series": "midgam_project",
@@ -6912,6 +8510,44 @@
   "status": "match",
   "sourceLevel": "primary",
   "source": "https://web.archive.org/web/20220511174408/https://bechirot23.bechirot.gov.il/election/Decisions/Documents/%D7%9B%D7%A0%D7%A1%D7%AA%2023/%D7%A1%D7%A7%D7%A8%D7%99%D7%9D/seker_walla_25_2.pdf"
+ },
+ {
+  "id": "k23-2020-02-25-panels-politics-103fm",
+  "knesset": 23,
+  "series": "panels_politics",
+  "fieldEnd": "2020-02-25",
+  "values": {
+   "אמת": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "טב": {
+    "s": 8
+   },
+   "ל": {
+    "s": 8
+   },
+   "מחל": {
+    "s": 34
+   },
+   "נץ": {
+    "p": 2.0
+   },
+   "פה": {
+    "s": 32
+   },
+   "שס": {
+    "s": 8
+   }
+  },
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HLJMFI&c41t4nzVQ=GJL"
  },
  {
   "id": "k23-2020-02-26-direct-polls-arutz-sheva",
