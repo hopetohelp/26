@@ -1,57 +1,113 @@
 /**
- * שרת הפידבק: POST עם {topic, text, page, theme, website} ⇐ שורה במאגר D1.
- * - בלי מייל, בלי חשבון, ובלי שמירת IP: להגבלת קצב נשמר רק גיבוב של ה-IP עם מלח יומי.
+ * שרת הפידבק (Cloudflare Worker + D1). בלי מייל, בלי חשבון, ובלי שמירת IP.
+ *
+ * POST /            {topic, text, page, theme, website} ⇐ הערה חדשה. מחזיר {ok, token}: הקישור האישי של הגולש.
+ * GET  /thread?t=   ⇐ ההערה והשיחה עליה (רק למי שמחזיק את הקישור).
+ * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
+ *
+ * - הקישור האישי: 128 ביט אקראיים. במאגר נשמר רק הגיבוב שלו, כך שגם מי שקורא את המאגר אינו יכול לפתוח שיחה.
+ * - תשובות הצוות נכתבות ישירות במאגר (author = 'team'), לא דרך השרת — אין כאן נקודת כניסה לכתיבה בשם הצוות.
  * - "website" הוא שדה מלכודת שגולש אמיתי לא רואה; מילוי שלו = רובוט, ומחזירים "הצלחה" בלי לשמור.
- * - עד 8 הערות ביום מאותו מקור; טקסט עד 2,000 תווים.
+ * - להגבלת קצב נשמר רק גיבוב של ה-IP עם התאריך: עד 8 הודעות ביום מאותו מקור (הערות ותגובות יחד).
  */
 const TOPICS = new Set(["data", "idea", "design", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
+const MAX_MESSAGES = 30;
 
 function cors(env, origin) {
   const allowed = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost:\d+$/.test(origin || "");
   return {
     "access-control-allow-origin": allowed ? origin : env.ALLOWED_ORIGIN,
-    "access-control-allow-methods": "POST, OPTIONS",
+    "access-control-allow-methods": "GET, POST, OPTIONS",
     "access-control-allow-headers": "content-type",
     "access-control-max-age": "86400",
     vary: "origin",
   };
 }
 
+const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+const sha256 = async (s) => hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
+
 async function dayKey(ip) {
   const day = new Date().toISOString().slice(0, 10);
-  const data = new TextEncoder().encode(`${day}|${ip}|elections26`);
-  const hash = await crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(hash)].slice(0, 12).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return (await sha256(`${day}|${ip}|elections26`)).slice(0, 24);
+}
+
+function newToken() {
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  return btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/** הודעות היום מאותו מקור — הערות ותגובות יחד */
+async function sentToday(env, key) {
+  const day = new Date().toISOString().slice(0, 10);
+  const row = await env.DB.prepare(
+    "SELECT (SELECT COUNT(*) FROM feedback WHERE day_key = ?1 AND created_at >= ?2) + (SELECT COUNT(*) FROM messages WHERE day_key = ?1 AND created_at >= ?2) AS n",
+  ).bind(key, day).first();
+  return row?.n ?? 0;
+}
+
+async function findThread(env, token) {
+  if (!token || typeof token !== "string" || token.length > 64) return null;
+  const row = await env.DB.prepare("SELECT id, created_at, topic, text, status FROM feedback WHERE token_hash = ?")
+    .bind(await sha256(token)).first();
+  return row || null;
 }
 
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("origin");
     const headers = { ...cors(env, origin), "content-type": "application/json; charset=utf-8" };
+    const reply = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers });
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
-    if (request.method !== "POST") return new Response(JSON.stringify({ ok: false }), { status: 405, headers });
+    const url = new URL(request.url);
+
+    // ---- קריאת שיחה
+    if (request.method === "GET" && url.pathname === "/thread") {
+      const fb = await findThread(env, url.searchParams.get("t"));
+      if (!fb) return reply({ ok: false, error: "not found" }, 404);
+      const { results } = await env.DB.prepare("SELECT author, text, created_at FROM messages WHERE feedback_id = ? ORDER BY id")
+        .bind(fb.id).all();
+      return reply({ ok: true, topic: fb.topic, text: fb.text, created_at: fb.created_at, status: fb.status, messages: results || [] });
+    }
+    if (request.method !== "POST") return reply({ ok: false }, 405);
 
     let body;
     try {
       body = await request.json();
     } catch {
-      return new Response(JSON.stringify({ ok: false, error: "bad json" }), { status: 400, headers });
+      return reply({ ok: false, error: "bad json" }, 400);
     }
-    if (body.website) return new Response(JSON.stringify({ ok: true }), { status: 200, headers }); // מלכודת
+    if (body.website) return reply({ ok: true }); // מלכודת
     const text = String(body.text || "").trim().slice(0, MAX_TEXT);
-    const topic = TOPICS.has(body.topic) ? body.topic : "other";
-    if (!text) return new Response(JSON.stringify({ ok: false, error: "empty" }), { status: 400, headers });
-
+    if (!text) return reply({ ok: false, error: "empty" }, 400);
     const key = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
-    const day = new Date().toISOString().slice(0, 10);
-    const { results } = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE day_key = ? AND created_at >= ?").bind(key, day).all();
-    if ((results?.[0]?.n ?? 0) >= MAX_PER_DAY) return new Response(JSON.stringify({ ok: false, error: "rate" }), { status: 429, headers });
+    if ((await sentToday(env, key)) >= MAX_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
+    const now = new Date().toISOString();
 
-    await env.DB.prepare("INSERT INTO feedback (created_at, topic, text, page, theme, day_key) VALUES (?, ?, ?, ?, ?, ?)")
-      .bind(new Date().toISOString(), topic, text, String(body.page || "").slice(0, 120), String(body.theme || "").slice(0, 20), key)
+    // ---- תגובת הגולש בשיחה
+    if (url.pathname === "/thread") {
+      const fb = await findThread(env, body.t);
+      if (!fb) return reply({ ok: false, error: "not found" }, 404);
+      const count = await env.DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE feedback_id = ?").bind(fb.id).first();
+      if ((count?.n ?? 0) >= MAX_MESSAGES) return reply({ ok: false, error: "full" }, 429);
+      await env.DB.batch([
+        env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text, day_key) VALUES (?, ?, 'visitor', ?, ?)")
+          .bind(fb.id, now, text, key),
+        env.DB.prepare("UPDATE feedback SET status = 'new' WHERE id = ?").bind(fb.id),
+      ]);
+      return reply({ ok: true });
+    }
+
+    // ---- הערה חדשה
+    const topic = TOPICS.has(body.topic) ? body.topic : "other";
+    const token = newToken();
+    await env.DB.prepare(
+      "INSERT INTO feedback (created_at, topic, text, page, theme, day_key, token_hash, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'new')",
+    )
+      .bind(now, topic, text, String(body.page || "").slice(0, 120), String(body.theme || "").slice(0, 20), key, await sha256(token))
       .run();
-    return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
+    return reply({ ok: true, token });
   },
 };

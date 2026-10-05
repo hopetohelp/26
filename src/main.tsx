@@ -17,6 +17,7 @@ import { PageTitle } from "./components/ui";
 const Accuracy = lazy(() => import("./pages/Accuracy"));
 const Scenarios = lazy(() => import("./pages/Scenarios"));
 const Changes = lazy(() => import("./pages/Changes"));
+const MyFeedback = lazy(() => import("./pages/MyFeedback"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -46,6 +47,8 @@ createRoot(document.getElementById("root")!).render(
               </Suspense>
             }
           />
+          <Route path="feedback" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
+          <Route path="feedback/:token" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
           <Route path="calculator" element={<Calculator />} />
           <Route path="results" element={<Results />} />
           <Route

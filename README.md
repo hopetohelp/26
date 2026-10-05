@@ -37,7 +37,7 @@ npm run dev
 
 ## הערות בלי מייל
 
-כפתור "הערה?" שולח טקסט קצר ל-`worker/feedback/`, שנפרס ל-Cloudflare בכל דחיפה ל-`main` (‏`.github/workflows/feedback-worker.yml`) ושומר אותו במאגר D1 פרטי. לא נשמרים מייל, שם או כתובת IP — רק מפתח יומי חד-כיווני להגבלת הצפה (8 הערות ביום).
+כפתור "הערה?" שולח טקסט קצר ל-`worker/feedback/`, ומחזיר לגולש קישור אישי לשיחה (`/#/feedback/<קישור>`; הטיפול: `docs/נוהל-הערות.md`). השרת נפרס ל-Cloudflare בכל דחיפה ל-`main` (‏`.github/workflows/feedback-worker.yml`), ושומר את ההערות והשיחות במאגר D1 פרטי. לא נשמרים מייל, שם או כתובת IP — רק מפתח יומי חד-כיווני להגבלת הצפה (8 הערות ביום).
 - הפריסה צריכה את הסוד `CLOUDFLARE_API_TOKEN` בריפו. בלעדיו — הפריסה מדלגת בשקט.
 - הכפתור מוצג רק כשמשתנה הבנייה `VITE_FEEDBACK_URL` מוגדר (‏`.github/workflows/pages.yml`). הכתובת: `https://elections26-feedback.hopetohelp-il.workers.dev`.
 
