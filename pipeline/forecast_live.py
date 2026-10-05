@@ -106,6 +106,9 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
     seat_draws = {k: [] for k in names}
     share_draws = {k: [] for k in names}
     bloc_draws, wasted = [], []
+    # גוש נתניהו: כל הרשימות שמשויכות אליו בקובץ הכנסת ה-26 (מפלגות הממשלה היוצאת ועמך ישראל)
+    camp = [k for k, v in lists.items() if v.get("bloc") == "right_religious"]
+    camp_draws = []
     for _ in range(SCENARIOS["n"] if sh else 0):
         x = {}
         for k in names:
@@ -119,6 +122,7 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
             seat_draws[k].append(seats[idx[k]])
             share_draws[k].append(x[k] * norm * 100)
         bloc_draws.append(sum(seats[idx[k]] for k in gov if k in idx))
+        camp_draws.append(sum(seats[idx[k]] for k in camp if k in idx))
         wasted.append(sum(x[k] * norm for k in names if seats[idx[k]] == 0) * 100 + (1 - tot) * 100)
 
     def q(xs: list[float], p: float) -> float:
@@ -154,6 +158,9 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
         "bloc": {"lists": gov, "seats": [q(bloc_draws, 0.1), q(bloc_draws, 0.5), q(bloc_draws, 0.9)] if bloc_draws else [],
                  "atLeast61": round(sum(1 for b in bloc_draws if b >= 61) / len(bloc_draws), 4) if bloc_draws else None,
                  "central": sum(central.get(k, 0) for k in gov)},
+        "camp": {"lists": camp, "seats": [q(camp_draws, 0.1), q(camp_draws, 0.5), q(camp_draws, 0.9)] if camp_draws else [],
+                 "atLeast61": round(sum(1 for b in camp_draws if b >= 61) / len(camp_draws), 4) if camp_draws else None,
+                 "central": sum(central.get(k, 0) for k in camp)},
         "wasted": [round(q(wasted, 0.1), 2), round(q(wasted, 0.5), 2), round(q(wasted, 0.9), 2)] if wasted else [],
         "gate": {"elections": spec["gate"]["elections"], "minVote": spec["gate"]["minVoteAccuracy"],
                  "minSeat": spec["gate"]["minSeatAccuracy"], "atHorizon": at_h, "passedAtHorizon": bt["passed"]},
