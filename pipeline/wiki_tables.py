@@ -81,9 +81,17 @@ def parse_plain_date(content):
     ys = yr if mon_s <= mon_e else yr - 1
     return {"start": f"{ys:04d}-{mon_s:02d}-{int(d1):02d}", "end": f"{yr:04d}-{mon_e:02d}-{int(d2):02d}"}
 
-def parse_date(content):
+def parse_date(content, attrs=""):
     m = re.search(r"\{\{\s*Opdrts\s*\|([^}]*)\}\}", content, re.I)
-    if not m: return parse_plain_date(content)
+    if not m:
+        d = parse_plain_date(content)
+        if d is None:
+            # תאריך גלוי בלי שנה ("17 Sep") — השנה בלבד נלקחת מ-data-sort-value. היום והחודש תמיד מהטקסט הגלוי:
+            # בוויקיפדיה יש ערכי מיון שגויים (למשל מדגם 17.9.2019 עם ערך מיון 2019-08-17)
+            y = re.search(r'data-sort-value\s*=\s*"?(\d{4})-\d{2}-\d{2}', attrs)
+            if y:
+                d = parse_plain_date(content + " " + y.group(1))
+        return d
     p = [x.strip() for x in m.group(1).split("|")]
     while len(p) < 4: p.append("")
     d1, d2, mon, yr = p[0], p[1], p[2], p[3]
@@ -102,12 +110,19 @@ def parse_date(content):
     return {"start": f"{syr:04d}-{smon:02d}-{s:02d}", "end": f"{y:04d}-{mon_i:02d}-{e:02d}"}
 
 def parse_value(content):
-    c = re.sub(r"<!--.*?-->", "", strip_refs(content), flags=re.S).strip()
+    c = re.sub(r"<!--.*?-->", "", strip_refs(content), flags=re.S).strip().lstrip("|").strip()
     m = re.match(r"\{\{\s*Hidden\s*\|([^|}]*)", c)
     if m: c = m.group(1).strip()
     c = re.sub(r"'''?", "", c).strip()
     if not c or re.fullmatch(r"\{\{\s*(n/a|N/A|na|NA|—|-)\s*\}\}|[–—-]|N/A|n/a", c):
         return None
+    c = re.sub(r"<small>(.*?)</small>", r"{{small|\1}}", c)
+    # מנדטים ולצדם אחוז ("4<br/>{{small|(3.9%)}}") — הסקר פרסם את שניהם
+    m = re.fullmatch(r"(\d+)\s*<br\s*/?>\s*\{\{\s*small\s*\|\s*\(?\s*([\d.]+)\s*%\s*\)?\s*\}\}", c)
+    if m: return {"seats": int(m.group(1)), "pct": float(m.group(2))}
+    # טווח אחוזים מתחת לסף ("(1.7-2.1%)") — נשמר הגבול התחתון והעליון
+    m = re.fullmatch(r"\{\{\s*small\s*\|\s*\(?\s*([\d.]+)\s*[-–]\s*([\d.]+)\s*%\s*\)?\s*\}\}", c)
+    if m: return {"pct": float(m.group(1)), "pctMax": float(m.group(2))}
     m = re.fullmatch(r"\{\{\s*small\s*\|\s*\(?\s*([\d.]+)\s*%\s*\)?\s*\}\}", c)
     if m: return {"pct": float(m.group(1))}
     m = re.fullmatch(r"\(?\s*([\d.]+)\s*%\s*\)?", c)
@@ -188,7 +203,7 @@ def header_columns(rows):
     for c in range(ncols):
         top = grid[0].get(c)
         top_label = top["label"] if top else ""
-        if re.match(r"^(gov|opp|others?|coalition|opposition|lead)\b", top_label.strip(" '\"").lower()):
+        if re.match(r"^(gov|opp|others?|coalition|opposition|lead)\b|^[lr]$", top_label.strip(" '\"").lower()):
             cols.append({"key": top_label, "label": top_label, "group": None}); continue
         name, party = None, None
         for r in range(len(grid) - 1, -1, -1):
@@ -243,7 +258,7 @@ def parse_table(table):
             idx += cs
         fill_pending()
         if grid[0] is None: continue
-        date = parse_date(grid[0][1])
+        date = parse_date(grid[0][1], grid[0][0])
         # שורת-אירוע: תא אחד רחב אחרי התאריך
         if grid[1] is not None and grid[1][2] >= 5:
             data.append({"type": "event", "date": date, "text": link_text(strip_refs(grid[1][1]))[:300]}); continue
@@ -269,7 +284,8 @@ def parse_table(table):
             span_keys = [cols[i + t]["key"] for t in range(info[2]) if i + t < len(cols)]
             v = parse_value(info[1])
             if v is not None: vals["+".join(span_keys)] = v
-        data.append({"type": "poll", "date": date, "firm": firm, "publisher": pub, "sample": samp, "values": vals})
+        urls = re.findall(r"url\s*=\s*(https?://[^\s|}]+)", "\n".join(c for _, c in r))
+        data.append({"type": "poll", "date": date, "firm": firm, "publisher": pub, "sample": samp, "values": vals, "urls": urls})
     return [{"columns": cols}, data]
 
 if __name__ == "__main__":

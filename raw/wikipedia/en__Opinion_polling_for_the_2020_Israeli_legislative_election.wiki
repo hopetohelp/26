@@ -1,0 +1,2650 @@
+{{short description|none}}
+{{pp-semi-indef}}
+
+In the run up to the [[2020 Israeli legislative election]], various organisations carry out [[opinion poll]]ing to gauge voting intention in [[Israel]] during the term of the [[22nd Knesset]]. This article lists the results of such polls.
+
+The date range for these opinion polls is from the [[September 2019 Israeli legislative election|previous election]], held on 17 September 2019, to the present day. The elections are to be held on 2 March 2020.<ref name=dissolved/> [[election silence|No polls may be published]] from the end of the Friday before the election until the [[polling station]]s close on election day at 22:00.<ref name=silence>[[s:he:חוק הבחירות (דרכי תעמולה)#סעיף 16ה]] (ח) (in Hebrew)</ref>
+
+Polls are listed in reverse chronological order, showing the most recent first and using the dates when the survey fieldwork was done, as opposed to the date of publication. Where the fieldwork dates are unknown, the date of publication is given instead. The highest figure in each polling survey is displayed with its background shaded in the leading party's colour. If a tie ensues, this is applied to the highest figures. When a poll has no information on a certain party, that party is instead marked by a dash (–).
+
+== Seat projections ==
+This section displays voting intention estimates referring to a hypothetical [[Knesset]] election. The figures listed are Knesset seat counts rather than percentages, unless otherwise stated.
+
+=== Graphs ===
+This graph shows the polling trends from the 17 [[September 2019 Israeli legislative election]] until election day using 4-poll [[moving average]]. Scenario polls are not included here.
+
+For parties not crossing the [[electoral threshold]] (currently 3.25%) in any given poll, the number of seats is calculated as a percentage of the 120 total seats.
+
+{{wide image|Opinion polling for the 2020 Israeli legislative election.svg|1000px|[[Local regression]] of polls conducted}}
+
+=== Polls ===
+Poll results are listed in the table below. Parties that fall below the [[electoral threshold]] are denoted by the percentage of votes that they received (N%) rather than the number of seats they would have gotten.
+
+;Legend
+* '''Gov.''' — Sum of the [[Thirty-fourth government of Israel|current government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism]] (UTJ), and [[Yamina (political alliance)|Yamina]].
+
+61 seats are required for a majority in the Knesset.
+
+'''Note:''' The composition of the current government does not necessarily determine the exact makeup of the post-election government.
+
+;{{small|Color key:}}
+{{legend2|#FFD|[[Exit poll]]|border=1px solid #AAAAAA}}
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Blue and White (political alliance)|Blue &<br/>White]]
+![[Likud]]
+![[Joint List|Joint<br/>List]]
+![[Labor-Gesher-Meretz|Emet]]
+![[Shas]]
+![[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+![[United Torah Judaism|UTJ]]
+![[Yamina (political alliance)|Yamina]]
+![[Otzma Yehudit|Otzma]]
+![[Thirty-fourth government of Israel|''Gov.'']]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:#B7CC15;" |
+!style="background:#2441FF;" |
+!style="background:#000EA3;" |
+|- style="background:silver"
+|colspan=3 |'''Pre-election seats'''
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|- style="background:silver"
+|data-sort-value="2020-03-02" |2 Mar 2020
+|colspan=2 |'''Election results'''<ref>{{cite news |url=https://www.maariv.co.il/breaking-news/Article-752233 |title=בחירות 2020: ועדת הבחירות פרסמה תוצאות סופיות, גוש הימין זוכה ל-58 מנדטים |language=he |author=Arik Bender |work=[[Maariv (newspaper)|Maariv]] |date=5 March 2020 |accessdate=5 March 2020}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''36'''	<!-- Likud		-->
+|15					<!-- Joint List		-->
+|7					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Yamina		-->
+|{{small|(0.42%)}}<ref>{{cite web |url=https://votes23.bechirot.gov.il/ |title=תוצאות האמת של הבחירות לכנסת ה-23 |language=he |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |date=4 March 2020 |accessdate=5 March 2020}}</ref>
+					<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|- style="background:#FFD"
+|data-sort-value="2020-03-02" |2 Mar 2020
+|Kantar
+|[[Kan 11]]<ref name=Ch13Exit/>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''36'''	<!-- Likud		-->
+|15					<!-- Joint List		-->
+|6					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|60					<!-- Gov.		-->
+|- style="background:#FFD"
+|data-sort-value="2020-03-02" |2 Mar 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch13Exit/>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''37'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|7					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|60					<!-- Gov.		-->
+|- style="background:#FFD"
+|data-sort-value="2020-03-02" |2 Mar 2020
+|Camile Fuchs
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Exit>{{cite news |title=מדגם חדשות 13: 37 מנדטים לליכוד, 32 לכחול לבן; 60 לגוש הימין |url=https://13news.co.il/item/news/politics/state-policy/2020-elections/voting-sample-1018501/ |date=2 March 2020 |accessdate=2 March 2020 |work=[[Channel 13 (Israel)|Channel 13]] |language=he}}</ref>
+|32					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''37'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|6					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|6					<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|60					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-28" |28 Feb 2020
+|colspan=13 |'''[[Election silence]] starting end of Friday before election day'''<ref name=silence/>
+|-
+|data-sort-value="2020-02-28" |28 Feb 2020
+|Smith
+|''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |url=https://knessetjeremy.com/2020/02/28/56th-poll-of-2020-election-likud-35-blue-white-34-joint-list-14-shas-9-labor-gesher-meretz-8-yamina-7-utj-7-yisrael-beitenu-6/ |title=56th Poll of 2020 Election: Likud 35, Blue & White 34, Joint List 14, Shas 9, Labor-Gesher-Meretz 8, Yamina 7, UTJ 7, Yisrael Beitenu 6 |language=en |date=28 February 2020 |accessdate=28 February 2020 |work=Jeremy's Knesset Insider}}</ref>
+|34					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-28" |28 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb28>{{cite news |title=סקר אחרון לבחירות: גנץ ונתניהו בתיקו; גוש המרכז-שמאל מוביל |url=https://13news.co.il/item/news/politics/state-policy/2020-elections/2020-election-survey-1016506/ |author=Ayala Hasson |date=28 February 2020 |accessdate=29 February 2020 |work=[[Channel 13 (Israel)|Channel 13]] |language=he}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|15					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1.8%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-28" |27–28 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb28>{{cite news |title=הסקר האחרון לפני הקלפיות: הליכוד מוביל בשני מנדטים על כחול לבן |url=https://www.mako.co.il/news-israel-elections/2020_q1/Article-186f5a0448c8071027.htm |author=Amit Segal |date=28 February 2020 |accessdate=28 February 2020 |work=mako |language=he}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.5%)}}			<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-27" |27 Feb 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]'' & ''[[The Jerusalem Post]]''<ref name=Maariv28Feb>{{cite news |url=https://knessetjeremy.com/2020/02/28/57th-poll-of-2020-election-likud-34-blue-white-34-joint-list-13-shas-9-labor-gesher-meretz-9-yamina-7-utj-7-yisrael-beitenu-7/ |title=57th Poll of 2020 Election: Likud 34, Blue & White 34, Joint List 13, Shas 9, Labor-Gesher-Meretz 9, Yamina 7, UTJ 7, Yisrael Beitenu 7 |date=28 February 2020 |accessdate=28 February 2020 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.1%)}}			<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-27" |27 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH27Feb>{{cite web |url=https://www.israelhayom.co.il/article/737373 |title=הסקר האחרון לפני הבחירות: שוויון בין הליכוד לכחול לבן, גוש הימין מוביל במנדט |language=he |work=[[Israel Hayom]] |author=Mati Tuchfeld |date=27 February 2020 |accessdate=29 February 2020}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|{{small|(2%)}}				<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-27" |27 Feb 2020
+|Kantar
+|[[Kan 11]]<ref name=Kan27Feb>{{cite news |title=54th Poll of 2020 Election: Likud 35, Blue & White 34, Joint List 14, Labor-Gesher-Meretz 8, Shas 8, UTJ 8, Yamina 7, Yisrael Beitenu 6 |url=https://knessetjeremy.com/2020/02/27/54th-poll-of-2020-election-likud-35-blue-white-34-joint-list-14-labor-gesher-meretz-8-shas-8-utj-8-yamina-7-yisrael-beitenu-6/ |work=Jeremy's Knesset Insider |date=27 February 2020 |accessdate=29 February 2020}}</ref>
+|34					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.6%)}}			<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-26" |26 Feb 2020
+|Direct Polls
+|''[[Arutz Sheva]]''<ref>{{cite news |url=https://www.inn.co.il/News/News.aspx/428674 |title=סקר: 59 מנדטים לגוש הימין |language=he |date=27 February 2020 |accessdate=29 February 2020 |work=[[Arutz Sheva]]}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(0.96%)}}			<!-- Otzma		-->
+|59					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-25" |25 Feb 2020
+|Midgam
+|[[Walla!]]<ref>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_walla_25_2.pdf |title=ממצאי סקר בחירות – 25-2-2020 |language=he |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |date=25 February 2020 |accessdate=29 February 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.7%)}}			<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-25" |25 Feb 2020
+|Panels Politics
+|103fm<ref name=103Feb25>{{cite news |url=https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HLJMFI&c41t4nzVQ=GJL |title=סקר 103fm: הליכוד פותח פער; יתרון לגוש הימין |work=103fm |language=he |date=26 February 2020 |accessdate=26 February 2020 |author=Ayala Hasson & Golan Yokhpaz}}</ref>
+|32					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2%)}}				<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-24" |24 Feb 2020
+|Kantar
+|[[Kan 11]]<ref name=Kan24Feb>{{cite news |title=50th Poll of 2020 Election: Likud 34, Blue & White 33, Joint List 14, Labor-Gesher-Meretz 10, Shas 8, Yamina 7, UTJ 7, Yisrael Beitenu 7 |url=https://knessetjeremy.com/2020/02/27/50th-poll-of-2020-election-likud-34-blue-white-33-joint-list-14-labor-gesher-meretz-10-shas-8-yamina-7-utj-7-yisrael-beitenu-7/ |work=Jeremy's Knesset Insider |date=27 February 2020 |accessdate=29 February 2020}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.9%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-24" |24 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb24>{{cite news |url=https://knessetjeremy.com/2020/02/27/49th-poll-of-2020-election-likud-33-blue-white-32-joint-list-14-labor-gesher-meretz-10-yamina-8-shas-8-yisrael-beitenu-8-utj-7/ |title=49th Poll of 2020 Election: Likud 33, Blue & White 32, Joint List 14, Labor-Gesher-Meretz 10, Yamina 8, Shas 8, Yisrael Beitenu 8, UTJ 7 |work=Jeremy's Knesset Insider |date=27 February 2020 |accessdate=29 February 2020}}</ref>
+|32					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2.0%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-23" |23 Feb 2020
+|Kantar
+|[[Kan 11]]<ref name=Ch11Feb23>{{cite news |title=A Week to Election, Polls Show Netanyahu Pulls Ahead of Gantz for First Time |url=https://www.haaretz.com/israel-news/elections/a-week-to-election-polls-show-netanyahu-pulls-ahead-of-gantz-for-first-time-1.8567410 |archive-url=https://web.archive.org/web/20200224013555/https://www.haaretz.com/israel-news/elections/a-week-to-election-polls-show-netanyahu-pulls-ahead-of-gantz-for-first-time-1.8567410 |url-status=dead |archive-date=February 24, 2020 |work=Haaretz |date=23 February 2020 |language=en}}</ref>
+|34					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Yamina		-->
+|{{small|(1.3%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-23" |23 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb23>{{cite news |title=סקר דרמטי: לראשונה הליכוד עובר את כחול לבן |url=https://www.mako.co.il/news-israel-elections/2020/Article-4cb6d4000237071027.htm |author=Amit Segal |date=23 February 2020 |accessdate=24 February 2020 |work=mako |language=he}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.5%)}}			<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-20" |19–20 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH20Feb>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_israel_today_20_2.pdf |title=סקר דעת קהל |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |date=20 February 2020 |accessdate=25 February 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1%)}}				<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-20" |19–20 Feb 2020
+|Direct Polls
+|''[[Arutz Sheva]]''<ref>{{cite news |url=https://www.inn.co.il/News/News.aspx/428022 |title= סקר: 58 מנדטים לימין, 55 לשמאל וערבים |language=he |date=20 February 2020 |accessdate=21 February 2020 |author=Iddo Ben Porat |work=[[Arutz Sheva]]}}</ref>
+|31					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|14					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1.2%)}}			<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-19" |19 Feb 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv19Feb>{{cite news |url=https://knessetjeremy.com/2020/02/21/45th-poll-of-2020-election-blue-white-36-likud-32-joint-list-14-shas-9-labor-gesher-meretz-8-yisrael-beitenu-8-yamina-7-utj-7/ |title=45th Poll of 2020 Election: Blue & White 36, Likud 32, Joint List 14, Shas 9, Labor-Gesher-Meretz 8, Yisrael Beitenu 8, Yamina 7, UTJ 7 |work=Jeremy's Knesset Insider |date=21 February 2020 |accessdate=22 February 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.6%)}}			<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-19" |19 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb19>{{cite news |url=https://knessetjeremy.com/2020/02/21/43rd-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-7/ |title=43rd Poll of 2020 Election: Blue & White 35, Likud 33, Joint List 13, Labor-Gesher-Meretz 9, Shas 8, UTJ 8, Yamina 7, Yisrael Beitenu 7 |work=Jeremy's Knesset Insider |date=21 February 2020 |accessdate=22 February 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.6%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-17" |17 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb17>{{cite news |url=https://13news.co.il/item/news/politics/state-policy/2020-elections/election-poll-1008508/ |title=סקר חדשות 13: כחול לבן מתחזקת – הפער בין הגושים מצטמצם |work=[[Channel 13 (Israel)|Channel 13]] |language=he |author=Akiva Novik, Raviv Drucker |date=17 February 2020 |accessdate=19 February 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.9%)}}			<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-17" |16–17 Feb 2020
+|Midgam
+|[[Walla!]]<ref name=Walla17Feb>{{cite news |url=https://elections.walla.co.il/item/3341421 |title=סקר וואלה! NEWS: הליכוד מצמצם פערים, האיחוד בשמאל לראשונה בדו-ספרתי |language=he |author=Tal Shalev |work=[[Walla!]] |date=17 February 2020 |accessdate=19 February 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.5%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-14" |13–14 Feb 2020
+|Panels Politics
+|103fm<ref name=103Feb14>{{cite news |url=https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HLILFI&c41t4nzVQ=GJL |title=סקר 103fm: עוד בחירות ללא הכרעה? |work=103fm |language=he |date=16 February 2020 |accessdate=16 February 2020 |author=Ayala Hasson & Golan Yokhpaz}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2.8%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-13" |13 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb13>{{cite news |url=https://www.mako.co.il/news-israel-elections/2020-2020_q1/Article-8a485854d8f3071027.htm |title=בחירות 2020 {{!}} סקר חדשות 12: מה יעדיפו הישראלים במקרה ששוב לא תושג הכרעה? |work=mako |language=he |author=Daphna Liel |date=13 February 2020 |accessdate=13 February 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.2%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-13" |12–13 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH14Feb>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_israel_hayom_13_2.pdf |title=סקר דעת קהל |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |language=he |date=13 February 2020 |accessdate=16 February 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|{{small|(1%)}}				<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-13" |12–13 Feb 2020
+|Smith
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv13Feb>{{cite news |url=https://www.maariv.co.il/elections2020/polls/Article-748077 |title=סקר "מעריב": כחול לבן 34, הליכוד 33, ליברמן 7 |language=he |work=[[Maariv (newspaper)|Maariv]] |author=Arik Bender |date=14 February 2020 |accessdate=14 February 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.4%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-12" |11–12 Feb 2020
+|Panels Politics
+|''[[Makor Rishon]]''<ref>{{cite news |url=https://www.makorrishon.co.il/news/204131/ |title=סקר מקור ראשון: הבוחר הישראלי מתבצר בעמדותיו מספטמבר |language=he |work=[[Makor Rishon]] |date=13 January 2020 |accessdate=14 January 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|7					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.6%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-07" |7 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb7>{{cite news |url=https://13news.co.il/item/news/politics/state-policy/2020-elections/elections-survey-1001961/ |title=סקר חדשות 13: גוש השמאל-מרכז מתחזק - ועומד על 59 מנדטים |work=[[Channel 13 (Israel)|Channel 13]] |language=he |author=Ayala Hasson |date=7 February 2020 |accessdate=8 February 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Yamina		-->
+|{{small|(1.5%)}}			<!-- Otzma		-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-06" |6 Feb 2020
+|Direct Polls
+|[[Channel 20 (Israel)|Channel 20]]<ref>{{cite news |url=https://knessetjeremy.com/2020/02/07/31st-poll-of-2020-election-likud-34-blue-white-33-joint-list-13-labor-gesher-meretz-10-shas-8-utj-8-yisrael-beitenu-7-yamina-7/ |title=31st Poll of 2020 Election: Likud 34, Blue & White 33, Joint List 13, Labor-Gesher-Meretz 10, Shas 8, UTJ 8, Yisrael Beitenu 7, Yamina 7 |work=Jeremy's Knesset Insider |date=7 February 2020 |accessdate=7 February 2020}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1%)}}				<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-06" |5–6 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH6Feb>{{cite news |url=https://www.israelhayom.co.il/article/731551 |title=סקר "ישראל היום" ו־"i24NEWS": כחול לבן 36, הליכוד 34 וגוש הימין 57 |work=[[Israel Hayom]] |language=he |author=Mati Tuchfeld |date=7 February 2020 |accessdate=7 February 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|34					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1%)}}				<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-05" |5 Feb 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv5Feb>{{cite news |url=https://www.maariv.co.il/elections2020/polls/Article-746662 |title=סקר "מעריב": רוב בוחרי הליכוד וכחול לבן רוצים ממשלת אחדות |language=he |work=[[Maariv (newspaper)|Maariv]] |author=Shmuel Rozner |date=7 February 2020 |accessdate=7 February 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2.8%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-02-05" |5 Feb 2020
+|Midgam
+|[[Walla!]]<ref name=Walla5Feb>{{cite news |url=https://elections.walla.co.il/item/3339225 |title=סקר וואלה! NEWS: גוש הימין מתחזק במנדט, רוב הציבור תומך בממשלת אחדות |language=he |author=Tal Shalev |work=[[Walla!]] |date=6 February 2020 |accessdate=6 February 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1.7%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-30" |30 Jan 2020
+|Maagar Mochot
+|103fm<ref>{{cite news |url=https://knessetjeremy.com/2020/01/30/29th-poll-of-2020-election-blue-white-34-likud-31-joint-list-14-yamina-9-shas-9-labor-gesher-meretz-9-utj-7-yisrael-beitenu-7/|title=29th Poll of 2020 Election: Blue & White 34, Likud 31, Joint List 14, Yamina 9, Shas 9, Labor-Gesher-Meretz 9, UTJ 7, Yisrael Beitenu 7|work=Jeremy's Knesset Insider |date=30 January 2020 |accessdate=30 January 2020 |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|{{small|(1.5%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-29" |29 Jan 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |url=https://www.maariv.co.il/elections2020/polls/Article-744323 |title=סקר "מעריב": פרסום "עסקת המאה" לא מסייע לליכוד בקלפי |language=he |work=[[Maariv (newspaper)|Maariv]] |author=Shmuel Rozner |date=31 January 2020 |accessdate=31 January 2020}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-29" |29 Jan 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=jkipphm>{{cite news|url=https://knessetjeremy.com/2020/01/29/27th-poll-of-2020-election-blue-white-35-likud-34-joint-list-12-labor-gesher-meretz-10-yisrael-beitenu-8-yamina-7-shas-7-utj-7/|title=27th Poll of 2020 Election: Blue & White 35, Likud 34, Joint List 12, Labor-Gesher-Meretz 10, Yisrael Beitenu 8, Yamina 7, Shas 7, UTJ 7|work=Jeremy's Knesset Insider|author=Jeremy Saltan|date=29 January 2020|accessdate=29 January 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|34					<!-- Likud		-->
+|12					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.1%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-29" |29 Jan 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=jkimidgam>{{cite news|url=https://knessetjeremy.com/2020/01/29/28th-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-yamina-8-shas-8-yisrael-beitenu-8-labor-gesher-meretz-8-utj-7/|title=28th Poll of 2020 Election: Blue & White 35, Likud 33, Joint List 13, Yamina 8, Shas 8, Yisrael Beitenu 8, Labor-Gesher-Meretz 8, UTJ 7|work=Jeremy's Knesset Insider|author=Jeremy Saltan|date=29 January 2020|accessdate=29 January 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2.2%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-29" |29 Jan 2020
+|Kantar
+|[[Kan 11]]<ref>{{cite news|url=https://knessetjeremy.com/2020/01/29/26th-poll-of-2020-election-blue-white-34-likud-33-joint-list-14-shas-8-utj-8-yisrael-beitenu-8-labor-gesher-meretz-8-yamina-7/|title=26th Poll of 2020 Election: Blue & White 34, Likud 33, Joint List 14, Shas 8, UTJ 8, Yisrael Beitenu 8, Labor-Gesher-Meretz 8, Yamina 7|work=Jeremy's Knesset Insider|author=Jeremy Saltan|date=29 January 2020|accessdate=29 January 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.1%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-28" |28 Jan 2020
+|Direct Polls
+|''[[Israel Hayom]]''<ref>{{cite news|url=https://knessetjeremy.com/2020/01/29/25th-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-7/|title=25th Poll of 2020 Election: Likud 35, Blue & White 33, Joint List 13, Labor-Gesher-Meretz 9, Shas 8, UTJ 8, Yamina 7, Yisrael Beitenu 7|work=Jeremy's Knesset Insider|author=Jeremy Saltan|date=29 January 2020|accessdate=29 January 2020}}</ref>
+|33					<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(1.32%)}}			<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|-
+|28 Jan 2020
+| colspan="13" |'''Announcement of [[2020 Trump Israel–Palestine plan|Trump's Peace Plan]]<ref>{{cite news|url=https://www.timesofisrael.com/as-peace-plan-rolls-out-netanyahu-says-he-will-annex-jordan-valley-settlements/|title=As peace plan rolls out, Netanyahu says he will annex Jordan Valley, settlements|last=staff|first=T. O. I.|website=[[The Times of Israel]]|language=en-US|access-date=2020-01-28 |issn=0040-7909}}</ref>'''
+|-
+|data-sort-value="2020-01-23" |22–23 Jan 2020
+|Panels Politics
+|''[[Makor Rishon]]''<ref>{{cite news |url=https://www.makorrishon.co.il/news/199445/ |title=סקר מקור ראשון ופאנלס פוליטיקס: פער של מנדט בין הימין לשמאל |language=he |work=[[Makor Rishon]] |date=23 January 2020 |accessdate=24 January 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2.6%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-23" |22–23 Jan 2020
+|Midgam
+|[[Walla!]]<ref>{{cite news |url=https://elections.walla.co.il/item/3336795 |title=סקר וואלה! NEWS: רק כשליש מהציבור תומך בסיפוח חד-צדדי של בקעת הירדן |language=he |author=Tal Shalev |work=[[Walla!]] |date=24 January 2020 |accessdate=24 January 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(2.2%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-21" |20–21 Jan 2020
+|Kantar
+|[[Kan 11]]<ref>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_kan_20_1.pdf |title=סקר מנדטים 20.1 – דיווח לוועדת הבחירות |language=he |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |accessdate=24 January 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1.93%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-19" |19 Jan 2020
+|Direct Polls
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_channel13_19_1.pdf |title=תוצאות סקר עמדות בנושאים פוליטיים אקטואליים |language=he |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |date=19 January 2020 |accessdate=24 January 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|{{small|(1.1%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Maagar Mochot
+|103fm<ref>{{cite news |url=https://knessetjeremy.com/2020/01/17/20th-poll-of-2020-election-blue-white-34-likud-30-joint-list-14-labor-gesher-meretz-10-yamina-9-shas-8-yisrael-beitenu-8-utj-7/ |title=20th Poll of 2020 Election: Blue & White 34, Likud 30, Joint List 14, Labor-Gesher-Meretz 10, Yamina 9, Shas 8, Yisrael Beitenu 8, UTJ 7 |work=Jeremy's Knesset Insider |date=17 January 2020 |accessdate=16 January 2020 |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|{{small|(1.0%)}}			<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Jan16>{{cite news |url=https://img.mako.co.il/2020/01/16/sekercon.pdf |title=ממצאי סקר "חדשות 12" - בנושא: מנדטים ואקטואליה |language=he |work=mako |date=16 January 2020 |accessdate=17 January 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|{{small|(2.1%)}}			<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=jki17janpphm>{{cite news |url=https://knessetjeremy.com/2020/01/17/19th-poll-of-2020-election-blue-white-34-likud-31-joint-list-14-labor-gesher-meretz-9-yisrael-beitenu-8-yamina-7-utj-7-shas-6-otzma-4/ |title=19th Poll of 2020 Election: Blue & White 34, Likud 31, Joint List 14, Labor-Gesher-Meretz 9, Yisrael Beitenu 8, Yamina 7, UTJ 7, Shas 6, Otzma 4 |work=Jeremy's Knesset Insider |date=17 January 2020 |accessdate=17 January 2020 |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|6					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|4					<!-- Otzma		-->
+|51					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Kantar
+|[[Kan 11]]<ref name=Kan16Jan/>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|{{small|(2.2%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020 (midnight)
+|colspan=13 |'''Deadline to submit the candidate lists'''<ref>{{Cite news|url=https://www.middleeasteye.net/news/new-alliances-show-israels-political-parties-are-fighting-survival|title=Electoral alliances are a game of life and death for Israeli parties|work=[[Middle East Eye]]|access-date=17 January 2020|date=16 January 2020|author=Lily Galili}}</ref>
+|-
+|data-sort-value="2020-01-15" |15 Jan 2020
+|colspan=13 |'''[[Yamina (political alliance)|Yamina]] alliance reestablished, United Jewish Home dissolves'''<ref>{{cite news |url=http://www.israelnationalnews.com/News/News.aspx/274617 |title=Bennett, Peretz, Smotrich agree to joint run without Ben Gvir |work=[[Arutz Sheva]] |author=[[Staff writer]] |date=15 January 2020 |accessdate=15 January 2020}}</ref>
+|-
+|data-sort-value="2020-01-15" |15 Jan 2020
+|colspan=13 |'''[[Green Party (Israel)|Green Party]] withdrawal'''<ref>{{Cite news |url=https://www.jpost.com/Israel-News/Stav-Shaffir-forced-into-break-from-politics-614256 |title=Stav Shaffir, once a star MK, announces break from politics |work=[[The Jerusalem Post]] |accessdate=15 January 2020 |date=15 January 2020 |author=Gil Hoffman}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Blue and White (political alliance)|Blue &<br/>White]]
+![[Likud]]
+![[Joint List|Joint<br/>List]]
+![[Labor-Gesher-Meretz|Emet]]
+![[Shas]]
+![[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+![[United Torah Judaism|UTJ]]
+![[New Right (Israel)|New<br/>Right]]
+![[Tkuma (political party)|NU]]
+!UJH
+![[Green Party (Israel)|Green]]
+![[Thirty-fourth government of Israel|''Gov.'']]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Labor-Gesher-Meretz}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Tkuma (political party)}};" |
+!style="background:#B7CC15;" |
+!style="background:{{party color|Green Movement (Israel)}};" |
+!style="background:#000EA3;" |
+|- style="background:silver"
+|colspan=3 |'''Current seats'''
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|colspan=2 |5				<!-- New Right-NU	-->
+|2					<!-- United Jewish Home	-->
+|1					<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-14" |14 Jan 2020
+|Direct Polls
+|''[[Arutz Sheva]]''<ref>{{cite news |url=http://www.israelnationalnews.com/News/News.aspx/274560 |title= New poll shows 7 Knesset seats for Bennett-Shaked-Smotrich list |date=14 January 2020 |accessdate=14 January 2020 |author=Mordechai Sones |work=[[Arutz Sheva]]}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|colspan=2 |7				<!-- New Right-NU	-->
+|{{small|(2.4%)}}			<!-- United Jewish Home	-->
+|{{small|(2.3%)}}			<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-14" |14 Jan 2020 (noon)
+|colspan=14 |'''Beginning of registration for candidate lists'''<ref name=jpost13jan>{{Cite news|url=https://www.jpost.com/Israel-News/Politics-And-Diplomacy/Fewer-parties-expected-to-register-to-run-in-March-2-election-614053|title=Fewer parties expected to register to run in March 2 election|work=[[The Jerusalem Post]]|access-date=13 January 2020|date=14 January 2020|author=Gil Hoffman}}</ref>
+|-
+|data-sort-value="2020-01-14" |14 Jan 2020
+|colspan=14 |'''[[New Right (Israel)|New Right]] and [[Tkuma (political party)|National Union]] merger'''<ref>{{Cite news |url=https://www.timesofisrael.com/new-right-national-union-agree-on-joint-run-call-for-jewish-home-to-join-them/ |title=New Right, National Union agree on joint run, call for Jewish Home to join them |author=Alexander Fulbright & Jacob Magid |work=[[The Times of Israel]] |date=14 January 2020 |accessdate=14 January 2020}}</ref>
+|-
+|rowspan=3 data-sort-value="2020-01-13" |13 Jan 2020
+|rowspan=3 |Midgam
+|rowspan=3 |[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Jan13>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_hadashut_13_1_20.pdf |title=ממצאי סקר בחירות – 13-1-2020 |language=he |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |date=13 January 2020 |accessdate=24 January 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- New Right		-->
+|colspan=2 |5				<!-- URWP		-->
+|{{small|(0.4%)}}			<!-- Green		-->
+|57					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|colspan=3 |10				<!-- NR+JH+NU+Otzma	-->
+|{{small|(0.4%)}}			<!-- Green		-->
+|57					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Labor–Gesher-Meretz-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|colspan=2 |6				<!-- New Right-NU	-->
+|4					<!-- United Jewish Home	-->
+|{{small|(0.4%)}}			<!-- Green		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-13" |13 Jan 2020
+|colspan=14 |'''[[Israeli Labor Party|Labor]]-[[Gesher (2019 political party)|Gesher]] and [[Meretz]] merger,<ref>{{Cite news |url=https://www.jpost.com/Breaking-News/Peretz-We-will-negotiate-with-Meretz-about-running-together-613942 |title=Amir Peretz and Nitzan Horowitz reach deal on Labor-Meretz joint ticket |author=Gil Hoffman |work=[[The Jerusalem Post]] |date=13 January 2020 |accessdate=13 January 2020}}</ref> [[Democratic Union (Israel)|Democratic Union]] dissolves'''
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=3 |Date
+!rowspan=3 |Polling firm
+!rowspan=3 |Publisher
+!rowspan=2 |[[Blue and White (political alliance)|Blue&nbsp;&<br/>White]]
+!rowspan=2 |[[Likud]]
+!rowspan=2 |[[Joint List|Joint<br/>List]]
+!rowspan=2 |[[Shas]]
+!rowspan=2 |[[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+!rowspan=2 |[[United Torah Judaism|UTJ]]
+!rowspan=2 |[[Labor-Gesher|Labor-<br/>Gesher]]
+!rowspan=2 |[[Democratic Union (Israel)|Dem.<br/>Union]]
+!rowspan=2 |[[New Right (Israel)|New<br/>Right]]
+!rowspan=2 |[[Tkuma (political party)|NU]]
+!colspan=2 |UJH
+!rowspan=2 |[[Green Party (Israel)|Green]]
+!rowspan=2 |[[Thirty-fourth government of Israel|''Gov.'']]
+|-
+![[The Jewish Home|JH]]
+![[Otzma Yehudit|Otzma]]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Tkuma (political party)}};" |
+!style="background:{{party color|The Jewish Home}};" |
+!style="background:{{party color|Otzma Yehudit}};" |
+!style="background:{{party color|Green Movement (Israel)}};" |
+!style="background:#000EA3;" |
+|- style="background:silver"
+|colspan=3 |'''Current seats'''
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|3					<!-- New Right		-->
+|2					<!-- National Union	-->
+|colspan=2 |2				<!-- United Jewish Home	-->
+|1					<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|rowspan=2 data-sort-value="2020-01-09" |9 Jan 2020
+|rowspan=2 |Midgam
+|rowspan=2 |''[[Arutz Sheva]]''<ref>{{cite news |url=https://www.inn.co.il/News/News.aspx/423809 |title=סקרים חדשים: רשימה של סמוטריץ והימין החדש מזנקת |work=[[Arutz Sheva]] |date=9 January 2020 |accessdate=9 January 2020 |language=he}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|6					<!-- New Right		-->
+|colspan=3 |4				<!-- URWP		-->
+|–					<!-- Green		-->
+|57					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|colspan=2 |9				<!-- New Right+NU	-->
+|colspan=2 |{{small|(2.7%)}}		<!-- United Jewish Home	-->
+|–					<!-- Green		-->
+|57					<!-- Gov.		-->
+|-
+|rowspan=5 data-sort-value="2020-01-09" |8–9 Jan 2020
+|rowspan=5 |Maagar Mohot
+|rowspan=5 |''[[Israel Hayom]]''<ref name=IH10Jan>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_israel_today_9_1.pdf |title=סקר דעת קהל בקרב הציבור הישראלי בנושאי אקטואליה |date=9 January 2020 |accessdate=24 January 2020 |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |language=he}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|15					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- New Right		-->
+|{{small|(1%)}}				<!-- National Union	-->
+|colspan=2 |5				<!-- United Jewish Home	-->
+|{{small|(0.2%)}}			<!-- Green		-->
+|54					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|29					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|colspan=4 |11				<!-- NR+JH+NU+Otzma	-->
+|–					<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|29					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|5					<!-- New Right		-->
+|colspan=3 |8				<!-- URWP		-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|colspan=2 |11				<!-- Labor–Gesher+DU	-->
+|6					<!-- New Right		-->
+|{{small|(1%)}}				<!-- National Union	-->
+|colspan=2 |6				<!-- United Jewish Home	-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''39'''{{efn |name=centre_left_merger |Merger of [[Blue and White (political alliance)|Blue and White]], [[Labor-Gesher]] and the [[Democratic Union (Israel)|Democratic Union]]}}
+					<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|11					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|style="background:#B2EDFB" colspan=2 |{{efn |name=centre_left_merger}}
+					<!-- Labor–Gesher+DU	-->
+|6					<!-- New Right		-->
+|{{small|(1%)}}				<!-- National Union	-->
+|colspan=2 |5				<!-- United Jewish Home	-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|rowspan=5 data-sort-value="2020-01-09" |8–9 Jan 2020
+|rowspan=5 |Panels Politics
+|rowspan=5 |''[[Makor Rishon]]''<ref>{{cite news |url=https://www.makorrishon.co.il/news/196167/ |title=סקר החיבורים בימין: ריצה בנפרד עשויה להניב שני מנדטים |work=[[Makor Rishon]] |date=9 January 2020 |accessdate=10 January 2020 |author=Shirit Avitan Cohen |language=he}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.4%)}}			<!-- Democratic Union	-->
+|7					<!-- New Right		-->
+|–					<!-- National Union	-->
+|colspan=2 |4				<!-- United Jewish Home	-->
+|–					<!-- Green		-->
+|58					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.4%)}}			<!-- Democratic Union	-->
+|7					<!-- New Right		-->
+|colspan=3 |6				<!-- URWP		-->
+|–					<!-- Green		-->
+|58					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.4%)}}			<!-- Democratic Union	-->
+|colspan=2 |8				<!-- New Right+NU	-->
+|colspan=2 |4				<!-- United Jewish Home	-->
+|–					<!-- Green		-->
+|58					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.4%)}}			<!-- Democratic Union	-->
+|colspan=4 |10				<!-- NR+JH+NU+Otzma	-->
+|–					<!-- Green		-->
+|58					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.4%)}}			<!-- Democratic Union	-->
+|colspan=3 |10				<!-- Yamina		-->
+|{{small|(2.1%)}}			<!-- Otzma		-->
+|–					<!-- Green		-->
+|58					<!-- Gov.		-->
+|-
+|rowspan=2 data-sort-value="2020-01-08" |8 Jan 2020
+|rowspan=2 |Midgam
+|rowspan=2 |[[Walla!]]<ref>{{cite news |url=https://elections.walla.co.il/item/3333940 |title=חיבורים בימין ובשמאל לא ישפיעו משמעותית על מפת הגושים |date=9 January 2020 |accessdate=9 January 2020 |work=[[Walla!]] |author=Tal Shalev |language=he}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|6					<!-- New Right		-->
+|{{small|(1.1%)}}			<!-- National Union	-->
+|colspan=2 |{{small|(2.8%)}}		<!-- United Jewish Home	-->
+|{{small|(0.2%)}}			<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|colspan=2 |9				<!-- Labor–Gesher+DU	-->
+|colspan=4 |8				<!-- NR+JH+NU+Otzma	-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-01-07" |7 Jan 2020
+|colspan=16 |'''[[Meretz]] and [[Democratic Choice (Israel)|Democratic Choice]] agree to run together as the [[Democratic Union (Israel)|Democratic Union]] list'''<ref>{{Cite news|url=https://www.timesofisrael.com/2-of-3-left-wing-slates-that-make-up-democratic-camp-ink-deal-to-stick-together/|title=2 of 3 left-wing slates that make up Democratic Camp ink deal to stick together|work=[[The Times of Israel]]|access-date=12 January 2020|date=7 January 2020|author=Jacob Magid}}</ref>
+|-
+|data-sort-value="2020-01-02" |2 Jan 2020
+|KANTAR
+|[[Kan 11]]<ref>{{cite news |url=https://knessetjeremy.com/2020/01/03/8th-poll-of-2020-election-channel-11-blue-white-35-likud-33-joint-list-13-utj-8-shas-7-yisrael-beitenu-7/ |title=8th Poll of 2020 Election (Channel 11): Blue & White 35, Likud 33, Joint List 13, UTJ 8, Shas 7, Yisrael Beitenu 7 |work=Jeremy's Knesset Insider |date=3 January 2020 |accessdate=11 January 2020}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|6					<!-- New Right		-->
+|colspan=3 |{{small|(3%)}}		<!-- URWP		-->
+|–					<!-- Green		-->
+|54					<!-- Gov.		-->
+|-
+|rowspan=2 data-sort-value="2020-01-02" |2 Jan 2020
+|rowspan=2 |Midgam
+|rowspan=2 |[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Jan2>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_midgam_2_1.pdf |title=ממצאי סקר בחירות – 2-1-2020 |date=2 January 2020 |accessdate=11 January 2020 |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |language=he}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4{{efn |[[Meretz]] only (thus without the [[Israel Democratic Party]])}}
+					<!-- Meretz		-->
+|6					<!-- New Right		-->
+|{{small|(0.9%)}}			<!-- National Union	-->
+|colspan=2 |{{small|(2.6%)}}		<!-- United Jewish Home	-->
+|{{small|(0.0%)}}			<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4{{efn |[[Meretz]] and the [[Green Party (Israel)|Green Party]] only (thus without the [[Israel Democratic Party]])}}
+					<!-- Democratic Union	-->
+|6					<!-- New Right		-->
+|colspan=3 |4				<!-- URWP		-->
+|{{efn |Within the [[Democratic Union (Israel)|Democratic Union]]}}
+					<!-- Green		-->
+|57					<!-- Gov.		-->
+|-
+|rowspan=2 data-sort-value="2020-01-02" |2 Jan 2020
+|rowspan=2 |Panel Project HaMidgam
+|rowspan=2 |[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Jan2>{{cite news |url=https://13news.co.il/item/news/politics/state-policy/2020-elections/election-poll-immunity-974591/ |title=סקר: כחול לבן מובילה עם 36 מנדטים; 50% מהנשאלים נגד חסינות |work=Channel 13 |author=Akiva Novik |date=2 January 2020 |accessdate=2 January 2020 |language=he}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|34					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|8					<!-- New Right		-->
+|colspan=3 |{{small|(2.9%)}}		<!-- URWP		-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|colspan=2 |10				<!-- Labor–Gesher-Meretz-->
+|8					<!-- New Right		-->
+|colspan=3 |–				<!-- URWP		-->
+|–					<!-- Green		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-01" |1 Jan 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv1Jan>{{cite news |url=https://www.maariv.co.il/elections2020/polls/Article-738905 |title=סקר מעריב: כחול לבן פותחת פער של 6 מנדטים מהליכוד |work=[[Maariv (newspaper)|Maariv]] |date=3 January 2020|accessdate=3 January 2020 |author=Arik Bender |language=he}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.9%)}}			<!-- Democratic Union	-->
+|6					<!-- New Right		-->
+|colspan=3 |7				<!-- URWP		-->
+|–					<!-- Green		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-29" |29 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec29>{{cite news |url=https://knessetjeremy.com/2019/12/29/7th-poll-of-2020-election-blue-white-34-likud-32-joint-list-13-shas-8-yisrael-beitenu-8-utj-7/ |title=7th Poll of 2020 Election: Blue & White 34, Likud 32, Joint List 13, Shas 8, Yisrael Beitenu 8, UTJ 7 |work=Jeremy's Knesset Insider |date=29 December 2019 |accessdate=3 January 2020}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|5					<!-- New Right		-->
+|colspan=3 |4				<!-- URWP		-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-26" |26 Dec 2019
+|colspan=16 |'''[[Likud]] [[2019 Likud leadership election|reelects]] [[Benjamin Netanyahu]] as its leader'''<ref>{{Cite web |url=https://www.theguardian.com/world/2019/dec/26/israel-voting-under-way-in-likud-primary-seen-as-threat-to-netanyahu |title=Israel: Netanyahu wins landslide in battle for Likud party leadership |work=[[The Guardian]] |date=26 December 2019 |author=Oliver Holmes |accessdate=27 December 2019}}</ref>
+|-
+|data-sort-value="2019-12-20" |20 Dec 2019
+|colspan=16 |'''[[The Jewish Home]] and [[Otzma Yehudit]] agree to run together on a list called the United Jewish Home'''<ref>{{Cite web|url=https://www.jpost.com/Breaking-News/Religious-Zionist-Bayt-Yehudit-and-far-right-Otzma-Yehudit-to-run-together-611563|title=Religious Zionist Bayit Yehudi and far-right Otzma Yehudit to run together|work=[[The Jerusalem Post]]|date=20 December 2019|author=Rossella Tercatin|accessdate=20 December 2019}}</ref><ref>{{Cite news|url=https://www.timesofisrael.com/smotrich-says-he-wont-join-jewish-home-otzma-yehudit-merger-at-any-cost/|title=Smotrich says he won't join Jewish Home-Otzma Yehudit merger 'at any cost'|work=[[The Times of Israel]]|access-date=31 December 2019|date=31 December 2019|author=Jacob Magid}}</ref>
+|-
+|data-sort-value="2019-12-19" |19 Dec 2019
+|Smith
+|103fm<ref name=as19dec/>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|5					<!-- New Right		-->
+|colspan=3 |4				<!-- URWP		-->
+|–					<!-- Green		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-19" |19 Dec 2019
+|colspan=16 |'''[[Stav Shaffir]] announces independent run of the [[Green Party (Israel)|Green Party]]'''<ref>{{Cite news |url=https://www.timesofisrael.com/left-wing-mk-shaffir-says-planning-to-run-independently-in-elections/ |title=Left-wing MK Shaffir says planning to run independently in elections |work=[[The Times of Israel]] |author=[[Staff writer]] |access-date=23 December 2019 |date=19 December 2019}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Blue and White (political alliance)|Blue&nbsp;&<br/>White]]
+![[Likud]]
+![[Joint List|Joint<br/>List]]
+![[Shas]]
+![[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher|Labor-<br/>Gesher]]
+![[Democratic Union (Israel)|Dem.<br/>Union]]
+![[The Jewish Home|JH]]–[[Tkuma (political party)|NU]]
+![[New Right (Israel)|New<br/>Right]]
+![[Otzma Yehudit|Otzma<br/>Yehudit]]
+![[Thirty-fourth government of Israel|''Gov.'']]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|The Jewish Home}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Otzma Yehudit}};" |
+!style="background:#000EA3;" |
+|- style="background:silver"
+|colspan=3 |'''Current seats'''
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|3					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-18" |18 Dec 2019
+|Panels Politics
+|''[[Makor Rishon]]''<ref name=MR18Dec>{{cite news |url=https://www.makorrishon.co.il/news/191581/ |title=סקר מנדטים ערב הפריימריז בליכוד: גנץ מתחזק |language=he |work=[[Makor Rishon]] |date=19 December 2019 |accessdate=19 January 2020 |author=Shirit Avitan Cohen}}</ref>
+|style="background:#B2EDFB" |'''38'''	<!-- Blue & White	-->
+|34					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.1%)}}			<!-- Democratic Union	-->
+|{{small|(2.7%)}}			<!-- JH-NU		-->
+|7					<!-- New Right		-->
+|{{small|(1.6%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-15" |15 Dec 2019
+|Kantar
+|[[Kan 11]]<ref name=Kan15Dec>{{cite news |url=https://knessetjeremy.com/2019/12/16/4th-poll-of-2020-election-blue-white-35-likud-31-joint-list-13-shas-9-yisrael-beitenu-8-utj-7/ |title=4th Poll of 2020 Election: Blue & White 35, Likud 31, Joint List 13, Shas 9, Yisrael Beitenu 8, UTJ 7 |work=Jeremy's Knesset Insider |date=15 December 2019 |accessdate=16 December 2019}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|–					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Smith
+|''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |url=https://www.maariv.co.il/news/politics/Article-735018 |title=סקר "מעריב": כחול לבן 35, הליכוד 33, ליברמן ממשיך להחזיק במפתח |date=13 December 2019 |accessdate=13 December 2019 |work=[[Maariv (newspaper)|Maariv]] |language=he |author=Arik Bender}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|12					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|4{{efn |name=URWP |Within the [[Union of Right-Wing Parties]]}}
+					<!-- URWP		-->
+|5					<!-- New Right		-->
+|{{efn |name=URWP}}			<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH12Dec>{{cite news |url=https://www.israelhayom.co.il/article/715265 |title=סקר "ישראל היום": כחול לבן פותחת פער מול הליכוד בראשות נתניהו |language=he |date=12 December 2019 |accessdate=13 December 2019 |work=Israel Hayom |author=Mati Tuchfeld}}</ref>
+|style="background:#B2EDFB" |'''37'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2%)}}				<!-- JH-NU		-->
+|5					<!-- New Right		-->
+|{{small|(1%)}}				<!-- Otzma		-->
+|51					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec12>{{cite news |url=https://knessetjeremy.com/2019/12/12/1st-poll-of-2020-election-blue-white-35-likud-32-joint-list-13-yisrael-beitenu-8-utj-8-shas-8-hayamin-hehadash-6/ |title=1st Poll of 2020 Election: Blue & White 35, Likud 32, Joint List 13, Yisrael Beitenu 8, UTJ 8, Shas 8, HaYamin HeHadash 6 |date=12 December 2019 |accessdate=12 December 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|{{small|(2.8%)}}			<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|{{small|(1.3%)}}			<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|colspan=14 |'''The Knesset is dissolved'''<ref name=dissolved>{{Cite web |url=https://www.timesofisrael.com/israel-calls-another-election-for-march-the-third-in-a-year/ |title=Israel calls another election for March 2, the third in a year |work=[[The Times of Israel]] |access-date=12 December 2019 |date=12 December 2019 |author=[[Staff writer]]}}</ref>
+|-
+|data-sort-value="2019-12-10" |10 Dec 2019
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Dec10>{{cite news |url=https://13news.co.il/item/news/politics/state-policy/left-center-block-getting-stronger-957440/ |title=סקר חדשות 13: גוש המרכז-שמאל עם 60 מנדטים - ומתקרב להכרעה |language=he |date=10 December 2019 |accessdate=19 January 2020 |work=[[Channel 13 (Israel)|Channel 13]] |author=Akiva Novik}}</ref>
+|style="background:#B2EDFB" |'''37'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|–					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|52					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-10" |9–10 Dec 2019
+|Midgam
+|[[Walla!]]<ref name=Walla10Dec>{{cite news |url=https://news.walla.co.il/item/3328640 |title=סקר וואלה! NEWS: כחול לבן מתחזקת לאחר ביטול הרוטציה בהנהגה |date=10 December 2019 |accessdate=10 December 2019 |work=[[Walla!]] |author=טל שלו |language=he}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2.1%)}}			<!-- URWP		-->
+|6					<!-- New Right		-->
+|{{small|(1.3%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-08" |8 Dec 2019
+|Kantar
+|[[Israeli Public Broadcasting Corporation|Kan]] Radio<ref name=Kan8Dec>{{cite news |url=https://knessetjeremy.com/2019/12/09/18th-poll-of-possible-3rd-election-blue-white-35-likud-34-joint-list-13-shas-8-utj-8-yisrael-beitenu-7-hayamin-hehadash-6/ |title=18th Poll of Possible 3rd Election: Blue & White 35, Likud 34, Joint List 13, Shas 8, UTJ 8, Yisrael Beitenu 7, HaYamin HeHadash 6 |date=9 December 2019 |accessdate=9 December 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|34					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2.4%)}}			<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|{{small|(1.9%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-05" |5 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec05>{{cite news |url=https://www.mako.co.il/news-israel-elections/elections_2019-2019_q4/Article-1e1addec6dbde61027.htm |title=מסתמן: הבחירות הבאות - ב-3.3.2020 |date=6 December 2019 |accessdate=6 December 2019 |work=Mako |author=Daphna Liel |language=he}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|{{small|(2.2%)}}			<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|{{small|(1.9%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-05" |5 Dec 2019
+|Maagar Mochot
+|103fm<ref>{{cite news |url=https://knessetjeremy.com/2019/12/05/16th-poll-of-possible-3rd-election-blue-white-34-likud-32-joint-list-12-shas-8-utj-8-yisrael-beitenu-8-hayamin-hehadash-6/ |title=16th Poll of Possible 3rd Election: Blue & White 34, Likud 32, Joint List 12, Shas 8, UTJ 8, Yisrael Beitenu 8, HaYamin HeHadash 6 |date=5 December 2019 |accessdate=5 December 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|12					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-28" |28 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH28Nov>{{cite news |url=https://knessetjeremy.com/2019/11/28/14th-poll-of-possible-3rd-election-blocs-tied-at-56-56-other-additional-questions-answered/ |title=14th Poll of Possible 3rd Election: Blocs tied at 56-56; Other additional questions answered |date=28 November 2019 |accessdate=29 November 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2%)}}				<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|{{small|(1%)}}				<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-28" |28 Nov 2019
+|Maagar Mochot
+|103fm<ref name=103fmNov28>{{cite news |url=https://knessetjeremy.com/2019/11/28/13th-poll-of-possible-3rd-election-blue-white-35-likud-33-joint-list-13-shas-9-yisrael-beitenu-8-utj-8-hayamin-hehadash-6-scenario-poll-gives-saar-led-likud-a-right-bloc-of-60/ |title=13th Poll of Possible 3rd Election: Blue & White 35, Likud 33, Joint List 13, Shas 9, Yisrael Beitenu 8, UTJ 8, HaYamin HeHadash 6; Scenario Poll gives Saar-led-Likud a Right Bloc of 60|date=28 November 2019 |accessdate=28 November 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|–					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-27" |26–27 Nov 2019
+|Smith
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv27Nov>{{cite news |url=https://www.maariv.co.il/news/politics/Article-732299 |title=סקר מעריב: הליכוד גדול יותר עם נתניהו, אך גוש הימין מתחזק כשסער בראש |date=29 November 2019 |accessdate=29 November 2019 |work=[[Maariv (newspaper)|Maariv]] |language=he}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|–					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-26" |26 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Nov26>{{cite news |url=https://www.mako.co.il/news-politics/2019_q4/Article-f9a29b44fd8ae61027.htm |title=סקר החדשות: כמה מנדטים יביא גדעון סער אם יעמוד בראש הליכוד? |date=26 November 2019 |accessdate=26 November 2019 |work=mako |author=Amit Segal |language=he}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|9					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2.3%)}}			<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|{{small|(1.2%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-26" |25–26 Nov 2019
+|Midgam
+|[[Walla!]]<ref>{{cite news |url=https://news.walla.co.il/item/3326004 |title=סקר וואלה! NEWS: נתניהו מביס את סער בקרב מצביעי הליכוד |date=26 November 2019 |accessdate=26 November 2019 |work=[[Walla!]] |author=טל שלו |language=he}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2.3%)}}			<!-- JH-NU		-->
+|7					<!-- New Right		-->
+|{{small|(1.2%)}}			<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-25" |25 Nov 2019
+|Panels Politics
+|[[Channel 12 (Israel)|Channel 12]]<ref>{{cite news |url=https://www.mako.co.il/tv-morning-news/articles/Article-f4749f09224ae61027.htm |title=סקר מנדטים: כחול לבן פותחת פער של שבעה מנדטים על הליכוד |date=26 November 2019 |accessdate=26 November 2019 |work=mako |language=he}}</ref>
+|style="background:#B2EDFB" |'''37'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|12					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|-
+|data-sort-value="2019-11-22" |22 Nov 2019
+|Panel Project HaMidgam/Statnet<ref>{{cite news |url=https://13news.co.il/item/news/politics/state-policy/reelection-2019/elections-survey-943042/ |title=סקר: 56% מאמינים שנתניהו לא יכול להמשיך לכהן; גנץ מתחזק |date=22 November 2019 |accessdate=24 November 2019 |work=[[Channel 13 (Israel)|Channel 13]] |author=Ayala Hasson |language=he}}</ref>
+|[[Channel 13 (Israel)|Channel 13]]<ref name=toi22nov>{{cite news |url=https://www.timesofisrael.com/poll-finds-most-israelis-think-netanyahu-must-step-down-now-charges-announced/ |title=Poll finds most Israelis think Netanyahu must step down now charges announced |date=22 November 2019 |accessdate=22 November 2019 |work=[[The Times of Israel]] |author=[[Staff writer]]}}</ref>
+|style="background:#B2EDFB" |'''36'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-22" |21–22 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH22Nov>{{cite news |title=8th Poll of Possible 3rd Election: Blue & White 34, Likud 33, Joint List 13, Shas 8, UTJ 8 |url=https://knessetjeremy.com/2019/11/24/8th-poll-of-possible-3rd-election-blue-white-34-likud-33-joint-list-13-shas-8-utj-8/ |date=24 November 2019 |accessdate=4 December 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|6					<!-- Democratic Union	-->
+|colspan=2 |7				<!-- Yamina		-->
+|{{small|(2%)}}				<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-21" |21 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref>{{cite news |title=סקר אחרי החזרת המנדט: תיקו בצמרת, ליברמן מתחזק |url=https://www.mako.co.il/news-israel-elections/elections_2019-2019_q4/Article-56f94e4706f8e61027.htm |language=he |date=21 November 2019 |accessdate=22 November 2019 |work=mako |author=Amit Segal}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|colspan=2 |7				<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-21" |21 Nov 2019
+|Kantar
+|[[Kan 11]]<ref name=Kan21Nov>{{cite news |url=https://knessetjeremy.com/2019/11/24/7th-poll-of-possible-3rd-election-likud-33-blue-white-33-joint-list-12-yisrael-beitenu-8-utj-8-shas-7/ |title=7th Poll of Possible 3rd Election: Likud 33, Blue & White 33, Joint List 12, Yisrael Beitenu 8, UTJ, 8, Shas 7|date=24 November 2019 |accessdate=25 November 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|5					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-21" |21 Nov 2019
+|colspan=14 |'''[[Attorney General of Israel|Attorney General]] indicts incumbent [[Benjamin Netanyahu|PM Benjamin Netanyahu]] on [[Investigations involving Benjamin Netanyahu|corruption charges]]'''<ref name=toi22nov/>
+|-
+|data-sort-value="2019-11-15" |15 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH15Nov>{{cite news |title=Poll: 40% of Israelis prefer broad government |url=http://www.israelnationalnews.com/News/News.aspx/271715 |date=15 November 2019 |accessdate=15 November 2019 |work=[[Arutz Sheva]]}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Shas		-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|6					<!-- Democratic Union	-->
+|colspan=2 |5				<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-10" |10 Nov 2019
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Nov10>{{cite news |url=https://knessetjeremy.com/2019/11/10/4th-poll-of-possible-3rd-election-blue-white-35-likud-34-joint-list-13-yisrael-beitenu-9-shas-6-utj-6/ |title=4th Poll of Possible 3rd Election: Blue & White 35, Likud 34, Joint List 13, Yisrael Beitenu 9, Shas 6, UTJ 6 |date=10 November 2019 |accessdate=10 November 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|34					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|4					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-10-31" |31 Oct 2019
+|Maagar Mochot
+|103fm<ref>{{cite news |title=3rd Poll of Possible 3rd Election: Blue & White 34, Likud 33, Joint List 12, Shas 9, Yisrael Beitenu 8; Center-Left Bloc at 58|url=https://knessetjeremy.com/2019/10/31/3rd-poll-of-possible-3rd-election-blue-white-34-likud-33-joint-list-12-shas-9-yisrael-beitenu-8-center-left-bloc-at-58/|author=Jeremy Saltan|date=31 October 2019 |accessdate=1 November 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|12					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- UTJ		-->
+|7					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|colspan=2 |6				<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-10-22" |22 Oct 2019
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=Third election won't break political deadlock in Israel, poll finds|url=https://www.timesofisrael.com/third-election-wont-break-political-deadlock-in-israel-poll-finds/|author=[[Staff writer]]|date=22 October 2019 |accessdate=22 October 2019 |work=[[The Times of Israel]]}}</ref>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|33					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|5					<!-- JH-NU		-->
+|4					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-10-10" |10 Oct 2019
+|colspan=14 |'''[[Yamina (political alliance)|Yamina]] splits into two factions'''<ref>{{Cite web|url=https://www.timesofisrael.com/yamina-party-officially-splits-into-new-right-jewish-home-national-union/|title=Yamina party officially splits into New Right, Jewish Home-National Union|work=[[The Times of Israel]]|date=10 October 2019|author=Raoul Wootliff|accessdate=22 October 2019}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Blue and White (political alliance)|Blue&nbsp;&<br/>White]]
+![[Likud]]
+![[Joint List|Joint<br/>List]]
+![[Shas]]
+![[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+![[United Torah Judaism|UTJ]]
+![[Yamina (political alliance)|Yamina]]
+![[Labor-Gesher|Labor-<br/>Gesher]]
+![[Democratic Union (Israel)|Dem.<br/>Union]]
+![[Otzma Yehudit|Otzma<br/>Yehudit]]
+![[Thirty-fourth government of Israel|''Gov.'']]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Yamina}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Otzma Yehudit}};" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-10-06" |3–6 Oct 2019
+|Midgam
+|[[Walla!]]<ref name=Walla6Oct19>{{cite news |title=1st Poll of Possible 3rd Election: Blue & White 33, Likud 33, Joint List 13, Shas 9; Scenario Poll: Blue & White 33, Likud led by Saar 26, Joint List 13, Yamina 12 |url=https://knessetjeremy.com/2019/10/07/1st-poll-of-possible-3rd-election-blue-white-33-likud-33-joint-list-13-shas-9-scenario-poll-blue-white-33-likud-led-by-saar-26-joint-list-13-yamina-12/ |author=Jeremy Saltan |date=7 October 2019 |accessdate=21 October 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|- style="background:silver"
+|data-sort-value="2019-09-17" |17 Sep 2019
+|colspan=2 |'''[[September 2019 Israeli legislative election|Election results]]'''<ref>{{cite web |url=https://bechirot22.bechirot.gov.il/election/english |title=Elections for the 22nd Knesset |work=[[Central Elections Committee (Israel)|Central Elections Committee]] |accessdate=7 October 2019}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|{{small|(1.88%)}}			<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|}
+
+==== Scenarios ====
+;[[Gideon Sa'ar]] founds a new party
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Blue and White (political alliance)|Blue &<br/>White]]
+![[Likud]]
+![[Gideon Sa'ar|Sa'ar]]
+![[Joint List|Joint<br/>List]]
+![[Shas]]
+![[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher|Labor-<br/>Gesher]]
+![[Democratic Union (Israel)|Dem.<br/>Union]]
+![[Union of Right-Wing Parties|URWP]]
+![[New Right (Israel)|New<br/>Right]]
+![[Thirty-fourth government of Israel|''Gov.'']]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:#000EA3;" |
+|- style="background:silver"
+|colspan=3 |'''Current seats'''
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|colspan=2 |32				<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- URWP		-->
+|3					<!-- New Right		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2020-01-01" |1 Jan 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv1Jan/>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|28					<!-- Likud		-->
+|6					<!-- Sa'ar		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|–					<!-- Democratic Union	-->
+|7					<!-- URWP		-->
+|6					<!-- New Right		-->
+|style="background:#BBCDE4" |'''62'''	<!-- Gov.		-->
+|}
+
+;[[Gideon Sa'ar]] leading Likud
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Blue and White (political alliance)|Blue&nbsp;&<br/>White]]
+![[Likud]]
+![[Joint List|Joint<br/>List]]
+![[Shas]]
+![[Yisrael Beiteinu|Yisrael<br/>Beiteinu]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher|Labor-<br/>Gesher]]
+![[Democratic Union (Israel)|Dem.<br/>Union]]
+![[The Jewish Home|JH]]–[[Tkuma (political party)|NU]]
+![[New Right (Israel)|New<br/>Right]]
+![[Otzma Yehudit|Otzma]]
+![[Thirty-fourth government of Israel|''Gov.'']]
+|-
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|The Jewish Home}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Otzma Yehudit}};" |
+!style="background:#000EA3;" |
+|- style="background:silver"
+|colspan=3 |'''Current seats'''
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|3					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-19" |19 Dec 2019
+|Smith
+|103fm<ref name=as19dec>{{cite news |url=http://www.israelnationalnews.com/News/News.aspx/273412 |title=Poll: Right-wing bloc has 56 seats when headed by Netanyahu |date=19 December 2019 |accessdate=19 December 2019 |work=[[Arutz Sheva]]}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|6					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|5{{efn |name=URWP}}			<!-- URWP		-->
+|8					<!-- New Right		-->
+|{{efn |name=URWP}}			<!-- Otzma		-->
+|59					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-18" |18 Dec 2019
+|Panels Politics
+|''[[Makor Rishon]]''<ref name=MR18Dec/>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|30					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|{{small|(2.6%)}}			<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|10					<!-- New Right		-->
+|{{small|(2%)}}				<!-- Otzma		-->
+|60					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-15" |15 Dec 2019
+|Kantar
+|[[Kan 11]]<ref name=Kan15Dec/>
+|style="background:#B2EDFB" |'''34'''	<!-- Blue & White	-->
+|27					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|8					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH12Dec/>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|15					<!-- Joint List		-->
+|11					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2%)}}				<!-- JH-NU		-->
+|7					<!-- New Right		-->
+|{{small|(2%)}}				<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec12/>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|26					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|9					<!-- New Right		-->
+|{{small|(2.1%)}}			<!-- Otzma		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-10" |10 Dec 2019
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Dec10/>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|29					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|5					<!-- JH-NU		-->
+|7					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-12-08" |8 Dec 2019
+|Kantar
+|[[Kan 11]]<ref>{{cite news |url=https://www.inn.co.il/News/News.aspx/420701 |title=סער יו"ר הליכוד, בנט מתחזק |language=he |date=9 December 2019 |accessdate=10 December 2019 |work=[[Arutz Sheva]]}}</ref>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|32					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|–					<!-- JH-NU		-->
+|8					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-28" |28 Nov 2019
+|Maagar Mochot
+|103fm<ref name=103fmNov28/>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|28					<!-- Likud		-->
+|14					<!-- Joint List		-->
+|11					<!-- Shas		-->
+|9					<!-- Yisrael Beiteinu	-->
+|9					<!-- UTJ		-->
+|4					<!-- Labor–Gesher	-->
+|–					<!-- Democratic Union	-->
+|–					<!-- JH-NU		-->
+|12					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|60					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-27" |26–27 Nov 2019
+|Smith
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv27Nov/>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|31					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|4					<!-- JH-NU		-->
+|6					<!-- New Right		-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-11-26" |26 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Nov26/>
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|26					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Shas		-->
+|9					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|4					<!-- Democratic Union	-->
+|{{small|(2.9%)}}			<!-- JH-NU		-->
+|9					<!-- New Right		-->
+|{{small|(2.2%)}}			<!-- Otzma		-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2019-10-06" |3–6 Oct 2019
+|Midgam
+|[[Walla!]]<ref name=Walla6Oct19/>
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|26					<!-- Likud		-->
+|13					<!-- Joint List		-->
+|10					<!-- Shas		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|5					<!-- Democratic Union	-->
+|colspan=2 |12				<!-- Yamina		-->
+|–					<!-- Otzma		-->
+|56					<!-- Gov.		-->
+|}
+
+== Prime minister ==
+Due to the [[political deadlock]] which resulted after the previous election, [[Shas]] chairman and [[Interior Minister of Israel|Interior Minister]] [[Aryeh Deri]] suggested [[direct election]]s for [[Prime Minister of Israel|prime minister]].<ref name=direct>{{cite news |url=https://www.timesofisrael.com/poll-predicts-slight-edge-for-netanyahu-over-gantz-if-direct-elections-were-held/ |title=Poll predicts slight edge for Netanyahu over Gantz if direct elections were held |work=[[The Times of Israel]] |date=5 November 2019 |accessdate=7 November 2019}}</ref> Some opinion pollsters have asked voters which party leader they would prefer as prime minister. Their responses are given as percentages in the tables below.
+
+;Netanyahu vs Gantz
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px;"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Benjamin Netanyahu|Netanyahu]]
+![[Benny Gantz|Gantz]]
+!Neither
+!Don't Know
+|-
+!style="background:{{party color|Likud}}" |
+!style="background:{{party color|Blue and White (political alliance)}}" |
+!style="background:#d3d3d3" |
+!style="background:#ffffff" |
+|-
+|data-sort-value="2020-02-28" |28 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb28/>
+|style="background:#BBCDE4" |'''45'''	<!-- Netanyahu	-->
+|35					<!-- Gantz	-->
+|13					<!-- Neither	-->
+|7					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-28" |27–28 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb28/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|32					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|–					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-27" |27 Feb 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]'' & [[The Jerusalem Post]]<ref name=Maariv28Feb/>
+|style="background:#BBCDE4" |'''45'''	<!-- Netanyahu	-->
+|36					<!-- Gantz	-->
+|13					<!-- Neither	-->
+|7					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-27" |27 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH27Feb/>
+|style="background:#BBCDE4" |'''49'''	<!-- Netanyahu	-->
+|35					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|16					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-27" |27 Feb 2020
+|Kantar
+|[[Kan 11]]<ref name=Kan27Feb/>
+|style="background:#BBCDE4" |'''45'''	<!-- Netanyahu	-->
+|34					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|21					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-25" |25 Feb 2020
+|Panels Politics
+|103fm<ref name=103Feb25/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|35					<!-- Gantz	-->
+|11					<!-- Neither	-->
+|10					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-24" |24 Feb 2020
+|Kantar
+|[[Kan 11]]<ref name=Kan24Feb/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|34					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|22					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-24" |24 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb24/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|19					<!-- Neither	-->
+|7					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-23" |23 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb23/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|33					<!-- Gantz	-->
+|18					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-20" |19–20 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH20Feb/>
+|style="background:#BBCDE4" |'''45'''	<!-- Netanyahu	-->
+|35					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|20					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-19" |19 Feb 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv19Feb/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|39					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|18					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-19" |19 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb19/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|34					<!-- Gantz	-->
+|18					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-17" |17 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb17/>
+|style="background:#BBCDE4" |'''45'''	<!-- Netanyahu	-->
+|33					<!-- Gantz	-->
+|16					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-17" |16–17 Feb 2020
+|Midgam
+|[[Walla!]]<ref name=Walla17Feb/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|35					<!-- Gantz	-->
+|16					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-14" |13–14 Feb 2020
+|Panels Politics
+|103fm<ref name=103Feb14/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|40					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|17					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-13" |13 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb13/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|36					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|5					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-13" |12–13 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH14Feb/>
+|style="background:#BBCDE4" |'''47'''	<!-- Netanyahu	-->
+|35					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|18					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-13" |12–13 Feb 2020
+|Smith
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv13Feb/>
+|style="background:#BBCDE4" |'''49'''	<!-- Netanyahu	-->
+|40					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|11					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-07" |7 Feb 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Feb7/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|32					<!-- Gantz	-->
+|16					<!-- Neither	-->
+|8					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-02-06" |5–6 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH6Feb/>
+|style="background:#BBCDE4" |'''47'''	<!-- Netanyahu	-->
+|39					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|14					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-29" |29 Jan 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=jkipphm/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|33					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|24					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-29" |29 Jan 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=jkimidgam/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|37					<!-- Gantz	-->
+|16					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=jki17janpphm/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|36					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|7					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Jan16/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|38					<!-- Gantz	-->
+|16					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-16" |16 Jan 2020
+|Kantar
+|[[Kan 11]]<ref name=Kan16Jan>{{cite news |url=https://knessetjeremy.com/2020/01/17/18th-poll-of-2020-election-blue-white-36-likud-31-joint-list-13-shas-9-labor-gesher-meretz-9-utj-8-yamina-7-yisrael-beitenu-7/ |title=18th Poll of 2020 Election: Blue & White 36, Likud 31, Joint List 13, Shas 9, Labor-Gesher-Meretz 9, UTJ 8, Yamina 7, Yisrael Beitenu 7 |work=Jeremy's Knesset Insider |date=17 January 2020 |accessdate=17 January 2020 |author=Jeremy Saltan}}</ref>
+|41					<!-- Netanyahu	-->
+|style="background:#B2EDFB" |'''42'''	<!-- Gantz	-->
+|–					<!-- Neither	-->
+|17					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-13" |13 Jan 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Jan13/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|style="background:#B2EDFB" |'''39'''	<!-- Gantz	-->
+|16					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-10" |10 Jan 2020
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH10Jan/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|38					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|19					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-02" |2 Jan 2020
+|Direct Polls
+|[[Channel 13 (Israel)|Channel 13]]<ref name=DP2Jan>{{cite web |url=https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_13_news_2_1.pdf |title=תוצאות סקר עמדות הציבור בנושאים שונים |language=he |website=[[Central Elections Committee (Israel)|Central Elections Committee]] |date=2 January 2020 |accessdate=11 January 2020}}</ref>
+|style="background:#BBCDE4" |'''48.5'''	<!-- Netanyahu	-->
+|45.9					<!-- Gantz	-->
+|5.0					<!-- Neither	-->
+|0.6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-02" |2 Jan 2020
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Jan2/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|33					<!-- Gantz	-->
+|13					<!-- Neither	-->
+|12					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-02" |2 Jan 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Jan2/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|39					<!-- Gantz	-->
+|15					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2020-01-01" |1 Jan 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv1Jan/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|40					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|19					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-29" |29 Dec 2019
+|Direct Polls
+|[[Channel 13 (Israel)|Channel 13]]<ref name=DP2Jan/>
+|style="background:#BBCDE4" |'''47.5'''	<!-- Netanyahu	-->
+|45.0					<!-- Gantz	-->
+|5.3					<!-- Neither	-->
+|2.1					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-29" |29 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec29/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|38					<!-- Gantz	-->
+|16					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH12Dec/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|40					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|18					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec12/>
+|style="background:#BBCDE4" |'''38'''	<!-- Netanyahu	-->
+|37					<!-- Gantz	-->
+|19					<!-- Neither	-->
+|6					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-10" |9–10 Dec 2019
+|Midgam
+|[[Walla!]]<ref name=Walla10Dec/>
+|37					<!-- Netanyahu	-->
+|style="background:#B2EDFB" |'''38'''	<!-- Gantz	-->
+|16					<!-- Neither	-->
+|9					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-08" |8 Dec 2019
+|Kantar
+|[[Israeli Public Broadcasting Corporation|Kan]] Radio<ref name=Kan8Dec/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|38					<!-- Gantz	-->
+|21					<!-- Neither	-->
+|–					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-05" |5 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec05/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|37					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|7					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-28" |28 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH28Nov/>
+|style="background:#BBCDE4" |'''45'''	<!-- Netanyahu	-->
+|39					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|16					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-26" |26 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Nov26/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|39					<!-- Gantz	-->
+|14					<!-- Neither	-->
+|7					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-22" |21–22 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH22Nov/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|37					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|19					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-15" |15 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH15Nov/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|41					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|16					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-11" |11 Nov 2019
+|Midgam
+|[[Army Radio]]<ref name=Army11Nov>{{cite news |url=https://www.timesofisrael.com/poll-finds-blue-and-white-voters-split-over-possible-arab-backed-government/ |title=Poll finds Blue and White voters split over possible Arab-backed government |work=[[The Times of Israel]] |date=11 November 2019 |accessdate=12 November 2019}}</ref>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|39					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|–					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-10" |10 Nov 2019
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13Nov10/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|37					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|23					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-05" |5 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=direct/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|36					<!-- Gantz	-->
+|colspan=2 |24				<!-- Neither	-->
+|}
+
+;Sa'ar vs Gantz
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px;"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+![[Gideon Sa'ar|Sa'ar]]
+![[Benny Gantz|Gantz]]
+!Neither
+!Don't Know
+|-
+!style="background:{{party color|Likud}}" |
+!style="background:{{party color|Blue and White (political alliance)}}" |
+!style="background:#d3d3d3" |
+!style="background:#ffffff" |
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH12Dec/>
+|31					<!-- Sa'ar	-->
+|style="background:#B2EDFB" |'''36'''	<!-- Gantz	-->
+|–					<!-- Neither	-->
+|33					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec12/>
+|22					<!-- Sa'ar	-->
+|style="background:#B2EDFB" |'''36'''	<!-- Gantz	-->
+|30					<!-- Neither	-->
+|12					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-08" |8 Dec 2019
+|Kantar
+|[[Israeli Public Broadcasting Corporation|Kan]] Radio<ref name=Kan8Dec/>
+|28					<!-- Sa'ar	-->
+|style="background:#B2EDFB" |'''36'''	<!-- Gantz	-->
+|style="background:#d3d3d3" |'''36'''	<!-- Neither	-->
+|–					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-12-05" |5 Dec 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Dec05/>
+|19					<!-- Sa'ar	-->
+|style="background:#B2EDFB" |'''36'''	<!-- Gantz	-->
+|31					<!-- Neither	-->
+|14					<!-- Don't Know	-->
+|-
+|data-sort-value="2019-11-26" |26 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Nov26/>
+|23					<!-- Sa'ar	-->
+|style="background:#B2EDFB" |'''40'''	<!-- Gantz	-->
+|24					<!-- Neither	-->
+|13					<!-- Don't Know	-->
+|}
+
+== Coalition ==
+Some opinion pollsters have asked voters which coalition they would prefer. The tables below list their responses as percentages.
+
+;[[Minority government]] backed by the [[Joint List]]
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px"
+!Date
+!Polling firm
+!Publisher
+!Support
+!Oppose
+!Don't Know
+|-
+|data-sort-value="2020-02-17" |16–17 Feb 2020
+|Midgam
+|[[Walla!]]<ref name=Walla17Feb/>
+|28
+|style="background:pink" |'''54'''{{efn|name=4th}}
+|18
+|-
+|data-sort-value="2020-02-13" |13 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb13/>
+|25
+|style="background:pink" |'''56'''
+|19
+|-
+|data-sort-value="2020-02-06" |5–6 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH6Feb/>
+|29
+|style="background:pink" |'''54'''
+|17
+|-
+|data-sort-value="2019-11-11" |11 Nov 2019
+|Midgam
+|[[Army Radio]]<ref name=Army11Nov/>
+|34
+|style="background:pink" |'''59'''
+|–
+|}
+
+;General
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px"
+!rowspan=2 |Date
+!rowspan=2 |Polling firm
+!rowspan=2 |Publisher
+!colspan=3 |[[National unity government]]
+!rowspan=2 |[[Right-wing politics|Right]]
+!rowspan=2 |[[Left-wing politics|Left]]
+!rowspan=2 |Don't Know
+|-
+![[Likud]]-[[Blue and White (political alliance)|B&W]] only
+!w/ right-wing block
+!w/ [[Yisrael Beiteinu]]
+|-
+|data-sort-value="2020-02-13" |12–13 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH14Feb/>
+|19
+|17
+|–
+|style="background:#BBCDE4" |'''30'''
+|22
+|12
+|-
+|data-sort-value="2020-02-06" |5–6 Feb 2020
+|Maagar Mohot
+|''[[Israel Hayom]]'' & [[i24 News]]<ref name=IH6Feb/>
+|17
+|17
+|–
+|style="background:#BBCDE4" |'''30'''
+|23
+|13
+|-
+|data-sort-value="2020-02-05" |5 Feb 2020
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv5Feb/>
+|style="background:Violet" |'''26'''
+|–
+|16
+|23
+|19
+|16
+|-
+|data-sort-value="2019-12-12" |12 Dec 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH12Dec/>
+|style="background:Violet" |'''30'''
+|19
+|–
+|20
+|15
+|16
+|-
+|data-sort-value="2019-11-21" |21 Nov 2019
+|Kantar
+|[[Kan 11]]<ref name=Kan21Nov/>
+|colspan=3 style="background:Violet" |'''40'''
+|24
+|15
+|–
+|-
+|data-sort-value="2019-11-15" |15 Nov 2019
+|Maagar Mochot
+|''[[Israel Hayom]]''<ref name=IH15Nov/>
+|–
+|–
+|style="background:Violet" |'''40'''
+|28
+|17
+|15
+|}
+
+;[[National unity government]] headed by [[Benjamin Netanyahu]]
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px"
+!Date
+!Polling firm
+!Publisher
+!Support
+!Oppose
+!Don't Know
+|-
+|data-sort-value="2020-02-13" |13 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb13/>
+|style="background:lightgreen" |'''50'''
+|25{{efn|name=4th|Prefer a fourth consecutive [[snap election]].}}
+|25
+|-
+|data-sort-value="2019-10-06" |3–6 Oct 2019
+|Midgam
+|[[Walla!]]<ref name=Walla6Oct19/>
+|42
+|style="background:pink" |'''50'''
+|8
+|}
+
+;[[National unity government]] headed by [[Benny Gantz]]
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px"
+!Date
+!Polling firm
+!Publisher
+!Support
+!Oppose
+!Don't Know
+|-
+|data-sort-value="2020-02-13" |13 Feb 2020
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=Ch12Feb13/>
+|style="background:lightgreen" |'''52'''
+|27{{efn|name=4th}}
+|21
+|}
+
+;[[National unity government]]
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px"
+!Date
+!Polling firm
+!Publisher
+!Support
+!Oppose
+!Don't Know
+|-
+|data-sort-value="2020-02-05" |5 Feb 2020
+|Midgam
+|[[Walla!]]<ref name=Walla5Feb/>
+|style="background:lightgreen" |'''52'''
+|26
+|22
+|}
+
+;Government headed by [[Benny Gantz]]
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px"
+!rowspan=3 |Date
+!rowspan=3 |Polling firm
+!rowspan=3 |Publisher
+!colspan=4 |[[National unity government]]
+!rowspan=3 |[[Center-left]] &<br> [[Yisrael Beiteinu]]
+!rowspan=3 |Other
+|-
+!colspan=2 |with [[Benjamin Netanyahu|Netanyahu]]
+!colspan=2 |without [[Benjamin Netanyahu|Netanyahu]]
+|-
+!with [[Haredim]]
+!colspan=2 |without [[Haredim]]
+!with [[Haredim]]
+|-
+|data-sort-value="2019-11-09" |9 Nov 2019
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref>{{cite news |title=Poll: Majority against a Palestinian state |url=http://www.israelnationalnews.com/News/News.aspx/271360 |work=[[Arutz Sheva]] |date=9 November 2019 |accessdate=12 November 2019}}</ref>
+|style="background:Violet" |'''29.1'''
+|17.9
+|20.3
+|3.2
+|19
+|10.5
+|}
+
+==Notes==
+{{notelist}}
+
+==References==
+{{Reflist}}
+{{Opinion polling for Israeli elections}}
+[[Category:Opinion polling in Israel]]
