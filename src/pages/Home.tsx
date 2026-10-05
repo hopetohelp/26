@@ -238,6 +238,12 @@ export default function Home() {
             למצביעים
           </Link>
         </Card>
+        <Card title="מה השתנה מאז 2022">
+          <p className="text-sm">כל משפחת רשימות: האחוז ב-2022 מול הממוצע היום, בשלוש דרכי שיוך — כולל "לא משויך".</p>
+          <Link to="/changes" className="font-bold">
+            להשוואה
+          </Link>
+        </Card>
         <Card title="כמה צדקו הסקרים בעבר">
           <p className="text-sm">מה אמרו הסקרים ערב כל מערכת מאז 2019, ומה יצא בפועל — לפי רשימה, גוש ומכון.</p>
           <Link to="/accuracy" className="font-bold">

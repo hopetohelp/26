@@ -418,7 +418,8 @@ def level_at_end(fit: dict) -> tuple[dict[str, float], dict[str, float]]:
     return level, var
 
 
-def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_noag=None, bloc: list[str] | None = None):
+def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_noag=None, bloc: list[str] | None = None,
+                        groups: dict[str, list[str]] | None = None):
     idx = {k: i for i, k in enumerate(lists)}
     n = len(sims_seats)
     out = {"n": n, "lists": {}}
@@ -443,12 +444,20 @@ def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_no
     if bloc:
         b = [sum(s[idx[k]] for k in bloc if k in idx) for s in sims_seats]
         out["bloc"] = {"lists": bloc, "seats": [round(x) for x in quantiles(b)], "atLeast61": round(sum(1 for x in b if x >= 61) / n, 4)}
+    if groups:
+        # קבוצת רשימות (למשל "משפחה" מ-2022): הטווח של הסכום בכל תרחיש — לא סכום הטווחים
+        out["groups"] = {}
+        for gid, members in groups.items():
+            ii = [idx[k] for k in members if k in idx]
+            sh = [100 * sum(s[i] for i in ii) for s in sims_shares]
+            se = [sum(s[i] for i in ii) for s in sims_seats]
+            out["groups"][gid] = {"share": [round(x, 2) for x in quantiles(sh)], "seats": [round(x) for x in quantiles(se)]}
     return out
 
 
 def scenarios(fit: dict, lists: list[str], ref: str, pairs: list[tuple[str, str]], election_day: str,
               agg_cfg: AggConfig, sc_cfg: ScenarioConfig, seed: int, bloc: list[str] | None = None,
-              with_noag: bool = True) -> dict:
+              with_noag: bool = True, groups: dict[str, list[str]] | None = None) -> dict:
     level, var = level_at_end(fit)
     model_lists = [ref] + [k for k in lists if k in level]
     horizon = max(0, _day(election_day) - _day(fit["asof"]))
@@ -457,7 +466,7 @@ def scenarios(fit: dict, lists: list[str], ref: str, pairs: list[tuple[str, str]
     noag = None
     if with_noag and pairs:
         noag = [fast_seats([int(round(v * VALID)) for v in shares], VALID, []) for shares in sh]
-    summ = summarize_scenarios(model_lists, sh, se, noag, bloc)
+    summ = summarize_scenarios(model_lists, sh, se, noag, bloc, groups)
     summ["horizonDays"] = horizon
     return summ
 
