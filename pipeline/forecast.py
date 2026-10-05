@@ -381,7 +381,9 @@ def forecast(variant: str, polls: dict[str, dict[str, float]], lists: dict[str, 
             corrected = {s: correct_poll(p, s, lists, f, spec, thr_share, use) for s, p in polls.items()}
             sh = combine(corrected, weights_for(list(polls), f, spec))
             if variant in spec["model"].get("others", {}).get("variants", []):
-                sh = {k: v * (1 - f.others_share) for k, v in sh.items()}
+                # מחליף את השארית שמודל התצפית השאיר (1%–5%, לא מכויל) במסה שנאמדה מהעבר
+                tot = sum(sh.values())
+                sh = {k: v / tot * (1 - f.others_share) for k, v in sh.items()}
     return sh, seats_from_shares(sh, agreements, threshold)
 
 
