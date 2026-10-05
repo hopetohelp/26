@@ -459,8 +459,10 @@
   ],
   "sourceLevels": [
    "primary",
+   "press",
    "aggregator"
-  ]
+  ],
+  "sourceLevelsNote": "primary = הפרסום של הגוף המזמין · press = כתבה של כלי תקשורת אחר מאותה תקופה · aggregator = לפחות רשימה אחת רק מאתר אוסף בן-זמננו (Knesset Jeremy). בדיקת רגישות: primary+press בלבד."
  },
  "validity": {
   "minSeries": 3
