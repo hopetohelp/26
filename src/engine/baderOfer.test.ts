@@ -170,3 +170,78 @@ describe("כמה קולות למנדט הבא", () => {
 function sortObj(o: Record<string, number>) {
   return Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : 1)));
 }
+
+/**
+ * אורקל עצמאי: שמונה מקרים שקודקס בנה ישירות מלשון החוק (סעיפים 81–82) ומהתוצאות הרשמיות,
+ * בלי לראות את המימוש. המקור: close-family#2423, תגובה 5996751753 (5.10.2026).
+ */
+describe("אורקל עצמאי מלשון החוק", () => {
+  const run = (votes: Record<string, number>, agreements: Agreement[] = []) =>
+    allocate(votes, Object.values(votes).reduce((a, b) => a + b, 0), agreements);
+
+  it("1. בדיוק על הסף עוברת; קול אחד מתחתיו — לא (81(א): 'אינו פחות')", () => {
+    const r = run({ א: 30000, ב: 7400, ג: 1300, ד: 1299, ה: 1 });
+    expect(r.status).toBe("ok");
+    expect(r.quota).toBe(322);
+    expect(r.seats).toMatchObject({ א: 93, ב: 23, ג: 4 });
+    expect(r.seats.ד ?? 0).toBe(0);
+    expect(r.seats.ה ?? 0).toBe(0);
+  });
+
+  it("2. הסכם שאחד מצדדיו לא עבר אינו פעיל בחלוקה (82(א))", () => {
+    const r = run({ א: 25000, ב: 10000, ג: 4000, ד: 1000 }, [["ג", "ד"]]);
+    expect(r.status).toBe("ok");
+    expect(r.quota).toBe(325);
+    expect(r.activeAgreements).toEqual([]);
+    expect(r.seats).toMatchObject({ א: 77, ב: 31, ג: 12 });
+    expect(r.seats.ד ?? 0).toBe(0);
+  });
+
+  it("3. שוויון במנה — הגרלה של הוועדה, לא הכרעה שקטה (81(ד)(2))", () => {
+    const r = run({ א: 1300, ב: 1300, ג: 1360 });
+    expect(r.status).toBe("lottery_required");
+    expect(r.quota).toBe(33);
+    expect(r.tie?.units).toEqual(["א", "ב"]);
+  });
+
+  it("4. הזוג זוכה בעודף, ואז חלוקה פנימית במודד פנימי שלם ובמנות (82(ב))", () => {
+    const r = run({ א: 2000, ב: 2100, ג: 5200 }, [["א", "ב"]]);
+    expect(r.status).toBe("ok");
+    expect(r.quota).toBe(77);
+    expect(r.seats).toEqual({ א: 26, ב: 27, ג: 67 });
+  });
+
+  it("5. עשר רשימות קטנות (10% יחד) אינן מצטרפות לעניין הסף", () => {
+    const small = Object.fromEntries(["ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל"].map((k) => [k, 1000]));
+    const r = run({ א: 54000, ב: 36000, ...small });
+    expect(r.status).toBe("ok");
+    expect(r.quota).toBe(750);
+    expect(r.seats.א).toBe(72);
+    expect(r.seats.ב).toBe(48);
+    for (const k of Object.keys(small)) expect(r.seats[k] ?? 0).toBe(0);
+  });
+
+  it("6. רשימה עם יותר ממחצית הקולות אינה נחסמת ב-81(ד)(4)", () => {
+    const r = run({ א: 51000, ב: 25000, ג: 24000 });
+    expect(r.status).toBe("ok");
+    expect(r.quota).toBe(833);
+    expect(r.seats).toEqual({ א: 61, ב: 30, ג: 29 });
+  });
+
+  it("7. הסכם מעביר מנדט מרשימה שלישית שאינה בזוג", () => {
+    const votes = { א: 1500, ב: 1600, ג: 2000, ד: 2300 };
+    expect(run(votes).seats).toEqual({ א: 24, ב: 26, ג: 33, ד: 37 });
+    expect(run(votes, [["א", "ב"]]).seats).toEqual({ א: 25, ב: 26, ג: 32, ד: 37 });
+  });
+
+  it("8. 2022 — עם ההסכמים ובלעדיהם, לפי חישוב עצמאי מקובץ הוועדה", () => {
+    const e = results.find((x) => x.knesset === 25)!;
+    const votes = votesOf(e);
+    const withAg = allocate(votes, e.valid, agreementsOf(e));
+    const without = allocate(votes, e.valid, []);
+    expect(withAg.quota).toBe(36227);
+    const nonzero = (s: Record<string, number>) => Object.fromEntries(Object.entries(s).filter(([, v]) => v > 0));
+    expect(nonzero(withAg.seats)).toEqual({ מחל: 32, פה: 24, ט: 14, כן: 12, שס: 11, ג: 7, ל: 6, עם: 5, ום: 5, אמת: 4 });
+    expect(nonzero(without.seats)).toEqual({ מחל: 31, פה: 24, ט: 14, כן: 12, שס: 11, ג: 7, ל: 6, עם: 5, ום: 5, אמת: 5 });
+  });
+});
