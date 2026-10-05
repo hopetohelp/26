@@ -1,11 +1,12 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { FEEDBACK_URL, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
 
 /**
  * כפתור פידבק בלי מייל: טופס קצר ⇐ שרת קטן ב-Cloudflare (worker/feedback) ⇐ מאגר פרטי (D1).
- * לא נשמר שום פרט מזהה. הכתובת נקבעת בבנייה (VITE_FEEDBACK_URL); בלעדיה הכפתור אינו מוצג.
+ * לא נשמר שום פרט מזהה. אחרי השליחה הגולש מקבל קישור אישי לשיחה (עמוד "ההערות שלי").
+ * הכתובת נקבעת בבנייה (VITE_FEEDBACK_URL); בלעדיה הכפתור אינו מוצג.
  */
-const ENDPOINT = import.meta.env.VITE_FEEDBACK_URL as string | undefined;
 const TOPICS = [
   { id: "data", label: "נתון שגוי" },
   { id: "idea", label: "רעיון" },
@@ -18,7 +19,7 @@ type Status = "idle" | "sending" | "sent" | "error";
 
 export default function Feedback() {
   const [open, setOpen] = useState(false);
-  if (!ENDPOINT) return null;
+  if (!FEEDBACK_URL) return null;
   return (
     <>
       <button
@@ -44,6 +45,9 @@ function Sheet({ onClose }: { onClose: () => void }) {
   const [text, setText] = useState("");
   const [trap, setTrap] = useState(""); // שדה מלכודת לרובוטים — גולש אמיתי לא רואה אותו
   const [status, setStatus] = useState<Status>("idle");
+  const [token, setToken] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const mine = savedThreads().length;
   const titleId = useId();
   const textId = useId();
   const area = useRef<HTMLTextAreaElement>(null);
@@ -59,11 +63,12 @@ function Sheet({ onClose }: { onClose: () => void }) {
     if (!text.trim() || status === "sending") return;
     setStatus("sending");
     try {
-      const res = await fetch(ENDPOINT!, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ topic, text: text.trim().slice(0, MAX), page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap }),
-      });
+      const body = text.trim().slice(0, MAX);
+      const res = await sendFeedback({ topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap });
+      if (res.ok && res.token) {
+        saveThread({ token: res.token, created: new Date().toISOString(), preview: body.slice(0, 80) });
+        setToken(res.token);
+      }
       setStatus(res.ok ? "sent" : "error");
     } catch {
       setStatus("error");
@@ -83,6 +88,29 @@ function Sheet({ onClose }: { onClose: () => void }) {
           <div role="status" className="flex flex-col gap-3 items-start py-2">
             <h2 id={titleId} className="font-display text-4xl leading-none">תודה. ההערה התקבלה.</h2>
             <p className="text-base leading-relaxed">כל הערה נקראת. תיקון נתון מופיע בהיסטוריה של האתר, עם הסבר.</p>
+            {token && (
+              <div className="w-full flex flex-col gap-2 bg-paper rounded-theme p-3">
+                <p className="text-sm font-bold">הקישור האישי שלך — שם תופיע התשובה, ושם אפשר להמשיך לכתוב:</p>
+                <p className="text-xs break-all tabular bg-paper-card rounded p-2" dir="ltr">{threadLink(token)}</p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(threadLink(token)).then(() => setCopied(true), () => setCopied(false));
+                    }}
+                    className="min-h-[44px] px-4 rounded-full bg-ink text-paper-card text-sm font-bold"
+                  >
+                    {copied ? "הועתק" : "העתקת הקישור"}
+                  </button>
+                  <Link to={`/feedback/${token}`} onClick={onClose} className="min-h-[44px] px-4 rounded-full border border-ink-faint text-sm font-bold flex items-center no-underline text-ink">
+                    לשיחה
+                  </Link>
+                </div>
+                <p className="text-xs text-ink-soft">
+                  הקישור נשמר גם בדפדפן הזה. מי שמחזיק בו יכול לקרוא את השיחה — אל תפרסמו אותו.
+                </p>
+              </div>
+            )}
             <button type="button" onClick={onClose} className="font-extrabold underline underline-offset-2 min-h-[44px]">
               חזרה לאתר
             </button>
@@ -129,8 +157,14 @@ function Sheet({ onClose }: { onClose: () => void }) {
               <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} className="hidden" />
             </label>
             <p className="text-sm text-ink-soft leading-relaxed">
-              בלי מייל ובלי הרשמה. ההערה נשמרת אצלנו בלבד, לא מתפרסמת, ולא נשמר שום פרט מזהה. העמוד שממנו שלחתם מצורף.
+              בלי מייל ובלי הרשמה. ההערה נשמרת אצלנו בלבד, לא מתפרסמת, ולא נשמר שום פרט מזהה. העמוד שממנו שלחתם מצורף. אחרי
+              השליחה תקבלו קישור אישי לתשובה.
             </p>
+            {mine > 0 && (
+              <Link to="/feedback" onClick={onClose} className="text-sm font-bold">
+                ההערות הקודמות שלי ({mine})
+              </Link>
+            )}
             {status === "error" && (
               <p role="alert" className="text-sm font-bold text-warn">
                 השליחה לא הצליחה. בדקו את החיבור לאינטרנט ונסו שוב.
