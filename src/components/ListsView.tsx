@@ -31,10 +31,10 @@ export default function ListsView({ rows, theme }: { rows: ListRow[]; theme: The
 function Board({ rows }: { rows: ListRow[] }) {
   return (
     <div className="bg-frame text-frame-ink rounded-theme overflow-hidden" role="table" aria-label="הרשימות: מנדטים לפי הממוצע, טווח וסטטוס">
-      <div role="row" className="grid grid-cols-[1fr_auto_4.2rem_minmax(6.5rem,auto)] md:grid-cols-[1fr_auto_6rem_12rem] gap-x-3 px-4 py-2 text-[11px] md:text-xs text-frame-soft">
+      <div role="row" className="grid grid-cols-[minmax(0,1fr)_auto_5.5rem] md:grid-cols-[minmax(0,1fr)_auto_6rem_12rem] gap-x-3 px-4 py-2 text-[11px] md:text-xs text-frame-soft">
         <span role="columnheader">רשימה</span>
         <span role="columnheader">מנדטים</span>
-        <span role="columnheader">טווח</span>
+        <span role="columnheader" className="hidden md:block">טווח</span>
         <span role="columnheader">סטטוס</span>
       </div>
       {rows.map((r, i) => {
@@ -45,10 +45,12 @@ function Board({ rows }: { rows: ListRow[] }) {
           <div
             role="row"
             key={r.id}
-            className={`grid grid-cols-[1fr_auto_4.2rem_minmax(6.5rem,auto)] md:grid-cols-[1fr_auto_6rem_12rem] gap-x-3 items-center px-4 py-2 border-t border-frame-line ${i % 2 ? "" : "bg-white/[.03]"}`}
+            className={`grid grid-cols-[minmax(0,1fr)_auto_5.5rem] md:grid-cols-[minmax(0,1fr)_auto_6rem_12rem] gap-x-3 items-center px-4 py-2 border-t border-frame-line ${i % 2 ? "" : "bg-white/[.03]"}`}
           >
-            <span role="cell" className={`font-medium text-[15px] md:text-base ${out ? "text-frame-soft/70" : ""}`}>
+            <span role="cell" className={`min-w-0 font-medium text-[15px] md:text-base ${out ? "text-frame-soft/70" : ""}`}>
               {r.name}
+              {/* בטלפון הטווח עובר מתחת לשם, כדי שהשורה תיכנס ברוחב 360 בלי לוותר על נתון */}
+              <span className="md:hidden block text-xs text-frame-soft tabular">טווח {range(r)}</span>
             </span>
             <span role="cell" className="flex gap-0.5" dir="ltr">
               <span className="sr-only">{r.central}</span>
@@ -67,10 +69,10 @@ function Board({ rows }: { rows: ListRow[] }) {
                 </span>
               ))}
             </span>
-            <span role="cell" className="text-[13px] md:text-sm text-frame-soft tabular">
+            <span role="cell" className="hidden md:block text-[13px] md:text-sm text-frame-soft tabular">
               {range(r)}
             </span>
-            <span role="cell" className={`text-[13px] md:text-sm font-bold flex items-center gap-1.5 ${out ? "text-frame-soft/70" : edge ? "text-signal" : "text-[#9FE0B8]"}`}>
+            <span role="cell" className={`min-w-0 leading-tight text-[13px] md:text-sm font-bold flex items-center gap-1.5 ${out ? "text-frame-soft/70" : edge ? "text-signal" : "text-[#9FE0B8]"}`}>
               {edge && <span aria-hidden="true" className="w-2 h-2 rounded-full bg-signal shadow-[0_0_0_3px_rgb(var(--signal)/.25)]" />}
               <span aria-hidden="true">{out ? "מתחת לסף" : edge ? `על הסף ${passPct(r.pass)}%` : "עוברת"}</span>
               <span className="sr-only">{statusText(r)}</span>

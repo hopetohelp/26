@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 
 /** שלושת העיצובים שהגולש בוחר ביניהם. הבחירה נשמרת בדפדפן שלו בלבד. */
 export const THEMES = [
-  { id: "board", name: "לוח", long: "לוח המודיעין", color: "#0B2239" },
-  { id: "league", name: "טבלה", long: "טבלת הליגה", color: "#FFFFFF" },
-  { id: "boxes", name: "קופסאות", long: "קיר הקופסאות", color: "#D9622B" },
+  { id: "boxes", name: "צעיר", long: "עיצוב צעיר — קיר הקופסאות", color: "#D9622B" },
+  { id: "league", name: "מקצועי", long: "עיצוב מקצועי — טבלת הליגה", color: "#FFFFFF" },
+  { id: "board", name: "חדשותי", long: "עיצוב חדשותי — לוח המודיעין", color: "#0B2239" },
 ] as const;
 export type ThemeId = (typeof THEMES)[number]["id"];
 

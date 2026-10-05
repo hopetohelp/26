@@ -52,7 +52,7 @@ function Icon({ name }: { name: string }) {
 export function ThemePicker() {
   const [theme, setTheme] = useTheme();
   return (
-    <div role="radiogroup" aria-label="עיצוב האתר" className="flex items-center gap-1.5">
+    <div role="radiogroup" aria-label="עיצוב האתר" className="flex flex-wrap items-center gap-1.5">
       <span className="text-sm opacity-80 me-1">עיצוב:</span>
       {THEMES.map((t) => {
         const on = t.id === theme;
@@ -63,7 +63,7 @@ export function ThemePicker() {
             role="radio"
             aria-checked={on}
             onClick={() => setTheme(t.id as ThemeId)}
-            className={`flex items-center gap-1.5 rounded-full px-2.5 min-h-[36px] text-sm font-bold border ${
+            className={`flex items-center gap-1.5 rounded-full px-2.5 min-h-[44px] md:min-h-[36px] text-sm font-bold border ${
               on ? "bg-signal text-signal-ink border-signal" : "border-current bg-transparent opacity-80 hover:opacity-100"
             }`}
           >
@@ -123,7 +123,7 @@ function Masthead({ theme }: { theme: ThemeId }) {
     <div className="text-ink">
       <div className="max-w-6xl mx-auto px-4 pt-4 pb-2 flex flex-col gap-1">
         <div className="flex justify-between items-start gap-3">
-          <NavLink to="/" className="font-display text-[60px] leading-[0.85] no-underline text-ink hover:text-ink whitespace-nowrap">
+          <NavLink to="/" className="font-display text-[clamp(44px,14vw,60px)] leading-[0.85] no-underline text-ink hover:text-ink whitespace-nowrap min-w-0">
             בחירות 26
           </NavLink>
           <span className="mt-2 text-sm font-extrabold bg-ink text-paper-card px-2.5 py-1.5 whitespace-nowrap">{left}</span>

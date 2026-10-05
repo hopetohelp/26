@@ -7,6 +7,8 @@ colors:
   board-frame: "#0B2239"
   board-signal: "#FFB81C"
   board-accent: "#1D4F80"
+  board-flap-tile: "#061727"
+  board-pass: "#9FE0B8"
   league-paper: "#EEF1F5"
   league-ink: "#13171D"
   league-accent: "#1B3A8C"
@@ -33,11 +35,34 @@ typography:
   boxes-num:
     fontFamily: "JetBrains Mono, ui-monospace, monospace"
     fontSize: "12px"
+  masthead-board:
+    fontSize: "42px"
+  masthead-countdown:
+    fontSize: "28px"
+  masthead-league:
+    fontSize: "32px"
+  masthead-boxes:
+    fontSize: "clamp(44px, 14vw, 60px)"
+  flap-digit:
+    fontSize: "30px"
+  flap-digit-wide:
+    fontSize: "34px"
+  boxes-name:
+    fontSize: "32px"
+  board-name:
+    fontSize: "15px"
+  board-cell:
+    fontSize: "13px"
+  board-caption:
+    fontSize: "11px"
 rounded:
   board: "10px"
   league: "12px"
   boxes: "4px"
 components:
+  flap-tile:
+    backgroundColor: "{colors.board-flap-tile}"
+    textColor: "{colors.board-signal}"
   feedback-button:
     backgroundColor: "{colors.board-signal}"
     textColor: "{colors.board-ink}"
@@ -54,9 +79,11 @@ components:
 
 | מזהה | שם בממשק | העולם | הרגש |
 |---|---|---|---|
-| `board` (ברירת מחדל) | לוח | לוח היציאות בתחנה: מסגרת כחול-לילה, ספרות מתהפכות בצהוב-נורה | "מה המצב עכשיו" — חי, דחוף, מדויק |
-| `league` | טבלה | טבלת ליגה בעיתון ספורט: לבן נקי, ספרות עבות, קו ירידה מקווקו | מי למעלה, מי על הקו |
-| `boxes` | קופסאות | קיר קופסאות נעליים: קרטון כתום, תווית לבנה, שורת "מידות" | טווח כמו מידות — כמה אפשרויות, אחת מסומנת |
+| `board` (ברירת מחדל) | חדשותי | לוח היציאות בתחנה: מסגרת כחול-לילה, ספרות מתהפכות בצהוב-נורה | "מה המצב עכשיו" — חי, דחוף, מדויק |
+| `league` | מקצועי | טבלת ליגה בעיתון ספורט: לבן נקי, ספרות עבות, קו ירידה מקווקו | מי למעלה, מי על הקו |
+| `boxes` | צעיר | קיר קופסאות נעליים: קרטון כתום, תווית לבנה, שורת "מידות" | טווח כמו מידות — כמה אפשרויות, אחת מסומנת |
+
+השמות בממשק (צעיר · מקצועי · חדשותי) נקבעו בהכרעת בעלים; המזהים בקוד נשארים `boxes` · `league` · `board`.
 
 ההבדל בין העיצובים הוא **בהצגה בלבד**. הנתונים, הטקסטים, ההסברים והנגישות זהים בשלושתם.
 
@@ -81,7 +108,7 @@ components:
 
 ## Layout
 
-- רוחב תוכן מרבי `max-w-6xl`, שוליים צדדיים `px-4`. נבדק ב-360px, ‏390px ו-1280px, בלי גלילה אופקית.
+- רוחב תוכן מרבי `max-w-6xl`, שוליים צדדיים `px-4`. נבדק בטלפון (360px, ‏390px), בטאבלט (768px, ‏820px, ‏1024px — לאורך ולרוחב) ובמחשב (1280px), בלי גלילה אופקית.
 - **טלפון:** סרגל לשוניות קבוע בתחתית (המצב היום · סקרים · תרחישים · עוד), ו"עוד" פותח את כל העמודים. `main` מקבל `pb-28` כדי שהסרגל וכפתור ההערה לא יסתירו תוכן.
 - **מחשב:** ניווט מלא בכותרת. הכותרת עצמה שונה בכל עיצוב: פס כהה עם ספירה לאחור ושורת 120 המושבים (לוח), כותרת לבנה עם שבב ספירה כהה (טבלה), כותרת ענקית על קרטון (קופסאות).
 - ברשתות: `[&>*]:min-w-0` על כל grid, כדי שתוכן ארוך לא ידחוף את הדף לרוחב.
