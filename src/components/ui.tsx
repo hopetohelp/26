@@ -3,16 +3,16 @@ import { useState, type ReactNode } from "react";
 export function PageTitle({ children, lead }: { children: ReactNode; lead?: ReactNode }) {
   return (
     <div className="mb-6">
-      <h1 className="text-2xl md:text-3xl font-extrabold">{children}</h1>
-      {lead && <p className="mt-2 text-ink-soft max-w-3xl">{lead}</p>}
+      <h1 className="font-display text-5xl md:text-6xl leading-[0.95]">{children}</h1>
+      {lead && <p className="mt-3 text-ink-soft max-w-3xl leading-relaxed">{lead}</p>}
     </div>
   );
 }
 
 export function Card({ title, children, className = "" }: { title?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={`bg-paper-card border border-paper-line rounded-xl p-4 md:p-5 mb-5 ${className}`}>
-      {title && <h2 className="text-lg font-bold mb-3">{title}</h2>}
+    <section className={`bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 mb-5 ${className}`}>
+      {title && <h2 className="font-display text-3xl leading-none mb-3">{title}</h2>}
       {children}
     </section>
   );

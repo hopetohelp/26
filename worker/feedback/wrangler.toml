@@ -1,0 +1,13 @@
+# שרת הפידבק של האתר — מקבל הערה מהטופס ושומר אותה במאגר הפרטי. נפרס מ-.github/workflows/feedback-worker.yml
+name = "elections26-feedback"
+main = "index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGIN = "https://hopetohelp.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "elections26-feedback"
+database_id = "69ba3e11-7cce-4823-a3be-ac7cf82999ea"

@@ -3,15 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="ניתוח הבחירות לכנסת ה-26: תוצאות אמת, ארכיון סקרים, מגמות ומחשבון מנדטים לפי חוק הבחירות." />
-    <meta name="theme-color" content="#1f5f8b" />
+    <meta name="description" content="ניתוח הבחירות לכנסת ה-26: הסקרים, התרחישים, תוצאות אמת ומחשבון מנדטים לפי חוק הבחירות." />
+    <meta name="theme-color" content="#0B2239" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>בחירות 2026 — ניתוח</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet" />
+    <script>
+      // העיצוב שהגולש בחר — לפני הציור הראשון, כדי שלא יהבהב העיצוב הלא נכון (src/lib/theme.ts)
+      try {
+        var t = localStorage.getItem("elections26.theme");
+        if (t === "board" || t === "league" || t === "boxes") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
   </head>
-  <body class="bg-paper text-ink">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
