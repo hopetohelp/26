@@ -226,8 +226,11 @@ export default function Home() {
             למחשבון
           </Link>
         </Card>
-        <Card title="2022 — מה באמת קרה">
-          <p className="text-sm">{num(wasted2022)} קולות הלכו לרשימות שלא עברו את אחוז החסימה — כ-{(wasted2022 / (passing2022 / 120)).toFixed(1)} מנדטים.</p>
+        <Card title="תוצאות אמת 2019–2022">
+          <p className="text-sm">
+            חמש מערכות, אותו ניתוח: מי עבר, כמה נשרף ומה הזיזו ההסכמים. ב-2022, למשל, {num(wasted2022)} קולות הלכו לרשימות שלא עברו — כ-
+            {(wasted2022 / (passing2022 / 120)).toFixed(1)} מנדטים.
+          </p>
           <Link to="/results" className="font-bold">
             לתוצאות האמת
           </Link>
