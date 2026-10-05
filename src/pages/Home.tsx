@@ -121,7 +121,7 @@ export default function Home() {
               {latest.map((p) => (
                 <tr key={p.id} className="border-b border-paper-line/60">
                   <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
-                    {pollsterLabel(p)} {p.verified && <Badge tone="ok">אומת</Badge>}
+                    {pollsterLabel(p)} {p.verification && p.verified && <Badge tone="ok">{p.verification.status === "corrected" ? "תוקן לפי המקור" : "אומת"}</Badge>}
                   </th>
                   <td className="pe-3 whitespace-nowrap">{dateRange(p.start, p.end)}</td>
                   <td className="pe-3 tabular-nums">{p.sample ? num(p.sample) : "—"}</td>

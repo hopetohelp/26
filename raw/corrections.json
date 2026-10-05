@@ -1,0 +1,100 @@
+[
+ {
+  "field": "values.democrats.s",
+  "from": 10,
+  "id": "2026-09-02-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-7cad3b3e",
+  "to": 9
+ },
+ {
+  "field": "values.yb.s",
+  "from": 8,
+  "id": "2026-09-02-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-7cad3b3e",
+  "to": 7
+ },
+ {
+  "field": "start",
+  "from": "2026-09-02",
+  "id": "2026-09-02-lri-p4a-walla",
+  "source": "https://news.walla.co.il/item/3865040",
+  "to": "2026-09-01"
+ },
+ {
+  "field": "end",
+  "from": "2026-09-04",
+  "id": "2026-09-04-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1362890",
+  "to": "2026-09-03"
+ },
+ {
+  "field": "others.pct",
+  "from": 1.9,
+  "id": "2026-09-04-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1362890",
+  "to": 2.8
+ },
+ {
+  "field": "start",
+  "from": "2026-09-03",
+  "id": "2026-09-04-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1362890",
+  "to": "2026-09-02"
+ },
+ {
+  "field": "others.pct",
+  "from": 0.4,
+  "id": "2026-09-07-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-067c7eb8e9c70a1026.htm",
+  "to": 0.3
+ },
+ {
+  "field": "values.haredi_public.p",
+  "from": 1.2,
+  "id": "2026-09-07-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-067c7eb8e9c70a1026.htm",
+  "to": 1.1
+ },
+ {
+  "field": "firmHe",
+  "from": "S.M.L.T.",
+  "id": "2026-09-07-s-m-l-t-x",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election59/he/Survey_4135.pdf",
+  "to": "מכון DRI"
+ },
+ {
+  "field": "gov",
+  "from": 63,
+  "id": "2026-09-15-sf-nd-channel-14",
+  "source": "https://www.c14.co.il/article/1706627",
+  "to": 64
+ },
+ {
+  "field": "values.shas.s",
+  "from": 8,
+  "id": "2026-09-23-mp-tm-sn-a-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/hcp4l-905367553/",
+  "to": 7
+ },
+ {
+  "field": "values.utj.s",
+  "from": 7,
+  "id": "2026-09-23-mp-tm-sn-a-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/hcp4l-905367553/",
+  "to": 8
+ },
+ {
+  "field": "values.reservists.p",
+  "from": 2.5,
+  "id": "2026-09-30-mp-tm-sn-a-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905376242/",
+  "to": 2.8
+ },
+ {
+  "field": "sample",
+  "from": 553,
+  "id": "2026-10-04-kantar-kan-11",
+  "source": "https://www.kan.org.il/content/kan-news/politic/1105927/",
+  "to": 554
+ }
+]

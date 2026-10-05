@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Badge, Card, Note, PageTitle } from "../components/ui";
-import { listName, polls, pollsterKey, pollsterLabel, type Poll } from "../lib/data";
+import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, VERIFICATION_LABEL, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const PAGE = 50;
@@ -83,7 +83,13 @@ export default function Polls() {
                   {p.sample && <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>}
                   {!p.eligibleToShow && <Badge tone="warn">פחות מ-24 שעות מהפרסום</Badge>}
                   {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
-                  {p.verified ? <Badge tone="ok">אומת מול המקור</Badge> : <Badge>מקור: ויקיפדיה</Badge>}
+                  {p.verification ? (
+                    <Badge tone={VERIFICATION_LABEL[p.verification.status].tone === "ok" ? "ok" : VERIFICATION_LABEL[p.verification.status].tone === "warn" ? "warn" : "neutral"}>
+                      {VERIFICATION_LABEL[p.verification.status].text}
+                    </Badge>
+                  ) : (
+                    <Badge>מקור: ויקיפדיה</Badge>
+                  )}
                 </button>
                 <p className="text-sm text-ink-soft mt-1">{p.eligibleToShow ? valuesText(p) : "התוצאות יוצגו 24 שעות אחרי הפרסום הראשון."}</p>
                 {isOpen && (
@@ -96,8 +102,34 @@ export default function Polls() {
                     <dd>{dateRange(p.start, p.end)}</dd>
                     <dt className="font-bold">גודל המדגם</dt>
                     <dd>{p.sample ? num(p.sample) : "לא צוין בטבלה"}</dd>
-                    <dt className="font-bold">אוכלוסייה, טעות דגימה, שאלות</dt>
-                    <dd>בפרסום המקורי (קישור למטה); לא נאספו עדיין לטבלה.</dd>
+                    <dt className="font-bold">טעות הדגימה</dt>
+                    <dd>{p.verification?.details.moe ? String(p.verification.details.moe) : "לא נמצאה בפרסום המקורי, או שטרם נבדק"}</dd>
+                    <dt className="font-bold">האוכלוסייה</dt>
+                    <dd>{p.verification?.details.population ?? "לא נמצאה בפרסום המקורי, או שטרם נבדק"}</dd>
+                    <dt className="font-bold">נוסח השאלות</dt>
+                    <dd>בפרסום המקורי, אם פורסם (קישור למטה)</dd>
+                    {p.verification && (
+                      <>
+                        <dt className="font-bold">בדיקה מול המקור</dt>
+                        <dd>
+                          {VERIFICATION_LABEL[p.verification.status].text} · נבדק {date(p.verification.checkedAt)}
+                        </dd>
+                      </>
+                    )}
+                    {p.corrections && p.corrections.length > 0 && (
+                      <>
+                        <dt className="font-bold">תיקונים</dt>
+                        <dd>
+                          <ul>
+                            {p.corrections.map((c) => (
+                              <li key={c.field}>
+                                {fieldLabel(c.field)}: בטבלת ויקיפדיה <bdi>{String(c.from)}</bdi>, בפרסום המקורי <bdi>{String(c.to)}</bdi> — מוצג לפי המקור
+                              </li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </>
+                    )}
                     <dt className="font-bold">פרסום מקורי</dt>
                     <dd className="break-all">
                       {p.urls.length
@@ -124,8 +156,9 @@ export default function Polls() {
           </button>
         )}
         <Note>
-          אחוז בסוגריים = הרשימה מתחת לאחוז החסימה באותו סקר. "מקור: ויקיפדיה" = הנתונים הועתקו מהטבלה ועדיין לא הושוו
-          לפרסום המקורי. העדכון האחרון: {date(polls[0]?.end ?? "")}.
+          אחוז בסוגריים = הרשימה מתחת לאחוז החסימה באותו סקר. "אומת" = המספרים הושוו לפרסום המקורי ותואמים. "תוקן לפי המקור" = נמצא
+          הבדל מטבלת ויקיפדיה, והאתר מציג את מה שבפרסום המקורי (הפירוט בכרטיס הסקר). "מקור: ויקיפדיה" = טרם הושווה לפרסום המקורי.
+          העדכון האחרון: {date(polls[0]?.end ?? "")}.
         </Note>
       </Card>
     </>

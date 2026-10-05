@@ -250,6 +250,59 @@ def build_polls(build_time: datetime) -> dict:
     return {"polls": polls}
 
 
+# ---------------------------------------------------------------- תיקונים ואימות מול המקור
+
+def apply_corrections(polls: list[dict], build_time: datetime) -> None:
+    """raw/corrections.json: תיקון שדה לפי הפרסום המקורי. אף פעם לא בשקט — נרשם ב-poll["corrections"].
+    אם הערך הנוכחי אינו הערך שממנו תיקנו ("from"), הבנייה נכשלת: המקור השתנה ויש לבדוק מחדש."""
+    path = RAW / "corrections.json"
+    if not path.exists():
+        return
+    by_id = {p["id"]: p for p in polls}
+    for c in json.loads(path.read_text(encoding="utf-8")):
+        p = by_id.get(c["id"])
+        if p is None:
+            raise SystemExit(f"תיקון לסקר שאינו קיים: {c['id']}")
+        parts = c["field"].split(".")
+        holder = p
+        for k in parts[:-1]:
+            if k == "others" and holder.get("others") is None:
+                holder["others"] = {}
+            holder = holder.setdefault(k, {})
+        last = {"s": "s", "p": "p", "pct": "pct"}.get(parts[-1], parts[-1])
+        current = holder.get(last)
+        if current != c["from"]:
+            raise SystemExit(f"תיקון {c['id']} {c['field']}: הערך הנוכחי {current!r} אינו {c['from']!r} — המקור השתנה")
+        holder[last] = c["to"]
+        p.setdefault("corrections", []).append({"field": c["field"], "from": c["from"], "to": c["to"], "source": c["source"]})
+    for p in polls:
+        if not p.get("corrections"):
+            continue
+        p["seatSum"] = sum(e.get("s", 0) for e in p["values"].values())
+        p["consistent"] = 118 <= p["seatSum"] <= 122
+        assumed = datetime.fromisoformat(p["end"] + "T20:00:00").replace(tzinfo=ISRAEL_TZ)
+        p["assumedPublishedAt"] = assumed.isoformat()
+        p["eligibleToShow"] = assumed + timedelta(hours=24) <= build_time
+
+
+def apply_verification(polls: list[dict]) -> None:
+    """raw/verification.json: תוצאת ההשוואה לפרסום המקורי לכל סקר שנבדק."""
+    path = RAW / "verification.json"
+    if not path.exists():
+        return
+    by_id = {v["id"]: v for v in json.loads(path.read_text(encoding="utf-8"))}
+    for p in polls:
+        v = by_id.get(p["id"])
+        if not v:
+            continue
+        status = v["status"]
+        if status == "mismatch" and p.get("corrections"):
+            status = "corrected"
+        p["verified"] = status in ("match", "corrected", "partial")
+        p["verification"] = {"status": status, "checkedAt": v["checkedAt"], "source": v.get("source"),
+                             "details": v.get("sourceDetails") or {}, "law16E": v.get("law16E") or {}}
+
+
 # ---------------------------------------------------------------- רשימות 2026
 
 LISTS_2026 = [
@@ -306,15 +359,8 @@ def main() -> None:
     results = build_results()
     polls = build_polls(build_time)
     registry = build_registry(results)
-    verified_path = ROOT / "raw" / "verification.json"
-    if verified_path.exists():
-        ver = json.loads(verified_path.read_text(encoding="utf-8"))
-        by_id = {v["id"]: v for v in ver}
-        for p in polls["polls"]:
-            v = by_id.get(p["id"])
-            if v:
-                p["verified"] = v.get("status") == "match"
-                p["verification"] = v
+    apply_corrections(polls["polls"], build_time)
+    apply_verification(polls["polls"])
     meta = {
         "dataAsOf": build_time.isoformat(),
         "electionDay": "2026-10-27",
