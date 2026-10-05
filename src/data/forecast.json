@@ -12,7 +12,7 @@
   ]
  },
  "bloc": {
-  "atLeast61": 0.0951,
+  "atLeast61": 0.0931,
   "central": 53,
   "lists": [
    "likud",
@@ -25,6 +25,23 @@
    45,
    53,
    60
+  ]
+ },
+ "camp": {
+  "atLeast61": 0.1881,
+  "central": 57,
+  "lists": [
+   "likud",
+   "shas",
+   "utj",
+   "otzma",
+   "rzp",
+   "amcha"
+  ],
+  "seats": [
+   48,
+   55,
+   63
   ]
  },
  "daysToElection": 22,
@@ -91,17 +108,17 @@
  "horizon": 22,
  "lists": {
   "amcha": {
-   "pass": 0.4912,
+   "pass": 0.5344,
    "seats": 4,
    "seatsRange": [
     0,
-    0,
+    4,
     6
    ],
-   "share": 3.36,
+   "share": 3.48,
    "shareRange": [
-    1.74,
-    4.76
+    1.84,
+    4.87
    ]
   },
   "bluewhite": {
@@ -126,10 +143,10 @@
     9,
     12
    ],
-   "share": 7.21,
+   "share": 7.2,
    "shareRange": [
     5.11,
-    9.35
+    9.34
    ]
   },
   "haredi_public": {
@@ -154,10 +171,10 @@
     8,
     11
    ],
-   "share": 6.34,
+   "share": 6.33,
    "shareRange": [
-    4.53,
-    8.35
+    4.52,
+    8.34
    ]
   },
   "likud": {
@@ -168,14 +185,14 @@
     22,
     29
    ],
-   "share": 17.57,
+   "share": 17.55,
    "shareRange": [
-    13.03,
-    22.14
+    13.01,
+    22.12
    ]
   },
   "otzma": {
-   "pass": 0.9812,
+   "pass": 0.981,
    "seats": 7,
    "seatsRange": [
     5,
@@ -184,50 +201,50 @@
    ],
    "share": 6.14,
    "shareRange": [
-    4.39,
-    8.08
+    4.38,
+    8.07
    ]
   },
   "raam": {
-   "pass": 0.8672,
+   "pass": 0.8667,
    "seats": 6,
    "seatsRange": [
     0,
     6,
     8
    ],
-   "share": 4.71,
+   "share": 4.7,
    "shareRange": [
     3.02,
     6.08
    ]
   },
   "reservists": {
-   "pass": 0.312,
+   "pass": 0.3109,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     5
    ],
-   "share": 2.85,
+   "share": 2.84,
    "shareRange": [
     1.24,
     4.21
    ]
   },
   "rzp": {
-   "pass": 0.8883,
+   "pass": 0.8875,
    "seats": 6,
    "seatsRange": [
     0,
     6,
     8
    ],
-   "share": 4.89,
+   "share": 4.88,
    "shareRange": [
     3.16,
-    6.3
+    6.29
    ]
   },
   "shas": {
@@ -238,10 +255,10 @@
     9,
     12
    ],
-   "share": 7.29,
+   "share": 7.28,
    "shareRange": [
-    5.21,
-    9.51
+    5.2,
+    9.5
    ]
   },
   "together": {
@@ -252,24 +269,24 @@
     11,
     14
    ],
-   "share": 8.59,
+   "share": 8.58,
    "shareRange": [
-    6.15,
-    11.11
+    6.14,
+    11.1
    ]
   },
   "utj": {
-   "pass": 0.9775,
+   "pass": 0.9773,
    "seats": 8,
    "seatsRange": [
     5,
     7,
     10
    ],
-   "share": 6.03,
+   "share": 6.02,
    "shareRange": [
-    4.3,
-    7.86
+    4.29,
+    7.85
    ]
   },
   "yashar": {
@@ -280,24 +297,24 @@
     21,
     27
    ],
-   "share": 16.52,
+   "share": 16.5,
    "shareRange": [
-    12.13,
-    20.84
+    12.12,
+    20.82
    ]
   },
   "yb": {
-   "pass": 0.9843,
+   "pass": 0.9842,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     11
    ],
-   "share": 6.29,
+   "share": 6.28,
    "shareRange": [
-    4.49,
-    8.29
+    4.48,
+    8.28
    ]
   }
  },
@@ -363,8 +380,8 @@
  "specVersion": 5,
  "variant": "V5",
  "wasted": [
-  2.92,
-  6.02,
-  9.44
+  2.81,
+  5.9,
+  9.38
  ]
 }

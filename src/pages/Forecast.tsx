@@ -27,6 +27,7 @@ interface ForecastFile {
   params: { others: number; beta: number; betaElections: number; trainedOn: number[]; weights: Record<string, number>; wA: number | null; polls: number | null };
   lists: Record<string, { share: number; seats: number; seatsRange: number[]; shareRange: number[]; pass: number }>;
   bloc: { seats: number[]; atLeast61: number | null; central: number };
+  camp?: { lists: string[]; seats: number[]; atLeast61: number | null; central: number };
   wasted: number[];
   gate: { elections: number[]; minVote: number; minSeat: number; atHorizon: GateRow; passedAtHorizon: boolean | null };
   attempts: { versions: number[]; runs: number; bestVoteAccuracy: number };
@@ -128,6 +129,13 @@ export default function Forecast() {
               מפלגות הממשלה היוצאת: {fc.bloc.central} מנדטים לפי התחזית, ובין {fc.bloc.seats[0]} ל-{fc.bloc.seats[2]} ב-80% מהתרחישים
               {fc.bloc.atLeast61 !== null && ` (61 ומעלה ב-${Math.round(fc.bloc.atLeast61 * 100)}% מהתרחישים)`}.
             </li>
+            {fc.camp && fc.camp.seats.length > 0 && (
+              <li>
+                גוש נתניהו ({fc.camp.lists.map(listName).join(", ")}): {fc.camp.central} מנדטים לפי התחזית, ובין {fc.camp.seats[0]} ל-
+                {fc.camp.seats[2]} ב-80% מהתרחישים
+                {fc.camp.atLeast61 !== null && ` (61 ומעלה ב-${Math.round(fc.camp.atLeast61 * 100)}% מהתרחישים)`}.
+              </li>
+            )}
             <li>
               כ-{fc.wasted[1].toLocaleString("he-IL")}% מהקולות הכשרים לא יהפכו למנדטים בחציון התרחישים (רשימות מתחת לסף ורשימות קטנות שהסקרים
               אינם מציגים).
