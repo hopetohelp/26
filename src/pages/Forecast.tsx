@@ -10,7 +10,7 @@ import { Badge, Card, Note, PageTitle } from "../components/ui";
 interface GateRow {
   passed: boolean;
   valid: boolean;
-  runAt: string;
+  logged: boolean;
   summary: Record<string, { voteAccuracy: number; seatAccuracy: number }>;
   perElection: Record<string, [number, number]>;
 }
@@ -27,7 +27,7 @@ interface ForecastFile {
   lists: Record<string, { share: number; seats: number; seatsRange: number[]; shareRange: number[]; pass: number }>;
   bloc: { seats: number[]; atLeast61: number | null; central: number };
   wasted: number[];
-  gate: { elections: number[]; minVote: number; minSeat: number; byHorizon: Record<string, GateRow>; passedAtHorizon: boolean | null };
+  gate: { elections: number[]; minVote: number; minSeat: number; atHorizon: GateRow; passedAtHorizon: boolean | null };
   attempts: { versions: number[]; runs: number; bestVoteAccuracy: number };
 }
 const fc = forecastFile as unknown as ForecastFile;
@@ -44,7 +44,7 @@ const rows: ListRow[] = Object.entries(fc.lists)
 
 export default function Forecast() {
   const [theme] = useTheme();
-  const gate = fc.gate.byHorizon[String(fc.horizon)];
+  const gate = fc.gate.atHorizon;
   const main = gate?.summary[fc.variant];
   const base = gate?.summary.V0;
   const passed = fc.gate.passedAtHorizon === true;
@@ -63,8 +63,9 @@ export default function Forecast() {
         {gate && main && base ? (
           <>
             <p className="text-base leading-relaxed mb-3">
-              הרצנו את אותו מודל בדיוק על חמש מערכות הבחירות 2019–2022, בכל פעם רק עם מה שהיה ידוע עד אז, ו-{fc.horizon} ימים לפני
-              הבחירות — כמו היום. קבענו מראש רף: לפחות {p1(fc.gate.minVote)} דיוק בקולות ולפחות {p1(fc.gate.minSeat)} במנדטים, בממוצע.
+              הרצנו את אותו מודל בדיוק על חמש מערכות הבחירות 2019–2022, בכל פעם רק עם מה שהיה ידוע עד אז, ובדיוק {fc.horizon} ימים לפני
+              הבחירות{fc.horizon === fc.daysToElection ? " — אותו מרחק כמו היום" : ""}. קבענו מראש רף: לפחות {p1(fc.gate.minVote)} דיוק בקולות
+              ולפחות {p1(fc.gate.minSeat)} במנדטים, בממוצע. ככל שהבחירות מתקרבות הסקרים מדויקים יותר, ולכן הבדיקה מתעדכנת כל יום למרחק של אותו יום.
             </p>
             <ul className="space-y-2 text-base mb-3">
               <li className="flex flex-wrap items-center gap-2">

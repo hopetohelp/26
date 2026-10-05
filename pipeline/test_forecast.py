@@ -65,6 +65,15 @@ def test_latest_run_reproduces():
     assert out["passed"] == r["passed"] and out["summary"] == r["summary"], "ההרצה החוזרת שונה מהיומן"
 
 
+def test_published_disclosure_is_logged():
+    """הבדיקה שמוצגת באתר (forecast.json) זהה להרצה רשמית ביומן — אין גילוי נאות מהרצה שלא נרשמה."""
+    path = F.ROOT / "src" / "data" / "forecast.json"
+    if not path.exists():
+        return
+    fc = json.loads(path.read_text(encoding="utf-8"))
+    assert fc["gate"]["atHorizon"]["logged"], f"אופק {fc['horizon']} של גרסה {fc['specVersion']} לא נרשם ביומן"
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

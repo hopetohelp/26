@@ -50,13 +50,15 @@ def build() -> list[dict]:
     names = {e["knesset"]: {l["short"]: l["letters"] for l in e["lists"]} for e in results}
     out = []
     for qf, rf in [("k21_k25_final_queue.json", "k21_k25_final_results.json"),
-                   ("k21_k25_windows_queue.json", "k21_k25_windows_results.json")]:
+                   ("k21_k25_windows_queue.json", "k21_k25_windows_results.json"),
+                   ("k21_k25_exact_a_queue.json", "k21_k25_exact_a_results.json"),
+                   ("k21_k25_exact_b_queue.json", "k21_k25_exact_b_results.json")]:
         if not (VER / rf).exists():
             continue
         res = {r["id"]: r for r in json.loads((VER / rf).read_text(encoding="utf-8"))}
         for q in json.loads((VER / qf).read_text(encoding="utf-8")):
             r = res.get(q["id"])
-            if not r:
+            if not r or r.get("duplicate_of"):
                 continue
             k, p = by_id[q["id"]]
             values = {kk: dict(v) for kk, v in p["values"].items()}
@@ -69,7 +71,8 @@ def build() -> list[dict]:
                         "status": r["status"], "sourceLevel": r.get("sourceLevel") or level_from_note(r.get("note")),
                         "source": r.get("source")})
     for qf, rf in [("k19_k20_final_queue.json", "k19_k20_final_results.json"),
-                   ("k19_k20_windows_queue.json", "k19_k20_windows_results.json")]:
+                   ("k19_k20_windows_queue.json", "k19_k20_windows_results.json"),
+                   ("k19_k20_exact_queue.json", "k19_k20_exact_results.json")]:
         if not (VER / rf).exists():
             continue
         queue = {q["id"]: q for q in json.loads((VER / qf).read_text(encoding="utf-8"))}

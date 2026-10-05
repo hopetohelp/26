@@ -22,10 +22,11 @@ K26 = json.loads((HERE / "forecast_k26.json").read_text(encoding="utf-8"))
 SCENARIOS = {"n": 10000, "inflation": 1.25, "df": 4, "smallShare": 0.05}
 
 
-def horizon_for(days: int, grid: list[int]) -> int:
-    """האופק הקטן ביותר שגדול או שווה למרחק מהבחירות (מפרט: horizonsNote); מעבר לגדול ביותר — הגדול ביותר."""
-    fit = [h for h in sorted(grid) if h >= days]
-    return fit[0] if fit else max(grid)
+def horizon_for(days: int, spec: dict) -> int:
+    """האופק המדויק: מספר הימים עד הבחירות (הכרעת בעלים — ההשוואה לעבר באותו מרחק בדיוק). מתחת ל-4 — 4 (סקר אחרון
+    ביום שישי); מעל המרחק שהנתונים המאומתים מכסים — הגבול הזה."""
+    hs = spec["data"]["horizons"]
+    return min(max(days, min(hs)), max(hs))
 
 
 def log_rows() -> list[dict]:
@@ -66,8 +67,7 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
     seed = spec["model"]["seed"]
     eday = date.fromisoformat(K26["date"])
     days = (eday - build_day).days
-    grid = spec["data"]["horizons"]
-    h = horizon_for(max(days, 0), grid)
+    h = horizon_for(days, spec)
     thr = tuple(K26["threshold"])
     lists = K26["lists"]
     win = spec["data"]["windowDays"]
@@ -149,14 +149,13 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
                         "shareRange": [round(q(share_draws[k], 0.1), 2), round(q(share_draws[k], 0.9), 2)],
                         "pass": round(sum(1 for s in seat_draws[k] if s > 0) / len(seat_draws[k]), 4)}
 
-    # הגילוי הנאות: יומן ההרצות
+    # הגילוי הנאות: אותה בדיקת עבר בדיוק באופק של היום (bt), ויומן הניסיונות. "logged" = ההרצה הרשמית ביומן זהה לה
     rows = log_rows()
-    cur = [r for r in rows if r["specVersion"] == spec["version"]]
-    by_h = {}
-    for r in cur:
-        by_h[str(r["horizon"])] = {"passed": r["passed"], "valid": r["valid"], "runAt": r["runAt"], "commit": r["commit"],
-                                   "summary": {v: r["summary"][v] for v in ("V0", primary) if v in r["summary"]},
-                                   "perElection": {k: v[primary] for k, v in r["perElection"].items()}}
+    logged = [r for r in rows if r["specVersion"] == spec["version"] and r["horizon"] == h and r["summary"] == bt["summary"]]
+    at_h = {"passed": bt["passed"], "valid": bt["valid"], "logged": bool(logged),
+            "summary": {v: bt["summary"][v] for v in ("V0", primary) if v in bt["summary"]},
+            "perElection": {str(r["knesset"]): [r["variants"][primary]["voteAccuracy"], r["variants"][primary]["seatAccuracy"]]
+                            for r in bt["rows"]}}
     attempts = sorted({r["specVersion"] for r in rows})
     best = max((r["summary"].get(F_primary(r), {}).get("voteAccuracy", 0) for r in rows), default=0)
     return {
@@ -173,8 +172,7 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
                  "central": sum(central.get(k, 0) for k in gov)},
         "wasted": [round(q(wasted, 0.1), 2), round(q(wasted, 0.5), 2), round(q(wasted, 0.9), 2)] if wasted else [],
         "gate": {"elections": spec["gate"]["elections"], "minVote": spec["gate"]["minVoteAccuracy"],
-                 "minSeat": spec["gate"]["minSeatAccuracy"], "byHorizon": by_h,
-                 "passedAtHorizon": by_h.get(str(h), {}).get("passed")},
+                 "minSeat": spec["gate"]["minSeatAccuracy"], "atHorizon": at_h, "passedAtHorizon": bt["passed"]},
         "attempts": {"versions": attempts, "runs": len(rows), "bestVoteAccuracy": round(best, 5)},
     }
 
