@@ -49,7 +49,8 @@ def test_trend_line_and_continuation():
     import forecast_trend as T
     pts = [(d, {"x": 0.30 - 0.01 * d / 7, "y": 0.70 + 0.01 * d / 7}) for d in (35, 28, 21, 14)]
     level, move = T.trend(pts, 14, 4)
-    assert abs(level["x"] - 0.28) < 1e-9 and 0 < move["x"] < 0.02, (level, move)
+    # השיפוע מכווץ (4 סקרים ⇐ 3/7), ולכן הרמה בין הממוצע (0.265) לערך האמיתי (0.28), וההמשך חיובי וקטן מהמלא (0.02)
+    assert 0.265 < level["x"] < 0.28 and 0 < move["x"] < 0.02, (level, move)
     spec = F.load_spec()
     def past(sign):
         out = []
