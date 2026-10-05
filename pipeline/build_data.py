@@ -512,7 +512,65 @@ LIST_SUBMISSION_2026 = "2026-09-08"
 MODEL_SEED = 26
 
 
-def build_model(polls: list[dict]) -> dict:
+def load_lineage(results: list[dict]) -> dict:
+    """raw/lineage.json — שיוך רשימות 2022 לרשימות 2026. נבדק כאן כדי ששגיאת שיוך תפיל את הבנייה."""
+    lin = json.loads((RAW / "lineage.json").read_text(encoding="utf-8"))
+    k25 = {l["short"] for l in results[-1]["lists"]}
+    ids26 = {l["id"] for l in LISTS_2026}
+    alts = {a["id"] for a in lin["alternatives"]}
+    for a in alts:
+        seen25, seen26 = set(), set()
+        for f in lin["families"]:
+            if a not in f["alts"]:
+                continue
+            assert set(f["k25"]) <= k25, f"lineage {f['id']}: unknown 2022 list {set(f['k25']) - k25}"
+            assert set(f["k26"]) <= ids26, f"lineage {f['id']}: unknown 2026 list {set(f['k26']) - ids26}"
+            assert not (seen25 & set(f["k25"])) and not (seen26 & set(f["k26"])), f"lineage {a}: list in two families"
+            seen25 |= set(f["k25"])
+            seen26 |= set(f["k26"])
+    for f in lin["families"]:
+        assert set(f["alts"]) <= alts, f"lineage {f['id']}: unknown alternative"
+    return lin
+
+
+def build_changes(lin: dict, results: list[dict], central: dict, groups_sc: dict) -> dict:
+    """'מה השתנה מאז 2022': לכל חלופת שיוך — כל משפחה, אחוז מהקולות הכשרים ב-2022 מול הממוצע היום.
+    שינוי נטו בין שתי תמונות בלבד; מה שלא שויך מוצג בנפרד, כך שכל עמודה מסתכמת ב-100%."""
+    k25 = results[-1]
+    valid = k25["valid"]
+    by_short = {l["short"]: l for l in k25["lists"]}
+    out = []
+    for a in lin["alternatives"]:
+        fams, used25, used26 = [], set(), set()
+        for f in lin["families"]:
+            if a["id"] not in f["alts"]:
+                continue
+            votes = sum(by_short[n]["votes"] for n in f["k25"])
+            g = groups_sc["+".join(sorted(f["k26"]))]
+            fams.append({
+                "id": f["id"], "k25": f["k25"], "k26": f["k26"], "why": f["why"],
+                "votes2022": votes, "share2022": round(100 * votes / valid, 2),
+                "seats2022": sum(by_short[n]["seats"] for n in f["k25"]),
+                "shareNow": round(sum(central["shares"][k] for k in f["k26"]), 2), "shareRange": g["share"],
+                "seatsNow": sum(central["seats"][k] for k in f["k26"]), "seatsRange": g["seats"],
+            })
+            used25 |= set(f["k25"])
+            used26 |= set(f["k26"])
+        fams.sort(key=lambda x: -x["shareNow"])
+        rest25 = [l for l in k25["lists"] if l["short"] not in used25]
+        rest26 = [k for k in central["shares"] if k not in used26]
+        out.append({
+            **a, "families": fams,
+            "unassigned2022": {"lists": [l["short"] for l in rest25 if l["votes"] >= 0.01 * valid],
+                               "others": sum(1 for l in rest25 if l["votes"] < 0.01 * valid),
+                               "share": round(100 * sum(l["votes"] for l in rest25) / valid, 2)},
+            "unassignedNow": {"lists": rest26,
+                              "share": round(100 - sum(central["shares"][k] for k in used26), 2)},
+        })
+    return {"election2022": k25["id"], "valid2022": valid, "alternatives": out}
+
+
+def build_model(polls: list[dict], results: list[dict]) -> dict:
     """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). רק סקרים מאומתים, עקביים, שעברו 24 שעות מפרסומם."""
     import model as M
 
@@ -528,7 +586,9 @@ def build_model(polls: list[dict]) -> dict:
     fit = M.fit_average(inputs, lists, "likud", pairs, start, asof, obs_cfg, agg_cfg, MODEL_SEED)
     backtest = json.loads((OUT / "backtest.json").read_text(encoding="utf-8"))
     sc_cfg = M.ScenarioConfig(hist_sd_small=backtest["histSd"]["small"], hist_sd_large=backtest["histSd"]["large"])
-    sc = M.scenarios(fit, lists, "likud", pairs, "2026-10-27", agg_cfg, sc_cfg, MODEL_SEED, bloc=gov)
+    lin = load_lineage(results)
+    groups = {"+".join(sorted(f["k26"])): f["k26"] for f in lin["families"]}
+    sc = M.scenarios(fit, lists, "likud", pairs, "2026-10-27", agg_cfg, sc_cfg, MODEL_SEED, bloc=gov, groups=groups)
     reported_others = sorted(p.others_pct for p in inputs if p.others_pct is not None)
     others = reported_others[len(reported_others) // 2] / 100 if reported_others else 0.008
     trend = M.central_seats(fit, lists, "likud", pairs, others)
@@ -555,6 +615,7 @@ def build_model(polls: list[dict]) -> dict:
         "signature": backtest["modelSignature"], "electionDay": "2026-10-27", "start": start, "asof": asof,
         "polls": len(fit["observed"]), "skipped": fit["skipped"], "pollsters": len(fit["pollsters"]),
         "others": round(others * 100, 2), "central": trend[-1], "trend": trend, "scenarios": sc, "house": house,
+        "changes": build_changes(lin, results, trend[-1], sc["groups"]),
         "params": {"draws": obs_cfg.draws, "kernel": obs_cfg.kernel, "walkSd": agg_cfg.walk_sd, "houseSd": agg_cfg.house_sd,
                    "nonsamplingSd": agg_cfg.nonsampling_sd, "histSdSmall": sc_cfg.hist_sd_small,
                    "histSdLarge": sc_cfg.hist_sd_large, "scenarios": sc_cfg.n},
@@ -585,7 +646,7 @@ def main() -> None:
     apply_verification(polls["polls"])
     history = build_history(results)
     # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
-    model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"])
+    model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results)
     missing = sorted({n for p in polls["polls"] for n in (p["firmHe"], p["publisherHe"]) if untranslated(n)})
     if missing:
         print("⚠️ שמות בלי תרגום לעברית (להוסיף ל-FIRM_HE/PUB_HE):", ", ".join(missing))

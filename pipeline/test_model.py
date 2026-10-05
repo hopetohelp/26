@@ -88,6 +88,21 @@ def test_scenarios_sane():
         assert sum(h["seats"].values()) == 120, h["pollster"]
 
 
+def test_changes_add_up():
+    """'מה השתנה מאז 2022': בכל דרך שיוך, המשפחות ועוד 'לא משויך' מסתכמות ב-100% בכל אחת משתי העמודות;
+    וטווח משפחה הוא טווח הסכום בכל תרחיש (מסודר, ומכיל את הממוצע בערך)."""
+    model = json.loads((ROOT / "src" / "data" / "model.json").read_text(encoding="utf-8"))
+    alts = model["changes"]["alternatives"]
+    assert {a["id"] for a in alts} == {"party", "camp", "strict"}
+    for a in alts:
+        then = sum(f["share2022"] for f in a["families"]) + a["unassigned2022"]["share"]
+        now = sum(f["shareNow"] for f in a["families"]) + a["unassignedNow"]["share"]
+        assert abs(then - 100) < 0.1 and abs(now - 100) < 0.1, (a["id"], then, now)
+        for f in a["families"]:
+            lo, mid, hi = f["shareRange"]
+            assert lo <= mid <= hi and lo - 1 <= f["shareNow"] <= hi + 1, f["id"]
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

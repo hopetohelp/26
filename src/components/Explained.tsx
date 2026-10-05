@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
  * ההסבר נפתח בכפתור אמיתי (מקלדת ומגע), לא בריחוף.
  */
 export interface ExplainProps {
-  kind: "נתון רשמי" | "חישוב לפי החוק" | "סיכום סקרים" | "תרחיש";
+  kind: "נתון רשמי" | "חישוב לפי החוק" | "סיכום סקרים" | "תרחיש" | "השוואה";
   source: string;
   asOf: string;
   assumption: string;

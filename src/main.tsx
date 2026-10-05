@@ -16,6 +16,7 @@ import { PageTitle } from "./components/ui";
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
 const Accuracy = lazy(() => import("./pages/Accuracy"));
 const Scenarios = lazy(() => import("./pages/Scenarios"));
+const Changes = lazy(() => import("./pages/Changes"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -34,6 +35,14 @@ createRoot(document.getElementById("root")!).render(
             element={
               <Suspense fallback={<p className="text-ink-soft">טוען את התרחישים…</p>}>
                 <Scenarios />
+              </Suspense>
+            }
+          />
+          <Route
+            path="changes"
+            element={
+              <Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}>
+                <Changes />
               </Suspense>
             }
           />
