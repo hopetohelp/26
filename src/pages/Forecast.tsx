@@ -24,7 +24,7 @@ interface ForecastFile {
   series: string[];
   seriesLabels: Record<string, string>;
   enough: boolean;
-  params: { others: number; beta: number; betaElections: number; trainedOn: number[]; weights: Record<string, number> };
+  params: { others: number; beta: number; betaElections: number; trainedOn: number[]; weights: Record<string, number>; wA: number | null; polls: number | null };
   lists: Record<string, { share: number; seats: number; seatsRange: number[]; shareRange: number[]; pass: number }>;
   bloc: { seats: number[]; atLeast61: number | null; central: number };
   wasted: number[];
@@ -107,7 +107,7 @@ export default function Forecast() {
         <section aria-label="התחזית לכל רשימה" className="mb-6">
           <Explained
             kind="תחזית"
-            source={`הסקר האחרון של כל אחת מ-${fc.series.length} סדרות סקרים בשבוע האחרון, משוקללים לפי הדיוק בעבר ומתוקנים לפי הטעויות שחזרו; מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר); ${num(10000)} תרחישים`}
+            source={`כל ${fc.params.polls ?? ""} הסקרים של ${fc.series.length} מכונים מאז הגשת הרשימות — קו מגמה לכל מכון ולכל הסקרים יחד, מתוקנים ומשוקללים לפי העבר; מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר); ${num(10000)} תרחישים`}
             asOf={dateLong(fc.asof)}
             assumption="המכונים יטעו השנה בערך כמו שטעו בממוצע בעבר. הטווח — 80% מהתרחישים, לפי הטעויות של המודל עצמו בבדיקת העבר, מוגדלות ברבע."
             methodAnchor="forecast"
@@ -171,17 +171,25 @@ export default function Forecast() {
       <Card title="מה המודל למד מהעבר">
         <ul className="space-y-2 text-base leading-relaxed">
           <li>
-            משקל לכל מכון לפי הדיוק שלו בבחירות הקודמות, כולל מגמת השתפרות או התדרדרות שנמדדה בפועל. מכון בלי עבר מקבל משקל ממוצע.
+            לכל מכון — כל הסקרים שלו מאז הגשת הרשימות, וקו מגמה לכל רשימה עד יום הבחירות.{" "}
+            {fc.params.betaElections === 0
+              ? "אין עדיין מספיק עבר כדי לדעת כמה מהמגמה מתממשת."
+              : fc.params.beta < 0
+                ? `בבחירות הקודמות המגמות התהפכו: בממוצע כ-${Math.round(-fc.params.beta * 100)}% מהן חזרו לאחור עד יום הבחירות, ולכן התחזית מחזירה חלק מהמגמה.`
+                : `בבחירות הקודמות התממשו בממוצע כ-${Math.round(fc.params.beta * 100)}% מהמגמות עד יום הבחירות, וכך הן נכנסות לתחזית (לכל מכון לפי הניסיון שלו).`}
+          </li>
+          <li>
+            משקל לכל מכון לפי הדיוק שלו בבחירות הקודמות באותו מרחק מהבחירות, כולל מגמת השתפרות או התדרדרות שנמדדה בפועל. מכון בלי עבר מקבל
+            משקל ממוצע.
           </li>
           <li>תיקון לפי גושים ולפי מפלגות שהמכונים העריכו ביתר או בחסר באופן עקבי, ותיקון לרשימות סביב אחוז החסימה.</li>
           <li>כ-{fc.params.others.toLocaleString("he-IL")}% מהקולות הולכים בדרך כלל לרשימות קטנות שהסקרים לא מציגים.</li>
-          <li>
-            {fc.params.betaElections === 0
-              ? "תנועה בסקרים בשבוע שלפני השבוע האחרון: אין עדיין מספיק נתונים מהעבר כדי לדעת אם היא נמשכת — לכן אינה משפיעה."
-              : fc.params.beta < 0
-                ? `תנועה בסקרים בשבוע שלפני השבוע האחרון: בעבר היא התהפכה — כ-${Math.round(-fc.params.beta * 100)}% ממנה חזרו לאחור עד יום הבחירות (לפי ${fc.params.betaElections} מערכות), ולכן התחזית מחזירה חלק ממנה.`
-                : `תנועה בסקרים בשבוע שלפני השבוע האחרון: בעבר נמשכה בכ-${Math.round(fc.params.beta * 100)}% מגודלה עד יום הבחירות (לפי ${fc.params.betaElections} מערכות), וכך היא מוכנסת לתחזית.`}
-          </li>
+          {fc.params.wA !== null && (
+            <li>
+              אותו תהליך נעשה פעמיים: לכל מכון בנפרד, ועל כל הסקרים יחד כאילו היו מכון אחד. לפי הדיוק של כל דרך בעבר, היום ההערכה לפי
+              המכונים מקבלת {Math.round(fc.params.wA * 100)}% וההערכה של כל הסקרים יחד {100 - Math.round(fc.params.wA * 100)}%.
+            </li>
+          )}
         </ul>
         {fc.series.length > 0 && (
           <div className="mt-4 overflow-x-auto">

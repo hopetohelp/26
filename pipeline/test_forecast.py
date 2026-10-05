@@ -43,6 +43,25 @@ def test_momentum_learns_continuation():
     assert n == 3 and up > 0 > down, (up, down)
 
 
+def test_trend_line_and_continuation():
+    """קו מגמה: עלייה קבועה של נקודה לשבוע ממשיכה עד יום הבחירות (מכווצת לפי מספר הסקרים);
+    מגמה שהתממשה במלואה בעבר ⇐ מקדם המשכה חיובי, מגמה שהתהפכה ⇐ שלילי."""
+    import forecast_trend as T
+    pts = [(d, {"x": 0.30 - 0.01 * d / 7, "y": 0.70 + 0.01 * d / 7}) for d in (35, 28, 21, 14)]
+    level, move = T.trend(pts, 14, 4)
+    assert abs(level["x"] - 0.28) < 1e-9 and 0 < move["x"] < 0.02, (level, move)
+    spec = F.load_spec()
+    def past(sign):
+        out = []
+        for k in (1, 2, 3):
+            e = F.Election(k, "2000-01-01", (1, 100), 1000, {"x": 300 + sign * 20, "y": 700 - sign * 20}, {}, [], {})
+            out.append((e, {"a": ({"x": 0.30, "y": 0.70}, {"x": 0.02, "y": -0.02})}))
+        return out
+    up, _ = T.fit_beta(past(+1), spec)
+    down, _ = T.fit_beta(past(-1), spec)
+    assert up > 0 > down, (up, down)
+
+
 def test_poll_letters_are_official():
     """כל אות רשימה בסקר שנכנס למודל קיימת בתוצאות הרשמיות של אותה מערכת — אחרת הסקר "מאבד" רשימה בשקט."""
     spec = F.load_spec()
