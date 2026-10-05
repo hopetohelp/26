@@ -112,11 +112,13 @@ def load_polls(spec: dict) -> list[Poll]:
             for r in rows if r["status"] in ok and r.get("sourceLevel", "primary") in levels]
 
 
-def final_week(polls: list[Poll], e: Election, spec: dict) -> list[Poll]:
-    """הסקר האחרון של כל סדרה, שהסתיים בשטח בשבוע שעד החיתוך (כולל)."""
+def final_week(polls: list[Poll], e: Election, spec: dict, horizon: int) -> list[Poll]:
+    """הסקר האחרון של כל סדרה, שהסתיים בשטח בשבוע שמסתיים horizon ימים לפני הבחירות (כולל).
+    האופק הוא פרמטר (הכרעת בעלים): המכונים מצמצמים את הפער ככל שהבחירות מתקרבות, ולכן הטעות, המשקל וההטיה
+    נאמדים מהסקרים שהיו באותו מרחק מהבחירות במערכות הקודמות."""
     from datetime import date, timedelta
     d = date.fromisoformat(e.date)
-    cut = d - timedelta(days=spec["data"]["cutoffDaysBefore"])
+    cut = d - timedelta(days=horizon)
     lo = cut - timedelta(days=spec["data"]["windowDays"])
     last: dict[str, Poll] = {}
     for p in polls:
@@ -133,6 +135,13 @@ def final_week(polls: list[Poll], e: Election, spec: dict) -> list[Poll]:
 def poll_shares(p: Poll, e_lists: list[str], agreements: list[tuple[str, str]], threshold: tuple[int, int],
                 seed: int) -> dict[str, float]:
     """אחוזים לכל רשימה בסקר. סקר שפרסם רק מנדטים ⇐ מודל התצפית (model.py) עם הסף של אותה מערכת."""
+    if any(isinstance(v.get("s"), float) and v["s"] != int(v["s"]) for v in p.values.values()):
+        # מנדטים עם חצאים (גיאוקרטוגרפיה 2013): אין קופסת מנוע — אחוז ≈ מנדטים/120, אחרי "שריפה" ממוצעת
+        tot = sum(v.get("s", 0) for v in p.values.values())
+        mid = sum(M.ObsConfig().wasted_default) / 2
+        return {k: v["s"] / tot * (1 - mid) for k, v in p.values.items() if v.get("s")}
+    p = Poll(p.id, p.knesset, p.series, p.field_end,
+             {k: ({"s": int(v["s"])} if "s" in v else v) for k, v in p.values.items()}, p.level)
     seats = {k: v for k, v in p.values.items() if isinstance(v.get("s"), int) and v["s"] > 0}
     if not seats:
         return {}
@@ -365,7 +374,7 @@ def forecast(variant: str, polls: dict[str, dict[str, float]], lists: dict[str, 
     return sh, seats_from_shares(sh, agreements, threshold)
 
 
-def run_backtest(spec: dict) -> dict:
+def run_backtest(spec: dict, horizon: int) -> dict:
     elections = load_elections(spec)
     polls = load_polls(spec)
     seed = spec["model"]["seed"]
@@ -374,7 +383,7 @@ def run_backtest(spec: dict) -> dict:
     validity: dict[int, dict] = {}
     for k in order:
         e = elections[k]
-        fw = final_week(polls, e, spec)
+        fw = final_week(polls, e, spec, horizon)
         obs[k] = {p.series: poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in fw}
         obs[k] = {s: sh for s, sh in obs[k].items() if sh}
         n = len(obs[k])
@@ -415,7 +424,7 @@ def run_backtest(spec: dict) -> dict:
         s, b = summary[primary], summary["V0"]
         passed = (s["voteAccuracy"] >= g["minVoteAccuracy"] and s["seatAccuracy"] >= g["minSeatAccuracy"]
                   and s["seatAccuracy"] >= b["seatAccuracy"])
-    return {"rows": rows, "validity": {str(k): v for k, v in validity.items()}, "valid": valid_run,
+    return {"horizon": horizon, "rows": rows, "validity": {str(k): v for k, v in validity.items()}, "valid": valid_run,
             "summary": summary, "passed": passed}
 
 
@@ -423,9 +432,33 @@ def file_sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def log_run(out: dict, spec: dict) -> dict:
+    """שורה ביומן ההרצות (pipeline/forecast_runs.jsonl) — רק מוסיפים, לא משנים. הקומיט = הקומיט שלפני השורה."""
+    import subprocess
+    from datetime import datetime, timezone
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=ROOT).stdout.strip()
+    dirty = bool(subprocess.run(["git", "status", "--porcelain", "pipeline/forecast.py", "pipeline/forecast_spec.json",
+                                 "raw/forecast/polls.json"], capture_output=True, text=True, cwd=ROOT).stdout.strip())
+    row = {"runAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "commit": commit, "dirty": dirty,
+           "specVersion": spec["version"], "specSha": file_sha(SPEC_PATH), "codeSha": file_sha(Path(__file__)),
+           "dataSha": file_sha(RAW / "forecast" / "polls.json"), "horizon": out["horizon"], "valid": out["valid"],
+           "passed": out["passed"], "summary": out["summary"],
+           "perElection": {str(r["knesset"]): {v: [r["variants"][v]["voteAccuracy"], r["variants"][v]["seatAccuracy"]]
+                                               for v in VARIANTS} for r in out["rows"]}}
+    with (Path(__file__).resolve().parent / "forecast_runs.jsonl").open("a", encoding="utf-8") as f:
+        f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+    return row
+
+
 if __name__ == "__main__":
-    out = run_backtest(load_spec())
-    print(json.dumps({"valid": out["valid"], "passed": out["passed"], "summary": out["summary"],
-                      "perElection": [(r["knesset"], {v: (r["variants"][v]["voteAccuracy"], r["variants"][v]["seatAccuracy"])
-                                                      for v in VARIANTS}) for r in out["rows"]]},
-                     ensure_ascii=False, indent=1))
+    import sys
+    sp = load_spec()
+    hs = [int(a) for a in sys.argv[1:] if a.isdigit()]
+    for h in (hs or sp["data"]["horizons"]):
+        out = run_backtest(sp, h)
+        if "--log" in sys.argv:
+            log_run(out, sp)
+        print(json.dumps({"horizon": h, "valid": out["valid"], "passed": out["passed"], "summary": out["summary"],
+                          "perElection": [(r["knesset"], {v: (r["variants"][v]["voteAccuracy"], r["variants"][v]["seatAccuracy"])
+                                                          for v in VARIANTS}) for r in out["rows"]]},
+                         ensure_ascii=False, indent=1))

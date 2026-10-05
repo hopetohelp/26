@@ -451,7 +451,6 @@
  },
  "blocRule": "גוש לפי מידע שהיה ידוע לפני הבחירות: רשימה ערבית ⇐ arab; הצהרה על תמיכה בנתניהו לראשות הממשלה ⇐ right_religious; הצהרה נגדו ⇐ center_left; אחרת ⇐ none. party = רק המשכיות ודאית (אותה מפלגה, בלי איחוד או פיצול).",
  "data": {
-  "cutoffDaysBefore": 4,
   "windowDays": 7,
   "validStatuses": [
    "match",
@@ -462,7 +461,14 @@
    "press",
    "aggregator"
   ],
-  "sourceLevelsNote": "primary = הפרסום של הגוף המזמין · press = כתבה של כלי תקשורת אחר מאותה תקופה · aggregator = לפחות רשימה אחת רק מאתר אוסף בן-זמננו (Knesset Jeremy). בדיקת רגישות: primary+press בלבד."
+  "sourceLevelsNote": "primary = הפרסום של הגוף המזמין · press = כתבה של כלי תקשורת אחר מאותה תקופה · aggregator = לפחות רשימה אחת רק מאתר אוסף בן-זמננו (Knesset Jeremy). בדיקת רגישות: primary+press בלבד.",
+  "horizons": [
+   4,
+   11,
+   18,
+   25
+  ],
+  "horizonsNote": "חלון של שבוע שמסתיים h ימים לפני הבחירות. תחזית ב-d ימים לפני הבחירות משתמשת באופק הקטן ביותר שגדול או שווה ל-d (כך לא נלקח מהעבר מידע \"קרוב יותר\" ממה שזמין היום); מ-4 ימים ומטה — 4."
  },
  "validity": {
   "minSeries": 3
@@ -492,6 +498,7 @@
   "primaryVariant": "V3",
   "minVoteAccuracy": 0.95,
   "minSeatAccuracy": 0.9,
-  "unitMinShare": 0.01
+  "unitMinShare": 0.01,
+  "horizonNote": "השער נבדק באופק של התחזית המוצגת, והגילוי הנאות מציג את הדיוק באותו אופק."
  }
 }

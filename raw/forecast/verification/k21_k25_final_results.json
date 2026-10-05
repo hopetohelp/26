@@ -1,0 +1,352 @@
+[
+ {
+  "id": "k21-2019-04-05-smith-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-692912",
+  "differences": [],
+  "fieldEndSource": "2019-04-05",
+  "sample": 1097,
+  "moe": "3%",
+  "note": "Rafi Smith for Maariv-Sofshavua: כחול לבן 29, ליכוד 27, עבודה 9, חד\"ש-תע\"ל 7, יהדות התורה 7, איחוד מפלגות הימין/הימין החדש/ש\"ס 6, מרצ/כולנו/זהות 5, ישראל ביתנו 4. רע\"ם-בל\"ד not named but implied 4 by center-left bloc 54 (and 120 total). Gesher % not stated (0 seats consistent). Fieldwork: evening (Thu) until Friday noon."
+ },
+ {
+  "id": "k21-2019-04-05-midgam-project-channel-13",
+  "status": "match",
+  "source": "https://13news.co.il/item/news/politics/elections-2019/election-survey-2019-149970/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 858,
+  "moe": "3.4%",
+  "note": "Channel 13 poll aired Friday: ליכוד 28, כחול לבן 28, עבודה 11, איחוד מפלגות הימין 7, הימין החדש/חד\"ש-תע\"ל/יהדות התורה/זהות 6, ש\"ס/מרצ 5, רע\"מ-בל\"ד/כולנו/ישראל ביתנו 4, גשר 2.8%. 'הסקר, שנערך על ידי פרופסור קמיל פוקס, כלל 858 נשאלים... התשאול במגזר היהודי נערך על ידי חברת פרויקט המדגם'. Field date not stated."
+ },
+ {
+  "id": "k21-2019-04-05-maagar-mochot-radio-103fm",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2019/04/05/103-fm-radio-poll-blue-white-31-likud-28-labor-9-4-tied-in-6-right-religious-bloc-66/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Secondary source (KnessetJeremy blog, the Wikipedia citation): 'Maagar Mochot conducted a poll that was broadcast by 103 FM Radio on April 5 2019.' B&W 31, Likud 28, Labor 9, UTJ/Hadash-Taal/Meretz/URWP 7, Kulanu/Shas/New Right/Zehut 6; Raam-Balad, Yisrael Beitenu, Gesher under threshold (0, no % given) — queue omits these three lists, consistent. Field dates not stated."
+ },
+ {
+  "id": "k21-2019-04-04-miskar-x",
+  "status": "match",
+  "source": "https://web.archive.org/web/20191115034853/https://www.jewishpress.com/news/politics/latest-miskar-poll-4500-respondents-bibi-31-gantz-28-feiglin-8-bennett-7/2019/04/04/",
+  "differences": [],
+  "fieldEndSource": "2019-04-04",
+  "sample": 4500,
+  "moe": null,
+  "note": "JewishPress (archived; live site returns 403; Facebook link skipped per ToS) with Miskar's own chart image: Likud 31, Gantz 28, Labor 10, Smotrich 8, Feiglin 8, Tibi 7, Bennett 7, UTJ 6, Shas 6, Meretz 5, B'lad 4. 'Kahlon's Kulanu disappearing below the threshold, as do Liberman and Orly Levy-Abekasis' — below-threshold % values (3.18/1.2/2.0) not shown. '4,500 respondents... conducted between April 2 and 4' (fieldStart per source 2019-04-02, Wikipedia 2019-04-04)."
+ },
+ {
+  "id": "k21-2019-04-04-midgam-yedioth-ahronoth",
+  "status": "match",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-5489848,00.html",
+  "differences": [],
+  "fieldEndSource": "2019-04-04",
+  "sample": 1023,
+  "moe": "3.1%",
+  "note": "סקר ידיעות אחרונות, ד\"ר מינה צמח ומנו גבע: כחול לבן 30, ליכוד 26, עבודה 11, חד\"ש-תע\"ל 7, יהדות התורה 7, הימין החדש 6, ש\"ס/איחוד מפלגות הימין/מרצ/זהות/כולנו 5, בל\"ד-רע\"ם 4, ישראל ביתנו 4, גשר 2.2%. 'הסקר נערך בימים רביעי וחמישי בקרב 1,023 מרואיינים' (i.e. Apr 3–4; Wikipedia fieldStart 04-04)."
+ },
+ {
+  "id": "k21-2019-04-04-kantar-kan",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2019/04/05/channel-11-poll-likud-31-blue-white-30-labor-8-hadash-taal-8-5-tied-at-6-right-religious-bloc-64/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1295,
+  "moe": "2.5%",
+  "note": "Secondary source (KnessetJeremy): 'Teleseker conducted a poll of 1295 people with a 2.5% margin of error that was published by Channel 11 on April 4 2019' (Teleseker = Kantar Israel's former name). Likud 31, B&W 30, Labor 8, Hadash-Taal 8, UTJ/URWP/Meretz/New Right/Zehut 6, Kulanu 5, Raam-Balad 4, Shas 4, Gesher 2.9%, Yisrael Beitenu 2.4%. All match."
+ },
+ {
+  "id": "k21-2019-04-03-panels-politics-walla",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2019/04/03/walla-poll-blue-white-30-likud-29-labor-10-hadash-taal-8-url-7-right-religious-bloc-62/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1005,
+  "moe": "3.4%",
+  "note": "Secondary source (KnessetJeremy): 'Panels conducted a poll of 1005 people with a 3.4% margin of error that was published by Walla on April 3 2019.' B&W 30, Likud 29, Labor 10, Hadash-Taal 8, URWP 7, UTJ/Meretz/New Right 6, Shas/Zehut 5, Raam-Balad/YB 4, Kulanu 2.9%, Gesher 2.1%. All match."
+ },
+ {
+  "id": "k22-2019-09-13-shvakim-panorama-hot",
+  "status": "match",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-5588152,00.html",
+  "differences": [],
+  "fieldEndSource": "2019-09-13",
+  "sample": 3193,
+  "moe": "1.8%",
+  "note": "HOT with 'שווקים פנורמה' (Yossi Vadana): 'הליכוד עם 33 מנדטים, כחול לבן 32. הרשימה המשותפת 11, ישראל ביתנו 9, יהדות התורה 8 וש\"ס 7. ימינה 7, המחנה הדמוקרטי 5, עבודה-גשר 4 ועוצמה יהודית 4'. 'נערך בין 10/9/19 08:00 לאתמול (13/9/19) 18:00', מדגם 3,193, טעות 1.8%."
+ },
+ {
+  "id": "k22-2019-09-13-midgam-project-channel-13",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2019/09/14/channel-13-poll-likud-32-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 943,
+  "moe": "3.2%",
+  "note": "Secondary source (KnessetJeremy): 'Panel Project HaMidgam conducted a poll of 943 people with a margin of error of 3.2% that was broadcast by Channel 13 on September 13 2019.' Likud 32, B&W 32, Joint List 12, Yamina 9, YB 9, UTJ 7, Shas 6, Dem. Union 5, Labor 4, Otzma 4. All match."
+ },
+ {
+  "id": "k22-2019-09-13-midgam-channel-12",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2019/09/14/channel-12-poll-likud-32-blue-white-32-joint-list-10-yamina-8-utj-8-yisrael-beitenu-8/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 605,
+  "moe": "4%",
+  "note": "Secondary source (KnessetJeremy): 'Midgam conducted a poll of 605 people with a margin of error of 4% that was broadcast by Channel 12 on September 13 2019.' Likud 32, B&W 32, Joint List 10, Yamina 8, UTJ 8, YB 8, Shas 7, Dem. Union 6, Labor 5, Otzma 4. All match. Field dates not stated."
+ },
+ {
+  "id": "k22-2019-09-12-panels-politics-knesset-channel",
+  "status": "match",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-718773",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 539,
+  "moe": "4.4%",
+  "note": "Knesset Channel poll by 'פאנלס פוליטיקס' (Menachem Lazar), published Thu 12.9: ליכוד 36, כחול לבן 32, המשותפת 10, ימינה 9, ישראל ביתנו 9, יהדות התורה 8, ש\"ס 7, המחנה הדמוקרטי 5, העבודה 4; עוצמה יהודית לא עוברת (no % given). 'בסקר השתתפו 539... טעות הדגימה המרבית – 4.4 אחוזים'."
+ },
+ {
+  "id": "k22-2019-09-12-smith-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-718968",
+  "differences": [],
+  "fieldEndSource": "2019-09-12",
+  "sample": 650,
+  "moe": "3.9%",
+  "note": "'הליכוד בראש עם 33, כחול לבן עם 32. הרשימה המשותפת עם 12, ימינה 9, ליברמן 8. 8 לש\"ס ו-7 ליהדות התורה. המחנה הדמוקרטי 6, העבודה-גשר... המנדט החמישי'; 'עוצמה יהודית מתחזקת במעט ל-3.1%'. 'בסקר של מכון סמית... שבוצע ב-12 בספטמבר'. Sample/MoE not in Maariv article; 650 / 3.9% from KnessetJeremy summary (https://knessetjeremy.com/2019/09/14/last-smith-poll-likud-33-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-8-shas-8/)."
+ },
+ {
+  "id": "k22-2019-09-12-kantar-kan-11",
+  "status": "match",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-718849 + https://knessetjeremy.com/2019/09/13/channel-11-poll-blue-white-33-likud-31-joint-list-11-yamina-9-utj-8/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1360,
+  "moe": "4.3%",
+  "note": "Maariv (cited) states only: כחול לבן 33, הליכוד 31, ישראל ביתנו 7, המחנה הדמוקרטי 5, העבודה 5, גוש ימין-חרדים 59, עוצמה יהודית עוברת. Full list from KnessetJeremy: 'Kantar/Teleseker conducted a poll of 1360 people with a margin of error of 4.3% ... broadcast by Channel 11 on September 12 2019': B&W 33, Likud 31, JL 11, Yamina 9, UTJ 8, Shas 7, YB 7, Labor 5, DU 5, Otzma 4. All match."
+ },
+ {
+  "id": "k22-2019-09-11-maagar-mochot-israel-hayom",
+  "status": "match",
+  "source": "https://web.archive.org/web/20250429015414/https://www.israelhayom.com/2019/09/13/poll-predicts-62-seats-for-left-wing-coalition-with-lieberman/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": "2.8%",
+  "note": "Live site 403; archived copy: 'An i24NEWS-Israel Hayom poll conducted by the Maagar Mohot Institute... margin of error of 2.8%.' Likud 33, B&W 31, Joint List 12, YB 9, Shas 7, UTJ 7, Yamina 7, Labor-Gesher 6, Dem. Union 4, Otzma 4. All match. Publisher per source is i24NEWS + Israel Hayom. Field dates/sample not stated."
+ },
+ {
+  "id": "k21-2019-04-03-dialog-haaretz",
+  "status": "match",
+  "source": "https://web.archive.org/web/20200806161215/https://www.haaretz.co.il/news/elections/.premium-1.7085782 + https://knessetjeremy.com/2019/04/03/haaretz-poll-likud-30-blue-white-27-labor-10-hadash-taal-7-url-7-right-religious-bloc-67/",
+  "differences": [],
+  "fieldEndSource": "2019-04-02",
+  "sample": 1002,
+  "moe": "3.2%",
+  "note": "Haaretz (archived, paywalled excerpt): 'סקר הארץ שנערך אתמול (שלישי) על ידי חברת דיאלוג, בפיקוח פרופ' קמיל פוקס... 1,002 נשאלים... טעות הדגימה 3.2%... הליכוד 30 מול 27 [כחול לבן]... הגוש 67'. Article published 03.04.19, so fieldwork = Tue 2019-04-02 (Wikipedia fieldEnd 04-03). Full list from KnessetJeremy: Likud 30, B&W 27, Labor 10, Hadash-Taal 7, URWP 7, UTJ 6, Kulanu/Shas/Meretz/New Right/Zehut 5, Raam-Balad/YB 4, Gesher 2.8% — all match Wikipedia."
+ },
+ {
+  "id": "k23-2020-02-27-panels-politics-maariv-the-jerusalem-post",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2020/02/28/57th-poll-of-2020-election-likud-34-blue-white-34-joint-list-13-shas-9-labor-gesher-meretz-9-yamina-7-utj-7-yisrael-beitenu-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 534,
+  "moe": "4.4%",
+  "note": "Secondary source (KnessetJeremy): 'Panels conducted a poll of 534 people with a 4.4% margin of error that was published by Maariv & the Jerusalem Post on February 28 2020.' Likud 34, B&W 34, JL 13, Labor-Gesher-Meretz 9, Shas 9, Yamina 7, YB 7, UTJ 7, Otzma 2.1%. All match. Field date not stated (published 28.2)."
+ },
+ {
+  "id": "k23-2020-02-27-kantar-kan-11",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2020/02/27/54th-poll-of-2020-election-likud-35-blue-white-34-joint-list-14-labor-gesher-meretz-8-shas-8-utj-8-yamina-7-yisrael-beitenu-6/",
+  "differences": [],
+  "fieldEndSource": "2020-02-27",
+  "sample": 1206,
+  "moe": "2.9%",
+  "note": "Secondary source (KnessetJeremy): 'Kantar conducted a poll of 1206 people with a 2.9% margin of error that was conducted and broadcast by Channel 11 on February 27 2020.' Likud 35, B&W 34, JL 14, L-G-M 8, Shas 8, UTJ 8, Yamina 7, YB 6, Otzma 1.6%. All match."
+ },
+ {
+  "id": "k23-2020-02-24-midgam-project-channel-13",
+  "status": "match",
+  "source": "https://knessetjeremy.com/2020/02/27/49th-poll-of-2020-election-likud-33-blue-white-32-joint-list-14-labor-gesher-meretz-10-yamina-8-shas-8-yisrael-beitenu-8-utj-7/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 602,
+  "moe": "3.8%",
+  "note": "Secondary source (KnessetJeremy): 'Project HaMidgam conducted a poll of 602 people with a 3.8% margin of error that was broadcast by Channel 13 on February 24 2020.' Likud 33, B&W 32, JL 14, L-G-M 10, Shas 8, YB 8, Yamina 8, UTJ 7, Otzma 2.0%. All match. Field date not stated."
+ },
+ {
+  "id": "k23-2020-02-26-direct-polls-arutz-sheva",
+  "status": "match",
+  "source": "https://www.inn.co.il/News/News.aspx/428674",
+  "differences": [],
+  "fieldEndSource": "2020-02-26",
+  "sample": 2983,
+  "moe": "2.1%",
+  "note": "Direct Polls chart in the article: ליכוד 35, כחול לבן 33, המשותפת 13, עבודה-גשר-מרצ 9, ש\"ס 9, יהדות התורה 8, ימינה 7, ישראל ביתנו 6, עוצמה יהודית 0.96%; blocs 59/55/6. Article text says 'יהדות התורה... 7' (typo; chart and 59 bloc give 8). 'נערך... בתאריך ה-26 בפברואר 2020 בשעות הערב... 2,983 משיבים... טעות 2.1%+-'."
+ },
+ {
+  "id": "k24-2021-03-19-midgam-channel-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/2021/Article-3288575c4cb4871027.htm",
+  "differences": [],
+  "fieldEndSource": "2021-03-19",
+  "sample": 1000,
+  "moe": "3.1%",
+  "note": "מדגם (מנו גבע) + iPanel for חדשות 12: ליכוד 32, יש עתיד 18, תקווה חדשה 9, ימינה 9, המשותפת 8, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 7, העבודה 6, הציונות הדתית/כחול לבן/מרצ/רע\"מ 4, הכלכלית החדשה 1.3%. 'מועד איסוף הנתונים: 18-19/3/2021, מספר המשיבים בפועל: 1,000, טעות 3.1%'."
+ },
+ {
+  "id": "k24-2021-03-18-panels-politics-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/elections-2021/Article-828758",
+  "differences": [],
+  "fieldEndSource": "2021-03-18",
+  "sample": 1001,
+  "moe": "3.2%",
+  "note": "מעריב סופהשבוע, פאנלס פוליטיקס (מנחם לזר): ליכוד 30, יש עתיד 19, ימינה 10, תקווה חדשה 8, ישראל ביתנו/ש\"ס/המשותפת 8, יהדות התורה 6, הציונות הדתית/כחול לבן/העבודה 5, מרצ/רע\"ם 4. 'בסקר שנערך אתמול השתתפו 1,001... טעות 3.2%' (published 19.3.2021)."
+ },
+ {
+  "id": "k24-2021-03-18-direct-polls-x",
+  "status": "match",
+  "source": "https://www.srugim.co.il/546514-הסוקר-שחזה-את-תוצאות-הבחירות-מציג-כך-זה",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 19.03.21 (Direct Polls final poll): ליכוד 32, יש עתיד 17, ישראל ביתנו 9, ש\"ס 9, ימינה 8, יהדות התורה/תקווה חדשה/כחול לבן/המשותפת 7, הציונות הדתית 5, מרצ ורע\"מ 4. העבודה not named — implied 4 by 'גוש נגד נתניהו 55' (and 120 total). הכלכלית החדשה % not stated. Field dates/sample not stated."
+ },
+ {
+  "id": "k24-2021-03-18-smith-mako",
+  "status": "match",
+  "source": "https://web.archive.org/web/20220831074054/https://www.mako.co.il/opinions-articles/Article-0a7cfc1d1d04871027.htm",
+  "differences": [],
+  "fieldEndSource": "2021-03-18",
+  "sample": 900,
+  "moe": "3.1%",
+  "note": "Live URL 404; archived: סקר מכון סמית עבור mako: ליכוד 31, יש עתיד 19, תקווה חדשה 9, ימינה 9, המשותפת 8, ש\"ס 8, ישראל ביתנו 7, יהדות התורה 7, העבודה 5, הציונות הדתית 5, כחול לבן/רע\"ם/מרצ 4, הכלכלית החדשה 1.4%. 'הסקר נערך ב-17-18 במרץ 2021 בקרב 900... טעות הדגימה: 3.1%'."
+ },
+ {
+  "id": "k24-2021-03-18-kantar-kan-11",
+  "status": "match",
+  "source": "https://web.archive.org/web/20211201150718/https://www.kan.org.il/Item/?itemId=102427",
+  "differences": [],
+  "fieldEndSource": "2021-03-18",
+  "sample": 1406,
+  "moe": "2.6%",
+  "note": "Live site 403; archived: 'הסקר האחרון של מכון קאנטר ודודי חסיד... בכאן 11': ליכוד 31, יש עתיד 19, ימינה 9, תקווה חדשה 9, המשותפת 8, ש\"ס 8, ישראל ביתנו 7, יהדות התורה 7, העבודה 5, הציונות הדתית 5, כחול לבן/מרצ/רע\"מ 4, הכלכלית 1.4%. 'בקרב 1,406... בין 17 במארס 2021 עד ל-18 במארס... טעות 2.6%'. (Identical numbers to the Smith/mako poll — confirmed independently in both sources.)"
+ },
+ {
+  "id": "k24-2021-03-19-camil-fuchs-channel-13",
+  "status": "match",
+  "source": "https://web.archive.org/web/20210321045810/https://13news.co.il/item/news/politics/state-policy/elections-survey-1225553/",
+  "differences": [],
+  "fieldEndSource": "2021-03-19",
+  "sample": 1103,
+  "moe": "3.4%",
+  "note": "Live 13tv redirect returns 403; archived: ליכוד 30, יש עתיד 18, ימינה 10, תקווה חדשה 10, המשותפת 8, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 6, העבודה 6, הציונות הדתית 5, מרצ/כחול לבן/רע\"מ 4; 'המפלגה הכלכלית... לא עברה את אחוז החסימה' (% not stated). 'סקר חדשות 13 וקמיל פוקס נערך היום [19.3.2021] וכלל 1,103 נשאלים... טעות 3.4%'."
+ },
+ {
+  "id": "k23-2020-02-27-maagar-mochot-israel-hayom-i24-news",
+  "status": "match",
+  "source": "https://web.archive.org/web/20200227232829/https://www.israelhayom.co.il/article/737373",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1040,
+  "moe": "3%",
+  "note": "Live 403; archived 27.2.2020: סקר ישראל היום ו-i24NEWS: 'הליכוד וכחול לבן 33, הרשימה המשותפת 14, העבודה־גשר־מרצ 9, יהדות התורה 7, ימינה 9, ש\"ס 8 וישראל ביתנו 7. עוצמה יהודית לא עוברת' (% not stated). 'נערך השבוע על ידי מכון מאגר מוחות... 1,040 נשאלים... טעות 3%'."
+ },
+ {
+  "id": "k24-2021-03-18-maagar-mochot-israel-hayom",
+  "status": "match",
+  "source": "https://web.archive.org/web/20210318231902/https://www.israelhayom.co.il/article/862625",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 2087,
+  "moe": "2.1%",
+  "note": "Live 403; archived 18.3.2021: סקר ישראל היום ו-i24NEWS, מאגר מוחות: ליכוד 29, יש עתיד 18, ימינה 10, תקווה חדשה 10, יהדות התורה 7, ש\"ס 9, המשותפת 10, ישראל ביתנו 8, העבודה/מרצ/הציונות הדתית 5, כחול לבן 4; 'רע\"מ לא עוברת... כך גם המפלגה הכלכלית החדשה' (% values not stated). '2,087 נשאלים... טעות 2.1%'. Field dates not stated. Publisher also i24NEWS."
+ },
+ {
+  "id": "k23-2020-02-25-midgam-walla",
+  "status": "match",
+  "source": "https://web.archive.org/web/20220511174408/https://bechirot23.bechirot.gov.il/election/Decisions/Documents/%D7%9B%D7%A0%D7%A1%D7%AA%2023/%D7%A1%D7%A7%D7%A8%D7%99%D7%9D/seker_walla_25_2.pdf",
+  "differences": [],
+  "fieldEndSource": "2020-02-25",
+  "sample": 501,
+  "moe": "4.4%",
+  "note": "Official filing to the Central Elections Committee (live gov.il link dead; archived PDF): מזמין וואלה! NEWS, עורך 'מדגם יעוץ ומחקר בראשות מנו גבע', מועד איסוף 25-2-2020, 501 משיבים, טעות 4.4%: כחול לבן 34, ליכוד 34, המשותפת 13, עבודה-גשר-מרצ 9, ש\"ס 8, יהדות התורה 8, ימינה 7, ישראל ביתנו 7, עוצמה יהודית 0 (1.7% raw). All match."
+ },
+ {
+  "id": "k25-2022-10-28-midgam-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-afc48a535be1481026.htm",
+  "differences": [],
+  "fieldEndSource": "2022-10-28",
+  "sample": 1007,
+  "moe": "3.1%",
+  "note": "מדגם (מנו גבע) + iPanel for חדשות 12: ליכוד 31, יש עתיד 25, הציונות הדתית 14, המחנה הממלכתי 11, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 6, העבודה 5, מרצ 5, חד\"ש-תע\"ל 4, רע\"ם 4, בל\"ד 1.6%, הבית היהודי 1.5%. 'מועד איסוף הנתונים: 27.10.2022-28.10.2022' (Wikipedia fieldStart 10-28), 1,007 משיבים, טעות 3.1%. Telegram link not used."
+ },
+ {
+  "id": "k25-2022-10-27-panels-politics-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/elections-2022/Article-954614",
+  "differences": [],
+  "fieldEndSource": "2022-10-27",
+  "sample": null,
+  "moe": "3.1%",
+  "note": "פאנלס פוליטיקס (מנחם לזר) for מעריב-סופהשבוע: ליכוד 31, יש עתיד 25, הציונות הדתית 14, המחנה הממלכתי 12, ש\"ס 9, יהדות התורה 6, ישראל ביתנו 6, מרצ 5, העבודה 4, רע\"ם 4, חד\"ש-תע\"ל 4, הבית היהודי 2.1%, בל\"ד 1.8%. 'נערך ב-26-27 באוקטובר. טעות הדגימה המרבית 3.1%'. Sample size not stated."
+ },
+ {
+  "id": "k25-2022-10-27-smith-galei-israel",
+  "status": "match",
+  "source": "https://www.srugim.co.il/723977-סקר-נוסף-שקד-מוסיפה-להתחזק-יש-הכרעה",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 28.10.22: 'סקר אחרון של מכון סמית... עבור רדיו גלי ישראל': ליכוד 31, יש עתיד 25, הציונות הדתית 14, המחנה הממלכתי 11, ש\"ס 9, יהדות התורה 7, ישראל ביתנו 6, העבודה 5, מרצ 4, חד\"ש-תע\"ל 4, רע\"ם 4; בל\"ד 2.1%, הבית היהודי 2%. All match. Field dates/sample not stated."
+ },
+ {
+  "id": "k25-2022-10-28-camil-fuchs-channel-13",
+  "status": "match",
+  "source": "https://web.archive.org/web/20221031082804/https://13tv.co.il/item/news/politics/politics/last-survey-903306114/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 801,
+  "moe": "3.5%",
+  "note": "Live 403; archived: סקר חדשות 13 (פרופ' קמיל פוקס, תשאול: פרויקט המדגם/סטט נט), aired Fri: ליכוד 30, יש עתיד 27, הציונות הדתית 15, המחנה הממלכתי 10, ש\"ס 8, יהדות התורה 7, העבודה 6, ישראל ביתנו 5, מרצ/רע\"מ/חד\"ש-תע\"ל 4, בל\"ד 2.75%, הבית היהודי 2%. '801 נשאלים... טעות 3.5'. Field date not stated."
+ },
+ {
+  "id": "k25-2022-10-27-kantar-kan-11",
+  "status": "match",
+  "source": "https://web.archive.org/web/20230127150019/https://www.kan.org.il/Item/?itemId=136898",
+  "differences": [],
+  "fieldEndSource": "2022-10-27",
+  "sample": 1301,
+  "moe": "2.7%",
+  "note": "Live 403; archived: 'הסקר של מכון קנטאר ודודי חסיד', כאן 11: ליכוד 31, יש עתיד 24, הציונות הדתית 14, המחנה הממלכתי 11, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 6, העבודה 6, מרצ 5, רע\"ם 4, חד\"ש-תע\"ל 4, בל\"ד 2.2%, הבית היהודי 2%. 'מדגם: 1,301... מועד עבודת השדה: 26-27 באוקטובר 2022... טעות 2.7'."
+ },
+ {
+  "id": "k25-2022-10-26-maagar-mochot-israel-hayom",
+  "status": "match",
+  "source": "https://web.archive.org/web/20221028063801/https://www.israelhayom.co.il/news/politics/article/13226572",
+  "differences": [],
+  "fieldEndSource": "2022-10-26",
+  "sample": 1201,
+  "moe": "2.7%",
+  "note": "Live 403; archived: ישראל היום + מאגר מוחות: ליכוד 30, יש עתיד 25, הציונות הדתית 15, המחנה הממלכתי 11, ש\"ס 9, יהדות התורה 7, העבודה 6, ישראל ביתנו 5, מרצ/חד\"ש-תע\"ל/רע\"מ 4, הבית היהודי 1.2%, בל\"ד 1%. 'הסקר נערך בתאריכים 23.10.2022 ו-26.10.2022, בקרב 1,201... טעות 2.7%'."
+ },
+ {
+  "id": "k25-2022-10-27-direct-polls-channel-14",
+  "status": "match",
+  "source": "https://web.archive.org/web/20221028105939/https://www.now14.co.il/חמישה-ימים-לבחירות-סקר-מנדטים-אחרון-קו/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Live now14 returns 403; archived: 'סקר המנדטים האחרון של מכון הסקרים דיירקט פולס בשיתוף חדשות 14': ליכוד 34, יש עתיד 23, המחנה הממלכתי 13, הציונות הדתית 12, ש\"ס 9, יהדות התורה 7, ישראל ביתנו 6, מרצ/העבודה/חד\"ש-תע\"ל/רע\"מ 4, בל\"ד 2.1%, הבית היהודי 1.9%. All match. Field dates/sample/MoE not stated."
+ }
+]
