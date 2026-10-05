@@ -9,3 +9,5 @@ export const seatsFmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFi
 export const date = (iso: string) => df.format(new Date(iso.length === 10 ? iso + "T12:00:00Z" : iso));
 export const dateLong = (iso: string) => dlf.format(new Date(iso.length === 10 ? iso + "T12:00:00Z" : iso));
 export const dateRange = (a: string, b: string) => (a === b ? date(a) : `${date(a)}–${date(b)}`);
+/** מספר עם סימן (+3, −2, 0). מינוס אמיתי (U+2212) — להצגה בתוך <bdi dir="ltr"> */
+export const signed = (n: number) => (n === 0 ? "0" : `${n > 0 ? "+" : "−"}${seatsFmt(Math.abs(n))}`);

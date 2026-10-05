@@ -153,7 +153,7 @@ export default function Home() {
         </Note>
       </Card>
 
-      <div className="grid md:grid-cols-3 gap-5 [&>*]:min-w-0">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 [&>*]:min-w-0">
         <Card title="מחשבון מנדטים">
           <p className="text-sm">משנים אחוזים ורואים את החלוקה לפי החוק: אחוז חסימה, הסכמי עודפים ובאדר-עופר.</p>
           <Link to="/calculator" className="font-bold">
@@ -170,6 +170,12 @@ export default function Home() {
           <p className="text-sm">מספר בעלי זכות הבחירה גדל; גם אחוז החסימה בקולות יגדל.</p>
           <Link to="/voters" className="font-bold">
             למצביעים
+          </Link>
+        </Card>
+        <Card title="כמה צדקו הסקרים בעבר">
+          <p className="text-sm">מה אמרו הסקרים ערב כל מערכת מאז 2019, ומה יצא בפועל — לפי רשימה, גוש ומכון.</p>
+          <Link to="/accuracy" className="font-bold">
+            לדיוק הסקרים
           </Link>
         </Card>
       </div>

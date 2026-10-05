@@ -10,6 +10,7 @@ const NAV = [
   { to: "/trends", label: "מגמות" },
   { to: "/calculator", label: "מחשבון מנדטים" },
   { to: "/results", label: "תוצאות אמת" },
+  { to: "/accuracy", label: "דיוק הסקרים" },
   { to: "/voters", label: "מצביעים" },
   { to: "/method", label: "שיטה ומקורות" },
   { to: "/about", label: "אודות" },

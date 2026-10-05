@@ -1,0 +1,3063 @@
+{{short description|none}}
+{{Use dmy dates|date=May 2019}}
+
+Polling for the 17 [[September 2019 Israeli legislative election]]<ref name=dissolved>{{Cite news |url=https://www.jpost.com/Israel-News/Elections-set-for-Sept-17-after-coalition-talks-fail-591044 |date=30 May 2019 |work=[[The Jerusalem Post]] |author=[[Gil Hoffman]]|author2=Lahav Harkov |title=Israel goes back to elections as Netanyahu fails to form coalition}}</ref> began on 26 May 2019.<ref name=jp>{{cite news |title=New Israeli elections would give Netanyahu an easy win - poll |url=https://www.jpost.com/Israel-News/Politics-And-Diplomacy/Poll-In-new-Israeli-elections-the-Right-will-get-68-Knesset-seats-590760 |author=Arik Bender |date=27 May 2019 |access-date=28 May 2019 |work=[[The Jerusalem Post]]}}</ref>
+
+== Seat projections ==
+=== Graphs ===
+These graphs show the polling trends from the time Knesset dissolved until the election day. [[election silence|No polls may be published]] from the end of Friday before the election until the [[polling station]]s closing on election day at 22:00.<ref name=silence>[[s:he:חוק הבחירות (דרכי תעמולה)#סעיף 16ה]] (ח) (in Hebrew)</ref>
+
+If more than one poll was conducted on the same day, the graphs show the average of the polls for that date.
+
+{{Graph:Chart |width=650 |height=500 |xAxisTitle=Date |yAxisTitle=Seats |legend= |type=line
+|interpolate=monotone
+|xType=date
+|xAxisMax = 1568678400000
+|yAxisMin=0
+|yGrid=5
+|x= 2019/05/26, 2019/05/28, 2019/05/30, 2019/06/02, 2019/06/07, 2019/06/14, 2019/06/20, 2019/06/26, 2019/07/03, 2019/07/04, 2019/07/11, 2019/07/12, 2019/07/16, 2019/07/17, 2019/07/19, 2019/07/21, 2019/07/25, 2019/07/26, 2019/07/30, 2019/08/01, 2019/08/02, 2019/08/04, 2019/08/05, 2019/08/08, 2019/08/13, 2019/08/15, 2019/08/18, 2019/08/21, 2019/08/22, 2019/08/25, 2019/08/28, 2019/08/29, 2019/09/01, 2019/09/02, 2019/09/04, 2019/09/05, 2019/09/09, 2019/09/10, 2019/09/11, 2019/09/12, 2019/09/13, 2019/09/17
+|y1Title=Likud			|y1=	35,	36,	36,	36,	37,	35,	34,	32,	31.5,	31,	30,	33,	31,	31,	32,	30,	29.4,	30,	30,	30,	30.5,	29,	30.5,	32,	30,	31.5,	31,	31,	31.3,	32,	31.5,	30,	31.5,	32,	31,	31.75,	31.5,	31,	33,	33.25,	32.33,  32
+|y2Title=Blue & White		|y2=	34,	33,	33.33,	34,	33,	33,	33,	32,	30,	30,	30,	30,	30,	28,	29,	29.5,	27.8,	28,	30,	28.5,	29,	30,	29,	30,	29,	30.5,	29,	30,	30.3,	31,	30.5,	32,	31.5,	31,	31,	31.5,	32.5,	32,	31,	32.25,	32,     33
+|y3Title=Joint List		|y3=	7,	9.76,	10,	11,	9.88,	10,	10,	12,	10.5,	9,	11,	10,	11,	11,	10.5,	10.5,	11.2,	11,	11,	11.5,	11,	11,	11,	11,	11,	10,	10,	11,	11.3,	11,	10,	11,	10.5,	10,	10,	10,	9.5,	10,	12,	11.25,	11,     13
+|y4Title=Yisrael Beiteinu	|y4=	6,	9,	8.67,	8,	7,	8,	8,	7,	8.5,	7,	9,	8,	10,	8,	8.5,	9.5,	9.2,	9,	10,	10.5,	10,	11,	10,	9,	10,	10.5,	9,	9,	10,	9,	10,	11,	10,	9,	9,	10.25,	8.5,	9,	9,	8.25,	8.67,   8
+|y5Title=Yamina			|y5=	12,	10,	10.17,	9,	12,	10,	10,	8,	9.5,	12,	10,	10,	9,	8,	9.5,	11.5,	12.8,	12,	12,	11,	11.5,	11,	11,	10,	11,	10.5,	11,	11,	10.3,	10,	10,	10,	10,	9,	10,	9,	9,	9,	7,	9,	8,      7
+|y6Title=UTJ			|y6=	8,	8,	7.67,	7,	8,	8,	8,	6,	6.5,	7,	8,	7,	8,	7,	7.5,	8,	7.4,	7,	8,	7,	7.5,	7,	7.5,	7,	8,	7,	8,	8,	7.3,	7,	7.5,	7,	7,	8,	8,	7.5,	7,	7,	7,	7.5,	7.67,   7
+|y7Title=Shas			|y7=	8,	7,	7,	7,	7,	7,	8,	6,	7,	6,	7,	8,	7,	8,	7.5,	7,	6.6,	8,	7,	6.5,	7.5,	7,	7,	8,	7,	7,	8,	7,	7.7,	7,	7.5,	8,	6.5,	7,	7,	7.25,	6.5,	6.5,	7,	7.5,	6.67,   9
+|y8Title=Democratic Union	|y8=	5,	5,	5.67,	4,	4,	5,	5,	12,	8.8,	10,	9,	9,	8,	11,	9.5,	8.18,	9.35,	9,	7,	9,	7.5,	8,	7.5,	8,	7,	7.5,	7,	7,	6.7,	6,	7,	6,	7,	7,	5,	6,	6,	6,	4,	5.5,	5.33,   5
+|y9Title=Labor-Gesher		|y9=	6,	8.15,	4.64,	4,	6.64,	4,	4,	5,	7.5,	8,	6,	5,	6,	8,	6,	7.5,	6,	6,	5,	6,	5.5,	6,	6.5,	5,	7,	5.5,	7,	6,	5,	7,	6,	5,	6,	7,	5,	5.75,	5.5,	5.5,	6,	4.5,	4.33,   6
+|y10Title=Zehut			|y10=	,	1.73,	2.7,	2.4,	,	,	2.825<!--do not remove, otherwise an error will occur-->,	,	3.25,	1.2,	3.24,	,	2.04,	1.2,	1.2,	1.8,	2.86,	,	1.68,	2.4,	2.04,	2.28,	2.46,	2.16,	3.48,	2.22,	1.92,	3.36,	2.28,	2.04,	1.68
+|y11Title=Otzma Yehudit		|y11=	,	,	,	,	,	,	,	,	,	,	,	,	,	,	2.04,	,	,	,	1.44,	2.4,	2.22,	3.36,	2.46,	1.8,	3.24,	2.28,	2.76,	2.4,	2.44,	2.76,	2.58,	,	3.42,	3.24,	4,	3.328,	4,	4,	4,	3.73,	4,      2.24
+|y12Title=Threshold (3.25%)	|y12=	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,	3.9,    3.9
+|colors=#1f5aa5,#04BEEF,#01B2AC,#9AC0E2,#CBD53A,#385380,#000000,#029A3D,#EE1C25,#6AC7DF,#2441FF,#808080
+}}
+
+=== Polls ===
+Poll results are listed in the table below in reverse chronological order, showing the most recent first. The highest figure in each survey is displayed in bold and the background shaded in the leading party's colour. In the instance that there is a tie, then both figures are shaded. Parties that fall below the threshold are denoted by the percentage of votes that they received (N%), instead of the seats they would have gotten. When a poll has no information on a certain party, that party is instead marked by a dash (–).
+
+;{{small|Color key:}}
+{{legend2|#EAEAFF|[[Exit poll]]|border=1px solid #AAAAAA}}
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Yamina (political alliance)|Yamina]]
+![[Labor-Gesher|Labor-<br />Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Democratic Union (Israel)|Dem.<br />Union]]
+![[Zehut]]
+![[Otzma Yehudit|Otzma<br />Yehudit]]
+!Gov.{{efn|group=fn1|name=Gov|Sum of [[Thirty-fourth government of Israel|government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism|UTJ]], and [[Yamina (political alliance)|Yamina]]}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:#CBD53A;" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:#2441FF;" |
+!style="background:#000EA3;" |
+|-
+|style="background:silver" colspan=3 |'''Pre-election seats'''<ref name=IH29Aug>{{cite news |title=Yisrael Hayom & I24NEWS Poll: Blue & White 32, Likud 30, Joint List 11, Yisrael Beitenu 11, Yamina 10; Scenario Poll w/o Otzma/Noam/Zehut: Likud 31, Blue & White 32, Yamina 12 |url=https://knessetjeremy.com/2019/08/30/yisrael-hayom-poll-blue-white-32-likud-30-joint-list-11-yisrael-beitenu-11-yamina-10-scenario-poll-w-o-otzma-noam-zehut-likud-31-blue-white-32-yamina-12/ |work=Jeremy's Knesset Insider |date=30 August 2019 |access-date=30 August 2019}}</ref>
+|style="background:#BBCDE4" |'''38'''	<!-- Likud		-->
+|style="background:silver" |35		<!-- Blue & White	-->
+|style="background:silver" |10		<!-- Joint List		-->
+|style="background:silver" |8		<!-- Shas		-->
+|style="background:silver" |8		<!-- UTJ		-->
+|style="background:silver" |6		<!-- Yamina		-->
+|style="background:silver" |6		<!-- Labor–Gesher	-->
+|style="background:silver" |5		<!-- Yisrael Beiteinu	-->
+|style="background:silver" |4		<!-- Democratic Union	-->
+|style="background:silver" |–		<!-- Zehut		-->
+|style="background:silver" |–		<!-- Otzma Yehudit	-->
+|style="background:silver" |60		<!-- Gov.		-->
+|-
+|style="background:silver" colspan=3 |'''[[September 2019 Israeli legislative election|Election results]]'''<ref>{{cite news |url=https://www.haaretz.com/israel-news/elections/EXT-INTERACTIVE-election-results-israel-2019-polls-netanyahu-gantz-1.7695785 |archive-url=https://web.archive.org/web/20190918151603/https://www.haaretz.com/israel-news/elections/EXT-INTERACTIVE-election-results-israel-2019-polls-netanyahu-gantz-1.7695785 |url-status=dead |archive-date=18 September 2019 |title=Final Results: Israel Election 2019 |work=[[Haaretz]] |date=19 September 2019 |access-date=19 September 2019}}</ref><ref>{{cite news |title=i24NEWS |url=https://www.i24news.tv/en/news/israel/1569365806-election-committee-revises-vote-count-giving-likud-extra-seat-at-expensive-of-religious-utj |work=i24 News |date=24 September 2019}}</ref>
+| style="background:silver" |32
+| style="background:#B2EDFB"|'''33'''
+| style="background:silver" |13
+| style="background:silver" |9
+| style="background:silver" |7
+| style="background:silver" |7
+| style="background:silver" |6
+| style="background:silver" |8
+| style="background:silver" |5
+| style="background:silver" |{{small|N/A}}
+| style="background:silver" |{{small|(1.9%)}}
+|style="background:silver" |55
+
+|- style="background-color:#EAEAFF;"
+|data-sort-value="2019-08-17" |17 Sep
+|KANTAR
+|[[Kan 11]]<ref>{{cite news |title=עדכון המדגם: גוש השמאל מתחזק בשני מנדטים |url=https://www.kan.org.il/item/?itemId=58926 |access-date=17 September 2019 |work=כאן-תאגיד השידור הישראלי}}</ref>
+|31					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|–					<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|- style="background-color:#EAEAFF;"
+|data-sort-value="2019-08-17" |17 Sep 
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref>{{cite news |title=החדשות - בחירות 2019 {{!}} תוצאות מדגם חדשות 12: אין לנתניהו 61... |url=https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-41bfb96aa204d61026.htm |work=mako |date=17 September 2019}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|13					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|–					<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|- style="background-color:#EAEAFF;"
+|data-sort-value="2019-08-17" |17 Sep 
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=‫מדגם חדשות 13 המעודכן: כחול לבן מובילה, הרשימה המשותפת - 15 |url=https://13news.co.il/item/news/politics/state-policy/reelection-2019/update_survey_election-403924/ |access-date=17 September 2019 |work=חדשות 13 |language=he}}</ref>
+|30					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|15					<!-- Joint List		-->
+|9					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|–					<!-- Otzma Yehudit	-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-13" |13 Sep
+|colspan="16" |'''[[Election silence]] starting end of Friday before election day.'''<ref name=silence/>
+|-
+|data-sort-value="2019-09-13" |13 Sep
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=ch13sep13>{{cite news |title=Channel 13 Poll: Likud 32, Blue & White 32, Joint List 12, Yamina 9, Yisrael Beitenu 9 |url=https://knessetjeremy.com/2019/09/14/channel-13-poll-likud-32-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-9/ |access-date=15 September 2019 |date=14 September 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|4					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-13" |12–13 Sep
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12sep13>{{cite news |title=Channel 12 Poll: Likud 32, Blue & White 32, Joint List 10, Yamina 8, UTJ 8, Yisrael Beitenu 8 |url=https://knessetjeremy.com/2019/09/14/channel-12-poll-likud-32-blue-white-32-joint-list-10-yamina-8-utj-8-yisrael-beitenu-8/ |access-date=15 September 2019 |date=14 September 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-13" |10–13 Sep
+|Shvakim Panorama
+|[[Hot (Israel)|HOT]]<ref>{{cite news |title=הסקר האחרון של HOT לפני הבחירות: גוש הימין 59 מנדטים |url=https://www.ynet.co.il/articles/0,7340,L-5588152,00.html |access-date=14 September 2019 |date=14 September 2019 |work=[[ynet]] |language=he}}</ref>
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|32					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|4					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-12" |12 Sep
+|Smith
+|[[Maariv]]<ref>{{cite news |title= רגע לפני תום מועד הסקרים: הנתונים שבין השורות ומפת המנדטים הסופית |url=https://www.maariv.co.il/elections2019/polls/Article-718968|access-date=13 September 2019 |date=13 September 2019 |work=Maariv|language=he}}</ref>
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|32                                 	<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(3.1%)}}		        <!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-12" |12 Sep
+|Panels Politics
+|[[Knesset Channel]]<ref name=knesset12sep>{{cite news |title=סקר: הליכוד מקבל 36 מנדטים, גוש הימין מגיע ל-60; עוצמה יהודית בחוץ |url=https://www.maariv.co.il/elections2019/polls/Article-718773 |access-date=12 September 2019 |date=12 September 2019 |work=Maariv |author=Aric Bender |language=he}}</ref>
+|style="background:#BBCDE4" |'''36'''	<!-- Likud		-->
+|32					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|4					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|–					<!-- Otzma Yehudit	-->
+|60					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-12" |11–12 Sep
+|Smith
+|103fm<ref>{{cite news |title=103 FM Poll: Likud 33, Blue & White 32, Joint List 12, Yamina 9, Yisrael Beitenu 9|url=https://knessetjeremy.com/2019/09/13/103-fm-poll-likud-33-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-9/|access-date=12 September 2019 |date=13 September 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|32					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|4					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.9%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-12" |11–12 Sep
+|KANTAR
+|[[Kan 11]]<ref>{{cite news |title=סקר: ליברמן יורד ל-7 מנדטים, 59 מנדטים לגוש הימין-חרדים |url=https://www.maariv.co.il/elections2019/polls/Article-718849 |access-date=12 September 2019 |date=12 September 2019 |work=Maariv |author=Aric Bender |language=he}}</ref>
+|31					<!-- Likud		-->
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|7					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-11" |10–11 Sep
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH12sep>{{cite news |author1=Mati Tuchfeld |title=Poll predicts 62 seats for left-wing coalition with Lieberman |url=https://www.israelhayom.com/2019/09/13/poll-predicts-62-seats-for-left-wing-coalition-with-lieberman/ |work=Israel Hayom |date=13 September 2019}}</ref>
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|31					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|7					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|4					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-10" |10 Sep
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=סקר חדשות 13: כחול לבן מובילה; עוצמה יהודית מעל אחוז החסימה |url=https://13news.co.il/item/news/politics/state-policy/reelection-2019/survey-election-355016/ |access-date=10 September 2019 |date=10 September 2019 |work=Channel 13 |author=עקיבא נוביק |language=he}}</ref>
+|31					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-10" |9–10 Sep
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12sep10>{{cite news |title=סקר חדשות 12: כחול לבן מובילה, אך גוש הימין מתחזק |url=https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-f891a9579fb1d61027.htm |access-date=10 September 2019 |date=10 September 2019 |work=mako |author=עמית סגל |language=he}}</ref>
+|31					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-09" |9 Sep
+|KANTAR
+|[[Kan 11]]<ref>{{cite web |title=Channel 11 Poll: Blue & White 32, Likud 31, Joint List 10, Yamina 9, Yisrael Beitenu 9 |url=https://knessetjeremy.com/2019/09/10/channel-11-poll-blue-white-32-likud-31-joint-list-10-yamina-9-yisrael-beitenu-9/ |work=Jeremy's Knesset Insider |access-date=10 September 2019 |date=10 September 2019}}</ref>
+|31					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-09" |8–9 Sep
+|Midgam
+|[[Walla!]]<ref name=WallaSep9>{{cite web |title=סקר וואלה! NEWS: כחול לבן מובילה על הליכוד, עוצמה יהודית עוברת |url=https://elections.walla.co.il/item/3311677 |website=Walla! |access-date=9 September 2019 |language=he |date=9 September 2019 |author=טל שלו}}</ref>
+|32					<!-- Likud		-->
+|style="background:#B2EDFB" |'''33'''	<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-05" |5 Sep
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=Channel 13 Poll: Likud 32, Blue & White 32, Yisrael Beitenu 11, Yamina 10, Joint List 10 |url=https://knessetjeremy.com/2019/09/05/channel-13-poll-likud-32-blue-white-32-yisrael-beitenu-11-yamina-10-joint-list-10/|date=5 September 2019 |access-date=5 September 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.76%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-05" |4–5 Sep
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH5Sep>{{cite news |author1=Mati Tuchfeld |title=Poll: Likud retakes lead, Right nears 60 seats without Lieberman |url=https://www.israelhayom.com/2019/09/06/poll-likud-retakes-lead-right-nears-60-seats-without-lieberman/ |work=Israel Hayom |date=6 September 2019}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|8					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|4					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-05" |4–5 Sep
+|Smith
+|103fm & ''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |title=103 FM & Maariv Poll: Likud 32, Blue & White 32, Yisrael Beitenu 10, Yamina 9, Joint List 9 |url=https://knessetjeremy.com/2019/09/06/103-fm-maariv-poll-likud-32-blue-white-32-yisrael-beitenu-10-yamina-9-joint-list-9/ |date=6 September 2019 |access-date=6 September 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.5%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-05" |4–5 Sep
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12sep5>{{cite news |title=Channel 12 Poll: Likud 32, Blue & White 32, Joint List 10, Yamina 9, Yisrael Beitenu 9 |url=https://knessetjeremy.com/2019/09/05/channel-12-poll-likud-32-blue-white-32-joint-list-10-yamina-9-yisrael-beitenu-9/ |date=5 September 2019 |access-date=5 September 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.5%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-04" |4 Sep
+|Panels Politics
+|[[Knesset Channel]]<ref name=knesset4sep>{{cite news |title=Knesset Channel Poll: Likud 31, Blue & White 31, Yamina 10, Joint List 10, Yisrael Beitenu 9; Otzma 4; Right Bloc 60 |url=https://knessetjeremy.com/2019/09/05/knesset-channel-poll-likud-31-blue-white-31-yamina-10-joint-list-10-yisrael-beitenu-9-otzma-4-right-bloc-60/ |work=Jeremy's Knesset Insider |date=5 September 2019 |access-date=6 September 2019}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''31'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|4					<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-02" |1–2 Sep
+|Midgam
+|[[Walla!]]<ref name="WallaSep2">{{cite web |title=סקר וואלה! NEWS: גוש הימין רחוק מ-61, המפלגות הגדולות מתחזקות |url=https://elections.walla.co.il/item/3310542 |website=Walla! |access-date=3 September 2019 |language=he-IL |date=3 September 2019 |author=טל שלו}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|31					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|7					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.7%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-01" |1 Sep
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=סקר חדשות 13: כחול לבן עוקפת את הליכוד; ימינה נחלשת |url=https://13news.co.il/item/news/politics/state-policy/reelection-2019/survey-347047/ |work=Channel 13 |date=1 September 2019 |access-date=1 September 2019 |author=Raviv Drucker |language=he}}</ref>
+|31					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.8%)}}			<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-09-01" |1 Sep
+|KANTAR
+|[[Kan 11]]<ref>{{cite news |title=סקר כאן חדשות: ימינה מזנקת ל-10 מנדטים, עוצמה יהודית על סף אחוז החסימה |url=https://www.kan.org.il/Item/?itemId=58120 |date=1 September 2019 |access-date=1 September 2019 |work=Kan |author=מואב ורדי |language=he}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|31					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{N/A}}				<!-- Zehut		-->
+|{{small|(2.9%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-29" |29 Aug
+| colspan="16" |'''[[Zehut]] announces withdrawal'''<ref>{{cite web |url=https://www.jpost.com/Breaking-News/Netanyahu-promises-Zehuts-Feiglin-ministerial-position-in-government-600099 |title= Netanyahu promises Feiglin ministry so that Zehut Party ends race |work=jpost.com |author=Gil Hoffman |date=29 August 2019 |access-date=30 August 2019}}</ref>
+|-
+|data-sort-value="2019-08-29" |27–29 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH29Aug/>
+|30					<!-- Likud		-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|–					<!-- Zehut		-->
+|–					<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-28" |28 Aug
+|Smith
+|103fm/''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |author1=Arik Bender |title=סקר "מעריב": חלק גדול בציבור סבור שיש לצרף את גנץ, אשכנזי ויעלון לקבינט חירום |url=https://www.maariv.co.il/elections2019/polls/Article-716309 |access-date=30 August 2019 |work=Maariv |date=30 August 2019 |language=he}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|31					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(1.6%)}}			<!-- Zehut		-->
+|{{small|(2.5%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-28" |28 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12Aug28>{{cite news |url=https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-fe0ebe50e7edc61026.htm |title=סקר חדשות 12: איך משפיעה פרישת זהות על חלוקת המנדטים ומפת הגושים? |date=29 August 2019 |access-date=30 August 2019 |work=mako |author=עמית סגל}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|7					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(1.2%)}}			<!-- Zehut		-->
+|{{small|(1.8%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-25" |22–25 Aug
+|KANTAR
+|[[Kan 11]]<ref>{{cite news |title=סקר כאן חדשות: סדר היום הביטחוני משרת פוליטית את המפלגות הגדולות |url=https://www.kan.org.il/Item/?itemId=57792 |date=26 August 2019 |access-date=27 August 2019 |work=Kan |author=מואב ורדי |language=he}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|31					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|7					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{small|(1.7%)}}			<!-- Zehut		-->
+|{{small|(2.3%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-22" |22 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12Aug22>{{cite news |title=Channel 12 Poll: Likud 30, Blue & White 30, Yamina 11, Joint List 11, Yisrael Beitenu 10 |url=https://knessetjeremy.com/2019/08/25/channel-12-poll-likud-30-blue-white-30-yamina-11-joint-list-11-yisrael-beitenu-10/ |date=25 August 2019 |access-date=30 August 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|11					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(2.3%)}}			<!-- Zehut		-->
+|{{small|(1.9%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-22" |22 Aug
+|Smith
+|103fm<ref>{{cite news|title=Poll: 32 seats for Likud, 10 for Yamina|url=http://www.israelnationalnews.com/News/News.aspx/267779|date=22 August 2019 |access-date=22 August 2019 |work=[[Arutz Sheva]]|author=[[Staff writer]]}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(1.4%)}}			<!-- Zehut		-->
+|{{small|(2.2%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-22" |20–22 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH22Aug22>{{cite news |author1=Mati Tuchfeld |title=Poll: Majority of Israelis plan on repeating April election vote |url=https://www.israelhayom.com/2019/08/23/poll-majority-of-israelis-plan-on-repeating-april-election-vote/ |access-date=23 August 2019 |work=Israel Hayom |date=23 August 2019}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|31					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|4					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|6					<!-- Democratic Union	-->
+|{{small|(2%)}}				<!-- Zehut		-->
+|{{small|(2%)}}				<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-21" |21 Aug
+|Midgam
+|[[Walla!]]<ref>{{cite news |title=Poll: Liberman loses seat after vote-sharing agreement|url=http://www.israelnationalnews.com/News/News.aspx/267703|date=21 August 2019 |work=[[Arutz Sheva]]}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|11					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(2.8%)}}			<!-- Zehut		-->
+|{{small|(2.0%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-18" |18 Aug
+|Direct Polls
+|''[[Makor Rishon]]''<ref>{{cite news |title=Makor Rishon Poll: Likud 31, Blue & White 29, Yamina 11, Joint List 10, Yisrael Beitenu 9|url=https://knessetjeremy.com/2019/08/19/makor-rishon-poll-likud-31-blue-white-29-yamina-11-joint-list-10-yisrael-beitenu-9/|date=19 August 2019 |work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|11					<!-- Yamina		-->
+|7					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(1.6%)}}			<!-- Zehut		-->
+|{{small|(2.3%)}}			<!-- Otzma Yehudit	-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-15" |15 Aug
+|Smith
+|103fm<ref>{{cite news |title=Poll: 56 seats for the right without Liberman|url=http://www.israelnationalnews.com/News/News.aspx/267486 |date=15 August 2019 |access-date=15 August 2019 |work=[[Arutz Sheva]]|author=[[Staff writer]]}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|9					<!-- Yamina		-->
+|6					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(2.3%)}}			<!-- Zehut		-->
+|{{small|(1.7%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-15" |15 Aug
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=Poll: Blue & White 31, Likud 31, Yamina 12|url=http://www.israelnationalnews.com/News/News.aspx/267471|date=15 August 2019 |access-date=15 August 2019 |work=[[Arutz Sheva]]|author=[[Staff writer]]}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''31'''	<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|12					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|8					<!-- Democratic Union	-->
+|{{small|(1.4%)}}			<!-- Zehut		-->
+|{{small|(2.1%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-13" |13 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name = 12aug13>{{cite news |title=Channel 12 Poll: Likud 30, Blue & White 29, Yamina 11, Joint List 11, Yisrael Beitenu 10|url=https://knessetjeremy.com/2019/08/13/channel-12-poll-likud-30-blue-white-29-yamina-11-joint-list-11-yisrael-beitenu-10/|date=13 August 2019 |access-date=13 August 2019 |work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|11					<!-- Yamina		-->
+|7					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(2.9%)}}			<!-- Zehut		-->
+|{{small|(2.7%)}}			<!-- Otzma Yehudit	-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-08" |8 Aug
+|Smith
+|103fm<ref>{{cite news |title=103FM Poll: Likud - 32, Blue and White - 30|url=http://www.israelnationalnews.com/News/News.aspx/267141 |date=8 August 2019 |access-date=8 August 2019 |work=[[Arutz Sheva]]}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|10					<!-- Yamina		-->
+|5					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|8					<!-- Democratic Union	-->
+|{{small|(1.8%)}}			<!-- Zehut		-->
+|{{small|(1.5%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-05" |5 Aug
+|Direct Polls
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |title=Channel 13 Poll: Likud 30, Blue & White 29, United Right 11, Joint List 11, Yisrael Beitenu 10|url=https://knessetjeremy.com/2019/08/06/channel-13-poll-likud-30-blue-white-29-united-right-11-joint-list-11-yisrael-beitenu-10/|date=6 August 2019 |access-date=7 August 2019|work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|11					<!-- UR			-->
+|7					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|8					<!-- Democratic Union	-->
+|{{small|(2.2%)}}			<!-- Zehut		-->
+|{{small|(1.9%)}}			<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-05" |5 Aug
+|Midgam
+|[[Walla!]]<ref name=Walla5Aug>{{cite news |title=סקר וואלה! NEWS: רוב הציבור מתנגד לממשלת אחדות בראשות נתניהו |url=https://elections.walla.co.il/item/3251377 |date=5 August 2019 |access-date=5 August 2019 |work=Walla! |author=טל שלו |language=he}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|11					<!-- UR			-->
+|6					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(1.9%)}}			<!-- Zehut		-->
+|{{small|(2.2%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-04" |4 Aug
+|KANTAR
+|[[Reshet Bet]]<ref>{{cite news |title=Reshet Bet Poll: Blue & White 30, Likud 29, United Right 11, Yisrael Beitenu 11, Joint List 11 |url=https://knessetjeremy.com/2019/08/04/reshet-bet-poll-blue-white-30-likud-29-united-right-11-yisrael-beitenu-11-joint-list-11/ |date=4 August 2019 |access-date=5 August 2019 |work=Jeremy's Knesset Insider}}</ref>
+|29					<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|11					<!-- UR			-->
+|6					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|8					<!-- Democratic Union	-->
+|{{small|(1.9%)}}			<!-- Zehut		-->
+|{{small|(2.8%)}}			<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-02" |2 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref>{{cite news |title=אחרי הגשת הרשימות: לאף אחד אין איך להרכיב ממשלה |url=https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-d716f286d185c61026.htm |date=3 August 2019 |access-date=3 August 2019 |work=Mako |language=he}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|12					<!-- UR			-->
+|6					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(2.2%)}}			<!-- Zehut		-->
+|{{small|(1.9%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-02" |2 Aug
+|Smith
+|103fm<ref>{{cite news |title=103 FM Radio Poll: Likud 31, Blue & White 29, United Right 11, Joint List 11, Yisrael Beitenu 10 |url=https://knessetjeremy.com/2019/08/04/103-fm-radio-poll-likud-31-blue-white-29-united-right-11-joint-list-11-yisrael-beitenu-10/ |date=4 August 2019 |access-date=5 August 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|11					<!-- UR			-->
+|5					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|8					<!-- Democratic Union	-->
+|{{small|(1.2%)}}			<!-- Zehut		-->
+|{{small|(1.8%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-01" |1 Aug
+| colspan="16" |'''Deadline for submitting the candidate lists'''<ref>{{cite web |url=https://bechirot22.bechirot.gov.il/election/English/kneset20/Pages/Committee_Timetable.aspx |title=Committee Timetable |work=[[Central Elections Committee (Israel)|Central Elections Committee]] |access-date=31 July 2019}}</ref>
+|-
+|data-sort-value="2019-08-01" |1 Aug
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=ch13aug1>{{cite news |title=Channel 13 Poll: Likud 30, Blue & White 29, United Right 11, Yisrael Beitenu 11, Joint List 11 |url=https://knessetjeremy.com/2019/08/01/channel-13-poll-likud-30-blue-white-29-united-right-11-yisrael-beitenu-11-joint-list-11/ |date=1 August 2019 |access-date=1 August 2019 |work=Jeremy's Knesset Insider |author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|11					<!-- UR			-->
+|6					<!-- Labor–Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|9					<!-- Democratic Union	-->
+|–					<!-- Zehut		-->
+|–					<!-- Otzma Yehudit	-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-08-01" |1 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH1Aug>{{cite news |title=Yisrael Hayom Poll: Likud 30, Blue & White 28, Joint List 12, United Right 11, Yisrael Beitenu 10 |url=https://knessetjeremy.com/2019/08/04/yisrael-hayom-poll-likud-30-blue-white-28-joint-list-12-united-right-11-yisrael-beitenu-10/ |date=4 August 2019 |access-date=5 August 2019 |work=Jeremy's Knesset Insider}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|28					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|11					<!-- UR			-->
+|6					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|9					<!-- Democratic Union	-->
+|{{small|(2%)}}				<!-- Zehut		-->
+|{{small|(2%)}}				<!-- Otzma Yehudit	-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-31" |31 Jul
+| colspan="16" |'''[[Kulanu]] officially dissolves and its remaining members join [[Likud]]'''<ref>{{cite web |title=6 שנים מאז שהקים את מפלגת כולנו: כחלון התפקד לליכוד |url=https://www.hidabroot.org/article/1127733 |website=www.hidabroot.org |language=he|date=31 July 2019}}</ref>
+|-
+|data-sort-value="2019-07-30" |30 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12jul30>{{cite web |url=https://knessetjeremy.com/2019/07/30/channel-12-poll-likud-30-blue-white-30-united-right-12-joint-list-11-yisrael-beitenu-10/ |title=Channel 12 Poll: Likud 30, Blue & White 30, United Right 12, Joint List 11, Yisrael Beitenu 10 |work=Jeremy's Knesset Insider |date=30 July 2019 |access-date=31 July 2019}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud–Kulanu	-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|12					<!-- United Right	-->
+|5					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|7					<!-- Democratic Union	-->
+|{{small|(1.4%)}}			<!-- Zehut		-->
+|{{small|(1.2%)}}			<!-- Otzma Yehudit	-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-29" |29 Jul
+| colspan="16" |'''The [[Union of the Right-Wing Parties|URWP]] and the [[New Right (Israel)|New Right]] agree to run together as [[Yamina (political alliance)|Yamina]]'''<ref>{{Cite web|url=http://www.israelnationalnews.com/News/News.aspx/266645|title=New Right, United Right reach final agreement on joint run|website=[[Arutz Sheva]]|language=en|access-date=29 July 2019|date=29 July 2019|author=[[Staff writer]]}}</ref><ref>{{Cite web|url=http://www.israelnationalnews.com/News/News.aspx/267286|title=United Right to run under name 'Yemina'|work=[[Arutz Sheva]]|date=12 August 2019|author=[[Staff writer]]}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]–<br />[[Kulanu]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher|Labor-<br />Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Democratic Union (Israel)|Dem.<br />Union]]
+![[New Right (Israel)|New<br />Right]]
+![[Zehut]]
+!Gov.{{efn|group=fn1|name=Gov|Sum of [[Thirty-fourth government of Israel|government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism|UTJ]], and [[Yamina (political alliance)|Yamina]]}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:#000EA3;" |
+|-
+|style="background:silver" colspan=3 |'''Seats at dissolution'''
+|style="background:#BBCDE4" |'''39'''	<!-- Likud–Kulanu	-->
+|style="background:silver" |35		<!-- Blue & White	-->
+|style="background:silver" |10		<!-- Joint List		-->
+|style="background:silver" |8		<!-- Shas		-->
+|style="background:silver" |8		<!-- UTJ		-->
+|style="background:silver" |6		<!-- Labor–Gesher	-->
+|style="background:silver" |5		<!-- Yisrael Beiteinu	-->
+|style="background:silver" |5		<!-- URWP		-->
+|style="background:silver" |4		<!-- Democratic Union	-->
+|style="background:silver" |–		<!-- New Right		-->
+|style="background:silver" |–		<!-- Zehut		-->
+|style="background:silver" |60		<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-26" |26 Jul
+|Smith
+|103fm/''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |title=103 FM Radio Poll: Likud 30, Blue & White 28, Joint List 11, Yisrael Beitenu 9, Democratic Union 9|url=https://knessetjeremy.com/2019/07/26/103-fm-radio-poll-likud-30-blue-white-28-joint-list-11-yisrael-beitenu-9-democratic-union-9/|date=26 July 2019 |access-date=26 July 2019|work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud–Kulanu	-->
+|28					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|9					<!-- Democratic Union	-->
+|7					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=kjc13>{{cite news |title=Channel 13 Poll: Likud 28, Blue & White 23, Democratic Union 12, Joint List 11, YB 10, Shaked 10; Scenario Poll: United Right List 14 |url=https://knessetjeremy.com/2019/07/25/channel-13-poll-likud-28-blue-white-23-democratic-union-12-joint-list-11-yb-10-shaked-10-scenario-poll-united-right-list-14/ |date=25 July 2019 |access-date=25 July 2019|work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''28'''	<!-- Likud–Kulanu	-->
+|23					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|5					<!-- Shas		-->
+|6					<!-- UTJ		-->
+|7					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|12					<!-- Democratic Union	-->
+|10					<!-- New Right		-->
+|4					<!-- Zehut		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=kjc12>{{cite news |title=Channel 12 Poll: Likud 29, Blue & White 28, Joint List 11, YB 10, Democratic Union 10, Shaked 9; Scenario Polls: United Left List 15, United Right List 14 |url=https://knessetjeremy.com/2019/07/25/channel-12-poll-likud-29-blue-white-28-joint-list-11-yb-10-democratic-union-10-shaked-9-scenario-polls-united-left-list-15-united-right-list-14/ |date=25 July 2019 |access-date=25 July 2019|work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''29'''	<!-- Likud–Kulanu	-->
+|27					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|10					<!-- Democratic Union	-->
+|9					<!-- New Right		-->
+|{{small|(1.9%)}}			<!-- Zehut		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref>{{cite news |title=I24 News & Yisrael Hayom Poll: Likud 31, Blue & White 30, Joint List 12, Democratic Union 9, 3 tied at 7 |url=https://knessetjeremy.com/2019/07/25/i24-news-yisrael-hayom-poll-likud-31-blue-white-30-joint-list-12-democratic-union-9-3-tied-at-7/ |date=25 July 2019 |access-date=25 July 2019|work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud–Kulanu	-->
+|30					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|7					<!-- Yisrael Beiteinu	-->
+|6					<!-- URWP		-->
+|9					<!-- Democratic Union	-->
+|6					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|KANTAR
+|[[Kan 11]]<ref name=kjc11>{{cite news |title=Channel 11 Poll: Likud 30, Blue & White 30, Joint List 10, YB 9, Shaked 9; Scenario Poll: United Right 15, United Left 14 |url=https://knessetjeremy.com/2019/07/25/channel-11-poll-likud-30-blue-white-30-joint-list-10-yb-9-shaked-9-scenario-poll-united-right-15-united-left-14/ |date=25 July 2019 |access-date=25 July 2019|work=Jeremy's Knesset Insider|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud–Kulanu	-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|8					<!-- Democratic Union	-->
+|9					<!-- New Right		-->
+|{{small|(2.4%)}}			<!-- Zehut		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+| colspan="15" |'''[[Meretz]], [[Israel Democratic Party|IDP]] and the [[Green Movement (Israel)|Green Movement]] agree to run together as the [[Democratic Union (Israel)|Democratic Union]]'''<ref>{{Cite web |url=https://www.timesofisrael.com/meretz-former-pm-barak-labor-defector-shaffir-announce-joint-knesset-run |title=Meretz, former PM Barak, Labor defector Shaffir announce joint Knesset run |work=[[The Times of Israel]] |access-date=25 July 2019 |date=25 July 2019 |author=Raoul Wootliff}}</ref><ref>{{Cite tweet |user=YaelCohenParan |number=1154284643803377664 |date=25 July 2019|title=המפלגה הירוקה שמחה להיות חלק מהמחנה הדמוקרטי שיעשה מהפך במפה הפוליטית בישראל.}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]–<br />[[Kulanu]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher|Labor-<br />Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Meretz]]
+![[New Right (Israel)|New<br />Right]]
+![[Zehut]]
+![[Israel Democratic Party|IDP]]
+!Gov.{{efn|group=fn1|name=Gov|Sum of [[Thirty-fourth government of Israel|government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism|UTJ]], and [[Yamina (political alliance)|Yamina]]}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#000EA3;" |
+|-
+|style="background:silver" colspan=3 |'''Seats at dissolution'''
+|style="background:#BBCDE4" |'''39'''	<!-- Likud–Kulanu	-->
+|style="background:silver" |35		<!-- Blue & White	-->
+|style="background:silver" |10		<!-- Joint List		-->
+|style="background:silver" |8		<!-- Shas		-->
+|style="background:silver" |8		<!-- UTJ		-->
+|style="background:silver" |6		<!-- Labor–Gesher	-->
+|style="background:silver" |5		<!-- Yisrael Beiteinu	-->
+|style="background:silver" |5		<!-- URWP		-->
+|style="background:silver" |4		<!-- Meretz		-->
+|style="background:silver" |–		<!-- New Right		-->
+|style="background:silver" |–		<!-- Zehut		-->
+|style="background:silver" |{{small|N/A}}<!-- IDP		-->
+|style="background:silver" |60		<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Midgam & iPanel
+|[[Walla!]]<ref name=Walla25jul>{{cite news |title=סקר וואלה! NEWS: שקד מתחזקת, ומה התמיכה באיחוד כולל בשמאל? |url=https://elections.walla.co.il/item/3249412 |work=Walla! |language=Hebrew |first=טל |last=שלו |date=25 July 2019 |access-date=25 July 2019}}</ref>
+|style="background:#BBCDE4" |'''29'''	<!-- Likud–Kulanu	-->
+|style="background:#B2EDFB" |'''29'''	<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|8					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|8					<!-- New Right		-->
+|{{small|(1.9%)}}			<!-- Zehut		-->
+|{{small|(2.3%)}}			<!-- IDP		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-21" |21 Jul
+| colspan="16" |'''[[Ayelet Shaked]] becomes the leader of the [[New Right (Israel)|New Right]]'''<ref>{{Cite web|url=https://www.timesofisrael.com/taking-reins-from-bennett-shaked-urges-right-wing-slates-to-unite-beneath-her/|title=Taking reins from Bennett, Shaked urges right-wing slates to unite beneath her|work=[[The Times of Israel]]|access-date=21 July 2019|date=21 July 2019|author=Jacob Magid}}</ref>
+|-
+|data-sort-value="2019-07-21" |21 Jul
+|KANTAR
+|[[Kan 11]]<ref name=kan21jul>{{cite news |title=סקר כאן חדשות: השוויון בצמרת נמשך – ברק מתחת לאחוז החסימה |url=https://www.kan.org.il/Item/?itemId=55800 |work=Kan 11 |language=Hebrew |author=מיכאל שמש |date=21 July 2019 |access-date=21 July 2019}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud–Kulanu	-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|8					<!-- Labor–Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|8					<!-- New Right		-->
+|{{small|(1.2%)}}			<!-- Zehut		-->
+|{{small|(2.8%)}}			<!-- IDP		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-21" |21 Jul
+|Midgam & iPanel
+|[[Channel 12 (Israel)|Channel 12]]<ref name="ch12july21">{{cite news |title=כמה שווה החיבור בין פרץ ללוי? סקר מנדטים של החדשות |url=https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-eb1a64058951c61026.htm |work=mako |language=he |author=עמית סגל |date=21 July 2019 |access-date=21 July 2019}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud–Kulanu	-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|6					<!-- New Right		-->
+|{{small|(1.8%)}}			<!-- Zehut		-->
+|4					<!-- IDP		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-19" |19 Jul
+|Smith
+|103fm/''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv19jul>{{cite news |url=https://knessetjeremy.com/2019/07/19/maariv-103-fm-radio-poll-likud-32-blue-white-29-joint-list-10-scenario-poll-labormeretz-13/ |title=Maariv/103 FM Radio Poll: Likud 32, Blue & White 29, Joint List 10; Scenario Poll: Labor+Meretz 13 |work=Jeremy's Knesset Insider |date=19 July 2019 |access-date=19 July 2019}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud–Kulanu	-->
+|29					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|6					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|4					<!-- IDP		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-19" |19 Jul
+|Direct Polls
+|''[[Makor Rishon]]''<ref name=jki19july>{{cite news |url=https://knessetjeremy.com/2019/07/19/makor-rishon-poll-likud-32-blue-white-29-joint-list-11-scenario-polls-on-shaked-vs-a-peretz-united-right-list-barak-vs-r-peretz-united-left-list/|title=Makor Rishon Poll: Likud 32, Blue & White 29, Joint List 11; Scenario Polls on Shaked vs A.Peretz united right list & Barak vs R.Peretz united left list|work=Jeremy's Knesset Insider|date=19 July 2019 |access-date=19 July 2019|author=Jeremy Saltan}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud–Kulanu	-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor–Gesher	-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|5					<!-- New Right		-->
+|{{small|(1%)}}				<!-- Zehut		--><!--Otzma Yehudit: 1.7% (for the Graph)-->
+|5					<!-- IDP		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-18" |18 Jul
+| colspan="16" |'''[[Israeli Labor Party|Labor]] and [[Gesher (2019 political party)|Gesher]] agree to run on a joint list'''<ref>{{Cite news |url=https://www.timesofisrael.com/liveblog_entry/orly-levy-abekasis-and-labors-amir-peretz-announce-joint-run/|title=Labor's Amir Peretz and Orly Levy-Abekasis announce joint run in election|work=[[The Times of Israel]]|access-date=18 July 2019|date=18 July 2019}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]–<br />[[Kulanu]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Meretz]]
+![[New Right (Israel)|New<br />Right]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+![[Israel Democratic Party|IDP]]
+!Gov.{{efn|group=fn1|name=Gov|Sum of [[Thirty-fourth government of Israel|government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism|UTJ]], and [[Yamina (political alliance)|Yamina]]}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#000EA3;" |
+|-
+|style="background:silver" colspan=3 |'''Seats at dissolution'''
+|style="background:#BBCDE4" |'''39'''	<!-- Likud-Kulanu	-->
+|style="background:silver" |35		<!-- Blue & White	-->
+|style="background:silver" |10		<!-- Joint List		-->
+|style="background:silver" |8		<!-- Shas		-->
+|style="background:silver" |8		<!-- UTJ		-->
+|style="background:silver" |6		<!-- Labor		-->
+|style="background:silver" |5		<!-- Yisrael Beiteinu	-->
+|style="background:silver" |5		<!-- URWP		-->
+|style="background:silver" |4		<!-- Meretz		-->
+|style="background:silver" |–		<!-- New Right		-->
+|style="background:silver" |–		<!-- Zehut		-->
+|style="background:silver" |–		<!-- Gesher		-->
+|style="background:silver" |{{small|N/A}}<!-- IDP		-->
+|style="background:silver" |60		<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-17" |17 Jul
+|Dialog
+|''[[Arutz Sheva]]''<ref>{{cite news |url=http://www.israelnationalnews.com/News/News.aspx/266117 |title=Arutz Sheva poll: Likud 31, Blue and White 28 |work=[[Arutz Sheva]] |author=Ido Ben Porat |date=17 July 2019 |access-date=18 July 2019}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud-Kulanu	-->
+|28					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|8					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|7					<!-- Meretz		-->
+|4					<!-- New Right		-->
+|{{small|(1%)}}				<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|54					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-16" |16 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=jki17july>{{cite news|url=https://knessetjeremy.com/2019/07/17/channel-12-poll-likud-31-blue-white-30-joint-list-11-scenario-polls-united-left-list-15-united-right-list-led-by-shaked-12/|title=Channel 12 Poll: Likud 31, Blue & White 30, Joint List 11; Scenario Polls: United Left List 15; United Right List led by Shaked 12|work=Jeremy's Knesset Insider|author=Jeremy Saltan|date=17 July 2019|access-date=18 July 2019}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud-Kulanu	-->
+|30					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor		-->
+|10					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|5					<!-- New Right		-->
+|{{small|(1.7%)}}			<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-12" |12 Jul
+|Smith
+|103fm/''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news|url=https://www.jpost.com/Israel-News/Without-Yisrael-Beiteinu-no-majority-for-ultra-Orthodox-right-wing-bloc-595436|title=Poll: Liberman's Yisrael Beytenu to decide who will form next government|work=[[The Jerusalem Post]]|date=12 July 2019|access-date=12 July 2019}}</ref>
+|style="background:#BBCDE4" |'''33'''	<!-- Likud-Kulanu	-->
+|30					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|6					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-11" |11 Jul
+|Midgam
+|[[Walla!]]<ref name =wal11jul>{{cite news|url=https://knessetjeremy.com/2019/07/11/walla-poll-likud-30-blue-white-30-joint-list-11-yisrael-beitenu-9-utj-8-shas-7/|title=Walla Poll: Likud 30, Blue & White 30, Joint List 11, Yisrael Beitenu 9, UTJ 8, Shas 7|work=Jeremy's Knesset Insider|author=Jeremy Saltan|date=11 July 2019|access-date=11 July 2019}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud-Kulanu	-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor		-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|5					<!-- New Right		-->
+|{{small|(2.7%)}}			<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-09" |9 Jul
+| colspan="16" |'''[[The Jewish Home]] and [[Tkuma (political party)|Tkuma]] agree to run together again as the [[Union of the Right-Wing Parties|URWP]]'''<ref>{{Cite news|url=http://www.israelnationalnews.com/News/News.aspx/265730|title=Peretz, Smotrich agree to joint run|work=[[Arutz Sheva]]|access-date=9 July 2019|date=9 July 2019|author=[[Staff writer]]}}</ref>
+|-
+|data-sort-value="2019-07-04" |4 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=toi4july>{{cite news|url=https://www.timesofisrael.com/poll-shows-separate-unions-of-small-right-left-wing-parties-each-surging/|title=Poll shows separate unions of small right, left-wing parties each surging|work=[[The Times of Israel]]|author=Raoul Wootliff|date=5 July 2019}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud-Kulanu	-->
+|30					<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|8					<!-- Labor		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- URWP		-->
+|6					<!-- Meretz		-->
+|4					<!-- New Right		-->
+|{{small|(1%)}}				<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-03" |3 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=toi3july>{{cite news|url=https://www.timesofisrael.com/tv-surveys-show-liberman-holds-balance-of-power-as-likud-blue-and-white-slip/|title=TV surveys show Liberman holds balance of power, as Likud, Blue and White slip|work=[[The Times of Israel]]|author=[[Staff writer]]|date=3 July 2019|access-date=3 July 2019}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud-Kulanu	-->
+|31					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|8					<!-- Labor		-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|5					<!-- New Right		-->
+|{{small|(2.1%)}}			<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|{{small|(3%)}}				<!-- IDP		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-03" |3 Jul
+|Statnet
+|[[Channel 13 (Israel)|Channel 13]]<ref name=toi3july/>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud-Kulanu	-->
+|29					<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|6					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|5					<!-- New Right		-->
+|4					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|6					<!-- IDP		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-02" |2 Jul
+| colspan="16" |'''[[Israeli Labor Party|Labor]] elects [[Amir Peretz]] as its leader'''<ref>{{Cite news |url=https://www.haaretz.com/israel-news/elections/veteran-labor-lawmaker-amir-peretz-overtakes-young-guard-in-party-primary-1.7432157|archive-url=https://web.archive.org/web/20190702194858/https://www.haaretz.com/israel-news/elections/veteran-labor-lawmaker-amir-peretz-overtakes-young-guard-in-party-primary-1.7432157|url-status=dead|archive-date=2 July 2019|title=Veteran Labor Lawmaker Amir Peretz Overtakes Young Guard in Party Primary|work=[[Haaretz]]|access-date=2 July 2019|date=2 July 2019}}</ref>
+|-
+|data-sort-value="2019-06-27" |27 Jun
+| colspan="16" |'''[[Meretz]] elects [[Nitzan Horowitz]] as its leader'''<ref>{{Cite news |url=https://www.timesofisrael.com/nitzan-horowitz-wins-vote-to-lead-left-wing-meretz-party/|title=Nitzan Horowitz wins vote to lead left-wing Meretz party|work=[[The Times of Israel]]|access-date=27 June 2019|date=27 June 2019}}</ref>
+|-
+|data-sort-value="2019-06-26" |26 Jun
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news|url=http://www.israelnationalnews.com/News/News.aspx/265149|title=Left-wing bloc, Arab parties get 61 seats|work=[[Arutz Sheva]] |author=[[Staff writer]]|date=26 June 2019|access-date=26 June 2019}}</ref>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud-Kulanu	-->
+|style="background:#B2EDFB" |'''32'''	<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|6					<!-- UTJ		-->
+|5					<!-- Labor		-->
+|7					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|6					<!-- Meretz		-->
+|4					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|6					<!-- IDP		-->
+|52					<!-- Gov.		-->
+|-
+|data-sort-value="2019-06-26" |26 Jun
+| colspan="16" |'''Former PM [[Ehud Barak]] announces the founding of the [[Israel Democratic Party]]'''<ref>{{Cite news |url=https://en.globes.co.il/en/article-ehud-barak-returns-to-the-political-fray-1001291258|title=Ehud Barak returns to the political fray|work=[[Globes (newspaper)|Globes]]|access-date=26 June 2019|date=26 June 2019}}</ref><ref>{{Cite web|url=https://www.timesofisrael.com/barak-announces-name-of-new-political-party-democratic-israel/|title=Barak announces name of his new political grouping: Israel Democratic Party|author=[[Staff writer]]|work=[[The Times of Israel]]|language=en-US|access-date=8 July 2019|date=6 July 2019}}</ref>
+|-
+|data-sort-value="2019-06-25" |25 Jun
+| colspan="16" |'''[[Otzma Yehudit]] leaves the [[Union of the Right-Wing Parties]]'''<ref>{{Cite news |url=https://www.ynetnews.com/articles/0,7340,L-5535884,00.html|title=Far right faction dismantles partnership with right-wing parties|work=[[YNet]]|access-date=25 June 2019|date=25 June 2019}}</ref>
+|-
+|data-sort-value="2019-06-20" |20 Jun
+| colspan="16" |'''[[Hadash]]–[[Ta'al]] and [[Ra'am]]–[[Balad (political party)|Balad]] agree to re-establish the [[Joint List]]'''<ref>{{Cite news |url=https://www.timesofisrael.com/israels-arab-parties-reunite-for-upcoming-elections/|title=Israel's Arab parties reunite for upcoming elections|work=[[The Times of Israel]]|access-date=20 June 2019|date=20 June 2019}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]–<br />[[Kulanu]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Hadash]]<br />–[[Ta'al]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Meretz]]
+![[Ra'am]]<br />–[[Balad (political party)|Balad]]
+![[New Right (Israel)|New<br />Right]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+!Gov.{{efn|group=fn1|name=Gov|Sum of [[Thirty-fourth government of Israel|government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism|UTJ]], and [[Yamina (political alliance)|Yamina]]}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Hadash}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|United Arab List}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#000EA3;" |
+|-
+|style="background:silver" colspan=3 |'''Seats at dissolution'''
+|style="background:#BBCDE4" |'''39'''	<!-- Likud-Kulanu	-->
+|style="background:silver" |35		<!-- Blue & White	-->
+|style="background:silver" |8		<!-- Shas		-->
+|style="background:silver" |8		<!-- UTJ		-->
+|style="background:silver" |6		<!-- Labor		-->
+|style="background:silver" |6		<!-- Hadash+Ta'al	-->
+|style="background:silver" |5		<!-- Yisrael Beiteinu	-->
+|style="background:silver" |5		<!-- URWP		-->
+|style="background:silver" |4		<!-- Meretz		-->
+|style="background:silver" |4		<!-- Ra'am+Balad	-->
+|style="background:silver" |–		<!-- New Right		-->
+|style="background:silver" |–		<!-- Zehut		-->
+|style="background:silver" |–		<!-- Gesher		-->
+|style="background:silver"|60		<!-- Gov.		-->
+|-
+|data-sort-value="2019-06-20" |20 Jun
+|Maagar Mohot
+|103fm<ref>{{cite news |url=https://www.maariv.co.il/elections2019/polls/Article-704686 |title=סקר: אחרי נתניהו - גדעון סער הוא המועמד המועדף על מצביעי הליכוד |work=[[Maariv (newspaper)|Maariv]] |author=Erik Bender |date=21 June 2019 |access-date=21 June 2019}}</ref>
+|style="background:#BBCDE4" |'''34'''	<!-- Likud-Kulanu	-->
+|33					<!-- Blue & White	-->
+|8					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor		-->
+|6					<!-- Hadash+Ta'al	-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|4					<!-- Ra'am+Balad	-->
+|4					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|60					<!-- Gov.		-->
+|-
+|data-sort-value="2019-06-14" |14 Jun
+|Maagar Mohot
+|103fm<ref name=103fm1406>{{cite news |url=http://www.israelnationalnews.com/News/News.aspx/264589|title=Poll: Right-wing bloc leads with 68 seats |work=[[Arutz Sheva]]|author=[[Staff writer]]|date=14 June 2019 |access-date=14 June 2019}}</ref>
+|style="background:#BBCDE4" |'''35'''	<!-- Likud-Kulanu	-->
+|33					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor		-->
+|6					<!-- Hadash+Ta'al	-->
+|8					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|4					<!-- Ra'am+Balad	-->
+|5					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|60					<!-- Gov.		-->
+|-
+|data-sort-value="2019-06-07" |7 Jun
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref>{{cite news |url=https://knessetjeremy.com/2019/06/07/maariv-poll-likud-37-blue-white-33-utj-8-3-tied-at-7-right-religious-bloc-71/ |title=Maariv Poll: Likud 37, Blue & White 33, UTJ 8, 3 tied at 7; Right-Religious Bloc 71 |work=Jeremy's Knesset Insider |date=7 June 2019 |access-date=5 August 2019}}</ref>
+|style="background:#BBCDE4" |'''37'''	<!-- Likud-Kulanu	-->
+|33					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor		-->
+|7					<!-- Hadash+Ta'al	-->
+|7					<!-- Yisrael Beiteinu	-->
+|6					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|{{small|(2.4%)}}			<!-- Ra'am+Balad	-->
+|6					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|{{small|(2.2%)}}			<!-- Gesher		-->
+|style="background:#939BFF" |'''64'''	<!-- Gov.		-->
+|-
+|data-sort-value="2019-06-02" |2 Jun
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=Israel0206>{{cite news |url=https://www.israelhayom.co.il/article/662673 |title=סקר "ישראל היום": 59 מנדטים לגוש הימין בלי ליברמן - איש לא יכול להרכיב ממשלה |language=he |author=מטי טוכפלד |work=Israel Hayom |date=2 June 2019 |access-date=2 June 2019}}</ref>
+|style="background:#BBCDE4" |'''36'''	<!-- Likud-Kulanu	-->
+|34					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|4					<!-- Labor		-->
+|6					<!-- Hadash+Ta'al	-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|5					<!-- Ra'am+Balad	-->
+|5					<!-- New Right		-->
+|{{small|(2%)}}				<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|59					<!-- Gov.		-->
+|-
+|data-sort-value="2019-05-30" |30 May
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv3005>{{cite news |url=https://www.maariv.co.il/news/politics/Article-701460 |title=סקר מעריב: הליכוד וליברמן מתחזקים, העבודה מתחת לאחוז החסימה |language=he |author=אריק בנדר |work=Maariv |date=31 May 2019 |access-date=31 May 2019}}</ref>
+|style="background:#BBCDE4" |'''37'''	<!-- Likud-Kulanu	-->
+|33					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|{{small|(1.9%)}}			<!-- Labor		-->
+|5					<!-- Hadash+Ta'al	-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- URWP		-->
+|6					<!-- Meretz		-->
+|4					<!-- Ra'am+Balad	-->
+|5					<!-- New Right		-->
+|{{small|(1.4%)}}			<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|style="background:#939BFF" |'''63'''	<!-- Gov.		-->
+|-
+|data-sort-value="2019-05-30" |30 May
+|Panel Project HaMidgam & Statnet
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |url=https://13news.co.il/item/news/politics/state-policy/reelection-2019/poll_reelection-260542/ |title=סקר: ליברמן מתחזק ל-9 מנדטים, איחוד של הליכוד וכולנו - 36 |language=he |author=עקיבא נוביק |work=Channel 13 |date=30 May 2019 |access-date=31 May 2019}}</ref>
+|style="background:#BBCDE4" |'''36'''	<!-- Likud-Kulanu	-->
+|33					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|4					<!-- Labor		-->
+|7					<!-- Hadash+Ta'al	-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- URWP		-->
+|6					<!-- Meretz		-->
+|4					<!-- Ra'am+Balad	-->
+|–					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-05-30" |30 May
+|KANTAR
+|[[Kan 11]]<ref name=Kan3005>{{cite news |url=https://www.kan.org.il/item/?itemId=52912 |title=סקר כאן חדשות: ליברמן המרוויח הגדול, כחלון לא מוסיף מנדטים לליכוד |language=he |author=מואב ורדי |work=Kan |date=30 May 2019 |access-date=31 May 2019}}</ref>
+|style="background:#BBCDE4" |'''35'''	<!-- Likud-Kulanu	-->
+|34					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor		-->
+|6					<!-- Hadash+Ta'al	-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|4					<!-- Ra'am+Balad	-->
+|4					<!-- New Right		-->
+|{{small|(3.1%)}}			<!-- Zehut		-->
+|{{small|(2.2%)}}			<!-- Gesher		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-05-30" |30 May
+| colspan="16" |'''The 21st Knesset is dissolved'''<ref name=dissolved/>
+|-
+|data-sort-value="2019-05-28" |28 May
+| colspan="16" |'''[[Kulanu]] and [[Likud]] agree to run on a joint list'''<ref>{{Cite news |url=https://www.timesofisrael.com/likud-okays-merger-with-kulanu-confirms-netanyahu-as-pm-candidate/|title=Likud okays merger with Kulanu, confirms Netanyahu as PM candidate|work=[[The Times of Israel]]|author=Marissa Newman|access-date=28 May 2019|date=28 May 2019}}</ref>
+|}
+
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Hadash]]<br />–[[Ta'al]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Kulanu]]
+![[Meretz]]
+![[Ra'am]]<br />–[[Balad (political party)|Balad]]
+![[New Right (Israel)|New<br />Right]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+!Gov.{{efn|group=fn1|name=Gov|Sum of [[Thirty-fourth government of Israel|government]] parties: [[Likud]], [[Shas]], [[United Torah Judaism|UTJ]], and [[Yamina (political alliance)|Yamina]]}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Hadash}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Kulanu}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|United Arab List}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-05-28" |28 May
+|Direct Polls
+|''[[Makor Rishon]]<ref>{{cite web |date=28 May 2019 |title=Second Post-Election Poll: Likud 34, Blue & White 33, Yisrael Beitenu 9, UTJ 8, 3 tied at 7; Right-Religious Bloc 68 |url=https://knessetjeremy.com/2019/05/28/second-post-election-poll-likud-34-blue-white-33-yisrael-beitenu-9-utj-8-3-tied-at-7-right-religious-bloc-68/ |access-date=28 May 2019 |website=Jeremy's Knesset Insider}}</ref>''
+|style="background:#BBCDE4" |'''34'''	<!-- Likud		-->
+|33					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|7					<!-- Hadash+Ta'al	-->
+|9					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|{{small|(1.67%)}}			<!-- Kulanu		-->
+|5					<!-- Meretz		-->
+|{{small|(2.3%)}}			<!-- Ra'am+Balad	-->
+|5					<!-- New Right		-->
+|{{small|(1.44%)}}			<!-- Zehut		-->
+|{{small|(0.96%)}}			<!-- Gesher		-->
+|59					<!-- Gov.		-->
+|-
+|data-sort-value="2019-05-26" |26 May
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]<ref name="jp" />''
+|style="background:#BBCDE4" |'''35'''	<!-- Likud		-->
+|34					<!-- Blue & White	-->
+|8					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor		-->
+|7					<!-- Hadash+Ta'al	-->
+|6					<!-- Yisrael Beiteinu	-->
+|6					<!-- URWP		-->
+|–					<!-- Kulanu		-->
+|5					<!-- Meretz		-->
+|–					<!-- Ra'am+Balad	-->
+|5					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|style="background:#939BFF" |'''62'''	<!-- Gov.		-->
+|-
+|style="background:silver" data-sort-value="2019-04-09" |9 Apr
+|style="background:silver" colspan=2 |'''[[April 2019 Israeli legislative election|Election results]]'''<ref>{{cite news |url=https://www.maariv.co.il/elections2019/news/Article-694585 |title=הסתיימה ספירת הקולות: יהדות התורה עם מנדט שמיני, בנט ושקד בחוץ |language=he |work=Maariv |date=16 April 2019 |access-date=16 April 2019}}</ref>
+|style="background:#BBCDE4" |'''35'''		<!-- Likud		-->
+|style="background:#B2EDFB" |'''35'''		<!-- Blue & White	-->
+|style="background:silver" |8			<!-- Shas		-->
+|style="background:silver" |8			<!-- UTJ		-->
+|style="background:silver" |6			<!-- Labor		-->
+|style="background:silver" |6			<!-- Hadash+Ta'al	-->
+|style="background:silver" |5			<!-- Yisrael Beiteinu	-->
+|style="background:silver" |5			<!-- URWP		-->
+|style="background:silver" |4			<!-- Kulanu		-->
+|style="background:silver" |4			<!-- Meretz		-->
+|style="background:silver" |4			<!-- Ra'am+Balad	-->
+|style="background:silver" |{{small|(3.22%)}}	<!-- New Right		-->
+|style="background:silver" |{{small|(2.74%)}}	<!-- Zehut		-->
+|style="background:silver" |{{small|(1.73%)}}	<!-- Gesher		-->
+|style="background:silver" |60			<!-- Gov.		-->
+|}
+
+=== Scenarios ===
+;[[Zehut]], [[Otzma Yehudit]] & [[Noam (political party)|Noam]] withdraw
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue&nbsp;&<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yamina (political alliance)|Yamina]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Democratic Union (Israel)|Dem.<br />Union]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yamina}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-08-29" |27–29 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH29Aug/>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''31'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|4					<!-- Labor-Gesher	-->
+|12					<!-- Yamina		-->
+|11					<!-- Yisrael Beiteinu	-->
+|5					<!-- Democratic Union	-->
+|style="background:#F4959A" |'''62'''	<!-- Oth.		-->
+|58					<!-- Gov.		-->
+|}
+
+;Left-Wing Union (including Democratic Union) and URWP + New Right
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Democratic Union (Israel)|Dem. Union]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Yamina}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|KANTAR
+|[[Kan 11]]<ref name=kjc11/>
+|style="background:#BBCDE4" |'''29'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''29'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|14					<!-- Democratic Union	-->
+|8					<!-- Yisrael Beiteinu	-->
+|15					<!-- New Right		-->
+|style="background:#F4959A" |'''61'''	<!-- Oth.		-->
+|59					<!-- Gov.		-->
+|}
+
+;Left-Wing Union (including Democratic Union)
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Democratic Union (Israel)|Dem. Union]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[New Right (Israel)|New Right]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=kjc12/>
+|style="background:#BBCDE4" |'''29'''	<!-- Likud		-->
+|27					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|15					<!-- Democratic Union	-->
+|10					<!-- Yisrael Beiteinu	-->
+|4					<!-- United Right	-->
+|9					<!-- New Right		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;Union of the Right-Wing Parties + New Right headed by [[Ayelet Shaked]] (including Democratic Union and Zehut)
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]
+![[Democratic Union (Israel)|Dem. Union]]
+![[Zehut]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Panel Project<br />HaMidgam & Statnet
+|[[Channel 13 (Israel)|Channel 13]]<ref name=kjc13/>
+|style="background:#BBCDE4" |'''28'''	<!-- Likud		-->
+|23					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|5					<!-- Shas		-->
+|6					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|10					<!-- Yisrael Beiteinu	-->
+|14					<!-- URWP		-->
+|12					<!-- Democratic Union	-->
+|4					<!-- Zehut		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=kjc12/>
+|style="background:#BBCDE4" |'''28'''	<!-- Likud		-->
+|27					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor		-->
+|10					<!-- Yisrael Beiteinu	-->
+|14					<!-- URWP		-->
+|10					<!-- Democratic Union	-->
+|{{small|(1.9%)}}			<!-- Zehut		-->
+|style="background:#F4959A" |'''63'''<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;Expanded Union of Right-Wing Parties headed by [[Ayelet Shaked]] (including [[Labor-Gesher]])
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Zehut]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=as26july>{{cite news|url=https://www.israelnationalnews.com/News/News.aspx/266517|title=Poll: United Right wins 16 seats with Shaked at the helm|work=Arutz Sheva|author=David Rosenberg|date=26 July 2019|access-date=27 July 2019}}</ref>
+|25					<!-- Likud		-->
+|style="background:#B2EDFB" |'''31'''	<!-- Blue & White	-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|16					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''65'''	<!-- Oth.		-->
+|55					<!-- Gov.		-->
+|}
+
+;Expanded Union of Right-Wing Parties headed by [[Ayelet Shaked]]
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Zehut]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Gesher (2019 political party)|Gesher]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-18" |18 Jul
+|Dialog
+|''[[Arutz Sheva]]''<ref name=as18july>{{cite news|url=http://www.israelnationalnews.com/News/News.aspx/266178|title=Ayelet Shaked would boost United Right, right-wing camp|work=Arutz Sheva|author=[[Staff writer]]|date=18 July 2019|access-date=18 July 2019}}</ref>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|28					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|10					<!-- URWP		-->
+|7					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''64'''	<!-- Oth.		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-16" |16 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=jki17july/>
+|28					<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor		-->
+|10					<!-- Yisrael Beiteinu	-->
+|12					<!-- URWP		-->
+|4					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''65'''	<!-- Oth.		-->
+|55					<!-- Gov.		-->
+|}
+
+;Expanded Union of Right-Wing Parties headed by [[Rafi Peretz]] (including [[Labor-Gesher]])
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Zehut]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=as26july/>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|30					<!-- Blue & White	-->
+|13					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|6					<!-- Labor		-->
+|7					<!-- Yisrael Beiteinu	-->
+|9					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|5					<!-- IDP		-->
+|style="background:#F4959A" |'''66'''	<!-- Oth.		-->
+|55					<!-- Gov.		-->
+|}
+
+;Expanded Union of Right-Wing Parties headed by [[Rafi Peretz]]
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Zehut]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Gesher (2019 political party)|Gesher]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-18" |18 Jul
+|Dialog
+|''[[Arutz Sheva]]''<ref name=as18july/>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|8					<!-- URWP		-->
+|7					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''67'''	<!-- Oth.		-->
+|53					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-10" |10 Jul
+|Kantar
+|Saloona<ref name="mako11 July"/>
+|28					<!-- Likud		-->
+|style="background:#B2EDFB" |'''29'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|6					<!-- Yisrael Beiteinu	-->
+|15					<!-- URWP		-->
+|6					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|5					<!-- IDP		-->
+|style="background:#F4959A" |'''62'''	<!-- Oth.		-->
+|58					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-04" |4 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=toi4july/>
+|25					<!-- Likud		-->
+|style="background:#B2EDFB" |'''31'''	<!-- Blue & White	-->
+|8					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|6					<!-- Yisrael Beiteinu	-->
+|19					<!-- URWP		-->
+|7					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|4					<!-- Barak		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;Left-Wing Union
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Israel Democratic Party|IDP]]+<br />[[Meretz]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[New Right (Israel)|New Right]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-16" |16 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=jki17july/>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|28					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|15					<!-- Labor		-->
+|11					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|style="background:#F4959A" |'''65'''	<!-- Oth.		-->
+|55					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-04" |4 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=toi4july/>
+|style="background:#BBCDE4" |'''31'''	<!-- Likud		-->
+|26					<!-- Blue & White	-->
+|8					<!-- Joint List		-->
+|6					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|19					<!-- Labor		-->
+|7					<!-- Yisrael Beiteinu	-->
+|8					<!-- URWP		-->
+|8					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|style="background:#F4959A" |'''60'''	<!-- Oth.		-->
+|style="background:#939BFF" |'''60'''	<!-- Gov.		-->
+|}
+
+;Likud+[[Ayelet Shaked]], URWP+[[Naftali Bennett]]
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Hadash]]<br />–[[Ta'al]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Meretz]]
+![[Ra'am]]<br />–[[Balad (political party)|Balad]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Hadash}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|United Arab List}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-05-30" |30 May
+|Panels Politics
+|''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv3005/>
+|style="background:#BBCDE4" |'''41'''	<!-- Likud		-->
+|34					<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|–					<!-- Labor		-->
+|4					<!-- Hadash+Ta'al	-->
+|8					<!-- Yisrael Beiteinu	-->
+|7					<!-- URWP		-->
+|6					<!-- Meretz		-->
+|5					<!-- Ra'am+Balad	-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|57					<!-- Oth.		-->
+|style="background:#939BFF" |'''63'''	<!-- Gov.		-->
+|}
+
+;[[Gabi Ashkenazi]] leading Blue & White
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Hadash]]<br />–[[Ta'al]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[Meretz]]
+![[Ra'am]]<br />–[[Balad (political party)|Balad]]
+![[New Right (Israel)|New<br />Right]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Hadash}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|United Arab List}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-06-14" |14 Jun
+|Maagar Mohot
+|103fm<ref name=103fm1406/>
+|33					<!-- Likud		-->
+|style="background:#B2EDFB" |'''35'''	<!-- Blue & White	-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|4					<!-- Labor		-->
+|6					<!-- Hadash+Ta'al	-->
+|8					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|4					<!-- Ra'am+Balad	-->
+|5					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;[[Zehut]] and [[New Right (Israel)|New Right]] merger
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Meretz]]
+![[Union of the Right-Wing Parties|URWP]]
+![[New Right (Israel)|New Right]]<br />–[[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-10" |10 Jul
+|Kantar
+|Saloona<ref name="mako11 July">{{cite news|url=https://www.mako.co.il/news-israel-elections/elections_2019/Article-2ae0516d690eb61027.htm|title=סקר: איחוד בין מפלגות הימין מגדיל את כוחן, מצביעי השמאל רוצים ריצה משותפת|work=[[Channel 12 (Israel)|Channel 12]]|date=11 July 2019|access-date=11 July 2019}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|6					<!-- Labor		-->
+|8					<!-- Yisrael Beiteinu	-->
+|6					<!-- Meretz		-->
+|5					<!-- URWP		-->
+|6					<!-- Zehut+New Right	-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''64'''	<!-- Oth.		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-09" |9 Jul
+|Kantar
+|[[Kan 11]]<ref>{{cite news|url=http://www.israelnationalnews.com/News/News.aspx/265740|title=Poll: Likud, Blue and White tied at 30 seats|work=[[Arutz Sheva]]|author=[[Staff writer]]|date=9 July 2019|access-date=9 July 2019}}</ref>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|9					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor		-->
+|9					<!-- Yisrael Beiteinu	-->
+|6					<!-- Meretz		-->
+|4					<!-- URWP		-->
+|5					<!-- Zehut+New Right	-->
+|–					<!-- Gesher		-->
+|5					<!-- IDP		-->
+|style="background:#F4959A" |'''66'''	<!-- Oth.		-->
+|54					<!-- Gov.		-->
+|}
+
+;[[Zehut]] and [[New Right (Israel)|New Right]] merger and Left-Wing Union
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Israel Democratic Party|IDP]]+<br />[[Meretz]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[New Right (Israel)|New Right]]<br />–[[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-10" |10 Jul
+|Kantar
+|Saloona<ref name="mako11 July"/>
+|29					<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|18					<!-- Labor		-->
+|7					<!-- Yisrael Beiteinu	-->
+|5					<!-- URWP		-->
+|6					<!-- Zehut+New Right	-->
+|–					<!-- Gesher		-->
+|style="background:#F4959A" |'''65'''	<!-- Oth.		-->
+|55					<!-- Gov.		-->
+|}
+
+;[[Israeli Labor Party|Labor]] and [[Meretz]] merger without [[Gesher (2019 political party)|Gesher]]
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Meretz]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]
+![[New Right (Israel)|New Right]]
+![[Zehut]]
+![[Gesher (2019 political party)|Gesher]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-19" |19 Jul
+|Smith
+|103fm/''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv19jul/>
+|style="background:#BBCDE4" |'''32'''	<!-- Likud		-->
+|27					<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|13					<!-- Labor+Meretz	-->
+|9					<!-- Yisrael Beiteinu	-->
+|4					<!-- URWP		-->
+|6					<!-- New Right		-->
+|–					<!-- Zehut		-->
+|–					<!-- Gesher		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;[[Israeli Labor Party|Labor]] and [[Israel Democratic Party|IDP]] merger without [[Gesher (2019 political party)|Gesher]], Expanded Union of Right-Wing Parties headed by [[Ayelet Shaked]]
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Israel Democratic Party|IDP]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Zehut]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Gesher (2019 political party)|Gesher]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-19" |19 Jul
+|Direct Polls
+|''[[Makor Rishon]]''<ref name=jki19july/>
+|style="background:#BBCDE4" |'''30'''	<!-- Likud		-->
+|28					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|11					<!-- Labor+IDP		-->
+|8					<!-- Yisrael Beiteinu	-->
+|12					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;[[Israeli Labor Party|Labor]] and [[Israel Democratic Party|IDP]] merger without [[Gesher (2019 political party)|Gesher]], Expanded Union of Right-Wing Parties headed by [[Rafi Peretz]]
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Israeli Labor Party|Labor]]+<br />[[Israel Democratic Party|IDP]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Zehut]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Gesher (2019 political party)|Gesher]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Gesher (2019 political party)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-19" |19 Jul
+|Direct Polls
+|''[[Makor Rishon]]''<ref name=jki19july/>
+|style="background:#BBCDE4" |'''33'''	<!-- Likud		-->
+|29					<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|8					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|10					<!-- Labor+IDP		-->
+|9					<!-- Yisrael Beiteinu	-->
+|7					<!-- URWP		-->
+|5					<!-- Meretz		-->
+|–					<!-- Gesher		-->
+|style="background:#F4959A" |'''64'''	<!-- Oth.		-->
+|56					<!-- Gov.		-->
+|}
+
+;[[Israel Democratic Party|IDP]] and [[Meretz]] merger, [[New Right (Israel)|New Right]] and [[Union of the Right-Wing Parties|URWP]] merger
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[New Right (Israel)|New Right]]+<br />[[Union of the Right-Wing Parties|URWP]]
+![[Israel Democratic Party|IDP]]+<br />[[Meretz]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-21" |21 Jul
+|KANTAR
+|[[Kan 11]]<ref name=kan21jul/>
+|28					<!-- Likud		-->
+|style="background:#B2EDFB" |'''29'''	<!-- Blue & White	-->
+|10					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor-Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|12					<!-- New Right+URWP	-->
+|9					<!-- IDP+Meretz		-->
+|style="background:#F4959A" |'''65'''	<!-- Oth.		-->
+|55					<!-- Gov.		-->
+|}
+
+;[[Union of the Right-Wing Parties|URWP]], [[New Right (Israel)|New Right]], and [[Otzma Yehudit]] merger
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[Union of the Right-Wing Parties|URWP]]+<br />[[New Right (Israel)|New Right]]+<br />[[Otzma Yehudit]]
+![[Meretz]]
+![[Zehut]]
+![[Israel Democratic Party|IDP]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Meretz}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-21" |21 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12july21/>
+|28					<!-- Likud		-->
+|style="background:#B2EDFB" |'''29'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|7					<!-- Labor-Gesher	-->
+|9					<!-- Yisrael Beiteinu	-->
+|13					<!-- UR+New Right+Otzma	-->
+|4					<!-- Meretz		-->
+|{{small|(1.9%)}}			<!-- Zehut		-->
+|4					<!-- IDP		-->
+|style="background:#F4959A" |'''64'''	<!-- Oth.		-->
+|56					<!-- Gov.		-->
+|}
+
+;[[Democratic Union (Israel)|Democratic Union]] & [[Union of the Right-Wing Parties|URWP]], [[New Right (Israel)|New Right]], and [[Otzma Yehudit]] merger
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]+<br />[[Kulanu]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[United Right (Israel)|UR]]+<br />[[Otzma Yehudit|Otzma]]
+![[Democratic Union (Israel)|Dem. <br />Union]]
+![[Zehut]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:{{party color|Zehut}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-08-01" |1 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref>{{cite news |title=סקר: איחוד בימין יניב 13 מנדטים |url=https://www.israelhayom.co.il/article/679211 |date=1 August 2019 |access-date=1 August 2019 |work=Israel Hayom |author=מתי טוכפלד}}</ref>
+|style="background:#BBCDE4" |'''29'''	<!-- Likud		-->
+|28					<!-- Blue & White	-->
+|12					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|7					<!-- UTJ		-->
+|5					<!-- Labor-Gesher	-->
+|11					<!-- Yisrael Beiteinu	-->
+|13					<!-- UR+Otzma		-->
+|8					<!-- Democratic Union	-->
+|–					<!-- Zehut		-->
+|style="background:#F4959A" |'''64'''	<!-- Oth.		-->
+|56					<!-- Gov.		-->
+|-
+|data-sort-value="2019-07-30" |30 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12jul30/>
+|29					<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor-Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|13					<!-- UR+Otzma		-->
+|7					<!-- Democratic Union	-->
+|{{small|(2.2%)}}			<!-- Zehut		-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+;[[Democratic Union (Israel)|Democratic Union]] & [[Union of the Right-Wing Parties|URWP]], [[New Right (Israel)|New Right]], [[Zehut]], and [[Otzma Yehudit]] merger
+{|class="wikitable sortable" style="text-align:center;font-size:90%;line-height:13px"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Likud]]+<br />[[Kulanu]]
+![[Blue and White (political alliance)|Blue &<br />White]]
+![[Joint List|Joint<br />List]]
+![[Shas]]
+![[United Torah Judaism|UTJ]]
+![[Labor-Gesher]]
+![[Yisrael Beiteinu|Yisrael<br />Beiteinu]]
+![[United Right (Israel)|UR]]+<br />[[Zehut]]+<br />[[Otzma Yehudit|Otzma]]
+![[Democratic Union (Israel)|Dem. <br />Union]]
+!{{tooltip|2=Other|Oth.}}
+!{{tooltip|2=34th Government of Israel|Gov.}}
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Joint List}};" |
+!style="background:{{party color|Shas}};" |
+!style="background:{{party color|United Torah Judaism}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|Union of Right-Wing Parties}};" |
+!style="background:{{party color|Democratic Union (Israel)}};" |
+!style="background:#E81B23;" |
+!style="background:#000EA3;" |
+|-
+|data-sort-value="2019-07-30" |30 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12jul30/>
+|28					<!-- Likud		-->
+|style="background:#B2EDFB" |'''30'''	<!-- Blue & White	-->
+|11					<!-- Joint List		-->
+|7					<!-- Shas		-->
+|8					<!-- UTJ		-->
+|5					<!-- Labor-Gesher	-->
+|10					<!-- Yisrael Beiteinu	-->
+|14					<!-- UR+Zehut+Otzma	-->
+|7					<!-- Democratic Union	-->
+|style="background:#F4959A" |'''63'''	<!-- Oth.		-->
+|57					<!-- Gov.		-->
+|}
+
+== Preferred prime minister polls ==
+Some opinion pollsters have asked voters which party leader they would prefer as Prime Minister. Their responses are given as percentages in the tables below.
+
+;Netanyahu vs Gantz
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px;"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Benjamin Netanyahu|Netanyahu]]
+![[Benny Gantz|Gantz]]
+!Neither
+!Don't Know
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:#d3d3d3;" |
+!style="background:#ffffff;" |
+|-
+|data-sort-value="2019-09-13" |13 Sep
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref>{{cite news |last1=Hoffman |first1=Gil |title=Final polls predict a second stalemate - Israel Elections - Jerusalem Post |url=https://www.jpost.com/Israel-News/Polls-predict-a-second-stalemate-601577 |access-date=8 November 2019 |work=Jerusalem Post}}</ref>
+|style="background:#BBCDE4" |'''46'''	<!-- Netanyahu	-->
+|31					<!-- Gantz	-->
+|14					<!-- Neither	-->
+|–					<!-- Don't know -->
+|-
+|data-sort-value="2019-09-13" |12–13 Sep
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12sep13/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|31					<!-- Gantz	-->
+|19					<!-- Neither	-->
+|9					<!-- Don't know -->
+|-
+|data-sort-value="2019-09-12" |12 Sep
+|Panels Politics
+|[[Knesset Channel]]<ref name=knesset12sep/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|29					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|–					<!-- Don't know -->
+|-
+|data-sort-value="2019-09-10" |9–10 Sep
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12sep10/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|33					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|–					<!-- Don't know -->
+|-
+|data-sort-value="2019-09-09" |8–9 Sep
+|Midgam
+|[[Walla!]]<ref name=WallaSep9/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|19					<!-- Neither	-->
+|8					<!-- Don't know -->
+|-
+|data-sort-value="2019-09-05" |4–5 Sep
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12sep5/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|31					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|28					<!-- Don't know -->
+|-
+|data-sort-value="2019-00-2" |1–2 Sep
+|Midgam
+|[[Walla!]]<ref name="WallaSep2"/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|9					<!-- Don't know -->
+|-
+|data-sort-value="2019-08-28" |28 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12Aug28/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|29					<!-- Gantz	-->
+|19					<!-- Neither	-->
+|9					<!-- Don't know -->
+|-
+|data-sort-value="2019-08-22" |22 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12Aug22/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|29					<!-- Gantz	-->
+|21					<!-- Neither	-->
+|8					<!-- Don't know -->
+|-
+|data-sort-value="2019-08-12" |12 Aug
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name = 12aug13/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|32					<!-- Gantz	-->
+|21					<!-- Neither	-->
+|6					<!-- Don't know -->
+|-
+|data-sort-value="2019-08-05" |5 Aug
+|Midgam
+|[[Walla!]]<ref name=Walla5Aug/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|6					<!-- Don't know -->
+|-
+|data-sort-value="2019-08-01" |1 Aug
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=ch13aug1/>
+|style="background:#BBCDE4" |'''43'''	<!-- Netanyahu	-->
+|32					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|–					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-30" |30 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12jul30/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|32					<!-- Gantz	-->
+|18					<!-- Neither	-->
+|8					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Panel Project HaMidgam
+|[[Channel 13 (Israel)|Channel 13]]<ref name=kjc13/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|33					<!-- Gantz	-->
+|17					<!-- Neither	-->
+|10					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=kjc12/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|–					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-25" |25 Jul
+|Midgam & iPanel
+|[[Walla!]]<ref name=Walla25jul/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|22					<!-- Neither	-->
+|5					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-21" |21 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=ch12july21/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|29					<!-- Gantz	-->
+|22					<!-- Neither	-->
+|10					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-16" |16 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=jki17july/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|28					<!-- Gantz	-->
+|22					<!-- Neither	-->
+|10					<!-- Don't know -->
+|-
+|data-sort-value="2019-07-03" |3 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=toi3july/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|30					<!-- Gantz	-->
+|21					<!-- Neither	-->
+|9					<!-- Don't know -->
+|-
+|data-sort-value="2019-05-30" |30 May
+|KANTAR
+|[[Kan 11]]<ref name=Kan3005/>
+|style="background:#BBCDE4" |'''44'''	<!-- Netanyahu	-->
+|38					<!-- Gantz	-->
+|–					<!-- Neither	-->
+|–					<!-- Don't know -->
+|}
+
+;Netanyahu vs Barak
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px;"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Benjamin Netanyahu|Netanyahu]]
+![[Ehud Barak|Barak]]
+!Neither
+!Don't Know
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Democratic Israel}};" |
+!style="background:#d3d3d3;" |
+!style="background:#ffffff;" |
+|-
+|data-sort-value="2019-07-03" |3 Jul
+|Midgam
+|[[Channel 12 (Israel)|Channel 12]]<ref name=toi3july/>
+|style="background:#BBCDE4" |'''41'''	<!-- Netanyahu	-->
+|16					<!-- Barak	-->
+|34					<!-- Neither	-->
+|9					<!-- Don't know -->
+|-
+|}
+
+;General
+{|class="wikitable sortable" style="text-align:center; font-size:90%; line-height:13px;"
+!rowspan="2" |Date
+!rowspan="2" |Polling firm
+!rowspan="2" |Publisher
+![[Benjamin Netanyahu|Netanyahu]]
+![[Benny Gantz|Gantz]]
+![[Yair Lapid|Lapid]]
+![[Gabi Ashkenazi|Ashkenazi]]
+![[Avi Gabbay|Gabbay]]
+![[Amir Peretz|Peretz]]
+![[Avigdor Lieberman|Lieberman]]
+![[Naftali Bennett|Bennett]]
+![[Ayelet Shaked|Shaked]]
+![[Ehud Barak|Barak]]
+|-
+!style="background:{{party color|Likud}};" |
+!style="background:{{party color|Blue and White (political alliance)}};" |
+!style="background:{{party color|Yesh Atid}};" |
+!style="background:{{party color|Israel Resilience Party}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Israeli Labor Party}};" |
+!style="background:{{party color|Yisrael Beiteinu}};" |
+!style="background:{{party color|New Right (Israel)}};" |
+!style="background:{{party color|Yamina}};" |
+!style="background:{{party color|Democratic Israel}};" |
+|-
+|data-sort-value="2019-09-11" |10–11 Sep
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH12sep/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|28					<!-- Gantz	-->
+|2					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|3					<!-- Peretz	-->
+|3					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|4					<!-- Shaked	-->
+|3					<!-- Barak	-->
+|-
+|data-sort-value="2019-09-05" |4–5 Sep
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH5Sep/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|23					<!-- Gantz	-->
+|3					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|4					<!-- Peretz	-->
+|3					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|5					<!-- Shaked	-->
+|3					<!-- Barak	-->
+|-
+|data-sort-value="2019-09-04" |4 Sep
+|Panels Politics
+|[[Knesset Channel]]<ref name=knesset4sep/>
+|style="background:#BBCDE4" |'''34'''	<!-- Netanyahu	-->
+|24					<!-- Gantz	-->
+|2					<!-- Lapid	-->
+|6					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|–					<!-- Peretz	-->
+|2					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|–					<!-- Shaked	-->
+|–					<!-- Barak	-->
+|-
+|data-sort-value="2019-08-29" |27–29 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH29Aug/>
+|style="background:#BBCDE4" |'''40'''	<!-- Netanyahu	-->
+|24					<!-- Gantz	-->
+|4					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|2					<!-- Peretz	-->
+|4					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|6					<!-- Shaked	-->
+|4					<!-- Barak	-->
+|-
+|data-sort-value="2019-08-22" |20–22 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH22Aug22/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|23					<!-- Gantz	-->
+|5					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|3					<!-- Peretz	-->
+|3					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|5					<!-- Shaked	-->
+|4					<!-- Barak	-->
+|-
+|data-sort-value="2019-08-01" |1 Aug
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=IH1Aug/>
+|style="background:#BBCDE4" |'''35'''	<!-- Netanyahu	-->
+|24					<!-- Gantz	-->
+|–					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|5					<!-- Peretz	-->
+|6					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|10					<!-- Shaked	-->
+|7					<!-- Barak	-->
+|-
+|data-sort-value="2019-07-11" |11 Jul
+|Midgam
+|[[Walla!]]<ref name=wal11jul/>
+|style="background:#BBCDE4" |'''42'''	<!-- Netanyahu	-->
+|22					<!-- Gantz	-->
+|–					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|–					<!-- Peretz	-->
+|6					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|–					<!-- Shaked	-->
+|7					<!-- Barak	-->
+|-
+|data-sort-value="2019-07-04" |4 Jul
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=toi4july/>
+|style="background:#BBCDE4" |'''35'''	<!-- Netanyahu	-->
+|22					<!-- Gantz	-->
+|–					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|4					<!-- Peretz	-->
+|3					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|–					<!-- Shaked	-->
+|12					<!-- Barak	-->
+|-
+|data-sort-value="2019-07-03" |3 Jul
+|Statnet
+|[[Channel 13 (Israel)|Channel 13]]<ref name=toi3july/>
+|style="background:#BBCDE4" |'''46'''	<!-- Netanyahu	-->
+|22					<!-- Gantz	-->
+|–					<!-- Lapid	-->
+|–					<!-- Ashkenazi	-->
+|–					<!-- Gabbay	-->
+|–					<!-- Peretz	-->
+|–					<!-- Lieberman	-->
+|–					<!-- Bennett	-->
+|–					<!-- Shaked	-->
+|10					<!-- Barak	-->
+|-
+|data-sort-value="2019-06-02" |2 Jun
+|Maagar Mohot
+|''[[Israel Hayom]]''<ref name=Israel0206/>
+|style="background:#BBCDE4" |'''39'''	<!-- Netanyahu	-->
+|27					<!-- Gantz	-->
+|3					<!-- Lapid	-->
+|3					<!-- Ashkenazi	-->
+|2					<!-- Gabbay	-->
+|–					<!-- Peretz	-->
+|5					<!-- Lieberman	-->
+|3					<!-- Bennett	-->
+|–					<!-- Shaked	-->
+|–					<!-- Barak	-->
+|}
+
+== Potential bias ==
+Direct Polls institute, which conducts some of the polls, is owned by [[Shlomo Filber]], the former director general of the [[Ministry of Communications (Israel)|Ministry of Communications]] and Likud campaign manager in the [[2015 Israeli legislative election]]. Filber [[turn state's evidence|turned state's evidence]] in [[Case 4000]], in which [[Prime Minister of Israel]] [[Benjamin Netanyahu]] has been indicted for [[bribery]]. In the [[April 2019 Israeli legislative election]], Filber advised the New Right campaign, potentially compromising his objectivity. Filber's polling method is controversial and is based on [[SMS]].<ref>{{cite news |url=https://www.globes.co.il/news/article.aspx?did=1001275500 |title=סמס מעד מדינה: פילבר יחזה עבורכם את תוצאות הבחירות |language=he |work=[[Globes (newspaper)|Globes]] |author=Tal Schneider |date=24 February 2019 |access-date=14 June 2019}}</ref>
+
+==See also==
+{{Portal|Israel|Politics}}
+*[[April 2019 Israeli legislative election]]
+*[[2019 in Israel]]
+*[[List of elections in 2019]]
+
+==Notes==
+{{notelist}}
+
+==References==
+{{Reflist}}
+{{reflist|group=fn}}
+{{Opinion polling for Israeli elections}}
+{{DEFAULTSORT:Opinion polling for the 2019 09 Israeli legislative election}}
+[[Category:Opinion polling in Israel]]

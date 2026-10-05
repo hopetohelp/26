@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
@@ -12,6 +12,9 @@ import Voters from "./pages/Voters";
 import Method from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
+
+// סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
+const Accuracy = lazy(() => import("./pages/Accuracy"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -27,6 +30,14 @@ createRoot(document.getElementById("root")!).render(
           <Route path="trends" element={<Trends />} />
           <Route path="calculator" element={<Calculator />} />
           <Route path="results" element={<Results />} />
+          <Route
+            path="accuracy"
+            element={
+              <Suspense fallback={<p className="text-ink-soft">טוען את סקרי המערכות הקודמות…</p>}>
+                <Accuracy />
+              </Suspense>
+            }
+          />
           <Route path="voters" element={<Voters />} />
           <Route path="method" element={<Method />} />
           <Route path="about" element={<About />} />

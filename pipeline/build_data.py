@@ -142,14 +142,27 @@ FIRM_HE = {
     "MP+TM+SN+A": "מדגם, המדד, סטטנט ואסקריה", "Maagar Mochot": "מאגר מוחות", "MM+SN": "מאגר מוחות + סטטנט",
     "Midgam R&C": "מדגם מחקר וייעוץ", "Midgam Project": "פרויקט מדגם", "TrendZone": "טרנדזון",
     "Panels Politics": "פאנלס פוליטיקס", "CF+MP+SN": "קמיל פוקס, פרויקט מדגם וסטטנט", "Camil Fuchs": "קמיל פוקס",
-    "Smith": "סמית'", "Statnet": "סטטנט",
+    "Smith": "סמית'", "Statnet": "סטטנט", "SF+DP": "שלמה פילבר + דיירקט פולס", "Smith Consulting": "סמית'",
+    "Midgam Project & Stat Net": "פרויקט מדגם וסטטנט", "Timor Group": "קבוצת טימור",
 }
 PUB_HE = {
     "Kan 11": "כאן 11", "i24 News": "i24NEWS", "Channel 14": "ערוץ 14", "Zman Yisrael": "זמן ישראל",
     "Maariv": "מעריב", "Channel 13": "חדשות 13", "Channel 16": "ערוץ 16", "HaHadashot 12": "חדשות 12",
     "Channel 12": "חדשות 12", "Walla": "וואלה", "Israel Hayom": "ישראל היום", "Channel 11": "כאן 11",
-    "103FM": "103FM", "Makor Rishon": "מקור ראשון",
+    "103FM": "103FM", "Makor Rishon": "מקור ראשון", "Zman Israel": "זמן ישראל",
+    "The Times of Israel": "טיימס אוף ישראל", "The Jerusalem Post": "ג'רוזלם פוסט", "Arutz Sheva": "ערוץ 7",
+    "Amit Segal": "עמית סגל (טלגרם)", "The Truth Machine": "מכונת האמת",
 }
+# שמות מותגים שנכתבים באותיות לטיניות גם בעברית; כל שם אחר באנגלית בממשק הוא תרגום חסר
+LATIN_BRANDS = ("NEXT DATA", "Panel4All", "i24NEWS", "103FM", "DRI", "HOT")
+
+
+def untranslated(name: str | None) -> bool:
+    if not name:
+        return False
+    for brand in LATIN_BRANDS:
+        name = name.replace(brand, "")
+    return bool(re.search(r"[A-Za-z]", name))
 
 POLL_FILES = [
     "en__2022–2023_opinion_polling_for_the_2026_Israeli_legislative_election.wiki",
@@ -168,8 +181,19 @@ def clean_publisher(p: str | None) -> str | None:
     if not p:
         return p
     p = re.sub(r"\{\{[^}]*\}\}", "", p)
-    p = re.sub(r"<ref.*", "", p).strip(" '\"")
-    return p or None
+    # שאריות עריכה בוויקיפדיה: "|" כפול בתחילת התא, מקף במקום "אין מזמין"
+    p = re.sub(r"<ref.*", "", p).strip(" '\"|`")
+    return None if p in ("", "–", "-", "—") else p
+
+
+def clean_firm(f: str | None) -> str:
+    return (f or "").strip(" '\"|`")
+
+
+def is_not_a_poll(firm: str | None) -> bool:
+    """שורת תוצאות בחירות, מדגם קלפיות או מצב הכנסת היוצאת — יושבות בטבלאות הסקרים אבל אינן סקר."""
+    return bool(re.search(r"legislative election|election results?|exit poll|pre-election seats|outgoing knesset",
+                          firm or "", re.I))
 
 
 def build_polls(build_time: datetime) -> dict:
@@ -185,21 +209,10 @@ def build_polls(build_time: datetime) -> dict:
             res = wt.parse_table(table)
             if not res:
                 continue
-            columns, data = res[0]["columns"], res[1]
-            # כתובות מקור לכל שורת סקר (לפי הסדר)
-            raw_rows = wt.rows_of(table)
-            url_rows = []
-            for r in raw_rows:
-                joined = "\n".join(c for _, c in r)
-                if any(k == "h" for k, _ in r):
+            for d in res[1]:
+                if d["type"] != "poll" or not d.get("date") or is_not_a_poll(d.get("firm")):
                     continue
-                url_rows.append(re.findall(r"url\s*=\s*(https?://[^\s|}]+)", joined))
-            ui = 0
-            for d in data:
-                urls = url_rows[ui] if ui < len(url_rows) else []
-                ui += 1
-                if d["type"] != "poll" or not d.get("date"):
-                    continue
+                urls = d["urls"]
                 values, joint_cols, others, gov = {}, [], None, None
                 for k, v in d["values"].items():
                     if k == "Others":
@@ -223,7 +236,7 @@ def build_polls(build_time: datetime) -> dict:
                         continue
                     values[pid] = entry
                 seat_sum = sum(e.get("s", 0) for e in values.values())
-                firm = (d.get("firm") or "").strip()
+                firm = clean_firm(d.get("firm"))
                 pub = clean_publisher(d.get("publisher"))
                 base = f"{d['date']['end']}-{slug(firm)}-{slug(pub)}"
                 n = seen_ids.get(base, 0)
@@ -338,6 +351,160 @@ HISTORY_NAMES = {
     "rzp_otzma": "הציונות הדתית + עוצמה", "labor_meretz": "העבודה + מרצ", "raam_hadash_taal": 'רע"ם + חד"ש-תע"ל',
 }
 
+# ---------------------------------------------------------------- סקרי המערכות הקודמות (דיוק הסקרים)
+
+# לכל מערכת: הטבלה הראשית בדף הסקרים שלה — מהגשת הרשימות ועד הבחירות, כלומר סקרים על הרשימות שעמדו בפועל לבחירה.
+# "cols": עמודת ויקיפדיה ⇐ אותיות הרשימה בתוצאות הרשמיות; "ignore": עמודות שאינן רשימה בקלפי (גוש, "אחרות",
+# רשימה שפרשה לפני הבחירות). עמודה שאינה באף אחד מהשניים מפילה את הבנייה — כדי ששום מספר לא ייוחס לרשימה הלא נכונה.
+HISTORY = {
+    21: {"page": "en__Opinion_polling_for_the_April_2019_Israeli_legislative_election.wiki", "combined": True,
+         "cols": {"Likud": "מחל", "Israeli Labor Party": "אמת", "Blue and White (political alliance)": "פה",
+                  "Kulanu": "כ", "United Arab List": "דעם", "Shas": "שס", "United Torah Judaism": "ג",
+                  "Union of Right-Wing Parties": "טב", "Yisrael Beiteinu": "ל", "Meretz": "מרצ", "Hadash": "ום",
+                  "New Right (Israel)": "נ", "Gesher (2019 political party)": "נר", "Zehut": "ז"},
+         "ignore": {"L", "R"}},
+    22: {"page": "en__Opinion_polling_for_the_September_2019_Israeli_legislative_election.wiki",
+         "cols": {"Likud": "מחל", "Blue and White (political alliance)": "פה", "Joint List": "ודעם", "Shas": "שס",
+                  "United Torah Judaism": "ג", "Yamina": "טב", "Israeli Labor Party": "אמת", "Yisrael Beiteinu": "ל",
+                  "Democratic Union (Israel)": "מרצ", "Otzma Yehudit": "כף"},
+         "ignore": {"Gov.", "Zehut"}},  # זהות פרשה ב-29.8.2019 ולא הופיעה בקלפי
+    23: {"page": "en__Opinion_polling_for_the_2020_Israeli_legislative_election.wiki",
+         "cols": {"Blue and White (political alliance)": "פה", "Likud": "מחל", "Joint List": "ודעם",
+                  "Israeli Labor Party": "אמת", "Shas": "שס", "Yisrael Beiteinu": "ל", "United Torah Judaism": "ג",
+                  "Yamina": "טב", "Otzma": "נץ"},
+         "ignore": {"Gov."}},
+    24: {"page": "en__Opinion_polling_for_the_2021_Israeli_legislative_election.wiki",
+         "cols": {"Likud": "מחל", "Yesh Atid": "פה", "Blue and White (political alliance)": "כן", "Joint List": "ודעם",
+                  "Shas": "שס", "United Torah Judaism": "ג", "Yisrael Beiteinu": "ל", "Meretz": "מרצ",
+                  "United Arab List": "עם", "Yamina": "ב", "New Hope": "ת", "Israeli Labor Party": "אמת",
+                  "Religious Zionist": "ט", "New Economic": "יז"},
+         "ignore": set()},
+    25: {"page": "en__Opinion_polling_for_the_2022_Israeli_legislative_election.wiki",
+         "cols": {"Likud": "מחל", "Yesh Atid": "פה", "National Unity Party (Israel)": "כן", "Shas": "שס",
+                  "The Jewish Home": "ב", "Israeli Labor Party": "אמת", "United Torah Judaism": "ג",
+                  "Yisrael Beiteinu": "ל", "Religious Zionist Party": "ט", "Hadash–Ta'al": "ום", "Meretz": "מרצ",
+                  "United Arab List": "עם", "Balad (political party)": "ד"},
+         "ignore": {"Others", "Gov.", "Opp."}},
+}
+# הרשימות שהמליצו על בנימין נתניהו לנשיא המדינה בהתייעצויות שאחרי כל מערכת — עובדה, לא סיווג אידאולוגי.
+# 21: 65 ח"כים · 22: 55 · 23: 58 · 24: 52 · 25: 64 (ויקיפדיה העברית, ערכי הבחירות; דיווחי התקשורת על ההתייעצויות)
+RECOMMENDED_NETANYAHU = {
+    21: ["מחל", "שס", "ג", "ל", "טב", "כ"],
+    22: ["מחל", "שס", "ג", "טב"],
+    23: ["מחל", "שס", "ג", "טב"],
+    24: ["מחל", "שס", "ג", "ט"],
+    25: ["מחל", "ט", "שס", "ג"],
+}
+
+# שמות המכונים והמזמינים בטבלאות הישנות — לפי צורה מנורמלת (אותיות קטנות, בלי פיסוק). מפתח המכון משותף לכל
+# המערכות, כדי שאפשר יהיה להשוות מכון לאורך זמן. שם שאינו כאן מפיל את הבנייה (אין שם באנגלית בממשק).
+HIST_FIRMS = {
+    "midgam": ("midgam", "מדגם מחקר וייעוץ"), "midgam ipanel": ("midgam", "מדגם מחקר וייעוץ"),
+    "panel project hamidgam": ("midgam_project", "פרויקט מדגם"),
+    "panel hamidgam project": ("midgam_project", "פרויקט מדגם"),
+    "maagar mohot": ("maagar_mochot", "מאגר מוחות"), "maagar mochot": ("maagar_mochot", "מאגר מוחות"),
+    "kantar": ("kantar", "קנטר"), "tns": ("kantar", "קנטר"),
+    "smith": ("smith", "סמית'"), "panels politics": ("panels_politics", "פאנלס פוליטיקס"),
+    "direct polls": ("direct_polls", "דיירקט פולס"),
+    "camil fuchs": ("camil_fuchs", "קמיל פוקס"), "camile fuchs": ("camil_fuchs", "קמיל פוקס"),
+    "dialog": ("dialog", "דיאלוג"), "miskar": ("miskar", "מסקר"),
+    "shvakim panorama": ("shvakim_panorama", "שווקים פנורמה"),
+    "number 10 strategies": ("number_10", "נאמבר 10 סטרטג'יז"),
+}
+HIST_PARTNERS = {"statnet", "ipanel"}  # שותפי שטח שמופיעים בתא המכון ("Midgam/iPanel/Channel 12")
+HIST_PUBS = {
+    "channel 13": "חדשות 13", "channel 12": "חדשות 12", "hahadashot 12": "חדשות 12", "keshet": "חדשות 12",
+    "kan": "כאן 11", "kan 11": "כאן 11", "channel 11": "כאן 11", "reshet bet": "כאן — רשת ב'",
+    "maariv": "מעריב", "jerusalem post": "ג'רוזלם פוסט", "the jerusalem post": "ג'רוזלם פוסט",
+    "yedioth ahronoth": "ידיעות אחרונות", "yediot ahronot": "ידיעות אחרונות",
+    "israel hayom": "ישראל היום", "israel hayom i24 news": "ישראל היום ו-i24NEWS",
+    "radio 103fm": "103FM", "radio 103 fm": "103FM", "103fm": "103FM",
+    "radio 103fm maariv": "103FM ומעריב", "103fm maariv": "103FM ומעריב",
+    "walla": "וואלה", "walla news": "וואלה", "haaretz": "הארץ",
+    "army radio": 'גלי צה"ל', "galei tzahal": 'גלי צה"ל', "channel 20": "ערוץ 20", "makor rishon": "מקור ראשון",
+    "the times of israel": "טיימס אוף ישראל", "knesset channel": "ערוץ הכנסת", "hot": "HOT",
+    "arutz sheva": "ערוץ 7", "mako": "מאקו", "galei israel": "גלי ישראל", "mako knesset channel": "מאקו וערוץ הכנסת",
+    "channel 14": "ערוץ 14", "maariv the jerusalem post": "מעריב וג'רוזלם פוסט",
+    "the jerusalem post maariv": "מעריב וג'רוזלם פוסט",
+}
+
+
+def norm_name(s: str | None) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", (s or "").lower()).strip()
+
+
+def hist_firm_pub(firm: str, pub: str | None, combined: bool) -> tuple[str, str, str, str | None]:
+    """מחזיר (מפתח מכון, שם המכון בעברית, מפתח מזמין, שם המזמין בעברית).
+    ב-2019א המכון והמזמין יושבים באותו תא: "Smith/Maariv", "Midgam/iPanel/Channel 12"."""
+    if combined:
+        parts = [p.strip() for p in firm.split("/") if p.strip()]
+        firm = parts[0]
+        pubs = [p for p in parts[1:] if norm_name(p) not in HIST_PARTNERS]
+        pub = "/".join(pubs) or None
+    key = norm_name(firm)
+    if key not in HIST_FIRMS:
+        raise SystemExit(f"מכון סקרים בלי שם בעברית: {firm!r} — להוסיף ל-HIST_FIRMS")
+    pk = norm_name(pub)
+    if pk and pk not in HIST_PUBS:
+        raise SystemExit(f"גוף מזמין בלי שם בעברית: {pub!r} — להוסיף ל-HIST_PUBS")
+    return (*HIST_FIRMS[key], pk, HIST_PUBS.get(pk))
+
+
+def build_history(results: list[dict]) -> dict:
+    by_n = {r["knesset"]: r for r in results}
+    cycles = []
+    for n, cfg in HISTORY.items():
+        election = by_n[n]
+        path = RAW / "wikipedia" / cfg["page"]
+        text = path.read_text(encoding="utf-8")
+        pos, table = wt.tables(text)[0]  # הטבלה הראשונה בדף = מהגשת הרשימות ועד יום הבחירות
+        res = wt.parse_table(table)
+        letters_on_ballot = {l["letters"] for l in election["lists"]}
+        for letters in cfg["cols"].values():
+            if letters not in letters_on_ballot:
+                raise SystemExit(f"K{n}: האותיות {letters} אינן בתוצאות הרשמיות")
+        polls, seen = [], {}
+        for d in res[1]:
+            if d["type"] != "poll" or is_not_a_poll(d.get("firm")):
+                continue
+            if not d.get("date"):
+                raise SystemExit(f"K{n}: שורת סקר בלי תאריך: {d.get('firm')!r}")
+            if d["date"]["end"] >= election["date"]:
+                continue  # מדגמי הקלפיות של ערב הבחירות אינם סקר מוקדם
+            values = {}
+            for k, v in d["values"].items():
+                parts = k.split("+")
+                if all(p in cfg["ignore"] for p in parts):
+                    continue
+                if len(parts) != 1 or k not in cfg["cols"]:
+                    raise SystemExit(f"K{n}: עמודה לא ממופה {k!r} בסקר {d['date']['end']} {d.get('firm')!r}")
+                if "seats" in v:
+                    values[cfg["cols"][k]] = {"s": v["seats"]}
+                elif "pct" in v:
+                    values[cfg["cols"][k]] = {"p": v["pct"], **({"pMax": v["pctMax"]} if "pctMax" in v else {})}
+            firm_key, firm_he, pub_key, pub_he = hist_firm_pub(clean_firm(d.get("firm")), clean_publisher(d.get("publisher")),
+                                                               cfg.get("combined", False))
+            seat_sum = sum(e.get("s", 0) for e in values.values())
+            base = f"k{n}-{d['date']['end']}-{slug(firm_key)}-{slug(pub_key)}"
+            i = seen.get(base, 0)
+            seen[base] = i + 1
+            polls.append({
+                "id": base if i == 0 else f"{base}-{chr(ord('a') + i)}",
+                "start": d["date"]["start"], "end": d["date"]["end"],
+                "firmKey": firm_key, "firmHe": firm_he, "publisherHe": pub_he,
+                "values": values, "seatSum": seat_sum, "consistent": 118 <= seat_sum <= 122,
+                "urls": d["urls"][:3],
+            })
+        polls.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
+        cycles.append({
+            "id": f"k{n}", "knesset": n, "date": election["date"], "label": election["label"],
+            "recommendedNetanyahu": RECOMMENDED_NETANYAHU[n],
+            "polls": polls,
+            "source": {"page": cfg["page"].replace("en__", "").replace(".wiki", "").replace("_", " "),
+                       "sha256": sha256(path), "tableLine": text[:pos].count("\n") + 1},
+        })
+    return {"cycles": cycles}
+
 # ---------------------------------------------------------------- פנקס הבוחרים
 
 def build_registry(results: list[dict]) -> dict:
@@ -361,6 +528,10 @@ def main() -> None:
     registry = build_registry(results)
     apply_corrections(polls["polls"], build_time)
     apply_verification(polls["polls"])
+    history = build_history(results)
+    missing = sorted({n for p in polls["polls"] for n in (p["firmHe"], p["publisherHe"]) if untranslated(n)})
+    if missing:
+        print("⚠️ שמות בלי תרגום לעברית (להוסיף ל-FIRM_HE/PUB_HE):", ", ".join(missing))
     meta = {
         "dataAsOf": build_time.isoformat(),
         "electionDay": "2026-10-27",
@@ -370,15 +541,17 @@ def main() -> None:
         "frozen": FROZEN_FROM <= build_time < FREEZE_END,
         "lists2026": LISTS_2026, "agreements2026": AGREEMENTS_2026, "historyNames": HISTORY_NAMES,
     }
-    for name, obj in [("results", results), ("polls", polls), ("registry", registry), ("meta", meta)]:
-        indent = None if name == "polls" else 1  # קובץ הסקרים גדול — נשמר מכווץ
+    for name, obj in [("results", results), ("polls", polls), ("registry", registry), ("meta", meta),
+                      ("history", history)]:
+        indent = None if name in ("polls", "history") else 1  # קובצי הסקרים גדולים — נשמרים מכווצים
         (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=indent,
                                                      separators=(",", ":") if indent is None else None) + "\n",
                                           encoding="utf-8")
     n = len(polls["polls"])
     print(f"results: {len(results)} elections (all reproduced by the engine) · polls: {n} "
           f"(consistent: {sum(p['consistent'] for p in polls['polls'])}, "
-          f"eligible to show: {sum(p['eligibleToShow'] for p in polls['polls'])})")
+          f"eligible to show: {sum(p['eligibleToShow'] for p in polls['polls'])}) · history: "
+          + ", ".join(f"K{c['knesset']} {len(c['polls'])}" for c in history["cycles"]))
 
 
 if __name__ == "__main__":
