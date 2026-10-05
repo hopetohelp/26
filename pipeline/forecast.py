@@ -194,7 +194,7 @@ def _shrunk_trend(points: list[tuple[float, float]], prior: float, strength: flo
     mx, my = sum(xs) / n, sum(ys) / n
     sxx = sum((x - mx) ** 2 for x in xs)
     b = (sum((x - mx) * (y - my) for x, y in points) / sxx) if n >= 2 and sxx > 0 else 0.0
-    b *= (n - 1) / (n - 1 + strength)
+    b *= (n - 1) / (n - 1 + strength) if n - 1 + strength > 0 else 0.0
     own = my + b * (t - mx)
     w = n / (n + strength)
     return w * own + (1 - w) * prior
@@ -433,6 +433,9 @@ def apply_momentum(sh: dict[str, float], mom: dict[str, float], beta: float) -> 
 
 
 def run_backtest(spec: dict, horizon: int) -> dict:
+    if spec["model"].get("kind") == "trend":  # גרסה 5 ואילך — מודל המגמות (forecast_trend.py)
+        import forecast_trend
+        return forecast_trend.run_backtest(spec, horizon)
     elections = load_elections(spec)
     polls = load_polls(spec)
     seed = spec["model"]["seed"]
@@ -477,11 +480,16 @@ def run_backtest(spec: dict, horizon: int) -> dict:
         if f is not None:
             row["weights"] = {s: round(w, 4) for s, w in weights_for(sorted(obs[k]), f, spec).items()}
         rows.append(row)
+    return summarize_backtest(spec, horizon, rows, validity, VARIANTS)
+
+
+def summarize_backtest(spec: dict, horizon: int, rows: list[dict], validity: dict, variants: tuple) -> dict:
+    """השער: ממוצע הדיוק על מערכות השער, בגרסה הראשית מול קו הבסיס V0. ריצה עם מערכת שער לא תקפה — לא תקפה."""
     gate_set = spec["gate"]["elections"]
     gate_rows = [r for r in rows if r["knesset"] in gate_set]
     valid_run = all(validity[k]["valid"] for k in gate_set)
     summary = {}
-    for v in VARIANTS:
+    for v in variants:
         if len(gate_rows) == len(gate_set):
             summary[v] = {
                 "voteAccuracy": sum(r["variants"][v]["voteAccuracy"] for r in gate_rows) / len(gate_rows),
@@ -513,8 +521,8 @@ def log_run(out: dict, spec: dict) -> dict:
            "specVersion": spec["version"], "specSha": file_sha(SPEC_PATH), "codeSha": file_sha(Path(__file__)),
            "dataSha": file_sha(RAW / "forecast" / "polls.json"), "horizon": out["horizon"], "valid": out["valid"],
            "passed": out["passed"], "summary": out["summary"],
-           "perElection": {str(r["knesset"]): {v: [r["variants"][v]["voteAccuracy"], r["variants"][v]["seatAccuracy"]]
-                                               for v in VARIANTS} for r in out["rows"]}}
+           "perElection": {str(r["knesset"]): {v: [x["voteAccuracy"], x["seatAccuracy"]] for v, x in r["variants"].items()}
+                           for r in out["rows"]}}
     with (Path(__file__).resolve().parent / "forecast_runs.jsonl").open("a", encoding="utf-8") as f:
         f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
     return row
@@ -529,6 +537,6 @@ if __name__ == "__main__":
         if "--log" in sys.argv:
             log_run(out, sp)
         print(json.dumps({"horizon": h, "valid": out["valid"], "passed": out["passed"], "summary": out["summary"],
-                          "perElection": [(r["knesset"], {v: (r["variants"][v]["voteAccuracy"], r["variants"][v]["seatAccuracy"])
-                                                          for v in VARIANTS}) for r in out["rows"]]},
+                          "perElection": [(r["knesset"], {v: (x["voteAccuracy"], x["seatAccuracy"]) for v, x in r["variants"].items()})
+                                          for r in out["rows"]]},
                          ensure_ascii=False, indent=1))

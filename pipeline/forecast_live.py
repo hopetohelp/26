@@ -88,29 +88,12 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
                 out[s] = sh
         return out
 
-    now, before = window(build_day), window(build_day - timedelta(days=lag))
-    # הפרמטרים: מכל המערכות התקפות באופק h (אותה פונקציה כמו בבדיקת העבר; t = 26)
-    bt = F.run_backtest(spec, h)
-    elections = F.load_elections(spec)
-    hist = []
-    for k in sorted(elections):
-        if bt["validity"][str(k)]["valid"]:
-            e = elections[k]
-            fw = F.final_week(F.load_polls(spec), e, spec, h)
-            obs = {p.series: F.poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in fw}
-            prev = F.final_week(F.load_polls(spec), e, spec, h + lag)
-            pobs = {p.series: F.poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in prev}
-            obs = {s: v for s, v in obs.items() if v}
-            hist.append((e, obs, F.momentum(obs, {s: v for s, v in pobs.items() if v}, spec["model"]["momentum"]["minSeries"])))
-    f = F.fit([(e, o) for e, o, _ in hist], 26, spec)
-    beta, n_mom = F.fit_momentum(hist, spec)
-    mom = F.momentum(now, before, spec["model"]["momentum"]["minSeries"])
-    enough = len(now) >= spec["validity"]["minSeries"]
     primary = spec["gate"]["primaryVariant"]
-    sh = {}
-    if enough:
-        sh3, _ = F.forecast("V3", now, lists, f, spec, thr, pairs)
-        sh = F.apply_momentum(sh3, mom, beta) if primary == "V4" else sh3
+    if spec["model"].get("kind") == "trend":
+        sh, bt, info = build_trend(polls, series_of, pairs, thr, lists, spec, h, days, eday, build_day, seed)
+        now, before, enough = info["series"], [], info["enough"]
+    else:
+        sh, bt, info, now, before, enough = build_v4(polls, window, lists, thr, pairs, spec, h, lag, build_day, seed, primary)
     central = F.seats_from_shares(sh, pairs, thr) if sh else {}
 
     # תרחישים
@@ -163,10 +146,10 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
         "asof": build_day.isoformat(), "electionDay": K26["date"], "daysToElection": days, "horizon": h,
         "specVersion": spec["version"], "variant": primary,
         "series": sorted(now), "seriesBefore": sorted(before), "enough": enough,
-        "params": {"others": round(f.others_share * 100, 2), "beta": round(beta, 4), "betaElections": n_mom,
-                   "trainedOn": [e.knesset for e, _, _ in hist], "residualSd": {k: round(v, 4) if isinstance(v, float) else v for k, v in sd.items()},
-                   "weights": {s: round(w, 4) for s, w in F.weights_for(sorted(now), f, spec).items()},
-                   "scenarios": SCENARIOS},
+        "params": {"others": round(info["others"] * 100, 2), "beta": round(info["beta"], 4), "betaElections": info["betaElections"],
+                   "trainedOn": info["trainedOn"], "residualSd": {k: round(v, 4) if isinstance(v, float) else v for k, v in sd.items()},
+                   "weights": {s: round(w, 4) for s, w in info["weights"].items()}, "wA": info.get("wA"),
+                   "polls": info.get("polls"), "scenarios": SCENARIOS},
         "lists": out_lists,
         "bloc": {"lists": gov, "seats": [q(bloc_draws, 0.1), q(bloc_draws, 0.5), q(bloc_draws, 0.9)] if bloc_draws else [],
                  "atLeast61": round(sum(1 for b in bloc_draws if b >= 61) / len(bloc_draws), 4) if bloc_draws else None,
@@ -179,5 +162,68 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
 
 
 def F_primary(row: dict) -> str:
-    """הגרסה הראשית של שורה ביומן: V4 מגרסה 4, V3 לפני כן."""
-    return "V4" if row["specVersion"] >= 4 else "V3"
+    """הגרסה הראשית של שורה ביומן: V5 מגרסה 5, V4 בגרסה 4, V3 לפני כן."""
+    return "V5" if row["specVersion"] >= 5 else "V4" if row["specVersion"] >= 4 else "V3"
+
+
+def build_v4(polls, window, lists, thr, pairs, spec, h, lag, build_day, seed, primary):
+    """גרסאות 1–4: הסקר האחרון של כל מכון בשבוע האחרון (נשמר כדי שהרצות היומן הישנות יהיו ניתנות לשחזור)."""
+    now, before = window(build_day), window(build_day - timedelta(days=lag))
+    # הפרמטרים: מכל המערכות התקפות באופק h (אותה פונקציה כמו בבדיקת העבר; t = 26)
+    bt = F.run_backtest(spec, h)
+    elections = F.load_elections(spec)
+    hist = []
+    for k in sorted(elections):
+        if bt["validity"][str(k)]["valid"]:
+            e = elections[k]
+            fw = F.final_week(F.load_polls(spec), e, spec, h)
+            obs = {p.series: F.poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in fw}
+            prev = F.final_week(F.load_polls(spec), e, spec, h + lag)
+            pobs = {p.series: F.poll_shares(p, list(e.votes), e.agreements, e.threshold, seed) for p in prev}
+            obs = {s: v for s, v in obs.items() if v}
+            hist.append((e, obs, F.momentum(obs, {s: v for s, v in pobs.items() if v}, spec["model"]["momentum"]["minSeries"])))
+    f = F.fit([(e, o) for e, o, _ in hist], 26, spec)
+    beta, n_mom = F.fit_momentum(hist, spec)
+    mom = F.momentum(now, before, spec["model"]["momentum"]["minSeries"])
+    enough = len(now) >= spec["validity"]["minSeries"]
+    primary = spec["gate"]["primaryVariant"]
+    sh = {}
+    if enough:
+        sh3, _ = F.forecast("V3", now, lists, f, spec, thr, pairs)
+        sh = F.apply_momentum(sh3, mom, beta) if primary == "V4" else sh3
+    info = {"others": f.others_share, "beta": beta, "betaElections": n_mom, "trainedOn": [e.knesset for e, _, _ in hist],
+            "weights": F.weights_for(sorted(now), f, spec)}
+    return sh, bt, info, now, before, enough
+
+
+def build_trend(polls, series_of, pairs, thr, lists, spec, h, days, eday, build_day, seed):
+    """גרסה 5 ואילך — מודל המגמות: כל הסקרים של כל מכון מאז הגשת הרשימות; הפרמטרים מבדיקת העבר באופק h."""
+    import forecast_trend as T
+    btobj = T.Backtest(spec, h)
+    bt = btobj.run()
+    camp: dict[str, list] = {}
+    for p in polls:
+        if date.fromisoformat(p["end"]) > build_day:
+            continue
+        s = series_of(p["firm"])
+        vals = {k: v for k, v in p["values"].items() if k in lists}
+        sh = F.poll_shares(F.Poll(p["id"], 26, s, p["end"], vals), list(lists), pairs, thr, seed)
+        if sh:
+            camp.setdefault(s, []).append(((eday - date.fromisoformat(p["end"])).days, sh))
+    enough = len(camp) >= spec["validity"]["minSeries"]
+    if not enough:
+        return {}, bt, {"series": sorted(camp), "enough": False, "others": 0.0, "beta": 0.0, "betaElections": 0,
+                        "trainedOn": [], "weights": {}, "wA": None}
+    strength = spec["model"]["trend"]["slopeStrength"]
+    at = max(days, 0)
+    lines = {s: T.trend(pts, at, strength) for s, pts in camp.items()}
+    pooled = T.trend([pt for pts in camp.values() for pt in pts], at, strength)
+    past = [int(k) for k, v in bt["validity"].items() if v["valid"]]
+    A, B, par = btobj.estimate(26, lines, pooled, lists, thr, pairs, sorted(past))
+    errs = {"A": [(r["knesset"], 1 - r["variants"]["V5A"]["voteAccuracy"]) for r in bt["rows"]],
+            "B": [(r["knesset"], 1 - r["variants"]["V5B"]["voteAccuracy"]) for r in bt["rows"]]}
+    wA = btobj.combo_weight(errs, 26)
+    sh = {k: wA * A.get(k, 0.0) + (1 - wA) * B.get(k, 0.0) for k in set(A) | set(B)}
+    return sh, bt, {"series": sorted(camp), "enough": True, "others": par["others"], "beta": par["beta"],
+                    "betaElections": len(past), "trainedOn": sorted(past), "weights": par["weights"], "wA": wA,
+                    "polls": sum(len(v) for v in camp.values())}

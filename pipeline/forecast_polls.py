@@ -56,7 +56,8 @@ def build() -> list[dict]:
     for qf, rf in [("k21_k25_final_queue.json", "k21_k25_final_results.json"),
                    ("k21_k25_windows_queue.json", "k21_k25_windows_results.json"),
                    ("k21_k25_exact_a_queue.json", "k21_k25_exact_a_results.json"),
-                   ("k21_k25_exact_b_queue.json", "k21_k25_exact_b_results.json")]:
+                   ("k21_k25_exact_b_queue.json", "k21_k25_exact_b_results.json"),
+                   ("k21_k25_full_queue.json", "k21_k25_full_results.json")]:
         if not (VER / rf).exists():
             continue
         res = {r["id"]: r for r in json.loads((VER / rf).read_text(encoding="utf-8"))}
@@ -78,7 +79,8 @@ def build() -> list[dict]:
                         "source": r.get("source")})
     for qf, rf in [("k19_k20_final_queue.json", "k19_k20_final_results.json"),
                    ("k19_k20_windows_queue.json", "k19_k20_windows_results.json"),
-                   ("k19_k20_exact_queue.json", "k19_k20_exact_results.json")]:
+                   ("k19_k20_exact_queue.json", "k19_k20_exact_results.json"),
+                   ("k19_k20_full_queue.json", "k19_k20_full_results.json")]:
         if not (VER / rf).exists():
             continue
         queue = {q["id"]: q for q in json.loads((VER / qf).read_text(encoding="utf-8"))}
