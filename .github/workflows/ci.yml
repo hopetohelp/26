@@ -31,6 +31,8 @@ jobs:
         run: python3 pipeline/test_freeze.py
       - name: המודל — מנוע מהיר זהה למנוע המחקרי, בדיקת עבר עדכנית
         run: python3 pipeline/test_model.py
+      - name: מודל החיזוי — מדדים, מגמה, ושלמות יומן ההרצות
+        run: python3 pipeline/test_forecast.py
       - name: טיפוסים
         run: npx tsc --noEmit -p tsconfig.json
       - name: בדיקות המנוע
