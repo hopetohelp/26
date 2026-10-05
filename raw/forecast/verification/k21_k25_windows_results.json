@@ -1,0 +1,895 @@
+[
+ {
+  "id": "k21-2019-03-28-midgam-yedioth-ahronoth",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/29/yediot-achronot-poll-blue-white-31-likud-27-labor-9-utj-7-hadash-taal-7-right-religious-bloc-64/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 510,
+  "moe": "4.4%",
+  "note": "KnessetJeremy (contemporaneous): Midgam for Yediot Achronot, published March 29 2019; all 13 lists + Gesher 2.7% match. Field date not stated (published Fri 29.3)."
+ },
+ {
+  "id": "k21-2019-03-28-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/29/channel-13-poll-likud-30-blue-white-30-labor-10-4-tied-at-7-right-religious-bloc-64/ ; https://www.maariv.co.il/elections2019/polls/Article-691778",
+  "differences": [],
+  "fieldEndSource": "2019-03-28",
+  "sample": 801,
+  "moe": "3.6%",
+  "note": "KnessetJeremy: Panel Project HaMidgam, broadcast by Channel 13 on March 28 2019; all lists match incl. Gesher 2.3%, Yisrael Beitenu 2.2%. fieldEndSource = broadcast date. Maariv 28.3.2019 (press) independently confirms all lists except Shas (implied 4 by 120 total) and gives 801 respondents, aired Thursday Mar 28; YB and Gesher below threshold (no %)."
+ },
+ {
+  "id": "k21-2019-03-22-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/22/maariv-poll-likud-31-blue-white-30-labor-9-hadash-taal-9-utj-7-right-religious-bloc-66/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1007,
+  "moe": null,
+  "note": "KnessetJeremy: Panels for Maariv, published March 22 2019; all 12 lists match; Raam-Balad and Gesher listed below threshold with no % (00)."
+ },
+ {
+  "id": "k21-2019-03-20-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/20/channel-13-poll-blue-white-31-likud-29-labor-9-3-tied-at-7-right-religious-bloc-64/",
+  "differences": [],
+  "fieldEndSource": "2019-03-20",
+  "sample": 734,
+  "moe": "3.5%",
+  "note": "KnessetJeremy: Panel Project HaMidgam, conducted on and broadcast by Channel 13 March 20 2019. All seat counts match; Gesher 2.3% matches; Yisrael Beitenu below threshold but KJ gives no % (Wikipedia's 2.2% unconfirmed)."
+ },
+ {
+  "id": "k21-2019-03-20-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/20/channel-12-poll-blue-white-32-likud-27-labor-10-hadash-taal-8-utj-7-hayamin-hehadash-6-right-religious-bloc-62/",
+  "differences": [],
+  "fieldEndSource": "2019-03-20",
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "KnessetJeremy: Midgam, conducted on and broadcast by Channel 12 March 20 2019; all lists match incl. Gesher 1.6%."
+ },
+ {
+  "id": "k22-2019-09-05-smith-103fm-maariv",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/09/06/103-fm-maariv-poll-likud-32-blue-white-32-yisrael-beitenu-10-yamina-9-joint-list-9/",
+  "differences": [],
+  "fieldEndSource": "2019-09-05",
+  "sample": 650,
+  "moe": "3.9%",
+  "note": "KnessetJeremy: Smith, broadcast by 103FM & published by Maariv Sept 6 2019; conducted Sept 4-5. All lists match incl. Otzma 2.5%."
+ },
+ {
+  "id": "k22-2019-09-05-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/09/05/channel-13-poll-likud-32-blue-white-32-yisrael-beitenu-11-yamina-10-joint-list-10/",
+  "differences": [],
+  "fieldEndSource": "2019-09-05",
+  "sample": 759,
+  "moe": "3.8%",
+  "note": "KnessetJeremy: HaMidgam Panel Project, broadcast by Channel 13 Sept 5 2019, conducted Sept 5. All lists match incl. Otzma 2.76%."
+ },
+ {
+  "id": "k22-2019-09-05-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/09/05/channel-12-poll-likud-32-blue-white-32-joint-list-10-yamina-9-yisrael-beitenu-9/",
+  "differences": [],
+  "fieldEndSource": "2019-09-05",
+  "sample": 508,
+  "moe": "4.4%",
+  "note": "KnessetJeremy: Midgam, broadcast by Channel 12 Sept 5 2019, conducted Sept 4-5. All lists match incl. Otzma 2.5%."
+ },
+ {
+  "id": "k22-2019-09-04-panels-politics-knesset-channel",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/09/05/knesset-channel-poll-likud-31-blue-white-31-yamina-10-joint-list-10-yisrael-beitenu-9-otzma-4-right-bloc-60/",
+  "differences": [],
+  "fieldEndSource": "2019-09-04",
+  "sample": null,
+  "moe": "4.4%",
+  "note": "KnessetJeremy: Panels, broadcast by the Knesset Channel Sept 5 2019, conducted Sept 4. All 10 lists match (Otzma 4)."
+ },
+ {
+  "id": "k22-2019-08-18-direct-polls-makor-rishon",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/08/19/makor-rishon-poll-likud-31-blue-white-29-yamina-11-joint-list-10-yisrael-beitenu-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 512,
+  "moe": "4.1%",
+  "note": "KnessetJeremy (posted Aug 19 2019): Direct Polls for Makor Rishon; text says published Aug 15 2019 (inconsistent with post date; likely typo). All 9 lists match, Otzma 2.3%; KJ also gives Zehut 1.6% (not in Wikipedia row). Field date not stated."
+ },
+ {
+  "id": "k22-2019-08-22-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/08/25/channel-12-poll-likud-30-blue-white-30-yamina-11-joint-list-11-yisrael-beitenu-10/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 507,
+  "moe": "4.4%",
+  "note": "KnessetJeremy: Midgam, broadcast by Channel 12 on Aug 23 2019 (KJ date; Wikipedia fieldEnd Aug 22 - field date not stated). All lists match, Otzma 1.9%; KJ also gives Zehut 2.3%."
+ },
+ {
+  "id": "k23-2020-02-19-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/02/21/45th-poll-of-2020-election-blue-white-36-likud-32-joint-list-14-shas-9-labor-gesher-meretz-8-yisrael-beitenu-8-yamina-7-utj-7/",
+  "differences": [],
+  "fieldEndSource": "2020-02-19",
+  "sample": 536,
+  "moe": "4.4%",
+  "note": "KnessetJeremy: Panels for Maariv, published Feb 21 2020, conducted Feb 19. All lists match incl. Otzma 2.6%."
+ },
+ {
+  "id": "k23-2020-02-19-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/02/21/43rd-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-7/",
+  "differences": [],
+  "fieldEndSource": "2020-02-19",
+  "sample": 503,
+  "moe": "4.4%",
+  "note": "KnessetJeremy: Midgam, broadcast by Channel 12 Feb 19 2020, conducted same day. All lists match incl. Otzma 1.6%."
+ },
+ {
+  "id": "k23-2020-02-06-direct-polls-channel-20",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/02/07/31st-poll-of-2020-election-likud-34-blue-white-33-joint-list-13-labor-gesher-meretz-10-shas-8-utj-8-yisrael-beitenu-7-yamina-7/",
+  "differences": [],
+  "fieldEndSource": "2020-02-06",
+  "sample": null,
+  "moe": null,
+  "note": "KnessetJeremy: Direct Polls, broadcast by Channel 20 Feb 6 2020 (first released on Twitter). All lists match incl. Otzma 1.00%. fieldEndSource = broadcast date."
+ },
+ {
+  "id": "k21-2019-03-28-smith-maariv",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/Israel-Elections/Poll-shows-Likud-gains-two-seats-585095",
+  "differences": [
+   {
+    "list": "fieldStart",
+    "wikipedia": "2019-03-28",
+    "source": "2019-03-27 (taken Wednesday and Thursday)"
+   }
+  ],
+  "fieldEndSource": "2019-03-28",
+  "sample": 650,
+  "moe": "3.9%",
+  "note": "Jerusalem Post (Maariv sister paper, Mar 30 2019): Smith Research poll taken Wednesday and Thursday for Maariv; all seats match (B&W 30, Likud 29, Labor 8, Hadash-Taal 7, New Right 7, URP/UTJ/Shas 6, Meretz 5, YB/Zehut/Kulanu/UAL-Balad 4), Gesher 3% matches. Seats identical; only field start date differs. Phone + internet panel."
+ },
+ {
+  "id": "k21-2019-03-22-smith-jerusalem-post",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/Israel-Elections/Post-poll-shows-race-is-close-584237",
+  "differences": [
+   {
+    "list": "fieldStart/fieldEnd",
+    "wikipedia": "2019-03-22",
+    "source": "2019-03-20 (taken Wednesday; article dated Mar 22 00:17)"
+   }
+  ],
+  "fieldEndSource": "2019-03-20",
+  "sample": 650,
+  "moe": "3.9%",
+  "note": "Jerusalem Post own poll by Smith Research: all seats match (B&W 30, Likud 27, Labor 8, Hadash-Taal 8, UTJ 7, NR/Shas/URP 6, Meretz/Kulanu 5, YB/UAL-Balad/Zehut 4), Gesher 2.8%. Only the field date differs (Wednesday = Mar 20; still in window 25-18)."
+ },
+ {
+  "id": "k21-2019-03-27-panels-politics-walla",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3227110",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1005,
+  "moe": "3.4%",
+  "note": "Walla! NEWS / Panels Politics (Menachem Lazar), published 27.3.2019 14:13; internet panel. All lists match: Likud 31, B&W 30, Labor 9, Hadash-Taal 8, URP 7, UTJ 7, NR 6, Zehut 5, Meretz 5, Kulanu/Shas/YB 4; Gesher 2.6%, Raam-Balad 1.9%. Field date not stated."
+ },
+ {
+  "id": "k21-2019-03-17-direct-polls-kan",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/396756",
+  "differences": [],
+  "fieldEndSource": "2019-03-17",
+  "sample": 583,
+  "moe": "4.1%",
+  "note": "Arutz 7 (17.03.19) reporting Kan News poll by Direct Polls aired on Kan 11: all lists match (Likud 31, B&W 30, Labor 9, Hadash-Taal 8, UTJ/Shas/NR/URP/Meretz 6, Zehut/YB/Raam-Balad 4; Kulanu 2.1, Gesher 1.1). Data collection 17.3.19, online panel."
+ },
+ {
+  "id": "k21-2019-03-14-midgam-channel-12",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q1_2019/Article-e0820f2be4d7961004.htm",
+  "differences": [
+   {
+    "list": "fieldStart",
+    "wikipedia": "2019-03-14",
+    "source": "2019-03-13 (data collected 13-14 March, 17:00 to 17:00)"
+   }
+  ],
+  "fieldEndSource": "2019-03-14",
+  "sample": 510,
+  "moe": "4.4%",
+  "note": "Mako / Channel 12 News (Amit Segal), 14.03.19: Midgam (Mina Tzemach, Mano Geva) with iPanel. All seats match: B&W 31, Likud 28, Labor 10, Hadash-Taal/UTJ/URP 7, Shas 6, Kulanu/NR/Meretz/Raam-Balad/YB/Zehut 4, Gesher 2.3%. Article text also says 512 respondents in one place, 510 in methodology. Only field start date differs."
+ },
+ {
+  "id": "k22-2019-08-28-smith-103fm-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-716309",
+  "differences": [],
+  "fieldEndSource": "2019-08-28",
+  "sample": 600,
+  "moe": "4%",
+  "note": "Maariv 30/08/2019: Smith for Maariv & 103FM, conducted \"שלשום\" (= Aug 28). All lists match: Likud 32, B&W 31, Yamina/Joint/YB 10, Shas 8, UTJ 7, DU 7, Labor-Gesher 5, Otzma 2.5%; also Zehut 1.6% (not in Wikipedia row). Internet panel + phone."
+ },
+ {
+  "id": "k22-2019-08-28-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-fe0ebe50e7edc61026.htm",
+  "differences": [],
+  "fieldEndSource": "2019-08-28",
+  "sample": 502,
+  "moe": "4.4%",
+  "note": "Mako / Channel 12 News: Midgam (Mano Geva). All lists match: Likud 31, B&W 30, Joint/Yamina/YB 10, UTJ 8, Shas/Labor-Gesher/DU 7, Otzma 1.8%; Zehut 1.2%. Methodology box says data collected 28-09-2019 09:00-20:00 (evident typo for 28-08; article published 2019-08-29). Phone + internet."
+ },
+ {
+  "id": "k23-2020-02-13-smith-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/Article-748077",
+  "differences": [],
+  "fieldEndSource": "2020-02-13",
+  "sample": 650,
+  "moe": "3.9%",
+  "note": "Maariv 14.2.2020: Smith (Rafi Smith) for Maariv-Sofshavua, conducted 12-13 Feb. All lists match: B&W 34, Likud 33, Joint 14, Shas 9, Labor-Gesher-Meretz 9, UTJ/YB/Yamina 7, Otzma 1.4%. Phone + internet panel."
+ },
+ {
+  "id": "k21-2019-03-28-direct-polls-makor-rishon",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/29/ (Makor Rishon Poll post)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 612,
+  "moe": "4%",
+  "note": "Makor Rishon page inaccessible (403; Wayback captures are bot-challenge pages). KnessetJeremy: Direct Polls, published by Makor Rishon March 29 2019: all lists match (Likud 30, B&W 29, Labor 9, H-T 8, URP 7, NR 7, Shas/UTJ/Meretz 6, Kulanu/Raam-Balad/Zehut 4; YB 2.3%, Gesher 1.5%). Jerusalem Post 30.3.2019 independently confirms Likud 30, B&W 29 and YB below threshold. Field date not stated."
+ },
+ {
+  "id": "k21-2019-03-14-maagar-mochot-israel-hayom-i24-news",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/15/ (Yisrael Hayom/I24 News Poll post)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 605,
+  "moe": "4%",
+  "note": "Israel Hayom page inaccessible (403/bot-challenge in Wayback). KnessetJeremy: Maagar Mochot, published by Yisrael Hayom March 15 2019: all lists match incl. Raam-Balad 2%, Gesher 2%. Field date not stated (Wikipedia: Mar 14)."
+ },
+ {
+  "id": "k21-2019-03-13-direct-polls-makor-rishon",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/15/ (Makor Rishon Poll post)",
+  "differences": [],
+  "fieldEndSource": "2019-03-13",
+  "sample": 557,
+  "moe": "4%",
+  "note": "Makor Rishon page inaccessible (403/bot-challenge in Wayback). KnessetJeremy: Direct Polls, published by Makor Rishon March 15 2019, conducted March 13: all lists match (YB 2.9%, Kulanu 2.7%, Raam-Balad 2.6%, Gesher 1.7%)."
+ },
+ {
+  "id": "k21-2019-03-11-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2019/03/12/ (Channel 13 Poll post)",
+  "differences": [],
+  "fieldEndSource": "2019-03-11",
+  "sample": 1304,
+  "moe": "3.2%",
+  "note": "Times of Israel cited URL returned 403. KnessetJeremy: Panel Project HaMidgam, broadcast by Channel 13 March 11 2019: all lists match incl. Gesher 2.3%. fieldEndSource = broadcast date."
+ },
+ {
+  "id": "k21-2019-03-22-maagar-mochot-israel-hayom-i24-news",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://web.archive.org/web/20190401120759/https://www.israelhayom.co.il/article/643143 + KnessetJeremy 2019/03/22",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 613,
+  "moe": "4%",
+  "note": "Israel Hayom (22.03.2019 03:13), Maagar Mochot (Prof. Yitzhak Katz) for Israel Hayom & i24NEWS: text confirms Likud 26, B&W 30, Labor 9, Meretz 6, Hadash-Taal 5, Raam-Balad 4, Gesher 4, URP 7, New Right 5, Zehut 6, right bloc 62 / center-left+Arab+Gesher 58. UTJ 6, Kulanu 4, YB 4, Shas 4 are only in a graphic; confirmed via KnessetJeremy (and consistent with bloc total 62). Field date not stated."
+ },
+ {
+  "id": "k22-2019-08-22-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20250430190615/https://www.israelhayom.com/2019/08/23/poll-majority-of-israelis-plan-on-repeating-april-election-vote/",
+  "differences": [
+   {
+    "list": "המחנה הדמוקרטי",
+    "wikipedia": 6,
+    "source": "5 (Israel Hayom English text; but its listed seats then total 119, while KnessetJeremy 23.8.2019 gives 6 and total 120)"
+   },
+   {
+    "list": "fieldStart",
+    "wikipedia": "2019-08-20",
+    "source": "poll conducted on Thursday (2019-08-22)"
+   }
+  ],
+  "fieldEndSource": "2019-08-22",
+  "sample": 611,
+  "moe": "4%",
+  "note": "Israel Hayom English (23.8.2019), Israel Hayom-i24NEWS poll conducted Thursday: Likud 32, B&W 31, Joint 12, YB 10, Yamina 10, Shas 8, UTJ 7, Democratic Union 5, Labor 4; Otzma and Zehut below threshold (no %). Text sums to 119, so DU=5 is likely a typo; KnessetJeremy (Maagar Mochot, 611 respondents, 4%) gives DU 6, Otzma 2.0%, Zehut 2.0%. Marked partial: DU conflicting between primary text and aggregator; Otzma 2.0% only from aggregator."
+ },
+ {
+  "id": "k22-2019-09-05-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20250319223449/https://www.israelhayom.com/2019/09/06/poll-likud-retakes-lead-right-nears-60-seats-without-lieberman/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 603,
+  "moe": "4%",
+  "note": "Israel Hayom English 6.9.2019, i24NEWS-Israel Hayom poll by Maagar Mochot (Prof. Yitzhak Katz): Likud 31, B&W 30, Yamina 8, Shas 8, UTJ 7, Labor-Gesher 6, DU 4, YB 11, Joint 11; Otzma passes threshold - its 4 seats derived from right-bloc total 58 (not stated directly; KnessetJeremy states Otzma 4). Field date not stated in article; KnessetJeremy says conducted Sept 5 (Wikipedia: Sept 4-5)."
+ },
+ {
+  "id": "k22-2019-08-29-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20250322161549/https://www.israelhayom.com/2019/08/30/blue-and-white-takes-the-lead-in-latest-i24news-israel-hayom-poll/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 507,
+  "moe": "4.3%",
+  "note": "Wikipedia row had no URL. Israel Hayom English 30.8.2019, i24NEWS-Israel Hayom poll by Maagar Mochot: B&W 32, Likud 30, Joint 11, YB 11, Yamina 10, Shas 8, UTJ 7, DU 6, Labor-Gesher 5; Otzma and Zehut below threshold (no %). Conducted before Feiglin dropout announcement on Thursday Aug 29; exact field dates not stated. Sample/MoE from KnessetJeremy (507, 4.3%)."
+ },
+ {
+  "id": "k22-2019-09-01-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20191212190654/https://www.kan.org.il/item/?itemid=58120",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 550,
+  "moe": "4.3%",
+  "note": "Kan News (Moav Vardi), 01.09.2019 20:37, aired Sunday evening on Kan 11: Likud 32, B&W 31, Joint 11, Yamina 10, YB 9, DU 7, Shas 7, UTJ 7, Labor-Gesher 6, Otzma 2.9%. Pollster not named in article; KnessetJeremy names Teleseker (=Kantar), 550 respondents, 4.3%, conducted Sept 1."
+ },
+ {
+  "id": "k21-2019-03-26-kantar-kan",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://web.archive.org/web/20190327090357/https://www.kan.org.il/item/?itemid=49303 + KnessetJeremy 2019/03/27",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 545,
+  "moe": "4.4%",
+  "note": "Kan News (Yoav Krakovsky) 27.3.2019 07:33: poll by TNS (=Kantar), aired Wednesday morning on Kan Reshet Bet radio (not Kan 11 TV - same broadcaster). Text: B&W 30, Likud 28, Labor 8, UTJ 7, Hadash-Taal 7, Kulanu/Shas/Zehut 6, Meretz 5, Balad-Raam 5, Gesher 2.6%, YB 2.1%; New Right mentioned without number. New Right 7 and URP 5 only from KnessetJeremy (Teleseker, 545, 4.4%); their sum 12 is implied by 120 total. Conducted before the latest southern escalation; exact date not stated."
+ },
+ {
+  "id": "k22-2019-08-25-kantar-kan-11",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20190915080837/https://www.kan.org.il/Item/?itemId=57792",
+  "differences": [
+   {
+    "list": "fieldStart",
+    "wikipedia": "2019-08-22",
+    "source": "2019-08-21 (conducted Wednesday and Thursday last week and last Sunday)"
+   }
+  ],
+  "fieldEndSource": "2019-08-25",
+  "sample": null,
+  "moe": null,
+  "note": "Kan News (Moav Vardi) 26.8.2019, aired Monday evening: Likud 32, B&W 31, Joint 11, Yamina 10, YB 9, Labor-Gesher 7, DU 6, Shas 7, UTJ 7; Otzma 2.3%, Zehut 1.7%. All seats match; pollster not named in article. Field: Wed-Thu Aug 21-22 and Sun Aug 25."
+ },
+ {
+  "id": "k22-2019-08-22-smith-103fm",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/267779",
+  "differences": [],
+  "fieldEndSource": "2019-08-22",
+  "sample": 600,
+  "moe": "4%",
+  "note": "Arutz Sheva English, Aug 22 2019 22:55: poll for 103FM conducted Thursday (Aug 22): Likud 32, B&W 30, Joint 11, YB 10, Yamina 10, Shas 8, UTJ 7, Democratic Camp 7, Labor 5; Otzma 2.2%, Zehut 1.4%. Pollster not named in article; KnessetJeremy names Smith (600 respondents, 4%), published by Maariv & 103FM Aug 23."
+ },
+ {
+  "id": "k23-2020-02-17-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20210703231657/https://13news.co.il/item/news/politics/state-policy/2020-elections/election-poll-1008508/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 709,
+  "moe": "3.8%",
+  "note": "Channel 13 News, published Monday 17.2.2020 20:15: B&W 36, Likud 33, Joint 14, Labor-Gesher-Meretz 8, YB 8, Shas 7, UTJ 7, Yamina 7; Otzma below threshold (no % in text; Wikipedia 1.9% unconfirmed). Prof. Camil Fuchs; Jewish sector by Project HaMidgam (Ariel Ayalon), Arab sector by Stat-Net. 709 respondents (603 Jewish, 106 Arab). Field date not stated."
+ },
+ {
+  "id": "k23-2020-02-13-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20200213202854/https://www.mako.co.il/news-israel-elections/2020-2020_q1/Article-8a485854d8f3071027.htm",
+  "differences": [],
+  "fieldEndSource": "2020-02-13",
+  "sample": 505,
+  "moe": "4.4%",
+  "note": "Mako / Channel 12 News (Dafna Liel), 13.2.2020 (live URL now 404; Wayback capture): B&W 35, Likud 33, Joint 13, Labor-Gesher-Meretz 9, Shas 8, UTJ 8, YB 7, Yamina 7, Otzma 2.2%. Data collected 13.2.2020."
+ },
+ {
+  "id": "k24-2021-03-10-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20220831074311/https://www.mako.co.il/news-israel-elections/2021-election_polls/Article-40e76c2962d1871026.htm",
+  "differences": [],
+  "fieldEndSource": "2021-03-10",
+  "sample": 509,
+  "moe": "4.4%",
+  "note": "N12 / Mako: Midgam (Mano Geva) with iPanel for Channel 12 News, aired Wednesday 10.3.2021: Likud 28, Yesh Atid 19, Yamina 13, New Hope 11, Joint 9, Shas 8, YB 7, UTJ 7, Labor 6, Religious Zionism/B&W/Meretz 4; Raam 3.1%, New Economic 2.1%. Data collected 10/3/2021. (Direct fetch timed out; Wayback capture used.)"
+ },
+ {
+  "id": "k23-2020-02-20-direct-polls-arutz-sheva",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.inn.co.il/News/News.aspx/428022",
+  "differences": [],
+  "fieldEndSource": "2020-02-20",
+  "sample": 976,
+  "moe": "3.8%",
+  "note": "Arutz 7 (20.02.20 19:21): Direct Polls poll \"if elections held today (Thursday)\": Likud 33, B&W 31, Joint 14, Labor-Gesher-Meretz 10, Shas 9, Yamina 8, UTJ 8, YB 7, Otzma 1.2%. Sample/MoE and Feb 19-20 field dates from KnessetJeremy (not in article)."
+ },
+ {
+  "id": "k23-2020-02-05-midgam-walla",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3339225",
+  "differences": [],
+  "fieldEndSource": "2020-02-05",
+  "sample": 505,
+  "moe": "4.4%",
+  "note": "Walla! NEWS (Tal Shalev) 6.2.2020: Midgam (Mano Geva) for Walla: B&W 34, Likud 32, Joint 13, Labor-Gesher-Meretz 9, Shas/YB/Yamina/UTJ 8 each, Otzma 1.7%. Data collected 5/2/2020; phone + internet."
+ },
+ {
+  "id": "k23-2020-02-05-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://www.maariv.co.il/elections2020/polls/Article-746662 + KnessetJeremy 2020/02/07",
+  "differences": [],
+  "fieldEndSource": "2020-02-05",
+  "sample": 523,
+  "moe": "4.4%",
+  "note": "Maariv 7.2.2020: Panels Politics (Menachem Lazar), conducted Wednesday (Feb 5) on Panel4All, 523 respondents, 4.4%. Article text states only B&W 36 and Likud 33 (other lists in an embedded Infogram chart not in page). Joint 13, Labor-Gesher-Meretz 8, Yamina 8, UTJ 8, Shas 7, YB 7, Otzma 2.8% confirmed from KnessetJeremy (Panels, published by Maariv & Jerusalem Post Feb 7 2020)."
+ },
+ {
+  "id": "k23-2020-02-06-maagar-mochot-israel-hayom-i24-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20250320185843/https://www.israelhayom.com/2020/02/07/poll-blue-and-white-gains-narrow-lead-over-likud-but-right-bloc-remains-strong/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 506,
+  "moe": "4.4%",
+  "note": "Israel Hayom English 7.2.2020 (Hebrew article 731551 inaccessible: 403/bot-challenge in Wayback): Maagar Mochot for Israel Hayom & i24NEWS, results shown Thursday: B&W 36, Likud 34, Joint 13, Labor-Gesher-Meretz 8, Yamina 8, Shas 8, UTJ 7, YB 6; Otzma below threshold (no %; Wikipedia 1.0% matches KnessetJeremy). Sample/MoE from KnessetJeremy. Field date not stated."
+ },
+ {
+  "id": "k24-2021-03-11-panels-politics-the-jerusalem-post-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-827333",
+  "differences": [],
+  "fieldEndSource": "2021-03-11",
+  "sample": 573,
+  "moe": "4.2%",
+  "note": "Maariv 12.3.2021: Panels Politics (Menachem Lazar) for Maariv, conducted \"yesterday\" (Mar 11): Likud 27, Yesh Atid 20, Yamina 11, New Hope 10, Joint 8, Shas 8, YB 8, UTJ 7, Labor 5, Meretz/B&W/RZ/Raam 4 each (3.6/3.9/3.4/3.5%), New Economic 1.1%. Panel4All online. Article does not mention Jerusalem Post."
+ },
+ {
+  "id": "k24-2021-03-04-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-825896",
+  "differences": [],
+  "fieldEndSource": "2021-03-04",
+  "sample": 571,
+  "moe": "4.2%",
+  "note": "Maariv-Sofshavua 5.3.2021: Panels Politics, conducted \"yesterday\" (Mar 4): Likud 27, Yesh Atid 20, Yamina 12, New Hope 12, YB 9, Joint 8, Shas 8, UTJ 7, Labor 5, RZ/B&W/Meretz 4; Raam 2.4%, New Economic 1.2%."
+ },
+ {
+  "id": "k24-2021-02-25-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2021/Article-824391",
+  "differences": [],
+  "fieldEndSource": "2021-02-25",
+  "sample": 593,
+  "moe": "4.2%",
+  "note": "Maariv 26.2.2021: Panels Politics (Menachem Lazar), conducted \"yesterday\" (Feb 25): Likud 29, Yesh Atid 17, New Hope 14, Yamina 11, Joint 9, Shas 8, UTJ 7, YB 7, B&W 5, Labor 5, RZ 4, Meretz 4; Raam 2.2%, New Economic 1.6%."
+ },
+ {
+  "id": "k25-2022-10-20-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-952955",
+  "differences": [],
+  "fieldEndSource": "2022-10-20",
+  "sample": 712,
+  "moe": "3.7%",
+  "note": "Maariv 21.10.2022: Panels Politics (Menachem Lazar), conducted 19-20 Oct: Likud 31, Yesh Atid 23, RZ-Otzma 14, National Unity 12, Shas 8, UTJ 7, YB 7, Labor 5, Meretz 5, Hadash-Taal 4, Raam 4; Jewish Home 1.8%, Balad 1.4% (also Hofesh Kalkali 1.4%, Economic 1.1%)."
+ },
+ {
+  "id": "k25-2022-10-13-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-951610",
+  "differences": [],
+  "fieldEndSource": "2022-10-13",
+  "sample": 707,
+  "moe": "3.7%",
+  "note": "Maariv 14.10.2022: Panels Politics, conducted 12-13 Oct: Likud 32, Yesh Atid 24, RZ-Otzma 13, National Unity 12, Shas 8, UTJ 7, YB 6, Meretz 5, Labor 5, Hadash-Taal 4, Raam 4; Jewish Home 2.7% (text also loosely calls it \"3 seats\" but below threshold), Balad 1.1%."
+ },
+ {
+  "id": "k25-2022-10-06-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-950320",
+  "differences": [],
+  "fieldEndSource": "2022-10-06",
+  "sample": 705,
+  "moe": "3.7%",
+  "note": "Maariv-Sofshavua 7.10.2022: Panels Politics, conducted 6 Oct: Likud 32, Yesh Atid 23, RZ-Otzma 14, National Unity 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, Hadash-Taal 4, Raam 4; Jewish Home 2.4%, Balad 1.2%. Panel4All online."
+ },
+ {
+  "id": "k25-2022-10-02-midgam-galei-tzahal",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/elections-2022/Article-949658",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv 3.10.2022 08:08 reporting Galei Tzahal (Army Radio) poll by Mano Geva: Likud 32, Yesh Atid 24, RZ 12, National Unity 12, Shas 8, UTJ 7, Labor 6, YB 6, Meretz 5, Raam 4, Hadash-Taal 4; Jewish Home 2.5%, Balad 1.9%. Text says the poll \"נערך הבוקר (שני)\" on Galei Tzahal (Monday Oct 3) - most likely the broadcast time; Wikipedia field date Oct 2 not confirmed or contradicted explicitly."
+ },
+ {
+  "id": "k24-2021-03-04-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021/Article-82f82bbadc90871027.htm",
+  "differences": [],
+  "fieldEndSource": "2021-03-04",
+  "sample": 600,
+  "moe": "4.0%",
+  "note": "N12/Mako: Midgam (Mano Geva) with iPanel for Channel 12 News, presented Sunday morning (Mar 7) at the Influencers Conference; data collected 4/3/2021. Likud 29, Yesh Atid 20, New Hope 12, Yamina 12, Joint 9, Shas 8, YB 7, Labor 7, UTJ 7, B&W 5, RZ 4; Meretz 3%, Raam 3%, New Economic 1.9%."
+ },
+ {
+  "id": "k24-2021-02-23-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2021_q1/Article-10186dc76dfc771026.htm",
+  "differences": [],
+  "fieldEndSource": "2021-02-23",
+  "sample": 506,
+  "moe": "4.4%",
+  "note": "N12/Mako: Midgam (Mano Geva) with iPanel for Channel 12 News, aired Tuesday 23.2.2021; data collected 23/02/2021. Likud 28, Yesh Atid 18, New Hope 13, Yamina 11, Joint 9, Shas 8, UTJ 7, YB 7, Labor 6, B&W 5, RZ 4, Meretz 4; New Economic 2.1%, Raam 2%, Maan 0.8%."
+ },
+ {
+  "id": "k25-2022-10-19-midgam-keshet",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-0285379d2d3f381027.htm",
+  "differences": [],
+  "fieldEndSource": "2022-10-19",
+  "sample": 507,
+  "moe": "4.4%",
+  "note": "N12: Midgam (Mano Geva) with iPanel, published Thursday morning (Oct 20) at the N12/Keshet Influencers Conference; data collected 19/10/2022. Likud 31, Yesh Atid 24, RZ 14, National Unity 11, Shas 8, UTJ 7, Labor 6, YB 6, Meretz 5, Hadash-Taal 4, Raam 4; Jewish Home 1.9%, Balad 1.3%. (CEC filing PDF also cited by Wikipedia; mako article suffices.)"
+ },
+ {
+  "id": "k25-2022-10-11-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/election_2022/Article-d3f89620728c381026.htm",
+  "differences": [],
+  "fieldEndSource": "2022-10-11",
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "N12: Midgam (Mano Geva) with iPanel, aired Tuesday 11.10.2022; data collected 11/10/2022. Likud 31, Yesh Atid 24, RZ 13, National Unity 12, Shas 8, UTJ 7, YB 6, Labor 6, Meretz 5, Hadash-Taal 4, Raam 4; Jewish Home 2%, Balad 1.6%."
+ },
+ {
+  "id": "k25-2022-10-11-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_kan11_seker-11.10.pdf",
+  "differences": [],
+  "fieldEndSource": "2022-10-11",
+  "sample": 649,
+  "moe": "3.8%",
+  "note": "Kantar Israel report to the Central Elections Committee for Kan 11 poll: fieldwork 11 Oct 10:00-16:40, internet+phone. Seats: Likud 32, Yesh Atid 24, RZ-Otzma 13, National Unity 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, Hadash-Taal 4, Raam 4 (=120). Raw %: Jewish Home 1.6%, Balad 1.4%. kan.org.il article (403) not needed."
+ },
+ {
+  "id": "k25-2022-10-20-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://elections.walla.co.il/item/3536051",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 801,
+  "moe": "3.5%",
+  "note": "Walla (20.10.2022) reporting Channel 13 News poll by Prof. Camil Fuchs aired Thursday evening: Likud 32, Yesh Atid 26, RZ 13, National Unity 11, Shas 8, UTJ 7, Labor 5, Meretz 5, YB 5, Hadash-Taal 4, Raam 4; Balad 2.5%, Jewish Home 1.5%. 801 respondents (600 Jewish, 201 non-Jewish). Field date not stated."
+ },
+ {
+  "id": "k25-2022-10-13-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221013234851/https://13tv.co.il/item/news/politics/politics/v58n9-903294144/?pid=98577&",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 802,
+  "moe": "3.5%",
+  "note": "Channel 13 News, aired Thursday 13.10.2022: Prof. Camil Fuchs (Project HaMidgam / Stat-Net). Likud 32, Yesh Atid 26, RZ 12, National Unity 12, Shas 8, UTJ 7, Labor 6, Meretz 4, YB 5, Hadash-Taal 4; Raam phrased as unchanged with YB (grammatically ambiguous) - Raam 4 implied by coalition bloc 57 and total 120. Jewish Home 1.7%, Balad 1.9%. 802 respondents. Field date not stated."
+ },
+ {
+  "id": "k25-2022-10-02-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221003163813/https://13tv.co.il/item/news/politics/politics/djkm7-903285002/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 701,
+  "moe": "3.7%",
+  "note": "Channel 13 News, aired Sunday 2.10.2022 20:29: Prof. Camil Fuchs. Likud 31, Yesh Atid 25, RZ 14, National Unity 12, Shas 8, UTJ 7, Labor 5, Meretz 5, YB 5, Hadash-Taal 4, Raam 4; Jewish Home 2%, Balad 2%. 701 respondents (600 Jewish, 101 non-Jewish). Field date not stated."
+ },
+ {
+  "id": "k24-2021-03-02-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20210303061301/https://13news.co.il/item/news/politics/state-policy/elections-survey-1218362/",
+  "differences": [],
+  "fieldEndSource": "2021-03-02",
+  "sample": 705,
+  "moe": "3.8%",
+  "note": "Channel 13 News, Tuesday 2.3.2021, poll by Prof. Camil Fuchs \"conducted today\": Likud 27, Yesh Atid 19, New Hope 11, Yamina 11, Joint 8, Shas 7, UTJ 7, YB 7, Labor 6, RZ 5, B&W/Meretz/Raam 4; New Economic 2.1%. 705 respondents (602 Jewish via Project HaMidgam, 103 non-Jewish)."
+ },
+ {
+  "id": "k24-2021-03-09-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20210310223831/https://13news.co.il/item/news/politics/state-policy/elections-survey-1221223/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 712,
+  "moe": "3.6%",
+  "note": "Channel 13 News, aired Tuesday 9.3.2021, with Prof. Camil Fuchs: Likud 29, Yesh Atid 20, Yamina 11, New Hope 9, Joint 8, YB 7, UTJ 7, Labor 6, RZ 5, Shas 6, Meretz/B&W/Raam 4; New Economic below threshold (no % in text; Wikipedia 1.7% unconfirmed). 712 respondents (603 Jewish, 109 non-Jewish). Field date not stated (live URL gone, 410)."
+ },
+ {
+  "id": "k24-2021-02-25-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20210226015556/https://13news.co.il/item/news/politics/state-policy/elections-survey-1216012/",
+  "differences": [],
+  "fieldEndSource": "2021-02-25",
+  "sample": 787,
+  "moe": "3.5%",
+  "note": "Channel 13 News, Thursday 25.2.2021, poll \"conducted this evening\": Likud 27, Yesh Atid 18, New Hope 13, Yamina 11, Joint 8, Shas 7, UTJ 7, YB 6, Labor 6, Meretz 5, B&W/RZ/Raam 4; New Economic 1.7%. Prof. Camil Fuchs; 787 respondents (603 Jewish, 184 non-Jewish)."
+ },
+ {
+  "id": "k23-2020-02-07-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20200218020052/https://13news.co.il/item/news/politics/state-policy/2020-elections/elections-survey-1001961/",
+  "differences": [],
+  "fieldEndSource": "2020-02-07",
+  "sample": 701,
+  "moe": "3.8%",
+  "note": "Channel 13 News, Friday 7.2.2020: B&W 35, Likud 33, Joint 14, Labor-Gesher-Meretz 10, YB 8, Shas 7, UTJ 7, Yamina 6, Otzma 1.5%. Conducted 7.2.2020 by Prof. Camil Fuchs; Jewish internet panel by Project HaMidgam, non-Jewish by Stat-Net; 701 respondents."
+ },
+ {
+  "id": "k24-2021-02-23-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20220121120446/https://www.kan.org.il/Item/?itemId=100938",
+  "differences": [],
+  "fieldEndSource": "2021-02-23",
+  "sample": 550,
+  "moe": "4.4%",
+  "note": "Kan News, published Wednesday morning 24.2.2021 on Kan Reshet Bet radio (not Kan 11 TV - same broadcaster): Kantar, conducted 23.02.21, internet sample. Likud 29, Yesh Atid 18, New Hope 13, Yamina 11, Joint 9, Shas 8, UTJ 7, YB 7, Labor 6, RZ 4, B&W 4, Meretz 4. New Economic, Raam, Maan below threshold with no % (Wikipedia New Economic 2.2% unconfirmed)."
+ },
+ {
+  "id": "k25-2022-10-18-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20230206052005/https://www.kan.org.il/Item/?itemId=136341",
+  "differences": [],
+  "fieldEndSource": "2022-10-18",
+  "sample": 651,
+  "moe": "3.8%",
+  "note": "Kan News (Yaara Shapira), aired Tuesday 18.10.2022 evening: Kantar, conducted 18 Oct, internet+phone. Likud 31, Yesh Atid 25, RZ 14, National Unity 11, Shas 8, UTJ 7, YB 7, Labor 5, Meretz 4, Raam 4, Hadash-Taal 4; Balad 2%, Jewish Home 1.9%, Economic 1.8%."
+ },
+ {
+  "id": "k24-2021-03-11-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20210411185006/https://www.kan.org.il/Item/?itemId=101950",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kan News, 11.3.2021, aired on Kan 11 evening news, with Kantar (Dudi Hasid): Likud 29, Yesh Atid 19, Yamina 12, New Hope 11, Shas 8, Joint 8, UTJ 7, YB 7, Labor 6, B&W 5, RZ 4, Raam 4; Meretz 2.8%, New Economic 1.6%. No field date/sample in captured text."
+ },
+ {
+  "id": "k24-2021-03-04-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20210404085222/https://www.kan.org.il/item/?itemId=101531",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kan News (Michael Shemesh, Yaara Shapira), 04.03.2021 20:28, aired Thursday on Kan 11: Likud 29, Yesh Atid 20, New Hope 12, Yamina 11, Joint 8, Shas/YB/UTJ 7, Labor 6, B&W 5, RZ 4, Raam 4; Meretz 3%, New Economic 1.7%. Pollster not named in captured text; no field date/sample."
+ },
+ {
+  "id": "k25-2022-10-01-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221001202032/https://www.kan.org.il/Item/?itemId=135533",
+  "differences": [],
+  "fieldEndSource": "2022-10-01",
+  "sample": 652,
+  "moe": "4.2%",
+  "note": "Kan News, Saturday 1.10.2022 on Kan 11: Kantar (Dudi Hasid), fieldwork Thursday 29 Sept to 1 Oct 2022, internet+phone. Likud 32, Yesh Atid 25, National Unity 12, RZ 12, Shas 8, UTJ 7, YB 6, Labor 5, Meretz 5, Hadash-Taal 4, Raam 4; Jewish Home 2.2%, Balad 1.6%."
+ },
+ {
+  "id": "k25-2022-10-20-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221021124801/https://www.now14.co.il/12-ימים-לבחירות-סקר-חדש-גוש-נתניהו-יציב/",
+  "differences": [],
+  "fieldEndSource": "2022-10-20",
+  "sample": 847,
+  "moe": "4.2%",
+  "note": "Now 14 (Channel 14): Direct Polls (Shlomo Filber, Tzuriel Sharon), conducted 20 Oct 2022: Likud 34, Yesh Atid 23, National Unity 13, RZ 12, Shas 9, UTJ 7, YB 6, Labor 4, Meretz 4, Hadash-Taal 4, Raam 4; Balad 2.1%, Jewish Home 1.9%."
+ },
+ {
+  "id": "k25-2022-10-13-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221022142349/https://www.now14.co.il/סקר-חדשות-14-הליכוד-נחלשת-ליברמן-מתחזק-ג/",
+  "differences": [],
+  "fieldEndSource": "2022-10-13",
+  "sample": 537,
+  "moe": "4.5%",
+  "note": "Now 14: Direct Polls, conducted 13 Oct 2022: Likud 34, Yesh Atid 23, National Unity 12, RZ 12, Shas 9, UTJ 7, YB 7, Labor 4, Meretz 4, Raam 4, Hadash-Taal 4; Jewish Home 2.1%, Balad 1.8%."
+ },
+ {
+  "id": "k25-2022-10-06-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221008100144/https://www.now14.co.il/סקר-מנדטים-חדש-גוש-נתניהו-עם-62-מנדטים-שק/",
+  "differences": [],
+  "fieldEndSource": "2022-10-06",
+  "sample": 591,
+  "moe": "4.4%",
+  "note": "Now 14: Direct Polls, conducted 6 Oct 2022: Likud 35, Yesh Atid 23, National Unity 11, RZ 11, Shas 9, UTJ 7, YB 6, Labor 5, Meretz 5, Hadash-Taal 4, Raam 4; Jewish Home 2.2%, Balad 1.6%."
+ },
+ {
+  "id": "k24-2021-03-03-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.mivzaklive.co.il/archives/414857",
+  "differences": [],
+  "fieldEndSource": "2021-03-03",
+  "sample": 778,
+  "moe": "4.2%",
+  "note": "Mivzak Live report of Direct Polls (Shlomo Filber, Tzuriel Sharon) poll conducted 3 March 2021 (digital system + panel); no commissioning outlet named: Likud 29, Yesh Atid 18, Yamina 13, New Hope 11, YB 9, Shas 8, Joint 8, UTJ 7, Labor 6, B&W 6, RZ 5; Raam 2.9%, Meretz 2.1%, New Economic 1.9%."
+ },
+ {
+  "id": "k24-2021-03-11-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20250320212044/https://www.israelhayom.com/2021/03/12/key-to-right-wing-government-in-bennetts-hands-poll-shows/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Israel Hayom English 12.3.2021 (Hebrew article 860275 inaccessible): i24News-Israel Hayom poll by Maagar Mochot: Likud 30, Yesh Atid 18, Yamina 11, New Hope 10, Joint 9, Shas 8, UTJ 7, YB 7, Labor 6, RZ 5, B&W 5, Meretz 4; Raam and New Economic below threshold (no %; Wikipedia 1.7% / 2.2% unconfirmed). No field date/sample in text."
+ },
+ {
+  "id": "k24-2021-03-04-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20250623133311/https://www.israelhayom.com/2021/03/05/poll-shows-both-netanyahu-rival-saar-and-labor-losing-steam/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Israel Hayom English 5.3.2021 (Hebrew article 858009 inaccessible): Israel Hayom-i24NEWS poll by Prof. Yitzhak Katz / Maagar Mochot: Likud 29, Yesh Atid 17, New Hope 11, Yamina 10, Joint 10, Shas 8, UTJ 7, YB 7, B&W 5, Labor 4, RZ 4, Meretz 4, Raam 4. New Economic not mentioned (Wikipedia 1.7% unconfirmed). No field date/sample in text."
+ },
+ {
+  "id": "k23-2020-02-20-maagar-mochot-israel-hayom-i24-news",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://web.archive.org/web/20250707202059/https://www.israelhayom.com/2020/02/21/israel-hayom-i24news-election-poll-could-mean-a-lot-more-political-drama-down-the-road/ + KnessetJeremy 2020/02/21",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 506,
+  "moe": "4.4%",
+  "note": "Cited CEC PDF unreachable (site moved; Wayback fetch failed). Israel Hayom English 21.2.2020, Maagar Mochot for Israel Hayom-i24NEWS: text gives YB 7, Otzma 1%, Right-Haredi bloc 56, Left+Arab 57, 506 respondents, MoE 4.4%; per-party seats are only in a graphic. B&W 36, Likud 33, Joint 13, LGM 8, Shas 8, Yamina 8, UTJ 7 from KnessetJeremy; consistent with both bloc totals. Field date not stated."
+ },
+ {
+  "id": "k23-2020-02-13-maagar-mochot-israel-hayom-i24-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20220511174412/https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_israel_hayom_13_2.pdf",
+  "differences": [],
+  "fieldEndSource": "2020-02-13",
+  "sample": 505,
+  "moe": "4.4%",
+  "note": "Maagar Mochot (Prof. Yitzhak Katz) report filed with the Central Elections Committee, commissioned by Israel Hayom: fieldwork 12.02.2020 11:14 - 13.02.2020 13:36, phone + internet panel. Final seats (after threshold reallocation): B&W 34, Likud 32, Joint 14, Yamina 9, LGM 8, UTJ 8, Shas 8, YB 7; Otzma 1% raw. Match."
+ },
+ {
+  "id": "k21-2019-03-26-miskar-x",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221203195441/https://bechirot21.bechirot.gov.il/election/Decisions/Documents/סקרים/24-26.3%20-%20מכון%20מסקר.pdf",
+  "differences": [],
+  "fieldEndSource": "2019-03-26",
+  "sample": 4500,
+  "moe": "2.5%",
+  "note": "Miskar Institute (Dr. Ido Liberman) report to the Central Elections Committee, \"המדגם של ישראל\": no commissioning client, published only on Miskar site/Facebook; online, sent 24.3.19 20:00, collection ended noon 26.3.19. Final seats: Likud 31, B&W 30, URP 9, Hadash-Taal 8, Zehut 7, NR 7, Labor 7, Shas 6, UTJ 6, Meretz 5, Balad-Raam 4 (raw 2.9% but allocated 4 after threshold/surplus per report); Kulanu 3.1%, Gesher 2.6%, YB 2.4%."
+ },
+ {
+  "id": "k21-2019-03-18-miskar-x",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20190327224110/https://bechirot21.bechirot.gov.il/election/Decisions/Documents/סקרים/המדגם%20של%20ישראל%20-%2016-18.3.19.pdf",
+  "differences": [],
+  "fieldEndSource": "2019-03-18",
+  "sample": 4500,
+  "moe": "2.5%",
+  "note": "Miskar Institute report to the Central Elections Committee (\"המדגם של ישראל\", self-published, no client), online panel. Final seats: Likud 31, B&W 29, URP 9, NR 8, Labor 8, Hadash-Taal 7, Zehut 6, Shas 6, UTJ 6, Meretz 5, Balad-Raam 5; Kulanu 2.3%, Gesher 2.3%, YB 1.4%. Data collected 16.3.19 (sent 22:00) to noon 18.3.19."
+ },
+ {
+  "id": "k23-2020-02-12-panels-politics-makor-rishon",
+  "status": "match",
+  "sourceLevel": "aggregator",
+  "source": "https://knessetjeremy.com/2020/02/15/ (39th poll post: Panels / Makor Rishon)",
+  "differences": [],
+  "fieldEndSource": "2020-02-12",
+  "sample": 1016,
+  "moe": null,
+  "note": "Makor Rishon page inaccessible (403; Wayback captures are bot-challenge pages). KnessetJeremy: Panels for Makor Rishon, published Feb 13 2020, conducted Feb 12 (Wikipedia start Feb 11 not confirmed). All lists match: B&W 36, Likud 33, Joint 14, Shas 8, UTJ 8, LGM 7, YB 7, Yamina 7, Otzma 2.6%."
+ },
+ {
+  "id": "k25-2022-10-03-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://web.archive.org/web/20221006011514/https://www.israelhayom.co.il/news/politics/article/13137422",
+  "differences": [],
+  "fieldEndSource": "2022-10-03",
+  "sample": 511,
+  "moe": "4.4%",
+  "note": "Israel Hayom: Maagar Mochot (Prof. Yitzhak Katz), conducted 02.10.2022 and 03.10.2022, internet panel + phone. Likud 32, Yesh Atid 24, RZ 13, National Unity 11, Labor 6, Meretz 6, Shas 8, UTJ 7, Raam 4, Hadash-Taal 4, YB 5; Jewish Home 2.0%, Balad 0.6%."
+ },
+ {
+  "id": "k21-2019-03-29-maagar-mochot-radio-103-fm",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HIJMMM&c41t4nzVQ=EL&gntVQ=IDL",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Cited 103FM page (29/03/2019, Ron Kofman & Arieh Eldad programme) is an audio clip titled \"תוצאות סקר הסקרים\"; its text only describes Nissim Mishal weekly poll of 442 people on Netanyahu as defense minister - no seat figures. No KnessetJeremy post, Maariv article or other text source for a 29.3.2019 Maagar Mochot/103FM seat poll found. Caution: 103FM \"סקר הסקרים\" is described elsewhere (Maariv 22.2.2019) as combining Maagar Mochot data for 103FM with other outlets polls of the week, so the Wikipedia row may be a composite rather than a standalone poll. Seats unverified (row sums to 120)."
+ }
+]

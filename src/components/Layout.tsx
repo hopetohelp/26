@@ -13,6 +13,7 @@ const NAV = [
   { to: "/polls", label: "ארכיון הסקרים" },
   { to: "/trends", label: "מגמות" },
   { to: "/scenarios", label: "תרחישים" },
+  { to: "/forecast", label: "תחזית" },
   { to: "/changes", label: "מה השתנה מאז 2022" },
   { to: "/calculator", label: "מחשבון מנדטים" },
   { to: "/results", label: "תוצאות אמת" },

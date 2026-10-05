@@ -16,3 +16,5 @@
 - Opinion polling for the 2022 Israeli legislative election
 
 **רישיון:** התוכן של ויקיפדיה מופץ לפי [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). הקרדיט — לכותבי הדפים בוויקיפדיה האנגלית (ההיסטוריה המלאה של כל דף מופיעה בו). הקבצים כאן נשמרים ללא שינוי, כחומר גלם; האתר משתמש בהם כאינדקס לסקרים, ולכל סקר נשמר הקישור לפרסום המקורי של הגוף המזמין.
+
+ולבדיקת העבר של מודל החיזוי — שתי מערכות נוספות (הורדו ב-5.10.2026): Opinion polling for the 2013 Israeli legislative election · Opinion polling for the 2015 Israeli legislative election. בדפים אלה התאריך נכתב בלי שנה, והשנה נגזרת מהחודש (`parse_table(..., year_of_month)`).

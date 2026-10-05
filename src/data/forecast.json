@@ -1,0 +1,355 @@
+{
+ "asof": "2026-10-05",
+ "attempts": {
+  "bestVoteAccuracy": 0.92997,
+  "runs": 22,
+  "versions": [
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "bloc": {
+  "atLeast61": 0.1217,
+  "central": 53,
+  "lists": [
+   "likud",
+   "shas",
+   "utj",
+   "otzma",
+   "rzp"
+  ],
+  "seats": [
+   45,
+   53,
+   61
+  ]
+ },
+ "daysToElection": 22,
+ "electionDay": "2026-10-27",
+ "enough": true,
+ "gate": {
+  "atHorizon": {
+   "invalidElections": [
+    25
+   ],
+   "logged": true,
+   "passed": false,
+   "perElection": {
+    "20": [
+     0.92179,
+     0.91667
+    ],
+    "21": [
+     0.90248,
+     0.825
+    ],
+    "22": [
+     0.94167,
+     0.93333
+    ],
+    "23": [
+     0.95042,
+     0.95833
+    ],
+    "24": [
+     0.88062,
+     0.875
+    ]
+   },
+   "summary": {},
+   "valid": false
+  },
+  "elections": [
+   21,
+   22,
+   23,
+   24,
+   25
+  ],
+  "minSeat": 0.9,
+  "minVote": 0.95,
+  "passedAtHorizon": false
+ },
+ "horizon": 22,
+ "lists": {
+  "amcha": {
+   "pass": 0.5066,
+   "seats": 4,
+   "seatsRange": [
+    0,
+    4,
+    6
+   ],
+   "share": 3.44,
+   "shareRange": [
+    1.53,
+    5.06
+   ]
+  },
+  "bluewhite": {
+   "pass": 0.0341,
+   "seats": 0,
+   "seatsRange": [
+    0,
+    0,
+    0
+   ],
+   "share": 0.47,
+   "shareRange": [
+    0.0,
+    2.2
+   ]
+  },
+  "democrats": {
+   "pass": 0.9874,
+   "seats": 9,
+   "seatsRange": [
+    6,
+    9,
+    12
+   ],
+   "share": 7.18,
+   "shareRange": [
+    4.9,
+    9.49
+   ]
+  },
+  "haredi_public": {
+   "pass": 0.0272,
+   "seats": 0,
+   "seatsRange": [
+    0,
+    0,
+    0
+   ],
+   "share": 0.27,
+   "shareRange": [
+    0.0,
+    1.99
+   ]
+  },
+  "joint": {
+   "pass": 0.9716,
+   "seats": 8,
+   "seatsRange": [
+    5,
+    7,
+    10
+   ],
+   "share": 6.01,
+   "shareRange": [
+    4.13,
+    8.09
+   ]
+  },
+  "likud": {
+   "pass": 0.9995,
+   "seats": 24,
+   "seatsRange": [
+    17,
+    23,
+    31
+   ],
+   "share": 18.49,
+   "shareRange": [
+    13.3,
+    23.62
+   ]
+  },
+  "otzma": {
+   "pass": 0.968,
+   "seats": 7,
+   "seatsRange": [
+    5,
+    7,
+    10
+   ],
+   "share": 5.88,
+   "shareRange": [
+    4.03,
+    7.9
+   ]
+  },
+  "raam": {
+   "pass": 0.8473,
+   "seats": 6,
+   "seatsRange": [
+    0,
+    6,
+    8
+   ],
+   "share": 4.83,
+   "shareRange": [
+    2.84,
+    6.41
+   ]
+  },
+  "reservists": {
+   "pass": 0.3722,
+   "seats": 0,
+   "seatsRange": [
+    0,
+    0,
+    5
+   ],
+   "share": 3.0,
+   "shareRange": [
+    1.11,
+    4.58
+   ]
+  },
+  "rzp": {
+   "pass": 0.9264,
+   "seats": 6,
+   "seatsRange": [
+    4,
+    6,
+    9
+   ],
+   "share": 5.1,
+   "shareRange": [
+    3.44,
+    6.83
+   ]
+  },
+  "shas": {
+   "pass": 0.9848,
+   "seats": 8,
+   "seatsRange": [
+    6,
+    8,
+    12
+   ],
+   "share": 6.79,
+   "shareRange": [
+    4.65,
+    9.06
+   ]
+  },
+  "together": {
+   "pass": 0.9941,
+   "seats": 11,
+   "seatsRange": [
+    8,
+    11,
+    15
+   ],
+   "share": 8.67,
+   "shareRange": [
+    5.98,
+    11.44
+   ]
+  },
+  "utj": {
+   "pass": 0.9724,
+   "seats": 8,
+   "seatsRange": [
+    5,
+    7,
+    10
+   ],
+   "share": 6.1,
+   "shareRange": [
+    4.18,
+    8.11
+   ]
+  },
+  "yashar": {
+   "pass": 0.9992,
+   "seats": 21,
+   "seatsRange": [
+    15,
+    21,
+    28
+   ],
+   "share": 16.52,
+   "shareRange": [
+    11.7,
+    21.21
+   ]
+  },
+  "yb": {
+   "pass": 0.9796,
+   "seats": 8,
+   "seatsRange": [
+    5,
+    8,
+    11
+   ],
+   "share": 6.37,
+   "shareRange": [
+    4.37,
+    8.56
+   ]
+  }
+ },
+ "params": {
+  "beta": -0.5,
+  "betaElections": 4,
+  "others": 0.87,
+  "residualSd": {
+   "large": 0.2393,
+   "nLarge": 30,
+   "nSmall": 17,
+   "small": 0.0134
+  },
+  "scenarios": {
+   "df": 4,
+   "inflation": 1.25,
+   "n": 10000,
+   "smallShare": 0.05
+  },
+  "trainedOn": [
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  "weights": {
+   "direct_polls": 0.1868,
+   "maagar_mochot": 0.1733,
+   "new_mp_tm_sn_a": 0.1733,
+   "new_sf_nd": 0.1733,
+   "new_yossi_tatika": 0.1733,
+   "panels_politics": 0.1199
+  }
+ },
+ "series": [
+  "direct_polls",
+  "maagar_mochot",
+  "new_mp_tm_sn_a",
+  "new_sf_nd",
+  "new_yossi_tatika",
+  "panels_politics"
+ ],
+ "seriesBefore": [
+  "direct_polls",
+  "kantar",
+  "maagar_mochot",
+  "midgam",
+  "new_mp_tm_sn_a",
+  "new_sf_nd",
+  "new_yossi_tatika",
+  "panels_politics"
+ ],
+ "seriesLabels": {
+  "direct_polls": "דיירקט פולס",
+  "kantar": "קנטר",
+  "maagar_mochot": "מאגר מוחות",
+  "midgam": "מדגם מחקר וייעוץ",
+  "new_mp_tm_sn_a": "מדגם, המדד, סטטנט ואסקריה",
+  "new_sf_nd": "שלמה פילבר + NEXT DATA",
+  "new_yossi_tatika": "יוסי טטיקה",
+  "panels_politics": "לזר מחקרים + Panel4All"
+ },
+ "specVersion": 4,
+ "variant": "V4",
+ "wasted": [
+  2.05,
+  5.21,
+  8.91
+ ]
+}

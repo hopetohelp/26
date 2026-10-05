@@ -621,6 +621,19 @@ def build_model(polls: list[dict], results: list[dict]) -> dict:
                    "histSdLarge": sc_cfg.hist_sd_large, "scenarios": sc_cfg.n},
     }
 
+def build_forecast(polls: list[dict], build_time: datetime) -> dict:
+    """מודל החיזוי (pipeline/forecast_live.py): אותם סקרים כמו הממוצע, סדרת מכון לפי HIST_FIRMS — כמו בבדיקת העבר."""
+    import forecast_live as FL
+
+    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]
+    series_of = lambda firm: FL.K26["seriesMap"].get(firm) or "new_" + norm_name(firm).replace(" ", "_")
+    out = FL.build(use, series_of, [tuple(a["pair"]) for a in AGREEMENTS_2026],
+                   [l["id"] for l in LISTS_2026 if l["gov37"]], build_time.date())
+    used = set(out["series"]) | set(out["seriesBefore"])
+    out["seriesLabels"] = {series_of(p["firm"]): p["firmHe"] for p in use if series_of(p["firm"]) in used}
+    return out
+
+
 # ---------------------------------------------------------------- פנקס הבוחרים
 
 def build_registry(results: list[dict]) -> dict:
@@ -647,6 +660,7 @@ def main() -> None:
     history = build_history(results)
     # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
     model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results)
+    forecast_out = None if __import__("os").environ.get("SKIP_MODEL") else build_forecast(polls["polls"], build_time)
     missing = sorted({n for p in polls["polls"] for n in (p["firmHe"], p["publisherHe"]) if untranslated(n)})
     if missing:
         print("⚠️ שמות בלי תרגום לעברית (להוסיף ל-FIRM_HE/PUB_HE):", ", ".join(missing))
@@ -662,6 +676,8 @@ def main() -> None:
     outputs = [("results", results), ("polls", polls), ("registry", registry), ("meta", meta), ("history", history)]
     if model_out is not None:
         outputs.append(("model", model_out))
+    if forecast_out is not None:
+        outputs.append(("forecast", forecast_out))
     for name, obj in outputs:
         indent = None if name in ("polls", "history") else 1  # קובצי הסקרים גדולים — נשמרים מכווצים
         (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=indent,
