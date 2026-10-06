@@ -1367,5 +1367,33 @@
    "sample_respondents": 554
   },
   "status": "mismatch"
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-10-06",
+  "id": "2026-10-05-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "Original (mako) returned HTTP 403 to a plain request, and the Wayback copy could not be fetched (rate limit / tunnel closed). Not compared; no claim of a match. Wikipedia row: Midgam, Channel 12, 5 Oct 2026, n=501; the cited headline says Winter falls below the threshold, consistent with the row. Retry verification when the source or an archive copy is reachable.",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-d7459e0cc7c01a1026.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "unreachable"
  }
 ]
