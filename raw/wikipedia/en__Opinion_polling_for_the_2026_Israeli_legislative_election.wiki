@@ -42,7 +42,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | Since 2022 election
 |-
 |[[HaHadashot 12]]
-|style="background:#FFDFCC" | Midgam Research & Consulting<ref name="Midgam24Aug">{{cite web|date=24 August 2026 |author=Amit Segel|title=סקר חדשות 12: וינטר עובר את אחוז החסימה ומפיל את סמוטריץ', גוש השינוי גדל|url=https://www.mako.co.il/news-israel-elections/2026/Article-cb0dba3ba4430a1027.htm|access-date=24 August 2026 |publisher=[[Hevrat HaHadashot|Channel 12]] |lang=he-IL}}</ref>
+|style="background:#FFDFCC" | Midgam Research & Consulting<ref name="Midgam24Aug">{{cite web|date=24 August 2026 |author=Amit Segal|title=סקר חדשות 12: וינטר עובר את אחוז החסימה ומפיל את סמוטריץ', גוש השינוי גדל|url=https://www.mako.co.il/news-israel-elections/2026/Article-cb0dba3ba4430a1027.htm|access-date=24 August 2026 |publisher=[[Hevrat HaHadashot|Channel 12]] |lang=he-IL}}</ref>
 | Since 2022 election
 |-
 ||[[i24NEWS (Israeli TV channel)|i24 News]]
@@ -153,6 +153,28 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | style="font-style:italic;" {{Opdrts||16|Oct|2026}}
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
+|{{Opdrts||5|Oct|2026}}
+|style=background:#FFDFCC |Midgam R&C
+|[[HaHadashot 12]]<ref>{{Cite web |title=סקר המנדטים של חדשות 12: וינטר מתרסק מתחת לאחוז החסימה, האופוזיציה מתחזקת |trans-title=News 12 Mandates poll: Winter crashes below the electoral threshold, the opposition is strengthening |publisher=Channel 12 |date=5 October 2026 |access-date=6 October 2026 | url=https://www.mako.co.il/news-israel-elections/2026/Article-d7459e0cc7c01a1026.htm |language=he-IL}}</ref>
+|501
+|21
+|13
+|colspan=2|6
+|7
+|{{small|(0.5%)}}
+|7
+|8
+|9
+|5
+|8
+|9
+|style="background:#d0eafb" |'''23'''
+|colspan=2|4
+|{{small|(1.5%)}}
+|{{small|(0.6%)}}
+|{{N/A}}
+|49
+|-
 |{{Opdrts||4|Oct|2026}}
 | style=background:Burlywood |Kantar
 |[[Kan 11]]<ref>{{cite web |title=סקר כאן חדשות: וינטר מתחת לאחוז החסימה, המשותפת מתחזקת |trans-title=Kan News Poll: Winter Below Electoral Threshold, Joint List Gains Strength |publisher=[[Kan 11]] |date=4 October 2026 |url=https://www.kan.org.il/content/kan-news/politic/1105927/ |language=he-il |access-date=4 October 2026}}</ref>
@@ -223,7 +245,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(1.7%)}}
 |{{small|(0.2%)}}
 |0.2%{{efn|[[Noam (political party)|Noam]] at 0.1% <br/> [[Haim Yosef Abergel|Ahi]] at 0.1%}}
-|style="background:#CCCCF5" |'''64'''
+|style="background:#b2b2f0" |'''64'''
 |-
 |{{Opdrts|30|1|Oct|2026}}
 | style=background:Turquoise |Yossi Tatika
@@ -333,7 +355,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(1.6%)}}
 |{{small|(0.2%)}}
 |0.2%{{efn|[[Noam (political party)|Noam]] at 0.2%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||27|Sep|2026}}
 | style=background:Burlywood |Kantar
@@ -406,7 +428,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|23|24|Sep|2026}}
 | style=background:Turquoise |Yossi Tatika
-|''[[Zman Yisrael]]''<ref name="toi25sept">{{Cite web |title=Netanyahu’s coalition and rival ‘change bloc’ draw level in latest ToI poll|work=[[The Times of Israel]]|access-date=25 September 2026|url=https://www.timesofisrael.com/netanyahus-coalition-and-rival-change-bloc-draw-level-in-latest-toi-poll/|date=25 September 2026}}</ref>
+|''[[Zman Yisrael]]''<ref name="toi25sept">{{Cite web |title=Netanyahu's coalition and rival 'change bloc' draw level in latest ToI poll|work=[[The Times of Israel]]|access-date=25 September 2026|url=https://www.timesofisrael.com/netanyahus-coalition-and-rival-change-bloc-draw-level-in-latest-toi-poll/|date=25 September 2026}}</ref>
 |500
 |21
 |12
@@ -468,7 +490,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(1.9%)}}
 |{{small|(0.5%)}}
 |0.1%{{efn|[[Noam (political party)|Noam]] at 0.1%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||23|Sep|2026}}
 | style="background:mediumseagreen" |MP+TM+SN+A
@@ -537,7 +559,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(2.6%)}}
 |{{small|(0.3%)}}
 |0.1%{{efn|[[Noam (political party)|Noam]] at 0.1%}}
-|style="background:#CCCCF5" |'''64'''
+|style="background:#b2b2f0" |'''64'''
 |-
 |{{Opdrts||17|Sep|2026}}
 | style=background:yellow |Direct Polls
@@ -691,7 +713,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(2.3%)}}
 |{{small|(0.2%)}}
 |0.3%{{efn|[[Noam (political party)|Noam]] at 0.3%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||14|Sep|2026}}
 |style="background:#FFDFCC" |Midgam R&C
@@ -873,7 +895,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(2.1%)}}
 |{{small|(0.1%)}}
 |0.1%{{efn|[[Noam (political party)|Noam]] at 0.1%}}
-|style="background:#CCCCF5" |'''64'''
+|style="background:#b2b2f0" |'''64'''
 |-
 |{{Opdrts||9|Sep|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -1008,7 +1030,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(3.0%)}}
 |{{small|(0.3%)}}
 |0.2%{{efn|[[Noam (political party)|Noam]] at 0.2%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||7|Sep|2026}}
 |style="background:#FFDFCC" |Midgam R&C
@@ -1147,7 +1169,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(0.1%)}}
 |{{small|(2.7%)}}
 |0.3%{{efn|[[Noam (political party)|Noam]] at 0.3%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||3|Sep|2026}}
 |colspan="21" |[[Likud]] MK [[Tally Gotliv]] announces she is running with [[Otzma Yehudit]]<ref>{{cite news |author=Shir Perets|title=Likud MK Tally Gotliv to run with Ben-Gvir's Otzma Yehudit in upcoming election|url=https://www.jpost.com/israel-election-2026/article-907539|work=[[The Jerusalem Post]]|date=3 September 2026|access-date=3 September 2026}}</ref>
@@ -1292,7 +1314,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||31|Aug|2026}}
 |style="background:#FFDFCC" |Midgam R&C
-|[[HaHadashot 12]]<ref name="Midgam31Aug">{{cite web|date=31 August 2026 |author=Amit Segel|title=סקר המנדטים של חדשות 12: וינטר עובר, סמוטריץ' בחוץ - והאיחודים שמשנים את המפה|url=https://www.mako.co.il/news-israel-elections/2026/Article-15cb223b69850a1026.htm|access-date=31 August 2026 |publisher=[[Hevrat HaHadashot|Channel 12]] |lang=he-IL}}</ref>
+|[[HaHadashot 12]]<ref name="Midgam31Aug">{{cite web|date=31 August 2026 |author=Amit Segal|title=סקר המנדטים של חדשות 12: וינטר עובר, סמוטריץ' בחוץ - והאיחודים שמשנים את המפה|url=https://www.mako.co.il/news-israel-elections/2026/Article-15cb223b69850a1026.htm|access-date=31 August 2026 |publisher=[[Hevrat HaHadashot|Channel 12]] |lang=he-IL}}</ref>
 |506
 |23
 |15
@@ -1650,7 +1672,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(0.2%)}}
 |{{small|(2.1%)}}
 |1.7%{{efn|[[Zehut]] at 1.7%<br/>}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||23|Aug|2026}}
 |style=background:burlywood |Kantar
@@ -1855,7 +1877,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(0.1%)}}
 |{{small|(0.9%)}}
 |1.2%{{efn|[[Zehut]] at 1.2%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||18|Aug|2026}}
 |style=background:yellow |Direct Polls
@@ -2109,7 +2131,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(0.9%)}}
 |{{small|(0.6%)}}
 |1.3%{{efn|[[Zehut]] at 1.3%}}
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |rowspan=2 {{Opdrts||9|Aug|2026}}
 |rowspan=2 style=background:burlywood |Kantar
@@ -2323,7 +2345,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |22
 |{{small|(1.9%)}}
 |3.2%{{efn|[[Zehut]] at 1.3%<br/>[[Ofer Winter]] at 1.2%<br/>[[Gilad Erdan]] at 0.7%}}
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |{{Opdrts||4|Aug|2026}}
 | style=background:skyblue |Maagar Mochot
@@ -2469,7 +2491,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |22
 |{{small|(2.1%)}}
 |1.3%{{efn|[[Zehut]] at 1.3%}}
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |rowspan=2 {{Opdrts||27|July|2026}}
 |rowspan=2 style="background:#FFDFCC" |Midgam R&C
@@ -2568,7 +2590,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |23
 |{{small|(2.1%)}}
 |1.9%{{efn|[[Zehut]] at 1.9%}}
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |{{Opdrts||23|July|2026}}
 |style=background:Burlywood |Kantar
@@ -2741,7 +2763,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |21
 |{{small|(2.5%)}}
 |1.5%{{efn|[[Zehut]] at 1.5%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||16|July|2026}}
 |style=background:yellow |Direct Polls
@@ -2885,7 +2907,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |21
 |{{small|(1.6%)}}
 |1.8%{{efn|[[Zehut]] at 1.8%}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||9|July|2026}}
 |style=background:yellow |Direct Polls
@@ -3054,7 +3076,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |20
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts|1|2|July|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -3220,7 +3242,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |20
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||25|June|2026}}
 |style=background:yellow |Direct Polls
@@ -3365,7 +3387,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |20
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |{{Opdrts|17|18|June|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -3551,7 +3573,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |16
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts|10|11|June|2026}}
 | style=background:Turquoise |Yossi Tatika
@@ -3617,7 +3639,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |16
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||4|Jun|2026}}
 |style=background:burlywood |Kantar
@@ -3800,7 +3822,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |15
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |27 May
 |style=background:burlywood |Kantar
@@ -4064,7 +4086,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |14
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''63'''
+|style="background:#b2b2f0" |'''63'''
 |-
 |{{Opdrts||13|May|2026}}
 | colspan="19" |The coalition and opposition submit Knesset dissolution bills, aiming to bring the election date forward<ref>{{cite web |author1=Keshet Neev |title=Coalition submits bill to dissolve Knesset, vote expected next week |url=https://www.jpost.com/israel-news/politics-and-diplomacy/article-896113 |work=The Jerusalem Post |access-date=14 May 2026|date=13 May 2026}}</ref>
@@ -4193,7 +4215,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |13
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''65'''
+|style="background:#b2b2f0" |'''65'''
 |-
 |{{Opdrts|6|7|May|2026}}
 | style=background:Turquoise |Yossi Tatika
@@ -4403,7 +4425,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |8
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |{{Opdrts||26|Apr|2026}}
 | style=background:orange |Filber
@@ -4422,7 +4444,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |9
 |{{N/A}}
 |{{N/A}}
-| style="background:#CCCCF5"| '''64'''
+| style="background:#b2b2f0"| '''64'''
 |-
 |{{Opdrts||26|Apr|2026}}
 | colspan="19" |[[Bennett 2026]] and [[Yesh Atid]] form the [[Together (Israel)|Together]] alliance under Bennett's leadership<ref>{{cite web |author1=James Genn |author2=Yehuda Shlezinger |title=Lapid, Bennett to announce a joint party ahead of Israeli elections |url=https://www.jpost.com/israel-news/politics-and-diplomacy/article-894194 |newspaper=The Jerusalem Post |access-date=26 April 2026 |date=26 April 2026}}</ref>
@@ -4554,7 +4576,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |12
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"| '''66'''
+|style="background:#b2b2f0"| '''66'''
 |-
 |{{Opdrts||17|Apr|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -4662,7 +4684,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |13
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"| '''65'''
+|style="background:#b2b2f0"| '''65'''
 |-
 |{{Opdrts||16|Apr|2026}}
 | colspan="20" |[[2026 Israel–Lebanon ceasefire]] goes into effect
@@ -4707,7 +4729,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |12
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''65'''
+|style="background:#b2b2f0"|'''65'''
 |-
 |{{Opdrts||9|Apr|2026}}
 |style=background:burlywood |Kantar
@@ -4862,7 +4884,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |11
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''65'''
+|style="background:#b2b2f0"|'''65'''
 |-
 |{{Opdrts|25|26|Mar|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -5036,7 +5058,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |10
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''66'''
+|style="background:#b2b2f0"|'''66'''
 |-
 |{{Opdrts|4|5|Mar|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -5128,7 +5150,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |11
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''65'''
+|style="background:#b2b2f0"|'''65'''
 |-
 | rowspan="2" {{Opdrts|25|26|Feb|2026}}
 |rowspan="2"  style=background:#F86B61 |LRI+P4A
@@ -5208,7 +5230,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |9
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''65'''
+|style="background:#b2b2f0"|'''65'''
 |-
 |{{Opdrts|18|19|Feb|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -5272,7 +5294,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |11
 |{{small|(2.4%)}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''64'''
+|style="background:#b2b2f0"|'''64'''
 |-
 |{{Opdrts||17|Feb|2026}}
 | style=background:#BAD1E6 |MM+SN
@@ -5350,7 +5372,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |8
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''66'''
+|style="background:#b2b2f0"|'''66'''
 |-
 |rowspan="2" {{Opdrts|11|12|Feb|2026}}
 |rowspan="2" style=background:Turquoise |Yossi Tatika
@@ -5488,7 +5510,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |6
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''65'''
+|style="background:#b2b2f0"|'''65'''
 |-
 |{{Opdrts||5|Feb|2026}}
 | style=background:Turquoise |Yossi Tatika
@@ -5568,7 +5590,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |7
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''64'''
+|style="background:#b2b2f0"|'''64'''
 |-
 |{{Opdrts|28|29|Jan|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -5673,7 +5695,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |7
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''65'''
+|style="background:#b2b2f0"|'''65'''
 |-
 |{{Opdrts|21|22|Jan|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -5805,7 +5827,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |6
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''66'''
+|style="background:#b2b2f0"|'''66'''
 |-
 |{{Opdrts|14|15|Jan|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -5915,7 +5937,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |8
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''66'''
+|style="background:#b2b2f0"|'''66'''
 |-
 |{{Opdrts|7|8|Jan|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -6025,7 +6047,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |8
 |{{N/A}}
 |{{N/A}}
-|style="background:#CCCCF5"|'''66'''
+|style="background:#b2b2f0"|'''66'''
 |-
 |{{Opdrts|31|1|Jan|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -7936,7 +7958,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 | style=background:#fffdb0|5
 | style=background:#fffdb0|{{small|(2.9%)}}
 | style=background:#fffdb0|10
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |rowspan=2 {{Opdrts||2|August|2026}}
 |rowspan=2 style=background:burlywood |Kantar
@@ -8796,7 +8818,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |8
 |colspan=3|14
 |9
-|style="background:#CCCCF5"|'''64'''
+|style="background:#b2b2f0"|'''64'''
 |- style=background:#fffdb0
 |style=background:#BBCDE4 |'''32'''
 |{{N/A}}
@@ -10063,7 +10085,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |4
 |–
 |9
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |- style=background:#fffdb0
 |style=background:#BBCDE4 |'''33'''
 |colspan="3"|30
@@ -10078,7 +10100,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |4
 |–
 |9
-|style="background:#CCCCF5" |'''62'''
+|style="background:#b2b2f0" |'''62'''
 |-
 |rowspan="3" {{Opdrts|6|7|Apr|2026}}
 |rowspan="3" style=background:#F86B61 |LRI+P4A
