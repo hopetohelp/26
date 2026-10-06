@@ -28,3 +28,11 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 CREATE INDEX IF NOT EXISTS messages_feedback ON messages(feedback_id, id);
 CREATE INDEX IF NOT EXISTS messages_day_key ON messages(day_key, created_at);
+
+-- מונה כניסות: מספר הצפיות לכל עמוד בכל יום (UTC). אין כאן IP, עוגייה או מזהה כלשהו — רק ספירה.
+CREATE TABLE IF NOT EXISTS hits (
+  day TEXT NOT NULL,
+  page TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day, page)
+);

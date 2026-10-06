@@ -4,6 +4,7 @@
  * POST /            {topic, text, page, theme, website} ⇐ הערה חדשה. מחזיר {ok, token}: הקישור האישי של הגולש.
  * GET  /thread?t=   ⇐ ההערה והשיחה עליה (רק למי שמחזיק את הקישור).
  * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
+ * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום. בלי IP, בלי עוגיות, בלי שום מזהה.
  *
  * - הקישור האישי: 128 ביט אקראיים. במאגר נשמר רק הגיבוב שלו, כך שגם מי שקורא את המאגר אינו יכול לפתוח שיחה.
  * - תשובות הצוות נכתבות ישירות במאגר (author = 'team'), לא דרך השרת — אין כאן נקודת כניסה לכתיבה בשם הצוות.
@@ -14,6 +15,7 @@ const TOPICS = new Set(["data", "idea", "design", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
 const MAX_MESSAGES = 30;
+const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
 
 function cors(env, origin) {
   const allowed = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost:\d+$/.test(origin || "");
@@ -72,6 +74,21 @@ export default {
       return reply({ ok: true, topic: fb.topic, text: fb.text, created_at: fb.created_at, status: fb.status, messages: results || [] });
     }
     if (request.method !== "POST") return reply({ ok: false }, 405);
+
+    // ---- מונה כניסות: רק עמודים מוכרים, ונשמר רק המספר ליום ולעמוד
+    if (url.pathname === "/hit") {
+      let page = "";
+      try {
+        page = String((await request.json()).page || "");
+      } catch {
+        return reply({ ok: false }, 400);
+      }
+      if (!HIT_PAGES.has(page)) return reply({ ok: false }, 400);
+      const day = new Date().toISOString().slice(0, 10);
+      await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1")
+        .bind(day, page).run();
+      return reply({ ok: true });
+    }
 
     let body;
     try {
