@@ -16,16 +16,16 @@ export function bearer(request) {
   return m ? m[1] : null;
 }
 
-/** אסימון ⇐ {participant, session: token_hash|null} או null */
+/** אסימון ⇐ {participant, session: token_hash|null, viaLink} או null. viaLink = נכנס בקישור האישי */
 export async function authenticate(env, token, now) {
   if (!token) return null;
   const th = await sha256(token);
   const s = await env.DB.prepare("SELECT participant FROM sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?")
     .bind(th, new Date(now).toISOString())
     .first();
-  if (s) return { participant: s.participant, session: th };
+  if (s) return { participant: s.participant, session: th, viaLink: false };
   const c = await env.DB.prepare("SELECT participant FROM credentials WHERE kind = 'link' AND token_hash = ?").bind(th).first();
-  if (c) return { participant: c.participant, session: null };
+  if (c) return { participant: c.participant, session: null, viaLink: true };
   return null;
 }
 

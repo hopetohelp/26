@@ -7,6 +7,8 @@ import type { Unit } from "./crowdApi";
 const P = "elections26.crowd.";
 const K = {
   token: P + "token",
+  link: P + "link",
+  linkAck: P + "linkAck",
   consent: P + "consent",
   intro: P + "intro",
   draft: (u: Unit) => `${P}draft.${u}`,
@@ -41,6 +43,16 @@ function getJson<T>(key: string): T | null {
 
 export const getToken = () => get(K.token);
 export const setToken = (t: string | null) => set(K.token, t);
+
+/**
+ * הקישור האישי — נשמר בנפרד מהסשן: אחרי הרשמה או החלפת סיסמה הסשן מתחלף, אבל הקישור נשאר,
+ * והוא דרך השחזור היחידה (אין מייל — הכרעת בעלים 6.10.2026).
+ */
+export const getLink = () => get(K.link);
+export const setLink = (t: string | null) => set(K.link, t);
+/** המשתמש אישר ששמר את הקישור — הכרטיס הבולט ב"שלי" מוסתר */
+export const linkAcked = () => get(K.linkAck) === "1";
+export const setLinkAck = (on: boolean) => set(K.linkAck, on ? "1" : null);
 
 export const hasConsent = () => get(K.consent) === "1";
 export const setConsent = (on: boolean) => set(K.consent, on ? "1" : null);
@@ -78,5 +90,7 @@ export function clearAll(): void {
     set(K.pending(u), null);
   }
   set(K.token, null);
+  set(K.link, null);
+  set(K.linkAck, null);
   set(K.consent, null);
 }

@@ -2,10 +2,9 @@ import { useState } from "react";
 import { call } from "../../lib/crowdApi";
 import { clearAll } from "../../lib/crowdSession";
 import Account from "./Account";
+import LinkSaver, { FORGOT_LINE } from "./LinkSaver";
 import { Btn, inputCls, Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
-
-export const personalLink = (token: string) => `${location.origin}${location.pathname}#/guess?t=${encodeURIComponent(token)}`;
 
 /** הקישור האישי, ייצוא, החלפה ומחיקה — ותיבת החשבון */
 export default function MyData({ session }: { session: ReturnType<typeof useSession> }) {
@@ -13,7 +12,7 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
   const [del, setDel] = useState(0);
   const [typed, setTyped] = useState("");
   const [rotateAsk, setRotateAsk] = useState(false);
-  const { token } = session;
+  const { token, link } = session;
 
   if (!session.online) return <Notice>כשהשמירה תיפתח באתר, כאן יופיעו הקישור האישי שלכם, ייצוא, ומחיקה מלאה. בינתיים הכול נשמר רק בדפדפן הזה, כטיוטה.</Notice>;
 
@@ -39,27 +38,31 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
       {token ? (
         <section className="space-y-2">
           <h3 className="font-display text-3xl leading-none">הקישור האישי</h3>
-          <p className="text-sm">הקישור הזה הוא המפתח להשערות שלכם, מכל מכשיר. אין לנו דרך לשחזר אותו: <strong>קישור שאבד — אבוד</strong>, אלא אם הוספתם שם משתמש וסיסמה.</p>
-          <div className="flex gap-2 flex-wrap items-center">
-            <input readOnly aria-label="הקישור האישי" value={personalLink(token)} dir="ltr" className={`${inputCls} flex-1 min-w-0 text-xs`} onFocus={(e) => e.target.select()} />
-            <Btn onClick={() => run(async () => (await navigator.clipboard.writeText(personalLink(token)), setMsg("הקישור הועתק. שמרו אותו במקום בטוח.")))}>העתקה</Btn>
-          </div>
-          <p className="text-xs text-ink-soft">אל תשתפו אותו — מי שמחזיק בו יכול לשנות ולמחוק.</p>
+          <p className="text-sm">
+            הקישור הזה הוא המפתח להשערות שלכם, מכל מכשיר, והוא גם <strong>דרך השחזור היחידה</strong>: האתר לא שומר מייל, ואין לנו דרך לשחזר קישור שאבד.
+          </p>
+          <p className="text-sm bg-accent-soft text-ink rounded-theme px-3 py-2">{FORGOT_LINE}</p>
+          {link ? (
+            <LinkSaver token={link} />
+          ) : (
+            <p className="text-sm">הקישור האישי לא שמור בדפדפן הזה (נכנסתם בשם משתמש וסיסמה). אפשר ליצור קישור חדש — הקודם, אם היה, יפסיק לעבוד.</p>
+          )}
           <div className="flex gap-2 flex-wrap">
             <Btn onClick={exportJson}>ייצוא (JSON)</Btn>
             {!rotateAsk ? (
-              <Btn onClick={() => setRotateAsk(true)}>קישור חדש</Btn>
+              <Btn onClick={() => setRotateAsk(true)}>{link ? "קישור חדש" : "יצירת קישור אישי"}</Btn>
             ) : (
               <span className="flex gap-2 items-center flex-wrap">
-                <span className="text-sm">הקישור הנוכחי יפסיק לעבוד מיד.</span>
+                <span className="text-sm">{link ? "הקישור הנוכחי יפסיק לעבוד מיד." : "קישור קודם, אם היה, יפסיק לעבוד."}</span>
                 <Btn
                   kind="primary"
                   onClick={() =>
                     run(async () => {
                       const r = await call<{ token: string }>("/link/rotate", { token, body: {} });
-                      session.setToken(r.token);
+                      // הקישור החדש מחליף את הסשן בדפדפן הזה; כאן הוא מוצג מיד לשמירה
+                      session.setToken(r.token, "link");
                       setRotateAsk(false);
-                      setMsg("נוצר קישור חדש. העתיקו אותו עכשיו.");
+                      setMsg("נוצר קישור חדש. שמרו אותו עכשיו — בהעתקה, בשליחה לעצמכם או בהורדה כקובץ.");
                     })
                   }
                 >

@@ -4,20 +4,31 @@ import { CROWD_URL, CrowdError, call, type Me, type Payload, type Unit } from ".
 import * as S from "../../lib/crowdSession";
 import { meta } from "../../lib/data";
 
-const listeners = new Set<(t: string | null) => void>();
+type Auth = { token: string | null; link: string | null };
+const listeners = new Set<(a: Auth) => void>();
+
+/**
+ * link: "link" = האסימון הזה הוא הקישור האישי (משתתף חדש, ?t=, קישור חדש) · "keep" = סשן חדש של אותו משתתף
+ * (הרשמה, החלפת סיסמה) — הקישור נשאר · "clear" (ברירת מחדל) = משתתף אחר או יציאה — הקישור נשכח מהדפדפן.
+ */
+export type LinkMode = "link" | "keep" | "clear";
 
 export function useSession() {
-  const [token, setTok] = useState<string | null>(S.getToken);
+  const [auth, setAuth] = useState<Auth>(() => ({ token: S.getToken(), link: S.getLink() }));
+  const { token, link } = auth;
   const [me, setMe] = useState<Me | null>(null);
   useEffect(() => {
-    listeners.add(setTok);
+    listeners.add(setAuth);
     return () => {
-      listeners.delete(setTok);
+      listeners.delete(setAuth);
     };
   }, []);
-  const setToken = useCallback((t: string | null) => {
+  const setToken = useCallback((t: string | null, mode: LinkMode = "clear") => {
+    const nextLink = t === null ? null : mode === "link" ? t : mode === "keep" ? S.getLink() : null;
+    if (mode === "link" && t !== S.getLink()) S.setLinkAck(false);
     S.setToken(t);
-    listeners.forEach((l) => l(t));
+    S.setLink(nextLink);
+    listeners.forEach((l) => l({ token: t, link: nextLink }));
   }, []);
   const refresh = useCallback(async () => {
     if (!CROWD_URL || !token) return setMe(null);
@@ -30,7 +41,9 @@ export function useSession() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
-  return { token, setToken, me, refresh, online: !!CROWD_URL };
+  /** נכנסו עם הקישור האישי ⇐ אפשר לקבוע סיסמה חדשה בלי הישנה */
+  const viaLink = !!token && token === link;
+  return { token, link, viaLink, setToken, me, refresh, online: !!CROWD_URL };
 }
 
 export type SaveState = "idle" | "saving" | "error";
@@ -38,7 +51,7 @@ export const errorText = (e: unknown): string => {
   if (!(e instanceof CrowdError)) return "משהו השתבש. אפשר לנסות שוב.";
   if (e.code === "offline") return "השמירה עוד לא פעילה באתר. הטיוטה נשמרת בדפדפן הזה.";
   if (e.code === "network") return "אין חיבור לשרת. הטיוטה שמורה; אפשר לנסות שוב.";
-  if (e.code === "no_username") return "כדי להוסיף מייל צריך קודם שם משתמש.";
+  if (e.code === "no_password") return "לחשבון הזה עוד אין שם משתמש וסיסמה.";
   if (e.status === 429) return "יותר מדי ניסיונות. כדאי לחכות דקה ולנסות שוב.";
   if (e.status === 401) return "פרטי הכניסה אינם נכונים או שהכניסה פגה.";
   return `השרת דחה את הבקשה (${e.code}).`;
@@ -70,7 +83,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
   const status: "draft" | "saved" | "dirty" = saved === null ? "draft" : same(saved, draft) ? "saved" : "dirty";
 
   const save = useCallback(
-    async (token: string | null, setToken: (t: string) => void) => {
+    async (token: string | null, setToken: (t: string, mode?: LinkMode) => void) => {
       if (!draft) return false;
       setState("saving");
       setError(null);
@@ -78,7 +91,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
         let tok = token;
         if (!tok) {
           tok = (await call<{ token: string }>("/participant", { body: {} })).token;
-          setToken(tok);
+          setToken(tok, "link");
         }
         const op_id = S.opIdFor(unit, draft);
         await call("/save", { token: tok, body: { unit, op_id, registry: meta.dataAsOf, payload: draft } });

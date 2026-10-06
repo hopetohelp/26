@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import Explained from "../../components/Explained";
 import { Fold } from "../../components/ui";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
@@ -33,6 +33,7 @@ export default function Seats({
   const p = unit.draft;
   const [preview, setPreview] = useState<ReturnType<typeof fillAll> | null>(null);
   const [resetAsk, setResetAsk] = useState(false);
+  const fillBtn = useRef<HTMLButtonElement>(null);
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
 
   if (!p) {
@@ -162,52 +163,32 @@ export default function Seats({
               </>
             )}
           </div>
-      {preview && (
-        <div className="mt-4 border-2 border-ink rounded-theme p-4 bg-paper-card" role="region" aria-label="תצוגה מקדימה של השלם הכול">
-          {preview.ok ? (
-            <>
-              <h3 className="font-display text-3xl leading-none mb-2">כך זה ייראה</h3>
-              {preview.changed.length === 0 ? (
-                <p className="text-sm">אין מה להשלים — הכול כבר קבוע.</p>
-              ) : (
-                <ul className="text-sm grid sm:grid-cols-2 gap-x-4 gap-y-1 mb-3">
-                  {preview.changed.map((id) => (
-                    <li key={id} className="flex justify-between gap-2">
-                      <span>{nameOf(id)}</span>
-                      <bdi dir="ltr" className="tabular font-bold">
-                        {p.seats[id]?.v ?? 0} → {preview.seats[id].v}
-                      </bdi>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <p className="text-xs text-ink-soft mb-3">לפי חלק כל רשימה בממוצע הסקרים מ-{dateLong(POLLS_AS_OF)}; רשימה שבממוצע מתחת לסף מקבלת 0. נעולים לא זזו.</p>
-              <div className="flex gap-2">
-                <Btn kind="primary" onClick={apply}>
-                  להחיל
-                </Btn>
-                <Btn onClick={() => setPreview(null)}>ביטול</Btn>
-              </div>
-            </>
-          ) : (
-            <>
-              <p role="alert" className="text-sm text-warn font-bold mb-2">
-                {fillErrorText(preview.error)}
-              </p>
-              <Btn onClick={() => setPreview(null)}>הבנתי</Btn>
-            </>
-          )}
-        </div>
-      )}
-
       {/* פס פעולה דביק באזור האגודל */}
       <div className="sticky z-20 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 mt-5">
+        {preview && (
+          <FillPreview
+            preview={preview}
+            current={p.seats}
+            onApply={apply}
+            onClose={() => setPreview(null)}
+            returnTo={fillBtn}
+          />
+        )}
         <div className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-3 py-2 flex items-center gap-2 flex-wrap">
           <div className="flex-1 min-w-[7rem]" aria-live="polite">
             <span className="text-xs text-ink-soft block leading-none">{left >= 0 ? "נותרו לחלוקה" : "יותר מדי"}</span>
             <span className={`font-num tabular text-3xl leading-none ${left < 0 ? "text-warn" : ""}`}>{Math.abs(left)}</span>
           </div>
-          <Btn onClick={runFill}>השלם הכול</Btn>
+          <button
+            ref={fillBtn}
+            type="button"
+            onClick={runFill}
+            aria-haspopup="dialog"
+            aria-expanded={!!preview}
+            className="min-h-[44px] px-4 rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
+          >
+            השלם הכול
+          </button>
           <SaveButton unit={unit} session={session} invalid={invalid} compact />
         </div>
         {unit.error && (
@@ -263,5 +244,85 @@ function Lock({ on }: { on: boolean }) {
       <rect x="5" y="11" width="14" height="10" rx="2" />
       {on ? <path d="M8 11V7a4 4 0 0 1 8 0v4" /> : <path d="M8 11V7a4 4 0 0 1 7.5-2" />}
     </svg>
+  );
+}
+
+/**
+ * תצוגה מקדימה של "השלם הכול" — חלונית שמוצמדת לפס הפעולה: בטלפון גיליון ברוחב מלא מעל הפס, במחשב חלונית צמודה לפס.
+ * המיקוד עובר אליה, Esc סוגר, והמיקוד חוזר לכפתור. בלי window.confirm.
+ */
+function FillPreview({
+  preview,
+  current,
+  onApply,
+  onClose,
+  returnTo,
+}: {
+  preview: ReturnType<typeof fillAll>;
+  current: SeatsPayload["seats"];
+  onApply: () => void;
+  onClose: () => void;
+  returnTo: RefObject<HTMLButtonElement | null>;
+}) {
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    box.current?.focus();
+    const back = returnTo.current;
+    return () => back?.focus();
+  }, [returnTo]);
+  const onKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      onClose();
+    }
+  };
+  return (
+    <div
+      ref={box}
+      tabIndex={-1}
+      role="dialog"
+      aria-labelledby="fill-preview-title"
+      onKeyDown={onKey}
+      className="absolute bottom-full mb-2 inset-x-0 md:start-auto md:w-[28rem] max-h-[min(60vh,32rem)] overflow-y-auto bg-paper-card text-ink border-2 border-ink rounded-theme shadow-lg p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+    >
+      {preview.ok ? (
+        <>
+          <h3 id="fill-preview-title" className="font-display text-3xl leading-none mb-2">
+            כך זה ייראה
+          </h3>
+          {preview.changed.length === 0 ? (
+            <p className="text-sm mb-3">אין מה להשלים — הכול כבר קבוע.</p>
+          ) : (
+            <ul className="text-sm grid grid-cols-1 gap-y-1 mb-3">
+              {preview.changed.map((id) => (
+                <li key={id} className="flex justify-between gap-2">
+                  <span className="min-w-0 truncate">{nameOf(id)}</span>
+                  <bdi dir="ltr" className="tabular font-bold shrink-0">
+                    {current[id]?.v ?? 0} → {preview.seats[id].v}
+                  </bdi>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="text-xs text-ink-soft mb-3">לפי חלק כל רשימה בממוצע הסקרים מ-{dateLong(POLLS_AS_OF)}; רשימה שבממוצע מתחת לסף מקבלת 0. נעולים לא זזו.</p>
+          <div className="flex gap-2">
+            <Btn kind="primary" onClick={onApply}>
+              להחיל
+            </Btn>
+            <Btn onClick={onClose}>ביטול</Btn>
+          </div>
+        </>
+      ) : (
+        <>
+          <h3 id="fill-preview-title" className="font-display text-3xl leading-none mb-2">
+            אי אפשר להשלים
+          </h3>
+          <p role="alert" className="text-sm text-warn font-bold mb-2">
+            {fillErrorText(preview.error)}
+          </p>
+          <Btn onClick={onClose}>הבנתי</Btn>
+        </>
+      )}
+    </div>
   );
 }

@@ -125,10 +125,3 @@ export function passwordProblem(p) {
   if (COMMON.has(p.toLowerCase()) || /^(.)\1+$/.test(p)) return "common";
   return null;
 }
-
-export function normalizeEmail(e) {
-  if (typeof e !== "string") return null;
-  const s = e.trim().toLowerCase();
-  if (s.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return null;
-  return s;
-}

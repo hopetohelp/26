@@ -2,13 +2,13 @@ import { useState } from "react";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { Btn } from "./ui";
-import type { useSession, SaveState } from "./useCrowd";
+import type { LinkMode, useSession, SaveState } from "./useCrowd";
 
 export interface SaveUnit {
   status: "draft" | "saved" | "dirty";
   state: SaveState;
   error: string | null;
-  save: (token: string | null, setToken: (t: string) => void) => Promise<boolean>;
+  save: (token: string | null, setToken: (t: string, mode?: LinkMode) => void) => Promise<boolean>;
 }
 
 /** כפתור "שמור" + הסכמה לפני השמירה הראשונה + שגיאה עם ניסיון חוזר (אותו op_id) */

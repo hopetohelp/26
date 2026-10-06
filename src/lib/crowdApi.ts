@@ -15,11 +15,10 @@
  * POST /auth/register {username,password}  ⇐ {token}      מוסיף שם משתמש+סיסמה למשתתף הנוכחי (או יוצר משתתף).
  * POST /auth/login    {username,password}  ⇐ {token}
  * POST /auth/logout   {all?:boolean}       ⇐ {ok}
- * POST /auth/password {current,next}       ⇐ {token}      מחליף סיסמה ומבטל את שאר הסשנים.
- * POST /auth/email    {email|null}         ⇐ {ok, pending} שומר מייל ממתין ושולח קישור אימות (דורש שם משתמש); null מסיר.
- * POST /auth/email/verify {verify}         ⇐ {ok}         מאשר את המייל מהקישור (#/guess?verify=…). בלי אסימון.
- * POST /auth/forgot   {username}           ⇐ {ok}         תמיד ok (לא חושף קיום); שולח קישור איפוס אם יש מייל.
- * POST /auth/reset    {reset,password}     ⇐ {token}
+ * POST /auth/password {current?,next}      ⇐ {token}      קובע סיסמה ומבטל את שאר הסשנים (הקישור נשאר). current חובה בסשן רגיל;
+ *                                                         עם הקישור האישי כ-Bearer — לא נדרש: זה מסלול השחזור למי ששכח סיסמה.
+ *
+ * אין מייל בכלל (הכרעת בעלים 6.10.2026): אין שליחת מיילים, אין איפוס במייל. השחזור = הקישור האישי.
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
  */
@@ -88,7 +87,6 @@ export interface Me {
   created_at: string;
   latest: Partial<Record<Unit, Version>>;
   username: string | null;
-  hasEmail: boolean;
   google: boolean;
 }
 

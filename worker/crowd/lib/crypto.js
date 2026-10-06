@@ -3,7 +3,6 @@
  * מפתחות מגיעים מסודות השרת כ-base64 של 32 בתים (openssl rand -base64 32).
  */
 const enc = new TextEncoder();
-const dec = new TextDecoder();
 
 export const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 export const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
@@ -58,24 +57,6 @@ export async function hashPassword(password, iterations = PBKDF2_ITERATIONS) {
 export async function verifyPassword(password, row) {
   if (row.algo !== PBKDF2_ALGO) return false;
   return safeEqual(await pbkdf2(password, row.salt, row.iterations), row.hash);
-}
-
-async function aesKey(secret) {
-  const raw = keyBytes(secret);
-  const bytes = raw.length === 32 ? raw : new Uint8Array(await crypto.subtle.digest("SHA-256", raw));
-  return crypto.subtle.importKey("raw", bytes, "AES-GCM", false, ["encrypt", "decrypt"]);
-}
-
-/** AES-GCM עם nonce אקראי של 96 ביט */
-export async function encrypt(secret, text) {
-  const nonce = crypto.getRandomValues(new Uint8Array(12));
-  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce }, await aesKey(secret), enc.encode(text));
-  return { ciphertext: b64(ct), nonce: b64(nonce) };
-}
-
-export async function decrypt(secret, ciphertext, nonce) {
-  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(nonce) }, await aesKey(secret), unb64(ciphertext));
-  return dec.decode(pt);
 }
 
 /** כתובת IP לצורך הגבלת קצב: IPv6 נחתך ל-/64 (ארבע הקבוצות הראשונות) */

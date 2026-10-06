@@ -4,19 +4,17 @@
  * בלי "אני לא רובוט" (הכרעת בעלים); ההגנה: הגבלת קצב, גרסה אחרונה בלבד, זיהוי חריגות.
  * בלי עוגיות — הזהות רק בכותרת Authorization, ולכן אין חשיפה ל-CSRF.
  *
- * סודות (wrangler secret): IP_KEY, LOOKUP_KEY, EMAIL_KEY; רשות: IP_KEY_PREV (24 שעות אחרי החלפה), RESEND_API_KEY.
+ * סודות (wrangler secret): IP_KEY; רשות: IP_KEY_PREV (24 שעות אחרי החלפה).
+ * בלי מייל בכלל (הכרעת בעלים 6.10.2026): השחזור הוא הקישור האישי — הוא מכניס ומאפשר לקבוע סיסמה חדשה בלי הישנה.
  * cron כל שעה: ניקוי מונים ישנים, זיהוי חריגות, צבירה ופרסום.
  */
-import { randomToken, sha256, hmac, hashPassword, verifyPassword, encrypt, decrypt, PBKDF2_ITERATIONS } from "./lib/crypto.js";
+import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
 import { bearer, authenticate, newSession, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
-import { validateSave, UNITS, normalizeUsername, passwordProblem, normalizeEmail } from "./lib/validate.js";
+import { validateSave, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 
-export const LIMITS = { savesPerHour: 20, participantsPerHourPerIp: 5, forgotPerHourPerIp: 10 };
-const EMAIL_KEY_VERSION = 1;
-const LOOKUP_KEY_VERSION = 1;
-const RESET_MS = 30 * 60 * 1000;
+export const LIMITS = { savesPerHour: 20, participantsPerHourPerIp: 5 };
 const MAX_BODY = 16 * 1024;
 
 function cors(env, origin) {
@@ -70,28 +68,6 @@ async function createParticipant(env, request, now) {
 
 const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: JSON.parse(r.payload) });
 
-// ---- מייל (Resend). בלי RESEND_API_KEY או MAIL_FROM — לא נשלח כלום.
-export async function sendMail(env, to, subject, bodyHtml) {
-  if (!env.RESEND_API_KEY || !env.MAIL_FROM) return false;
-  const html = `<div dir="rtl" lang="he" style="font-family:Arial,sans-serif;text-align:right;line-height:1.6">${bodyHtml}<p style="color:#666;font-size:13px">ההודעה נשלחה מאתר ניתוח הבחירות לכנסת ה-26. אם לא ביקשת אותה — אפשר להתעלם.</p></div>`;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: env.MAIL_FROM, to: [to], subject, html }),
-  }).catch(() => null);
-  return !!res?.ok;
-}
-
-async function currentEmail(env, participant) {
-  const row = await env.DB.prepare("SELECT ciphertext, nonce FROM recovery_emails WHERE participant = ?").bind(participant).first();
-  if (!row) return null;
-  try {
-    return await decrypt(env.EMAIL_KEY, row.ciphertext, row.nonce);
-  } catch {
-    return null;
-  }
-}
-
 async function passwordCred(env, participant) {
   return env.DB.prepare("SELECT * FROM credentials WHERE participant = ? AND kind = 'password'").bind(participant).first();
 }
@@ -143,9 +119,8 @@ const routes = {
       .all();
     const latest = Object.fromEntries((results || []).map((r) => [r.unit, parseVersion(r)]));
     const pw = await passwordCred(env, participant);
-    const email = await env.DB.prepare("SELECT 1 AS x FROM recovery_emails WHERE participant = ?").bind(participant).first();
     const g = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
-    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, hasEmail: !!email, google: !!g };
+    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g };
   },
 
   "POST /save": async ({ env, request, now, body }) => {
@@ -190,7 +165,6 @@ const routes = {
       underReview: !!p.review,
       versions: versions.map((r) => ({ ...parseVersion(r), op_id: r.op_id, registry: r.registry })),
       credentials: creds,
-      email: await currentEmail(env, participant),
       sessions: sessions.map((s) => ({ ...s, revoked: !!s.revoked })),
     };
   },
@@ -199,7 +173,7 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     if (body.confirm !== "מחק") throw bad("confirm");
     await env.DB.batch(
-      ["versions", "credentials", "sessions", "recovery_emails", "pending_emails", "resets"]
+      ["versions", "credentials", "sessions"]
         .map((t) => env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant))
         .concat([
           env.DB.prepare("DELETE FROM rate WHERE key = ?").bind("s:" + participant),
@@ -280,10 +254,16 @@ const routes = {
     return { ok: true };
   },
 
+  // שינוי סיסמה. עם סשן רגיל — חובה הסיסמה הנוכחית. עם הקישור האישי (Bearer = אסימון הקישור) — אין צורך:
+  // זה מסלול השחזור למי ששכח סיסמה. בשני המקרים כל הסשנים האחרים מבוטלים; הקישור עצמו נשאר.
   "POST /auth/password": async ({ env, request, now, body }) => {
-    const { participant } = await requireAuth(env, request, now);
+    const { participant, viaLink } = await requireAuth(env, request, now);
     const cred = await passwordCred(env, participant);
     if (!cred) throw bad("no_password");
+    if (viaLink) {
+      checkPassword(body.next);
+      return { token: await setPassword(env, participant, body.next, now) };
+    }
     const keys = ["fa:" + (await hmac(env.IP_KEY, "user|" + cred.username_norm))];
     const wait = await waitMs(env, keys, now);
     if (wait > 0) throw new HttpError(429, "slow_down", { retryAfter: Math.ceil(wait / 1000) });
@@ -293,86 +273,6 @@ const routes = {
     }
     checkPassword(body.next);
     return { token: await setPassword(env, participant, body.next, now) };
-  },
-
-  "POST /auth/email": async ({ env, request, now, body }) => {
-    const { participant } = await requireAuth(env, request, now);
-    if (!(await passwordCred(env, participant))) throw bad("no_username");
-    const old = await currentEmail(env, participant);
-    if (body.email === null) {
-      await env.DB.batch([
-        env.DB.prepare("DELETE FROM recovery_emails WHERE participant = ?").bind(participant),
-        env.DB.prepare("DELETE FROM pending_emails WHERE participant = ?").bind(participant),
-      ]);
-      if (old) await sendMail(env, old, "המייל לשחזור הוסר", "<p>המייל הזה הוסר מחשבון ההשערות שלך באתר. אם לא עשית זאת — היכנס לחשבון והחלף סיסמה.</p>");
-      return { ok: true };
-    }
-    const email = normalizeEmail(body.email);
-    if (!email) throw bad("bad_email");
-    const [cur] = await ipKeys(env, request);
-    if (!(await hit(env, "m:" + cur, LIMITS.forgotPerHourPerIp, now))) throw new HttpError(429, "rate");
-    const enc = await encrypt(env.EMAIL_KEY, email);
-    const token = randomToken();
-    await env.DB.batch([
-      env.DB.prepare("DELETE FROM pending_emails WHERE participant = ?").bind(participant),
-      env.DB.prepare(
-        "INSERT INTO pending_emails (participant, ciphertext, nonce, key_version, lookup_hmac, lookup_key_version, token_hash, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      ).bind(participant, enc.ciphertext, enc.nonce, EMAIL_KEY_VERSION, await hmac(env.LOOKUP_KEY, email), LOOKUP_KEY_VERSION, await sha256(token), iso(now), iso(now + RESET_MS)),
-    ]);
-    const link = `${env.SITE_URL}#/guess?verify=${token}`;
-    await sendMail(
-      env,
-      email,
-      "אימות מייל לשחזור",
-      `<p>כדי שהמייל הזה ישמש לשחזור הסיסמה בחשבון ההשערות שלך, לחץ על הקישור (בתוקף 30 דקות):</p><p><a href="${link}">${link}</a></p>`,
-    );
-    return { ok: true, pending: true };
-  },
-
-  "POST /auth/email/verify": async ({ env, now, body }) => {
-    if (typeof body.verify !== "string" || body.verify.length > 100) throw bad("bad_token");
-    const row = await env.DB.prepare("SELECT * FROM pending_emails WHERE token_hash = ? AND expires_at > ?").bind(await sha256(body.verify), iso(now)).first();
-    if (!row) throw bad("bad_token");
-    const old = await currentEmail(env, row.participant);
-    await env.DB.batch([
-      env.DB.prepare("DELETE FROM recovery_emails WHERE participant = ?").bind(row.participant),
-      env.DB.prepare(
-        "INSERT INTO recovery_emails (participant, ciphertext, nonce, key_version, lookup_hmac, lookup_key_version, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      ).bind(row.participant, row.ciphertext, row.nonce, row.key_version, row.lookup_hmac, row.lookup_key_version, iso(now)),
-      env.DB.prepare("DELETE FROM pending_emails WHERE participant = ?").bind(row.participant),
-    ]);
-    const neu = await decrypt(env.EMAIL_KEY, row.ciphertext, row.nonce).catch(() => null);
-    if (old && old !== neu)
-      await sendMail(env, old, "המייל לשחזור הוחלף", "<p>המייל לשחזור בחשבון ההשערות שלך הוחלף בכתובת אחרת. אם לא עשית זאת — היכנס לחשבון והחלף סיסמה.</p>");
-    return { ok: true };
-  },
-
-  "POST /auth/forgot": async ({ env, request, now, body }) => {
-    const [cur, ...prev] = await ipKeys(env, request);
-    if (!(await hit(env, "f:" + cur, LIMITS.forgotPerHourPerIp, now, HOUR, prev.map((k) => "f:" + k)))) return { ok: true };
-    const u = normalizeUsername(body.username);
-    const cred = u ? await env.DB.prepare("SELECT participant FROM credentials WHERE kind = 'password' AND username_norm = ?").bind(u.norm).first() : null;
-    if (!cred) return { ok: true };
-    const email = await currentEmail(env, cred.participant);
-    if (!email || !env.RESEND_API_KEY || !env.MAIL_FROM) return { ok: true };
-    const token = randomToken();
-    await env.DB.batch([
-      env.DB.prepare("UPDATE resets SET used = 1 WHERE participant = ? AND used = 0").bind(cred.participant),
-      env.DB.prepare("INSERT INTO resets (token_hash, participant, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(await sha256(token), cred.participant, iso(now), iso(now + RESET_MS)),
-    ]);
-    const link = `${env.SITE_URL}#/guess?reset=${token}`;
-    await sendMail(env, email, "איפוס סיסמה", `<p>לבחירת סיסמה חדשה לחשבון ההשערות שלך, לחץ על הקישור (חד-פעמי, בתוקף 30 דקות):</p><p><a href="${link}">${link}</a></p>`);
-    return { ok: true };
-  },
-
-  "POST /auth/reset": async ({ env, now, body }) => {
-    if (typeof body.reset !== "string" || body.reset.length > 100) throw bad("bad_token");
-    const th = await sha256(body.reset);
-    const row = await env.DB.prepare("SELECT participant FROM resets WHERE token_hash = ? AND used = 0 AND expires_at > ?").bind(th, iso(now)).first();
-    if (!row) throw bad("bad_token");
-    checkPassword(body.password);
-    await env.DB.prepare("UPDATE resets SET used = 1 WHERE token_hash = ?").bind(th).run();
-    return { token: await setPassword(env, row.participant, body.password, now) };
   },
 
   "GET /log": async ({ env }) => {
@@ -478,8 +378,6 @@ export async function cleanup(env, now) {
   await env.DB.batch([
     env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(now - 24 * HOUR),
     env.DB.prepare("DELETE FROM sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
-    env.DB.prepare("DELETE FROM resets WHERE expires_at < ?").bind(iso(now - 24 * HOUR)),
-    env.DB.prepare("DELETE FROM pending_emails WHERE expires_at < ?").bind(iso(now)),
     env.DB.prepare("DELETE FROM aggregates WHERE section = 'dashboard' AND published_at < ?").bind(iso(now - 7 * 24 * HOUR)),
   ]);
 }

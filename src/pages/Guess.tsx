@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Tabbed from "../components/Tabbed";
 import { PageTitle } from "../components/ui";
-import { call } from "../lib/crowdApi";
 import { introSeen, markIntroSeen } from "../lib/crowdSession";
-import { ResetPanel } from "./guess/Account";
+import { NewPasswordForm } from "./guess/Account";
 import Dashboard from "./guess/Dashboard";
 import Mine from "./guess/Mine";
 import { LOCK_AT } from "./guess/model";
 import { Btn, Notice } from "./guess/ui";
-import { errorText, useSession } from "./guess/useCrowd";
+import { useSession } from "./guess/useCrowd";
 
 /** ספירה לאחור לנעילת ההשערות לתחרות הדיוק (26.10.2026, 23:59 שעון ישראל) */
 function Countdown() {
@@ -36,25 +35,18 @@ export default function Guess() {
   const [params, setParams] = useSearchParams();
   const [flash, setFlash] = useState<{ ok: boolean; text: string } | null>(null);
   const [intro, setIntro] = useState(() => !introSeen());
-  const reset = params.get("reset");
+  const [fromLink, setFromLink] = useState(false);
 
-  // קישור אישי (?t=) או אימות מייל (?verify=) — נקלטים ונמחקים מהכתובת
+  // קישור אישי (?t=) — נקלט ונמחק מהכתובת. הוא גם מסלול השחזור: מי ששכח סיסמה פותח אותו וקובע חדשה.
   useEffect(() => {
     const t = params.get("t");
-    const verify = params.get("verify");
-    if (!t && !verify) return;
+    if (!t) return;
     const next = new URLSearchParams(params);
     next.delete("t");
-    next.delete("verify");
     setParams(next, { replace: true });
-    if (t) {
-      session.setToken(t);
-      setFlash({ ok: true, text: "נכנסתם עם הקישור האישי." });
-    }
-    if (verify)
-      call("/auth/email/verify", { body: { verify } })
-        .then(() => setFlash({ ok: true, text: "המייל אומת. מעכשיו אפשר לשחזר דרכו את הסיסמה." }))
-        .catch((e) => setFlash({ ok: false, text: errorText(e) }));
+    session.setToken(t, "link");
+    setFromLink(true);
+    setFlash({ ok: true, text: "נכנסתם עם הקישור האישי." });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -81,17 +73,17 @@ export default function Guess() {
           <Notice tone={flash.ok ? "calm" : "warn"}>{flash.text}</Notice>
         </div>
       )}
-      {reset && (
-        <ResetPanel
-          reset={reset}
-          session={session}
-          onDone={(text) => {
-            setFlash({ ok: true, text });
-            const next = new URLSearchParams(params);
-            next.delete("reset");
-            setParams(next, { replace: true });
-          }}
-        />
+      {fromLink && session.viaLink && session.me?.username && (
+        <section className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5 space-y-2" aria-labelledby="link-pw-title">
+          <h2 id="link-pw-title" className="font-display text-3xl leading-none">
+            שכחתם את הסיסמה?
+          </h2>
+          <p className="text-sm">
+            נכנסתם בשם <bdi className="font-bold">{session.me.username}</bdi> דרך הקישור האישי, ולכן אפשר לקבוע סיסמה חדשה בלי הישנה.
+          </p>
+          <NewPasswordForm session={session} onDone={() => (setFromLink(false), setFlash({ ok: true, text: "הסיסמה החדשה נקבעה. שאר המכשירים נותקו; הקישור האישי ממשיך לעבוד." }))} />
+          <Btn onClick={() => setFromLink(false)}>לא צריך, תודה</Btn>
+        </section>
       )}
       <Tabbed
         label="ההשערה שלך"

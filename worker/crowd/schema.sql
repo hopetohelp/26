@@ -1,6 +1,6 @@
 -- מאגר השתתפות הגולשים (Cloudflare D1 ‏elections26-crowd) — נפרד לגמרי ממאגר ההערות. השיטה: docs/השתתפות-גולשים.md
--- אין כאן IP, שם או מייל גלוי: אסימונים נשמרים מגובבים (SHA-256), IP רק כ-HMAC עם סוד ונמחק אחרי 24 שעות,
--- מייל לשחזור מוצפן (AES-GCM) עם גיבוב HMAC נפרד לחיפוש.
+-- אין כאן IP, שם או מייל: אסימונים נשמרים מגובבים (SHA-256), IP רק כ-HMAC עם סוד ונמחק אחרי 24 שעות.
+-- אין מייל בכלל (הכרעת בעלים 6.10.2026) — השחזור הוא הקישור האישי.
 -- זה המצב החי. שינוי — רק בתוספת (ALTER/CREATE), ותיעוד כאן באותו PR.
 
 -- משתתף: מזהה אקראי. review = 1 ⇐ "בבדיקה" (נוצר בשעה חשודה), לא נכנס לממוצע הראשי.
@@ -50,40 +50,6 @@ CREATE TABLE IF NOT EXISTS versions (
   UNIQUE (participant, unit, op_id)
 );
 CREATE INDEX IF NOT EXISTS versions_participant ON versions(participant, unit, id);
-
--- מייל לשחזור: מוצפן. key_version מאפשר החלפת מפתח בעתיד. lookup_hmac = HMAC של המייל המנורמל.
-CREATE TABLE IF NOT EXISTS recovery_emails (
-  participant TEXT PRIMARY KEY REFERENCES participants(id),
-  ciphertext TEXT NOT NULL,
-  nonce TEXT NOT NULL,
-  key_version INTEGER NOT NULL,
-  lookup_hmac TEXT NOT NULL,
-  lookup_key_version INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS recovery_lookup ON recovery_emails(lookup_hmac);
-
--- מייל שממתין לאימות בעלות: נכנס ל-recovery_emails רק אחרי לחיצה על קישור חד-פעמי (token_hash, 30 דקות).
-CREATE TABLE IF NOT EXISTS pending_emails (
-  participant TEXT PRIMARY KEY REFERENCES participants(id),
-  ciphertext TEXT NOT NULL,
-  nonce TEXT NOT NULL,
-  key_version INTEGER NOT NULL,
-  lookup_hmac TEXT NOT NULL,
-  lookup_key_version INTEGER NOT NULL DEFAULT 1,
-  token_hash TEXT NOT NULL UNIQUE,
-  created_at TEXT NOT NULL,
-  expires_at TEXT NOT NULL
-);
-
--- קישורי איפוס סיסמה: מגובבים, חד-פעמיים, 30 דקות. בקשה חדשה מבטלת את הקודמות.
-CREATE TABLE IF NOT EXISTS resets (
-  token_hash TEXT PRIMARY KEY,
-  participant TEXT NOT NULL REFERENCES participants(id),
-  created_at TEXT NOT NULL,
-  expires_at TEXT NOT NULL,
-  used INTEGER NOT NULL DEFAULT 0
-);
 
 -- מוני הגבלת קצב. key = סוג + HMAC של IP/חשבון/משתתף. window_start במילישניות. נמחקים אחרי 24 שעות.
 CREATE TABLE IF NOT EXISTS rate (

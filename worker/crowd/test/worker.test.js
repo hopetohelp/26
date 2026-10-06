@@ -14,10 +14,7 @@ beforeEach(() => {
     DB: fakeD1(),
     ALLOWED_ORIGIN: "https://hopetohelp.github.io",
     SITE_URL: "https://hopetohelp.github.io/26/",
-    MAIL_FROM: "",
     IP_KEY: "ip-secret",
-    LOOKUP_KEY: "lookup-secret",
-    EMAIL_KEY: btoa(String.fromCharCode(...new Uint8Array(32).fill(7))),
     NOW: () => t,
   };
 });
@@ -44,7 +41,7 @@ describe("participant & saves", () => {
     expect(r.status).toBe(200);
     expect(r.headers.get("access-control-allow-headers")).toContain("authorization");
     const me = await call("/me", { token: r.data.token });
-    expect(me.data).toMatchObject({ latest: {}, username: null, hasEmail: false, google: false });
+    expect(me.data).toMatchObject({ latest: {}, username: null, google: false });
     expect((await call("/me")).status).toBe(401);
   });
   it("saves each unit; rejects invalid; op_id idempotent; history", async () => {
@@ -146,51 +143,33 @@ describe("username & password", () => {
   }, 20000);
 });
 
-describe("email verify + reset flow", () => {
-  it("verifies email ownership, notifies old address, resets password once", async () => {
-    env.RESEND_API_KEY = "re_test";
-    env.MAIL_FROM = "site@example.org";
-    const sent = [];
-    vi.stubGlobal("fetch", async (url, init) => {
-      sent.push({ url, body: JSON.parse(init.body) });
-      return new Response("{}", { status: 200 });
-    });
-    const tok = (await call("/auth/register", { body: { username: "mailer", password: "mail password 1" } })).data.token;
-    await call("/auth/email", { body: { email: " A@Example.org " }, token: tok });
-    expect((await call("/me", { token: tok })).data.hasEmail).toBe(false); // עד אימות
-    const verify = /verify=([\w-]+)/.exec(sent.at(-1).body.html)[1];
-    expect(sent.at(-1).body.to).toEqual(["a@example.org"]);
-    expect((await call("/auth/email/verify", { body: { verify } })).data).toEqual({ ok: true });
-    expect((await call("/me", { token: tok })).data.hasEmail).toBe(true);
-    // החלפה ⇐ הודעה לכתובת הישנה
-    await call("/auth/email", { body: { email: "b@example.org" }, token: tok });
-    const v2 = /verify=([\w-]+)/.exec(sent.at(-1).body.html)[1];
-    await call("/auth/email/verify", { body: { verify: v2 } });
-    expect(sent.at(-1).body.to).toEqual(["a@example.org"]);
-    // שכחתי סיסמה
-    expect((await call("/auth/forgot", { body: { username: "nobody_here" } })).data).toEqual({ ok: true });
-    const before = sent.length;
-    await call("/auth/forgot", { body: { username: "mailer" } });
-    const first = /reset=([\w-]+)/.exec(sent.at(-1).body.html)[1];
-    expect(sent.length).toBe(before + 1);
-    expect(sent.at(-1).body.to).toEqual(["b@example.org"]);
-    expect(sent.at(-1).body.html).toContain('dir="rtl"');
-    expect(sent.at(-1).body.html).toContain("https://hopetohelp.github.io/26/#/guess?reset=");
-    await call("/auth/forgot", { body: { username: "mailer" } });
-    const second = /reset=([\w-]+)/.exec(sent.at(-1).body.html)[1];
-    expect((await call("/auth/reset", { body: { reset: first, password: "brand new pass 1" } })).status).toBe(400); // בוטל
-    const ok = await call("/auth/reset", { body: { reset: second, password: "brand new pass 1" } });
-    expect(ok.status).toBe(200);
-    expect((await call("/me", { token: tok })).status).toBe(401); // כל הסשנים בוטלו
-    expect((await call("/auth/reset", { body: { reset: second, password: "brand new pass 2" } })).status).toBe(400); // חד-פעמי
-    t += 31 * 60 * 1000;
-    await call("/auth/forgot", { body: { username: "mailer" } });
-    const late = /reset=([\w-]+)/.exec(sent.at(-1).body.html)[1];
-    t += 31 * 60 * 1000;
-    expect((await call("/auth/reset", { body: { reset: late, password: "brand new pass 3" } })).status).toBe(400); // פג תוקף
-    const row = env.DB.raw.prepare("SELECT ciphertext, lookup_hmac FROM recovery_emails").get();
-    expect(row.ciphertext).not.toContain("example");
+describe("recovery via personal link (no email)", () => {
+  it("link credential sets a new password without the current one; revokes sessions, keeps the link", async () => {
+    const link = await newP();
+    const reg = await call("/auth/register", { body: { username: "forgetful", password: "original pass 1" }, token: link });
+    expect(reg.status).toBe(200);
+    const other = (await call("/auth/login", { body: { username: "forgetful", password: "original pass 1" } })).data.token;
+    expect((await call("/auth/password", { body: { next: "short" }, token: link })).data.error).toBe("weak_password");
+    const ch = await call("/auth/password", { body: { next: "recovered pass 1" }, token: link });
+    expect(ch.status).toBe(200);
+    expect((await call("/me", { token: reg.data.token })).status).toBe(401);
+    expect((await call("/me", { token: other })).status).toBe(401);
+    expect((await call("/me", { token: link })).status).toBe(200); // הקישור נשאר
+    expect((await call("/me", { token: ch.data.token })).status).toBe(200);
+    expect((await call("/auth/login", { body: { username: "forgetful", password: "original pass 1" } })).status).toBe(401);
+    expect((await call("/auth/login", { body: { username: "forgetful", password: "recovered pass 1" } })).status).toBe(200);
   }, 30000);
+  it("normal session still requires the current password", async () => {
+    const reg = await call("/auth/register", { body: { username: "session_user", password: "original pass 2" } });
+    const r = await call("/auth/password", { body: { next: "another pass 22" }, token: reg.data.token });
+    expect(r).toMatchObject({ status: 401, data: { error: "bad_credentials" } });
+    const w = await call("/auth/password", { body: { current: "wrong pass 222", next: "another pass 22" }, token: reg.data.token });
+    expect(w.status).toBe(401);
+    expect((await call("/auth/login", { body: { username: "session_user", password: "original pass 2" } })).status).toBe(200);
+  }, 30000);
+  it("removed email endpoints are gone", async () => {
+    for (const p of ["/auth/email", "/auth/email/verify", "/auth/forgot", "/auth/reset"]) expect((await call(p, { body: {} })).status).toBe(404);
+  });
 });
 
 describe("cron: aggregation & anomaly", () => {

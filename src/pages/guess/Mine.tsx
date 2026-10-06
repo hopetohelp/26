@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { linkAcked, setLinkAck } from "../../lib/crowdSession";
 import { call, type BlocsPayload, type Dashboard, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import Blocs from "./Blocs";
 import History from "./History";
+import LinkSaver, { FORGOT_LINE } from "./LinkSaver";
 import MyData from "./MyData";
 import Seats from "./Seats";
 import Vote from "./Vote";
-import { Notice } from "./ui";
+import { Btn, Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
@@ -33,6 +35,10 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
       .catch(() => {});
   }, [session.online]);
 
+  const [acked, setAcked] = useState(linkAcked);
+  // הכרטיס הבולט מופיע מיד אחרי השמירה הראשונה (כשנוצר הקישור), עד שמאשרים ששמרתם
+  const showLink = !!session.link && !acked && !!(seats.saved || blocs.saved || vote.saved);
+
   const statusOf = (s: Sec) => (s === "seats" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null);
   return (
     <div>
@@ -40,6 +46,18 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
         <div className="mb-4">
           <Notice>השמירה עוד לא פעילה באתר. אפשר כבר לבנות את הכנסת שלכם — הטיוטה נשמרת בדפדפן הזה, ותחכה לכם.</Notice>
         </div>
+      )}
+      {showLink && session.link && (
+        <section className="mb-5 border-2 border-ink rounded-theme p-4 bg-paper-card space-y-2" aria-labelledby="link-first-title">
+          <h2 id="link-first-title" className="font-display text-3xl leading-none">
+            נשמר. עכשיו שמרו את הקישור האישי
+          </h2>
+          <p className="text-sm">
+            הקישור הוא המפתח להשערות שלכם מכל מכשיר, והדרך היחידה לשחזר אותן — האתר לא שומר שם ולא מייל. {FORGOT_LINE}
+          </p>
+          <LinkSaver token={session.link} />
+          <Btn onClick={() => (setLinkAck(true), setAcked(true))}>שמרתי את הקישור</Btn>
+        </section>
       )}
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">
         {SECTIONS.map((s) => {
