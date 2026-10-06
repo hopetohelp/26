@@ -154,7 +154,7 @@ function Masthead({ theme }: { theme: ThemeId }) {
     <div className={`bg-frame text-frame-ink ${board ? "" : "border-b border-frame-line"}`}>
       <div className="max-w-6xl mx-auto px-4 pt-3 pb-3 flex flex-col gap-2.5">
         <div className="flex flex-wrap justify-between items-center gap-x-4 gap-y-2">
-          <div className="flex items-baseline gap-3 whitespace-nowrap text-sm text-frame-soft">
+          <div className="flex items-baseline justify-between w-full md:w-auto gap-3 whitespace-nowrap text-sm text-frame-soft">
             <NavLink
               to="/"
               className={`font-display leading-none no-underline text-frame-ink hover:text-frame-ink ${board ? "text-[36px] sm:text-[42px]" : "text-[30px] sm:text-[32px]"}`}
@@ -163,11 +163,11 @@ function Masthead({ theme }: { theme: ThemeId }) {
             </NavLink>
             <ElectionDate />
           </div>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center justify-between w-full md:w-auto md:flex-1 gap-3">
             {board ? (
-              <span className="font-display text-[24px] sm:text-[28px] leading-none text-signal whitespace-nowrap">{left}</span>
+              <span className="font-display text-[24px] sm:text-[28px] leading-none text-signal whitespace-nowrap md:mx-auto">{left}</span>
             ) : (
-              <span className="text-sm font-extrabold bg-ink text-paper-card rounded-md px-2.5 py-1.5 whitespace-nowrap">{left}</span>
+              <span className="text-sm font-extrabold bg-ink text-paper-card rounded-md px-2.5 py-1.5 whitespace-nowrap md:mx-auto">{left}</span>
             )}
             <ThemePicker />
           </div>
