@@ -146,62 +146,39 @@ function StylePicker() {
   );
 }
 
+/** הכותרת והתאריך תמיד בשורה אחת; הספירה לאחור והבוררים לצידם כשיש מקום, ומתחתם כשאין */
 function Masthead({ theme }: { theme: ThemeId }) {
   const left = daysLeft();
-  if (theme === "board") {
-    return (
-      <div className="bg-frame text-frame-ink">
-        <div className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-2.5">
-          <div className="flex justify-between items-baseline gap-3">
-            <NavLink to="/" className="font-display text-[36px] sm:text-[42px] leading-none no-underline text-frame-ink hover:text-frame-ink whitespace-nowrap">
+  const board = theme === "board";
+  return (
+    <div className={`bg-frame text-frame-ink ${board ? "" : "border-b border-frame-line"}`}>
+      <div className="max-w-6xl mx-auto px-4 pt-3 pb-3 flex flex-col gap-2.5">
+        <div className="flex flex-wrap justify-between items-center gap-x-4 gap-y-2">
+          <div className="flex items-baseline justify-between w-full md:w-auto gap-3 whitespace-nowrap text-sm text-frame-soft">
+            <NavLink
+              to="/"
+              className={`font-display leading-none no-underline text-frame-ink hover:text-frame-ink ${board ? "text-[36px] sm:text-[42px]" : "text-[30px] sm:text-[32px]"}`}
+            >
               בחירות 26
             </NavLink>
-            <span className="font-display text-[24px] sm:text-[28px] leading-none text-signal whitespace-nowrap">{left}</span>
+            <ElectionDate />
           </div>
+          <div className="flex items-center justify-between w-full md:w-auto md:flex-1 gap-3">
+            {board ? (
+              <span className="font-display text-[24px] sm:text-[28px] leading-none text-signal whitespace-nowrap md:mx-auto">{left}</span>
+            ) : (
+              <span className="text-sm font-extrabold bg-ink text-paper-card rounded-md px-2.5 py-1.5 whitespace-nowrap md:mx-auto">{left}</span>
+            )}
+            <ThemePicker />
+          </div>
+        </div>
+        {board && (
           <div className="flex h-2.5 gap-px" role="img" aria-label="הרכב 120 המנדטים לפי הממוצע היום">
             {strip.map(([id, s], i) => (
               <span key={id} style={{ flexGrow: s, background: colorOf(id, i) }} />
             ))}
           </div>
-          <div className="flex justify-between gap-x-3 items-center text-xs text-frame-soft">
-            <ElectionDate />
-            <ThemePicker />
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (theme === "league") {
-    return (
-      <div className="bg-frame text-frame-ink border-b border-frame-line">
-        <div className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-2">
-          <div className="flex justify-between items-center gap-3">
-            <NavLink to="/" className="font-display text-[32px] leading-none no-underline text-frame-ink hover:text-frame-ink whitespace-nowrap">
-              בחירות 26
-            </NavLink>
-            <span className="text-sm font-extrabold bg-ink text-paper-card rounded-md px-2.5 py-1.5 whitespace-nowrap">{left}</span>
-          </div>
-          <div className="flex justify-between gap-x-3 items-center text-sm text-frame-soft">
-            <ElectionDate />
-            <ThemePicker />
-          </div>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="text-ink">
-      <div className="max-w-6xl mx-auto px-4 pt-4 pb-2 flex flex-col gap-1">
-        <div className="flex justify-between items-start gap-3">
-          <NavLink to="/" className="font-display text-[clamp(44px,14vw,60px)] leading-[0.85] no-underline text-ink hover:text-ink whitespace-nowrap min-w-0">
-            בחירות 26
-          </NavLink>
-          <span className="mt-2 text-sm font-extrabold bg-ink text-paper-card px-2.5 py-1.5 whitespace-nowrap">{left}</span>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-4 gap-y-2 items-center text-sm font-semibold text-ink-soft">
-          <ElectionDate />
-          <ThemePicker />
-        </div>
+        )}
       </div>
     </div>
   );
