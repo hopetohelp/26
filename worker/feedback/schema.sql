@@ -36,3 +36,20 @@ CREATE TABLE IF NOT EXISTS hits (
   count INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (day, page)
 );
+
+-- גולשים שונים ביום ובעמוד. vid = גיבוב חד-כיווני של IP + דפדפן + התאריך: מתחלף מדי יום, ולכן אי אפשר לשחזר ממנו כתובת
+-- או לעקוב אחרי גולש בין ימים. גולשים ביום = COUNT(DISTINCT vid) לאותו day.
+CREATE TABLE IF NOT EXISTS visitors (
+  day TEXT NOT NULL,
+  vid TEXT NOT NULL,
+  page TEXT NOT NULL,
+  PRIMARY KEY (day, vid, page)
+);
+
+-- ספירה מצטברת של גולשים: vh = גיבוב של מזהה אקראי שנשמר בדפדפן של הגולש (לא נגזר מ-IP או מפרט אחר).
+-- אין כאן כתובת או שום פרט אחר. גולשים בסך הכול = COUNT(*); חוזרים = first_day < last_day.
+CREATE TABLE IF NOT EXISTS visitors_all (
+  vh TEXT PRIMARY KEY,
+  first_day TEXT NOT NULL,
+  last_day TEXT NOT NULL
+);
