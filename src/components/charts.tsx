@@ -105,15 +105,15 @@ export function TrendChart({
       <title id={tid}>{title}</title>
       {yTicks.map((v) => (
         <g key={v}>
-          <line x1={m.left} x2={W - m.right} y1={y(v)} y2={y(v)} stroke="#e3e1da" />
-          <text x={m.left - 6} y={y(v) + 4} textAnchor="end" fontSize="11" fill="#7a8496">
+          <line x1={m.left} x2={W - m.right} y1={y(v)} y2={y(v)} stroke="rgb(var(--grid))" />
+          <text x={m.left - 6} y={y(v) + 4} textAnchor="end" fontSize="11" fill="rgb(var(--ink-faint))">
             {v}
           </text>
         </g>
       ))}
       {months.map((t, i) =>
         i % monthStep === 0 ? (
-          <text key={t} x={x(t)} y={H - 10} textAnchor="middle" fontSize="11" fill="#7a8496">
+          <text key={t} x={x(t)} y={H - 10} textAnchor="middle" fontSize="11" fill="rgb(var(--ink-faint))">
             {tick(t)}
           </text>
         ) : null,
@@ -186,7 +186,7 @@ export function EstimateVsActual({ rows, maxSeats = 40, caption }: { rows: GapRo
                 {r.name}
               </span>
               <span className="relative h-6 bg-paper rounded [grid-area:bar]" aria-hidden="true">
-                <span className="absolute inset-y-1 right-0 rounded bg-[#9fb3c8]" style={{ width: w(est) }} />
+                <span className="absolute inset-y-1 right-0 rounded bg-ink-faint/40" style={{ width: w(est) }} />
                 {r.max > r.min && (
                   <span className="absolute top-1/2 h-0.5 bg-ink/60" style={{ right: w(r.min), width: `calc(${w(r.max)} - ${w(r.min)})` }} />
                 )}

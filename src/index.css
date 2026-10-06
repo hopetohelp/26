@@ -56,6 +56,46 @@
   --grid: 226 230 236;
 }
 
+/* תצורה חשוכה (src/lib/theme.ts ‏useMode): אותו עיצוב, צבעים כהים. רק צבעים — הגופנים והצורות לא משתנים. */
+[data-dark] {
+  color-scheme: dark;
+  --paper: 10 20 32;
+  --card: 17 31 47;
+  --line: 38 58 80;
+  --ink: 230 236 242;
+  --ink-soft: 170 185 202;
+  --ink-faint: 140 157 176;
+  --accent: 120 170 220;
+  --accent-soft: 22 44 68;
+  --warn: 240 170 80;
+  --warn-soft: 50 36 14;
+  --frame: 6 16 28;
+  --frame-ink: 244 246 248;
+  --frame-soft: 170 185 202;
+  --frame-line: 30 52 76;
+  --signal: 255 184 28;
+  --signal-ink: 11 34 57;
+  --grid: 30 46 64;
+}
+[data-theme="league"][data-dark] {
+  --paper: 16 18 22;
+  --card: 26 29 35;
+  --line: 52 58 68;
+  --ink: 236 239 243;
+  --ink-soft: 176 184 196;
+  --ink-faint: 146 155 168;
+  --accent: 130 160 240;
+  --accent-soft: 30 38 62;
+  --warn: 245 160 80;
+  --warn-soft: 52 36 20;
+  --frame: 26 29 35;
+  --frame-ink: 236 239 243;
+  --frame-soft: 176 184 196;
+  --frame-line: 52 58 68;
+  --signal: 240 140 40;
+  --signal-ink: 19 23 29;
+  --grid: 40 45 54;
+}
 
 @layer base {
   html {

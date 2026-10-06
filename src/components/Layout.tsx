@@ -4,7 +4,7 @@ import FreezeBanner from "./FreezeBanner";
 import Feedback from "./Feedback";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
-import { THEMES, useTheme, type ThemeId } from "../lib/theme";
+import { MODES, THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/theme";
 import { colorOf } from "../lib/colors";
 import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
@@ -41,6 +41,35 @@ function Icon({ name }: { name: string }) {
 
 /** בחירת העיצוב: שלוש אפשרויות שוות, כל אחת עם דוגמית הצבע שלה */
 export function ThemePicker() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+      <StylePicker />
+      <ModePicker />
+    </div>
+  );
+}
+
+const pill = (on: boolean) =>
+  `flex items-center gap-1.5 rounded-full px-2.5 min-h-[44px] md:min-h-[36px] text-sm font-bold border ${
+    on ? "bg-signal text-signal-ink border-signal" : "border-current bg-transparent opacity-80 hover:opacity-100"
+  }`;
+
+/** בחירת תצורה: בהיר · חשוך · לפי המכשיר */
+function ModePicker() {
+  const [mode, setMode] = useMode();
+  return (
+    <div role="radiogroup" aria-label="תצורת צבעים" className="flex flex-wrap items-center gap-1.5">
+      <span className="text-sm opacity-80 me-1">תצורה:</span>
+      {MODES.map((m) => (
+        <button key={m.id} type="button" role="radio" aria-checked={m.id === mode} onClick={() => setMode(m.id as ModeId)} className={pill(m.id === mode)}>
+          {m.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function StylePicker() {
   const [theme, setTheme] = useTheme();
   return (
     <div role="radiogroup" aria-label="עיצוב האתר" className="flex flex-wrap items-center gap-1.5">
