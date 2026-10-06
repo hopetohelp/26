@@ -4,7 +4,8 @@
  * POST /            {topic, text, page, theme, website} ⇐ הערה חדשה. מחזיר {ok, token}: הקישור האישי של הגולש.
  * GET  /thread?t=   ⇐ ההערה והשיחה עליה (רק למי שמחזיק את הקישור).
  * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
- * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום. בלי IP, בלי עוגיות, בלי שום מזהה.
+ * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
+ *                    המזהה הוא גיבוב חד-כיווני של ה-IP, הדפדפן והתאריך: בלי עוגיות, ואי אפשר לשחזר ממנו כתובת או לקשור גולש בין ימים.
  *
  * - הקישור האישי: 128 ביט אקראיים. במאגר נשמר רק הגיבוב שלו, כך שגם מי שקורא את המאגר אינו יכול לפתוח שיחה.
  * - תשובות הצוות נכתבות ישירות במאגר (author = 'team'), לא דרך השרת — אין כאן נקודת כניסה לכתיבה בשם הצוות.
@@ -85,8 +86,11 @@ export default {
       }
       if (!HIT_PAGES.has(page)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
-      await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1")
-        .bind(day, page).run();
+      const vid = await dayKey(`${request.headers.get("cf-connecting-ip") || "unknown"}|${request.headers.get("user-agent") || ""}`);
+      await env.DB.batch([
+        env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, page),
+        env.DB.prepare("INSERT OR IGNORE INTO visitors (day, vid, page) VALUES (?, ?, ?)").bind(day, vid, page),
+      ]);
       return reply({ ok: true });
     }
 
