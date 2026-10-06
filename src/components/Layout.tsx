@@ -43,10 +43,42 @@ function Icon({ name }: { name: string }) {
 /** בחירת העיצוב: שלוש אפשרויות שוות, כל אחת עם דוגמית הצבע שלה */
 export function ThemePicker() {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-      <StylePicker />
+    <div className="flex items-center gap-x-3 gap-y-1.5">
+      <div className="hidden md:block">
+        <StylePicker />
+      </div>
+      <StyleToggle />
       <ModePicker />
     </div>
+  );
+}
+
+/** בטלפון (אין מקום לשני כפתורים): כפתור אחד שמחליף לעיצוב השני */
+function StyleToggle() {
+  const [theme, setTheme] = useTheme();
+  const cur = THEMES.find((t) => t.id === theme)!;
+  const next = THEMES.find((t) => t.id !== theme)!;
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(next.id as ThemeId)}
+      aria-label={`עיצוב: ${cur.name}. בלחיצה: ${next.name}`}
+      className="md:hidden flex items-center gap-1.5 rounded-full px-3 h-[44px] text-sm font-bold border border-current opacity-80 hover:opacity-100 whitespace-nowrap"
+    >
+      <span aria-hidden="true" className="w-3.5 h-3.5 rounded-full border border-black/30" style={{ background: cur.color }} />
+      {cur.name}
+    </button>
+  );
+}
+
+/** תאריך הבחירות בשורה הקטנה: מלא כשיש מקום, מקוצר (27/10/26) בטלפון */
+function ElectionDate() {
+  const [y, m, d] = meta.electionDay.split("-");
+  return (
+    <span className="whitespace-nowrap">
+      <span className="hidden sm:inline">{dateLong(meta.electionDay)}</span>
+      <span className="sm:hidden" dir="ltr">{`${Number(d)}/${Number(m)}/${y.slice(2)}`}</span>
+    </span>
   );
 }
 
@@ -121,18 +153,18 @@ function Masthead({ theme }: { theme: ThemeId }) {
       <div className="bg-frame text-frame-ink">
         <div className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-2.5">
           <div className="flex justify-between items-baseline gap-3">
-            <NavLink to="/" className="font-display text-[42px] leading-none no-underline text-frame-ink hover:text-frame-ink">
+            <NavLink to="/" className="font-display text-[36px] sm:text-[42px] leading-none no-underline text-frame-ink hover:text-frame-ink whitespace-nowrap">
               בחירות 26
             </NavLink>
-            <span className="font-display text-[28px] leading-none text-signal">{left}</span>
+            <span className="font-display text-[24px] sm:text-[28px] leading-none text-signal whitespace-nowrap">{left}</span>
           </div>
           <div className="flex h-2.5 gap-px" role="img" aria-label="הרכב 120 המנדטים לפי הממוצע היום">
             {strip.map(([id, s], i) => (
               <span key={id} style={{ flexGrow: s, background: colorOf(id, i) }} />
             ))}
           </div>
-          <div className="flex flex-wrap justify-between gap-x-4 gap-y-2 items-center text-xs text-frame-soft">
-            <span>הבחירות לכנסת ה-26, {dateLong(meta.electionDay)}</span>
+          <div className="flex justify-between gap-x-3 items-center text-xs text-frame-soft">
+            <ElectionDate />
             <ThemePicker />
           </div>
         </div>
@@ -144,13 +176,13 @@ function Masthead({ theme }: { theme: ThemeId }) {
       <div className="bg-frame text-frame-ink border-b border-frame-line">
         <div className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-2">
           <div className="flex justify-between items-center gap-3">
-            <NavLink to="/" className="font-display text-[32px] leading-none no-underline text-frame-ink hover:text-frame-ink">
+            <NavLink to="/" className="font-display text-[32px] leading-none no-underline text-frame-ink hover:text-frame-ink whitespace-nowrap">
               בחירות 26
             </NavLink>
             <span className="text-sm font-extrabold bg-ink text-paper-card rounded-md px-2.5 py-1.5 whitespace-nowrap">{left}</span>
           </div>
-          <div className="flex flex-wrap justify-between gap-x-4 gap-y-2 items-center text-sm text-frame-soft">
-            <span>הבחירות לכנסת ה-26, {dateLong(meta.electionDay)}</span>
+          <div className="flex justify-between gap-x-3 items-center text-sm text-frame-soft">
+            <ElectionDate />
             <ThemePicker />
           </div>
         </div>
@@ -167,7 +199,7 @@ function Masthead({ theme }: { theme: ThemeId }) {
           <span className="mt-2 text-sm font-extrabold bg-ink text-paper-card px-2.5 py-1.5 whitespace-nowrap">{left}</span>
         </div>
         <div className="flex flex-wrap justify-between gap-x-4 gap-y-2 items-center text-sm font-semibold text-ink-soft">
-          <span>הבחירות לכנסת ה-26, {dateLong(meta.electionDay)}</span>
+          <ElectionDate />
           <ThemePicker />
         </div>
       </div>
