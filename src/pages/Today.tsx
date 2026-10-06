@@ -4,7 +4,7 @@ import { SeatRangeBars } from "../components/charts";
 import ListsView, { type ListRow } from "../components/ListsView";
 import modelFile from "../data/model.json";
 import { useTheme } from "../lib/theme";
-import { Badge, Card, Note, PageTitle } from "../components/ui";
+import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
 import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, passesInAll, pollsterLabel, results, seatsIn, summarize, type Poll } from "../lib/data";
 import { date, dateLong, dateRange, num, seatsFmt } from "../lib/format";
 
@@ -93,13 +93,13 @@ export default function Today() {
           </li>
         </ul>
         <p className="mt-3">
-          <Link to="/scenarios" className="font-bold">
+          <Link to="/today?tab=scenarios" className="font-bold">
             כל התרחישים, הטווחים ובדיקת העבר
           </Link>
         </p>
       </Card>
 
-      <Card title="לפי המכונים: הסקר האחרון של כל אחד">
+      <Fold title="לפי המכונים: הסקר האחרון של כל אחד">
         <p className="text-sm text-ink-soft mb-3">
           {`הסקר האחרון של כל מכון ב-${WINDOW_DAYS} הימים שעד ${dateLong(asOf)} — ${latest.length} מכונים. החציון בין המכונים, והטווח מהנמוך לגבוה.`}
         </p>
@@ -120,10 +120,10 @@ export default function Today() {
             מתחת לאחוז החסימה בחציון: {below.map((s) => `${listName(s.id)} (עוברת ב-${s.n - s.belowCount} מתוך ${s.n} מכונים)`).join(" · ")}.
           </Note>
         )}
-      </Card>
+      </Fold>
 
       <div className="grid md:grid-cols-2 gap-5 [&>*]:min-w-0">
-        <Card title="מפלגות הממשלה היוצאת (ממשלה 37)">
+        <Fold title="מפלגות הממשלה היוצאת (ממשלה 37)">
           <Explained
             kind="סיכום סקרים"
             source="סכום המנדטים של הליכוד, הציונות הדתית-זהות, עוצמה יהודית, ש&quot;ס ויהדות התורה בכל סקר"
@@ -141,9 +141,9 @@ export default function Today() {
               </p>
             )}
           </Explained>
-        </Card>
+        </Fold>
 
-        <Card title="הפער בין מכוני הסקרים">
+        <Fold title="הפער בין מכוני הסקרים">
           <p className="text-sm text-ink-soft mb-2">הליכוד בסקר האחרון של כל מכון:</p>
           <ul className="text-sm space-y-1">
             {likudBy.map(({ p, v }) => (
@@ -155,12 +155,12 @@ export default function Today() {
           </ul>
           <Note>
             הפער בין המכונים גדול מטעות הדגימה של כל סקר בודד. לכן מוצג טווח ולא מספר אחד, ואפשר לראות כל מכון בנפרד ב
-            <Link to="/trends">מגמות</Link>.
+            <Link to="/polls?tab=trends">מגמות</Link>.
           </Note>
-        </Card>
+        </Fold>
       </div>
 
-      <Card title="הסקרים שנכללו">
+      <Fold title="הסקרים שנכללו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <caption className="sr-only">הסקר האחרון של כל מכון, לפי רשימה</caption>
@@ -211,49 +211,8 @@ export default function Today() {
           אחוז בתא = הרשימה מתחת לאחוז החסימה באותו סקר. "—" = לא נשאלה או לא דווחה. סקר נכנס לאתר 24 שעות אחרי פרסומו
           הראשון. נתונים נכונים ל-{date(meta.dataAsOf)}.
         </Note>
-      </Card>
+      </Fold>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 [&>*]:min-w-0">
-        <Card title="תרחישים ליום הבחירות">
-          <p className="text-sm">אלפי תרחישים שעוברים במנוע החוק: טווח מנדטים לכל רשימה, ובכמה מהם היא עוברת את אחוז החסימה.</p>
-          <Link to="/scenarios" className="font-bold">
-            לתרחישים
-          </Link>
-        </Card>
-        <Card title="מחשבון מנדטים">
-          <p className="text-sm">משנים אחוזים ורואים את החלוקה לפי החוק: אחוז חסימה, הסכמי עודפים ובאדר-עופר.</p>
-          <Link to="/calculator" className="font-bold">
-            למחשבון
-          </Link>
-        </Card>
-        <Card title="תוצאות אמת 2019–2022">
-          <p className="text-sm">
-            חמש מערכות, אותו ניתוח: מי עבר, כמה נשרף ומה הזיזו ההסכמים. ב-2022, למשל, {num(wasted2022)} קולות הלכו לרשימות שלא עברו — כ-
-            {(wasted2022 / (passing2022 / 120)).toFixed(1)} מנדטים.
-          </p>
-          <Link to="/results" className="font-bold">
-            לתוצאות האמת
-          </Link>
-        </Card>
-        <Card title="כמה קולות יידרשו">
-          <p className="text-sm">מספר בעלי זכות הבחירה גדל; גם אחוז החסימה בקולות יגדל.</p>
-          <Link to="/voters" className="font-bold">
-            למצביעים
-          </Link>
-        </Card>
-        <Card title="מה השתנה מאז 2022">
-          <p className="text-sm">כל משפחת רשימות: האחוז ב-2022 מול הממוצע היום, בשלוש דרכי שיוך — כולל "לא משויך".</p>
-          <Link to="/changes" className="font-bold">
-            להשוואה
-          </Link>
-        </Card>
-        <Card title="כמה צדקו הסקרים בעבר">
-          <p className="text-sm">מה אמרו הסקרים ערב כל מערכת מאז 2019, ומה יצא בפועל — לפי רשימה, גוש ומכון.</p>
-          <Link to="/accuracy" className="font-bold">
-            לדיוק הסקרים
-          </Link>
-        </Card>
-      </div>
     </>
   );
 }

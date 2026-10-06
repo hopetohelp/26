@@ -229,7 +229,7 @@ export default function Forecast() {
             השיטה המלאה של התחזית
           </Link>
           {" · "}
-          <Link to="/accuracy" className="font-bold">
+          <Link to="/past?tab=accuracy" className="font-bold">
             דיוק הסקרים בעבר
           </Link>
         </p>

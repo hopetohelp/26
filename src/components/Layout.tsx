@@ -13,7 +13,7 @@ const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to
 /** הלשוניות בתחתית המסך בטלפון; "עוד" פותח את כל העמודים */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
-  { to: "/today", label: "המצב היום", icon: "board" },
+  { to: "/today", label: "מצב ותחזית", icon: "board" },
   { to: "/polls", label: "סקרים", icon: "bars" },
 ];
 
