@@ -15,6 +15,8 @@
       try {
         var t = localStorage.getItem("elections26.theme");
         if (t === "board" || t === "league") document.documentElement.dataset.theme = t;
+        var m = localStorage.getItem("elections26.mode") || "auto";
+        if (m === "dark" || (m === "auto" && matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.dataset.dark = "";
       } catch (e) {}
     </script>
   </head>
