@@ -1,0 +1,317 @@
+/**
+ * צבירת הדשבורד — פונקציות טהורות בלבד (בלי מאגר, בלי שעון): מקבלות משתתפים וגרסאות ומחזירות JSON.
+ * הכללים: docs/השתתפות-גולשים.md, "הדשבורד — כללים".
+ *
+ * - יחידת ספירה: משתתף ייחודי, הגרסה האחרונה שלו בכל יחידה.
+ * - משתתף "בבדיקה" (review) אינו נספר בשום מספר ראשי; מוצג בנפרד ב-underReview.
+ * - סף תא/חתך 10, שורת מטריצה 20, והסתרה משלימה (אין תא מוסתר יחיד שאפשר לחשב מהמכנה).
+ * - הדשבורד נפתח מ-30 משתתפים.
+ * - יחידה מפורסמת מתחלפת רק אם לפחות 5 משתתפים ייחודיים חדשים/ששינו השפיעו עליה מאז הפרסום הקודם;
+ *   אחרת נשארת היחידה הקודמת כמו שהיא (כולל n, of ומועד הפרסום שלה).
+ * - מטריצה, פילוח לפי הצבעה ומגמה — רק בריצה הראשונה אחרי חצות שעון ישראל; באותה ריצה מתפרסמים גם החלקים הכלליים,
+ *   כך שהכלליים והפילוחים נגזרים מאותה תמונה, וחתך שנבדל מסך כללי בפחות מ-10 אינו מתפרסם.
+ */
+import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
+
+export const K_CELL = 10;
+export const K_ROW = 20;
+export const OPEN_AT = 30;
+export const MIN_CHANGED = 5;
+export const TOTAL = 120;
+export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
+export const DAILY = ["matrix", "byVote", "trend"];
+/** אילו יחידות משפיעות על כל חלק בדשבורד */
+export const SECTION_UNITS = {
+  seats: ["seats"],
+  blocs: ["seats", "blocs"],
+  vote2026: ["vote"],
+  vote2022: ["vote"],
+  underReview: ["seats"],
+  matrix: ["vote"],
+  byVote: ["vote", "seats"],
+  trend: ["seats"],
+};
+
+const r2 = (x) => Math.round(x * 100) / 100;
+
+/** יום בשעון ישראל (YYYY-MM-DD) של רגע נתון */
+export function israelDay(t) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem", year: "numeric", month: "2-digit", day: "2-digit" }).format(
+    new Date(t),
+  );
+}
+
+/** הגרסה האחרונה (המזהה הגבוה) של כל משתתף בכל יחידה. filter אופציונלי על גרסה */
+export function latestByUnit(versions, filter = () => true) {
+  const out = { vote: new Map(), seats: new Map(), blocs: new Map() };
+  for (const v of versions) {
+    if (!out[v.unit] || !filter(v)) continue;
+    const cur = out[v.unit].get(v.participant);
+    if (!cur || v.id > cur.id) out[v.unit].set(v.participant, v);
+  }
+  return out;
+}
+
+function quantile(sorted, q) {
+  if (!sorted.length) return 0;
+  const pos = (sorted.length - 1) * q;
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+
+/** ממוצע, חציון, רבעונים */
+export function seatStat(list, values) {
+  const s = [...values].sort((a, b) => a - b);
+  const mean = s.reduce((a, b) => a + b, 0) / (s.length || 1);
+  return { list, n: s.length, mean: r2(mean), median: r2(quantile(s, 0.5)), p25: r2(quantile(s, 0.25)), p75: r2(quantile(s, 0.75)) };
+}
+
+/**
+ * ספירות ⇐ תאים עם סף והסתרה משלימה. counts: {key: n}, of: המכנה המפורסם.
+ * תא מתחת לסף מוסתר (n לא נחשף). אם נשאר בדיוק תא מוסתר אחד — מוסתר גם התא הגלוי הקטן ביותר, כדי שאי אפשר יהיה לחשב אותו מהמכנה.
+ */
+export function suppress(counts, of, k = K_CELL) {
+  const keys = Object.keys(counts);
+  const hidden = new Set(keys.filter((key) => counts[key] > 0 && counts[key] < k));
+  if (hidden.size === 1) {
+    const visible = keys.filter((key) => !hidden.has(key) && counts[key] > 0).sort((a, b) => counts[a] - counts[b]);
+    if (visible.length) hidden.add(visible[0]);
+  }
+  const out = {};
+  for (const key of keys) out[key] = hidden.has(key) ? { n: 0, of, hidden: true } : { n: counts[key], of };
+  return out;
+}
+
+const seatValue = (payload, id) => payload.seats[id]?.v ?? 0;
+
+function seatsStats(seatVersions) {
+  return LISTS_2026.map((l) => seatStat(l.id, seatVersions.map((v) => seatValue(v.payload, l.id))));
+}
+
+export function computeSeats(seatVersions) {
+  const n = seatVersions.length;
+  if (n < K_CELL) return null;
+  const manual = [];
+  for (const l of LISTS_2026) {
+    const vals = seatVersions.filter((v) => v.payload.seats[l.id]?.src === "manual").map((v) => v.payload.seats[l.id].v);
+    if (vals.length >= K_CELL) manual.push(seatStat(l.id, vals));
+  }
+  let filled = 0;
+  let usedFillAll = 0;
+  const starts = { zero: 0, k25: 0, polls: 0 };
+  const asOf = {};
+  for (const v of seatVersions) {
+    const cells = Object.values(v.payload.seats);
+    const f = cells.filter((c) => c.src === "filled").reduce((a, c) => a + c.v, 0);
+    filled += f;
+    if (cells.some((c) => c.src === "filled")) usedFillAll++;
+    starts[v.payload.start]++;
+    if (v.payload.pollsAsOf) asOf[v.payload.pollsAsOf] = (asOf[v.payload.pollsAsOf] || 0) + 1;
+  }
+  const commonAsOf = Object.entries(asOf).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? 1 : -1))[0]?.[0] ?? null;
+  return {
+    n,
+    full: seatsStats(seatVersions),
+    manual,
+    filledShare: r2(filled / (TOTAL * n)),
+    usedFillAll,
+    pollsAsOf: commonAsOf ?? POLLS_AS_OF,
+    polls: POLLS,
+    starts,
+  };
+}
+
+export function computeBlocs(seatVersions, blocVersions) {
+  let derived = null;
+  if (seatVersions.length >= K_CELL) {
+    const gov = seatVersions.map((v) => [...GOV37].reduce((a, id) => a + seatValue(v.payload, id), 0));
+    derived = { gov: seatStat("gov", gov), rest: seatStat("rest", gov.map((g) => TOTAL - g)) };
+  }
+  const g = [];
+  const r = [];
+  let gov37Count = 0;
+  let customCount = 0;
+  for (const v of blocVersions) {
+    if (v.payload.mode === "custom") {
+      customCount++;
+      continue;
+    }
+    gov37Count++;
+    const gb = v.payload.blocs.find((b) => b.id === "gov");
+    const rb = v.payload.blocs.find((b) => b.id === "rest");
+    if (gb && gb.target !== null) g.push(gb.target);
+    if (rb && rb.target !== null) r.push(rb.target);
+  }
+  const explicit = gov37Count
+    ? { gov: g.length >= K_CELL ? seatStat("gov", g) : null, rest: r.length >= K_CELL ? seatStat("rest", r) : null }
+    : null;
+  if (!derived && !explicit && customCount < K_CELL) return null;
+  return { derived, explicit, customCount };
+}
+
+function countBy(items, key) {
+  const c = {};
+  for (const it of items) {
+    const k = key(it);
+    if (k !== null && k !== undefined) c[k] = (c[k] || 0) + 1;
+  }
+  return c;
+}
+
+export function computeVote2026(voteVersions) {
+  const vals = voteVersions.map((v) => v.payload.v2026).filter((x) => x !== null);
+  if (vals.length < K_CELL) return null;
+  const all = countBy(vals, (x) => x);
+  const namedVals = vals.filter((x) => IDS_2026.has(x));
+  const named = countBy(namedVals, (x) => x);
+  return { all: suppress(all, vals.length), named: namedVals.length >= K_CELL ? suppress(named, namedVals.length) : {} };
+}
+
+export function computeVote2022(voteVersions) {
+  const vals = voteVersions.map((v) => v.payload.v2022).filter((x) => x !== null);
+  if (vals.length < K_CELL) return null;
+  const validVals = vals.filter((x) => IDS_2022.has(x) || x === "other");
+  return {
+    all: suppress(countBy(vals, (x) => x), vals.length),
+    valid: validVals.length >= K_CELL ? suppress(countBy(validVals, (x) => x), validVals.length) : {},
+    official: OFFICIAL_2022,
+  };
+}
+
+/** מטריצת מעברים: שורה = הצבעה 2022, עמודה = 2026. שורה מתחת ל-20 מוסתרת (והסתרה משלימה בין השורות) */
+export function computeMatrix(voteVersions, publishedAt) {
+  const pairs = voteVersions.map((v) => v.payload).filter((p) => p.v2022 !== null && p.v2026 !== null);
+  if (pairs.length < K_ROW) return null;
+  const rowCounts = countBy(pairs, (p) => p.v2022);
+  const rowCells = suppress(rowCounts, pairs.length, K_ROW);
+  const rows = {};
+  for (const [row, n] of Object.entries(rowCounts)) {
+    if (rowCells[row].hidden) {
+      rows[row] = { n: 0, hidden: true, cells: {} };
+      continue;
+    }
+    rows[row] = { n, cells: suppress(countBy(pairs.filter((p) => p.v2022 === row), (p) => p.v2026), n) };
+  }
+  return { rows, publishedAt };
+}
+
+/** ממוצע השערות המנדטים לפי כוונת הצבעה 2026 (חתך מתחת ל-10 לא מוצג) */
+export function computeByVote(voteMap, seatMap) {
+  const groups = {};
+  const totals = [seatMap.size];
+  for (const [p, sv] of seatMap) {
+    const code = voteMap.get(p)?.payload.v2026;
+    if (!code) continue;
+    (groups[code] ||= []).push(sv);
+  }
+  totals.push(Object.values(groups).reduce((a, g) => a + g.length, 0));
+  const out = {};
+  for (const [code, list] of Object.entries(groups)) {
+    if (list.length < K_CELL) continue;
+    // הגנה מחיסור: חתך שגודלו קרוב (פחות מ-10) לסך כללי שמתפרסם מאותה תמונה — לא מתפרסם
+    if (totals.some((t) => t - list.length > 0 && t - list.length < K_CELL)) continue;
+    out[code] = { n: list.length, seats: Object.fromEntries(LISTS_2026.map((l) => [l.id, r2(list.reduce((a, v) => a + seatValue(v.payload, l.id), 0) / list.length)])) };
+  }
+  return out;
+}
+
+/** מגמה: מצב בסוף כל יום (שעון ישראל) עד אתמול, לפי הגרסאות שהיו קיימות אז */
+export function computeTrend(seatVersions, today) {
+  const byDay = new Map();
+  for (const v of seatVersions) {
+    const d = israelDay(v.created_at);
+    if (d >= today) continue;
+    if (!byDay.has(d)) byDay.set(d, []);
+    byDay.get(d).push(v);
+  }
+  const days = [...byDay.keys()].sort();
+  const state = new Map();
+  const out = [];
+  for (const day of days) {
+    let newcomers = 0;
+    const changed = new Set();
+    for (const v of byDay.get(day).sort((a, b) => a.id - b.id)) {
+      if (!state.has(v.participant)) newcomers++;
+      else if (!changed.has(v.participant) && state.get(v.participant).day !== day) changed.add(v.participant);
+      state.set(v.participant, { v, day });
+    }
+    const cur = [...state.values()].map((x) => x.v);
+    const n = cur.length;
+    const seats = n >= K_CELL ? Object.fromEntries(LISTS_2026.map((l) => [l.id, r2(cur.reduce((a, v) => a + seatValue(v.payload, l.id), 0) / n)])) : {};
+    out.push({ day, n, newcomers, changed: changed.size, seats });
+  }
+  return out;
+}
+
+export function computeUnderReview(reviewSeatVersions, reviewParticipants) {
+  if (!reviewParticipants) return null;
+  return { participants: reviewParticipants, seats: reviewSeatVersions.length >= K_CELL ? seatsStats(reviewSeatVersions) : [] };
+}
+
+/**
+ * ריצת צבירה מלאה.
+ * participants: [{id, review}] · versions: [{id, participant, unit, created_at, payload}] · now: ISO
+ * wasOpen: האם הדשבורד הקודם היה פתוח
+ * previous: {section: {json, publishedAt, snapshot: number[]}} — הפרסום הקודם של כל חלק · lastDailyDay: היום (ישראל) של החישוב היומי הקודם
+ * מחזיר {dashboard, sections: {section: {json, publishedAt, snapshot, contributors, changed}}, daily}
+ */
+export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true }) {
+  const review = new Set(participants.filter((p) => p.review).map((p) => p.id));
+  const known = new Set(participants.map((p) => p.id));
+  const main = latestByUnit(versions, (v) => known.has(v.participant) && !review.has(v.participant));
+  const rev = latestByUnit(versions, (v) => review.has(v.participant));
+  const active = new Set([...main.vote.keys(), ...main.seats.keys(), ...main.blocs.keys()]);
+  const reviewActive = new Set([...rev.vote.keys(), ...rev.seats.keys(), ...rev.blocs.keys()]);
+  const today = israelDay(now);
+  const daily = lastDailyDay !== today;
+  // ברגע הפתיחה (30) — כל החלקים מתפרסמים מחדש, ולא נשארים קפואים מתקופת הסגירה
+  const opening = active.size >= OPEN_AT && !wasOpen;
+  const seatV = [...main.seats.values()];
+  const voteV = [...main.vote.values()];
+
+  const compute = {
+    seats: () => computeSeats(seatV),
+    blocs: () => computeBlocs(seatV, [...main.blocs.values()]),
+    vote2026: () => computeVote2026(voteV),
+    vote2022: () => computeVote2022(voteV),
+    underReview: () => computeUnderReview([...rev.seats.values()], reviewActive.size),
+    matrix: () => computeMatrix(voteV, now),
+    byVote: () => computeByVote(main.vote, main.seats),
+    trend: () => computeTrend(versions.filter((v) => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant)), today),
+  };
+
+  const sections = {};
+  for (const name of [...HOURLY, ...DAILY]) {
+    const isDaily = DAILY.includes(name);
+    const units = SECTION_UNITS[name];
+    const src = name === "underReview" ? rev : main;
+    const owners = new Map();
+    for (const u of units) for (const v of src[u].values()) owners.set(v.id, v.participant);
+    const snapshot = [...owners.keys()].sort((a, b) => a - b);
+    const prev = previous[name];
+    const prevIds = new Set(prev?.snapshot || []);
+    const changed = new Set([...owners].filter(([id]) => !prevIds.has(id)).map(([, p]) => p)).size;
+    let publish;
+    if (isDaily) publish = daily || !prev || opening;
+    else if (name === "underReview") publish = true; // קבוצה קטנה ונפרדת — מתעדכנת בכל שעה
+    // ביום של חישוב יומי — כל החלקים שחופפים לפילוחים מתפרסמים מאותה תמונה (מניעת חיסור בין תמונות שונות)
+    else publish = !prev || changed >= MIN_CHANGED || daily || opening;
+    if (publish) sections[name] = { json: compute[name](), publishedAt: now, snapshot, contributors: new Set(owners.values()).size, changed };
+    else sections[name] = { ...prev, changed, kept: true };
+  }
+
+  const open = active.size >= OPEN_AT;
+  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, sectionsAsOf: {} };
+  if (open) {
+    for (const [name, s] of Object.entries(sections)) {
+      if (s.json === null || s.json === undefined) continue;
+      dashboard[name] = s.json;
+      dashboard.sectionsAsOf[name] = s.publishedAt;
+    }
+  } else if (sections.underReview.json) {
+    dashboard.underReview = sections.underReview.json;
+  }
+  if (!("underReview" in dashboard)) dashboard.underReview = null;
+  return { dashboard, sections, daily, today };
+}

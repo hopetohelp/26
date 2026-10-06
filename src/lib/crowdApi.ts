@@ -16,7 +16,8 @@
  * POST /auth/login    {username,password}  ⇐ {token}
  * POST /auth/logout   {all?:boolean}       ⇐ {ok}
  * POST /auth/password {current,next}       ⇐ {token}      מחליף סיסמה ומבטל את שאר הסשנים.
- * POST /auth/email    {email|null}         ⇐ {ok}         מוסיף/מסיר מייל לשחזור.
+ * POST /auth/email    {email|null}         ⇐ {ok, pending} שומר מייל ממתין ושולח קישור אימות (דורש שם משתמש); null מסיר.
+ * POST /auth/email/verify {verify}         ⇐ {ok}         מאשר את המייל מהקישור (#/guess?verify=…). בלי אסימון.
  * POST /auth/forgot   {username}           ⇐ {ok}         תמיד ok (לא חושף קיום); שולח קישור איפוס אם יש מייל.
  * POST /auth/reset    {reset,password}     ⇐ {token}
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
@@ -109,8 +110,10 @@ export interface SeatStat {
 
 export interface Dashboard {
   /** מועד הפרסום — "נכון ל-" */
-  publishedAt: string;
-  aggregationId: string;
+  publishedAt: string | null;
+  aggregationId: string | null;
+  /** מועד הפרסום של כל חלק — חלק קפוא לא משתנה גם כשהצבירה רצה */
+  sectionsAsOf?: Record<string, string>;
   participants: number;
   /** הדשבורד נפתח מ-30 */
   open: boolean;

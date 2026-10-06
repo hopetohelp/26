@@ -1,0 +1,20 @@
+# שרת השתתפות הגולשים ("ההשערה שלי" + דשבורד). נפרס מ-.github/workflows/crowd-worker.yml
+# סודות (wrangler secret put): IP_KEY, LOOKUP_KEY, EMAIL_KEY — נוצרים אוטומטית בפריסה; רשות: RESEND_API_KEY, IP_KEY_PREV.
+name = "elections26-crowd"
+main = "index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGIN = "https://hopetohelp.github.io"
+SITE_URL = "https://hopetohelp.github.io/26/"
+MAIL_FROM = ""
+
+[[d1_databases]]
+binding = "DB"
+database_name = "elections26-crowd"
+database_id = "a0564cb0-3bea-40e9-b5a9-e0dae54b6a86"
+
+# צבירה, זיהוי חריגות וניקוי — כל שעה
+[triggers]
+crons = ["0 * * * *"]
