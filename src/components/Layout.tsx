@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import FreezeBanner from "./FreezeBanner";
 import Feedback from "./Feedback";
 import { meta } from "../lib/data";
@@ -10,7 +10,7 @@ import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label }))];
-/** הלשוניות בתחתית המסך בטלפון; "עוד" פותח את כל העמודים */
+/** הלשוניות בתחתית המסך בטלפון. כל שאר המסכים — מריבועי מסך הבית (בלי "עוד", הכרעת בעלים) */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/today", label: "מצב ותחזית", icon: "board" },
@@ -155,10 +155,10 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
   );
 }
 
-function MobileTabs({ onMore, moreOpen }: { onMore: () => void; moreOpen: boolean }) {
+function MobileTabs() {
   return (
     <nav aria-label="ניווט בטלפון" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-3">
         {TABS.map((t) => (
           <li key={t.to}>
             <NavLink
@@ -173,73 +173,14 @@ function MobileTabs({ onMore, moreOpen }: { onMore: () => void; moreOpen: boolea
             </NavLink>
           </li>
         ))}
-        <li>
-          <button
-            type="button"
-            onClick={onMore}
-            aria-expanded={moreOpen}
-            aria-controls="more-menu"
-            className="w-full flex flex-col items-center justify-center gap-0.5 h-16 text-xs text-ink-faint"
-          >
-            <Icon name="more" />
-            עוד
-          </button>
-        </li>
       </ul>
     </nav>
-  );
-}
-
-function MoreMenu({ onClose }: { onClose: () => void }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    document.getElementById("more-close")?.focus();
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-  return (
-    <div className="md:hidden fixed inset-0 z-40 bg-black/40" onClick={onClose}>
-      <div
-        id="more-menu"
-        role="dialog"
-        aria-modal="true"
-        aria-label="כל העמודים"
-        onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-0 inset-x-0 bg-paper-card text-ink rounded-t-2xl p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] max-h-[85vh] overflow-y-auto"
-      >
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="font-display text-3xl leading-none">כל העמודים</h2>
-          <button id="more-close" type="button" onClick={onClose} aria-label="סגירה" className="w-11 h-11 rounded-full bg-paper flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </div>
-        <ul className="grid grid-cols-2 gap-2">
-          {NAV.map((n) => (
-            <li key={n.to}>
-              <NavLink
-                to={n.to}
-                end={n.to === "/"}
-                onClick={onClose}
-                className={({ isActive }) =>
-                  `block rounded-theme px-3 py-3 no-underline font-bold border ${isActive ? "bg-ink text-paper-card border-ink" : "border-paper-line text-ink"}`
-                }
-              >
-                {n.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
   );
 }
 
 export default function Layout() {
   const { pathname } = useLocation();
   const [theme] = useTheme();
-  const [more, setMore] = useState(false);
   useEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById("main")?.focus({ preventScroll: true });
@@ -270,8 +211,7 @@ export default function Layout() {
         </div>
       </footer>
       <Feedback />
-      <MobileTabs onMore={() => setMore((v) => !v)} moreOpen={more} />
-      {more && <MoreMenu onClose={() => setMore(false)} />}
+      <MobileTabs />
     </div>
   );
 }
