@@ -45,3 +45,11 @@ CREATE TABLE IF NOT EXISTS visitors (
   page TEXT NOT NULL,
   PRIMARY KEY (day, vid, page)
 );
+
+-- ספירה מצטברת של גולשים: vh = גיבוב של מזהה אקראי שנשמר בדפדפן של הגולש (לא נגזר מ-IP או מפרט אחר).
+-- אין כאן כתובת או שום פרט אחר. גולשים בסך הכול = COUNT(*); חוזרים = first_day < last_day.
+CREATE TABLE IF NOT EXISTS visitors_all (
+  vh TEXT PRIMARY KEY,
+  first_day TEXT NOT NULL,
+  last_day TEXT NOT NULL
+);

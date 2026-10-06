@@ -1,4 +1,4 @@
-import { FEEDBACK_URL } from "../lib/feedback";
+import { pingVisit } from "../lib/visits";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import FreezeBanner from "./FreezeBanner";
@@ -240,8 +240,8 @@ export default function Layout() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById("main")?.focus({ preventScroll: true });
-    // מונה כניסות: רק שם העמוד, בלי שום מזהה של הגולש
-    if (FEEDBACK_URL) fetch(`${FEEDBACK_URL}/hit`, { method: "POST", body: JSON.stringify({ page: pathname }), keepalive: true }).catch(() => {});
+    // מונה כניסות (src/lib/visits.ts)
+    pingVisit(pathname);
   }, [pathname]);
 
   return (
