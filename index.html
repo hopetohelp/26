@@ -14,7 +14,7 @@
       // העיצוב שהגולש בחר — לפני הציור הראשון, כדי שלא יהבהב העיצוב הלא נכון (src/lib/theme.ts)
       try {
         var t = localStorage.getItem("elections26.theme");
-        if (t === "board" || t === "league" || t === "boxes") document.documentElement.dataset.theme = t;
+        if (t === "board" || t === "league") document.documentElement.dataset.theme = t;
       } catch (e) {}
     </script>
   </head>

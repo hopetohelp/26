@@ -1,4 +1,3 @@
-import { colorOf } from "../lib/colors";
 import type { ThemeId } from "../lib/theme";
 
 /** שורה אחת: מנדטים לפי הממוצע, טווח 80% של התרחישים, ושיעור התרחישים שבהם הרשימה עוברת את הסף */
@@ -26,7 +25,6 @@ const srRow = (r: ListRow, basis: string) =>
  *  basis: מקור המספר המרכזי, כפי שנקרא ("הממוצע" בעמוד הראשי, "התחזית" בעמוד התחזית). */
 export default function ListsView({ rows, theme, basis = "הממוצע" }: { rows: ListRow[]; theme: ThemeId; basis?: string }) {
   if (theme === "league") return <League rows={rows} basis={basis} />;
-  if (theme === "boxes") return <Boxes rows={rows} basis={basis} />;
   return <Board rows={rows} basis={basis} />;
 }
 
@@ -135,42 +133,5 @@ function League({ rows, basis }: { rows: ListRow[]; basis: string }) {
         })}
       </ol>
     </div>
-  );
-}
-
-/* ---------- קיר הקופסאות ---------- */
-function Boxes({ rows, basis }: { rows: ListRow[]; basis: string }) {
-  return (
-    <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 [&>*]:min-w-0" aria-label={`הרשימות: מנדטים לפי ${basis} וטווח התרחישים`}>
-      {rows.map((r, i) => {
-        const out = isOut(r);
-        const edge = isEdge(r);
-        const run: { v: number; on: boolean }[] = [];
-        if (r.hi === 0) run.push({ v: 0, on: true });
-        else {
-          if (r.lo === 0) run.push({ v: 0, on: r.central === 0 });
-          for (let s = r.lo === 0 ? 4 : r.lo; s <= r.hi; s++) run.push({ v: s, on: s === r.central });
-        }
-        return (
-          <li key={r.id} className={`flex flex-col gap-2 rounded-theme px-3 pt-2.5 pb-3 shadow-[inset_0_-4px_0_rgba(0,0,0,.12)] ${out ? "bg-accent-soft" : "bg-paper-card"}`}>
-            <span className="sr-only">{srRow(r, basis)}</span>
-            <span className="flex flex-wrap justify-between items-baseline gap-x-2 gap-y-1" aria-hidden="true">
-              <span className="font-display text-[32px] leading-[0.95] flex items-center gap-2 min-w-0 break-words">
-                <span className="w-3 h-3 rounded-full" style={{ background: colorOf(r.id, i) }} />
-                {r.name}
-              </span>
-              {(edge || out) && <span className={`text-xs font-extrabold ${edge ? "text-warn" : "text-ink-faint"}`}>{out ? "מתחת לסף" : `עוברת ב-${passPct(r.pass)}%`}</span>}
-            </span>
-            <span className="flex flex-wrap gap-1 justify-end" dir="ltr" aria-hidden="true">
-              {run.map((x) => (
-                <span key={x.v} className={`font-num text-xs min-w-[1.6rem] text-center px-1 py-0.5 rounded-[3px] ${x.on ? "bg-ink text-paper-card font-extrabold" : "bg-accent-soft text-ink-faint"}`}>
-                  {x.v}
-                </span>
-              ))}
-            </span>
-          </li>
-        );
-      })}
-    </ul>
   );
 }
