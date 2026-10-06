@@ -3,7 +3,7 @@ import { linkAcked, setLinkAck } from "../../lib/crowdSession";
 import { call, type BlocsPayload, type Dashboard, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import Blocs from "./Blocs";
 import History from "./History";
-import LinkSaver, { FORGOT_LINE } from "./LinkSaver";
+import LinkSaver from "./LinkSaver";
 import MyData from "./MyData";
 import Seats from "./Seats";
 import Vote from "./Vote";
@@ -36,8 +36,8 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
   }, [session.online]);
 
   const [acked, setAcked] = useState(linkAcked);
-  // הכרטיס הבולט מופיע מיד אחרי השמירה הראשונה (כשנוצר הקישור), עד שמאשרים ששמרתם
-  const showLink = !!session.link && !acked && !!(seats.saved || blocs.saved || vote.saved);
+  // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
+  const showLink = !!session.token && !!session.link && !acked;
 
   const statusOf = (s: Sec) => (s === "seats" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null);
   return (
@@ -50,10 +50,10 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
       {showLink && session.link && (
         <section className="mb-5 border-2 border-ink rounded-theme p-4 bg-paper-card space-y-2" aria-labelledby="link-first-title">
           <h2 id="link-first-title" className="font-display text-3xl leading-none">
-            נשמר. עכשיו שמרו את הקישור האישי
+            נרשמתם. עכשיו שמרו את הקישור האישי
           </h2>
           <p className="text-sm">
-            הקישור הוא המפתח להשערות שלכם מכל מכשיר, והדרך היחידה לשחזר אותן — האתר לא שומר שם ולא מייל. {FORGOT_LINE}
+            הקישור האישי מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. האתר לא שומר מייל, ולכן זו הדרך היחידה לשחזר סיסמה שנשכחה.
           </p>
           <LinkSaver token={session.link} />
           <Btn onClick={() => (setLinkAck(true), setAcked(true))}>שמרתי את הקישור</Btn>

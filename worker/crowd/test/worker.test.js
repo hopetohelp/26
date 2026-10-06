@@ -31,18 +31,29 @@ async function call(path, { body, token, method, ip = "1.2.3.4" } = {}) {
   );
   return { status: res.status, data: await res.json().catch(() => null), headers: res.headers };
 }
-const newP = async (ip = ipFor()) => (await call("/participant", { body: {}, ip })).data.token;
+let un = 0;
+const PW = "a long pass phrase";
+const register = (ip = ipFor(), username = "user_" + un++) => call("/auth/register", { body: { username, password: PW }, ip });
+/** משתתף חדש = הרשמה (אין משתתף אנונימי). מחזיר אסימון סשן */
+const newP = async (ip = ipFor()) => (await register(ip)).data.token;
 let op = 0;
 const save = (token, unit, payload, op_id = "op-" + String(op++).padStart(8, "0")) => call("/save", { token, body: { unit, op_id, registry: "r", payload } });
 
 describe("participant & saves", () => {
-  it("creates participant, /me, CORS with authorization header", async () => {
-    const r = await call("/participant", { body: {} });
+  it("register creates participant + link; /me, CORS; no anonymous creation", async () => {
+    const r = await register();
     expect(r.status).toBe(200);
+    expect(r.data.token).toMatch(/^[\w-]{20,}$/);
+    expect(r.data.link).toMatch(/^[\w-]{20,}$/);
     expect(r.headers.get("access-control-allow-headers")).toContain("authorization");
     const me = await call("/me", { token: r.data.token });
-    expect(me.data).toMatchObject({ latest: {}, username: null, google: false });
+    expect(me.data).toMatchObject({ latest: {}, username: "user_" + (un - 1), google: false });
     expect((await call("/me")).status).toBe(401);
+    expect((await call("/participant", { body: {} })).status).toBe(404);
+    // הקישור אינו אסימון כניסה
+    expect((await call("/me", { token: r.data.link })).status).toBe(401);
+    expect((await save(r.data.link, "seats", seats(60))).status).toBe(401);
+    expect((await call("/link/rotate", { body: {}, token: r.data.link })).status).toBe(401);
   });
   it("saves each unit; rejects invalid; op_id idempotent; history", async () => {
     const tok = await newP();
@@ -64,48 +75,53 @@ describe("participant & saves", () => {
     const me = await call("/me", { token: tok });
     expect(Object.keys(me.data.latest).sort()).toEqual(["blocs", "seats", "vote"]);
   });
-  it("rate limits: 20 saves/hour per participant, 5 participants/hour per IP", async () => {
+  it("rate limits: 20 saves/hour per participant, 5 registrations/hour per IP", async () => {
     const tok = await newP();
     for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats(i))).status).toBe(200);
     expect((await save(tok, "seats", seats(1))).status).toBe(429);
     t += 2 * 3600 * 1000;
     expect((await save(tok, "seats", seats(1))).status).toBe(200);
-    for (let i = 0; i < 5; i++) expect((await call("/participant", { body: {}, ip: "2001:db8:1:2:3::1" })).status).toBe(200);
-    expect((await call("/participant", { body: {}, ip: "2001:db8:1:2:ffff::9" })).status).toBe(429); // אותו /64
-    expect((await call("/participant", { body: {}, ip: "2001:db8:1:3::1" })).status).toBe(200);
+    for (let i = 0; i < 5; i++) expect((await register("2001:db8:1:2:3::1")).status).toBe(200);
+    expect((await register("2001:db8:1:2:ffff::9")).status).toBe(429); // אותו /64
+    expect((await register("2001:db8:1:3::1")).status).toBe(200);
   });
   it("IP_KEY_PREV keeps old counters", async () => {
-    for (let i = 0; i < 5; i++) await call("/participant", { body: {}, ip: "9.9.9.9" });
+    for (let i = 0; i < 5; i++) await register("9.9.9.9");
     env.IP_KEY_PREV = env.IP_KEY;
     env.IP_KEY = "new-ip-secret";
-    expect((await call("/participant", { body: {}, ip: "9.9.9.9" })).status).toBe(429);
+    expect((await register("9.9.9.9")).status).toBe(429);
   });
-  it("link rotate invalidates old link; delete removes everything", async () => {
-    const tok = await newP();
+  it("link rotate (session only) replaces the recovery link; delete removes everything", async () => {
+    const reg = await register();
+    const tok = reg.data.token;
     await save(tok, "seats", seats(60));
     const r = await call("/link/rotate", { body: {}, token: tok });
-    expect((await call("/me", { token: tok })).status).toBe(401);
-    expect((await call("/me", { token: r.data.token })).status).toBe(200);
-    expect((await call("/delete", { body: { confirm: "no" }, token: r.data.token })).status).toBe(400);
-    expect((await call("/delete", { body: { confirm: "מחק" }, token: r.data.token })).data).toEqual({ ok: true });
-    expect((await call("/me", { token: r.data.token })).status).toBe(401);
+    expect(r.data.link).toMatch(/^[\w-]{20,}$/);
+    expect((await call("/me", { token: tok })).status).toBe(200); // הסשן נשאר
+    expect((await call("/auth/recover", { body: { link: reg.data.link, password: "brand new pass 1" } })).status).toBe(401);
+    expect((await call("/auth/recover", { body: { link: r.data.link, password: "brand new pass 1" }, ip: "7.7.7.1" })).status).toBe(200);
+    const tok2 = (await call("/auth/login", { body: { username: "user_" + (un - 1), password: "brand new pass 1" } })).data.token;
+    expect((await call("/delete", { body: { confirm: "no" }, token: tok2 })).status).toBe(400);
+    expect((await call("/delete", { body: { confirm: "מחק" }, token: tok2 })).data).toEqual({ ok: true });
+    expect((await call("/me", { token: tok2 })).status).toBe(401);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM versions").get().n).toBe(0);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM participants").get().n).toBe(0);
-  });
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM credentials").get().n).toBe(0);
+  }, 20000);
   it("export returns participant data", async () => {
     const tok = await newP();
     await save(tok, "vote", { v2022: null, v2026: "private" });
     const e = await call("/export", { token: tok });
     expect(e.data.versions.length).toBe(1);
-    expect(e.data.credentials[0].kind).toBe("link");
+    expect(e.data.credentials.map((c) => c.kind).sort()).toEqual(["link", "password"]);
   });
 });
 
 describe("username & password", () => {
   it("register, login, wrong password, no enumeration, progressive delay", async () => {
-    const anon = await newP();
-    expect((await call("/auth/register", { body: { username: "דני", password: "short" }, token: anon })).data.error).toBe("weak_password");
-    const reg = await call("/auth/register", { body: { username: "Dani_7", password: "a long pass phrase" }, token: anon });
+    expect((await call("/auth/register", { body: { username: "דני", password: "short" } })).data.error).toBe("weak_password");
+    expect((await call("/auth/register", { body: { username: "x", password: "a long pass phrase" } })).data.error).toBe("bad_username");
+    const reg = await call("/auth/register", { body: { username: "Dani_7", password: "a long pass phrase" } });
     expect(reg.status).toBe(200);
     expect((await call("/me", { token: reg.data.token })).data.username).toBe("Dani_7");
     expect((await call("/auth/register", { body: { username: "dani_7", password: "a long pass phrase" } })).status).toBe(409);
@@ -144,27 +160,49 @@ describe("username & password", () => {
 });
 
 describe("recovery via personal link (no email)", () => {
-  it("link credential sets a new password without the current one; revokes sessions, keeps the link", async () => {
-    const link = await newP();
-    const reg = await call("/auth/register", { body: { username: "forgetful", password: "original pass 1" }, token: link });
+  it("/auth/recover sets a new password with the link; revokes sessions, keeps the link", async () => {
+    const reg = await call("/auth/register", { body: { username: "forgetful", password: "original pass 1" } });
     expect(reg.status).toBe(200);
+    const link = reg.data.link;
     const other = (await call("/auth/login", { body: { username: "forgetful", password: "original pass 1" } })).data.token;
-    expect((await call("/auth/password", { body: { next: "short" }, token: link })).data.error).toBe("weak_password");
-    const ch = await call("/auth/password", { body: { next: "recovered pass 1" }, token: link });
+    expect((await call("/auth/recover", { body: { link, password: "short" } })).data.error).toBe("weak_password");
+    const ch = await call("/auth/recover", { body: { link, password: "recovered pass 1" } });
     expect(ch.status).toBe(200);
+    expect(ch.data.username).toBe("forgetful");
     expect((await call("/me", { token: reg.data.token })).status).toBe(401);
     expect((await call("/me", { token: other })).status).toBe(401);
-    expect((await call("/me", { token: link })).status).toBe(200); // הקישור נשאר
     expect((await call("/me", { token: ch.data.token })).status).toBe(200);
     expect((await call("/auth/login", { body: { username: "forgetful", password: "original pass 1" } })).status).toBe(401);
     expect((await call("/auth/login", { body: { username: "forgetful", password: "recovered pass 1" } })).status).toBe(200);
+    // הקישור נשאר — אפשר לשחזר שוב
+    expect((await call("/auth/recover", { body: { link, password: "recovered pass 2" } })).status).toBe(200);
   }, 30000);
-  it("normal session still requires the current password", async () => {
+  it("/auth/link logs in with the link (normal session); link itself is not a Bearer", async () => {
+    const reg = await call("/auth/register", { body: { username: "linker", password: "original pass 3" } });
+    const r = await call("/auth/link", { body: { link: reg.data.link }, ip: "8.8.8.1" });
+    expect(r.status).toBe(200);
+    expect(r.data.username).toBe("linker");
+    expect((await call("/me", { token: r.data.token })).data.username).toBe("linker");
+    expect((await call("/me", { token: reg.data.link })).status).toBe(401);
+    expect((await call("/me", { token: reg.data.token })).status).toBe(200); // סשנים אחרים לא נפגעים
+    for (let i = 0; i < 3; i++) await call("/auth/link", { body: { link: "y".repeat(43) }, ip: "8.8.8.2" });
+    expect((await call("/auth/link", { body: { link: reg.data.link }, ip: "8.8.8.2" })).status).toBe(429);
+  }, 20000);
+  it("bad links are rejected with progressive delay", async () => {
+    const bogus = "x".repeat(43);
+    for (let i = 0; i < 3; i++) expect((await call("/auth/recover", { body: { link: bogus, password: "whatever pass 1" }, ip: "6.6.6.6" })).status).toBe(401);
+    const slow = await call("/auth/recover", { body: { link: bogus, password: "whatever pass 1" }, ip: "6.6.6.6" });
+    expect(slow).toMatchObject({ status: 429, data: { error: "slow_down" } });
+    expect((await call("/auth/recover", { body: { password: "whatever pass 1" }, ip: "6.6.6.7" })).status).toBe(401);
+  });
+  it("password change with a session always requires the current password", async () => {
     const reg = await call("/auth/register", { body: { username: "session_user", password: "original pass 2" } });
     const r = await call("/auth/password", { body: { next: "another pass 22" }, token: reg.data.token });
     expect(r).toMatchObject({ status: 401, data: { error: "bad_credentials" } });
     const w = await call("/auth/password", { body: { current: "wrong pass 222", next: "another pass 22" }, token: reg.data.token });
     expect(w.status).toBe(401);
+    // הקישור אינו Bearer גם כאן
+    expect((await call("/auth/password", { body: { next: "another pass 22" }, token: reg.data.link })).status).toBe(401);
     expect((await call("/auth/login", { body: { username: "session_user", password: "original pass 2" } })).status).toBe(200);
   }, 30000);
   it("removed email endpoints are gone", async () => {

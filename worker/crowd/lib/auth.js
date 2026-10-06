@@ -1,8 +1,7 @@
 /**
  * זהות, סשנים והגבלת קצב.
  * - סשן: אסימון אקראי של 256 ביט; במאגר רק SHA-256 שלו. תוקף 30 יום.
- * - הקישור האישי הוא אמצעי כניסה (credentials.kind = 'link') שהאסימון שלו עובד גם כ-Bearer, בלי תפוגה,
- *   עד שמחליפים אותו (/link/rotate) או מוחקים את המשתתף.
+ * - הקישור האישי (credentials.kind = 'link') מכניס דרך /auth/link (סשן חדש) ומשחזר סיסמה דרך /auth/recover. הוא עצמו אינו Bearer.
  * - הגבלת קצב: מונים במאגר בחלונות של שעה, ספירה "מתגלגלת" (החלון הנוכחי + החלק היחסי מהקודם), עדכון אטומי.
  */
 import { randomToken, sha256, hmac, ipPrefix } from "./crypto.js";
@@ -16,17 +15,14 @@ export function bearer(request) {
   return m ? m[1] : null;
 }
 
-/** אסימון ⇐ {participant, session: token_hash|null, viaLink} או null. viaLink = נכנס בקישור האישי */
+/** אסימון סשן ⇐ {participant, session: token_hash} או null */
 export async function authenticate(env, token, now) {
   if (!token) return null;
   const th = await sha256(token);
   const s = await env.DB.prepare("SELECT participant FROM sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?")
     .bind(th, new Date(now).toISOString())
     .first();
-  if (s) return { participant: s.participant, session: th, viaLink: false };
-  const c = await env.DB.prepare("SELECT participant FROM credentials WHERE kind = 'link' AND token_hash = ?").bind(th).first();
-  if (c) return { participant: c.participant, session: null, viaLink: true };
-  return null;
+  return s ? { participant: s.participant, session: th } : null;
 }
 
 /** סשן חדש ⇐ [statement, token] */

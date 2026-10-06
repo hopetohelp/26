@@ -22,6 +22,26 @@ describe("validate", () => {
     frac.seats[IDS[1]].v = 60.5;
     expect(save("seats", frac).ok).toBe(false);
   });
+  it("seats by vote percentages (mode pct)", () => {
+    const pct = (p) => save("seats", seats(60, "filled", { mode: "pct", pct: p }));
+    expect(pct({ [IDS[0]]: 40.5, [IDS[1]]: 50 }).ok).toBe(true);
+    expect(pct({ [IDS[0]]: 40.5, [IDS[1]]: 50 }).value.payload.pct).toEqual({ [IDS[0]]: 40.5, [IDS[1]]: 50 });
+    expect(pct({ [IDS[0]]: 50, [IDS[1]]: 50.05 }).error).toBe("pct_value"); // שתי ספרות
+    expect(pct({ [IDS[0]]: 60, [IDS[1]]: 40.1 }).error).toBe("pct_sum");
+    expect(pct({ [IDS[0]]: -1 }).error).toBe("pct_value");
+    expect(pct({ [IDS[0]]: 101 }).error).toBe("pct_value");
+    expect(pct({ nope: 3 }).error).toBe("list");
+    expect(pct(undefined).error).toBe("pct");
+    expect(save("seats", seats(60, "manual", { mode: "x" })).error).toBe("mode");
+    // בלי mode — ניחוש לפי מנדטים (גרסאות ישנות)
+    expect(save("seats", seats(60)).value.payload.mode).toBe("seats");
+    // pct נשמר רק במצב pct
+    expect(save("seats", seats(60, "manual", { mode: "seats", pct: { [IDS[0]]: 3 } })).value.payload.pct).toBeUndefined();
+    // המנדטים עדיין חייבים להסתכם ב-120
+    const bad = seats(60, "filled", { mode: "pct", pct: { [IDS[0]]: 50 } });
+    bad.seats[IDS[0]].v = 10;
+    expect(save("seats", bad).error).toBe("sum");
+  });
   it("blocs", () => {
     const b = (blocs) => validateBlocs({ mode: "custom", blocs });
     expect(b([{ id: "a", name: "", lists: [IDS[0]], target: 60 }, { id: "b", name: "", lists: [IDS[1]], target: null }]).ok).toBe(true);

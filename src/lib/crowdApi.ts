@@ -2,21 +2,23 @@
  * החוזה בין האתר לשרת ההשתתפות (worker/crowd). מקור אחד לטיפוסים בשני הצדדים — השרת מממש בדיוק את מה שכתוב כאן.
  * השיטה המלאה: docs/השתתפות-גולשים.md
  *
- * זהות: כל בקשה מזוהה נושאת `Authorization: Bearer <token>`. האסימון נוצר בשמירה הראשונה (משתתף אנונימי)
- * או בכניסה בשם משתמש/סיסמה, ונשמר בדפדפן אצל הבעלים היחיד שלו — src/lib/crowdSession.ts.
+ * זהות: חשבון = שם משתמש + סיסמה, והוא הדרך היחידה לשמור (הכרעת בעלים 6.10.2026) — אין משתתף אנונימי.
+ * כל בקשה מזוהה נושאת `Authorization: Bearer <token>` של סשן; הסשן נשמר בדפדפן אצל הבעלים היחיד שלו — src/lib/crowdSession.ts.
+ * הקישור האישי נוצר בהרשמה: הוא מכניס ישר להשערות (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה. הוא עצמו אינו Bearer.
  *
- * POST /participant                 ⇐ {token}             משתתף אנונימי חדש + אסימון סשן. האסימון הוא גם "הקישור האישי".
- * GET  /me                          ⇐ Me                  מצב המשתתף: הגרסה האחרונה בכל יחידה, אמצעי כניסה.
+ * POST /auth/register {username,password}  ⇐ {token, link}  משתתף חדש: סיסמה + קישור אישי + סשן.
+ * POST /auth/login    {username,password}  ⇐ {token}
+ * POST /auth/logout   {all?:boolean}       ⇐ {ok}
+ * POST /auth/password {current,next}       ⇐ {token}       קובע סיסמה (הנוכחית חובה) ומבטל את שאר הסשנים; הקישור נשאר.
+ * POST /auth/link     {link}               ⇐ {token, username}  כניסה בקישור האישי ⇐ סשן רגיל. עיכוב מדורג כמו בכניסה.
+ * POST /auth/recover  {link,password}      ⇐ {token, username}  שחזור: הקישור האישי + סיסמה חדשה ⇐ סשן רגיל;
+ *                                                         מבטל את שאר הסשנים, הקישור נשאר. עיכוב מדורג כמו בכניסה.
+ * GET  /me                          ⇐ Me                  מצב המשתתף: הגרסה האחרונה בכל יחידה, שם המשתמש.
  * POST /save   SaveRequest          ⇐ {version}           גרסה חדשה ליחידה (op_id ייחודי — ניסיון חוזר מחזיר את אותה גרסה).
  * GET  /history?unit=seats          ⇐ {versions: Version[]}
  * GET  /export                      ⇐ כל נתוני המשתתף (JSON)
  * POST /delete {confirm:"מחק"}      ⇐ {ok}               מחיקה מלאה + ביטול כל הסשנים.
- * POST /link/rotate                 ⇐ {token}             קישור אישי חדש; הקודם מפסיק לעבוד מיד.
- * POST /auth/register {username,password}  ⇐ {token}      מוסיף שם משתמש+סיסמה למשתתף הנוכחי (או יוצר משתתף).
- * POST /auth/login    {username,password}  ⇐ {token}
- * POST /auth/logout   {all?:boolean}       ⇐ {ok}
- * POST /auth/password {current?,next}      ⇐ {token}      קובע סיסמה ומבטל את שאר הסשנים (הקישור נשאר). current חובה בסשן רגיל;
- *                                                         עם הקישור האישי כ-Bearer — לא נדרש: זה מסלול השחזור למי ששכח סיסמה.
+ * POST /link/rotate                 ⇐ {link}              קישור אישי חדש (בסשן); הקודם מפסיק לעבוד מיד.
  *
  * אין מייל בכלל (הכרעת בעלים 6.10.2026): אין שליחת מיילים, אין איפוס במייל. השחזור = הקישור האישי.
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
@@ -44,7 +46,11 @@ export interface SeatCell {
 }
 
 export interface SeatsPayload {
-  /** מזהה רשימה 2026 ⇐ ערך. סכום v חייב 120 */
+  /** "seats" = ניחוש לפי מנדטים (ברירת המחדל, גם כשחסר) · "pct" = לפי אחוזי הצבעה, והמנדטים מחושבים במנוע החוק */
+  mode?: "seats" | "pct";
+  /** במצב pct: אחוז מהקולות הכשרים לכל רשימה (0..100, ספרה אחת אחרי הנקודה, סכום ≤ 100; היתר = אחרות / לא עברו) */
+  pct?: Record<string, number>;
+  /** מזהה רשימה 2026 ⇐ ערך. סכום v חייב 120 (גם במצב pct — כפי שחישב המנוע) */
   seats: Record<string, SeatCell>;
   start: "zero" | "k25" | "polls";
   /** תאריך תמונת ממוצע הסקרים ששימשה (פתיחה או "השלם הכול") */
@@ -125,6 +131,10 @@ export interface Dashboard {
     pollsAsOf: string | null;
     polls: Record<string, number>;
     starts: Record<"zero" | "k25" | "polls", number>;
+    /** כמה ניחשו לפי מנדטים וכמה לפי אחוזים */
+    modes?: { seats: number; pct: number };
+    /** אחוזי ההצבעה שניחשו, בקרב מי שניחשו לפי אחוזים (רק מ-10) */
+    pctStats?: SeatStat[];
   };
   blocs?: {
     derived: { gov: SeatStat; rest: SeatStat } | null;

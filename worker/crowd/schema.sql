@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS participants (
 );
 CREATE INDEX IF NOT EXISTS participants_created ON participants(created_at);
 
--- אמצעי כניסה. link = הקישור האישי (token_hash) · password = שם משתמש+סיסמה · google = שלב עתידי.
+-- אמצעי כניסה. link = הקישור האישי (token_hash): /auth/link ⇐ סשן, /auth/recover ⇐ סיסמה חדשה; אינו Bearer · password = שם משתמש+סיסמה · google = שלב עתידי.
 CREATE TABLE IF NOT EXISTS credentials (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   participant TEXT NOT NULL REFERENCES participants(id),

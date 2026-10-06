@@ -3,12 +3,14 @@ import modelFile from "../../data/model.json";
 import type { Bloc, BlocsPayload, SeatCell, SeatsPayload, VotePayload } from "../../lib/crowdApi";
 import { lists2026, results } from "../../lib/data";
 
-const model = modelFile as unknown as { asof: string; central: { seats: Record<string, number> } };
+const model = modelFile as unknown as { asof: string; central: { seats: Record<string, number>; shares: Record<string, number> } };
 
 export const IDS = lists2026.map((l) => l.id);
 export const ALPHA = [...lists2026].sort((a, b) => a.name.localeCompare(b.name, "he"));
 export const POLLS: Record<string, number> = model.central.seats;
 export const POLLS_AS_OF = model.asof;
+/** ממוצע הסקרים באחוזים מהקולות הכשרים — בסיס "השלם הכול" בניחוש לפי אחוזים */
+export const POLL_SHARES: Record<string, number> = model.central.shares;
 export const nameOf = (id: string) => lists2026.find((l) => l.id === id)?.name ?? id;
 
 const k25 = results.find((r) => r.id === "k25")!;

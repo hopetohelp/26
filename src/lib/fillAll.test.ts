@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Bloc, SeatCell } from "./crowdApi";
-import { fillAll, fillErrorText, largestRemainder } from "./fillAll";
-import { validateBlocs, validateSeats, validateVote } from "./crowdValidate";
+import { fillAll, fillErrorText, fillPct, largestRemainder } from "./fillAll";
+import { validateBlocs, validatePct, validateSeats, validateVote } from "./crowdValidate";
 
 const m = (v: number): SeatCell => ({ v, src: "manual", locked: true });
 const sum = (s: Record<string, SeatCell>) => Object.values(s).reduce((a, c) => a + c.v, 0);
@@ -145,5 +145,45 @@ describe("validation", () => {
     expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 60), bloc("y", ["a"], null)] }, ids)).not.toBeNull();
     expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 0), bloc("y", ["b"], 120)] }, ids)).toBeNull();
     expect(validateBlocs({ mode: "custom", blocs: [1, 2, 3, 4, 5].map((i) => bloc(String(i), [], null)) }, ids)).not.toBeNull();
+  });
+});
+
+describe("fillPct (guess by vote percentages)", () => {
+  const ids = ["a", "b", "c", "d"];
+  const shares = { a: 50, b: 30, c: 15, d: 4 }; // אחרות = 1%
+  it("fills the remainder proportionally to the polls shares, keeping the 'others' share", () => {
+    const r = fillPct(ids, { a: 0, b: 0, c: 0, d: 0 }, () => false, shares);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.pct).toEqual({ a: 50, b: 30, c: 15, d: 4 });
+    expect(r.changed).toEqual(ids);
+  });
+  it("respects locks and stays in tenths", () => {
+    const r = fillPct(ids, { a: 40, b: 0, c: 0, d: 0 }, (id) => id === "a", shares);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.pct.a).toBe(40);
+    const sum = ids.reduce((s, id) => s + r.pct[id], 0);
+    expect(sum).toBeCloseTo(40 + 60 * (49 / 50), 1);
+    for (const id of ids) expect(Math.abs(r.pct[id] * 10 - Math.round(r.pct[id] * 10))).toBeLessThan(1e-9);
+    expect(r.pct.b).toBeGreaterThan(r.pct.c);
+  });
+  it("errors when locked percentages exceed 100", () => {
+    const r = fillPct(ids, { a: 60, b: 50, c: 0, d: 0 }, (id) => id === "a" || id === "b", shares);
+    expect(r).toEqual({ ok: false, error: { kind: "pct-over", locked: 110 } });
+  });
+});
+
+describe("validatePct (client mirror of the server rule)", () => {
+  const ids = ["a", "b"];
+  it("accepts tenths up to a sum of 100", () => {
+    expect(validatePct({ a: 60.5, b: 39.5 }, ids)).toBeNull();
+    expect(validatePct({ a: 10 }, ids)).toBeNull();
+  });
+  it("rejects bad values", () => {
+    expect(validatePct({ a: 60.55 }, ids)).not.toBeNull();
+    expect(validatePct({ a: 60, b: 40.1 }, ids)).toMatch(/יותר מ-100/);
+    expect(validatePct({ x: 1 }, ids)).not.toBeNull();
+    expect(validatePct({ a: -1 }, ids)).not.toBeNull();
   });
 });

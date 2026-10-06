@@ -5,7 +5,8 @@
  * בלי עוגיות — הזהות רק בכותרת Authorization, ולכן אין חשיפה ל-CSRF.
  *
  * סודות (wrangler secret): IP_KEY; רשות: IP_KEY_PREV (24 שעות אחרי החלפה).
- * בלי מייל בכלל (הכרעת בעלים 6.10.2026): השחזור הוא הקישור האישי — הוא מכניס ומאפשר לקבוע סיסמה חדשה בלי הישנה.
+ * חשבון = שם משתמש + סיסמה, והוא הדרך היחידה לשמור (הכרעת בעלים 6.10.2026) — אין משתתף אנונימי.
+ * בלי מייל בכלל: הקישור האישי נוצר בהרשמה; הוא מכניס (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה (POST /auth/recover). הוא עצמו אינו Bearer.
  * cron כל שעה: ניקוי מונים ישנים, זיהוי חריגות, צבירה ופרסום.
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
@@ -58,7 +59,7 @@ async function requireAuth(env, request, now) {
   return a;
 }
 
-/** משתתף אנונימי חדש (עם הגבלה לפי IP) ⇐ [statements, participantId] */
+/** משתתף חדש — רק מתוך הרשמה (עם הגבלה לפי IP) ⇐ [statements, participantId] */
 async function createParticipant(env, request, now) {
   const [cur, ...prev] = await ipKeys(env, request);
   if (!(await hit(env, "p:" + cur, LIMITS.participantsPerHourPerIp, now, HOUR, prev.map((k) => "p:" + k)))) throw new HttpError(429, "rate");
@@ -94,20 +95,25 @@ function checkPassword(p) {
   if (problem) throw bad("weak_password", { reason: problem });
 }
 
+/** הקישור האישי (בגוף הבקשה) ⇐ המשתתף, עם עיכוב מדורג לפי IP על ניסיונות כושלים */
+async function linkOwner(env, request, now, raw) {
+  const link = typeof raw === "string" && /^[\w-]{20,100}$/.test(raw) ? raw : null;
+  const ips = await ipKeys(env, request);
+  const keys = ["fi:" + ips[0]];
+  const wait = await waitMs(env, [...keys, ...ips.slice(1).map((k) => "fi:" + k)], now);
+  if (wait > 0) throw new HttpError(429, "slow_down", { retryAfter: Math.ceil(wait / 1000) });
+  const c = link ? await env.DB.prepare("SELECT participant FROM credentials WHERE kind = 'link' AND token_hash = ?").bind(await sha256(link)).first() : null;
+  if (!c) {
+    await recordFail(env, keys, now);
+    throw new HttpError(401, "bad_link");
+  }
+  return { participant: c.participant, keys };
+}
+
 const DUMMY = { algo: "pbkdf2-sha256", salt: "AAAAAAAAAAAAAAAAAAAAAA==", iterations: PBKDF2_ITERATIONS, hash: "0".repeat(64) };
 
 // ---- הנתיבים
 const routes = {
-  "POST /participant": async ({ env, request, now }) => {
-    const [stmts, id] = await createParticipant(env, request, now);
-    const token = randomToken();
-    await env.DB.batch([
-      ...stmts,
-      env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(id, await sha256(token), iso(now)),
-    ]);
-    return { token };
-  },
-
   "GET /me": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     const p = await env.DB.prepare("SELECT id, created_at FROM participants WHERE id = ?").bind(participant).first();
@@ -191,37 +197,33 @@ const routes = {
       env.DB.prepare("DELETE FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant),
       env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, th, iso(now)),
     ]);
-    return { token };
+    return { link: token };
   },
 
+  // הרשמה = יצירת משתתף: אמצעי סיסמה + קישור אישי לשחזור + סשן. אין דרך אחרת להיווצר.
   "POST /auth/register": async ({ env, request, now, body }) => {
     const u = normalizeUsername(body.username);
     if (!u) throw bad("bad_username");
     checkPassword(body.password);
-    const auth = await authenticate(env, bearer(request), now);
-    let stmts = [];
-    let participant = auth?.participant;
-    if (participant) {
-      if (await passwordCred(env, participant)) throw new HttpError(409, "already_registered");
-    } else {
-      [stmts, participant] = await createParticipant(env, request, now);
-    }
     const taken = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(u.norm).first();
     if (taken) throw new HttpError(409, "username_taken");
+    const [stmts, participant] = await createParticipant(env, request, now);
     const h = await hashPassword(body.password);
     const [sess, token] = await newSession(env, participant, now);
+    const link = randomToken();
     try {
       await env.DB.batch([
         ...stmts,
         env.DB.prepare(
           "INSERT INTO credentials (participant, kind, username, username_norm, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?, ?, ?)",
         ).bind(participant, u.display, u.norm, h.hash, h.salt, h.iterations, h.algo, iso(now)),
+        env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
         sess,
       ]);
     } catch {
       throw new HttpError(409, "username_taken");
     }
-    return { token };
+    return { token, link };
   },
 
   "POST /auth/login": async ({ env, request, now, body }) => {
@@ -250,20 +252,15 @@ const routes = {
   "POST /auth/logout": async ({ env, request, now, body }) => {
     const a = await requireAuth(env, request, now);
     if (body.all) await env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE participant = ?").bind(a.participant).run();
-    else if (a.session) await env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE token_hash = ?").bind(a.session).run();
+    else await env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE token_hash = ?").bind(a.session).run();
     return { ok: true };
   },
 
-  // שינוי סיסמה. עם סשן רגיל — חובה הסיסמה הנוכחית. עם הקישור האישי (Bearer = אסימון הקישור) — אין צורך:
-  // זה מסלול השחזור למי ששכח סיסמה. בשני המקרים כל הסשנים האחרים מבוטלים; הקישור עצמו נשאר.
+  // שינוי סיסמה בסשן רגיל — חובה הסיסמה הנוכחית. כל הסשנים האחרים מבוטלים; הקישור האישי נשאר.
   "POST /auth/password": async ({ env, request, now, body }) => {
-    const { participant, viaLink } = await requireAuth(env, request, now);
+    const { participant } = await requireAuth(env, request, now);
     const cred = await passwordCred(env, participant);
     if (!cred) throw bad("no_password");
-    if (viaLink) {
-      checkPassword(body.next);
-      return { token: await setPassword(env, participant, body.next, now) };
-    }
     const keys = ["fa:" + (await hmac(env.IP_KEY, "user|" + cred.username_norm))];
     const wait = await waitMs(env, keys, now);
     if (wait > 0) throw new HttpError(429, "slow_down", { retryAfter: Math.ceil(wait / 1000) });
@@ -273,6 +270,26 @@ const routes = {
     }
     checkPassword(body.next);
     return { token: await setPassword(env, participant, body.next, now) };
+  },
+
+  // כניסה בקישור האישי ⇐ סשן רגיל (בלי סיסמה). הקישור עצמו אינו Bearer לשום נתיב. עיכוב מדורג כמו בכניסה.
+  "POST /auth/link": async ({ env, request, now, body }) => {
+    const { participant, keys } = await linkOwner(env, request, now, body.link);
+    await clearFails(env, keys);
+    const [sess, token] = await newSession(env, participant, now);
+    await sess.run();
+    const cred = await passwordCred(env, participant);
+    return { token, username: cred?.username ?? null };
+  },
+
+  // שחזור: הקישור האישי + סיסמה חדשה ⇐ סשן רגיל; שאר הסשנים מבוטלים, הקישור נשאר.
+  "POST /auth/recover": async ({ env, request, now, body }) => {
+    const { participant, keys } = await linkOwner(env, request, now, body.link);
+    const cred = await passwordCred(env, participant);
+    if (!cred) throw bad("no_password");
+    checkPassword(body.password);
+    await clearFails(env, keys);
+    return { token: await setPassword(env, participant, body.password, now), username: cred.username };
   },
 
   "GET /log": async ({ env }) => {

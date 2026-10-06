@@ -6,7 +6,7 @@ import { IDS, nameOf } from "./model";
 
 /** 120 מושבים בחצי עיגול: מיקום קבוע לכל מושב, מימין לשמאל ומהשורה הפנימית החוצה */
 const ROWS = 6;
-const SEATS = (() => {
+export const SEATS = (() => {
   const radii = Array.from({ length: ROWS }, (_, i) => 0.44 + (i * 0.56) / (ROWS - 1));
   const per = largestRemainder(TOTAL, Object.fromEntries(radii.map((r, i) => [String(i), r])));
   const out: { x: number; y: number; a: number; r: number }[] = [];
@@ -20,14 +20,20 @@ const SEATS = (() => {
   return out.sort((p, q) => p.a - q.a || q.r - p.r);
 })();
 
-export default function SeatBoard({ values }: { values: Record<string, number> }) {
-  const [theme] = useTheme();
-  const board = theme === "board";
-  const order = useMemo(() => IDS.filter((id) => (values[id] ?? 0) > 0).sort((a, b) => values[b] - values[a]), [values]);
+/** סדר הרשימות (מהגדולה) והצבע של כל מושב — משותף ללוח ולתמונת השיתוף */
+export function seatFills(values: Record<string, number>) {
+  const order = IDS.filter((id) => (values[id] ?? 0) > 0).sort((a, b) => values[b] - values[a]);
   const fills: { id: string; i: number }[] = [];
   order.forEach((id) => {
     for (let k = 0; k < values[id] && fills.length < TOTAL; k++) fills.push({ id, i: IDS.indexOf(id) });
   });
+  return { order, fills };
+}
+
+export default function SeatBoard({ values }: { values: Record<string, number> }) {
+  const [theme] = useTheme();
+  const board = theme === "board";
+  const { order, fills } = useMemo(() => seatFills(values), [values]);
   const total = IDS.reduce((a, id) => a + (values[id] ?? 0), 0);
   const left = TOTAL - total;
 

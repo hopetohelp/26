@@ -4,9 +4,9 @@ import { Btn, inputCls } from "./ui";
 export const personalLink = (token: string) => `${location.origin}${location.pathname}#/guess?t=${encodeURIComponent(token)}`;
 
 /** שורת ההסבר על השחזור — אותו ניסוח בכל מקום (אין מייל; הכרעת בעלים 6.10.2026) */
-export const FORGOT_LINE = "שכחתם סיסמה? פתחו את הקישור האישי שלכם — הוא מכניס אתכם ומאפשר לקבוע סיסמה חדשה.";
+export const FORGOT_LINE = "שכחתם סיסמה? פתחו את הקישור האישי שקיבלתם בהרשמה — הוא מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אין שחזור במייל.";
 
-const FILE_LINE = "זה הקישור האישי שלכם לאתר ניתוח הבחירות לכנסת ה-26: הוא מכניס להשערות שלכם מכל מכשיר ומאפשר לקבוע סיסמה חדשה. אל תשתפו אותו.";
+const FILE_LINE = "זה הקישור האישי שלכם לאתר ניתוח הבחירות לכנסת ה-26: הוא מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אל תשתפו אותו.";
 
 /** שמירת הקישור האישי: העתקה, שליחה לעצמי (שיתוף המכשיר), הורדה כקובץ */
 export default function LinkSaver({ token }: { token: string }) {
@@ -48,7 +48,7 @@ export default function LinkSaver({ token }: { token: string }) {
         {canShare && <Btn onClick={share}>שליחה לעצמי</Btn>}
         <Btn onClick={download}>הורדה כקובץ</Btn>
       </div>
-      <p className="text-xs text-ink-soft">{canShare ? "\"שליחה לעצמי\" — למשל בוואטסאפ לעצמכם. " : ""}אל תשתפו אותו עם אחרים: מי שמחזיק בו יכול לשנות ולמחוק.</p>
+      <p className="text-xs text-ink-soft">{canShare ? "\"שליחה לעצמי\" — למשל בוואטסאפ לעצמכם. " : ""}אל תשתפו אותו עם אחרים: מי שמחזיק בו נכנס לחשבון ויכול לשנות ולמחוק.</p>
       {msg && (
         <p role="status" className="text-sm font-bold">
           {msg}

@@ -25,6 +25,18 @@ export function validateSeats(p: SeatsPayload, ids: string[]): string | null {
   return null;
 }
 
+/** אחוזי הצבעה (ניחוש במצב pct): 0..100, עשירית אחוז לכל היותר, סכום עד 100 — כמו בשרת */
+export function validatePct(pct: Record<string, number>, ids: string[]): string | null {
+  let sum = 0;
+  for (const [id, v] of Object.entries(pct)) {
+    if (!ids.includes(id)) return "רשימה לא מוכרת.";
+    if (!Number.isFinite(v) || v < 0 || v > 100 || Math.abs(v * 10 - Math.round(v * 10)) > 1e-6) return "כל אחוז בין 0 ל-100, עם ספרה אחת אחרי הנקודה.";
+    sum += v;
+  }
+  if (sum > 100.05) return `סכום האחוזים ${Math.round(sum * 10) / 10}%, יותר מ-100%.`;
+  return null;
+}
+
 export function validateBlocs(p: BlocsPayload, ids: string[]): string | null {
   if (p.blocs.length === 0) return "אין גושים.";
   if (p.blocs.length > MAX_BLOCS) return `עד ${MAX_BLOCS} גושים.`;

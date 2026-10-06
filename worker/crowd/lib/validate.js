@@ -48,7 +48,32 @@ export function validateSeats(p) {
   const pollsAsOf = p.pollsAsOf ?? null;
   if (pollsAsOf !== null && !(typeof pollsAsOf === "string" && /^\d{4}-\d{2}-\d{2}/.test(pollsAsOf) && pollsAsOf.length <= 32))
     return fail("pollsAsOf");
-  return { ok: true, value: { seats, start: p.start, pollsAsOf } };
+  const mode = p.mode ?? "seats";
+  if (mode !== "seats" && mode !== "pct") return fail("mode");
+  const value = { mode, seats, start: p.start, pollsAsOf };
+  if (mode === "pct") {
+    const r = validatePct(p.pct);
+    if (!r.ok) return r;
+    value.pct = r.value;
+  }
+  return { ok: true, value };
+}
+
+export const PCT_MAX_SUM = 100.05;
+/** אחוזי הצבעה: כל ערך 0..100 עם ספרה אחת אחרי הנקודה לכל היותר; סכום עד 100 (סובלנות עיגול 0.05) */
+export function validatePct(pct) {
+  if (!isObj(pct)) return fail("pct");
+  const out = {};
+  let sum = 0;
+  for (const [id, v] of Object.entries(pct)) {
+    if (!IDS_2026.has(id)) return fail("list");
+    if (typeof v !== "number" || !Number.isFinite(v) || v < 0 || v > 100) return fail("pct_value");
+    if (Math.abs(v * 10 - Math.round(v * 10)) > 1e-6) return fail("pct_value");
+    out[id] = Math.round(v * 10) / 10;
+    sum += out[id];
+  }
+  if (sum > PCT_MAX_SUM) return fail("pct_sum");
+  return { ok: true, value: out };
 }
 
 export function validateBlocs(p) {

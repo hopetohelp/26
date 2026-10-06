@@ -173,8 +173,47 @@ function SeatsBlock({ d }: { d: D }) {
         <p className="text-xs text-ink-soft mt-3">
           {Math.round(s.filledShare * 100)}% מהמנדטים בהשערות הושלמו ב"השלם הכול" · {s.usedFillAll} השתמשו בו · נקודות פתיחה: מאפס {s.starts.zero}, מהסקרים {s.starts.polls}, מ-2022 {s.starts.k25}
         </p>
+        {s.modes && (
+          <p className="text-xs text-ink-soft mt-1">
+            ניחשו לפי מנדטים: {s.modes.seats} · לפי אחוזי הצבעה: {s.modes.pct} (אצלם המנדטים חושבו לפי החוק)
+          </p>
+        )}
+        {s.pctStats && <PctStats rows={s.pctStats} />}
       </Ex>
     </Card>
+  );
+}
+
+/** אחוזי ההצבעה שניחשו מי שבחרו "לפי אחוזי הצבעה" (מתפרסם רק מ-10 כאלה) */
+function PctStats({ rows }: { rows: SeatStat[] }) {
+  const sorted = [...rows].sort((a, b) => b.median - a.median || b.mean - a.mean);
+  return (
+    <div className="mt-4">
+      <h3 className="font-bold text-sm mb-1">לפי אחוזי הצבעה ({rows[0]?.n ?? 0} משתתפים)</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm tabular">
+          <caption className="sr-only">אחוזי ההצבעה שניחשו הגולשים, בקרב מי שניחשו לפי אחוזים</caption>
+          <thead>
+            <tr className="text-ink-soft">
+              <th className="text-start font-normal py-1">רשימה</th>
+              <th className="font-normal">חציון</th>
+              <th className="font-normal">25–75</th>
+              <th className="font-normal">ממוצע</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((r) => (
+              <tr key={r.list} className="border-t border-paper-line">
+                <td className="py-1">{nameOf(r.list)}</td>
+                <td className="text-center font-bold"><bdi dir="ltr">{r.median.toFixed(1)}%</bdi></td>
+                <td className="text-center"><bdi dir="ltr">{r.p25.toFixed(1)}–{r.p75.toFixed(1)}%</bdi></td>
+                <td className="text-center"><bdi dir="ltr">{r.mean.toFixed(1)}%</bdi></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { call } from "../../lib/crowdApi";
 import { clearAll } from "../../lib/crowdSession";
 import Account from "./Account";
-import LinkSaver, { FORGOT_LINE } from "./LinkSaver";
+import LinkSaver from "./LinkSaver";
 import { Btn, inputCls, Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
-/** הקישור האישי, ייצוא, החלפה ומחיקה — ותיבת החשבון */
+/** החשבון, הקישור האישי, ייצוא ומחיקה */
 export default function MyData({ session }: { session: ReturnType<typeof useSession> }) {
   const [msg, setMsg] = useState<string | null>(null);
   const [del, setDel] = useState(0);
@@ -14,7 +14,7 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
   const [rotateAsk, setRotateAsk] = useState(false);
   const { token, link } = session;
 
-  if (!session.online) return <Notice>כשהשמירה תיפתח באתר, כאן יופיעו הקישור האישי שלכם, ייצוא, ומחיקה מלאה. בינתיים הכול נשמר רק בדפדפן הזה, כטיוטה.</Notice>;
+  if (!session.online) return <Notice>כשהשמירה תיפתח באתר, כאן יופיעו החשבון שלכם, ייצוא ומחיקה מלאה. בינתיים הכול נשמר רק בדפדפן הזה, כטיוטה.</Notice>;
 
   const run = async (fn: () => Promise<void>) => {
     setMsg(null);
@@ -35,34 +35,34 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
 
   return (
     <div className="space-y-5">
-      {token ? (
+      <Account session={session} />
+
+      {token && (
         <section className="space-y-2">
           <h3 className="font-display text-3xl leading-none">הקישור האישי</h3>
           <p className="text-sm">
-            הקישור הזה הוא המפתח להשערות שלכם, מכל מכשיר, והוא גם <strong>דרך השחזור היחידה</strong>: האתר לא שומר מייל, ואין לנו דרך לשחזר קישור שאבד.
+            הקישור האישי מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אין מייל באתר, ולכן זו <strong>הדרך היחידה</strong> לשחזר סיסמה שנשכחה.
           </p>
-          <p className="text-sm bg-accent-soft text-ink rounded-theme px-3 py-2">{FORGOT_LINE}</p>
           {link ? (
             <LinkSaver token={link} />
           ) : (
-            <p className="text-sm">הקישור האישי לא שמור בדפדפן הזה (נכנסתם בשם משתמש וסיסמה). אפשר ליצור קישור חדש — הקודם, אם היה, יפסיק לעבוד.</p>
+            <p className="text-sm">הקישור לא שמור בדפדפן הזה. אם אינו אצלכם — צרו קישור חדש; הקודם יפסיק לעבוד.</p>
           )}
           <div className="flex gap-2 flex-wrap">
             <Btn onClick={exportJson}>ייצוא (JSON)</Btn>
             {!rotateAsk ? (
-              <Btn onClick={() => setRotateAsk(true)}>{link ? "קישור חדש" : "יצירת קישור אישי"}</Btn>
+              <Btn onClick={() => setRotateAsk(true)}>קישור אישי חדש</Btn>
             ) : (
               <span className="flex gap-2 items-center flex-wrap">
-                <span className="text-sm">{link ? "הקישור הנוכחי יפסיק לעבוד מיד." : "קישור קודם, אם היה, יפסיק לעבוד."}</span>
+                <span className="text-sm">הקישור הקודם יפסיק לעבוד מיד.</span>
                 <Btn
                   kind="primary"
                   onClick={() =>
                     run(async () => {
-                      const r = await call<{ token: string }>("/link/rotate", { token, body: {} });
-                      // הקישור החדש מחליף את הסשן בדפדפן הזה; כאן הוא מוצג מיד לשמירה
-                      session.setToken(r.token, "link");
+                      const r = await call<{ link: string }>("/link/rotate", { token, body: {} });
+                      session.setLink(r.link);
                       setRotateAsk(false);
-                      setMsg("נוצר קישור חדש. שמרו אותו עכשיו — בהעתקה, בשליחה לעצמכם או בהורדה כקובץ.");
+                      setMsg("נוצר קישור אישי חדש. שמרו אותו עכשיו — בהעתקה, בשליחה לעצמכם או בהורדה כקובץ.");
                     })
                   }
                 >
@@ -73,11 +73,7 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
             )}
           </div>
         </section>
-      ) : (
-        <Notice>עוד לא שמרתם, אז אין עדיין קישור אישי. הוא נוצר בשמירה הראשונה.</Notice>
       )}
-
-      <Account session={session} />
 
       {token && (
         <section className="border-2 border-warn rounded-theme p-4 space-y-2">

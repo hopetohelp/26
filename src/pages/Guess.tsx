@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Tabbed from "../components/Tabbed";
 import { PageTitle } from "../components/ui";
-import { introSeen, markIntroSeen } from "../lib/crowdSession";
-import { NewPasswordForm } from "./guess/Account";
+import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
+import { call } from "../lib/crowdApi";
+import { introSeen, loadDraft, markIntroSeen, saveDraft, setLinkAck } from "../lib/crowdSession";
+import { decodeGuess } from "../lib/shareGuess";
+import { RecoverForm } from "./guess/Account";
 import Dashboard from "./guess/Dashboard";
 import Mine from "./guess/Mine";
-import { LOCK_AT } from "./guess/model";
+import { IDS, LOCK_AT } from "./guess/model";
+import SharedGuess from "./guess/SharedGuess";
 import { Btn, Notice } from "./guess/ui";
-import { useSession } from "./guess/useCrowd";
+import { errorText, useSession } from "./guess/useCrowd";
 
 /** ספירה לאחור לנעילת ההשערות לתחרות הדיוק (26.10.2026, 23:59 שעון ישראל) */
 function Countdown() {
@@ -35,33 +39,62 @@ export default function Guess() {
   const [params, setParams] = useSearchParams();
   const [flash, setFlash] = useState<{ ok: boolean; text: string } | null>(null);
   const [intro, setIntro] = useState(() => !introSeen());
-  const [fromLink, setFromLink] = useState(false);
+  const [recoverLink, setRecoverLink] = useState<string | null>(null);
+  const [mineKey, setMineKey] = useState(0);
+  const top = useRef<HTMLDivElement>(null);
 
-  // קישור אישי (?t=) — נקלט ונמחק מהכתובת. הוא גם מסלול השחזור: מי ששכח סיסמה פותח אותו וקובע חדשה.
+  // הקישור האישי (?t=) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
   useEffect(() => {
     const t = params.get("t");
     if (!t) return;
     const next = new URLSearchParams(params);
     next.delete("t");
     setParams(next, { replace: true });
-    session.setToken(t, "link");
-    setFromLink(true);
-    setFlash({ ok: true, text: "נכנסתם עם הקישור האישי." });
+    call<{ token: string; username: string | null }>("/auth/link", { body: { link: t } })
+      .then((r) => {
+        session.setToken(r.token);
+        session.setLink(t);
+        setLinkAck(true);
+        setRecoverLink(t);
+        setFlash({ ok: true, text: r.username ? `נכנסתם עם הקישור האישי, בשם ${r.username}.` : "נכנסתם עם הקישור האישי." });
+      })
+      .catch((e) => setFlash({ ok: false, text: errorText(e) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // השערה ששותפה (?g=) — מפוענחת בזהירות; קישור פגום פשוט לא מציג כלום
+  const gRaw = params.get("g");
+  const shared = useMemo(() => decodeGuess(gRaw, IDS), [gRaw]);
+  const closeShared = () => {
+    const next = new URLSearchParams(params);
+    next.delete("g");
+    next.delete("tab");
+    setParams(next, { replace: true });
+  };
+  const startFromShared = (fromThis: boolean) => {
+    if (fromThis && shared) {
+      const seats: Record<string, SeatCell> = Object.fromEntries(IDS.map((id) => [id, { v: shared.seats[id] ?? 0, src: "manual", locked: true }]));
+      const p: SeatsPayload = shared.pct ? { mode: "pct", pct: shared.pct, seats, start: "zero", pollsAsOf: null } : { mode: "seats", seats, start: "zero", pollsAsOf: null };
+      saveDraft("seats", p);
+      setMineKey((k) => k + 1);
+    }
+    closeShared();
+    requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+
   return (
     <>
-      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלך</PageTitle>
+      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלך</PageTitle>
+      {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
       <div className="mb-5">
         <Countdown />
       </div>
-      {intro && (
+      {intro && !shared && (
         <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
           <h2 className="font-display text-3xl leading-none mb-2">השערות גולשים, אינן סקר</h2>
           <p className="text-sm leading-relaxed mb-3">
             כאן כל אחד מנחש כמה מנדטים תקבל כל רשימה. מי שמשתתף בוחר בזה בעצמו — אין דגימה ואין שקלול, ולכן הממוצע מספר מה חושבים הגולשים באתר, לא מה
-            יקרה. ההשערה שלכם פרטית; רק ממוצע אנונימי מתפרסם.
+            יקרה. אפשר לשחק בלי חשבון; כדי לשמור — נרשמים בשם משתמש וסיסמה, בלי שם אמיתי ובלי מייל. ההשערה שלכם פרטית; רק ממוצע אנונימי מתפרסם.
           </p>
           <Btn kind="primary" onClick={() => (markIntroSeen(), setIntro(false))}>
             הבנתי, בואו נתחיל
@@ -73,25 +106,29 @@ export default function Guess() {
           <Notice tone={flash.ok ? "calm" : "warn"}>{flash.text}</Notice>
         </div>
       )}
-      {fromLink && session.viaLink && session.me?.username && (
-        <section className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5 space-y-2" aria-labelledby="link-pw-title">
-          <h2 id="link-pw-title" className="font-display text-3xl leading-none">
+      {recoverLink && (
+        <section className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5 space-y-2" aria-labelledby="recover-title">
+          <h2 id="recover-title" className="font-display text-3xl leading-none">
             שכחתם את הסיסמה?
           </h2>
-          <p className="text-sm">
-            נכנסתם בשם <bdi className="font-bold">{session.me.username}</bdi> דרך הקישור האישי, ולכן אפשר לקבוע סיסמה חדשה בלי הישנה.
-          </p>
-          <NewPasswordForm session={session} onDone={() => (setFromLink(false), setFlash({ ok: true, text: "הסיסמה החדשה נקבעה. שאר המכשירים נותקו; הקישור האישי ממשיך לעבוד." }))} />
-          <Btn onClick={() => setFromLink(false)}>לא צריך, תודה</Btn>
+          <p className="text-sm">נכנסתם עם הקישור האישי, ולכן אפשר לקבוע סיסמה חדשה בלי הישנה. שאר המכשירים ינותקו, והקישור ימשיך לעבוד.</p>
+          <RecoverForm
+            link={recoverLink}
+            session={session}
+            onDone={() => (setRecoverLink(null), setFlash({ ok: true, text: "הסיסמה החדשה נקבעה. שאר המכשירים נותקו; הקישור האישי ממשיך לעבוד." }))}
+          />
+          <Btn onClick={() => setRecoverLink(null)}>לא צריך, תודה</Btn>
         </section>
       )}
-      <Tabbed
-        label="ההשערה שלך"
-        tabs={[
-          { id: "mine", label: "שלי", element: <Mine session={session} /> },
-          { id: "dashboard", label: "דשבורד", element: <Dashboard session={session} /> },
-        ]}
-      />
+      <div ref={top} className="scroll-mt-4">
+        <Tabbed
+          label="ההשערה שלך"
+          tabs={[
+            { id: "mine", label: "שלי", element: <Mine key={mineKey} session={session} /> },
+            { id: "dashboard", label: "דשבורד", element: <Dashboard session={session} /> },
+          ]}
+        />
+      </div>
     </>
   );
 }

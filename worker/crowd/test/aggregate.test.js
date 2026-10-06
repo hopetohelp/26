@@ -51,6 +51,19 @@ describe("seats section", () => {
     expect(s.starts.zero).toBe(21);
     expect(s.filledShare).toBeCloseTo(9 / 21, 2);
     expect(computeSeats(vs.slice(0, 9))).toBeNull();
+    expect(s.modes).toEqual({ seats: 21, pct: 0 });
+    expect(s.pctStats).toBeUndefined();
+  });
+  it("pct stats among pct-mode participants only, ≥10", () => {
+    const pctV = (i) => ver("p" + i, "seats", seats(60, "filled", { mode: "pct", pct: { [IDS[0]]: 30 + i, [IDS[1]]: 40 } }));
+    const base = [...Array(5)].map((_, i) => ver("s" + i, "seats", seats(50)));
+    const s9 = computeSeats(base.concat([...Array(9)].map((_, i) => pctV(i))));
+    expect(s9.modes).toEqual({ seats: 5, pct: 9 });
+    expect(s9.pctStats).toBeUndefined();
+    const s = computeSeats(base.concat([...Array(11)].map((_, i) => pctV(i))));
+    const a = s.pctStats.find((x) => x.list === IDS[0]);
+    expect(a).toMatchObject({ n: 11, mean: 35, median: 35, p25: 32.5, p75: 37.5 });
+    expect(s.pctStats.find((x) => x.list === IDS[2]).mean).toBe(0);
   });
 });
 
