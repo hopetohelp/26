@@ -51,6 +51,8 @@ function stat(to: string): { value: string; label: string } {
       return { value: String(model.changes.alternatives[0]?.families.length ?? 0), label: "משפחות מפלגות, 2022 מול היום" };
     case "/calculator":
       return { value: "3.25%", label: "אחוז החסימה" };
+    case "/guess":
+      return { value: "120", label: "מושבים לחלק — בדרך שלכם" };
     case "/past":
       return { value: String(results.length), label: `מערכות בחירות · ${num(meta.historyPolls ?? 0)} סקרים מול התוצאות` };
     case "/method":
@@ -66,6 +68,16 @@ export default function Home() {
       <PageTitle lead={`הבחירות לכנסת ה-26 ב-${dateLong(meta.electionDay)}. כל עמוד באתר — במשפט אחד ובנתון אחד. הנתונים נכונים ל-${dateLong(meta.dataAsOf)}.`}>
         בחירות 2026
       </PageTitle>
+      <Link
+        to="/guess"
+        className="flex items-center justify-between gap-4 flex-wrap mb-5 bg-frame text-frame-ink border-2 border-frame rounded-theme p-4 md:p-5 no-underline hover:text-frame-ink"
+      >
+        <span>
+          <span className="font-display text-4xl md:text-5xl leading-none block">כמה תקבל כל רשימה? תנחשו.</span>
+          <span className="text-sm text-frame-soft block mt-1">מחלקים 120 מושבים, ומשווים למה שמנחשים כל השאר. השערות גולשים, אינן סקר.</span>
+        </span>
+        <span className="shrink-0 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-extrabold inline-flex items-center">לבנות את הכנסת שלי</span>
+      </Link>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
         {PAGES.map((p) => {
           const s = stat(p.to);

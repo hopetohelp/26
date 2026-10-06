@@ -34,6 +34,7 @@ jobs:
         env:
           # כפתור "הערה?" — השרת הקטן ב-worker/feedback (Cloudflare). בלי המשתנה הכפתור אינו מוצג.
           VITE_FEEDBACK_URL: https://elections26-feedback.hopetohelp-il.workers.dev
+          VITE_CROWD_URL: https://elections26-crowd.hopetohelp-il.workers.dev
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

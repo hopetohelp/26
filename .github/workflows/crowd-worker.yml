@@ -1,0 +1,41 @@
+name: שרת השתתפות הגולשים
+on:
+  push:
+    branches: [main]
+    paths: ["worker/crowd/**", ".github/workflows/crowd-worker.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a64716cf8cec4b4885a5eb06e9a3ee9a
+    steps:
+      - uses: actions/checkout@v4
+      - name: מבנה המאגר (CREATE IF NOT EXISTS — בטוח להרצה חוזרת)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/crowd
+        run: npx --yes wrangler@3 d1 execute elections26-crowd --remote --file=schema.sql
+      - name: סודות — נוצרים פעם אחת, רק אם חסרים
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/crowd
+        run: |
+          existing="$(npx --yes wrangler@3 secret list 2>/dev/null || echo '[]')"
+          for name in IP_KEY; do
+            if echo "$existing" | grep -q "\"$name\""; then
+              echo "$name קיים"
+            else
+              openssl rand -base64 32 | npx --yes wrangler@3 secret put "$name"
+              echo "$name נוצר"
+            fi
+          done
+      - name: פריסה ל-Cloudflare
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/crowd
+        run: npx --yes wrangler@3 deploy
+      - name: אין מפתח — מדלגים
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "CLOUDFLARE_API_TOKEN לא הוגדר בסודות הריפו; השרת לא נפרס."

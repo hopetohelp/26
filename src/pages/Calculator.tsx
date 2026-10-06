@@ -5,6 +5,7 @@ import { Badge, Card, Note, PageTitle } from "../components/ui";
 import { allocate, votesToNextSeat, type Agreement } from "../engine/baderOfer";
 import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, registry, summarize } from "../lib/data";
 import { dateLong, num, pct } from "../lib/format";
+import { DEFAULT_TURNOUT, sharesToVotes, validVotes } from "../lib/lawSeats";
 
 const IDS = lists2026.map((l) => l.id);
 const OTHERS_DEFAULT = 1.5;
@@ -49,7 +50,7 @@ export default function Calculator() {
     const shares = s && s.length === IDS.length && s.every((x) => Number.isFinite(x)) ? Object.fromEntries(IDS.map((id, i) => [id, s[i]])) : def;
     return {
       shares,
-      turnout: Number(params.get("t")) || 70,
+      turnout: Number(params.get("t")) || DEFAULT_TURNOUT,
       eligible: Number(params.get("e")) || registry.k26.eligible,
       ag: params.get("a")?.length === AGREEMENTS.length ? [...params.get("a")!].map((c) => c === "1") : AGREEMENTS.map(() => true),
       def,
@@ -67,8 +68,8 @@ export default function Calculator() {
   const listSum = IDS.reduce((a, id) => a + (shares[id] || 0), 0);
   const others = Math.max(0, 100 - listSum);
   const over = listSum > 100.0001;
-  const valid = Math.round(eligible * (turnout / 100) * (1 - 0.006));
-  const votes = Object.fromEntries(IDS.map((id) => [id, Math.round(((shares[id] || 0) / 100) * valid)]));
+  const valid = validVotes(eligible, turnout);
+  const votes = sharesToVotes(IDS, shares, valid);
   const agreements: Agreement[] = AGREEMENTS.filter((_, i) => ag[i]).map((a) => a.pair as unknown as Agreement);
   const r = over ? null : allocate(votes, valid, agreements);
   const r0 = over ? null : allocate(votes, valid, []);
