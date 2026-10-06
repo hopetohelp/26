@@ -21,6 +21,7 @@ const Scenarios = lazy(() => import("./pages/Scenarios"));
 const Changes = lazy(() => import("./pages/Changes"));
 const MyFeedback = lazy(() => import("./pages/MyFeedback"));
 const Forecast = lazy(() => import("./pages/Forecast"));
+const Guess = lazy(() => import("./pages/Guess"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -49,6 +50,7 @@ createRoot(document.getElementById("root")!).render(
           />
           <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
           <Route path="calculator" element={<Calculator />} />
+          <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess /></Suspense>} />
           <Route
             path="past"
             element={<Tabbed label="בחירות קודמות" tabs={[
