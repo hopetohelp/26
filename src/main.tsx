@@ -13,6 +13,7 @@ import Voters from "./pages/Voters";
 import Method from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
+import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
 const Accuracy = lazy(() => import("./pages/Accuracy"));
@@ -31,41 +32,47 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="today" element={<Today />} />
-          <Route path="polls" element={<Polls />} />
-          <Route path="trends" element={<Trends />} />
           <Route
-            path="scenarios"
-            element={
-              <Suspense fallback={<p className="text-ink-soft">טוען את התרחישים…</p>}>
-                <Scenarios />
-              </Suspense>
-            }
+            path="today"
+            element={<Tabbed label="המצב והתחזית" tabs={[
+              { id: "today", label: "היום", element: <Today /> },
+              { id: "scenarios", label: "תרחישים", element: <Scenarios /> },
+              { id: "forecast", label: "תחזית", element: <Forecast /> },
+            ]} />}
           />
           <Route
-            path="changes"
-            element={
-              <Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}>
-                <Changes />
-              </Suspense>
-            }
+            path="polls"
+            element={<Tabbed label="סקרים ומגמות" tabs={[
+              { id: "archive", label: "ארכיון", element: <Polls /> },
+              { id: "trends", label: "מגמות", element: <Trends /> },
+            ]} />}
           />
+          <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
+          <Route path="calculator" element={<Calculator />} />
+          <Route
+            path="past"
+            element={<Tabbed label="בחירות קודמות" tabs={[
+              { id: "results", label: "תוצאות אמת", element: <Results /> },
+              { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
+              { id: "voters", label: "מצביעים", element: <Voters /> },
+            ]} />}
+          />
+          <Route
+            path="method"
+            element={<Tabbed label="שיטה, מקורות ואודות" tabs={[
+              { id: "method", label: "שיטה ומקורות", element: <Method /> },
+              { id: "about", label: "אודות", element: <About /> },
+            ]} />}
+          />
+          <Route path="scenarios" element={<Moved to="/today" tab="scenarios" />} />
+          <Route path="forecast" element={<Moved to="/today" tab="forecast" />} />
+          <Route path="trends" element={<Moved to="/polls" tab="trends" />} />
+          <Route path="results" element={<Moved to="/past" tab="results" />} />
+          <Route path="accuracy" element={<Moved to="/past" tab="accuracy" />} />
+          <Route path="voters" element={<Moved to="/past" tab="voters" />} />
+          <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="feedback" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
           <Route path="feedback/:token" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
-          <Route path="forecast" element={<Suspense fallback={null}><Forecast /></Suspense>} />
-          <Route path="calculator" element={<Calculator />} />
-          <Route path="results" element={<Results />} />
-          <Route
-            path="accuracy"
-            element={
-              <Suspense fallback={<p className="text-ink-soft">טוען את סקרי המערכות הקודמות…</p>}>
-                <Accuracy />
-              </Suspense>
-            }
-          />
-          <Route path="voters" element={<Voters />} />
-          <Route path="method" element={<Method />} />
-          <Route path="about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

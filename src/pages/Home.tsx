@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import forecastFile from "../data/forecast.json";
 import modelFile from "../data/model.json";
 import { PageTitle } from "../components/ui";
-import { listName, meta, polls, registry, results, usablePolls } from "../lib/data";
+import { listName, meta, polls, results, usablePolls } from "../lib/data";
 import { dateLong, num } from "../lib/format";
 import { PAGES } from "../lib/pages";
 
@@ -40,34 +40,21 @@ function biggestMove(): string {
 function stat(to: string): { value: string; label: string } {
   const above = Object.values(model.central.seats).filter((s) => s > 0).length;
   const acc = fc.gate.atHorizon.valid ? fc.gate.atHorizon.summary[fc.variant]?.voteAccuracy : undefined;
-  const reg = registry as unknown as { k26: { eligible: number } };
   switch (to) {
     case "/today":
-      return { value: String(above), label: "רשימות מעל אחוז החסימה לפי הממוצע" };
-    case "/polls":
-      return { value: num(polls.length), label: "סקרים בארכיון" };
-    case "/trends":
-      return { value: "", label: biggestMove() };
-    case "/scenarios":
-      return { value: pct(model.scenarios.bloc.atLeast61), label: "מהתרחישים: 61 מנדטים ומעלה למפלגות הממשלה היוצאת" };
-    case "/forecast":
       return acc !== undefined
-        ? { value: pct(acc), label: `דיוק בקולות בבחירות הקודמות, ${fc.horizon} ימים לפני הבחירות` }
-        : { value: "", label: "הבדיקה על הבחירות הקודמות — בעמוד" };
+        ? { value: String(above), label: `רשימות מעל הסף לפי הממוצע · דיוק התחזית בעבר ${pct(acc)}` }
+        : { value: String(above), label: "רשימות מעל אחוז החסימה לפי הממוצע" };
+    case "/polls":
+      return { value: num(polls.length), label: `סקרים בארכיון · ${biggestMove()}` };
     case "/changes":
       return { value: String(model.changes.alternatives[0]?.families.length ?? 0), label: "משפחות מפלגות, 2022 מול היום" };
     case "/calculator":
       return { value: "3.25%", label: "אחוז החסימה" };
-    case "/results":
-      return { value: String(results.length), label: "מערכות בחירות, 2019–2022" };
-    case "/accuracy":
-      return { value: num(meta.historyPolls ?? 0), label: "סקרים מהבחירות הקודמות מול התוצאות" };
-    case "/voters":
-      return { value: `${(reg.k26.eligible / 1e6).toLocaleString("he-IL", { maximumFractionDigits: 2 })} מיליון`, label: "בעלי זכות בחירה (לפי דיווח)" };
+    case "/past":
+      return { value: String(results.length), label: `מערכות בחירות · ${num(meta.historyPolls ?? 0)} סקרים מול התוצאות` };
     case "/method":
-      return { value: num(usablePolls.filter((p) => p.verified).length), label: "סקרים שהושוו לפרסום המקורי" };
-    case "/about":
-      return { value: "", label: `עדכון אחרון: ${dateLong(meta.dataAsOf)}` };
+      return { value: num(usablePolls.filter((p) => p.verified).length), label: `סקרים שהושוו לפרסום המקורי · עדכון אחרון ${dateLong(meta.dataAsOf)}` };
     default:
       return { value: "", label: "" };
   }
