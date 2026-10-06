@@ -5,7 +5,7 @@ import FreezeBanner from "./FreezeBanner";
 import Feedback from "./Feedback";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
-import { MODES, THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/theme";
+import { THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/theme";
 import { colorOf } from "../lib/colors";
 import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
@@ -50,23 +50,40 @@ export function ThemePicker() {
   );
 }
 
-const pill = (on: boolean) =>
-  `flex items-center gap-1.5 rounded-full px-2.5 min-h-[44px] md:min-h-[36px] text-sm font-bold border ${
-    on ? "bg-signal text-signal-ink border-signal" : "border-current bg-transparent opacity-80 hover:opacity-100"
-  }`;
+/** כפתור תצורה אחד שמתחלף בלחיצה: לפי המכשיר ⇐ יום ⇐ לילה ⇐ לפי המכשיר */
+const NEXT_MODE: Record<ModeId, ModeId> = { auto: "light", light: "dark", dark: "auto" };
+const MODE_ICON: Record<ModeId, JSX.Element> = {
+  light: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </>
+  ),
+  dark: <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />,
+  auto: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" />
+    </>
+  ),
+};
+const MODE_NAME: Record<ModeId, string> = { light: "יום", dark: "לילה", auto: "לפי המכשיר" };
 
-/** בחירת תצורה: בהיר · חשוך · לפי המכשיר */
 function ModePicker() {
   const [mode, setMode] = useMode();
+  const next = NEXT_MODE[mode];
   return (
-    <div role="radiogroup" aria-label="תצורת צבעים" className="flex flex-wrap items-center gap-1.5">
-      <span className="text-sm opacity-80 me-1">תצורה:</span>
-      {MODES.map((m) => (
-        <button key={m.id} type="button" role="radio" aria-checked={m.id === mode} onClick={() => setMode(m.id as ModeId)} className={pill(m.id === mode)}>
-          {m.name}
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      onClick={() => setMode(next)}
+      aria-label={`תצורה: ${MODE_NAME[mode]}. בלחיצה: ${MODE_NAME[next]}`}
+      title={`תצורה: ${MODE_NAME[mode]}`}
+      className="flex items-center justify-center rounded-full w-[44px] h-[44px] md:w-[36px] md:h-[36px] border border-current opacity-80 hover:opacity-100"
+    >
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {MODE_ICON[mode]}
+      </svg>
+    </button>
   );
 }
 

@@ -47,8 +47,8 @@ export function useTheme(): [ThemeId, (t: ThemeId) => void] {
 
 /** תצורה: בהיר · חשוך · לפי המכשיר (ברירת מחדל). נפרדת מהעיצוב — כל עיצוב קיים בשתי התצורות. */
 export const MODES = [
-  { id: "light", name: "בהיר" },
-  { id: "dark", name: "חשוך" },
+  { id: "light", name: "יום" },
+  { id: "dark", name: "לילה" },
   { id: "auto", name: "לפי המכשיר" },
 ] as const;
 export type ModeId = (typeof MODES)[number]["id"];
