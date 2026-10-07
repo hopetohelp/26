@@ -15,7 +15,8 @@ export type FillError =
   | { kind: "bloc-over"; bloc: string; locked: number; target: number }
   | { kind: "bloc-locked-mismatch"; bloc: string; locked: number; target: number }
   | { kind: "targets-over"; sum: number }
-  | { kind: "no-eligible"; bloc: string | null; remainder: number };
+  | { kind: "no-eligible"; bloc: string | null; remainder: number }
+  | { kind: "range-impossible"; bloc: string | null; target: number };
 
 export type FillResult = { ok: true; seats: Record<string, SeatCell>; changed: string[] } | { ok: false; error: FillError };
 
@@ -38,7 +39,7 @@ export function largestRemainder(total: number, weights: Record<string, number>)
   return out;
 }
 
-export function fillAll(ids: string[], cells: Record<string, SeatCell | undefined>, polls: Record<string, number>, blocs: Bloc[]): FillResult {
+export function fillAll(ids: string[], cells: Record<string, SeatCell | undefined>, polls: Record<string, number>, blocs: Bloc[], ranges: Record<string, [number, number]> = {}): FillResult {
   const locked = (id: string) => !!cells[id]?.locked;
   const lockedV = (id: string) => (locked(id) ? cells[id]!.v : 0);
   const totalLocked = ids.reduce((a, id) => a + lockedV(id), 0);
@@ -56,7 +57,30 @@ export function fillAll(ids: string[], cells: Record<string, SeatCell | undefine
     const free = bucket.filter((id) => !locked(id));
     const weights = Object.fromEntries(free.map((id) => [id, Math.max(0, polls[id] ?? 0)]));
     if (remainder > 0 && !free.some((id) => weights[id] > 0)) return { kind: "no-eligible", bloc, remainder };
-    const alloc = largestRemainder(remainder, weights);
+    const lower = Object.fromEntries(free.map((id) => [id, Math.max(0, ranges[id]?.[0] ?? 0)]));
+    const upper = Object.fromEntries(free.map((id) => [id, Math.max(lower[id], ranges[id]?.[1] ?? TOTAL)]));
+    const minSum = free.reduce((a,id)=>a+lower[id],0);
+    const maxSum = free.reduce((a,id)=>a+upper[id],0);
+    if (remainder < minSum || remainder > maxSum) return { kind: "range-impossible", bloc, target: remainder };
+    const alloc = { ...lower };
+    let left = remainder - minSum;
+    while (left > 0) {
+      const open = free.filter((id) => alloc[id] < upper[id]);
+      if (!open.length) return { kind: "range-impossible", bloc, target: remainder };
+      const step = largestRemainder(left, Object.fromEntries(open.map((id)=>[id, weights[id]])));
+      let added = 0;
+      for (const id of open) {
+        const n = Math.min(step[id] ?? 0, upper[id] - alloc[id]);
+        alloc[id] += n;
+        added += n;
+      }
+      if (!added) {
+        const id = open.sort((a,b)=>weights[b]-weights[a])[0];
+        alloc[id]++;
+        added=1;
+      }
+      left -= added;
+    }
     for (const id of free) result[id] = { v: alloc[id] ?? 0, src: "filled", locked: false };
     return null;
   };
@@ -96,6 +120,8 @@ export function fillErrorText(e: FillError): string {
       return `בגוש "${e.bloc}" כל הרשימות נעולות, וסכומן (${e.locked}) שונה מהיעד (${e.target}).`;
     case "no-eligible":
       return `${e.bloc ? `בגוש "${e.bloc}"` : "מחוץ לגושים"} נשארו ${e.remainder} מנדטים, ואין רשימה לא-נעולה שעוברת את הסף בממוצע הסקרים. אפשר לשחרר נעילה או לקבוע ערך ידנית.`;
+    case "range-impossible":
+      return `${e.bloc ? `בגוש "${e.bloc}"` : "בחלוקה הכללית"} אי אפשר להגיע ל-${e.target} מנדטים בלי לצאת מטווחי הסקרים. שנו את מספר הגוש או ערך נעול.`;
   }
 }
 
