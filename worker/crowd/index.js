@@ -292,6 +292,34 @@ const routes = {
     return { token: await setPassword(env, participant, body.password, now), username: cred.username };
   },
 
+  "GET /support": async ({ env, request, now }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
+    if (!thread) return { thread: null };
+    const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY id").bind(participant).all();
+    return { thread: { status: thread.status, created_at: thread.created_at, updated_at: thread.updated_at, messages: results || [] } };
+  },
+
+  "POST /support": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const text = String(body.text ?? "").trim().slice(0, 2000);
+    if (!text) throw bad("empty");
+    const at = iso(now);
+    const thread = await env.DB.prepare("SELECT participant FROM support_threads WHERE participant = ?").bind(participant).first();
+    if (!thread) {
+      await env.DB.batch([
+        env.DB.prepare("INSERT INTO support_threads (participant, created_at, updated_at, status) VALUES (?, ?, ?, 'new')").bind(participant, at, at),
+        env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'visitor', ?)").bind(participant, at, text),
+      ]);
+    } else {
+      await env.DB.batch([
+        env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'visitor', ?)").bind(participant, at, text),
+        env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'new' WHERE participant = ?").bind(at, participant),
+      ]);
+    }
+    return { ok: true };
+  },
+
   "GET /log": async ({ env }) => {
     const { results } = await env.DB.prepare("SELECT * FROM review_log ORDER BY id DESC LIMIT 500").all();
     return {
