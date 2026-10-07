@@ -219,12 +219,25 @@ describe("cron: aggregation & anomaly", () => {
       await save(tok, "vote", { v2022: "מחל", v2026: i % 2 ? "likud" : "yashar" });
     }
   }
-  it("dashboard closed at 29, open at 30, cached", async () => {
+  it("refreshes an old closed snapshot once on the first request", async () => {
+    await crowd(1);
+    await env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json) VALUES (?, ?, ?, ?)")
+      .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ open: false, participants: 1 })).run();
+    const first = await call("/dashboard");
+    expect(first.data).toMatchObject({ open: true, policy: "open-all-v1", participants: 1 });
+    expect(first.data.seats.n).toBe(1);
+    expect(first.data.matrix.rows["מחל"].n).toBe(1);
+    const before = env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n;
+    const second = await call("/dashboard");
+    expect(second.data).toEqual(first.data);
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n).toBe(before);
+  });
+  it("dashboard open below 30 and cached", async () => {
     await crowd(29);
     t += 3600 * 1000;
     await cron();
     let d = await call("/dashboard");
-    expect(d.data.open).toBe(false);
+    expect(d.data.open).toBe(true);
     expect(d.headers.get("cache-control")).toBe("public, max-age=300");
     await crowd(1);
     t += 3600 * 1000;
@@ -234,7 +247,7 @@ describe("cron: aggregation & anomaly", () => {
     expect(d.data.seats.n).toBe(30);
     expect(d.data.vote2026.all.likud).toEqual({ n: 14, of: 30 });
     expect(d.data.vote2026.all.yashar).toEqual({ n: 16, of: 30 });
-    expect(d.data.matrix.rows["מחל"].n).toBe(30);
+    expect(d.data.matrix.rows["מחל"].n).toBe(29); // הפילוח היומי נשאר בתמונת הפרסום הראשונה
   }, 30000);
   it("surge hour flags newcomers for review and logs it", async () => {
     await crowd(30, () => seats(77));

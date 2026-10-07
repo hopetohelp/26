@@ -24,7 +24,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
   const picked2022Other = p.v2022 && K25_IDS.includes(p.v2022) && !K25_PASSED.some((l) => l.letters === p.v2022);
   return (
     <div className="space-y-6">
-      <p className="text-sm text-ink-soft">שתי שאלות, כל אחת רשות. התשובה שלכם פרטית; רק ספירה מצטברת נכנסת לדשבורד, ותא שיש בו פחות מ-10 — מוסתר.</p>
+      <p className="text-sm text-ink-soft">שתי שאלות, כל אחת רשות. רק ספירה מצטברת ללא שם נכנסת לדשבורד, גם בקבוצות של משתתף יחיד. בקבוצה קטנה אפשר להסיק תשובות; הנתונים אינם משקפים את הציבור.</p>
       <fieldset>
         <legend className="font-display text-3xl leading-none mb-2">ב-2022 הצבעתי ל…</legend>
         <div className="flex flex-wrap gap-2">

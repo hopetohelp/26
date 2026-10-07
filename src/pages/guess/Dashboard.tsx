@@ -9,7 +9,6 @@ import { errorText, type useSession } from "./useCrowd";
 
 const GUESS = "השערות גולשים, אינן סקר" as const;
 const VOTE = "תשובות גולשים במדגם עצמי, לא מייצג, ללא דגימה וללא שקלול" as const;
-const OPEN_AT = 30;
 const when = (iso: string | null) =>
   iso === null ? "עוד לא פורסם" : `${dateLong(iso)}, ${new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" })}`;
 const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
@@ -20,7 +19,7 @@ const pctOf = (c: Cell) => (c.of ? Math.round((c.n / c.of) * 1000) / 10 : 0);
 
 function Ex({ kind, asOf, children, n }: { kind: typeof GUESS | typeof VOTE; asOf: string | null; children: ReactNode; n: string }) {
   return (
-    <Explained kind={kind} source={`ההשערות באתר — הגרסה האחרונה של כל משתתף (${n})`} asOf={when(asOf)} assumption="מי שבחר להשתתף אינו מדגם מייצג של הבוחרים. תא עם פחות מ-10 משתתפים מוסתר." methodAnchor="crowd">
+    <Explained kind={kind} source={`ההשערות באתר — הגרסה האחרונה של כל משתתף (${n})`} asOf={when(asOf)} assumption="מי שבחר להשתתף אינו מדגם מייצג של הבוחרים. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצה קטנה אפשר ללמוד מהם את תשובתו, ללא שם." methodAnchor="crowd">
       {children}
     </Explained>
   );
@@ -49,30 +48,19 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     call<D>("/dashboard").then(setD).catch((e) => setErr(errorText(e)));
   }, [session.online]);
 
-  if (!session.online) return <Notice>הדשבורד ייפתח כשהשמירה תהיה פעילה באתר, ויתחיל להציג נתונים מ-{OPEN_AT} משתתפים. בינתיים — אפשר לבנות את ההשערה שלכם בלשונית "שלי".</Notice>;
+  if (!session.online) return <Notice>הדשבורד יוצג כשהחיבור לשרת יהיה פעיל. בינתיים — אפשר לבנות את ההשערה שלכם בלשונית "שלי".</Notice>;
   if (err) return <Notice tone="warn">{err}</Notice>;
   if (!d) return <p className="text-ink-soft">טוען…</p>;
 
-  if (!d.open) {
-    const pc = Math.min(100, (d.participants / OPEN_AT) * 100);
-    return (
-      <Card title="עוד קצת והדשבורד נפתח">
-        <p className="text-sm mb-3">הממוצע מתפרסם רק מ-{OPEN_AT} משתתפים, כדי שאף אחד לא יהיה מזוהה ושהמספרים יהיו בעלי משמעות.</p>
-        <div className="h-4 rounded-full bg-paper border border-paper-line overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={OPEN_AT} aria-valuenow={d.participants} aria-label="משתתפים עד הפתיחה">
-          <div className="h-full bg-ink" style={{ width: `${pc}%` }} />
-        </div>
-        <p className="mt-2 font-num text-3xl tabular" dir="rtl">
-          {d.participants} <span className="text-base font-sans text-ink-soft">מתוך {OPEN_AT}</span>
-        </p>
-      </Card>
-    );
-  }
-
   return (
     <div>
+      <div className="mb-4">
+        <Notice tone="warn">{d.participants < 30 ? "מספר המשתתפים נמוך: הנתונים אינם משקפים את הציבור ואינם מאפשרים להסיק על תוצאות הבחירות. " : ""}אלה השערות של גולשים שבחרו להשתתף, ולא מדגם מייצג — גם כאשר מספר המשתתפים גדל.</Notice>
+      </div>
       <p className="text-sm text-ink-soft mb-4">
         {d.participants} משתתפים · {d.publishedAt ? `נכון ל-${when(d.publishedAt)}` : "עוד לא פורסם"}. {GUESS}; כוונות ההצבעה — {VOTE}.
       </p>
+      {!d.seats && <Notice>עדיין לא נשמרו השערות מנדטים לפרסום. הממוצע יוצג כבר מההשערה הראשונה; אפשר להשתתף בלשונית "שלי".</Notice>}
       {d.seats && <SeatsBlock d={d} />}
       {d.blocs && <BlocsBlock d={d} />}
       {d.vote2026 && <Vote2026 d={d} />}
@@ -184,7 +172,7 @@ function SeatsBlock({ d }: { d: D }) {
   );
 }
 
-/** אחוזי ההצבעה שניחשו מי שבחרו "לפי אחוזי הצבעה" (מתפרסם רק מ-10 כאלה) */
+/** אחוזי ההצבעה שניחשו מי שבחרו "לפי אחוזי הצבעה" (מתפרסם כבר מהתשובה הראשונה) */
 function PctStats({ rows }: { rows: SeatStat[] }) {
   const sorted = [...rows].sort((a, b) => b.median - a.median || b.mean - a.mean);
   return (
@@ -265,11 +253,11 @@ function CellBars({ cells, name }: { cells: Record<string, Cell>; name: (k: stri
               {!c.hidden && <div className="h-full rounded-full bg-ink/70" style={{ width: `${pctOf(c)}%` }} />}
             </div>
             <span className="tabular text-end">{c.hidden ? "—" : `${pctOf(c)}%`}</span>
-            <span className="sr-only">{c.hidden ? "מוסתר, פחות מ-10" : `${c.n} מתוך ${c.of}`}</span>
+            <span className="sr-only">{c.hidden ? "נתון לא זמין" : `${c.n} מתוך ${c.of}`}</span>
           </li>
         ))}
       </ul>
-      <p className="text-xs text-ink-soft mt-2">"—" = פחות מ-10 משתתפים, מוסתר כדי שאיש לא יזוהה.</p>
+      <p className="text-xs text-ink-soft mt-2">כל קבוצה שיש בה תשובות מוצגת, גם אם מדובר במשתתף יחיד.</p>
     </>
   );
 }
@@ -328,7 +316,7 @@ function Matrix({ d }: { d: D }) {
   return (
     <Fold title="מאיפה לאן: 2022 ⇐ 2026">
       <Ex kind={VOTE} asOf={d.sectionsAsOf?.matrix ?? m.publishedAt} n="שורה = ההצבעה ב-2022">
-        <p className="text-sm mb-2">כל שורה: מי שהצביעו לרשימה ב-2022, ואחוז מהם לכל כוונה ב-2026. "—" = מוסתר (שורה מתחת ל-20 משתתפים או תא מתחת ל-10, כולל הסתרה משלימה).</p>
+        <p className="text-sm mb-2">כל שורה: מי שהצביעו לרשימה ב-2022, ואחוז מהם לכל כוונה ב-2026. כל שורה ותא שיש בהם תשובות מוצגים; "—" מציין נתון לא זמין.</p>
         <div className="overflow-x-auto">
           <table className="text-xs tabular min-w-full">
             <thead>

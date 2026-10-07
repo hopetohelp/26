@@ -4,20 +4,21 @@
  *
  * - יחידת ספירה: משתתף ייחודי, הגרסה האחרונה שלו בכל יחידה.
  * - משתתף "בבדיקה" (review) אינו נספר בשום מספר ראשי; מוצג בנפרד ב-underReview.
- * - סף תא/חתך 10, שורת מטריצה 20, והסתרה משלימה (אין תא מוסתר יחיד שאפשר לחשב מהמכנה).
- * - הדשבורד נפתח מ-30 משתתפים.
- * - יחידה מפורסמת מתחלפת רק אם לפחות 5 משתתפים ייחודיים חדשים/ששינו השפיעו עליה מאז הפרסום הקודם;
+ * - כל תא וחתך עם תשובה אחת לפחות מוצג, בלי הסתרת קבוצות קטנות (הכרעת בעלים 7.10.2026).
+ * - הדשבורד פתוח גם במספר משתתפים קטן; נתוני קבוצה קטנה אינם מייצגים.
+ * - יחידה מפורסמת מתחלפת רק אם לפחות משתתף ייחודי אחד חדשים/ששינו השפיעו עליה מאז הפרסום הקודם;
  *   אחרת נשארת היחידה הקודמת כמו שהיא (כולל n, of ומועד הפרסום שלה).
  * - מטריצה, פילוח לפי הצבעה ומגמה — רק בריצה הראשונה אחרי חצות שעון ישראל; באותה ריצה מתפרסמים גם החלקים הכלליים,
- *   כך שהכלליים והפילוחים נגזרים מאותה תמונה, וחתך שנבדל מסך כללי בפחות מ-10 אינו מתפרסם.
+ *   כך שהכלליים והפילוחים נגזרים מאותה תמונה, וכל חתך שיש בו תשובות מתפרסם.
  */
 import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
 
-export const K_CELL = 10;
-export const K_ROW = 20;
-export const OPEN_AT = 30;
-export const MIN_CHANGED = 5;
+export const K_CELL = 1;
+export const K_ROW = 1;
+export const OPEN_AT = 0;
+export const MIN_CHANGED = 1;
 export const TOTAL = 120;
+export const DASHBOARD_POLICY = "open-all-v1";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -109,7 +110,7 @@ export function computeSeats(seatVersions) {
     starts[v.payload.start]++;
     if (v.payload.pollsAsOf) asOf[v.payload.pollsAsOf] = (asOf[v.payload.pollsAsOf] || 0) + 1;
   }
-  // ניחוש לפי אחוזי הצבעה: סטטיסטיקה של האחוזים, רק כשיש לפחות 10 כאלה (סף התא)
+  // ניחוש לפי אחוזי הצבעה: סטטיסטיקה של האחוזים, כשיש תשובה אחת לפחות
   const pctV = seatVersions.filter((v) => v.payload.mode === "pct" && v.payload.pct);
   const modes = { seats: n - pctV.length, pct: pctV.length };
   const pctStats = pctV.length >= K_CELL ? LISTS_2026.map((l) => seatStat(l.id, pctV.map((v) => v.payload.pct[l.id] ?? 0))) : undefined;
@@ -185,7 +186,7 @@ export function computeVote2022(voteVersions) {
   };
 }
 
-/** מטריצת מעברים: שורה = הצבעה 2022, עמודה = 2026. שורה מתחת ל-20 מוסתרת (והסתרה משלימה בין השורות) */
+/** מטריצת מעברים: שורה = הצבעה 2022, עמודה = 2026. כל שורה שיש בה תשובות מוצגת */
 export function computeMatrix(voteVersions, publishedAt) {
   const pairs = voteVersions.map((v) => v.payload).filter((p) => p.v2022 !== null && p.v2026 !== null);
   if (pairs.length < K_ROW) return null;
@@ -202,7 +203,7 @@ export function computeMatrix(voteVersions, publishedAt) {
   return { rows, publishedAt };
 }
 
-/** ממוצע השערות המנדטים לפי כוונת הצבעה 2026 (חתך מתחת ל-10 לא מוצג) */
+/** ממוצע השערות המנדטים לפי כוונת הצבעה 2026 (כל חתך עם תשובות מוצג) */
 export function computeByVote(voteMap, seatMap) {
   const groups = {};
   const totals = [seatMap.size];
@@ -215,7 +216,7 @@ export function computeByVote(voteMap, seatMap) {
   const out = {};
   for (const [code, list] of Object.entries(groups)) {
     if (list.length < K_CELL) continue;
-    // הגנה מחיסור: חתך שגודלו קרוב (פחות מ-10) לסך כללי שמתפרסם מאותה תמונה — לא מתפרסם
+    // הגנה מחיסור: חתך שגודלו קרוב (פחות מסף התא) לסך כללי שמתפרסם מאותה תמונה — לא מתפרסם
     if (totals.some((t) => t - list.length > 0 && t - list.length < K_CELL)) continue;
     out[code] = { n: list.length, seats: Object.fromEntries(LISTS_2026.map((l) => [l.id, r2(list.reduce((a, v) => a + seatValue(v.payload, l.id), 0) / list.length)])) };
   }
@@ -271,7 +272,7 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const reviewActive = new Set([...rev.vote.keys(), ...rev.seats.keys(), ...rev.blocs.keys()]);
   const today = israelDay(now);
   const daily = lastDailyDay !== today;
-  // ברגע הפתיחה (30) — כל החלקים מתפרסמים מחדש, ולא נשארים קפואים מתקופת הסגירה
+  // במעבר מדשבורד סגור לפתוח — כל החלקים מתפרסמים מחדש, ולא נשארים קפואים מתקופת הסגירה
   const opening = active.size >= OPEN_AT && !wasOpen;
   const seatV = [...main.seats.values()];
   const voteV = [...main.vote.values()];
@@ -308,7 +309,7 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   }
 
   const open = active.size >= OPEN_AT;
-  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, sectionsAsOf: {} };
+  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, sectionsAsOf: {} };
   if (open) {
     for (const [name, s] of Object.entries(sections)) {
       if (s.json === null || s.json === undefined) continue;

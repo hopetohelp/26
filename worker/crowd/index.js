@@ -12,7 +12,7 @@
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
 import { bearer, authenticate, newSession, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
 import { validateSave, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
-import { aggregate, HOURLY, DAILY } from "./lib/aggregate.js";
+import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 
 export const LIMITS = { savesPerHour: 20, participantsPerHourPerIp: 5 };
@@ -310,7 +310,10 @@ const routes = {
 
 async function dashboard(env) {
   const row = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'dashboard' ORDER BY id DESC LIMIT 1").first();
-  return row ? JSON.parse(row.json) : { publishedAt: null, aggregationId: null, participants: 0, open: false, underReview: null };
+  const published = row ? JSON.parse(row.json) : null;
+  // אחרי שינוי מדיניות מחשבים פעם אחת בשרת: אין צורך להמתין לצבירה השעתית.
+  if (!published || published.policy !== DASHBOARD_POLICY) return (await runAggregation(env, clock(env))).dashboard;
+  return published;
 }
 
 // ---- המשימה השעתית
@@ -371,7 +374,8 @@ export async function runAggregation(env, now) {
   }
   const dailyRow = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'daily' ORDER BY id DESC LIMIT 1").first();
   const lastDash = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'dashboard' ORDER BY id DESC LIMIT 1").first();
-  const wasOpen = lastDash ? !!JSON.parse(lastDash.json).open : false;
+  const previousDash = lastDash ? JSON.parse(lastDash.json) : null;
+  const wasOpen = !!previousDash?.open && previousDash.policy === DASHBOARD_POLICY;
   const res = aggregate({ wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId });
   const ins = (section, json, publishedAt, contributors = 0, snapshot = null) =>
     env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json, contributors, snapshot) VALUES (?, ?, ?, ?, ?, ?)").bind(
