@@ -89,7 +89,7 @@ export default function Blocs({
                     if (e.key === "Escape") { e.preventDefault(); setEditing(null); }
                   }} />
               ) : (
-                <h3 className="font-display text-3xl leading-none"><button type="button" className="w-full min-h-[44px] text-start break-words rounded-theme focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal"
+                <h3 className="font-display text-xl sm:text-3xl leading-tight"><button type="button" className="w-full min-h-[44px] text-start break-words rounded-theme focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal"
                   aria-label={`עריכת שם הגוש: ${b.name}`} onClick={() => { setNameDraft(b.name); setEditing(b.id); }}>{b.name}</button></h3>
               )}
               <div className="flex items-end gap-2 flex-wrap">
