@@ -39,13 +39,19 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
 }
 
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
-export function gov37Blocs(): Bloc[] {
+const ARAB_IDS = IDS.filter((id) => ["joint", "raam"].includes(id));
+const NEW_IDS = IDS.filter((id) => ["yashar", "reservists", "amcha", "haredi_public", "bluewhite"].includes(id));
+export function defaultBlocs(): Bloc[] {
+  const coalition = GOV_IDS.filter((id) => !ARAB_IDS.includes(id) && !NEW_IDS.includes(id));
+  const opposition = IDS.filter((id) => !coalition.includes(id) && !ARAB_IDS.includes(id) && !NEW_IDS.includes(id));
   return [
-    { id: "gov", name: "מפלגות הממשלה היוצאת", lists: GOV_IDS, target: null },
-    { id: "rest", name: "שאר הרשימות", lists: IDS.filter((id) => !GOV_IDS.includes(id)), target: null },
+    { id: "coalition", name: "גוש הקואליציה", lists: coalition, target: null },
+    { id: "opposition", name: "גוש האופוזיציה", lists: opposition, target: null },
+    { id: "arabs", name: "ערבים", lists: ARAB_IDS, target: null },
+    { id: "new", name: "מפלגות חדשות", lists: NEW_IDS, target: null },
   ];
 }
-export const DEFAULT_BLOCS: BlocsPayload = { mode: "gov37", blocs: gov37Blocs() };
+export const DEFAULT_BLOCS: BlocsPayload = { mode: "custom", blocs: defaultBlocs() };
 export const EMPTY_VOTE: VotePayload = { v2022: null, v2026: null };
 
 export const V2022_LABEL: Record<string, string> = {
