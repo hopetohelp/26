@@ -25,17 +25,28 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
   localStorage.setItem('elections26.crowd.saved.blocs',JSON.stringify({mode:'gov37',blocs:[{id:'gov',name:'ממשלה',lists:['likud'],target:null},{id:'rest',name:'יתר',lists:[],target:null}]}));
   localStorage.setItem('elections26.feedback',JSON.stringify([{token:tok,created:'2026-10-01',preview:'הודעה ישנה לדוגמה'}]));
  },{theme,cells,tok});
- await page.route('https://crowd.example/**',async route=>{
-  const p=new URL(route.request().url()).pathname;
+ const crowdRoute = async route=>{
+  const p=new URL(route.request().url()).pathname.replace(/^\/crowd/, '');
   const data=p==='/me'?{participant:'demo',username:'דוגמה',latest:{},created_at:'2026-10-01'}:p==='/support'?{thread:null}:p==='/dashboard'?dashboard:{};
   await route.fulfill({json:data});
- });
- await page.route('https://feedback.example/**',route=>route.fulfill({json:{ok:true,topic:'design',text:'הודעה ישנה לדוגמה',status:'answered',created_at:'2026-10-01',messages:[{author:'team',text:'תשובת צוות לדוגמה',created_at:'2026-10-02'}]}}));
+ };
+ await page.route('https://crowd.example/**',crowdRoute);
+ await page.route('https://feedback.example/crowd/**',crowdRoute);
+ await page.route('https://feedback.example/**',route=>new URL(route.request().url()).pathname.startsWith('/crowd/') ? crowdRoute(route) : route.fulfill({json:{ok:true,topic:'design',text:'הודעה ישנה לדוגמה',status:'answered',created_at:'2026-10-01',messages:[{author:'team',text:'תשובת צוות לדוגמה',created_at:'2026-10-02'}]}}));
  await page.goto(`${baseUrl}#/support`);
  await page.getByText('תשובת צוות לדוגמה',{exact:true}).waitFor();
  await page.getByText('מחוברים בשם').waitFor();
+ assert.equal(await page.locator('textarea').count(),1,'one support composer');
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow support ${theme} ${width}`);
  await page.screenshot({path:`${screenshotDir}/support-${theme}-${width}.png`,fullPage:true});
+ await page.evaluate(()=>localStorage.removeItem('elections26.crowd.token'));
+ await page.reload();
+ await page.getByText('אפשר לכתוב לנו גם בלי חשבון.',{exact:true}).waitFor();
+ assert.equal(await page.locator('textarea').count(),1,'anonymous composer');
+ await page.getByRole('textbox',{name:'הודעה לתמיכה'}).fill('בדיקת פנייה בלי חשבון');
+ await page.getByRole('button',{name:'שליחת הודעה',exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('#support-message').value==='');
+ await page.evaluate(()=>localStorage.setItem('elections26.crowd.token','test-session'));
  await page.goto(`${baseUrl}#/feedback/${tok}`);
  await page.getByText('תשובת צוות לדוגמה',{exact:true}).waitFor();
  assert.ok(page.url().includes('/feedback/'));

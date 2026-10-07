@@ -11,3 +11,7 @@ ALLOWED_ORIGIN = "https://hopetohelp.github.io"
 binding = "DB"
 database_name = "elections26-feedback"
 database_id = "69ba3e11-7cce-4823-a3be-ac7cf82999ea"
+
+[[services]]
+binding = "CROWD"
+service = "elections26-crowd"

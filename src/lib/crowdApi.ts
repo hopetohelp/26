@@ -25,7 +25,8 @@
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
  */
 
-export const CROWD_URL = import.meta.env.VITE_CROWD_URL as string | undefined;
+const feedbackUrl = import.meta.env.VITE_FEEDBACK_URL as string | undefined;
+export const CROWD_URL = feedbackUrl ? feedbackUrl.replace(/\/$/, "") + "/crowd" : import.meta.env.VITE_CROWD_URL as string | undefined;
 
 export type Unit = "vote" | "seats" | "blocs";
 

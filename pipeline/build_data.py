@@ -259,6 +259,31 @@ def build_polls(build_time: datetime) -> dict:
                                "sha256": page_sha, "tableLine": line},
                     "verified": False,
                 })
+    # פרסומים חדשים שטרם נוספו לאינדקס ויקיפדיה. אין שינוי בקובץ ויקיפדיה ואין השלמת נתון חסר.
+    direct_path = RAW / "direct-polls.json"
+    if direct_path.exists():
+        for d in json.loads(direct_path.read_text(encoding="utf-8")):
+            if any(p["id"] == d["id"] for p in polls):
+                continue
+            published = datetime.fromisoformat(d["publishedAt"])
+            if published.tzinfo is None:
+                raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
+            if FREEZE_START <= published < FREEZE_END:
+                continue
+            seat_sum = sum(v.get("s", 0) for v in d["values"].values())
+            if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]):
+                raise ValueError(f"סקר ישיר לא תקין: {d['id']}")
+            firm, pub = d["firm"], d["publisher"]
+            polls.append({"id": d["id"], "start": d["start"], "end": d["end"],
+                          "firm": firm, "firmHe": FIRM_HE.get(firm, firm), "publisher": pub,
+                          "publisherHe": PUB_HE.get(pub, pub), "sample": d["sample"],
+                          "values": d["values"], "others": None,
+                          "gov": sum(d["values"].get(k, {}).get("s", 0) for k in ("likud", "rzp", "otzma", "shas", "utj")),
+                          "seatSum": seat_sum, "consistent": True, "unmapped": [], "urls": d["urls"],
+                          "assumedPublishedAt": published.isoformat(),
+                          "eligibleToShow": published + timedelta(hours=24) <= build_time,
+                          "source": {"page": "פרסומי סקרים — השלמה לאינדקס", "sha256": sha256(direct_path), "tableLine": 0},
+                          "verified": False})
     polls.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
     return {"polls": polls}
 

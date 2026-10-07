@@ -21,7 +21,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | style="background:#FFCCFF" |Camil Fuchs, Midgam Project, Stat-Net<ref>{{Cite news |author1=[[Hila Korach]]|author2=[[Raviv Drucker]] |title=סקר חדשות 13: גוש נתניהו יורד ל-58 מנדטים, מרצ עוברת |url=https://13tv.co.il/item/news/politics/politics/new-survey-903379652/ |access-date=2 January 2023 |date=1 January 2023 |website=Channel 13 |language=he-IL}}</ref><ref>{{Cite news |author=Michael Shemesh |title=סקר כאן חדשות: עמדת פתיחה חלשה לסער |url=https://www.kan.org.il/content/kan-news/politic/722543/ |access-date=13 March 2024 |date=13 March 2024 |website=Israeli Public Broadcasting Corporation|language=he-IL}}</ref>
 |2022 election - 13 March 2024 
 |-
-| style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name="Ch13June9">{{Cite news |author1=Sefi Ovadia|author2=[[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
+| style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name=Ch13June9>{{Cite news| author=Sefi Ovadia, [[Raviv Drucker]]| title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים?|url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/| access-date=10 June 2024| date=10 June 2024| publisher=[[Channel 13 (Israel)|Channel 13]]| language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
 |10 June 2024 - 25 May 2026
 |-
 | style="background:mediumseagreen" |Midgam Project, The Madad, Stat-Net, Askaria<ref name="auto7">{{cite web  |title=דרמה בגוש מתנגדי נתניהו: איזנקוט מזנק, בנט מתרסק|publisher=[[Channel 13 (Israel)|Channel 13]] |url=https://13tv.co.il/item/news/politics/politics/v0v13-905221091/|date=17 June 2026|access-date=18 June 2026 |language=he-IL}}</ref>
@@ -63,7 +63,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | 2022 election - 29 June 2023
 |-
 | style="background:indianred" |Lazar Research Institute<ref>{{Cite news |author=Moshe Cohen |title=חוזרים להוביל: 29 מנדטים לליכוד, גנץ ממשיך להיחלש
-|url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name="Maariv11Aug23">{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים? |url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
+|url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name=Maariv11Aug23>{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים? |url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
 | 5 July 2023 - 10 August 2023
 |-
 | style="background:#F86B61" |Lazar Research Institute, Panel4All<ref>{{Cite news |author=Matan Wasserman |title=סקר "מעריב": גנץ מזנק, אך הקואליציה מצמצמת פערים |url=https://www.maariv.co.il/news/politics/Article-1031166 |access-date=18 August 2023 |date=18 August 2023 |website=Maariv |language=he-IL}}</ref>
@@ -152,6 +152,9 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 | style="font-style:italic;" {{Opdrts||16|Oct|2026}}
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
+|-
+| {{Opdrts||6|Oct|2026}}
+| colspan="22" |[[Likud]] and [[Religious Zionist Party | RZP-Zehut]] sign a surplus-vote agreement<ref>{{Cite web |date=6 October 2026 |title=Likud and Religious Zionism sign surplus-vote agreement |url=https://www.timesofisrael.com/liveblog_entry/likud-and-religious-zionism-sign-surplus-vote-agreement/ |access-date=7 October 2026|website=The Times of Israel}}</ref>
 |-
 |{{Opdrts||5|Oct|2026}}
 |style=background:#FFDFCC |Midgam R&C
@@ -1220,7 +1223,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||2|Sep|2026}}
 | style=background:skyblue |Maagar Mochot
-|[[Channel 16 (Israel)|Channel 16]]<ref name="Maagar2Sep">{{cite web|date=2 August 2026 |title=Main News Edition, from 9:45 to 11:20 |url=https://www.ch16.co.il/vod.html?id=430a18f3-fe1e-498b-9587-218e51b73cbf&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2026.08.26|access-date=3 September 2026 |publisher=Channel 16}}</ref>
+|[[Channel 16 (Israel)|Channel 16]]<ref name=Maagar2Sep>{{cite web|date=2 August 2026 |title=Main News Edition, from 9:45 to 11:20 |url=https://www.ch16.co.il/vod.html?id=430a18f3-fe1e-498b-9587-218e51b73cbf&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2026.08.26|access-date=3 September 2026 |publisher=Channel 16}}</ref>
 |552
 |19
 |18
@@ -1470,7 +1473,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||26|Aug|2026}}
 | style=background:skyblue |Maagar Mochot
-|[[Channel 16 (Israel)|Channel 16]]<ref name="Maagar26Aug">{{cite web|date=26 August 2026 |title=Main News Edition, from 10:10 to 11:40 |url=https://www.ch16.co.il/vod.html?id=430a18f3-fe1e-498b-9587-218e51b73cbf&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2026.08.26|access-date=27 August 2026 |publisher=Channel 16}}</ref>
+|[[Channel 16 (Israel)|Channel 16]]<ref name=Maagar2Sep/>
 |552
 |style="background:#BBCDE4" |'''21'''
 |16
@@ -6948,7 +6951,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 |-
 |rowspan=2 {{Opdrts||2|Sep|2026}}
 |rowspan=2 style=background:skyblue |Maagar Mochot
-|rowspan=2 |[[Channel 16 (Israel)|Channel 16]]<ref name="Maagar2Sep"/>
+|rowspan=2 |[[Channel 16 (Israel)|Channel 16]]<ref name=Maagar2Sep/>
 |19
 |18
 |5
@@ -12042,7 +12045,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |-
 |rowspan="2" data-sort-value=2023-08-10 |9–10 Aug 23
 |rowspan="2" style=background:indianred |Lazar
-|rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref>{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים?|url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
+|rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv11Aug23/>
 |28
 |16
 |6
@@ -12817,7 +12820,7 @@ Scenarios where [[Avigdor Lieberman]], [[Naftali Bennett]], [[Yossi Cohen]], [[A
 |-
 | rowspan="2" data-sort-value="2024-06-10" |10 Jun 24
 | rowspan="2" style=background:#BAD1E6 |MM+SN
-| rowspan="2" |[[Channel 13 (Israel)|Channel 13]]<ref>{{Cite news| author=Sefi Ovadia, [[Raviv Drucker]]| title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים?|url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/| access-date=10 June 2024| date=10 June 2024| publisher=[[Channel 13 (Israel)|Channel 13]]| language=he-IL}}</ref>
+| rowspan="2" |[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13June9/>
 |20
 |5
 |9

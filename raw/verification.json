@@ -1395,5 +1395,47 @@
    "sample_respondents": null
   },
   "status": "unreachable"
+ },
+ {
+  "id": "2026-10-07-mp-tm-sn-a-channel-13",
+  "checkedAt": "2026-10-08",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905386103/",
+  "note": "המנדטים, האחוזים, המכון והמדגם הושוו לפרסום המקורי. טעות הדגימה 2.5%. מועד השדה לא נמסר בנפרד ממועד הפרסום.",
+  "sourceDetails": {
+   "published": "2026-10-07T20:35:00+03:00",
+   "sample_respondents": 1013
+  },
+  "access": [
+   "direct"
+  ]
+ },
+ {
+  "id": "2026-10-07-sf-nd-channel-14",
+  "checkedAt": "2026-10-08",
+  "status": "match",
+  "source": "https://www.c14.co.il/article/1728516",
+  "note": "המנדטים, האחוזים, המדגם והמכון הושוו לפרסום המקורי. נתון הציבור החרדי לא נמסר ולכן לא הושלם.",
+  "sourceDetails": {
+   "published": "2026-10-07T20:34:00+03:00",
+   "sample_respondents": 1100
+  },
+  "access": [
+   "direct"
+  ]
+ },
+ {
+  "id": "2026-10-06-maagar-mochot-channel-16",
+  "checkedAt": "2026-10-08",
+  "status": "secondary",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1233013-0/",
+  "note": "המנדטים אומתו מול הדיווח בכיפה. המקור הראשוני אינו נגיש לסריקה; מדגם ואחוזי הרשימות שמתחת לסף לא הושלמו ללא אימות המקור.",
+  "sourceDetails": {
+   "published": "2026-10-06T21:02:00+03:00",
+   "sample_respondents": null
+  },
+  "access": [
+   "secondary"
+  ]
  }
 ]
