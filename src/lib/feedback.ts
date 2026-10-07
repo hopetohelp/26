@@ -74,8 +74,8 @@ async function post(path: string, body: object): Promise<{ ok: boolean; token?: 
   return { ok: res.ok && data.ok, token: data.token, error: data.error };
 }
 
-export const sendFeedback = (body: { topic: string; text: string; page: string; theme: string; website: string }) => post("/", body);
-export const replyToThread = (token: string, text: string, website: string) => post("/thread", { t: token, text, website });
+export const sendFeedback = (body: { topic: string; text: string; page: string; theme: string; website: string; diagnostic?: string }) => post("/", body);
+export const replyToThread = (token: string, text: string, website: string, diagnostic?: string) => post("/thread", { t: token, text, website, diagnostic });
 
 export async function getThread(token: string): Promise<Thread | null> {
   const res = await fetch(`${FEEDBACK_URL}/thread?t=${encodeURIComponent(token)}`);

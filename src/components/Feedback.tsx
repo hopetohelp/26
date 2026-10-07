@@ -35,15 +35,15 @@ export default function Feedback() {
         <span className="md:hidden">הערה?</span>
         <span className="hidden md:inline">הערה? ספרו לנו</span>
       </button>
-      {open && <Sheet onClose={() => setOpen(false)} />}
+      {open && <FeedbackSheet onClose={() => setOpen(false)} />}
     </>
   );
 }
 
-function Sheet({ onClose }: { onClose: () => void }) {
+export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; diagnostic?: string }) {
   const { pathname } = useLocation();
-  const [topic, setTopic] = useState<string>("data");
-  const [text, setText] = useState("");
+  const [topic, setTopic] = useState<string>(diagnostic ? "other" : "data");
+  const [text, setText] = useState(diagnostic ? "לא הצלחתי לשמור את ההשערה שלי." : "");
   const [trap, setTrap] = useState(""); // שדה מלכודת לרובוטים — גולש אמיתי לא רואה אותו
   const [status, setStatus] = useState<Status>("idle");
   const [token, setToken] = useState<string | null>(null);
@@ -54,10 +54,11 @@ function Sheet({ onClose }: { onClose: () => void }) {
   const area = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    const back = document.activeElement as HTMLElement | null;
     area.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => { window.removeEventListener("keydown", onKey); back?.focus(); };
   }, [onClose]);
 
   async function send() {
@@ -69,7 +70,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
       const prim = primaryThread();
       if (prim) {
         const topicLabel = TOPICS.find((t) => t.id === topic)?.label ?? "";
-        const res = await replyToThread(prim.token, `[${topicLabel}] ${body}`.slice(0, MAX), trap);
+        const res = await replyToThread(prim.token, `[${topicLabel}] ${body}`.slice(0, MAX), trap, diagnostic);
         if (res.ok) {
           setToken(prim.token);
           setStatus("sent");
@@ -77,7 +78,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
         }
         if (res.error !== "not found" && res.error !== "full") return setStatus("error");
       }
-      const res = await sendFeedback({ topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap });
+      const res = await sendFeedback({ topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap, diagnostic });
       if (res.ok && res.token) {
         saveThread({ token: res.token, created: new Date().toISOString(), preview: body.slice(0, 80) });
         setToken(res.token);
@@ -95,7 +96,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
         aria-modal="true"
         aria-labelledby={titleId}
         onClick={(e) => e.stopPropagation()}
-        className="w-full md:max-w-lg bg-paper-card text-ink rounded-t-2xl md:rounded-2xl p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] flex flex-col gap-4"
+        className="w-full md:max-w-lg max-h-[92dvh] overflow-y-auto bg-paper-card text-ink rounded-t-2xl md:rounded-2xl p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] flex flex-col gap-4"
       >
         {status === "sent" ? (
           <div role="status" className="flex flex-col gap-3 items-start py-2">
@@ -171,6 +172,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
               <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} className="hidden" />
             </label>
             <p className="text-sm text-ink-soft leading-relaxed">
+              {diagnostic && "לוג התקלה ופרטי הדפדפן מצורפים, בלי סיסמה, קישור אישי או תוכן ההשערה. "}
               בלי מייל ובלי הרשמה. ההערה נשמרת אצלנו בלבד, לא מתפרסמת, ולא נשמר שום פרט מזהה. העמוד שממנו שלחתם מצורף. אחרי
               השליחה תקבלו קישור אישי לתשובה.
             </p>
@@ -178,6 +180,12 @@ function Sheet({ onClose }: { onClose: () => void }) {
               <Link to="/feedback" onClick={onClose} className="text-sm font-bold">
                 ההערות הקודמות שלי ({mine})
               </Link>
+            )}
+            {diagnostic && (
+              <details className="text-sm text-ink-soft">
+                <summary className="cursor-pointer min-h-[44px] flex items-center">לוג התקלה מצורף — אפשר לעיין בו</summary>
+                <pre dir="ltr" className="text-xs whitespace-pre-wrap break-all bg-paper rounded-theme p-3">{diagnostic}</pre>
+              </details>
             )}
             {status === "error" && (
               <p role="alert" className="text-sm font-bold text-warn">

@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { AuthForm } from "./Account";
 import { Btn } from "./ui";
+import { FeedbackSheet } from "../../components/Feedback";
+import { FEEDBACK_URL } from "../../lib/feedback";
 import type { useSession, SaveState } from "./useCrowd";
 
 export interface SaveUnit {
   status: "draft" | "saved" | "dirty";
   state: SaveState;
   error: string | null;
+  errorLog?: string | null;
   save: (token: string) => Promise<boolean>;
 }
 
@@ -50,10 +54,25 @@ export default function SaveButton({
         />
       )}
       {unit.error && !compact && (
-        <p role="alert" className="text-sm text-warn">
-          {unit.error}
-        </p>
+        <SaveError unit={unit} />
       )}
+    </div>
+  );
+}
+
+/** דיווח יזום של הגולש מתוך התקלה; הלוג מוצג לפני השליחה. */
+export function SaveError({ unit }: { unit: Pick<SaveUnit, "error" | "errorLog"> }) {
+  const [report, setReport] = useState(false);
+  if (!unit.error) return null;
+  return (
+    <div className="bg-paper-card rounded-theme px-3 py-2 mt-1 space-y-1">
+      <p role="alert" className="text-sm text-warn">{unit.error}</p>
+      {FEEDBACK_URL && unit.errorLog && (
+        <button type="button" aria-haspopup="dialog" onClick={() => setReport(true)} className="min-h-[44px] px-3 rounded-full border border-ink-faint text-ink text-sm font-bold">
+          שליחת הערה עם לוג התקלה
+        </button>
+      )}
+      {report && unit.errorLog && createPortal(<FeedbackSheet diagnostic={unit.errorLog} onClose={() => setReport(false)} />, document.body)}
     </div>
   );
 }

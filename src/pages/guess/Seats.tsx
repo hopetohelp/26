@@ -10,7 +10,7 @@ import { seatsFromPct, THRESHOLD_PCT, type PctSeats } from "../../lib/lawSeats";
 import { K25_MAP, k25Name, IDS, nameOf, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import Blocs from "./Blocs";
 import { blocSummary } from "./blocSummary";
-import SaveButton, { type SaveUnit } from "./SaveButton";
+import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
 import Share from "./Share";
 import { Btn, StatusPill } from "./ui";
@@ -112,6 +112,7 @@ export default function Seats({
     status: unit.status !== "saved" ? unit.status : blocsToSave && blocsUnit.status !== "saved" ? blocsUnit.status : "saved",
     state: unit.state === "saving" || blocsUnit.state === "saving" ? "saving" : unit.state === "error" || blocsUnit.state === "error" ? "error" : "idle",
     error: unit.error ?? blocsUnit.error,
+    errorLog: unit.error ? unit.errorLog : blocsUnit.errorLog,
     save: async (token) => {
       const a = unit.status === "saved" ? true : await unit.save(token);
       const b = !a || !blocsToSave || blocsUnit.status === "saved" ? a : await blocsUnit.save(token);
@@ -306,11 +307,7 @@ export default function Seats({
             {lawProblem}
           </p>
         )}
-        {unit.error && (
-          <p role="alert" className="text-sm text-warn bg-paper-card rounded-theme px-3 py-1 mt-1">
-            {unit.error}
-          </p>
-        )}
+        <SaveError unit={both} />
         {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
       </div>
 
