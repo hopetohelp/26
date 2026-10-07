@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { linkAcked, setLinkAck } from "../../lib/crowdSession";
-import { call, type BlocsPayload, type Dashboard, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
+import { type BlocsPayload, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
 import LinkSaver from "./LinkSaver";
 import Seats from "./Seats";
@@ -22,13 +22,6 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   const blocs = useUnit<BlocsPayload>("blocs", null, latest?.blocs?.payload as BlocsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, latest?.vote?.payload as VotePayload | undefined);
 
-  const [crowd, setCrowd] = useState<Record<string, number> | null>(null);
-  useEffect(() => {
-    if (!session.online) return;
-    call<Dashboard>("/dashboard")
-      .then((d) => d.open && d.seats && setCrowd(Object.fromEntries(d.seats.full.map((s) => [s.list, s.mean]))))
-      .catch(() => {});
-  }, [session.online]);
 
   const [acked, setAcked] = useState(linkAcked);
   // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
