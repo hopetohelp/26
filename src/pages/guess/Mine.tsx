@@ -15,7 +15,7 @@ const SECTIONS = [
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
 
-export default function Mine({ session }: { session: ReturnType<typeof useSession> }) {
+export default function Mine({ session, onStatistics }: { session: ReturnType<typeof useSession>; onStatistics: () => void }) {
   const [sec, setSec] = useState<Sec>("seats");
   const latest = session.me?.latest;
   const seats = useUnit<SeatsPayload>("seats", null, latest?.seats?.payload as SeatsPayload | undefined);
@@ -84,7 +84,7 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
           );
         })}
       </nav>
-      {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} crowd={crowd} />}
+      {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} onStatistics={onStatistics} />}
       {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
     </div>
