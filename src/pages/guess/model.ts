@@ -66,4 +66,4 @@ export const V2022_LABEL: Record<string, string> = {
   ineligible: "לא הייתה לי זכות הצבעה",
   private: "מעדיף/ה לא לומר",
 };
-export const V2026_LABEL: Record<string, string> = { undecided: "עוד לא החלטתי", none: "לא אצביע", private: "מעדיף/ה לא לומר" };
+export const V2026_LABEL: Record<string, string> = { undecided: "עוד לא החלטתי", none: "לא אצביע", ineligible: "לא הייתה לי זכות הצבעה", private: "מעדיף/ה לא לומר" };
