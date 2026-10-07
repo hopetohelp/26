@@ -4,6 +4,7 @@ import { Card, ChartWithTable, Fold } from "../../components/ui";
 import { call, type Cell, type Dashboard as D, type LogEntry, type SeatStat } from "../../lib/crowdApi";
 import { dateLong, seatsFmt } from "../../lib/format";
 import { IDS, k25Name, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
+import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
@@ -83,8 +84,8 @@ function Band({ s, max, poll }: { s: SeatStat; max: number; poll?: number }) {
   const x = (v: number) => `${(v / max) * 100}%`;
   return (
     <div className="relative h-5 rounded-full bg-paper" aria-hidden="true">
-      <div className="absolute inset-y-1 rounded-full bg-ink/25" style={{ insetInlineStart: x(s.p25), width: `calc(${x(s.p75 - s.p25)} + 4px)` }} />
-      <div className="absolute inset-y-0 w-1 rounded-full bg-ink" style={{ insetInlineStart: x(s.median) }} />
+      <div className="absolute inset-y-1 rounded-full bg-ink/25" style={{ insetInlineStart: x(s.min), width: `calc(${x(s.max - s.min)} + 4px)` }} />
+      <div className="absolute inset-y-0 w-1 rounded-full bg-ink" style={{ insetInlineStart: x(s.mean) }} />
       {poll !== undefined && <div className="absolute -inset-y-0.5 w-0.5 bg-accent" style={{ insetInlineStart: x(poll) }} title="ממוצע הסקרים" />}
     </div>
   );
@@ -96,9 +97,8 @@ function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, nu
       <thead>
         <tr className="text-ink-soft">
           <th className="text-start font-normal">רשימה</th>
-          <th className="font-normal">חציון</th>
-          <th className="font-normal">טווח אמצעי (25–75)</th>
           <th className="font-normal">ממוצע</th>
+          <th className="font-normal">טווח מלא</th>
           <th className="font-normal">סקרים</th>
         </tr>
       </thead>
@@ -106,9 +106,8 @@ function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, nu
         {rows.map((s) => (
           <tr key={s.list} className="border-t border-paper-line">
             <td className="py-1">{nameOf(s.list)}</td>
-            <td className="text-center font-bold">{seatsFmt(s.median)}</td>
-            <td className="text-center"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi></td>
-            <td className="text-center">{seatsFmt(Math.round(s.mean * 10) / 10)}</td>
+            <td className="text-center font-bold">{seatsFmt(s.mean)}</td>
+            <td className="text-center">{s.min === s.max ? "כל ההשערות זהות" : <bdi dir="ltr">{seatsFmt(s.min)}–{seatsFmt(s.max)}</bdi>}</td>
             <td className="text-center">{polls[s.list] ?? "—"}</td>
           </tr>
         ))}
@@ -121,8 +120,8 @@ function SeatsBlock({ d }: { d: D }) {
   const s = d.seats!;
   const [manual, setManual] = useState(false);
   const [alpha, setAlpha] = useState(false);
-  const rows = [...(manual ? s.manual : s.full)].sort((a, b) => (alpha ? nameOf(a.list).localeCompare(nameOf(b.list), "he") : b.median - a.median || b.p75 - a.p75));
-  const max = Math.max(10, ...rows.map((r) => r.p75), ...Object.values(s.polls)) + 2;
+  const rows = [...(manual ? s.manual : s.full)].sort((a, b) => (alpha ? nameOf(a.list).localeCompare(nameOf(b.list), "he") : b.mean - a.mean || b.max - a.max));
+  const max = Math.max(10, ...rows.map((r) => r.max), ...Object.values(s.polls)) + 2;
   return (
     <Card title="הכנסת של הגולשים">
       <Ex kind={GUESS} asOf={at(d, "seats")} n={`${s.n} משתתפים`} details={<>
@@ -141,9 +140,9 @@ function SeatsBlock({ d }: { d: D }) {
           ))}
         </div>
         {manual && <p className="text-xs text-ink-soft mb-2">רק מי שקבעו ערך לרשימה בעצמם נספרים בתצוגה הזו.</p>}
-        {!manual && <Sorter alpha={alpha} setAlpha={setAlpha} metric="חציון" />}
+        {!manual && <Sorter alpha={alpha} setAlpha={setAlpha} metric="ממוצע" />}
         <ChartWithTable
-          summary={`הקו העבה = החציון; הפס = מחצית ההשערות האמצעית; הקו הדק = ממוצע הסקרים${s.pollsAsOf ? ` מ-${dateLong(s.pollsAsOf)}` : ""}.`}
+          summary={`הקו העבה = הממוצע; הפס = הטווח מההשערה הנמוכה לגבוהה; הקו הדק = ממוצע הסקרים${s.pollsAsOf ? ` מ-${dateLong(s.pollsAsOf)}` : ""}.`}
           table={<StatTable rows={rows} polls={s.polls} />}
           chart={
             <ul className="space-y-2">
@@ -151,9 +150,9 @@ function SeatsBlock({ d }: { d: D }) {
                 <li key={r.list} className="grid grid-cols-[7.5rem_1fr_2.5rem] items-center gap-2">
                   <span className="text-sm truncate">{nameOf(r.list)}</span>
                   <Band s={r} max={max} poll={manual ? undefined : s.polls[r.list]} />
-                  <span className="font-num tabular text-xl text-end">{seatsFmt(r.median)}</span>
+                  <span className="font-num tabular text-xl text-end">{seatsFmt(r.mean)}</span>
                   <span className="sr-only">
-                    חציון {seatsFmt(r.median)}, מחצית אמצעית {seatsFmt(r.p25)} עד {seatsFmt(r.p75)}, ממוצע הסקרים {s.polls[r.list] ?? "אין"}, {r.n} משתתפים
+                    ממוצע {seatsFmt(r.mean)}, טווח מלא {seatsFmt(r.min)} עד {seatsFmt(r.max)}, ממוצע הסקרים {s.polls[r.list] ?? "אין"}, {r.n} משתתפים
                   </span>
                 </li>
               ))}
@@ -168,7 +167,7 @@ function SeatsBlock({ d }: { d: D }) {
 
 /** אחוזי ההצבעה שניחשו מי שבחרו "לפי אחוזי הצבעה" (מתפרסם כבר מהתשובה הראשונה) */
 function PctStats({ rows }: { rows: SeatStat[] }) {
-  const sorted = [...rows].sort((a, b) => b.median - a.median || b.mean - a.mean);
+  const sorted = [...rows].sort((a, b) => b.mean - a.mean || nameOf(a.list).localeCompare(nameOf(b.list), "he"));
   return (
     <div className="mt-4">
       <h3 className="font-bold text-sm mb-1">לפי אחוזי הצבעה</h3>
@@ -178,18 +177,16 @@ function PctStats({ rows }: { rows: SeatStat[] }) {
           <thead>
             <tr className="text-ink-soft">
               <th className="text-start font-normal py-1">רשימה</th>
-              <th className="font-normal">חציון</th>
-              <th className="font-normal">25–75</th>
               <th className="font-normal">ממוצע</th>
+              <th className="font-normal">טווח מלא</th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((r) => (
               <tr key={r.list} className="border-t border-paper-line">
                 <td className="py-1">{nameOf(r.list)}</td>
-                <td className="text-center font-bold"><bdi dir="ltr">{r.median.toFixed(1)}%</bdi></td>
-                <td className="text-center"><bdi dir="ltr">{r.p25.toFixed(1)}–{r.p75.toFixed(1)}%</bdi></td>
-                <td className="text-center"><bdi dir="ltr">{r.mean.toFixed(1)}%</bdi></td>
+                <td className="text-center font-bold"><bdi dir="ltr">{r.mean.toFixed(1)}%</bdi></td>
+                <td className="text-center"><bdi dir="ltr">{r.min.toFixed(1)}–{r.max.toFixed(1)}%</bdi></td>
               </tr>
             ))}
           </tbody>
@@ -205,15 +202,15 @@ function BlocsBlock({ d }: { d: D }) {
     s ? (
       <tr className="border-t border-paper-line">
         <td className="py-1">{label}</td>
-        <td className="text-center font-bold">{seatsFmt(s.median)}</td>
-        <td className="text-center"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi></td>
+        <td className="text-center font-bold">{seatsFmt(s.mean)}</td>
+        <td className="text-center">{s.min === s.max ? "כל ההשערות זהות" : <bdi dir="ltr">{seatsFmt(s.min)}–{seatsFmt(s.max)}</bdi>}</td>
       </tr>
     ) : null;
   const table = (title: string, gov?: SeatStat | null, rest?: SeatStat | null) => (
     <table className="w-full text-sm tabular mb-3">
       <caption className="text-start font-bold mb-1">{title}</caption>
       <thead>
-        <tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">חציון</th><th className="font-normal">25–75</th></tr>
+        <tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח מלא</th></tr>
       </thead>
       <tbody>
         {row("מפלגות הממשלה היוצאת", gov)}
@@ -242,7 +239,7 @@ function BlocsBlock({ d }: { d: D }) {
                     <td className="py-2 pe-2"><b>{g.name || "גוש ללא שם"}</b><p className="text-xs text-ink-soft">{g.lists.length ? g.lists.map(nameOf).join(" · ") : "ללא רשימות"}</p></td>
                     {[g.derived, g.explicit].map((s, i) => (
                       <td key={i} className="text-center py-2 px-1">
-                        {s ? <><b>{seatsFmt(s.median)}</b><p className="text-xs text-ink-soft whitespace-nowrap"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi></p></> : "לא נמסר"}
+                        {s ? <><b>ממוצע {seatsFmt(s.mean)}</b><p className="text-xs text-ink-soft">{s.min === s.max ? "כל ההשערות זהות" : <>טווח מלא <bdi dir="ltr">{seatsFmt(s.min)}–{seatsFmt(s.max)}</bdi></>}</p></> : "לא נמסר"}
                       </td>
                     ))}
                   </tr>
@@ -251,106 +248,28 @@ function BlocsBlock({ d }: { d: D }) {
             </table>
           </div>
         )}
-        <p className="text-xs text-ink-soft">חציון וטווח 25–75. סכום המנדטים וההימור הישיר מוצגים בנפרד. גושים מאוחדים רק כששמם והרכב הרשימות שלהם זהים.</p>
+        <p className="text-xs text-ink-soft">ממוצע וטווח מלא. סכום המנדטים: חיבור המנדטים שהוקצו למפלגות הגוש. הימור ישיר: היעד שהוזן לגוש בנפרד. אלה עשויים להיות שונים, וגם מספר המשיבים עשוי להיות שונה. גושים מאוחדים רק כששמם והרכב הרשימות שלהם זהים.</p>
       </Ex>
     </Card>
-  );
-}
-
-function CellBars({ cells, name }: { cells: Record<string, Cell>; name: (k: string) => string }) {
-  const [alpha, setAlpha] = useState(false);
-  const rows = Object.entries(cells).sort(([a, x], [b, y]) => (alpha ? name(a).localeCompare(name(b), "he") : (y.hidden ? -1 : pctOf(y)) - (x.hidden ? -1 : pctOf(x))));
-  return (
-    <>
-      <Sorter alpha={alpha} setAlpha={setAlpha} metric="שיעור" />
-      <ul className="space-y-1.5">
-        {rows.map(([k, c]) => (
-          <li key={k} className="grid grid-cols-[7.5rem_1fr_4.5rem] items-center gap-2 text-sm">
-            <span className="truncate">{name(k)}</span>
-            <div className="h-3 rounded-full bg-paper" aria-hidden="true">
-              {!c.hidden && <div className="h-full rounded-full bg-ink/70" style={{ width: `${pctOf(c)}%` }} />}
-            </div>
-            <span className="tabular text-end">{c.hidden ? "—" : `${pctOf(c)}%`}</span>
-            <span className="sr-only">{c.hidden ? "נתון לא זמין" : `${c.n} מתוך ${c.of}`}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="text-xs text-ink-soft mt-2">כל קבוצה שיש בה תשובות מוצגת, גם אם מדובר במשתתף יחיד.</p>
-    </>
   );
 }
 
 function VotingBlock({ d }: { d: D }) {
-  const [selected, setSelected] = useState("matrix");
-  const views = [
-    { id: "matrix", label: "מעבר 2022–2026", available: !!d.matrix, content: <Matrix d={d} /> },
-    { id: "byVote", label: "השערות לפי הצבעה", available: !!d.byVote, content: <ByVote d={d} /> },
-  ].filter((v) => v.available);
-  const current = views.find((v) => v.id === selected) ?? views[0];
-  return (
-    <Card title="הצבעה וכוונות הצבעה">
-      {current ? <>
-      <div className="flex flex-wrap gap-1.5 text-xs mb-3" role="radiogroup" aria-label="תצוגת נתוני הצבעה">
-        {views.map((v) => <button key={v.id} type="button" role="radio" aria-checked={current.id === v.id} onClick={() => setSelected(v.id)} className={`min-h-[44px] px-3 rounded-full border ${current.id === v.id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{v.label}</button>)}
-      </div>
-      <h3 className="font-bold text-sm mb-2">{current.label}</h3>
-      {current.content}
-      </> : <p className="text-sm">אין עדיין תשובות מפורסמות לטבלת המעבר.</p>}
-      <details className="mt-3 border-t border-paper-line pt-2">
-        <summary className="cursor-pointer min-h-[44px] flex items-center text-sm">פרטי ההצבעה והחישוב</summary>
-        {d.vote2026 && <><h3 className="font-bold text-sm my-2">כוונה ל-2026</h3><Vote2026 d={d} /></>}
-        {d.vote2022 && <><h3 className="font-bold text-sm my-2">הצבעה ב-2022</h3><Vote2022 d={d} /></>}
-      </details>
-    </Card>
-  );
+  return <Card title="הצבעה וכוונות הצבעה">
+    <VoteComparison d={d} />
+    {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} /></section>}
+    {d.byVote && <section className="mt-6"><h3 className="font-bold mb-2">השערות לפי הצבעה</h3><ByVote d={d} /></section>}
+  </Card>;
 }
 
-function Vote2026({ d }: { d: D }) {
-  const [named, setNamed] = useState(false);
-  const cells = named ? d.vote2026!.named : d.vote2026!.all;
-  const of = Object.values(cells)[0]?.of ?? 0;
-  return (
-    <>
-      <Ex kind={VOTE} asOf={at(d, "vote2026")} n={`${of} שענו`}>
-        <div className="flex gap-1.5 text-xs mb-2" role="radiogroup" aria-label="מי נספר">
-          {[
-            [false, "כל מי שענה"],
-            [true, "רק מי שציין רשימה"],
-          ].map(([m, l]) => (
-            <button key={String(m)} type="button" role="radio" aria-checked={named === m} onClick={() => setNamed(m as boolean)} className={`min-h-[36px] px-3 rounded-full border ${named === m ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>
-              {l as string}
-            </button>
-          ))}
-        </div>
-        <CellBars cells={cells} name={v2026Name} />
-      </Ex>
-    </>
-  );
-}
-
-function Vote2022({ d }: { d: D }) {
-  const v = d.vote2022!;
-  return (
-    <>
-      <Ex kind={VOTE} asOf={at(d, "vote2022")} n={`${Object.values(v.all)[0]?.of ?? 0} שענו`}>
-        <p className="text-sm mb-2">השוואה לתוצאה הרשמית מראה עד כמה המשתתפים כאן שונים מכלל הבוחרים.</p>
-        <table className="w-full text-sm tabular">
-          <thead>
-            <tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">כאן (מקולות כשרים)</th><th className="font-normal">רשמי</th></tr>
-          </thead>
-          <tbody>
-            {Object.entries(v.valid).map(([k, c]) => (
-              <tr key={k} className="border-t border-paper-line">
-                <td className="py-1">{v2022Name(k)}</td>
-                <td className="text-center">{c.hidden ? "—" : `${pctOf(c)}%`}</td>
-                <td className="text-center">{v.official[k] !== undefined ? `${v.official[k]}%` : "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Ex>
-    </>
-  );
+export function VoteComparison({ d }: { d: D }) {
+  const rows = votingRows(d);
+  return <Ex kind={VOTE} asOf={at(d, "vote2026")} n="כל מי שענה לכל שאלה" details={<p>התוצאות הרשמיות הן אחוז מהקולות הכשרים. תשובות המשתתפים הן אחוז מכל מי שענה לשאלה, כולל אי־הצבעה והתלבטות. רשימות בהרכב שונה מוצגות בנפרד; מקף מציין שאינן מתמודדות באותה מערכת או שאין תשובות לשאלה.</p>}>
+    <table className="w-full table-fixed text-xs sm:text-sm tabular">
+      <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th>בחירות קודמות — כלל המצביעים</th><th>בחירות קודמות — הצביעו מהמשתתפים</th><th>בחירות הבאות — מתכננים להצביע</th></tr></thead>
+      <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>{[r.official, r.previous, r.next].map((v,i) => <td key={i} className="text-center">{v === null ? "—" : `${v}%`}</td>)}</tr>)}</tbody>
+    </table>
+  </Ex>;
 }
 
 function Matrix({ d }: { d: D }) {

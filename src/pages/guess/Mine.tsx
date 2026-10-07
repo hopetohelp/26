@@ -28,7 +28,7 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
   useEffect(() => {
     if (!session.online) return;
     call<Dashboard>("/dashboard")
-      .then((d) => d.open && d.seats && setCrowd(Object.fromEntries(d.seats.full.map((s) => [s.list, s.median]))))
+      .then((d) => d.open && d.seats && setCrowd(Object.fromEntries(d.seats.full.map((s) => [s.list, s.mean]))))
       .catch(() => {});
   }, [session.online]);
 
@@ -36,7 +36,7 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
   // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
   const showLink = !!session.token && !!session.link && !acked;
 
-  const statusOf = (s: Sec) => (s === "seats" ? (seats.draft && seats.status !== "saved" ? seats : blocs.draft && blocs.status !== "saved" && blocs.draft.blocs.some((b) => b.target !== null) ? blocs : seats) : s === "vote" ? vote : null);
+  const statusOf = (s: Sec) => (s === "seats" ? (seats.draft && seats.status !== "saved" ? seats : blocs.draft && blocs.status !== "saved" ? blocs : seats) : s === "vote" ? vote : null);
   return (
     <div>
       {!session.online && (

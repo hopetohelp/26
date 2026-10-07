@@ -8,8 +8,12 @@ const run = (ps, vs, extra = {}) => aggregate({ participants: ps, versions: vs, 
 
 describe("seatStat", () => {
   it("mean/median/quartiles", () => {
-    expect(seatStat("x", [1, 2, 3, 4])).toEqual({ list: "x", n: 4, mean: 2.5, median: 2.5, p25: 1.75, p75: 3.25 });
+    expect(seatStat("x", [1, 2, 3, 4])).toEqual({ list: "x", n: 4, mean: 2.5, min: 1, max: 4, median: 2.5, p25: 1.75, p75: 3.25 });
   });
+});
+
+it("כולל את הקצוות בטווח המלא גם כשהם מחוץ לרבעונים", () => {
+  expect(seatStat("x", [0, 50, 50, 50, 120])).toMatchObject({ mean: 54, min: 0, max: 120, p25: 50, p75: 50 });
 });
 
 describe("suppress", () => {

@@ -18,7 +18,7 @@ export const K_ROW = 1;
 export const OPEN_AT = 0;
 export const MIN_CHANGED = 1;
 export const TOTAL = 120;
-export const DASHBOARD_POLICY = "open-all-v2";
+export const DASHBOARD_POLICY = "open-all-v3";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -65,7 +65,7 @@ function quantile(sorted, q) {
 export function seatStat(list, values) {
   const s = [...values].sort((a, b) => a - b);
   const mean = s.reduce((a, b) => a + b, 0) / (s.length || 1);
-  return { list, n: s.length, mean: r2(mean), median: r2(quantile(s, 0.5)), p25: r2(quantile(s, 0.25)), p75: r2(quantile(s, 0.75)) };
+  return { list, n: s.length, mean: r2(mean), min: s[0] ?? 0, max: s[s.length - 1] ?? 0, median: r2(quantile(s, 0.5)), p25: r2(quantile(s, 0.25)), p75: r2(quantile(s, 0.75)) };
 }
 
 /**
