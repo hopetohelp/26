@@ -76,7 +76,7 @@ export const lists2026 = meta.lists2026;
 export const listName = (id: string) =>
   lists2026.find((l) => l.id === id)?.name ?? meta.historyNames[id] ?? id;
 
-/** סקרים שמותר ונכון להציג בניתוח: עברו 24 שעות מהפרסום ועקביים (סכום ≈ 120) */
+/** סקרים שמותר ונכון להציג בניתוח: פורסמו לציבור ועקביים (סכום ≈ 120) */
 export const usablePolls = polls.filter((p) => p.eligibleToShow && p.consistent);
 
 export const pollsterKey = (p: Poll) => `${p.firm}|${p.publisher ?? ""}`;

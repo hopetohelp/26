@@ -12,8 +12,8 @@
   ]
  },
  "bloc": {
-  "atLeast61": 0.0897,
-  "central": 53,
+  "atLeast61": 0.0965,
+  "central": 54,
   "lists": [
    "likud",
    "shas",
@@ -28,8 +28,8 @@
   ]
  },
  "camp": {
-  "atLeast61": 0.1816,
-  "central": 57,
+  "atLeast61": 0.198,
+  "central": 58,
   "lists": [
    "likud",
    "shas",
@@ -39,8 +39,8 @@
    "amcha"
   ],
   "seats": [
-   48,
-   55,
+   49,
+   56,
    63
   ]
  },
@@ -108,7 +108,7 @@
  "horizon": 19,
  "lists": {
   "amcha": {
-   "pass": 0.5158,
+   "pass": 0.5189,
    "seats": 4,
    "seatsRange": [
     0,
@@ -118,63 +118,63 @@
    "share": 3.43,
    "shareRange": [
     1.75,
-    4.79
+    4.8
    ]
   },
   "bluewhite": {
-   "pass": 0.0238,
+   "pass": 0.0256,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     0
    ],
-   "share": 0.56,
+   "share": 0.63,
    "shareRange": [
     0.0,
-    2.03
+    2.11
    ]
   },
   "democrats": {
-   "pass": 0.9924,
+   "pass": 0.9923,
    "seats": 9,
    "seatsRange": [
     6,
     9,
     12
    ],
-   "share": 7.14,
+   "share": 7.12,
    "shareRange": [
-    5.2,
-    9.2
+    5.19,
+    9.17
    ]
   },
   "haredi_public": {
-   "pass": 0.0207,
+   "pass": 0.021,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     0
    ],
-   "share": 0.37,
+   "share": 0.38,
    "shareRange": [
     0.0,
-    1.82
+    1.83
    ]
   },
   "joint": {
-   "pass": 0.9868,
+   "pass": 0.9871,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     11
    ],
-   "share": 6.4,
+   "share": 6.41,
    "shareRange": [
-    4.65,
-    8.28
+    4.66,
+    8.31
    ]
   },
   "likud": {
@@ -182,83 +182,83 @@
    "seats": 23,
    "seatsRange": [
     17,
-    22,
+    23,
     29
    ],
-   "share": 17.53,
+   "share": 17.65,
    "shareRange": [
-    13.08,
-    21.89
+    13.17,
+    22.04
    ]
   },
   "otzma": {
-   "pass": 0.9831,
-   "seats": 7,
+   "pass": 0.9837,
+   "seats": 8,
    "seatsRange": [
     5,
     7,
     10
    ],
-   "share": 6.18,
+   "share": 6.21,
    "shareRange": [
-    4.46,
-    8.03
+    4.49,
+    8.08
    ]
   },
   "raam": {
-   "pass": 0.8595,
+   "pass": 0.866,
    "seats": 6,
    "seatsRange": [
     0,
     6,
     8
    ],
-   "share": 4.61,
+   "share": 4.64,
    "shareRange": [
-    2.98,
-    6.01
+    3.02,
+    6.05
    ]
   },
   "reservists": {
-   "pass": 0.3313,
+   "pass": 0.3126,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     5
    ],
-   "share": 2.9,
+   "share": 2.84,
    "shareRange": [
-    1.27,
-    4.29
+    1.21,
+    4.23
    ]
   },
   "rzp": {
-   "pass": 0.8939,
+   "pass": 0.8963,
    "seats": 6,
    "seatsRange": [
     0,
     6,
     8
    ],
-   "share": 4.91,
+   "share": 4.92,
    "shareRange": [
-    3.2,
-    6.36
+    3.22,
+    6.37
    ]
   },
   "shas": {
-   "pass": 0.9926,
+   "pass": 0.9925,
    "seats": 9,
    "seatsRange": [
     7,
     9,
     12
    ],
-   "share": 7.28,
+   "share": 7.27,
    "shareRange": [
     5.28,
-    9.37
+    9.36
    ]
   },
   "together": {
@@ -269,24 +269,24 @@
     11,
     14
    ],
-   "share": 8.5,
+   "share": 8.45,
    "shareRange": [
-    6.23,
-    10.96
+    6.19,
+    10.9
    ]
   },
   "utj": {
-   "pass": 0.9815,
+   "pass": 0.9816,
    "seats": 8,
    "seatsRange": [
     5,
-    7,
+    8,
     10
    ],
-   "share": 6.06,
+   "share": 6.07,
    "shareRange": [
-    4.38,
-    7.83
+    4.39,
+    7.85
    ]
   },
   "yashar": {
@@ -297,24 +297,24 @@
     21,
     27
    ],
-   "share": 16.46,
+   "share": 16.43,
    "shareRange": [
-    12.27,
-    20.63
+    12.25,
+    20.59
    ]
   },
   "yb": {
-   "pass": 0.9842,
-   "seats": 8,
+   "pass": 0.9814,
+   "seats": 7,
    "seatsRange": [
-    6,
-    8,
+    5,
+    7,
     10
    ],
-   "share": 6.26,
+   "share": 6.09,
    "shareRange": [
-    4.51,
-    8.09
+    4.38,
+    7.88
    ]
   }
  },
@@ -322,7 +322,7 @@
   "beta": -0.0719,
   "betaElections": 7,
   "others": 1.43,
-  "polls": 34,
+  "polls": 36,
   "residualSd": {
    "large": 0.2079,
    "nLarge": 44,
@@ -380,8 +380,8 @@
  "specVersion": 5,
  "variant": "V5",
  "wasted": [
-  2.83,
-  5.86,
+  2.94,
+  5.93,
   9.43
  ]
 }
