@@ -1,0 +1,173 @@
+[
+  {
+    "id": "2026-10-07-mp-tm-sn-a-channel-13",
+    "start": "2026-10-07",
+    "end": "2026-10-07",
+    "firm": "MP+TM+SN+A",
+    "publisher": "Channel 13",
+    "sample": 1013,
+    "values": {
+      "likud": {
+        "s": 20
+      },
+      "yashar": {
+        "s": 20
+      },
+      "together": {
+        "s": 12
+      },
+      "democrats": {
+        "s": 10
+      },
+      "joint": {
+        "s": 9
+      },
+      "yb": {
+        "s": 8
+      },
+      "otzma": {
+        "s": 8
+      },
+      "utj": {
+        "s": 8
+      },
+      "shas": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 7
+      },
+      "raam": {
+        "s": 6
+      },
+      "amcha": {
+        "s": 5
+      },
+      "reservists": {
+        "p": 2.9
+      },
+      "haredi_public": {
+        "p": 1.1
+      },
+      "bluewhite": {
+        "p": 0.8
+      }
+    },
+    "urls": [
+      "https://13tv.co.il/item/news/politics/politics/survey-905386103/"
+    ],
+    "publishedAt": "2026-10-07T20:35:00+03:00",
+    "verified": true,
+    "note": "המנדטים, האחוזים, המכון והמדגם הושוו לפרסום המקורי. טעות הדגימה 2.5%. מועד השדה לא נמסר בנפרד ממועד הפרסום."
+  },
+  {
+    "id": "2026-10-07-sf-nd-channel-14",
+    "start": "2026-10-07",
+    "end": "2026-10-07",
+    "firm": "SF+ND",
+    "publisher": "Channel 14",
+    "sample": 1100,
+    "values": {
+      "likud": {
+        "s": 31
+      },
+      "yashar": {
+        "s": 23
+      },
+      "shas": {
+        "s": 10
+      },
+      "democrats": {
+        "s": 9
+      },
+      "together": {
+        "s": 8
+      },
+      "utj": {
+        "s": 8
+      },
+      "otzma": {
+        "s": 8
+      },
+      "joint": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 6
+      },
+      "yb": {
+        "s": 5
+      },
+      "raam": {
+        "s": 5
+      },
+      "amcha": {
+        "p": 2.2
+      },
+      "reservists": {
+        "p": 1.8
+      },
+      "bluewhite": {
+        "p": 1.3
+      }
+    },
+    "urls": [
+      "https://www.c14.co.il/article/1728516"
+    ],
+    "publishedAt": "2026-10-07T20:34:00+03:00",
+    "verified": true,
+    "note": "המנדטים, האחוזים, המדגם והמכון הושוו לפרסום המקורי. נתון הציבור החרדי לא נמסר ולכן לא הושלם."
+  },
+  {
+    "id": "2026-10-06-maagar-mochot-channel-16",
+    "start": "2026-10-06",
+    "end": "2026-10-06",
+    "firm": "Maagar Mochot",
+    "publisher": "Channel 16",
+    "sample": null,
+    "values": {
+      "yashar": {
+        "s": 23
+      },
+      "likud": {
+        "s": 21
+      },
+      "together": {
+        "s": 14
+      },
+      "democrats": {
+        "s": 9
+      },
+      "shas": {
+        "s": 8
+      },
+      "otzma": {
+        "s": 7
+      },
+      "utj": {
+        "s": 7
+      },
+      "yb": {
+        "s": 7
+      },
+      "joint": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 7
+      },
+      "raam": {
+        "s": 6
+      },
+      "amcha": {
+        "s": 4
+      }
+    },
+    "urls": [
+      "https://www.kipa.co.il/חדשות/פוליטי/1233013-0/"
+    ],
+    "publishedAt": "2026-10-06T21:02:00+03:00",
+    "verified": false,
+    "note": "המנדטים אומתו מול הדיווח בכיפה. המקור הראשוני אינו נגיש לסריקה; מדגם ואחוזי הרשימות שמתחת לסף לא הושלמו ללא אימות המקור."
+  }
+]

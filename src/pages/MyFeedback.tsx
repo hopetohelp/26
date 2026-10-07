@@ -124,7 +124,7 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
         )}
       </Card>
 
-      {thread.status !== "closed" && (
+      {!embedded && thread.status !== "closed" && (
         <Card title="להוסיף">
           <label htmlFor={fieldId} className="text-sm font-bold">
             מה תרצו להוסיף?

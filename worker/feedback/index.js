@@ -24,8 +24,8 @@ function cors(env, origin) {
   const allowed = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost:\d+$/.test(origin || "");
   return {
     "access-control-allow-origin": allowed ? origin : env.ALLOWED_ORIGIN,
-    "access-control-allow-methods": "GET, POST, OPTIONS",
-    "access-control-allow-headers": "content-type",
+    "access-control-allow-methods": "GET, POST, DELETE, OPTIONS",
+    "access-control-allow-headers": "content-type, authorization",
     "access-control-max-age": "86400",
     vary: "origin",
   };
@@ -70,6 +70,13 @@ export default {
     const reply = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers });
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     const url = new URL(request.url);
+
+    // Keep the original authentication, origin and client-IP headers across the internal service binding.
+    if (url.pathname.startsWith("/crowd/")) {
+      if (!env.CROWD) return reply({ error: "offline" }, 503);
+      url.pathname = url.pathname.slice("/crowd".length);
+      return env.CROWD.fetch(new Request(url, request));
+    }
 
     // ---- קריאת שיחה
     if (request.method === "GET" && url.pathname === "/thread") {

@@ -4,6 +4,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 describe("לוג תקלת שמירה", () => {
+  it("uses the feedback gateway for authenticated saves when configured", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example/");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    const fetcher = vi.fn().mockResolvedValue(new Response('{"ok":true}'));
+    vi.stubGlobal("fetch", fetcher);
+    await call("/save", { token: "session-token", body: { mode: "seats" } });
+    expect(fetcher).toHaveBeenCalledWith("https://feedback.example/crowd/save", expect.objectContaining({ headers: expect.objectContaining({ authorization: "Bearer session-token" }) }));
+  });
   it("שומר את השגיאה המקורית והמחסנית בלי אסימון, גוף בקשה או פרמטרים אישיים", async () => {
     vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
     vi.resetModules();

@@ -33,6 +33,8 @@ jobs:
         run: python3 pipeline/test_model.py
       - name: מודל החיזוי — מדדים, מגמה, ושלמות יומן ההרצות
         run: python3 pipeline/test_forecast.py
+      - name: סקרים ישירים — שעת פרסום ומגבלת 24 שעות
+        run: python3 pipeline/test_direct_polls.py
       - name: טיפוסים
         run: npx tsc --noEmit -p tsconfig.json
       - name: בדיקות המנוע
