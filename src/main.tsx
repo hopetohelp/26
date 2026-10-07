@@ -13,6 +13,7 @@ import Voters from "./pages/Voters";
 import Method from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
+import Support from "./pages/Support";
 import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
@@ -73,6 +74,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="accuracy" element={<Moved to="/past" tab="accuracy" />} />
           <Route path="voters" element={<Moved to="/past" tab="voters" />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
+          <Route path="support" element={<Support />} />
           <Route path="feedback" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
           <Route path="feedback/:token" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
           <Route path="*" element={<NotFound />} />
