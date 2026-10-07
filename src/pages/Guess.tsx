@@ -41,6 +41,7 @@ export default function Guess() {
   const [intro, setIntro] = useState(() => !introSeen());
   const [recoverLink, setRecoverLink] = useState<string | null>(null);
   const [mineKey, setMineKey] = useState(0);
+  const [view, setView] = useState<"mine" | "statistics">("mine");
   const top = useRef<HTMLDivElement>(null);
 
   // הקישור האישי (?t=) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
@@ -121,18 +122,23 @@ export default function Guess() {
           <Btn onClick={() => setRecoverLink(null)}>לא צריך, תודה</Btn>
         </section>
       )}
-      <nav aria-label="בחירת תצוגה" className="sticky top-0 z-20 bg-paper py-2 mb-5 flex gap-2">
-        <a href="#my-guess" className="min-h-[48px] px-5 rounded-full bg-ink text-paper-card font-bold no-underline flex items-center">ההשערה שלי</a>
-        <a href="#statistics" className="min-h-[48px] px-5 rounded-full border border-ink bg-paper-card text-ink font-bold no-underline flex items-center">סטטיסטיקות</a>
+      <nav aria-label="בחירת תצוגה" className="sticky top-0 z-20 bg-paper py-2 mb-5 grid grid-cols-2 gap-2">
+        {([["mine", "ההשערה שלי"], ["statistics", "סטטיסטיקות"]] as const).map(([id, label]) => (
+          <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)}
+            className={`min-h-[48px] px-4 rounded-full border-2 font-bold ${view === id ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-ink"}`}>
+            {label}
+          </button>
+        ))}
       </nav>
-      <section id="my-guess" ref={top} className="scroll-mt-20">
-        <h2 className="font-display text-5xl leading-none mb-4">ההשערה שלי</h2>
-        <Mine key={mineKey} session={session} />
-      </section>
-      <section id="statistics" className="scroll-mt-20 mt-10 border-t border-paper-line pt-8">
-        <h2 className="font-display text-5xl leading-none mb-4">סטטיסטיקות</h2>
-        <Dashboard session={session} />
-      </section>
+      {view === "mine" ? (
+        <section id="my-guess" ref={top}>
+          <Mine key={mineKey} session={session} onStatistics={() => setView("statistics")} />
+        </section>
+      ) : (
+        <section id="statistics">
+          <Dashboard session={session} />
+        </section>
+      )}
     </>
   );
 }
