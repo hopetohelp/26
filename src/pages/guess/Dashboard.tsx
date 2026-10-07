@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Explained from "../../components/Explained";
-import { Card, ChartWithTable, Fold } from "../../components/ui";
-import { call, type Cell, type Dashboard as D, type LogEntry, type SeatStat } from "../../lib/crowdApi";
+import { Card, Fold } from "../../components/ui";
+import { call, type Cell, type Dashboard as D, type LogEntry, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { dateLong, seatsFmt } from "../../lib/format";
-import { IDS, k25Name, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
+import { GOV_IDS, IDS, k25Name, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
+import { loadDraft } from "../../lib/crowdSession";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
@@ -43,6 +44,7 @@ function Sorter({ alpha, setAlpha, metric }: { alpha: boolean; setAlpha: (a: boo
 
 export default function Dashboard({ session }: { session: ReturnType<typeof useSession> }) {
   const [d, setD] = useState<D | null>(null);
+  useEffect(() => { void session.refresh(); }, [session.refresh]);
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
     if (!session.online) return;
@@ -62,7 +64,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         {d.participants} משתתפים · {d.publishedAt ? `נכון ל-${when(d.publishedAt)}` : "עוד לא פורסם"}.
       </p>
       {!d.seats && <Notice>עדיין לא נשמרו השערות מנדטים לפרסום. הממוצע יוצג כבר מההשערה הראשונה; אפשר להשתתף בלשונית "שלי".</Notice>}
-      {d.seats && <SeatsBlock d={d} />}
+      {d.seats && <SeatsBlock d={d} mine={loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined} />}
       {d.blocs && <BlocsBlock d={d} />}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingBlock d={d} />}
       {d.trend && d.trend.length > 0 && <Trend d={d} />}
@@ -80,26 +82,15 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   );
 }
 
-function Band({ s, max, poll }: { s: SeatStat; max: number; poll?: number }) {
-  const x = (v: number) => `${(v / max) * 100}%`;
-  return (
-    <div className="relative h-5 rounded-full bg-paper" aria-hidden="true">
-      <div className="absolute inset-y-1 rounded-full bg-ink/25" style={{ insetInlineStart: x(s.min), width: `calc(${x(s.max - s.min)} + 4px)` }} />
-      <div className="absolute inset-y-0 w-1 rounded-full bg-ink" style={{ insetInlineStart: x(s.mean) }} />
-      {poll !== undefined && <div className="absolute -inset-y-0.5 w-0.5 bg-accent" style={{ insetInlineStart: x(poll) }} title="ממוצע הסקרים" />}
-    </div>
-  );
-}
-
-function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, number> }) {
+export function StatTable({ rows, polls, mine }: { rows: SeatStat[]; polls: Record<string, number>; mine?: SeatsPayload | null }) {
   return (
     <table className="w-full text-sm tabular">
       <thead>
         <tr className="text-ink-soft">
           <th className="text-start font-normal">רשימה</th>
-          <th className="font-normal">ממוצע</th>
-          <th className="font-normal">טווח מלא</th>
-          <th className="font-normal">סקרים</th>
+          <th className="font-normal">ממוצע גולשים</th>
+          <th className="font-normal">ממוצע סקרים</th>
+          <th className="font-normal">ההשערה שלי</th>
         </tr>
       </thead>
       <tbody>
@@ -107,8 +98,8 @@ function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, nu
           <tr key={s.list} className="border-t border-paper-line">
             <td className="py-1">{nameOf(s.list)}</td>
             <td className="text-center font-bold">{seatsFmt(s.mean)}</td>
-            <td className="text-center">{s.min === s.max ? "כל ההשערות זהות" : <bdi dir="ltr">{seatsFmt(s.min)}–{seatsFmt(s.max)}</bdi>}</td>
             <td className="text-center">{polls[s.list] ?? "—"}</td>
+            <td className="text-center">{mine?.seats[s.list]?.v ?? "—"}</td>
           </tr>
         ))}
       </tbody>
@@ -116,17 +107,17 @@ function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, nu
   );
 }
 
-function SeatsBlock({ d }: { d: D }) {
+function SeatsBlock({ d, mine }: { d: D; mine?: SeatsPayload | null }) {
   const s = d.seats!;
   const [manual, setManual] = useState(false);
   const [alpha, setAlpha] = useState(false);
   const rows = [...(manual ? s.manual : s.full)].sort((a, b) => (alpha ? nameOf(a.list).localeCompare(nameOf(b.list), "he") : b.mean - a.mean || b.max - a.max));
-  const max = Math.max(10, ...rows.map((r) => r.max), ...Object.values(s.polls)) + 2;
   return (
     <Card title="הכנסת של הגולשים">
       <Ex kind={GUESS} asOf={at(d, "seats")} n={`${s.n} משתתפים`} details={<>
         <p>{Math.round(s.filledShare * 100)}% מהמנדטים הושלמו ב״השלם הכול״ · {s.usedFillAll} השתמשו בו. נקודות פתיחה: מאפס {s.starts.zero}, מהסקרים {s.starts.polls}, מ-2022 {s.starts.k25}.</p>
         {s.modes && <p>לפי מנדטים: {s.modes.seats} · לפי אחוזי הצבעה: {s.modes.pct}.</p>}
+        <p>ההשערה שלי מציגה את הטיוטה בדפדפן, ואם אין טיוטה — את הגרסה האחרונה בחשבון.</p>
         <p>משתתפים לכל רשימה: {rows.map((r) => `${nameOf(r.list)}: ${r.n}`).join(" · ")}</p>
       </>}>
         <div className="flex gap-1.5 text-xs mb-2 flex-wrap" role="radiogroup" aria-label="מי נספר">
@@ -141,24 +132,7 @@ function SeatsBlock({ d }: { d: D }) {
         </div>
         {manual && <p className="text-xs text-ink-soft mb-2">רק מי שקבעו ערך לרשימה בעצמם נספרים בתצוגה הזו.</p>}
         {!manual && <Sorter alpha={alpha} setAlpha={setAlpha} metric="ממוצע" />}
-        <ChartWithTable
-          summary={`הקו העבה = הממוצע; הפס = הטווח מההשערה הנמוכה לגבוהה; הקו הדק = ממוצע הסקרים${s.pollsAsOf ? ` מ-${dateLong(s.pollsAsOf)}` : ""}.`}
-          table={<StatTable rows={rows} polls={s.polls} />}
-          chart={
-            <ul className="space-y-2">
-              {rows.map((r) => (
-                <li key={r.list} className="grid grid-cols-[7.5rem_1fr_2.5rem] items-center gap-2">
-                  <span className="text-sm truncate">{nameOf(r.list)}</span>
-                  <Band s={r} max={max} poll={manual ? undefined : s.polls[r.list]} />
-                  <span className="font-num tabular text-xl text-end">{seatsFmt(r.mean)}</span>
-                  <span className="sr-only">
-                    ממוצע {seatsFmt(r.mean)}, טווח מלא {seatsFmt(r.min)} עד {seatsFmt(r.max)}, ממוצע הסקרים {s.polls[r.list] ?? "אין"}, {r.n} משתתפים
-                  </span>
-                </li>
-              ))}
-            </ul>
-          }
-        />
+        <StatTable rows={rows} polls={s.polls} mine={mine} />
         {s.pctStats && <PctStats rows={s.pctStats} />}
       </Ex>
     </Card>
@@ -196,62 +170,19 @@ function PctStats({ rows }: { rows: SeatStat[] }) {
   );
 }
 
-function BlocsBlock({ d }: { d: D }) {
+export function BlocsBlock({ d }: { d: D }) {
   const b = d.blocs!;
-  const row = (label: string, s: SeatStat | null | undefined) =>
-    s ? (
-      <tr className="border-t border-paper-line">
-        <td className="py-1">{label}</td>
-        <td className="text-center font-bold">{seatsFmt(s.mean)}</td>
-        <td className="text-center">{s.min === s.max ? "כל ההשערות זהות" : <bdi dir="ltr">{seatsFmt(s.min)}–{seatsFmt(s.max)}</bdi>}</td>
-      </tr>
-    ) : null;
-  const table = (title: string, gov?: SeatStat | null, rest?: SeatStat | null) => (
-    <table className="w-full text-sm tabular mb-3">
-      <caption className="text-start font-bold mb-1">{title}</caption>
-      <thead>
-        <tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח מלא</th></tr>
-      </thead>
-      <tbody>
-        {row("מפלגות הממשלה היוצאת", gov)}
-        {row("שאר הרשימות", rest)}
-      </tbody>
+  const government = [...GOV_IDS].sort().join(",");
+  const rows = [
+    ...(b.derived ? [{ key: government, label: "מפלגות הממשלה היוצאת", stat: b.derived.gov }] : []),
+    ...(b.custom ?? []).filter(g => g.derived && g.lists.length && [...g.lists].sort().join(",") !== government).map(g => ({ key: [...g.lists].sort().join(","), label: g.lists.map(nameOf).join(" · "), stat: g.derived! })),
+  ].sort((a,b) => b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+  const showRange = rows.some(r => r.stat.n > 1);
+  return <Card title="גושים"><Ex kind={GUESS} asOf={at(d,"blocs")} n="לפי הרכב מפלגות" details={<p>לכל משתתף מחברים את המנדטים של מפלגות הגוש בהשערתו האחרונה. אותו הרכב מפלגות מאוחד בלי תלות בשם או בסדר הגוש. מספר המנחשים כולל רק מי ששמר מנדטים עבור ההרכב הזה.</p>}>
+    <table className="w-full text-sm tabular"><thead><tr className="text-ink-soft"><th className="text-start font-normal">הרכב הגוש</th><th className="font-normal">ממוצע</th><th className="font-normal">מספר מנחשים</th>{showRange && <th className="font-normal">טווח</th>}</tr></thead>
+      <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal">{r.label}</th><td className="text-center font-bold">{seatsFmt(r.stat.mean)}</td><td className="text-center">{r.stat.n}</td>{showRange && <td className="text-center">{r.stat.n > 1 && <bdi dir="ltr">{r.stat.min === r.stat.max ? seatsFmt(r.stat.min) : `${seatsFmt(r.stat.min)}–${seatsFmt(r.stat.max)}`}</bdi>}</td>}</tr>)}</tbody>
     </table>
-  );
-  return (
-    <Card title="גושים">
-      <Ex kind={GUESS} asOf={at(d, "blocs")} n="לכל סדרה מספר משתתפים משלה" details={<>
-        <p>ברירת המחדל — סכום מנדטים: ממשלה {b.derived?.gov.n ?? 0}, שאר הרשימות {b.derived?.rest.n ?? 0}; הימור ישיר: ממשלה {b.explicit?.gov?.n ?? 0}, שאר הרשימות {b.explicit?.rest?.n ?? 0} משתתפים.</p>
-        {b.custom?.map((g) => <p key={JSON.stringify([g.name, g.lists])}>{g.name}: {g.lists.map(nameOf).join(" · ")} — סכום מנדטים: {g.derived?.n ?? 0}; הימור ישיר: {g.explicit?.n ?? 0} משתתפים.</p>)}
-      </>}>
-        {b.derived && table("סדרה 1: סכום ההשערות לרשימות", b.derived.gov, b.derived.rest)}
-        {b.explicit && table("סדרה 2: יעד גוש שהגולשים כתבו במפורש", b.explicit.gov, b.explicit.rest)}
-        {b.custom && b.custom.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm tabular mb-3">
-              <caption className="text-start font-bold mb-1">הגושים שהגולשים הגדירו ({b.customCount} משתתפים)</caption>
-              <thead>
-                <tr className="text-ink-soft"><th className="text-start font-normal">שם והרכב הגוש</th><th className="font-normal">סכום המנדטים</th><th className="font-normal">הימור ישיר</th></tr>
-              </thead>
-              <tbody>
-                {b.custom.map((g) => (
-                  <tr key={JSON.stringify([g.name, g.lists])} className="border-t border-paper-line">
-                    <td className="py-2 pe-2"><b>{g.name || "גוש ללא שם"}</b><p className="text-xs text-ink-soft">{g.lists.length ? g.lists.map(nameOf).join(" · ") : "ללא רשימות"}</p></td>
-                    {[g.derived, g.explicit].map((s, i) => (
-                      <td key={i} className="text-center py-2 px-1">
-                        {s ? <><b>ממוצע {seatsFmt(s.mean)}</b><p className="text-xs text-ink-soft">{s.min === s.max ? "כל ההשערות זהות" : <>טווח מלא <bdi dir="ltr">{seatsFmt(s.min)}–{seatsFmt(s.max)}</bdi></>}</p></> : "לא נמסר"}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        <p className="text-xs text-ink-soft">ממוצע וטווח מלא. סכום המנדטים: חיבור המנדטים שהוקצו למפלגות הגוש. הימור ישיר: היעד שהוזן לגוש בנפרד. אלה עשויים להיות שונים, וגם מספר המשיבים עשוי להיות שונה. גושים מאוחדים רק כששמם והרכב הרשימות שלהם זהים.</p>
-      </Ex>
-    </Card>
-  );
+  </Ex></Card>;
 }
 
 function VotingBlock({ d }: { d: D }) {

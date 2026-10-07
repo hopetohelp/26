@@ -142,7 +142,7 @@ export interface Dashboard {
     derived: { gov: SeatStat; rest: SeatStat } | null;
     explicit: { gov: SeatStat | null; rest: SeatStat | null } | null;
     customCount: number;
-    /** גושים בעלי אותו שם והרכב רשימות; אין ערבוב בין הרכבים שונים. */
+    /** גושים בעלי אותו הרכב רשימות, ללא תלות בשם או בסדר; אין ערבוב בין הרכבים שונים. */
     custom?: { name: string; lists: string[]; n: number; explicit: SeatStat | null; derived: SeatStat | null }[];
   };
   vote2026?: { all: Record<string, Cell>; named: Record<string, Cell> };

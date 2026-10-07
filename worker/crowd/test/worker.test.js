@@ -219,18 +219,33 @@ describe("cron: aggregation & anomaly", () => {
       await save(tok, "vote", { v2022: "מחל", v2026: i % 2 ? "likud" : "yashar" });
     }
   }
-  it.each([{ open: false }, { open: true, policy: "open-all-v1" }, { open: true, policy: "open-all-v2" }])("refreshes an old snapshot once on the first request: %j", async (old) => {
+  it.each([{ open: false }, { open: true, policy: "open-all-v1" }, { open: true, policy: "open-all-v2" }])("ignores cached snapshots and reads current data: %j", async (old) => {
     await crowd(1);
     await env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json) VALUES (?, ?, ?, ?)")
       .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ ...old, participants: 1 })).run();
     const first = await call("/dashboard");
-    expect(first.data).toMatchObject({ open: true, policy: "open-all-v3", participants: 1 });
+    expect(first.data).toMatchObject({ open: true, policy: "open-all-v4", participants: 1 });
     expect(first.data.seats.n).toBe(1);
     expect(first.data.matrix.rows["מחל"].n).toBe(1);
     const before = env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n;
     const second = await call("/dashboard");
     expect(second.data).toEqual(first.data);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n).toBe(before);
+  });
+  it("מחשב שינוי במנדטים ובהצבעה מיד בלי cron ובלי לכתוב תמונות", async () => {
+    const token = await newP();
+    await save(token,"seats",seats(40));
+    await save(token,"vote",{v2022:"מחל",v2026:"likud"});
+    const first = await call("/dashboard");
+    await save(token,"seats",seats(55));
+    await save(token,"vote",{v2022:"מחל",v2026:"yashar"});
+    const next = await call("/dashboard");
+    expect(first.data.seats.full[0].mean).toBe(40);
+    expect(next.data.seats.full[0].mean).toBe(55);
+    expect(next.data.matrix.rows["מחל"].cells.yashar.n).toBe(1);
+    expect(next.data.byVote.yashar).toBeDefined();
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n).toBe(0);
+    expect(JSON.stringify(next.data)).not.toContain('"participant"');
   });
   it("dashboard open below 30 without stale caching", async () => {
     await crowd(29);
@@ -247,7 +262,7 @@ describe("cron: aggregation & anomaly", () => {
     expect(d.data.seats.n).toBe(30);
     expect(d.data.vote2026.all.likud).toEqual({ n: 14, of: 30 });
     expect(d.data.vote2026.all.yashar).toEqual({ n: 16, of: 30 });
-    expect(d.data.matrix.rows["מחל"].n).toBe(29); // הפילוח היומי נשאר בתמונת הפרסום הראשונה
+    expect(d.data.matrix.rows["מחל"].n).toBe(30); // הפילוח עדכני בתמונת הפרסום הראשונה
   }, 30000);
   it("surge hour flags newcomers for review and logs it", async () => {
     await crowd(30, () => seats(77));
