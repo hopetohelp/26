@@ -27,7 +27,8 @@ export default function Blocs({
   onFit?: () => void;
 }) {
   const [announcement, setAnnouncement] = useState("");
-  const [customized, setCustomized] = useState(false);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [nameDraft, setNameDraft] = useState("");
   const [hovered, setHovered] = useState<string | null>(null);
   const p = unit.draft?.mode === "gov37" ? DEFAULT_BLOCS : unit.draft ?? DEFAULT_BLOCS;
   useEffect(() => {
@@ -71,7 +72,7 @@ export default function Blocs({
     <div className="space-y-4">
       <p className="text-sm text-ink-soft">גררו כרטיס מפלגה לגוש אחר עם העכבר או האצבע. במקלדת: התמקדו בכרטיס והעבירו עם החצים ימינה ושמאלה.</p>
       <p role="status" className="sr-only">{announcement}</p>
-      <div className="flex justify-center"><Btn onClick={() => setCustomized(!customized)}>{customized ? "סיום עריכת שמות" : "עריכת שמות הגושים"}</Btn></div>
+      <p className="text-sm text-ink-soft">לעריכת שם הגוש, לחצו על שמו.</p>
       <p className="text-sm text-ink-soft">כל מפלגה נמצאת בגוש אחד. העברה אינה משנה את מספר המנדטים או את שמות הגושים.</p>
       <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         {p.blocs.map((b, i) => {
@@ -79,10 +80,17 @@ export default function Blocs({
           const diff = b.target !== null && fromSeats !== null ? fromSeats - b.target : null;
           return (
             <div key={b.id} data-bloc-id={b.id} className={`bg-paper-card border-2 rounded-theme p-4 space-y-3 ${hovered === b.id ? "border-ink bg-accent-soft" : "border-paper-line"}`}>
-              {customized ? (
-                <input aria-label={`שם הגוש ${i + 1}`} className={`${inputCls} font-display text-2xl`} value={b.name} maxLength={40} onChange={(e) => patch(i, { name: e.target.value })} />
+              {editing === b.id ? (
+                <input autoFocus aria-label={`שם הגוש ${i + 1}`} className={`${inputCls} font-display text-2xl`} value={nameDraft} maxLength={40}
+                  onFocus={(e) => e.target.select()} onChange={(e) => setNameDraft(e.target.value)}
+                  onBlur={() => { if (nameDraft.trim()) patch(i, { name: nameDraft.trim() }); setEditing(null); }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") { e.preventDefault(); e.currentTarget.blur(); }
+                    if (e.key === "Escape") { e.preventDefault(); setEditing(null); }
+                  }} />
               ) : (
-                <h3 className="font-display text-3xl leading-none">{b.name}</h3>
+                <h3 className="font-display text-xl sm:text-3xl leading-tight"><button type="button" className="w-full min-h-[44px] text-start break-words rounded-theme focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal"
+                  aria-label={`עריכת שם הגוש: ${b.name}`} onClick={() => { setNameDraft(b.name); setEditing(b.id); }}>{b.name}</button></h3>
               )}
               <div className="flex items-end gap-2 flex-wrap">
                 <label className="text-sm">

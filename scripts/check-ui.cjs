@@ -43,6 +43,17 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.locator('[data-bloc-id="coalition"]').waitFor();
  assert.equal(await page.locator('[data-bloc-id]').count(),4);
  assert.equal(await page.locator('[data-bloc-party] select').count(),0);
+ assert.equal(await page.getByRole('button',{name:'עריכת שמות הגושים',exact:true}).count(),0);
+ await page.getByRole('button',{name:'עריכת שם הגוש: הקואליציה הנוכחית',exact:true}).click();
+ await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('שם אישי');
+ await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).press('Enter');
+ await page.getByRole('button',{name:'עריכת שם הגוש: שם אישי',exact:true}).click();
+ await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('ביטול');
+ await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).press('Escape');
+ assert.equal(await page.getByRole('button',{name:'עריכת שם הגוש: שם אישי',exact:true}).count(),1);
+ await page.getByRole('button',{name:'עריכת שם הגוש: שם אישי',exact:true}).click();
+ await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('הקואליציה הנוכחית');
+ await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).press('Tab');
  await page.locator('[data-bloc-party="likud"] button').scrollIntoViewIfNeeded();
  let source=await page.locator('[data-bloc-party="likud"] button').boundingBox();
  let target=await page.locator('[data-bloc-id="opposition"]').boundingBox();
@@ -54,7 +65,7 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.locator('[data-bloc-party="likud"] button').press('ArrowLeft');
  assert.equal(await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"]').count(),1);
  // עריכת שמות אינה מתבצעת אוטומטית בעקבות העברה.
- assert.equal(await page.locator('[data-bloc-id="coalition"] h3').innerText(),'גוש הקואליציה');
+ assert.equal(await page.locator('[data-bloc-id="coalition"] h3').innerText(),'הקואליציה הנוכחית');
  await page.locator('[data-bloc-party="likud"] button').scrollIntoViewIfNeeded();
  source=await page.locator('[data-bloc-party="likud"] button').boundingBox();
  target=await page.locator('[data-bloc-id="new"]').boundingBox();
