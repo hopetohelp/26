@@ -10,6 +10,7 @@
  *
  * - הקישור האישי: 128 ביט אקראיים. במאגר נשמר רק הגיבוב שלו, כך שגם מי שקורא את המאגר אינו יכול לפתוח שיחה.
  * - תשובות הצוות נכתבות ישירות במאגר (author = 'team'), לא דרך השרת — אין כאן נקודת כניסה לכתיבה בשם הצוות.
+ * - הערה חדשה באותו נוסח בדיוק מאותו מקור באותו יום אינה נשמרת שוב (מחזירים {ok, duplicate}, בלי token).
  * - "website" הוא שדה מלכודת שגולש אמיתי לא רואה; מילוי שלו = רובוט, ומחזירים "הצלחה" בלי לשמור.
  * - להגבלת קצב נשמר רק גיבוב של ה-IP עם התאריך: עד 8 הודעות ביום מאותו מקור (הערות ותגובות יחד).
  */
@@ -116,8 +117,14 @@ export default {
     const text = String(body.text || "").trim().slice(0, MAX_TEXT);
     if (!text) return reply({ ok: false, error: "empty" }, 400);
     const key = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
-    if ((await sentToday(env, key)) >= MAX_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
     const now = new Date().toISOString();
+
+    // ---- הערה חדשה זהה שכבר נשלחה היום מאותו מקור: מחזירים "הצלחה" בלי לשמור (הגולש כבר קיבל קישור על הראשונה)
+    if (url.pathname !== "/thread") {
+      const dup = await env.DB.prepare("SELECT 1 AS d FROM feedback WHERE day_key = ? AND text = ? LIMIT 1").bind(key, text).first();
+      if (dup) return reply({ ok: true, duplicate: true });
+    }
+    if ((await sentToday(env, key)) >= MAX_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
 
     // ---- תגובת הגולש בשיחה
     if (url.pathname === "/thread") {
