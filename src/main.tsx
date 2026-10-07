@@ -14,6 +14,7 @@ import Method from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
 import Support from "./pages/Support";
+import MyFeedback from "./pages/MyFeedback";
 import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
@@ -75,7 +76,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
           <Route path="feedback" element={<Moved to="/support" />} />
-          <Route path="feedback/:token" element={<Moved to="/support" />} />
+          <Route path="feedback/:token" element={<MyFeedback />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

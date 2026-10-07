@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { moveList } from "./blocEditing";
 import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
 import { validateBlocs } from "../../lib/crowdValidate";
@@ -7,6 +7,7 @@ import { DEFAULT_BLOCS, IDS, nameOf } from "./model";
 import SaveButton from "./SaveButton";
 import { Btn, inputCls, Notice, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
+import BlocParty from "./BlocParty";
 
 /**
  * הגושים. בלשונית "מנדטים וגושים" הם מוצגים יחד עם המנדטים (embedded): בלי כפתור שמירה משלהם, עם השוואה חיה
@@ -26,34 +27,24 @@ export default function Blocs({
   onFit?: () => void;
 }) {
   const [announcement, setAnnouncement] = useState("");
-  const [customized, setCustomized] = useState(() => !!unit.draft && unit.draft.blocs.some((b) => /^גוש [1-4]$/.test(b.name)));
-  const p = unit.draft ?? DEFAULT_BLOCS;
+  const [customized, setCustomized] = useState(false);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const p = unit.draft?.mode === "gov37" ? DEFAULT_BLOCS : unit.draft ?? DEFAULT_BLOCS;
+  useEffect(() => {
+    if (unit.draft?.mode === "gov37") unit.setDraft(DEFAULT_BLOCS);
+  }, [unit.draft, unit.setDraft]);
   const setBlocs = (blocs: Bloc[], mode = p.mode) => unit.setDraft({ mode, blocs });
   const patch = (i: number, b: Partial<Bloc>) => setBlocs(p.blocs.map((x, j) => (j === i ? { ...x, ...b } : x)));
   const invalid = validateBlocs(p, IDS);
   const unassigned = IDS.filter(id => !p.blocs.some(b => b.lists.includes(id)));
   const assign = (id: string, to: string) => {
     if (!IDS.includes(id)) return;
-    const generic = customized ? p.blocs : p.blocs.map((b, i) => ({ ...b, name: `גוש ${i + 1}` }));
-    setBlocs(moveList(generic, id, to), "custom");
-    setCustomized(true);
-    setAnnouncement(`${nameOf(id)} הועברה ל${generic.find(b => b.id === to)?.name}`);
+    if (!p.blocs.some(b => b.id === to) || p.blocs.find(b => b.id === to)?.lists.includes(id)) return;
+    setBlocs(moveList(p.blocs, id, to), "custom");
+    setAnnouncement(`${nameOf(id)} הועברה ל${p.blocs.find(b => b.id === to)?.name}`);
   };
-  const partyCard = (id: string) => <li key={id} data-bloc-party={id} draggable
-    onDragStart={e => { e.dataTransfer.setData("text/plain", id); e.dataTransfer.effectAllowed = "move"; }}
-    onTouchEnd={e => {
-      const touch = e.changedTouches[0];
-      const target = touch ? document.elementFromPoint(touch.clientX, touch.clientY)?.closest("[data-bloc-id]") as HTMLElement | null : null;
-      if (target?.dataset.blocId) assign(id, target.dataset.blocId);
-    }}
-    className="border border-paper-line bg-paper rounded-theme p-2 space-y-1 touch-none">
-    <div className="flex justify-between gap-2 text-sm"><b>{nameOf(id)}</b><span className="tabular">{mySeats?.[id] ?? "—"} מנדטים</span></div>
-    <label className="text-xs flex items-center gap-2">העבר לגוש
-      <select aria-label={`הגוש של ${nameOf(id)}`} value={p.blocs.find(b => b.lists.includes(id))?.id ?? ""} onChange={e => assign(id,e.target.value)} className="min-h-[44px] min-w-0 flex-1 border border-paper-line rounded-theme bg-paper-card text-ink px-2">
-        <option value="" disabled>בחירת גוש</option>{p.blocs.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-      </select>
-    </label>
-  </li>;
+  const partyCard = (id: string) => <BlocParty key={id} id={id} name={nameOf(id)} seats={mySeats?.[id] ?? null}
+    current={p.blocs.find(b => b.lists.includes(id))?.id} targets={p.blocs.map(b => b.id)} onMove={assign} onHover={setHovered} />;
   const clamp = (n: number) => Math.max(0, Math.min(TOTAL, Math.round(n) || 0));
   const two = p.blocs.length === 2;
   /** בשני גושים מספיק למלא אחד: השני מקבל אוטומטית את כל מה שנשאר (120 פחות הערך) */
@@ -78,15 +69,16 @@ export default function Blocs({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-ink-soft">גררו מפלגה בין הגושים עם העכבר או האצבע. אחרי ההעברה הראשונה שמות הגושים הופכים לגוש 1–4 וניתנים לעריכה.</p>
+      <p className="text-sm text-ink-soft">גררו כרטיס מפלגה לגוש אחר עם העכבר או האצבע. במקלדת: התמקדו בכרטיס והעבירו עם החצים ימינה ושמאלה.</p>
       <p role="status" className="sr-only">{announcement}</p>
-      <p className="text-sm text-ink-soft">כל מפלגה נמצאת בגוש אחד. אפשר גם לבחור יעד מתוך הכרטיס. העברה אינה משנה את מספר המנדטים.</p>
-      <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
+      <div className="flex justify-center"><Btn onClick={() => setCustomized(!customized)}>{customized ? "סיום עריכת שמות" : "עריכת שמות הגושים"}</Btn></div>
+      <p className="text-sm text-ink-soft">כל מפלגה נמצאת בגוש אחד. העברה אינה משנה את מספר המנדטים או את שמות הגושים.</p>
+      <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
         {p.blocs.map((b, i) => {
           const fromSeats = seatsOf(b);
           const diff = b.target !== null && fromSeats !== null ? fromSeats - b.target : null;
           return (
-            <div key={b.id} data-bloc-id={b.id} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); assign(e.dataTransfer.getData("text/plain"), b.id); }} className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-2">
+            <div key={b.id} data-bloc-id={b.id} className={`bg-paper-card border-2 rounded-theme p-4 space-y-3 ${hovered === b.id ? "border-ink bg-accent-soft" : "border-paper-line"}`}>
               {customized ? (
                 <input aria-label={`שם הגוש ${i + 1}`} className={`${inputCls} font-display text-2xl`} value={b.name} maxLength={40} onChange={(e) => patch(i, { name: e.target.value })} />
               ) : (
@@ -128,7 +120,7 @@ export default function Blocs({
       </div>
 
       {unassigned.length > 0 && <section className="border border-warn rounded-theme p-3 space-y-2">
-        <p className="text-sm">יש מפלגות ללא גוש. אפשר לבחור להן גוש מתוך הכרטיס.</p>
+        <p className="text-sm">יש מפלגות ללא גוש. גררו אותן לגוש או העבירו עם החצים במקלדת.</p>
         <ul className="space-y-2">{unassigned.map(partyCard)}</ul>
       </section>}
 

@@ -27,6 +27,10 @@ export const k25Name = (letters: string) => K25_LISTS.find((l) => l.letters === 
 /** רק התאמות מובהקות — אותה רשימה בשם ובהרכב. כל השאר נשאר ריק, וזה מוסבר בממשק. */
 export const K25_MAP: Record<string, string> = { likud: "מחל", shas: "שס", utj: "ג", yb: "ל", raam: "עם" };
 
+/** התאמה לצורך השוואת בחירת הגולש בלבד; אינה משנה את תוצאות האמת או את פתיחת המנדטים. */
+export const VOTE_MAP: Record<string, string> = { ...K25_MAP, rzp: "ט" };
+export const k25VoteName = (letters: string) => letters === "ט" ? "הציונות הדתית/זהות" : k25Name(letters);
+
 export const LOCK_AT = Date.parse("2026-10-26T23:59:00+02:00");
 export const THRESHOLD_SEATS = 4;
 

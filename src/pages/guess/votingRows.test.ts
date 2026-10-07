@@ -7,6 +7,7 @@ it("מציג רק רשימות שנבחרו על ידי משתתפים בעבר 
   expect(rows.find(r=>r.key==="likud")).toMatchObject({previous:50,next:100,official:23.41});
   expect(rows.map(r=>r.key)).toEqual(["likud"]);
   const oldOnly = votingRows({...d, vote2022:{...d.vote2022!,all:{"ט":{n:1,of:1}}}});
-  expect(oldOnly.find(r=>r.key === "2022:ט")).toMatchObject({previous:100,next:null});
+  expect(oldOnly.find(r=>r.key === "rzp")).toMatchObject({previous:100,next:0});
+  expect(oldOnly.find(r=>r.key === "2022:ט")).toBeUndefined();
   expect(votingRows({...d,vote2026:undefined}).find(r=>r.key==="likud")?.next).toBeNull();
 });

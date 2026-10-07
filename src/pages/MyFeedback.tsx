@@ -19,7 +19,14 @@ export default function MyFeedback() {
   return token ? <ThreadView token={token} /> : <List />;
 }
 
-function List() {
+export function LegacyFeedback() {
+  return FEEDBACK_URL && savedThreads().length > 0 ? <section aria-labelledby="legacy-feedback-title">
+    <h2 id="legacy-feedback-title" className="font-display text-3xl leading-none text-center mb-4">השיחות הקודמות שלכם</h2>
+    <List embedded />
+  </section> : null;
+}
+
+function List({ embedded = false }: { embedded?: boolean }) {
   const [items, setItems] = useState(savedThreads);
   const [open, setOpen] = useState(false);
   const [mergeError, setMergeError] = useState(false);
@@ -33,8 +40,8 @@ function List() {
   useEffect(() => { void sync(); }, []);
   return (
     <>
-      {items.length === 1 && !loading ? <ThreadView token={items[0].token} /> : <>
-      <PageTitle lead="ההערות והתשובות שלכם בשיחה אחת.">ההערות שלי</PageTitle>
+      {items.length === 1 && !loading ? <ThreadView token={items[0].token} embedded={embedded} /> : <>
+      {!embedded && <PageTitle lead="ההערות והתשובות שלכם בשיחה אחת.">ההערות שלי</PageTitle>}
       <Card>
         {loading ? <p role="status">מאחדים את השיחות…</p> : items.length === 0 ? (
           <p className="text-base">אין כאן הערות. אפשר לשלוח את ההערה הראשונה כאן.</p>
@@ -54,13 +61,13 @@ function List() {
       </Card>
       </>}
       {mergeError && <p role="alert" className="text-sm text-warn mb-3">איחוד השיחות לא הצליח. כל השיחות נשמרו. <button type="button" onClick={() => void sync()} className="underline min-h-[44px]">לנסות שוב</button></p>}
-      <button type="button" onClick={() => setOpen(true)} className="min-h-[48px] px-5 rounded-theme bg-ink text-paper-card font-bold">שליחת הערה</button>
+      {!embedded && <button type="button" onClick={() => setOpen(true)} className="min-h-[48px] px-5 rounded-theme bg-ink text-paper-card font-bold">שליחת הערה</button>}
       {open && <FeedbackSheet onClose={() => { setOpen(false); void sync(); }} />}
     </>
   );
 }
 
-function ThreadView({ token }: { token: string }) {
+function ThreadView({ token, embedded = false }: { token: string; embedded?: boolean }) {
   const [thread, setThread] = useState<Thread | null | undefined>(undefined);
   const [text, setText] = useState("");
   const [trap, setTrap] = useState("");
@@ -94,7 +101,7 @@ function ThreadView({ token }: { token: string }) {
     }
   }
 
-  if (thread === undefined) return <PageTitle lead="טוענים את השיחה…">ההערה שלי</PageTitle>;
+  if (thread === undefined) return <p role="status">טוענים את השיחה…</p>;
   if (thread === null)
     return (
       <PageTitle lead="הקישור אינו תקין, או שאין חיבור לאינטרנט. בדקו שהעתקתם את הקישור המלא.">
@@ -104,7 +111,7 @@ function ThreadView({ token }: { token: string }) {
 
   return (
     <>
-      <PageTitle lead={`נשלחה ב-${when(thread.created_at)} · ${TOPIC[thread.topic] ?? "אחר"} · ${STATUS[thread.status]}`}>ההערה שלי</PageTitle>
+      {embedded ? <p className="text-sm text-ink-soft mb-3">{STATUS[thread.status]} · {when(thread.created_at)}</p> : <PageTitle lead={`נשלחה ב-${when(thread.created_at)} · ${TOPIC[thread.topic] ?? "אחר"} · ${STATUS[thread.status]}`}>ההערה שלי</PageTitle>}
       <Card>
         <ol className="flex flex-col gap-3" aria-label="השיחה">
           <Bubble author="visitor" text={thread.text} at={thread.created_at} />
