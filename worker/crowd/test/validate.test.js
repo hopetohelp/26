@@ -60,6 +60,9 @@ describe("validate", () => {
   it("password", () => {
     expect(passwordProblem("short")).toBe("short");
     expect(passwordProblem("1234567890")).toBe("common");
+    expect(passwordProblem("123456")).toBe("common");
+    expect(passwordProblem("abc12x")).toBeNull();
+    expect(passwordProblem("a1b2c")).toBe("short");
     expect(passwordProblem("x".repeat(129))).toBe("long");
     expect(passwordProblem("correct horse battery")).toBeNull();
   });

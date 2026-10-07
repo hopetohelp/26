@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { linkAcked, setLinkAck } from "../../lib/crowdSession";
 import { call, type BlocsPayload, type Dashboard, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
-import Blocs from "./Blocs";
 import History from "./History";
 import LinkSaver from "./LinkSaver";
 import MyData from "./MyData";
@@ -11,8 +10,7 @@ import { Btn, Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
-  { id: "seats", label: "מנדטים" },
-  { id: "blocs", label: "גושים" },
+  { id: "seats", label: "מנדטים וגושים" },
   { id: "vote", label: "הצבעה" },
   { id: "history", label: "היסטוריה" },
   { id: "data", label: "הנתונים שלי" },
@@ -25,7 +23,6 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
   const seats = useUnit<SeatsPayload>("seats", null, latest?.seats?.payload as SeatsPayload | undefined);
   const blocs = useUnit<BlocsPayload>("blocs", null, latest?.blocs?.payload as BlocsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, latest?.vote?.payload as VotePayload | undefined);
-  const mySeats = useMemo(() => (seats.draft ? Object.fromEntries(Object.entries(seats.draft.seats).map(([k, c]) => [k, c.v])) : null), [seats.draft]);
 
   const [crowd, setCrowd] = useState<Record<string, number> | null>(null);
   useEffect(() => {
@@ -39,7 +36,7 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
   // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
   const showLink = !!session.token && !!session.link && !acked;
 
-  const statusOf = (s: Sec) => (s === "seats" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null);
+  const statusOf = (s: Sec) => (s === "seats" ? (seats.draft && seats.status !== "saved" ? seats : blocs.draft && blocs.status !== "saved" && blocs.draft.blocs.some((b) => b.target !== null) ? blocs : seats) : s === "vote" ? vote : null);
   return (
     <div>
       {!session.online && (
@@ -49,9 +46,21 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
       )}
       {showLink && session.link && (
         <section className="mb-5 border-2 border-ink rounded-theme p-4 bg-paper-card space-y-2" aria-labelledby="link-first-title">
-          <h2 id="link-first-title" className="font-display text-3xl leading-none">
-            נרשמתם. עכשיו שמרו את הקישור האישי
-          </h2>
+          <div className="flex items-start justify-between gap-3">
+            <h2 id="link-first-title" className="font-display text-3xl leading-none">
+              נרשמתם. עכשיו שמרו את הקישור האישי
+            </h2>
+            <button
+              type="button"
+              onClick={() => (setLinkAck(true), setAcked(true))}
+              className="shrink-0 min-h-[44px] px-4 rounded-full border-2 border-ink bg-ink text-paper-card text-sm font-bold flex items-center gap-1.5"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+              סגירה
+            </button>
+          </div>
           <p className="text-sm">
             הקישור האישי מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. האתר לא שומר מייל, ולכן זו הדרך היחידה לשחזר סיסמה שנשכחה.
           </p>
@@ -77,8 +86,7 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
           );
         })}
       </nav>
-      {sec === "seats" && <Seats unit={seats} session={session} blocs={blocs.draft} crowd={crowd} />}
-      {sec === "blocs" && <Blocs unit={blocs} session={session} mySeats={mySeats} />}
+      {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} crowd={crowd} />}
       {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
       {sec === "data" && <MyData session={session} />}

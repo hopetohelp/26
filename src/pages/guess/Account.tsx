@@ -5,7 +5,7 @@ import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
-const PW_MIN = 10;
+const PW_MIN = 6;
 const PW_MAX = 128;
 const pwProps = { type: "password", minLength: PW_MIN, maxLength: PW_MAX, required: true, className: inputCls, dir: "ltr" as const };
 

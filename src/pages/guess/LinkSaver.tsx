@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { FEEDBACK_URL, linkWithFeedback, primaryThread } from "../../lib/feedback";
 import { Btn, inputCls } from "./ui";
 
-export const personalLink = (token: string) => `${location.origin}${location.pathname}#/guess?t=${encodeURIComponent(token)}`;
+/** הקישור האישי להשערות; אם יש שיחת הערות בדפדפן — היא נוספת אליו (&f=), וכניסה בקישור מחזירה גם אותה */
+export const personalLink = (token: string) =>
+  linkWithFeedback(`${location.origin}${location.pathname}#/guess?t=${encodeURIComponent(token)}`, FEEDBACK_URL ? primaryThread()?.token : null);
 
 /** שורת ההסבר על השחזור — אותו ניסוח בכל מקום (אין מייל; הכרעת בעלים 6.10.2026) */
 export const FORGOT_LINE = "שכחתם סיסמה? פתחו את הקישור האישי שקיבלתם בהרשמה — הוא מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אין שחזור במייל.";
@@ -48,6 +51,7 @@ export default function LinkSaver({ token }: { token: string }) {
         {canShare && <Btn onClick={share}>שליחה לעצמי</Btn>}
         <Btn onClick={download}>הורדה כקובץ</Btn>
       </div>
+      {link.includes("&f=") && <p className="text-xs text-ink">הקישור כולל גם את שיחת ההערות שלכם — אותה כניסה להשערות ולהערות.</p>}
       <p className="text-xs text-ink-soft">{canShare ? "\"שליחה לעצמי\" — למשל בוואטסאפ לעצמכם. " : ""}אל תשתפו אותו עם אחרים: מי שמחזיק בו נכנס לחשבון ויכול לשנות ולמחוק.</p>
       {msg && (
         <p role="status" className="text-sm font-bold">

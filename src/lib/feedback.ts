@@ -42,6 +42,25 @@ export function saveThread(t: SavedThread) {
   }
 }
 
+/**
+ * שיחה אחת לכל משתמש: הערה חדשה מצטרפת לשיחה האחרונה השמורה בדפדפן (primaryThread), ולא פותחת שיחה נוספת.
+ * הקישור האישי להשערות נושא איתו גם את השיחה (&f=), כך שכניסה בקישור אחד מחזירה את שניהם — גם במכשיר אחר.
+ */
+const TOKEN_RE = /^[A-Za-z0-9_-]{16,64}$/;
+export const primaryThread = (): SavedThread | null => savedThreads()[0] ?? null;
+export const isFeedbackToken = (t: unknown): t is string => typeof t === "string" && TOKEN_RE.test(t);
+
+/** מוסיף לקישור האישי להשערות את השיחה (אם יש) */
+export function linkWithFeedback(link: string, token: string | null | undefined): string {
+  return isFeedbackToken(token) ? `${link}&f=${encodeURIComponent(token)}` : link;
+}
+
+/** נכנסים בקישור אישי שנושא שיחה: שומרים אותה בדפדפן הזה כשיחה הראשית */
+export function absorbFeedbackToken(token: string | null) {
+  if (!isFeedbackToken(token) || savedThreads().some((x) => x.token === token)) return;
+  saveThread({ token, created: new Date().toISOString(), preview: "" });
+}
+
 /** הקישור האישי לשיחה, כפי שהגולש מעתיק אותו */
 export const threadLink = (token: string) => `${location.origin}${location.pathname}#/feedback/${token}`;
 

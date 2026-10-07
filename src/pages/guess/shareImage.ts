@@ -5,6 +5,7 @@
  */
 import { colorOf } from "../../lib/colors";
 import { SITE_URL } from "../../lib/shareGuess";
+import type { BlocTotal } from "./blocSummary";
 import { IDS, nameOf } from "./model";
 import { SEATS, seatFills } from "./SeatBoard";
 
@@ -21,9 +22,11 @@ export interface ShareImageInput {
   values: Record<string, number>;
   pct?: Record<string, number>;
   username?: string;
+  /** גושים, אם נקבע להם יעד: שם וסכום מנדטים (src/pages/guess/blocSummary.ts) */
+  blocs?: BlocTotal[];
 }
 
-export async function renderShareImage({ values, pct, username }: ShareImageInput): Promise<Blob> {
+export async function renderShareImage({ values, pct, username, blocs }: ShareImageInput): Promise<Blob> {
   const board = document.documentElement.dataset.theme === "board";
   const c = {
     bg: rgb(board ? "--frame" : "--paper"),
@@ -65,10 +68,20 @@ export async function renderShareImage({ values, pct, username }: ShareImageInpu
   ctx.font = `400 34px ${body}`;
   ctx.fillText(pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר", R, 196);
 
+  // שורת הגושים (אם יש): "גוש א 61 · גוש ב 59" — בולט וקריא גם כשמצמצמים את התמונה
+  if (blocs?.length) {
+    const line = blocs.map((b) => `${b.name} ${b.total}`).join("  ·  ");
+    let bs = 44;
+    do ctx.font = `700 ${bs}px ${body}`;
+    while (ctx.measureText(line).width > R - L && --bs > 26);
+    ctx.fillStyle = c.ink;
+    ctx.fillText(line, R, 256);
+  }
+
   // חצי העיגול — אותם מיקומים כמו בלוח שבאתר (viewBox ‏2.2×1.12)
   const { order, fills } = seatFills(values);
   const scale = (IMG_W - 2 * L) / 2.2;
-  const top = 236;
+  const top = blocs?.length ? 290 : 236;
   SEATS.forEach((s, k) => {
     const f = fills[k];
     ctx.beginPath();
@@ -86,7 +99,7 @@ export async function renderShareImage({ values, pct, username }: ShareImageInpu
   const rows = order.slice(0, 12);
   const y0 = top + 1.12 * scale + 70;
   const colW = (IMG_W - 2 * L - 40) / 2;
-  const rowH = 62;
+  const rowH = blocs?.length ? 56 : 62;
   rows.forEach((id, i) => {
     const col = Math.floor(i / 6);
     const y = y0 + (i % 6) * rowH;
@@ -98,18 +111,18 @@ export async function renderShareImage({ values, pct, username }: ShareImageInpu
     ctx.fill();
     ctx.textAlign = "right";
     ctx.fillStyle = c.ink;
-    ctx.font = `400 34px ${body}`;
+    ctx.font = `700 34px ${body}`;
     let name = nameOf(id);
     while (ctx.measureText(name).width > colW - 150 && name.length > 3) name = name.slice(0, -2) + "…";
     ctx.fillText(name, right - 36, y);
     ctx.textAlign = "left";
-    ctx.font = `700 40px ${num}`;
+    ctx.font = `700 46px ${num}`;
     ctx.fillStyle = board ? c.signal : c.ink;
     ctx.fillText(String(values[id]), left, y);
     if (pct) {
-      ctx.font = `400 26px ${body}`;
-      ctx.fillStyle = c.soft;
-      ctx.fillText(`${pct[id] ?? 0}%`, left + 58, y);
+      ctx.font = `700 28px ${body}`;
+      ctx.fillStyle = c.ink;
+      ctx.fillText(`${pct[id] ?? 0}%`, left + 66, y);
     }
     ctx.strokeStyle = c.line;
     ctx.lineWidth = 2;
@@ -120,26 +133,26 @@ export async function renderShareImage({ values, pct, username }: ShareImageInpu
   });
   if (order.length > rows.length) {
     ctx.textAlign = "right";
-    ctx.fillStyle = c.soft;
+    ctx.fillStyle = c.ink;
     ctx.font = `400 28px ${body}`;
-    ctx.fillText(`ועוד ${order.length - rows.length} רשימות`, R, y0 + 6 * rowH);
+    ctx.fillText(`ועוד ${order.length - rows.length} רשימות`, R, y0 + 6 * rowH - 6);
   }
 
   // תחתית: קריאה לפעולה + כתובת
   ctx.fillStyle = c.card === c.bg ? c.line : c.card;
-  ctx.fillRect(0, IMG_H - 190, IMG_W, 190);
+  ctx.fillRect(0, IMG_H - 176, IMG_W, 176);
   ctx.textAlign = "right";
   ctx.fillStyle = c.ink;
   const cta = "ומה אתם מנחשים? בנו את הכנסת שלכם";
   let size = 64;
   do ctx.font = `700 ${size}px ${display}`;
   while (ctx.measureText(cta).width > R - L && --size > 30);
-  ctx.fillText(cta, R, IMG_H - 108);
+  ctx.fillText(cta, R, IMG_H - 100);
   ctx.fillStyle = c.soft;
   ctx.font = `700 34px ${body}`;
   ctx.direction = "ltr";
   ctx.textAlign = "right";
-  ctx.fillText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, IMG_H - 52);
+  ctx.fillText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, IMG_H - 48);
 
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }

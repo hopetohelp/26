@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { shareUrl, type SharedGuess } from "../../lib/shareGuess";
+import type { BlocTotal } from "./blocSummary";
 import { renderShareImage } from "./shareImage";
 import { Btn } from "./ui";
 
@@ -10,7 +11,7 @@ const TEXT = "בניתי כנסת של 120 — השערה, לא סקר. ומה �
  * משפט קצר וקישור לאתר שמציג את ההשערה המלאה (?g=). בלי תפריט שיתוף במכשיר ⇐ וואטסאפ ישירות.
  * רק המספרים — ושם המשתמש, אם בחרתם לצרף אותו (ברירת מחדל: לא). בלי הקישור האישי ובלי שום פרט אחר.
  */
-export default function Share({ values, pct, username }: { values: Record<string, number>; pct?: Record<string, number>; username?: string | null; open?: boolean }) {
+export default function Share({ values, pct, username, blocs }: { values: Record<string, number>; pct?: Record<string, number>; username?: string | null; blocs?: BlocTotal[]; open?: boolean }) {
   const [withName, setWithName] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -25,7 +26,7 @@ export default function Share({ values, pct, username }: { values: Record<string
       if (navigator.share) {
         let file: File | null = null;
         try {
-          file = new File([await renderShareImage({ values, pct, username: name })], "הכנסת-שלי.png", { type: "image/png" });
+          file = new File([await renderShareImage({ values, pct, username: name, blocs })], "הכנסת-שלי.png", { type: "image/png" });
         } catch {
           file = null; // בלי תמונה — משתפים טקסט וקישור
         }

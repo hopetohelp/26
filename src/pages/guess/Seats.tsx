@@ -4,11 +4,13 @@ import { Fold } from "../../components/ui";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, fillPct, pctFillErrorText, TOTAL, type PctFillResult } from "../../lib/fillAll";
-import { seatsSum, validatePct, validateSeats } from "../../lib/crowdValidate";
+import { seatsSum, validateBlocs, validatePct, validateSeats } from "../../lib/crowdValidate";
 import { dateLong } from "../../lib/format";
 import { seatsFromPct, THRESHOLD_PCT, type PctSeats } from "../../lib/lawSeats";
 import { K25_MAP, k25Name, IDS, nameOf, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
-import SaveButton from "./SaveButton";
+import Blocs from "./Blocs";
+import { blocSummary } from "./blocSummary";
+import SaveButton, { type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
 import Share from "./Share";
 import { Btn, StatusPill } from "./ui";
@@ -44,15 +46,16 @@ function initialPct(p: SeatsPayload): Record<string, number> {
 export default function Seats({
   unit,
   session,
-  blocs,
+  blocsUnit,
   crowd,
 }: {
   unit: ReturnType<typeof useUnit<SeatsPayload>>;
   session: ReturnType<typeof useSession>;
-  blocs: BlocsPayload | null;
+  blocsUnit: ReturnType<typeof useUnit<BlocsPayload>>;
   crowd: Record<string, number> | null;
 }) {
   const p = unit.draft;
+  const blocs = blocsUnit.draft;
   const [preview, setPreview] = useState<ReturnType<typeof fillAll> | null>(null);
   const [resetAsk, setResetAsk] = useState(false);
   const fillBtn = useRef<HTMLButtonElement>(null);
@@ -102,6 +105,19 @@ export default function Seats({
           ? "אי אפשר לחשב: צריך לפחות רשימה אחת מעל אחוז החסימה."
           : null;
   const invalid = pctMode ? (validatePct(pct, IDS) ?? lawProblem ?? validateSeats(p, IDS)) : validateSeats(p, IDS);
+  // שמירה אחת לשניהם: המנדטים, והגושים אם נקבע להם יעד. הגושים נשמרים רק כשהם תקינים ויש יעד לפחות לגוש אחד.
+  const blocsToSave = !!blocs && blocs.blocs.some((b) => b.target !== null);
+  const blocsInvalid = blocsToSave ? validateBlocs(blocs!, IDS) : null;
+  const both: SaveUnit = {
+    status: unit.status !== "saved" ? unit.status : blocsToSave && blocsUnit.status !== "saved" ? blocsUnit.status : "saved",
+    state: unit.state === "saving" || blocsUnit.state === "saving" ? "saving" : unit.state === "error" || blocsUnit.state === "error" ? "error" : "idle",
+    error: unit.error ?? blocsUnit.error,
+    save: async (token) => {
+      const a = unit.status === "saved" ? true : await unit.save(token);
+      const b = !a || !blocsToSave || blocsUnit.status === "saved" ? a : await blocsUnit.save(token);
+      return a && b;
+    },
+  };
   const setCell = (id: string, c: SeatCell) => {
     unit.setDraft({ ...p, seats: { ...p.seats, [id]: c } });
     setPreview(null);
@@ -143,18 +159,18 @@ export default function Seats({
         <div className="lg:sticky lg:top-4 space-y-3">
           <SeatBoard values={values} />
           <div className="flex items-center gap-2 flex-wrap">
-            <StatusPill status={unit.status} />
+            <StatusPill status={both.status} />
             <span className="text-xs text-ink-soft">
               נקודת פתיחה: {START_OPTIONS.find((o) => o.id === p.start)?.title}
               {p.pollsAsOf ? ` · ממוצע הסקרים מ-${dateLong(p.pollsAsOf)}` : ""}
             </span>
           </div>
-          {justSaved && unit.status === "saved" && (
+          {justSaved && both.status === "saved" && (
             <p role="status" className="text-sm font-bold">
               נשמר. עכשיו — שתפו, ותראו מה מנחשים החברים.
             </p>
           )}
-          {sum === TOTAL && !invalid && <Share values={values} pct={pctMode ? pct : undefined} username={session.me?.username} open={justSaved} />}
+          {sum === TOTAL && !invalid && <Share values={values} pct={pctMode ? pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           {pctMode && law && law.r.status === "ok" && <LawSummary law={law} />}
         </div>
 
@@ -178,10 +194,8 @@ export default function Seats({
             <PctList p={p} pct={pct} law={law} pctLeft={pctLeft} setPct={setPct} setCell={setCell} />
           ) : (
             <>
-          <p className="text-sm text-ink-soft mb-2">
-              ערך שקבעתם ננעל מיד, ו"השלם הכול" לא נוגע בו. מנעול פתוח = "השלם הכול" רשאי לשנות.
-              {targets.length > 0 && ` "השלם הכול" מתחשב גם ביעדי הגושים שלכם (${targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).`}
-            </p>
+          <LockLegend />
+            {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <ul className="divide-y divide-paper-line border-y border-paper-line" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
@@ -192,8 +206,8 @@ export default function Seats({
                     <div className="flex items-center gap-2">
                       <div className="flex-1 min-w-0">
                         <span className="font-bold block truncate">{name}</span>
-                        <span className="text-xs text-ink-soft">
-                          {c.src === "filled" ? "הושלם" : c.locked ? "קבעתם" : "פתוח"}
+                        <span className="text-sm text-ink">
+                          {rowState(c)}
                           {K25_MAP[id] && p.start === "k25" ? ` · 2022: ${k25Name(K25_MAP[id])}` : ""}
                         </span>
                       </div>
@@ -216,15 +230,7 @@ export default function Seats({
                           +
                         </button>
                       </div>
-                      <button
-                        type="button"
-                        aria-pressed={c.locked}
-                        aria-label={c.locked ? `${name}: נעול. לחיצה פותחת לשינוי ב"השלם הכול"` : `${name}: פתוח. לחיצה נועלת`}
-                        onClick={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })}
-                        className={`w-11 h-11 rounded-full grid place-items-center border ${c.locked ? "border-ink text-ink" : "border-paper-line text-ink-faint"}`}
-                      >
-                        <Lock on={c.locked} />
-                      </button>
+                      <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />
                     </div>
                     {under && (
                       <p className="text-xs text-warn mt-1">
@@ -237,6 +243,13 @@ export default function Seats({
             </ul>
             </>
           )}
+          <section className="mt-5 space-y-2" aria-labelledby="blocs-in-seats">
+            <h3 id="blocs-in-seats" className="font-display text-3xl leading-none">
+              גושים — משלימים את המנדטים
+            </h3>
+            <p className="text-sm text-ink">ההשערה לגושים והשערת המנדטים הן אותה השערה: סכום המנדטים של כל גוש צריך להתאים ליעד שלו, ולהפך.</p>
+            <Blocs unit={blocsUnit} session={session} mySeats={values} embedded onFit={runFill} />
+          </section>
           <div className="mt-3 flex gap-2 flex-wrap">
             {!resetAsk ? (
               <Btn onClick={() => setResetAsk(true)}>להתחיל מחדש</Btn>
@@ -285,7 +298,7 @@ export default function Seats({
           >
             השלם הכול
           </button>
-          <SaveButton unit={unit} session={session} invalid={invalid} compact onSaved={() => setJustSaved(true)} />
+          <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
         </div>
         {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
         {pctMode && invalid && pctLeft >= 0 && lawProblem && (
@@ -336,6 +349,48 @@ export default function Seats({
           </Explained>
         </Fold>
       )}
+    </div>
+  );
+}
+
+/** מה כתוב בשורה (הכפתור שלידה כבר אומר נעול/פתוח): הערך שלכם · הושלם אוטומטית · טרם נקבע */
+const rowState = (c: SeatCell) => (c.locked ? "הערך שלכם" : c.src === "filled" ? "הושלם אוטומטית" : "טרם נקבע");
+
+/** כפתור נעילה עם מילה — לא רק אייקון: נעול = מלא וכהה, פתוח = ריק עם קו מקווקו */
+function LockChip({ locked }: { locked: boolean }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-full border-2 text-sm font-bold ${locked ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-dashed border-ink-soft"}`}>
+      <Lock on={locked} />
+      {locked ? "נעול" : "פתוח"}
+    </span>
+  );
+}
+function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={locked}
+      aria-label={locked ? `${name}: נעול. לחיצה פותחת לשינוי ב"השלם הכול"` : `${name}: פתוח. לחיצה נועלת`}
+      onClick={onToggle}
+      className="shrink-0 rounded-full"
+    >
+      <LockChip locked={locked} />
+    </button>
+  );
+}
+/** הסבר קבוע על ההבדל בין נעול לפתוח, עם אותם כפתורים כמו בשורות */
+function LockLegend() {
+  return (
+    <div className="mb-3 rounded-theme border border-paper-line bg-paper-card p-3 space-y-2" aria-label="מה ההבדל בין נעול לפתוח">
+      <p className="text-sm font-bold">מה זה נעול ומה זה פתוח?</p>
+      <p className="flex items-center gap-3 text-sm text-ink">
+        <span className="shrink-0" aria-hidden="true"><LockChip locked /></span>
+        <span>המספר שלכם. "השלם הכול" לא ישנה אותו. כל ערך שתקלידו ננעל מעצמו.</span>
+      </p>
+      <p className="flex items-center gap-3 text-sm text-ink">
+        <span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span>
+        <span>"השלם הכול" רשאי לשנות אותו כדי שהסכום יגיע ל-120. לחיצה על הכפתור שבשורה נועלת או פותחת.</span>
+      </p>
     </div>
   );
 }
@@ -452,6 +507,7 @@ function PctList({
         אחוז מהקולות הכשרים לכל רשימה. המנדטים מחושבים מיד לפי החוק — אחוז החסימה ({THRESHOLD_PCT}%), הסכמי העודפים ושיטת באדר-עופר — בדיוק כמו במחשבון
         המנדטים. מה שלא חולק נספר כ"אחרות".
       </p>
+      <LockLegend />
       <ul className="divide-y divide-paper-line border-y border-paper-line" aria-label="אחוזי הצבעה לכל רשימה">
         {IDS.map((id) => {
           const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
@@ -464,7 +520,7 @@ function PctList({
               <div className="flex items-center gap-2">
                 <div className="flex-1 min-w-0">
                   <span className="font-bold block truncate">{name}</span>
-                  <span className="text-xs text-ink-soft">
+                  <span className="text-sm text-ink">
                     {ok ? (
                       <>
                         <span className={`font-bold ${under ? "text-warn" : "text-ink"}`}>{c.v} מנדטים</span>
@@ -474,7 +530,7 @@ function PctList({
                       "—"
                     )}
                     {" · "}
-                    {c.src === "filled" ? "הושלם" : c.locked ? "קבעתם" : "פתוח"}
+                    {rowState(c)}
                   </span>
                 </div>
                 <div className="flex items-center gap-1" dir="ltr">
@@ -497,15 +553,7 @@ function PctList({
                     +
                   </button>
                 </div>
-                <button
-                  type="button"
-                  aria-pressed={c.locked}
-                  aria-label={c.locked ? `${name}: נעול. לחיצה פותחת לשינוי ב"השלם הכול"` : `${name}: פתוח. לחיצה נועלת`}
-                  onClick={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })}
-                  className={`w-11 h-11 rounded-full grid place-items-center border ${c.locked ? "border-ink text-ink" : "border-paper-line text-ink-faint"}`}
-                >
-                  <Lock on={c.locked} />
-                </button>
+                <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />
               </div>
               {under && (
                 <p className="text-xs text-warn mt-1">

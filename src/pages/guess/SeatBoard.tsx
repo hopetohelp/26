@@ -81,12 +81,12 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
         {status}. {order.map((id) => `${nameOf(id)} ${values[id]}`).join(", ")}
       </p>
       {order.length > 0 && (
-        <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs" aria-hidden="true">
+        <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5" aria-hidden="true">
           {order.map((id) => (
-            <li key={id} className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: colorOf(id, IDS.indexOf(id)) }} />
-              <span className={board ? "text-frame-ink" : "text-ink"}>{nameOf(id)}</span>
-              <span className={`tabular font-bold ${board ? "text-signal" : "text-ink"}`}>{values[id]}</span>
+            <li key={id} className={`flex items-center gap-2 border-b pb-1 ${board ? "border-frame-line" : "border-paper-line"}`}>
+              <span className="w-3.5 h-3.5 rounded-full shrink-0" style={{ background: colorOf(id, IDS.indexOf(id)) }} />
+              <span className={`flex-1 min-w-0 truncate text-base font-bold ${board ? "text-frame-ink" : "text-ink"}`}>{nameOf(id)}</span>
+              <span className={`tabular font-num text-2xl leading-none ${board ? "text-signal" : "text-ink"}`}>{values[id]}</span>
             </li>
           ))}
         </ul>
