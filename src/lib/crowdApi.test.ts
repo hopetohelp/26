@@ -34,6 +34,23 @@ describe("לוג תקלת שמירה", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 })));
     await expect(call("/save", { body: {} })).rejects.toMatchObject({ status: 401, code: "unauthorized", diagnostic: { status: 401 } });
   });
+  it("מצרף לוג לתקלת הרשמה ומסיר גם פרטי כניסה מהשגיאה המקורית", async () => {
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: false, userAgent: "test-browser" });
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch private-user private-password")));
+    try {
+      await call("/auth/register", { body: { username: "private-user", password: "private-password" } });
+      throw new Error("הבקשה הייתה אמורה להיכשל");
+    } catch (e) {
+      expect(e).toMatchObject({ code: "network", diagnostic: { endpoint: "https://crowd.example/auth/register", online: false, cause: { name: "TypeError" } } });
+      const log = JSON.stringify(e);
+      expect(log).not.toContain("private-user");
+      expect(log).not.toContain("private-password");
+      expect(log).toContain("Failed to fetch");
+    }
+  });
   it("dashboard requests bypass a cached snapshot", async () => {
     vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
     vi.resetModules();

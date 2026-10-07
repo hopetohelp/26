@@ -1,16 +1,18 @@
 import { useState, type FormEvent } from "react";
-import { call } from "../../lib/crowdApi";
+import { call, CrowdError } from "../../lib/crowdApi";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
+import ErrorReport from "../../components/ErrorReport";
+
 const PW_MIN = 6;
 const PW_MAX = 128;
 const pwProps = { type: "password", minLength: PW_MIN, maxLength: PW_MAX, required: true, className: inputCls, dir: "ltr" as const };
 
-function useAction() {
-  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+function useAction(action: string) {
+  const [msg, setMsg] = useState<{ ok: boolean; text: string; log?: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const run = (fn: () => Promise<string>) => async (e?: FormEvent) => {
     e?.preventDefault();
@@ -19,16 +21,12 @@ function useAction() {
     try {
       setMsg({ ok: true, text: await fn() });
     } catch (err) {
-      setMsg({ ok: false, text: errorText(err) });
+      setMsg({ ok: false, text: errorText(err), log: JSON.stringify({ action, ...(err instanceof CrowdError ? { code: err.code, status: err.status, ...err.diagnostic } : { code: "unexpected" }) }, null, 2) });
     } finally {
       setBusy(false);
     }
   };
-  const view = msg && (
-    <p role={msg.ok ? "status" : "alert"} className={`text-sm font-bold ${msg.ok ? "" : "text-warn"}`}>
-      {msg.text}
-    </p>
-  );
+  const view = msg && (msg.ok ? <p role="status" className="text-sm font-bold">{msg.text}</p> : <ErrorReport error={msg.text} errorLog={msg.log} />);
   return { run, busy, view };
 }
 
@@ -37,7 +35,7 @@ export function NewPasswordForm({ session, onDone }: { session: ReturnType<typeo
   const { token } = session;
   const [cur, setCur] = useState("");
   const [next, setNext] = useState("");
-  const a = useAction();
+  const a = useAction("החלפת סיסמה");
   return (
     <form
       className="space-y-2"
@@ -71,7 +69,7 @@ export function NewPasswordForm({ session, onDone }: { session: ReturnType<typeo
  */
 export function RecoverForm({ link, session, onDone }: { link: string; session: ReturnType<typeof useSession>; onDone: (username: string) => void }) {
   const [pw, setPw] = useState("");
-  const a = useAction();
+  const a = useAction("שחזור חשבון");
   return (
     <form
       className="space-y-2"
@@ -115,7 +113,7 @@ export function AuthForm({
   const [u, setU] = useState("");
   const [pw, setPw] = useState("");
   const [agree, setAgree] = useState(hasConsent);
-  const a = useAction();
+  const a = useAction(mode === "register" ? "הרשמה לפני שמירה" : "כניסה לפני שמירה");
   const tabs = [
     ["register", "הרשמה"],
     ["login", "כבר יש לי חשבון"],
@@ -175,7 +173,7 @@ export function AuthForm({
 /** החשבון: מחוברים ⇐ יציאה והחלפת סיסמה · לא מחוברים ⇐ הרשמה או כניסה */
 export default function Account({ session }: { session: ReturnType<typeof useSession> }) {
   const { me, token } = session;
-  const a = useAction();
+  const a = useAction("התנתקות");
 
   if (token && me?.username) {
     return (

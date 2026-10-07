@@ -196,7 +196,9 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
     // בלי גוף הבקשה, כותרות או כתובת העמוד: הם עשויים להכיל פרטי כניסה וקישורים אישיים.
     const clean = (s: string) => {
       const urls = s.replace(/https?:\/\/[^\s)]+/g, (url) => url.split(/[?#]/)[0]);
-      return opts.token ? urls.split(opts.token).join("[הוסר]") : urls;
+      const body = opts.body && typeof opts.body === "object" ? opts.body as Record<string, unknown> : {};
+      const secrets = [opts.token, ...["username", "password", "current", "next", "link"].map((key) => body[key])];
+      return secrets.reduce<string>((text, secret) => typeof secret === "string" && secret ? text.split(secret).join("[הוסר]") : text, urls);
     };
     throw new CrowdError(0, "network", {
       ...context(),
