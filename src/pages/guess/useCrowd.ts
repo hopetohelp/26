@@ -56,7 +56,7 @@ export const errorText = (e: unknown): string => {
   if (e.code === "no_password") return "לחשבון הזה עוד אין שם משתמש וסיסמה.";
   if (e.code === "username_taken") return "שם המשתמש הזה כבר תפוס. אפשר לבחור אחר — או להיכנס, אם הוא שלכם.";
   if (e.code === "bad_username") return "שם משתמש: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון.";
-  if (e.code === "weak_password") return "הסיסמה קצרה או נפוצה מדי. לפחות 10 תווים.";
+  if (e.code === "weak_password") return "הסיסמה קצרה או נפוצה מדי. לפחות 6 תווים.";
   if (e.code === "bad_link") return "הקישור האישי הזה אינו בתוקף (אולי נוצר אחריו קישור חדש).";
   if (e.status === 429) return "יותר מדי ניסיונות. כדאי לחכות דקה ולנסות שוב.";
   if (e.status === 401) return "פרטי הכניסה אינם נכונים או שהכניסה פגה.";

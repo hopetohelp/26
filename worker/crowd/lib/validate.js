@@ -138,14 +138,16 @@ export function normalizeUsername(u) {
 }
 
 const COMMON = new Set([
+  "123456", "1234567", "12345678", "123456789", "111111", "000000", "654321", "123123", "12341234", "11111111", "1q2w3e",
+  "password", "qwerty", "abc123", "iloveyou", "qwerty123", "password1", "admin123", "israel", "shalom", "123abc", "a12345",
   "1234567890", "0123456789", "12345678910", "1111111111", "0000000000", "qwertyuiop", "password12", "password123",
   "password1234", "1q2w3e4r5t", "qwerty1234", "qwerty12345", "iloveyou12", "abcdefghij", "abcd123456", "123456789a",
   "a123456789", "1234567890a", "9876543210", "aaaaaaaaaa", "asdfghjkl1", "123123123123", "11223344556677", "zxcvbnm123",
   "shalom1234", "israel1234", "1234512345", "qazwsxedcr", "princess12", "football12", "welcome123", "admin12345",
 ]);
-/** סיסמה: לפחות 10 תווים ולא מהרשימה הנפוצה */
+/** סיסמה: לפחות 6 תווים ולא מהרשימה הנפוצה */
 export function passwordProblem(p) {
-  if (typeof p !== "string" || [...p].length < 10) return "short";
+  if (typeof p !== "string" || [...p].length < 6) return "short";
   if ([...p].length > 128) return "long";
   if (COMMON.has(p.toLowerCase()) || /^(.)\1+$/.test(p)) return "common";
   return null;
