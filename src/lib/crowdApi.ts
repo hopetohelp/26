@@ -183,6 +183,7 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
     browser: navigator.userAgent,
   });
   const res = await fetch(CROWD_URL + path, {
+    cache: path.split("?")[0] === "/dashboard" ? "no-store" : "default",
     method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
     headers: {
       ...(opts.body === undefined ? {} : { "content-type": "application/json" }),

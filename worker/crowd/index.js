@@ -411,7 +411,7 @@ export default {
     const now = clock(env);
     try {
       if (request.method === "GET" && url.pathname === "/dashboard")
-        return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "public, max-age=300" } });
+        return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
       const handler = routes[`${request.method} ${url.pathname}`];
       if (!handler) throw new HttpError(404, "not_found");
       const body = request.method === "POST" ? await readJson(request) : {};

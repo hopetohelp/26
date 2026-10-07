@@ -85,19 +85,20 @@ export default function Guess() {
     requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
+  const dashboardTab = params.get("tab") === "dashboard";
   return (
     <>
-      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלך</PageTitle>
+      <PageTitle lead={dashboardTab ? undefined : "בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."}>{dashboardTab ? "דשבורד הגולשים" : "ההשערה שלך"}</PageTitle>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      <div className="mb-5">
+      {!dashboardTab && <div className="mb-5">
         <Countdown />
-      </div>
-      {intro && !shared && (
+      </div>}
+      {intro && !shared && !dashboardTab && (
         <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
           <h2 className="font-display text-3xl leading-none mb-2">השערות גולשים, אינן סקר</h2>
           <p className="text-sm leading-relaxed mb-3">
             כאן כל אחד מנחש כמה מנדטים תקבל כל רשימה. מי שמשתתף בוחר בזה בעצמו — אין דגימה ואין שקלול, ולכן הממוצע מספר מה חושבים הגולשים באתר, לא מה
-            יקרה. אפשר לשחק בלי חשבון; כדי לשמור — נרשמים בשם משתמש וסיסמה, בלי שם אמיתי ובלי מייל. ההשערה שלכם פרטית; רק ממוצע אנונימי מתפרסם.
+            יקרה. אפשר לשחק בלי חשבון; כדי לשמור — נרשמים בשם משתמש וסיסמה, בלי שם אמיתי ובלי מייל. הנתונים מתפרסמים ללא שם, גם בקבוצות קטנות.
           </p>
           <Btn kind="primary" onClick={() => (markIntroSeen(), setIntro(false))}>
             הבנתי, בואו נתחיל

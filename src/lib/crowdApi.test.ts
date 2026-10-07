@@ -34,4 +34,14 @@ describe("לוג תקלת שמירה", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 })));
     await expect(call("/save", { body: {} })).rejects.toMatchObject({ status: 401, code: "unauthorized", diagnostic: { status: 401 } });
   });
+  it("dashboard requests bypass a cached snapshot", async () => {
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({ open: true, seats: { n: 5 } })));
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/dashboard")).resolves.toMatchObject({ seats: { n: 5 } });
+    expect(fetcher).toHaveBeenCalledWith("https://crowd.example/dashboard", expect.objectContaining({ cache: "no-store" }));
+  });
+
 });
