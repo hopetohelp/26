@@ -2,7 +2,6 @@ import { pingVisit } from "../lib/visits";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import FreezeBanner from "./FreezeBanner";
-import Feedback from "./Feedback";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
 import { THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/theme";
