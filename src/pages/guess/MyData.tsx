@@ -38,9 +38,9 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
       <Account session={session} />
 
       {token && (
-        <section className="space-y-2">
-          <h3 className="font-display text-3xl leading-none">הקישור האישי</h3>
-          <p className="text-sm">
+        <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
+          <h3 className="font-display text-3xl leading-none text-center">הקישור האישי</h3>
+          <p className="text-sm text-center leading-relaxed">
             הקישור האישי מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אין מייל באתר, ולכן זו <strong>הדרך היחידה</strong> לשחזר סיסמה שנשכחה.
           </p>
           {link ? (
@@ -48,7 +48,7 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
           ) : (
             <p className="text-sm">הקישור לא שמור בדפדפן הזה. אם אינו אצלכם — צרו קישור חדש; הקודם יפסיק לעבוד.</p>
           )}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex justify-center gap-3 flex-wrap border-t border-paper-line pt-4">
             <Btn onClick={exportJson}>ייצוא (JSON)</Btn>
             {!rotateAsk ? (
               <Btn onClick={() => setRotateAsk(true)}>קישור אישי חדש</Btn>
@@ -76,7 +76,7 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
       )}
 
       {token && (
-        <section className="border-2 border-warn rounded-theme p-4 space-y-2">
+        <section className="bg-paper-card border-2 border-warn rounded-theme p-5 sm:p-6 space-y-4 text-center">
           <h3 className="font-display text-3xl leading-none text-warn">מחיקה מלאה</h3>
           <p className="text-sm">מוחקת את כל ההשערות, ההיסטוריה ופרטי הכניסה. ממוצעים שכבר פורסמו לא משתנים.</p>
           {del === 0 && (

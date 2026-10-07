@@ -2,10 +2,19 @@ import { expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
-import { BlocsBlock, StatTable } from "./Dashboard";
+import { BlocsBlock, SeatsStats, StatTable } from "./Dashboard";
 import type { Dashboard, SeatStat } from "../../lib/crowdApi";
 
 const stat: SeatStat = { list: "likud", n: 1, mean: 30, min: 30, max: 30, median: 30, p25: 30, p75: 30 };
+
+it("אחוזים משתמשים בניחוש האחוזים ולא מחלקים מנדטים ב־120", () => {
+  const html = renderToStaticMarkup(createElement(SeatsStats, {
+    rows: [{ ...stat, mean: 24.5 }], polls: { likud: 23.5 }, view: "table", unit: "pct",
+    mine: { mode: "pct", pct: { likud: 25.5 }, start: "zero", pollsAsOf: null, seats: { likud: { v: 30, src: "manual", locked: false } } },
+  }));
+  for (const value of ["24.5%", "23.5%", "25.5%"]) expect(html).toContain(value);
+  expect(html).not.toContain(">30</td>");
+});
 
 it("מציג ממוצע, סקרים וההשערה שלי; טווח זהה נשאר ריק", () => {
   const html = renderToStaticMarkup(createElement(StatTable, {

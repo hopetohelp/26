@@ -44,7 +44,7 @@ export default function LinkSaver({ token }: { token: string }) {
   return (
     <div className="space-y-2">
       <input readOnly aria-label="הקישור האישי" value={link} dir="ltr" className={`${inputCls} text-xs`} onFocus={(e) => e.target.select()} />
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex justify-center gap-3 flex-wrap [&>button]:flex-1 [&>button]:min-w-[8rem]">
         <Btn kind="primary" onClick={copy}>
           העתקה
         </Btn>

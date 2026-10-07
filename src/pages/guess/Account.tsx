@@ -48,14 +48,14 @@ export function NewPasswordForm({ session, onDone }: { session: ReturnType<typeo
         return "הסיסמה הוחלפה. שאר המכשירים נותקו.";
       })}
     >
-      <div className="grid sm:grid-cols-3 gap-2 items-end">
+      <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
         <Field label="סיסמה נוכחית">
           <input {...pwProps} autoComplete="current-password" value={cur} onChange={(e) => setCur(e.target.value)} />
         </Field>
         <Field label="סיסמה חדשה" hint={`לפחות ${PW_MIN} תווים`}>
           <input {...pwProps} autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
         </Field>
-        <Btn type="submit" disabled={a.busy}>
+        <Btn type="submit" disabled={a.busy} className="sm:col-span-2 w-full mt-1">
           החלפת סיסמה
         </Btn>
       </div>
@@ -177,24 +177,24 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
 
   if (token && me?.username) {
     return (
-      <section className="space-y-3">
-        <h3 className="font-display text-3xl leading-none">החשבון</h3>
-        <p className="text-sm">
+      <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
+        <h3 className="font-display text-3xl leading-none text-center">החשבון</h3>
+        <p className="text-sm text-center">
           מחוברים בשם <bdi className="font-bold">{me.username}</bdi>.
         </p>
-        <div className="flex gap-2 flex-wrap">
+        <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
           <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
           <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
         </div>
         {a.view}
-        <h4 className="font-bold">החלפת סיסמה</h4>
+        <h4 className="font-bold text-center pt-4 border-t border-paper-line">החלפת סיסמה</h4>
         <NewPasswordForm session={session} />
       </section>
     );
   }
 
   return (
-    <section className="space-y-3">
+    <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-3">
       <h3 className="font-display text-3xl leading-none">חשבון</h3>
       <p className="text-sm text-ink-soft">כדי לשמור צריך שם משתמש וסיסמה — בלי שם אמיתי ובלי מייל. עד אז הטיוטות נשמרות רק בדפדפן הזה.</p>
       <AuthForm session={session} />
