@@ -89,7 +89,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/45 flex items-end md:items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/45 flex items-end md:items-center justify-center" onClick={onClose} onKeyDown={(e) => { if (e.key === "Escape") { e.stopPropagation(); onClose(); } }}>
       <div
         role="dialog"
         aria-modal="true"
@@ -184,6 +184,12 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
               <details className="text-sm text-ink-soft">
                 <summary className="cursor-pointer min-h-[44px] flex items-center">לוג התקלה מצורף — אפשר לעיין בו</summary>
                 <pre dir="ltr" className="text-xs whitespace-pre-wrap break-all bg-paper rounded-theme p-3">{diagnostic}</pre>
+                <button type="button" className="min-h-[44px] underline font-bold" onClick={() => {
+                  const url = URL.createObjectURL(new Blob([diagnostic], { type: "text/plain;charset=utf-8" }));
+                  const link = document.createElement("a");
+                  link.href = url; link.download = "elections26-error-log.txt"; link.click();
+                  setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }}>הורדת לוג התקלה</button>
               </details>
             )}
             {status === "error" && (
