@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { customBlocs, moveList, removeBloc } from "./blocEditing";
 import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
 import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
 import { TOTAL } from "../../lib/fillAll";
@@ -23,13 +25,27 @@ export default function Blocs({
   embedded?: boolean;
   onFit?: () => void;
 }) {
+  const [removing, setRemoving] = useState<string | null>(null);
+  const [destination, setDestination] = useState("");
+  const [announcement, setAnnouncement] = useState("");
   const p = unit.draft ?? DEFAULT_BLOCS;
   const setBlocs = (blocs: Bloc[], mode = p.mode) => unit.setDraft({ mode, blocs });
   const patch = (i: number, b: Partial<Bloc>) => setBlocs(p.blocs.map((x, j) => (j === i ? { ...x, ...b } : x)));
   const invalid = validateBlocs(p, IDS);
-  const blocOf = (id: string) => p.blocs.findIndex((b) => b.lists.includes(id));
-  const assign = (id: string, to: number) =>
-    setBlocs(p.blocs.map((b, j) => ({ ...b, lists: j === to ? [...b.lists.filter((x) => x !== id), id] : b.lists.filter((x) => x !== id) })));
+  const unassigned = IDS.filter(id => !p.blocs.some(b => b.lists.includes(id)));
+  const assign = (id: string, to: string) => {
+    if (!IDS.includes(id)) return;
+    setBlocs(moveList(p.blocs, id, to));
+    setAnnouncement(`${nameOf(id)} הועברה ל${p.blocs.find(b => b.id === to)?.name}`);
+  };
+  const partyCard = (id: string) => <li key={id} draggable onDragStart={e => { e.dataTransfer.setData("text/plain", id); e.dataTransfer.effectAllowed = "move"; }} className="border border-paper-line bg-paper rounded-theme p-2 space-y-1">
+    <div className="flex justify-between gap-2 text-sm"><b>{nameOf(id)}</b><span className="tabular">{mySeats?.[id] ?? "—"} מנדטים</span></div>
+    <label className="text-xs flex items-center gap-2">העבר לגוש
+      <select aria-label={`הגוש של ${nameOf(id)}`} value={p.blocs.find(b => b.lists.includes(id))?.id ?? ""} onChange={e => assign(id,e.target.value)} className="min-h-[44px] min-w-0 flex-1 border border-paper-line rounded-theme bg-paper-card text-ink px-2">
+        <option value="" disabled>בחירת גוש</option>{p.blocs.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+      </select>
+    </label>
+  </li>;
   const newId = () => `b${Date.now().toString(36)}`;
   const clamp = (n: number) => Math.max(0, Math.min(TOTAL, Math.round(n) || 0));
   const two = p.blocs.length === 2;
@@ -70,7 +86,7 @@ export default function Blocs({
             onClick={() =>
               m === "gov37"
                 ? unit.setDraft(DEFAULT_BLOCS)
-                : setBlocs(p.mode === "custom" ? p.blocs : [{ id: newId(), name: "גוש א", lists: [], target: null }, { id: newId() + "x", name: "גוש ב", lists: [], target: null }], "custom")
+                : setBlocs(p.mode === "custom" ? p.blocs : customBlocs(IDS), "custom")
             }
             className={`min-h-[44px] px-4 rounded-full border-2 text-sm font-bold ${p.mode === m ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}
           >
@@ -82,13 +98,15 @@ export default function Blocs({
         <p className="text-sm text-ink-soft">"מפלגות הממשלה היוצאת" = הרשימות של מפלגות ממשלה 37, הגדרה עובדתית: {p.blocs[0].lists.map(nameOf).join(", ")}.</p>
       )}
 
+      <p role="status" className="sr-only">{announcement}</p>
+      {p.mode === "custom" && <p className="text-sm text-ink-soft">כל מפלגה בגוש אחד. גררו כרטיס לגוש או בחרו יעד בכרטיס. העברה אינה משנה מנדטים או יעדים.</p>}
       {two && <p className="text-sm text-ink">מספיק למלא גוש אחד — הגוש השני מקבל אוטומטית את כל מה שנשאר (120 פחות המספר).</p>}
       <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         {p.blocs.map((b, i) => {
           const fromSeats = seatsOf(b);
           const diff = b.target !== null && fromSeats !== null ? fromSeats - b.target : null;
           return (
-            <div key={b.id} className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-2">
+            <div key={b.id} onDragOver={e => { if (p.mode === "custom") e.preventDefault(); }} onDrop={e => { e.preventDefault(); if (p.mode === "custom") assign(e.dataTransfer.getData("text/plain"), b.id); }} className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-2">
               {p.mode === "custom" ? (
                 <input aria-label={`שם הגוש ${i + 1}`} className={`${inputCls} font-display text-2xl`} value={b.name} maxLength={40} onChange={(e) => patch(i, { name: e.target.value })} />
               ) : (
@@ -125,9 +143,9 @@ export default function Blocs({
               )}
               {p.mode === "custom" && (
                 <>
-                  <p className="text-xs text-ink-soft">{b.lists.length ? b.lists.map(nameOf).join(", ") : "עוד אין רשימות בגוש."}</p>
+                  <ul className="space-y-2" aria-label={`המפלגות ב${b.name}`}>{b.lists.map(partyCard)}</ul>{!b.lists.length && <p className="text-xs text-ink-soft">הגוש ריק — אפשר להעביר אליו כרטיסים.</p>}
                   {p.blocs.length > 1 && (
-                    <button type="button" className="text-sm underline text-ink-soft min-h-[44px]" onClick={() => setBlocs(p.blocs.filter((_, j) => j !== i))}>
+                    <button type="button" className="text-sm underline text-ink-soft min-h-[44px]" onClick={() => { setRemoving(b.id); setDestination(p.blocs.find(x => x.id !== b.id && x.id === "b")?.id ?? p.blocs.find(x => x.id !== b.id)!.id); }}>
                       הסרת הגוש
                     </button>
                   )}
@@ -141,24 +159,16 @@ export default function Blocs({
       {p.mode === "custom" && (
         <>
           {p.blocs.length < MAX_BLOCS && <Btn onClick={() => setBlocs([...p.blocs, { id: newId(), name: `גוש ${"אבגד"[p.blocs.length]}`, lists: [], target: null }])}>עוד גוש</Btn>}
-          <fieldset>
-            <legend className="font-bold text-sm mb-2">איזו רשימה בכל גוש? (רשימה בגוש אחד לכל היותר)</legend>
-            <ul className="divide-y divide-paper-line border-y border-paper-line">
-              {IDS.map((id) => (
-                <li key={id} className="flex items-center justify-between gap-2 py-1.5">
-                  <span className="text-sm">{nameOf(id)}</span>
-                  <select aria-label={`הגוש של ${nameOf(id)}`} className="min-h-[44px] rounded-theme border border-paper-line bg-paper-card text-ink px-2 text-sm max-w-[50%]" value={blocOf(id)} onChange={(e) => assign(id, Number(e.target.value))}>
-                    <option value={-1}>בלי גוש</option>
-                    {p.blocs.map((b, j) => (
-                      <option key={b.id} value={j}>
-                        {b.name || `גוש ${j + 1}`}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-              ))}
-            </ul>
-          </fieldset>
+          {unassigned.length > 0 && <section className="border border-warn rounded-theme p-3 space-y-2">
+            <p className="text-sm">בטיוטה הישנה יש מפלגות ללא גוש. אפשר לבחור יעד בכל כרטיס או להעביר את כולן לגוש ב׳.</p>
+            <ul className="space-y-2">{unassigned.map(partyCard)}</ul>
+            <Btn onClick={() => { const target = p.blocs.find(b => b.id === "b") ?? p.blocs[1] ?? p.blocs[0]; setBlocs(unassigned.reduce((bs,id) => moveList(bs,id,target.id),p.blocs)); }}>העברת המפלגות הלא משויכות ל{(p.blocs.find(b => b.id === "b") ?? p.blocs[1] ?? p.blocs[0]).name}</Btn>
+          </section>}
+          {removing && <section role="region" aria-label="אישור הסרת גוש" className="border-2 border-warn rounded-theme p-3 space-y-2">
+            <p>הסרת {p.blocs.find(b => b.id === removing)?.name}: המפלגות הבאות יעברו לגוש שתבחרו: {p.blocs.find(b => b.id === removing)?.lists.map(nameOf).join(", ") || "הגוש ריק"}. יעד הגוש הנמחק יוסר; יתר היעדים והמנדטים יישארו.</p>
+            <label className="block">גוש יעד <select className={inputCls} value={destination} onChange={e => setDestination(e.target.value)}>{p.blocs.filter(b => b.id !== removing).map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
+            <div className="flex gap-2"><Btn onClick={() => { setBlocs(removeBloc(p.blocs, removing, destination)); setRemoving(null); }}>אישור ההעברה וההסרה</Btn><Btn onClick={() => setRemoving(null)}>ביטול</Btn></div>
+          </section>}
         </>
       )}
 

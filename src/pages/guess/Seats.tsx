@@ -104,8 +104,8 @@ export default function Seats({
           ? "אי אפשר לחשב: צריך לפחות רשימה אחת מעל אחוז החסימה."
           : null;
   const invalid = pctMode ? (validatePct(pct, IDS) ?? lawProblem ?? validateSeats(p, IDS)) : validateSeats(p, IDS);
-  // שמירה אחת לשניהם: המנדטים, והגושים אם נקבע להם יעד. הגושים נשמרים רק כשהם תקינים ויש יעד לפחות לגוש אחד.
-  const blocsToSave = !!blocs && blocs.blocs.some((b) => b.target !== null);
+  // שמירה אחת למנדטים ולכל חלוקת גושים שנערכה, גם בלי יעד מספרי.
+  const blocsToSave = !!blocs;
   const blocsInvalid = blocsToSave ? validateBlocs(blocs!, IDS) : null;
   const both: SaveUnit = {
     status: unit.status !== "saved" ? unit.status : blocsToSave && blocsUnit.status !== "saved" ? blocsUnit.status : "saved",
@@ -306,7 +306,7 @@ export default function Seats({
           <div className="max-h-[45dvh] overflow-y-auto p-3">
           <Explained
             kind="השערות גולשים, אינן סקר"
-            source="ההשערות האחרונות של הגולשים באתר (חציון), וממוצע הסקרים של האתר"
+            source="ההשערות האחרונות של הגולשים באתר (ממוצע), וממוצע הסקרים של האתר"
             asOf={dateLong(POLLS_AS_OF)}
             assumption="הגולשים בחרו להשתתף בעצמם — זה לא מדגם מייצג."
             methodAnchor="crowd"

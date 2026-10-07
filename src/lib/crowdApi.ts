@@ -107,6 +107,8 @@ export interface SeatStat {
   list: string;
   n: number;
   mean: number;
+  min: number;
+  max: number;
   median: number;
   p25: number;
   p75: number;
