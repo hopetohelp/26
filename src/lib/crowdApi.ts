@@ -165,6 +165,7 @@ export class CrowdError extends Error {
   constructor(
     public status: number,
     public code: string,
+    public diagnostic?: Record<string, unknown>,
   ) {
     super(code);
   }
@@ -172,6 +173,15 @@ export class CrowdError extends Error {
 
 export async function call<T>(path: string, opts: { method?: string; body?: unknown; token?: string | null } = {}): Promise<T> {
   if (!CROWD_URL) throw new CrowdError(0, "offline");
+  const started = Date.now();
+  const context = () => ({
+    at: new Date().toISOString(),
+    endpoint: CROWD_URL + path.split("?")[0],
+    method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
+    elapsedMs: Date.now() - started,
+    online: navigator.onLine,
+    browser: navigator.userAgent,
+  });
   const res = await fetch(CROWD_URL + path, {
     method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
     headers: {
@@ -179,10 +189,18 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
       ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}),
     },
     body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
-  }).catch(() => {
-    throw new CrowdError(0, "network");
+  }).catch((cause: unknown) => {
+    // בלי גוף הבקשה, כותרות או כתובת העמוד: הם עשויים להכיל פרטי כניסה וקישורים אישיים.
+    const clean = (s: string) => {
+      const urls = s.replace(/https?:\/\/[^\s)]+/g, (url) => url.split(/[?#]/)[0]);
+      return opts.token ? urls.split(opts.token).join("[הוסר]") : urls;
+    };
+    throw new CrowdError(0, "network", {
+      ...context(),
+      cause: cause instanceof Error ? { name: cause.name, message: clean(cause.message), stack: clean(cause.stack ?? "") } : { name: "UnknownError" },
+    });
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new CrowdError(res.status, (data as { error?: string }).error ?? "error");
+  if (!res.ok) throw new CrowdError(res.status, (data as { error?: string }).error ?? "error", { ...context(), status: res.status });
   return data as T;
 }

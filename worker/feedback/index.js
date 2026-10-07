@@ -114,8 +114,12 @@ export default {
       return reply({ ok: false, error: "bad json" }, 400);
     }
     if (body.website) return reply({ ok: true }); // מלכודת
-    const text = String(body.text || "").trim().slice(0, MAX_TEXT);
-    if (!text) return reply({ ok: false, error: "empty" }, 400);
+    const note = String(body.text || "").trim().slice(0, MAX_TEXT);
+    if (!note) return reply({ ok: false, error: "empty" }, 400);
+    // הלוג נפרד ממגבלת ההערה: אין חיתוך שקט של פרטי התקלה.
+    if (body.diagnostic !== undefined && (typeof body.diagnostic !== "string" || body.diagnostic.length > 16000))
+      return reply({ ok: false, error: "diagnostic too large" }, 413);
+    const text = body.diagnostic ? `${note}\n\n--- לוג התקלה ---\n${body.diagnostic}` : note;
     const key = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
     const now = new Date().toISOString();
 

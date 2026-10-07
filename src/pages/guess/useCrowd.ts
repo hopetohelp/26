@@ -71,6 +71,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
   const [saved, setSavedState] = useState<P | null>(() => S.loadSaved<P>(unit));
   const [state, setState] = useState<SaveState>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [errorLog, setErrorLog] = useState<string | null>(null);
   const setDraft = useCallback(
     (p: P | null) => {
       setDraftState(p);
@@ -94,6 +95,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       if (!draft) return false;
       setState("saving");
       setError(null);
+      setErrorLog(null);
       try {
         const op_id = S.opIdFor(unit, draft);
         await call("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload: draft } });
@@ -105,13 +107,17 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
         return true;
       } catch (e) {
         setError(errorText(e));
+        setErrorLog(JSON.stringify({
+          action: "שמירת השערה", unit, registry: meta.dataAsOf,
+          ...(e instanceof CrowdError ? { code: e.code, status: e.status, ...e.diagnostic } : { code: "unexpected" }),
+        }, null, 2));
         setState("error");
         return false;
       }
     },
     [draft, unit],
   );
-  return { draft, setDraft, saved, status, save, state, error };
+  return { draft, setDraft, saved, status, save, state, error, errorLog };
 }
 
 export const STATUS_LABEL = { draft: "טיוטה", saved: "נשמר", dirty: "שינויים שלא נשמרו" } as const;
