@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MyData from "./guess/MyData";
 import { Btn, Notice } from "./guess/ui";
-import { call, CrowdError } from "../lib/crowdApi";
+import { call } from "../lib/crowdApi";
 import { errorText, useSession } from "./guess/useCrowd";
 
 type Message = { author: "visitor" | "team"; text: string; created_at: string };
