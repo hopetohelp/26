@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Tabbed from "../components/Tabbed";
 import { PageTitle } from "../components/ui";
 import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
@@ -85,12 +84,12 @@ export default function Guess() {
     requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
-  const dashboardTab = params.get("tab") === "dashboard";
+
   return (
     <>
-      <PageTitle lead={dashboardTab ? undefined : "בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."}>{dashboardTab ? "דשבורד הגולשים" : "ההשערה שלך"}</PageTitle>
+      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלי</PageTitle>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      {!dashboardTab && <div className="mb-5">
+      <div className="mb-5">
         <Countdown />
       </div>}
       {intro && !shared && !dashboardTab && (
@@ -124,15 +123,18 @@ export default function Guess() {
           <Btn onClick={() => setRecoverLink(null)}>לא צריך, תודה</Btn>
         </section>
       )}
-      <div ref={top} className="scroll-mt-4">
-        <Tabbed
-          label="ההשערה שלך"
-          tabs={[
-            { id: "mine", label: "שלי", element: <Mine key={mineKey} session={session} /> },
-            { id: "dashboard", label: "דשבורד", element: <Dashboard session={session} /> },
-          ]}
-        />
-      </div>
+      <nav aria-label="בחירת תצוגה" className="sticky top-0 z-20 bg-paper py-2 mb-5 flex gap-2">
+        <a href="#my-guess" className="min-h-[48px] px-5 rounded-full bg-ink text-paper-card font-bold no-underline flex items-center">ההשערה שלי</a>
+        <a href="#statistics" className="min-h-[48px] px-5 rounded-full border border-ink bg-paper-card text-ink font-bold no-underline flex items-center">סטטיסטיקות</a>
+      </nav>
+      <section id="my-guess" ref={top} className="scroll-mt-20">
+        <h2 className="font-display text-5xl leading-none mb-4">ההשערה שלי</h2>
+        <Mine key={mineKey} session={session} />
+      </section>
+      <section id="statistics" className="scroll-mt-20 mt-10 border-t border-paper-line pt-8">
+        <h2 className="font-display text-5xl leading-none mb-4">סטטיסטיקות</h2>
+        <Dashboard session={session} />
+      </section>
     </>
   );
 }
