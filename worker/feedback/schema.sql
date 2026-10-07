@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS feedback (
   theme TEXT,
   day_key TEXT NOT NULL,
   token_hash TEXT,
+  account_key TEXT,
   status TEXT NOT NULL DEFAULT 'new'
 );
 CREATE INDEX IF NOT EXISTS feedback_day_key ON feedback(day_key, created_at);
@@ -60,3 +61,6 @@ CREATE TABLE IF NOT EXISTS visitors_all (
   first_day TEXT NOT NULL,
   last_day TEXT NOT NULL
 );
+
+-- תמיכה חדשה: שיחה אחת לכל חשבון. רשומות הערות הישנות אינן משתתפות בזרימה הזו.
+CREATE UNIQUE INDEX IF NOT EXISTS feedback_support_account ON feedback(account_key) WHERE topic = 'support';
