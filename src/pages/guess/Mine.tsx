@@ -3,7 +3,6 @@ import { linkAcked, setLinkAck } from "../../lib/crowdSession";
 import { call, type BlocsPayload, type Dashboard, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
 import LinkSaver from "./LinkSaver";
-import MyData from "./MyData";
 import Seats from "./Seats";
 import Vote from "./Vote";
 import { Btn, Notice } from "./ui";
@@ -13,7 +12,6 @@ const SECTIONS = [
   { id: "seats", label: "מנדטים וגושים" },
   { id: "vote", label: "הצבעה" },
   { id: "history", label: "היסטוריה" },
-  { id: "data", label: "הנתונים שלי" },
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
 
@@ -89,7 +87,6 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
       {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} crowd={crowd} />}
       {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
-      {sec === "data" && <MyData session={session} />}
     </div>
   );
 }
