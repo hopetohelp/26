@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FEEDBACK_URL, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
+import { getLink } from "../lib/crowdSession";
+import { FEEDBACK_URL, primaryThread, replyToThread, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
 
 /**
  * כפתור פידבק בלי מייל: טופס קצר ⇐ שרת קטן ב-Cloudflare (worker/feedback) ⇐ מאגר פרטי (D1).
@@ -64,6 +65,18 @@ function Sheet({ onClose }: { onClose: () => void }) {
     setStatus("sending");
     try {
       const body = text.trim().slice(0, MAX);
+      // שיחה אחת לכל משתמש: אם כבר יש שיחה בדפדפן הזה — ההערה מצטרפת אליה (עם הנושא בראשה)
+      const prim = primaryThread();
+      if (prim) {
+        const topicLabel = TOPICS.find((t) => t.id === topic)?.label ?? "";
+        const res = await replyToThread(prim.token, `[${topicLabel}] ${body}`.slice(0, MAX), trap);
+        if (res.ok) {
+          setToken(prim.token);
+          setStatus("sent");
+          return;
+        }
+        if (res.error !== "not found" && res.error !== "full") return setStatus("error");
+      }
       const res = await sendFeedback({ topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap });
       if (res.ok && res.token) {
         saveThread({ token: res.token, created: new Date().toISOString(), preview: body.slice(0, 80) });
@@ -90,7 +103,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
             <p className="text-base leading-relaxed">כל הערה נקראת. תיקון נתון מופיע בהיסטוריה של האתר, עם הסבר.</p>
             {token && (
               <div className="w-full flex flex-col gap-2 bg-paper rounded-theme p-3">
-                <p className="text-sm font-bold">הקישור האישי שלך — שם תופיע התשובה, ושם אפשר להמשיך לכתוב:</p>
+                <p className="text-sm font-bold">הקישור האישי שלך — שם תופיע התשובה, ושם אפשר להמשיך לכתוב. כל ההערות שלך נמצאות באותה שיחה:</p>
                 <p className="text-xs break-all tabular bg-paper-card rounded p-2" dir="ltr">{threadLink(token)}</p>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -108,6 +121,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
                 </div>
                 <p className="text-xs text-ink-soft">
                   הקישור נשמר גם בדפדפן הזה. מי שמחזיק בו יכול לקרוא את השיחה — אל תפרסמו אותו.
+                  {getLink() ? " הקישור האישי להשערות שלך פותח גם את השיחה הזו — שמרו אותו מחדש מ\"הנתונים שלי\"." : ""}
                 </p>
               </div>
             )}

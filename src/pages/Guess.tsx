@@ -4,6 +4,7 @@ import Tabbed from "../components/Tabbed";
 import { PageTitle } from "../components/ui";
 import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
+import { absorbFeedbackToken } from "../lib/feedback";
 import { introSeen, loadDraft, markIntroSeen, saveDraft, setLinkAck } from "../lib/crowdSession";
 import { decodeGuess } from "../lib/shareGuess";
 import { RecoverForm } from "./guess/Account";
@@ -49,7 +50,9 @@ export default function Guess() {
     if (!t) return;
     const next = new URLSearchParams(params);
     next.delete("t");
+    next.delete("f");
     setParams(next, { replace: true });
+    absorbFeedbackToken(params.get("f")); // שיחת ההערות שנושא הקישור
     call<{ token: string; username: string | null }>("/auth/link", { body: { link: t } })
       .then((r) => {
         session.setToken(r.token);

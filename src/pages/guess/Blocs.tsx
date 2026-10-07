@@ -1,11 +1,28 @@
 import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
 import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
+import { TOTAL } from "../../lib/fillAll";
 import { DEFAULT_BLOCS, IDS, nameOf } from "./model";
 import SaveButton from "./SaveButton";
 import { Btn, inputCls, Notice, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 
-export default function Blocs({ unit, session, mySeats }: { unit: ReturnType<typeof useUnit<BlocsPayload>>; session: ReturnType<typeof useSession>; mySeats: Record<string, number> | null }) {
+/**
+ * הגושים. בלשונית "מנדטים וגושים" הם מוצגים יחד עם המנדטים (embedded): בלי כפתור שמירה משלהם, עם השוואה חיה
+ * בין היעד של כל גוש לבין סכום המנדטים שחילקתם, ושתי דרכים ליישר: להתאים את המנדטים ליעד, או את היעד למנדטים.
+ */
+export default function Blocs({
+  unit,
+  session,
+  mySeats,
+  embedded = false,
+  onFit,
+}: {
+  unit: ReturnType<typeof useUnit<BlocsPayload>>;
+  session: ReturnType<typeof useSession>;
+  mySeats: Record<string, number> | null;
+  embedded?: boolean;
+  onFit?: () => void;
+}) {
   const p = unit.draft ?? DEFAULT_BLOCS;
   const setBlocs = (blocs: Bloc[], mode = p.mode) => unit.setDraft({ mode, blocs });
   const patch = (i: number, b: Partial<Bloc>) => setBlocs(p.blocs.map((x, j) => (j === i ? { ...x, ...b } : x)));
@@ -14,6 +31,27 @@ export default function Blocs({ unit, session, mySeats }: { unit: ReturnType<typ
   const assign = (id: string, to: number) =>
     setBlocs(p.blocs.map((b, j) => ({ ...b, lists: j === to ? [...b.lists.filter((x) => x !== id), id] : b.lists.filter((x) => x !== id) })));
   const newId = () => `b${Date.now().toString(36)}`;
+  const clamp = (n: number) => Math.max(0, Math.min(TOTAL, Math.round(n) || 0));
+  const two = p.blocs.length === 2;
+  /** בשני גושים מספיק למלא אחד: השני מקבל אוטומטית את כל מה שנשאר (120 פחות הערך) */
+  const setTarget = (i: number, n: number) => {
+    const t = clamp(n);
+    setBlocs(two ? p.blocs.map((x, j) => ({ ...x, target: j === i ? t : TOTAL - t })) : p.blocs.map((x, j) => (j === i ? { ...x, target: t } : x)));
+  };
+  const setNoGuess = (i: number, none: boolean, fromSeats: number | null) => {
+    if (none) return setBlocs(two ? p.blocs.map((x) => ({ ...x, target: null })) : p.blocs.map((x, j) => (j === i ? { ...x, target: null } : x)));
+    setTarget(i, fromSeats ?? 60);
+  };
+  const seatsOf = (b: Bloc) => (mySeats ? b.lists.reduce((a, id) => a + (mySeats[id] ?? 0), 0) : null);
+  const mismatch = p.blocs.some((b) => b.target !== null && seatsOf(b) !== null && seatsOf(b) !== b.target);
+  /** "עדכנו את היעד לפי המנדטים": בשני גושים הראשון לפי המנדטים והשני משלים; אחרת כל יעד לפי המנדטים של הגוש שלו */
+  const targetsFromSeats = () => {
+    if (!mySeats) return;
+    const first = p.blocs.findIndex((b) => b.target !== null);
+    if (first < 0) return;
+    if (two) return setTarget(first, seatsOf(p.blocs[first]) ?? 0);
+    setBlocs(p.blocs.map((b) => (b.target === null ? b : { ...b, target: clamp(seatsOf(b) ?? 0) })));
+  };
 
   return (
     <div className="space-y-4">
@@ -44,9 +82,11 @@ export default function Blocs({ unit, session, mySeats }: { unit: ReturnType<typ
         <p className="text-sm text-ink-soft">"מפלגות הממשלה היוצאת" = הרשימות של מפלגות ממשלה 37, הגדרה עובדתית: {p.blocs[0].lists.map(nameOf).join(", ")}.</p>
       )}
 
+      {two && <p className="text-sm text-ink">מספיק למלא גוש אחד — הגוש השני מקבל אוטומטית את כל מה שנשאר (120 פחות המספר).</p>}
       <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         {p.blocs.map((b, i) => {
-          const fromSeats = mySeats ? b.lists.reduce((a, id) => a + (mySeats[id] ?? 0), 0) : null;
+          const fromSeats = seatsOf(b);
+          const diff = b.target !== null && fromSeats !== null ? fromSeats - b.target : null;
           return (
             <div key={b.id} className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-2">
               {p.mode === "custom" ? (
@@ -62,19 +102,27 @@ export default function Blocs({ unit, session, mySeats }: { unit: ReturnType<typ
                     min={0}
                     max={120}
                     inputMode="numeric"
-                    disabled={b.target === null}
                     value={b.target ?? ""}
                     placeholder="—"
-                    onChange={(e) => patch(i, { target: Math.max(0, Math.min(120, Math.round(Number(e.target.value)) || 0)) })}
-                    className="w-24 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num tabular text-2xl disabled:opacity-50"
+                    onChange={(e) => setTarget(i, Number(e.target.value))}
+                    className="w-24 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num tabular text-2xl"
                   />
                 </label>
                 <label className="flex items-center gap-2 text-sm min-h-[44px]">
-                  <input type="checkbox" className="w-5 h-5" checked={b.target === null} onChange={(e) => patch(i, { target: e.target.checked ? null : (fromSeats ?? 60) })} />
+                  <input type="checkbox" className="w-5 h-5" checked={b.target === null} onChange={(e) => setNoGuess(i, e.target.checked, fromSeats)} />
                   בלי ניחוש
                 </label>
               </div>
-              {fromSeats !== null && <p className="text-xs text-ink-soft">לפי המנדטים שחילקתם: {fromSeats}</p>}
+              {fromSeats !== null && (
+                <p className="text-sm text-ink">
+                  לפי המנדטים שחילקתם: <strong className="tabular">{fromSeats}</strong>
+                  {diff !== null && (
+                    <span className={`block text-xs mt-0.5 ${diff === 0 ? "text-ink-soft" : "text-warn font-bold"}`}>
+                      {diff === 0 ? "מתאים ליעד" : diff > 0 ? `במנדטים יש ${diff} יותר מהיעד` : `במנדטים חסרים ${-diff} כדי להגיע ליעד`}
+                    </span>
+                  )}
+                </p>
+              )}
               {p.mode === "custom" && (
                 <>
                   <p className="text-xs text-ink-soft">{b.lists.length ? b.lists.map(nameOf).join(", ") : "עוד אין רשימות בגוש."}</p>
@@ -116,10 +164,22 @@ export default function Blocs({ unit, session, mySeats }: { unit: ReturnType<typ
 
       {invalid && p.blocs.some((b) => b.target !== null) && <Notice tone="warn">{invalid}</Notice>}
       <p className="text-xs text-ink-soft">"בלי ניחוש" שונה מ-0: 0 אומר שהגוש לא יקבל אף מנדט. היעדים משמשים גם את "השלם הכול" במסך המנדטים.</p>
-      <div className="flex items-center gap-3 flex-wrap">
-        <SaveButton unit={unit} session={session} invalid={invalid ?? (p.blocs.every((b) => b.target === null) ? "אין יעד לאף גוש." : null)} />
-        <StatusPill status={unit.status} />
-      </div>
+      {embedded && mismatch && (
+        <div className="rounded-theme border-2 border-warn bg-warn-soft p-3 space-y-2" role="status">
+          <p className="text-sm font-bold text-warn">המנדטים והגושים עוד לא מתאימים זה לזה.</p>
+          <div className="flex gap-2 flex-wrap">
+            {onFit && <Btn onClick={onFit}>התאימו את המנדטים ליעד</Btn>}
+            <Btn onClick={targetsFromSeats}>עדכנו את היעד לפי המנדטים</Btn>
+          </div>
+          <p className="text-xs text-ink">"התאימו את המנדטים" משנה רק רשימות פתוחות; רשימות נעולות נשארות כמו שקבעתם.</p>
+        </div>
+      )}
+      {!embedded && (
+        <div className="flex items-center gap-3 flex-wrap">
+          <SaveButton unit={unit} session={session} invalid={invalid ?? (p.blocs.every((b) => b.target === null) ? "אין יעד לאף גוש." : null)} />
+          <StatusPill status={unit.status} />
+        </div>
+      )}
     </div>
   );
 }

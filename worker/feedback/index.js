@@ -130,6 +130,9 @@ export default {
     if (url.pathname === "/thread") {
       const fb = await findThread(env, body.t);
       if (!fb) return reply({ ok: false, error: "not found" }, 404);
+      // אותה תגובה בדיוק כמו האחרונה של הגולש בשיחה: לא נשמרת שוב
+      const last = await env.DB.prepare("SELECT text FROM messages WHERE feedback_id = ? AND author = 'visitor' ORDER BY id DESC LIMIT 1").bind(fb.id).first();
+      if ((last?.text ?? fb.text) === text) return reply({ ok: true, duplicate: true });
       const count = await env.DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE feedback_id = ?").bind(fb.id).first();
       if ((count?.n ?? 0) >= MAX_MESSAGES) return reply({ ok: false, error: "full" }, 429);
       await env.DB.batch([
