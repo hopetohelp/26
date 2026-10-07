@@ -5,7 +5,7 @@ import { fillAll, fillErrorText, fillPct, pctFillErrorText, TOTAL, type PctFillR
 import { seatsSum, validateBlocs, validatePct, validateSeats } from "../../lib/crowdValidate";
 import { dateLong } from "../../lib/format";
 import { seatsFromPct, THRESHOLD_PCT, type PctSeats } from "../../lib/lawSeats";
-import { K25_MAP, k25Name, IDS, nameOf, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
+import { K25_MAP, k25Name, IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import Blocs from "./Blocs";
 import { blocSummary } from "./blocSummary";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
@@ -138,7 +138,7 @@ export default function Seats({
   };
   const targets = blocs?.blocs.filter((b) => b.target !== null) ?? [];
   const runFill = () =>
-    pctMode ? setPctPreview(fillPct(IDS, pct, (id) => !!p.seats[id]?.locked, POLL_SHARES)) : setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? []));
+    pctMode ? setPctPreview(fillPct(IDS, pct, (id) => !!p.seats[id]?.locked, POLL_SHARES)) : setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES));
   const apply = () => {
     if (preview?.ok) unit.setDraft({ ...p, seats: preview.seats, pollsAsOf: POLLS_AS_OF });
     setPreview(null);
