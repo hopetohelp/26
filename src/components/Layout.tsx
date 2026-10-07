@@ -11,11 +11,13 @@ import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label }))];
-/** הלשוניות בתחתית המסך בטלפון. כל שאר המסכים — מריבועי מסך הבית (בלי "עוד", הכרעת בעלים) */
+/** הלשוניות בתחתית המסך בטלפון. יתר המסכים נגישים מריבועי מסך הבית. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/today", label: "מצב ותחזית", icon: "board" },
   { to: "/polls", label: "סקרים", icon: "bars" },
+  { to: "/guess", label: "השערות", icon: "guess" },
+  { to: "/feedback", label: "הערות", icon: "comments" },
 ];
 
 const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
@@ -36,6 +38,8 @@ function Icon({ name }: { name: string }) {
   if (name === "home") return <svg {...p}><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /><path d="M10 20v-6h4v6" /></svg>;
   if (name === "board") return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 10h18M9 4v16" /></svg>;
   if (name === "bars") return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" /></svg>;
+  if (name === "guess") return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" /></svg>;
+  if (name === "comments") return <svg {...p}><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M7 8h10M7 12h7" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
 }
@@ -214,7 +218,7 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
 function MobileTabs() {
   return (
     <nav aria-label="ניווט בטלפון" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-      <ul className="grid grid-cols-3">
+      <ul className="grid grid-cols-5">
         {TABS.map((t) => (
           <li key={t.to}>
             <NavLink

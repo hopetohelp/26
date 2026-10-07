@@ -55,10 +55,10 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   return (
     <div>
       <div className="mb-4">
-        <Notice tone="warn">{d.participants < 30 ? "מספר המשתתפים נמוך: הנתונים אינם משקפים את הציבור ואינם מאפשרים להסיק על תוצאות הבחירות. " : ""}אלה השערות של גולשים שבחרו להשתתף, ולא מדגם מייצג — גם כאשר מספר המשתתפים גדל.</Notice>
+        <Notice tone="warn">{d.participants < 30 ? "מעט משתתפים — הנתונים אינם מייצגים את הציבור." : "השערות הגולשים אינן מדגם מייצג."}</Notice>
       </div>
       <p className="text-sm text-ink-soft mb-4">
-        {d.participants} משתתפים · {d.publishedAt ? `נכון ל-${when(d.publishedAt)}` : "עוד לא פורסם"}. {GUESS}; כוונות ההצבעה — {VOTE}.
+        {d.participants} משתתפים · {d.publishedAt ? `נכון ל-${when(d.publishedAt)}` : "עוד לא פורסם"}.
       </p>
       {!d.seats && <Notice>עדיין לא נשמרו השערות מנדטים לפרסום. הממוצע יוצג כבר מההשערה הראשונה; אפשר להשתתף בלשונית "שלי".</Notice>}
       {d.seats && <SeatsBlock d={d} />}
@@ -74,6 +74,9 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
           <StatTable rows={d.underReview.seats} polls={{}} />
         </Fold>
       )}
+      <Fold title="על הנתונים">
+        <p className="text-sm">{GUESS}. כוונות ההצבעה — {VOTE}. מספר משתתפים קטן אינו מאפשר להסיק על תוצאות הבחירות.</p>
+      </Fold>
       <LogFold />
     </div>
   );

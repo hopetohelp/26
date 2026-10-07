@@ -232,13 +232,13 @@ describe("cron: aggregation & anomaly", () => {
     expect(second.data).toEqual(first.data);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n).toBe(before);
   });
-  it("dashboard open below 30 and cached", async () => {
+  it("dashboard open below 30 without stale caching", async () => {
     await crowd(29);
     t += 3600 * 1000;
     await cron();
     let d = await call("/dashboard");
     expect(d.data.open).toBe(true);
-    expect(d.headers.get("cache-control")).toBe("public, max-age=300");
+    expect(d.headers.get("cache-control")).toBe("no-store");
     await crowd(1);
     t += 3600 * 1000;
     await cron();
