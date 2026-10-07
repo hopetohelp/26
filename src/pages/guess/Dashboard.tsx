@@ -37,7 +37,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   return (
     <div>
       <div className="mb-4"><Notice tone="warn">{d.participants < 30 ? "מעט משתתפים — הנתונים אינם מייצגים את הציבור." : "השערות הגולשים אינן מדגם מייצג."}</Notice></div>
-      <p className="text-sm text-ink-soft mb-4">{d.participants} משתתפים. כל ההשערות מוצגות לפי הממוצע.</p>
+      <p className="font-display text-2xl mb-4">{d.participants} משתתפים בסך הכול</p>
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
@@ -53,6 +53,10 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   );
 }
 
+function SectionTitle({ title, count }: { title: string; count?: number }) {
+  return <span className="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1"><span>{title}</span><span className="text-2xl tabular">{count ?? "—"} משתתפים</span></span>;
+}
+
 function Toggle<T extends string>({ value, setValue, options, label }: { value: T; setValue: (v:T)=>void; options: readonly (readonly [T,string])[]; label:string }) {
   return <div className="flex gap-1.5" role="radiogroup" aria-label={label}>{options.map(([id,text]) => <button key={id} type="button" role="radio" aria-checked={value===id} onClick={()=>setValue(id)} className={`min-h-[40px] px-4 rounded-full border-2 text-sm font-bold ${value===id ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}>{text}</button>)}</div>;
 }
@@ -62,8 +66,8 @@ export function SeatsStats({ rows, polls, mine, view, unit = "seats" }: { rows: 
   const suffix = unit === "pct" ? "%" : "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => unit === "pct" ? mine?.mode === "pct" ? mine.pct?.[id] : undefined : mine?.seats[id]?.v;
-  if (view === "chart") return <Bars suffix={suffix} title={unit === "pct" ? "אחוזים" : "מנדטים"} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),value:s.mean,range:range(s)}))} />;
-  return <Card title={unit === "pct" ? "אחוזים" : "מנדטים"}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
+  if (view === "chart") return <Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),value:s.mean,range:range(s)}))} />;
+  return <Card title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th><th className="font-normal">שלי</th></tr></thead>
     <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td><td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td></tr>)}</tbody>
   </table></div></Card>;
@@ -78,21 +82,22 @@ export function BlocStats({ d, view }: { d:D; view:View }) {
       .map(g=>({key:[...g.lists].sort().join(","),label:g.lists.map(nameOf).join(" · "),stat:g.derived!}))
       .sort((a,b)=>b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"))
   ];
-  if (view==="chart") return <Bars rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat.mean,range:range(r.stat)}))} />;
-  return <Card title="גושים"><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
-    <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">מנחשים</th></tr></thead>
+  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat.mean,range:range(r.stat)}))} />;
+  return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
+    <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
     <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32">{r.label}</th><td className="text-center font-bold">{seatsFmt(r.stat.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(r.stat)}</bdi></td><td className="text-center">{r.stat.n}</td></tr>)}</tbody>
   </table></div></Card>;
 }
 
-function Bars({ rows, suffix = "", title = "גושים" }: { rows:{key:string;label:string;value:number;range:string}[]; suffix?: string; title?: string }) {
+function Bars({ rows, suffix = "", title = "גושים" }: { rows:{key:string;label:string;value:number;range:string}[]; suffix?: string; title?: import("react").ReactNode }) {
   const max=Math.max(1,...rows.map(r=>r.value));
   return <Card title={title}><div className="space-y-3">{rows.map(r=><div key={r.key} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-center text-sm"><span className="break-words">{r.label}</span><div className="h-5 rounded-full bg-paper-line overflow-hidden"><div className="h-full bg-ink" style={{width:`${Math.max(2,(r.value/max)*100)}%`}} /></div><span className="font-num tabular whitespace-nowrap"><b>{seatsFmt(r.value)}{suffix}</b>{r.range ? ` · ${r.range}${suffix}` : ""}</span></div>)}</div></Card>;
 }
 
 
-function VotingStats({ d }: { d: D }) {
-  return <Card title="הצבעה וכוונות הצבעה">
+export function VotingStats({ d }: { d: D }) {
+  const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
+  return <Card title={<SectionTitle title="הצבעה וכוונות הצבעה" count={count} />}>
     <VoteComparison d={d} />
     {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} /></section>}
   </Card>;
