@@ -20,7 +20,6 @@ import Tabbed, { Moved } from "./components/Tabbed";
 const Accuracy = lazy(() => import("./pages/Accuracy"));
 const Scenarios = lazy(() => import("./pages/Scenarios"));
 const Changes = lazy(() => import("./pages/Changes"));
-const MyFeedback = lazy(() => import("./pages/MyFeedback"));
 const Forecast = lazy(() => import("./pages/Forecast"));
 const Guess = lazy(() => import("./pages/Guess"));
 
@@ -75,7 +74,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="voters" element={<Moved to="/past" tab="voters" />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
-          <Route path="feedback" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
+          <Route path="feedback" element={<Moved to="/support" />} />
           <Route path="feedback/:token" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
           <Route path="*" element={<NotFound />} />
         </Route>
