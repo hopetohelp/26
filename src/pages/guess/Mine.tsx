@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { linkAcked, setLinkAck } from "../../lib/crowdSession";
-import { call, type BlocsPayload, type Dashboard, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
+import { type BlocsPayload, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
 import LinkSaver from "./LinkSaver";
-import MyData from "./MyData";
 import Seats from "./Seats";
+import { DEFAULT_BLOCS } from "./model";
 import Vote from "./Vote";
 import { Btn, Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
@@ -13,24 +13,16 @@ const SECTIONS = [
   { id: "seats", label: "מנדטים וגושים" },
   { id: "vote", label: "הצבעה" },
   { id: "history", label: "היסטוריה" },
-  { id: "data", label: "הנתונים שלי" },
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
 
-export default function Mine({ session }: { session: ReturnType<typeof useSession> }) {
+export default function Mine({ session, onStatistics }: { session: ReturnType<typeof useSession>; onStatistics: () => void }) {
   const [sec, setSec] = useState<Sec>("seats");
   const latest = session.me?.latest;
   const seats = useUnit<SeatsPayload>("seats", null, latest?.seats?.payload as SeatsPayload | undefined);
-  const blocs = useUnit<BlocsPayload>("blocs", null, latest?.blocs?.payload as BlocsPayload | undefined);
+  const blocs = useUnit<BlocsPayload>("blocs", DEFAULT_BLOCS, latest?.blocs?.payload as BlocsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, latest?.vote?.payload as VotePayload | undefined);
 
-  const [crowd, setCrowd] = useState<Record<string, number> | null>(null);
-  useEffect(() => {
-    if (!session.online) return;
-    call<Dashboard>("/dashboard")
-      .then((d) => d.open && d.seats && setCrowd(Object.fromEntries(d.seats.full.map((s) => [s.list, s.mean]))))
-      .catch(() => {});
-  }, [session.online]);
 
   const [acked, setAcked] = useState(linkAcked);
   // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
@@ -86,10 +78,9 @@ export default function Mine({ session }: { session: ReturnType<typeof useSessio
           );
         })}
       </nav>
-      {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} crowd={crowd} />}
+      {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} onStatistics={onStatistics} />}
       {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
-      {sec === "data" && <MyData session={session} />}
     </div>
   );
 }

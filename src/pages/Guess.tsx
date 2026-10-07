@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Tabbed from "../components/Tabbed";
 import { PageTitle } from "../components/ui";
 import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
@@ -42,6 +41,7 @@ export default function Guess() {
   const [intro, setIntro] = useState(() => !introSeen());
   const [recoverLink, setRecoverLink] = useState<string | null>(null);
   const [mineKey, setMineKey] = useState(0);
+  const [view, setView] = useState<"mine" | "statistics">("mine");
   const top = useRef<HTMLDivElement>(null);
 
   // הקישור האישי (?t=) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
@@ -85,15 +85,13 @@ export default function Guess() {
     requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
-  const dashboardTab = params.get("tab") === "dashboard";
+
   return (
     <>
-      <PageTitle lead={dashboardTab ? undefined : "בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."}>{dashboardTab ? "דשבורד הגולשים" : "ההשערה שלך"}</PageTitle>
+      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלי</PageTitle>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      {!dashboardTab && <div className="mb-5">
-        <Countdown />
-      </div>}
-      {intro && !shared && !dashboardTab && (
+      <div className="mb-5"><Countdown /></div>
+      {intro && !shared && (
         <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
           <h2 className="font-display text-3xl leading-none mb-2">השערות גולשים, אינן סקר</h2>
           <p className="text-sm leading-relaxed mb-3">
@@ -124,15 +122,23 @@ export default function Guess() {
           <Btn onClick={() => setRecoverLink(null)}>לא צריך, תודה</Btn>
         </section>
       )}
-      <div ref={top} className="scroll-mt-4">
-        <Tabbed
-          label="ההשערה שלך"
-          tabs={[
-            { id: "mine", label: "שלי", element: <Mine key={mineKey} session={session} /> },
-            { id: "dashboard", label: "דשבורד", element: <Dashboard session={session} /> },
-          ]}
-        />
-      </div>
+      <nav aria-label="בחירת תצוגה" className="sticky top-0 z-20 bg-paper py-2 mb-5 grid grid-cols-2 gap-2">
+        {([["mine", "ההשערה שלי"], ["statistics", "סטטיסטיקות"]] as const).map(([id, label]) => (
+          <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)}
+            className={`min-h-[48px] px-4 rounded-full border-2 font-bold ${view === id ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-ink"}`}>
+            {label}
+          </button>
+        ))}
+      </nav>
+      {view === "mine" ? (
+        <section id="my-guess" ref={top}>
+          <Mine key={mineKey} session={session} onStatistics={() => setView("statistics")} />
+        </section>
+      ) : (
+        <section id="statistics">
+          <Dashboard session={session} />
+        </section>
+      )}
     </>
   );
 }

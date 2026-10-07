@@ -29,7 +29,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
         <legend className="font-display text-3xl leading-none mb-2">ב-2022 הצבעתי ל…</legend>
         <div className="flex flex-wrap gap-2">
           {K25_PASSED.map((l) => (
-            <Choice key={l.letters} name="v2022" value={l.letters} current={p.v2022} label={l.short} onPick={(v) => set({ v2022: v })} />
+            <Choice key={l.letters} name="v2022" value={l.letters} current={p.v2022} label={l.letters === "ט" ? "הציונות הדתית/זהות" : l.short} onPick={(v) => set({ v2022: v })} />
           ))}
           {picked2022Other && <Choice name="v2022" value={p.v2022!} current={p.v2022} label={k25Name(p.v2022!)} onPick={() => {}} />}
         </div>
@@ -60,7 +60,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
         <legend className="font-display text-3xl leading-none mb-2">ב-2026 אני מתכוון/ת להצביע ל…</legend>
         <div className="flex flex-wrap gap-2">
           {ALPHA.map((l) => (
-            <Choice key={l.id} name="v2026" value={l.id} current={p.v2026} label={l.name} onPick={(v) => set({ v2026: v })} />
+            <Choice key={l.id} name="v2026" value={l.id} current={p.v2026} label={l.id === "rzp" ? "הציונות הדתית/זהות" : l.name} onPick={(v) => set({ v2026: v })} />
           ))}
         </div>
         <div className="flex flex-wrap gap-2 mt-3">

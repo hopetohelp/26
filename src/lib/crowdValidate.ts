@@ -3,7 +3,7 @@ import type { BlocsPayload, SeatsPayload, VotePayload } from "./crowdApi";
 import { TOTAL } from "./fillAll";
 
 export const V2022_SPECIAL = ["other", "none", "blank", "ineligible", "private"] as const;
-export const V2026_SPECIAL = ["undecided", "none", "private"] as const;
+export const V2026_SPECIAL = ["undecided", "none", "ineligible", "private"] as const;
 export const MAX_BLOCS = 4;
 
 export function validateVote(p: VotePayload, ids2022: string[], ids2026: string[]): string | null {

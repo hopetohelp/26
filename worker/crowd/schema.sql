@@ -92,3 +92,20 @@ CREATE TABLE IF NOT EXISTS review_log (
   decision TEXT NOT NULL DEFAULT 'pending' CHECK (decision IN ('pending', 'excluded', 'restored')),
   aggregation_id TEXT NOT NULL
 );
+
+
+-- תמיכה: שיחה אחת לכל משתתף מאומת. אין קשר להערות הישנות.
+CREATE TABLE IF NOT EXISTS support_threads (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new'
+);
+CREATE TABLE IF NOT EXISTS support_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  participant TEXT NOT NULL REFERENCES participants(id),
+  created_at TEXT NOT NULL,
+  author TEXT NOT NULL CHECK (author IN ('visitor','team')),
+  text TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS support_messages_participant ON support_messages(participant, id);

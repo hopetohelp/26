@@ -6,7 +6,7 @@ import { fillAll, fillErrorText, fillPct, pctFillErrorText, TOTAL, type PctFillR
 import { seatsSum, validateBlocs, validatePct, validateSeats } from "../../lib/crowdValidate";
 import { dateLong } from "../../lib/format";
 import { seatsFromPct, THRESHOLD_PCT, type PctSeats } from "../../lib/lawSeats";
-import { K25_MAP, k25Name, IDS, nameOf, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
+import { K25_MAP, k25Name, IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import Blocs from "./Blocs";
 import { blocSummary } from "./blocSummary";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
@@ -46,12 +46,12 @@ export default function Seats({
   unit,
   session,
   blocsUnit,
-  crowd,
+  onStatistics,
 }: {
   unit: ReturnType<typeof useUnit<SeatsPayload>>;
   session: ReturnType<typeof useSession>;
   blocsUnit: ReturnType<typeof useUnit<BlocsPayload>>;
-  crowd: Record<string, number> | null;
+  onStatistics: () => void;
 }) {
   const p = unit.draft;
   const blocs = blocsUnit.draft;
@@ -139,7 +139,7 @@ export default function Seats({
   };
   const targets = blocs?.blocs.filter((b) => b.target !== null) ?? [];
   const runFill = () =>
-    pctMode ? setPctPreview(fillPct(IDS, pct, (id) => !!p.seats[id]?.locked, POLL_SHARES)) : setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? []));
+    pctMode ? setPctPreview(fillPct(IDS, pct, (id) => !!p.seats[id]?.locked, POLL_SHARES)) : setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES));
   const apply = () => {
     if (preview?.ok) unit.setDraft({ ...p, seats: preview.seats, pollsAsOf: POLLS_AS_OF });
     setPreview(null);
@@ -166,9 +166,10 @@ export default function Seats({
             </span>
           </div>
           {justSaved && both.status === "saved" && (
-            <p role="status" className="text-sm font-bold">
-              נשמר. עכשיו — שתפו, ותראו מה מנחשים החברים.
-            </p>
+            <div role="status" className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-bold">נשמר.</p>
+              <Btn kind="primary" onClick={onStatistics}>מעבר לסטטיסטיקות</Btn>
+            </div>
           )}
           {sum === TOTAL && !invalid && <Share values={values} pct={pctMode ? pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           {pctMode && law && law.r.status === "ok" && <LawSummary law={law} />}
@@ -300,41 +301,6 @@ export default function Seats({
           </button>
           <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
         </div>
-      {crowd && (
-        <details className="mt-1 bg-paper-card border border-ink rounded-theme">
-          <summary className="cursor-pointer font-bold min-h-[44px] flex items-center px-3">אני</summary>
-          <div className="max-h-[45dvh] overflow-y-auto p-3">
-          <Explained
-            kind="השערות גולשים, אינן סקר"
-            source="ההשערות האחרונות של הגולשים באתר (ממוצע), וממוצע הסקרים של האתר"
-            asOf={dateLong(POLLS_AS_OF)}
-            assumption="הגולשים בחרו להשתתף בעצמם — זה לא מדגם מייצג."
-            methodAnchor="crowd"
-          >
-            <table className="w-full text-sm tabular">
-              <thead>
-                <tr className="text-ink-soft text-start">
-                  <th className="text-start font-normal py-1">רשימה</th>
-                  <th className="font-normal">אני</th>
-                  <th className="font-normal">הגולשים</th>
-                  <th className="font-normal">הסקרים</th>
-                </tr>
-              </thead>
-              <tbody>
-                {IDS.map((id) => (
-                  <tr key={id} className="border-t border-paper-line">
-                    <td className="py-1">{nameOf(id)}</td>
-                    <td className="text-center font-bold">{values[id]}</td>
-                    <td className="text-center">{crowd[id] ?? "—"}</td>
-                    <td className="text-center">{POLLS[id] ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Explained>
-        </div>
-        </details>
-      )}
         {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
         {pctMode && invalid && pctLeft >= 0 && lawProblem && (
           <p role="alert" className="text-sm text-warn bg-paper-card rounded-theme px-3 py-1 mt-1">
