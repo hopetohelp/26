@@ -10,14 +10,14 @@ import { colorOf } from "../lib/colors";
 import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
 
-const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label }))];
+const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label })), { to: "/support", label: "תמיכה" }];
 /** הלשוניות בתחתית המסך בטלפון. יתר המסכים נגישים מריבועי מסך הבית. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/today", label: "מצב ותחזית", icon: "board" },
   { to: "/polls", label: "סקרים", icon: "bars" },
   { to: "/guess", label: "השערות", icon: "guess" },
-  { to: "/feedback", label: "הערות", icon: "comments" },
+  { to: "/support", label: "תמיכה", icon: "comments" },
 ];
 
 const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
@@ -272,7 +272,6 @@ export default function Layout() {
           </p>
         </div>
       </footer>
-      <Feedback />
       <MobileTabs />
     </div>
   );
