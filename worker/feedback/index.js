@@ -120,40 +120,6 @@ export default {
     } catch {
       return reply({ ok: false, error: "bad json" }, 400);
     }
-    // ---- תמיכה חדשה: שיחה אחת לכל חשבון. המערכת הישנה של ההערות נשארת לקריאה/תחזוקה בלבד.
-    if (url.pathname === "/support") {
-      const account = String(body.account || "").trim().slice(0, 64);
-      const note = String(body.text || "").trim().slice(0, MAX_TEXT);
-      if (!account || !note) return reply({ ok: false, error: "account and text required" }, 400);
-      const accountKey = await sha256("support|" + account);
-      const key = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
-      const now = new Date().toISOString();
-      if ((await sentToday(env, key)) >= MAX_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
-      const existing = await env.DB.prepare("SELECT id, token_hash, created_at, text, status FROM feedback WHERE account_key = ? AND topic = 'support' LIMIT 1").bind(accountKey).first();
-      if (existing) {
-        const last = await env.DB.prepare("SELECT text FROM messages WHERE feedback_id = ? AND author = 'visitor' ORDER BY id DESC LIMIT 1").bind(existing.id).first();
-        if ((last?.text ?? existing.text) !== note) {
-          await env.DB.batch([
-            env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text, day_key) VALUES (?, ?, 'visitor', ?, ?)").bind(existing.id, now, note, key),
-            env.DB.prepare("UPDATE feedback SET status = 'new' WHERE id = ?").bind(existing.id),
-          ]);
-        }
-        return reply({ ok: true, token: existing.token_hash ? null : undefined });
-      }
-      const token = newToken();
-      await env.DB.prepare("INSERT INTO feedback (created_at, topic, text, page, theme, day_key, token_hash, account_key, status) VALUES (?, 'support', ?, ?, ?, ?, ?, ?, 'new')")
-        .bind(now, note, String(body.page || "").slice(0, 120), String(body.theme || "").slice(0, 20), key, await sha256(token), accountKey).run();
-      return reply({ ok: true, token });
-    }
-    if (request.method === "GET" && url.pathname === "/support") {
-      const account = String(url.searchParams.get("account") || "").trim().slice(0, 64);
-      if (!account) return reply({ ok: false, error: "account required" }, 400);
-      const accountKey = await sha256("support|" + account);
-      const fb = await env.DB.prepare("SELECT id, created_at, text, status FROM feedback WHERE account_key = ? AND topic = 'support' LIMIT 1").bind(accountKey).first();
-      if (!fb) return reply({ ok: true, thread: null });
-      const { results } = await env.DB.prepare("SELECT author, text, created_at FROM messages WHERE feedback_id = ? ORDER BY created_at, id").bind(fb.id).all();
-      return reply({ ok: true, thread: { text: fb.text, created_at: fb.created_at, status: fb.status, messages: results || [] } });
-    }
     if (body.website) return reply({ ok: true }); // מלכודת
     // כל אסימון מוכיח בעלות בשיחה שלו; אין שימוש ב-IP או בדמיון בטקסט לאיחוד.
     if (url.pathname === "/merge") {
