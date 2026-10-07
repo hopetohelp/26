@@ -55,7 +55,7 @@ function Toggle<T extends string>({ value, setValue, options, label }: { value: 
   return <div className="flex gap-1.5" role="radiogroup" aria-label={label}>{options.map(([id,text]) => <button key={id} type="button" role="radio" aria-checked={value===id} onClick={()=>setValue(id)} className={`min-h-[40px] px-4 rounded-full border-2 text-sm font-bold ${value===id ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}>{text}</button>)}</div>;
 }
 
-function SeatsStats({ rows, polls, mine, view }: { rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View }) {
+export function SeatsStats({ rows, polls, mine, view }: { rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View }) {
   const sorted = useMemo(() => [...rows].sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows]);
   if (view === "chart") return <Bars rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),value:s.mean,range:range(s)}))} />;
   return <Card title="מנדטים"><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
@@ -64,7 +64,7 @@ function SeatsStats({ rows, polls, mine, view }: { rows: SeatStat[]; polls: Reco
   </table></div></Card>;
 }
 
-function BlocStats({ d, view }: { d:D; view:View }) {
+export function BlocStats({ d, view }: { d:D; view:View }) {
   const b=d.blocs!;
   const government=[...GOV_IDS].sort().join(",");
   const rows = [
@@ -130,3 +130,7 @@ function Matrix({ d }: { d: D }) {
     </table>
   </div>;
 }
+
+// תאימות לבדיקות הרכיבים הוותיקות בזמן המעבר לדשבורד המאוחד.
+export const StatTable = ({ rows, polls, mine }: { rows: SeatStat[]; polls: Record<string, number>; mine?: SeatsPayload | null }) => <SeatsStats rows={rows} polls={polls} mine={mine} view="table" />;
+export const BlocsBlock = ({ d }: { d: D }) => <BlocStats d={d} view="table" />;
