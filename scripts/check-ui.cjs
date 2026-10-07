@@ -42,6 +42,14 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.goto(`${baseUrl}#/guess`);
  await page.locator('[data-bloc-id="coalition"]').waitFor();
  assert.equal(await page.locator('[data-bloc-id]').count(),4);
+ const resetButton=page.getByRole('button',{name:'אפס הכול',exact:true});
+ const resetBox=await resetButton.boundingBox();
+ const actionBox=await resetButton.locator('../..').boundingBox();
+ assert.ok(Math.abs((resetBox.x+resetBox.width/2)-(actionBox.x+actionBox.width/2))<2,'reset centered');
+ await resetButton.click();
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'reset confirmation overflow');
+ await page.getByRole('button',{name:'לא',exact:true}).click();
+ assert.equal(await page.getByRole('button',{name:'אפס הכול',exact:true}).count(),1);
  assert.equal(await page.locator('[data-bloc-party] select').count(),0);
  assert.equal(await page.getByRole('button',{name:'עריכת שמות הגושים',exact:true}).count(),0);
  await page.getByRole('button',{name:'עריכת שם הגוש: הקואליציה הנוכחית',exact:true}).click();

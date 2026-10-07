@@ -251,19 +251,6 @@ export default function Seats({
             <p className="text-sm text-ink">ההשערה לגושים והשערת המנדטים הן אותה השערה: סכום המנדטים של כל גוש צריך להתאים ליעד שלו, ולהפך.</p>
             <Blocs unit={blocsUnit} session={session} mySeats={values} embedded onFit={runFill} />
           </section>
-          <div className="mt-3 flex gap-2 flex-wrap">
-            {!resetAsk ? (
-              <Btn onClick={() => setResetAsk(true)}>להתחיל מחדש</Btn>
-            ) : (
-              <>
-                <span className="text-sm self-center">הטיוטה תימחק. בטוח?</span>
-                <Btn kind="danger" onClick={() => (unit.setDraft(null), setResetAsk(false))}>
-                  כן, מחדש
-                </Btn>
-                <Btn onClick={() => setResetAsk(false)}>לא</Btn>
-              </>
-            )}
-          </div>
       {/* פס פעולה דביק באזור האגודל */}
       <div className="sticky z-20 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 mt-5">
         {preview && (
@@ -275,31 +262,46 @@ export default function Seats({
             returnTo={fillBtn}
           />
         )}
-        <div className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-3 py-2 flex items-center gap-2 flex-wrap">
+        <div className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-3 py-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
           {pctMode ? (
-            <div className="flex-1 min-w-[7rem]" aria-live="polite">
+            <div className="min-w-0" aria-live="polite">
               <span className="text-xs text-ink-soft block leading-none">{pctLeft >= 0 ? "נותרו %" : "יותר מ-100%"}</span>
               <span className={`font-num tabular text-3xl leading-none ${pctLeft < 0 ? "text-warn" : ""}`}>
                 <bdi dir="ltr">{Math.abs(pctLeft).toFixed(1)}%</bdi>
               </span>
             </div>
           ) : (
-            <div className="flex-1 min-w-[7rem]" aria-live="polite">
+            <div className="min-w-0" aria-live="polite">
               <span className="text-xs text-ink-soft block leading-none">{left >= 0 ? "נותרו לחלוקה" : "יותר מדי"}</span>
               <span className={`font-num tabular text-3xl leading-none ${left < 0 ? "text-warn" : ""}`}>{Math.abs(left)}</span>
             </div>
           )}
+          <div className={`flex justify-center items-center gap-2 flex-wrap ${resetAsk ? "col-span-3 row-start-2" : ""}`}>
+            {!resetAsk ? (
+              <Btn onClick={() => setResetAsk(true)}>אפס הכול</Btn>
+            ) : (
+              <>
+                <span className="text-sm self-center">הטיוטה תימחק. בטוח?</span>
+                <Btn kind="danger" onClick={() => (unit.setDraft(null), setResetAsk(false))}>
+                  כן, מחדש
+                </Btn>
+                <Btn onClick={() => setResetAsk(false)}>לא</Btn>
+              </>
+            )}
+          </div>
+          <div className="flex justify-end items-center gap-2 flex-wrap">
           <button
             ref={fillBtn}
             type="button"
             onClick={runFill}
             aria-haspopup="dialog"
             aria-expanded={!!(preview || pctPreview)}
-            className="min-h-[44px] px-4 rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
+            className="min-h-[44px] px-2 sm:px-4 whitespace-nowrap rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
           >
             השלם הכול
           </button>
           <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
+          </div>
         </div>
         {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
         {pctMode && invalid && pctLeft >= 0 && lawProblem && (
