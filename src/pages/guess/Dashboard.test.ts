@@ -1,8 +1,9 @@
+import { nameOf } from "./model";
 import { expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
-import { BlocsBlock, SeatsStats, StatTable } from "./Dashboard";
+import { BlocStats, BlocsBlock, SeatsStats, StatTable } from "./Dashboard";
 import type { Dashboard, SeatStat } from "../../lib/crowdApi";
 
 const stat: SeatStat = { list: "likud", n: 1, mean: 30, min: 30, max: 30, median: 30, p25: 30, p75: 30 };
@@ -43,4 +44,17 @@ it("גוש הקואליציה ראשון, מציג מספר מנחשים וטו�
   expect(html).toContain("מנחשים");
   expect(html).toContain("<bdi dir=\"ltr\"></bdi>");
   for (const label of ["הימור ישיר", "שאר הרשימות", "סדרה 1"]) expect(html).not.toContain(label);
+});
+
+it("גושים בטבלה ובגרף מציגים את הרכב המפלגות במקום שם אישי", () => {
+  const d: Dashboard = { participants: 2, open: true, publishedAt: null, aggregationId: null,
+    blocs: { derived: { gov: stat, rest: stat }, explicit: null, customCount: 2,
+      custom: [{ name: "שם אישי שאין להציג", lists: ["joint", "raam"], n: 2, explicit: null, derived: stat }] } };
+  for (const view of ["table", "chart"] as const) {
+    const html = renderToStaticMarkup(createElement(BlocStats, { d, view }));
+    expect(html).toContain("גוש הקואליציה");
+    expect(html).toContain(" · ");
+    expect(html.split('&quot;').join('"')).toContain(nameOf('raam'));
+    expect(html).not.toContain("שם אישי שאין להציג");
+  }
 });

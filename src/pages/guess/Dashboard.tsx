@@ -75,19 +75,19 @@ export function BlocStats({ d, view }: { d:D; view:View }) {
   const rows = [
     ...(b.derived ? [{key:government,label:"גוש הקואליציה",stat:b.derived.gov}] : []),
     ...(b.custom ?? []).filter(g=>g.derived && g.lists.length && [...g.lists].sort().join(",")!==government)
-      .map(g=>({key:[...g.lists].sort().join(","),label:g.name || g.lists.map(nameOf).join(" · "),stat:g.derived!}))
+      .map(g=>({key:[...g.lists].sort().join(","),label:g.lists.map(nameOf).join(" · "),stat:g.derived!}))
       .sort((a,b)=>b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"))
   ];
   if (view==="chart") return <Bars rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat.mean,range:range(r.stat)}))} />;
   return <Card title="גושים"><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">מנחשים</th></tr></thead>
-    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal">{r.label}</th><td className="text-center font-bold">{seatsFmt(r.stat.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(r.stat)}</bdi></td><td className="text-center">{r.stat.n}</td></tr>)}</tbody>
+    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32">{r.label}</th><td className="text-center font-bold">{seatsFmt(r.stat.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(r.stat)}</bdi></td><td className="text-center">{r.stat.n}</td></tr>)}</tbody>
   </table></div></Card>;
 }
 
 function Bars({ rows, suffix = "", title = "גושים" }: { rows:{key:string;label:string;value:number;range:string}[]; suffix?: string; title?: string }) {
   const max=Math.max(1,...rows.map(r=>r.value));
-  return <Card title={title}><div className="space-y-3">{rows.map(r=><div key={r.key} className="grid grid-cols-[minmax(6rem,auto)_1fr_auto] gap-2 items-center text-sm"><span className="truncate">{r.label}</span><div className="h-5 rounded-full bg-paper-line overflow-hidden"><div className="h-full bg-ink" style={{width:`${Math.max(2,(r.value/max)*100)}%`}} /></div><span className="font-num tabular whitespace-nowrap"><b>{seatsFmt(r.value)}{suffix}</b>{r.range ? ` · ${r.range}${suffix}` : ""}</span></div>)}</div></Card>;
+  return <Card title={title}><div className="space-y-3">{rows.map(r=><div key={r.key} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-center text-sm"><span className="break-words">{r.label}</span><div className="h-5 rounded-full bg-paper-line overflow-hidden"><div className="h-full bg-ink" style={{width:`${Math.max(2,(r.value/max)*100)}%`}} /></div><span className="font-num tabular whitespace-nowrap"><b>{seatsFmt(r.value)}{suffix}</b>{r.range ? ` · ${r.range}${suffix}` : ""}</span></div>)}</div></Card>;
 }
 
 

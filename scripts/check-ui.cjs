@@ -8,7 +8,7 @@ const meta = require('../src/data/meta.json');
 const ids=meta.lists2026.map(l=>l.id);
 const cells=Object.fromEntries(ids.map(id=>[id,{v:id==='likud'?120:0,src:'manual',locked:false}]));
 const stat=(list,mean,min=mean,max=mean)=>({list,n:2,mean,min,max,median:mean,p25:min,p75:max});
-const dashboard={participants:2,open:true,publishedAt:'2026-10-07',aggregationId:'demo',seats:{n:2,full:[stat('likud',30,28,32),stat('rzp',6)],polls:{likud:28,rzp:5},pctStats:[stat('likud',24.5,23,26),stat('rzp',4.5)],modes:{seats:0,pct:2}},blocs:{derived:{gov:stat('gov',60,58,62),rest:stat('rest',60)},customCount:0,custom:[],explicit:null},vote2022:{all:{'ט':{n:2,of:2}},valid:{},official:{}},vote2026:{all:{rzp:{n:2,of:2}},named:{}},matrix:{publishedAt:'2026-10-07',rows:{'ט':{n:2,cells:{rzp:{n:2,of:2}}}}}};
+const dashboard={participants:2,open:true,publishedAt:'2026-10-07',aggregationId:'demo',seats:{n:2,full:[stat('likud',30,28,32),stat('rzp',6)],polls:{likud:28,rzp:5},pctStats:[stat('likud',24.5,23,26),stat('rzp',4.5)],modes:{seats:0,pct:2}},blocs:{derived:{gov:stat('gov',60,58,62),rest:stat('rest',60)},customCount:2,custom:[{name:"שם אישי שאין להציג",lists:["joint","raam"],n:2,explicit:null,derived:stat("arabs",13)}],explicit:null},vote2022:{all:{'ט':{n:2,of:2}},valid:{},official:{}},vote2026:{all:{rzp:{n:2,of:2}},named:{}},matrix:{publishedAt:'2026-10-07',rows:{'ט':{n:2,cells:{rzp:{n:2,of:2}}}}}};
 const tok='abcdefghijklmnopqrstuv';
 (async()=>{
 const browser=await chromium.launch({headless:true,executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox']});
@@ -82,10 +82,18 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.getByRole('radio',{name:'אחוזים',exact:true}).click();
  await page.getByRole('heading',{name:'אחוזים',exact:true}).waitFor();
  assert.equal(await page.getByRole('heading',{name:'גושים',exact:true}).count(),1);
+ assert.ok((await page.locator('#statistics').innerText()).includes(' · '));
+ assert.equal((await page.locator('#statistics').innerText()).includes('שם אישי שאין להציג'),false);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow statistics ${theme} ${width}`);
+ await page.screenshot({path:`${screenshotDir}/statistics-${theme}-${width}-${await page.getByRole('radio',{name:'גרף',exact:true}).getAttribute('aria-checked')}.png`});
  assert.ok((await page.locator('#statistics').innerText()).includes('24.5%'));
  assert.ok((await page.locator('#statistics').innerText()).includes('לא שינו בחירה: 2'));
  await page.getByRole('radio',{name:'גרף',exact:true}).click();
  assert.equal(await page.getByRole('heading',{name:'גושים',exact:true}).count(),1);
+ assert.ok((await page.locator('#statistics').innerText()).includes(' · '));
+ assert.equal((await page.locator('#statistics').innerText()).includes('שם אישי שאין להציג'),false);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow statistics ${theme} ${width}`);
+ await page.screenshot({path:`${screenshotDir}/statistics-${theme}-${width}-${await page.getByRole('radio',{name:'גרף',exact:true}).getAttribute('aria-checked')}.png`});
  assert.equal(errors.length,0,errors.join('\n'));
  console.log(`${theme} ${width}: עברו: שיחות קודמות, ארבעה גושים, גרירה בעכבר ובמגע, מקלדת, אחוזים וגושים קבועים`);
  await context.close();
