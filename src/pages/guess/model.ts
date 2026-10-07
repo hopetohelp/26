@@ -54,10 +54,10 @@ export function defaultBlocs(): Bloc[] {
   const coalition = GOV_IDS.filter((id) => !ARAB_IDS.includes(id) && !NEW_IDS.includes(id));
   const opposition = IDS.filter((id) => !coalition.includes(id) && !ARAB_IDS.includes(id) && !NEW_IDS.includes(id));
   return [
-    { id: "coalition", name: "גוש הקואליציה", lists: coalition, target: null },
-    { id: "opposition", name: "גוש האופוזיציה", lists: opposition, target: null },
+    { id: "coalition", name: "הקואליציה הנוכחית", lists: coalition, target: null },
+    { id: "opposition", name: "האופוזיציה הנוכחית", lists: opposition, target: null },
     { id: "arabs", name: "ערבים", lists: ARAB_IDS, target: null },
-    { id: "new", name: "מפלגות חדשות", lists: NEW_IDS, target: null },
+    { id: "new", name: "חדשות", lists: NEW_IDS, target: null },
   ];
 }
 export const DEFAULT_BLOCS: BlocsPayload = { mode: "custom", blocs: defaultBlocs() };
