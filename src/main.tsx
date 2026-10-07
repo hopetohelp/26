@@ -75,7 +75,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
           <Route path="feedback" element={<Moved to="/support" />} />
-          <Route path="feedback/:token" element={<Suspense fallback={null}><MyFeedback /></Suspense>} />
+          <Route path="feedback/:token" element={<Moved to="/support" />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
