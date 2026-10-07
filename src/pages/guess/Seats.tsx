@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import Explained from "../../components/Explained";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, fillPct, pctFillErrorText, TOTAL, type PctFillResult } from "../../lib/fillAll";
@@ -46,12 +45,12 @@ export default function Seats({
   unit,
   session,
   blocsUnit,
-  crowd,
+  onStatistics,
 }: {
   unit: ReturnType<typeof useUnit<SeatsPayload>>;
   session: ReturnType<typeof useSession>;
   blocsUnit: ReturnType<typeof useUnit<BlocsPayload>>;
-  crowd: Record<string, number> | null;
+  onStatistics: () => void;
 }) {
   const p = unit.draft;
   const blocs = blocsUnit.draft;
@@ -166,9 +165,10 @@ export default function Seats({
             </span>
           </div>
           {justSaved && both.status === "saved" && (
-            <p role="status" className="text-sm font-bold">
-              נשמר. עכשיו — שתפו, ותראו מה מנחשים החברים.
-            </p>
+            <div role="status" className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-bold">נשמר.</p>
+              <Btn kind="primary" onClick={onStatistics}>מעבר לסטטיסטיקות</Btn>
+            </div>
           )}
           {sum === TOTAL && !invalid && <Share values={values} pct={pctMode ? pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           {pctMode && law && law.r.status === "ok" && <LawSummary law={law} />}
@@ -300,41 +300,6 @@ export default function Seats({
           </button>
           <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
         </div>
-      {crowd && (
-        <details className="mt-1 bg-paper-card border border-ink rounded-theme">
-          <summary className="cursor-pointer font-bold min-h-[44px] flex items-center px-3">אני</summary>
-          <div className="max-h-[45dvh] overflow-y-auto p-3">
-          <Explained
-            kind="השערות גולשים, אינן סקר"
-            source="ההשערות האחרונות של הגולשים באתר (ממוצע), וממוצע הסקרים של האתר"
-            asOf={dateLong(POLLS_AS_OF)}
-            assumption="הגולשים בחרו להשתתף בעצמם — זה לא מדגם מייצג."
-            methodAnchor="crowd"
-          >
-            <table className="w-full text-sm tabular">
-              <thead>
-                <tr className="text-ink-soft text-start">
-                  <th className="text-start font-normal py-1">רשימה</th>
-                  <th className="font-normal">אני</th>
-                  <th className="font-normal">הגולשים</th>
-                  <th className="font-normal">הסקרים</th>
-                </tr>
-              </thead>
-              <tbody>
-                {IDS.map((id) => (
-                  <tr key={id} className="border-t border-paper-line">
-                    <td className="py-1">{nameOf(id)}</td>
-                    <td className="text-center font-bold">{values[id]}</td>
-                    <td className="text-center">{crowd[id] ?? "—"}</td>
-                    <td className="text-center">{POLLS[id] ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Explained>
-        </div>
-        </details>
-      )}
         {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
         {pctMode && invalid && pctLeft >= 0 && lawProblem && (
           <p role="alert" className="text-sm text-warn bg-paper-card rounded-theme px-3 py-1 mt-1">
