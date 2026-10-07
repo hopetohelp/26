@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { moveList, removeBloc } from "./blocEditing";
+import { moveList } from "./blocEditing";
 import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
-import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
+import { validateBlocs } from "../../lib/crowdValidate";
 import { TOTAL } from "../../lib/fillAll";
 import { DEFAULT_BLOCS, IDS, nameOf } from "./model";
 import SaveButton from "./SaveButton";
@@ -25,8 +25,6 @@ export default function Blocs({
   embedded?: boolean;
   onFit?: () => void;
 }) {
-  const [removing, setRemoving] = useState<string | null>(null);
-  const [destination, setDestination] = useState("");
   const [announcement, setAnnouncement] = useState("");
   const [customized, setCustomized] = useState(() => !!unit.draft && unit.draft.blocs.some((b) => /^גוש [1-4]$/.test(b.name)));
   const p = unit.draft ?? DEFAULT_BLOCS;
@@ -56,7 +54,6 @@ export default function Blocs({
       </select>
     </label>
   </li>;
-  const newId = () => `b${Date.now().toString(36)}`;
   const clamp = (n: number) => Math.max(0, Math.min(TOTAL, Math.round(n) || 0));
   const two = p.blocs.length === 2;
   /** בשני גושים מספיק למלא אחד: השני מקבל אוטומטית את כל מה שנשאר (120 פחות הערך) */
@@ -130,21 +127,10 @@ export default function Blocs({
         })}
       </div>
 
-      {customized && (
-        <>
-          {p.blocs.length < MAX_BLOCS && <Btn onClick={() => setBlocs([...p.blocs, { id: newId(), name: `גוש ${"אבגד"[p.blocs.length]}`, lists: [], target: null }])}>עוד גוש</Btn>}
-          {unassigned.length > 0 && <section className="border border-warn rounded-theme p-3 space-y-2">
-            <p className="text-sm">בטיוטה הישנה יש מפלגות ללא גוש. אפשר לבחור יעד בכל כרטיס או להעביר את כולן לגוש ב׳.</p>
-            <ul className="space-y-2">{unassigned.map(partyCard)}</ul>
-            <Btn onClick={() => { const target = p.blocs.find(b => b.id === "b") ?? p.blocs[1] ?? p.blocs[0]; setBlocs(unassigned.reduce((bs,id) => moveList(bs,id,target.id),p.blocs)); }}>העברת המפלגות הלא משויכות ל{(p.blocs.find(b => b.id === "b") ?? p.blocs[1] ?? p.blocs[0]).name}</Btn>
-          </section>}
-          {removing && <section role="region" aria-label="אישור הסרת גוש" className="border-2 border-warn rounded-theme p-3 space-y-2">
-            <p>הסרת {p.blocs.find(b => b.id === removing)?.name}: המפלגות הבאות יעברו לגוש שתבחרו: {p.blocs.find(b => b.id === removing)?.lists.map(nameOf).join(", ") || "הגוש ריק"}. יעד הגוש הנמחק יוסר; יתר היעדים והמנדטים יישארו.</p>
-            <label className="block">גוש יעד <select className={inputCls} value={destination} onChange={e => setDestination(e.target.value)}>{p.blocs.filter(b => b.id !== removing).map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
-            <div className="flex gap-2"><Btn onClick={() => { setBlocs(removeBloc(p.blocs, removing, destination)); setRemoving(null); }}>אישור ההעברה וההסרה</Btn><Btn onClick={() => setRemoving(null)}>ביטול</Btn></div>
-          </section>}
-        </>
-      )}
+      {unassigned.length > 0 && <section className="border border-warn rounded-theme p-3 space-y-2">
+        <p className="text-sm">יש מפלגות ללא גוש. אפשר לבחור להן גוש מתוך הכרטיס.</p>
+        <ul className="space-y-2">{unassigned.map(partyCard)}</ul>
+      </section>}
 
       {invalid && p.blocs.some((b) => b.target !== null) && <Notice tone="warn">{invalid}</Notice>}
       <p className="text-xs text-ink-soft">"בלי ניחוש" שונה מ-0: 0 אומר שהגוש לא יקבל אף מנדט. היעדים משמשים גם את "השלם הכול" במסך המנדטים.</p>
