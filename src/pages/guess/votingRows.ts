@@ -16,5 +16,9 @@ export function votingRows(d: Dashboard) {
   for (const l of previous.lists) if (!matched.has(l.letters)) rows.push({ key: `2022:${l.letters}`, name: `${l.short} (2022)`, official: Math.round(l.votes / previous.valid * 10000) / 100, previous: percent(d.vote2022?.all, l.letters), next: null });
   const keys = new Set([...Object.keys(d.vote2022?.all ?? {}).filter(k => k in V2022_LABEL), ...Object.keys(d.vote2026?.all ?? {}).filter(k => k in V2026_LABEL)]);
   for (const key of keys) rows.push({ key: `answer:${key}`, name: key === "none" ? "לא הצביעו / לא מתכננים להצביע" : V2022_LABEL[key] ?? V2026_LABEL[key], official: null, previous: key in V2022_LABEL ? percent(d.vote2022?.all,key) : null, next: key in V2026_LABEL ? percent(d.vote2026?.all,key) : null });
-  return rows;
+  return rows.filter(row => {
+    if (row.key.startsWith("answer:")) return false;
+    const old = row.key.startsWith("2022:") ? row.key.slice(5) : K25_MAP[row.key];
+    return (old && (d.vote2022?.all[old]?.n ?? 0) > 0) || (d.vote2026?.all[row.key]?.n ?? 0) > 0;
+  });
 }

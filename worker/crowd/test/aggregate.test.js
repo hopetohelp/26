@@ -97,12 +97,12 @@ describe("seats section", () => {
 });
 
 describe("blocs", () => {
-  it("publishes custom blocs by name and exact membership, joining each owner's seats", () => {
+  it("groups custom blocs by exact membership regardless of name, joining each owner's seats", () => {
     const ps = people(3);
     const vs = ps.flatMap((p, i) => [
       ver(p.id, "seats", seats(40 + i * 10)),
       ver(p.id, "blocs", { mode: "custom", blocs: [
-        { id: "a", name: "גוש א", lists: i === 2 ? [IDS[1]] : [IDS[0]], target: i === 2 ? 0 : 60 + i * 10 },
+        { id: "a", name: i === 1 ? "גוש ד" : "גוש א", lists: i === 2 ? [IDS[1]] : [IDS[0]], target: i === 2 ? 0 : 60 + i * 10 },
         { id: "b", name: "גוש ב", lists: [IDS[2]], target: null },
       ] }),
     ]);

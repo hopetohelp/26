@@ -309,11 +309,16 @@ const routes = {
 };
 
 async function dashboard(env) {
-  const row = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'dashboard' ORDER BY id DESC LIMIT 1").first();
-  const published = row ? JSON.parse(row.json) : null;
-  // אחרי שינוי מדיניות מחשבים פעם אחת בשרת: אין צורך להמתין לצבירה השעתית.
-  if (!published || published.policy !== DASHBOARD_POLICY) return (await runAggregation(env, clock(env))).dashboard;
-  return published;
+  // תמונה עדכנית לכל פתיחה, בלי כתיבה ובלי להמתין למשימה השעתית.
+  // התשובות האישיות נשארות בשרת; רק התוצאה המצטברת יוצאת לדפדפן.
+  const now = iso(clock(env));
+  const data = await env.DB.batch([
+    env.DB.prepare("SELECT id, review FROM participants"),
+    env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id"),
+  ]);
+  const participants = data[0].results || [];
+  const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
+  return aggregate({ participants, versions, now, aggregationId: `live-${now}` }).dashboard;
 }
 
 // ---- המשימה השעתית

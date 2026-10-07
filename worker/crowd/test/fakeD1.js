@@ -27,6 +27,7 @@ class Stmt {
     return this._run();
   }
   _run() {
+    if (/^\s*SELECT\b/i.test(this.sql)) return { success: true, results: this.db.prepare(this.sql).all(...this.args).map(r => ({ ...r })) };
     const r = this.db.prepare(this.sql).run(...this.args);
     return { success: true, meta: { changes: Number(r.changes), last_row_id: Number(r.lastInsertRowid) } };
   }

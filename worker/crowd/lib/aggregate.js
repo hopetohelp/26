@@ -18,7 +18,7 @@ export const K_ROW = 1;
 export const OPEN_AT = 0;
 export const MIN_CHANGED = 1;
 export const TOTAL = 120;
-export const DASHBOARD_POLICY = "open-all-v3";
+export const DASHBOARD_POLICY = "open-all-v4";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -148,7 +148,7 @@ export function computeBlocs(seatVersions, blocVersions) {
       for (const b of v.payload.blocs) {
         const lists = [...new Set(b.lists)].sort();
         const name = b.name.trim();
-        const key = JSON.stringify([name, lists]);
+        const key = JSON.stringify(lists);
         if (seen.has(key)) continue;
         seen.add(key);
         if (!customGroups.has(key)) customGroups.set(key, { name, lists, n: 0, targets: [], totals: [] });
