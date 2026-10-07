@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { customBlocs, moveList, removeBloc } from "./blocEditing";
+import { moveList, removeBloc } from "./blocEditing";
 import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
 import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
 import { TOTAL } from "../../lib/fillAll";
@@ -28,6 +28,7 @@ export default function Blocs({
   const [removing, setRemoving] = useState<string | null>(null);
   const [destination, setDestination] = useState("");
   const [announcement, setAnnouncement] = useState("");
+  const [customized, setCustomized] = useState(() => !!unit.draft && unit.draft.blocs.some((b) => /^גוש [1-4]$/.test(b.name)));
   const p = unit.draft ?? DEFAULT_BLOCS;
   const setBlocs = (blocs: Bloc[], mode = p.mode) => unit.setDraft({ mode, blocs });
   const patch = (i: number, b: Partial<Bloc>) => setBlocs(p.blocs.map((x, j) => (j === i ? { ...x, ...b } : x)));
@@ -35,10 +36,19 @@ export default function Blocs({
   const unassigned = IDS.filter(id => !p.blocs.some(b => b.lists.includes(id)));
   const assign = (id: string, to: string) => {
     if (!IDS.includes(id)) return;
-    setBlocs(moveList(p.blocs, id, to));
-    setAnnouncement(`${nameOf(id)} הועברה ל${p.blocs.find(b => b.id === to)?.name}`);
+    const generic = customized ? p.blocs : p.blocs.map((b, i) => ({ ...b, name: `גוש ${i + 1}` }));
+    setBlocs(moveList(generic, id, to), "custom");
+    setCustomized(true);
+    setAnnouncement(`${nameOf(id)} הועברה ל${generic.find(b => b.id === to)?.name}`);
   };
-  const partyCard = (id: string) => <li key={id} draggable onDragStart={e => { e.dataTransfer.setData("text/plain", id); e.dataTransfer.effectAllowed = "move"; }} className="border border-paper-line bg-paper rounded-theme p-2 space-y-1">
+  const partyCard = (id: string) => <li key={id} data-bloc-party={id} draggable
+    onDragStart={e => { e.dataTransfer.setData("text/plain", id); e.dataTransfer.effectAllowed = "move"; }}
+    onTouchEnd={e => {
+      const touch = e.changedTouches[0];
+      const target = touch ? document.elementFromPoint(touch.clientX, touch.clientY)?.closest("[data-bloc-id]") as HTMLElement | null : null;
+      if (target?.dataset.blocId) assign(id, target.dataset.blocId);
+    }}
+    className="border border-paper-line bg-paper rounded-theme p-2 space-y-1 touch-none">
     <div className="flex justify-between gap-2 text-sm"><b>{nameOf(id)}</b><span className="tabular">{mySeats?.[id] ?? "—"} מנדטים</span></div>
     <label className="text-xs flex items-center gap-2">העבר לגוש
       <select aria-label={`הגוש של ${nameOf(id)}`} value={p.blocs.find(b => b.lists.includes(id))?.id ?? ""} onChange={e => assign(id,e.target.value)} className="min-h-[44px] min-w-0 flex-1 border border-paper-line rounded-theme bg-paper-card text-ink px-2">
@@ -71,43 +81,16 @@ export default function Blocs({
 
   return (
     <div className="space-y-4">
-      <div role="radiogroup" aria-label="סוג הגושים" className="flex gap-2 flex-wrap">
-        {(
-          [
-            ["gov37", "הממשלה היוצאת מול השאר"],
-            ["custom", "גושים משלי"],
-          ] as const
-        ).map(([m, label]) => (
-          <button
-            key={m}
-            type="button"
-            role="radio"
-            aria-checked={p.mode === m}
-            onClick={() =>
-              m === "gov37"
-                ? unit.setDraft(DEFAULT_BLOCS)
-                : setBlocs(p.mode === "custom" ? p.blocs : customBlocs(IDS), "custom")
-            }
-            className={`min-h-[44px] px-4 rounded-full border-2 text-sm font-bold ${p.mode === m ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      {p.mode === "gov37" && (
-        <p className="text-sm text-ink-soft">"מפלגות הממשלה היוצאת" = הרשימות של מפלגות ממשלה 37, הגדרה עובדתית: {p.blocs[0].lists.map(nameOf).join(", ")}.</p>
-      )}
-
+      <p className="text-sm text-ink-soft">גררו מפלגה בין הגושים עם העכבר או האצבע. אחרי ההעברה הראשונה שמות הגושים הופכים לגוש 1–4 וניתנים לעריכה.</p>
       <p role="status" className="sr-only">{announcement}</p>
-      {p.mode === "custom" && <p className="text-sm text-ink-soft">כל מפלגה בגוש אחד. גררו כרטיס לגוש או בחרו יעד בכרטיס. העברה אינה משנה מנדטים או יעדים.</p>}
-      {two && <p className="text-sm text-ink">מספיק למלא גוש אחד — הגוש השני מקבל אוטומטית את כל מה שנשאר (120 פחות המספר).</p>}
+      <p className="text-sm text-ink-soft">כל מפלגה נמצאת בגוש אחד. אפשר גם לבחור יעד מתוך הכרטיס. העברה אינה משנה את מספר המנדטים.</p>
       <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         {p.blocs.map((b, i) => {
           const fromSeats = seatsOf(b);
           const diff = b.target !== null && fromSeats !== null ? fromSeats - b.target : null;
           return (
-            <div key={b.id} onDragOver={e => { if (p.mode === "custom") e.preventDefault(); }} onDrop={e => { e.preventDefault(); if (p.mode === "custom") assign(e.dataTransfer.getData("text/plain"), b.id); }} className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-2">
-              {p.mode === "custom" ? (
+            <div key={b.id} data-bloc-id={b.id} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); assign(e.dataTransfer.getData("text/plain"), b.id); }} className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-2">
+              {customized ? (
                 <input aria-label={`שם הגוש ${i + 1}`} className={`${inputCls} font-display text-2xl`} value={b.name} maxLength={40} onChange={(e) => patch(i, { name: e.target.value })} />
               ) : (
                 <h3 className="font-display text-3xl leading-none">{b.name}</h3>
@@ -141,22 +124,13 @@ export default function Blocs({
                   )}
                 </p>
               )}
-              {p.mode === "custom" && (
-                <>
-                  <ul className="space-y-2" aria-label={`המפלגות ב${b.name}`}>{b.lists.map(partyCard)}</ul>{!b.lists.length && <p className="text-xs text-ink-soft">הגוש ריק — אפשר להעביר אליו כרטיסים.</p>}
-                  {p.blocs.length > 1 && (
-                    <button type="button" className="text-sm underline text-ink-soft min-h-[44px]" onClick={() => { setRemoving(b.id); setDestination(p.blocs.find(x => x.id !== b.id && x.id === "b")?.id ?? p.blocs.find(x => x.id !== b.id)!.id); }}>
-                      הסרת הגוש
-                    </button>
-                  )}
-                </>
-              )}
+              <ul className="space-y-2" aria-label={`המפלגות ב${b.name}`}>{b.lists.map(partyCard)}</ul>{!b.lists.length && <p className="text-xs text-ink-soft">הגוש ריק — אפשר להעביר אליו כרטיסים.</p>}
             </div>
           );
         })}
       </div>
 
-      {p.mode === "custom" && (
+      {customized && (
         <>
           {p.blocs.length < MAX_BLOCS && <Btn onClick={() => setBlocs([...p.blocs, { id: newId(), name: `גוש ${"אבגד"[p.blocs.length]}`, lists: [], target: null }])}>עוד גוש</Btn>}
           {unassigned.length > 0 && <section className="border border-warn rounded-theme p-3 space-y-2">
