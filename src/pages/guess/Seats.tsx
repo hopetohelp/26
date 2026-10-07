@@ -275,16 +275,16 @@ export default function Seats({
             returnTo={fillBtn}
           />
         )}
-        <div className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-3 py-2 flex items-center gap-2 flex-wrap">
+        <div className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-3 py-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
           {pctMode ? (
-            <div className="flex-1 min-w-[7rem]" aria-live="polite">
+            <div className="min-w-0" aria-live="polite">
               <span className="text-xs text-ink-soft block leading-none">{pctLeft >= 0 ? "נותרו %" : "יותר מ-100%"}</span>
               <span className={`font-num tabular text-3xl leading-none ${pctLeft < 0 ? "text-warn" : ""}`}>
                 <bdi dir="ltr">{Math.abs(pctLeft).toFixed(1)}%</bdi>
               </span>
             </div>
           ) : (
-            <div className="flex-1 min-w-[7rem]" aria-live="polite">
+            <div className="min-w-0" aria-live="polite">
               <span className="text-xs text-ink-soft block leading-none">{left >= 0 ? "נותרו לחלוקה" : "יותר מדי"}</span>
               <span className={`font-num tabular text-3xl leading-none ${left < 0 ? "text-warn" : ""}`}>{Math.abs(left)}</span>
             </div>
@@ -299,7 +299,7 @@ export default function Seats({
           >
             השלם הכול
           </button>
-          <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
+          <div className="justify-self-end"><SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} /></div>
         </div>
         {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
         {pctMode && invalid && pctLeft >= 0 && lawProblem && (
