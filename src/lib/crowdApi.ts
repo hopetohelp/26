@@ -119,7 +119,7 @@ export interface Dashboard {
   /** מועד הפרסום של כל חלק — חלק קפוא לא משתנה גם כשהצבירה רצה */
   sectionsAsOf?: Record<string, string>;
   participants: number;
-  /** הדשבורד נפתח מ-30 */
+  /** הדשבורד פתוח גם במספר משתתפים קטן; כל חלק עם תשובות מוצג. */
   open: boolean;
   seats?: {
     n: number;
@@ -133,7 +133,7 @@ export interface Dashboard {
     starts: Record<"zero" | "k25" | "polls", number>;
     /** כמה ניחשו לפי מנדטים וכמה לפי אחוזים */
     modes?: { seats: number; pct: number };
-    /** אחוזי ההצבעה שניחשו, בקרב מי שניחשו לפי אחוזים (רק מ-10) */
+    /** אחוזי ההצבעה שניחשו, בקרב מי שניחשו לפי אחוזים (מתשובה אחת) */
     pctStats?: SeatStat[];
   };
   blocs?: {
