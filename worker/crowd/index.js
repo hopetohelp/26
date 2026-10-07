@@ -403,7 +403,7 @@ export async function runAggregation(env, now) {
   const previous = {};
   for (const name of [...HOURLY, ...DAILY]) {
     const r = await env.DB.prepare("SELECT * FROM aggregates WHERE section = ? ORDER BY id DESC LIMIT 1").bind(name).first();
-    if (r) previous[name] = { json: r.json === null ? null : JSON.parse(r.json), publishedAt: r.published_at, snapshot: JSON.parse(r.snapshot || "[]") };
+    if (r) previous[name] = { json: r.json === null ? null : JSON.parse(r.json), publishedAt: r.published_at, contributors: r.contributors, snapshot: JSON.parse(r.snapshot || "[]") };
   }
   const dailyRow = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'daily' ORDER BY id DESC LIMIT 1").first();
   const lastDash = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'dashboard' ORDER BY id DESC LIMIT 1").first();

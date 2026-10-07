@@ -254,7 +254,7 @@ def build_polls(build_time: datetime) -> dict:
                     "unmapped": joint_cols,
                     "urls": urls[:3],
                     "assumedPublishedAt": assumed_pub.isoformat(),
-                    "eligibleToShow": assumed_pub + timedelta(hours=24) <= build_time,
+                    "eligibleToShow": True,
                     "source": {"page": fname.replace("en__", "").replace(".wiki", "").replace("_", " "),
                                "sha256": page_sha, "tableLine": line},
                     "verified": False,
@@ -281,7 +281,7 @@ def build_polls(build_time: datetime) -> dict:
                           "gov": sum(d["values"].get(k, {}).get("s", 0) for k in ("likud", "rzp", "otzma", "shas", "utj")),
                           "seatSum": seat_sum, "consistent": True, "unmapped": [], "urls": d["urls"],
                           "assumedPublishedAt": published.isoformat(),
-                          "eligibleToShow": published + timedelta(hours=24) <= build_time,
+                          "eligibleToShow": True,
                           "source": {"page": "פרסומי סקרים — השלמה לאינדקס", "sha256": sha256(direct_path), "tableLine": 0},
                           "verified": False})
     polls.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
@@ -320,7 +320,7 @@ def apply_corrections(polls: list[dict], build_time: datetime) -> None:
         p["consistent"] = 118 <= p["seatSum"] <= 122
         assumed = datetime.fromisoformat(p["end"] + "T20:00:00").replace(tzinfo=ISRAEL_TZ)
         p["assumedPublishedAt"] = assumed.isoformat()
-        p["eligibleToShow"] = assumed + timedelta(hours=24) <= build_time
+        p["eligibleToShow"] = True
 
 
 def apply_verification(polls: list[dict]) -> None:
@@ -596,7 +596,7 @@ def build_changes(lin: dict, results: list[dict], central: dict, groups_sc: dict
 
 
 def build_model(polls: list[dict], results: list[dict]) -> dict:
-    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). רק סקרים מאומתים, עקביים, שעברו 24 שעות מפרסומם."""
+    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). רק סקרים מאומתים, עקביים, שפורסמו לציבור."""
     import model as M
 
     use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]

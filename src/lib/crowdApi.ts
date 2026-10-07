@@ -121,6 +121,8 @@ export interface Dashboard {
   aggregationId: string | null;
   /** מועד הפרסום של כל חלק — חלק קפוא לא משתנה גם כשהצבירה רצה */
   sectionsAsOf?: Record<string, string>;
+  /** משתתפים ייחודיים בכל חלק, ללא ספירה כפולה בין יחידות. */
+  sectionParticipants?: Record<string, number>;
   participants: number;
   /** הדשבורד פתוח גם במספר משתתפים קטן; כל חלק עם תשובות מוצג. */
   open: boolean;

@@ -81,7 +81,6 @@ export default function Polls() {
                   <span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span>
                   <span>{pollsterLabel(p)}</span>
                   {p.sample && <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>}
-                  {!p.eligibleToShow && <Badge tone="warn">פחות מ-24 שעות מהפרסום</Badge>}
                   {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
                   {p.verification ? (
                     <Badge tone={VERIFICATION_LABEL[p.verification.status].tone === "ok" ? "ok" : VERIFICATION_LABEL[p.verification.status].tone === "warn" ? "warn" : "neutral"}>
@@ -91,7 +90,7 @@ export default function Polls() {
                     <Badge>מקור: ויקיפדיה</Badge>
                   )}
                 </button>
-                <p className="text-sm text-ink-soft mt-1">{p.eligibleToShow ? valuesText(p) : "התוצאות יוצגו 24 שעות אחרי הפרסום הראשון."}</p>
+                <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
                 {isOpen && (
                   <dl className="mt-2 text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                     <dt className="font-bold">עורך הסקר</dt>

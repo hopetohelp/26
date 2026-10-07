@@ -260,3 +260,14 @@ describe("trend", () => {
     expect(m.seats.get("a").id).toBe(5);
   });
 });
+
+
+it("counts distinct contributors per section, excluding reviewed accounts and duplicate versions", () => {
+  const ps = [{ id: "a", review: 0 }, { id: "b", review: 0 }, { id: "c", review: 0 }, { id: "r", review: 1 }];
+  const bloc = { mode: "gov37", blocs: [{ id: "gov", lists: [], target: 60 }, { id: "rest", lists: [], target: 60 }] };
+  const vs = [ver("a", "seats", seats()), ver("a", "seats", seats()), ver("b", "seats", seats()), ver("a", "blocs", bloc), ver("c", "blocs", bloc), ver("c", "vote", { v2022: null, v2026: "likud" }), ver("r", "seats", seats())];
+  const d = run(ps, vs).dashboard;
+  expect(d.sectionParticipants.seats).toBe(2);
+  expect(d.sectionParticipants.blocs).toBe(3);
+  expect(d.sectionParticipants.vote2026).toBe(1);
+});

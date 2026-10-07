@@ -330,12 +330,13 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   }
 
   const open = active.size >= OPEN_AT;
-  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, sectionsAsOf: {} };
+  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, sectionsAsOf: {}, sectionParticipants: {} };
   if (open) {
     for (const [name, s] of Object.entries(sections)) {
       if (s.json === null || s.json === undefined) continue;
       dashboard[name] = s.json;
       dashboard.sectionsAsOf[name] = s.publishedAt;
+      dashboard.sectionParticipants[name] = s.contributors;
     }
   } else if (sections.underReview.json) {
     dashboard.underReview = sections.underReview.json;
