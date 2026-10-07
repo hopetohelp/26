@@ -89,10 +89,8 @@ export default function Guess() {
     <>
       <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלי</PageTitle>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      <div className="mb-5">
-        <Countdown />
-      </div>}
-      {intro && !shared && !dashboardTab && (
+      <div className="mb-5"><Countdown /></div>
+      {intro && !shared && (
         <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
           <h2 className="font-display text-3xl leading-none mb-2">השערות גולשים, אינן סקר</h2>
           <p className="text-sm leading-relaxed mb-3">
