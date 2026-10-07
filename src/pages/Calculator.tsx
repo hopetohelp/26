@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Explained from "../components/Explained";
-import { Badge, Card, Note, PageTitle } from "../components/ui";
+import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
 import { allocate, votesToNextSeat, type Agreement } from "../engine/baderOfer";
 import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, registry, summarize } from "../lib/data";
 import { dateLong, num, pct } from "../lib/format";
@@ -179,7 +179,7 @@ export default function Calculator() {
                 asOf="מחושב עכשיו מהקלט שלכם"
                 assumption="האחוזים הם מתוך הקולות הכשרים. 'בלי הסכמים' = אותה חלוקה בלי אף הסכם עודפים."
                 methodAnchor="engine"
-              >
+                details={
                 <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <caption className="sr-only">מנדטים לכל רשימה</caption>
@@ -226,12 +226,17 @@ export default function Calculator() {
                   </tbody>
                 </table>
                 </div>
+                }
+              >
+                <table className="w-full text-sm">
+                  <thead><tr className="text-start border-b border-paper-line"><th className="py-1">רשימה</th><th>מנדטים</th></tr></thead>
+                  <tbody>{[...IDS].sort((a, b) => (r.seats[b] ?? 0) - (r.seats[a] ?? 0) || votes[b] - votes[a]).map((id) => <tr key={id} className="border-b border-paper-line/60"><th className="text-start py-1 font-medium">{listName(id)} {!r.passing.includes(id) && votes[id] > 0 && <Badge tone="warn">מתחת לסף</Badge>}</th><td className="tabular-nums font-bold">{r.seats[id] ?? 0}</td></tr>)}</tbody>
+                </table>
               </Explained>
             )}
+            {r && r.status !== "invalid_input" && <p className="font-bold mt-3">מפלגות הממשלה היוצאת: {gov} מנדטים {gov >= 61 ? "(רוב)" : ""}</p>}
             {r && r.status !== "invalid_input" && (
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mt-4">
-                <dt className="text-ink-soft">מפלגות הממשלה היוצאת</dt>
-                <dd className="font-bold">{gov} מנדטים {gov >= 61 ? "(רוב)" : ""}</dd>
+              <Fold title="פרטי החישוב"><dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mt-4">
                 <dt className="text-ink-soft">אחוז החסימה בקולות</dt>
                 <dd className="tabular-nums">{num(r.thresholdVotes)}</dd>
                 <dt className="text-ink-soft">המודד (קולות למנדט שלם)</dt>
@@ -240,16 +245,16 @@ export default function Calculator() {
                 <dd className="tabular-nums">
                   {num(r.wasted)} ({pct((r.wasted / valid) * 100)})
                 </dd>
-              </dl>
+              </dl></Fold>
             )}
             {r && r.inactiveAgreements.length > 0 && (
               <Note>הסכמים שאינם פעילים: {r.inactiveAgreements.map((x) => `${listName(x.pair[0])}–${listName(x.pair[1])} (${x.reason.replace(/[a-z_]+/g, (m) => listName(m))})`).join(" · ")}</Note>
             )}
-            <Note>"קולות למנדט הבא" = כמה קולות צריך להוסיף לרשימה, כשכל השאר נשארות קבועות, כדי שתקבל מנדט נוסף (אחוז החסימה והמודד זזים בהתאם).</Note>
+            <details className="text-sm mt-2"><summary className="cursor-pointer min-h-[44px] flex items-center">על קולות למנדט הבא</summary><Note>"קולות למנדט הבא" = כמה קולות צריך להוסיף לרשימה, כשכל השאר נשארות קבועות, כדי שתקבל מנדט נוסף (אחוז החסימה והמודד זזים בהתאם).</Note></details>
           </Card>
 
           {r && r.status === "ok" && (
-            <Card title="צעד אחר צעד: חלוקת המנדטים העודפים">
+            <Fold title="צעד אחר צעד: חלוקת המנדטים העודפים">
               <p className="text-sm mb-2">
                 שלב 1: כל רשימה שעברה מקבלת מנדט שלם לכל {num(r.quota)} קולות ({Object.values(r.whole).reduce((a, b) => a + b, 0)} מנדטים). שלב 2: את
                 {" "}
@@ -263,7 +268,7 @@ export default function Calculator() {
                 ))}
               </ol>
               <Note>מנדט שזכה בו זוג עודפים מתחלק אחר כך בין שתי הרשימות באותה שיטה (סעיף 82(ב) לחוק).</Note>
-            </Card>
+            </Fold>
           )}
         </div>
       </div>

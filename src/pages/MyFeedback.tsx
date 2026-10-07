@@ -1,7 +1,8 @@
 import { useEffect, useId, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card, Note, PageTitle } from "../components/ui";
-import { FEEDBACK_URL, getThread, replyToThread, saveThread, savedThreads, threadLink, type SavedThread, type Thread } from "../lib/feedback";
+import { FeedbackSheet } from "../components/Feedback";
+import { FEEDBACK_URL, getThread, mergeSavedThreads, replyToThread, saveThread, savedThreads, threadLink, type Thread } from "../lib/feedback";
 import { dateLong } from "../lib/format";
 
 const TOPIC: Record<string, string> = { data: "נתון שגוי", idea: "רעיון", design: "עיצוב ונוחות", other: "אחר" };
@@ -19,16 +20,27 @@ export default function MyFeedback() {
 }
 
 function List() {
-  const items = savedThreads();
+  const [items, setItems] = useState(savedThreads);
+  const [open, setOpen] = useState(false);
+  const [mergeError, setMergeError] = useState(false);
+  const [loading, setLoading] = useState(items.length > 1);
+  async function sync() {
+    setMergeError(false);
+    try { await mergeSavedThreads(); } catch { setMergeError(true); }
+    setItems(savedThreads());
+    setLoading(false);
+  }
+  useEffect(() => { void sync(); }, []);
   return (
     <>
-      <PageTitle lead="ההערות ששלחתם מהדפדפן הזה. כל אחת נפתחת בקישור האישי שלה, ושם מופיעה התשובה.">ההערות שלי</PageTitle>
+      {items.length === 1 && !loading ? <ThreadView token={items[0].token} /> : <>
+      <PageTitle lead="ההערות והתשובות שלכם בשיחה אחת.">ההערות שלי</PageTitle>
       <Card>
-        {items.length === 0 ? (
-          <p className="text-base">אין כאן הערות. הערה חדשה — בכפתור "הערה?" שבפינת המסך.</p>
+        {loading ? <p role="status">מאחדים את השיחות…</p> : items.length === 0 ? (
+          <p className="text-base">אין כאן הערות. אפשר לשלוח את ההערה הראשונה כאן.</p>
         ) : (
           <ul className="divide-y divide-paper-line">
-            {items.map((t: SavedThread) => (
+            {items.map((t) => (
               <li key={t.token} className="py-3">
                 <Link to={`/feedback/${t.token}`} className="font-bold">
                   {t.preview || "הערה"}
@@ -40,6 +52,10 @@ function List() {
         )}
         <Note>הרשימה שמורה רק בדפדפן הזה. בדפדפן אחר — פותחים את הקישור האישי ששמרתם.</Note>
       </Card>
+      </>}
+      {mergeError && <p role="alert" className="text-sm text-warn mb-3">איחוד השיחות לא הצליח. כל השיחות נשמרו. <button type="button" onClick={() => void sync()} className="underline min-h-[44px]">לנסות שוב</button></p>}
+      <button type="button" onClick={() => setOpen(true)} className="min-h-[48px] px-5 rounded-theme bg-ink text-paper-card font-bold">שליחת הערה</button>
+      {open && <FeedbackSheet onClose={() => { setOpen(false); void sync(); }} />}
     </>
   );
 }

@@ -77,6 +77,25 @@ async function post(path: string, body: object): Promise<{ ok: boolean; token?: 
 export const sendFeedback = (body: { topic: string; text: string; page: string; theme: string; website: string; diagnostic?: string }) => post("/", body);
 export const replyToThread = (token: string, text: string, website: string, diagnostic?: string) => post("/thread", { t: token, text, website, diagnostic });
 
+let merging: Promise<SavedThread | null> | null = null;
+/** איחוד השיחות שהדפדפן מחזיק בקישורים שלהן. אין מחיקת קישור לפני הצלחה בשרת. */
+export function mergeSavedThreads(): Promise<SavedThread | null> {
+  if (merging) return merging;
+  merging = (async () => {
+    const items = savedThreads();
+    if (items.length < 2 || !FEEDBACK_URL) return items[0] ?? null;
+    const res = await post("/merge", { tokens: items.map((t) => t.token) });
+    if (!res.ok) throw new Error(res.error || "merge failed");
+    const primary = items[0];
+    // קישורים שנוספו בזמן הבקשה אינם מוסרים.
+    const mergedTokens = new Set(items.map((t) => t.token));
+    const added = savedThreads().filter((t) => !mergedTokens.has(t.token));
+    try { localStorage.setItem(KEY, JSON.stringify([primary, ...added])); } catch { /* כל הקישורים עדיין תקפים */ }
+    return primary;
+  })().finally(() => { merging = null; });
+  return merging;
+}
+
 export async function getThread(token: string): Promise<Thread | null> {
   const res = await fetch(`${FEEDBACK_URL}/thread?t=${encodeURIComponent(token)}`);
   if (!res.ok) return null;

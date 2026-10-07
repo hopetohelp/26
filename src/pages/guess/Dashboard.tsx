@@ -17,9 +17,9 @@ const v2022Name = (k: string) => V2022_LABEL[k] ?? k25Name(k);
 const at = (d: D, section: string) => d.sectionsAsOf?.[section] ?? d.publishedAt;
 const pctOf = (c: Cell) => (c.of ? Math.round((c.n / c.of) * 1000) / 10 : 0);
 
-function Ex({ kind, asOf, children, n }: { kind: typeof GUESS | typeof VOTE; asOf: string | null; children: ReactNode; n: string }) {
+function Ex({ kind, asOf, children, n, details }: { kind: typeof GUESS | typeof VOTE; asOf: string | null; children: ReactNode; n: string; details?: ReactNode }) {
   return (
-    <Explained kind={kind} source={`ההשערות באתר — הגרסה האחרונה של כל משתתף (${n})`} asOf={when(asOf)} assumption="מי שבחר להשתתף אינו מדגם מייצג של הבוחרים. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצה קטנה אפשר ללמוד מהם את תשובתו, ללא שם." methodAnchor="crowd">
+    <Explained kind={kind} source={`ההשערות באתר — הגרסה האחרונה של כל משתתף (${n})`} asOf={when(asOf)} assumption="מי שבחר להשתתף אינו מדגם מייצג של הבוחרים. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצה קטנה אפשר ללמוד מהם את תשובתו, ללא שם." methodAnchor="crowd" details={details}>
       {children}
     </Explained>
   );
@@ -100,7 +100,6 @@ function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, nu
           <th className="font-normal">טווח אמצעי (25–75)</th>
           <th className="font-normal">ממוצע</th>
           <th className="font-normal">סקרים</th>
-          <th className="font-normal">n</th>
         </tr>
       </thead>
       <tbody>
@@ -111,7 +110,6 @@ function StatTable({ rows, polls }: { rows: SeatStat[]; polls: Record<string, nu
             <td className="text-center"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi></td>
             <td className="text-center">{seatsFmt(Math.round(s.mean * 10) / 10)}</td>
             <td className="text-center">{polls[s.list] ?? "—"}</td>
-            <td className="text-center">{s.n}</td>
           </tr>
         ))}
       </tbody>
@@ -127,7 +125,11 @@ function SeatsBlock({ d }: { d: D }) {
   const max = Math.max(10, ...rows.map((r) => r.p75), ...Object.values(s.polls)) + 2;
   return (
     <Card title="הכנסת של הגולשים">
-      <Ex kind={GUESS} asOf={at(d, "seats")} n={`${s.n} משתתפים`}>
+      <Ex kind={GUESS} asOf={at(d, "seats")} n={`${s.n} משתתפים`} details={<>
+        <p>{Math.round(s.filledShare * 100)}% מהמנדטים הושלמו ב״השלם הכול״ · {s.usedFillAll} השתמשו בו. נקודות פתיחה: מאפס {s.starts.zero}, מהסקרים {s.starts.polls}, מ-2022 {s.starts.k25}.</p>
+        {s.modes && <p>לפי מנדטים: {s.modes.seats} · לפי אחוזי הצבעה: {s.modes.pct}.</p>}
+        <p>משתתפים לכל רשימה: {rows.map((r) => `${nameOf(r.list)}: ${r.n}`).join(" · ")}</p>
+      </>}>
         <div className="flex gap-1.5 text-xs mb-2 flex-wrap" role="radiogroup" aria-label="מי נספר">
           {[
             [false, "כל ההשערות"],
@@ -138,7 +140,7 @@ function SeatsBlock({ d }: { d: D }) {
             </button>
           ))}
         </div>
-        {manual && <p className="text-xs text-ink-soft mb-2">לכל רשימה n משלה — רק מי שקבע לה ערך בעצמו. לכן אין כאן סכום ואין דירוג.</p>}
+        {manual && <p className="text-xs text-ink-soft mb-2">רק מי שקבעו ערך לרשימה בעצמם נספרים בתצוגה הזו.</p>}
         {!manual && <Sorter alpha={alpha} setAlpha={setAlpha} metric="חציון" />}
         <ChartWithTable
           summary={`הקו העבה = החציון; הפס = מחצית ההשערות האמצעית; הקו הדק = ממוצע הסקרים${s.pollsAsOf ? ` מ-${dateLong(s.pollsAsOf)}` : ""}.`}
@@ -158,14 +160,6 @@ function SeatsBlock({ d }: { d: D }) {
             </ul>
           }
         />
-        <p className="text-xs text-ink-soft mt-3">
-          {Math.round(s.filledShare * 100)}% מהמנדטים בהשערות הושלמו ב"השלם הכול" · {s.usedFillAll} השתמשו בו · נקודות פתיחה: מאפס {s.starts.zero}, מהסקרים {s.starts.polls}, מ-2022 {s.starts.k25}
-        </p>
-        {s.modes && (
-          <p className="text-xs text-ink-soft mt-1">
-            ניחשו לפי מנדטים: {s.modes.seats} · לפי אחוזי הצבעה: {s.modes.pct} (אצלם המנדטים חושבו לפי החוק)
-          </p>
-        )}
         {s.pctStats && <PctStats rows={s.pctStats} />}
       </Ex>
     </Card>
@@ -177,7 +171,7 @@ function PctStats({ rows }: { rows: SeatStat[] }) {
   const sorted = [...rows].sort((a, b) => b.median - a.median || b.mean - a.mean);
   return (
     <div className="mt-4">
-      <h3 className="font-bold text-sm mb-1">לפי אחוזי הצבעה ({rows[0]?.n ?? 0} משתתפים)</h3>
+      <h3 className="font-bold text-sm mb-1">לפי אחוזי הצבעה</h3>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular">
           <caption className="sr-only">אחוזי ההצבעה שניחשו הגולשים, בקרב מי שניחשו לפי אחוזים</caption>
@@ -213,14 +207,13 @@ function BlocsBlock({ d }: { d: D }) {
         <td className="py-1">{label}</td>
         <td className="text-center font-bold">{seatsFmt(s.median)}</td>
         <td className="text-center"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi></td>
-        <td className="text-center">{s.n}</td>
       </tr>
     ) : null;
   const table = (title: string, gov?: SeatStat | null, rest?: SeatStat | null) => (
     <table className="w-full text-sm tabular mb-3">
       <caption className="text-start font-bold mb-1">{title}</caption>
       <thead>
-        <tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">חציון</th><th className="font-normal">25–75</th><th className="font-normal">n</th></tr>
+        <tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">חציון</th><th className="font-normal">25–75</th></tr>
       </thead>
       <tbody>
         {row("מפלגות הממשלה היוצאת", gov)}
@@ -230,7 +223,10 @@ function BlocsBlock({ d }: { d: D }) {
   );
   return (
     <Card title="גושים">
-      <Ex kind={GUESS} asOf={at(d, "blocs")} n="לכל סדרה מספר משתתפים משלה">
+      <Ex kind={GUESS} asOf={at(d, "blocs")} n="לכל סדרה מספר משתתפים משלה" details={<>
+        <p>ברירת המחדל — סכום מנדטים: ממשלה {b.derived?.gov.n ?? 0}, שאר הרשימות {b.derived?.rest.n ?? 0}; הימור ישיר: ממשלה {b.explicit?.gov?.n ?? 0}, שאר הרשימות {b.explicit?.rest?.n ?? 0} משתתפים.</p>
+        {b.custom?.map((g) => <p key={JSON.stringify([g.name, g.lists])}>{g.name}: {g.lists.map(nameOf).join(" · ")} — סכום מנדטים: {g.derived?.n ?? 0}; הימור ישיר: {g.explicit?.n ?? 0} משתתפים.</p>)}
+      </>}>
         {b.derived && table("סדרה 1: סכום ההשערות לרשימות", b.derived.gov, b.derived.rest)}
         {b.explicit && table("סדרה 2: יעד גוש שהגולשים כתבו במפורש", b.explicit.gov, b.explicit.rest)}
         {b.custom && b.custom.length > 0 && (
@@ -246,7 +242,7 @@ function BlocsBlock({ d }: { d: D }) {
                     <td className="py-2 pe-2"><b>{g.name || "גוש ללא שם"}</b><p className="text-xs text-ink-soft">{g.lists.length ? g.lists.map(nameOf).join(" · ") : "ללא רשימות"}</p></td>
                     {[g.derived, g.explicit].map((s, i) => (
                       <td key={i} className="text-center py-2 px-1">
-                        {s ? <><b>{seatsFmt(s.median)}</b><p className="text-xs text-ink-soft whitespace-nowrap"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi> · n={s.n}</p></> : "לא נמסר"}
+                        {s ? <><b>{seatsFmt(s.median)}</b><p className="text-xs text-ink-soft whitespace-nowrap"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi></p></> : "לא נמסר"}
                       </td>
                     ))}
                   </tr>
@@ -285,21 +281,26 @@ function CellBars({ cells, name }: { cells: Record<string, Cell>; name: (k: stri
 }
 
 function VotingBlock({ d }: { d: D }) {
-  const [selected, setSelected] = useState("vote2026");
+  const [selected, setSelected] = useState("matrix");
   const views = [
-    { id: "vote2026", label: "כוונה ל-2026", available: !!d.vote2026, content: <Vote2026 d={d} /> },
-    { id: "vote2022", label: "הצבעה ב-2022", available: !!d.vote2022, content: <Vote2022 d={d} /> },
     { id: "matrix", label: "מעבר 2022–2026", available: !!d.matrix, content: <Matrix d={d} /> },
     { id: "byVote", label: "השערות לפי הצבעה", available: !!d.byVote, content: <ByVote d={d} /> },
   ].filter((v) => v.available);
   const current = views.find((v) => v.id === selected) ?? views[0];
   return (
     <Card title="הצבעה וכוונות הצבעה">
+      {current ? <>
       <div className="flex flex-wrap gap-1.5 text-xs mb-3" role="radiogroup" aria-label="תצוגת נתוני הצבעה">
         {views.map((v) => <button key={v.id} type="button" role="radio" aria-checked={current.id === v.id} onClick={() => setSelected(v.id)} className={`min-h-[44px] px-3 rounded-full border ${current.id === v.id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{v.label}</button>)}
       </div>
       <h3 className="font-bold text-sm mb-2">{current.label}</h3>
       {current.content}
+      </> : <p className="text-sm">אין עדיין תשובות מפורסמות לטבלת המעבר.</p>}
+      <details className="mt-3 border-t border-paper-line pt-2">
+        <summary className="cursor-pointer min-h-[44px] flex items-center text-sm">פרטי ההצבעה והחישוב</summary>
+        {d.vote2026 && <><h3 className="font-bold text-sm my-2">כוונה ל-2026</h3><Vote2026 d={d} /></>}
+        {d.vote2022 && <><h3 className="font-bold text-sm my-2">הצבעה ב-2022</h3><Vote2022 d={d} /></>}
+      </details>
     </Card>
   );
 }
@@ -357,8 +358,8 @@ function Matrix({ d }: { d: D }) {
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return (
     <>
-      <Ex kind={VOTE} asOf={d.sectionsAsOf?.matrix ?? m.publishedAt} n="שורה = ההצבעה ב-2022">
-        <p className="text-sm mb-2">כל שורה: מי שהצביעו לרשימה ב-2022, ואחוז מהם לכל כוונה ב-2026. כל שורה ותא שיש בהם תשובות מוצגים; "—" מציין נתון לא זמין.</p>
+      <Ex kind={VOTE} asOf={d.sectionsAsOf?.matrix ?? m.publishedAt} n="שורה = ההצבעה ב-2022" details={<p>משתתפים בכל שורה: {Object.entries(m.rows).map(([k, r]) => `${v2022Name(k)}: ${r.n}`).join(" · ")}. האחוז בכל תא מחושב מתוך משתתפי אותה שורה.</p>}>
+        <p className="text-sm mb-2">בשורות: למי הצביעו ב-2022. בטורים: למי מתכננים להצביע ב-2026. כל תא מציג את אחוז המשיבים מאותה שורה.</p>
         <div className="overflow-x-auto">
           <table className="text-xs tabular min-w-full">
             <thead>
@@ -367,7 +368,6 @@ function Matrix({ d }: { d: D }) {
                 {cols.map((c) => (
                   <th key={c} className="p-1 font-normal text-ink-soft whitespace-nowrap">{v2026Name(c)}</th>
                 ))}
-                <th className="p-1 font-normal">n</th>
               </tr>
             </thead>
             <tbody>
@@ -379,7 +379,6 @@ function Matrix({ d }: { d: D }) {
                     const hidden = r.hidden || !cell || cell.hidden;
                     return <td key={c} className={`p-1 text-center ${hidden ? "text-ink-faint" : ""}`}>{hidden ? "—" : `${pctOf(cell)}%`}</td>;
                   })}
-                  <td className="p-1 text-center">{r.hidden ? "—" : r.n}</td>
                 </tr>
               ))}
             </tbody>
@@ -393,14 +392,13 @@ function Matrix({ d }: { d: D }) {
 function ByVote({ d }: { d: D }) {
   return (
     <>
-      <Ex kind={GUESS} asOf={at(d, "byVote")} n="לפי קבוצה">
+      <Ex kind={GUESS} asOf={at(d, "byVote")} n="לפי קבוצה" details={<p>משתתפים בכל קבוצה: {Object.entries(d.byVote!).map(([k, r]) => `${v2026Name(k)}: ${r.n}`).join(" · ")}</p>}>
         <div className="overflow-x-auto">
           <table className="text-xs tabular min-w-full">
             <thead>
               <tr>
                 <th className="text-start p-1">מתכוונים להצביע ל…</th>
                 {IDS.map((id) => <th key={id} className="p-1 font-normal text-ink-soft whitespace-nowrap">{nameOf(id)}</th>)}
-                <th className="p-1">n</th>
               </tr>
             </thead>
             <tbody>
@@ -408,7 +406,6 @@ function ByVote({ d }: { d: D }) {
                 <tr key={k} className="border-t border-paper-line">
                   <th className="text-start p-1 whitespace-nowrap">{v2026Name(k)}</th>
                   {IDS.map((id) => <td key={id} className="p-1 text-center">{r.seats[id] !== undefined ? seatsFmt(r.seats[id]) : "—"}</td>)}
-                  <td className="p-1 text-center">{r.n}</td>
                 </tr>
               ))}
             </tbody>

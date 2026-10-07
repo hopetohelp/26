@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getLink } from "../lib/crowdSession";
-import { FEEDBACK_URL, primaryThread, replyToThread, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
+import { FEEDBACK_URL, mergeSavedThreads, replyToThread, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
 
 /**
  * כפתור פידבק בלי מייל: טופס קצר ⇐ שרת קטן ב-Cloudflare (worker/feedback) ⇐ מאגר פרטי (D1).
@@ -27,13 +27,12 @@ export default function Feedback() {
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        className="fixed z-40 left-4 bottom-[calc(80px+env(safe-area-inset-bottom))] md:bottom-6 flex items-center gap-2 min-h-[48px] px-4 rounded-full border-2 border-ink/80 bg-signal text-signal-ink font-extrabold shadow-lg"
+        className="hidden md:flex fixed z-40 left-4 bottom-6 items-center gap-2 min-h-[48px] px-4 rounded-full border-2 border-ink/80 bg-signal text-signal-ink font-extrabold shadow-lg"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
-        <span className="md:hidden">הערה?</span>
-        <span className="hidden md:inline">הערה? ספרו לנו</span>
+        <span>הערה? ספרו לנו</span>
       </button>
       {open && <FeedbackSheet onClose={() => setOpen(false)} />}
     </>
@@ -67,7 +66,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
     try {
       const body = text.trim().slice(0, MAX);
       // שיחה אחת לכל משתמש: אם כבר יש שיחה בדפדפן הזה — ההערה מצטרפת אליה (עם הנושא בראשה)
-      const prim = primaryThread();
+      const prim = await mergeSavedThreads();
       if (prim) {
         const topicLabel = TOPICS.find((t) => t.id === topic)?.label ?? "";
         const res = await replyToThread(prim.token, `[${topicLabel}] ${body}`.slice(0, MAX), trap, diagnostic);
@@ -76,7 +75,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
           setStatus("sent");
           return;
         }
-        if (res.error !== "not found" && res.error !== "full") return setStatus("error");
+        if (res.error !== "not found") return setStatus("error");
       }
       const res = await sendFeedback({ topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap, diagnostic });
       if (res.ok && res.token) {

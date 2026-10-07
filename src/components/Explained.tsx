@@ -21,9 +21,10 @@ export interface ExplainProps {
   assumption: string;
   methodAnchor: string;
   children: ReactNode;
+  details?: ReactNode;
 }
 
-export default function Explained({ kind, source, asOf, assumption, methodAnchor, children }: ExplainProps) {
+export default function Explained({ kind, source, asOf, assumption, methodAnchor, children, details }: ExplainProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
@@ -41,7 +42,8 @@ export default function Explained({ kind, source, asOf, assumption, methodAnchor
         </button>
       </div>
       {open && (
-        <dl id={id} className="mt-2 text-sm bg-accent-soft rounded-md p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+        <div id={id} className="mt-2 text-sm bg-accent-soft rounded-md p-3">
+        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
           <dt className="font-bold">סוג</dt>
           <dd>{kind}</dd>
           <dt className="font-bold">מקור</dt>
@@ -55,6 +57,8 @@ export default function Explained({ kind, source, asOf, assumption, methodAnchor
             <Link to={`/method#${methodAnchor}`}>בעמוד השיטה</Link>
           </dd>
         </dl>
+        {details && <div className="mt-3">{details}</div>}
+        </div>
       )}
     </div>
   );

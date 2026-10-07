@@ -32,9 +32,9 @@ class Stmt {
   }
 }
 
-export function fakeD1() {
+export function fakeD1(schema = new URL("../schema.sql", import.meta.url)) {
   const db = new DatabaseSync(":memory:");
-  db.exec(readFileSync(new URL("../schema.sql", import.meta.url), "utf8"));
+  db.exec(readFileSync(schema, "utf8"));
   return {
     raw: db,
     prepare: (sql) => new Stmt(db, sql),
