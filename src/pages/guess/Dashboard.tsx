@@ -63,10 +63,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       {!d.seats && <Notice>עדיין לא נשמרו השערות מנדטים לפרסום. הממוצע יוצג כבר מההשערה הראשונה; אפשר להשתתף בלשונית "שלי".</Notice>}
       {d.seats && <SeatsBlock d={d} />}
       {d.blocs && <BlocsBlock d={d} />}
-      {d.vote2026 && <Vote2026 d={d} />}
-      {d.vote2022 && <Vote2022 d={d} />}
-      {d.matrix && <Matrix d={d} />}
-      {d.byVote && <ByVote d={d} />}
+      {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingBlock d={d} />}
       {d.trend && d.trend.length > 0 && <Trend d={d} />}
       {d.underReview && d.underReview.participants > 0 && (
         <Fold title="בבדיקה — מוצג בנפרד">
@@ -233,10 +230,32 @@ function BlocsBlock({ d }: { d: D }) {
   );
   return (
     <Card title="גושים">
-      <Ex kind={GUESS} asOf={at(d, "blocs")} n="שתי סדרות נפרדות">
+      <Ex kind={GUESS} asOf={at(d, "blocs")} n="לכל סדרה מספר משתתפים משלה">
         {b.derived && table("סדרה 1: סכום ההשערות לרשימות", b.derived.gov, b.derived.rest)}
         {b.explicit && table("סדרה 2: יעד גוש שהגולשים כתבו במפורש", b.explicit.gov, b.explicit.rest)}
-        <p className="text-xs text-ink-soft">שתי הסדרות לא מתמזגות: אחת נגזרת מהמנדטים, השנייה ניחוש ישיר. {b.customCount} משתתפים הגדירו גושים משלהם, והם לא בטבלה הזו.</p>
+        {b.custom && b.custom.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm tabular mb-3">
+              <caption className="text-start font-bold mb-1">הגושים שהגולשים הגדירו ({b.customCount} משתתפים)</caption>
+              <thead>
+                <tr className="text-ink-soft"><th className="text-start font-normal">שם והרכב הגוש</th><th className="font-normal">סכום המנדטים</th><th className="font-normal">הימור ישיר</th></tr>
+              </thead>
+              <tbody>
+                {b.custom.map((g) => (
+                  <tr key={JSON.stringify([g.name, g.lists])} className="border-t border-paper-line">
+                    <td className="py-2 pe-2"><b>{g.name || "גוש ללא שם"}</b><p className="text-xs text-ink-soft">{g.lists.length ? g.lists.map(nameOf).join(" · ") : "ללא רשימות"}</p></td>
+                    {[g.derived, g.explicit].map((s, i) => (
+                      <td key={i} className="text-center py-2 px-1">
+                        {s ? <><b>{seatsFmt(s.median)}</b><p className="text-xs text-ink-soft whitespace-nowrap"><bdi dir="ltr">{seatsFmt(s.p25)}–{seatsFmt(s.p75)}</bdi> · n={s.n}</p></> : "לא נמסר"}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <p className="text-xs text-ink-soft">חציון וטווח 25–75. סכום המנדטים וההימור הישיר מוצגים בנפרד. גושים מאוחדים רק כששמם והרכב הרשימות שלהם זהים.</p>
       </Ex>
     </Card>
   );
@@ -265,12 +284,32 @@ function CellBars({ cells, name }: { cells: Record<string, Cell>; name: (k: stri
   );
 }
 
+function VotingBlock({ d }: { d: D }) {
+  const [selected, setSelected] = useState("vote2026");
+  const views = [
+    { id: "vote2026", label: "כוונה ל-2026", available: !!d.vote2026, content: <Vote2026 d={d} /> },
+    { id: "vote2022", label: "הצבעה ב-2022", available: !!d.vote2022, content: <Vote2022 d={d} /> },
+    { id: "matrix", label: "מעבר 2022–2026", available: !!d.matrix, content: <Matrix d={d} /> },
+    { id: "byVote", label: "השערות לפי הצבעה", available: !!d.byVote, content: <ByVote d={d} /> },
+  ].filter((v) => v.available);
+  const current = views.find((v) => v.id === selected) ?? views[0];
+  return (
+    <Card title="הצבעה וכוונות הצבעה">
+      <div className="flex flex-wrap gap-1.5 text-xs mb-3" role="radiogroup" aria-label="תצוגת נתוני הצבעה">
+        {views.map((v) => <button key={v.id} type="button" role="radio" aria-checked={current.id === v.id} onClick={() => setSelected(v.id)} className={`min-h-[44px] px-3 rounded-full border ${current.id === v.id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{v.label}</button>)}
+      </div>
+      <h3 className="font-bold text-sm mb-2">{current.label}</h3>
+      {current.content}
+    </Card>
+  );
+}
+
 function Vote2026({ d }: { d: D }) {
   const [named, setNamed] = useState(false);
   const cells = named ? d.vote2026!.named : d.vote2026!.all;
   const of = Object.values(cells)[0]?.of ?? 0;
   return (
-    <Card title="כוונת הצבעה 2026">
+    <>
       <Ex kind={VOTE} asOf={at(d, "vote2026")} n={`${of} שענו`}>
         <div className="flex gap-1.5 text-xs mb-2" role="radiogroup" aria-label="מי נספר">
           {[
@@ -284,14 +323,14 @@ function Vote2026({ d }: { d: D }) {
         </div>
         <CellBars cells={cells} name={v2026Name} />
       </Ex>
-    </Card>
+    </>
   );
 }
 
 function Vote2022({ d }: { d: D }) {
   const v = d.vote2022!;
   return (
-    <Fold title="ההצבעה ב-2022 — מי השתתף כאן">
+    <>
       <Ex kind={VOTE} asOf={at(d, "vote2022")} n={`${Object.values(v.all)[0]?.of ?? 0} שענו`}>
         <p className="text-sm mb-2">השוואה לתוצאה הרשמית מראה עד כמה המשתתפים כאן שונים מכלל הבוחרים.</p>
         <table className="w-full text-sm tabular">
@@ -309,7 +348,7 @@ function Vote2022({ d }: { d: D }) {
           </tbody>
         </table>
       </Ex>
-    </Fold>
+    </>
   );
 }
 
@@ -317,7 +356,7 @@ function Matrix({ d }: { d: D }) {
   const m = d.matrix!;
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return (
-    <Fold title="מאיפה לאן: 2022 ⇐ 2026">
+    <>
       <Ex kind={VOTE} asOf={d.sectionsAsOf?.matrix ?? m.publishedAt} n="שורה = ההצבעה ב-2022">
         <p className="text-sm mb-2">כל שורה: מי שהצביעו לרשימה ב-2022, ואחוז מהם לכל כוונה ב-2026. כל שורה ותא שיש בהם תשובות מוצגים; "—" מציין נתון לא זמין.</p>
         <div className="overflow-x-auto">
@@ -347,13 +386,13 @@ function Matrix({ d }: { d: D }) {
           </table>
         </div>
       </Ex>
-    </Fold>
+    </>
   );
 }
 
 function ByVote({ d }: { d: D }) {
   return (
-    <Fold title="ההשערות לפי כוונת ההצבעה">
+    <>
       <Ex kind={GUESS} asOf={at(d, "byVote")} n="לפי קבוצה">
         <div className="overflow-x-auto">
           <table className="text-xs tabular min-w-full">
@@ -376,7 +415,7 @@ function ByVote({ d }: { d: D }) {
           </table>
         </div>
       </Ex>
-    </Fold>
+    </>
   );
 }
 

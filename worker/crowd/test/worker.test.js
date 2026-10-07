@@ -219,12 +219,12 @@ describe("cron: aggregation & anomaly", () => {
       await save(tok, "vote", { v2022: "מחל", v2026: i % 2 ? "likud" : "yashar" });
     }
   }
-  it("refreshes an old closed snapshot once on the first request", async () => {
+  it.each([{ open: false }, { open: true, policy: "open-all-v1" }])("refreshes an old snapshot once on the first request: %j", async (old) => {
     await crowd(1);
     await env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json) VALUES (?, ?, ?, ?)")
-      .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ open: false, participants: 1 })).run();
+      .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ ...old, participants: 1 })).run();
     const first = await call("/dashboard");
-    expect(first.data).toMatchObject({ open: true, policy: "open-all-v1", participants: 1 });
+    expect(first.data).toMatchObject({ open: true, policy: "open-all-v2", participants: 1 });
     expect(first.data.seats.n).toBe(1);
     expect(first.data.matrix.rows["מחל"].n).toBe(1);
     const before = env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n;

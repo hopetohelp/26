@@ -93,6 +93,40 @@ describe("seats section", () => {
 });
 
 describe("blocs", () => {
+  it("publishes custom blocs by name and exact membership, joining each owner's seats", () => {
+    const ps = people(3);
+    const vs = ps.flatMap((p, i) => [
+      ver(p.id, "seats", seats(40 + i * 10)),
+      ver(p.id, "blocs", { mode: "custom", blocs: [
+        { id: "a", name: "גוש א", lists: i === 2 ? [IDS[1]] : [IDS[0]], target: i === 2 ? 0 : 60 + i * 10 },
+        { id: "b", name: "גוש ב", lists: [IDS[2]], target: null },
+      ] }),
+    ]);
+    const b = run(ps, vs).dashboard.blocs;
+    expect(b.customCount).toBe(3);
+    expect(b.custom).toHaveLength(3);
+    const a = b.custom.find((g) => g.name === "גוש א" && g.lists[0] === IDS[0]);
+    expect(a).toMatchObject({ n: 2, derived: { n: 2, mean: 45, median: 45 }, explicit: { n: 2, median: 65 } });
+    const otherA = b.custom.find((g) => g.name === "גוש א" && g.lists[0] === IDS[1]);
+    expect(otherA.explicit).toMatchObject({ n: 1, median: 0 });
+    expect(b.custom.find((g) => g.name === "גוש ב").explicit).toBeNull();
+    expect(JSON.stringify(b.custom)).not.toContain('"participant"');
+  });
+  it("uses latest definitions, ignores review, canonicalizes membership, counts each owner once", () => {
+    const ps = people(3);
+    ps[2].review = true;
+    const definition = (lists) => ({ id: "a", name: "יחד", lists, target: 55 });
+    const vs = [
+      ver(ps[0].id, "blocs", { mode: "custom", blocs: [{ ...definition([IDS[2]]), name: "ישן" }] }),
+      ver(ps[0].id, "blocs", { mode: "custom", blocs: [definition([IDS[0], IDS[1]]), definition([IDS[1], IDS[0]])] }),
+      ver(ps[1].id, "blocs", { mode: "custom", blocs: [definition([IDS[1], IDS[0]])] }),
+      ver(ps[2].id, "blocs", { mode: "custom", blocs: [{ ...definition([IDS[2]]), name: "בבדיקה" }] }),
+    ];
+    const b = run(ps, vs).dashboard.blocs;
+    expect(b.customCount).toBe(2);
+    expect(b.custom).toHaveLength(1);
+    expect(b.custom[0]).toMatchObject({ name: "יחד", n: 2, derived: null, explicit: { n: 2, median: 55 } });
+  });
   it("derived from gov37 flags and explicit from gov37 blocs", () => {
     const ps = people(30);
     const govId = IDS.find((id) => GOV37.has(id));

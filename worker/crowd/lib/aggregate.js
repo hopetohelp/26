@@ -18,7 +18,7 @@ export const K_ROW = 1;
 export const OPEN_AT = 0;
 export const MIN_CHANGED = 1;
 export const TOTAL = 120;
-export const DASHBOARD_POLICY = "open-all-v1";
+export const DASHBOARD_POLICY = "open-all-v2";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -139,9 +139,25 @@ export function computeBlocs(seatVersions, blocVersions) {
   const r = [];
   let gov37Count = 0;
   let customCount = 0;
+  const customGroups = new Map();
+  const seatsByParticipant = new Map(seatVersions.map((v) => [v.participant, v]));
   for (const v of blocVersions) {
     if (v.payload.mode === "custom") {
       customCount++;
+      const seen = new Set();
+      for (const b of v.payload.blocs) {
+        const lists = [...new Set(b.lists)].sort();
+        const name = b.name.trim();
+        const key = JSON.stringify([name, lists]);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        if (!customGroups.has(key)) customGroups.set(key, { name, lists, n: 0, targets: [], totals: [] });
+        const group = customGroups.get(key);
+        group.n++;
+        if (b.target !== null) group.targets.push(b.target);
+        const seatVersion = seatsByParticipant.get(v.participant);
+        if (seatVersion) group.totals.push(lists.reduce((sum, id) => sum + seatValue(seatVersion.payload, id), 0));
+      }
       continue;
     }
     gov37Count++;
@@ -154,7 +170,12 @@ export function computeBlocs(seatVersions, blocVersions) {
     ? { gov: g.length >= K_CELL ? seatStat("gov", g) : null, rest: r.length >= K_CELL ? seatStat("rest", r) : null }
     : null;
   if (!derived && !explicit && customCount < K_CELL) return null;
-  return { derived, explicit, customCount };
+  const custom = [...customGroups.values()].map(({ name, lists, n, targets, totals }) => ({
+    name, lists, n,
+    explicit: targets.length ? seatStat("custom", targets) : null,
+    derived: totals.length ? seatStat("custom", totals) : null,
+  })).sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "he") || a.lists.join(",").localeCompare(b.lists.join(",")));
+  return { derived, explicit, customCount, custom };
 }
 
 function countBy(items, key) {
