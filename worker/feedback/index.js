@@ -4,6 +4,7 @@
  * POST /            {topic, text, page, theme, website} ⇐ הערה חדשה. מחזיר {ok, token}: הקישור האישי של הגולש.
  * GET  /thread?t=   ⇐ ההערה והשיחה עליה (רק למי שמחזיק את הקישור).
  * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
+ * POST /merge       {tokens} ⇐ איחוד השיחות שהגולש מחזיק בכל הקישורים שלהן. הקישורים נשארים תקפים.
  * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
  *                    המזהה היומי הוא גיבוב חד-כיווני של ה-IP, הדפדפן והתאריך: אי אפשר לשחזר ממנו כתובת או לקשור גולש בין ימים.
  *                    {v} = מזהה אקראי של הדפדפן (localStorage) לספירה מצטברת; נשמר רק גיבוב שלו, יחד עם יום ראשון ואחרון.
@@ -17,7 +18,6 @@
 const TOPICS = new Set(["data", "idea", "design", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
-const MAX_MESSAGES = 30;
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
 
 function cors(env, origin) {
@@ -57,7 +57,10 @@ async function findThread(env, token) {
   if (!token || typeof token !== "string" || token.length > 64) return null;
   const row = await env.DB.prepare("SELECT id, created_at, topic, text, status FROM feedback WHERE token_hash = ?")
     .bind(await sha256(token)).first();
-  return row || null;
+  if (!row) return null;
+  const group = await env.DB.prepare("SELECT root_id FROM feedback_threads WHERE feedback_id = ?").bind(row.id).first();
+  if (!group || group.root_id === row.id) return row;
+  return env.DB.prepare("SELECT id, created_at, topic, text, status FROM feedback WHERE id = ?").bind(group.root_id).first();
 }
 
 export default {
@@ -72,9 +75,13 @@ export default {
     if (request.method === "GET" && url.pathname === "/thread") {
       const fb = await findThread(env, url.searchParams.get("t"));
       if (!fb) return reply({ ok: false, error: "not found" }, 404);
-      const { results } = await env.DB.prepare("SELECT author, text, created_at FROM messages WHERE feedback_id = ? ORDER BY id")
-        .bind(fb.id).all();
-      return reply({ ok: true, topic: fb.topic, text: fb.text, created_at: fb.created_at, status: fb.status, messages: results || [] });
+      const members = "SELECT feedback_id FROM feedback_threads WHERE root_id = ?1 UNION SELECT ?1";
+      const { results: notes } = await env.DB.prepare(`SELECT id, created_at, topic, text, status FROM feedback WHERE id IN (${members}) ORDER BY created_at, id`).bind(fb.id).all();
+      const { results } = await env.DB.prepare(`SELECT author, text, created_at FROM messages WHERE feedback_id IN (${members}) ORDER BY created_at, id`).bind(fb.id).all();
+      const first = notes[0] ?? fb;
+      const messages = [...notes.slice(1).map((n) => ({ author: "visitor", text: n.text, created_at: n.created_at })), ...(results || [])]
+        .sort((a, b) => a.created_at.localeCompare(b.created_at));
+      return reply({ ok: true, topic: first.topic, text: first.text, created_at: first.created_at, status: fb.status, messages });
     }
     if (request.method !== "POST") return reply({ ok: false }, 405);
 
@@ -114,6 +121,24 @@ export default {
       return reply({ ok: false, error: "bad json" }, 400);
     }
     if (body.website) return reply({ ok: true }); // מלכודת
+    // כל אסימון מוכיח בעלות בשיחה שלו; אין שימוש ב-IP או בדמיון בטקסט לאיחוד.
+    if (url.pathname === "/merge") {
+      if (!Array.isArray(body.tokens) || body.tokens.length < 2 || body.tokens.length > 20 || body.tokens.some((t) => typeof t !== "string" || !/^[A-Za-z0-9_-]{16,64}$/.test(t)))
+        return reply({ ok: false, error: "bad tokens" }, 400);
+      const tokens = [...new Set(body.tokens)];
+      const hashes = await Promise.all(tokens.map(sha256));
+      const placeholders = hashes.map(() => "?").join(",");
+      const found = await env.DB.prepare(`SELECT id FROM feedback WHERE token_hash IN (${placeholders})`).bind(...hashes).all();
+      if (found.results.length !== hashes.length) return reply({ ok: false, error: "not found" }, 404);
+      // הפתרון של הקבוצות נעשה בתוך האצווה האטומית, גם כששתי בקשות איחוד חופפות.
+      const roots = `SELECT ft.root_id FROM feedback_threads ft JOIN feedback f ON f.id = ft.feedback_id WHERE f.token_hash IN (${placeholders})`;
+      await env.DB.batch([
+        env.DB.prepare(`INSERT OR IGNORE INTO feedback_threads (feedback_id, root_id) SELECT id, id FROM feedback WHERE token_hash IN (${placeholders})`).bind(...hashes),
+        env.DB.prepare(`UPDATE feedback SET status = CASE WHEN EXISTS (SELECT 1 FROM feedback WHERE id IN (${roots}) AND status = 'new') THEN 'new' WHEN NOT EXISTS (SELECT 1 FROM feedback WHERE id IN (${roots}) AND status != 'closed') THEN 'closed' ELSE 'answered' END WHERE id = (SELECT MIN(root_id) FROM (${roots}))`).bind(...hashes, ...hashes, ...hashes),
+        env.DB.prepare(`UPDATE feedback_threads SET root_id = (SELECT MIN(root_id) FROM (${roots})) WHERE root_id IN (${roots})`).bind(...hashes, ...hashes),
+      ]);
+      return reply({ ok: true, token: tokens[0] });
+    }
     const note = String(body.text || "").trim().slice(0, MAX_TEXT);
     if (!note) return reply({ ok: false, error: "empty" }, 400);
     // הלוג נפרד ממגבלת ההערה: אין חיתוך שקט של פרטי התקלה.
@@ -137,8 +162,6 @@ export default {
       // אותה תגובה בדיוק כמו האחרונה של הגולש בשיחה: לא נשמרת שוב
       const last = await env.DB.prepare("SELECT text FROM messages WHERE feedback_id = ? AND author = 'visitor' ORDER BY id DESC LIMIT 1").bind(fb.id).first();
       if ((last?.text ?? fb.text) === text) return reply({ ok: true, duplicate: true });
-      const count = await env.DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE feedback_id = ?").bind(fb.id).first();
-      if ((count?.n ?? 0) >= MAX_MESSAGES) return reply({ ok: false, error: "full" }, 429);
       await env.DB.batch([
         env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text, day_key) VALUES (?, ?, 'visitor', ?, ?)")
           .bind(fb.id, now, text, key),

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import Explained from "../../components/Explained";
-import { Fold } from "../../components/ui";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, fillPct, pctFillErrorText, TOTAL, type PctFillResult } from "../../lib/fillAll";
@@ -301,21 +300,10 @@ export default function Seats({
           </button>
           <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
         </div>
-        {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
-        {pctMode && invalid && pctLeft >= 0 && lawProblem && (
-          <p role="alert" className="text-sm text-warn bg-paper-card rounded-theme px-3 py-1 mt-1">
-            {lawProblem}
-          </p>
-        )}
-        <SaveError unit={both} />
-        {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
-      </div>
-
-        </div>
-      </div>
-
       {crowd && (
-        <Fold title="שלי מול הגולשים מול הסקרים">
+        <details className="mt-1 bg-paper-card border border-ink rounded-theme">
+          <summary className="cursor-pointer font-bold min-h-[44px] flex items-center px-3">אני</summary>
+          <div className="max-h-[45dvh] overflow-y-auto p-3">
           <Explained
             kind="השערות גולשים, אינן סקר"
             source="ההשערות האחרונות של הגולשים באתר (חציון), וממוצע הסקרים של האתר"
@@ -327,7 +315,7 @@ export default function Seats({
               <thead>
                 <tr className="text-ink-soft text-start">
                   <th className="text-start font-normal py-1">רשימה</th>
-                  <th className="font-normal">שלי</th>
+                  <th className="font-normal">אני</th>
                   <th className="font-normal">הגולשים</th>
                   <th className="font-normal">הסקרים</th>
                 </tr>
@@ -344,8 +332,23 @@ export default function Seats({
               </tbody>
             </table>
           </Explained>
-        </Fold>
+        </div>
+        </details>
       )}
+        {pctPreview && <PctFillPreview preview={pctPreview} current={pct} onApply={applyPct} onClose={() => setPctPreview(null)} returnTo={fillBtn} />}
+        {pctMode && invalid && pctLeft >= 0 && lawProblem && (
+          <p role="alert" className="text-sm text-warn bg-paper-card rounded-theme px-3 py-1 mt-1">
+            {lawProblem}
+          </p>
+        )}
+        <SaveError unit={both} />
+        {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
+      </div>
+
+        </div>
+      </div>
+
+
     </div>
   );
 }

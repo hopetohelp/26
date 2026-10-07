@@ -29,6 +29,13 @@ CREATE TABLE IF NOT EXISTS messages (
 CREATE INDEX IF NOT EXISTS messages_feedback ON messages(feedback_id, id);
 CREATE INDEX IF NOT EXISTS messages_day_key ON messages(day_key, created_at);
 
+-- איחוד שיחות רק אחרי הוכחת בעלות בכל הקישורים. הרשומות והקישורים המקוריים נשמרים.
+CREATE TABLE IF NOT EXISTS feedback_threads (
+  feedback_id INTEGER PRIMARY KEY REFERENCES feedback(id),
+  root_id INTEGER NOT NULL REFERENCES feedback(id)
+);
+CREATE INDEX IF NOT EXISTS feedback_threads_root ON feedback_threads(root_id);
+
 -- מונה כניסות: מספר הצפיות לכל עמוד בכל יום (UTC). אין כאן IP, עוגייה או מזהה כלשהו — רק ספירה.
 CREATE TABLE IF NOT EXISTS hits (
   day TEXT NOT NULL,

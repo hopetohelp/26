@@ -5,7 +5,7 @@ import forecastFile from "../data/forecast.json";
 import { lastPollDate, latestPerPollster, listName, passesInAll } from "../lib/data";
 import { dateLong, num } from "../lib/format";
 import { useTheme } from "../lib/theme";
-import { Badge, Card, Note, PageTitle } from "../components/ui";
+import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
 
 interface GateRow {
   passed: boolean;
@@ -91,9 +91,11 @@ export default function Forecast() {
               </p>
             )}
             <p className="text-sm text-ink-soft">
-              להשוואה: חציון פשוט של הסקרים האחרונים הגיע ל-{p1(base.voteAccuracy)} בקולות ו-{p1(base.seatAccuracy)} במנדטים. דיוק בקולות =
-              100% פחות מחצית סכום הפערים בין האחוז החזוי לאחוז בפועל; דיוק במנדטים = 100% פחות סכום פערי המנדטים חלקי 240.
+              להשוואה: חציון פשוט של הסקרים האחרונים הגיע ל-{p1(base.voteAccuracy)} בקולות ו-{p1(base.seatAccuracy)} במנדטים.
             </p>
+            <Fold title="איך מחושב מדד הדיוק">
+              <p className="text-sm">דיוק בקולות = 100% פחות מחצית סכום הפערים בין האחוז החזוי לאחוז בפועל; דיוק במנדטים = 100% פחות סכום פערי המנדטים חלקי 240.</p>
+            </Fold>
           </>
         ) : gate && !gate.valid ? (
           <p className="text-base font-bold text-warn">
@@ -147,7 +149,7 @@ export default function Forecast() {
       )}
 
       {gate && (
-        <Card title="הבדיקה על הבחירות הקודמות, מערכת אחר מערכת">
+        <Fold title="הבדיקה על הבחירות הקודמות, מערכת אחר מערכת">
           <div className="overflow-x-auto">
             <table className="w-full text-sm tabular">
               <caption className="sr-only">דיוק המודל בכל מערכת בחירות, {fc.horizon} ימים לפני הבחירות</caption>
@@ -175,10 +177,10 @@ export default function Forecast() {
             2013 ו-2015 משמשות ללמידה בלבד ואינן בחישוב הרף. מספר הגרסאות שנוסו עד היום: {fc.attempts.versions.length} ({fc.attempts.runs} הרצות). כל
             הרצה נרשמת ביומן שאינו נמחק: <a href={LOG_URL}>יומן ההרצות</a>. כל שינוי במודל נבדק מחדש על כל המערכות, לפי אותם כללים.
           </Note>
-        </Card>
+        </Fold>
       )}
 
-      <Card title="מה המודל למד מהעבר">
+      <Fold title="מה המודל למד מהעבר">
         <ul className="space-y-2 text-base leading-relaxed">
           <li>
             לכל מכון — כל הסקרים שלו מאז הגשת הרשימות, וקו מגמה לכל רשימה עד יום הבחירות.{" "}
@@ -233,7 +235,7 @@ export default function Forecast() {
             דיוק הסקרים בעבר
           </Link>
         </p>
-      </Card>
+      </Fold>
     </>
   );
 }

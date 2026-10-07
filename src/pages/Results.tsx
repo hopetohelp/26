@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Explained from "../components/Explained";
-import { Badge, Card, Note, PageTitle } from "../components/ui";
+import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
 import { num, pct } from "../lib/format";
@@ -152,7 +152,6 @@ export default function Results() {
                 <th scope="col">אותיות</th>
                 <th scope="col">קולות</th>
                 <th scope="col">אחוז</th>
-                <th scope="col">מנדטים שלמים</th>
                 <th scope="col">מנדטים</th>
               </tr>
             </thead>
@@ -163,14 +162,16 @@ export default function Results() {
                   <td>{l.letters}</td>
                   <td className="tabular-nums">{num(l.votes)}</td>
                   <td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td>
-                  <td className="tabular-nums">{a.withAll.whole[l.letters]}</td>
                   <td className="tabular-nums font-bold">{l.seats}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <Note>המודד: {num(a.withAll.quota)} קולות למנדט שלם (סך הקולות של הרשימות שעברו, חלקי 120, החלק השלם — סעיף 81(ב) לחוק).</Note>
+        <Fold title="פרטי חלוקת המנדטים">
+          <p className="text-sm">המודד: {num(a.withAll.quota)} קולות למנדט שלם (סך הקולות של הרשימות שעברו, חלקי 120, החלק השלם — סעיף 81(ב) לחוק).</p>
+          <ul className="text-sm mt-2">{passing.map((l) => <li key={l.letters}>{l.short}: {a.withAll.whole[l.letters]} מנדטים שלמים לפני חלוקת העודפים</li>)}</ul>
+        </Fold>
       </Card>
 
       <Card title="מה הזיזו הסכמי העודפים">
@@ -206,6 +207,9 @@ export default function Results() {
         </Explained>
       </Card>
 
+      <Fold title="פרטי החישוב בכל מערכת">
+        <ul className="text-sm space-y-1">{[...ALL].reverse().map(({ e: x, a: ax }) => <li key={x.id}>{x.label}: אחוז החסימה {num(ax.withAll.thresholdVotes)} קולות; מודד {num(ax.withAll.quota)} קולות למנדט שלם.</li>)}</ul>
+      </Fold>
       <Card title="כל המערכות מאז 2019, זו לצד זו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -215,8 +219,6 @@ export default function Results() {
                 <th scope="col" className="py-2 pe-3">מערכת</th>
                 <th scope="col" className="pe-3">בעלי זכות</th>
                 <th scope="col" className="pe-3">הצבעה</th>
-                <th scope="col" className="pe-3">אחוז החסימה בקולות</th>
-                <th scope="col" className="pe-3">קולות למנדט</th>
                 <th scope="col" className="pe-3">עברו</th>
                 <th scope="col" className="pe-3">נשרפו</th>
                 <th scope="col">מה הזיזו ההסכמים</th>
@@ -230,8 +232,6 @@ export default function Results() {
                   </th>
                   <td className="pe-3 tabular-nums">{num(x.eligible)}</td>
                   <td className="pe-3 tabular-nums">{pct((x.voted / x.eligible) * 100)}</td>
-                  <td className="pe-3 tabular-nums">{num(ax.withAll.thresholdVotes)}</td>
-                  <td className="pe-3 tabular-nums">{num(ax.withAll.quota)}</td>
                   <td className="pe-3 tabular-nums">{x.lists.filter((l) => l.seats > 0).length}</td>
                   <td className="pe-3 tabular-nums whitespace-nowrap">
                     {pct((ax.withAll.wasted / x.valid) * 100)} <span className="text-ink-soft">(כ-{(ax.withAll.wasted / ax.withAll.quota).toFixed(1)} מנד׳)</span>
