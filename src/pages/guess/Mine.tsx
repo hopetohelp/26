@@ -4,6 +4,7 @@ import { type BlocsPayload, type SeatsPayload, type VotePayload } from "../../li
 import History from "./History";
 import LinkSaver from "./LinkSaver";
 import Seats from "./Seats";
+import { DEFAULT_BLOCS } from "./model";
 import Vote from "./Vote";
 import { Btn, Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
@@ -19,7 +20,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   const [sec, setSec] = useState<Sec>("seats");
   const latest = session.me?.latest;
   const seats = useUnit<SeatsPayload>("seats", null, latest?.seats?.payload as SeatsPayload | undefined);
-  const blocs = useUnit<BlocsPayload>("blocs", null, latest?.blocs?.payload as BlocsPayload | undefined);
+  const blocs = useUnit<BlocsPayload>("blocs", DEFAULT_BLOCS, latest?.blocs?.payload as BlocsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, latest?.vote?.payload as VotePayload | undefined);
 
 
