@@ -23,13 +23,13 @@ describe("לוג תקלת שמירה", () => {
     cause.stack = "TypeError: Failed to fetch secret-token\n at https://site.example/app.js?t=private-link#secret:1:2";
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(cause));
     try {
-      await call("/save", { token: "secret-token", body: { password: "private-password", payload: "private-vote" } });
+      await call("/auth/password", { token: "secret-token", body: { password: "private-password", payload: "private-vote" } });
       throw new Error("הבקשה הייתה אמורה להיכשל");
     } catch (e) {
       expect(e).toBeInstanceOf(CrowdError);
       const error = e as InstanceType<typeof CrowdError>;
       expect(error.code).toBe("network");
-      expect(error.diagnostic).toMatchObject({ endpoint: "https://crowd.example/save", method: "POST", browser: "test-browser", online: true });
+      expect(error.diagnostic).toMatchObject({ endpoint: "https://crowd.example/auth/password", method: "POST", browser: "test-browser", online: true });
       const log = JSON.stringify(error.diagnostic);
       for (const secret of ["secret-token", "private-link", "private-password", "private-vote"]) expect(log).not.toContain(secret);
       expect(log).toContain("TypeError");
@@ -51,10 +51,10 @@ describe("לוג תקלת שמירה", () => {
     vi.stubGlobal("navigator", { onLine: false, userAgent: "test-browser" });
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch private-user private-password")));
     try {
-      await call("/auth/register", { body: { username: "private-user", password: "private-password" } });
+      await call("/auth/login", { body: { username: "private-user", password: "private-password" } });
       throw new Error("הבקשה הייתה אמורה להיכשל");
     } catch (e) {
-      expect(e).toMatchObject({ code: "network", diagnostic: { endpoint: "https://crowd.example/auth/register", online: false, cause: { name: "TypeError" } } });
+      expect(e).toMatchObject({ code: "network", diagnostic: { endpoint: "https://crowd.example/auth/login", online: false, cause: { name: "TypeError" } } });
       const log = JSON.stringify(e);
       expect(log).not.toContain("private-user");
       expect(log).not.toContain("private-password");
@@ -99,7 +99,7 @@ describe("מסלולים חלופיים ובדיקת חיבור", () => {
     const { call } = await import("./crowdApi");
     vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
-    await expect(call("/auth/guest", { body: {} })).rejects.toMatchObject({ code: "network", diagnostic: { method: "POST" } });
+    await expect(call("/auth/login", { body: {} })).rejects.toMatchObject({ code: "network", diagnostic: { method: "POST" } });
   });
   it("שני המסלולים חסומים ⇐ השמירה עוברת בממסר של שרת ההערות", async () => {
     vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
@@ -117,6 +117,26 @@ describe("מסלולים חלופיים ובדיקת חיבור", () => {
     const sent = fetcher.mock.calls.find(([u]) => u.endsWith("/relay"))! as unknown as [string, RequestInit];
     const inner = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(JSON.parse(sent[1].body as string).d), (c) => c.charCodeAt(0))));
     expect(inner).toEqual({ path: "/save", method: "POST", token: "tok", body: { unit: "seats" } });
+  });
+  it("כל המסלולים נכשלו בהרשמה ובשמירה ⇐ ממשיכים באסימון שהדפדפן יצר (התשובה נחסמה, הבקשה נקלטה)", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const api = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith("/autoreport") || url.endsWith("/diag")) return new Response("{}");
+      void init;
+      throw new TypeError("Failed to fetch");
+    });
+    vi.stubGlobal("fetch", fetcher);
+    const g = await api.call<{ token: string }>("/auth/guest", { body: {} });
+    expect(g.token).toMatch(/^[A-Za-z0-9_-]{43}$/);
+    expect(api.lastBlind).toBe(true);
+    const sent = fetcher.mock.calls.filter(([u]) => u.includes("/auth/guest")).map(([, i]) => JSON.parse((i as RequestInit).body as string).token);
+    expect(new Set(sent)).toEqual(new Set([g.token])); // אותו אסימון בכל המסלולים — משתתף אחד בשרת
+    const s = await api.call<{ version: { payload: unknown } }>("/save", { token: g.token, body: { unit: "seats", payload: { a: 1 } } });
+    expect(s.version.payload).toEqual({ a: 1 });
   });
   it("תשובת שרת (גם שגיאה) אינה מפעילה מסלול חלופי", async () => {
     vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
