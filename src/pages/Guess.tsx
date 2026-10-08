@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageTitle } from "../components/ui";
 import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
+import { maskIdentifier } from "../lib/identifier";
 import { absorbFeedbackToken } from "../lib/feedback";
 import { introSeen, loadDraft, markIntroSeen, saveDraft, setLinkAck } from "../lib/crowdSession";
 import { decodeGuess } from "../lib/shareGuess";
@@ -61,7 +62,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         session.setLink(t);
         setLinkAck(true);
         setRecoverLink(t);
-        setFlash({ ok: true, text: r.username ? `נכנסתם עם הקישור האישי, בשם ${r.username}.` : "נכנסתם עם הקישור האישי." });
+        setFlash({ ok: true, text: r.username ? `נכנסתם עם הקישור האישי, בשם ${maskIdentifier(r.username)}.` : "נכנסתם עם הקישור האישי." });
       })
       .catch((e) => setFlash({ ok: false, text: errorText(e) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps

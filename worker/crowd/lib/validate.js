@@ -133,10 +133,16 @@ export function validateSave(body) {
 // ---- שם משתמש וסיסמה
 const HEB = /[א-ת]/;
 const LAT = /[A-Za-z]/;
-/** NFKC, 3–24 תווים: אותיות עבריות או לטיניות, ספרות, קו תחתון; בלי ערבוב עברית ולטינית. מחזיר {display, norm} או null */
+/** שם משתמש או כתובת מייל. שם: NFKC, 3–24 תווים: אותיות עבריות או לטיניות, ספרות, קו תחתון; בלי ערבוב עברית ולטינית. מחזיר {display, norm} או null */
+// כתובת מייל כשם משתמש (הכרעת בעלים 8.10.2026): נשמרת באותיות קטנות, לא נשלח אליה דבר, ולא מוצגת לאיש
+const EMAIL = /^[^\s@<>()[\]"',;:\\]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?\.[A-Za-z]{2,24}$/;
 export function normalizeUsername(u) {
   if (typeof u !== "string") return null;
   const display = u.normalize("NFKC").trim();
+  if (display.includes("@")) {
+    const email = display.toLowerCase();
+    return email.length <= 254 && EMAIL.test(email) ? { display: email, norm: email } : null;
+  }
   if (!/^[א-תA-Za-z0-9_]{3,24}$/.test(display)) return null;
   if (HEB.test(display) && LAT.test(display)) return null;
   // צורה קנונית לייחודיות: NFKC ואז קיפול אותיות לטיניות (עברית אינה תלוית רישיות)

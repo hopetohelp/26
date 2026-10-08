@@ -74,4 +74,21 @@ describe("שמירה בלי משתמש", () => {
     expect((await call("/delete", { token: g.data.token, body: { confirm: "מחק" } })).status).toBe(200);
     expect((await call("/me", { token: g.data.token })).status).toBe(401);
   });
+
+});
+
+describe("מייל כשם משתמש", () => {
+  it("הרשמה וכניסה במייל, בלי הבדל באותיות; אותו מייל לא נרשם פעמיים", async () => {
+    const r = await call("/auth/register", { body: { username: "Dani@Example.com", password: "abc12x" } });
+    expect(r.status).toBe(200);
+    expect((await call("/me", { token: r.data.token })).data.username).toBe("dani@example.com");
+    expect((await call("/auth/login", { body: { username: "DANI@example.COM", password: "abc12x" } })).status).toBe(200);
+    expect((await call("/auth/register", { body: { username: "dani@example.com", password: "abc12x" } })).status).toBe(409);
+    expect((await call("/auth/register", { body: { username: "not-an-email@x", password: "abc12x" } })).data.error).toBe("bad_username");
+  });
+  it("אורח מוסיף מייל כשם משתמש", async () => {
+    const g = await call("/auth/guest", { body: {} });
+    const c = await call("/auth/claim", { token: g.data.token, body: { username: "guest@example.com", password: "abc12x" } });
+    expect(c.data.username).toBe("guest@example.com");
+  });
 });
