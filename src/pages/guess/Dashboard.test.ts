@@ -112,7 +112,9 @@ it("ממיין את כל הגושים לפי משתתפים ואז מנדטים,
     ]} };
   for (const view of ['table','chart'] as const) {
     const html = renderToStaticMarkup(createElement(BlocStats,{d,view})).split('&quot;').join('"');
-    const labels = [[nameOf('utj'),nameOf('otzma')].join(' · '),[nameOf('likud'),nameOf('shas')].join(' · '),'גוש הקואליציה',[nameOf('joint'),nameOf('raam')].join(' · ')];
+    // גוש שהגדיר משתתף אחד בלבד אינו מוצג (הכרעת בעלים 8.10.2026)
+    expect(html).not.toContain([nameOf('joint'),nameOf('raam')].join(' · '));
+    const labels = [[nameOf('utj'),nameOf('otzma')].join(' · '),[nameOf('likud'),nameOf('shas')].join(' · '),'גוש הקואליציה'];
     const indices = labels.map(label => html.indexOf(label));
     expect(indices.every(index => index >= 0)).toBe(true);
     expect(indices).toEqual([...indices].sort((a,b)=>a-b));
