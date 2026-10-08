@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { shareUrl, type SharedGuess } from "../../lib/shareGuess";
 import type { BlocTotal } from "./blocSummary";
+import { isEmail } from "../../lib/identifier";
 import { renderShareImage } from "./shareImage";
 import { Btn } from "./ui";
 
@@ -72,7 +73,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
         {busy ? "מכינים…" : "שתפו את ההשערה"}
       </Btn>
       <Btn onClick={download} disabled={busy} className="w-full">הורדת תמונה</Btn>
-      {username && (
+      {username && !isEmail(username) && (
         <label className="flex items-center gap-2 text-sm text-ink-soft">
           <input type="checkbox" className="w-5 h-5" checked={withName} onChange={(e) => setWithName(e.target.checked)} />
           <span>

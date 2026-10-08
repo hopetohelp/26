@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { call, CrowdError } from "../../lib/crowdApi";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
+import { maskIdentifier } from "../../lib/identifier";
 import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
@@ -115,7 +116,7 @@ function PrivacyNote() {
     <details className="text-sm">
       <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">מה נשמר ומי רואה?</summary>
       <ul className="list-disc ps-5 space-y-1 pb-2">
-        <li>מה שתשמרו נשמר בשרת האתר, בלי שם אמיתי ובלי מייל.</li>
+        <li>מה שתשמרו נשמר בשרת האתר, בלי שם אמיתי. אם תבחרו כתובת מייל כשם משתמש, היא נשמרת בשרת, לא מוצגת לאיש ולא נשלח אליה דבר; לשחזור משתמשים בקישור האישי.</li>
         <li>הגרסה האחרונה שלכם נכנסת לממוצע הגולשים, בלי שום פרט מזהה. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצות קטנות אפשר להסיק תשובות ללא שם. מספר משתתפים קטן אינו משקף את הציבור.</li>
         <li>אם החיבור לשרת נכשל, נשלח אלינו דיווח אוטומטי עם פרטים טכניים בלבד: סוג הדפדפן, איזה חלק נכשל ותוצאת בדיקת חיבור. בלי שם, סיסמה או ההשערה.</li>
         <li>אף אחד אחר לא רואה את ההשערה האישית שלכם. אפשר למחוק הכול בכל רגע ב"הנתונים שלי".</li>
@@ -173,8 +174,8 @@ export function AuthForm({
           {mode === "register" && allowGuest && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-accent-soft text-ink">מומלץ</span>}
         </h3>
         <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
-          <Field label="שם משתמש" hint={mode === "register" ? "3–24 אותיות או ספרות. לא שם אמיתי." : undefined}>
-            <input required minLength={3} maxLength={24} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
+          <Field label="שם משתמש או מייל" hint={mode === "register" ? "3–24 אותיות או ספרות, או כתובת מייל. לא נשלח אליה דבר והיא לא מוצגת לאיש." : undefined}>
+            <input required minLength={3} maxLength={254} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
           </Field>
           <PasswordField label="סיסמה" hint={mode === "register" ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={mode === "login" ? "current" : "new"} />
         </div>
@@ -234,8 +235,8 @@ export function ClaimForm({ session, onDone }: { session: ReturnType<typeof useS
       })}
     >
       <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
-        <Field label="שם משתמש" hint="3–24 אותיות או ספרות. לא שם אמיתי.">
-          <input required minLength={3} maxLength={24} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
+        <Field label="שם משתמש או מייל" hint="3–24 אותיות או ספרות, או כתובת מייל. לא נשלח אליה דבר והיא לא מוצגת לאיש.">
+          <input required minLength={3} maxLength={254} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
         </Field>
         <PasswordField label="סיסמה" hint={`לפחות ${PW_MIN} תווים`} value={pw} onChange={setPw} mode="new" />
       </div>
@@ -257,7 +258,7 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
       <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
         <h3 className="font-display text-3xl leading-none text-center">החשבון</h3>
         <p className="text-sm text-center">
-          מחוברים בשם <bdi className="font-bold">{me.username}</bdi>.
+          מחוברים בשם <bdi className="font-bold">{maskIdentifier(me.username)}</bdi>.
         </p>
         <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
           <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
