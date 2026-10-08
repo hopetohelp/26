@@ -33,6 +33,8 @@ jobs:
         run: python3 pipeline/test_model.py
       - name: מודל החיזוי — מדדים, מגמה, ושלמות יומן ההרצות
         run: python3 pipeline/test_forecast.py
+      - name: בדיקות חלופת התחזית המחקרית
+        run: python3 pipeline/test_forecast_challenger.py
       - name: סקרים ישירים — קליטה ללא השהיה
         run: python3 pipeline/test_direct_polls.py
       - name: טיפוסים
