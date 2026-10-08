@@ -61,6 +61,8 @@ export interface SeatCell {
 export interface SeatsPayload {
   /** סכום מפלגות הקואליציה, מחושב בשרת ונשמר עם הגרסה; חסר בגרסאות ישנות. */
   coalitionSeats?: number;
+  personalBlocSeats?: { id: string; name: string; lists: string[]; seats: number }[];
+  fixedBlocSeats?: Record<"government" | "coalition" | "opposition" | "arab" | "unity", number>;
   /** "seats" = ניחוש לפי מנדטים (ברירת המחדל, גם כשחסר) · "pct" = לפי אחוזי הצבעה, והמנדטים מחושבים במנוע החוק */
   mode?: "seats" | "pct";
   /** במצב pct: אחוז מהקולות הכשרים לכל רשימה (0..100, ספרה אחת אחרי הנקודה, סכום ≤ 100; היתר = אחרות / לא עברו) */
@@ -163,10 +165,11 @@ export interface Dashboard {
   };
   blocs?: {
     derived: { gov: SeatStat; rest: SeatStat } | null;
+    fixed?: { id: string; name: string; lists: string[]; stat: SeatStat | null }[];
     explicit: { gov: SeatStat | null; rest: SeatStat | null } | null;
     customCount: number;
     /** גושים בעלי אותו הרכב רשימות, ללא תלות בשם או בסדר; אין ערבוב בין הרכבים שונים. */
-    custom?: { name: string; lists: string[]; n: number; explicit: SeatStat | null; derived: SeatStat | null }[];
+    custom?: { name: string; lists: string[]; n: number; eligible?: boolean; explicit: SeatStat | null; derived: SeatStat | null }[];
   };
   vote2026?: { all: Record<string, Cell>; named: Record<string, Cell> };
   vote2022?: { all: Record<string, Cell>; valid: Record<string, Cell>; official: Record<string, number> };

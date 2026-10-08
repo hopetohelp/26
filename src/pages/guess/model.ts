@@ -47,15 +47,17 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
   return { seats, start, pollsAsOf: start === "polls" ? POLLS_AS_OF : null };
 }
 
+export const UNITY_IDS = ["likud", "yashar", "together", "yb", "bluewhite", "reservists"];
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 /** חלוקת פתיחה למשתתף חדש לפי הכרעת הבעלים; אינה משנה גושים שמורים. */
 export function defaultBlocs(): Bloc[] {
-  const coalition = IDS.filter(id => GOV_IDS.includes(id) || ["amcha", "noam", "code_black"].includes(id));
+  const coalition = IDS.filter(id => GOV_IDS.includes(id) || ["amcha", "noam", "code_black", "haredi_public"].includes(id));
   const arab: string[] = IDS.filter(id => id === "joint" || id === "raam");
   return [
     { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
+    { id: "rest", name: "גוש האופוזיציה", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
     { id: "arab", name: "ערבים", lists: arab, target: null },
-    { id: "rest", name: "כל השאר", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
+    { id: "unity", name: "אחדות", lists: [...UNITY_IDS], target: null },
   ];
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
@@ -79,10 +81,26 @@ export const V2022_LABEL: Record<string, string> = {
 export const V2026_LABEL: Record<string, string> = { undecided: "עוד לא החלטתי", none: "לא אצביע", ineligible: "לא הייתה לי זכות הצבעה", private: "מעדיף/ה לא לומר" };
 
 /** גוש הקואליציה שנשמר לפני שנעם וצבע שחור נוספו לברירת המחדל — אותו גוש (הכרעת בעלים 8.10.2026). כמו `canonicalLists` בשרת. */
-const LEGACY_COALITION = ["amcha", "likud", "otzma", "rzp", "shas", "utj"].join(",");
+const keyOf = (lists: string[]) => [...new Set(lists)].sort().join(",");
+const oldCoalitions = new Set([
+  ["amcha", "likud", "otzma", "rzp", "shas", "utj"],
+  ["amcha", "code_black", "likud", "noam", "otzma", "rzp", "shas", "utj"],
+].map(keyOf));
 function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
-  const legacy = (b: Bloc) => [...new Set(b.lists)].sort().join(",") === LEGACY_COALITION;
-  if (!p.blocs.some(legacy)) return p;
-  const added = ["noam", "code_black"].filter(id => IDS.includes(id));
-  return { ...p, blocs: p.blocs.map(b => legacy(b) ? { ...b, lists: [...b.lists, ...added] } : { ...b, lists: b.lists.filter(id => !added.includes(id)) }) };
+  const current = defaultBlocs();
+  const oldRest = new Set([...oldCoalitions].flatMap(key => {
+    const rest = IDS.filter(id => !key.split(",").includes(id) && !["joint", "raam"].includes(id));
+    return [keyOf(rest), keyOf(rest.filter(id => !["noam", "code_black"].includes(id)))];
+  }));
+  let changed = false;
+  const blocs = p.blocs.map(b => {
+    if (oldCoalitions.has(keyOf(b.lists))) { changed = true; return { ...b, lists: current[0].lists }; }
+    if (oldRest.has(keyOf(b.lists))) {
+      changed = true; return { ...b, name: "גוש האופוזיציה", lists: current[1].lists };
+    }
+    return b;
+  });
+  const defaults = blocs.length === 3 && current.slice(0, 3).every(d => blocs.some(b => b.id === d.id && keyOf(b.lists) === keyOf(d.lists)));
+  if (defaults) return { ...p, blocs: [...current.slice(0,3).map(d => blocs.find(b => b.id === d.id)!), current[3]] };
+  return changed ? { ...p, blocs } : p;
 }

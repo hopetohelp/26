@@ -119,3 +119,9 @@ CREATE TABLE IF NOT EXISTS prefs (
   camps TEXT,
   updated_at TEXT NOT NULL
 );
+
+-- המקור לפני שינוי הרכבי ברירת המחדל נשמר לצורך שחזור וביקורת; אין מזהים חדשים או נתונים ציבוריים.
+CREATE TABLE IF NOT EXISTS bloc_migration_backup (
+  kind TEXT NOT NULL, id INTEGER NOT NULL, original TEXT NOT NULL, migrated_at TEXT NOT NULL,
+  PRIMARY KEY(kind,id)
+);

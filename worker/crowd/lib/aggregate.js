@@ -13,12 +13,14 @@
  */
 import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
 
+import { FIXED_BLOCS, migrateBlocs } from "./blocDefinitions.js";
+
 export const K_CELL = 1;
 export const K_ROW = 1;
 export const OPEN_AT = 0;
 export const MIN_CHANGED = 1;
 export const TOTAL = 120;
-export const DASHBOARD_POLICY = "open-all-v4";
+export const DASHBOARD_POLICY = "fixed-blocs-v5";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -129,17 +131,13 @@ export function computeSeats(seatVersions) {
   };
 }
 
-/** גוש הקואליציה בברירת המחדל הישנה, לפני שנעם וצבע שחור נוספו לו (הכרעת בעלים 8.10.2026: אותו גוש) */
-const LEGACY_COALITION = JSON.stringify(["amcha", "likud", "otzma", "rzp", "shas", "utj"]);
-const COALITION = ["amcha", "code_black", "likud", "noam", "otzma", "rzp", "shas", "utj"];
-const canonicalLists = (lists) => (JSON.stringify(lists) === LEGACY_COALITION ? COALITION : lists);
-
 export function computeBlocs(seatVersions, blocVersions) {
   let derived = null;
   if (seatVersions.length >= K_CELL) {
     const gov = seatVersions.map((v) => [...GOV37].reduce((a, id) => a + seatValue(v.payload, id), 0));
     derived = { gov: seatStat("gov", gov), rest: seatStat("rest", gov.map((g) => TOTAL - g)) };
   }
+  const fixed = FIXED_BLOCS.map(b => ({ ...b, stat: seatVersions.length ? seatStat(b.id, seatVersions.map(v => b.lists.reduce((sum, id) => sum + seatValue(v.payload, id), 0))) : null }));
   const g = [];
   const r = [];
   let gov37Count = 0;
@@ -150,8 +148,8 @@ export function computeBlocs(seatVersions, blocVersions) {
     if (v.payload.mode === "custom") {
       customCount++;
       const seen = new Set();
-      for (const b of v.payload.blocs) {
-        const lists = canonicalLists([...new Set(b.lists)].sort());
+      for (const b of migrateBlocs(v.payload).blocs) {
+        const lists = [...new Set(b.lists)].sort();
         const name = b.name.trim();
         const key = JSON.stringify(lists);
         if (seen.has(key)) continue;
@@ -177,10 +175,11 @@ export function computeBlocs(seatVersions, blocVersions) {
   if (!derived && !explicit && customCount < K_CELL) return null;
   const custom = [...customGroups.values()].map(({ name, lists, n, targets, totals }) => ({
     name, lists, n,
+    eligible: lists.length >= 2 && totals.length > 0 && totals.reduce((sum, n) => sum + n, 0) >= 4 * lists.length * totals.length,
     explicit: targets.length ? seatStat("custom", targets) : null,
     derived: totals.length ? seatStat("custom", totals) : null,
   })).sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "he") || a.lists.join(",").localeCompare(b.lists.join(",")));
-  return { derived, explicit, customCount, custom };
+  return { derived, fixed, explicit, customCount, custom };
 }
 
 function countBy(items, key) {

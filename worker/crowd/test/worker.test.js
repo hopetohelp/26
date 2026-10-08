@@ -225,7 +225,7 @@ describe("cron: aggregation & anomaly", () => {
     await env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json) VALUES (?, ?, ?, ?)")
       .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ ...old, participants: 1 })).run();
     const first = await call("/dashboard");
-    expect(first.data).toMatchObject({ open: true, policy: "open-all-v4", participants: 1 });
+    expect(first.data).toMatchObject({ open: true, policy: "fixed-blocs-v5", participants: 1 });
     expect(first.data.seats.n).toBe(1);
     expect(first.data.matrix.rows["מחל"].n).toBe(1);
     const before = env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n;
@@ -312,4 +312,19 @@ describe("העדפות — המחנות נשמרים על המשתמש", () => {
     expect((await call("/prefs", { body: { camps: {} } })).status).toBe(401);
     expect((await call("/delete", { token, body: { confirm: "מחק" } })).status).toBe(200);
   });
+});
+
+it('כל שמירת מפלגות שומרת גושים קבועים ואישיים לפי ההרכב האחרון', async () => {
+  const tok = await newP();
+  const definition = (lists) => ({mode:'custom',blocs:[{id:'mine',name:'שלי',lists,target:null}]});
+  expect((await save(tok,'blocs',definition(['likud','yashar']))).status).toBe(200);
+  const original = await save(tok,'seats',seats(60));
+  expect(original.status).toBe(200);
+  expect(Object.keys(original.data.version.payload.fixedBlocSeats)).toEqual(['government','coalition','opposition','arab','unity']);
+  expect(original.data.version.payload.personalBlocSeats).toEqual([{id:'mine',name:'שלי',lists:['likud','yashar'],seats:120}]);
+  await save(tok,'blocs',definition(['likud','shas']));
+  const next = await save(tok,'seats',seats(60));
+  expect(next.data.version.payload.personalBlocSeats[0].seats).toBe(60);
+  const history = (await call('/history?unit=seats',{token:tok})).data.versions;
+  expect(history.find(v=>v.id===original.data.version.id).payload.personalBlocSeats[0].seats).toBe(120);
 });
