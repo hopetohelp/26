@@ -109,3 +109,6 @@ CREATE TABLE IF NOT EXISTS support_messages (
   text TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS support_messages_participant ON support_messages(participant, id);
+
+-- ממשק ניהול: רק גיבוב של מפתח הניהול (המפתח עצמו אצל הבעלים בלבד, בקישור הניהול)
+CREATE TABLE IF NOT EXISTS admin_keys (hash TEXT PRIMARY KEY, created_at TEXT NOT NULL);

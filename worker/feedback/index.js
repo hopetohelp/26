@@ -89,6 +89,52 @@ export default {
       return env.CROWD.fetch(new Request(url, request));
     }
 
+    // ---- ממשק ניהול: מפתח ב-Authorization: Bearer; במאגר רק הגיבוב שלו (admin_keys). שיחות תמיכה, תשובות ומספרים.
+    if (url.pathname.startsWith("/admin/")) {
+      const key = (request.headers.get("authorization") || "").replace(/^Bearer /, "");
+      const ok = key.length >= 32 && (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first());
+      if (!ok) return reply({ ok: false, error: "unauthorized" }, 401);
+      const crowd = (path, init = {}) => env.CROWD ? env.CROWD.fetch(new Request("https://crowd.internal" + path, { ...init, headers: { "x-admin-key": key, "content-type": "application/json" } })).then((r) => r.json()).catch(() => null) : Promise.resolve(null);
+      if (request.method === "GET" && url.pathname === "/admin/data") {
+        const since = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
+        const { results: notes } = await env.DB.prepare("SELECT f.id, f.created_at, f.topic, f.text, f.page, f.status, COALESCE(ft.root_id, f.id) AS root FROM feedback f LEFT JOIN feedback_threads ft ON ft.feedback_id = f.id WHERE f.text NOT LIKE ?1 ORDER BY f.created_at DESC LIMIT 300").bind(AUTO + "%").all();
+        const { results: msgs } = await env.DB.prepare("SELECT feedback_id, author, text, created_at FROM messages WHERE feedback_id IN (SELECT id FROM feedback WHERE text NOT LIKE ?1 ORDER BY created_at DESC LIMIT 300) ORDER BY created_at, id").bind(AUTO + "%").all();
+        const { results: days } = await env.DB.prepare("SELECT d.day, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page NOT LIKE 'diag:%') AS visits, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day) AS users, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:all-blocked') AS blocked, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:blind-sent') AS blindSaved, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:relay-saved') AS relaySaved, (SELECT COUNT(*) FROM feedback f WHERE substr(f.created_at,1,10) = d.day AND f.text LIKE ?2) AS autoFailures FROM (SELECT DISTINCT day FROM hits WHERE day >= ?1) d ORDER BY d.day DESC").bind(since, AUTO + "%").all();
+        const total = await env.DB.prepare("SELECT COUNT(*) AS n FROM visitors_all").first();
+        const threads = {};
+        for (const n of notes || []) (threads[n.root] ??= { id: n.root, items: [] }).items.push({ kind: "note", id: n.id, author: "visitor", text: n.text, created_at: n.created_at, topic: n.topic, page: n.page, status: n.status });
+        for (const m of msgs || []) {
+          const root = (notes || []).find((n) => n.id === m.feedback_id)?.root ?? m.feedback_id;
+          (threads[root] ??= { id: root, items: [] }).items.push({ kind: "message", author: m.author, text: m.text, created_at: m.created_at });
+        }
+        const list = Object.values(threads).map((t) => {
+          t.items.sort((a, b) => a.created_at.localeCompare(b.created_at));
+          const last = t.items[t.items.length - 1];
+          return { ...t, updated_at: last.created_at, waiting: last.author === "visitor" };
+        }).sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+        return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, feedback: list, support: await crowd("/admin/support") });
+      }
+      if (request.method === "POST" && url.pathname === "/admin/reply") {
+        let b = {};
+        try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+        const text = String(b.text || "").trim().slice(0, 4000);
+        if (!text) return reply({ ok: false, error: "empty" }, 400);
+        if (b.kind === "support") {
+          const r = await crowd("/admin/support/reply", { method: "POST", body: JSON.stringify({ participant: b.id, text }) });
+          return reply(r ?? { ok: false }, r?.ok ? 200 : 502);
+        }
+        const id = Number(b.id);
+        if (!Number.isInteger(id)) return reply({ ok: false }, 400);
+        const now = new Date().toISOString();
+        await env.DB.batch([
+          env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text) SELECT ?, ?, 'team', ? WHERE EXISTS (SELECT 1 FROM feedback WHERE id = ?)").bind(id, now, text, id),
+          env.DB.prepare("UPDATE feedback SET status = 'answered' WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(id, id),
+        ]);
+        return reply({ ok: true });
+      }
+      return reply({ ok: false }, 404);
+    }
+
     // ---- בדיקת חיבור (בלי מאגר)
     if (url.pathname === "/ping") return reply({ ok: true });
 

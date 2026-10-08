@@ -14,6 +14,7 @@ import Method from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
 import Support from "./pages/Support";
+const Admin = lazy(() => import("./pages/Admin"));
 import MyFeedback from "./pages/MyFeedback";
 import Tabbed, { Moved } from "./components/Tabbed";
 
@@ -76,6 +77,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="voters" element={<Moved to="/past" tab="voters" />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
+          <Route path="admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Admin /></Suspense>} />
           <Route path="feedback" element={<Moved to="/support" />} />
           <Route path="feedback/:token" element={<MyFeedback />} />
           <Route path="*" element={<NotFound />} />
