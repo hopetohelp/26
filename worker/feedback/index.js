@@ -74,6 +74,26 @@ async function findThread(env, token) {
   return env.DB.prepare("SELECT id, created_at, topic, text, status FROM feedback WHERE id = ?").bind(group.root_id).first();
 }
 
+/** העתקה חוזרת בטוחה: ההודעות המקוריות נשמרות, וסטטוס מקומי חדש יותר אינו נדרס. */
+async function importSupport(env, participant, thread) {
+  if (!thread) return;
+  await env.DB.prepare("INSERT OR IGNORE INTO support_threads (participant, created_at, updated_at, status) VALUES (?, ?, ?, ?)").bind(participant, thread.created_at, thread.updated_at, thread.status).run();
+  const statements = [];
+  for (const [index, message] of (thread.messages || []).entries()) {
+    const key = await sha256(JSON.stringify([participant, index, message.created_at, message.author, message.text]));
+    statements.push(env.DB.prepare("INSERT OR IGNORE INTO support_messages (participant, created_at, author, text, legacy_key) VALUES (?, ?, ?, ?, ?)").bind(participant, message.created_at, message.author, message.text, key));
+  }
+  for (let i = 0; i < statements.length; i += 50) await env.DB.batch(statements.slice(i, i + 50));
+  await env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = ? WHERE participant = ? AND updated_at < ?").bind(thread.updated_at, thread.status, participant, thread.updated_at).run();
+}
+
+async function supportThread(env, participant) {
+  const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
+  if (!thread) return null;
+  const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY created_at, id").bind(participant).all();
+  return { ...thread, messages: results || [] };
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("origin");
@@ -87,6 +107,52 @@ export default {
       if (!env.CROWD) return reply({ error: "offline" }, 503);
       url.pathname = url.pathname.slice("/crowd".length);
       return env.CROWD.fetch(new Request(url, request));
+    }
+
+    // אותה כתובת ואותה צורת בקשה כמו הערה רגילה, בלי כותרת זהות בדפדפן.
+    let accountBody;
+    if (url.pathname === "/" && request.method === "POST") {
+      const candidate = await request.clone().json().catch(() => null);
+      if (candidate?.kind === "account-support") accountBody = candidate;
+    }
+    // הסשן מאומת רק בבקשה פנימית, ואינו נשמר במאגר ההערות.
+    if ((url.pathname === "/support" || accountBody) && request.method === "POST") {
+      let body;
+      try { body = accountBody ?? await request.json(); } catch { return reply({ error: "bad_json" }, 400); }
+      if (!body || typeof body.token !== "string" || !body.token || body.token.length > 256) return reply({ error: "unauthorized" }, 401);
+      if (!env.CROWD) return reply({ error: "offline" }, 503);
+      const authHeaders = { authorization: `Bearer ${body.token}`, origin: origin || "" };
+      let access;
+      try {
+        let auth = await env.CROWD.fetch(new Request("https://crowd.internal/support/access", { headers: authHeaders }));
+        if (auth.status === 404) {
+          // פריסת שרת ההערות יכולה להקדים את שרת החשבונות.
+          const me = await env.CROWD.fetch(new Request("https://crowd.internal/me", { headers: authHeaders }));
+          if (!me.ok) return reply({ error: me.status === 401 ? "unauthorized" : "account_unavailable" }, me.status);
+          const owner = await me.json();
+          auth = await env.CROWD.fetch(new Request("https://crowd.internal/support", { headers: authHeaders }));
+          if (!auth.ok) return reply({ error: "account_unavailable" }, 503);
+          access = { participant: owner.participant, ...(await auth.json()) };
+        } else {
+          if (!auth.ok) return reply({ error: auth.status === 401 ? "unauthorized" : "account_unavailable" }, auth.status);
+          access = await auth.json();
+        }
+      } catch { return reply({ error: "account_unavailable" }, 503); }
+      if (typeof access.participant !== "string" || !access.participant) return reply({ error: "account_unavailable" }, 503);
+      const participant = access.participant;
+      await importSupport(env, participant, access.thread);
+      if (body.text !== undefined) {
+        const text = typeof body.text === "string" ? body.text.trim() : "";
+        if (!text || text.length > MAX_TEXT || typeof body.op_id !== "string" || !/^[\w-]{16,64}$/.test(body.op_id)) return reply({ error: "bad_request" }, 400);
+        if (body.website) return reply({ ok: true });
+        const at = new Date().toISOString();
+        await env.DB.batch([
+          env.DB.prepare("INSERT OR IGNORE INTO support_threads (participant, created_at, updated_at, status) VALUES (?, ?, ?, 'new')").bind(participant, at, at),
+          env.DB.prepare("INSERT OR IGNORE INTO support_messages (participant, created_at, author, text, op_id) VALUES (?, ?, 'visitor', ?, ?)").bind(participant, at, text, body.op_id),
+          env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'new' WHERE participant = ? AND changes() = 1").bind(at, participant),
+        ]);
+      }
+      return reply({ ok: true, thread: await supportThread(env, participant) });
     }
 
     // ---- ממשק ניהול: מפתח ב-Authorization: Bearer; במאגר רק הגיבוב שלו (admin_keys). שיחות תמיכה, תשובות ומספרים.
@@ -112,7 +178,12 @@ export default {
           const last = t.items[t.items.length - 1];
           return { ...t, updated_at: last.created_at, waiting: last.author === "visitor" };
         }).sort((a, b) => b.updated_at.localeCompare(a.updated_at));
-        return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, feedback: list, support: await crowd("/admin/support") });
+        const legacy = await crowd("/admin/support");
+        for (const thread of legacy?.threads || []) await importSupport(env, thread.participant, thread);
+        const { results: accountThreads } = await env.DB.prepare("SELECT participant, status, created_at, updated_at FROM support_threads ORDER BY updated_at DESC").all();
+        const local = [];
+        for (const thread of accountThreads || []) local.push({ participant: thread.participant, ...(await supportThread(env, thread.participant)) });
+        return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       if (request.method === "POST" && url.pathname === "/admin/reply") {
         let b = {};
@@ -120,8 +191,15 @@ export default {
         const text = String(b.text || "").trim().slice(0, 4000);
         if (!text) return reply({ ok: false, error: "empty" }, 400);
         if (b.kind === "support") {
-          const r = await crowd("/admin/support/reply", { method: "POST", body: JSON.stringify({ participant: b.id, text }) });
-          return reply(r ?? { ok: false }, r?.ok ? 200 : 502);
+          const participant = String(b.id || "");
+          const thread = await supportThread(env, participant);
+          if (!thread) return reply({ ok: false, error: "not found" }, 404);
+          const at = new Date().toISOString();
+          await env.DB.batch([
+            env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(participant, at, text),
+            env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
+          ]);
+          return reply({ ok: true });
         }
         const id = Number(b.id);
         if (!Number.isInteger(id)) return reply({ ok: false }, 400);

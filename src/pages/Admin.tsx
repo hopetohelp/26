@@ -13,7 +13,7 @@ type Item = { author: "visitor" | "team"; text: string; created_at: string; topi
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
 type Day = { day: string; visits: number; users: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
-type Data = { days: Day[]; totalVisitors: number; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type Data = { accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => new Date(s).toLocaleString("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
 
@@ -122,7 +122,7 @@ export default function Admin() {
             <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו.</p>
           </section>
 
-          {!data.support && <Notice tone="warn">שרת ההשתתפות לא ענה. מוצגות הפניות הזמינות משרת ההערות.</Notice>}
+          {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
           <InquirySections data={data} reply={reply} />
         </>
       )}

@@ -1,10 +1,9 @@
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MyData from "./guess/MyData";
 import { Btn, Notice } from "./guess/ui";
-import { call } from "../lib/crowdApi";
 import { errorText, useSession } from "./guess/useCrowd";
-import { FEEDBACK_URL, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
+import { FEEDBACK_URL, accountSupport, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { LegacyFeedback } from "./MyFeedback";
 
 type Message = { author: "visitor" | "team"; text: string; created_at: string };
@@ -28,13 +27,14 @@ export default function Support() {
   const [busy, setBusy] = useState(false);
   const [trap, setTrap] = useState("");
   const [revision, setRevision] = useState(0);
+  const pending = useRef<{ token: string; text: string; op_id: string } | null>(null);
 
-  const load = async () => {
-    if (!session.token) return setThread(null);
-    try { setThread((await call<{thread: Thread | null}>("/support", { token: session.token })).thread); }
-    catch (e) { setError(errorText(e)); }
-  };
-  useEffect(() => { void load(); }, [session.token]);
+  useEffect(() => {
+    let current = true;
+    setThread(null); setError(null); pending.current = null;
+    if (session.token) void accountSupport(session.token).then(value => { if (current) setThread(value); }).catch(e => { if (current) setError(errorText(e)); });
+    return () => { current = false; };
+  }, [session.token]);
 
   async function send() {
     if (!text.trim() || busy || text.trim().length > maxText) return;
@@ -42,7 +42,9 @@ export default function Support() {
     setBusy(true); setError(null);
     try {
       if (session.token) {
-        await call("/support", { token: session.token, body: { text: message } });
+        if (pending.current?.text !== message || pending.current.token !== session.token) pending.current = { token: session.token, text: message, op_id: crypto.randomUUID() };
+        setThread(await accountSupport(session.token, { text: message, op_id: pending.current.op_id, website: trap }));
+        pending.current = null;
       } else {
         const primary = await mergeSavedThreads();
         let res = primary ? await replyToThread(primary.token, message, trap) : null;
@@ -54,7 +56,7 @@ export default function Support() {
         setRevision(n => n + 1);
       }
       setText("");
-      await load();
+
     } catch (e) { setError(errorText(e)); }
     finally { setBusy(false); }
   }

@@ -102,3 +102,21 @@ export async function getThread(token: string): Promise<Thread | null> {
   const data = await res.json().catch(() => null);
   return data?.ok ? (data as Thread) : null;
 }
+
+/** שיחות חשבון נשמרות באותו שרת הערות. האסימון מועבר בגוף כמו בטופס הרגיל, בלי כותרת זהות בדפדפן. */
+export interface AccountSupportThread {
+  status: "new" | "answered" | "closed";
+  created_at: string;
+  updated_at: string;
+  messages: ThreadMessage[];
+}
+export async function accountSupport(token: string, message?: { text: string; op_id: string; website: string }): Promise<AccountSupportThread | null> {
+  if (!FEEDBACK_URL) throw new Error("שרת ההערות אינו זמין.");
+  const response = await fetch(`${FEEDBACK_URL}/`, {
+    method: "POST", cache: "no-store", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kind: "account-support", token, ...message }),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data?.ok) throw new Error(response.status === 401 ? "יש להתחבר שוב לחשבון כדי לפתוח את השיחה." : "לא הצלחנו להתחבר לתמיכה. נסו שוב.");
+  return data.thread ?? null;
+}

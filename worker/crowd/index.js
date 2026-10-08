@@ -342,50 +342,17 @@ const routes = {
   // ---- ממשק ניהול (דרך שרת ההערות בלבד): שיחות תמיכה של משתתפים מאומתים ומספרים כלליים. מפתח בכותרת x-admin-key.
   "GET /admin/support": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const { results: threads } = await env.DB.prepare("SELECT participant, created_at, updated_at, status FROM support_threads ORDER BY updated_at DESC LIMIT 200").all();
-    const { results: msgs } = await env.DB.prepare("SELECT participant, author, text, created_at FROM support_messages WHERE participant IN (SELECT participant FROM support_threads ORDER BY updated_at DESC LIMIT 200) ORDER BY id").all();
+    const { results: threads } = await env.DB.prepare("SELECT participant, created_at, updated_at, status FROM support_threads ORDER BY updated_at DESC").all();
+    const { results: msgs } = await env.DB.prepare("SELECT id, participant, author, text, created_at FROM support_messages ORDER BY id").all();
     const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday").first();
     return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
-  "POST /admin/support/reply": async ({ env, request, now, body }) => {
-    await requireAdmin(env, request);
-    const text = String(body.text || "").trim().slice(0, 4000);
-    const participant = String(body.participant || "");
-    if (!text || !participant) throw bad("empty");
-    const at = iso(now);
-    await env.DB.batch([
-      env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) SELECT ?, ?, 'team', ? WHERE EXISTS (SELECT 1 FROM support_threads WHERE participant = ?)").bind(participant, at, text, participant),
-      env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
-    ]);
-    return { ok: true };
-  },
-
-  "GET /support": async ({ env, request, now }) => {
+  // קריאה בלבד לצורך העברה לשרת ההערות; רק בעל הסשן מקבל את ההיסטוריה שלו.
+  "GET /support/access": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
-    if (!thread) return { thread: null };
-    const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY id").bind(participant).all();
-    return { thread: { status: thread.status, created_at: thread.created_at, updated_at: thread.updated_at, messages: results || [] } };
-  },
-
-  "POST /support": async ({ env, request, now, body }) => {
-    const { participant } = await requireAuth(env, request, now);
-    const text = String(body.text ?? "").trim().slice(0, 2000);
-    if (!text) throw bad("empty");
-    const at = iso(now);
-    const thread = await env.DB.prepare("SELECT participant FROM support_threads WHERE participant = ?").bind(participant).first();
-    if (!thread) {
-      await env.DB.batch([
-        env.DB.prepare("INSERT INTO support_threads (participant, created_at, updated_at, status) VALUES (?, ?, ?, 'new')").bind(participant, at, at),
-        env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'visitor', ?)").bind(participant, at, text),
-      ]);
-    } else {
-      await env.DB.batch([
-        env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'visitor', ?)").bind(participant, at, text),
-        env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'new' WHERE participant = ?").bind(at, participant),
-      ]);
-    }
-    return { ok: true };
+    const { results } = await env.DB.prepare("SELECT id, author, text, created_at FROM support_messages WHERE participant = ? ORDER BY id").bind(participant).all();
+    return { participant, thread: thread ? { ...thread, messages: results || [] } : null };
   },
 
   "GET /log": async ({ env }) => {
@@ -511,6 +478,18 @@ export default {
     const url = new URL(request.url);
     const now = clock(env);
     try {
+      // תאימות לביקורים שכבר פתוחים: כל כתיבת תמיכה עוברת לשרת ההערות.
+      if (url.pathname === "/support" || url.pathname === "/admin/support/reply") {
+        if (!env.FEEDBACK) throw new HttpError(503, "support_offline");
+        const admin = url.pathname === "/admin/support/reply";
+        if (admin) await requireAdmin(env, request);
+        const body = request.method === "POST" ? await readJson(request) : {};
+        const target = admin ? "/admin/reply" : "/support";
+        const payload = admin ? { kind: "support", id: body.participant, text: body.text } : { ...body, ...(body.text !== undefined ? { op_id: body.op_id || randomToken(16) } : {}), token: bearer(request) };
+        return env.FEEDBACK.fetch(new Request("https://feedback.internal" + target, {
+          method: "POST", headers: { "content-type": "application/json", origin: request.headers.get("origin") || "", "cf-connecting-ip": request.headers.get("cf-connecting-ip") || "", ...(admin ? { authorization: `Bearer ${request.headers.get("x-admin-key")}` } : {}) }, body: JSON.stringify(payload),
+        }));
+      }
       if (request.method === "GET" && url.pathname === "/dashboard")
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
       const handler = routes[`${request.method} ${url.pathname}`];

@@ -32,6 +32,16 @@ jobs:
               echo "$name נוצר"
             fi
           done
+      - name: שרת ההערות מוכן לקבל את שיחות התמיכה
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: |
+          for attempt in $(seq 1 36); do
+            status=$(curl --max-time 10 -s -o /dev/null -w '%{http_code}' -H 'content-type: application/json' -d '{}' https://elections26-feedback.hopetohelp-il.workers.dev/support || true)
+            if [ "$status" = "401" ]; then exit 0; fi
+            sleep 5
+          done
+          echo "שרת ההערות טרם עודכן; לא מחליפים את נתיבי התמיכה הישנים."
+          exit 1
       - name: פריסה ל-Cloudflare
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: worker/crowd

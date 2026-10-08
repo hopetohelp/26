@@ -63,3 +63,22 @@ CREATE TABLE IF NOT EXISTS visitors_all (
 
 -- ממשק ניהול: רק גיבוב של מפתח הניהול (המפתח עצמו אצל הבעלים בלבד, בקישור הניהול)
 CREATE TABLE IF NOT EXISTS admin_keys (hash TEXT PRIMARY KEY, created_at TEXT NOT NULL);
+
+-- תמיכת חשבונות הועברה לכאן. מאגר החשבונות נשאר מקור האימות בלבד.
+CREATE TABLE IF NOT EXISTS support_threads (
+  participant TEXT PRIMARY KEY,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new'
+);
+CREATE TABLE IF NOT EXISTS support_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  participant TEXT NOT NULL REFERENCES support_threads(participant),
+  created_at TEXT NOT NULL,
+  author TEXT NOT NULL CHECK(author IN ('visitor', 'team')),
+  text TEXT NOT NULL,
+  legacy_key TEXT UNIQUE,
+  op_id TEXT,
+  UNIQUE(participant, op_id)
+);
+CREATE INDEX IF NOT EXISTS support_messages_participant ON support_messages(participant, created_at, id);

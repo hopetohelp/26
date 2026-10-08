@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS review_log (
 );
 
 
--- תמיכה: שיחה אחת לכל משתתף מאומת. אין קשר להערות הישנות.
+-- ארכיון תמיכה ישן לקריאה ולהעברה בלבד. כתיבה חדשה ומענה נשמרים בשרת ההערות.
 CREATE TABLE IF NOT EXISTS support_threads (
   participant TEXT PRIMARY KEY REFERENCES participants(id),
   created_at TEXT NOT NULL,
