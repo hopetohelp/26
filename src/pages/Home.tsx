@@ -1,4 +1,3 @@
-import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import forecastFile from "../data/forecast.json";
 import modelFile from "../data/model.json";
@@ -77,7 +76,6 @@ export default function Home() {
         </span>
         <span className="shrink-0 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-extrabold inline-flex items-center">לבנות את הכנסת שלי</span>
       </Link>
-      <PersonalBlocs values={model.central.seats} source="מנדטים לפי הממוצע היום" asOf={dateLong(meta.dataAsOf)} />
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
         {PAGES.map((p) => {
           const s = stat(p.to);

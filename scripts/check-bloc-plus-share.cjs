@@ -58,11 +58,24 @@ const dir='/tmp/elections26-bloc-plus-share'; fs.mkdirSync(dir,{recursive:true})
   const text=await page.evaluate(()=>window.drawn);
   assert.ok(text.includes('הגוש הגדול לבדיקה'));
   assert.ok(text.includes('116'));
-  assert.ok(text.includes(name('likud')));
-  assert.ok(text.includes(name('shas')));
+  assert.ok(text.join(' ').includes(name('likud')));
+  assert.ok(text.join(' ').includes(name('shas')));
   assert.ok(text.join(' ').includes(name('haredi_public')),'גם מפלגה עם אפס מנדטים מופיעה בהרכב');
-  assert.ok(!text.includes('הגוש הקטן שלא משתפים'));
-  assert.ok(!text.includes(name('yashar')),'מפלגה מחוץ לגוש אינה בתמונה');
+  assert.ok(text.includes('הגוש הקטן שלא משתפים'));
+  assert.ok(text.join(' ').includes(name('yashar')),'כל הרכבי הגושים בתמונה');
+  assert.ok(text.includes('ממוצע סקרים'));
+  assert.ok(text.includes('תחזית'));
+  fs.writeFileSync(`${dir}/share-blocs-${theme}-${width}-${dark}.png`,Buffer.from(await page.evaluate(()=>window.sharedImage)));
+  const downloadPromise=page.waitForEvent('download');
+  await page.getByRole('button',{name:'הורדת תמונה',exact:true}).click();
+  const downloaded=await downloadPromise;assert.equal(downloaded.suggestedFilename(),'הגושים-שלי.png');
+  await page.getByRole('radio',{name:'מפלגות',exact:true}).check();
+  await page.evaluate(()=>{window.sharedImage=null;window.drawn=[];});
+  await page.getByRole('button',{name:'שתפו את ההשערה',exact:true}).click();
+  await page.waitForFunction(()=>Array.isArray(window.sharedImage));
+  const partyText=await page.evaluate(()=>window.drawn);
+  assert.ok(partyText.some(t=>t.startsWith('ממוצע סקרים: ')));
+  assert.ok(partyText.some(t=>t.startsWith('ממוצע הסקרים האחרון נכון')));
   const link=await page.evaluate(()=>window.shared.url);
   assert.ok(link.includes('g='),'הקישור עדיין כולל את ההשערה המלאה');
   const buffer=Buffer.from(await page.evaluate(()=>window.sharedImage));
@@ -70,7 +83,7 @@ const dir='/tmp/elections26-bloc-plus-share'; fs.mkdirSync(dir,{recursive:true})
   assert.equal(buffer.readUInt32BE(16),1080);
   assert.ok(buffer.readUInt32BE(20)>=1350);
   assert.deepEqual(errors,[]);
-  console.log(`עברו + בכל גוש, בחירה ושיתוף הגוש הגדול בלבד: ${theme}, ${width}, ${dark?'לילה':'יום'}`);
+  console.log(`עברו + בכל גוש, בחירה ושיתוף גושים ומפלגות עם סקרים: ${theme}, ${width}, ${dark?'לילה':'יום'}`);
   await context.close();
  }
  }finally{await browser.close();await new Promise(r=>server.httpServer.close(r));}

@@ -64,6 +64,7 @@ export default function Today() {
       >
         המצב היום
       </PageTitle>
+      <PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
 
       <section aria-label="הרשימות היום" className="mb-6">
         <Explained
@@ -77,7 +78,6 @@ export default function Today() {
         </Explained>
       </section>
 
-      <PersonalBlocs values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
 
       <Card title="מה רואים היום">
         <ul className="space-y-2 text-base leading-relaxed">
@@ -163,7 +163,7 @@ export default function Today() {
         </Fold>
       </div>
 
-      <PersonalBlocs source="הסקרים האחרונים של המכונים, כל מקור בנפרד" asOf={dateLong(model.asof)} datasets={latest.map(p => ({ values: Object.fromEntries(ids.map(id => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: dateLong(p.end) }))} />
+      <PersonalBlocs title="הגושים שלי בכל סקר אחרון" source="הסקרים האחרונים של המכונים, כל מקור בנפרד" asOf={dateLong(model.asof)} datasets={latest.map(p => ({ values: Object.fromEntries(ids.map(id => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: dateLong(p.end) }))} />
       <Fold title="הסקרים שנכללו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

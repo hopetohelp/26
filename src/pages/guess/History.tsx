@@ -48,6 +48,7 @@ export default function History({ session }: { session: ReturnType<typeof useSes
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
       {versions?.length === 0 && <Notice>אין עדיין גרסאות ביחידה הזו.</Notice>}
+      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות ההשערה ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...versions].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: `גרסה ${v.id}`, asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {versions && versions.length > 0 && (
         <ol className="relative border-s-2 border-ink ms-2 space-y-3" aria-label="הגרסאות שלכם, מהחדשה לישנה">
           {[...versions].reverse().map((v, i) => (
@@ -68,7 +69,6 @@ export default function History({ session }: { session: ReturnType<typeof useSes
         </ol>
       )}
       {unit === "seats" && versions && versions.length > 1 && !b && <p className="text-xs text-ink-soft">סמנו שתי גרסאות כדי לראות מה השתנה.</p>}
-      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...versions].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: `גרסה ${v.id}`, asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {a && b && (
         <table className="w-full text-sm tabular">
           <caption className="text-start font-bold mb-1">

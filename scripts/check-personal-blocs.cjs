@@ -35,6 +35,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
   });
   for(const path of ['/','/today','/today?tab=scenarios','/today?tab=forecast','/polls','/polls?tab=trends','/changes','/past','/past?tab=accuracy','/guess?view=statistics']){
    await page.goto(`${base}#${path}`,{waitUntil:"domcontentloaded"});
+   if(path==='/') { assert.equal(await page.locator('[data-personal-blocs-card]').count(),0,'הכרטיס הכפול הוסר מהבית'); continue; }
    try { await page.getByRole('heading',{name:/הגושים שלי/}).first().waitFor({timeout:10000}); } catch(e) { console.error(await page.locator("main").innerText());throw e; }
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${path}: overflow ${theme} ${dark} ${width}`);
    assert.ok(await page.locator('[data-personal-blocs-card]').count() <= 2,`${path}: at most two personal bloc cards`);

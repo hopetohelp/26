@@ -1,12 +1,14 @@
 /**
- * תמונת שיתוף להשערה (PNG, רוחב 1080 וגובה 1350 ומעלה): רק הגוש הגדול לפי ההשערה, עם כל מפלגותיו. בלי גוש מוגדר — הכנסת המלאה.
+ * תמונת שיתוף להשערה (PNG, רוחב 1080 וגובה 1350 ומעלה): בחירה בין תמונת מפלגות לתמונת גושים עם ההשערה, ממוצע הסקרים והתחזית.
  * הצבעים נקראים ממשתני ה-CSS של העיצוב הפעיל (בהיר/חשוך, מקצועי/חדשותי) — אין כאן צבע קבוע, מלבד צבעי הרשימות
  * הניטרליים מ-src/lib/colors.ts. הטקסט מימין לשמאל. בלי המלצה ובלי אימוג'י.
  */
 import { colorOf } from "../../lib/colors";
 import { SITE_URL } from "../../lib/shareGuess";
-import { largestBloc, type BlocTotal } from "./blocSummary";
+import { type BlocTotal } from "./blocSummary";
 import { IDS, nameOf } from "./model";
+import { dateLong, seatsFmt } from "../../lib/format";
+import { shareBlocRows, SHARE_POLLS, SHARE_POLLS_AS_OF, SHARE_FORECAST_AS_OF, SHARE_FORECAST_CAUTION } from "./shareComparison";
 import { SEATS, seatFills } from "./SeatBoard";
 
 export const IMG_W = 1080;
@@ -20,13 +22,14 @@ const font = (name: string, fallback: string) => `${cssVar(name) || fallback}, s
 
 export interface ShareImageInput {
   values: Record<string, number>;
+  kind?: "parties" | "blocs";
   pct?: Record<string, number>;
   username?: string;
   /** תרחישים עצמאיים: שם, סכום מנדטים והרכב המפלגות (src/pages/guess/blocSummary.ts) */
   blocs?: BlocTotal[];
 }
 
-export async function renderShareImage({ values, pct, username, blocs }: ShareImageInput): Promise<Blob> {
+export async function renderShareImage({ values, pct, username, blocs, kind = blocs?.length ? "blocs" : "parties" }: ShareImageInput): Promise<Blob> {
   const board = document.documentElement.dataset.theme === "board";
   const c = {
     bg: rgb(board ? "--frame" : "--paper"),
@@ -45,23 +48,24 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
     /* גופן לא נטען — גופן המערכת */
   }
 
-  const selected = largestBloc(blocs);
-  if (selected) {
+  if (kind === "blocs") {
+    if (!blocs?.length) throw new Error("no blocs");
     const cv = document.createElement("canvas");
     cv.width = IMG_W;
     const ctx = cv.getContext("2d")!;
     const R = IMG_W - 72, L = 72;
-    ctx.font = `700 38px ${body}`;
-    const rows = selected.lists.map(id => {
+    const wrap = (text: string, max: number) => {
       const lines: string[] = [];
-      for (const word of nameOf(id).split(" ")) {
+      for (const word of text.split(" ")) {
         const last = lines.length - 1;
-        if (last < 0 || ctx.measureText(`${lines[last]} ${word}`).width > R - L - 180) lines.push(word);
+        if (last < 0 || ctx.measureText(`${lines[last]} ${word}`).width > max) lines.push(word);
         else lines[last] += ` ${word}`;
       }
-      return { id, lines, height: Math.max(80, lines.length * 48 + 28) };
-    });
-    const imageHeight = Math.max(IMG_H, 540 + rows.reduce((n, row) => n + row.height, 0) + 240);
+      return lines;
+    };
+    ctx.font = `400 30px ${body}`;
+    const rows = shareBlocRows(blocs, values).map(b => ({ ...b, names: wrap(b.lists.map(nameOf).join(" · "), R - L) }));
+    const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + row.names.length * 38, 0) + 290);
     cv.height = imageHeight;
     ctx.direction = "rtl";
     ctx.textAlign = "right";
@@ -71,37 +75,43 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
     ctx.fillRect(0, 0, IMG_W, 14);
     ctx.fillStyle = c.ink;
     ctx.font = `700 80px ${display}`;
-    ctx.fillText(username ? `הגוש הגדול של ${username}` : "הגוש הגדול שלי", R, 140, R - L);
+    ctx.fillText(username ? `הגושים של ${username}` : "הגושים שלי", R, 140, R - L);
     ctx.fillStyle = c.soft;
-    ctx.font = `400 34px ${body}`;
-    ctx.fillText("השערה לבחירות לכנסת ה-26 · השערה, לא סקר", R, 204);
-    ctx.fillStyle = c.ink;
-    ctx.font = `700 68px ${display}`;
-    ctx.fillText(selected.name, R, 310, R - L);
-    ctx.fillStyle = board ? c.signal : c.ink;
-    ctx.font = `700 120px ${num}`;
-    ctx.fillText(String(selected.total), R, 448);
-    ctx.fillStyle = c.soft;
-    ctx.font = `700 34px ${body}`;
-    ctx.fillText("מנדטים לפי ההשערה", R - 250, 438);
-    let y = 550;
-    rows.forEach(({id, lines, height}) => {
+    ctx.font = `400 30px ${body}`;
+    ctx.fillText("השערה, לא סקר · אותם הרכבי מפלגות בשלוש השוואות", R, 200, R - L);
+    ctx.font = `400 26px ${body}`;
+    ctx.fillText(`ממוצע סקרים: ${dateLong(SHARE_POLLS_AS_OF)} · תחזית: ${dateLong(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
+    const columns = [R - 145, IMG_W / 2, L + 145];
+    ctx.textAlign = "center";
+    ctx.font = `700 32px ${body}`;
+    ["ההשערה שלי", "ממוצע סקרים", "תחזית"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
+    let y = 382;
+    rows.forEach(row => {
       ctx.textAlign = "right";
       ctx.fillStyle = c.ink;
-      ctx.font = `700 38px ${body}`;
-      lines.forEach((line, i) => ctx.fillText(line, R, y + i * 48));
-      ctx.textAlign = "left";
-      ctx.fillStyle = board ? c.signal : c.ink;
-      ctx.font = `700 46px ${num}`;
-      ctx.fillText(String(values[id] ?? 0), L, y);
-      ctx.strokeStyle = c.line;
-      ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(L, y + height - 40); ctx.lineTo(R, y + height - 40); ctx.stroke();
-      y += height;
+      ctx.font = `700 44px ${display}`;
+      ctx.fillText(row.name, R, y, R - L);
+      ctx.textAlign = "center";
+      ctx.font = `700 60px ${num}`;
+      [row.mine, row.polls, row.forecast].forEach((value, i) => {
+        ctx.fillStyle = i === 0 && board ? c.signal : c.ink;
+        ctx.fillText(value === null ? "—" : seatsFmt(value), columns[i], y + 72);
+      });
+      ctx.textAlign = "right";
+      ctx.fillStyle = c.soft;
+      ctx.font = `400 30px ${body}`;
+      row.names.forEach((line, i) => ctx.fillText(line, R, y + 126 + i * 38));
+      y += 172 + row.names.length * 38;
+      ctx.strokeStyle = c.line; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(L, y - 48); ctx.lineTo(R, y - 48); ctx.stroke();
     });
+    ctx.textAlign = "right";
+    ctx.fillStyle = c.soft;
+    ctx.font = `400 26px ${body}`;
+    ctx.fillText("גושים עצמאיים וחופפים; אין לחבר את סכומיהם. — = חסר נתון מלא.", R, imageHeight - 245, R - L);
+    if (SHARE_FORECAST_CAUTION) ctx.fillText("התחזית לא עברה את רף הדיוק שנקבע בבדיקת העבר.", R, imageHeight - 208, R - L);
     ctx.fillStyle = c.line;
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
-    ctx.textAlign = "right";
     ctx.fillStyle = c.ink;
     ctx.font = `700 54px ${display}`;
     ctx.fillText("ומה אתם מנחשים? בנו את הכנסת שלכם", R, imageHeight - 100, R - L);
@@ -114,7 +124,7 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
 
   const cv = document.createElement("canvas");
   cv.width = IMG_W;
-  const imageHeight = IMG_H;
+  const imageHeight = IMG_H + 180;
   cv.height = imageHeight;
   const ctx = cv.getContext("2d")!;
   ctx.direction = "rtl";
@@ -122,7 +132,7 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
   const L = 72;
 
   ctx.fillStyle = c.bg;
-  ctx.fillRect(0, 0, IMG_W, IMG_H);
+  ctx.fillRect(0, 0, IMG_W, imageHeight);
   // פס עליון דק בצבע ההדגשה
   ctx.fillStyle = c.signal;
   ctx.fillRect(0, 0, IMG_W, 14);
@@ -157,7 +167,7 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
   const rows = order.slice(0, 12);
   const y0 = top + 1.12 * scale + 70;
   const colW = (IMG_W - 2 * L - 40) / 2;
-  const rowH = 62;
+  const rowH = 86;
   rows.forEach((id, i) => {
     const col = Math.floor(i / 6);
     const y = y0 + (i % 6) * rowH;
@@ -182,11 +192,15 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
       ctx.fillStyle = c.ink;
       ctx.fillText(`${pct[id] ?? 0}%`, left + 66, y);
     }
+    ctx.textAlign = "right";
+    ctx.font = `400 26px ${body}`;
+    ctx.fillStyle = c.soft;
+    ctx.fillText(`ממוצע סקרים: ${SHARE_POLLS[id] === undefined ? "—" : seatsFmt(SHARE_POLLS[id])}`, right - 36, y + 30);
     ctx.strokeStyle = c.line;
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(left, y + 20);
-    ctx.lineTo(right, y + 20);
+    ctx.moveTo(left, y + 46);
+    ctx.lineTo(right, y + 46);
     ctx.stroke();
   });
   if (order.length > rows.length) {
@@ -195,6 +209,11 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
     ctx.font = `400 28px ${body}`;
     ctx.fillText(`ועוד ${order.length - rows.length} רשימות`, R, y0 + 6 * rowH - 6);
   }
+
+  ctx.textAlign = "right";
+  ctx.fillStyle = c.soft;
+  ctx.font = `400 26px ${body}`;
+  ctx.fillText(`ממוצע הסקרים האחרון נכון ל־${dateLong(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
 
   // תחתית: קריאה לפעולה + כתובת
   ctx.fillStyle = c.card === c.bg ? c.line : c.card;

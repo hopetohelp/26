@@ -15,6 +15,22 @@ export default function Share({ values, pct, username, blocs }: { values: Record
   const [withName, setWithName] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [kind, setKind] = useState<"parties" | "blocs">(blocs?.length ? "blocs" : "parties");
+  const imageKind = blocs?.length ? kind : "parties";
+  const imageFile = async () => new File([await renderShareImage({ values, pct, username: withName && username ? username : undefined, blocs, kind: imageKind })], imageKind === "blocs" ? "הגושים-שלי.png" : "הכנסת-שלי.png", { type: "image/png" });
+  const download = async () => {
+    setBusy(true); setMsg(null);
+    try {
+      const file = await imageFile();
+      const url = URL.createObjectURL(file);
+      const link = document.createElement("a");
+      link.href = url; link.download = file.name;
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      setMsg("התמונה מוכנה. אפשר לצרף אותה להודעה.");
+    } catch { setMsg("הכנת התמונה לא הצליחה. נסו שוב."); }
+    finally { setBusy(false); }
+  };
 
   const share = async () => {
     setMsg(null);
@@ -26,7 +42,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
       if (navigator.share) {
         let file: File | null = null;
         try {
-          file = new File([await renderShareImage({ values, pct, username: name, blocs })], "הכנסת-שלי.png", { type: "image/png" });
+          file = await imageFile();
         } catch {
           file = null; // בלי תמונה — משתפים טקסט וקישור
         }
@@ -44,9 +60,18 @@ export default function Share({ values, pct, username, blocs }: { values: Record
 
   return (
     <div className="space-y-2">
+      <fieldset className="space-y-2" disabled={busy}>
+        <legend className="font-bold text-sm">איזו תמונה לשתף?</legend>
+        <div className="flex flex-wrap gap-3 text-sm">
+          <label className="flex items-center gap-2 min-h-[44px]"><input type="radio" name="share-image-kind" checked={imageKind === "parties"} onChange={() => setKind("parties")} />מפלגות</label>
+          <label className="flex items-center gap-2 min-h-[44px]"><input type="radio" name="share-image-kind" checked={imageKind === "blocs"} disabled={!blocs?.length} onChange={() => setKind("blocs")} />גושים</label>
+        </div>
+      </fieldset>
+      <p className="text-xs text-ink-soft">{imageKind === "blocs" ? "רק הגושים: ההשערה שלי, ממוצע סקרים ותחזית לפי אותו הרכב מפלגות." : "המנדטים שלי לכל מפלגה, עם ממוצע הסקרים האחרון בקטן."}{!blocs?.length && " כדי לשתף גושים, הוסיפו להם מפלגות בלשונית לפי גושים."}</p>
       <Btn kind="primary" onClick={share} disabled={busy} className="w-full text-base">
         {busy ? "מכינים…" : "שתפו את ההשערה"}
       </Btn>
+      <Btn onClick={download} disabled={busy} className="w-full">הורדת תמונה</Btn>
       {username && (
         <label className="flex items-center gap-2 text-sm text-ink-soft">
           <input type="checkbox" className="w-5 h-5" checked={withName} onChange={(e) => setWithName(e.target.checked)} />
