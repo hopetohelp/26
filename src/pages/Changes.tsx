@@ -100,27 +100,28 @@ export default function Changes() {
   return (
     <>
       <Split title="מה השתנה מהבחירות האחרונות" lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת." primary={<>
-      <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-4">
-        {([["blocs", "לפי הגושים שלי"], ["families", "לפי משפחות מפלגות"]] as const).map(([id,label]) => <button key={id} role="radio" type="button" aria-checked={view === id} onClick={() => setView(id)} className={`min-h-[44px] rounded-full px-4 border font-bold text-sm ${view === id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{label}</button>)}
-      </div>
-
-      <Card title="איך לשייך?">
-        <div role="radiogroup" aria-label="דרך השיוך" className="flex flex-wrap gap-2 mb-3">
-          {ALTS.map((a) => (
+      {/* כפתור אחד לכל דרך השוואה (הכרעת בעלים 8.10.2026): הגושים שלי, או משפחות המפלגות לפי אחת משלוש דרכי השיוך.
+          בתצוגת הגושים — השיוך האחרון שנבחר (ברירת מחדל: לפי המפלגה). */}
+      <div role="radiogroup" aria-label="איך לשייך?" className="flex flex-wrap gap-2 mb-3">
+        {[{ id: "blocs", name: "לפי הגושים שלי" }, ...ALTS.map((a) => ({ id: a.id, name: a.name }))].map((o) => {
+          const on = o.id === "blocs" ? view === "blocs" : view === "families" && o.id === alt.id;
+          return (
             <button
-              key={a.id}
+              key={o.id}
               type="button"
               role="radio"
-              aria-checked={a.id === alt.id}
-              onClick={() => setAltId(a.id)}
-              className={`min-h-[44px] px-4 rounded-full text-sm font-bold border ${a.id === alt.id ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
+              aria-checked={on}
+              onClick={() => (o.id === "blocs" ? setView("blocs") : (setView("families"), setAltId(o.id)))}
+              className={`min-h-[44px] px-4 rounded-full text-sm font-bold border ${on ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
             >
-              {a.name}
+              {o.name}
             </button>
-          ))}
-        </div>
-        <p className="text-base leading-relaxed">{alt.desc}</p>
-      </Card>
+          );
+        })}
+      </div>
+      <p className="text-base leading-relaxed mb-4">
+        {view === "blocs" ? `הגושים שלכם, 2022 מול היום. שיוך רשימות העבר: ${alt.name}.` : alt.desc}
+      </p>
       </>} secondary={<>
       {view === "blocs" && <PersonalBlocs title="הגושים שלי: תוצאות 2022 מול ממוצע הסקרים היום" source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
         { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },

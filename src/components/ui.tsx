@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useTabsSlot } from "./Tabbed";
 
 /** inColumns: בתוך `Columns` — מהמחשב הכותרת לקורא מסך בלבד (היא כבר בלשונית הפעילה בסרגל), וההסבר בראש הטור הימני */
 export function PageTitle({ children, lead, inColumns = false }: { children: ReactNode; lead?: ReactNode; inColumns?: boolean }) {
@@ -64,11 +65,11 @@ export function Fold({ title, children, open = false }: { title: ReactNode; chil
 /**
  * עיקרי ומשני — שני טורים במחשב, כמו תבנית 3ב של "קרובים מתמיד" (מדריך 31 §20 שם):
  * העיקרי (ההסבר, פקדים, בחירה) בטור הצר מימין; המשני (התוצאות) בטור הרחב. פס דק מפריד ביניהם.
- * 🔴 שני הטורים בכל גובה המסך, ולכל אחד גלילה משלו (הכרעת בעלים 8.10.2026). כותרת העמוד אינה
- *    מוצגת — היא כבר בלשונית הפעילה בסרגל הניווט — ונשארת לקורא מסך; ההסבר עובר לראש הטור הצר.
- * 🔴 העדיפות: הטור הצר בלי גלילה. שני טורים רק כשהשורש רחב מ-SPLIT_AT **וגם** הטור הצר נכנס כולו
- *    בגובה; אחרת טור אחד, כמו בטלפון. ההחלטה מתקבלת בטעינה ומחדש רק כשמידות החלון משתנות —
- *    לא כשלחיצה בטור הצר משנה את גובהו, כדי שהמסך לא יקפוץ פתאום מטורים לטור אחד.
+ * 🔴 גלילה אחת בלבד במסך (הכרעת בעלים 8.10.2026): שני הטורים ממלאים את הגובה שמתחת לסרגל העליון,
+ *    הקו המפריד לכל הגובה, ורק הטור הרחב נגלל. כותרת העמוד אינה מוצגת — היא כבר בלשונית הפעילה
+ *    בסרגל הניווט — ונשארת לקורא מסך; שורת הלשוניות של המסך (Tabbed) וההסבר — בראש הטור הצר.
+ * 🔴 בטור הצר רק מה שנכנס בלי גלילה. שני טורים רק כשהשורש רחב מ-SPLIT_AT **וגם** הטור הצר נכנס כולו
+ *    בגובה; אחרת — וגם כשתוכן הטור הצר גדל אחר כך מעבר לגובה — טור אחד, כמו בטלפון, עם גלילת העמוד.
  * 🔴 הסדר בקוד הוא סדר הטלפון — בטלפון ובמסך צר שום דבר אינו משתנה.
  */
 const SPLIT_AT = 1024;
@@ -76,6 +77,7 @@ const SETTLE_MS = 2000;
 export function Split({ primary, secondary, title, lead }: { primary: ReactNode; secondary: ReactNode; title?: ReactNode; lead?: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const prim = useRef<HTMLDivElement>(null);
+  const tabs = useTabsSlot();
   // ניסיון: קודם מציגים בשני טורים ומודדים את הטור הצר בצורה האמיתית. נכנס ⇐ נשאר; לא נכנס ⇐ טור אחד.
   // מודדים אחרי שהגופנים נטענו ושוב אחרי SETTLE_MS (נתונים שנטענים), ואחר כך ההחלטה קפואה עד שינוי חלון.
   const [state, setState] = useState<{ split: boolean; top: number }>({ split: false, top: 0 });
@@ -100,7 +102,10 @@ export function Split({ primary, secondary, title, lead }: { primary: ReactNode;
       if (at !== last) { last = at; start(); }
     };
     window.addEventListener("resize", resize);
-    return () => (timers.forEach(clearTimeout), window.removeEventListener("resize", resize));
+    // תוכן הטור הצר גדל (פתיחת פירוט, נתונים שנטענו) ⇐ אם כבר לא נכנס — טור אחד
+    const grow = new ResizeObserver(measure);
+    if (prim.current?.firstElementChild) grow.observe(prim.current.firstElementChild);
+    return () => (timers.forEach(clearTimeout), window.removeEventListener("resize", resize), grow.disconnect());
   }, []);
   const { split } = state;
   // הגובה נמדד מחדש בצורה המפוצלת: בטור אחד הכותרת יושבת מעל, ומיקום הטורים שונה
@@ -112,20 +117,25 @@ export function Split({ primary, secondary, title, lead }: { primary: ReactNode;
   const hasHead = title !== undefined;
   return (
     <>
+      {!split && tabs}
       {hasHead && !split && <PageTitle lead={lead}>{title}</PageTitle>}
       {hasHead && split && <h1 className="sr-only">{title}</h1>}
       <div
         ref={root}
         data-split={split || undefined}
         style={split ? { height: `calc(100dvh - ${state.top}px)` } : undefined}
-        className={split ? "grid grid-cols-[minmax(22rem,1fr)_2fr] [&>*]:min-w-0" : ""}
+        // ‎-mt-6 -mb-24: מבטלים את הריווח של <main> (py-6 md:pb-24 ב-Layout), כדי שהטורים והקו ימלאו את כל הגובה בלי גלילת עמוד
+        className={split ? "-mt-6 -mb-24 grid grid-cols-[minmax(22rem,1fr)_2fr] [&>*]:min-w-0" : ""}
       >
-        <div ref={prim} className={split ? "overflow-y-auto pe-6 border-e border-paper-line" : ""}>
-          {hasHead && split && lead && <p className="text-ink-soft leading-relaxed mb-5">{lead}</p>}
-          {primary}
+        <div ref={prim} className={split ? "relative overflow-hidden pt-6 pe-6 border-e border-paper-line" : ""}>
+          <div>
+            {split && tabs}
+            {hasHead && split && lead && <p className="text-ink-soft leading-relaxed mb-5">{lead}</p>}
+            {primary}
+          </div>
         </div>
         {/* pb-24: הכפתור הצף "לבנות את הכנסת שלי" לא מסתיר את סוף הטור */}
-        <div className={split ? "overflow-y-auto ps-6 pb-24" : ""}>{secondary}</div>
+        <div className={split ? "relative overflow-y-auto pt-6 ps-6 pb-24" : ""}>{secondary}</div>
       </div>
     </>
   );

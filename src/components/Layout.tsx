@@ -242,7 +242,8 @@ function MobileTabs() {
 /** במחשב: הזמנה צפה להשערה (הכרעת בעלים 8.10.2026). לא במסכי ההשערה והסטטיסטיקות ולא בניהול; לתוכן יש ריווח תחתון כדי שלא יוסתר. */
 const NO_GUESS_CTA = ["/guess", "/community", "/admin"];
 function GuessCta({ pathname }: { pathname: string }) {
-  if (NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
+  // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
+  if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
   return (
     <Link
       to="/guess"
@@ -268,7 +269,8 @@ export default function Layout() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
-      <header>
+      {/* במחשב הסרגל העליון תמיד גלוי (הכרעת בעלים 8.10.2026) */}
+      <header className="md:sticky md:top-0 md:z-40">
         <Masthead theme={theme} />
         <DesktopNav theme={theme} />
       </header>
@@ -276,17 +278,6 @@ export default function Layout() {
       <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
         <PersonalBlocsProvider><PageErrorBoundary><Outlet /></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      <footer className="border-t border-paper-line bg-paper-card text-sm text-ink-soft mb-16 md:mb-0">
-        <div className="w-full mx-auto px-4 md:px-6 py-4 md:pb-24 space-y-1">
-          <p>
-            <strong>האתר אינו עורך סקרים.</strong> הממוצעים, הטווחים והתרחישים הם ניתוח של סקרים שכבר פורסמו, עם פרטי כל סקר ומקורו.
-            תוצאות האמת — מקובצי ועדת הבחירות המרכזית.
-          </p>
-          <p>
-            הנתונים נכונים ל-{dateLong(meta.dataAsOf)}. <a href="https://github.com/hopetohelp/26">הקוד והנתונים פתוחים</a>.
-          </p>
-        </div>
-      </footer>
       <MobileTabs />
       <GuessCta pathname={pathname} />
     </div>
