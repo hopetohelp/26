@@ -1,4 +1,5 @@
 import { pingVisit } from "../lib/visits";
+import PageErrorBoundary from "./PageErrorBoundary";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import FreezeBanner from "./FreezeBanner";
@@ -258,7 +259,7 @@ export default function Layout() {
       </header>
       <FreezeBanner />
       <main id="main" tabIndex={-1} className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 pb-28 md:pb-10 outline-none">
-        <Outlet />
+        <PageErrorBoundary><Outlet /></PageErrorBoundary>
       </main>
       <footer className="border-t border-paper-line bg-paper-card text-sm text-ink-soft mb-16 md:mb-0">
         <div className="max-w-6xl mx-auto px-4 py-4 space-y-1">
