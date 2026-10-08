@@ -8,6 +8,7 @@ export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
 export const V2026_CODES = new Set(["undecided", "none", "private"]);
 const TOTAL = 120;
+const THRESHOLD_SEATS = 4;
 const MAX_BLOCS = 5;
 
 const fail = (error) => ({ ok: false, error });
@@ -44,6 +45,7 @@ export function validateSeats(p) {
     sum += cell.v;
   }
   if (sum !== TOTAL) return fail("sum");
+  if (Object.values(seats).some(cell => cell.v > 0 && cell.v < THRESHOLD_SEATS)) return fail("threshold");
   if (!["zero", "k25", "polls"].includes(p.start)) return fail("start");
   const pollsAsOf = p.pollsAsOf ?? null;
   if (pollsAsOf !== null && !(typeof pollsAsOf === "string" && /^\d{4}-\d{2}-\d{2}/.test(pollsAsOf) && pollsAsOf.length <= 32))

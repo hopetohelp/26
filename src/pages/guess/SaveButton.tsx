@@ -33,6 +33,7 @@ export default function SaveButton({
   const [ask, setAsk] = useState(false);
   const busy = unit.state === "saving";
   const run = async (token: string) => {
+    if (invalid) return;
     if (await unit.save(token)) onSaved?.();
   };
   const go = () => (session.token ? void run(session.token) : setAsk(true));

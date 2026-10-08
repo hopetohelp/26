@@ -2,10 +2,8 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 
 type Drag = { pointer: number; x: number; y: number; startX: number; startY: number; moved: boolean; dx: number; dy: number; width: number };
-export const PARTY_POOL = "party-pool";
 const targetAt = (x: number, y: number) => {
-  const element = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-bloc-id], [data-bloc-pool]");
-  return element?.hasAttribute("data-bloc-pool") ? PARTY_POOL : element?.dataset.blocId ?? null;
+  return document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-bloc-id]")?.dataset.blocId ?? null;
 };
 
 /** אותו כרטיס זז בפועל בעכבר ובמגע; החצים מספקים חלופה במקלדת. */
@@ -44,8 +42,8 @@ export default function BlocParty({ id, name, seats, targets, current, onMove, o
     setDrag(null); onHover(null);
     if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
     if (cancel || !moved) return;
-    if (to && to !== PARTY_POOL && to !== current) onMove(id, to);
-    else if (current && (!to || to === PARTY_POOL)) onRemove?.(id, current);
+    if (to && to !== current) onMove(id, to);
+    else if (current && !to) onRemove?.(id, current);
   };
   return <li data-bloc-party={id} className="flex gap-1 items-start min-w-0">
     <button type="button" data-party-drag aria-label={`${name}, ${seats ?? "ללא"} מנדטים. גררו לגוש או השתמשו בחצים ימינה ושמאלה.${current ? " להסרה גררו החוצה או לחצו Delete." : ""}`}
