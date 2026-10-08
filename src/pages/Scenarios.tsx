@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ScenarioRanges, TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, PageTitle } from "../components/ui";
+
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
 import { listName, meta, results } from "../lib/data";
@@ -87,9 +88,9 @@ export default function Scenarios() {
   return (
     <>
       <PageTitle
-        lead={`${num(sc.n)} תרחישים אפשריים ליום הבחירות, שנבנו מהסקרים שפורסמו מאז הגשת הרשימות. לכל רשימה: כמה מנדטים לפי הממוצע, הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. אלה תרחישים של מודל — לא תחזית, ולא "סיכוי".`}
+        lead={`התחזית ליום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`}
       >
-        תרחישים ליום הבחירות
+        תחזית ותרחישים
       </PageTitle>
 <PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />
 

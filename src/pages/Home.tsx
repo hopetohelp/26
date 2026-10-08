@@ -21,6 +21,7 @@ const fc = forecastFile as unknown as {
   horizon: number;
   variant: string;
   gate: { atHorizon: { valid: boolean; summary: Record<string, { voteAccuracy: number }> } };
+  selection?: { summary: Record<string, { voteAccuracy: number }> } | null;
 };
 const pct = (x: number) => `${(Math.round(x * 1000) / 10).toLocaleString("he-IL")}%`;
 
@@ -39,11 +40,11 @@ function biggestMove(): string {
 
 function stat(to: string): { value: string; label: string } {
   const above = Object.values(model.central.seats).filter((s) => s > 0).length;
-  const acc = fc.gate.atHorizon.valid ? fc.gate.atHorizon.summary[fc.variant]?.voteAccuracy : undefined;
+  const acc = fc.selection?.summary.baseline?.voteAccuracy;
   switch (to) {
     case "/today":
       return acc !== undefined
-        ? { value: String(above), label: `רשימות מעל הסף לפי הממוצע · דיוק התחזית בעבר ${pct(acc)}` }
+        ? { value: String(above), label: `רשימות מעל הסף לפי הממוצע · דיוק ממוצע הסקרים בעבר ${pct(acc)}` }
         : { value: String(above), label: "רשימות מעל אחוז החסימה לפי הממוצע" };
     case "/polls":
       return { value: num(polls.length), label: `סקרים בארכיון · ${biggestMove()}` };
