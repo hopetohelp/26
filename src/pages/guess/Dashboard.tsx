@@ -101,20 +101,24 @@ export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   const fixedRows = fixed.map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
   const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")))
     .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
-    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.lists.map(nameOf).join(" · "), stat: g.derived!}))
+    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!}))
     .sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
   const rows = [...fixedRows, ...customRows];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
-  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat?.mean ?? 0,range:r.stat ? range(r.stat) : "חסר נתון"}))} />;
+  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,value:r.stat?.mean ?? 0,range:r.stat ? range(r.stat) : "חסר נתון"}))} />;
   return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
-    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32">{r.label}</th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
+    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
   </table></div></Card>;
 }
 
-function Bars({ rows, suffix = "", title = "גושים" }: { rows:{key:string;label:string;value:number;range:string}[]; suffix?: string; title?: import("react").ReactNode }) {
+function BlocName({ name, lists }: { name: string; lists: string[] }) {
+  return <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold" aria-label={`מפלגות ${name}`}>{name}</summary><p className="text-xs font-normal text-ink-soft py-1 whitespace-normal">{lists.map(nameOf).join(" · ")}</p></details>;
+}
+
+function Bars({ rows, suffix = "", title = "גושים" }: { rows:{key:string;label:string;lists?:string[];value:number;range:string}[]; suffix?: string; title?: import("react").ReactNode }) {
   const max=Math.max(1,...rows.map(r=>r.value));
-  return <Card title={title}><div className="space-y-3">{rows.map(r=><div key={r.key} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-center text-sm"><span className="break-words">{r.label}</span><div className="h-5 rounded-full bg-paper-line overflow-hidden"><div className="h-full bg-ink" style={{width:`${Math.max(2,(r.value/max)*100)}%`}} /></div><span className="font-num tabular whitespace-nowrap"><b>{seatsFmt(r.value)}{suffix}</b>{r.range ? ` · ${r.range}${suffix}` : ""}</span></div>)}</div></Card>;
+  return <Card title={title}><div className="space-y-3">{rows.map(r=><div key={r.key} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-center text-sm"><span className="break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span><div className="h-5 rounded-full bg-paper-line overflow-hidden"><div className="h-full bg-ink" style={{width:`${Math.max(2,(r.value/max)*100)}%`}} /></div><span className="font-num tabular whitespace-nowrap"><b>{seatsFmt(r.value)}{suffix}</b>{r.range ? ` · ${r.range}${suffix}` : ""}</span></div>)}</div></Card>;
 }
 
 

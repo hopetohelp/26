@@ -86,11 +86,14 @@ const oldCoalitions = new Set([
 ].map(keyOf));
 function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
   const current = defaultBlocs();
-  const oldRest = new Set([...oldCoalitions].map(key => keyOf(IDS.filter(id => !key.split(",").includes(id) && !["joint", "raam"].includes(id)))));
+  const oldRest = new Set([...oldCoalitions].flatMap(key => {
+    const rest = IDS.filter(id => !key.split(",").includes(id) && !["joint", "raam"].includes(id));
+    return [keyOf(rest), keyOf(rest.filter(id => !["noam", "code_black"].includes(id)))];
+  }));
   let changed = false;
   const blocs = p.blocs.map(b => {
     if (oldCoalitions.has(keyOf(b.lists))) { changed = true; return { ...b, lists: current[0].lists }; }
-    if (oldRest.has(keyOf(b.lists)) && ["כל השאר", "גוש האופוזיציה"].includes(b.name)) {
+    if (oldRest.has(keyOf(b.lists))) {
       changed = true; return { ...b, name: "גוש האופוזיציה", lists: current[1].lists };
     }
     return b;

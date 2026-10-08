@@ -14,14 +14,17 @@ const legacyCoalitions = [
   COALITION.filter(id => id !== "haredi_public"),
 ];
 const oldCoalitions = new Set(legacyCoalitions.map(compositionKey));
-const oldOpposition = new Set(legacyCoalitions.map(lists => compositionKey([...IDS_2026].filter(id => !lists.includes(id) && !ARAB.includes(id)))));
+const oldOpposition = new Set(legacyCoalitions.flatMap(lists => {
+  const rest = [...IDS_2026].filter(id => !lists.includes(id) && !ARAB.includes(id));
+  return [compositionKey(rest), compositionKey(rest.filter(id => !["noam", "code_black"].includes(id)))];
+}));
 export function migrateBlocs(payload) {
   if (payload.mode !== "custom") return payload;
   let changed = false;
   let blocs = payload.blocs.map(b => {
     const key = compositionKey(b.lists);
     if (oldCoalitions.has(key)) { changed = true; return { ...b, lists: [...COALITION] }; }
-    if (oldOpposition.has(key) && ["כל השאר", "גוש האופוזיציה"].includes(b.name)) {
+    if (oldOpposition.has(key)) {
       changed = true; return { ...b, name: "גוש האופוזיציה", lists: [...OPPOSITION] };
     }
     return b;
