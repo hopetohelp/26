@@ -2,7 +2,7 @@ import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle, Split } from "../components/ui";
+import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMedian, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateLong, seatsFmt } from "../lib/format";
 
@@ -73,11 +73,8 @@ export default function Trends() {
 
   return (
     <>
-      <PageTitle lead="חציון מתגלגל של המנדטים בסקרים שפורסמו: בכל נקודה — החציון של כל הסקרים מ-14 הימים שקדמו לה. הנקודות הבהירות הן הסקרים עצמם.">
-        מגמות
-      </PageTitle>
 
-      <Split primary={<Card>
+      <Split title="מגמות" lead="חציון מתגלגל של המנדטים בסקרים שפורסמו: בכל נקודה — החציון של כל הסקרים מ-14 הימים שקדמו לה. הנקודות הבהירות הן הסקרים עצמם." primary={<Card>
         <div className="flex flex-wrap gap-4 items-end mb-3">
           <label className="flex flex-col text-sm">
             תקופה

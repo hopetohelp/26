@@ -13,8 +13,9 @@ export default function Method() {
 
   return (
     <>
-      <PageTitle lead="מאיפה כל מספר באתר מגיע, איך הוא מחושב, ומה אי אפשר ללמוד ממנו.">שיטה ומקורות</PageTitle>
+      
       <Columns>
+      <PageTitle inColumns lead="מאיפה כל מספר באתר מגיע, איך הוא מחושב, ומה אי אפשר ללמוד ממנו.">שיטה ומקורות</PageTitle>
       <section id="personal-blocs" className="my-5 bg-paper-card border border-paper-line rounded-theme p-4">
         <h2 className="font-display text-3xl">הגושים האישיים</h2>
         <p>כל גוש הוא תרחיש עצמאי של עד חמש קבוצות. מפלגה רשאית להופיע בכמה תרחישים, אך פעם אחת בכל תרחיש. בכל מקור סכום הגוש מחושב רק ממנדטי מפלגותיו באותו מקור. סכומי הגושים אינם חלוקה של הכנסת ואין לחברם.</p>

@@ -1,6 +1,6 @@
 import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
-import { Card, Split } from "../../components/ui";
+import { Card } from "../../components/ui";
 import { call, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { seatsFmt } from "../../lib/format";
@@ -36,7 +36,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   return (
-    <Split primary={<>
+    <div>
       <div className="mb-4"><Notice tone="warn">{d.participants < 30 ? "מעט משתתפים — הנתונים אינם מייצגים את הציבור." : "השערות הגולשים אינן מדגם מייצג."}</Notice></div>
       <p className="font-display text-2xl mb-4">{d.participants} משתתפים בסך הכול</p>
       {d.seats && <PersonalBlocs title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={d.publishedAt ?? "הפרסום האחרון"} datasets={[
@@ -48,7 +48,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
-      </>} secondary={<>
       {subject === "seats" ? (
         d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={mine} view={view} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
       ) : (
@@ -56,7 +55,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       )}
       {d.blocs ? <BlocStats d={d} view={view} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
-    </>} />
+    </div>
   );
 }
 

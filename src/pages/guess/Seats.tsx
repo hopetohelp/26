@@ -190,10 +190,10 @@ export default function Seats({
                 );
               })}
             </ul>
-      {/* פס פעולה דביק באזור האגודל */}
+      {/* פס פעולה דביק באזור האגודל; מהמחשב דביק בתחתית הטור שלו ולא על כל המסך (שני טורים) */}
       {/* מקום לכרטיס הצף, כדי שלא יסתיר את השורה האחרונה */}
-      <div aria-hidden="true" className="h-36" />
-      <div className="fixed z-20 inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 px-4 md:px-6 mx-auto w-full">
+      <div aria-hidden="true" className="h-36 md:hidden" />
+      <div className="fixed md:sticky z-20 inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 px-4 md:px-0 mx-auto w-full">
         {(left < 0 || editError) && <p role="alert" className="mb-2 rounded-theme border-2 border-warn bg-paper-card text-ink p-3 text-sm font-bold">
           {editError ?? `יש כרגע ${sum} מנדטים — ${-left} מעל 120. הפחיתו מנדטים או השתמשו ב״השלם הכול״ למפלגות הפתוחות. אפשר לשמור רק כשהסכום חוזר ל־120.`}
         </p>}
