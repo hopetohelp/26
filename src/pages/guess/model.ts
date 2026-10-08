@@ -48,9 +48,15 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
 }
 
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
-/** התחלה ניטרלית: אין חלוקה פוליטית שנכפית על משתתף חדש. */
+/** חלוקת פתיחה למשתתף חדש לפי הכרעת הבעלים; אינה משנה גושים שמורים. */
 export function defaultBlocs(): Bloc[] {
-  return [{ id: "scenario-1", name: "תרחיש 1", lists: [], target: null }];
+  const coalition = IDS.filter(id => GOV_IDS.includes(id) || id === "amcha");
+  const arab: string[] = IDS.filter(id => id === "joint" || id === "raam");
+  return [
+    { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
+    { id: "arab", name: "ערבים", lists: arab, target: null },
+    { id: "rest", name: "כל השאר", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
+  ];
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
 export function normalizeBlocs(p: BlocsPayload): BlocsPayload {

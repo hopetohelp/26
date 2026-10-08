@@ -1,7 +1,18 @@
 import { expect, it } from "vitest";
-import { defaultBlocs, normalizeBlocs, GOV_IDS } from "./model";
-it("משתתף חדש מתחיל בתרחיש ריק בלי שיוך פוליטי מוכתב", () => {
-  expect(defaultBlocs()).toEqual([{ id: "scenario-1", name: "תרחיש 1", lists: [], target: null }]);
+import { defaultBlocs, normalizeBlocs, GOV_IDS, IDS } from "./model";
+it("משתתף חדש מתחיל בקואליציה כולל עמך ישראל, ערבים וכל השאר", () => {
+  expect(defaultBlocs()).toEqual([
+    { id: "gov", name: "גוש הקואליציה", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha"], target: null },
+    { id: "arab", name: "ערבים", lists: ["joint", "raam"], target: null },
+    { id: "rest", name: "כל השאר", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite", "haredi_public"], target: null },
+  ]);
+  const assigned = defaultBlocs().flatMap(b => b.lists);
+  expect([...assigned].sort()).toEqual([...IDS].sort());
+  expect(new Set(assigned).size).toBe(assigned.length);
+});
+it("חלוקה אישית שמורה אינה מוחלפת בברירת המחדל החדשה", () => {
+  const saved = { mode: "custom" as const, blocs: [{ id: "mine", name: "שלי", lists: ["raam", "amcha"], target: 20 }] };
+  expect(normalizeBlocs(saved)).toBe(saved);
 });
 it("משמרים את ההרכב המרומז והיעדים של גרסאות הממשלה הישנות", () => {
   const p = normalizeBlocs({ mode: "gov37", blocs: [{ id: "gov", name: "ממשלה", lists: [], target: 65 }, { id: "rest", name: "יתר", lists: [], target: 55 }] });
