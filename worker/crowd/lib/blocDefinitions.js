@@ -2,11 +2,13 @@ import { GOV37, IDS_2026 } from "./lists.js";
 export const COALITION = [...new Set([...GOV37, "amcha", "code_black", "haredi_public"])].sort();
 export const ARAB = ["joint", "raam"];
 export const OPPOSITION = [...IDS_2026].filter(id => !COALITION.includes(id) && !ARAB.includes(id)).sort();
+export const UNITY = ["likud", "yashar", "together", "yb", "bluewhite", "reservists"];
 export const FIXED_BLOCS = [
   { id: "government", name: "הממשלה היוצאת", lists: [...GOV37].sort() },
   { id: "coalition", name: "גוש הקואליציה", lists: COALITION },
   { id: "opposition", name: "גוש האופוזיציה", lists: OPPOSITION },
   { id: "arab", name: "ערבים", lists: ARAB },
+  { id: "unity", name: "אחדות", lists: UNITY },
 ];
 export const compositionKey = lists => [...new Set(lists)].sort().join(",");
 const legacyCoalitions = [
@@ -39,4 +41,14 @@ export function migrateBlocs(payload) {
 /** סכומים נגזרים בלבד; המפלגות עצמן נשמרות בשלמותן לשחזור עתידי. */
 export function fixedTotals(payload) {
   return Object.fromEntries(FIXED_BLOCS.map(b => [b.id, b.lists.reduce((sum, id) => sum + (payload.seats[id]?.v ?? 0), 0)]));
+}
+
+export function personalTotals(payload, definition) {
+  const blocs = definition ? definition.mode === "gov37" ? definition.blocs.map(b => ({ ...b, lists: b.id === "gov" ? [...GOV37] : b.id === "rest" ? [...IDS_2026].filter(id => !GOV37.has(id)) : b.lists })) : migrateBlocs(definition).blocs : [
+    {id:"gov",name:"גוש הקואליציה",lists:COALITION},
+    {id:"rest",name:"גוש האופוזיציה",lists:OPPOSITION},
+    {id:"arab",name:"ערבים",lists:ARAB},
+    {id:"unity",name:"אחדות",lists:UNITY},
+  ];
+  return blocs.map(b => ({ id:b.id,name:b.name,lists:[...new Set(b.lists)],seats:[...new Set(b.lists)].reduce((sum,id)=>sum+(payload.seats[id]?.v??0),0) }));
 }

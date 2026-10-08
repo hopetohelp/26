@@ -5,7 +5,7 @@ import { computeBlocs } from '../lib/aggregate.js';
 
 const payload = { seats: Object.fromEntries(Object.entries({likud:40,shas:8,utj:8,otzma:4,rzp:4,noam:4,amcha:4,code_black:4,haredi_public:4,joint:8,raam:4,yashar:28}).map(([id,v]) => [id,{v,src:'manual',locked:false}])), start:'zero',pollsAsOf:null };
 it('משחזר שלושה הרכבים נפרדים בכל גרסה ושומר את חלוקת המקור', () => {
-  expect(fixedTotals(payload)).toEqual({government:68,coalition:80,opposition:28,arab:12});
+  expect(fixedTotals(payload)).toEqual({government:68,coalition:80,opposition:28,arab:12,unity:68});
   const result = upgradeVersion({id:1,unit:'seats',payload});
   expect(result.seats).toEqual(payload.seats);
   expect(upgradeVersion({id:1,unit:'seats',payload:result})).toEqual(result);
@@ -24,10 +24,17 @@ it('משדרג ברירות מחדל ישנות, בלי לשנות גוש איש
 });
 it('ארבע שורות קבועות מחושבות לכל בעלי השערת מפלגות גם בלי הגדרת גושים', () => {
   const b = computeBlocs([{participant:'a',payload},{participant:'b',payload}],[]);
-  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש הקואליציה',80,2],['גוש האופוזיציה',28,2],['ערבים',12,2]]);
+  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש הקואליציה',80,2],['גוש האופוזיציה',28,2],['ערבים',12,2],['אחדות',68,2]]);
 });
 it('פרסום היסטורי משתמש בגרסאות המקור ולא בהשערה מאוחרת', () => {
   const versions = [{id:1,participant:'a',unit:'seats',created_at:'2026-10-01',payload},{id:2,participant:'a',unit:'seats',created_at:'2026-10-03',payload:{...payload,seats:{likud:{v:120}}}}];
   const row = {section:'blocs',snapshot:'[1]',json:'{}',published_at:'2026-10-02'};
   expect(JSON.parse(upgradeAggregate(row,versions,[])).fixed[1].stat.mean).toBe(80);
+});
+
+it('שומר סכום והרכב אישי בכל גרסה ומשחזר לפי ההגדרה באותה עת', () => {
+  const definition = {mode:'custom',blocs:[{id:'a',name:'אישי',lists:['likud','joint'],target:50}]};
+  const result=upgradeVersion({id:1,unit:'seats',payload},definition);
+  expect(result.personalBlocSeats).toEqual([{id:'a',name:'אישי',lists:['likud','joint'],seats:48}]);
+  expect(upgradeVersion({id:1,unit:'seats',payload:result},null).personalBlocSeats).toEqual(result.personalBlocSeats);
 });

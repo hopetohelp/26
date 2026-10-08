@@ -313,3 +313,18 @@ describe("העדפות — המחנות נשמרים על המשתמש", () => {
     expect((await call("/delete", { token, body: { confirm: "מחק" } })).status).toBe(200);
   });
 });
+
+it('כל שמירת מפלגות שומרת גושים קבועים ואישיים לפי ההרכב האחרון', async () => {
+  const tok = await newP();
+  const definition = (lists) => ({mode:'custom',blocs:[{id:'mine',name:'שלי',lists,target:null}]});
+  expect((await save(tok,'blocs',definition(['likud','yashar']))).status).toBe(200);
+  const original = await save(tok,'seats',seats(60));
+  expect(original.status).toBe(200);
+  expect(Object.keys(original.data.version.payload.fixedBlocSeats)).toEqual(['government','coalition','opposition','arab','unity']);
+  expect(original.data.version.payload.personalBlocSeats).toEqual([{id:'mine',name:'שלי',lists:['likud','yashar'],seats:120}]);
+  await save(tok,'blocs',definition(['likud','shas']));
+  const next = await save(tok,'seats',seats(60));
+  expect(next.data.version.payload.personalBlocSeats[0].seats).toBe(60);
+  const history = (await call('/history?unit=seats',{token:tok})).data.versions;
+  expect(history.find(v=>v.id===original.data.version.id).payload.personalBlocSeats[0].seats).toBe(120);
+});

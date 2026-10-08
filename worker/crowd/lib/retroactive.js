@@ -1,11 +1,11 @@
-import { fixedTotals, migrateBlocs } from './blocDefinitions.js';
+import { fixedTotals, migrateBlocs, personalTotals } from './blocDefinitions.js';
 import { computeBlocs, latestByUnit } from './aggregate.js';
 
-export function upgradeVersion(row) {
+export function upgradeVersion(row, definition = null) {
   const payload = typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload;
   if (row.unit === 'seats') {
     if (!payload.seats || Object.values(payload.seats).reduce((sum, c) => sum + c.v, 0) !== 120) throw new Error(`אין חלוקת 120 תקינה בגרסה ${row.id}`);
-    return { ...payload, fixedBlocSeats: fixedTotals(payload) };
+    return { ...payload, fixedBlocSeats: fixedTotals(payload), personalBlocSeats: payload.personalBlocSeats ?? personalTotals(payload, definition) };
   }
   return row.unit === 'blocs' ? migrateBlocs(payload) : payload;
 }

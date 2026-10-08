@@ -61,7 +61,8 @@ export interface SeatCell {
 export interface SeatsPayload {
   /** סכום מפלגות הקואליציה, מחושב בשרת ונשמר עם הגרסה; חסר בגרסאות ישנות. */
   coalitionSeats?: number;
-  fixedBlocSeats?: Record<"government" | "coalition" | "opposition" | "arab", number>;
+  personalBlocSeats?: { id: string; name: string; lists: string[]; seats: number }[];
+  fixedBlocSeats?: Record<"government" | "coalition" | "opposition" | "arab" | "unity", number>;
   /** "seats" = ניחוש לפי מנדטים (ברירת המחדל, גם כשחסר) · "pct" = לפי אחוזי הצבעה, והמנדטים מחושבים במנוע החוק */
   mode?: "seats" | "pct";
   /** במצב pct: אחוז מהקולות הכשרים לכל רשימה (0..100, ספרה אחת אחרי הנקודה, סכום ≤ 100; היתר = אחרות / לא עברו) */

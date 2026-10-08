@@ -14,7 +14,12 @@ const versions = await query('SELECT id, participant, unit, created_at, payload 
 const participants = await query('SELECT id, review FROM participants');
 const aggregates = await query("SELECT * FROM aggregates WHERE section IN ('blocs','dashboard') ORDER BY id");
 // קודם בודקים את כל הגרסאות; שגיאה עוצרת לפני כתיבה כלשהי.
-const upgraded = versions.map(v => ({ ...v, payload: upgradeVersion(v) }));
+const definitions = new Map();
+const upgraded = versions.map(v => {
+  const payload = upgradeVersion(v, definitions.get(v.participant) ?? null);
+  if (v.unit === 'blocs') definitions.set(v.participant, payload);
+  return { ...v, payload };
+});
 const summaries = aggregates.map(a => ({ ...a, upgraded: upgradeAggregate(a, upgraded, participants) }));
 await query('CREATE TABLE IF NOT EXISTS bloc_migration_backup (kind TEXT NOT NULL, id INTEGER NOT NULL, original TEXT NOT NULL, migrated_at TEXT NOT NULL, PRIMARY KEY(kind,id))');
 let changedVersions = 0;

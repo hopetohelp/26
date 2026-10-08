@@ -5,8 +5,9 @@ it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל,
     { id: "gov", name: "גוש הקואליציה", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha", "haredi_public", "noam", "code_black"], target: null },
     { id: "rest", name: "גוש האופוזיציה", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite"], target: null },
     { id: "arab", name: "ערבים", lists: ["joint", "raam"], target: null },
+    { id: "unity", name: "אחדות", lists: ["likud", "yashar", "together", "yb", "bluewhite", "reservists"], target: null },
   ]);
-  const assigned = defaultBlocs().flatMap(b => b.lists);
+  const assigned = defaultBlocs().slice(0,3).flatMap(b => b.lists);
   expect([...assigned].sort()).toEqual([...IDS].sort());
   expect(new Set(assigned).size).toBe(assigned.length);
 });

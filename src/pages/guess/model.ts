@@ -47,6 +47,7 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
   return { seats, start, pollsAsOf: start === "polls" ? POLLS_AS_OF : null };
 }
 
+export const UNITY_IDS = ["likud", "yashar", "together", "yb", "bluewhite", "reservists"];
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 /** חלוקת פתיחה למשתתף חדש לפי הכרעת הבעלים; אינה משנה גושים שמורים. */
 export function defaultBlocs(): Bloc[] {
@@ -56,6 +57,7 @@ export function defaultBlocs(): Bloc[] {
     { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
     { id: "rest", name: "גוש האופוזיציה", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
     { id: "arab", name: "ערבים", lists: arab, target: null },
+    { id: "unity", name: "אחדות", lists: [...UNITY_IDS], target: null },
   ];
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
@@ -98,7 +100,7 @@ function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
     }
     return b;
   });
-  if (!changed) return p;
-  const defaults = blocs.length === 3 && current.every(d => blocs.some(b => b.id === d.id && keyOf(b.lists) === keyOf(d.lists)));
-  return { ...p, blocs: defaults ? current.map(d => blocs.find(b => b.id === d.id)!) : blocs };
+  const defaults = blocs.length === 3 && current.slice(0, 3).every(d => blocs.some(b => b.id === d.id && keyOf(b.lists) === keyOf(d.lists)));
+  if (defaults) return { ...p, blocs: [...current.slice(0,3).map(d => blocs.find(b => b.id === d.id)!), current[3]] };
+  return changed ? { ...p, blocs } : p;
 }
