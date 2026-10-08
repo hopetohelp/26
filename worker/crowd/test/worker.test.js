@@ -76,18 +76,18 @@ describe("participant & saves", () => {
     const me = await call("/me", { token: tok });
     expect(Object.keys(me.data.latest).sort()).toEqual(["blocs", "seats", "vote"]);
   });
-  it("rate limits: 20 saves/hour per participant, 5 registrations/hour per IP", async () => {
+  it("rate limits: 20 saves/hour per participant, 15 registrations/hour per IP", async () => {
     const tok = await newP();
     for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats(i + 4))).status).toBe(200);
     expect((await save(tok, "seats", seats(4))).status).toBe(429);
     t += 2 * 3600 * 1000;
     expect((await save(tok, "seats", seats(4))).status).toBe(200);
-    for (let i = 0; i < 5; i++) expect((await register("2001:db8:1:2:3::1")).status).toBe(200);
+    for (let i = 0; i < LIMITS.participantsPerHourPerIp; i++) expect((await register("2001:db8:1:2:3::1")).status).toBe(200);
     expect((await register("2001:db8:1:2:ffff::9")).status).toBe(429); // אותו /64
     expect((await register("2001:db8:1:3::1")).status).toBe(200);
   });
   it("IP_KEY_PREV keeps old counters", async () => {
-    for (let i = 0; i < 5; i++) await register("9.9.9.9");
+    for (let i = 0; i < LIMITS.participantsPerHourPerIp; i++) await register("9.9.9.9");
     env.IP_KEY_PREV = env.IP_KEY;
     env.IP_KEY = "new-ip-secret";
     expect((await register("9.9.9.9")).status).toBe(429);

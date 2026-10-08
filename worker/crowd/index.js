@@ -15,7 +15,7 @@ import { validateSave, UNITS, normalizeUsername, passwordProblem } from "./lib/v
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 
-export const LIMITS = { savesPerHour: 20, participantsPerHourPerIp: 5 };
+export const LIMITS = { savesPerHour: 20, participantsPerHourPerIp: 15 };
 const MAX_BODY = 16 * 1024;
 
 function cors(env, origin) {
@@ -114,6 +114,10 @@ const DUMMY = { algo: "pbkdf2-sha256", salt: "AAAAAAAAAAAAAAAAAAAAAA==", iterati
 
 // ---- הנתיבים
 const routes = {
+  // בדיקת חיבור: בלי מאגר ובלי זהות. GET ו-POST (עם גוף) — כדי שהבדיקה בדפדפן תוכל להבדיל חסימה של סוג בקשה.
+  "GET /ping": async () => ({ ok: true }),
+  "POST /ping": async () => ({ ok: true }),
+
   "GET /me": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     const p = await env.DB.prepare("SELECT id, created_at FROM participants WHERE id = ?").bind(participant).first();
@@ -126,7 +130,7 @@ const routes = {
     const latest = Object.fromEntries((results || []).map((r) => [r.unit, parseVersion(r)]));
     const pw = await passwordCred(env, participant);
     const g = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
-    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g };
+    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g };
   },
 
   "POST /save": async ({ env, request, now, body }) => {
@@ -224,6 +228,40 @@ const routes = {
       throw new HttpError(409, "username_taken");
     }
     return { token, link };
+  },
+
+  // שמירה בלי משתמש (הכרעת בעלים 8.10.2026): משתתף בלי סיסמה ובלי קישור אישי — אי אפשר לשחזר אותו אם הסשן אבד.
+  // אותה הגבלת קצב כמו בהרשמה. בהמשך אפשר להוסיף שם משתמש וסיסמה (POST /auth/claim) ואז נוצר גם קישור אישי.
+  "POST /auth/guest": async ({ env, request, now }) => {
+    const [stmts, participant] = await createParticipant(env, request, now);
+    const [sess, token] = await newSession(env, participant, now);
+    await env.DB.batch([...stmts, sess]);
+    return { token };
+  },
+
+  // הוספת שם משתמש וסיסמה למשתתף שנשמר בלי משתמש: הסשן הנוכחי נשאר, ונוצר קישור אישי לשחזור.
+  "POST /auth/claim": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    if (await passwordCred(env, participant)) throw bad("has_password");
+    const u = normalizeUsername(body.username);
+    if (!u) throw bad("bad_username");
+    checkPassword(body.password);
+    const taken = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(u.norm).first();
+    if (taken) throw new HttpError(409, "username_taken");
+    const h = await hashPassword(body.password);
+    const link = randomToken();
+    try {
+      await env.DB.batch([
+        env.DB.prepare(
+          "INSERT INTO credentials (participant, kind, username, username_norm, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?, ?, ?)",
+        ).bind(participant, u.display, u.norm, h.hash, h.salt, h.iterations, h.algo, iso(now)),
+        env.DB.prepare("DELETE FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant),
+        env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
+      ]);
+    } catch {
+      throw new HttpError(409, "username_taken");
+    }
+    return { username: u.display, link };
   },
 
   "POST /auth/login": async ({ env, request, now, body }) => {

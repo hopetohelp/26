@@ -5,6 +5,8 @@
  * GET  /thread?t=   ⇐ ההערה והשיחה עליה (רק למי שמחזיק את הקישור).
  * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
  * POST /merge       {tokens} ⇐ איחוד השיחות שהגולש מחזיק בכל הקישורים שלהן. הקישורים נשארים תקפים.
+ * GET|POST /ping   ⇐ בדיקת חיבור, בלי מאגר.
+ * POST /diag        {kind} ⇐ סיווג כשל חיבור (מונה ליום; hits.page = diag:<kind>).
  * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
  *                    המזהה היומי הוא גיבוב חד-כיווני של ה-IP, הדפדפן והתאריך: אי אפשר לשחזר ממנו כתובת או לקשור גולש בין ימים.
  *                    {v} = מזהה אקראי של הדפדפן (localStorage) לספירה מצטברת; נשמר רק גיבוב שלו, יחד עם יום ראשון ואחרון.
@@ -18,6 +20,8 @@
 const TOPICS = new Set(["data", "idea", "design", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
+/** סיווגי "בדיקת חיבור" שהדפדפן שולח אחרי כשל (POST /diag): רק מונה ליום, בלי שום פרט על המשתמש. נשמרים ב-hits בשם diag:<סיווג>. */
+const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved"]);
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
 
 function cors(env, origin) {
@@ -78,6 +82,9 @@ export default {
       return env.CROWD.fetch(new Request(url, request));
     }
 
+    // ---- בדיקת חיבור (בלי מאגר)
+    if (url.pathname === "/ping") return reply({ ok: true });
+
     // ---- קריאת שיחה
     if (request.method === "GET" && url.pathname === "/thread") {
       const fb = await findThread(env, url.searchParams.get("t"));
@@ -91,6 +98,20 @@ export default {
       return reply({ ok: true, topic: first.topic, text: first.text, created_at: first.created_at, status: fb.status, messages });
     }
     if (request.method !== "POST") return reply({ ok: false }, 405);
+
+    // ---- סיווג כשל חיבור: מונה בלבד
+    if (url.pathname === "/diag") {
+      let kind = "";
+      try {
+        kind = String((await request.json()).kind || "");
+      } catch {
+        return reply({ ok: false }, 400);
+      }
+      if (!DIAG_KINDS.has(kind)) return reply({ ok: false }, 400);
+      const day = new Date().toISOString().slice(0, 10);
+      await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:" + kind).run();
+      return reply({ ok: true });
+    }
 
     // ---- מונה כניסות: רק עמודים מוכרים, ונשמר רק המספר ליום ולעמוד
     if (url.pathname === "/hit") {

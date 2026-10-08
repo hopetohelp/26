@@ -11,6 +11,21 @@ const PW_MIN = 6;
 const PW_MAX = 128;
 const pwProps = { type: "password", minLength: PW_MIN, maxLength: PW_MAX, required: true, className: inputCls, dir: "ltr" as const };
 
+/** שדה סיסמה עם "הצגה": מקטין טעויות הקלדה, במיוחד בטלפון */
+function PasswordField({ label, hint, value, onChange, mode }: { label: string; hint?: string; value: string; onChange: (v: string) => void; mode: "current" | "new" }) {
+  const [show, setShow] = useState(false);
+  return (
+    <Field label={label} hint={hint}>
+      <span className="flex gap-2">
+        <input {...pwProps} type={show ? "text" : "password"} autoComplete={mode === "current" ? "current-password" : "new-password"} value={value} onChange={(e) => onChange(e.target.value)} />
+        <button type="button" onClick={() => setShow((x) => !x)} aria-pressed={show} className="shrink-0 min-h-[44px] px-3 rounded-theme border border-paper-line text-sm font-bold">
+          {show ? "הסתרה" : "הצגה"}
+        </button>
+      </span>
+    </Field>
+  );
+}
+
 function useAction(action: string) {
   const [msg, setMsg] = useState<{ ok: boolean; text: string; log?: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -94,39 +109,52 @@ export function RecoverForm({ link, session, onDone }: { link: string; session: 
   );
 }
 
+/** מה נשמר ומי רואה — מקופל, כדי שהטופס יישאר קצר */
+function PrivacyNote() {
+  return (
+    <details className="text-sm">
+      <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">מה נשמר ומי רואה?</summary>
+      <ul className="list-disc ps-5 space-y-1 pb-2">
+        <li>מה שתשמרו נשמר בשרת האתר, בלי שם אמיתי ובלי מייל.</li>
+        <li>הגרסה האחרונה שלכם נכנסת לממוצע הגולשים, בלי שום פרט מזהה. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצות קטנות אפשר להסיק תשובות ללא שם. מספר משתתפים קטן אינו משקף את הציבור.</li>
+        <li>אף אחד אחר לא רואה את ההשערה האישית שלכם. אפשר למחוק הכול בכל רגע ב"הנתונים שלי".</li>
+      </ul>
+    </details>
+  );
+}
+
 /**
- * הרשמה או כניסה — שם משתמש וסיסמה. זו הדרך היחידה לשמור (הכרעת בעלים 6.10.2026).
- * בהרשמה נוצר גם קישור אישי (כניסה ישירה + שחזור סיסמה), והוא מוצג מיד לשמירה. ההסכמה נדרשת לפני השמירה הראשונה.
+ * הרשמה, כניסה, או (בגיליון השמירה) שמירה בלי משתמש.
+ * הרשמה: שם משתמש וסיסמה (מומלץ) ⇐ קישור אישי לשחזור. בלי משתמש (הכרעת בעלים 8.10.2026): נשמר בשרת, אבל אי אפשר לשחזר.
+ * ההסכמה (הגרסה האחרונה נכנסת לממוצע האנונימי) נדרשת פעם אחת לפני כל שמירה ראשונה.
  */
 export function AuthForm({
   session,
   onDone,
   initial = "register",
   submitSuffix = "",
+  allowGuest = false,
 }: {
   session: ReturnType<typeof useSession>;
   onDone?: (token: string) => void;
   initial?: "login" | "register";
   submitSuffix?: string;
+  allowGuest?: boolean;
 }) {
   const [mode, setMode] = useState<"login" | "register">(initial);
   const [u, setU] = useState("");
   const [pw, setPw] = useState("");
   const [agree, setAgree] = useState(hasConsent);
   const a = useAction(mode === "register" ? "הרשמה לפני שמירה" : "כניסה לפני שמירה");
-  const tabs = [
-    ["register", "הרשמה"],
-    ["login", "כבר יש לי חשבון"],
-  ] as const;
+  const g = useAction("שמירה בלי משתמש");
+  const consent = (
+    <label className="flex items-start gap-2 text-sm font-bold">
+      <input type="checkbox" className="mt-1 w-5 h-5 shrink-0" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
+      הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של הגולשים, ואפשר למחוק הכול בכל רגע.
+    </label>
+  );
   return (
-    <div className="space-y-3">
-      <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="פעולה">
-        {tabs.map(([m, l]) => (
-          <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => setMode(m)} className={`min-h-[44px] px-3 rounded-full border-2 text-sm font-bold ${mode === m ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}>
-            {l}
-          </button>
-        ))}
-      </div>
+    <div className="space-y-4">
       <form
         className="space-y-3"
         onSubmit={a.run(async () => {
@@ -139,34 +167,82 @@ export function AuthForm({
           return mode === "login" ? "נכנסתם." : "נרשמתם.";
         })}
       >
-        <div className="grid sm:grid-cols-2 gap-2">
+        <h3 className="font-bold flex items-center gap-2 flex-wrap">
+          {mode === "register" ? "הרשמה" : "כניסה"}
+          {mode === "register" && allowGuest && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-accent-soft text-ink">מומלץ</span>}
+        </h3>
+        <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
           <Field label="שם משתמש" hint={mode === "register" ? "3–24 אותיות או ספרות. לא שם אמיתי." : undefined}>
             <input required minLength={3} maxLength={24} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
           </Field>
-          <Field label="סיסמה" hint={mode === "register" ? `לפחות ${PW_MIN} תווים` : undefined}>
-            <input {...pwProps} autoComplete={mode === "login" ? "current-password" : "new-password"} value={pw} onChange={(e) => setPw(e.target.value)} />
-          </Field>
+          <PasswordField label="סיסמה" hint={mode === "register" ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={mode === "login" ? "current" : "new"} />
         </div>
-        {mode === "register" && (
-          <>
-            <ul className="list-disc ps-5 text-sm space-y-1">
-              <li>מה שתשמרו נשמר בשרת האתר תחת שם המשתמש שבחרתם — בלי שם אמיתי ובלי מייל.</li>
-              <li>הגרסה האחרונה שלכם נכנסת לממוצע הגולשים, בלי שום פרט מזהה. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצות קטנות אפשר להסיק תשובות ללא שם. מספר משתתפים קטן אינו משקף את הציבור.</li>
-              <li>אף אחד אחר לא רואה את ההשערה האישית שלכם. אפשר למחוק הכול בכל רגע ב"הנתונים שלי".</li>
-            </ul>
-            <label className="flex items-start gap-2 text-sm font-bold">
-              <input type="checkbox" className="mt-1 w-5 h-5" checked={agree} onChange={(e) => setAgree(e.target.checked)} required />
-              הבנתי, ואני מסכים/ה
-            </label>
-          </>
-        )}
-        <Btn type="submit" kind="primary" disabled={a.busy || (mode === "register" && !agree)}>
-          {(mode === "login" ? "כניסה" : "הרשמה") + submitSuffix}
-        </Btn>
+        {mode === "register" && consent}
+        <div className="flex gap-2 flex-wrap items-center">
+          <Btn type="submit" kind="primary" disabled={a.busy || (mode === "register" && !agree)}>
+            {(mode === "login" ? "כניסה" : "הרשמה") + submitSuffix}
+          </Btn>
+          <button type="button" onClick={() => setMode(mode === "login" ? "register" : "login")} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
+            {mode === "login" ? "אין לי חשבון — הרשמה" : "כבר יש לי חשבון"}
+          </button>
+        </div>
+        {mode === "login" && <p className="text-xs text-ink">{FORGOT_LINE}</p>}
+        {a.view}
       </form>
-      <p className="text-xs text-ink-soft">{FORGOT_LINE}</p>
-      {a.view}
+      {mode === "register" && <PrivacyNote />}
+      {allowGuest && (
+        <section className="rounded-theme border-2 border-dashed border-ink-soft p-3 space-y-2" aria-label="שמירה בלי משתמש">
+          <h3 className="font-bold">או: שמירה בלי משתמש</h3>
+          <p className="text-sm text-ink">ההשערה נשמרת בשרת, אבל <strong>לא ניתן יהיה לשחזר אותה</strong> אם תחליפו מכשיר, תמחקו נתוני דפדפן או תתנתקו. מומלץ להירשם. אפשר להוסיף שם משתמש גם אחרי השמירה.</p>
+          {mode === "login" && consent}
+          <Btn
+            disabled={g.busy || !agree}
+            onClick={g.run(async () => {
+              const r = await call<{ token: string }>("/auth/guest", { body: {} });
+              setConsent(true);
+              session.setToken(r.token);
+              onDone?.(r.token);
+              return "נשמר בלי משתמש.";
+            })}
+          >
+            שמירה בלי משתמש
+          </Btn>
+          {!agree && <p className="text-xs text-ink">כדי לשמור סמנו קודם "הבנתי".</p>}
+          {g.view}
+        </section>
+      )}
     </div>
+  );
+}
+
+/** מי שנשמר בלי משתמש: הוספת שם משתמש וסיסמה בלי לאבד את מה ששמר; נוצר קישור אישי לשחזור */
+export function ClaimForm({ session, onDone }: { session: ReturnType<typeof useSession>; onDone?: () => void }) {
+  const [u, setU] = useState("");
+  const [pw, setPw] = useState("");
+  const a = useAction("הוספת שם משתמש");
+  return (
+    <form
+      className="space-y-3"
+      onSubmit={a.run(async () => {
+        const r = await call<{ username: string; link: string }>("/auth/claim", { token: session.token, body: { username: u, password: pw } });
+        setPw("");
+        session.setLink(r.link);
+        await session.refresh();
+        onDone?.();
+        return "נוסף שם משתמש. שמרו עכשיו את הקישור האישי.";
+      })}
+    >
+      <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
+        <Field label="שם משתמש" hint="3–24 אותיות או ספרות. לא שם אמיתי.">
+          <input required minLength={3} maxLength={24} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
+        </Field>
+        <PasswordField label="סיסמה" hint={`לפחות ${PW_MIN} תווים`} value={pw} onChange={setPw} mode="new" />
+      </div>
+      <Btn type="submit" kind="primary" disabled={a.busy}>
+        הוספת שם משתמש
+      </Btn>
+      {a.view}
+    </form>
   );
 }
 
@@ -193,10 +269,20 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
     );
   }
 
+  if (token && me?.guest) {
+    return (
+      <section className="bg-paper-card border-2 border-warn rounded-theme p-5 sm:p-6 space-y-3">
+        <h3 className="font-display text-3xl leading-none">נשמרתם בלי משתמש</h3>
+        <p className="text-sm text-ink">אי אפשר לשחזר את ההשערה אם תחליפו מכשיר או תמחקו נתוני דפדפן. הוסיפו שם משתמש וסיסמה כדי להישאר מחוברים מכל מכשיר.</p>
+        <ClaimForm session={session} />
+      </section>
+    );
+  }
+
   return (
     <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-3">
       <h3 className="font-display text-3xl leading-none">חשבון</h3>
-      <p className="text-sm text-ink-soft">כדי לשמור צריך שם משתמש וסיסמה — בלי שם אמיתי ובלי מייל. עד אז הטיוטות נשמרות רק בדפדפן הזה.</p>
+      <p className="text-sm text-ink">הרשמה בשם משתמש וסיסמה (בלי שם אמיתי ובלי מייל) מאפשרת לחזור להשערה מכל מכשיר. עד אז הטיוטות נשמרות רק בדפדפן הזה.</p>
       <AuthForm session={session} />
     </section>
   );

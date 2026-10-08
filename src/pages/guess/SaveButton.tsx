@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { AuthForm } from "./Account";
 import { Btn } from "./ui";
@@ -42,16 +43,19 @@ export default function SaveButton({
       <Btn kind="primary" onClick={go} disabled={!!invalid || busy || !CROWD_URL || unit.status === "saved"}>
         {busy ? "שומר…" : unit.state === "error" ? "לנסות שוב" : unit.status === "saved" ? "נשמר" : "שמור"}
       </Btn>
-      {ask && (
-        <AuthSheet
-          session={session}
-          onClose={() => setAsk(false)}
-          onDone={(token) => {
-            setAsk(false);
-            void run(token);
-          }}
-        />
-      )}
+      {ask &&
+        // בפורטל: הגיליון נמצא בתוך סרגל הפעולות הדביק (z-20), ובלי פורטל סרגל הניווט התחתון בטלפון (z-30) מכסה את כפתורי הגיליון
+        createPortal(
+          <AuthSheet
+            session={session}
+            onClose={() => setAsk(false)}
+            onDone={(token) => {
+              setAsk(false);
+              void run(token);
+            }}
+          />,
+          document.body,
+        )}
       {unit.error && !compact && (
         <SaveError unit={unit} />
       )}
@@ -87,14 +91,14 @@ export function AuthSheet({ session, onClose, onDone }: { session: ReturnType<ty
       >
         <div className="flex items-start justify-between gap-2">
           <h2 id="auth-title" className="font-display text-3xl leading-none">
-            כדי לשמור — שם משתמש וסיסמה
+            לשמור את ההשערה
           </h2>
           <button type="button" onClick={onClose} aria-label="סגירה" className="w-11 h-11 -mt-2 -me-2 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">
             ×
           </button>
         </div>
-        <p className="text-sm text-ink-soft">ההשערה שלכם מחכה כטיוטה. נרשמים פעם אחת, ואז אפשר לחזור אליה ולשנות מכל מכשיר.</p>
-        <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" />
+        <p className="text-sm text-ink-soft">ההשערה שלכם מחכה כטיוטה. הרשמה לוקחת חצי דקה, ואז אפשר לחזור אליה ולשנות מכל מכשיר.</p>
+        <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" allowGuest />
       </div>
     </div>
   );
