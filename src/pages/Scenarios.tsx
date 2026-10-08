@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import { ScenarioRanges, TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, PageTitle } from "../components/ui";
-import forecastFile from "../data/forecast.json";
 
-const fc = forecastFile as unknown as { horizon: number; selection?: { summary: Record<string, { voteAccuracy: number; seatAccuracy: number }> } | null };
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
 import { listName, meta, results } from "../lib/data";
@@ -71,23 +69,6 @@ function coverageRange() {
   return [...byCycle.entries()].map(([label, xs]) => ({ label, avg: xs.reduce((a, b) => a + b, 0) / xs.length }));
 }
 
-/** למה אין תחזית נפרדת: מודל המגמות נבדק מול החציון באותו מרחק מהבחירות (pipeline/forecast_challenger.py) */
-function ForecastCheck() {
-  const s = fc.selection?.summary;
-  if (!s?.baseline || !s.trend) return null;
-  const p1 = (x: number) => `${(Math.round(x * 1000) / 10).toLocaleString("he-IL")}%`;
-  return (
-    <Card title="למה התחזית היא ממוצע הסקרים">
-      <p className="text-sm leading-relaxed">
-        בדקנו גם מודל מגמות, שממשיך את קו המגמה של כל מכון עד יום הבחירות ומתקן טעויות עבר. על חמש מערכות הבחירות 2019–2022, {fc.horizon} ימים
-        לפני הבחירות כמו היום, הוא הגיע ל-{p1(s.trend.seatAccuracy)} דיוק במנדטים — מול {p1(s.baseline.seatAccuracy)} לחציון הסקרים האחרונים.
-        מודל שלא מנצח את הממוצע אינו מוסיף ידע, ולכן לא מוצג. הוא ייבדק שוב בכל יום, ויחזור רק אם יהיה מדויק יותר בעבר באותו מרחק מהבחירות.
-      </p>
-      <p className="text-xs text-ink-soft mt-2">דיוק במנדטים = 100% פחות סכום פערי המנדטים חלקי 240. חמש מערכות בחירות אינן מספיקות כדי להבטיח דיוק עתידי.</p>
-    </Card>
-  );
-}
-
 export default function Scenarios() {
   const asOfText = `הסקרים עד ${dateLong(m.asof)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
   const trendIds = ids.filter((id) => m.central.seats[id] > 0).slice(0, 9);
@@ -107,11 +88,10 @@ export default function Scenarios() {
   return (
     <>
       <PageTitle
-        lead={`התחזית ליום הבחירות היא ממוצע הסקרים — כי שום שיטה שבדקנו לא הייתה מדויקת ממנו בעבר. סביבו ${num(sc.n)} תרחישים: לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`}
+        lead={`התחזית ליום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`}
       >
         תחזית ותרחישים
       </PageTitle>
-      <ForecastCheck />
 <PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />
 
       <Card title="לכל רשימה">
