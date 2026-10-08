@@ -1,3 +1,4 @@
+import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useState } from "react";
 import { call, type BlocsPayload, type VotePayload, type SeatsPayload, type Unit, type Version } from "../../lib/crowdApi";
 import { date } from "../../lib/format";
@@ -61,12 +62,14 @@ export default function History({ session }: { session: ReturnType<typeof useSes
               <details className="bg-paper-card border border-paper-line rounded-theme p-3">
                 <summary className="cursor-pointer min-h-[44px] font-bold flex items-center">תוכן גרסה {v.id}</summary>
                 <VersionContent version={v} />
+                {v.unit === "seats" && <PersonalBlocs values={Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id, c]) => [id, c.v]))} source={`מנדטי גרסה ${v.id}, לפי הרכב הגושים הנוכחי שלכם`} asOf={v.created_at} />}
               </details>
             </li>
           ))}
         </ol>
       )}
       {unit === "seats" && versions && versions.length > 1 && !b && <p className="text-xs text-ink-soft">סמנו שתי גרסאות כדי לראות מה השתנה.</p>}
+      {a && b && <><PersonalBlocs values={Object.fromEntries(Object.entries(a.payload.seats).map(([id, c]) => [id, c.v]))} source={`גרסה קודמת ${a.id}, לפי הרכב הגושים הנוכחי`} asOf={a.created_at} /><PersonalBlocs values={Object.fromEntries(Object.entries(b.payload.seats).map(([id, c]) => [id, c.v]))} source={`גרסה מאוחרת ${b.id}, לפי הרכב הגושים הנוכחי`} asOf={b.created_at} /></>}
       {a && b && (
         <table className="w-full text-sm tabular">
           <caption className="text-start font-bold mb-1">

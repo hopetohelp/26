@@ -41,7 +41,8 @@ export default function Guess() {
   const [intro, setIntro] = useState(() => !introSeen());
   const [recoverLink, setRecoverLink] = useState<string | null>(null);
   const [mineKey, setMineKey] = useState(0);
-  const [view, setView] = useState<"mine" | "statistics">("mine");
+  const view = params.get("view") === "statistics" ? "statistics" : "mine";
+  const setView = (value: "mine" | "statistics") => { const next = new URLSearchParams(params); next.set("view", value); setParams(next, { replace: true }); };
   const top = useRef<HTMLDivElement>(null);
 
   // הקישור האישי (?t=) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
@@ -88,7 +89,7 @@ export default function Guess() {
 
   return (
     <>
-      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: לפי מנדטים או לפי אחוזי הצבעה. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלי</PageTitle>
+      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלי</PageTitle>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
       <div className="mb-5"><Countdown /></div>
       {intro && !shared && (

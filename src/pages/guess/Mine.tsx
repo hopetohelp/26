@@ -1,26 +1,35 @@
+import { useSearchParams, Link } from "react-router-dom";
+import { usePersonalBlocs } from "../../components/PersonalBlocs";
+import Blocs from "./Blocs";
+import Calculator from "../Calculator";
 import { useState } from "react";
 import { linkAcked, setLinkAck } from "../../lib/crowdSession";
-import { type BlocsPayload, type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
+import { type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
 import LinkSaver from "./LinkSaver";
 import Seats from "./Seats";
-import { DEFAULT_BLOCS } from "./model";
 import Vote from "./Vote";
 import { Btn, Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
   { id: "seats", label: "מנדטים וגושים" },
+  { id: "calculator", label: "מחשבון מנדטים" },
+  { id: "blocs", label: "עריכת גושים" },
   { id: "vote", label: "הצבעה" },
   { id: "history", label: "היסטוריה" },
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
 
 export default function Mine({ session, onStatistics }: { session: ReturnType<typeof useSession>; onStatistics: () => void }) {
-  const [sec, setSec] = useState<Sec>("seats");
+  const [params, setParams] = useSearchParams();
+  const requested = params.get("section");
+  const sec: Sec = SECTIONS.some(s => s.id === requested) ? requested as Sec : "seats";
+  const setSec = (value: Sec) => { const next = new URLSearchParams(params); next.set("section", value); setParams(next, { replace: true }); };
+  const back = params.get("return");
   const latest = session.me?.latest;
   const seats = useUnit<SeatsPayload>("seats", null, latest?.seats?.payload as SeatsPayload | undefined);
-  const blocs = useUnit<BlocsPayload>("blocs", DEFAULT_BLOCS, latest?.blocs?.payload as BlocsPayload | undefined);
+  const blocs = usePersonalBlocs();
   const vote = useUnit<VotePayload>("vote", null, latest?.vote?.payload as VotePayload | undefined);
 
 
@@ -79,6 +88,8 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
         })}
       </nav>
       {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} onStatistics={onStatistics} />}
+      {sec === "calculator" && <Calculator session={session} unit={seats} blocsUnit={blocs} />}
+      {sec === "blocs" && <><Blocs unit={blocs} session={session} mySeats={seats.draft ? Object.fromEntries(Object.entries(seats.draft.seats).map(([id, c]) => [id, c.v])) : null} />{back && /^\/(?!\/)/.test(back) && <Link className="block min-h-[44px] mt-4" to={back}>חזרה למסך הקודם</Link>}</>}
       {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
     </div>

@@ -15,16 +15,16 @@ const browser=await chromium.launch({headless:true,executablePath:process.env.UI
 for(const theme of ['league','board']) for(const width of [360,820,1280]){
  const context=await browser.newContext({viewport:{width,height:1000},hasTouch:true});
  const page=await context.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message));
- await page.addInitScript(({theme,cells,tok})=>{
+ await page.addInitScript(({theme,cells,tok,ids})=>{
   localStorage.setItem('elections26.theme',theme);
   localStorage.setItem('elections26.crowd.token','test-session');
   localStorage.setItem('elections26.crowd.link','test-personal-link');
   localStorage.setItem('elections26.crowd.intro','1');
   localStorage.setItem('elections26.crowd.linkAck','1');
   localStorage.setItem('elections26.crowd.draft.seats',JSON.stringify({seats:cells,start:'zero',pollsAsOf:null}));
-  localStorage.setItem('elections26.crowd.saved.blocs',JSON.stringify({mode:'gov37',blocs:[{id:'gov',name:'ממשלה',lists:['likud'],target:null},{id:'rest',name:'יתר',lists:[],target:null}]}));
+  localStorage.setItem('elections26.crowd.saved.blocs',JSON.stringify({mode:'custom',blocs:[{id:'coalition',name:'הקואליציה הנוכחית',lists:['likud'],target:null},{id:'opposition',name:'האופוזיציה הנוכחית',lists:ids.filter(id=>id!=='likud'),target:null},{id:'arabs',name:'ערבים',lists:[],target:null},{id:'new',name:'חדשות',lists:[],target:null}]}));
   localStorage.setItem('elections26.feedback',JSON.stringify([{token:tok,created:'2026-10-01',preview:'הודעה ישנה לדוגמה'}]));
- },{theme,cells,tok});
+ },{theme,cells,tok,ids});
  const crowdRoute = async route=>{
   const p=new URL(route.request().url()).pathname.replace(/^\/crowd/, '');
   const data=p==='/me'?{participant:'demo',username:'דוגמה',latest:{},created_at:'2026-10-01'}:p==='/support'?{thread:null}:p==='/dashboard'?dashboard:{};
@@ -73,20 +73,20 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.getByRole('button',{name:'עריכת שם הגוש: שם אישי',exact:true}).click();
  await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('הקואליציה הנוכחית');
  await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).press('Tab');
- await page.locator('[data-bloc-party="likud"] button').scrollIntoViewIfNeeded();
- let source=await page.locator('[data-bloc-party="likud"] button').boundingBox();
+ await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] button').evaluate(el=>el.scrollIntoView({block:"center"}));
+ let source=await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] button').boundingBox();
  let target=await page.locator('[data-bloc-id="opposition"]').boundingBox();
  await page.mouse.move(source.x+20,source.y+20); await page.mouse.down();
  await page.mouse.move(target.x+target.width/2,target.y+30,{steps:8});
  assert.equal(await page.locator('[data-drag-preview="likud"]').count(),1);
  await page.mouse.up();
- assert.equal(await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"]').count(),1);
- await page.locator('[data-bloc-party="likud"] button').press('ArrowLeft');
+ await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"]').waitFor();
+ await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"] button').press('ArrowLeft');
  assert.equal(await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"]').count(),1);
  // עריכת שמות אינה מתבצעת אוטומטית בעקבות העברה.
  assert.equal(await page.locator('[data-bloc-id="coalition"] h3').innerText(),'הקואליציה הנוכחית');
- await page.locator('[data-bloc-party="likud"] button').scrollIntoViewIfNeeded();
- source=await page.locator('[data-bloc-party="likud"] button').boundingBox();
+ await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"] button').evaluate(el=>el.scrollIntoView({block:"center"}));
+ source=await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"] button').boundingBox();
  target=await page.locator('[data-bloc-id="new"]').boundingBox();
  const cdp=await context.newCDPSession(page);
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:source.x+20,y:source.y+20}]});
@@ -94,6 +94,14 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  assert.equal(await page.locator('[data-drag-preview="likud"]').count(),1);
  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').waitFor({timeout:5000});
+ assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1,'copy preserves source');
+ await page.getByRole('button',{name:'הוספת גוש (4/5)',exact:true}).click();
+ assert.equal(await page.locator('[data-bloc-id]').count(),5);
+ assert.equal(await page.getByRole('button',{name:'הוספת גוש (5/5)',exact:true}).isDisabled(),true);
+ const fifth=page.locator('[data-bloc-id]').last();
+ await fifth.getByRole('button',{name:'מחיקת הגוש',exact:true}).click();
+ assert.equal(await page.locator('[data-bloc-id]').count(),4);
+ assert.equal(await page.getByRole('radio',{name:'לפי אחוזי הצבעה',exact:true}).count(),0);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow guess ${theme} ${width}`);
  await page.locator('[data-bloc-id="coalition"]').scrollIntoViewIfNeeded();
  await page.screenshot({path:`${screenshotDir}/blocs-${theme}-${width}.png`});
@@ -115,7 +123,7 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow statistics ${theme} ${width}`);
  await page.screenshot({path:`${screenshotDir}/statistics-${theme}-${width}-${await page.getByRole('radio',{name:'גרף',exact:true}).getAttribute('aria-checked')}.png`});
  assert.equal(errors.length,0,errors.join('\n'));
- console.log(`${theme} ${width}: עברו: שיחות קודמות, ארבעה גושים, גרירה בעכבר ובמגע, מקלדת, אחוזים וגושים קבועים`);
+ console.log(`${theme} ${width}: עברו: שיחות קודמות, חמישה גושים עצמאיים, העתקה בגרירה בעכבר ובמגע, מקלדת, אחוזים וגושים קבועים`);
  await context.close();
 }
 await browser.close();

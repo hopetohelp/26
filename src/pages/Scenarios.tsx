@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import { ScenarioRanges, TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
@@ -143,6 +144,8 @@ export default function Scenarios() {
         </Note>
       </Card>
 
+      <PersonalBlocs values={m.central.seats} source="מנדטים לפי ממוצע מודל התרחישים" asOf={asOfText} />
+
       <div className="grid md:grid-cols-2 gap-5 [&>*]:min-w-0">
         <Card title="על סף אחוז החסימה">
           <Explained kind="תרחיש" source={SOURCE} asOf={asOfText} assumption="רשימה שלא עוברת את הסף מקבלת אפס מנדטים, וקולותיה אינם נספרים בחלוקה." methodAnchor="model">
@@ -184,7 +187,7 @@ export default function Scenarios() {
             </p>
           </Explained>
           <Note>
-            קבוצה אחרת אפשר להגדיר <Link to="/calculator">במחשבון</Link>.
+            קבוצה אחרת אפשר להגדיר <Link to="/guess?section=blocs">בעריכת הגושים</Link>.
           </Note>
         </Card>
       </div>
@@ -255,6 +258,8 @@ export default function Scenarios() {
         </Explained>
       </Card>
 
+      <PersonalBlocs values={m.trend[0].seats} source="מנדטי המודל בתחילת חלון המגמה" asOf={dateLong(m.trend[0].date)} />
+      <PersonalBlocs values={m.trend[m.trend.length - 1].seats} source="מנדטי המודל בסוף חלון המגמה" asOf={dateLong(m.trend[m.trend.length - 1].date)} />
       <Card title="המכונים: אילו הממוצע היה מעוגן במכון אחד">
         <Explained
           kind="סיכום סקרים"
@@ -304,6 +309,7 @@ export default function Scenarios() {
             </table>
           </div>
         </Explained>
+        {m.house.map(h => <PersonalBlocs key={h.pollster} values={h.seats} source={`הממוצע מעוגן במכון ${h.firmHe}`} asOf={dateLong(m.asof)} />)}
         <Note>מודגש = הפרש של 3 מנדטים ומעלה מהממוצע. מכון עם סקר אחד בלבד נאמד בזהירות (האפקט שלו מכווץ לכיוון אפס).</Note>
       </Card>
 

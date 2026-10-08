@@ -36,9 +36,9 @@ export interface Poll {
 }
 
 export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "warn" | "neutral" }> = {
+  secondary: { text: "מקור משני", tone: "neutral" },
   match: { text: "אומת מול המקור", tone: "ok" },
   corrected: { text: "תוקן לפי המקור", tone: "ok" },
-  secondary: { text: "מקור משני", tone: "neutral" },
   partial: { text: "אומת חלקית", tone: "neutral" },
   unreachable: { text: "המקור אינו נגיש", tone: "warn" },
   mismatch: { text: "לא תואם למקור", tone: "warn" },

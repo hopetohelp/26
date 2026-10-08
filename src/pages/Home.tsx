@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import forecastFile from "../data/forecast.json";
 import modelFile from "../data/model.json";
@@ -49,8 +50,6 @@ function stat(to: string): { value: string; label: string } {
       return { value: num(polls.length), label: `סקרים בארכיון · ${biggestMove()}` };
     case "/changes":
       return { value: String(model.changes.alternatives[0]?.families.length ?? 0), label: "משפחות מפלגות, 2022 מול היום" };
-    case "/calculator":
-      return { value: "3.25%", label: "אחוז החסימה" };
     case "/guess":
       return { value: "120", label: "מושבים לחלק — בדרך שלכם" };
     case "/past":
@@ -78,6 +77,7 @@ export default function Home() {
         </span>
         <span className="shrink-0 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-extrabold inline-flex items-center">לבנות את הכנסת שלי</span>
       </Link>
+      <PersonalBlocs values={model.central.seats} source="מנדטים לפי הממוצע היום" asOf={dateLong(meta.dataAsOf)} />
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
         {PAGES.map((p) => {
           const s = stat(p.to);

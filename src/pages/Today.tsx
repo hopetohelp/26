@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import { SeatRangeBars } from "../components/charts";
@@ -75,6 +76,8 @@ export default function Today() {
           <ListsView rows={rows} theme={theme} />
         </Explained>
       </section>
+
+      <PersonalBlocs values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
 
       <Card title="מה רואים היום">
         <ul className="space-y-2 text-base leading-relaxed">
@@ -160,6 +163,7 @@ export default function Today() {
         </Fold>
       </div>
 
+      {latest.map(p => <PersonalBlocs key={p.id} values={Object.fromEntries(ids.map(id => [id, seatsIn(p, id)]))} source={`הסקר האחרון של ${pollsterLabel(p)}`} asOf={dateLong(p.end)} />)}
       <Fold title="הסקרים שנכללו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

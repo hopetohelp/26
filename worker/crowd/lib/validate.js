@@ -8,7 +8,7 @@ export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
 export const V2026_CODES = new Set(["undecided", "none", "private"]);
 const TOTAL = 120;
-const MAX_BLOCS = 4;
+const MAX_BLOCS = 5;
 
 const fail = (error) => ({ ok: false, error });
 const isInt = (n, lo, hi) => Number.isInteger(n) && n >= lo && n <= hi;
@@ -56,6 +56,16 @@ export function validateSeats(p) {
     if (!r.ok) return r;
     value.pct = r.value;
   }
+  if (p.calculation !== undefined && mode === "pct") {
+    const c = p.calculation;
+    if (!isObj(c) || !Number.isFinite(c.turnout) || c.turnout <= 0 || c.turnout > 100 || !Number.isFinite(c.eligible) || c.eligible <= 0 || c.eligible > 100000000 || !Array.isArray(c.agreements) || c.agreements.length > 10) return fail("calculation");
+    const used = new Set();
+    for (const pair of c.agreements) {
+      if (!Array.isArray(pair) || pair.length !== 2 || pair.some(id => !IDS_2026.has(id) || used.has(id)) || pair[0] === pair[1]) return fail("calculation");
+      pair.forEach(id => used.add(id));
+    }
+    value.calculation = { turnout: c.turnout, eligible: c.eligible, agreements: c.agreements.map(pair => [...pair]) };
+  }
   return { ok: true, value };
 }
 
@@ -81,15 +91,13 @@ export function validateBlocs(p) {
   if (p.mode !== "gov37" && p.mode !== "custom") return fail("mode");
   if (p.blocs.length < 1 || p.blocs.length > MAX_BLOCS) return fail("count");
   const ids = new Set();
-  const used = new Set();
   const blocs = [];
-  let sum = 0;
-  let allSet = true;
   for (const b of p.blocs) {
     if (!isObj(b) || typeof b.id !== "string" || !/^[\w-]{1,32}$/.test(b.id) || ids.has(b.id)) return fail("id");
     ids.add(b.id);
     if (typeof b.name !== "string" || b.name.length > 40) return fail("name");
     if (!Array.isArray(b.lists)) return fail("lists");
+    const used = new Set();
     for (const l of b.lists) {
       if (!IDS_2026.has(l)) return fail("list");
       if (used.has(l)) return fail("overlap");
@@ -97,12 +105,8 @@ export function validateBlocs(p) {
     }
     const target = b.target ?? null;
     if (target !== null && !isInt(target, 0, TOTAL)) return fail("target");
-    if (target === null) allSet = false;
-    else sum += target;
     blocs.push({ id: b.id, name: b.name, lists: [...b.lists], target });
   }
-  if (sum > TOTAL) return fail("sum");
-  if (allSet && sum !== TOTAL) return fail("sum");
   return { ok: true, value: { mode: p.mode, blocs } };
 }
 

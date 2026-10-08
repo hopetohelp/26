@@ -80,6 +80,15 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
     },
     [unit],
   );
+  useEffect(() => {
+    const sync = () => {
+      setDraftState(S.loadDraft<P>(unit) ?? S.loadSaved<P>(unit) ?? initial);
+      setSavedState(S.loadSaved<P>(unit));
+    };
+    window.addEventListener("crowd-clear", sync);
+    window.addEventListener("storage", sync);
+    return () => { window.removeEventListener("crowd-clear", sync); window.removeEventListener("storage", sync); };
+  }, [unit, initial]);
   // מכשיר חדש אחרי כניסה: הגרסה האחרונה מהשרת, אם אין כאן טיוטה
   useEffect(() => {
     if (!remote || S.loadDraft(unit) || same(remote, S.loadSaved(unit))) return;
@@ -91,18 +100,19 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
 
   /** שמירה בשרת — רק עם סשן (חשבון). בלי סשן הכפתור פותח קודם הרשמה/כניסה (SaveButton) */
   const save = useCallback(
-    async (token: string) => {
-      if (!draft) return false;
+    async (token: string, payload: P | null = draft) => {
+      if (!payload) return false;
       setState("saving");
       setError(null);
       setErrorLog(null);
       try {
-        const op_id = S.opIdFor(unit, draft);
-        await call("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload: draft } });
+        const op_id = S.opIdFor(unit, payload);
+        await call("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload } });
         S.clearPending(unit);
-        S.setSaved(unit, draft);
-        S.clearDraft(unit);
-        setSavedState(draft);
+        S.setSaved(unit, payload);
+        const current = S.loadDraft<P>(unit);
+        if (!current || same(current, payload)) { S.clearDraft(unit); setDraftState(payload); }
+        setSavedState(payload);
         setState("idle");
         return true;
       } catch (e) {

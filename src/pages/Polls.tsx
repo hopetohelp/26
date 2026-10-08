@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { Badge, Card, Note, PageTitle } from "../components/ui";
 import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, verificationLabel, type Poll } from "../lib/data";
@@ -92,6 +93,7 @@ export default function Polls() {
                   )}
                 </button>
                 <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
+                <PersonalBlocs values={Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)]))} source={`סקר ${pollsterLabel(p)}`} asOf={date(p.end)} />
                 {isOpen && (
                   <dl className="mt-2 text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                     <dt className="font-bold">עורך הסקר</dt>

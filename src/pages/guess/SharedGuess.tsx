@@ -1,3 +1,4 @@
+import PersonalBlocs from "../../components/PersonalBlocs";
 import { useMemo } from "react";
 import type { SharedGuess as G } from "../../lib/shareGuess";
 import { IDS, nameOf } from "./model";
@@ -31,6 +32,7 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
       </div>
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-4 [&>*]:min-w-0 items-start">
         <SeatBoard values={g.seats} />
+      <PersonalBlocs values={g.seats} source="השערת המשתתף ששיתף את הקישור, לפי הגושים שלכם" asOf="תוכן הקישור" />
         <div>
           <table className="w-full text-sm tabular">
             <caption className="sr-only">המנדטים לכל רשימה בהשערה ששותפה</caption>

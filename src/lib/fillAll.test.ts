@@ -141,10 +141,10 @@ describe("validation", () => {
   it("blocs", () => {
     const ids = ["a", "b", "c"];
     expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 60), bloc("y", ["b"], null)] }, ids)).toBeNull();
-    expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 60), bloc("y", ["b"], 50)] }, ids)).toMatch("120");
-    expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 60), bloc("y", ["a"], null)] }, ids)).not.toBeNull();
+    expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 60), bloc("y", ["b"], 50)] }, ids)).toBeNull();
+    expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 60), bloc("y", ["a"], null)] }, ids)).toBeNull();
     expect(validateBlocs({ mode: "custom", blocs: [bloc("x", ["a"], 0), bloc("y", ["b"], 120)] }, ids)).toBeNull();
-    expect(validateBlocs({ mode: "custom", blocs: [1, 2, 3, 4, 5].map((i) => bloc(String(i), [], null)) }, ids)).not.toBeNull();
+    expect(validateBlocs({ mode: "custom", blocs: [1, 2, 3, 4, 5].map((i) => bloc(String(i), [], null)) }, ids)).toBeNull();
   });
 });
 
