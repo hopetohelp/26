@@ -78,3 +78,27 @@ describe("דיווח כשל חיבור אוטומטי", () => {
   });
 });
 
+describe("ממסר שמירה", () => {
+  const origin = "https://hopetohelp.github.io";
+  const enc = (o) => btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(o))));
+  const post = (env, d) => worker.fetch(new Request("https://feedback.example/relay", { method: "POST", headers: { origin, "cf-connecting-ip": "1.2.3.4" }, body: JSON.stringify({ d }) }), env);
+  it("מעביר לשרת ההשתתפות עם אסימון, IP וגוף", async () => {
+    const fetch = vi.fn(async (req) => {
+      expect(new URL(req.url).pathname).toBe("/save");
+      expect(req.headers.get("authorization")).toBe("Bearer tok");
+      expect(req.headers.get("cf-connecting-ip")).toBe("1.2.3.4");
+      expect(await req.json()).toEqual({ unit: "seats", note: "שלום" });
+      return new Response('{"version":3}', { status: 201 });
+    });
+    const res = await post({ ALLOWED_ORIGIN: origin, CROWD: { fetch } }, enc({ path: "/save", method: "POST", token: "tok", body: { unit: "seats", note: "שלום" } }));
+    expect(res.status).toBe(201);
+    expect(await res.json()).toEqual({ version: 3 });
+    expect(res.headers.get("access-control-allow-origin")).toBe(origin);
+  });
+  it("נתיב לא מוכר או קידוד שבור — נדחה", async () => {
+    const fetch = vi.fn();
+    expect((await post({ ALLOWED_ORIGIN: origin, CROWD: { fetch } }, enc({ path: "/admin", method: "POST" }))).status).toBe(400);
+    expect((await post({ ALLOWED_ORIGIN: origin, CROWD: { fetch } }, "%%%")).status).toBe(400);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+});

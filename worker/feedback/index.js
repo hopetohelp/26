@@ -6,6 +6,7 @@
  * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
  * POST /merge       {tokens} ⇐ איחוד השיחות שהגולש מחזיק בכל הקישורים שלהן. הקישורים נשארים תקפים.
  * GET|POST /ping   ⇐ בדיקת חיבור, בלי מאגר.
+ * POST /relay      {d}   ⇐ ממסר שמירה כשהמסלולים הרגילים חסומים: מעביר לשרת ההשתתפות את הבקשה המקודדת ב-d.
  * POST /autoreport {log} ⇐ דיווח כשל חיבור אוטומטי (בלי אישור הגולש), עד 3 ליום מכל מקור.
  * POST /diag        {kind} ⇐ סיווג כשל חיבור (מונה ליום; hits.page = diag:<kind>).
  * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
@@ -25,7 +26,9 @@ const MAX_PER_DAY = 8;
 /** דיווח כשל חיבור אוטומטי (POST /autoreport, בלי אישור הגולש — הכרעת בעלים 8.10.2026): נשמר כהערה עם התחילית הזו, עד 3 ליום מכל מקור, ולא נספר במכסת ההערות. */
 const AUTO = "[כשל חיבור אוטומטי]";
 const AUTO_PER_DAY = 3;
-const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved"]);
+const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved"]);
+/** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
+const RELAY_PATHS = new Set(["/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support"]);
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
 
 function cors(env, origin) {
@@ -170,6 +173,23 @@ export default {
         env.DB.prepare(`UPDATE feedback_threads SET root_id = (SELECT MIN(root_id) FROM (${roots})) WHERE root_id IN (${roots})`).bind(...hashes, ...hashes),
       ]);
       return reply({ ok: true, token: tokens[0] });
+    }
+    // ---- ממסר שמירה: כששני המסלולים לשרת ההשתתפות נכשלו ברשת, הדפדפן שולח את אותה בקשה כאן, באותה צורה כמו דיווח כשל
+    //      (הכרעת בעלים 8.10.2026). d = base64 של {path, method, token, body}; מועבר לשרת ההשתתפות כבקשה רגילה, עם אותם כללים.
+    if (url.pathname === "/relay") {
+      if (!env.CROWD) return reply({ error: "offline" }, 503);
+      let r;
+      try {
+        r = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(String(body.d || "")), (c) => c.charCodeAt(0))));
+      } catch {
+        return reply({ error: "bad relay" }, 400);
+      }
+      if (typeof r.path !== "string" || !RELAY_PATHS.has(r.path.split("?")[0]) || !["GET", "POST"].includes(r.method)) return reply({ error: "bad relay" }, 400);
+      const headers = { "cf-connecting-ip": request.headers.get("cf-connecting-ip") || "", origin: request.headers.get("origin") || "" };
+      if (typeof r.token === "string" && r.token) headers.authorization = `Bearer ${r.token}`;
+      if (r.body !== undefined) headers["content-type"] = "application/json";
+      const res = await env.CROWD.fetch(new Request(new URL(r.path, "https://crowd.internal"), { method: r.method, headers, body: r.body === undefined ? undefined : JSON.stringify(r.body) }));
+      return new Response(await res.text(), { status: res.status, headers: { ...cors(env, request.headers.get("origin")), "content-type": "application/json" } });
     }
     // ---- דיווח כשל חיבור אוטומטי: לוג טכני בלבד (הדפדפן כבר הסיר אסימונים, סיסמאות וכתובות אישיות)
     if (url.pathname === "/autoreport") {

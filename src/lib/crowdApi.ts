@@ -247,7 +247,9 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
   }
   if (!res) {
     reportFailure(path, first!.diagnostic);
-    throw first!;
+    res = await relay(path, opts);
+    if (!res) throw first!;
+    reportDiag("relay-saved");
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok)
@@ -264,7 +266,7 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
 }
 
 // ---- בדיקת חיבור: מה בדיוק נחסם? (נשלחת רק אחרי כשל, ומדווחת למונה אנונימי)
-export type ConnectionKind = "all-ok" | "all-blocked" | "feedback-only" | "direct-only" | "gateway-only" | "post-blocked" | "password-blocked" | "fallback-saved";
+export type ConnectionKind = "all-ok" | "all-blocked" | "feedback-only" | "direct-only" | "gateway-only" | "post-blocked" | "password-blocked" | "fallback-saved" | "relay-saved";
 export interface ConnectionCheck {
   kind: ConnectionKind;
   /** תוצאה לכל בדיקה: true = עבר */
@@ -307,6 +309,21 @@ export async function checkConnection(): Promise<ConnectionCheck> {
   ]);
   const probes = { feedback, gateway, direct, post, postPassword };
   return { kind: classifyConnection(probes), probes };
+}
+
+/**
+ * ממסר: כששני המסלולים נכשלו ברשת, אותה בקשה נשלחת לשרת ההערות באותה צורה כמו דיווח הכשל — שעובר גם אצל מי שהשמירה חסומה לו
+ * (הכרעת בעלים 8.10.2026). השרת מעביר אותה לשרת ההשתתפות כבקשה רגילה. כשל גם כאן ⇐ undefined, והטיוטה נשארת בדפדפן.
+ */
+async function relay(path: string, opts: { method?: string; body?: unknown; token?: string | null }): Promise<Response | undefined> {
+  if (!feedbackUrl) return undefined;
+  const json = JSON.stringify({ path, method: opts.method ?? (opts.body === undefined ? "GET" : "POST"), token: opts.token ?? undefined, body: opts.body });
+  const d = btoa(String.fromCharCode(...new TextEncoder().encode(json)));
+  try {
+    return await fetch(feedbackUrl.replace(/\/$/, "") + "/relay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ d }) });
+  } catch {
+    return undefined;
+  }
 }
 
 /** מונה אנונימי של סיווג כשל (שרת ההערות, POST /diag) — בלי שום פרט על המשתמש; כשל בשליחה מתעלמים */
