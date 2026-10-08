@@ -15,8 +15,8 @@ export interface SaveUnit {
 }
 
 /**
- * כפתור "שמור". שמירה דורשת חשבון (הכרעת בעלים 6.10.2026): בלי סשן נפתח גיליון הרשמה/כניסה (כולל ההסכמה),
- * ומיד אחריו השמירה עצמה. שגיאה ⇐ ניסיון חוזר עם אותו op_id.
+ * כפתור "שמור". בלי סשן נפתח גיליון השמירה: "שמירה עכשיו" בלחיצה אחת (בלי משתמש) היא הפעולה הראשית,
+ * והרשמה או כניסה משניות (הכרעת בעלים 8.10.2026). מיד אחריו השמירה עצמה. שגיאה ⇐ ניסיון חוזר עם אותו op_id.
  */
 export default function SaveButton({
   unit,
@@ -97,7 +97,7 @@ export function AuthSheet({ session, onClose, onDone }: { session: ReturnType<ty
             ×
           </button>
         </div>
-        <p className="text-sm text-ink-soft">ההשערה שלכם מחכה כטיוטה. הרשמה לוקחת חצי דקה, ואז אפשר לחזור אליה ולשנות מכל מכשיר.</p>
+        <p className="text-sm text-ink-soft">ההשערה שלכם מחכה כטיוטה. שמירה לוקחת שנייה, ונכנסת לממוצע הגולשים.</p>
         <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" allowGuest />
       </div>
     </div>

@@ -155,64 +155,78 @@ export function AuthForm({
       הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של הגולשים, ואפשר למחוק הכול בכל רגע.
     </label>
   );
-  return (
-    <div className="space-y-4">
-      <form
-        className="space-y-3"
-        onSubmit={a.run(async () => {
-          const r = await call<{ token: string; link?: string }>(`/auth/${mode}`, { body: { username: u, password: pw } });
-          setPw("");
-          setConsent(true);
-          session.setToken(r.token);
-          if (r.link) session.setLink(r.link);
-          onDone?.(r.token);
-          return mode === "login" ? "נכנסתם." : "נרשמתם.";
-        })}
-      >
-        <h3 className="font-bold flex items-center gap-2 flex-wrap">
-          {mode === "register" ? "הרשמה" : "כניסה"}
-          {mode === "register" && allowGuest && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-accent-soft text-ink">מומלץ</span>}
-        </h3>
-        <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
-          <Field label="שם משתמש או מייל" hint={mode === "register" ? "3–24 אותיות או ספרות, או כתובת מייל. לא נשלח אליה דבר והיא לא מוצגת לאיש." : undefined}>
-            <input required minLength={3} maxLength={254} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
-          </Field>
-          <PasswordField label="סיסמה" hint={mode === "register" ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={mode === "login" ? "current" : "new"} />
-        </div>
-        {mode === "register" && consent}
-        <div className="flex gap-2 flex-wrap items-center">
-          <Btn type="submit" kind="primary" disabled={a.busy || (mode === "register" && !agree)}>
-            {(mode === "login" ? "כניסה" : "הרשמה") + submitSuffix}
-          </Btn>
-          <button type="button" onClick={() => setMode(mode === "login" ? "register" : "login")} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
-            {mode === "login" ? "אין לי חשבון — הרשמה" : "כבר יש לי חשבון"}
-          </button>
-        </div>
-        {mode === "login" && <p className="text-xs text-ink">{FORGOT_LINE}</p>}
-        {a.view}
-      </form>
-      {mode === "register" && <PrivacyNote />}
-      {allowGuest && (
-        <section className="rounded-theme border-2 border-dashed border-ink-soft p-3 space-y-2" aria-label="שמירה בלי משתמש">
-          <h3 className="font-bold">או: שמירה בלי משתמש</h3>
-          <p className="text-sm text-ink">ההשערה נשמרת בשרת, אבל <strong>לא ניתן יהיה לשחזר אותה</strong> אם תחליפו מכשיר, תמחקו נתוני דפדפן או תתנתקו. מומלץ להירשם. אפשר להוסיף שם משתמש גם אחרי השמירה.</p>
-          {mode === "login" && consent}
+  const accountForm = (
+    <form
+      className="space-y-3"
+      onSubmit={a.run(async () => {
+        const r = await call<{ token: string; link?: string }>(`/auth/${mode}`, { body: { username: u, password: pw } });
+        setPw("");
+        setConsent(true);
+        session.setToken(r.token);
+        if (r.link) session.setLink(r.link);
+        onDone?.(r.token);
+        return mode === "login" ? "נכנסתם." : "נרשמתם.";
+      })}
+    >
+      {!allowGuest && <h3 className="font-bold">{mode === "register" ? "הרשמה" : "כניסה"}</h3>}
+      <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
+        <Field label="שם משתמש או מייל" hint={mode === "register" ? "3–24 אותיות או ספרות, או כתובת מייל. לא נשלח אליה דבר והיא לא מוצגת לאיש." : undefined}>
+          <input required minLength={3} maxLength={254} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
+        </Field>
+        <PasswordField label="סיסמה" hint={mode === "register" ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={mode === "login" ? "current" : "new"} />
+      </div>
+      {mode === "register" && !allowGuest && consent}
+      <div className="flex gap-2 flex-wrap items-center">
+        <Btn type="submit" kind={allowGuest ? "ghost" : "primary"} disabled={a.busy || (mode === "register" && !agree)}>
+          {(mode === "login" ? "כניסה" : "הרשמה") + submitSuffix}
+        </Btn>
+        <button type="button" onClick={() => setMode(mode === "login" ? "register" : "login")} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
+          {mode === "login" ? "אין לי חשבון — הרשמה" : "כבר יש לי חשבון"}
+        </button>
+      </div>
+      {mode === "register" && allowGuest && !agree && <p className="text-xs text-ink">כדי להירשם סמנו קודם "הבנתי" למעלה.</p>}
+      {mode === "login" && <p className="text-xs text-ink">{FORGOT_LINE}</p>}
+      {a.view}
+    </form>
+  );
+
+  // בגיליון השמירה: קודם ערך, אחר כך מחויבות (הכרעת בעלים 8.10.2026) — שמירה בלחיצה אחת היא הפעולה הראשית,
+  // והרשמה או כניסה הן אפשרות משנית; אחרי השמירה מוצעת הוספת שם משתמש (ClaimForm).
+  if (allowGuest)
+    return (
+      <div className="space-y-4">
+        <section className="space-y-3" aria-label="שמירה עכשיו">
+          {consent}
           <Btn
+            kind="primary"
+            className="w-full"
             disabled={g.busy || !agree}
             onClick={g.run(async () => {
               const r = await call<{ token: string }>("/auth/guest", { body: {} });
               setConsent(true);
               session.setToken(r.token);
               onDone?.(r.token);
-              return "נשמר בלי משתמש.";
+              return "נשמר.";
             })}
           >
-            שמירה בלי משתמש
+            {g.busy ? "שומר…" : "שמירה עכשיו"}
           </Btn>
           {!agree && <p className="text-xs text-ink">כדי לשמור סמנו קודם "הבנתי".</p>}
+          <p className="text-sm text-ink">בלי שם ובלי סיסמה. אחרי השמירה אפשר להוסיף שם משתמש, כדי לחזור להשערה מכל מכשיר.</p>
           {g.view}
         </section>
-      )}
+        <details className="border-t border-paper-line pt-3" open={initial === "login"}>
+          <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">כבר יש לי חשבון, או: הרשמה עם שם משתמש</summary>
+          <div className="pt-2">{accountForm}</div>
+        </details>
+        <PrivacyNote />
+      </div>
+    );
+
+  return (
+    <div className="space-y-4">
+      {accountForm}
+      {mode === "register" && <PrivacyNote />}
     </div>
   );
 }
