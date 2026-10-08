@@ -1,7 +1,7 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useState } from "react";
 import Explained from "../components/Explained";
-import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
+import { Badge, Card, Fold, Note, PageTitle, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
 import { num, pct } from "../lib/format";
@@ -86,6 +86,7 @@ export default function Results() {
         תוצאות אמת
       </PageTitle>
 
+      <Split primary={<>
       <Card>
         <div role="radiogroup" aria-label="מערכת בחירות" className="flex flex-wrap gap-2">
           {[...results].reverse().map((x) => (
@@ -105,13 +106,14 @@ export default function Results() {
         <h2 className="font-display text-3xl leading-none mt-4">
           הכנסת ה-{e.knesset} · {e.label}
         </h2>
-        <dl className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-sm">
+        <dl className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">
           <div><dt className="text-ink-soft">בעלי זכות בחירה</dt><dd className="text-xl font-bold tabular-nums">{num(e.eligible)}</dd></div>
           <div><dt className="text-ink-soft">הצביעו</dt><dd className="text-xl font-bold tabular-nums">{num(e.voted)} <span className="text-sm font-normal">({pct((e.voted / e.eligible) * 100)})</span></dd></div>
           <div><dt className="text-ink-soft">קולות כשרים</dt><dd className="text-xl font-bold tabular-nums">{num(e.valid)}</dd></div>
           <div><dt className="text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-xl font-bold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
         </dl>
       </Card>
+      </>} secondary={<>
       <PersonalBlocs title={`הגושים שלי בתוצאות ${e.label}`} historical mapping={e.knesset === 25 ? undefined : {}} values={Object.fromEntries(e.lists.map(l => [l.letters, l.seats]))} source={`תוצאות אמת ${e.label}; התאמות מובהקות בלבד`} asOf="התוצאות הסופיות" />
 
       <Card title="בקצרה">
@@ -249,6 +251,7 @@ export default function Results() {
           "נשרפו" = קולות כשרים לרשימות שלא עברו את אחוז החסימה. "מה הזיזו ההסכמים" = כל ההסכמים יחד לעומת אף הסכם, על אותם קולות.
         </Note>
       </Card>
+      </>} />
     </>
   );
 }
