@@ -65,11 +65,7 @@ export default function Support() {
   if (!session.online && !FEEDBACK_URL) return <Notice>התמיכה תיפתח יחד עם השמירה באתר.</Notice>;
 
   return <div className="space-y-8">
-    <header className="text-center">
-      <h1 className="font-display text-5xl leading-none">תמיכה</h1>
-      <p className="mt-2 text-base text-ink-soft">כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם.</p>
-    </header>
-    <Split primary={
+    <Split title="תמיכה" lead="כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם." primary={
       <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
         <h2 className="font-display text-3xl leading-none text-center">השיחה עם צוות האתר</h2>
         {!thread ? <p className="text-sm text-ink-soft">אפשר לכתוב לנו גם בלי חשבון.</p> : (

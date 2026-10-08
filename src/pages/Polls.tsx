@@ -1,6 +1,6 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
-import { Badge, Card, Note, PageTitle, Split } from "../components/ui";
+import { Badge, Card, Note, Split } from "../components/ui";
 import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
@@ -36,11 +36,8 @@ export default function Polls() {
 
   return (
     <>
-      <PageTitle lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם.">
-        ארכיון הסקרים
-      </PageTitle>
 
-      <Split primary={<>
+      <Split title="ארכיון הסקרים" lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם." primary={<>
       <Card>
         <form className="flex flex-wrap gap-3 items-end" onSubmit={(e) => e.preventDefault()}>
           <label className="flex flex-col text-sm w-full sm:w-auto min-w-0">
@@ -68,8 +65,8 @@ export default function Polls() {
         </form>
       </Card>
 
-      <PersonalBlocs title="הגושים שלי בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={filtered.slice(0, shown).map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />
       </>} secondary={<>
+      <PersonalBlocs title="הגושים שלי בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={filtered.slice(0, shown).map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />
       <Card>
         <ul className="divide-y divide-paper-line">
           {filtered.slice(0, shown).map((p) => {

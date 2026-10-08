@@ -5,7 +5,7 @@ import { DEFAULT_BLOCS, normalizeBlocs } from "./guess/model";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle, Split } from "../components/ui";
+import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import { listName } from "../lib/data";
 import { colorOf } from "../lib/colors";
@@ -99,10 +99,7 @@ export default function Changes() {
 
   return (
     <>
-      <PageTitle lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת.">
-        מה השתנה מבחירות קודמות
-      </PageTitle>
-      <Split primary={<>
+      <Split title="מה השתנה מהבחירות האחרונות" lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת." primary={<>
       <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-4">
         {([["blocs", "לפי הגושים שלי"], ["families", "לפי משפחות מפלגות"]] as const).map(([id,label]) => <button key={id} role="radio" type="button" aria-checked={view === id} onClick={() => setView(id)} className={`min-h-[44px] rounded-full px-4 border font-bold text-sm ${view === id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{label}</button>)}
       </div>

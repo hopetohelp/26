@@ -2,7 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import { ScenarioRanges, TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle, Split } from "../components/ui";
+import { Card, ChartWithTable, Note, Split } from "../components/ui";
 
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
@@ -87,12 +87,7 @@ export default function Scenarios() {
 
   return (
     <>
-      <PageTitle
-        lead={`התחזית ליום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`}
-      >
-        תחזית ותרחישים
-      </PageTitle>
-      <Split primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />} secondary={<>
+      <Split title="תחזית ותרחישים" lead={`התחזית ליום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />} secondary={<>
 
       <Card title="לכל רשימה">
         <Explained

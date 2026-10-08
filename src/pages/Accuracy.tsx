@@ -83,12 +83,13 @@ export default function Accuracy() {
 
   return (
     <>
-      <PageTitle
+      
+      <Columns>
+      <PageTitle inColumns
         lead={`מה אמרו הסקרים ערב כל אחת מחמש מערכות הבחירות האחרונות, ומה יצא בפועל. החישוב זהה לעמוד "המצב היום": הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני הבחירות, והחציון ביניהם.`}
       >
         דיוק הסקרים בעבר
       </PageTitle>
-      <Columns>
 
       <Card title="חמש מערכות במבט אחד">
         <Explained

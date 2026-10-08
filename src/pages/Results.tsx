@@ -1,7 +1,7 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useState } from "react";
 import Explained from "../components/Explained";
-import { Badge, Card, Fold, Note, PageTitle, Split } from "../components/ui";
+import { Badge, Card, Fold, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
 import { num, pct } from "../lib/format";
@@ -82,11 +82,8 @@ export default function Results() {
 
   return (
     <>
-      <PageTitle lead={`התוצאות הרשמיות של ועדת הבחירות המרכזית בכל ${results.length} מערכות הבחירות מאז 2019, וחלוקת המנדטים כפי שהחוק קובע. לכל מערכת אותו ניתוח: מי עבר, כמה קולות נשרפו, ומה הזיזו הסכמי העודפים. המנוע של האתר משחזר כל אחת מהן בדיוק.`}>
-        תוצאות אמת
-      </PageTitle>
 
-      <Split primary={<>
+      <Split title="תוצאות אמת" lead={`התוצאות הרשמיות של ועדת הבחירות המרכזית בכל ${results.length} מערכות הבחירות מאז 2019, וחלוקת המנדטים כפי שהחוק קובע. לכל מערכת אותו ניתוח: מי עבר, כמה קולות נשרפו, ומה הזיזו הסכמי העודפים. המנוע של האתר משחזר כל אחת מהן בדיוק.`} primary={<>
       <Card>
         <div role="radiogroup" aria-label="מערכת בחירות" className="flex flex-wrap gap-2">
           {[...results].reverse().map((x) => (
