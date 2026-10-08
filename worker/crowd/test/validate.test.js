@@ -85,4 +85,9 @@ describe("validate", () => {
     expect(passwordProblem("x".repeat(129))).toBe("long");
     expect(passwordProblem("correct horse battery")).toBeNull();
   });
+
+  it("מייל כשם משתמש: מתקבל באותיות קטנות, ונדחות כתובות פגומות", () => {
+    expect(normalizeUsername("  Dani.Cohen+x@Gmail.COM ")).toEqual({ display: "dani.cohen+x@gmail.com", norm: "dani.cohen+x@gmail.com" });
+    for (const bad of ["a@b", "@gmail.com", "a b@gmail.com", "a@@gmail.com", "a@gmail..", "<x>@gmail.com", "a@" + "b".repeat(260) + ".com"]) expect(normalizeUsername(bad)).toBeNull();
+  });
 });
