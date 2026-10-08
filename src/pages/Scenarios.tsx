@@ -91,6 +91,7 @@ export default function Scenarios() {
       >
         תרחישים ליום הבחירות
       </PageTitle>
+<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />
 
       <Card title="לכל רשימה">
         <Explained
@@ -144,7 +145,6 @@ export default function Scenarios() {
         </Note>
       </Card>
 
-      <PersonalBlocs values={m.central.seats} source="מנדטים לפי ממוצע מודל התרחישים" asOf={asOfText} />
 
       <div className="grid md:grid-cols-2 gap-5 [&>*]:min-w-0">
         <Card title="על סף אחוז החסימה">
@@ -308,7 +308,6 @@ export default function Scenarios() {
             </table>
           </div>
         </Explained>
-        <PersonalBlocs source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />
         <Note>מודגש = הפרש של 3 מנדטים ומעלה מהממוצע. מכון עם סקר אחד בלבד נאמד בזהירות (האפקט שלו מכווץ לכיוון אפס).</Note>
       </Card>
 

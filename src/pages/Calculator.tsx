@@ -116,6 +116,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
       <PageTitle lead="מכניסים אחוזי הצבעה לכל רשימה (מתוך הקולות הכשרים), והמחשבון מחלק 120 מנדטים לפי חוק הבחירות: אחוז החסימה, הסכמי העודפים ושיטת באדר-עופר. המנוע נבדק מול חמש מערכות הבחירות 2019–2022 ומשחזר אותן בדיוק.">
         מחשבון ההשערה
       </PageTitle>
+            {r?.status === "ok" && <PersonalBlocs title="הגושים שלי לפי תוצאת המחשבון" values={r.seats} source="תוצאת מחשבון ההשערה לפי חוק הבחירות" asOf="מחושב עכשיו מהקלט שלכם" />}
 
       <div className="mb-4"><SaveButton unit={saveUnit} session={session} invalid={invalid} /><SaveError unit={saveUnit} />{invalid && <p role="status" className="text-sm text-warn mt-2">{invalid}</p>}<p className="text-sm text-ink-soft mt-2">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. עד השמירה אפשר לבדוק תרחיש בלי להחליף את טיוטת המנדטים.</p></div>
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
@@ -264,7 +265,6 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
                 </table>
               </Explained>
             )}
-            {r?.status === "ok" && <PersonalBlocs values={r.seats} source="תוצאת מחשבון ההשערה לפי חוק הבחירות" asOf="מחושב עכשיו מהקלט שלכם" />}
             {r && r.status !== "invalid_input" && (
               <Fold title="פרטי החישוב"><dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mt-4">
                 <dt className="text-ink-soft">אחוז החסימה בקולות</dt>

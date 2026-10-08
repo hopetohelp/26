@@ -112,6 +112,7 @@ export default function Results() {
           <div><dt className="text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-xl font-bold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
         </dl>
       </Card>
+      <PersonalBlocs title={`הגושים שלי בתוצאות ${e.label}`} historical mapping={e.knesset === 25 ? undefined : {}} values={Object.fromEntries(e.lists.map(l => [l.letters, l.seats]))} source={`תוצאות אמת ${e.label}; התאמות מובהקות בלבד`} asOf="התוצאות הסופיות" />
 
       <Card title="בקצרה">
         <Explained
@@ -175,7 +176,6 @@ export default function Results() {
         </Fold>
       </Card>
 
-      <PersonalBlocs historical mapping={e.knesset === 25 ? undefined : {}} values={Object.fromEntries(e.lists.map(l => [l.letters, l.seats]))} source={`תוצאות אמת ${e.label}; התאמות מובהקות בלבד`} asOf="התוצאות הסופיות" />
 
       <Card title="מה הזיזו הסכמי העודפים">
         <ul className="text-sm space-y-1 mb-3">

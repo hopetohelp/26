@@ -70,8 +70,8 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  assert.ok(page.url().includes('/feedback/'));
  await page.goto(`${baseUrl}#/guess`);
  assert.equal(await page.locator('[data-bloc-id]').count(),0,'לשונית מנדטים אינה מציגה גושים');
- await page.getByRole('heading',{name:'הגושים שלי',exact:true}).waitFor();
- assert.equal(await page.getByRole('heading',{name:'הגושים שלי',exact:true}).count(),1);
+ await page.getByRole('heading',{name:'הגושים שלי: חלוקת ההשערה ויעדי ההשלמה',exact:true}).waitFor();
+ assert.equal(await page.getByRole('heading',{name:'הגושים שלי: חלוקת ההשערה ויעדי ההשלמה',exact:true}).count(),1);
  assert.equal(await page.locator('[data-personal-blocs-card]').count(),1);
  const targetInput=page.getByRole('spinbutton',{name:'מנדטים צפויים לגוש הקואליציה הנוכחית',exact:true});
  await targetInput.fill('61');

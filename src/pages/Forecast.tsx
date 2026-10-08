@@ -109,6 +109,7 @@ export default function Forecast() {
         )}
       </Card>
 
+      {fc.enough && <PersonalBlocs title="הגושים שלי לפי תחזית יום הבחירות" values={Object.fromEntries(Object.entries(fc.lists).map(([id, v]) => [id, v.seats]))} source="מנדטי התחזית, זהים לטבלת המפלגות" asOf={dateLong(fc.asof)} />}
       {fc.enough ? (
         <section aria-label="התחזית לכל רשימה" className="mb-6">
           <Explained
@@ -127,7 +128,6 @@ export default function Forecast() {
         </Card>
       )}
 
-      {fc.enough && <PersonalBlocs values={Object.fromEntries(Object.entries(fc.lists).map(([id, v]) => [id, v.seats]))} source="מנדטי התחזית, זהים לטבלת המפלגות" asOf={dateLong(fc.asof)} />}
 
       {fc.enough && fc.bloc.seats.length > 0 && (
         <Card title="מה עוד התחזית אומרת">

@@ -39,6 +39,11 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       <div className="mb-4"><Notice tone="warn">{d.participants < 30 ? "מעט משתתפים — הנתונים אינם מייצגים את הציבור." : "השערות הגולשים אינן מדגם מייצג."}</Notice></div>
       <p className="font-display text-2xl mb-4">{d.participants} משתתפים בסך הכול</p>
+      {d.seats && <PersonalBlocs title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={d.publishedAt ?? "הפרסום האחרון"} datasets={[
+        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf: d.publishedAt ?? "הפרסום האחרון" },
+        { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
+        ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
+      ]} />}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
@@ -48,11 +53,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       ) : (
         d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={mine} view={view} unit="pct" /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
-      {d.seats && <PersonalBlocs source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={d.publishedAt ?? "הפרסום האחרון"} datasets={[
-        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf: d.publishedAt ?? "הפרסום האחרון" },
-        { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
-        ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
-      ]} />}
       {d.blocs ? <BlocStats d={d} view={view} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>

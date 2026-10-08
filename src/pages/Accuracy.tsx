@@ -392,7 +392,7 @@ export default function Accuracy() {
         </details>
       </Card>
 
-      <PersonalBlocs source="הגושים: חציוני מפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
+      <PersonalBlocs title="הגושים שלי: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: חציוני מפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום חציוני מפלגות לפני ${c.label}; אינו חציון הגוש`, asOf: eveText },
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
       ]} />

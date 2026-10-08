@@ -123,6 +123,11 @@ export default function Changes() {
         </div>
         <p className="text-base leading-relaxed">{alt.desc}</p>
       </Card>
+      <PersonalBlocs title="הגושים שלי: תוצאות 2022 מול ממוצע הסקרים היום" source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
+        { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },
+        { values: m.central.seats, source: "המנדטים היום לפי המודל", asOf: dateLong(m.asof) },
+      ]} />
+
 
       {view === "families" && <Card title={`המשפחות — ${alt.name}`}>
         <Explained
@@ -186,10 +191,6 @@ export default function Changes() {
         </Explained>
       </Card>}
 
-      <PersonalBlocs source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
-        { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },
-        { values: m.central.seats, source: "המנדטים היום לפי המודל", asOf: dateLong(m.asof) },
-      ]} />
       <Note>רשימת עבר נספרת פעם אחת בכל גוש. אם הגוש כולל רק חלק ממשפחה שהתפצלה, או מפלגה ללא שיוך בחלופה שנבחרה, אין השוואה מספרית מלאה. זו השוואת הרכבים לפי ההנחות הגלויות, ולא מדידה של מעבר בוחרים.</Note>
 
       {view === "families" && <Card title="לא משויך">
