@@ -2,7 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { EstimateVsActual, TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle } from "../components/ui";
+import { Card, ChartWithTable, Note, PageTitle, Columns } from "../components/ui";
 import historyFile from "../data/history.json";
 import { results } from "../lib/data";
 import { dateRange, date, seatsFmt, signed } from "../lib/format";
@@ -88,6 +88,7 @@ export default function Accuracy() {
       >
         דיוק הסקרים בעבר
       </PageTitle>
+      <Columns>
 
       <Card title="חמש מערכות במבט אחד">
         <Explained
@@ -441,6 +442,7 @@ export default function Accuracy() {
           בטוחה מחמש מערכות.
         </Note>
       </Card>
+      </Columns>
     </>
   );
 }

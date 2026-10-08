@@ -2,7 +2,7 @@ import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle } from "../components/ui";
+import { Card, ChartWithTable, Note, PageTitle, Split } from "../components/ui";
 import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMedian, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateLong, seatsFmt } from "../lib/format";
 
@@ -77,7 +77,7 @@ export default function Trends() {
         מגמות
       </PageTitle>
 
-      <Card>
+      <Split primary={<Card>
         <div className="flex flex-wrap gap-4 items-end mb-3">
           <label className="flex flex-col text-sm">
             תקופה
@@ -113,6 +113,7 @@ export default function Trends() {
           </div>
         </fieldset>
 
+        </Card>} secondary={<><Card>
         <Explained
           kind="סיכום סקרים"
           source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
@@ -152,6 +153,7 @@ export default function Trends() {
         </Note>
       </Card>
       <PersonalBlocTrends source={rawSource} from={from} to={to} days={days} minN={minN} />
+      </>} />
     </>
   );
 }

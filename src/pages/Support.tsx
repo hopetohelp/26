@@ -2,6 +2,7 @@ import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedba
 import { useEffect, useRef, useState } from "react";
 import MyData from "./guess/MyData";
 import { Btn, Notice } from "./guess/ui";
+import { Split } from "../components/ui";
 import { errorText, useSession } from "./guess/useCrowd";
 import { FEEDBACK_URL, accountSupport, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { LegacyFeedback } from "./MyFeedback";
@@ -63,12 +64,12 @@ export default function Support() {
 
   if (!session.online && !FEEDBACK_URL) return <Notice>התמיכה תיפתח יחד עם השמירה באתר.</Notice>;
 
-  return <div className="max-w-3xl mx-auto space-y-8">
+  return <div className="space-y-8">
     <header className="text-center">
       <h1 className="font-display text-5xl leading-none">תמיכה</h1>
       <p className="mt-2 text-base text-ink-soft">כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם.</p>
     </header>
-
+    <Split primary={
       <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
         <h2 className="font-display text-3xl leading-none text-center">השיחה עם צוות האתר</h2>
         {!thread ? <p className="text-sm text-ink-soft">אפשר לכתוב לנו גם בלי חשבון.</p> : (
@@ -87,12 +88,12 @@ export default function Support() {
           <div className="flex justify-center"><Btn kind="primary" disabled={!text.trim() || busy || text.trim().length > maxText} onClick={send}>{busy ? "שולחים…" : "שליחת הודעה"}</Btn></div>
         </div>}
       </section>
-
-
+    } secondary={<div className="space-y-8">
     <LegacyFeedback key={revision} />
     <section>
       <h2 className="font-display text-4xl leading-none mb-5 text-center">הנתונים שלי</h2>
       <MyData session={session} />
     </section>
+    </div>} />
   </div>;
 }

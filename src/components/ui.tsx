@@ -96,3 +96,11 @@ export function Split({ primary, secondary }: { primary: ReactNode; secondary: R
     </div>
   );
 }
+
+/**
+ * שני טורים שווים לרצף של כרטיסים עצמאיים — כמו `CardColumns` של קרובים מתמיד: מרוחב 1024 הכרטיסים
+ * זורמים לטור הימני ואז לשמאלי, באותו סדר כמו בטלפון, והאורכים מתאזנים לבד. כרטיס אינו נחתך בין טורים.
+ */
+export function Columns({ children }: { children: ReactNode }) {
+  return <div className="lg:columns-2 lg:gap-6 [&>*]:break-inside-avoid">{children}</div>;
+}
