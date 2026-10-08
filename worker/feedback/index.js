@@ -28,7 +28,7 @@ const AUTO = "[כשל חיבור אוטומטי]";
 const AUTO_PER_DAY = 3;
 const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved", "blind-sent"]);
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
-const RELAY_PATHS = new Set(["/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support"]);
+const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support"]);
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
 
 function cors(env, origin) {
@@ -193,7 +193,7 @@ export default {
     }
     // ---- דיווח כשל חיבור אוטומטי: לוג טכני בלבד (הדפדפן כבר הסיר אסימונים, סיסמאות וכתובות אישיות)
     if (url.pathname === "/autoreport") {
-      const log = typeof body.log === "string" ? body.log.slice(0, 6000) : "";
+      const log = typeof body.log === "string" ? body.log.slice(0, 16000) : "";
       if (!log) return reply({ ok: false, error: "empty" }, 400);
       const akey = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
       const day = new Date().toISOString().slice(0, 10);

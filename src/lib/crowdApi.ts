@@ -193,39 +193,51 @@ export class CrowdError extends Error {
   }
 }
 
-/** מנסה מסלול אחד; כשל ברשת נזרק כ-CrowdError("network") עם לוג בלי פרטים אישיים */
-async function attempt(base: string, path: string, opts: { method?: string; body?: unknown; token?: string | null }, started: number): Promise<Response> {
-  const context = () => ({
-    at: new Date().toISOString(),
-    endpoint: base + path.split("?")[0],
-    method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
-    elapsedMs: Date.now() - started,
-    online: navigator.onLine,
-    browser: navigator.userAgent,
-  });
+type CallOptions = { method?: string; body?: unknown; token?: string | null };
+const REQUEST_TIMEOUT_MS = 15000;
+
+/** רק מידע טכני: אין גוף, כותרות הרשאה, פרמטרים או כתובת אישית. */
+function cleanError(value: string, opts: CallOptions): string {
+  const body = opts.body && typeof opts.body === "object" ? opts.body as Record<string, unknown> : {};
+  const secrets = [opts.token, ...["username", "password", "current", "next", "link", "token"].map(key => body[key])];
+  const urls = value.replace(/https?:\/\/[^\s)]+/g, url => url.split(/[?#]/)[0]);
+  return secrets.reduce<string>((text, secret) => typeof secret === "string" && secret ? text.split(secret).join("[הוסר]") : text, urls).slice(0, 1200);
+}
+
+function environment() {
+  const nav = typeof navigator === "undefined" ? undefined : navigator;
+  const connection = (nav as Navigator & { connection?: { effectiveType?: string; downlink?: number; rtt?: number; saveData?: boolean } } | undefined)?.connection;
+  return {
+    online: nav?.onLine, browser: nav?.userAgent, language: nav?.language,
+    connection: connection ? { effectiveType: connection.effectiveType, downlink: connection.downlink, rtt: connection.rtt, saveData: connection.saveData } : undefined,
+    origin: typeof location === "undefined" ? undefined : location.origin,
+    secureContext: typeof isSecureContext === "undefined" ? undefined : isSecureContext,
+    visibility: typeof document === "undefined" ? undefined : document.visibilityState,
+    build: typeof document === "undefined" ? undefined : Array.from(document.scripts).map(script => script.src).find(src => /\/assets\/index-/.test(src))?.split(/[?#]/)[0],
+  };
+}
+
+async function attempt(base: string, path: string, opts: CallOptions, attempts: Record<string, unknown>[], route: string, secrets = opts): Promise<Response> {
+  const started = Date.now();
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), REQUEST_TIMEOUT_MS);
+  const context = { route, at: new Date().toISOString(), endpoint: base + path.split("?")[0], method: opts.method ?? (opts.body === undefined ? "GET" : "POST") };
   try {
-    return await fetch(base + path, {
-      cache: path.split("?")[0] === "/dashboard" ? "no-store" : "default",
-      method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
-      headers: {
-        ...(opts.body === undefined ? {} : { "content-type": "application/json" }),
-        ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}),
-      },
+    const res = await fetch(base + path, {
+      cache: path.split("?")[0] === "/dashboard" || route === "relay" ? "no-store" : "default",
+      method: context.method, signal: ctl.signal,
+      headers: { ...(opts.body === undefined ? {} : { "content-type": "application/json" }), ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}) },
       body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
     });
-  } catch (cause: unknown) {
-    // בלי גוף הבקשה, כותרות או כתובת העמוד: הם עשויים להכיל פרטי כניסה וקישורים אישיים.
-    const clean = (s: string) => {
-      const urls = s.replace(/https?:\/\/[^\s)]+/g, (url) => url.split(/[?#]/)[0]);
-      const body = opts.body && typeof opts.body === "object" ? opts.body as Record<string, unknown> : {};
-      const secrets = [opts.token, ...["username", "password", "current", "next", "link", "token"].map((key) => body[key])];
-      return secrets.reduce<string>((text, secret) => typeof secret === "string" && secret ? text.split(secret).join("[הוסר]") : text, urls);
-    };
-    throw new CrowdError(0, "network", {
-      ...context(),
-      cause: cause instanceof Error ? { name: cause.name, message: clean(cause.message), stack: clean(cause.stack ?? "") } : { name: "UnknownError" },
-    });
-  }
+    attempts.push({ ...context, elapsedMs: Date.now() - started, status: res.status, ok: res.ok, type: res.type, redirected: res.redirected,
+      contentType: res.headers.get("content-type"), requestId: res.headers.get("cf-ray"), retryAfter: res.headers.get("retry-after") });
+    return res;
+  } catch (cause) {
+    const diagnostic = { ...context, ...environment(), elapsedMs: Date.now() - started, timeout: ctl.signal.aborted,
+      cause: cause instanceof Error ? { name: cause.name, message: cleanError(cause.message, secrets), stack: cleanError(cause.stack ?? "", secrets) } : { name: "UnknownError" } };
+    attempts.push(diagnostic);
+    throw new CrowdError(0, "network", diagnostic);
+  } finally { clearTimeout(timer); }
 }
 
 /** אסימון אקראי שהדפדפן יוצר (32 בתים, base64url) */
@@ -243,51 +255,54 @@ const BLIND = new Set(["/auth/guest", "/auth/register", "/save"]);
 /** הפעולה האחרונה הסתיימה בלי אישור מהשרת (התשובה נחסמה) */
 export let lastBlind = false;
 
-export async function call<T>(path: string, opts: { method?: string; body?: unknown; token?: string | null } = {}): Promise<T> {
+export async function call<T>(path: string, opts: CallOptions = {}): Promise<T> {
   if (!BASES.length) throw new CrowdError(0, "offline");
   lastBlind = false;
   const p0 = path.split("?")[0];
   if ((p0 === "/auth/guest" || p0 === "/auth/register") && opts.body && typeof opts.body === "object" && !(opts.body as { token?: string }).token)
     opts = { ...opts, body: { ...(opts.body as object), token: clientToken() } };
   const started = Date.now();
+  const attempts: Record<string, unknown>[] = [];
   let res: Response | undefined;
   let first: CrowdError | undefined;
+  let usedRelay = false;
   for (let i = 0; i < BASES.length && !res; i++) {
     const idx = (preferred + i) % BASES.length;
     try {
-      res = await attempt(BASES[idx], path, opts, started);
-      if (i > 0) {
-        preferred = idx; // המסלול שעבד נשאר בשימוש
-        reportDiag("fallback-saved");
-      }
-    } catch (e) {
-      first ??= e as CrowdError;
-    }
+      res = await attempt(BASES[idx], path, opts, attempts, BASES[idx] === gatewayUrl ? "gateway" : "direct");
+      if (i > 0 && res.ok) { preferred = idx; reportDiag("fallback-saved"); }
+    } catch (e) { first ??= e as CrowdError; }
   }
   if (!res) {
-    reportFailure(path, first!.diagnostic);
-    res = await relay(path, opts);
-    if (!res && BLIND.has(p0)) {
-      lastBlind = true;
-      reportDiag("blind-sent");
-      const body = opts.body as Record<string, unknown>;
-      if (p0 === "/save") return { version: { id: 0, unit: body.unit, created_at: new Date().toISOString(), payload: body.payload }, blind: true } as T;
-      return { token: body.token, blind: true } as T;
+    usedRelay = true;
+    try { res = await relay(path, opts, attempts); } catch (e) { first ??= e as CrowdError; }
+    if (!res) {
+      const diagnostic = { ...first?.diagnostic, ...environment(), elapsedMs: Date.now() - started, timeoutMs: REQUEST_TIMEOUT_MS, attempts };
+      reportFailure(path, diagnostic);
+      if (BLIND.has(p0)) {
+        lastBlind = true;
+        reportDiag("blind-sent");
+        const body = opts.body as Record<string, unknown>;
+        if (p0 === "/save") return { version: { id: 0, unit: body.unit, created_at: new Date().toISOString(), payload: body.payload }, blind: true } as T;
+        return { token: body.token, blind: true } as T;
+      }
+      throw new CrowdError(0, "network", diagnostic);
     }
-    if (!res) throw first!;
-    reportDiag("relay-saved");
   }
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok)
-    throw new CrowdError(res.status, (data as { error?: string }).error ?? "error", {
-      at: new Date().toISOString(),
-      endpoint: res.url ? res.url.split(/[?#]/)[0] : undefined,
-      method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
-      elapsedMs: Date.now() - started,
-      online: navigator.onLine,
-      browser: navigator.userAgent,
-      status: res.status,
-    });
+  let data: unknown;
+  try { data = await res.json(); } catch (cause) {
+    const diagnostic = { ...environment(), elapsedMs: Date.now() - started, attempts, status: res.status, stage: "response-json", cause: { name: cause instanceof Error ? cause.name : "UnknownError" } };
+    reportFailure(path, { code: "invalid_response", ...diagnostic });
+    throw new CrowdError(res.status, "invalid_response", diagnostic);
+  }
+  if (!res.ok) {
+    const code = typeof (data as { error?: unknown })?.error === "string" ? cleanError((data as { error: string }).error, opts) : "error";
+    const diagnostic = { ...environment(), elapsedMs: Date.now() - started, attempts, status: res.status, method: opts.method ?? (opts.body === undefined ? "GET" : "POST"), code };
+    // שגיאות זהות/קלט רגילות אינן כשל חיבור; תקלה בתשתית הממסר כן.
+    if (res.status >= 500 || (usedRelay && code === "bad relay")) reportFailure(path, diagnostic);
+    throw new CrowdError(res.status, code, diagnostic);
+  }
+  if (usedRelay) reportDiag("relay-saved");
   return data as T;
 }
 
@@ -339,17 +354,14 @@ export async function checkConnection(): Promise<ConnectionCheck> {
 
 /**
  * ממסר: כששני המסלולים נכשלו ברשת, אותה בקשה נשלחת לשרת ההערות באותה צורה כמו דיווח הכשל — שעובר גם אצל מי שהשמירה חסומה לו
- * (הכרעת בעלים 8.10.2026). השרת מעביר אותה לשרת ההשתתפות כבקשה רגילה. כשל גם כאן ⇐ undefined, והטיוטה נשארת בדפדפן.
+ * (הכרעת בעלים 8.10.2026). השרת מעביר אותה לשרת ההשתתפות כבקשה רגילה. כשל גם כאן ⇐ שגיאה מפורטת, והטיוטה נשארת בדפדפן.
  */
-async function relay(path: string, opts: { method?: string; body?: unknown; token?: string | null }): Promise<Response | undefined> {
-  if (!feedbackUrl) return undefined;
+async function relay(path: string, opts: CallOptions, attempts: Record<string, unknown>[]): Promise<Response | undefined> {
+  if (!feedbackUrl) { attempts.push({ route: "relay", skipped: "not-configured" }); return undefined; }
   const json = JSON.stringify({ path, method: opts.method ?? (opts.body === undefined ? "GET" : "POST"), token: opts.token ?? undefined, body: opts.body });
-  const d = btoa(String.fromCharCode(...new TextEncoder().encode(json)));
-  try {
-    return await fetch(feedbackUrl.replace(/\/$/, "") + "/relay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ d }) });
-  } catch {
-    return undefined;
-  }
+  // קידוד בלי פריסת מערך לארגומנטים: גם מטען גדול אינו גורם ל-RangeError.
+  const d = btoa(Array.from(new TextEncoder().encode(json), byte => String.fromCharCode(byte)).join(""));
+  return attempt(feedbackUrl.replace(/\/$/, ""), "/relay", { method: "POST", body: { d } }, attempts, "relay", opts);
 }
 
 /** מונה אנונימי של סיווג כשל (שרת ההערות, POST /diag) — בלי שום פרט על המשתמש; כשל בשליחה מתעלמים */
@@ -359,13 +371,13 @@ export function reportDiag(kind: ConnectionKind) {
 }
 
 /**
- * כל כשל חיבור (שני המסלולים נכשלו) נשלח מיד לתמיכה, בלי אישור הגולש (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
+ * כל כשל חיבור סופי (כולל הממסר) נשלח לתמיכה, בלי אישור הגולש (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
  * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים. עד 3 לכל טעינת עמוד.
  */
 let autoSent = 0;
 export function reportFailure(path: string, diagnostic?: Record<string, unknown>) {
   if (!feedbackUrl || autoSent >= 3) return;
   autoSent++;
-  const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic }, null, 2);
+  const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic });
   void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
 }
