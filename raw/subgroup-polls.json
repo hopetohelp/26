@@ -1,0 +1,29 @@
+[
+  {
+    "id": "2026-10-06-dialog-ynet-first-time-voters",
+    "start": "2026-10-05",
+    "end": "2026-10-06",
+    "firm": "Dialog (Amnat Pro)",
+    "firmHe": "דיאלוג (אמנת פרו)",
+    "publisher": "ynet / Yedioth Ahronoth",
+    "publisherHe": "ynet וידיעות אחרונות",
+    "population": "צעירים בני 18–22 שיצביעו לראשונה (יהודים וערבים)",
+    "sample": 543,
+    "values": {
+      "together": {"s": 16},
+      "yashar": {"s": 15},
+      "otzma": {"s": 15},
+      "rzp": {"s": 14},
+      "likud": {"s": 14},
+      "yb": {"s": 9},
+      "democrats": {"s": 9},
+      "joint": {"s": 9},
+      "utj": {"s": 8},
+      "reservists": {"s": 6},
+      "haredi_public": {"s": 5}
+    },
+    "urls": ["https://www.ynet.co.il/news/elections2026/article/byvn5fp5zl"],
+    "publishedAt": "2026-10-09T00:01:00+03:00",
+    "note": "המנדטים, המכון, המדגם, תאריכי הסקר והאוכלוסייה הושוו לפרסום המקורי. ש\"ס, רע\"ם, עמך ישראל וכחול לבן מתחת לאחוז החסימה בסקר זה."
+  }
+]

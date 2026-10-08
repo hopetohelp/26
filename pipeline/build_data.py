@@ -285,7 +285,23 @@ def build_polls(build_time: datetime) -> dict:
                           "source": {"page": "פרסומי סקרים — השלמה לאינדקס", "sha256": sha256(direct_path), "tableLine": 0},
                           "verified": False})
     polls.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
-    return {"polls": polls}
+    # סקרים על קבוצת אוכלוסייה מסוימת (למשל מצביעים לראשונה): מוצגים בארכיון בנפרד,
+    # ואינם נכנסים לממוצעים, למגמות, למודל או לתחזית — לכן מחוץ לרשימת "polls".
+    subgroup = []
+    sub_path = RAW / "subgroup-polls.json"
+    if sub_path.exists():
+        for d in json.loads(sub_path.read_text(encoding="utf-8")):
+            published = datetime.fromisoformat(d["publishedAt"])
+            if published.tzinfo is None:
+                raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
+            if FREEZE_START <= published < FREEZE_END:
+                continue
+            seat_sum = sum(v.get("s", 0) for v in d["values"].values())
+            if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]) or not d.get("population"):
+                raise ValueError(f"סקר קבוצת אוכלוסייה לא תקין: {d['id']}")
+            subgroup.append({**d, "seatSum": seat_sum})
+    subgroup.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
+    return {"polls": polls, "subgroupPolls": subgroup}
 
 
 # ---------------------------------------------------------------- תיקונים ואימות מול המקור
