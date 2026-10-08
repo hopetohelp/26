@@ -44,6 +44,10 @@ export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "wa
   mismatch: { text: "לא תואם למקור", tone: "warn" },
 };
 
+export function verificationLabel(status: string) {
+  return VERIFICATION_LABEL[status] ?? { text: "טרם הושלם האימות", tone: "neutral" as const };
+}
+
 /** תיאור שדה מתוקן בעברית, למשל "ש"ס (מנדטים)" */
 export function fieldLabel(field: string): string {
   const parts = field.split(".");
