@@ -271,3 +271,11 @@ it("counts distinct contributors per section, excluding reviewed accounts and du
   expect(d.sectionParticipants.blocs).toBe(3);
   expect(d.sectionParticipants.vote2026).toBe(1);
 });
+
+it("כל מנחש מפלגות נכלל בקואליציה פעם אחת מהגרסה האחרונה גם בלי גושים", () => {
+  const ps = [{id:'a',review:0},{id:'b',review:0},{id:'r',review:1}];
+  const payload = (n) => ({start:'zero',pollsAsOf:null,seats:{likud:{v:n,src:'manual',locked:true},democrats:{v:120-n,src:'manual',locked:true}}});
+  const d = run(ps,[ver('a','seats',payload(30)),ver('a','seats',payload(40)),ver('b','seats',{...payload(60),mode:'pct',pct:{likud:50,democrats:50}}),ver('r','seats',payload(120))]).dashboard;
+  expect(d.blocs.derived.gov).toMatchObject({n:2,mean:50,min:40,max:60});
+  expect(d.sectionParticipants.blocs).toBe(2);
+});

@@ -2,7 +2,7 @@
  * חוזי השמירה (docs/השתתפות-גולשים.md, "חוזי שמירה"). כל פונקציה מחזירה {ok, value} עם מטען נקי, או {ok:false, error}.
  * המטען שנשמר נבנה מחדש מהשדות המוכרים בלבד — שדה זר לא נכנס למאגר.
  */
-import { IDS_2026, IDS_2022 } from "./lists.js";
+import { IDS_2026, IDS_2022, GOV37 } from "./lists.js";
 
 export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
@@ -52,7 +52,9 @@ export function validateSeats(p) {
     return fail("pollsAsOf");
   const mode = p.mode ?? "seats";
   if (mode !== "seats" && mode !== "pct") return fail("mode");
-  const value = { mode, seats, start: p.start, pollsAsOf };
+  // מחושב בשרת מהחלוקה המאומתת; ערך שסיפק הלקוח אינו מקור אמת.
+  const coalitionSeats = [...GOV37].reduce((sum, id) => sum + (seats[id]?.v ?? 0), 0);
+  const value = { mode, seats, start: p.start, pollsAsOf, coalitionSeats };
   if (mode === "pct") {
     const r = validatePct(p.pct);
     if (!r.ok) return r;

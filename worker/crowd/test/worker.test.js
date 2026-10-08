@@ -284,3 +284,16 @@ describe("cron: aggregation & anomaly", () => {
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM rate").get().n).toBe(0);
   });
 });
+
+it("סכום הקואליציה נשמר ונקרא בחשבון ובהיסטוריה באותה גרסה בלי שמירת גושים", async () => {
+  const tok = await newP();
+  const payload = {start:'zero',pollsAsOf:null,seats:{likud:{v:30,src:'manual',locked:true},shas:{v:8,src:'manual',locked:true},democrats:{v:82,src:'manual',locked:true}}};
+  const result = await save(tok,'seats',payload,'coalition-op-001');
+  expect(result.status).toBe(200);
+  expect(result.data.version.payload.coalitionSeats).toBe(38);
+  const me = (await call('/me',{token:tok})).data;
+  expect(me.latest.seats.payload.coalitionSeats).toBe(38);
+  expect(me.latest.blocs).toBeUndefined();
+  expect((await call('/history?unit=seats',{token:tok})).data.versions[0].payload.coalitionSeats).toBe(38);
+  expect((await save(tok,'seats',{...payload,coalitionSeats:99},'coalition-op-001')).data.version.id).toBe(result.data.version.id);
+});

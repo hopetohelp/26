@@ -102,3 +102,19 @@ it("אותו סף חל על הקואליציה; ללא גוש מתאים מוצ�
     expect(html).toContain('לפחות שתי רשימות');
   }
 });
+
+it("ממיין את כל הגושים לפי משתתפים ואז מנדטים, כולל הקואליציה", () => {
+  const d: Dashboard = { participants: 12, open: true, publishedAt: null, aggregationId: null,
+    blocs: { derived: {gov:{...stat,n:2,mean:30},rest:stat},explicit:null,customCount:12,custom:[
+      {name:'א',lists:['joint','raam'],n:1,explicit:null,derived:{...stat,n:1,mean:80}},
+      {name:'ב',lists:['likud','shas'],n:3,explicit:null,derived:{...stat,n:3,mean:50}},
+      {name:'ג',lists:['utj','otzma'],n:3,explicit:null,derived:{...stat,n:3,mean:60}},
+    ]} };
+  for (const view of ['table','chart'] as const) {
+    const html = renderToStaticMarkup(createElement(BlocStats,{d,view})).split('&quot;').join('"');
+    const labels = [[nameOf('utj'),nameOf('otzma')].join(' · '),[nameOf('likud'),nameOf('shas')].join(' · '),'גוש הקואליציה',[nameOf('joint'),nameOf('raam')].join(' · ')];
+    const indices = labels.map(label => html.indexOf(label));
+    expect(indices.every(index => index >= 0)).toBe(true);
+    expect(indices).toEqual([...indices].sort((a,b)=>a-b));
+  }
+});
