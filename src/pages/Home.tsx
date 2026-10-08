@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import forecastFile from "../data/forecast.json";
 import modelFile from "../data/model.json";
-import { PageTitle } from "../components/ui";
+import { Split } from "../components/ui";
 import { listName, meta, polls, results, usablePolls } from "../lib/data";
 import { dateLong, num } from "../lib/format";
 import { PAGES } from "../lib/pages";
@@ -66,10 +66,9 @@ function stat(to: string): { value: string; label: string } {
 export default function Home() {
   return (
     <>
-      <PageTitle lead={`הבחירות לכנסת ה-26 ב-${dateLong(meta.electionDay)}. כל עמוד באתר — במשפט אחד ובנתון אחד. הנתונים נכונים ל-${dateLong(meta.dataAsOf)}.`}>
-        בחירות 2026
-      </PageTitle>
-      <Link
+      {/* הכותרת הגלויה היא הסרגל העליון ("בחירות 26" והתאריך) — כאן רק לקורא מסך */}
+      <h1 className="sr-only">בחירות 26 — כל עמודי האתר</h1>
+      <Split primary={<Link
         to="/guess"
         className="flex items-center justify-between gap-4 flex-wrap mb-5 bg-frame text-frame-ink border-2 border-frame rounded-theme p-4 md:p-5 no-underline hover:text-frame-ink"
       >
@@ -78,8 +77,7 @@ export default function Home() {
           <span className="text-sm text-frame-soft block mt-1">מחלקים 120 מושבים, ומשווים למה שמנחשים כל השאר. השערות גולשים, אינן סקר.</span>
         </span>
         <span className="shrink-0 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-extrabold inline-flex items-center">לבנות את הכנסת שלי</span>
-      </Link>
-      <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))] gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
+      </Link>} secondary={<ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))] gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
         {PAGES.filter(p => p.to !== "/guess").map((p) => {
           const s = stat(p.to);
           return (
@@ -98,7 +96,7 @@ export default function Home() {
             </li>
           );
         })}
-      </ul>
+      </ul>} />
     </>
   );
 }

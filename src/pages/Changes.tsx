@@ -5,7 +5,7 @@ import { DEFAULT_BLOCS, normalizeBlocs } from "./guess/model";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle } from "../components/ui";
+import { Card, ChartWithTable, Note, PageTitle, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import { listName } from "../lib/data";
 import { colorOf } from "../lib/colors";
@@ -102,6 +102,7 @@ export default function Changes() {
       <PageTitle lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת.">
         מה השתנה מבחירות קודמות
       </PageTitle>
+      <Split primary={<>
       <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-4">
         {([["blocs", "לפי הגושים שלי"], ["families", "לפי משפחות מפלגות"]] as const).map(([id,label]) => <button key={id} role="radio" type="button" aria-checked={view === id} onClick={() => setView(id)} className={`min-h-[44px] rounded-full px-4 border font-bold text-sm ${view === id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{label}</button>)}
       </div>
@@ -123,6 +124,7 @@ export default function Changes() {
         </div>
         <p className="text-base leading-relaxed">{alt.desc}</p>
       </Card>
+      </>} secondary={<>
       {view === "blocs" && <PersonalBlocs title="הגושים שלי: תוצאות 2022 מול ממוצע הסקרים היום" source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
         { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },
         { values: m.central.seats, source: "המנדטים היום לפי המודל", asOf: dateLong(m.asof) },
@@ -235,6 +237,7 @@ export default function Changes() {
           <li>ב-2026 יש יותר בעלי זכות בחירה, ושיעור ההצבעה עשוי להשתנות. כאן משווים אחוזים, לא מספרי קולות.</li>
         </ul>
       </Card>
+      </>} />
     </>
   );
 }

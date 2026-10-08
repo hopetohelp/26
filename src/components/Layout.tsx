@@ -19,7 +19,6 @@ const TABS = [
   { to: "/community", label: "הגולשים", icon: "bars" },
   { to: "/guess", label: "השערות", icon: "guess" },
   { to: "/support", label: "תמיכה", icon: "comments" },
-  { to: "/method", label: "שיטה ואודות", icon: "info" },
 ];
 
 const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
@@ -42,7 +41,6 @@ function Icon({ name }: { name: string }) {
   if (name === "bars") return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" /></svg>;
   if (name === "guess") return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" /></svg>;
   if (name === "comments") return <svg {...p}><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M7 8h10M7 12h7" /></svg>;
-  if (name === "info") return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
 }
@@ -221,14 +219,14 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
 function MobileTabs() {
   return (
     <nav aria-label="ניווט בטלפון" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-      <ul className="grid grid-cols-6">
+      <ul className="grid grid-cols-5">
         {TABS.map((t) => (
           <li key={t.to}>
             <NavLink
               to={t.to}
               end={t.to === "/"}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-0.5 h-16 text-[11px] leading-tight text-center no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`
+                `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`
               }
             >
               <Icon name={t.icon} />

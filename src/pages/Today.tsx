@@ -5,7 +5,7 @@ import { SeatRangeBars } from "../components/charts";
 import ListsView, { type ListRow } from "../components/ListsView";
 import modelFile from "../data/model.json";
 import { useTheme } from "../lib/theme";
-import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
+import { Badge, Card, Fold, Note, PageTitle, Split } from "../components/ui";
 import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, passesInAll, pollsterLabel, results, seatsIn, summarize, type Poll } from "../lib/data";
 import { date, dateLong, dateRange, num, seatsFmt } from "../lib/format";
 
@@ -64,8 +64,7 @@ export default function Today() {
       >
         המצב היום
       </PageTitle>
-      <PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
-
+      <Split primary={<PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />} secondary={<>
       <section aria-label="הרשימות היום" className="mb-6">
         <Explained
           kind="תרחיש"
@@ -216,6 +215,7 @@ export default function Today() {
         </Note>
       </Fold>
 
+      </>} />
     </>
   );
 }

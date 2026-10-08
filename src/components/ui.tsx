@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 export function PageTitle({ children, lead }: { children: ReactNode; lead?: ReactNode }) {
   return (
@@ -57,5 +57,42 @@ export function Fold({ title, children, open = false }: { title: ReactNode; chil
       </summary>
       <div className="px-4 md:px-5 pb-4 md:pb-5">{children}</div>
     </details>
+  );
+}
+
+/**
+ * עיקרי ומשני — שני טורים במחשב, כמו תבנית 3ב של "קרובים מתמיד" (מדריך 31 §20 שם):
+ * העיקרי (פקדים, בחירה, תקציר) בטור הצר מימין ועומד במקום; המשני (התוצאות) בטור הרחב ונגלל.
+ * 🔴 הסדר בקוד הוא סדר הטלפון — בטלפון ובמסך צר שום דבר אינו משתנה.
+ * 🔴 שני טורים רק כשהשורש רחב מ-SPLIT_AT **וגם** העיקרי נכנס כולו בגובה המסך; אחרת טור אחד.
+ * ההחלטה "לא נכנס" נזכרת עד שמידות החלון משתנות — בטור אחד העיקרי רחב ונמוך יותר, ומדידה תמימה הייתה מקפצת.
+ */
+const SPLIT_AT = 1024;
+export function Split({ primary, secondary }: { primary: ReactNode; secondary: ReactNode }) {
+  const root = useRef<HTMLDivElement>(null);
+  const prim = useRef<HTMLDivElement>(null);
+  const [wide, setWide] = useState(false);
+  const [tooTall, setTooTall] = useState<string | null>(null);
+  const viewport = () => `${window.innerWidth}x${window.innerHeight}`;
+  useLayoutEffect(() => {
+    const check = () => {
+      const w = (root.current?.clientWidth ?? 0) >= SPLIT_AT;
+      setWide(w);
+      if (tooTall && tooTall !== viewport()) setTooTall(null);
+      if (w && !tooTall && prim.current && prim.current.scrollHeight > window.innerHeight - 32) setTooTall(viewport());
+    };
+    check();
+    const ro = new ResizeObserver(check);
+    if (root.current) ro.observe(root.current);
+    if (prim.current) ro.observe(prim.current);
+    window.addEventListener("resize", check);
+    return () => (ro.disconnect(), window.removeEventListener("resize", check));
+  }, [tooTall]);
+  const split = wide && !tooTall;
+  return (
+    <div ref={root} data-split={split || undefined} className={split ? "grid grid-cols-[minmax(22rem,1fr)_2fr] gap-6 items-start [&>*]:min-w-0" : ""}>
+      <div ref={prim} className={split ? "sticky top-4" : ""}>{primary}</div>
+      <div>{secondary}</div>
+    </div>
   );
 }
