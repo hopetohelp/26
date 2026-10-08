@@ -2,7 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import SaveButton, { SaveError, type SaveUnit } from "./guess/SaveButton";
 import type { useSession, useUnit } from "./guess/useCrowd";
 import type { SeatsPayload, BlocsPayload } from "../lib/crowdApi";
-import { validateBlocs } from "../lib/crowdValidate";
+import { validateBlocs, validateSeats } from "../lib/crowdValidate";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Explained from "../components/Explained";
@@ -102,7 +102,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
     error: unit.error ?? blocsUnit.error, errorLog: unit.errorLog ?? blocsUnit.errorLog,
     save: async token => { if (!next) return false; unit.setDraft(next); if (!await unit.save(token, next)) return false; return blocsUnit.status === "saved" || await blocsUnit.save(token); },
   };
-  const invalid = inputProblem ?? (over ? "סכום האחוזים עולה על 100." : r?.status !== "ok" ? "אפשר לשמור רק תוצאה תקינה של 120 מנדטים, ללא הגרלה." : null) ?? (blocsUnit.draft ? validateBlocs(blocsUnit.draft, IDS) : null);
+  const invalid = inputProblem ?? (over ? "סכום האחוזים עולה על 100." : r?.status !== "ok" ? "אפשר לשמור רק תוצאה תקינה של 120 מנדטים, ללא הגרלה." : null) ?? (next ? validateSeats(next, IDS) : null) ?? (blocsUnit.draft ? validateBlocs(blocsUnit.draft, IDS) : null);
 
   const setShare = (id: string, v: number) => {
     const next = { ...shares, [id]: Math.max(0, Math.min(100, Math.round(v * 10) / 10)) };
@@ -117,7 +117,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
         מחשבון ההשערה
       </PageTitle>
 
-      <div className="mb-4"><SaveButton unit={saveUnit} session={session} invalid={invalid} /><SaveError unit={saveUnit} /><p className="text-sm text-ink-soft mt-2">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. עד השמירה אפשר לבדוק תרחיש בלי להחליף את טיוטת המנדטים.</p></div>
+      <div className="mb-4"><SaveButton unit={saveUnit} session={session} invalid={invalid} /><SaveError unit={saveUnit} />{invalid && <p role="status" className="text-sm text-warn mt-2">{invalid}</p>}<p className="text-sm text-ink-soft mt-2">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. עד השמירה אפשר לבדוק תרחיש בלי להחליף את טיוטת המנדטים.</p></div>
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
         <Card title="הקלט">
           <p className="text-sm text-ink-soft mb-3">

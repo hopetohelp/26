@@ -63,6 +63,7 @@ describe("participant & saves", () => {
     const bad = seats(60);
     bad.seats[IDS[0]].v = 50;
     expect((await save(tok, "seats", bad)).data).toMatchObject({ error: "invalid", field: "sum" });
+    expect((await save(tok, "seats", seats(3))).data).toMatchObject({ error: "invalid", field: "threshold" });
     const blocs = { mode: "gov37", blocs: [{ id: "gov", name: "א", lists: [IDS[0]], target: 60 }, { id: "rest", name: "ב", lists: [], target: 60 }] };
     expect((await save(tok, "blocs", blocs)).status).toBe(200);
     expect((await save(tok, "blocs", { ...blocs, blocs: [{ ...blocs.blocs[0], target: 70 }, blocs.blocs[1]] })).status).toBe(200);
@@ -77,10 +78,10 @@ describe("participant & saves", () => {
   });
   it("rate limits: 20 saves/hour per participant, 5 registrations/hour per IP", async () => {
     const tok = await newP();
-    for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats(i))).status).toBe(200);
-    expect((await save(tok, "seats", seats(1))).status).toBe(429);
+    for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats(i + 4))).status).toBe(200);
+    expect((await save(tok, "seats", seats(4))).status).toBe(429);
     t += 2 * 3600 * 1000;
-    expect((await save(tok, "seats", seats(1))).status).toBe(200);
+    expect((await save(tok, "seats", seats(4))).status).toBe(200);
     for (let i = 0; i < 5; i++) expect((await register("2001:db8:1:2:3::1")).status).toBe(200);
     expect((await register("2001:db8:1:2:ffff::9")).status).toBe(429); // אותו /64
     expect((await register("2001:db8:1:3::1")).status).toBe(200);

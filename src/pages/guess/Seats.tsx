@@ -8,6 +8,7 @@ import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate"
 import { dateLong } from "../../lib/format";
 import { K25_MAP, k25Name, IDS, nameOf, POLL_RANGES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { blocSummary } from "./blocSummary";
+import { canSetSeats } from "./seatEditing";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
 import Share from "./Share";
@@ -37,6 +38,7 @@ export default function Seats({
   const [resetAsk, setResetAsk] = useState(false);
   const fillBtn = useRef<HTMLButtonElement>(null);
   const [justSaved, setJustSaved] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
 
   if (!p) {
@@ -82,16 +84,25 @@ export default function Seats({
     },
   };
   const setCell = (id: string, c: SeatCell) => {
+    setEditError(null);
     const { pct: _pct, calculation: _calculation, ...rest } = p;
     const base = c.v === p.seats[id]?.v ? p : { ...rest, mode: "seats" as const };
     unit.setDraft({ ...base, seats: { ...p.seats, [id]: c } });
     setPreview(null);
   };
-  const setV = (id: string, v: number) => setCell(id, { v: Math.max(0, Math.min(TOTAL, Math.round(v) || 0)), src: "manual", locked: true });
+  const setV = (id: string, v: number) => {
+    const value = Math.max(0, Math.min(TOTAL, Math.round(v) || 0));
+    if (!canSetSeats(p.seats, IDS, id, value)) {
+      setEditError("אי אפשר להוסיף מעל 120 בלי להשאיר מפלגה אחרת פתוחה. פתחו נעילה של מפלגה אחרת או הפחיתו מנדטים.");
+      return;
+    }
+    setCell(id, { v: value, src: "manual", locked: true });
+  };
   const targets = blocs?.blocs.filter((b) => b.target !== null) ?? [];
   const runFill = () => setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES));
   const apply = () => {
     if (preview?.ok) { const { pct: _pct, calculation: _calculation, ...rest } = p; unit.setDraft({ ...rest, mode: "seats", seats: preview.seats, pollsAsOf: POLLS_AS_OF }); }
+    setEditError(null);
     setPreview(null);
   };
   const rows = IDS;
@@ -152,7 +163,7 @@ export default function Seats({
                           className="w-14 h-11 text-center font-num tabular text-2xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
                           style={{ textAlign: "center" }}
                         />
-                        <button type="button" aria-label={`עוד ל${name}`} disabled={left <= 0} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
+                        <button type="button" aria-label={`עוד ל${name}`} disabled={c.v >= TOTAL || !canSetSeats(p.seats, IDS, id, c.v + 1)} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
                           +
                         </button>
                       </div>
@@ -160,7 +171,7 @@ export default function Seats({
                     </div>
                     {under && (
                       <p className="text-xs text-warn mt-1">
-                        {c.v} {c.v === 1 ? "מנדט" : "מנדטים"} זה פחות מאחוז החסימה (בערך {THRESHOLD_SEATS}). אפשר לשמור — רק שתדעו.
+                        אי אפשר לשמור עם {c.v} {c.v === 1 ? "מנדט" : "מנדטים"}. קבעו 0 למפלגה שלא עוברת את אחוז החסימה, או לפחות {THRESHOLD_SEATS} למפלגה שעוברת.
                       </p>
                     )}
                   </li>
@@ -169,6 +180,9 @@ export default function Seats({
             </ul>
       {/* פס פעולה דביק באזור האגודל */}
       <div className="sticky z-20 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 mt-5">
+        {(left < 0 || editError) && <p role="alert" className="mb-2 rounded-theme border-2 border-warn bg-paper-card text-ink p-3 text-sm font-bold">
+          {editError ?? `יש כרגע ${sum} מנדטים — ${-left} מעל 120. הפחיתו מנדטים או השתמשו ב״השלם הכול״ למפלגות הפתוחות. אפשר לשמור רק כשהסכום חוזר ל־120.`}
+        </p>}
         {preview && (
           <FillPreview
             preview={preview}
@@ -189,7 +203,7 @@ export default function Seats({
             ) : (
               <>
                 <span className="text-sm self-center">הטיוטה תימחק. בטוח?</span>
-                <Btn kind="danger" onClick={() => (unit.setDraft(null), setResetAsk(false))}>
+                <Btn kind="danger" onClick={() => (unit.setDraft(null), setEditError(null), setResetAsk(false))}>
                   כן, מחדש
                 </Btn>
                 <Btn onClick={() => setResetAsk(false)}>לא</Btn>
@@ -211,6 +225,7 @@ export default function Seats({
           </div>
         </div>
         <SaveError unit={both} />
+        {invalid && left >= 0 && <p role="status" className="mt-2 text-sm text-warn">{invalid}</p>}
         {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
       </div>
 

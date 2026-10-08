@@ -1,0 +1,77 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const meta = require('../src/data/meta.json');
+const ids=meta.lists2026.map(l=>l.id);
+const name=id=>meta.lists2026.find(l=>l.id===id).name;
+const dir='/tmp/elections26-bloc-plus-share'; fs.mkdirSync(dir,{recursive:true});
+(async()=>{
+ const {preview}=await import('vite');
+ const server=await preview({preview:{host:'127.0.0.1',port:5176,strictPort:true}});
+ const browser=await chromium.launch({executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox','--disable-gpu','--disable-dev-shm-usage']});
+ try {
+ for(const theme of ['board','league']) for(const width of [360,1280]) for(const dark of [false,true]) {
+  const context=await browser.newContext({viewport:{width,height:900}});
+  await context.route('https://fonts.googleapis.com/**',r=>r.abort());
+  await context.route('https://fonts.gstatic.com/**',r=>r.abort());
+  await context.addInitScript(({theme,dark,ids})=>{
+   localStorage.setItem('elections26.theme',theme);localStorage.setItem('elections26.mode',dark?'dark':'light');
+   localStorage.setItem('elections26.crowd.intro','1');
+   const values={likud:60,shas:56,yashar:4};
+   localStorage.setItem('elections26.crowd.draft.seats',JSON.stringify({start:'zero',pollsAsOf:null,seats:Object.fromEntries(ids.map(id=>[id,{v:values[id]||0,locked:true,src:'manual'}]))}));
+   localStorage.setItem('elections26.crowd.draft.blocs',JSON.stringify({mode:'custom',blocs:[{id:'large',name:'הגוש הגדול לבדיקה',lists:['likud','shas','haredi_public'],target:1},{id:'small',name:'הגוש הקטן שלא משתפים',lists:['yashar'],target:120}]}));
+   window.drawn=[];
+   const original=CanvasRenderingContext2D.prototype.fillText;
+   CanvasRenderingContext2D.prototype.fillText=function(text,...args){window.drawn.push(String(text));return original.call(this,text,...args)};
+   Object.defineProperty(navigator,'canShare',{value:()=>true});
+   Object.defineProperty(navigator,'share',{value:async data=>{
+    window.shared=data;
+    window.sharedImage=Array.from(new Uint8Array(await data.files[0].arrayBuffer()));
+   }});
+  },{theme,dark,ids});
+  const page=await context.newPage(), errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:5176/#/guess?section=blocs');
+  const large=page.locator('[data-bloc-id="large"]'),small=page.locator('[data-bloc-id="small"]');
+  await large.waitFor();
+  assert.equal(await page.locator('[data-bloc-pool]').count(),0);
+  assert.equal(await page.getByRole('button',{name:/הוספת מפלגות לגוש/}).count(),2);
+  const plus=small.getByRole('button',{name:'הוספת מפלגות לגוש הגוש הקטן שלא משתפים',exact:true});
+  await plus.click();
+  const pick=small.getByRole('checkbox',{name:name('likud'),exact:true});
+  await pick.check();
+  assert.equal(await small.locator('[data-bloc-party="likud"]').count(),1);
+  assert.equal(await large.locator('[data-bloc-party="likud"]').count(),1);
+  await pick.uncheck();
+  assert.equal(await small.locator('[data-bloc-party="likud"]').count(),0);
+  await pick.check();
+  await pick.press('Escape');
+  assert.equal(await plus.getAttribute('aria-expanded'),'false');
+  assert.equal(await plus.evaluate(el=>el===document.activeElement),true);
+  await small.getByRole('button',{name:`הסרת ${name('likud')} מהגוש`,exact:true}).click();
+  assert.equal(await small.locator('[data-bloc-party="likud"]').count(),0);
+  await plus.click();await pick.check();await small.getByRole('button',{name:'סיום בחירה',exact:true}).click();
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await small.scrollIntoViewIfNeeded();await page.screenshot({path:`${dir}/picker-${theme}-${width}-${dark}.png`,fullPage:true});
+  await page.goto('http://127.0.0.1:5176/#/guess?section=seats');
+  await page.getByRole('button',{name:'שתפו את ההשערה',exact:true}).click();
+  await page.waitForFunction(()=>Array.isArray(window.sharedImage));
+  const text=await page.evaluate(()=>window.drawn);
+  assert.ok(text.includes('הגוש הגדול לבדיקה'));
+  assert.ok(text.includes('116'));
+  assert.ok(text.includes(name('likud')));
+  assert.ok(text.includes(name('shas')));
+  assert.ok(text.join(' ').includes(name('haredi_public')),'גם מפלגה עם אפס מנדטים מופיעה בהרכב');
+  assert.ok(!text.includes('הגוש הקטן שלא משתפים'));
+  assert.ok(!text.includes(name('yashar')),'מפלגה מחוץ לגוש אינה בתמונה');
+  const link=await page.evaluate(()=>window.shared.url);
+  assert.ok(link.includes('g='),'הקישור עדיין כולל את ההשערה המלאה');
+  const buffer=Buffer.from(await page.evaluate(()=>window.sharedImage));
+  fs.writeFileSync(`${dir}/share-${theme}-${width}-${dark}.png`,buffer);
+  assert.equal(buffer.readUInt32BE(16),1080);
+  assert.ok(buffer.readUInt32BE(20)>=1350);
+  assert.deepEqual(errors,[]);
+  console.log(`עברו + בכל גוש, בחירה ושיתוף הגוש הגדול בלבד: ${theme}, ${width}, ${dark?'לילה':'יום'}`);
+  await context.close();
+ }
+ }finally{await browser.close();await new Promise(r=>server.httpServer.close(r));}
+})().catch(e=>{console.error(e);process.exit(1)});

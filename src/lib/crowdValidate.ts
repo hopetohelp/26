@@ -5,6 +5,7 @@ import { TOTAL } from "./fillAll";
 export const V2022_SPECIAL = ["other", "none", "blank", "ineligible", "private"] as const;
 export const V2026_SPECIAL = ["undecided", "none", "ineligible", "private"] as const;
 export const MAX_BLOCS = 5;
+export const THRESHOLD_SEATS = 4;
 
 export function validateVote(p: VotePayload, ids2022: string[], ids2026: string[]): string | null {
   if (p.v2022 === null && p.v2026 === null) return "צריך למלא לפחות שדה אחד.";
@@ -22,6 +23,8 @@ export function validateSeats(p: SeatsPayload, ids: string[]): string | null {
   }
   const s = seatsSum(p);
   if (s !== TOTAL) return s < TOTAL ? `נותרו ${TOTAL - s} לחלוקה.` : `יש ${s - TOTAL} יותר מדי.`;
+  if (Object.values(p.seats).some(c => c.v > 0 && c.v < THRESHOLD_SEATS))
+    return `אי אפשר לשמור השערה עם מפלגה שקיבלה 1–3 מנדטים. קבעו 0 למפלגה שלא עוברת את אחוז החסימה, או לפחות ${THRESHOLD_SEATS} מנדטים למפלגה שעוברת.`;
   return null;
 }
 

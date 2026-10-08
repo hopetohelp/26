@@ -22,6 +22,15 @@ describe("validate", () => {
     frac.seats[IDS[1]].v = 60.5;
     expect(save("seats", frac).ok).toBe(false);
   });
+  it("חוסם 1–3 מנדטים גם בסכום 120, ומקבל 0 או 4", () => {
+    for (const v of [1, 2, 3]) {
+      expect(save("seats", seats(v)).error).toBe("threshold");
+      expect(save("seats", seats(v, "filled", { mode: "pct", pct: { [IDS[0]]: 3, [IDS[1]]: 97 } })).error).toBe("threshold");
+    }
+    expect(save("seats", seats(0)).ok).toBe(true);
+    expect(save("seats", seats(4)).ok).toBe(true);
+    expect(save("seats", seats(0, "filled", { mode: "pct", pct: { [IDS[0]]: 3, [IDS[1]]: 97 } })).ok).toBe(true);
+  });
   it("seats by vote percentages (mode pct)", () => {
     const pct = (p) => save("seats", seats(60, "filled", { mode: "pct", pct: p }));
     expect(pct({ [IDS[0]]: 40.5, [IDS[1]]: 50 }).ok).toBe(true);
