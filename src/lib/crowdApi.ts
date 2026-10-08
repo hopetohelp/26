@@ -245,7 +245,10 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
       first ??= e as CrowdError;
     }
   }
-  if (!res) throw first!;
+  if (!res) {
+    reportFailure(path, first!.diagnostic);
+    throw first!;
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok)
     throw new CrowdError(res.status, (data as { error?: string }).error ?? "error", {
@@ -310,4 +313,16 @@ export async function checkConnection(): Promise<ConnectionCheck> {
 export function reportDiag(kind: ConnectionKind) {
   if (!feedbackUrl) return;
   void fetch(feedbackUrl.replace(/\/$/, "") + "/diag", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind }), keepalive: true }).catch(() => {});
+}
+
+/**
+ * כל כשל חיבור (שני המסלולים נכשלו) נשלח מיד לתמיכה, בלי אישור הגולש (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
+ * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים. עד 3 לכל טעינת עמוד.
+ */
+let autoSent = 0;
+export function reportFailure(path: string, diagnostic?: Record<string, unknown>) {
+  if (!feedbackUrl || autoSent >= 3) return;
+  autoSent++;
+  const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic }, null, 2);
+  void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
 }
