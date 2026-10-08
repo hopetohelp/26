@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useIsPhone } from "./useIsPhone";
 import { createPortal } from "react-dom";
 
 type Drag = { pointer: number; x: number; y: number; startX: number; startY: number; moved: boolean; dx: number; dy: number; width: number };
@@ -12,6 +13,7 @@ export default function BlocParty({ id, name, seats, targets, current, onMove, o
   onMove: (id: string, target: string) => void; onHover: (target: string | null) => void;
   onRemove?: (id: string, from: string) => void;
 }) {
+  const phone = useIsPhone();
   const active = useRef<Drag | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const dragging = drag !== null;
@@ -45,6 +47,12 @@ export default function BlocParty({ id, name, seats, targets, current, onMove, o
     if (to && to !== current) onMove(id, to);
     else if (current && !to) onRemove?.(id, current);
   };
+  const removeBtn = current && onRemove && <button type="button" aria-label={`הסרת ${name} מהגוש`} onClick={() => onRemove(id, current)} className="shrink-0 min-h-[48px] px-3 rounded-theme border border-paper-line text-sm text-ink-soft hover:text-warn focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal">הסר</button>;
+  /** בטלפון אין גרירה: הכרטיס רק מציג, ההוספה בכרטיס + והסרה בכפתור "הסר" משמאל. */
+  if (phone) return <li data-bloc-party={id} className="flex gap-1 items-stretch min-w-0">
+    <div className="flex-1 min-w-0 min-h-[48px] flex flex-wrap justify-between items-center gap-2 text-sm text-start border border-paper-line bg-paper rounded-theme p-3">{content}</div>
+    {removeBtn}
+  </li>;
   return <li data-bloc-party={id} className="flex gap-1 items-start min-w-0">
     <button type="button" data-party-drag aria-label={`${name}, ${seats ?? "ללא"} מנדטים. גררו לגוש או השתמשו בחצים ימינה ושמאלה.${current ? " להסרה גררו החוצה או לחצו Delete." : ""}`}
       className={`flex-1 min-w-0 min-h-[48px] flex flex-wrap justify-between items-center gap-2 text-sm text-start border border-paper-line bg-paper rounded-theme p-3 touch-none select-none cursor-grab focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal ${drag ? "opacity-30" : ""}`}
@@ -79,7 +87,7 @@ export default function BlocParty({ id, name, seats, targets, current, onMove, o
       }}>
       {content}
     </button>
-    {current && onRemove && <button type="button" aria-label={`הסרת ${name} מהגוש`} onClick={() => onRemove(id, current)} className="shrink-0 min-h-[48px] min-w-[44px] rounded-theme border border-paper-line text-ink-soft hover:text-warn focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal">×</button>}
+    {removeBtn}
     {drag && createPortal(<div aria-hidden="true" data-drag-preview={id}
       className="fixed z-[100] pointer-events-none border-2 border-ink bg-paper-card text-ink rounded-theme p-3 flex justify-between gap-2 text-sm shadow-lg cursor-grabbing"
       style={{ left: drag.x - drag.dx, top: drag.y - drag.dy, width: drag.width, direction: "rtl" }}>{content}</div>, document.body)}
