@@ -163,7 +163,7 @@ export default function Today() {
         </Fold>
       </div>
 
-      <PersonalBlocs title="הגושים שלי בכל סקר אחרון" source="הסקרים האחרונים של המכונים, כל מקור בנפרד" asOf={dateLong(model.asof)} datasets={latest.map(p => ({ values: Object.fromEntries(ids.map(id => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: dateLong(p.end) }))} />
+      <PersonalBlocs title="הגושים שלי בכל סקר אחרון" source="הסקרים האחרונים של המכונים, כל מקור בנפרד" asOf={dateLong(model.asof)} datasets={latest.map(p => ({ poll: p, values: Object.fromEntries(ids.map(id => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: dateLong(p.end) }))} />
       <Fold title="הסקרים שנכללו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

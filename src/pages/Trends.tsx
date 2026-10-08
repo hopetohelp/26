@@ -46,7 +46,8 @@ export default function Trends() {
 
   const p0 = PERIODS.find((p) => p.id === period)!;
   const from = p0.from || new Date(toTime(to) - 90 * 86_400_000).toISOString().slice(0, 10);
-  const source = useMemo(() => withLineage(usablePolls.filter((p) => !who || pollsterKey(p) === who)), [who]);
+  const rawSource = useMemo(() => usablePolls.filter((p) => !who || pollsterKey(p) === who), [who]);
+  const source = useMemo(() => withLineage(rawSource), [rawSource]);
   const days = who ? 45 : 14;
   const minN = who ? 1 : 3;
 
@@ -150,7 +151,7 @@ export default function Trends() {
           רשימות נפרדות, לא תמיכה ברשימה המאוחדת.
         </Note>
       </Card>
-      <PersonalBlocTrends source={source} from={from} to={to} days={days} minN={minN} />
+      <PersonalBlocTrends source={rawSource} from={from} to={to} days={days} minN={minN} />
     </>
   );
 }

@@ -16,3 +16,9 @@ it("חסר נתון אינו אפס; תחזית לא זמינה נשארת חס�
   const row=shareBlocRows([{name:"א",lists:["a","b"],total:30}],{a:30,b:0},{a:20},null)[0];
   expect(row.mine).toBe(30);expect(row.polls).toBeNull();expect(row.forecast).toBeNull();
 });
+
+it("שיתוף שומר סכום חלקי וכיסוי בלי להמציא מפלגה חסרה", () => {
+  const row=shareBlocRows([{name:"א",lists:["a","b"],total:120}],{a:80,b:40},{a:30},{a:32,b:0})[0];
+  expect(row.polls).toBeNull();expect(row.pollsInfo.knownTotal).toBe(30);expect(row.pollsInfo.knownCount).toBe(1);
+  expect(row.pollsInfo.missing).toEqual(["b"]);expect(row.forecast).toBe(32);expect(row.mine).toBe(120);
+});

@@ -3,6 +3,7 @@
  * הצבעים נקראים ממשתני ה-CSS של העיצוב הפעיל (בהיר/חשוך, מקצועי/חדשותי) — אין כאן צבע קבוע, מלבד צבעי הרשימות
  * הניטרליים מ-src/lib/colors.ts. הטקסט מימין לשמאל. בלי המלצה ובלי אימוג'י.
  */
+import { formatBlocValue } from "../../lib/personalBlocs";
 import { colorOf } from "../../lib/colors";
 import { SITE_URL } from "../../lib/shareGuess";
 import { type BlocTotal } from "./blocSummary";
@@ -64,8 +65,12 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
       return lines;
     };
     ctx.font = `400 30px ${body}`;
-    const rows = shareBlocRows(blocs, values).map(b => ({ ...b, names: wrap(b.lists.map(nameOf).join(" · "), R - L) }));
-    const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + row.names.length * 38, 0) + 290);
+    const rows = shareBlocRows(blocs, values).map(b => {
+      const incomplete = [["ההשערה שלי",b.mineInfo],["ממוצע סקרים",b.pollsInfo],["תחזית",b.forecastInfo]] as const;
+      const notes = incomplete.filter(([,info])=>info.missing.length).flatMap(([label,info])=>wrap(`${label}: נתון ל-${info.knownCount}/${info.lists.length} מפלגות; חסר: ${info.missing.map(nameOf).join(" · ")}`,R-L));
+      return {...b,names:wrap(b.lists.map(nameOf).join(" · "),R-L),notes};
+    });
+    const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + (row.names.length + row.notes.length) * 38, 0) + 290);
     cv.height = imageHeight;
     ctx.direction = "rtl";
     ctx.textAlign = "right";
@@ -93,22 +98,23 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
       ctx.fillText(row.name, R, y, R - L);
       ctx.textAlign = "center";
       ctx.font = `700 60px ${num}`;
-      [row.mine, row.polls, row.forecast].forEach((value, i) => {
+      [row.mineInfo, row.pollsInfo, row.forecastInfo].forEach((info, i) => {
         ctx.fillStyle = i === 0 && board ? c.signal : c.ink;
-        ctx.fillText(value === null ? "—" : seatsFmt(value), columns[i], y + 72);
+        ctx.fillText(formatBlocValue(info), columns[i], y + 72, 285);
       });
       ctx.textAlign = "right";
       ctx.fillStyle = c.soft;
       ctx.font = `400 30px ${body}`;
       row.names.forEach((line, i) => ctx.fillText(line, R, y + 126 + i * 38));
-      y += 172 + row.names.length * 38;
+      row.notes.forEach((line,i)=>ctx.fillText(line,R,y+126+(row.names.length+i)*38));
+      y += 172 + (row.names.length + row.notes.length) * 38;
       ctx.strokeStyle = c.line; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(L, y - 48); ctx.lineTo(R, y - 48); ctx.stroke();
     });
     ctx.textAlign = "right";
     ctx.fillStyle = c.soft;
     ctx.font = `400 26px ${body}`;
-    ctx.fillText("גושים עצמאיים וחופפים; אין לחבר את סכומיהם. — = חסר נתון מלא.", R, imageHeight - 245, R - L);
+    ctx.fillText("גושים חופפים; אין לחברם. לפחות = חלקי · כ- = אומדן · — = אין נתון.", R, imageHeight - 245, R - L);
     if (SHARE_FORECAST_CAUTION) ctx.fillText("התחזית לא עברה את רף הדיוק שנקבע בבדיקת העבר.", R, imageHeight - 208, R - L);
     ctx.fillStyle = c.line;
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
