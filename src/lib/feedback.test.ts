@@ -45,3 +45,13 @@ describe("איחוד שיחות שמורות", () => {
     expect(api.savedThreads()).toEqual([b, a]);
   });
 });
+
+it("שיחת חשבון נשלחת ישירות לשרת ההערות בלי כותרת זהות", async () => {
+  vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+  vi.resetModules();
+  const { accountSupport } = await import("./feedback");
+  const fetchMock = vi.fn(async () => new Response(JSON.stringify({ok:true,thread:null})));
+  vi.stubGlobal("fetch", fetchMock);
+  expect(await accountSupport("private-account-token", {text:"[רעיון] בדיקה",op_id:"operation-123456789",website:""})).toBe(null);
+  expect(fetchMock.mock.calls[0]).toEqual(["https://feedback.example/", expect.objectContaining({method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({kind:"account-support",token:"private-account-token",text:"[רעיון] בדיקה",op_id:"operation-123456789",website:""})})]);
+});

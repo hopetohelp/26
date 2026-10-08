@@ -1,3 +1,4 @@
+import { FEEDBACK_TOPICS as TOPICS, topicMessage } from "../lib/feedbackTopics";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getLink } from "../lib/crowdSession";
@@ -8,12 +9,6 @@ import { FEEDBACK_URL, mergeSavedThreads, replyToThread, saveThread, savedThread
  * לא נשמר שום פרט מזהה. אחרי השליחה הגולש מקבל קישור אישי לשיחה (עמוד "ההערות שלי").
  * הכתובת נקבעת בבנייה (VITE_FEEDBACK_URL); בלעדיה הכפתור אינו מוצג.
  */
-const TOPICS = [
-  { id: "data", label: "נתון שגוי" },
-  { id: "idea", label: "רעיון" },
-  { id: "design", label: "עיצוב ונוחות" },
-  { id: "other", label: "אחר" },
-] as const;
 const MAX = 2000;
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -68,8 +63,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
       // שיחה אחת לכל משתמש: אם כבר יש שיחה בדפדפן הזה — ההערה מצטרפת אליה (עם הנושא בראשה)
       const prim = await mergeSavedThreads();
       if (prim) {
-        const topicLabel = TOPICS.find((t) => t.id === topic)?.label ?? "";
-        const res = await replyToThread(prim.token, `[${topicLabel}] ${body}`.slice(0, MAX), trap, diagnostic);
+        const res = await replyToThread(prim.token, topicMessage(topic, body).slice(0, MAX), trap, diagnostic);
         if (res.ok) {
           setToken(prim.token);
           setStatus("sent");
