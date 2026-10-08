@@ -60,3 +60,6 @@ CREATE TABLE IF NOT EXISTS visitors_all (
   first_day TEXT NOT NULL,
   last_day TEXT NOT NULL
 );
+
+-- ממשק ניהול: רק גיבוב של מפתח הניהול (המפתח עצמו אצל הבעלים בלבד, בקישור הניהול)
+CREATE TABLE IF NOT EXISTS admin_keys (hash TEXT PRIMARY KEY, created_at TEXT NOT NULL);

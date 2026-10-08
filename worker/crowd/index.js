@@ -53,6 +53,12 @@ async function readJson(request) {
   }
 }
 
+async function requireAdmin(env, request) {
+  const key = request.headers.get("x-admin-key") || "";
+  const ok = key.length >= 32 && (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first());
+  if (!ok) throw new HttpError(401, "unauthorized");
+}
+
 async function requireAuth(env, request, now) {
   const a = await authenticate(env, bearer(request), now);
   if (!a) throw new HttpError(401, "unauthorized");
@@ -331,6 +337,27 @@ const routes = {
     checkPassword(body.password);
     await clearFails(env, keys);
     return { token: await setPassword(env, participant, body.password, now), username: cred.username };
+  },
+
+  // ---- ממשק ניהול (דרך שרת ההערות בלבד): שיחות תמיכה של משתתפים מאומתים ומספרים כלליים. מפתח בכותרת x-admin-key.
+  "GET /admin/support": async ({ env, request }) => {
+    await requireAdmin(env, request);
+    const { results: threads } = await env.DB.prepare("SELECT participant, created_at, updated_at, status FROM support_threads ORDER BY updated_at DESC LIMIT 200").all();
+    const { results: msgs } = await env.DB.prepare("SELECT participant, author, text, created_at FROM support_messages WHERE participant IN (SELECT participant FROM support_threads ORDER BY updated_at DESC LIMIT 200) ORDER BY id").all();
+    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday").first();
+    return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
+  },
+  "POST /admin/support/reply": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    const text = String(body.text || "").trim().slice(0, 4000);
+    const participant = String(body.participant || "");
+    if (!text || !participant) throw bad("empty");
+    const at = iso(now);
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) SELECT ?, ?, 'team', ? WHERE EXISTS (SELECT 1 FROM support_threads WHERE participant = ?)").bind(participant, at, text, participant),
+      env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
+    ]);
+    return { ok: true };
   },
 
   "GET /support": async ({ env, request, now }) => {
