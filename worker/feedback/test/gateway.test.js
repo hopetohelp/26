@@ -102,3 +102,20 @@ describe("ממסר שמירה", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 });
+
+describe("ממסר הסטטיסטיקות הציבוריות", () => {
+  it("מעביר את הסטטיסטיקה ויומן ההחרגות בלי זהות", async () => {
+    for (const path of ["/dashboard", "/log"]) {
+      const fetch = vi.fn(async req => {
+        expect(new URL(req.url).pathname).toBe(path);
+        expect(req.method).toBe("GET");
+        expect(req.headers.has("authorization")).toBe(false);
+        return new Response('{"participants":12}');
+      });
+      const d = btoa(JSON.stringify({ path, method: "GET" }));
+      const response = await worker.fetch(new Request("https://feedback.example/relay", { method: "POST", headers: { origin: "https://hopetohelp.github.io" }, body: JSON.stringify({d}) }), { CROWD: {fetch} });
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({participants:12});
+    }
+  });
+});
