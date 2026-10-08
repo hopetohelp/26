@@ -1447,5 +1447,15 @@
   "access": [
    "blocked"
   ]
+ },
+ {
+  "id": "2026-10-07-direct-polls-i24-news",
+  "checkedAt": "2026-10-08",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-fa0f56f4",
+  "note": "12 הרשימות (סה\"כ 120), המכון, המזמין, תאריך השדה ומדגם 518 — תואמים לפרסום המקורי. הסקר טרם הופיע בוויקיפדיה; נקלט כהשלמה לאינדקס.",
+  "access": [
+   "direct"
+  ]
  }
 ]

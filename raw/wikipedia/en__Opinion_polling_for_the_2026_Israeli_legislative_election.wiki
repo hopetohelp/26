@@ -177,7 +177,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||7|Oct|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber7octp>{{cite web|date=7 October 2026|lang=he|title=סקר חדשות 14: איזנקוט מצמצם דרמטית את הפער מנתניהו|url=https://www.c14.co.il/article/1728552|access-date=8 October 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber7octp>{{cite web|date=7 October 2026|lang=he|title=סקר חדשות 14: איזנקוט מצמצם דרמטית את הפער מנתניהו|url=https://www.c14.co.il/article/1728516|access-date=8 October 2026 |work=Channel 14}}</ref>
 |2175
 |style="background:#BBCDE4" |'''31'''
 |8
@@ -296,7 +296,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||1|Oct|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber1octp>{{cite web|date=1 October 2026|lang=he|title=מתקרבים לרגע האמת: כך נראית מפת המנדטים המעודכנת|url=https://www.c14.co.il/article/1716250|access-date=4 October 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber1octp>{{cite web|date=1 October 2026|lang=he|title=מתקרבים לרגע האמת: כך נראית מפת המנדטים המעודכנת|url=https://www.c14.co.il/article/1720749|access-date=4 October 2026 |work=Channel 14}}</ref>
 |2175
 |style="background:#BBCDE4" |'''32'''
 |8
