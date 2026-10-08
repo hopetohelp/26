@@ -25,6 +25,7 @@
  *
  * אין מייל בכלל (הכרעת בעלים 6.10.2026): אין שליחת מיילים, אין איפוס במייל. השחזור = הקישור האישי.
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
+ *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
  */
 
@@ -183,6 +184,33 @@ export interface LogEntry {
   reason: string;
   decision: "pending" | "excluded" | "restored";
   aggregationId: string;
+}
+
+/** הפרסום המאוחר מבין השניים (לפי publishedAt). */
+export function newerDashboard(a: Dashboard | null, b: Dashboard): Dashboard {
+  return a && (a.publishedAt ?? "") > (b.publishedAt ?? "") ? a : b;
+}
+
+async function fetchDashboard(url: string): Promise<Dashboard> {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { cache: "no-store", signal: ctl.signal });
+    const data = await res.json() as Dashboard;
+    if (!res.ok || typeof data?.participants !== "number") throw new Error("invalid dashboard");
+    return data;
+  } finally { clearTimeout(timer); }
+}
+
+/** העותק שמתפרסם עם האתר (dashboard.json) — נטען מכתובת האתר עצמו, בלי שרת ההשתתפות. */
+export const siteDashboard = () => fetchDashboard(`${import.meta.env.BASE_URL}dashboard.json`);
+
+/** הנתונים העדכניים מהשרת, בשקט: בלי ממסר ובלי דיווח כשל, כי העותק שבאתר מוצג בכל מקרה. */
+export async function liveDashboard(): Promise<Dashboard> {
+  for (const base of BASES) {
+    try { return await fetchDashboard(base + "/dashboard"); } catch { /* המסלול הבא */ }
+  }
+  throw new CrowdError(0, "network");
 }
 
 export class CrowdError extends Error {

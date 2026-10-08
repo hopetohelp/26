@@ -1,14 +1,14 @@
 import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
 import { Card, Split } from "../../components/ui";
-import { call, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { liveDashboard, newerDashboard, siteDashboard, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
-import { seatsFmt } from "../../lib/format";
+import { date, seatsFmt } from "../../lib/format";
 import { GOV_IDS, k25VoteName, nameOf, POLL_SHARES, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
-import { errorText, type useSession } from "./useCrowd";
+import type { useSession } from "./useCrowd";
 
 type Subject = "seats" | "pct";
 type View = "table" | "chart";
@@ -16,6 +16,7 @@ type View = "table" | "chart";
 const range = (s: SeatStat) => s.min === s.max ? "" : `${seatsFmt(s.min)}–${seatsFmt(s.max)}`;
 const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
 const v2022Name = (k: string) => V2022_LABEL[k] ?? k25VoteName(k);
+const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 const pctOf = (cell: Cell) => cell.of ? Math.round((cell.n / cell.of) * 1000) / 10 : 0;
 
 export default function Dashboard({ session }: { session: ReturnType<typeof useSession> }) {
@@ -25,22 +26,28 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
+  // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
   useEffect(() => {
-    if (!session.online) return;
-    call<D>("/dashboard").then(setD).catch((e) => setErr(errorText(e)));
-  }, [session.online]);
+    let alive = true;
+    let shown = false;
+    const show = (x: D) => { if (!alive) return; shown = true; setD(prev => newerDashboard(prev, x)); };
+    void Promise.allSettled([siteDashboard().then(show), liveDashboard().then(show)])
+      .then(() => { if (alive && !shown) setErr("הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות."); });
+    return () => { alive = false; };
+  }, []);
 
-  if (!session.online) return <Notice>הסטטיסטיקות יוצגו כשהחיבור לשרת יהיה פעיל.</Notice>;
   if (err) return <Notice tone="warn">{err}</Notice>;
   if (!d) return <p className="text-ink-soft">טוען…</p>;
 
+  const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   return (
     <Split primary={<>
       <div className="mb-4"><Notice tone="warn">{d.participants < 30 ? "מעט משתתפים — הנתונים אינם מייצגים את הציבור." : "השערות הגולשים אינן מדגם מייצג."}</Notice></div>
-      <p className="font-display text-2xl mb-4">{d.participants} משתתפים בסך הכול</p>
-      {d.seats && <PersonalBlocs title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={d.publishedAt ?? "הפרסום האחרון"} datasets={[
-        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf: d.publishedAt ?? "הפרסום האחרון" },
+      <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
+      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל־{asOf}</p>}
+      {d.seats && <PersonalBlocs title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
+        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
         { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
         ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
       ]} />}
