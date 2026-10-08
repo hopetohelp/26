@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import MyData from "./guess/MyData";
 import { Btn, Notice } from "./guess/ui";
 import { Split } from "../components/ui";
-import { errorText, useSession } from "./guess/useCrowd";
+import { ensureSession, errorText, useSession } from "./guess/useCrowd";
 import { FEEDBACK_URL, accountSupport, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { LegacyFeedback } from "./MyFeedback";
 import { WELCOME, markSupportSeen } from "../lib/supportUnread";
@@ -45,9 +45,11 @@ export default function Support() {
     const message = topicMessage(topic, text);
     setBusy(true); setError(null);
     try {
-      if (session.token) {
-        if (pending.current?.text !== message || pending.current.token !== session.token) pending.current = { token: session.token, text: message, op_id: crypto.randomUUID() };
-        setThread(await accountSupport(session.token, { text: message, op_id: pending.current.op_id, website: trap }));
+      // בלי חשבון — נוצר חשבון אורח עם קישור אישי בהודעה הראשונה (הכרעת בעלים 9.10.2026); אם השרת לא זמין — שיחה בקישור כמו קודם
+      const token = session.token ?? await ensureSession();
+      if (token) {
+        if (pending.current?.text !== message || pending.current.token !== token) pending.current = { token, text: message, op_id: crypto.randomUUID() };
+        setThread(await accountSupport(token, { text: message, op_id: pending.current.op_id, website: trap }));
         pending.current = null;
       } else {
         const primary = await mergeSavedThreads();
@@ -65,7 +67,8 @@ export default function Support() {
     finally { setBusy(false); }
   }
 
-  if (!session.online && !FEEDBACK_URL) return <Notice>התמיכה תיפתח יחד עם השמירה באתר.</Notice>;
+  if (!FEEDBACK_URL) return <Notice>התמיכה תיפתח יחד עם השמירה באתר.</Notice>;
+  const unregistered = !session.token || session.me?.guest;
 
   return <>
     <Split secondaryFirst title="תמיכה" lead="כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם." primary={<section>
@@ -78,7 +81,7 @@ export default function Support() {
           <Bubble m={WELCOME} />
           {thread?.messages.map((m, i) => <Bubble key={i} m={m} />)}
         </ol>
-        {!thread && <p className="text-sm text-ink-soft">אפשר לכתוב לנו גם בלי חשבון.</p>}
+        {unregistered && <Notice>אפשר לכתוב גם בלי להירשם. שימו לב: הכניסה נשמרת רק בדפדפן הזה, באופן זמני. ממכשיר אחר אפשר לחזור לשיחה רק עם הקישור האישי, שנוצר עם ההודעה הראשונה. מומלץ להירשם עם שם משתמש וסיסמה.</Notice>}
         {thread?.status !== "closed" && <div className="space-y-2">
           <fieldset disabled={busy} className="space-y-2">
             <legend className="font-bold">סוג הפנייה</legend>

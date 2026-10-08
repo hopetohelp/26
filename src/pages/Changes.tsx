@@ -4,7 +4,7 @@ import { historicalBlocValues } from "../lib/personalBlocs";
 import { DEFAULT_BLOCS, normalizeBlocs } from "./guess/model";
 import { useEffect, useRef, useState } from "react";
 import { call } from "../lib/crowdApi";
-import { useSession } from "./guess/useCrowd";
+import { ensureSession, useSession } from "./guess/useCrowd";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
@@ -160,11 +160,9 @@ export default function Changes() {
   const setCamps = (c: CampMap) => {
     setCampsState(c);
     saveCamps(c);
-    if (!session.token) return;
     window.clearTimeout(timer.current);
-    const token = session.token;
     timer.current = window.setTimeout(() => {
-      call("/prefs", { token, body: { camps: c } }).then(() => setCampsError(false), () => setCampsError(true));
+      void ensureSession().then((token) => { if (token) void call("/prefs", { token, body: { camps: c } }).then(() => setCampsError(false), () => setCampsError(true)); });
     }, 800);
   };
   const campAlt = campAlternative(camps);
@@ -204,7 +202,7 @@ export default function Changes() {
       </>} secondary={<>
       {editing && view !== "party" && (
         <Card title="המחנות שלי">
-          <p className="text-sm text-ink-soft mb-3">לכל רשימה של היום — לאיזה מחנה של 2022 להשוות אותה. השינוי משמש גם בהשוואת הגושים, ו{session.token ? "נשמר בחשבון שלכם" : "נשמר בדפדפן הזה. כדי לשמור אותו בחשבון — נכנסים ב\"הכנסת שלי\""}.</p>
+          <p className="text-sm text-ink-soft mb-3">לכל רשימה של היום — לאיזה מחנה של 2022 להשוות אותה. השינוי משמש גם בהשוואת הגושים, ו{session.token ? "נשמר בחשבון שלכם" : "בשינוי הראשון נוצר לכם קישור אישי, והשינוי נשמר בחשבון"}.</p>
           {campsError && <p role="alert" className="text-sm text-warn mb-2">השמירה בחשבון לא הצליחה כרגע. השינוי נשמר בדפדפן.</p>}
           <ul className="divide-y divide-paper-line">
             {LISTS_NOW.map((id) => (

@@ -28,11 +28,12 @@ describe("בדיקת חיבור", () => {
 });
 
 describe("שמירה בלי משתמש", () => {
-  it("אורח נשמר בשרת, בלי סיסמה ובלי קישור אישי; /me מסמן אורח", async () => {
+  it("אורח נשמר בשרת, בלי סיסמה ועם קישור אישי שמכניס אליו; /me מסמן אורח", async () => {
     const g = await call("/auth/guest", { body: {} });
     expect(g.status).toBe(200);
     expect(g.data.token).toMatch(/^[\w-]{20,}$/);
-    expect(g.data.link).toBeUndefined();
+    expect(g.data.link).toMatch(/^[\w-]{20,}$/);
+    expect((await call("/auth/link", { body: { link: g.data.link } })).status).toBe(200);
     expect((await save(g.data.token)).status).toBe(200);
     const me = await call("/me", { token: g.data.token });
     expect(me.data).toMatchObject({ username: null, guest: true });
