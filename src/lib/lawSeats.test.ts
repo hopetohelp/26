@@ -32,3 +32,15 @@ describe("seatsFromPct — guess by vote percentages through the law engine", ()
     expect(seatsFromPct(IDS, { ...pct, likud: 60 })).toBeNull();
   });
 });
+
+describe("אחוזים מעוגלים לא יוצרים הגרלה", () => {
+  it("קלט ברירת המחדל עם אחוזים זהים מחזיר תוצאה של 120", async () => {
+    const { allocate } = await import("../engine/baderOfer");
+    const ids = ["likud","yashar","together","democrats","yb","shas","utj","otzma","rzp","joint","raam","reservists","bluewhite","amcha","haredi_public"];
+    const vals = [16,17.1,9.3,7.1,6.7,5.9,6.3,6.3,4.8,6.3,4.1,3.3,1.1,3.3,0.8];
+    const valid = validVotes(7560000, 70);
+    const r = allocate(sharesToVotes(ids, Object.fromEntries(ids.map((id, i) => [id, vals[i]])), valid), valid, AGREEMENTS_2026);
+    expect(r.status).toBe("ok");
+    expect(Object.values(r.seats).reduce((a, b) => a + b, 0)).toBe(120);
+  });
+});

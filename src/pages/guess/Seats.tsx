@@ -42,6 +42,14 @@ export default function Seats({
   const typedFrom = useRef<Record<string, number>>({});
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
 
+  /** נקודת פתיחה שמכבדת יעד שכבר נכתב לגוש (הכרעת בעלים 8.10.2026): בכל שלוש האפשרויות, ההשלמה מתאימה את הגושים ליעד */
+  const startWithTargets = (start: SeatsPayload["start"]): SeatsPayload => {
+    const base = startSeats(start);
+    if (!blocs?.blocs.some((b) => b.target !== null)) return base;
+    const r = fillAll(IDS, base.seats, POLLS, blocs.blocs, POLL_RANGES);
+    return r.ok ? { ...base, seats: r.seats, pollsAsOf: POLLS_AS_OF } : base;
+  };
+
   if (!p) {
     return (
       <div>
@@ -52,7 +60,7 @@ export default function Seats({
             <button
               key={o.id}
               type="button"
-              onClick={() => unit.setDraft(startSeats(o.id))}
+              onClick={() => unit.setDraft(startWithTargets(o.id))}
               className="text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
             >
               <span className="font-display text-3xl leading-none block mb-1">{o.title}</span>

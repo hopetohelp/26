@@ -58,8 +58,13 @@ export default function Blocs({ unit, session, mySeats }: {
           {p.blocs.length > 1 && <Btn onClick={() => setBlocs(removeBloc(p.blocs, b.id))}>מחיקת הגוש</Btn>}
         </section>;
       })}
+      {p.blocs.length < MAX_BLOCS && <button type="button" onClick={() => setBlocs([...p.blocs, { id: `b-${crypto.randomUUID().slice(0, 20)}`, name: `גוש ${p.blocs.length + 1}`, lists: [], target: null }])}
+        className="min-h-[10rem] flex flex-col items-center justify-center gap-2 bg-paper-card border-2 border-dashed border-paper-line hover:border-ink rounded-theme p-4 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal">
+        <span aria-hidden="true" className="text-4xl leading-none font-bold">+</span>
+        <span className="font-display text-2xl">הוספת גוש</span>
+        <span className="text-sm text-ink-soft">{p.blocs.length}/{MAX_BLOCS} גושים</span>
+      </button>}
     </div>
-    <Btn disabled={p.blocs.length >= MAX_BLOCS} onClick={() => setBlocs([...p.blocs, { id: `b-${crypto.randomUUID().slice(0, 20)}`, name: `גוש ${p.blocs.length + 1}`, lists: [], target: null }])}>הוספת גוש ({p.blocs.length}/{MAX_BLOCS})</Btn>
     {invalid && <Notice tone="warn">{invalid}</Notice>}
     <SaveButton unit={unit} session={session} invalid={invalid} />
   </div>;

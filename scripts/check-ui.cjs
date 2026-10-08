@@ -124,9 +124,9 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').waitFor({timeout:5000});
  assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1,'copy preserves source');
- await page.getByRole('button',{name:'הוספת גוש (4/5)',exact:true}).click();
+ await page.getByRole('button',{name:/^הוספת גוש/}).click();
  assert.equal(await page.locator('[data-bloc-id]').count(),5);
- assert.equal(await page.getByRole('button',{name:'הוספת גוש (5/5)',exact:true}).isDisabled(),true);
+ assert.equal(await page.getByRole('button',{name:/^הוספת גוש/}).count(),0);
  const fifth=page.locator('[data-bloc-id]').last();
  await fifth.getByRole('button',{name:'מחיקת הגוש',exact:true}).click();
  assert.equal(await page.locator('[data-bloc-id]').count(),4);
