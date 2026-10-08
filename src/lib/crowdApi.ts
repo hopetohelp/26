@@ -113,6 +113,8 @@ export interface Me {
   google: boolean;
   /** נשמר בלי שם משתמש וסיסמה (POST /auth/guest): אי אפשר לשחזר אם הסשן אבד */
   guest: boolean;
+  /** העדפות שאינן השערה (POST /prefs): המחנות במסך "מה השתנה" */
+  prefs?: { camps: Record<string, string> | null };
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */

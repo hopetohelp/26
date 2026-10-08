@@ -1,5 +1,6 @@
 import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { Card } from "../../components/ui";
 import { liveDashboard, newerDashboard, siteDashboard, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
@@ -27,6 +28,8 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => setSlot(document.getElementById("community-blocs")), []);
   useEffect(() => {
     let alive = true;
     let shown = false;
@@ -41,16 +44,18 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
+  // במסך סקר האתר כרטיס הגושים שלי בטור הצר (הכרעת בעלים 8.10.2026) — Guess מציב שם מקום ריק
+  const blocsCard = d.seats ? <PersonalBlocs compact={!!slot} title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
+        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
+        { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
+        ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
+      ]} /> : null;
   return (
     <div>
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
       {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל־{asOf}</p>}
-      {d.seats && <PersonalBlocs title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
-        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
-        { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
-        ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
-      ]} />}
+      {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />

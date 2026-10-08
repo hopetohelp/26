@@ -11,7 +11,7 @@
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
 import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
-import { validateSave, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
+import { validateSave, validateCamps, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 
@@ -136,7 +136,21 @@ const routes = {
     const latest = Object.fromEntries((results || []).map((r) => [r.unit, parseVersion(r)]));
     const pw = await passwordCred(env, participant);
     const g = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
-    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g };
+    const pref = await env.DB.prepare("SELECT camps FROM prefs WHERE participant = ?").bind(participant).first();
+    const camps = pref?.camps ? JSON.parse(pref.camps) : null;
+    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps } };
+  },
+
+  // העדפות אישיות (המחנות) — נשמרות על המשתמש, בלי גרסאות ובלי השפעה על הסטטיסטיקות
+  "POST /prefs": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const r = validateCamps(body.camps);
+    if (!r.ok) throw bad("invalid", { field: r.error });
+    if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
+    await env.DB.prepare("INSERT INTO prefs (participant, camps, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET camps = excluded.camps, updated_at = excluded.updated_at")
+      .bind(participant, JSON.stringify(r.value), iso(now))
+      .run();
+    return { ok: true, camps: r.value };
   },
 
   "POST /save": async ({ env, request, now, body }) => {
@@ -179,6 +193,7 @@ const routes = {
       participant: p.id,
       created_at: p.created_at,
       underReview: !!p.review,
+      prefs: (await env.DB.prepare("SELECT camps, updated_at FROM prefs WHERE participant = ?").bind(participant).first()) ?? null,
       versions: versions.map((r) => ({ ...parseVersion(r), op_id: r.op_id, registry: r.registry })),
       credentials: creds,
       sessions: sessions.map((s) => ({ ...s, revoked: !!s.revoked })),
@@ -189,7 +204,7 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     if (body.confirm !== "מחק") throw bad("confirm");
     await env.DB.batch(
-      ["versions", "credentials", "sessions"]
+      ["versions", "credentials", "sessions", "prefs"]
         .map((t) => env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant))
         .concat([
           env.DB.prepare("DELETE FROM rate WHERE key = ?").bind("s:" + participant),

@@ -112,3 +112,10 @@ CREATE INDEX IF NOT EXISTS support_messages_participant ON support_messages(part
 
 -- ממשק ניהול: רק גיבוב של מפתח הניהול (המפתח עצמו אצל הבעלים בלבד, בקישור הניהול)
 CREATE TABLE IF NOT EXISTS admin_keys (hash TEXT PRIMARY KEY, created_at TEXT NOT NULL);
+
+-- העדפות אישיות שאינן השערה ואינן נכנסות לסטטיסטיקות (כרגע: המחנות במסך "מה השתנה"). שורה אחת למשתתף.
+CREATE TABLE IF NOT EXISTS prefs (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  camps TEXT,
+  updated_at TEXT NOT NULL
+);
