@@ -64,6 +64,21 @@ export interface ListInfo {
 }
 
 export const polls = pollsFile.polls as unknown as Poll[];
+
+/** סקר על קבוצת אוכלוסייה מסוימת (למשל מצביעים לראשונה) — מוצג בארכיון בלבד, מחוץ לכל סטטיסטיקה של כלל הציבור */
+export interface SubgroupPoll {
+  id: string;
+  start: string;
+  end: string;
+  firmHe: string;
+  publisherHe: string;
+  population: string;
+  sample: number;
+  values: Record<string, { s?: number; p?: number }>;
+  urls: string[];
+  note?: string;
+}
+export const subgroupPolls = ((pollsFile as { subgroupPolls?: unknown }).subgroupPolls ?? []) as SubgroupPoll[];
 export const meta = metaFile as unknown as {
   dataAsOf: string;
   electionDay: string;

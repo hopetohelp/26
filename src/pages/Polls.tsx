@@ -1,12 +1,12 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { Badge, Card, Note, Split } from "../components/ui";
-import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, verificationLabel, type Poll } from "../lib/data";
+import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const PAGE = 50;
 
-function valuesText(p: Poll) {
+function valuesText(p: Pick<Poll, "values"> | SubgroupPoll) {
   return Object.entries(p.values)
     .sort(([, a], [, b]) => (b.s ?? -1) - (a.s ?? -1))
     .map(([id, v]) => `${listName(id)} ${v.s ?? `(${v.p}%)`}`)
@@ -162,6 +162,35 @@ export default function Polls() {
           העדכון האחרון: {date(polls[0]?.end ?? "")}.
         </Note>
       </Card>
+      {subgroupPolls.length > 0 && (
+        <Card>
+          <h2 className="font-bold text-lg">סקרים על קבוצת אוכלוסייה מסוימת</h2>
+          <p className="text-sm text-ink-soft mt-1">
+            סקרים שנשאלה בהם רק קבוצה אחת (למשל צעירים), ולכן אינם מייצגים את כלל הציבור. הם מוצגים כאן לעיון בלבד.
+          </p>
+          <ul className="divide-y divide-paper-line mt-2">
+            {subgroupPolls.map((p) => (
+              <li key={p.id} className="py-3 min-w-0">
+                <div className="flex flex-wrap gap-x-3 gap-y-1 items-baseline">
+                  <span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span>
+                  <span>{p.firmHe} · {p.publisherHe}</span>
+                  <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>
+                  <Badge>לא נכנס לסטטיסטיקות של כלל הציבור</Badge>
+                </div>
+                <p className="text-sm mt-1"><span className="font-bold">האוכלוסייה:</span> {p.population}</p>
+                <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
+                {p.note && <p className="text-sm text-ink-soft mt-1">{p.note}</p>}
+                <p className="text-sm mt-1 break-all">
+                  פרסום מקורי:{" "}
+                  {p.urls.map((u) => (
+                    <a key={u} href={u} rel="noopener noreferrer">{u}</a>
+                  ))}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
       </>} />
     </>
   );
