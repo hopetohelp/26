@@ -173,3 +173,79 @@ describe("מסלולים חלופיים ובדיקת חיבור", () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("אבחון סופי של כל המסלולים", () => {
+  async function setup() {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser", connection: { effectiveType: "4g", rtt: 80 } });
+    return import("./crowdApi");
+  }
+  it("סטטיסטיקה עוברת בממסר בלי דיווח כשל", async () => {
+    const { call } = await setup();
+    const fetcher = vi.fn(async (url: string) => {
+      if (url.endsWith("/relay")) return new Response('{"participants":12}');
+      if (url.endsWith("/diag")) return new Response('{}');
+      throw new TypeError("Failed to fetch");
+    });
+    vi.stubGlobal("fetch", fetcher);
+    expect(await call("/dashboard")).toEqual({ participants: 12 });
+    expect(fetcher.mock.calls.some(([url]) => url.endsWith("/autoreport"))).toBe(false);
+  });
+  it("דיווח אחד רק לאחר כשל הממסר, עם שלושת הניסיונות וללא פרטים אישיים", async () => {
+    const { call } = await setup();
+    const fetcher = vi.fn(async (url: string) => {
+      if (url.endsWith("/autoreport")) return new Response('{}');
+      throw new TypeError("Failed to fetch secret-password secret-token");
+    });
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/auth/login", { token: "secret-token", body: { password: "secret-password" } })).rejects.toMatchObject({ diagnostic: { attempts: [{route:"gateway"},{route:"direct"},{route:"relay"}], connection: { rtt: 80 } } });
+    expect(fetcher.mock.calls.map(([url]) => url)).toEqual(["https://feedback.example/crowd/auth/login", "https://crowd.example/auth/login", "https://feedback.example/relay", "https://feedback.example/autoreport"]);
+    const log = String((fetcher.mock.calls[3] as unknown as [string, RequestInit])[1].body);
+    expect(log).not.toContain("secret-password");
+    expect(log).not.toContain("secret-token");
+  });
+  it("כשל HTTP בממסר אינו נספר כהצלחה ונכלל בדיווח", async () => {
+    const { call } = await setup();
+    const fetcher = vi.fn(async (url: string) => {
+      if (url.endsWith("/relay")) return new Response('{"error":"offline"}', {status:503});
+      if (url.endsWith("/autoreport")) return new Response('{}');
+      throw new TypeError("Failed to fetch");
+    });
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/dashboard")).rejects.toMatchObject({status:503,diagnostic:{attempts:[{route:"gateway"},{route:"direct"},{route:"relay",status:503}]}});
+    expect(fetcher.mock.calls.some(([url]) => url.endsWith("/diag"))).toBe(false);
+    expect(fetcher.mock.calls.filter(([url]) => url.endsWith("/autoreport"))).toHaveLength(1);
+  });
+});
+
+describe("בקשה תקועה ותשובה שאינה JSON", () => {
+  it("מפסיק ניסיון תקוע וממשיך למסלול הישיר", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    vi.useFakeTimers();
+    try {
+      vi.stubGlobal("fetch", vi.fn((url: string, init: RequestInit) => {
+        if (url.includes("/crowd/")) return new Promise((_resolve, reject) => init.signal!.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError"))));
+        return Promise.resolve(new Response('{}'));
+      }));
+      const result = call("/dashboard");
+      await vi.advanceTimersByTimeAsync(15000);
+      await expect(result).resolves.toEqual({});
+    } finally { vi.useRealTimers(); }
+  });
+  it("אינו מציג תשובת HTML כהצלחה ואינו מעתיק את תוכנה לאבחון", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn(async (url: string) => new Response(url.endsWith("/autoreport") ? '{}' : '<html>private-proxy-content</html>', {headers:{'content-type':'text/html'}}));
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/dashboard")).rejects.toMatchObject({code:"invalid_response",diagnostic:{stage:"response-json",attempts:[{contentType:"text/html"}]}});
+    expect(String((fetcher.mock.calls[1] as unknown as [string,RequestInit])[1].body)).not.toContain('private-proxy-content');
+  });
+});
