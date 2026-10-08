@@ -53,7 +53,8 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
     const def = startingShares();
     const stored = unit.draft?.calculation;
     const s = params.get("cs")?.split("_").map(Number);
-    const shares = s && s.length === IDS.length && s.every((x) => Number.isFinite(x) && x >= 0 && x <= 100 && Math.abs(x * 10 - Math.round(x * 10)) < 1e-6) ? Object.fromEntries(IDS.map((id, i) => [id, s[i]])) : unit.draft?.mode === "pct" && unit.draft.pct ? unit.draft.pct : def;
+    // קישור שנוצר לפני שנוספו רשימות קצר יותר: הרשימות החדשות מתחילות ב-0
+    const shares = s && s.length >= 1 && s.length <= IDS.length && s.every((x) => Number.isFinite(x) && x >= 0 && x <= 100 && Math.abs(x * 10 - Math.round(x * 10)) < 1e-6) ? Object.fromEntries(IDS.map((id, i) => [id, s[i] ?? 0])) : unit.draft?.mode === "pct" && unit.draft.pct ? unit.draft.pct : def;
     return {
       shares,
       turnout: Number(params.get("ct")) || stored?.turnout || DEFAULT_TURNOUT,
