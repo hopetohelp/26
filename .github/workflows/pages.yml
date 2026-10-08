@@ -5,6 +5,8 @@ on:
   schedule:
     # כל ערב ב-21:30 שעון ישראל (קיץ) — רענון הנתונים והבנייה
     - cron: "30 18 * * *"
+    # כל שעה — עותק עדכני של הסטטיסטיקות בתוך האתר (dashboard.json)
+    - cron: "20 * * * *"
   workflow_dispatch:
 permissions:
   contents: read
@@ -35,6 +37,19 @@ jobs:
           # כפתור "הערה?" — השרת הקטן ב-worker/feedback (Cloudflare). בלי המשתנה הכפתור אינו מוצג.
           VITE_FEEDBACK_URL: https://elections26-feedback.hopetohelp-il.workers.dev
           VITE_CROWD_URL: https://elections26-crowd.hopetohelp-il.workers.dev
+      - name: עותק הסטטיסטיקות בתוך האתר — מוצג לכולם גם בלי חיבור לשרת ההשתתפות
+        run: |
+          set -uo pipefail
+          valid() { node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); if (typeof d.participants !== "number") process.exit(1)' "$1"; }
+          if curl --fail --silent --show-error --retry 3 --max-time 30 https://elections26-crowd.hopetohelp-il.workers.dev/dashboard -o /tmp/dashboard.json && valid /tmp/dashboard.json; then
+            echo "עותק חדש מהשרת"
+          elif curl --fail --silent --show-error --retry 2 --max-time 30 https://hopetohelp.github.io/26/dashboard.json -o /tmp/dashboard.json && valid /tmp/dashboard.json; then
+            echo "::warning::השרת לא ענה — נשאר העותק הקודם שבאתר"
+          else
+            echo "::warning::אין עותק סטטיסטיקות — המסך ינסה את השרת בלבד"
+            exit 0
+          fi
+          cp /tmp/dashboard.json dist/dashboard.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

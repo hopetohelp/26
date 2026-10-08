@@ -269,3 +269,13 @@ describe("בקשה תקועה ותשובה שאינה JSON", () => {
     expect(String((fetcher.mock.calls[1] as unknown as [string,RequestInit])[1].body)).not.toContain('private-proxy-content');
   });
 });
+
+describe("סטטיסטיקות בלי שרת: העותק שבאתר מול השרת", () => {
+  const dash = (publishedAt: string | null) => ({ publishedAt, aggregationId: null, participants: 1, open: true });
+  it("מציג את הפרסום המאוחר יותר", async () => {
+    const { newerDashboard } = await import("./crowdApi");
+    expect(newerDashboard(null, dash("2026-10-08T10:00:00Z")).publishedAt).toBe("2026-10-08T10:00:00Z");
+    expect(newerDashboard(dash("2026-10-08T11:00:00Z"), dash("2026-10-08T10:00:00Z")).publishedAt).toBe("2026-10-08T11:00:00Z");
+    expect(newerDashboard(dash("2026-10-08T10:00:00Z"), dash("2026-10-08T11:00:00Z")).publishedAt).toBe("2026-10-08T11:00:00Z");
+  });
+});
