@@ -26,7 +26,7 @@ export interface Poll {
   urls: string[];
   verified: boolean;
   verification?: {
-    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch";
+    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch" | "secondary";
     checkedAt: string;
     source: string | null;
     details: { published?: string | null; population?: string | null; moe?: string | number | null; method?: string | null; sample_respondents?: number | null };
@@ -36,6 +36,7 @@ export interface Poll {
 }
 
 export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "warn" | "neutral" }> = {
+  secondary: { text: "מקור משני", tone: "neutral" },
   match: { text: "אומת מול המקור", tone: "ok" },
   corrected: { text: "תוקן לפי המקור", tone: "ok" },
   partial: { text: "אומת חלקית", tone: "neutral" },

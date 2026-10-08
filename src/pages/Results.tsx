@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { useState } from "react";
 import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
@@ -173,6 +174,8 @@ export default function Results() {
           <ul className="text-sm mt-2">{passing.map((l) => <li key={l.letters}>{l.short}: {a.withAll.whole[l.letters]} מנדטים שלמים לפני חלוקת העודפים</li>)}</ul>
         </Fold>
       </Card>
+
+      <PersonalBlocs historical mapping={e.knesset === 25 ? undefined : {}} values={Object.fromEntries(e.lists.map(l => [l.letters, l.seats]))} source={`תוצאות אמת ${e.label}; התאמות מובהקות בלבד`} asOf="התוצאות הסופיות" />
 
       <Card title="מה הזיזו הסכמי העודפים">
         <ul className="text-sm space-y-1 mb-3">

@@ -1,3 +1,4 @@
+import { useSearchParams as useCalculatorParams, Navigate as CalculatorRedirect } from "react-router-dom";
 import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
@@ -7,7 +8,6 @@ import Home from "./pages/Home";
 import Today from "./pages/Today";
 import Polls from "./pages/Polls";
 import Trends from "./pages/Trends";
-import Calculator from "./pages/Calculator";
 import Results from "./pages/Results";
 import Voters from "./pages/Voters";
 import Method from "./pages/Method";
@@ -50,7 +50,7 @@ createRoot(document.getElementById("root")!).render(
             ]} />}
           />
           <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
-          <Route path="calculator" element={<Calculator />} />
+          <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess /></Suspense>} />
           <Route
             path="past"
@@ -83,3 +83,14 @@ createRoot(document.getElementById("root")!).render(
     </HashRouter>
   </StrictMode>,
 );
+
+function LegacyCalculator() {
+  const [params] = useCalculatorParams();
+  const next = new URLSearchParams(params);
+  for (const key of ["s", "t", "e", "a"]) {
+    const value = next.get(key);
+    if (value !== null) { next.set(`c${key}`, value); next.delete(key); }
+  }
+  next.set("section", "calculator");
+  return <CalculatorRedirect replace to={`/guess?${next}`} />;
+}

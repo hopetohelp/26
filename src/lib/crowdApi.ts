@@ -56,6 +56,8 @@ export interface SeatsPayload {
   start: "zero" | "k25" | "polls";
   /** תאריך תמונת ממוצע הסקרים ששימשה (פתיחה או "השלם הכול") */
   pollsAsOf: string | null;
+  /** קלט המחשבון לצורך שחזור השערה שמורה. */
+  calculation?: { turnout: number; eligible: number; agreements: string[][] };
 }
 
 export interface Bloc {

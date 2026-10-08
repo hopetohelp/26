@@ -65,7 +65,7 @@ describe("participant & saves", () => {
     expect((await save(tok, "seats", bad)).data).toMatchObject({ error: "invalid", field: "sum" });
     const blocs = { mode: "gov37", blocs: [{ id: "gov", name: "א", lists: [IDS[0]], target: 60 }, { id: "rest", name: "ב", lists: [], target: 60 }] };
     expect((await save(tok, "blocs", blocs)).status).toBe(200);
-    expect((await save(tok, "blocs", { ...blocs, blocs: [{ ...blocs.blocs[0], target: 70 }, blocs.blocs[1]] })).status).toBe(400);
+    expect((await save(tok, "blocs", { ...blocs, blocs: [{ ...blocs.blocs[0], target: 70 }, blocs.blocs[1]] })).status).toBe(200);
     const a = await save(tok, "seats", seats(30), "same-op-123");
     const b = await save(tok, "seats", seats(90), "same-op-123");
     expect(b.data.version.id).toBe(a.data.version.id);

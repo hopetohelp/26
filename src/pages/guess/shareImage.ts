@@ -1,5 +1,5 @@
 /**
- * תמונת שיתוף להשערה (PNG, ‏1080×1350): חצי העיגול של 120 המושבים, הרשימות הגדולות וכתובת האתר.
+ * תמונת שיתוף להשערה (PNG, רוחב 1080 וגובה 1350 ומעלה לפי מספר הגושים): חצי העיגול של 120 המושבים, הרשימות הגדולות וכתובת האתר.
  * הצבעים נקראים ממשתני ה-CSS של העיצוב הפעיל (בהיר/חשוך, מקצועי/חדשותי) — אין כאן צבע קבוע, מלבד צבעי הרשימות
  * הניטרליים מ-src/lib/colors.ts. הטקסט מימין לשמאל. בלי המלצה ובלי אימוג'י.
  */
@@ -22,7 +22,7 @@ export interface ShareImageInput {
   values: Record<string, number>;
   pct?: Record<string, number>;
   username?: string;
-  /** גושים, אם נקבע להם יעד: שם וסכום מנדטים (src/pages/guess/blocSummary.ts) */
+  /** תרחישים עצמאיים: שם וסכום מנדטים (src/pages/guess/blocSummary.ts) */
   blocs?: BlocTotal[];
 }
 
@@ -47,7 +47,9 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
 
   const cv = document.createElement("canvas");
   cv.width = IMG_W;
-  cv.height = IMG_H;
+  const blocHeight = blocs?.length ? 44 + blocs.length * 46 : 0;
+  const imageHeight = IMG_H + Math.max(0, blocHeight - 54);
+  cv.height = imageHeight;
   const ctx = cv.getContext("2d")!;
   ctx.direction = "rtl";
   const R = IMG_W - 72; // קצה ימני לטקסט
@@ -68,20 +70,19 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
   ctx.font = `400 34px ${body}`;
   ctx.fillText(pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר", R, 196);
 
-  // שורת הגושים (אם יש): "גוש א 61 · גוש ב 59" — בולט וקריא גם כשמצמצמים את התמונה
+  // כל תרחיש בשורה משלו — גם חמישה שמות ארוכים אינם נחתכים.
   if (blocs?.length) {
-    const line = blocs.map((b) => `${b.name} ${b.total}`).join("  ·  ");
-    let bs = 44;
-    do ctx.font = `700 ${bs}px ${body}`;
-    while (ctx.measureText(line).width > R - L && --bs > 26);
     ctx.fillStyle = c.ink;
-    ctx.fillText(line, R, 256);
+    ctx.font = `400 26px ${body}`;
+    ctx.fillText("תרחישים עצמאיים וחופפים — אין לחבר את הסכומים", R, 228, R - L);
+    ctx.font = `700 34px ${body}`;
+    blocs.forEach((b, i) => ctx.fillText(`${b.name}: ${b.total} מנדטים`, R, 274 + i * 46, R - L));
   }
 
   // חצי העיגול — אותם מיקומים כמו בלוח שבאתר (viewBox ‏2.2×1.12)
   const { order, fills } = seatFills(values);
   const scale = (IMG_W - 2 * L) / 2.2;
-  const top = blocs?.length ? 290 : 236;
+  const top = 236 + blocHeight;
   SEATS.forEach((s, k) => {
     const f = fills[k];
     ctx.beginPath();
@@ -140,19 +141,19 @@ export async function renderShareImage({ values, pct, username, blocs }: ShareIm
 
   // תחתית: קריאה לפעולה + כתובת
   ctx.fillStyle = c.card === c.bg ? c.line : c.card;
-  ctx.fillRect(0, IMG_H - 176, IMG_W, 176);
+  ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
   ctx.textAlign = "right";
   ctx.fillStyle = c.ink;
   const cta = "ומה אתם מנחשים? בנו את הכנסת שלכם";
   let size = 64;
   do ctx.font = `700 ${size}px ${display}`;
   while (ctx.measureText(cta).width > R - L && --size > 30);
-  ctx.fillText(cta, R, IMG_H - 100);
+  ctx.fillText(cta, R, imageHeight - 100);
   ctx.fillStyle = c.soft;
   ctx.font = `700 34px ${body}`;
   ctx.direction = "ltr";
   ctx.textAlign = "right";
-  ctx.fillText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, IMG_H - 48);
+  ctx.fillText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, imageHeight - 48);
 
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }

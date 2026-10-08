@@ -17,8 +17,8 @@ describe("blocSummary", () => {
       { name: "גוש ב", total: 59 },
     ]);
   });
-  it("אין יעד לאף גוש, או אין גושים — אין סיכום", () => {
-    expect(blocSummary(blocs(null, null), { x: 1 })).toBeUndefined();
+  it("ההרכב מופיע בשיתוף גם בלי יעד מספרי", () => {
+    expect(blocSummary(blocs(null, null), { x: 1 })).toEqual([{ name: "גוש א", total: 1 }, { name: "גוש ב", total: 0 }]);
     expect(blocSummary(null, { x: 1 })).toBeUndefined();
   });
 });

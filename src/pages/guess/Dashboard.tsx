@@ -1,3 +1,4 @@
+import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
 import { Card } from "../../components/ui";
 import { call, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
@@ -47,6 +48,8 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       ) : (
         d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={mine} view={view} unit="pct" /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
+      {d.seats && <PersonalBlocs values={Object.fromEntries(d.seats.full.map(row => [row.list, row.mean]))} source={`ממוצע השערות ${d.seats.n} המשתתפים; סכום ממוצעי המפלגות מאותו ציבור`} asOf={d.publishedAt ?? "הפרסום האחרון"} />}
+      {d.seats && <PersonalBlocs values={d.seats.polls} source="מנדטי הסקרים בהשוואת הסטטיסטיקות" asOf={d.seats.pollsAsOf ?? "הפרסום האחרון"} />}
       {d.blocs ? <BlocStats d={d} view={view} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>

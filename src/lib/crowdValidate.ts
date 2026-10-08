@@ -4,7 +4,7 @@ import { TOTAL } from "./fillAll";
 
 export const V2022_SPECIAL = ["other", "none", "blank", "ineligible", "private"] as const;
 export const V2026_SPECIAL = ["undecided", "none", "ineligible", "private"] as const;
-export const MAX_BLOCS = 4;
+export const MAX_BLOCS = 5;
 
 export function validateVote(p: VotePayload, ids2022: string[], ids2026: string[]): string | null {
   if (p.v2022 === null && p.v2026 === null) return "צריך למלא לפחות שדה אחד.";
@@ -40,19 +40,18 @@ export function validatePct(pct: Record<string, number>, ids: string[]): string 
 export function validateBlocs(p: BlocsPayload, ids: string[]): string | null {
   if (p.blocs.length === 0) return "אין גושים.";
   if (p.blocs.length > MAX_BLOCS) return `עד ${MAX_BLOCS} גושים.`;
-  const seen = new Set<string>();
+  const blocIds = new Set<string>();
   for (const b of p.blocs) {
-    if (!b.name.trim()) return "לכל גוש צריך שם.";
+    if (!/^[\w-]{1,32}$/.test(b.id) || blocIds.has(b.id)) return "מזהה גוש כפול או לא תקין.";
+    blocIds.add(b.id);
+    if (!b.name.trim() || b.name.length > 40) return "לכל גוש צריך שם עד 40 תווים.";
     if (b.target !== null && (!Number.isInteger(b.target) || b.target < 0 || b.target > TOTAL)) return "יעד חייב להיות מספר שלם בין 0 ל-120.";
+    const seen = new Set<string>();
     for (const id of b.lists) {
       if (!ids.includes(id)) return "רשימה לא מוכרת.";
-      if (seen.has(id)) return "רשימה יכולה להיות בגוש אחד לכל היותר.";
+      if (seen.has(id)) return "רשימה יכולה להופיע פעם אחת בתוך אותו גוש.";
       seen.add(id);
     }
   }
-  const targets = p.blocs.map((b) => b.target);
-  const sum = targets.reduce<number>((a, t) => a + (t ?? 0), 0);
-  if (sum > TOTAL) return `סכום היעדים ${sum}, יותר מ-120.`;
-  if (targets.every((t) => t !== null) && sum !== TOTAL) return `כשלכל הגושים יש יעד, הסכום חייב להיות 120 (כרגע ${sum}).`;
   return null;
 }

@@ -1,3 +1,4 @@
+import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
@@ -149,6 +150,7 @@ export default function Trends() {
           רשימות נפרדות, לא תמיכה ברשימה המאוחדת.
         </Note>
       </Card>
+      <PersonalBlocTrends source={source} from={from} to={to} days={days} minN={minN} />
     </>
   );
 }

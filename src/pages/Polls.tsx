@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { Badge, Card, Note, PageTitle } from "../components/ui";
 import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, VERIFICATION_LABEL, type Poll } from "../lib/data";
@@ -70,6 +71,7 @@ export default function Polls() {
         <ul className="divide-y divide-paper-line">
           {filtered.slice(0, shown).map((p) => {
             const isOpen = open === p.id;
+            const verificationLabel = p.verification ? VERIFICATION_LABEL[p.verification.status] ?? { text: "טרם הושלם האימות", tone: "neutral" as const } : null;
             return (
               <li key={p.id} className="py-3 min-w-0">
                 <button
@@ -83,14 +85,15 @@ export default function Polls() {
                   {p.sample && <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>}
                   {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
                   {p.verification ? (
-                    <Badge tone={VERIFICATION_LABEL[p.verification.status].tone === "ok" ? "ok" : VERIFICATION_LABEL[p.verification.status].tone === "warn" ? "warn" : "neutral"}>
-                      {VERIFICATION_LABEL[p.verification.status].text}
+                    <Badge tone={verificationLabel!.tone === "ok" ? "ok" : verificationLabel!.tone === "warn" ? "warn" : "neutral"}>
+                      {verificationLabel!.text}
                     </Badge>
                   ) : (
                     <Badge>מקור: ויקיפדיה</Badge>
                   )}
                 </button>
                 <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
+                <PersonalBlocs values={Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)]))} source={`סקר ${pollsterLabel(p)}`} asOf={date(p.end)} />
                 {isOpen && (
                   <dl className="mt-2 text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                     <dt className="font-bold">עורך הסקר</dt>
@@ -111,7 +114,7 @@ export default function Polls() {
                       <>
                         <dt className="font-bold">בדיקה מול המקור</dt>
                         <dd>
-                          {VERIFICATION_LABEL[p.verification.status].text} · נבדק {date(p.verification.checkedAt)}
+                          {verificationLabel!.text} · נבדק {date(p.verification.checkedAt)}
                         </dd>
                       </>
                     )}

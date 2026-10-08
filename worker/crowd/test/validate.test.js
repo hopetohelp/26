@@ -45,10 +45,20 @@ describe("validate", () => {
   it("blocs", () => {
     const b = (blocs) => validateBlocs({ mode: "custom", blocs });
     expect(b([{ id: "a", name: "", lists: [IDS[0]], target: 60 }, { id: "b", name: "", lists: [IDS[1]], target: null }]).ok).toBe(true);
-    expect(b([{ id: "a", name: "", lists: [], target: 60 }, { id: "b", name: "", lists: [], target: 50 }]).error).toBe("sum");
-    expect(b([{ id: "a", name: "", lists: [], target: 70 }, { id: "b", name: "", lists: [], target: null }, { id: "c", name: "", lists: [], target: 60 }]).error).toBe("sum");
-    expect(b([{ id: "a", name: "", lists: [IDS[0]], target: null }, { id: "b", name: "", lists: [IDS[0]], target: null }]).error).toBe("overlap");
-    expect(b("abcde".split("").map((id) => ({ id, name: "", lists: [], target: null }))).error).toBe("count");
+    expect(b([{ id: "a", name: "", lists: [], target: 60 }, { id: "b", name: "", lists: [], target: 50 }]).ok).toBe(true);
+    expect(b([{ id: "a", name: "", lists: [], target: 70 }, { id: "b", name: "", lists: [], target: null }, { id: "c", name: "", lists: [], target: 60 }]).ok).toBe(true);
+    expect(b([{ id: "a", name: "", lists: [IDS[0]], target: null }, { id: "b", name: "", lists: [IDS[0]], target: null }]).ok).toBe(true);
+    expect(b("abcdef".split("").map((id) => ({ id, name: "", lists: [], target: null }))).error).toBe("count");
+  });
+  it("שומר חמישה תרחישים חופפים ופרטי מחשבון; דוחה כפילות פנימית וקלט לא תקין", () => {
+    const blocs = Array.from({length:5}, (_,i)=>({id:`b${i}`,name:`תרחיש ${i}`,lists:[IDS[0]],target:80}));
+    expect(validateBlocs({mode:"custom",blocs}).ok).toBe(true);
+    expect(validateBlocs({mode:"custom",blocs:[{...blocs[0],lists:[IDS[0],IDS[0]]}]}).error).toBe("overlap");
+    const calculation = {eligible:7000000,turnout:71.5,agreements:[[IDS[0],IDS[1]]]};
+    const input = {...seats(60), mode:"pct", pct:{[IDS[0]]:50,[IDS[1]]:50}, calculation};
+    expect(save("seats",input).value.payload.calculation).toEqual(calculation);
+    expect(save("seats",{...input,calculation:{...calculation,turnout:101}}).error).toBe("calculation");
+    expect(save("seats",{...input,calculation:{...calculation,agreements:[[IDS[0],IDS[0]]]}}).error).toBe("calculation");
   });
   it("username", () => {
     expect(normalizeUsername("Dani_1").norm).toBe("dani_1");

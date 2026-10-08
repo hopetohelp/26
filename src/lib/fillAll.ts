@@ -15,6 +15,8 @@ export type FillError =
   | { kind: "bloc-over"; bloc: string; locked: number; target: number }
   | { kind: "bloc-locked-mismatch"; bloc: string; locked: number; target: number }
   | { kind: "targets-over"; sum: number }
+  | { kind: "overlap-impossible" }
+  | { kind: "search-limit" }
   | { kind: "no-eligible"; bloc: string | null; remainder: number }
   | { kind: "range-impossible"; bloc: string | null; target: number };
 
@@ -46,6 +48,8 @@ export function fillAll(ids: string[], cells: Record<string, SeatCell | undefine
   if (totalLocked > TOTAL) return { ok: false, error: { kind: "over-120", locked: totalLocked } };
 
   const targeted = blocs.filter((b) => b.target !== null);
+  const memberships = targeted.flatMap(b => b.lists);
+  if (new Set(memberships).size !== memberships.length) return fillOverlapping(ids, cells, polls, targeted, ranges);
   const targetSum = targeted.reduce((a, b) => a + (b.target ?? 0), 0);
   if (targetSum > TOTAL) return { ok: false, error: { kind: "targets-over", sum: targetSum } };
 
@@ -107,9 +111,58 @@ export function fillAll(ids: string[], cells: Record<string, SeatCell | undefine
   return { ok: true, seats: result, changed };
 }
 
+/** פתרון של אילוצים חופפים: סך הכנסת 120, ולכל גוש סכום עצמאי.
+ * חיפוש שלמים עם חסמים ומזכרון; ערכים הקרובים לסקרים נבדקים תחילה.
+ * מגבלת עבודה מונעת חסימת הממשק; אין תוצאה חלקית ואין דריסה של נעילות.
+ */
+function fillOverlapping(ids: string[], cells: Record<string, SeatCell | undefined>, polls: Record<string, number>, targeted: Bloc[], ranges: Record<string, [number, number]>): FillResult {
+  const groups = [{ lists: ids, target: TOTAL }, ...targeted.map(b => ({ lists: [...new Set(b.lists)], target: b.target! }))];
+  const free = ids.filter(id => !cells[id]?.locked).sort((a, b) => groups.filter(g => g.lists.includes(b)).length - groups.filter(g => g.lists.includes(a)).length || a.localeCompare(b));
+  const remaining = groups.map(g => g.target - g.lists.reduce((n, id) => n + (cells[id]?.locked ? cells[id]!.v : 0), 0));
+  const lo = free.map(id => Math.max(0, Math.ceil(ranges[id]?.[0] ?? 0)));
+  const hi = free.map((id, i) => Math.max(lo[i], Math.floor(ranges[id]?.[1] ?? (polls[id] > 0 ? TOTAL : 0))));
+  const member = free.map(id => groups.map(g => g.lists.includes(id)));
+  const suffixLo = Array.from({ length: free.length + 1 }, () => groups.map(() => 0));
+  const suffixHi = suffixLo.map(row => [...row]);
+  for (let i = free.length - 1; i >= 0; i--) for (let g = 0; g < groups.length; g++) {
+    suffixLo[i][g] = suffixLo[i + 1][g] + (member[i][g] ? lo[i] : 0);
+    suffixHi[i][g] = suffixHi[i + 1][g] + (member[i][g] ? hi[i] : 0);
+  }
+  const dead = new Set<string>();
+  const alloc: number[] = [];
+  let work = 0;
+  let limited = false;
+  const visit = (i: number, rem: number[]): boolean => {
+    if (++work > 100000) { limited = true; return false; }
+    if (rem.some((n, g) => n < suffixLo[i][g] || n > suffixHi[i][g])) return false;
+    if (i === free.length) return rem.every(n => n === 0);
+    const key = `${i}:${rem.join(",")}`;
+    if (dead.has(key)) return false;
+    let lower = lo[i], upper = hi[i];
+    for (let g = 0; g < groups.length; g++) if (member[i][g]) {
+      lower = Math.max(lower, rem[g] - suffixHi[i + 1][g]);
+      upper = Math.min(upper, rem[g] - suffixLo[i + 1][g]);
+    }
+    const choices = Array.from({ length: Math.max(0, upper - lower + 1) }, (_, n) => lower + n).sort((a, b) => Math.abs(a - (polls[free[i]] ?? 0)) - Math.abs(b - (polls[free[i]] ?? 0)) || a - b);
+    for (const value of choices) {
+      alloc[i] = value;
+      if (visit(i + 1, rem.map((n, g) => n - (member[i][g] ? value : 0)))) return true;
+      if (limited) return false;
+    }
+    dead.add(key);
+    return false;
+  };
+  if (!visit(0, remaining)) return { ok: false, error: { kind: limited ? "search-limit" : "overlap-impossible" } };
+  const seats: Record<string, SeatCell> = Object.fromEntries(ids.filter(id => cells[id]?.locked).map(id => [id, { ...cells[id]! }]));
+  free.forEach((id, i) => { seats[id] = { v: alloc[i], src: "filled", locked: false }; });
+  return { ok: true, seats, changed: free.filter(id => (cells[id]?.v ?? 0) !== seats[id].v) };
+}
+
 /** הודעה בעברית לכל סוג סתירה */
 export function fillErrorText(e: FillError): string {
   switch (e.kind) {
+    case "overlap-impossible": return "אי אפשר לקיים יחד את יעדי הגושים החופפים, הנעילות וטווחי הסקרים. שנו יעד או שחררו נעילה.";
+    case "search-limit": return "ההשלמה מורכבת מדי לחישוב מיידי. נסו פחות יעדים או קבעו מנדטים ידנית. הטיוטה לא השתנתה.";
     case "over-120":
       return `הערכים הנעולים מגיעים ל-${e.locked}, יותר מ-120. כדאי להוריד או לשחרר נעילה.`;
     case "targets-over":

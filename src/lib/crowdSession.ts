@@ -17,18 +17,25 @@ const K = {
   pending: (u: Unit) => `${P}pending.${u}`,
 };
 
+const memory = new Map<string, string>();
+const unavailable = new Set<string>();
+
 function get(key: string): string | null {
+  if (unavailable.has(key)) return memory.get(key) ?? null;
   try {
     return localStorage.getItem(key);
   } catch {
-    return null;
+    return memory.get(key) ?? null;
   }
 }
 function set(key: string, value: string | null): void {
+  if (value === null) memory.delete(key); else memory.set(key, value);
   try {
     if (value === null) localStorage.removeItem(key);
     else localStorage.setItem(key, value);
+    unavailable.delete(key);
   } catch {
+    unavailable.add(key);
     /* לא נשמר — רק לביקור הזה */
   }
 }
@@ -94,4 +101,5 @@ export function clearAll(): void {
   set(K.link, null);
   set(K.linkAck, null);
   set(K.consent, null);
+  if (typeof window !== "undefined") window.dispatchEvent(new Event("crowd-clear"));
 }

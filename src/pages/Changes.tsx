@@ -1,3 +1,5 @@
+import { results } from "../lib/data";
+import PersonalBlocs from "../components/PersonalBlocs";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
@@ -29,6 +31,7 @@ interface Alternative {
   unassignedNow: { lists: string[]; share: number };
 }
 interface ModelLite {
+  central: { seats: Record<string, number> };
   asof: string;
   polls: number;
   changes: { election2022: string; valid2022: number; alternatives: Alternative[] };
@@ -172,6 +175,9 @@ export default function Changes() {
           />
         </Explained>
       </Card>
+
+      <PersonalBlocs values={m.central.seats} source="מנדטי המודל היום, לפני שיוך למשפחות" asOf={dateLong(m.asof)} />
+      <PersonalBlocs historical values={Object.fromEntries(results.find(r => r.knesset === 25)!.lists.map(l => [l.letters, l.seats]))} source="תוצאות אמת 2022, התאמות מובהקות בלבד" asOf="התוצאות הסופיות" />
 
       <Card title="לא משויך">
         <div className="grid sm:grid-cols-2 gap-4 [&>*]:min-w-0">

@@ -48,17 +48,17 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
 }
 
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
-const ARAB_IDS = IDS.filter((id) => ["joint", "raam"].includes(id));
-const NEW_IDS = IDS.filter((id) => ["yashar", "reservists", "amcha", "haredi_public", "bluewhite"].includes(id));
+/** התחלה ניטרלית: אין חלוקה פוליטית שנכפית על משתתף חדש. */
 export function defaultBlocs(): Bloc[] {
-  const coalition = GOV_IDS.filter((id) => !ARAB_IDS.includes(id) && !NEW_IDS.includes(id));
-  const opposition = IDS.filter((id) => !coalition.includes(id) && !ARAB_IDS.includes(id) && !NEW_IDS.includes(id));
-  return [
-    { id: "coalition", name: "הקואליציה הנוכחית", lists: coalition, target: null },
-    { id: "opposition", name: "האופוזיציה הנוכחית", lists: opposition, target: null },
-    { id: "arabs", name: "ערבים", lists: ARAB_IDS, target: null },
-    { id: "new", name: "חדשות", lists: NEW_IDS, target: null },
-  ];
+  return [{ id: "scenario-1", name: "תרחיש 1", lists: [], target: null }];
+}
+/** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
+export function normalizeBlocs(p: BlocsPayload): BlocsPayload {
+  if (p.mode === "custom") return p;
+  return { mode: "custom", blocs: p.blocs.map(b => ({ ...b,
+    name: b.name || (b.id === "gov" ? "מפלגות הממשלה היוצאת" : "יתר המפלגות"),
+    lists: b.id === "gov" ? [...GOV_IDS] : b.id === "rest" ? IDS.filter(id => !GOV_IDS.includes(id)) : b.lists,
+  })) };
 }
 export const DEFAULT_BLOCS: BlocsPayload = { mode: "custom", blocs: defaultBlocs() };
 export const EMPTY_VOTE: VotePayload = { v2022: null, v2026: null };

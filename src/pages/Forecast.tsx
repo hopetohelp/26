@@ -1,3 +1,4 @@
+import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import ListsView, { type ListRow } from "../components/ListsView";
@@ -125,6 +126,8 @@ export default function Forecast() {
           <p className="text-base">אין מספיק סקרים בשבוע האחרון (פחות משלוש סדרות) — התחזית אינה מחושבת היום.</p>
         </Card>
       )}
+
+      {fc.enough && <PersonalBlocs values={Object.fromEntries(Object.entries(fc.lists).map(([id, v]) => [id, v.seats]))} source="מנדטי התחזית, זהים לטבלת המפלגות" asOf={dateLong(fc.asof)} />}
 
       {fc.enough && fc.bloc.seats.length > 0 && (
         <Card title="מה עוד התחזית אומרת">

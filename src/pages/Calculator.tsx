@@ -1,4 +1,9 @@
-import { useMemo, useState } from "react";
+import PersonalBlocs from "../components/PersonalBlocs";
+import SaveButton, { SaveError, type SaveUnit } from "./guess/SaveButton";
+import type { useSession, useUnit } from "./guess/useCrowd";
+import type { SeatsPayload, BlocsPayload } from "../lib/crowdApi";
+import { validateBlocs } from "../lib/crowdValidate";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
@@ -35,24 +40,25 @@ const AGREEMENTS = meta.agreements2026;
 
 function encode(shares: Record<string, number>, turnout: number, eligible: number, ag: boolean[]) {
   return {
-    s: IDS.map((id) => shares[id] ?? 0).join("_"),
-    t: String(turnout),
-    e: String(eligible),
-    a: ag.map((x) => (x ? "1" : "0")).join(""),
+    cs: IDS.map((id) => shares[id] ?? 0).join("_"),
+    ct: String(turnout),
+    ce: String(eligible),
+    ca: ag.map((x) => (x ? "1" : "0")).join(""),
   };
 }
 
-export default function Calculator() {
+export default function Calculator({ session, unit, blocsUnit }: { session: ReturnType<typeof useSession>; unit: ReturnType<typeof useUnit<SeatsPayload>>; blocsUnit: ReturnType<typeof useUnit<BlocsPayload>> }) {
   const [params, setParams] = useSearchParams();
   const initial = useMemo(() => {
     const def = startingShares();
-    const s = params.get("s")?.split("_").map(Number);
-    const shares = s && s.length === IDS.length && s.every((x) => Number.isFinite(x)) ? Object.fromEntries(IDS.map((id, i) => [id, s[i]])) : def;
+    const stored = unit.draft?.calculation;
+    const s = params.get("cs")?.split("_").map(Number);
+    const shares = s && s.length === IDS.length && s.every((x) => Number.isFinite(x) && x >= 0 && x <= 100 && Math.abs(x * 10 - Math.round(x * 10)) < 1e-6) ? Object.fromEntries(IDS.map((id, i) => [id, s[i]])) : unit.draft?.mode === "pct" && unit.draft.pct ? unit.draft.pct : def;
     return {
       shares,
-      turnout: Number(params.get("t")) || DEFAULT_TURNOUT,
-      eligible: Number(params.get("e")) || registry.k26.eligible,
-      ag: params.get("a")?.length === AGREEMENTS.length ? [...params.get("a")!].map((c) => c === "1") : AGREEMENTS.map(() => true),
+      turnout: Number(params.get("ct")) || stored?.turnout || DEFAULT_TURNOUT,
+      eligible: Number(params.get("ce")) || stored?.eligible || registry.k26.eligible,
+      ag: params.get("ca")?.length === AGREEMENTS.length ? [...params.get("ca")!].map((c) => c === "1") : AGREEMENTS.map(a => stored ? stored.agreements.some(pair => pair.join() === a.pair.join()) : true),
       def,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,9 +67,19 @@ export default function Calculator() {
   const [turnout, setTurnout] = useState(initial.turnout);
   const [eligible, setEligible] = useState(initial.eligible);
   const [ag, setAg] = useState<boolean[]>(initial.ag);
+  const touched = useRef(false);
+  useEffect(() => {
+    const saved = unit.draft;
+    if (touched.current || params.has("cs") || saved?.mode !== "pct" || !saved.pct) return;
+    setShares(saved.pct);
+    if (saved.calculation) {
+      setTurnout(saved.calculation.turnout); setEligible(saved.calculation.eligible);
+      setAg(AGREEMENTS.map(a => saved.calculation!.agreements.some(pair => pair.join() === a.pair.join())));
+    }
+  }, [unit.draft]);
   const [nextSeat, setNextSeat] = useState<Record<string, number | null>>({});
 
-  const sync = (s = shares, t = turnout, e = eligible, a = ag) => setParams(encode(s, t, e, a), { replace: true });
+  const sync = (s = shares, t = turnout, e = eligible, a = ag) => { touched.current = true; const next = new URLSearchParams(params); for (const [k, v] of Object.entries(encode(s, t, e, a))) next.set(k, v); setParams(next, { replace: true }); };
 
   const listSum = IDS.reduce((a, id) => a + (shares[id] || 0), 0);
   const others = Math.max(0, 100 - listSum);
@@ -71,9 +87,22 @@ export default function Calculator() {
   const valid = validVotes(eligible, turnout);
   const votes = sharesToVotes(IDS, shares, valid);
   const agreements: Agreement[] = AGREEMENTS.filter((_, i) => ag[i]).map((a) => a.pair as unknown as Agreement);
-  const r = over ? null : allocate(votes, valid, agreements);
+  const r = useMemo(() => over ? null : allocate(votes, valid, agreements), [shares, turnout, eligible, ag]);
   const r0 = over ? null : allocate(votes, valid, []);
-  const gov = r ? lists2026.filter((l) => l.gov37).reduce((a, l) => a + (r.seats[l.id] ?? 0), 0) : 0;
+
+  const inputProblem = !Number.isFinite(eligible) || eligible <= 0 || eligible > 100000000 || !Number.isFinite(turnout) || turnout <= 0 || turnout > 100 ? "בעלי זכות בחירה חייבים להיות חיוביים; שיעור הצבעה בין 0 ל־100." : null;
+  const next: SeatsPayload | null = inputProblem || r?.status !== "ok" ? null : {
+    mode: "pct", pct: shares, start: "polls", pollsAsOf: lastPollDate(),
+    seats: Object.fromEntries(IDS.map(id => [id, { v: r.seats[id] ?? 0, src: "manual" as const, locked: true }])),
+    calculation: { turnout, eligible, agreements: agreements.map(pair => [...pair]) },
+  };
+  const saveUnit: SaveUnit = {
+    status: JSON.stringify(next) === JSON.stringify(unit.saved) ? blocsUnit.status : unit.saved ? "dirty" : "draft",
+    state: unit.state === "saving" || blocsUnit.state === "saving" ? "saving" : unit.state === "error" || blocsUnit.state === "error" ? "error" : "idle",
+    error: unit.error ?? blocsUnit.error, errorLog: unit.errorLog ?? blocsUnit.errorLog,
+    save: async token => { if (!next) return false; unit.setDraft(next); if (!await unit.save(token, next)) return false; return blocsUnit.status === "saved" || await blocsUnit.save(token); },
+  };
+  const invalid = inputProblem ?? (over ? "סכום האחוזים עולה על 100." : r?.status !== "ok" ? "אפשר לשמור רק תוצאה תקינה של 120 מנדטים, ללא הגרלה." : null) ?? (blocsUnit.draft ? validateBlocs(blocsUnit.draft, IDS) : null);
 
   const setShare = (id: string, v: number) => {
     const next = { ...shares, [id]: Math.max(0, Math.min(100, Math.round(v * 10) / 10)) };
@@ -85,9 +114,10 @@ export default function Calculator() {
   return (
     <>
       <PageTitle lead="מכניסים אחוזי הצבעה לכל רשימה (מתוך הקולות הכשרים), והמחשבון מחלק 120 מנדטים לפי חוק הבחירות: אחוז החסימה, הסכמי העודפים ושיטת באדר-עופר. המנוע נבדק מול חמש מערכות הבחירות 2019–2022 ומשחזר אותן בדיוק.">
-        מחשבון מנדטים
+        מחשבון ההשערה
       </PageTitle>
 
+      <div className="mb-4"><SaveButton unit={saveUnit} session={session} invalid={invalid} /><SaveError unit={saveUnit} /><p className="text-sm text-ink-soft mt-2">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. עד השמירה אפשר לבדוק תרחיש בלי להחליף את טיוטת המנדטים.</p></div>
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
         <Card title="הקלט">
           <p className="text-sm text-ink-soft mb-3">
@@ -124,7 +154,7 @@ export default function Calculator() {
               ))}
               <tr>
                 <th scope="row" className="text-right py-1 text-ink-soft">אחרות (מחושב)</th>
-                <td className={`tabular-nums ${over ? "text-red-700 font-bold" : ""}`}>{over ? `חריגה: ${pct(listSum)}` : pct(others)}</td>
+                <td className={`tabular-nums ${over ? "text-warn font-bold" : ""}`}>{over ? `חריגה: ${pct(listSum)}` : pct(others)}</td>
               </tr>
             </tbody>
           </table>
@@ -169,8 +199,8 @@ export default function Calculator() {
 
         <div>
           <Card title="התוצאה">
-            {over && <p className="text-red-700 font-bold">סכום האחוזים עולה על 100 — יש להקטין אחת הרשימות.</p>}
-            {r && r.status === "invalid_input" && <p className="text-red-700 font-bold">{r.error}</p>}
+            {over && <p className="text-warn font-bold">סכום האחוזים עולה על 100 — יש להקטין אחת הרשימות.</p>}
+            {r && r.status === "invalid_input" && <p className="text-warn font-bold">{r.error}</p>}
             {r && r.status === "lottery_required" && <p className="text-warn font-bold">שוויון מנות מדויק — לפי החוק מכריעה הגרלה של ועדת הבחירות.</p>}
             {r && r0 && r.status !== "invalid_input" && (
               <Explained
@@ -205,7 +235,7 @@ export default function Calculator() {
                           <td className="tabular-nums font-bold">{r.seats[id] ?? 0}</td>
                           <td className="tabular-nums">
                             {r0.seats[id] ?? 0}
-                            {d !== 0 && <span className={d > 0 ? "text-green-800" : "text-red-700"}> (<bdi dir="ltr">{d > 0 ? `+${d}` : d}</bdi>)</span>}
+                            {d !== 0 && <span className={d > 0 ? "text-accent" : "text-warn"}> (<bdi dir="ltr">{d > 0 ? `+${d}` : d}</bdi>)</span>}
                           </td>
                           <td className="tabular-nums">
                             {passed ? (
@@ -234,7 +264,7 @@ export default function Calculator() {
                 </table>
               </Explained>
             )}
-            {r && r.status !== "invalid_input" && <p className="font-bold mt-3">מפלגות הממשלה היוצאת: {gov} מנדטים {gov >= 61 ? "(רוב)" : ""}</p>}
+            {r?.status === "ok" && <PersonalBlocs values={r.seats} source="תוצאת מחשבון ההשערה לפי חוק הבחירות" asOf="מחושב עכשיו מהקלט שלכם" />}
             {r && r.status !== "invalid_input" && (
               <Fold title="פרטי החישוב"><dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mt-4">
                 <dt className="text-ink-soft">אחוז החסימה בקולות</dt>
