@@ -33,7 +33,34 @@ def test_threshold_before_seats():
     assert C.choose([]) == "baseline"
 
 
+def test_choose_ties_to_baseline():
+    """שומר "לא גרוע מהחציון": בשוויון בעבר — החציון; חלופה נבחרת רק כשהייתה מדויקת יותר במנדטים."""
+    same = {n: {"seatAccuracy": 0.9} for n in C.CANDIDATES}
+    assert C.choose([same, same]) == "baseline"
+    better = {**same, "blend": {"seatAccuracy": 0.95}}
+    assert C.choose([same, better]) == "blend"
+    worse = {**same, "trend": {"seatAccuracy": 0.8}}
+    assert C.choose([worse]) == "baseline"
+
+
+def test_published_center_matches_selection():
+    """התחזית שבאתר משתמשת במשקל של החלופה שנבחרה, ואינה בוחרת חלופה שהייתה גרועה מהחציון באותו אופק."""
+    import json
+    path = F.ROOT / "src" / "data" / "forecast.json"
+    if not path.exists():
+        return
+    sel = json.loads(path.read_text(encoding="utf-8")).get("selection")
+    if not sel:
+        return
+    assert sel["weight"] == C.CANDIDATES[sel["candidate"]]
+    s = sel["summary"]
+    if s:
+        assert s[sel["candidate"]]["seatAccuracy"] >= s["baseline"]["seatAccuracy"] or sel["candidate"] == "baseline"
+
+
 if __name__ == "__main__":
+    test_choose_ties_to_baseline()
+    test_published_center_matches_selection()
     test_past_only()
     test_threshold_before_seats()
     print("✅ בחירת חלופה ללא מידע עתידי, והקצאה לאחר שילוב קולות")

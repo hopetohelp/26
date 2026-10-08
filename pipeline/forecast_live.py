@@ -15,6 +15,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import forecast as F
+import forecast_challenger as C
 import model as M
 
 HERE = Path(__file__).resolve().parent
@@ -34,7 +35,7 @@ def log_rows() -> list[dict]:
     return [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()] if path.exists() else []
 
 
-def residual_sd(bt: dict, spec: dict) -> dict[str, float]:
+def residual_sd(bt: dict, spec: dict, weight: float | None = None) -> dict[str, float]:
     """שורש ממוצע ריבועי השאריות של הגרסה הראשית, במערכות שאינן התחלה קרה. רשימה גדולה — בלוג-יחס (הטעות יחסית
     לגודל); רשימה קטנה (מתחת ל-smallShare בתחזית) — בנקודות אחוז, כי לוג-יחס של רשימה שקרסה לאפס מתפוצץ."""
     eps = spec["model"]["clrEpsilon"]
@@ -44,7 +45,10 @@ def residual_sd(bt: dict, spec: dict) -> dict[str, float]:
     for r in bt["rows"]:
         if r["coldStart"]:
             continue
-        pred = r["variants"][v]["shares"]
+        pred = (r["variants"][v]["shares"] if weight is None
+                else C.mix(r["variants"]["V0"]["shares"], r["variants"][v]["shares"], weight))
+        if not pred:
+            continue
         act = elections[r["knesset"]].shares()
         for k in F.units(pred, act, spec["gate"]["unitMinShare"]):
             if pred.get(k, 0) < SCENARIOS["smallShare"]:
@@ -94,10 +98,23 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
         now, before, enough = info["series"], [], info["enough"]
     else:
         sh, bt, info, now, before, enough = build_v4(polls, window, lists, thr, pairs, spec, h, lag, build_day, seed, primary)
+    # שומר "לא גרוע מממוצע הסקרים" (הכרעת בעלים 8.10.2026): המרכז הציבורי נבחר בין חציון הסקרים (V0), המגמות (V5)
+    # ושילוב חצי־חצי — לפי דיוק המנדטים בבדיקת העבר באותו אופק בדיוק, רק במערכות שכבר נבדקו (forecast_challenger.choose).
+    # בהתחלה ובשוויון — החציון. כך התחזית אינה מאמצת מודל שהפסיד לחציון בעבר.
+    selection = None
+    if sh and spec["model"].get("kind") == "trend":
+        base = F.forecast("V0", window(build_day), lists, None, spec, thr, pairs)[0] if window(build_day) else {}
+        ev = C.evaluate(bt, spec, F.load_elections(spec))
+        history = [{k: v for k, v in r["scores"].items() if k != "adaptive"} for r in ev["rows"]]
+        chosen = C.choose(history) if base else "trend"
+        weight = C.CANDIDATES[chosen]
+        sh = C.mix(base, sh, weight) if base else sh
+        selection = {"candidate": chosen, "weight": weight, "trainedOn": [r["knesset"] for r in ev["rows"]],
+                     "summary": {k: {m: round(v, 5) for m, v in x.items()} for k, x in ev["summary"].items()}}
     central = F.seats_from_shares(sh, pairs, thr) if sh else {}
 
-    # תרחישים
-    sd = residual_sd(bt, spec)
+    # תרחישים — לפי השאריות של המרכז שנבחר בפועל
+    sd = residual_sd(bt, spec, selection["weight"] if selection else None)
     rng = random.Random(f"{seed}|live|{build_day.isoformat()}")
     names = [k for k in lists if sh.get(k, 0) > 0]
     idx = {k: i for i, k in enumerate(names)}
@@ -148,7 +165,7 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
     best = max((r["summary"].get(F_primary(r), {}).get("voteAccuracy", 0) for r in rows), default=0)
     return {
         "asof": build_day.isoformat(), "electionDay": K26["date"], "daysToElection": days, "horizon": h,
-        "specVersion": spec["version"], "variant": primary,
+        "specVersion": spec["version"], "variant": primary, "selection": selection,
         "series": sorted(now), "seriesBefore": sorted(before), "enough": enough,
         "params": {"others": round(info["others"] * 100, 2), "beta": round(info["beta"], 4), "betaElections": info["betaElections"],
                    "trainedOn": info["trainedOn"], "residualSd": {k: round(v, 4) if isinstance(v, float) else v for k, v in sd.items()},

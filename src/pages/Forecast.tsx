@@ -32,12 +32,15 @@ interface ForecastFile {
   wasted: number[];
   gate: { elections: number[]; minVote: number; minSeat: number; atHorizon: GateRow; passedAtHorizon: boolean | null };
   attempts: { versions: number[]; runs: number; bestVoteAccuracy: number };
+  /** המרכז שנבחר לפי דיוק המנדטים בעבר באותו אופק: חציון / מגמות / חצי־חצי (שומר "לא גרוע מהחציון") */
+  selection?: { candidate: "baseline" | "blend" | "trend"; weight: number; trainedOn: number[]; summary: Record<string, { voteAccuracy: number; seatAccuracy: number }> } | null;
 }
 const fc = forecastFile as unknown as ForecastFile;
 
 const ELECTION: Record<string, string> = {
   "19": "2013", "20": "2015", "21": "אפריל 2019", "22": "ספטמבר 2019", "23": "מרץ 2020", "24": "מרץ 2021", "25": "נובמבר 2022",
 };
+const CANDIDATE: Record<string, string> = { baseline: "חציון הסקרים האחרונים", blend: "שילוב חצי־חצי של החציון ומודל המגמות", trend: "מודל המגמות" };
 const p1 = (x: number) => `${(Math.round(x * 1000) / 10).toLocaleString("he-IL")}%`;
 const LOG_URL = "https://github.com/hopetohelp/26/blob/main/pipeline/forecast_runs.jsonl";
 
@@ -50,16 +53,17 @@ const rows: ListRow[] = Object.entries(fc.lists)
 export default function Forecast() {
   const [theme] = useTheme();
   const gate = fc.gate.atHorizon;
-  const main = gate?.summary[fc.variant];
-  const base = gate?.summary.V0;
-  const passed = fc.gate.passedAtHorizon === true;
+  const sel = fc.selection;
+  const main = sel?.summary.adaptive ?? gate?.summary[fc.variant];
+  const base = sel?.summary.baseline ?? gate?.summary.V0;
+  const passed = sel ? !!main && gate?.valid !== false && main.voteAccuracy >= fc.gate.minVote && main.seatAccuracy >= fc.gate.minSeat : fc.gate.passedAtHorizon === true;
   const votesOk = main ? main.voteAccuracy >= fc.gate.minVote : false;
   const seatsOk = main ? main.seatAccuracy >= fc.gate.minSeat : false;
 
   return (
     <>
       <PageTitle
-        lead={`מה יהיו התוצאות ביום הבחירות, לפי מודל שמשקלל את כל המכונים לפי הדיוק שלהם בבחירות הקודמות ומתקן את הטעויות שחזרו בהן. נכון ל-${dateLong(fc.asof)}, ${fc.daysToElection} ימים לפני הבחירות.`}
+        lead={`מה יהיו התוצאות ביום הבחירות — לפי השיטה שהייתה מדויקת יותר בבחירות הקודמות באותו מרחק מהבחירות${fc.selection ? ` (היום: ${CANDIDATE[fc.selection.candidate]})` : ""}. נכון ל-${dateLong(fc.asof)}, ${fc.daysToElection} ימים לפני הבחירות.`}
       >
         תחזית התוצאות
       </PageTitle>
@@ -91,9 +95,17 @@ export default function Forecast() {
                 המודל לא עבר את הרף שנקבע מראש. התחזית מוצגת בכל זאת, עם הנתונים האלה, כדי שתוכלו לשפוט בעצמכם.
               </p>
             )}
-            <p className="text-sm text-ink-soft">
-              להשוואה: חציון פשוט של הסקרים האחרונים הגיע ל-{p1(base.voteAccuracy)} בקולות ו-{p1(base.seatAccuracy)} במנדטים.
-            </p>
+            {sel ? (
+              <p className="text-sm text-ink-soft">
+                השיטה היום: <strong className="text-ink">{CANDIDATE[sel.candidate]}</strong>. בכל יום בוחרים בין חציון הסקרים, מודל המגמות ושילוב שלהם — את מה
+                שהיה מדויק יותר במנדטים, באותו מרחק מהבחירות, בבחירות שכבר היו; בשוויון — החציון. כך התחזית לא מאמצת שיטה שהפסידה לממוצע הסקרים בעבר.
+                {sel.candidate !== "baseline" && ` להשוואה: החציון לבדו הגיע ל-${p1(base.voteAccuracy)} בקולות ו-${p1(base.seatAccuracy)} במנדטים.`}
+              </p>
+            ) : (
+              <p className="text-sm text-ink-soft">
+                להשוואה: חציון פשוט של הסקרים האחרונים הגיע ל-{p1(base.voteAccuracy)} בקולות ו-{p1(base.seatAccuracy)} במנדטים.
+              </p>
+            )}
             <Fold title="איך מחושב מדד הדיוק">
               <p className="text-sm">דיוק בקולות = 100% פחות מחצית סכום הפערים בין האחוז החזוי לאחוז בפועל; דיוק במנדטים = 100% פחות סכום פערי המנדטים חלקי 240.</p>
             </Fold>
@@ -114,7 +126,7 @@ export default function Forecast() {
         <section aria-label="התחזית לכל רשימה" className="mb-6">
           <Explained
             kind="תחזית"
-            source={`כל ${fc.params.polls ?? ""} הסקרים של ${fc.series.length} מכונים מאז הגשת הרשימות — קו מגמה לכל מכון ולכל הסקרים יחד, מתוקנים ומשוקללים לפי העבר; מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר); ${num(10000)} תרחישים`}
+            source={`${fc.selection?.candidate === "baseline" ? "חציון הסקר האחרון של כל מכון בשבוע האחרון" : `כל ${fc.params.polls ?? ""} הסקרים של ${fc.series.length} מכונים מאז הגשת הרשימות — קו מגמה לכל מכון ולכל הסקרים יחד, מתוקנים ומשוקללים לפי העבר${fc.selection?.candidate === "blend" ? ", בשילוב חצי־חצי עם חציון הסקרים" : ""}`}; מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר); ${num(10000)} תרחישים`}
             asOf={dateLong(fc.asof)}
             assumption="המכונים יטעו השנה בערך כמו שטעו בממוצע בעבר. הטווח — 80% מהתרחישים, לפי הטעויות של המודל עצמו בבדיקת העבר, מוגדלות ברבע."
             methodAnchor="forecast"
