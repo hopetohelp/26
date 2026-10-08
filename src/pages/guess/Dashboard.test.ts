@@ -74,3 +74,31 @@ it("מספר המשתתפים בכותרות נלקח מכל חלק, בטבלה 
   expect(html).toContain("font-display");
   expect(html).not.toContain("99 משתתפים");
 });
+
+it("מסתיר רשימה יחידה וגושים עם פחות מ־4 מנדטים לרשימה בממוצע, לפני עיגול", () => {
+  const d: Dashboard = { participants: 12, open: true, publishedAt: null, aggregationId: null,
+    blocs: { derived: null, explicit: null, customCount: 12, custom: [
+      { name: "יחיד", lists: ["joint"], n: 1, explicit: null, derived: { ...stat, mean: 8 } },
+      { name: "נמוך", lists: ["likud", "raam", "joint", "amcha", "shas"], n: 1, explicit: null, derived: { ...stat, mean: 13 } },
+      { name: "מעט מתחת", lists: ["likud", "shas"], n: 1, explicit: null, derived: { ...stat, mean: 7.999 } },
+      { name: "בדיוק בסף", lists: ["joint", "raam"], n: 2, explicit: null, derived: { ...stat, mean: 8 } },
+    ] } };
+  for (const view of ["table", "chart"] as const) {
+    const html = renderToStaticMarkup(createElement(BlocStats, { d, view }));
+    const text = html.split('&quot;').join('"');
+    expect(text).toContain(`${nameOf('joint')} · ${nameOf('raam')}`);
+    expect(text).not.toContain(nameOf('likud'));
+    expect(text).not.toContain(nameOf('amcha'));
+    expect(text.split(nameOf('joint'))).toHaveLength(2);
+  }
+});
+
+it("אותו סף חל על הקואליציה; ללא גוש מתאים מוצג הסבר", () => {
+  const d: Dashboard = { participants: 1, open: true, publishedAt: null, aggregationId: null,
+    blocs: { derived: { gov: { ...stat, mean: 5 }, rest: stat }, explicit: null, customCount: 0 } };
+  for (const view of ["table", "chart"] as const) {
+    const html = renderToStaticMarkup(createElement(BlocStats, { d, view }));
+    expect(html).not.toContain('גוש הקואליציה');
+    expect(html).toContain('לפחות שתי רשימות');
+  }
+});
