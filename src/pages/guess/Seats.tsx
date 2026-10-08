@@ -1,3 +1,4 @@
+import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
@@ -100,6 +101,7 @@ export default function Seats({
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
           <SeatBoard values={values} />
+          <PersonalBlocs values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
           <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} />
             <span className="text-xs text-ink-soft">

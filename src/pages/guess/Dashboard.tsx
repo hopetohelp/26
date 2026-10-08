@@ -48,8 +48,11 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       ) : (
         d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={mine} view={view} unit="pct" /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
-      {d.seats && <PersonalBlocs values={Object.fromEntries(d.seats.full.map(row => [row.list, row.mean]))} source={`ממוצע השערות ${d.seats.n} המשתתפים; סכום ממוצעי המפלגות מאותו ציבור`} asOf={d.publishedAt ?? "הפרסום האחרון"} />}
-      {d.seats && <PersonalBlocs values={d.seats.polls} source="מנדטי הסקרים בהשוואת הסטטיסטיקות" asOf={d.seats.pollsAsOf ?? "הפרסום האחרון"} />}
+      {d.seats && <PersonalBlocs source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={d.publishedAt ?? "הפרסום האחרון"} datasets={[
+        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf: d.publishedAt ?? "הפרסום האחרון" },
+        { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
+        ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
+      ]} />}
       {d.blocs ? <BlocStats d={d} view={view} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>

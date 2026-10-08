@@ -37,7 +37,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
   const showLink = !!session.token && !!session.link && !acked;
 
-  const statusOf = (s: Sec) => s === "seats" || s === "calculator" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null;
+  const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "calculator" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null;
   return (
     <div>
       {!session.online && (

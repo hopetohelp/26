@@ -22,8 +22,8 @@ async function dragCard(page, source, destination, cdp) {
   const to=await destination.boundingBox(); const height=page.viewportSize().height;
   const y=to.y+Math.min(25,to.height/2);
   const x=Math.max(20,Math.min(page.viewportSize().width-20,to.x+to.width/2));
-  if(y>100 && y<height-100){await move(x,y);reached=true;break;}
-  await move(x,y<=100?40:height-40); await page.waitForTimeout(100);
+  if(y>160 && y<height-250){await move(x,y);await page.waitForTimeout(80);const final=await destination.boundingBox();await move(x,final.y+Math.min(25,final.height/2));reached=true;break;}
+  await move(x,y<=160?40:height-40); await page.waitForTimeout(100);
  }
  assert.ok(reached,'auto-scroll reaches drop destination');
  if(cdp) await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]}); else await page.mouse.up();
@@ -70,7 +70,14 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  assert.ok(page.url().includes('/feedback/'));
  await page.goto(`${baseUrl}#/guess`);
  assert.equal(await page.locator('[data-bloc-id]').count(),0,'לשונית מנדטים אינה מציגה גושים');
- assert.equal(await page.getByRole('heading',{name:'הגושים שלי',exact:true}).count(),0);
+ await page.getByRole('heading',{name:'הגושים שלי',exact:true}).waitFor();
+ assert.equal(await page.getByRole('heading',{name:'הגושים שלי',exact:true}).count(),1);
+ assert.equal(await page.locator('[data-personal-blocs-card]').count(),1);
+ const targetInput=page.getByRole('spinbutton',{name:'מנדטים צפויים לגוש הקואליציה הנוכחית',exact:true});
+ await targetInput.fill('61');
+ assert.equal(await targetInput.inputValue(),'61');
+ assert.equal(await page.locator('[data-bloc-pool]').count(),0,'target editing does not embed the composition editor');
+ await targetInput.fill('');
  const resetButton=page.getByRole('button',{name:'אפס הכול',exact:true});
  const resetBox=await resetButton.boundingBox();
  const actionBox=await resetButton.locator('../..').boundingBox();

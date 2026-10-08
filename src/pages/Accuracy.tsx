@@ -392,8 +392,10 @@ export default function Accuracy() {
         </details>
       </Card>
 
-      <PersonalBlocs historical mapping={id === "k25" ? undefined : {}} values={Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats]))} source={`תוצאות אמת ${c.label}`} asOf="תוצאות סופיות" />
-      <PersonalBlocs historical mapping={id === "k25" ? undefined : {}} values={Object.fromEntries(s.rows.map(r => [r.letters, r.estimate]))} source={`סכום חציוני מפלגות בסקרים לפני ${c.label}; אינו חציון הגוש`} asOf={eveText} />
+      <PersonalBlocs source="הגושים: חציוני מפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
+        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום חציוני מפלגות לפני ${c.label}; אינו חציון הגוש`, asOf: eveText },
+        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
+      ]} />
       <Card title="מכוני הסקרים לאורך זמן">
         <Explained
           kind="סיכום סקרים"

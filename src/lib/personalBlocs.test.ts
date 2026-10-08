@@ -1,6 +1,6 @@
 import { polls, VERIFICATION_LABEL } from "./data";
 import { expect, it } from "vitest";
-import { blocValues } from "./personalBlocs";
+import { blocValues, historicalBlocValues } from "./personalBlocs";
 import { validateBlocs } from "./crowdValidate";
 import { fillAll } from "./fillAll";
 import type { Bloc } from "./crowdApi";
@@ -38,4 +38,15 @@ it("אילוצים חופפים נשמרים גם בטווחים צרים ובע
 
 it("כל סטטוס אימות בנתוני הסקרים הנוכחיים יכול להופיע בארכיון", () => {
   for (const poll of polls) if (poll.verification) expect(VERIFICATION_LABEL[poll.verification.status]).toBeDefined();
+});
+it("השוואת גוש לעבר מחייבת משפחה מלאה, בלי לחלק מנדטים של רשימה שהתפצלה", () => {
+  const families = [{ k26: ["a", "b"], k25: ["shared"] }, { k26: ["c"], k25: ["other"] }];
+  const rows = historicalBlocValues([b("whole", ["a", "b", "c"]), b("partial", ["a"]), b("unknown", ["new"])], families, { shared: 14, other: 11 });
+  expect(rows.map(r => r.total)).toEqual([25, null, null]);
+  expect(rows[1].missing).toEqual(["a"]);
+});
+it("רשימת עבר משותפת נספרת פעם אחת, וחוסר נתון אינו אפס", () => {
+  const families = [{ k26: ["a"], k25: ["shared"] }, { k26: ["b"], k25: ["shared"] }];
+  expect(historicalBlocValues([b("one", ["a", "b"])], families, { shared: 14 })[0].total).toBe(14);
+  expect(historicalBlocValues([b("one", ["a"])], families, {})[0].total).toBeNull();
 });

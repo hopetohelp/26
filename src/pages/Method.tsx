@@ -168,7 +168,7 @@ export default function Method() {
         </div>
       </Fold>
 
-      <Fold title="מה השתנה מאז 2022">
+      <Fold title="מה השתנה מבחירות קודמות">
         <div className="text-sm space-y-2" id="changes">
           <p>
             לכל "משפחה" — אחוז הקולות הכשרים שקיבלו רשימותיה בבחירות 2022, מול הממוצע מבוסס-המודל של היום. הטווח של משפחה בת כמה רשימות

@@ -1,5 +1,7 @@
 import { results } from "../lib/data";
-import PersonalBlocs from "../components/PersonalBlocs";
+import PersonalBlocs, { usePersonalBlocs } from "../components/PersonalBlocs";
+import { historicalBlocValues } from "../lib/personalBlocs";
+import { DEFAULT_BLOCS, normalizeBlocs } from "./guess/model";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
@@ -84,17 +86,25 @@ function FamilyRow({ f, max }: { f: Family; max: number }) {
 }
 
 export default function Changes() {
+  const personal = usePersonalBlocs();
+  const blocs = personal.draft ? normalizeBlocs(personal.draft).blocs : DEFAULT_BLOCS.blocs;
+  const [view, setView] = useState<"blocs" | "families">("blocs");
   const [altId, setAltId] = useState(ALTS[0].id);
   const alt = ALTS.find((a) => a.id === altId) ?? ALTS[0];
   const max = Math.max(25, ...alt.families.flatMap((f) => [f.share2022, f.shareRange[2]]));
   const u22 = alt.unassigned2022;
   const unow = alt.unassignedNow;
+  const previous = results.find(r => r.knesset === 25)!;
+  const historical = historicalBlocValues(blocs, alt.families, Object.fromEntries(previous.lists.map(l => [l.short, l.seats])));
 
   return (
     <>
-      <PageTitle lead="כל משפחת רשימות: אחוז מהקולות הכשרים בבחירות 2022, מול הממוצע של הסקרים היום. רשימות שהתפצלו או התאחדו אפשר לשייך בכמה דרכים — בוחרים דרך, ורואים איך התמונה משתנה.">
-        מה השתנה מאז 2022
+      <PageTitle lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת.">
+        מה השתנה מבחירות קודמות
       </PageTitle>
+      <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-4">
+        {([["blocs", "לפי הגושים שלי"], ["families", "לפי משפחות מפלגות"]] as const).map(([id,label]) => <button key={id} role="radio" type="button" aria-checked={view === id} onClick={() => setView(id)} className={`min-h-[44px] rounded-full px-4 border font-bold text-sm ${view === id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{label}</button>)}
+      </div>
 
       <Card title="איך לשייך?">
         <div role="radiogroup" aria-label="דרך השיוך" className="flex flex-wrap gap-2 mb-3">
@@ -114,7 +124,7 @@ export default function Changes() {
         <p className="text-base leading-relaxed">{alt.desc}</p>
       </Card>
 
-      <Card title={`המשפחות — ${alt.name}`}>
+      {view === "families" && <Card title={`המשפחות — ${alt.name}`}>
         <Explained
           kind="השוואה"
           source={`תוצאות האמת של בחירות 2022 (ועדת הבחירות המרכזית) מול הממוצע מבוסס-המודל — ${m.polls} סקרים מאומתים עד ${dateLong(m.asof)}`}
@@ -174,12 +184,15 @@ export default function Changes() {
             }
           />
         </Explained>
-      </Card>
+      </Card>}
 
-      <PersonalBlocs values={m.central.seats} source="מנדטי המודל היום, לפני שיוך למשפחות" asOf={dateLong(m.asof)} />
-      <PersonalBlocs historical values={Object.fromEntries(results.find(r => r.knesset === 25)!.lists.map(l => [l.letters, l.seats]))} source="תוצאות אמת 2022, התאמות מובהקות בלבד" asOf="התוצאות הסופיות" />
+      <PersonalBlocs source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
+        { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },
+        { values: m.central.seats, source: "המנדטים היום לפי המודל", asOf: dateLong(m.asof) },
+      ]} />
+      <Note>רשימת עבר נספרת פעם אחת בכל גוש. אם הגוש כולל רק חלק ממשפחה שהתפצלה, או מפלגה ללא שיוך בחלופה שנבחרה, אין השוואה מספרית מלאה. זו השוואת הרכבים לפי ההנחות הגלויות, ולא מדידה של מעבר בוחרים.</Note>
 
-      <Card title="לא משויך">
+      {view === "families" && <Card title="לא משויך">
         <div className="grid sm:grid-cols-2 gap-4 [&>*]:min-w-0">
           <div>
             <p className="font-display text-4xl leading-none tabular">{r1(u22.share)}%</p>
@@ -195,7 +208,7 @@ export default function Changes() {
           </div>
         </div>
         <Note>כל עמודה מסתכמת ב-100%: המשפחות ועוד מה שלא שויך.</Note>
-      </Card>
+      </Card>}
 
       <Card title="למה כך שויך">
         <ul className="space-y-2 text-sm leading-relaxed">
