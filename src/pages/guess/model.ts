@@ -50,7 +50,7 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 /** חלוקת פתיחה למשתתף חדש לפי הכרעת הבעלים; אינה משנה גושים שמורים. */
 export function defaultBlocs(): Bloc[] {
-  const coalition = IDS.filter(id => GOV_IDS.includes(id) || id === "amcha");
+  const coalition = IDS.filter(id => GOV_IDS.includes(id) || ["amcha", "noam", "code_black"].includes(id));
   const arab: string[] = IDS.filter(id => id === "joint" || id === "raam");
   return [
     { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },

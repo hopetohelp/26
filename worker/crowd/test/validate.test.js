@@ -95,8 +95,8 @@ describe("validate", () => {
 it("שומר סכום קואליציה מחושב במנדטים ובאחוזים ומתעלם מערך לקוח", () => {
   for (const mode of ['seats', 'pct']) {
     const payload = { mode, start: 'zero', pollsAsOf: null, coalitionSeats: 119,
-      seats: {likud:{v:30,src:'manual',locked:true},shas:{v:8,src:'filled',locked:false},utj:{v:7,src:'manual',locked:true},democrats:{v:75,src:'manual',locked:true}},
+      seats: {likud:{v:30,src:'manual',locked:true},shas:{v:8,src:'filled',locked:false},utj:{v:7,src:'manual',locked:true},noam:{v:4,src:'manual',locked:true},code_black:{v:4,src:'manual',locked:true},democrats:{v:67,src:'manual',locked:true}},
       ...(mode === 'pct' ? {pct:{likud:25,shas:7,utj:6,democrats:62}} : {}) };
-    expect(save('seats',payload).value.payload.coalitionSeats).toBe(45);
+    expect(save('seats',payload).value.payload.coalitionSeats).toBe(49);
   }
 });
