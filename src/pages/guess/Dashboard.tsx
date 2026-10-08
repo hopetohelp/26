@@ -43,7 +43,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   return (
     <div>
-      <div className="mb-4"><Notice tone="warn">{d.participants < 30 ? "מעט משתתפים — הנתונים אינם מייצגים את הציבור." : "השערות הגולשים אינן מדגם מייצג."}</Notice></div>
+      {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
       {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל־{asOf}</p>}
       {d.seats && <PersonalBlocs title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
@@ -91,7 +91,7 @@ export function BlocStats({ d, view }: { d:D; view:View }) {
   const government=[...GOV_IDS].sort().join(",");
   const rows = [
     ...(b.derived ? [{key:government,lists:GOV_IDS,label:"גוש הקואליציה",stat:b.derived.gov}] : []),
-    ...(b.custom ?? []).filter(g=>g.derived && g.lists.length && [...g.lists].sort().join(",")!==government)
+    ...(b.custom ?? []).filter(g=>g.derived && g.n >= 2 && g.lists.length && [...g.lists].sort().join(",")!==government)
       .map(g=>({key:[...g.lists].sort().join(","),lists:g.lists,label:g.lists.map(nameOf).join(" · "),stat:g.derived!}))
   ].filter(row => {
     const listCount = new Set(row.lists).size;
