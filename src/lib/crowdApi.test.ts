@@ -101,6 +101,23 @@ describe("מסלולים חלופיים ובדיקת חיבור", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
     await expect(call("/auth/guest", { body: {} })).rejects.toMatchObject({ code: "network", diagnostic: { method: "POST" } });
   });
+  it("שני המסלולים חסומים ⇐ השמירה עוברת בממסר של שרת ההערות", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn(async (url: string) => {
+      if (url.endsWith("/relay")) return new Response('{"version":7}');
+      if (url.endsWith("/autoreport") || url.endsWith("/diag")) return new Response("{}");
+      throw new TypeError("Failed to fetch");
+    });
+    vi.stubGlobal("fetch", fetcher);
+    expect(await call("/save", { token: "tok", body: { unit: "seats" } })).toEqual({ version: 7 });
+    const sent = fetcher.mock.calls.find(([u]) => u.endsWith("/relay"))! as unknown as [string, RequestInit];
+    const inner = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(JSON.parse(sent[1].body as string).d), (c) => c.charCodeAt(0))));
+    expect(inner).toEqual({ path: "/save", method: "POST", token: "tok", body: { unit: "seats" } });
+  });
   it("תשובת שרת (גם שגיאה) אינה מפעילה מסלול חלופי", async () => {
     vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
     vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
