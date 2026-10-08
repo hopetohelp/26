@@ -62,14 +62,13 @@ export default function History({ session }: { session: ReturnType<typeof useSes
               <details className="bg-paper-card border border-paper-line rounded-theme p-3">
                 <summary className="cursor-pointer min-h-[44px] font-bold flex items-center">תוכן גרסה {v.id}</summary>
                 <VersionContent version={v} />
-                {v.unit === "seats" && <PersonalBlocs values={Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id, c]) => [id, c.v]))} source={`מנדטי גרסה ${v.id}, לפי הרכב הגושים הנוכחי שלכם`} asOf={v.created_at} />}
               </details>
             </li>
           ))}
         </ol>
       )}
       {unit === "seats" && versions && versions.length > 1 && !b && <p className="text-xs text-ink-soft">סמנו שתי גרסאות כדי לראות מה השתנה.</p>}
-      {a && b && <><PersonalBlocs values={Object.fromEntries(Object.entries(a.payload.seats).map(([id, c]) => [id, c.v]))} source={`גרסה קודמת ${a.id}, לפי הרכב הגושים הנוכחי`} asOf={a.created_at} /><PersonalBlocs values={Object.fromEntries(Object.entries(b.payload.seats).map(([id, c]) => [id, c.v]))} source={`גרסה מאוחרת ${b.id}, לפי הרכב הגושים הנוכחי`} asOf={b.created_at} /></>}
+      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...versions].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: `גרסה ${v.id}`, asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {a && b && (
         <table className="w-full text-sm tabular">
           <caption className="text-start font-bold mb-1">

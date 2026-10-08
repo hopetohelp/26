@@ -67,6 +67,7 @@ export default function Polls() {
         </form>
       </Card>
 
+      <PersonalBlocs source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={filtered.slice(0, shown).map(p => ({ values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />
       <Card>
         <ul className="divide-y divide-paper-line">
           {filtered.slice(0, shown).map((p) => {
@@ -93,7 +94,6 @@ export default function Polls() {
                   )}
                 </button>
                 <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
-                <PersonalBlocs values={Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)]))} source={`סקר ${pollsterLabel(p)}`} asOf={date(p.end)} />
                 {isOpen && (
                   <dl className="mt-2 text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                     <dt className="font-bold">עורך הסקר</dt>

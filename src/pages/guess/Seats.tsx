@@ -7,7 +7,6 @@ import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { dateLong } from "../../lib/format";
 import { K25_MAP, k25Name, IDS, nameOf, POLL_RANGES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
-import Blocs from "./Blocs";
 import { blocSummary } from "./blocSummary";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
@@ -102,7 +101,7 @@ export default function Seats({
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
           <SeatBoard values={values} />
-          <PersonalBlocs values={values} source="מנדטי ההשערה שבטיוטה" asOf="הטיוטה הנוכחית" />
+          <PersonalBlocs values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
           <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} />
             <span className="text-xs text-ink-soft">
@@ -168,13 +167,6 @@ export default function Seats({
                 );
               })}
             </ul>
-          <section className="mt-5 space-y-2" aria-labelledby="blocs-in-seats">
-            <h3 id="blocs-in-seats" className="font-display text-3xl leading-none">
-              הגושים שלי — תרחישים עצמאיים
-            </h3>
-            <p className="text-sm text-ink">כל גוש מציג את סכום המפלגות שבחרתם. יעד הוא בקשת השלמה, ואינו משנה את התוצאה שחילקתם.</p>
-            <Blocs unit={blocsUnit} session={session} mySeats={values} embedded onFit={runFill} />
-          </section>
       {/* פס פעולה דביק באזור האגודל */}
       <div className="sticky z-20 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 mt-5">
         {preview && (

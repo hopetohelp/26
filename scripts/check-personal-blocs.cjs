@@ -37,9 +37,24 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
    await page.goto(`${base}#${path}`,{waitUntil:"domcontentloaded"});
    try { await page.getByRole('heading',{name:/הגושים שלי/}).first().waitFor({timeout:10000}); } catch(e) { console.error(await page.locator("main").innerText());throw e; }
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${path}: overflow ${theme} ${dark} ${width}`);
+   assert.ok(await page.locator('[data-personal-blocs-card]').count() <= 2,`${path}: at most two personal bloc cards`);
   }
+  await page.goto(`${base}#/changes`,{waitUntil:'domcontentloaded'});
+  await page.getByRole('heading',{name:'מה השתנה מבחירות קודמות',exact:true}).waitFor();
+  const comparison=page.locator('[data-personal-blocs-card]');
+  const firstRow=comparison.getByRole('row').filter({hasText:'תרחיש 1'});
+  assert.equal((await firstRow.getByRole('cell').allTextContents())[0],'43');
+  await page.getByRole('radio',{name:'לפי משפחות מפלגות',exact:true}).click();
+  assert.equal(await page.locator('[data-personal-blocs-card]').count(),1);
+  await page.goto(`${base}#/guess?section=seats`,{waitUntil:'domcontentloaded'});
+  await page.getByLabel('מנדטים צפויים לגוש תרחיש 1',{exact:true}).fill('61');
+  assert.equal(await page.locator('[data-bloc-id]').count(),0,'עריכת ההרכב רק בלשונית הגושים');
+  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('elections26.crowd.saved.seats'))),original);
+  await page.screenshot({path:`/tmp/targets-${theme}-${dark}-${width}.png`,fullPage:true});
+  await page.goto(`${base}#/guess?view=statistics`,{waitUntil:'domcontentloaded'});
+  await page.locator('#statistics').waitFor();
   // חזרה לסטטיסטיקות נשמרת גם לאחר עריכה ומעבר במכשיר.
-  await page.getByRole('link',{name:'עריכת גושים',exact:true}).first().click();
+  await page.getByRole('link',{name:'עריכת הרכב הגושים',exact:true}).first().click();
   await page.locator('[data-bloc-id="b0"]').waitFor();
   await page.getByRole('button',{name:'עריכת שם הגוש: תרחיש 1',exact:true}).click();
   await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('תרחיש בדיקה');
@@ -47,7 +62,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
   await page.getByRole('link',{name:'חזרה למסך הקודם',exact:true}).click();
   assert.ok(page.url().includes('view=statistics'));
   await page.locator('#statistics').waitFor();
-  await page.locator('#statistics').getByText('תרחיש בדיקה',{exact:true}).first().waitFor();
+  await page.locator('#statistics').getByRole('rowheader').filter({hasText:'תרחיש בדיקה'}).first().waitFor();
   // כתובת מחשבון ישנה וקלטה נשמרים. עצם פתיחתו אינה מחליפה מנדטים.
   const shares=ids.map((id,i)=>i<2?50:0).join('_');
   const agreementFlags=meta.agreements2026.map(()=>0).join('');
@@ -63,14 +78,14 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
   assert.equal(snapshot.mode,'pct');assert.equal(Object.values(snapshot.seats).reduce((n,c)=>n+c.v,0),120);
   assert.deepEqual(snapshot.calculation,{turnout:72,eligible:4000000,agreements:[]});
   const bsave=saved.find(v=>v.unit==='blocs').payload;
-  assert.equal(bsave.blocs.length,5);assert.equal(bsave.blocs[0].name,'תרחיש בדיקה');
+  assert.equal(bsave.blocs[0].target,61);assert.deepEqual(bsave.blocs[0].lists,['likud','shas']);assert.equal(bsave.blocs.length,5);assert.equal(bsave.blocs[0].name,'תרחיש בדיקה');
   lastSeat=snapshot; lastBlocs=bsave;
   fs.mkdirSync('/tmp/elections26-ui',{recursive:true});
   await page.screenshot({path:`/tmp/elections26-ui/calculator-${theme}-${dark}-${width}.png`,fullPage:true});
   // קלט שגוי לא שומר תוצאה ישנה.
   await page.locator(`#share-${ids[0]}`).fill('100');
   assert.equal(await page.getByRole('button',{name:'שמור',exact:true}).isDisabled(),true);
-  await page.getByRole('button',{name:'היסטוריה',exact:true}).click();
+  await page.getByRole('button',{name:'ההיסטוריה שלי',exact:true}).click();
   await page.getByText('תוכן גרסה 1',{exact:true}).click();
   assert.ok((await page.locator('#my-guess').innerText()).includes('50%'));
   assert.equal(errors.length,0,errors.join('\n'));

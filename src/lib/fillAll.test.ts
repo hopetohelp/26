@@ -60,6 +60,22 @@ describe("fillAll", () => {
     expect(sum(r.seats)).toBe(120);
   });
 
+  it("fills parties outside a single partial bloc; targets need not sum to 120", () => {
+    const r = fillAll(ids, {}, polls, [bloc("scenario", ["a"], 37)]);
+    if (!r.ok) throw new Error(JSON.stringify(r.error));
+    expect(r.seats.a.v).toBe(37);
+    expect(r.seats.b.v + r.seats.c.v).toBe(83);
+    expect(sum(r.seats)).toBe(120);
+  });
+
+  it("does not add overlapping targets or require every party in a bloc", () => {
+    const r = fillAll(ids, {}, polls, [bloc("first", ["a","b"], 90), bloc("second", ["a","b"], 90)]);
+    if (!r.ok) throw new Error(JSON.stringify(r.error));
+    expect(r.seats.a.v + r.seats.b.v).toBe(90);
+    expect(r.seats.c.v).toBe(30);
+    expect(sum(r.seats)).toBe(120);
+  });
+
   it("ignores blocs without target", () => {
     const r = fillAll(ids, {}, polls, [bloc("g", ["a"], null)]);
     expect(r.ok && r.seats.a.v).toBe(60);

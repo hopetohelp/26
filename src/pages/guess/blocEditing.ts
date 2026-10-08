@@ -11,3 +11,7 @@ export function moveList(blocs: Bloc[], id: string, target: string): Bloc[] {
 export function removeBloc(blocs: Bloc[], id: string): Bloc[] {
   return blocs.filter(b => b.id !== id);
 }
+/** מסירים רק את החברות בגוש שממנו נגרר הכרטיס. */
+export function removeList(blocs: Bloc[], id: string, from: string): Bloc[] {
+  return blocs.map(b => b.id === from ? { ...b, lists: b.lists.filter(list => list !== id) } : b);
+}

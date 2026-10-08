@@ -258,8 +258,7 @@ export default function Scenarios() {
         </Explained>
       </Card>
 
-      <PersonalBlocs values={m.trend[0].seats} source="מנדטי המודל בתחילת חלון המגמה" asOf={dateLong(m.trend[0].date)} />
-      <PersonalBlocs values={m.trend[m.trend.length - 1].seats} source="מנדטי המודל בסוף חלון המגמה" asOf={dateLong(m.trend[m.trend.length - 1].date)} />
+
       <Card title="המכונים: אילו הממוצע היה מעוגן במכון אחד">
         <Explained
           kind="סיכום סקרים"
@@ -309,7 +308,7 @@ export default function Scenarios() {
             </table>
           </div>
         </Explained>
-        {m.house.map(h => <PersonalBlocs key={h.pollster} values={h.seats} source={`הממוצע מעוגן במכון ${h.firmHe}`} asOf={dateLong(m.asof)} />)}
+        <PersonalBlocs source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />
         <Note>מודגש = הפרש של 3 מנדטים ומעלה מהממוצע. מכון עם סקר אחד בלבד נאמד בזהירות (האפקט שלו מכווץ לכיוון אפס).</Note>
       </Card>
 
