@@ -50,6 +50,9 @@ export default function Seats({
     return r.ok ? { ...base, seats: r.seats, pollsAsOf: POLLS_AS_OF } : base;
   };
 
+  const startTargets = blocs?.blocs.filter((b) => b.target !== null) ?? [];
+  const targetNote = startTargets.length ? `מותאם ליעדי הגושים שלכם: ${startTargets.map((b) => `${b.name} ${b.target}`).join(", ")}.` : null;
+
   if (!p) {
     return (
       <div>
@@ -65,6 +68,7 @@ export default function Seats({
             >
               <span className="font-display text-3xl leading-none block mb-1">{o.title}</span>
               <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
+              {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
             </button>
           ))}
         </div>
