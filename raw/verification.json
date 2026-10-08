@@ -1437,5 +1437,15 @@
   "access": [
    "secondary"
   ]
+ },
+ {
+  "id": "2026-10-08-kantar-israel-hayom",
+  "checkedAt": "2026-10-08",
+  "status": "mismatch",
+  "source": "https://www.israelhayom.co.il/news/politics/article/21444759",
+  "note": "הקישור שבוויקיפדיה לסקר זה מוביל לכתבה של סקר 17.9.2026 (אותה כתבה שאומתה לסקר 2026-09-17-kantar-israel-hayom), ולא לפרסום של 8.10. אתר ישראל היום חוסם גישה (403), ולא נמצא מקור משני בחיפוש. המנדטים לא אומתו מול פרסום מקורי; הסקר יוצג בלי סימון 'אומת'.",
+  "access": [
+   "blocked"
+  ]
  }
 ]

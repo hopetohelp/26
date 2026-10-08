@@ -12,8 +12,8 @@
   ]
  },
  "bloc": {
-  "atLeast61": 0.0497,
-  "central": 52,
+  "atLeast61": 0.0494,
+  "central": 53,
   "lists": [
    "likud",
    "shas",
@@ -29,8 +29,8 @@
   ]
  },
  "camp": {
-  "atLeast61": 0.0722,
-  "central": 52,
+  "atLeast61": 0.0716,
+  "central": 53,
   "lists": [
    "likud",
    "shas",
@@ -109,7 +109,7 @@
  "horizon": 19,
  "lists": {
   "amcha": {
-   "pass": 0.2432,
+   "pass": 0.2441,
    "seats": 0,
    "seatsRange": [
     0,
@@ -118,7 +118,7 @@
    ],
    "share": 2.64,
    "shareRange": [
-    1.12,
+    1.13,
     3.93
    ]
   },
@@ -175,7 +175,7 @@
    "share": 6.49,
    "shareRange": [
     4.79,
-    8.34
+    8.35
    ]
   },
   "likud": {
@@ -186,80 +186,80 @@
     21,
     27
    ],
-   "share": 16.28,
+   "share": 16.29,
    "shareRange": [
-    12.27,
-    20.32
+    12.28,
+    20.33
    ]
   },
   "otzma": {
-   "pass": 0.9883,
+   "pass": 0.988,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     10
    ],
-   "share": 6.45,
+   "share": 6.44,
    "shareRange": [
     4.74,
-    8.34
+    8.33
    ]
   },
   "raam": {
-   "pass": 0.7905,
+   "pass": 0.7913,
    "seats": 5,
    "seatsRange": [
     0,
     5,
     7
    ],
-   "share": 4.18,
+   "share": 4.19,
    "shareRange": [
     2.71,
-    5.5
+    5.51
    ]
   },
   "reservists": {
-   "pass": 0.3409,
+   "pass": 0.3424,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     5
    ],
-   "share": 2.94,
+   "share": 2.95,
    "shareRange": [
-    1.43,
-    4.23
+    1.44,
+    4.24
    ]
   },
   "rzp": {
-   "pass": 0.9199,
+   "pass": 0.9176,
    "seats": 6,
    "seatsRange": [
     4,
     6,
     8
    ],
-   "share": 5.0,
+   "share": 4.97,
    "shareRange": [
-    3.43,
-    6.37
+    3.4,
+    6.35
    ]
   },
   "shas": {
-   "pass": 0.9893,
-   "seats": 8,
+   "pass": 0.9895,
+   "seats": 9,
    "seatsRange": [
     6,
     8,
     11
    ],
-   "share": 6.45,
+   "share": 6.46,
    "shareRange": [
-    4.75,
-    8.29
+    4.76,
+    8.3
    ]
   },
   "together": {
@@ -270,52 +270,52 @@
     12,
     16
    ],
-   "share": 9.51,
+   "share": 9.49,
    "shareRange": [
-    7.09,
-    12.16
+    7.07,
+    12.13
    ]
   },
   "utj": {
-   "pass": 0.9874,
+   "pass": 0.9875,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     11
    ],
-   "share": 6.42,
+   "share": 6.43,
    "shareRange": [
-    4.73,
-    8.26
+    4.74,
+    8.27
    ]
   },
   "yashar": {
    "pass": 0.9997,
-   "seats": 24,
+   "seats": 23,
    "seatsRange": [
-    18,
+    17,
     23,
     29
    ],
-   "share": 17.78,
+   "share": 17.74,
    "shareRange": [
-    13.52,
-    22.09
+    13.48,
+    22.04
    ]
   },
   "yb": {
-   "pass": 0.9868,
+   "pass": 0.9871,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     11
    ],
-   "share": 6.41,
+   "share": 6.45,
    "shareRange": [
-    4.69,
-    8.24
+    4.72,
+    8.29
    ]
   }
  },
@@ -412,8 +412,8 @@
  "specVersion": 5,
  "variant": "V5",
  "wasted": [
-  2.88,
+  2.87,
   5.93,
-  9.34
+  9.35
  ]
 }
