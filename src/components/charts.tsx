@@ -47,7 +47,7 @@ export function SeatRangeBars({ rows, maxSeats = 40, caption }: { rows: RangeRow
 export interface Series {
   id: string;
   name: string;
-  points: { t: number; v: number }[];
+  points: { t: number; v: number; estimated?: boolean; breakBefore?: boolean }[];
   dashed?: boolean;
   /** מזהה הצבע (ברירת מחדל: id) — לקו "מרכיבים" באותו צבע של הרשימה */
   colorId?: string;
@@ -121,16 +121,15 @@ export function TrendChart({
       {dots.map((d, i) => (
         <circle key={i} cx={x(d.t)} cy={y(d.v)} r={2.2} fill={colorOf(d.id)} opacity={0.28} />
       ))}
-      {series.map((s, i) => (
-        <polyline
-          key={s.id}
-          fill="none"
-          stroke={colorOf(s.colorId ?? s.id, i)}
-          strokeWidth={2.4}
-          strokeDasharray={s.dashed ? "5 4" : undefined}
-          points={s.points.map((p) => `${x(p.t)},${y(p.v)}`).join(" ")}
-        />
-      ))}
+      {series.map((s, i) => !s.points.some(p=>p.estimated || p.breakBefore) ? <polyline key={s.id} fill="none" stroke={colorOf(s.colorId ?? s.id,i)} strokeWidth={2.4} strokeDasharray={s.dashed ? "5 4" : undefined} points={s.points.map(p=>`${x(p.t)},${y(p.v)}`).join(" ")} /> : <g key={s.id}>
+        {s.points.map((p,k)=>{
+          const previous=s.points[k-1];
+          return <g key={p.t}>
+            {previous && !p.breakBefore && <line x1={x(previous.t)} y1={y(previous.v)} x2={x(p.t)} y2={y(p.v)} stroke={colorOf(s.colorId ?? s.id,i)} strokeWidth={2.4} strokeDasharray={s.dashed || p.estimated || previous.estimated ? "5 4" : undefined} />}
+            {(s.points.length===1 || p.estimated) && <circle cx={x(p.t)} cy={y(p.v)} r={3} fill="rgb(var(--paper))" stroke={colorOf(s.colorId ?? s.id,i)}><title>{`${s.name}: ${p.estimated ? "כ-" : ""}${seatsFmt(p.v)}`}</title></circle>}
+          </g>;
+        })}
+      </g>)}
       {markers.map((mk, i) => {
         const si = series.findIndex((x) => x.id === mk.id);
         return (

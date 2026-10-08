@@ -12,6 +12,7 @@ export interface PollValue {
 
 export interface Poll {
   id: string;
+  assumedPublishedAt?: string;
   start: string;
   end: string;
   firm: string;
@@ -115,8 +116,8 @@ export function latestPerPollster(asOf: string, days = 14): Poll[] {
 export function seatsIn(p: Poll, id: string): number | undefined {
   const v = p.values[id];
   if (!v) return undefined;
-  if (typeof v.s === "number") return v.s;
-  if (typeof v.p === "number") return 0;
+  if (Number.isFinite(v.s) && v.s! >= 0 && v.s! <= 120) return v.s;
+  if (Number.isFinite(v.p) && v.p! >= 0 && v.p! < 3.25) return 0;
   return undefined;
 }
 

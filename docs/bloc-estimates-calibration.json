@@ -1,0 +1,443 @@
+{
+  "dataThrough": "2026-10-07",
+  "split": "2026-09-01",
+  "qualityLimits": {
+    "mae": 1.5,
+    "p90": 3,
+    "minTrainingPerParty": 20,
+    "minValidationPerParty": 10
+  },
+  "policy": {
+    "maxAgeDays": 21,
+    "allowedIds": [
+      "likud",
+      "yashar",
+      "together",
+      "democrats",
+      "yb",
+      "shas",
+      "utj",
+      "otzma",
+      "rzp",
+      "joint",
+      "raam",
+      "bluewhite"
+    ],
+    "maxMissingFraction": 0.5,
+    "maxEstimatedSeatFraction": 0.3333333333333333
+  },
+  "candidates": [
+    {
+      "maxAgeDays": 3,
+      "attempted": 2972,
+      "trainingAttempted": 2230,
+      "validationAttempted": 742,
+      "beforeConsistency": {
+        "n": 922,
+        "mae": 1.1106290672451193,
+        "p90": 2.5
+      },
+      "rejectedByConsistency": 281,
+      "training": {
+        "n": 338,
+        "mae": 0.8727810650887574,
+        "p90": 2
+      },
+      "validation": {
+        "n": 303,
+        "mae": 0.7095709570957096,
+        "p90": 2
+      }
+    },
+    {
+      "maxAgeDays": 7,
+      "attempted": 2972,
+      "trainingAttempted": 2230,
+      "validationAttempted": 742,
+      "beforeConsistency": {
+        "n": 2784,
+        "mae": 0.7875359195402298,
+        "p90": 2
+      },
+      "rejectedByConsistency": 695,
+      "training": {
+        "n": 1519,
+        "mae": 0.5908492429229757,
+        "p90": 2
+      },
+      "validation": {
+        "n": 570,
+        "mae": 0.443859649122807,
+        "p90": 1
+      }
+    },
+    {
+      "maxAgeDays": 14,
+      "attempted": 2972,
+      "trainingAttempted": 2230,
+      "validationAttempted": 742,
+      "beforeConsistency": {
+        "n": 2931,
+        "mae": 0.7081200955305357,
+        "p90": 2
+      },
+      "rejectedByConsistency": 701,
+      "training": {
+        "n": 1664,
+        "mae": 0.5042067307692307,
+        "p90": 1
+      },
+      "validation": {
+        "n": 566,
+        "mae": 0.4293286219081272,
+        "p90": 1
+      }
+    },
+    {
+      "maxAgeDays": 21,
+      "attempted": 2972,
+      "trainingAttempted": 2230,
+      "validationAttempted": 742,
+      "beforeConsistency": {
+        "n": 2948,
+        "mae": 0.6770691994572592,
+        "p90": 2
+      },
+      "rejectedByConsistency": 692,
+      "training": {
+        "n": 1690,
+        "mae": 0.4653846153846154,
+        "p90": 1
+      },
+      "validation": {
+        "n": 566,
+        "mae": 0.4293286219081272,
+        "p90": 1
+      }
+    }
+  ],
+  "byParty": [
+    {
+      "id": "likud",
+      "name": "הליכוד",
+      "training": {
+        "n": 120,
+        "mae": 1.0958333333333334,
+        "p90": 2
+      },
+      "validation": {
+        "n": 33,
+        "mae": 0.696969696969697,
+        "p90": 1
+      }
+    },
+    {
+      "id": "yashar",
+      "name": "ישר!",
+      "training": {
+        "n": 162,
+        "mae": 0.9722222222222222,
+        "p90": 2
+      },
+      "validation": {
+        "n": 27,
+        "mae": 0.7407407407407407,
+        "p90": 2
+      }
+    },
+    {
+      "id": "together",
+      "name": "ביחד",
+      "training": {
+        "n": 57,
+        "mae": 0.5263157894736842,
+        "p90": 2
+      },
+      "validation": {
+        "n": 32,
+        "mae": 0.5625,
+        "p90": 1
+      }
+    },
+    {
+      "id": "democrats",
+      "name": "הדמוקרטים",
+      "training": {
+        "n": 151,
+        "mae": 0.4271523178807947,
+        "p90": 1
+      },
+      "validation": {
+        "n": 33,
+        "mae": 0.3333333333333333,
+        "p90": 1
+      }
+    },
+    {
+      "id": "yb",
+      "name": "ישראל ביתנו",
+      "training": {
+        "n": 141,
+        "mae": 0.38652482269503546,
+        "p90": 1
+      },
+      "validation": {
+        "n": 35,
+        "mae": 0.2857142857142857,
+        "p90": 1
+      }
+    },
+    {
+      "id": "shas",
+      "name": "ש\"ס",
+      "training": {
+        "n": 162,
+        "mae": 0.2191358024691358,
+        "p90": 1
+      },
+      "validation": {
+        "n": 45,
+        "mae": 0.17777777777777778,
+        "p90": 1
+      }
+    },
+    {
+      "id": "utj",
+      "name": "יהדות התורה",
+      "training": {
+        "n": 179,
+        "mae": 0.1424581005586592,
+        "p90": 1
+      },
+      "validation": {
+        "n": 42,
+        "mae": 0.21428571428571427,
+        "p90": 1
+      }
+    },
+    {
+      "id": "otzma",
+      "name": "עוצמה יהודית",
+      "training": {
+        "n": 134,
+        "mae": 0.5111940298507462,
+        "p90": 1
+      },
+      "validation": {
+        "n": 40,
+        "mae": 0.425,
+        "p90": 1
+      }
+    },
+    {
+      "id": "rzp",
+      "name": "הציונות הדתית-זהות",
+      "training": {
+        "n": 133,
+        "mae": 0.5112781954887218,
+        "p90": 1
+      },
+      "validation": {
+        "n": 43,
+        "mae": 1.0232558139534884,
+        "p90": 3
+      }
+    },
+    {
+      "id": "joint",
+      "name": "הרשימה המשותפת",
+      "training": {
+        "n": 24,
+        "mae": 0.3333333333333333,
+        "p90": 1
+      },
+      "validation": {
+        "n": 43,
+        "mae": 0.27906976744186046,
+        "p90": 1
+      }
+    },
+    {
+      "id": "raam",
+      "name": "רע\"ם",
+      "training": {
+        "n": 149,
+        "mae": 0.174496644295302,
+        "p90": 1
+      },
+      "validation": {
+        "n": 46,
+        "mae": 0.1956521739130435,
+        "p90": 1
+      }
+    },
+    {
+      "id": "reservists",
+      "name": "המילואימניקים-הכלכלית",
+      "training": {
+        "n": 113,
+        "mae": 0.36283185840707965,
+        "p90": 0
+      },
+      "validation": {
+        "n": 46,
+        "mae": 0.8043478260869565,
+        "p90": 4
+      }
+    },
+    {
+      "id": "bluewhite",
+      "name": "כחול לבן",
+      "training": {
+        "n": 150,
+        "mae": 0.18666666666666668,
+        "p90": 0
+      },
+      "validation": {
+        "n": 41,
+        "mae": 0.0975609756097561,
+        "p90": 0
+      }
+    },
+    {
+      "id": "amcha",
+      "name": "עמך ישראל",
+      "training": {
+        "n": 15,
+        "mae": 3.2,
+        "p90": 7
+      },
+      "validation": {
+        "n": 36,
+        "mae": 0.5833333333333334,
+        "p90": 4
+      }
+    },
+    {
+      "id": "haredi_public",
+      "name": "הציבור החרדי",
+      "training": {
+        "n": 0,
+        "mae": null,
+        "p90": null
+      },
+      "validation": {
+        "n": 24,
+        "mae": 0,
+        "p90": 0
+      }
+    }
+  ],
+  "byFirm": [
+    {
+      "firm": "SF+ND",
+      "n": 254,
+      "mae": 0.38188976377952755,
+      "p90": 1
+    },
+    {
+      "firm": "MP+TM+SN+A",
+      "n": 152,
+      "mae": 0.506578947368421,
+      "p90": 1.5
+    },
+    {
+      "firm": "Maagar Mochot",
+      "n": 97,
+      "mae": 0.5154639175257731,
+      "p90": 2
+    },
+    {
+      "firm": "Midgam R&C",
+      "n": 383,
+      "mae": 0.3289817232375979,
+      "p90": 1
+    },
+    {
+      "firm": "Kantar",
+      "n": 315,
+      "mae": 0.4238095238095238,
+      "p90": 1
+    },
+    {
+      "firm": "Yossi Tatika",
+      "n": 291,
+      "mae": 0.5927835051546392,
+      "p90": 2
+    },
+    {
+      "firm": "LRI+P4A",
+      "n": 414,
+      "mae": 0.3611111111111111,
+      "p90": 1
+    },
+    {
+      "firm": "Direct Polls",
+      "n": 165,
+      "mae": 0.6545454545454545,
+      "p90": 2
+    },
+    {
+      "firm": "S.M.L.T.",
+      "n": 8,
+      "mae": 1.875,
+      "p90": 4
+    },
+    {
+      "firm": "Midgam Project",
+      "n": 9,
+      "mae": 0.4444444444444444,
+      "p90": 2.5
+    },
+    {
+      "firm": "Lazar",
+      "n": 9,
+      "mae": 0.6666666666666666,
+      "p90": 4
+    },
+    {
+      "firm": "MM+SN",
+      "n": 44,
+      "mae": 0.6363636363636364,
+      "p90": 2
+    },
+    {
+      "firm": "Filber",
+      "n": 103,
+      "mae": 0.4077669902912621,
+      "p90": 1
+    },
+    {
+      "firm": "TrendZone",
+      "n": 12,
+      "mae": 1.75,
+      "p90": 6
+    }
+  ],
+  "byAge": [
+    {
+      "upToDays": 3,
+      "n": 124,
+      "mae": 0.20161290322580644,
+      "p90": 1
+    },
+    {
+      "upToDays": 7,
+      "n": 1420,
+      "mae": 0.4137323943661972,
+      "p90": 1
+    },
+    {
+      "upToDays": 14,
+      "n": 526,
+      "mae": 0.5893536121673004,
+      "p90": 2
+    },
+    {
+      "upToDays": 21,
+      "n": 186,
+      "mae": 0.5752688172043011,
+      "p90": 2
+    }
+  ]
+}

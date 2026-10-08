@@ -1,0 +1,19 @@
+{
+  "maxAgeDays": 21,
+  "allowedIds": [
+    "likud",
+    "yashar",
+    "together",
+    "democrats",
+    "yb",
+    "shas",
+    "utj",
+    "otzma",
+    "rzp",
+    "joint",
+    "raam",
+    "bluewhite"
+  ],
+  "maxMissingFraction": 0.5,
+  "maxEstimatedSeatFraction": 0.3333333333333333
+}

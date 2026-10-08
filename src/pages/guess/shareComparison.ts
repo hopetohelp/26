@@ -1,5 +1,6 @@
 import forecastFile from "../../data/forecast.json";
 import { POLLS, POLLS_AS_OF } from "./model";
+import { blocValues } from "../../lib/personalBlocs";
 import type { BlocTotal } from "./blocSummary";
 
 const forecast = forecastFile as { asof: string; enough: boolean; lists: Record<string, { seats: number }> ; gate: { passedAtHorizon: boolean | null } };
@@ -15,7 +16,12 @@ export function sumShareBloc(lists: string[], values: Record<string, number> | n
   return [...new Set(lists)].reduce((n, id) => n + values[id], 0);
 }
 export function shareBlocRows(blocs: BlocTotal[], values: Record<string, number>, polls = SHARE_POLLS, forecast: Record<string, number> | null = SHARE_FORECAST) {
-  return blocs.filter(b => b.lists.length).map(b => ({ ...b,
-    mine: sumShareBloc(b.lists, values), polls: sumShareBloc(b.lists, polls), forecast: sumShareBloc(b.lists, forecast),
-  })).sort((a, b) => (b.mine ?? -1) - (a.mine ?? -1));
+  return blocs.filter(b => b.lists.length).map(b => {
+    const members = [{id: "share", name:b.name, lists:b.lists, target:null}];
+    const mapping=Object.fromEntries(b.lists.map(id=>[id,id]));
+    const mineInfo=blocValues(members,values,mapping)[0];
+    const pollsInfo=blocValues(members,polls,mapping)[0];
+    const forecastInfo=blocValues(members,forecast??{},mapping)[0];
+    return {...b,mine:mineInfo.total,polls:pollsInfo.total,forecast:forecastInfo.total,mineInfo,pollsInfo,forecastInfo};
+  }).sort((a,b)=>(b.mine??b.mineInfo.knownTotal??-1)-(a.mine??a.mineInfo.knownTotal??-1));
 }
