@@ -11,7 +11,7 @@ import { Btn, Notice } from "./guess/ui";
 const KEY = "elections26.admin";
 type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string };
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
-type Day = { day: string; visits: number; users: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
+type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
 type Data = { accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
@@ -100,9 +100,14 @@ export default function Admin() {
               ["נפילות היום", (today?.autoFailures ?? 0)],
               ["ממתינים לתשובה", waiting],
               ["משתמשים מצטבר", data.totalVisitors],
-              ["חשבונות", data.support?.stats.participants ?? "—"],
-              ["חשבונות היום", data.support?.stats.participantsToday ?? "—"],
-              ["שמירות היום", data.support?.stats.savesToday ?? "—"],
+              ["נכנסו להשערה היום", today?.guessUsers ?? "—"],
+              ["שמרו (בדשבורד)", data.support?.stats.savers ?? "—"],
+              ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
+              ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
+              ["רשומות במאגר", data.support?.stats.participants ?? "—"],
+              ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
+              ["חשבון בלי שמירה", data.support?.stats.accountsNoSave ?? "—"],
+              ["רשומות ריקות בלי משתמש", data.support?.stats.emptyGuests ?? "—"],
             ].map(([label, n]) => (
               <div key={label} className="bg-paper-card border border-paper-line rounded-theme p-3">
                 <p className="text-xs text-ink-soft">{label}</p>
@@ -115,11 +120,11 @@ export default function Admin() {
             <h2 className="font-display text-2xl">לפי יום</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm tabular">
-                <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
-                <tbody>{data.days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
+                <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נכנסו להשערה", "נכנסו לסטטיסטיקות", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
+                <tbody>{data.days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
               </table>
             </div>
-            <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו.</p>
+            <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8.10.2026), ולא אנשים.</p>
           </section>
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}

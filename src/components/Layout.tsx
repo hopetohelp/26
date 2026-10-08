@@ -1,7 +1,7 @@
 import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import FreezeBanner from "./FreezeBanner";
 import { meta } from "../lib/data";
@@ -239,6 +239,20 @@ function MobileTabs() {
   );
 }
 
+/** במחשב: הזמנה צפה להשערה (הכרעת בעלים 8.10.2026). לא במסכי ההשערה והסטטיסטיקות ולא בניהול; לתוכן יש ריווח תחתון כדי שלא יוסתר. */
+const NO_GUESS_CTA = ["/guess", "/community", "/admin"];
+function GuessCta({ pathname }: { pathname: string }) {
+  if (NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
+  return (
+    <Link
+      to="/guess"
+      className="hidden md:flex fixed bottom-6 end-6 z-30 items-center min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg no-underline hover:brightness-95"
+    >
+      מה ההשערה שלך?
+    </Link>
+  );
+}
+
 export default function Layout() {
   const { pathname } = useLocation();
   const [theme] = useTheme();
@@ -259,11 +273,11 @@ export default function Layout() {
         <DesktopNav theme={theme} />
       </header>
       <FreezeBanner />
-      <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-10 outline-none">
+      <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
         <PersonalBlocsProvider><PageErrorBoundary><Outlet /></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <footer className="border-t border-paper-line bg-paper-card text-sm text-ink-soft mb-16 md:mb-0">
-        <div className="w-full mx-auto px-4 md:px-6 py-4 space-y-1">
+        <div className="w-full mx-auto px-4 md:px-6 py-4 md:pb-24 space-y-1">
           <p>
             <strong>האתר אינו עורך סקרים.</strong> הממוצעים, הטווחים והתרחישים הם ניתוח של סקרים שכבר פורסמו, עם פרטי כל סקר ומקורו.
             תוצאות האמת — מקובצי ועדת הבחירות המרכזית.
@@ -274,6 +288,7 @@ export default function Layout() {
         </div>
       </footer>
       <MobileTabs />
+      <GuessCta pathname={pathname} />
     </div>
   );
 }

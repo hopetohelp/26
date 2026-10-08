@@ -124,7 +124,8 @@ export function Split({ primary, secondary, title, lead }: { primary: ReactNode;
           {hasHead && split && lead && <p className="text-ink-soft leading-relaxed mb-5">{lead}</p>}
           {primary}
         </div>
-        <div className={split ? "overflow-y-auto ps-6" : ""}>{secondary}</div>
+        {/* pb-24: הכפתור הצף "מה ההשערה שלך?" לא מסתיר את סוף הטור */}
+        <div className={split ? "overflow-y-auto ps-6 pb-24" : ""}>{secondary}</div>
       </div>
     </>
   );
