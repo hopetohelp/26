@@ -135,7 +135,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         <section id="statistics">
           <Dashboard session={session} />
         </section>
-      ); return <Split title={community ? "סטטיסטיקת ההשערות" : "ההשערה שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."} primary={head} secondary={body} />; })()}
+      ); return <Split title={community ? "סקר האתר" : "ההשערה שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."} primary={head} secondary={body} />; })()}
     </>
   );
 }
