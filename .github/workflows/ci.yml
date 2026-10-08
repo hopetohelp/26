@@ -1,10 +1,8 @@
 name: בדיקות
 on:
-  # הכרעת בעלים 8.10.2026: אין הרצה בכל PR/מיזוג (חיסכון בדקות) — הרצה יומית ב-22:00 שעון ישראל, או ידנית
-  schedule:
-    - cron: "0 19 * * *"  # 22:00 בשעון קיץ
-    - cron: "0 20 * * *"  # 22:00 בשעון חורף
-  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
 permissions:
   contents: read
 concurrency:
@@ -15,50 +13,33 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: רק ב-22:00 שעון ישראל (שתי השעות ב-cron מכסות קיץ/חורף)
-        id: gate
-        run: |
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(TZ=Asia/Jerusalem date +%H)" != "22" ]; then echo "run=no" >> "$GITHUB_OUTPUT"; else echo "run=yes" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/checkout@v4
-        if: steps.gate.outputs.run == 'yes'
       - uses: actions/setup-node@v4
-        if: steps.gate.outputs.run == 'yes'
         with:
           node-version: 22
           cache: npm
       - uses: actions/setup-python@v5
-        if: steps.gate.outputs.run == 'yes'
         with:
           python-version: "3.11"
       - run: npm ci
-        if: steps.gate.outputs.run == 'yes'
       - name: הנתונים נבנים מחדש זהה מחומר הגלם (דטרמיניזם)
-        if: steps.gate.outputs.run == 'yes'
         run: |
           AS_OF=$(python3 -c "import json;print(json.load(open('src/data/meta.json'))['dataAsOf'])")
           BUILD_TIME="$AS_OF" python3 pipeline/build_data.py
           git diff --exit-code -- src/data
       - name: הקפאה לפי 16ה(ח) — שעון מזויף
-        if: steps.gate.outputs.run == 'yes'
         run: python3 pipeline/test_freeze.py
       - name: המודל — מנוע מהיר זהה למנוע המחקרי, בדיקת עבר עדכנית
-        if: steps.gate.outputs.run == 'yes'
         run: python3 pipeline/test_model.py
       - name: מודל החיזוי — מדדים, מגמה, ושלמות יומן ההרצות
-        if: steps.gate.outputs.run == 'yes'
         run: python3 pipeline/test_forecast.py
       - name: בדיקות חלופת התחזית המחקרית
-        if: steps.gate.outputs.run == 'yes'
         run: python3 pipeline/test_forecast_challenger.py
       - name: סקרים ישירים — קליטה ללא השהיה
-        if: steps.gate.outputs.run == 'yes'
         run: python3 pipeline/test_direct_polls.py
       - name: טיפוסים
-        if: steps.gate.outputs.run == 'yes'
         run: npx tsc --noEmit -p tsconfig.json
       - name: בדיקות המנוע
-        if: steps.gate.outputs.run == 'yes'
         run: npm test
       - name: בנייה
-        if: steps.gate.outputs.run == 'yes'
         run: npm run build
