@@ -221,8 +221,11 @@ describe("אבחון סופי של כל המסלולים", () => {
     });
     vi.stubGlobal("fetch", fetcher);
     await expect(call("/auth/login", { token: "secret-token", body: { password: "secret-password" } })).rejects.toMatchObject({ diagnostic: { attempts: [{route:"gateway"},{route:"direct"},{route:"relay"}], connection: { rtt: 80 } } });
-    expect(fetcher.mock.calls.map(([url]) => url)).toEqual(["https://feedback.example/crowd/auth/login", "https://crowd.example/auth/login", "https://feedback.example/relay", "https://feedback.example/autoreport"]);
-    const log = String((fetcher.mock.calls[3] as unknown as [string, RequestInit])[1].body);
+    const urls = fetcher.mock.calls.map(([url]) => url);
+    // בדיקת העומק (ping, Google, diag) רצה גם היא אחרי הכשל הסופי, ואינה חלק מסדר המסלולים.
+    expect(urls.filter(u => !/\/(ping|diag)$|dashboard\.json|google/.test(u))).toEqual(["https://feedback.example/crowd/auth/login", "https://crowd.example/auth/login", "https://feedback.example/relay", "https://feedback.example/autoreport"]);
+    expect(urls.filter(u => u.endsWith("/diag"))).toHaveLength(5);
+    const log = String((fetcher.mock.calls.find(([url]) => url.endsWith("/autoreport")) as unknown as [string, RequestInit])[1].body);
     expect(log).not.toContain("secret-password");
     expect(log).not.toContain("secret-token");
   });
@@ -235,7 +238,9 @@ describe("אבחון סופי של כל המסלולים", () => {
     });
     vi.stubGlobal("fetch", fetcher);
     await expect(call("/dashboard")).rejects.toMatchObject({status:503,diagnostic:{attempts:[{route:"gateway"},{route:"direct"},{route:"relay",status:503}]}});
-    expect(fetcher.mock.calls.some(([url]) => url.endsWith("/diag"))).toBe(false);
+    // אין מונה "הצלחת ממסר"; רק מוני בדיקת העומק
+    const diags = (fetcher.mock.calls as unknown as [string, RequestInit][]).filter(([url]) => url.endsWith("/diag")).map(([, init]) => String(init.body));
+    expect(diags.every(body => body.includes("probe-"))).toBe(true);
     expect(fetcher.mock.calls.filter(([url]) => url.endsWith("/autoreport"))).toHaveLength(1);
   });
 });

@@ -442,7 +442,10 @@ export function reportDiag(kind: ConnectionKind) {
  */
 let autoSent = 0;
 export function reportFailure(path: string, diagnostic?: Record<string, unknown>) {
-  if (!feedbackUrl || autoSent >= 3) return;
+  if (!feedbackUrl) return;
+  // גם כשהשמירה ממשיכה "בעיוורון" ולא מוצגת שגיאה — לבדוק לאן הגולש כן מגיע (פעם אחת לטעינה).
+  void deepProbe();
+  if (autoSent >= 3) return;
   autoSent++;
   const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic });
   void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
