@@ -16,7 +16,7 @@ const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/today", label: "מצב ותחזית", icon: "board" },
-  { to: "/polls", label: "סקרים", icon: "bars" },
+  { to: "/community", label: "הגולשים", icon: "bars" },
   { to: "/guess", label: "השערות", icon: "guess" },
   { to: "/support", label: "תמיכה", icon: "comments" },
 ];

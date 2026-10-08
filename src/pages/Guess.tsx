@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageTitle } from "../components/ui";
 import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
@@ -34,15 +34,16 @@ function Countdown() {
   );
 }
 
-export default function Guess() {
+export default function Guess({ community = false }: { community?: boolean }) {
+  const navigate = useNavigate();
   const session = useSession();
   const [params, setParams] = useSearchParams();
   const [flash, setFlash] = useState<{ ok: boolean; text: string } | null>(null);
   const [intro, setIntro] = useState(() => !introSeen());
   const [recoverLink, setRecoverLink] = useState<string | null>(null);
   const [mineKey, setMineKey] = useState(0);
-  const view = params.get("view") === "statistics" ? "statistics" : "mine";
-  const setView = (value: "mine" | "statistics") => { const next = new URLSearchParams(params); next.set("view", value); setParams(next, { replace: true }); };
+  const view = community ? "statistics" : "mine";
+  const setView = (value: "mine" | "statistics") => { if (value !== view) navigate(value === "statistics" ? "/community" : "/guess"); };
   const top = useRef<HTMLDivElement>(null);
 
   // הקישור האישי (?t=) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
@@ -83,16 +84,17 @@ export default function Guess() {
       setMineKey((k) => k + 1);
     }
     closeShared();
+    if (community) navigate("/guess");
     requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
 
   return (
     <>
-      <PageTitle lead="בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים.">ההשערה שלי</PageTitle>
+      <PageTitle lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."}>{community ? "השערות הגולשים" : "ההשערה שלי"}</PageTitle>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      <div className="mb-5"><Countdown /></div>
-      {intro && !shared && (
+      {!community && <div className="mb-5"><Countdown /></div>}
+      {intro && !shared && !community && (
         <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
           <h2 className="font-display text-3xl leading-none mb-2">השערות גולשים, אינן סקר</h2>
           <p className="text-sm leading-relaxed mb-3">

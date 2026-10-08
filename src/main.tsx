@@ -51,7 +51,8 @@ createRoot(document.getElementById("root")!).render(
           />
           <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
-          <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess /></Suspense>} />
+          <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense>} />
+          <Route path="community" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess community /></Suspense>} />
           <Route
             path="past"
             element={<Tabbed label="בחירות קודמות" tabs={[
@@ -93,4 +94,13 @@ function LegacyCalculator() {
   }
   next.set("section", "calculator");
   return <CalculatorRedirect replace to={`/guess?${next}`} />;
+}
+
+/** קישורים ישנים לסטטיסטיקות נשארים תקינים, לרבות פרמטרי הקישור האישי. */
+function LegacyGuess() {
+  const [params] = useCalculatorParams();
+  if (params.get("view") !== "statistics") return <Guess />;
+  const next = new URLSearchParams(params);
+  next.delete("view");
+  return <CalculatorRedirect replace to={`/community${next.size ? `?${next}` : ""}`} />;
 }
