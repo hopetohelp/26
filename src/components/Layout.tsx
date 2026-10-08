@@ -17,7 +17,7 @@ const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/today", label: "מצב ותחזית", icon: "board" },
   { to: "/community", label: "סקר האתר", icon: "bars" },
-  { to: "/guess", label: "השערות", icon: "guess" },
+  { to: "/guess", label: "הכנסת שלי", icon: "guess" },
   { to: "/support", label: "תמיכה", icon: "comments" },
 ];
 
@@ -248,7 +248,7 @@ function GuessCta({ pathname }: { pathname: string }) {
       to="/guess"
       className="hidden md:flex fixed bottom-6 end-6 z-30 items-center min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg no-underline hover:brightness-95"
     >
-      מה ההשערה שלך?
+      לבנות את הכנסת שלי
     </Link>
   );
 }
