@@ -72,3 +72,56 @@ describe("לוג תקלת שמירה", () => {
   });
 
 });
+
+describe("מסלולים חלופיים ובדיקת חיבור", () => {
+  it("כשל ברשת במסלול אחד ⇐ המסלול השני, והוא נשאר בשימוש", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn(async (url: string) => {
+      if (url.startsWith("https://feedback.example/crowd")) throw new TypeError("Failed to fetch");
+      return new Response('{"ok":true}');
+    });
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/me", { token: "t" })).resolves.toEqual({ ok: true });
+    expect(fetcher.mock.calls[0][0]).toBe("https://feedback.example/crowd/me");
+    expect(fetcher.mock.calls[1][0]).toBe("https://crowd.example/me");
+    fetcher.mockClear();
+    await call("/me", { token: "t" });
+    expect(fetcher.mock.calls[0][0]).toBe("https://crowd.example/me"); // המסלול שעבד קודם
+  });
+  it("שני המסלולים נכשלו ⇐ שגיאת רשת אחת עם לוג", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
+    await expect(call("/auth/guest", { body: {} })).rejects.toMatchObject({ code: "network", diagnostic: { method: "POST" } });
+  });
+  it("תשובת שרת (גם שגיאה) אינה מפעילה מסלול חלופי", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn().mockResolvedValue(new Response('{"error":"bad_credentials"}', { status: 401 }));
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/auth/login", { body: {} })).rejects.toMatchObject({ status: 401 });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("סיווג תוצאות הבדיקה", async () => {
+    vi.resetModules();
+    const { classifyConnection } = await import("./crowdApi");
+    const ok = { feedback: true, gateway: true, direct: true, post: true, postPassword: true };
+    expect(classifyConnection(ok)).toBe("all-ok");
+    expect(classifyConnection({ feedback: false, gateway: false, direct: false, post: false, postPassword: false })).toBe("all-blocked");
+    expect(classifyConnection({ ...ok, gateway: false, direct: false, post: false, postPassword: false })).toBe("feedback-only");
+    expect(classifyConnection({ ...ok, gateway: false })).toBe("direct-only");
+    expect(classifyConnection({ ...ok, direct: false })).toBe("gateway-only");
+    expect(classifyConnection({ ...ok, post: false })).toBe("post-blocked");
+    expect(classifyConnection({ ...ok, postPassword: false })).toBe("password-blocked");
+  });
+});

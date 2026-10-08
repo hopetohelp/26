@@ -1,0 +1,19 @@
+name: בדיקת בריאות
+# כל חצי שעה: בודקת מבחוץ שהשרתים עונים, שכותרות CORS תקינות ושהרשמה/שמירה נדחות בשגיאה ברורה ולא בכשל רשת.
+# כשל ⇐ הריצה נכשלת ו-GitHub שולח התראה לבעלים. אין בה סודות והיא לא יוצרת משתתפים או הערות.
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/health-check.mjs

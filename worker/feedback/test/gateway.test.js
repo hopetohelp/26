@@ -25,3 +25,27 @@ describe("internal account gateway", () => {
     expect((await worker.fetch(new Request("https://feedback.example/crowd/me"), {})).status).toBe(503);
   });
 });
+
+describe("בדיקת חיבור וסיווג כשלים", () => {
+  const origin = "https://hopetohelp.github.io";
+  const env = (rows) => ({
+    ALLOWED_ORIGIN: origin,
+    DB: { prepare: (sql) => ({ bind: (...a) => ({ run: async () => rows.push([sql, ...a]) }) }) },
+  });
+  it("ping עונה ב-GET וב-POST בלי מאגר, עם CORS", async () => {
+    for (const method of ["GET", "POST"]) {
+      const res = await worker.fetch(new Request("https://feedback.example/ping", { method, headers: { origin }, body: method === "POST" ? '{"password":"x"}' : undefined }), { ALLOWED_ORIGIN: origin });
+      expect(res.status).toBe(200);
+      expect(res.headers.get("access-control-allow-origin")).toBe(origin);
+    }
+  });
+  it("diag שומר מונה לפי סיווג מוכר בלבד", async () => {
+    const rows = [];
+    const ok = await worker.fetch(new Request("https://feedback.example/diag", { method: "POST", headers: { origin }, body: JSON.stringify({ kind: "feedback-only" }) }), env(rows));
+    expect(ok.status).toBe(200);
+    expect(rows[0][2]).toBe("diag:feedback-only");
+    const bad = await worker.fetch(new Request("https://feedback.example/diag", { method: "POST", headers: { origin }, body: JSON.stringify({ kind: "free text" }) }), env(rows));
+    expect(bad.status).toBe(400);
+    expect(rows).toHaveLength(1);
+  });
+});

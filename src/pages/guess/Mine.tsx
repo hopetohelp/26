@@ -5,6 +5,7 @@ import Calculator from "../Calculator";
 import { useState } from "react";
 import { linkAcked, setLinkAck } from "../../lib/crowdSession";
 import { type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
+import { ClaimForm } from "./Account";
 import History from "./History";
 import LinkSaver from "./LinkSaver";
 import Seats from "./Seats";
@@ -67,6 +68,20 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
           </p>
           <LinkSaver token={session.link} />
           <Btn onClick={() => (setLinkAck(true), setAcked(true))}>שמרתי את הקישור</Btn>
+        </section>
+      )}
+      {session.token && session.me?.guest && (
+        <section className="mb-5 border-2 border-warn rounded-theme p-4 bg-paper-card space-y-2" aria-labelledby="guest-title">
+          <h2 id="guest-title" className="font-display text-3xl leading-none">
+            נשמרתם בלי משתמש
+          </h2>
+          <p className="text-sm text-ink">אם תחליפו מכשיר או תמחקו נתוני דפדפן, אי אפשר יהיה לשחזר את ההשערה. מומלץ להוסיף שם משתמש וסיסמה, ומה ששמרתם נשאר.</p>
+          <details>
+            <summary className="cursor-pointer min-h-[44px] inline-flex items-center px-4 rounded-full border-2 border-ink bg-ink text-paper-card text-sm font-bold">הוספת שם משתמש</summary>
+            <div className="pt-3">
+              <ClaimForm session={session} />
+            </div>
+          </details>
         </section>
       )}
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">

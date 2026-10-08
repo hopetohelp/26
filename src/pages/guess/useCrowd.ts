@@ -52,7 +52,8 @@ export type SaveState = "idle" | "saving" | "error";
 export const errorText = (e: unknown): string => {
   if (!(e instanceof CrowdError)) return "משהו השתבש. אפשר לנסות שוב.";
   if (e.code === "offline") return "השמירה עוד לא פעילה באתר. הטיוטה נשמרת בדפדפן הזה.";
-  if (e.code === "network") return "אין חיבור לשרת. הטיוטה שמורה; אפשר לנסות שוב.";
+  if (e.code === "network") return "אין חיבור לשרת. הטיוטה שמורה אצלכם; אפשר לנסות שוב.";
+  if (e.code === "has_password") return "לחשבון הזה כבר יש שם משתמש.";
   if (e.code === "no_password") return "לחשבון הזה עוד אין שם משתמש וסיסמה.";
   if (e.code === "username_taken") return "שם המשתמש הזה כבר תפוס. אפשר לבחור אחר — או להיכנס, אם הוא שלכם.";
   if (e.code === "bad_username") return "שם משתמש: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון.";

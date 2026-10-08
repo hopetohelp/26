@@ -2,11 +2,14 @@
  * החוזה בין האתר לשרת ההשתתפות (worker/crowd). מקור אחד לטיפוסים בשני הצדדים — השרת מממש בדיוק את מה שכתוב כאן.
  * השיטה המלאה: docs/השתתפות-גולשים.md
  *
- * זהות: חשבון = שם משתמש + סיסמה, והוא הדרך היחידה לשמור (הכרעת בעלים 6.10.2026) — אין משתתף אנונימי.
+ * זהות: חשבון = שם משתמש + סיסמה (מומלץ), או שמירה בלי משתמש — "אורח" בלי שחזור (הכרעת בעלים 8.10.2026).
  * כל בקשה מזוהה נושאת `Authorization: Bearer <token>` של סשן; הסשן נשמר בדפדפן אצל הבעלים היחיד שלו — src/lib/crowdSession.ts.
  * הקישור האישי נוצר בהרשמה: הוא מכניס ישר להשערות (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה. הוא עצמו אינו Bearer.
  *
  * POST /auth/register {username,password}  ⇐ {token, link}  משתתף חדש: סיסמה + קישור אישי + סשן.
+ * POST /auth/guest   {}                    ⇐ {token}       שמירה בלי משתמש (הכרעת בעלים 8.10.2026): בלי סיסמה ובלי קישור אישי, ולכן בלי שחזור.
+ * POST /auth/claim   {username,password}   ⇐ {username, link}  (בסשן) הוספת שם משתמש וסיסמה לאורח; נוצר קישור אישי.
+ * GET|POST /ping                      ⇐ {ok}          בדיקת חיבור, בלי זהות ובלי מאגר.
  * POST /auth/login    {username,password}  ⇐ {token}
  * POST /auth/logout   {all?:boolean}       ⇐ {ok}
  * POST /auth/password {current,next}       ⇐ {token}       קובע סיסמה (הנוכחית חובה) ומבטל את שאר הסשנים; הקישור נשאר.
@@ -26,7 +29,15 @@
  */
 
 const feedbackUrl = import.meta.env.VITE_FEEDBACK_URL as string | undefined;
-export const CROWD_URL = feedbackUrl ? feedbackUrl.replace(/\/$/, "") + "/crowd" : import.meta.env.VITE_CROWD_URL as string | undefined;
+const directUrl = (import.meta.env.VITE_CROWD_URL as string | undefined)?.replace(/\/$/, "");
+const gatewayUrl = feedbackUrl ? feedbackUrl.replace(/\/$/, "") + "/crowd" : undefined;
+export const CROWD_URL = gatewayUrl ?? directUrl;
+/**
+ * שני מסלולים לאותו שרת: דרך שרת ההערות (gateway) וישירות. כשבקשה נכשלת ברשת במסלול אחד — מנסים את השני,
+ * והמסלול שעבד נשאר בשימוש לשאר הביקור. כשחוסמים כתובת אחת ברשת, השנייה יכולה לעבור.
+ */
+const BASES = [...new Set([gatewayUrl, directUrl].filter((u): u is string => !!u))];
+let preferred = 0;
 
 export type Unit = "vote" | "seats" | "blocs";
 
@@ -97,6 +108,8 @@ export interface Me {
   latest: Partial<Record<Unit, Version>>;
   username: string | null;
   google: boolean;
+  /** נשמר בלי שם משתמש וסיסמה (POST /auth/guest): אי אפשר לשחזר אם הסשן אבד */
+  guest: boolean;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */
@@ -180,26 +193,27 @@ export class CrowdError extends Error {
   }
 }
 
-export async function call<T>(path: string, opts: { method?: string; body?: unknown; token?: string | null } = {}): Promise<T> {
-  if (!CROWD_URL) throw new CrowdError(0, "offline");
-  const started = Date.now();
+/** מנסה מסלול אחד; כשל ברשת נזרק כ-CrowdError("network") עם לוג בלי פרטים אישיים */
+async function attempt(base: string, path: string, opts: { method?: string; body?: unknown; token?: string | null }, started: number): Promise<Response> {
   const context = () => ({
     at: new Date().toISOString(),
-    endpoint: CROWD_URL + path.split("?")[0],
+    endpoint: base + path.split("?")[0],
     method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
     elapsedMs: Date.now() - started,
     online: navigator.onLine,
     browser: navigator.userAgent,
   });
-  const res = await fetch(CROWD_URL + path, {
-    cache: path.split("?")[0] === "/dashboard" ? "no-store" : "default",
-    method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
-    headers: {
-      ...(opts.body === undefined ? {} : { "content-type": "application/json" }),
-      ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}),
-    },
-    body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
-  }).catch((cause: unknown) => {
+  try {
+    return await fetch(base + path, {
+      cache: path.split("?")[0] === "/dashboard" ? "no-store" : "default",
+      method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
+      headers: {
+        ...(opts.body === undefined ? {} : { "content-type": "application/json" }),
+        ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}),
+      },
+      body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
+    });
+  } catch (cause: unknown) {
     // בלי גוף הבקשה, כותרות או כתובת העמוד: הם עשויים להכיל פרטי כניסה וקישורים אישיים.
     const clean = (s: string) => {
       const urls = s.replace(/https?:\/\/[^\s)]+/g, (url) => url.split(/[?#]/)[0]);
@@ -211,8 +225,89 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
       ...context(),
       cause: cause instanceof Error ? { name: cause.name, message: clean(cause.message), stack: clean(cause.stack ?? "") } : { name: "UnknownError" },
     });
-  });
+  }
+}
+
+export async function call<T>(path: string, opts: { method?: string; body?: unknown; token?: string | null } = {}): Promise<T> {
+  if (!BASES.length) throw new CrowdError(0, "offline");
+  const started = Date.now();
+  let res: Response | undefined;
+  let first: CrowdError | undefined;
+  for (let i = 0; i < BASES.length && !res; i++) {
+    const idx = (preferred + i) % BASES.length;
+    try {
+      res = await attempt(BASES[idx], path, opts, started);
+      if (i > 0) {
+        preferred = idx; // המסלול שעבד נשאר בשימוש
+        reportDiag("fallback-saved");
+      }
+    } catch (e) {
+      first ??= e as CrowdError;
+    }
+  }
+  if (!res) throw first!;
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new CrowdError(res.status, (data as { error?: string }).error ?? "error", { ...context(), status: res.status });
+  if (!res.ok)
+    throw new CrowdError(res.status, (data as { error?: string }).error ?? "error", {
+      at: new Date().toISOString(),
+      endpoint: res.url ? res.url.split(/[?#]/)[0] : undefined,
+      method: opts.method ?? (opts.body === undefined ? "GET" : "POST"),
+      elapsedMs: Date.now() - started,
+      online: navigator.onLine,
+      browser: navigator.userAgent,
+      status: res.status,
+    });
   return data as T;
+}
+
+// ---- בדיקת חיבור: מה בדיוק נחסם? (נשלחת רק אחרי כשל, ומדווחת למונה אנונימי)
+export type ConnectionKind = "all-ok" | "all-blocked" | "feedback-only" | "direct-only" | "gateway-only" | "post-blocked" | "password-blocked" | "fallback-saved";
+export interface ConnectionCheck {
+  kind: ConnectionKind;
+  /** תוצאה לכל בדיקה: true = עבר */
+  probes: Record<"feedback" | "gateway" | "direct" | "post" | "postPassword", boolean | null>;
+}
+
+async function probe(url: string | undefined, body?: unknown): Promise<boolean | null> {
+  if (!url) return null;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const r = await fetch(url, { method: body === undefined ? "GET" : "POST", headers: body === undefined ? {} : { "content-type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body), signal: ctl.signal, cache: "no-store" });
+    return r.ok;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export function classifyConnection(p: ConnectionCheck["probes"]): ConnectionKind {
+  const crowd = [p.gateway, p.direct, p.post, p.postPassword].filter((x) => x !== null);
+  if (crowd.every((x) => x) && p.feedback !== false) return "all-ok";
+  if (p.feedback === false && crowd.every((x) => x === false)) return "all-blocked";
+  if (p.feedback && crowd.every((x) => x === false)) return "feedback-only";
+  if (p.gateway === false && p.direct) return "direct-only";
+  if (p.direct === false && p.gateway) return "gateway-only";
+  if (p.post === false) return "post-blocked";
+  if (p.postPassword === false) return "password-blocked";
+  return "all-ok";
+}
+
+export async function checkConnection(): Promise<ConnectionCheck> {
+  const [feedback, gateway, direct, post, postPassword] = await Promise.all([
+    probe(feedbackUrl ? feedbackUrl.replace(/\/$/, "") + "/ping" : undefined),
+    probe(gatewayUrl ? gatewayUrl + "/ping" : undefined),
+    probe(directUrl ? directUrl + "/ping" : undefined),
+    probe(gatewayUrl ? gatewayUrl + "/ping" : directUrl ? directUrl + "/ping" : undefined, { probe: 1 }),
+    probe(gatewayUrl ? gatewayUrl + "/ping" : directUrl ? directUrl + "/ping" : undefined, { username: "probe-user", password: "probe-pass" }),
+  ]);
+  const probes = { feedback, gateway, direct, post, postPassword };
+  return { kind: classifyConnection(probes), probes };
+}
+
+/** מונה אנונימי של סיווג כשל (שרת ההערות, POST /diag) — בלי שום פרט על המשתמש; כשל בשליחה מתעלמים */
+export function reportDiag(kind: ConnectionKind) {
+  if (!feedbackUrl) return;
+  void fetch(feedbackUrl.replace(/\/$/, "") + "/diag", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind }), keepalive: true }).catch(() => {});
 }
