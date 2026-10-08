@@ -3,7 +3,6 @@ import { call } from "../../lib/crowdApi";
 import { clearAll } from "../../lib/crowdSession";
 import Account from "./Account";
 import LinkSaver from "./LinkSaver";
-import LocalBackup from "./LocalBackup";
 import { Btn, inputCls, Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
@@ -37,11 +36,6 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
   return (
     <div className="space-y-5">
       <Account session={session} />
-
-      <section className="space-y-2">
-        <h3 className="font-display text-3xl leading-none">גיבוי במכשיר</h3>
-        <LocalBackup />
-      </section>
 
       {token && (
         <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">

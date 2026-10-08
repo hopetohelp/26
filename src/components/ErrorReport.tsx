@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import { FeedbackSheet } from "./Feedback";
 import { checkConnection, reportDiag, type ConnectionCheck, type ConnectionKind } from "../lib/crowdApi";
 import { FEEDBACK_URL } from "../lib/feedback";
-import LocalBackup from "../pages/guess/LocalBackup";
 
 /** כשל ברשת (ולא תשובת שרת): הלוג נושא code=network */
 export const isNetworkLog = (log?: string | null) => !!log && /"code":\s*"network"/.test(log);
@@ -49,7 +48,6 @@ export default function ErrorReport({ error, errorLog }: { error: string | null;
       {net && FEEDBACK_URL && <p className="text-xs text-ink">התקלה דווחה אוטומטית לתמיכה, עם פרטים טכניים בלבד.</p>}
       {check === "running" && <p className="text-sm text-ink">בודקים את החיבור…</p>}
       {check && check !== "running" && <p role="status" className="text-sm text-ink">{connectionAdvice(check.kind)}</p>}
-      {check && check !== "running" && check.kind !== "all-ok" && <LocalBackup compact />}
       {FEEDBACK_URL && log && (
         <button type="button" aria-haspopup="dialog" onClick={() => setReport(true)} className="min-h-[44px] px-3 rounded-full border border-ink-faint text-ink text-sm font-bold">
           שליחת הערה עם לוג התקלה
