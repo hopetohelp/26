@@ -6,6 +6,7 @@
  *    בגושים חופפים פותרים כל יעד בנפרד לצד סך המפלגות 120; אין חיבור של יעדי התרחישים.
  * 4. שלמים בשיטת השארית הגדולה; רשימה שבממוצע הסקרים מתחת לסף (0 מנדטים) מקבלת 0.
  * 5. סתירה ⇐ שגיאה, בלי השלמה.
+ * 6. אין תוצאה של 1–3 מנדטים לרשימה פתוחה (מתחת לסף): היא מקבלת 0, והמנדטים עוברים לרשימה פתוחה עוברת באותם גושים (הכרעת בעלים 8.10.2026).
  */
 import type { Bloc, SeatCell } from "./crowdApi";
 
@@ -42,7 +43,27 @@ export function largestRemainder(total: number, weights: Record<string, number>)
   return out;
 }
 
+export const MIN_PASSING = 4;
+
 export function fillAll(ids: string[], cells: Record<string, SeatCell | undefined>, polls: Record<string, number>, blocs: Bloc[], ranges: Record<string, [number, number]> = {}): FillResult {
+  const r = fillRaw(ids, cells, polls, blocs, ranges);
+  if (!r.ok) return r;
+  const seats = { ...r.seats };
+  const free = ids.filter((id) => !cells[id]?.locked);
+  const key = (id: string) => blocs.filter((b) => b.target !== null && b.lists.includes(id)).map((b) => b.id).join("|");
+  for (const id of free) {
+    const v = seats[id]?.v ?? 0;
+    if (v <= 0 || v >= MIN_PASSING) continue;
+    const to = free.filter((o) => o !== id && (seats[o]?.v ?? 0) >= MIN_PASSING && key(o) === key(id)).sort((a, b) => (polls[b] ?? 0) - (polls[a] ?? 0))[0];
+    if (!to) continue;
+    seats[to] = { ...seats[to], v: seats[to].v + v };
+    seats[id] = { ...seats[id], v: 0 };
+  }
+  const changed = ids.filter((id) => !cells[id]?.locked && (cells[id]?.v ?? 0) !== seats[id].v);
+  return { ok: true, seats, changed };
+}
+
+function fillRaw(ids: string[], cells: Record<string, SeatCell | undefined>, polls: Record<string, number>, blocs: Bloc[], ranges: Record<string, [number, number]> = {}): FillResult {
   const locked = (id: string) => !!cells[id]?.locked;
   const lockedV = (id: string) => (locked(id) ? cells[id]!.v : 0);
   const totalLocked = ids.reduce((a, id) => a + lockedV(id), 0);

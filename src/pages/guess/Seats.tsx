@@ -39,6 +39,7 @@ export default function Seats({
   const fillBtn = useRef<HTMLButtonElement>(null);
   const [justSaved, setJustSaved] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
+  const typedFrom = useRef<Record<string, number>>({});
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
 
   if (!p) {
@@ -90,8 +91,9 @@ export default function Seats({
     unit.setDraft({ ...base, seats: { ...p.seats, [id]: c } });
     setPreview(null);
   };
-  const setV = (id: string, v: number) => {
-    const value = Math.max(0, Math.min(TOTAL, Math.round(v) || 0));
+  /** snap = false בזמן הקלדה (כדי שאפשר יהיה להקליד 12); היישור נעשה ביציאה מהשדה מול הערך שלפני ההקלדה */
+  const setV = (id: string, v: number, snap = true, from = p.seats[id]?.v ?? 0) => {
+    const value = snap ? snapSeats(v, from) : Math.max(0, Math.min(TOTAL, Math.round(v) || 0));
     if (!canSetSeats(p.seats, IDS, id, value)) {
       setEditError("אי אפשר להוסיף מעל 120 בלי להשאיר מפלגה אחרת פתוחה. פתחו נעילה של מפלגה אחרת או הפחיתו מנדטים.");
       return;
@@ -112,7 +114,10 @@ export default function Seats({
           <PersonalBlocs title="הגושים שלי: חלוקת ההשערה ויעדי ההשלמה" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
-          <SeatBoard values={values} />
+          <div className="relative">
+            <SeatBoard values={values} />
+            {sum === TOTAL && !invalid && <Share values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
+          </div>
           <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} />
             <span className="text-xs text-ink-soft">
@@ -126,7 +131,6 @@ export default function Seats({
               <Btn kind="primary" onClick={onStatistics}>מעבר לסטטיסטיקות</Btn>
             </div>
           )}
-          {sum === TOTAL && !invalid && <Share values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
         </div>
 
         <div>
@@ -136,7 +140,6 @@ export default function Seats({
             <ul className="divide-y divide-paper-line border-y border-paper-line" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
-                const under = c.v > 0 && c.v < THRESHOLD_SEATS;
                 const name = nameOf(id);
                 return (
                   <li key={id} className="py-2">
@@ -159,27 +162,26 @@ export default function Seats({
                           max={TOTAL}
                           aria-label={`מנדטים ל${name}`}
                           value={c.v}
-                          onChange={(e) => setV(id, Number(e.target.value))}
+                          onFocus={() => (typedFrom.current[id] = c.v)}
+                          onChange={(e) => setV(id, Number(e.target.value), false)}
+                          onBlur={() => setV(id, c.v, true, typedFrom.current[id] ?? c.v)}
                           className="w-14 h-11 text-center font-num tabular text-2xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
                           style={{ textAlign: "center" }}
                         />
-                        <button type="button" aria-label={`עוד ל${name}`} disabled={c.v >= TOTAL || !canSetSeats(p.seats, IDS, id, c.v + 1)} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
+                        <button type="button" aria-label={`עוד ל${name}`} disabled={c.v >= TOTAL || !canSetSeats(p.seats, IDS, id, snapSeats(c.v + 1, c.v))} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
                           +
                         </button>
                       </div>
                       <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />
                     </div>
-                    {under && (
-                      <p className="text-xs text-warn mt-1">
-                        אי אפשר לשמור עם {c.v} {c.v === 1 ? "מנדט" : "מנדטים"}. קבעו 0 למפלגה שלא עוברת את אחוז החסימה, או לפחות {THRESHOLD_SEATS} למפלגה שעוברת.
-                      </p>
-                    )}
                   </li>
                 );
               })}
             </ul>
       {/* פס פעולה דביק באזור האגודל */}
-      <div className="sticky z-20 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 mt-5">
+      {/* מקום לכרטיס הצף, כדי שלא יסתיר את השורה האחרונה */}
+      <div aria-hidden="true" className="h-36" />
+      <div className="fixed z-20 inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 px-4 mx-auto max-w-6xl">
         {(left < 0 || editError) && <p role="alert" className="mb-2 rounded-theme border-2 border-warn bg-paper-card text-ink p-3 text-sm font-bold">
           {editError ?? `יש כרגע ${sum} מנדטים — ${-left} מעל 120. הפחיתו מנדטים או השתמשו ב״השלם הכול״ למפלגות הפתוחות. אפשר לשמור רק כשהסכום חוזר ל־120.`}
         </p>}
@@ -235,6 +237,13 @@ export default function Seats({
 
     </div>
   );
+}
+
+/** אין 1–3 מנדטים (הכרעת בעלים 8.10.2026): עלייה לתחום קופצת לסף, ירידה אליו — ל-0 */
+export function snapSeats(v: number, from: number): number {
+  const value = Math.max(0, Math.min(TOTAL, Math.round(v) || 0));
+  if (value > 0 && value < THRESHOLD_SEATS) return value > from ? THRESHOLD_SEATS : 0;
+  return value;
 }
 
 /** מה כתוב בשורה (הכפתור שלידה כבר אומר נעול/פתוח): הערך שלכם · הושלם אוטומטית · טרם נקבע */
