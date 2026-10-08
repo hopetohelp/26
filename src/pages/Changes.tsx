@@ -154,7 +154,7 @@ export default function Changes() {
     const c = cleanCamps(accountCamps);
     if (c) (setCampsState(c), saveCamps(c));
   }, [accountCamps]);
-  // שמירה בחשבון — חצי שנייה אחרי השינוי האחרון (המכסה לשעה משותפת לשמירות)
+  // שמירה בחשבון — מיד (0.3 שנייה לאיחוד שינויים רצופים)
   const timer = useRef<number>();
   const [campsError, setCampsError] = useState(false);
   const setCamps = (c: CampMap) => {
@@ -163,7 +163,7 @@ export default function Changes() {
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => {
       void ensureSession().then((token) => { if (token) void call("/prefs", { token, body: { camps: c } }).then(() => setCampsError(false), () => setCampsError(true)); });
-    }, 800);
+    }, 300);
   };
   const campAlt = campAlternative(camps);
   const alt = view === "party" ? PARTY : campAlt;

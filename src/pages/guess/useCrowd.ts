@@ -1,6 +1,6 @@
 /** מצב ההשתתפות בדפדפן: אסימון, מצב המשתתף מהשרת, וטיוטה+שמירה לכל יחידה. */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CROWD_URL, CrowdError, call, type Me, type Payload, type Unit } from "../../lib/crowdApi";
+import { CROWD_URL, CrowdError, call, clientToken, type Me, type Payload, type Unit } from "../../lib/crowdApi";
 import * as S from "../../lib/crowdSession";
 import { meta } from "../../lib/data";
 
@@ -16,15 +16,27 @@ const emit = () => {
  * עם קישור אישי, וכל שינוי נשמר בו ונכנס לממוצע האנונימי. מומלץ להוסיף שם משתמש וסיסמה (AccessCard).
  */
 let creating: Promise<string | null> | null = null;
+
+/** שליחות שממתינות לסיום רצף שינויים — נשלחות מיד כשהדף נסגר או מוסתר */
+type Pending = (() => void) & { unit?: Unit };
+const pendingSends = new Set<Pending>();
+function flushPending() { [...pendingSends].forEach((f) => f()); }
+if (typeof window !== "undefined") {
+  window.addEventListener("pagehide", flushPending);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushPending(); });
+}
 export function ensureSession(): Promise<string | null> {
   const t = S.getToken();
   if (t) return Promise.resolve(t);
   if (!CROWD_URL) return Promise.resolve(null);
-  creating ??= call<{ token: string; link?: string }>("/auth/guest", { body: {} })
+  // הקישור נוצר בדפדפן ונשלח לשרת — ידוע גם אם התשובה נחסמת
+  const link = clientToken();
+  creating ??= call<{ token: string; link?: string }>("/auth/guest", { body: { link } })
     .then((r) => {
+      if (!r?.token) return null;
       S.setToken(r.token);
       S.setConsent(true);
-      if (r.link) { S.setLink(r.link); S.setLinkAck(false); }
+      S.setLink(r.link ?? link); S.setLinkAck(false);
       emit();
       return r.token;
     })
@@ -102,12 +114,24 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       setDraftState(p);
       if (p === null) S.clearDraft(unit);
       else S.saveDraft(unit, p);
-      // שמירה אוטומטית — 2 שניות אחרי השינוי האחרון (חשבון אורח נוצר לפי הצורך)
+      // שמירה אוטומטית מיידית (חשבון אורח נוצר לפי הצורך). שינויים רצופים (הקלדה, גרירה) מאוחדים ל-0.4 שנייה,
+      // ובסגירת הדף או מעבר לאפליקציה אחרת — נשלח מיד (flushPending)
       window.clearTimeout(timer.current);
       if (p === null || same(p, S.loadSaved(unit))) return;
-      timer.current = window.setTimeout(() => {
-        void ensureSession().then((token) => { if (token && saveRef.current) void saveRef.current(token, p); });
-      }, 2000);
+      let tries = 0;
+      const send: Pending = () => {
+        pendingSends.delete(send);
+        // כישלון (רשת) ⇐ ניסיון חוזר עד 3 פעמים, כל עוד זו עדיין הגרסה האחרונה
+        const retry = () => { if (++tries <= 3 && same(S.loadDraft(unit), p)) timer.current = window.setTimeout(send, 5000 * tries); };
+        void ensureSession().then(async (token) => {
+          if (!token || !saveRef.current) return retry();
+          if (!(await saveRef.current(token, p))) retry();
+        });
+      };
+      pendingSends.forEach((f) => f.unit === unit && pendingSends.delete(f));
+      send.unit = unit;
+      pendingSends.add(send);
+      timer.current = window.setTimeout(send, 400);
     },
     [unit],
   );

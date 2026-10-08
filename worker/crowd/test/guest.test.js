@@ -34,6 +34,11 @@ describe("שמירה בלי משתמש", () => {
     expect(g.data.token).toMatch(/^[\w-]{20,}$/);
     expect(g.data.link).toMatch(/^[\w-]{20,}$/);
     expect((await call("/auth/link", { body: { link: g.data.link } })).status).toBe(200);
+    // קישור שהדפדפן הציע מראש — תקף גם אם התשובה לא הגיעה
+    const proposed = "L".repeat(43);
+    const g2 = await call("/auth/guest", { body: { link: proposed } });
+    expect(g2.data.link).toBe(proposed);
+    expect((await call("/auth/link", { body: { link: proposed } })).status).toBe(200);
     expect((await save(g.data.token)).status).toBe(200);
     const me = await call("/me", { token: g.data.token });
     expect(me.data).toMatchObject({ username: null, guest: true });
