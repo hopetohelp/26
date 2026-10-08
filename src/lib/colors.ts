@@ -18,6 +18,8 @@ const PALETTE: Record<string, string> = {
   bluewhite: "#5f9ea0",
   amcha: "#a0668a",
   haredi_public: "#777777",
+  noam: "#c07a50",
+  code_black: "#3d3d3d",
 };
 const FALLBACK = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#9d755d", "#e45756", "#72b7b2", "#bab0ac"];
 

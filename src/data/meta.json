@@ -41,7 +41,7 @@
    "status": "reported_single_source"
   }
  ],
- "dataAsOf": "2026-10-08T01:32:01+03:00",
+ "dataAsOf": "2026-10-08T16:15:57+03:00",
  "electionDay": "2026-10-27",
  "freezeEnd": "2026-10-27T22:00:00+02:00",
  "freezeStart": "2026-10-24T00:00:00+03:00",
@@ -154,6 +154,18 @@
    "id": "haredi_public",
    "leader": "",
    "name": "הציבור החרדי"
+  },
+  {
+   "gov37": false,
+   "id": "noam",
+   "leader": "",
+   "name": "נעם לישראל"
+  },
+  {
+   "gov37": false,
+   "id": "code_black",
+   "leader": "",
+   "name": "צבע שחור"
   }
  ]
 }
