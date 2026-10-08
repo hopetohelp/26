@@ -123,10 +123,10 @@ export default function Changes() {
         </div>
         <p className="text-base leading-relaxed">{alt.desc}</p>
       </Card>
-      <PersonalBlocs title="הגושים שלי: תוצאות 2022 מול ממוצע הסקרים היום" source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
+      {view === "blocs" && <PersonalBlocs title="הגושים שלי: תוצאות 2022 מול ממוצע הסקרים היום" source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
         { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },
         { values: m.central.seats, source: "המנדטים היום לפי המודל", asOf: dateLong(m.asof) },
-      ]} />
+      ]} />}
 
 
       {view === "families" && <Card title={`המשפחות — ${alt.name}`}>

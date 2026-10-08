@@ -19,6 +19,7 @@ const TABS = [
   { to: "/community", label: "הגולשים", icon: "bars" },
   { to: "/guess", label: "השערות", icon: "guess" },
   { to: "/support", label: "תמיכה", icon: "comments" },
+  { to: "/method", label: "שיטה ואודות", icon: "info" },
 ];
 
 const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
@@ -41,6 +42,7 @@ function Icon({ name }: { name: string }) {
   if (name === "bars") return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" /></svg>;
   if (name === "guess") return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" /></svg>;
   if (name === "comments") return <svg {...p}><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M7 8h10M7 12h7" /></svg>;
+  if (name === "info") return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
 }
@@ -157,7 +159,7 @@ function Masthead({ theme }: { theme: ThemeId }) {
   const board = theme === "board";
   return (
     <div className={`bg-frame text-frame-ink ${board ? "" : "border-b border-frame-line"}`}>
-      <div className="max-w-6xl mx-auto px-4 pt-3 pb-3 flex flex-col gap-2.5">
+      <div className="w-full mx-auto px-4 md:px-6 pt-3 pb-3 flex flex-col gap-2.5">
         <div className="flex flex-wrap justify-between items-center gap-x-4 gap-y-2">
           <div className="flex items-baseline justify-between w-full md:w-auto gap-3 whitespace-nowrap text-sm text-frame-soft">
             <NavLink
@@ -193,7 +195,7 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
   const wrap = theme === "board" ? "bg-frame" : theme === "league" ? "bg-frame border-b border-frame-line" : "";
   return (
     <nav aria-label="ניווט ראשי" className={`hidden md:block ${wrap}`}>
-      <ul className="max-w-6xl mx-auto px-2 flex flex-wrap gap-1 text-sm">
+      <ul className="w-full mx-auto px-2 md:px-4 flex flex-wrap gap-1 text-sm">
         {NAV.map((n) => (
           <li key={n.to}>
             <NavLink
@@ -219,14 +221,14 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
 function MobileTabs() {
   return (
     <nav aria-label="ניווט בטלפון" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-      <ul className="grid grid-cols-5">
+      <ul className="grid grid-cols-6">
         {TABS.map((t) => (
           <li key={t.to}>
             <NavLink
               to={t.to}
               end={t.to === "/"}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`
+                `flex flex-col items-center justify-center gap-0.5 h-16 text-[11px] leading-tight text-center no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`
               }
             >
               <Icon name={t.icon} />
@@ -259,11 +261,11 @@ export default function Layout() {
         <DesktopNav theme={theme} />
       </header>
       <FreezeBanner />
-      <main id="main" tabIndex={-1} className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 pb-28 md:pb-10 outline-none">
+      <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-10 outline-none">
         <PersonalBlocsProvider><PageErrorBoundary><Outlet /></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <footer className="border-t border-paper-line bg-paper-card text-sm text-ink-soft mb-16 md:mb-0">
-        <div className="max-w-6xl mx-auto px-4 py-4 space-y-1">
+        <div className="w-full mx-auto px-4 md:px-6 py-4 space-y-1">
           <p>
             <strong>האתר אינו עורך סקרים.</strong> הממוצעים, הטווחים והתרחישים הם ניתוח של סקרים שכבר פורסמו, עם פרטי כל סקר ומקורו.
             תוצאות האמת — מקובצי ועדת הבחירות המרכזית.

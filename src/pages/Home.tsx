@@ -79,7 +79,7 @@ export default function Home() {
         </span>
         <span className="shrink-0 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-extrabold inline-flex items-center">לבנות את הכנסת שלי</span>
       </Link>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))] gap-3 [&>*]:min-w-0" aria-label="כל העמודים באתר">
         {PAGES.filter(p => p.to !== "/guess").map((p) => {
           const s = stat(p.to);
           return (
