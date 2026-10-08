@@ -203,3 +203,15 @@ describe("validatePct (client mirror of the server rule)", () => {
     expect(validatePct({ a: -1 }, ids)).not.toBeNull();
   });
 });
+
+describe("אין 1–3 מנדטים בהשלמה", () => {
+  it("רשימה פתוחה שיצאה מתחת לסף מקבלת 0, והמנדטים עוברים לרשימה עוברת", () => {
+    const r = fillAll(["a", "b", "c"], {}, { a: 60, b: 58, c: 2 }, []);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const v = Object.values(r.seats).map((c) => c.v);
+    expect(v.every((n) => n === 0 || n >= 4)).toBe(true);
+    expect(v.reduce((a, b) => a + b, 0)).toBe(120);
+    expect(r.seats.c.v).toBe(0);
+  });
+});
