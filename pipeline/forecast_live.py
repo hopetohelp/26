@@ -169,7 +169,7 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
         "series": sorted(now), "seriesBefore": sorted(before), "enough": enough,
         "params": {"others": round(info["others"] * 100, 2), "beta": round(info["beta"], 4), "betaElections": info["betaElections"],
                    "trainedOn": info["trainedOn"], "residualSd": {k: round(v, 4) if isinstance(v, float) else v for k, v in sd.items()},
-                   "weights": {s: round(w, 4) for s, w in info["weights"].items()}, "wA": info.get("wA"),
+                   "weights": {s: round(w, 4) for s, w in info["weights"].items()}, "wA": round(info["wA"], 4) if info.get("wA") is not None else None,
                    "polls": info.get("polls"), "scenarios": SCENARIOS},
         "lists": out_lists,
         "bloc": {"lists": gov, "seats": [q(bloc_draws, 0.1), q(bloc_draws, 0.5), q(bloc_draws, 0.9)] if bloc_draws else [],
