@@ -225,7 +225,7 @@ describe("cron: aggregation & anomaly", () => {
     await env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json) VALUES (?, ?, ?, ?)")
       .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ ...old, participants: 1 })).run();
     const first = await call("/dashboard");
-    expect(first.data).toMatchObject({ open: true, policy: "open-all-v4", participants: 1 });
+    expect(first.data).toMatchObject({ open: true, policy: "fixed-blocs-v5", participants: 1 });
     expect(first.data.seats.n).toBe(1);
     expect(first.data.matrix.rows["מחל"].n).toBe(1);
     const before = env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n;

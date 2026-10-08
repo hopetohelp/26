@@ -47,7 +47,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   // במסך סקר האתר כרטיס הגושים שלי בטור הצר (הכרעת בעלים 8.10.2026) — Guess מציב שם מקום ריק
-  const blocsCard = d.seats ? <PersonalBlocs compact={!!slot} title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
+  const blocsCard = d.seats ? <PersonalBlocs compact title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
         { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
         { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
         ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
@@ -93,24 +93,22 @@ export function SeatsStats({ rows, polls, mine, view, unit = "seats" }: { rows: 
   </table></div></Card>;
 }
 
-/** mine: הרכבי הגושים של המשתמש עצמו — מוצגים לו תמיד, גם אם רק הוא הגדיר אותם (הכרעת בעלים 9.10.2026) */
-export function BlocStats({ d, view, mine = [] }: { d:D; view:View; mine?: string[][] }) {
+/** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
+export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   const b=d.blocs!;
-  const government=[...GOV_IDS].sort().join(",");
-  const own = new Set(mine.map(lists => [...lists].sort().join(",")));
-  const rows = [
-    ...(b.derived ? [{key:government,lists:GOV_IDS,label:"גוש הקואליציה",stat:b.derived.gov}] : []),
-    ...(b.custom ?? []).filter(g=>g.derived && (g.n >= 2 || own.has([...g.lists].sort().join(","))) && g.lists.length && [...g.lists].sort().join(",")!==government)
-      .map(g=>({key:[...g.lists].sort().join(","),lists:g.lists,label:g.lists.map(nameOf).join(" · "),stat:g.derived!}))
-  ].filter(row => {
-    const listCount = new Set(row.lists).size;
-    return listCount >= 2 && row.stat.mean >= 4 * listCount;
-  }).sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+  const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
+  const fixedKeys = new Set(fixed.map(g => [...g.lists].sort().join(",")));
+  const fixedRows = fixed.map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
+  const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")))
+    .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
+    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.lists.map(nameOf).join(" · "), stat: g.derived!}))
+    .sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+  const rows = [...fixedRows, ...customRows];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
-  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat.mean,range:range(r.stat)}))} />;
+  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat?.mean ?? 0,range:r.stat ? range(r.stat) : "חסר נתון"}))} />;
   return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
-    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32">{r.label}</th><td className="text-center font-bold">{seatsFmt(r.stat.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(r.stat)}</bdi></td><td className="text-center">{r.stat.n}</td></tr>)}</tbody>
+    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32">{r.label}</th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
   </table></div></Card>;
 }
 

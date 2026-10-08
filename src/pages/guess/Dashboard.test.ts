@@ -28,7 +28,7 @@ it("מציג ממוצע, סקרים וההשערה שלי; טווח זהה נש�
   expect(html).toContain("<bdi dir=\"ltr\"></bdi>");
 });
 
-it("גוש הקואליציה ראשון, מציג מספר משתתפים וטווח זהה כריק", () => {
+it("הממשלה היוצאת ראשון, מציג מספר משתתפים וטווח זהה כריק", () => {
   const d: Dashboard = {
     participants: 1,
     open: true,
@@ -40,7 +40,7 @@ it("גוש הקואליציה ראשון, מציג מספר משתתפים וט�
     location: "/guess",
     children: createElement(BlocsBlock, { d }),
   }));
-  expect(html).toContain("גוש הקואליציה");
+  expect(html).toContain("הממשלה היוצאת");
   expect(html).toContain("משתתפים");
   expect(html).toContain("<bdi dir=\"ltr\"></bdi>");
   for (const label of ["הימור ישיר", "שאר הרשימות", "סדרה 1"]) expect(html).not.toContain(label);
@@ -52,9 +52,9 @@ it("גושים בטבלה ובגרף מציגים את הרכב המפלגות �
       custom: [{ name: "שם אישי שאין להציג", lists: ["joint", "raam"], n: 2, explicit: null, derived: stat }] } };
   for (const view of ["table", "chart"] as const) {
     const html = renderToStaticMarkup(createElement(BlocStats, { d, view }));
-    expect(html).toContain("גוש הקואליציה");
-    expect(html).toContain(" · ");
-    expect(html.split('&quot;').join('"')).toContain(nameOf('raam'));
+    expect(html).toContain("הממשלה היוצאת");
+    expect(html).toContain("ערבים");
+    expect(html).toContain('גוש האופוזיציה');
     expect(html).not.toContain("שם אישי שאין להציג");
   }
 });
@@ -81,12 +81,12 @@ it("מסתיר רשימה יחידה וגושים עם פחות מ־4 מנדטי
       { name: "יחיד", lists: ["joint"], n: 1, explicit: null, derived: { ...stat, mean: 8 } },
       { name: "נמוך", lists: ["likud", "raam", "joint", "amcha", "shas"], n: 1, explicit: null, derived: { ...stat, mean: 13 } },
       { name: "מעט מתחת", lists: ["likud", "shas"], n: 1, explicit: null, derived: { ...stat, mean: 7.999 } },
-      { name: "בדיוק בסף", lists: ["joint", "raam"], n: 2, explicit: null, derived: { ...stat, mean: 8 } },
+      { name: "בדיוק בסף", lists: ["joint", "yb"], n: 2, explicit: null, derived: { ...stat, mean: 8 } },
     ] } };
   for (const view of ["table", "chart"] as const) {
     const html = renderToStaticMarkup(createElement(BlocStats, { d, view }));
     const text = html.split('&quot;').join('"');
-    expect(text).toContain(`${nameOf('joint')} · ${nameOf('raam')}`);
+    expect(text).toContain(`${nameOf('joint')} · ${nameOf('yb')}`);
     expect(text).not.toContain(nameOf('likud'));
     expect(text).not.toContain(nameOf('amcha'));
     expect(text.split(nameOf('joint'))).toHaveLength(2);
@@ -98,8 +98,8 @@ it("אותו סף חל על הקואליציה; ללא גוש מתאים מוצ�
     blocs: { derived: { gov: { ...stat, mean: 5 }, rest: stat }, explicit: null, customCount: 0 } };
   for (const view of ["table", "chart"] as const) {
     const html = renderToStaticMarkup(createElement(BlocStats, { d, view }));
-    expect(html).not.toContain('גוש הקואליציה');
-    expect(html).toContain('לפחות שתי רשימות');
+    expect(html).toContain('הממשלה היוצאת');
+    expect(html).toContain('הממשלה היוצאת');
   }
 });
 
@@ -116,8 +116,8 @@ it("ממיין את כל הגושים לפי משתתפים ואז מנדטים,
     expect(html).not.toContain([nameOf('joint'),nameOf('raam')].join(' · '));
     // הגוש של המשתמש עצמו מוצג לו תמיד, גם כשרק הוא הגדיר אותו
     const own = renderToStaticMarkup(createElement(BlocStats,{d,view,mine:[['raam','joint']]})).split('&quot;').join('"');
-    expect(own).toContain([nameOf('joint'),nameOf('raam')].join(' · '));
-    const labels = [[nameOf('utj'),nameOf('otzma')].join(' · '),[nameOf('likud'),nameOf('shas')].join(' · '),'גוש הקואליציה'];
+    expect(own).not.toContain([nameOf('joint'),nameOf('raam')].join(' · '));
+    const labels = ['הממשלה היוצאת',[nameOf('utj'),nameOf('otzma')].join(' · '),[nameOf('likud'),nameOf('shas')].join(' · ')];
     const indices = labels.map(label => html.indexOf(label));
     expect(indices.every(index => index >= 0)).toBe(true);
     expect(indices).toEqual([...indices].sort((a,b)=>a-b));

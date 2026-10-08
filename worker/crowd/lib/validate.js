@@ -4,6 +4,8 @@
  */
 import { IDS_2026, IDS_2022, GOV37 } from "./lists.js";
 
+import { fixedTotals, migrateBlocs } from "./blocDefinitions.js";
+
 export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
 export const V2026_CODES = new Set(["undecided", "none", "private"]);
@@ -54,7 +56,7 @@ export function validateSeats(p) {
   if (mode !== "seats" && mode !== "pct") return fail("mode");
   // מחושב בשרת מהחלוקה המאומתת; ערך שסיפק הלקוח אינו מקור אמת.
   const coalitionSeats = [...GOV37].reduce((sum, id) => sum + (seats[id]?.v ?? 0), 0);
-  const value = { mode, seats, start: p.start, pollsAsOf, coalitionSeats };
+  const value = { mode, seats, start: p.start, pollsAsOf, coalitionSeats, fixedBlocSeats: fixedTotals({ seats }) };
   if (mode === "pct") {
     const r = validatePct(p.pct);
     if (!r.ok) return r;
@@ -111,7 +113,7 @@ export function validateBlocs(p) {
     if (target !== null && !isInt(target, 0, TOTAL)) return fail("target");
     blocs.push({ id: b.id, name: b.name, lists: [...b.lists], target });
   }
-  return { ok: true, value: { mode: p.mode, blocs } };
+  return { ok: true, value: migrateBlocs({ mode: p.mode, blocs }) };
 }
 
 /** המחנות במסך "מה השתנה": רשימה של היום ⇐ מזהה מחנה 2022 ("" = בלי שיוך). לא נכנס לשום חישוב. */

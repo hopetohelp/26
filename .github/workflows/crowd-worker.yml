@@ -19,6 +19,12 @@ jobs:
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: worker/crowd
         run: npx --yes wrangler@3 d1 execute elections26-crowd --remote --file=schema.sql
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: שחזור הגושים בכל הגרסאות והפרסומים עם גיבוי המקור
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: node worker/crowd/migrate-blocs.mjs
       - name: סודות — נוצרים פעם אחת, רק אם חסרים
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: worker/crowd

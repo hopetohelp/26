@@ -1,10 +1,10 @@
 import { expect, it } from "vitest";
 import { defaultBlocs, normalizeBlocs, GOV_IDS, IDS } from "./model";
-it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל, נעם לישראל וצבע שחור), ערבים וכל השאר", () => {
+it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל, נעם לישראל וצבע שחור), אופוזיציה וערבים", () => {
   expect(defaultBlocs()).toEqual([
-    { id: "gov", name: "גוש הקואליציה", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha", "noam", "code_black"], target: null },
+    { id: "gov", name: "גוש הקואליציה", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha", "haredi_public", "noam", "code_black"], target: null },
+    { id: "rest", name: "גוש האופוזיציה", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite"], target: null },
     { id: "arab", name: "ערבים", lists: ["joint", "raam"], target: null },
-    { id: "rest", name: "כל השאר", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite", "haredi_public"], target: null },
   ]);
   const assigned = defaultBlocs().flatMap(b => b.lists);
   expect([...assigned].sort()).toEqual([...IDS].sort());
