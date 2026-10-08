@@ -48,6 +48,16 @@ describe("בדיקת חיבור וסיווג כשלים", () => {
     expect(bad.status).toBe(400);
     expect(rows).toHaveLength(1);
   });
+
+  it("diag שומר בדיקת עומק רק ביעד ותוצאה מוכרים", async () => {
+    const rows = [];
+    const send = (kind) => worker.fetch(new Request("https://feedback.example/diag", { method: "POST", headers: { origin }, body: JSON.stringify({ kind }) }), env(rows));
+    expect((await send("probe-gapi-ok")).status).toBe(200);
+    expect(rows[0][2]).toBe("diag:probe-gapi-ok");
+    expect((await send("probe-evil-ok")).status).toBe(400);
+    expect((await send("probe-gapi-maybe")).status).toBe(400);
+    expect(rows).toHaveLength(1);
+  });
 });
 
 describe("דיווח כשל חיבור אוטומטי", () => {

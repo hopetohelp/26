@@ -27,6 +27,8 @@ const MAX_PER_DAY = 8;
 const AUTO = "[כשל חיבור אוטומטי]";
 const AUTO_PER_DAY = 3;
 const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved", "blind-sent"]);
+/** בדיקת עומק אחרי חסימה: לאן כן מגיעים (probe-<יעד>-<תוצאה>) — מונה ליום בלבד */
+const PROBE_KIND = /^probe-(worker|crowd|site|gapi|gsi)-(ok|fail)$/;
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
 const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support"]);
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
@@ -238,7 +240,7 @@ export default {
       } catch {
         return reply({ ok: false }, 400);
       }
-      if (!DIAG_KINDS.has(kind)) return reply({ ok: false }, 400);
+      if (!DIAG_KINDS.has(kind) && !PROBE_KIND.test(kind)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
       await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:" + kind).run();
       return reply({ ok: true });

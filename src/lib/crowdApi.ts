@@ -383,6 +383,42 @@ export async function checkConnection(): Promise<ConnectionCheck> {
 }
 
 /**
+ * בדיקת עומק אחרי חסימה: לאילו יעדים הגולש כן מגיע. worker/crowd ב-no-cors = האם תשובה כלשהי חזרה מהשרת (גם אם סוננה);
+ * site = עותק הסטטיסטיקות שבאתר; gapi = שרתי Google שקריאים לדפדפן; gsi = כפתור הכניסה של Google.
+ * התוצאה נשלחת כמונים אנונימיים בלבד (probe-<יעד>-ok|fail), פעם אחת לכל טעינה.
+ */
+export type ProbeTarget = "worker" | "crowd" | "site" | "gapi" | "gsi";
+let deepSent = false;
+export async function deepProbe(): Promise<Record<ProbeTarget, boolean>> {
+  const reach = async (url: string | undefined, cors: boolean) => {
+    if (!url) return false;
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 8000);
+    try {
+      const r = await fetch(url, { mode: cors ? "cors" : "no-cors", cache: "no-store", signal: ctl.signal });
+      return cors ? r.ok : true;
+    } catch { return false; } finally { clearTimeout(timer); }
+  };
+  const [worker, crowd, site, gapi, gsi] = await Promise.all([
+    reach(feedbackUrl ? feedbackUrl.replace(/\/$/, "") + "/ping" : undefined, false),
+    reach(directUrl ? directUrl + "/ping" : undefined, false),
+    reach(`${import.meta.env.BASE_URL}dashboard.json`, true),
+    reach("https://www.googleapis.com/oauth2/v3/certs", true),
+    reach("https://accounts.google.com/gsi/client", false),
+  ]);
+  const result = { worker, crowd, site, gapi, gsi };
+  if (!deepSent && feedbackUrl) {
+    deepSent = true;
+    for (const [k, v] of Object.entries(result)) reportProbe(`probe-${k}-${v ? "ok" : "fail"}`);
+  }
+  return result;
+}
+
+function reportProbe(kind: string) {
+  void fetch(feedbackUrl!.replace(/\/$/, "") + "/diag", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind }), keepalive: true }).catch(() => {});
+}
+
+/**
  * ממסר: כששני המסלולים נכשלו ברשת, אותה בקשה נשלחת לשרת ההערות באותה צורה כמו דיווח הכשל — שעובר גם אצל מי שהשמירה חסומה לו
  * (הכרעת בעלים 8.10.2026). השרת מעביר אותה לשרת ההשתתפות כבקשה רגילה. כשל גם כאן ⇐ שגיאה מפורטת, והטיוטה נשארת בדפדפן.
  */

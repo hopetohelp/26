@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FeedbackSheet } from "./Feedback";
-import { checkConnection, reportDiag, type ConnectionCheck, type ConnectionKind } from "../lib/crowdApi";
+import { checkConnection, deepProbe, reportDiag, type ConnectionCheck, type ConnectionKind } from "../lib/crowdApi";
 import { FEEDBACK_URL } from "../lib/feedback";
 
 /** כשל ברשת (ולא תשובת שרת): הלוג נושא code=network */
@@ -35,6 +35,7 @@ export default function ErrorReport({ error, errorLog }: { error: string | null;
       if (!live) return;
       setCheck(c);
       reportDiag(c.kind);
+      if (c.kind !== "all-ok") void deepProbe();
     });
     return () => {
       live = false;
