@@ -260,6 +260,8 @@ async function attempt(base: string, path: string, opts: CallOptions, attempts: 
       method: context.method, signal: ctl.signal,
       headers: { ...(opts.body === undefined ? {} : { "content-type": "application/json" }), ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}) },
       body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
+      // שמירות ממשיכות גם כשהדף נסגר באמצע (גוף קטן)
+      keepalive: ["/save", "/prefs", "/auth/guest"].includes(path.split("?")[0]),
     });
     attempts.push({ ...context, elapsedMs: Date.now() - started, status: res.status, ok: res.ok, type: res.type, redirected: res.redirected,
       contentType: res.headers.get("content-type"), requestId: res.headers.get("cf-ray"), retryAfter: res.headers.get("retry-after") });

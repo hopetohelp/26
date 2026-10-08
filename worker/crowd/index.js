@@ -261,7 +261,8 @@ const routes = {
     const [stmts, participant] = await createParticipant(env, request, now);
     const [sess, token] = await newSession(env, participant, now, clientToken);
     // קישור אישי נוצר מיד (הכרעת בעלים 9.10.2026): הדרך היחידה לחזור לחשבון אורח ממכשיר אחר
-    const link = randomToken();
+    // קישור שהדפדפן הציע (כמו אסימון הסשן): ידוע לגולש גם כשתשובת השרת נחסמת בדרך ("עיוורון")
+    const link = isClientToken(body?.link) ? body.link : randomToken();
     await env.DB.batch([
       ...stmts,
       env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
