@@ -10,6 +10,24 @@ const cells=Object.fromEntries(ids.map(id=>[id,{v:id==='likud'?120:0,src:'manual
 const stat=(list,mean,min=mean,max=mean)=>({list,n:2,mean,min,max,median:mean,p25:min,p75:max});
 const dashboard={sectionParticipants:{seats:2,blocs:2,vote2026:2,vote2022:2},participants:2,open:true,publishedAt:'2026-10-07',aggregationId:'demo',seats:{n:2,full:[stat('likud',30,28,32),stat('rzp',6)],polls:{likud:28,rzp:5},pctStats:[stat('likud',24.5,23,26),stat('rzp',4.5)],modes:{seats:0,pct:2}},blocs:{derived:{gov:stat('gov',60,58,62),rest:stat('rest',60)},customCount:2,custom:[{name:"שם אישי שאין להציג",lists:["joint","raam"],n:2,explicit:null,derived:stat("arabs",13)}],explicit:null},vote2022:{all:{'ט':{n:2,of:2}},valid:{},official:{}},vote2026:{all:{rzp:{n:2,of:2}},named:{}},matrix:{publishedAt:'2026-10-07',rows:{'ט':{n:2,cells:{rzp:{n:2,of:2}}}}}};
 const tok='abcdefghijklmnopqrstuv';
+async function dragCard(page, source, destination, cdp) {
+ await source.evaluate(el=>el.scrollIntoView({block:'center'}));
+ const from=await source.boundingBox();
+ const move=async (x,y)=>cdp ? cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y}]}) : page.mouse.move(x,y,{steps:4});
+ if(cdp) await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:from.x+20,y:from.y+20}]});
+ else { await page.mouse.move(from.x+20,from.y+20); await page.mouse.down(); }
+ await move(from.x+30,from.y+20);
+ let reached=false;
+ for(let i=0;i<100;i++) {
+  const to=await destination.boundingBox(); const height=page.viewportSize().height;
+  const y=to.y+Math.min(25,to.height/2);
+  const x=Math.max(20,Math.min(page.viewportSize().width-20,to.x+to.width/2));
+  if(y>100 && y<height-100){await move(x,y);reached=true;break;}
+  await move(x,y<=100?40:height-40); await page.waitForTimeout(100);
+ }
+ assert.ok(reached,'auto-scroll reaches drop destination');
+ if(cdp) await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]}); else await page.mouse.up();
+}
 (async()=>{
 const browser=await chromium.launch({headless:true,executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox']});
 for(const theme of ['league','board']) for(const width of [360,820,1280]){
@@ -51,8 +69,8 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.getByText('תשובת צוות לדוגמה',{exact:true}).waitFor();
  assert.ok(page.url().includes('/feedback/'));
  await page.goto(`${baseUrl}#/guess`);
- await page.locator('[data-bloc-id="coalition"]').waitFor();
- assert.equal(await page.locator('[data-bloc-id]').count(),4);
+ assert.equal(await page.locator('[data-bloc-id]').count(),0,'לשונית מנדטים אינה מציגה גושים');
+ assert.equal(await page.getByRole('heading',{name:'הגושים שלי',exact:true}).count(),0);
  const resetButton=page.getByRole('button',{name:'אפס הכול',exact:true});
  const resetBox=await resetButton.boundingBox();
  const actionBox=await resetButton.locator('../..').boundingBox();
@@ -61,6 +79,10 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'reset confirmation overflow');
  await page.getByRole('button',{name:'לא',exact:true}).click();
  assert.equal(await page.getByRole('button',{name:'אפס הכול',exact:true}).count(),1);
+ await page.getByRole('button',{name:'לפי גושים',exact:true}).click();
+ assert.deepEqual(await page.locator('nav[aria-label="חלקי ההשערה"] button').allTextContents(),['לפי מנדטים','לפי אחוזים','לפי גושים','ההצבעה שלי','ההיסטוריה שלי']);
+ await page.locator('[data-bloc-id="coalition"]').waitFor();
+ assert.equal(await page.locator('[data-bloc-id]').count(),4);
  assert.equal(await page.locator('[data-bloc-party] select').count(),0);
  assert.equal(await page.getByRole('button',{name:'עריכת שמות הגושים',exact:true}).count(),0);
  await page.getByRole('button',{name:'עריכת שם הגוש: הקואליציה הנוכחית',exact:true}).click();
@@ -73,20 +95,20 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await page.getByRole('button',{name:'עריכת שם הגוש: שם אישי',exact:true}).click();
  await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('הקואליציה הנוכחית');
  await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).press('Tab');
- await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] button').evaluate(el=>el.scrollIntoView({block:"center"}));
- let source=await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] button').boundingBox();
+ await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] [data-party-drag]').evaluate(el=>el.scrollIntoView({block:"center"}));
+ let source=await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] [data-party-drag]').boundingBox();
  let target=await page.locator('[data-bloc-id="opposition"]').boundingBox();
  await page.mouse.move(source.x+20,source.y+20); await page.mouse.down();
  await page.mouse.move(target.x+target.width/2,target.y+30,{steps:8});
  assert.equal(await page.locator('[data-drag-preview="likud"]').count(),1);
  await page.mouse.up();
  await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"]').waitFor();
- await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"] button').press('ArrowLeft');
+ await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"] [data-party-drag]').press('ArrowLeft');
  assert.equal(await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"]').count(),1);
  // עריכת שמות אינה מתבצעת אוטומטית בעקבות העברה.
  assert.equal(await page.locator('[data-bloc-id="coalition"] h3').innerText(),'הקואליציה הנוכחית');
- await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"] button').evaluate(el=>el.scrollIntoView({block:"center"}));
- source=await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"] button').boundingBox();
+ await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"] [data-party-drag]').evaluate(el=>el.scrollIntoView({block:"center"}));
+ source=await page.locator('[data-bloc-id="arabs"] [data-bloc-party="likud"] [data-party-drag]').boundingBox();
  target=await page.locator('[data-bloc-id="new"]').boundingBox();
  const cdp=await context.newCDPSession(page);
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:source.x+20,y:source.y+20}]});
@@ -102,6 +124,40 @@ for(const theme of ['league','board']) for(const width of [360,820,1280]){
  await fifth.getByRole('button',{name:'מחיקת הגוש',exact:true}).click();
  assert.equal(await page.locator('[data-bloc-id]').count(),4);
  assert.equal(await page.getByRole('radio',{name:'לפי אחוזי הצבעה',exact:true}).count(),0);
+ const pool=page.locator('[data-bloc-pool]');
+ assert.equal(await pool.locator('[data-bloc-party]').count(),ids.length,'pool always contains every party');
+ const arabs=page.locator('[data-bloc-id="arabs"]');
+ await arabs.locator('[data-bloc-party="likud"] [data-party-drag]').press('Delete');
+ assert.equal(await arabs.locator('[data-bloc-party="likud"]').count(),0);
+ assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1);
+ const poolLikud=pool.locator('[data-bloc-party="likud"] [data-party-drag]');
+ await dragCard(page,poolLikud,arabs.locator('h3'));
+ await arabs.locator('[data-bloc-party="likud"]').waitFor();
+ await dragCard(page,poolLikud,arabs.locator('h3'));
+ assert.equal(await arabs.locator('[data-bloc-party="likud"]').count(),1,'adding twice does not duplicate');
+ await dragCard(page,arabs.locator('[data-bloc-party="likud"] [data-party-drag]'),pool.locator('h3'),cdp);
+ assert.equal(await arabs.locator('[data-bloc-party="likud"]').count(),0,'touch drag out removes only source');
+ assert.equal(await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"]').count(),1);
+ assert.equal(await pool.locator('[data-bloc-party]').count(),ids.length);
+ const coalitionCard=page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"] [data-party-drag]');
+ await coalitionCard.click();
+ assert.equal(await page.locator('[data-drag-preview]').count(),0,'tap is not a drag');
+ await coalitionCard.evaluate(el=>el.scrollIntoView({block:'center'}));
+ const cancelBox=await coalitionCard.boundingBox();
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:cancelBox.x+20,y:cancelBox.y+20}]});
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:cancelBox.x+20,y:40}]});
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+ assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1,'cancelled drag preserves membership');
+ assert.equal(await page.locator('[data-drag-preview]').count(),0);
+ await poolLikud.press('ArrowLeft');
+ assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1);
+ await page.locator('[data-bloc-id="new"]').getByRole('button',{name:'הסרת הליכוד מהגוש',exact:true}).click();
+ assert.equal(await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').count(),0,'button removal');
+ await dragCard(page,poolLikud,page.locator('[data-bloc-id="new"] h3'),cdp);
+ await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').waitFor();
+ await dragCard(page,page.locator('[data-bloc-id="new"] [data-bloc-party="likud"] [data-party-drag]'),page.locator('nav[aria-label="חלקי ההשערה"]'));
+ assert.equal(await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').count(),0,'drag outside all blocs removes source');
+ assert.equal(await pool.locator('[data-bloc-party]').count(),ids.length);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow guess ${theme} ${width}`);
  await page.locator('[data-bloc-id="coalition"]').scrollIntoViewIfNeeded();
  await page.screenshot({path:`${screenshotDir}/blocs-${theme}-${width}.png`});

@@ -70,7 +70,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
   // קלט שגוי לא שומר תוצאה ישנה.
   await page.locator(`#share-${ids[0]}`).fill('100');
   assert.equal(await page.getByRole('button',{name:'שמור',exact:true}).isDisabled(),true);
-  await page.getByRole('button',{name:'היסטוריה',exact:true}).click();
+  await page.getByRole('button',{name:'ההיסטוריה שלי',exact:true}).click();
   await page.getByText('תוכן גרסה 1',{exact:true}).click();
   assert.ok((await page.locator('#my-guess').innerText()).includes('50%'));
   assert.equal(errors.length,0,errors.join('\n'));

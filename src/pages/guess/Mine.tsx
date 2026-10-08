@@ -13,11 +13,11 @@ import { Btn, Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
-  { id: "seats", label: "מנדטים וגושים" },
-  { id: "calculator", label: "מחשבון מנדטים" },
-  { id: "blocs", label: "עריכת גושים" },
-  { id: "vote", label: "הצבעה" },
-  { id: "history", label: "היסטוריה" },
+  { id: "seats", label: "לפי מנדטים" },
+  { id: "calculator", label: "לפי אחוזים" },
+  { id: "blocs", label: "לפי גושים" },
+  { id: "vote", label: "ההצבעה שלי" },
+  { id: "history", label: "ההיסטוריה שלי" },
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
 
@@ -37,7 +37,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   // הכרטיס הבולט מופיע מיד אחרי ההרשמה (כשנוצר הקישור האישי), עד שמאשרים ששמרתם
   const showLink = !!session.token && !!session.link && !acked;
 
-  const statusOf = (s: Sec) => (s === "seats" ? (seats.draft && seats.status !== "saved" ? seats : blocs.draft && blocs.status !== "saved" ? blocs : seats) : s === "vote" ? vote : null);
+  const statusOf = (s: Sec) => s === "seats" || s === "calculator" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null;
   return (
     <div>
       {!session.online && (
