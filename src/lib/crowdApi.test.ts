@@ -124,4 +124,35 @@ describe("מסלולים חלופיים ובדיקת חיבור", () => {
     expect(classifyConnection({ ...ok, post: false })).toBe("post-blocked");
     expect(classifyConnection({ ...ok, postPassword: false })).toBe("password-blocked");
   });
+
+  it("כשל חיבור נשלח אוטומטית לתמיכה — פעם אחת לכל כשל, בלי אסימון או סיסמה", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.stubEnv("VITE_CROWD_URL", "https://crowd.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn(async (url: string, _init?: RequestInit) => {
+      void _init;
+      if (url.endsWith("/autoreport")) return new Response('{"ok":true}');
+      throw new TypeError("Failed to fetch secret-token");
+    });
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/auth/login", { token: "secret-token", body: { username: "u", password: "private-password" } })).rejects.toMatchObject({ code: "network" });
+    const reports = fetcher.mock.calls.filter((c) => String(c[0]).endsWith("/autoreport"));
+    expect(reports).toHaveLength(1);
+    const sent = String((reports[0][1] as RequestInit).body);
+    expect(sent).toContain("/auth/login");
+    expect(sent).toContain("test-browser");
+    for (const secret of ["secret-token", "private-password"]) expect(sent).not.toContain(secret);
+  });
+  it("שגיאת שרת רגילה (למשל סיסמה שגויה) אינה דיווח כשל חיבור", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    vi.resetModules();
+    const { call } = await import("./crowdApi");
+    vi.stubGlobal("navigator", { onLine: true, userAgent: "test-browser" });
+    const fetcher = vi.fn().mockResolvedValue(new Response('{"error":"bad_credentials"}', { status: 401 }));
+    vi.stubGlobal("fetch", fetcher);
+    await expect(call("/auth/login", { body: {} })).rejects.toMatchObject({ status: 401 });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
 });

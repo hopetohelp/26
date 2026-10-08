@@ -46,6 +46,7 @@ export default function ErrorReport({ error, errorLog }: { error: string | null;
   return (
     <div className="bg-paper-card rounded-theme px-3 py-2 mt-1 space-y-1">
       <p role="alert" className="text-sm text-warn">{error}</p>
+      {net && FEEDBACK_URL && <p className="text-xs text-ink">התקלה דווחה אוטומטית לתמיכה, עם פרטים טכניים בלבד.</p>}
       {check === "running" && <p className="text-sm text-ink">בודקים את החיבור…</p>}
       {check && check !== "running" && <p role="status" className="text-sm text-ink">{connectionAdvice(check.kind)}</p>}
       {check && check !== "running" && check.kind !== "all-ok" && <LocalBackup compact />}

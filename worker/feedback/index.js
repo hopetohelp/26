@@ -6,6 +6,7 @@
  * POST /thread      {t, text, website} ⇐ תגובה של הגולש בשיחה.
  * POST /merge       {tokens} ⇐ איחוד השיחות שהגולש מחזיק בכל הקישורים שלהן. הקישורים נשארים תקפים.
  * GET|POST /ping   ⇐ בדיקת חיבור, בלי מאגר.
+ * POST /autoreport {log} ⇐ דיווח כשל חיבור אוטומטי (בלי אישור הגולש), עד 3 ליום מכל מקור.
  * POST /diag        {kind} ⇐ סיווג כשל חיבור (מונה ליום; hits.page = diag:<kind>).
  * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
  *                    המזהה היומי הוא גיבוב חד-כיווני של ה-IP, הדפדפן והתאריך: אי אפשר לשחזר ממנו כתובת או לקשור גולש בין ימים.
@@ -21,6 +22,9 @@ const TOPICS = new Set(["data", "idea", "design", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
 /** סיווגי "בדיקת חיבור" שהדפדפן שולח אחרי כשל (POST /diag): רק מונה ליום, בלי שום פרט על המשתמש. נשמרים ב-hits בשם diag:<סיווג>. */
+/** דיווח כשל חיבור אוטומטי (POST /autoreport, בלי אישור הגולש — הכרעת בעלים 8.10.2026): נשמר כהערה עם התחילית הזו, עד 3 ליום מכל מקור, ולא נספר במכסת ההערות. */
+const AUTO = "[כשל חיבור אוטומטי]";
+const AUTO_PER_DAY = 3;
 const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved"]);
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread"]);
 
@@ -52,8 +56,8 @@ function newToken() {
 async function sentToday(env, key) {
   const day = new Date().toISOString().slice(0, 10);
   const row = await env.DB.prepare(
-    "SELECT (SELECT COUNT(*) FROM feedback WHERE day_key = ?1 AND created_at >= ?2) + (SELECT COUNT(*) FROM messages WHERE day_key = ?1 AND created_at >= ?2) AS n",
-  ).bind(key, day).first();
+    "SELECT (SELECT COUNT(*) FROM feedback WHERE day_key = ?1 AND created_at >= ?2 AND text NOT LIKE ?3) + (SELECT COUNT(*) FROM messages WHERE day_key = ?1 AND created_at >= ?2) AS n",
+  ).bind(key, day, AUTO + "%").first();
   return row?.n ?? 0;
 }
 
@@ -166,6 +170,19 @@ export default {
         env.DB.prepare(`UPDATE feedback_threads SET root_id = (SELECT MIN(root_id) FROM (${roots})) WHERE root_id IN (${roots})`).bind(...hashes, ...hashes),
       ]);
       return reply({ ok: true, token: tokens[0] });
+    }
+    // ---- דיווח כשל חיבור אוטומטי: לוג טכני בלבד (הדפדפן כבר הסיר אסימונים, סיסמאות וכתובות אישיות)
+    if (url.pathname === "/autoreport") {
+      const log = typeof body.log === "string" ? body.log.slice(0, 6000) : "";
+      if (!log) return reply({ ok: false, error: "empty" }, 400);
+      const akey = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
+      const day = new Date().toISOString().slice(0, 10);
+      const sent = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE day_key = ? AND created_at >= ? AND text LIKE ?").bind(akey, day, AUTO + "%").first();
+      if ((sent?.n ?? 0) >= AUTO_PER_DAY) return reply({ ok: true, dropped: true });
+      await env.DB.prepare("INSERT INTO feedback (created_at, topic, text, page, theme, day_key, token_hash, status) VALUES (?, 'other', ?, 'auto', '', ?, ?, 'new')")
+        .bind(new Date().toISOString(), `${AUTO}\n${log}`, akey, await sha256(newToken()))
+        .run();
+      return reply({ ok: true });
     }
     const note = String(body.text || "").trim().slice(0, MAX_TEXT);
     if (!note) return reply({ ok: false, error: "empty" }, 400);
