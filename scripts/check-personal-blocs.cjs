@@ -61,7 +61,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
   await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).fill('תרחיש בדיקה');
   await page.getByRole('textbox',{name:'שם הגוש 1',exact:true}).press('Enter');
   await page.getByRole('link',{name:'חזרה למסך הקודם',exact:true}).click();
-  assert.ok(page.url().includes('view=statistics'));
+  assert.ok(page.url().includes('/community'));
   await page.locator('#statistics').waitFor();
   await page.locator('#statistics').getByRole('rowheader').filter({hasText:'תרחיש בדיקה'}).first().waitFor();
   // כתובת מחשבון ישנה וקלטה נשמרים. עצם פתיחתו אינה מחליפה מנדטים.
