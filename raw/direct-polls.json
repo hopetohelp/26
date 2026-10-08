@@ -1,5 +1,57 @@
 [
   {
+    "id": "2026-10-07-direct-polls-i24-news",
+    "start": "2026-10-07",
+    "end": "2026-10-07",
+    "firm": "Direct Polls",
+    "publisher": "i24 News",
+    "sample": 518,
+    "values": {
+      "likud": {
+        "s": 26
+      },
+      "yashar": {
+        "s": 20
+      },
+      "together": {
+        "s": 11
+      },
+      "democrats": {
+        "s": 10
+      },
+      "otzma": {
+        "s": 9
+      },
+      "utj": {
+        "s": 8
+      },
+      "shas": {
+        "s": 7
+      },
+      "yb": {
+        "s": 7
+      },
+      "joint": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 6
+      },
+      "raam": {
+        "s": 5
+      },
+      "amcha": {
+        "s": 4
+      }
+    },
+    "urls": [
+      "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-fa0f56f4"
+    ],
+    "publishedAt": "2026-10-08T19:40:55+03:00",
+    "verified": true,
+    "note": "המנדטים, המכון והמדגם הושוו לפרסום המקורי. מועד השדה לפי הצהרת המכון בסוף הכתבה (7.10); בגוף הכתבה נכתב 'ערך היום (8.10)'. אחוז המילואימניקים (2.3%) מופיע רק במקור משני ולכן לא נכלל."
+  },
+  {
     "id": "2026-10-07-mp-tm-sn-a-channel-13",
     "start": "2026-10-07",
     "end": "2026-10-07",

@@ -1,5 +1,5 @@
 {
- "asof": "2026-10-08",
+ "asof": "2026-10-09",
  "attempts": {
   "bestVoteAccuracy": 0.92997,
   "runs": 41,
@@ -12,8 +12,8 @@
   ]
  },
  "bloc": {
-  "atLeast61": 0.0494,
-  "central": 53,
+  "atLeast61": 0.1046,
+  "central": 55,
   "lists": [
    "likud",
    "shas",
@@ -23,14 +23,14 @@
    "noam"
   ],
   "seats": [
-   45,
-   51,
-   58
+   47,
+   54,
+   61
   ]
  },
  "camp": {
-  "atLeast61": 0.0716,
-  "central": 53,
+  "atLeast61": 0.1855,
+  "central": 55,
   "lists": [
    "likud",
    "shas",
@@ -40,12 +40,12 @@
    "amcha"
   ],
   "seats": [
-   46,
-   52,
-   59
+   49,
+   56,
+   63
   ]
  },
- "daysToElection": 19,
+ "daysToElection": 18,
  "electionDay": "2026-10-27",
  "enough": true,
  "gate": {
@@ -55,42 +55,42 @@
    "passed": false,
    "perElection": {
     "19": [
-     0.87057,
+     0.87064,
      0.88333
     ],
     "20": [
-     0.90147,
+     0.90165,
      0.90833
     ],
     "21": [
-     0.89937,
+     0.89964,
      0.85
     ],
     "22": [
-     0.93226,
+     0.93274,
      0.93333
     ],
     "23": [
-     0.94933,
+     0.94991,
      0.96667
     ],
     "24": [
-     0.88242,
+     0.88237,
      0.86667
     ],
     "25": [
-     0.94977,
+     0.9496,
      0.93333
     ]
    },
    "summary": {
     "V0": {
-     "seatAccuracy": 0.920002,
-     "voteAccuracy": 0.924764
+     "seatAccuracy": 0.9199999999999999,
+     "voteAccuracy": 0.9235960000000001
     },
     "V5": {
      "seatAccuracy": 0.9099999999999999,
-     "voteAccuracy": 0.9226300000000001
+     "voteAccuracy": 0.922852
     }
    },
    "valid": true
@@ -106,229 +106,229 @@
   "minVote": 0.95,
   "passedAtHorizon": false
  },
- "horizon": 19,
+ "horizon": 18,
  "lists": {
   "amcha": {
-   "pass": 0.2441,
+   "pass": 0.4205,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     5
    ],
-   "share": 2.64,
+   "share": 3.13,
    "shareRange": [
-    1.13,
-    3.93
+    1.62,
+    4.51
    ]
   },
   "bluewhite": {
-   "pass": 0.0465,
+   "pass": 0.0379,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     0
    ],
-   "share": 1.32,
+   "share": 1.07,
    "shareRange": [
     0.0,
-    2.67
+    2.47
    ]
   },
   "democrats": {
-   "pass": 0.9933,
-   "seats": 9,
+   "pass": 0.9965,
+   "seats": 10,
    "seatsRange": [
     7,
     9,
     12
    ],
-   "share": 7.23,
+   "share": 7.65,
    "shareRange": [
-    5.34,
-    9.24
+    5.65,
+    9.74
    ]
   },
   "haredi_public": {
-   "pass": 0.0288,
+   "pass": 0.024,
    "seats": 0,
    "seatsRange": [
     0,
     0,
     0
    ],
-   "share": 0.91,
+   "share": 0.67,
    "shareRange": [
     0.0,
-    2.24
+    2.08
    ]
   },
   "joint": {
-   "pass": 0.9891,
-   "seats": 9,
-   "seatsRange": [
-    6,
-    8,
-    11
-   ],
-   "share": 6.49,
-   "shareRange": [
-    4.79,
-    8.35
-   ]
-  },
-  "likud": {
-   "pass": 0.9999,
-   "seats": 22,
-   "seatsRange": [
-    16,
-    21,
-    27
-   ],
-   "share": 16.29,
-   "shareRange": [
-    12.28,
-    20.33
-   ]
-  },
-  "otzma": {
-   "pass": 0.988,
+   "pass": 0.9864,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     10
    ],
-   "share": 6.44,
+   "share": 6.14,
    "shareRange": [
-    4.74,
-    8.33
+    4.51,
+    7.85
+   ]
+  },
+  "likud": {
+   "pass": 0.9993,
+   "seats": 25,
+   "seatsRange": [
+    18,
+    23,
+    30
+   ],
+   "share": 18.44,
+   "shareRange": [
+    14.05,
+    22.8
+   ]
+  },
+  "otzma": {
+   "pass": 0.9899,
+   "seats": 8,
+   "seatsRange": [
+    6,
+    8,
+    10
+   ],
+   "share": 6.49,
+   "shareRange": [
+    4.77,
+    8.32
    ]
   },
   "raam": {
-   "pass": 0.7913,
+   "pass": 0.7819,
    "seats": 5,
    "seatsRange": [
     0,
     5,
     7
    ],
-   "share": 4.19,
+   "share": 4.2,
    "shareRange": [
-    2.71,
-    5.51
+    2.61,
+    5.55
    ]
   },
   "reservists": {
-   "pass": 0.3424,
+   "pass": 0.1877,
    "seats": 0,
    "seatsRange": [
     0,
     0,
-    5
+    4
    ],
-   "share": 2.95,
+   "share": 2.4,
    "shareRange": [
-    1.44,
-    4.24
+    0.88,
+    3.72
    ]
   },
   "rzp": {
-   "pass": 0.9176,
+   "pass": 0.9551,
    "seats": 6,
    "seatsRange": [
     4,
     6,
     8
    ],
-   "share": 4.97,
+   "share": 5.01,
    "shareRange": [
-    3.4,
-    6.35
+    3.69,
+    6.45
    ]
   },
   "shas": {
-   "pass": 0.9895,
-   "seats": 9,
+   "pass": 0.9857,
+   "seats": 8,
    "seatsRange": [
     6,
     8,
-    11
+    10
    ],
-   "share": 6.46,
+   "share": 6.12,
    "shareRange": [
-    4.76,
-    8.3
+    4.49,
+    7.92
    ]
   },
   "together": {
-   "pass": 0.9976,
-   "seats": 13,
+   "pass": 0.9979,
+   "seats": 12,
    "seatsRange": [
     9,
-    12,
-    16
+    11,
+    15
    ],
-   "share": 9.49,
+   "share": 9.19,
    "shareRange": [
-    7.07,
-    12.13
+    6.79,
+    11.68
    ]
   },
   "utj": {
-   "pass": 0.9875,
+   "pass": 0.9906,
    "seats": 8,
    "seatsRange": [
     6,
     8,
     11
    ],
-   "share": 6.43,
+   "share": 6.48,
    "shareRange": [
-    4.74,
-    8.27
+    4.79,
+    8.31
    ]
   },
   "yashar": {
    "pass": 0.9997,
-   "seats": 23,
+   "seats": 22,
    "seatsRange": [
     17,
-    23,
-    29
+    21,
+    27
    ],
-   "share": 17.74,
+   "share": 16.87,
    "shareRange": [
-    13.48,
-    22.04
+    12.85,
+    21.01
    ]
   },
   "yb": {
-   "pass": 0.9871,
+   "pass": 0.9867,
    "seats": 8,
    "seatsRange": [
     6,
     8,
-    11
+    10
    ],
-   "share": 6.45,
+   "share": 6.13,
    "shareRange": [
-    4.72,
-    8.29
+    4.54,
+    7.87
    ]
   }
  },
  "params": {
-  "beta": -0.0719,
+  "beta": -0.1289,
   "betaElections": 7,
   "others": 1.43,
-  "polls": 36,
+  "polls": 37,
   "residualSd": {
-   "large": 0.2001,
-   "nLarge": 47,
-   "nSmall": 25,
-   "small": 0.0105
+   "large": 0.1995,
+   "nLarge": 46,
+   "nSmall": 26,
+   "small": 0.0109
   },
   "scenarios": {
    "df": 4,
@@ -345,16 +345,16 @@
    24,
    25
   ],
-  "wA": 0.49409463555219263,
+  "wA": 0.4961726909591656,
   "weights": {
-   "direct_polls": 0.1334,
-   "kantar": 0.1376,
-   "maagar_mochot": 0.1194,
-   "midgam": 0.1237,
-   "new_mp_tm_sn_a": 0.1237,
-   "new_sf_nd": 0.1237,
-   "new_yossi_tatika": 0.1237,
-   "panels_politics": 0.1148
+   "direct_polls": 0.1337,
+   "kantar": 0.1363,
+   "maagar_mochot": 0.1198,
+   "midgam": 0.124,
+   "new_mp_tm_sn_a": 0.124,
+   "new_sf_nd": 0.124,
+   "new_yossi_tatika": 0.124,
+   "panels_politics": 0.1143
   }
  },
  "selection": {
@@ -362,19 +362,19 @@
   "summary": {
    "adaptive": {
     "seatAccuracy": 0.92,
-    "voteAccuracy": 0.92476
+    "voteAccuracy": 0.92359
    },
    "baseline": {
     "seatAccuracy": 0.92,
-    "voteAccuracy": 0.92476
+    "voteAccuracy": 0.92359
    },
    "blend": {
     "seatAccuracy": 0.91167,
-    "voteAccuracy": 0.92863
+    "voteAccuracy": 0.92838
    },
    "trend": {
     "seatAccuracy": 0.91,
-    "voteAccuracy": 0.92263
+    "voteAccuracy": 0.92285
    }
   },
   "trainedOn": [
@@ -412,8 +412,8 @@
  "specVersion": 5,
  "variant": "V5",
  "wasted": [
-  2.87,
-  5.93,
-  9.35
+  2.39,
+  5.42,
+  8.76
  ]
 }
