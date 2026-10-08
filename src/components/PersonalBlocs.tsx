@@ -14,7 +14,7 @@ const Context = createContext<ReturnType<typeof useUnit<BlocsPayload>> | null>(n
 export function PersonalBlocsProvider({ children }: { children: ReactNode }) {
   const session = useSession();
   const unit = useUnit<BlocsPayload>("blocs", DEFAULT_BLOCS, session.me?.latest.blocs?.payload as BlocsPayload | undefined);
-  useEffect(() => { if (unit.draft?.mode === "gov37") unit.setDraft(normalizeBlocs(unit.draft)); }, [unit.draft, unit.setDraft]);
+  useEffect(() => { if (!unit.draft) return; const n = normalizeBlocs(unit.draft); if (n !== unit.draft) unit.setDraft(n); }, [unit.draft, unit.setDraft]);
   return <Context.Provider value={unit}>{children}</Context.Provider>;
 }
 export function usePersonalBlocs() {

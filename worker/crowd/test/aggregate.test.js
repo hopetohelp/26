@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { aggregate, suppress, seatStat, computeMatrix, computeVote2026, computeByVote, computeTrend, latestByUnit, israelDay, computeSeats } from "../lib/aggregate.js";
+import { aggregate, suppress, seatStat, computeMatrix, computeVote2026, computeByVote, computeTrend, latestByUnit, israelDay, computeSeats, computeBlocs } from "../lib/aggregate.js";
 import { GOV37 } from "../lib/lists.js";
 import { seats, ver, people, IDS } from "./helpers.js";
 
@@ -278,4 +278,14 @@ it("כל מנחש מפלגות נכלל בקואליציה פעם אחת מהג�
   const d = run(ps,[ver('a','seats',payload(30)),ver('a','seats',payload(40)),ver('b','seats',{...payload(60),mode:'pct',pct:{likud:50,democrats:50}}),ver('r','seats',payload(120))]).dashboard;
   expect(d.blocs.derived.gov).toMatchObject({n:2,mean:50,min:40,max:60});
   expect(d.sectionParticipants.blocs).toBe(2);
+});
+
+it("legacy coalition bloc merges into the current default coalition", () => {
+  const seats = (p) => ({ participant: p, payload: { seats: Object.fromEntries(["likud","shas","utj","otzma","rzp","amcha"].map((id) => [id, { v: 10 }])) } });
+  const blocs = (p, lists) => ({ participant: p, payload: { mode: "custom", blocs: [{ id: "a", name: "x", lists, target: null }] } });
+  const old = ["amcha", "likud", "otzma", "rzp", "shas", "utj"];
+  const now = [...old, "noam", "code_black"];
+  const r = computeBlocs([seats(1), seats(2)], [blocs(1, old), blocs(2, now)]);
+  expect(r.custom).toHaveLength(1);
+  expect(r.custom[0].n).toBe(2);
 });

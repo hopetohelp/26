@@ -129,6 +129,11 @@ export function computeSeats(seatVersions) {
   };
 }
 
+/** גוש הקואליציה בברירת המחדל הישנה, לפני שנעם וצבע שחור נוספו לו (הכרעת בעלים 8.10.2026: אותו גוש) */
+const LEGACY_COALITION = JSON.stringify(["amcha", "likud", "otzma", "rzp", "shas", "utj"]);
+const COALITION = ["amcha", "code_black", "likud", "noam", "otzma", "rzp", "shas", "utj"];
+const canonicalLists = (lists) => (JSON.stringify(lists) === LEGACY_COALITION ? COALITION : lists);
+
 export function computeBlocs(seatVersions, blocVersions) {
   let derived = null;
   if (seatVersions.length >= K_CELL) {
@@ -146,7 +151,7 @@ export function computeBlocs(seatVersions, blocVersions) {
       customCount++;
       const seen = new Set();
       for (const b of v.payload.blocs) {
-        const lists = [...new Set(b.lists)].sort();
+        const lists = canonicalLists([...new Set(b.lists)].sort());
         const name = b.name.trim();
         const key = JSON.stringify(lists);
         if (seen.has(key)) continue;

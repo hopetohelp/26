@@ -60,7 +60,7 @@ export function defaultBlocs(): Bloc[] {
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
 export function normalizeBlocs(p: BlocsPayload): BlocsPayload {
-  if (p.mode === "custom") return p;
+  if (p.mode === "custom") return upgradeLegacyCoalition(p);
   return { mode: "custom", blocs: p.blocs.map(b => ({ ...b,
     name: b.name || (b.id === "gov" ? "מפלגות הממשלה היוצאת" : "יתר המפלגות"),
     lists: b.id === "gov" ? [...GOV_IDS] : b.id === "rest" ? IDS.filter(id => !GOV_IDS.includes(id)) : b.lists,
@@ -77,3 +77,12 @@ export const V2022_LABEL: Record<string, string> = {
   private: "מעדיף/ה לא לומר",
 };
 export const V2026_LABEL: Record<string, string> = { undecided: "עוד לא החלטתי", none: "לא אצביע", ineligible: "לא הייתה לי זכות הצבעה", private: "מעדיף/ה לא לומר" };
+
+/** גוש הקואליציה שנשמר לפני שנעם וצבע שחור נוספו לברירת המחדל — אותו גוש (הכרעת בעלים 8.10.2026). כמו `canonicalLists` בשרת. */
+const LEGACY_COALITION = ["amcha", "likud", "otzma", "rzp", "shas", "utj"].join(",");
+function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
+  const legacy = (b: Bloc) => [...new Set(b.lists)].sort().join(",") === LEGACY_COALITION;
+  if (!p.blocs.some(legacy)) return p;
+  const added = ["noam", "code_black"].filter(id => IDS.includes(id));
+  return { ...p, blocs: p.blocs.map(b => legacy(b) ? { ...b, lists: [...b.lists, ...added] } : { ...b, lists: b.lists.filter(id => !added.includes(id)) }) };
+}
