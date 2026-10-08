@@ -1,11 +1,11 @@
-import PersonalBlocs from "../../components/PersonalBlocs";
+import PersonalBlocs, { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Card } from "../../components/ui";
 import { liveDashboard, newerDashboard, siteDashboard, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, seatsFmt } from "../../lib/format";
-import { GOV_IDS, k25VoteName, nameOf, POLL_SHARES, V2022_LABEL, V2026_LABEL } from "./model";
+import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, POLL_SHARES, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
@@ -28,6 +28,8 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
+  const personal = usePersonalBlocs();
+  const myBlocs = (personal.draft ? normalizeBlocs(personal.draft) : DEFAULT_BLOCS).blocs.map(b => b.lists);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => setSlot(document.getElementById("community-blocs")), []);
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       ) : (
         d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={mine} view={view} unit="pct" /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
-      {d.blocs ? <BlocStats d={d} view={view} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
+      {d.blocs ? <BlocStats d={d} view={view} mine={myBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>
   );
@@ -91,12 +93,14 @@ export function SeatsStats({ rows, polls, mine, view, unit = "seats" }: { rows: 
   </table></div></Card>;
 }
 
-export function BlocStats({ d, view }: { d:D; view:View }) {
+/** mine: הרכבי הגושים של המשתמש עצמו — מוצגים לו תמיד, גם אם רק הוא הגדיר אותם (הכרעת בעלים 9.10.2026) */
+export function BlocStats({ d, view, mine = [] }: { d:D; view:View; mine?: string[][] }) {
   const b=d.blocs!;
   const government=[...GOV_IDS].sort().join(",");
+  const own = new Set(mine.map(lists => [...lists].sort().join(",")));
   const rows = [
     ...(b.derived ? [{key:government,lists:GOV_IDS,label:"גוש הקואליציה",stat:b.derived.gov}] : []),
-    ...(b.custom ?? []).filter(g=>g.derived && g.n >= 2 && g.lists.length && [...g.lists].sort().join(",")!==government)
+    ...(b.custom ?? []).filter(g=>g.derived && (g.n >= 2 || own.has([...g.lists].sort().join(","))) && g.lists.length && [...g.lists].sort().join(",")!==government)
       .map(g=>({key:[...g.lists].sort().join(","),lists:g.lists,label:g.lists.map(nameOf).join(" · "),stat:g.derived!}))
   ].filter(row => {
     const listCount = new Set(row.lists).size;
