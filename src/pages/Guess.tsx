@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { PageTitle } from "../components/ui";
+import { PageTitle, Split } from "../components/ui";
 import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
 import { maskIdentifier } from "../lib/identifier";
@@ -93,6 +93,8 @@ export default function Guess({ community = false }: { community?: boolean }) {
   return (
     <>
       <PageTitle lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."}>{community ? "השערות הגולשים" : "ההשערה שלי"}</PageTitle>
+      {/* ההשערה שלי: הפתיחה והבחירה בטור הצר, ההשערה עצמה ברחב. בגולשים — הפיצול בתוך Dashboard */}
+      {(() => { const head = <>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
       {!community && <div className="mb-5"><Countdown /></div>}
       {intro && !shared && !community && (
@@ -134,7 +136,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
           </button>
         ))}
       </nav>
-      {view === "mine" ? (
+      </>; const body = view === "mine" ? (
         <section id="my-guess" ref={top}>
           <Mine key={mineKey} session={session} onStatistics={() => setView("statistics")} />
         </section>
@@ -142,7 +144,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         <section id="statistics">
           <Dashboard session={session} />
         </section>
-      )}
+      ); return community ? <>{head}{body}</> : <Split primary={head} secondary={body} />; })()}
     </>
   );
 }

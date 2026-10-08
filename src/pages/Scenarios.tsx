@@ -2,7 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import { ScenarioRanges, TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle } from "../components/ui";
+import { Card, ChartWithTable, Note, PageTitle, Split } from "../components/ui";
 
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
@@ -92,7 +92,7 @@ export default function Scenarios() {
       >
         תחזית ותרחישים
       </PageTitle>
-<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />
+      <Split primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />} secondary={<>
 
       <Card title="לכל רשימה">
         <Explained
@@ -364,6 +364,7 @@ export default function Scenarios() {
           <li>חמש מערכות אינן מספיקות כדי להוכיח שהמספרים "מכוילים". לכן האתר מדבר על "שיעור התרחישים", ולא על סיכוי.</li>
         </ul>
       </Card>
+      </>} />
     </>
   );
 }

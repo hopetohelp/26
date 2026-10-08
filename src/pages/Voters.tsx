@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Explained from "../components/Explained";
-import { Badge, Card, ChartWithTable, Note, PageTitle } from "../components/ui";
+import { Badge, Card, ChartWithTable, Note, PageTitle, Columns } from "../components/ui";
 import { registry, results } from "../lib/data";
 import { num, pct } from "../lib/format";
 
@@ -21,6 +21,7 @@ export default function Voters() {
       <PageTitle lead="כמה בעלי זכות בחירה היו בכל מערכת, כמה הצביעו, וכמה קולות עלה לעבור את אחוז החסימה — ומה זה אומר על 2026.">
         מצביעים — אז והיום
       </PageTitle>
+      <Columns>
 
       <Card title="בעלי זכות בחירה ושיעור ההצבעה">
         <Explained
@@ -113,6 +114,7 @@ export default function Voters() {
           אחד.
         </p>
       </Card>
+      </Columns>
     </>
   );
 }
