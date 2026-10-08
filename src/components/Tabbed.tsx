@@ -8,9 +8,11 @@ export interface Tab {
   element: ReactNode;
 }
 
-export default function Tabbed({ label, tabs }: { label: string; tabs: Tab[] }) {
+/** aliases: לשונית שאוחדה לתוך אחרת ⇐ קישורים ישנים (?tab=forecast) נפתחים בלשונית החדשה */
+export default function Tabbed({ label, tabs, aliases = {} }: { label: string; tabs: Tab[]; aliases?: Record<string, string> }) {
   const [params, setParams] = useSearchParams();
-  const current = tabs.find((t) => t.id === params.get("tab")) ?? tabs[0];
+  const asked = params.get("tab") ?? "";
+  const current = tabs.find((t) => t.id === (aliases[asked] ?? asked)) ?? tabs[0];
   return (
     <>
       <div role="tablist" aria-label={label} className="flex flex-wrap gap-1.5 mb-5">

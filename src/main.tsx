@@ -22,7 +22,6 @@ import Tabbed, { Moved } from "./components/Tabbed";
 const Accuracy = lazy(() => import("./pages/Accuracy"));
 const Scenarios = lazy(() => import("./pages/Scenarios"));
 const Changes = lazy(() => import("./pages/Changes"));
-const Forecast = lazy(() => import("./pages/Forecast"));
 const Guess = lazy(() => import("./pages/Guess"));
 
 function NotFound() {
@@ -39,9 +38,8 @@ createRoot(document.getElementById("root")!).render(
             path="today"
             element={<Tabbed label="המצב והתחזית" tabs={[
               { id: "today", label: "היום", element: <Today /> },
-              { id: "scenarios", label: "תרחישים", element: <Scenarios /> },
-              { id: "forecast", label: "תחזית", element: <Forecast /> },
-            ]} />}
+              { id: "scenarios", label: "תחזית ותרחישים", element: <Scenarios /> },
+            ]} aliases={{ forecast: "scenarios" }} />}
           />
           <Route
             path="polls"
@@ -70,7 +68,7 @@ createRoot(document.getElementById("root")!).render(
             ]} />}
           />
           <Route path="scenarios" element={<Moved to="/today" tab="scenarios" />} />
-          <Route path="forecast" element={<Moved to="/today" tab="forecast" />} />
+          <Route path="forecast" element={<Moved to="/today" tab="scenarios" />} />
           <Route path="trends" element={<Moved to="/polls" tab="trends" />} />
           <Route path="results" element={<Moved to="/past" tab="results" />} />
           <Route path="accuracy" element={<Moved to="/past" tab="accuracy" />} />

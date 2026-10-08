@@ -33,7 +33,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
    if(url.pathname==='/history')data={versions:saved.filter(v=>v.unit===url.searchParams.get('unit')).map((v,i)=>({id:i+1,unit:v.unit,payload:v.payload,created_at:'2026-10-08T06:00:00Z'}))};
    await route.fulfill({json:data});
   });
-  for(const path of ['/','/today','/today?tab=scenarios','/today?tab=forecast','/polls','/polls?tab=trends','/changes','/past','/past?tab=accuracy','/guess?view=statistics']){
+  for(const path of ['/','/today','/today?tab=scenarios','/polls','/polls?tab=trends','/changes','/past','/past?tab=accuracy','/guess?view=statistics']){
    await page.goto(`${base}#${path}`,{waitUntil:"domcontentloaded"});
    if(path==='/') { assert.equal(await page.locator('[data-personal-blocs-card]').count(),0,'הכרטיס הכפול הוסר מהבית'); continue; }
    try { await page.getByRole('heading',{name:/הגושים שלי/}).first().waitFor({timeout:10000}); } catch(e) { console.error(await page.locator("main").innerText());throw e; }
