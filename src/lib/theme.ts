@@ -8,7 +8,7 @@ export const THEMES = [
 export type ThemeId = (typeof THEMES)[number]["id"];
 
 const KEY = "elections26.theme"; // אותו מפתח בסקריפט הקטן שב-index.html
-const DEFAULT: ThemeId = "board";
+const DEFAULT: ThemeId = "league"; // הכרעת בעלים 8.10.2026: ברירת המחדל — מקצועי
 
 function read(): ThemeId {
   try {

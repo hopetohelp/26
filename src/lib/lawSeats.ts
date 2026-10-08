@@ -13,8 +13,17 @@ export const THRESHOLD_PCT = 3.25;
 
 export const validVotes = (eligible: number = registry.k26.eligible, turnout = DEFAULT_TURNOUT) => Math.round(eligible * (turnout / 100) * (1 - INVALID_SHARE));
 
+/**
+ * אחוזים ⇐ קולות. אחוזים בדיוק של עשירית יוצרים שוויונות מלאכותיים (שתי רשימות באותו אחוז, או צירוף הסכם עודפים
+ * ששווה בדיוק לרשימה אחרת) — ואז החוק מחייב הגרלה ואין תוצאה. במציאות זה לא קורה, ולכן כל רשימה מקבלת
+ * פחות קולות לפי מקומה בסדר הרשימות (0, 1, 2… קולות) — הבדל זניח שמונע "הגרלה" על קלט מעוגל
+ * (הכרעת בעלים 8.10.2026: החישוב חייב להחזיר תוצאה).
+ */
 export const sharesToVotes = (ids: string[], shares: Record<string, number>, valid: number) =>
-  Object.fromEntries(ids.map((id) => [id, Math.round(((shares[id] || 0) / 100) * valid)]));
+  Object.fromEntries(ids.map((id, i) => {
+    const v = Math.round(((shares[id] || 0) / 100) * valid);
+    return [id, v > i ? v - i : v];
+  }));
 
 /** כל הסכמי העודפים שדווחו ל-2026 (כולם פעילים — ברירת המחדל של המחשבון) */
 export const AGREEMENTS_2026: Agreement[] = meta.agreements2026.map((a) => a.pair as unknown as Agreement);
