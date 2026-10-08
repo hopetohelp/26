@@ -20,9 +20,10 @@ interface Family {
   share2022: number;
   seats2022: number;
   shareNow: number;
-  shareRange: number[];
+  /** null: מחנה ששיניתם ידנית — לטווח התרחישים נדרש חישוב בצינור, ולכן אינו מוצג */
+  shareRange: number[] | null;
   seatsNow: number;
-  seatsRange: number[];
+  seatsRange: number[] | null;
 }
 interface Alternative {
   id: string;
@@ -33,13 +34,61 @@ interface Alternative {
   unassignedNow: { lists: string[]; share: number };
 }
 interface ModelLite {
-  central: { seats: Record<string, number> };
+  central: { seats: Record<string, number>; shares: Record<string, number> };
   asof: string;
   polls: number;
   changes: { election2022: string; valid2022: number; alternatives: Alternative[] };
 }
 const m = modelFile as unknown as ModelLite;
 const ALTS = m.changes.alternatives;
+const PARTY = ALTS.find((a) => a.id === "party")!;
+const CAMP = ALTS.find((a) => a.id === "camp")!;
+
+/** המחנות שלכם: לכל רשימה של היום — מחנה 2022 שאליו היא משויכת (או "" — בלי שיוך). נשמר בדפדפן (הכרעת בעלים 8.10.2026). */
+type CampMap = Record<string, string>;
+const CAMPS_KEY = "elections26.camps";
+const LISTS_NOW = Object.keys(m.central.shares);
+const DEFAULT_CAMPS: CampMap = Object.fromEntries(LISTS_NOW.map((id) => [id, CAMP.families.find((f) => f.k26.includes(id))?.id ?? ""]));
+function loadCamps(): CampMap {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CAMPS_KEY) ?? "null") as CampMap | null;
+    if (saved && typeof saved === "object") return { ...DEFAULT_CAMPS, ...Object.fromEntries(Object.entries(saved).filter(([k, v]) => k in DEFAULT_CAMPS && (v === "" || CAMP.families.some((f) => f.id === v)))) };
+  } catch { /* דפדפן בלי אחסון — ברירת המחדל */ }
+  return DEFAULT_CAMPS;
+}
+function saveCamps(c: CampMap) {
+  try { localStorage.setItem(CAMPS_KEY, JSON.stringify(c)); } catch { /* לא נשמר — עדיין מוצג */ }
+}
+const sameSet = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
+const votes2022 = Object.fromEntries((results.find((r) => r.knesset === 25)?.lists ?? []).map((l) => [l.short, { votes: l.votes, seats: l.seats }]));
+
+/** חלופת "לפי המחנה" לפי המחנות שלכם. 2022 — מתוצאות האמת; היום — ממוצע המודל. טווח התרחישים רק למחנה שלא שונה. */
+function campAlternative(camps: CampMap): Alternative {
+  const families = CAMP.families.map((f) => {
+    const k26 = LISTS_NOW.filter((id) => camps[id] === f.id);
+    const same = sameSet(k26, f.k26);
+    const v = f.k25.reduce((t, n) => t + (votes2022[n]?.votes ?? 0), 0);
+    return {
+      ...f,
+      k26,
+      why: same ? f.why : "שיוך ששיניתם ידנית.",
+      votes2022: v,
+      share2022: (v / m.changes.valid2022) * 100,
+      seats2022: f.k25.reduce((t, n) => t + (votes2022[n]?.seats ?? 0), 0),
+      shareNow: k26.reduce((t, id) => t + (m.central.shares[id] ?? 0), 0),
+      seatsNow: k26.reduce((t, id) => t + (m.central.seats[id] ?? 0), 0),
+      shareRange: same ? f.shareRange : null,
+      seatsRange: same ? f.seatsRange : null,
+    };
+  });
+  const free = LISTS_NOW.filter((id) => !camps[id]);
+  return {
+    ...CAMP,
+    desc: "כל רשימה של היום מושווית למחנה שממנו באה ב-2022. ברירת המחדל: כמו לפי המפלגה, אבל המחנה הממלכתי מושווה לכחול לבן ולישר! יחד, כי גדי איזנקוט התמודד ב-2022 ברשימת המחנה הממלכתי. אפשר לשנות את המחנות, והשינוי נשמר בדפדפן הזה.",
+    families,
+    unassignedNow: { lists: free, share: Math.max(0, 100 - families.reduce((t, f) => t + f.shareNow, 0)) },
+  };
+}
 
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const diff = (x: number) => {
@@ -55,7 +104,7 @@ function FamilyRow({ f, max }: { f: Family; max: number }) {
   return (
     <li className="py-3 border-t border-paper-line first:border-t-0">
       <p className="sr-only">
-        {`${names26(f.k26)}, לעומת ${f.k25.join(" ו")} ב-2022: ${r1(f.share2022)}% מהקולות הכשרים ב-2022; היום ${r1(f.shareNow)}% לפי הממוצע, ובין ${r1(f.shareRange[0])}% ל-${r1(f.shareRange[2])}% ב-80% מהתרחישים. שינוי נטו: ${diff(d)} נקודות אחוז.`}
+        {`${names26(f.k26)}, לעומת ${f.k25.join(" ו")} ב-2022: ${r1(f.share2022)}% מהקולות הכשרים ב-2022; היום ${r1(f.shareNow)}% לפי הממוצע${f.shareRange ? `, ובין ${r1(f.shareRange[0])}% ל-${r1(f.shareRange[2])}% ב-80% מהתרחישים` : ""}. שינוי נטו: ${diff(d)} נקודות אחוז.`}
       </p>
       <div aria-hidden="true" className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
         <span className="font-bold text-base flex items-center gap-2 min-w-0">
@@ -76,7 +125,7 @@ function FamilyRow({ f, max }: { f: Family; max: number }) {
         <span className="tabular text-left">{r1(f.share2022)}%</span>
         <span className="text-ink-soft">היום</span>
         <span className="relative h-2.5 bg-paper rounded-sm">
-          <span className="absolute inset-y-0 rounded-sm bg-accent/25" style={{ right: w(f.shareRange[0]), width: `calc(${w(f.shareRange[2])} - ${w(f.shareRange[0])})` }} />
+          {f.shareRange && <span className="absolute inset-y-0 rounded-sm bg-accent/25" style={{ right: w(f.shareRange[0]), width: `calc(${w(f.shareRange[2])} - ${w(f.shareRange[0])})` }} />}
           <span className="absolute inset-y-0 right-0 rounded-sm bg-accent" style={{ width: w(f.shareNow) }} />
         </span>
         <span className="tabular text-left font-bold">{r1(f.shareNow)}%</span>
@@ -88,10 +137,15 @@ function FamilyRow({ f, max }: { f: Family; max: number }) {
 export default function Changes() {
   const personal = usePersonalBlocs();
   const blocs = personal.draft ? normalizeBlocs(personal.draft).blocs : DEFAULT_BLOCS.blocs;
-  const [view, setView] = useState<"blocs" | "families">("blocs");
-  const [altId, setAltId] = useState(ALTS[0].id);
-  const alt = ALTS.find((a) => a.id === altId) ?? ALTS[0];
-  const max = Math.max(25, ...alt.families.flatMap((f) => [f.share2022, f.shareRange[2]]));
+  // שלוש דרכים (הכרעת בעלים 8.10.2026): הגושים שלי · לפי המפלגה · לפי המחנה (המחנות ניתנים לשינוי ידני ונשמרים)
+  const [view, setView] = useState<"blocs" | "party" | "camp">("blocs");
+  const [camps, setCampsState] = useState<CampMap>(loadCamps);
+  const [editing, setEditing] = useState(false);
+  const setCamps = (c: CampMap) => (setCampsState(c), saveCamps(c));
+  const campAlt = campAlternative(camps);
+  const alt = view === "party" ? PARTY : campAlt;
+  const customized = LISTS_NOW.some((id) => camps[id] !== DEFAULT_CAMPS[id]);
+  const max = Math.max(25, ...alt.families.flatMap((f) => [f.share2022, f.shareRange?.[2] ?? f.shareNow]));
   const u22 = alt.unassigned2022;
   const unow = alt.unassignedNow;
   const previous = results.find(r => r.knesset === 25)!;
@@ -100,36 +154,57 @@ export default function Changes() {
   return (
     <>
       <Split title="מה השתנה מהבחירות האחרונות" lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת." primary={<>
-      {/* כפתור אחד לכל דרך השוואה (הכרעת בעלים 8.10.2026): הגושים שלי, או משפחות המפלגות לפי אחת משלוש דרכי השיוך.
-          בתצוגת הגושים — השיוך האחרון שנבחר (ברירת מחדל: לפי המפלגה). */}
-      <div role="radiogroup" aria-label="איך לשייך?" className="flex flex-wrap gap-2 mb-3">
-        {[{ id: "blocs", name: "לפי הגושים שלי" }, ...ALTS.map((a) => ({ id: a.id, name: a.name }))].map((o) => {
-          const on = o.id === "blocs" ? view === "blocs" : view === "families" && o.id === alt.id;
-          return (
-            <button
-              key={o.id}
-              type="button"
-              role="radio"
-              aria-checked={on}
-              onClick={() => (o.id === "blocs" ? setView("blocs") : (setView("families"), setAltId(o.id)))}
-              className={`min-h-[44px] px-4 rounded-full text-sm font-bold border ${on ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
-            >
-              {o.name}
-            </button>
-          );
-        })}
+      <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-3">
+        {([["blocs", "לפי הגושים שלי"], ["party", "לפי המפלגה"], ["camp", "לפי המחנה"]] as const).map(([id, name]) => (
+          <button
+            key={id}
+            type="button"
+            role="radio"
+            aria-checked={view === id}
+            onClick={() => setView(id)}
+            className={`min-h-[44px] px-4 rounded-full text-sm font-bold border ${view === id ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
+          >
+            {name}
+          </button>
+        ))}
       </div>
-      <p className="text-base leading-relaxed mb-4">
-        {view === "blocs" ? `הגושים שלכם, 2022 מול היום. שיוך רשימות העבר: ${alt.name}.` : alt.desc}
+      <p className="text-base leading-relaxed mb-3">
+        {view === "blocs" ? "הגושים שלכם, 2022 מול היום. רשימות 2022 משויכות לפי המחנות (ראו \"לפי המחנה\")." : alt.desc}
       </p>
+      {view !== "party" && (
+        <button type="button" aria-expanded={editing} onClick={() => setEditing((e) => !e)} className="min-h-[44px] px-4 rounded-full text-sm font-bold border border-ink-faint mb-4">
+          {editing ? "סגירת עריכת המחנות" : customized ? "עריכת המחנות שלי (שונו)" : "שינוי המחנות"}
+        </button>
+      )}
       </>} secondary={<>
+      {editing && view !== "party" && (
+        <Card title="המחנות שלי">
+          <p className="text-sm text-ink-soft mb-3">לכל רשימה של היום — לאיזה מחנה של 2022 להשוות אותה. השינוי נשמר בדפדפן הזה ומשמש גם בהשוואת הגושים.</p>
+          <ul className="divide-y divide-paper-line">
+            {LISTS_NOW.map((id) => (
+              <li key={id} className="py-2 flex flex-wrap items-center justify-between gap-2">
+                <label htmlFor={`camp-${id}`} className="font-bold">{listName(id)}</label>
+                <select id={`camp-${id}`} value={camps[id]} onChange={(e) => setCamps({ ...camps, [id]: e.target.value })} className="border border-paper-line rounded px-2 py-1 min-h-[44px] max-w-full bg-paper-card">
+                  {CAMP.families.map((f) => <option key={f.id} value={f.id}>2022: {f.k25.join(" + ")}</option>)}
+                  <option value="">בלי שיוך</option>
+                </select>
+              </li>
+            ))}
+          </ul>
+          {customized && (
+            <button type="button" onClick={() => setCamps(DEFAULT_CAMPS)} className="mt-3 min-h-[44px] px-4 rounded-full text-sm font-bold border border-ink-faint">
+              חזרה לברירת המחדל
+            </button>
+          )}
+        </Card>
+      )}
       {view === "blocs" && <PersonalBlocs title="הגושים שלי: תוצאות 2022 מול ממוצע הסקרים היום" source={`תוצאות 2022 מול המודל היום; שיוך ${alt.name}`} asOf={dateLong(m.asof)} compare datasets={[
         { rows: historical, source: "תוצאות 2022", asOf: "תוצאות סופיות" },
         { values: m.central.seats, source: "המנדטים היום לפי המודל", asOf: dateLong(m.asof) },
       ]} />}
 
 
-      {view === "families" && <Card title={`המשפחות — ${alt.name}`}>
+      {view !== "blocs" && <Card title={`המשפחות — ${alt.name}`}>
         <Explained
           kind="השוואה"
           source={`תוצאות האמת של בחירות 2022 (ועדת הבחירות המרכזית) מול הממוצע מבוסס-המודל — ${m.polls} סקרים מאומתים עד ${dateLong(m.asof)}`}
@@ -169,8 +244,8 @@ export default function Changes() {
                       <td className="pe-3 tabular">{r1(f.share2022)}</td>
                       <td className="pe-3 tabular">{f.seats2022}</td>
                       <td className="pe-3 tabular">{r1(f.shareNow)}</td>
-                      <td className="pe-3 tabular whitespace-nowrap">{r1(f.shareRange[0])}–{r1(f.shareRange[2])}</td>
-                      <td className="pe-3 tabular whitespace-nowrap">{f.seatsNow} ({f.seatsRange[0]}–{f.seatsRange[2]})</td>
+                      <td className="pe-3 tabular whitespace-nowrap">{f.shareRange ? `${r1(f.shareRange[0])}–${r1(f.shareRange[2])}` : "—"}</td>
+                      <td className="pe-3 tabular whitespace-nowrap">{f.seatsNow}{f.seatsRange ? ` (${f.seatsRange[0]}–${f.seatsRange[2]})` : ""}</td>
                       <td className="tabular" dir="ltr">{diff(f.shareNow - f.share2022)}</td>
                     </tr>
                   ))}
@@ -193,7 +268,7 @@ export default function Changes() {
 
       <Note>רשימת עבר נספרת פעם אחת בכל גוש. אם הגוש כולל רק חלק ממשפחה שהתפצלה, או מפלגה ללא שיוך בחלופה שנבחרה, אין השוואה מספרית מלאה. זו השוואת הרכבים לפי ההנחות הגלויות, ולא מדידה של מעבר בוחרים.</Note>
 
-      {view === "families" && <Card title="לא משויך">
+      {view !== "blocs" && <Card title="לא משויך">
         <div className="grid sm:grid-cols-2 gap-4 [&>*]:min-w-0">
           <div>
             <p className="font-display text-4xl leading-none tabular">{r1(u22.share)}%</p>
