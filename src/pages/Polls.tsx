@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Badge, Card, Note, PageTitle } from "../components/ui";
-import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, VERIFICATION_LABEL, type Poll } from "../lib/data";
+import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const PAGE = 50;
@@ -70,6 +70,7 @@ export default function Polls() {
         <ul className="divide-y divide-paper-line">
           {filtered.slice(0, shown).map((p) => {
             const isOpen = open === p.id;
+            const label = p.verification ? verificationLabel(p.verification.status) : null;
             return (
               <li key={p.id} className="py-3 min-w-0">
                 <button
@@ -83,8 +84,8 @@ export default function Polls() {
                   {p.sample && <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>}
                   {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
                   {p.verification ? (
-                    <Badge tone={VERIFICATION_LABEL[p.verification.status].tone === "ok" ? "ok" : VERIFICATION_LABEL[p.verification.status].tone === "warn" ? "warn" : "neutral"}>
-                      {VERIFICATION_LABEL[p.verification.status].text}
+                    <Badge tone={label!.tone === "ok" ? "ok" : label!.tone === "warn" ? "warn" : "neutral"}>
+                      {label!.text}
                     </Badge>
                   ) : (
                     <Badge>מקור: ויקיפדיה</Badge>
@@ -102,16 +103,16 @@ export default function Polls() {
                     <dt className="font-bold">גודל המדגם</dt>
                     <dd>{p.sample ? num(p.sample) : "לא צוין בטבלה"}</dd>
                     <dt className="font-bold">טעות הדגימה</dt>
-                    <dd>{p.verification?.details.moe ? String(p.verification.details.moe) : "לא נמצאה בפרסום המקורי, או שטרם נבדק"}</dd>
+                    <dd>{p.verification?.details?.moe ? String(p.verification.details.moe) : "לא נמצאה בפרסום המקורי, או שטרם נבדק"}</dd>
                     <dt className="font-bold">האוכלוסייה</dt>
-                    <dd>{p.verification?.details.population ?? "לא נמצאה בפרסום המקורי, או שטרם נבדק"}</dd>
+                    <dd>{p.verification?.details?.population ?? "לא נמצאה בפרסום המקורי, או שטרם נבדק"}</dd>
                     <dt className="font-bold">נוסח השאלות</dt>
                     <dd>בפרסום המקורי, אם פורסם (קישור למטה)</dd>
                     {p.verification && (
                       <>
                         <dt className="font-bold">בדיקה מול המקור</dt>
                         <dd>
-                          {VERIFICATION_LABEL[p.verification.status].text} · נבדק {date(p.verification.checkedAt)}
+                          {label!.text} · נבדק {date(p.verification.checkedAt)}
                         </dd>
                       </>
                     )}
