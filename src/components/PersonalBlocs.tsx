@@ -47,14 +47,15 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   if (!p.blocs.some(b => b.lists.length)) return null;
   const anyKnown = series.some(d => d.rows.some(row => row.knownTotal !== null));
   const display = formatBlocValue;
+  const displayDate = (value: string) => /^\d{4}-\d{2}-\d{2}(?:T|$)/.test(value) && Number.isFinite(Date.parse(value)) ? date(value) : value;
   const one = series[0];
   const table = series.length > 3 ? <table className="w-full text-sm">
     <caption className="sr-only">מנדטים לפי הגושים שלי בכל מקור</caption>
     <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start py-2 min-w-[12rem]">מקור · תאריך</th>{p.blocs.map(b => <th key={b.id} scope="col" className="px-3 min-w-[7rem] break-words">{b.name}</th>)}</tr></thead>
-    <tbody>{series.map((d, i) => <tr key={i} className="border-b border-paper-line"><th scope="row" className="text-start py-2 font-normal">{d.source}<span className="block text-xs text-ink-soft">{d.asOf}</span></th>{p.blocs.map(b => { const row = d.rows.find(r => r.id === b.id); return <td key={b.id} className="text-center px-3 tabular">{display(row)}<BlocCoverage row={row} /></td>; })}</tr>)}</tbody>
+    <tbody>{series.map((d, i) => <tr key={i} className="border-b border-paper-line"><th scope="row" className="text-start py-2 font-normal">{d.source}<span className="block text-xs text-ink-soft">{displayDate(d.asOf)}</span></th>{p.blocs.map(b => { const row = d.rows.find(r => r.id === b.id); return <td key={b.id} className="text-center px-3 tabular">{display(row)}<BlocCoverage row={row} /></td>; })}</tr>)}</tbody>
   </table> : <table className="w-full text-sm">
     <caption className="sr-only">השוואת מנדטים לפי הגושים שלי</caption>
-    <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[8rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-3 min-w-[7rem] py-2">{d.source}<span className="block font-normal text-xs text-ink-soft">{d.asOf}</span></th>)}{compare && series.length === 2 && <th scope="col" className="px-3">שינוי במנדטים</th>}</tr></thead>
+    <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[8rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-3 min-w-[7rem] py-2">{d.source}<span className="block font-normal text-xs text-ink-soft">{displayDate(d.asOf)}</span></th>)}{compare && series.length === 2 && <th scope="col" className="px-3">שינוי במנדטים</th>}</tr></thead>
     <tbody>{p.blocs.map(b => { const first = series[0]?.rows.find(r => r.id === b.id)?.total; const last = series[1]?.rows.find(r => r.id === b.id)?.total; const delta = first != null && last != null ? last - first : null; return <tr key={b.id} className="border-b border-paper-line"><th scope="row" className="text-start py-2 break-words">{b.name}<span className="block font-normal text-xs text-ink-soft">{b.lists.map(nameOf).join(" · ") || "אין מפלגות"}</span></th>{series.map((d,i) => { const row = d.rows.find(r => r.id === b.id); return <td key={i} className="px-3 text-center tabular">{display(row)}<BlocCoverage row={row} /></td>; })}{compare && series.length === 2 && <td className="text-center tabular"><bdi>{delta === null ? "—" : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td>}</tr>; })}</tbody>
   </table>;
   return <section data-personal-blocs-card className="my-4 rounded-theme border border-paper-line bg-paper-card p-3 space-y-2" aria-label={title}>
