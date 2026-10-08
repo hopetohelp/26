@@ -34,9 +34,11 @@ export interface BlocDataset {
 }
 
 /** כרטיס משותף מרכז כמה מקורות; נתון חסר נשאר חסר והמקורות אינם מתמזגים. */
-export default function PersonalBlocs({ title, values = {}, source, asOf, historical = false, mapping, datasets, editTargets = false, compare = false }: {
+export default function PersonalBlocs({ title, values = {}, source, asOf, historical = false, mapping, datasets, editTargets = false, compare = false, compact = false }: {
   title: string; values?: Record<string, number | undefined>; source: string; asOf: string; historical?: boolean; mapping?: Record<string, string>;
   datasets?: BlocDataset[]; editTargets?: boolean; compare?: boolean;
+  /** טור צר: לכל גוש רשימת מקורות זה מתחת לזה, במקום טבלה רחבה */
+  compact?: boolean;
 }) {
   const unit = usePersonalBlocs();
   const { pathname, search } = useLocation();
@@ -49,7 +51,11 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const display = formatBlocValue;
   const displayDate = (value: string) => /^\d{4}-\d{2}-\d{2}(?:T|$)/.test(value) && Number.isFinite(Date.parse(value)) ? date(value) : value;
   const one = series[0];
-  const table = series.length > 3 ? <table className="w-full text-sm">
+  const stacked = <dl className="space-y-3">{p.blocs.map(b => <div key={b.id} className="border-b border-paper-line pb-2 text-sm">
+    <dt><strong className="break-words">{b.name}</strong><span className="block text-xs text-ink-soft break-words">{b.lists.map(nameOf).join(" · ") || "אין מפלגות"}</span></dt>
+    {series.map((d, i) => { const row = d.rows.find(r => r.id === b.id); return <dd key={i} className="flex justify-between gap-3 mt-1"><span className="text-ink-soft min-w-0">{d.source}</span><span className="tabular font-bold text-end shrink-0">{display(row)}<BlocCoverage row={row} /></span></dd>; })}
+  </div>)}</dl>;
+  const table = compact ? stacked : series.length > 3 ? <table className="w-full text-sm">
     <caption className="sr-only">מנדטים לפי הגושים שלי בכל מקור</caption>
     <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start py-2 min-w-[12rem]">מקור · תאריך</th>{p.blocs.map(b => <th key={b.id} scope="col" className="px-3 min-w-[7rem] break-words">{b.name}</th>)}</tr></thead>
     <tbody>{series.map((d, i) => <tr key={i} className="border-b border-paper-line"><th scope="row" className="text-start py-2 font-normal">{d.source}<span className="block text-xs text-ink-soft">{displayDate(d.asOf)}</span></th>{p.blocs.map(b => { const row = d.rows.find(r => r.id === b.id); return <td key={b.id} className="text-center px-3 tabular">{display(row)}<BlocCoverage row={row} /></td>; })}</tr>)}</tbody>
@@ -70,11 +76,15 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   </section>;
 }
 
+/** שורה קצרצרה מתחת לנתון חסר (הכרעת בעלים 8.10.2026); שמות המפלגות ומקורות האומדן — בריחוף ולקורא מסך */
 function BlocCoverage({ row }: { row?: BlocRow }) {
   if (!row?.missing.length) return null;
-  return <div className="mt-1 text-xs font-sans font-normal text-ink-soft whitespace-normal break-words max-w-xs">
-    <span className="block">נתון ל-{row.knownCount} מתוך {row.lists.length} מפלגות</span>
-    <span className="block">{row.estimate !== null ? "הושלם" : "חסר נתון או אין התאמה"}: {row.missing.map(nameOf).join(" · ")}</span>
-    {row.imputed.length ? <details className="mt-1"><summary className="cursor-pointer min-h-[44px] flex items-center">מקורות האומדן</summary><ul className="space-y-1">{row.imputed.map(c=><li key={c.id}>{nameOf(c.id)}: {seatsFmt(c.value)} מנדטים · {c.method === "same-firm" ? "סקר קודם של אותו מכון ומזמין" : "חציון המכונים הקודמים"}{c.sources.map(source=><span key={source.id} className="block">{source.label} · {date(source.date)}</span>)}</li>)}</ul></details> : row.reason && <span className="block">{row.reason}</span>}
-  </div>;
+  const detail = [
+    `${row.estimate !== null ? "הושלם באומדן" : "חסר נתון או אין התאמה"}: ${row.missing.map(nameOf).join(" · ")}`,
+    ...row.imputed.map(c => `${nameOf(c.id)}: ${seatsFmt(c.value)} מנדטים · ${c.method === "same-firm" ? "סקר קודם של אותו מכון ומזמין" : "חציון המכונים הקודמים"} · ${c.sources.map(x => `${x.label} ${date(x.date)}`).join(", ")}`),
+  ].join("\n");
+  return <span className="block mt-0.5 text-xs font-sans font-normal text-ink-soft whitespace-nowrap" title={detail}>
+    חסר נתון על <bdi>{row.missing.length}/{row.lists.length}</bdi> מפלגות{row.estimate !== null ? " · אומדן" : ""}
+    <span className="sr-only">. {detail}</span>
+  </span>;
 }

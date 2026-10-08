@@ -114,6 +114,18 @@ export function validateBlocs(p) {
   return { ok: true, value: { mode: p.mode, blocs } };
 }
 
+/** המחנות במסך "מה השתנה": רשימה של היום ⇐ מזהה מחנה 2022 ("" = בלי שיוך). לא נכנס לשום חישוב. */
+export function validateCamps(c) {
+  if (!isObj(c)) return fail("camps");
+  const out = {};
+  for (const [k, v] of Object.entries(c)) {
+    if (!IDS_2026.has(k)) return fail("camps_list");
+    if (typeof v !== "string" || !/^[a-z0-9_]{0,32}$/.test(v)) return fail("camps_value");
+    out[k] = v;
+  }
+  return { ok: true, value: out };
+}
+
 export function validatePayload(unit, payload) {
   if (unit === "vote") return validateVote(payload);
   if (unit === "seats") return validateSeats(payload);

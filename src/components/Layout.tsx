@@ -10,6 +10,7 @@ import { THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/the
 import { colorOf } from "../lib/colors";
 import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
+import { useSupportUnread } from "../lib/supportUnread";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label })), { to: "/support", label: "תמיכה" }];
 /** הלשוניות בתחתית המסך בטלפון. יתר המסכים נגישים מריבועי מסך הבית. */
@@ -189,7 +190,7 @@ function Masthead({ theme }: { theme: ThemeId }) {
   );
 }
 
-function DesktopNav({ theme }: { theme: ThemeId }) {
+function DesktopNav({ theme, unread }: { theme: ThemeId; unread: boolean }) {
   const wrap = theme === "board" ? "bg-frame" : theme === "league" ? "bg-frame border-b border-frame-line" : "";
   return (
     <nav aria-label="ניווט ראשי" className={`hidden md:block ${wrap}`}>
@@ -208,6 +209,7 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
               }}
             >
               {n.label}
+              {n.to === "/support" && unread && <UnreadDot />}
             </NavLink>
           </li>
         ))}
@@ -216,7 +218,12 @@ function DesktopNav({ theme }: { theme: ThemeId }) {
   );
 }
 
-function MobileTabs() {
+/** סימון "לא נקרא" — נקודה בצבע ההדגשה, עם טקסט לקורא מסך */
+function UnreadDot() {
+  return <span className="inline-block w-2.5 h-2.5 rounded-full bg-signal ms-1 align-top" role="img" aria-label="הודעה חדשה" />;
+}
+
+function MobileTabs({ unread }: { unread: boolean }) {
   return (
     <nav aria-label="ניווט בטלפון" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
       <ul className="grid grid-cols-5">
@@ -229,7 +236,7 @@ function MobileTabs() {
                 `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`
               }
             >
-              <Icon name={t.icon} />
+              <span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span>
               {t.label}
             </NavLink>
           </li>
@@ -257,6 +264,7 @@ function GuessCta({ pathname }: { pathname: string }) {
 export default function Layout() {
   const { pathname } = useLocation();
   const [theme] = useTheme();
+  const unread = useSupportUnread(pathname);
   useEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById("main")?.focus({ preventScroll: true });
@@ -272,13 +280,13 @@ export default function Layout() {
       {/* במחשב הסרגל העליון תמיד גלוי (הכרעת בעלים 8.10.2026) */}
       <header className="md:sticky md:top-0 md:z-40">
         <Masthead theme={theme} />
-        <DesktopNav theme={theme} />
+        <DesktopNav theme={theme} unread={unread} />
       </header>
       <FreezeBanner />
       <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
         <PersonalBlocsProvider><PageErrorBoundary><Outlet /></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      <MobileTabs />
+      <MobileTabs unread={unread} />
       <GuessCta pathname={pathname} />
     </div>
   );

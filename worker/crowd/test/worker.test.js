@@ -297,3 +297,19 @@ it("סכום הקואליציה נשמר ונקרא בחשבון ובהיסטו�
   expect((await call('/history?unit=seats',{token:tok})).data.versions[0].payload.coalitionSeats).toBe(38);
   expect((await save(tok,'seats',{...payload,coalitionSeats:99},'coalition-op-001')).data.version.id).toBe(result.data.version.id);
 });
+
+describe("העדפות — המחנות נשמרים על המשתמש", () => {
+  it("נשמרים, מוחזרים ב-/me, נדחים כשאינם תקינים ונמחקים עם החשבון", async () => {
+    const token = await newP();
+    expect((await call("/me", { token })).data.prefs).toEqual({ camps: null });
+    const ok = await call("/prefs", { token, body: { camps: { yashar: "", likud: "likud" } } });
+    expect(ok.status).toBe(200);
+    expect((await call("/me", { token })).data.prefs).toEqual({ camps: { yashar: "", likud: "likud" } });
+    await call("/prefs", { token, body: { camps: { yashar: "nu_camp" } } });
+    expect((await call("/me", { token })).data.prefs.camps).toEqual({ yashar: "nu_camp" });
+    expect((await call("/prefs", { token, body: { camps: { nope: "x" } } })).status).toBe(400);
+    expect((await call("/prefs", { token, body: { camps: { likud: "<b>" } } })).status).toBe(400);
+    expect((await call("/prefs", { body: { camps: {} } })).status).toBe(401);
+    expect((await call("/delete", { token, body: { confirm: "מחק" } })).status).toBe(200);
+  });
+});

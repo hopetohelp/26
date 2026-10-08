@@ -6,6 +6,7 @@ import { Split } from "../components/ui";
 import { errorText, useSession } from "./guess/useCrowd";
 import { FEEDBACK_URL, accountSupport, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { LegacyFeedback } from "./MyFeedback";
+import { WELCOME, markSupportSeen } from "../lib/supportUnread";
 
 type Message = { author: "visitor" | "team"; text: string; created_at: string };
 type Thread = { status: "new" | "answered" | "closed"; created_at: string; updated_at: string; messages: Message[] };
@@ -30,6 +31,8 @@ export default function Support() {
   const [revision, setRevision] = useState(0);
   const pending = useRef<{ token: string; text: string; op_id: string } | null>(null);
 
+  // ביקור במסך התמיכה = ההודעות נקראו (גם כשמגיעה תשובה בזמן שהמסך פתוח)
+  useEffect(() => { markSupportSeen(); }, [thread]);
   useEffect(() => {
     let current = true;
     setThread(null); setError(null); pending.current = null;
@@ -64,13 +67,18 @@ export default function Support() {
 
   if (!session.online && !FEEDBACK_URL) return <Notice>התמיכה תיפתח יחד עם השמירה באתר.</Notice>;
 
-  return <div className="space-y-8">
-    <Split title="תמיכה" lead="כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם." primary={
+  return <>
+    <Split secondaryFirst title="תמיכה" lead="כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם." primary={<section>
+      <h2 className="font-display text-4xl leading-none mb-5 text-center">הנתונים שלי</h2>
+      <MyData session={session} />
+    </section>} secondary={<div className="space-y-8">
       <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
         <h2 className="font-display text-3xl leading-none text-center">השיחה עם צוות האתר</h2>
-        {!thread ? <p className="text-sm text-ink-soft">אפשר לכתוב לנו גם בלי חשבון.</p> : (
-          <ol className="flex flex-col gap-3" aria-label="שיחת תמיכה">{thread.messages.map((m, i) => <Bubble key={i} m={m} />)}</ol>
-        )}
+        <ol className="flex flex-col gap-3" aria-label="שיחת תמיכה">
+          <Bubble m={WELCOME} />
+          {thread?.messages.map((m, i) => <Bubble key={i} m={m} />)}
+        </ol>
+        {!thread && <p className="text-sm text-ink-soft">אפשר לכתוב לנו גם בלי חשבון.</p>}
         {thread?.status !== "closed" && <div className="space-y-2">
           <fieldset disabled={busy} className="space-y-2">
             <legend className="font-bold">סוג הפנייה</legend>
@@ -84,12 +92,7 @@ export default function Support() {
           <div className="flex justify-center"><Btn kind="primary" disabled={!text.trim() || busy || text.trim().length > maxText} onClick={send}>{busy ? "שולחים…" : "שליחת הודעה"}</Btn></div>
         </div>}
       </section>
-    } secondary={<div className="space-y-8">
     <LegacyFeedback key={revision} />
-    <section>
-      <h2 className="font-display text-4xl leading-none mb-5 text-center">הנתונים שלי</h2>
-      <MyData session={session} />
-    </section>
     </div>} />
-  </div>;
+  </>;
 }

@@ -74,7 +74,8 @@ export function Fold({ title, children, open = false }: { title: ReactNode; chil
  */
 const SPLIT_AT = 1024;
 const SETTLE_MS = 2000;
-export function Split({ primary, secondary, title, lead }: { primary: ReactNode; secondary: ReactNode; title?: ReactNode; lead?: ReactNode }) {
+/** secondaryFirst: בטור אחד (טלפון) הטור הרחב קודם — למשל שיחת התמיכה לפני הנתונים שלי */
+export function Split({ primary, secondary, title, lead, secondaryFirst = false }: { primary: ReactNode; secondary: ReactNode; title?: ReactNode; lead?: ReactNode; secondaryFirst?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const prim = useRef<HTMLDivElement>(null);
   const tabs = useTabsSlot();
@@ -125,7 +126,7 @@ export function Split({ primary, secondary, title, lead }: { primary: ReactNode;
         data-split={split || undefined}
         style={split ? { height: `calc(100dvh - ${state.top}px)` } : undefined}
         // ‎-mt-6 -mb-24: מבטלים את הריווח של <main> (py-6 md:pb-24 ב-Layout), כדי שהטורים והקו ימלאו את כל הגובה בלי גלילת עמוד
-        className={split ? "-mt-6 -mb-24 grid grid-cols-[minmax(22rem,1fr)_2fr] [&>*]:min-w-0" : ""}
+        className={split ? "-mt-6 -mb-24 grid grid-cols-[minmax(22rem,1fr)_2fr] [&>*]:min-w-0" : secondaryFirst ? "flex flex-col [&>*:last-child]:order-first [&>*:last-child]:mb-8" : ""}
       >
         <div ref={prim} className={split ? "relative overflow-hidden pt-6 pe-6 border-e border-paper-line" : ""}>
           <div>

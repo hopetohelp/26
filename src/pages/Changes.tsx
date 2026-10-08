@@ -2,7 +2,9 @@ import { results } from "../lib/data";
 import PersonalBlocs, { usePersonalBlocs } from "../components/PersonalBlocs";
 import { historicalBlocValues } from "../lib/personalBlocs";
 import { DEFAULT_BLOCS, normalizeBlocs } from "./guess/model";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { call } from "../lib/crowdApi";
+import { useSession } from "./guess/useCrowd";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
@@ -44,15 +46,19 @@ const ALTS = m.changes.alternatives;
 const PARTY = ALTS.find((a) => a.id === "party")!;
 const CAMP = ALTS.find((a) => a.id === "camp")!;
 
-/** המחנות שלכם: לכל רשימה של היום — מחנה 2022 שאליו היא משויכת (או "" — בלי שיוך). נשמר בדפדפן (הכרעת בעלים 8.10.2026). */
+/** המחנות שלכם: לכל רשימה של היום — מחנה 2022 שאליו היא משויכת (או "" — בלי שיוך).
+ *  נשמרים על המשתמש (POST /prefs, הכרעת בעלים 8.10.2026) ובדפדפן; בלי חשבון — בדפדפן בלבד. */
 type CampMap = Record<string, string>;
 const CAMPS_KEY = "elections26.camps";
 const LISTS_NOW = Object.keys(m.central.shares);
 const DEFAULT_CAMPS: CampMap = Object.fromEntries(LISTS_NOW.map((id) => [id, CAMP.families.find((f) => f.k26.includes(id))?.id ?? ""]));
+function cleanCamps(saved: unknown): CampMap | null {
+  if (!saved || typeof saved !== "object") return null;
+  return { ...DEFAULT_CAMPS, ...Object.fromEntries(Object.entries(saved as CampMap).filter(([k, v]) => k in DEFAULT_CAMPS && (v === "" || CAMP.families.some((f) => f.id === v)))) };
+}
 function loadCamps(): CampMap {
   try {
-    const saved = JSON.parse(localStorage.getItem(CAMPS_KEY) ?? "null") as CampMap | null;
-    if (saved && typeof saved === "object") return { ...DEFAULT_CAMPS, ...Object.fromEntries(Object.entries(saved).filter(([k, v]) => k in DEFAULT_CAMPS && (v === "" || CAMP.families.some((f) => f.id === v)))) };
+    return cleanCamps(JSON.parse(localStorage.getItem(CAMPS_KEY) ?? "null")) ?? DEFAULT_CAMPS;
   } catch { /* דפדפן בלי אחסון — ברירת המחדל */ }
   return DEFAULT_CAMPS;
 }
@@ -84,7 +90,7 @@ function campAlternative(camps: CampMap): Alternative {
   const free = LISTS_NOW.filter((id) => !camps[id]);
   return {
     ...CAMP,
-    desc: "כל רשימה של היום מושווית למחנה שממנו באה ב-2022. ברירת המחדל: כמו לפי המפלגה, אבל המחנה הממלכתי מושווה לכחול לבן ולישר! יחד, כי גדי איזנקוט התמודד ב-2022 ברשימת המחנה הממלכתי. אפשר לשנות את המחנות, והשינוי נשמר בדפדפן הזה.",
+    desc: "כל רשימה של היום מושווית למחנה שממנו באה ב-2022. ברירת המחדל: כמו לפי המפלגה, אבל המחנה הממלכתי מושווה לכחול לבן ולישר! יחד, כי גדי איזנקוט התמודד ב-2022 ברשימת המחנה הממלכתי. אפשר לשנות את המחנות, והשינוי נשמר בחשבון שלכם (או בדפדפן, בלי חשבון).",
     families,
     unassignedNow: { lists: free, share: Math.max(0, 100 - families.reduce((t, f) => t + f.shareNow, 0)) },
   };
@@ -139,9 +145,28 @@ export default function Changes() {
   const blocs = personal.draft ? normalizeBlocs(personal.draft).blocs : DEFAULT_BLOCS.blocs;
   // שלוש דרכים (הכרעת בעלים 8.10.2026): הגושים שלי · לפי המפלגה · לפי המחנה (המחנות ניתנים לשינוי ידני ונשמרים)
   const [view, setView] = useState<"blocs" | "party" | "camp">("blocs");
+  const session = useSession();
   const [camps, setCampsState] = useState<CampMap>(loadCamps);
   const [editing, setEditing] = useState(false);
-  const setCamps = (c: CampMap) => (setCampsState(c), saveCamps(c));
+  // מחנות שנשמרו על המשתמש גוברים על הדפדפן
+  const accountCamps = session.me?.prefs?.camps;
+  useEffect(() => {
+    const c = cleanCamps(accountCamps);
+    if (c) (setCampsState(c), saveCamps(c));
+  }, [accountCamps]);
+  // שמירה בחשבון — חצי שנייה אחרי השינוי האחרון (המכסה לשעה משותפת לשמירות)
+  const timer = useRef<number>();
+  const [campsError, setCampsError] = useState(false);
+  const setCamps = (c: CampMap) => {
+    setCampsState(c);
+    saveCamps(c);
+    if (!session.token) return;
+    window.clearTimeout(timer.current);
+    const token = session.token;
+    timer.current = window.setTimeout(() => {
+      call("/prefs", { token, body: { camps: c } }).then(() => setCampsError(false), () => setCampsError(true));
+    }, 800);
+  };
   const campAlt = campAlternative(camps);
   const alt = view === "party" ? PARTY : campAlt;
   const customized = LISTS_NOW.some((id) => camps[id] !== DEFAULT_CAMPS[id]);
@@ -179,7 +204,8 @@ export default function Changes() {
       </>} secondary={<>
       {editing && view !== "party" && (
         <Card title="המחנות שלי">
-          <p className="text-sm text-ink-soft mb-3">לכל רשימה של היום — לאיזה מחנה של 2022 להשוות אותה. השינוי נשמר בדפדפן הזה ומשמש גם בהשוואת הגושים.</p>
+          <p className="text-sm text-ink-soft mb-3">לכל רשימה של היום — לאיזה מחנה של 2022 להשוות אותה. השינוי משמש גם בהשוואת הגושים, ו{session.token ? "נשמר בחשבון שלכם" : "נשמר בדפדפן הזה. כדי לשמור אותו בחשבון — נכנסים ב\"הכנסת שלי\""}.</p>
+          {campsError && <p role="alert" className="text-sm text-warn mb-2">השמירה בחשבון לא הצליחה כרגע. השינוי נשמר בדפדפן.</p>}
           <ul className="divide-y divide-paper-line">
             {LISTS_NOW.map((id) => (
               <li key={id} className="py-2 flex flex-wrap items-center justify-between gap-2">

@@ -127,6 +127,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
           <Btn onClick={() => setRecoverLink(null)}>לא צריך, תודה</Btn>
         </section>
       )}
+      {community && <div id="community-blocs" />}
       </>; const body = view === "mine" ? (
         <section id="my-guess" ref={top}>
           <Mine key={mineKey} session={session} onStatistics={() => setView("statistics")} />
