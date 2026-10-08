@@ -1,3 +1,4 @@
+import { FEEDBACK_TOPICS, conversationTopic } from "../lib/feedbackTopics";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
@@ -121,18 +122,26 @@ export default function Admin() {
             <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו.</p>
           </section>
 
-          <section className="space-y-2">
-            <h2 className="font-display text-2xl">שיחות תמיכה של משתמשים רשומים ({data.support?.threads.length ?? 0})</h2>
-            {!data.support && <Notice tone="warn">שרת ההשתתפות לא ענה.</Notice>}
-            <ul className="space-y-2">{data.support?.threads.map((t) => <Conversation key={t.participant} title="משתמש רשום" items={t.messages} waiting={t.status === "new"} onReply={reply("support", t.participant)} />)}</ul>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="font-display text-2xl">הערות ופניות ({data.feedback.length})</h2>
-            <ul className="space-y-2">{data.feedback.map((t) => <Conversation key={t.id} title={`פנייה ${t.id}`} items={t.items} waiting={t.waiting} onReply={reply("feedback", t.id)} />)}</ul>
-          </section>
+          {!data.support && <Notice tone="warn">שרת ההשתתפות לא ענה. מוצגות הפניות הזמינות משרת ההערות.</Notice>}
+          <InquirySections data={data} reply={reply} />
         </>
       )}
     </div>
   );
+}
+
+
+/** שני מקורות השמירה מוצגים יחד; נתיב התשובה המקורי נשמר לכל שיחה. */
+export function InquirySections({ data, reply }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean> }) {
+  const conversations = [
+    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, updated: thread.updated_at, onReply: reply("feedback", thread.id) })),
+    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", updated: thread.updated_at, onReply: reply("support", thread.participant) })),
+  ].sort((a,b) => Number(b.waiting)-Number(a.waiting) || b.updated.localeCompare(a.updated));
+  return <>{FEEDBACK_TOPICS.map(topic => {
+    const group = conversations.filter(conversation => conversationTopic(conversation.items) === topic.id);
+    return <section key={topic.id} className="space-y-2">
+      <h2 className="font-display text-2xl">{topic.label} ({group.length})</h2>
+      {group.length ? <ul className="space-y-2">{group.map(({ key, ...conversation }) => <Conversation key={key} {...conversation} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות מסוג זה.</p>}
+    </section>;
+  })}</>;
 }

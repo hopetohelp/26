@@ -1,3 +1,4 @@
+import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
 import { useEffect, useState } from "react";
 import MyData from "./guess/MyData";
 import { Btn, Notice } from "./guess/ui";
@@ -21,6 +22,8 @@ export default function Support() {
   const session = useSession();
   const [thread, setThread] = useState<Thread | null>(null);
   const [text, setText] = useState("");
+  const [topic, setTopic] = useState<FeedbackTopic>("other");
+  const maxText = 2000 - topicMessage(topic, "").length;
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [trap, setTrap] = useState("");
@@ -34,16 +37,17 @@ export default function Support() {
   useEffect(() => { void load(); }, [session.token]);
 
   async function send() {
-    if (!text.trim() || busy) return;
+    if (!text.trim() || busy || text.trim().length > maxText) return;
+    const message = topicMessage(topic, text);
     setBusy(true); setError(null);
     try {
       if (session.token) {
-        await call("/support", { token: session.token, body: { text: text.trim() } });
+        await call("/support", { token: session.token, body: { text: message } });
       } else {
         const primary = await mergeSavedThreads();
-        let res = primary ? await replyToThread(primary.token, text.trim(), trap) : null;
+        let res = primary ? await replyToThread(primary.token, message, trap) : null;
         if (!res || res.error === "not found") {
-          res = await sendFeedback({ topic: "other", text: text.trim(), page: "/support", theme: document.documentElement.dataset.theme ?? "board", website: trap });
+          res = await sendFeedback({ topic, text: message, page: "/support", theme: document.documentElement.dataset.theme ?? "board", website: trap });
           if (res.ok && res.token) saveThread({ token: res.token, created: new Date().toISOString(), preview: text.trim().slice(0, 80) });
         }
         if (!res.ok) throw new Error("send failed");
@@ -69,11 +73,16 @@ export default function Support() {
           <ol className="flex flex-col gap-3" aria-label="שיחת תמיכה">{thread.messages.map((m, i) => <Bubble key={i} m={m} />)}</ol>
         )}
         {thread?.status !== "closed" && <div className="space-y-2">
+          <fieldset disabled={busy} className="space-y-2">
+            <legend className="font-bold">סוג הפנייה</legend>
+            <div className="flex flex-wrap gap-2">{FEEDBACK_TOPICS.map(option => <label key={option.id} className={`flex items-center gap-2 min-h-[44px] px-3 rounded-full border cursor-pointer ${topic === option.id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}><input type="radio" name="support-topic" value={option.id} checked={topic === option.id} onChange={() => setTopic(option.id)} />{option.label}</label>)}</div>
+          </fieldset>
           <label htmlFor="support-message" className="sr-only">הודעה לתמיכה</label>
-          <textarea id="support-message" value={text} onChange={e => setText(e.target.value)} rows={4} maxLength={2000} placeholder="איך אפשר לעזור?" className="w-full border border-ink-faint rounded-theme p-3 bg-paper-card" />
+          <textarea id="support-message" value={text} onChange={e => setText(e.target.value)} rows={4} maxLength={maxText} placeholder="איך אפשר לעזור?" className="w-full border border-ink-faint rounded-theme p-3 bg-paper-card" />
           <input aria-hidden="true" tabIndex={-1} autoComplete="off" className="hidden" value={trap} onChange={e => setTrap(e.target.value)} />
+          {text.trim().length > maxText && <p role="alert" className="text-sm text-warn">ההודעה ארוכה מדי לסוג הפנייה שנבחר.</p>}
           {error && <p role="alert" className="text-sm font-bold text-warn">{error}</p>}
-          <div className="flex justify-center"><Btn kind="primary" disabled={!text.trim() || busy} onClick={send}>{busy ? "שולחים…" : "שליחת הודעה"}</Btn></div>
+          <div className="flex justify-center"><Btn kind="primary" disabled={!text.trim() || busy || text.trim().length > maxText} onClick={send}>{busy ? "שולחים…" : "שליחת הודעה"}</Btn></div>
         </div>}
       </section>
 
