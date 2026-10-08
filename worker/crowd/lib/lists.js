@@ -1,7 +1,7 @@
 // נוצר אוטומטית מ-src/data על ידי worker/crowd/gen-lists.mjs — לא לערוך ביד.
-export const REGISTRY = "2026-10-08T16:12:37+03:00";
+export const REGISTRY = "2026-10-08T16:19:09+03:00";
 /** רשימות 2026: מזהה + האם בין מפלגות הממשלה היוצאת (ממשלה 37) */
-export const LISTS_2026 = [{"id":"likud","gov37":true},{"id":"yashar","gov37":false},{"id":"together","gov37":false},{"id":"democrats","gov37":false},{"id":"yb","gov37":false},{"id":"shas","gov37":true},{"id":"utj","gov37":true},{"id":"otzma","gov37":true},{"id":"rzp","gov37":true},{"id":"joint","gov37":false},{"id":"raam","gov37":false},{"id":"reservists","gov37":false},{"id":"bluewhite","gov37":false},{"id":"amcha","gov37":false},{"id":"haredi_public","gov37":false},{"id":"noam","gov37":false},{"id":"code_black","gov37":false}];
+export const LISTS_2026 = [{"id":"likud","gov37":true},{"id":"yashar","gov37":false},{"id":"together","gov37":false},{"id":"democrats","gov37":false},{"id":"yb","gov37":false},{"id":"shas","gov37":true},{"id":"utj","gov37":true},{"id":"otzma","gov37":true},{"id":"rzp","gov37":true},{"id":"joint","gov37":false},{"id":"raam","gov37":false},{"id":"reservists","gov37":false},{"id":"bluewhite","gov37":false},{"id":"amcha","gov37":false},{"id":"haredi_public","gov37":false},{"id":"noam","gov37":true},{"id":"code_black","gov37":false}];
 /** רשימות 2022 (כנסת 25) לפי letters */
 export const LISTS_2022 = ["מחל","פה","ט","כן","שס","ג","ל","עם","ום","אמת","מרצ","ד","ב","אצ","קץ","יז","צ","ף","ק","ת","ני","קנ","נק","י","קך","נץ","ץ","רז","ך","ז","קי","יק","נז","נר","זץ","יץ","נף","ינ","זך","זנ"];
 /** אחוז מהקולות הכשרים בבחירות 2022 — התוצאה הרשמית */
