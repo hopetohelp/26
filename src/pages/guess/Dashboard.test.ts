@@ -114,6 +114,9 @@ it("ממיין את כל הגושים לפי משתתפים ואז מנדטים,
     const html = renderToStaticMarkup(createElement(BlocStats,{d,view})).split('&quot;').join('"');
     // גוש שהגדיר משתתף אחד בלבד אינו מוצג (הכרעת בעלים 8.10.2026)
     expect(html).not.toContain([nameOf('joint'),nameOf('raam')].join(' · '));
+    // הגוש של המשתמש עצמו מוצג לו תמיד, גם כשרק הוא הגדיר אותו
+    const own = renderToStaticMarkup(createElement(BlocStats,{d,view,mine:[['raam','joint']]})).split('&quot;').join('"');
+    expect(own).toContain([nameOf('joint'),nameOf('raam')].join(' · '));
     const labels = [[nameOf('utj'),nameOf('otzma')].join(' · '),[nameOf('likud'),nameOf('shas')].join(' · '),'גוש הקואליציה'];
     const indices = labels.map(label => html.indexOf(label));
     expect(indices.every(index => index >= 0)).toBe(true);

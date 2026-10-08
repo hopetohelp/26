@@ -1,5 +1,5 @@
 /** מצב ההשתתפות בדפדפן: אסימון, מצב המשתתף מהשרת, וטיוטה+שמירה לכל יחידה. */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CROWD_URL, CrowdError, call, type Me, type Payload, type Unit } from "../../lib/crowdApi";
 import * as S from "../../lib/crowdSession";
 import { meta } from "../../lib/data";
@@ -10,6 +10,28 @@ const emit = () => {
   const a = { token: S.getToken(), link: S.getLink() };
   listeners.forEach((l) => l(a));
 };
+
+/**
+ * סשן לכל פעולה (הכרעת בעלים 9.10.2026): בשינוי הראשון — הודעה, מחנות, גושים, מפלגות, אחוזים — נוצר חשבון אורח
+ * עם קישור אישי, וכל שינוי נשמר בו ונכנס לממוצע האנונימי. מומלץ להוסיף שם משתמש וסיסמה (AccessCard).
+ */
+let creating: Promise<string | null> | null = null;
+export function ensureSession(): Promise<string | null> {
+  const t = S.getToken();
+  if (t) return Promise.resolve(t);
+  if (!CROWD_URL) return Promise.resolve(null);
+  creating ??= call<{ token: string; link?: string }>("/auth/guest", { body: {} })
+    .then((r) => {
+      S.setToken(r.token);
+      S.setConsent(true);
+      if (r.link) { S.setLink(r.link); S.setLinkAck(false); }
+      emit();
+      return r.token;
+    })
+    .catch(() => null)
+    .finally(() => { creating = null; });
+  return creating;
+}
 
 /** החשבון בדפדפן: סשן (שם משתמש וסיסמה) והקישור האישי שנוצר כאן. בלי סשן — רק טיוטות מקומיות. */
 export function useSession() {
@@ -73,11 +95,19 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
   const [state, setState] = useState<SaveState>("idle");
   const [error, setError] = useState<string | null>(null);
   const [errorLog, setErrorLog] = useState<string | null>(null);
+  const saveRef = useRef<(token: string, payload: P) => Promise<boolean>>();
+  const timer = useRef<number>();
   const setDraft = useCallback(
     (p: P | null) => {
       setDraftState(p);
       if (p === null) S.clearDraft(unit);
       else S.saveDraft(unit, p);
+      // שמירה אוטומטית — 2 שניות אחרי השינוי האחרון (חשבון אורח נוצר לפי הצורך)
+      window.clearTimeout(timer.current);
+      if (p === null || same(p, S.loadSaved(unit))) return;
+      timer.current = window.setTimeout(() => {
+        void ensureSession().then((token) => { if (token && saveRef.current) void saveRef.current(token, p); });
+      }, 2000);
     },
     [unit],
   );
@@ -128,6 +158,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
     },
     [draft, unit],
   );
+  saveRef.current = save;
   return { draft, setDraft, saved, status, save, state, error, errorLog };
 }
 

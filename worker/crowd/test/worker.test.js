@@ -76,9 +76,9 @@ describe("participant & saves", () => {
     const me = await call("/me", { token: tok });
     expect(Object.keys(me.data.latest).sort()).toEqual(["blocs", "seats", "vote"]);
   });
-  it("rate limits: 20 saves/hour per participant, 15 registrations/hour per IP", async () => {
+  it("rate limits: saves/hour per participant, 15 registrations/hour per IP", async () => {
     const tok = await newP();
-    for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats(i + 4))).status).toBe(200);
+    for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats((i % 16) + 4))).status).toBe(200);
     expect((await save(tok, "seats", seats(4))).status).toBe(429);
     t += 2 * 3600 * 1000;
     expect((await save(tok, "seats", seats(4))).status).toBe(200);

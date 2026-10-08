@@ -30,7 +30,7 @@ const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-on
 /** בדיקת עומק אחרי חסימה: לאן כן מגיעים (probe-<יעד>-<תוצאה>) — מונה ליום בלבד */
 const PROBE_KIND = /^probe-(worker|crowd|site|gapi|gsi)-(ok|fail)$/;
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
-const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support"]);
+const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/prefs", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support"]);
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread", "/guess", "/community"]);
 
 function cors(env, origin) {

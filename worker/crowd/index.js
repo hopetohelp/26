@@ -15,7 +15,8 @@ import { validateSave, validateCamps, UNITS, normalizeUsername, passwordProblem 
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 
-export const LIMITS = { savesPerHour: 20, participantsPerHourPerIp: 15 };
+// שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
+export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
 const MAX_BODY = 16 * 1024;
 
 function cors(env, origin) {
@@ -259,8 +260,14 @@ const routes = {
     if (clientToken && (await authenticate(env, clientToken, now))) return { token: clientToken };
     const [stmts, participant] = await createParticipant(env, request, now);
     const [sess, token] = await newSession(env, participant, now, clientToken);
-    await env.DB.batch([...stmts, sess]);
-    return { token };
+    // קישור אישי נוצר מיד (הכרעת בעלים 9.10.2026): הדרך היחידה לחזור לחשבון אורח ממכשיר אחר
+    const link = randomToken();
+    await env.DB.batch([
+      ...stmts,
+      env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
+      sess,
+    ]);
+    return { token, link };
   },
 
   // הוספת שם משתמש וסיסמה למשתתף שנשמר בלי משתמש: הסשן הנוכחי נשאר, ונוצר קישור אישי לשחזור.
