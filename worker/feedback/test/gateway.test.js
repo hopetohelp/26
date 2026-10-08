@@ -49,3 +49,32 @@ describe("בדיקת חיבור וסיווג כשלים", () => {
     expect(rows).toHaveLength(1);
   });
 });
+
+describe("דיווח כשל חיבור אוטומטי", () => {
+  const origin = "https://hopetohelp.github.io";
+  const post = (env, body) => worker.fetch(new Request("https://feedback.example/autoreport", { method: "POST", headers: { origin, "cf-connecting-ip": "1.2.3.4" }, body: JSON.stringify(body) }), env);
+  const makeEnv = (existing = 0) => {
+    const inserts = [];
+    return {
+      inserts,
+      ALLOWED_ORIGIN: origin,
+      DB: { prepare: (sql) => ({ bind: (...a) => ({ first: async () => ({ n: existing }), run: async () => inserts.push([sql, ...a]) }) }) },
+    };
+  };
+  it("נשמר כהערה חדשה עם תחילית, בלי אישור ובלי אסימון בתשובה", async () => {
+    const env = makeEnv();
+    const res = await post(env, { log: '{"code":"network"}' });
+    expect(await res.json()).toEqual({ ok: true });
+    expect(env.inserts).toHaveLength(1);
+    expect(env.inserts[0][2]).toMatch(/^\[כשל חיבור אוטומטי\]\n/);
+  });
+  it("אחרי 3 ביום מאותו מקור — מתעלם בלי שגיאה", async () => {
+    const env = makeEnv(3);
+    expect(await (await post(env, { log: "x" })).json()).toEqual({ ok: true, dropped: true });
+    expect(env.inserts).toHaveLength(0);
+  });
+  it("בלי לוג — נדחה", async () => {
+    expect((await post(makeEnv(), {})).status).toBe(400);
+  });
+});
+
