@@ -25,9 +25,12 @@ export async function authenticate(env, token, now) {
   return s ? { participant: s.participant, session: th } : null;
 }
 
-/** סשן חדש ⇐ [statement, token] */
-export async function newSession(env, participant, now) {
-  const token = randomToken();
+/** אסימון סשן שהדפדפן יצר בעצמו (שמירה כשהתשובות נחסמות ברשת): 32–64 תווי base64url */
+export const isClientToken = (t) => typeof t === "string" && /^[A-Za-z0-9_-]{32,64}$/.test(t);
+
+/** סשן חדש ⇐ [statement, token]. clientToken = אסימון שהדפדפן יצר (ראו isClientToken) */
+export async function newSession(env, participant, now, clientToken) {
+  const token = clientToken || randomToken();
   const stmt = env.DB.prepare("INSERT INTO sessions (token_hash, participant, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(
     await sha256(token),
     participant,

@@ -10,7 +10,7 @@
  * cron כל שעה: ניקוי מונים ישנים, זיהוי חריגות, צבירה ופרסום.
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
-import { bearer, authenticate, newSession, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
+import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
 import { validateSave, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
@@ -213,7 +213,7 @@ const routes = {
     if (taken) throw new HttpError(409, "username_taken");
     const [stmts, participant] = await createParticipant(env, request, now);
     const h = await hashPassword(body.password);
-    const [sess, token] = await newSession(env, participant, now);
+    const [sess, token] = await newSession(env, participant, now, isClientToken(body.token) ? body.token : undefined);
     const link = randomToken();
     try {
       await env.DB.batch([
@@ -232,9 +232,12 @@ const routes = {
 
   // שמירה בלי משתמש (הכרעת בעלים 8.10.2026): משתתף בלי סיסמה ובלי קישור אישי — אי אפשר לשחזר אותו אם הסשן אבד.
   // אותה הגבלת קצב כמו בהרשמה. בהמשך אפשר להוסיף שם משתמש וסיסמה (POST /auth/claim) ואז נוצר גם קישור אישי.
-  "POST /auth/guest": async ({ env, request, now }) => {
+  // אסימון מהדפדפן (body.token): כשהתשובות נחסמות ברשת, הדפדפן יודע את האסימון בלי לקבל תשובה; ניסיון חוזר באותו אסימון לא יוצר משתתף נוסף.
+  "POST /auth/guest": async ({ env, request, now, body }) => {
+    const clientToken = isClientToken(body?.token) ? body.token : undefined;
+    if (clientToken && (await authenticate(env, clientToken, now))) return { token: clientToken };
     const [stmts, participant] = await createParticipant(env, request, now);
-    const [sess, token] = await newSession(env, participant, now);
+    const [sess, token] = await newSession(env, participant, now, clientToken);
     await env.DB.batch([...stmts, sess]);
     return { token };
   },

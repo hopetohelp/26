@@ -218,7 +218,7 @@ async function attempt(base: string, path: string, opts: { method?: string; body
     const clean = (s: string) => {
       const urls = s.replace(/https?:\/\/[^\s)]+/g, (url) => url.split(/[?#]/)[0]);
       const body = opts.body && typeof opts.body === "object" ? opts.body as Record<string, unknown> : {};
-      const secrets = [opts.token, ...["username", "password", "current", "next", "link"].map((key) => body[key])];
+      const secrets = [opts.token, ...["username", "password", "current", "next", "link", "token"].map((key) => body[key])];
       return secrets.reduce<string>((text, secret) => typeof secret === "string" && secret ? text.split(secret).join("[הוסר]") : text, urls);
     };
     throw new CrowdError(0, "network", {
@@ -228,8 +228,27 @@ async function attempt(base: string, path: string, opts: { method?: string; body
   }
 }
 
+/** אסימון אקראי שהדפדפן יוצר (32 בתים, base64url) */
+export function clientToken(): string {
+  const b = crypto.getRandomValues(new Uint8Array(32));
+  return btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/**
+ * פעולות שאפשר להשלים "בעיוורון": אצל חלק מהגולשים (סינון ברשת) הבקשה מגיעה לשרת ונשמרת, אבל התשובה נחסמת בדרך חזרה
+ * (נבדק 8.10.2026: נוצרו משתתפים בשרת בדיוק ברגעי הדיווחים על "Failed to fetch"). לכן בהרשמה ובשמירה בלי משתמש
+ * הדפדפן יוצר את אסימון הסשן בעצמו ושולח אותו, וכשכל המסלולים "נכשלו" — מניחים שהבקשה נקלטה וממשיכים עם האסימון.
+ */
+const BLIND = new Set(["/auth/guest", "/auth/register", "/save"]);
+/** הפעולה האחרונה הסתיימה בלי אישור מהשרת (התשובה נחסמה) */
+export let lastBlind = false;
+
 export async function call<T>(path: string, opts: { method?: string; body?: unknown; token?: string | null } = {}): Promise<T> {
   if (!BASES.length) throw new CrowdError(0, "offline");
+  lastBlind = false;
+  const p0 = path.split("?")[0];
+  if ((p0 === "/auth/guest" || p0 === "/auth/register") && opts.body && typeof opts.body === "object" && !(opts.body as { token?: string }).token)
+    opts = { ...opts, body: { ...(opts.body as object), token: clientToken() } };
   const started = Date.now();
   let res: Response | undefined;
   let first: CrowdError | undefined;
@@ -248,6 +267,13 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
   if (!res) {
     reportFailure(path, first!.diagnostic);
     res = await relay(path, opts);
+    if (!res && BLIND.has(p0)) {
+      lastBlind = true;
+      reportDiag("blind-sent");
+      const body = opts.body as Record<string, unknown>;
+      if (p0 === "/save") return { version: { id: 0, unit: body.unit, created_at: new Date().toISOString(), payload: body.payload }, blind: true } as T;
+      return { token: body.token, blind: true } as T;
+    }
     if (!res) throw first!;
     reportDiag("relay-saved");
   }
@@ -266,7 +292,7 @@ export async function call<T>(path: string, opts: { method?: string; body?: unkn
 }
 
 // ---- בדיקת חיבור: מה בדיוק נחסם? (נשלחת רק אחרי כשל, ומדווחת למונה אנונימי)
-export type ConnectionKind = "all-ok" | "all-blocked" | "feedback-only" | "direct-only" | "gateway-only" | "post-blocked" | "password-blocked" | "fallback-saved" | "relay-saved";
+export type ConnectionKind = "all-ok" | "all-blocked" | "feedback-only" | "direct-only" | "gateway-only" | "post-blocked" | "password-blocked" | "fallback-saved" | "relay-saved" | "blind-sent";
 export interface ConnectionCheck {
   kind: ConnectionKind;
   /** תוצאה לכל בדיקה: true = עבר */
