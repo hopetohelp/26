@@ -127,14 +127,6 @@ export default function Guess({ community = false }: { community?: boolean }) {
           <Btn onClick={() => setRecoverLink(null)}>לא צריך, תודה</Btn>
         </section>
       )}
-      <nav aria-label="בחירת תצוגה" className="sticky top-0 z-20 bg-paper py-2 mb-5 grid grid-cols-2 gap-2">
-        {([["mine", "ההשערה שלי"], ["statistics", "סטטיסטיקות"]] as const).map(([id, label]) => (
-          <button key={id} type="button" aria-pressed={view === id} onClick={() => setView(id)}
-            className={`min-h-[48px] px-4 rounded-full border-2 font-bold ${view === id ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-ink"}`}>
-            {label}
-          </button>
-        ))}
-      </nav>
       </>; const body = view === "mine" ? (
         <section id="my-guess" ref={top}>
           <Mine key={mineKey} session={session} onStatistics={() => setView("statistics")} />
@@ -143,7 +135,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         <section id="statistics">
           <Dashboard session={session} />
         </section>
-      ); return <Split title={community ? "השערות הגולשים" : "ההשערה שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."} primary={head} secondary={body} />; })()}
+      ); return <Split title={community ? "סטטיסטיקת ההשערות" : "ההשערה שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."} primary={head} secondary={body} />; })()}
     </>
   );
 }

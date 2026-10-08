@@ -99,7 +99,7 @@ export default function Changes() {
 
   return (
     <>
-      <Split title="מה השתנה מבחירות קודמות" lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת." primary={<>
+      <Split title="מה השתנה מהבחירות האחרונות" lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת." primary={<>
       <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-4">
         {([["blocs", "לפי הגושים שלי"], ["families", "לפי משפחות מפלגות"]] as const).map(([id,label]) => <button key={id} role="radio" type="button" aria-checked={view === id} onClick={() => setView(id)} className={`min-h-[44px] rounded-full px-4 border font-bold text-sm ${view === id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}>{label}</button>)}
       </div>
