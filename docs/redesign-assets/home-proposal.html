@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-theme="league">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בחירות 26: מסך בית מוצע</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;500;600;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">
+<style>/* הדגמת עיצוב מחדש — בחירות 26. הצבעים הם אותם טוקנים של האתר (src/index.css); חדשים רק band ו-seat. */
+:root, [data-theme="league"] {
+  --paper: 238 241 245; --card: 255 255 255; --line: 213 219 227;
+  --ink: 19 23 29; --ink-soft: 74 85 99; --ink-faint: 92 101 114;
+  --accent: 27 58 140; --accent-soft: 230 236 248;
+  --warn: 163 78 0; --warn-soft: 255 244 232;
+  --frame: 255 255 255; --frame-ink: 19 23 29; --frame-soft: 74 85 99; --frame-line: 213 219 227;
+  --signal: 232 119 14; --signal-ink: 19 23 29;
+  --band: 19 23 29; --band-ink: 244 246 248; --band-soft: 184 192 204;
+  --font-display: "Secular One"; --font-body: "Assistant"; --radius: 12px;
+  --hero: 2.1rem; --hero-lg: 3.1rem;
+}
+[data-theme="board"] {
+  --paper: 231 235 240; --card: 255 255 255; --line: 203 211 220;
+  --ink: 11 34 57; --ink-soft: 61 81 104; --ink-faint: 84 101 120;
+  --accent: 29 79 128; --accent-soft: 227 236 245;
+  --warn: 138 75 0; --warn-soft: 255 244 220;
+  --frame: 11 34 57; --frame-ink: 244 246 248; --frame-soft: 184 196 209; --frame-line: 22 56 90;
+  --signal: 255 184 28; --signal-ink: 11 34 57;
+  --band: 11 34 57; --band-ink: 244 246 248; --band-soft: 184 196 209;
+  --font-display: "Karantina"; --font-body: "Heebo"; --radius: 10px;
+  --hero: 2.9rem; --hero-lg: 4.4rem;
+}
+[data-dark] {
+  color-scheme: dark;
+  --paper: 10 20 32; --card: 17 31 47; --line: 38 58 80;
+  --ink: 230 236 242; --ink-soft: 170 185 202; --ink-faint: 140 157 176;
+  --accent: 120 170 220; --accent-soft: 22 44 68;
+  --warn: 240 170 80; --warn-soft: 50 36 14;
+  --frame: 6 16 28; --frame-ink: 244 246 248; --frame-soft: 170 185 202; --frame-line: 30 52 76;
+  --signal: 255 184 28; --signal-ink: 11 34 57;
+  --band: 22 46 74; --band-ink: 244 246 248; --band-soft: 170 185 202;
+}
+[data-theme="league"][data-dark] {
+  --paper: 16 18 22; --card: 26 29 35; --line: 52 58 68;
+  --ink: 236 239 243; --ink-soft: 176 184 196; --ink-faint: 146 155 168;
+  --accent: 130 160 240; --accent-soft: 30 38 62;
+  --warn: 245 160 80; --warn-soft: 52 36 20;
+  --frame: 26 29 35; --frame-ink: 236 239 243; --frame-soft: 176 184 196; --frame-line: 52 58 68;
+  --signal: 240 140 40; --signal-ink: 19 23 29;
+  --band: 38 44 56; --band-ink: 236 239 243; --band-soft: 176 184 196;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+html[data-card] { font-size: 27px; }
+body {
+  margin: 0; background: rgb(var(--paper)); color: rgb(var(--ink));
+  font-family: var(--font-body), system-ui, Arial, sans-serif; font-size: 1rem; line-height: 1.6;
+}
+a { color: rgb(var(--accent)); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid rgb(var(--signal)); outline-offset: 2px; }
+[data-theme="league"] :focus-visible { outline-color: rgb(var(--accent)); }
+.tab { font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.display { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; letter-spacing: 0; }
+
+/* ---------- פס עליון ---------- */
+.top { background: rgb(var(--frame)); color: rgb(var(--frame-ink)); border-bottom: 1px solid rgb(var(--frame-line)); }
+.top-in { display: flex; align-items: center; gap: .75rem; min-height: 3.5rem; padding: 0 1rem; }
+.brand { font-family: var(--font-display), var(--font-body), sans-serif; font-size: 1.75rem; line-height: 1; color: inherit; text-decoration: none; white-space: nowrap; }
+[data-theme="board"] .brand { font-size: 2.1rem; }
+.count { margin-inline-start: auto; font-size: .875rem; font-weight: 700; border: 1px solid rgb(var(--frame-line)); border-radius: 999px; padding: .2rem .7rem; white-space: nowrap; }
+[data-theme="board"] .count b { color: rgb(var(--signal)); }
+.icon-btn { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border-radius: 999px; border: 1px solid rgb(var(--frame-line)); background: transparent; color: inherit; }
+.icon-btn svg { width: 1.3rem; height: 1.3rem; }
+.navd { display: none; }
+.navd ul { display: flex; gap: .15rem; list-style: none; margin: 0; padding: 0; }
+.navd a { display: block; padding: .5rem .7rem; color: rgb(var(--frame-soft)); text-decoration: none; font-size: .875rem; border-bottom: 3px solid transparent; }
+.navd a[aria-current] { color: rgb(var(--frame-ink)); font-weight: 700; border-bottom-color: rgb(var(--signal)); }
+[data-theme="league"] .navd a[aria-current] { border-bottom-color: rgb(var(--accent)); }
+
+.freeze { display: none; background: rgb(var(--warn-soft)); color: rgb(var(--warn)); border-block: 1px solid rgb(var(--warn)); }
+[data-freeze] .freeze { display: block; }
+.freeze p { margin: 0; padding: .75rem 1rem; font-weight: 700; font-size: .875rem; line-height: 1.5; }
+
+/* ---------- תוכן ---------- */
+main { padding: 0 1rem 7rem; }
+.hero { padding-top: 1.5rem; }
+.h1 { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
+.lede { margin: .75rem 0 0; color: rgb(var(--ink-soft)); font-size: 1rem; }
+.hemi { margin: 1.25rem 0 0; }
+.hemi svg { display: block; width: 100%; height: auto; }
+.seat-a { fill: rgb(var(--accent)); }
+.seat-b { fill: color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card))); stroke: rgb(var(--accent) / .7); stroke-width: .009; }
+.hemi .tick { stroke: rgb(var(--ink)); stroke-width: .012; }
+.hemi { position: relative; }
+.hl { position: absolute; transform: translate(-50%, -50%); font-weight: 800; font-size: 1rem; line-height: 1; }
+.hl-total { font-weight: 400; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.legend { list-style: none; margin: .75rem 0 0; padding: 0; }
+.legend li { display: grid; grid-template-columns: 1rem 1fr auto; align-items: baseline; gap: .6rem; padding: .7rem 0; border-top: 1px solid rgb(var(--line)); }
+.legend li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.sw { width: .9rem; height: .9rem; border-radius: 50%; align-self: center; }
+.sw.a { background: rgb(var(--accent)); }
+.sw.b { background: color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card))); border: 1.5px solid rgb(var(--accent) / .7); }
+.legend .lbl { font-weight: 600; }
+.legend .big { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.legend small { display: block; color: rgb(var(--ink-soft)); font-weight: 400; font-size: .875rem; }
+.legend .val { text-align: end; }
+.src { margin: .75rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
+
+.sec { margin-top: 2.5rem; }
+.h2 { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 0 0 .25rem; }
+.sec-lead { margin: 0 0 .5rem; color: rgb(var(--ink-soft)); font-size: .875rem; }
+
+.edge { list-style: none; padding: 0; margin: .5rem 0 0; }
+.edge li { padding: .8rem 0; border-top: 1px solid rgb(var(--line)); display: grid; grid-template-columns: 1fr auto; gap: .15rem .75rem; align-items: center; }
+.edge li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.edge .nm { font-weight: 700; font-size: 1rem; }
+.edge .seats { font-weight: 800; font-size: 1.25rem; text-align: end; }
+.edge .how { grid-column: 1 / -1; display: flex; align-items: center; gap: .6rem; color: rgb(var(--ink-soft)); font-size: .875rem; }
+.dots { display: inline-flex; gap: .22rem; }
+.dots i { width: .62rem; height: .62rem; border-radius: 50%; background: rgb(var(--accent)); }
+.dots i.off { background: transparent; box-shadow: inset 0 0 0 1.5px rgb(var(--ink-faint)); }
+
+.rank { list-style: none; padding: 0; margin: .5rem 0 0; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); align-items: center; gap: .75rem; min-height: 3rem; padding: .35rem 0; border-top: 1px solid rgb(var(--line)); }
+.row:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.row .nm { font-weight: 600; line-height: 1.25; }
+.row .nm em { display: block; font-style: normal; font-size: .875rem; font-weight: 700; color: rgb(var(--warn)); }
+.row .n { font-weight: 800; font-size: 1.25rem; text-align: start; }
+.row .rng { display: none; }
+.axisrow { display: grid; grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); gap: .75rem; font-size: .75rem; color: rgb(var(--ink-soft)); margin-top: .35rem; }
+.axisrow .ticks { grid-column: 3; position: relative; height: 1rem; direction: ltr; }
+.axisrow .ticks span { position: absolute; transform: translateX(-50%); }
+.plot { position: relative; height: 1.25rem; direction: ltr;
+  background-image: linear-gradient(to right, rgb(var(--line)) 1px, transparent 1px); background-size: 33.333% 100%; background-position: left top; background-repeat: repeat-x; }
+.plot .bar { position: absolute; top: 50%; height: .3rem; margin-top: -.15rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.plot .dot { position: absolute; top: 50%; width: .8rem; height: .8rem; margin: -.4rem 0 0 -.4rem; border-radius: 50%; background: rgb(var(--ink)); box-shadow: 0 0 0 2px rgb(var(--paper)); }
+.key { display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin: .25rem 0 .25rem; font-size: .875rem; color: rgb(var(--ink-soft)); align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: .4rem; }
+.key .k-bar { width: 1.4rem; height: .3rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.key .k-dot { width: .8rem; height: .8rem; border-radius: 50%; background: rgb(var(--ink)); }
+.key .k-dot.sig { background: rgb(var(--signal)); }
+
+.cta { margin-top: 2.5rem; background: rgb(var(--band)); color: rgb(var(--band-ink)); border-radius: var(--radius); padding: 1.25rem; }
+.cta h2 { margin: 0; font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+.cta p { margin: .5rem 0 1rem; color: rgb(var(--band-soft)); font-size: .875rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 1.4rem; border-radius: 999px; background: rgb(var(--signal)); color: rgb(var(--signal-ink)); font-weight: 800; text-decoration: none; border: 0; font-family: inherit; font-size: 1rem; }
+.btn.ghost { background: transparent; color: rgb(var(--ink)); box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); }
+
+.index { list-style: none; padding: 0; margin: .5rem 0 0; }
+.index a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .75rem; padding: .85rem 0; border-top: 1px solid rgb(var(--line)); text-decoration: none; color: rgb(var(--ink)); min-height: 3.25rem; }
+.index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
+.index b { display: block; font-size: 1rem; }
+.index span.d { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; line-height: 1.45; }
+.index svg { width: 1.2rem; height: 1.2rem; color: rgb(var(--ink-faint)); }
+.foot { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid rgb(var(--line)); color: rgb(var(--ink-soft)); font-size: .875rem; }
+.foot p { margin: 0 0 .5rem; }
+
+/* ---------- סרגל תחתון בטלפון ---------- */
+.tabs { position: sticky; bottom: 0; z-index: 5; background: rgb(var(--card)); border-top: 1px solid rgb(var(--line)); }
+.tabs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
+.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
+.tabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
+.tabs svg { width: 1.4rem; height: 1.4rem; }
+
+/* ---------- מחשב ---------- */
+@media (min-width: 1024px) {
+  .top-in { min-height: 4rem; padding: 0 1.5rem; gap: 1.25rem; }
+  .navd { display: block; }
+  .count { margin-inline-start: 0; }
+  .top-in .spacer { flex: 1; }
+  .tabs { display: none; }
+  main { padding: 0 1.5rem 4rem; }
+  .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 3rem; align-items: center; padding-top: 2.5rem; }
+  .h1 { font-size: var(--hero-lg); }
+  .hemi { margin-top: 0; max-width: 46rem; }
+  .body { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); grid-template-rows: auto 1fr auto; grid-template-areas: "edge rank" "cta rank" "idx idx"; column-gap: 3rem; align-content: start; }
+  .body .edge-sec { grid-area: edge; margin-top: 2.5rem; }
+  .body .rank-sec { grid-area: rank; margin-top: 2.5rem; }
+  .body .cta { grid-area: cta; align-self: start; }
+  .body .idx-sec { grid-area: idx; }
+  .row, .axisrow { grid-template-columns: minmax(0, 13rem) 2.6rem minmax(0, 1fr) 5rem; }
+  .axisrow .ticks { grid-column: 3; }
+  .row .rng { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; text-align: end; }
+  .index { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 3rem; }
+  .index li:nth-last-child(-n+3) a { border-bottom: 1px solid rgb(var(--line)); }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hemi { max-width: 34rem; margin-inline: auto !important; }
+  .index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; }
+  .index li:nth-last-child(-n+2) a { border-bottom: 1px solid rgb(var(--line)); }
+}
+html[data-static] .tabs { position: static; }
+.index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
+
+
+@media (min-width: 1024px) {
+  .hero { grid-template-areas: "head hemi" "facts hemi"; }
+  .hero-head { grid-area: head; align-self: end; }
+  .hemi { grid-area: hemi; align-self: center; }
+  .hero-facts { grid-area: facts; align-self: start; }
+}
+</style><script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
+d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
+if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
+if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';})();</script></head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="#">בחירות 26</a>
+  <nav class="navd" aria-label="ניווט ראשי"><ul><li><a href="#" aria-current=page>בית</a></li><li><a href="#">הכנסת שלי</a></li><li><a href="#">סקר האתר</a></li><li><a href="#">המצב והתרחישים</a></li><li><a href="#">סקרים ומגמות</a></li><li><a href="#">בחירות קודמות</a></li><li><a href="#">מה השתנה</a></li><li><a href="#">שיטה ומקורות</a></li><li><a href="#">תמיכה</a></li></ul></nav>
+  <span class="spacer"></span>
+  <span class="count">עוד <b class="num">18</b> ימים</span>
+  <button class="icon-btn" type="button" aria-label="תצוגה: עיצוב ויום או לילה"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg></button>
+</div></header>
+<div class="freeze" role="alert"><p>הסקרים באתר אינם עדכניים ואין ללמוד מהם על דפוסי הצבעה או עמדות הציבור היום. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים; כל הסקרים כאן פורסמו לראשונה לפני כן.</p></div>
+<main id="main">
+  <section class="hero" aria-labelledby="h1">
+    <div class="hero-head">
+      <h1 class="h1" id="h1">מפלגות הממשלה היוצאת: 52 מנדטים. לרוב דרושים 61.</h1>
+      <p class="lede">ב-80% מהתרחישים: בין 46 ל-58 מנדטים. ב-4% מהם: 61 ומעלה.</p>
+    </div>
+    <figure class="hemi" style="margin-inline:0"><svg viewBox="0 0 2.2 1.32" role="img" aria-label="120 המושבים בחצי עיגול: 52 למפלגות הממשלה היוצאת; 68 לשאר הרשימות. הקו מסמן את המושב ה-61, הרוב."><circle class="seat-a" cx="2.1000" cy="1.2600" r="0.038"/><circle class="seat-a" cx="1.9880" cy="1.2600" r="0.038"/><circle class="seat-a" cx="1.8760" cy="1.2600" r="0.038"/><circle class="seat-a" cx="1.7640" cy="1.2600" r="0.038"/><circle class="seat-a" cx="1.6520" cy="1.2600" r="0.038"/><circle class="seat-a" cx="1.5400" cy="1.2600" r="0.038"/><circle class="seat-a" cx="2.0932" cy="1.1439" r="0.038"/><circle class="seat-a" cx="1.9804" cy="1.1441" r="0.038"/><circle class="seat-a" cx="1.8673" cy="1.1443" r="0.038"/><circle class="seat-a" cx="1.7527" cy="1.1380" r="0.038"/><circle class="seat-a" cx="1.6382" cy="1.1372" r="0.038"/><circle class="seat-a" cx="2.0730" cy="1.0294" r="0.038"/><circle class="seat-a" cx="1.9577" cy="1.0302" r="0.038"/><circle class="seat-a" cx="1.5222" cy="1.1360" r="0.038"/><circle class="seat-a" cx="1.8415" cy="1.0313" r="0.038"/><circle class="seat-a" cx="2.0397" cy="0.9180" r="0.038"/><circle class="seat-a" cx="1.7192" cy="1.0201" r="0.038"/><circle class="seat-a" cx="1.9204" cy="0.9202" r="0.038"/><circle class="seat-a" cx="1.7992" cy="0.9233" r="0.038"/><circle class="seat-a" cx="1.5973" cy="1.0205" r="0.038"/><circle class="seat-a" cx="1.9936" cy="0.8112" r="0.038"/><circle class="seat-a" cx="1.8690" cy="0.8160" r="0.038"/><circle class="seat-a" cx="1.6645" cy="0.9104" r="0.038"/><circle class="seat-a" cx="1.4702" cy="1.0221" r="0.038"/><circle class="seat-a" cx="1.9355" cy="0.7105" r="0.038"/><circle class="seat-a" cx="1.7412" cy="0.8229" r="0.038"/><circle class="seat-a" cx="1.8045" cy="0.7194" r="0.038"/><circle class="seat-a" cx="1.5316" cy="0.9158" r="0.038"/><circle class="seat-a" cx="1.8660" cy="0.6172" r="0.038"/><circle class="seat-a" cx="1.5907" cy="0.8127" r="0.038"/><circle class="seat-a" cx="1.6688" cy="0.7322" r="0.038"/><circle class="seat-a" cx="1.7279" cy="0.6321" r="0.038"/><circle class="seat-a" cx="1.7862" cy="0.5326" r="0.038"/><circle class="seat-a" cx="1.3881" cy="0.9275" r="0.038"/><circle class="seat-a" cx="1.5838" cy="0.6533" r="0.038"/><circle class="seat-a" cx="1.4442" cy="0.8284" r="0.038"/><circle class="seat-a" cx="1.6406" cy="0.5555" r="0.038"/><circle class="seat-a" cx="1.5001" cy="0.7301" r="0.038"/><circle class="seat-a" cx="1.6972" cy="0.4579" r="0.038"/><circle class="seat-a" cx="1.6000" cy="0.3940" r="0.038"/><circle class="seat-a" cx="1.5440" cy="0.4910" r="0.038"/><circle class="seat-a" cx="1.4880" cy="0.5880" r="0.038"/><circle class="seat-a" cx="1.3960" cy="0.6656" r="0.038"/><circle class="seat-a" cx="1.3395" cy="0.7627" r="0.038"/><circle class="seat-a" cx="1.2828" cy="0.8598" r="0.038"/><circle class="seat-a" cx="1.4961" cy="0.3418" r="0.038"/><circle class="seat-a" cx="1.4398" cy="0.4396" r="0.038"/><circle class="seat-a" cx="1.3835" cy="0.5376" r="0.038"/><circle class="seat-a" cx="1.3868" cy="0.3020" r="0.038"/><circle class="seat-a" cx="1.2817" cy="0.6213" r="0.038"/><circle class="seat-a" cx="1.3298" cy="0.4023" r="0.038"/><circle class="seat-a" cx="1.2727" cy="0.5035" r="0.038"/><circle class="seat-b" cx="1.2228" cy="0.7218" r="0.038"/><circle class="seat-b" cx="1.2736" cy="0.2752" r="0.038"/><circle class="seat-b" cx="1.1626" cy="0.8245" r="0.038"/><circle class="seat-b" cx="1.2159" cy="0.3796" r="0.038"/><circle class="seat-b" cx="1.1613" cy="0.5988" r="0.038"/><circle class="seat-b" cx="1.1580" cy="0.4862" r="0.038"/><circle class="seat-b" cx="1.1581" cy="0.2617" r="0.038"/><circle class="seat-b" cx="1.1000" cy="0.3720" r="0.038"/><circle class="seat-b" cx="1.1000" cy="0.7080" r="0.038"/><circle class="seat-b" cx="1.0419" cy="0.2617" r="0.038"/><circle class="seat-b" cx="1.0420" cy="0.4862" r="0.038"/><circle class="seat-b" cx="1.0387" cy="0.5988" r="0.038"/><circle class="seat-b" cx="0.9841" cy="0.3796" r="0.038"/><circle class="seat-b" cx="1.0374" cy="0.8245" r="0.038"/><circle class="seat-b" cx="0.9264" cy="0.2752" r="0.038"/><circle class="seat-b" cx="0.9273" cy="0.5035" r="0.038"/><circle class="seat-b" cx="0.9772" cy="0.7218" r="0.038"/><circle class="seat-b" cx="0.8702" cy="0.4023" r="0.038"/><circle class="seat-b" cx="0.9183" cy="0.6213" r="0.038"/><circle class="seat-b" cx="0.8132" cy="0.3020" r="0.038"/><circle class="seat-b" cx="0.8165" cy="0.5376" r="0.038"/><circle class="seat-b" cx="0.7602" cy="0.4396" r="0.038"/><circle class="seat-b" cx="0.7039" cy="0.3418" r="0.038"/><circle class="seat-b" cx="0.9172" cy="0.8598" r="0.038"/><circle class="seat-b" cx="0.8605" cy="0.7627" r="0.038"/><circle class="seat-b" cx="0.8040" cy="0.6656" r="0.038"/><circle class="seat-b" cx="0.6000" cy="0.3940" r="0.038"/><circle class="seat-b" cx="0.6560" cy="0.4910" r="0.038"/><circle class="seat-b" cx="0.7120" cy="0.5880" r="0.038"/><circle class="seat-b" cx="0.5028" cy="0.4579" r="0.038"/><circle class="seat-b" cx="0.6999" cy="0.7301" r="0.038"/><circle class="seat-b" cx="0.5594" cy="0.5555" r="0.038"/><circle class="seat-b" cx="0.6162" cy="0.6533" r="0.038"/><circle class="seat-b" cx="0.7558" cy="0.8284" r="0.038"/><circle class="seat-b" cx="0.8119" cy="0.9275" r="0.038"/><circle class="seat-b" cx="0.4138" cy="0.5326" r="0.038"/><circle class="seat-b" cx="0.4721" cy="0.6321" r="0.038"/><circle class="seat-b" cx="0.5312" cy="0.7322" r="0.038"/><circle class="seat-b" cx="0.6093" cy="0.8127" r="0.038"/><circle class="seat-b" cx="0.3340" cy="0.6172" r="0.038"/><circle class="seat-b" cx="0.6684" cy="0.9158" r="0.038"/><circle class="seat-b" cx="0.3955" cy="0.7194" r="0.038"/><circle class="seat-b" cx="0.4588" cy="0.8229" r="0.038"/><circle class="seat-b" cx="0.2645" cy="0.7105" r="0.038"/><circle class="seat-b" cx="0.7298" cy="1.0221" r="0.038"/><circle class="seat-b" cx="0.5355" cy="0.9104" r="0.038"/><circle class="seat-b" cx="0.3310" cy="0.8160" r="0.038"/><circle class="seat-b" cx="0.2064" cy="0.8112" r="0.038"/><circle class="seat-b" cx="0.4008" cy="0.9233" r="0.038"/><circle class="seat-b" cx="0.6027" cy="1.0205" r="0.038"/><circle class="seat-b" cx="0.2796" cy="0.9202" r="0.038"/><circle class="seat-b" cx="0.4808" cy="1.0201" r="0.038"/><circle class="seat-b" cx="0.1603" cy="0.9180" r="0.038"/><circle class="seat-b" cx="0.3585" cy="1.0313" r="0.038"/><circle class="seat-b" cx="0.6778" cy="1.1360" r="0.038"/><circle class="seat-b" cx="0.2423" cy="1.0302" r="0.038"/><circle class="seat-b" cx="0.1270" cy="1.0294" r="0.038"/><circle class="seat-b" cx="0.5618" cy="1.1372" r="0.038"/><circle class="seat-b" cx="0.4473" cy="1.1380" r="0.038"/><circle class="seat-b" cx="0.3327" cy="1.1443" r="0.038"/><circle class="seat-b" cx="0.2196" cy="1.1441" r="0.038"/><circle class="seat-b" cx="0.1068" cy="1.1439" r="0.038"/><circle class="seat-b" cx="0.1000" cy="1.2600" r="0.038"/><circle class="seat-b" cx="0.2120" cy="1.2600" r="0.038"/><circle class="seat-b" cx="0.3240" cy="1.2600" r="0.038"/><circle class="seat-b" cx="0.4360" cy="1.2600" r="0.038"/><circle class="seat-b" cx="0.5480" cy="1.2600" r="0.038"/><circle class="seat-b" cx="0.6600" cy="1.2600" r="0.038"/><line class="tick" x1="1.0696" y1="0.2154" x2="1.0668" y2="0.1205"/></svg><span class="hl" style="left:48.39%;top:3.07%" aria-hidden="true">61</span><span class="hl hl-total" style="left:50%;top:90.91%" aria-hidden="true">120 מושבים</span></figure>
+    <div class="hero-facts">
+      <ul class="legend">
+        <li><span class="sw a"></span><span class="lbl">מפלגות הממשלה היוצאת</span><span class="val"><span class="big num">52</span><small>טווח <span class="ltr">46–58</span></small></span></li>
+        <li><span class="sw b"></span><span class="lbl">כל שאר הרשימות</span><span class="val"><span class="big num">68</span><small>טווח <span class="ltr">62–74</span></small></span></li>
+      </ul>
+      <p class="src">ממוצע 37 סקרים של 10 מכונים, עד 7.10.2026. <a href="#">איך זה חושב?</a></p>
+    </div>
+  </section>
+
+  <div class="body">
+    <section class="sec edge-sec" aria-labelledby="h-edge">
+      <h2 class="h2" id="h-edge">על הסף: שתי רשימות</h2>
+      <p class="sec-lead">אחוז החסימה הוא 3.25% מהקולות הכשרים. רשימה מתחתיו לא מקבלת מנדטים.</p>
+      <ul class="edge"><li><span class="nm">עמך ישראל</span><span class="seats num" aria-label="4 מנדטים לפי הממוצע">4</span><span class="how"><span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span><span>עוברת ב-5 מתוך 10 תרחישים</span></span></li><li><span class="nm">המילואימניקים-הכלכלית</span><span class="seats num" aria-label="0 מנדטים לפי הממוצע">0</span><span class="how"><span class="dots" aria-hidden="true"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span><span>עוברת ב-3 מתוך 10 תרחישים</span></span></li></ul>
+      <p class="src">המספר בכל שורה: מנדטים לפי הממוצע. הנקודות: בכמה מתוך 10 תרחישים הרשימה עוברת את הסף.
+        כמעט באף תרחיש לא עוברות: כחול לבן, הציבור החרדי.</p>
+    </section>
+
+    <section class="sec rank-sec" aria-labelledby="h-rank">
+      <h2 class="h2" id="h-rank">כל הרשימות</h2>
+      <div class="key"><span><i class="k-dot"></i>ממוצע הסקרים</span><span><i class="k-bar"></i>טווח 80% מהתרחישים</span></div>
+      <div class="axisrow" aria-hidden="true"><div class="ticks"><span style="left:0.00%">0</span><span style="left:33.33%">10</span><span style="left:66.67%">20</span><span style="left:100.00%">30</span></div></div>
+      <ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"><span class="ltr">18–27</span></span><span class="sr">; טווח 18 עד 27</span></li><li class="row"><span class="nm">ישר!</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:56.67%;width:36.67%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"><span class="ltr">17–28</span></span><span class="sr">; טווח 17 עד 28</span></li><li class="row"><span class="nm">ביחד</span><span class="n num">12</span><span class="plot" aria-hidden="true"><span class="bar" style="left:30.00%;width:20.00%"></span><span class="dot" style="left:40.00%"></span></span><span class="rng"><span class="ltr">9–15</span></span><span class="sr">; טווח 9 עד 15</span></li><li class="row"><span class="nm">הדמוקרטים</span><span class="n num">9</span><span class="plot" aria-hidden="true"><span class="bar" style="left:23.33%;width:16.67%"></span><span class="dot" style="left:30.00%"></span></span><span class="rng"><span class="ltr">7–12</span></span><span class="sr">; טווח 7 עד 12</span></li><li class="row"><span class="nm">ישראל ביתנו</span><span class="n num">8</span><span class="plot" aria-hidden="true"><span class="bar" style="left:20.00%;width:16.67%"></span><span class="dot" style="left:26.67%"></span></span><span class="rng"><span class="ltr">6–11</span></span><span class="sr">; טווח 6 עד 11</span></li><li class="row"><span class="nm">ש"ס</span><span class="n num">8</span><span class="plot" aria-hidden="true"><span class="bar" style="left:20.00%;width:16.67%"></span><span class="dot" style="left:26.67%"></span></span><span class="rng"><span class="ltr">6–11</span></span><span class="sr">; טווח 6 עד 11</span></li><li class="row"><span class="nm">עוצמה יהודית</span><span class="n num">8</span><span class="plot" aria-hidden="true"><span class="bar" style="left:20.00%;width:13.33%"></span><span class="dot" style="left:26.67%"></span></span><span class="rng"><span class="ltr">6–10</span></span><span class="sr">; טווח 6 עד 10</span></li><li class="row"><span class="nm">יהדות התורה</span><span class="n num">8</span><span class="plot" aria-hidden="true"><span class="bar" style="left:20.00%;width:13.33%"></span><span class="dot" style="left:26.67%"></span></span><span class="rng"><span class="ltr">6–10</span></span><span class="sr">; טווח 6 עד 10</span></li><li class="row"><span class="nm">הרשימה המשותפת</span><span class="n num">8</span><span class="plot" aria-hidden="true"><span class="bar" style="left:20.00%;width:13.33%"></span><span class="dot" style="left:26.67%"></span></span><span class="rng"><span class="ltr">6–10</span></span><span class="sr">; טווח 6 עד 10</span></li><li class="row"><span class="nm">הציונות הדתית-זהות</span><span class="n num">6</span><span class="plot" aria-hidden="true"><span class="bar" style="left:0.00%;width:30.00%"></span><span class="dot" style="left:20.00%"></span></span><span class="rng"><span class="ltr">0–9</span></span><span class="sr">; טווח 0 עד 9</span></li><li class="row"><span class="nm">רע"ם</span><span class="n num">5</span><span class="plot" aria-hidden="true"><span class="bar" style="left:0.00%;width:26.67%"></span><span class="dot" style="left:16.67%"></span></span><span class="rng"><span class="ltr">0–8</span></span><span class="sr">; טווח 0 עד 8</span></li><li class="row"><span class="nm">עמך ישראל<em>על הסף</em></span><span class="n num">4</span><span class="plot" aria-hidden="true"><span class="bar" style="left:0.00%;width:20.00%"></span><span class="dot" style="left:13.33%"></span></span><span class="rng"><span class="ltr">0–6</span></span><span class="sr">; טווח 0 עד 6</span></li></ol>
+      <p class="src">ב-7 הימים האחרונים: ישר! <span class="ltr">−1</span> · עוצמה יהודית <span class="ltr">+1</span>. שאר הרשימות ללא שינוי. <a href="#">לכל הרשימות והתרחישים</a></p>
+    </section>
+
+    <aside class="cta" aria-labelledby="h-cta">
+      <h2 id="h-cta">כמה תקבל כל רשימה? תנחשו.</h2>
+      <p>מחלקים 120 מושבים ומשווים למה שמנחשים כל השאר. השערות גולשים, אינן סקר.</p>
+      <a class="btn" href="#">לבנות את הכנסת שלי</a>
+    </aside>
+
+    <section class="sec idx-sec" aria-labelledby="h-idx">
+      <h2 class="h2" id="h-idx">להמשך</h2>
+      <ul class="index"><li><a href="#"><span><b>המצב והתרחישים</b><span class="d">כמה מנדטים לכל רשימה היום, התרחישים ליום הבחירות, והתחזית.</span></span><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a></li><li><a href="#"><span><b>סקרים ומגמות</b><span class="d">כל סקר שפורסם עם המקור, ואיך כל רשימה עלתה או ירדה.</span></span><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a></li><li><a href="#"><span><b>סקר האתר</b><span class="d">השערות המשתתפים: ממוצע, טווח והשוואה לסקרים ולהשערה שלכם.</span></span><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a></li><li><a href="#"><span><b>בחירות קודמות</b><span class="d">התוצאות הרשמיות <span class="ltr">2019–2022</span>, כמה הסקרים טעו, ושיעורי ההצבעה.</span></span><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a></li><li><a href="#"><span><b>מה השתנה מהבחירות האחרונות</b><span class="d">כל משפחת מפלגות: הקולות ב-2022 מול הממוצע של היום.</span></span><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a></li><li><a href="#"><span><b>שיטה, מקורות ואודות</b><span class="d">איך כל מספר מחושב, מאיפה הנתונים, ומי אנחנו.</span></span><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a></li></ul>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <p>האתר אינו עורך סקרים ואינו ממליץ על אף רשימה. כל מספר נבנה מסקרים שפורסמו, עם קישור לפרסום המקורי.</p>
+    <p><a href="#">שיטה ומקורות</a></p>
+  </footer>
+</main>
+<nav class="tabs" aria-label="ניווט בטלפון"><ul><li><a href="#" aria-current=page><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>בית</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>מצב ותחזית</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>סקר האתר</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>הכנסת שלי</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M7 8h10M7 12h7"/></svg>תמיכה</a></li></ul></nav>
+</body></html>
