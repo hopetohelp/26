@@ -61,7 +61,7 @@ const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 const edge = ids.filter((id) => sc.lists[id].pass > 0.005 && sc.lists[id].pass < 0.995);
 const k25 = results[results.length - 1];
 const wasted2022 = ((k25.valid - k25.lists.filter((l) => l.seats > 0).reduce((a, l) => a + l.votes, 0)) / k25.valid) * 100;
-const SOURCE = `${m.polls} סקרים מאומתים של ${m.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
+const SOURCE = `${m.polls} סקרים של ${m.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
 
 function coverageRange() {
   const byCycle = new Map<string, number[]>();

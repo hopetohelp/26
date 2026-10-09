@@ -59,11 +59,11 @@ export default function Today() {
 
   return (
     <>
-      <Split title="המצב היום" lead={`לפי ממוצע הסקרים מאז הגשת הרשימות: ${model.polls} סקרים מאומתים של ${model.pollsters} מכונים, עד ${dateLong(model.asof)}. לכל רשימה — כמה מנדטים לפי הממוצע, הטווח ב-80% מהתרחישים, והאם היא עוברת את אחוז החסימה.`} primary={<PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />} secondary={<>
+      <Split title="המצב היום" lead={`לפי ממוצע הסקרים מאז הגשת הרשימות: ${model.polls} סקרים של ${model.pollsters} מכונים, עד ${dateLong(model.asof)}. לכל רשימה — כמה מנדטים לפי הממוצע, הטווח ב-80% מהתרחישים, והאם היא עוברת את אחוז החסימה.`} primary={<PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />} secondary={<>
       <section aria-label="הרשימות היום" className="mb-6">
         <Explained
           kind="תרחיש"
-          source={`${model.polls} סקרים מאומתים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-${num(20000)} תרחישים`}
+          source={`${model.polls} סקרים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-${num(20000)} תרחישים`}
           asOf={`הסקרים עד ${dateLong(model.asof)}`}
           assumption="מנדטים לפי הממוצע של המודל; הטווח והסטטוס — מתוך התרחישים ליום הבחירות. לא תחזית ולא סיכוי."
           methodAnchor="model"

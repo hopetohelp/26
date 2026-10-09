@@ -103,6 +103,15 @@ def test_changes_add_up():
             assert lo <= mid <= hi and lo - 1 <= f["shareNow"] <= hi + 1, f["id"]
 
 
+def test_average_includes_every_consistent_poll():
+    """הכרעת בעלים 9.10.2026: כל סקר עקבי שפורסם נכנס לממוצע — בלי תנאי אימות. הממוצע מתעדכן עד הסקר האחרון."""
+    polls = json.loads((ROOT / "src" / "data" / "polls.json").read_text(encoding="utf-8"))["polls"]
+    model = json.loads((ROOT / "src" / "data" / "model.json").read_text(encoding="utf-8"))
+    used = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > "2026-09-08"]  # LIST_SUBMISSION_2026
+    assert model["asof"] == max(p["end"] for p in used)
+    assert model["polls"] == len(used) - len(model.get("skipped", []))
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

@@ -352,7 +352,8 @@ def apply_verification(polls: list[dict]) -> None:
         status = v["status"]
         if status == "mismatch" and p.get("corrections"):
             status = "corrected"
-        p["verified"] = status in ("match", "corrected", "partial")
+        # "secondary" = המנדטים הושוו לדיווח עצמאי כשהמקור הראשוני חוסם סריקה (כלל 7 — מאמתים ממקור אחר)
+        p["verified"] = status in ("match", "corrected", "partial", "secondary")
         p["verification"] = {"status": status, "checkedAt": v["checkedAt"], "source": v.get("source"),
                              "details": v.get("sourceDetails") or {}, "law16E": v.get("law16E") or {}}
 
@@ -617,10 +618,10 @@ def build_changes(lin: dict, results: list[dict], central: dict, groups_sc: dict
 
 
 def build_model(polls: list[dict], results: list[dict]) -> dict:
-    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). רק סקרים מאומתים, עקביים, שפורסמו לציבור."""
+    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). כל סקר עקבי שפורסם לציבור נכנס מיד — בלי תנאי אימות (הכרעת בעלים 9.10.2026: האתר מרכז פרסומים קיימים)."""
     import model as M
 
-    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]
+    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
     inputs = [M.ModelInput(p["id"], f"{p['firm']}|{p['publisher'] or ''}", p["end"], p["values"],
                            (p.get("others") or {}).get("pct"), p.get("sample")) for p in use]
     lists = [l["id"] for l in LISTS_2026]
@@ -671,7 +672,7 @@ def build_forecast(polls: list[dict], build_time: datetime) -> dict:
     """מודל החיזוי (pipeline/forecast_live.py): אותם סקרים כמו הממוצע, סדרת מכון לפי HIST_FIRMS — כמו בבדיקת העבר."""
     import forecast_live as FL
 
-    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]
+    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
     series_of = lambda firm: FL.K26["seriesMap"].get(firm) or "new_" + norm_name(firm).replace(" ", "_")
     out = FL.build(use, series_of, [tuple(a["pair"]) for a in AGREEMENTS_2026],
                    [l["id"] for l in LISTS_2026 if l["gov37"]], build_time.date())
