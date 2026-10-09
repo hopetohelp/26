@@ -9,10 +9,10 @@ import { Btn, Notice } from "./guess/ui";
  */
 export type GuessReason = { list: string; rule: "ratio" | "watched"; value: number; mean?: number };
 export type GuessBloc = { name: string; lists: string[]; seats: number; target: number | null };
-export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review" | "unverified"; reasons: GuessReason[] };
+export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; verified?: boolean; reasons: GuessReason[] };
 type Filter = "pending" | "all" | "approved" | "rejected" | "unverified";
 
-const STATUS: Record<GuessRow["status"], string> = { ok: "תקינה", pending: "ממתינה לאישור", approved: "אושרה", rejected: "נדחתה", review: "בבדיקת שעה חשודה", unverified: "חשבון לא מאומת" };
+const STATUS: Record<GuessRow["status"], string> = { ok: "תקינה", pending: "ממתינה לאישור", approved: "אושרה", rejected: "נדחתה", review: "בבדיקת שעה חשודה" };
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "pending", label: "ממתינות" },
   { id: "all", label: "הכול" },
@@ -36,7 +36,7 @@ export function blocsText(r: GuessRow): string {
 export function toCsv(rows: GuessRow[]) {
   const ids = lists2026.map((l) => l.id);
   const head = ["יום", "מצב", "דרך", ...ids.map(listName), "גושים"];
-  const lines = rows.map((r) => [r.day, STATUS[r.status], r.mode === "pct" ? "אחוזים" : "מנדטים", ...ids.map((id) => r.seats[id] ?? 0), blocsText(r)]);
+  const lines = rows.map((r) => [r.day, STATUS[r.status] + (r.verified === false ? " · חשבון לא מאומת" : ""), r.mode === "pct" ? "אחוזים" : "מנדטים", ...ids.map((id) => r.seats[id] ?? 0), blocsText(r)]);
   return [head, ...lines].map((l) => l.map((x) => `"${String(x).replace(/"/g, '""')}"`).join(",")).join("\n");
 }
 
@@ -60,7 +60,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
     finally { setBusy(null); }
   };
 
-  const rows = (data?.rows ?? []).filter((r) => filter === "all" || r.status === filter);
+  const rows = (data?.rows ?? []).filter((r) => filter === "all" || (filter === "unverified" ? r.verified === false : r.status === filter));
   const pending = data?.rows.filter((r) => r.status === "pending").length ?? 0;
   const ids = lists2026.map((l) => l.id);
   const download = () => {
@@ -79,7 +79,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
       <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
-      <p className="text-sm text-ink-soft max-w-3xl">רק חשבון מאומת (Google או מייל שאומת) נספר בסטטיסטיקות. חשבונות שלא אומתו מרוכזים באזור הנפרד שמתחת, ועוברים לסטטיסטיקות ברגע שמאמתים.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>
       {!!data?.unverified?.participants && (
         <details className="border border-paper-line rounded-theme p-3">
           <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">אזור נפרד: חשבונות שלא אומתו ({data.unverified.participants}) — ממוצע מנדטים לכל רשימה</summary>
@@ -109,7 +109,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
                 <tr className="border-t border-paper-line align-top">
                   <td className="py-1 pe-3 whitespace-nowrap">{r.day}</td>
                   <td className="py-1 pe-3 min-w-[12rem]">
-                    <span className="font-bold">{STATUS[r.status]}</span>{r.mode === "pct" ? " · באחוזים" : ""}
+                    <span className="font-bold">{STATUS[r.status]}</span>{r.mode === "pct" ? " · באחוזים" : ""}{r.verified === false && <span className="text-xs text-ink-soft"> · חשבון לא מאומת</span>}
                     {!!r.reasons.length && <ul className="text-xs text-ink-soft">{r.reasons.map((x, i) => <li key={i}>{reasonText(x)}</li>)}</ul>}
                   </td>
                   {ids.map((id) => <td key={id} className={`py-1 pe-2 ${r.reasons.some((x) => x.list === id) ? "font-bold text-warn" : ""}`}>{r.seats[id] ?? 0}</td>)}

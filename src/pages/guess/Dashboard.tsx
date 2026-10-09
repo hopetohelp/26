@@ -75,8 +75,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
-      {d.accounts && d.participants > 0 && <p className="text-sm text-ink-soft mb-1">מתוכם {d.accounts.google} עם חשבון Google ו-{d.accounts.email} עם מייל מאומת.</p>}
-      {!!d.accounts?.unverified && <p className="text-sm text-ink-soft mb-1">עוד {d.accounts.unverified} {d.accounts.unverified === 1 ? "משתתף עוד לא אימת" : "משתתפים עוד לא אימתו"} מייל או חיבור Google, וההשערות שלהם אינן נספרות עד האימות.</p>}
+      {d.accounts && d.accounts.total > 0 && <p className="text-xs text-ink-soft mb-1">{d.accounts.verified}/{d.accounts.total} מאומתים (Google או מייל)</p>}
       {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
       {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}

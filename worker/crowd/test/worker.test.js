@@ -398,7 +398,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
     const text = JSON.stringify(r.data);
     for (const tok of [a, b, c, d4]) expect(text).not.toContain(tok);
     expect(text).not.toContain(String(odd.data.version.id) + ",");
-    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["blocs", "day", "handle", "mode", "reasons", "seats", "status"]);
+    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["blocs", "day", "handle", "mode", "reasons", "seats", "status", "verified"]);
     // כל שורה כוללת את הגושים: אישיים עם סכום המנדטים והיעד, או ברירת המחדל (5 גושים) כשלא נשמרה הגדרה
     const mine = r.data.rows.find((x) => x.blocs.saved);
     expect(mine.blocs.items).toEqual([{ name: "הגוש שלי", lists: [IDS[0], IDS[1]], seats: 120, target: 100 }]);
@@ -418,10 +418,10 @@ describe("admin guesses dashboard (no identifiers)", () => {
 });
 
 
-describe("חשבונות שלא אומתו — אזור נפרד (הכרעת בעלים 9.10.2026)", () => {
+describe("חשבונות שלא אומתו (הכרעת בעלים 9.10.2026)", () => {
   const KEY = "k".repeat(40);
   const admin = (path) => worker.fetch(new Request("https://w.example" + path, { headers: { "x-admin-key": KEY } }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
-  it("לא נספרים בסטטיסטיקות הראשיות, נספרים באזור הנפרד, וחוזרים לראשיות כשמאמתים", async () => {
+  it("נספרים בסטטיסטיקות כמו כולם, עם הערה כמה מאומתים; בניהול מרוכזים באזור נפרד", async () => {
     await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
     const ok = (await register()).data.token;
     const unv = (await register(undefined, undefined, { verified: false })).data.token;
@@ -429,21 +429,21 @@ describe("חשבונות שלא אומתו — אזור נפרד (הכרעת ב�
     await save(unv, "seats", seats(55));
     resetDashboardCache();
     let d = (await call("/dashboard")).data;
-    expect(d.participants).toBe(1);
-    expect(d.seats.n).toBe(1);
-    expect(d.accounts).toEqual({ google: 0, email: 1, unverified: 1 });
+    expect(d.participants).toBe(2);
+    expect(d.seats.n).toBe(2);
+    expect(d.accounts).toEqual({ verified: 1, total: 2 });
     expect((await call("/me", { token: unv })).data.verified).toBe(false);
     expect((await call("/me", { token: ok })).data.verified).toBe(true);
-    // האזור הנפרד בניהול: שורה אחת בסטטוס "unverified", ממוצע המנדטים שלה, בלי מזהים
+    // האזור הנפרד בניהול: סימון verified בכל שורה, וסיכום של הלא מאומתים (ממוצע מנדטים) בלי מזהים
     const g = (await admin("/admin/guesses")).data;
-    expect(g.rows.map((r) => r.status).sort()).toEqual(["ok", "unverified"]);
+    expect(g.rows.map((r) => r.verified).sort()).toEqual([false, true]);
     expect(g.unverified.participants).toBe(1);
     expect(g.unverified.means[IDS[0]]).toBe(55);
-    // אימות ⇐ עובר לסטטיסטיקות הראשיות
+    // אימות ⇐ ההערה מתעדכנת, הסטטיסטיקות לא משתנות
     env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = (SELECT participant FROM sessions WHERE token_hash = ?)").run(await sha256(unv));
     resetDashboardCache();
     d = (await call("/dashboard")).data;
     expect(d.participants).toBe(2);
-    expect(d.accounts.unverified).toBe(0);
+    expect(d.accounts).toEqual({ verified: 2, total: 2 });
   });
 });

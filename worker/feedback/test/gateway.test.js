@@ -106,7 +106,7 @@ describe("ממסר שמירה", () => {
     expect(res.headers.get("access-control-allow-origin")).toBe(origin);
   });
   it("מעביר גם את נתיבי החשבון והאימות (מי שהמסלולים הרגילים חסומים לו)", async () => {
-    for (const path of ["/account/verify/send", "/account/verify/check", "/account/name", "/account/password"]) {
+    for (const path of ["/account/verify/send", "/account/verify/check", "/account/name", "/account/password", "/auth/verify-email"]) {
       const fetch = vi.fn(async (req) => {
         expect(new URL(req.url).pathname).toBe(path);
         expect(req.headers.get("authorization")).toBe("Bearer tok");

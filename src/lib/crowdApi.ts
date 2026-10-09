@@ -135,7 +135,7 @@ export interface Me {
   needsEmail?: boolean;
   /** אימות מייל זמין בשרת (מוגדר מפתח Firebase) */
   verifyAvailable?: boolean;
-  /** חשבון מאומת (Google או מייל שאומת): רק הוא נספר בסטטיסטיקות */
+  /** חשבון מאומת: Google או מייל שאומת */
   verified?: boolean;
   /** חשבון מנהל (טבלת admins): נכנס לממשק הניהול בלי קישור */
   isAdmin?: boolean;
@@ -205,8 +205,8 @@ export interface Dashboard {
   underReview?: { participants: number; seats: SeatStat[] } | null;
   /** השערות חריגות שממתינות לאישור מנהל — לא נספרות (מספר בלבד) */
   pendingGuesses?: number;
-  /** פירוט המשתתפים שנספרים לפי סוג החשבון, ומספר החשבונות שעוד לא אומתו (נמצאים באזור נפרד, לא נספרים) */
-  accounts?: { google: number; email: number; unverified: number };
+  /** כמה מהנספרים מאומתים (Google או מייל שאומת) מתוך כל הנספרים. הערה קטנה בלבד: כולם נספרים בסטטיסטיקות */
+  accounts?: { verified: number; total: number };
 }
 
 export interface LogEntry {

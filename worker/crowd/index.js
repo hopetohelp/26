@@ -172,8 +172,8 @@ async function moderationState(env) {
   const verified = new Set((data[0].results || []).filter((p) => p.verified).map((p) => p.id));
   const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: JSON.parse(r.payload) }));
   const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
-  // הבדיקה רק מול משתתפים שנספרים: מאומתים, ולא "בבדיקה"
-  const counted = latest.filter((v) => !review.has(v.participant) && verified.has(v.participant));
+  // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
+  const counted = latest.filter((v) => !review.has(v.participant));
   const mod = moderate(counted, decisions);
   // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
   const raw = moderate(counted, new Map()).pending;
@@ -536,6 +536,34 @@ const routes = {
     return { sent: true };
   },
 
+  // דף האימות באתר (הכרעת בעלים 9.10.2026: עדיף דף באתר מאשר דף של Firebase): הקישור שבמייל מוביל לאתר עצמו, והדפדפן שולח לכאן את הקוד.
+  // הקוד הוא הוכחה שהגולש שולט בתיבת המייל, ולכן אין צורך בסשן — אפשר לפתוח את הקישור גם במכשיר אחר.
+  "POST /auth/verify-email": async ({ env, request, now, body }) => {
+    const code = typeof body.oobCode === "string" && /^[\w-]{10,300}$/.test(body.oobCode) ? body.oobCode : null;
+    if (!code) throw bad("bad_code");
+    const [cur] = await ipKeys(env, request);
+    if (!(await hit(env, "va:" + cur, 30, now))) throw new HttpError(429, "slow_down");
+    let email;
+    try {
+      const info = await fb.checkCode(env, code);
+      if (info.requestType !== "VERIFY_EMAIL" || typeof info.email !== "string") throw bad("bad_code");
+      await fb.applyCode(env, code);
+      email = info.email;
+    } catch (e) {
+      if (e instanceof HttpError) throw e;
+      if (e instanceof fb.FirebaseError && /OOB_CODE|INVALID_ID_TOKEN/.test(e.code)) throw bad(/EXPIRED/.test(e.code) ? "expired_code" : "bad_code");
+      throw fbFailure(e);
+    }
+    const n = normalizeEmail(email);
+    if (!n) throw bad("bad_code");
+    const row = await env.DB.prepare("SELECT participant FROM emails WHERE hash = ?").bind(await emailHash(env, n.norm)).first();
+    if (!row) return { verified: true, account: false };
+    await env.DB.prepare("UPDATE emails SET verified = 1 WHERE participant = ? AND hash = ?").bind(row.participant, await emailHash(env, n.norm)).run();
+    await dropFirebaseUser(env, row.participant);
+    await env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(row.participant).run();
+    return { verified: true, account: true };
+  },
+
   "POST /account/verify/check": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     const row = await env.DB.prepare("SELECT hash, enc, verified FROM emails WHERE participant = ? ORDER BY verified DESC, created_at LIMIT 1").bind(participant).first();
@@ -672,7 +700,7 @@ const routes = {
     for (const v of latest) {
       const reasons = mod.pending.get(v.id) ?? [];
       const decision = mod.decisions.get(v.id) ?? null;
-      const status = review.has(v.participant) ? "review" : !verified.has(v.participant) ? "unverified" : decision ?? (reasons.length ? "pending" : "ok");
+      const status = review.has(v.participant) ? "review" : decision ?? (reasons.length ? "pending" : "ok");
       rows.push({
         handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
         day: v.created_at.slice(0, 10),
@@ -680,6 +708,7 @@ const routes = {
         seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
         ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
         status,
+        verified: verified.has(v.participant),
         reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
         blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
       });
@@ -688,8 +717,8 @@ const routes = {
       const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
       [rows[i], rows[j]] = [rows[j], rows[i]];
     }
-    // האזור הנפרד של חשבונות שלא אומתו: כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים)
-    const unv = rows.filter((r) => r.status === "unverified");
+    // האזור הנפרד בניהול: חשבונות שלא אומתו — כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים). הם נספרים בסטטיסטיקות כרגיל.
+    const unv = rows.filter((r) => !r.verified);
     const means = Object.fromEntries(IDS_2026_LIST.map((id) => [id, unv.length ? Math.round((unv.reduce((a, r) => a + (r.seats[id] ?? 0), 0) / unv.length) * 100) / 100 : 0]));
     return { salt, rows, unverified: { participants: unv.length, means } };
   },

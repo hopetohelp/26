@@ -57,5 +57,11 @@ export async function isVerified(env, idToken) {
   return r.users?.[0]?.emailVerified === true;
 }
 
+/** בדיקת קוד פעולה מהקישור שבמייל (בלי להחיל אותו) ⇐ {email, requestType}. קוד לא תקף ⇐ FirebaseError("INVALID_OOB_CODE" / "EXPIRED_OOB_CODE") */
+export const checkCode = (env, oobCode) => call(env, "resetPassword", { oobCode }).then((r) => ({ email: r.email, requestType: r.requestType }));
+
+/** החלת הקוד: מסמן את המייל כמאומת ב-Firebase */
+export const applyCode = (env, oobCode) => call(env, "update", { oobCode });
+
 /** מחיקת המשתמש הזמני ב-Firebase — כך המייל לא נשאר אצלם */
 export const removeUser = (env, idToken) => call(env, "delete", { idToken });
