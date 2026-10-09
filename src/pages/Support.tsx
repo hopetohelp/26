@@ -1,5 +1,6 @@
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import MyData from "./guess/MyData";
 import Account from "./guess/Account";
 import { Btn, Notice } from "./guess/ui";
@@ -181,6 +182,11 @@ export default function Support() {
         <Drawer className="lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:border-t" title="תמיכה" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
           <Conversation session={session} />
         </Drawer>
+        {me?.isAdmin && (
+          <div className="border-b border-paper-line lg:col-start-1">
+            <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
+          </div>
+        )}
         {token && (
           <Drawer className="lg:col-start-1" title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>
             <MyData session={session} part="data" />

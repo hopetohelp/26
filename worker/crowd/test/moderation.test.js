@@ -24,10 +24,20 @@ describe("השערות חריגות", () => {
     expect(moderate(vs).pending.size).toBe(0);
   });
 
-  it("מעבר אחוז החסימה כש-90% נתנו 0 ⇐ ממתינה, מהמשתתף השני", () => {
-    const vs = [typical("a"), ver("c", "seats", guess({ yashar: 20, shas: 10, noam: 4 }))];
-    const reasons = moderate(vs).pending.get(vs[1].id);
-    expect(reasons.map((r) => r.rule)).toContain("zero");
+  it("הציבור החרדי, צבע שחור ונועם: מעבר הסף (4 ומעלה) ממתין לאישור, גם כשכל האחרים נתנו אותו דבר ומהמשתתף הראשון", () => {
+    for (const list of ["haredi_public", "code_black", "noam"]) {
+      const first = ver("a", "seats", guess({ [list]: 4 }));
+      expect(moderate([first]).pending.get(first.id)).toEqual([{ list, rule: "watched", value: 4 }]);
+      const vs = [ver("a", "seats", guess({ [list]: 5 })), ver("b", "seats", guess({ [list]: 5 }))];
+      expect(moderate(vs).pending.size).toBe(2);
+    }
+  });
+
+  it("רשימה נבחרת מתחת לסף (1–3) תקינה; מפלגה רגילה שעוברת את הסף אינה ממתינה רק בגלל שהסף עבר (הכלל הישן בוטל)", () => {
+    const low = ver("a", "seats", guess({ noam: 3 }));
+    expect(moderate([low]).pending.size).toBe(0);
+    const withAmcha = (p) => ver(p, "seats", guess({ yashar: 20, shas: 10, amcha: 4 }));
+    expect(moderate([withAmcha("a"), withAmcha("b"), withAmcha("c")]).pending.size).toBe(0);
   });
 
   it("משתתף ראשון לבד — אין למה להשוות", () => {

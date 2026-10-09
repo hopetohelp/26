@@ -199,7 +199,11 @@ export default {
     // ---- ממשק ניהול: מפתח ב-Authorization: Bearer; במאגר רק הגיבוב שלו (admin_keys). שיחות תמיכה, תשובות ומספרים.
     if (url.pathname.startsWith("/admin/")) {
       const key = (request.headers.get("authorization") || "").replace(/^Bearer /, "");
-      const ok = key.length >= 32 && (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first());
+      let ok = key.length >= 32 && (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first());
+      // חשבון מנהל (הכרעת בעלים 9.10.2026): שרת ההשתתפות מאשר שהסשן שייך למנהל
+      if (!ok && key.length >= 32 && env.CROWD) {
+        ok = await env.CROWD.fetch(new Request("https://crowd.internal/admin/whoami", { headers: { "x-admin-key": key } })).then((r) => r.ok, () => false);
+      }
       if (!ok) return reply({ ok: false, error: "unauthorized" }, 401);
       const crowd = (path, init = {}) => env.CROWD ? env.CROWD.fetch(new Request("https://crowd.internal" + path, { ...init, headers: { "x-admin-key": key, "content-type": "application/json" } })).then((r) => r.json()).catch(() => null) : Promise.resolve(null);
       if (request.method === "GET" && url.pathname === "/admin/data") {
