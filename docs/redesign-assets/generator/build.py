@@ -6,7 +6,7 @@
  - מסך הבית: model.json דרך הפונקציות של האתר (extract.ts → home-data.json) ושינוי 7 ימים מ-trend
  - גרף הסקרים מול התוצאות: history.json (בחירות 2022) ו-results.json
 הפלט: קבצי HTML עצמאיים ב-docs/redesign-assets (ה-CSS המשותף מוטמע):
- home-proposal, accuracy-proposal, chart-kit, method-proposal, tokens-sheet."""
+ home-proposal, accuracy-proposal, chart-kit, method-proposal, ui-kit (גופנים, כרטיסים ומתגים), tokens-sheet."""
 import json, math, pathlib
 from datetime import date, timedelta
 
@@ -19,18 +19,20 @@ D = json.loads((GEN / "home-data.json").read_text(encoding="utf-8"))
 MODEL = json.loads((REPO / "src/data/model.json").read_text(encoding="utf-8"))
 
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;500;600;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">')
+         '<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@700;900&display=swap" rel="stylesheet">')
+FONTS_OLD = ('<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">')
+
 BOOT = """<script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
 if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
 if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script>"""
 
 
-def page(title, body, extra_css="", boot=True):
+def page(title, body, extra_css="", boot=True, extra_head=""):
     return f"""<!doctype html>
 <html lang="he" dir="rtl" data-theme="league">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title}</title>{FONTS}
+<title>{title}</title>{FONTS}{extra_head}
 <style>{CSS}
 {extra_css}</style>{BOOT if boot else ""}</head>
 <body>{body}</body></html>"""
@@ -188,10 +190,10 @@ def tchart():
     return f'<div class="tchart">{sv}{lab}</div>'
 
 
-SHEET = ["סקר האתר", "סקרים ומגמות", "בחירות קודמות", "מה השתנה מהבחירות האחרונות", "שיטה, מקורות ואודות"]
+SHEET = ["המצב והתרחישים", "סקרים ומגמות", "בחירות קודמות", "מה השתנה מהבחירות האחרונות", "שיטה, מקורות ואודות"]
 NAV = [("בית", True), ("הכנסת שלי", False), ("סקר האתר", False), ("המצב והתרחישים", False), ("סקרים ומגמות", False),
        ("בחירות קודמות", False), ("מה השתנה", False), ("שיטה ומקורות", False), ("תמיכה", False)]
-TABS = [("בית", "home", "home"), ("מצב ותחזית", "board", "today"), ("עוד", "more", "more"), ("הכנסת שלי", "guess", "guess"), ("תמיכה", "comments", "support")]
+TABS = [("בית", "home", "home"), ("הכנסת שלי", "guess", "guess"), ("עוד", "more", "more"), ("סקר האתר", "bars", "community"), ("תמיכה", "comments", "support")]
 
 
 def _cur(c):
@@ -332,7 +334,7 @@ def table():
 ACC_EXTRA = """
 .wrap { padding: 1.25rem 1rem 2.5rem; max-width: 64rem; margin: 0 auto; }
 html[data-card] .wrap { padding: 2.2rem 2.4rem 2rem; max-width: none; }
-.acc-h { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
+.acc-h { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: var(--display-weight); font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
 .grp { margin: 1.25rem 0 .25rem; font-size: 1rem; font-weight: 800; }
 .arows { list-style: none; margin: 0; padding: 0; }
 .arow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; align-items: center; gap: .1rem .75rem; padding: .5rem 0; border-top: 1px solid rgb(var(--line)); }
@@ -518,7 +520,7 @@ method_body = f"""
 {top_bar()}
 <main class="wrap" id="main">
   <h1 class="acc-h">שיטה, מקורות ואודות</h1>
-  <nav class="seg2" aria-label="חלקי המסך"><a href="#" aria-current="page">מילון המספרים</a><a href="#">מקורות</a><a href="#">החוק</a><a href="#">אודות</a></nav>
+  <nav class="utabs" aria-label="חלקי המסך"><a href="#" aria-current="page">מילון המספרים</a><a href="#">מקורות</a><a href="#">החוק</a><a href="#">אודות</a></nav>
   <p class="asof" style="margin-top:.75rem">כל גרף באתר מקשר לערך שלו כאן. התאריך המעודכן מופיע ליד הגרף.</p>
   <div class="dict">{"".join(entry(*e) for e in DICT)}</div>
   <h2 class="mh" id="sources">מקורות</h2><ul class="plain">{"".join(f"<li>{s}</li>" for s in SOURCES)}</ul>
@@ -601,3 +603,152 @@ json.dump({"acc": acc, "n_in": n_in, "n_all": n_all, "meretz_pct": thr, "dates":
           open(GEN / "acc-data.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("home:", gov_n, glo, ghi, [r["name"] for r in edge], [r["name"] for r in below], (s_min, s_max))
 print("accuracy:", n_in, n_all, round(thr, 3), "| changes:", find_changes)
+
+
+# =====================================================================
+# 5. גופנים, כרטיסים ומתגים רוחביים: היום מול מוצע
+# =====================================================================
+UI_EXTRA = """
+body { background: rgb(var(--paper)); }
+.uk { padding: 1.25rem 1rem 3rem; max-width: 90rem; margin: 0 auto; display: grid; gap: 3rem; }
+.uk .note { color: rgb(var(--ink-soft)); font-size: .875rem; margin: .5rem 0 0; max-width: 60ch; }
+.uk h2.sec { font-size: 1.5rem; font-weight: 800; margin: 0; line-height: 1.2; }
+.cmp { display: grid; gap: 1.25rem; margin-top: 1rem; }
+@media (min-width: 900px) { .cmp { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+.col { border-top: 3px solid rgb(var(--line)); padding-top: .75rem; min-width: 0; }
+.col.new { border-top-color: rgb(var(--accent)); }
+.tag { font-size: .875rem; font-weight: 800; margin: 0 0 1rem; color: rgb(var(--ink-soft)); }
+.col.new .tag { color: rgb(var(--accent)); }
+.spec { margin: 1rem 0 0; padding: 0; list-style: none; font-size: .875rem; color: rgb(var(--ink-soft)); display: grid; gap: .3rem; }
+.spec li::before { content: "– "; }
+/* --- טיפוגרפיה --- */
+[data-theme="league"] .old { --font-display: "Secular One"; --font-body: "Assistant"; --font-num: "Secular One"; --display-weight: 400; --hero: 2.1rem; }
+[data-theme="board"] .old { --font-display: "Karantina"; --font-body: "Heebo"; --font-num: "Karantina"; --display-weight: 400; --hero: 2.9rem; }
+.ty { font-family: var(--font-body), system-ui, sans-serif; }
+.ty .big { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: var(--display-weight); font-size: var(--hero); line-height: 1.08; margin: 0; text-wrap: balance; }
+.ty table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.ty td { padding: .35rem 0; border-top: 1px solid rgb(var(--line)); font-size: 1rem; }
+.ty td.n { text-align: end; font-weight: 700; font-size: 1.5rem; font-family: var(--font-num), var(--font-body), sans-serif; }
+.ty .digs { font-family: var(--font-num), var(--font-body), sans-serif; font-size: 1.75rem; font-weight: 700; line-height: 1.3; direction: ltr; text-align: end; margin: 0; }
+.ty .digs span { display: block; }
+.ty.tn .digs, .ty.tn td.n { font-variant-numeric: tabular-nums; }
+.ty .p16 { font-size: 1rem; line-height: 1.55; margin: .75rem 0 0; }
+.ty .p12 { font-size: .75rem; color: rgb(var(--ink-soft)); margin: .4rem 0 0; }
+/* --- כרטיסים --- */
+.oc { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.25rem; background: rgb(var(--card)); font-family: var(--font-body), sans-serif; }
+.oc h3 { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: var(--display-weight); font-size: 1.9rem; line-height: 1; margin: 0 0 .75rem; }
+.oc .inner { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: .75rem; background: rgb(var(--paper)); }
+.oc .inner + .inner { margin-top: .5rem; }
+.crow { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; font-size: 1rem; }
+.crow b { font-family: var(--font-num), var(--font-body), sans-serif; font-variant-numeric: tabular-nums; }
+.sf { border-top: 1px solid rgb(var(--line)); padding-top: 1rem; margin-top: 1.75rem; }
+.sf:first-child { margin-top: 0; }
+.sf h3, .cd h3 { font-size: 1.25rem; font-weight: 800; margin: 0 0 .25rem; line-height: 1.25; }
+.sf .src, .cd .src { font-size: .875rem; color: rgb(var(--ink-soft)); margin: 0 0 .5rem; }
+.cd { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1rem; background: rgb(var(--card)); margin-top: 1.75rem; }
+.pn { background: rgb(var(--band)); color: rgb(var(--band-ink)); border-radius: var(--radius); padding: 1.25rem; margin-top: 1.75rem; }
+.pn h3 { margin: 0; font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+.pn p { margin: .4rem 0 0; color: rgb(var(--band-soft)); font-size: .875rem; }
+.fr { display: flex; align-items: center; justify-content: space-between; min-height: 3.5rem; border-top: 1px solid rgb(var(--line)); border-bottom: 1px solid rgb(var(--line)); margin-top: 1.75rem; font-weight: 700; }
+.fr i { font-style: normal; font-size: 1.4rem; color: rgb(var(--ink-soft)); }
+.lbl { display: inline-block; font-size: .75rem; font-weight: 700; color: rgb(var(--ink-soft)); margin-bottom: .25rem; }
+/* --- מתגים: היום --- */
+.rg { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem; }
+.pill { min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; font: inherit; font-size: .875rem; font-weight: 700; border: 1px solid rgb(var(--line)); background: rgb(var(--card)); color: rgb(var(--ink)); display: inline-flex; align-items: center; }
+.pill.f { border-color: rgb(var(--ink-faint)); background: transparent; }
+.pill.t40 { min-height: 2.5rem; border-width: 2px; }
+.pill.on { background: rgb(var(--ink)); color: rgb(var(--card)); border-color: rgb(var(--ink)); }
+.pill.sg { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); border-color: rgb(var(--signal)); }
+/* --- מתגים: מוצע --- */
+.tabsu { display: flex; border-bottom: 1px solid rgb(var(--line)); overflow-x: auto; scrollbar-width: none; margin-bottom: 1rem; }
+.tabsu button { min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0 1rem; font: inherit; font-size: 1rem; font-weight: 600; color: rgb(var(--ink-soft)); background: none; border: 0; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.tabsu button[aria-selected="true"] { color: rgb(var(--ink)); font-weight: 700; border-bottom-color: rgb(var(--accent)); }
+.segd { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; padding: 3px; border-radius: var(--radius); background: rgb(var(--paper)); box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); margin-bottom: 1rem; }
+.segd button { min-height: 2.75rem; border: 0; border-radius: calc(var(--radius) - 3px); background: transparent; font: inherit; font-size: .875rem; font-weight: 600; color: rgb(var(--ink-soft)); padding: 0 .4rem; }
+.segd button[aria-checked="true"] { background: rgb(var(--card)); color: rgb(var(--ink)); font-weight: 700; box-shadow: inset 0 0 0 1.5px rgb(var(--ink)); }
+.chips { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; padding: 2px 0; margin-bottom: 1rem; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 2rem); mask-image: linear-gradient(to right, transparent 0, #000 2rem); }
+.chips button { flex: none; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; border: 0; background: transparent; font: inherit; font-size: .875rem; font-weight: 600; color: rgb(var(--ink)); box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); }
+.chips button[aria-checked="true"] { background: rgb(var(--ink)); color: rgb(var(--card)); box-shadow: none; font-weight: 700; }
+.swt { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; width: 100%; background: none; border: 0; padding: 0; font: inherit; font-size: 1rem; font-weight: 600; color: rgb(var(--ink)); margin-bottom: 1rem; }
+.swt .tr { flex: none; width: 2.9rem; height: 1.7rem; border-radius: 999px; background: rgb(var(--ink) / .35); position: relative; }
+.swt .tr::after { content: ""; position: absolute; top: 3px; inset-inline-start: 3px; width: calc(1.7rem - 6px); height: calc(1.7rem - 6px); border-radius: 50%; background: rgb(var(--card)); }
+.swt[aria-checked="true"] .tr { background: rgb(var(--accent)); }
+.swt[aria-checked="true"] .tr::after { inset-inline-start: calc(100% - 1.7rem + 3px); }
+.swt small { display: block; font-weight: 400; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.sheetx { border: 1px solid rgb(var(--line)); border-radius: var(--radius); background: rgb(var(--card)); padding: .5rem 1rem 1rem; }
+.sheetx h3 { margin: 0; font-size: 1.25rem; font-weight: 800; min-height: 3rem; display: flex; align-items: center; }
+.focus { outline: 3px solid rgb(var(--accent)); outline-offset: 2px; }
+"""
+
+OLD_BIT = '<span class="lbl">מקצועי: ספרות לא שוות רוחב</span>'
+ty_rows = [("סקרים בארכיון", "775"), ("סקרים בממוצע", str(D["polls"])), ("מכונים", "10"), ("מושבים בכנסת", "120")]
+
+
+def ty_col(old):
+    cls = "ty old" if old else "ty tn"
+    tag = "היום" if old else "מוצע"
+    rows_html = "".join(f'<tr><td>{a}</td><td class="n">{b}</td></tr>' for a, b in ty_rows)
+    return (f'<div class="col{"" if old else " new"}"><p class="tag">{tag}</p><div class="{cls}">'
+            f'<h3 class="big">מפלגות הממשלה היוצאת: {gov_n} מנדטים. לרוב דרושים 61.</h3>'
+            f'<table aria-label="דוגמת מספרים בטור">{rows_html}</table>'
+            '<p class="digs" dir="ltr"><span>1111</span><span>8888</span><span>1,234</span></p>'
+            '<p class="p16">כמה תקבל כל רשימה? מחלקים 120 מושבים, ומשווים למה שמנחשים כל השאר. השערות גולשים, אינן סקר.</p>'
+            f'<p class="p12">0 · 10 · 20 · 30 · נכון ל-{asof} · {D["polls"]} סקרים · איך זה חושב?</p></div></div>')
+
+
+def card_rows():
+    return "".join(f'<div class="crow"><span>{r["name"]}</span><b>{r["central"]}</b></div>' for r in rows[:3])
+
+
+old_card = (f'<div class="col"><p class="tag">היום</p><div class="old"><div class="oc"><h3>הגושים שלי</h3>'
+            f'<div class="inner">{card_rows()}</div><div class="inner" style="font-size:.875rem">מקור: ממוצע המודל · נכון ל-{asof} · הנחה: הקבוצה לפי ממשלה 37 · איך זה חושב?</div></div>'
+            '<div class="oc" style="margin-bottom:0"><h3>פירוט לפי מכון</h3><div class="inner" style="font-size:.875rem">כרטיס בתוך כרטיס, כותרת בגודל 30px בגופן הכותרות</div></div></div>'
+            '<ul class="spec"><li>כל קבוצה בקופסה עם מסגרת, וקופסה בתוך קופסה</li><li>כותרת כרטיס: 30px בגופן הכותרות, בכל כרטיס</li></ul></div>')
+new_card = (f'<div class="col new"><p class="tag">מוצע</p>'
+            f'<section class="sf"><h3>הגושים שלי</h3><p class="src">נכון ל-{asof} · <a href="#">איך זה חושב?</a></p>{card_rows()}</section>'
+            f'<section class="cd"><h3>כרטיס: יחידה שאפשר לשתף</h3><p class="src">מסגרת אחת, בלי קופסה בתוכה</p>{card_rows()}</section>'
+            '<aside class="pn"><h3>כמה תקבל כל רשימה? תנחשו.</h3><p>פאנל פעולה: אחד בכל מסך</p></aside>'
+            '<div class="fr"><span>פירוט לפי מכון</span><i aria-hidden="true">+</i></div>'
+            '<ul class="spec"><li>שלוש רמות: משטח (קו דק), כרטיס (מסגרת), פאנל (כהה)</li><li>כותרת: 20px, משקל 800, בלי גופן הכותרות</li><li>אין קופסה בתוך קופסה</li></ul></div>')
+
+
+def pills(items, cls=""):
+    return "".join(f'<span class="pill {cls} {"on" if i == 0 else ""}">{t}</span>' for i, t in enumerate(items))
+
+
+old_tog = ('<div class="col"><p class="tag">היום</p>'
+           '<span class="lbl">לשוניות מסך (Tabbed): כפתורים עגולים</span><div class="rg">' + pills(["היום", "תחזית ותרחישים"]) + '</div>'
+           '<span class="lbl">מערכת בחירות: חמש אפשרויות, יורדות לשורה שנייה</span><div class="rg">' + pills(["2022", "2021", "2020", "2019 ב׳", "2019 א׳"], "f") + '</div>'
+           '<span class="lbl">השוואה לפי: מסגרת כהה יותר ללא נבחר</span><div class="rg">' + pills(["לפי הגושים שלי", "לפי המפלגה", "לפי המחנה"], "f") + '</div>'
+           '<span class="lbl">דשבורד: גובה 40 ומסגרת כפולה</span><div class="rg">' + pills(["מנדטים", "אחוזים"], "t40") + '</div>'
+           '<span class="lbl">בורר עיצוב: מילוי בצבע ההדגשה</span><div class="rg"><span class="pill sg">● מקצועי</span><span class="pill f">● חדשותי</span></div>'
+           '<ul class="spec"><li>שבעה מימושים נפרדים, בשלושה גבהים ושני עוביי מסגרת</li><li>מסגרת הלא-נבחר בלשוניות: ניגודיות 1.4:1</li><li>חמש אפשרויות יורדות לשתי שורות</li></ul></div>')
+new_tog = ('<div class="col new"><p class="tag">מוצע</p>'
+           '<span class="lbl">לשוניות (Tabs): מעבר בין מסכים, מתחת לסרגל</span>'
+           '<div class="tabsu" role="tablist" aria-label="המצב והתרחישים"><button role="tab" aria-selected="true">היום</button><button role="tab" aria-selected="false">תחזית ותרחישים</button></div>'
+           '<span class="lbl">מתג מקטעים (Segmented): שניים עד ארבעה, שורה אחת</span>'
+           '<div class="segd" role="radiogroup" aria-label="השוואה לפי"><button role="radio" aria-checked="true">לפי הגושים שלי</button><button role="radio" aria-checked="false">לפי המפלגה</button><button role="radio" aria-checked="false">לפי המחנה</button></div>'
+           '<span class="lbl">צ׳יפים (Chips): חמש אפשרויות ומעלה, גלילה בשורה אחת</span>'
+           '<div class="chips" role="radiogroup" aria-label="מערכת בחירות"><button role="radio" aria-checked="true">2022</button><button role="radio" aria-checked="false">2021</button><button role="radio" aria-checked="false">2020</button><button role="radio" aria-checked="false">2019 ב׳</button><button role="radio" aria-checked="false">2019 א׳</button></div>'
+           '<span class="lbl">מתג הדלקה (Switch): הפעלה וכיבוי</span>'
+           '<button class="swt" role="switch" aria-checked="true"><span>הצגה כטבלה<small>הנתונים מאחורי הגרף</small></span><span class="tr"></span></button>'
+           '<span class="lbl">חלון "תצוגה": מתגי מקטעים במקום ארבעה בקרים</span>'
+           '<div class="sheetx"><h3>תצוגה</h3><span class="lbl">עיצוב</span><div class="segd" role="radiogroup" aria-label="עיצוב"><button role="radio" aria-checked="true">מקצועי</button><button role="radio" aria-checked="false">חדשותי</button></div>'
+           '<span class="lbl">מצב</span><div class="segd" role="radiogroup" aria-label="מצב" style="margin-bottom:0"><button role="radio" aria-checked="true">יום</button><button role="radio" aria-checked="false">לילה</button><button role="radio" aria-checked="false">לפי המכשיר</button></div></div>'
+           '<ul class="spec"><li>ארבעה רכיבים לארבעה תפקידים, כולם בגובה 44px</li><li>הנבחר מסומן במסגרת כהה וקו תחתון (ניגודיות מעל 3:1), לא בצבע בלבד</li><li>חצים במקלדת עוברים בין האפשרויות (radiogroup, tablist)</li></ul></div>')
+
+ui_body = f"""
+{top_bar(count="גופנים, כרטיסים ומתגים", nav=False)}
+<main class="uk" id="main">
+  <header><h1 class="acc-h">גופנים, כרטיסים ומתגים</h1><p class="note">היום מול מוצע, בעיצוב שנבחר בראש הדף. כל הדוגמאות בנתוני האתר; לא שונה שום חישוב.</p></header>
+  <section aria-labelledby="s-ty"><h2 class="sec" id="s-ty">גופנים: משפחה אחת לכל עיצוב, וספרות שוות רוחב</h2>
+    <div class="cmp">{ty_col(True)}{ty_col(False)}</div>
+    <ul class="spec"><li>מקצועי: IBM Plex Sans Hebrew לכול. חדשותי: Frank Ruhl Libre לכותרות ו-Heebo לגוף.</li><li>בשני העיצובים ספרות שוות רוחב אמיתיות (tabular). ב"היום" Assistant ו-Secular One ו-Karantina אינם מציעים אותן.</li></ul></section>
+  <section aria-labelledby="s-cd"><h2 class="sec" id="s-cd">כרטיסים: שלוש רמות במקום קופסאות בתוך קופסאות</h2>
+    <div class="cmp">{old_card}{new_card}</div></section>
+  <section aria-labelledby="s-tg"><h2 class="sec" id="s-tg">מתגים רוחביים: ארבעה רכיבים במקום שבעה מימושים</h2>
+    <div class="cmp">{old_tog}{new_tog}</div></section>
+</main>
+{tabs_bar("more")}
+"""
+(OUT / "ui-kit.html").write_text(page("בחירות 26: גופנים, כרטיסים ומתגים", ui_body, ACC_EXTRA.split("@media")[0] + UI_EXTRA, extra_head=FONTS_OLD), encoding="utf-8")

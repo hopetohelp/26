@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="he" dir="rtl" data-theme="league">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>בחירות 26: טוקנים ורכיבים</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;500;600;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">
+<title>בחירות 26: טוקנים ורכיבים</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@700;900&display=swap" rel="stylesheet">
 <style>/* הדגמת עיצוב מחדש — בחירות 26. הצבעים הם אותם טוקנים של האתר (src/index.css); חדשים רק band ו-seat. */
 :root, [data-theme="league"] {
   --paper: 238 241 245; --card: 255 255 255; --line: 213 219 227;
@@ -11,8 +11,8 @@
   --frame: 255 255 255; --frame-ink: 19 23 29; --frame-soft: 74 85 99; --frame-line: 213 219 227;
   --signal: 232 119 14; --signal-ink: 19 23 29;
   --band: 19 23 29; --band-ink: 244 246 248; --band-soft: 184 192 204;
-  --font-display: "Secular One"; --font-body: "Assistant"; --radius: 12px;
-  --hero: 2.1rem; --hero-lg: 3.1rem;
+  --font-display: "IBM Plex Sans Hebrew"; --font-body: "IBM Plex Sans Hebrew"; --font-num: "IBM Plex Sans Hebrew"; --display-weight: 700; --radius: 12px;
+  --hero: 2rem; --hero-lg: 3rem;
 }
 [data-theme="board"] {
   --paper: 231 235 240; --card: 255 255 255; --line: 203 211 220;
@@ -22,8 +22,8 @@
   --frame: 11 34 57; --frame-ink: 244 246 248; --frame-soft: 184 196 209; --frame-line: 22 56 90;
   --signal: 255 184 28; --signal-ink: 11 34 57;
   --band: 11 34 57; --band-ink: 244 246 248; --band-soft: 184 196 209;
-  --font-display: "Karantina"; --font-body: "Heebo"; --radius: 10px;
-  --hero: 2.9rem; --hero-lg: 4.4rem;
+  --font-display: "Frank Ruhl Libre"; --font-body: "Heebo"; --font-num: "Heebo"; --display-weight: 900; --radius: 10px;
+  --hero: 2.3rem; --hero-lg: 3.6rem;
 }
 [data-dark] {
   color-scheme: dark;
@@ -59,12 +59,12 @@ a { color: rgb(var(--accent)); text-underline-offset: 3px; }
 .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.display { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; letter-spacing: 0; }
+.display { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: var(--display-weight); letter-spacing: 0; }
 
 /* ---------- פס עליון ---------- */
 .top { background: rgb(var(--frame)); color: rgb(var(--frame-ink)); border-bottom: 1px solid rgb(var(--frame-line)); }
 .top-in { display: flex; align-items: center; gap: .75rem; min-height: 3.5rem; padding: 0 1rem; }
-.brand { font-family: var(--font-display), var(--font-body), sans-serif; font-size: 1.75rem; line-height: 1; color: inherit; text-decoration: none; white-space: nowrap; }
+.brand { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: var(--display-weight); font-size: 1.75rem; line-height: 1; color: inherit; text-decoration: none; white-space: nowrap; }
 [data-theme="board"] .brand { font-size: 2.1rem; }
 .count { margin-inline-start: auto; font-size: .875rem; font-weight: 700; border: 1px solid rgb(var(--frame-line)); border-radius: 999px; padding: .2rem .7rem; white-space: nowrap; }
 [data-theme="board"] .count b { color: rgb(var(--signal)); }
@@ -80,7 +80,7 @@ a { color: rgb(var(--accent)); text-underline-offset: 3px; }
 /* ---------- תוכן ---------- */
 main { padding: 0 1rem 7rem; }
 .hero { padding-top: 1.5rem; }
-.h1 { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
+.h1 { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: var(--display-weight); font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
 .lede { margin: .75rem 0 0; color: rgb(var(--ink-soft)); font-size: 1rem; }
 .hemi { margin: 1.25rem 0 0; }
 .hemi svg { display: block; width: 100%; height: auto; }
@@ -242,9 +242,9 @@ html[data-static] .tabs { position: static; }
 @media (min-width: 1024px) { .kit { grid-template-columns: 1fr 1fr; } .plate .row, .plate .axisrow { grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); } }
 
 /* מילון המספרים (שיטה, מקורות ואודות) */
-.seg2 { display: flex; gap: .25rem; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); width: fit-content; max-width: 100%; overflow-x: auto; margin-top: 1rem; }
-.seg2 a { padding: .45rem 1rem; border-radius: 999px; font-weight: 700; font-size: .875rem; color: rgb(var(--ink)); text-decoration: none; white-space: nowrap; }
-.seg2 a[aria-current] { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); }
+.utabs { display: flex; border-bottom: 1px solid rgb(var(--line)); overflow-x: auto; scrollbar-width: none; margin-top: 1rem; }
+.utabs a { min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0 1rem; font-weight: 600; font-size: 1rem; color: rgb(var(--ink-soft)); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.utabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-bottom-color: rgb(var(--accent)); }
 .dict { display: grid; gap: 0; margin-top: 1rem; }
 .entry { padding: 1rem 0; border-top: 1px solid rgb(var(--line)); }
 .entry:last-child { border-bottom: 1px solid rgb(var(--line)); }
