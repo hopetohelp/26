@@ -76,9 +76,6 @@ a { color: rgb(var(--accent)); text-underline-offset: 3px; }
 .navd a[aria-current] { color: rgb(var(--frame-ink)); font-weight: 700; border-bottom-color: rgb(var(--signal)); }
 [data-theme="league"] .navd a[aria-current] { border-bottom-color: rgb(var(--accent)); }
 
-.freeze { display: none; background: rgb(var(--warn-soft)); color: rgb(var(--warn)); border-block: 1px solid rgb(var(--warn)); }
-[data-freeze] .freeze { display: block; }
-.freeze p { margin: 0; padding: .75rem 1rem; font-weight: 700; font-size: .875rem; line-height: 1.5; }
 
 /* ---------- תוכן ---------- */
 main { padding: 0 1rem 7rem; }
@@ -322,7 +319,7 @@ html[data-card] .acc-h { font-size: 2.3rem; }
 </style><script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
 if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
-if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script></head>
+if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script></head>
 <body>
 <header class="top"><div class="top-in"><a class="brand" href="#">בחירות 26</a><span class="spacer"></span><span class="count">בחירות קודמות: 2022</span><button class="icon-btn" type="button" aria-label="תצוגה: עיצוב ויום או לילה"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg></button></div></header>
 <main class="wrap" id="main">

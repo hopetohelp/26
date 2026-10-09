@@ -1,12 +1,12 @@
 {
- "asOf": "2026-10-07",
+ "asOf": "2026-10-08",
  "start": "2026-09-09",
- "polls": 37,
+ "polls": 41,
  "pollsters": 10,
  "lastPoll": "2026-10-08",
  "latestN": 9,
  "bloc": {
-  "atLeast61": 0.0384,
+  "atLeast61": 0.0363,
   "lists": [
    "likud",
    "shas",
@@ -22,73 +22,62 @@
   ]
  },
  "wasted": [
-  3.5,
-  6.47,
-  9.84
+  3.41,
+  6.41,
+  9.72
  ],
  "electionDay": "2026-10-27",
- "dataAsOf": "2026-10-09T00:40:52+03:00",
+ "dataAsOf": "2026-10-09T05:39:20+03:00",
  "usable": 757,
  "rows": [
   {
    "id": "likud",
    "name": "הליכוד",
    "gov": true,
-   "central": 22,
+   "central": 23,
    "lo": 18,
    "hi": 27,
    "pass": 1,
    "sure": true,
-   "d0": 0
+   "d0": 1
   },
   {
    "id": "yashar",
    "name": "ישר!",
    "gov": false,
-   "central": 22,
+   "central": 23,
    "lo": 17,
    "hi": 28,
    "pass": 1,
    "sure": true,
-   "d0": -1
+   "d0": 0
   },
   {
    "id": "together",
    "name": "ביחד",
    "gov": false,
-   "central": 12,
+   "central": 13,
    "lo": 9,
    "hi": 15,
    "pass": 1,
    "sure": true,
-   "d0": 0
+   "d0": 1
   },
   {
    "id": "democrats",
    "name": "הדמוקרטים",
    "gov": false,
-   "central": 9,
+   "central": 10,
    "lo": 7,
    "hi": 12,
-   "pass": 0.9999,
+   "pass": 0.9998,
    "sure": true,
-   "d0": 0
+   "d0": 1
   },
   {
    "id": "yb",
    "name": "ישראל ביתנו",
    "gov": false,
-   "central": 8,
-   "lo": 6,
-   "hi": 11,
-   "pass": 0.998,
-   "sure": true,
-   "d0": 0
-  },
-  {
-   "id": "shas",
-   "name": "ש\"ס",
-   "gov": true,
    "central": 8,
    "lo": 6,
    "hi": 11,
@@ -103,9 +92,20 @@
    "central": 8,
    "lo": 6,
    "hi": 10,
-   "pass": 0.998,
+   "pass": 0.9981,
    "sure": true,
-   "d0": 1
+   "d0": 0
+  },
+  {
+   "id": "shas",
+   "name": "ש\"ס",
+   "gov": true,
+   "central": 8,
+   "lo": 6,
+   "hi": 10,
+   "pass": 0.9981,
+   "sure": true,
+   "d0": 0
   },
   {
    "id": "utj",
@@ -114,7 +114,7 @@
    "central": 8,
    "lo": 6,
    "hi": 10,
-   "pass": 0.9982,
+   "pass": 0.9984,
    "sure": true,
    "d0": 0
   },
@@ -125,9 +125,9 @@
    "central": 8,
    "lo": 6,
    "hi": 10,
-   "pass": 0.996,
+   "pass": 0.9968,
    "sure": true,
-   "d0": 0
+   "d0": 1
   },
   {
    "id": "rzp",
@@ -136,7 +136,7 @@
    "central": 6,
    "lo": 0,
    "hi": 9,
-   "pass": 0.8601,
+   "pass": 0.8742,
    "sure": true,
    "d0": 0
   },
@@ -147,7 +147,7 @@
    "central": 5,
    "lo": 0,
    "hi": 8,
-   "pass": 0.7613,
+   "pass": 0.7725,
    "sure": true,
    "d0": 0
   },
@@ -155,12 +155,12 @@
    "id": "amcha",
    "name": "עמך ישראל",
    "gov": false,
-   "central": 4,
+   "central": 0,
    "lo": 0,
    "hi": 6,
-   "pass": 0.4994,
+   "pass": 0.4556,
    "sure": false,
-   "d0": 0
+   "d0": -4
   },
   {
    "id": "reservists",
@@ -169,7 +169,7 @@
    "central": 0,
    "lo": 0,
    "hi": 5,
-   "pass": 0.3345,
+   "pass": 0.3725,
    "sure": false,
    "d0": 0
   },
@@ -180,7 +180,7 @@
    "central": 0,
    "lo": 0,
    "hi": 0,
-   "pass": 0.0002,
+   "pass": 0.0001,
    "sure": false,
    "d0": 0
   },

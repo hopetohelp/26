@@ -23,7 +23,7 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="
 BOOT = """<script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
 if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
-if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script>"""
+if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script>"""
 
 
 def page(title, body, extra_css="", boot=True):
@@ -113,9 +113,11 @@ def fmt_date(iso):
 # =====================================================================
 rows = D["rows"]
 NAME = {r["id"]: r["name"] for r in rows}
-gov_n = sum(r["central"] for r in rows if r["gov"])
+# הכותרת והלוח: מנדטי הממשלה היוצאת כפי שהאתר מציג ("בחציון התרחישים", bloc.seats[1]).
+# סכום הממוצעים של הרשימות (gov_sum) יכול להיות שונה ב-1 — ממצא שנרשם במסמך (החלטה 14); לא מחושב מחדש כאן.
 glo, gmid, ghi = D["bloc"]["seats"]
-assert gov_n == gmid, (gov_n, gmid)
+gov_n = gmid
+gov_sum = sum(r["central"] for r in rows if r["gov"])
 oth_n = 120 - gov_n
 edge = [r for r in rows if (not r["sure"]) and 0.005 < r["pass"] < 0.995]
 below = [r for r in rows if r["pass"] <= 0.005]
@@ -126,7 +128,6 @@ sd = f"{int(start_d[8:])}.{int(start_d[5:7])}"
 hemi_groups = [("seat-a", gov_n, f"{gov_n} למפלגות הממשלה היוצאת"), ("seat-b", oth_n, f"{oth_n} לשאר הרשימות")]
 GOV_IDS = [r["id"] for r in rows if r["gov"]]
 series = [(t["date"], sum(t["seats"].get(i, 0) for i in GOV_IDS)) for t in MODEL["trend"]]
-assert series[-1][1] == gov_n
 s_min, s_max = min(v for _, v in series), max(v for _, v in series)
 
 MAXV = 30
@@ -180,7 +181,6 @@ def tchart():
           f'<line class="wh" x1="{X1 - 2}" x2="{X1 + 2}" y1="{Y(glo):.2f}" y2="{Y(glo):.2f}"/>')
     sv = f'<svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="הממשלה היוצאת: {s_min} עד {s_max} מנדטים בממוצע מאז {sd}; קו 61 מסמן את הרוב">{grid}{ref}<polyline class="ln" points="{pts}"/>{wh}</svg>'
     lab = (f'<span class="tl big" style="left:95%;top:{Y(61) - 7:.2f}%">61</span>'
-           f'<span class="tl big" style="left:{X1 - 7:.2f}%;top:{Y(gov_n) - 9:.2f}%">{gov_n}</span>'
            f'<span class="tl" style="left:{X1 + 6:.2f}%;top:{Y(ghi):.2f}%">{ghi}</span>'
            f'<span class="tl" style="left:{X1 + 6:.2f}%;top:{Y(glo):.2f}%">{glo}</span>'
            f'<span class="tl soft" style="left:{X0 + 2:.2f}%;top:88%">{sd}</span>'
@@ -188,7 +188,6 @@ def tchart():
     return f'<div class="tchart">{sv}{lab}</div>'
 
 
-FREEZE_SHORT = 'הסקרים באתר אינם עדכניים: לפי חוק, מ-24.10 00:00 ועד סגירת הקלפיות ב-27.10 לא מתפרסמים סקרים חדשים. <a href="#">סעיף 16ה</a>'
 SHEET = ["סקר האתר", "סקרים ומגמות", "בחירות קודמות", "מה השתנה מהבחירות האחרונות", "שיטה, מקורות ואודות"]
 NAV = [("בית", True), ("הכנסת שלי", False), ("סקר האתר", False), ("המצב והתרחישים", False), ("סקרים ומגמות", False),
        ("בחירות קודמות", False), ("מה השתנה", False), ("שיטה ומקורות", False), ("תמיכה", False)]
@@ -246,7 +245,6 @@ HOME_EXTRA = """
 """
 home_body = f"""
 {top_bar()}
-<div class="freeze" role="alert"><p>{FREEZE_SHORT}</p></div>
 <main id="main">
   <section class="hero" aria-labelledby="h1">
     <div class="hero-head"><h1 class="h1" id="h1">מפלגות הממשלה היוצאת: {gov_n} מנדטים. לרוב דרושים 61.</h1></div>
@@ -467,7 +465,7 @@ kit_body = f"""
 # =====================================================================
 # 4. שיטה, מקורות ואודות: מילון המספרים
 # =====================================================================
-SRC_MODEL = f"{D['polls']} סקרים מאומתים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-20,000 תרחישים"
+SRC_MODEL = f"{D['polls']} סקרים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-20,000 תרחישים"
 DICT = [
     ("current", "ממוצע הסקרים", "המצב היום · בית", "סיכום סקרים",
      "טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר",
@@ -507,8 +505,8 @@ SOURCES = [
     "<b>הסכמי עודפים:</b> לכנסות 21–25 בוויקיפדיה העברית; לכנסת 26 כפי שדווחו בתקשורת.",
 ]
 LAW = [
-    "סקר שפורסם לציבור נכנס לאתר מיד עם קליטתו, ללא השהיה נוספת.",
-    "מתום יום שישי שלפני הבחירות (24.10.2026) ועד סגירת הקלפיות (27.10.2026, 22:00) לא נכנס סקר חדש, ובכל עמוד מופיעה הודעה שהסקרים אינם עדכניים.",
+    "סקרים נקלטים אוטומטית מכל פרסום, בלי הקפאה ובלי הגבלת תאריך (הכרעת בעלים 9.10.2026, באישור משפטי), ומתעדכנים כל 4 שעות.",
+    "האימות מול הפרסום המקורי הוא תווית שקיפות בלבד (\"אומת\" / \"לא אומת\"), ואינו תנאי לכניסת סקר.",
     "האתר אינו עורך סקרים, ואינו ממליץ על אף רשימה.",
 ]
 ABOUT = [
@@ -556,7 +554,6 @@ body { padding: 2rem; background: #fff; }
 .line { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
 .note { font-size: .75rem; color: rgb(var(--ink-soft)); margin-top: .4rem; }
 .tile .rank { margin-top: 0; }
-.tile .freeze { display: block; border-radius: 8px; border: 1px solid rgb(var(--warn)); }
 .tile .btn.ghost { color: rgb(var(--ink)); }
 .tile .entry { border: 0; padding: 0; }
 .tile .asof { margin-top: 0; }
@@ -592,8 +589,6 @@ def tile(theme, dark):
 <h3>שקיפות: שורה אחת מתחת לגרף, וההסבר המלא במילון</h3>
 <p class="asof">נכון ל-{asof} · {D["polls"]} סקרים · <a href="#">איך זה חושב?</a></p>
 <div style="margin-top:.75rem">{entry(*e0)}</div>
-<h3>באנר הקפאה (סעיף 16ה): שורה אחת מתחת לפס העליון</h3>
-<div class="freeze" role="note"><p>{FREEZE_SHORT}</p></div>
 <p class="note">רדיוס {'12px' if theme == 'league' else '10px'} · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
 </section>'''
 
