@@ -219,7 +219,7 @@ export default function Scenarios() {
         >
           <ChartWithTable
             summary={`${trendIds.length} הרשימות הגדולות, ${dateRange(m.trend[0].date, m.trend[m.trend.length - 1].date)}.`}
-            chart={<TrendChart series={series} from={t0} to={t1} yMax={Math.ceil((Math.max(...series.flatMap((s) => s.points.map((p) => p.v))) + 2) / 5) * 5} title="הממוצע של המודל באחוזים לאורך זמן" />}
+            chart={<TrendChart series={series} from={t0} to={t1} yMax={Math.ceil((Math.max(...series.flatMap((s) => s.points.map((p) => p.v))) + 2) / 5) * 5} title="הממוצע של המודל באחוזים לאורך זמן" lineLabel="ממוצע המודל בכל יום" />}
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">האחוז והמנדטים לפי הממוצע בתחילת החלון ובסופו</caption>

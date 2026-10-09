@@ -1,7 +1,8 @@
 import { rng, signed } from "../lib/format";
 import { deviation, type DevInput, type DevRow } from "../lib/deviation";
 import { levelSegs, type LSeg } from "../lib/chartLanguage";
-import { KeyItem, MeanDot, ProfileCandle, ResultRing, ThicknessKey } from "./marks";
+import ChartLegend from "./ChartLegend";
+import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 
 /**
  * "הסקרים מול התוצאות" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל רשימה, נר כחול = הנמוך והגבוה בין הסקרים ערב הבחירות (טווח מלא),
@@ -57,12 +58,14 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
   const x = (v: number) => ((v + bound) / (2 * bound)) * 100;
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft my-1">
-        <KeyItem kind="mean">0 = ממוצע הסקרים</KeyItem>
-        <KeyItem kind="candle">הנמוך והגבוה בין הסקרים (לא טווח טעות סטטיסטי)</KeyItem>
-        <KeyItem kind="result">התוצאה בפועל</KeyItem>
-        <ThicknessKey what="כמה מכונים נתנו לרשימה ערך כזה" />
-      </div>
+      <ChartLegend
+        entries={[
+          { kind: "mean", text: "0 = ממוצע הסקרים. כל הסימנים נמדדים ממנו, כך שהבדלים קטנים נראים" },
+          { kind: "candle", text: "הנמוך והגבוה בין הסקרים ערב הבחירות (לא טווח טעות סטטיסטי)" },
+          { kind: "result", text: "התוצאה בפועל, ביחס לממוצע הסקרים" },
+        ]}
+        thickness="כמה מכונים נתנו לרשימה ערך כזה"
+      />
       <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
         <div dir="ltr" className="col-start-2 relative h-8">
           <span className="absolute left-0 top-0">פחות מהסקרים</span>

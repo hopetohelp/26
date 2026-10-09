@@ -56,7 +56,6 @@
   --mk-range: 52 105 214;
   --mk-mean: 214 40 57;
   --mk-result: 240 124 0;
-  --mk-diamond: 20 150 80;
   --frame: 11 34 57;
   --frame-ink: 244 246 248;
   --frame-soft: 184 196 209;
@@ -88,7 +87,6 @@
   --mk-range: 52 105 214;
   --mk-mean: 214 40 57;
   --mk-result: 240 124 0;
-  --mk-diamond: 20 150 80;
   --frame: 255 255 255;
   --frame-ink: 19 23 29;
   --frame-soft: 74 85 99;
@@ -123,7 +121,6 @@
   --mk-range: 106 150 235;
   --mk-mean: 255 107 107;
   --mk-result: 255 158 60;
-  --mk-diamond: 90 210 140;
   --frame: 6 16 28;
   --frame-ink: 244 246 248;
   --frame-soft: 170 185 202;
@@ -151,7 +148,6 @@
   --mk-range: 106 150 235;
   --mk-mean: 255 107 107;
   --mk-result: 255 158 60;
-  --mk-diamond: 90 210 140;
   --frame: 26 29 35;
   --frame-ink: 236 239 243;
   --frame-soft: 176 184 196;
@@ -199,8 +195,9 @@
 
 /*
  * שפת הציור האחידה של כל הגרפים (הכרעת בעלים 9.10.2026; הגדלים ב-src/lib/chartLanguage.ts, הרכיבים ב-src/components/marks.tsx):
- * נר = טווח שעוביו משתנה לאורכו לפי כמות הנתונים (חמש רמות), עיגול מלא = ממוצע, עיגול גדול ריק = תוצאה, עיגול קטן ריק = סמן על קו, מעוין ריק = ממוצע הגולשים.
- * צבע לכל סימן: טווח כחול, סמן שחור (ink), ממוצע אדום, תוצאה כתומה, מעוין ירוק. בלי קו לבן מסביב לסימנים.
+ * נר = טווח שעוביו משתנה לאורכו לפי כמות הנתונים (שלוש רמות: 3, 10, 18 פיקסלים, במעבר מעוגל), עיגול מלא = ממוצע,
+ * עיגול ריק = תוצאה (וממוצע הגולשים בסקר האתר), שניהם בקוטר 10 כעובי רמה 3, ועיגול קטן ריק = סמן על קו.
+ * צבע לכל סימן: טווח כחול, סמן שחור (ink), ממוצע אדום, תוצאה כתומה. בלי קו לבן מסביב לסימנים.
  * מיקום: `left` באחוזים מתוך המסלול (`position: relative; direction: ltr`). הכול בטוקנים, בלי צבע קבוע.
  */
 .mk {
@@ -217,7 +214,7 @@
   display: inline-block;
   vertical-align: middle;
 }
-/* נר בעובי אחיד (דוגמית במקרא) */
+/* נר בעובי אחיד (דוגמית עובי במקרא) */
 .mk-candle {
   border-radius: 999px;
   background: rgb(var(--mk-range));
@@ -227,67 +224,35 @@
   translate: none;
 }
 .mk-c1 { height: 3px; }
-.mk-c2 { height: 6px; }
 .mk-c3 { height: 10px; }
-.mk-c4 { height: 14px; }
 .mk-c5 { height: 18px; }
-/* נר שעוביו משתנה לאורכו: קטעים סמוכים, לכל אחד עובי לפי רמה (l1 עד l5) */
+/* נר שעוביו משתנה לאורכו: SVG אחד, וקו המתאר שלו חלק. אופקי: הגובה קבוע (פיקסלים) והרוחב לפי הציר */
 .mk-prof {
   position: absolute;
   top: 50%;
   translate: 0 -50%;
-  display: flex;
-  align-items: center;
-  height: 18px;
-  box-sizing: border-box;
-}
-.mk-prof.mk-sw {
-  position: relative;
-  top: auto;
-  translate: none;
-  display: inline-flex;
-  vertical-align: middle;
-}
-.mk-prof > i {
   display: block;
-  flex: 1 1 0;
-  min-width: 1px;
-  background: rgb(var(--mk-range));
+  height: 18px;
+  overflow: visible;
 }
-.mk-prof > i + i { margin-inline-start: -0.5px; }
-.mk-prof > i:first-child { border-radius: 999px 0 0 999px; }
-.mk-prof > i:last-child { border-radius: 0 999px 999px 0; }
-.mk-prof > i:only-child { border-radius: 999px; }
-.mk-prof > .l1 { height: 3px; }
-.mk-prof > .l2 { height: 6px; }
-.mk-prof > .l3 { height: 10px; }
-.mk-prof > .l4 { height: 14px; }
-.mk-prof > .l5 { height: 18px; }
-/* אותו נר בכיוון אנכי (בגרפים עם ציר זמן): העובי הוא הרוחב */
+/* אנכי (בגרפים עם ציר זמן): הרוחב קבוע והגובה לפי הציר */
 .mk-pv {
   position: absolute;
   translate: -50% 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 18px;
-  box-sizing: border-box;
-}
-.mk-pv > i {
   display: block;
-  flex: 1 1 0;
-  min-height: 1px;
-  background: rgb(var(--mk-range));
+  width: 18px;
+  overflow: visible;
 }
-.mk-pv > i + i { margin-block-start: -0.5px; }
-.mk-pv > i:first-child { border-radius: 999px 999px 0 0; }
-.mk-pv > i:last-child { border-radius: 0 0 999px 999px; }
-.mk-pv > i:only-child { border-radius: 999px; }
-.mk-pv > .l1 { width: 3px; }
-.mk-pv > .l2 { width: 6px; }
-.mk-pv > .l3 { width: 10px; }
-.mk-pv > .l4 { width: 14px; }
-.mk-pv > .l5 { width: 18px; }
+.mk-prof-sw {
+  width: 2.6rem;
+  height: 18px;
+  overflow: visible;
+}
+.mk-prof path,
+.mk-pv path,
+.mk-prof-sw path {
+  fill: rgb(var(--mk-range));
+}
 .mk-dot {
   width: 9px;
   height: 9px;
@@ -295,26 +260,18 @@
   border: 2px solid rgb(var(--ink));
   background: rgb(var(--mk-bg, var(--paper)));
 }
+/* ממוצע ותוצאה: קוטר 10, כעובי רמה 3 של הנר */
 .mk-mean {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: rgb(var(--mk-mean));
 }
 .mk-ring {
-  width: 26px;
-  height: 26px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: 6px solid rgb(var(--mk-result));
-}
-.mk-dia {
-  width: 13px;
-  height: 13px;
-  border: 2px solid rgb(var(--mk-diamond));
-  rotate: 45deg;
-}
-.mk-sw.mk-dia {
-  margin-inline: 2px;
+  border: 3px solid rgb(var(--mk-result));
 }
 /* עיגול מושב חסר (עד הרוב) בלוח המושבים: אדום בהיר */
 .seat-miss {

@@ -1,6 +1,7 @@
 import { binSegs, levelSegs, type LSeg } from "../lib/chartLanguage";
 import { change, diffText, dumbbellAxis, histBounds, r1, type DumbbellRow } from "../lib/dumbbell";
-import { KeyItem, MeanDot, ProfileCandle, ResultRing, ThicknessKey } from "./marks";
+import ChartLegend from "./ChartLegend";
+import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 
 /**
  * "מה השתנה" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל משפחה, עיגול גדול ריק כתום = 2022 (תוצאה רשמית), עיגול מלא אדום = היום (ממוצע המודל),
@@ -46,12 +47,14 @@ export default function DumbbellChart({ rows }: { rows: DumbbellRow[] }) {
   const levels = levelSegs(rows.map((r) => (r.hist ? binSegs(r.hist.start, r.hist.step, r.hist.counts) : [])));
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft my-1">
-        <KeyItem kind="result">2022, תוצאות רשמיות</KeyItem>
-        <KeyItem kind="mean">היום, ממוצע המודל</KeyItem>
-        <KeyItem kind="candle">טווח מלא: הנמוך והגבוה מכל התרחישים</KeyItem>
-        <ThicknessKey what="כמה תרחישים נותנים כל אחוז" />
-      </div>
+      <ChartLegend
+        entries={[
+          { kind: "result", text: "2022, התוצאות הרשמיות" },
+          { kind: "mean", text: "היום, ממוצע המודל" },
+          { kind: "candle", text: "טווח מלא: הנמוך והגבוה מכל התרחישים" },
+        ]}
+        thickness="כמה תרחישים נותנים כל אחוז"
+      />
       <div aria-hidden="true" className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
         <div dir="ltr" className="md:col-start-2 relative h-5">
           {ticks.map((v) => (

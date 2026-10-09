@@ -12,7 +12,8 @@ import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { levelSegs, quantileSegs } from "../../lib/chartLanguage";
-import { AxisLabels, Diamond, KeyItem, MeanDot, ProfileCandle, ThicknessKey, Track } from "../../components/marks";
+import ChartLegend from "../../components/ChartLegend";
+import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import type { useSession } from "./useCrowd";
 
 const LIVE_REFRESH_MS = 60_000;
@@ -140,7 +141,7 @@ interface BarRow { key: string; label: string; lists?: string[]; mean: number | 
 /**
  * סקר האתר בגרף (הכרעת בעלים 9.10.2026): נר כחול = הנמוך והגבוה בין השערות הגולשים (טווח מלא), שעוביו משתנה לאורכו:
  * הסיכום של הגולשים כולל רבעונים (נמוך, רבעון תחתון, חציון, רבעון עליון, גבוה), ובכל קטע ביניהם 25% מהגולשים, ולכן הנר עבה היכן שהם צפופים ודק בזנבות.
- * מעוין ריק ירוק = ממוצע הגולשים (אינו סקר), עיגול מלא אדום = ממוצע הסקרים, כשיש.
+ * עיגול ריק כתום = ממוצע הגולשים (אינו סקר), עיגול מלא אדום = ממוצע הסקרים, כשיש.
  */
 function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suffix?: string; title?: import("react").ReactNode }) {
   const top = Math.max(1, ...rows.flatMap(r => [r.hi, r.mean ?? 0, r.poll ?? 0]));
@@ -151,19 +152,21 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
   const levels = levelSegs(rows.map(r => r.q ? quantileSegs(r.q, suffix ? 0.25 : 0.5) : []));
   const COLS = "grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto]";
   return <Card title={title}>
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft mb-1">
-      <KeyItem kind="diamond">ממוצע הגולשים (אינו סקר)</KeyItem>
-      <KeyItem kind="candle">הנמוך והגבוה בין ההשערות</KeyItem>
-      {withPoll && <KeyItem kind="mean">ממוצע הסקרים</KeyItem>}
-      <ThicknessKey what="כמה גולשים שיערו ערך כזה" />
-    </div>
+    <ChartLegend
+      entries={[
+        { kind: "result", text: "ממוצע הגולשים (אינו סקר)" },
+        { kind: "candle", text: "הנמוך והגבוה בין ההשערות" },
+        ...(withPoll ? [{ kind: "mean" as const, text: "ממוצע הסקרים" }] : []),
+      ]}
+      thickness="כמה גולשים שיערו ערך כזה"
+    />
     <div aria-hidden="true" className={`grid ${COLS} gap-2 text-xs text-ink-soft`}><div className="col-start-2"><AxisLabels axisMax={axisMax} step={step} format={v => `${v}${suffix}`} /></div></div>
     <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
       <span className="break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span>
       <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה גולשים שיערו ערך כזה`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
         {r.poll !== undefined && <MeanDot at={at(r.poll)} />}
-        {r.mean !== null && <Diamond at={at(r.mean)} />}
+        {r.mean !== null && <ResultRing at={at(r.mean)} />}
       </Track>
       <span className="font-num tabular whitespace-nowrap">{r.mean === null ? "חסר נתון" : <><b>{seatsFmt(r.mean)}{suffix}</b>{r.lo !== r.hi ? ` · ${rng(seatsFmt(r.lo), seatsFmt(r.hi))}${suffix}` : ""}</>}</span>
       <span className="sr-only">; {r.mean === null ? "חסר נתון" : `ממוצע הגולשים ${seatsFmt(r.mean)}${suffix}, בין ${seatsFmt(r.lo)} ל-${seatsFmt(r.hi)}`}{r.poll !== undefined ? `; ממוצע הסקרים ${seatsFmt(r.poll)}${suffix}` : ""}</span>
