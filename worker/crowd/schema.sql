@@ -135,3 +135,11 @@ CREATE TABLE IF NOT EXISTS bloc_display_names (
   suggested_at TEXT NOT NULL,
   approved_at TEXT
 );
+
+-- החלטות מנהל על השערות חריגות (worker/crowd/lib/moderation.js). approved = נכנסת לסטטיסטיקות גם אם חריגה · rejected = לא נכנסת לעולם.
+-- לפי מזהה גרסה בלבד; גרסה חדשה של אותו גולש נבדקת מחדש. ממשק הניהול אינו מקבל מזהה גרסה או משתתף — רק ידית חד-פעמית.
+CREATE TABLE IF NOT EXISTS version_review (
+  version_id INTEGER PRIMARY KEY REFERENCES versions(id),
+  decision TEXT NOT NULL CHECK (decision IN ('approved', 'rejected')),
+  decided_at TEXT NOT NULL
+);

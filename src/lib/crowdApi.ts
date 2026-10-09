@@ -120,6 +120,8 @@ export interface Me {
   guest: boolean;
   /** העדפות שאינן השערה (POST /prefs): המחנות במסך "מה השתנה" */
   prefs?: { camps: Record<string, string> | null };
+  /** ההשערה האחרונה חריגה וממתינה לאישור מנהל: לא נספרת בסטטיסטיקות עד אז */
+  seatsPending?: boolean;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */
@@ -184,6 +186,8 @@ export interface Dashboard {
   byVote?: Record<string, { n: number; seats: Record<string, number> }>;
   trend?: { day: string; n: number; newcomers: number; changed: number; seats: Record<string, number> }[];
   underReview?: { participants: number; seats: SeatStat[] } | null;
+  /** השערות חריגות שממתינות לאישור מנהל — לא נספרות (מספר בלבד) */
+  pendingGuesses?: number;
 }
 
 export interface LogEntry {
