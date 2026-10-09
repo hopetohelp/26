@@ -3,7 +3,7 @@
  * - **טווח** = נר: פס מהנמוך אל הגבוה, **שעוביו משתנה לאורכו** לפי כמות הנתונים בכל קטע: עבה היכן שרוב הנתונים, דק בקצוות.
  *   העובי בשלוש רמות **ביחס לקטע העמוס ביותר באותו נר** (כל נר בנפרד; הכרעת בעלים 9.10.2026, אחרי ניסיון של "ביחס לכל הגרף"): מתחת לשליש רמה 1 (דק, 4 פיקסלים), משליש רמה 3 (בינוני, 10), מ-⅔ רמה 5 (עבה, 16). (הכרעת בעלים 9.10.2026; היה 3, 10, 18.)
  *   (הרמות הן 1, 3 ו-5 כדי לשמור את שמות הרמות מההכרעה; רמות 2 ו-4 בוטלו, 9.10.2026.)
- *   המעבר בין הרמות **מעוגל**: קו המתאר של הנר עובר בעקומה חלקה דרך עובי כל קטע (`profilePath`), לא בצעדים מרובעים.
+ *   הנר **מרובע** (כמו נר יפני; הכרעת בעלים 9.10.2026): רמה 1 קו מלא, ורמות 3 ו-5 קופסה סגורה וחלולה (`squareRuns`, `squarePath`).
  *   דוגמה (הבעלים): נר אחד בגרף, 20 משתתפים בין 28 ל-30, 8 בין 26 ל-32, 2 בין 24 ל-34 ⇐ באמצע 5, מהצדדים 3, ובקצוות 1.
  *   כל נר מראה את הצורה שלו: עבה היכן שרוב הנתונים בו, דק בקצוות. אפשר גם ביחס לכל הגרף (`levelSegs(…, "chart")`, כמו נרות ווליום; היה ברירת המחדל זמן קצר ב-9.10.2026 ובוטל).
  *   הנר נבנה מקטעים (`Seg`): מהתפלגות של מספרים שלמים (`intSegs`), מרשימת ערכים (`valueSegs`), מתאים רציפים (`binSegs`) או מרבעונים (`quantileSegs`).
@@ -107,80 +107,47 @@ export function smoothPath(points: Pt[]): string {
   return monotoneCubics(points).reduce((d, c) => `${d}C${m(c.c1)},${m(c.c2)},${m(c.p)}`, `M${m(points[0])}`);
 }
 
-/** נקודה בקו המתאר של נר: מיקום לאורך הנר (`t`) ומחצית העובי שם (`h`) */
-export interface ProfilePt {
-  t: number;
-  h: number;
-}
+/** עובי מסגרת הקופסה בנר, בפיקסלים */
+export const SQUARE_STROKE = 1.5;
 
-/** פונקציית ההתפלגות המצטברת של ההתפלגות הנורמלית (קירוב של אברמוביץ וסטגון), לריכוך המעבר בין הרמות */
-function normalCdf(z: number): number {
-  const t = 1 / (1 + 0.2316419 * Math.abs(z));
-  const p = 0.3989423 * Math.exp((-z * z) / 2) * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
-  return z > 0 ? 1 - p : p;
+/** קטע רצוף בנר באותה רמה: מ-`a` עד `b` (במיקום לאורך הנר), מחצית העובי הכולל `half`, ו-`filled` = קו מלא (רמה 1) ולא קופסה חלולה */
+export interface SquareRun {
+  a: number;
+  b: number;
+  half: number;
+  filled: boolean;
 }
-
-/** כמה מרוכך המעבר בין הרמות, ביחס לרוחב הקטע החציוני: גדול יותר = עגול יותר */
-export const PROFILE_SOFTNESS = 0.6;
 
 /**
- * קו המתאר של נר שעוביו משתנה: עובי כל קטע לפי הרמה שלו (4, 10 או 16 פיקסלים), **מרוכך** לעקומה חלקה, כך שהמעבר בין הרמות עגול ולא מרובע.
- * הריכוך הוא טשטוש גאוסי של פונקציית המדרגות (כמו בגרף כינור), ואחריו מותחים את העובי כך שהקטע העמוס ביותר (תמיד רמה 5 בנר, כי העובי ביחס לנר) יחזור לעובי המלא,
- * והקצוות מתחדדים לעובי הדק (4). `map` ממפה ערך על הציר למיקום לאורך הנר, בכל כיוון (גם יורד, בנר אנכי). `scale` מקטין את כל העוביים יחד (בנרות צפופים).
+ * הנר המרובע (הכרעת בעלים 9.10.2026, כמו נר יפני): הקטעים הסמוכים באותה רמה מתחברים לקטע אחד. רמה 1 היא **קו מלא** (4 פיקסלים),
+ * ורמות 3 ו-5 הן **קופסה סגורה וחלולה** (מסגרת בלבד, 10 ו-16 פיקסלים). הקטעים מצוירים זה ליד זה בזוויות ישרות, בלי החלקה.
+ * `map` ממפה ערך על הציר למיקום לאורך הנר, בכל כיוון (גם יורד, בנר אנכי). `scale` מקטין את כל העוביים יחד (בנרות צפופים).
  */
-export function profilePoints(segs: LSeg[], map: (v: number) => number, scale = 1): ProfilePt[] {
-  if (!segs.length) return [];
-  const ext = segs.map((g) => {
-    const a = map(g.from);
-    const b = map(g.to);
-    return { a: Math.min(a, b), b: Math.max(a, b), h: CANDLE_PX[g.level] / 2 };
-  });
-  const t0 = Math.min(...ext.map((e) => e.a));
-  const t1 = Math.max(...ext.map((e) => e.b));
-  const widths = ext.map((e) => e.b - e.a).sort((x, y) => x - y);
-  const med = Math.max(widths[Math.floor(widths.length / 2)], 1e-6);
-  const sigma = med * PROFILE_SOFTNESS;
-  const lo = CANDLE_PX[1] / 2;
-  const hmax = Math.max(...ext.map((e) => e.h));
-  const span = Math.max(t1 - t0, 1e-6);
-  const n = Math.min(80, Math.max(16, Math.ceil(span / (med / 2))));
-  const taper = med * 0.5;
-  const raw: ProfilePt[] = [];
-  for (let k = 0; k <= n; k++) {
-    const t = t0 + (span * k) / n;
-    let num = 0;
-    let den = 0;
-    for (const e of ext) {
-      const mass = normalCdf((e.b - t) / sigma) - normalCdf((e.a - t) / sigma);
-      num += mass * e.h;
-      den += mass;
-    }
-    let h = den > 1e-12 ? num / den : lo;
-    // הקצוות מתחדדים לעובי הדק
-    const d = Math.min(t - t0, t1 - t) / taper;
-    if (d < 1) h = lo + (h - lo) * (d * d * (3 - 2 * d));
-    raw.push({ t, h });
+export function squareRuns(segs: LSeg[], map: (v: number) => number, scale = 1): SquareRun[] {
+  const out: (SquareRun & { level: Level })[] = [];
+  const ordered = segs
+    .map((g) => {
+      const a = map(g.from);
+      const b = map(g.to);
+      return { a: Math.min(a, b), b: Math.max(a, b), level: g.level };
+    })
+    .sort((x, y) => x.a - y.a);
+  for (const g of ordered) {
+    const last = out[out.length - 1];
+    if (last && last.level === g.level) last.b = g.b;
+    else out.push({ a: g.a, b: g.b, half: (CANDLE_PX[g.level] / 2) * scale, filled: g.level === 1, level: g.level });
   }
-  const smax = Math.max(...raw.map((p) => p.h));
-  const stretch = smax > lo + 1e-9 ? (hmax - lo) / (smax - lo) : 1;
-  return raw.map((p) => ({ t: p.t, h: (lo + (p.h - lo) * stretch) * scale }));
+  return out.map(({ a, b, half, filled }) => ({ a, b, half, filled }));
 }
 
 /**
- * צורת הנר כשטח סגור: הקו העליון והתחתון הם אותה עקומה חלקה (מונוטונית בין הקטעים, כך שהמעבר בין העוביים מעוגל ולא מרובע),
- * מצדי ציר שעובר ב-`mid`. `across`: "y" = נר אופקי (`t` הוא x), "x" = נר אנכי (`t` הוא y). מחזירה את תכונת `d` של path.
+ * מלבן סגור של קטע, סביב ציר ב-`mid`. המלבן מוקטן במחצית עובי המסגרת, כך שהגודל החיצוני (המסגרת כלולה) הוא בדיוק 4, 10 או 16.
+ * `across`: "y" = נר אופקי (`a` ו-`b` הם x), "x" = נר אנכי (`a` ו-`b` הם y). מחזירה את תכונת `d` של path.
  */
-export function profilePath(pts: ProfilePt[], mid: number, across: "x" | "y" = "y"): string {
-  if (pts.length === 0) return "";
+export function squarePath(run: SquareRun, mid: number, across: "x" | "y" = "y"): string {
+  const h = Math.max(run.half - SQUARE_STROKE / 2, 0.25);
   const at = (t: number, s: number) => (across === "y" ? `${f2(t)},${f2(s)}` : `${f2(s)},${f2(t)}`);
-  const upper = pts.map((p) => ({ x: p.t, y: mid - p.h }));
-  const lower = pts.map((p) => ({ x: p.t, y: mid + p.h }));
-  let d = `M${at(upper[0].x, upper[0].y)}`;
-  for (const c of monotoneCubics(upper)) d += `C${at(c.c1.x, c.c1.y)} ${at(c.c2.x, c.c2.y)} ${at(c.p.x, c.p.y)}`;
-  d += `L${at(lower[lower.length - 1].x, lower[lower.length - 1].y)}`;
-  const back = monotoneCubics(lower);
-  for (let i = back.length - 1; i >= 0; i--) d += `C${at(back[i].c2.x, back[i].c2.y)} ${at(back[i].c1.x, back[i].c1.y)} ${at(lower[i].x, lower[i].y)}`;
-  return `${d}Z`;
+  return `M${at(run.a, mid - h)}L${at(run.b, mid - h)}L${at(run.b, mid + h)}L${at(run.a, mid + h)}Z`;
 }
 
 /** קטע בנר: מ-`from` עד `to` (ביחידות הציר), ו-`count` = כמות הנתונים בו (או צפיפות, בנר שנבנה מרבעונים) */

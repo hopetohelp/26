@@ -1,6 +1,6 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { colorOf } from "../lib/colors";
-import { CANDLE_PX, levelSegs, profilePath, profilePoints, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
+import { CANDLE_PX, levelSegs, smoothPath, squarePath, squareRuns, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
 import { date, rng, seatsFmt } from "../lib/format";
 import { Segmented } from "./Choice";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
@@ -127,7 +127,7 @@ export function TrendChart({
   const profileShape = (key: string, cx: number, opacity: number) => {
     const segs = profiles.get(key) ?? [];
     if (!segs.length) return null;
-    return <path d={profilePath(profilePoints(segs, y, candleScale), cx, "x")} fill="rgb(var(--mk-range))" opacity={opacity} />;
+    return <g opacity={opacity}>{squareRuns(segs, y, candleScale).map((r, i) => <path key={i} d={squarePath(r, cx, "x")} className={r.filled ? "mk-sq mk-sq-f" : "mk-sq"} />)}</g>;
   };
   const meanR = Math.max(2.5, Math.min(SVG_MARKS.meanR, spacing * 0.35));
 
