@@ -6,7 +6,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
-import { listName, meta, results } from "../lib/data";
+import { lists2026, listName, meta, results } from "../lib/data";
 import { date, dateLong, num, seatsFmt } from "../lib/format";
 
 interface ListScenario {
@@ -55,6 +55,8 @@ interface BacktestData {
 const m = modelFile as unknown as ModelData;
 const bt = backtestFile as unknown as BacktestData;
 const sc = m.scenarios;
+/** מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר כמו בבית ובדירוג (החלטה 14, 9.10.2026) */
+const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (m.central.seats[l.id] ?? 0), 0);
 const ids = Object.keys(sc.lists).sort((a, b) => m.central.seats[b] - m.central.seats[a] || sc.lists[b].share[1] - sc.lists[a].share[1]);
 const pctTxt = (x: number) => (x >= 0.995 ? "כמעט בכל התרחישים" : x < 0.005 ? "כמעט באף תרחיש" : `ב-${Math.round(x * 100)}% מהתרחישים`);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
@@ -175,8 +177,8 @@ export default function Scenarios() {
             methodAnchor="model"
           >
             <p className="text-4xl font-extrabold tabular-nums">
-              {sc.bloc.seats[1]}
-              <span className="text-lg font-medium text-ink-soft"> מנדטים בחציון התרחישים</span>
+              {govCentral}
+              <span className="text-lg font-medium text-ink-soft"> מנדטים לפי ממוצע המודל</span>
             </p>
             <p className="text-ink-soft text-sm">
               ב-80% מהתרחישים: {sc.bloc.seats[0]}–{sc.bloc.seats[2]} · 61 ומעלה: {pctTxt(sc.bloc.atLeast61)}

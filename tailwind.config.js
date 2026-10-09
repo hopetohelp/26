@@ -17,6 +17,7 @@ export default {
         warn: { DEFAULT: v("warn"), soft: v("warn-soft") },
         frame: { DEFAULT: v("frame"), ink: v("frame-ink"), soft: v("frame-soft"), line: v("frame-line") },
         signal: { DEFAULT: v("signal"), ink: v("signal-ink") },
+        band: { DEFAULT: v("band"), ink: v("band-ink"), soft: v("band-soft") },
       },
       borderRadius: { theme: "var(--radius)" },
     },

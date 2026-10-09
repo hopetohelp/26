@@ -34,6 +34,8 @@ const modelRows: ListRow[] = Object.keys(model.scenarios.lists)
   .map((id) => ({ id, name: "", central: model.central.seats[id], lo: model.scenarios.lists[id].seats[0], hi: model.scenarios.lists[id].seats[2], pass: model.scenarios.lists[id].pass }))
   .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].share[1] - model.scenarios.lists[a.id].share[1]);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
+/** מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר כמו בבית ובדירוג (החלטה 14, 9.10.2026) */
+const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (model.central.seats[l.id] ?? 0), 0);
 
 const k25 = results[results.length - 1];
 const passing2022 = k25.lists.filter((l) => l.seats > 0).reduce((a, l) => a + l.votes, 0);
@@ -86,7 +88,7 @@ export default function Today() {
             {r1((wasted2022 / k25.valid) * 100)}%).
           </li>
           <li>
-            מפלגות הממשלה היוצאת: {sc.bloc.seats[1]} מנדטים בחציון התרחישים, ובין {sc.bloc.seats[0]} ל-{sc.bloc.seats[2]} ב-80% מהם.
+            מפלגות הממשלה היוצאת: {govCentral} מנדטים לפי ממוצע המודל, ובין {sc.bloc.seats[0]} ל-{sc.bloc.seats[2]} ב-80% מהתרחישים.
           </li>
         </ul>
         <p className="mt-3">
