@@ -23,7 +23,8 @@ export interface RangeRowData {
 /**
  * גרפי הבית (הכרעת בעלים 9.10.2026) בשפת הציור האחידה (`src/lib/chartLanguage.ts`): לוח 120 המושבים, דירוג הרשימות
  * (נר = טווח, שעוביו משתנה לפי כמה תרחישים נותנים כל ערך; עיגול מלא = ממוצע המודל) ומגמת הממשלה היוצאת (קו חלק עם סמנים ונר בסופו).
- * הטווח הוא **מלא** (הנמוך והגבוה מכל התרחישים) בכל מקום, חוץ מהמסך "תחזית ותרחישים" שבו הוא 80%. הצבעים בטוקנים (`--mk-*`, `pos`, `neg`).
+ * 🔴 הטווח לפי מקור הנתון (הכרעת בעלים 9.10.2026): נר שמבוסס על **תרחישים** (הדירוג, מגמת הממשלה) הוא טווח **80%** (מ-10% עד 90%);
+ * נר שמבוסס על סקרים, השערות, נתונים או חוק הבחירות (סיכום המכונים) הוא **מלא** (הנמוך והגבוה). הצבעים בטוקנים (`--mk-*`, `pos`, `neg`).
  * כל גרף מקבל מנדטים ממספר אחד: `buildHome` ב-`src/lib/home.ts`.
  */
 const W = 2.2;
@@ -147,28 +148,26 @@ function Axis({ axisMax }: { axisMax: number }) {
 /** מקסימום ציר המנדטים: 30 לפחות, ומכפלה של 10 מעל הטווח הגבוה ביותר */
 export const axisMaxOf = (rows: { hi: number }[]) => Math.max(30, Math.ceil(Math.max(...rows.map((r) => r.hi), 0) / 10) * 10);
 
-/** רשימה מהנתונים הביתיים ⇐ שורה בטווח המבוקש: מלא (ברירת המחדל) או 80%, עם קטעי הנר מההתפלגות של כל התרחישים */
-export function rangeRow(r: HomeRow, range: "full" | "p80"): RangeRowData {
-  const lo = range === "p80" ? r.lo : r.fullLo;
-  const hi = range === "p80" ? r.hi : r.fullHi;
-  const all = r.hist.length ? intSegs(r.hist) : [{ from: lo, to: hi, count: 1 }];
-  return { id: r.id, name: r.name, central: r.central, lo, hi, pass: r.pass, segs: range === "p80" ? clipSegs(all, lo, hi) : all };
+/** רשימה מהנתונים הביתיים ⇐ שורה בטווח 80% מהתרחישים, עם קטעי הנר מההתפלגות של כל התרחישים, חתוכה לטווח */
+export function rangeRow(r: HomeRow): RangeRowData {
+  const all = r.hist.length ? intSegs(r.hist) : [{ from: r.lo, to: r.hi, count: 1 }];
+  return { id: r.id, name: r.name, central: r.central, lo: r.lo, hi: r.hi, pass: r.pass, segs: clipSegs(all, r.lo, r.hi) };
 }
 
 /**
  * כל הרשימות: ציר פעם אחת בראש (0 משמאל), שורה לרשימה, וקו אחוז החסימה שמפריד את "על הסף".
  * רכיב אחד לבית, ל"המצב היום" ול"תרחישים" (החלטה 10, 9.10.2026).
- * `range`: "full" (ברירת המחדל) = הנמוך והגבוה מכל התרחישים, בבית ובמצב היום; "p80" = טווח 80% מהתרחישים, רק במסך "תחזית ותרחישים" (הכרעת בעלים 9.10.2026).
+ * הטווח הוא תמיד 80% מהתרחישים (מ-10% עד 90%), כי כל הדירוג מבוסס על תרחישים (הכרעת בעלים 9.10.2026).
  * עובי הנר בכל קטע: כמה תרחישים נותנים לרשימה את הערך הזה, ביחס לקטע העמוס ביותר בכל הדירוג.
  */
-export function Ranking({ home, range = "full", meanLabel = "ממוצע המודל" }: { home: HomeData; range?: "full" | "p80"; meanLabel?: string }) {
-  const safe = home.safe.map((r) => rangeRow(r, range));
-  const edge = home.edge.map((r) => rangeRow(r, range));
+export function Ranking({ home, meanLabel = "ממוצע המודל" }: { home: HomeData; meanLabel?: string }) {
+  const safe = home.safe.map((r) => rangeRow(r));
+  const edge = home.edge.map((r) => rangeRow(r));
   const below = home.below;
   const axisMax = axisMaxOf([...safe, ...edge]);
   const levels = levelSegs([...safe, ...edge].map((r) => r.segs));
   const lvOf = (i: number) => levels[i];
-  const rangeLabel = range === "p80" ? "טווח 80% מהתרחישים" : "טווח מלא: הנמוך והגבוה מכל התרחישים";
+  const rangeLabel = "טווח 80% מהתרחישים: בלי 10% הנמוכים ו-10% הגבוהים ביותר";
   return (
     <>
       <RankLegend meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה תרחישים נותנים לרשימה ערך כזה" withPass={edge.length > 0} />
@@ -214,12 +213,18 @@ export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { 
   );
 }
 
+/** קטעי הנר של סכום הממשלה היוצאת: ההתפלגות בכל התרחישים, חתוכה לטווח 80% (תרחישים ⇐ 80%) */
+export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHist">): Seg[] {
+  const { blocLo: lo, blocHi: hi, blocHist } = home;
+  return clipSegs(blocHist.length ? intSegs(blocHist) : [{ from: lo, to: hi, count: 1 }], lo, hi);
+}
+
 /**
  * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, ובסופו עיגול מלא אדום (הממוצע היום)
- * ונר של הטווח המלא ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
+ * ונר של טווח 80% ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
  */
 export function GovTrend({ home }: { home: HomeData }) {
-  const { series, blocFullLo: lo, blocFullHi: hi, blocHist } = home;
+  const { series, blocLo: lo, blocHi: hi } = home;
   if (series.length < 2) return null;
   const X0 = 3, X1 = 86, YT = 6, YB = 84;
   const vals = series.map((s) => s.v);
@@ -235,7 +240,7 @@ export function GovTrend({ home }: { home: HomeData }) {
   const grid = [50, 55].filter((v) => v > vmin && v < vmax);
   const min = Math.min(...vals);
   const max = Math.max(...vals);
-  const profile = levelSegs([blocHist.length ? intSegs(blocHist) : [{ from: lo, to: hi, count: 1 }]])[0];
+  const profile = levelSegs([blocRangeSegs(home)])[0];
   const line = { vectorEffect: "non-scaling-stroke" as const };
   const label = "absolute -translate-x-1/2 -translate-y-1/2 text-sm font-bold leading-none whitespace-nowrap";
   return (
@@ -246,7 +251,7 @@ export function GovTrend({ home }: { home: HomeData }) {
           preserveAspectRatio="none"
           className="block w-full h-40"
           role="img"
-          aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב; בטווח המלא ליום הבחירות: ${lo} עד ${hi}`}
+          aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב; בטווח 80% ליום הבחירות: ${lo} עד ${hi}`}
         >
           {grid.map((v) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className="stroke-paper-line" strokeWidth={1} {...line} />)}
           <line x1={X0} x2={100} y1={Y(MAJORITY)} y2={Y(MAJORITY)} className="stroke-ink" strokeWidth={1.5} strokeDasharray="5 4" {...line} />
@@ -269,7 +274,7 @@ export function GovTrend({ home }: { home: HomeData }) {
           { kind: "dot", text: "נקודה על הקו" },
           { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
           { kind: "mean", text: "הממוצע היום" },
-          { kind: "candle", text: "טווח מלא ליום הבחירות: הנמוך והגבוה מכל התרחישים" },
+          { kind: "candle", text: "טווח 80% ליום הבחירות: בלי 10% הנמוכים ו-10% הגבוהים ביותר מהתרחישים" },
         ]}
         thickness="כמה תרחישים נותנים לממשלה היוצאת סכום כזה"
       />

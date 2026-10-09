@@ -11,7 +11,7 @@ import { HOME } from "../lib/homeData";
 import type { DevInput } from "../lib/deviation";
 
 const dev: DevInput[] = [{ id: "a", name: "א", estimate: 8.5, min: 8, max: 9, actual: 11, n: 3, values: [8, 9, 9] }];
-const rows = [{ id: "a", name: "א", before: 10, now: 12, from: "א", hist: { start: 11, step: 0.25, counts: [1, 3, 1] } }];
+const rows = [{ id: "a", name: "א", before: 10, now: 12, from: "א", hist: { start: 11, step: 0.25, counts: [1, 3, 1] }, range: [11, 11.75] as [number, number] }];
 const series = [{ id: "a", name: "א", points: [{ t: 0, v: 5, lo: 4, hi: 6, n: 3, xs: [4, 5, 6] }, { t: 86_400_000 * 10, v: 6, lo: 5, hi: 7, n: 3, xs: [5, 6, 7] }] }];
 const stat = { list: "likud", n: 3, mean: 30, min: 25, max: 35, median: 30, p25: 28, p75: 32 };
 

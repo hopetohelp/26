@@ -3,7 +3,8 @@ import { TOTAL } from "./fillAll";
 /**
  * נתוני מסך הבית. הכול נגזר מ-`model.json` ומהסקרים האחרונים: אין כאן חישוב חדש.
  * 🔴 מספר אחד לכל עובדה (הכרעת בעלים 9.10.2026, החלטה 14 "ליישר"): מנדטי הממשלה היוצאת בכותרת, בלוח ובמגמה
- * הם סכום הממוצעים של הרשימות (`central`), אותו סכום שבדירוג. הטווח (`blocLo`–`blocHi`) הוא טווח 80% מהתרחישים.
+ * הם סכום הממוצעים של הרשימות (`central`), אותו סכום שבדירוג. הטווח (`lo`–`hi`, `blocLo`–`blocHi`) הוא טווח 80% מהתרחישים.
+ * 🔴 כלל הטווחים (הכרעת בעלים 9.10.2026): כל טווח שמבוסס על תרחישים הוא 80% (מ-10% עד 90%); כל טווח שמבוסס על סקרים, השערות, נתונים או חוק הבחירות הוא מלא (הנמוך והגבוה).
  */
 export interface HomeModel {
   asof: string;
@@ -27,11 +28,8 @@ export interface HomeRow {
   hi: number;
   /** שיעור התרחישים שבהם הרשימה עוברת את אחוז החסימה (0 עד 1) */
   pass: number;
-  /** התפלגות המנדטים בכל התרחישים: `hist[v]` = בכמה תרחישים הרשימה קיבלה v מנדטים. מזה נבנים הטווח המלא ועובי הנר בכל קטע */
+  /** התפלגות המנדטים בכל התרחישים: `hist[v]` = בכמה תרחישים הרשימה קיבלה v מנדטים. מזה נבנה עובי הנר בכל קטע (נחתך לטווח 80%) */
   hist: number[];
-  /** הטווח המלא: הנמוך והגבוה מכל התרחישים */
-  fullLo: number;
-  fullHi: number;
 }
 
 export interface HomeData {
@@ -43,9 +41,7 @@ export interface HomeData {
   /** טווח 80% של הגוש (מ-10% עד 90%) */
   blocLo: number;
   blocHi: number;
-  /** הטווח המלא של הגוש והתפלגותו */
-  blocFullLo: number;
-  blocFullHi: number;
+  /** התפלגות סכום הגוש בכל התרחישים (לעובי הנר, נחתך לטווח 80%) */
   blocHist: number[];
   /** מעל הקו: עוברות בבירור */
   safe: HomeRow[];
@@ -61,15 +57,6 @@ export interface HomeData {
 export const EDGE_MIN = 0.005;
 export const EDGE_MAX = 0.995;
 
-/** הנמוך והגבוה בהתפלגות (הערך הראשון והאחרון שיש בו תרחישים); בלי התפלגות — הגיבוי שניתן */
-export function histRange(hist: number[], lo: number, hi: number): [number, number] {
-  const first = hist.findIndex((c) => c > 0);
-  if (first < 0) return [lo, hi];
-  let last = hist.length - 1;
-  while (last > first && hist[last] === 0) last--;
-  return [first, last];
-}
-
 export function buildHome(
   model: HomeModel,
   opts: { govIds: string[]; nameOf: (id: string) => string; sure: (id: string) => boolean },
@@ -78,9 +65,7 @@ export function buildHome(
   const rows: HomeRow[] = Object.keys(model.scenarios.lists)
     .map((id) => {
       const l = model.scenarios.lists[id];
-      const hist = l.seatsHist ?? [];
-      const [fullLo, fullHi] = histRange(hist, l.seats[0], l.seats[2]);
-      return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass, hist, fullLo, fullHi };
+      return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass, hist: l.seatsHist ?? [] };
     })
     .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].seatsMean - model.scenarios.lists[a.id].seatsMean);
 
@@ -92,8 +77,6 @@ export function buildHome(
   const govSum = (seats: Record<string, number>) => govIds.reduce((a, id) => a + (seats[id] ?? 0), 0);
   const gov = govSum(model.central.seats);
   const series = model.trend.map((t) => ({ date: t.date, v: govSum(t.seats) }));
-  const blocHist = model.scenarios.bloc.seatsHist ?? [];
-  const [blocFullLo, blocFullHi] = histRange(blocHist, model.scenarios.bloc.seats[0], model.scenarios.bloc.seats[2]);
 
   return {
     asOf: model.asof,
@@ -103,9 +86,7 @@ export function buildHome(
     other: TOTAL - gov,
     blocLo: model.scenarios.bloc.seats[0],
     blocHi: model.scenarios.bloc.seats[2],
-    blocFullLo,
-    blocFullHi,
-    blocHist,
+    blocHist: model.scenarios.bloc.seatsHist ?? [],
     safe,
     edge,
     below,

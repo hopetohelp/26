@@ -12,7 +12,7 @@ import { Segmented } from "../components/Choice";
 import modelFile from "../data/model.json";
 import { listName } from "../lib/data";
 import DumbbellChart from "../components/dumbbellChart";
-import { diffText as diff, histBounds, r1, type DumbbellRow, type ShareHist } from "../lib/dumbbell";
+import { diffText as diff, r1, type DumbbellRow, type ShareHist } from "../lib/dumbbell";
 import { dateLong, num, rng } from "../lib/format";
 
 interface Family {
@@ -26,7 +26,7 @@ interface Family {
   shareNow: number;
   /** null: מחנה ששיניתם ידנית — לטווח התרחישים נדרש חישוב בצינור, ולכן אינו מוצג */
   shareRange: number[] | null;
-  /** התפלגות האחוז בכל התרחישים (לטווח המלא ולעובי הנר) */
+  /** התפלגות האחוז בכל התרחישים (לעובי הנר, נחתכת לטווח 80%) */
   shareHist: ShareHist | null;
   seatsNow: number;
   seatsRange: number[] | null;
@@ -110,6 +110,7 @@ const toRow = (f: Family): DumbbellRow => ({
   before: f.share2022,
   now: f.shareNow,
   hist: f.shareHist,
+  range: f.shareRange ? [f.shareRange[0], f.shareRange[2]] : null,
 });
 
 export default function Changes() {
@@ -204,7 +205,7 @@ export default function Changes() {
           methodAnchor="changes"
         >
           <ChartWithTable
-            summary="עיגול גדול ריק כתום: 2022 · עיגול מלא אדום: היום לפי ממוצע המודל · נר כחול: הטווח המלא של כל התרחישים, עבה היכן שרוב התרחישים. המספר מימין: השינוי בנקודות אחוז."
+            summary="עיגול ריק כתום: 2022 · עיגול מלא אדום: היום לפי ממוצע המודל · נר כחול: טווח 80% מהתרחישים, עבה היכן שרוב התרחישים. המספר מימין: השינוי בנקודות אחוז."
             chart={<DumbbellChart rows={alt.families.map(toRow)} />}
             table={
               <table className="w-full text-sm">
@@ -216,7 +217,7 @@ export default function Changes() {
                     <th scope="col" className="pe-3">2022 %</th>
                     <th scope="col" className="pe-3">2022 מנדטים</th>
                     <th scope="col" className="pe-3">היום %</th>
-                    <th scope="col" className="pe-3">טווח מלא</th>
+                    <th scope="col" className="pe-3">טווח 80%</th>
                     <th scope="col" className="pe-3">מנדטים היום</th>
                     <th scope="col">שינוי (נק')</th>
                   </tr>
@@ -229,7 +230,7 @@ export default function Changes() {
                       <td className="pe-3 tabular">{r1(f.share2022)}</td>
                       <td className="pe-3 tabular">{f.seats2022}</td>
                       <td className="pe-3 tabular">{r1(f.shareNow)}</td>
-                      <td className="pe-3 tabular whitespace-nowrap">{f.shareHist ? rng(r1(histBounds(f.shareHist)[0]), r1(histBounds(f.shareHist)[1])) : "—"}</td>
+                      <td className="pe-3 tabular whitespace-nowrap">{f.shareRange ? rng(r1(f.shareRange[0]), r1(f.shareRange[2])) : "—"}</td>
                       <td className="pe-3 tabular whitespace-nowrap">{f.seatsNow}{f.seatsRange ? ` (${rng(f.seatsRange[0], f.seatsRange[2])})` : ""}</td>
                       <td className="tabular" dir="ltr">{diff(f.shareNow - f.share2022)}</td>
                     </tr>

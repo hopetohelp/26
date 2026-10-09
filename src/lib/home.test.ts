@@ -58,12 +58,13 @@ describe("buildHome", () => {
     expect(h.edge.map((r) => r.id)).toEqual(["e", "f", "h"]);
   });
 
-  it("הטווח המלא הוא הנמוך והגבוה מכל התרחישים, והוא רחב מטווח 80%", () => {
+  it("הטווח של רשימה ושל הגוש הוא טווח 80% מהתרחישים (כלל הטווחים: תרחישים ⇐ 80%), וההתפלגות רחבה ממנו", () => {
     const a = h.safe.find((r) => r.id === "a")!;
-    expect([a.fullLo, a.fullHi]).toEqual([30, 46]);
-    expect(a.fullLo).toBeLessThanOrEqual(a.lo);
-    expect(a.fullHi).toBeGreaterThanOrEqual(a.hi);
-    expect([h.blocFullLo, h.blocFullHi]).toEqual([44, 60]);
+    expect([a.lo, a.hi]).toEqual([35, 45]);
+    expect([h.blocLo, h.blocHi]).toEqual([46, 58]);
+    // ההתפלגות מגיעה מ-30 עד 46 (טווח מלא), והנר נחתך ל-35 עד 45
+    expect(a.hist.findIndex((c) => c > 0)).toBe(30);
+    expect(a.hist.length - 1).toBe(46);
   });
 
   it("המגמה: סכום מנדטי הממשלה היוצאת בכל יום", () => {
@@ -101,8 +102,9 @@ describe("הבית מהנתונים האמיתיים", () => {
     for (const r of [...h.safe, ...h.edge, ...h.below]) {
       expect(r.lo).toBeLessThanOrEqual(r.central);
       expect(r.hi).toBeGreaterThanOrEqual(r.central);
-      expect(r.fullLo).toBeLessThanOrEqual(r.lo);
-      expect(r.fullHi).toBeGreaterThanOrEqual(r.hi);
+      // טווח 80% בתוך ההתפלגות המלאה
+      expect(r.hist.findIndex((c) => c > 0)).toBeLessThanOrEqual(r.lo);
+      expect(r.hist.length - 1).toBeGreaterThanOrEqual(r.hi);
     }
   });
 
