@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, profilePath, profilePoints, quantileSegs, segLevel, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type LSeg, type Seg } from "./chartLanguage";
+import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, valueSegs, type LSeg, type Seg } from "./chartLanguage";
 
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
@@ -129,77 +129,48 @@ describe("נר שעוביו משתנה לאורכו: קטעים לפי כמות 
 });
 
 /** חצי העובי הדק והעבה, וציר הנר (מחצית העובי העבה) */
-const LO = CANDLE_PX[1] / 2;
-const HI = CANDLE_PX[5] / 2;
-const MID = HI;
+const MID = CANDLE_PX[5] / 2;
+const HALF_STROKE = SQUARE_STROKE / 2;
 
-describe("קו המתאר של הנר: מעבר מעוגל בין העוביים", () => {
+describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה לרמות 3 ו-5", () => {
   const segs: LSeg[] = ([1, 1, 3, 5, 5, 3, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
   const map = (v: number) => v * 100;
-  const pts = profilePoints(segs, map);
-  const hs = pts.map((p) => p.h);
+  const runs = squareRuns(segs, map);
 
-  it("מתחיל ונגמר בקצוות הנר, במיקום עולה", () => {
-    expect(pts[0].t).toBe(0);
-    expect(pts[pts.length - 1].t).toBe(800);
-    for (let i = 1; i < pts.length; i++) expect(pts[i].t).toBeGreaterThan(pts[i - 1].t);
+  it("קטעים סמוכים באותה רמה מתחברים לקטע אחד", () => {
+    expect(runs.map((r) => [r.a, r.b])).toEqual([[0, 200], [200, 300], [300, 500], [500, 600], [600, 800]]);
   });
-  it("הקצוות בעובי הדק (4), והקטע העמוס ביותר בעובי המלא (16)", () => {
-    expect(hs[0]).toBeCloseTo(CANDLE_PX[1] / 2, 6);
-    expect(hs[hs.length - 1]).toBeCloseTo(CANDLE_PX[1] / 2, 6);
-    expect(Math.max(...hs)).toBeCloseTo(CANDLE_PX[5] / 2, 6);
-    expect(Math.min(...hs)).toBeGreaterThanOrEqual(CANDLE_PX[1] / 2 - 1e-9);
+  it("רמה 1 קו מלא (4), רמות 3 ו-5 קופסה חלולה (10 ו-16)", () => {
+    expect(runs.map((r) => r.filled)).toEqual([true, false, false, false, true]);
+    expect(runs.map((r) => r.half * 2)).toEqual([4, 10, 16, 10, 4]);
   });
-  it("העובי עולה בהדרגה מהקצה אל האמצע: אין קפיצה מרובעת בין דק לעבה", () => {
-    const peak = hs.indexOf(Math.max(...hs));
-    const maxStep = Math.max(...hs.slice(1).map((h, i) => Math.abs(h - hs[i])));
-    expect(peak).toBeGreaterThan(0);
-    expect(maxStep).toBeLessThan((CANDLE_PX[5] - CANDLE_PX[1]) / 2 / 2.5);
-    // בצד העולה לעולם לא יורד (חלק, בלי נקיקים)
-    for (let i = 1; i <= peak; i++) expect(hs[i]).toBeGreaterThanOrEqual(hs[i - 1] - 1e-6);
-  });
-  it("העובי בקטע בינוני נמצא בין הדק לעבה", () => {
-    const at = (t: number) => pts.reduce((best, p) => (Math.abs(p.t - t) < Math.abs(best.t - t) ? p : best)).h;
-    expect(at(250)).toBeGreaterThan(CANDLE_PX[1] / 2 + 0.5);
-    expect(at(250)).toBeLessThan(CANDLE_PX[5] / 2 - 0.5);
+  it("אין רמת ביניים: כל קטע באחד משלושת הגדלים", () => {
+    runs.forEach((r) => expect(Object.values(CANDLE_PX)).toContain(r.half * 2));
   });
   it("הקטנה (scale) מקטינה את כל העוביים ביחד", () => {
-    const half = profilePoints(segs, map, 0.5).map((p) => p.h);
-    half.forEach((h, i) => expect(h).toBeCloseTo(hs[i] / 2, 6));
+    const half = squareRuns(segs, map, 0.5);
+    half.forEach((r, i) => expect(r.half).toBeCloseTo(runs[i].half / 2, 6));
   });
-  it("הכיוון היורד (נר אנכי) נותן את אותה צורה במיקום עולה", () => {
-    const down = profilePoints(segs, (v) => 800 - v * 100);
-    expect(down.map((p) => p.t)).toEqual(pts.map((p) => p.t));
-    down.forEach((p, i) => expect(p.h).toBeCloseTo(hs[hs.length - 1 - i], 3));
+  it("כיוון יורד (נר אנכי) נותן אותם קטעים במיקום עולה", () => {
+    const down = squareRuns(segs, (v) => 800 - v * 100);
+    expect(down.map((r) => [r.a, r.b])).toEqual(runs.map((r) => [800 - r.b, 800 - r.a]).reverse());
+    expect(down.map((r) => r.half)).toEqual(runs.map((r) => r.half).reverse());
   });
-  it("הצורה סגורה ובנויה מעקומות בזייה בשני הצדדים", () => {
-    const d = profilePath(pts, MID);
-    expect(d.startsWith(`M0,${MID - LO}C`)).toBe(true);
-    expect(d.endsWith("Z")).toBe(true);
-    expect(d.match(/C/g)).toHaveLength(2 * (pts.length - 1));
-    expect(d.match(/L/g)).toHaveLength(1);
+  it("המלבן סגור, בזוויות ישרות, והגודל החיצוני עם המסגרת בדיוק 4, 10 או 16", () => {
+    const d = squarePath(runs[2], MID);
+    expect(d).toBe(`M300,${MID - (MID - HALF_STROKE)}L500,${MID - (MID - HALF_STROKE)}L500,${MID + (MID - HALF_STROKE)}L300,${MID + (MID - HALF_STROKE)}Z`);
+    expect(d.match(/L/g)).toHaveLength(3);
+    // גובה הנתיב + עובי המסגרת = הגודל המלא
+    expect(2 * (MID - HALF_STROKE) + SQUARE_STROKE).toBe(CANDLE_PX[5]);
   });
-  it("מתאר סימטרי סביב הציר ואינו חורג מהעובי העבה ביותר", () => {
-    const d = profilePath(pts, MID);
-    const ys = d.replace(/[MCLZ]/g, " ").split(/[ ,]+/).filter(Boolean).map(Number).filter((_, i) => i % 2 === 1);
-    expect(Math.min(...ys)).toBeGreaterThanOrEqual(-1e-6);
-    expect(Math.max(...ys)).toBeLessThanOrEqual(2 * MID + 1e-6);
-    expect(Math.min(...ys)).toBeCloseTo(2 * MID - Math.max(...ys), 1);
+  it("נר אנכי מחליף בין הצירים", () => {
+    expect(squarePath({ a: 10, b: 50, half: 8, filled: false }, MID, "x").startsWith(`M${MID - (8 - HALF_STROKE)},10L`)).toBe(true);
   });
-  it("נר אנכי מחליף בין הצירים; בלי קטעים: ריק", () => {
-    expect(profilePath(pts, MID, "x").startsWith(`M${MID - LO},0C`)).toBe(true);
-    expect(profilePath([], MID)).toBe("");
-    expect(profilePoints([], map)).toEqual([]);
+  it("בלי קטעים: ריק; קטע בודד: קופסה אחת", () => {
+    expect(squareRuns([], map)).toEqual([]);
+    expect(squareRuns([{ from: 0, to: 2, level: 5 }], map)).toEqual([{ a: 0, b: 200, half: 8, filled: false }]);
   });
-  it("קטע בודד עבה מצויר כציר סימטרי עם קצוות דקים", () => {
-    const one = profilePoints([{ from: 0, to: 2, level: 5 }], map).map((p) => p.h);
-    expect(one[0]).toBeCloseTo(LO, 6);
-    expect(one[one.length - 1]).toBeCloseTo(LO, 6);
-    expect(Math.max(...one)).toBeCloseTo(HI, 6);
-    expect(one[Math.floor(one.length / 2)]).toBeCloseTo(HI, 0);
-  });
-  it("כל הקטעים דקים: נר דק בעובי אחד", () => {
-    const thin = profilePoints(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map).map((p) => p.h);
-    thin.forEach((h) => expect(h).toBeCloseTo(LO, 6));
+  it("כל הקטעים דקים: קו מלא אחד", () => {
+    expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 2, filled: true }]);
   });
 });
