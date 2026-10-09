@@ -74,7 +74,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
-      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
+      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf} · מתעדכן אוטומטית כל דקה</p>}
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />
