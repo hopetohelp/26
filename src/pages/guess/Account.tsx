@@ -7,6 +7,7 @@ import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
 import ErrorReport from "../../components/ErrorReport";
+import GoogleButton from "./GoogleButton";
 
 const PW_MIN = 6;
 const PW_MAX = 128;
@@ -215,6 +216,12 @@ export function AuthForm({
           <p className="text-sm text-ink">בלי שם ובלי סיסמה. אחרי השמירה אפשר להוסיף שם משתמש, כדי לחזור להשערה מכל מכשיר.</p>
           {g.view}
         </section>
+        <section className="space-y-2 border-t border-paper-line pt-3" aria-label="כניסה עם Google">
+          <p className="text-sm font-bold">או: המשך עם Google — כדי לחזור להשערה מכל מכשיר</p>
+          <GoogleButton session={session} onDone={onDone} disabled={!agree} />
+          {!agree && <p className="text-xs text-ink">הכפתור יופיע אחרי סימון "הבנתי".</p>}
+          <p className="text-xs text-ink">מ-Google לא נשמר מייל ולא שם, רק מזהה פנימי.</p>
+        </section>
         <details className="border-t border-paper-line pt-3" open={initial === "login"}>
           <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">כבר יש לי חשבון, או: הרשמה עם שם משתמש</summary>
           <div className="pt-2">{accountForm}</div>
@@ -290,6 +297,7 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
       <section className="bg-paper-card border-2 border-warn rounded-theme p-4 md:p-5 space-y-3">
         <h3 className="text-xl font-display leading-tight">נשמרתם בלי משתמש</h3>
         <p className="text-sm text-ink">אי אפשר לשחזר את ההשערה אם תחליפו מכשיר או תמחקו נתוני דפדפן. הוסיפו שם משתמש וסיסמה כדי להישאר מחוברים מכל מכשיר.</p>
+        <GoogleButton session={session} onDone={() => void session.refresh()} />
         <ClaimForm session={session} />
       </section>
     );
@@ -299,6 +307,8 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
     <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-3">
       <h3 className="text-xl font-display leading-tight">חשבון</h3>
       <p className="text-sm text-ink">הרשמה בשם משתמש וסיסמה (בלי שם אמיתי ובלי מייל) מאפשרת לחזור להשערה מכל מכשיר. עד אז הטיוטות נשמרות רק בדפדפן הזה.</p>
+      <GoogleButton session={session} />
+      <p className="text-xs text-ink">בכניסה מאשרים שהגרסה האחרונה שלכם נכנסת לממוצע האנונימי של הגולשים. מ-Google לא נשמר מייל ולא שם.</p>
       <AuthForm session={session} />
     </section>
   );

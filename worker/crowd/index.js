@@ -11,6 +11,7 @@ import { personalTotals } from "./lib/blocDefinitions.js";
  * cron כל שעה: ניקוי מונים ישנים, זיהוי חריגות, צבירה ופרסום.
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
+import { verifyGoogle } from "./lib/google.js";
 import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
 import { validateSave, validateCamps, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
@@ -277,6 +278,35 @@ const routes = {
       sess,
     ]);
     return { token, link };
+  },
+
+  // כניסה עם Google (הכרעת בעלים 8.10.2026). Google מאמת את הגולש בדפדפן, ולכן הדפדפן יכול להמשיך עם האסימון שיצר (body.token)
+  // גם כשתשובת השרת נחסמת בדרך — אין סיכון של סיסמה שגויה. נשמר רק גיבוב של sub, בלי מייל ובלי שם.
+  // חשבון Google קיים ⇐ סשן חדש לאותו משתתף · אחרת: מחובר כבר (למשל אורח) ⇐ Google מתווסף אליו · אחרת משתתף חדש.
+  "POST /auth/google": async ({ env, request, now, body }) => {
+    const sub = await verifyGoogle(env, body?.credential, now);
+    if (!sub) throw new HttpError(401, "bad_google");
+    const clientToken = isClientToken(body?.token) ? body.token : undefined;
+    if (clientToken && (await authenticate(env, clientToken, now))) return { token: clientToken };
+    const gh = await sha256("google|" + sub);
+    const found = await env.DB.prepare("SELECT participant FROM credentials WHERE kind = 'google' AND google_sub = ?").bind(gh).first();
+    if (found) {
+      const [sess, token] = await newSession(env, found.participant, now, clientToken);
+      await env.DB.batch([sess]);
+      return { token };
+    }
+    const current = await authenticate(env, bearer(request), now);
+    const hasGoogle = current && (await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(current.participant).first());
+    let stmts = [], participant;
+    if (current && !hasGoogle) participant = current.participant;
+    else [stmts, participant] = await createParticipant(env, request, now);
+    const [sess, token] = await newSession(env, participant, now, clientToken);
+    await env.DB.batch([
+      ...stmts,
+      env.DB.prepare("INSERT INTO credentials (participant, kind, google_sub, created_at) VALUES (?, 'google', ?, ?)").bind(participant, gh, iso(now)),
+      sess,
+    ]);
+    return { token };
   },
 
   // הוספת שם משתמש וסיסמה למשתתף שנשמר בלי משתמש: הסשן הנוכחי נשאר, ונוצר קישור אישי לשחזור.
