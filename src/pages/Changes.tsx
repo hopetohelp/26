@@ -8,6 +8,7 @@ import { ensureSession, useSession } from "./guess/useCrowd";
 import { Link } from "react-router-dom";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
+import { Segmented } from "../components/Choice";
 import modelFile from "../data/model.json";
 import { listName } from "../lib/data";
 import { colorOf } from "../lib/colors";
@@ -184,20 +185,13 @@ export default function Changes() {
           {editing && view !== "party" ? "סגירת עריכת המחנות" : customized ? "עריכת הרכב המחנות (שונה)" : "עריכת הרכב המחנות"}
         </button>
       </div>
-      <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-3">
-        {([["blocs", "לפי הגושים שלי"], ["party", "לפי המפלגה"], ["camp", "לפי המחנה"]] as const).map(([id, name]) => (
-          <button
-            key={id}
-            type="button"
-            role="radio"
-            aria-checked={view === id}
-            onClick={() => setView(id)}
-            className={`min-h-[44px] px-4 rounded-full text-sm font-bold border ${view === id ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
-          >
-            {name}
-          </button>
-        ))}
-      </div>
+      <Segmented
+        label="השוואה לפי"
+        value={view}
+        onChange={setView}
+        className="mb-3"
+        options={[{ id: "blocs", label: "לפי הגושים שלי" }, { id: "party", label: "לפי המפלגה" }, { id: "camp", label: "לפי המחנה" }]}
+      />
       <p className="text-base leading-relaxed mb-3">
         {view === "blocs" ? "הגושים שלכם, 2022 מול היום. רשימות 2022 משויכות לפי המחנות (ראו \"לפי המחנה\")." : alt.desc}
       </p>

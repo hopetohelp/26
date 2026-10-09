@@ -53,7 +53,6 @@ export function Badge({ tone = "neutral", children }: { tone?: "neutral" | "ok" 
   return <span className={`inline-block text-xs border rounded-full px-2 py-0.5 ${cls}`}>{children}</span>;
 }
 
-/** כרטיס מקופל: תוכן משני שנפתח בלחיצה (מבנה האתר — שכבה ראשונה קצרה, עומק במרחק לחיצה) */
 /** שורת קיפול: קווים עליון ותחתון (בלי קופסה), כותרת 16px. קיפולים רצופים חולקים קו אחד. */
 export function Fold({ title, children, open = false }: { title: ReactNode; children: ReactNode; open?: boolean }) {
   return (
