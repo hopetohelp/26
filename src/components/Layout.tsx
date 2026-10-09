@@ -3,7 +3,6 @@ import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import FreezeBanner from "./FreezeBanner";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
@@ -283,7 +282,6 @@ export default function Layout() {
         <Masthead theme={theme} />
         <DesktopNav theme={theme} unread={unread} />
       </header>
-      <FreezeBanner />
       <AccessCard />
       <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
         <PersonalBlocsProvider><PageErrorBoundary><Outlet /></PageErrorBoundary></PersonalBlocsProvider>

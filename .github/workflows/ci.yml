@@ -27,8 +27,6 @@ jobs:
           AS_OF=$(python3 -c "import json;print(json.load(open('src/data/meta.json'))['dataAsOf'])")
           BUILD_TIME="$AS_OF" python3 pipeline/build_data.py
           git diff --exit-code -- src/data
-      - name: הקפאה לפי 16ה(ח) — שעון מזויף
-        run: python3 pipeline/test_freeze.py
       - name: המודל — מנוע מהיר זהה למנוע המחקרי, בדיקת עבר עדכנית
         run: python3 pipeline/test_model.py
       - name: מודל החיזוי — מדדים, מגמה, ושלמות יומן ההרצות
