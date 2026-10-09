@@ -44,8 +44,8 @@ function patternText(r: (typeof families)[number]): string | null {
   const n = r.cells.length;
   const avg = seatsFmt(Math.abs(Math.round(r.meanDiff * 10) / 10));
   const [k, dir] = r.under >= r.over ? [r.under, "גבוהה"] : [r.over, "נמוכה"];
-  if (k === n) return `${r.name}: בכל ${n} המערכות התוצאה בפועל הייתה ${dir} מחציון הסקרים (בממוצע ב-${avg} מנדטים).`;
-  if (k === n - 1) return `${r.name}: ב-${k} מתוך ${n} המערכות התוצאה בפועל הייתה ${dir} מחציון הסקרים.`;
+  if (k === n) return `${r.name}: בכל ${n} המערכות התוצאה בפועל הייתה ${dir} מממוצע הסקרים (בפער ממוצע של ${avg} מנדטים).`;
+  if (k === n - 1) return `${r.name}: ב-${k} מתוך ${n} המערכות התוצאה בפועל הייתה ${dir} מממוצע הסקרים.`;
   return null;
 }
 
@@ -89,7 +89,7 @@ export default function Accuracy() {
       
       <Columns>
       <PageTitle inColumns
-        lead={`מה אמרו הסקרים ערב כל אחת מחמש מערכות הבחירות האחרונות, ומה יצא בפועל. החישוב זהה לעמוד "המצב היום": הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני הבחירות, והחציון ביניהם.`}
+        lead={`מה אמרו הסקרים ערב כל אחת מחמש מערכות הבחירות האחרונות, ומה יצא בפועל. החישוב זהה לעמוד "המצב היום": הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני הבחירות, והממוצע ביניהם.`}
       >
         דיוק הסקרים בעבר
       </PageTitle>
@@ -107,15 +107,15 @@ export default function Accuracy() {
         <p className="text-sm text-ink-soft mb-3">הכנסת ה-{c.knesset} ({c.label}) · {s.snapshot.length} מכונים · סך הפער {seatsFmt(s.gap)} מנדטים</p>
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
           <ChartWithTable
-            summary="נקודה = התוצאה הרשמית, פס = הנמוך והגבוה בין הסקרים, והכול ביחס לחציון הסקרים."
+            summary="נקודה = התוצאה הרשמית, פס = הנמוך והגבוה בין הסקרים, והכול ביחס לממוצע הסקרים."
             chart={<DeviationChart rows={s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n }))} />}
             table={
               <table className="text-sm w-full">
-                <caption className="sr-only">לכל רשימה: חציון הסקרים, הטווח, התוצאה וההפרש</caption>
+                <caption className="sr-only">לכל רשימה: ממוצע הסקרים, הטווח, התוצאה וההפרש</caption>
                 <thead>
                   <tr className="text-right border-b border-paper-line">
                     <th scope="col" className="py-1 pe-3">רשימה</th>
-                    <th scope="col" className="pe-3">חציון הסקרים</th>
+                    <th scope="col" className="pe-3">ממוצע הסקרים</th>
                     <th scope="col" className="pe-3">טווח</th>
                     <th scope="col" className="pe-3">עברה את הסף אצל</th>
                     <th scope="col" className="pe-3">בפועל</th>
@@ -155,7 +155,7 @@ export default function Accuracy() {
           kind="סיכום סקרים"
           source={SOURCE}
           asOf={`מהגשת הרשימות (${date(first)}) ועד הבחירות`}
-          assumption="בכל יום: חציון הסקרים מ-7 הימים שקדמו לו, לפחות 3 סקרים. מעוין = התוצאה ביום הבחירות."
+          assumption="בכל יום: ממוצע הסקרים מ-7 הימים שקדמו לו, לפחות 3 סקרים. מעוין = התוצאה ביום הבחירות."
           methodAnchor="accuracy"
         >
           <ChartWithTable
@@ -163,7 +163,7 @@ export default function Accuracy() {
             chart={<TrendChart series={series} dots={dots} markers={markers} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
             table={
               <table className="text-sm w-full">
-                <caption className="sr-only">לכל רשימה: חציון הסקרים בתחילת המערכה ובסופה, והתוצאה</caption>
+                <caption className="sr-only">לכל רשימה: ממוצע הסקרים בתחילת המערכה ובסופה, והתוצאה</caption>
                 <thead>
                   <tr className="text-right border-b border-paper-line">
                     <th scope="col" className="py-1 pe-3">רשימה</th>
@@ -278,8 +278,8 @@ export default function Accuracy() {
           </Note>
         </details>
       </Card>
-      <PersonalBlocs title="הגושים שלי: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: חציוני מפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
-        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום חציוני מפלגות לפני ${c.label}; אינו חציון הגוש`, asOf: eveText },
+      <PersonalBlocs title="הגושים שלי: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: ממוצעי המפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
+        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום ממוצעי המפלגות לפני ${c.label}`, asOf: eveText },
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
       ]} />
       <Fold title="חמש מערכות במבט אחד">
@@ -287,7 +287,7 @@ export default function Accuracy() {
           kind="סיכום סקרים"
           source={SOURCE}
           asOf="ערב כל מערכת בחירות"
-          assumption='"סך הפער" = סכום ההפרשים בין חציון הסקרים לתוצאה, על פני כל הרשימות. הגוש = הרשימות שהמליצו על נתניהו לנשיא המדינה אחרי אותן בחירות — עובדה, לא סיווג.'
+          assumption='"סך הפער" = סכום ההפרשים בין ממוצע הסקרים לתוצאה, על פני כל הרשימות. הגוש = הרשימות שהמליצו על נתניהו לנשיא המדינה אחרי אותן בחירות — עובדה, לא סיווג.'
           methodAnchor="accuracy"
         >
           <ul className="md:hidden space-y-3 text-sm">
@@ -344,7 +344,7 @@ export default function Accuracy() {
           </div>
         </Explained>
         <Note>
-          הפרש עם מינוס = הסקרים נתנו פחות ממה שהתקבל בפועל. "טעות בשאלת אחוז החסימה" = בחציון הסקרים הרשימה עברה ובפועל לא, או
+          הפרש עם מינוס = הסקרים נתנו פחות ממה שהתקבל בפועל. "טעות בשאלת אחוז החסימה" = רוב הסקרים נתנו לרשימה מנדטים ובפועל לא עברה, או
           להפך — כלומר כל הקולות שלה "נשרפו" בניגוד לתמונה שהציגו הסקרים, או ההפך.
         </Note>
       </Fold>
@@ -353,12 +353,12 @@ export default function Accuracy() {
           kind="סיכום סקרים"
           source={SOURCE}
           asOf="ערב כל מערכת בחירות"
-          assumption='לכל רשימה (או קבוצת רשימות) — חציון הסקרים פחות התוצאה בכל מערכת. "המפלגות הערביות" = כל הרשימות שהתמודדו בכל מערכת, ביחד.'
+          assumption='לכל רשימה (או קבוצת רשימות) — ממוצע הסקרים פחות התוצאה בכל מערכת. "המפלגות הערביות" = כל הרשימות שהתמודדו בכל מערכת, ביחד.'
           methodAnchor="accuracy"
         >
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <caption className="sr-only">ההפרש בין חציון הסקרים לתוצאה, לפי רשימה ומערכת</caption>
+              <caption className="sr-only">ההפרש בין ממוצע הסקרים לתוצאה, לפי רשימה ומערכת</caption>
               <thead>
                 <tr className="text-right border-b border-paper-line">
                   <th scope="col" className="py-2 pe-3">רשימה</th>

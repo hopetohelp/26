@@ -1,5 +1,5 @@
 import { hemicycleSeats } from "../lib/hemicycle";
-import { rng } from "../lib/format";
+import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 
 /** שורת טווח: הממוצע (נקודה) והטווח (פס). `pass` רק לרשימות על הסף */
@@ -73,7 +73,7 @@ function RankRow({ r, axisMax, withDots }: { r: RangeRowData; axisMax: number; w
   return (
     <li className={`grid ${COLS} items-center gap-x-3 min-h-12 py-1.5 border-t border-paper-line last:border-b`}>
       <span className="font-semibold leading-tight">{r.name}</span>
-      <span className="font-num text-xl font-extrabold tabular">{r.central}</span>
+      <span className="font-num text-xl font-extrabold tabular">{seatsFmt(r.central)}</span>
       <span
         aria-hidden="true"
         dir="ltr"
@@ -154,8 +154,8 @@ export function Ranking({ home, dotLabel = "ממוצע הסקרים", barLabel =
   );
 }
 
-/** אותו רכיב לסיכום הסקרים בין המכונים: נקודה = החציון, פס = הנמוך והגבוה בין המכונים (בלי קו סף) */
-export function PollRanges({ rows, dotLabel = "חציון הסקרים", barLabel = "הנמוך והגבוה בין המכונים" }: { rows: RangeRowData[]; dotLabel?: string; barLabel?: string }) {
+/** אותו רכיב לסיכום הסקרים בין המכונים: נקודה = הממוצע, פס = הנמוך והגבוה בין המכונים (בלי קו סף) */
+export function PollRanges({ rows, dotLabel = "ממוצע המכונים", barLabel = "הנמוך והגבוה בין המכונים" }: { rows: RangeRowData[]; dotLabel?: string; barLabel?: string }) {
   const axisMax = axisMaxOf(rows);
   return (
     <>

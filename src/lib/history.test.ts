@@ -98,8 +98,11 @@ describe("ערב הבחירות — אותה שיטה כמו 'המצב היום'
   it("המספרים המרכזיים (נבדקו בחישוב נפרד בפייתון)", () => {
     const s = cycles.map((c) => summarizeCycle(c, resultOf(c)));
     expect(s.map((x) => x.snapshot.length)).toEqual([14, 10, 10, 9, 9]);
-    expect(s.map((x) => x.gap)).toEqual([37, 14, 7.5, 20, 14]);
-    expect(s.map((x) => [x.bloc.estimate, x.bloc.actual])).toEqual([[54, 65], [55.5, 55], [56, 58], [50, 52], [60, 64]]);
+    // ממוצע בין המכונים (הכרעת בעלים 9.10.2026). הערכים נבדקו בחישוב נפרד בפייתון, ובאותו חישוב עם חציון התקבלו הערכים הישנים 37, 14, 7.5, 20, 14.
+    const close = (got: number[], want: number[]) => got.forEach((v, i) => expect(v).toBeCloseTo(want[i], 3));
+    close(s.map((x) => x.gap), [38.901, 12.467, 8.1, 20, 12.889]);
+    close(s.map((x) => x.bloc.estimate), [53.637, 55.7, 57.2, 49.778, 60.222]);
+    expect(s.map((x) => x.bloc.actual)).toEqual([65, 55, 58, 52, 64]);
     expect(s.map((x) => x.misses.map((m) => m.letters).sort())).toEqual([["ז", "נ"], ["כף"], [], [], ["מרצ"]]);
   });
 });
@@ -112,12 +115,12 @@ describe("מכונים ומשפחות לאורך זמן", () => {
     }
   });
 
-  it("ש\"ס: בכל חמש המערכות קיבלה יותר מחציון הסקרים", () => {
+  it("ש\"ס: בכל חמש המערכות קיבלה יותר מממוצע הסקרים", () => {
     const rows = familyRows(cycles.map((c) => summarizeCycle(c, resultOf(c))));
     const shas = rows.find((r) => r.id === "shas")!;
     expect(shas.under).toBe(5);
-    expect(shas.cells.map((x) => x.diff)).toEqual([-3, -2, -1, -1, -3]);
+    shas.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-2.643, -1.9, -0.6, -0.889, -2.556][i], 3));
     const bloc = rows.find((r) => r.id === "bloc")!;
-    expect(bloc.cells.map((x) => x.diff)).toEqual([-11, 0.5, -2, -2, -4]);
+    bloc.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-11.363, 0.7, -0.8, -2.222, -3.778][i], 3));
   });
 });

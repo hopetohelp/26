@@ -11,7 +11,7 @@ export interface HomeModel {
   polls: number;
   central: { seats: Record<string, number> };
   scenarios: {
-    lists: Record<string, { seats: number[]; pass: number; share: number[] }>;
+    lists: Record<string, { seats: number[]; pass: number; seatsMean: number }>;
     bloc: { seats: number[] };
   };
   trend: { date: string; seats: Record<string, number> }[];
@@ -63,7 +63,7 @@ export function buildHome(
       const l = model.scenarios.lists[id];
       return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass };
     })
-    .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].share[1] - model.scenarios.lists[a.id].share[1]);
+    .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].seatsMean - model.scenarios.lists[a.id].seatsMean);
 
   const isEdge = (r: HomeRow) => !sure(r.id) && r.pass > EDGE_MIN && r.pass < EDGE_MAX;
   const edge = rows.filter(isEdge);

@@ -5,7 +5,7 @@ export interface BlocImputation {
   id: string;
   value: number;
   sources: { id: string; date: string; label: string }[];
-  method: "same-firm" | "median";
+  method: "same-firm" | "mean";
 }
 export interface BlocRow extends Bloc {
   missing: string[];

@@ -3,7 +3,7 @@ import { deviation, type DevInput, type DevRow } from "../lib/deviation";
 
 /**
  * "הסקרים מול התוצאות" (החלטה 8, 9.10.2026): לכל רשימה, פס = הנמוך והגבוה בין הסקרים ערב הבחירות, נקודה = התוצאה הרשמית,
- * הכול ביחס לחציון הסקרים (0). כך הבדלים קטנים נראים. נקודה כהה = בתוך הטווח; נקודה בצבע ההדגשה עם טבעת = מחוץ לטווח
+ * הכול ביחס לממוצע הסקרים (0). כך הבדלים קטנים נראים. נקודה כהה = בתוך הטווח; נקודה בצבע ההדגשה עם טבעת = מחוץ לטווח
  * (וגם קבוצה וטקסט, לא צבע בלבד). ציר 0 באמצע, "פחות" משמאל ו"יותר" מימין. הטווח הוא הנמוך והגבוה בין הסקרים, לא טווח טעות סטטיסטי.
  */
 const COLS = "grid-cols-[minmax(0,1fr)_minmax(7rem,46%)_3.4rem] md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem]";
@@ -43,7 +43,7 @@ function Row({ r, bound }: { r: DevRow; bound: number }) {
         <bdi dir="ltr">{signed(r.dev)}</bdi>
       </span>
       <span className="sr-only">
-        ; בפועל {r.actual}, חציון הסקרים {r.estimate}, בסקרים בין {r.min} ל-{r.max}, {r.outside ? "מחוץ לטווח הסקרים" : "בתוך טווח הסקרים"}
+        ; בפועל {r.actual}, ממוצע הסקרים {r.estimate}, בסקרים בין {r.min} ל-{r.max}, {r.outside ? "מחוץ לטווח הסקרים" : "בתוך טווח הסקרים"}
       </span>
     </li>
   );
@@ -59,7 +59,7 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
         <span className="inline-flex items-center gap-2"><i className="size-[.8rem] rounded-full bg-ink" />התוצאה בתוך הטווח</span>
         <span className="inline-flex items-center gap-2"><i className="size-[.8rem] rounded-full bg-signal ring-2 ring-ink" />התוצאה מחוץ לטווח</span>
         <span className="inline-flex items-center gap-2"><i className="w-[1.4rem] h-[.3rem] rounded-full bg-accent/70" />הנמוך והגבוה בין הסקרים (לא טווח טעות סטטיסטי)</span>
-        <span className="inline-flex items-center gap-2"><i className="w-0.5 h-[.9rem] bg-ink-faint" />0 = חציון הסקרים</span>
+        <span className="inline-flex items-center gap-2"><i className="w-0.5 h-[.9rem] bg-ink-faint" />0 = ממוצע הסקרים</span>
       </div>
       <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
         <div dir="ltr" className="col-start-2 relative h-8">

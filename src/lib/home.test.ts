@@ -11,14 +11,14 @@ const fixture: HomeModel = {
   central: { seats: { a: 40, b: 30, c: 20, d: 18, e: 12, f: 0, g: 0, h: 0 } },
   scenarios: {
     lists: {
-      a: { seats: [35, 40, 45], pass: 1, share: [0, 30, 0] },
-      b: { seats: [25, 30, 35], pass: 1, share: [0, 25, 0] },
-      c: { seats: [15, 20, 25], pass: 1, share: [0, 15, 0] },
-      d: { seats: [14, 18, 22], pass: 1, share: [0, 14, 0] },
-      e: { seats: [0, 12, 40], pass: 0.9, share: [0, 9, 0] },
-      f: { seats: [0, 0, 6], pass: 0.4, share: [0, 3, 0] },
-      g: { seats: [0, 0, 0], pass: 0.0001, share: [0, 1, 0] },
-      h: { seats: [0, 0, 0], pass: 0.5, share: [0, 2, 0] },
+      a: { seats: [35, 40, 45], pass: 1, seatsMean: 40 },
+      b: { seats: [25, 30, 35], pass: 1, seatsMean: 30 },
+      c: { seats: [15, 20, 25], pass: 1, seatsMean: 20 },
+      d: { seats: [14, 18, 22], pass: 1, seatsMean: 18 },
+      e: { seats: [0, 12, 40], pass: 0.9, seatsMean: 10.5 },
+      f: { seats: [0, 0, 6], pass: 0.4, seatsMean: 2.3 },
+      g: { seats: [0, 0, 0], pass: 0.0001, seatsMean: 0 },
+      h: { seats: [0, 0, 0], pass: 0.5, seatsMean: 1.1 },
     },
     bloc: { seats: [46, 52, 58] },
   },
@@ -49,9 +49,9 @@ describe("buildHome", () => {
     expect(h.below.map((r) => r.id)).toEqual(["g"]);
   });
 
-  it("הסדר לפי הממוצע, ובשוויון לפי חציון אחוז הקולות", () => {
+  it("הסדר לפי הממוצע, ובשוויון לפי ממוצע התרחישים", () => {
     expect(h.safe.map((r) => r.central)).toEqual([40, 30, 20, 18]);
-    // f ו-h בלי מנדטים בממוצע: f קודמת כי חציון אחוז הקולות שלה גבוה (3 מול 2)
+    // f ו-h בלי מנדטים בממוצע: f קודמת כי ממוצע המנדטים שלה בתרחישים גבוה (2.3 מול 1.1)
     expect(h.edge.map((r) => r.id)).toEqual(["e", "f", "h"]);
   });
 

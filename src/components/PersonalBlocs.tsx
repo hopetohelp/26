@@ -87,7 +87,7 @@ function BlocCoverage({ row }: { row?: BlocRow }) {
   if (!row?.missing.length) return null;
   const detail = [
     `${row.estimate !== null ? "הושלם באומדן" : "חסר נתון או אין התאמה"}: ${row.missing.map(nameOf).join(" · ")}`,
-    ...row.imputed.map(c => `${nameOf(c.id)}: ${seatsFmt(c.value)} מנדטים · ${c.method === "same-firm" ? "סקר קודם של אותו מכון ומזמין" : "חציון המכונים הקודמים"} · ${c.sources.map(x => `${x.label} ${date(x.date)}`).join(", ")}`),
+    ...row.imputed.map(c => `${nameOf(c.id)}: ${seatsFmt(c.value)} מנדטים · ${c.method === "same-firm" ? "סקר קודם של אותו מכון ומזמין" : "ממוצע המכונים הקודמים"} · ${c.sources.map(x => `${x.label} ${date(x.date)}`).join(", ")}`),
   ].join("\n");
   return <span className="block mt-0.5 text-xs font-sans font-normal text-ink-soft whitespace-nowrap" title={detail}>
     חסר נתון על <bdi>{row.missing.length}/{row.lists.length}</bdi> מפלגות{row.estimate !== null ? " · אומדן" : ""}

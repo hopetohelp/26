@@ -60,11 +60,9 @@ export const toTime = (d: string) => Date.parse(d + "T12:00:00Z");
 /** חלון "ערב הבחירות" — אותו חלון כמו בעמוד "המצב היום" */
 export const EVE_DAYS = 14;
 
-export function median(xs: number[]): number {
-  if (!xs.length) return NaN;
-  const s = [...xs].sort((a, b) => a - b);
-  const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+/** ממוצע חשבוני (הכרעת בעלים 9.10.2026: תמיד ממוצע, לא חציון) */
+export function mean(xs: number[]): number {
+  return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN;
 }
 
 /** מנדטים בסקר: מתחת לסף = 0; לא נשאלה = undefined */
@@ -108,7 +106,7 @@ export function comparedLists(c: Cycle, r: ElectionResult): ResultList[] {
 export interface ListComparison {
   letters: string;
   name: string;
-  /** חציון בין המכונים; NaN אם אף מכון לא שאל עליה */
+  /** ממוצע בין המכונים; NaN אם אף מכון לא שאל עליה */
   estimate: number;
   min: number;
   max: number;
@@ -118,7 +116,7 @@ export interface ListComparison {
   actual: number;
   /** סקרים פחות תוצאה: חיובי = הסקרים נתנו יותר */
   diff: number;
-  /** הסקרים (בחציון) טעו בשאלה אם הרשימה עוברת את אחוז החסימה */
+  /** רוב הסקרים טעו בשאלה אם הרשימה עוברת את אחוז החסימה (רוב הסקרים נתנו לה מנדטים, והיא לא עברה, או להפך) */
   thresholdMiss: boolean;
 }
 
@@ -126,19 +124,21 @@ export function compareLists(c: Cycle, r: ElectionResult, polls: HistPoll[]): Li
   return comparedLists(c, r)
     .map((l) => {
       const xs = polls.map((p) => seatsOf(p, l.letters)).filter((x): x is number => typeof x === "number");
-      const estimate = xs.length ? median(xs) : NaN;
+      const estimate = xs.length ? mean(xs) : NaN;
       const est0 = Number.isNaN(estimate) ? 0 : estimate;
+      const above = xs.filter((x) => x > 0).length;
+      const pollsSayPass = xs.length > 0 && above >= Math.ceil(xs.length / 2);
       return {
         letters: l.letters,
         name: l.short,
         estimate,
         min: xs.length ? Math.min(...xs) : NaN,
         max: xs.length ? Math.max(...xs) : NaN,
-        above: xs.filter((x) => x > 0).length,
+        above,
         n: xs.length,
         actual: l.seats,
         diff: est0 - l.seats,
-        thresholdMiss: est0 > 0 !== l.seats > 0,
+        thresholdMiss: pollsSayPass !== l.seats > 0,
       };
     })
     .sort((a, b) => b.actual - a.actual || (b.estimate || 0) - (a.estimate || 0));
@@ -281,7 +281,7 @@ export function familyRows(summaries: CycleSummary[]): FamilyRow[] {
   return rows;
 }
 
-/** חציון מתגלגל לאורך המערכה: בכל יום — חציון הסקרים מ-`days` הימים שקדמו לו (לפחות `minN` סקרים) */
+/** ממוצע מתגלגל לאורך המערכה: בכל יום — ממוצע הסקרים מ-`days` הימים שקדמו לו (לפחות `minN` סקרים) */
 export function campaignTrend(c: Cycle, letters: string, days = 7, minN = 3) {
   const ps = usable(c);
   if (!ps.length) return [];
@@ -293,7 +293,7 @@ export function campaignTrend(c: Cycle, letters: string, days = 7, minN = 3) {
       .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
       .map((p) => seatsOf(p, letters))
       .filter((x): x is number => typeof x === "number");
-    if (xs.length >= minN) out.push({ t, v: median(xs), n: xs.length });
+    if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length });
   }
   return out;
 }

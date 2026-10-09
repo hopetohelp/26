@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
-import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMedian, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateLong, dateRange, seatsFmt } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -53,10 +53,10 @@ export default function Trends() {
 
   const series: Series[] = [];
   for (const id of ids) {
-    const solid = rollingMedian(id, from, to, days, 3, source).filter((x) => x.n >= minN);
+    const solid = rollingMean(id, from, to, days, 3, source).filter((x) => x.n >= minN);
     const lin = LINEAGE[id];
     if (lin && from < lin.since) {
-      const dashed = rollingMedian(`${id}__lineage`, from, lin.since, days, 3, source).filter((x) => x.n >= minN);
+      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, 3, source).filter((x) => x.n >= minN);
       if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
     }
     if (solid.length) series.push({ id, name: listName(id), points: solid });
@@ -74,7 +74,7 @@ export default function Trends() {
   return (
     <>
 
-      <Split title="מגמות" lead="חציון מתגלגל של המנדטים בסקרים שפורסמו: בכל נקודה — החציון של כל הסקרים מ-14 הימים שקדמו לה. הנקודות הבהירות הן הסקרים עצמם." primary={<Card>
+      <Split title="מגמות" lead="ממוצע מתגלגל של המנדטים בסקרים שפורסמו: בכל נקודה — הממוצע של כל הסקרים מ-14 הימים שקדמו לה. הנקודות הבהירות הן הסקרים עצמם." primary={<Card>
         <div className="flex flex-wrap gap-4 items-end mb-3">
           <label className="flex flex-col text-sm">
             תקופה
@@ -115,7 +115,7 @@ export default function Trends() {
           kind="סיכום סקרים"
           source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
           asOf={`הסקרים עד ${dateLong(to)}`}
-          assumption={who ? "מכון בודד: חלון של 45 יום, כדי שיהיו מספיק סקרים." : "כל המכונים: חציון של הסקרים ב-14 הימים האחרונים, לפחות 3 סקרים לנקודה. ממוצע תיאורי — לא מודל ולא תחזית."}
+          assumption={who ? "מכון בודד: חלון של 45 יום, כדי שיהיו מספיק סקרים." : "כל המכונים: ממוצע הסקרים ב-14 הימים האחרונים, לפחות 3 סקרים לנקודה. ממוצע תיאורי — לא מודל ולא תחזית."}
           methodAnchor="trends"
         >
           <ChartWithTable

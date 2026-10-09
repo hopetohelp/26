@@ -34,6 +34,7 @@ interface ModelData {
     lists: Record<string, ListScenario>;
     bloc: { lists: string[]; seats: number[]; atLeast61: number };
     wasted: number[];
+    wastedMean: number;
     agreementsMoveSeat: number;
   };
   house: { pollster: string; firmHe: string; publisherHe: string | null; polls: number; seats: Record<string, number> }[];
@@ -59,7 +60,7 @@ const bt = backtestFile as unknown as BacktestData;
 const sc = m.scenarios;
 /** מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר כמו בבית ובדירוג (החלטה 14, 9.10.2026) */
 const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (m.central.seats[l.id] ?? 0), 0);
-const ids = Object.keys(sc.lists).sort((a, b) => m.central.seats[b] - m.central.seats[a] || sc.lists[b].share[1] - sc.lists[a].share[1]);
+const ids = Object.keys(sc.lists).sort((a, b) => m.central.seats[b] - m.central.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
 const pctTxt = (x: number) => (x >= 0.995 ? "כמעט בכל התרחישים" : x < 0.005 ? "כמעט באף תרחיש" : `ב-${Math.round(x * 100)}% מהתרחישים`);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 const edge = ids.filter((id) => sc.lists[id].pass > 0.005 && sc.lists[id].pass < 0.995);
@@ -147,7 +148,7 @@ export default function Scenarios() {
         <Card title="קולות שלא הופכים למנדטים">
           <Explained kind="תרחיש" source={SOURCE} asOf={asOfText} assumption="רשימה שלא עוברת את הסף מקבלת אפס מנדטים, וקולותיה אינם נספרים בחלוקה." methodAnchor="model">
             <p className="text-sm">
-              קולות כשרים לרשימות שלא עוברות את הסף: חציון {r1(sc.wasted[1])}%, וב-80% מהתרחישים בין {r1(sc.wasted[0])}% ל-{r1(sc.wasted[2])}%.
+              קולות כשרים לרשימות שלא עוברות את הסף: ממוצע {r1(sc.wastedMean)}%, וב-80% מהתרחישים בין {r1(sc.wasted[0])}% ל-{r1(sc.wasted[2])}%.
               ב-2022 זה היה {r1(wasted2022)}%.
             </p>
           </Explained>

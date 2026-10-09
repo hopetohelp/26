@@ -6,7 +6,7 @@ import { Segmented } from "../components/Choice";
 import { PollRanges, Ranking } from "../components/homeCharts";
 import modelFile from "../data/model.json";
 import { Badge, Fold, Note, Split } from "../components/ui";
-import { lastPollDate, lists2026, listName, median, meta, pollsterLabel, seatsIn, summarize, type Poll } from "../lib/data";
+import { lastPollDate, lists2026, listName, mean, meta, passesInMost, pollsterLabel, seatsIn, summarize, type Poll } from "../lib/data";
 import { date, dateLong, dateRange, num, rng, seatsFmt } from "../lib/format";
 import { HOME, LATEST_POLLS } from "../lib/homeData";
 
@@ -38,8 +38,8 @@ export default function Today() {
   const latest = LATEST_POLLS;
   const ids = lists2026.map((l) => l.id);
   const summary = summarize(latest, ids);
-  const above = summary.filter((s) => s.median > 0);
-  const below = summary.filter((s) => s.median === 0);
+  const above = summary.filter(passesInMost);
+  const below = summary.filter((s) => !passesInMost(s));
   const govs = latest.map(govSum).filter((x): x is number => typeof x === "number");
   const likudBy = latest
     .map((p) => ({ p, v: seatsIn(p, "likud") }))
@@ -97,7 +97,7 @@ export default function Today() {
 
             <Fold title="לפי המכונים: הסקר האחרון של כל אחד">
               <p className="text-sm text-ink-soft mb-3">
-                {`הסקר האחרון של כל מכון ב-${WINDOW_DAYS} הימים שעד ${dateLong(asOf)} — ${latest.length} מכונים. החציון בין המכונים, והטווח מהנמוך לגבוה.`}
+                {`הסקר האחרון של כל מכון ב-${WINDOW_DAYS} הימים שעד ${dateLong(asOf)} — ${latest.length} מכונים. הממוצע בין המכונים, והטווח מהנמוך לגבוה.`}
               </p>
               <Explained
                 kind="סיכום סקרים"
@@ -106,11 +106,11 @@ export default function Today() {
                 assumption="כל מכון נספר פעם אחת (הסקר האחרון שלו). זה סיכום תיאורי של מה שפורסם — לא תחזית ולא מודל."
                 methodAnchor="current"
               >
-                <PollRanges rows={above.map((s) => ({ id: s.id, name: listName(s.id), central: s.median, lo: s.min, hi: s.max }))} />
+                <PollRanges rows={above.map((s) => ({ id: s.id, name: listName(s.id), central: Math.round(s.mean * 10) / 10, lo: s.min, hi: s.max }))} />
               </Explained>
               {below.length > 0 && (
                 <Note>
-                  מתחת לאחוז החסימה בחציון: {below.map((s) => `${listName(s.id)} (עוברת ב-${s.n - s.belowCount} מתוך ${s.n} מכונים)`).join(" · ")}.
+                  מתחת לאחוז החסימה אצל רוב המכונים: {below.map((s) => `${listName(s.id)} (עוברת ב-${s.n - s.belowCount} מתוך ${s.n} מכונים)`).join(" · ")}.
                 </Note>
               )}
             </Fold>
@@ -125,8 +125,8 @@ export default function Today() {
                   methodAnchor="current"
                 >
                   <p className="text-4xl font-extrabold tabular-nums">
-                    {govs.length ? seatsFmt(median(govs)) : "—"}
-                    <span className="text-lg font-medium text-ink-soft"> מנדטים, חציון בין המכונים</span>
+                    {govs.length ? seatsFmt(mean(govs)) : "—"}
+                    <span className="text-lg font-medium text-ink-soft"> מנדטים, ממוצע המכונים</span>
                   </p>
                   {govs.length > 0 && (
                     <p className="text-ink-soft">

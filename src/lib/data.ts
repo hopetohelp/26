@@ -100,11 +100,9 @@ export const usablePolls = polls.filter((p) => p.eligibleToShow && p.consistent)
 export const pollsterKey = (p: Poll) => `${p.firm}|${p.publisher ?? ""}`;
 export const pollsterLabel = (p: Poll) => `${p.firmHe}${p.publisherHe ? ` · ${p.publisherHe}` : ""}`;
 
-export function median(xs: number[]): number {
-  if (!xs.length) return NaN;
-  const s = [...xs].sort((a, b) => a - b);
-  const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+/** ממוצע חשבוני. הכרעת בעלים 9.10.2026: באתר מציגים תמיד ממוצע, אף פעם לא חציון. */
+export function mean(xs: number[]): number {
+  return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN;
 }
 
 const DAY = 86_400_000;
@@ -141,12 +139,19 @@ export function passesInAll(ps: Poll[], id: string): boolean {
 
 export interface PartySummary {
   id: string;
-  median: number;
+  /** ממוצע בין המכונים */
+  mean: number;
+  /** הנמוך והגבוה בין המכונים (טווח מלא) */
   min: number;
   max: number;
   n: number;
+  /** בכמה מכונים הרשימה קיבלה מנדטים */
+  passing: number;
   belowCount: number;
 }
+
+/** רוב המכונים נותנים לרשימה מנדטים: היא "עוברת" בסיכום. (ספירה, לא סטטיסטיקה של מרכז.) */
+export const passesInMost = (s: Pick<PartySummary, "passing" | "n">) => s.passing >= Math.ceil(s.n / 2);
 
 export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
   return ids
@@ -154,26 +159,27 @@ export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
       const xs = ps.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
       return {
         id,
-        median: median(xs),
+        mean: mean(xs),
         min: xs.length ? Math.min(...xs) : NaN,
         max: xs.length ? Math.max(...xs) : NaN,
         n: xs.length,
+        passing: xs.filter((x) => x > 0).length,
         belowCount: ps.filter((p) => typeof p.values[id]?.p === "number").length,
       };
     })
     .filter((s) => s.n > 0)
-    .sort((a, b) => b.median - a.median || b.max - a.max);
+    .sort((a, b) => b.mean - a.mean || b.max - a.max);
 }
 
-/** חציון מתגלגל של מנדטים — חלון של `days` ימים, נקודה כל `step` ימים */
-export function rollingMedian(id: string, from: string, to: string, days = 14, step = 3, source = usablePolls) {
+/** ממוצע מתגלגל של מנדטים — חלון של `days` ימים, נקודה כל `step` ימים */
+export function rollingMean(id: string, from: string, to: string, days = 14, step = 3, source = usablePolls) {
   const out: { t: number; v: number; n: number }[] = [];
   for (let t = toTime(from); t <= toTime(to); t += step * DAY) {
     const xs = source
       .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
       .map((p) => seatsIn(p, id))
       .filter((x): x is number => typeof x === "number");
-    if (xs.length >= 3) out.push({ t, v: median(xs), n: xs.length });
+    if (xs.length >= 3) out.push({ t, v: mean(xs), n: xs.length });
   }
   return out;
 }
