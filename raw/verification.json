@@ -1370,9 +1370,9 @@
  },
  {
   "access": [
-   "none"
+   "secondary"
   ],
-  "checkedAt": "2026-10-06",
+  "checkedAt": "2026-10-09",
   "id": "2026-10-05-midgam-r-c-hahadashot-12",
   "law16E": {
    "commissioner": false,
@@ -1384,17 +1384,13 @@
    "population": false,
    "questions": false
   },
-  "note": "Original (mako) returned HTTP 403 to a plain request, and the Wayback copy could not be fetched (rate limit / tunnel closed). Not compared; no claim of a match. Wikipedia row: Midgam, Channel 12, 5 Oct 2026, n=501; the cited headline says Winter falls below the threshold, consistent with the row. Retry verification when the source or an archive copy is reachable.",
-  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-d7459e0cc7c01a1026.htm",
+  "note": "המקור הראשוני (mako) חוסם גישה אוטומטית ולכן לא נסרק. המנדטים של כל 12 הרשימות, סך 120 וגושי 54 ו-49 הושוו לדיווח וואלה על סקר חדשות 12 מ-5.10 וזהים לוויקיפדיה. המכון והמזמין, המדגם (501) ואחוז עמך ישראל (1.5%) לא אומתו; הציבור החרדי 0.6% וכחול לבן 0.5% תואמים.",
+  "source": "https://www.walla.co.il/news/israel/383956390",
   "sourceDetails": {
-   "asked_to_participate": null,
-   "method": null,
-   "moe": null,
-   "population": null,
-   "published": null,
+   "published": "2026-10-05T22:00:00+03:00",
    "sample_respondents": null
   },
-  "status": "unreachable"
+  "status": "secondary"
  },
  {
   "id": "2026-10-07-mp-tm-sn-a-channel-13",
@@ -1440,13 +1436,17 @@
  },
  {
   "id": "2026-10-08-kantar-israel-hayom",
-  "checkedAt": "2026-10-08",
-  "status": "mismatch",
-  "source": "https://www.israelhayom.co.il/news/politics/article/21444759",
-  "note": "הקישור שבוויקיפדיה לסקר זה מוביל לכתבה של סקר 17.9.2026 (אותה כתבה שאומתה לסקר 2026-09-17-kantar-israel-hayom), ולא לפרסום של 8.10. אתר ישראל היום חוסם גישה (403), ולא נמצא מקור משני בחיפוש. המנדטים לא אומתו מול פרסום מקורי; הסקר יוצג בלי סימון 'אומת'.",
+  "checkedAt": "2026-10-09",
+  "status": "secondary",
+  "source": "https://kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233234-0",
+  "note": "הקישור שבוויקיפדיה לסקר זה מוביל לכתבת סקר 17.9 (שאומתה לסקר ההוא), ואתר ישראל היום חוסם גישה אוטומטית. המנדטים הושוו לדיווח כיפה (8.10) על סקר 'היום': 11 רשימות זהות לוויקיפדיה, סך הקואליציה 51; הציונות הדתית-זהות (6) נגזרת מסך הקואליציה ומסך 120. שם המכון (קנטאר), המדגם (555) ואחוזי הרשימות שמתחת לסף לא אומתו.",
   "access": [
-   "blocked"
-  ]
+   "secondary"
+  ],
+  "sourceDetails": {
+   "published": "2026-10-08T08:00:00+03:00",
+   "sample_respondents": null
+  }
  },
  {
   "id": "2026-10-07-direct-polls-i24-news",
