@@ -22,13 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import wiki_tables as wt  # noqa: E402
 from bader_ofer import allocate  # noqa: E402
 
-ISRAEL_TZ = timezone(timedelta(hours=3))  # שעון קיץ עד 25.10.2026; ההקפאה מחושבת ברגעים מוחלטים בהמשך
-# 16ה(ח): מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות (25.10 — מעבר לשעון חורף, ולכן +02:00 בסוף)
-FREEZE_START = datetime.fromisoformat("2026-10-24T00:00:00+03:00")
-FREEZE_END = datetime.fromisoformat("2026-10-27T22:00:00+02:00")
-# מהבנייה של יום שישי בצהריים ואילך — באנר "לא עדכני" קבוע, בלי תלות בשעון הדפדפן
-FROZEN_FROM = FREEZE_START - timedelta(hours=12)
-
+ISRAEL_TZ = timezone(timedelta(hours=3))  # שעון קיץ עד 25.10.2026
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -243,8 +237,6 @@ def build_polls(build_time: datetime) -> dict:
                 seen_ids[base] = n + 1
                 pid_ = base if n == 0 else f"{base}-{chr(ord('a') + n)}"
                 assumed_pub = datetime.fromisoformat(d["date"]["end"] + "T20:00:00").replace(tzinfo=ISRAEL_TZ)
-                if FREEZE_START <= assumed_pub < FREEZE_END:
-                    continue  # 16ה(ח): סקר שפורסם לראשונה בתקופת האיסור — לא נכנס בשום מקרה
                 polls.append({
                     "id": pid_, "start": d["date"]["start"], "end": d["date"]["end"],
                     "firm": firm, "firmHe": FIRM_HE.get(firm, firm), "publisher": pub,
@@ -268,8 +260,6 @@ def build_polls(build_time: datetime) -> dict:
             published = datetime.fromisoformat(d["publishedAt"])
             if published.tzinfo is None:
                 raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
-            if FREEZE_START <= published < FREEZE_END:
-                continue
             seat_sum = sum(v.get("s", 0) for v in d["values"].values())
             if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]):
                 raise ValueError(f"סקר ישיר לא תקין: {d['id']}")
@@ -294,8 +284,6 @@ def build_polls(build_time: datetime) -> dict:
             published = datetime.fromisoformat(d["publishedAt"])
             if published.tzinfo is None:
                 raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
-            if FREEZE_START <= published < FREEZE_END:
-                continue
             seat_sum = sum(v.get("s", 0) for v in d["values"].values())
             if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]) or not d.get("population"):
                 raise ValueError(f"סקר קבוצת אוכלוסייה לא תקין: {d['id']}")
@@ -714,10 +702,6 @@ def main() -> None:
     meta = {
         "dataAsOf": build_time.isoformat(),
         "electionDay": "2026-10-27",
-        # 16ה(ח): מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות. רגעים מוחלטים (25.10 — מעבר לשעון חורף).
-        "freezeStart": FREEZE_START.isoformat(),
-        "freezeEnd": FREEZE_END.isoformat(),
-        "frozen": FROZEN_FROM <= build_time < FREEZE_END,
         "lists2026": LISTS_2026, "agreements2026": AGREEMENTS_2026, "historyNames": HISTORY_NAMES,
         "historyPolls": sum(len(c["polls"]) for c in history["cycles"]),  # לריבוע "דיוק הסקרים" במסך הבית, בלי לטעון את הקובץ הגדול
     }
