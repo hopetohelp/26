@@ -13,12 +13,12 @@ import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label })), { to: "/support", label: "תמיכה" }];
-/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026). "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
+/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקר האתר · תמיכה. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
-  { to: "/today", label: "מצב ותחזית", icon: "board" },
-  { to: "more", label: "עוד", icon: "more" },
   { to: "/guess", label: "הכנסת שלי", icon: "guess" },
+  { to: "more", label: "עוד", icon: "more" },
+  { to: "/community", label: "סקר האתר", icon: "bars" },
   { to: "/support", label: "תמיכה", icon: "comments" },
 ];
 /** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
