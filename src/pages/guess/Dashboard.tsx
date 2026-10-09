@@ -200,10 +200,10 @@ function Matrix({ d }: { d: D }) {
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>
         <tr>
-          <th rowSpan={2} className="text-start p-1 sticky start-0 bg-paper-card align-bottom border-b border-paper-line">
-            <span className="block text-ink-soft font-normal">2022</span>
+          <th rowSpan={2} className="text-center p-1 sticky start-0 bg-paper-card align-bottom border-b border-e-2 border-paper-line border-e-ink-faint/60 min-w-24 font-bold">
+            הצבעה בבחירות קודמות
           </th>
-          <th colSpan={Math.max(cols.length, 1)} className="p-1 text-center font-bold">2026</th>
+          <th colSpan={Math.max(cols.length, 1)} className="p-1 text-center font-bold">יצביעו בבחירות הקרובות</th>
         </tr>
         <tr className="border-b border-paper-line">
           {cols.map((col) => <th key={col} className="p-1 font-normal text-ink-soft whitespace-nowrap">{v2026Name(col)}</th>)}
@@ -211,7 +211,7 @@ function Matrix({ d }: { d: D }) {
       </thead>
       <tbody>
         {Object.entries(m.rows).map(([key, row]) => <tr key={key} className="border-t border-paper-line">
-          <th className="text-start p-1 font-bold whitespace-nowrap sticky start-0 bg-paper-card">{v2022Name(key)}</th>
+          <th className="text-center p-1 font-bold whitespace-nowrap sticky start-0 bg-paper-card border-e-2 border-e-ink-faint/60">{v2022Name(key)}</th>
           {cols.map((col) => {
             const cell = row.cells[col];
             const hidden = row.hidden || !cell || cell.hidden;
