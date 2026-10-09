@@ -2,9 +2,11 @@ import { useId, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 /**
- * חוזה ההסבר הצמוד לכל מספר מחושב. כל השדות חובה (הטיפוסים אוכפים זאת):
- * סוג המספר, מקור, נכון ל-, ההנחה המרכזית, וקישור לפסקה בעמוד השיטה.
- * ההסבר נפתח בכפתור אמיתי (מקלדת ומגע), לא בריחוף.
+ * חוזה ההסבר הצמוד לכל מספר מחושב (הכרעת בעלים 9.10.2026, החלטה 9). כל השדות חובה (הטיפוסים אוכפים זאת): סוג המספר, מקור,
+ * נכון ל-, ההנחה המרכזית, וקישור לערך במילון המספרים. כך אי אפשר להוסיף מספר בלי מקור.
+ * מה שמוצג בגרף: הסוג, התאריך, וקישור "איך זה חושב?" אל הערך. המקור וההנחה המלאים נמצאים במילון (`src/pages/Method.tsx`),
+ * ולכן `source` ו-`assumption` כאן הם התיעוד של מה שהערך מבטיח, ועליהם להתאים לו.
+ * `details`: פירוט החישוב עצמו (למשל טבלת תוצאות המחשבון), נפתח בכפתור אמיתי (מקלדת ומגע), לא בריחוף.
  */
 export interface ExplainProps {
   kind:
@@ -19,47 +21,36 @@ export interface ExplainProps {
   source: string;
   asOf: string;
   assumption: string;
+  /** העוגן של הערך במילון: /method#<methodAnchor> (נבדק בבדיקה שהוא קיים) */
   methodAnchor: string;
   children: ReactNode;
   details?: ReactNode;
 }
 
-export default function Explained({ kind, source, asOf, assumption, methodAnchor, children, details }: ExplainProps) {
+export default function Explained({ kind, asOf, methodAnchor, children, details }: ExplainProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
     <div>
-      <div className="flex flex-col-reverse lg:flex-row lg:items-start gap-2">
-        <div className="flex-1 min-w-0">{children}</div>
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={id}
-          onClick={() => setOpen((o) => !o)}
-          className="self-end lg:self-auto shrink-0 text-xs border border-paper-line rounded-full px-2 py-1 text-ink-soft hover:text-ink hover:border-ink-faint"
-        >
-          {open ? "סגירת ההסבר" : "איך זה חושב?"}
-        </button>
-      </div>
-      {open && (
-        <div id={id} className="mt-2 text-sm bg-accent-soft rounded-md p-3">
-        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-          <dt className="font-bold">סוג</dt>
-          <dd>{kind}</dd>
-          <dt className="font-bold">מקור</dt>
-          <dd>{source}</dd>
-          <dt className="font-bold">נכון ל-</dt>
-          <dd>{asOf}</dd>
-          <dt className="font-bold">הנחה מרכזית</dt>
-          <dd>{assumption}</dd>
-          <dt className="font-bold">פירוט</dt>
-          <dd>
-            <Link to={`/method#${methodAnchor}`}>בעמוד השיטה</Link>
-          </dd>
-        </dl>
-        {details && <div className="mt-3">{details}</div>}
-        </div>
-      )}
+      {children}
+      <p className="mt-2 text-sm text-ink-soft">
+        {kind} · {asOf} · <Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
+        {details && (
+          <>
+            {" · "}
+            <button
+              type="button"
+              aria-expanded={open}
+              aria-controls={id}
+              onClick={() => setOpen((o) => !o)}
+              className="min-h-[44px] -my-3 font-semibold text-accent underline underline-offset-2"
+            >
+              {open ? "סגירת הפירוט" : "פירוט החישוב"}
+            </button>
+          </>
+        )}
+      </p>
+      {details && open && <div id={id} className="mt-2 text-sm">{details}</div>}
     </div>
   );
 }
