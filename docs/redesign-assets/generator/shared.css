@@ -176,6 +176,7 @@ main { padding: 0 1rem 7rem; }
   .row, .axisrow { grid-template-columns: minmax(0, 13rem) 2.6rem minmax(0, 1fr) 5rem; }
   .axisrow .ticks { grid-column: 3; }
   .row .rng { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; text-align: end; }
+  .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; }
   .index { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 3rem; }
   .index li:nth-last-child(-n+3) a { border-bottom: 1px solid rgb(var(--line)); }
 }
@@ -186,3 +187,79 @@ main { padding: 0 1rem 7rem; }
 }
 html[data-static] .tabs { position: static; }
 .index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
+
+/* ===== גרסה 2: תמצות, גרף קודם ===== */
+.asof { margin: .6rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); display: flex; flex-wrap: wrap; gap: .25rem .5rem; align-items: center; }
+.asof a { font-weight: 600; }
+.leg1 { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: .75rem 0 0; font-size: 1rem; font-weight: 600; align-items: center; }
+.leg1 span { display: inline-flex; align-items: center; gap: .5rem; }
+.leg1 b { font-size: 1.25rem; font-weight: 800; }
+.thr { display: flex; align-items: center; gap: .75rem; margin: .5rem 0; font-size: .875rem; font-weight: 700; color: rgb(var(--ink-soft)); }
+.thr::before, .thr::after { content: ""; flex: 1; border-top: 2px dashed rgb(var(--ink-faint)); }
+.row.tall { grid-template-areas: "nm n plot" "dl dl dl"; row-gap: .15rem; padding-bottom: .5rem; }
+.row.tall .nm { grid-area: nm; } .row.tall .n { grid-area: n; } .row.tall .plot { grid-area: plot; } .row.tall .rng { grid-area: rng; }
+.row .dl { grid-area: dl; display: flex; align-items: center; gap: .6rem; font-size: .875rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.below { margin: .5rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.cta.mini p { margin: .4rem 0 0; font-size: .875rem; }
+.cta.mini .btn { margin-top: .9rem; }
+.links { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 2rem 0 0; padding: 0; }
+.links a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); color: rgb(var(--ink)); font-weight: 600; font-size: .875rem; text-decoration: none; }
+@media (min-width: 1024px) { .links { display: none; } }
+
+/* מגמה: SVG בקנה מידה חופשי, תוויות ב-HTML בגודל קבוע */
+.tchart { position: relative; margin-top: .5rem; }
+.tchart svg { display: block; width: 100%; height: 10rem; }
+.tchart .ln { fill: none; stroke: rgb(var(--accent)); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.tchart .ref { stroke: rgb(var(--ink)); stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.tchart .wh { stroke: rgb(var(--accent) / .7); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tchart .gl { stroke: rgb(var(--line)); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.tl { position: absolute; transform: translate(-50%, -50%); font-size: .875rem; font-weight: 700; line-height: 1; white-space: nowrap; direction: ltr; }
+.tl.soft { font-weight: 400; font-size: .75rem; color: rgb(var(--ink-soft)); transform: translate(-50%, 0); }
+.tl.big { font-size: 1rem; font-weight: 800; }
+
+/* שינוי מול 2022: דמבל */
+.drow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; align-items: center; gap: .1rem .75rem; padding: .5rem 0; border-top: 1px solid rgb(var(--line)); }
+.drow:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.drow .nm { font-weight: 600; line-height: 1.25; }
+.drow .nm small { display: block; font-size: .75rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.dbplot { position: relative; height: 1.5rem; direction: ltr; }
+.dbplot i.g { position: absolute; top: 0; bottom: 0; width: 1px; background: rgb(var(--line)); }
+.dbplot .rg { position: absolute; top: 50%; height: .35rem; margin-top: -.175rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.dbplot .ln2 { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: rgb(var(--ink-faint)); }
+.dbplot .d22 { position: absolute; top: 50%; width: .9rem; height: .9rem; margin: -.45rem 0 0 -.45rem; border-radius: 50%; background: rgb(var(--paper)); box-shadow: inset 0 0 0 2px rgb(var(--ink)); }
+.dbplot .dnow { position: absolute; top: 50%; width: .9rem; height: .9rem; margin: -.45rem 0 0 -.45rem; border-radius: 50%; background: rgb(var(--ink)); box-shadow: 0 0 0 2px rgb(var(--paper)); }
+.drow .av { text-align: end; line-height: 1.1; }
+.drow .av b { font-size: 1.25rem; font-weight: 800; display: block; }
+.drow .av small { font-size: .75rem; color: rgb(var(--ink-soft)); white-space: nowrap; }
+.k-hollow { width: .8rem; height: .8rem; border-radius: 50%; box-shadow: inset 0 0 0 2px rgb(var(--ink)); background: rgb(var(--paper)); display: inline-block; }
+
+/* ערכת גרפים */
+.kit { display: grid; gap: 1.5rem; padding: 1.5rem 1rem 3rem; max-width: 90rem; margin: 0 auto; }
+.plate { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1.25rem; background: rgb(var(--card)); }
+.plate .ft { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 0 0 .25rem; }
+.plate .use { margin: 1rem 0 0; font-size: .75rem; color: rgb(var(--ink-soft)); border-top: 1px solid rgb(var(--line)); padding-top: .5rem; }
+.plate .rank { margin-top: .25rem; }
+.plate .hemi { margin-top: .5rem; }
+.plate .row .rng { display: none; }
+@media (min-width: 1024px) { .kit { grid-template-columns: 1fr 1fr; } .plate .row, .plate .axisrow { grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); } }
+
+/* מילון המספרים (שיטה, מקורות ואודות) */
+.seg2 { display: flex; gap: .25rem; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); width: fit-content; max-width: 100%; overflow-x: auto; margin-top: 1rem; }
+.seg2 a { padding: .45rem 1rem; border-radius: 999px; font-weight: 700; font-size: .875rem; color: rgb(var(--ink)); text-decoration: none; white-space: nowrap; }
+.seg2 a[aria-current] { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); }
+.dict { display: grid; gap: 0; margin-top: 1rem; }
+.entry { padding: 1rem 0; border-top: 1px solid rgb(var(--line)); }
+.entry:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.entry h3 { margin: 0; font-size: 1.25rem; font-weight: 800; line-height: 1.3; }
+.entry .where { margin: .1rem 0 .5rem; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.entry dl { margin: 0; display: grid; grid-template-columns: 4.5rem 1fr; gap: .25rem .75rem; font-size: .875rem; line-height: 1.5; }
+.entry dt { color: rgb(var(--ink-soft)); font-weight: 600; }
+.entry dd { margin: 0; }
+.entry .more { display: inline-block; margin-top: .5rem; font-size: .875rem; font-weight: 600; }
+.mh { margin: 2rem 0 .25rem; font-size: 1.25rem; font-weight: 800; }
+.plain { margin: .5rem 0 0; padding: 0; list-style: none; font-size: .875rem; line-height: 1.55; }
+.plain li { padding: .45rem 0; border-top: 1px solid rgb(var(--line)); }
+.plain li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+@media (min-width: 1024px) { .dict { grid-template-columns: 1fr 1fr; column-gap: 3rem; } .entry:nth-last-child(2) { border-bottom: 1px solid rgb(var(--line)); } }
+
+@media (min-width: 1024px) { .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; } }
