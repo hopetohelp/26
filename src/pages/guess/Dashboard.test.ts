@@ -88,3 +88,21 @@ it("ממוצע הסקרים בגוש מסכם רק מפלגות עם נתון, �
   expect(html).not.toContain("לפחות");
   expect(html).not.toContain("חסר");
 });
+
+it("ברשימה ובגרף מוצגות רק מפלגות שעברו אצל משתתף, גם כשהממוצע נמוך מארבעה", () => {
+  const rows=[{...stat,list:"likud",mean:2,min:0,max:4},{...stat,list:"shas",mean:0,min:0,max:0}];
+  for(const view of ["table","chart"] as const) {
+    const html=renderToStaticMarkup(createElement(SeatsStats,{rows,polls:{shas:8},view}));
+    expect(html).toContain(nameOf("likud"));
+    expect(html).not.toContain("ש&quot;ס");
+    expect(html).toContain("מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות");
+  }
+  const historical=renderToStaticMarkup(createElement(SeatsStats,{rows,polls:{},view:"table",passedLists:["shas"]}));
+  expect(historical).toContain("ש&quot;ס");
+  expect(historical).not.toContain(nameOf("likud"));
+});
+
+it("טור שלי אינו מופיע כאשר אין נתונים אישיים להשוואה", () => {
+ const html=renderToStaticMarkup(createElement(SeatsStats,{rows:[stat],polls:{},view:"table"}));
+ expect(html).not.toContain('>שלי</th>');
+});

@@ -92,7 +92,7 @@ function seatsStats(seatVersions) {
   return LISTS_2026.map((l) => seatStat(l.id, seatVersions.map((v) => seatValue(v.payload, l.id))));
 }
 
-export function computeSeats(seatVersions) {
+export function computeSeats(seatVersions, history = seatVersions) {
   const n = seatVersions.length;
   if (n < K_CELL) return null;
   const manual = [];
@@ -120,6 +120,7 @@ export function computeSeats(seatVersions) {
   return {
     n,
     full: seatsStats(seatVersions),
+    everPassedLists: LISTS_2026.filter(l => history.some(v => seatValue(v.payload, l.id) >= 4)).map(l => l.id),
     manual,
     filledShare: r2(filled / (TOTAL * n)),
     usedFillAll,
@@ -303,7 +304,7 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const voteV = [...main.vote.values()];
 
   const compute = {
-    seats: () => computeSeats(seatV),
+    seats: () => computeSeats(seatV, versions.filter(v => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant))),
     blocs: () => computeBlocs(seatV, [...main.blocs.values()], blocNames),
     vote2026: () => computeVote2026(voteV),
     vote2022: () => computeVote2022(voteV),

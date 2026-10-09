@@ -153,6 +153,8 @@ export interface Dashboard {
   seats?: {
     n: number;
     full: SeatStat[];
+    /** רשימות שקיבלו לפחות ארבעה מנדטים באחת מגרסאות המשתתפים. */
+    everPassedLists?: string[];
     /** "בקרב מי שקבעו ערך לרשימה" — לכל רשימה n משלה */
     manual: SeatStat[];
     filledShare: number;

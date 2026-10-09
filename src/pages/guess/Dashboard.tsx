@@ -2,7 +2,7 @@ import PersonalBlocs, { usePersonalBlocs } from "../../components/PersonalBlocs"
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Card } from "../../components/ui";
-import { liveDashboard, newerDashboard, siteDashboard, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { liveDashboard, newerDashboard, siteDashboard, type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, POLL_SHARES, V2022_LABEL, V2026_LABEL } from "./model";
@@ -46,11 +46,13 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
+  const definedBlocs = loadDraft<BlocsPayload>("blocs") ?? personal.saved ?? session.me?.latest.blocs?.payload as BlocsPayload | undefined;
+  const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
   // במסך סקר האתר כרטיס הגושים שלי בטור הצר (הכרעת בעלים 8.10.2026) — Guess מציב שם מקום ריק
   const blocsCard = d.seats ? <PersonalBlocs compact title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
         { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
         { values: d.seats.polls, source: "ממוצע הסקרים", sumAvailable: true, asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
-        ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
+        ...(mine && hasDefinedBlocs ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
       ]} /> : null;
   return (
     <div>
@@ -63,9 +65,9 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
       {subject === "seats" ? (
-        d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={mine} view={view} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
+        d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
       ) : (
-        d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={mine} view={view} unit="pct" /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
+        d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={hasDefinedBlocs ? mine : undefined} view={view} unit="pct" passedLists={d.seats.everPassedLists ?? d.seats.full.filter(s => s.max >= 4).map(s => s.list)} /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
       {d.blocs ? <BlocStats d={d} view={view} mine={myBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
@@ -81,16 +83,17 @@ function Toggle<T extends string>({ value, setValue, options, label }: { value: 
   return <div className="flex gap-1.5" role="radiogroup" aria-label={label}>{options.map(([id,text]) => <button key={id} type="button" role="radio" aria-checked={value===id} onClick={()=>setValue(id)} className={`min-h-[40px] px-4 rounded-full border-2 text-sm font-bold ${value===id ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}>{text}</button>)}</div>;
 }
 
-export function SeatsStats({ rows, polls, mine, view, unit = "seats" }: { rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject }) {
-  const sorted = useMemo(() => [...rows].sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows]);
+export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject }) {
+  const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= (unit === "pct" ? 3.25 : 4)).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists, unit]);
+  const hiddenNote = <p className="text-xs text-ink-soft mt-3">מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות</p>;
   const suffix = unit === "pct" ? "%" : "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => unit === "pct" ? mine?.mode === "pct" ? mine.pct?.[id] : undefined : mine?.seats[id]?.v;
-  if (view === "chart") return <Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),value:s.mean,range:range(s)}))} />;
+  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),value:s.mean,range:range(s)}))} />{hiddenNote}</>;
   return <Card title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
-    <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th><th className="font-normal">שלי</th></tr></thead>
-    <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td><td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td></tr>)}</tbody>
-  </table></div></Card>;
+    <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th>{mine && <th className="font-normal">שלי</th>}</tr></thead>
+    <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
+  </table></div>{hiddenNote}</Card>;
 }
 
 /** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
@@ -144,7 +147,7 @@ function Matrix({ d }: { d: D }) {
   const continuity = voteContinuity(m);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{continuity.same}</strong> · עברו לרשימה אחרת: <strong>{continuity.changed}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{continuity.split}</strong>. ב־2022 הציונות הדתית, עוצמה יהודית ונעם התמודדו יחד; בטבלה מופיע המעבר מהרשימה המשותפת לרשימות של היום.</p>}
+    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{continuity.same}</strong> · עברו לרשימה אחרת: <strong>{continuity.changed}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{continuity.split}</strong></p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>

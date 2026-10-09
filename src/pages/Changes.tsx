@@ -177,6 +177,13 @@ export default function Changes() {
   return (
     <>
       <Split title="מה השתנה מהבחירות האחרונות" lead="השוואת הגושים שלכם או משפחות המפלגות לבחירות קודמות. כרגע ההשוואה היא לתוצאות 2022 מול ממוצע הסקרים היום. בהרכבים שהתפצלו או התאחדו בוחרים דרך שיוך מפורשת." primary={<>
+      <div className="bg-accent-soft text-ink rounded-theme p-3 mb-3 space-y-2">
+        <p className="font-bold">אפשר לשנות את הרכב המחנות</p>
+        <p className="text-sm">בחרו לאיזה מחנה לשייך כל מפלגה. השינוי מעדכן גם את השוואת הגושים שלכם.</p>
+        <button type="button" aria-expanded={editing && view !== "party"} onClick={() => { if (view === "party") { setView("camp"); setEditing(true); } else setEditing(e => !e); }} className="min-h-[44px] px-4 rounded-full text-sm font-bold border border-ink bg-paper-card">
+          {editing && view !== "party" ? "סגירת עריכת המחנות" : customized ? "עריכת הרכב המחנות (שונה)" : "עריכת הרכב המחנות"}
+        </button>
+      </div>
       <div role="radiogroup" aria-label="השוואה לפי" className="flex flex-wrap gap-2 mb-3">
         {([["blocs", "לפי הגושים שלי"], ["party", "לפי המפלגה"], ["camp", "לפי המחנה"]] as const).map(([id, name]) => (
           <button
@@ -194,11 +201,7 @@ export default function Changes() {
       <p className="text-base leading-relaxed mb-3">
         {view === "blocs" ? "הגושים שלכם, 2022 מול היום. רשימות 2022 משויכות לפי המחנות (ראו \"לפי המחנה\")." : alt.desc}
       </p>
-      {view !== "party" && (
-        <button type="button" aria-expanded={editing} onClick={() => setEditing((e) => !e)} className="min-h-[44px] px-4 rounded-full text-sm font-bold border border-ink-faint mb-4">
-          {editing ? "סגירת עריכת המחנות" : customized ? "עריכת המחנות שלי (שונו)" : "שינוי המחנות"}
-        </button>
-      )}
+
       </>} secondary={<>
       {editing && view !== "party" && (
         <Card title="המחנות שלי">

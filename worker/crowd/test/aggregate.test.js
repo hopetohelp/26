@@ -312,3 +312,11 @@ it("אישור שם מתעדכן גם בפרסום שלא השתנה ואינו 
   expect(after.dashboard.sectionsAsOf.blocs).toBe(first.dashboard.sectionsAsOf.blocs);
   expect(first.dashboard.blocs.custom[0].name).toBe('אישי');
 });
+
+it("רשימה שעברה באחת הגרסאות נשארת ברשימה גם אחרי עדכון לאפס", () => {
+  const history=[ver('a','seats',seats(4)),ver('a','seats',seats(0)),ver('reviewed','seats',{...seats(0),seats:{shas:{v:120,src:'manual'}}})];
+  const d=run([{id:'a',review:0},{id:'reviewed',review:1}],history).dashboard;
+  expect(d.seats.full.find(s=>s.list==='likud').max).toBe(0);
+  expect(d.seats.everPassedLists).toContain('likud');
+  expect(d.seats.everPassedLists).not.toContain('shas');
+});
