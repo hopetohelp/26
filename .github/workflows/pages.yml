@@ -5,8 +5,8 @@ on:
   schedule:
     # כל ערב ב-21:30 שעון ישראל (קיץ) — רענון הנתונים והבנייה
     - cron: "30 18 * * *"
-    # כל שעה — עותק עדכני של הסטטיסטיקות בתוך האתר (dashboard.json)
-    - cron: "20 * * * *"
+    # כל רבע שעה — סקרים חדשים מוויקיפדיה נכנסים אוטומטית לכל החישובים (הכרעת בעלים 9.10.2026), וגם עותק עדכני של הסטטיסטיקות (dashboard.json)
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 permissions:
   contents: read
@@ -29,9 +29,22 @@ jobs:
         with:
           python-version: "3.11"
       - run: npm ci
+      - name: סקרים חדשים מוויקיפדיה — נכנסים אוטומטית, בלי אימות ובלי המתנה
+        run: |
+          set -uo pipefail
+          T="Opinion_polling_for_the_2026_Israeli_legislative_election"
+          if curl --fail --silent --show-error --retry 3 --max-time 60 -A "elections26-poll-aggregator (https://github.com/hopetohelp/26)" "https://en.wikipedia.org/w/index.php?title=${T}&action=raw" -o /tmp/polls.wiki \
+             && [ "$(wc -c < /tmp/polls.wiki)" -gt 100000 ] && grep -q '^{|' /tmp/polls.wiki; then
+            cp /tmp/polls.wiki "raw/wikipedia/en__${T}.wiki"
+            echo "טבלת הסקרים עודכנה מוויקיפדיה"
+          else
+            echo "::warning::הורדת ויקיפדיה נכשלה או חלקית — נשארת הגרסה שבריפו"
+          fi
       - name: בניית הנתונים לרגע הפרסום (כלל ההקפאה)
         run: python3 pipeline/build_data.py
       - run: npm test
+        env:
+          AUTO_INGEST: "1"
       - run: npm run build
         env:
           # כפתור "הערה?" — השרת הקטן ב-worker/feedback (Cloudflare). בלי המשתנה הכפתור אינו מוצג.
