@@ -27,6 +27,8 @@ export interface HomeRow {
   hi: number;
   /** שיעור התרחישים שבהם הרשימה עוברת את אחוז החסימה (0 עד 1) */
   pass: number;
+  /** כמה סקרים שאלו על הרשימה: קובע את עובי הנר ביחס לשאר הגרף */
+  n: number;
 }
 
 export interface HomeData {
@@ -47,6 +49,8 @@ export interface HomeData {
   series: { date: string; v: number }[];
   /** מקסימום ציר המנדטים (מכפלה של 10) */
   axisMax: number;
+  /** הכי הרבה סקרים שאלו על רשימה אחת: עובי הנר הכי עבה */
+  maxN: number;
 }
 
 /** אחוז התרחישים שמתחתיו הרשימה "מתחת לסף", ומעליו "עוברת בבירור" */
@@ -55,13 +59,13 @@ export const EDGE_MAX = 0.995;
 
 export function buildHome(
   model: HomeModel,
-  opts: { govIds: string[]; nameOf: (id: string) => string; sure: (id: string) => boolean },
+  opts: { govIds: string[]; nameOf: (id: string) => string; sure: (id: string) => boolean; volume?: (id: string) => number },
 ): HomeData {
-  const { govIds, nameOf, sure } = opts;
+  const { govIds, nameOf, sure, volume = () => 1 } = opts;
   const rows: HomeRow[] = Object.keys(model.scenarios.lists)
     .map((id) => {
       const l = model.scenarios.lists[id];
-      return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass };
+      return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass, n: volume(id) };
     })
     .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].seatsMean - model.scenarios.lists[a.id].seatsMean);
 
@@ -88,6 +92,7 @@ export function buildHome(
     below,
     series,
     axisMax: Math.max(30, Math.ceil(maxHi / 10) * 10),
+    maxN: Math.max(0, ...rows.map((r) => r.n)),
   };
 }
 

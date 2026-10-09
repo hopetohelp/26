@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import InstallApp from "../components/InstallApp";
-import { GovTrend, Hemicycle, MAJORITY, Ranking } from "../components/homeCharts";
+import { GovTrend, Hemicycle, MAJORITY, Ranking, missingToMajority } from "../components/homeCharts";
 import { date, num } from "../lib/format";
 import { dayMonth } from "../lib/home";
 import { HOME } from "../lib/homeData";
@@ -14,6 +14,7 @@ const home = HOME;
 
 export default function Home() {
   const { gov, other, series } = home;
+  const missing = Math.min(missingToMajority(gov), other);
   const lo = Math.min(...series.map((s) => s.v));
   const hi = Math.max(...series.map((s) => s.v));
   return (
@@ -30,7 +31,8 @@ export default function Home() {
         <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
           <p className="flex flex-wrap items-center gap-x-5 gap-y-1 font-semibold">
             <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-a" />הממשלה היוצאת <b className="font-num text-xl font-extrabold tabular">{gov}</b></span>
-            <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-b" />כל השאר <b className="font-num text-xl font-extrabold tabular">{other}</b></span>
+            {missing > 0 && <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-miss" />חסרים לרוב <b className="font-num text-xl font-extrabold tabular">{missing}</b></span>}
+            <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-b" />{missing > 0 ? "שאר הכנסת" : "כל השאר"} <b className="font-num text-xl font-extrabold tabular">{other - missing}</b></span>
           </p>
           <p className="mt-2.5 text-sm text-ink-soft">
             נכון ל-{date(home.asOf)} · {num(home.polls)} סקרים · <Link to="/method#model" className="font-semibold">איך זה חושב?</Link>

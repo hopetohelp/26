@@ -201,7 +201,7 @@ export default function Changes() {
           methodAnchor="changes"
         >
           <ChartWithTable
-            summary="טבעת: 2022 · נקודה: היום לפי הממוצע · הרקע הבהיר: הטווח ב-80% מהתרחישים. המספר מימין: השינוי בנקודות אחוז."
+            summary="עיגול גדול ריק: 2022 · עיגול מלא: היום לפי ממוצע המודל · נר: הטווח ב-80% מהתרחישים. המספר מימין: השינוי בנקודות אחוז."
             chart={<DumbbellChart rows={alt.families.map(toRow)} />}
             table={
               <table className="w-full text-sm">

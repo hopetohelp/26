@@ -17,7 +17,7 @@ export function PageTitle({ children, lead, inColumns = false }: { children: Rea
  */
 export function Card({ title, children, className = "", boxed = false }: { title?: ReactNode; children: ReactNode; className?: string; boxed?: boolean }) {
   return (
-    <section className={`${boxed ? "bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
+    <section className={`${boxed ? "bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
       {title && <h2 className="text-xl font-display leading-tight mb-3">{title}</h2>}
       {children}
     </section>

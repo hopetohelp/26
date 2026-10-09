@@ -287,13 +287,13 @@ export function campaignTrend(c: Cycle, letters: string, days = 7, minN = 3) {
   if (!ps.length) return [];
   const first = ps.reduce((a, p) => (p.end < a ? p.end : a), ps[0].end);
   const last = ps.reduce((a, p) => (p.end > a ? p.end : a), ps[0].end);
-  const out: { t: number; v: number; n: number }[] = [];
+  const out: { t: number; v: number; n: number; lo: number; hi: number }[] = [];
   for (let t = toTime(first); t <= toTime(last); t += DAY) {
     const xs = ps
       .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
       .map((p) => seatsOf(p, letters))
       .filter((x): x is number => typeof x === "number");
-    if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length });
+    if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length, lo: Math.min(...xs), hi: Math.max(...xs) });
   }
   return out;
 }

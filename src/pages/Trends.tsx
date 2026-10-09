@@ -1,10 +1,12 @@
 import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
+import { Segmented } from "../components/Choice";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
+import { colorOf } from "../lib/colors";
 import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
-import { date, dateLong, dateRange, seatsFmt } from "../lib/format";
+import { date, dateLong, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
 const LINEAGE: Record<string, { parts: string[]; since: string; note: string }> = {
@@ -28,15 +30,21 @@ function withLineage(ps: Poll[]): Poll[] {
 const PERIODS = [
   { id: "2026", label: "מינואר 2026", from: "2026-01-01" },
   { id: "cycle", label: "מאז בחירות 2022", from: "2022-11-15" },
-  { id: "90", label: "שלושת החודשים האחרונים", from: "" },
-];
+  { id: "90", label: "3 חודשים", from: "" },
+] as const;
+type PeriodId = (typeof PERIODS)[number]["id"];
+
+const DEFAULT_IDS = ["likud", "yashar", "together", "democrats", "yb", "shas", "utj", "otzma"];
+const GOV_LISTS = lists2026.filter((l) => l.gov37).map((l) => l.id);
+
+/** צבע קבוע לכל רשימה (לפי מקומה ברשימת הרשימות), כך שהמתג, המקרא והקו תמיד באותו צבע */
+const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
 
 export default function Trends() {
   const to = lastPollDate();
-  const [period, setPeriod] = useState("2026");
+  const [period, setPeriod] = useState<PeriodId>("2026");
   const [who, setWho] = useState("");
-  const defaultIds = ["likud", "yashar", "together", "democrats", "yb", "shas", "utj", "otzma"];
-  const [ids, setIds] = useState<string[]>(defaultIds);
+  const [ids, setIds] = useState<string[]>(DEFAULT_IDS);
 
   const pollsters = useMemo(() => {
     const m = new Map<string, string>();
@@ -53,104 +61,167 @@ export default function Trends() {
 
   const series: Series[] = [];
   for (const id of ids) {
+    const color = colorOf(id, colorIndex(id));
     const solid = rollingMean(id, from, to, days, 3, source).filter((x) => x.n >= minN);
     const lin = LINEAGE[id];
     if (lin && from < lin.since) {
       const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, 3, source).filter((x) => x.n >= minN);
-      if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
+      if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, color, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
     }
-    if (solid.length) series.push({ id, name: listName(id), points: solid });
+    if (solid.length) series.push({ id, color, name: listName(id), points: solid });
   }
   // תוויות קצה רק לקו המלא של כל רשימה
   const labeled = series.filter((s) => !s.dashed);
-  const dots = source
-    .filter((p) => p.end >= from && p.end <= to)
-    .flatMap((p) => ids.map((id) => ({ id, t: toTime(p.end), v: seatsIn(p, id) })).filter((d) => typeof d.v === "number")) as { id: string; t: number; v: number }[];
   const yMax = Math.max(10, Math.ceil(Math.max(...series.flatMap((s) => s.points.map((p) => p.v)), 0) / 5) * 5 + 5);
 
   const toggle = (id: string) => setIds((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
-  const tableRows = labeled.map((s) => ({ name: s.name, last: s.points[s.points.length - 1], first: s.points[0] }));
+  const rows = labeled
+    .map((s) => ({ s, first: s.points[0], last: s.points[s.points.length - 1] }))
+    .sort((a, b) => b.last.v - a.last.v);
+  const nowOf = (id: string) => rows.find((r) => r.s.id === id)?.last.v;
+  const who0 = who ? pollsters.find(([k]) => k === who)?.[1] : undefined;
+
+  const PRESETS: { label: string; ids: string[] }[] = [
+    { label: "הגדולות", ids: DEFAULT_IDS },
+    { label: "הממשלה היוצאת", ids: GOV_LISTS },
+    { label: "כל הרשימות", ids: lists2026.map((l) => l.id) },
+    { label: "ניקוי", ids: [] },
+  ];
+  const sameSet = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
 
   return (
     <>
-
-      <Split title="מגמות" lead="ממוצע מתגלגל של המנדטים בסקרים שפורסמו: בכל נקודה — הממוצע של כל הסקרים מ-14 הימים שקדמו לה. הנקודות הבהירות הן הסקרים עצמם." primary={<Card>
-        <div className="flex flex-wrap gap-4 items-end mb-3">
-          <label className="flex flex-col text-sm">
-            תקופה
-            <select className="border border-paper-line rounded px-2 py-1 mt-1" value={period} onChange={(e) => setPeriod(e.target.value)}>
-              {PERIODS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex flex-col text-sm">
-            מכון
-            <select className="border border-paper-line rounded px-2 py-1 mt-1" value={who} onChange={(e) => setWho(e.target.value)}>
-              <option value="">כל המכונים</option>
-              {pollsters.map(([k, l]) => (
-                <option key={k} value={k}>
-                  {l}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <fieldset className="mb-4">
-          <legend className="text-sm font-bold mb-1">רשימות</legend>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            {lists2026.map((l) => (
-              <label key={l.id} className="text-sm flex items-center gap-1">
-                <input type="checkbox" checked={ids.includes(l.id)} onChange={() => toggle(l.id)} />
-                {l.name}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        </Card>} secondary={<><Card>
-        <Explained
-          kind="סיכום סקרים"
-          source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
-          asOf={`הסקרים עד ${dateLong(to)}`}
-          assumption={who ? "מכון בודד: חלון של 45 יום, כדי שיהיו מספיק סקרים." : "כל המכונים: ממוצע הסקרים ב-14 הימים האחרונים, לפחות 3 סקרים לנקודה. ממוצע תיאורי — לא מודל ולא תחזית."}
-          methodAnchor="trends"
-        >
-          <ChartWithTable
-            summary={`${labeled.length} רשימות, ${dateRange(from, to)}${who ? `, ${pollsters.find(([k]) => k === who)?.[1] ?? ""}` : ", כל המכונים"}.`}
-            chart={<TrendChart series={series} dots={dots} from={toTime(from)} to={toTime(to)} yMax={yMax} title="מגמת המנדטים לפי רשימה" />}
-            table={
-              <table className="text-sm w-full">
-                <caption className="sr-only">ערך התחלה וסוף לכל רשימה בתקופה</caption>
-                <thead>
-                  <tr className="text-right border-b border-paper-line">
-                    <th scope="col" className="py-1">רשימה</th>
-                    <th scope="col">בתחילת התקופה</th>
-                    <th scope="col">היום</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableRows.map((r) => (
-                    <tr key={r.name} className="border-b border-paper-line/60">
-                      <th scope="row" className="text-right py-1 font-medium">{r.name}</th>
-                      <td className="tabular-nums">{seatsFmt(r.first.v)} ({date(new Date(r.first.t).toISOString())})</td>
-                      <td className="tabular-nums">{seatsFmt(r.last.v)} ({date(new Date(r.last.t).toISOString())})</td>
-                    </tr>
+      <Split
+        title="מגמות"
+        lead="ממוצע מתגלגל של המנדטים בסקרים שפורסמו. בקו: בכל נקודה הממוצע של כל הסקרים מהחלון שקדם לה, ובסופו נר של הנמוך והגבוה. בנרות: נר לכל חלון."
+        primary={
+          <Card>
+            <div className="space-y-4">
+              <div>
+                <div id="trend-period" className="text-sm font-bold mb-1.5">תקופה</div>
+                <Segmented label="תקופה" value={period} onChange={setPeriod} options={PERIODS.map((p) => ({ id: p.id, label: p.label }))} />
+              </div>
+              <label className="block">
+                <span className="block text-sm font-bold mb-1.5">מכון</span>
+                <select className="w-full min-h-[44px] rounded-theme border border-ink/[.35] bg-paper-card px-3 text-sm" value={who} onChange={(e) => setWho(e.target.value)}>
+                  <option value="">כל המכונים</option>
+                  {pollsters.map(([k, l]) => (
+                    <option key={k} value={k}>
+                      {l}
+                    </option>
                   ))}
-                </tbody>
-              </table>
-            }
-          />
-        </Explained>
-        <Note>
-          קו מקווקו: לפני שהרשימה התאחדה — סכום המנדטים של מרכיביה ({Object.values(LINEAGE).map((l) => l.note).join(" · ")}). זה סכום של שתי
-          רשימות נפרדות, לא תמיכה ברשימה המאוחדת.
-        </Note>
-      </Card>
-      <PersonalBlocTrends source={rawSource} from={from} to={to} days={days} minN={minN} />
-      </>} />
+                </select>
+              </label>
+              <fieldset>
+                <legend className="text-sm font-bold mb-1.5">רשימות ({ids.length})</legend>
+                <div className="flex flex-wrap gap-1.5 mb-2.5" role="group" aria-label="קיצורי בחירה">
+                  {PRESETS.map((p) => (
+                    <button
+                      key={p.label}
+                      type="button"
+                      onClick={() => setIds(p.ids)}
+                      aria-pressed={sameSet(ids, p.ids) && p.ids.length > 0}
+                      className={`min-h-[34px] px-3 rounded-full text-sm ${sameSet(ids, p.ids) && p.ids.length > 0 ? "bg-ink text-paper-card font-bold" : "ring-[1.5px] ring-inset ring-ink/[.35] font-semibold"}`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {lists2026.map((l) => {
+                    const on = ids.includes(l.id);
+                    const now = nowOf(l.id);
+                    return (
+                      <button
+                        key={l.id}
+                        type="button"
+                        onClick={() => toggle(l.id)}
+                        aria-pressed={on}
+                        className={`inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-full text-sm ${on ? "bg-paper-card font-bold ring-2 ring-inset ring-ink" : "ring-[1.5px] ring-inset ring-ink/[.35] text-ink-soft"}`}
+                      >
+                        <i className="size-2.5 rounded-full" style={{ background: on ? colorOf(l.id, colorIndex(l.id)) : "transparent", boxShadow: on ? undefined : `inset 0 0 0 1.5px ${colorOf(l.id, colorIndex(l.id))}` }} />
+                        {l.name}
+                        {on && now !== undefined && <span className="font-num tabular text-xs text-ink-soft">{seatsFmt(now)}</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            </div>
+          </Card>
+        }
+        secondary={
+          <>
+            <Card>
+              <Explained
+                kind="סיכום סקרים"
+                source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
+                asOf={`הסקרים עד ${dateLong(to)}`}
+                assumption={
+                  who
+                    ? "מכון בודד: חלון של 45 יום, כדי שיהיו מספיק סקרים. הנר הוא הנמוך והגבוה בין הסקרים של המכון בחלון."
+                    : "כל המכונים: ממוצע הסקרים ב-14 הימים האחרונים, לפחות 3 סקרים לנקודה. הנר הוא הנמוך והגבוה בין הסקרים בחלון (טווח מלא), והעובי לפי כמות הסקרים ביחס לשאר הגרף. ממוצע תיאורי — לא מודל ולא תחזית."
+                }
+                methodAnchor="trends"
+              >
+                <ChartWithTable
+                  summary={`${labeled.length} רשימות, ${dateRange(from, to)}${who0 ? `, ${who0}` : ", כל המכונים"}.`}
+                  chart={
+                    labeled.length ? (
+                      <TrendChart series={series} from={toTime(from)} to={toTime(to)} yMax={yMax} title="מגמת המנדטים לפי רשימה" windowText={{ days, label: `${days} הימים` }} />
+                    ) : (
+                      <p className="text-ink-soft py-8 text-center">אין מספיק סקרים בתקופה ובמכון שנבחרו. בחרו תקופה ארוכה יותר או כל המכונים.</p>
+                    )
+                  }
+                  table={
+                    <table className="text-sm w-full">
+                      <caption className="sr-only">ערך התחלה, סוף ושינוי לכל רשימה בתקופה</caption>
+                      <thead>
+                        <tr className="text-right border-b border-paper-line">
+                          <th scope="col" className="py-1">רשימה</th>
+                          <th scope="col">בתחילת התקופה</th>
+                          <th scope="col">היום</th>
+                          <th scope="col">הנמוך והגבוה בחלון האחרון</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map(({ s, first, last }) => (
+                          <tr key={s.id} className="border-b border-paper-line/60">
+                            <th scope="row" className="text-right py-1 font-medium">{s.name}</th>
+                            <td className="tabular-nums">{seatsFmt(first.v)} ({date(new Date(first.t).toISOString())})</td>
+                            <td className="tabular-nums">{seatsFmt(last.v)} ({date(new Date(last.t).toISOString())})</td>
+                            <td className="tabular-nums">{last.lo !== undefined && last.hi !== undefined ? (last.lo === last.hi ? seatsFmt(last.lo) : `${seatsFmt(last.lo)}–${seatsFmt(last.hi)}`) : "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  }
+                />
+              </Explained>
+              {rows.length > 0 && (
+                <ul className="mt-4 grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3" aria-label="היום ושינוי מתחילת התקופה">
+                  {rows.map(({ s, first, last }) => {
+                    const d = Math.round((last.v - first.v) * 10) / 10;
+                    return (
+                      <li key={s.id} className="flex items-baseline gap-2 border-t border-paper-line py-1.5 text-sm">
+                        <i className="size-2.5 rounded-full shrink-0 self-center" style={{ background: s.color }} />
+                        <span className="grow font-semibold">{s.name}</span>
+                        <b className="font-num tabular text-lg">{seatsFmt(last.v)}</b>
+                        <span className="font-num tabular text-ink-soft w-12 text-end"><bdi dir="ltr">{signed(d)}</bdi></span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <Note>
+                השינוי הוא מתחילת התקופה שנבחרה. קו מקווקו: לפני שהרשימה התאחדה — סכום המנדטים של מרכיביה ({Object.values(LINEAGE).map((l) => l.note).join(" · ")}). זה סכום של שתי
+                רשימות נפרדות, לא תמיכה ברשימה המאוחדת.
+              </Note>
+            </Card>
+            <PersonalBlocTrends source={rawSource} from={from} to={to} days={days} minN={minN} />
+          </>
+        }
+      />
     </>
   );
 }

@@ -51,7 +51,8 @@ function useRadioKeys<T extends string>(options: readonly ChoiceOption<T>[], val
 
 const RING = "ring-[1.5px] ring-inset";
 
-export function Segmented<T extends string>({ value, onChange, options, label, disabled, className = "" }: ChoiceProps<T>) {
+/** `size="sm"`: מתג קטן (36px) למתגי תצוגה בתוך גרף, כמו קו/נרות */
+export function Segmented<T extends string>({ value, onChange, options, label, disabled, className = "", size = "md" }: ChoiceProps<T> & { size?: "md" | "sm" }) {
   const { tabbable, onKeyDown } = useRadioKeys(options, value, onChange, disabled);
   return (
     <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={`grid grid-flow-col auto-cols-fr gap-[3px] p-[3px] rounded-theme bg-paper ${RING} ring-ink/[.35] ${className}`}>
@@ -66,7 +67,7 @@ export function Segmented<T extends string>({ value, onChange, options, label, d
             tabIndex={o.id === tabbable ? 0 : -1}
             disabled={disabled || o.disabled}
             onClick={() => onChange(o.id)}
-            className={`min-h-[44px] px-2 rounded-[calc(var(--radius)-3px)] text-sm leading-tight text-center disabled:opacity-40 ${on ? `bg-paper-card text-ink font-bold ${RING} ring-ink` : "text-ink-soft font-semibold"}`}
+            className={`${size === "sm" ? "min-h-[34px]" : "min-h-[44px]"} px-2 rounded-[calc(var(--radius)-3px)] text-sm leading-tight text-center disabled:opacity-40 ${on ? `bg-paper-card text-ink font-bold ${RING} ring-ink` : "text-ink-soft font-semibold"}`}
           >
             {o.label}
           </button>
