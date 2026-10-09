@@ -11,7 +11,8 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { Segmented } from "../components/Choice";
 import modelFile from "../data/model.json";
 import { listName } from "../lib/data";
-import { colorOf } from "../lib/colors";
+import DumbbellChart from "../components/dumbbellChart";
+import { diffText as diff, r1, type DumbbellRow } from "../lib/dumbbell";
 import { dateLong, num, rng } from "../lib/format";
 
 interface Family {
@@ -97,49 +98,16 @@ function campAlternative(camps: CampMap): Alternative {
   };
 }
 
-const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const diff = (x: number) => {
-  const v = Math.round(x * 10) / 10;
-  return v === 0 ? "0.0" : `${v > 0 ? "+" : "−"}${r1(Math.abs(v))}`;
-};
 const names26 = (ids: string[]) => ids.map(listName).join(" + ");
 
-/** שורה אחת: 2022 מול היום, על אותו סרגל. כיוון השינוי מסומן בסימן בלבד — אותו צבע לעלייה ולירידה (ניטרליות). */
-function FamilyRow({ f, max }: { f: Family; max: number }) {
-  const w = (x: number) => `${(Math.min(x, max) / max) * 100}%`;
-  const d = f.shareNow - f.share2022;
-  return (
-    <li className="py-3 border-t border-paper-line first:border-t-0">
-      <p className="sr-only">
-        {`${names26(f.k26)}, לעומת ${f.k25.join(" ו")} ב-2022: ${r1(f.share2022)}% מהקולות הכשרים ב-2022; היום ${r1(f.shareNow)}% לפי הממוצע${f.shareRange ? `, ובין ${r1(f.shareRange[0])}% ל-${r1(f.shareRange[2])}% ב-80% מהתרחישים` : ""}. שינוי נטו: ${diff(d)} נקודות אחוז.`}
-      </p>
-      <div aria-hidden="true" className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-        <span className="font-bold text-base flex items-center gap-2 min-w-0">
-          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: colorOf(f.k26[0]) }} />
-          {names26(f.k26)}
-        </span>
-        <span className="font-display text-2xl leading-none">
-          <span className="tabular" dir="ltr">{diff(d)}</span>
-          <span className="text-sm font-sans text-ink-soft"> נק'</span>
-        </span>
-      </div>
-      <p aria-hidden="true" className="text-xs text-ink-soft mb-1.5">2022: {f.k25.join(" + ")}</p>
-      <div aria-hidden="true" className="grid grid-cols-[3.2rem_1fr_3rem] items-center gap-x-2 gap-y-1 text-xs">
-        <span className="text-ink-soft">2022</span>
-        <span className="relative h-2.5 bg-paper rounded-sm">
-          <span className="absolute inset-y-0 right-0 rounded-sm bg-ink-faint/60" style={{ width: w(f.share2022) }} />
-        </span>
-        <span className="tabular text-left">{r1(f.share2022)}%</span>
-        <span className="text-ink-soft">היום</span>
-        <span className="relative h-2.5 bg-paper rounded-sm">
-          {f.shareRange && <span className="absolute inset-y-0 rounded-sm bg-accent/25" style={{ right: w(f.shareRange[0]), width: `calc(${w(f.shareRange[2])} - ${w(f.shareRange[0])})` }} />}
-          <span className="absolute inset-y-0 right-0 rounded-sm bg-accent" style={{ width: w(f.shareNow) }} />
-        </span>
-        <span className="tabular text-left font-bold">{r1(f.shareNow)}%</span>
-      </div>
-    </li>
-  );
-}
+const toRow = (f: Family): DumbbellRow => ({
+  id: f.id,
+  name: names26(f.k26),
+  from: f.k25.join(" + "),
+  before: f.share2022,
+  now: f.shareNow,
+  range: f.shareRange ? [f.shareRange[0], f.shareRange[2]] : null,
+});
 
 export default function Changes() {
   const personal = usePersonalBlocs();
@@ -169,7 +137,6 @@ export default function Changes() {
   const campAlt = campAlternative(camps);
   const alt = view === "party" ? PARTY : campAlt;
   const customized = LISTS_NOW.some((id) => camps[id] !== DEFAULT_CAMPS[id]);
-  const max = Math.max(25, ...alt.families.flatMap((f) => [f.share2022, f.shareRange?.[2] ?? f.shareNow]));
   const u22 = alt.unassigned2022;
   const unow = alt.unassignedNow;
   const previous = results.find(r => r.knesset === 25)!;
@@ -234,14 +201,8 @@ export default function Changes() {
           methodAnchor="changes"
         >
           <ChartWithTable
-            summary="פס אפור: 2022 · פס כחול: היום לפי הממוצע · הרקע הבהיר: הטווח ב-80% מהתרחישים. המספר הגדול: השינוי בנקודות אחוז."
-            chart={
-              <ul aria-label="משפחות הרשימות, 2022 מול היום">
-                {alt.families.map((f) => (
-                  <FamilyRow key={f.id} f={f} max={max} />
-                ))}
-              </ul>
-            }
+            summary="טבעת: 2022 · נקודה: היום לפי הממוצע · הרקע הבהיר: הטווח ב-80% מהתרחישים. המספר מימין: השינוי בנקודות אחוז."
+            chart={<DumbbellChart rows={alt.families.map(toRow)} />}
             table={
               <table className="w-full text-sm">
                 <caption className="sr-only">משפחות הרשימות: 2022 מול היום — {alt.name}</caption>
