@@ -22,12 +22,14 @@ function Row({ r, max, ticks, lsegs }: { r: DumbbellRow; max: number; ticks: num
         <span className="block text-xs text-ink-soft md:mt-0.5">נק'</span>
       </span>
       <span aria-hidden="true" dir="ltr" className="relative block h-8 col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-span-2">
-        {ticks.map((v) => (
-          <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
-        ))}
-        {lsegs.length > 0 && <ProfileCandle segs={lsegs} x={x} />}
-        <ResultRing at={x(r.before)} />
-        <MeanDot at={x(r.now)} />
+        <span className="mk-plot">
+          {ticks.map((v) => (
+            <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
+          ))}
+          {lsegs.length > 0 && <ProfileCandle segs={lsegs} x={x} />}
+          <ResultRing at={x(r.before)} />
+          <MeanDot at={x(r.now)} />
+        </span>
       </span>
       <span className="col-span-2 row-start-3 md:col-span-1 md:col-start-1 md:row-start-2 text-sm text-ink-soft leading-snug">
         <span className="whitespace-nowrap">2022: <b className="font-num tabular text-ink">{r1(r.before)}%</b></span>
@@ -56,9 +58,11 @@ export default function DumbbellChart({ rows }: { rows: DumbbellRow[] }) {
       />
       <div aria-hidden="true" className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
         <div dir="ltr" className="md:col-start-2 relative h-5">
-          {ticks.map((v) => (
-            <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${(v / max) * 100}%` }}>{v === 0 ? "0" : `${v}%`}</span>
-          ))}
+          <span className="mk-plot">
+            {ticks.map((v) => (
+              <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${(v / max) * 100}%` }}>{v === 0 ? "0" : `${v}%`}</span>
+            ))}
+          </span>
         </div>
       </div>
       <ul aria-label="משפחות הרשימות, 2022 מול היום">

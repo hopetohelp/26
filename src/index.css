@@ -241,6 +241,17 @@
 .mk-prof-sw path {
   fill: rgb(var(--mk-range));
 }
+/* שטח הציור של מסלול אופקי: מרוחק מכל קצה, כדי שעיגול בקצה הציר לא יחרוג אל עמודת המספרים או הטקסט (`MARK_PAD`) */
+:root {
+  --mk-pad: 14px;
+}
+.mk-plot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--mk-pad);
+  right: var(--mk-pad);
+}
 .mk-dot {
   width: 9px;
   height: 9px;

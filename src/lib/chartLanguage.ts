@@ -21,6 +21,12 @@ export const CANDLE_PX: Readonly<Record<Level, number>> = { 1: 4, 3: 10, 5: 16 }
 /** קוטר עיגול הממוצע והתוצאה: גדול מהנר העבה (הכרעת בעלים 9.10.2026) */
 export const MARK_PX = 22;
 
+/**
+ * הרווח בין קצה המסלול לקצה שטח הציור, בפיקסלים: חצי קוטר העיגול ועוד 3. כך עיגול בקצה הציר (למשל 0 מנדטים) לא חורג אל עמודת
+ * המספרים או הטקסט שלידו (הכרעת בעלים 9.10.2026). אותו ערך ב-`--mk-pad` ב-`src/index.css` (בדיקה מוודאת).
+ */
+export const MARK_PAD = MARK_PX / 2 + 3;
+
 /** המקסימום באותו גרף, להשוואת עובי הנרות (מתעלם מערכים חסרים) */
 export const maxVolume = (ns: (number | undefined)[]): number => Math.max(0, ...ns.filter((n): n is number => typeof n === "number" && Number.isFinite(n)));
 

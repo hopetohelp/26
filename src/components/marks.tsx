@@ -70,17 +70,16 @@ export function Swatch({ kind }: { kind: MarkKind }) {
   return <i aria-hidden="true" className={`mk mk-sw ${cls}`} />;
 }
 
-/** מסלול של שורה: `relative`, שמאל לימין, ורשת של קווים דקים כל `step` יחידות. 0 משמאל בכל האתר */
+/** מסלול של שורה: `relative`, שמאל לימין, ורשת של קווים דקים כל `step` יחידות. 0 משמאל בכל האתר. הסימנים והרשת בשטח פנימי (`mk-plot`) שמרוחק `MARK_PAD` מכל קצה, כדי שעיגול בקצה (למשל 0) לא יחרוג אל עמודת המספרים או הטקסט (הכרעת בעלים 9.10.2026) */
 export function Track({ axisMax, step = 10, className = "h-5", title, children }: { axisMax: number; step?: number; className?: string; title?: string; children: ReactNode }) {
   return (
-    <span
-      aria-hidden="true"
-      title={title}
-      dir="ltr"
-      className={`relative block ${className}`}
-      style={{ backgroundImage: "linear-gradient(to right, rgb(var(--line)) 1px, transparent 1px)", backgroundSize: `${(step / axisMax) * 100}% 100%`, backgroundRepeat: "repeat-x" }}
-    >
-      {children}
+    <span aria-hidden="true" title={title} dir="ltr" className={`relative block ${className}`}>
+      <span
+        className="mk-plot"
+        style={{ backgroundImage: "linear-gradient(to right, rgb(var(--line)) 1px, transparent 1px)", backgroundSize: `${(step / axisMax) * 100}% 100%`, backgroundRepeat: "repeat-x" }}
+      >
+        {children}
+      </span>
     </span>
   );
 }
@@ -90,9 +89,11 @@ export function AxisLabels({ axisMax, step = 10, format = (v: number) => String(
   const ticks = Array.from({ length: Math.floor(axisMax / step) + 1 }, (_, i) => i * step);
   return (
     <div aria-hidden="true" dir="ltr" className="relative h-4">
-      {ticks.map((v) => (
-        <span key={v} className="absolute -translate-x-1/2" style={{ left: `${(v / axisMax) * 100}%` }}>{format(v)}</span>
-      ))}
+      <span className="mk-plot">
+        {ticks.map((v) => (
+          <span key={v} className="absolute -translate-x-1/2" style={{ left: `${(v / axisMax) * 100}%` }}>{format(v)}</span>
+        ))}
+      </span>
     </div>
   );
 }
