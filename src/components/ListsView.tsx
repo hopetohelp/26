@@ -1,3 +1,4 @@
+import { rng } from "../lib/format";
 import type { ThemeId } from "../lib/theme";
 
 /** שורה אחת: מנדטים לפי הממוצע, טווח 80% של התרחישים, ושיעור התרחישים שבהם הרשימה עוברת את הסף */
@@ -16,7 +17,7 @@ export interface ListRow {
 const passPct = (p: number) => Math.round(p * 100);
 const isEdge = (r: ListRow) => !r.sure && r.pass > 0.005 && r.pass < 0.995;
 const isOut = (r: ListRow) => r.pass <= 0.005;
-const range = (r: ListRow) => (r.hi > 0 ? `${r.lo}–${r.hi}` : "—");
+const range = (r: ListRow) => (r.hi > 0 ? rng(r.lo, r.hi) : "—");
 const statusText = (r: ListRow) => (isOut(r) ? "מתחת לסף" : isEdge(r) ? `על הסף, עוברת ב-${passPct(r.pass)}%` : "עוברת");
 const srRow = (r: ListRow, basis: string) =>
   `${r.name}: ${r.central} מנדטים לפי ${basis}; ב-80% מהתרחישים ${r.hi > 0 ? `בין ${r.lo} ל-${r.hi}` : "אפס"}; ${statusText(r)}`;

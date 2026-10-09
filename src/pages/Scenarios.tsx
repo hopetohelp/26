@@ -7,7 +7,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
 import { lists2026, listName, meta, results } from "../lib/data";
-import { date, dateLong, num, seatsFmt } from "../lib/format";
+import { date, dateLong, dateRange, num, rng, seatsFmt } from "../lib/format";
 
 interface ListScenario {
   seats: number[];
@@ -126,7 +126,7 @@ export default function Scenarios() {
                       <tr key={id} className="border-b border-paper-line/60">
                         <th scope="row" className="py-1 pe-3 text-right font-medium">{listName(id)}</th>
                         <td className="pe-3 tabular-nums font-bold">{m.central.seats[id]}</td>
-                        <td className="pe-3 tabular-nums">{l.seats[0]}–{l.seats[2]}</td>
+                        <td className="pe-3 tabular-nums">{rng(l.seats[0], l.seats[2])}</td>
                         <td className="pe-3 tabular-nums">{r1(l.share[0])}%–{r1(l.share[2])}%</td>
                         <td>{pctTxt(l.pass)}</td>
                       </tr>
@@ -181,7 +181,7 @@ export default function Scenarios() {
               <span className="text-lg font-medium text-ink-soft"> מנדטים לפי ממוצע המודל</span>
             </p>
             <p className="text-ink-soft text-sm">
-              ב-80% מהתרחישים: {sc.bloc.seats[0]}–{sc.bloc.seats[2]} · 61 ומעלה: {pctTxt(sc.bloc.atLeast61)}
+              ב-80% מהתרחישים: {rng(sc.bloc.seats[0], sc.bloc.seats[2])} · 61 ומעלה: {pctTxt(sc.bloc.atLeast61)}
             </p>
           </Explained>
           <Note>
@@ -227,7 +227,7 @@ export default function Scenarios() {
           methodAnchor="model"
         >
           <ChartWithTable
-            summary={`${trendIds.length} הרשימות הגדולות, ${date(m.trend[0].date)}–${date(m.trend[m.trend.length - 1].date)}.`}
+            summary={`${trendIds.length} הרשימות הגדולות, ${dateRange(m.trend[0].date, m.trend[m.trend.length - 1].date)}.`}
             chart={<TrendChart series={series} from={t0} to={t1} yMax={Math.ceil((Math.max(...series.flatMap((s) => s.points.map((p) => p.v))) + 2) / 5) * 5} title="הממוצע של המודל באחוזים לאורך זמן" />}
             table={
               <table className="text-sm w-full">

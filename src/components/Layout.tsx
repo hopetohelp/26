@@ -84,6 +84,8 @@ function ElectionDate() {
   const [y, m, d] = meta.electionDay.split("-");
   return (
     <span className="whitespace-nowrap">
+      {/* "הבחירות": התווית שמבדילה את הספירה לאחור כאן מהספירה לנעילת ההשערות במסך "הכנסת שלי" (שלב 0, 9.10.2026) */}
+      הבחירות{" "}
       <span className="hidden sm:inline">{dateLong(meta.electionDay)}</span>
       <span className="sm:hidden" dir="ltr">{`${Number(d)}/${Number(m)}/${y.slice(2)}`}</span>
     </span>

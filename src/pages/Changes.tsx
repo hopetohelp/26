@@ -12,7 +12,7 @@ import { Segmented } from "../components/Choice";
 import modelFile from "../data/model.json";
 import { listName } from "../lib/data";
 import { colorOf } from "../lib/colors";
-import { dateLong, num } from "../lib/format";
+import { dateLong, num, rng } from "../lib/format";
 
 interface Family {
   id: string;
@@ -265,8 +265,8 @@ export default function Changes() {
                       <td className="pe-3 tabular">{r1(f.share2022)}</td>
                       <td className="pe-3 tabular">{f.seats2022}</td>
                       <td className="pe-3 tabular">{r1(f.shareNow)}</td>
-                      <td className="pe-3 tabular whitespace-nowrap">{f.shareRange ? `${r1(f.shareRange[0])}–${r1(f.shareRange[2])}` : "—"}</td>
-                      <td className="pe-3 tabular whitespace-nowrap">{f.seatsNow}{f.seatsRange ? ` (${f.seatsRange[0]}–${f.seatsRange[2]})` : ""}</td>
+                      <td className="pe-3 tabular whitespace-nowrap">{f.shareRange ? rng(r1(f.shareRange[0]), r1(f.shareRange[2])) : "—"}</td>
+                      <td className="pe-3 tabular whitespace-nowrap">{f.seatsNow}{f.seatsRange ? ` (${rng(f.seatsRange[0], f.seatsRange[2])})` : ""}</td>
                       <td className="tabular" dir="ltr">{diff(f.shareNow - f.share2022)}</td>
                     </tr>
                   ))}

@@ -5,7 +5,7 @@ import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
 import { liveDashboard, newerDashboard, siteDashboard, type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
-import { date, seatsFmt } from "../../lib/format";
+import { date, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, POLL_SHARES, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
@@ -15,7 +15,7 @@ import type { useSession } from "./useCrowd";
 type Subject = "seats" | "pct";
 type View = "table" | "chart";
 
-const range = (s: SeatStat) => s.min === s.max ? "" : `${seatsFmt(s.min)}–${seatsFmt(s.max)}`;
+const range = (s: SeatStat) => s.min === s.max ? "" : rng(seatsFmt(s.min), seatsFmt(s.max));
 const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
 const v2022Name = (k: string) => V2022_LABEL[k] ?? k25VoteName(k);
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
@@ -59,7 +59,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
-      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל־{asOf}</p>}
+      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />

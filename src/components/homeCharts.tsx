@@ -1,4 +1,5 @@
 import { hemicycleSeats } from "../lib/hemicycle";
+import { rng } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 
 /**
@@ -83,7 +84,7 @@ function RankRow({ r, axisMax, withDots }: { r: HomeRow; axisMax: number; withDo
         />
       </span>
       <span className="hidden md:block text-sm text-ink-soft text-end">
-        <bdi dir="ltr">{`${r.lo}–${r.hi}`}</bdi>
+        {rng(r.lo, r.hi)}
       </span>
       <span className="sr-only">; טווח {r.lo} עד {r.hi}</span>
       {withDots && (
