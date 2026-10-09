@@ -131,7 +131,7 @@ export default function Seats({
             {sum === TOTAL && !invalid && <Share values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <StatusPill status={both.status} />
+            <StatusPill status={both.status} queued={unit.queued || (blocsToSave && blocsUnit.queued)} />
             <span className="text-xs text-ink-soft">
               נקודת פתיחה: {START_OPTIONS.find((o) => o.id === p.start)?.title}
               {p.pollsAsOf ? ` · ממוצע הסקרים מ-${dateLong(p.pollsAsOf)}` : ""}

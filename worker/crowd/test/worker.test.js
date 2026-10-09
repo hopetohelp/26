@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import worker, { LIMITS } from "../index.js";
+import worker, { LIMITS, resetDashboardCache } from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
 import { seats, IDS } from "./helpers.js";
 import { sha256 } from "../lib/crypto.js";
@@ -9,6 +9,7 @@ let t;
 let ipN = 0;
 const ipFor = () => `10.0.${Math.floor(ipN / 250)}.${(ipN++ % 250) + 1}`;
 beforeEach(() => {
+  resetDashboardCache();
   t = Date.parse("2026-10-05T10:05:00Z");
   env = {
     DB: fakeD1(),
@@ -348,8 +349,18 @@ it('רק שם שאושר מוצג לכולם לפי הרכב ולא לפי שם 
  const before=(await call('/dashboard')).data;
  expect(before.blocs.custom[0].name).toBe('אישי');
  await env.DB.prepare("UPDATE bloc_display_names SET status = 'approved', approved_at = ? WHERE composition = ?").bind('2026-10-09','likud,shas').run();
+ resetDashboardCache(); // שינוי ישיר במאגר, לא דרך השרת
  const after=(await call('/dashboard')).data;
  expect(after.blocs.custom[0].name).toBe('שם מוצע');
  expect(after.blocs.custom[0].derived).toEqual(before.blocs.custom[0].derived);
  expect((await call('/me',{token:a})).data.latest.blocs.payload.blocs[0].name).toBe('אישי');
+});
+
+describe("סטטיסטיקות חיות", () => {
+  it("שמירה חדשה נכנסת מיד לסטטיסטיקות, בלי להמתין לחצי הדקה", async () => {
+    const first = (await call("/dashboard")).data;
+    expect((await call("/dashboard")).data).toEqual(first);
+    expect((await save(await newP(), "seats", seats(60))).status).toBe(200);
+    expect((await call("/dashboard")).data.participants).toBe(first.participants + 1);
+  });
 });

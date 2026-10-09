@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { CROWD_URL, CrowdError, call, clientToken, type Me, type Payload, type Unit } from "../../lib/crowdApi";
 import * as S from "../../lib/crowdSession";
 import { meta } from "../../lib/data";
+import { OUTBOX_EVENT, SAVED_EVENT } from "../../lib/outbox";
 
 type Auth = { token: string | null; link: string | null };
 const listeners = new Set<(a: Auth) => void>();
@@ -108,6 +109,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
   const [saved, setSavedState] = useState<P | null>(() => S.loadSaved<P>(unit));
   const [state, setState] = useState<SaveState>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [queued, setQueued] = useState(() => S.isQueued(unit));
   const [errorLog, setErrorLog] = useState<string | null>(null);
   const saveRef = useRef<(token: string, payload: P) => Promise<boolean>>();
   const timer = useRef<number>();
@@ -145,9 +147,11 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       setDraftState(S.loadDraft<P>(unit) ?? S.loadSaved<P>(unit) ?? initial);
       setSavedState(S.loadSaved<P>(unit));
     };
+    const outbox = () => { sync(); setQueued(S.isQueued(unit)); };
     window.addEventListener("crowd-clear", sync);
     window.addEventListener("storage", sync);
-    return () => { window.removeEventListener("crowd-clear", sync); window.removeEventListener("storage", sync); };
+    window.addEventListener(OUTBOX_EVENT, outbox);
+    return () => { window.removeEventListener("crowd-clear", sync); window.removeEventListener("storage", sync); window.removeEventListener(OUTBOX_EVENT, outbox); };
   }, [unit, initial]);
   // מכשיר חדש אחרי כניסה: הגרסה האחרונה מהשרת, אם אין כאן טיוטה
   useEffect(() => {
@@ -158,6 +162,15 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
   }, [remote, unit]);
   const status: "draft" | "saved" | "dirty" = saved === null ? "draft" : same(saved, draft) ? "saved" : "dirty";
 
+  const keepLocal = (payload: P) => {
+    S.setSaved(unit, payload);
+    const current = S.loadDraft<P>(unit);
+    if (!current || same(current, payload)) { S.clearDraft(unit); setDraftState(payload); }
+    setSavedState(payload);
+    setQueued(S.isQueued(unit));
+    setState("idle");
+  };
+
   /** שמירה בשרת — רק עם סשן (חשבון). בלי סשן הכפתור פותח קודם הרשמה/כניסה (SaveButton) */
   const save = useCallback(
     async (token: string, payload: P | null = draft) => {
@@ -167,15 +180,14 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       setErrorLog(null);
       try {
         const op_id = S.opIdFor(unit, payload);
-        await call("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload } });
-        S.clearPending(unit);
-        S.setSaved(unit, payload);
-        const current = S.loadDraft<P>(unit);
-        if (!current || same(current, payload)) { S.clearDraft(unit); setDraftState(payload); }
-        setSavedState(payload);
-        setState("idle");
+        const r = await call<{ blind?: boolean }>("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload } });
+        // התשובה נחסמה ⇐ נשמר אצל הגולש ונשאר בתור השליחה עד אישור (src/lib/outbox.ts)
+        if (!r?.blind) { S.clearPending(unit); window.dispatchEvent(new Event(SAVED_EVENT)); }
+        keepLocal(payload);
         return true;
       } catch (e) {
+        // אין חיבור לשרת ⇐ שמירה מקומית קודם: הגרסה נשמרת בדפדפן ותישלח אוטומטית כשהחיבור יחזור
+        if (e instanceof CrowdError && e.code === "network") { keepLocal(payload); return true; }
         setError(errorText(e));
         setErrorLog(JSON.stringify({
           action: "שמירת השערה", unit, registry: meta.dataAsOf,
@@ -188,7 +200,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
     [draft, unit],
   );
   saveRef.current = save;
-  return { draft, setDraft, saved, status, save, state, error, errorLog };
+  return { draft, setDraft, saved, status, queued, save, state, error, errorLog };
 }
 
 export const STATUS_LABEL = { draft: "טיוטה", saved: "נשמר", dirty: "שינויים שלא נשמרו" } as const;
