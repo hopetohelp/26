@@ -16,6 +16,7 @@ import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, r
 import { validateSave, validateCamps, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
+import { moderate } from "./lib/moderation.js";
 
 // שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
 export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
@@ -81,6 +82,12 @@ async function createParticipant(env, request, now, limited = false) {
   return [[env.DB.prepare("INSERT INTO participants (id, created_at) VALUES (?, ?)").bind(id, iso(now))], id];
 }
 
+/** החלטות המנהל על השערות חריגות ⇐ Map(versionId ⇐ decision) */
+async function loadDecisions(env) {
+  const { results } = await env.DB.prepare("SELECT version_id, decision FROM version_review").all();
+  return new Map((results || []).map((r) => [r.version_id, r.decision]));
+}
+
 const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: JSON.parse(r.payload) });
 
 async function passwordCred(env, participant) {
@@ -124,6 +131,24 @@ async function linkOwner(env, request, now, raw) {
   return { participant: c.participant, keys };
 }
 
+/** מצב הבדיקה של ההשערות: הגרסה האחרונה (מנדטים) של כל משתתף, ותוצאת הבדיקה מול שאר הגולשים */
+async function moderationState(env) {
+  const data = await env.DB.batch([
+    env.DB.prepare("SELECT id, review FROM participants"),
+    env.DB.prepare("SELECT v.id, v.participant, v.unit, v.created_at, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id"),
+    env.DB.prepare("SELECT version_id, decision FROM version_review"),
+  ]);
+  const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
+  const known = new Set((data[0].results || []).map((p) => p.id));
+  const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: JSON.parse(r.payload) }));
+  const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
+  const counted = latest.filter((v) => !review.has(v.participant));
+  const mod = moderate(counted, decisions);
+  // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
+  const raw = moderate(counted, new Map()).pending;
+  return { latest, review, mod: { ...mod, decisions, raw } };
+}
+
 const DUMMY = { algo: "pbkdf2-sha256", salt: "AAAAAAAAAAAAAAAAAAAAAA==", iterations: PBKDF2_ITERATIONS, hash: "0".repeat(64) };
 
 // ---- הנתיבים
@@ -146,7 +171,9 @@ const routes = {
     const g = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
     const pref = await env.DB.prepare("SELECT camps FROM prefs WHERE participant = ?").bind(participant).first();
     const camps = pref?.camps ? JSON.parse(pref.camps) : null;
-    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps } };
+    // ההשערה האחרונה ממתינה לאישור מנהל (חריגה) — הגולש רואה אותה כרגיל, עם הסבר
+    const seatsPending = latest.seats ? (await dashboardState(env)).pending.has(latest.seats.id) : false;
+    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps }, seatsPending };
   },
 
   // העדפות אישיות (המחנות) — נשמרות על המשתמש, בלי גרסאות ובלי השפעה על הסטטיסטיקות
@@ -415,6 +442,52 @@ const routes = {
     const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests").first();
     return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
+  // דשבורד השערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה — בלי מזהה משתתף, גרסה או פעולה, בלי שעה (יום בלבד),
+  // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
+  "GET /admin/guesses": async ({ env, request }) => {
+    await requireAdmin(env, request);
+    const { latest, mod, review } = await moderationState(env);
+    const salt = randomToken(12);
+    const rows = [];
+    for (const v of latest) {
+      const reasons = mod.pending.get(v.id) ?? [];
+      const decision = mod.decisions.get(v.id) ?? null;
+      const status = review.has(v.participant) ? "review" : decision ?? (reasons.length ? "pending" : "ok");
+      rows.push({
+        handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
+        day: v.created_at.slice(0, 10),
+        mode: v.payload.mode === "pct" ? "pct" : "seats",
+        seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
+        ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
+        status,
+        reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
+      });
+    }
+    for (let i = rows.length - 1; i > 0; i--) {
+      const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+      [rows[i], rows[j]] = [rows[j], rows[i]];
+    }
+    return { salt, rows };
+  },
+
+  // אישור / דחייה / ביטול החלטה — לפי ידית מהטעינה (salt + handle). אין קלט של מזהה גרסה או משתתף.
+  "POST /admin/guesses/decide": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    const decision = body.decision;
+    if (!["approved", "rejected", "clear"].includes(decision)) throw bad("decision");
+    if (typeof body.salt !== "string" || typeof body.handle !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
+    const { latest } = await moderationState(env);
+    let target = null;
+    for (const v of latest) if ((await hmac(env.IP_KEY, `guess|${body.salt}|${v.id}`)).slice(0, 32) === body.handle) { target = v; break; }
+    if (!target) throw new HttpError(404, "not_found");
+    if (decision === "clear") await env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(target.id).run();
+    else
+      await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
+        .bind(target.id, decision, iso(now))
+        .run();
+    return { ok: true };
+  },
+
   // קריאה בלבד לצורך העברה לשרת ההערות; רק בעל הסשן מקבל את ההיסטוריה שלו.
   "GET /support/access": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
@@ -445,13 +518,15 @@ const DASHBOARD_TTL_MS = 30_000;
 let dashboardCache = null;
 export function resetDashboardCache() { dashboardCache = null; }
 
-async function dashboard(env) {
+/** ⇐ {dashboard, pending: Map(versionId ⇐ reasons)} — pending נשאר בשרת בלבד */
+async function dashboardState(env) {
   const at = clock(env);
   if (dashboardCache && at >= dashboardCache.at && at - dashboardCache.at < DASHBOARD_TTL_MS) return dashboardCache.data;
   const data = await computeDashboard(env);
   dashboardCache = { at, data };
   return data;
 }
+const dashboard = async (env) => (await dashboardState(env)).dashboard;
 
 async function computeDashboard(env) {
   // תמונה עדכנית, בלי כתיבה ובלי להמתין למשימה השעתית.
@@ -461,11 +536,14 @@ async function computeDashboard(env) {
     env.DB.prepare("SELECT id, review FROM participants"),
     env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id"),
     env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'"),
+    env.DB.prepare("SELECT version_id, decision FROM version_review"),
   ]);
   const participants = data[0].results || [];
+  const decisions = new Map((data[3].results || []).map((r) => [r.version_id, r.decision]));
   const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
-  return aggregate({ participants, versions, now, blocNames, aggregationId: `live-${now}` }).dashboard;
+  const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
+  return { dashboard: res.dashboard, pending: res.pending };
 }
 
 // ---- המשימה השעתית
@@ -530,7 +608,8 @@ export async function runAggregation(env, now) {
   const wasOpen = !!previousDash?.open && previousDash.policy === DASHBOARD_POLICY;
   const names = (await env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'").all()).results || [];
   const blocNames = Object.fromEntries(names.map(r => [r.composition,r.name]));
-  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId });
+  const decisions = await loadDecisions(env);
+  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId, decisions });
   const ins = (section, json, publishedAt, contributors = 0, snapshot = null) =>
     env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json, contributors, snapshot) VALUES (?, ?, ?, ?, ?, ?)").bind(
       aggregationId,

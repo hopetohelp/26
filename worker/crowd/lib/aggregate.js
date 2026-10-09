@@ -14,6 +14,7 @@
 import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
 
 import { FIXED_BLOCS, migrateBlocs, compositionKey } from "./blocDefinitions.js";
+import { moderate } from "./moderation.js";
 
 export const K_CELL = 1;
 export const K_ROW = 1;
@@ -289,10 +290,14 @@ export function computeUnderReview(reviewSeatVersions, reviewParticipants) {
  * previous: {section: {json, publishedAt, snapshot: number[]}} — הפרסום הקודם של כל חלק · lastDailyDay: היום (ישראל) של החישוב היומי הקודם
  * מחזיר {dashboard, sections: {section: {json, publishedAt, snapshot, contributors, changed}}, daily}
  */
-export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {} }) {
+export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {}, decisions = new Map() }) {
   const review = new Set(participants.filter((p) => p.review).map((p) => p.id));
   const known = new Set(participants.map((p) => p.id));
   const main = latestByUnit(versions, (v) => known.has(v.participant) && !review.has(v.participant));
+  // השערות חריגות ממתינות לאישור מנהל (moderation.js): לא נספרות בשום חלק עד שאושרו
+  const mod = moderate([...main.seats.values()], decisions);
+  for (const [p, v] of [...main.seats]) if (mod.pending.has(v.id) || mod.rejected.has(v.id)) main.seats.delete(p);
+  const countedSeat = (v) => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant) && !mod.isExcluded(v);
   const rev = latestByUnit(versions, (v) => review.has(v.participant));
   const active = new Set([...main.vote.keys(), ...main.seats.keys(), ...main.blocs.keys()]);
   const reviewActive = new Set([...rev.vote.keys(), ...rev.seats.keys(), ...rev.blocs.keys()]);
@@ -304,14 +309,14 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const voteV = [...main.vote.values()];
 
   const compute = {
-    seats: () => computeSeats(seatV, versions.filter(v => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant))),
+    seats: () => computeSeats(seatV, versions.filter(countedSeat)),
     blocs: () => computeBlocs(seatV, [...main.blocs.values()], blocNames),
     vote2026: () => computeVote2026(voteV),
     vote2022: () => computeVote2022(voteV),
     underReview: () => computeUnderReview([...rev.seats.values()], reviewActive.size),
     matrix: () => computeMatrix(voteV, now),
     byVote: () => computeByVote(main.vote, main.seats),
-    trend: () => computeTrend(versions.filter((v) => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant)), today),
+    trend: () => computeTrend(versions.filter(countedSeat), today),
   };
 
   const sections = {};
@@ -340,7 +345,7 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
     custom: sections.blocs.json.custom.map(g => ({ ...g, name: blocNames[compositionKey(g.lists)] ?? g.name })),
   } };
   const open = active.size >= OPEN_AT;
-  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, sectionsAsOf: {}, sectionParticipants: {} };
+  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, pendingGuesses: mod.pending.size, sectionsAsOf: {}, sectionParticipants: {} };
   if (open) {
     for (const [name, s] of Object.entries(sections)) {
       if (s.json === null || s.json === undefined) continue;
@@ -352,5 +357,5 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
     dashboard.underReview = sections.underReview.json;
   }
   if (!("underReview" in dashboard)) dashboard.underReview = null;
-  return { dashboard, sections, daily, today };
+  return { dashboard, sections, daily, today, pending: mod.pending, rejected: mod.rejected };
 }

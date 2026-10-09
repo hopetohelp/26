@@ -369,3 +369,36 @@ describe("סטטיסטיקות חיות", () => {
     expect((await call("/dashboard")).data.participants).toBe(first.participants + 1);
   });
 });
+
+describe("admin guesses dashboard (no identifiers)", () => {
+  const KEY = "k".repeat(40);
+  const admin = (path, body) =>
+    worker.fetch(new Request("https://w.example" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json", "x-admin-key": KEY }, body: body ? JSON.stringify(body) : undefined }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
+  it("lists every latest guess without ids; approving a flagged guess brings it into the statistics", async () => {
+    await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
+    expect((await worker.fetch(new Request("https://w.example/admin/guesses"), env)).status).toBe(401);
+    const a = await newP(), b = await newP(), c = await newP(), d4 = await newP();
+    await save(a, "seats", seats(60));
+    await save(b, "seats", seats(60));
+    await save(d4, "seats", seats(60));
+    const odd = await save(c, "seats", seats(100));
+    resetDashboardCache();
+    expect((await call("/dashboard")).data.pendingGuesses).toBe(1);
+    expect((await call("/me", { token: c })).data.seatsPending).toBe(true);
+    const r = await admin("/admin/guesses");
+    expect(r.data.rows).toHaveLength(4);
+    const text = JSON.stringify(r.data);
+    for (const tok of [a, b, c, d4]) expect(text).not.toContain(tok);
+    expect(text).not.toContain(String(odd.data.version.id) + ",");
+    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["day", "handle", "mode", "reasons", "seats", "status"]);
+    const pending = r.data.rows.find((x) => x.status === "pending");
+    expect(pending.reasons[0]).toMatchObject({ list: IDS[0], rule: "ratio" });
+    expect((await admin("/admin/guesses/decide", { salt: "wrong-salt-1234", handle: pending.handle, decision: "approved" })).status).toBe(404);
+    expect((await admin("/admin/guesses/decide", { salt: r.data.salt, handle: pending.handle, decision: "approved" })).status).toBe(200);
+    resetDashboardCache();
+    const d = (await call("/dashboard")).data;
+    expect(d.pendingGuesses).toBe(0);
+    expect(d.seats.n).toBe(4);
+    expect((await admin("/admin/guesses")).data.rows.filter((x) => x.status === "approved")).toHaveLength(1);
+  });
+});

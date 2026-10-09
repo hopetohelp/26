@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
 import { Btn, Notice } from "./guess/ui";
+import AdminGuesses from "./AdminGuesses";
 
 /**
  * ממשק ניהול (לבעלים בלבד, לא מקושר מהאתר): כל שיחות התמיכה עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
@@ -126,6 +127,8 @@ export default function Admin() {
             </div>
             <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8.10.2026), ולא אנשים.</p>
           </section>
+
+          <AdminGuesses api={api} />
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
           <InquirySections data={data} reply={reply} />

@@ -191,6 +191,12 @@ export default {
         for (const thread of accountThreads || []) local.push({ participant: thread.participant, ...(await supportThread(env, thread.participant)) });
         return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
+      // דשבורד ההשערות (בלי מזהים) ואישור השערות חריגות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
+      if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide") {
+        if (!env.CROWD) return reply({ ok: false, error: "offline" }, 503);
+        const res = await env.CROWD.fetch(new Request("https://crowd.internal" + url.pathname, { method: request.method, headers: { "x-admin-key": key, "content-type": "application/json" }, body: request.method === "POST" ? await request.text() : undefined }));
+        return new Response(await res.text(), { status: res.status, headers });
+      }
       if (request.method === "POST" && url.pathname === "/admin/reply") {
         let b = {};
         try { b = await request.json(); } catch { return reply({ ok: false }, 400); }

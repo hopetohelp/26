@@ -23,6 +23,17 @@ jobs:
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: worker/feedback
         run: npx --yes wrangler@3 deploy
+      - name: סוד גיבוב כתובות הרשת — נוצר פעם אחת, רק אם חסר (אישור בעלים 9.10.2026)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/feedback
+        run: |
+          existing="$(npx --yes wrangler@3 secret list 2>/dev/null || echo '[]')"
+          if echo "$existing" | grep -q '"IP_KEY"'; then
+            echo "IP_KEY קיים"
+          else
+            openssl rand -base64 32 | npx --yes wrangler@3 secret put IP_KEY
+            echo "IP_KEY נוצר"
+          fi
       - name: אין מפתח — מדלגים
         if: env.CLOUDFLARE_API_TOKEN == ''
         run: echo "CLOUDFLARE_API_TOKEN לא הוגדר בסודות הריפו; השרת לא נפרס."

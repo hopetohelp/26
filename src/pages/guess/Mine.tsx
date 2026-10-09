@@ -43,6 +43,9 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
       {!session.token && session.online && (
         <div className="mb-4"><Notice>בשינוי הראשון נשמרת ההשערה ונוצר לכם קישור אישי לחזרה. שינויים נוספים נשמרים בלחיצה על ״שמור״, או אוטומטית אחרי 15 שניות בלי שינוי, ונכנסים לממוצע האנונימי של הגולשים.</Notice></div>
       )}
+      {session.me?.seatsPending && (sec === "seats" || sec === "calculator") && (
+        <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר הגולשים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
+      )}
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">
         {SECTIONS.map((s) => {
           const on = sec === s.id;
