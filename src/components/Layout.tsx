@@ -7,12 +7,10 @@ import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
 import { THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/theme";
-import { colorOf } from "../lib/colors";
-import modelFile from "../data/model.json";
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 
-const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label })), { to: "/support", label: "תמיכה" }];
+const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "תמיכה" }];
 /** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקר האתר · תמיכה. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
@@ -23,11 +21,6 @@ const TABS = [
 ];
 /** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
 const MORE = PAGES.filter((p) => !TABS.some((t) => t.to === p.to));
-
-const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
-const strip = Object.entries(central)
-  .filter(([, s]) => s > 0)
-  .sort((a, b) => b[1] - a[1]);
 
 function daysLeft(now = new Date()): string {
   const d = Math.ceil((Date.parse(meta.electionDay + "T00:00:00+03:00") - now.getTime()) / 86_400_000);
@@ -52,7 +45,7 @@ function Icon({ name }: { name: string }) {
 export function ThemePicker() {
   return (
     <div className="flex items-center gap-x-3 gap-y-1.5">
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <StylePicker />
       </div>
       <StyleToggle />
@@ -61,7 +54,7 @@ export function ThemePicker() {
   );
 }
 
-/** בטלפון (אין מקום לשני כפתורים): כפתור אחד שמחליף לעיצוב השני */
+/** בטלפון ובטאבלט (אין מקום לשני כפתורים): כפתור אחד שמחליף לעיצוב השני */
 function StyleToggle() {
   const [theme, setTheme] = useTheme();
   const cur = THEMES.find((t) => t.id === theme)!;
@@ -71,7 +64,7 @@ function StyleToggle() {
       type="button"
       onClick={() => setTheme(next.id as ThemeId)}
       aria-label={`עיצוב: ${cur.name}. בלחיצה: ${next.name}`}
-      className="md:hidden flex items-center gap-1.5 rounded-full px-3 h-[44px] text-sm font-bold border border-current opacity-80 hover:opacity-100 whitespace-nowrap"
+      className="lg:hidden flex items-center gap-1.5 rounded-full px-3 h-[44px] text-sm font-bold border border-current opacity-80 hover:opacity-100 whitespace-nowrap"
     >
       <span aria-hidden="true" className="w-3.5 h-3.5 rounded-full border border-black/30" style={{ background: cur.color }} />
       {cur.name}
@@ -79,13 +72,12 @@ function StyleToggle() {
   );
 }
 
-/** תאריך הבחירות בשורה הקטנה: מלא כשיש מקום, מקוצר (27/10/26) בטלפון */
+/** תאריך הבחירות בשורה הקטנה: מלא כשיש מקום, מקוצר (27/10/26) בטלפון. "הבחירות" מבדיל את התאריך מהספירה לנעילת ההשערות במסך "הכנסת שלי" (9.10.2026); בטלפון המילה לקורא מסך בלבד, כדי שהשורה תיכנס. */
 function ElectionDate() {
   const [y, m, d] = meta.electionDay.split("-");
   return (
     <span className="whitespace-nowrap">
-      {/* "הבחירות": התווית שמבדילה את הספירה לאחור כאן מהספירה לנעילת ההשערות במסך "הכנסת שלי" (שלב 0, 9.10.2026) */}
-      הבחירות{" "}
+      <span className="sr-only sm:not-sr-only">הבחירות </span>
       <span className="hidden sm:inline">{dateLong(meta.electionDay)}</span>
       <span className="sm:hidden" dir="ltr">{`${Number(d)}/${Number(m)}/${y.slice(2)}`}</span>
     </span>
@@ -120,7 +112,7 @@ function ModePicker() {
       onClick={() => setMode(next)}
       aria-label={`תצורה: ${MODE_NAME[mode]}. בלחיצה: ${MODE_NAME[next]}`}
       title={`תצורה: ${MODE_NAME[mode]}`}
-      className="flex items-center justify-center rounded-full w-[44px] h-[44px] md:w-[36px] md:h-[36px] border border-current opacity-80 hover:opacity-100"
+      className="flex items-center justify-center rounded-full w-[44px] h-[44px] lg:w-[36px] lg:h-[36px] border border-current opacity-80 hover:opacity-100"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         {MODE_ICON[mode]}
@@ -143,7 +135,7 @@ function StylePicker() {
             role="radio"
             aria-checked={on}
             onClick={() => setTheme(t.id as ThemeId)}
-            className={`flex items-center gap-1.5 rounded-full px-2.5 min-h-[44px] md:min-h-[36px] text-sm font-bold border ${
+            className={`flex items-center gap-1.5 rounded-full px-2.5 min-h-[44px] lg:min-h-[36px] text-sm font-bold border ${
               on ? "bg-signal text-signal-ink border-signal" : "border-current bg-transparent opacity-80 hover:opacity-100"
             }`}
           >
@@ -156,61 +148,44 @@ function StylePicker() {
   );
 }
 
-/** הכותרת והתאריך תמיד בשורה אחת; הספירה לאחור והבוררים לצידם כשיש מקום, ומתחתם כשאין */
-function Masthead({ theme }: { theme: ThemeId }) {
+/**
+ * פס עליון אחד, אותו מבנה בשני העיצובים (הכרעת בעלים 9.10.2026, החלטה 2); ההבדל רק בטוקנים (`frame`, `signal`, גופן, רדיוס).
+ * בטלפון שורה אחת: שם האתר, מתחתיו "עוד N ימים · תאריך הבחירות", ובצד הבוררים. במחשב הספירה כשבב במרכז.
+ */
+function Masthead() {
   const left = daysLeft();
-  const board = theme === "board";
   return (
-    <div className={`bg-frame text-frame-ink ${board ? "" : "border-b border-frame-line"}`}>
-      <div className="w-full mx-auto px-4 md:px-6 pt-3 pb-3 flex flex-col gap-2.5">
-        <div className="flex flex-wrap justify-between items-center gap-x-4 gap-y-2">
-          <div className="flex items-baseline justify-between w-full md:w-auto gap-3 whitespace-nowrap text-sm text-frame-soft">
-            <NavLink
-              to="/"
-              className={`font-display leading-none no-underline text-frame-ink hover:text-frame-ink ${board ? "text-[36px] sm:text-[42px]" : "text-[30px] sm:text-[32px]"}`}
-            >
-              בחירות 26
-            </NavLink>
+    <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
+      <div className="w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-4">
+        <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
+          <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
+            בחירות 26
+          </NavLink>
+          <p className="mt-1 md:mt-0 text-xs md:text-sm whitespace-nowrap">
+            <span className="md:hidden font-bold text-frame-ink">{left}</span>
+            <span className="md:hidden" aria-hidden="true"> · </span>
             <ElectionDate />
-          </div>
-          <div className="flex items-center justify-between w-full md:w-auto md:flex-1 gap-3">
-            {board ? (
-              <span className="font-display text-[24px] sm:text-[28px] leading-none text-signal whitespace-nowrap md:mx-auto">{left}</span>
-            ) : (
-              <span className="text-sm font-extrabold bg-ink text-paper-card rounded-md px-2.5 py-1.5 whitespace-nowrap md:mx-auto">{left}</span>
-            )}
-            <ThemePicker />
-          </div>
+          </p>
         </div>
-        {board && (
-          <div className="flex h-2.5 gap-px" role="img" aria-label="הרכב 120 המנדטים לפי הממוצע היום">
-            {strip.map(([id, s], i) => (
-              <span key={id} style={{ flexGrow: s, background: colorOf(id, i) }} />
-            ))}
-          </div>
-        )}
+        <span className="hidden md:block text-sm font-extrabold border border-frame-ink/40 rounded-full px-3 py-1 whitespace-nowrap">{left}</span>
+        <ThemePicker />
       </div>
     </div>
   );
 }
 
-function DesktopNav({ theme, unread }: { theme: ThemeId; unread: boolean }) {
-  const wrap = theme === "board" ? "bg-frame" : theme === "league" ? "bg-frame border-b border-frame-line" : "";
+function DesktopNav({ unread }: { unread: boolean }) {
   return (
-    <nav aria-label="ניווט ראשי" className={`hidden md:block ${wrap}`}>
+    <nav aria-label="ניווט ראשי" className="hidden md:block bg-frame border-b border-frame-line">
       <ul className="w-full mx-auto px-2 md:px-4 flex flex-wrap gap-1 text-sm">
         {NAV.map((n) => (
           <li key={n.to}>
             <NavLink
               to={n.to}
               end={n.to === "/"}
-              className={({ isActive }) => {
-                if (theme === "board")
-                  return `inline-block px-3 py-2.5 no-underline border-b-[3px] ${isActive ? "border-signal text-frame-ink font-bold" : "border-transparent text-frame-soft hover:text-frame-ink"}`;
-                if (theme === "league")
-                  return `inline-block px-3 py-2.5 no-underline border-b-[3px] ${isActive ? "border-accent text-ink font-bold" : "border-transparent text-ink-soft hover:text-ink"}`;
-                return `inline-block px-3 py-1.5 my-1 no-underline font-bold ${isActive ? "bg-ink text-paper-card" : "text-ink hover:bg-ink/10"}`;
-              }}
+              className={({ isActive }) =>
+                `inline-block px-2 lg:px-3 py-2.5 no-underline border-b-[3px] ${isActive ? "border-signal text-frame-ink font-bold" : "border-transparent text-frame-soft hover:text-frame-ink"}`
+              }
             >
               {n.label}
               {n.to === "/support" && unread && <UnreadDot />}
@@ -319,7 +294,6 @@ function GuessCta({ pathname }: { pathname: string }) {
 
 export default function Layout() {
   const { pathname } = useLocation();
-  const [theme] = useTheme();
   const unread = useSupportUnread(pathname);
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -335,8 +309,8 @@ export default function Layout() {
       </a>
       {/* במחשב הסרגל העליון תמיד גלוי (הכרעת בעלים 8.10.2026) */}
       <header className="md:sticky md:top-0 md:z-40">
-        <Masthead theme={theme} />
-        <DesktopNav theme={theme} unread={unread} />
+        <Masthead />
+        <DesktopNav unread={unread} />
       </header>
       <AccessCard />
       <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
