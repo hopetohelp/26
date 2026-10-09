@@ -6,6 +6,11 @@
     <meta name="description" content="ניתוח הבחירות לכנסת ה-26: הסקרים, התרחישים, תוצאות אמת ומחשבון מנדטים לפי חוק הבחירות." />
     <meta name="theme-color" content="#FFFFFF" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <!-- התקנה כאפליקציה במסך הבית (public/manifest.webmanifest, src/components/InstallApp.tsx) -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="בחירות 2026" />
     <title>בחירות 2026 — ניתוח</title>
     <!-- גופנים מאוחסנים באתר (הכרעת בעלים 9.10.2026): הגדרות @font-face ב-src/index.css, קבצים ב-src/assets/fonts. Rubik לעברית, וספרות בלבד ב-Roboto Mono (ברוחב קבוע, ספרות מיושרות). קובץ הספרות קטן (4KB) ולכן משובץ ב-CSS ואינו נטען מראש. -->
     <link rel="preload" href="/src/assets/fonts/rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin />
