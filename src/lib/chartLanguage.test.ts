@@ -72,15 +72,20 @@ describe("נר שעוביו משתנה לאורכו: קטעים לפי כמות 
     const shares = Array.from({ length: 101 }, (_, i) => i / 100);
     expect([...new Set(shares.map(segLevel))].sort()).toEqual([1, 3, 5]);
   });
-  it("כברירת מחדל כל נר ביחס לעצמו; בהיקף 'chart' ביחס לכל הגרף", () => {
+  it("כברירת מחדל העובי ביחס לכל הגרף (הכרעת בעלים 9.10.2026); בהיקף 'candle' כל נר ביחס לעצמו", () => {
     const wide: Seg[] = [{ from: 0, to: 1, count: 10 }, { from: 1, to: 2, count: 8 }];
     const narrow: Seg[] = [{ from: 0, to: 1, count: 100 }];
-    const own = levelSegs([wide, narrow]);
-    expect(own[0][0].level).toBe(5);
-    expect(own[1][0].level).toBe(5);
-    const all = levelSegs([wide, narrow], "chart");
+    const all = levelSegs([wide, narrow]);
     expect(all[0][0].level).toBe(1);
     expect(all[1][0].level).toBe(5);
+    expect(levelSegs([wide, narrow], "chart")).toEqual(all);
+    const own = levelSegs([wide, narrow], "candle");
+    expect(own[0][0].level).toBe(5);
+    expect(own[1][0].level).toBe(5);
+  });
+  it("נר אחד בגרף: אותו דבר בשני ההיקפים (הדוגמה של הבעלים)", () => {
+    const segs = intSegs([2, 8, 20, 8, 2], 24);
+    expect(levelSegs([segs])).toEqual(levelSegs([segs], "candle"));
   });
   it("valueSegs: חותך בדיוק למינימום ולמקסימום; חורים בספירה 0 מצוירים בעובי הדק ביותר", () => {
     const segs = valueSegs([25, 27, 27, 29, 29, 29]);
