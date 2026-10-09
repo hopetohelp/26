@@ -19,8 +19,9 @@ D = json.loads((GEN / "home-data.json").read_text(encoding="utf-8"))
 MODEL = json.loads((REPO / "src/data/model.json").read_text(encoding="utf-8"))
 
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@700;900&display=swap" rel="stylesheet">')
-FONTS_OLD = ('<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">')
+         '<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">'
+         '<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&text=0123456789&display=swap" rel="stylesheet">')
+FONTS_OLD = ('<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;500;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">')
 
 BOOT = """<script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
@@ -741,9 +742,9 @@ ui_body = f"""
 {top_bar(count="גופנים, כרטיסים ומתגים", nav=False)}
 <main class="uk" id="main">
   <header><h1 class="acc-h">גופנים, כרטיסים ומתגים</h1><p class="note">היום מול מוצע, בעיצוב שנבחר בראש הדף. כל הדוגמאות בנתוני האתר; לא שונה שום חישוב.</p></header>
-  <section aria-labelledby="s-ty"><h2 class="sec" id="s-ty">גופנים: משפחה אחת לכל עיצוב, וספרות שוות רוחב</h2>
+  <section aria-labelledby="s-ty"><h2 class="sec" id="s-ty">גופנים: עברית כבדה וספרות ברוחב קבוע</h2>
     <div class="cmp">{ty_col(True)}{ty_col(False)}</div>
-    <ul class="spec"><li>מקצועי: IBM Plex Sans Hebrew לכול. חדשותי: Frank Ruhl Libre לכותרות ו-Heebo לגוף.</li><li>בשני העיצובים ספרות שוות רוחב אמיתיות (tabular). ב"היום" Assistant ו-Secular One ו-Karantina אינם מציעים אותן.</li></ul></section>
+    <ul class="spec"><li>בשני העיצובים: Rubik לעברית (כבד ורחב, כמו בדוגמה של המומחה) וספרות בגופן ברוחב קבוע (Roboto Mono).</li><li>הספרות מיושרות באמת בכל טור. ב"היום" Assistant ו-Secular One ו-Karantina אינם מציעים ספרות שוות רוחב.</li></section>
   <section aria-labelledby="s-cd"><h2 class="sec" id="s-cd">כרטיסים: שלוש רמות במקום קופסאות בתוך קופסאות</h2>
     <div class="cmp">{old_card}{new_card}</div></section>
   <section aria-labelledby="s-tg"><h2 class="sec" id="s-tg">מתגים רוחביים: ארבעה רכיבים במקום שבעה מימושים</h2>

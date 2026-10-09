@@ -7,8 +7,8 @@
   --frame: 255 255 255; --frame-ink: 19 23 29; --frame-soft: 74 85 99; --frame-line: 213 219 227;
   --signal: 232 119 14; --signal-ink: 19 23 29;
   --band: 19 23 29; --band-ink: 244 246 248; --band-soft: 184 192 204;
-  --font-display: "IBM Plex Sans Hebrew"; --font-body: "IBM Plex Sans Hebrew"; --font-num: "IBM Plex Sans Hebrew"; --display-weight: 700; --radius: 12px;
-  --hero: 2rem; --hero-lg: 3rem;
+  --font-display: "Roboto Mono", "Rubik"; --font-body: "Roboto Mono", "Rubik"; --font-num: "Roboto Mono", "Rubik"; --display-weight: 800; --radius: 12px;
+  --hero: 1.8rem; --hero-lg: 2.8rem;
 }
 [data-theme="board"] {
   --paper: 231 235 240; --card: 255 255 255; --line: 203 211 220;
@@ -18,8 +18,8 @@
   --frame: 11 34 57; --frame-ink: 244 246 248; --frame-soft: 184 196 209; --frame-line: 22 56 90;
   --signal: 255 184 28; --signal-ink: 11 34 57;
   --band: 11 34 57; --band-ink: 244 246 248; --band-soft: 184 196 209;
-  --font-display: "Frank Ruhl Libre"; --font-body: "Heebo"; --font-num: "Heebo"; --display-weight: 900; --radius: 10px;
-  --hero: 2.3rem; --hero-lg: 3.6rem;
+  --font-display: "Roboto Mono", "Rubik"; --font-body: "Roboto Mono", "Rubik"; --font-num: "Roboto Mono", "Rubik"; --display-weight: 800; --radius: 10px;
+  --hero: 1.8rem; --hero-lg: 2.8rem;
 }
 [data-dark] {
   color-scheme: dark;
