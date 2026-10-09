@@ -234,7 +234,7 @@ export default function Changes() {
       {view !== "blocs" && <Card title={`המשפחות — ${alt.name}`}>
         <Explained
           kind="השוואה"
-          source={`תוצאות האמת של בחירות 2022 (ועדת הבחירות המרכזית) מול הממוצע מבוסס-המודל — ${m.polls} סקרים מאומתים עד ${dateLong(m.asof)}`}
+          source={`תוצאות האמת של בחירות 2022 (ועדת הבחירות המרכזית) מול הממוצע מבוסס-המודל — ${m.polls} סקרים עד ${dateLong(m.asof)}`}
           asOf={`הסקרים עד ${dateLong(m.asof)}`}
           assumption="שינוי נטו בין שתי תמונות: כמה אחוזים יש למשפחה היום לעומת 2022. זה לא מעבר בוחרים — אי אפשר לדעת מכאן מי עבר לאן."
           methodAnchor="changes"

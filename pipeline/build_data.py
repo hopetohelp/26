@@ -22,13 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import wiki_tables as wt  # noqa: E402
 from bader_ofer import allocate  # noqa: E402
 
-ISRAEL_TZ = timezone(timedelta(hours=3))  # שעון קיץ עד 25.10.2026; ההקפאה מחושבת ברגעים מוחלטים בהמשך
-# 16ה(ח): מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות (25.10 — מעבר לשעון חורף, ולכן +02:00 בסוף)
-FREEZE_START = datetime.fromisoformat("2026-10-24T00:00:00+03:00")
-FREEZE_END = datetime.fromisoformat("2026-10-27T22:00:00+02:00")
-# מהבנייה של יום שישי בצהריים ואילך — באנר "לא עדכני" קבוע, בלי תלות בשעון הדפדפן
-FROZEN_FROM = FREEZE_START - timedelta(hours=12)
-
+ISRAEL_TZ = timezone(timedelta(hours=3))  # שעון קיץ עד 25.10.2026
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -243,8 +237,6 @@ def build_polls(build_time: datetime) -> dict:
                 seen_ids[base] = n + 1
                 pid_ = base if n == 0 else f"{base}-{chr(ord('a') + n)}"
                 assumed_pub = datetime.fromisoformat(d["date"]["end"] + "T20:00:00").replace(tzinfo=ISRAEL_TZ)
-                if FREEZE_START <= assumed_pub < FREEZE_END:
-                    continue  # 16ה(ח): סקר שפורסם לראשונה בתקופת האיסור — לא נכנס בשום מקרה
                 polls.append({
                     "id": pid_, "start": d["date"]["start"], "end": d["date"]["end"],
                     "firm": firm, "firmHe": FIRM_HE.get(firm, firm), "publisher": pub,
@@ -268,8 +260,6 @@ def build_polls(build_time: datetime) -> dict:
             published = datetime.fromisoformat(d["publishedAt"])
             if published.tzinfo is None:
                 raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
-            if FREEZE_START <= published < FREEZE_END:
-                continue
             seat_sum = sum(v.get("s", 0) for v in d["values"].values())
             if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]):
                 raise ValueError(f"סקר ישיר לא תקין: {d['id']}")
@@ -294,8 +284,6 @@ def build_polls(build_time: datetime) -> dict:
             published = datetime.fromisoformat(d["publishedAt"])
             if published.tzinfo is None:
                 raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
-            if FREEZE_START <= published < FREEZE_END:
-                continue
             seat_sum = sum(v.get("s", 0) for v in d["values"].values())
             if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]) or not d.get("population"):
                 raise ValueError(f"סקר קבוצת אוכלוסייה לא תקין: {d['id']}")
@@ -352,7 +340,8 @@ def apply_verification(polls: list[dict]) -> None:
         status = v["status"]
         if status == "mismatch" and p.get("corrections"):
             status = "corrected"
-        p["verified"] = status in ("match", "corrected", "partial")
+        # "secondary" = המנדטים הושוו לדיווח עצמאי כשהמקור הראשוני חוסם סריקה (כלל 7 — מאמתים ממקור אחר)
+        p["verified"] = status in ("match", "corrected", "partial", "secondary")
         p["verification"] = {"status": status, "checkedAt": v["checkedAt"], "source": v.get("source"),
                              "details": v.get("sourceDetails") or {}, "law16E": v.get("law16E") or {}}
 
@@ -617,10 +606,10 @@ def build_changes(lin: dict, results: list[dict], central: dict, groups_sc: dict
 
 
 def build_model(polls: list[dict], results: list[dict]) -> dict:
-    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). רק סקרים מאומתים, עקביים, שפורסמו לציבור."""
+    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). כל סקר עקבי שפורסם לציבור נכנס מיד — בלי תנאי אימות (הכרעת בעלים 9.10.2026: האתר מרכז פרסומים קיימים)."""
     import model as M
 
-    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]
+    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
     inputs = [M.ModelInput(p["id"], f"{p['firm']}|{p['publisher'] or ''}", p["end"], p["values"],
                            (p.get("others") or {}).get("pct"), p.get("sample")) for p in use]
     lists = [l["id"] for l in LISTS_2026]
@@ -671,7 +660,7 @@ def build_forecast(polls: list[dict], build_time: datetime) -> dict:
     """מודל החיזוי (pipeline/forecast_live.py): אותם סקרים כמו הממוצע, סדרת מכון לפי HIST_FIRMS — כמו בבדיקת העבר."""
     import forecast_live as FL
 
-    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > LIST_SUBMISSION_2026]
+    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
     series_of = lambda firm: FL.K26["seriesMap"].get(firm) or "new_" + norm_name(firm).replace(" ", "_")
     out = FL.build(use, series_of, [tuple(a["pair"]) for a in AGREEMENTS_2026],
                    [l["id"] for l in LISTS_2026 if l["gov37"]], build_time.date())
@@ -713,10 +702,6 @@ def main() -> None:
     meta = {
         "dataAsOf": build_time.isoformat(),
         "electionDay": "2026-10-27",
-        # 16ה(ח): מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות. רגעים מוחלטים (25.10 — מעבר לשעון חורף).
-        "freezeStart": FREEZE_START.isoformat(),
-        "freezeEnd": FREEZE_END.isoformat(),
-        "frozen": FROZEN_FROM <= build_time < FREEZE_END,
         "lists2026": LISTS_2026, "agreements2026": AGREEMENTS_2026, "historyNames": HISTORY_NAMES,
         "historyPolls": sum(len(c["polls"]) for c in history["cycles"]),  # לריבוע "דיוק הסקרים" במסך הבית, בלי לטעון את הקובץ הגדול
     }

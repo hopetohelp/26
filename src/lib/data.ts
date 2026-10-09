@@ -82,9 +82,6 @@ export const subgroupPolls = ((pollsFile as { subgroupPolls?: unknown }).subgrou
 export const meta = metaFile as unknown as {
   dataAsOf: string;
   electionDay: string;
-  freezeStart: string;
-  freezeEnd: string;
-  frozen?: boolean;
   lists2026: ListInfo[];
   agreements2026: { pair: [string, string]; status: string; source: string }[];
   historyNames: Record<string, string>;
