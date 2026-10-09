@@ -87,3 +87,11 @@ CREATE INDEX IF NOT EXISTS support_messages_participant ON support_messages(part
 -- ולכן הוא נמחק מכל רשומה בת יותר מיומיים. רץ בכל פריסה; אינו נוגע בתוכן ההערות.
 UPDATE feedback SET day_key = '' WHERE day_key <> '' AND created_at < date('now', '-2 day');
 UPDATE messages SET day_key = NULL WHERE day_key IS NOT NULL AND created_at < date('now', '-2 day');
+
+-- פניות שנפתחו בלי חשבון ואוחדו לשיחת החשבון בהרשמה (הכרעת בעלים 9.10.2026). המקור נשמר; במסך הניהול מוצגת רק שיחת החשבון.
+CREATE TABLE IF NOT EXISTS feedback_adopted (
+  feedback_id INTEGER PRIMARY KEY REFERENCES feedback(id),
+  participant TEXT NOT NULL,
+  adopted_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS feedback_adopted_participant ON feedback_adopted(participant);

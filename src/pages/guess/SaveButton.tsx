@@ -15,8 +15,8 @@ export interface SaveUnit {
 }
 
 /**
- * כפתור "שמור". בלי סשן נפתח גיליון השמירה: "שמירה עכשיו" בלחיצה אחת (בלי משתמש) היא הפעולה הראשית,
- * והרשמה או כניסה משניות (הכרעת בעלים 8.10.2026). מיד אחריו השמירה עצמה. שגיאה ⇐ ניסיון חוזר עם אותו op_id.
+ * כפתור "שמור". בלי סשן נפתח גיליון השמירה: Google או מייל (הכרעת בעלים 9.10.2026 — אין שמירה בשרת בלי חשבון).
+ * מיד אחריו השמירה עצמה. שגיאה ⇐ ניסיון חוזר עם אותו op_id.
  */
 export default function SaveButton({
   unit,
@@ -97,8 +97,8 @@ export function AuthSheet({ session, onClose, onDone }: { session: ReturnType<ty
             ×
           </button>
         </div>
-        <p className="text-sm text-ink-soft">ההשערה שלכם מחכה כטיוטה. שמירה לוקחת שנייה, ונכנסת לממוצע הגולשים.</p>
-        <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" allowGuest />
+        <p className="text-sm text-ink-soft">ההשערה שלכם שמורה כרגע רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל. מה שכבר כתבתם עולה לחשבון.</p>
+        <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" />
       </div>
     </div>
   );

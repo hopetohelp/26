@@ -10,14 +10,14 @@ import { THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/the
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 
-const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "תמיכה" }];
-/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקר האתר · תמיכה. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
+const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
+/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקר האתר · אישי. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/guess", label: "הכנסת שלי", icon: "guess" },
   { to: "more", label: "עוד", icon: "more" },
   { to: "/community", label: "סקר האתר", icon: "bars" },
-  { to: "/support", label: "תמיכה", icon: "comments" },
+  { to: "/support", label: "אישי", icon: "user" },
 ];
 /** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
 const MORE = PAGES.filter((p) => !TABS.some((t) => t.to === p.to));
@@ -37,6 +37,7 @@ function Icon({ name }: { name: string }) {
   if (name === "bars") return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" /></svg>;
   if (name === "guess") return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" /></svg>;
   if (name === "comments") return <svg {...p}><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M7 8h10M7 12h7" /></svg>;
+  if (name === "user") return <svg {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
 }
