@@ -301,7 +301,8 @@ function VerifyEmail({ session }: { session: ReturnType<typeof useSession> }) {
       await call("/account/verify/send", { token, body: {} });
       setMsg({ ok: true, text: "נשלח מייל אימות. לחצו על הקישור שבו, וחזרו לכאן." });
     } catch (e) {
-      setMsg({ ok: false, text: errorText(e) });
+      // התשובה לא חזרה (חסימה ברשת) — ייתכן שהבקשה הגיעה והמייל נשלח
+      setMsg({ ok: false, text: e instanceof CrowdError && e.code === "network" ? "לא התקבל אישור מהשרת. ייתכן שהמייל נשלח — בדקו את תיבת המייל (גם בספאם), או נסו שוב בעוד כמה דקות. אפשר גם להתחבר עם Google." : errorText(e) });
     } finally { setBusy(false); }
   };
   // חזרה ללשונית אחרי הלחיצה במייל ⇐ בדיקה שקטה

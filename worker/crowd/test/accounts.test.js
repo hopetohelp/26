@@ -144,9 +144,9 @@ describe("משתמשים קיימים", () => {
 
 /** אימות מייל דרך Firebase (הכרעת בעלים 9.10.2026) — Firebase מדומה: משתמשים לפי מייל, שליחת מייל וסימון אימות */
 describe("אימות מייל", () => {
-  let users, sent, deleted;
+  let users, sent, deleted, codes;
   beforeEach(() => {
-    users = new Map(); sent = []; deleted = [];
+    users = new Map(); sent = []; deleted = []; codes = new Map();
     env.FIREBASE_API_KEY = "test-key";
     env.SITE_URL = "https://hopetohelp.github.io/26/";
     vi.stubGlobal("fetch", vi.fn(async (url, init) => {
@@ -156,6 +156,14 @@ describe("אימות מייל", () => {
       const ok = (o = {}) => new Response(JSON.stringify(o));
       if (method === "signUp") { if (users.has(b.email)) return fail("EMAIL_EXISTS"); users.set(b.email, { pw: b.password, verified: false }); return ok({ idToken: "tok:" + b.email }); }
       if (method === "signInWithPassword") { const u = users.get(b.email); return u && u.pw === b.password ? ok({ idToken: "tok:" + b.email }) : fail("INVALID_LOGIN_CREDENTIALS"); }
+      // קוד מהקישור שבמייל (תווים כמו בקוד אמיתי): הטבלה codes ממפה קוד ⇐ {email, type, expired}
+      if (method === "resetPassword" || method === "update") {
+        const c = codes.get(String(b.oobCode));
+        if (!c || !users.has(c.email)) return fail("INVALID_OOB_CODE");
+        if (c.expired) return fail("EXPIRED_OOB_CODE");
+        if (method === "update") users.get(c.email).verified = true;
+        return ok({ email: c.email, requestType: c.type });
+      }
       const email = String(b.idToken).slice(4);
       if (method === "sendOobCode") { sent.push({ email, continueUrl: b.continueUrl }); return ok(); }
       if (method === "lookup") return ok({ users: [{ emailVerified: users.get(email).verified }] });
@@ -200,6 +208,23 @@ describe("אימות מייל", () => {
     expect((await call("/account/verify/check", { token: r.data.token, body: {} })).data.error).toBe("not_sent");
   });
 
+  it("דף האימות באתר: הקוד מהקישור מאמת בלי סשן (גם ממכשיר אחר), המשתמש הזמני נמחק, וקוד לא תקף נדחה", async () => {
+    const r = await call("/auth/register", { body: { email: "page.user@example.com", password: PW } });
+    await call("/account/verify/send", { token: r.data.token, body: {} });
+    codes.set("OTHERtypeCODE1234567890", { email: "page.user@example.com", type: "PASSWORD_RESET" });
+    codes.set("EXPIREDcode1234567890", { email: "page.user@example.com", type: "VERIFY_EMAIL", expired: true });
+    codes.set("GOODcodeABCDEFGH1234567890", { email: "page.user@example.com", type: "VERIFY_EMAIL" });
+    expect((await call("/auth/verify-email", { body: { oobCode: "unknownCODE1234567890" } })).data.error).toBe("bad_code");
+    expect((await call("/auth/verify-email", { body: { oobCode: "OTHERtypeCODE1234567890" } })).data.error).toBe("bad_code"); // לא קוד אימות מייל
+    expect((await call("/auth/verify-email", { body: { oobCode: "EXPIREDcode1234567890" } })).data.error).toBe("expired_code");
+    expect((await call("/auth/verify-email", { body: { oobCode: "x" } })).data.error).toBe("bad_code");
+    expect((await call("/me", { token: r.data.token })).data.emails[0].verified).toBe(false);
+    expect((await call("/auth/verify-email", { body: { oobCode: "GOODcodeABCDEFGH1234567890" } })).data).toEqual({ verified: true, account: true });
+    expect((await call("/me", { token: r.data.token })).data.emails[0].verified).toBe(true);
+    expect(deleted).toContain("page.user@example.com");
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM email_verify").get().n).toBe(0);
+  });
+
   it("Firebase חסום להרשמה במייל וסיסמה (לא הופעל) ⇐ הודעה ברורה; מחיקת חשבון מוחקת גם את המשתמש הזמני", async () => {
     const r = await call("/auth/register", { body: { email: "gone2@example.com", password: PW } });
     await call("/account/verify/send", { token: r.data.token, body: {} });
@@ -241,5 +266,17 @@ describe("מנהל לפי חשבון ומספרי ניהול", () => {
     await call("/auth/google", { body: { credential: await google({}) } });
     const stats = (await asAdmin(KEY, "/admin/support")).data.stats;
     expect(stats).toMatchObject({ verifiedEmails: 1, googleAccounts: 1 });
+  });
+});
+
+describe("סטטיסטיקות: כולם נספרים, עם הערה כמה מאומתים (הכרעת בעלים 9.10.2026)", () => {
+  it("חשבון Google וחשבון במייל שלא אומת נספרים שניהם; ההערה: 1 מתוך 2 מאומתים", async () => {
+    const g = await call("/auth/google", { body: { credential: await google({}) } });
+    await save(g.data.token);
+    const e = await call("/auth/register", { body: { email: "unverified@example.com", password: PW } });
+    await save(e.data.token);
+    const d = (await call("/dashboard")).data;
+    expect(d.participants).toBe(2);
+    expect(d.accounts).toEqual({ verified: 1, total: 2 });
   });
 });

@@ -21,7 +21,7 @@ export const K_ROW = 1;
 export const OPEN_AT = 0;
 export const MIN_CHANGED = 1;
 export const TOTAL = 120;
-export const DASHBOARD_POLICY = "fixed-blocs-v5";
+export const DASHBOARD_POLICY = "verified-v6";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -290,6 +290,12 @@ export function computeUnderReview(reviewSeatVersions, reviewParticipants) {
  * previous: {section: {json, publishedAt, snapshot: number[]}} — הפרסום הקודם של כל חלק · lastDailyDay: היום (ישראל) של החישוב היומי הקודם
  * מחזיר {dashboard, sections: {section: {json, publishedAt, snapshot, contributors, changed}}, daily}
  */
+/**
+ * חשבון מאומת = יש לו Google או מייל מאומת. הכרעת בעלים 9.10.2026: הסטטיסטיקות הציבוריות סופרות את כלל המשתתפים, גם בלי אימות;
+ * רק מוצגת הערה קטנה "N מתוך M מאומתים". שורה בלי השדה verified נחשבת מאומתת (תאימות לבדיקות); השרת מספק תמיד 0 או 1.
+ */
+const isVerified = (p) => p.verified !== 0 && p.verified !== false;
+
 export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {}, decisions = new Map() }) {
   const review = new Set(participants.filter((p) => p.review).map((p) => p.id));
   const known = new Set(participants.map((p) => p.id));
@@ -301,6 +307,8 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const rev = latestByUnit(versions, (v) => review.has(v.participant));
   const active = new Set([...main.vote.keys(), ...main.seats.keys(), ...main.blocs.keys()]);
   const reviewActive = new Set([...rev.vote.keys(), ...rev.seats.keys(), ...rev.blocs.keys()]);
+  // הערה קטנה בדשבורד: כמה מהנספרים מאומתים (Google או מייל שאומת)
+  const verifiedActive = participants.filter((p) => active.has(p.id) && isVerified(p)).length;
   const today = israelDay(now);
   const daily = lastDailyDay !== today;
   // במעבר מדשבורד סגור לפתוח — כל החלקים מתפרסמים מחדש, ולא נשארים קפואים מתקופת הסגירה
@@ -345,7 +353,7 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
     custom: sections.blocs.json.custom.map(g => ({ ...g, name: blocNames[compositionKey(g.lists)] ?? g.name })),
   } };
   const open = active.size >= OPEN_AT;
-  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, pendingGuesses: mod.pending.size, sectionsAsOf: {}, sectionParticipants: {} };
+  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, pendingGuesses: mod.pending.size, accounts: { verified: verifiedActive, total: active.size }, sectionsAsOf: {}, sectionParticipants: {} };
   if (open) {
     for (const [name, s] of Object.entries(sections)) {
       if (s.json === null || s.json === undefined) continue;

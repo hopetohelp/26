@@ -1,4 +1,4 @@
-import { personalTotals } from "./lib/blocDefinitions.js";
+import { personalTotals, migrateBlocs } from "./lib/blocDefinitions.js";
 /**
  * שרת השתתפות הגולשים — "ההשערה שלי" ודשבורד הגולשים (Cloudflare Worker + D1 ‏elections26-crowd).
  * השיטה: docs/השתתפות-גולשים.md · החוזה (נתיבים וצורות תשובה): src/lib/crowdApi.ts — השרת מממש בדיוק אותו.
@@ -19,6 +19,9 @@ import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 import { moderate } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
+import { LISTS_2026 } from "./lib/lists.js";
+
+const IDS_2026_LIST = LISTS_2026.map((l) => l.id);
 
 // שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
 export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
@@ -137,22 +140,44 @@ async function linkOwner(env, request, now, raw) {
   return { participant: c.participant, keys };
 }
 
+/**
+ * המשתתפים עם הדגלים לצבירה: review (שעה חשודה), google (יש חשבון Google), verified (Google או מייל מאומת — הכרעת בעלים 9.10.2026:
+ * רק מאומתים נספרים בסטטיסטיקות; השאר באזור נפרד).
+ */
+const PARTICIPANTS_SQL =
+  "SELECT p.id, p.review, EXISTS(SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'google') AS google, (EXISTS(SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'google') OR EXISTS(SELECT 1 FROM emails e WHERE e.participant = p.id AND e.verified = 1)) AS verified FROM participants p";
+
+/**
+ * הגושים של השערה, לממשק הניהול (הכרעת בעלים 9.10.2026): הגושים שהמשתתף הגדיר (או ברירת המחדל כשלא שמר הגדרה),
+ * עם סכום המנדטים של כל גוש לפי ההשערה, והיעד אם קבע. בלי מזהה.
+ */
+function blocsOf(seatsPayload, definition) {
+  const defined = definition ? (definition.mode === "gov37" ? definition.blocs : migrateBlocs(definition).blocs) : [];
+  const targets = new Map(defined.map((b) => [b.id, b.target ?? null]));
+  const items = personalTotals(seatsPayload, definition).map((b) => ({ name: b.name, lists: b.lists, seats: b.seats, target: targets.get(b.id) ?? null }));
+  return { saved: !!definition, items };
+}
+
 /** מצב הבדיקה של ההשערות: הגרסה האחרונה (מנדטים) של כל משתתף, ותוצאת הבדיקה מול שאר הגולשים */
 async function moderationState(env) {
   const data = await env.DB.batch([
-    env.DB.prepare("SELECT id, review FROM participants"),
+    env.DB.prepare(PARTICIPANTS_SQL),
     env.DB.prepare("SELECT v.id, v.participant, v.unit, v.created_at, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id"),
     env.DB.prepare("SELECT version_id, decision FROM version_review"),
+    env.DB.prepare("SELECT v.participant, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'blocs' GROUP BY participant) m ON v.id = m.id"),
   ]);
+  const blocsBy = new Map((data[3].results || []).map((r) => [r.participant, JSON.parse(r.payload)]));
   const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
   const known = new Set((data[0].results || []).map((p) => p.id));
+  const verified = new Set((data[0].results || []).filter((p) => p.verified).map((p) => p.id));
   const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: JSON.parse(r.payload) }));
   const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
+  // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
   const counted = latest.filter((v) => !review.has(v.participant));
   const mod = moderate(counted, decisions);
   // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
   const raw = moderate(counted, new Map()).pending;
-  return { latest, review, mod: { ...mod, decisions, raw } };
+  return { latest, review, verified, blocsBy, mod: { ...mod, decisions, raw } };
 }
 
 /** המייל כבר רשום — בגיבוב, או כשם משתמש ישן (גלוי) של חשבון שנרשם לפני 9.10.2026 */
@@ -255,6 +280,8 @@ const routes = {
       // אימות מייל במייל: זמין כשמוגדר מפתח Firebase
       verifyAvailable: !!env.FIREBASE_API_KEY,
       isAdmin: !!(await env.DB.prepare("SELECT 1 AS x FROM admins WHERE participant = ?").bind(participant).first()),
+      // נספר בסטטיסטיקות רק חשבון מאומת: Google או מייל שאומת
+      verified: !!g || emailRows.some((r) => r.verified),
     };
   },
 
@@ -509,6 +536,34 @@ const routes = {
     return { sent: true };
   },
 
+  // דף האימות באתר (הכרעת בעלים 9.10.2026: עדיף דף באתר מאשר דף של Firebase): הקישור שבמייל מוביל לאתר עצמו, והדפדפן שולח לכאן את הקוד.
+  // הקוד הוא הוכחה שהגולש שולט בתיבת המייל, ולכן אין צורך בסשן — אפשר לפתוח את הקישור גם במכשיר אחר.
+  "POST /auth/verify-email": async ({ env, request, now, body }) => {
+    const code = typeof body.oobCode === "string" && /^[\w-]{10,300}$/.test(body.oobCode) ? body.oobCode : null;
+    if (!code) throw bad("bad_code");
+    const [cur] = await ipKeys(env, request);
+    if (!(await hit(env, "va:" + cur, 30, now))) throw new HttpError(429, "slow_down");
+    let email;
+    try {
+      const info = await fb.checkCode(env, code);
+      if (info.requestType !== "VERIFY_EMAIL" || typeof info.email !== "string") throw bad("bad_code");
+      await fb.applyCode(env, code);
+      email = info.email;
+    } catch (e) {
+      if (e instanceof HttpError) throw e;
+      if (e instanceof fb.FirebaseError && /OOB_CODE|INVALID_ID_TOKEN/.test(e.code)) throw bad(/EXPIRED/.test(e.code) ? "expired_code" : "bad_code");
+      throw fbFailure(e);
+    }
+    const n = normalizeEmail(email);
+    if (!n) throw bad("bad_code");
+    const row = await env.DB.prepare("SELECT participant FROM emails WHERE hash = ?").bind(await emailHash(env, n.norm)).first();
+    if (!row) return { verified: true, account: false };
+    await env.DB.prepare("UPDATE emails SET verified = 1 WHERE participant = ? AND hash = ?").bind(row.participant, await emailHash(env, n.norm)).run();
+    await dropFirebaseUser(env, row.participant);
+    await env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(row.participant).run();
+    return { verified: true, account: true };
+  },
+
   "POST /account/verify/check": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     const row = await env.DB.prepare("SELECT hash, enc, verified FROM emails WHERE participant = ? ORDER BY verified DESC, created_at LIMIT 1").bind(participant).first();
@@ -639,7 +694,7 @@ const routes = {
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
   "GET /admin/guesses": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const { latest, mod, review } = await moderationState(env);
+    const { latest, mod, review, verified, blocsBy } = await moderationState(env);
     const salt = randomToken(12);
     const rows = [];
     for (const v of latest) {
@@ -653,14 +708,19 @@ const routes = {
         seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
         ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
         status,
+        verified: verified.has(v.participant),
         reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
+        blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
       });
     }
     for (let i = rows.length - 1; i > 0; i--) {
       const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
       [rows[i], rows[j]] = [rows[j], rows[i]];
     }
-    return { salt, rows };
+    // האזור הנפרד בניהול: חשבונות שלא אומתו — כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים). הם נספרים בסטטיסטיקות כרגיל.
+    const unv = rows.filter((r) => !r.verified);
+    const means = Object.fromEntries(IDS_2026_LIST.map((id) => [id, unv.length ? Math.round((unv.reduce((a, r) => a + (r.seats[id] ?? 0), 0) / unv.length) * 100) / 100 : 0]));
+    return { salt, rows, unverified: { participants: unv.length, means } };
   },
 
   // אישור / דחייה / ביטול החלטה — לפי ידית מהטעינה (salt + handle). אין קלט של מזהה גרסה או משתתף.
@@ -726,7 +786,7 @@ async function computeDashboard(env) {
   // התשובות האישיות נשארות בשרת; רק התוצאה המצטברת יוצאת לדפדפן.
   const now = iso(clock(env));
   const data = await env.DB.batch([
-    env.DB.prepare("SELECT id, review FROM participants"),
+    env.DB.prepare(PARTICIPANTS_SQL),
     env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id"),
     env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'"),
     env.DB.prepare("SELECT version_id, decision FROM version_review"),
@@ -785,7 +845,7 @@ export async function runAnomaly(env, now, aggregationId) {
 export async function runAggregation(env, now) {
   const aggregationId = "agg-" + hourOf(now);
   await runAnomaly(env, now, aggregationId);
-  const participants = (await env.DB.prepare("SELECT id, review FROM participants").all()).results || [];
+  const participants = (await env.DB.prepare(PARTICIPANTS_SQL).all()).results || [];
   const versions = ((await env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id").all()).results || []).map((r) => ({
     ...r,
     payload: JSON.parse(r.payload),
