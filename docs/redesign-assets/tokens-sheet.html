@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-theme="league">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בחירות 26: טוקנים ורכיבים</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;500;600;700;800&family=Karantina:wght@400;700&family=Secular+One&display=swap" rel="stylesheet">
+<style>/* הדגמת עיצוב מחדש — בחירות 26. הצבעים הם אותם טוקנים של האתר (src/index.css); חדשים רק band ו-seat. */
+:root, [data-theme="league"] {
+  --paper: 238 241 245; --card: 255 255 255; --line: 213 219 227;
+  --ink: 19 23 29; --ink-soft: 74 85 99; --ink-faint: 92 101 114;
+  --accent: 27 58 140; --accent-soft: 230 236 248;
+  --warn: 163 78 0; --warn-soft: 255 244 232;
+  --frame: 255 255 255; --frame-ink: 19 23 29; --frame-soft: 74 85 99; --frame-line: 213 219 227;
+  --signal: 232 119 14; --signal-ink: 19 23 29;
+  --band: 19 23 29; --band-ink: 244 246 248; --band-soft: 184 192 204;
+  --font-display: "Secular One"; --font-body: "Assistant"; --radius: 12px;
+  --hero: 2.1rem; --hero-lg: 3.1rem;
+}
+[data-theme="board"] {
+  --paper: 231 235 240; --card: 255 255 255; --line: 203 211 220;
+  --ink: 11 34 57; --ink-soft: 61 81 104; --ink-faint: 84 101 120;
+  --accent: 29 79 128; --accent-soft: 227 236 245;
+  --warn: 138 75 0; --warn-soft: 255 244 220;
+  --frame: 11 34 57; --frame-ink: 244 246 248; --frame-soft: 184 196 209; --frame-line: 22 56 90;
+  --signal: 255 184 28; --signal-ink: 11 34 57;
+  --band: 11 34 57; --band-ink: 244 246 248; --band-soft: 184 196 209;
+  --font-display: "Karantina"; --font-body: "Heebo"; --radius: 10px;
+  --hero: 2.9rem; --hero-lg: 4.4rem;
+}
+[data-dark] {
+  color-scheme: dark;
+  --paper: 10 20 32; --card: 17 31 47; --line: 38 58 80;
+  --ink: 230 236 242; --ink-soft: 170 185 202; --ink-faint: 140 157 176;
+  --accent: 120 170 220; --accent-soft: 22 44 68;
+  --warn: 240 170 80; --warn-soft: 50 36 14;
+  --frame: 6 16 28; --frame-ink: 244 246 248; --frame-soft: 170 185 202; --frame-line: 30 52 76;
+  --signal: 255 184 28; --signal-ink: 11 34 57;
+  --band: 22 46 74; --band-ink: 244 246 248; --band-soft: 170 185 202;
+}
+[data-theme="league"][data-dark] {
+  --paper: 16 18 22; --card: 26 29 35; --line: 52 58 68;
+  --ink: 236 239 243; --ink-soft: 176 184 196; --ink-faint: 146 155 168;
+  --accent: 130 160 240; --accent-soft: 30 38 62;
+  --warn: 245 160 80; --warn-soft: 52 36 20;
+  --frame: 26 29 35; --frame-ink: 236 239 243; --frame-soft: 176 184 196; --frame-line: 52 58 68;
+  --signal: 240 140 40; --signal-ink: 19 23 29;
+  --band: 38 44 56; --band-ink: 236 239 243; --band-soft: 176 184 196;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+html[data-card] { font-size: 27px; }
+body {
+  margin: 0; background: rgb(var(--paper)); color: rgb(var(--ink));
+  font-family: var(--font-body), system-ui, Arial, sans-serif; font-size: 1rem; line-height: 1.6;
+}
+a { color: rgb(var(--accent)); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid rgb(var(--signal)); outline-offset: 2px; }
+[data-theme="league"] :focus-visible { outline-color: rgb(var(--accent)); }
+.tab { font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.display { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; letter-spacing: 0; }
+
+/* ---------- פס עליון ---------- */
+.top { background: rgb(var(--frame)); color: rgb(var(--frame-ink)); border-bottom: 1px solid rgb(var(--frame-line)); }
+.top-in { display: flex; align-items: center; gap: .75rem; min-height: 3.5rem; padding: 0 1rem; }
+.brand { font-family: var(--font-display), var(--font-body), sans-serif; font-size: 1.75rem; line-height: 1; color: inherit; text-decoration: none; white-space: nowrap; }
+[data-theme="board"] .brand { font-size: 2.1rem; }
+.count { margin-inline-start: auto; font-size: .875rem; font-weight: 700; border: 1px solid rgb(var(--frame-line)); border-radius: 999px; padding: .2rem .7rem; white-space: nowrap; }
+[data-theme="board"] .count b { color: rgb(var(--signal)); }
+.icon-btn { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border-radius: 999px; border: 1px solid rgb(var(--frame-line)); background: transparent; color: inherit; }
+.icon-btn svg { width: 1.3rem; height: 1.3rem; }
+.navd { display: none; }
+.navd ul { display: flex; gap: .15rem; list-style: none; margin: 0; padding: 0; }
+.navd a { display: block; padding: .5rem .7rem; color: rgb(var(--frame-soft)); text-decoration: none; font-size: .875rem; border-bottom: 3px solid transparent; }
+.navd a[aria-current] { color: rgb(var(--frame-ink)); font-weight: 700; border-bottom-color: rgb(var(--signal)); }
+[data-theme="league"] .navd a[aria-current] { border-bottom-color: rgb(var(--accent)); }
+
+.freeze { display: none; background: rgb(var(--warn-soft)); color: rgb(var(--warn)); border-block: 1px solid rgb(var(--warn)); }
+[data-freeze] .freeze { display: block; }
+.freeze p { margin: 0; padding: .75rem 1rem; font-weight: 700; font-size: .875rem; line-height: 1.5; }
+
+/* ---------- תוכן ---------- */
+main { padding: 0 1rem 7rem; }
+.hero { padding-top: 1.5rem; }
+.h1 { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
+.lede { margin: .75rem 0 0; color: rgb(var(--ink-soft)); font-size: 1rem; }
+.hemi { margin: 1.25rem 0 0; }
+.hemi svg { display: block; width: 100%; height: auto; }
+.seat-a { fill: rgb(var(--accent)); }
+.seat-b { fill: color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card))); stroke: rgb(var(--accent) / .7); stroke-width: .009; }
+.hemi .tick { stroke: rgb(var(--ink)); stroke-width: .012; }
+.hemi { position: relative; }
+.hl { position: absolute; transform: translate(-50%, -50%); font-weight: 800; font-size: 1rem; line-height: 1; }
+.hl-total { font-weight: 400; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.legend { list-style: none; margin: .75rem 0 0; padding: 0; }
+.legend li { display: grid; grid-template-columns: 1rem 1fr auto; align-items: baseline; gap: .6rem; padding: .7rem 0; border-top: 1px solid rgb(var(--line)); }
+.legend li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.sw { width: .9rem; height: .9rem; border-radius: 50%; align-self: center; }
+.sw.a { background: rgb(var(--accent)); }
+.sw.b { background: color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card))); border: 1.5px solid rgb(var(--accent) / .7); }
+.legend .lbl { font-weight: 600; }
+.legend .big { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.legend small { display: block; color: rgb(var(--ink-soft)); font-weight: 400; font-size: .875rem; }
+.legend .val { text-align: end; }
+.src { margin: .75rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
+
+.sec { margin-top: 2.5rem; }
+.h2 { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 0 0 .25rem; }
+.sec-lead { margin: 0 0 .5rem; color: rgb(var(--ink-soft)); font-size: .875rem; }
+
+.edge { list-style: none; padding: 0; margin: .5rem 0 0; }
+.edge li { padding: .8rem 0; border-top: 1px solid rgb(var(--line)); display: grid; grid-template-columns: 1fr auto; gap: .15rem .75rem; align-items: center; }
+.edge li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.edge .nm { font-weight: 700; font-size: 1rem; }
+.edge .seats { font-weight: 800; font-size: 1.25rem; text-align: end; }
+.edge .how { grid-column: 1 / -1; display: flex; align-items: center; gap: .6rem; color: rgb(var(--ink-soft)); font-size: .875rem; }
+.dots { display: inline-flex; gap: .22rem; }
+.dots i { width: .62rem; height: .62rem; border-radius: 50%; background: rgb(var(--accent)); }
+.dots i.off { background: transparent; box-shadow: inset 0 0 0 1.5px rgb(var(--ink-faint)); }
+
+.rank { list-style: none; padding: 0; margin: .5rem 0 0; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); align-items: center; gap: .75rem; min-height: 3rem; padding: .35rem 0; border-top: 1px solid rgb(var(--line)); }
+.row:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.row .nm { font-weight: 600; line-height: 1.25; }
+.row .nm em { display: block; font-style: normal; font-size: .875rem; font-weight: 700; color: rgb(var(--warn)); }
+.row .n { font-weight: 800; font-size: 1.25rem; text-align: start; }
+.row .rng { display: none; }
+.axisrow { display: grid; grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); gap: .75rem; font-size: .75rem; color: rgb(var(--ink-soft)); margin-top: .35rem; }
+.axisrow .ticks { grid-column: 3; position: relative; height: 1rem; direction: ltr; }
+.axisrow .ticks span { position: absolute; transform: translateX(-50%); }
+.plot { position: relative; height: 1.25rem; direction: ltr;
+  background-image: linear-gradient(to right, rgb(var(--line)) 1px, transparent 1px); background-size: 33.333% 100%; background-position: left top; background-repeat: repeat-x; }
+.plot .bar { position: absolute; top: 50%; height: .3rem; margin-top: -.15rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.plot .dot { position: absolute; top: 50%; width: .8rem; height: .8rem; margin: -.4rem 0 0 -.4rem; border-radius: 50%; background: rgb(var(--ink)); box-shadow: 0 0 0 2px rgb(var(--paper)); }
+.key { display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin: .25rem 0 .25rem; font-size: .875rem; color: rgb(var(--ink-soft)); align-items: center; }
+.key span { display: inline-flex; align-items: center; gap: .4rem; }
+.key .k-bar { width: 1.4rem; height: .3rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.key .k-dot { width: .8rem; height: .8rem; border-radius: 50%; background: rgb(var(--ink)); }
+.key .k-dot.sig { background: rgb(var(--signal)); }
+
+.cta { margin-top: 2.5rem; background: rgb(var(--band)); color: rgb(var(--band-ink)); border-radius: var(--radius); padding: 1.25rem; }
+.cta h2 { margin: 0; font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+.cta p { margin: .5rem 0 1rem; color: rgb(var(--band-soft)); font-size: .875rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 1.4rem; border-radius: 999px; background: rgb(var(--signal)); color: rgb(var(--signal-ink)); font-weight: 800; text-decoration: none; border: 0; font-family: inherit; font-size: 1rem; }
+.btn.ghost { background: transparent; color: rgb(var(--ink)); box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); }
+
+.index { list-style: none; padding: 0; margin: .5rem 0 0; }
+.index a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .75rem; padding: .85rem 0; border-top: 1px solid rgb(var(--line)); text-decoration: none; color: rgb(var(--ink)); min-height: 3.25rem; }
+.index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
+.index b { display: block; font-size: 1rem; }
+.index span.d { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; line-height: 1.45; }
+.index svg { width: 1.2rem; height: 1.2rem; color: rgb(var(--ink-faint)); }
+.foot { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid rgb(var(--line)); color: rgb(var(--ink-soft)); font-size: .875rem; }
+.foot p { margin: 0 0 .5rem; }
+
+/* ---------- סרגל תחתון בטלפון ---------- */
+.tabs { position: sticky; bottom: 0; z-index: 5; background: rgb(var(--card)); border-top: 1px solid rgb(var(--line)); }
+.tabs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
+.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
+.tabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
+.tabs svg { width: 1.4rem; height: 1.4rem; }
+
+/* ---------- מחשב ---------- */
+@media (min-width: 1024px) {
+  .top-in { min-height: 4rem; padding: 0 1.5rem; gap: 1.25rem; }
+  .navd { display: block; }
+  .count { margin-inline-start: 0; }
+  .top-in .spacer { flex: 1; }
+  .tabs { display: none; }
+  main { padding: 0 1.5rem 4rem; }
+  .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 3rem; align-items: center; padding-top: 2.5rem; }
+  .h1 { font-size: var(--hero-lg); }
+  .hemi { margin-top: 0; max-width: 46rem; }
+  .body { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); grid-template-rows: auto 1fr auto; grid-template-areas: "edge rank" "cta rank" "idx idx"; column-gap: 3rem; align-content: start; }
+  .body .edge-sec { grid-area: edge; margin-top: 2.5rem; }
+  .body .rank-sec { grid-area: rank; margin-top: 2.5rem; }
+  .body .cta { grid-area: cta; align-self: start; }
+  .body .idx-sec { grid-area: idx; }
+  .row, .axisrow { grid-template-columns: minmax(0, 13rem) 2.6rem minmax(0, 1fr) 5rem; }
+  .axisrow .ticks { grid-column: 3; }
+  .row .rng { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; text-align: end; }
+  .index { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 3rem; }
+  .index li:nth-last-child(-n+3) a { border-bottom: 1px solid rgb(var(--line)); }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hemi { max-width: 34rem; margin-inline: auto !important; }
+  .index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; }
+  .index li:nth-last-child(-n+2) a { border-bottom: 1px solid rgb(var(--line)); }
+}
+html[data-static] .tabs { position: static; }
+.index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
+
+
+body { padding: 2rem; background: #fff; }
+.sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 90rem; margin: 0 auto; }
+.tile { background: rgb(var(--paper)); color: rgb(var(--ink)); font-family: var(--font-body), sans-serif; border: 1px solid rgb(var(--line)); border-radius: 16px; padding: 1.5rem; }
+.tile h2 { margin: 0 0 1rem; font-size: 1.125rem; font-weight: 800; }
+.tile h3 { margin: 1.4rem 0 .5rem; font-size: .875rem; font-weight: 800; color: rgb(var(--ink-soft)); }
+.sws { display: grid; grid-template-columns: repeat(8, 1fr); gap: .4rem; }
+.sws div { font-size: .75rem; color: rgb(var(--ink-soft)); text-align: center; direction: ltr; }
+.sws b { display: block; height: 2.6rem; border-radius: 8px; border: 1px solid rgb(var(--line)); margin-bottom: .25rem; }
+.spec { display: grid; grid-template-columns: 1fr 11rem; gap: .3rem 1rem; align-items: baseline; }
+.spec small { color: rgb(var(--ink-soft)); font-size: .75rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { display: inline-flex; align-items: center; gap: .45rem; padding: .3rem .8rem; border-radius: 999px; border: 1.5px solid rgb(var(--ink) / .35); font-weight: 700; font-size: .875rem; }
+.chip i { width: .8rem; height: .8rem; border-radius: 50%; border: 2px solid rgb(var(--ink)); box-sizing: border-box; }
+.chip i.full { background: rgb(var(--ink)); }
+.chip i.half { background: linear-gradient(to left, rgb(var(--ink)) 50%, transparent 50%); }
+.seg { display: inline-flex; border: 1.5px solid rgb(var(--ink) / .35); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg span { padding: .35rem .9rem; border-radius: 999px; font-weight: 700; font-size: .875rem; }
+.seg span.on { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); }
+.line { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.sheet-demo { background: rgb(var(--card)); border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1rem; font-size: .875rem; }
+.sheet-demo dl { margin: .5rem 0 0; display: grid; grid-template-columns: 6rem 1fr; gap: .3rem 1rem; }
+.sheet-demo dt { color: rgb(var(--ink-soft)); }
+.sheet-demo dd { margin: 0; }
+.note { font-size: .75rem; color: rgb(var(--ink-soft)); margin-top: .4rem; }
+.tile .rank { margin-top: 0; }
+.tile .freeze { display: block; border-radius: 8px; border: 1px solid rgb(var(--warn)); }
+.tile .btn.ghost { color: rgb(var(--ink)); }
+</style></head>
+<body><div class="sheet"><section class="tile" data-theme="league">
+<h2>מקצועי · בהיר</h2>
+<h3>צבעים (טוקנים, בלי צבע קבוע ברכיב)</h3><div class="sws"><div><b style="background:rgb(var(--paper))"></b>paper</div><div><b style="background:rgb(var(--card))"></b>card</div><div><b style="background:rgb(var(--line))"></b>line</div><div><b style="background:rgb(var(--ink))"></b>ink</div><div><b style="background:rgb(var(--ink-soft))"></b>ink-soft</div><div><b style="background:rgb(var(--accent))"></b>accent</div><div><b style="background:rgb(var(--signal))"></b>signal</div><div><b style="background:rgb(var(--band))"></b>band</div></div>
+<h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
+<div class="spec">
+ <div class="display" style="font-size:2.1rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
+ <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
+ <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
+</div>
+<h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
+<div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
+<h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
+<h3>שורת רשימה</h3>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
+<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
+<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
+<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<p class="note">רדיוס 12px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
+</section><section class="tile" data-theme="board">
+<h2>חדשותי · בהיר</h2>
+<h3>צבעים (טוקנים, בלי צבע קבוע ברכיב)</h3><div class="sws"><div><b style="background:rgb(var(--paper))"></b>paper</div><div><b style="background:rgb(var(--card))"></b>card</div><div><b style="background:rgb(var(--line))"></b>line</div><div><b style="background:rgb(var(--ink))"></b>ink</div><div><b style="background:rgb(var(--ink-soft))"></b>ink-soft</div><div><b style="background:rgb(var(--accent))"></b>accent</div><div><b style="background:rgb(var(--signal))"></b>signal</div><div><b style="background:rgb(var(--band))"></b>band</div></div>
+<h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
+<div class="spec">
+ <div class="display" style="font-size:2.9rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
+ <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
+ <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
+</div>
+<h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
+<div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
+<h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
+<h3>שורת רשימה</h3>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
+<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
+<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
+<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<p class="note">רדיוס 10px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
+</section><section class="tile" data-theme="league" data-dark="">
+<h2>מקצועי · חשוך</h2>
+<h3>צבעים (טוקנים, בלי צבע קבוע ברכיב)</h3><div class="sws"><div><b style="background:rgb(var(--paper))"></b>paper</div><div><b style="background:rgb(var(--card))"></b>card</div><div><b style="background:rgb(var(--line))"></b>line</div><div><b style="background:rgb(var(--ink))"></b>ink</div><div><b style="background:rgb(var(--ink-soft))"></b>ink-soft</div><div><b style="background:rgb(var(--accent))"></b>accent</div><div><b style="background:rgb(var(--signal))"></b>signal</div><div><b style="background:rgb(var(--band))"></b>band</div></div>
+<h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
+<div class="spec">
+ <div class="display" style="font-size:2.1rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
+ <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
+ <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
+</div>
+<h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
+<div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
+<h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
+<h3>שורת רשימה</h3>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
+<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
+<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
+<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<p class="note">רדיוס 12px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
+</section><section class="tile" data-theme="board" data-dark="">
+<h2>חדשותי · חשוך</h2>
+<h3>צבעים (טוקנים, בלי צבע קבוע ברכיב)</h3><div class="sws"><div><b style="background:rgb(var(--paper))"></b>paper</div><div><b style="background:rgb(var(--card))"></b>card</div><div><b style="background:rgb(var(--line))"></b>line</div><div><b style="background:rgb(var(--ink))"></b>ink</div><div><b style="background:rgb(var(--ink-soft))"></b>ink-soft</div><div><b style="background:rgb(var(--accent))"></b>accent</div><div><b style="background:rgb(var(--signal))"></b>signal</div><div><b style="background:rgb(var(--band))"></b>band</div></div>
+<h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
+<div class="spec">
+ <div class="display" style="font-size:2.9rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
+ <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
+ <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
+</div>
+<h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
+<div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
+<h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
+<h3>שורת רשימה</h3>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
+<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
+<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
+<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<p class="note">רדיוס 10px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
+</section></div></body></html>

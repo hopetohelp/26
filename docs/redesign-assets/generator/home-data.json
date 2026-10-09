@@ -1,0 +1,199 @@
+{
+ "asOf": "2026-10-07",
+ "start": "2026-09-09",
+ "polls": 37,
+ "pollsters": 10,
+ "lastPoll": "2026-10-08",
+ "latestN": 9,
+ "bloc": {
+  "atLeast61": 0.0384,
+  "lists": [
+   "likud",
+   "shas",
+   "utj",
+   "otzma",
+   "rzp",
+   "noam"
+  ],
+  "seats": [
+   46,
+   52,
+   58
+  ]
+ },
+ "wasted": [
+  3.5,
+  6.47,
+  9.84
+ ],
+ "electionDay": "2026-10-27",
+ "dataAsOf": "2026-10-09T00:40:52+03:00",
+ "usable": 757,
+ "rows": [
+  {
+   "id": "likud",
+   "name": "הליכוד",
+   "gov": true,
+   "central": 22,
+   "lo": 18,
+   "hi": 27,
+   "pass": 1,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "yashar",
+   "name": "ישר!",
+   "gov": false,
+   "central": 22,
+   "lo": 17,
+   "hi": 28,
+   "pass": 1,
+   "sure": true,
+   "d0": -1
+  },
+  {
+   "id": "together",
+   "name": "ביחד",
+   "gov": false,
+   "central": 12,
+   "lo": 9,
+   "hi": 15,
+   "pass": 1,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "democrats",
+   "name": "הדמוקרטים",
+   "gov": false,
+   "central": 9,
+   "lo": 7,
+   "hi": 12,
+   "pass": 0.9999,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "yb",
+   "name": "ישראל ביתנו",
+   "gov": false,
+   "central": 8,
+   "lo": 6,
+   "hi": 11,
+   "pass": 0.998,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "shas",
+   "name": "ש\"ס",
+   "gov": true,
+   "central": 8,
+   "lo": 6,
+   "hi": 11,
+   "pass": 0.9982,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "otzma",
+   "name": "עוצמה יהודית",
+   "gov": true,
+   "central": 8,
+   "lo": 6,
+   "hi": 10,
+   "pass": 0.998,
+   "sure": true,
+   "d0": 1
+  },
+  {
+   "id": "utj",
+   "name": "יהדות התורה",
+   "gov": true,
+   "central": 8,
+   "lo": 6,
+   "hi": 10,
+   "pass": 0.9982,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "joint",
+   "name": "הרשימה המשותפת",
+   "gov": false,
+   "central": 8,
+   "lo": 6,
+   "hi": 10,
+   "pass": 0.996,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "rzp",
+   "name": "הציונות הדתית-זהות",
+   "gov": true,
+   "central": 6,
+   "lo": 0,
+   "hi": 9,
+   "pass": 0.8601,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "raam",
+   "name": "רע\"ם",
+   "gov": false,
+   "central": 5,
+   "lo": 0,
+   "hi": 8,
+   "pass": 0.7613,
+   "sure": true,
+   "d0": 0
+  },
+  {
+   "id": "amcha",
+   "name": "עמך ישראל",
+   "gov": false,
+   "central": 4,
+   "lo": 0,
+   "hi": 6,
+   "pass": 0.4994,
+   "sure": false,
+   "d0": 0
+  },
+  {
+   "id": "reservists",
+   "name": "המילואימניקים-הכלכלית",
+   "gov": false,
+   "central": 0,
+   "lo": 0,
+   "hi": 5,
+   "pass": 0.3345,
+   "sure": false,
+   "d0": 0
+  },
+  {
+   "id": "bluewhite",
+   "name": "כחול לבן",
+   "gov": false,
+   "central": 0,
+   "lo": 0,
+   "hi": 0,
+   "pass": 0.0002,
+   "sure": false,
+   "d0": 0
+  },
+  {
+   "id": "haredi_public",
+   "name": "הציבור החרדי",
+   "gov": false,
+   "central": 0,
+   "lo": 0,
+   "hi": 0,
+   "pass": 0.0001,
+   "sure": false,
+   "d0": 0
+  }
+ ]
+}
