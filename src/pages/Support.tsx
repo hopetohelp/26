@@ -72,11 +72,11 @@ export default function Support() {
 
   return <>
     <Split secondaryFirst title="תמיכה" lead="כאן נמצאת השיחה האישית שלכם עם צוות האתר, וגם כל הנתונים שלכם." primary={<section>
-      <h2 className="font-display text-4xl leading-none mb-5 text-center">הנתונים שלי</h2>
+      <h2 className="text-3xl font-display leading-tight mb-5 text-center">הנתונים שלי</h2>
       <MyData session={session} />
     </section>} secondary={<div className="space-y-8">
-      <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
-        <h2 className="font-display text-3xl leading-none text-center">השיחה עם צוות האתר</h2>
+      <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-4">
+        <h2 className="text-xl font-display leading-tight text-center">השיחה עם צוות האתר</h2>
         <ol className="flex flex-col gap-3" aria-label="שיחת תמיכה">
           <Bubble m={WELCOME} />
           {thread?.messages.map((m, i) => <Bubble key={i} m={m} />)}

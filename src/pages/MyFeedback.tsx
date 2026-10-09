@@ -21,7 +21,7 @@ export default function MyFeedback() {
 
 export function LegacyFeedback() {
   return FEEDBACK_URL && savedThreads().length > 0 ? <section aria-labelledby="legacy-feedback-title">
-    <h2 id="legacy-feedback-title" className="font-display text-3xl leading-none text-center mb-4">השיחות הקודמות שלכם</h2>
+    <h2 id="legacy-feedback-title" className="text-2xl font-display leading-tight text-center mb-4">השיחות הקודמות שלכם</h2>
     <List embedded />
   </section> : null;
 }
@@ -42,7 +42,7 @@ function List({ embedded = false }: { embedded?: boolean }) {
     <>
       {items.length === 1 && !loading ? <ThreadView token={items[0].token} embedded={embedded} /> : <>
       {!embedded && <PageTitle lead="ההערות והתשובות שלכם בשיחה אחת.">ההערות שלי</PageTitle>}
-      <Card>
+      <Card boxed>
         {loading ? <p role="status">מאחדים את השיחות…</p> : items.length === 0 ? (
           <p className="text-base">אין כאן הערות. אפשר לשלוח את ההערה הראשונה כאן.</p>
         ) : (
@@ -112,7 +112,7 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
   return (
     <>
       {embedded ? <p className="text-sm text-ink-soft mb-3">{STATUS[thread.status]} · {when(thread.created_at)}</p> : <PageTitle lead={`נשלחה ב-${when(thread.created_at)} · ${TOPIC[thread.topic] ?? "אחר"} · ${STATUS[thread.status]}`}>ההערה שלי</PageTitle>}
-      <Card>
+      <Card boxed>
         <ol className="flex flex-col gap-3" aria-label="השיחה">
           <Bubble author="visitor" text={thread.text} at={thread.created_at} />
           {thread.messages.map((m, i) => (
@@ -125,7 +125,7 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
       </Card>
 
       {!embedded && thread.status !== "closed" && (
-        <Card title="להוסיף">
+        <Card title="להוסיף" boxed>
           <label htmlFor={fieldId} className="text-sm font-bold">
             מה תרצו להוסיף?
           </label>

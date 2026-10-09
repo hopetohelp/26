@@ -98,7 +98,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
       {!community && <div className="mb-5"><Countdown /></div>}
       {intro && !shared && !community && (
         <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
-          <h2 className="font-display text-3xl leading-none mb-2">השערות גולשים, אינן סקר</h2>
+          <h2 className="text-xl font-display leading-tight mb-2">השערות גולשים, אינן סקר</h2>
           <p className="text-sm leading-relaxed mb-3">
             כאן כל אחד מנחש כמה מנדטים תקבל כל רשימה. מי שמשתתף בוחר בזה בעצמו — אין דגימה ואין שקלול, ולכן הממוצע מספר מה חושבים הגולשים באתר, לא מה
             יקרה. כל שינוי נשמר אוטומטית ונכנס לממוצע; בשינוי הראשון נוצר לכם קישור אישי לחזרה, ומומלץ להירשם בשם משתמש וסיסמה — בלי שם אמיתי ובלי מייל. הנתונים מתפרסמים ללא שם, גם בקבוצות קטנות.
@@ -115,7 +115,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
       )}
       {recoverLink && (
         <section className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5 space-y-2" aria-labelledby="recover-title">
-          <h2 id="recover-title" className="font-display text-3xl leading-none">
+          <h2 id="recover-title" className="text-xl font-display leading-tight">
             שכחתם את הסיסמה?
           </h2>
           <p className="text-sm">נכנסתם עם הקישור האישי, ולכן אפשר לקבוע סיסמה חדשה בלי הישנה. שאר המכשירים ינותקו, והקישור ימשיך לעבוד.</p>

@@ -79,7 +79,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
         <div className="fixed inset-0 z-50 bg-black/45 flex items-end md:items-center justify-center" onClick={(e) => e.target === e.currentTarget && setOpen(false)} onKeyDown={(e) => e.key === "Escape" && setOpen(false)}>
           <div ref={box} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="share-title" className="bg-paper-card text-ink w-full md:max-w-md rounded-t-theme md:rounded-theme p-5 space-y-4 max-h-[92vh] overflow-y-auto focus:outline-none">
             <div className="flex items-start justify-between gap-2">
-              <h2 id="share-title" className="font-display text-3xl leading-none">שיתוף ההשערה</h2>
+              <h2 id="share-title" className="text-2xl font-display leading-tight">שיתוף ההשערה</h2>
               <button type="button" onClick={() => setOpen(false)} aria-label="סגירה" className="w-11 h-11 -mt-2 -me-2 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">×</button>
             </div>
             <div role="radiogroup" aria-label="איזו תמונה לשתף?" className="space-y-2">
