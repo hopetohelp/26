@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
 import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
-import { DEFAULT_BLOCS, IDS, nameOf, normalizeBlocs } from "./model";
+import { DEFAULT_BLOCS, defaultBlocs, IDS, nameOf, normalizeBlocs } from "./model";
 import { moveList, removeBloc, removeList } from "./blocEditing";
 import SaveButton from "./SaveButton";
 import { Btn, inputCls, Notice } from "./ui";
@@ -53,6 +53,7 @@ export default function Blocs({ unit, session, mySeats }: {
       </form>
     </div>}
 
+    <Btn onClick={() => { setPending(null); setPicker(null); setEditing(null); setHovered(null); setBlocs(defaultBlocs()); setAnnouncement("חמשת גושי ברירת המחדל שוחזרו"); }}>חזרה לברירת מחדל</Btn>
     <p className="text-sm text-ink-soft">עד חמישה גושים עצמאיים. מפלגה יכולה להשתתף בכמה גושים; אין צורך לשייך את כל המפלגות. סכומי הגושים אינם מתחברים ל־120.</p>
     {phone ? <p className="text-sm text-ink-soft">לחצו על "+ הוספת מפלגה" בגוש כדי לבחור מפלגות. כפתור "הסר" מסיר מפלגה רק מהגוש הזה.</p> : <p className="text-sm text-ink-soft">לחצו על "+ הוספת מפלגה" בגוש כדי לבחור מפלגות. גרירה בין גושים מוסיפה עותק; גרירה החוצה או כפתור "הסר" מסירים רק מהגוש הזה. במקלדת: חצים להוספה לגוש אחר, Delete להסרה.</p>}
     <p role="status" className="sr-only">{announcement}</p>
