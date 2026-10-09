@@ -129,16 +129,32 @@ export function computeSeats(seatVersions) {
   };
 }
 
-/** גוש הקואליציה בברירת המחדל הישנה, לפני שנעם וצבע שחור נוספו לו (הכרעת בעלים 8.10.2026: אותו גוש) */
-const LEGACY_COALITION = JSON.stringify(["amcha", "likud", "otzma", "rzp", "shas", "utj"]);
-const COALITION = ["amcha", "code_black", "likud", "noam", "otzma", "rzp", "shas", "utj"];
-const canonicalLists = (lists) => (JSON.stringify(lists) === LEGACY_COALITION ? COALITION : lists);
+/**
+ * גושי ברירת המחדל (הכרעת בעלים 9.10.2026): הציבור החרדי עבר מ"כל השאר" לגוש הקואליציה, ו"כל השאר" הוא גוש האופוזיציה.
+ * רטרואקטיבית: גרסאות ישנות של אותם גושים נספרות כגוש החדש (בלי לשנות את מה שנשמר).
+ */
+const COALITION = ["amcha", "code_black", "haredi_public", "likud", "noam", "otzma", "rzp", "shas", "utj"];
+const ARAB = ["joint", "raam"];
+const OPPOSITION = [...IDS_2026].filter((id) => !COALITION.includes(id) && !ARAB.includes(id)).sort();
+const LEGACY = new Map([
+  [JSON.stringify(["amcha", "likud", "otzma", "rzp", "shas", "utj"]), COALITION],
+  [JSON.stringify(["amcha", "code_black", "likud", "noam", "otzma", "rzp", "shas", "utj"]), COALITION],
+  [JSON.stringify([...OPPOSITION, "haredi_public"].sort()), OPPOSITION],
+]);
+const canonicalLists = (lists) => LEGACY.get(JSON.stringify(lists)) ?? lists;
+const sumOf = (v, lists) => lists.reduce((a, id) => a + seatValue(v.payload, id), 0);
 
 export function computeBlocs(seatVersions, blocVersions) {
   let derived = null;
   if (seatVersions.length >= K_CELL) {
     const gov = seatVersions.map((v) => [...GOV37].reduce((a, id) => a + seatValue(v.payload, id), 0));
-    derived = { gov: seatStat("gov", gov), rest: seatStat("rest", gov.map((g) => TOTAL - g)) };
+    // ארבעת הגושים הקבועים — מחושבים מהשערת המנדטים של כל משתתף (רטרואקטיבית לכל שמירה)
+    derived = {
+      gov: seatStat("gov", gov), rest: seatStat("rest", gov.map((g) => TOTAL - g)),
+      coalition: seatStat("coalition", seatVersions.map((v) => sumOf(v, COALITION))),
+      opposition: seatStat("opposition", seatVersions.map((v) => sumOf(v, OPPOSITION))),
+      arab: seatStat("arab", seatVersions.map((v) => sumOf(v, ARAB))),
+    };
   }
   const g = [];
   const r = [];

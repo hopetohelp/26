@@ -289,3 +289,19 @@ it("legacy coalition bloc merges into the current default coalition", () => {
   expect(r.custom).toHaveLength(1);
   expect(r.custom[0].n).toBe(2);
 });
+
+it("ארבעת הגושים הקבועים ורטרואקטיביות הציבור החרדי (9.10.2026)", () => {
+  const vals = { likud: 30, shas: 10, haredi_public: 4, yashar: 25, joint: 6, raam: 5, democrats: 10, together: 10, utj: 8, otzma: 7, rzp: 5 };
+  const seats = (p) => ({ participant: p, payload: { seats: Object.fromEntries(Object.entries(vals).map(([id, v]) => [id, { v }])) } });
+  const blocs = (p, lists) => ({ participant: p, payload: { mode: "custom", blocs: [{ id: "a", name: "x", lists, target: null }] } });
+  const oldCo = ["amcha", "code_black", "likud", "noam", "otzma", "rzp", "shas", "utj"];
+  const newCo = [...oldCo, "haredi_public"].sort();
+  const sv = Array.from({ length: 5 }, (_, i) => seats(i + 1));
+  const r = computeBlocs(sv, [blocs(1, oldCo), blocs(2, newCo)]);
+  expect(r.derived.gov.mean).toBe(60);            // הממשלה היוצאת: likud+shas+utj+otzma+rzp
+  expect(r.derived.coalition.mean).toBe(64);      // + הציבור החרדי
+  expect(r.derived.opposition.mean).toBe(45);     // yashar+democrats+together, בלי הציבור החרדי
+  expect(r.derived.arab.mean).toBe(11);
+  expect(r.custom).toHaveLength(1);               // גוש הקואליציה הישן נספר כחדש
+  expect(r.custom[0]).toMatchObject({ n: 2, lists: newCo });
+});

@@ -50,12 +50,13 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 /** חלוקת פתיחה למשתתף חדש לפי הכרעת הבעלים; אינה משנה גושים שמורים. */
 export function defaultBlocs(): Bloc[] {
-  const coalition = IDS.filter(id => GOV_IDS.includes(id) || ["amcha", "noam", "code_black"].includes(id));
+  // הכרעת בעלים 9.10.2026: הציבור החרדי בגוש הקואליציה; "כל השאר" ⇐ גוש האופוזיציה, שני בסדר
+  const coalition = IDS.filter(id => GOV_IDS.includes(id) || ["amcha", "noam", "code_black", "haredi_public"].includes(id));
   const arab: string[] = IDS.filter(id => id === "joint" || id === "raam");
   return [
     { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
+    { id: "rest", name: "גוש האופוזיציה", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
     { id: "arab", name: "ערבים", lists: arab, target: null },
-    { id: "rest", name: "כל השאר", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
   ];
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
@@ -81,8 +82,24 @@ export const V2026_LABEL: Record<string, string> = { undecided: "עוד לא ה�
 /** גוש הקואליציה שנשמר לפני שנעם וצבע שחור נוספו לברירת המחדל — אותו גוש (הכרעת בעלים 8.10.2026). כמו `canonicalLists` בשרת. */
 const LEGACY_COALITION = ["amcha", "likud", "otzma", "rzp", "shas", "utj"].join(",");
 function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
+  return upgradeHarediPublic(upgradeNoam(p));
+}
+function upgradeNoam(p: BlocsPayload): BlocsPayload {
   const legacy = (b: Bloc) => [...new Set(b.lists)].sort().join(",") === LEGACY_COALITION;
   if (!p.blocs.some(legacy)) return p;
   const added = ["noam", "code_black"].filter(id => IDS.includes(id));
   return { ...p, blocs: p.blocs.map(b => legacy(b) ? { ...b, lists: [...b.lists, ...added] } : { ...b, lists: b.lists.filter(id => !added.includes(id)) }) };
+}
+/** גושי ברירת המחדל שנשמרו לפני 9.10.2026: הציבור החרדי עובר מ"כל השאר" לגוש הקואליציה, ו"כל השאר" נקרא גוש האופוזיציה. כמו `canonicalLists` בשרת. */
+const key = (lists: string[]) => [...new Set(lists)].sort().join(",");
+function upgradeHarediPublic(p: BlocsPayload): BlocsPayload {
+  const fresh = defaultBlocs();
+  const newCo = fresh.find(b => b.id === "gov")!.lists, newOpp = fresh.find(b => b.id === "rest")!.lists;
+  const oldCo = key(newCo.filter(id => id !== "haredi_public")), oldOpp = key([...newOpp, "haredi_public"]);
+  if (!p.blocs.some(b => key(b.lists) === oldCo || key(b.lists) === oldOpp)) return p;
+  const blocs = p.blocs.map(b => key(b.lists) === oldCo ? { ...b, lists: [...b.lists, "haredi_public"] }
+    : key(b.lists) === oldOpp ? { ...b, lists: b.lists.filter(id => id !== "haredi_public"), name: b.name === "כל השאר" ? "גוש האופוזיציה" : b.name } : b);
+  // סדר ברירת המחדל: קואליציה, אופוזיציה, ערבים
+  const order = ["gov", "rest", "arab"];
+  return { ...p, blocs: [...blocs].sort((a, b) => (order.includes(a.id) ? order.indexOf(a.id) : 9) - (order.includes(b.id) ? order.indexOf(b.id) : 9)) };
 }

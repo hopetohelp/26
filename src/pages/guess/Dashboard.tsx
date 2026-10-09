@@ -98,14 +98,23 @@ export function BlocStats({ d, view, mine = [] }: { d:D; view:View; mine?: strin
   const b=d.blocs!;
   const government=[...GOV_IDS].sort().join(",");
   const own = new Set(mine.map(lists => [...lists].sort().join(",")));
-  const rows = [
-    ...(b.derived ? [{key:government,lists:GOV_IDS,label:"גוש הקואליציה",stat:b.derived.gov}] : []),
-    ...(b.custom ?? []).filter(g=>g.derived && (g.n >= 2 || own.has([...g.lists].sort().join(","))) && g.lists.length && [...g.lists].sort().join(",")!==government)
-      .map(g=>({key:[...g.lists].sort().join(","),lists:g.lists,label:g.lists.map(nameOf).join(" · "),stat:g.derived!}))
-  ].filter(row => {
-    const listCount = new Set(row.lists).size;
-    return listCount >= 2 && row.stat.mean >= 4 * listCount;
-  }).sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+  // ארבע שורות קבועות, מחושבות מהשערת המנדטים של כל המשתתפים (הכרעת בעלים 9.10.2026)
+  const fixedBlocs = DEFAULT_BLOCS.blocs;
+  const coalitionLists = fixedBlocs.find(x => x.id === "gov")!.lists, oppositionLists = fixedBlocs.find(x => x.id === "rest")!.lists, arabLists = fixedBlocs.find(x => x.id === "arab")!.lists;
+  const fixed = b.derived ? [
+    { key: "fixed:gov37", lists: GOV_IDS, label: "הממשלה היוצאת", stat: b.derived.gov },
+    ...(b.derived.coalition ? [{ key: "fixed:coalition", lists: coalitionLists, label: "גוש הקואליציה", stat: b.derived.coalition }] : []),
+    ...(b.derived.opposition ? [{ key: "fixed:opposition", lists: oppositionLists, label: "גוש האופוזיציה", stat: b.derived.opposition }] : []),
+    ...(b.derived.arab ? [{ key: "fixed:arab", lists: arabLists, label: "ערבים", stat: b.derived.arab }] : []),
+  ] : [];
+  const fixedKeys = new Set(fixed.map(r => [...r.lists].sort().join(",")));
+  // ואחריהן כל גוש שהגדירו לפחות 2 משתתפים (או המשתמש עצמו), מלפחות 2 מפלגות, בממוצע לפחות 4 מנדטים למפלגה
+  const custom = (b.custom ?? [])
+    .filter(g => g.derived && (g.n >= 2 || own.has([...g.lists].sort().join(","))) && !fixedKeys.has([...g.lists].sort().join(",")) && [...g.lists].sort().join(",") !== government)
+    .map(g => ({ key: [...g.lists].sort().join(","), lists: g.lists, label: g.lists.map(nameOf).join(" · "), stat: g.derived! }))
+    .filter(row => { const listCount = new Set(row.lists).size; return listCount >= 2 && row.stat.mean >= 4 * listCount; })
+    .sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+  const rows = [...fixed, ...custom];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
   if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,value:r.stat.mean,range:range(r.stat)}))} />;
   return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">

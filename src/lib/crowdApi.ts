@@ -162,7 +162,7 @@ export interface Dashboard {
     pctStats?: SeatStat[];
   };
   blocs?: {
-    derived: { gov: SeatStat; rest: SeatStat } | null;
+    derived: { gov: SeatStat; rest: SeatStat; coalition?: SeatStat; opposition?: SeatStat; arab?: SeatStat } | null;
     explicit: { gov: SeatStat | null; rest: SeatStat | null } | null;
     customCount: number;
     /** גושים בעלי אותו הרכב רשימות, ללא תלות בשם או בסדר; אין ערבוב בין הרכבים שונים. */
