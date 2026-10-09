@@ -146,9 +146,14 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
         ys = sorted(xs)
         return ys[min(len(ys) - 1, int(p * len(ys)))]
 
+    def mean(xs: list[float]) -> float:
+        return sum(xs) / len(xs)
+
     out_lists = {}
     for k in names:
+        # seatsMean = ממוצע המנדטים בכל התרחישים (הכרעת בעלים 9.10.2026, בנוסף לחציון ב-seatsRange[1]); סכום הממוצעים של כל הרשימות = 120
         out_lists[k] = {"share": round(sh[k] * 100, 2), "seats": central.get(k, 0),
+                        "seatsMean": round(mean(seat_draws[k]), 2),
                         "seatsRange": [q(seat_draws[k], 0.1), q(seat_draws[k], 0.5), q(seat_draws[k], 0.9)],
                         "shareRange": [round(q(share_draws[k], 0.1), 2), round(q(share_draws[k], 0.9), 2)],
                         "pass": round(sum(1 for s in seat_draws[k] if s > 0) / len(seat_draws[k]), 4)}
@@ -173,9 +178,11 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
                    "polls": info.get("polls"), "scenarios": SCENARIOS},
         "lists": out_lists,
         "bloc": {"lists": gov, "seats": [q(bloc_draws, 0.1), q(bloc_draws, 0.5), q(bloc_draws, 0.9)] if bloc_draws else [],
+                 "mean": round(mean(bloc_draws), 2) if bloc_draws else None,
                  "atLeast61": round(sum(1 for b in bloc_draws if b >= 61) / len(bloc_draws), 4) if bloc_draws else None,
                  "central": sum(central.get(k, 0) for k in gov)},
         "camp": {"lists": camp, "seats": [q(camp_draws, 0.1), q(camp_draws, 0.5), q(camp_draws, 0.9)] if camp_draws else [],
+                 "mean": round(mean(camp_draws), 2) if camp_draws else None,
                  "atLeast61": round(sum(1 for b in camp_draws if b >= 61) / len(camp_draws), 4) if camp_draws else None,
                  "central": sum(central.get(k, 0) for k in camp)},
         "wasted": [round(q(wasted, 0.1), 2), round(q(wasted, 0.5), 2), round(q(wasted, 0.9), 2)] if wasted else [],
