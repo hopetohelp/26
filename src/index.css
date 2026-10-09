@@ -51,6 +51,8 @@
   --accent-soft: 227 236 245;
   --warn: 138 75 0;
   --warn-soft: 255 244 220;
+  --pos: 22 120 70;
+  --neg: 190 40 50;
   --frame: 11 34 57;
   --frame-ink: 244 246 248;
   --frame-soft: 184 196 209;
@@ -77,6 +79,8 @@
   --accent-soft: 230 236 248;
   --warn: 163 78 0;
   --warn-soft: 255 244 232;
+  --pos: 22 120 70;
+  --neg: 190 40 50;
   --frame: 255 255 255;
   --frame-ink: 19 23 29;
   --frame-soft: 74 85 99;
@@ -106,6 +110,8 @@
   --accent-soft: 22 44 68;
   --warn: 240 170 80;
   --warn-soft: 50 36 14;
+  --pos: 92 200 140;
+  --neg: 245 120 120;
   --frame: 6 16 28;
   --frame-ink: 244 246 248;
   --frame-soft: 170 185 202;
@@ -128,6 +134,8 @@
   --accent-soft: 30 38 62;
   --warn: 245 160 80;
   --warn-soft: 52 36 20;
+  --pos: 100 205 150;
+  --neg: 245 125 125;
   --frame: 26 29 35;
   --frame-ink: 236 239 243;
   --frame-soft: 176 184 196;
@@ -171,6 +179,88 @@
     background: color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card)));
     box-shadow: inset 0 0 0 1.5px rgb(var(--accent) / 0.7);
   }
+}
+
+/*
+ * שפת הציור האחידה של כל הגרפים (הכרעת בעלים 9.10.2026; הגדלים ב-src/lib/chartLanguage.ts, הרכיבים ב-src/components/marks.tsx):
+ * נר = טווח (חמש רמות עובי), עיגול בינוני מלא = ממוצע, עיגול גדול ריק = תוצאה, עיגול קטן ריק = סמן על קו, מעוין ריק = ממוצע הגולשים.
+ * מיקום: `left` באחוזים מתוך המסלול (`position: relative; direction: ltr`). הכול בטוקנים, בלי צבע קבוע.
+ */
+.mk {
+  position: absolute;
+  top: 50%;
+  translate: -50% -50%;
+  box-sizing: border-box;
+  flex: none;
+}
+.mk-sw {
+  position: relative;
+  top: auto;
+  translate: none;
+  display: inline-block;
+  vertical-align: middle;
+}
+.mk-candle {
+  border-radius: 999px;
+  background: rgb(var(--accent) / 0.6);
+  translate: 0 -50%;
+}
+.mk-sw.mk-candle {
+  translate: none;
+}
+.mk-c1 { height: 4px; }
+.mk-c2 { height: 7px; }
+.mk-c3 { height: 10px; }
+.mk-c4 { height: 13px; }
+.mk-c5 { height: 16px; }
+/* נר אנכי (בגרף מגמה בתצוגת HTML): הרוחב לפי הרמה, הגובה והמיקום בשורת style */
+.mk-v {
+  translate: -50% 0;
+  top: auto;
+}
+.mk-w1 { width: 4px; }
+.mk-w2 { width: 7px; }
+.mk-w3 { width: 10px; }
+.mk-w4 { width: 13px; }
+.mk-w5 { width: 16px; }
+.mk-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--mk-bg, var(--paper)));
+}
+.mk-mean {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgb(var(--ink));
+  box-shadow: 0 0 0 2px rgb(var(--mk-bg, var(--paper)));
+}
+.mk-ring {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 6px solid rgb(var(--ink));
+}
+.mk-dia {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgb(var(--ink));
+  rotate: 45deg;
+}
+.mk-sw.mk-dia {
+  margin-inline: 2px;
+}
+/* עיגול מושב חסר (עד הרוב) בלוח המושבים: אדום בהיר */
+.seat-miss {
+  fill: rgb(var(--neg) / 0.28);
+  stroke: rgb(var(--neg) / 0.8);
+  stroke-width: 0.009;
+}
+.sw-miss {
+  background: rgb(var(--neg) / 0.28);
+  box-shadow: inset 0 0 0 1.5px rgb(var(--neg) / 0.8);
 }
 
 @layer base {

@@ -173,13 +173,14 @@ export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
 
 /** ממוצע מתגלגל של מנדטים — חלון של `days` ימים, נקודה כל `step` ימים */
 export function rollingMean(id: string, from: string, to: string, days = 14, step = 3, source = usablePolls) {
-  const out: { t: number; v: number; n: number }[] = [];
+  const out: { t: number; v: number; n: number; lo: number; hi: number }[] = [];
   for (let t = toTime(from); t <= toTime(to); t += step * DAY) {
     const xs = source
       .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
       .map((p) => seatsIn(p, id))
       .filter((x): x is number => typeof x === "number");
-    if (xs.length >= 3) out.push({ t, v: mean(xs), n: xs.length });
+    // lo ו-hi = הנמוך והגבוה בין הסקרים בחלון (טווח מלא): נר הטווח בגרפי המגמה
+    if (xs.length >= 3) out.push({ t, v: mean(xs), n: xs.length, lo: Math.min(...xs), hi: Math.max(...xs) });
   }
   return out;
 }

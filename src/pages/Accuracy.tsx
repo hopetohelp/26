@@ -16,7 +16,6 @@ import {
   familyRows,
   pollGap,
   pollsterRecords,
-  seatsOf,
   summarizeCycle,
   toTime,
   usable,
@@ -77,9 +76,6 @@ export default function Accuracy() {
     })
     .filter((x) => x.points.length > 0);
   const markers = shown.map((letters) => ({ id: letters, t: toTime(c.date), v: lists.find((l) => l.letters === letters)?.seats ?? 0 }));
-  const dots = all.flatMap((p) => shown.map((letters) => ({ id: letters, t: toTime(p.end), v: seatsOf(p, letters) }))).filter(
-    (d): d is { id: string; t: number; v: number } => typeof d.v === "number",
-  );
   const yMax = Math.max(10, Math.ceil(Math.max(...series.flatMap((x) => x.points.map((p) => p.v)), ...markers.map((m) => m.v), 0) / 5) * 5 + 5);
   const dev = deviation(s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n })));
   const eveText = `הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני ${date(c.date)}`;
@@ -155,12 +151,12 @@ export default function Accuracy() {
           kind="סיכום סקרים"
           source={SOURCE}
           asOf={`מהגשת הרשימות (${date(first)}) ועד הבחירות`}
-          assumption="בכל יום: ממוצע הסקרים מ-7 הימים שקדמו לו, לפחות 3 סקרים. מעוין = התוצאה ביום הבחירות."
+          assumption="בכל יום: ממוצע הסקרים מ-7 הימים שקדמו לו, לפחות 3 סקרים. הנר הוא הנמוך והגבוה בין הסקרים באותם 7 ימים. עיגול גדול ריק = התוצאה ביום הבחירות."
           methodAnchor="accuracy"
         >
           <ChartWithTable
-            summary={`${all.length} סקרים, ${dateRange(first, c.date)}. הנקודות הבהירות הן הסקרים עצמם; המעוינים בקצה — התוצאה בפועל.`}
-            chart={<TrendChart series={series} dots={dots} markers={markers} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
+            summary={`${all.length} סקרים, ${dateRange(first, c.date)}. העיגולים הגדולים הריקים בקצה — התוצאה בפועל.`}
+            chart={<TrendChart series={series} markers={markers} windowText={{ days: 7, label: "7 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">לכל רשימה: ממוצע הסקרים בתחילת המערכה ובסופה, והתוצאה</caption>

@@ -103,17 +103,19 @@ export default function Scenarios() {
           methodAnchor="model"
         >
           <ChartWithTable
-            summary={`קו = המנדטים לפי הממוצע · רצועה = 80% מהתרחישים. ${edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : ""}`}
+            summary={`עיגול מלא = ממוצע המודל · נר = 80% מהתרחישים (בטבלה גם הממוצע והחציון של התרחישים). ${edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : ""}`}
             chart={
               <Ranking home={HOME} />
             }
             table={
               <table className="text-sm w-full">
-                <caption className="sr-only">לכל רשימה: מנדטים לפי הממוצע, טווח 80% של התרחישים, אחוז הקולות ושיעור התרחישים שבהם היא עוברת</caption>
+                <caption className="sr-only">לכל רשימה: מנדטים לפי ממוצע המודל, ממוצע וחציון התרחישים, טווח 80% של התרחישים, אחוז הקולות ושיעור התרחישים שבהם היא עוברת</caption>
                 <thead>
                   <tr className="text-right border-b border-paper-line">
                     <th scope="col" className="py-1 pe-3">רשימה</th>
-                    <th scope="col" className="pe-3">לפי הממוצע</th>
+                    <th scope="col" className="pe-3">ממוצע המודל</th>
+                    <th scope="col" className="pe-3">ממוצע התרחישים</th>
+                    <th scope="col" className="pe-3">חציון התרחישים</th>
                     <th scope="col" className="pe-3">80% מהתרחישים</th>
                     <th scope="col" className="pe-3">אחוז הקולות (80%)</th>
                     <th scope="col">עוברת את הסף</th>
@@ -126,6 +128,8 @@ export default function Scenarios() {
                       <tr key={id} className="border-b border-paper-line/60">
                         <th scope="row" className="py-1 pe-3 text-right font-medium">{listName(id)}</th>
                         <td className="pe-3 tabular-nums font-bold">{m.central.seats[id]}</td>
+                        <td className="pe-3 tabular-nums">{seatsFmt(Math.round(l.seatsMean * 10) / 10)}</td>
+                        <td className="pe-3 tabular-nums">{l.seats[1]}</td>
                         <td className="pe-3 tabular-nums">{rng(l.seats[0], l.seats[2])}</td>
                         <td className="pe-3 tabular-nums">{r1(l.share[0])}%–{r1(l.share[2])}%</td>
                         <td>{pctTxt(l.pass)}</td>
@@ -138,7 +142,8 @@ export default function Scenarios() {
           />
         </Explained>
         <Note>
-          "לפי הממוצע" = המנדטים שהחוק נותן לאחוזים של הממוצע עצמו. הטווח רחב בכוונה: הוא כולל גם את הטעות שהסקרים עשו יחד בבחירות קודמות.
+          "ממוצע המודל" = המנדטים שהחוק נותן לאחוזים של הממוצע עצמו (מספר שלם, הסכום 120). "ממוצע התרחישים" = ממוצע המנדטים של כל התרחישים, ו"חציון התרחישים" = המנדט האמצעי: חצי מהתרחישים נמוכים ממנו וחצי גבוהים.
+          שניהם מוצגים, כי לרשימה על הסף הם שונים. <Link to="/method#means" className="font-semibold">מה ההבדל בין הממוצעים?</Link> הטווח רחב בכוונה: הוא כולל גם את הטעות שהסקרים עשו יחד בבחירות קודמות.
           ב-2019א, למשל, כל המכונים נתנו לליכוד 7 מנדטים פחות ממה שקיבל.
         </Note>
       </Card>
