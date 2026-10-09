@@ -43,10 +43,11 @@ export function KeyItem({ kind, level, children }: { kind: MarkKind; level?: Lev
 }
 
 /** מסלול של שורה: `relative`, שמאל לימין, ורשת של קווים דקים כל `step` יחידות. 0 משמאל בכל האתר */
-export function Track({ axisMax, step = 10, className = "h-5", children }: { axisMax: number; step?: number; className?: string; children: ReactNode }) {
+export function Track({ axisMax, step = 10, className = "h-5", title, children }: { axisMax: number; step?: number; className?: string; title?: string; children: ReactNode }) {
   return (
     <span
       aria-hidden="true"
+      title={title}
       dir="ltr"
       className={`relative block ${className}`}
       style={{ backgroundImage: "linear-gradient(to right, rgb(var(--line)) 1px, transparent 1px)", backgroundSize: `${(step / axisMax) * 100}% 100%`, backgroundRepeat: "repeat-x" }}
@@ -68,18 +69,25 @@ export function AxisLabels({ axisMax, step = 10, format = (v: number) => String(
   );
 }
 
-/** מקרא עובי הנר: "דק ... עבה" בחמש רמות, לפי כמות הנתונים ביחס לגרף */
+/** מקרא עובי הנר: מעט ... הרבה, בחמש רמות לפי כמות הנתונים הרלוונטית ביחס לגרף (עד 20%, 20 עד 40, 40 עד 60, 60 עד 80, 80 עד 100) */
 export function ThicknessKey({ what }: { what: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5" title={`עובי הנר: ${what}, ביחס לגרף. חמש רמות: עד 20%, 20 עד 40, 40 עד 60, 60 עד 80, 80 עד 100.`}>
+    <span className="inline-flex items-center gap-1.5" title={`עובי הנר: ${what}, ביחס לשאר הגרף. חמש רמות: עד 20%, 20 עד 40, 40 עד 60, 60 עד 80, 80 עד 100.`}>
       <span>עובי הנר: {what}</span>
-      <span aria-hidden="true" className="inline-flex items-center gap-1">
-        {([1, 2, 3, 4, 5] as const).map((l) => (
-          <i key={l} className={`mk mk-sw mk-candle mk-c${l}`} style={{ width: ".6rem" }} />
-        ))}
+      <span className="inline-flex items-center gap-1">
+        <span>מעט</span>
+        <span aria-hidden="true" className="inline-flex items-center gap-1">
+          {([1, 2, 3, 4, 5] as const).map((l) => (
+            <i key={l} className={`mk mk-sw mk-candle mk-c${l}`} style={{ width: ".7rem" }} />
+          ))}
+        </span>
+        <span>הרבה</span>
       </span>
     </span>
   );
 }
+
+/** טקסט הרחפה לנר: מה נספר ובאיזו רמה (1 עד 5) */
+export const candleTitle = (what: string, level: Level) => `${what} · עובי הנר: רמה ${level} מתוך 5`;
 
 export { volumeLevel };

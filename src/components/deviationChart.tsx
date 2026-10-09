@@ -1,11 +1,11 @@
 import { rng, signed } from "../lib/format";
 import { deviation, type DevInput, type DevRow } from "../lib/deviation";
 import { volumeLevel } from "../lib/chartLanguage";
-import { Candle, KeyItem, MeanDot, ResultRing, ThicknessKey } from "./marks";
+import { Candle, KeyItem, MeanDot, ResultRing, ThicknessKey, candleTitle } from "./marks";
 
 /**
  * "הסקרים מול התוצאות" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל רשימה, נר = הנמוך והגבוה בין הסקרים ערב הבחירות (טווח מלא;
- * עובי הנר לפי כמה מכונים שאלו עליה, ביחס לשאר הגרף), עיגול מלא ב-0 = ממוצע הסקרים, עיגול גדול ריק = התוצאה הרשמית.
+ * עובי הנר לפי כמה מכונים נתנו לה מנדטים, ביחס לשאר הגרף), עיגול מלא ב-0 = ממוצע הסקרים, עיגול גדול ריק = התוצאה הרשמית.
  * הכול ביחס לממוצע הסקרים (0), כך שהבדלים קטנים נראים. הקבוצה ("מחוץ לטווח" / "בתוך הטווח") והטקסט נושאים את ההבחנה, לא צבע.
  * ציר 0 באמצע, "פחות" משמאל ו"יותר" מימין. הטווח הוא הנמוך והגבוה בין הסקרים, לא טווח טעות סטטיסטי.
  */
@@ -19,7 +19,7 @@ export function devTicks(bound: number): number[] {
   return out;
 }
 
-function Row({ r, bound, maxN }: { r: DevRow; bound: number; maxN: number }) {
+function Row({ r, bound, maxVolume }: { r: DevRow; bound: number; maxVolume: number }) {
   const x = (v: number) => ((v + bound) / (2 * bound)) * 100;
   const ticks = devTicks(bound);
   return (
@@ -32,11 +32,11 @@ function Row({ r, bound, maxN }: { r: DevRow; bound: number; maxN: number }) {
           <span className="whitespace-nowrap">סקרים {r.min === r.max ? r.min : rng(r.min, r.max)}</span>
         </span>
       </span>
-      <span aria-hidden="true" dir="ltr" className="relative block h-8">
+      <span aria-hidden="true" dir="ltr" className="relative block h-8" title={`${r.name}: ${candleTitle(`${r.volume} מתוך ${r.n} מכונים נתנו לה מנדטים`, volumeLevel(r.volume, maxVolume))}`}>
         {ticks.map((v) => (
           <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint/60" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
         ))}
-        <Candle from={x(r.lo)} to={x(r.hi)} level={volumeLevel(r.n, maxN)} />
+        <Candle from={x(r.lo)} to={x(r.hi)} level={volumeLevel(r.volume, maxVolume)} />
         <MeanDot at={x(0)} />
         <ResultRing at={x(r.dev)} />
       </span>
@@ -52,7 +52,7 @@ function Row({ r, bound, maxN }: { r: DevRow; bound: number; maxN: number }) {
 
 export default function DeviationChart({ rows }: { rows: DevInput[] }) {
   const { outside, inside, notAsked, bound } = deviation(rows);
-  const maxN = Math.max(0, ...[...outside, ...inside].map((r) => r.n));
+  const maxVolume = Math.max(0, ...[...outside, ...inside].map((r) => r.volume));
   const ticks = devTicks(bound);
   const x = (v: number) => ((v + bound) / (2 * bound)) * 100;
   return (
@@ -61,7 +61,7 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
         <KeyItem kind="mean">0 = ממוצע הסקרים</KeyItem>
         <KeyItem kind="candle">הנמוך והגבוה בין הסקרים (לא טווח טעות סטטיסטי)</KeyItem>
         <KeyItem kind="result">התוצאה בפועל</KeyItem>
-        <ThicknessKey what="כמה מכונים שאלו על הרשימה" />
+        <ThicknessKey what="כמה מכונים נתנו לרשימה מנדטים" />
       </div>
       <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
         <div dir="ltr" className="col-start-2 relative h-8">
@@ -75,13 +75,13 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
       {outside.length > 0 && (
         <>
           <h4 className="mt-2 text-sm font-bold">מחוץ לטווח הסקרים ({outside.length})</h4>
-          <ol>{outside.map((r) => <Row key={r.id} r={r} bound={bound} maxN={maxN} />)}</ol>
+          <ol>{outside.map((r) => <Row key={r.id} r={r} bound={bound} maxVolume={maxVolume} />)}</ol>
         </>
       )}
       {inside.length > 0 && (
         <>
           <h4 className="mt-3 text-sm font-bold">בתוך הטווח ({inside.length})</h4>
-          <ol>{inside.map((r) => <Row key={r.id} r={r} bound={bound} maxN={maxN} />)}</ol>
+          <ol>{inside.map((r) => <Row key={r.id} r={r} bound={bound} maxVolume={maxVolume} />)}</ol>
         </>
       )}
       {notAsked.length > 0 && (

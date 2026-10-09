@@ -208,21 +208,21 @@
 .mk-sw.mk-candle {
   translate: none;
 }
-.mk-c1 { height: 4px; }
-.mk-c2 { height: 7px; }
+.mk-c1 { height: 3px; }
+.mk-c2 { height: 6px; }
 .mk-c3 { height: 10px; }
-.mk-c4 { height: 13px; }
-.mk-c5 { height: 16px; }
+.mk-c4 { height: 14px; }
+.mk-c5 { height: 18px; }
 /* נר אנכי (בגרף מגמה בתצוגת HTML): הרוחב לפי הרמה, הגובה והמיקום בשורת style */
 .mk-v {
   translate: -50% 0;
   top: auto;
 }
-.mk-w1 { width: 4px; }
-.mk-w2 { width: 7px; }
+.mk-w1 { width: 3px; }
+.mk-w2 { width: 6px; }
 .mk-w3 { width: 10px; }
-.mk-w4 { width: 13px; }
-.mk-w5 { width: 16px; }
+.mk-w4 { width: 14px; }
+.mk-w5 { width: 18px; }
 .mk-dot {
   width: 9px;
   height: 9px;

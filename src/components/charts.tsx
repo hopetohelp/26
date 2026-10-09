@@ -109,7 +109,7 @@ export function TrendChart({
     if (!windowText) return 20;
     return Math.max(2, (windowText.days * DAY / Math.max(1, to - from)) * (W - M.left - M.right));
   })();
-  const candleW = (level: number) => Math.max(2, Math.min(SVG_MARKS.candleW[level - 1] + 2, spacing * 0.85 * (level / 5)));
+  const candleW = (level: number) => Math.max(2, Math.min(SVG_MARKS.candleW[level - 1], spacing * 0.85 * (level / 5)));
   const meanR = Math.max(2.5, Math.min(SVG_MARKS.meanR, spacing * 0.35));
 
   // פיזור תוויות הקצה כדי שלא יעלו זו על זו

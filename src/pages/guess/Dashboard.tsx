@@ -12,7 +12,7 @@ import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { volumeLevel } from "../../lib/chartLanguage";
-import { AxisLabels, Candle, Diamond, KeyItem, MeanDot, ThicknessKey, Track } from "../../components/marks";
+import { AxisLabels, Candle, Diamond, KeyItem, MeanDot, ThicknessKey, Track, candleTitle } from "../../components/marks";
 import type { useSession } from "./useCrowd";
 
 const LIVE_REFRESH_MS = 60_000;
@@ -83,7 +83,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
       {subject === "seats" ? (
-        d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
+        d.seats ? <SeatsStats rows={d.seats.full} manual={d.seats.manual} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
       ) : (
         d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={hasDefinedBlocs ? mine : undefined} view={view} unit="pct" passedLists={d.seats.everPassedLists ?? d.seats.full.filter(s => s.max >= 4).map(s => s.list)} /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
@@ -101,13 +101,15 @@ function Toggle<T extends string>({ value, setValue, options, label }: { value: 
   return <Segmented value={value} onChange={setValue} label={label} className="min-w-[12rem]" options={options.map(([id, text]) => ({ id, label: text }))} />;
 }
 
-export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject }) {
+export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists, manual }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject; manual?: SeatStat[] }) {
+  // כמות הנתונים מאחורי הנר: כמה גולשים קבעו ערך לרשימה (לכל רשימה n משלה), ולא כל המשתתפים, שהם אותו מספר לכולן
+  const manualN = useMemo(() => new Map((manual ?? []).map(m => [m.list, m.n])), [manual]);
   const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= (unit === "pct" ? 3.25 : 4)).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists, unit]);
   const hiddenNote = <p className="text-xs text-ink-soft mt-3">מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות</p>;
   const suffix = unit === "pct" ? "%" : "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => unit === "pct" ? mine?.mode === "pct" ? mine.pct?.[id] : undefined : mine?.seats[id]?.v;
-  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,n:s.n,poll:polls[s.list]}))} />{hiddenNote}</>;
+  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,n:manualN.get(s.list) ?? s.n,poll:polls[s.list]}))} />{hiddenNote}</>;
   return <Card title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th>{mine && <th className="font-normal">שלי</th>}</tr></thead>
     <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
@@ -160,12 +162,12 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
       <KeyItem kind="diamond">ממוצע הגולשים (אינו סקר)</KeyItem>
       <KeyItem kind="candle">הנמוך והגבוה בין ההשערות</KeyItem>
       {withPoll && <KeyItem kind="mean">ממוצע הסקרים</KeyItem>}
-      <ThicknessKey what="כמה גולשים שיערו" />
+      <ThicknessKey what="כמה גולשים קבעו ערך לרשימה" />
     </div>
     <div aria-hidden="true" className={`grid ${COLS} gap-2 text-xs text-ink-soft`}><div className="col-start-2"><AxisLabels axisMax={axisMax} step={step} format={v => `${v}${suffix}`} /></div></div>
     <ul className="mt-1">{rows.map(r => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
       <span className="break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span>
-      <Track axisMax={axisMax} step={step} className="h-6">
+      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: ${candleTitle(`${r.n ?? 0} גולשים קבעו ערך`, volumeLevel(r.n ?? maxN, maxN))}`}>
         {r.mean !== null && <Candle from={at(r.lo)} to={at(r.hi)} level={volumeLevel(r.n ?? maxN, maxN)} />}
         {r.poll !== undefined && <MeanDot at={at(r.poll)} />}
         {r.mean !== null && <Diamond at={at(r.mean)} />}

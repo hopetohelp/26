@@ -13,6 +13,8 @@ export interface DevInput {
   actual: number;
   /** כמה מכונים שאלו על הרשימה */
   n: number;
+  /** כמה מהם נתנו לה מנדטים: כמות הנתונים שעומדת מאחורי הטווח, וקובעת את עובי הנר. ברירת מחדל: `n` */
+  above?: number;
 }
 
 export interface DevRow extends DevInput {
@@ -23,12 +25,14 @@ export interface DevRow extends DevInput {
   hi: number;
   /** התוצאה מחוץ לטווח הסקרים */
   outside: boolean;
+  /** כמות הנתונים מאחורי הנר (עובי הנר ביחס לשאר הגרף) */
+  volume: number;
 }
 
 export function deviation(rows: DevInput[]) {
   const asked: DevRow[] = rows
     .filter((r) => r.n > 0)
-    .map((r) => ({ ...r, dev: r.actual - r.estimate, lo: r.min - r.estimate, hi: r.max - r.estimate, outside: r.actual < r.min || r.actual > r.max }));
+    .map((r) => ({ ...r, dev: r.actual - r.estimate, lo: r.min - r.estimate, hi: r.max - r.estimate, outside: r.actual < r.min || r.actual > r.max, volume: r.above ?? r.n }));
   const outside = asked.filter((r) => r.outside).sort((a, b) => Math.abs(b.dev) - Math.abs(a.dev) || b.actual - a.actual);
   const inside = asked.filter((r) => !r.outside).sort((a, b) => b.actual - a.actual);
   const notAsked = rows.filter((r) => r.n === 0);

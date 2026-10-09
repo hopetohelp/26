@@ -47,3 +47,12 @@ describe("הסקרים מול התוצאות בנתונים האמיתיים (20
     expect(d.outside.length + d.inside.length + d.notAsked.length).toBe(rows.length);
   });
 });
+
+describe("עובי הנר בסטייה: כמה מכונים נתנו לרשימה מנדטים", () => {
+  it("volume = above, ובלי above — n", () => {
+    const base = { name: "x", estimate: 5, min: 0, max: 8, actual: 4 };
+    const d = deviation([{ ...base, id: "a", n: 9, above: 9 }, { ...base, id: "b", n: 9, above: 4 }, { ...base, id: "c", n: 7 }]);
+    const vol = Object.fromEntries([...d.outside, ...d.inside].map((r) => [r.id, r.volume]));
+    expect(vol).toEqual({ a: 9, b: 4, c: 7 });
+  });
+});

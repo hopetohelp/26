@@ -77,7 +77,7 @@ export default function Accuracy() {
     .filter((x) => x.points.length > 0);
   const markers = shown.map((letters) => ({ id: letters, t: toTime(c.date), v: lists.find((l) => l.letters === letters)?.seats ?? 0 }));
   const yMax = Math.max(10, Math.ceil(Math.max(...series.flatMap((x) => x.points.map((p) => p.v)), ...markers.map((m) => m.v), 0) / 5) * 5 + 5);
-  const dev = deviation(s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n })));
+  const dev = deviation(s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n, above: r.above })));
   const eveText = `הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני ${date(c.date)}`;
 
   return (
@@ -104,7 +104,7 @@ export default function Accuracy() {
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
           <ChartWithTable
             summary="נקודה = התוצאה הרשמית, פס = הנמוך והגבוה בין הסקרים, והכול ביחס לממוצע הסקרים."
-            chart={<DeviationChart rows={s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n }))} />}
+            chart={<DeviationChart rows={s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n, above: r.above }))} />}
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">לכל רשימה: ממוצע הסקרים, הטווח, התוצאה וההפרש</caption>

@@ -106,7 +106,7 @@ export default function Today() {
                 assumption="כל מכון נספר פעם אחת (הסקר האחרון שלו). זה סיכום תיאורי של מה שפורסם — לא תחזית ולא מודל."
                 methodAnchor="current"
               >
-                <PollRanges rows={above.map((s) => ({ id: s.id, name: listName(s.id), central: Math.round(s.mean * 10) / 10, lo: s.min, hi: s.max, n: s.n }))} />
+                <PollRanges rows={above.map((s) => ({ id: s.id, name: listName(s.id), central: Math.round(s.mean * 10) / 10, lo: s.min, hi: s.max, volume: s.n - s.belowCount }))} />
               </Explained>
               {below.length > 0 && (
                 <Note>
