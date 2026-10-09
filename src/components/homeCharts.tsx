@@ -3,10 +3,13 @@ import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 import { smoothPath, sparseIndices, volumeLevel } from "../lib/chartLanguage";
-import { AxisLabels, Candle, KeyItem, MeanDot, ThicknessKey, Track } from "./marks";
+import { AxisLabels, Candle, KeyItem, MeanDot, ThicknessKey, Track, candleTitle } from "./marks";
 
-/** שורת טווח: הממוצע (עיגול מלא) והטווח (נר). `n` = כמות הנתונים מאחורי הטווח (עובי הנר). `pass` רק לרשימות על הסף */
-export type RangeRowData = Pick<HomeRow, "id" | "name" | "central" | "lo" | "hi"> & { pass?: number; n?: number };
+const scenarioShare = (r: RangeRowData) => `מקבלת מנדטים ב-${Math.round((r.volume ?? 0) * 100)}% מהתרחישים`;
+const machinesGiving = (r: RangeRowData) => `${r.volume ?? 0} מכונים נתנו לה מנדטים`;
+
+/** שורת טווח: הממוצע (עיגול מלא) והטווח (נר). `volume` = כמות הנתונים הרלוונטית לטווח (עובי הנר). `pass` רק לרשימות על הסף */
+export type RangeRowData = Pick<HomeRow, "id" | "name" | "central" | "lo" | "hi"> & { pass?: number; volume?: number };
 
 /**
  * גרפי הבית (הכרעת בעלים 9.10.2026) בשפת הציור האחידה (`src/lib/chartLanguage.ts`): לוח 120 המושבים, דירוג הרשימות
@@ -68,13 +71,13 @@ export function PassBar({ pass }: { pass: number }) {
   );
 }
 
-function RankRow({ r, axisMax, maxN, withPass }: { r: RangeRowData; axisMax: number; maxN: number; withPass?: boolean }) {
-  const level = volumeLevel(r.n ?? maxN, maxN);
+function RankRow({ r, axisMax, maxVolume, withPass, what }: { r: RangeRowData; axisMax: number; maxVolume: number; withPass?: boolean; what: (r: RangeRowData) => string }) {
+  const level = volumeLevel(r.volume ?? maxVolume, maxVolume);
   return (
     <li className={`grid ${COLS} items-center gap-x-3 min-h-12 py-1.5 border-t border-paper-line last:border-b`}>
       <span className="font-semibold leading-tight">{r.name}</span>
       <span className="font-num text-xl font-extrabold tabular">{seatsFmt(r.central)}</span>
-      <Track axisMax={axisMax}>
+      <Track axisMax={axisMax} title={`${r.name}: ${candleTitle(what(r), level)}`}>
         <Candle from={(r.lo / axisMax) * 100} to={(r.hi / axisMax) * 100} level={level} />
         <MeanDot at={(r.central / axisMax) * 100} />
       </Track>
@@ -126,12 +129,12 @@ export const axisMaxOf = (rows: { hi: number }[]) => Math.max(30, Math.ceil(Math
  * רכיב אחד לבית, ל"המצב היום" ול"תרחישים" (החלטה 10, 9.10.2026). הטווח כאן הוא טווח 80% מהתרחישים (הכרעת בעלים: רק בטווח התרחישים 80%).
  */
 export function Ranking({ home, meanLabel = "ממוצע המודל", rangeLabel = "טווח 80% מהתרחישים" }: { home: HomeData; meanLabel?: string; rangeLabel?: string }) {
-  const { safe, edge, below, axisMax, maxN } = home;
+  const { safe, edge, below, axisMax, maxVolume } = home;
   return (
     <>
-      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה סקרים שאלו על הרשימה" />
+      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="בכמה מהתרחישים הרשימה מקבלת מנדטים" />
       <Axis axisMax={axisMax} />
-      <ol className="mt-1">{safe.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxN={maxN} />)}</ol>
+      <ol className="mt-1">{safe.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxVolume={maxVolume} what={scenarioShare} />)}</ol>
       {edge.length > 0 && (
         <>
           <div
@@ -141,7 +144,7 @@ export function Ranking({ home, meanLabel = "ממוצע המודל", rangeLabel 
           >
             אחוז החסימה 3.25%
           </div>
-          <ol>{edge.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxN={maxN} withPass />)}</ol>
+          <ol>{edge.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxVolume={maxVolume} withPass what={scenarioShare} />)}</ol>
         </>
       )}
       {below.length > 0 && <p className="mt-2 text-sm text-ink-soft">מתחת לסף: {below.map((r) => r.name).join(", ")}</p>}
@@ -152,12 +155,12 @@ export function Ranking({ home, meanLabel = "ממוצע המודל", rangeLabel 
 /** אותו רכיב לסיכום הסקרים בין המכונים: עיגול מלא = ממוצע המכונים, נר = הנמוך והגבוה בין המכונים (טווח מלא, בלי קו סף) */
 export function PollRanges({ rows, meanLabel = "ממוצע המכונים", rangeLabel = "הנמוך והגבוה בין המכונים" }: { rows: RangeRowData[]; meanLabel?: string; rangeLabel?: string }) {
   const axisMax = axisMaxOf(rows);
-  const maxN = Math.max(0, ...rows.map((r) => r.n ?? 0));
+  const maxVolume = Math.max(0, ...rows.map((r) => r.volume ?? 0));
   return (
     <>
-      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה מכונים שאלו על הרשימה" />
+      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה מכונים נתנו לרשימה מנדטים" />
       <Axis axisMax={axisMax} />
-      <ol className="mt-1">{rows.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxN={maxN} />)}</ol>
+      <ol className="mt-1">{rows.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxVolume={maxVolume} what={machinesGiving} />)}</ol>
     </>
   );
 }

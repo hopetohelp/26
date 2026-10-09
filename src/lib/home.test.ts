@@ -55,6 +55,12 @@ describe("buildHome", () => {
     expect(h.edge.map((r) => r.id)).toEqual(["e", "f", "h"]);
   });
 
+  it("עובי הנר: כמה מהתרחישים נותנים לרשימה מנדטים (כל הרשימות שעוברות תמיד: הנר העבה ביותר), ולא כמות זהה לכולן", () => {
+    const byId = Object.fromEntries([...h.safe, ...h.edge, ...h.below].map((r) => [r.id, r.volume]));
+    expect(byId).toMatchObject({ a: 1, b: 1, e: 0.9, f: 0.4, h: 0.5 });
+    expect(h.maxVolume).toBe(1);
+  });
+
   it("המגמה: סכום מנדטי הממשלה היוצאת בכל יום, וציר המנדטים עד 30 לפחות", () => {
     expect(h.series).toEqual([{ date: "2026-09-09", v: 82 }, { date: "2026-10-08", v: 82 }]);
     expect(h.axisMax).toBe(50);
