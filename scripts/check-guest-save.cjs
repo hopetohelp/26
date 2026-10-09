@@ -11,7 +11,7 @@ const cors = { 'access-control-allow-origin': '*' };
   const server = await preview({ preview: { host: '127.0.0.1', port: 5176, strictPort: true } });
   const browser = await chromium.launch({ executablePath: process.env.UI_BROWSER_EXECUTABLE || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
   try {
-    for (const theme of ['board', 'league']) for (const [width, dark] of [[360, false], [1280, true]]) {
+    for (const theme of ['league']) for (const [width, dark] of [[360, false], [1280, true]]) {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
       await context.addInitScript(({ theme, dark }) => {
         localStorage.setItem('elections26.theme', theme);

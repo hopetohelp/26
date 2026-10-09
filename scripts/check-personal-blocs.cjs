@@ -13,7 +13,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
 (async()=>{
  let lastSeat, lastBlocs;
  const browser=await chromium.launch({headless:true,executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox']});
- for(const theme of ['board','league']) for(const dark of [false,true]) for(const width of [360,1280]){
+ for(const theme of ['league']) for(const dark of [false,true]) for(const width of [360,1280]){
   const context=await browser.newContext({viewport:{width,height:1000}});
   const page=await context.newPage(); const errors=[]; const saved=[]; let authLinkCalls=0;
   page.on('pageerror',e=>{errors.push(e.message);console.error(e.message);});

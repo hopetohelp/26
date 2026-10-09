@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl" data-theme="league">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,10 +15,8 @@
     <!-- גופנים מאוחסנים באתר (הכרעת בעלים 9.10.2026): הגדרות @font-face ב-src/index.css, קבצים ב-src/assets/fonts. Rubik לעברית, וספרות בלבד ב-Roboto Mono (ברוחב קבוע, ספרות מיושרות). קובץ הספרות קטן (4KB) ולכן משובץ ב-CSS ואינו נטען מראש. -->
     <link rel="preload" href="/src/assets/fonts/rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin />
     <script>
-      // העיצוב שהגולש בחר — לפני הציור הראשון, כדי שלא יהבהב העיצוב הלא נכון (src/lib/theme.ts)
+      // התצורה שהגולש בחר (יום / לילה / לפי המכשיר) — לפני הציור הראשון, כדי שלא יהבהב (src/lib/theme.ts)
       try {
-        var t = localStorage.getItem("elections26.theme");
-        if (t === "board" || t === "league") document.documentElement.dataset.theme = t;
         var m = localStorage.getItem("elections26.mode") || "auto";
         if (m === "dark" || (m === "auto" && matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.dataset.dark = "";
       } catch (e) {}

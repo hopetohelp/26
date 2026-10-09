@@ -5,7 +5,7 @@ const fs=require('node:fs');
  const {preview}=await import('vite');const server=await preview({preview:{host:'127.0.0.1',port:5178,strictPort:true}});
  const browser=await chromium.launch({executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox','--disable-gpu','--disable-dev-shm-usage']});
  try{
-  for(const theme of ['board','league'])for(const width of [360,1280])for(const dark of [false,true]){
+  for(const theme of ['league'])for(const width of [360,1280])for(const dark of [false,true]){
    const context=await browser.newContext({viewport:{width,height:900}});
    await context.route('https://fonts.googleapis.com/**',r=>r.abort());await context.route('https://fonts.gstatic.com/**',r=>r.abort());
    await context.route('https://crowd.example/**',r=>r.fulfill({json:{participants:0,seats:null,blocs:null}}));

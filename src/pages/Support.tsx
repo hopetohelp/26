@@ -105,7 +105,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
         const primary = await mergeSavedThreads();
         let res = primary ? await replyToThread(primary.token, message, trap) : null;
         if (!res || res.error === "not found") {
-          res = await sendFeedback({ topic, text: message, page: "/support", theme: document.documentElement.dataset.theme ?? "league", website: trap });
+          res = await sendFeedback({ topic, text: message, page: "/support", theme: "league", website: trap });
           if (res.ok && res.token) saveThread({ token: res.token, created: new Date().toISOString(), preview: text.trim().slice(0, 80) });
         }
         if (!res.ok) throw new Error("send failed");
