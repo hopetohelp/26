@@ -93,6 +93,7 @@ components:
 ## Typography
 
 - **גופנים (הכרעת בעלים 9.10.2026, בסגנון הדוגמה של המומחה):** **Rubik** לעברית ו-**Roboto Mono** לספרות בלבד, בשני העיצובים. רשימת הגופנים היא `"Roboto Mono", "Rubik"` (משתני `--font-display`, `--font-body`, `--font-num`): Roboto Mono נטען עם עשר הספרות בלבד (`&text=0123456789`), ולכן כל ספרה, גם בתוך משפט, ברוחב קבוע וכל טור מספרים מיושר; כל השאר מ-Rubik. מוסרים: Karantina, Secular One, Assistant, Heebo ו-JetBrains Mono.
+- **אירוח הגופנים (החלטה 18, 9.10.2026):** הגופנים מוגשים מהאתר עצמו, בלי Google Fonts: שלושה קבצים ב-`src/assets/fonts` (Rubik עברית, Rubik לטינית, וספרות Roboto Mono), הגדרות `@font-face` ב-`src/index.css`, ורישיון `OFL.txt`. Rubik הוא גופן משתנה (משקלים 300 עד 900). אין להחזיר קישור חיצוני לגופנים ב-`index.html`.
 - **כותרות:** `font-display` (Rubik במשקל 800; המשקל מוגדר ב-`index.css`). כותרת עמוד: `text-3xl md:text-5xl leading-[1.05]`; כותרת סעיף בכרטיס: 20px (`text-xl leading-tight`); כותרת חלון: 24px.
 - **גוף:** `font-sans`, ‏16px לפחות לטקסט רץ.
 - **מספרים:** `font-num` (משקל 700) ו-`.tabular` בכל טבלה ורשימת מספרים (הספרות כבר ברוחב קבוע). ספרות בתוך הקשר עברי שצריכות סדר משמאל לימין — בתוך `dir="ltr"`.
