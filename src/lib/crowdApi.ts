@@ -8,6 +8,7 @@
  *
  * POST /auth/register {username,password}  ⇐ {token, link}  משתתף חדש: סיסמה + קישור אישי + סשן.
  * POST /auth/guest   {}                    ⇐ {token}       שמירה בלי משתמש (הכרעת בעלים 8.10.2026): בלי סיסמה ובלי קישור אישי, ולכן בלי שחזור.
+ * POST /auth/google  {credential,token}   ⇐ {token}       כניסה עם Google (ID token מהדפדפן); חשבון קיים ⇐ אותו משתתף, אחרת מתווסף לסשן הנוכחי או משתתף חדש.
  * POST /auth/claim   {username,password}   ⇐ {username, link}  (בסשן) הוספת שם משתמש וסיסמה לאורח; נוצר קישור אישי.
  * GET|POST /ping                      ⇐ {ok}          בדיקת חיבור, בלי זהות ובלי מאגר.
  * POST /auth/login    {username,password}  ⇐ {token}
@@ -292,7 +293,7 @@ export function clientToken(): string {
  * (נבדק 8.10.2026: נוצרו משתתפים בשרת בדיוק ברגעי הדיווחים על "Failed to fetch"). לכן בהרשמה ובשמירה בלי משתמש
  * הדפדפן יוצר את אסימון הסשן בעצמו ושולח אותו, וכשכל המסלולים "נכשלו" — מניחים שהבקשה נקלטה וממשיכים עם האסימון.
  */
-const BLIND = new Set(["/auth/guest", "/auth/register", "/save"]);
+const BLIND = new Set(["/auth/guest", "/auth/register", "/auth/google", "/save"]);
 /** הפעולה האחרונה הסתיימה בלי אישור מהשרת (התשובה נחסמה) */
 export let lastBlind = false;
 
@@ -300,7 +301,7 @@ export async function call<T>(path: string, opts: CallOptions = {}): Promise<T> 
   if (!BASES.length) throw new CrowdError(0, "offline");
   lastBlind = false;
   const p0 = path.split("?")[0];
-  if ((p0 === "/auth/guest" || p0 === "/auth/register") && opts.body && typeof opts.body === "object" && !(opts.body as { token?: string }).token)
+  if ((p0 === "/auth/guest" || p0 === "/auth/register" || p0 === "/auth/google") && opts.body && typeof opts.body === "object" && !(opts.body as { token?: string }).token)
     opts = { ...opts, body: { ...(opts.body as object), token: clientToken() } };
   const started = Date.now();
   const attempts: Record<string, unknown>[] = [];
