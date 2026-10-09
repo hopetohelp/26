@@ -105,6 +105,18 @@ describe("ממסר שמירה", () => {
     expect(await res.json()).toEqual({ version: 3 });
     expect(res.headers.get("access-control-allow-origin")).toBe(origin);
   });
+  it("מעביר גם את נתיבי החשבון והאימות (מי שהמסלולים הרגילים חסומים לו)", async () => {
+    for (const path of ["/account/verify/send", "/account/verify/check", "/account/name", "/account/password"]) {
+      const fetch = vi.fn(async (req) => {
+        expect(new URL(req.url).pathname).toBe(path);
+        expect(req.headers.get("authorization")).toBe("Bearer tok");
+        return new Response('{"ok":true}');
+      });
+      const res = await post({ ALLOWED_ORIGIN: origin, CROWD: { fetch } }, enc({ path, method: "POST", token: "tok", body: {} }));
+      expect(res.status).toBe(200);
+      expect(fetch).toHaveBeenCalledTimes(1);
+    }
+  });
   it("נתיב לא מוכר או קידוד שבור — נדחה", async () => {
     const fetch = vi.fn();
     expect((await post({ ALLOWED_ORIGIN: origin, CROWD: { fetch } }, enc({ path: "/admin", method: "POST" }))).status).toBe(400);

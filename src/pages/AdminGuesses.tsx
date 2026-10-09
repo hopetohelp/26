@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { lists2026, listName } from "../lib/data";
-import { Segmented } from "../components/Choice";
+import { Chips } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 
 /**
@@ -8,15 +8,16 @@ import { Btn, Notice } from "./guess/ui";
  * השרת מחזיר את ההשערות בסדר אקראי, עם יום בלבד, ו"ידית" חד-פעמית לאישור/דחייה של השערה חריגה.
  */
 export type GuessReason = { list: string; rule: "ratio" | "watched"; value: number; mean?: number };
-export type GuessRow = { handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; reasons: GuessReason[] };
-type Filter = "pending" | "all" | "approved" | "rejected";
+export type GuessRow = { handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review" | "unverified"; reasons: GuessReason[] };
+type Filter = "pending" | "all" | "approved" | "rejected" | "unverified";
 
-const STATUS: Record<GuessRow["status"], string> = { ok: "תקינה", pending: "ממתינה לאישור", approved: "אושרה", rejected: "נדחתה", review: "בבדיקת שעה חשודה" };
+const STATUS: Record<GuessRow["status"], string> = { ok: "תקינה", pending: "ממתינה לאישור", approved: "אושרה", rejected: "נדחתה", review: "בבדיקת שעה חשודה", unverified: "חשבון לא מאומת" };
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "pending", label: "ממתינות" },
   { id: "all", label: "הכול" },
   { id: "approved", label: "אושרו" },
   { id: "rejected", label: "נדחו" },
+  { id: "unverified", label: "לא מאומתים" },
 ];
 
 export function reasonText(r: GuessReason) {
@@ -33,7 +34,7 @@ export function toCsv(rows: GuessRow[]) {
 }
 
 export default function AdminGuesses({ api }: { api: (path: string, body?: unknown) => Promise<any> }) {
-  const [data, setData] = useState<{ salt: string; rows: GuessRow[] } | null>(null);
+  const [data, setData] = useState<{ salt: string; rows: GuessRow[]; unverified?: { participants: number; means: Record<string, number> } } | null>(null);
   const [filter, setFilter] = useState<Filter>("pending");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -70,8 +71,17 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         <h2 className="font-display text-2xl">השערות הגולשים ({data?.rows.length ?? "…"} · ממתינות {pending})</h2>
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 3.5 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
-      <Segmented label="סינון" value={filter} onChange={setFilter} options={FILTERS} />
+      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">רק חשבון מאומת (Google או מייל שאומת) נספר בסטטיסטיקות. חשבונות שלא אומתו מרוכזים באזור הנפרד שמתחת, ועוברים לסטטיסטיקות ברגע שמאמתים.</p>
+      {!!data?.unverified?.participants && (
+        <details className="border border-paper-line rounded-theme p-3">
+          <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">אזור נפרד: חשבונות שלא אומתו ({data.unverified.participants}) — ממוצע מנדטים לכל רשימה</summary>
+          <ul className="grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-x-4 gap-y-1 text-sm tabular pt-2">
+            {Object.entries(data.unverified.means).filter(([, m]) => m > 0).sort((a, b) => b[1] - a[1]).map(([id, m]) => <li key={id} className="flex justify-between gap-2"><span>{listName(id)}</span><span>{m}</span></li>)}
+          </ul>
+        </details>
+      )}
+      <Chips label="סינון" value={filter} onChange={setFilter} options={FILTERS} />
       {error && <Notice tone="warn">{error}</Notice>}
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
       {data && !rows.length && <p className="text-sm text-ink-soft">אין השערות במצב הזה.</p>}

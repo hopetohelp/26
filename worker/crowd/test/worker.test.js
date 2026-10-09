@@ -35,7 +35,12 @@ async function call(path, { body, token, method, ip = "1.2.3.4" } = {}) {
 }
 let un = 0;
 const PW = "a long pass phrase";
-const register = (ip = ipFor(), email = "user_" + un++ + "@example.com") => call("/auth/register", { body: { email, password: PW }, ip });
+/** הרשמה במייל. כברירת מחדל המייל מסומן מאומת, כי רק חשבון מאומת נספר בסטטיסטיקות (הכרעת בעלים 9.10.2026) */
+const register = async (ip = ipFor(), email = "user_" + un++ + "@example.com", { verified = true } = {}) => {
+  const r = await call("/auth/register", { body: { email, password: PW }, ip });
+  if (verified && r.status === 200) env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = (SELECT participant FROM sessions WHERE token_hash = ?)").run(await sha256(r.data.token));
+  return r;
+};
 /** משתתף חדש = הרשמה (אין משתתף אנונימי). מחזיר אסימון סשן */
 const newP = async (ip = ipFor()) => (await register(ip)).data.token;
 let op = 0;
@@ -43,13 +48,13 @@ const save = (token, unit, payload, op_id = "op-" + String(op++).padStart(8, "0"
 
 describe("participant & saves", () => {
   it("register creates participant + link; /me, CORS; no anonymous creation", async () => {
-    const r = await register();
+    const r = await register(undefined, undefined, { verified: false });
     expect(r.status).toBe(200);
     expect(r.data.token).toMatch(/^[\w-]{20,}$/);
     expect(r.data.link).toMatch(/^[\w-]{20,}$/);
     expect(r.headers.get("access-control-allow-headers")).toContain("authorization");
     const me = await call("/me", { token: r.data.token });
-    expect(me.data).toMatchObject({ latest: {}, username: null, google: false, needsEmail: false, hasPassword: true, emails: [{ email: "user_" + (un - 1) + "@example.com", source: "password", verified: false }] });
+    expect(me.data).toMatchObject({ latest: {}, username: null, google: false, needsEmail: false, hasPassword: true, verified: false, emails: [{ email: "user_" + (un - 1) + "@example.com", source: "password", verified: false }] });
     expect((await call("/me")).status).toBe(401);
     expect((await call("/participant", { body: {} })).status).toBe(404);
     // הקישור אינו אסימון כניסה
@@ -232,7 +237,7 @@ describe("cron: aggregation & anomaly", () => {
     await env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json) VALUES (?, ?, ?, ?)")
       .bind("old", new Date(t).toISOString(), "dashboard", JSON.stringify({ ...old, participants: 1 })).run();
     const first = await call("/dashboard");
-    expect(first.data).toMatchObject({ open: true, policy: "fixed-blocs-v5", participants: 1 });
+    expect(first.data).toMatchObject({ open: true, policy: "verified-v6", participants: 1 });
     expect(first.data.seats.n).toBe(1);
     expect(first.data.matrix.rows["מחל"].n).toBe(1);
     const before = env.DB.raw.prepare("SELECT COUNT(*) AS n FROM aggregates").get().n;
@@ -401,5 +406,36 @@ describe("admin guesses dashboard (no identifiers)", () => {
     expect(d.pendingGuesses).toBe(0);
     expect(d.seats.n).toBe(4);
     expect((await admin("/admin/guesses")).data.rows.filter((x) => x.status === "approved")).toHaveLength(1);
+  });
+});
+
+
+describe("חשבונות שלא אומתו — אזור נפרד (הכרעת בעלים 9.10.2026)", () => {
+  const KEY = "k".repeat(40);
+  const admin = (path) => worker.fetch(new Request("https://w.example" + path, { headers: { "x-admin-key": KEY } }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
+  it("לא נספרים בסטטיסטיקות הראשיות, נספרים באזור הנפרד, וחוזרים לראשיות כשמאמתים", async () => {
+    await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
+    const ok = (await register()).data.token;
+    const unv = (await register(undefined, undefined, { verified: false })).data.token;
+    await save(ok, "seats", seats(60));
+    await save(unv, "seats", seats(55));
+    resetDashboardCache();
+    let d = (await call("/dashboard")).data;
+    expect(d.participants).toBe(1);
+    expect(d.seats.n).toBe(1);
+    expect(d.accounts).toEqual({ google: 0, email: 1, unverified: 1 });
+    expect((await call("/me", { token: unv })).data.verified).toBe(false);
+    expect((await call("/me", { token: ok })).data.verified).toBe(true);
+    // האזור הנפרד בניהול: שורה אחת בסטטוס "unverified", ממוצע המנדטים שלה, בלי מזהים
+    const g = (await admin("/admin/guesses")).data;
+    expect(g.rows.map((r) => r.status).sort()).toEqual(["ok", "unverified"]);
+    expect(g.unverified.participants).toBe(1);
+    expect(g.unverified.means[IDS[0]]).toBe(55);
+    // אימות ⇐ עובר לסטטיסטיקות הראשיות
+    env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = (SELECT participant FROM sessions WHERE token_hash = ?)").run(await sha256(unv));
+    resetDashboardCache();
+    d = (await call("/dashboard")).data;
+    expect(d.participants).toBe(2);
+    expect(d.accounts.unverified).toBe(0);
   });
 });

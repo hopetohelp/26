@@ -12,16 +12,20 @@ const guess = (parts) => {
 describe("השערות חריגות", () => {
   const typical = (p) => ver(p, "seats", guess({ yashar: 20, shas: 10 }));
 
-  it("פי 1.5 מממוצע הגולשים ו-3.5 מנדטים פער ⇐ ממתינה", () => {
+  it("פי 1.5 מממוצע הגולשים ופער של לפחות 4.1 מנדטים ⇐ ממתינה", () => {
     const vs = [typical("a"), typical("b"), ver("c", "seats", guess({ yashar: 30, shas: 10 }))];
     const m = moderate(vs);
     expect(m.pending.size).toBe(1);
     expect(m.pending.get(vs[2].id)).toEqual([{ list: "yashar", rule: "ratio", value: 30, mean: 20 }]);
   });
 
-  it("פי 1.5 בלי פער של 3.5 מנדטים ⇐ תקינה", () => {
+  it("פי 1.5 בלי פער של 4.1 מנדטים ⇐ תקינה (פער 4.0 לא מספיק, 5 כן)", () => {
     const vs = [ver("a", "seats", guess({ amcha: 4 })), ver("b", "seats", guess({ amcha: 4 })), ver("c", "seats", guess({ amcha: 7 }))];
     expect(moderate(vs).pending.size).toBe(0);
+    const four = [ver("a", "seats", guess({ amcha: 4 })), ver("b", "seats", guess({ amcha: 4 })), ver("c", "seats", guess({ amcha: 8 }))];
+    expect(moderate(four).pending.size).toBe(0); // פי 2, אבל פער 4.0
+    const five = [ver("a", "seats", guess({ amcha: 4 })), ver("b", "seats", guess({ amcha: 4 })), ver("c", "seats", guess({ amcha: 9 }))];
+    expect(moderate(five).pending.size).toBe(1); // פי 2.25 ופער 5
   });
 
   it("הציבור החרדי, צבע שחור ונועם: מעבר הסף (4 ומעלה) ממתין לאישור, גם כשכל האחרים נתנו אותו דבר ומהמשתתף הראשון", () => {

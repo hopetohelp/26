@@ -21,7 +21,7 @@ export const K_ROW = 1;
 export const OPEN_AT = 0;
 export const MIN_CHANGED = 1;
 export const TOTAL = 120;
-export const DASHBOARD_POLICY = "fixed-blocs-v5";
+export const DASHBOARD_POLICY = "verified-v6";
 export const HOURLY = ["seats", "blocs", "vote2026", "vote2022", "underReview"];
 export const DAILY = ["matrix", "byVote", "trend"];
 /** אילו יחידות משפיעות על כל חלק בדשבורד */
@@ -290,9 +290,18 @@ export function computeUnderReview(reviewSeatVersions, reviewParticipants) {
  * previous: {section: {json, publishedAt, snapshot: number[]}} — הפרסום הקודם של כל חלק · lastDailyDay: היום (ישראל) של החישוב היומי הקודם
  * מחזיר {dashboard, sections: {section: {json, publishedAt, snapshot, contributors, changed}}, daily}
  */
+/**
+ * חשבון מאומת = יש לו Google או מייל מאומת (הכרעת בעלים 9.10.2026). רק מאומתים נספרים בסטטיסטיקות; חשבונות שלא אומתו
+ * מרוכזים באזור נפרד (נספרים בלבד בדשבורד הציבורי; הנתונים עצמם — בממשק הניהול). שורה בלי השדה verified נחשבת מאומתת
+ * (תאימות לבדיקות); השרת מספק תמיד 0 או 1.
+ */
+const isVerified = (p) => p.verified !== 0 && p.verified !== false;
+
 export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {}, decisions = new Map() }) {
   const review = new Set(participants.filter((p) => p.review).map((p) => p.id));
-  const known = new Set(participants.map((p) => p.id));
+  // known = המשתתפים שנספרים: מאומתים, ולא "בבדיקה"
+  const known = new Set(participants.filter((p) => !p.review && isVerified(p)).map((p) => p.id));
+  const unverified = new Set(participants.filter((p) => !p.review && !isVerified(p)).map((p) => p.id));
   const main = latestByUnit(versions, (v) => known.has(v.participant) && !review.has(v.participant));
   // השערות חריגות ממתינות לאישור מנהל (moderation.js): לא נספרות בשום חלק עד שאושרו
   const mod = moderate([...main.seats.values()], decisions);
@@ -301,6 +310,11 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const rev = latestByUnit(versions, (v) => review.has(v.participant));
   const active = new Set([...main.vote.keys(), ...main.seats.keys(), ...main.blocs.keys()]);
   const reviewActive = new Set([...rev.vote.keys(), ...rev.seats.keys(), ...rev.blocs.keys()]);
+  // האזור הנפרד: חשבונות שלא אומתו ושמרו משהו
+  const unv = latestByUnit(versions, (v) => unverified.has(v.participant));
+  const unverifiedActive = new Set([...unv.vote.keys(), ...unv.seats.keys(), ...unv.blocs.keys()]);
+  const kinds = { google: 0, email: 0 };
+  for (const p of participants) if (active.has(p.id)) kinds[p.google ? "google" : "email"]++;
   const today = israelDay(now);
   const daily = lastDailyDay !== today;
   // במעבר מדשבורד סגור לפתוח — כל החלקים מתפרסמים מחדש, ולא נשארים קפואים מתקופת הסגירה
@@ -345,7 +359,7 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
     custom: sections.blocs.json.custom.map(g => ({ ...g, name: blocNames[compositionKey(g.lists)] ?? g.name })),
   } };
   const open = active.size >= OPEN_AT;
-  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, pendingGuesses: mod.pending.size, sectionsAsOf: {}, sectionParticipants: {} };
+  const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, pendingGuesses: mod.pending.size, accounts: { ...kinds, unverified: unverifiedActive.size }, sectionsAsOf: {}, sectionParticipants: {} };
   if (open) {
     for (const [name, s] of Object.entries(sections)) {
       if (s.json === null || s.json === undefined) continue;

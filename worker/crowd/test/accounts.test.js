@@ -243,3 +243,15 @@ describe("מנהל לפי חשבון ומספרי ניהול", () => {
     expect(stats).toMatchObject({ verifiedEmails: 1, googleAccounts: 1 });
   });
 });
+
+describe("סטטיסטיקות: רק חשבון מאומת נספר", () => {
+  it("חשבון Google נספר מיד ומופיע בפירוט accounts.google; חשבון במייל שלא אומת — לא", async () => {
+    const g = await call("/auth/google", { body: { credential: await google({}) } });
+    await save(g.data.token);
+    const e = await call("/auth/register", { body: { email: "unverified@example.com", password: PW } });
+    await save(e.data.token);
+    const d = (await call("/dashboard")).data;
+    expect(d.participants).toBe(1);
+    expect(d.accounts).toEqual({ google: 1, email: 0, unverified: 1 });
+  });
+});
