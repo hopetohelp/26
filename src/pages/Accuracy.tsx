@@ -1,8 +1,11 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
-import { EstimateVsActual, TrendChart, type Series } from "../components/charts";
+import { TrendChart, type Series } from "../components/charts";
+import { Chips } from "../components/Choice";
+import DeviationChart from "../components/deviationChart";
+import { deviation, finding } from "../lib/deviation";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Note, PageTitle, Columns } from "../components/ui";
+import { Card, ChartWithTable, Fold, Note, PageTitle, Columns } from "../components/ui";
 import historyFile from "../data/history.json";
 import { results } from "../lib/data";
 import { dateRange, date, rng, seatsFmt, signed } from "../lib/format";
@@ -78,7 +81,7 @@ export default function Accuracy() {
     (d): d is { id: string; t: number; v: number } => typeof d.v === "number",
   );
   const yMax = Math.max(10, Math.ceil(Math.max(...series.flatMap((x) => x.points.map((p) => p.v)), ...markers.map((m) => m.v), 0) / 5) * 5 + 5);
-  const maxSeats = Math.max(30, ...s.rows.map((r) => Math.max(r.actual, Number.isNaN(r.max) ? 0 : r.max))) + 2;
+  const dev = deviation(s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n })));
   const eveText = `הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני ${date(c.date)}`;
 
   return (
@@ -91,139 +94,21 @@ export default function Accuracy() {
         דיוק הסקרים בעבר
       </PageTitle>
 
-      <Card title="חמש מערכות במבט אחד">
-        <Explained
-          kind="סיכום סקרים"
-          source={SOURCE}
-          asOf="ערב כל מערכת בחירות"
-          assumption='"סך הפער" = סכום ההפרשים בין חציון הסקרים לתוצאה, על פני כל הרשימות. הגוש = הרשימות שהמליצו על נתניהו לנשיא המדינה אחרי אותן בחירות — עובדה, לא סיווג.'
-          methodAnchor="accuracy"
-        >
-          <ul className="md:hidden space-y-3 text-sm">
-            {newestFirst.map((x) => (
-              <li key={x.cycle.id} className="border-b border-paper-line/60 pb-2">
-                <p className="font-bold">
-                  הכנסת ה-{x.cycle.knesset} ({x.cycle.label})
-                </p>
-                <p>
-                  סך הפער: <span className="tabular-nums">{seatsFmt(x.gap)}</span> מנדטים · {x.snapshot.length} מכונים
-                </p>
-                <p className="tabular-nums">
-                  הרשימות שהמליצו על נתניהו: {seatsFmt(x.bloc.estimate)} ⇐ <strong>{x.bloc.actual}</strong> (<Signed n={x.bloc.estimate - x.bloc.actual} />)
-                </p>
-                <p>
-                  טעות בשאלת אחוז החסימה:{" "}
-                  {x.misses.length ? x.misses.map((m) => `${m.name} (סקרים ${fmtEst(m.estimate)}, בפועל ${m.actual})`).join(" · ") : "אין"}
-                </p>
-              </li>
-            ))}
-          </ul>
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full text-sm">
-              <caption className="sr-only">לכל מערכת: מספר המכונים, סך הפער, הגוש בסקרים ובפועל, וטעויות בשאלת אחוז החסימה</caption>
-              <thead>
-                <tr className="text-right border-b border-paper-line">
-                  <th scope="col" className="py-2 pe-3">מערכת</th>
-                  <th scope="col" className="pe-3">מכונים</th>
-                  <th scope="col" className="pe-3">סך הפער</th>
-                  <th scope="col" className="pe-3">הרשימות שהמליצו על נתניהו: סקרים ⇐ בפועל</th>
-                  <th scope="col">טעות בשאלת אחוז החסימה</th>
-                </tr>
-              </thead>
-              <tbody>
-                {newestFirst.map((x) => (
-                  <tr key={x.cycle.id} className="border-b border-paper-line/60">
-                    <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
-                      הכנסת ה-{x.cycle.knesset} ({x.cycle.label})
-                    </th>
-                    <td className="pe-3 tabular-nums">{x.snapshot.length}</td>
-                    <td className="pe-3 tabular-nums">{seatsFmt(x.gap)} מנדטים</td>
-                    <td className="pe-3 tabular-nums whitespace-nowrap">
-                      {seatsFmt(x.bloc.estimate)} ⇐ <strong>{x.bloc.actual}</strong> (<Signed n={x.bloc.estimate - x.bloc.actual} />)
-                    </td>
-                    <td>
-                      {x.misses.length
-                        ? x.misses.map((m) => `${m.name} (סקרים ${fmtEst(m.estimate)}, בפועל ${m.actual})`).join(" · ")
-                        : "אין"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Explained>
-        <Note>
-          הפרש עם מינוס = הסקרים נתנו פחות ממה שהתקבל בפועל. "טעות בשאלת אחוז החסימה" = בחציון הסקרים הרשימה עברה ובפועל לא, או
-          להפך — כלומר כל הקולות שלה "נשרפו" בניגוד לתמונה שהציגו הסקרים, או ההפך.
-        </Note>
-      </Card>
+      <Card title="הסקרים מול התוצאות">
+        <Chips
+          label="מערכת בחירות"
+          value={id}
+          onChange={setId}
+          className="mb-4"
+          options={newestFirst.map((x) => ({ id: x.cycle.id, label: <>{x.cycle.label}<span className="sr-only"> — הכנסת ה-{x.cycle.knesset}</span></> }))}
+        />
 
-      <Card title="מה חזר על עצמו">
-        <Explained
-          kind="סיכום סקרים"
-          source={SOURCE}
-          asOf="ערב כל מערכת בחירות"
-          assumption='לכל רשימה (או קבוצת רשימות) — חציון הסקרים פחות התוצאה בכל מערכת. "המפלגות הערביות" = כל הרשימות שהתמודדו בכל מערכת, ביחד.'
-          methodAnchor="accuracy"
-        >
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <caption className="sr-only">ההפרש בין חציון הסקרים לתוצאה, לפי רשימה ומערכת</caption>
-              <thead>
-                <tr className="text-right border-b border-paper-line">
-                  <th scope="col" className="py-2 pe-3">רשימה</th>
-                  {summaries.map((x) => (
-                    <th key={x.cycle.id} scope="col" className="pe-3 whitespace-nowrap">
-                      {x.cycle.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {families.map((f) => (
-                  <tr key={f.id} className="border-b border-paper-line/60">
-                    <th scope="row" className="py-2 pe-3 text-right font-medium">
-                      {f.name}
-                    </th>
-                    {f.cells.map((x) => (
-                      <td key={x.cycleId} className="pe-3 tabular-nums whitespace-nowrap">
-                        <Signed n={x.diff} /> <span className="hidden sm:inline text-ink-faint text-xs">({seatsFmt(x.estimate)} ⇐ {x.actual})</span>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Explained>
-        <ul className="list-disc ps-5 text-sm mt-3 space-y-1">
-          {families.map(patternText).filter((t): t is string => !!t).map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
-        <Note>
-          חמש מערכות הן מדגם קטן, והמכונים משנים שיטות, שותפים ולוחות זמנים בין מערכת למערכת. דפוס שחזר בעבר אינו מבטיח שיחזור הפעם — ולכן
-          האתר אינו "מתקן" את הסקרים של היום לפיו.
-        </Note>
-      </Card>
-
-      <Card title="מערכת אחת מקרוב">
-        <label className="text-sm flex flex-col max-w-xs mb-4">
-          מערכת בחירות
-          <select className="border border-paper-line rounded px-2 py-1 mt-1" value={id} onChange={(e) => setId(e.target.value)}>
-            {newestFirst.map((x) => (
-              <option key={x.cycle.id} value={x.cycle.id}>
-                הכנסת ה-{x.cycle.knesset} ({x.cycle.label})
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <h3 className="font-bold mb-2">ערב הבחירות: חציון הסקרים מול התוצאה</h3>
+        <h3 className="text-xl font-display leading-tight mb-1">{finding(dev.outside.length, dev.askedCount)}</h3>
+        <p className="text-sm text-ink-soft mb-3">הכנסת ה-{c.knesset} ({c.label}) · {s.snapshot.length} מכונים · סך הפער {seatsFmt(s.gap)} מנדטים</p>
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
           <ChartWithTable
-            summary={`${s.snapshot.length} מכונים · סך הפער ${seatsFmt(s.gap)} מנדטים. פס = חציון הסקרים, קו דק = הטווח בין המכונים, מעוין = התוצאה בפועל.`}
-            chart={<EstimateVsActual rows={s.rows.map((r) => ({ id: r.letters, ...r }))} maxSeats={maxSeats} caption={`חציון הסקרים מול התוצאה, הכנסת ה-${c.knesset}`} />}
+            summary="נקודה = התוצאה הרשמית, פס = הנמוך והגבוה בין הסקרים, והכול ביחס לחציון הסקרים."
+            chart={<DeviationChart rows={s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n }))} />}
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">לכל רשימה: חציון הסקרים, הטווח, התוצאה וההפרש</caption>
@@ -393,12 +278,125 @@ export default function Accuracy() {
           </Note>
         </details>
       </Card>
-
       <PersonalBlocs title="הגושים שלי: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: חציוני מפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום חציוני מפלגות לפני ${c.label}; אינו חציון הגוש`, asOf: eveText },
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
       ]} />
-      <Card title="מכוני הסקרים לאורך זמן">
+      <Fold title="חמש מערכות במבט אחד">
+        <Explained
+          kind="סיכום סקרים"
+          source={SOURCE}
+          asOf="ערב כל מערכת בחירות"
+          assumption='"סך הפער" = סכום ההפרשים בין חציון הסקרים לתוצאה, על פני כל הרשימות. הגוש = הרשימות שהמליצו על נתניהו לנשיא המדינה אחרי אותן בחירות — עובדה, לא סיווג.'
+          methodAnchor="accuracy"
+        >
+          <ul className="md:hidden space-y-3 text-sm">
+            {newestFirst.map((x) => (
+              <li key={x.cycle.id} className="border-b border-paper-line/60 pb-2">
+                <p className="font-bold">
+                  הכנסת ה-{x.cycle.knesset} ({x.cycle.label})
+                </p>
+                <p>
+                  סך הפער: <span className="tabular-nums">{seatsFmt(x.gap)}</span> מנדטים · {x.snapshot.length} מכונים
+                </p>
+                <p className="tabular-nums">
+                  הרשימות שהמליצו על נתניהו: {seatsFmt(x.bloc.estimate)} ⇐ <strong>{x.bloc.actual}</strong> (<Signed n={x.bloc.estimate - x.bloc.actual} />)
+                </p>
+                <p>
+                  טעות בשאלת אחוז החסימה:{" "}
+                  {x.misses.length ? x.misses.map((m) => `${m.name} (סקרים ${fmtEst(m.estimate)}, בפועל ${m.actual})`).join(" · ") : "אין"}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-sm">
+              <caption className="sr-only">לכל מערכת: מספר המכונים, סך הפער, הגוש בסקרים ובפועל, וטעויות בשאלת אחוז החסימה</caption>
+              <thead>
+                <tr className="text-right border-b border-paper-line">
+                  <th scope="col" className="py-2 pe-3">מערכת</th>
+                  <th scope="col" className="pe-3">מכונים</th>
+                  <th scope="col" className="pe-3">סך הפער</th>
+                  <th scope="col" className="pe-3">הרשימות שהמליצו על נתניהו: סקרים ⇐ בפועל</th>
+                  <th scope="col">טעות בשאלת אחוז החסימה</th>
+                </tr>
+              </thead>
+              <tbody>
+                {newestFirst.map((x) => (
+                  <tr key={x.cycle.id} className="border-b border-paper-line/60">
+                    <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
+                      הכנסת ה-{x.cycle.knesset} ({x.cycle.label})
+                    </th>
+                    <td className="pe-3 tabular-nums">{x.snapshot.length}</td>
+                    <td className="pe-3 tabular-nums">{seatsFmt(x.gap)} מנדטים</td>
+                    <td className="pe-3 tabular-nums whitespace-nowrap">
+                      {seatsFmt(x.bloc.estimate)} ⇐ <strong>{x.bloc.actual}</strong> (<Signed n={x.bloc.estimate - x.bloc.actual} />)
+                    </td>
+                    <td>
+                      {x.misses.length
+                        ? x.misses.map((m) => `${m.name} (סקרים ${fmtEst(m.estimate)}, בפועל ${m.actual})`).join(" · ")
+                        : "אין"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Explained>
+        <Note>
+          הפרש עם מינוס = הסקרים נתנו פחות ממה שהתקבל בפועל. "טעות בשאלת אחוז החסימה" = בחציון הסקרים הרשימה עברה ובפועל לא, או
+          להפך — כלומר כל הקולות שלה "נשרפו" בניגוד לתמונה שהציגו הסקרים, או ההפך.
+        </Note>
+      </Fold>
+      <Fold title="מה חזר על עצמו">
+        <Explained
+          kind="סיכום סקרים"
+          source={SOURCE}
+          asOf="ערב כל מערכת בחירות"
+          assumption='לכל רשימה (או קבוצת רשימות) — חציון הסקרים פחות התוצאה בכל מערכת. "המפלגות הערביות" = כל הרשימות שהתמודדו בכל מערכת, ביחד.'
+          methodAnchor="accuracy"
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <caption className="sr-only">ההפרש בין חציון הסקרים לתוצאה, לפי רשימה ומערכת</caption>
+              <thead>
+                <tr className="text-right border-b border-paper-line">
+                  <th scope="col" className="py-2 pe-3">רשימה</th>
+                  {summaries.map((x) => (
+                    <th key={x.cycle.id} scope="col" className="pe-3 whitespace-nowrap">
+                      {x.cycle.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {families.map((f) => (
+                  <tr key={f.id} className="border-b border-paper-line/60">
+                    <th scope="row" className="py-2 pe-3 text-right font-medium">
+                      {f.name}
+                    </th>
+                    {f.cells.map((x) => (
+                      <td key={x.cycleId} className="pe-3 tabular-nums whitespace-nowrap">
+                        <Signed n={x.diff} /> <span className="hidden sm:inline text-ink-faint text-xs">({seatsFmt(x.estimate)} ⇐ {x.actual})</span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Explained>
+        <ul className="list-disc ps-5 text-sm mt-3 space-y-1">
+          {families.map(patternText).filter((t): t is string => !!t).map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+        <Note>
+          חמש מערכות הן מדגם קטן, והמכונים משנים שיטות, שותפים ולוחות זמנים בין מערכת למערכת. דפוס שחזר בעבר אינו מבטיח שיחזור הפעם — ולכן
+          האתר אינו "מתקן" את הסקרים של היום לפיו.
+        </Note>
+      </Fold>
+      <Fold title="מכוני הסקרים לאורך זמן">
         <Explained
           kind="סיכום סקרים"
           source={SOURCE}
@@ -442,7 +440,7 @@ export default function Accuracy() {
           המכונים היה {spread.map((x) => `ב${x.label} — בין ${r1(x.min)} ל-${r1(x.max)}`).join("; ")}. לכן "המכון המדויק ביותר" אינו מסקנה
           בטוחה מחמש מערכות.
         </Note>
-      </Card>
+      </Fold>
       </Columns>
     </>
   );

@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { colorOf } from "../lib/colors";
-import { seatsFmt, signed } from "../lib/format";
+import { seatsFmt } from "../lib/format";
 
 export interface Series {
   id: string;
@@ -111,60 +111,5 @@ export function TrendChart({
       ))}
     </svg>
     </div>
-  );
-}
-
-export interface GapRow {
-  id: string;
-  name: string;
-  /** חציון הסקרים; NaN = אף סקר לא שאל עליה */
-  estimate: number;
-  min: number;
-  max: number;
-  actual: number;
-}
-
-/** הסקרים מול התוצאה: פס = חציון הסקרים, קו דק = הטווח בין המכונים, מעוין = התוצאה בפועל */
-export function EstimateVsActual({ rows, maxSeats = 40, caption }: { rows: GapRow[]; maxSeats?: number; caption: string }) {
-  const w = (x: number) => `${Math.max(0, Math.min(100, (x / maxSeats) * 100))}%`;
-  return (
-    <figure>
-      <figcaption className="sr-only">{caption}</figcaption>
-      <ul className="space-y-2">
-        {rows.map((r) => {
-          const est = Number.isNaN(r.estimate) ? 0 : r.estimate;
-          const diff = est - r.actual;
-          return (
-            <li
-              key={r.id}
-              className="grid grid-cols-[1fr_auto] md:grid-cols-[11rem_1fr_10rem] items-center gap-x-2 gap-y-1 [grid-template-areas:'name_nums'_'bar_bar'] md:[grid-template-areas:'name_bar_nums']"
-            >
-              <span className="font-medium truncate [grid-area:name]" title={r.name}>
-                {r.name}
-              </span>
-              <span className="relative h-6 bg-paper rounded [grid-area:bar]" aria-hidden="true">
-                <span className="absolute inset-y-1 right-0 rounded bg-ink-faint/40" style={{ width: w(est) }} />
-                {r.max > r.min && (
-                  <span className="absolute top-1/2 h-0.5 bg-ink/60" style={{ right: w(r.min), width: `calc(${w(r.max)} - ${w(r.min)})` }} />
-                )}
-                <span
-                  className="absolute top-1/2 w-3 h-3 -mt-1.5 -mr-1.5 rotate-45 border-2 border-ink bg-white"
-                  style={{ right: w(r.actual) }}
-                />
-              </span>
-              <span className="text-sm tabular-nums whitespace-nowrap [grid-area:nums]">
-                {seatsFmt(est)} <span className="text-ink-soft">⇐</span> <strong>{r.actual}</strong>{" "}
-                <span className={diff === 0 ? "text-ink-soft" : "text-warn"}>
-                  (<bdi dir="ltr">{signed(diff)}</bdi>)
-                </span>
-                <span className="sr-only">
-                  {` — חציון הסקרים ${seatsFmt(est)}${r.max > r.min ? ` (טווח ${r.min} עד ${r.max})` : ""}, בפועל ${r.actual}`}
-                </span>
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </figure>
   );
 }
