@@ -11,6 +11,8 @@
  * POST /auth/google  {credential,token}   ⇐ {token}       כניסה עם Google; אותו Google או אותו מייל מאומת ⇐ אותו חשבון.
  * POST /auth/claim   {email,password?}    ⇐ {email, link?}  (בסשן) הוספת מייל לחשבון ישן; סיסמה רק אם אין סיסמה ואין Google.
  * POST /account/name {name}               ⇐ {name}        שם תצוגה (מוצפן בשרת).
+ * POST /account/verify/send  {}           ⇐ {sent}        (בסשן) שליחת מייל אימות לכתובת שבחשבון (Firebase); 3 בשעה.
+ * POST /account/verify/check {}           ⇐ {verified}    (בסשן) בדיקה שהגולש לחץ על הקישור; כשאומת — מסומן מאומת.
  * POST /account/password {password}       ⇐ {ok}          קביעת סיסמה לחשבון בלי סיסמה (למשל Google).
  * GET|POST /ping                      ⇐ {ok}          בדיקת חיבור, בלי זהות ובלי מאגר.
  * POST /auth/login    {email|username,password} ⇐ {token}
@@ -131,6 +133,8 @@ export interface Me {
   hasPassword?: boolean;
   /** חשבון ישן בלי מייל ובלי Google — נדרש להוסיף (הכרעת בעלים 9.10.2026) */
   needsEmail?: boolean;
+  /** אימות מייל זמין בשרת (מוגדר מפתח Firebase) */
+  verifyAvailable?: boolean;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */

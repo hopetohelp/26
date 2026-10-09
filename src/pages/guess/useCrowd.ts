@@ -106,6 +106,10 @@ export const errorText = (e: unknown): string => {
   if (e.code === "no_password") return "לחשבון הזה עוד אין סיסמה.";
   if (e.code === "username_taken" || e.code === "email_taken") return "המייל הזה כבר רשום באתר. אפשר להיכנס איתו — או להשתמש במייל אחר.";
   if (e.code === "email_required") return "נא להזין כתובת מייל תקינה.";
+  if (e.code === "verify_not_enabled") return "אימות המייל עוד לא הופעל באתר.";
+  if (e.code === "verify_unavailable") return "לא ניתן לשלוח אימות לכתובת הזו כרגע. כתבו לנו בתמיכה.";
+  if (e.code === "verify_failed") return "שליחת מייל האימות נכשלה. נסו שוב בעוד כמה דקות.";
+  if (e.code === "nothing_to_verify") return "אין מייל שממתין לאימות.";
   if (e.code === "bad_name") return "השם ארוך מדי (עד 40 תווים).";
   if (e.code === "account_required") return "כדי לשמור בשרת צריך חשבון: Google או מייל.";
   if (e.code === "bad_username") return "שם משתמש: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון, או כתובת מייל תקינה.";

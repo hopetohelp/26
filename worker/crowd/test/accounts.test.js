@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, beforeAll } from "vitest";
+import { describe, it, expect, beforeEach, beforeAll, afterEach, vi } from "vitest";
 import worker from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
 import { seats } from "./helpers.js";
@@ -138,5 +138,76 @@ describe("משתמשים קיימים", () => {
     expect((await call("/delete", { token: r.data.token, body: { confirm: "מחק" } })).status).toBe(200);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM emails").get().n).toBe(0);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM profile").get().n).toBe(0);
+  });
+});
+
+
+/** אימות מייל דרך Firebase (הכרעת בעלים 9.10.2026) — Firebase מדומה: משתמשים לפי מייל, שליחת מייל וסימון אימות */
+describe("אימות מייל", () => {
+  let users, sent, deleted;
+  beforeEach(() => {
+    users = new Map(); sent = []; deleted = [];
+    env.FIREBASE_API_KEY = "test-key";
+    env.SITE_URL = "https://hopetohelp.github.io/26/";
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => {
+      const method = String(url).split("accounts:")[1].split("?")[0];
+      const b = JSON.parse(init.body);
+      const fail = (message) => new Response(JSON.stringify({ error: { message } }), { status: 400 });
+      const ok = (o = {}) => new Response(JSON.stringify(o));
+      if (method === "signUp") { if (users.has(b.email)) return fail("EMAIL_EXISTS"); users.set(b.email, { pw: b.password, verified: false }); return ok({ idToken: "tok:" + b.email }); }
+      if (method === "signInWithPassword") { const u = users.get(b.email); return u && u.pw === b.password ? ok({ idToken: "tok:" + b.email }) : fail("INVALID_LOGIN_CREDENTIALS"); }
+      const email = String(b.idToken).slice(4);
+      if (method === "sendOobCode") { sent.push({ email, continueUrl: b.continueUrl }); return ok(); }
+      if (method === "lookup") return ok({ users: [{ emailVerified: users.get(email).verified }] });
+      if (method === "delete") { users.delete(email); deleted.push(email); return ok(); }
+      return fail("UNKNOWN");
+    }));
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("שליחה ⇐ הגולש לוחץ ⇐ בדיקה מסמנת מאומת, והמשתמש הזמני ב-Firebase נמחק", async () => {
+    const r = await call("/auth/register", { body: { email: "real.person@example.com", password: PW } });
+    expect((await call("/me", { token: r.data.token })).data.verifyAvailable).toBe(true);
+    expect((await call("/account/verify/send", { token: r.data.token, body: {} })).data).toEqual({ sent: true });
+    expect(sent).toEqual([{ email: "real.person@example.com", continueUrl: "https://hopetohelp.github.io/26/#/support" }]);
+    // הסיסמה הזמנית אינה סיסמת האתר, ושמורה מוצפנת
+    expect(users.get("real.person@example.com").pw).not.toBe(PW);
+    expect(JSON.stringify(env.DB.raw.prepare("SELECT * FROM email_verify").all())).not.toContain(users.get("real.person@example.com").pw);
+    expect((await call("/account/verify/check", { token: r.data.token, body: {} })).data).toEqual({ verified: false });
+    users.get("real.person@example.com").verified = true; // הלחיצה על הקישור שבמייל
+    expect((await call("/account/verify/check", { token: r.data.token, body: {} })).data).toEqual({ verified: true });
+    expect((await call("/me", { token: r.data.token })).data.emails[0]).toMatchObject({ email: "real.person@example.com", verified: true });
+    expect(deleted).toEqual(["real.person@example.com"]);
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM email_verify").get().n).toBe(0);
+    expect((await call("/account/verify/send", { token: r.data.token, body: {} })).data.error).toBe("nothing_to_verify");
+  });
+
+  it("שליחה חוזרת משתמשת באותו משתמש זמני; מוגבלת ל-3 בשעה; בלי מפתח Firebase — לא זמין", async () => {
+    const r = await call("/auth/register", { body: { email: "again@example.com", password: PW } });
+    for (let i = 0; i < 3; i++) expect((await call("/account/verify/send", { token: r.data.token, body: {} })).status).toBe(200);
+    expect(sent).toHaveLength(3);
+    expect(users.size).toBe(1);
+    expect((await call("/account/verify/send", { token: r.data.token, body: {} })).status).toBe(429);
+    delete env.FIREBASE_API_KEY;
+    expect((await call("/account/verify/send", { token: r.data.token, body: {} })).data.error).toBe("verify_not_enabled");
+  });
+
+  it("חשבון Google מאומת כבר, ושליחה בלי מייל רשום — נדחות; בדיקה בלי שליחה קודמת — נדחית", async () => {
+    const g = await call("/auth/google", { body: { credential: await google({}) } });
+    expect((await call("/account/verify/send", { token: g.data.token, body: {} })).data.error).toBe("nothing_to_verify");
+    expect((await call("/account/verify/check", { token: g.data.token, body: {} })).data).toEqual({ verified: true });
+    const r = await call("/auth/register", { body: { email: "nosend@example.com", password: PW } });
+    expect((await call("/account/verify/check", { token: r.data.token, body: {} })).data.error).toBe("not_sent");
+  });
+
+  it("Firebase חסום להרשמה במייל וסיסמה (לא הופעל) ⇐ הודעה ברורה; מחיקת חשבון מוחקת גם את המשתמש הזמני", async () => {
+    const r = await call("/auth/register", { body: { email: "gone2@example.com", password: PW } });
+    await call("/account/verify/send", { token: r.data.token, body: {} });
+    expect(users.has("gone2@example.com")).toBe(true);
+    await call("/delete", { token: r.data.token, body: { confirm: "מחק" } });
+    expect(users.has("gone2@example.com")).toBe(false);
+    const r2 = await call("/auth/register", { body: { email: "blocked@example.com", password: PW } });
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ error: { message: "OPERATION_NOT_ALLOWED" } }), { status: 400 })));
+    expect((await call("/account/verify/send", { token: r2.data.token, body: {} })).data.error).toBe("verify_not_enabled");
   });
 });

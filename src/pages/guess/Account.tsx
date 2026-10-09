@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { call, CrowdError } from "../../lib/crowdApi";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { FORGOT_LINE } from "./LinkSaver";
@@ -166,8 +166,11 @@ export function AuthForm({
           setConsent(true);
           session.setToken(r.token);
           if (r.link) session.setLink(r.link);
+          // הרשמה במייל ⇐ נשלח מייל אימות; כישלון אינו חוסם (אפשר לשלוח שוב ב"הפרטים שלי")
+          let note = "";
+          if (register) await call("/account/verify/send", { token: r.token, body: {} }).then(() => { note = " נשלח אליכם מייל לאימות הכתובת."; }, () => {});
           onDone?.(r.token);
-          return register ? "נרשמתם." : "נכנסתם.";
+          return (register ? "נרשמתם." : "נכנסתם.") + note;
         })}
       >
         <h3 className="font-bold">{register ? "או: הרשמה במייל" : "כניסה במייל"}</h3>
@@ -211,9 +214,11 @@ export function ClaimForm({ session, onDone }: { session: ReturnType<typeof useS
         const r = await call<{ email: string; link?: string }>("/auth/claim", { token: session.token, body: { email, ...(needsPassword ? { password: pw } : {}) } });
         setPw("");
         if (r.link) session.setLink(r.link);
+        let note = "";
+        await call("/account/verify/send", { token: session.token, body: {} }).then(() => { note = " נשלח אליכם מייל לאימות הכתובת."; }, () => {});
         await session.refresh();
         onDone?.();
-        return r.link ? "המייל נוסף. שמרו עכשיו את הקישור האישי." : "המייל נוסף.";
+        return (r.link ? "המייל נוסף. שמרו עכשיו את הקישור האישי." : "המייל נוסף.") + note;
       })}
     >
       <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
@@ -273,6 +278,49 @@ function SetPasswordForm({ session }: { session: ReturnType<typeof useSession> }
   );
 }
 
+/** אימות המייל (הכרעת בעלים 9.10.2026): נשלח מייל עם קישור (דרך Firebase); אחרי הלחיצה בו — "בדקתי" מאשר. נבדק גם אוטומטית כשחוזרים ללשונית. */
+function VerifyEmail({ session }: { session: ReturnType<typeof useSession> }) {
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const { token } = session;
+  const check = async (quiet = false) => {
+    setBusy(true);
+    if (!quiet) setMsg(null);
+    try {
+      const r = await call<{ verified: boolean }>("/account/verify/check", { token, body: {} });
+      if (r.verified) { await session.refresh(); setMsg({ ok: true, text: "המייל אומת." }); }
+      else if (!quiet) setMsg({ ok: false, text: "עוד לא אומת. לחצו על הקישור במייל (בדקו גם בספאם), ואז נסו שוב." });
+    } catch (e) {
+      if (!quiet) setMsg({ ok: false, text: e instanceof CrowdError && e.code === "not_sent" ? "קודם שולחים מייל אימות." : errorText(e) });
+    } finally { setBusy(false); }
+  };
+  const send = async () => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      await call("/account/verify/send", { token, body: {} });
+      setMsg({ ok: true, text: "נשלח מייל אימות. לחצו על הקישור שבו, וחזרו לכאן." });
+    } catch (e) {
+      setMsg({ ok: false, text: errorText(e) });
+    } finally { setBusy(false); }
+  };
+  // חזרה ללשונית אחרי הלחיצה במייל ⇐ בדיקה שקטה
+  useEffect(() => {
+    const on = () => { if (document.visibilityState === "visible" && msg?.ok && !busy) void check(true); };
+    document.addEventListener("visibilitychange", on);
+    return () => document.removeEventListener("visibilitychange", on);
+  }); // eslint-disable-line react-hooks/exhaustive-deps
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2 flex-wrap">
+        <Btn onClick={send} disabled={busy}>שליחת מייל אימות</Btn>
+        <Btn onClick={() => void check()} disabled={busy}>בדקתי — אימתתי</Btn>
+      </div>
+      {msg && <p role={msg.ok ? "status" : "alert"} className={`text-sm font-bold ${msg.ok ? "" : "text-warn"}`}>{msg.text}</p>}
+    </div>
+  );
+}
+
 const mask = (email: string) => email.replace(/^(.)(.*)(@.*)$/, (_, a: string, b: string, d: string) => a + "•".repeat(Math.min(6, b.length)) + d);
 
 /** "הפרטים שלי" באזור האישי: Google, מייל, שם, סיסמה, יציאה. בלי חשבון ⇐ הרשמה או כניסה */
@@ -305,11 +353,12 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
             {emails.map((e) => (
               <li key={e.email}>
                 <span dir="ltr">{showEmail ? e.email : mask(e.email!)}</span>
-                {e.verified && <span className="block text-xs text-ink-soft">אומת ב-Google</span>}
+                <span className="block text-xs text-ink-soft">{e.verified ? (e.source === "google" ? "אומת ב-Google" : "אומת") : "לא אומת"}</span>
               </li>
             ))}
           </ul>
         ) : <p className="text-sm text-ink-soft">אין עדיין.</p>}
+        {emails.some((e) => !e.verified) && (me.verifyAvailable ? <VerifyEmail session={session} /> : <p className="text-xs text-ink-soft">אימות המייל יתאפשר בקרוב.</p>)}
         {!!emails.length && <button type="button" onClick={() => setShowEmail((x) => !x)} className="text-sm underline min-h-[44px]">{showEmail ? "הסתרה" : "הצגה מלאה"}</button>}
       </div>
       <div className={row}>

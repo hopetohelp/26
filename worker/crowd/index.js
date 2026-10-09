@@ -18,6 +18,7 @@ import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 import { moderate } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
+import * as fb from "./lib/firebase.js";
 
 // שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
 export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
@@ -179,6 +180,37 @@ async function firstEmail(env, participant) {
   return r ? await open(env, r.enc) : null;
 }
 
+/** המשתמש הזמני ב-Firebase של חשבון ⇐ idToken, או null אם אין/נמחק שם */
+async function firebaseSession(env, participant, email) {
+  const rec = await env.DB.prepare("SELECT fb_enc FROM email_verify WHERE participant = ?").bind(participant).first();
+  if (!rec) return null;
+  const pw = await open(env, rec.fb_enc);
+  if (!pw) return null;
+  try {
+    return await fb.signIn(env, email, pw);
+  } catch {
+    return null;
+  }
+}
+
+/** מחיקה בשיטת best effort של המשתמש הזמני ב-Firebase (אחרי אימות, או במחיקת חשבון) */
+async function dropFirebaseUser(env, participant) {
+  try {
+    const row = await env.DB.prepare("SELECT enc FROM emails WHERE participant = ? ORDER BY created_at LIMIT 1").bind(participant).first();
+    const email = row ? await open(env, row.enc) : null;
+    const token = email ? await firebaseSession(env, participant, email) : null;
+    if (token) await fb.removeUser(env, token);
+  } catch { /* Firebase לא זמין — המשתמש הזמני נשאר שם, בלי נתונים שלנו */ }
+}
+
+const fbFailure = (e) => {
+  if (!(e instanceof fb.FirebaseError)) return e;
+  if (e.code === "OPERATION_NOT_ALLOWED" || e.code === "NOT_CONFIGURED") return new HttpError(503, "verify_not_enabled");
+  if (e.code === "TOO_MANY_ATTEMPTS_TRY_LATER" || e.code === "QUOTA_EXCEEDED") return new HttpError(429, "slow_down");
+  if (e.code === "EMAIL_EXISTS") return new HttpError(409, "verify_unavailable");
+  return new HttpError(502, "verify_failed");
+};
+
 const DUMMY = { algo: "pbkdf2-sha256", salt: "AAAAAAAAAAAAAAAAAAAAAA==", iterations: PBKDF2_ITERATIONS, hash: "0".repeat(64) };
 
 // ---- הנתיבים
@@ -216,6 +248,8 @@ const routes = {
       emails, name: prof ? await open(env, prof.name_enc) : null, hasPassword: !!pw,
       // חשבון בלי מייל ובלי Google (אורח או שם משתמש ישן) — נדרש להוסיף בכניסה הבאה (הכרעת בעלים 9.10.2026)
       needsEmail: !emails.length && !g,
+      // אימות מייל במייל: זמין כשמוגדר מפתח Firebase
+      verifyAvailable: !!env.FIREBASE_API_KEY,
     };
   },
 
@@ -294,13 +328,14 @@ const routes = {
         await env.FEEDBACK.fetch(new Request("https://feedback.internal/support/purge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: bearer(request) }) }));
       } catch { /* שרת ההערות לא זמין — המחיקה כאן ממשיכה */ }
     }
+    await dropFirebaseUser(env, participant);
     await env.DB.batch(
       [
         env.DB.prepare("DELETE FROM version_review WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "support_messages", "support_threads"].map((t) =>
+          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -442,6 +477,53 @@ const routes = {
     if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
     await (name ? await nameRow(env, participant, name, now) : env.DB.prepare("DELETE FROM profile WHERE participant = ?").bind(participant)).run();
     return { name };
+  },
+
+  // אימות המייל (הכרעת בעלים 9.10.2026): Firebase שולח לכתובת מייל עם קישור; אחרי הלחיצה "בדקתי" מאשר את האימות.
+  // מוגבל: 3 שליחות בשעה לחשבון, 5 ביום למייל, 10 בשעה ל-IP. המייל שנשלח אליו הוא רק זה שרשום בחשבון.
+  "POST /account/verify/send": async ({ env, request, now }) => {
+    const { participant } = await requireAuth(env, request, now);
+    if (!env.FIREBASE_API_KEY) throw new HttpError(503, "verify_not_enabled");
+    const row = await env.DB.prepare("SELECT hash, enc FROM emails WHERE participant = ? AND verified = 0 ORDER BY created_at LIMIT 1").bind(participant).first();
+    if (!row) throw bad("nothing_to_verify");
+    const [cur] = await ipKeys(env, request);
+    if (!(await hit(env, "v:" + participant, 3, now)) || !(await hit(env, "vi:" + cur, 10, now)) || !(await hit(env, "ve:" + row.hash, 5, now, 24 * HOUR))) throw new HttpError(429, "slow_down");
+    const email = await open(env, row.enc);
+    if (!email) throw new HttpError(500, "server");
+    try {
+      let idToken = await firebaseSession(env, participant, email);
+      if (!idToken) {
+        const password = fb.randomPassword();
+        idToken = await fb.signUp(env, email, password);
+        await env.DB.prepare("INSERT INTO email_verify (participant, fb_enc, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET fb_enc = excluded.fb_enc, created_at = excluded.created_at").bind(participant, await seal(env, password), iso(now)).run();
+      }
+      await fb.sendVerify(env, idToken, env.SITE_URL ? `${env.SITE_URL}#/support` : undefined);
+    } catch (e) {
+      throw fbFailure(e);
+    }
+    return { sent: true };
+  },
+
+  "POST /account/verify/check": async ({ env, request, now }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const row = await env.DB.prepare("SELECT hash, enc, verified FROM emails WHERE participant = ? ORDER BY verified DESC, created_at LIMIT 1").bind(participant).first();
+    if (!row) throw bad("nothing_to_verify");
+    if (row.verified) return { verified: true };
+    if (!(await hit(env, "vc:" + participant, 30, now))) throw new HttpError(429, "slow_down");
+    const email = await open(env, row.enc);
+    const idToken = email ? await firebaseSession(env, participant, email) : null;
+    if (!idToken) throw bad("not_sent");
+    try {
+      if (!(await fb.isVerified(env, idToken))) return { verified: false };
+    } catch (e) {
+      throw fbFailure(e);
+    }
+    await env.DB.batch([
+      env.DB.prepare("UPDATE emails SET verified = 1 WHERE hash = ? AND participant = ?").bind(row.hash, participant),
+      env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(participant),
+    ]);
+    try { await fb.removeUser(env, idToken); } catch { /* נשאר ב-Firebase, בלי נתונים שלנו */ }
+    return { verified: true };
   },
 
   // קביעת סיסמה לחשבון בלי סיסמה (למשל Google בלבד). להחלפת סיסמה קיימת — /auth/password
