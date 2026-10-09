@@ -1,4 +1,4 @@
-import { personalTotals } from "./lib/blocDefinitions.js";
+import { personalTotals, migrateBlocs } from "./lib/blocDefinitions.js";
 /**
  * שרת השתתפות הגולשים — "ההשערה שלי" ודשבורד הגולשים (Cloudflare Worker + D1 ‏elections26-crowd).
  * השיטה: docs/השתתפות-גולשים.md · החוזה (נתיבים וצורות תשובה): src/lib/crowdApi.ts — השרת מממש בדיוק אותו.
@@ -147,13 +147,26 @@ async function linkOwner(env, request, now, raw) {
 const PARTICIPANTS_SQL =
   "SELECT p.id, p.review, EXISTS(SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'google') AS google, (EXISTS(SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'google') OR EXISTS(SELECT 1 FROM emails e WHERE e.participant = p.id AND e.verified = 1)) AS verified FROM participants p";
 
+/**
+ * הגושים של השערה, לממשק הניהול (הכרעת בעלים 9.10.2026): הגושים שהמשתתף הגדיר (או ברירת המחדל כשלא שמר הגדרה),
+ * עם סכום המנדטים של כל גוש לפי ההשערה, והיעד אם קבע. בלי מזהה.
+ */
+function blocsOf(seatsPayload, definition) {
+  const defined = definition ? (definition.mode === "gov37" ? definition.blocs : migrateBlocs(definition).blocs) : [];
+  const targets = new Map(defined.map((b) => [b.id, b.target ?? null]));
+  const items = personalTotals(seatsPayload, definition).map((b) => ({ name: b.name, lists: b.lists, seats: b.seats, target: targets.get(b.id) ?? null }));
+  return { saved: !!definition, items };
+}
+
 /** מצב הבדיקה של ההשערות: הגרסה האחרונה (מנדטים) של כל משתתף, ותוצאת הבדיקה מול שאר הגולשים */
 async function moderationState(env) {
   const data = await env.DB.batch([
     env.DB.prepare(PARTICIPANTS_SQL),
     env.DB.prepare("SELECT v.id, v.participant, v.unit, v.created_at, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id"),
     env.DB.prepare("SELECT version_id, decision FROM version_review"),
+    env.DB.prepare("SELECT v.participant, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'blocs' GROUP BY participant) m ON v.id = m.id"),
   ]);
+  const blocsBy = new Map((data[3].results || []).map((r) => [r.participant, JSON.parse(r.payload)]));
   const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
   const known = new Set((data[0].results || []).map((p) => p.id));
   const verified = new Set((data[0].results || []).filter((p) => p.verified).map((p) => p.id));
@@ -164,7 +177,7 @@ async function moderationState(env) {
   const mod = moderate(counted, decisions);
   // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
   const raw = moderate(counted, new Map()).pending;
-  return { latest, review, verified, mod: { ...mod, decisions, raw } };
+  return { latest, review, verified, blocsBy, mod: { ...mod, decisions, raw } };
 }
 
 /** המייל כבר רשום — בגיבוב, או כשם משתמש ישן (גלוי) של חשבון שנרשם לפני 9.10.2026 */
@@ -653,7 +666,7 @@ const routes = {
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
   "GET /admin/guesses": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const { latest, mod, review, verified } = await moderationState(env);
+    const { latest, mod, review, verified, blocsBy } = await moderationState(env);
     const salt = randomToken(12);
     const rows = [];
     for (const v of latest) {
@@ -668,6 +681,7 @@ const routes = {
         ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
         status,
         reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
+        blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
       });
     }
     for (let i = rows.length - 1; i > 0; i--) {

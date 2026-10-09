@@ -387,6 +387,8 @@ describe("admin guesses dashboard (no identifiers)", () => {
     await save(a, "seats", seats(60));
     await save(b, "seats", seats(60));
     await save(d4, "seats", seats(60));
+    // גושים: a שמר גוש אישי, והאחרים בברירת מחדל
+    expect((await save(a, "blocs", { mode: "custom", blocs: [{ id: "x1", name: "הגוש שלי", lists: [IDS[0], IDS[1]], target: 100 }] })).status).toBe(200);
     const odd = await save(c, "seats", seats(100));
     resetDashboardCache();
     expect((await call("/dashboard")).data.pendingGuesses).toBe(1);
@@ -396,7 +398,13 @@ describe("admin guesses dashboard (no identifiers)", () => {
     const text = JSON.stringify(r.data);
     for (const tok of [a, b, c, d4]) expect(text).not.toContain(tok);
     expect(text).not.toContain(String(odd.data.version.id) + ",");
-    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["day", "handle", "mode", "reasons", "seats", "status"]);
+    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["blocs", "day", "handle", "mode", "reasons", "seats", "status"]);
+    // כל שורה כוללת את הגושים: אישיים עם סכום המנדטים והיעד, או ברירת המחדל (5 גושים) כשלא נשמרה הגדרה
+    const mine = r.data.rows.find((x) => x.blocs.saved);
+    expect(mine.blocs.items).toEqual([{ name: "הגוש שלי", lists: [IDS[0], IDS[1]], seats: 120, target: 100 }]);
+    const def = r.data.rows.filter((x) => !x.blocs.saved);
+    expect(def).toHaveLength(3);
+    expect(def[0].blocs.items.map((b) => b.name)).toEqual(["הממשלה היוצאת", "גוש הקואליציה", "גוש האופוזיציה", "אחדות", "ערבים"]);
     const pending = r.data.rows.find((x) => x.status === "pending");
     expect(pending.reasons[0]).toMatchObject({ list: IDS[0], rule: "ratio" });
     expect((await admin("/admin/guesses/decide", { salt: "wrong-salt-1234", handle: pending.handle, decision: "approved" })).status).toBe(404);
