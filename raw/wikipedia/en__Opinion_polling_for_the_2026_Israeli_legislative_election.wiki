@@ -154,6 +154,51 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
 |{{Opdrts|7|8|Oct|2026}}
+| style=background:#F86B61 |LRI+P4A
+|[[Maariv (newspaper)|''Maariv'']]<ref name="maariv8oct">{{cite news |title=מפלגת הליכוד מתחזקת - והקרב מול איזנקוט מתחמם {{!}} סקר המנדטים של מעריב  |work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1375198|date=9 October 2026|access-date=9 October 2026|author=Moshe Cohen}}</ref>
+|700
+|20
+|13
+|colspan=2|6
+|8
+|{{small|(1.9%)}}
+|7
+|7
+|9
+|5
+|7
+|9
+|style="background:#d0eafb" |'''21'''
+|colspan=2|4
+|4
+|{{small|(0.8%)}}
+|0.9%{{efn|[[Noam (political party)|Noam]] at 0.6% <br/>[[Tzomet]]-[[Gadi Yevarkan|Beit Yisrael]] at 0.3% <br/>}}
+|48
+|-
+|-
+|{{Opdrts|7|8|Oct|2026}}
+| style=background:Turquoise |Yossi Tatika
+|''[[Zman Yisrael]]''<ref name="8OctYossi">{{Cite web |title= הבחירות יוכרעו בתחתית הטבלה |trans-title= |work=Zman Yisrael |date=8 October 2026 |url=https://www.zman.co.il/731622/ |language=he-IL}}</ref>
+|500
+|20
+|13
+|colspan=2|5
+|6
+|{{small|(1.2%)}}
+|8
+|8
+|10
+|5
+|9
+|8
+|style="background:#d0eafb" |'''24'''
+|colspan=2|{{small|(3.2%)}}
+|4
+|{{N/A}}
+|{{N/A}}
+|47
+|-
+|{{Opdrts|7|8|Oct|2026}}
 |style=background:Burlywood |Kantar
 |''[[Israel Hayom]]''<ref name="Kantar7oct">{{Cite web |title=עופר וינטר מתחת לאחוז החסימה, הנדל וזליכה יציבים {{!}} סקר מנדטים" |trans-title= |work=Israel Hayom |date=8 October 2026 |url=https://www.israelhayom.co.il/news/politics/article/21444759|language=he-IL|access-date=8 October 2026}}</ref>
 |555
@@ -174,6 +219,29 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{N/A}}
 |{{N/A}}
 |51
+|-
+
+|{{Opdrts||7|Oct|2026}}
+|style=background:yellow |Direct Polls
+| [[i24NEWS (Israeli TV channel)|i24 News]]<ref>{{Cite web |title=סקר מנדטים דרמטי של i24NEWS: נתניהו ואיזנקוט בירידה, בנט מתחזק {{!}} הנתונים המלאים|work=i24 News |date=8 October 2026|url=https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-fa0f56f4|lang=he-IL|access-date=9 October 2026 }}</ref>
+|504
+| style="background:#BBCDE4" |'''26'''
+|11
+|colspan=2|6
+|9
+|{{small|(<1%)}}
+|7
+|8
+|7
+|5
+|7
+|10
+|20
+|colspan=2|{{small|2.3%}}
+|4
+|{{small|(<1%)}}
+|{{small|(<4%)}}{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
+|56
 |-
 |{{Opdrts||7|Oct|2026}}
 | style=background:DarkOrange |SF+ND
