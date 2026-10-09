@@ -1,14 +1,43 @@
-import type { CSSProperties, ReactNode } from "react";
-import { volumeLevel, type Level } from "../lib/chartLanguage";
+import type { ReactNode } from "react";
+import { volumeLevel, type Level, type LSeg } from "../lib/chartLanguage";
 
 /**
  * הסימנים של שפת הציור האחידה (`src/lib/chartLanguage.ts`, מחלקות `mk-*` ב-`src/index.css`), לגרפים של שורות ב-HTML.
  * כולם מוצבים באחוזים על מסלול `relative` ב-`dir="ltr"`, כך שהציר (0 משמאל) נשאר זהה בכל האתר.
  */
 
-/** נר = טווח. `from` ו-`to` באחוזים מהמסלול; `level` = עובי לפי כמות הנתונים ביחס לגרף */
-export function Candle({ from, to, level, style }: { from: number; to: number; level: Level; style?: CSSProperties }) {
-  return <span aria-hidden="true" className={`mk mk-candle mk-c${level}`} style={{ left: `${from}%`, width: `${Math.max(to - from, 0.8)}%`, ...style }} />;
+/**
+ * נר = טווח, בעובי שמשתנה לאורכו: קטעים סמוכים, וכל קטע בעובי לפי כמות הנתונים בו (רמה 1 עד 5, ביחס לכל הגרף).
+ * `x` ממפה ערך על הציר לאחוז מהמסלול. עבה היכן שרוב הנתונים, ודק בקצוות.
+ */
+export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number) => number; title?: string }) {
+  if (!segs.length) return null;
+  const from = x(segs[0].from);
+  const to = x(segs[segs.length - 1].to);
+  return (
+    <span aria-hidden="true" title={title} className="mk-prof" style={{ left: `${from}%`, width: `${Math.max(to - from, 0.8)}%` }}>
+      {segs.map((g, k) => (
+        <i key={k} className={`l${g.level}`} style={{ flexGrow: Math.max(g.to - g.from, 1e-6) }} />
+      ))}
+    </span>
+  );
+}
+
+/** אותו נר בכיוון אנכי (גרף עם ציר זמן): `y` ממפה ערך לאחוז מגובה המסלול, מלמעלה. הערך הגבוה למעלה. */
+export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number) => number; left: string }) {
+  if (!segs.length) return null;
+  const top = y(segs[segs.length - 1].to);
+  const bottom = y(segs[0].from);
+  return (
+    <span aria-hidden="true" className="mk-pv" style={{ left, top: `${top}%`, height: `${Math.max(bottom - top, 0.8)}%` }}>
+      {segs
+        .slice()
+        .reverse()
+        .map((g, k) => (
+          <i key={k} className={`l${g.level}`} style={{ flexGrow: Math.max(g.to - g.from, 1e-6) }} />
+        ))}
+    </span>
+  );
 }
 
 /** ממוצע נוכחי = עיגול בינוני מלא */
@@ -26,17 +55,24 @@ export const Diamond = ({ at }: { at: number }) => <span aria-hidden="true" clas
 export type MarkKind = "candle" | "mean" | "result" | "dot" | "diamond";
 
 /** דוגמית סימן למקרא. הנר מצויר ברמה 3 (בינונית) אלא אם צוינה רמה */
-export function Swatch({ kind, level = 3 }: { kind: MarkKind; level?: Level }) {
-  if (kind === "candle") return <i aria-hidden="true" className={`mk mk-sw mk-candle mk-c${level}`} style={{ width: "1.6rem" }} />;
+export function Swatch({ kind }: { kind: MarkKind; level?: Level }) {
+  if (kind === "candle")
+    return (
+      <i aria-hidden="true" className="mk mk-sw mk-prof" style={{ width: "2rem" }}>
+        {[1, 3, 5, 4, 2, 1].map((l, k) => (
+          <i key={k} className={`l${l}`} />
+        ))}
+      </i>
+    );
   const cls = { mean: "mk-mean", result: "mk-ring", dot: "mk-dot", diamond: "mk-dia" }[kind];
   return <i aria-hidden="true" className={`mk mk-sw ${cls}`} />;
 }
 
 /** פריט מקרא: דוגמית וטקסט */
-export function KeyItem({ kind, level, children }: { kind: MarkKind; level?: Level; children: ReactNode }) {
+export function KeyItem({ kind, level: _level, children }: { kind: MarkKind; level?: Level; children: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-2">
-      <Swatch kind={kind} level={level} />
+      <Swatch kind={kind} />
       {children}
     </span>
   );
@@ -69,10 +105,10 @@ export function AxisLabels({ axisMax, step = 10, format = (v: number) => String(
   );
 }
 
-/** מקרא עובי הנר: מעט ... הרבה, בחמש רמות לפי כמות הנתונים הרלוונטית ביחס לגרף (עד 20%, 20 עד 40, 40 עד 60, 60 עד 80, 80 עד 100) */
+/** מקרא עובי הנר: מעט ... הרבה, בחמש רמות לפי כמות הנתונים בכל קטע, ביחס לקטע העמוס ביותר באותו נר */
 export function ThicknessKey({ what }: { what: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5" title={`עובי הנר: ${what}, ביחס לשאר הגרף. חמש רמות: עד 20%, 20 עד 40, 40 עד 60, 60 עד 80, 80 עד 100.`}>
+    <span className="inline-flex items-center gap-1.5" title={`עובי הנר בכל קטע: ${what}, ביחס לקטע העמוס ביותר באותו נר. חמש רמות: מתחת ל-20%, מ-20%, מ-40%, מ-60%, מ-80%.`}>
       <span>עובי הנר: {what}</span>
       <span className="inline-flex items-center gap-1">
         <span>מעט</span>
@@ -86,8 +122,5 @@ export function ThicknessKey({ what }: { what: string }) {
     </span>
   );
 }
-
-/** טקסט הרחפה לנר: מה נספר ובאיזו רמה (1 עד 5) */
-export const candleTitle = (what: string, level: Level) => `${what} · עובי הנר: רמה ${level} מתוך 5`;
 
 export { volumeLevel };

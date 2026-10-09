@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CANDLE_PX, maxVolume, smoothPath, sparseIndices, SVG_MARKS, volumeLevel } from "./chartLanguage";
+import { binSegs, clipSegs, intSegs, levelSegs, quantileSegs, segLevel, valueSegs, type Seg, CANDLE_PX, maxVolume, smoothPath, sparseIndices, SVG_MARKS, volumeLevel } from "./chartLanguage";
 
 describe("volumeLevel: עובי הנר ביחס לכל הגרף, בחמישונים", () => {
   it("1 = עד 20%, 2 = 20 עד 40, 3 = 40 עד 60, 4 = 60 עד 80, 5 = 80 עד 100", () => {
@@ -63,5 +63,61 @@ describe("sparseIndices: סמנים על הקו במרווח מינימלי", ()
   it("ריק ונקודה אחת", () => {
     expect(sparseIndices([], 5)).toEqual([]);
     expect(sparseIndices([4], 5)).toEqual([0]);
+  });
+});
+
+describe("נר שעוביו משתנה לאורכו: קטעים לפי כמות הנתונים", () => {
+  it("הדוגמה של הבעלים: 20 באמצע, 8 מסביב, 2 בקצוות ⇐ 5, 3, 1", () => {
+    // 5 קטעים: קצה 2, צד 8, אמצע 20, צד 8, קצה 2 (סך הכול 40)
+    const segs = intSegs([2, 8, 20, 8, 2], 24);
+    const [lv] = levelSegs([segs]);
+    expect(lv.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
+  });
+  it("segLevel: גבולות הרמות (20%, 40%, 60%, 80%)", () => {
+    expect([0.05, 0.19, 0.2, 0.39, 0.4, 0.59, 0.6, 0.79, 0.8, 1].map(segLevel)).toEqual([1, 1, 2, 2, 3, 3, 4, 4, 5, 5]);
+    expect(segLevel(0)).toBe(1);
+  });
+  it("כברירת מחדל כל נר ביחס לעצמו; בהיקף 'chart' ביחס לכל הגרף", () => {
+    const wide: Seg[] = [{ from: 0, to: 1, count: 10 }, { from: 1, to: 2, count: 8 }];
+    const narrow: Seg[] = [{ from: 0, to: 1, count: 100 }];
+    const own = levelSegs([wide, narrow]);
+    expect(own[0][0].level).toBe(5);
+    expect(own[1][0].level).toBe(5);
+    const all = levelSegs([wide, narrow], "chart");
+    expect(all[0][0].level).toBe(1);
+    expect(all[1][0].level).toBe(5);
+  });
+  it("valueSegs: חותך בדיוק למינימום ולמקסימום; חורים בספירה 0 מצוירים בעובי הדק ביותר", () => {
+    const segs = valueSegs([25, 27, 27, 29, 29, 29]);
+    expect(segs[0].from).toBe(25);
+    expect(segs[segs.length - 1].to).toBe(29);
+    const [lv] = levelSegs([segs]);
+    expect(lv.find((g) => g.from <= 28 && g.to >= 28 && g.to - g.from > 0.4 && g.to - g.from < 1.1)?.level).toBeDefined();
+    expect(Math.min(...lv.map((g) => g.level))).toBe(1);
+  });
+  it("intSegs: חותך בדיוק למינימום ולמקסימום, וחורים נשארים בספירה 0", () => {
+    const segs = intSegs([0, 0, 3, 0, 5, 2], 10); // ערכים 12, 14, 15
+    expect(segs[0]).toEqual({ from: 12, to: 12.5, count: 3 });
+    expect(segs[1]).toEqual({ from: 12.5, to: 13.5, count: 0 });
+    expect(segs[segs.length - 1].to).toBe(15);
+    expect(intSegs([0, 0])).toEqual([]);
+  });
+  it("clipSegs: חיתוך לטווח 80% בלי לשנות את הספירות", () => {
+    const segs = intSegs([1, 2, 3, 4, 5]); // 0..4
+    const c = clipSegs(segs, 1, 3);
+    expect(c[0].from).toBe(1);
+    expect(c[c.length - 1].to).toBe(3);
+  });
+  it("quantileSegs: הצפיפות גבוהה במרכז הצר ונמוכה בזנבות", () => {
+    const segs = quantileSegs([10, 18, 20, 22, 30]);
+    expect(segs).toHaveLength(4);
+    expect(segs[1].count).toBeGreaterThan(segs[0].count);
+    const [lv] = levelSegs([segs]);
+    expect(lv[1].level).toBeGreaterThan(lv[0].level);
+  });
+  it("binSegs: תאים רציפים לפי התחלה ורוחב", () => {
+    const segs = binSegs(5, 0.25, [0, 2, 8, 2, 0]);
+    expect(segs[0].from).toBe(5.25);
+    expect(segs[segs.length - 1].to).toBe(6);
   });
 });

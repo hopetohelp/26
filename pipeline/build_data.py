@@ -586,7 +586,7 @@ def build_changes(lin: dict, results: list[dict], central: dict, groups_sc: dict
                 "id": f["id"], "k25": f["k25"], "k26": f["k26"], "why": f["why"],
                 "votes2022": votes, "share2022": round(100 * votes / valid, 2),
                 "seats2022": sum(by_short[n]["seats"] for n in f["k25"]),
-                "shareNow": round(sum(central["shares"][k] for k in f["k26"]), 2), "shareRange": g["share"],
+                "shareNow": round(sum(central["shares"][k] for k in f["k26"]), 2), "shareRange": g["share"], "shareHist": g["shareHist"],
                 "seatsNow": sum(central["seats"][k] for k in f["k26"]), "seatsRange": g["seats"],
             })
             used25 |= set(f["k25"])

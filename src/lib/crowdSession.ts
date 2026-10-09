@@ -12,6 +12,7 @@ const K = {
   linkAck: P + "linkAck",
   consent: P + "consent",
   intro: P + "intro",
+  picture: P + "picture",
   draft: (u: Unit) => `${P}draft.${u}`,
   saved: (u: Unit) => `${P}saved.${u}`,
   pending: (u: Unit) => `${P}pending.${u}`,
@@ -62,6 +63,10 @@ export const setLink = (t: string | null) => set(K.link, t);
 export const linkAcked = () => get(K.linkAck) === "1";
 export const setLinkAck = (on: boolean) => set(K.linkAck, on ? "1" : null);
 
+/** תמונת הפרופיל מ-Google — נשמרת רק בדפדפן הזה, לא בשרת (הכרעת בעלים 9.10.2026) */
+export const getPicture = () => get(K.picture);
+export const setPicture = (url: string | null) => set(K.picture, url && /^https:\/\/[\w.-]+\.googleusercontent\.com\//.test(url) ? url : null);
+
 export const hasConsent = () => get(K.consent) === "1";
 export const setConsent = (on: boolean) => set(K.consent, on ? "1" : null);
 
@@ -101,6 +106,7 @@ export function clearAll(): void {
   set(K.link, null);
   set(K.linkAck, null);
   set(K.consent, null);
+  set(K.picture, null);
   if (typeof window !== "undefined") window.dispatchEvent(new Event("crowd-clear"));
 }
 

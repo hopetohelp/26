@@ -123,6 +123,24 @@ export async function accountSupport(token: string, message?: { text: string; op
   return data.thread ?? null;
 }
 
+/**
+ * שיחה שנפתחה בלי חשבון (הזיהוי שלה בדפדפן בלבד) ⇐ מאוחדת לשיחת החשבון בהרשמה או בכניסה (הכרעת בעלים 9.10.2026).
+ * אחרי הצלחה הקישורים נמחקים מהדפדפן — השיחה כולה בחשבון. הקישור הישן ממשיך לעבוד בשרת.
+ */
+export async function adoptSupportThreads(token: string): Promise<AccountSupportThread | null> {
+  const items = savedThreads();
+  if (!items.length || !FEEDBACK_URL) return null;
+  const response = await fetch(`${FEEDBACK_URL}/`, {
+    method: "POST", cache: "no-store", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kind: "account-support", token, adopt: items.map((t) => t.token) }),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data?.ok) throw new Error("adopt failed");
+  const adopted = new Set(items.map((t) => t.token));
+  try { localStorage.setItem(KEY, JSON.stringify(savedThreads().filter((t) => !adopted.has(t.token)))); } catch { /* הקישורים עדיין תקפים */ }
+  return data.thread ?? null;
+}
+
 export interface FeedbackItem { topic: string; text: string; page: string; theme: string; website: string; diagnostic?: string }
 
 /**

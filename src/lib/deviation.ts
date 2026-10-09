@@ -3,6 +3,8 @@
  * והטווח = הנמוך והגבוה בין הסקרים (לא טווח טעות סטטיסטי). אין כאן חישוב חדש: הכול מ-`compareLists` ב-`history.ts`
  * (ממוצע, נמוך, גבוה, תוצאה), ורק מוחסר הממוצע כדי שההפרשים יראו את הסטייה.
  */
+import { valueSegs, type Seg } from "./chartLanguage";
+
 export interface DevInput {
   id: string;
   name: string;
@@ -13,8 +15,8 @@ export interface DevInput {
   actual: number;
   /** כמה מכונים שאלו על הרשימה */
   n: number;
-  /** כמה מהם נתנו לה מנדטים: כמות הנתונים שעומדת מאחורי הטווח, וקובעת את עובי הנר. ברירת מחדל: `n` */
-  above?: number;
+  /** המנדטים שכל מכון נתן לרשימה: מזה נבנה הנר, ועוביו בכל קטע לפי כמה מכונים נתנו ערך כזה */
+  values: number[];
 }
 
 export interface DevRow extends DevInput {
@@ -25,14 +27,14 @@ export interface DevRow extends DevInput {
   hi: number;
   /** התוצאה מחוץ לטווח הסקרים */
   outside: boolean;
-  /** כמות הנתונים מאחורי הנר (עובי הנר ביחס לשאר הגרף) */
-  volume: number;
+  /** קטעי הנר ביחס לממוצע הסקרים (ספירה לכל ערך), לפני מתן רמות העובי */
+  segs: Seg[];
 }
 
 export function deviation(rows: DevInput[]) {
   const asked: DevRow[] = rows
     .filter((r) => r.n > 0)
-    .map((r) => ({ ...r, dev: r.actual - r.estimate, lo: r.min - r.estimate, hi: r.max - r.estimate, outside: r.actual < r.min || r.actual > r.max, volume: r.above ?? r.n }));
+    .map((r) => ({ ...r, dev: r.actual - r.estimate, lo: r.min - r.estimate, hi: r.max - r.estimate, outside: r.actual < r.min || r.actual > r.max, segs: valueSegs(r.values).map((g) => ({ ...g, from: g.from - r.estimate, to: g.to - r.estimate })) }));
   const outside = asked.filter((r) => r.outside).sort((a, b) => Math.abs(b.dev) - Math.abs(a.dev) || b.actual - a.actual);
   const inside = asked.filter((r) => !r.outside).sort((a, b) => b.actual - a.actual);
   const notAsked = rows.filter((r) => r.n === 0);

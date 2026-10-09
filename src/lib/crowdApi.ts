@@ -2,16 +2,18 @@
  * החוזה בין האתר לשרת ההשתתפות (worker/crowd). מקור אחד לטיפוסים בשני הצדדים — השרת מממש בדיוק את מה שכתוב כאן.
  * השיטה המלאה: docs/השתתפות-גולשים.md
  *
- * זהות: חשבון = שם משתמש + סיסמה (מומלץ), או שמירה בלי משתמש — "אורח" בלי שחזור (הכרעת בעלים 8.10.2026).
+ * זהות (הכרעת בעלים 9.10.2026): חשבון = מייל + סיסמה, או Google. חשבון אחד לכל מייל. בלי חשבון — הכול נשמר בדפדפן בלבד ולא נכנס לסטטיסטיקות.
  * כל בקשה מזוהה נושאת `Authorization: Bearer <token>` של סשן; הסשן נשמר בדפדפן אצל הבעלים היחיד שלו — src/lib/crowdSession.ts.
- * הקישור האישי נוצר בהרשמה: הוא מכניס ישר להשערות (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה. הוא עצמו אינו Bearer.
+ * הקישור האישי נוצר מיד ביצירת החשבון: הוא מכניס ישר (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה. הוא עצמו אינו Bearer.
  *
- * POST /auth/register {username,password}  ⇐ {token, link}  משתתף חדש: סיסמה + קישור אישי + סשן.
- * POST /auth/guest   {}                    ⇐ {token}       שמירה בלי משתמש (הכרעת בעלים 8.10.2026): בלי סיסמה ובלי קישור אישי, ולכן בלי שחזור.
- * POST /auth/google  {credential,token}   ⇐ {token}       כניסה עם Google (ID token מהדפדפן); חשבון קיים ⇐ אותו משתתף, אחרת מתווסף לסשן הנוכחי או משתתף חדש.
- * POST /auth/claim   {username,password}   ⇐ {username, link}  (בסשן) הוספת שם משתמש וסיסמה לאורח; נוצר קישור אישי.
+ * POST /auth/register {email,password,name?} ⇐ {token, link}  חשבון חדש. מייל רשום ⇐ 409 email_taken.
+ * POST /auth/guest   {}                    ⇐ 403 account_required (אין יותר אורח בשרת).
+ * POST /auth/google  {credential,token}   ⇐ {token}       כניסה עם Google; אותו Google או אותו מייל מאומת ⇐ אותו חשבון.
+ * POST /auth/claim   {email,password?}    ⇐ {email, link?}  (בסשן) הוספת מייל לחשבון ישן; סיסמה רק אם אין סיסמה ואין Google.
+ * POST /account/name {name}               ⇐ {name}        שם תצוגה (מוצפן בשרת).
+ * POST /account/password {password}       ⇐ {ok}          קביעת סיסמה לחשבון בלי סיסמה (למשל Google).
  * GET|POST /ping                      ⇐ {ok}          בדיקת חיבור, בלי זהות ובלי מאגר.
- * POST /auth/login    {username,password}  ⇐ {token}
+ * POST /auth/login    {email|username,password} ⇐ {token}
  * POST /auth/logout   {all?:boolean}       ⇐ {ok}
  * POST /auth/password {current,next}       ⇐ {token}       קובע סיסמה (הנוכחית חובה) ומבטל את שאר הסשנים; הקישור נשאר.
  * POST /auth/link     {link}               ⇐ {token, username}  כניסה בקישור האישי ⇐ סשן רגיל. עיכוב מדורג כמו בכניסה.
@@ -24,7 +26,7 @@
  * POST /delete {confirm:"מחק"}      ⇐ {ok}               מחיקה מלאה + ביטול כל הסשנים.
  * POST /link/rotate                 ⇐ {link}              קישור אישי חדש (בסשן); הקודם מפסיק לעבוד מיד.
  *
- * אין מייל בכלל (הכרעת בעלים 6.10.2026): אין שליחת מיילים, אין איפוס במייל. השחזור = הקישור האישי.
+ * אין עדיין שליחת מיילים: השחזור = הקישור האישי. המייל נשמר מוצפן, רק לזיהוי ולמניעת כפילות.
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
@@ -120,6 +122,15 @@ export interface Me {
   guest: boolean;
   /** העדפות שאינן השערה (POST /prefs): המחנות במסך "מה השתנה" */
   prefs?: { camps: Record<string, string> | null };
+  /** ההשערה האחרונה חריגה וממתינה לאישור מנהל: לא נספרת בסטטיסטיקות עד אז */
+  seatsPending?: boolean;
+  /** המיילים של החשבון (מפוענחים בשרת רק לבעל החשבון). verified = אומת (Google) */
+  emails?: { email: string | null; source: "password" | "google" | "added"; verified: boolean }[];
+  /** שם תצוגה (רשות) */
+  name?: string | null;
+  hasPassword?: boolean;
+  /** חשבון ישן בלי מייל ובלי Google — נדרש להוסיף (הכרעת בעלים 9.10.2026) */
+  needsEmail?: boolean;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */
@@ -184,6 +195,8 @@ export interface Dashboard {
   byVote?: Record<string, { n: number; seats: Record<string, number> }>;
   trend?: { day: string; n: number; newcomers: number; changed: number; seats: Record<string, number> }[];
   underReview?: { participants: number; seats: SeatStat[] } | null;
+  /** השערות חריגות שממתינות לאישור מנהל — לא נספרות (מספר בלבד) */
+  pendingGuesses?: number;
 }
 
 export interface LogEntry {
@@ -450,15 +463,25 @@ export function reportDiag(kind: ConnectionKind) {
 
 /**
  * כל כשל חיבור סופי (כולל הממסר) נשלח לתמיכה, בלי אישור הגולש (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
- * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים. עד 3 לכל טעינת עמוד.
+ * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים.
+ * דיווח אחד לכל דפדפן בשעה (הכרעת בעלים 9.10.2026) — גולש מסונן שמרענן את העמוד אינו מציף את ההערות.
  */
-let autoSent = 0;
+const AUTO_KEY = "e26-autoreport-at";
+const AUTO_GAP_MS = 60 * 60 * 1000;
+let autoSentAt = 0;
+function autoReportAllowed(now: number): boolean {
+  let last = autoSentAt;
+  try { last = Math.max(last, Number(localStorage.getItem(AUTO_KEY)) || 0); } catch { /* אין אחסון — נשען על הזיכרון של העמוד */ }
+  if (now - last < AUTO_GAP_MS) return false;
+  autoSentAt = now;
+  try { localStorage.setItem(AUTO_KEY, String(now)); } catch { /* ראו למעלה */ }
+  return true;
+}
 export function reportFailure(path: string, diagnostic?: Record<string, unknown>) {
   if (!feedbackUrl) return;
   // גם כשהשמירה ממשיכה "בעיוורון" ולא מוצגת שגיאה — לבדוק לאן הגולש כן מגיע (פעם אחת לטעינה).
   void deepProbe();
-  if (autoSent >= 3) return;
-  autoSent++;
+  if (!autoReportAllowed(Date.now())) return;
   const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic });
   void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
 }

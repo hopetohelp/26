@@ -47,9 +47,13 @@ function cors(env, origin) {
 const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 const sha256 = async (s) => hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
 
-async function dayKey(ip) {
+// גיבוב חתום (HMAC) עם סוד השרת IP_KEY: בלי הסוד אי אפשר לנחש את הכתובת בניסוי כל הכתובות האפשריות.
+// בלי הסוד (פריסה ראשונה, בדיקות) — הגיבוב הישן.
+async function dayKey(env, ip) {
   const day = new Date().toISOString().slice(0, 10);
-  return (await sha256(`${day}|${ip}|elections26`)).slice(0, 24);
+  if (!env?.IP_KEY) return (await sha256(`${day}|${ip}|elections26`)).slice(0, 24);
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.IP_KEY), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return hex(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${day}|${ip}`))).slice(0, 24);
 }
 
 function newToken() {
@@ -89,6 +93,25 @@ async function importSupport(env, participant, thread) {
   await env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = ? WHERE participant = ? AND updated_at < ?").bind(thread.updated_at, thread.status, participant, thread.updated_at).run();
 }
 
+/** פנייה שנפתחה בקישור (בלי חשבון) ⇐ ההודעות שלה עוברות לשיחת החשבון. המקור נשמר (הקישור הישן ממשיך לעבוד) ומוסתר ממסך הניהול. */
+async function adoptThread(env, participant, token) {
+  const root = await findThread(env, token);
+  if (!root) return;
+  const { results: members } = await env.DB.prepare("SELECT id, created_at, text FROM feedback WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(root.id, root.id).all();
+  const ids = (members || []).map((m) => m.id);
+  if (!ids.length) return;
+  const { results: msgs } = await env.DB.prepare(`SELECT id, created_at, author, text FROM messages WHERE feedback_id IN (${ids.map(() => "?").join(",")})`).bind(...ids).all();
+  const at = new Date().toISOString();
+  const stmts = [env.DB.prepare("INSERT OR IGNORE INTO support_threads (participant, created_at, updated_at, status) VALUES (?, ?, ?, ?)").bind(participant, members[0].created_at, at, root.status === "new" ? "new" : "answered")];
+  for (const m of members) {
+    stmts.push(env.DB.prepare("INSERT OR IGNORE INTO support_messages (participant, created_at, author, text, legacy_key) VALUES (?, ?, 'visitor', ?, ?)").bind(participant, m.created_at, m.text, "fb:" + m.id));
+    stmts.push(env.DB.prepare("INSERT OR IGNORE INTO feedback_adopted (feedback_id, participant, adopted_at) VALUES (?, ?, ?)").bind(m.id, participant, at));
+  }
+  for (const m of msgs || []) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO support_messages (participant, created_at, author, text, legacy_key) VALUES (?, ?, ?, ?, ?)").bind(participant, m.created_at, m.author, m.text, "fbm:" + m.id));
+  if (root.status === "new") stmts.push(env.DB.prepare("UPDATE support_threads SET status = 'new', updated_at = ? WHERE participant = ?").bind(at, participant));
+  for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
+}
+
 async function supportThread(env, participant) {
   const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
   if (!thread) return null;
@@ -118,7 +141,7 @@ export default {
       if (candidate?.kind === "account-support") accountBody = candidate;
     }
     // הסשן מאומת רק בבקשה פנימית, ואינו נשמר במאגר ההערות.
-    if ((url.pathname === "/support" || accountBody) && request.method === "POST") {
+    if ((url.pathname === "/support" || url.pathname === "/support/purge" || accountBody) && request.method === "POST") {
       let body;
       try { body = accountBody ?? await request.json(); } catch { return reply({ error: "bad_json" }, 400); }
       if (!body || typeof body.token !== "string" || !body.token || body.token.length > 256) return reply({ error: "unauthorized" }, 401);
@@ -142,7 +165,23 @@ export default {
       } catch { return reply({ error: "account_unavailable" }, 503); }
       if (typeof access.participant !== "string" || !access.participant) return reply({ error: "account_unavailable" }, 503);
       const participant = access.participant;
+      // מחיקת חשבון (נקרא משרת ההשתתפות, עם הסשן של בעל החשבון): כל השיחה, כולל פניות קודמות שאוחדו לתוכה
+      if (url.pathname === "/support/purge") {
+        const ids = ((await env.DB.prepare("SELECT feedback_id FROM feedback_adopted WHERE participant = ?").bind(participant).all()).results || []).map((r) => r.feedback_id);
+        const list = ids.map(() => "?").join(",") || "NULL";
+        await env.DB.batch([
+          env.DB.prepare(`DELETE FROM messages WHERE feedback_id IN (${list})`).bind(...ids),
+          env.DB.prepare(`DELETE FROM feedback_threads WHERE feedback_id IN (${list}) OR root_id IN (${list})`).bind(...ids, ...ids),
+          env.DB.prepare("DELETE FROM feedback_adopted WHERE participant = ?").bind(participant),
+          env.DB.prepare(`DELETE FROM feedback WHERE id IN (${list})`).bind(...ids),
+          env.DB.prepare("DELETE FROM support_messages WHERE participant = ?").bind(participant),
+          env.DB.prepare("DELETE FROM support_threads WHERE participant = ?").bind(participant),
+        ]);
+        return reply({ ok: true });
+      }
       await importSupport(env, participant, access.thread);
+      // שיחה שנפתחה בלי חשבון (הזיהוי שלה נשמר רק בדפדפן) ⇐ מאוחדת לשיחת החשבון בהרשמה (הכרעת בעלים 9.10.2026)
+      if (Array.isArray(body.adopt)) for (const t of body.adopt.slice(0, 20)) await adoptThread(env, participant, t);
       if (body.text !== undefined) {
         const text = typeof body.text === "string" ? body.text.trim() : "";
         if (!text || text.length > MAX_TEXT || typeof body.op_id !== "string" || !/^[\w-]{16,64}$/.test(body.op_id)) return reply({ error: "bad_request" }, 400);
@@ -165,8 +204,8 @@ export default {
       const crowd = (path, init = {}) => env.CROWD ? env.CROWD.fetch(new Request("https://crowd.internal" + path, { ...init, headers: { "x-admin-key": key, "content-type": "application/json" } })).then((r) => r.json()).catch(() => null) : Promise.resolve(null);
       if (request.method === "GET" && url.pathname === "/admin/data") {
         const since = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
-        const { results: notes } = await env.DB.prepare("SELECT f.id, f.created_at, f.topic, f.text, f.page, f.status, COALESCE(ft.root_id, f.id) AS root FROM feedback f LEFT JOIN feedback_threads ft ON ft.feedback_id = f.id WHERE f.text NOT LIKE ?1 ORDER BY f.created_at DESC LIMIT 300").bind(AUTO + "%").all();
-        const { results: msgs } = await env.DB.prepare("SELECT feedback_id, author, text, created_at FROM messages WHERE feedback_id IN (SELECT id FROM feedback WHERE text NOT LIKE ?1 ORDER BY created_at DESC LIMIT 300) ORDER BY created_at, id").bind(AUTO + "%").all();
+        const { results: notes } = await env.DB.prepare("SELECT f.id, f.created_at, f.topic, f.text, f.page, f.status, COALESCE(ft.root_id, f.id) AS root FROM feedback f LEFT JOIN feedback_threads ft ON ft.feedback_id = f.id WHERE f.text NOT LIKE ?1 AND f.id NOT IN (SELECT feedback_id FROM feedback_adopted) ORDER BY f.created_at DESC LIMIT 300").bind(AUTO + "%").all();
+        const { results: msgs } = await env.DB.prepare("SELECT feedback_id, author, text, created_at FROM messages WHERE feedback_id IN (SELECT id FROM feedback WHERE text NOT LIKE ?1 AND id NOT IN (SELECT feedback_id FROM feedback_adopted) ORDER BY created_at DESC LIMIT 300) ORDER BY created_at, id").bind(AUTO + "%").all();
         const { results: days } = await env.DB.prepare("SELECT d.day, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page NOT LIKE 'diag:%') AS visits, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day) AS users, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/guess') AS guessUsers, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/community') AS communityUsers, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:all-blocked') AS blocked, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:blind-sent') AS blindSaved, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:relay-saved') AS relaySaved, (SELECT COUNT(*) FROM feedback f WHERE substr(f.created_at,1,10) = d.day AND f.text LIKE ?2) AS autoFailures FROM (SELECT DISTINCT day FROM hits WHERE day >= ?1) d ORDER BY d.day DESC").bind(since, AUTO + "%").all();
         const total = await env.DB.prepare("SELECT COUNT(*) AS n FROM visitors_all").first();
         const threads = {};
@@ -186,6 +225,12 @@ export default {
         const local = [];
         for (const thread of accountThreads || []) local.push({ participant: thread.participant, ...(await supportThread(env, thread.participant)) });
         return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+      }
+      // דשבורד ההשערות (בלי מזהים) ואישור השערות חריגות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
+      if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide") {
+        if (!env.CROWD) return reply({ ok: false, error: "offline" }, 503);
+        const res = await env.CROWD.fetch(new Request("https://crowd.internal" + url.pathname, { method: request.method, headers: { "x-admin-key": key, "content-type": "application/json" }, body: request.method === "POST" ? await request.text() : undefined }));
+        return new Response(await res.text(), { status: res.status, headers });
       }
       if (request.method === "POST" && url.pathname === "/admin/reply") {
         let b = {};
@@ -259,7 +304,7 @@ export default {
       }
       if (!HIT_PAGES.has(page)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
-      const vid = await dayKey(`${request.headers.get("cf-connecting-ip") || "unknown"}|${request.headers.get("user-agent") || ""}`);
+      const vid = await dayKey(env, `${request.headers.get("cf-connecting-ip") || "unknown"}|${request.headers.get("user-agent") || ""}`);
       const stmts = [
         env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, page),
         env.DB.prepare("INSERT OR IGNORE INTO visitors (day, vid, page) VALUES (?, ?, ?)").bind(day, vid, page),
@@ -321,7 +366,7 @@ export default {
     if (url.pathname === "/autoreport") {
       const log = typeof body.log === "string" ? body.log.slice(0, 16000) : "";
       if (!log) return reply({ ok: false, error: "empty" }, 400);
-      const akey = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
+      const akey = await dayKey(env, request.headers.get("cf-connecting-ip") || "unknown");
       const day = new Date().toISOString().slice(0, 10);
       const sent = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE day_key = ? AND created_at >= ? AND text LIKE ?").bind(akey, day, AUTO + "%").first();
       if ((sent?.n ?? 0) >= AUTO_PER_DAY) return reply({ ok: true, dropped: true });
@@ -336,7 +381,7 @@ export default {
     if (body.diagnostic !== undefined && (typeof body.diagnostic !== "string" || body.diagnostic.length > 16000))
       return reply({ ok: false, error: "diagnostic too large" }, 413);
     const text = body.diagnostic ? `${note}\n\n--- לוג התקלה ---\n${body.diagnostic}` : note;
-    const key = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
+    const key = await dayKey(env, request.headers.get("cf-connecting-ip") || "unknown");
     const now = new Date().toISOString();
 
     // ---- הערה חדשה זהה שכבר נשלחה היום מאותו מקור: מחזירים "הצלחה" בלי לשמור (הגולש כבר קיבל קישור על הראשונה)
