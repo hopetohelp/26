@@ -1,7 +1,7 @@
 /**
  * כניסה עם Google: אימות ID token (JWT חתום RS256) מול המפתחות הציבוריים של Google.
- * בודקים חתימה, aud = מזהה הלקוח שלנו, iss של Google ותוקף. מחזירים רק את sub (מזהה קבוע ואטום של החשבון) —
- * המייל והשם מגוגל אינם נקראים ואינם נשמרים (הכרעת בעלים 6.10.2026: בלי מייל).
+ * בודקים חתימה, aud = מזהה הלקוח שלנו, iss של Google ותוקף. מחזירים את sub (מזהה קבוע ואטום) ואת המייל המאומת —
+ * המייל נשמר רק מוצפן ובגיבוב חתום (הכרעת בעלים 9.10.2026: חשבון אחד לכל מייל).
  */
 const CERTS = "https://www.googleapis.com/oauth2/v3/certs";
 const ISSUERS = new Set(["accounts.google.com", "https://accounts.google.com"]);
@@ -21,7 +21,7 @@ async function keys(env, now) {
   return cache.keys;
 }
 
-/** ⇐ sub, או null כשהאסימון אינו תקף */
+/** ⇐ {sub, email, emailVerified}, או null כשהאסימון אינו תקף. המייל משמש רק לחשבון אחד לכל מייל (identity.js) */
 export async function verifyGoogle(env, credential, now) {
   const clientId = env.GOOGLE_CLIENT_ID;
   const parts = typeof credential === "string" ? credential.split(".") : [];
@@ -42,5 +42,5 @@ export async function verifyGoogle(env, credential, now) {
   if (payload.aud !== clientId || !ISSUERS.has(payload.iss)) return null;
   if (typeof payload.exp !== "number" || payload.exp * 1000 < now - 60_000) return null;
   if (typeof payload.sub !== "string" || !payload.sub) return null;
-  return payload.sub;
+  return { sub: payload.sub, email: typeof payload.email === "string" ? payload.email : null, emailVerified: payload.email_verified === true || payload.email_verified === "true" };
 }

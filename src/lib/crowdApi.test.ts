@@ -284,3 +284,26 @@ describe("סטטיסטיקות בלי שרת: העותק שבאתר מול הש�
     expect(newerDashboard(dash("2026-10-08T10:00:00Z"), dash("2026-10-08T11:00:00Z")).publishedAt).toBe("2026-10-08T11:00:00Z");
   });
 });
+
+describe("מגבלת דיווח כשל אוטומטי", () => {
+  it("דיווח אחד לכל דפדפן בשעה, גם אחרי טעינה מחדש של העמוד", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example");
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => { store.set(k, v); } });
+    const fetcher = vi.fn(async () => new Response("{}"));
+    vi.stubGlobal("fetch", fetcher);
+    const reports = () => (fetcher.mock.calls as unknown as [string][]).filter(([url]) => url.endsWith("/autoreport")).length;
+    vi.resetModules();
+    let api = await import("./crowdApi");
+    api.reportFailure("/save");
+    api.reportFailure("/me");
+    expect(reports()).toBe(1);
+    vi.resetModules();
+    api = await import("./crowdApi");
+    api.reportFailure("/auth/guest");
+    expect(reports()).toBe(1);
+    store.set("e26-autoreport-at", String(Date.now() - 61 * 60 * 1000));
+    api.reportFailure("/save");
+    expect(reports()).toBe(2);
+  });
+});

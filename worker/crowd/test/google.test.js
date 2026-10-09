@@ -19,7 +19,7 @@ beforeAll(async () => {
   jwk = { ...(await crypto.subtle.exportKey("jwk", keyPair.publicKey)), kid: "k1" };
 });
 beforeEach(() => {
-  env = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", IP_KEY: "k", GOOGLE_CLIENT_ID: CLIENT, GOOGLE_JWKS: [jwk], NOW: () => Date.parse("2026-10-08T10:00:00Z") };
+  env = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", IP_KEY: "k", DATA_KEY: "d", GOOGLE_CLIENT_ID: CLIENT, GOOGLE_JWKS: [jwk], NOW: () => Date.parse("2026-10-08T10:00:00Z") };
 });
 const call = async (path, { body, token } = {}) => {
   const res = await worker.fetch(new Request("https://w.example" + path, {
@@ -44,13 +44,14 @@ describe("כניסה עם Google", () => {
     expect((await call("/auth/google", { body: { credential: await idToken({}), token: tok("b") } })).data.token).toBe(tok("b"));
   });
 
-  it("אורח שמתחבר עם Google שומר את ההשערה שלו", async () => {
-    const g = await call("/auth/guest", { body: { token: tok("g") } });
+  it("חשבון מייל שמתחבר עם Google שומר את ההשערה שלו, ושני המיילים נשמרים בו", async () => {
+    const g = await call("/auth/register", { body: { email: "mine@example.com", password: "a fine password 1" } });
     await call("/save", { token: g.data.token, body: { unit: "seats", op_id: "op-bbbbbbbbbb", registry: "r", payload: seats(60) } });
-    const r = await call("/auth/google", { token: g.data.token, body: { credential: await idToken({ sub: "guest-sub" }), token: tok("h") } });
+    const r = await call("/auth/google", { token: g.data.token, body: { credential: await idToken({ sub: "guest-sub", email_verified: true }), token: tok("h") } });
     const me = await call("/me", { token: r.data.token });
     expect(me.data).toMatchObject({ google: true });
     expect(me.data.latest.seats).toBeTruthy();
+    expect(me.data.emails.map((e) => e.email).sort()).toEqual(["mine@example.com", "x@example.com"]);
   });
 
   it("דוחה חתימה זרה, קהל אחר, מנפיק אחר ותוקף שפג", async () => {

@@ -5,6 +5,8 @@ import { seats, ver, people, IDS } from "./helpers.js";
 
 const NOW = "2026-10-05T12:00:00Z";
 const run = (ps, vs, extra = {}) => aggregate({ participants: ps, versions: vs, now: NOW, aggregationId: "a", ...extra });
+/** בדיקות שאינן על השערות חריגות: כל הגרסאות מאושרות, כדי שכללי החריגה לא ישנו את המספרים */
+const approved = (vs) => new Map(vs.map((v) => [v.id, "approved"]));
 
 describe("seatStat", () => {
   it("mean/median/quartiles", () => {
@@ -199,12 +201,12 @@ describe("one changed contributor updates the section", () => {
     const { ps, vs } = base();
     const first = run(ps, vs);
     const four = [...vs, ...[0, 1, 2, 3].map((i) => ver(ps[i].id, "seats", seats(100)))];
-    const r4 = run(ps, four, { previous: prevFrom(first), lastDailyDay: israelDay(NOW), now: "2026-10-05T13:00:00Z" });
+    const r4 = run(ps, four, { previous: prevFrom(first), lastDailyDay: israelDay(NOW), now: "2026-10-05T13:00:00Z", decisions: approved(four) });
     expect(r4.sections.seats.kept).toBeUndefined();
     expect(r4.dashboard.seats).not.toEqual(first.dashboard.seats);
     expect(r4.dashboard.sectionsAsOf.seats).toBe("2026-10-05T13:00:00Z");
     const five = [...four, ver(ps[4].id, "seats", seats(100))];
-    const r5 = run(ps, five, { previous: prevFrom(first), lastDailyDay: israelDay(NOW), now: "2026-10-05T13:00:00Z" });
+    const r5 = run(ps, five, { previous: prevFrom(first), lastDailyDay: israelDay(NOW), now: "2026-10-05T13:00:00Z", decisions: approved(five) });
     expect(r5.sections.seats.kept).toBeUndefined();
     expect(r5.dashboard.seats.full[0].mean).not.toBe(first.dashboard.seats.full[0].mean);
   });
@@ -275,7 +277,8 @@ it("counts distinct contributors per section, excluding reviewed accounts and du
 it("כל מנחש מפלגות נכלל בקואליציה פעם אחת מהגרסה האחרונה גם בלי גושים", () => {
   const ps = [{id:'a',review:0},{id:'b',review:0},{id:'r',review:1}];
   const payload = (n) => ({start:'zero',pollsAsOf:null,seats:{likud:{v:n,src:'manual',locked:true},democrats:{v:120-n,src:'manual',locked:true}}});
-  const d = run(ps,[ver('a','seats',payload(30)),ver('a','seats',payload(40)),ver('b','seats',{...payload(60),mode:'pct',pct:{likud:50,democrats:50}}),ver('r','seats',payload(120))]).dashboard;
+  const vs = [ver('a','seats',payload(30)),ver('a','seats',payload(40)),ver('b','seats',{...payload(60),mode:'pct',pct:{likud:50,democrats:50}}),ver('r','seats',payload(120))];
+  const d = run(ps,vs,{decisions:approved(vs)}).dashboard;
   expect(d.blocs.derived.gov).toMatchObject({n:2,mean:50,min:40,max:60});
   expect(d.sectionParticipants.blocs).toBe(2);
 });

@@ -77,6 +77,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
+      {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
       {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">

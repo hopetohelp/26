@@ -1,9 +1,10 @@
 /** מצב ההשתתפות בדפדפן: אסימון, מצב המשתתף מהשרת, וטיוטה+שמירה לכל יחידה. */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CROWD_URL, CrowdError, call, clientToken, type Me, type Payload, type Unit } from "../../lib/crowdApi";
+import { CROWD_URL, CrowdError, call, type Me, type Payload, type Unit } from "../../lib/crowdApi";
 import * as S from "../../lib/crowdSession";
 import { meta } from "../../lib/data";
 import { OUTBOX_EVENT, SAVED_EVENT } from "../../lib/outbox";
+import { adoptSupportThreads } from "../../lib/feedback";
 
 type Auth = { token: string | null; link: string | null };
 const listeners = new Set<(a: Auth) => void>();
@@ -13,11 +14,9 @@ const emit = () => {
 };
 
 /**
- * סשן לכל פעולה (הכרעת בעלים 9.10.2026): בשינוי הראשון — הודעה, מחנות, גושים, מפלגות, אחוזים — נוצר חשבון אורח
- * עם קישור אישי, וכל שינוי נשמר בו ונכנס לממוצע האנונימי. מומלץ להוסיף שם משתמש וסיסמה (AccessCard).
+ * בלי חשבון — הכול נשמר בדפדפן בלבד ולא נכנס לסטטיסטיקות (הכרעת בעלים 9.10.2026). אין יותר חשבון אורח אוטומטי.
+ * בהרשמה או בכניסה, מה שנשמר בדפדפן עולה לחשבון (syncLocal).
  */
-let creating: Promise<string | null> | null = null;
-
 /** שליחות שממתינות לסיום רצף שינויים — נשלחות מיד כשהדף נסגר או מוסתר */
 type Pending = (() => void) & { unit?: Unit };
 const pendingSends = new Set<Pending>();
@@ -26,24 +25,36 @@ if (typeof window !== "undefined") {
   window.addEventListener("pagehide", flushPending);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushPending(); });
 }
+/** הסשן הקיים, אם יש. בלי חשבון ⇐ null, והשינויים נשארים בדפדפן */
 export function ensureSession(): Promise<string | null> {
-  const t = S.getToken();
-  if (t) return Promise.resolve(t);
-  if (!CROWD_URL) return Promise.resolve(null);
-  // הקישור נוצר בדפדפן ונשלח לשרת — ידוע גם אם התשובה נחסמת
-  const link = clientToken();
-  creating ??= call<{ token: string; link?: string }>("/auth/guest", { body: { link } })
-    .then((r) => {
-      if (!r?.token) return null;
-      S.setToken(r.token);
-      S.setConsent(true);
-      S.setLink(r.link ?? link); S.setLinkAck(false);
-      emit();
-      return r.token;
-    })
-    .catch(() => null)
-    .finally(() => { creating = null; });
-  return creating;
+  return Promise.resolve(CROWD_URL ? S.getToken() : null);
+}
+
+/** מפתחות הדפדפן שמחוץ ל-crowdSession: המחנות (Changes.tsx) */
+const CAMPS_KEY = "elections26.camps";
+
+/**
+ * אחרי הרשמה או כניסה: כל מה שנשמר בדפדפן בלי חשבון עולה לחשבון — השערות (טיוטה שלא נשמרה), מחנות,
+ * ושיחת תמיכה שנפתחה בלי חשבון. כל שלב עצמאי; כישלון משאיר את הטיוטה בדפדפן לניסיון הבא.
+ */
+export async function syncLocal(token: string): Promise<void> {
+  for (const unit of ["seats", "blocs", "vote"] as Unit[]) {
+    const draft = S.loadDraft<Payload>(unit);
+    if (!draft || JSON.stringify(draft) === JSON.stringify(S.loadSaved(unit))) continue;
+    try {
+      await call("/save", { token, body: { unit, op_id: S.opIdFor(unit, draft), registry: meta.dataAsOf, payload: draft } });
+      S.clearPending(unit);
+      S.setSaved(unit, draft);
+      S.clearDraft(unit);
+    } catch { /* נשאר בדפדפן */ }
+  }
+  try {
+    const camps = localStorage.getItem(CAMPS_KEY);
+    if (camps) await call("/prefs", { token, body: { camps: JSON.parse(camps) } });
+  } catch { /* נשאר בדפדפן */ }
+  try { await adoptSupportThreads(token); } catch { /* ינוסה שוב בכניסה הבאה */ }
+  window.dispatchEvent(new Event("crowd-clear"));
+  window.dispatchEvent(new Event(SAVED_EVENT));
 }
 
 /** החשבון בדפדפן: סשן (שם משתמש וסיסמה) והקישור האישי שנוצר כאן. בלי סשן — רק טיוטות מקומיות. */
@@ -59,9 +70,12 @@ export function useSession() {
   }, []);
   /** סשן חדש. משתמש אחר או יציאה (null) ⇐ הקישור האישי נשכח מהדפדפן */
   const setToken = useCallback((t: string | null, keepLink = false) => {
+    const changed = t !== S.getToken();
     S.setToken(t);
     if (!keepLink) S.setLink(null);
+    if (!t) S.setPicture(null);
     emit();
+    if (t && changed) void syncLocal(t);
   }, []);
   /** קישור אישי חדש (הרשמה / "קישור חדש") ⇐ מוצג לשמירה עד שמאשרים */
   const setLink = useCallback((l: string) => {
@@ -88,9 +102,12 @@ export const errorText = (e: unknown): string => {
   if (!(e instanceof CrowdError)) return "משהו השתבש. אפשר לנסות שוב.";
   if (e.code === "offline") return "השמירה עוד לא פעילה באתר. הטיוטה נשמרת בדפדפן הזה.";
   if (e.code === "network") return "אין חיבור לשרת. הטיוטה שמורה אצלכם; אפשר לנסות שוב.";
-  if (e.code === "has_password") return "לחשבון הזה כבר יש שם משתמש.";
-  if (e.code === "no_password") return "לחשבון הזה עוד אין שם משתמש וסיסמה.";
-  if (e.code === "username_taken") return "שם המשתמש הזה כבר תפוס. אפשר לבחור אחר — או להיכנס, אם הוא שלכם.";
+  if (e.code === "has_password") return "לחשבון הזה כבר יש סיסמה.";
+  if (e.code === "no_password") return "לחשבון הזה עוד אין סיסמה.";
+  if (e.code === "username_taken" || e.code === "email_taken") return "המייל הזה כבר רשום באתר. אפשר להיכנס איתו — או להשתמש במייל אחר.";
+  if (e.code === "email_required") return "נא להזין כתובת מייל תקינה.";
+  if (e.code === "bad_name") return "השם ארוך מדי (עד 40 תווים).";
+  if (e.code === "account_required") return "כדי לשמור בשרת צריך חשבון: Google או מייל.";
   if (e.code === "bad_username") return "שם משתמש: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון, או כתובת מייל תקינה.";
   if (e.code === "weak_password") return "הסיסמה קצרה או נפוצה מדי. לפחות 6 תווים.";
   if (e.code === "bad_link") return "הקישור האישי הזה אינו בתוקף (אולי נוצר אחריו קישור חדש).";
@@ -99,7 +116,6 @@ export const errorText = (e: unknown): string => {
   return `השרת דחה את הבקשה (${e.code}).`;
 };
 
-const FIRST_SAVE_MS = 400;
 const IDLE_SAVE_MS = 15_000;
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -138,7 +154,9 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       pendingSends.forEach((f) => f.unit === unit && pendingSends.delete(f));
       send.unit = unit;
       pendingSends.add(send);
-      timer.current = window.setTimeout(send, S.getToken() ? IDLE_SAVE_MS : FIRST_SAVE_MS);
+      // בלי חשבון — נשאר בדפדפן בלבד; עולה לחשבון בהרשמה (syncLocal)
+      if (!S.getToken()) { pendingSends.delete(send); return; }
+      timer.current = window.setTimeout(send, IDLE_SAVE_MS);
     },
     [unit],
   );

@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { call, CrowdError } from "../../lib/crowdApi";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
-import { maskIdentifier } from "../../lib/identifier";
 import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
@@ -91,10 +90,10 @@ export function RecoverForm({ link, session, onDone }: { link: string; session: 
     <form
       className="space-y-2"
       onSubmit={a.run(async () => {
-        const r = await call<{ token: string; username: string }>("/auth/recover", { body: { link, password: pw } });
+        const r = await call<{ token: string; username: string | null; email: string | null }>("/auth/recover", { body: { link, password: pw } });
         setPw("");
         session.setToken(r.token);
-        onDone(r.username);
+        onDone(r.email ?? r.username ?? "");
         return "הסיסמה החדשה נקבעה.";
       })}
     >
@@ -117,199 +116,214 @@ function PrivacyNote() {
     <details className="text-sm">
       <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">מה נשמר ומי רואה?</summary>
       <ul className="list-disc ps-5 space-y-1 pb-2">
-        <li>מה שתשמרו נשמר בשרת האתר, בלי שם אמיתי. אם תבחרו כתובת מייל כשם משתמש, היא נשמרת בשרת, לא מוצגת לאיש ולא נשלח אליה דבר; לשחזור משתמשים בקישור האישי.</li>
-        <li>הגרסה האחרונה שלכם נכנסת לממוצע הגולשים, בלי שום פרט מזהה. הנתונים מוצגים גם עבור משתתף יחיד; בקבוצות קטנות אפשר להסיק תשובות ללא שם. מספר משתתפים קטן אינו משקף את הציבור.</li>
-        <li>אם החיבור לשרת נכשל, נשלח אלינו דיווח אוטומטי עם פרטים טכניים בלבד: סוג הדפדפן, איזה חלק נכשל ותוצאת בדיקת חיבור. בלי שם, סיסמה או ההשערה.</li>
-        <li>אף אחד אחר לא רואה את ההשערה האישית שלכם. אפשר למחוק הכול בכל רגע ב"הנתונים שלי".</li>
+        <li>המייל והשם נשמרים בשרת האתר <strong>מוצפנים</strong>, מוצגים רק לכם, ומשמשים רק לזיהוי ולמניעת חשבון כפול. לא נשלחים אליהם מיילים.</li>
+        <li>מ-Google נשמרים רק מזהה פנימי והמייל (מוצפן). תמונת הפרופיל נשמרת רק בדפדפן הזה.</li>
+        <li>הגרסה האחרונה שלכם נכנסת לממוצע הגולשים, בלי שום פרט מזהה. גם צוות האתר רואה את ההשערות בלי שם ובלי מייל.</li>
+        <li>אם החיבור לשרת נכשל, נשלח אלינו דיווח אוטומטי עם פרטים טכניים בלבד, בלי סיסמה, מייל או ההשערה.</li>
+        <li>אפשר למחוק הכול בכל רגע באזור האישי.</li>
       </ul>
     </details>
   );
 }
 
 /**
- * הרשמה, כניסה, או (בגיליון השמירה) שמירה בלי משתמש.
- * הרשמה: שם משתמש וסיסמה (מומלץ) ⇐ קישור אישי לשחזור. בלי משתמש (הכרעת בעלים 8.10.2026): נשמר בשרת, אבל אי אפשר לשחזר.
- * ההסכמה (הגרסה האחרונה נכנסת לממוצע האנונימי) נדרשת פעם אחת לפני כל שמירה ראשונה.
+ * הרשמה או כניסה (הכרעת בעלים 9.10.2026): Google, או מייל + סיסמה. חשבון אחד לכל מייל.
+ * בלי חשבון — הכול נשמר רק בדפדפן ולא נכנס לסטטיסטיקות; בהרשמה זה עולה לחשבון (syncLocal).
  */
 export function AuthForm({
   session,
   onDone,
   initial = "register",
   submitSuffix = "",
-  allowGuest = false,
 }: {
   session: ReturnType<typeof useSession>;
   onDone?: (token: string) => void;
   initial?: "login" | "register";
   submitSuffix?: string;
-  allowGuest?: boolean;
 }) {
   const [mode, setMode] = useState<"login" | "register">(initial);
-  const [u, setU] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [pw, setPw] = useState("");
   const [agree, setAgree] = useState(hasConsent);
-  const a = useAction(mode === "register" ? "הרשמה לפני שמירה" : "כניסה לפני שמירה");
-  const g = useAction("שמירה בלי משתמש");
-  const consent = (
-    <label className="flex items-start gap-2 text-sm font-bold">
-      <input type="checkbox" className="mt-1 w-5 h-5 shrink-0" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-      הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של הגולשים, ואפשר למחוק הכול בכל רגע.
-    </label>
-  );
-  const accountForm = (
-    <form
-      className="space-y-3"
-      onSubmit={a.run(async () => {
-        const r = await call<{ token: string; link?: string }>(`/auth/${mode}`, { body: { username: u, password: pw } });
-        setPw("");
-        setConsent(true);
-        session.setToken(r.token);
-        if (r.link) session.setLink(r.link);
-        onDone?.(r.token);
-        return mode === "login" ? "נכנסתם." : "נרשמתם.";
-      })}
-    >
-      {!allowGuest && <h3 className="font-bold">{mode === "register" ? "הרשמה" : "כניסה"}</h3>}
-      <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
-        <Field label="שם משתמש או מייל" hint={mode === "register" ? "3–24 אותיות או ספרות, או כתובת מייל. לא נשלח אליה דבר והיא לא מוצגת לאיש." : undefined}>
-          <input required minLength={3} maxLength={254} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
-        </Field>
-        <PasswordField label="סיסמה" hint={mode === "register" ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={mode === "login" ? "current" : "new"} />
-      </div>
-      {mode === "register" && !allowGuest && consent}
-      <div className="flex gap-2 flex-wrap items-center">
-        <Btn type="submit" kind={allowGuest ? "ghost" : "primary"} disabled={a.busy || (mode === "register" && !agree)}>
-          {(mode === "login" ? "כניסה" : "הרשמה") + submitSuffix}
-        </Btn>
-        <button type="button" onClick={() => setMode(mode === "login" ? "register" : "login")} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
-          {mode === "login" ? "אין לי חשבון — הרשמה" : "כבר יש לי חשבון"}
-        </button>
-      </div>
-      {mode === "register" && allowGuest && !agree && <p className="text-xs text-ink">כדי להירשם סמנו קודם "הבנתי" למעלה.</p>}
-      {mode === "login" && <p className="text-xs text-ink">{FORGOT_LINE}</p>}
-      {a.view}
-    </form>
-  );
-
-  // בגיליון השמירה: קודם ערך, אחר כך מחויבות (הכרעת בעלים 8.10.2026) — שמירה בלחיצה אחת היא הפעולה הראשית,
-  // והרשמה או כניסה הן אפשרות משנית; אחרי השמירה מוצעת הוספת שם משתמש (ClaimForm).
-  if (allowGuest)
-    return (
-      <div className="space-y-4">
-        <section className="space-y-3" aria-label="שמירה עכשיו">
-          {consent}
-          <Btn
-            kind="primary"
-            className="w-full"
-            disabled={g.busy || !agree}
-            onClick={g.run(async () => {
-              const r = await call<{ token: string }>("/auth/guest", { body: {} });
-              setConsent(true);
-              session.setToken(r.token);
-              onDone?.(r.token);
-              return "נשמר.";
-            })}
-          >
-            {g.busy ? "שומר…" : "שמירה עכשיו"}
-          </Btn>
-          {!agree && <p className="text-xs text-ink">כדי לשמור סמנו קודם "הבנתי".</p>}
-          <p className="text-sm text-ink">בלי שם ובלי סיסמה. אחרי השמירה אפשר להוסיף שם משתמש, כדי לחזור להשערה מכל מכשיר.</p>
-          {g.view}
-        </section>
-        <section className="space-y-2 border-t border-paper-line pt-3" aria-label="כניסה עם Google">
-          <p className="text-sm font-bold">או: המשך עם Google — כדי לחזור להשערה מכל מכשיר</p>
-          <GoogleButton session={session} onDone={onDone} disabled={!agree} />
-          {!agree && <p className="text-xs text-ink">הכפתור יופיע אחרי סימון "הבנתי".</p>}
-          <p className="text-xs text-ink">מ-Google לא נשמר מייל ולא שם, רק מזהה פנימי.</p>
-        </section>
-        <details className="border-t border-paper-line pt-3" open={initial === "login"}>
-          <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">כבר יש לי חשבון, או: הרשמה עם שם משתמש</summary>
-          <div className="pt-2">{accountForm}</div>
-        </details>
-        <PrivacyNote />
-      </div>
-    );
-
+  const a = useAction(mode === "register" ? "הרשמה" : "כניסה");
+  const register = mode === "register";
   return (
     <div className="space-y-4">
-      {accountForm}
-      {mode === "register" && <PrivacyNote />}
+      <label className="flex items-start gap-2 text-sm font-bold">
+        <input type="checkbox" className="mt-1 w-5 h-5 shrink-0" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
+        הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של הגולשים, ואפשר למחוק הכול בכל רגע.
+      </label>
+      <section className="space-y-2" aria-label="כניסה עם Google">
+        <GoogleButton session={session} onDone={onDone} disabled={!agree} />
+        {!agree && <p className="text-xs text-ink">הכפתור יופיע אחרי סימון "הבנתי".</p>}
+      </section>
+      <form
+        className="space-y-3 border-t border-paper-line pt-3"
+        onSubmit={a.run(async () => {
+          const r = await call<{ token: string; link?: string }>(`/auth/${mode}`, { body: register ? { email, password: pw, ...(name.trim() ? { name } : {}) } : { email, password: pw } });
+          setPw("");
+          setConsent(true);
+          session.setToken(r.token);
+          if (r.link) session.setLink(r.link);
+          onDone?.(r.token);
+          return register ? "נרשמתם." : "נכנסתם.";
+        })}
+      >
+        <h3 className="font-bold">{register ? "או: הרשמה במייל" : "כניסה במייל"}</h3>
+        <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
+          <Field label={register ? "מייל" : "מייל (או שם משתמש ישן)"}>
+            <input required type={register ? "email" : "text"} maxLength={254} autoComplete={register ? "email" : "username"} dir="ltr" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
+          </Field>
+          <PasswordField label="סיסמה" hint={register ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={register ? "new" : "current"} />
+          {register && (
+            <Field label="שם (רשות)" hint="מוצג רק לכם">
+              <input maxLength={40} autoComplete="nickname" className={inputCls} value={name} onChange={(e) => setName(e.target.value)} />
+            </Field>
+          )}
+        </div>
+        <div className="flex gap-2 flex-wrap items-center">
+          <Btn type="submit" kind="primary" disabled={a.busy || (register && !agree)}>
+            {(register ? "הרשמה" : "כניסה") + submitSuffix}
+          </Btn>
+          <button type="button" onClick={() => setMode(register ? "login" : "register")} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
+            {register ? "כבר יש לי חשבון" : "אין לי חשבון — הרשמה"}
+          </button>
+        </div>
+        {!register && <p className="text-xs text-ink">{FORGOT_LINE}</p>}
+        {a.view}
+      </form>
+      <PrivacyNote />
     </div>
   );
 }
 
-/** מי שנשמר בלי משתמש: הוספת שם משתמש וסיסמה בלי לאבד את מה ששמר; נוצר קישור אישי לשחזור */
+/** חשבון ישן בלי מייל ובלי Google (הכרעת בעלים 9.10.2026: נדרש בכניסה הבאה): הוספת מייל, וסיסמה אם אין עדיין */
 export function ClaimForm({ session, onDone }: { session: ReturnType<typeof useSession>; onDone?: () => void }) {
-  const [u, setU] = useState("");
+  const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  const a = useAction("הוספת שם משתמש");
+  const needsPassword = !session.me?.hasPassword && !session.me?.google;
+  const a = useAction("הוספת מייל");
   return (
     <form
       className="space-y-3"
       onSubmit={a.run(async () => {
-        const r = await call<{ username: string; link: string }>("/auth/claim", { token: session.token, body: { username: u, password: pw } });
+        const r = await call<{ email: string; link?: string }>("/auth/claim", { token: session.token, body: { email, ...(needsPassword ? { password: pw } : {}) } });
         setPw("");
-        session.setLink(r.link);
+        if (r.link) session.setLink(r.link);
         await session.refresh();
         onDone?.();
-        return "נוסף שם משתמש. שמרו עכשיו את הקישור האישי.";
+        return r.link ? "המייל נוסף. שמרו עכשיו את הקישור האישי." : "המייל נוסף.";
       })}
     >
       <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
-        <Field label="שם משתמש או מייל" hint="3–24 אותיות או ספרות, או כתובת מייל. לא נשלח אליה דבר והיא לא מוצגת לאיש.">
-          <input required minLength={3} maxLength={254} autoComplete="username" dir="ltr" className={inputCls} value={u} onChange={(e) => setU(e.target.value)} />
+        <Field label="מייל" hint="נשמר מוצפן ומוצג רק לכם">
+          <input required type="email" maxLength={254} autoComplete="email" dir="ltr" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
         </Field>
-        <PasswordField label="סיסמה" hint={`לפחות ${PW_MIN} תווים`} value={pw} onChange={setPw} mode="new" />
+        {needsPassword && <PasswordField label="סיסמה" hint={`לפחות ${PW_MIN} תווים`} value={pw} onChange={setPw} mode="new" />}
       </div>
       <Btn type="submit" kind="primary" disabled={a.busy}>
-        הוספת שם משתמש
+        הוספת מייל
       </Btn>
       {a.view}
     </form>
   );
 }
 
-/** החשבון: מחוברים ⇐ יציאה והחלפת סיסמה · לא מחוברים ⇐ הרשמה או כניסה */
+/** שם תצוגה (רשות) — מוצפן בשרת, מוצג רק לבעל החשבון */
+export function NameForm({ session }: { session: ReturnType<typeof useSession> }) {
+  const [name, setName] = useState(session.me?.name ?? "");
+  const a = useAction("שינוי שם");
+  return (
+    <form
+      className="flex gap-2 items-end flex-wrap"
+      onSubmit={a.run(async () => {
+        await call("/account/name", { token: session.token, body: { name } });
+        await session.refresh();
+        return name.trim() ? "השם נשמר." : "השם נמחק.";
+      })}
+    >
+      <Field label="שם (רשות)" hint="מוצג רק לכם">
+        <input maxLength={40} autoComplete="nickname" className={inputCls} value={name} onChange={(e) => setName(e.target.value)} />
+      </Field>
+      <Btn type="submit" disabled={a.busy}>שמירה</Btn>
+      {a.view}
+    </form>
+  );
+}
+
+/** קביעת סיסמה לחשבון בלי סיסמה (למשל Google בלבד) — כדי להיכנס גם במייל */
+function SetPasswordForm({ session }: { session: ReturnType<typeof useSession> }) {
+  const [pw, setPw] = useState("");
+  const a = useAction("קביעת סיסמה");
+  return (
+    <form
+      className="space-y-2"
+      onSubmit={a.run(async () => {
+        await call("/account/password", { token: session.token, body: { password: pw } });
+        setPw("");
+        await session.refresh();
+        return "הסיסמה נקבעה. אפשר להיכנס גם במייל.";
+      })}
+    >
+      <PasswordField label="סיסמה חדשה" hint={`לפחות ${PW_MIN} תווים`} value={pw} onChange={setPw} mode="new" />
+      <Btn type="submit" disabled={a.busy}>קביעת סיסמה</Btn>
+      {a.view}
+    </form>
+  );
+}
+
+const mask = (email: string) => email.replace(/^(.)(.*)(@.*)$/, (_, a: string, b: string, d: string) => a + "•".repeat(Math.min(6, b.length)) + d);
+
+/** "הפרטים שלי" באזור האישי: Google, מייל, שם, סיסמה, יציאה. בלי חשבון ⇐ הרשמה או כניסה */
 export default function Account({ session }: { session: ReturnType<typeof useSession> }) {
   const { me, token } = session;
+  const [showEmail, setShowEmail] = useState(false);
   const a = useAction("התנתקות");
-
-  if (token && me?.username) {
-    return (
-      <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-4">
-        <h3 className="text-xl font-display leading-tight text-center">החשבון</h3>
-        <p className="text-sm text-center">
-          מחוברים בשם <bdi className="font-bold">{maskIdentifier(me.username)}</bdi>.
-        </p>
-        <div className="grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
-          <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
-          <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
-        </div>
-        {a.view}
-        <h4 className="font-bold text-center pt-4 border-t border-paper-line">החלפת סיסמה</h4>
-        <NewPasswordForm session={session} />
-      </section>
-    );
-  }
-
-  if (token && me?.guest) {
-    return (
-      <section className="bg-paper-card border-2 border-warn rounded-theme p-4 md:p-5 space-y-3">
-        <h3 className="text-xl font-display leading-tight">נשמרתם בלי משתמש</h3>
-        <p className="text-sm text-ink">אי אפשר לשחזר את ההשערה אם תחליפו מכשיר או תמחקו נתוני דפדפן. הוסיפו שם משתמש וסיסמה כדי להישאר מחוברים מכל מכשיר.</p>
-        <GoogleButton session={session} onDone={() => void session.refresh()} />
-        <ClaimForm session={session} />
-      </section>
-    );
-  }
-
+  if (!token) return <AuthForm session={session} />;
+  if (!me) return <p className="text-ink-soft">טוען…</p>;
+  const emails = (me.emails ?? []).filter((e) => e.email);
+  const row = "py-3 border-b border-paper-line space-y-2";
   return (
-    <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-3">
-      <h3 className="text-xl font-display leading-tight">חשבון</h3>
-      <p className="text-sm text-ink">הרשמה בשם משתמש וסיסמה (בלי שם אמיתי ובלי מייל) מאפשרת לחזור להשערה מכל מכשיר. עד אז הטיוטות נשמרות רק בדפדפן הזה.</p>
-      <GoogleButton session={session} />
-      <p className="text-xs text-ink">בכניסה מאשרים שהגרסה האחרונה שלכם נכנסת לממוצע האנונימי של הגולשים. מ-Google לא נשמר מייל ולא שם.</p>
-      <AuthForm session={session} />
-    </section>
+    <div className="space-y-1">
+      {me.needsEmail && (
+        <div className="border-2 border-warn rounded-theme p-3 space-y-3 mb-3">
+          <p className="font-bold">חסר מייל או Google בחשבון.</p>
+          <p className="text-sm">כל חשבון צריך מייל או Google. ההשערה שלכם נשמרת ונספרת גם בינתיים.</p>
+          <GoogleButton session={session} onDone={() => void session.refresh()} />
+          <ClaimForm session={session} />
+        </div>
+      )}
+      <div className={row}>
+        <p className="font-bold">Google</p>
+        {me.google ? <p className="text-sm">מחובר.</p> : <><p className="text-sm text-ink-soft">לא מחובר. חיבור מאפשר להיכנס בלחיצה אחת.</p><GoogleButton session={session} onDone={() => void session.refresh()} /></>}
+      </div>
+      <div className={row}>
+        <p className="font-bold">מייל</p>
+        {emails.length ? (
+          <ul className="text-sm space-y-1">
+            {emails.map((e) => (
+              <li key={e.email}>
+                <span dir="ltr">{showEmail ? e.email : mask(e.email!)}</span>
+                {e.verified && <span className="block text-xs text-ink-soft">אומת ב-Google</span>}
+              </li>
+            ))}
+          </ul>
+        ) : <p className="text-sm text-ink-soft">אין עדיין.</p>}
+        {!!emails.length && <button type="button" onClick={() => setShowEmail((x) => !x)} className="text-sm underline min-h-[44px]">{showEmail ? "הסתרה" : "הצגה מלאה"}</button>}
+      </div>
+      <div className={row}>
+        <NameForm session={session} />
+      </div>
+      <div className={row}>
+        <p className="font-bold">סיסמה</p>
+        {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
+      </div>
+      <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
+        <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
+        <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
+      </div>
+      {a.view}
+    </div>
   );
 }

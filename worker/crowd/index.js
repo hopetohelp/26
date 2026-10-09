@@ -16,6 +16,8 @@ import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, r
 import { validateSave, validateCamps, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
+import { moderate } from "./lib/moderation.js";
+import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
 
 // שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
 export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
@@ -81,6 +83,12 @@ async function createParticipant(env, request, now, limited = false) {
   return [[env.DB.prepare("INSERT INTO participants (id, created_at) VALUES (?, ?)").bind(id, iso(now))], id];
 }
 
+/** החלטות המנהל על השערות חריגות ⇐ Map(versionId ⇐ decision) */
+async function loadDecisions(env) {
+  const { results } = await env.DB.prepare("SELECT version_id, decision FROM version_review").all();
+  return new Map((results || []).map((r) => [r.version_id, r.decision]));
+}
+
 const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: JSON.parse(r.payload) });
 
 async function passwordCred(env, participant) {
@@ -124,6 +132,53 @@ async function linkOwner(env, request, now, raw) {
   return { participant: c.participant, keys };
 }
 
+/** מצב הבדיקה של ההשערות: הגרסה האחרונה (מנדטים) של כל משתתף, ותוצאת הבדיקה מול שאר הגולשים */
+async function moderationState(env) {
+  const data = await env.DB.batch([
+    env.DB.prepare("SELECT id, review FROM participants"),
+    env.DB.prepare("SELECT v.id, v.participant, v.unit, v.created_at, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id"),
+    env.DB.prepare("SELECT version_id, decision FROM version_review"),
+  ]);
+  const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
+  const known = new Set((data[0].results || []).map((p) => p.id));
+  const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: JSON.parse(r.payload) }));
+  const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
+  const counted = latest.filter((v) => !review.has(v.participant));
+  const mod = moderate(counted, decisions);
+  // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
+  const raw = moderate(counted, new Map()).pending;
+  return { latest, review, mod: { ...mod, decisions, raw } };
+}
+
+/** המייל כבר רשום — בגיבוב, או כשם משתמש ישן (גלוי) של חשבון שנרשם לפני 9.10.2026 */
+async function emailTaken(env, eh, email) {
+  if (await env.DB.prepare("SELECT 1 AS x FROM emails WHERE hash = ?").bind(eh).first()) return true;
+  return !!(await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(email.display).first());
+}
+
+const emailRow = async (env, participant, eh, display, source, verified, now) =>
+  env.DB.prepare("INSERT INTO emails (hash, participant, enc, source, verified, created_at) VALUES (?, ?, ?, ?, ?, ?)").bind(eh, participant, await seal(env, display), source, verified, iso(now));
+
+const nameRow = async (env, participant, name, now) =>
+  env.DB.prepare("INSERT INTO profile (participant, name_enc, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET name_enc = excluded.name_enc, updated_at = excluded.updated_at").bind(participant, await seal(env, name), iso(now));
+
+/** שם משתמש ישן שהוא מייל (גלוי במאגר) ⇐ מייל מוצפן + גיבוב, והשם הגלוי נמחק */
+async function migrateLegacyEmail(env, cred, now) {
+  const email = normalizeEmail(cred.username);
+  if (!email) return [];
+  const eh = await emailHash(env, email.norm);
+  const taken = await env.DB.prepare("SELECT participant FROM emails WHERE hash = ?").bind(eh).first();
+  return [
+    ...(taken ? [] : [await emailRow(env, cred.participant, eh, email.display, "password", 0, now)]),
+    env.DB.prepare("UPDATE credentials SET username = NULL, username_norm = NULL WHERE id = ?").bind(cred.id),
+  ];
+}
+
+async function firstEmail(env, participant) {
+  const r = await env.DB.prepare("SELECT enc FROM emails WHERE participant = ? ORDER BY created_at LIMIT 1").bind(participant).first();
+  return r ? await open(env, r.enc) : null;
+}
+
 const DUMMY = { algo: "pbkdf2-sha256", salt: "AAAAAAAAAAAAAAAAAAAAAA==", iterations: PBKDF2_ITERATIONS, hash: "0".repeat(64) };
 
 // ---- הנתיבים
@@ -142,11 +197,26 @@ const routes = {
       .bind(participant)
       .all();
     const latest = Object.fromEntries((results || []).map((r) => [r.unit, parseVersion(r)]));
-    const pw = await passwordCred(env, participant);
+    let pw = await passwordCred(env, participant);
+    if (env.DATA_KEY && pw?.username?.includes("@")) {
+      await env.DB.batch(await migrateLegacyEmail(env, pw, now));
+      pw = await passwordCred(env, participant);
+    }
     const g = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
+    const emailRows = (await env.DB.prepare("SELECT enc, source, verified FROM emails WHERE participant = ? ORDER BY created_at").bind(participant).all()).results || [];
+    const emails = [];
+    for (const r of emailRows) emails.push({ email: await open(env, r.enc), source: r.source, verified: !!r.verified });
+    const prof = await env.DB.prepare("SELECT name_enc FROM profile WHERE participant = ?").bind(participant).first();
     const pref = await env.DB.prepare("SELECT camps FROM prefs WHERE participant = ?").bind(participant).first();
     const camps = pref?.camps ? JSON.parse(pref.camps) : null;
-    return { participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps } };
+    // ההשערה האחרונה ממתינה לאישור מנהל (חריגה) — הגולש רואה אותה כרגיל, עם הסבר
+    const seatsPending = latest.seats ? (await dashboardState(env)).pending.has(latest.seats.id) : false;
+    return {
+      participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps }, seatsPending,
+      emails, name: prof ? await open(env, prof.name_enc) : null, hasPassword: !!pw,
+      // חשבון בלי מייל ובלי Google (אורח או שם משתמש ישן) — נדרש להוסיף בכניסה הבאה (הכרעת בעלים 9.10.2026)
+      needsEmail: !emails.length && !g,
+    };
   },
 
   // העדפות אישיות (המחנות) — נשמרות על המשתמש, בלי גרסאות ובלי השפעה על הסטטיסטיקות
@@ -218,9 +288,22 @@ const routes = {
   "POST /delete": async ({ env, request, now, body }) => {
     const { participant } = await requireAuth(env, request, now);
     if (body.confirm !== "מחק") throw bad("confirm");
+    // שיחת התמיכה נשמרת בשרת ההערות — נמחקת שם קודם, כל עוד הסשן עדיין תקף (השרת שם מאמת אותו מולנו)
+    if (env.FEEDBACK) {
+      try {
+        await env.FEEDBACK.fetch(new Request("https://feedback.internal/support/purge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: bearer(request) }) }));
+      } catch { /* שרת ההערות לא זמין — המחיקה כאן ממשיכה */ }
+    }
     await env.DB.batch(
-      ["versions", "credentials", "sessions", "prefs"]
-        .map((t) => env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant))
+      [
+        env.DB.prepare("DELETE FROM version_review WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
+        env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
+      ]
+        .concat(
+          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "support_messages", "support_threads"].map((t) =>
+            env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
+          ),
+        )
         .concat([
           env.DB.prepare("DELETE FROM rate WHERE key = ?").bind("s:" + participant),
           env.DB.prepare("DELETE FROM participants WHERE id = ?").bind(participant),
@@ -240,114 +323,158 @@ const routes = {
     return { link: token };
   },
 
-  // הרשמה = יצירת משתתף: אמצעי סיסמה + קישור אישי לשחזור + סשן. אין דרך אחרת להיווצר.
+  // הרשמה = מייל + סיסמה (הכרעת בעלים 9.10.2026: כל חשבון עם מייל או Google; לא יותר מחשבון אחד לכל מייל).
+  // נוצרים: משתתף, סיסמה, מייל (מוצפן + גיבוב ייחודי), שם (רשות), קישור אישי וסשן.
   "POST /auth/register": async ({ env, request, now, body }) => {
-    const u = normalizeUsername(body.username);
-    if (!u) throw bad("bad_username");
+    const email = normalizeEmail(body.email ?? (String(body.username ?? "").includes("@") ? body.username : null));
+    if (!email) throw bad("email_required");
     checkPassword(body.password);
+    const name = body.name === undefined ? "" : normalizeName(body.name);
+    if (name === null) throw bad("bad_name");
     await limitNewParticipant(env, request, now);
-    const taken = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(u.norm).first();
-    if (taken) throw new HttpError(409, "username_taken");
+    const eh = await emailHash(env, email.norm);
+    if (await emailTaken(env, eh, email)) throw new HttpError(409, "email_taken");
     const [stmts, participant] = await createParticipant(env, request, now, true);
     const h = await hashPassword(body.password);
     const [sess, token] = await newSession(env, participant, now, isClientToken(body.token) ? body.token : undefined);
-    const link = randomToken();
+    const link = isClientToken(body.link) ? body.link : randomToken();
     try {
       await env.DB.batch([
         ...stmts,
-        env.DB.prepare(
-          "INSERT INTO credentials (participant, kind, username, username_norm, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?, ?, ?)",
-        ).bind(participant, u.display, u.norm, h.hash, h.salt, h.iterations, h.algo, iso(now)),
+        env.DB.prepare("INSERT INTO credentials (participant, kind, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?)").bind(participant, h.hash, h.salt, h.iterations, h.algo, iso(now)),
         env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
+        await emailRow(env, participant, eh, email.display, "password", 0, now),
+        ...(name ? [await nameRow(env, participant, name, now)] : []),
         sess,
       ]);
     } catch {
-      throw new HttpError(409, "username_taken");
+      throw new HttpError(409, "email_taken");
     }
     return { token, link };
   },
 
-  // שמירה בלי משתמש (הכרעת בעלים 8.10.2026): משתתף בלי סיסמה ובלי קישור אישי — אי אפשר לשחזר אותו אם הסשן אבד.
-  // אותה הגבלת קצב כמו בהרשמה. בהמשך אפשר להוסיף שם משתמש וסיסמה (POST /auth/claim) ואז נוצר גם קישור אישי.
-  // אסימון מהדפדפן (body.token): כשהתשובות נחסמות ברשת, הדפדפן יודע את האסימון בלי לקבל תשובה; ניסיון חוזר באותו אסימון לא יוצר משתתף נוסף.
-  "POST /auth/guest": async ({ env, request, now, body }) => {
-    const clientToken = isClientToken(body?.token) ? body.token : undefined;
-    if (clientToken && (await authenticate(env, clientToken, now))) return { token: clientToken };
-    const [stmts, participant] = await createParticipant(env, request, now);
-    const [sess, token] = await newSession(env, participant, now, clientToken);
-    // קישור אישי נוצר מיד (הכרעת בעלים 9.10.2026): הדרך היחידה לחזור לחשבון אורח ממכשיר אחר
-    // קישור שהדפדפן הציע (כמו אסימון הסשן): ידוע לגולש גם כשתשובת השרת נחסמת בדרך ("עיוורון")
-    const link = isClientToken(body?.link) ? body.link : randomToken();
-    await env.DB.batch([
-      ...stmts,
-      env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
-      sess,
-    ]);
-    return { token, link };
+  // אין יותר שמירה בלי חשבון בשרת (הכרעת בעלים 9.10.2026): בלי חשבון — הכול נשמר בדפדפן בלבד ולא נכנס לסטטיסטיקות.
+  "POST /auth/guest": async () => {
+    throw new HttpError(403, "account_required");
   },
 
-  // כניסה עם Google (הכרעת בעלים 8.10.2026). Google מאמת את הגולש בדפדפן, ולכן הדפדפן יכול להמשיך עם האסימון שיצר (body.token)
-  // גם כשתשובת השרת נחסמת בדרך — אין סיכון של סיסמה שגויה. נשמר רק גיבוב של sub, בלי מייל ובלי שם.
-  // חשבון Google קיים ⇐ סשן חדש לאותו משתתף · אחרת: מחובר כבר (למשל אורח) ⇐ Google מתווסף אליו · אחרת משתתף חדש.
+  // כניסה עם Google. Google מאמת את המייל, ולכן: אותו מזהה Google ⇐ אותו חשבון · אחרת אותו מייל מאומת ⇐ אותו חשבון (Google מתווסף) ·
+  // מחובר בלי Google ⇐ Google מתווסף אליו · אחרת חשבון חדש. מייל שמישהו אחר רשם בלי אימות — עובר לבעל ה-Google המאומת.
   "POST /auth/google": async ({ env, request, now, body }) => {
-    const sub = await verifyGoogle(env, body?.credential, now);
-    if (!sub) throw new HttpError(401, "bad_google");
+    const g = await verifyGoogle(env, body?.credential, now);
+    if (!g) throw new HttpError(401, "bad_google");
     const clientToken = isClientToken(body?.token) ? body.token : undefined;
     if (clientToken && (await authenticate(env, clientToken, now))) return { token: clientToken };
-    const gh = await sha256("google|" + sub);
+    const gh = await sha256("google|" + g.sub);
+    const email = g.emailVerified ? normalizeEmail(g.email) : null;
+    const eh = email ? await emailHash(env, email.norm) : null;
+    const owner = eh ? await env.DB.prepare("SELECT participant, verified FROM emails WHERE hash = ?").bind(eh).first() : null;
     const found = await env.DB.prepare("SELECT participant FROM credentials WHERE kind = 'google' AND google_sub = ?").bind(gh).first();
-    if (found) {
-      const [sess, token] = await newSession(env, found.participant, now, clientToken);
-      await env.DB.batch([sess]);
-      return { token };
+    const stmts = [];
+    let participant = found?.participant;
+    if (!participant && owner?.verified) participant = owner.participant;
+    if (!participant) {
+      const current = await authenticate(env, bearer(request), now);
+      const hasGoogle = current && (await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(current.participant).first());
+      if (current && !hasGoogle) participant = current.participant;
+      else {
+        const [created, id] = await createParticipant(env, request, now);
+        stmts.push(...created);
+        participant = id;
+        stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(isClientToken(body?.link) ? body.link : randomToken()), iso(now)));
+      }
     }
-    const current = await authenticate(env, bearer(request), now);
-    const hasGoogle = current && (await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(current.participant).first());
-    let stmts = [], participant;
-    if (current && !hasGoogle) participant = current.participant;
-    else [stmts, participant] = await createParticipant(env, request, now);
+    // לחשבון יש כבר Google אחר עם אותו מייל מאומת — נכנסים בלי להוסיף מזהה שני
+    const hasG = !found && (await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first());
+    if (!found && !hasG) stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, google_sub, created_at) VALUES (?, 'google', ?, ?)").bind(participant, gh, iso(now)));
+    if (eh) {
+      // מייל מאומת של Google: שייך לחשבון הזה. רישום לא מאומת של אותו מייל בחשבון אחר — מבוטל.
+      if (owner && owner.participant !== participant) stmts.push(env.DB.prepare("DELETE FROM emails WHERE hash = ? AND verified = 0").bind(eh));
+      if (!owner || owner.participant !== participant || !owner.verified) {
+        if (owner?.participant === participant) stmts.push(env.DB.prepare("UPDATE emails SET verified = 1, source = 'google' WHERE hash = ?").bind(eh));
+        else stmts.push(await emailRow(env, participant, eh, email.display, "google", 1, now));
+      }
+    }
     const [sess, token] = await newSession(env, participant, now, clientToken);
-    await env.DB.batch([
-      ...stmts,
-      env.DB.prepare("INSERT INTO credentials (participant, kind, google_sub, created_at) VALUES (?, 'google', ?, ?)").bind(participant, gh, iso(now)),
-      sess,
-    ]);
+    await env.DB.batch([...stmts, sess]);
     return { token };
   },
 
-  // הוספת שם משתמש וסיסמה למשתתף שנשמר בלי משתמש: הסשן הנוכחי נשאר, ונוצר קישור אישי לשחזור.
+  // הוספת מייל וסיסמה לחשבון קיים (אורח ישן או שם משתמש): נדרש בכניסה הבאה (הכרעת בעלים 9.10.2026).
+  // הסשן נשאר; לחשבון בלי קישור אישי נוצר קישור. סיסמה — חובה רק כשאין עדיין סיסמה ואין Google.
   "POST /auth/claim": async ({ env, request, now, body }) => {
     const { participant } = await requireAuth(env, request, now);
-    if (await passwordCred(env, participant)) throw bad("has_password");
-    const u = normalizeUsername(body.username);
-    if (!u) throw bad("bad_username");
-    checkPassword(body.password);
+    const email = normalizeEmail(body.email ?? body.username);
+    if (!email) throw bad("email_required");
     if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
-    const taken = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(u.norm).first();
-    if (taken) throw new HttpError(409, "username_taken");
-    const h = await hashPassword(body.password);
-    const link = randomToken();
-    try {
-      await env.DB.batch([
-        env.DB.prepare(
-          "INSERT INTO credentials (participant, kind, username, username_norm, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?, ?, ?)",
-        ).bind(participant, u.display, u.norm, h.hash, h.salt, h.iterations, h.algo, iso(now)),
-        env.DB.prepare("DELETE FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant),
-        env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
-      ]);
-    } catch {
-      throw new HttpError(409, "username_taken");
+    const pw = await passwordCred(env, participant);
+    const hasGoogle = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
+    if (!pw && !hasGoogle) checkPassword(body.password);
+    const eh = await emailHash(env, email.norm);
+    const mine = await env.DB.prepare("SELECT participant FROM emails WHERE hash = ?").bind(eh).first();
+    if (mine && mine.participant !== participant) throw new HttpError(409, "email_taken");
+    if (!mine && (await emailTaken(env, eh, email))) throw new HttpError(409, "email_taken");
+    const stmts = [];
+    if (!mine) {
+      stmts.push(env.DB.prepare("DELETE FROM emails WHERE participant = ? AND verified = 0").bind(participant));
+      stmts.push(await emailRow(env, participant, eh, email.display, "added", 0, now));
     }
-    return { username: u.display, link };
+    if (!pw && !hasGoogle) {
+      const h = await hashPassword(body.password);
+      stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?)").bind(participant, h.hash, h.salt, h.iterations, h.algo, iso(now)));
+    }
+    const hasLink = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant).first();
+    const link = hasLink ? null : randomToken();
+    if (link) stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)));
+    try {
+      await env.DB.batch(stmts);
+    } catch {
+      throw new HttpError(409, "email_taken");
+    }
+    return { email: email.display, ...(link ? { link } : {}) };
   },
 
+  // שם תצוגה (רשות) — נשמר מוצפן, מוצג רק לבעל החשבון
+  "POST /account/name": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const name = normalizeName(body.name);
+    if (name === null) throw bad("bad_name");
+    if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
+    await (name ? await nameRow(env, participant, name, now) : env.DB.prepare("DELETE FROM profile WHERE participant = ?").bind(participant)).run();
+    return { name };
+  },
+
+  // קביעת סיסמה לחשבון בלי סיסמה (למשל Google בלבד). להחלפת סיסמה קיימת — /auth/password
+  "POST /account/password": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    if (await passwordCred(env, participant)) throw bad("has_password");
+    if (!(await env.DB.prepare("SELECT 1 AS x FROM emails WHERE participant = ?").bind(participant).first())) throw bad("email_required");
+    checkPassword(body.password);
+    const h = await hashPassword(body.password);
+    await env.DB.prepare("INSERT INTO credentials (participant, kind, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?)").bind(participant, h.hash, h.salt, h.iterations, h.algo, iso(now)).run();
+    return { ok: true };
+  },
+
+  // כניסה: מייל + סיסמה (או שם משתמש ישן + סיסמה)
   "POST /auth/login": async ({ env, request, now, body }) => {
-    const u = normalizeUsername(body.username);
+    const raw = String(body.email ?? body.username ?? "");
+    const email = raw.includes("@") ? normalizeEmail(raw) : null;
+    const u = email ? null : normalizeUsername(raw);
     const ips = await ipKeys(env, request);
-    const keys = ["fi:" + ips[0], "fa:" + (await hmac(env.IP_KEY, "user|" + (u?.norm ?? String(body.username ?? ""))))];
+    const keys = ["fi:" + ips[0], "fa:" + (await hmac(env.IP_KEY, "user|" + (email?.norm ?? u?.norm ?? raw)))];
     const wait = await waitMs(env, [...keys, ...ips.slice(1).map((k) => "fi:" + k)], now);
     if (wait > 0) throw new HttpError(429, "slow_down", { retryAfter: Math.ceil(wait / 1000) });
-    const cred = u ? await env.DB.prepare("SELECT * FROM credentials WHERE kind = 'password' AND username_norm = ?").bind(u.norm).first() : null;
+    let cred = null;
+    let legacyEmail = false;
+    if (email) {
+      const row = await env.DB.prepare("SELECT participant FROM emails WHERE hash = ?").bind(await emailHash(env, email.norm)).first();
+      if (row) cred = await passwordCred(env, row.participant);
+      if (!cred) {
+        // חשבון ישן שנרשם עם המייל כשם משתמש (גלוי במאגר) — עובר אחרי הכניסה לשמירה מוצפנת
+        cred = await env.DB.prepare("SELECT * FROM credentials WHERE kind = 'password' AND username_norm = ?").bind(email.display).first();
+        legacyEmail = !!cred;
+      }
+    } else if (u) cred = await env.DB.prepare("SELECT * FROM credentials WHERE kind = 'password' AND username_norm = ?").bind(u.norm).first();
     const ok = await verifyPassword(String(body.password ?? ""), cred || DUMMY);
     if (!cred || !ok) {
       await recordFail(env, keys, now);
@@ -359,6 +486,7 @@ const routes = {
       const h = await hashPassword(body.password);
       stmts.push(env.DB.prepare("UPDATE credentials SET hash = ?, salt = ?, iterations = ?, algo = ? WHERE id = ?").bind(h.hash, h.salt, h.iterations, h.algo, cred.id));
     }
+    if (legacyEmail) stmts.push(...(await migrateLegacyEmail(env, cred, now)));
     const [sess, token] = await newSession(env, cred.participant, now);
     await env.DB.batch([...stmts, sess]);
     return { token };
@@ -394,7 +522,7 @@ const routes = {
     const [sess, token] = await newSession(env, participant, now);
     await sess.run();
     const cred = await passwordCred(env, participant);
-    return { token, username: cred?.username ?? null };
+    return { token, username: cred?.username ?? null, email: await firstEmail(env, participant) };
   },
 
   // שחזור: הקישור האישי + סיסמה חדשה ⇐ סשן רגיל; שאר הסשנים מבוטלים, הקישור נשאר.
@@ -404,7 +532,7 @@ const routes = {
     if (!cred) throw bad("no_password");
     checkPassword(body.password);
     await clearFails(env, keys);
-    return { token: await setPassword(env, participant, body.password, now), username: cred.username };
+    return { token: await setPassword(env, participant, body.password, now), username: cred.username, email: await firstEmail(env, participant) };
   },
 
   // ---- ממשק ניהול (דרך שרת ההערות בלבד): שיחות תמיכה של משתתפים מאומתים ומספרים כלליים. מפתח בכותרת x-admin-key.
@@ -415,6 +543,52 @@ const routes = {
     const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests").first();
     return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
+  // דשבורד השערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה — בלי מזהה משתתף, גרסה או פעולה, בלי שעה (יום בלבד),
+  // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
+  "GET /admin/guesses": async ({ env, request }) => {
+    await requireAdmin(env, request);
+    const { latest, mod, review } = await moderationState(env);
+    const salt = randomToken(12);
+    const rows = [];
+    for (const v of latest) {
+      const reasons = mod.pending.get(v.id) ?? [];
+      const decision = mod.decisions.get(v.id) ?? null;
+      const status = review.has(v.participant) ? "review" : decision ?? (reasons.length ? "pending" : "ok");
+      rows.push({
+        handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
+        day: v.created_at.slice(0, 10),
+        mode: v.payload.mode === "pct" ? "pct" : "seats",
+        seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
+        ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
+        status,
+        reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
+      });
+    }
+    for (let i = rows.length - 1; i > 0; i--) {
+      const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+      [rows[i], rows[j]] = [rows[j], rows[i]];
+    }
+    return { salt, rows };
+  },
+
+  // אישור / דחייה / ביטול החלטה — לפי ידית מהטעינה (salt + handle). אין קלט של מזהה גרסה או משתתף.
+  "POST /admin/guesses/decide": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    const decision = body.decision;
+    if (!["approved", "rejected", "clear"].includes(decision)) throw bad("decision");
+    if (typeof body.salt !== "string" || typeof body.handle !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
+    const { latest } = await moderationState(env);
+    let target = null;
+    for (const v of latest) if ((await hmac(env.IP_KEY, `guess|${body.salt}|${v.id}`)).slice(0, 32) === body.handle) { target = v; break; }
+    if (!target) throw new HttpError(404, "not_found");
+    if (decision === "clear") await env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(target.id).run();
+    else
+      await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
+        .bind(target.id, decision, iso(now))
+        .run();
+    return { ok: true };
+  },
+
   // קריאה בלבד לצורך העברה לשרת ההערות; רק בעל הסשן מקבל את ההיסטוריה שלו.
   "GET /support/access": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
@@ -445,13 +619,15 @@ const DASHBOARD_TTL_MS = 30_000;
 let dashboardCache = null;
 export function resetDashboardCache() { dashboardCache = null; }
 
-async function dashboard(env) {
+/** ⇐ {dashboard, pending: Map(versionId ⇐ reasons)} — pending נשאר בשרת בלבד */
+async function dashboardState(env) {
   const at = clock(env);
   if (dashboardCache && at >= dashboardCache.at && at - dashboardCache.at < DASHBOARD_TTL_MS) return dashboardCache.data;
   const data = await computeDashboard(env);
   dashboardCache = { at, data };
   return data;
 }
+const dashboard = async (env) => (await dashboardState(env)).dashboard;
 
 async function computeDashboard(env) {
   // תמונה עדכנית, בלי כתיבה ובלי להמתין למשימה השעתית.
@@ -461,11 +637,14 @@ async function computeDashboard(env) {
     env.DB.prepare("SELECT id, review FROM participants"),
     env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id"),
     env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'"),
+    env.DB.prepare("SELECT version_id, decision FROM version_review"),
   ]);
   const participants = data[0].results || [];
+  const decisions = new Map((data[3].results || []).map((r) => [r.version_id, r.decision]));
   const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
-  return aggregate({ participants, versions, now, blocNames, aggregationId: `live-${now}` }).dashboard;
+  const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
+  return { dashboard: res.dashboard, pending: res.pending };
 }
 
 // ---- המשימה השעתית
@@ -530,7 +709,8 @@ export async function runAggregation(env, now) {
   const wasOpen = !!previousDash?.open && previousDash.policy === DASHBOARD_POLICY;
   const names = (await env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'").all()).results || [];
   const blocNames = Object.fromEntries(names.map(r => [r.composition,r.name]));
-  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId });
+  const decisions = await loadDecisions(env);
+  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId, decisions });
   const ins = (section, json, publishedAt, contributors = 0, snapshot = null) =>
     env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json, contributors, snapshot) VALUES (?, ?, ?, ?, ?, ?)").bind(
       aggregationId,

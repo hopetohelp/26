@@ -16,6 +16,7 @@ beforeEach(() => {
     ALLOWED_ORIGIN: "https://hopetohelp.github.io",
     SITE_URL: "https://hopetohelp.github.io/26/",
     IP_KEY: "ip-secret",
+    DATA_KEY: "data-secret",
     NOW: () => t,
   };
 });
@@ -34,7 +35,7 @@ async function call(path, { body, token, method, ip = "1.2.3.4" } = {}) {
 }
 let un = 0;
 const PW = "a long pass phrase";
-const register = (ip = ipFor(), username = "user_" + un++) => call("/auth/register", { body: { username, password: PW }, ip });
+const register = (ip = ipFor(), email = "user_" + un++ + "@example.com") => call("/auth/register", { body: { email, password: PW }, ip });
 /** משתתף חדש = הרשמה (אין משתתף אנונימי). מחזיר אסימון סשן */
 const newP = async (ip = ipFor()) => (await register(ip)).data.token;
 let op = 0;
@@ -48,7 +49,7 @@ describe("participant & saves", () => {
     expect(r.data.link).toMatch(/^[\w-]{20,}$/);
     expect(r.headers.get("access-control-allow-headers")).toContain("authorization");
     const me = await call("/me", { token: r.data.token });
-    expect(me.data).toMatchObject({ latest: {}, username: "user_" + (un - 1), google: false });
+    expect(me.data).toMatchObject({ latest: {}, username: null, google: false, needsEmail: false, hasPassword: true, emails: [{ email: "user_" + (un - 1) + "@example.com", source: "password", verified: false }] });
     expect((await call("/me")).status).toBe(401);
     expect((await call("/participant", { body: {} })).status).toBe(404);
     // הקישור אינו אסימון כניסה
@@ -107,7 +108,7 @@ describe("participant & saves", () => {
     expect((await call("/me", { token: tok })).status).toBe(200); // הסשן נשאר
     expect((await call("/auth/recover", { body: { link: reg.data.link, password: "brand new pass 1" } })).status).toBe(401);
     expect((await call("/auth/recover", { body: { link: r.data.link, password: "brand new pass 1" }, ip: "7.7.7.1" })).status).toBe(200);
-    const tok2 = (await call("/auth/login", { body: { username: "user_" + (un - 1), password: "brand new pass 1" } })).data.token;
+    const tok2 = (await call("/auth/login", { body: { email: "user_" + (un - 1) + "@example.com", password: "brand new pass 1" } })).data.token;
     expect((await call("/delete", { body: { confirm: "no" }, token: tok2 })).status).toBe(400);
     expect((await call("/delete", { body: { confirm: "מחק" }, token: tok2 })).data).toEqual({ ok: true });
     expect((await call("/me", { token: tok2 })).status).toBe(401);
@@ -126,70 +127,70 @@ describe("participant & saves", () => {
 
 describe("username & password", () => {
   it("register, login, wrong password, no enumeration, progressive delay", async () => {
-    expect((await call("/auth/register", { body: { username: "דני", password: "short" } })).data.error).toBe("weak_password");
-    expect((await call("/auth/register", { body: { username: "x", password: "a long pass phrase" } })).data.error).toBe("bad_username");
-    const reg = await call("/auth/register", { body: { username: "Dani_7", password: "a long pass phrase" } });
+    expect((await call("/auth/register", { body: { email: "דני@example.com", password: "short" } })).data.error).toBe("weak_password");
+    expect((await call("/auth/register", { body: { username: "not_an_email", password: "a long pass phrase" } })).data.error).toBe("email_required");
+    const reg = await call("/auth/register", { body: { email: "Dani_7@example.com", password: "a long pass phrase" } });
     expect(reg.status).toBe(200);
-    expect((await call("/me", { token: reg.data.token })).data.username).toBe("Dani_7");
-    expect((await call("/auth/register", { body: { username: "dani_7", password: "a long pass phrase" } })).status).toBe(409);
-    expect((await call("/auth/login", { body: { username: "DANI_7", password: "a long pass phrase" } })).status).toBe(200);
-    const wrong = await call("/auth/login", { body: { username: "dani_7", password: "wrong wrong wrong" }, ip: "5.5.5.5" });
-    const ghost = await call("/auth/login", { body: { username: "ghost_user", password: "wrong wrong wrong" }, ip: "5.5.5.6" });
+    expect((await call("/me", { token: reg.data.token })).data.emails[0].email).toBe("dani_7@example.com");
+    expect((await call("/auth/register", { body: { email: "dani_7@example.com", password: "a long pass phrase" } })).status).toBe(409);
+    expect((await call("/auth/login", { body: { email: "DANI_7@example.com", password: "a long pass phrase" } })).status).toBe(200);
+    const wrong = await call("/auth/login", { body: { email: "dani_7@example.com", password: "wrong wrong wrong" }, ip: "5.5.5.5" });
+    const ghost = await call("/auth/login", { body: { email: "ghost_user@example.com", password: "wrong wrong wrong" }, ip: "5.5.5.6" });
     expect(wrong).toMatchObject({ status: 401, data: { error: "bad_credentials" } });
     expect(ghost).toMatchObject({ status: 401, data: { error: "bad_credentials" } });
-    for (let i = 0; i < 2; i++) await call("/auth/login", { body: { username: "dani_7", password: "nope nope nope" }, ip: "5.5.5.7" });
-    const slow = await call("/auth/login", { body: { username: "dani_7", password: "a long pass phrase" }, ip: "5.5.5.8" });
+    for (let i = 0; i < 2; i++) await call("/auth/login", { body: { email: "dani_7@example.com", password: "nope nope nope" }, ip: "5.5.5.7" });
+    const slow = await call("/auth/login", { body: { email: "dani_7@example.com", password: "a long pass phrase" }, ip: "5.5.5.8" });
     expect(slow.status).toBe(429);
     expect(slow.data.error).toBe("slow_down");
     t += 5000;
-    expect((await call("/auth/login", { body: { username: "dani_7", password: "a long pass phrase" }, ip: "5.5.5.8" })).status).toBe(200);
+    expect((await call("/auth/login", { body: { email: "dani_7@example.com", password: "a long pass phrase" }, ip: "5.5.5.8" })).status).toBe(200);
   }, 20000);
   it("password change revokes other sessions; logout all", async () => {
-    const reg = await call("/auth/register", { body: { username: "user_a", password: "first password!" } });
-    const s2 = (await call("/auth/login", { body: { username: "user_a", password: "first password!" } })).data.token;
+    const reg = await call("/auth/register", { body: { email: "user_a@example.com", password: "first password!" } });
+    const s2 = (await call("/auth/login", { body: { email: "user_a@example.com", password: "first password!" } })).data.token;
     const ch = await call("/auth/password", { body: { current: "first password!", next: "second password!" }, token: reg.data.token });
     expect(ch.status).toBe(200);
     expect((await call("/me", { token: s2 })).status).toBe(401);
     expect((await call("/me", { token: reg.data.token })).status).toBe(401);
     expect((await call("/me", { token: ch.data.token })).status).toBe(200);
-    const s3 = (await call("/auth/login", { body: { username: "user_a", password: "second password!" } })).data.token;
+    const s3 = (await call("/auth/login", { body: { email: "user_a@example.com", password: "second password!" } })).data.token;
     await call("/auth/logout", { body: { all: true }, token: s3 });
     expect((await call("/me", { token: ch.data.token })).status).toBe(401);
   }, 20000);
   it("upgrades lower iteration count on login", async () => {
-    await call("/auth/register", { body: { username: "olduser", password: "old password 1" } });
+    await call("/auth/register", { body: { email: "olduser@example.com", password: "old password 1" } });
     const { hashPassword } = await import("../lib/crypto.js");
     const h = await hashPassword("old password 1", 1000);
-    env.DB.raw.prepare("UPDATE credentials SET hash = ?, salt = ?, iterations = 1000 WHERE username_norm = 'olduser'").run(h.hash, h.salt);
-    expect((await call("/auth/login", { body: { username: "olduser", password: "old password 1" } })).status).toBe(200);
-    expect(env.DB.raw.prepare("SELECT iterations FROM credentials WHERE username_norm = 'olduser'").get().iterations).toBe(100000);
+    env.DB.raw.prepare("UPDATE credentials SET hash = ?, salt = ?, iterations = 1000 WHERE kind = 'password'").run(h.hash, h.salt);
+    expect((await call("/auth/login", { body: { email: "olduser@example.com", password: "old password 1" } })).status).toBe(200);
+    expect(env.DB.raw.prepare("SELECT iterations FROM credentials WHERE kind = 'password'").get().iterations).toBe(100000);
   }, 20000);
 });
 
 describe("recovery via personal link (no email)", () => {
   it("/auth/recover sets a new password with the link; revokes sessions, keeps the link", async () => {
-    const reg = await call("/auth/register", { body: { username: "forgetful", password: "original pass 1" } });
+    const reg = await call("/auth/register", { body: { email: "forgetful@example.com", password: "original pass 1" } });
     expect(reg.status).toBe(200);
     const link = reg.data.link;
-    const other = (await call("/auth/login", { body: { username: "forgetful", password: "original pass 1" } })).data.token;
+    const other = (await call("/auth/login", { body: { email: "forgetful@example.com", password: "original pass 1" } })).data.token;
     expect((await call("/auth/recover", { body: { link, password: "short" } })).data.error).toBe("weak_password");
     const ch = await call("/auth/recover", { body: { link, password: "recovered pass 1" } });
     expect(ch.status).toBe(200);
-    expect(ch.data.username).toBe("forgetful");
+    expect(ch.data.email).toBe("forgetful@example.com");
     expect((await call("/me", { token: reg.data.token })).status).toBe(401);
     expect((await call("/me", { token: other })).status).toBe(401);
     expect((await call("/me", { token: ch.data.token })).status).toBe(200);
-    expect((await call("/auth/login", { body: { username: "forgetful", password: "original pass 1" } })).status).toBe(401);
-    expect((await call("/auth/login", { body: { username: "forgetful", password: "recovered pass 1" } })).status).toBe(200);
+    expect((await call("/auth/login", { body: { email: "forgetful@example.com", password: "original pass 1" } })).status).toBe(401);
+    expect((await call("/auth/login", { body: { email: "forgetful@example.com", password: "recovered pass 1" } })).status).toBe(200);
     // הקישור נשאר — אפשר לשחזר שוב
     expect((await call("/auth/recover", { body: { link, password: "recovered pass 2" } })).status).toBe(200);
   }, 30000);
   it("/auth/link logs in with the link (normal session); link itself is not a Bearer", async () => {
-    const reg = await call("/auth/register", { body: { username: "linker", password: "original pass 3" } });
+    const reg = await call("/auth/register", { body: { email: "linker@example.com", password: "original pass 3" } });
     const r = await call("/auth/link", { body: { link: reg.data.link }, ip: "8.8.8.1" });
     expect(r.status).toBe(200);
-    expect(r.data.username).toBe("linker");
-    expect((await call("/me", { token: r.data.token })).data.username).toBe("linker");
+    expect(r.data.email).toBe("linker@example.com");
+    expect((await call("/me", { token: r.data.token })).data.emails[0].email).toBe("linker@example.com");
     expect((await call("/me", { token: reg.data.link })).status).toBe(401);
     expect((await call("/me", { token: reg.data.token })).status).toBe(200); // סשנים אחרים לא נפגעים
     for (let i = 0; i < 3; i++) await call("/auth/link", { body: { link: "y".repeat(43) }, ip: "8.8.8.2" });
@@ -203,14 +204,14 @@ describe("recovery via personal link (no email)", () => {
     expect((await call("/auth/recover", { body: { password: "whatever pass 1" }, ip: "6.6.6.7" })).status).toBe(401);
   });
   it("password change with a session always requires the current password", async () => {
-    const reg = await call("/auth/register", { body: { username: "session_user", password: "original pass 2" } });
+    const reg = await call("/auth/register", { body: { email: "session_user@example.com", password: "original pass 2" } });
     const r = await call("/auth/password", { body: { next: "another pass 22" }, token: reg.data.token });
     expect(r).toMatchObject({ status: 401, data: { error: "bad_credentials" } });
     const w = await call("/auth/password", { body: { current: "wrong pass 222", next: "another pass 22" }, token: reg.data.token });
     expect(w.status).toBe(401);
     // הקישור אינו Bearer גם כאן
     expect((await call("/auth/password", { body: { next: "another pass 22" }, token: reg.data.link })).status).toBe(401);
-    expect((await call("/auth/login", { body: { username: "session_user", password: "original pass 2" } })).status).toBe(200);
+    expect((await call("/auth/login", { body: { email: "session_user@example.com", password: "original pass 2" } })).status).toBe(200);
   }, 30000);
   it("removed email endpoints are gone", async () => {
     for (const p of ["/auth/email", "/auth/email/verify", "/auth/forgot", "/auth/reset"]) expect((await call(p, { body: {} })).status).toBe(404);
@@ -367,5 +368,38 @@ describe("סטטיסטיקות חיות", () => {
     expect((await call("/dashboard")).data).toEqual(first);
     expect((await save(await newP(), "seats", seats(60))).status).toBe(200);
     expect((await call("/dashboard")).data.participants).toBe(first.participants + 1);
+  });
+});
+
+describe("admin guesses dashboard (no identifiers)", () => {
+  const KEY = "k".repeat(40);
+  const admin = (path, body) =>
+    worker.fetch(new Request("https://w.example" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json", "x-admin-key": KEY }, body: body ? JSON.stringify(body) : undefined }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
+  it("lists every latest guess without ids; approving a flagged guess brings it into the statistics", async () => {
+    await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
+    expect((await worker.fetch(new Request("https://w.example/admin/guesses"), env)).status).toBe(401);
+    const a = await newP(), b = await newP(), c = await newP(), d4 = await newP();
+    await save(a, "seats", seats(60));
+    await save(b, "seats", seats(60));
+    await save(d4, "seats", seats(60));
+    const odd = await save(c, "seats", seats(100));
+    resetDashboardCache();
+    expect((await call("/dashboard")).data.pendingGuesses).toBe(1);
+    expect((await call("/me", { token: c })).data.seatsPending).toBe(true);
+    const r = await admin("/admin/guesses");
+    expect(r.data.rows).toHaveLength(4);
+    const text = JSON.stringify(r.data);
+    for (const tok of [a, b, c, d4]) expect(text).not.toContain(tok);
+    expect(text).not.toContain(String(odd.data.version.id) + ",");
+    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["day", "handle", "mode", "reasons", "seats", "status"]);
+    const pending = r.data.rows.find((x) => x.status === "pending");
+    expect(pending.reasons[0]).toMatchObject({ list: IDS[0], rule: "ratio" });
+    expect((await admin("/admin/guesses/decide", { salt: "wrong-salt-1234", handle: pending.handle, decision: "approved" })).status).toBe(404);
+    expect((await admin("/admin/guesses/decide", { salt: r.data.salt, handle: pending.handle, decision: "approved" })).status).toBe(200);
+    resetDashboardCache();
+    const d = (await call("/dashboard")).data;
+    expect(d.pendingGuesses).toBe(0);
+    expect(d.seats.n).toBe(4);
+    expect((await admin("/admin/guesses")).data.rows.filter((x) => x.status === "approved")).toHaveLength(1);
   });
 });
