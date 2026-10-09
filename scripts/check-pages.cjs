@@ -8,7 +8,7 @@ const assert = require('node:assert/strict');
   const base = 'http://127.0.0.1:5174/';
   try {
     const routes = ['/', '/today', '/today?tab=scenarios', '/polls', '/polls?tab=trends', '/changes', '/calculator', '/guess', '/guess?view=statistics', '/past', '/past?tab=accuracy', '/past?tab=voters', '/method', '/method?tab=about', '/support'];
-    for (const theme of ['board', 'league']) for (const width of [360, 1280]) {
+    for (const theme of ['league']) for (const width of [360, 1280]) {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
       await context.addInitScript(theme => localStorage.setItem('elections26.theme', theme), theme);
       const page = await context.newPage();
@@ -33,7 +33,7 @@ const assert = require('node:assert/strict');
       console.log(`כל המסכים והלשוניות עברו: ${theme}, רוחב ${width}`);
     }
     // תקלה ממשית בטעינת קובץ מסך: שומרת על הניווט ומאפשרת התאוששות.
-    for (const theme of ['board', 'league']) for (const width of [360, 1280]) {
+    for (const theme of ['league']) for (const width of [360, 1280]) {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
       await context.addInitScript(theme => localStorage.setItem('elections26.theme', theme), theme);
       const page = await context.newPage();

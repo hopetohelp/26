@@ -10,7 +10,7 @@ const dir='/tmp/elections26-bloc-plus-share'; fs.mkdirSync(dir,{recursive:true})
  const server=await preview({preview:{host:'127.0.0.1',port:5176,strictPort:true}});
  const browser=await chromium.launch({executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox','--disable-gpu','--disable-dev-shm-usage']});
  try {
- for(const theme of ['board','league']) for(const width of [360,1280]) for(const dark of [false,true]) {
+ for(const theme of ['league']) for(const width of [360,1280]) for(const dark of [false,true]) {
   const context=await browser.newContext({viewport:{width,height:900}});
   await context.route('https://fonts.googleapis.com/**',r=>r.abort());
   await context.route('https://fonts.gstatic.com/**',r=>r.abort());

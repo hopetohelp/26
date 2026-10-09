@@ -62,7 +62,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
     let item: FeedbackItem | undefined;
     try {
       const body = text.trim().slice(0, MAX);
-      item = { topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap, diagnostic };
+      item = { topic, text: body, page: pathname, theme: "league", website: trap, diagnostic };
       const res = await deliverFeedback(item, MAX);
       if (res.token) setToken(res.token);
       setStatus(res.ok ? "sent" : "error");

@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  const {createServer}=await import('vite');const server=await createServer({base:'/',server:{host:'127.0.0.1',port:5182,strictPort:true}});await server.listen();
  const browser=await chromium.launch({executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox','--disable-gpu','--disable-dev-shm-usage']});
  try{
-  for(const theme of ['board','league'])for(const dark of [false,true]){
+  for(const theme of ['league'])for(const dark of [false,true]){
    const context=await browser.newContext({viewport:{width:360,height:900}});await context.route('https://fonts.googleapis.com/**',r=>r.abort());await context.route('https://fonts.gstatic.com/**',r=>r.abort());
    await context.addInitScript(({theme,dark})=>{localStorage.setItem('elections26.theme',theme);localStorage.setItem('elections26.mode',dark?'dark':'light')},{theme,dark});
    const page=await context.newPage();await page.goto('http://127.0.0.1:5182/');await page.locator('main h1').waitFor();

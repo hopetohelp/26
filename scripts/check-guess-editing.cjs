@@ -13,7 +13,7 @@ const payload = (a, b, open = false) => ({ start: 'zero', pollsAsOf: null,
   const server = await preview({ preview: { host: '127.0.0.1', port: 5175, strictPort: true } });
   const browser = await chromium.launch({ executablePath: process.env.UI_BROWSER_EXECUTABLE || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
   try {
-    for (const theme of ['board', 'league']) for (const width of [360, 1280]) for (const dark of [false, true]) {
+    for (const theme of ['league']) for (const width of [360, 1280]) for (const dark of [false, true]) {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
       await context.addInitScript(({theme,dark}) => {
         localStorage.setItem('elections26.theme',theme);

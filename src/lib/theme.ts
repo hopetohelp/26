@@ -1,51 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
-/** שני העיצובים (הצעיר הוסר אחרי ביקורת משתמשים: עיוות את הגרפים — הכרעת בעלים 6.10.2026) שהגולש בוחר ביניהם. הבחירה נשמרת בדפדפן שלו בלבד. */
-export const THEMES = [
-  { id: "league", name: "מקצועי", long: "עיצוב מקצועי — טבלת הליגה", color: "#FFFFFF" },
-  { id: "board", name: "חדשותי", long: "עיצוב חדשותי — לוח המודיעין", color: "#0B2239" },
-] as const;
-export type ThemeId = (typeof THEMES)[number]["id"];
+/** עיצוב אחד בלבד: מקצועי (הכרעת בעלים 9.10.2026; בורר העיצוב והעיצוב החדשותי הוסרו). נשארה רק התצורה: יום, לילה, לפי המכשיר. */
 
-const KEY = "elections26.theme"; // אותו מפתח בסקריפט הקטן שב-index.html
-const DEFAULT: ThemeId = "league"; // הכרעת בעלים 8.10.2026: ברירת המחדל — מקצועי
-
-function read(): ThemeId {
-  try {
-    const t = localStorage.getItem(KEY);
-    if (THEMES.some((x) => x.id === t)) return t as ThemeId;
-  } catch {
-    /* דפדפן חסום לאחסון — עיצוב ברירת המחדל */
-  }
-  return DEFAULT;
-}
-
-const listeners = new Set<(t: ThemeId) => void>();
-
-/** הבעלים היחיד של בחירת העיצוב: קורא, שומר ומחיל על <html data-theme> */
-export function useTheme(): [ThemeId, (t: ThemeId) => void] {
-  const [theme, setThemeState] = useState<ThemeId>(read);
-  useEffect(() => {
-    listeners.add(setThemeState);
-    return () => {
-      listeners.delete(setThemeState);
-    };
-  }, []);
-  const setTheme = useCallback((t: ThemeId) => {
-    document.documentElement.dataset.theme = t;
-    const meta = document.querySelector('meta[name="theme-color"]');
-    meta?.setAttribute("content", THEMES.find((x) => x.id === t)!.color);
-    try {
-      localStorage.setItem(KEY, t);
-    } catch {
-      /* לא נשמר — רק לביקור הזה */
-    }
-    listeners.forEach((l) => l(t));
-  }, []);
-  return [theme, setTheme];
-}
-
-/** תצורה: בהיר · חשוך · לפי המכשיר (ברירת מחדל). נפרדת מהעיצוב — כל עיצוב קיים בשתי התצורות. */
+/** תצורה: בהיר · חשוך · לפי המכשיר (ברירת מחדל). */
 export const MODES = [
   { id: "light", name: "יום" },
   { id: "dark", name: "לילה" },

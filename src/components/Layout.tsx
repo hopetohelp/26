@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
-import { THEMES, useMode, useTheme, type ModeId, type ThemeId } from "../lib/theme";
+import { useMode, type ModeId } from "../lib/theme";
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 
@@ -40,37 +40,6 @@ function Icon({ name }: { name: string }) {
   if (name === "user") return <svg {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
-}
-
-/** בחירת העיצוב: שלוש אפשרויות שוות, כל אחת עם דוגמית הצבע שלה */
-export function ThemePicker() {
-  return (
-    <div className="flex items-center gap-x-3 gap-y-1.5">
-      <div className="hidden lg:block">
-        <StylePicker />
-      </div>
-      <StyleToggle />
-      <ModePicker />
-    </div>
-  );
-}
-
-/** בטלפון ובטאבלט (אין מקום לשני כפתורים): כפתור אחד שמחליף לעיצוב השני */
-function StyleToggle() {
-  const [theme, setTheme] = useTheme();
-  const cur = THEMES.find((t) => t.id === theme)!;
-  const next = THEMES.find((t) => t.id !== theme)!;
-  return (
-    <button
-      type="button"
-      onClick={() => setTheme(next.id as ThemeId)}
-      aria-label={`עיצוב: ${cur.name}. בלחיצה: ${next.name}`}
-      className="lg:hidden flex items-center gap-1.5 rounded-full px-3 h-[44px] text-sm font-bold border border-current opacity-80 hover:opacity-100 whitespace-nowrap"
-    >
-      <span aria-hidden="true" className="w-3.5 h-3.5 rounded-full border border-black/30" style={{ background: cur.color }} />
-      {cur.name}
-    </button>
-  );
 }
 
 /** תאריך הבחירות בשורה הקטנה: מלא כשיש מקום, מקוצר (27/10/26) בטלפון. "הבחירות" מבדיל את התאריך מהספירה לנעילת ההשערות במסך "הכנסת שלי" (9.10.2026); בטלפון המילה לקורא מסך בלבד, כדי שהשורה תיכנס. */
@@ -122,35 +91,8 @@ function ModePicker() {
   );
 }
 
-function StylePicker() {
-  const [theme, setTheme] = useTheme();
-  return (
-    <div role="radiogroup" aria-label="עיצוב האתר" className="flex flex-wrap items-center gap-1.5">
-      <span className="text-sm opacity-80 me-1">עיצוב:</span>
-      {THEMES.map((t) => {
-        const on = t.id === theme;
-        return (
-          <button
-            key={t.id}
-            type="button"
-            role="radio"
-            aria-checked={on}
-            onClick={() => setTheme(t.id as ThemeId)}
-            className={`flex items-center gap-1.5 rounded-full px-2.5 min-h-[44px] lg:min-h-[36px] text-sm font-bold border ${
-              on ? "bg-signal text-signal-ink border-signal" : "border-current bg-transparent opacity-80 hover:opacity-100"
-            }`}
-          >
-            <span aria-hidden="true" className="w-3.5 h-3.5 rounded-full border border-black/30" style={{ background: t.color }} />
-            {t.name}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 /**
- * פס עליון אחד, אותו מבנה בשני העיצובים (הכרעת בעלים 9.10.2026, החלטה 2); ההבדל רק בטוקנים (`frame`, `signal`, גופן, רדיוס).
+ * פס עליון אחד (הכרעת בעלים 9.10.2026, החלטה 2), בטוקנים (`frame`, `signal`, גופן, רדיוס).
  * בטלפון שורה אחת: שם האתר, מתחתיו "עוד N ימים · תאריך הבחירות", ובצד הבוררים. במחשב הספירה כשבב במרכז.
  */
 function Masthead() {
@@ -169,7 +111,7 @@ function Masthead() {
           </p>
         </div>
         <span className="hidden md:block text-sm font-extrabold border border-frame-ink/40 rounded-full px-3 py-1 whitespace-nowrap">{left}</span>
-        <ThemePicker />
+        <ModePicker />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 /**
  * תמונת שיתוף להשערה (PNG, רוחב 1080 וגובה 1350 ומעלה): בחירה בין תמונת מפלגות לתמונת גושים עם ההשערה, ממוצע הסקרים והתחזית.
- * הצבעים נקראים ממשתני ה-CSS של העיצוב הפעיל (בהיר/חשוך, מקצועי/חדשותי) — אין כאן צבע קבוע, מלבד צבעי הרשימות
+ * הצבעים נקראים ממשתני ה-CSS של העיצוב הפעיל (בהיר/חשוך) — אין כאן צבע קבוע, מלבד צבעי הרשימות
  * הניטרליים מ-src/lib/colors.ts. הטקסט מימין לשמאל. בלי המלצה ובלי אימוג'י.
  */
 import { formatBlocValue } from "../../lib/personalBlocs";
@@ -31,13 +31,12 @@ export interface ShareImageInput {
 }
 
 export async function renderShareImage({ values, pct, username, blocs, kind = blocs?.length ? "blocs" : "parties" }: ShareImageInput): Promise<Blob> {
-  const board = document.documentElement.dataset.theme === "board";
   const c = {
-    bg: rgb(board ? "--frame" : "--paper"),
-    card: rgb(board ? "--frame" : "--card"),
-    ink: rgb(board ? "--frame-ink" : "--ink"),
-    soft: rgb(board ? "--frame-soft" : "--ink-soft"),
-    line: rgb(board ? "--frame-line" : "--line"),
+    bg: rgb("--paper"),
+    card: rgb("--card"),
+    ink: rgb("--ink"),
+    soft: rgb("--ink-soft"),
+    line: rgb("--line"),
     signal: rgb("--signal"),
   };
   const display = font("--font-display", "sans-serif");
@@ -99,7 +98,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
       ctx.textAlign = "center";
       ctx.font = `700 60px ${num}`;
       [row.mineInfo, row.pollsInfo, row.forecastInfo].forEach((info, i) => {
-        ctx.fillStyle = i === 0 && board ? c.signal : c.ink;
+        ctx.fillStyle = c.ink;
         ctx.fillText(formatBlocValue(info), columns[i], y + 72, 285);
       });
       ctx.textAlign = "right";
@@ -165,7 +164,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
   });
   const total = order.reduce((a, id) => a + values[id], 0);
   ctx.textAlign = "center";
-  ctx.fillStyle = board ? c.signal : c.ink;
+  ctx.fillStyle = c.ink;
   ctx.font = `700 150px ${num}`;
   ctx.fillText(String(total), IMG_W / 2, top + 1.07 * scale - 10);
 
@@ -191,7 +190,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
     ctx.fillText(name, right - 36, y);
     ctx.textAlign = "left";
     ctx.font = `700 46px ${num}`;
-    ctx.fillStyle = board ? c.signal : c.ink;
+    ctx.fillStyle = c.ink;
     ctx.fillText(String(values[id]), left, y);
     if (pct) {
       ctx.font = `700 28px ${body}`;

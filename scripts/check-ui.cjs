@@ -30,7 +30,7 @@ async function dragCard(page, source, destination, cdp) {
 }
 (async()=>{
 const browser=await chromium.launch({headless:true,executablePath:process.env.UI_BROWSER_EXECUTABLE,args:['--no-sandbox']});
-for(const theme of ['league','board']) for(const width of [360,820,1280]){
+for(const theme of ['league']) for(const width of [360,820,1280]){
  const context=await browser.newContext({viewport:{width,height:1000},hasTouch:true});
  const page=await context.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(({theme,cells,tok,ids})=>{
