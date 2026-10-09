@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { colorOf } from "../lib/colors";
-import { seatsFmt, signed } from "../lib/format";
+import { rng, seatsFmt, signed } from "../lib/format";
 
 export interface RangeRow {
   id: string;
@@ -31,7 +31,7 @@ export function SeatRangeBars({ rows, maxSeats = 40, caption }: { rows: RangeRow
             </span>
             <span className="text-sm tabular-nums whitespace-nowrap">
               <strong>{seatsFmt(r.median)}</strong>
-              {r.max > r.min && <span className="text-ink-soft"> ({r.min}–{r.max})</span>}
+              {r.max > r.min && <span className="text-ink-soft"> ({rng(r.min, r.max)})</span>}
               <span className="sr-only">
                 {` מנדטים בחציון, טווח ${r.min} עד ${r.max}`}
                 {r.note ? `. ${r.note}` : ""}
@@ -247,7 +247,7 @@ export function ScenarioRanges({ rows, maxSeats = 35, caption }: { rows: Scenari
             </span>
             <span className="text-sm tabular-nums whitespace-nowrap [grid-area:nums]">
               <strong>{r.central}</strong>
-              <span className="text-ink-soft"> ({r.lo}–{r.hi})</span>
+              <span className="text-ink-soft"> ({rng(r.lo, r.hi)})</span>
             </span>
             <span className={`text-sm whitespace-nowrap [grid-area:pass] ${r.pass > 0.005 && r.pass < 0.995 ? "text-warn font-bold" : "text-ink-soft"}`}>
               עוברת: {pct(r.pass)}

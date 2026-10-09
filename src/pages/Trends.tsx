@@ -4,7 +4,7 @@ import { TrendChart, type Series } from "../components/charts";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMedian, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
-import { date, dateLong, seatsFmt } from "../lib/format";
+import { date, dateLong, dateRange, seatsFmt } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
 const LINEAGE: Record<string, { parts: string[]; since: string; note: string }> = {
@@ -119,7 +119,7 @@ export default function Trends() {
           methodAnchor="trends"
         >
           <ChartWithTable
-            summary={`${labeled.length} רשימות, ${date(from)}–${date(to)}${who ? `, ${pollsters.find(([k]) => k === who)?.[1] ?? ""}` : ", כל המכונים"}.`}
+            summary={`${labeled.length} רשימות, ${dateRange(from, to)}${who ? `, ${pollsters.find(([k]) => k === who)?.[1] ?? ""}` : ", כל המכונים"}.`}
             chart={<TrendChart series={series} dots={dots} from={toTime(from)} to={toTime(to)} yMax={yMax} title="מגמת המנדטים לפי רשימה" />}
             table={
               <table className="text-sm w-full">

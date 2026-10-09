@@ -7,7 +7,7 @@ import modelFile from "../data/model.json";
 import { useTheme } from "../lib/theme";
 import { Badge, Card, Fold, Note, Split } from "../components/ui";
 import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, passesInAll, pollsterLabel, results, seatsIn, summarize, type Poll } from "../lib/data";
-import { date, dateLong, dateRange, num, seatsFmt } from "../lib/format";
+import { date, dateLong, dateRange, num, rng, seatsFmt } from "../lib/format";
 
 const WINDOW_DAYS = 14;
 
@@ -136,7 +136,7 @@ export default function Today() {
             </p>
             {govs.length > 0 && (
               <p className="text-ink-soft">
-                טווח בין המכונים: {Math.min(...govs)}–{Math.max(...govs)} · רוב בכנסת: 61
+                טווח בין המכונים: {rng(Math.min(...govs), Math.max(...govs))} · רוב בכנסת: 61
               </p>
             )}
           </Explained>

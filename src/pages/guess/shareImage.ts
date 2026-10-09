@@ -219,7 +219,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
   ctx.textAlign = "right";
   ctx.fillStyle = c.soft;
   ctx.font = `400 26px ${body}`;
-  ctx.fillText(`ממוצע הסקרים האחרון נכון ל־${dateLong(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
+  ctx.fillText(`ממוצע הסקרים האחרון נכון ל-${dateLong(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
 
   // תחתית: קריאה לפעולה + כתובת
   ctx.fillStyle = c.card === c.bg ? c.line : c.card;

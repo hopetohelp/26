@@ -5,7 +5,7 @@ import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, PageTitle, Columns } from "../components/ui";
 import historyFile from "../data/history.json";
 import { results } from "../lib/data";
-import { dateRange, date, seatsFmt, signed } from "../lib/format";
+import { dateRange, date, rng, seatsFmt, signed } from "../lib/format";
 import {
   EVE_DAYS,
   campaignTrend,
@@ -242,7 +242,7 @@ export default function Accuracy() {
                     <tr key={r.letters} className="border-b border-paper-line/60">
                       <th scope="row" className="py-1 pe-3 text-right font-medium">{r.name}</th>
                       <td className="pe-3 tabular-nums">{fmtEst(r.estimate)}</td>
-                      <td className="pe-3 tabular-nums">{r.n ? `${r.min}–${r.max}` : "—"}</td>
+                      <td className="pe-3 tabular-nums">{r.n ? rng(r.min, r.max) : "—"}</td>
                       <td className="pe-3 tabular-nums">{r.n ? `${r.above} מתוך ${r.n} מכונים` : "—"}</td>
                       <td className="pe-3 tabular-nums font-bold">{r.actual}</td>
                       <td className="tabular-nums"><Signed n={r.diff} /></td>
@@ -274,7 +274,7 @@ export default function Accuracy() {
           methodAnchor="accuracy"
         >
           <ChartWithTable
-            summary={`${all.length} סקרים, ${date(first)}–${date(c.date)}. הנקודות הבהירות הן הסקרים עצמם; המעוינים בקצה — התוצאה בפועל.`}
+            summary={`${all.length} סקרים, ${dateRange(first, c.date)}. הנקודות הבהירות הן הסקרים עצמם; המעוינים בקצה — התוצאה בפועל.`}
             chart={<TrendChart series={series} dots={dots} markers={markers} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
             table={
               <table className="text-sm w-full">
