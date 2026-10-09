@@ -7,7 +7,7 @@ import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ProfileCandleV, Track } from "./marks";
 
 /**
- * שורת טווח: הממוצע (עיגול מלא אדום) והטווח (נר כחול שעוביו משתנה לאורכו). `segs` = קטעי הנר וכמות הנתונים בכל אחד.
+ * שורת טווח: הממוצע (עיגול מלא כתום) והטווח (נר כחול שעוביו משתנה לאורכו). `segs` = קטעי הנר וכמות הנתונים בכל אחד.
  * `pass` רק לרשימות על הסף.
  */
 export interface RangeRowData {
@@ -220,7 +220,7 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
 }
 
 /**
- * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, ובסופו עיגול מלא אדום (הממוצע היום)
+ * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, ובסופו עיגול מלא כתום (הממוצע היום)
  * ונר של טווח 80% ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
  */
 export function GovTrend({ home }: { home: HomeData }) {
