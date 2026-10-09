@@ -115,12 +115,12 @@ function normalCdf(z: number): number {
 }
 
 /** כמה מרוכך המעבר בין הרמות, ביחס לרוחב הקטע החציוני: גדול יותר = עגול יותר */
-export const PROFILE_SOFTNESS = 1.0;
+export const PROFILE_SOFTNESS = 0.6;
 
 /**
  * קו המתאר של נר שעוביו משתנה: עובי כל קטע לפי הרמה שלו (4, 10 או 16 פיקסלים), **מרוכך** לעקומה חלקה, כך שהמעבר בין הרמות עגול ולא מרובע.
  * הריכוך הוא טשטוש גאוסי של פונקציית המדרגות (כמו בגרף כינור), ואחריו מותחים את העובי כך שהקטע העמוס ביותר (תמיד רמה 5 בנר, כי העובי ביחס לנר) יחזור לעובי המלא,
- * והקצוות מתעגלים לעובי הדק (3). `map` ממפה ערך על הציר למיקום לאורך הנר, בכל כיוון (גם יורד, בנר אנכי). `scale` מקטין את כל העוביים יחד (בנרות צפופים).
+ * והקצוות מתחדדים לעובי הדק (4). `map` ממפה ערך על הציר למיקום לאורך הנר, בכל כיוון (גם יורד, בנר אנכי). `scale` מקטין את כל העוביים יחד (בנרות צפופים).
  */
 export function profilePoints(segs: LSeg[], map: (v: number) => number, scale = 1): ProfilePt[] {
   if (!segs.length) return [];
@@ -138,19 +138,10 @@ export function profilePoints(segs: LSeg[], map: (v: number) => number, scale = 
   const hmax = Math.max(...ext.map((e) => e.h));
   const span = Math.max(t1 - t0, 1e-6);
   const n = Math.min(80, Math.max(16, Math.ceil(span / (med / 2))));
-  // הקצוות מתעגלים בחצי אליפסה לאורך מספיק (לפחות רוחב קטע, ולפחות 12% מאורך הנר), כדי שנר שנחתך באמצע התפלגות לא יראה קצוץ
-  const taper = Math.max(med, span * 0.12);
-  // נקודות דגימה: אחידות לאורך הנר, ועוד נקודות צפופות בקצוות כדי שהעיגול שם יהיה חלק
-  const ts = new Set<number>();
-  for (let k = 0; k <= n; k++) ts.add(t0 + (span * k) / n);
-  for (const f of [0.01, 0.04, 0.1, 0.2, 0.4]) {
-    if (taper * f < span / 2) {
-      ts.add(t0 + taper * f);
-      ts.add(t1 - taper * f);
-    }
-  }
+  const taper = med * 0.5;
   const raw: ProfilePt[] = [];
-  for (const t of [...ts].sort((a, b) => a - b)) {
+  for (let k = 0; k <= n; k++) {
+    const t = t0 + (span * k) / n;
     let num = 0;
     let den = 0;
     for (const e of ext) {
@@ -159,9 +150,9 @@ export function profilePoints(segs: LSeg[], map: (v: number) => number, scale = 
       den += mass;
     }
     let h = den > 1e-12 ? num / den : lo;
-    // הקצוות מתעגלים: עובי חצי אליפסה מהעובי הדק עד העובי המלא
+    // הקצוות מתחדדים לעובי הדק
     const d = Math.min(t - t0, t1 - t) / taper;
-    if (d < 1) h = lo + (h - lo) * Math.sqrt(1 - (1 - d) * (1 - d));
+    if (d < 1) h = lo + (h - lo) * (d * d * (3 - 2 * d));
     raw.push({ t, h });
   }
   const smax = Math.max(...raw.map((p) => p.h));
