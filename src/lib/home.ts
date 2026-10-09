@@ -11,8 +11,8 @@ export interface HomeModel {
   polls: number;
   central: { seats: Record<string, number> };
   scenarios: {
-    lists: Record<string, { seats: number[]; pass: number; seatsMean: number }>;
-    bloc: { seats: number[] };
+    lists: Record<string, { seats: number[]; pass: number; seatsMean: number; seatsHist?: number[] }>;
+    bloc: { seats: number[]; seatsHist?: number[] };
   };
   trend: { date: string; seats: Record<string, number> }[];
 }
@@ -27,8 +27,11 @@ export interface HomeRow {
   hi: number;
   /** שיעור התרחישים שבהם הרשימה עוברת את אחוז החסימה (0 עד 1) */
   pass: number;
-  /** כמה מהתרחישים נותנים לרשימה מנדטים (0 עד 1): כמות הנתונים שעומדת מאחורי הטווח, וקובעת את עובי הנר ביחס לשאר הגרף */
-  volume: number;
+  /** התפלגות המנדטים בכל התרחישים: `hist[v]` = בכמה תרחישים הרשימה קיבלה v מנדטים. מזה נבנים הטווח המלא ועובי הנר בכל קטע */
+  hist: number[];
+  /** הטווח המלא: הנמוך והגבוה מכל התרחישים */
+  fullLo: number;
+  fullHi: number;
 }
 
 export interface HomeData {
@@ -37,8 +40,13 @@ export interface HomeData {
   polls: number;
   gov: number;
   other: number;
+  /** טווח 80% של הגוש (מ-10% עד 90%) */
   blocLo: number;
   blocHi: number;
+  /** הטווח המלא של הגוש והתפלגותו */
+  blocFullLo: number;
+  blocFullHi: number;
+  blocHist: number[];
   /** מעל הקו: עוברות בבירור */
   safe: HomeRow[];
   /** על הסף: עוברות בחלק מהתרחישים בלבד, עם האחוז הקיים */
@@ -47,15 +55,20 @@ export interface HomeData {
   below: HomeRow[];
   /** מנדטי הממשלה היוצאת לאורך זמן */
   series: { date: string; v: number }[];
-  /** מקסימום ציר המנדטים (מכפלה של 10) */
-  axisMax: number;
-  /** הכמות הגדולה ביותר בגרף: הנר העבה ביותר */
-  maxVolume: number;
 }
 
 /** אחוז התרחישים שמתחתיו הרשימה "מתחת לסף", ומעליו "עוברת בבירור" */
 export const EDGE_MIN = 0.005;
 export const EDGE_MAX = 0.995;
+
+/** הנמוך והגבוה בהתפלגות (הערך הראשון והאחרון שיש בו תרחישים); בלי התפלגות — הגיבוי שניתן */
+export function histRange(hist: number[], lo: number, hi: number): [number, number] {
+  const first = hist.findIndex((c) => c > 0);
+  if (first < 0) return [lo, hi];
+  let last = hist.length - 1;
+  while (last > first && hist[last] === 0) last--;
+  return [first, last];
+}
 
 export function buildHome(
   model: HomeModel,
@@ -65,7 +78,9 @@ export function buildHome(
   const rows: HomeRow[] = Object.keys(model.scenarios.lists)
     .map((id) => {
       const l = model.scenarios.lists[id];
-      return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass, volume: l.pass };
+      const hist = l.seatsHist ?? [];
+      const [fullLo, fullHi] = histRange(hist, l.seats[0], l.seats[2]);
+      return { id, name: nameOf(id), central: model.central.seats[id] ?? 0, lo: l.seats[0], hi: l.seats[2], pass: l.pass, hist, fullLo, fullHi };
     })
     .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].seatsMean - model.scenarios.lists[a.id].seatsMean);
 
@@ -77,7 +92,8 @@ export function buildHome(
   const govSum = (seats: Record<string, number>) => govIds.reduce((a, id) => a + (seats[id] ?? 0), 0);
   const gov = govSum(model.central.seats);
   const series = model.trend.map((t) => ({ date: t.date, v: govSum(t.seats) }));
-  const maxHi = Math.max(...rows.map((r) => r.hi), 0);
+  const blocHist = model.scenarios.bloc.seatsHist ?? [];
+  const [blocFullLo, blocFullHi] = histRange(blocHist, model.scenarios.bloc.seats[0], model.scenarios.bloc.seats[2]);
 
   return {
     asOf: model.asof,
@@ -87,12 +103,13 @@ export function buildHome(
     other: TOTAL - gov,
     blocLo: model.scenarios.bloc.seats[0],
     blocHi: model.scenarios.bloc.seats[2],
+    blocFullLo,
+    blocFullHi,
+    blocHist,
     safe,
     edge,
     below,
     series,
-    axisMax: Math.max(30, Math.ceil(maxHi / 10) * 10),
-    maxVolume: Math.max(0, ...rows.map((r) => r.volume)),
   };
 }
 

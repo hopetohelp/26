@@ -2,19 +2,28 @@ import { Link } from "react-router-dom";
 import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
-import { smoothPath, sparseIndices, volumeLevel } from "../lib/chartLanguage";
-import { AxisLabels, Candle, KeyItem, MeanDot, ThicknessKey, Track, candleTitle } from "./marks";
+import { clipSegs, intSegs, levelSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
+import { AxisLabels, KeyItem, MeanDot, ProfileCandle, ProfileCandleV, ThicknessKey, Track } from "./marks";
 
-const scenarioShare = (r: RangeRowData) => `מקבלת מנדטים ב-${Math.round((r.volume ?? 0) * 100)}% מהתרחישים`;
-const machinesGiving = (r: RangeRowData) => `${r.volume ?? 0} מכונים נתנו לה מנדטים`;
-
-/** שורת טווח: הממוצע (עיגול מלא) והטווח (נר). `volume` = כמות הנתונים הרלוונטית לטווח (עובי הנר). `pass` רק לרשימות על הסף */
-export type RangeRowData = Pick<HomeRow, "id" | "name" | "central" | "lo" | "hi"> & { pass?: number; volume?: number };
+/**
+ * שורת טווח: הממוצע (עיגול מלא אדום) והטווח (נר כחול שעוביו משתנה לאורכו). `segs` = קטעי הנר וכמות הנתונים בכל אחד.
+ * `pass` רק לרשימות על הסף.
+ */
+export interface RangeRowData {
+  id: string;
+  name: string;
+  central: number;
+  lo: number;
+  hi: number;
+  segs: Seg[];
+  pass?: number;
+}
 
 /**
  * גרפי הבית (הכרעת בעלים 9.10.2026) בשפת הציור האחידה (`src/lib/chartLanguage.ts`): לוח 120 המושבים, דירוג הרשימות
- * (נר = טווח 80% מהתרחישים, עיגול מלא = ממוצע המודל) ומגמת הממשלה היוצאת (קו חלק עם סמנים ונר בסופו).
- * הכול בטוקנים בלבד (accent, ink, paper, line, pos, neg), בלי צבעי מפלגות. כל גרף מקבל מנדטים ממספר אחד: `buildHome` ב-`src/lib/home.ts`.
+ * (נר = טווח, שעוביו משתנה לפי כמה תרחישים נותנים כל ערך; עיגול מלא = ממוצע המודל) ומגמת הממשלה היוצאת (קו חלק עם סמנים ונר בסופו).
+ * הטווח הוא **מלא** (הנמוך והגבוה מכל התרחישים) בכל מקום, חוץ מהמסך "תחזית ותרחישים" שבו הוא 80%. הצבעים בטוקנים (`--mk-*`, `pos`, `neg`).
+ * כל גרף מקבל מנדטים ממספר אחד: `buildHome` ב-`src/lib/home.ts`.
  */
 const W = 2.2;
 const H = 1.32;
@@ -57,6 +66,8 @@ export function Hemicycle({ gov, other }: { gov: number; other: number }) {
 
 const COLS = "grid-cols-[minmax(0,1fr)_2.1rem_minmax(5.5rem,38%)] md:grid-cols-[minmax(0,13rem)_2.6rem_minmax(0,1fr)_5rem]";
 
+const PICK = "העובי בכל קטע: כמה נתונים נותנים ערך כזה";
+
 /**
  * כמה מהתרחישים הרשימה עוברת את אחוז החסימה: פס אחד, אדום (לא עוברת) משמאל וירוק (עוברת) מימין.
  * הצבע לא לבדו: המספרים כתובים ליד הפס.
@@ -71,15 +82,15 @@ export function PassBar({ pass }: { pass: number }) {
   );
 }
 
-function RankRow({ r, axisMax, maxVolume, withPass, what }: { r: RangeRowData; axisMax: number; maxVolume: number; withPass?: boolean; what: (r: RangeRowData) => string }) {
-  const level = volumeLevel(r.volume ?? maxVolume, maxVolume);
+function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg[]; axisMax: number; withPass?: boolean }) {
+  const x = (v: number) => (v / axisMax) * 100;
   return (
     <li className={`grid ${COLS} items-center gap-x-3 min-h-12 py-1.5 border-t border-paper-line last:border-b`}>
       <span className="font-semibold leading-tight">{r.name}</span>
       <span className="font-num text-xl font-extrabold tabular">{seatsFmt(r.central)}</span>
-      <Track axisMax={axisMax} title={`${r.name}: ${candleTitle(what(r), level)}`}>
-        <Candle from={(r.lo / axisMax) * 100} to={(r.hi / axisMax) * 100} level={level} />
-        <MeanDot at={(r.central / axisMax) * 100} />
+      <Track axisMax={axisMax} title={`${r.name}: ${PICK}`}>
+        <ProfileCandle segs={lsegs} x={x} />
+        <MeanDot at={x(r.central)} />
       </Track>
       <span className="hidden md:block text-sm text-ink-soft text-end">
         {rng(r.lo, r.hi)}
@@ -124,17 +135,33 @@ function Axis({ axisMax }: { axisMax: number }) {
 /** מקסימום ציר המנדטים: 30 לפחות, ומכפלה של 10 מעל הטווח הגבוה ביותר */
 export const axisMaxOf = (rows: { hi: number }[]) => Math.max(30, Math.ceil(Math.max(...rows.map((r) => r.hi), 0) / 10) * 10);
 
+/** רשימה מהנתונים הביתיים ⇐ שורה בטווח המבוקש: מלא (ברירת המחדל) או 80%, עם קטעי הנר מההתפלגות של כל התרחישים */
+export function rangeRow(r: HomeRow, range: "full" | "p80"): RangeRowData {
+  const lo = range === "p80" ? r.lo : r.fullLo;
+  const hi = range === "p80" ? r.hi : r.fullHi;
+  const all = r.hist.length ? intSegs(r.hist) : [{ from: lo, to: hi, count: 1 }];
+  return { id: r.id, name: r.name, central: r.central, lo, hi, pass: r.pass, segs: range === "p80" ? clipSegs(all, lo, hi) : all };
+}
+
 /**
  * כל הרשימות: ציר פעם אחת בראש (0 משמאל), שורה לרשימה, וקו אחוז החסימה שמפריד את "על הסף".
- * רכיב אחד לבית, ל"המצב היום" ול"תרחישים" (החלטה 10, 9.10.2026). הטווח כאן הוא טווח 80% מהתרחישים (הכרעת בעלים: רק בטווח התרחישים 80%).
+ * רכיב אחד לבית, ל"המצב היום" ול"תרחישים" (החלטה 10, 9.10.2026).
+ * `range`: "full" (ברירת המחדל) = הנמוך והגבוה מכל התרחישים, בבית ובמצב היום; "p80" = טווח 80% מהתרחישים, רק במסך "תחזית ותרחישים" (הכרעת בעלים 9.10.2026).
+ * עובי הנר בכל קטע: כמה תרחישים נותנים לרשימה את הערך הזה, ביחס לקטע העמוס ביותר בכל הדירוג.
  */
-export function Ranking({ home, meanLabel = "ממוצע המודל", rangeLabel = "טווח 80% מהתרחישים" }: { home: HomeData; meanLabel?: string; rangeLabel?: string }) {
-  const { safe, edge, below, axisMax, maxVolume } = home;
+export function Ranking({ home, range = "full", meanLabel = "ממוצע המודל" }: { home: HomeData; range?: "full" | "p80"; meanLabel?: string }) {
+  const safe = home.safe.map((r) => rangeRow(r, range));
+  const edge = home.edge.map((r) => rangeRow(r, range));
+  const below = home.below;
+  const axisMax = axisMaxOf([...safe, ...edge]);
+  const levels = levelSegs([...safe, ...edge].map((r) => r.segs));
+  const lvOf = (i: number) => levels[i];
+  const rangeLabel = range === "p80" ? "טווח 80% מהתרחישים" : "טווח מלא: הנמוך והגבוה מכל התרחישים";
   return (
     <>
-      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="בכמה מהתרחישים הרשימה מקבלת מנדטים" />
+      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה תרחישים נותנים לרשימה ערך כזה" />
       <Axis axisMax={axisMax} />
-      <ol className="mt-1">{safe.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxVolume={maxVolume} what={scenarioShare} />)}</ol>
+      <ol className="mt-1">{safe.map((r, i) => <RankRow key={r.id} r={r} lsegs={lvOf(i)} axisMax={axisMax} />)}</ol>
       {edge.length > 0 && (
         <>
           <div
@@ -144,7 +171,7 @@ export function Ranking({ home, meanLabel = "ממוצע המודל", rangeLabel 
           >
             אחוז החסימה 3.25%
           </div>
-          <ol>{edge.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxVolume={maxVolume} withPass what={scenarioShare} />)}</ol>
+          <ol>{edge.map((r, i) => <RankRow key={r.id} r={r} lsegs={lvOf(safe.length + i)} axisMax={axisMax} withPass />)}</ol>
         </>
       )}
       {below.length > 0 && <p className="mt-2 text-sm text-ink-soft">מתחת לסף: {below.map((r) => r.name).join(", ")}</p>}
@@ -152,25 +179,35 @@ export function Ranking({ home, meanLabel = "ממוצע המודל", rangeLabel 
   );
 }
 
-/** אותו רכיב לסיכום הסקרים בין המכונים: עיגול מלא = ממוצע המכונים, נר = הנמוך והגבוה בין המכונים (טווח מלא, בלי קו סף) */
-export function PollRanges({ rows, meanLabel = "ממוצע המכונים", rangeLabel = "הנמוך והגבוה בין המכונים" }: { rows: RangeRowData[]; meanLabel?: string; rangeLabel?: string }) {
-  const axisMax = axisMaxOf(rows);
-  const maxVolume = Math.max(0, ...rows.map((r) => r.volume ?? 0));
+/** שורת סיכום מכונים: ממוצע, ערך כל מכון (מזה הנמוך, הגבוה ועובי הנר) */
+export interface MachineRow {
+  id: string;
+  name: string;
+  central: number;
+  /** המנדטים שכל מכון נתן לרשימה (הסקר האחרון של כל מכון) */
+  values: number[];
+}
+
+/** אותו רכיב לסיכום הסקרים בין המכונים: עיגול מלא = ממוצע המכונים, נר = הנמוך והגבוה בין המכונים (טווח מלא), עובי הנר לפי כמה מכונים נתנו כל ערך */
+export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { rows: MachineRow[]; meanLabel?: string }) {
+  const data: RangeRowData[] = rows.map((r) => ({ id: r.id, name: r.name, central: r.central, lo: Math.min(...r.values), hi: Math.max(...r.values), segs: valueSegs(r.values) }));
+  const axisMax = axisMaxOf(data);
+  const levels = levelSegs(data.map((r) => r.segs));
   return (
     <>
-      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה מכונים נתנו לרשימה מנדטים" />
+      <Key meanLabel={meanLabel} rangeLabel="הנמוך והגבוה בין המכונים (טווח מלא)" thicknessLabel="כמה מכונים נתנו לרשימה ערך כזה" />
       <Axis axisMax={axisMax} />
-      <ol className="mt-1">{rows.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} maxVolume={maxVolume} what={machinesGiving} />)}</ol>
+      <ol className="mt-1">{data.map((r, i) => <RankRow key={r.id} r={r} lsegs={levels[i]} axisMax={axisMax} />)}</ol>
     </>
   );
 }
 
 /**
- * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים), קו 61 מקווקו, ובסופו עיגול מלא (הממוצע היום)
- * ונר של טווח 80% ליום הבחירות. SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים. תוויות בגודל קבוע.
+ * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, ובסופו עיגול מלא אדום (הממוצע היום)
+ * ונר של הטווח המלא ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
  */
 export function GovTrend({ home }: { home: HomeData }) {
-  const { series, blocLo: lo, blocHi: hi } = home;
+  const { series, blocFullLo: lo, blocFullHi: hi, blocHist } = home;
   if (series.length < 2) return null;
   const X0 = 3, X1 = 86, YT = 6, YB = 84;
   const vals = series.map((s) => s.v);
@@ -186,6 +223,7 @@ export function GovTrend({ home }: { home: HomeData }) {
   const grid = [50, 55].filter((v) => v > vmin && v < vmax);
   const min = Math.min(...vals);
   const max = Math.max(...vals);
+  const profile = levelSegs([blocHist.length ? intSegs(blocHist) : [{ from: lo, to: hi, count: 1 }]])[0];
   const line = { vectorEffect: "non-scaling-stroke" as const };
   const label = "absolute -translate-x-1/2 -translate-y-1/2 text-sm font-bold leading-none whitespace-nowrap";
   return (
@@ -196,7 +234,7 @@ export function GovTrend({ home }: { home: HomeData }) {
           preserveAspectRatio="none"
           className="block w-full h-40"
           role="img"
-          aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב; בטווח 80% ליום הבחירות: ${lo} עד ${hi}`}
+          aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב; בטווח המלא ליום הבחירות: ${lo} עד ${hi}`}
         >
           {grid.map((v) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className="stroke-paper-line" strokeWidth={1} {...line} />)}
           <line x1={X0} x2={100} y1={Y(MAJORITY)} y2={Y(MAJORITY)} className="stroke-ink" strokeWidth={1.5} strokeDasharray="5 4" {...line} />
@@ -205,9 +243,9 @@ export function GovTrend({ home }: { home: HomeData }) {
         {markers.map((i) => (
           <span key={i} aria-hidden="true" className="mk mk-dot" style={{ left: `${pts[i].x}%`, top: `${pts[i].y}%` }} />
         ))}
-        <span aria-hidden="true" className="mk mk-candle mk-v mk-w5" style={{ left: `${X1}%`, top: `${Y(hi)}%`, height: `${Y(lo) - Y(hi)}%` }} />
+        <ProfileCandleV segs={profile} y={Y} left={`${X1}%`} />
         <span aria-hidden="true" className="mk mk-mean" style={{ left: `${last.x}%`, top: `${last.y}%` }} />
-        <span aria-hidden="true" className={`${label} text-base font-extrabold`} style={{ left: "95%", top: `${Y(MAJORITY) - 7}%` }}>{MAJORITY}</span>
+        <span aria-hidden="true" className={`${label} text-base font-extrabold`} style={{ left: "6%", top: `${Y(MAJORITY) - 7}%` }}>{MAJORITY}</span>
         <span aria-hidden="true" className={label} style={{ left: `${X1 + 6}%`, top: `${Y(hi)}%` }}>{hi}</span>
         <span aria-hidden="true" className={label} style={{ left: `${X1 + 6}%`, top: `${Y(lo)}%` }}>{lo}</span>
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X0 + 2}%`, top: "88%" }}>{dayMonth(series[0].date)}</span>
@@ -215,7 +253,7 @@ export function GovTrend({ home }: { home: HomeData }) {
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft mt-1">
         <KeyItem kind="mean">הממוצע היום</KeyItem>
-        <KeyItem kind="candle" level={5}>טווח 80% ליום הבחירות</KeyItem>
+        <KeyItem kind="candle">טווח מלא ליום הבחירות, מכל התרחישים</KeyItem>
       </div>
     </>
   );

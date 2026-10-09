@@ -50,14 +50,14 @@ export function pollBlocValues(blocs: Bloc[], target: Poll, source: Poll[], rule
 export function rollingBlocMean(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days: number, minN: number, step = 3, rules = BLOC_ESTIMATE_POLICY) {
   const projected = source.map(p=>({t:toTime(p.end),rows:pollBlocValues(blocs,p,donors,rules)}));
   return blocs.map(b=>{
-    const points: {t:number;v:number;lo:number;hi:number;n:number;fullN:number;estimatedN:number;missingN:number;estimated:boolean;missing:string[];imputed:BlocImputation[];breakBefore:boolean}[]=[];
+    const points: {t:number;v:number;lo:number;hi:number;xs:number[];n:number;fullN:number;estimatedN:number;missingN:number;estimated:boolean;missing:string[];imputed:BlocImputation[];breakBefore:boolean}[]=[];
     for(let t=toTime(from);t<=toTime(to);t+=step*DAY){
       const rows=projected.filter(p=>p.t<=t && p.t>t-days*DAY).map(p=>p.rows.find(r=>r.id===b.id)!);
       const ready=rows.filter(r=>r.total!==null || r.estimate!==null);
       if(ready.length<minN)continue;
       const estimatedRows=ready.filter(r=>r.estimate!==null);
       const totals=ready.map(r=>r.total??r.estimate!);
-      points.push({t,v:mean(totals),lo:Math.min(...totals),hi:Math.max(...totals),n:ready.length,fullN:ready.length-estimatedRows.length,estimatedN:estimatedRows.length,missingN:rows.length-ready.length,estimated:!!estimatedRows.length,missing:[...new Set(estimatedRows.flatMap(r=>r.missing))],imputed:estimatedRows.flatMap(r=>r.imputed),breakBefore:!!points.length && t-points[points.length-1].t>step*DAY});
+      points.push({t,v:mean(totals),lo:Math.min(...totals),hi:Math.max(...totals),xs:totals,n:ready.length,fullN:ready.length-estimatedRows.length,estimatedN:estimatedRows.length,missingN:rows.length-ready.length,estimated:!!estimatedRows.length,missing:[...new Set(estimatedRows.flatMap(r=>r.missing))],imputed:estimatedRows.flatMap(r=>r.imputed),breakBefore:!!points.length && t-points[points.length-1].t>step*DAY});
     }
     return {id:b.id,name:b.name,points};
   });

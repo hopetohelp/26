@@ -1,14 +1,16 @@
-import { change, diffText, dumbbellAxis, r1, type DumbbellRow } from "../lib/dumbbell";
-import { Candle, KeyItem, MeanDot, ResultRing } from "./marks";
+import { binSegs, levelSegs, type LSeg } from "../lib/chartLanguage";
+import { change, diffText, dumbbellAxis, histBounds, r1, type DumbbellRow } from "../lib/dumbbell";
+import { KeyItem, MeanDot, ProfileCandle, ResultRing, ThicknessKey } from "./marks";
 
 /**
- * "מה השתנה" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל משפחה, עיגול גדול ריק = 2022 (תוצאה רשמית), עיגול מלא = היום (ממוצע הסקרים),
- * ונר = טווח 80% מהתרחישים (לכל הרשימות אותה כמות תרחישים, ולכן אותו עובי). בלי קו בין העיגולים: המרחק ביניהם ברור (הכרעת בעלים 9.10.2026).
+ * "מה השתנה" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל משפחה, עיגול גדול ריק כתום = 2022 (תוצאה רשמית), עיגול מלא אדום = היום (ממוצע המודל),
+ * ונר כחול = הטווח המלא של כל התרחישים, שעוביו משתנה לאורכו לפי כמה תרחישים נותנים כל אחוז (ביחס לשאר הגרף). בלי קו בין העיגולים:
+ * המרחק ביניהם ברור (הכרעת בעלים 9.10.2026). הטווח המלא בכל מקום חוץ ממסך "תחזית ותרחישים".
  * כיוון השינוי מסומן במיקום ובסימן בלבד — בלי צבע לעלייה ובלי צבע לירידה (ניטרליות). הציר משמאל לימין, 0 משמאל, כמו בשאר הגרפים.
  */
 const COLS = "grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem]";
 
-function Row({ r, max, ticks }: { r: DumbbellRow; max: number; ticks: number[] }) {
+function Row({ r, max, ticks, lsegs }: { r: DumbbellRow; max: number; ticks: number[]; lsegs: LSeg[] }) {
   const x = (v: number) => (Math.min(v, max) / max) * 100;
   const d = change(r);
   return (
@@ -22,7 +24,7 @@ function Row({ r, max, ticks }: { r: DumbbellRow; max: number; ticks: number[] }
         {ticks.map((v) => (
           <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
         ))}
-        {r.range && <Candle from={x(r.range[0])} to={x(r.range[1])} level={5} />}
+        {lsegs.length > 0 && <ProfileCandle segs={lsegs} x={x} />}
         <ResultRing at={x(r.before)} />
         <MeanDot at={x(r.now)} />
       </span>
@@ -33,7 +35,7 @@ function Row({ r, max, ticks }: { r: DumbbellRow; max: number; ticks: number[] }
         <span className="block text-xs">ב-2022: {r.from}</span>
       </span>
       <span className="sr-only">
-        ; 2022: {r1(r.before)}% מהקולות הכשרים, היום {r1(r.now)}% לפי הממוצע{r.range ? `, ובין ${r1(r.range[0])}% ל-${r1(r.range[1])}% ב-80% מהתרחישים` : ""}. שינוי נטו: {diffText(d)} נקודות אחוז
+        ; 2022: {r1(r.before)}% מהקולות הכשרים, היום {r1(r.now)}% לפי הממוצע{r.hist ? `, ובין ${r1(histBounds(r.hist)[0])}% ל-${r1(histBounds(r.hist)[1])}% בכל התרחישים` : ""}. שינוי נטו: {diffText(d)} נקודות אחוז
       </span>
     </li>
   );
@@ -41,12 +43,14 @@ function Row({ r, max, ticks }: { r: DumbbellRow; max: number; ticks: number[] }
 
 export default function DumbbellChart({ rows }: { rows: DumbbellRow[] }) {
   const { max, ticks } = dumbbellAxis(rows);
+  const levels = levelSegs(rows.map((r) => (r.hist ? binSegs(r.hist.start, r.hist.step, r.hist.counts) : [])));
   return (
     <div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft my-1">
         <KeyItem kind="result">2022, תוצאות רשמיות</KeyItem>
         <KeyItem kind="mean">היום, ממוצע המודל</KeyItem>
-        <KeyItem kind="candle" level={5}>טווח 80% מהתרחישים</KeyItem>
+        <KeyItem kind="candle">טווח מלא: הנמוך והגבוה מכל התרחישים</KeyItem>
+        <ThicknessKey what="כמה תרחישים נותנים כל אחוז" />
       </div>
       <div aria-hidden="true" className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
         <div dir="ltr" className="md:col-start-2 relative h-5">
@@ -56,9 +60,9 @@ export default function DumbbellChart({ rows }: { rows: DumbbellRow[] }) {
         </div>
       </div>
       <ul aria-label="משפחות הרשימות, 2022 מול היום">
-        {rows.map((r) => <Row key={r.id} r={r} max={max} ticks={ticks} />)}
+        {rows.map((r, i) => <Row key={r.id} r={r} max={max} ticks={ticks} lsegs={levels[i]} />)}
       </ul>
-      <p className="text-xs text-ink-soft mt-2">הציר: אחוז מהקולות הכשרים. הטווח, כשהוא מוצג, הוא 80% מהתרחישים שהמודל מריץ ליום הבחירות.</p>
+      <p className="text-xs text-ink-soft mt-2">הציר: אחוז מהקולות הכשרים. הנר, כשהוא מוצג, הוא הטווח המלא של התרחישים שהמודל מריץ ליום הבחירות (הנמוך והגבוה), ועוביו לפי כמה תרחישים נותנים כל אחוז.</p>
     </div>
   );
 }
