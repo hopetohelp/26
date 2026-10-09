@@ -323,3 +323,13 @@ it("רשימה שעברה באחת הגרסאות נשארת ברשימה גם �
   expect(d.seats.everPassedLists).toContain('likud');
   expect(d.seats.everPassedLists).not.toContain('shas');
 });
+
+it("השערות אחוזים נספרות בממוצע המנדטים יחד עם השערות מנדטים", () => {
+  const result = computeSeats([
+    ver("mandates", "seats", seats(40)),
+    ver("percentages", "seats", seats(60, "manual", { mode: "pct", pct: { [IDS[0]]: 50, [IDS[1]]: 50 } })),
+  ]);
+  expect(result.n).toBe(2);
+  expect(result.full.find(row => row.list === IDS[0])).toMatchObject({ n: 2, mean: 50, min: 40, max: 60 });
+  expect(result.full.find(row => row.list === IDS[1])).toMatchObject({ n: 2, mean: 70, min: 60, max: 80 });
+});

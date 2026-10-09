@@ -7,13 +7,17 @@ import type { Dashboard, SeatStat } from "../../lib/crowdApi";
 
 const stat: SeatStat = { list: "likud", n: 1, mean: 30, min: 30, max: 30, median: 30, p25: 30, p75: 30 };
 
-it("אחוזים משתמשים בניחוש האחוזים ולא מחלקים מנדטים ב־120", () => {
-  const html = renderToStaticMarkup(createElement(SeatsStats, {
-    rows: [{ ...stat, mean: 24.5 }], polls: { likud: 23.5 }, view: "table", unit: "pct",
-    mine: { mode: "pct", pct: { likud: 25.5 }, start: "zero", pollsAsOf: null, seats: { likud: { v: 30, src: "manual", locked: false } } },
-  }));
-  for (const value of ["24.5%", "23.5%", "25.5%"]) expect(html).toContain(value);
-  expect(html).not.toContain(">30</td>");
+it("השערת אחוזים מוצגת במנדטים בטבלה ובגרף", () => {
+  for (const view of ["table", "chart"] as const) {
+    const html = renderToStaticMarkup(createElement(SeatsStats, {
+      rows: [stat], polls: { likud: 28 }, view,
+      mine: { mode: "pct", pct: { likud: 25.5 }, start: "zero", pollsAsOf: null, seats: { likud: { v: 30, src: "manual", locked: false } } },
+    }));
+    expect(html).toContain("מנדטים");
+    expect(html).not.toContain("אחוזים");
+    expect(html).not.toContain("25.5%");
+    if (view === "table") expect(html).toContain(">30</td>");
+  }
 });
 
 it("מציג ממוצע, סקרים וההשערה שלי; טווח זהה נשאר ריק", () => {

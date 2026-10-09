@@ -7,7 +7,7 @@ import { OUTBOX_EVENT, SAVED_EVENT } from "../../lib/outbox";
 import { liveDashboard, newerDashboard, siteDashboard, type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, rng, seatsFmt } from "../../lib/format";
-import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, POLL_SHARES, V2022_LABEL, V2026_LABEL } from "./model";
+import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
@@ -18,7 +18,6 @@ import type { useSession } from "./useCrowd";
 
 const LIVE_REFRESH_MS = 60_000;
 
-type Subject = "seats" | "pct";
 type View = "table" | "chart";
 
 const range = (s: SeatStat) => s.min === s.max ? "" : rng(seatsFmt(s.min), seatsFmt(s.max));
@@ -29,7 +28,6 @@ const pctOf = (cell: Cell) => cell.of ? Math.round((cell.n / cell.of) * 1000) / 
 
 export default function Dashboard({ session }: { session: ReturnType<typeof useSession> }) {
   const [d, setD] = useState<D | null>(null);
-  const [subject, setSubject] = useState<Subject>("seats");
   const [view, setView] = useState<View>("table");
   const [err, setErr] = useState<string | null>(null);
 
@@ -81,14 +79,9 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
-        <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
-      {subject === "seats" ? (
-        d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
-      ) : (
-        d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={hasDefinedBlocs ? mine : undefined} view={view} unit="pct" passedLists={d.seats.everPassedLists ?? d.seats.full.filter(s => s.max >= 4).map(s => s.list)} /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
-      )}
+      {d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
       {d.blocs ? <BlocStats d={d} view={view} mine={myBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>
@@ -103,14 +96,14 @@ function Toggle<T extends string>({ value, setValue, options, label }: { value: 
   return <Segmented value={value} onChange={setValue} label={label} className="min-w-[12rem]" options={options.map(([id, text]) => ({ id, label: text }))} />;
 }
 
-export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject }) {
-  const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= (unit === "pct" ? 3.25 : 4)).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists, unit]);
+export function SeatsStats({ rows, polls, mine, view, passedLists }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View }) {
+  const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= 4).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists]);
   const hiddenNote = <p className="text-xs text-ink-soft mt-3">מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות</p>;
-  const suffix = unit === "pct" ? "%" : "";
+  const suffix = "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
-  const myValue = (id: string) => unit === "pct" ? mine?.mode === "pct" ? mine.pct?.[id] : undefined : mine?.seats[id]?.v;
-  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
-  return <Card title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
+  const myValue = (id: string) => mine?.seats[id]?.v;
+  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
+  return <Card title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th>{mine && <th className="font-normal">שלי</th>}</tr></thead>
     <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
   </table></div>{hiddenNote}</Card>;
