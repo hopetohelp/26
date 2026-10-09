@@ -2,6 +2,9 @@ import { hemicycleSeats } from "../lib/hemicycle";
 import { rng } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 
+/** שורת טווח: הממוצע (נקודה) והטווח (פס). `pass` רק לרשימות על הסף */
+export type RangeRowData = Pick<HomeRow, "id" | "name" | "central" | "lo" | "hi"> & { pass?: number };
+
 /**
  * גרפי הבית (הכרעת בעלים 9.10.2026): לוח 120 המושבים בשני גוונים, דירוג הרשימות עם טווח 80%, ומגמת הממשלה היוצאת.
  * הכול בטוקנים בלבד (accent, ink, paper, line), בלי צבעי מפלגות. כל גרף מקבל מנדטים ממספר אחד: `buildHome` ב-`src/lib/home.ts`.
@@ -64,7 +67,7 @@ function Dots({ pass }: { pass: number }) {
   );
 }
 
-function RankRow({ r, axisMax, withDots }: { r: HomeRow; axisMax: number; withDots?: boolean }) {
+function RankRow({ r, axisMax, withDots }: { r: RangeRowData; axisMax: number; withDots?: boolean }) {
   const left = (r.lo / axisMax) * 100;
   const width = Math.max(((r.hi - r.lo) / axisMax) * 100, 0.8);
   return (
@@ -87,7 +90,7 @@ function RankRow({ r, axisMax, withDots }: { r: HomeRow; axisMax: number; withDo
         {rng(r.lo, r.hi)}
       </span>
       <span className="sr-only">; טווח {r.lo} עד {r.hi}</span>
-      {withDots && (
+      {withDots && r.pass !== undefined && (
         <span className="col-span-full flex items-center gap-2.5 text-sm text-ink-soft pb-1">
           <Dots pass={r.pass} />
           <span>עוברת ב-{Math.round(r.pass * 100)}% מהתרחישים</span>
@@ -97,23 +100,42 @@ function RankRow({ r, axisMax, withDots }: { r: HomeRow; axisMax: number; withDo
   );
 }
 
-/** כל הרשימות: ציר פעם אחת בראש (0 משמאל), שורה לרשימה, וקו אחוז החסימה שמפריד את "על הסף" */
-export function Ranking({ home }: { home: HomeData }) {
-  const { safe, edge, below, axisMax } = home;
+function Key({ dotLabel, barLabel }: { dotLabel: string; barLabel: string }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft my-1">
+      <span className="inline-flex items-center gap-2"><i className="size-[.8rem] rounded-full bg-ink" />{dotLabel}</span>
+      <span className="inline-flex items-center gap-2"><i className="w-[1.4rem] h-[.3rem] rounded-full bg-accent/70" />{barLabel}</span>
+    </div>
+  );
+}
+
+/** ציר המנדטים פעם אחת בראש, 0 משמאל */
+function Axis({ axisMax }: { axisMax: number }) {
   const ticks = Array.from({ length: axisMax / 10 + 1 }, (_, i) => i * 10);
   return (
+    <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
+      <div dir="ltr" className="col-start-3 relative h-4">
+        {ticks.map((v) => (
+          <span key={v} className="absolute -translate-x-1/2" style={{ left: `${(v / axisMax) * 100}%` }}>{v}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** מקסימום ציר המנדטים: 30 לפחות, ומכפלה של 10 מעל הטווח הגבוה ביותר */
+export const axisMaxOf = (rows: { hi: number }[]) => Math.max(30, Math.ceil(Math.max(...rows.map((r) => r.hi), 0) / 10) * 10);
+
+/**
+ * כל הרשימות: ציר פעם אחת בראש (0 משמאל), שורה לרשימה, וקו אחוז החסימה שמפריד את "על הסף".
+ * רכיב אחד לבית, ל"המצב היום" ול"תרחישים" (החלטה 10, 9.10.2026).
+ */
+export function Ranking({ home, dotLabel = "ממוצע הסקרים", barLabel = "טווח 80% מהתרחישים" }: { home: HomeData; dotLabel?: string; barLabel?: string }) {
+  const { safe, edge, below, axisMax } = home;
+  return (
     <>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft my-1">
-        <span className="inline-flex items-center gap-2"><i className="size-[.8rem] rounded-full bg-ink" />ממוצע הסקרים</span>
-        <span className="inline-flex items-center gap-2"><i className="w-[1.4rem] h-[.3rem] rounded-full bg-accent/70" />טווח 80% מהתרחישים</span>
-      </div>
-      <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
-        <div dir="ltr" className="col-start-3 relative h-4">
-          {ticks.map((v) => (
-            <span key={v} className="absolute -translate-x-1/2" style={{ left: `${(v / axisMax) * 100}%` }}>{v}</span>
-          ))}
-        </div>
-      </div>
+      <Key dotLabel={dotLabel} barLabel={barLabel} />
+      <Axis axisMax={axisMax} />
       <ol className="mt-1">{safe.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} />)}</ol>
       {edge.length > 0 && (
         <>
@@ -128,6 +150,18 @@ export function Ranking({ home }: { home: HomeData }) {
         </>
       )}
       {below.length > 0 && <p className="mt-2 text-sm text-ink-soft">מתחת לסף: {below.map((r) => r.name).join(", ")}</p>}
+    </>
+  );
+}
+
+/** אותו רכיב לסיכום הסקרים בין המכונים: נקודה = החציון, פס = הנמוך והגבוה בין המכונים (בלי קו סף) */
+export function PollRanges({ rows, dotLabel = "חציון הסקרים", barLabel = "הנמוך והגבוה בין המכונים" }: { rows: RangeRowData[]; dotLabel?: string; barLabel?: string }) {
+  const axisMax = axisMaxOf(rows);
+  return (
+    <>
+      <Key dotLabel={dotLabel} barLabel={barLabel} />
+      <Axis axisMax={axisMax} />
+      <ol className="mt-1">{rows.map((r) => <RankRow key={r.id} r={r} axisMax={axisMax} />)}</ol>
     </>
   );
 }
