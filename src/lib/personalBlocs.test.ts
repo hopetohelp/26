@@ -50,3 +50,8 @@ it("רשימת עבר משותפת נספרת פעם אחת, וחוסר נתון
   expect(historicalBlocValues([b("one", ["a", "b"])], families, { shared: 14 })[0].total).toBe(14);
   expect(historicalBlocValues([b("one", ["a"])], families, {})[0].total).toBeNull();
 });
+
+it("מחיקת כל הגושים ושם ריק מתקבלים", () => {
+  expect(validateBlocs({mode:"custom",blocs:[]},["x"])).toBeNull();
+  expect(validateBlocs({mode:"custom",blocs:[{...b("one",["x"]),name:""}]},["x"])).toBeNull();
+});

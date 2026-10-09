@@ -95,7 +95,7 @@ export function validatePct(pct) {
 export function validateBlocs(p) {
   if (!isObj(p) || !Array.isArray(p.blocs)) return fail("payload");
   if (p.mode !== "gov37" && p.mode !== "custom") return fail("mode");
-  if (p.blocs.length < 1 || p.blocs.length > MAX_BLOCS) return fail("count");
+  if (p.blocs.length > MAX_BLOCS) return fail("count");
   const ids = new Set();
   const blocs = [];
   for (const b of p.blocs) {

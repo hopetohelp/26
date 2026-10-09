@@ -1,4 +1,4 @@
-import { personalTotals, blocNameError } from "./lib/blocDefinitions.js";
+import { personalTotals } from "./lib/blocDefinitions.js";
 /**
  * שרת השתתפות הגולשים — "ההשערה שלי" ודשבורד הגולשים (Cloudflare Worker + D1 ‏elections26-crowd).
  * השיטה: docs/השתתפות-גולשים.md · החוזה (נתיבים וצורות תשובה): src/lib/crowdApi.ts — השרת מממש בדיוק אותו.
@@ -166,9 +166,6 @@ const routes = {
     if (existing) return { version: parseVersion(existing) };
     if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
     if (unit === "blocs") {
-      const latestBlocs = await env.DB.prepare("SELECT payload FROM versions WHERE participant = ? AND unit = 'blocs' ORDER BY id DESC LIMIT 1").bind(participant).first();
-      const nameError = blocNameError(latestBlocs ? JSON.parse(latestBlocs.payload) : null, payload);
-      if (nameError) throw bad("invalid", { field: nameError });
       if (payload.mode === "custom") payload.schemaVersion = 2;
     }
     if (unit === "seats") {
@@ -412,10 +409,12 @@ async function dashboard(env) {
   const data = await env.DB.batch([
     env.DB.prepare("SELECT id, review FROM participants"),
     env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id"),
+    env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'"),
   ]);
   const participants = data[0].results || [];
   const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
-  return aggregate({ participants, versions, now, aggregationId: `live-${now}` }).dashboard;
+  const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
+  return aggregate({ participants, versions, now, blocNames, aggregationId: `live-${now}` }).dashboard;
 }
 
 // ---- המשימה השעתית
@@ -478,7 +477,9 @@ export async function runAggregation(env, now) {
   const lastDash = await env.DB.prepare("SELECT json FROM aggregates WHERE section = 'dashboard' ORDER BY id DESC LIMIT 1").first();
   const previousDash = lastDash ? JSON.parse(lastDash.json) : null;
   const wasOpen = !!previousDash?.open && previousDash.policy === DASHBOARD_POLICY;
-  const res = aggregate({ wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId });
+  const names = (await env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'").all()).results || [];
+  const blocNames = Object.fromEntries(names.map(r => [r.composition,r.name]));
+  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId });
   const ins = (section, json, publishedAt, contributors = 0, snapshot = null) =>
     env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json, contributors, snapshot) VALUES (?, ?, ?, ?, ?, ?)").bind(
       aggregationId,

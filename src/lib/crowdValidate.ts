@@ -41,13 +41,12 @@ export function validatePct(pct: Record<string, number>, ids: string[]): string 
 }
 
 export function validateBlocs(p: BlocsPayload, ids: string[]): string | null {
-  if (p.blocs.length === 0) return "אין גושים.";
   if (p.blocs.length > MAX_BLOCS) return `עד ${MAX_BLOCS} גושים.`;
   const blocIds = new Set<string>();
   for (const b of p.blocs) {
     if (!/^[\w-]{1,32}$/.test(b.id) || blocIds.has(b.id)) return "מזהה גוש כפול או לא תקין.";
     blocIds.add(b.id);
-    if (!b.name.trim() || b.name.length > 40) return "לכל גוש צריך שם עד 40 תווים.";
+    if (b.name.length > 40) return "שם גוש יכול להכיל עד 40 תווים.";
     if (b.target !== null && (!Number.isInteger(b.target) || b.target < 0 || b.target > TOTAL)) return "יעד חייב להיות מספר שלם בין 0 ל-120.";
     const seen = new Set<string>();
     for (const id of b.lists) {

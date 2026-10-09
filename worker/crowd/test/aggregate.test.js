@@ -289,3 +289,26 @@ it("legacy coalition bloc merges into the current default coalition", () => {
   expect(r.custom).toHaveLength(1);
   expect(r.custom[0].n).toBe(2);
 });
+
+it("הרכב משותף מאוחד גם עם שמות שונים ושם מאושר משנה תצוגה בלבד", () => {
+  const ss=[{participant:'a',payload:seats(60)},{participant:'b',payload:seats(40)}];
+  const bs=['a','b'].map((participant,i)=>({participant,payload:{mode:'custom',schemaVersion:2,blocs:[{id:'x',name:i?'שם שני':'שם ראשון',lists:i?['shas','likud']:['likud','shas'],target:null}]}}));
+  const first=computeBlocs(ss,bs);
+  const named=computeBlocs(ss,bs,{'likud,shas':'שם מאושר'});
+  expect(first.custom).toHaveLength(1);
+  expect(first.custom[0].n).toBe(2);
+  expect(named.custom[0].name).toBe('שם מאושר');
+  expect({...named.custom[0],name:first.custom[0].name}).toEqual(first.custom[0]);
+  expect(named.fixed).toEqual(first.fixed);
+});
+
+it("אישור שם מתעדכן גם בפרסום שלא השתנה ואינו משנה את תאריך הנתונים", () => {
+  const vs=[ver('a','seats',seats(60)),ver('a','blocs',{mode:'custom',schemaVersion:2,blocs:[{id:'x',name:'אישי',lists:['likud','shas'],target:null}]})];
+  const first=run([{id:'a',review:0}],vs);
+  const after=run([{id:'a',review:0}],vs,{previous:first.sections,lastDailyDay:first.today,blocNames:{'likud,shas':'שם מאושר'}});
+  expect(after.sections.blocs.kept).toBe(true);
+  expect(after.dashboard.blocs.custom[0].name).toBe('שם מאושר');
+  expect(after.dashboard.blocs.custom[0].derived).toEqual(first.dashboard.blocs.custom[0].derived);
+  expect(after.dashboard.sectionsAsOf.blocs).toBe(first.dashboard.sectionsAsOf.blocs);
+  expect(first.dashboard.blocs.custom[0].name).toBe('אישי');
+});

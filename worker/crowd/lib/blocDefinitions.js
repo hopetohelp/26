@@ -54,16 +54,3 @@ export function personalTotals(payload, definition) {
   return blocs.map(b => ({ id:b.id,name:b.name,lists:[...new Set(b.lists)],seats:[...new Set(b.lists)].reduce((sum,id)=>sum+(payload.seats[id]?.v??0),0) }));
 }
 
-/** שם חדש נדרש לשינוי הרכב; השמות הקבועים מתארים רק את ההרכב המקורי. */
-export function blocNameError(previous, next) {
-  if (next.mode !== "custom") return null;
-  const old = previous?.mode === "custom" ? previous.blocs : [];
-  for (const b of next.blocs) {
-    if (!b.name.trim()) return "bloc_name_required";
-    const fixed = FIXED_BLOCS.find(f => f.name === b.name.trim());
-    if (fixed && compositionKey(fixed.lists) !== compositionKey(b.lists)) return "bloc_rename_required";
-    const before = old.find(a => a.id === b.id);
-    if (before && compositionKey(before.lists) !== compositionKey(b.lists) && before.name.trim() === b.name.trim()) return "bloc_rename_required";
-  }
-  return null;
-}
