@@ -1,0 +1,17 @@
+{
+  "name": "בחירות 2026 — ניתוח",
+  "short_name": "בחירות 2026",
+  "description": "ניתוח הבחירות לכנסת ה-26: הסקרים, התרחישים, תוצאות אמת ומחשבון מנדטים לפי חוק הבחירות.",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import InstallApp from "../components/InstallApp";
 import { GovTrend, Hemicycle, MAJORITY, Ranking } from "../components/homeCharts";
 import { date, num } from "../lib/format";
 import { dayMonth } from "../lib/home";
@@ -61,6 +62,7 @@ export default function Home() {
           </Link>
         </aside>
       </div>
+      <InstallApp />
     </>
   );
 }
