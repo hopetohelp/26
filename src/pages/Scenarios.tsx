@@ -1,6 +1,8 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
-import { ScenarioRanges, TrendChart, type Series } from "../components/charts";
+import { TrendChart, type Series } from "../components/charts";
+import { Ranking } from "../components/homeCharts";
+import { HOME } from "../lib/homeData";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 
@@ -102,10 +104,7 @@ export default function Scenarios() {
           <ChartWithTable
             summary={`קו = המנדטים לפי הממוצע · רצועה = 80% מהתרחישים. ${edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : ""}`}
             chart={
-              <ScenarioRanges
-                caption="מנדטים לפי הממוצע וטווח 80% של התרחישים לכל רשימה"
-                rows={ids.map((id) => ({ id, name: listName(id), central: m.central.seats[id], lo: sc.lists[id].seats[0], hi: sc.lists[id].seats[2], pass: sc.lists[id].pass }))}
-              />
+              <Ranking home={HOME} />
             }
             table={
               <table className="text-sm w-full">
@@ -145,23 +144,9 @@ export default function Scenarios() {
 
 
       <div className="grid md:grid-cols-2 gap-5 [&>*]:min-w-0">
-        <Card title="על סף אחוז החסימה">
+        <Card title="קולות שלא הופכים למנדטים">
           <Explained kind="תרחיש" source={SOURCE} asOf={asOfText} assumption="רשימה שלא עוברת את הסף מקבלת אפס מנדטים, וקולותיה אינם נספרים בחלוקה." methodAnchor="model">
-            {edge.length ? (
-              <ul className="text-sm space-y-1">
-                {edge.map((id) => (
-                  <li key={id}>
-                    <strong>{listName(id)}</strong> עוברת {pctTxt(sc.lists[id].pass)} · אחוז הקולות:{" "}
-                    <span className="whitespace-nowrap">
-                      {r1(sc.lists[id].share[0])}%–{r1(sc.lists[id].share[2])}%
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm">אין כרגע רשימה שעוברת בחלק מהתרחישים בלבד.</p>
-            )}
-            <p className="text-sm mt-3">
+            <p className="text-sm">
               קולות כשרים לרשימות שלא עוברות את הסף: חציון {r1(sc.wasted[1])}%, וב-80% מהתרחישים בין {r1(sc.wasted[0])}% ל-{r1(sc.wasted[2])}%.
               ב-2022 זה היה {r1(wasted2022)}%.
             </p>

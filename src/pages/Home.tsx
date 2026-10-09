@@ -1,21 +1,15 @@
 import { Link } from "react-router-dom";
 import { GovTrend, Hemicycle, MAJORITY, Ranking } from "../components/homeCharts";
-import modelFile from "../data/model.json";
-import { lastPollDate, latestPerPollster, lists2026, listName, passesInAll } from "../lib/data";
 import { date, num } from "../lib/format";
-import { buildHome, dayMonth, type HomeModel } from "../lib/home";
+import { dayMonth } from "../lib/home";
+import { HOME } from "../lib/homeData";
 
 /**
  * מסך הבית (הכרעות בעלים 9.10.2026): התשובה והגרפים קודם, ובלי כפתורי הפניה חוץ מ"הכנסת שלי".
  * שלוש שאלות לפי הסדר: מה המצב (כותרת ולוח 120 המושבים), מי על הסף ומי עולה (כל הרשימות), לאן זה הולך (מגמה). אחריהן פעולה אחת.
  * מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר בכותרת, בלוח, בדירוג ובמגמה (החלטה 14).
  */
-const latest = latestPerPollster(lastPollDate(), 14);
-const home = buildHome(modelFile as unknown as HomeModel, {
-  govIds: lists2026.filter((l) => l.gov37).map((l) => l.id),
-  nameOf: listName,
-  sure: (id) => passesInAll(latest, id),
-});
+const home = HOME;
 
 export default function Home() {
   const { gov, other, series } = home;
