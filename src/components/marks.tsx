@@ -1,25 +1,31 @@
 import type { ReactNode } from "react";
-import { volumeLevel, type Level, type LSeg } from "../lib/chartLanguage";
+import { profilePath, profilePoints, type LSeg } from "../lib/chartLanguage";
 
 /**
  * הסימנים של שפת הציור האחידה (`src/lib/chartLanguage.ts`, מחלקות `mk-*` ב-`src/index.css`), לגרפים של שורות ב-HTML.
  * כולם מוצבים באחוזים על מסלול `relative` ב-`dir="ltr"`, כך שהציר (0 משמאל) נשאר זהה בכל האתר.
  */
 
+/** נר אופקי: שטח סגור אחד שקו המתאר שלו חלק. הקואורדינטות המקומיות: 0 עד 1000 לאורך ו-0 עד 18 לרוחב (פיקסלים) */
+const LOCAL = 1000;
+const THICK = 18;
+
 /**
- * נר = טווח, בעובי שמשתנה לאורכו: קטעים סמוכים, וכל קטע בעובי לפי כמות הנתונים בו (רמה 1 עד 5, ביחס לכל הגרף).
+ * נר = טווח, בעובי שמשתנה לאורכו: קו מתאר חלק (בלי צעדים מרובעים) שעובר דרך עובי כל קטע לפי כמות הנתונים בו (רמה 1, 3 או 5).
  * `x` ממפה ערך על הציר לאחוז מהמסלול. עבה היכן שרוב הנתונים, ודק בקצוות.
  */
 export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number) => number; title?: string }) {
   if (!segs.length) return null;
   const from = x(segs[0].from);
   const to = x(segs[segs.length - 1].to);
+  const width = Math.max(to - from, 0.8);
+  const left = from - (width - (to - from)) / 2;
+  const d = profilePath(profilePoints(segs, (v) => ((x(v) - left) / width) * LOCAL), THICK / 2);
   return (
-    <span aria-hidden="true" title={title} className="mk-prof" style={{ left: `${from}%`, width: `${Math.max(to - from, 0.8)}%` }}>
-      {segs.map((g, k) => (
-        <i key={k} className={`l${g.level}`} style={{ flexGrow: Math.max(g.to - g.from, 1e-6) }} />
-      ))}
-    </span>
+    <svg aria-hidden="true" focusable="false" className="mk-prof" viewBox={`0 0 ${LOCAL} ${THICK}`} preserveAspectRatio="none" style={{ left: `${left}%`, width: `${width}%` }}>
+      {title && <title>{title}</title>}
+      <path d={d} />
+    </svg>
   );
 }
 
@@ -28,54 +34,40 @@ export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number)
   if (!segs.length) return null;
   const top = y(segs[segs.length - 1].to);
   const bottom = y(segs[0].from);
+  const height = Math.max(bottom - top, 0.8);
+  const top0 = top - (height - (bottom - top)) / 2;
+  const d = profilePath(profilePoints(segs, (v) => ((y(v) - top0) / height) * LOCAL), THICK / 2, "x");
   return (
-    <span aria-hidden="true" className="mk-pv" style={{ left, top: `${top}%`, height: `${Math.max(bottom - top, 0.8)}%` }}>
-      {segs
-        .slice()
-        .reverse()
-        .map((g, k) => (
-          <i key={k} className={`l${g.level}`} style={{ flexGrow: Math.max(g.to - g.from, 1e-6) }} />
-        ))}
-    </span>
+    <svg aria-hidden="true" focusable="false" className="mk-pv" viewBox={`0 0 ${THICK} ${LOCAL}`} preserveAspectRatio="none" style={{ left, top: `${top0}%`, height: `${height}%` }}>
+      <path d={d} />
+    </svg>
   );
 }
 
-/** ממוצע נוכחי = עיגול בינוני מלא */
+/** ממוצע = עיגול מלא בקוטר 10, כעובי רמה 3 */
 export const MeanDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-mean" style={{ left: `${at}%` }} />;
 
-/** תוצאת אמת = עיגול גדול ריק */
+/** תוצאה = עיגול ריק בקוטר 10, כעובי רמה 3 (גם ממוצע הגולשים בסקר האתר, שאינו סקר) */
 export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-ring" style={{ left: `${at}%` }} />;
 
 /** סמן על קו = עיגול קטן ריק */
 export const SmallDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-dot" style={{ left: `${at}%` }} />;
 
-/** ממוצע הגולשים בסקר האתר = מעוין ריק (אינו סקר) */
-export const Diamond = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-dia" style={{ left: `${at}%` }} />;
+export type MarkKind = "candle" | "mean" | "result" | "dot";
 
-export type MarkKind = "candle" | "mean" | "result" | "dot" | "diamond";
-
-/** דוגמית סימן למקרא. הנר מצויר ברמה 3 (בינונית) אלא אם צוינה רמה */
-export function Swatch({ kind }: { kind: MarkKind; level?: Level }) {
-  if (kind === "candle")
+/** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן: זנב דק, בינוני, עבה, בינוני, זנב דק */
+export function Swatch({ kind }: { kind: MarkKind }) {
+  if (kind === "candle") {
+    const segs: LSeg[] = ([1, 1, 3, 5, 5, 3, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
+    const d = profilePath(profilePoints(segs, (v) => (v / 8) * LOCAL), THICK / 2);
     return (
-      <i aria-hidden="true" className="mk mk-sw mk-prof" style={{ width: "2rem" }}>
-        {[1, 3, 5, 4, 2, 1].map((l, k) => (
-          <i key={k} className={`l${l}`} />
-        ))}
-      </i>
+      <svg aria-hidden="true" focusable="false" className="mk-sw mk-prof-sw" viewBox={`0 0 ${LOCAL} ${THICK}`} preserveAspectRatio="none">
+        <path d={d} />
+      </svg>
     );
-  const cls = { mean: "mk-mean", result: "mk-ring", dot: "mk-dot", diamond: "mk-dia" }[kind];
+  }
+  const cls = { mean: "mk-mean", result: "mk-ring", dot: "mk-dot" }[kind];
   return <i aria-hidden="true" className={`mk mk-sw ${cls}`} />;
-}
-
-/** פריט מקרא: דוגמית וטקסט */
-export function KeyItem({ kind, level: _level, children }: { kind: MarkKind; level?: Level; children: ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-2">
-      <Swatch kind={kind} />
-      {children}
-    </span>
-  );
 }
 
 /** מסלול של שורה: `relative`, שמאל לימין, ורשת של קווים דקים כל `step` יחידות. 0 משמאל בכל האתר */
@@ -104,23 +96,3 @@ export function AxisLabels({ axisMax, step = 10, format = (v: number) => String(
     </div>
   );
 }
-
-/** מקרא עובי הנר: מעט ... הרבה, בחמש רמות לפי כמות הנתונים בכל קטע, ביחס לקטע העמוס ביותר באותו נר */
-export function ThicknessKey({ what }: { what: string }) {
-  return (
-    <span className="inline-flex items-center gap-1.5" title={`עובי הנר בכל קטע: ${what}, ביחס לקטע העמוס ביותר באותו נר. חמש רמות: מתחת ל-20%, מ-20%, מ-40%, מ-60%, מ-80%.`}>
-      <span>עובי הנר: {what}</span>
-      <span className="inline-flex items-center gap-1">
-        <span>מעט</span>
-        <span aria-hidden="true" className="inline-flex items-center gap-1">
-          {([1, 2, 3, 4, 5] as const).map((l) => (
-            <i key={l} className={`mk mk-sw mk-candle mk-c${l}`} style={{ width: ".7rem" }} />
-          ))}
-        </span>
-        <span>הרבה</span>
-      </span>
-    </span>
-  );
-}
-
-export { volumeLevel };
