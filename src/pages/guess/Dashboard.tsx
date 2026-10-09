@@ -49,7 +49,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   // במסך סקר האתר כרטיס הגושים שלי בטור הצר (הכרעת בעלים 8.10.2026) — Guess מציב שם מקום ריק
   const blocsCard = d.seats ? <PersonalBlocs compact title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: גולשים, סקרים וההשערה שלי" asOf={asOf} datasets={[
         { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
-        { values: d.seats.polls, source: "הסקרים", asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
+        { values: d.seats.polls, source: "ממוצע הסקרים", sumAvailable: true, asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
         ...(mine ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
       ]} /> : null;
   return (
@@ -108,8 +108,8 @@ export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
   if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,value:r.stat?.mean ?? 0,range:r.stat ? range(r.stat) : "חסר נתון"}))} />;
   return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
-    <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
-    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
+    <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע הגולשים</th><th className="font-normal">ממוצע הסקרים</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
+    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center">{seatsFmt([...new Set(r.lists)].reduce((sum, id) => { const value = d.seats?.polls[id]; return sum + (typeof value === "number" && Number.isFinite(value) ? value : 0); }, 0))}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
   </table></div></Card>;
 }
 
