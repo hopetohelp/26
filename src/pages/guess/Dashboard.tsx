@@ -12,7 +12,7 @@ import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { levelSegs, quantileSegs } from "../../lib/chartLanguage";
-import ChartLegend from "../../components/ChartLegend";
+import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import type { useSession } from "./useCrowd";
 
@@ -155,10 +155,9 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
     <ChartLegend
       entries={[
         { kind: "result", text: "ממוצע הגולשים (אינו סקר)" },
-        { kind: "candle", text: "הנמוך והגבוה בין ההשערות" },
+        { kind: "candle", text: rangeLine("full", "ההשערות") },
         ...(withPoll ? [{ kind: "mean" as const, text: "ממוצע הסקרים" }] : []),
       ]}
-      thickness="כמה גולשים שיערו ערך כזה"
     />
     <div aria-hidden="true" className={`grid ${COLS} gap-2 text-xs text-ink-soft`}><div className="col-start-2"><AxisLabels axisMax={axisMax} step={step} format={v => `${v}${suffix}`} /></div></div>
     <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>

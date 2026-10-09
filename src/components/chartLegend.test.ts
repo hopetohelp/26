@@ -1,7 +1,8 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import ChartLegend, { LegendPanel, type LegendKind } from "./ChartLegend";
+import ChartLegend, { LegendPanel, rangeLine, type LegendKind } from "./ChartLegend";
 import DeviationChart from "./deviationChart";
 import DumbbellChart from "./dumbbellChart";
 import { TrendChart } from "./charts";
@@ -54,15 +55,10 @@ describe("ChartLegend", () => {
     const html = renderToStaticMarkup(createElement(ChartLegend, { entries, action: createElement("i", { id: "act" }) }));
     expect(html.indexOf("מקרא")).toBeLessThan(html.indexOf('id="act"'));
   });
-  it("הפאנל הפתוח מסביר כל סימון, ואת שלוש רמות העובי בעובי האמיתי שלהן", () => {
-    const html = renderToStaticMarkup(createElement(LegendPanel, { entries, thickness: "כמה תרחישים" }));
-    for (const t of ["ממוצע בדיקה", "טווח בדיקה", "כמה תרחישים", "דק", "בינוני", "עבה"]) expect(html).toContain(t);
-    for (const c of ["mk-c1", "mk-c3", "mk-c5"]) expect(html).toContain(c);
-    expect(html).not.toContain("mk-c2");
-    expect(html).not.toContain("mk-c4");
-  });
-  it("בלי thickness אין הסבר על עובי", () => {
-    expect(renderToStaticMarkup(createElement(LegendPanel, { entries }))).not.toContain("עובי הנר");
+  it("הפאנל הפתוח מסביר כל סימון, ובלי הסבר על רמות העובי (שורה אחת בלבד, בתוך הסימון של הנר)", () => {
+    const html = renderToStaticMarkup(createElement(LegendPanel, { entries: [...entries, { kind: "candle", text: rangeLine("full", "הסקרים") }] }));
+    for (const t of ["ממוצע בדיקה", "טווח בדיקה", "טווח מלא - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה"]) expect(html).toContain(t);
+    for (const t of ["דק:", "בינוני:", "עבה:", "שליש", "mk-c1", "mk-c3", "mk-c5", "mk-candle"]) expect(html).not.toContain(t);
   });
   it("כל סוגי הדוגמיות מצוירים", () => {
     const kinds: LegendKind[] = ["candle", "mean", "result", "dot", "line", "lineList", "dash", "pass", "seatGov", "seatMiss", "seatOther"];
@@ -70,5 +66,22 @@ describe("ChartLegend", () => {
     for (const k of kinds) expect(html).toContain(`>${k}<`);
     expect(html).toContain("mk-prof-sw");
     expect(html).toContain("sw-miss");
+  });
+});
+
+describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכרעת בעלים 9.10.2026)", () => {
+  it('"טווח מלא - עובי הקו מראה את כמות … שנמצאים בטווח הזה"', () => {
+    expect(rangeLine("full", "הסקרים")).toBe("טווח מלא - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה");
+  });
+  it("טווח של תרחישים הוא 80%, ואפשר להוסיף חלון זמן", () => {
+    expect(rangeLine("p80", "התרחישים")).toBe("טווח 80% - עובי הקו מראה את כמות התרחישים שנמצאים בטווח הזה");
+    expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה");
+  });
+  it("כל גרף עם נר משתמש בשורה הזאת ואין בו הסבר רמות", () => {
+    for (const f of ["homeCharts.tsx", "charts.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
+      const src = readFileSync(new URL(`./${f}`, import.meta.url), "utf8");
+      expect(src, f).toContain("rangeLine(");
+      expect(src, f).not.toContain("thickness");
+    }
   });
 });
