@@ -1456,9 +1456,10 @@
    3.41,
    6.41,
    9.72
-  ]
+  ],
+  "wastedMean": 6.55
  },
- "signature": "0c5581d26eb38803",
+ "signature": "f50e605488bf365d",
  "skipped": [],
  "start": "2026-09-09",
  "trend": [

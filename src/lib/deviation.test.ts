@@ -13,7 +13,7 @@ describe("deviation", () => {
     expect(d.outside.map((r) => r.id)).toEqual(["d", "a", "c"]);
     expect(d.inside.map((r) => r.id)).toEqual(["b"]);
   });
-  it("הסטייה היא התוצאה פחות חציון הסקרים, והטווח ביחס לחציון", () => {
+  it("הסטייה היא התוצאה פחות ממוצע הסקרים, והטווח ביחס לממוצע", () => {
     const a = d.outside.find((r) => r.id === "a")!;
     expect([a.dev, a.lo, a.hi]).toEqual([2.5, -0.5, 0.5]);
   });

@@ -8,30 +8,30 @@ import { useSearchParams } from "react-router-dom";
 import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, PageTitle } from "../components/ui";
 import { allocate, votesToNextSeat, type Agreement } from "../engine/baderOfer";
-import { lastPollDate, latestPerPollster, lists2026, listName, median, meta, registry, summarize } from "../lib/data";
+import { lastPollDate, latestPerPollster, lists2026, listName, mean, meta, passesInMost, registry, summarize } from "../lib/data";
 import { dateLong, num, pct } from "../lib/format";
 import { DEFAULT_TURNOUT, sharesToVotes, validVotes } from "../lib/lawSeats";
 
 const IDS = lists2026.map((l) => l.id);
 const OTHERS_DEFAULT = 1.5;
 
-/** נקודת המוצא: חציון המנדטים בסקרים האחרונים, מומר לאחוזים בקירוב שמתחשב בבאדר-עופר. שנו כרצונכם. */
+/** נקודת המוצא: ממוצע המנדטים בסקרים האחרונים, מומר לאחוזים בקירוב שמתחשב בבאדר-עופר. שנו כרצונכם. */
 function startingShares(): Record<string, number> {
   const latest = latestPerPollster(lastPollDate(), 14);
   const sum = summarize(latest, IDS);
   const shares: Record<string, number> = {};
   let below = 0;
   for (const s of sum) {
-    if (s.median === 0) {
+    if (!passesInMost(s)) {
       const ps = latest.map((p) => p.values[s.id]?.p).filter((x): x is number => typeof x === "number");
-      shares[s.id] = ps.length ? Math.round(median(ps) * 10) / 10 : 1;
+      shares[s.id] = ps.length ? Math.round(mean(ps) * 10) / 10 : 1;
       below += shares[s.id];
     }
   }
-  const above = sum.filter((s) => s.median > 0);
-  const weight = above.reduce((a, s) => a + s.median + 0.5, 0);
+  const above = sum.filter(passesInMost);
+  const weight = above.reduce((a, s) => a + s.mean + 0.5, 0);
   const room = 100 - below - OTHERS_DEFAULT;
-  for (const s of above) shares[s.id] = Math.round(((s.median + 0.5) / weight) * room * 10) / 10;
+  for (const s of above) shares[s.id] = Math.round(((s.mean + 0.5) / weight) * room * 10) / 10;
   for (const id of IDS) if (!(id in shares)) shares[id] = 0;
   return shares;
 }
@@ -123,7 +123,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
         <Card title="הקלט" boxed>
           <p className="text-sm text-ink-soft mb-3">
-            נקודת המוצא: חציון הסקרים האחרונים (עד {dateLong(lastPollDate())}), מומר לאחוזים בקירוב. זו הערכה גסה — שנו כרצונכם.
+            נקודת המוצא: ממוצע הסקרים האחרונים (עד {dateLong(lastPollDate())}), מומר לאחוזים בקירוב. זו הערכה גסה — שנו כרצונכם.
           </p>
           <table className="w-full text-sm">
             <caption className="sr-only">אחוז לכל רשימה</caption>

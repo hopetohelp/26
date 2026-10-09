@@ -1,4 +1,4 @@
-import { median, pollsterKey, pollsterLabel, seatsIn, toTime, type Poll } from "./data";
+import { mean, pollsterKey, pollsterLabel, seatsIn, toTime, type Poll } from "./data";
 import { blocValues, type BlocImputation, type BlocRow } from "./personalBlocs";
 import type { Bloc } from "./crowdApi";
 import policy from "./blocEstimatePolicy.json";
@@ -22,8 +22,8 @@ export function estimatePollParty(target: Poll, id: string, source: Poll[], maxA
   const same = previous.find(p => pollsterKey(p) === pollsterKey(target));
   const selected: Poll[] = same ? [same] : [...new Map(previous.slice().reverse().map(p=>[p.firm,p])).values()];
   if (!same && selected.length < 3) return null;
-  const value = same ? seatsIn(same,id)! : median(selected.map(p=>seatsIn(p,id)!));
-  return { id, value, method: same ? "same-firm" : "median", sources: selected.map(p=>({id:p.id,date:p.end,label:pollsterLabel(p)})) };
+  const value = same ? seatsIn(same,id)! : mean(selected.map(p=>seatsIn(p,id)!));
+  return { id, value, method: same ? "same-firm" : "mean", sources: selected.map(p=>({id:p.id,date:p.end,label:pollsterLabel(p)})) };
 }
 export function pollBlocValues(blocs: Bloc[], target: Poll, source: Poll[], rules: EstimatePolicy = BLOC_ESTIMATE_POLICY): BlocRow[] {
   const ids = [...new Set(blocs.flatMap(b=>b.lists))];
@@ -47,7 +47,7 @@ export function pollBlocValues(blocs: Bloc[], target: Poll, source: Poll[], rule
   });
 }
 
-export function rollingBlocMedian(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days: number, minN: number, step = 3, rules = BLOC_ESTIMATE_POLICY) {
+export function rollingBlocMean(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days: number, minN: number, step = 3, rules = BLOC_ESTIMATE_POLICY) {
   const projected = source.map(p=>({t:toTime(p.end),rows:pollBlocValues(blocs,p,donors,rules)}));
   return blocs.map(b=>{
     const points: {t:number;v:number;n:number;fullN:number;estimatedN:number;missingN:number;estimated:boolean;missing:string[];imputed:BlocImputation[];breakBefore:boolean}[]=[];
@@ -56,7 +56,7 @@ export function rollingBlocMedian(blocs: Bloc[], source: Poll[], donors: Poll[],
       const ready=rows.filter(r=>r.total!==null || r.estimate!==null);
       if(ready.length<minN)continue;
       const estimatedRows=ready.filter(r=>r.estimate!==null);
-      points.push({t,v:median(ready.map(r=>r.total??r.estimate!)),n:ready.length,fullN:ready.length-estimatedRows.length,estimatedN:estimatedRows.length,missingN:rows.length-ready.length,estimated:!!estimatedRows.length,missing:[...new Set(estimatedRows.flatMap(r=>r.missing))],imputed:estimatedRows.flatMap(r=>r.imputed),breakBefore:!!points.length && t-points[points.length-1].t>step*DAY});
+      points.push({t,v:mean(ready.map(r=>r.total??r.estimate!)),n:ready.length,fullN:ready.length-estimatedRows.length,estimatedN:estimatedRows.length,missingN:rows.length-ready.length,estimated:!!estimatedRows.length,missing:[...new Set(estimatedRows.flatMap(r=>r.missing))],imputed:estimatedRows.flatMap(r=>r.imputed),breakBefore:!!points.length && t-points[points.length-1].t>step*DAY});
     }
     return {id:b.id,name:b.name,points};
   });

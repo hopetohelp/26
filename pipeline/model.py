@@ -443,6 +443,7 @@ def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_no
         out["agreementsMoveSeat"] = round(sum(1 for a, b in zip(sims_seats, sims_seats_noag) if a != b) / n, 4)
     wasted = [100 * (1 - sum(sh for sh, se in zip(shs, ses) if se > 0)) for shs, ses in zip(sims_shares, sims_seats)]
     out["wasted"] = [round(x, 2) for x in quantiles(wasted)]
+    out["wastedMean"] = round(sum(wasted) / len(wasted), 2)
     if bloc:
         b = [sum(s[idx[k]] for k in bloc if k in idx) for s in sims_seats]
         out["bloc"] = {"lists": bloc, "seats": [round(x) for x in quantiles(b)], "atLeast61": round(sum(1 for x in b if x >= 61) / n, 4)}
