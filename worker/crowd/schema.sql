@@ -125,3 +125,13 @@ CREATE TABLE IF NOT EXISTS bloc_migration_backup (
   kind TEXT NOT NULL, id INTEGER NOT NULL, original TEXT NOT NULL, migrated_at TEXT NOT NULL,
   PRIMARY KEY(kind,id)
 );
+
+-- שמות תצוגה ציבוריים לפי הרכב בלבד. הצעה אינה מתפרסמת לפני אישור.
+CREATE TABLE IF NOT EXISTS bloc_display_names (
+  composition TEXT PRIMARY KEY,
+  lists TEXT NOT NULL,
+  name TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'suggested' CHECK(status IN ('suggested', 'approved', 'rejected')),
+  suggested_at TEXT NOT NULL,
+  approved_at TEXT
+);

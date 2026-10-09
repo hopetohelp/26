@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { upgradeVersion, upgradeAggregate } from '../lib/retroactive.js';
-import { fixedTotals, migrateBlocs, blocNameError, COALITION, OPPOSITION } from '../lib/blocDefinitions.js';
+import { fixedTotals, migrateBlocs, COALITION, OPPOSITION } from '../lib/blocDefinitions.js';
 import { computeBlocs } from '../lib/aggregate.js';
 
 const payload = { seats: Object.fromEntries(Object.entries({likud:40,shas:8,utj:8,otzma:4,rzp:4,noam:4,amcha:4,code_black:4,haredi_public:4,joint:8,raam:4,yashar:28}).map(([id,v]) => [id,{v,src:'manual',locked:false}])), start:'zero',pollsAsOf:null };
@@ -39,11 +39,7 @@ it('שומר סכום והרכב אישי בכל גרסה ומשחזר לפי ה
   expect(upgradeVersion({id:1,unit:'seats',payload:result},null).personalBlocSeats).toEqual(result.personalBlocSeats);
 });
 
-it('שינוי הרכב מחייב שם חדש גם בשרת ושמות קבועים שומרים על הרכבם', () => {
-  const old={mode:'custom',blocs:[{id:'x',name:'שלי',lists:['likud','shas'],target:null}]};
-  const changed={mode:'custom',blocs:[{id:'x',name:'שלי',lists:['likud','utj'],target:null}]};
-  expect(blocNameError(old,changed)).toBe('bloc_rename_required');
-  expect(blocNameError(old,{...changed,blocs:[{...changed.blocs[0],name:'הרכב חדש'}]})).toBeNull();
-  expect(blocNameError(null,{...changed,blocs:[{...changed.blocs[0],name:'גוש הקואליציה'}]})).toBe('bloc_rename_required');
-  expect(migrateBlocs({mode:'custom',blocs:[{id:'x',name:'קואליציה מצומצמת',lists:COALITION.filter(id=>id!=='haredi_public'),target:null}]}).blocs[0].lists).not.toContain('haredi_public');
+it('הרכב ששונה במפורש אינו משוחזר לפי שמו הישן', () => {
+  const custom={mode:'custom',schemaVersion:2,blocs:[{id:'gov',name:'גוש הקואליציה',lists:COALITION.filter(id=>id!=='haredi_public'),target:null}]};
+  expect(migrateBlocs(custom)).toBe(custom);
 });

@@ -329,11 +329,27 @@ it('כל שמירת מפלגות שומרת גושים קבועים ואישיי
   expect(history.find(v=>v.id===original.data.version.id).payload.personalBlocSeats[0].seats).toBe(120);
 });
 
-it('השרת דוחה שינוי הרכב בלי שם חדש ומאשר יחד את השם וההרכב', async () => {
+it('שינוי הרכב שומר אותו שם, שם ריק ומחיקת כל הגושים נשמרים', async () => {
  const tok=await newP();const payload=(name,lists)=>({mode:'custom',blocs:[{id:'x',name,lists,target:null}]});
  expect((await save(tok,'blocs',payload('שלי',['likud','shas']))).status).toBe(200);
- const rejected=await save(tok,'blocs',payload('שלי',['likud','utj']));
- expect(rejected.status).toBe(400);
- expect(rejected.data.field).toBe('bloc_rename_required');
- expect((await save(tok,'blocs',payload('שלי החדש',['likud','utj']))).status).toBe(200);
+ expect((await save(tok,'blocs',payload('שלי',['likud','utj']))).status).toBe(200);
+ expect((await save(tok,'blocs',payload('',['likud','utj']))).status).toBe(200);
+ expect((await save(tok,'blocs',{mode:'custom',blocs:[]})).status).toBe(200);
+ expect((await call('/me',{token:tok})).data.latest.blocs.payload.blocs).toEqual([]);
+ const saved=await save(tok,'seats',seats(60));
+ expect(saved.data.version.payload.personalBlocSeats).toEqual([]);
+ expect(saved.data.version.payload.fixedBlocSeats).toBeDefined();
+});
+
+it('רק שם שאושר מוצג לכולם לפי הרכב ולא לפי שם אישי', async () => {
+ const a=await newP();const b=await newP();
+ for(const tok of [a,b]) { await save(tok,'seats',seats(60));await save(tok,'blocs',{mode:'custom',blocs:[{id:'x',name:'אישי',lists:['likud','shas'],target:null}]}); }
+ await env.DB.prepare("INSERT INTO bloc_display_names (composition, lists, name, status, suggested_at) VALUES (?, ?, ?, 'suggested', ?)").bind('likud,shas','["likud","shas"]','שם מוצע','2026-10-09').run();
+ const before=(await call('/dashboard')).data;
+ expect(before.blocs.custom[0].name).toBe('אישי');
+ await env.DB.prepare("UPDATE bloc_display_names SET status = 'approved', approved_at = ? WHERE composition = ?").bind('2026-10-09','likud,shas').run();
+ const after=(await call('/dashboard')).data;
+ expect(after.blocs.custom[0].name).toBe('שם מוצע');
+ expect(after.blocs.custom[0].derived).toEqual(before.blocs.custom[0].derived);
+ expect((await call('/me',{token:a})).data.latest.blocs.payload.blocs[0].name).toBe('אישי');
 });

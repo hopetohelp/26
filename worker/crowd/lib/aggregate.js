@@ -13,7 +13,7 @@
  */
 import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
 
-import { FIXED_BLOCS, migrateBlocs } from "./blocDefinitions.js";
+import { FIXED_BLOCS, migrateBlocs, compositionKey } from "./blocDefinitions.js";
 
 export const K_CELL = 1;
 export const K_ROW = 1;
@@ -92,7 +92,7 @@ function seatsStats(seatVersions) {
   return LISTS_2026.map((l) => seatStat(l.id, seatVersions.map((v) => seatValue(v.payload, l.id))));
 }
 
-export function computeSeats(seatVersions) {
+export function computeSeats(seatVersions, history = seatVersions) {
   const n = seatVersions.length;
   if (n < K_CELL) return null;
   const manual = [];
@@ -120,6 +120,7 @@ export function computeSeats(seatVersions) {
   return {
     n,
     full: seatsStats(seatVersions),
+    everPassedLists: LISTS_2026.filter(l => history.some(v => seatValue(v.payload, l.id) >= 4)).map(l => l.id),
     manual,
     filledShare: r2(filled / (TOTAL * n)),
     usedFillAll,
@@ -131,7 +132,7 @@ export function computeSeats(seatVersions) {
   };
 }
 
-export function computeBlocs(seatVersions, blocVersions) {
+export function computeBlocs(seatVersions, blocVersions, blocNames = {}) {
   let derived = null;
   if (seatVersions.length >= K_CELL) {
     const gov = seatVersions.map((v) => [...GOV37].reduce((a, id) => a + seatValue(v.payload, id), 0));
@@ -150,7 +151,7 @@ export function computeBlocs(seatVersions, blocVersions) {
       const seen = new Set();
       for (const b of migrateBlocs(v.payload).blocs) {
         const lists = [...new Set(b.lists)].sort();
-        const name = b.name.trim();
+        const name = blocNames[compositionKey(lists)] ?? (b.name.trim() || "גוש נוסף");
         const key = JSON.stringify(lists);
         if (seen.has(key)) continue;
         seen.add(key);
@@ -288,7 +289,7 @@ export function computeUnderReview(reviewSeatVersions, reviewParticipants) {
  * previous: {section: {json, publishedAt, snapshot: number[]}} — הפרסום הקודם של כל חלק · lastDailyDay: היום (ישראל) של החישוב היומי הקודם
  * מחזיר {dashboard, sections: {section: {json, publishedAt, snapshot, contributors, changed}}, daily}
  */
-export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true }) {
+export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {} }) {
   const review = new Set(participants.filter((p) => p.review).map((p) => p.id));
   const known = new Set(participants.map((p) => p.id));
   const main = latestByUnit(versions, (v) => known.has(v.participant) && !review.has(v.participant));
@@ -303,8 +304,8 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const voteV = [...main.vote.values()];
 
   const compute = {
-    seats: () => computeSeats(seatV),
-    blocs: () => computeBlocs(seatV, [...main.blocs.values()]),
+    seats: () => computeSeats(seatV, versions.filter(v => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant))),
+    blocs: () => computeBlocs(seatV, [...main.blocs.values()], blocNames),
     vote2026: () => computeVote2026(voteV),
     vote2022: () => computeVote2022(voteV),
     underReview: () => computeUnderReview([...rev.seats.values()], reviewActive.size),
@@ -333,6 +334,11 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
     else sections[name] = { ...prev, changed, kept: true };
   }
 
+  // שם מאושר מתעדכן גם בלי תשובות חדשות, בלי לשנות את תמונת הנתונים.
+  if (sections.blocs.json?.custom) sections.blocs = { ...sections.blocs, json: {
+    ...sections.blocs.json,
+    custom: sections.blocs.json.custom.map(g => ({ ...g, name: blocNames[compositionKey(g.lists)] ?? g.name })),
+  } };
   const open = active.size >= OPEN_AT;
   const dashboard = { publishedAt: now, aggregationId, participants: active.size, open, policy: DASHBOARD_POLICY, sectionsAsOf: {}, sectionParticipants: {} };
   if (open) {
