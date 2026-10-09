@@ -76,3 +76,15 @@ it('גושים נוספים מסודרים לפי מספר המגדירים וא
   expect(order.every(i=>i>=0)).toBe(true);
   expect(order).toEqual([...order].sort((a,b)=>a-b));
 });
+
+
+it("ממוצע הסקרים בגוש מסכם רק מפלגות עם נתון, בלי הודעת חסר", () => {
+  const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,
+    seats:{n:2,full:[],manual:[],filledShare:0,usedFillAll:0,pollsAsOf:null,starts:{zero:2,polls:0,k25:0},polls:{likud:23.5,shas:8,utj:0}},
+    blocs:{derived:null,explicit:null,customCount:0,fixed:[{id:"coalition",name:"בדיקת סכום",lists:["likud","shas","utj","noam"],stat}]}};
+  const html = renderToStaticMarkup(createElement(BlocStats,{d,view:"table"}));
+  expect(html).toContain("ממוצע הסקרים");
+  expect(html).toContain(">31.5</td>");
+  expect(html).not.toContain("לפחות");
+  expect(html).not.toContain("חסר");
+});

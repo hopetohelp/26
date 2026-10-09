@@ -31,6 +31,7 @@ export interface BlocDataset {
   mapping?: Record<string, string>;
   rows?: BlocRow[];
   poll?: Poll;
+  sumAvailable?: boolean;
 }
 
 /** כרטיס משותף מרכז כמה מקורות; נתון חסר נשאר חסר והמקורות אינם מתמזגים. */
@@ -46,6 +47,9 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const series = (datasets ?? [{ values, source, asOf, historical, mapping }]).map(d => ({
     ...d, rows: d.rows ?? (d.poll ? pollBlocValues(p.blocs, d.poll, usablePolls) : blocValues(p.blocs, d.values ?? {}, d.mapping ?? (d.historical ? K25_MAP : Object.fromEntries(IDS.map(id => [id, id]))))),
   }));
+  for (const d of series) {
+    if (d.sumAvailable) d.rows = d.rows.map(row => ({ ...row, total: row.knownTotal ?? 0, missing: [], estimate: null, imputed: [] }));
+  }
   if (!p.blocs.some(b => b.lists.length)) return null;
   const anyKnown = series.some(d => d.rows.some(row => row.knownTotal !== null));
   const display = formatBlocValue;
@@ -53,7 +57,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const one = series[0];
   const stacked = <table className="w-full table-fixed text-xs">
     <caption className="sr-only">הגושים שלי מול המשתתפים והסקרים</caption>
-    <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal" title={`${d.source} · ${displayDate(d.asOf)}`}>{d.source.startsWith("ממוצע") ? "גולשים" : d.source === "ההשערה שלי" ? "שלי" : d.source}</th>)}</tr></thead>
+    <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal" title={`${d.source} · ${displayDate(d.asOf)}`}>{d.source.includes("המשתתפים") ? "גולשים" : d.source === "ההשערה שלי" ? "שלי" : d.source}</th>)}</tr></thead>
     <tbody>{p.blocs.map(b => <tr key={b.id} className="border-b border-paper-line"><th scope="row" className="text-start py-1.5 pe-1 font-normal break-words"><details><summary className="cursor-pointer min-h-[44px] flex items-center" aria-label={`מפלגות ${b.name}`}>{b.name}</summary><p className="text-xs font-normal text-ink-soft py-1">{b.lists.map(nameOf).join(" · ")}</p></details></th>{series.map((d,i) => { const row = d.rows.find(r => r.id === b.id); return <td key={i} className="text-center px-1 tabular font-bold">{display(row)}{row?.missing.length ? <span title={row.missing.map(nameOf).join(" · ")} className="block text-[10px] font-normal">חסר {row.missing.length}/{row.lists.length}</span> : null}</td>; })}</tr>)}</tbody>
   </table>;
   const table = compact ? stacked : series.length > 3 ? <table className="w-full text-sm">
