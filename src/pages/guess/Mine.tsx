@@ -41,7 +41,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
       )}
       {/* הקישור האישי וההמלצה להירשם — בכרטיס הגישה הכללי (AccessCard) בראש כל עמוד */}
       {!session.token && session.online && (
-        <div className="mb-4"><Notice>כל שינוי נשמר אוטומטית ונכנס לממוצע האנונימי של הגולשים. בשינוי הראשון נוצר לכם קישור אישי לחזרה.</Notice></div>
+        <div className="mb-4"><Notice>בשינוי הראשון נשמרת ההשערה ונוצר לכם קישור אישי לחזרה. שינויים נוספים נשמרים בלחיצה על ״שמור״, או אוטומטית אחרי 15 שניות בלי שינוי, ונכנסים לממוצע האנונימי של הגולשים.</Notice></div>
       )}
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">
         {SECTIONS.map((s) => {
