@@ -22,6 +22,7 @@
    "rzp",
    "noam"
   ],
+  "mean": 51.48,
   "seats": [
    45,
    51,
@@ -39,6 +40,7 @@
    "rzp",
    "amcha"
   ],
+  "mean": 53.85,
   "seats": [
    47,
    54,
@@ -111,6 +113,7 @@
   "amcha": {
    "pass": 0.4854,
    "seats": 4,
+   "seatsMean": 2.37,
    "seatsRange": [
     0,
     0,
@@ -125,6 +128,7 @@
   "bluewhite": {
    "pass": 0.0247,
    "seats": 0,
+   "seatsMean": 0.12,
    "seatsRange": [
     0,
     0,
@@ -139,6 +143,7 @@
   "democrats": {
    "pass": 0.996,
    "seats": 9,
+   "seatsMean": 9.29,
    "seatsRange": [
     7,
     9,
@@ -153,6 +158,7 @@
   "haredi_public": {
    "pass": 0.0154,
    "seats": 0,
+   "seatsMean": 0.08,
    "seatsRange": [
     0,
     0,
@@ -167,6 +173,7 @@
   "joint": {
    "pass": 0.9872,
    "seats": 8,
+   "seatsMean": 7.74,
    "seatsRange": [
     6,
     8,
@@ -181,6 +188,7 @@
   "likud": {
    "pass": 0.999,
    "seats": 22,
+   "seatsMean": 21.77,
    "seatsRange": [
     16,
     21,
@@ -195,6 +203,7 @@
   "otzma": {
    "pass": 0.9906,
    "seats": 8,
+   "seatsMean": 8.01,
    "seatsRange": [
     6,
     8,
@@ -209,6 +218,7 @@
   "raam": {
    "pass": 0.8072,
    "seats": 5,
+   "seatsMean": 4.56,
    "seatsRange": [
     0,
     5,
@@ -223,6 +233,7 @@
   "reservists": {
    "pass": 0.195,
    "seats": 0,
+   "seatsMean": 0.92,
    "seatsRange": [
     0,
     0,
@@ -237,6 +248,7 @@
   "rzp": {
    "pass": 0.9636,
    "seats": 6,
+   "seatsMean": 6.19,
    "seatsRange": [
     4,
     6,
@@ -251,6 +263,7 @@
   "shas": {
    "pass": 0.9826,
    "seats": 7,
+   "seatsMean": 7.27,
    "seatsRange": [
     5,
     7,
@@ -265,6 +278,7 @@
   "together": {
    "pass": 0.999,
    "seats": 13,
+   "seatsMean": 12.86,
    "seatsRange": [
     9,
     13,
@@ -279,6 +293,7 @@
   "utj": {
    "pass": 0.9913,
    "seats": 8,
+   "seatsMean": 8.25,
    "seatsRange": [
     6,
     8,
@@ -293,6 +308,7 @@
   "yashar": {
    "pass": 0.9997,
    "seats": 23,
+   "seatsMean": 22.85,
    "seatsRange": [
     17,
     22,
@@ -307,6 +323,7 @@
   "yb": {
    "pass": 0.9879,
    "seats": 7,
+   "seatsMean": 7.73,
    "seatsRange": [
     6,
     8,

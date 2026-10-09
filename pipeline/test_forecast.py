@@ -102,6 +102,23 @@ def test_published_disclosure_is_logged():
     assert fc["gate"]["atHorizon"]["logged"], f"אופק {fc['horizon']} של גרסה {fc['specVersion']} לא נרשם ביומן"
 
 
+def test_scenario_means():
+    """ממוצע התרחישים בפלט (הכרעת בעלים 9.10.2026): בכל תרחיש סכום המנדטים 120, ולכן סכום ממוצעי הרשימות 120 (עד עיגול),
+    וממוצע הגוש הוא סכום ממוצעי רשימותיו."""
+    path = F.ROOT / "src" / "data" / "forecast.json"
+    if not path.exists():
+        return
+    fc = json.loads(path.read_text(encoding="utf-8"))
+    if not fc.get("enough") or not fc["lists"]:
+        return
+    means = {k: v["seatsMean"] for k, v in fc["lists"].items()}
+    assert all(0 <= m <= 120 for m in means.values()), means
+    assert abs(sum(means.values()) - 120) <= 0.005 * len(means) + 1e-9, sum(means.values())
+    for part in ("bloc", "camp"):
+        lists = [k for k in fc[part]["lists"] if k in means]
+        assert abs(fc[part]["mean"] - sum(means[k] for k in lists)) <= 0.005 * (len(lists) + 1) + 1e-9, part
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

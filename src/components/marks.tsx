@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { profilePath, profilePoints, type LSeg } from "../lib/chartLanguage";
+import { CANDLE_PX, profilePath, profilePoints, type LSeg } from "../lib/chartLanguage";
 
 /**
  * הסימנים של שפת הציור האחידה (`src/lib/chartLanguage.ts`, מחלקות `mk-*` ב-`src/index.css`), לגרפים של שורות ב-HTML.
@@ -8,7 +8,7 @@ import { profilePath, profilePoints, type LSeg } from "../lib/chartLanguage";
 
 /** נר אופקי: שטח סגור אחד שקו המתאר שלו חלק. הקואורדינטות המקומיות: 0 עד 1000 לאורך ו-0 עד 18 לרוחב (פיקסלים) */
 const LOCAL = 1000;
-const THICK = 18;
+const THICK = CANDLE_PX[5];
 
 /**
  * נר = טווח, בעובי שמשתנה לאורכו: קו מתאר חלק (בלי צעדים מרובעים) שעובר דרך עובי כל קטע לפי כמות הנתונים בו (רמה 1, 3 או 5).
@@ -44,10 +44,10 @@ export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number)
   );
 }
 
-/** ממוצע = עיגול מלא אדום בקוטר 18, בגודל הנר העבה */
+/** ממוצע = עיגול מלא אדום בקוטר 22, גדול מהנר העבה */
 export const MeanDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-mean" style={{ left: `${at}%` }} />;
 
-/** תוצאה (מציאות) = עיגול ריק כתום בקוטר 18, בגודל הנר העבה (גם ממוצע הגולשים בסקר האתר, שאינו סקר) */
+/** תוצאה (מציאות) = עיגול ריק כתום בקוטר 22, גדול מהנר העבה (גם ממוצע הגולשים בסקר האתר, שאינו סקר) */
 export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-ring" style={{ left: `${at}%` }} />;
 
 /** סמן על קו = עיגול קטן ריק */
