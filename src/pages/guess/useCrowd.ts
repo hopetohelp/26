@@ -98,6 +98,8 @@ export const errorText = (e: unknown): string => {
   return `השרת דחה את הבקשה (${e.code}).`;
 };
 
+const FIRST_SAVE_MS = 400;
+const IDLE_SAVE_MS = 15_000;
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
 /** טיוטה ביחידה אחת: נשמרת בדפדפן עד שמירה, עם מצב (טיוטה / נשמר / שינויים שלא נשמרו) */
@@ -114,13 +116,16 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       setDraftState(p);
       if (p === null) S.clearDraft(unit);
       else S.saveDraft(unit, p);
-      // שמירה אוטומטית מיידית (חשבון אורח נוצר לפי הצורך). שינויים רצופים (הקלדה, גרירה) מאוחדים ל-0.4 שנייה,
-      // ובסגירת הדף או מעבר לאפליקציה אחרת — נשלח מיד (flushPending)
+      // השינוי הראשון (אין עדיין חשבון) נשמר מיד ויוצר חשבון אורח וקישור אישי (הכרעת בעלים 9.10.2026).
+      // שינויים נוספים נשמרים בלחיצה על "שמור", או אחרי 15 שניות בלי שינוי; בסגירת הדף או מעבר
+      // לאפליקציה אחרת — נשלח מיד (flushPending)
       window.clearTimeout(timer.current);
       if (p === null || same(p, S.loadSaved(unit))) return;
       let tries = 0;
       const send: Pending = () => {
         pendingSends.delete(send);
+        // כבר נשמר (בלחיצה על "שמור") ⇐ אין מה לשלוח שוב
+        if (same(p, S.loadSaved(unit))) return;
         // כישלון (רשת) ⇐ ניסיון חוזר עד 3 פעמים, כל עוד זו עדיין הגרסה האחרונה
         const retry = () => { if (++tries <= 3 && same(S.loadDraft(unit), p)) timer.current = window.setTimeout(send, 5000 * tries); };
         void ensureSession().then(async (token) => {
@@ -131,7 +136,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       pendingSends.forEach((f) => f.unit === unit && pendingSends.delete(f));
       send.unit = unit;
       pendingSends.add(send);
-      timer.current = window.setTimeout(send, 400);
+      timer.current = window.setTimeout(send, S.getToken() ? IDLE_SAVE_MS : FIRST_SAVE_MS);
     },
     [unit],
   );
