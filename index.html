@@ -7,11 +7,8 @@
     <meta name="theme-color" content="#FFFFFF" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>בחירות 2026 — ניתוח</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- גופנים (הכרעת בעלים 9.10.2026): Rubik לעברית, וספרות בלבד ב-Roboto Mono (ברוחב קבוע, ספרות מיושרות) -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&text=0123456789&display=swap" rel="stylesheet" />
+    <!-- גופנים מאוחסנים באתר (הכרעת בעלים 9.10.2026): הגדרות @font-face ב-src/index.css, קבצים ב-src/assets/fonts. Rubik לעברית, וספרות בלבד ב-Roboto Mono (ברוחב קבוע, ספרות מיושרות). קובץ הספרות קטן (4KB) ולכן משובץ ב-CSS ואינו נטען מראש. -->
+    <link rel="preload" href="/src/assets/fonts/rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin />
     <script>
       // העיצוב שהגולש בחר — לפני הציור הראשון, כדי שלא יהבהב העיצוב הלא נכון (src/lib/theme.ts)
       try {
