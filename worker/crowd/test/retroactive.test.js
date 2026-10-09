@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { upgradeVersion, upgradeAggregate } from '../lib/retroactive.js';
-import { fixedTotals, migrateBlocs, COALITION, OPPOSITION } from '../lib/blocDefinitions.js';
+import { fixedTotals, migrateBlocs, blocNameError, COALITION, OPPOSITION } from '../lib/blocDefinitions.js';
 import { computeBlocs } from '../lib/aggregate.js';
 
 const payload = { seats: Object.fromEntries(Object.entries({likud:40,shas:8,utj:8,otzma:4,rzp:4,noam:4,amcha:4,code_black:4,haredi_public:4,joint:8,raam:4,yashar:28}).map(([id,v]) => [id,{v,src:'manual',locked:false}])), start:'zero',pollsAsOf:null };
@@ -24,7 +24,7 @@ it('משדרג ברירות מחדל ישנות, בלי לשנות גוש איש
 });
 it('ארבע שורות קבועות מחושבות לכל בעלי השערת מפלגות גם בלי הגדרת גושים', () => {
   const b = computeBlocs([{participant:'a',payload},{participant:'b',payload}],[]);
-  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש הקואליציה',80,2],['גוש האופוזיציה',28,2],['ערבים',12,2],['אחדות',68,2]]);
+  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש הקואליציה',80,2],['גוש האופוזיציה',28,2],['אחדות',68,2],['ערבים',12,2]]);
 });
 it('פרסום היסטורי משתמש בגרסאות המקור ולא בהשערה מאוחרת', () => {
   const versions = [{id:1,participant:'a',unit:'seats',created_at:'2026-10-01',payload},{id:2,participant:'a',unit:'seats',created_at:'2026-10-03',payload:{...payload,seats:{likud:{v:120}}}}];
@@ -37,4 +37,13 @@ it('שומר סכום והרכב אישי בכל גרסה ומשחזר לפי ה
   const result=upgradeVersion({id:1,unit:'seats',payload},definition);
   expect(result.personalBlocSeats).toEqual([{id:'a',name:'אישי',lists:['likud','joint'],seats:48}]);
   expect(upgradeVersion({id:1,unit:'seats',payload:result},null).personalBlocSeats).toEqual(result.personalBlocSeats);
+});
+
+it('שינוי הרכב מחייב שם חדש גם בשרת ושמות קבועים שומרים על הרכבם', () => {
+  const old={mode:'custom',blocs:[{id:'x',name:'שלי',lists:['likud','shas'],target:null}]};
+  const changed={mode:'custom',blocs:[{id:'x',name:'שלי',lists:['likud','utj'],target:null}]};
+  expect(blocNameError(old,changed)).toBe('bloc_rename_required');
+  expect(blocNameError(old,{...changed,blocs:[{...changed.blocs[0],name:'הרכב חדש'}]})).toBeNull();
+  expect(blocNameError(null,{...changed,blocs:[{...changed.blocs[0],name:'גוש הקואליציה'}]})).toBe('bloc_rename_required');
+  expect(migrateBlocs({mode:'custom',blocs:[{id:'x',name:'קואליציה מצומצמת',lists:COALITION.filter(id=>id!=='haredi_public'),target:null}]}).blocs[0].lists).not.toContain('haredi_public');
 });

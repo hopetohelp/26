@@ -13,6 +13,8 @@ export default function Blocs({ unit, session, mySeats }: {
   unit: ReturnType<typeof useUnit<BlocsPayload>>; session: ReturnType<typeof useSession>;
   mySeats: Record<string, number> | null;
 }) {
+  const [pending, setPending] = useState<{ id: string; blocs: Bloc[] } | null>(null);
+  const [requiredName, setRequiredName] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [nameDraft, setNameDraft] = useState("");
   const [announcement, setAnnouncement] = useState("");
@@ -20,19 +22,37 @@ export default function Blocs({ unit, session, mySeats }: {
   const [picker, setPicker] = useState<string | null>(null);
   const phone = useIsPhone();
   const p = unit.draft ? normalizeBlocs(unit.draft) : DEFAULT_BLOCS;
-  const setBlocs = (blocs: Bloc[]) => unit.setDraft({ mode: "custom", blocs });
+  const setBlocs = (blocs: Bloc[]) => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs });
   const patch = (id: string, part: Partial<Bloc>) => setBlocs(p.blocs.map(b => b.id === id ? { ...b, ...part } : b));
+  const changeComposition = (id: string, blocs: Bloc[]) => {
+    const before = p.blocs.find(b => b.id === id);
+    const after = blocs.find(b => b.id === id);
+    if (!before || !after || [...before.lists].sort().join(",") === [...after.lists].sort().join(",")) return;
+    setRequiredName(""); setPending({id, blocs});
+  };
   const assign = (id: string, to: string) => {
     if (!IDS.includes(id)) return;
-    setBlocs(moveList(p.blocs, id, to));
+    changeComposition(to, moveList(p.blocs, id, to));
     setAnnouncement(`${nameOf(id)} נוספה ל${p.blocs.find(b => b.id === to)?.name}`);
   };
   const invalid = validateBlocs(p, IDS);
   const remove = (id: string, from: string) => {
-    setBlocs(removeList(p.blocs, id, from));
+    changeComposition(from, removeList(p.blocs, id, from));
     setAnnouncement(`${nameOf(id)} הוסרה מ${p.blocs.find(b => b.id === from)?.name}`);
   };
+  const oldName = pending ? p.blocs.find(b => b.id === pending.id)?.name : null;
+  const nameReady = requiredName.trim().length > 0 && requiredName.trim() !== oldName && !DEFAULT_BLOCS.blocs.some(b => b.name === requiredName.trim());
   return <div className="space-y-4">
+    {pending && <div className="fixed inset-0 z-[100] bg-ink/60 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="rename-bloc-title" onKeyDown={e => { if (e.key === "Escape") setPending(null); }}>
+      <form className="bg-paper-card text-ink border border-paper-line rounded-theme p-4 w-full max-w-md space-y-3" onSubmit={e => { e.preventDefault(); if (!nameReady) return; setBlocs(pending.blocs.map(b => b.id === pending.id ? {...b,name:requiredName.trim()} : b)); setPending(null); }}>
+        <h3 id="rename-bloc-title" className="font-display text-2xl">שם להרכב החדש</h3>
+        <p className="text-sm">שינוי ההרכב של ״{oldName}״ מחייב שם חדש. השינוי יישמר יחד עם השם.</p>
+        <label className="block text-sm">שם הגוש החדש<input autoFocus required maxLength={40} className={`${inputCls} w-full mt-1`} value={requiredName} onChange={e => setRequiredName(e.target.value)} /></label>
+        <p className="text-xs text-ink-soft">בחרו שם שונה מהשם הקודם ומשמות חמשת הגושים הקבועים.</p>
+        <div className="flex gap-2"><button type="submit" disabled={!nameReady} className="min-h-[44px] px-4 rounded-theme bg-ink text-paper-card disabled:opacity-50">שמירת השם וההרכב</button><Btn onClick={() => setPending(null)}>ביטול</Btn></div>
+      </form>
+    </div>}
+
     <p className="text-sm text-ink-soft">עד חמישה גושים עצמאיים. מפלגה יכולה להשתתף בכמה גושים; אין צורך לשייך את כל המפלגות. סכומי הגושים אינם מתחברים ל־120.</p>
     {phone ? <p className="text-sm text-ink-soft">לחצו על "+ הוספת מפלגה" בגוש כדי לבחור מפלגות. כפתור "הסר" מסיר מפלגה רק מהגוש הזה.</p> : <p className="text-sm text-ink-soft">לחצו על "+ הוספת מפלגה" בגוש כדי לבחור מפלגות. גרירה בין גושים מוסיפה עותק; גרירה החוצה או כפתור "הסר" מסירים רק מהגוש הזה. במקלדת: חצים להוספה לגוש אחר, Delete להסרה.</p>}
     <p role="status" className="sr-only">{announcement}</p>

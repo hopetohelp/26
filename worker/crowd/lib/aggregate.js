@@ -178,7 +178,7 @@ export function computeBlocs(seatVersions, blocVersions) {
     eligible: lists.length >= 2 && totals.length > 0 && totals.reduce((sum, n) => sum + n, 0) >= 4 * lists.length * totals.length,
     explicit: targets.length ? seatStat("custom", targets) : null,
     derived: totals.length ? seatStat("custom", totals) : null,
-  })).sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "he") || a.lists.join(",").localeCompare(b.lists.join(",")));
+  })).sort((a, b) => b.n - a.n || (b.derived?.mean ?? -1) - (a.derived?.mean ?? -1) || a.name.localeCompare(b.name, "he") || a.lists.join(",").localeCompare(b.lists.join(",")));
   return { derived, fixed, explicit, customCount, custom };
 }
 

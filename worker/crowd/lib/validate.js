@@ -4,7 +4,7 @@
  */
 import { IDS_2026, IDS_2022, GOV37 } from "./lists.js";
 
-import { fixedTotals, migrateBlocs } from "./blocDefinitions.js";
+import { fixedTotals } from "./blocDefinitions.js";
 
 export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
@@ -113,7 +113,7 @@ export function validateBlocs(p) {
     if (target !== null && !isInt(target, 0, TOTAL)) return fail("target");
     blocs.push({ id: b.id, name: b.name, lists: [...b.lists], target });
   }
-  return { ok: true, value: migrateBlocs({ mode: p.mode, blocs }) };
+  return { ok: true, value: { mode: p.mode, blocs } };
 }
 
 /** המחנות במסך "מה השתנה": רשימה של היום ⇐ מזהה מחנה 2022 ("" = בלי שיוך). לא נכנס לשום חישוב. */

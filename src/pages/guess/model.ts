@@ -54,15 +54,16 @@ export function defaultBlocs(): Bloc[] {
   const coalition = IDS.filter(id => GOV_IDS.includes(id) || ["amcha", "noam", "code_black", "haredi_public"].includes(id));
   const arab: string[] = IDS.filter(id => id === "joint" || id === "raam");
   return [
+    { id: "government", name: "הממשלה היוצאת", lists: [...GOV_IDS], target: null },
     { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
     { id: "rest", name: "גוש האופוזיציה", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
-    { id: "arab", name: "ערבים", lists: arab, target: null },
     { id: "unity", name: "אחדות", lists: [...UNITY_IDS], target: null },
+    { id: "arab", name: "ערבים", lists: arab, target: null },
   ];
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
 export function normalizeBlocs(p: BlocsPayload): BlocsPayload {
-  if (p.mode === "custom") return upgradeLegacyCoalition(p);
+  if (p.mode === "custom") return p.schemaVersion === 2 ? p : upgradeLegacyCoalition(p);
   return { mode: "custom", blocs: p.blocs.map(b => ({ ...b,
     name: b.name || (b.id === "gov" ? "מפלגות הממשלה היוצאת" : "יתר המפלגות"),
     lists: b.id === "gov" ? [...GOV_IDS] : b.id === "rest" ? IDS.filter(id => !GOV_IDS.includes(id)) : b.lists,
@@ -94,13 +95,11 @@ function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
   }));
   let changed = false;
   const blocs = p.blocs.map(b => {
-    if (oldCoalitions.has(keyOf(b.lists))) { changed = true; return { ...b, lists: current[0].lists }; }
-    if (oldRest.has(keyOf(b.lists))) {
-      changed = true; return { ...b, name: "גוש האופוזיציה", lists: current[1].lists };
+    if (oldCoalitions.has(keyOf(b.lists)) && ["גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: current[1].lists }; }
+    if (oldRest.has(keyOf(b.lists)) && ["כל השאר", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
+      changed = true; return { ...b, name: "גוש האופוזיציה", lists: current[2].lists };
     }
     return b;
   });
-  const defaults = blocs.length === 3 && current.slice(0, 3).every(d => blocs.some(b => b.id === d.id && keyOf(b.lists) === keyOf(d.lists)));
-  if (defaults) return { ...p, blocs: [...current.slice(0,3).map(d => blocs.find(b => b.id === d.id)!), current[3]] };
   return changed ? { ...p, blocs } : p;
 }

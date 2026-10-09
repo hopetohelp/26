@@ -96,13 +96,14 @@ export function SeatsStats({ rows, polls, mine, view, unit = "seats" }: { rows: 
 /** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
 export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   const b=d.blocs!;
-  const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
+  const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.filter(g => g.id !== "government").map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
   const fixedKeys = new Set(fixed.map(g => [...g.lists].sort().join(",")));
-  const fixedRows = fixed.map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
+  const fixedOrder = ["government", "coalition", "gov", "opposition", "rest", "unity", "arab"];
+  const fixedRows = [...fixed].sort((a,b) => fixedOrder.indexOf(a.id)-fixedOrder.indexOf(b.id)).map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
   const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")))
     .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
-    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!}))
-    .sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!, n: g.n}))
+    .sort((a,b) => b.n-a.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
   const rows = [...fixedRows, ...customRows];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
   if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,value:r.stat?.mean ?? 0,range:r.stat ? range(r.stat) : "חסר נתון"}))} />;
