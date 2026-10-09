@@ -5,6 +5,9 @@ import { fakeD1 } from "../../crowd/test/fakeD1.js";
 import { sha256 } from "../../crowd/lib/crypto.js";
 
 let env, accounts, token, participant;
+let n = 0;
+/** חשבון חדש (מייל + סיסמה) ⇐ אסימון סשן */
+const newAccount = async () => (await request(crowd, accounts, "/auth/register", { email: `user${n++}@example.com`, password: "a fine password 1" })).data.token;
 const admin = "a".repeat(40);
 const origin = "https://hopetohelp.github.io";
 async function request(worker, environment, path, body, authorization) {
@@ -18,10 +21,10 @@ const api = (path, body, auth) => request(feedback, env, path, body, auth);
 const support = (body = {}, auth = token) => api("/", { kind: "account-support", token: auth, ...body });
 beforeEach(async () => {
   env = { DB: fakeD1(new URL("../schema.sql", import.meta.url)), ALLOWED_ORIGIN: origin };
-  accounts = { DB: fakeD1(), ALLOWED_ORIGIN: origin, IP_KEY: "secret" };
+  accounts = { DB: fakeD1(), ALLOWED_ORIGIN: origin, IP_KEY: "secret", DATA_KEY: "data" };
   env.CROWD = { fetch: vi.fn(req => crowd.fetch(req, accounts)) };
   accounts.FEEDBACK = { fetch: req => feedback.fetch(req, env) };
-  token = (await request(crowd, accounts, "/auth/guest", {})).data.token;
+  token = await newAccount();
   participant = (await request(crowd, accounts, "/me", undefined, token)).data.participant;
   for (const database of [env.DB, accounts.DB]) await database.prepare("INSERT INTO admin_keys (hash,created_at) VALUES (?,?)").bind(await sha256(admin), "2026-10-01").run();
 });
@@ -57,7 +60,7 @@ it("מענה בניהול אינו תלוי בשרת החשבונות; העתק�
 it("אימות חשבון חובה וכל חשבון רואה רק את השיחה שלו", async () => {
   expect((await support({text:"לא מורשה",op_id:"operation-123456789"},"invalid")).status).toBe(401);
   await support({text:"פרטי",op_id:"operation-123456789"});
-  const other = (await request(crowd,accounts,"/auth/guest",{})).data.token;
+  const other = await newAccount();
   expect((await support({},other)).data.thread).toBe(null);
   expect((await api("/admin/reply",{kind:"support",id:participant,text:"אסור"},"invalid")).status).toBe(401);
 });
@@ -84,4 +87,18 @@ it("כשל אימות פנימי מדווח כשגיאה, בלי אישור שמ
   env.CROWD = { fetch: async () => { throw new Error("offline"); } };
   expect((await support({text:"חדש",op_id:"operation-123456789"})).status).toBe(503);
   expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM support_messages").get().n).toBe(0);
+});
+it("פנייה שנפתחה בלי חשבון מאוחדת לשיחת החשבון בהרשמה; מחיקת החשבון מוחקת את כל השיחה", async () => {
+  const note = await api("/", { topic: "other", text: "שאלה בלי חשבון", page: "/support" });
+  expect(note.data.token).toBeTruthy();
+  await support({ text: "הודעה מהחשבון", op_id: "operation-adopt-0001" });
+  const merged = (await support({ adopt: [note.data.token, "no-such-thread"] })).data.thread.messages.map(m => m.text);
+  expect(merged).toEqual(["שאלה בלי חשבון", "הודעה מהחשבון"]);
+  await support({ adopt: [note.data.token] });
+  expect((await support()).data.thread.messages).toHaveLength(2);
+  const admin_ = (await api("/admin/data", undefined, admin)).data;
+  expect(admin_.feedback.find(t => t.items.some(i => i.text === "שאלה בלי חשבון"))).toBeUndefined();
+  expect((await request(crowd, accounts, "/delete", { confirm: "מחק" }, token)).status).toBe(200);
+  expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM support_messages").get().n).toBe(0);
+  expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM feedback").get().n).toBe(0);
 });

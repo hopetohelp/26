@@ -30,7 +30,7 @@ jobs:
         working-directory: worker/crowd
         run: |
           existing="$(npx --yes wrangler@3 secret list 2>/dev/null || echo '[]')"
-          for name in IP_KEY; do
+          for name in IP_KEY DATA_KEY; do
             if echo "$existing" | grep -q "\"$name\""; then
               echo "$name קיים"
             else

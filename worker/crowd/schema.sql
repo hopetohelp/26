@@ -143,3 +143,23 @@ CREATE TABLE IF NOT EXISTS version_review (
   decision TEXT NOT NULL CHECK (decision IN ('approved', 'rejected')),
   decided_at TEXT NOT NULL
 );
+
+-- מיילים (הכרעת בעלים 9.10.2026: כל חשבון עם מייל או Google, ולא יותר מחשבון אחד לכל מייל). hash = HMAC של המייל המנורמל
+-- (ייחודי — חשבון אחד לכל מייל); enc = המייל מוצפן (AES-GCM), רק להצגה לבעל החשבון. המפתח: הסוד DATA_KEY. אין מייל גלוי במאגר.
+-- source: password = נרשם עם המייל · google = מ-Google · added = נוסף לחשבון קיים. verified = 1 רק כשהמייל אומת (Google).
+CREATE TABLE IF NOT EXISTS emails (
+  hash TEXT PRIMARY KEY,
+  participant TEXT NOT NULL REFERENCES participants(id),
+  enc TEXT NOT NULL,
+  source TEXT NOT NULL CHECK (source IN ('password', 'google', 'added')),
+  verified INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS emails_participant ON emails(participant);
+
+-- שם תצוגה (רשות), מוצפן באותו מפתח. מוצג רק לבעל החשבון.
+CREATE TABLE IF NOT EXISTS profile (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  name_enc TEXT,
+  updated_at TEXT NOT NULL
+);

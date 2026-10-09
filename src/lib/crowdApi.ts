@@ -2,16 +2,18 @@
  * החוזה בין האתר לשרת ההשתתפות (worker/crowd). מקור אחד לטיפוסים בשני הצדדים — השרת מממש בדיוק את מה שכתוב כאן.
  * השיטה המלאה: docs/השתתפות-גולשים.md
  *
- * זהות: חשבון = שם משתמש + סיסמה (מומלץ), או שמירה בלי משתמש — "אורח" בלי שחזור (הכרעת בעלים 8.10.2026).
+ * זהות (הכרעת בעלים 9.10.2026): חשבון = מייל + סיסמה, או Google. חשבון אחד לכל מייל. בלי חשבון — הכול נשמר בדפדפן בלבד ולא נכנס לסטטיסטיקות.
  * כל בקשה מזוהה נושאת `Authorization: Bearer <token>` של סשן; הסשן נשמר בדפדפן אצל הבעלים היחיד שלו — src/lib/crowdSession.ts.
- * הקישור האישי נוצר בהרשמה: הוא מכניס ישר להשערות (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה. הוא עצמו אינו Bearer.
+ * הקישור האישי נוצר מיד ביצירת החשבון: הוא מכניס ישר (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה. הוא עצמו אינו Bearer.
  *
- * POST /auth/register {username,password}  ⇐ {token, link}  משתתף חדש: סיסמה + קישור אישי + סשן.
- * POST /auth/guest   {}                    ⇐ {token}       שמירה בלי משתמש (הכרעת בעלים 8.10.2026): בלי סיסמה ובלי קישור אישי, ולכן בלי שחזור.
- * POST /auth/google  {credential,token}   ⇐ {token}       כניסה עם Google (ID token מהדפדפן); חשבון קיים ⇐ אותו משתתף, אחרת מתווסף לסשן הנוכחי או משתתף חדש.
- * POST /auth/claim   {username,password}   ⇐ {username, link}  (בסשן) הוספת שם משתמש וסיסמה לאורח; נוצר קישור אישי.
+ * POST /auth/register {email,password,name?} ⇐ {token, link}  חשבון חדש. מייל רשום ⇐ 409 email_taken.
+ * POST /auth/guest   {}                    ⇐ 403 account_required (אין יותר אורח בשרת).
+ * POST /auth/google  {credential,token}   ⇐ {token}       כניסה עם Google; אותו Google או אותו מייל מאומת ⇐ אותו חשבון.
+ * POST /auth/claim   {email,password?}    ⇐ {email, link?}  (בסשן) הוספת מייל לחשבון ישן; סיסמה רק אם אין סיסמה ואין Google.
+ * POST /account/name {name}               ⇐ {name}        שם תצוגה (מוצפן בשרת).
+ * POST /account/password {password}       ⇐ {ok}          קביעת סיסמה לחשבון בלי סיסמה (למשל Google).
  * GET|POST /ping                      ⇐ {ok}          בדיקת חיבור, בלי זהות ובלי מאגר.
- * POST /auth/login    {username,password}  ⇐ {token}
+ * POST /auth/login    {email|username,password} ⇐ {token}
  * POST /auth/logout   {all?:boolean}       ⇐ {ok}
  * POST /auth/password {current,next}       ⇐ {token}       קובע סיסמה (הנוכחית חובה) ומבטל את שאר הסשנים; הקישור נשאר.
  * POST /auth/link     {link}               ⇐ {token, username}  כניסה בקישור האישי ⇐ סשן רגיל. עיכוב מדורג כמו בכניסה.
@@ -24,7 +26,7 @@
  * POST /delete {confirm:"מחק"}      ⇐ {ok}               מחיקה מלאה + ביטול כל הסשנים.
  * POST /link/rotate                 ⇐ {link}              קישור אישי חדש (בסשן); הקודם מפסיק לעבוד מיד.
  *
- * אין מייל בכלל (הכרעת בעלים 6.10.2026): אין שליחת מיילים, אין איפוס במייל. השחזור = הקישור האישי.
+ * אין עדיין שליחת מיילים: השחזור = הקישור האישי. המייל נשמר מוצפן, רק לזיהוי ולמניעת כפילות.
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
@@ -122,6 +124,13 @@ export interface Me {
   prefs?: { camps: Record<string, string> | null };
   /** ההשערה האחרונה חריגה וממתינה לאישור מנהל: לא נספרת בסטטיסטיקות עד אז */
   seatsPending?: boolean;
+  /** המיילים של החשבון (מפוענחים בשרת רק לבעל החשבון). verified = אומת (Google) */
+  emails?: { email: string | null; source: "password" | "google" | "added"; verified: boolean }[];
+  /** שם תצוגה (רשות) */
+  name?: string | null;
+  hasPassword?: boolean;
+  /** חשבון ישן בלי מייל ובלי Google — נדרש להוסיף (הכרעת בעלים 9.10.2026) */
+  needsEmail?: boolean;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */

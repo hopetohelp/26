@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { call } from "../../lib/crowdApi";
 import { clearAll } from "../../lib/crowdSession";
-import Account from "./Account";
 import LinkSaver from "./LinkSaver";
 import { Btn, inputCls, Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
-/** החשבון, הקישור האישי, ייצוא ומחיקה */
-export default function MyData({ session }: { session: ReturnType<typeof useSession> }) {
+/** הקישור האישי (part="link") או ייצוא ומחיקה (part="data") — שתי מגירות באזור האישי */
+export default function MyData({ session, part }: { session: ReturnType<typeof useSession>; part: "link" | "data" }) {
   const [msg, setMsg] = useState<string | null>(null);
   const [del, setDel] = useState(0);
   const [typed, setTyped] = useState("");
@@ -15,6 +14,7 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
   const { token, link } = session;
 
   if (!session.online) return <Notice>כשהשמירה תיפתח באתר, כאן יופיעו החשבון שלכם, ייצוא ומחיקה מלאה. בינתיים הכול נשמר רק בדפדפן הזה, כטיוטה.</Notice>;
+  if (!token) return <p className="text-sm text-ink-soft">{part === "link" ? "קישור הכניסה האישי נוצר מיד כשנפתח חשבון." : "בלי חשבון הכול נשמר רק בדפדפן הזה."}</p>;
 
   const run = async (fn: () => Promise<void>) => {
     setMsg(null);
@@ -35,21 +35,17 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
 
   return (
     <div className="space-y-5">
-      <Account session={session} />
-
-      {token && (
-        <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-4">
-          <h3 className="text-xl font-display leading-tight text-center">הקישור האישי</h3>
-          <p className="text-sm text-center leading-relaxed">
-            הקישור האישי מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אין מייל באתר, ולכן זו <strong>הדרך היחידה</strong> לשחזר סיסמה שנשכחה.
+      {part === "link" && (
+        <section className="space-y-4">
+          <p className="text-sm leading-relaxed">
+            הקישור מכניס אתכם ישר לחשבון, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. כרגע אין שחזור במייל, ולכן זו <strong>הדרך היחידה</strong> לשחזר סיסמה שנשכחה. אל תשתפו אותו.
           </p>
           {link ? (
             <LinkSaver token={link} />
           ) : (
             <p className="text-sm">הקישור לא שמור בדפדפן הזה. אם אינו אצלכם — צרו קישור חדש; הקודם יפסיק לעבוד.</p>
           )}
-          <div className="flex justify-center gap-3 flex-wrap border-t border-paper-line pt-4">
-            <Btn onClick={exportJson}>ייצוא (JSON)</Btn>
+          <div className="flex gap-3 flex-wrap border-t border-paper-line pt-4">
             {!rotateAsk ? (
               <Btn onClick={() => setRotateAsk(true)}>קישור אישי חדש</Btn>
             ) : (
@@ -75,10 +71,17 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
         </section>
       )}
 
-      {token && (
-        <section className="bg-paper-card border-2 border-warn rounded-theme p-4 md:p-5 space-y-4 text-center">
+      {part === "data" && (
+        <section className="space-y-3">
+          <p className="text-sm">כל מה ששמרתם — ההשערות, ההיסטוריה והפרטים — בקובץ אחד.</p>
+          <Btn onClick={exportJson}>ייצוא (JSON)</Btn>
+        </section>
+      )}
+
+      {part === "data" && (
+        <section className="border-2 border-warn rounded-theme p-4 space-y-4">
           <h3 className="text-xl font-display leading-tight text-warn">מחיקה מלאה</h3>
-          <p className="text-sm">מוחקת את כל ההשערות, ההיסטוריה ופרטי הכניסה. ממוצעים שכבר פורסמו לא משתנים.</p>
+          <p className="text-sm">מוחקת את כל ההשערות, ההיסטוריה, המייל, השם, שיחת התמיכה ופרטי הכניסה. ממוצעים שכבר פורסמו לא משתנים.</p>
           {del === 0 && (
             <Btn kind="danger" onClick={() => setDel(1)}>
               למחוק את הכול
