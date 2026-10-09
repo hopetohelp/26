@@ -49,7 +49,7 @@ export function ChartWithTable({ chart, table, summary }: { chart: ReactNode; ta
 
 export function Badge({ tone = "neutral", children }: { tone?: "neutral" | "ok" | "warn"; children: ReactNode }) {
   const cls =
-    tone === "ok" ? "bg-green-50 text-green-800 border-green-200" : tone === "warn" ? "bg-warn-soft text-warn border-orange-200" : "bg-paper text-ink-soft border-paper-line";
+    tone === "ok" ? "bg-accent-soft text-accent border-accent/30" : tone === "warn" ? "bg-warn-soft text-warn border-warn/30" : "bg-paper text-ink-soft border-paper-line";
   return <span className={`inline-block text-xs border rounded-full px-2 py-0.5 ${cls}`}>{children}</span>;
 }
 
