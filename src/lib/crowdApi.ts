@@ -85,6 +85,8 @@ export interface Bloc {
 }
 
 export interface BlocsPayload {
+  /** הרכב שנערך במפורש: לא משדרגים אותו כאילו היה ברירת מחדל ישנה. */
+  schemaVersion?: 2;
   /** "gov37" = ברירת המחדל (מפלגות הממשלה היוצאת / שאר הרשימות) · "custom" = גושים של המשתמש */
   mode: "gov37" | "custom";
   blocs: Bloc[];

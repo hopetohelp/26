@@ -7,8 +7,8 @@ export const FIXED_BLOCS = [
   { id: "government", name: "הממשלה היוצאת", lists: [...GOV37].sort() },
   { id: "coalition", name: "גוש הקואליציה", lists: COALITION },
   { id: "opposition", name: "גוש האופוזיציה", lists: OPPOSITION },
-  { id: "arab", name: "ערבים", lists: ARAB },
   { id: "unity", name: "אחדות", lists: UNITY },
+  { id: "arab", name: "ערבים", lists: ARAB },
 ];
 export const compositionKey = lists => [...new Set(lists)].sort().join(",");
 const legacyCoalitions = [
@@ -21,12 +21,12 @@ const oldOpposition = new Set(legacyCoalitions.flatMap(lists => {
   return [compositionKey(rest), compositionKey(rest.filter(id => !["noam", "code_black"].includes(id)))];
 }));
 export function migrateBlocs(payload) {
-  if (payload.mode !== "custom") return payload;
+  if (payload.mode !== "custom" || payload.schemaVersion === 2) return payload;
   let changed = false;
   let blocs = payload.blocs.map(b => {
     const key = compositionKey(b.lists);
-    if (oldCoalitions.has(key)) { changed = true; return { ...b, lists: [...COALITION] }; }
-    if (oldOpposition.has(key)) {
+    if (oldCoalitions.has(key) && ["גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: [...COALITION] }; }
+    if (oldOpposition.has(key) && ["כל השאר", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
       changed = true; return { ...b, name: "גוש האופוזיציה", lists: [...OPPOSITION] };
     }
     return b;
@@ -45,10 +45,25 @@ export function fixedTotals(payload) {
 
 export function personalTotals(payload, definition) {
   const blocs = definition ? definition.mode === "gov37" ? definition.blocs.map(b => ({ ...b, lists: b.id === "gov" ? [...GOV37] : b.id === "rest" ? [...IDS_2026].filter(id => !GOV37.has(id)) : b.lists })) : migrateBlocs(definition).blocs : [
+    {id:"government",name:"הממשלה היוצאת",lists:[...GOV37]},
     {id:"gov",name:"גוש הקואליציה",lists:COALITION},
     {id:"rest",name:"גוש האופוזיציה",lists:OPPOSITION},
-    {id:"arab",name:"ערבים",lists:ARAB},
     {id:"unity",name:"אחדות",lists:UNITY},
+    {id:"arab",name:"ערבים",lists:ARAB},
   ];
   return blocs.map(b => ({ id:b.id,name:b.name,lists:[...new Set(b.lists)],seats:[...new Set(b.lists)].reduce((sum,id)=>sum+(payload.seats[id]?.v??0),0) }));
+}
+
+/** שם חדש נדרש לשינוי הרכב; השמות הקבועים מתארים רק את ההרכב המקורי. */
+export function blocNameError(previous, next) {
+  if (next.mode !== "custom") return null;
+  const old = previous?.mode === "custom" ? previous.blocs : [];
+  for (const b of next.blocs) {
+    if (!b.name.trim()) return "bloc_name_required";
+    const fixed = FIXED_BLOCS.find(f => f.name === b.name.trim());
+    if (fixed && compositionKey(fixed.lists) !== compositionKey(b.lists)) return "bloc_rename_required";
+    const before = old.find(a => a.id === b.id);
+    if (before && compositionKey(before.lists) !== compositionKey(b.lists) && before.name.trim() === b.name.trim()) return "bloc_rename_required";
+  }
+  return null;
 }

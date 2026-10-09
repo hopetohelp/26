@@ -10,11 +10,11 @@ import { Notice } from "./ui";
 import { useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
-  { id: "seats", label: "לפי מנדטים" },
-  { id: "calculator", label: "לפי אחוזים" },
-  { id: "blocs", label: "לפי גושים" },
+  { id: "seats", label: "המפלגות" },
+  { id: "blocs", label: "הגושים" },
+  { id: "calculator", label: "האחוזים" },
   { id: "vote", label: "ההצבעה שלי" },
-  { id: "history", label: "ההיסטוריה שלי" },
+  { id: "history", label: "ההשערות שלי" },
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
 

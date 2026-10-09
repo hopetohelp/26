@@ -320,11 +320,20 @@ it('כל שמירת מפלגות שומרת גושים קבועים ואישיי
   expect((await save(tok,'blocs',definition(['likud','yashar']))).status).toBe(200);
   const original = await save(tok,'seats',seats(60));
   expect(original.status).toBe(200);
-  expect(Object.keys(original.data.version.payload.fixedBlocSeats)).toEqual(['government','coalition','opposition','arab','unity']);
+  expect(Object.keys(original.data.version.payload.fixedBlocSeats)).toEqual(['government','coalition','opposition','unity','arab']);
   expect(original.data.version.payload.personalBlocSeats).toEqual([{id:'mine',name:'שלי',lists:['likud','yashar'],seats:120}]);
-  await save(tok,'blocs',definition(['likud','shas']));
+  await save(tok,'blocs',{mode:'custom',blocs:[{id:'mine',name:'שלי החדש',lists:['likud','shas'],target:null}]});
   const next = await save(tok,'seats',seats(60));
   expect(next.data.version.payload.personalBlocSeats[0].seats).toBe(60);
   const history = (await call('/history?unit=seats',{token:tok})).data.versions;
   expect(history.find(v=>v.id===original.data.version.id).payload.personalBlocSeats[0].seats).toBe(120);
+});
+
+it('השרת דוחה שינוי הרכב בלי שם חדש ומאשר יחד את השם וההרכב', async () => {
+ const tok=await newP();const payload=(name,lists)=>({mode:'custom',blocs:[{id:'x',name,lists,target:null}]});
+ expect((await save(tok,'blocs',payload('שלי',['likud','shas']))).status).toBe(200);
+ const rejected=await save(tok,'blocs',payload('שלי',['likud','utj']));
+ expect(rejected.status).toBe(400);
+ expect(rejected.data.field).toBe('bloc_rename_required');
+ expect((await save(tok,'blocs',payload('שלי החדש',['likud','utj']))).status).toBe(200);
 });

@@ -282,7 +282,7 @@ it("כל מנחש מפלגות נכלל בקואליציה פעם אחת מהג�
 
 it("legacy coalition bloc merges into the current default coalition", () => {
   const seats = (p) => ({ participant: p, payload: { seats: Object.fromEntries(["likud","shas","utj","otzma","rzp","amcha"].map((id) => [id, { v: 10 }])) } });
-  const blocs = (p, lists) => ({ participant: p, payload: { mode: "custom", blocs: [{ id: "a", name: "x", lists, target: null }] } });
+  const blocs = (p, lists) => ({ participant: p, payload: { mode: "custom", blocs: [{ id: "a", name: "גוש הקואליציה", lists, target: null }] } });
   const old = ["amcha", "likud", "otzma", "rzp", "shas", "utj"];
   const now = [...old, "noam", "code_black"];
   const r = computeBlocs([seats(1), seats(2)], [blocs(1, old), blocs(2, now)]);

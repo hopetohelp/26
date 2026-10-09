@@ -96,13 +96,14 @@ export function SeatsStats({ rows, polls, mine, view, unit = "seats" }: { rows: 
 /** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
 export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   const b=d.blocs!;
-  const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
+  const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.filter(g => g.id !== "government").map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
   const fixedKeys = new Set(fixed.map(g => [...g.lists].sort().join(",")));
-  const fixedRows = fixed.map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
+  const fixedOrder = ["government", "coalition", "gov", "opposition", "rest", "unity", "arab"];
+  const fixedRows = [...fixed].sort((a,b) => fixedOrder.indexOf(a.id)-fixedOrder.indexOf(b.id)).map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
   const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")))
     .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
-    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!}))
-    .sort((a,b) => b.stat.n-a.stat.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
+    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!, n: g.n}))
+    .sort((a,b) => b.n-a.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
   const rows = [...fixedRows, ...customRows];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
   if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,value:r.stat?.mean ?? 0,range:r.stat ? range(r.stat) : "חסר נתון"}))} />;
@@ -143,7 +144,7 @@ function Matrix({ d }: { d: D }) {
   const continuity = voteContinuity(m);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3">לא שינו בחירה: <strong>{continuity.same}</strong> · שינו בחירה: <strong>{continuity.changed}</strong>. הציונות הדתית ב־2022 והציונות הדתית/זהות ב־2026 נספרות כאותה בחירה.</p>}
+    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{continuity.same}</strong> · עברו לרשימה אחרת: <strong>{continuity.changed}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{continuity.split}</strong>. ב־2022 הציונות הדתית, עוצמה יהודית ונעם התמודדו יחד; בטבלה מופיע המעבר מהרשימה המשותפת לרשימות של היום.</p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>

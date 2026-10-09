@@ -1,4 +1,4 @@
-import { personalTotals } from "./lib/blocDefinitions.js";
+import { personalTotals, blocNameError } from "./lib/blocDefinitions.js";
 /**
  * שרת השתתפות הגולשים — "ההשערה שלי" ודשבורד הגולשים (Cloudflare Worker + D1 ‏elections26-crowd).
  * השיטה: docs/השתתפות-גולשים.md · החוזה (נתיבים וצורות תשובה): src/lib/crowdApi.ts — השרת מממש בדיוק אותו.
@@ -165,6 +165,12 @@ const routes = {
     const existing = await find();
     if (existing) return { version: parseVersion(existing) };
     if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
+    if (unit === "blocs") {
+      const latestBlocs = await env.DB.prepare("SELECT payload FROM versions WHERE participant = ? AND unit = 'blocs' ORDER BY id DESC LIMIT 1").bind(participant).first();
+      const nameError = blocNameError(latestBlocs ? JSON.parse(latestBlocs.payload) : null, payload);
+      if (nameError) throw bad("invalid", { field: nameError });
+      if (payload.mode === "custom") payload.schemaVersion = 2;
+    }
     if (unit === "seats") {
       const latestBlocs = await env.DB.prepare("SELECT payload FROM versions WHERE participant = ? AND unit = 'blocs' ORDER BY id DESC LIMIT 1").bind(participant).first();
       payload.personalBlocSeats = personalTotals(payload, latestBlocs ? JSON.parse(latestBlocs.payload) : null);
