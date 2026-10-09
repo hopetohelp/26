@@ -103,15 +103,13 @@ def test_changes_add_up():
             assert lo <= mid <= hi and lo - 1 <= f["shareNow"] <= hi + 1, f["id"]
 
 
-def test_average_includes_every_verified_poll():
-    """הממוצע מתעדכן עד הסקר המאומת האחרון — כולל סקר שאומת ממקור משני (המקור הראשוני חוסם סריקה). לא נשאר מאחור."""
+def test_average_includes_every_consistent_poll():
+    """הכרעת בעלים 9.10.2026: כל סקר עקבי שפורסם נכנס לממוצע — בלי תנאי אימות. הממוצע מתעדכן עד הסקר האחרון."""
     polls = json.loads((ROOT / "src" / "data" / "polls.json").read_text(encoding="utf-8"))["polls"]
     model = json.loads((ROOT / "src" / "data" / "model.json").read_text(encoding="utf-8"))
-    start = "2026-10-01"
-    ok = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] >= start]
-    assert model["asof"] == max(p["end"] for p in polls if p["consistent"] and p["eligibleToShow"] and p["verified"] and p["end"] > "2026-08-01")
-    assert all(p["verified"] for p in polls if (p.get("verification") or {}).get("status") == "secondary"), "מקור משני אינו נספר כמאומת"
-    assert ok, "אין סקרים מאומתים"
+    used = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > "2026-09-08"]  # LIST_SUBMISSION_2026
+    assert model["asof"] == max(p["end"] for p in used)
+    assert model["polls"] == len(used) - len(model.get("skipped", []))
 
 
 if __name__ == "__main__":
