@@ -10,7 +10,7 @@ import Polls from "./pages/Polls";
 import Trends from "./pages/Trends";
 import Results from "./pages/Results";
 import Voters from "./pages/Voters";
-import Method from "./pages/Method";
+import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
 import Support from "./pages/Support";
@@ -62,10 +62,17 @@ createRoot(document.getElementById("root")!).render(
           />
           <Route
             path="method"
-            element={<Tabbed label="שיטה, מקורות ואודות" tabs={[
-              { id: "method", label: "שיטה ומקורות", element: <Method /> },
-              { id: "about", label: "אודות", element: <About /> },
-            ]} />}
+            element={<Tabbed
+              label="שיטה, מקורות ואודות"
+              aliases={{ method: "numbers" }}
+              anchors={{ sources: "sources", updates: "sources", privacy: "sources", law: "law", limits: "law", about: "about" }}
+              tabs={[
+                { id: "numbers", label: "מילון המספרים", element: <MethodNumbers /> },
+                { id: "sources", label: "מקורות", element: <MethodSources /> },
+                { id: "law", label: "החוק", element: <MethodLaw /> },
+                { id: "about", label: "אודות", element: <About /> },
+              ]}
+            />}
           />
           <Route path="scenarios" element={<Moved to="/today" tab="scenarios" />} />
           <Route path="forecast" element={<Moved to="/today" tab="scenarios" />} />

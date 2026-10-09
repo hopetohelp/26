@@ -1,5 +1,5 @@
-import { createContext, Suspense, useCallback, useContext, useLayoutEffect, useState, type ReactNode } from "react";
-import { Navigate, useLocation, useSearchParams } from "react-router-dom";
+import { createContext, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 /** מסך אחד עם כמה לשוניות (הכרעת המבנה: 7 מסכים, לכל נתון בית אחד). הלשונית נשמרת בכתובת (?tab=), כדי שקישור ששותף יפתח אותה. */
 export interface Tab {
@@ -24,9 +24,20 @@ export function useTabsSlot(): ReactNode {
   return slot?.tabs ?? null;
 }
 
-export default function Tabbed({ label, tabs, aliases = {} }: { label: string; tabs: Tab[]; aliases?: Record<string, string> }) {
+/**
+ * anchors: עוגן (#id) שנמצא בלשונית אחרת ⇐ הלשונית שלו. קישור ישן כמו /method#privacy פותח את הלשונית הנכונה ואז גולל לעוגן.
+ * הלשונית שנבחרה במפורש (?tab=) גוברת.
+ */
+export default function Tabbed({ label, tabs, aliases = {}, anchors = {} }: { label: string; tabs: Tab[]; aliases?: Record<string, string>; anchors?: Record<string, string> }) {
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { hash } = useLocation();
   const asked = params.get("tab") ?? "";
+  const anchorTab = !asked ? anchors[decodeURIComponent(hash.slice(1))] : undefined;
+  const firstTab = tabs[0].id;
+  useEffect(() => {
+    if (anchorTab && anchorTab !== firstTab) navigate({ search: `?tab=${anchorTab}`, hash }, { replace: true });
+  }, [anchorTab, firstTab, hash, navigate]);
   const current = tabs.find((t) => t.id === (aliases[asked] ?? asked)) ?? tabs[0];
   const [claimed, setClaimed] = useState(0);
   const claim = useCallback((on: boolean) => setClaimed((n) => n + (on ? 1 : -1)), []);
