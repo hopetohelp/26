@@ -87,6 +87,11 @@ describe("participant & saves", () => {
     expect((await register("2001:db8:1:2:ffff::9")).status).toBe(429); // אותו /64
     expect((await register("2001:db8:1:3::1")).status).toBe(200);
   });
+  it("checking whether a username/email is taken counts toward the per-IP limit", async () => {
+    expect((await register("8.8.4.4", "victim@example.com")).status).toBe(200);
+    for (let i = 0; i < LIMITS.participantsPerHourPerIp; i++) expect((await register("8.8.8.8", "victim@example.com")).status).toBe(409);
+    expect((await register("8.8.8.8", "victim@example.com")).status).toBe(429);
+  });
   it("IP_KEY_PREV keeps old counters", async () => {
     for (let i = 0; i < LIMITS.participantsPerHourPerIp; i++) await register("9.9.9.9");
     env.IP_KEY_PREV = env.IP_KEY;

@@ -47,9 +47,13 @@ function cors(env, origin) {
 const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 const sha256 = async (s) => hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
 
-async function dayKey(ip) {
+// גיבוב חתום (HMAC) עם סוד השרת IP_KEY: בלי הסוד אי אפשר לנחש את הכתובת בניסוי כל הכתובות האפשריות.
+// בלי הסוד (פריסה ראשונה, בדיקות) — הגיבוב הישן.
+async function dayKey(env, ip) {
   const day = new Date().toISOString().slice(0, 10);
-  return (await sha256(`${day}|${ip}|elections26`)).slice(0, 24);
+  if (!env?.IP_KEY) return (await sha256(`${day}|${ip}|elections26`)).slice(0, 24);
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.IP_KEY), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return hex(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${day}|${ip}`))).slice(0, 24);
 }
 
 function newToken() {
@@ -259,7 +263,7 @@ export default {
       }
       if (!HIT_PAGES.has(page)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
-      const vid = await dayKey(`${request.headers.get("cf-connecting-ip") || "unknown"}|${request.headers.get("user-agent") || ""}`);
+      const vid = await dayKey(env, `${request.headers.get("cf-connecting-ip") || "unknown"}|${request.headers.get("user-agent") || ""}`);
       const stmts = [
         env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, page),
         env.DB.prepare("INSERT OR IGNORE INTO visitors (day, vid, page) VALUES (?, ?, ?)").bind(day, vid, page),
@@ -321,7 +325,7 @@ export default {
     if (url.pathname === "/autoreport") {
       const log = typeof body.log === "string" ? body.log.slice(0, 16000) : "";
       if (!log) return reply({ ok: false, error: "empty" }, 400);
-      const akey = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
+      const akey = await dayKey(env, request.headers.get("cf-connecting-ip") || "unknown");
       const day = new Date().toISOString().slice(0, 10);
       const sent = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE day_key = ? AND created_at >= ? AND text LIKE ?").bind(akey, day, AUTO + "%").first();
       if ((sent?.n ?? 0) >= AUTO_PER_DAY) return reply({ ok: true, dropped: true });
@@ -336,7 +340,7 @@ export default {
     if (body.diagnostic !== undefined && (typeof body.diagnostic !== "string" || body.diagnostic.length > 16000))
       return reply({ ok: false, error: "diagnostic too large" }, 413);
     const text = body.diagnostic ? `${note}\n\n--- לוג התקלה ---\n${body.diagnostic}` : note;
-    const key = await dayKey(request.headers.get("cf-connecting-ip") || "unknown");
+    const key = await dayKey(env, request.headers.get("cf-connecting-ip") || "unknown");
     const now = new Date().toISOString();
 
     // ---- הערה חדשה זהה שכבר נשלחה היום מאותו מקור: מחזירים "הצלחה" בלי לשמור (הגולש כבר קיבל קישור על הראשונה)

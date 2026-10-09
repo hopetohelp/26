@@ -82,3 +82,8 @@ CREATE TABLE IF NOT EXISTS support_messages (
   UNIQUE(participant, op_id)
 );
 CREATE INDEX IF NOT EXISTS support_messages_participant ON support_messages(participant, created_at, id);
+
+-- פרטיות (בדיקת אבטחה 9.10.2026): day_key נחוץ רק להגבלת הקצב של היום. מגיבוב ישן אפשר היה לשחזר כתובת IP בניסוי כל הכתובות,
+-- ולכן הוא נמחק מכל רשומה בת יותר מיומיים. רץ בכל פריסה; אינו נוגע בתוכן ההערות.
+UPDATE feedback SET day_key = '' WHERE day_key <> '' AND created_at < date('now', '-2 day');
+UPDATE messages SET day_key = NULL WHERE day_key IS NOT NULL AND created_at < date('now', '-2 day');

@@ -68,10 +68,15 @@ async function requireAuth(env, request, now) {
   return a;
 }
 
-/** משתתף חדש — רק מתוך הרשמה (עם הגבלה לפי IP) ⇐ [statements, participantId] */
-async function createParticipant(env, request, now) {
+/** הגבלת יצירת משתתפים לפי IP. בהרשמה — לפני בדיקת "השם תפוס", כדי שאי אפשר יהיה לבדוק בלי הגבלה אם מייל או שם רשומים באתר */
+async function limitNewParticipant(env, request, now) {
   const [cur, ...prev] = await ipKeys(env, request);
   if (!(await hit(env, "p:" + cur, LIMITS.participantsPerHourPerIp, now, HOUR, prev.map((k) => "p:" + k)))) throw new HttpError(429, "rate");
+}
+
+/** משתתף חדש — רק מתוך הרשמה (עם הגבלה לפי IP; limited = ההגבלה כבר נבדקה) ⇐ [statements, participantId] */
+async function createParticipant(env, request, now, limited = false) {
+  if (!limited) await limitNewParticipant(env, request, now);
   const id = randomToken(16);
   return [[env.DB.prepare("INSERT INTO participants (id, created_at) VALUES (?, ?)").bind(id, iso(now))], id];
 }
@@ -240,9 +245,10 @@ const routes = {
     const u = normalizeUsername(body.username);
     if (!u) throw bad("bad_username");
     checkPassword(body.password);
+    await limitNewParticipant(env, request, now);
     const taken = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(u.norm).first();
     if (taken) throw new HttpError(409, "username_taken");
-    const [stmts, participant] = await createParticipant(env, request, now);
+    const [stmts, participant] = await createParticipant(env, request, now, true);
     const h = await hashPassword(body.password);
     const [sess, token] = await newSession(env, participant, now, isClientToken(body.token) ? body.token : undefined);
     const link = randomToken();
@@ -316,6 +322,7 @@ const routes = {
     const u = normalizeUsername(body.username);
     if (!u) throw bad("bad_username");
     checkPassword(body.password);
+    if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
     const taken = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE username_norm = ?").bind(u.norm).first();
     if (taken) throw new HttpError(409, "username_taken");
     const h = await hashPassword(body.password);
