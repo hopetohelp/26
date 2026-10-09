@@ -420,6 +420,25 @@ def level_at_end(fit: dict) -> tuple[dict[str, float], dict[str, float]]:
     return level, var
 
 
+def hist_int(xs: list[int]) -> list[int]:
+    """התפלגות של מספרים שלמים: counts[v] = בכמה תרחישים התקבל v (מ-0 עד המקסימום). לנר הטווח באתר: העובי לפי כמות התרחישים."""
+    top = int(max(xs)) if xs else 0
+    counts = [0] * (top + 1)
+    for x in xs:
+        counts[int(x)] += 1
+    return counts
+
+
+def hist_bins(xs: list[float], step: float) -> dict:
+    """התפלגות רציפה בתאים ברוחב `step`: {"start": תחילת התא הראשון, "step": step, "counts": [...]}."""
+    lo = math.floor(min(xs) / step) * step
+    top = int(math.floor((max(xs) - lo) / step))
+    counts = [0] * (top + 1)
+    for x in xs:
+        counts[int(math.floor((x - lo) / step))] += 1
+    return {"start": round(lo, 4), "step": step, "counts": counts}
+
+
 def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_noag=None, bloc: list[str] | None = None,
                         groups: dict[str, list[str]] | None = None):
     idx = {k: i for i, k in enumerate(lists)}
@@ -435,6 +454,7 @@ def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_no
             "seatsMean": round(sum(seats) / n, 2),
             "share": [round(x, 2) for x in quantiles(shares)],
             "pass": round(sum(1 for x in seats if x > 0) / n, 4),
+            "seatsHist": hist_int(seats),
         }
         if sims_seats_noag is not None:
             gain = [a[i] - b[i] for a, b in zip(sims_seats, sims_seats_noag)]
@@ -446,7 +466,7 @@ def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_no
     out["wastedMean"] = round(sum(wasted) / len(wasted), 2)
     if bloc:
         b = [sum(s[idx[k]] for k in bloc if k in idx) for s in sims_seats]
-        out["bloc"] = {"lists": bloc, "seats": [round(x) for x in quantiles(b)], "atLeast61": round(sum(1 for x in b if x >= 61) / n, 4)}
+        out["bloc"] = {"lists": bloc, "seats": [round(x) for x in quantiles(b)], "atLeast61": round(sum(1 for x in b if x >= 61) / n, 4), "seatsHist": hist_int(b)}
     if groups:
         # קבוצת רשימות (למשל "משפחה" מ-2022): הטווח של הסכום בכל תרחיש — לא סכום הטווחים
         out["groups"] = {}
@@ -454,7 +474,7 @@ def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_no
             ii = [idx[k] for k in members if k in idx]
             sh = [100 * sum(s[i] for i in ii) for s in sims_shares]
             se = [sum(s[i] for i in ii) for s in sims_seats]
-            out["groups"][gid] = {"share": [round(x, 2) for x in quantiles(sh)], "seats": [round(x) for x in quantiles(se)]}
+            out["groups"][gid] = {"share": [round(x, 2) for x in quantiles(sh)], "seats": [round(x) for x in quantiles(se)], "shareHist": hist_bins(sh, 0.25)}
     return out
 
 

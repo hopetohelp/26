@@ -4,7 +4,7 @@ import { results } from "./data";
 import { compareLists, eveSnapshot, type Cycle, type ElectionResult } from "./history";
 import { deviation, finding, type DevInput } from "./deviation";
 
-const row = (id: string, estimate: number, min: number, max: number, actual: number, n = 4): DevInput => ({ id, name: id, estimate, min, max, actual, n });
+const row = (id: string, estimate: number, min: number, max: number, actual: number, n = 4): DevInput => ({ id, name: id, estimate, min, max, actual, n, values: n ? [min, max] : [] });
 
 describe("deviation", () => {
   const d = deviation([row("a", 8.5, 8, 9, 11), row("b", 24, 23, 27, 24), row("c", 4, 4, 4, 5), row("d", 4.5, 4, 5, 0), row("x", NaN, NaN, NaN, 3, 0)]);
@@ -35,7 +35,7 @@ describe("הסקרים מול התוצאות בנתונים האמיתיים (20
   const cycles = historyFile.cycles as unknown as Cycle[];
   const c = cycles.find((x) => x.id === "k25")!;
   const r = (results as unknown as ElectionResult[]).find((x) => x.id === "k25")!;
-  const rows = compareLists(c, r, eveSnapshot(c)).map((x) => ({ id: x.letters, name: x.name, estimate: x.estimate, min: x.min, max: x.max, actual: x.actual, n: x.n }));
+  const rows = compareLists(c, r, eveSnapshot(c)).map((x) => ({ id: x.letters, name: x.name, estimate: x.estimate, min: x.min, max: x.max, actual: x.actual, n: x.n, values: x.values }));
   const d = deviation(rows);
 
   it("ש״ס יצאה מחוץ לטווח הסקרים (11 מול 8 עד 9), כפי שנמדד בהצעה", () => {
@@ -48,11 +48,14 @@ describe("הסקרים מול התוצאות בנתונים האמיתיים (20
   });
 });
 
-describe("עובי הנר בסטייה: כמה מכונים נתנו לרשימה מנדטים", () => {
-  it("volume = above, ובלי above — n", () => {
-    const base = { name: "x", estimate: 5, min: 0, max: 8, actual: 4 };
-    const d = deviation([{ ...base, id: "a", n: 9, above: 9 }, { ...base, id: "b", n: 9, above: 4 }, { ...base, id: "c", n: 7 }]);
-    const vol = Object.fromEntries([...d.outside, ...d.inside].map((r) => [r.id, r.volume]));
-    expect(vol).toEqual({ a: 9, b: 4, c: 7 });
+describe("נר הסטייה: קטעים לפי כמה מכונים נתנו כל ערך, ביחס לממוצע", () => {
+  it("הקטעים מתחילים בנמוך ונגמרים בגבוה, ומוזזים בממוצע הסקרים (0 = הממוצע)", () => {
+    const base = { name: "x", estimate: 10, min: 8, max: 12, actual: 11, n: 5 };
+    const d = deviation([{ ...base, id: "a", values: [8, 10, 10, 10, 12] }]);
+    const segs = d.inside[0].segs;
+    expect(segs[0].from).toBe(8 - 10);
+    expect(segs[segs.length - 1].to).toBe(12 - 10);
+    const mid = segs.find((g) => g.from <= 0 && g.to >= 0)!;
+    expect(mid.count).toBe(3);
   });
 });

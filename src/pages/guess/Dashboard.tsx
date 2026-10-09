@@ -11,8 +11,8 @@ import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, POLL_SHARE
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
-import { volumeLevel } from "../../lib/chartLanguage";
-import { AxisLabels, Candle, Diamond, KeyItem, MeanDot, ThicknessKey, Track, candleTitle } from "../../components/marks";
+import { levelSegs, quantileSegs } from "../../lib/chartLanguage";
+import { AxisLabels, Diamond, KeyItem, MeanDot, ProfileCandle, ThicknessKey, Track } from "../../components/marks";
 import type { useSession } from "./useCrowd";
 
 const LIVE_REFRESH_MS = 60_000;
@@ -83,7 +83,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
       {subject === "seats" ? (
-        d.seats ? <SeatsStats rows={d.seats.full} manual={d.seats.manual} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
+        d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>
       ) : (
         d.seats?.pctStats ? <SeatsStats rows={d.seats.pctStats} polls={POLL_SHARES} mine={hasDefinedBlocs ? mine : undefined} view={view} unit="pct" passedLists={d.seats.everPassedLists ?? d.seats.full.filter(s => s.max >= 4).map(s => s.list)} /> : <Notice>עדיין אין השערות לפי אחוזים להצגה.</Notice>
       )}
@@ -101,15 +101,13 @@ function Toggle<T extends string>({ value, setValue, options, label }: { value: 
   return <Segmented value={value} onChange={setValue} label={label} className="min-w-[12rem]" options={options.map(([id, text]) => ({ id, label: text }))} />;
 }
 
-export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists, manual }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject; manual?: SeatStat[] }) {
-  // כמות הנתונים מאחורי הנר: כמה גולשים קבעו ערך לרשימה (לכל רשימה n משלה), ולא כל המשתתפים, שהם אותו מספר לכולן
-  const manualN = useMemo(() => new Map((manual ?? []).map(m => [m.list, m.n])), [manual]);
+export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject }) {
   const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= (unit === "pct" ? 3.25 : 4)).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists, unit]);
   const hiddenNote = <p className="text-xs text-ink-soft mt-3">מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות</p>;
   const suffix = unit === "pct" ? "%" : "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => unit === "pct" ? mine?.mode === "pct" ? mine.pct?.[id] : undefined : mine?.seats[id]?.v;
-  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,n:manualN.get(s.list) ?? s.n,poll:polls[s.list]}))} />{hiddenNote}</>;
+  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
   return <Card title={<SectionTitle title={unit === "pct" ? "אחוזים" : "מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th>{mine && <th className="font-normal">שלי</th>}</tr></thead>
     <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
@@ -129,7 +127,7 @@ export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
     .sort((a,b) => b.n-a.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
   const rows = [...fixedRows, ...customRows];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
-  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,n:r.stat?.n,poll:blocPoll(d,r.lists)}))} />;
+  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
   return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע הגולשים</th><th className="font-normal">ממוצע הסקרים</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
     <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
@@ -143,32 +141,33 @@ function BlocName({ name, lists }: { name: string; lists: string[] }) {
   return <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold" aria-label={`מפלגות ${name}`}>{name}</summary><p className="text-xs font-normal text-ink-soft py-1 whitespace-normal">{lists.map(nameOf).join(" · ")}</p></details>;
 }
 
-interface BarRow { key: string; label: string; lists?: string[]; mean: number | null; lo: number; hi: number; n?: number; poll?: number }
+interface BarRow { key: string; label: string; lists?: string[]; mean: number | null; lo: number; hi: number; q?: [number, number, number, number, number]; poll?: number }
 
 /**
- * סקר האתר בגרף (הכרעת בעלים 9.10.2026): נר = הנמוך והגבוה בין השערות הגולשים (טווח מלא; העובי לפי כמה גולשים שיערו, ביחס לשאר הגרף),
- * מעוין ריק = ממוצע הגולשים (אינו סקר), עיגול מלא = ממוצע הסקרים, כשיש.
+ * סקר האתר בגרף (הכרעת בעלים 9.10.2026): נר כחול = הנמוך והגבוה בין השערות הגולשים (טווח מלא), שעוביו משתנה לאורכו:
+ * הסיכום של הגולשים כולל רבעונים (נמוך, רבעון תחתון, חציון, רבעון עליון, גבוה), ובכל קטע ביניהם 25% מהגולשים, ולכן הנר עבה היכן שהם צפופים ודק בזנבות.
+ * מעוין ריק ירוק = ממוצע הגולשים (אינו סקר), עיגול מלא אדום = ממוצע הסקרים, כשיש.
  */
 function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suffix?: string; title?: import("react").ReactNode }) {
   const top = Math.max(1, ...rows.flatMap(r => [r.hi, r.mean ?? 0, r.poll ?? 0]));
   const step = suffix ? 5 : top > 60 ? 20 : 10;
   const axisMax = Math.max(step * 2, Math.ceil(top / step) * step);
-  const maxN = Math.max(0, ...rows.map(r => r.n ?? 0));
   const at = (v: number) => (v / axisMax) * 100;
   const withPoll = rows.some(r => r.poll !== undefined);
+  const levels = levelSegs(rows.map(r => r.q ? quantileSegs(r.q, suffix ? 0.25 : 0.5) : []));
   const COLS = "grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto]";
   return <Card title={title}>
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft mb-1">
       <KeyItem kind="diamond">ממוצע הגולשים (אינו סקר)</KeyItem>
       <KeyItem kind="candle">הנמוך והגבוה בין ההשערות</KeyItem>
       {withPoll && <KeyItem kind="mean">ממוצע הסקרים</KeyItem>}
-      <ThicknessKey what="כמה גולשים קבעו ערך לרשימה" />
+      <ThicknessKey what="כמה גולשים שיערו ערך כזה" />
     </div>
     <div aria-hidden="true" className={`grid ${COLS} gap-2 text-xs text-ink-soft`}><div className="col-start-2"><AxisLabels axisMax={axisMax} step={step} format={v => `${v}${suffix}`} /></div></div>
-    <ul className="mt-1">{rows.map(r => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
+    <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
       <span className="break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span>
-      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: ${candleTitle(`${r.n ?? 0} גולשים קבעו ערך`, volumeLevel(r.n ?? maxN, maxN))}`}>
-        {r.mean !== null && <Candle from={at(r.lo)} to={at(r.hi)} level={volumeLevel(r.n ?? maxN, maxN)} />}
+      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה גולשים שיערו ערך כזה`}>
+        {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
         {r.poll !== undefined && <MeanDot at={at(r.poll)} />}
         {r.mean !== null && <Diamond at={at(r.mean)} />}
       </Track>

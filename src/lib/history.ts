@@ -113,6 +113,8 @@ export interface ListComparison {
   /** בכמה סקרים הרשימה עברה את הסף */
   above: number;
   n: number;
+  /** המנדטים בכל סקר שנשאל על הרשימה (מזה נבנים הנמוך, הגבוה ועובי הנר בכל קטע) */
+  values: number[];
   actual: number;
   /** סקרים פחות תוצאה: חיובי = הסקרים נתנו יותר */
   diff: number;
@@ -136,6 +138,7 @@ export function compareLists(c: Cycle, r: ElectionResult, polls: HistPoll[]): Li
         max: xs.length ? Math.max(...xs) : NaN,
         above,
         n: xs.length,
+        values: xs,
         actual: l.seats,
         diff: est0 - l.seats,
         thresholdMiss: pollsSayPass !== l.seats > 0,
@@ -287,13 +290,13 @@ export function campaignTrend(c: Cycle, letters: string, days = 7, minN = 3) {
   if (!ps.length) return [];
   const first = ps.reduce((a, p) => (p.end < a ? p.end : a), ps[0].end);
   const last = ps.reduce((a, p) => (p.end > a ? p.end : a), ps[0].end);
-  const out: { t: number; v: number; n: number; lo: number; hi: number }[] = [];
+  const out: { t: number; v: number; n: number; lo: number; hi: number; xs: number[] }[] = [];
   for (let t = toTime(first); t <= toTime(last); t += DAY) {
     const xs = ps
       .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
       .map((p) => seatsOf(p, letters))
       .filter((x): x is number => typeof x === "number");
-    if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length, lo: Math.min(...xs), hi: Math.max(...xs) });
+    if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length, lo: Math.min(...xs), hi: Math.max(...xs), xs });
   }
   return out;
 }

@@ -1,6 +1,6 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { colorOf } from "../lib/colors";
-import { maxVolume, smoothPath, sparseIndices, SVG_MARKS, volumeLevel } from "../lib/chartLanguage";
+import { levelSegs, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
 import { date, rng, seatsFmt } from "../lib/format";
 import { Segmented } from "./Choice";
 import { KeyItem, ThicknessKey } from "./marks";
@@ -11,10 +11,11 @@ export interface TrendPoint {
   v: number;
   estimated?: boolean;
   breakBefore?: boolean;
-  /** הנמוך והגבוה בין הסקרים בחלון (טווח מלא) ו-`n` = כמה סקרים בחלון: נר הטווח ועובי הנר */
+  /** הנמוך והגבוה בין הסקרים בחלון (טווח מלא), `n` = כמה סקרים בחלון, ו-`xs` = הערך בכל סקר: מזה נבנה הנר ועוביו בכל קטע */
   lo?: number;
   hi?: number;
   n?: number;
+  xs?: number[];
 }
 
 export interface Series {
@@ -52,9 +53,10 @@ function windows(points: TrendPoint[], windowMs: number): TrendPoint[] {
 
 /**
  * גרף מגמה ב-SVG בשפת הציור האחידה (`src/lib/chartLanguage.ts`, הכרעת בעלים 9.10.2026). ציר הזמן משמאל (עבר) לימין (היום).
- * שתי תצוגות במתג קטן: **קו** (קו חלק עם פינות עגולות וסמנים קטנים ריקים, ובסופו עיגול מלא = הממוצע היום ונר של הטווח בחלון האחרון)
- * ו**נרות** (כל הגרף נרות: נר לכל חלון, מהנמוך אל הגבוה בין הסקרים, עיגול מלא = הממוצע, והעובי לפי כמות הסקרים ביחס לשאר הגרף).
- * `markers` = התוצאה בפועל: עיגול גדול ריק. מעבר עכבר או מקלדת מציגים את הערכים בכל תאריך. תוויות ישירות בקצה כל קו.
+ * שתי תצוגות במתג קטן: **קו** (קו חלק עם פינות עגולות, סמנים קטנים ריקים שחורים, ובסופו עיגול מלא אדום = הממוצע היום ונר כחול של הטווח בחלון האחרון)
+ * ו**נרות** (כל הגרף נרות: נר לכל חלון, מהנמוך אל הגבוה בין הסקרים, עיגול מלא אדום = הממוצע).
+ * עובי הנר משתנה לאורכו: עבה היכן שהרבה סקרים נתנו אותו ערך, דק בקצוות, ביחס לכל הגרף. הקו נשאר בצבע הרשימה, כדי לזהות אותה.
+ * `markers` = התוצאה בפועל: עיגול גדול ריק כתום. מעבר עכבר או מקלדת מציגים את הערכים בכל תאריך. תוויות ישירות בקצה כל קו.
  */
 export function TrendChart({
   series, markers = [], from, to, yMax, title, height = 360, windowText, defaultMode = "line",
@@ -104,12 +106,23 @@ export function TrendChart({
     () => (canCandle ? series.map((s) => ({ s, pts: windows(s.points.filter((p) => p.lo !== undefined && p.hi !== undefined), windowText!.days * DAY) })) : []),
     [series, canCandle, windowText],
   );
-  const maxN = maxVolume(series.flatMap((s) => (view === "candles" ? candles.find((c) => c.s === s)?.pts ?? [] : s.points).map((p) => p.n)));
+  // נר של חלון: קטעים לפי כמה סקרים נתנו כל ערך, ועובי כל קטע ביחס לקטע העמוס ביותר בכל הגרף
+  const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
+  const profiles = useMemo(() => {
+    const items: { key: string; segs: Seg[] }[] = [];
+    if (view === "line") series.forEach((s) => { const last = s.points[s.points.length - 1]; if (last && !s.dashed) items.push({ key: `${s.id}|${last.t}`, segs: segsOf(last) }); });
+    else candles.forEach(({ s, pts }) => pts.forEach((p) => items.push({ key: `${s.id}|${p.t}`, segs: segsOf(p) })));
+    const lv = levelSegs(items.map((it) => it.segs));
+    return new Map(items.map((it, k) => [it.key, lv[k]] as const));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, series, candles]);
   const spacing = (() => {
     if (!windowText) return 20;
     return Math.max(2, (windowText.days * DAY / Math.max(1, to - from)) * (W - M.left - M.right));
   })();
-  const candleW = (level: number) => Math.max(2, Math.min(SVG_MARKS.candleW[level - 1], spacing * 0.85 * (level / 5)));
+  const candleW = (level: number) => (view === "line" ? SVG_MARKS.candleW[level - 1] : Math.max(2, Math.min(SVG_MARKS.candleW[level - 1], spacing * 0.85 * (level / 5))));
+  const profileRects = (key: string, cx: number, opacity: number) =>
+    (profiles.get(key) ?? []).map((g, k) => <rect key={k} x={cx - candleW(g.level) / 2} y={y(g.to)} width={candleW(g.level)} height={Math.max(1, y(g.from) - y(g.to))} fill="rgb(var(--mk-range))" opacity={opacity} />);
   const meanR = Math.max(2.5, Math.min(SVG_MARKS.meanR, spacing * 0.35));
 
   // פיזור תוויות הקצה כדי שלא יעלו זו על זו
@@ -168,6 +181,7 @@ export function TrendChart({
   };
 
   const markFill = { fill: "rgb(var(--mk-bg, var(--paper)))" };
+  const ink = "rgb(var(--ink))";
   return (
     <div>
       {canCandle && (
@@ -212,57 +226,39 @@ export function TrendChart({
               const pts = s.points.map((p) => ({ x: x(p.t), y: y(p.v) }));
               const last = s.points[s.points.length - 1];
               const dots = s.dashed ? [] : sparseIndices(pts.map((p) => p.x), 46).filter((k) => k !== pts.length - 1);
-              const level = last && last.n !== undefined && last.lo !== undefined && last.hi !== undefined ? volumeLevel(last.n, maxN) : null;
               return (
                 <g key={s.id}>
                   {pieces(s).map((pc, k) => (
                     <path key={k} d={smoothPath(pc.pts.map((p) => ({ x: x(p.t), y: y(p.v) })))} fill="none" stroke={c} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={pc.dashed ? "5 4" : undefined} />
                   ))}
                   {dots.map((k) => (
-                    <circle key={k} cx={pts[k].x} cy={pts[k].y} r={SVG_MARKS.smallR} strokeWidth={SVG_MARKS.smallStroke} stroke={c} style={markFill} />
+                    <circle key={k} cx={pts[k].x} cy={pts[k].y} r={SVG_MARKS.smallR} strokeWidth={SVG_MARKS.smallStroke} stroke={ink} style={markFill} />
                   ))}
-                  {!s.dashed && level !== null && (
-                    <rect
-                      x={x(last.t) - candleW(level) / 2}
-                      y={y(last.hi!)}
-                      width={candleW(level)}
-                      height={Math.max(2, y(last.lo!) - y(last.hi!))}
-                      rx={candleW(level) / 2}
-                      fill={c}
-                      opacity={0.45}
-                    />
-                  )}
-                  {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR} fill={c} stroke="rgb(var(--mk-bg, var(--paper)))" strokeWidth={2} />}
-                  {last && last.estimated && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR + 3} fill="none" stroke={c} strokeDasharray="3 3" />}
+                  {!s.dashed && last && profileRects(`${s.id}|${last.t}`, x(last.t), last.estimated ? 0.45 : 0.9)}
+                  {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR} fill="rgb(var(--mk-mean))" />}
+                  {last && last.estimated && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR + 3} fill="none" stroke="rgb(var(--mk-mean))" strokeDasharray="3 3" />}
                 </g>
               );
             })}
 
-            {view === "candles" && candles.map(({ s, pts }, i) => {
-              const c = colorFor(s, i);
-              return (
-                <g key={s.id}>
-                  {pts.map((p) => {
-                    const w = candleW(volumeLevel(p.n ?? maxN, maxN));
-                    return (
-                      <g key={p.t}>
-                        <rect x={x(p.t) - w / 2} y={y(p.hi!)} width={w} height={Math.max(2, y(p.lo!) - y(p.hi!))} rx={w / 2} fill={c} opacity={p.estimated ? 0.2 : 0.45} stroke={p.estimated ? c : undefined} strokeDasharray={p.estimated ? "2 2" : undefined} />
-                        <circle cx={x(p.t)} cy={y(p.v)} r={meanR} fill={c} stroke="rgb(var(--mk-bg, var(--paper)))" strokeWidth={meanR > 4 ? 2 : 1} />
-                      </g>
-                    );
-                  })}
-                </g>
-              );
-            })}
+            {view === "candles" && candles.map(({ s, pts }) => (
+              <g key={s.id}>
+                {pts.map((p) => (
+                  <g key={p.t}>
+                    {profileRects(`${s.id}|${p.t}`, x(p.t), p.estimated ? 0.45 : 0.85)}
+                    <circle cx={x(p.t)} cy={y(p.v)} r={meanR} fill="rgb(var(--mk-mean))" />
+                  </g>
+                ))}
+              </g>
+            ))}
 
             {hover !== null && tipRows.map(({ s, i, p }) => (
               <circle key={s.id} cx={x(p.t)} cy={y(p.v)} r={SVG_MARKS.meanR + 2} fill="none" stroke={colorFor(s, i)} strokeWidth={2} />
             ))}
 
             {markers.map((mk, i) => {
-              const si = series.findIndex((q) => q.id === mk.id);
               return (
-                <circle key={`m${i}`} cx={x(mk.t)} cy={y(mk.v)} r={SVG_MARKS.ringR} fill="none" stroke={si < 0 ? colorOf(mk.id, i) : colorFor(series[si], si)} strokeWidth={SVG_MARKS.ringStroke}>
+                <circle key={`m${i}`} cx={x(mk.t)} cy={y(mk.v)} r={SVG_MARKS.ringR} fill="none" stroke="rgb(var(--mk-result))" strokeWidth={SVG_MARKS.ringStroke}>
                   <title>{`התוצאה בפועל: ${mk.v}`}</title>
                 </circle>
               );
@@ -309,7 +305,7 @@ export function TrendChart({
           </>
         )}
         {markers.length > 0 && <KeyItem kind="result">התוצאה בפועל</KeyItem>}
-        {canCandle && <ThicknessKey what="כמה סקרים בחלון" />}
+        {canCandle && <ThicknessKey what="כמה סקרים נותנים ערך כזה" />}
       </div>
     </div>
   );

@@ -103,9 +103,9 @@ export default function Scenarios() {
           methodAnchor="model"
         >
           <ChartWithTable
-            summary={`עיגול מלא = ממוצע המודל · נר = 80% מהתרחישים (בטבלה גם הממוצע והחציון של התרחישים). ${edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : ""}`}
+            summary={`עיגול מלא אדום = ממוצע המודל · נר כחול = 80% מהתרחישים, העובי לפי כמה תרחישים נותנים כל ערך (בטבלה גם הממוצע והחציון של התרחישים). ${edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : ""}`}
             chart={
-              <Ranking home={HOME} />
+              <Ranking home={HOME} range="p80" />
             }
             table={
               <table className="text-sm w-full">

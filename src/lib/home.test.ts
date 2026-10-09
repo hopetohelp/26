@@ -4,6 +4,9 @@ import { lastPollDate, latestPerPollster, lists2026, listName, passesInAll } fro
 import { dayMonth, buildHome, type HomeModel } from "./home";
 import { hemicycleSeats } from "./hemicycle";
 
+/** התפלגות מלאכותית: counts מתחילים במנדט `from` (לפניו אפסים) */
+const hist = (from: number, counts: number[]) => [...Array(from).fill(0), ...counts];
+
 const fixture: HomeModel = {
   asof: "2026-10-08",
   start: "2026-09-09",
@@ -11,7 +14,7 @@ const fixture: HomeModel = {
   central: { seats: { a: 40, b: 30, c: 20, d: 18, e: 12, f: 0, g: 0, h: 0 } },
   scenarios: {
     lists: {
-      a: { seats: [35, 40, 45], pass: 1, seatsMean: 40 },
+      a: { seats: [35, 40, 45], pass: 1, seatsMean: 40, seatsHist: hist(30, [1, 1, 2, 3, 5, 7, 9, 12, 9, 7, 5, 3, 2, 1, 1, 1, 1]) },
       b: { seats: [25, 30, 35], pass: 1, seatsMean: 30 },
       c: { seats: [15, 20, 25], pass: 1, seatsMean: 20 },
       d: { seats: [14, 18, 22], pass: 1, seatsMean: 18 },
@@ -20,7 +23,7 @@ const fixture: HomeModel = {
       g: { seats: [0, 0, 0], pass: 0.0001, seatsMean: 0 },
       h: { seats: [0, 0, 0], pass: 0.5, seatsMean: 1.1 },
     },
-    bloc: { seats: [46, 52, 58] },
+    bloc: { seats: [46, 52, 58], seatsHist: hist(44, [1, 3, 6, 9, 12, 9, 6, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1]) },
   },
   trend: [
     { date: "2026-09-09", seats: { a: 38, b: 30, c: 20, d: 18, e: 14 } },
@@ -55,16 +58,16 @@ describe("buildHome", () => {
     expect(h.edge.map((r) => r.id)).toEqual(["e", "f", "h"]);
   });
 
-  it("עובי הנר: כמה מהתרחישים נותנים לרשימה מנדטים (כל הרשימות שעוברות תמיד: הנר העבה ביותר), ולא כמות זהה לכולן", () => {
-    const byId = Object.fromEntries([...h.safe, ...h.edge, ...h.below].map((r) => [r.id, r.volume]));
-    expect(byId).toMatchObject({ a: 1, b: 1, e: 0.9, f: 0.4, h: 0.5 });
-    expect(h.maxVolume).toBe(1);
+  it("הטווח המלא הוא הנמוך והגבוה מכל התרחישים, והוא רחב מטווח 80%", () => {
+    const a = h.safe.find((r) => r.id === "a")!;
+    expect([a.fullLo, a.fullHi]).toEqual([30, 46]);
+    expect(a.fullLo).toBeLessThanOrEqual(a.lo);
+    expect(a.fullHi).toBeGreaterThanOrEqual(a.hi);
+    expect([h.blocFullLo, h.blocFullHi]).toEqual([44, 60]);
   });
 
-  it("המגמה: סכום מנדטי הממשלה היוצאת בכל יום, וציר המנדטים עד 30 לפחות", () => {
+  it("המגמה: סכום מנדטי הממשלה היוצאת בכל יום", () => {
     expect(h.series).toEqual([{ date: "2026-09-09", v: 82 }, { date: "2026-10-08", v: 82 }]);
-    expect(h.axisMax).toBe(50);
-    expect(buildHome({ ...fixture, scenarios: { ...fixture.scenarios, lists: { d: fixture.scenarios.lists.d } } }, opts).axisMax).toBe(30);
   });
 });
 
@@ -94,11 +97,18 @@ describe("הבית מהנתונים האמיתיים", () => {
     expect(h.series[h.series.length - 1].v).toBe(h.gov);
   });
 
-  it("הממוצע של כל רשימה נמצא בתוך טווח 80% שלה", () => {
+  it("הממוצע של כל רשימה נמצא בתוך טווח 80% שלה, וטווח 80% בתוך הטווח המלא", () => {
     for (const r of [...h.safe, ...h.edge, ...h.below]) {
       expect(r.lo).toBeLessThanOrEqual(r.central);
       expect(r.hi).toBeGreaterThanOrEqual(r.central);
+      expect(r.fullLo).toBeLessThanOrEqual(r.lo);
+      expect(r.fullHi).toBeGreaterThanOrEqual(r.hi);
     }
+  });
+
+  it("לכל רשימה התפלגות של 20,000 תרחישים, ולגוש גם", () => {
+    for (const r of [...h.safe, ...h.edge, ...h.below]) expect(r.hist.reduce((a, c) => a + c, 0)).toBe(20000);
+    expect(h.blocHist.reduce((a, c) => a + c, 0)).toBe(20000);
   });
 });
 
