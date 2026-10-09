@@ -1,6 +1,7 @@
 import { FEEDBACK_TOPICS as TOPICS, topicMessage } from "../lib/feedbackTopics";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Segmented } from "./Choice";
 import { getLink } from "../lib/crowdSession";
 import { FEEDBACK_URL, mergeSavedThreads, replyToThread, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
 
@@ -133,20 +134,10 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
                 </svg>
               </button>
             </div>
-            <fieldset className="flex flex-wrap gap-2">
-              <legend className="text-sm font-bold mb-2">על מה?</legend>
-              {TOPICS.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  aria-pressed={topic === t.id}
-                  onClick={() => setTopic(t.id)}
-                  className={`min-h-[40px] px-3.5 rounded-full text-sm font-semibold border ${topic === t.id ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </fieldset>
+            <div>
+              <p className="text-sm font-bold mb-2">על מה?</p>
+              <Segmented label="על מה?" value={topic} onChange={setTopic} options={TOPICS} />
+            </div>
             <label htmlFor={textId} className="text-sm font-bold -mb-2">
               מה תרצו להגיד?
             </label>

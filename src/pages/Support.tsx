@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import MyData from "./guess/MyData";
 import { Btn, Notice } from "./guess/ui";
 import { Split } from "../components/ui";
+import { Segmented } from "../components/Choice";
 import { ensureSession, errorText, useSession } from "./guess/useCrowd";
 import { FEEDBACK_URL, accountSupport, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { LegacyFeedback } from "./MyFeedback";
@@ -83,10 +84,10 @@ export default function Support() {
         </ol>
         {unregistered && <Notice>אפשר לכתוב גם בלי להירשם. שימו לב: הכניסה נשמרת רק בדפדפן הזה, באופן זמני. ממכשיר אחר אפשר לחזור לשיחה רק עם הקישור האישי, שנוצר עם ההודעה הראשונה. מומלץ להירשם עם שם משתמש וסיסמה.</Notice>}
         {thread?.status !== "closed" && <div className="space-y-2">
-          <fieldset disabled={busy} className="space-y-2">
-            <legend className="font-bold">סוג הפנייה</legend>
-            <div className="flex flex-wrap gap-2">{FEEDBACK_TOPICS.map(option => <label key={option.id} className={`flex items-center gap-2 min-h-[44px] px-3 rounded-full border cursor-pointer ${topic === option.id ? "bg-ink text-paper-card border-ink" : "border-paper-line"}`}><input type="radio" name="support-topic" value={option.id} checked={topic === option.id} onChange={() => setTopic(option.id)} />{option.label}</label>)}</div>
-          </fieldset>
+          <div className="space-y-2">
+            <p className="font-bold">סוג הפנייה</p>
+            <Segmented label="סוג הפנייה" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
+          </div>
           <label htmlFor="support-message" className="sr-only">הודעה לתמיכה</label>
           <textarea id="support-message" value={text} onChange={e => setText(e.target.value)} rows={4} maxLength={maxText} placeholder="איך אפשר לעזור?" className="w-full border border-ink-faint rounded-theme p-3 bg-paper-card" />
           <input aria-hidden="true" tabIndex={-1} autoComplete="off" className="hidden" value={trap} onChange={e => setTrap(e.target.value)} />

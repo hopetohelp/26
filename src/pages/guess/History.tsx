@@ -4,6 +4,7 @@ import { call, type BlocsPayload, type VotePayload, type SeatsPayload, type Unit
 import { date } from "../../lib/format";
 import { IDS, nameOf, k25VoteName, V2022_LABEL, V2026_LABEL } from "./model";
 import { Notice } from "./ui";
+import { Segmented } from "../../components/Choice";
 import { errorText, type useSession } from "./useCrowd";
 
 const UNITS: { id: Unit; label: string }[] = [
@@ -38,13 +39,7 @@ export default function History({ session }: { session: ReturnType<typeof useSes
   const [a, b] = pick.map((id) => versions?.find((v) => v.id === id)).filter(Boolean).sort((x,y) => x!.id - y!.id) as Version<SeatsPayload>[];
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="יחידה">
-        {UNITS.map((u) => (
-          <button key={u.id} type="button" role="radio" aria-checked={unit === u.id} onClick={() => setUnit(u.id)} className={`min-h-[44px] px-4 rounded-full border-2 text-sm font-bold ${unit === u.id ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}>
-            {u.label}
-          </button>
-        ))}
-      </div>
+      <Segmented label="יחידה" value={unit} onChange={setUnit} options={UNITS} />
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
       {versions?.length === 0 && <Notice>אין עדיין גרסאות ביחידה הזו.</Notice>}

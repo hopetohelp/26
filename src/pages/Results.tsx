@@ -2,6 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { useState } from "react";
 import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, Split } from "../components/ui";
+import { Chips } from "../components/Choice";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
 import { num, pct } from "../lib/format";
@@ -85,21 +86,12 @@ export default function Results() {
 
       <Split title="תוצאות אמת" lead={`התוצאות הרשמיות של ועדת הבחירות המרכזית בכל ${results.length} מערכות הבחירות מאז 2019, וחלוקת המנדטים כפי שהחוק קובע. לכל מערכת אותו ניתוח: מי עבר, כמה קולות נשרפו, ומה הזיזו הסכמי העודפים. המנוע של האתר משחזר כל אחת מהן בדיוק.`} primary={<>
       <Card>
-        <div role="radiogroup" aria-label="מערכת בחירות" className="flex flex-wrap gap-2">
-          {[...results].reverse().map((x) => (
-            <button
-              key={x.id}
-              type="button"
-              role="radio"
-              aria-checked={x.id === id}
-              onClick={() => setId(x.id)}
-              className={`min-h-[44px] px-4 rounded-full text-sm font-bold border ${x.id === id ? "bg-ink text-paper-card border-ink" : "border-ink-faint"}`}
-            >
-              {yearLabel(x)}
-              <span className="sr-only"> — הכנסת ה-{x.knesset}</span>
-            </button>
-          ))}
-        </div>
+        <Chips
+          label="מערכת בחירות"
+          value={id}
+          onChange={setId}
+          options={[...results].reverse().map((x) => ({ id: x.id, label: <>{yearLabel(x)}<span className="sr-only"> — הכנסת ה-{x.knesset}</span></> }))}
+        />
         <h2 className="text-xl font-display leading-tight mt-4">
           הכנסת ה-{e.knesset} · {e.label}
         </h2>

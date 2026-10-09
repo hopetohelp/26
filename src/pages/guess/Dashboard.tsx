@@ -2,6 +2,7 @@ import PersonalBlocs, { usePersonalBlocs } from "../../components/PersonalBlocs"
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Card } from "../../components/ui";
+import { Segmented } from "../../components/Choice";
 import { liveDashboard, newerDashboard, siteDashboard, type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, seatsFmt } from "../../lib/format";
@@ -80,7 +81,7 @@ function SectionTitle({ title, count }: { title: string; count?: number }) {
 }
 
 function Toggle<T extends string>({ value, setValue, options, label }: { value: T; setValue: (v:T)=>void; options: readonly (readonly [T,string])[]; label:string }) {
-  return <div className="flex gap-1.5" role="radiogroup" aria-label={label}>{options.map(([id,text]) => <button key={id} type="button" role="radio" aria-checked={value===id} onClick={()=>setValue(id)} className={`min-h-[40px] px-4 rounded-full border-2 text-sm font-bold ${value===id ? "bg-ink text-paper-card border-ink" : "bg-paper-card border-paper-line"}`}>{text}</button>)}</div>;
+  return <Segmented value={value} onChange={setValue} label={label} className="min-w-[12rem]" options={options.map(([id, text]) => ({ id, label: text }))} />;
 }
 
 export function SeatsStats({ rows, polls, mine, view, unit = "seats", passedLists }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; unit?: Subject }) {

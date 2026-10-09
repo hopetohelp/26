@@ -5,6 +5,7 @@ import type { BlocTotal } from "./blocSummary";
 import { isEmail } from "../../lib/identifier";
 import { renderShareImage } from "./shareImage";
 import { Btn } from "./ui";
+import { Segmented } from "../../components/Choice";
 
 const TEXT = "בניתי כנסת של 120 — השערה, לא סקר. ומה אתם מנחשים?";
 
@@ -68,7 +69,6 @@ export default function Share({ values, pct, username, blocs }: { values: Record
     }
   };
 
-  const pill = (on: boolean) => `flex-1 min-h-[44px] px-4 rounded-full border-2 text-sm font-bold ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-paper-line hover:border-ink-faint"} disabled:opacity-40`;
   return (
     <>
       <button type="button" data-share-open onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}
@@ -84,10 +84,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
             </div>
             <div role="radiogroup" aria-label="איזו תמונה לשתף?" className="space-y-2">
               <p className="font-bold text-sm">איזו תמונה?</p>
-              <div className="flex gap-2">
-                <button type="button" role="radio" aria-checked={imageKind === "parties"} disabled={busy} onClick={() => setKind("parties")} className={pill(imageKind === "parties")}>מפלגות</button>
-                <button type="button" role="radio" aria-checked={imageKind === "blocs"} disabled={busy || !blocs?.length} onClick={() => setKind("blocs")} className={pill(imageKind === "blocs")}>גושים</button>
-              </div>
+              <Segmented label="איזו תמונה לשתף?" value={imageKind} onChange={setKind} disabled={busy} options={[{ id: "parties", label: "מפלגות" }, { id: "blocs", label: "גושים", disabled: !blocs?.length }]} />
               <p className="text-xs text-ink-soft">{imageKind === "blocs" ? "רק הגושים: ההשערה שלי, ממוצע סקרים ותחזית לפי אותו הרכב מפלגות." : "המנדטים שלי לכל מפלגה, עם ממוצע הסקרים האחרון בקטן."}{!blocs?.length && " כדי לשתף גושים, הוסיפו להם מפלגות בלשונית לפי גושים."}</p>
             </div>
             {username && !isEmail(username) && (
