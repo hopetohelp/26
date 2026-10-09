@@ -454,15 +454,25 @@ export function reportDiag(kind: ConnectionKind) {
 
 /**
  * כל כשל חיבור סופי (כולל הממסר) נשלח לתמיכה, בלי אישור הגולש (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
- * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים. עד 3 לכל טעינת עמוד.
+ * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים.
+ * דיווח אחד לכל דפדפן בשעה (הכרעת בעלים 9.10.2026) — גולש מסונן שמרענן את העמוד אינו מציף את ההערות.
  */
-let autoSent = 0;
+const AUTO_KEY = "e26-autoreport-at";
+const AUTO_GAP_MS = 60 * 60 * 1000;
+let autoSentAt = 0;
+function autoReportAllowed(now: number): boolean {
+  let last = autoSentAt;
+  try { last = Math.max(last, Number(localStorage.getItem(AUTO_KEY)) || 0); } catch { /* אין אחסון — נשען על הזיכרון של העמוד */ }
+  if (now - last < AUTO_GAP_MS) return false;
+  autoSentAt = now;
+  try { localStorage.setItem(AUTO_KEY, String(now)); } catch { /* ראו למעלה */ }
+  return true;
+}
 export function reportFailure(path: string, diagnostic?: Record<string, unknown>) {
   if (!feedbackUrl) return;
   // גם כשהשמירה ממשיכה "בעיוורון" ולא מוצגת שגיאה — לבדוק לאן הגולש כן מגיע (פעם אחת לטעינה).
   void deepProbe();
-  if (autoSent >= 3) return;
-  autoSent++;
+  if (!autoReportAllowed(Date.now())) return;
   const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic });
   void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
 }
