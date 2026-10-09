@@ -28,8 +28,8 @@ export const k25Name = (letters: string) => K25_LISTS.find((l) => l.letters === 
 export const K25_MAP: Record<string, string> = { likud: "מחל", shas: "שס", utj: "ג", yb: "ל", raam: "עם" };
 
 /** התאמה לצורך השוואת בחירת הגולש בלבד; אינה משנה את תוצאות האמת או את פתיחת המנדטים. */
-export const VOTE_MAP: Record<string, string> = { ...K25_MAP, rzp: "ט" };
-export const k25VoteName = (letters: string) => letters === "ט" ? "הציונות הדתית/זהות" : k25Name(letters);
+export const VOTE_MAP: Record<string, string> = { ...K25_MAP };
+export const k25VoteName = (letters: string) => letters === "ט" ? "הציונות הדתית · עוצמה יהודית · נעם" : k25Name(letters);
 
 export const LOCK_AT = Date.parse("2026-10-26T23:59:00+02:00");
 export { THRESHOLD_SEATS } from "../../lib/crowdValidate";

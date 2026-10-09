@@ -143,7 +143,7 @@ function Matrix({ d }: { d: D }) {
   const continuity = voteContinuity(m);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3">לא שינו בחירה: <strong>{continuity.same}</strong> · שינו בחירה: <strong>{continuity.changed}</strong>. הציונות הדתית ב־2022 והציונות הדתית/זהות ב־2026 נספרות כאותה בחירה.</p>}
+    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{continuity.same}</strong> · עברו לרשימה אחרת: <strong>{continuity.changed}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{continuity.split}</strong>. ב־2022 הציונות הדתית, עוצמה יהודית ונעם התמודדו יחד; בטבלה מופיע המעבר מהרשימה המשותפת לרשימות של היום.</p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>
