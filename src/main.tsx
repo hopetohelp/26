@@ -16,6 +16,8 @@ import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
 import Support from "./pages/Support";
+import VerifyEmail from "./pages/VerifyEmail";
+import { setVerifyCode } from "./lib/verifyEmail";
 const Admin = lazy(() => import("./pages/Admin"));
 import MyFeedback from "./pages/MyFeedback";
 import Tabbed, { Moved } from "./components/Tabbed";
@@ -28,6 +30,16 @@ const Guess = lazy(() => import("./pages/Guess"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
+}
+
+// קישור אימות המייל של Firebase מגיע לאתר כ-?mode=verifyEmail&oobCode=… (לפני ה-#). מעבירים אותו לדף האימות, בלי להשאיר את הקוד בכתובת.
+{
+  const q = new URLSearchParams(location.search);
+  const code = q.get("oobCode");
+  if (q.get("mode") === "verifyEmail" && code && /^[\w-]{10,300}$/.test(code)) {
+    setVerifyCode(code);
+    history.replaceState(null, "", `${location.pathname}#/verify-email`);
+  }
 }
 
 // שמירה מקומית קודם: השערות והערות שלא הגיעו לשרת נשלחות שוב אוטומטית; האתר עצמו נשמר במכשיר לפתיחה גם בלי רשת
@@ -88,6 +100,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="voters" element={<Moved to="/past" tab="voters" />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
+          <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Admin /></Suspense>} />
           <Route path="feedback" element={<Moved to="/support" />} />
           <Route path="feedback/:token" element={<MyFeedback />} />
