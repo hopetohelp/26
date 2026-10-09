@@ -86,7 +86,7 @@ export default function Admin() {
     <div className="space-y-6">
       <meta name="robots" content="noindex" />
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h1 className="font-display text-4xl leading-none">ניהול</h1>
+        <h1 className="text-3xl font-display leading-tight">ניהול</h1>
         <Btn onClick={load}>רענון</Btn>
       </div>
       {error && <Notice tone="warn">{error}</Notice>}

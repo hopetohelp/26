@@ -38,8 +38,8 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
       <Account session={session} />
 
       {token && (
-        <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
-          <h3 className="font-display text-3xl leading-none text-center">הקישור האישי</h3>
+        <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-4">
+          <h3 className="text-xl font-display leading-tight text-center">הקישור האישי</h3>
           <p className="text-sm text-center leading-relaxed">
             הקישור האישי מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אין מייל באתר, ולכן זו <strong>הדרך היחידה</strong> לשחזר סיסמה שנשכחה.
           </p>
@@ -76,8 +76,8 @@ export default function MyData({ session }: { session: ReturnType<typeof useSess
       )}
 
       {token && (
-        <section className="bg-paper-card border-2 border-warn rounded-theme p-5 sm:p-6 space-y-4 text-center">
-          <h3 className="font-display text-3xl leading-none text-warn">מחיקה מלאה</h3>
+        <section className="bg-paper-card border-2 border-warn rounded-theme p-4 md:p-5 space-y-4 text-center">
+          <h3 className="text-xl font-display leading-tight text-warn">מחיקה מלאה</h3>
           <p className="text-sm">מוחקת את כל ההשערות, ההיסטוריה ופרטי הכניסה. ממוצעים שכבר פורסמו לא משתנים.</p>
           {del === 0 && (
             <Btn kind="danger" onClick={() => setDel(1)}>

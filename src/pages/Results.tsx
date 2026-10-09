@@ -100,7 +100,7 @@ export default function Results() {
             </button>
           ))}
         </div>
-        <h2 className="font-display text-3xl leading-none mt-4">
+        <h2 className="text-xl font-display leading-tight mt-4">
           הכנסת ה-{e.knesset} · {e.label}
         </h2>
         <dl className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">

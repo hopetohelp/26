@@ -22,7 +22,7 @@ export default function AccessCard() {
     // צף בפינה (לא דוחף את העמוד — גלילה אחת בלבד); בטלפון מעל סרגל הלשוניות
     <section className="fixed z-40 bottom-20 inset-x-3 md:bottom-6 md:inset-x-auto md:start-6 md:w-[30rem] max-h-[75dvh] overflow-y-auto shadow-2xl rounded-theme" aria-labelledby="access-title">
       <div className="border-2 border-ink rounded-theme p-4 bg-paper-card space-y-2">
-        <h2 id="access-title" className="font-display text-3xl leading-none">
+        <h2 id="access-title" className="text-2xl font-display leading-tight">
           {guest ? "נוצר לכם קישור אישי — שמרו אותו" : "נרשמתם. עכשיו שמרו את הקישור האישי"}
         </h2>
         <p className="text-sm">

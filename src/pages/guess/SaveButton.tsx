@@ -90,7 +90,7 @@ export function AuthSheet({ session, onClose, onDone }: { session: ReturnType<ty
         className="bg-paper-card text-ink w-full md:max-w-lg rounded-t-theme md:rounded-theme p-5 space-y-3 max-h-[92vh] overflow-y-auto focus:outline-none"
       >
         <div className="flex items-start justify-between gap-2">
-          <h2 id="auth-title" className="font-display text-3xl leading-none">
+          <h2 id="auth-title" className="text-2xl font-display leading-tight">
             לשמור את ההשערה
           </h2>
           <button type="button" onClick={onClose} aria-label="סגירה" className="w-11 h-11 -mt-2 -me-2 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">

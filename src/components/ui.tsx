@@ -5,16 +5,20 @@ import { useTabsSlot } from "./Tabbed";
 export function PageTitle({ children, lead, inColumns = false }: { children: ReactNode; lead?: ReactNode; inColumns?: boolean }) {
   return (
     <div className="mb-6">
-      <h1 className={`font-display text-5xl md:text-6xl leading-[0.95] ${inColumns ? "lg:sr-only" : ""}`}>{children}</h1>
+      <h1 className={`font-display text-3xl md:text-5xl leading-[1.05] ${inColumns ? "lg:sr-only" : ""}`}>{children}</h1>
       {lead && <p className="mt-3 text-ink-soft max-w-3xl leading-relaxed">{lead}</p>}
     </div>
   );
 }
 
-export function Card({ title, children, className = "" }: { title?: ReactNode; children: ReactNode; className?: string }) {
+/**
+ * שלוש רמות (הכרעת בעלים 9.10.2026): משטח (ברירת המחדל, קו דק בלי קופסה), כרטיס (`boxed`: מסגרת, ליחידה
+ * שאפשר לשתף או לפעול עליה, כמו טופס), ופאנל (כהה, פעולה ראשית אחת במסך). כותרת 20px. אין קופסה בתוך קופסה.
+ */
+export function Card({ title, children, className = "", boxed = false }: { title?: ReactNode; children: ReactNode; className?: string; boxed?: boolean }) {
   return (
-    <section className={`bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 mb-5 ${className}`}>
-      {title && <h2 className="font-display text-3xl leading-none mb-3">{title}</h2>}
+    <section className={`${boxed ? "bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
+      {title && <h2 className="text-xl font-display leading-tight mb-3">{title}</h2>}
       {children}
     </section>
   );
@@ -50,14 +54,15 @@ export function Badge({ tone = "neutral", children }: { tone?: "neutral" | "ok" 
 }
 
 /** כרטיס מקופל: תוכן משני שנפתח בלחיצה (מבנה האתר — שכבה ראשונה קצרה, עומק במרחק לחיצה) */
+/** שורת קיפול: קווים עליון ותחתון (בלי קופסה), כותרת 16px. קיפולים רצופים חולקים קו אחד. */
 export function Fold({ title, children, open = false }: { title: ReactNode; children: ReactNode; open?: boolean }) {
   return (
-    <details open={open} className="group bg-paper-card border border-paper-line rounded-theme mb-5 [&_summary::-webkit-details-marker]:hidden">
-      <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 md:p-5 min-h-[56px]">
-        <h2 className="font-display text-3xl leading-none">{title}</h2>
+    <details open={open} className="group border-y border-paper-line mt-8 [&+&]:mt-0 [&+&]:border-t-0 [&_summary::-webkit-details-marker]:hidden">
+      <summary className="cursor-pointer list-none flex items-center justify-between gap-3 py-3 min-h-[56px]">
+        <h2 className="text-base font-bold leading-tight">{title}</h2>
         <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
       </summary>
-      <div className="px-4 md:px-5 pb-4 md:pb-5">{children}</div>
+      <div className="pb-4">{children}</div>
     </details>
   );
 }

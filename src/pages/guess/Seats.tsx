@@ -56,7 +56,7 @@ export default function Seats({
   if (!p) {
     return (
       <div>
-        <h2 className="font-display text-4xl leading-none mb-1">מאיפה מתחילים?</h2>
+        <h2 className="text-3xl font-display leading-tight mb-1">מאיפה מתחילים?</h2>
         <p className="text-ink-soft text-sm mb-4">בונים כנסת של 120. בוחרים נקודת פתיחה, ומשם כל מנדט בידיים שלכם.</p>
         <div className="grid sm:grid-cols-3 gap-3 [&>*]:min-w-0">
           {START_OPTIONS.map((o) => (
@@ -66,7 +66,7 @@ export default function Seats({
               onClick={() => unit.setDraft(startWithTargets(o.id))}
               className="text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
             >
-              <span className="font-display text-3xl leading-none block mb-1">{o.title}</span>
+              <span className="text-xl font-display leading-tight block mb-1">{o.title}</span>
               <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
               {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
             </button>
@@ -349,7 +349,7 @@ function FillPreview({
     >
       {preview.ok ? (
         <>
-          <h3 id="fill-preview-title" className="font-display text-3xl leading-none mb-2">
+          <h3 id="fill-preview-title" className="text-xl font-display leading-tight mb-2">
             כך זה ייראה
           </h3>
           {preview.changed.length === 0 ? (
@@ -376,7 +376,7 @@ function FillPreview({
         </>
       ) : (
         <>
-          <h3 id="fill-preview-title" className="font-display text-3xl leading-none mb-2">
+          <h3 id="fill-preview-title" className="text-xl font-display leading-tight mb-2">
             אי אפשר להשלים
           </h3>
           <p role="alert" className="text-sm text-warn font-bold mb-2">

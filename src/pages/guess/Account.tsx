@@ -269,8 +269,8 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
 
   if (token && me?.username) {
     return (
-      <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-4">
-        <h3 className="font-display text-3xl leading-none text-center">החשבון</h3>
+      <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-4">
+        <h3 className="text-xl font-display leading-tight text-center">החשבון</h3>
         <p className="text-sm text-center">
           מחוברים בשם <bdi className="font-bold">{maskIdentifier(me.username)}</bdi>.
         </p>
@@ -287,8 +287,8 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
 
   if (token && me?.guest) {
     return (
-      <section className="bg-paper-card border-2 border-warn rounded-theme p-5 sm:p-6 space-y-3">
-        <h3 className="font-display text-3xl leading-none">נשמרתם בלי משתמש</h3>
+      <section className="bg-paper-card border-2 border-warn rounded-theme p-4 md:p-5 space-y-3">
+        <h3 className="text-xl font-display leading-tight">נשמרתם בלי משתמש</h3>
         <p className="text-sm text-ink">אי אפשר לשחזר את ההשערה אם תחליפו מכשיר או תמחקו נתוני דפדפן. הוסיפו שם משתמש וסיסמה כדי להישאר מחוברים מכל מכשיר.</p>
         <ClaimForm session={session} />
       </section>
@@ -296,8 +296,8 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
   }
 
   return (
-    <section className="bg-paper-card border border-paper-line rounded-theme p-5 sm:p-6 space-y-3">
-      <h3 className="font-display text-3xl leading-none">חשבון</h3>
+    <section className="bg-paper-card border border-paper-line rounded-theme p-4 md:p-5 space-y-3">
+      <h3 className="text-xl font-display leading-tight">חשבון</h3>
       <p className="text-sm text-ink">הרשמה בשם משתמש וסיסמה (בלי שם אמיתי ובלי מייל) מאפשרת לחזור להשערה מכל מכשיר. עד אז הטיוטות נשמרות רק בדפדפן הזה.</p>
       <AuthForm session={session} />
     </section>

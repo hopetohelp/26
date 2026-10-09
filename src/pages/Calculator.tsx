@@ -121,7 +121,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
 
       <div className="mb-4"><SaveButton unit={saveUnit} session={session} invalid={invalid} /><SaveError unit={saveUnit} />{invalid && <p role="status" className="text-sm text-warn mt-2">{invalid}</p>}<p className="text-sm text-ink-soft mt-2">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. עד השמירה אפשר לבדוק תרחיש בלי להחליף את טיוטת המנדטים.</p></div>
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
-        <Card title="הקלט">
+        <Card title="הקלט" boxed>
           <p className="text-sm text-ink-soft mb-3">
             נקודת המוצא: חציון הסקרים האחרונים (עד {dateLong(lastPollDate())}), מומר לאחוזים בקירוב. זו הערכה גסה — שנו כרצונכם.
           </p>
