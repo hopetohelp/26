@@ -1,47 +1,39 @@
 /**
  * שפת הציור האחידה של כל הגרפים (הכרעת בעלים 9.10.2026). ארבעה סימנים, וכל אחד משמעותו אחת בכל האתר:
  * - **טווח** = נר: פס מהנמוך אל הגבוה, **שעוביו משתנה לאורכו** לפי כמות הנתונים בכל קטע: עבה היכן שרוב הנתונים, דק בקצוות.
- *   העובי בחמש רמות ביחס לקטע העמוס ביותר באותו נר: מתחת ל-20% רמה 1, מ-20% רמה 2, מ-40% רמה 3, מ-60% רמה 4, מ-80% רמה 5.
+ *   העובי בשלוש רמות ביחס לקטע העמוס ביותר באותו נר: מתחת לשליש רמה 1 (דק, 3 פיקסלים), משליש רמה 3 (בינוני, 10), מ-⅔ רמה 5 (עבה, 18).
+ *   (הרמות הן 1, 3 ו-5 כדי לשמור את שמות הרמות מההכרעה; רמות 2 ו-4 בוטלו, 9.10.2026.)
+ *   המעבר בין הרמות **מעוגל**: קו המתאר של הנר עובר בעקומה חלקה דרך עובי כל קטע (`profilePath`), לא בצעדים מרובעים.
  *   דוגמה (הבעלים): 30 משתתפים על הליכוד, 20 בין 28 ל-30, 8 בין 26 ל-32, 2 בין 24 ל-34 ⇐ באמצע 5, מהצדדים 3, ובקצוות 1.
  *   אפשר גם ביחס לכל הגרף (`levelSegs(…, "chart")`, כמו נרות ווליום), אבל אז נר פזור נראה דק כולו.
  *   הנר נבנה מקטעים (`Seg`): מהתפלגות של מספרים שלמים (`intSegs`), מרשימת ערכים (`valueSegs`), מתאים רציפים (`binSegs`) או מרבעונים (`quantileSegs`).
- * - **ממוצע נוכחי** = עיגול בינוני מלא (עובי 4).
- * - צבע לכל סימן (הכרעת בעלים 9.10.2026): טווח כחול, סמן על קו שחור, ממוצע אדום, תוצאה כתומה, מעוין ירוק. טוקנים `--mk-*` ב-`src/index.css`; בלי קו לבן מסביב לסימנים.
- * - **תוצאת אמת** = עיגול גדול ריק (עובי 6).
+ * - **ממוצע** = עיגול מלא בקוטר 10, כעובי רמה 3 (`MARK_PX`).
+ * - **תוצאה** = עיגול ריק בקוטר חיצוני 10, כעובי רמה 3. גם ממוצע הגולשים בסקר האתר (שאינו סקר) מצויר כך.
  * - **סמן על קו** = עיגול קטן ריק (עובי 2). גרף מגמה הוא תמיד קו, עם סמנים כאלה.
- * ממוצע הגולשים בסקר האתר הוא מעוין ריק, כי זה לא סקר. הגדלים כאן הם מקור אחד ל-SVG ול-HTML (`src/index.css`, מחלקות `mk-*`).
+ * - צבע לכל סימן (הכרעת בעלים 9.10.2026): טווח כחול, סמן על קו שחור, ממוצע אדום, תוצאה כתומה. טוקנים `--mk-*` ב-`src/index.css`; בלי קו לבן מסביב לסימנים.
+ *   הגדלים כאן הם מקור אחד ל-SVG ול-HTML (`src/index.css`, מחלקות `mk-*`).
  */
-export type Level = 1 | 2 | 3 | 4 | 5;
+export type Level = 1 | 3 | 5;
 
-/**
- * רמת עובי הנר: כמה נתונים עומדים מאחורי הטווח מול המקסימום באותו גרף, בחמישונים.
- * 1 = עד 20% מהמקסימום, 2 = 20 עד 40, 3 = 40 עד 60, 4 = 60 עד 80, 5 = 80 עד 100.
- * גרף שבו לכל הנרות אותה כמות נתונים: כולם ברמה 5.
- */
-export function volumeLevel(n: number, max: number): Level {
-  if (!(max > 0) || !(n > 0)) return 1;
-  const share = Math.min(1, n / max);
-  return Math.min(5, Math.max(1, Math.ceil(share * 5 - 1e-9))) as Level;
-}
+/** עובי הנר בפיקסלים לפי הרמה: דק, בינוני, עבה (שורות HTML: `.mk-c1`, `.mk-c3`, `.mk-c5` ב-`src/index.css`) */
+export const CANDLE_PX: Readonly<Record<Level, number>> = { 1: 3, 3: 10, 5: 18 };
+
+/** קוטר עיגול הממוצע והתוצאה: כעובי רמה 3 */
+export const MARK_PX = CANDLE_PX[3];
 
 /** המקסימום באותו גרף, להשוואת עובי הנרות (מתעלם מערכים חסרים) */
 export const maxVolume = (ns: (number | undefined)[]): number => Math.max(0, ...ns.filter((n): n is number => typeof n === "number" && Number.isFinite(n)));
-
-/** עובי הנר בפיקסלים לפי הרמה, בשורות HTML (`.mk-c1` עד `.mk-c5` ב-`src/index.css`) */
-export const CANDLE_PX: readonly number[] = [3, 6, 10, 14, 18];
 
 /** מידות הסימנים בגרפי SVG (יחידות ה-viewBox): הסמן הקטן, הממוצע והתוצאה */
 export const SVG_MARKS = {
   /** עיגול קטן ריק, עובי 2 */
   smallR: 3.5,
   smallStroke: 2,
-  /** ממוצע: עיגול בינוני מלא, עובי 4 */
-  meanR: 5.5,
-  /** תוצאה: עיגול גדול ריק, עובי 6 */
-  ringR: 10,
-  ringStroke: 6,
-  /** רוחב הנר בגרף SVG לפי רמה */
-  candleW: [3, 5, 8, 11, 14] as readonly number[],
+  /** ממוצע: עיגול מלא, קוטר 10 */
+  meanR: MARK_PX / 2,
+  /** תוצאה: עיגול ריק, קוטר חיצוני 10 (רדיוס הקו 3.5 וקו בעובי 3) */
+  ringR: (MARK_PX - 3) / 2,
+  ringStroke: 3,
 } as const;
 
 interface Pt {
@@ -49,16 +41,15 @@ interface Pt {
   y: number;
 }
 
+const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
+
 /**
- * קו עם פינות עגולות (לא ישרות): עקומה מונוטונית בכל קטע (כמו d3 `curveMonotoneX`), שאינה חורגת מעל או מתחת לנקודות.
- * מחזירה את תכונת `d` של path. פחות משתי נקודות: ריק.
+ * מקטעי בזייה מונוטוניים (כמו d3 `curveMonotoneX`) דרך נקודות ש-x שלהן עולה: אינם חורגים מעל או מתחת לנקודות.
+ * לכל קטע: שתי נקודות בקרה ונקודת הסיום. פחות משתי נקודות: ריק.
  */
-export function smoothPath(points: Pt[]): string {
+function monotoneCubics(points: Pt[]): { c1: Pt; c2: Pt; p: Pt }[] {
   const n = points.length;
-  if (n === 0) return "";
-  const f = (v: number) => (Math.round(v * 100) / 100).toString();
-  if (n === 1) return `M${f(points[0].x)},${f(points[0].y)}`;
-  if (n === 2) return `M${f(points[0].x)},${f(points[0].y)}L${f(points[1].x)},${f(points[1].y)}`;
+  if (n < 2) return [];
   const dx: number[] = [];
   const slope: number[] = [];
   for (let i = 0; i < n - 1; i++) {
@@ -87,12 +78,103 @@ export function smoothPath(points: Pt[]): string {
       tan[i + 1] = t * b * slope[i];
     }
   }
-  let d = `M${f(points[0].x)},${f(points[0].y)}`;
-  for (let i = 0; i < n - 1; i++) {
+  return Array.from({ length: n - 1 }, (_, i) => {
     const w = dx[i] / 3;
-    d += `C${f(points[i].x + w)},${f(points[i].y + tan[i] * w)},${f(points[i + 1].x - w)},${f(points[i + 1].y - tan[i + 1] * w)},${f(points[i + 1].x)},${f(points[i + 1].y)}`;
+    return {
+      c1: { x: points[i].x + w, y: points[i].y + tan[i] * w },
+      c2: { x: points[i + 1].x - w, y: points[i + 1].y - tan[i + 1] * w },
+      p: points[i + 1],
+    };
+  });
+}
+
+/**
+ * קו עם פינות עגולות (לא ישרות): עקומה מונוטונית בכל קטע, שאינה חורגת מעל או מתחת לנקודות.
+ * מחזירה את תכונת `d` של path. פחות משתי נקודות: ריק.
+ */
+export function smoothPath(points: Pt[]): string {
+  const n = points.length;
+  if (n === 0) return "";
+  const m = (p: Pt) => `${f2(p.x)},${f2(p.y)}`;
+  if (n === 1) return `M${m(points[0])}`;
+  if (n === 2) return `M${m(points[0])}L${m(points[1])}`;
+  return monotoneCubics(points).reduce((d, c) => `${d}C${m(c.c1)},${m(c.c2)},${m(c.p)}`, `M${m(points[0])}`);
+}
+
+/** נקודה בקו המתאר של נר: מיקום לאורך הנר (`t`) ומחצית העובי שם (`h`) */
+export interface ProfilePt {
+  t: number;
+  h: number;
+}
+
+/** פונקציית ההתפלגות המצטברת של ההתפלגות הנורמלית (קירוב של אברמוביץ וסטגון), לריכוך המעבר בין הרמות */
+function normalCdf(z: number): number {
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const p = 0.3989423 * Math.exp((-z * z) / 2) * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  return z > 0 ? 1 - p : p;
+}
+
+/** כמה מרוכך המעבר בין הרמות, ביחס לרוחב הקטע החציוני: גדול יותר = עגול יותר */
+export const PROFILE_SOFTNESS = 0.6;
+
+/**
+ * קו המתאר של נר שעוביו משתנה: עובי כל קטע לפי הרמה שלו (3, 10 או 18 פיקסלים), **מרוכך** לעקומה חלקה, כך שהמעבר בין הרמות עגול ולא מרובע.
+ * הריכוך הוא טשטוש גאוסי של פונקציית המדרגות (כמו בגרף כינור), ואחריו מותחים את העובי כך שהקטע העמוס ביותר (תמיד רמה 5 בנר, כי העובי ביחס לנר) יחזור לעובי המלא,
+ * והקצוות מתחדדים לעובי הדק (3). `map` ממפה ערך על הציר למיקום לאורך הנר, בכל כיוון (גם יורד, בנר אנכי). `scale` מקטין את כל העוביים יחד (בנרות צפופים).
+ */
+export function profilePoints(segs: LSeg[], map: (v: number) => number, scale = 1): ProfilePt[] {
+  if (!segs.length) return [];
+  const ext = segs.map((g) => {
+    const a = map(g.from);
+    const b = map(g.to);
+    return { a: Math.min(a, b), b: Math.max(a, b), h: CANDLE_PX[g.level] / 2 };
+  });
+  const t0 = Math.min(...ext.map((e) => e.a));
+  const t1 = Math.max(...ext.map((e) => e.b));
+  const widths = ext.map((e) => e.b - e.a).sort((x, y) => x - y);
+  const med = Math.max(widths[Math.floor(widths.length / 2)], 1e-6);
+  const sigma = med * PROFILE_SOFTNESS;
+  const lo = CANDLE_PX[1] / 2;
+  const hmax = Math.max(...ext.map((e) => e.h));
+  const span = Math.max(t1 - t0, 1e-6);
+  const n = Math.min(80, Math.max(16, Math.ceil(span / (med / 2))));
+  const taper = med * 0.5;
+  const raw: ProfilePt[] = [];
+  for (let k = 0; k <= n; k++) {
+    const t = t0 + (span * k) / n;
+    let num = 0;
+    let den = 0;
+    for (const e of ext) {
+      const mass = normalCdf((e.b - t) / sigma) - normalCdf((e.a - t) / sigma);
+      num += mass * e.h;
+      den += mass;
+    }
+    let h = den > 1e-12 ? num / den : lo;
+    // הקצוות מתחדדים לעובי הדק
+    const d = Math.min(t - t0, t1 - t) / taper;
+    if (d < 1) h = lo + (h - lo) * (d * d * (3 - 2 * d));
+    raw.push({ t, h });
   }
-  return d;
+  const smax = Math.max(...raw.map((p) => p.h));
+  const stretch = smax > lo + 1e-9 ? (hmax - lo) / (smax - lo) : 1;
+  return raw.map((p) => ({ t: p.t, h: (lo + (p.h - lo) * stretch) * scale }));
+}
+
+/**
+ * צורת הנר כשטח סגור: הקו העליון והתחתון הם אותה עקומה חלקה (מונוטונית בין הקטעים, כך שהמעבר בין העוביים מעוגל ולא מרובע),
+ * מצדי ציר שעובר ב-`mid`. `across`: "y" = נר אופקי (`t` הוא x), "x" = נר אנכי (`t` הוא y). מחזירה את תכונת `d` של path.
+ */
+export function profilePath(pts: ProfilePt[], mid: number, across: "x" | "y" = "y"): string {
+  if (pts.length === 0) return "";
+  const at = (t: number, s: number) => (across === "y" ? `${f2(t)},${f2(s)}` : `${f2(s)},${f2(t)}`);
+  const upper = pts.map((p) => ({ x: p.t, y: mid - p.h }));
+  const lower = pts.map((p) => ({ x: p.t, y: mid + p.h }));
+  let d = `M${at(upper[0].x, upper[0].y)}`;
+  for (const c of monotoneCubics(upper)) d += `C${at(c.c1.x, c.c1.y)} ${at(c.c2.x, c.c2.y)} ${at(c.p.x, c.p.y)}`;
+  d += `L${at(lower[lower.length - 1].x, lower[lower.length - 1].y)}`;
+  const back = monotoneCubics(lower);
+  for (let i = back.length - 1; i >= 0; i--) d += `C${at(back[i].c2.x, back[i].c2.y)} ${at(back[i].c1.x, back[i].c1.y)} ${at(lower[i].x, lower[i].y)}`;
+  return `${d}Z`;
 }
 
 /** קטע בנר: מ-`from` עד `to` (ביחידות הציר), ו-`count` = כמות הנתונים בו (או צפיפות, בנר שנבנה מרבעונים) */
@@ -101,7 +183,7 @@ export interface Seg {
   to: number;
   count: number;
 }
-/** קטע עם רמת העובי שלו (1 עד 5) */
+/** קטע עם רמת העובי שלו (1, 3 או 5) */
 export interface LSeg {
   from: number;
   to: number;
@@ -177,12 +259,13 @@ export function quantileSegs(q: [number, number, number, number, number], minWid
 }
 
 /**
- * רמת העובי של קטע לפי חלקו מהקטע העמוס ביותר: 1 מתחת ל-20%, 2 מ-20%, 3 מ-40%, 4 מ-60%, 5 מ-80% ומעלה.
+ * רמת העובי של קטע לפי חלקו מהקטע העמוס ביותר, בשלישים: 1 מתחת לשליש, 3 משליש ועד פחות מ-⅔, 5 מ-⅔ ומעלה.
  * (בדוגמה של הבעלים, 20 משתתפים באמצע, 8 מסביב ו-2 בקצוות: 100% ⇐ 5, 40% ⇐ 3, 10% ⇐ 1.)
  */
 export function segLevel(share: number): Level {
   if (!(share > 0)) return 1;
-  return Math.min(5, Math.max(1, Math.floor(Math.min(1, share) * 5 + 1e-9) + 1)) as Level;
+  const s = Math.min(1, share);
+  return s >= 2 / 3 - 1e-9 ? 5 : s >= 1 / 3 - 1e-9 ? 3 : 1;
 }
 
 /**

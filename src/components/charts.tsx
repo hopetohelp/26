@@ -1,9 +1,9 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { colorOf } from "../lib/colors";
-import { levelSegs, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
+import { CANDLE_PX, levelSegs, profilePath, profilePoints, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
 import { date, rng, seatsFmt } from "../lib/format";
 import { Segmented } from "./Choice";
-import { KeyItem, ThicknessKey } from "./marks";
+import ChartLegend, { type LegendEntry } from "./ChartLegend";
 
 export interface TrendPoint {
   t: number;
@@ -59,7 +59,7 @@ function windows(points: TrendPoint[], windowMs: number): TrendPoint[] {
  * `markers` = התוצאה בפועל: עיגול גדול ריק כתום. מעבר עכבר או מקלדת מציגים את הערכים בכל תאריך. תוויות ישירות בקצה כל קו.
  */
 export function TrendChart({
-  series, markers = [], from, to, yMax, title, height = 360, windowText, defaultMode = "line",
+  series, markers = [], from, to, yMax, title, height = 360, windowText, defaultMode = "line", lineLabel = "ממוצע הסקרים בכל תאריך",
 }: {
   series: Series[];
   /** התוצאה בפועל ביום הבחירות: עיגול גדול ריק */
@@ -72,6 +72,8 @@ export function TrendChart({
   /** משך החלון בטקסט, למקרא ("14 הימים"); גם קובע את רוחב הנר */
   windowText?: { days: number; label: string };
   defaultMode?: TrendMode;
+  /** מה הקו מראה, למקרא ("ממוצע הסקרים בכל תאריך") */
+  lineLabel?: string;
 }) {
   const tid = useId();
   const H = height;
@@ -120,9 +122,13 @@ export function TrendChart({
     if (!windowText) return 20;
     return Math.max(2, (windowText.days * DAY / Math.max(1, to - from)) * (W - M.left - M.right));
   })();
-  const candleW = (level: number) => (view === "line" ? SVG_MARKS.candleW[level - 1] : Math.max(2, Math.min(SVG_MARKS.candleW[level - 1], spacing * 0.85 * (level / 5))));
-  const profileRects = (key: string, cx: number, opacity: number) =>
-    (profiles.get(key) ?? []).map((g, k) => <rect key={k} x={cx - candleW(g.level) / 2} y={y(g.to)} width={candleW(g.level)} height={Math.max(1, y(g.from) - y(g.to))} fill="rgb(var(--mk-range))" opacity={opacity} />);
+  // בנרות צפופים כל העוביים מוקטנים יחד, כך שנר לא יגע בשכן שלו
+  const candleScale = view === "line" ? 1 : Math.min(1, (spacing * 0.85) / CANDLE_PX[5]);
+  const profileShape = (key: string, cx: number, opacity: number) => {
+    const segs = profiles.get(key) ?? [];
+    if (!segs.length) return null;
+    return <path d={profilePath(profilePoints(segs, y, candleScale), cx, "x")} fill="rgb(var(--mk-range))" opacity={opacity} />;
+  };
   const meanR = Math.max(2.5, Math.min(SVG_MARKS.meanR, spacing * 0.35));
 
   // פיזור תוויות הקצה כדי שלא יעלו זו על זו
@@ -180,15 +186,30 @@ export function TrendChart({
     return out;
   };
 
+  const legend: LegendEntry[] =
+    view === "line"
+      ? [
+          { kind: "lineList", text: `${lineLabel}, בצבע הרשימה (קטע מקווקו = אומדן)` },
+          { kind: "dot", text: "נקודה על הקו" },
+          { kind: "mean", text: "הממוצע היום" },
+          ...(canCandle ? [{ kind: "candle" as const, text: `הנמוך והגבוה בין הסקרים ב-${windowText!.label} האחרונים` }] : []),
+          ...(markers.length > 0 ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
+        ]
+      : [
+          { kind: "candle", text: `נר = הנמוך והגבוה בין הסקרים ב-${windowText?.label ?? "החלון"}` },
+          { kind: "mean", text: "ממוצע החלון" },
+          ...(markers.length > 0 ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
+        ];
   const markFill = { fill: "rgb(var(--mk-bg, var(--paper)))" };
   const ink = "rgb(var(--ink))";
   return (
     <div>
-      {canCandle && (
-        <div className="flex justify-end mb-2">
-          <Segmented size="sm" label="צורת הגרף" value={mode} onChange={setMode} className="w-44" options={[{ id: "line", label: "קו" }, { id: "candles", label: "נרות" }]} />
-        </div>
-      )}
+      <ChartLegend
+        className="mb-2"
+        entries={legend}
+        thickness={canCandle ? "כמה סקרים נותנים ערך כזה" : undefined}
+        action={canCandle ? <Segmented size="sm" label="צורת הגרף" value={mode} onChange={setMode} className="w-44" options={[{ id: "line", label: "קו" }, { id: "candles", label: "נרות" }]} /> : undefined}
+      />
       {/* בטלפון הגרף נגלל לרוחב במקום להתכווץ לגופן בלתי קריא */}
       <div className="overflow-x-auto">
         <div
@@ -234,7 +255,7 @@ export function TrendChart({
                   {dots.map((k) => (
                     <circle key={k} cx={pts[k].x} cy={pts[k].y} r={SVG_MARKS.smallR} strokeWidth={SVG_MARKS.smallStroke} stroke={ink} style={markFill} />
                   ))}
-                  {!s.dashed && last && profileRects(`${s.id}|${last.t}`, x(last.t), last.estimated ? 0.45 : 0.9)}
+                  {!s.dashed && last && profileShape(`${s.id}|${last.t}`, x(last.t), last.estimated ? 0.45 : 0.9)}
                   {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR} fill="rgb(var(--mk-mean))" />}
                   {last && last.estimated && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR + 3} fill="none" stroke="rgb(var(--mk-mean))" strokeDasharray="3 3" />}
                 </g>
@@ -245,7 +266,7 @@ export function TrendChart({
               <g key={s.id}>
                 {pts.map((p) => (
                   <g key={p.t}>
-                    {profileRects(`${s.id}|${p.t}`, x(p.t), p.estimated ? 0.45 : 0.85)}
+                    {profileShape(`${s.id}|${p.t}`, x(p.t), p.estimated ? 0.45 : 0.85)}
                     <circle cx={x(p.t)} cy={y(p.v)} r={meanR} fill="rgb(var(--mk-mean))" />
                   </g>
                 ))}
@@ -290,22 +311,6 @@ export function TrendChart({
             </div>
           )}
         </div>
-      </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft mt-2">
-        {view === "line" ? (
-          <>
-            <KeyItem kind="dot">נקודה על הקו</KeyItem>
-            <KeyItem kind="mean">הממוצע היום</KeyItem>
-            {canCandle && <KeyItem kind="candle">הנמוך והגבוה בין הסקרים ב-{windowText!.label} האחרונים</KeyItem>}
-          </>
-        ) : (
-          <>
-            <KeyItem kind="candle">נר = הנמוך והגבוה בין הסקרים ב-{windowText!.label}</KeyItem>
-            <KeyItem kind="mean">ממוצע החלון</KeyItem>
-          </>
-        )}
-        {markers.length > 0 && <KeyItem kind="result">התוצאה בפועל</KeyItem>}
-        {canCandle && <ThicknessKey what="כמה סקרים נותנים ערך כזה" />}
       </div>
     </div>
   );

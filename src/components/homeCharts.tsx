@@ -3,7 +3,8 @@ import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 import { clipSegs, intSegs, levelSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
-import { AxisLabels, KeyItem, MeanDot, ProfileCandle, ProfileCandleV, ThicknessKey, Track } from "./marks";
+import ChartLegend, { type LegendEntry } from "./ChartLegend";
+import { AxisLabels, MeanDot, ProfileCandle, ProfileCandleV, Track } from "./marks";
 
 /**
  * שורת טווח: הממוצע (עיגול מלא אדום) והטווח (נר כחול שעוביו משתנה לאורכו). `segs` = קטעי הנר וכמות הנתונים בכל אחד.
@@ -42,24 +43,33 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
 export function Hemicycle({ gov, other }: { gov: number; other: number }) {
   const missing = Math.min(missingToMajority(gov), other);
   return (
-    <figure className="relative m-0">
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="block w-full h-auto"
-        role="img"
-        aria-label={`120 המושבים בחצי עיגול: ${gov} למפלגות הממשלה היוצאת; ${missing > 0 ? `${missing} מושבים חסרים להן עד הרוב, ${MAJORITY}; ` : `יש להן רוב, ${MAJORITY} ומעלה; `}${other - missing} לשאר הרשימות.`}
-      >
-        {SEATS.map((s, k) => (
-          <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
-        ))}
-      </svg>
-      <span
-        aria-hidden="true"
-        className="absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-none text-ink-soft"
-        style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%` }}
-      >
-        120 מושבים
-      </span>
+    <figure className="m-0">
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="block w-full h-auto"
+          role="img"
+          aria-label={`120 המושבים בחצי עיגול: ${gov} למפלגות הממשלה היוצאת; ${missing > 0 ? `${missing} מושבים חסרים להן עד הרוב, ${MAJORITY}; ` : `יש להן רוב, ${MAJORITY} ומעלה; `}${other - missing} לשאר הרשימות.`}
+        >
+          {SEATS.map((s, k) => (
+            <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
+          ))}
+        </svg>
+        <span
+          aria-hidden="true"
+          className="absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-none text-ink-soft"
+          style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%` }}
+        >
+          120 מושבים
+        </span>
+      </div>
+      <ChartLegend
+        entries={[
+          { kind: "seatGov", text: `מפלגות הממשלה היוצאת (ממשלה 37): ${gov} מושבים, סכום הממוצעים שלהן` },
+          ...(missing > 0 ? [{ kind: "seatMiss" as const, text: `מושבים שחסרים להן עד הרוב, ${MAJORITY}` }] : []),
+          { kind: "seatOther", text: missing > 0 ? "שאר הכנסת" : "כל השאר" },
+        ]}
+      />
     </figure>
   );
 }
@@ -109,15 +119,17 @@ function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg
   );
 }
 
-function Key({ meanLabel, rangeLabel, thicknessLabel, children }: { meanLabel: string; rangeLabel: string; thicknessLabel: string; children?: React.ReactNode }) {
+/** מקרא הדירוג: ממוצע, נר הטווח (ועוביו) וקישור להסבר על ממוצע המודל מול ממוצע המכונים */
+function RankLegend({ meanLabel, rangeLabel, thicknessLabel, withPass }: { meanLabel: string; rangeLabel: string; thicknessLabel: string; withPass?: boolean }) {
+  const entries: LegendEntry[] = [
+    { kind: "mean", text: meanLabel },
+    { kind: "candle", text: rangeLabel },
+    ...(withPass ? [{ kind: "pass" as const, text: "שיעור התרחישים שבהם הרשימה עוברת את אחוז החסימה: אדום = לא עוברת, ירוק = עוברת" }] : []),
+  ];
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft my-1">
-      <KeyItem kind="mean">{meanLabel}</KeyItem>
-      <KeyItem kind="candle">{rangeLabel}</KeyItem>
-      <ThicknessKey what={thicknessLabel} />
+    <ChartLegend entries={entries} thickness={thicknessLabel}>
       <Link to="/method#means" className="font-semibold">ממוצע המודל מול ממוצע המכונים</Link>
-      {children}
-    </div>
+    </ChartLegend>
   );
 }
 
@@ -159,7 +171,7 @@ export function Ranking({ home, range = "full", meanLabel = "ממוצע המוד
   const rangeLabel = range === "p80" ? "טווח 80% מהתרחישים" : "טווח מלא: הנמוך והגבוה מכל התרחישים";
   return (
     <>
-      <Key meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה תרחישים נותנים לרשימה ערך כזה" />
+      <RankLegend meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה תרחישים נותנים לרשימה ערך כזה" withPass={edge.length > 0} />
       <Axis axisMax={axisMax} />
       <ol className="mt-1">{safe.map((r, i) => <RankRow key={r.id} r={r} lsegs={lvOf(i)} axisMax={axisMax} />)}</ol>
       {edge.length > 0 && (
@@ -195,7 +207,7 @@ export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { 
   const levels = levelSegs(data.map((r) => r.segs));
   return (
     <>
-      <Key meanLabel={meanLabel} rangeLabel="הנמוך והגבוה בין המכונים (טווח מלא)" thicknessLabel="כמה מכונים נתנו לרשימה ערך כזה" />
+      <RankLegend meanLabel={meanLabel} rangeLabel="הנמוך והגבוה בין המכונים (טווח מלא)" thicknessLabel="כמה מכונים נתנו לרשימה ערך כזה" />
       <Axis axisMax={axisMax} />
       <ol className="mt-1">{data.map((r, i) => <RankRow key={r.id} r={r} lsegs={levels[i]} axisMax={axisMax} />)}</ol>
     </>
@@ -251,10 +263,16 @@ export function GovTrend({ home }: { home: HomeData }) {
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X0 + 2}%`, top: "88%" }}>{dayMonth(series[0].date)}</span>
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X1}%`, top: "88%" }}>{dayMonth(series[series.length - 1].date)}</span>
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-soft mt-1">
-        <KeyItem kind="mean">הממוצע היום</KeyItem>
-        <KeyItem kind="candle">טווח מלא ליום הבחירות, מכל התרחישים</KeyItem>
-      </div>
+      <ChartLegend
+        entries={[
+          { kind: "line", text: "הממוצע של מנדטי הממשלה היוצאת בכל יום" },
+          { kind: "dot", text: "נקודה על הקו" },
+          { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
+          { kind: "mean", text: "הממוצע היום" },
+          { kind: "candle", text: "טווח מלא ליום הבחירות: הנמוך והגבוה מכל התרחישים" },
+        ]}
+        thickness="כמה תרחישים נותנים לממשלה היוצאת סכום כזה"
+      />
     </>
   );
 }
