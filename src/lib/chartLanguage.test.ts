@@ -72,16 +72,16 @@ describe("נר שעוביו משתנה לאורכו: קטעים לפי כמות 
     const shares = Array.from({ length: 101 }, (_, i) => i / 100);
     expect([...new Set(shares.map(segLevel))].sort()).toEqual([1, 3, 5]);
   });
-  it("כברירת מחדל העובי ביחס לכל הגרף (הכרעת בעלים 9.10.2026); בהיקף 'candle' כל נר ביחס לעצמו", () => {
+  it("כברירת מחדל העובי ביחס לכל נר בנפרד (הכרעת בעלים 9.10.2026); בהיקף 'chart' ביחס לכל הגרף", () => {
     const wide: Seg[] = [{ from: 0, to: 1, count: 10 }, { from: 1, to: 2, count: 8 }];
     const narrow: Seg[] = [{ from: 0, to: 1, count: 100 }];
-    const all = levelSegs([wide, narrow]);
-    expect(all[0][0].level).toBe(1);
-    expect(all[1][0].level).toBe(5);
-    expect(levelSegs([wide, narrow], "chart")).toEqual(all);
-    const own = levelSegs([wide, narrow], "candle");
+    const own = levelSegs([wide, narrow]);
     expect(own[0][0].level).toBe(5);
     expect(own[1][0].level).toBe(5);
+    expect(levelSegs([wide, narrow], "candle")).toEqual(own);
+    const all = levelSegs([wide, narrow], "chart");
+    expect(all[0][0].level).toBe(1);
+    expect(all[1][0].level).toBe(5);
   });
   it("נר אחד בגרף: אותו דבר בשני ההיקפים (הדוגמה של הבעלים)", () => {
     const segs = intSegs([2, 8, 20, 8, 2], 24);

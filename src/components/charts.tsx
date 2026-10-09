@@ -55,7 +55,7 @@ function windows(points: TrendPoint[], windowMs: number): TrendPoint[] {
  * גרף מגמה ב-SVG בשפת הציור האחידה (`src/lib/chartLanguage.ts`, הכרעת בעלים 9.10.2026). ציר הזמן משמאל (עבר) לימין (היום).
  * שתי תצוגות במתג קטן: **קו** (קו חלק עם פינות עגולות, סמנים קטנים ריקים שחורים, ובסופו עיגול מלא כתום = הממוצע היום ונר כחול של הטווח בחלון האחרון)
  * ו**נרות** (כל הגרף נרות: נר לכל חלון, מהנמוך אל הגבוה בין הסקרים, עיגול מלא כתום = הממוצע).
- * עובי הנר משתנה לאורכו: עבה היכן שהרבה סקרים נתנו אותו ערך, דק בקצוות, ביחס לכל הגרף. הקו נשאר בצבע הרשימה, כדי לזהות אותה.
+ * עובי הנר משתנה לאורכו: עבה היכן שהרבה סקרים נתנו אותו ערך, דק בקצוות, ביחס לאותו נר. הקו נשאר בצבע הרשימה, כדי לזהות אותה.
  * `markers` = התוצאה בפועל: עיגול ריק שחור. מעבר עכבר או מקלדת מציגים את הערכים בכל תאריך. תוויות ישירות בקצה כל קו.
  */
 export function TrendChart({
@@ -103,12 +103,12 @@ export function TrendChart({
     return short ? `${d.getUTCDate()}.${d.getUTCMonth() + 1}` : `${d.getUTCMonth() + 1}.${String(d.getUTCFullYear()).slice(2)}`;
   };
 
-  // נקודות הנרות: חלונות שאינם חופפים, ועובי הנר ביחס למקסימום בכל הגרף
+  // נקודות הנרות: חלונות שאינם חופפים, ועובי הנר ביחס למקסימום בכל נר
   const candles = useMemo(
     () => (canCandle ? series.map((s) => ({ s, pts: windows(s.points.filter((p) => p.lo !== undefined && p.hi !== undefined), windowText!.days * DAY) })) : []),
     [series, canCandle, windowText],
   );
-  // נר של חלון: קטעים לפי כמה סקרים נתנו כל ערך, ועובי כל קטע ביחס לקטע העמוס ביותר בכל הגרף
+  // נר של חלון: קטעים לפי כמה סקרים נתנו כל ערך, ועובי כל קטע ביחס לקטע העמוס ביותר באותו נר
   const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
   const profiles = useMemo(() => {
     const items: { key: string; segs: Seg[] }[] = [];
