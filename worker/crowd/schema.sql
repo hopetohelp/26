@@ -171,3 +171,9 @@ CREATE TABLE IF NOT EXISTS email_verify (
   fb_enc TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
+
+-- חשבונות מנהל (הכרעת בעלים 9.10.2026): סשן של חשבון כזה נכנס לממשק הניהול בלי מפתח הניהול. ההגדרה ידנית, במאגר בלבד (לא בקוד).
+CREATE TABLE IF NOT EXISTS admins (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  added_at TEXT NOT NULL
+);

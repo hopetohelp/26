@@ -135,6 +135,8 @@ export interface Me {
   needsEmail?: boolean;
   /** אימות מייל זמין בשרת (מוגדר מפתח Firebase) */
   verifyAvailable?: boolean;
+  /** חשבון מנהל (טבלת admins): נכנס לממשק הניהול בלי קישור */
+  isAdmin?: boolean;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */

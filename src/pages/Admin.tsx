@@ -1,13 +1,16 @@
-import { FEEDBACK_TOPICS, conversationTopic } from "../lib/feedbackTopics";
+import { FEEDBACK_TOPICS, conversationTopic, topicLabel } from "../lib/feedbackTopics";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
+import { getToken } from "../lib/crowdSession";
+import { Chips, Segmented } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
 
 /**
- * ממשק ניהול (לבעלים בלבד, לא מקושר מהאתר): כל שיחות התמיכה עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
- * המפתח מגיע בקישור (?k=), נשמר בדפדפן הזה בלבד ונמחק מהכתובת. בשרת נשמר רק גיבוב שלו (admin_keys).
+ * ממשק ניהול: כל הפניות עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
+ * כניסה: מפתח בקישור (?k=) — נשמר בדפדפן הזה בלבד ונמחק מהכתובת, ובשרת רק גיבוב שלו (admin_keys); או חשבון שהוגדר מנהל
+ * (טבלת admins; הכרעת בעלים 9.10.2026) — הסשן של החשבון משמש כמפתח, בלי קישור.
  */
 const KEY = "elections26.admin";
 type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string };
@@ -28,7 +31,7 @@ function Conversation({ title, items, waiting, onReply }: { title: string; items
       <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="w-full text-start p-3 flex gap-2 items-start min-h-[44px]">
         <span className={`shrink-0 mt-1 w-2.5 h-2.5 rounded-full ${waiting ? "bg-warn" : "bg-paper-line"}`} aria-label={waiting ? "ממתין לתשובה" : "נענה"} />
         <span className="flex-1 min-w-0">
-          <span className="text-xs text-ink-soft block">{title} · {when(items[items.length - 1].created_at)} · {items.length} הודעות{waiting ? " · ממתין לתשובה" : ""}</span>
+          <span className="text-xs text-ink-soft block">{title} · {topicLabel(conversationTopic(items))} · התקבלה {when(items[0].created_at)} · {items.length} הודעות{waiting ? " · ממתין לתשובה" : ""}</span>
           <span className="block truncate">{first?.text.split("\n")[0]}</span>
         </span>
       </button>
@@ -65,9 +68,11 @@ export default function Admin() {
     setParams(params, { replace: true });
   }, [params, setParams]);
 
+  // מפתח הניהול, ואם אין — הסשן של החשבון (מנהל לפי חשבון)
+  const credential = key ?? getToken();
   const api = async (path: string, body?: unknown) => {
-    const r = await fetch(`${FEEDBACK_URL}${path}`, { method: body ? "POST" : "GET", cache: "no-store", headers: { authorization: `Bearer ${key}`, ...(body ? { "content-type": "application/json" } : {}) }, body: body ? JSON.stringify(body) : undefined });
-    if (r.status === 401) throw new Error("המפתח אינו תקף.");
+    const r = await fetch(`${FEEDBACK_URL}${path}`, { method: body ? "POST" : "GET", cache: "no-store", headers: { authorization: `Bearer ${credential}`, ...(body ? { "content-type": "application/json" } : {}) }, body: body ? JSON.stringify(body) : undefined });
+    if (r.status === 401) throw new Error(key ? "המפתח אינו תקף." : "לחשבון הזה אין הרשאת ניהול.");
     if (!r.ok) throw new Error(`שגיאת שרת (${r.status}).`);
     return r.json();
   };
@@ -75,12 +80,12 @@ export default function Admin() {
     setError(null);
     try { setData(await api("/admin/data")); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
   };
-  useEffect(() => { if (key && FEEDBACK_URL) void load(); }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (credential && FEEDBACK_URL) void load(); }, [credential]); // eslint-disable-line react-hooks/exhaustive-deps
   const reply = (kind: "feedback" | "support", id: number | string) => async (text: string) => {
     try { await api("/admin/reply", { kind, id, text }); await load(); return true; } catch (e) { setError((e as Error).message); return false; }
   };
 
-  if (!key) return <Notice>הממשק זמין רק דרך קישור הניהול.</Notice>;
+  if (!credential) return <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>;
   const today = data?.days[0];
   const waiting = (data?.feedback.filter((t) => t.waiting).length ?? 0) + (data?.support?.threads.filter((t) => t.status === "new").length ?? 0);
   return (
@@ -107,6 +112,8 @@ export default function Admin() {
               ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
               ["רשומות במאגר", data.support?.stats.participants ?? "—"],
               ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
+              ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
+              ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
               ["חשבון בלי שמירה", data.support?.stats.accountsNoSave ?? "—"],
               ["רשומות ריקות בלי משתמש", data.support?.stats.emptyGuests ?? "—"],
             ].map(([label, n]) => (
@@ -125,7 +132,7 @@ export default function Admin() {
                 <tbody>{data.days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
               </table>
             </div>
-            <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8.10.2026), ולא אנשים.</p>
+            <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "מייל מאומת (בקישור)" = חשבונות שאימתו את המייל דרך הקישור שנשלח אליהם, בלי אלה ש-Google אימת; "חשבון Google" = חשבונות שנכנסו עם Google. "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8.10.2026), ולא אנשים.</p>
           </section>
 
           <AdminGuesses api={api} />
@@ -139,17 +146,32 @@ export default function Admin() {
 }
 
 
-/** שני מקורות השמירה מוצגים יחד; נתיב התשובה המקורי נשמר לכל שיחה. */
+type Sort = "oldest" | "newest";
+type Filter = "all" | "waiting";
+
+/**
+ * כל הפניות ברשימה אחת לפי סדר קבלתן — לפי ההודעה הראשונה בכל שיחה (הכרעת בעלים 9.10.2026) — עם סינון לפי נושא ולפי "ממתינות לתשובה".
+ * שני מקורות השמירה מוצגים יחד; נתיב התשובה המקורי נשמר לכל שיחה.
+ */
 export function InquirySections({ data, reply }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean> }) {
-  const conversations = [
-    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, updated: thread.updated_at, onReply: reply("feedback", thread.id) })),
-    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", updated: thread.updated_at, onReply: reply("support", thread.participant) })),
-  ].sort((a,b) => Number(b.waiting)-Number(a.waiting) || b.updated.localeCompare(a.updated));
-  return <>{FEEDBACK_TOPICS.map(topic => {
-    const group = conversations.filter(conversation => conversationTopic(conversation.items) === topic.id);
-    return <section key={topic.id} className="space-y-2">
-      <h2 className="font-display text-2xl">{topic.label} ({group.length})</h2>
-      {group.length ? <ul className="space-y-2">{group.map(({ key, ...conversation }) => <Conversation key={key} {...conversation} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות מסוג זה.</p>}
-    </section>;
-  })}</>;
+  const [topic, setTopic] = useState<"all" | (typeof FEEDBACK_TOPICS)[number]["id"]>("all");
+  const [filter, setFilter] = useState<Filter>("all");
+  const [sort, setSort] = useState<Sort>("oldest");
+  const all = [
+    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, onReply: reply("feedback", thread.id) })),
+    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", onReply: reply("support", thread.participant) })),
+  ].filter(c => c.items.length).map(c => ({ ...c, received: c.items[0].created_at, topic: conversationTopic(c.items) }));
+  const count = (pick: (c: (typeof all)[number]) => boolean) => all.filter(pick).length;
+  const shown = all
+    .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || c.waiting))
+    .sort((a, b) => (sort === "oldest" ? 1 : -1) * a.received.localeCompare(b.received));
+  return <section className="space-y-3" aria-labelledby="inquiries-title">
+    <h2 id="inquiries-title" className="font-display text-2xl">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h2>
+    <Chips label="נושא" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
+    <div className="grid sm:grid-cols-2 gap-2">
+      <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }]} />
+      <Segmented label="סדר" value={sort} onChange={setSort} options={[{ id: "oldest", label: "לפי סדר קבלה" }, { id: "newest", label: "החדשות קודם" }]} />
+    </div>
+    {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
+  </section>;
 }

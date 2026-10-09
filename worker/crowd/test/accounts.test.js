@@ -211,3 +211,35 @@ describe("אימות מייל", () => {
     expect((await call("/account/verify/send", { token: r2.data.token, body: {} })).data.error).toBe("verify_not_enabled");
   });
 });
+
+describe("מנהל לפי חשבון ומספרי ניהול", () => {
+  const asAdmin = (token, path = "/admin/whoami") => worker.fetch(new Request("https://w.example" + path, { headers: { "x-admin-key": token, origin: env.ALLOWED_ORIGIN } }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
+  it("רק חשבון שנמצא בטבלת admins נכנס; /me מסמן isAdmin; סשן רגיל וסשן שפג נדחים", async () => {
+    const a = await call("/auth/register", { body: { email: "boss@example.com", password: PW } });
+    const b = await call("/auth/register", { body: { email: "user@example.com", password: PW } });
+    expect((await asAdmin(a.data.token)).status).toBe(401);
+    expect((await call("/me", { token: a.data.token })).data.isAdmin).toBe(false);
+    const id = (await call("/me", { token: a.data.token })).data.participant;
+    env.DB.raw.prepare("INSERT INTO admins (participant, added_at) VALUES (?, ?)").run(id, "x");
+    expect((await asAdmin(a.data.token)).data).toEqual({ ok: true });
+    expect((await call("/me", { token: a.data.token })).data.isAdmin).toBe(true);
+    expect((await asAdmin(b.data.token)).status).toBe(401);
+    expect((await asAdmin(a.data.token, "/admin/support")).status).toBe(200);
+    expect((await asAdmin(a.data.token, "/admin/guesses")).status).toBe(200);
+    await call("/auth/logout", { token: a.data.token, body: {} });
+    expect((await asAdmin(a.data.token)).status).toBe(401);
+    expect((await asAdmin("short")).status).toBe(401);
+  });
+
+  it("מספרי הניהול: מייל מאומת בקישור (בלי אימות Google) וחשבונות Google", async () => {
+    const KEY = "k".repeat(40);
+    await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
+    await call("/auth/register", { body: { email: "plain@example.com", password: PW } });
+    const v = await call("/auth/register", { body: { email: "linked@example.com", password: PW } });
+    const id = (await call("/me", { token: v.data.token })).data.participant;
+    env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = ?").run(id);
+    await call("/auth/google", { body: { credential: await google({}) } });
+    const stats = (await asAdmin(KEY, "/admin/support")).data.stats;
+    expect(stats).toMatchObject({ verifiedEmails: 1, googleAccounts: 1 });
+  });
+});

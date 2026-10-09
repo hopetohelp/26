@@ -59,10 +59,14 @@ async function readJson(request) {
   }
 }
 
+/** מנהל = מפתח ניהול (גיבוב ב-admin_keys), או סשן של חשבון שהוגדר מנהל (טבלת admins; הכרעת בעלים 9.10.2026) */
 async function requireAdmin(env, request) {
   const key = request.headers.get("x-admin-key") || "";
-  const ok = key.length >= 32 && (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first());
-  if (!ok) throw new HttpError(401, "unauthorized");
+  if (key.length < 32) throw new HttpError(401, "unauthorized");
+  if (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first()) return;
+  const session = /^[\w-]{32,100}$/.test(key) ? await authenticate(env, key, clock(env)) : null;
+  if (session && (await env.DB.prepare("SELECT 1 AS x FROM admins WHERE participant = ?").bind(session.participant).first())) return;
+  throw new HttpError(401, "unauthorized");
 }
 
 async function requireAuth(env, request, now) {
@@ -250,6 +254,7 @@ const routes = {
       needsEmail: !emails.length && !g,
       // אימות מייל במייל: זמין כשמוגדר מפתח Firebase
       verifyAvailable: !!env.FIREBASE_API_KEY,
+      isAdmin: !!(await env.DB.prepare("SELECT 1 AS x FROM admins WHERE participant = ?").bind(participant).first()),
     };
   },
 
@@ -335,7 +340,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "support_messages", "support_threads"].map((t) =>
+          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -622,8 +627,13 @@ const routes = {
     await requireAdmin(env, request);
     const { results: threads } = await env.DB.prepare("SELECT participant, created_at, updated_at, status FROM support_threads ORDER BY updated_at DESC").all();
     const { results: msgs } = await env.DB.prepare("SELECT id, participant, author, text, created_at FROM support_messages ORDER BY id").all();
-    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests").first();
+    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
     return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
+  },
+  // שרת ההערות בודק כאן אם הסשן או המפתח שקיבל שייכים למנהל (חשבון מנהל נכנס לממשק הניהול בלי קישור)
+  "GET /admin/whoami": async ({ env, request }) => {
+    await requireAdmin(env, request);
+    return { ok: true };
   },
   // דשבורד השערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה — בלי מזהה משתתף, גרסה או פעולה, בלי שעה (יום בלבד),
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.

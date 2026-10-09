@@ -102,3 +102,14 @@ it("פנייה שנפתחה בלי חשבון מאוחדת לשיחת החשבו
   expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM support_messages").get().n).toBe(0);
   expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM feedback").get().n).toBe(0);
 });
+
+it("חשבון מנהל נכנס לממשק הניהול של שרת ההערות בלי מפתח; חשבון רגיל נדחה", async () => {
+  expect((await api("/admin/data", undefined, token)).status).toBe(401);
+  accounts.DB.raw.prepare("INSERT INTO admins (participant, added_at) VALUES (?, ?)").run(participant, "x");
+  const r = await api("/admin/data", undefined, token);
+  expect(r.status).toBe(200);
+  expect(r.data.ok).toBe(true);
+  const guesses = await api("/admin/guesses", undefined, token);
+  expect(guesses.status).toBe(200);
+  expect((await api("/admin/data", undefined, "x".repeat(43))).status).toBe(401);
+});

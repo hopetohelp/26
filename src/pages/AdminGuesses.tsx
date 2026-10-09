@@ -7,7 +7,7 @@ import { Btn, Notice } from "./guess/ui";
  * דשבורד ההשערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה גולש.
  * השרת מחזיר את ההשערות בסדר אקראי, עם יום בלבד, ו"ידית" חד-פעמית לאישור/דחייה של השערה חריגה.
  */
-export type GuessReason = { list: string; rule: "ratio" | "zero"; value: number; mean?: number; zeroShare?: number };
+export type GuessReason = { list: string; rule: "ratio" | "watched"; value: number; mean?: number };
 export type GuessRow = { handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; reasons: GuessReason[] };
 type Filter = "pending" | "all" | "approved" | "rejected";
 
@@ -22,7 +22,7 @@ const FILTERS: { id: Filter; label: string }[] = [
 export function reasonText(r: GuessReason) {
   return r.rule === "ratio"
     ? `${listName(r.list)}: ${r.value} מנדטים, ממוצע הגולשים ${r.mean}`
-    : `${listName(r.list)}: ${r.value} מנדטים, ${Math.round((r.zeroShare ?? 0) * 100)}% מהגולשים נתנו 0`;
+    : `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה ממתין לאישור`;
 }
 
 export function toCsv(rows: GuessRow[]) {
@@ -70,7 +70,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         <h2 className="font-display text-2xl">השערות הגולשים ({data?.rows.length ?? "…"} · ממתינות {pending})</h2>
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 3.5 מנדטים יותר, או מפלגה שעוברת את הסף כש-90% מהגולשים נתנו לה 0 — לא נכנסת לסטטיסטיקות עד אישור.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 3.5 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
       <Segmented label="סינון" value={filter} onChange={setFilter} options={FILTERS} />
       {error && <Notice tone="warn">{error}</Notice>}
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
