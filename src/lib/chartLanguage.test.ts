@@ -1,10 +1,16 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PX, maxVolume, profilePath, profilePoints, quantileSegs, segLevel, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type LSeg, type Seg } from "./chartLanguage";
+import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, profilePath, profilePoints, quantileSegs, segLevel, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type LSeg, type Seg } from "./chartLanguage";
 
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
     expect(Object.keys(CANDLE_PX)).toEqual(["1", "3", "5"]);
     expect(CANDLE_PX).toEqual({ 1: 4, 3: 10, 5: 16 });
+  });
+  it("שטח הציור מרוחק מקצה המסלול מעבר לרדיוס העיגול, והערך זהה ב-CSS", () => {
+    expect(MARK_PAD).toBeGreaterThan(MARK_PX / 2);
+    const css = readFileSync(new URL("../index.css", import.meta.url), "utf8");
+    expect(css).toContain(`--mk-pad: ${MARK_PAD}px;`);
   });
   it("עיגול הממוצע ועיגול התוצאה בקוטר 22, גדולים מהנר העבה", () => {
     expect(MARK_PX).toBe(22);
