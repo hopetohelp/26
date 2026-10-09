@@ -18,23 +18,14 @@ colors:
   boxes-card: "#FFFFFF"
   boxes-signal: "#F2C14E"
 typography:
-  board-display:
-    fontFamily: "Karantina, system-ui, sans-serif"
-    fontWeight: 700
+  display:
+    fontFamily: "Roboto Mono, Rubik, system-ui, sans-serif"
+    fontWeight: 800
     lineHeight: 0.95
-  board-body:
-    fontFamily: "Heebo, system-ui, Arial, sans-serif"
+  body:
+    fontFamily: "Roboto Mono, Rubik, system-ui, Arial, sans-serif"
     fontSize: "16px"
     lineHeight: 1.6
-  league-display:
-    fontFamily: "Secular One, system-ui, sans-serif"
-    lineHeight: 0.95
-  league-body:
-    fontFamily: "Assistant, system-ui, Arial, sans-serif"
-    fontSize: "16px"
-  boxes-num:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
-    fontSize: "12px"
   masthead-board:
     fontSize: "42px"
   masthead-countdown:
@@ -101,9 +92,10 @@ components:
 
 ## Typography
 
-- **כותרות:** `font-display` — ‏Karantina (לוח, קופסאות) או Secular One (טבלה). גדולות וצפופות: ‏`text-5xl md:text-6xl leading-[0.95]` לכותרת עמוד, ו-`text-3xl leading-none` לכותרת כרטיס.
-- **גוף:** `font-sans` — ‏Heebo או Assistant, ‏16px לפחות לטקסט רץ.
-- **מספרים:** `font-num` ו-`.tabular` (ספרות ברוחב שווה) בכל טבלה ורשימת מספרים. ספרות בתוך הקשר עברי שצריכות סדר משמאל לימין — בתוך `dir="ltr"`.
+- **גופנים (הכרעת בעלים 9.10.2026, בסגנון הדוגמה של המומחה):** **Rubik** לעברית ו-**Roboto Mono** לספרות בלבד, בשני העיצובים. רשימת הגופנים היא `"Roboto Mono", "Rubik"` (משתני `--font-display`, `--font-body`, `--font-num`): Roboto Mono נטען עם עשר הספרות בלבד (`&text=0123456789`), ולכן כל ספרה, גם בתוך משפט, ברוחב קבוע וכל טור מספרים מיושר; כל השאר מ-Rubik. מוסרים: Karantina, Secular One, Assistant, Heebo ו-JetBrains Mono.
+- **כותרות:** `font-display` (Rubik במשקל 800; המשקל מוגדר ב-`index.css`). כותרת עמוד: `text-4xl md:text-5xl leading-none`.
+- **גוף:** `font-sans`, ‏16px לפחות לטקסט רץ.
+- **מספרים:** `font-num` (משקל 700) ו-`.tabular` בכל טבלה ורשימת מספרים (הספרות כבר ברוחב קבוע). ספרות בתוך הקשר עברי שצריכות סדר משמאל לימין — בתוך `dir="ltr"`.
 
 ## Layout
 

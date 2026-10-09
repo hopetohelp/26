@@ -26,9 +26,9 @@
   --frame-line: 22 56 90;
   --signal: 255 184 28;
   --signal-ink: 11 34 57;
-  --font-display: "Karantina";
-  --font-body: "Heebo";
-  --font-num: "Karantina";
+  --font-display: "Roboto Mono", "Rubik";
+  --font-body: "Roboto Mono", "Rubik";
+  --font-num: "Roboto Mono", "Rubik";
   --radius: 10px;
   --grid: 216 222 230;
 }
@@ -49,9 +49,9 @@
   --frame-line: 213 219 227;
   --signal: 232 119 14;
   --signal-ink: 19 23 29;
-  --font-display: "Secular One";
-  --font-body: "Assistant";
-  --font-num: "Secular One";
+  --font-display: "Roboto Mono", "Rubik";
+  --font-body: "Roboto Mono", "Rubik";
+  --font-num: "Roboto Mono", "Rubik";
   --radius: 12px;
   --grid: 226 230 236;
 }
@@ -95,6 +95,18 @@
   --signal: 240 140 40;
   --signal-ink: 19 23 29;
   --grid: 40 45 54;
+}
+
+/* גופנים: Rubik לעברית (כבד ורחב), וספרות בלבד ב-Roboto Mono. רשימת הגופנים היא "Roboto Mono", "Rubik":
+   כל ספרה מגיעה מ-Roboto Mono (ברוחב קבוע, ולכן כל טור מיושר), וכל השאר מ-Rubik. הגופנים הישנים היו במשקל יחיד. */
+@layer components {
+  .font-display {
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+  .font-num {
+    font-weight: 700;
+  }
 }
 
 @layer base {

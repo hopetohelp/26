@@ -44,7 +44,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
   const body = font("--font-body", "sans-serif");
   const num = font("--font-num", "sans-serif");
   try {
-    await Promise.all([`700 80px ${display}`, `400 32px ${body}`, `700 32px ${body}`, `400 80px ${num}`].map((f) => document.fonts?.load(f)));
+    await Promise.all([`800 80px ${display}`, `700 80px ${display}`, `400 32px ${body}`, `700 32px ${body}`, `700 80px ${num}`].map((f) => document.fonts?.load(f, "אבג 0123456789")));
   } catch {
     /* גופן לא נטען — גופן המערכת */
   }
@@ -166,7 +166,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
   const total = order.reduce((a, id) => a + values[id], 0);
   ctx.textAlign = "center";
   ctx.fillStyle = board ? c.signal : c.ink;
-  ctx.font = `400 150px ${num}`;
+  ctx.font = `700 150px ${num}`;
   ctx.fillText(String(total), IMG_W / 2, top + 1.07 * scale - 10);
 
   // הרשימות, מהגדולה: שתי עמודות
