@@ -1,7 +1,7 @@
 import { rng, signed } from "../lib/format";
 import { deviation, type DevInput, type DevRow } from "../lib/deviation";
 import { levelSegs, type LSeg } from "../lib/chartLanguage";
-import ChartLegend from "./ChartLegend";
+import ChartLegend, { rangeLine } from "./ChartLegend";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 
 /**
@@ -61,10 +61,9 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
       <ChartLegend
         entries={[
           { kind: "mean", text: "0 = ממוצע הסקרים. כל הסימנים נמדדים ממנו, כך שהבדלים קטנים נראים" },
-          { kind: "candle", text: "הנמוך והגבוה בין הסקרים ערב הבחירות (לא טווח טעות סטטיסטי)" },
+          { kind: "candle", text: `${rangeLine("full", "הסקרים")} (לא טווח טעות סטטיסטי)` },
           { kind: "result", text: "התוצאה בפועל, ביחס לממוצע הסקרים" },
         ]}
-        thickness="כמה מכונים נתנו לרשימה ערך כזה"
       />
       <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
         <div dir="ltr" className="col-start-2 relative h-8">

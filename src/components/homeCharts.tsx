@@ -3,7 +3,7 @@ import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 import { clipSegs, intSegs, levelSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
-import ChartLegend, { type LegendEntry } from "./ChartLegend";
+import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ProfileCandleV, Track } from "./marks";
 
 /**
@@ -121,14 +121,14 @@ function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg
 }
 
 /** מקרא הדירוג: ממוצע, נר הטווח (ועוביו) וקישור להסבר על ממוצע המודל מול ממוצע המכונים */
-function RankLegend({ meanLabel, rangeLabel, thicknessLabel, withPass }: { meanLabel: string; rangeLabel: string; thicknessLabel: string; withPass?: boolean }) {
+function RankLegend({ meanLabel, rangeText, withPass }: { meanLabel: string; rangeText: string; withPass?: boolean }) {
   const entries: LegendEntry[] = [
     { kind: "mean", text: meanLabel },
-    { kind: "candle", text: rangeLabel },
+    { kind: "candle", text: rangeText },
     ...(withPass ? [{ kind: "pass" as const, text: "שיעור התרחישים שבהם הרשימה עוברת את אחוז החסימה: אדום = לא עוברת, ירוק = עוברת" }] : []),
   ];
   return (
-    <ChartLegend entries={entries} thickness={thicknessLabel}>
+    <ChartLegend entries={entries}>
       <Link to="/method#means" className="font-semibold">ממוצע המודל מול ממוצע המכונים</Link>
     </ChartLegend>
   );
@@ -167,10 +167,10 @@ export function Ranking({ home, meanLabel = "ממוצע המודל" }: { home: H
   const axisMax = axisMaxOf([...safe, ...edge]);
   const levels = levelSegs([...safe, ...edge].map((r) => r.segs));
   const lvOf = (i: number) => levels[i];
-  const rangeLabel = "טווח 80% מהתרחישים: בלי 10% הנמוכים ו-10% הגבוהים ביותר";
+  const rangeText = rangeLine("p80", "התרחישים");
   return (
     <>
-      <RankLegend meanLabel={meanLabel} rangeLabel={rangeLabel} thicknessLabel="כמה תרחישים נותנים לרשימה ערך כזה" withPass={edge.length > 0} />
+      <RankLegend meanLabel={meanLabel} rangeText={rangeText} withPass={edge.length > 0} />
       <Axis axisMax={axisMax} />
       <ol className="mt-1">{safe.map((r, i) => <RankRow key={r.id} r={r} lsegs={lvOf(i)} axisMax={axisMax} />)}</ol>
       {edge.length > 0 && (
@@ -206,7 +206,7 @@ export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { 
   const levels = levelSegs(data.map((r) => r.segs));
   return (
     <>
-      <RankLegend meanLabel={meanLabel} rangeLabel="הנמוך והגבוה בין המכונים (טווח מלא)" thicknessLabel="כמה מכונים נתנו לרשימה ערך כזה" />
+      <RankLegend meanLabel={meanLabel} rangeText={rangeLine("full", "הסקרים")} />
       <Axis axisMax={axisMax} />
       <ol className="mt-1">{data.map((r, i) => <RankRow key={r.id} r={r} lsegs={levels[i]} axisMax={axisMax} />)}</ol>
     </>
@@ -274,9 +274,8 @@ export function GovTrend({ home }: { home: HomeData }) {
           { kind: "dot", text: "נקודה על הקו" },
           { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
           { kind: "mean", text: "הממוצע היום" },
-          { kind: "candle", text: "טווח 80% ליום הבחירות: בלי 10% הנמוכים ו-10% הגבוהים ביותר מהתרחישים" },
+          { kind: "candle", text: rangeLine("p80", "התרחישים", "ליום הבחירות") },
         ]}
-        thickness="כמה תרחישים נותנים לממשלה היוצאת סכום כזה"
       />
     </>
   );

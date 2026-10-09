@@ -6,10 +6,13 @@ describe("עובי הנר ומידות הסימנים", () => {
     expect(Object.keys(CANDLE_PX)).toEqual(["1", "3", "5"]);
     expect(CANDLE_PX).toEqual({ 1: 3, 3: 10, 5: 18 });
   });
-  it("עיגול הממוצע ועיגול התוצאה בגודל עובי רמה 3 (קוטר 10)", () => {
-    expect(MARK_PX).toBe(CANDLE_PX[3]);
+  it("עיגול הממוצע ועיגול התוצאה בגודל הנר העבה (קוטר 18)", () => {
+    expect(MARK_PX).toBe(CANDLE_PX[5]);
+    expect(MARK_PX).toBe(18);
     expect(SVG_MARKS.meanR * 2).toBe(MARK_PX);
     expect((SVG_MARKS.ringR + SVG_MARKS.ringStroke / 2) * 2).toBe(MARK_PX);
+    // הטבעת ריקה: יש בה חור
+    expect(SVG_MARKS.ringR - SVG_MARKS.ringStroke / 2).toBeGreaterThan(0);
   });
   it("maxVolume מתעלם מערכים חסרים", () => {
     expect(maxVolume([3, undefined, 9, NaN])).toBe(9);

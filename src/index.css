@@ -195,8 +195,8 @@
 
 /*
  * שפת הציור האחידה של כל הגרפים (הכרעת בעלים 9.10.2026; הגדלים ב-src/lib/chartLanguage.ts, הרכיבים ב-src/components/marks.tsx):
- * נר = טווח שעוביו משתנה לאורכו לפי כמות הנתונים (שלוש רמות: 3, 10, 18 פיקסלים, במעבר מעוגל), עיגול מלא = ממוצע,
- * עיגול ריק = תוצאה (וממוצע הגולשים בסקר האתר), שניהם בקוטר 10 כעובי רמה 3, ועיגול קטן ריק = סמן על קו.
+ * נר = טווח שעוביו משתנה לאורכו לפי כמות הנתונים (שלוש רמות: 3, 10, 18 פיקסלים, במעבר מעוגל), עיגול מלא אדום = ממוצע,
+ * עיגול ריק כתום = תוצאה (וממוצע הגולשים בסקר האתר), שניהם בקוטר 18, בגודל הנר העבה, ועיגול קטן ריק = סמן על קו.
  * צבע לכל סימן: טווח כחול, סמן שחור (ink), ממוצע אדום, תוצאה כתומה. בלי קו לבן מסביב לסימנים.
  * מיקום: `left` באחוזים מתוך המסלול (`position: relative; direction: ltr`). הכול בטוקנים, בלי צבע קבוע.
  */
@@ -214,18 +214,6 @@
   display: inline-block;
   vertical-align: middle;
 }
-/* נר בעובי אחיד (דוגמית עובי במקרא) */
-.mk-candle {
-  border-radius: 999px;
-  background: rgb(var(--mk-range));
-  translate: 0 -50%;
-}
-.mk-sw.mk-candle {
-  translate: none;
-}
-.mk-c1 { height: 3px; }
-.mk-c3 { height: 10px; }
-.mk-c5 { height: 18px; }
 /* נר שעוביו משתנה לאורכו: SVG אחד, וקו המתאר שלו חלק. אופקי: הגובה קבוע (פיקסלים) והרוחב לפי הציר */
 .mk-prof {
   position: absolute;
@@ -260,18 +248,18 @@
   border: 2px solid rgb(var(--ink));
   background: rgb(var(--mk-bg, var(--paper)));
 }
-/* ממוצע ותוצאה: קוטר 10, כעובי רמה 3 של הנר */
+/* ממוצע ותוצאה: קוטר 18, בגודל הנר העבה */
 .mk-mean {
-  width: 10px;
-  height: 10px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: rgb(var(--mk-mean));
 }
 .mk-ring {
-  width: 10px;
-  height: 10px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  border: 3px solid rgb(var(--mk-result));
+  border: 4px solid rgb(var(--mk-result));
 }
 /* עיגול מושב חסר (עד הרוב) בלוח המושבים: אדום בהיר */
 .seat-miss {

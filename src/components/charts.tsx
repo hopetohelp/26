@@ -3,7 +3,7 @@ import { colorOf } from "../lib/colors";
 import { CANDLE_PX, levelSegs, profilePath, profilePoints, smoothPath, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
 import { date, rng, seatsFmt } from "../lib/format";
 import { Segmented } from "./Choice";
-import ChartLegend, { type LegendEntry } from "./ChartLegend";
+import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 
 export interface TrendPoint {
   t: number;
@@ -192,11 +192,11 @@ export function TrendChart({
           { kind: "lineList", text: `${lineLabel}, בצבע הרשימה (קטע מקווקו = אומדן)` },
           { kind: "dot", text: "נקודה על הקו" },
           { kind: "mean", text: "הממוצע היום" },
-          ...(canCandle ? [{ kind: "candle" as const, text: `הנמוך והגבוה בין הסקרים ב-${windowText!.label} האחרונים` }] : []),
+          ...(canCandle ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowText!.label} האחרונים`) }] : []),
           ...(markers.length > 0 ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
         ]
       : [
-          { kind: "candle", text: `נר = הנמוך והגבוה בין הסקרים ב-${windowText?.label ?? "החלון"}` },
+          { kind: "candle", text: rangeLine("full", "הסקרים", `ב-${windowText?.label ?? "החלון"}`) },
           { kind: "mean", text: "ממוצע החלון" },
           ...(markers.length > 0 ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
         ];
@@ -207,7 +207,6 @@ export function TrendChart({
       <ChartLegend
         className="mb-2"
         entries={legend}
-        thickness={canCandle ? "כמה סקרים נותנים ערך כזה" : undefined}
         action={canCandle ? <Segmented size="sm" label="צורת הגרף" value={mode} onChange={setMode} className="w-44" options={[{ id: "line", label: "קו" }, { id: "candles", label: "נרות" }]} /> : undefined}
       />
       {/* בטלפון הגרף נגלל לרוחב במקום להתכווץ לגופן בלתי קריא */}

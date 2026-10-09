@@ -1,6 +1,6 @@
 import { levelSegs, type LSeg } from "../lib/chartLanguage";
 import { change, diffText, dumbbellAxis, dumbbellSegs, r1, type DumbbellRow } from "../lib/dumbbell";
-import ChartLegend from "./ChartLegend";
+import ChartLegend, { rangeLine } from "./ChartLegend";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 
 /**
@@ -51,9 +51,8 @@ export default function DumbbellChart({ rows }: { rows: DumbbellRow[] }) {
         entries={[
           { kind: "result", text: "2022, התוצאות הרשמיות" },
           { kind: "mean", text: "היום, ממוצע המודל" },
-          { kind: "candle", text: "טווח 80% מהתרחישים: בלי 10% הנמוכים ו-10% הגבוהים ביותר" },
+          { kind: "candle", text: rangeLine("p80", "התרחישים") },
         ]}
-        thickness="כמה תרחישים נותנים כל אחוז"
       />
       <div aria-hidden="true" className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
         <div dir="ltr" className="md:col-start-2 relative h-5">

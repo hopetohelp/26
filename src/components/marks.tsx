@@ -44,10 +44,10 @@ export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number)
   );
 }
 
-/** ממוצע = עיגול מלא בקוטר 10, כעובי רמה 3 */
+/** ממוצע = עיגול מלא אדום בקוטר 18, בגודל הנר העבה */
 export const MeanDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-mean" style={{ left: `${at}%` }} />;
 
-/** תוצאה = עיגול ריק בקוטר 10, כעובי רמה 3 (גם ממוצע הגולשים בסקר האתר, שאינו סקר) */
+/** תוצאה (מציאות) = עיגול ריק כתום בקוטר 18, בגודל הנר העבה (גם ממוצע הגולשים בסקר האתר, שאינו סקר) */
 export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-ring" style={{ left: `${at}%` }} />;
 
 /** סמן על קו = עיגול קטן ריק */

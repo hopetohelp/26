@@ -103,7 +103,7 @@ export default function Accuracy() {
         <p className="text-sm text-ink-soft mb-3">הכנסת ה-{c.knesset} ({c.label}) · {s.snapshot.length} מכונים · סך הפער {seatsFmt(s.gap)} מנדטים</p>
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
           <ChartWithTable
-            summary="נקודה = התוצאה הרשמית, פס = הנמוך והגבוה בין הסקרים, והכול ביחס לממוצע הסקרים."
+            summary="עיגול ריק כתום = התוצאה הרשמית, נר כחול = הנמוך והגבוה בין הסקרים, עיגול מלא אדום = ממוצע הסקרים (0)."
             chart={<DeviationChart rows={s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n, values: r.values }))} />}
             table={
               <table className="text-sm w-full">

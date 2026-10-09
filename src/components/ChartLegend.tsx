@@ -3,7 +3,7 @@ import { Swatch, type MarkKind } from "./marks";
 
 /**
  * כפתור "מקרא" ליד כל גרף (הכרעת בעלים 9.10.2026): סגור כברירת מחדל, ובלחיצה נפתח הסבר על כל הסימונים בגרף.
- * רשימת הסימונים קבועה לכל גרף (`entries`), ואם נר שעוביו משתנה מופיע בגרף — `thickness` מסביר על מה העובי (שלוש הרמות כתובות כאן, פעם אחת).
+ * רשימת הסימונים קבועה לכל גרף (`entries`). נר שעוביו משתנה מוסבר בשורה אחת בלבד (`rangeLine`), בלי פירוט הרמות (הכרעת בעלים 9.10.2026).
  * הצבעים והצורות מגיעים מאותם רכיבים של הגרפים (`Swatch`), כך שהמקרא לא יכול להיות שונה ממה שמצויר.
  */
 export type LegendKind = MarkKind | "line" | "lineList" | "dash" | "pass" | "seatGov" | "seatMiss" | "seatOther";
@@ -12,6 +12,14 @@ export interface LegendEntry {
   kind: LegendKind;
   text: ReactNode;
 }
+
+/**
+ * שורת המקרא של נר: איזה טווח, ועל מה העובי. אחת בלבד, בכל הגרפים (הכרעת בעלים 9.10.2026):
+ * "טווח מלא - עובי הקו מראה את כמות הנתונים או הסקרים שנמצאים בטווח הזה". טווח של תרחישים הוא 80% (כלל הטווחים לפי מקור הנתון).
+ * `what` = מה נספר, עם ה' הידיעה ("הסקרים", "התרחישים"). `window` = חלון הזמן, כשיש ("ב-14 הימים האחרונים").
+ */
+export const rangeLine = (range: "full" | "p80", what: string, window = "") =>
+  `${range === "p80" ? "טווח 80%" : "טווח מלא"}${window ? ` ${window}` : ""} - עובי הקו מראה את כמות ${what} שנמצאים בטווח הזה`;
 
 const MARKS: readonly LegendKind[] = ["candle", "mean", "result", "dot"];
 
@@ -40,15 +48,8 @@ function LegendSwatch({ kind }: { kind: LegendKind }) {
   }
 }
 
-/** שלוש רמות עובי הנר, כל אחת בעובי האמיתי שלה (3, 10 ו-18 פיקסלים) */
-const LEVELS = [
-  { cls: "mk-c1", text: "דק: פחות משליש מהקטע העמוס ביותר" },
-  { cls: "mk-c3", text: "בינוני: משליש עד שני שלישים" },
-  { cls: "mk-c5", text: "עבה: שני שלישים ומעלה" },
-] as const;
-
-/** תוכן המקרא הפתוח: הסימונים, ואם יש נר שעוביו משתנה — שלוש הרמות */
-export function LegendPanel({ id, entries, thickness, children }: { id?: string; entries: LegendEntry[]; thickness?: string; children?: ReactNode }) {
+/** תוכן המקרא הפתוח: הסימונים */
+export function LegendPanel({ id, entries, children }: { id?: string; entries: LegendEntry[]; children?: ReactNode }) {
   return (
     <div id={id} className="mt-2 rounded-theme border border-paper-line bg-paper-card p-3 text-sm text-ink-soft">
       <ul className="grid gap-y-2">
@@ -61,22 +62,6 @@ export function LegendPanel({ id, entries, thickness, children }: { id?: string;
           </li>
         ))}
       </ul>
-      {thickness && (
-        <div className="mt-3 pt-3 border-t border-paper-line">
-          <p>עובי הנר בכל קטע: {thickness}</p>
-          <ul className="mt-2 grid gap-y-1.5">
-            {LEVELS.map((l) => (
-              <li key={l.cls} className="flex items-center gap-2.5">
-                <span className="w-12 shrink-0 flex justify-center">
-                  <i aria-hidden="true" className={`mk-sw mk-candle ${l.cls}`} style={{ width: "2.2rem" }} />
-                </span>
-                <span>{l.text}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-1.5 text-xs">העובי הוא ביחס לקטע העמוס ביותר באותו נר, והמעבר בין הרמות חלק.</p>
-        </div>
-      )}
       {children && <div className="mt-3 pt-3 border-t border-paper-line">{children}</div>}
     </div>
   );
@@ -84,13 +69,11 @@ export function LegendPanel({ id, entries, thickness, children }: { id?: string;
 
 export default function ChartLegend({
   entries,
-  thickness,
   children,
   action,
   className = "",
 }: {
   entries: LegendEntry[];
-  thickness?: string;
   children?: ReactNode;
   /** פקד של הגרף באותה שורה עם הכפתור, בקצה השני (למשל מתג קו/נרות) */
   action?: ReactNode;
@@ -116,7 +99,7 @@ export default function ChartLegend({
         {action}
       </div>
       {open && (
-        <LegendPanel id={id} entries={entries} thickness={thickness}>
+        <LegendPanel id={id} entries={entries}>
           {children}
         </LegendPanel>
       )}
