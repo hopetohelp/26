@@ -2,6 +2,8 @@
  * "מה השתנה" (הכרעת בעלים 9.10.2026, החלטה 8): לכל משפחת רשימות, נקודה אחת ל-2022 ונקודה אחת להיום על אותו ציר,
  * (בלי קו ביניהן). אין כאן חישוב חדש — האחוזים והטווח כבר מחושבים בצינור (`model.json`), וכאן רק גובה הציר והשינוי.
  */
+import { binSegs, clipSegs, type Seg } from "./chartLanguage";
+
 export interface DumbbellRow {
   id: string;
   /** שמות הרשימות היום */
@@ -12,8 +14,10 @@ export interface DumbbellRow {
   before: number;
   /** אחוז היום לפי הממוצע */
   now: number;
-  /** התפלגות האחוז בכל התרחישים (תאים של רבע אחוז): ממנה הטווח המלא ועובי הנר בכל קטע; null — מחנה ששונה ידנית */
+  /** התפלגות האחוז בכל התרחישים (תאים של רבע אחוז): ממנה עובי הנר בכל קטע (נחתך לטווח 80%); null — מחנה ששונה ידנית */
   hist: ShareHist | null;
+  /** טווח 80% מהתרחישים (מ-10% עד 90%): הקצוות של הנר; null — מחנה ששונה ידנית */
+  range: [number, number] | null;
 }
 
 /** התפלגות רציפה בתאים: `counts[i]` = כמה תרחישים באחוז שבין `start + i*step` ל-`start + (i+1)*step` */
@@ -23,18 +27,15 @@ export interface ShareHist {
   counts: number[];
 }
 
-/** הטווח המלא של התפלגות: הנמוך והגבוה מכל התרחישים (קצה התא הראשון והאחרון שיש בהם תרחישים) */
-export function histBounds(h: ShareHist): [number, number] {
-  const first = h.counts.findIndex((c) => c > 0);
-  if (first < 0) return [h.start, h.start];
-  let last = h.counts.length - 1;
-  while (last > first && h.counts[last] === 0) last--;
-  return [h.start + first * h.step, h.start + (last + 1) * h.step];
+/** קטעי הנר של משפחה: ההתפלגות בכל התרחישים, חתוכה לטווח 80% (כלל הטווחים: תרחישים ⇐ 80%). מחנה ששונה ידנית: אין נר */
+export function dumbbellSegs(r: Pick<DumbbellRow, "hist" | "range">): Seg[] {
+  if (!r.hist || !r.range) return [];
+  return clipSegs(binSegs(r.hist.start, r.hist.step, r.hist.counts), r.range[0], r.range[1]);
 }
 
 /** ציר 0 עד גבול עגול: צעד 5 עד 20, ואחרי זה צעד 10 (עד ארבעה-חמישה סימונים, שייכנסו בטלפון) */
 export function dumbbellAxis(rows: DumbbellRow[]): { max: number; ticks: number[] } {
-  const raw = Math.max(20, ...rows.flatMap((r) => [r.before, r.now, r.hist ? histBounds(r.hist)[1] : 0]));
+  const raw = Math.max(20, ...rows.flatMap((r) => [r.before, r.now, r.range ? r.range[1] : 0]));
   const step = raw <= 20 ? 5 : 10;
   const max = Math.ceil(raw / step) * step;
   const ticks: number[] = [];
