@@ -157,8 +157,8 @@ main { padding: 0 1rem 7rem; }
 /* ---------- סרגל תחתון בטלפון ---------- */
 .tabs { position: sticky; bottom: 0; z-index: 5; background: rgb(var(--card)); border-top: 1px solid rgb(var(--line)); }
 .tabs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
-.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
-.tabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
+.tabs a[aria-current], .tabs button[aria-current], html[data-more] .tabs button.more { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
 .tabs svg { width: 1.4rem; height: 1.4rem; }
 
 /* ---------- מחשב ---------- */
@@ -206,9 +206,6 @@ html[data-static] .tabs { position: static; }
 .below { margin: .5rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
 .cta.mini p { margin: .4rem 0 0; font-size: .875rem; }
 .cta.mini .btn { margin-top: .9rem; }
-.links { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 2rem 0 0; padding: 0; }
-.links a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); color: rgb(var(--ink)); font-weight: 600; font-size: .875rem; text-decoration: none; }
-@media (min-width: 1024px) { .links { display: none; } }
 
 /* מגמה: SVG בקנה מידה חופשי, תוויות ב-HTML בגודל קבוע */
 .tchart { position: relative; margin-top: .5rem; }
@@ -268,6 +265,21 @@ html[data-static] .tabs { position: static; }
 
 @media (min-width: 1024px) { .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; } }
 
+.tabs button { width: 100%; font: inherit; font-size: .75rem; background: none; border-inline: 0; border-bottom: 0; cursor: pointer; }
+.scrim, .sheet { display: none; }
+html[data-more] .scrim { display: block; position: fixed; inset: 0; background: rgb(var(--band) / .5); z-index: 20; }
+html[data-more] .sheet { display: block; position: fixed; inset-inline: 0; bottom: 4rem; z-index: 21; background: rgb(var(--card)); border-radius: var(--radius) var(--radius) 0 0; border-top: 1px solid rgb(var(--line)); padding: .25rem 1rem .5rem; }
+.sheet-h { display: flex; align-items: center; justify-content: space-between; min-height: 3.25rem; }
+.sheet-h h2 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.sheet-x { border-color: rgb(var(--line)); }
+.sheet-x svg { width: 1.2rem; height: 1.2rem; }
+.sheet ul { list-style: none; margin: 0; padding: 0; }
+.sheet li a { display: flex; align-items: center; min-height: 3.5rem; border-top: 1px solid rgb(var(--line)); font-size: 1rem; font-weight: 600; color: rgb(var(--ink)); text-decoration: none; }
+html[data-card] .tabs, html[data-card] .scrim, html[data-card] .sheet { display: none; }
+@media (min-width: 1024px) { html[data-more] .scrim, html[data-more] .sheet { display: none; } }
+html[data-more] .tabs { z-index: 22; }
+html[data-more] .tabs a[aria-current] { color: rgb(var(--ink-faint)); font-weight: 400; border-top-color: transparent; }
+
 
 .wrap { padding: 1.25rem 1rem 2.5rem; max-width: 64rem; margin: 0 auto; }
 html[data-card] .wrap { padding: 2.2rem 2.4rem 2rem; max-width: none; }
@@ -310,7 +322,7 @@ html[data-card] .acc-h { font-size: 2.3rem; }
 </style><script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
 if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
-if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';})();</script></head>
+if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script></head>
 <body>
 <header class="top"><div class="top-in"><a class="brand" href="#">בחירות 26</a><nav class="navd" aria-label="ניווט ראשי"><ul><li><a href="#" aria-current="page">בית</a></li><li><a href="#">הכנסת שלי</a></li><li><a href="#">סקר האתר</a></li><li><a href="#">המצב והתרחישים</a></li><li><a href="#">סקרים ומגמות</a></li><li><a href="#">בחירות קודמות</a></li><li><a href="#">מה השתנה</a></li><li><a href="#">שיטה ומקורות</a></li><li><a href="#">תמיכה</a></li></ul></nav><span class="spacer"></span><span class="count">עוד <b class="num">18</b> ימים</span><button class="icon-btn" type="button" aria-label="תצוגה: עיצוב ויום או לילה"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg></button></div></header>
 <main class="wrap" id="main">
@@ -322,5 +334,5 @@ if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.g
   <h2 class="mh" id="law">החוק, סעיף 16ה</h2><ul class="plain"><li>סקר שפורסם לציבור נכנס לאתר מיד עם קליטתו, ללא השהיה נוספת.</li><li>מתום יום שישי שלפני הבחירות (24.10.2026) ועד סגירת הקלפיות (27.10.2026, 22:00) לא נכנס סקר חדש, ובכל עמוד מופיעה הודעה שהסקרים אינם עדכניים.</li><li>האתר אינו עורך סקרים, ואינו ממליץ על אף רשימה.</li></ul>
   <h2 class="mh" id="about">אודות</h2><ul class="plain"><li>האתר מנתח את הבחירות לכנסת ה-26 על בסיס נתונים פומביים. הוא אינו קשור לאף מפלגה, אינו עורך סקרים ואינו ממליץ על אף רשימה.</li><li>הצבעים באתר ניטרליים במכוון ואינם צבעי המפלגות. "מפלגות הממשלה היוצאת" היא הגדרה עובדתית לפי הרכב הממשלה ה-37, לא תחזית לקואליציה.</li><li>כל הקוד והנתונים פתוחים לעיון ב-github.com/hopetohelp/26. מצאתם טעות? אפשר לדווח שם, וכל תיקון נרשם בהיסטוריה.</li></ul>
 </main>
-<nav class="tabs" aria-label="ניווט בטלפון"><ul><li><a href="#" aria-current="page"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>בית</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>מצב ותחזית</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>סקר האתר</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>הכנסת שלי</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M7 8h10M7 12h7"/></svg>תמיכה</a></li></ul></nav>
+<nav class="tabs" aria-label="ניווט בטלפון"><ul><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>בית</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>מצב ותחזית</a></li><li><button type="button" class="more" aria-haspopup="dialog" aria-controls="more-sheet" aria-current="page"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>עוד</button></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>הכנסת שלי</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M7 8h10M7 12h7"/></svg>תמיכה</a></li></ul></nav><div class="scrim" aria-hidden="true"></div><section class="sheet" id="more-sheet" role="dialog" aria-modal="true" aria-labelledby="more-t"><div class="sheet-h"><h2 id="more-t">עוד</h2><button type="button" class="icon-btn sheet-x" aria-label="סגירה"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><ul><li><a href="#">סקר האתר</a></li><li><a href="#">סקרים ומגמות</a></li><li><a href="#">בחירות קודמות</a></li><li><a href="#">מה השתנה מהבחירות האחרונות</a></li><li><a href="#">שיטה, מקורות ואודות</a></li></ul></section><script>(function(){var d=document.documentElement,m=document.querySelector('.tabs .more');if(!m)return;m.addEventListener('click',function(){d.toggleAttribute('data-more');});document.querySelector('.scrim').addEventListener('click',function(){d.removeAttribute('data-more');});document.querySelector('.sheet-x').addEventListener('click',function(){d.removeAttribute('data-more');});})();</script>
 </body></html>

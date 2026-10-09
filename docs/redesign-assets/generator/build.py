@@ -23,7 +23,7 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="
 BOOT = """<script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
 if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
-if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';})();</script>"""
+if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script>"""
 
 
 def page(title, body, extra_css="", boot=True):
@@ -47,6 +47,8 @@ ICONS = {
     "bars": '<path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>',
     "guess": '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/>',
     "comments": '<path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M7 8h10M7 12h7"/>',
+    "more": '<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
+    "close": '<path d="M6 6l12 12M18 6L6 18"/>',
     "sliders": '<path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/>',
     "chev": '<path d="M15 6l-6 6 6 6"/>',
     "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
@@ -106,7 +108,6 @@ def fmt_date(iso):
     return f"{int(d)}.{int(m)}.{y}"
 
 
-
 # =====================================================================
 # נתונים משותפים
 # =====================================================================
@@ -143,7 +144,7 @@ def rank_row(r, with_dots=False):
     dl = ""
     if with_dots:
         d, k = dots(r["pass"])
-        dl = f'<span class="dl">{d}<span>עוברת ב-{k} מתוך 10 תרחישים</span></span>'
+        dl = f'<span class="dl">{d}<span>עוברת ב-{round(r["pass"] * 100)}% מהתרחישים</span></span>'
     return (f'<li class="row{" tall" if with_dots else ""}"><span class="nm">{r["name"]}</span><span class="n num">{c}</span>'
             f'<span class="plot" aria-hidden="true"><span class="bar" style="left:{lo / MAXV * 100:.2f}%;width:{width:.2f}%"></span>'
             f'<span class="dot" style="left:{c / MAXV * 100:.2f}%"></span></span>'
@@ -188,10 +189,10 @@ def tchart():
 
 
 FREEZE_SHORT = 'הסקרים באתר אינם עדכניים: לפי חוק, מ-24.10 00:00 ועד סגירת הקלפיות ב-27.10 לא מתפרסמים סקרים חדשים. <a href="#">סעיף 16ה</a>'
-LINKS = ["המצב והתרחישים", "סקרים ומגמות", "בחירות קודמות", "מה השתנה מהבחירות האחרונות", "סקר האתר", "שיטה, מקורות ואודות"]
+SHEET = ["סקר האתר", "סקרים ומגמות", "בחירות קודמות", "מה השתנה מהבחירות האחרונות", "שיטה, מקורות ואודות"]
 NAV = [("בית", True), ("הכנסת שלי", False), ("סקר האתר", False), ("המצב והתרחישים", False), ("סקרים ומגמות", False),
        ("בחירות קודמות", False), ("מה השתנה", False), ("שיטה ומקורות", False), ("תמיכה", False)]
-TABS = [("בית", "home", True), ("מצב ותחזית", "board", False), ("סקר האתר", "bars", False), ("הכנסת שלי", "guess", False), ("תמיכה", "comments", False)]
+TABS = [("בית", "home", "home"), ("מצב ותחזית", "board", "today"), ("עוד", "more", "more"), ("הכנסת שלי", "guess", "guess"), ("תמיכה", "comments", "support")]
 
 
 def _cur(c):
@@ -205,9 +206,24 @@ def top_bar(count='עוד <b class="num">18</b> ימים', nav=True):
             f'<span class="count">{count}</span><button class="icon-btn" type="button" aria-label="תצוגה: עיצוב ויום או לילה">{svg("sliders")}</button></div></header>')
 
 
-def tabs_bar():
-    items = "".join(f'<li><a href="#"{_cur(cur)}>{svg(ic)}{n}</a></li>' for n, ic, cur in TABS)
-    return f'<nav class="tabs" aria-label="ניווט בטלפון"><ul>{items}</ul></nav>'
+def tabs_bar(active="home"):
+    """חמש לשוניות. "עוד" פותחת חלון עם כל המסכים שאינם בסרגל (SHEET)."""
+    items = []
+    for n, ic, key in TABS:
+        cur = key == active
+        if key == "more":
+            items.append(f'<li><button type="button" class="more" aria-haspopup="dialog" aria-controls="more-sheet"{_cur(cur)}>{svg(ic)}{n}</button></li>')
+        else:
+            items.append(f'<li><a href="#"{_cur(cur)}>{svg(ic)}{n}</a></li>')
+    sheet = ("".join(f'<li><a href="#">{s}</a></li>' for s in SHEET))
+    return (f'<nav class="tabs" aria-label="ניווט בטלפון"><ul>{"".join(items)}</ul></nav>'
+            '<div class="scrim" aria-hidden="true"></div>'
+            f'<section class="sheet" id="more-sheet" role="dialog" aria-modal="true" aria-labelledby="more-t"><div class="sheet-h"><h2 id="more-t">עוד</h2>'
+            f'<button type="button" class="icon-btn sheet-x" aria-label="סגירה">{svg("close")}</button></div><ul>{sheet}</ul></section>'
+            "<script>(function(){var d=document.documentElement,m=document.querySelector('.tabs .more');if(!m)return;"
+            "m.addEventListener('click',function(){d.toggleAttribute('data-more');});"
+            "document.querySelector('.scrim').addEventListener('click',function(){d.removeAttribute('data-more');});"
+            "document.querySelector('.sheet-x').addEventListener('click',function(){d.removeAttribute('data-more');});})();</script>")
 
 
 def asof_line(extra=""):
@@ -252,7 +268,6 @@ home_body = f"""
       <a class="btn" href="#">לבנות את הכנסת שלי</a>
       <p>השערות גולשים, אינן סקר.</p>
     </aside>
-    <ul class="links" aria-label="מסכים נוספים">{"".join(f'<li><a href="#">{t}</a></li>' for t in LINKS)}</ul>
   </div>
 </main>
 {tabs_bar()}
@@ -371,6 +386,7 @@ acc_body = f"""
   <p class="asof">הסקר האחרון של כאן 11, חדשות 12, חדשות 13 וערוץ 14 · <a href="#">איך זה חושב?</a></p>
   <div class="cardfoot"><span>בחירות 26 · בחירות לכנסת ה-25</span><span>הסקרים מול התוצאות</span></div>
 </main>
+{tabs_bar("more")}
 <script>if(location.search.indexOf('table=1')>-1){{var d=document.querySelector('.depth');if(d)d.setAttribute('open','');}}</script>
 """
 (OUT / "accuracy-proposal.html").write_text(page("בחירות 26: הסקרים מול התוצאות", acc_body, ACC_EXTRA), encoding="utf-8")
@@ -441,9 +457,9 @@ kit_body = f"""
     <div class="dax" aria-hidden="true"><div class="ticks">{dticks}</div></div>
     <ul class="arows" style="list-style:none;padding:0;margin:0">{"".join(db_row(f) for f in fams_sorted)}</ul>
     <p class="use">דמבל: שתי נקודות וקו ביניהן. מחליף טבלה רחבה שנחתכה בטלפון (גלישה ב"מה השתנה").</p></section>
-  <section class="plate"><h2 class="ft">על הסף: עוברת ב-5 מתוך 10 תרחישים</h2>
+  <section class="plate"><h2 class="ft">על הסף: עוברת רק בחלק מהתרחישים</h2>
     <ol class="rank">{"".join(rank_row(r, True) for r in edge)}</ol>
-    <p class="use">תדירות במקום סיכוי: עשר נקודות, ממולאות לפי מספר התרחישים שבהם הרשימה עוברת.</p></section>
+    <p class="use">עשר נקודות ממחישות את אחוז התרחישים שבהם הרשימה עוברת. האחוז עצמו כתוב לידן, בלי שינוי בחישוב.</p></section>
 </main>
 """
 (OUT / "chart-kit.html").write_text(page("בחירות 26: ערכת הגרפים", kit_body, KIT_EXTRA), encoding="utf-8")
@@ -511,7 +527,7 @@ method_body = f"""
   <h2 class="mh" id="law">החוק, סעיף 16ה</h2><ul class="plain">{"".join(f"<li>{s}</li>" for s in LAW)}</ul>
   <h2 class="mh" id="about">אודות</h2><ul class="plain">{"".join(f"<li>{s}</li>" for s in ABOUT)}</ul>
 </main>
-{tabs_bar()}
+{tabs_bar("more")}
 """
 (OUT / "method-proposal.html").write_text(page("בחירות 26: שיטה, מקורות ואודות", method_body, ACC_EXTRA), encoding="utf-8")
 

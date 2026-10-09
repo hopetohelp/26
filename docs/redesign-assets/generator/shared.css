@@ -153,8 +153,8 @@ main { padding: 0 1rem 7rem; }
 /* ---------- סרגל תחתון בטלפון ---------- */
 .tabs { position: sticky; bottom: 0; z-index: 5; background: rgb(var(--card)); border-top: 1px solid rgb(var(--line)); }
 .tabs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
-.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
-.tabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
+.tabs a[aria-current], .tabs button[aria-current], html[data-more] .tabs button.more { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
 .tabs svg { width: 1.4rem; height: 1.4rem; }
 
 /* ---------- מחשב ---------- */
@@ -202,9 +202,6 @@ html[data-static] .tabs { position: static; }
 .below { margin: .5rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
 .cta.mini p { margin: .4rem 0 0; font-size: .875rem; }
 .cta.mini .btn { margin-top: .9rem; }
-.links { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 2rem 0 0; padding: 0; }
-.links a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); color: rgb(var(--ink)); font-weight: 600; font-size: .875rem; text-decoration: none; }
-@media (min-width: 1024px) { .links { display: none; } }
 
 /* מגמה: SVG בקנה מידה חופשי, תוויות ב-HTML בגודל קבוע */
 .tchart { position: relative; margin-top: .5rem; }
@@ -263,3 +260,18 @@ html[data-static] .tabs { position: static; }
 @media (min-width: 1024px) { .dict { grid-template-columns: 1fr 1fr; column-gap: 3rem; } .entry:nth-last-child(2) { border-bottom: 1px solid rgb(var(--line)); } }
 
 @media (min-width: 1024px) { .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; } }
+
+.tabs button { width: 100%; font: inherit; font-size: .75rem; background: none; border-inline: 0; border-bottom: 0; cursor: pointer; }
+.scrim, .sheet { display: none; }
+html[data-more] .scrim { display: block; position: fixed; inset: 0; background: rgb(var(--band) / .5); z-index: 20; }
+html[data-more] .sheet { display: block; position: fixed; inset-inline: 0; bottom: 4rem; z-index: 21; background: rgb(var(--card)); border-radius: var(--radius) var(--radius) 0 0; border-top: 1px solid rgb(var(--line)); padding: .25rem 1rem .5rem; }
+.sheet-h { display: flex; align-items: center; justify-content: space-between; min-height: 3.25rem; }
+.sheet-h h2 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.sheet-x { border-color: rgb(var(--line)); }
+.sheet-x svg { width: 1.2rem; height: 1.2rem; }
+.sheet ul { list-style: none; margin: 0; padding: 0; }
+.sheet li a { display: flex; align-items: center; min-height: 3.5rem; border-top: 1px solid rgb(var(--line)); font-size: 1rem; font-weight: 600; color: rgb(var(--ink)); text-decoration: none; }
+html[data-card] .tabs, html[data-card] .scrim, html[data-card] .sheet { display: none; }
+@media (min-width: 1024px) { html[data-more] .scrim, html[data-more] .sheet { display: none; } }
+html[data-more] .tabs { z-index: 22; }
+html[data-more] .tabs a[aria-current] { color: rgb(var(--ink-faint)); font-weight: 400; border-top-color: transparent; }
