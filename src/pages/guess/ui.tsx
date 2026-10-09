@@ -2,12 +2,13 @@
 import type { ReactNode } from "react";
 import { STATUS_LABEL } from "./useCrowd";
 
-export function StatusPill({ status }: { status: keyof typeof STATUS_LABEL }) {
+/** queued = נשמר בדפדפן ויישלח לשרת אוטומטית כשהחיבור יחזור (src/lib/outbox.ts) */
+export function StatusPill({ status, queued = false }: { status: keyof typeof STATUS_LABEL; queued?: boolean }) {
   const tone = status === "saved" ? "border-ink-faint text-ink" : status === "dirty" ? "bg-warn-soft text-warn border-warn/40" : "text-ink-soft border-paper-line";
   return (
     <span className={`inline-flex items-center gap-1.5 text-xs font-bold border rounded-full px-2.5 py-1 ${tone}`} role="status">
       <span aria-hidden="true" className={`w-2 h-2 rounded-full ${status === "saved" ? "bg-ink" : status === "dirty" ? "bg-warn" : "border border-ink-faint"}`} />
-      {STATUS_LABEL[status]}
+      {status === "saved" && queued ? "נשמר אצלך — יישלח כשיחזור החיבור" : STATUS_LABEL[status]}
     </span>
   );
 }

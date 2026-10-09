@@ -1,7 +1,9 @@
 /**
  * כפתור ההערות: הפנייה לשרת (worker/feedback) והקישורים האישיים שנשמרים בדפדפן.
- * הבעלים היחיד של המפתח "elections26.feedback" ב-localStorage.
+ * הבעלים היחיד של המפתחות "elections26.feedback" ו-"elections26.feedback.outbox" ב-localStorage.
  */
+import { topicMessage } from "./feedbackTopics";
+
 export const FEEDBACK_URL = import.meta.env.VITE_FEEDBACK_URL as string | undefined;
 
 export interface ThreadMessage {
@@ -119,4 +121,63 @@ export async function accountSupport(token: string, message?: { text: string; op
   const data = await response.json().catch(() => null);
   if (!response.ok || !data?.ok) throw new Error(response.status === 401 ? "יש להתחבר שוב לחשבון כדי לפתוח את השיחה." : "לא הצלחנו להתחבר לתמיכה. נסו שוב.");
   return data.thread ?? null;
+}
+
+export interface FeedbackItem { topic: string; text: string; page: string; theme: string; website: string; diagnostic?: string }
+
+/**
+ * שליחת הערה: שיחה אחת לכל משתמש — אם כבר יש שיחה בדפדפן הזה, ההערה מצטרפת אליה (עם הנושא בראשה).
+ * מחזיר את אסימון השיחה. כשל רשת נזרק כ-TypeError (fetch) — הקורא מכניס לתור.
+ */
+export async function deliverFeedback(item: FeedbackItem, max: number): Promise<{ ok: boolean; token?: string }> {
+  const prim = await mergeSavedThreads();
+  if (prim) {
+    const res = await replyToThread(prim.token, topicMessage(item.topic, item.text).slice(0, max), item.website, item.diagnostic);
+    if (res.ok) return { ok: true, token: prim.token };
+    if (res.error !== "not found") return { ok: false };
+  }
+  const res = await sendFeedback(item);
+  if (res.ok && res.token) saveThread({ token: res.token, created: new Date().toISOString(), preview: item.text.slice(0, 80) });
+  return { ok: res.ok, token: res.token };
+}
+
+/** תור ההערות: הערה שנכתבה בלי חיבור נשמרת כאן ונשלחת אוטומטית כשהחיבור חוזר (src/lib/outbox.ts). */
+const OUTBOX = "elections26.feedback.outbox";
+type Queued = { item: FeedbackItem; max: number };
+function readOutbox(): Queued[] {
+  try {
+    const v = JSON.parse(localStorage.getItem(OUTBOX) || "[]");
+    return Array.isArray(v) ? v.filter((x) => x?.item && typeof x.item.text === "string") : [];
+  } catch {
+    return [];
+  }
+}
+function writeOutbox(items: Queued[]): boolean {
+  try {
+    if (items.length) localStorage.setItem(OUTBOX, JSON.stringify(items.slice(-20)));
+    else localStorage.removeItem(OUTBOX);
+    return true;
+  } catch {
+    return false;
+  }
+}
+/** false = הדפדפן חוסם אחסון, ואי אפשר לשמור את ההערה לשליחה מאוחרת */
+export const queueFeedback = (item: FeedbackItem, max: number) => writeOutbox([...readOutbox(), { item, max }]);
+export const queuedFeedbackCount = () => readOutbox().length;
+
+let flushing: Promise<void> | null = null;
+export function flushFeedbackOutbox(): Promise<void> {
+  flushing ??= (async () => {
+    if (!FEEDBACK_URL) return;
+    for (const q of readOutbox()) {
+      try {
+        // נשלחה, או שהשרת דחה אותה (לא תתקבל גם בניסיון חוזר) ⇐ יוצאת מהתור
+        await deliverFeedback(q.item, q.max);
+      } catch {
+        return; // עדיין אין חיבור ⇐ הסבב הבא
+      }
+      writeOutbox(readOutbox().filter((x) => JSON.stringify(x) !== JSON.stringify(q)));
+    }
+  })().finally(() => { flushing = null; });
+  return flushing;
 }

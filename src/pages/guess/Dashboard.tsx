@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
+import { OUTBOX_EVENT, SAVED_EVENT } from "../../lib/outbox";
 import { liveDashboard, newerDashboard, siteDashboard, type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, rng, seatsFmt } from "../../lib/format";
@@ -11,6 +12,8 @@ import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import type { useSession } from "./useCrowd";
+
+const LIVE_REFRESH_MS = 60_000;
 
 type Subject = "seats" | "pct";
 type View = "table" | "chart";
@@ -39,7 +42,19 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     const show = (x: D) => { if (!alive) return; shown = true; setD(prev => newerDashboard(prev, x)); };
     void Promise.allSettled([siteDashboard().then(show), liveDashboard().then(show)])
       .then(() => { if (alive && !shown) setErr("הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות."); });
-    return () => { alive = false; };
+    // הסטטיסטיקות מחושבות כל הזמן: רענון כל דקה כשהדף גלוי, מיד כשחוזרים אליו, ואחרי כל שמירה שהגיעה לשרת
+    const live = () => { if (document.visibilityState === "visible") liveDashboard().then(show).catch(() => {}); };
+    const timer = window.setInterval(live, LIVE_REFRESH_MS);
+    document.addEventListener("visibilitychange", live);
+    window.addEventListener(OUTBOX_EVENT, live);
+    window.addEventListener(SAVED_EVENT, live);
+    return () => {
+      alive = false;
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", live);
+      window.removeEventListener(OUTBOX_EVENT, live);
+      window.removeEventListener(SAVED_EVENT, live);
+    };
   }, []);
 
   if (err) return <Notice tone="warn">{err}</Notice>;
@@ -59,7 +74,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
-      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
+      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf} · מתעדכן אוטומטית כל דקה</p>}
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
         <Toggle value={subject} setValue={setSubject} options={[["seats","מנדטים"],["pct","אחוזים"]]} label="סוג נתון" />

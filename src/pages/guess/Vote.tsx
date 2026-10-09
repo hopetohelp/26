@@ -57,7 +57,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
       </details>
       <div className="flex items-center gap-3 flex-wrap">
         <SaveButton unit={unit} session={session} invalid={validateVote(p, K25_IDS, IDS)} />
-        <StatusPill status={unit.status} />
+        <StatusPill status={unit.status} queued={unit.queued} />
         {(p.v2022 || p.v2026) && (
           <button type="button" className="text-sm underline text-ink-soft min-h-[44px]" onClick={() => unit.setDraft(EMPTY_VOTE)}>
             ניקוי הבחירות

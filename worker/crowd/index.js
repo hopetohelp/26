@@ -402,8 +402,22 @@ const routes = {
   },
 };
 
+// הסטטיסטיקות מחושבות כל הזמן: כל פתיחה מקבלת תמונה עדכנית. תוצאה אחת משרתת את כל הפניות בחצי הדקה
+// שאחריה (בכל עותק של השרת), כדי שרענון אוטומטי אצל גולשים רבים לא יקרא את כל המאגר בכל פעם. שמירה חדשה מבטלת אותה.
+const DASHBOARD_TTL_MS = 30_000;
+let dashboardCache = null;
+export function resetDashboardCache() { dashboardCache = null; }
+
 async function dashboard(env) {
-  // תמונה עדכנית לכל פתיחה, בלי כתיבה ובלי להמתין למשימה השעתית.
+  const at = clock(env);
+  if (dashboardCache && at >= dashboardCache.at && at - dashboardCache.at < DASHBOARD_TTL_MS) return dashboardCache.data;
+  const data = await computeDashboard(env);
+  dashboardCache = { at, data };
+  return data;
+}
+
+async function computeDashboard(env) {
+  // תמונה עדכנית, בלי כתיבה ובלי להמתין למשימה השעתית.
   // התשובות האישיות נשארות בשרת; רק התוצאה המצטברת יוצאת לדפדפן.
   const now = iso(clock(env));
   const data = await env.DB.batch([
@@ -532,6 +546,7 @@ export default {
       const body = request.method === "POST" ? await readJson(request) : {};
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
       const out = await handler({ env, request, url, now, body });
+      if (request.method === "POST") resetDashboardCache();
       return new Response(JSON.stringify(out), { headers: { ...headers, "cache-control": "no-store" } });
     } catch (e) {
       if (e instanceof HttpError) {
@@ -545,6 +560,7 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
+    resetDashboardCache();
     const now = clock(env);
     const job = (async () => {
       await cleanup(env, now);

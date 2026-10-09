@@ -103,3 +103,14 @@ export function clearAll(): void {
   set(K.consent, null);
   if (typeof window !== "undefined") window.dispatchEvent(new Event("crowd-clear"));
 }
+
+/**
+ * תור השליחה (שמירה מקומית קודם): גרסה שנשמרה בדפדפן אבל השרת עוד לא אישר שקיבל אותה —
+ * ה-op_id הממתין זהה לגרסה השמורה. src/lib/outbox.ts שולח אותה שוב עד אישור.
+ */
+export function isQueued(u: Unit): boolean {
+  const cur = getJson<{ op: string; body: string }>(K.pending(u));
+  const saved = get(K.saved(u));
+  return !!cur && saved !== null && cur.body === saved;
+}
+export const pendingOp = (u: Unit) => getJson<{ op: string; body: string }>(K.pending(u));

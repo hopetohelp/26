@@ -1,9 +1,9 @@
-import { FEEDBACK_TOPICS as TOPICS, topicMessage } from "../lib/feedbackTopics";
+import { FEEDBACK_TOPICS as TOPICS } from "../lib/feedbackTopics";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Segmented } from "./Choice";
 import { getLink } from "../lib/crowdSession";
-import { FEEDBACK_URL, mergeSavedThreads, replyToThread, saveThread, savedThreads, sendFeedback, threadLink } from "../lib/feedback";
+import { FEEDBACK_URL, deliverFeedback, queueFeedback, savedThreads, threadLink, type FeedbackItem } from "../lib/feedback";
 
 /**
  * כפתור פידבק בלי מייל: טופס קצר ⇐ שרת קטן ב-Cloudflare (worker/feedback) ⇐ מאגר פרטי (D1).
@@ -12,7 +12,7 @@ import { FEEDBACK_URL, mergeSavedThreads, replyToThread, saveThread, savedThread
  */
 const MAX = 2000;
 
-type Status = "idle" | "sending" | "sent" | "error";
+type Status = "idle" | "sending" | "sent" | "queued" | "error";
 
 export default function Feedback() {
   const [open, setOpen] = useState(false);
@@ -59,27 +59,16 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
   async function send() {
     if (!text.trim() || status === "sending") return;
     setStatus("sending");
+    let item: FeedbackItem | undefined;
     try {
       const body = text.trim().slice(0, MAX);
-      // שיחה אחת לכל משתמש: אם כבר יש שיחה בדפדפן הזה — ההערה מצטרפת אליה (עם הנושא בראשה)
-      const prim = await mergeSavedThreads();
-      if (prim) {
-        const res = await replyToThread(prim.token, topicMessage(topic, body).slice(0, MAX), trap, diagnostic);
-        if (res.ok) {
-          setToken(prim.token);
-          setStatus("sent");
-          return;
-        }
-        if (res.error !== "not found") return setStatus("error");
-      }
-      const res = await sendFeedback({ topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap, diagnostic });
-      if (res.ok && res.token) {
-        saveThread({ token: res.token, created: new Date().toISOString(), preview: body.slice(0, 80) });
-        setToken(res.token);
-      }
+      item = { topic, text: body, page: pathname, theme: document.documentElement.dataset.theme ?? "board", website: trap, diagnostic };
+      const res = await deliverFeedback(item, MAX);
+      if (res.token) setToken(res.token);
       setStatus(res.ok ? "sent" : "error");
     } catch {
-      setStatus("error");
+      // אין חיבור ⇐ ההערה נשמרת בדפדפן ונשלחת אוטומטית כשהחיבור יחזור
+      setStatus(item && queueFeedback(item, MAX) ? "queued" : "error");
     }
   }
 
@@ -92,7 +81,13 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
         onClick={(e) => e.stopPropagation()}
         className="w-full md:max-w-lg max-h-[92dvh] overflow-y-auto bg-paper-card text-ink rounded-t-2xl md:rounded-2xl p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] flex flex-col gap-4"
       >
-        {status === "sent" ? (
+        {status === "queued" ? (
+          <div role="status" className="flex flex-col gap-3 items-start py-2">
+            <h2 id={titleId} className="text-2xl font-display leading-tight">ההערה נשמרה אצלך.</h2>
+            <p className="text-base leading-relaxed">אין כרגע חיבור לשרת ההערות. ההערה תישלח אוטומטית כשהחיבור יחזור, גם אם תסגרו את הדף ותחזרו מאוחר יותר.</p>
+            <button type="button" onClick={onClose} className="min-h-[44px] px-4 rounded-full border-2 border-paper-line bg-paper-card text-ink text-sm font-bold">סגירה</button>
+          </div>
+        ) : status === "sent" ? (
           <div role="status" className="flex flex-col gap-3 items-start py-2">
             <h2 id={titleId} className="text-2xl font-display leading-tight">תודה. ההערה התקבלה.</h2>
             <p className="text-base leading-relaxed">כל הערה נקראת. תיקון נתון מופיע בהיסטוריה של האתר, עם הסבר.</p>

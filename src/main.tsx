@@ -3,6 +3,8 @@ import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
+import { startOutbox } from "./lib/outbox";
+import { registerOffline } from "./lib/offline";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Today from "./pages/Today";
@@ -27,6 +29,10 @@ const Guess = lazy(() => import("./pages/Guess"));
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
 }
+
+// שמירה מקומית קודם: השערות והערות שלא הגיעו לשרת נשלחות שוב אוטומטית; האתר עצמו נשמר במכשיר לפתיחה גם בלי רשת
+startOutbox();
+registerOffline();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
