@@ -1,24 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colorOf } from "../../lib/colors";
-import { largestRemainder, TOTAL } from "../../lib/fillAll";
+import { TOTAL } from "../../lib/fillAll";
+import { hemicycleSeats } from "../../lib/hemicycle";
 import { useTheme } from "../../lib/theme";
 import { IDS, nameOf } from "./model";
 
-/** 120 מושבים בחצי עיגול: מיקום קבוע לכל מושב, מימין לשמאל ומהשורה הפנימית החוצה */
-const ROWS = 6;
-export const SEATS = (() => {
-  const radii = Array.from({ length: ROWS }, (_, i) => 0.44 + (i * 0.56) / (ROWS - 1));
-  const per = largestRemainder(TOTAL, Object.fromEntries(radii.map((r, i) => [String(i), r])));
-  const out: { x: number; y: number; a: number; r: number }[] = [];
-  radii.forEach((r, i) => {
-    const n = per[String(i)];
-    for (let k = 0; k < n; k++) {
-      const a = n === 1 ? Math.PI / 2 : (k / (n - 1)) * Math.PI;
-      out.push({ x: 1.1 + r * Math.cos(a), y: 1.07 - r * Math.sin(a), a, r });
-    }
-  });
-  return out.sort((p, q) => p.a - q.a || q.r - p.r);
-})();
+/** 120 מושבים בחצי עיגול: המיקומים ב-`src/lib/hemicycle.ts` (משותפים גם לבית) */
+export const SEATS = hemicycleSeats(1.1, 1.07);
 
 /** סדר הרשימות (מהגדולה) והצבע של כל מושב — משותף ללוח ולתמונת השיתוף */
 export function seatFills(values: Record<string, number>) {
