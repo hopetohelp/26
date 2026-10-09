@@ -8,6 +8,8 @@ workers_dev = true
 [vars]
 # מזהה הלקוח של Google (גלוי, לא סוד) — לאימות כניסה עם Google
 GOOGLE_CLIENT_ID = "842977993302-8n4sibbf7rgr6e1ludvi28oojua9ht9t.apps.googleusercontent.com"
+# מפתח ה-Web של פרויקט Firebase לאימות מייל. גלוי לפי Firebase (לא סוד); מומלץ להגביל אותו ב-Google Cloud ל-Identity Toolkit API
+FIREBASE_API_KEY = "AIzaSyCpQqdBDjlh9zWEDBwnDhBK93wLONlvXzs"
 ALLOWED_ORIGIN = "https://hopetohelp.github.io"
 SITE_URL = "https://hopetohelp.github.io/26/"
 

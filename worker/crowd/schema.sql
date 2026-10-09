@@ -163,3 +163,11 @@ CREATE TABLE IF NOT EXISTS profile (
   name_enc TEXT,
   updated_at TEXT NOT NULL
 );
+
+-- אימות מייל דרך Firebase (הכרעת בעלים 9.10.2026): למשתמש זמני ב-Firebase יש סיסמה אקראית ארוכה, שנשמרת כאן מוצפנת (DATA_KEY) —
+-- סיסמת הגולש אינה נשלחת ל-Google. אחרי אימות או מחיקת חשבון השורה והמשתמש ב-Firebase נמחקים.
+CREATE TABLE IF NOT EXISTS email_verify (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  fb_enc TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
