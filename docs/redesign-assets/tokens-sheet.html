@@ -76,9 +76,6 @@ a { color: rgb(var(--accent)); text-underline-offset: 3px; }
 .navd a[aria-current] { color: rgb(var(--frame-ink)); font-weight: 700; border-bottom-color: rgb(var(--signal)); }
 [data-theme="league"] .navd a[aria-current] { border-bottom-color: rgb(var(--accent)); }
 
-.freeze { display: none; background: rgb(var(--warn-soft)); color: rgb(var(--warn)); border-block: 1px solid rgb(var(--warn)); }
-[data-freeze] .freeze { display: block; }
-.freeze p { margin: 0; padding: .75rem 1rem; font-weight: 700; font-size: .875rem; line-height: 1.5; }
 
 /* ---------- תוכן ---------- */
 main { padding: 0 1rem 7rem; }
@@ -157,8 +154,8 @@ main { padding: 0 1rem 7rem; }
 /* ---------- סרגל תחתון בטלפון ---------- */
 .tabs { position: sticky; bottom: 0; z-index: 5; background: rgb(var(--card)); border-top: 1px solid rgb(var(--line)); }
 .tabs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
-.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
-.tabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
+.tabs a[aria-current], .tabs button[aria-current], html[data-more] .tabs button.more { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
 .tabs svg { width: 1.4rem; height: 1.4rem; }
 
 /* ---------- מחשב ---------- */
@@ -180,6 +177,7 @@ main { padding: 0 1rem 7rem; }
   .row, .axisrow { grid-template-columns: minmax(0, 13rem) 2.6rem minmax(0, 1fr) 5rem; }
   .axisrow .ticks { grid-column: 3; }
   .row .rng { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; text-align: end; }
+  .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; }
   .index { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 3rem; }
   .index li:nth-last-child(-n+3) a { border-bottom: 1px solid rgb(var(--line)); }
 }
@@ -190,6 +188,94 @@ main { padding: 0 1rem 7rem; }
 }
 html[data-static] .tabs { position: static; }
 .index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
+
+/* ===== גרסה 2: תמצות, גרף קודם ===== */
+.asof { margin: .6rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); display: flex; flex-wrap: wrap; gap: .25rem .5rem; align-items: center; }
+.asof a { font-weight: 600; }
+.leg1 { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: .75rem 0 0; font-size: 1rem; font-weight: 600; align-items: center; }
+.leg1 span { display: inline-flex; align-items: center; gap: .5rem; }
+.leg1 b { font-size: 1.25rem; font-weight: 800; }
+.thr { display: flex; align-items: center; gap: .75rem; margin: .5rem 0; font-size: .875rem; font-weight: 700; color: rgb(var(--ink-soft)); }
+.thr::before, .thr::after { content: ""; flex: 1; border-top: 2px dashed rgb(var(--ink-faint)); }
+.row.tall { grid-template-areas: "nm n plot" "dl dl dl"; row-gap: .15rem; padding-bottom: .5rem; }
+.row.tall .nm { grid-area: nm; } .row.tall .n { grid-area: n; } .row.tall .plot { grid-area: plot; } .row.tall .rng { grid-area: rng; }
+.row .dl { grid-area: dl; display: flex; align-items: center; gap: .6rem; font-size: .875rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.below { margin: .5rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.cta.mini p { margin: .4rem 0 0; font-size: .875rem; }
+.cta.mini .btn { margin-top: .9rem; }
+
+/* מגמה: SVG בקנה מידה חופשי, תוויות ב-HTML בגודל קבוע */
+.tchart { position: relative; margin-top: .5rem; }
+.tchart svg { display: block; width: 100%; height: 10rem; }
+.tchart .ln { fill: none; stroke: rgb(var(--accent)); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.tchart .ref { stroke: rgb(var(--ink)); stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.tchart .wh { stroke: rgb(var(--accent) / .7); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tchart .gl { stroke: rgb(var(--line)); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.tl { position: absolute; transform: translate(-50%, -50%); font-size: .875rem; font-weight: 700; line-height: 1; white-space: nowrap; direction: ltr; }
+.tl.soft { font-weight: 400; font-size: .75rem; color: rgb(var(--ink-soft)); transform: translate(-50%, 0); }
+.tl.big { font-size: 1rem; font-weight: 800; }
+
+/* שינוי מול 2022: דמבל */
+.drow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; align-items: center; gap: .1rem .75rem; padding: .5rem 0; border-top: 1px solid rgb(var(--line)); }
+.drow:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.drow .nm { font-weight: 600; line-height: 1.25; }
+.drow .nm small { display: block; font-size: .75rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.dbplot { position: relative; height: 1.5rem; direction: ltr; }
+.dbplot i.g { position: absolute; top: 0; bottom: 0; width: 1px; background: rgb(var(--line)); }
+.dbplot .rg { position: absolute; top: 50%; height: .35rem; margin-top: -.175rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.dbplot .ln2 { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: rgb(var(--ink-faint)); }
+.dbplot .d22 { position: absolute; top: 50%; width: .9rem; height: .9rem; margin: -.45rem 0 0 -.45rem; border-radius: 50%; background: rgb(var(--paper)); box-shadow: inset 0 0 0 2px rgb(var(--ink)); }
+.dbplot .dnow { position: absolute; top: 50%; width: .9rem; height: .9rem; margin: -.45rem 0 0 -.45rem; border-radius: 50%; background: rgb(var(--ink)); box-shadow: 0 0 0 2px rgb(var(--paper)); }
+.drow .av { text-align: end; line-height: 1.1; }
+.drow .av b { font-size: 1.25rem; font-weight: 800; display: block; }
+.drow .av small { font-size: .75rem; color: rgb(var(--ink-soft)); white-space: nowrap; }
+.k-hollow { width: .8rem; height: .8rem; border-radius: 50%; box-shadow: inset 0 0 0 2px rgb(var(--ink)); background: rgb(var(--paper)); display: inline-block; }
+
+/* ערכת גרפים */
+.kit { display: grid; gap: 1.5rem; padding: 1.5rem 1rem 3rem; max-width: 90rem; margin: 0 auto; }
+.plate { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1.25rem; background: rgb(var(--card)); }
+.plate .ft { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 0 0 .25rem; }
+.plate .use { margin: 1rem 0 0; font-size: .75rem; color: rgb(var(--ink-soft)); border-top: 1px solid rgb(var(--line)); padding-top: .5rem; }
+.plate .rank { margin-top: .25rem; }
+.plate .hemi { margin-top: .5rem; }
+.plate .row .rng { display: none; }
+@media (min-width: 1024px) { .kit { grid-template-columns: 1fr 1fr; } .plate .row, .plate .axisrow { grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); } }
+
+/* מילון המספרים (שיטה, מקורות ואודות) */
+.seg2 { display: flex; gap: .25rem; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); width: fit-content; max-width: 100%; overflow-x: auto; margin-top: 1rem; }
+.seg2 a { padding: .45rem 1rem; border-radius: 999px; font-weight: 700; font-size: .875rem; color: rgb(var(--ink)); text-decoration: none; white-space: nowrap; }
+.seg2 a[aria-current] { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); }
+.dict { display: grid; gap: 0; margin-top: 1rem; }
+.entry { padding: 1rem 0; border-top: 1px solid rgb(var(--line)); }
+.entry:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.entry h3 { margin: 0; font-size: 1.25rem; font-weight: 800; line-height: 1.3; }
+.entry .where { margin: .1rem 0 .5rem; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.entry dl { margin: 0; display: grid; grid-template-columns: 4.5rem 1fr; gap: .25rem .75rem; font-size: .875rem; line-height: 1.5; }
+.entry dt { color: rgb(var(--ink-soft)); font-weight: 600; }
+.entry dd { margin: 0; }
+.entry .more { display: inline-block; margin-top: .5rem; font-size: .875rem; font-weight: 600; }
+.mh { margin: 2rem 0 .25rem; font-size: 1.25rem; font-weight: 800; }
+.plain { margin: .5rem 0 0; padding: 0; list-style: none; font-size: .875rem; line-height: 1.55; }
+.plain li { padding: .45rem 0; border-top: 1px solid rgb(var(--line)); }
+.plain li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+@media (min-width: 1024px) { .dict { grid-template-columns: 1fr 1fr; column-gap: 3rem; } .entry:nth-last-child(2) { border-bottom: 1px solid rgb(var(--line)); } }
+
+@media (min-width: 1024px) { .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; } }
+
+.tabs button { width: 100%; font: inherit; font-size: .75rem; background: none; border-inline: 0; border-bottom: 0; cursor: pointer; }
+.scrim, .sheet { display: none; }
+html[data-more] .scrim { display: block; position: fixed; inset: 0; background: rgb(var(--band) / .5); z-index: 20; }
+html[data-more] .sheet { display: block; position: fixed; inset-inline: 0; bottom: 4rem; z-index: 21; background: rgb(var(--card)); border-radius: var(--radius) var(--radius) 0 0; border-top: 1px solid rgb(var(--line)); padding: .25rem 1rem .5rem; }
+.sheet-h { display: flex; align-items: center; justify-content: space-between; min-height: 3.25rem; }
+.sheet-h h2 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.sheet-x { border-color: rgb(var(--line)); }
+.sheet-x svg { width: 1.2rem; height: 1.2rem; }
+.sheet ul { list-style: none; margin: 0; padding: 0; }
+.sheet li a { display: flex; align-items: center; min-height: 3.5rem; border-top: 1px solid rgb(var(--line)); font-size: 1rem; font-weight: 600; color: rgb(var(--ink)); text-decoration: none; }
+html[data-card] .tabs, html[data-card] .scrim, html[data-card] .sheet { display: none; }
+@media (min-width: 1024px) { html[data-more] .scrim, html[data-more] .sheet { display: none; } }
+html[data-more] .tabs { z-index: 22; }
+html[data-more] .tabs a[aria-current] { color: rgb(var(--ink-faint)); font-weight: 400; border-top-color: transparent; }
 
 
 body { padding: 2rem; background: #fff; }
@@ -211,14 +297,11 @@ body { padding: 2rem; background: #fff; }
 .seg span { padding: .35rem .9rem; border-radius: 999px; font-weight: 700; font-size: .875rem; }
 .seg span.on { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); }
 .line { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
-.sheet-demo { background: rgb(var(--card)); border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1rem; font-size: .875rem; }
-.sheet-demo dl { margin: .5rem 0 0; display: grid; grid-template-columns: 6rem 1fr; gap: .3rem 1rem; }
-.sheet-demo dt { color: rgb(var(--ink-soft)); }
-.sheet-demo dd { margin: 0; }
 .note { font-size: .75rem; color: rgb(var(--ink-soft)); margin-top: .4rem; }
 .tile .rank { margin-top: 0; }
-.tile .freeze { display: block; border-radius: 8px; border: 1px solid rgb(var(--warn)); }
 .tile .btn.ghost { color: rgb(var(--ink)); }
+.tile .entry { border: 0; padding: 0; }
+.tile .asof { margin-top: 0; }
 </style></head>
 <body><div class="sheet"><section class="tile" data-theme="league">
 <h2>מקצועי · בהיר</h2>
@@ -226,23 +309,22 @@ body { padding: 2rem; background: #fff; }
 <h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
 <div class="spec">
  <div class="display" style="font-size:2.1rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
- <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1.5rem;font-weight:800">52</div><small>24 · 800 · מספרי מקרא</small>
+ <div style="font-size:1.25rem;font-weight:800">כל הרשימות</div><small>20 · 800 · כותרת גרף, מספרים בשורות</small>
  <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
- <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
- <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">נכון ל-7.10.2026</div><small>14 · משני</small>
  <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
 </div>
 <h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
 <div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
 <h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
-<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה, מקורות ואודות</a></div>
 <div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
 <h3>שורת רשימה</h3>
-<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
-<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
-<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
-<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
-<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">23</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:76.67%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: שורה אחת מתחת לגרף, וההסבר המלא במילון</h3>
+<p class="asof">נכון ל-8.10.2026 · 41 סקרים · <a href="#">איך זה חושב?</a></p>
+<div style="margin-top:.75rem"><article class="entry" id="current"><h3>ממוצע הסקרים</h3><p class="where">מופיע ב: המצב היום · בית</p><dl><dt>סוג</dt><dd>סיכום סקרים</dd><dt>מקור</dt><dd>טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר</dd><dt>הנחה</dt><dd>כל מכון נספר פעם אחת (הסקר האחרון שלו). זה סיכום תיאורי של מה שפורסם — לא תחזית ולא מודל.</dd></dl><a class="more" href="#">פירוט מלא</a></article></div>
 <p class="note">רדיוס 12px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
 </section><section class="tile" data-theme="board">
 <h2>חדשותי · בהיר</h2>
@@ -250,23 +332,22 @@ body { padding: 2rem; background: #fff; }
 <h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
 <div class="spec">
  <div class="display" style="font-size:2.9rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
- <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1.5rem;font-weight:800">52</div><small>24 · 800 · מספרי מקרא</small>
+ <div style="font-size:1.25rem;font-weight:800">כל הרשימות</div><small>20 · 800 · כותרת גרף, מספרים בשורות</small>
  <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
- <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
- <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">נכון ל-7.10.2026</div><small>14 · משני</small>
  <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
 </div>
 <h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
 <div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
 <h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
-<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה, מקורות ואודות</a></div>
 <div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
 <h3>שורת רשימה</h3>
-<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
-<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
-<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
-<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
-<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">23</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:76.67%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: שורה אחת מתחת לגרף, וההסבר המלא במילון</h3>
+<p class="asof">נכון ל-8.10.2026 · 41 סקרים · <a href="#">איך זה חושב?</a></p>
+<div style="margin-top:.75rem"><article class="entry" id="current"><h3>ממוצע הסקרים</h3><p class="where">מופיע ב: המצב היום · בית</p><dl><dt>סוג</dt><dd>סיכום סקרים</dd><dt>מקור</dt><dd>טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר</dd><dt>הנחה</dt><dd>כל מכון נספר פעם אחת (הסקר האחרון שלו). זה סיכום תיאורי של מה שפורסם — לא תחזית ולא מודל.</dd></dl><a class="more" href="#">פירוט מלא</a></article></div>
 <p class="note">רדיוס 10px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
 </section><section class="tile" data-theme="league" data-dark="">
 <h2>מקצועי · חשוך</h2>
@@ -274,23 +355,22 @@ body { padding: 2rem; background: #fff; }
 <h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
 <div class="spec">
  <div class="display" style="font-size:2.1rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
- <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1.5rem;font-weight:800">52</div><small>24 · 800 · מספרי מקרא</small>
+ <div style="font-size:1.25rem;font-weight:800">כל הרשימות</div><small>20 · 800 · כותרת גרף, מספרים בשורות</small>
  <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
- <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
- <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">נכון ל-7.10.2026</div><small>14 · משני</small>
  <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
 </div>
 <h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
 <div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
 <h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
-<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה, מקורות ואודות</a></div>
 <div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
 <h3>שורת רשימה</h3>
-<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
-<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
-<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
-<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
-<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">23</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:76.67%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: שורה אחת מתחת לגרף, וההסבר המלא במילון</h3>
+<p class="asof">נכון ל-8.10.2026 · 41 סקרים · <a href="#">איך זה חושב?</a></p>
+<div style="margin-top:.75rem"><article class="entry" id="current"><h3>ממוצע הסקרים</h3><p class="where">מופיע ב: המצב היום · בית</p><dl><dt>סוג</dt><dd>סיכום סקרים</dd><dt>מקור</dt><dd>טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר</dd><dt>הנחה</dt><dd>כל מכון נספר פעם אחת (הסקר האחרון שלו). זה סיכום תיאורי של מה שפורסם — לא תחזית ולא מודל.</dd></dl><a class="more" href="#">פירוט מלא</a></article></div>
 <p class="note">רדיוס 12px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
 </section><section class="tile" data-theme="board" data-dark="">
 <h2>חדשותי · חשוך</h2>
@@ -298,22 +378,21 @@ body { padding: 2rem; background: #fff; }
 <h3>כתב: שישה צעדים, גוף אחד לכל הטקסט והמספרים</h3>
 <div class="spec">
  <div class="display" style="font-size:2.9rem;line-height:1.06">52 מנדטים</div><small>כותרת ראשית בלבד (display)</small>
- <div style="font-size:1.25rem;font-weight:800">על הסף: שתי רשימות</div><small>20 · 800 · כותרת קבוצה</small>
+ <div style="font-size:1.5rem;font-weight:800">52</div><small>24 · 800 · מספרי מקרא</small>
+ <div style="font-size:1.25rem;font-weight:800">כל הרשימות</div><small>20 · 800 · כותרת גרף, מספרים בשורות</small>
  <div style="font-size:1rem">מפלגות הממשלה היוצאת</div><small>16 · 400 · גוף</small>
- <div style="font-size:.875rem;color:rgb(var(--ink-soft))">ממוצע 37 סקרים, עד 7.10.2026</div><small>14 · משני ומקורות</small>
- <div class="num" style="font-size:1.25rem;font-weight:800">22 &nbsp; <span class="ltr">18–27</span></div><small>20 · 800 · מספרים (ספרות שוות רוחב)</small>
+ <div style="font-size:.875rem;color:rgb(var(--ink-soft))">נכון ל-7.10.2026</div><small>14 · משני</small>
  <div style="font-size:.75rem;color:rgb(var(--ink-soft))">0 &nbsp; 10 &nbsp; 20 &nbsp; 30</div><small>12 · צירים בלבד, לא מתחת</small>
 </div>
 <h3>מצב ברשימה: צורה וטקסט, לא רק צבע</h3>
 <div class="chips"><span class="chip"><i class="full"></i>עוברת</span><span class="chip"><i class="half"></i>על הסף</span><span class="chip"><i></i>מתחת לסף</span></div>
 <h3>פעולות ובחירת תצוגה (כפתור אחד בפס העליון פותח את שתי הבחירות)</h3>
-<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה ומקורות</a></div>
+<div class="line"><a class="btn" href="#">לבנות את הכנסת שלי</a><a class="btn ghost" href="#">שיטה, מקורות ואודות</a></div>
 <div class="line" style="margin-top:.75rem"><span style="font-weight:700">עיצוב</span><span class="seg"><span class="on">מקצועי</span><span>חדשותי</span></span><span style="font-weight:700">תצוגה</span><span class="seg"><span>יום</span><span>לילה</span><span class="on">לפי המכשיר</span></span></div>
 <h3>שורת רשימה</h3>
-<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">22</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:73.33%"></span></span><span class="rng"></span></li></ol>
-<h3>שקיפות: "איך זה חושב?" נפתח כגיליון קצר, לא כפסקה</h3>
-<div class="sheet-demo"><b>איך זה חושב?</b><dl><dt>סוג</dt><dd>תרחיש</dd><dt>מקור</dt><dd>37 סקרים מאומתים, מנוע החוק, 20,000 תרחישים</dd><dt>נכון ל-</dt><dd>7.10.2026</dd><dt>הנחה</dt><dd>טווח 80% מתרחישי יום הבחירות. לא תחזית ולא סיכוי.</dd></dl><p style="margin:.6rem 0 0"><a href="#">לשיטה המלאה</a></p></div>
-<h3>באנר הקפאה (סעיף 16ה): אחד, מתחת לפס העליון, בכל עמוד</h3>
-<div class="freeze" role="note"><p>הסקרים באתר אינם עדכניים. לפי חוק, מתום יום שישי שלפני הבחירות ועד סגירת הקלפיות לא מתפרסמים סקרים חדשים.</p></div>
+<ol class="rank"><li class="row"><span class="nm">הליכוד</span><span class="n num">23</span><span class="plot" aria-hidden="true"><span class="bar" style="left:60.00%;width:30.00%"></span><span class="dot" style="left:76.67%"></span></span><span class="rng"></span></li></ol>
+<h3>שקיפות: שורה אחת מתחת לגרף, וההסבר המלא במילון</h3>
+<p class="asof">נכון ל-8.10.2026 · 41 סקרים · <a href="#">איך זה חושב?</a></p>
+<div style="margin-top:.75rem"><article class="entry" id="current"><h3>ממוצע הסקרים</h3><p class="where">מופיע ב: המצב היום · בית</p><dl><dt>סוג</dt><dd>סיכום סקרים</dd><dt>מקור</dt><dd>טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר</dd><dt>הנחה</dt><dd>כל מכון נספר פעם אחת (הסקר האחרון שלו). זה סיכום תיאורי של מה שפורסם — לא תחזית ולא מודל.</dd></dl><a class="more" href="#">פירוט מלא</a></article></div>
 <p class="note">רדיוס 10px · רווחים 4 · 8 · 12 · 16 · 24 · 32 · 48 · יעד נגיעה 44px לפחות · תנועה: רק מילוי המושבים בכניסה</p>
 </section></div></body></html>

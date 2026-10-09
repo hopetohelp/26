@@ -76,9 +76,6 @@ a { color: rgb(var(--accent)); text-underline-offset: 3px; }
 .navd a[aria-current] { color: rgb(var(--frame-ink)); font-weight: 700; border-bottom-color: rgb(var(--signal)); }
 [data-theme="league"] .navd a[aria-current] { border-bottom-color: rgb(var(--accent)); }
 
-.freeze { display: none; background: rgb(var(--warn-soft)); color: rgb(var(--warn)); border-block: 1px solid rgb(var(--warn)); }
-[data-freeze] .freeze { display: block; }
-.freeze p { margin: 0; padding: .75rem 1rem; font-weight: 700; font-size: .875rem; line-height: 1.5; }
 
 /* ---------- תוכן ---------- */
 main { padding: 0 1rem 7rem; }
@@ -157,8 +154,8 @@ main { padding: 0 1rem 7rem; }
 /* ---------- סרגל תחתון בטלפון ---------- */
 .tabs { position: sticky; bottom: 0; z-index: 5; background: rgb(var(--card)); border-top: 1px solid rgb(var(--line)); }
 .tabs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
-.tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
-.tabs a[aria-current] { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; height: 4rem; font-size: .75rem; text-decoration: none; color: rgb(var(--ink-faint)); border-top: 3px solid transparent; margin-top: -1px; }
+.tabs a[aria-current], .tabs button[aria-current], html[data-more] .tabs button.more { color: rgb(var(--ink)); font-weight: 700; border-top-color: rgb(var(--accent)); }
 .tabs svg { width: 1.4rem; height: 1.4rem; }
 
 /* ---------- מחשב ---------- */
@@ -180,6 +177,7 @@ main { padding: 0 1rem 7rem; }
   .row, .axisrow { grid-template-columns: minmax(0, 13rem) 2.6rem minmax(0, 1fr) 5rem; }
   .axisrow .ticks { grid-column: 3; }
   .row .rng { display: block; color: rgb(var(--ink-soft)); font-size: .875rem; text-align: end; }
+  .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; }
   .index { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 3rem; }
   .index li:nth-last-child(-n+3) a { border-bottom: 1px solid rgb(var(--line)); }
 }
@@ -191,33 +189,120 @@ main { padding: 0 1rem 7rem; }
 html[data-static] .tabs { position: static; }
 .index li:last-child a { border-bottom: 1px solid rgb(var(--line)); }
 
+/* ===== גרסה 2: תמצות, גרף קודם ===== */
+.asof { margin: .6rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); display: flex; flex-wrap: wrap; gap: .25rem .5rem; align-items: center; }
+.asof a { font-weight: 600; }
+.leg1 { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: .75rem 0 0; font-size: 1rem; font-weight: 600; align-items: center; }
+.leg1 span { display: inline-flex; align-items: center; gap: .5rem; }
+.leg1 b { font-size: 1.25rem; font-weight: 800; }
+.thr { display: flex; align-items: center; gap: .75rem; margin: .5rem 0; font-size: .875rem; font-weight: 700; color: rgb(var(--ink-soft)); }
+.thr::before, .thr::after { content: ""; flex: 1; border-top: 2px dashed rgb(var(--ink-faint)); }
+.row.tall { grid-template-areas: "nm n plot" "dl dl dl"; row-gap: .15rem; padding-bottom: .5rem; }
+.row.tall .nm { grid-area: nm; } .row.tall .n { grid-area: n; } .row.tall .plot { grid-area: plot; } .row.tall .rng { grid-area: rng; }
+.row .dl { grid-area: dl; display: flex; align-items: center; gap: .6rem; font-size: .875rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.below { margin: .5rem 0 0; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.cta.mini p { margin: .4rem 0 0; font-size: .875rem; }
+.cta.mini .btn { margin-top: .9rem; }
+
+/* מגמה: SVG בקנה מידה חופשי, תוויות ב-HTML בגודל קבוע */
+.tchart { position: relative; margin-top: .5rem; }
+.tchart svg { display: block; width: 100%; height: 10rem; }
+.tchart .ln { fill: none; stroke: rgb(var(--accent)); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.tchart .ref { stroke: rgb(var(--ink)); stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.tchart .wh { stroke: rgb(var(--accent) / .7); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tchart .gl { stroke: rgb(var(--line)); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.tl { position: absolute; transform: translate(-50%, -50%); font-size: .875rem; font-weight: 700; line-height: 1; white-space: nowrap; direction: ltr; }
+.tl.soft { font-weight: 400; font-size: .75rem; color: rgb(var(--ink-soft)); transform: translate(-50%, 0); }
+.tl.big { font-size: 1rem; font-weight: 800; }
+
+/* שינוי מול 2022: דמבל */
+.drow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; align-items: center; gap: .1rem .75rem; padding: .5rem 0; border-top: 1px solid rgb(var(--line)); }
+.drow:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.drow .nm { font-weight: 600; line-height: 1.25; }
+.drow .nm small { display: block; font-size: .75rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.dbplot { position: relative; height: 1.5rem; direction: ltr; }
+.dbplot i.g { position: absolute; top: 0; bottom: 0; width: 1px; background: rgb(var(--line)); }
+.dbplot .rg { position: absolute; top: 50%; height: .35rem; margin-top: -.175rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
+.dbplot .ln2 { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: rgb(var(--ink-faint)); }
+.dbplot .d22 { position: absolute; top: 50%; width: .9rem; height: .9rem; margin: -.45rem 0 0 -.45rem; border-radius: 50%; background: rgb(var(--paper)); box-shadow: inset 0 0 0 2px rgb(var(--ink)); }
+.dbplot .dnow { position: absolute; top: 50%; width: .9rem; height: .9rem; margin: -.45rem 0 0 -.45rem; border-radius: 50%; background: rgb(var(--ink)); box-shadow: 0 0 0 2px rgb(var(--paper)); }
+.drow .av { text-align: end; line-height: 1.1; }
+.drow .av b { font-size: 1.25rem; font-weight: 800; display: block; }
+.drow .av small { font-size: .75rem; color: rgb(var(--ink-soft)); white-space: nowrap; }
+.k-hollow { width: .8rem; height: .8rem; border-radius: 50%; box-shadow: inset 0 0 0 2px rgb(var(--ink)); background: rgb(var(--paper)); display: inline-block; }
+
+/* ערכת גרפים */
+.kit { display: grid; gap: 1.5rem; padding: 1.5rem 1rem 3rem; max-width: 90rem; margin: 0 auto; }
+.plate { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 1.25rem; background: rgb(var(--card)); }
+.plate .ft { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 0 0 .25rem; }
+.plate .use { margin: 1rem 0 0; font-size: .75rem; color: rgb(var(--ink-soft)); border-top: 1px solid rgb(var(--line)); padding-top: .5rem; }
+.plate .rank { margin-top: .25rem; }
+.plate .hemi { margin-top: .5rem; }
+.plate .row .rng { display: none; }
+@media (min-width: 1024px) { .kit { grid-template-columns: 1fr 1fr; } .plate .row, .plate .axisrow { grid-template-columns: minmax(0, 1fr) 2.1rem minmax(5.5rem, 38%); } }
+
+/* מילון המספרים (שיטה, מקורות ואודות) */
+.seg2 { display: flex; gap: .25rem; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(var(--ink) / .35); width: fit-content; max-width: 100%; overflow-x: auto; margin-top: 1rem; }
+.seg2 a { padding: .45rem 1rem; border-radius: 999px; font-weight: 700; font-size: .875rem; color: rgb(var(--ink)); text-decoration: none; white-space: nowrap; }
+.seg2 a[aria-current] { background: rgb(var(--signal)); color: rgb(var(--signal-ink)); }
+.dict { display: grid; gap: 0; margin-top: 1rem; }
+.entry { padding: 1rem 0; border-top: 1px solid rgb(var(--line)); }
+.entry:last-child { border-bottom: 1px solid rgb(var(--line)); }
+.entry h3 { margin: 0; font-size: 1.25rem; font-weight: 800; line-height: 1.3; }
+.entry .where { margin: .1rem 0 .5rem; font-size: .875rem; color: rgb(var(--ink-soft)); }
+.entry dl { margin: 0; display: grid; grid-template-columns: 4.5rem 1fr; gap: .25rem .75rem; font-size: .875rem; line-height: 1.5; }
+.entry dt { color: rgb(var(--ink-soft)); font-weight: 600; }
+.entry dd { margin: 0; }
+.entry .more { display: inline-block; margin-top: .5rem; font-size: .875rem; font-weight: 600; }
+.mh { margin: 2rem 0 .25rem; font-size: 1.25rem; font-weight: 800; }
+.plain { margin: .5rem 0 0; padding: 0; list-style: none; font-size: .875rem; line-height: 1.55; }
+.plain li { padding: .45rem 0; border-top: 1px solid rgb(var(--line)); }
+.plain li:last-child { border-bottom: 1px solid rgb(var(--line)); }
+@media (min-width: 1024px) { .dict { grid-template-columns: 1fr 1fr; column-gap: 3rem; } .entry:nth-last-child(2) { border-bottom: 1px solid rgb(var(--line)); } }
+
+@media (min-width: 1024px) { .row.tall { grid-template-areas: "nm n plot rng" "dl dl dl dl"; } }
+
+.tabs button { width: 100%; font: inherit; font-size: .75rem; background: none; border-inline: 0; border-bottom: 0; cursor: pointer; }
+.scrim, .sheet { display: none; }
+html[data-more] .scrim { display: block; position: fixed; inset: 0; background: rgb(var(--band) / .5); z-index: 20; }
+html[data-more] .sheet { display: block; position: fixed; inset-inline: 0; bottom: 4rem; z-index: 21; background: rgb(var(--card)); border-radius: var(--radius) var(--radius) 0 0; border-top: 1px solid rgb(var(--line)); padding: .25rem 1rem .5rem; }
+.sheet-h { display: flex; align-items: center; justify-content: space-between; min-height: 3.25rem; }
+.sheet-h h2 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.sheet-x { border-color: rgb(var(--line)); }
+.sheet-x svg { width: 1.2rem; height: 1.2rem; }
+.sheet ul { list-style: none; margin: 0; padding: 0; }
+.sheet li a { display: flex; align-items: center; min-height: 3.5rem; border-top: 1px solid rgb(var(--line)); font-size: 1rem; font-weight: 600; color: rgb(var(--ink)); text-decoration: none; }
+html[data-card] .tabs, html[data-card] .scrim, html[data-card] .sheet { display: none; }
+@media (min-width: 1024px) { html[data-more] .scrim, html[data-more] .sheet { display: none; } }
+html[data-more] .tabs { z-index: 22; }
+html[data-more] .tabs a[aria-current] { color: rgb(var(--ink-faint)); font-weight: 400; border-top-color: transparent; }
+
 
 .wrap { padding: 1.25rem 1rem 2.5rem; max-width: 64rem; margin: 0 auto; }
 html[data-card] .wrap { padding: 2.2rem 2.4rem 2rem; max-width: none; }
 .acc-h { font-family: var(--font-display), var(--font-body), sans-serif; font-weight: 400; font-size: var(--hero); line-height: 1.06; margin: 0; text-wrap: balance; }
-.lede { margin-top: .75rem; }
-.grp { margin: 1.5rem 0 .25rem; font-size: 1rem; font-weight: 800; }
+.grp { margin: 1.25rem 0 .25rem; font-size: 1rem; font-weight: 800; }
 .arows { list-style: none; margin: 0; padding: 0; }
-.arow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; grid-template-areas: "nm plot av" "note note note"; align-items: center; gap: .1rem .75rem; padding: .55rem 0; border-top: 1px solid rgb(var(--line)); }
+.arow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; align-items: center; gap: .1rem .75rem; padding: .5rem 0; border-top: 1px solid rgb(var(--line)); }
 .arow:last-child { border-bottom: 1px solid rgb(var(--line)); }
-.arow .nm { grid-area: nm; font-weight: 600; line-height: 1.25; }
-.dplot { grid-area: plot; position: relative; height: 1.5rem; direction: ltr; }
+.arow .nm { font-weight: 600; line-height: 1.25; }
+.arow .nm .why { display: block; font-size: .75rem; font-weight: 400; color: rgb(var(--ink-soft)); }
+.dplot { position: relative; height: 1.5rem; direction: ltr; }
 .dplot i.g { position: absolute; top: 0; bottom: 0; width: 1px; background: rgb(var(--line)); }
 .dplot i.z { background: rgb(var(--ink-faint)); width: 1.5px; }
 .dplot .bar { position: absolute; top: 50%; height: .35rem; margin-top: -.175rem; border-radius: 99px; background: rgb(var(--accent) / .7); }
 .dplot .dot { position: absolute; top: 50%; width: .95rem; height: .95rem; margin: -.475rem 0 0 -.475rem; border-radius: 50%; background: rgb(var(--ink)); box-shadow: 0 0 0 2px rgb(var(--paper)); }
 .dplot .dot.sig { background: rgb(var(--signal)); box-shadow: 0 0 0 2px rgb(var(--paper)), 0 0 0 3.5px rgb(var(--ink)); }
-.arow .av { grid-area: av; text-align: end; line-height: 1.1; }
+.arow .av { text-align: end; line-height: 1.1; }
 .arow .av b { font-size: 1.25rem; font-weight: 800; display: block; }
 .arow .av small { font-size: .75rem; color: rgb(var(--ink-soft)); white-space: nowrap; }
-.arow .note { grid-area: note; font-size: .875rem; color: rgb(var(--ink)); font-weight: 700; padding-top: .1rem; }
 .arow.out .nm { font-weight: 800; }
 .axis { display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 46%) 4.6rem; gap: .1rem .75rem; font-size: .75rem; color: rgb(var(--ink-soft)); margin-top: .5rem; }
 .axis .ticks { grid-column: 2; position: relative; height: 1rem; direction: ltr; }
 .axis .ticks span { position: absolute; transform: translateX(-50%); }
 .axis .ends { grid-column: 2; display: flex; justify-content: space-between; direction: ltr; font-weight: 700; }
 .k-dot.sig { background: rgb(var(--signal)); box-shadow: 0 0 0 2px rgb(var(--paper)), 0 0 0 3.5px rgb(var(--ink)); }
-.depth { margin-top: 1.5rem; border-top: 1px solid rgb(var(--line)); }
+.depth { margin-top: 1.25rem; border-top: 1px solid rgb(var(--line)); }
 .depth summary { cursor: pointer; padding: .9rem 0; font-weight: 700; min-height: 3rem; list-style: none; display: flex; justify-content: space-between; }
 .depth summary::-webkit-details-marker { display: none; }
 .depth summary::after { content: "+"; font-size: 1.4rem; line-height: 1; color: rgb(var(--ink-soft)); }
@@ -227,33 +312,28 @@ html[data-card] .wrap { padding: 2.2rem 2.4rem 2rem; max-width: none; }
 .tbl th:first-child { text-align: start; font-weight: 600; }
 .tbl thead th { font-size: .75rem; color: rgb(var(--ink-soft)); font-weight: 600; }
 .cardfoot { display: none; }
-html[data-card] .cardfoot { display: flex; justify-content: space-between; margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid rgb(var(--line)); font-size: .75rem; color: rgb(var(--ink-soft)); }
-html[data-card] .top, html[data-card] .depth { display: none; }
+html[data-card] .cardfoot { display: flex; justify-content: space-between; margin-top: 1.2rem; padding-top: .8rem; border-top: 1px solid rgb(var(--line)); font-size: .75rem; color: rgb(var(--ink-soft)); }
+html[data-card] .top, html[data-card] .depth, html[data-card] .asof { display: none; }
 html[data-card] .acc-h { font-size: 2.3rem; }
-@media (min-width: 1024px) { html:not([data-card]) .arow { grid-template-columns: 13rem minmax(0, 1fr) 6rem 15rem; grid-template-areas: "nm plot av note"; } html:not([data-card]) .axis { grid-template-columns: 13rem minmax(0, 1fr) 6rem 15rem; } .arow .note { font-weight: 600; font-size: .875rem; } }
+@media (min-width: 1024px) { html:not([data-card]) .arow { grid-template-columns: 13rem minmax(0, 1fr) 6rem; } html:not([data-card]) .axis { grid-template-columns: 13rem minmax(0, 1fr) 6rem; } }
 </style><script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
 d.dataset.theme=q.get('theme')==='board'?'board':'league';var m=q.get('mode');
 if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))d.dataset.dark='';
-if(q.get('freeze'))d.dataset.freeze='';if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';})();</script></head>
+if(q.get('card'))d.dataset.card='';if(q.get('static'))d.dataset.static='';if(q.get('more'))d.dataset.more='';})();</script></head>
 <body>
-<header class="top"><div class="top-in"><a class="brand" href="#">בחירות 26</a><span class="spacer"></span><span class="count">בחירות קודמות: 2022</span></div></header>
+<header class="top"><div class="top-in"><a class="brand" href="#">בחירות 26</a><span class="spacer"></span><span class="count">בחירות קודמות: 2022</span><button class="icon-btn" type="button" aria-label="תצוגה: עיצוב ויום או לילה"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg></button></div></header>
 <main class="wrap" id="main">
   <h1 class="acc-h">ב-4 מתוך 11 רשימות התוצאה יצאה מחוץ לטווח הסקרים</h1>
-  <p class="lede">ב-7 רשימות התוצאה הייתה בתוך הטווח של ארבעת הסקרים האחרונים. ש"ס, רע"ם וחד"ש-תע"ל קיבלו יותר מהטווח, ומרצ לא עברה את אחוז החסימה.</p>
-
-  <div class="key" style="margin-top:1.25rem"><span><i class="k-bar"></i>הטווח של ארבעת הסקרים האחרונים</span><span><i class="k-dot"></i>תוצאה רשמית בתוך הטווח</span><span><i class="k-dot sig"></i>תוצאה רשמית מחוץ לטווח</span></div>
-  <p class="src" style="margin-top:.25rem">הציר: כמה מנדטים יותר (+) או פחות (−) מממוצע ארבעת הסקרים.</p>
+  <div class="key" style="margin-top:1rem"><span><i class="k-bar"></i>טווח 4 הסקרים האחרונים</span><span><i class="k-dot"></i>תוצאה, בתוך הטווח</span><span><i class="k-dot sig"></i>תוצאה, מחוץ לטווח</span></div>
   <div class="axis" aria-hidden="true"><div class="ticks"><span style="left:11.11%">−4</span><span style="left:33.33%">−2</span><span style="left:55.56%">0</span><span style="left:77.78%">+2</span><span style="left:100.00%">+4</span></div><div class="ends"><span>פחות</span><span>יותר</span></div></div>
-
-  <h2 class="grp">מחוץ לטווח הסקרים</h2>
-  <ul class="arows"><li class="arow out"><span class="nm">מרצ</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:50.00%;width:11.11%"></span><span class="dot sig" style="left:5.56%"></span></span><span class="av"><b class="num">0</b><small>סקרים <span class="ltr">4–5</span></small></span><span class="note">לא עברה את אחוז החסימה: 3.16% מהקולות הכשרים</span></li><li class="arow out"><span class="nm">ש"ס</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:52.78%;width:11.11%"></span><span class="dot sig" style="left:86.11%"></span></span><span class="av"><b class="num">11</b><small>סקרים <span class="ltr">8–9</span></small></span><span class="note">2 מנדטים יותר מהגבוה בסקרים</span></li><li class="arow out"><span class="nm">רע"ם</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:55.56%;width:1.20%"></span><span class="dot sig" style="left:66.67%"></span></span><span class="av"><b class="num">5</b><small>סקרים <span class="ltr">4</span></small></span><span class="note">1 מנדטים יותר מהגבוה בסקרים</span></li><li class="arow out"><span class="nm">חד"ש-תע"ל</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:55.56%;width:1.20%"></span><span class="dot sig" style="left:66.67%"></span></span><span class="av"><b class="num">5</b><small>סקרים <span class="ltr">4</span></small></span><span class="note">1 מנדטים יותר מהגבוה בסקרים</span></li></ul>
+  <h2 class="grp">מחוץ לטווח</h2>
+  <ul class="arows"><li class="arow out"><span class="nm">מרצ<small class="why">מתחת לסף: 3.16%</small></span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:50.00%;width:11.11%"></span><span class="dot sig" style="left:5.56%"></span></span><span class="av"><b class="num">0</b><small>סקרים <span class="ltr">4–5</span></small></span></li><li class="arow out"><span class="nm">ש"ס</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:52.78%;width:11.11%"></span><span class="dot sig" style="left:86.11%"></span></span><span class="av"><b class="num">11</b><small>סקרים <span class="ltr">8–9</span></small></span></li><li class="arow out"><span class="nm">רע"ם</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:55.56%;width:1.20%"></span><span class="dot sig" style="left:66.67%"></span></span><span class="av"><b class="num">5</b><small>סקרים <span class="ltr">4</span></small></span></li><li class="arow out"><span class="nm">חד"ש-תע"ל</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:55.56%;width:1.20%"></span><span class="dot sig" style="left:66.67%"></span></span><span class="av"><b class="num">5</b><small>סקרים <span class="ltr">4</span></small></span></li></ul>
   <h2 class="grp">בתוך הטווח</h2>
   <ul class="arows"><li class="arow"><span class="nm">הליכוד</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:38.89%;width:44.44%"></span><span class="dot" style="left:61.11%"></span></span><span class="av"><b class="num">32</b><small>סקרים <span class="ltr">30–34</span></small></span></li><li class="arow"><span class="nm">יש עתיד</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:36.11%;width:44.44%"></span><span class="dot" style="left:47.22%"></span></span><span class="av"><b class="num">24</b><small>סקרים <span class="ltr">23–27</span></small></span></li><li class="arow"><span class="nm">הציונות הדתית ועוצמה יהודית</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:36.11%;width:33.33%"></span><span class="dot" style="left:58.33%"></span></span><span class="av"><b class="num">14</b><small>סקרים <span class="ltr">12–15</span></small></span></li><li class="arow"><span class="nm">המחנה הממלכתי</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:41.67%;width:33.33%"></span><span class="dot" style="left:63.89%"></span></span><span class="av"><b class="num">12</b><small>סקרים <span class="ltr">10–13</span></small></span></li><li class="arow"><span class="nm">יהדות התורה</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:55.56%;width:1.20%"></span><span class="dot" style="left:55.56%"></span></span><span class="av"><b class="num">7</b><small>סקרים <span class="ltr">7</span></small></span></li><li class="arow"><span class="nm">ישראל ביתנו</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:47.22%;width:11.11%"></span><span class="dot" style="left:58.33%"></span></span><span class="av"><b class="num">6</b><small>סקרים <span class="ltr">5–6</span></small></span></li><li class="arow"><span class="nm">העבודה</span><span class="dplot" aria-hidden="true"><i class="g" style="left:11.11%"></i><i class="g" style="left:33.33%"></i><i class="g z" style="left:55.56%"></i><i class="g" style="left:77.78%"></i><i class="g" style="left:100.00%"></i><span class="bar" style="left:41.67%;width:22.22%"></span><span class="dot" style="left:41.67%"></span></span><span class="av"><b class="num">4</b><small>סקרים <span class="ltr">4–6</span></small></span></li></ul>
-
-  <details class="depth"><summary>הצגה כטבלה: כל ארבעת הסקרים</summary><table class="tbl"><thead><tr><th>רשימה</th><th>כאן 11</th><th>חדשות 12</th><th>חדשות 13</th><th>ערוץ 14</th><th>תוצאה</th></tr></thead><tbody><tr><th scope="row">הליכוד</th><td class="num">31</td><td class="num">31</td><td class="num">30</td><td class="num">34</td><td class="num"><b>32</b></td></tr><tr><th scope="row">יש עתיד</th><td class="num">24</td><td class="num">25</td><td class="num">27</td><td class="num">23</td><td class="num"><b>24</b></td></tr><tr><th scope="row">הציונות הדתית ועוצמה יהודית</th><td class="num">14</td><td class="num">14</td><td class="num">15</td><td class="num">12</td><td class="num"><b>14</b></td></tr><tr><th scope="row">המחנה הממלכתי</th><td class="num">11</td><td class="num">11</td><td class="num">10</td><td class="num">13</td><td class="num"><b>12</b></td></tr><tr><th scope="row">ש"ס</th><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">9</td><td class="num"><b>11</b></td></tr><tr><th scope="row">יהדות התורה</th><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num"><b>7</b></td></tr><tr><th scope="row">ישראל ביתנו</th><td class="num">6</td><td class="num">6</td><td class="num">5</td><td class="num">6</td><td class="num"><b>6</b></td></tr><tr><th scope="row">רע"ם</th><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num"><b>5</b></td></tr><tr><th scope="row">חד"ש-תע"ל</th><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num"><b>5</b></td></tr><tr><th scope="row">העבודה</th><td class="num">6</td><td class="num">5</td><td class="num">6</td><td class="num">4</td><td class="num"><b>4</b></td></tr><tr><th scope="row">מרצ</th><td class="num">5</td><td class="num">5</td><td class="num">4</td><td class="num">4</td><td class="num"><b>0</b></td></tr></tbody></table></details>
-  <p class="src" style="margin-top:1rem">הסקר האחרון של כל אחד מארבעת ערוצי הטלוויזיה: כאן 11 (קנטר, 27.10.2022), חדשות 12 (מדגם, 28.10.2022),
-  חדשות 13 (קמיל פוקס, 28.10.2022), ערוץ 14 (דיירקט פולס, 27.10.2022). תוצאות: ועדת הבחירות המרכזית. הפס מראה את הנמוך והגבוה בארבעת הסקרים, לא טווח טעות סטטיסטי.</p>
+  <details class="depth"><summary>הצגה כטבלה</summary><table class="tbl"><thead><tr><th>רשימה</th><th>כאן 11</th><th>חדשות 12</th><th>חדשות 13</th><th>ערוץ 14</th><th>תוצאה</th></tr></thead><tbody><tr><th scope="row">הליכוד</th><td class="num">31</td><td class="num">31</td><td class="num">30</td><td class="num">34</td><td class="num"><b>32</b></td></tr><tr><th scope="row">יש עתיד</th><td class="num">24</td><td class="num">25</td><td class="num">27</td><td class="num">23</td><td class="num"><b>24</b></td></tr><tr><th scope="row">הציונות הדתית ועוצמה יהודית</th><td class="num">14</td><td class="num">14</td><td class="num">15</td><td class="num">12</td><td class="num"><b>14</b></td></tr><tr><th scope="row">המחנה הממלכתי</th><td class="num">11</td><td class="num">11</td><td class="num">10</td><td class="num">13</td><td class="num"><b>12</b></td></tr><tr><th scope="row">ש"ס</th><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">9</td><td class="num"><b>11</b></td></tr><tr><th scope="row">יהדות התורה</th><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num"><b>7</b></td></tr><tr><th scope="row">ישראל ביתנו</th><td class="num">6</td><td class="num">6</td><td class="num">5</td><td class="num">6</td><td class="num"><b>6</b></td></tr><tr><th scope="row">רע"ם</th><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num"><b>5</b></td></tr><tr><th scope="row">חד"ש-תע"ל</th><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num"><b>5</b></td></tr><tr><th scope="row">העבודה</th><td class="num">6</td><td class="num">5</td><td class="num">6</td><td class="num">4</td><td class="num"><b>4</b></td></tr><tr><th scope="row">מרצ</th><td class="num">5</td><td class="num">5</td><td class="num">4</td><td class="num">4</td><td class="num"><b>0</b></td></tr></tbody></table></details>
+  <p class="asof">הסקר האחרון של כאן 11, חדשות 12, חדשות 13 וערוץ 14 · <a href="#">איך זה חושב?</a></p>
   <div class="cardfoot"><span>בחירות 26 · בחירות לכנסת ה-25</span><span>הסקרים מול התוצאות</span></div>
 </main>
+<nav class="tabs" aria-label="ניווט בטלפון"><ul><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>בית</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>מצב ותחזית</a></li><li><button type="button" class="more" aria-haspopup="dialog" aria-controls="more-sheet" aria-current="page"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>עוד</button></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>הכנסת שלי</a></li><li><a href="#"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M7 8h10M7 12h7"/></svg>תמיכה</a></li></ul></nav><div class="scrim" aria-hidden="true"></div><section class="sheet" id="more-sheet" role="dialog" aria-modal="true" aria-labelledby="more-t"><div class="sheet-h"><h2 id="more-t">עוד</h2><button type="button" class="icon-btn sheet-x" aria-label="סגירה"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><ul><li><a href="#">סקר האתר</a></li><li><a href="#">סקרים ומגמות</a></li><li><a href="#">בחירות קודמות</a></li><li><a href="#">מה השתנה מהבחירות האחרונות</a></li><li><a href="#">שיטה, מקורות ואודות</a></li></ul></section><script>(function(){var d=document.documentElement,m=document.querySelector('.tabs .more');if(!m)return;m.addEventListener('click',function(){d.toggleAttribute('data-more');});document.querySelector('.scrim').addEventListener('click',function(){d.removeAttribute('data-more');});document.querySelector('.sheet-x').addEventListener('click',function(){d.removeAttribute('data-more');});})();</script>
 <script>if(location.search.indexOf('table=1')>-1){var d=document.querySelector('.depth');if(d)d.setAttribute('open','');}</script>
 </body></html>

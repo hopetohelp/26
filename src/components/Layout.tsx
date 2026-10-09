@@ -2,7 +2,7 @@ import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
 import { dateLong } from "../lib/format";
@@ -13,14 +13,16 @@ import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label }) => ({ to, label })), { to: "/support", label: "תמיכה" }];
-/** הלשוניות בתחתית המסך בטלפון. יתר המסכים נגישים מריבועי מסך הבית. */
+/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026). "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/today", label: "מצב ותחזית", icon: "board" },
-  { to: "/community", label: "סקר האתר", icon: "bars" },
+  { to: "more", label: "עוד", icon: "more" },
   { to: "/guess", label: "הכנסת שלי", icon: "guess" },
   { to: "/support", label: "תמיכה", icon: "comments" },
 ];
+/** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
+const MORE = PAGES.filter((p) => !TABS.some((t) => t.to === p.to));
 
 const central = (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats;
 const strip = Object.entries(central)
@@ -224,25 +226,77 @@ function UnreadDot() {
 }
 
 function MobileTabs({ unread }: { unread: boolean }) {
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  const moreBtn = useRef<HTMLButtonElement>(null);
+  const closeBtn = useRef<HTMLButtonElement>(null);
+  const inMore = MORE.some((p) => pathname === p.to || pathname.startsWith(`${p.to}/`));
+  const close = () => { setOpen(false); moreBtn.current?.focus(); };
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    closeBtn.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); moreBtn.current?.focus(); } };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+  const tabClass = (active: boolean) =>
+    `flex flex-col items-center justify-center gap-0.5 h-16 w-full text-xs no-underline ${active ? "text-ink font-bold" : "text-ink-faint"}`;
   return (
-    <nav aria-label="ניווט בטלפון" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-      <ul className="grid grid-cols-5">
-        {TABS.map((t) => (
-          <li key={t.to}>
-            <NavLink
-              to={t.to}
-              end={t.to === "/"}
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`
-              }
-            >
-              <span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span>
-              {t.label}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <>
+      {open && <div className="md:hidden fixed inset-0 z-40 bg-black/45" onClick={close} aria-hidden="true" />}
+      {open && (
+        <div
+          id="more-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="more-title"
+          className="md:hidden fixed inset-x-0 z-40 bg-paper-card text-ink rounded-t-theme border-t border-paper-line px-4 pb-2 bottom-[calc(4rem+env(safe-area-inset-bottom))]"
+        >
+          <div className="flex items-center justify-between min-h-[52px]">
+            <h2 id="more-title" className="text-xl font-extrabold">עוד</h2>
+            <button ref={closeBtn} type="button" onClick={close} aria-label="סגירה" className="w-11 h-11 grid place-items-center rounded-full border border-paper-line">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+          </div>
+          <ul>
+            {MORE.map((p) => (
+              <li key={p.to}>
+                <Link to={p.to} className="flex items-center min-h-[56px] border-t border-paper-line font-semibold no-underline text-ink hover:text-ink">{p.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <nav aria-label="ניווט בטלפון" className={`md:hidden fixed bottom-0 inset-x-0 ${open ? "z-50" : "z-30"} bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]`}>
+        <ul className="grid grid-cols-5">
+          {TABS.map((t) => (
+            <li key={t.to}>
+              {t.to === "more" ? (
+                <button
+                  ref={moreBtn}
+                  type="button"
+                  aria-haspopup="dialog"
+                  aria-expanded={open}
+                  aria-controls="more-sheet"
+                  onClick={() => setOpen((v) => !v)}
+                  className={tabClass(open || inMore)}
+                  aria-current={inMore && !open ? "page" : undefined}
+                >
+                  <span className="relative"><Icon name={t.icon} /></span>
+                  {t.label}
+                </button>
+              ) : (
+                <NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => tabClass(isActive && !open)}>
+                  <span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span>
+                  {t.label}
+                </NavLink>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 }
 
