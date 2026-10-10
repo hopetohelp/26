@@ -1,5 +1,5 @@
 /**
- * שיתוף מסך "סקר האתר": תמונת המסך כולו, תמונת חלוקת המנדטים (ממוצע המשתתפים), תמונת ההצבעה (בחירות קודמות ← הבאות) וקישור.
+ * שיתוף מסך "סקר האתר": תמונת חלוקת המנדטים (ממוצע המשתתפים), תמונת ההצבעה (בחירות קודמות ← הבאות) וקישור.
  * באותו סגנון של תמונת "הכנסת שלי" (shareImage.ts). השאלות שבכל אחת נשענות על הנתונים שבמסך — בלי מספר חדש.
  */
 import type { Dashboard } from "../../lib/crowdApi";
@@ -80,14 +80,4 @@ export async function voteImage(d: Dashboard): Promise<Blob> {
   ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
   ctx.fillText(SITE_LABEL, R, H - 48);
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
-}
-
-/** צילום המסך כולו (התוכן הראשי), ברקע העיצוב הפעיל */
-export async function screenImage(): Promise<Blob> {
-  const { toBlob } = await import("html-to-image");
-  const node = (document.querySelector("main") ?? document.body) as HTMLElement;
-  const bg = `rgb(${getComputedStyle(document.documentElement).getPropertyValue("--paper").trim()})`;
-  const blob = await toBlob(node, { backgroundColor: bg, pixelRatio: Math.min(2, window.devicePixelRatio || 1), filter: (n) => !(n instanceof HTMLElement && n.dataset.noCapture !== undefined) });
-  if (!blob) throw new Error("capture");
-  return blob;
 }

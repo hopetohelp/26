@@ -1,21 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Dashboard } from "../../lib/crowdApi";
-import { COMMUNITY_TEXT, COMMUNITY_URL, screenImage, seatsImage, voteImage } from "./communityShare";
+import { COMMUNITY_TEXT, COMMUNITY_URL, seatsImage, voteImage } from "./communityShare";
 import { Btn } from "./ui";
 
-type Kind = "screen" | "seats" | "vote" | "link";
+type Kind = "seats" | "vote" | "link";
 const OPTIONS: { id: Kind; label: string; hint: string }[] = [
-  { id: "screen", label: "תמונת המסך כולו", hint: "צילום של כל מה שמוצג כאן עכשיו" },
   { id: "seats", label: "חלוקת המנדטים", hint: "תמונה מעוצבת: לוח 120 המושבים לפי ממוצע המשתתפים" },
   { id: "vote", label: "לאן הצביעו ויצביעו", hint: "תמונה מעוצבת: הצבעה ב-2022 מול הכוונה ב-2026" },
   { id: "link", label: "קישור", hint: "משפט קצר עם קישור לסקר האתר" },
 ];
-const FILE: Record<Exclude<Kind, "link">, string> = { screen: "סקר-האתר-מסך.png", seats: "סקר-האתר-מנדטים.png", vote: "סקר-האתר-הצבעה.png" };
+const FILE: Record<Exclude<Kind, "link">, string> = { seats: "סקר-האתר-מנדטים.png", vote: "סקר-האתר-הצבעה.png" };
 
 /**
  * שיתוף סקר האתר (הכרעת בעלים 10.10.2026): פס עליון שמזמין לשתף, כפתור צף בפינה השמאלית התחתונה,
- * ושניהם פותחים חלון עם ארבע אפשרויות — בכולן קישור לאתר.
+ * ושניהם פותחים חלון עם שלוש אפשרויות — בכולן קישור לאתר.
  */
 export default function CommunityShare({ d }: { d: Dashboard }) {
   const [open, setOpen] = useState(false);
@@ -31,7 +30,7 @@ export default function CommunityShare({ d }: { d: Dashboard }) {
     <>
       {slot ? createPortal(banner, slot) : banner}
       {createPortal(
-        <button type="button" data-no-capture onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}
+        <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}
           className="fixed z-30 left-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] md:bottom-6 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">
           שיתוף
         </button>, document.body)}
@@ -55,13 +54,8 @@ function ShareDialog({ d, onClose }: { d: Dashboard; onClose: () => void }) {
   const disabled = (k: Kind) => (k === "seats" && !hasSeats) || (k === "vote" && !hasVote);
 
   const makeFile = async (k: Exclude<Kind, "link">) => {
-    if (k === "screen") box.current?.closest<HTMLElement>("[data-share-layer]")?.style.setProperty("visibility", "hidden");
-    try {
-      const blob = k === "screen" ? await screenImage() : k === "seats" ? await seatsImage(d) : await voteImage(d);
-      return new File([blob], FILE[k], { type: "image/png" });
-    } finally {
-      box.current?.closest<HTMLElement>("[data-share-layer]")?.style.removeProperty("visibility");
-    }
+    const blob = k === "seats" ? await seatsImage(d) : await voteImage(d);
+    return new File([blob], FILE[k], { type: "image/png" });
   };
   const share = async () => {
     setBusy(true); setMsg(null);
@@ -97,7 +91,7 @@ function ShareDialog({ d, onClose }: { d: Dashboard; onClose: () => void }) {
   };
 
   return createPortal(
-    <div data-share-layer className="fixed inset-0 z-50 bg-black/45 flex items-end md:items-center justify-center" onClick={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === "Escape" && onClose()}>
+    <div className="fixed inset-0 z-50 bg-black/45 flex items-end md:items-center justify-center" onClick={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === "Escape" && onClose()}>
       <div ref={box} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="community-share-title" className="bg-paper-card text-ink w-full md:max-w-md rounded-t-theme md:rounded-theme p-5 space-y-4 max-h-[92vh] overflow-y-auto focus:outline-none">
         <div className="flex items-start justify-between gap-2">
           <h2 id="community-share-title" className="text-2xl font-display leading-tight">שיתוף סקר האתר</h2>
