@@ -79,6 +79,7 @@ describe("participant & saves", () => {
     const blocs = { mode: "gov37", blocs: [{ id: "gov", name: "א", lists: [IDS[0]], target: 60 }, { id: "rest", name: "ב", lists: [], target: 60 }] };
     expect((await save(tok, "blocs", blocs)).status).toBe(200);
     expect((await save(tok, "blocs", { ...blocs, blocs: [{ ...blocs.blocs[0], target: 70 }, blocs.blocs[1]] })).status).toBe(200);
+    t += 24 * 3600 * 1000; // יום אחר: ההשערה של היום הקודם נשארת (כלל "האחרונה של כל יום")
     const a = await save(tok, "seats", seats(30), "same-op-123");
     const b = await save(tok, "seats", seats(90), "same-op-123");
     expect(b.data.version.id).toBe(a.data.version.id);
@@ -335,6 +336,7 @@ it('כל שמירת מפלגות שומרת גושים קבועים ואישיי
   expect(Object.keys(original.data.version.payload.fixedBlocSeats)).toEqual(['government','coalition','opposition','unity','arab']);
   expect(original.data.version.payload.personalBlocSeats).toEqual([{id:'mine',name:'שלי',lists:['likud','yashar'],seats:120}]);
   await save(tok,'blocs',{mode:'custom',blocs:[{id:'mine',name:'שלי החדש',lists:['likud','shas'],target:null}]});
+  t += 24 * 3600 * 1000; // יום אחר: ההשערה הקודמת נשארת בהיסטוריה
   const next = await save(tok,'seats',seats(60));
   expect(next.data.version.payload.personalBlocSeats[0].seats).toBe(60);
   const history = (await call('/history?unit=seats',{token:tok})).data.versions;

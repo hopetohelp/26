@@ -170,6 +170,28 @@ describe("מחיקת ההשערות", () => {
   });
 });
 
+describe("ההשערה האחרונה של כל יום", () => {
+  it("בכל יחידה נשארת רק האחרונה בכל יום (שעון ישראל); יחידות ומשתתפים אחרים לא נפגעים", async () => {
+    const a = await call("/auth/register", { body: { email: "daily-a@example.com", password: PW } });
+    const b = await call("/auth/register", { body: { email: "daily-b@example.com", password: PW } });
+    const at = (iso) => { env.NOW = () => Date.parse(iso); };
+    const put = (token, unit, op, n) => call("/save", { token, body: { unit, op_id: op, registry: "r", payload: unit === "seats" ? seats(n) : { v2022: null, v2026: "likud" } } });
+    at("2026-10-08T08:00:00Z"); await put(a.data.token, "seats", "op-day1-aaaa1", 50); await put(b.data.token, "seats", "op-day1-bbbb1", 50);
+    at("2026-10-08T09:00:00Z"); await put(a.data.token, "seats", "op-day1-aaaa2", 55); await put(a.data.token, "vote", "op-day1-vote1", 0);
+    at("2026-10-08T20:30:00Z"); await put(a.data.token, "seats", "op-day1-aaaa3", 60);
+    // 21:30 UTC = 00:30 למחרת בישראל — יום חדש, הקודמת נשארת
+    at("2026-10-08T21:30:00Z"); await put(a.data.token, "seats", "op-day2-aaaa4", 70);
+    at("2026-10-08T21:45:00Z"); await put(a.data.token, "seats", "op-day2-aaaa5", 80);
+    const mine = (await call("/history?unit=seats", { token: a.data.token })).data.versions;
+    expect(mine.map((v) => v.payload.seats[Object.keys(v.payload.seats)[0]].v).sort()).toEqual([60, 80]);
+    expect((await call("/history?unit=vote", { token: a.data.token })).data.versions).toHaveLength(1);
+    expect((await call("/history?unit=seats", { token: b.data.token })).data.versions).toHaveLength(1);
+    // ניסיון חוזר של שמירה אחרונה אינו יוצר גרסה
+    await put(a.data.token, "seats", "op-day2-aaaa5", 80);
+    expect((await call("/history?unit=seats", { token: a.data.token })).data.versions).toHaveLength(2);
+  });
+});
+
 /** אימות מייל דרך Firebase (הכרעת בעלים 9.10.2026) — Firebase מדומה: משתמשים לפי מייל, שליחת מייל וסימון אימות */
 describe("אימות מייל", () => {
   let users, sent, deleted, codes;
