@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { call } from "../../lib/crowdApi";
 import { clearAll } from "../../lib/crowdSession";
-import LinkSaver from "./LinkSaver";
 import { Btn, inputCls, Notice } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
-/** הקישור האישי (part="link") או ייצוא ומחיקה (part="data") — שתי מגירות באזור האישי */
-export default function MyData({ session, part }: { session: ReturnType<typeof useSession>; part: "link" | "data" }) {
+/** ייצוא ומחיקה — מגירת "הנתונים שלי" באזור האישי (מגירת הקישור האישי הוסרה 10.10.2026) */
+export default function MyData({ session, part }: { session: ReturnType<typeof useSession>; part: "data" }) {
   const [msg, setMsg] = useState<string | null>(null);
   const [del, setDel] = useState(0);
   const [typed, setTyped] = useState("");
-  const [rotateAsk, setRotateAsk] = useState(false);
-  const { token, link } = session;
+  const { token } = session;
 
   if (!session.online) return <Notice>כשהשמירה תיפתח באתר, כאן יופיעו החשבון שלכם, ייצוא ומחיקה מלאה. בינתיים הכול נשמר רק בדפדפן הזה, כטיוטה.</Notice>;
-  if (!token) return <p className="text-sm text-ink-soft">{part === "link" ? "קישור הכניסה האישי נוצר מיד כשנפתח חשבון." : "בלי חשבון הכול נשמר רק בדפדפן הזה."}</p>;
+  if (!token) return <p className="text-sm text-ink-soft">בלי חשבון הכול נשמר רק בדפדפן הזה.</p>;
 
   const run = async (fn: () => Promise<void>) => {
     setMsg(null);
@@ -35,42 +33,6 @@ export default function MyData({ session, part }: { session: ReturnType<typeof u
 
   return (
     <div className="space-y-5">
-      {part === "link" && (
-        <section className="space-y-4">
-          <p className="text-sm leading-relaxed">
-            הקישור מכניס אתכם ישר לחשבון, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אפשר גם לקבל מייל לאיפוס סיסמה (רק למייל שאומת), אבל הקישור הזה עובד תמיד, גם בלי מייל מאומת. אל תשתפו אותו.
-          </p>
-          {link ? (
-            <LinkSaver token={link} />
-          ) : (
-            <p className="text-sm">הקישור לא שמור בדפדפן הזה. אם אינו אצלכם — צרו קישור חדש; הקודם יפסיק לעבוד.</p>
-          )}
-          <div className="flex gap-3 flex-wrap border-t border-paper-line pt-4">
-            {!rotateAsk ? (
-              <Btn onClick={() => setRotateAsk(true)}>קישור אישי חדש</Btn>
-            ) : (
-              <span className="flex gap-2 items-center flex-wrap">
-                <span className="text-sm">הקישור הקודם יפסיק לעבוד מיד.</span>
-                <Btn
-                  kind="primary"
-                  onClick={() =>
-                    run(async () => {
-                      const r = await call<{ link: string }>("/link/rotate", { token, body: {} });
-                      session.setLink(r.link);
-                      setRotateAsk(false);
-                      setMsg("נוצר קישור אישי חדש. שמרו אותו עכשיו — בהעתקה, בשליחה לעצמכם או בהורדה כקובץ.");
-                    })
-                  }
-                >
-                  ליצור קישור חדש
-                </Btn>
-                <Btn onClick={() => setRotateAsk(false)}>ביטול</Btn>
-              </span>
-            )}
-          </div>
-        </section>
-      )}
-
       {part === "data" && (
         <section className="space-y-3">
           <p className="text-sm">כל מה ששמרתם — ההשערות, ההיסטוריה והפרטים — בקובץ אחד.</p>

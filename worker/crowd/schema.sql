@@ -179,6 +179,12 @@ CREATE TABLE IF NOT EXISTS password_reset (
   created_at TEXT NOT NULL
 );
 
+-- המייל שאליו נשלח האיפוס (גיבוב) — מסומן מאומת כשהאיפוס מושלם (פתיחת המייל מוכיחה בעלות).
+CREATE TABLE IF NOT EXISTS password_reset_email (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  email_hash TEXT NOT NULL
+);
+
 -- חשבונות מנהל (הכרעת בעלים 9.10.2026): סשן של חשבון כזה נכנס לממשק הניהול בלי מפתח הניהול. ההגדרה ידנית, במאגר בלבד (לא בקוד).
 CREATE TABLE IF NOT EXISTS admins (
   participant TEXT PRIMARY KEY REFERENCES participants(id),

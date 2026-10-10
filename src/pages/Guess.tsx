@@ -5,7 +5,7 @@ import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
 import { maskIdentifier } from "../lib/identifier";
 import { absorbFeedbackToken } from "../lib/feedback";
-import { introSeen, loadDraft, markIntroSeen, saveDraft, setLinkAck } from "../lib/crowdSession";
+import { introSeen, loadDraft, markIntroSeen, saveDraft } from "../lib/crowdSession";
 import { decodeGuess } from "../lib/shareGuess";
 import { RecoverForm } from "./guess/Account";
 import Dashboard from "./guess/Dashboard";
@@ -47,7 +47,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
   const setView = (value: "mine" | "statistics") => { if (value !== view) navigate(value === "statistics" ? "/community" : "/guess"); };
   const top = useRef<HTMLDivElement>(null);
 
-  // הקישור האישי (?t=) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
+  // קישור אישי ישן (?t=; אין הנפקה חדשה מ-10.10.2026, והוא נמחק כשהחשבון מאומת) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
   useEffect(() => {
     const t = params.get("t");
     if (!t) return;
@@ -59,8 +59,6 @@ export default function Guess({ community = false }: { community?: boolean }) {
     call<{ token: string; username: string | null }>("/auth/link", { body: { link: t } })
       .then((r) => {
         session.setToken(r.token);
-        session.setLink(t);
-        setLinkAck(true);
         setRecoverLink(t);
         setFlash({ ok: true, text: r.username ? `נכנסתם עם הקישור האישי, בשם ${maskIdentifier(r.username)}.` : "נכנסתם עם הקישור האישי." });
       })

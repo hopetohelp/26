@@ -12,7 +12,7 @@ import { FEEDBACK_URL, accountSupport, getThread, mergeSavedThreads, replyToThre
 import { WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread";
 
 /**
- * האזור האישי (הכרעת בעלים 9.10.2026, במקום "תמיכה"): תמונה ושם, ומגירות — הפרטים שלי · קישור כניסה · תמיכה · הנתונים שלי.
+ * האזור האישי (הכרעת בעלים 9.10.2026, במקום "תמיכה"): תמונה ושם, ומגירות — הפרטים שלי · תמיכה · הנתונים שלי (מגירת הקישור הוסרה 10.10.2026).
  * התמיכה היא שיחה אחת ארוכה עם כל ההודעות של הגולש והצוות, ושדה ההודעה בתחתית.
  * בלי חשבון: השיחה נשמרת אצלנו, והזיהוי שלה רק בדפדפן הזה; בהרשמה היא עוברת לחשבון (syncLocal).
  */
@@ -145,7 +145,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
   );
 }
 
-type DrawerId = "details" | "link" | "support" | "data";
+type DrawerId = "details" | "support" | "data";
 
 export default function Support() {
   const session = useSession();
@@ -161,7 +161,7 @@ export default function Support() {
 
   return (
     <div>
-      <PageTitle lead="הפרטים, קישור הכניסה והשיחה עם צוות האתר — במקום אחד.">אזור אישי</PageTitle>
+      <PageTitle lead="הפרטים שלכם והשיחה עם צוות האתר — במקום אחד. התמיכה פתוחה גם בלי חשבון.">אזור אישי</PageTitle>
       <header className="flex items-center gap-4 mb-4">
         <Avatar name={me?.name ?? email} picture={token ? getPicture() : null} />
         <div className="min-w-0">
@@ -171,14 +171,9 @@ export default function Support() {
       </header>
       {/* טלפון: מגירה אחרי מגירה. מחשב (הכרעת בעלים 8.10.2026): הפרטים בטור הצר, השיחה בטור הרחב */}
       <div className="border-t border-paper-line lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-x-10 lg:items-start lg:border-t-0 [&>*]:min-w-0">
-        <Drawer className="lg:col-start-1 lg:border-t" title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(חסר מייל)" /> : undefined}>
+        <Drawer className="lg:col-start-1 lg:border-t" title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
           <Account session={session} />
         </Drawer>
-        {token && (
-          <Drawer className="lg:col-start-1" title="קישור כניסה" open={open.has("link")} onToggle={() => toggle("link")}>
-            <MyData session={session} part="link" />
-          </Drawer>
-        )}
         <Drawer className="lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:border-t" title="תמיכה" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
           <Conversation session={session} />
         </Drawer>

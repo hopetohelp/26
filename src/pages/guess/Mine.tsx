@@ -42,7 +42,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
           <Notice>השמירה עוד לא פעילה באתר. אפשר כבר לבנות את הכנסת שלכם — הטיוטה נשמרת בדפדפן הזה, ותחכה לכם.</Notice>
         </div>
       )}
-      {/* הקישור האישי וההמלצה להירשם — בכרטיס הגישה הכללי (AccessCard) בראש כל עמוד */}
+      {/* דרישת האימות לחשבונות ישנים — בכרטיס הגישה הכללי (AccessCard) */}
       {!session.token && session.online && (
         <div className="mb-4"><Notice>בלי חשבון ההשערה נשמרת רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל (בלחיצה על ״שמור״ או <Link to="/support">באזור האישי</Link>); מה שכבר כתבתם עולה לחשבון.</Notice></div>
       )}

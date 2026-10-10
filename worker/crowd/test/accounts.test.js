@@ -100,18 +100,35 @@ describe("חשבון = מייל או Google", () => {
 });
 
 describe("משתמשים קיימים", () => {
-  it("אורח ישן: needsEmail, ממשיך לשמור; הוספת מייל וסיסמה יוצרת קישור אישי", async () => {
+  it("אורח ישן: needsEmail ו-legacy, ממשיך לשמור; הוספת מייל וסיסמה בלי קישור אישי חדש", async () => {
     const t = await legacy();
-    expect((await call("/me", { token: t })).data).toMatchObject({ needsEmail: true, guest: true });
+    expect((await call("/me", { token: t })).data).toMatchObject({ needsEmail: true, guest: true, legacy: true });
     expect((await save(t)).status).toBe(200);
     expect((await call("/auth/claim", { token: t, body: { email: "late@example.com", password: "short" } })).data.error).toBe("weak_password");
     const c = await call("/auth/claim", { token: t, body: { email: "late@example.com", password: PW } });
     expect(c.data).toMatchObject({ email: "late@example.com" });
-    expect(c.data.link).toMatch(/^[\w-]{20,}$/);
+    expect(c.data.link).toBeUndefined();
     const me = (await call("/me", { token: t })).data;
     expect(me).toMatchObject({ needsEmail: false, hasPassword: true });
     expect(me.latest.seats).toBeTruthy();
     expect((await call("/auth/login", { body: { email: "late@example.com", password: PW } })).status).toBe(200);
+  });
+
+  it("שם משתמש ישן וקישור ישן: עד האימות נכנסים בשניהם; אחרי האימות שניהם נמחקים והשם נשמר כשם תצוגה", async () => {
+    const t = await legacy({ username: "old_timer" });
+    const id = env.DB.raw.prepare("SELECT participant FROM sessions WHERE token_hash = ?").get(await sha256(t)).participant;
+    const link = "K".repeat(12) + "linklinklinklinklinklink";
+    env.DB.raw.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").run(id, await sha256(link), "x");
+    expect((await call("/auth/claim", { token: t, body: { email: "timer@example.com" } })).status).toBe(200);
+    expect((await call("/me", { token: t })).data).toMatchObject({ legacy: true, verified: false, username: "old_timer" });
+    expect((await call("/auth/link", { body: { link } })).status).toBe(200);
+    expect((await call("/auth/login", { body: { username: "old_timer", password: PW } })).status).toBe(200);
+    env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = ?").run(id); // המייל אומת
+    expect((await call("/me", { token: t })).data).toMatchObject({ legacy: false, verified: true, username: null, name: "old_timer" });
+    expect((await call("/auth/link", { body: { link } })).status).toBe(401);
+    expect((await call("/auth/login", { body: { username: "old_timer", password: PW } })).status).toBe(401);
+    expect((await call("/auth/login", { body: { email: "timer@example.com", password: PW } })).status).toBe(200);
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM credentials WHERE kind = 'link'").get().n).toBe(0);
   });
 
   it("שם משתמש ישן: מוסיף מייל בלי סיסמה חדשה; מייל תפוס נדחה", async () => {
@@ -279,15 +296,25 @@ describe("אימות מייל", () => {
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM password_reset").get().n).toBe(0);
   });
 
-  it("אותה תשובה לכתובת לא רשומה, למייל לא מאומת ולחשבון Google בלבד — ובלי שום מייל", async () => {
-    await call("/auth/register", { body: { email: "unverified.forgot@example.com", password: PW } });
+  it("אותה תשובה לכתובת לא רשומה ולחשבון Google בלבד — ובלי שום מייל", async () => {
     await call("/auth/google", { body: { credential: await google({ email: "only.google@gmail.com" }) } });
-    for (const email of ["nobody@example.com", "unverified.forgot@example.com", "only.google@gmail.com"]) {
+    for (const email of ["nobody@example.com", "only.google@gmail.com"]) {
       expect((await call("/auth/forgot", { body: { email } })).data).toEqual({ sent: true });
     }
     expect(sent).toHaveLength(0);
     expect(users.size).toBe(0);
     expect((await call("/auth/forgot", { body: { email: "not-an-email" } })).data.error).toBe("email_required");
+  });
+
+  it("מייל שעוד לא אומת: האיפוס עובד ומסמן אותו מאומת (פתיחת המייל מוכיחה בעלות)", async () => {
+    const r = await call("/auth/register", { body: { email: "unverified.forgot@example.com", password: PW } });
+    expect((await call("/auth/forgot", { body: { email: "unverified.forgot@example.com" } })).data).toEqual({ sent: true });
+    expect(sent).toHaveLength(1);
+    const done = await call("/auth/reset", { body: { secret: secretOf(), password: "brand new password 9" } });
+    expect(done.status).toBe(200);
+    expect((await call("/me", { token: done.data.token })).data).toMatchObject({ verified: true, emails: [{ email: "unverified.forgot@example.com", verified: true }] });
+    expect((await call("/me", { token: r.data.token })).status).toBe(401);
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM password_reset_email").get().n).toBe(0);
   });
 
   it("בקשה חדשה מבטלת את הקודמת (ומשתמש זמני חדש); סוד שגוי או שפג תוקפו נדחה", async () => {

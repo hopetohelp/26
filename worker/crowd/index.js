@@ -206,6 +206,27 @@ async function migrateLegacyEmail(env, cred, now) {
   ];
 }
 
+/**
+ * חשבון מאומת (Google או מייל שאומת) — הקישור האישי ושם המשתמש הישן נמחקים (הכרעת בעלים 10.10.2026: כניסה רק במייל וסיסמה או Google).
+ * שם משתמש ישן נשמר כשם תצוגה (מוצפן), כמו השם של כל חשבון חדש, אם עוד אין שם.
+ */
+async function retireLegacy(env, participant, now) {
+  const verified = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google' UNION SELECT 1 AS x FROM emails WHERE participant = ? AND verified = 1").bind(participant, participant).first();
+  if (!verified) return;
+  const stmts = [];
+  if (await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant).first()) {
+    stmts.push(env.DB.prepare("DELETE FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant));
+  }
+  const pw = await passwordCred(env, participant);
+  if (pw?.username) {
+    const hasName = await env.DB.prepare("SELECT 1 AS x FROM profile WHERE participant = ? AND name_enc IS NOT NULL").bind(participant).first();
+    const name = pw.username.includes("@") ? null : normalizeName(pw.username);
+    if (!hasName && name) stmts.push(await nameRow(env, participant, name, now));
+    stmts.push(env.DB.prepare("UPDATE credentials SET username = NULL, username_norm = NULL WHERE id = ?").bind(pw.id));
+  }
+  if (stmts.length) await env.DB.batch(stmts);
+}
+
 async function firstEmail(env, participant) {
   const r = await env.DB.prepare("SELECT enc FROM emails WHERE participant = ? ORDER BY created_at LIMIT 1").bind(participant).first();
   return r ? await open(env, r.enc) : null;
@@ -265,7 +286,10 @@ const routes = {
       await env.DB.batch(await migrateLegacyEmail(env, pw, now));
       pw = await passwordCred(env, participant);
     }
+    await retireLegacy(env, participant, now);
+    pw = await passwordCred(env, participant);
     const g = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'google'").bind(participant).first();
+    const hasLink = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant).first();
     const emailRows = (await env.DB.prepare("SELECT enc, source, verified FROM emails WHERE participant = ? ORDER BY created_at").bind(participant).all()).results || [];
     const emails = [];
     for (const r of emailRows) emails.push({ email: await open(env, r.enc), source: r.source, verified: !!r.verified });
@@ -284,6 +308,8 @@ const routes = {
       isAdmin: !!(await env.DB.prepare("SELECT 1 AS x FROM admins WHERE participant = ?").bind(participant).first()),
       // נספר בסטטיסטיקות רק חשבון מאומת: Google או מייל שאומת
       verified: !!g || emailRows.some((r) => r.verified),
+      // חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google מיד בכניסה (הכרעת בעלים 10.10.2026)
+      legacy: !!hasLink || !!pw?.username || (!pw && !g),
     };
   },
 
@@ -381,7 +407,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "password_reset", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -393,15 +419,9 @@ const routes = {
     return { ok: true };
   },
 
-  "POST /link/rotate": async ({ env, request, now }) => {
-    const { participant } = await requireAuth(env, request, now);
-    const token = randomToken();
-    const th = await sha256(token);
-    await env.DB.batch([
-      env.DB.prepare("DELETE FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant),
-      env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, th, iso(now)),
-    ]);
-    return { link: token };
+  // אין יותר הנפקת קישורים אישיים (הכרעת בעלים 10.10.2026). קישור ישן ממשיך להכניס עד שהחשבון מאומת.
+  "POST /link/rotate": async () => {
+    throw new HttpError(410, "link_retired");
   },
 
   // הרשמה = מייל + סיסמה (הכרעת בעלים 9.10.2026: כל חשבון עם מייל או Google; לא יותר מחשבון אחד לכל מייל).
@@ -418,12 +438,10 @@ const routes = {
     const [stmts, participant] = await createParticipant(env, request, now, true);
     const h = await hashPassword(body.password);
     const [sess, token] = await newSession(env, participant, now, isClientToken(body.token) ? body.token : undefined);
-    const link = isClientToken(body.link) ? body.link : randomToken();
     try {
       await env.DB.batch([
         ...stmts,
         env.DB.prepare("INSERT INTO credentials (participant, kind, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?)").bind(participant, h.hash, h.salt, h.iterations, h.algo, iso(now)),
-        env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)),
         await emailRow(env, participant, eh, email.display, "password", 0, now),
         ...(name ? [await nameRow(env, participant, name, now)] : []),
         sess,
@@ -431,7 +449,7 @@ const routes = {
     } catch {
       throw new HttpError(409, "email_taken");
     }
-    return { token, link };
+    return { token };
   },
 
   // אין יותר שמירה בלי חשבון בשרת (הכרעת בעלים 9.10.2026): בלי חשבון — הכול נשמר בדפדפן בלבד ולא נכנס לסטטיסטיקות.
@@ -462,7 +480,6 @@ const routes = {
         const [created, id] = await createParticipant(env, request, now);
         stmts.push(...created);
         participant = id;
-        stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(isClientToken(body?.link) ? body.link : randomToken()), iso(now)));
       }
     }
     // לחשבון יש כבר Google אחר עם אותו מייל מאומת — נכנסים בלי להוסיף מזהה שני
@@ -478,6 +495,7 @@ const routes = {
     }
     const [sess, token] = await newSession(env, participant, now, clientToken);
     await env.DB.batch([...stmts, sess]);
+    await retireLegacy(env, participant, now);
     return { token };
   },
 
@@ -504,15 +522,12 @@ const routes = {
       const h = await hashPassword(body.password);
       stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, hash, salt, iterations, algo, created_at) VALUES (?, 'password', ?, ?, ?, ?, ?)").bind(participant, h.hash, h.salt, h.iterations, h.algo, iso(now)));
     }
-    const hasLink = await env.DB.prepare("SELECT 1 AS x FROM credentials WHERE participant = ? AND kind = 'link'").bind(participant).first();
-    const link = hasLink ? null : randomToken();
-    if (link) stmts.push(env.DB.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").bind(participant, await sha256(link), iso(now)));
     try {
       await env.DB.batch(stmts);
     } catch {
       throw new HttpError(409, "email_taken");
     }
-    return { email: email.display, ...(link ? { link } : {}) };
+    return { email: email.display };
   },
 
   // שם תצוגה (רשות) — נשמר מוצפן, מוצג רק לבעל החשבון
@@ -575,6 +590,7 @@ const routes = {
     await env.DB.prepare("UPDATE emails SET verified = 1 WHERE participant = ? AND hash = ?").bind(row.participant, await emailHash(env, n.norm)).run();
     await dropFirebaseUser(env, row.participant);
     await env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(row.participant).run();
+    await retireLegacy(env, row.participant, now);
     return { verified: true, account: true };
   },
 
@@ -597,6 +613,7 @@ const routes = {
       env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(participant),
     ]);
     try { await fb.removeUser(env, idToken); } catch { /* נשאר ב-Firebase, בלי נתונים שלנו */ }
+    await retireLegacy(env, participant, now);
     return { verified: true };
   },
 
@@ -691,7 +708,8 @@ const routes = {
     return { token: await setPassword(env, participant, body.password, now), username: cred.username, email: await firstEmail(env, participant) };
   },
 
-  // איפוס סיסמה במייל (הכרעת בעלים 10.10.2026) — רק לחשבון עם מייל מאומת וסיסמה. Firebase משמש רק לשליחת המייל:
+  // איפוס סיסמה במייל (הכרעת בעלים 10.10.2026) — לכל חשבון עם מייל וסיסמה, גם כשהמייל עוד לא אומת: פתיחת המייל מוכיחה בעלות,
+  // ובסיום האיפוס המייל מסומן מאומת. Firebase משמש רק לשליחת המייל:
   // הקישור שבו חוזר לאתר עם סוד חד-פעמי (RESET_TTL), שנמצא רק במייל — מי שפתח את המייל הוא היחיד שיכול לקבוע סיסמה חדשה.
   // התשובה זהה בין אם יש חשבון ובין אם לא (אין בדיקת "מי רשום"); 3 בקשות ביום למייל, 10 בשעה ל-IP.
   "POST /auth/forgot": async ({ env, request, now, body }) => {
@@ -701,7 +719,7 @@ const routes = {
     const [cur] = await ipKeys(env, request);
     if (!(await hit(env, "fg:" + cur, 10, now))) throw new HttpError(429, "slow_down");
     const eh = await emailHash(env, email.norm);
-    const row = await env.DB.prepare("SELECT participant, enc FROM emails WHERE hash = ? AND verified = 1").bind(eh).first();
+    const row = await env.DB.prepare("SELECT participant, enc FROM emails WHERE hash = ?").bind(eh).first();
     const cred = row ? await passwordCred(env, row.participant) : null;
     if (!row || !cred || !(await hit(env, "fe:" + eh, 3, now, 24 * HOUR))) return { sent: true };
     const address = await open(env, row.enc);
@@ -716,6 +734,7 @@ const routes = {
       await env.DB.batch([
         env.DB.prepare("INSERT INTO email_verify (participant, fb_enc, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET fb_enc = excluded.fb_enc, created_at = excluded.created_at").bind(row.participant, await seal(env, password), iso(now)),
         env.DB.prepare("INSERT INTO password_reset (participant, secret_hash, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET secret_hash = excluded.secret_hash, created_at = excluded.created_at").bind(row.participant, await sha256(secret), iso(now)),
+        env.DB.prepare("INSERT INTO password_reset_email (participant, email_hash) VALUES (?, ?) ON CONFLICT(participant) DO UPDATE SET email_hash = excluded.email_hash").bind(row.participant, eh),
       ]);
       await fb.sendVerify(env, idToken, `${env.SITE_URL || ""}?reset=${secret}`, { strict: true });
     } catch (e) {
@@ -740,12 +759,16 @@ const routes = {
     if (!(await passwordCred(env, r.participant))) throw new HttpError(401, "bad_reset");
     await clearFails(env, keys);
     const token = await setPassword(env, r.participant, body.password, now);
+    const target = await env.DB.prepare("SELECT email_hash FROM password_reset_email WHERE participant = ?").bind(r.participant).first();
+    if (target) await env.DB.prepare("UPDATE emails SET verified = 1 WHERE participant = ? AND hash = ?").bind(r.participant, target.email_hash).run();
     const idToken = await firebaseSession(env, r.participant, (await firstEmail(env, r.participant)) ?? "");
     await env.DB.batch([
       env.DB.prepare("DELETE FROM password_reset WHERE participant = ?").bind(r.participant),
+      env.DB.prepare("DELETE FROM password_reset_email WHERE participant = ?").bind(r.participant),
       env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(r.participant),
     ]);
     if (idToken) await fb.removeUser(env, idToken).catch(() => {});
+    await retireLegacy(env, r.participant, now);
     return { token };
   },
 
@@ -958,6 +981,7 @@ export async function cleanup(env, now) {
     env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(now - 24 * HOUR),
     env.DB.prepare("DELETE FROM sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
     env.DB.prepare("DELETE FROM password_reset WHERE created_at < ?").bind(iso(now - RESET_TTL)),
+    env.DB.prepare("DELETE FROM password_reset_email WHERE participant NOT IN (SELECT participant FROM password_reset)"),
     env.DB.prepare("DELETE FROM aggregates WHERE section = 'dashboard' AND published_at < ?").bind(iso(now - 7 * 24 * HOUR)),
   ]);
 }

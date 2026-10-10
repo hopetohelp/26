@@ -42,8 +42,13 @@ export function useSupportUnread(pathname: string): boolean {
   const [seen, setSeen] = useState(seenAt);
   useEffect(() => {
     let alive = true;
-    void latestTeamMessage().then(l => { if (alive) setLatest(l); });
-    return () => { alive = false; };
+    const load = () => void latestTeamMessage().then(l => { if (alive) setLatest(l); });
+    load();
+    // חזרה ללשונית ובדיקה תקופתית: תשובה חדשה של הצוות מסומנת גם בלי מעבר בין מסכים
+    const onVisible = () => { if (document.visibilityState === "visible") { cache = null; load(); } };
+    document.addEventListener("visibilitychange", onVisible);
+    const timer = window.setInterval(() => { cache = null; load(); }, 5 * 60_000);
+    return () => { alive = false; document.removeEventListener("visibilitychange", onVisible); window.clearInterval(timer); };
   }, [pathname]);
   useEffect(() => {
     const sync = () => setSeen(seenAt());
