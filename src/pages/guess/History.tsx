@@ -33,14 +33,16 @@ export default function History({ session }: { session: ReturnType<typeof useSes
     return () => { active = false; };
   }, [unit, session.online, session.token]);
 
+  const note = <p className="text-sm text-ink-soft">ההשערה האחרונה היא היחידה שנספרת בסטטיסטיקות הכלליות.</p>;
   const bar = <ClearAll session={session} onCleared={() => { setVersions([]); setPick([]); }} />;
-  if (!session.online) return <><Notice>ההיסטוריה תופיע כשהשמירה תיפתח באתר: כל שמירה תהיה נקודה על ציר הזמן, ואפשר יהיה להשוות בין שתיים.</Notice>{bar}</>;
-  if (!session.token) return <><Notice>עוד לא שמרתם. אחרי השמירה הראשונה, כל גרסה תופיע כאן.</Notice>{bar}</>;
+  if (!session.online) return <>{note}<Notice>ההיסטוריה תופיע כשהשמירה תיפתח באתר: כל שמירה תהיה נקודה על ציר הזמן, ואפשר יהיה להשוות בין שתיים.</Notice>{bar}</>;
+  if (!session.token) return <>{note}<Notice>עוד לא שמרתם. אחרי השמירה הראשונה, כל גרסה תופיע כאן.</Notice>{bar}</>;
 
   const toggle = (id: number) => setPick((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p.slice(-1), id]));
   const [a, b] = pick.map((id) => versions?.find((v) => v.id === id)).filter(Boolean).sort((x,y) => x!.id - y!.id) as Version<SeatsPayload>[];
   return (
     <div className="space-y-4">
+      {note}
       <Segmented label="יחידה" value={unit} onChange={setUnit} options={UNITS} />
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
