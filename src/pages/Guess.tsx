@@ -103,7 +103,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         <section id="statistics">
           <Dashboard session={session} />
         </section>
-      ); return <Split title={community ? "סקר האתר" : "הכנסת שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : undefined} primary={head} secondary={body} />; })()}
+      ); return <Split title={community ? "סקר האתר" : undefined} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : undefined} primary={head} secondary={body} />; })()}
     </>
   );
 }
