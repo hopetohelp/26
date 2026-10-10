@@ -310,13 +310,31 @@ it("סכום הקואליציה נשמר ונקרא בחשבון ובהיסטו�
   expect((await save(tok,'seats',{...payload,coalitionSeats:99},'coalition-op-001')).data.version.id).toBe(result.data.version.id);
 });
 
+describe("העדפות — השיוך האישי נשמר על המשתמש", () => {
+  it("נשמר, מוחזר ב-/me ובייצוא, נדחה כשאינו תקין ונמחק עם החשבון", async () => {
+    const token = await newP();
+    const lineage = { map: { rzp: ["ט"], otzma: ["ט"], likud: ["מחל", "מחל"] }, split: "manual", manual: { "ט": { rzp: 33.33, otzma: 66.7 } } };
+    expect((await call("/prefs", { token, body: { lineage } })).status).toBe(200);
+    const me = (await call("/me", { token })).data.prefs;
+    expect(me.lineage).toEqual({ map: { rzp: ["ט"], otzma: ["ט"], likud: ["מחל"] }, split: "manual", manual: { "ט": { rzp: 33.3, otzma: 66.7 } } });
+    expect(me.camps).toBeNull();
+    expect((await call("/export", { token })).data.lineage.lineage).toContain("manual");
+    expect((await call("/prefs", { token, body: { lineage: { ...lineage, split: "x" } } })).status).toBe(400);
+    expect((await call("/prefs", { token, body: { lineage: { map: { nope: [] }, split: "polls" } } })).status).toBe(400);
+    expect((await call("/prefs", { token, body: { lineage: { map: { likud: ["<b>"] }, split: "polls" } } })).status).toBe(400);
+    expect((await call("/prefs", { token, body: { lineage: { map: {}, split: "manual", manual: { "ט": { rzp: 101 } } } } })).status).toBe(400);
+    expect((await call("/prefs", { token, body: {} })).status).toBe(400);
+    expect((await call("/delete", { token, body: { confirm: "מחק" } })).status).toBe(200);
+  });
+});
+
 describe("העדפות — המחנות נשמרים על המשתמש", () => {
   it("נשמרים, מוחזרים ב-/me, נדחים כשאינם תקינים ונמחקים עם החשבון", async () => {
     const token = await newP();
-    expect((await call("/me", { token })).data.prefs).toEqual({ camps: null });
+    expect((await call("/me", { token })).data.prefs).toEqual({ camps: null, lineage: null });
     const ok = await call("/prefs", { token, body: { camps: { yashar: "", likud: "likud" } } });
     expect(ok.status).toBe(200);
-    expect((await call("/me", { token })).data.prefs).toEqual({ camps: { yashar: "", likud: "likud" } });
+    expect((await call("/me", { token })).data.prefs).toEqual({ camps: { yashar: "", likud: "likud" }, lineage: null });
     await call("/prefs", { token, body: { camps: { yashar: "nu_camp" } } });
     expect((await call("/me", { token })).data.prefs.camps).toEqual({ yashar: "nu_camp" });
     expect((await call("/prefs", { token, body: { camps: { nope: "x" } } })).status).toBe(400);

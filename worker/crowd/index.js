@@ -14,7 +14,7 @@ import { personalTotals, migrateBlocs } from "./lib/blocDefinitions.js";
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
 import { verifyGoogle } from "./lib/google.js";
 import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
-import { validateSave, validateCamps, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
+import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 import { moderate } from "./lib/moderation.js";
@@ -296,10 +296,12 @@ const routes = {
     const prof = await env.DB.prepare("SELECT name_enc FROM profile WHERE participant = ?").bind(participant).first();
     const pref = await env.DB.prepare("SELECT camps FROM prefs WHERE participant = ?").bind(participant).first();
     const camps = pref?.camps ? JSON.parse(pref.camps) : null;
+    const lin = await env.DB.prepare("SELECT lineage FROM lineage_prefs WHERE participant = ?").bind(participant).first();
+    const lineage = lin?.lineage ? JSON.parse(lin.lineage) : null;
     // ההשערה האחרונה ממתינה לאישור מנהל (חריגה) — הגולש רואה אותה כרגיל, עם הסבר
     const seatsPending = latest.seats ? (await dashboardState(env)).pending.has(latest.seats.id) : false;
     return {
-      participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps }, seatsPending,
+      participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps, lineage }, seatsPending,
       emails, name: prof ? await open(env, prof.name_enc) : null, hasPassword: !!pw,
       // חשבון בלי מייל ובלי Google (אורח או שם משתמש ישן) — נדרש להוסיף בכניסה הבאה (הכרעת בעלים 9.10.2026)
       needsEmail: !emails.length && !g,
@@ -316,13 +318,20 @@ const routes = {
   // העדפות אישיות (המחנות) — נשמרות על המשתמש, בלי גרסאות ובלי השפעה על הסטטיסטיקות
   "POST /prefs": async ({ env, request, now, body }) => {
     const { participant } = await requireAuth(env, request, now);
-    const r = validateCamps(body.camps);
-    if (!r.ok) throw bad("invalid", { field: r.error });
+    // camps (המחנות, הגרסה הקודמת) ו/או lineage (השיוך האישי) — לפחות אחד
+    if (body.camps === undefined && body.lineage === undefined) throw bad("invalid", { field: "prefs" });
+    const c = body.camps === undefined ? null : validateCamps(body.camps);
+    if (c && !c.ok) throw bad("invalid", { field: c.error });
+    const l = body.lineage === undefined ? null : validateLineage(body.lineage);
+    if (l && !l.ok) throw bad("invalid", { field: l.error });
     if (!(await hit(env, "s:" + participant, LIMITS.savesPerHour, now))) throw new HttpError(429, "rate");
-    await env.DB.prepare("INSERT INTO prefs (participant, camps, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET camps = excluded.camps, updated_at = excluded.updated_at")
-      .bind(participant, JSON.stringify(r.value), iso(now))
+    if (c) await env.DB.prepare("INSERT INTO prefs (participant, camps, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET camps = excluded.camps, updated_at = excluded.updated_at")
+      .bind(participant, JSON.stringify(c.value), iso(now))
       .run();
-    return { ok: true, camps: r.value };
+    if (l) await env.DB.prepare("INSERT INTO lineage_prefs (participant, lineage, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET lineage = excluded.lineage, updated_at = excluded.updated_at")
+      .bind(participant, JSON.stringify(l.value), iso(now))
+      .run();
+    return { ok: true, ...(c ? { camps: c.value } : {}), ...(l ? { lineage: l.value } : {}) };
   },
 
   "POST /save": async ({ env, request, now, body }) => {
@@ -385,6 +394,7 @@ const routes = {
       created_at: p.created_at,
       underReview: !!p.review,
       prefs: (await env.DB.prepare("SELECT camps, updated_at FROM prefs WHERE participant = ?").bind(participant).first()) ?? null,
+      lineage: (await env.DB.prepare("SELECT lineage, updated_at FROM lineage_prefs WHERE participant = ?").bind(participant).first()) ?? null,
       versions: versions.map((r) => ({ ...parseVersion(r), op_id: r.op_id, registry: r.registry })),
       credentials: creds,
       sessions: sessions.map((s) => ({ ...s, revoked: !!s.revoked })),
@@ -407,7 +417,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "credentials", "sessions", "prefs", "lineage_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )

@@ -128,6 +128,34 @@ export function validateCamps(c) {
   return { ok: true, value: out };
 }
 
+/**
+ * השיוך האישי במסך "מה השתנה – מפלגות": map — רשימה של היום ⇐ אותיות רשימות 2022;
+ * split — אופן החלוקה בפיצול; manual — לכל רשימת 2022, אחוז לכל רשימה של היום. לא נכנס לשום חישוב.
+ */
+export function validateLineage(x) {
+  if (!isObj(x) || !isObj(x.map)) return fail("lineage");
+  const map = {};
+  for (const [k, v] of Object.entries(x.map)) {
+    if (!IDS_2026.has(k)) return fail("lineage_list");
+    if (!Array.isArray(v) || v.length > 10 || v.some((l) => typeof l !== "string" || !IDS_2022.has(l))) return fail("lineage_from");
+    map[k] = [...new Set(v)];
+  }
+  if (!["polls", "crowd", "manual"].includes(x.split)) return fail("lineage_split");
+  const manual = {};
+  if (x.manual !== undefined) {
+    if (!isObj(x.manual)) return fail("lineage_manual");
+    for (const [l, parts] of Object.entries(x.manual)) {
+      if (!IDS_2022.has(l) || !isObj(parts)) return fail("lineage_manual");
+      manual[l] = {};
+      for (const [k, n] of Object.entries(parts)) {
+        if (!IDS_2026.has(k) || typeof n !== "number" || !Number.isFinite(n) || n < 0 || n > 100) return fail("lineage_manual");
+        manual[l][k] = Math.round(n * 10) / 10;
+      }
+    }
+  }
+  return { ok: true, value: { map, split: x.split, manual } };
+}
+
 export function validatePayload(unit, payload) {
   if (unit === "vote") return validateVote(payload);
   if (unit === "seats") return validateSeats(payload);

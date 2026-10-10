@@ -120,6 +120,14 @@ CREATE TABLE IF NOT EXISTS prefs (
   updated_at TEXT NOT NULL
 );
 
+-- השיוך האישי במסך "מה השתנה – מפלגות" (הכרעת בעלים 10.10.2026): רשימה של היום ⇐ רשימות 2022, ואופן החלוקה בפיצול.
+-- העדפה בלבד — לא נכנסת לסטטיסטיקות. טבלה נפרדת כדי שהקובץ יישאר בר-הרצה חוזרת (בלי ALTER).
+CREATE TABLE IF NOT EXISTS lineage_prefs (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  lineage TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
 -- המקור לפני שינוי הרכבי ברירת המחדל נשמר לצורך שחזור וביקורת; אין מזהים חדשים או נתונים ציבוריים.
 CREATE TABLE IF NOT EXISTS bloc_migration_backup (
   kind TEXT NOT NULL, id INTEGER NOT NULL, original TEXT NOT NULL, migrated_at TEXT NOT NULL,

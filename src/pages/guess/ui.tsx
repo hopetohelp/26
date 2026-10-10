@@ -62,7 +62,7 @@ export const inputCls = "w-full min-h-[44px] rounded-theme border border-paper-l
 
 /**
  * כרטיס הפעולות הצף של "הכנסת שלי" (הכרעת בעלים 10.10.2026): בכל לשונית, בתחתית המסך, צמוד לשמאל וברוחב הכפתורים.
- * הילדים נכתבים בסדר הקריאה (מימין לשמאל), כך ש״שמור״ — האחרון — יוצא הכי שמאלי. `above` — התראות מעל הכרטיס.
+ * הילדים נכתבים בסדר הקריאה (מימין לשמאל), כך ש״שמירה״ — האחרון — יוצא הכי שמאלי. `above` — התראות מעל הכרטיס.
  */
 export function ActionBar({ children, above }: { children: ReactNode; above?: ReactNode }) {
   return (

@@ -455,6 +455,8 @@ def summarize_scenarios(lists: list[str], sims_shares, sims_seats, sims_seats_no
             "share": [round(x, 2) for x in quantiles(shares)],
             "pass": round(sum(1 for x in seats if x > 0) / n, 4),
             "seatsHist": hist_int(seats),
+            # התפלגות האחוז (תאים של רבע אחוז) — לעובי הנר ב"מה השתנה – מפלגות"
+            "shareHist": hist_bins(shares, 0.25),
         }
         if sims_seats_noag is not None:
             gain = [a[i] - b[i] for a, b in zip(sims_seats, sims_seats_noag)]

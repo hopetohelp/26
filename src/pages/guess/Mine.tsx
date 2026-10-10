@@ -44,7 +44,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
       )}
       {/* דרישת האימות לחשבונות ישנים — בכרטיס הגישה הכללי (AccessCard) */}
       {!session.token && session.online && (
-        <div className="mb-4"><Notice>בלי חשבון ההשערה נשמרת רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל (בלחיצה על ״שמור״ או <Link to="/support">באזור האישי</Link>); מה שכבר כתבתם עולה לחשבון.</Notice></div>
+        <div className="mb-4"><Notice>בלי חשבון ההשערה נשמרת רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל (בלחיצה על ״שמירה״ או <Link to="/support">באזור האישי</Link>); מה שכבר כתבתם עולה לחשבון.</Notice></div>
       )}
       {session.me?.seatsPending && (sec === "seats" || sec === "calculator") && (
         <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר הגולשים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
