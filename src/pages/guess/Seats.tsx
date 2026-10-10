@@ -147,7 +147,7 @@ export default function Seats({
 
         <div>
           {p.mode === "pct" && <p className="text-sm mb-3">המנדטים חושבו במחשבון. <Link to="/guess?section=calculator">עריכת קלט המחשבון</Link>. שינוי מנדטים כאן הופך את ההשערה לחלוקה ישירה.</p>}
-          <LockLegend />
+          <HowTo />
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <ul className="divide-y divide-paper-line border-y border-paper-line" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
@@ -275,19 +275,20 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
     </button>
   );
 }
-/** הסבר קבוע על ההבדל בין נעול לפתוח, עם אותם כפתורים כמו בשורות */
-function LockLegend() {
+/** הסבר קבוע על המסך כולו: איך משערים, שלב אחר שלב (הכרעת בעלים 10.10.2026) */
+function HowTo() {
   return (
-    <div className="mb-3 rounded-theme border border-paper-line bg-paper-card p-3 space-y-2" aria-label="מה ההבדל בין נעול לפתוח">
-      <p className="text-sm font-bold">מה זה נעול ומה זה פתוח?</p>
-      <p className="flex items-center gap-3 text-sm text-ink">
-        <span className="shrink-0" aria-hidden="true"><LockChip locked /></span>
-        <span>המספר שלכם. "השלם הכול" לא ישנה אותו. כל ערך שתקלידו ננעל מעצמו.</span>
-      </p>
-      <p className="flex items-center gap-3 text-sm text-ink">
-        <span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span>
-        <span>"השלם הכול" רשאי לשנות אותו כדי שהסכום יגיע ל-120. לחיצה על הכפתור שבשורה נועלת או פותחת.</span>
-      </p>
+    <div className="mb-3 rounded-theme border border-paper-line bg-paper-card p-3" aria-label="איך משערים">
+      <p className="text-sm font-bold mb-1">איך משערים?</p>
+      <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
+        <li>מגדירים גוש משלכם, או נשארים עם ברירת המחדל.</li>
+        <li>מגדירים מספר מנדטים כולל לגוש, או משאירים ריק.</li>
+        <li>בוחרים מאיפה מתחילים: מאפס, מממוצע הסקרים או מהבחירות הקודמות.</li>
+        <li>
+          נועלים מפלגה <span className="inline-block align-middle" aria-hidden="true"><LockChip locked /></span> או משנים לה את המספר (מספר שמקלידים ננעל מעצמו). מפלגה פתוחה <span className="inline-block align-middle" aria-hidden="true"><LockChip locked={false} /></span> תשתנה בהשלמה.
+        </li>
+        <li>לוחצים "השלם הכול": המפלגות הנעולות ומספרי הגושים נשמרים, ושאר המפלגות מקבלות את היתרה ביחס לסקרים.</li>
+      </ol>
     </div>
   );
 }
