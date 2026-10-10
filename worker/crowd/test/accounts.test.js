@@ -142,6 +142,17 @@ describe("משתמשים קיימים", () => {
 });
 
 
+describe("מחיקת ההשערות", () => {
+  it("מוחק את כל הגרסאות ומשאיר את החשבון", async () => {
+    const r = await call("/auth/register", { body: { email: "clear@example.com", password: PW } });
+    expect((await call("/save", { token: r.data.token, body: { unit: "seats", op_id: "op-clear-1", registry: "x", payload: seats() } })).status).toBe(200);
+    expect((await call("/history/clear", { token: r.data.token, body: {} })).status).toBe(400);
+    expect((await call("/history/clear", { token: r.data.token, body: { confirm: "מחק" } })).status).toBe(200);
+    expect((await call("/history?unit=seats", { token: r.data.token })).data.versions).toHaveLength(0);
+    expect((await call("/me", { token: r.data.token })).status).toBe(200);
+  });
+});
+
 /** אימות מייל דרך Firebase (הכרעת בעלים 9.10.2026) — Firebase מדומה: משתמשים לפי מייל, שליחת מייל וסימון אימות */
 describe("אימות מייל", () => {
   let users, sent, deleted, codes;

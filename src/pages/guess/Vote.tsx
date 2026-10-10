@@ -1,8 +1,8 @@
 import type { VotePayload } from "../../lib/crowdApi";
 import { validateVote } from "../../lib/crowdValidate";
 import { ALPHA, EMPTY_VOTE, IDS, K25_IDS, K25_LISTS, K25_PASSED, V2022_LABEL, V2026_LABEL, k25VoteName } from "./model";
-import SaveButton from "./SaveButton";
-import { inputCls, StatusPill } from "./ui";
+import SaveButton, { SaveError } from "./SaveButton";
+import { ActionBar, Btn, inputCls, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 
 export default function Vote({ unit, session }: { unit: ReturnType<typeof useUnit<VotePayload>>; session: ReturnType<typeof useSession> }) {
@@ -15,7 +15,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
         <p className="font-bold">ההצבעה הקודמת שלכם עוזרת להבין את התמונה</p>
         <p className="text-sm leading-relaxed">כדי להשוות את התפלגות העונים בסקר לתוצאות הבחירות בפועל, חשוב מאוד שהתשובה על הצבעתכם בבחירות הקודמות תהיה אמיתית. בחרו את הרשימה שהצבעתם לה אז, גם אם היום אתם בוחרים אחרת.</p>
       </div>
-      <p className="text-sm text-ink-soft">שתי השאלות הן רשות. אפשר להשיב רק על אחת, והבחירה נשמרת אוטומטית.</p>
+      <p className="text-sm text-ink-soft">שתי השאלות הן רשות. אפשר להשיב רק על אחת, והבחירה נשמרת בלחיצה על ״שמור״ או ביציאה מהמסך.</p>
       <div className="grid md:grid-cols-2 gap-3 [&>*]:min-w-0">
         <section className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2">
           <label htmlFor="vote-2022" className="block font-bold">בבחירות 2022 הצבעתי ל…</label>
@@ -55,15 +55,11 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
           <p>בקבוצות קטנות, גם נתונים מצטברים עשויים לאפשר הסקת תשובות אישיות.</p>
         </div>
       </details>
-      <div className="flex items-center gap-3 flex-wrap">
-        <SaveButton unit={unit} session={session} invalid={validateVote(p, K25_IDS, IDS)} />
-        <StatusPill status={unit.status} queued={unit.queued} />
-        {(p.v2022 || p.v2026) && (
-          <button type="button" className="text-sm underline text-ink-soft min-h-[44px]" onClick={() => unit.setDraft(EMPTY_VOTE)}>
-            ניקוי הבחירות
-          </button>
-        )}
-      </div>
+      <div><StatusPill status={unit.status} queued={unit.queued} /></div>
+      <ActionBar above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
+        <Btn disabled={!p.v2022 && !p.v2026} onClick={() => unit.setDraft(EMPTY_VOTE)}>אפס</Btn>
+        <SaveButton unit={unit} session={session} invalid={validateVote(p, K25_IDS, IDS)} compact />
+      </ActionBar>
     </div>
   );
 }

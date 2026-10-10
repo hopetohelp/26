@@ -26,6 +26,7 @@
  * GET  /me                          ⇐ Me                  מצב המשתתף: הגרסה האחרונה בכל יחידה, שם המשתמש.
  * POST /save   SaveRequest          ⇐ {version}           גרסה חדשה ליחידה (op_id ייחודי — ניסיון חוזר מחזיר את אותה גרסה).
  * GET  /history?unit=seats          ⇐ {versions: Version[]}
+ * POST /history/clear {confirm:"מחק"} ⇐ {ok}          מחיקת כל הגרסאות (כל היחידות); החשבון נשאר.
  * GET  /export                      ⇐ כל נתוני המשתתף (JSON)
  * POST /delete {confirm:"מחק"}      ⇐ {ok}               מחיקה מלאה + ביטול כל הסשנים.
  * POST /link/rotate                 ⇐ {link}              קישור אישי חדש (בסשן); הקודם מפסיק לעבוד מיד.

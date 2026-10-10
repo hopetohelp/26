@@ -3,8 +3,8 @@ import type { Bloc, BlocsPayload } from "../../lib/crowdApi";
 import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
 import { DEFAULT_BLOCS, defaultBlocs, IDS, nameOf, normalizeBlocs } from "./model";
 import { moveList, removeBloc, removeList } from "./blocEditing";
-import SaveButton from "./SaveButton";
-import { Btn, inputCls, Notice } from "./ui";
+import SaveButton, { SaveError } from "./SaveButton";
+import { ActionBar, Btn, inputCls, Notice } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 import BlocParty from "./BlocParty";
 import { useIsPhone } from "./useIsPhone";
@@ -33,10 +33,6 @@ export default function Blocs({ unit, session, mySeats }: {
     setAnnouncement(`${nameOf(id)} הוסרה מ${p.blocs.find(b => b.id === from)?.name}`);
   };
   return <div className="space-y-4">
-    <div className="flex flex-wrap gap-2">
-      <Btn onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs(defaultBlocs()); setAnnouncement("חמשת גושי ברירת המחדל שוחזרו"); }}>חזרה לברירת מחדל</Btn>
-      <Btn kind="danger" disabled={!p.blocs.length} onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs([]); setAnnouncement("כל הגושים האישיים נמחקו"); }}>מחק הכל</Btn>
-    </div>
     {!p.blocs.length && <Notice>אין גושים אישיים. אפשר להוסיף גוש חדש או לחזור לברירת המחדל.</Notice>}
     <p className="text-sm text-ink-soft">עד חמישה גושים עצמאיים. מפלגה יכולה להשתתף בכמה גושים; אין צורך לשייך את כל המפלגות. סכומי הגושים אינם מתחברים ל־120.</p>
     {phone ? <p className="text-sm text-ink-soft">לחצו על "+ הוספת מפלגה" בגוש כדי לבחור מפלגות. כפתור "הסר" מסיר מפלגה רק מהגוש הזה.</p> : <p className="text-sm text-ink-soft">לחצו על "+ הוספת מפלגה" בגוש כדי לבחור מפלגות. גרירה בין גושים מוסיפה עותק; גרירה החוצה או כפתור "הסר" מסירים רק מהגוש הזה. במקלדת: חצים להוספה לגוש אחר, Delete להסרה.</p>}
@@ -71,6 +67,10 @@ export default function Blocs({ unit, session, mySeats }: {
       </button>}
     </div>
     {invalid && <Notice tone="warn">{invalid}</Notice>}
-    <SaveButton unit={unit} session={session} invalid={invalid} />
+    <ActionBar above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
+      <Btn kind="danger" disabled={!p.blocs.length} onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs([]); setAnnouncement("כל הגושים האישיים נמחקו"); }}>מחק הכל</Btn>
+      <Btn onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs(defaultBlocs()); setAnnouncement("חמשת גושי ברירת המחדל שוחזרו"); }}>ברירת מחדל</Btn>
+      <SaveButton unit={unit} session={session} invalid={invalid} compact />
+    </ActionBar>
   </div>;
 }

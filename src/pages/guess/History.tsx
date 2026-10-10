@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { call, type BlocsPayload, type VotePayload, type SeatsPayload, type Unit, type Version } from "../../lib/crowdApi";
 import { date } from "../../lib/format";
 import { IDS, nameOf, k25VoteName, V2022_LABEL, V2026_LABEL } from "./model";
-import { Notice } from "./ui";
+import { ActionBar, Btn, Notice } from "./ui";
+import * as S from "../../lib/crowdSession";
 import { Segmented } from "../../components/Choice";
 import { errorText, type useSession } from "./useCrowd";
 
@@ -32,8 +33,9 @@ export default function History({ session }: { session: ReturnType<typeof useSes
     return () => { active = false; };
   }, [unit, session.online, session.token]);
 
-  if (!session.online) return <Notice>ההיסטוריה תופיע כשהשמירה תיפתח באתר: כל שמירה תהיה נקודה על ציר הזמן, ואפשר יהיה להשוות בין שתיים.</Notice>;
-  if (!session.token) return <Notice>עוד לא שמרתם. אחרי השמירה הראשונה, כל גרסה תופיע כאן.</Notice>;
+  const bar = <ClearAll session={session} onCleared={() => { setVersions([]); setPick([]); }} />;
+  if (!session.online) return <><Notice>ההיסטוריה תופיע כשהשמירה תיפתח באתר: כל שמירה תהיה נקודה על ציר הזמן, ואפשר יהיה להשוות בין שתיים.</Notice>{bar}</>;
+  if (!session.token) return <><Notice>עוד לא שמרתם. אחרי השמירה הראשונה, כל גרסה תופיע כאן.</Notice>{bar}</>;
 
   const toggle = (id: number) => setPick((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p.slice(-1), id]));
   const [a, b] = pick.map((id) => versions?.find((v) => v.id === id)).filter(Boolean).sort((x,y) => x!.id - y!.id) as Version<SeatsPayload>[];
@@ -95,6 +97,7 @@ export default function History({ session }: { session: ReturnType<typeof useSes
           </tbody>
         </table>
       )}
+      {bar}
     </div>
   );
 }
@@ -111,4 +114,40 @@ export function VersionContent({ version }: { version: Version }) {
   }
   const p = version.payload as VotePayload;
   return <dl className="text-sm space-y-2"><div><dt className="font-bold">הצבעה ב-2022</dt><dd>{p.v2022 === null ? "לא נמסרה תשובה" : V2022_LABEL[p.v2022] ?? k25VoteName(p.v2022)}</dd></div><div><dt className="font-bold">כוונה ל-2026</dt><dd>{p.v2026 === null ? "לא נמסרה תשובה" : V2026_LABEL[p.v2026] ?? nameOf(p.v2026)}</dd></div></dl>;
+}
+
+/** "מחק הכל" (הכרעת בעלים 10.10.2026): כל ההשערות — הגרסאות בשרת והטיוטות בדפדפן. החשבון נשאר. */
+function ClearAll({ session, onCleared }: { session: ReturnType<typeof useSession>; onCleared: () => void }) {
+  const [ask, setAsk] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const run = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      if (session.online && session.token) await call("/history/clear", { token: session.token, body: { confirm: "מחק" } });
+      for (const u of UNITS) { S.clearDraft(u.id); S.setSaved(u.id, null); S.clearPending(u.id); }
+      window.dispatchEvent(new Event("crowd-clear"));
+      onCleared();
+      void session.refresh();
+      setAsk(false);
+    } catch (e) {
+      setErr(errorText(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <ActionBar above={err && <Notice tone="warn">{err}</Notice>}>
+      {ask ? (
+        <>
+          <span className="text-sm">כל ההשערות והגרסאות יימחקו. בטוח?</span>
+          <Btn onClick={() => setAsk(false)} disabled={busy}>לא</Btn>
+          <Btn kind="danger" onClick={() => void run()} disabled={busy}>{busy ? "מוחק…" : "כן, למחוק"}</Btn>
+        </>
+      ) : (
+        <Btn kind="danger" onClick={() => setAsk(true)}>מחק הכל</Btn>
+      )}
+    </ActionBar>
+  );
 }

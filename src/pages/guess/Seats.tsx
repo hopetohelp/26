@@ -12,7 +12,7 @@ import { canSetSeats } from "./seatEditing";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
 import Share from "./Share";
-import { Btn, StatusPill } from "./ui";
+import { ActionBar, Btn, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 
 const START_OPTIONS: { id: SeatsPayload["start"]; title: string; desc: string }[] = [
@@ -190,11 +190,8 @@ export default function Seats({
                 );
               })}
             </ul>
-      {/* פס פעולה דביק באזור האגודל; מהמחשב דביק בתחתית הטור שלו ולא על כל המסך (שני טורים) */}
-      {/* מקום לכרטיס הצף, כדי שלא יסתיר את השורה האחרונה */}
-      <div aria-hidden="true" className="h-36 md:hidden" />
-      <div className="fixed md:sticky z-20 inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 px-4 md:px-0 mx-auto w-full">
-        {(left < 0 || editError) && <p role="alert" className="mb-2 rounded-theme border-2 border-warn bg-paper-card text-ink p-3 text-sm font-bold">
+      <ActionBar above={<>
+        {(left < 0 || editError) && <p role="alert" className="rounded-theme border-2 border-warn bg-paper-card text-ink p-3 text-sm font-bold">
           {editError ?? `יש כרגע ${sum} מנדטים — ${-left} מעל 120. הפחיתו מנדטים או השתמשו ב״השלם הכול״ למפלגות הפתוחות. אפשר לשמור רק כשהסכום חוזר ל־120.`}
         </p>}
         {preview && (
@@ -206,42 +203,37 @@ export default function Seats({
             returnTo={fillBtn}
           />
         )}
-        <div className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-3 py-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
-            <div className="min-w-0" aria-live="polite">
+        {both.error && <div className="bg-paper-card rounded-theme"><SaveError unit={both} /></div>}
+        {invalid && left >= 0 && <p role="status" className="bg-paper-card rounded-theme p-2 text-sm text-warn">{invalid}</p>}
+        {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
+      </>}>
+        {resetAsk ? (
+          <>
+            <span className="text-sm">הטיוטה תימחק. בטוח?</span>
+            <Btn onClick={() => setResetAsk(false)}>לא</Btn>
+            <Btn kind="danger" onClick={() => (unit.setDraft(null), setEditError(null), setResetAsk(false))}>כן, מחדש</Btn>
+          </>
+        ) : (
+          <>
+            <div className="min-w-0 px-1" aria-live="polite">
               <span className="text-xs text-ink-soft block leading-none">{left >= 0 ? "נותרו לחלוקה" : "יותר מדי"}</span>
               <span className={`font-num tabular text-3xl leading-none ${left < 0 ? "text-warn" : ""}`}>{Math.abs(left)}</span>
             </div>
-          <div className={`flex justify-center items-center gap-2 flex-wrap ${resetAsk ? "col-span-3 row-start-2" : ""}`}>
-            {!resetAsk ? (
-              <Btn onClick={() => setResetAsk(true)}>אפס הכול</Btn>
-            ) : (
-              <>
-                <span className="text-sm self-center">הטיוטה תימחק. בטוח?</span>
-                <Btn kind="danger" onClick={() => (unit.setDraft(null), setEditError(null), setResetAsk(false))}>
-                  כן, מחדש
-                </Btn>
-                <Btn onClick={() => setResetAsk(false)}>לא</Btn>
-              </>
-            )}
-          </div>
-          <div className="flex justify-end items-center gap-2 flex-wrap">
-          <button
-            ref={fillBtn}
-            type="button"
-            onClick={runFill}
-            aria-haspopup="dialog"
-            aria-expanded={!!preview}
-            className="min-h-[44px] px-2 sm:px-4 whitespace-nowrap rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
-          >
-            השלם הכול
-          </button>
-          <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
-          </div>
-        </div>
-        <SaveError unit={both} />
-        {invalid && left >= 0 && <p role="status" className="mt-2 text-sm text-warn">{invalid}</p>}
-        {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
-      </div>
+            <Btn onClick={() => setResetAsk(true)}>אפס הכול</Btn>
+            <button
+              ref={fillBtn}
+              type="button"
+              onClick={runFill}
+              aria-haspopup="dialog"
+              aria-expanded={!!preview}
+              className="min-h-[44px] px-4 whitespace-nowrap rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
+            >
+              השלם הכול
+            </button>
+            <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
+          </>
+        )}
+      </ActionBar>
 
         </div>
       </div>
@@ -345,7 +337,7 @@ function FillPreview({
       role="dialog"
       aria-labelledby="fill-preview-title"
       onKeyDown={onKey}
-      className="absolute bottom-full mb-2 inset-x-0 md:start-auto md:w-[28rem] max-h-[min(60vh,32rem)] overflow-y-auto bg-paper-card text-ink border-2 border-ink rounded-theme shadow-lg p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+      className="w-[min(28rem,calc(100vw-2rem))] max-h-[min(60vh,32rem)] overflow-y-auto bg-paper-card text-ink border-2 border-ink rounded-theme shadow-lg p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
     >
       {preview.ok ? (
         <>
