@@ -40,6 +40,9 @@ function cors(env, origin) {
   };
 }
 
+/** היום לפי שעון ישראל (YYYY-MM-DD) — גבול "ההשערה האחרונה של היום" */
+const IL_DAY = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem", year: "numeric", month: "2-digit", day: "2-digit" });
+const ilDay = (t) => IL_DAY.format(new Date(t));
 const clock = (env) => (env.NOW ? env.NOW() : Date.now());
 const iso = (t) => new Date(t).toISOString();
 
@@ -347,7 +350,20 @@ const routes = {
     )
       .bind(participant, unit, iso(now), op_id, registry, JSON.stringify(payload))
       .run();
-    return { version: parseVersion(await find()) };
+    const saved = await find();
+    // כלל קבוע (הכרעת בעלים 10.10.2026): בכל יחידה נשמרת ההשערה האחרונה של כל יום (שעון ישראל); גרסאות קודמות מאותו יום נמחקות.
+    // "מצב בסוף יום" (מגמות) אינו משתנה, כי האחרונה היא מצב סוף היום.
+    const { results: earlier } = await env.DB.prepare("SELECT id, created_at FROM versions WHERE participant = ? AND unit = ? AND id < ?").bind(participant, unit, saved.id).all();
+    const sameDay = (earlier || []).filter((v) => ilDay(v.created_at) === ilDay(saved.created_at)).map((v) => v.id);
+    if (sameDay.length) {
+      const marks = sameDay.map(() => "?").join(",");
+      await env.DB.batch([
+        env.DB.prepare(`DELETE FROM version_review WHERE version_id IN (${marks})`).bind(...sameDay),
+        env.DB.prepare(`DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (${marks})`).bind(...sameDay),
+        env.DB.prepare(`DELETE FROM versions WHERE id IN (${marks})`).bind(...sameDay),
+      ]);
+    }
+    return { version: parseVersion(saved) };
   },
 
   "GET /history": async ({ env, request, now, url }) => {
