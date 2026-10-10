@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { call, CrowdError } from "../../lib/crowdApi";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
+import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
 import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
@@ -13,7 +14,7 @@ const PW_MAX = 128;
 const pwProps = { type: "password", minLength: PW_MIN, maxLength: PW_MAX, required: true, className: inputCls, dir: "ltr" as const };
 
 /** שדה סיסמה עם "הצגה": מקטין טעויות הקלדה, במיוחד בטלפון */
-function PasswordField({ label, hint, value, onChange, mode }: { label: string; hint?: string; value: string; onChange: (v: string) => void; mode: "current" | "new" }) {
+export function PasswordField({ label, hint, value, onChange, mode }: { label: string; hint?: string; value: string; onChange: (v: string) => void; mode: "current" | "new" }) {
   const [show, setShow] = useState(false);
   return (
     <Field label={label} hint={hint}>
@@ -146,6 +147,7 @@ export function AuthForm({
   const [name, setName] = useState("");
   const [pw, setPw] = useState("");
   const [agree, setAgree] = useState(hasConsent);
+  const [forgot, setForgot] = useState(false);
   const a = useAction(mode === "register" ? "הרשמה" : "כניסה");
   const register = mode === "register";
   return (
@@ -192,12 +194,66 @@ export function AuthForm({
           <button type="button" onClick={() => setMode(register ? "login" : "register")} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
             {register ? "כבר יש לי חשבון" : "אין לי חשבון — הרשמה"}
           </button>
+          {!register && (
+            <button type="button" onClick={() => setForgot((x) => !x)} aria-expanded={forgot} className="min-h-[44px] px-2 text-sm font-bold underline underline-offset-2">
+              שכחתי סיסמה
+            </button>
+          )}
         </div>
         {!register && <p className="text-xs text-ink">{FORGOT_LINE}</p>}
         {a.view}
       </form>
+      {!register && forgot && <ForgotForm initialEmail={email} />}
       <PrivacyNote />
     </div>
+  );
+}
+
+/** בקשת איפוס סיסמה במייל (הכרעת בעלים 10.10.2026): רק לחשבון עם מייל מאומת; התשובה זהה בין אם יש חשבון ובין אם לא */
+function ForgotForm({ initialEmail }: { initialEmail: string }) {
+  const [email, setEmail] = useState(initialEmail.includes("@") ? initialEmail : "");
+  const a = useAction("איפוס סיסמה");
+  return (
+    <form
+      className="space-y-3 border border-paper-line rounded-theme p-3"
+      onSubmit={a.run(async () => {
+        await call("/auth/forgot", { body: { email } });
+        return "אם הכתובת רשומה באתר ומאומתת, נשלח אליה מייל. פתחו בו את הקישור, ובדף שייפתח לחצו על Continue (המשך) כדי לקבוע סיסמה חדשה. המייל תקף 30 דקות, והוא מגיע בכותרת על אימות מייל — זה תקין.";
+      })}
+    >
+      <h3 className="font-bold">איפוס סיסמה במייל</h3>
+      <Field label="המייל שבחשבון" hint="האיפוס עובד רק למייל שאומת (Google או קישור אימות)">
+        <input required type="email" maxLength={254} autoComplete="email" dir="ltr" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
+      </Field>
+      <Btn type="submit" kind="primary" disabled={a.busy}>שליחת מייל לאיפוס</Btn>
+      {a.view}
+    </form>
+  );
+}
+
+/** קביעת סיסמה חדשה מהקישור שבמייל האיפוס: הסוד נשמר בזיכרון בלבד (lib/resetPassword) */
+export function ResetPasswordForm({ session }: { session: ReturnType<typeof useSession> }) {
+  const [pw, setPw] = useState("");
+  const [done, setDone] = useState(false);
+  const a = useAction("קביעת סיסמה חדשה");
+  if (done) return <div className="space-y-2">{a.view}</div>;
+  return (
+    <form
+      className="space-y-3"
+      onSubmit={a.run(async () => {
+        const r = await call<{ token: string }>("/auth/reset", { body: { secret: getResetSecret(), password: pw } });
+        setPw("");
+        clearResetSecret();
+        setConsent(true);
+        session.setToken(r.token, true);
+        setDone(true);
+        return "הסיסמה עודכנה ונכנסתם לחשבון. סיסמאות ישנות והכניסות במכשירים אחרים בוטלו.";
+      })}
+    >
+      <PasswordField label="סיסמה חדשה" hint={`לפחות ${PW_MIN} תווים`} value={pw} onChange={setPw} mode="new" />
+      <Btn type="submit" kind="primary" disabled={a.busy}>קביעת סיסמה</Btn>
+      {a.view}
+    </form>
   );
 }
 

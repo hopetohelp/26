@@ -17,7 +17,9 @@ import About from "./pages/About";
 import { PageTitle } from "./components/ui";
 import Support from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
 import { setVerifyCode } from "./lib/verifyEmail";
+import { setResetSecret, SECRET_RE } from "./lib/resetPassword";
 const Admin = lazy(() => import("./pages/Admin"));
 import MyFeedback from "./pages/MyFeedback";
 import Tabbed, { Moved } from "./components/Tabbed";
@@ -36,7 +38,14 @@ function NotFound() {
 {
   const q = new URLSearchParams(location.search);
   const code = q.get("oobCode");
-  if (q.get("mode") === "verifyEmail" && code && /^[\w-]{10,300}$/.test(code)) {
+  // איפוס סיסמה: הסוד חוזר בכתובת ההמשך של Firebase (?reset=…), ואם הוגדר "Customize action URL" — בתוך continueUrl של קישור האימות
+  let reset = q.get("reset");
+  const cont = q.get("continueUrl");
+  if (!reset && cont) { try { reset = new URL(cont).searchParams.get("reset"); } catch { /* כתובת שבורה — מתעלמים */ } }
+  if (reset && SECRET_RE.test(reset)) {
+    setResetSecret(reset);
+    history.replaceState(null, "", `${location.pathname}#/reset-password`);
+  } else if (q.get("mode") === "verifyEmail" && code && /^[\w-]{10,300}$/.test(code)) {
     setVerifyCode(code);
     history.replaceState(null, "", `${location.pathname}#/verify-email`);
   }
@@ -101,6 +110,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
           <Route path="verify-email" element={<VerifyEmail />} />
+          <Route path="reset-password" element={<ResetPassword />} />
           <Route path="admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Admin /></Suspense>} />
           <Route path="feedback" element={<Moved to="/support" />} />
           <Route path="feedback/:token" element={<MyFeedback />} />

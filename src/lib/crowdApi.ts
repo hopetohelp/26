@@ -21,6 +21,8 @@
  * POST /auth/link     {link}               ⇐ {token, username}  כניסה בקישור האישי ⇐ סשן רגיל. עיכוב מדורג כמו בכניסה.
  * POST /auth/recover  {link,password}      ⇐ {token, username}  שחזור: הקישור האישי + סיסמה חדשה ⇐ סשן רגיל;
  *                                                         מבטל את שאר הסשנים, הקישור נשאר. עיכוב מדורג כמו בכניסה.
+ * POST /auth/forgot   {email}             ⇐ {sent}        איפוס סיסמה במייל (Firebase שולח; הקישור חוזר לאתר עם סוד חד-פעמי). אותה תשובה בין אם יש חשבון ובין אם לא; רק למייל מאומת.
+ * POST /auth/reset    {secret,password}    ⇐ {token}       סיסמה חדשה עם הסוד מהמייל (30 דקות, חד-פעמי) ⇐ סשן רגיל; שאר הסשנים מבוטלים.
  * GET  /me                          ⇐ Me                  מצב המשתתף: הגרסה האחרונה בכל יחידה, שם המשתמש.
  * POST /save   SaveRequest          ⇐ {version}           גרסה חדשה ליחידה (op_id ייחודי — ניסיון חוזר מחזיר את אותה גרסה).
  * GET  /history?unit=seats          ⇐ {versions: Version[]}

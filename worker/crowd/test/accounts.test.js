@@ -235,6 +235,82 @@ describe("אימות מייל", () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ error: { message: "OPERATION_NOT_ALLOWED" } }), { status: 400 })));
     expect((await call("/account/verify/send", { token: r2.data.token, body: {} })).data.error).toBe("verify_not_enabled");
   });
+
+  /** חשבון עם מייל מאומת וסיסמה (המצב שבו איפוס מותר) */
+  async function verifiedAccount(email) {
+    const r = await call("/auth/register", { body: { email, password: PW } });
+    const id = (await call("/me", { token: r.data.token })).data.participant;
+    env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = ?").run(id);
+    return { ...r.data, id };
+  }
+  const secretOf = (i = sent.length - 1) => new URL(sent[i].continueUrl).searchParams.get("reset");
+
+  it("איפוס סיסמה: מייל עם סוד בכתובת החזרה ⇐ סיסמה חדשה ⇐ כניסה; הסוד חד-פעמי, הישנה לא עובדת, שאר הסשנים מבוטלים", async () => {
+    const acc = await verifiedAccount("forgot@example.com");
+    expect((await call("/auth/forgot", { body: { email: "Forgot@Example.com" } })).data).toEqual({ sent: true });
+    expect(sent).toHaveLength(1);
+    expect(sent[0].email).toBe("forgot@example.com");
+    expect(sent[0].continueUrl).toMatch(/^https:\/\/hopetohelp\.github\.io\/26\/\?reset=[\w-]{20,}$/);
+    // רק גיבוב הסוד נשמר, והסיסמה הזמנית ב-Firebase אינה סיסמת האתר
+    expect(JSON.stringify(env.DB.raw.prepare("SELECT * FROM password_reset").all())).not.toContain(secretOf());
+    expect(users.get("forgot@example.com").pw).not.toBe(PW);
+    const NEW = "brand new password 9";
+    expect((await call("/auth/reset", { body: { secret: secretOf(), password: "short" } })).data.error).toBe("weak_password");
+    const done = await call("/auth/reset", { body: { secret: secretOf(), password: NEW } });
+    expect(done.status).toBe(200);
+    expect((await call("/me", { token: done.data.token })).data.participant).toBe(acc.id);
+    expect((await call("/me", { token: acc.token })).status).toBe(401); // הסשן הקודם בוטל
+    expect((await call("/auth/login", { body: { email: "forgot@example.com", password: PW } })).status).toBe(401);
+    expect((await call("/auth/login", { body: { email: "forgot@example.com", password: NEW } })).status).toBe(200);
+    // חד-פעמי, והמשתמש הזמני ב-Firebase נמחק
+    expect((await call("/auth/reset", { body: { secret: secretOf(), password: "another pass 22" } })).data.error).toBe("bad_reset");
+    expect(users.has("forgot@example.com")).toBe(false);
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM password_reset").get().n).toBe(0);
+  });
+
+  it("אותה תשובה לכתובת לא רשומה, למייל לא מאומת ולחשבון Google בלבד — ובלי שום מייל", async () => {
+    await call("/auth/register", { body: { email: "unverified.forgot@example.com", password: PW } });
+    await call("/auth/google", { body: { credential: await google({ email: "only.google@gmail.com" }) } });
+    for (const email of ["nobody@example.com", "unverified.forgot@example.com", "only.google@gmail.com"]) {
+      expect((await call("/auth/forgot", { body: { email } })).data).toEqual({ sent: true });
+    }
+    expect(sent).toHaveLength(0);
+    expect(users.size).toBe(0);
+    expect((await call("/auth/forgot", { body: { email: "not-an-email" } })).data.error).toBe("email_required");
+  });
+
+  it("בקשה חדשה מבטלת את הקודמת (ומשתמש זמני חדש); סוד שגוי או שפג תוקפו נדחה", async () => {
+    await verifiedAccount("twice@example.com");
+    await call("/auth/forgot", { body: { email: "twice@example.com" } });
+    const first = secretOf();
+    users.get("twice@example.com").verified = true; // מישהו כבר לחץ על הקישור הראשון
+    await call("/auth/forgot", { body: { email: "twice@example.com" } });
+    expect(users.get("twice@example.com").verified).toBe(false);
+    expect(secretOf()).not.toBe(first);
+    expect((await call("/auth/reset", { body: { secret: first, password: "brand new password 9" } })).data.error).toBe("bad_reset");
+    expect((await call("/auth/reset", { body: { secret: "x", password: "brand new password 9" } })).data.error).toBe("bad_reset");
+    const NOW = env.NOW;
+    env.NOW = () => NOW() + 31 * 60 * 1000;
+    expect((await call("/auth/reset", { body: { secret: secretOf(), password: "brand new password 9" } })).data.error).toBe("bad_reset");
+    env.NOW = NOW;
+    expect((await call("/auth/reset", { body: { secret: secretOf(), password: "brand new password 9" } })).status).toBe(200);
+  });
+
+  it("הגבלות: 3 מיילים ביום לכתובת (בלי חשיפה), ובלי מפתח Firebase — לא זמין", async () => {
+    await verifiedAccount("limited@example.com");
+    for (let i = 0; i < 5; i++) expect((await call("/auth/forgot", { body: { email: "limited@example.com" } })).data).toEqual({ sent: true });
+    expect(sent).toHaveLength(3);
+    delete env.FIREBASE_API_KEY;
+    expect((await call("/auth/forgot", { body: { email: "limited@example.com" } })).data.error).toBe("verify_not_enabled");
+  });
+
+  it("Firebase דחה את כתובת החזרה ⇐ שגיאה ולא מייל בלי סוד", async () => {
+    await verifiedAccount("nocontinue@example.com");
+    const inner = globalThis.fetch;
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => (String(url).includes("sendOobCode") ? new Response(JSON.stringify({ error: { message: "INVALID_CONTINUE_URI" } }), { status: 400 }) : inner(url, init))));
+    expect((await call("/auth/forgot", { body: { email: "nocontinue@example.com" } })).data.error).toBe("verify_failed");
+    expect(sent).toHaveLength(0);
+  });
 });
 
 describe("מנהל לפי חשבון ומספרי ניהול", () => {
