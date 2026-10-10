@@ -15,3 +15,13 @@ it("הורדת CSV כוללת עמודת גושים בסוף", () => {
   expect(head.endsWith('"גושים"')).toBe(true);
   expect(line).toContain("ערבים: 8");
 });
+
+it("שדות הפעילות מוצגים בעמודות ה-CSV: הצבעה שמורה, שמירות, הרשמה, כניסה אחרונה וכניסות", () => {
+  const r = { ...row(), hasVote: true, saves: 7, registered: "2026-10-09T09:15:00Z", lastLogin: "2026-10-10T18:30:00Z", logins: 3 };
+  const [head, line] = toCsv([r]).split("\n");
+  expect(head).toContain('"הצבעה שמורה","סה״כ שמירות","נרשם","כניסה אחרונה","כניסות"');
+  expect(line).toContain('"כן","7"');
+  expect(line).toContain('"3"');
+  const none = toCsv([row()]).split("\n")[1];
+  expect(none).toContain('"לא","0","—","—","0"');
+});

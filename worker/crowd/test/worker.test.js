@@ -418,7 +418,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
     const text = JSON.stringify(r.data);
     for (const tok of [a, b, c, d4]) expect(text).not.toContain(tok);
     expect(text).not.toContain(String(odd.data.version.id) + ",");
-    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["blocs", "day", "handle", "mode", "reasons", "seats", "status", "verified"]);
+    for (const row of r.data.rows) expect(Object.keys(row).sort()).toEqual(["blocs", "day", "handle", "hasVote", "lastLogin", "logins", "mode", "reasons", "registered", "saves", "seats", "status", "verified"]);
     // כל שורה כוללת את הגושים: אישיים עם סכום המנדטים והיעד, או ברירת המחדל (5 גושים) כשלא נשמרה הגדרה
     const mine = r.data.rows.find((x) => x.blocs.saved);
     expect(mine.blocs.items).toEqual([{ name: "הגוש שלי", lists: [IDS[0], IDS[1]], seats: 120, target: 100 }]);

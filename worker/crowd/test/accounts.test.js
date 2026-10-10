@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll, afterEach, vi } from "vitest";
-import worker from "../index.js";
+import worker, { cleanup } from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
 import { seats } from "./helpers.js";
 import { normalizeEmail } from "../lib/identity.js";
@@ -189,6 +189,29 @@ describe("ההשערה האחרונה של כל יום", () => {
     // ניסיון חוזר של שמירה אחרונה אינו יוצר גרסה
     await put(a.data.token, "seats", "op-day2-aaaa5", 80);
     expect((await call("/history?unit=seats", { token: a.data.token })).data.versions).toHaveLength(2);
+  });
+});
+
+describe("פעילות משתתף בממשק הניהול", () => {
+  it("הצבעה שמורה, סך שמירות (כולל שנמחקו באותו יום), הרשמה וכניסות — גם אחרי ניקוי סשנים", async () => {
+    env.DB.raw.prepare("INSERT INTO admin_keys (hash,created_at) VALUES (?,?)").run(await sha256("k".repeat(40)), "2026-10-01");
+    const adminGet = async () => (await worker.fetch(new Request("https://w.example/admin/guesses", { headers: { origin: env.ALLOWED_ORIGIN, "x-admin-key": "k".repeat(40), "cf-connecting-ip": "8.8.8.8" } }), env)).json();
+    const at = (iso) => { env.NOW = () => Date.parse(iso); };
+    at("2026-10-08T08:00:00Z");
+    const reg = await call("/auth/register", { body: { email: "act@example.com", password: PW } });
+    const put = (unit, op, n) => call("/save", { token: reg.data.token, body: { unit, op_id: op, registry: "r", payload: unit === "seats" ? seats(n) : { v2022: null, v2026: "likud" } } });
+    await put("seats", "op-act-0000001", 50);
+    await put("seats", "op-act-0000002", 60);
+    await put("vote", "op-act-0000003", 0);
+    at("2026-10-08T09:00:00Z");
+    await call("/auth/login", { body: { email: "act@example.com", password: PW } });
+    let row = (await adminGet()).rows.find((r) => r.registered === "2026-10-08T08:00:00.000Z");
+    expect(row).toMatchObject({ hasVote: true, saves: 3, logins: 2, lastLogin: "2026-10-08T09:00:00.000Z" });
+    // ניקוי הסשנים אחרי שפגו: הכניסות לא אובדות
+    await cleanup(env, Date.parse("2026-12-30T00:00:00Z"));
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM sessions").get().n).toBe(0);
+    row = (await adminGet()).rows.find((r) => r.registered === "2026-10-08T08:00:00.000Z");
+    expect(row).toMatchObject({ logins: 2, lastLogin: "2026-10-08T09:00:00.000Z", saves: 3 });
   });
 });
 

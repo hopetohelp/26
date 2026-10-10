@@ -198,3 +198,12 @@ CREATE TABLE IF NOT EXISTS admins (
   participant TEXT PRIMARY KEY REFERENCES participants(id),
   added_at TEXT NOT NULL
 );
+
+-- פעילות משתתף לממשק הניהול (הכרעת בעלים 10.10.2026): סשנים נמחקים אחרי שפגו או בוטלו, וגרסאות נמחקות לפי "ההשערה האחרונה של כל יום",
+-- לכן המחיקה מגלגלת לכאן את הספירה לפני שהשורות נמחקות. כניסות = logins + הסשנים הקיימים; שמירות = pruned + הגרסאות הקיימות.
+CREATE TABLE IF NOT EXISTS participant_activity (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  logins INTEGER NOT NULL DEFAULT 0,
+  last_login_at TEXT,
+  pruned INTEGER NOT NULL DEFAULT 0
+);

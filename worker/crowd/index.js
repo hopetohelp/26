@@ -367,6 +367,7 @@ const routes = {
     if (sameDay.length) {
       const marks = sameDay.map(() => "?").join(",");
       await env.DB.batch([
+        env.DB.prepare("INSERT INTO participant_activity (participant, pruned) VALUES (?, ?) ON CONFLICT(participant) DO UPDATE SET pruned = pruned + excluded.pruned").bind(participant, sameDay.length),
         env.DB.prepare(`DELETE FROM version_review WHERE version_id IN (${marks})`).bind(...sameDay),
         env.DB.prepare(`DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (${marks})`).bind(...sameDay),
         env.DB.prepare(`DELETE FROM versions WHERE id IN (${marks})`).bind(...sameDay),
@@ -393,6 +394,7 @@ const routes = {
       env.DB.prepare("DELETE FROM version_review WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM versions WHERE participant = ?").bind(participant),
+      env.DB.prepare("UPDATE participant_activity SET pruned = 0 WHERE participant = ?").bind(participant),
     ]);
     return { ok: true };
   },
@@ -433,7 +435,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "credentials", "sessions", "prefs", "lineage_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "participant_activity", "credentials", "sessions", "prefs", "lineage_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -811,11 +813,16 @@ const routes = {
     await requireAdmin(env, request);
     return { ok: true };
   },
-  // דשבורד השערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה — בלי מזהה משתתף, גרסה או פעולה, בלי שעה (יום בלבד),
+  // דשבורד השערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה — בלי מזהה משתתף, גרסה או פעולה; מועד ההשערה ביום בלבד (ופעילות המשתתף — הרשמה, כניסות ושמירות — נוספה ב-10.10.2026),
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
   "GET /admin/guesses": async ({ env, request }) => {
     await requireAdmin(env, request);
     const { latest, mod, review, verified, blocsBy } = await moderationState(env);
+    // פעילות לכל משתתף (הכרעת בעלים 10.10.2026): הצבעה שמורה, סך שמירות, מועד הרשמה, כניסה אחרונה ומספר כניסות. בלי מזהה בתשובה.
+    const { results: act } = await env.DB.prepare(
+      "SELECT p.id, p.created_at AS registered, EXISTS(SELECT 1 FROM versions v WHERE v.participant = p.id AND v.unit = 'vote') AS has_vote, (SELECT COUNT(*) FROM versions v WHERE v.participant = p.id) + COALESCE(a.pruned, 0) AS saves, COALESCE(a.logins, 0) + (SELECT COUNT(*) FROM sessions s WHERE s.participant = p.id) AS logins, MAX(COALESCE((SELECT MAX(s.created_at) FROM sessions s WHERE s.participant = p.id), ''), COALESCE(a.last_login_at, '')) AS last_login FROM participants p LEFT JOIN participant_activity a ON a.participant = p.id",
+    ).all();
+    const activity = new Map((act || []).map((r) => [r.id, r]));
     const salt = randomToken(12);
     const rows = [];
     for (const v of latest) {
@@ -832,6 +839,11 @@ const routes = {
         verified: verified.has(v.participant),
         reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
         blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
+        hasVote: !!activity.get(v.participant)?.has_vote,
+        saves: activity.get(v.participant)?.saves ?? 0,
+        registered: activity.get(v.participant)?.registered ?? null,
+        lastLogin: activity.get(v.participant)?.last_login || null,
+        logins: activity.get(v.participant)?.logins ?? 0,
       });
     }
     for (let i = rows.length - 1; i > 0; i--) {
@@ -1005,6 +1017,10 @@ export async function runAggregation(env, now) {
 export async function cleanup(env, now) {
   await env.DB.batch([
     env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(now - 24 * HOUR),
+    // הספירה של הסשנים שעומדים להימחק (כניסות) מתגלגלת לפעילות המשתתף — בלי זה "כמה כניסות" היה מאבד כל כניסה שפגה
+    env.DB.prepare(
+      "INSERT INTO participant_activity (participant, logins, last_login_at) SELECT participant, COUNT(*), MAX(created_at) FROM sessions WHERE expires_at < ?1 OR revoked = 1 GROUP BY participant ON CONFLICT(participant) DO UPDATE SET logins = logins + excluded.logins, last_login_at = MAX(COALESCE(last_login_at, ''), excluded.last_login_at)",
+    ).bind(iso(now - 24 * HOUR)),
     env.DB.prepare("DELETE FROM sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
     env.DB.prepare("DELETE FROM password_reset WHERE created_at < ?").bind(iso(now - RESET_TTL)),
     env.DB.prepare("DELETE FROM password_reset_email WHERE participant NOT IN (SELECT participant FROM password_reset)"),
