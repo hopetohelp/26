@@ -1,3 +1,4 @@
+import CommunityShare from "./CommunityShare";
 import PersonalBlocs, { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -56,6 +57,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       ]} /> : null;
   return (
     <div>
+      <CommunityShare d={d} />
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
       {d.accounts && d.accounts.total > 0 && <p className="text-xs text-ink-soft mb-1">{d.accounts.verified}/{d.accounts.total} מאומתים (Google או מייל)</p>}
