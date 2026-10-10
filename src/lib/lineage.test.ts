@@ -84,6 +84,6 @@ describe("התחלה מבחירות 22", () => {
     expect(s.reservists).toEqual({ v: 0, locked: false });
     expect(s.rzp.locked).toBe(false);
     expect(Object.values(s).every((c) => Number.isInteger(c.v) && (c.v === 0 || c.v >= 4))).toBe(true);
-    expect(Object.values(s).reduce((t, c) => t + c.v, 0)).toBeLessThanOrEqual(120);
+    expect(Object.values(s).reduce((t, c) => t + c.v, 0)).toBe(120); // מנדט מתחת לסף עובר לשותפה מאותה רשימה
   });
 });

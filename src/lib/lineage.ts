@@ -181,9 +181,14 @@ export function start2022(lin: Lineage, crowd: Record<string, number> | null = n
   const { rows } = lineageRows(lin, crowd);
   const total = Math.round(rows.reduce((t, r) => t + r.seats2022, 0));
   const ints = largestRemainder(total, Object.fromEntries(rows.map((r) => [r.id, r.seats2022])));
-  return Object.fromEntries(rows.map((r) => {
-    const v = ints[r.id] ?? 0;
-    if (v > 0 && v < MIN_PASSING) return [r.id, { v: 0, locked: false }];
-    return [r.id, { v, locked: r.category === "certain" }];
-  }));
+  const out: Record<string, { v: number; locked: boolean }> = Object.fromEntries(rows.map((r) => [r.id, { v: ints[r.id] ?? 0, locked: r.category === "certain" }]));
+  // 1–3 מנדטים ⇐ 0, והמנדטים עוברים לשותפה הגדולה מאותה רשימת 2022 (כמו "השלם הכול")
+  for (const r of rows) {
+    const v = out[r.id].v;
+    if (v <= 0 || v >= MIN_PASSING) continue;
+    out[r.id] = { v: 0, locked: false };
+    const to = rows.filter((o) => o.id !== r.id && o.from.some((l) => r.from.includes(l)) && out[o.id].v >= MIN_PASSING).sort((a, b) => out[b.id].v - out[a.id].v)[0];
+    if (to) out[to.id] = { ...out[to.id], v: out[to.id].v + v };
+  }
+  return out;
 }

@@ -57,12 +57,13 @@ export function validateSeats(p) {
   // מחושב בשרת מהחלוקה המאומתת; ערך שסיפק הלקוח אינו מקור אמת.
   const coalitionSeats = [...GOV37].reduce((sum, id) => sum + (seats[id]?.v ?? 0), 0);
   const value = { mode, seats, start: p.start, pollsAsOf, coalitionSeats, fixedBlocSeats: fixedTotals({ seats }) };
-  if (mode === "pct") {
+  // האחוזים נשמרים בשני המצבים (הכרעת בעלים 10.10.2026: מנדטים ואחוזים מסונכרנים); במצב pct — חובה
+  if (mode === "pct" || p.pct !== undefined) {
     const r = validatePct(p.pct);
     if (!r.ok) return r;
     value.pct = r.value;
   }
-  if (p.calculation !== undefined && mode === "pct") {
+  if (p.calculation !== undefined) {
     const c = p.calculation;
     if (!isObj(c) || !Number.isFinite(c.turnout) || c.turnout <= 0 || c.turnout > 100 || !Number.isFinite(c.eligible) || c.eligible <= 0 || c.eligible > 100000000 || !Array.isArray(c.agreements) || c.agreements.length > 10) return fail("calculation");
     const used = new Set();
