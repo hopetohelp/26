@@ -1,6 +1,8 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import SaveButton, { SaveError, type SaveUnit } from "./guess/SaveButton";
-import type { useSession, useUnit } from "./guess/useCrowd";
+import { setExitSave, type useSession, type useUnit } from "./guess/useCrowd";
+import { getToken } from "../lib/crowdSession";
+import { ActionBar, Btn } from "./guess/ui";
 import type { SeatsPayload, BlocsPayload } from "../lib/crowdApi";
 import { validateBlocs, validateSeats } from "../lib/crowdValidate";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -105,6 +107,28 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
   };
   const invalid = inputProblem ?? (over ? "סכום האחוזים עולה על 100." : r?.status !== "ok" ? "אפשר לשמור רק תוצאה תקינה של 120 מנדטים, ללא הגרלה." : null) ?? (next ? validateSeats(next, IDS) : null) ?? (blocsUnit.draft ? validateBlocs(blocsUnit.draft, IDS) : null);
 
+  // יציאה מהמסך אחרי שינוי בקלט ⇐ התוצאה נשמרת כמו בלחיצה על "שמור" (הכרעת בעלים 10.10.2026)
+  const exitSave = useRef(saveUnit);
+  const invalidRef = useRef(invalid);
+  invalidRef.current = invalid;
+  exitSave.current = saveUnit;
+  const dirty = touched.current && !invalid && saveUnit.status !== "saved";
+  useEffect(() => {
+    if (!dirty) return;
+    setExitSave("seats", () => { setExitSave("seats", null); const t = getToken(); if (t && exitSave.current.status !== "saved" && !invalidRef.current) void exitSave.current.save(t); });
+  }, [dirty, shares, turnout, eligible, ag]);
+
+  const setAll = (next: Record<string, number>) => { setShares(next); setNextSeat({}); sync(next); };
+  /** "השלם הכול": רשימות שעומדות על 0 מקבלות את נקודת המוצא מהסקרים, מוקטנת כך שהסכום לא יעבור את 100 (פחות "אחרות" 1.5%) */
+  const fillAllShares = () => {
+    const empty = IDS.filter((id) => !(shares[id] > 0) && initial.def[id] > 0);
+    const want = empty.reduce((a, id) => a + initial.def[id], 0);
+    const room = Math.max(0, 100 - OTHERS_DEFAULT - listSum);
+    if (!empty.length || !room) return;
+    const k = Math.min(1, room / want);
+    setAll({ ...shares, ...Object.fromEntries(empty.map((id) => [id, Math.floor(initial.def[id] * k * 10) / 10])) });
+  };
+
   const setShare = (id: string, v: number) => {
     const next = { ...shares, [id]: Math.max(0, Math.min(100, Math.round(v * 10) / 10)) };
     setShares(next);
@@ -119,7 +143,12 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
       </PageTitle>
             {r?.status === "ok" && <PersonalBlocs title="הגושים שלי לפי תוצאת המחשבון" values={r.seats} source="תוצאת מחשבון ההשערה לפי חוק הבחירות" asOf="מחושב עכשיו מהקלט שלכם" />}
 
-      <div className="mb-4"><SaveButton unit={saveUnit} session={session} invalid={invalid} /><SaveError unit={saveUnit} />{invalid && <p role="status" className="text-sm text-warn mt-2">{invalid}</p>}<p className="text-sm text-ink-soft mt-2">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. עד השמירה אפשר לבדוק תרחיש בלי להחליף את טיוטת המנדטים.</p></div>
+      <div className="mb-4">{invalid && <p role="status" className="text-sm text-warn mb-2">{invalid}</p>}<p className="text-sm text-ink-soft">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. השמירה נעשית בלחיצה על ״שמור״, או ביציאה מהמסך אחרי שינוי בקלט.</p></div>
+      <ActionBar above={saveUnit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={saveUnit} /></div>}>
+        <Btn onClick={() => setAll(Object.fromEntries(IDS.map((id) => [id, 0])))}>אפס הכול</Btn>
+        <Btn onClick={fillAllShares}>השלם הכול</Btn>
+        <SaveButton unit={saveUnit} session={session} invalid={invalid} compact />
+      </ActionBar>
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">
         <Card title="הקלט" boxed>
           <p className="text-sm text-ink-soft mb-3">

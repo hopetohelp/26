@@ -17,12 +17,22 @@ const emit = () => {
  * בלי חשבון — הכול נשמר בדפדפן בלבד ולא נכנס לסטטיסטיקות (הכרעת בעלים 9.10.2026). אין יותר חשבון אורח אוטומטי.
  * בהרשמה או בכניסה, מה שנשמר בדפדפן עולה לחשבון (syncLocal).
  */
-/** שליחות שממתינות לסיום רצף שינויים — נשלחות מיד כשהדף נסגר או מוסתר */
-type Pending = (() => void) & { unit?: Unit };
-const pendingSends = new Set<Pending>();
-function flushPending() { [...pendingSends].forEach((f) => f()); }
+/**
+ * שמירה רק בשתי דרכים (הכרעת בעלים 10.10.2026): לחיצה על "שמור", או יציאה — סגירת הדף, מעבר לאפליקציה אחרת,
+ * יציאה ממסך "הכנסת שלי" (Mine קורא ל-flushPending) או ניתוק החיבור. אין שמירה אוטומטית בזמן העריכה.
+ * לכל יחידה שליחה ממתינה אחת — האחרונה גוברת.
+ */
+const pendingSends = new Map<string, () => void>();
+export function flushPending() { [...pendingSends.values()].forEach((f) => f()); }
+/** שליחה ממתינה ליציאה; null מבטל. המחשבון רושם כאן את התוצאה שלו תחת "seats" */
+export function setExitSave(key: string, send: (() => void) | null) {
+  if (send) pendingSends.set(key, send);
+  else pendingSends.delete(key);
+}
 if (typeof window !== "undefined") {
   window.addEventListener("pagehide", flushPending);
+  // ניתוק: השמירה נכשלת ברשת ⇐ נשמרת בדפדפן ונשלחת כשהחיבור חוזר (keepLocal + outbox)
+  window.addEventListener("offline", flushPending);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushPending(); });
 }
 /** הסשן הקיים, אם יש. בלי חשבון ⇐ null, והשינויים נשארים בדפדפן */
@@ -121,7 +131,6 @@ export const errorText = (e: unknown): string => {
   return `השרת דחה את הבקשה (${e.code}).`;
 };
 
-const IDLE_SAVE_MS = 15_000;
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
 /** טיוטה ביחידה אחת: נשמרת בדפדפן עד שמירה, עם מצב (טיוטה / נשמר / שינויים שלא נשמרו) */
@@ -139,29 +148,23 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       setDraftState(p);
       if (p === null) S.clearDraft(unit);
       else S.saveDraft(unit, p);
-      // השינוי הראשון (אין עדיין חשבון) נשמר מיד ויוצר חשבון אורח וקישור אישי (הכרעת בעלים 9.10.2026).
-      // שינויים נוספים נשמרים בלחיצה על "שמור", או אחרי 15 שניות בלי שינוי; בסגירת הדף או מעבר
-      // לאפליקציה אחרת — נשלח מיד (flushPending)
+      // נשמר בלחיצה על "שמור" או ביציאה מהמסך (flushPending) — לא בזמן העריכה
       window.clearTimeout(timer.current);
-      if (p === null || same(p, S.loadSaved(unit))) return;
+      if (p === null || same(p, S.loadSaved(unit))) return setExitSave(unit, null);
       let tries = 0;
-      const send: Pending = () => {
-        pendingSends.delete(send);
+      const send = () => {
+        setExitSave(unit, null);
         // כבר נשמר (בלחיצה על "שמור") ⇐ אין מה לשלוח שוב
         if (same(p, S.loadSaved(unit))) return;
-        // כישלון (רשת) ⇐ ניסיון חוזר עד 3 פעמים, כל עוד זו עדיין הגרסה האחרונה
+        // כישלון ⇐ ניסיון חוזר עד 3 פעמים, כל עוד זו עדיין הגרסה האחרונה
         const retry = () => { if (++tries <= 3 && same(S.loadDraft(unit), p)) timer.current = window.setTimeout(send, 5000 * tries); };
         void ensureSession().then(async (token) => {
-          if (!token || !saveRef.current) return retry();
+          if (!token || !saveRef.current) return;
           if (!(await saveRef.current(token, p))) retry();
         });
       };
-      pendingSends.forEach((f) => f.unit === unit && pendingSends.delete(f));
-      send.unit = unit;
-      pendingSends.add(send);
       // בלי חשבון — נשאר בדפדפן בלבד; עולה לחשבון בהרשמה (syncLocal)
-      if (!S.getToken()) { pendingSends.delete(send); return; }
-      timer.current = window.setTimeout(send, IDLE_SAVE_MS);
+      setExitSave(unit, S.getToken() ? send : null);
     },
     [unit],
   );

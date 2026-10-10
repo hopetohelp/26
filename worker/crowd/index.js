@@ -334,6 +334,18 @@ const routes = {
     return { versions: (results || []).map(parseVersion) };
   },
 
+  // "מחק הכל" בלשונית ההשערות שלי: כל הגרסאות של המשתתף נמחקות; החשבון נשאר
+  "POST /history/clear": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    if (body.confirm !== "מחק") throw bad("confirm");
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM version_review WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
+      env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
+      env.DB.prepare("DELETE FROM versions WHERE participant = ?").bind(participant),
+    ]);
+    return { ok: true };
+  },
+
   "GET /export": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     const p = await env.DB.prepare("SELECT id, created_at, review FROM participants WHERE id = ?").bind(participant).first();

@@ -7,7 +7,8 @@ import History from "./History";
 import Seats from "./Seats";
 import Vote from "./Vote";
 import { Notice } from "./ui";
-import { useUnit, type useSession } from "./useCrowd";
+import { useEffect } from "react";
+import { flushPending, useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
   { id: "seats", label: "המפלגות" },
@@ -28,6 +29,8 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   const seats = useUnit<SeatsPayload>("seats", null, latest?.seats?.payload as SeatsPayload | undefined);
   const blocs = usePersonalBlocs();
   const vote = useUnit<VotePayload>("vote", null, latest?.vote?.payload as VotePayload | undefined);
+  // יציאה ממסך "הכנסת שלי" ⇐ שמירת מה שלא נשמר
+  useEffect(() => flushPending, []);
 
 
 
