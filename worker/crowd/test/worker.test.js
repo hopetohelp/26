@@ -467,3 +467,13 @@ describe("חשבונות שלא אומתו (הכרעת בעלים 9.10.2026)", (
     expect(d.accounts).toEqual({ verified: 2, total: 2 });
   });
 });
+
+it("אחוזים נשמרים גם בהשערה לפי מנדטים (סנכרון מנדטים ואחוזים), ונבדקים", async () => {
+  const tok = await newP();
+  const payload = { mode: "seats", start: "zero", pollsAsOf: null, pct: { likud: 25.1, shas: 7.2, democrats: 66.6 }, seats: { likud: { v: 30, src: "manual", locked: true }, shas: { v: 8, src: "manual", locked: true }, democrats: { v: 82, src: "manual", locked: true } } };
+  const r = await save(tok, "seats", payload);
+  expect(r.status).toBe(200);
+  expect(r.data.version.payload.mode).toBe("seats");
+  expect(r.data.version.payload.pct).toEqual({ likud: 25.1, shas: 7.2, democrats: 66.6 });
+  expect((await save(tok, "seats", { ...payload, pct: { likud: 120 } })).status).toBe(400);
+});

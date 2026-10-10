@@ -128,7 +128,8 @@ function LegacyCalculator() {
     const value = next.get(key);
     if (value !== null) { next.set(`c${key}`, value); next.delete(key); }
   }
-  next.set("section", "calculator");
+  next.set("section", "seats");
+  next.set("unit", "pct");
   return <CalculatorRedirect replace to={`/guess?${next}`} />;
 }
 

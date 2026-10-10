@@ -44,8 +44,10 @@ describe("validate", () => {
     expect(save("seats", seats(60, "manual", { mode: "x" })).error).toBe("mode");
     // בלי mode — ניחוש לפי מנדטים (גרסאות ישנות)
     expect(save("seats", seats(60)).value.payload.mode).toBe("seats");
-    // pct נשמר רק במצב pct
-    expect(save("seats", seats(60, "manual", { mode: "seats", pct: { [IDS[0]]: 3 } })).value.payload.pct).toBeUndefined();
+    // pct נשמר גם במצב seats — מנדטים ואחוזים מסונכרנים (הכרעת בעלים 10.10.2026), ונבדק באותה בדיקה
+    expect(save("seats", seats(60, "manual", { mode: "seats", pct: { [IDS[0]]: 3 } })).value.payload.pct).toEqual({ [IDS[0]]: 3 });
+    expect(save("seats", seats(60, "manual", { mode: "seats", pct: { [IDS[0]]: 101 } })).error).toBe("pct_value");
+    expect(save("seats", seats(60)).value.payload.pct).toBeUndefined();
     // המנדטים עדיין חייבים להסתכם ב-120
     const bad = seats(60, "filled", { mode: "pct", pct: { [IDS[0]]: 50 } });
     bad.seats[IDS[0]].v = 10;

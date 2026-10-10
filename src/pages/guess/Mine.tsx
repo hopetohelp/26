@@ -1,7 +1,6 @@
 import { useSearchParams, Link } from "react-router-dom";
 import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import Blocs from "./Blocs";
-import Calculator from "../Calculator";
 import { type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
 import Seats from "./Seats";
@@ -13,7 +12,6 @@ import { flushPending, useUnit, type useSession } from "./useCrowd";
 const SECTIONS = [
   { id: "seats", label: "המפלגות" },
   { id: "blocs", label: "הגושים" },
-  { id: "calculator", label: "האחוזים" },
   { id: "vote", label: "ההצבעה שלי" },
   { id: "history", label: "ההשערות שלי" },
 ] as const;
@@ -23,6 +21,12 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   const [params, setParams] = useSearchParams();
   const requested = params.get("section");
   const sec: Sec = SECTIONS.some(s => s.id === requested) ? requested as Sec : "seats";
+  // הלשונית "האחוזים" אוחדה עם "המפלגות" (מתג מנדטים | אחוזים, הכרעת בעלים 10.10.2026): קישור ישן נפתח במצב אחוזים
+  useEffect(() => {
+    if (requested !== "calculator") return;
+    const next = new URLSearchParams(params); next.set("section", "seats"); next.set("unit", "pct");
+    setParams(next, { replace: true });
+  }, [requested]); // eslint-disable-line react-hooks/exhaustive-deps
   const setSec = (value: Sec) => { const next = new URLSearchParams(params); next.set("section", value); setParams(next, { replace: true }); };
   const back = params.get("return");
   const latest = session.me?.latest;
@@ -34,7 +38,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
 
 
 
-  const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "calculator" ? seats : s === "blocs" ? blocs : s === "vote" ? vote : null;
+  const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "blocs" ? blocs : s === "vote" ? vote : null;
   return (
     <div>
       {!session.online && (
@@ -46,7 +50,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
       {!session.token && session.online && (
         <div className="mb-4"><Notice>בלי חשבון ההשערה נשמרת רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל (בלחיצה על ״שמירה״ או <Link to="/support">באזור האישי</Link>); מה שכבר כתבתם עולה לחשבון.</Notice></div>
       )}
-      {session.me?.seatsPending && (sec === "seats" || sec === "calculator") && (
+      {session.me?.seatsPending && sec === "seats" && (
         <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר הגולשים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
       )}
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">
@@ -68,7 +72,6 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
         })}
       </nav>
       {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} onStatistics={onStatistics} />}
-      {sec === "calculator" && <Calculator session={session} unit={seats} blocsUnit={blocs} />}
       {sec === "blocs" && <><Blocs unit={blocs} session={session} mySeats={seats.draft ? Object.fromEntries(Object.entries(seats.draft.seats).map(([id, c]) => [id, c.v])) : null} />{back && /^\/(?!\/)/.test(back) && <Link className="block min-h-[44px] mt-4" to={back}>חזרה למסך הקודם</Link>}</>}
       {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
