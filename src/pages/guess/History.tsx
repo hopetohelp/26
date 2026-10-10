@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { call, type BlocsPayload, type VotePayload, type SeatsPayload, type Unit, type Version } from "../../lib/crowdApi";
 import { date } from "../../lib/format";
 import { IDS, nameOf, k25VoteName, V2022_LABEL, V2026_LABEL } from "./model";
-import { ActionBar, Btn, Notice } from "./ui";
+import { ActionBar, Btn, ShortLabel, Notice } from "./ui";
 import * as S from "../../lib/crowdSession";
 import { Segmented } from "../../components/Choice";
 import { errorText, type useSession } from "./useCrowd";
@@ -146,7 +146,7 @@ function ClearAll({ session, onCleared }: { session: ReturnType<typeof useSessio
           <Btn kind="danger" onClick={() => void run()} disabled={busy}>{busy ? "מוחק…" : "כן, למחוק"}</Btn>
         </>
       ) : (
-        <Btn kind="danger" onClick={() => setAsk(true)}>מחק הכל</Btn>
+        <Btn kind="danger" onClick={() => setAsk(true)}><ShortLabel short="מחק" full="מחק הכל" /></Btn>
       )}
     </ActionBar>
   );

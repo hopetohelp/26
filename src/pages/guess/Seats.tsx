@@ -12,7 +12,7 @@ import { canSetSeats } from "./seatEditing";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
 import Share from "./Share";
-import { ActionBar, Btn, StatusPill } from "./ui";
+import { ActionBar, Btn, ShortLabel, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 
 const START_OPTIONS: { id: SeatsPayload["start"]; title: string; desc: string }[] = [
@@ -219,7 +219,7 @@ export default function Seats({
               <span className="text-xs text-ink-soft block leading-none">{left >= 0 ? "נותרו לחלוקה" : "יותר מדי"}</span>
               <span className={`font-num tabular text-3xl leading-none ${left < 0 ? "text-warn" : ""}`}>{Math.abs(left)}</span>
             </div>
-            <Btn onClick={() => setResetAsk(true)}>אפס הכול</Btn>
+            <Btn onClick={() => setResetAsk(true)}><ShortLabel short="אפס" full="אפס הכול" /></Btn>
             <button
               ref={fillBtn}
               type="button"
@@ -228,7 +228,7 @@ export default function Seats({
               aria-expanded={!!preview}
               className="min-h-[44px] px-4 whitespace-nowrap rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
             >
-              השלם הכול
+              <ShortLabel short="השלם" full="השלם הכול" />
             </button>
             <SaveButton unit={both} session={session} invalid={invalid ?? blocsInvalid} compact onSaved={() => setJustSaved(true)} />
           </>
