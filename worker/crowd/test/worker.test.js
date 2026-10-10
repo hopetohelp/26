@@ -41,26 +41,31 @@ const register = async (ip = ipFor(), email = "user_" + un++ + "@example.com", {
   if (verified && r.status === 200) env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = (SELECT participant FROM sessions WHERE token_hash = ?)").run(await sha256(r.data.token));
   return r;
 };
+/** קישור אישי ישן (הונפק עד 10.10.2026; אין יותר הנפקה) — נוצר ישירות במאגר לחשבון של הסשן */
+const giveLink = async (token) => {
+  const link = "L".repeat(10) + Math.random().toString(36).slice(2).padEnd(30, "q");
+  const s = env.DB.raw.prepare("SELECT participant FROM sessions WHERE token_hash = ?").get(await sha256(token));
+  env.DB.raw.prepare("INSERT INTO credentials (participant, kind, token_hash, created_at) VALUES (?, 'link', ?, ?)").run(s.participant, await sha256(link), "2026-10-01T00:00:00Z");
+  return link;
+};
 /** משתתף חדש = הרשמה (אין משתתף אנונימי). מחזיר אסימון סשן */
 const newP = async (ip = ipFor()) => (await register(ip)).data.token;
 let op = 0;
 const save = (token, unit, payload, op_id = "op-" + String(op++).padStart(8, "0")) => call("/save", { token, body: { unit, op_id, registry: "r", payload } });
 
 describe("participant & saves", () => {
-  it("register creates participant + link; /me, CORS; no anonymous creation", async () => {
+  it("register creates participant (no personal link); /me, CORS; no anonymous creation", async () => {
     const r = await register(undefined, undefined, { verified: false });
     expect(r.status).toBe(200);
     expect(r.data.token).toMatch(/^[\w-]{20,}$/);
-    expect(r.data.link).toMatch(/^[\w-]{20,}$/);
+    expect(r.data.link).toBeUndefined();
     expect(r.headers.get("access-control-allow-headers")).toContain("authorization");
     const me = await call("/me", { token: r.data.token });
-    expect(me.data).toMatchObject({ latest: {}, username: null, google: false, needsEmail: false, hasPassword: true, verified: false, emails: [{ email: "user_" + (un - 1) + "@example.com", source: "password", verified: false }] });
+    expect(me.data).toMatchObject({ latest: {}, username: null, google: false, needsEmail: false, hasPassword: true, verified: false, legacy: false, emails: [{ email: "user_" + (un - 1) + "@example.com", source: "password", verified: false }] });
     expect((await call("/me")).status).toBe(401);
     expect((await call("/participant", { body: {} })).status).toBe(404);
-    // הקישור אינו אסימון כניסה
-    expect((await call("/me", { token: r.data.link })).status).toBe(401);
-    expect((await save(r.data.link, "seats", seats(60))).status).toBe(401);
-    expect((await call("/link/rotate", { body: {}, token: r.data.link })).status).toBe(401);
+    // אין יותר הנפקת קישורים (הכרעת בעלים 10.10.2026)
+    expect((await call("/link/rotate", { body: {}, token: r.data.token })).status).toBe(410);
   });
   it("saves each unit; rejects invalid; op_id idempotent; history", async () => {
     const tok = await newP();
@@ -104,16 +109,10 @@ describe("participant & saves", () => {
     env.IP_KEY = "new-ip-secret";
     expect((await register("9.9.9.9")).status).toBe(429);
   });
-  it("link rotate (session only) replaces the recovery link; delete removes everything", async () => {
+  it("delete removes everything", async () => {
     const reg = await register();
-    const tok = reg.data.token;
-    await save(tok, "seats", seats(60));
-    const r = await call("/link/rotate", { body: {}, token: tok });
-    expect(r.data.link).toMatch(/^[\w-]{20,}$/);
-    expect((await call("/me", { token: tok })).status).toBe(200); // הסשן נשאר
-    expect((await call("/auth/recover", { body: { link: reg.data.link, password: "brand new pass 1" } })).status).toBe(401);
-    expect((await call("/auth/recover", { body: { link: r.data.link, password: "brand new pass 1" }, ip: "7.7.7.1" })).status).toBe(200);
-    const tok2 = (await call("/auth/login", { body: { email: "user_" + (un - 1) + "@example.com", password: "brand new pass 1" } })).data.token;
+    const tok2 = reg.data.token;
+    await save(tok2, "seats", seats(60));
     expect((await call("/delete", { body: { confirm: "no" }, token: tok2 })).status).toBe(400);
     expect((await call("/delete", { body: { confirm: "מחק" }, token: tok2 })).data).toEqual({ ok: true });
     expect((await call("/me", { token: tok2 })).status).toBe(401);
@@ -126,7 +125,7 @@ describe("participant & saves", () => {
     await save(tok, "vote", { v2022: null, v2026: "private" });
     const e = await call("/export", { token: tok });
     expect(e.data.versions.length).toBe(1);
-    expect(e.data.credentials.map((c) => c.kind).sort()).toEqual(["link", "password"]);
+    expect(e.data.credentials.map((c) => c.kind).sort()).toEqual(["password"]);
   });
 });
 
@@ -172,11 +171,11 @@ describe("username & password", () => {
   }, 20000);
 });
 
-describe("recovery via personal link (no email)", () => {
+describe("recovery via an old personal link (accounts not yet verified)", () => {
   it("/auth/recover sets a new password with the link; revokes sessions, keeps the link", async () => {
     const reg = await call("/auth/register", { body: { email: "forgetful@example.com", password: "original pass 1" } });
     expect(reg.status).toBe(200);
-    const link = reg.data.link;
+    const link = await giveLink(reg.data.token);
     const other = (await call("/auth/login", { body: { email: "forgetful@example.com", password: "original pass 1" } })).data.token;
     expect((await call("/auth/recover", { body: { link, password: "short" } })).data.error).toBe("weak_password");
     const ch = await call("/auth/recover", { body: { link, password: "recovered pass 1" } });
@@ -192,6 +191,7 @@ describe("recovery via personal link (no email)", () => {
   }, 30000);
   it("/auth/link logs in with the link (normal session); link itself is not a Bearer", async () => {
     const reg = await call("/auth/register", { body: { email: "linker@example.com", password: "original pass 3" } });
+    reg.data.link = await giveLink(reg.data.token);
     const r = await call("/auth/link", { body: { link: reg.data.link }, ip: "8.8.8.1" });
     expect(r.status).toBe(200);
     expect(r.data.email).toBe("linker@example.com");

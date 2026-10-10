@@ -167,7 +167,6 @@ export function AuthForm({
           setPw("");
           setConsent(true);
           session.setToken(r.token);
-          if (r.link) session.setLink(r.link);
           // הרשמה במייל ⇐ נשלח מייל אימות; כישלון אינו חוסם (אפשר לשלוח שוב ב"הפרטים שלי")
           let note = "";
           if (register) await call("/account/verify/send", { token: r.token, body: {} }).then(() => { note = " נשלח אליכם מייל לאימות הכתובת."; }, () => {});
@@ -267,14 +266,13 @@ export function ClaimForm({ session, onDone }: { session: ReturnType<typeof useS
     <form
       className="space-y-3"
       onSubmit={a.run(async () => {
-        const r = await call<{ email: string; link?: string }>("/auth/claim", { token: session.token, body: { email, ...(needsPassword ? { password: pw } : {}) } });
+        await call<{ email: string }>("/auth/claim", { token: session.token, body: { email, ...(needsPassword ? { password: pw } : {}) } });
         setPw("");
-        if (r.link) session.setLink(r.link);
         let note = "";
         await call("/account/verify/send", { token: session.token, body: {} }).then(() => { note = " נשלח אליכם מייל לאימות הכתובת."; }, () => {});
         await session.refresh();
         onDone?.();
-        return (r.link ? "המייל נוסף. שמרו עכשיו את הקישור האישי." : "המייל נוסף.") + note;
+        return "המייל נוסף." + note;
       })}
     >
       <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
@@ -335,7 +333,7 @@ function SetPasswordForm({ session }: { session: ReturnType<typeof useSession> }
 }
 
 /** אימות המייל (הכרעת בעלים 9.10.2026): נשלח מייל עם קישור (דרך Firebase); אחרי הלחיצה בו — "בדקתי" מאשר. נבדק גם אוטומטית כשחוזרים ללשונית. */
-function VerifyEmail({ session }: { session: ReturnType<typeof useSession> }) {
+export function VerifyEmail({ session }: { session: ReturnType<typeof useSession> }) {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const { token } = session;
