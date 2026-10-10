@@ -2,7 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import SaveButton, { SaveError, type SaveUnit } from "./guess/SaveButton";
 import { setExitSave, type useSession, type useUnit } from "./guess/useCrowd";
 import { getToken } from "../lib/crowdSession";
-import { ActionBar, Btn } from "./guess/ui";
+import { ActionBar, Btn, ShortLabel } from "./guess/ui";
 import type { SeatsPayload, BlocsPayload } from "../lib/crowdApi";
 import { validateBlocs, validateSeats } from "../lib/crowdValidate";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -145,8 +145,8 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
 
       <div className="mb-4">{invalid && <p role="status" className="text-sm text-warn mb-2">{invalid}</p>}<p className="text-sm text-ink-soft">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. השמירה נעשית בלחיצה על ״שמור״, או ביציאה מהמסך אחרי שינוי בקלט.</p></div>
       <ActionBar above={saveUnit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={saveUnit} /></div>}>
-        <Btn onClick={() => setAll(Object.fromEntries(IDS.map((id) => [id, 0])))}>אפס הכול</Btn>
-        <Btn onClick={fillAllShares}>השלם הכול</Btn>
+        <Btn onClick={() => setAll(Object.fromEntries(IDS.map((id) => [id, 0])))}><ShortLabel short="אפס" full="אפס הכול" /></Btn>
+        <Btn onClick={fillAllShares}><ShortLabel short="השלם" full="השלם הכול" /></Btn>
         <SaveButton unit={saveUnit} session={session} invalid={invalid} compact />
       </ActionBar>
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0">

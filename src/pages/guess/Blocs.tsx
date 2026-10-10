@@ -4,7 +4,7 @@ import { MAX_BLOCS, validateBlocs } from "../../lib/crowdValidate";
 import { DEFAULT_BLOCS, defaultBlocs, IDS, nameOf, normalizeBlocs } from "./model";
 import { moveList, removeBloc, removeList } from "./blocEditing";
 import SaveButton, { SaveError } from "./SaveButton";
-import { ActionBar, Btn, inputCls, Notice } from "./ui";
+import { ActionBar, Btn, ShortLabel, inputCls, Notice } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 import BlocParty from "./BlocParty";
 import { useIsPhone } from "./useIsPhone";
@@ -68,7 +68,7 @@ export default function Blocs({ unit, session, mySeats }: {
     </div>
     {invalid && <Notice tone="warn">{invalid}</Notice>}
     <ActionBar above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
-      <Btn kind="danger" disabled={!p.blocs.length} onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs([]); setAnnouncement("כל הגושים האישיים נמחקו"); }}>מחק הכל</Btn>
+      <Btn kind="danger" disabled={!p.blocs.length} onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs([]); setAnnouncement("כל הגושים האישיים נמחקו"); }}><ShortLabel short="מחק" full="מחק הכל" /></Btn>
       <Btn onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs(defaultBlocs()); setAnnouncement("חמשת גושי ברירת המחדל שוחזרו"); }}>ברירת מחדל</Btn>
       <SaveButton unit={unit} session={session} invalid={invalid} compact />
     </ActionBar>

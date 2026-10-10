@@ -77,3 +77,8 @@ export function ActionBar({ children, above }: { children: ReactNode; above?: Re
     </>
   );
 }
+
+/** תווית מקוצרת בטלפון צר (הכרעת בעלים 10.10.2026): "השלם", "אפס", "מחק" */
+export function ShortLabel({ short, full }: { short: string; full: string }) {
+  return <><span className="sm:hidden">{short}</span><span className="hidden sm:inline">{full}</span></>;
+}
