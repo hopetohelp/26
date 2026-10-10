@@ -9,7 +9,7 @@ import { Btn, Notice } from "./guess/ui";
  */
 export type GuessReason = { list: string; rule: "ratio" | "watched"; value: number; mean?: number };
 export type GuessBloc = { name: string; lists: string[]; seats: number; target: number | null };
-export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; verified?: boolean; reasons: GuessReason[] };
+export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; verified?: boolean; reasons: GuessReason[]; hasVote?: boolean; saves?: number; registered?: string | null; lastLogin?: string | null; logins?: number };
 type Filter = "pending" | "all" | "approved" | "rejected" | "unverified";
 
 const STATUS: Record<GuessRow["status"], string> = { ok: "תקינה", pending: "ממתינה לאישור", approved: "אושרה", rejected: "נדחתה", review: "בבדיקת שעה חשודה" };
@@ -20,6 +20,9 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "rejected", label: "נדחו" },
   { id: "unverified", label: "לא מאומתים" },
 ];
+
+/** תאריך ושעה בשעון ישראל, לשדות הפעילות (נרשם / כניסה אחרונה) */
+export const stamp = (iso?: string | null) => iso ? new Date(iso).toLocaleString("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
 
 export function reasonText(r: GuessReason) {
   return r.rule === "ratio"
@@ -35,8 +38,8 @@ export function blocsText(r: GuessRow): string {
 
 export function toCsv(rows: GuessRow[]) {
   const ids = lists2026.map((l) => l.id);
-  const head = ["יום", "מצב", "דרך", ...ids.map(listName), "גושים"];
-  const lines = rows.map((r) => [r.day, STATUS[r.status] + (r.verified === false ? " · חשבון לא מאומת" : ""), r.mode === "pct" ? "אחוזים" : "מנדטים", ...ids.map((id) => r.seats[id] ?? 0), blocsText(r)]);
+  const head = ["יום", "מצב", "דרך", "הצבעה שמורה", "סה״כ שמירות", "נרשם", "כניסה אחרונה", "כניסות", ...ids.map(listName), "גושים"];
+  const lines = rows.map((r) => [r.day, STATUS[r.status] + (r.verified === false ? " · חשבון לא מאומת" : ""), r.mode === "pct" ? "אחוזים" : "מנדטים", r.hasVote ? "כן" : "לא", r.saves ?? 0, stamp(r.registered), stamp(r.lastLogin), r.logins ?? 0, ...ids.map((id) => r.seats[id] ?? 0), blocsText(r)]);
   return [head, ...lines].map((l) => l.map((x) => `"${String(x).replace(/"/g, '""')}"`).join(",")).join("\n");
 }
 
@@ -79,6 +82,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
       <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10.10.2026 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>
       <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>
       {!!data?.unverified?.participants && (
         <details className="border border-paper-line rounded-theme p-3">
@@ -99,6 +103,11 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
               <tr className="text-ink-soft">
                 <th className="text-start font-medium py-1 pe-3">יום</th>
                 <th className="text-start font-medium py-1 pe-3">מצב</th>
+                <th className="text-start font-medium py-1 pe-3">הצבעה שמורה</th>
+                <th className="text-start font-medium py-1 pe-3">שמירות (סה״כ)</th>
+                <th className="text-start font-medium py-1 pe-3">נרשם</th>
+                <th className="text-start font-medium py-1 pe-3">כניסה אחרונה</th>
+                <th className="text-start font-medium py-1 pe-3">כניסות</th>
                 {ids.map((id) => <th key={id} className="text-start font-medium py-1 pe-2 whitespace-nowrap">{listName(id)}</th>)}
                 <th className="text-start font-medium py-1">פעולה</th>
               </tr>
@@ -112,6 +121,11 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
                     <span className="font-bold">{STATUS[r.status]}</span>{r.mode === "pct" ? " · באחוזים" : ""}{r.verified === false && <span className="text-xs text-ink-soft"> · חשבון לא מאומת</span>}
                     {!!r.reasons.length && <ul className="text-xs text-ink-soft">{r.reasons.map((x, i) => <li key={i}>{reasonText(x)}</li>)}</ul>}
                   </td>
+                  <td className="py-1 pe-3">{r.hasVote ? "כן" : "לא"}</td>
+                  <td className="py-1 pe-3">{r.saves ?? 0}</td>
+                  <td className="py-1 pe-3 whitespace-nowrap">{stamp(r.registered)}</td>
+                  <td className="py-1 pe-3 whitespace-nowrap">{stamp(r.lastLogin)}</td>
+                  <td className="py-1 pe-3">{r.logins ?? 0}</td>
                   {ids.map((id) => <td key={id} className={`py-1 pe-2 ${r.reasons.some((x) => x.list === id) ? "font-bold text-warn" : ""}`}>{r.seats[id] ?? 0}</td>)}
                   <td className="py-1 whitespace-nowrap space-x-1 space-x-reverse">
                     {r.status === "pending" && <><Btn kind="primary" disabled={busy === r.handle} onClick={() => decide(r, "approved")}>אישור</Btn><Btn disabled={busy === r.handle} onClick={() => decide(r, "rejected")}>דחייה</Btn></>}
@@ -120,7 +134,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
                 </tr>
                 {r.blocs && (
                   <tr>
-                    <td colSpan={ids.length + 3} className="pb-2">
+                    <td colSpan={ids.length + 8} className="pb-2">
                       <details>
                         <summary className="cursor-pointer text-xs text-ink-soft min-h-[32px] flex items-center">גושים ({r.blocs.items.length}{r.blocs.saved ? "" : " · ברירת מחדל"})</summary>
                         <ul className="text-xs space-y-0.5 pt-1">
