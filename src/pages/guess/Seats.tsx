@@ -28,7 +28,7 @@ import type { useSession, useUnit } from "./useCrowd";
 const START_OPTIONS: { id: SeatsPayload["start"]; title: string; desc: string }[] = [
   { id: "zero", title: "מאפס", desc: "120 מושבים ריקים. אתם מחלקים הכול." },
   { id: "polls", title: "מממוצע הסקרים", desc: `הממוצע נכון ל-${dateLong(POLLS_AS_OF)}. משנים מה שרוצים.` },
-  { id: "k25", title: "מבחירות 22", desc: "התוצאה של 2022 לפי השיוך של כל מפלגה. מפלגה שנוצרה מפיצול מקבלת חלק, ומפלגה חדשה מתחילה מ-0." },
+  { id: "k25", title: "מבחירות 22", desc: "התוצאה של 2022 לפי השיוך של כל מפלגה היום." },
 ];
 
 export default function Seats({
@@ -78,23 +78,23 @@ export default function Seats({
     return (
       <div>
         <HowTo />
-        <h2 className="text-3xl font-display leading-tight mb-1">מאיפה מתחילים?</h2>
-        <p className="text-ink-soft text-sm mb-4">בונים כנסת של 120. בוחרים נקודת פתיחה, ומשם כל מנדט בידיים שלכם.</p>
-        <div className="grid sm:grid-cols-3 gap-3 [&>*]:min-w-0">
+        <h2 className="text-3xl font-display leading-tight mb-3">מאיפה מתחילים?</h2>
+        <div className="grid sm:grid-cols-3 gap-3 items-start [&>*]:min-w-0">
           {START_OPTIONS.map((o) => (
-            <button
-              key={o.id}
-              type="button"
-              onClick={() => unit.setDraft(startWithTargets(o.id))}
-              className="text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
-            >
-              <span className="text-xl font-display leading-tight block mb-1">{o.title}</span>
-              <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
-              {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
-            </button>
+            <div key={o.id}>
+              <button
+                type="button"
+                onClick={() => unit.setDraft(startWithTargets(o.id))}
+                className="w-full text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
+              >
+                <span className="text-xl font-display leading-tight block mb-1">{o.title}</span>
+                <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
+                {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
+              </button>
+              {o.id === "k25" && <Link to="/changes" className="inline-flex items-center min-h-[44px] text-sm">איך המפלגות משויכות להיום?</Link>}
+            </div>
           ))}
         </div>
-        <p className="text-sm mt-2"><Link to="/changes">פירוט איך כל מפלגה שויכה — במסך "מה השתנה – מפלגות"</Link></p>
         <div className="mt-5 opacity-80">
           <SeatBoard values={{}} />
         </div>
