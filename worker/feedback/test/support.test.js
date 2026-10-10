@@ -89,10 +89,19 @@ it("כשל אימות פנימי מדווח כשגיאה, בלי אישור שמ
   expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM support_messages").get().n).toBe(0);
 });
 it("פנייה שנפתחה בלי חשבון מאוחדת לשיחת החשבון בהרשמה; מחיקת החשבון מוחקת את כל השיחה", async () => {
-  const note = await api("/", { topic: "other", text: "שאלה בלי חשבון", page: "/support" });
-  expect(note.data.token).toBeTruthy();
-  await support({ text: "הודעה מהחשבון", op_id: "operation-adopt-0001" });
-  const merged = (await support({ adopt: [note.data.token, "no-such-thread"] })).data.thread.messages.map(m => m.text);
+  // השעון נקבע במפורש: שתי ההודעות נוצרות במרווח קבוע, כדי שהסדר לא יהיה תלוי באם נוצרו באותה אלפית שנייה
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    vi.setSystemTime(new Date("2026-10-10T10:00:00.000Z"));
+    var note = await api("/", { topic: "other", text: "שאלה בלי חשבון", page: "/support" });
+    expect(note.data.token).toBeTruthy();
+    vi.setSystemTime(new Date("2026-10-10T10:05:00.000Z"));
+    await support({ text: "הודעה מהחשבון", op_id: "operation-adopt-0001" });
+    vi.setSystemTime(new Date("2026-10-10T10:10:00.000Z"));
+    var merged = (await support({ adopt: [note.data.token, "no-such-thread"] })).data.thread.messages.map(m => m.text);
+  } finally {
+    vi.useRealTimers();
+  }
   expect(merged).toEqual(["שאלה בלי חשבון", "הודעה מהחשבון"]);
   await support({ adopt: [note.data.token] });
   expect((await support()).data.thread.messages).toHaveLength(2);
