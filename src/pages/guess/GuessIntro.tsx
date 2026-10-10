@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { timeLeftText } from "../../lib/countdown";
 import { LOCK_AT } from "./model";
 
@@ -28,7 +29,7 @@ export default function GuessIntro({ signedIn }: { signedIn: boolean }) {
         ) : (
           <>
             <li>אפשר לשמור כאורח, ולשתף אחרים בהשערה שלכם.</li>
-            <li>ואפשר להירשם, לשמור את היסטוריית ההשערות שלכם, ולהשפיע על סקר האתר.</li>
+            <li>ואפשר להירשם, לשמור את היסטוריית ההשערות שלכם, ולהשפיע על סקר האתר. ההרשמה מוצעת אחרי השמירה, או <Link to="/support">באזור האישי</Link>.</li>
           </>
         )}
       </ul>
