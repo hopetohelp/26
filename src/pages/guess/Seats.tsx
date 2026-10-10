@@ -1,12 +1,15 @@
 import PersonalBlocs from "../../components/PersonalBlocs";
-import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { dateLong } from "../../lib/format";
-import { K25_MAP, k25Name, IDS, nameOf, POLL_RANGES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
+import { IDS, nameOf, POLL_RANGES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
+import { lineageRows, start2022 } from "../../lib/lineage";
+import { useCrowdSeats, useLineage } from "./useLineage";
+import { seatsFmt } from "../../lib/format";
 import { blocSummary } from "./blocSummary";
 import { canSetSeats } from "./seatEditing";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
@@ -18,7 +21,7 @@ import type { useSession, useUnit } from "./useCrowd";
 const START_OPTIONS: { id: SeatsPayload["start"]; title: string; desc: string }[] = [
   { id: "zero", title: "מאפס", desc: "120 מושבים ריקים. אתם מחלקים הכול." },
   { id: "polls", title: "מממוצע הסקרים", desc: `הממוצע נכון ל-${dateLong(POLLS_AS_OF)}. משנים מה שרוצים.` },
-  { id: "k25", title: "מתוצאות 2022", desc: `רק לרשימות שרצות שוב באותו הרכב (${Object.keys(K25_MAP).map(nameOf).join(", ")}). שאר הרשימות — ריקות, כי אין להן מקבילה אחת ב-2022.` },
+  { id: "k25", title: "מבחירות 22", desc: "התוצאה של 2022 לפי השיוך של כל מפלגה. מפלגה שנוצרה מפיצול מקבלת חלק, ומפלגה חדשה מתחילה מ-0." },
 ];
 
 export default function Seats({
@@ -41,10 +44,17 @@ export default function Seats({
   const [editError, setEditError] = useState<string | null>(null);
   const typedFrom = useRef<Record<string, number>>({});
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
+  const lineage = useLineage(session);
+  const crowd = useCrowdSeats();
+  const lin = lineage.draft.split === "crowd" && !crowd ? { ...lineage.draft, split: "polls" as const } : lineage.draft;
+  const rows22 = Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r]));
+  const [cmp, setCmp] = useCompare();
 
   /** נקודת פתיחה שמכבדת יעד שכבר נכתב לגוש (הכרעת בעלים 8.10.2026): בכל שלוש האפשרויות, ההשלמה מתאימה את הגושים ליעד */
   const startWithTargets = (start: SeatsPayload["start"]): SeatsPayload => {
-    const base = startSeats(start);
+    const base = start === "k25"
+      ? { ...startSeats("zero"), start, seats: Object.fromEntries(Object.entries(start2022(lin, crowd)).map(([id, c]) => [id, { v: c.v, src: c.locked ? "manual" as const : "filled" as const, locked: c.locked }])) }
+      : startSeats(start);
     if (!blocs?.blocs.some((b) => b.target !== null)) return base;
     const r = fillAll(IDS, base.seats, POLLS, blocs.blocs, POLL_RANGES);
     return r.ok ? { ...base, seats: r.seats, pollsAsOf: POLLS_AS_OF } : base;
@@ -56,6 +66,7 @@ export default function Seats({
   if (!p) {
     return (
       <div>
+        <HowTo />
         <h2 className="text-3xl font-display leading-tight mb-1">מאיפה מתחילים?</h2>
         <p className="text-ink-soft text-sm mb-4">בונים כנסת של 120. בוחרים נקודת פתיחה, ומשם כל מנדט בידיים שלכם.</p>
         <div className="grid sm:grid-cols-3 gap-3 [&>*]:min-w-0">
@@ -72,6 +83,7 @@ export default function Seats({
             </button>
           ))}
         </div>
+        <p className="text-sm mt-2"><Link to="/changes">פירוט איך כל מפלגה שויכה — במסך "מה השתנה – מפלגות"</Link></p>
         <div className="mt-5 opacity-80">
           <SeatBoard values={{}} />
         </div>
@@ -123,6 +135,7 @@ export default function Seats({
 
   return (
     <div>
+      <HowTo />
           <PersonalBlocs title="הגושים שלי: חלוקת ההשערה ויעדי ההשלמה" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
@@ -147,8 +160,13 @@ export default function Seats({
 
         <div>
           {p.mode === "pct" && <p className="text-sm mb-3">המנדטים חושבו במחשבון. <Link to="/guess?section=calculator">עריכת קלט המחשבון</Link>. שינוי מנדטים כאן הופך את ההשערה לחלוקה ישירה.</p>}
-          <HowTo />
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
+            <CompareToggles value={cmp} onChange={setCmp} />
+            {cmp.length > 0 && (
+              <div className="flex items-end gap-2 text-xs text-ink-soft pb-1" aria-hidden="true">
+                <div className="flex-1 min-w-0"><CompareCells on={cmp} cells={{ k22: <Link to="/changes" className="underline">בחירות 22</Link>, polls: "סקרים", crowd: "גולשים" }} /></div>
+              </div>
+            )}
             <ul className="divide-y divide-paper-line border-y border-paper-line" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
@@ -158,10 +176,12 @@ export default function Seats({
                     <div className="flex items-center gap-2">
                       <div className="flex-1 min-w-0">
                         <span className="font-bold block truncate">{name}</span>
-                        <span className="text-sm text-ink">
-                          {rowState(c)}
-                          {K25_MAP[id] && p.start === "k25" ? ` · 2022: ${k25Name(K25_MAP[id])}` : ""}
-                        </span>
+                        <span className="sr-only">{rowState(c)}</span>
+                        {cmp.length > 0 && <CompareCells on={cmp} cells={{
+                          k22: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0),
+                          polls: seatsFmt(POLLS[id] ?? 0),
+                          crowd: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—",
+                        }} labels />}
                       </div>
                       <div className="flex items-center gap-1" dir="ltr">
                         <button type="button" aria-label={`פחות ל${name}`} disabled={c.v <= 0} onClick={() => setV(id, c.v - 1)} className="w-11 h-11 rounded-full border-2 border-ink text-2xl font-bold leading-none disabled:opacity-30 active:bg-ink active:text-paper-card">
@@ -253,12 +273,11 @@ export function snapSeats(v: number, from: number): number {
 /** מה כתוב בשורה (הכפתור שלידה כבר אומר נעול/פתוח): הערך שלכם · הושלם אוטומטית · טרם נקבע */
 const rowState = (c: SeatCell) => (c.locked ? "הערך שלכם" : c.src === "filled" ? "הושלם אוטומטית" : "טרם נקבע");
 
-/** כפתור נעילה עם מילה — לא רק אייקון: נעול = מלא וכהה, פתוח = ריק עם קו מקווקו */
+/** כפתור נעילה — אייקון ועיצוב בלבד (הכרעת בעלים 10.10.2026): נעול = מלא וכהה, פתוח = ריק עם קו מקווקו. השם המלא בתווית לקורא מסך. */
 function LockChip({ locked }: { locked: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-full border-2 text-sm font-bold ${locked ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-dashed border-ink-soft"}`}>
+    <span className={`inline-flex items-center justify-center w-11 h-11 rounded-full border-2 ${locked ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink border-dashed border-ink-soft"}`}>
       <Lock on={locked} />
-      {locked ? "נעול" : "פתוח"}
     </span>
   );
 }
@@ -275,21 +294,73 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
     </button>
   );
 }
-/** הסבר קבוע על המסך כולו: איך משערים, שלב אחר שלב (הכרעת בעלים 10.10.2026) */
+/** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
 function HowTo() {
   return (
-    <div className="mb-3 rounded-theme border border-paper-line bg-paper-card p-3" aria-label="איך משערים">
-      <p className="text-sm font-bold mb-1">איך משערים?</p>
+    <section className="mb-4 rounded-theme border border-paper-line bg-paper-card p-4" aria-labelledby="howto-title">
+      <h2 id="howto-title" className="text-xl font-display leading-tight mb-2">איך משערים?</h2>
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
         <li>מגדירים גוש משלכם, או נשארים עם ברירת המחדל.</li>
         <li>מגדירים מספר מנדטים כולל לגוש, או משאירים ריק.</li>
-        <li>בוחרים מאיפה מתחילים: מאפס, מממוצע הסקרים או מהבחירות הקודמות.</li>
-        <li>
-          נועלים מפלגה <span className="inline-block align-middle" aria-hidden="true"><LockChip locked /></span> או משנים לה את המספר (מספר שמקלידים ננעל מעצמו). מפלגה פתוחה <span className="inline-block align-middle" aria-hidden="true"><LockChip locked={false} /></span> תשתנה בהשלמה.
-        </li>
+        <li>בוחרים מאיפה מתחילים: מאפס, מממוצע הסקרים או מבחירות 22.</li>
+        <li>נועלים מפלגה או משנים לה את המספר.</li>
         <li>לוחצים "השלם הכול": המפלגות הנעולות ומספרי הגושים נשמרים, ושאר המפלגות מקבלות את היתרה ביחס לסקרים.</li>
       </ol>
+      <details className="group mt-3 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">
+        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[44px] text-sm font-bold">
+          הסברים
+          <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
+        </summary>
+        <div className="space-y-3 text-sm pb-1">
+          <div className="flex items-center gap-3"><span className="shrink-0" aria-hidden="true"><LockChip locked /></span><p><b>נעול:</b> המספר שלכם. "השלם הכול" לא ישנה אותו. מספר שמקלידים ננעל מעצמו.</p></div>
+          <div className="flex items-center gap-3"><span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span><p><b>פתוח:</b> "השלם הכול" רשאי לשנות אותו. לחיצה על המנעול נועלת או פותחת.</p></div>
+          <p><b>אחוז החסימה:</b> מפלגה צריכה לפחות 4 מנדטים כדי להיכנס לכנסת. לכן אין 1, 2 או 3 מנדטים — מעלים ל-4 או מורידים ל-0.</p>
+          <p><b>בחירות 22 · סקרים · גולשים:</b> שלושה מספרים להשוואה ליד כל מפלגה. אפשר להסתיר כל אחד מהם. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. "גולשים" — ממוצע ההשערות באתר, אינו סקר.</p>
+          <p><b>שמירה:</b> נשמרת בחשבון שלכם, ורק ההשערה האחרונה נספרת בסטטיסטיקות.</p>
+        </div>
+      </details>
+    </section>
+  );
+}
+
+type CompareKey = "k22" | "polls" | "crowd";
+const COMPARE: { id: CompareKey; label: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים" }, { id: "crowd", label: "גולשים" }];
+const CMP_KEY = "elections26.compare";
+/** אילו טורי השוואה מוצגים — נשמר בדפדפן */
+function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
+  const [v, setV] = useState<CompareKey[]>(() => {
+    try { const x = JSON.parse(localStorage.getItem(CMP_KEY) ?? "null"); if (Array.isArray(x)) return COMPARE.map((c) => c.id).filter((id) => x.includes(id)); } catch { /* ברירת מחדל */ }
+    return COMPARE.map((c) => c.id);
+  });
+  return [v, (next) => { setV(next); try { localStorage.setItem(CMP_KEY, JSON.stringify(next)); } catch { /* לא נשמר */ } }];
+}
+function CompareToggles({ value, onChange }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void }) {
+  return (
+    <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-2 mb-2">
+      <span className="text-sm text-ink-soft">להשוואה:</span>
+      {COMPARE.map((c) => {
+        const on = value.includes(c.id);
+        return (
+          <button key={c.id} type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))}
+            className={`min-h-[44px] px-3 rounded-full border-2 text-sm font-bold ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`}>
+            {c.label}
+          </button>
+        );
+      })}
     </div>
+  );
+}
+/** שלושה מספרים קטנים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה */
+function CompareCells({ on, cells, labels = false }: { on: CompareKey[]; cells: Record<CompareKey, ReactNode>; labels?: boolean }) {
+  return (
+    <span className="grid grid-cols-3 gap-1 max-w-[15rem] text-xs">
+      {COMPARE.map((c) => (
+        <span key={c.id} className={`truncate ${on.includes(c.id) ? "" : "invisible"} ${labels ? "font-num tabular text-ink-soft" : ""}`}>
+          {labels && <span className="sr-only">{c.label}: </span>}
+          {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
+        </span>
+      ))}
+    </span>
   );
 }
 
