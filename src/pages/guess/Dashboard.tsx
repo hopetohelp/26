@@ -175,28 +175,40 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
 }
 
 
+type Unit = "pct" | "num";
+/** עד שתי ספרות אחרי הנקודה, בלי אפסים מיותרים: 1.65, 3, 0.5 */
+const fmtNum = (v: number) => String(Math.round(v * 100) / 100);
+
 export function VotingStats({ d }: { d: D }) {
+  const [unit, setUnit] = useState<Unit>("pct");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
   return <Card title={<SectionTitle title="הצבעה וכוונות הצבעה" count={count} />}>
-    <VoteComparison d={d} />
-    {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} /></section>}
+    <div className="mb-3"><Toggle value={unit} setValue={setUnit} options={[["pct","אחוז"],["num","מספר"]]} label="יחידת התצוגה" /></div>
+    {unit === "num" && <p className="text-xs text-ink-soft mb-3">במספרים: כל נתון הוא מספר המשתתפים שענו כך. בבחירות קודמות — כלל המצביעים: התוצאה הרשמית באחוזים כפול מספר המשתתפים בסקר{count ? ` (${count})` : ""}.</p>}
+    <VoteComparison d={d} unit={unit} participants={count ?? 0} />
+    {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} unit={unit} /></section>}
   </Card>;
 }
 
-function VoteComparison({ d }: { d: D }) {
+export function VoteComparison({ d, unit, participants }: { d: D; unit: Unit; participants: number }) {
   const rows = votingRows(d);
+  const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${v}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
     <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th>בחירות קודמות — כלל המצביעים</th><th>בחירות קודמות — הצביעו מהמשתתפים</th><th>בחירות הבאות — מתכננים להצביע</th></tr></thead>
-    <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>{[r.official, r.previous, r.next].map((v,i) => <td key={i} className="text-center">{v === null ? "—" : `${v}%`}</td>)}</tr>)}</tbody>
+    <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>
+      <td className="text-center">{r.official === null ? "—" : unit === "pct" ? `${r.official}%` : fmtNum(r.official * participants / 100)}</td>
+      <td className="text-center">{cell(r.previous, r.previousN)}</td>
+      <td className="text-center">{cell(r.next, r.nextN)}</td></tr>)}</tbody>
   </table></div>;
 }
 
-function Matrix({ d }: { d: D }) {
+export function Matrix({ d, unit }: { d: D; unit: Unit }) {
   const m = d.matrix!;
   const continuity = voteContinuity(m);
+  const show = (n: number) => unit === "pct" ? `${Math.round(n / continuity.total * 1000) / 10}%` : String(n);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{continuity.same}</strong> · עברו לרשימה אחרת: <strong>{continuity.changed}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{continuity.split}</strong></p>}
+    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{show(continuity.same)}</strong> · עברו לרשימה אחרת: <strong>{show(continuity.changed)}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{show(continuity.split)}</strong></p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>
@@ -216,7 +228,7 @@ function Matrix({ d }: { d: D }) {
           {cols.map((col) => {
             const cell = row.cells[col];
             const hidden = row.hidden || !cell || cell.hidden;
-            return <td key={col} className={`p-1 text-center ${hidden ? "text-ink-faint" : ""}`}>{hidden ? "—" : `${pctOf(cell)}%`}</td>;
+            return <td key={col} className={`p-1 text-center ${hidden ? "text-ink-faint" : ""}`}>{hidden ? "—" : unit === "pct" ? `${pctOf(cell)}%` : cell.n}</td>;
           })}
         </tr>)}
       </tbody>
