@@ -113,9 +113,10 @@ export function computeSeats(seatVersions, history = seatVersions) {
     starts[v.payload.start]++;
     if (v.payload.pollsAsOf) asOf[v.payload.pollsAsOf] = (asOf[v.payload.pollsAsOf] || 0) + 1;
   }
-  // ניחוש לפי אחוזי הצבעה: סטטיסטיקה של האחוזים, כשיש תשובה אחת לפחות
-  const pctV = seatVersions.filter((v) => v.payload.mode === "pct" && v.payload.pct);
-  const modes = { seats: n - pctV.length, pct: pctV.length };
+  // ממוצע האחוזים של הגולשים: מכל השערה שיש בה אחוזים — מ-10.10.2026 האחוזים נשמרים בשני המצבים (מנדטים ואחוזים מסונכרנים)
+  const pctV = seatVersions.filter((v) => v.payload.pct);
+  const pctMode = seatVersions.filter((v) => v.payload.mode === "pct").length;
+  const modes = { seats: n - pctMode, pct: pctMode };
   const pctStats = pctV.length >= K_CELL ? LISTS_2026.map((l) => seatStat(l.id, pctV.map((v) => v.payload.pct[l.id] ?? 0))) : undefined;
   const commonAsOf = Object.entries(asOf).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? 1 : -1))[0]?.[0] ?? null;
   return {

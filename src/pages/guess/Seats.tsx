@@ -8,14 +8,13 @@ import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate"
 import { dateLong } from "../../lib/format";
 import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
-import { Segmented } from "../../components/Choice";
 import { Badge } from "../../components/ui";
 import { meta, listName, registry } from "../../lib/data";
 import { num } from "../../lib/format";
 /** אחוז בעשירית — כמו שמקלידים */
 const pctFmt = (x: number) => `${(Math.round(x * 10) / 10).toFixed(1)}%`;
 import { lineageRows, start2022 } from "../../lib/lineage";
-import { useCrowdSeats, useLineage } from "./useLineage";
+import { useCrowd, useLineage } from "./useLineage";
 import { seatsFmt } from "../../lib/format";
 import { blocSummary } from "./blocSummary";
 import { canSetSeats } from "./seatEditing";
@@ -52,7 +51,7 @@ export default function Seats({
   const typedFrom = useRef<Record<string, number>>({});
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
   const lineage = useLineage(session);
-  const crowd = useCrowdSeats();
+  const { seats: crowd, pct: crowdPct } = useCrowd();
   const lin = lineage.draft.split === "crowd" && !crowd ? { ...lineage.draft, split: "polls" as const } : lineage.draft;
   const rows22 = Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r]));
   const [cmp, setCmp] = useCompare();
@@ -159,13 +158,20 @@ export default function Seats({
   };
   /** "השלם הכול" באחוזים: הפתוחות מקבלות את היתרה לפי ממוצע הסקרים; הנעולות לא זזות */
   const fillPctNow = () => {
+    // יש מספר לגוש ⇐ ההשלמה במנדטים (מתחשבת בגושים ובנעילות), והאחוזים מחושבים מהמנדטים
+    if (targets.length) {
+      const f = fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES);
+      if (!f.ok) return setEditError(fillErrorText(f.error));
+      const w = withSeats(p, f.seats, { pollsAsOf: POLLS_AS_OF });
+      unit.setDraft(w.pct ? { ...w, mode: "pct" } : w);
+      return setEditError(null);
+    }
     const r = fillPct(IDS, pctNow ?? {}, (id) => !!p.seats[id]?.locked, POLL_SHARES);
     if (!r.ok) return setEditError(pctFillErrorText(r.error));
     const w = withPct(p, r.pct, { extra: { pollsAsOf: POLLS_AS_OF } });
     unit.setDraft(w.payload);
     setEditError(w.error);
   };
-  const passingPolls = IDS.reduce((a, id) => a + ((POLLS[id] ?? 0) > 0 ? POLL_SHARES[id] ?? 0 : 0), 0);
 
   return (
     <div>
@@ -193,9 +199,8 @@ export default function Seats({
         </div>
 
         <div>
-          <Segmented label="מה מקלידים" value={view} onChange={setView} className="mb-3" options={[{ id: "seats", label: "מנדטים" }, { id: "pct", label: "אחוזים" }]} />
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
-            <CompareToggles value={cmp} onChange={setCmp} />
+            <CompareToggles value={cmp} onChange={setCmp} view={view} onView={setView} />
             {cmp.length > 0 && (
               <div className="flex items-end gap-2 text-xs text-ink-soft pb-1 border-b-2 border-ink/30" aria-hidden="true">
                 <div className="flex-1 min-w-0"><CompareCells on={cmp} cells={{ k22: <Link to="/changes" className="underline">בחירות 22</Link>, polls: "סקרים", crowd: "גולשים" }} /></div>
@@ -218,8 +223,8 @@ export default function Seats({
                         } : {
                           k22: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}`,
                           polls: pctFmt(POLL_SHARES[id] ?? 0),
-                          // ממוצע המנדטים של הגולשים, מומר לאחוז בקירוב: מנדטים ÷ 120 × חלק הקולות של הרשימות שעוברות בסקרים
-                          crowd: crowd ? `~${pctFmt(((crowd[id] ?? 0) / 120) * passingPolls)}` : "—",
+                          // ממוצע האחוזים של הגולשים, כמו בסקר האתר
+                          crowd: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—",
                         }} labels />}
                       </div>
                       {view === "pct" ? (
@@ -441,19 +446,30 @@ function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
   });
   return [v, (next) => { setV(next); try { localStorage.setItem(CMP_KEY, JSON.stringify(next)); } catch { /* לא נשמר */ } }];
 }
-function CompareToggles({ value, onChange }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void }) {
+const CHIP = "min-h-[32px] px-2.5 rounded-full border text-xs font-bold";
+const chipCls = (on: boolean) => `${CHIP} ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`;
+/** שורה אחת: מתג מנדטים | אחוזים, ולידו שלושת מספרי ההשוואה — באותו עיצוב */
+function CompareToggles({ value, onChange, view, onView }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
   return (
-    <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-2 mb-2">
-      <span className="text-xs text-ink-soft">להשוואה:</span>
-      {COMPARE.map((c) => {
-        const on = value.includes(c.id);
-        return (
-          <button key={c.id} type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))}
-            className={`min-h-[32px] px-2.5 rounded-full border text-xs font-bold ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`}>
-            {c.label}
+    <div className="flex flex-wrap items-center gap-2 mb-2">
+      <div role="radiogroup" aria-label="מה מקלידים" className="flex gap-1">
+        {(["seats", "pct"] as const).map((v) => (
+          <button key={v} type="button" role="radio" aria-checked={view === v} onClick={() => onView(v)} className={chipCls(view === v)}>
+            {v === "seats" ? "מנדטים" : "אחוזים"}
           </button>
-        );
-      })}
+        ))}
+      </div>
+      <span aria-hidden="true" className="w-px h-6 bg-paper-line" />
+      <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-1">
+        {COMPARE.map((c) => {
+          const on = value.includes(c.id);
+          return (
+            <button key={c.id} type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))} className={chipCls(on)}>
+              {c.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
