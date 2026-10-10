@@ -9,9 +9,11 @@ import type { useSession, useUnit } from "./useCrowd";
 import BlocParty from "./BlocParty";
 import { useIsPhone } from "./useIsPhone";
 
-export default function Blocs({ unit, session, mySeats }: {
+export default function Blocs({ unit, session, mySeats, actions = true }: {
   unit: ReturnType<typeof useUnit<BlocsPayload>>; session: ReturnType<typeof useSession>;
   mySeats: Record<string, number> | null;
+  /** false: בלי כרטיס הפעולות הצף — המסך המארח (מה השתנה) מציג כרטיס משלו, ו"ברירת מחדל" נשאר כאן בתוך הדף */
+  actions?: boolean;
 }) {
   const [editing, setEditing] = useState<string | null>(null);
   const [nameDraft, setNameDraft] = useState("");
@@ -67,10 +69,11 @@ export default function Blocs({ unit, session, mySeats }: {
       </button>}
     </div>
     {invalid && <Notice tone="warn">{invalid}</Notice>}
-    <ActionBar above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
+    {!actions && <Btn onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs(defaultBlocs()); setAnnouncement("חמשת גושי ברירת המחדל שוחזרו"); }}>חזרה לגושי ברירת המחדל</Btn>}
+    {actions && <ActionBar above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
       <Btn kind="danger" disabled={!p.blocs.length} onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs([]); setAnnouncement("כל הגושים האישיים נמחקו"); }}><ShortLabel short="מחק" full="מחק הכל" /></Btn>
       <Btn onClick={() => { setPicker(null); setEditing(null); setHovered(null); setBlocs(defaultBlocs()); setAnnouncement("חמשת גושי ברירת המחדל שוחזרו"); }}>ברירת מחדל</Btn>
       <SaveButton unit={unit} session={session} invalid={invalid} compact />
-    </ActionBar>
+    </ActionBar>}
   </div>;
 }

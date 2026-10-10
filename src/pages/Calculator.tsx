@@ -107,7 +107,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
   };
   const invalid = inputProblem ?? (over ? "סכום האחוזים עולה על 100." : r?.status !== "ok" ? "אפשר לשמור רק תוצאה תקינה של 120 מנדטים, ללא הגרלה." : null) ?? (next ? validateSeats(next, IDS) : null) ?? (blocsUnit.draft ? validateBlocs(blocsUnit.draft, IDS) : null);
 
-  // יציאה מהמסך אחרי שינוי בקלט ⇐ התוצאה נשמרת כמו בלחיצה על "שמור" (הכרעת בעלים 10.10.2026)
+  // יציאה מהמסך אחרי שינוי בקלט ⇐ התוצאה נשמרת כמו בלחיצה על "שמירה" (הכרעת בעלים 10.10.2026)
   const exitSave = useRef(saveUnit);
   const invalidRef = useRef(invalid);
   invalidRef.current = invalid;
@@ -143,7 +143,7 @@ export default function Calculator({ session, unit, blocsUnit }: { session: Retu
       </PageTitle>
             {r?.status === "ok" && <PersonalBlocs title="הגושים שלי לפי תוצאת המחשבון" values={r.seats} source="תוצאת מחשבון ההשערה לפי חוק הבחירות" asOf="מחושב עכשיו מהקלט שלכם" />}
 
-      <div className="mb-4">{invalid && <p role="status" className="text-sm text-warn mb-2">{invalid}</p>}<p className="text-sm text-ink-soft">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. השמירה נעשית בלחיצה על ״שמור״, או ביציאה מהמסך אחרי שינוי בקלט.</p></div>
+      <div className="mb-4">{invalid && <p role="status" className="text-sm text-warn mb-2">{invalid}</p>}<p className="text-sm text-ink-soft">שמירת התוצאה מעדכנת את השערת המנדטים והגושים שלכם בחשבון ובהיסטוריה. השמירה נעשית בלחיצה על ״שמירה״, או ביציאה מהמסך אחרי שינוי בקלט.</p></div>
       <ActionBar above={saveUnit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={saveUnit} /></div>}>
         <Btn onClick={() => setAll(Object.fromEntries(IDS.map((id) => [id, 0])))}><ShortLabel short="אפס" full="אפס הכול" /></Btn>
         <Btn onClick={fillAllShares}><ShortLabel short="השלם" full="השלם הכול" /></Btn>

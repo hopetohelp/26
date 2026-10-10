@@ -15,7 +15,7 @@ export interface SaveUnit {
 }
 
 /**
- * כפתור "שמור". בלי סשן נפתח גיליון השמירה: Google או מייל (הכרעת בעלים 9.10.2026 — אין שמירה בשרת בלי חשבון).
+ * כפתור "שמירה". בלי סשן נפתח גיליון השמירה: Google או מייל (הכרעת בעלים 9.10.2026 — אין שמירה בשרת בלי חשבון).
  * מיד אחריו השמירה עצמה. שגיאה ⇐ ניסיון חוזר עם אותו op_id.
  */
 export default function SaveButton({
@@ -41,7 +41,7 @@ export default function SaveButton({
   return (
     <div className={compact ? "contents" : "space-y-2"}>
       <Btn kind="primary" onClick={go} disabled={!!invalid || busy || !CROWD_URL || unit.status === "saved"}>
-        {busy ? "שומר…" : unit.state === "error" ? "לנסות שוב" : unit.status === "saved" ? "נשמר" : "שמור"}
+        {busy ? "שומר…" : unit.state === "error" ? "לנסות שוב" : unit.status === "saved" ? "נשמר" : "שמירה"}
       </Btn>
       {ask &&
         // בפורטל: הגיליון נמצא בתוך סרגל הפעולות הדביק (z-20), ובלי פורטל סרגל הניווט התחתון בטלפון (z-30) מכסה את כפתורי הגיליון

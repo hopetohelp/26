@@ -18,7 +18,7 @@ const emit = () => {
  * בהרשמה או בכניסה, מה שנשמר בדפדפן עולה לחשבון (syncLocal).
  */
 /**
- * שמירה רק בשתי דרכים (הכרעת בעלים 10.10.2026): לחיצה על "שמור", או יציאה — סגירת הדף, מעבר לאפליקציה אחרת,
+ * שמירה רק בשתי דרכים (הכרעת בעלים 10.10.2026): לחיצה על "שמירה", או יציאה — סגירת הדף, מעבר לאפליקציה אחרת,
  * יציאה ממסך "הכנסת שלי" (Mine קורא ל-flushPending) או ניתוק החיבור. אין שמירה אוטומטית בזמן העריכה.
  * לכל יחידה שליחה ממתינה אחת — האחרונה גוברת.
  */
@@ -40,8 +40,9 @@ export function ensureSession(): Promise<string | null> {
   return Promise.resolve(CROWD_URL ? S.getToken() : null);
 }
 
-/** מפתחות הדפדפן שמחוץ ל-crowdSession: המחנות (Changes.tsx) */
+/** מפתחות הדפדפן שמחוץ ל-crowdSession: המחנות (גרסה קודמת) והשיוך האישי (useLineage.ts) */
 const CAMPS_KEY = "elections26.camps";
+const LINEAGE_KEY = "elections26.lineage";
 
 /**
  * אחרי הרשמה או כניסה: כל מה שנשמר בדפדפן בלי חשבון עולה לחשבון — השערות (טיוטה שלא נשמרה), מחנות,
@@ -61,6 +62,10 @@ export async function syncLocal(token: string): Promise<void> {
   try {
     const camps = localStorage.getItem(CAMPS_KEY);
     if (camps) await call("/prefs", { token, body: { camps: JSON.parse(camps) } });
+  } catch { /* נשאר בדפדפן */ }
+  try {
+    const lineage = localStorage.getItem(LINEAGE_KEY);
+    if (lineage) { await call("/prefs", { token, body: { lineage: JSON.parse(lineage) } }); localStorage.removeItem(LINEAGE_KEY); }
   } catch { /* נשאר בדפדפן */ }
   try { await adoptSupportThreads(token); } catch { /* ינוסה שוב בכניסה הבאה */ }
   window.dispatchEvent(new Event("crowd-clear"));
@@ -148,13 +153,13 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       setDraftState(p);
       if (p === null) S.clearDraft(unit);
       else S.saveDraft(unit, p);
-      // נשמר בלחיצה על "שמור" או ביציאה מהמסך (flushPending) — לא בזמן העריכה
+      // נשמר בלחיצה על "שמירה" או ביציאה מהמסך (flushPending) — לא בזמן העריכה
       window.clearTimeout(timer.current);
       if (p === null || same(p, S.loadSaved(unit))) return setExitSave(unit, null);
       let tries = 0;
       const send = () => {
         setExitSave(unit, null);
-        // כבר נשמר (בלחיצה על "שמור") ⇐ אין מה לשלוח שוב
+        // כבר נשמר (בלחיצה על "שמירה") ⇐ אין מה לשלוח שוב
         if (same(p, S.loadSaved(unit))) return;
         // כישלון ⇐ ניסיון חוזר עד 3 פעמים, כל עוד זו עדיין הגרסה האחרונה
         const retry = () => { if (++tries <= 3 && same(S.loadDraft(unit), p)) timer.current = window.setTimeout(send, 5000 * tries); };

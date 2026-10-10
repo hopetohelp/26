@@ -15,7 +15,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
         <p className="font-bold">ההצבעה הקודמת שלכם עוזרת להבין את התמונה</p>
         <p className="text-sm leading-relaxed">כדי להשוות את התפלגות העונים בסקר לתוצאות הבחירות בפועל, חשוב מאוד שהתשובה על הצבעתכם בבחירות הקודמות תהיה אמיתית. בחרו את הרשימה שהצבעתם לה אז, גם אם היום אתם בוחרים אחרת.</p>
       </div>
-      <p className="text-sm text-ink-soft">שתי השאלות הן רשות. אפשר להשיב רק על אחת, והבחירה נשמרת בלחיצה על ״שמור״ או ביציאה מהמסך.</p>
+      <p className="text-sm text-ink-soft">שתי השאלות הן רשות. אפשר להשיב רק על אחת, והבחירה נשמרת בלחיצה על ״שמירה״ או ביציאה מהמסך.</p>
       <div className="grid md:grid-cols-2 gap-3 [&>*]:min-w-0">
         <section className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2">
           <label htmlFor="vote-2022" className="block font-bold">בבחירות 2022 הצבעתי ל…</label>
