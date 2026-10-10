@@ -30,7 +30,8 @@ export const K25_MAP: Record<string, string> = { likud: "מחל", shas: "שס", 
 export const VOTE_MAP: Record<string, string> = { ...K25_MAP };
 export const k25VoteName = (letters: string) => letters === "ט" ? "הציונות הדתית · עוצמה יהודית · נעם" : k25Name(letters);
 
-export const LOCK_AT = Date.parse("2026-10-26T23:59:00+02:00");
+/** מדגמי הבחירות (27.10.2026, 22:00 שעון ישראל) — היעד של הספירה לאחור במסך "הכנסת שלי" */
+export const LOCK_AT = Date.parse("2026-10-27T22:00:00+02:00");
 export { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 
 export function startSeats(start: SeatsPayload["start"]): SeatsPayload {

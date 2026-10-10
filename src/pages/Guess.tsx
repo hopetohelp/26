@@ -5,42 +5,22 @@ import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
 import { maskIdentifier } from "../lib/identifier";
 import { absorbFeedbackToken } from "../lib/feedback";
-import { introSeen, loadDraft, markIntroSeen, saveDraft } from "../lib/crowdSession";
+import { loadDraft, saveDraft } from "../lib/crowdSession";
 import { decodeGuess } from "../lib/shareGuess";
 import { RecoverForm } from "./guess/Account";
 import Dashboard from "./guess/Dashboard";
 import Mine from "./guess/Mine";
-import { IDS, LOCK_AT } from "./guess/model";
+import { IDS } from "./guess/model";
+import GuessIntro from "./guess/GuessIntro";
 import SharedGuess from "./guess/SharedGuess";
 import { Btn, Notice } from "./guess/ui";
 import { errorText, useSession } from "./guess/useCrowd";
-
-/** ספירה לאחור לנעילת ההשערות לתחרות הדיוק (26.10.2026, 23:59 שעון ישראל) */
-function Countdown() {
-  const [now, setNow] = useState(Date.now);
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 60_000);
-    return () => clearInterval(t);
-  }, []);
-  const ms = LOCK_AT - now;
-  if (ms <= 0) return <p className="text-sm font-bold">ההשערות לתחרות הדיוק ננעלו. אחרי הבחירות נראה של מי הייתה הכי קרובה.</p>;
-  const d = Math.floor(ms / 86_400_000);
-  const h = Math.floor((ms % 86_400_000) / 3_600_000);
-  return (
-    <p className="flex items-baseline gap-2 flex-wrap text-sm">
-      <span className="font-num tabular text-3xl leading-none">{d}</span> ימים
-      <span className="font-num tabular text-3xl leading-none">{h}</span> שעות
-      <span className="text-ink-soft">עד שההשערות ננעלות לתחרות הדיוק (26.10, 23:59)</span>
-    </p>
-  );
-}
 
 export default function Guess({ community = false }: { community?: boolean }) {
   const navigate = useNavigate();
   const session = useSession();
   const [params, setParams] = useSearchParams();
   const [flash, setFlash] = useState<{ ok: boolean; text: string } | null>(null);
-  const [intro, setIntro] = useState(() => !introSeen());
   const [recoverLink, setRecoverLink] = useState<string | null>(null);
   const [mineKey, setMineKey] = useState(0);
   const view = community ? "statistics" : "mine";
@@ -93,19 +73,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
       {/* ההשערה שלי: הפתיחה והבחירה בטור הצר, ההשערה או הסטטיסטיקות ברחב */}
       {(() => { const head = <>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      {!community && <div className="mb-5"><Countdown /></div>}
-      {intro && !shared && !community && (
-        <div className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
-          <h2 className="text-xl font-display leading-tight mb-2">השערות גולשים, אינן סקר</h2>
-          <p className="text-sm leading-relaxed mb-3">
-            כאן כל אחד מנחש כמה מנדטים תקבל כל רשימה. מי שמשתתף בוחר בזה בעצמו — אין דגימה ואין שקלול, ולכן הממוצע מספר מה חושבים הגולשים באתר, לא מה
-            יקרה. כדי שההשערה תיכנס לממוצע צריך חשבון — Google או מייל; בלי חשבון היא נשמרת רק במכשיר הזה. הנתונים מתפרסמים ללא שם, גם בקבוצות קטנות.
-          </p>
-          <Btn kind="primary" onClick={() => (markIntroSeen(), setIntro(false))}>
-            הבנתי, בואו נתחיל
-          </Btn>
-        </div>
-      )}
+      {!community && !shared && <GuessIntro signedIn={!!session.token} />}
       {flash && (
         <div className="mb-4" role={flash.ok ? "status" : "alert"}>
           <Notice tone={flash.ok ? "calm" : "warn"}>{flash.text}</Notice>
@@ -135,7 +103,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         <section id="statistics">
           <Dashboard session={session} />
         </section>
-      ); return <Split title={community ? "סקר האתר" : "הכנסת שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : "בונים כנסת של 120 — בדרך שלכם: בחלוקה ישירה או במחשבון המנדטים. אחר כך רואים מה ניחשו כל השאר, ומשווים לסקרים."} primary={head} secondary={body} />; })()}
+      ); return <Split title={community ? "סקר האתר" : "הכנסת שלי"} lead={community ? "ממוצע השערות המשתתפים, הגושים וההצבעה — והשוואה לסקרים ולהשערה שלכם. אפשר לצפות בלי חשבון." : undefined} primary={head} secondary={body} />; })()}
     </>
   );
 }

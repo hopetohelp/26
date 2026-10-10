@@ -46,12 +46,8 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
           <Notice>השמירה עוד לא פעילה באתר. אפשר כבר לבנות את הכנסת שלכם — הטיוטה נשמרת בדפדפן הזה, ותחכה לכם.</Notice>
         </div>
       )}
-      {/* דרישת האימות לחשבונות ישנים — בכרטיס הגישה הכללי (AccessCard) */}
-      {!session.token && session.online && (
-        <div className="mb-4"><Notice>בלי חשבון ההשערה נשמרת רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל (בלחיצה על ״שמירה״ או <Link to="/support">באזור האישי</Link>); מה שכבר כתבתם עולה לחשבון.</Notice></div>
-      )}
       {session.me?.seatsPending && sec === "seats" && (
-        <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר הגולשים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
+        <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר המשתתפים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
       )}
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">
         {SECTIONS.map((s) => {
