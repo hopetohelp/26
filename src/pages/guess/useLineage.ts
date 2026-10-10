@@ -83,8 +83,7 @@ export function useLineage(session: ReturnType<typeof useSession>) {
   return { draft, setDraft, reset, saved, dirty, custom: !sameLineage(draft, DEFAULT_LINEAGE), unit };
 }
 
-/** ממוצע המנדטים של הגולשים לכל רשימה — לחלוקה "לפי הגולשים". null כשאין סטטיסטיקות פתוחות. */
-export function useCrowdSeats(): Record<string, number> | null {
+function useDashboard(): Dashboard | null {
   const [d, setD] = useState<Dashboard | null>(null);
   useEffect(() => {
     let alive = true;
@@ -93,6 +92,16 @@ export function useCrowdSeats(): Record<string, number> | null {
     void liveDashboard().then(show, () => {});
     return () => { alive = false; };
   }, []);
-  if (!d?.open || !d.seats?.n || !d.seats.full.length) return null;
-  return Object.fromEntries(d.seats.full.map((s) => [s.list, s.mean]));
+  return d;
 }
+
+/** ממוצע הגולשים לכל רשימה, כפי שמוצג בסקר האתר: מנדטים, ואחוזים (מהשערות שיש בהן אחוזים). null כשאין סטטיסטיקות. */
+export function useCrowd(): { seats: Record<string, number> | null; pct: Record<string, number> | null } {
+  const d = useDashboard();
+  const open = !!d?.open && !!d.seats?.n;
+  return {
+    seats: open && d!.seats!.full.length ? Object.fromEntries(d!.seats!.full.map((s) => [s.list, s.mean])) : null,
+    pct: open && d!.seats!.pctStats?.length ? Object.fromEntries(d!.seats!.pctStats.map((s) => [s.list, s.mean])) : null,
+  };
+}
+export const useCrowdSeats = () => useCrowd().seats;

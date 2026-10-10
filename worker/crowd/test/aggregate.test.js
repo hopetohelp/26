@@ -85,7 +85,14 @@ describe("seats section", () => {
     expect(s.modes).toEqual({ seats: 21, pct: 0 });
     expect(s.pctStats).toBeUndefined();
   });
-  it("pct stats among pct-mode participants only", () => {
+  it("pct stats from every guess that has percentages (both modes)", () => {
+    const base = [...Array(5)].map((_, i) => ver("s" + i, "seats", seats(50)));
+    const both = base.concat([...Array(11)].map((_, i) => ver("m" + i, "seats", seats(60, "manual", { mode: i % 2 ? "pct" : "seats", pct: { [IDS[0]]: 30, [IDS[1]]: 40 } }))));
+    const s = computeSeats(both);
+    expect(s.modes).toEqual({ seats: 5 + 6, pct: 5 });
+    expect(s.pctStats.find((x) => x.list === IDS[0])).toMatchObject({ n: 11, mean: 30 });
+  });
+  it("pct stats: guesses without percentages are not counted", () => {
     const pctV = (i) => ver("p" + i, "seats", seats(60, "filled", { mode: "pct", pct: { [IDS[0]]: 30 + i, [IDS[1]]: 40 } }));
     const base = [...Array(5)].map((_, i) => ver("s" + i, "seats", seats(50)));
     const s9 = computeSeats(base.concat([...Array(9)].map((_, i) => pctV(i))));
