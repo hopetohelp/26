@@ -28,9 +28,23 @@ export interface ShareImageInput {
   username?: string;
   /** תרחישים עצמאיים: שם, סכום מנדטים והרכב המפלגות (src/pages/guess/blocSummary.ts) */
   blocs?: BlocTotal[];
+  /** תמונה של מקור אחר (למשל ממוצע סקר האתר): כותרות, ערך מוצג לכל רשימה וקריאה לפעולה */
+  labels?: { title: string; subtitle: string; cta: string; value?: (id: string) => string };
 }
 
-export async function renderShareImage({ values, pct, username, blocs, kind = blocs?.length ? "blocs" : "parties" }: ShareImageInput): Promise<Blob> {
+/** צבעי העיצוב הפעיל וגופניו — לכל תמונות השיתוף */
+export async function sharePalette() {
+  const c = { bg: rgb("--paper"), card: rgb("--card"), ink: rgb("--ink"), soft: rgb("--ink-soft"), line: rgb("--line"), signal: rgb("--signal") };
+  const f = { display: font("--font-display", "sans-serif"), body: font("--font-body", "sans-serif"), num: font("--font-num", "sans-serif") };
+  try {
+    await Promise.all([`800 80px ${f.display}`, `700 80px ${f.display}`, `400 32px ${f.body}`, `700 32px ${f.body}`, `700 80px ${f.num}`].map((x) => document.fonts?.load(x, "אבג 0123456789")));
+  } catch {
+    /* גופן לא נטען — גופן המערכת */
+  }
+  return { c, ...f };
+}
+
+export async function renderShareImage({ values, pct, username, blocs, labels, kind = blocs?.length ? "blocs" : "parties" }: ShareImageInput): Promise<Blob> {
   const c = {
     bg: rgb("--paper"),
     card: rgb("--card"),
@@ -146,10 +160,10 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = c.ink;
   ctx.font = `700 92px ${display}`;
-  ctx.fillText(username ? `הכנסת של ${username}` : "הכנסת שלי", R, 140);
+  ctx.fillText(labels?.title ?? (username ? `הכנסת של ${username}` : "הכנסת שלי"), R, 140, R - L);
   ctx.fillStyle = c.soft;
   ctx.font = `400 34px ${body}`;
-  ctx.fillText(pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר", R, 196);
+  ctx.fillText(labels?.subtitle ?? (pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר"), R, 196, R - L);
 
   // חצי העיגול — אותם מיקומים כמו בלוח שבאתר (viewBox ‏2.2×1.12)
   const { order, fills } = seatFills(values);
@@ -191,7 +205,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
     ctx.textAlign = "left";
     ctx.font = `700 46px ${num}`;
     ctx.fillStyle = c.ink;
-    ctx.fillText(String(values[id]), left, y);
+    ctx.fillText(labels?.value?.(id) ?? String(values[id]), left, y);
     if (pct) {
       ctx.font = `700 28px ${body}`;
       ctx.fillStyle = c.ink;
@@ -225,7 +239,7 @@ export async function renderShareImage({ values, pct, username, blocs, kind = bl
   ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
   ctx.textAlign = "right";
   ctx.fillStyle = c.ink;
-  const cta = "ומה אתם מנחשים? בנו את הכנסת שלכם";
+  const cta = labels?.cta ?? "ומה אתם מנחשים? בנו את הכנסת שלכם";
   let size = 64;
   do ctx.font = `700 ${size}px ${display}`;
   while (ctx.measureText(cta).width > R - L && --size > 30);
