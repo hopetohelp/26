@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
-import { OUTBOX_EVENT, SAVED_EVENT } from "../../lib/outbox";
-import { liveDashboard, newerDashboard, siteDashboard, type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
+import { type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
@@ -16,7 +16,6 @@ import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import type { useSession } from "./useCrowd";
 
-const LIVE_REFRESH_MS = 60_000;
 
 type View = "table" | "chart";
 
@@ -27,9 +26,13 @@ const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: 
 const pctOf = (cell: Cell) => cell.of ? Math.round((cell.n / cell.of) * 1000) / 10 : 0;
 
 export default function Dashboard({ session }: { session: ReturnType<typeof useSession> }) {
-  const [d, setD] = useState<D | null>(null);
+  // ממוצע הגולשים — מהמקור האחד (src/lib/sources.ts): מתעדכן כל דקה, בחזרה לדף ואחרי כל שמירה
+  const crowd = useCrowdDashboard();
+  const d0 = crowd.dashboard;
+  // ממוצע הסקרים — תמיד מהמקור האחד של האתר (מתעדכן עם רענון הנתונים), לא מהעותק שבשרת
+  const d: D | null = d0 && d0.seats ? { ...d0, seats: { ...d0.seats, polls: POLL_AVERAGE.seats, pollsAsOf: POLL_AVERAGE.asOf } } : d0;
+  const err = crowd.failed ? "הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות." : null;
   const [view, setView] = useState<View>("table");
-  const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
@@ -37,26 +40,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const myBlocs = (personal.draft ? normalizeBlocs(personal.draft) : DEFAULT_BLOCS).blocs.map(b => b.lists);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => setSlot(document.getElementById("community-blocs")), []);
-  useEffect(() => {
-    let alive = true;
-    let shown = false;
-    const show = (x: D) => { if (!alive) return; shown = true; setD(prev => newerDashboard(prev, x)); };
-    void Promise.allSettled([siteDashboard().then(show), liveDashboard().then(show)])
-      .then(() => { if (alive && !shown) setErr("הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות."); });
-    // הסטטיסטיקות מחושבות כל הזמן: רענון כל דקה כשהדף גלוי, מיד כשחוזרים אליו, ואחרי כל שמירה שהגיעה לשרת
-    const live = () => { if (document.visibilityState === "visible") liveDashboard().then(show).catch(() => {}); };
-    const timer = window.setInterval(live, LIVE_REFRESH_MS);
-    document.addEventListener("visibilitychange", live);
-    window.addEventListener(OUTBOX_EVENT, live);
-    window.addEventListener(SAVED_EVENT, live);
-    return () => {
-      alive = false;
-      window.clearInterval(timer);
-      document.removeEventListener("visibilitychange", live);
-      window.removeEventListener(OUTBOX_EVENT, live);
-      window.removeEventListener(SAVED_EVENT, live);
-    };
-  }, []);
 
   if (err) return <Notice tone="warn">{err}</Notice>;
   if (!d) return <p className="text-ink-soft">טוען…</p>;

@@ -199,33 +199,3 @@ export function fillErrorText(e: FillError): string {
       return `${e.bloc ? `בגוש "${e.bloc}"` : "בחלוקה הכללית"} אי אפשר להגיע ל-${e.target} מנדטים בלי לצאת מטווחי הסקרים. שנו את מספר הגוש או ערך נעול.`;
   }
 }
-
-// ---- "השלם הכול" בניחוש לפי אחוזי הצבעה
-
-export type PctFillResult = { ok: true; pct: Record<string, number>; changed: string[] } | { ok: false; error: { kind: "pct-over"; locked: number } | { kind: "pct-no-eligible" } };
-
-/**
- * משלים את האחוזים של הרשימות הלא-נעולות לפי חלקן בממוצע הסקרים (model.json central.shares).
- * החלק של "אחרות" בממוצע (100 − סכום כל הרשימות) נשמר באותו יחס, כך שהשורה "אחרות / קולות שלא עברו" לא נמחקת.
- * דיוק: עשירית אחוז, בשיטת השארית הגדולה. נעולים לא זזים.
- */
-export function fillPct(ids: string[], pct: Record<string, number>, locked: (id: string) => boolean, shares: Record<string, number>): PctFillResult {
-  const lockedSum = ids.reduce((a, id) => a + (locked(id) ? pct[id] || 0 : 0), 0);
-  if (lockedSum > 100.05) return { ok: false, error: { kind: "pct-over", locked: Math.round(lockedSum * 10) / 10 } };
-  const free = ids.filter((id) => !locked(id));
-  const weights = Object.fromEntries(free.map((id) => [id, Math.max(0, shares[id] ?? 0)]));
-  const W = free.reduce((a, id) => a + weights[id], 0);
-  if (free.length && W <= 0) return { ok: false, error: { kind: "pct-no-eligible" } };
-  const others = Math.max(0, 100 - ids.reduce((a, id) => a + Math.max(0, shares[id] ?? 0), 0));
-  const room = Math.max(0, 100 - lockedSum);
-  const tenths = Math.floor(((room * W) / (W + others)) * 10 + 1e-6);
-  const alloc = largestRemainder(tenths, weights);
-  const out: Record<string, number> = {};
-  for (const id of ids) out[id] = locked(id) ? pct[id] || 0 : (alloc[id] ?? 0) / 10;
-  const changed = free.filter((id) => (pct[id] || 0) !== out[id]);
-  return { ok: true, pct: out, changed };
-}
-
-export function pctFillErrorText(e: Extract<PctFillResult, { ok: false }>["error"]): string {
-  return e.kind === "pct-over" ? `האחוזים הנעולים מגיעים ל-${e.locked}%, יותר מ-100%. כדאי להוריד או לשחרר נעילה.` : "אין רשימה לא-נעולה עם חלק בממוצע הסקרים. אפשר לשחרר נעילה.";
-}

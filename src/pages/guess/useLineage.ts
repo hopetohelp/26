@@ -5,7 +5,8 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import modelFile from "../../data/model.json";
-import { call, siteDashboard, liveDashboard, newerDashboard, type Dashboard } from "../../lib/crowdApi";
+import { call } from "../../lib/crowdApi";
+import { useCrowdAverage } from "../../lib/sources";
 import { cleanLineage, DEFAULT_LINEAGE, K25_LISTS, sameLineage, type Lineage } from "../../lib/lineage";
 import type { SaveUnit } from "./SaveButton";
 import { errorText, type useSession, type SaveState } from "./useCrowd";
@@ -83,25 +84,6 @@ export function useLineage(session: ReturnType<typeof useSession>) {
   return { draft, setDraft, reset, saved, dirty, custom: !sameLineage(draft, DEFAULT_LINEAGE), unit };
 }
 
-function useDashboard(): Dashboard | null {
-  const [d, setD] = useState<Dashboard | null>(null);
-  useEffect(() => {
-    let alive = true;
-    const show = (x: Dashboard) => alive && setD((prev) => newerDashboard(prev, x));
-    void siteDashboard().then(show, () => {});
-    void liveDashboard().then(show, () => {});
-    return () => { alive = false; };
-  }, []);
-  return d;
-}
-
-/** ממוצע הגולשים לכל רשימה, כפי שמוצג בסקר האתר: מנדטים, ואחוזים (מהשערות שיש בהן אחוזים). null כשאין סטטיסטיקות. */
-export function useCrowd(): { seats: Record<string, number> | null; pct: Record<string, number> | null } {
-  const d = useDashboard();
-  const open = !!d?.open && !!d.seats?.n;
-  return {
-    seats: open && d!.seats!.full.length ? Object.fromEntries(d!.seats!.full.map((s) => [s.list, s.mean])) : null,
-    pct: open && d!.seats!.pctStats?.length ? Object.fromEntries(d!.seats!.pctStats.map((s) => [s.list, s.mean])) : null,
-  };
-}
-export const useCrowdSeats = () => useCrowd().seats;
+/** ממוצע הגולשים — מהמקור האחד (src/lib/sources.ts) */
+export const useCrowd = () => { const c = useCrowdAverage(); return { seats: c.seats, pct: c.pct }; };
+export const useCrowdSeats = () => useCrowdAverage().seats;

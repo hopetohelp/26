@@ -83,25 +83,18 @@ describe("seats section", () => {
     expect(computeSeats(vs.slice(0, 9)).n).toBe(9);
     expect(computeSeats([])).toBeNull();
     expect(s.modes).toEqual({ seats: 21, pct: 0 });
-    expect(s.pctStats).toBeUndefined();
+    // השערות בלי אחוזים — האחוזים מחושבים מהמנדטים, כך שממוצע האחוזים כולל את כולן
+    expect(s.pctStats.find((x) => x.list === IDS[0]).n).toBe(21);
   });
-  it("pct stats from every guess that has percentages (both modes)", () => {
+  it("pct stats include every guess: saved percentages as is, missing ones derived from seats", () => {
     const base = [...Array(5)].map((_, i) => ver("s" + i, "seats", seats(50)));
     const both = base.concat([...Array(11)].map((_, i) => ver("m" + i, "seats", seats(60, "manual", { mode: i % 2 ? "pct" : "seats", pct: { [IDS[0]]: 30, [IDS[1]]: 40 } }))));
     const s = computeSeats(both);
     expect(s.modes).toEqual({ seats: 5 + 6, pct: 5 });
-    expect(s.pctStats.find((x) => x.list === IDS[0])).toMatchObject({ n: 11, mean: 30 });
-  });
-  it("pct stats: guesses without percentages are not counted", () => {
-    const pctV = (i) => ver("p" + i, "seats", seats(60, "filled", { mode: "pct", pct: { [IDS[0]]: 30 + i, [IDS[1]]: 40 } }));
-    const base = [...Array(5)].map((_, i) => ver("s" + i, "seats", seats(50)));
-    const s9 = computeSeats(base.concat([...Array(9)].map((_, i) => pctV(i))));
-    expect(s9.modes).toEqual({ seats: 5, pct: 9 });
-    expect(s9.pctStats[0].n).toBe(9);
-    const s = computeSeats(base.concat([...Array(11)].map((_, i) => pctV(i))));
     const a = s.pctStats.find((x) => x.list === IDS[0]);
-    expect(a).toMatchObject({ n: 11, mean: 35, median: 35, p25: 32.5, p75: 37.5 });
-    expect(s.pctStats.find((x) => x.list === IDS[2]).mean).toBe(0);
+    expect(a.n).toBe(16);
+    expect(a.max).toBe(30); // האחוזים שנשמרו נלקחים כמו שהם
+    expect(a.min).toBeLessThan(30); // ולהשערות בלי אחוזים — מחושבים מהמנדטים
   });
 });
 

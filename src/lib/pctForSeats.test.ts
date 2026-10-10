@@ -46,6 +46,14 @@ describe("מנדטים ⇐ אחוזים ⇐ מנדטים (הלוך-חזור)", (
     for (const id of ids) if (!seats[id]) expect(pct[id]).toBeLessThan(THRESHOLD_PCT);
   });
 
+  it("רשימה נעולה שומרת על האחוז שלה, והשאר מתאימות את עצמן", () => {
+    const base = pctForSeats(ids, polls.seats, polls.shares)!;
+    const seats: Record<string, number> = { ...polls.seats, together: polls.seats.together + 1, yashar: polls.seats.yashar - 1 };
+    const pct = pctForSeats(ids, seats, base, { fixed: ["likud"] })!;
+    expect(pct.likud).toBe(base.likud);
+    for (const id of ids) expect(back(pct)[id] ?? 0).toBe(seats[id] ?? 0);
+  });
+
   it("סכום שאינו 120 ⇐ null", () => {
     expect(pctForSeats(ids, { likud: 60 })).toBeNull();
   });

@@ -2,7 +2,8 @@ name: שרת השתתפות הגולשים
 on:
   push:
     branches: [main]
-    paths: ["worker/crowd/**", ".github/workflows/crowd-worker.yml"]
+    # השרת משתמש בליבת החישוב של האתר (מנדטים ⇐ אחוזים) — שינוי בה פורס גם אותו
+    paths: ["worker/crowd/**", "src/engine/**", ".github/workflows/crowd-worker.yml"]
   workflow_dispatch:
 permissions:
   contents: read

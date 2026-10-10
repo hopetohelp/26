@@ -1,3 +1,4 @@
+import { POLL_AVERAGE } from "../lib/sources";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import PersonalBlocs from "../components/PersonalBlocs";
@@ -64,7 +65,7 @@ export default function Today() {
               options={[{ id: "model", label: "ממוצע המודל" }, { id: "polls", label: "כל סקר אחרון" }]}
             />
             {basis === "model" ? (
-              <PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={model.central.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
+              <PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={POLL_AVERAGE.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
             ) : (
               <PersonalBlocs
                 title="הגושים שלי בכל סקר אחרון"
