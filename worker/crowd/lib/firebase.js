@@ -42,12 +42,15 @@ export const signUp = (env, email, password) => call(env, "signUp", { email, pas
 
 export const signIn = (env, email, password) => call(env, "signInWithPassword", { email, password, returnSecureToken: true }).then((r) => r.idToken);
 
-/** שליחת מייל האימות. continueUrl = לאן חוזרים אחרי הלחיצה (חייב להיות דומיין מורשה ב-Firebase); נדחה ⇐ ניסיון בלעדיו */
-export async function sendVerify(env, idToken, continueUrl) {
+/**
+ * שליחת מייל האימות. continueUrl = לאן חוזרים אחרי הלחיצה (חייב להיות דומיין מורשה ב-Firebase); נדחה ⇐ ניסיון בלעדיו.
+ * strict = בלי ניסיון בלעדיו (באיפוס סיסמה הכתובת נושאת את הסוד, ומייל בלעדיה חסר ערך).
+ */
+export async function sendVerify(env, idToken, continueUrl, { strict = false } = {}) {
   try {
     await call(env, "sendOobCode", { requestType: "VERIFY_EMAIL", idToken, ...(continueUrl ? { continueUrl } : {}) });
   } catch (e) {
-    if (continueUrl && /CONTINUE_URI|UNAUTHORIZED_DOMAIN|INVALID_CONTINUE/.test(e.code)) return call(env, "sendOobCode", { requestType: "VERIFY_EMAIL", idToken });
+    if (!strict && continueUrl && /CONTINUE_URI|UNAUTHORIZED_DOMAIN|INVALID_CONTINUE/.test(e.code)) return call(env, "sendOobCode", { requestType: "VERIFY_EMAIL", idToken });
     throw e;
   }
 }

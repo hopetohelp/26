@@ -219,7 +219,7 @@ describe("recovery via personal link (no email)", () => {
     expect((await call("/auth/login", { body: { email: "session_user@example.com", password: "original pass 2" } })).status).toBe(200);
   }, 30000);
   it("removed email endpoints are gone", async () => {
-    for (const p of ["/auth/email", "/auth/email/verify", "/auth/forgot", "/auth/reset"]) expect((await call(p, { body: {} })).status).toBe(404);
+    for (const p of ["/auth/email", "/auth/email/verify"]) expect((await call(p, { body: {} })).status).toBe(404);
   });
 });
 

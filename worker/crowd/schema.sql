@@ -172,6 +172,13 @@ CREATE TABLE IF NOT EXISTS email_verify (
   created_at TEXT NOT NULL
 );
 
+-- איפוס סיסמה במייל (הכרעת בעלים 10.10.2026): נשמר רק גיבוב של הסוד החד-פעמי, שנשלח בקישור שבמייל. בקשה חדשה מחליפה את הקודמת; תוקף 30 דקות.
+CREATE TABLE IF NOT EXISTS password_reset (
+  participant TEXT PRIMARY KEY REFERENCES participants(id),
+  secret_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
 -- חשבונות מנהל (הכרעת בעלים 9.10.2026): סשן של חשבון כזה נכנס לממשק הניהול בלי מפתח הניהול. ההגדרה ידנית, במאגר בלבד (לא בקוד).
 CREATE TABLE IF NOT EXISTS admins (
   participant TEXT PRIMARY KEY REFERENCES participants(id),

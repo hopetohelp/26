@@ -38,7 +38,7 @@ export default function MyData({ session, part }: { session: ReturnType<typeof u
       {part === "link" && (
         <section className="space-y-4">
           <p className="text-sm leading-relaxed">
-            הקישור מכניס אתכם ישר לחשבון, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. כרגע אין שחזור במייל, ולכן זו <strong>הדרך היחידה</strong> לשחזר סיסמה שנשכחה. אל תשתפו אותו.
+            הקישור מכניס אתכם ישר לחשבון, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אפשר גם לקבל מייל לאיפוס סיסמה (רק למייל שאומת), אבל הקישור הזה עובד תמיד, גם בלי מייל מאומת. אל תשתפו אותו.
           </p>
           {link ? (
             <LinkSaver token={link} />

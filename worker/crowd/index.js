@@ -7,7 +7,8 @@ import { personalTotals, migrateBlocs } from "./lib/blocDefinitions.js";
  *
  * סודות (wrangler secret): IP_KEY; רשות: IP_KEY_PREV (24 שעות אחרי החלפה).
  * חשבון = שם משתמש + סיסמה, והוא הדרך היחידה לשמור (הכרעת בעלים 6.10.2026) — אין משתתף אנונימי.
- * בלי מייל בכלל: הקישור האישי נוצר בהרשמה; הוא מכניס (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה (POST /auth/recover). הוא עצמו אינו Bearer.
+ * שחזור גישה: הקישור האישי נוצר בהרשמה; הוא מכניס (POST /auth/link ⇐ סשן) ומאפשר לקבוע סיסמה חדשה (POST /auth/recover); הוא עצמו אינו Bearer.
+ * ובנוסף איפוס במייל (POST /auth/forgot ו-/auth/reset, 10.10.2026) למי שהמייל שלו מאומת.
  * cron כל שעה: ניקוי מונים ישנים, זיהוי חריגות, צבירה ופרסום.
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
@@ -26,6 +27,7 @@ const IDS_2026_LIST = LISTS_2026.map((l) => l.id);
 // שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
 export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
 const MAX_BODY = 16 * 1024;
+const RESET_TTL = 30 * 60 * 1000;
 
 function cors(env, origin) {
   const allowed = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost:\d+$/.test(origin || "");
@@ -367,7 +369,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "credentials", "sessions", "prefs", "emails", "profile", "email_verify", "password_reset", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -677,6 +679,64 @@ const routes = {
     return { token: await setPassword(env, participant, body.password, now), username: cred.username, email: await firstEmail(env, participant) };
   },
 
+  // איפוס סיסמה במייל (הכרעת בעלים 10.10.2026) — רק לחשבון עם מייל מאומת וסיסמה. Firebase משמש רק לשליחת המייל:
+  // הקישור שבו חוזר לאתר עם סוד חד-פעמי (RESET_TTL), שנמצא רק במייל — מי שפתח את המייל הוא היחיד שיכול לקבוע סיסמה חדשה.
+  // התשובה זהה בין אם יש חשבון ובין אם לא (אין בדיקת "מי רשום"); 3 בקשות ביום למייל, 10 בשעה ל-IP.
+  "POST /auth/forgot": async ({ env, request, now, body }) => {
+    const email = normalizeEmail(body.email);
+    if (!email) throw bad("email_required");
+    if (!env.FIREBASE_API_KEY) throw new HttpError(503, "verify_not_enabled");
+    const [cur] = await ipKeys(env, request);
+    if (!(await hit(env, "fg:" + cur, 10, now))) throw new HttpError(429, "slow_down");
+    const eh = await emailHash(env, email.norm);
+    const row = await env.DB.prepare("SELECT participant, enc FROM emails WHERE hash = ? AND verified = 1").bind(eh).first();
+    const cred = row ? await passwordCred(env, row.participant) : null;
+    if (!row || !cred || !(await hit(env, "fe:" + eh, 3, now, 24 * HOUR))) return { sent: true };
+    const address = await open(env, row.enc);
+    if (!address) throw new HttpError(500, "server");
+    try {
+      // משתמש זמני חדש בכל בקשה: משתמש ישן שכבר נלחץ בו הקישור לא מועבר הלאה
+      const old = await firebaseSession(env, row.participant, address);
+      if (old) await fb.removeUser(env, old).catch(() => {});
+      const password = fb.randomPassword();
+      const idToken = await fb.signUp(env, address, password);
+      const secret = randomToken(24);
+      await env.DB.batch([
+        env.DB.prepare("INSERT INTO email_verify (participant, fb_enc, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET fb_enc = excluded.fb_enc, created_at = excluded.created_at").bind(row.participant, await seal(env, password), iso(now)),
+        env.DB.prepare("INSERT INTO password_reset (participant, secret_hash, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET secret_hash = excluded.secret_hash, created_at = excluded.created_at").bind(row.participant, await sha256(secret), iso(now)),
+      ]);
+      await fb.sendVerify(env, idToken, `${env.SITE_URL || ""}?reset=${secret}`, { strict: true });
+    } catch (e) {
+      throw fbFailure(e);
+    }
+    return { sent: true };
+  },
+
+  // קביעת סיסמה חדשה עם הסוד מהמייל ⇐ סשן רגיל; כל שאר הסשנים מבוטלים, הקישור האישי נשאר. הסוד חד-פעמי.
+  "POST /auth/reset": async ({ env, request, now, body }) => {
+    const secret = typeof body.secret === "string" && /^[\w-]{20,100}$/.test(body.secret) ? body.secret : null;
+    const ips = await ipKeys(env, request);
+    const keys = ["fi:" + ips[0]];
+    const wait = await waitMs(env, [...keys, ...ips.slice(1).map((k) => "fi:" + k)], now);
+    if (wait > 0) throw new HttpError(429, "slow_down", { retryAfter: Math.ceil(wait / 1000) });
+    const r = secret ? await env.DB.prepare("SELECT participant, created_at FROM password_reset WHERE secret_hash = ?").bind(await sha256(secret)).first() : null;
+    if (!r || Date.parse(r.created_at) < now - RESET_TTL) {
+      await recordFail(env, keys, now);
+      throw new HttpError(401, "bad_reset");
+    }
+    checkPassword(body.password);
+    if (!(await passwordCred(env, r.participant))) throw new HttpError(401, "bad_reset");
+    await clearFails(env, keys);
+    const token = await setPassword(env, r.participant, body.password, now);
+    const idToken = await firebaseSession(env, r.participant, (await firstEmail(env, r.participant)) ?? "");
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM password_reset WHERE participant = ?").bind(r.participant),
+      env.DB.prepare("DELETE FROM email_verify WHERE participant = ?").bind(r.participant),
+    ]);
+    if (idToken) await fb.removeUser(env, idToken).catch(() => {});
+    return { token };
+  },
+
   // ---- ממשק ניהול (דרך שרת ההערות בלבד): שיחות תמיכה של משתתפים מאומתים ומספרים כלליים. מפתח בכותרת x-admin-key.
   "GET /admin/support": async ({ env, request }) => {
     await requireAdmin(env, request);
@@ -885,6 +945,7 @@ export async function cleanup(env, now) {
   await env.DB.batch([
     env.DB.prepare("DELETE FROM rate WHERE window_start < ?").bind(now - 24 * HOUR),
     env.DB.prepare("DELETE FROM sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
+    env.DB.prepare("DELETE FROM password_reset WHERE created_at < ?").bind(iso(now - RESET_TTL)),
     env.DB.prepare("DELETE FROM aggregates WHERE section = 'dashboard' AND published_at < ?").bind(iso(now - 7 * 24 * HOUR)),
   ]);
 }
