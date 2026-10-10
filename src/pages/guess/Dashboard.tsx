@@ -214,9 +214,9 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
       <thead>
         <tr>
           <th rowSpan={2} className="text-center p-1 sticky start-0 bg-paper-card align-bottom border-b border-e-2 border-paper-line border-e-ink-faint/60 min-w-24 font-bold">
-            הצבעה בבחירות קודמות
+            הצביעו בבחירות הקודמות למפלגה
           </th>
-          <th colSpan={Math.max(cols.length, 1)} className="p-1 text-center font-bold">יצביעו בבחירות הקרובות</th>
+          <th colSpan={Math.max(cols.length, 1)} className="p-1 text-center font-bold">מתכננים להצביע בבחירות הקרובות למפלגה</th>
         </tr>
         <tr className="border-b border-paper-line">
           {cols.map((col) => <th key={col} className="p-1 font-normal text-ink-soft whitespace-nowrap">{v2026Name(col)}</th>)}
