@@ -12,7 +12,7 @@
  * POST /auth/claim   {email,password?}    ⇐ {email, link?}  (בסשן) הוספת מייל לחשבון ישן; סיסמה רק אם אין סיסמה ואין Google.
  * POST /account/name {name}               ⇐ {name}        שם תצוגה (מוצפן בשרת).
  * POST /account/verify/send  {}           ⇐ {sent}        (בסשן) שליחת מייל אימות לכתובת שבחשבון (Firebase); 3 בשעה.
- * POST /account/verify/check {}           ⇐ {verified}    (בסשן) בדיקה שהגולש לחץ על הקישור; כשאומת — מסומן מאומת.
+ * POST /account/verify/check {}           ⇐ {verified}    (בסשן) בדיקה שהמשתתף לחץ על הקישור; כשאומת — מסומן מאומת.
  * POST /account/password {password}       ⇐ {ok}          קביעת סיסמה לחשבון בלי סיסמה (למשל Google).
  * GET|POST /ping                      ⇐ {ok}          בדיקת חיבור, בלי זהות ובלי מאגר.
  * POST /auth/login    {email|username,password} ⇐ {token}
@@ -23,7 +23,7 @@
  *                                                         מבטל את שאר הסשנים, הקישור נשאר. עיכוב מדורג כמו בכניסה.
  * POST /auth/forgot   {email}             ⇐ {sent}        איפוס סיסמה במייל (Firebase שולח; הקישור חוזר לאתר עם סוד חד-פעמי). אותה תשובה בין אם יש חשבון ובין אם לא; רק למייל מאומת.
  * POST /auth/reset    {secret,password}    ⇐ {token}       סיסמה חדשה עם הסוד מהמייל (30 דקות, חד-פעמי) ⇐ סשן רגיל; שאר הסשנים מבוטלים.
- * GET  /me                          ⇐ Me                  מצב המשתתף: הגרסה האחרונה בכל יחידה, שם המשתמש.
+ * GET  /me                          ⇐ Me                  מצב המשתתף: הגרסה האחרונה בכל יחידה, שם המשתתף.
  * POST /save   SaveRequest          ⇐ {version}           גרסה חדשה ליחידה (op_id ייחודי — ניסיון חוזר מחזיר את אותה גרסה).
  *                                                       בכל יחידה נשמרת רק ההשערה האחרונה של כל יום (שעון ישראל): גרסאות קודמות מאותו יום נמחקות (הכרעת בעלים 10.10.2026).
  * GET  /history?unit=seats          ⇐ {versions: Version[]}
@@ -72,7 +72,7 @@ export interface SeatsPayload {
   coalitionSeats?: number;
   personalBlocSeats?: { id: string; name: string; lists: string[]; seats: number }[];
   fixedBlocSeats?: Record<"government" | "coalition" | "opposition" | "arab" | "unity", number>;
-  /** "seats" = ניחוש לפי מנדטים (ברירת המחדל, גם כשחסר) · "pct" = לפי אחוזי הצבעה, והמנדטים מחושבים במנוע החוק */
+  /** "seats" = השערה לפי מנדטים (ברירת המחדל, גם כשחסר) · "pct" = לפי אחוזי הצבעה, והמנדטים מחושבים במנוע החוק */
   mode?: "seats" | "pct";
   /** במצב pct: אחוז מהקולות הכשרים לכל רשימה (0..100, ספרה אחת אחרי הנקודה, סכום ≤ 100; היתר = אחרות / לא עברו) */
   pct?: Record<string, number>;
@@ -96,7 +96,7 @@ export interface Bloc {
 export interface BlocsPayload {
   /** הרכב שנערך במפורש: לא משדרגים אותו כאילו היה ברירת מחדל ישנה. */
   schemaVersion?: 2;
-  /** "gov37" = ברירת המחדל (מפלגות הממשלה היוצאת / שאר הרשימות) · "custom" = גושים של המשתמש */
+  /** "gov37" = ברירת המחדל (מפלגות הממשלה היוצאת / שאר הרשימות) · "custom" = גושים של המשתתף */
   mode: "gov37" | "custom";
   blocs: Bloc[];
 }
@@ -124,7 +124,7 @@ export interface Me {
   latest: Partial<Record<Unit, Version>>;
   username: string | null;
   google: boolean;
-  /** נשמר בלי שם משתמש וסיסמה (POST /auth/guest): אי אפשר לשחזר אם הסשן אבד */
+  /** נשמר בלי שם משתתף וסיסמה (POST /auth/guest): אי אפשר לשחזר אם הסשן אבד */
   guest: boolean;
   /** העדפות שאינן השערה (POST /prefs): המחנות במסך "מה השתנה" */
   prefs?: { camps: Record<string, string> | null; lineage?: unknown };
@@ -141,7 +141,7 @@ export interface Me {
   verifyAvailable?: boolean;
   /** חשבון מאומת: Google או מייל שאומת */
   verified?: boolean;
-  /** חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google (הכרעת בעלים 10.10.2026) */
+  /** חשבון ישן (קישור אישי, שם משתתף או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google (הכרעת בעלים 10.10.2026) */
   legacy?: boolean;
   /** חשבון מנהל (טבלת admins): נכנס לממשק הניהול בלי קישור */
   isAdmin?: boolean;
@@ -188,9 +188,9 @@ export interface Dashboard {
     pollsAsOf: string | null;
     polls: Record<string, number>;
     starts: Record<"zero" | "k25" | "polls", number>;
-    /** כמה ניחשו לפי מנדטים וכמה לפי אחוזים */
+    /** כמה שיערו לפי מנדטים וכמה לפי אחוזים */
     modes?: { seats: number; pct: number };
-    /** אחוזי ההצבעה שניחשו, בקרב מי שניחשו לפי אחוזים (מתשובה אחת) */
+    /** אחוזי ההצבעה ששיערו, בקרב מי ששיערו לפי אחוזים (מתשובה אחת) */
     pctStats?: SeatStat[];
   };
   blocs?: {
@@ -318,7 +318,7 @@ export function clientToken(): string {
 }
 
 /**
- * פעולות שאפשר להשלים "בעיוורון": אצל חלק מהגולשים (סינון ברשת) הבקשה מגיעה לשרת ונשמרת, אבל התשובה נחסמת בדרך חזרה
+ * פעולות שאפשר להשלים "בעיוורון": אצל חלק מהמשתתפים (סינון ברשת) הבקשה מגיעה לשרת ונשמרת, אבל התשובה נחסמת בדרך חזרה
  * (נבדק 8.10.2026: נוצרו משתתפים בשרת בדיוק ברגעי הדיווחים על "Failed to fetch"). לכן בהרשמה ובשמירה בלי משתמש
  * הדפדפן יוצר את אסימון הסשן בעצמו ושולח אותו, וכשכל המסלולים "נכשלו" — מניחים שהבקשה נקלטה וממשיכים עם האסימון.
  */
@@ -424,7 +424,7 @@ export async function checkConnection(): Promise<ConnectionCheck> {
 }
 
 /**
- * בדיקת עומק אחרי חסימה: לאילו יעדים הגולש כן מגיע. worker/crowd ב-no-cors = האם תשובה כלשהי חזרה מהשרת (גם אם סוננה);
+ * בדיקת עומק אחרי חסימה: לאילו יעדים המשתתף כן מגיע. worker/crowd ב-no-cors = האם תשובה כלשהי חזרה מהשרת (גם אם סוננה);
  * site = עותק הסטטיסטיקות שבאתר; gapi = שרתי Google שקריאים לדפדפן; gsi = כפתור הכניסה של Google.
  * התוצאה נשלחת כמונים אנונימיים בלבד (probe-<יעד>-ok|fail), פעם אחת לכל טעינה.
  */
@@ -471,16 +471,16 @@ async function relay(path: string, opts: CallOptions, attempts: Record<string, u
   return attempt(feedbackUrl.replace(/\/$/, ""), "/relay", { method: "POST", body: { d } }, attempts, "relay", opts);
 }
 
-/** מונה אנונימי של סיווג כשל (שרת ההערות, POST /diag) — בלי שום פרט על המשתמש; כשל בשליחה מתעלמים */
+/** מונה אנונימי של סיווג כשל (שרת ההערות, POST /diag) — בלי שום פרט על המשתתף; כשל בשליחה מתעלמים */
 export function reportDiag(kind: ConnectionKind) {
   if (!feedbackUrl) return;
   void fetch(feedbackUrl.replace(/\/$/, "") + "/diag", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind }), keepalive: true }).catch(() => {});
 }
 
 /**
- * כל כשל חיבור סופי (כולל הממסר) נשלח לתמיכה, בלי אישור הגולש (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
+ * כל כשל חיבור סופי (כולל הממסר) נשלח לתמיכה, בלי אישור המשתתף (הכרעת בעלים 8.10.2026): לוג טכני בלבד —
  * סוג הדפדפן, איזה חלק נכשל ושגיאת הדפדפן, אחרי שהוסרו אסימונים, סיסמאות וקישורים אישיים.
- * דיווח אחד לכל דפדפן בשעה (הכרעת בעלים 9.10.2026) — גולש מסונן שמרענן את העמוד אינו מציף את ההערות.
+ * דיווח אחד לכל דפדפן בשעה (הכרעת בעלים 9.10.2026) — משתתף מסונן שמרענן את העמוד אינו מציף את ההערות.
  */
 const AUTO_KEY = "e26-autoreport-at";
 const AUTO_GAP_MS = 60 * 60 * 1000;
@@ -495,7 +495,7 @@ function autoReportAllowed(now: number): boolean {
 }
 export function reportFailure(path: string, diagnostic?: Record<string, unknown>) {
   if (!feedbackUrl) return;
-  // גם כשהשמירה ממשיכה "בעיוורון" ולא מוצגת שגיאה — לבדוק לאן הגולש כן מגיע (פעם אחת לטעינה).
+  // גם כשהשמירה ממשיכה "בעיוורון" ולא מוצגת שגיאה — לבדוק לאן המשתתף כן מגיע (פעם אחת לטעינה).
   void deepProbe();
   if (!autoReportAllowed(Date.now())) return;
   const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic });

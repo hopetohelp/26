@@ -13,7 +13,7 @@ export const POLL_RANGES: Record<string, [number, number]> = Object.fromEntries(
   const xs = recentPolls.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
   return [id, xs.length ? [Math.min(...xs), Math.max(...xs)] : [POLLS[id] ?? 0, POLLS[id] ?? 0]];
 }));
-/** ממוצע הסקרים באחוזים מהקולות הכשרים — בסיס "השלם הכול" בניחוש לפי אחוזים */
+/** ממוצע הסקרים באחוזים מהקולות הכשרים — בסיס "השלם הכול" בהשערה לפי אחוזים */
 export const POLL_SHARES: Record<string, number> = POLL_AVERAGE.shares;
 export const nameOf = (id: string) => lists2026.find((l) => l.id === id)?.name ?? id;
 
@@ -26,7 +26,7 @@ export const k25Name = (letters: string) => K25_LISTS.find((l) => l.letters === 
 /** רק התאמות מובהקות — אותה רשימה בשם ובהרכב. כל השאר נשאר ריק, וזה מוסבר בממשק. */
 export const K25_MAP: Record<string, string> = { likud: "מחל", shas: "שס", utj: "ג", yb: "ל", raam: "עם" };
 
-/** התאמה לצורך השוואת בחירת הגולש בלבד; אינה משנה את תוצאות האמת או את פתיחת המנדטים. */
+/** התאמה לצורך השוואת בחירת המשתתף בלבד; אינה משנה את תוצאות האמת או את פתיחת המנדטים. */
 export const VOTE_MAP: Record<string, string> = { ...K25_MAP };
 export const k25VoteName = (letters: string) => letters === "ט" ? "הציונות הדתית · עוצמה יהודית · נעם" : k25Name(letters);
 

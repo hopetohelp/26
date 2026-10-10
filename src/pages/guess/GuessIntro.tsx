@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { timeLeftText } from "../../lib/countdown";
 import { LOCK_AT } from "./model";
 
 /**
  * כרטיס ההסבר היחיד בראש "הכנסת שלי" (הכרעת בעלים 10.10.2026): שאלה עם ספירה לאחור עד מדגמי הבחירות (27.10, 22:00),
- * ושתי שורות שמותאמות לאורח או למשתמש רשום. אין כאן כפתור "הבנתי" — הכרטיס תמיד מוצג.
+ * ושתי שורות שמותאמות לאורח או למשתתף רשום. אין כאן כפתור "הבנתי" — הכרטיס תמיד מוצג.
  */
 export default function GuessIntro({ signedIn }: { signedIn: boolean }) {
   const [now, setNow] = useState(Date.now);
@@ -19,7 +18,7 @@ export default function GuessIntro({ signedIn }: { signedIn: boolean }) {
       <h2 id="guess-intro-title" className="text-xl font-display leading-tight mb-2">
         {left ? <>מה ההשערה שלכם לתוצאות האמת בעוד <span className="font-num tabular">{left}</span>?</> : "מדגמי הבחירות פורסמו. ההשערות נסגרו."}
       </h2>
-      <p className="text-sm leading-relaxed">כאן כל אחד משער כמה מנדטים תקבל כל רשימה. ההשערות אינן סקר: כל משתתף בוחר בעצמו.</p>
+      <p className="text-sm leading-relaxed">כאן כל אחד משער כמה מנדטים תקבל כל רשימה.</p>
       <ul className="text-sm leading-relaxed list-disc ps-5 mt-2 space-y-1">
         {signedIn ? (
           <>
@@ -28,8 +27,8 @@ export default function GuessIntro({ signedIn }: { signedIn: boolean }) {
           </>
         ) : (
           <>
-            <li>אפשר לשתף את ההשערה עם אחרים. היא נשמרת במכשיר הזה.</li>
-            <li>אפשר להירשם (Google או מייל), לשמור את היסטוריית ההשערות ולהשפיע על סקר האתר. ההרשמה מוצעת אחרי השמירה, או <Link to="/support">באזור האישי</Link>.</li>
+            <li>אפשר לשמור כאורח, ולשתף אחרים בהשערה שלכם.</li>
+            <li>ואפשר להירשם, לשמור את היסטוריית ההשערות שלכם, ולהשפיע על סקר האתר.</li>
           </>
         )}
       </ul>

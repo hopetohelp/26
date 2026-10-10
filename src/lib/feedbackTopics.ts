@@ -9,7 +9,7 @@ export type FeedbackTopic = typeof FEEDBACK_TOPICS[number]["id"];
 export const topicLabel = (id: string) => FEEDBACK_TOPICS.find(topic => topic.id === id)?.label ?? "אחר";
 export const topicMessage = (topic: string, text: string) => `[${topicLabel(topic)}] ${text.trim()}`;
 export type TopicMessage = { author: "visitor" | "team"; text: string; topic?: string };
-/** סוג הפנייה האחרונה של הגולש, גם בשיחות ישנות; תשובת צוות אינה משנה את הסיווג. */
+/** סוג הפנייה האחרונה של המשתתף, גם בשיחות ישנות; תשובת צוות אינה משנה את הסיווג. */
 export function conversationTopic(items: TopicMessage[]): FeedbackTopic {
   const message = [...items].reverse().find(item => item.author === "visitor");
   if (!message) return "other";

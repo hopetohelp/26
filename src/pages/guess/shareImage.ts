@@ -133,7 +133,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
     ctx.fillStyle = c.ink;
     ctx.font = `700 54px ${display}`;
-    ctx.fillText("ומה אתם מנחשים? בנו את הכנסת שלכם", R, imageHeight - 100, R - L);
+    ctx.fillText("ומה אתם משערים? בנו את הכנסת שלכם", R, imageHeight - 100, R - L);
     ctx.fillStyle = c.soft;
     ctx.font = `700 34px ${body}`;
     ctx.direction = "ltr";
@@ -239,7 +239,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
   ctx.textAlign = "right";
   ctx.fillStyle = c.ink;
-  const cta = labels?.cta ?? "ומה אתם מנחשים? בנו את הכנסת שלכם";
+  const cta = labels?.cta ?? "ומה אתם משערים? בנו את הכנסת שלכם";
   let size = 64;
   do ctx.font = `700 ${size}px ${display}`;
   while (ctx.measureText(cta).width > R - L && --size > 30);

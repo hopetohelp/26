@@ -34,7 +34,7 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
       expect(html).not.toContain("עובי הנר:");
     });
   }
-  it("בסקר האתר אין מעוין: ממוצע הגולשים הוא עיגול תוצאה (טבעת)", () => {
+  it("בסקר האתר אין מעוין: ממוצע המשתתפים הוא עיגול תוצאה (טבעת)", () => {
     const html = renderToStaticMarkup(createElement(SeatsStats, { rows: [stat], polls: { likud: 29 }, view: "chart" }));
     expect(html).not.toContain("mk-dia");
     expect(html).toContain("mk-ring");

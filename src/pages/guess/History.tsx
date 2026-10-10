@@ -112,7 +112,7 @@ export function VersionContent({ version }: { version: Version }) {
   }
   if (version.unit === "blocs") {
     const p = version.payload as BlocsPayload;
-    return <ul className="space-y-3">{p.blocs.map(b => <li key={b.id}><b>{b.name || "גוש ללא שם"}</b><p className="text-sm">{b.lists.map(nameOf).join(", ") || "ללא מפלגות"}</p><p className="text-sm">הימור ישיר: {b.target === null ? "ללא ניחוש" : `${b.target} מנדטים`}</p></li>)}</ul>;
+    return <ul className="space-y-3">{p.blocs.map(b => <li key={b.id}><b>{b.name || "גוש ללא שם"}</b><p className="text-sm">{b.lists.map(nameOf).join(", ") || "ללא מפלגות"}</p><p className="text-sm">הימור ישיר: {b.target === null ? "ללא השערה" : `${b.target} מנדטים`}</p></li>)}</ul>;
   }
   const p = version.payload as VotePayload;
   return <dl className="text-sm space-y-2"><div><dt className="font-bold">הצבעה ב-2022</dt><dd>{p.v2022 === null ? "לא נמסרה תשובה" : V2022_LABEL[p.v2022] ?? k25VoteName(p.v2022)}</dd></div><div><dt className="font-bold">כוונה ל-2026</dt><dd>{p.v2026 === null ? "לא נמסרה תשובה" : V2026_LABEL[p.v2026] ?? nameOf(p.v2026)}</dd></div></dl>;

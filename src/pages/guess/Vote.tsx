@@ -50,7 +50,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
       <details className="text-sm text-ink-soft border-b border-paper-line pb-2">
         <summary className="cursor-pointer min-h-[44px] py-3 font-bold">איך נשמרת הפרטיות?</summary>
         <div className="space-y-2 pb-2 leading-relaxed">
-          <p>באתר מוצגים רק נתונים מצטברים, ללא שם המשתמש וללא שיוך של תשובה לאדם.</p>
+          <p>באתר מוצגים רק נתונים מצטברים, ללא שם המשתתף וללא שיוך של תשובה לאדם.</p>
           <p>התשובות האישיות נשמרות בחשבון שלכם כדי שתוכלו לחזור ולעדכן אותן. אין צורך למסור שם אמיתי או כתובת מייל.</p>
           <p>בקבוצות קטנות, גם נתונים מצטברים עשויים לאפשר הסקת תשובות אישיות.</p>
         </div>

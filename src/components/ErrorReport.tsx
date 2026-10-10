@@ -19,7 +19,7 @@ export function connectionAdvice(kind: ConnectionKind): string {
   }
 }
 
-/** דיווח יזום של הגולש מתוך התקלה; הלוג מוצג לפני השליחה. בכשל רשת — בדיקת חיבור אוטומטית שמצורפת ללוג ומדווחת כמונה אנונימי. */
+/** דיווח יזום של המשתתף מתוך התקלה; הלוג מוצג לפני השליחה. בכשל רשת — בדיקת חיבור אוטומטית שמצורפת ללוג ומדווחת כמונה אנונימי. */
 export default function ErrorReport({ error, errorLog }: { error: string | null; errorLog?: string | null }) {
   const [report, setReport] = useState(false);
   const [check, setCheck] = useState<ConnectionCheck | "running" | null>(null);

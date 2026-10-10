@@ -1,6 +1,6 @@
 /**
  * קישור שיתוף להשערה: https://hopetohelp.github.io/26/#/guess?g=<base64url של JSON קומפקטי>.
- * התוכן: מנדטים לכל רשימה, אחוזים (אם הניחוש היה לפי אחוזים) ושם משתמש — רק אם המשתמש בחר לצרף אותו.
+ * התוכן: מנדטים לכל רשימה, אחוזים (אם ההשערה הייתה לפי אחוזים) ושם משתתף — רק אם המשתתף בחר לצרף אותו.
  * אין בו שום פרט אחר. הפענוח הגנתי: כל ערך נבדק, ומה שלא עובר ⇐ null (הכרטיס פשוט לא מוצג).
  */
 import { TOTAL } from "./fillAll";
@@ -42,7 +42,7 @@ export function shareUrl(g: SharedGuess, base = SITE_URL): string {
 
 const isObj = (o: unknown): o is Record<string, unknown> => !!o && typeof o === "object" && !Array.isArray(o);
 
-/** פענוח הגנתי: מזהים מוכרים בלבד, מנדטים שלמים שמסתכמים ב-120, אחוזים 0..100 בסכום עד 100, שם משתמש תקין */
+/** פענוח הגנתי: מזהים מוכרים בלבד, מנדטים שלמים שמסתכמים ב-120, אחוזים 0..100 בסכום עד 100, שם משתתף תקין */
 export function decodeGuess(raw: string | null, ids: string[]): SharedGuess | null {
   if (!raw || raw.length > MAX_LEN || !/^[\w-]+$/.test(raw)) return null;
   let o: unknown;

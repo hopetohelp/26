@@ -72,7 +72,7 @@ export async function syncLocal(token: string): Promise<void> {
   window.dispatchEvent(new Event(SAVED_EVENT));
 }
 
-/** החשבון בדפדפן: סשן (שם משתמש וסיסמה) והקישור האישי שנוצר כאן. בלי סשן — רק טיוטות מקומיות. */
+/** החשבון בדפדפן: סשן (שם משתתף וסיסמה) והקישור האישי שנוצר כאן. בלי סשן — רק טיוטות מקומיות. */
 export function useSession() {
   const [auth, setAuth] = useState<Auth>(() => ({ token: S.getToken(), link: S.getLink() }));
   const { token, link } = auth;
@@ -127,7 +127,7 @@ export const errorText = (e: unknown): string => {
   if (e.code === "nothing_to_verify") return "אין מייל שממתין לאימות.";
   if (e.code === "bad_name") return "השם ארוך מדי (עד 40 תווים).";
   if (e.code === "account_required") return "כדי לשמור בשרת צריך חשבון: Google או מייל.";
-  if (e.code === "bad_username") return "שם משתמש: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון, או כתובת מייל תקינה.";
+  if (e.code === "bad_username") return "שם משתתף: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון, או כתובת מייל תקינה.";
   if (e.code === "weak_password") return "הסיסמה קצרה או נפוצה מדי. לפחות 6 תווים.";
   if (e.code === "bad_reset") return "הקישור לאיפוס הסיסמה אינו תקף או שפג תוקפו (30 דקות). אפשר לבקש מייל חדש בטופס הכניסה ← \"שכחתי סיסמה\".";
   if (e.code === "bad_link") return "הקישור האישי הזה אינו בתוקף (אולי נוצר אחריו קישור חדש).";
@@ -212,7 +212,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       try {
         const op_id = S.opIdFor(unit, payload);
         const r = await call<{ blind?: boolean }>("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload } });
-        // התשובה נחסמה ⇐ נשמר אצל הגולש ונשאר בתור השליחה עד אישור (src/lib/outbox.ts)
+        // התשובה נחסמה ⇐ נשמר אצל המשתתף ונשאר בתור השליחה עד אישור (src/lib/outbox.ts)
         if (!r?.blind) { S.clearPending(unit); window.dispatchEvent(new Event(SAVED_EVENT)); }
         keepLocal(payload);
         return true;

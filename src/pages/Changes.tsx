@@ -36,7 +36,7 @@ const CATEGORIES: { id: Category; title: string; lead: string }[] = [
 ];
 const SPLITS: { id: SplitKind; label: string }[] = [
   { id: "polls", label: "לפי הסקרים" },
-  { id: "crowd", label: "לפי הגולשים" },
+  { id: "crowd", label: "לפי המשתתפים" },
   { id: "manual", label: "ידני" },
 ];
 
@@ -170,7 +170,7 @@ export default function Changes() {
   );
 
   const shared = sharedLists(effective);
-  const splitNote = lin.split === "manual" ? "לפי החלוקה שלכם" : effective.split === "crowd" ? "לפי ממוצע הגולשים (אינו סקר)" : `לפי ממוצע הסקרים (${dateLong(m.asof)})`;
+  const splitNote = lin.split === "manual" ? "לפי החלוקה שלכם" : effective.split === "crowd" ? "לפי ממוצע המשתתפים (אינו סקר)" : `לפי ממוצע הסקרים (${dateLong(m.asof)})`;
 
   return (
     <>
@@ -257,7 +257,7 @@ export default function Changes() {
               <div className="space-y-4 text-sm leading-relaxed">
                 <div>
                   <h3 className="font-bold mb-1">איך מחלקים פיצול</h3>
-                  <p>כשרשימה של 2022 התפצלה, התוצאה שלה מתחלקת בין הרשימות של היום לפי היחס ביניהן בסקרים. למשל: 14 מנדטים, ובסקרים היום 2, 4 ו-6 — החלוקה היא בערך 2.3, 4.7 ו-7. אפשר לבחור חלוקה לפי הגולשים או חלוקה ידנית.</p>
+                  <p>כשרשימה של 2022 התפצלה, התוצאה שלה מתחלקת בין הרשימות של היום לפי היחס ביניהן בסקרים. למשל: 14 מנדטים, ובסקרים היום 2, 4 ו-6 — החלוקה היא בערך 2.3, 4.7 ו-7. אפשר לבחור חלוקה לפי המשתתפים או חלוקה ידנית.</p>
                 </div>
                 <div>
                   <h3 className="font-bold mb-1">השיוך שלכם</h3>

@@ -7,12 +7,12 @@ import { renderShareImage } from "./shareImage";
 import { Btn } from "./ui";
 import { Segmented } from "../../components/Choice";
 
-const TEXT = "בניתי כנסת של 120 — השערה, לא סקר. ומה אתם מנחשים?";
+const TEXT = "בניתי כנסת של 120 — השערה, לא סקר. ומה אתם משערים?";
 
 /**
  * כפתור צף "שתף / הורד" מעל תמונת הכנסת פותח חלון עם בחירת התמונה, צירוף השם, שיתוף והורדה. השיתוף פותח ישר את תפריט השיתוף של המכשיר (וואטסאפ, טלגרם…) עם תמונת ההשערה,
  * משפט קצר וקישור לאתר שמציג את ההשערה המלאה (?g=). בלי תפריט שיתוף במכשיר ⇐ וואטסאפ ישירות.
- * רק המספרים — ושם המשתמש, אם בחרתם לצרף אותו (ברירת מחדל: לא). בלי הקישור האישי ובלי שום פרט אחר.
+ * רק המספרים — ושם המשתתף, אם בחרתם לצרף אותו (ברירת מחדל: לא). בלי הקישור האישי ובלי שום פרט אחר.
  */
 export default function Share({ values, pct, username, blocs }: { values: Record<string, number>; pct?: Record<string, number>; username?: string | null; blocs?: BlocTotal[]; open?: boolean }) {
   const [withName, setWithName] = useState(false);
@@ -89,7 +89,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
             </div>
             {username && !isEmail(username) && (
               <button type="button" role="switch" aria-checked={withName} onClick={() => setWithName(!withName)} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start">
-                <span>לצרף את שם המשתמש שלי (<bdi className="font-bold">{username}</bdi>)</span>
+                <span>לצרף את שם המשתתף שלי (<bdi className="font-bold">{username}</bdi>)</span>
                 <span aria-hidden="true" className={`shrink-0 w-12 h-7 rounded-full border-2 border-ink p-0.5 flex ${withName ? "bg-ink justify-end" : "bg-paper-card justify-start"}`}>
                   <span className={`w-5 h-5 rounded-full ${withName ? "bg-paper-card" : "bg-ink"}`} />
                 </span>

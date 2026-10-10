@@ -2,7 +2,7 @@
  * מקור אמת אחד לכל ממוצע באתר (הכרעת בעלים 10.10.2026). כל מסך קורא מכאן, ולא מחשב או מעתיק בעצמו.
  *
  * - **ממוצע הסקרים** — מ-model.json (המודל שהצינור בונה מחדש בכל רענון נתונים, כל 4 שעות).
- * - **ממוצע הגולשים** — מהסטטיסטיקות: העותק שבאתר מוצג מיד, והשרת מחליף אותו כשהוא חדש יותר;
+ * - **ממוצע המשתתפים** — מהסטטיסטיקות: העותק שבאתר מוצג מיד, והשרת מחליף אותו כשהוא חדש יותר;
  *   רענון כל דקה כשהדף גלוי, מיד כשחוזרים אליו, ואחרי כל שמירה. מאגר אחד לכל המסכים.
  */
 import { useEffect, useSyncExternalStore } from "react";
@@ -21,7 +21,7 @@ export const POLL_AVERAGE = {
   polls: model.polls,
 } as const;
 
-// ---- ממוצע הגולשים: מאגר משותף
+// ---- ממוצע המשתתפים: מאגר משותף
 
 const LIVE_REFRESH_MS = 60_000;
 type CrowdState = { dashboard: Dashboard | null; failed: boolean };
@@ -49,7 +49,7 @@ function start() {
   };
 }
 
-/** הסטטיסטיקות של הגולשים, מתעדכנות לבד. failed — גם העותק שבאתר וגם השרת לא זמינים. */
+/** הסטטיסטיקות של המשתתפים, מתעדכנות לבד. failed — גם העותק שבאתר וגם השרת לא זמינים. */
 export function useCrowdDashboard(): CrowdState {
   useEffect(() => {
     if (users++ === 0) stop = start();
@@ -58,7 +58,7 @@ export function useCrowdDashboard(): CrowdState {
   return useSyncExternalStore((l) => { listeners.add(l); return () => listeners.delete(l); }, () => state, () => state);
 }
 
-/** ממוצע הגולשים לכל רשימה: מנדטים, ואחוזים (מכל ההשערות). null כשאין סטטיסטיקות. */
+/** ממוצע המשתתפים לכל רשימה: מנדטים, ואחוזים (מכל ההשערות). null כשאין סטטיסטיקות. */
 export function crowdAverage(d: Dashboard | null): { seats: Record<string, number> | null; pct: Record<string, number> | null; asOf: string | null } {
   const open = !!d?.open && !!d.seats?.n;
   return {
