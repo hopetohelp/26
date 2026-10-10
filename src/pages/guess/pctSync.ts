@@ -43,13 +43,15 @@ function approxPct(seats: Record<string, number>, total: number): Record<string,
 }
 
 /** עריכה במנדטים: האחוזים מחושבים מחדש מהמנדטים (רשימה עם 0 שומרת על האחוז שלה) */
-export function withSeats(p: SeatsPayload, seats: Record<string, SeatCell>, extra: Partial<SeatsPayload> = {}): SeatsPayload {
+export function withSeats(p: SeatsPayload, seats: Record<string, SeatCell>, extra: Partial<SeatsPayload> = {}, mode: "seats" | "pct" = "seats"): SeatsPayload {
   const values = Object.fromEntries(IDS.map((id) => [id, seats[id]?.v ?? 0]));
   const c = calcOf(p);
   const prev = p.pct ?? POLL_SHARES;
-  const pct = sumOf(values) === 120 ? pctForSeats(IDS, values, prev, { ...law(c), others: othersOf(p.pct) }) : null;
+  // רשימה נעולה שומרת על האחוז שלה (כשיש לה כבר אחוז), גם אחרי "השלם הכול"
+  const fixed = p.pct ? IDS.filter((id) => seats[id]?.locked) : [];
+  const pct = sumOf(values) === 120 ? pctForSeats(IDS, values, prev, { ...law(c), others: othersOf(p.pct), fixed }) : null;
   const { pct: _old, ...rest } = p;
-  return { ...rest, ...extra, mode: "seats", seats, ...(pct ? { pct } : {}) };
+  return { ...rest, ...extra, mode: pct ? mode : "seats", seats, ...(pct ? { pct } : {}) };
 }
 
 /** אחוזים ⇐ מנדטים לפי החוק; בעיה ⇐ הסבר */

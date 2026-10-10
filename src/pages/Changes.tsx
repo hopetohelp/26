@@ -6,6 +6,7 @@ import DumbbellChart from "../components/dumbbellChart";
 import { Segmented } from "../components/Choice";
 import { ChartWithTable, Fold, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
+import { POLL_AVERAGE } from "../lib/sources";
 import { listName } from "../lib/data";
 import { diffText as diff, r1, type DumbbellRow, type ShareHist } from "../lib/dumbbell";
 import { dateLong, num, rng, seatsFmt } from "../lib/format";
@@ -186,7 +187,7 @@ export default function Changes() {
                 compare
                 datasets={[
                   { values: values2022, source: "2022 לפי השיוך", asOf: "תוצאות סופיות" },
-                  { values: (modelFile as unknown as { central: { seats: Record<string, number> } }).central.seats, source: "היום", asOf: dateLong(m.asof) },
+                  { values: POLL_AVERAGE.seats, source: "היום", asOf: dateLong(m.asof) },
                 ]}
               />
               <h3 className="font-bold mt-4 mb-2">הגדרת הגושים שלי</h3>

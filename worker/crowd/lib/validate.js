@@ -5,6 +5,7 @@
 import { IDS_2026, IDS_2022, GOV37 } from "./lists.js";
 
 import { fixedTotals } from "./blocDefinitions.js";
+import { derivePct } from "./derivePct.js";
 
 export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
@@ -73,6 +74,8 @@ export function validateSeats(p) {
     }
     value.calculation = { turnout: c.turnout, eligible: c.eligible, agreements: c.agreements.map(pair => [...pair]) };
   }
+  // לכל השערה שמורה — גם אחוזים: חסרים ⇐ מחושבים מהמנדטים באותה ליבה כמו באתר
+  if (!value.pct) { const d = derivePct(value); if (d) value.pct = d; }
   return { ok: true, value };
 }
 

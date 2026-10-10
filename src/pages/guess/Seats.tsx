@@ -3,11 +3,12 @@ import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } 
 import { Link, useSearchParams } from "react-router-dom";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
-import { fillAll, fillErrorText, fillPct, pctFillErrorText, TOTAL } from "../../lib/fillAll";
+import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { dateLong } from "../../lib/format";
 import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
+import { Segmented } from "../../components/Choice";
 import { Badge } from "../../components/ui";
 import { meta, listName, registry } from "../../lib/data";
 import { num } from "../../lib/format";
@@ -137,7 +138,8 @@ export default function Seats({
   const targets = blocs?.blocs.filter((b) => b.target !== null) ?? [];
   const runFill = () => setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES));
   const apply = () => {
-    if (preview?.ok) unit.setDraft(withSeats(p, preview.seats, { pollsAsOf: POLLS_AS_OF }));
+    // "השלם הכול" — אותה השלמה בשני המצבים (גושים, נעילות, טווחי הסקרים); באחוזים — האחוזים מחושבים מהתוצאה
+    if (preview?.ok) unit.setDraft(withSeats(p, preview.seats, { pollsAsOf: POLLS_AS_OF }, view));
     setEditError(null);
     setPreview(null);
   };
@@ -155,22 +157,6 @@ export default function Seats({
   const setCalc = (c: Calc) => {
     if (view === "pct" && pctNow) { const r = withPct(p, pctNow, { calc: c }); unit.setDraft(r.payload); setEditError(r.error); }
     else unit.setDraft(withSeats({ ...p, calculation: c }, p.seats));
-  };
-  /** "השלם הכול" באחוזים: הפתוחות מקבלות את היתרה לפי ממוצע הסקרים; הנעולות לא זזות */
-  const fillPctNow = () => {
-    // יש מספר לגוש ⇐ ההשלמה במנדטים (מתחשבת בגושים ובנעילות), והאחוזים מחושבים מהמנדטים
-    if (targets.length) {
-      const f = fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES);
-      if (!f.ok) return setEditError(fillErrorText(f.error));
-      const w = withSeats(p, f.seats, { pollsAsOf: POLLS_AS_OF });
-      unit.setDraft(w.pct ? { ...w, mode: "pct" } : w);
-      return setEditError(null);
-    }
-    const r = fillPct(IDS, pctNow ?? {}, (id) => !!p.seats[id]?.locked, POLL_SHARES);
-    if (!r.ok) return setEditError(pctFillErrorText(r.error));
-    const w = withPct(p, r.pct, { extra: { pollsAsOf: POLLS_AS_OF } });
-    unit.setDraft(w.payload);
-    setEditError(w.error);
   };
 
   return (
@@ -318,9 +304,9 @@ export default function Seats({
             <button
               ref={fillBtn}
               type="button"
-              onClick={view === "pct" ? fillPctNow : runFill}
-              aria-haspopup={view === "pct" ? undefined : "dialog"}
-              aria-expanded={view === "pct" ? undefined : !!preview}
+              onClick={runFill}
+              aria-haspopup="dialog"
+              aria-expanded={!!preview}
               className="min-h-[44px] px-4 whitespace-nowrap rounded-full border-2 text-sm font-bold bg-paper-card text-ink border-paper-line hover:border-ink-faint"
             >
               <ShortLabel short="השלם" full="השלם הכול" />
@@ -452,13 +438,7 @@ const chipCls = (on: boolean) => `${CHIP} ${on ? "bg-ink text-paper-card border-
 function CompareToggles({ value, onChange, view, onView }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
   return (
     <div className="flex flex-wrap items-center gap-2 mb-2">
-      <div role="radiogroup" aria-label="מה מקלידים" className="flex gap-1">
-        {(["seats", "pct"] as const).map((v) => (
-          <button key={v} type="button" role="radio" aria-checked={view === v} onClick={() => onView(v)} className={chipCls(view === v)}>
-            {v === "seats" ? "מנדטים" : "אחוזים"}
-          </button>
-        ))}
-      </div>
+      <Segmented size="sm" label="מה מקלידים" value={view} onChange={onView} className="!inline-grid w-auto text-xs" options={[{ id: "seats", label: "מנדטים" }, { id: "pct", label: "אחוזים" }]} />
       <span aria-hidden="true" className="w-px h-6 bg-paper-line" />
       <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-1">
         {COMPARE.map((c) => {

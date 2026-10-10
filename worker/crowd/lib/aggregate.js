@@ -15,6 +15,7 @@ import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_O
 
 import { FIXED_BLOCS, migrateBlocs, compositionKey } from "./blocDefinitions.js";
 import { moderate } from "./moderation.js";
+import { derivePct } from "./derivePct.js";
 
 export const K_CELL = 1;
 export const K_ROW = 1;
@@ -114,7 +115,8 @@ export function computeSeats(seatVersions, history = seatVersions) {
     if (v.payload.pollsAsOf) asOf[v.payload.pollsAsOf] = (asOf[v.payload.pollsAsOf] || 0) + 1;
   }
   // ממוצע האחוזים של הגולשים: מכל השערה שיש בה אחוזים — מ-10.10.2026 האחוזים נשמרים בשני המצבים (מנדטים ואחוזים מסונכרנים)
-  const pctV = seatVersions.filter((v) => v.payload.pct);
+  // השערות ישנות בלי אחוזים — האחוזים מחושבים מהמנדטים (derivePct), כך שהממוצע כולל את כל ההשערות
+  const pctV = seatVersions.map((v) => (v.payload.pct ? v : { ...v, payload: { ...v.payload, pct: derivePct(v.payload) } })).filter((v) => v.payload.pct);
   const pctMode = seatVersions.filter((v) => v.payload.mode === "pct").length;
   const modes = { seats: n - pctMode, pct: pctMode };
   const pctStats = pctV.length >= K_CELL ? LISTS_2026.map((l) => seatStat(l.id, pctV.map((v) => v.payload.pct[l.id] ?? 0))) : undefined;

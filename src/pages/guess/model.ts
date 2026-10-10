@@ -1,21 +1,20 @@
 /** נתוני היסוד של "ההשערה שלך": הרשימות, ממוצע הסקרים, תוצאות 2022 והמיפוי המובהק ביניהן. */
-import modelFile from "../../data/model.json";
+import { POLL_AVERAGE } from "../../lib/sources";
 import type { Bloc, BlocsPayload, SeatCell, SeatsPayload, VotePayload } from "../../lib/crowdApi";
 import { latestPerPollster, lists2026, results, seatsIn } from "../../lib/data";
 
-const model = modelFile as unknown as { asof: string; central: { seats: Record<string, number>; shares: Record<string, number> } };
-
 export const IDS = lists2026.map((l) => l.id);
 export const ALPHA = [...lists2026].sort((a, b) => a.name.localeCompare(b.name, "he"));
-export const POLLS: Record<string, number> = model.central.seats;
-export const POLLS_AS_OF = model.asof;
+/** ממוצע הסקרים — מהמקור האחד (src/lib/sources.ts) */
+export const POLLS: Record<string, number> = POLL_AVERAGE.seats;
+export const POLLS_AS_OF = POLL_AVERAGE.asOf;
 const recentPolls = latestPerPollster(POLLS_AS_OF, 14);
 export const POLL_RANGES: Record<string, [number, number]> = Object.fromEntries(IDS.map((id) => {
   const xs = recentPolls.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
   return [id, xs.length ? [Math.min(...xs), Math.max(...xs)] : [POLLS[id] ?? 0, POLLS[id] ?? 0]];
 }));
 /** ממוצע הסקרים באחוזים מהקולות הכשרים — בסיס "השלם הכול" בניחוש לפי אחוזים */
-export const POLL_SHARES: Record<string, number> = model.central.shares;
+export const POLL_SHARES: Record<string, number> = POLL_AVERAGE.shares;
 export const nameOf = (id: string) => lists2026.find((l) => l.id === id)?.name ?? id;
 
 const k25 = results.find((r) => r.id === "k25")!;

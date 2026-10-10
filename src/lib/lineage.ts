@@ -8,6 +8,7 @@
  */
 import modelFile from "../data/model.json";
 import { lists2026, results } from "./data";
+import { POLL_AVERAGE } from "./sources";
 import { largestRemainder, MIN_PASSING } from "./fillAll";
 
 export type Split = "polls" | "crowd" | "manual";
@@ -123,7 +124,7 @@ function parts(lin: Lineage, crowd: Record<string, number> | null): Record<strin
       ids.length === 1 ? 1
       : lin.split === "manual" ? lin.manual[l]?.[id] ?? 0
       : lin.split === "crowd" && crowd ? crowd[id] ?? 0
-      : m.central.shares[id] ?? 0;
+      : POLL_AVERAGE.shares[id] ?? 0;
     const total = ids.reduce((t, id) => t + weight(id), 0);
     for (const id of ids) out[id][l] = total > 0 ? weight(id) / total : 1 / ids.length;
   }
@@ -148,8 +149,8 @@ export function lineageRows(lin: Lineage, crowd: Record<string, number> | null =
       votes2022: votes,
       share2022: (votes / VALID_2022) * 100,
       seats2022: from.reduce((t, l) => t + K25_BY_ID[l].seats * p[id][l], 0),
-      shareNow: m.central.shares[id] ?? 0,
-      seatsNow: m.central.seats[id] ?? 0,
+      shareNow: POLL_AVERAGE.shares[id] ?? 0,
+      seatsNow: POLL_AVERAGE.seats[id] ?? 0,
     };
   });
   const used = new Set(Object.keys(heirs(lin)));

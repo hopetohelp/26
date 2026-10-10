@@ -5,6 +5,7 @@ const root = new URL("../../src/data/", import.meta.url);
 const meta = JSON.parse(readFileSync(new URL("meta.json", root), "utf8"));
 const results = JSON.parse(readFileSync(new URL("results.json", root), "utf8"));
 const model = JSON.parse(readFileSync(new URL("model.json", root), "utf8"));
+const registry = JSON.parse(readFileSync(new URL("registry.json", root), "utf8"));
 const k25 = results.find((e) => e.id === "k25");
 const lists2026 = meta.lists2026.map((l) => ({ id: l.id, gov37: !!l.gov37 }));
 const lists2022 = k25.lists.map((l) => l.letters);
@@ -20,6 +21,11 @@ export const OFFICIAL_2022 = ${JSON.stringify(official2022)};
 /** ממוצע הסקרים (מנדטים) מתמונת המודל האחרונה */
 export const POLLS = ${JSON.stringify(model.central.seats)};
 export const POLLS_AS_OF = ${JSON.stringify(model.asof)};
+/** ממוצע הסקרים (אחוזים) — לאחוז של רשימה עם 0 מנדטים כשהשערה נשמרה בלי אחוזים */
+export const POLL_SHARES = ${JSON.stringify(model.central.shares)};
+/** ברירות המחדל של החישוב באתר (src/pages/guess/pctSync.ts): בעלי זכות, הסכמי עודפים */
+export const ELIGIBLE = ${JSON.stringify(registry.k26.eligible)};
+export const AGREEMENTS = ${JSON.stringify(meta.agreements2026.map((a) => a.pair))};
 export const IDS_2026 = new Set(LISTS_2026.map((l) => l.id));
 export const IDS_2022 = new Set(LISTS_2022);
 export const GOV37 = new Set(LISTS_2026.filter((l) => l.gov37).map((l) => l.id));

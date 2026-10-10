@@ -47,7 +47,8 @@ describe("validate", () => {
     // pct נשמר גם במצב seats — מנדטים ואחוזים מסונכרנים (הכרעת בעלים 10.10.2026), ונבדק באותה בדיקה
     expect(save("seats", seats(60, "manual", { mode: "seats", pct: { [IDS[0]]: 3 } })).value.payload.pct).toEqual({ [IDS[0]]: 3 });
     expect(save("seats", seats(60, "manual", { mode: "seats", pct: { [IDS[0]]: 101 } })).error).toBe("pct_value");
-    expect(save("seats", seats(60)).value.payload.pct).toBeUndefined();
+    // בלי אחוזים ⇐ מחושבים מהמנדטים (לכל השערה שמורה — גם מנדטים וגם אחוזים)
+    expect(Object.keys(save("seats", seats(60)).value.payload.pct ?? {}).length).toBeGreaterThan(0);
     // המנדטים עדיין חייבים להסתכם ב-120
     const bad = seats(60, "filled", { mode: "pct", pct: { [IDS[0]]: 50 } });
     bad.seats[IDS[0]].v = 10;
@@ -101,4 +102,17 @@ it("שומר סכום קואליציה מחושב במנדטים ובאחוזי�
       ...(mode === 'pct' ? {pct:{likud:25,shas:7,utj:6,democrats:62}} : {}) };
     expect(save('seats',payload).value.payload.coalitionSeats).toBe(49);
   }
+});
+
+import { allocate } from "../../../src/engine/baderOfer.ts";
+import { sharesToVotes } from "../../../src/engine/pctForSeats.ts";
+import { AGREEMENTS, ELIGIBLE } from "../lib/lists.js";
+describe("אחוזים שמחושבים בשרת", () => {
+  it("מחזירים לפי החוק בדיוק את המנדטים שנשמרו", () => {
+    const ids = [...IDS];
+    const s = save("seats", seats(60)).value.payload;
+    const valid = Math.round(ELIGIBLE * 0.7 * (1 - 0.006));
+    const r = allocate(sharesToVotes(ids, s.pct, valid), valid, AGREEMENTS);
+    for (const id of ids) expect(r.seats[id] ?? 0).toBe(s.seats[id]?.v ?? 0);
+  });
 });

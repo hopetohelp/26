@@ -1,3 +1,4 @@
+import { POLL_AVERAGE } from "../lib/sources";
 import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import { TrendChart, type Series } from "../components/charts";
@@ -59,8 +60,8 @@ const m = modelFile as unknown as ModelData;
 const bt = backtestFile as unknown as BacktestData;
 const sc = m.scenarios;
 /** מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר כמו בבית ובדירוג (החלטה 14, 9.10.2026) */
-const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (m.central.seats[l.id] ?? 0), 0);
-const ids = Object.keys(sc.lists).sort((a, b) => m.central.seats[b] - m.central.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
+const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (POLL_AVERAGE.seats[l.id] ?? 0), 0);
+const ids = Object.keys(sc.lists).sort((a, b) => POLL_AVERAGE.seats[b] - POLL_AVERAGE.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
 const pctTxt = (x: number) => (x >= 0.995 ? "כמעט בכל התרחישים" : x < 0.005 ? "כמעט באף תרחיש" : `ב-${Math.round(x * 100)}% מהתרחישים`);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 const edge = ids.filter((id) => sc.lists[id].pass > 0.005 && sc.lists[id].pass < 0.995);
@@ -76,7 +77,7 @@ function coverageRange() {
 
 export default function Scenarios() {
   const asOfText = `הסקרים עד ${dateLong(m.asof)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
-  const trendIds = ids.filter((id) => m.central.seats[id] > 0).slice(0, 9);
+  const trendIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0).slice(0, 9);
   // באחוזים ולא במנדטים: שינוי של עשיריות האחוז אינו מזיז מנדט שלם, והקו היה נראה שטוח
   const series: Series[] = trendIds.map((id) => ({
     id,
@@ -88,7 +89,7 @@ export default function Scenarios() {
   const t1 = Date.parse(m.trend[m.trend.length - 1].date + "T12:00:00Z");
   const cov = coverageRange();
   const govNames = sc.bloc.lists.map(listName).join(", ");
-  const houseIds = ids.filter((id) => m.central.seats[id] > 0);
+  const houseIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0);
 
   return (
     <>
@@ -127,7 +128,7 @@ export default function Scenarios() {
                     return (
                       <tr key={id} className="border-b border-paper-line/60">
                         <th scope="row" className="py-1 pe-3 text-right font-medium">{listName(id)}</th>
-                        <td className="pe-3 tabular-nums font-bold">{m.central.seats[id]}</td>
+                        <td className="pe-3 tabular-nums font-bold">{POLL_AVERAGE.seats[id]}</td>
                         <td className="pe-3 tabular-nums">{seatsFmt(Math.round(l.seatsMean * 10) / 10)}</td>
                         <td className="pe-3 tabular-nums">{l.seats[1]}</td>
                         <td className="pe-3 tabular-nums">{rng(l.seats[0], l.seats[2])}</td>
@@ -273,7 +274,7 @@ export default function Scenarios() {
                   <th scope="row" className="py-2 pe-3 text-right">הממוצע (כל המכונים)</th>
                   <td className="pe-3 tabular-nums">{m.polls}</td>
                   {houseIds.map((id) => (
-                    <td key={id} className="pe-2 tabular-nums font-bold">{m.central.seats[id]}</td>
+                    <td key={id} className="pe-2 tabular-nums font-bold">{POLL_AVERAGE.seats[id]}</td>
                   ))}
                 </tr>
                 {[...m.house].sort((a, b) => b.seats.likud - a.seats.likud).map((h) => (
@@ -284,7 +285,7 @@ export default function Scenarios() {
                     </th>
                     <td className="pe-3 tabular-nums">{h.polls}</td>
                     {houseIds.map((id) => {
-                      const d = h.seats[id] - m.central.seats[id];
+                      const d = h.seats[id] - POLL_AVERAGE.seats[id];
                       return (
                         <td key={id} className={`pe-2 tabular-nums ${Math.abs(d) >= 3 ? "font-bold text-warn" : ""}`}>
                           {h.seats[id]}
