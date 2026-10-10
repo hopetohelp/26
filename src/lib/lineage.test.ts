@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import modelFile from "../data/model.json";
-import { cleanLineage, DEFAULT_LINEAGE, K25_LISTS, lineageProblem, lineageRows, manualFromCurrent, seats2022ByList, VALID_2022, type Lineage } from "./lineage";
+import { cleanLineage, DEFAULT_LINEAGE, K25_LISTS, lineageProblem, lineageRows, manualFromCurrent, seats2022ByList, start2022, VALID_2022, type Lineage } from "./lineage";
 
 const shares = (modelFile as unknown as { central: { shares: Record<string, number> } }).central.shares;
 const row = (lin: Lineage, id: string) => lineageRows(lin).rows.find((r) => r.id === id)!;
@@ -74,5 +74,16 @@ describe("שיוך רשימות 2022 לרשימות היום", () => {
     expect(c.split).toBe("polls");
     expect(c.manual["ט"]).toEqual({});
     expect(cleanLineage(null)).toBeNull();
+  });
+});
+
+describe("התחלה מבחירות 22", () => {
+  it("שלמים, בלי 1–3 מנדטים; ודאי נעול, חלקי פתוח", () => {
+    const s = start2022(DEFAULT_LINEAGE);
+    expect(s.likud).toEqual({ v: 32, locked: true });
+    expect(s.reservists).toEqual({ v: 0, locked: false });
+    expect(s.rzp.locked).toBe(false);
+    expect(Object.values(s).every((c) => Number.isInteger(c.v) && (c.v === 0 || c.v >= 4))).toBe(true);
+    expect(Object.values(s).reduce((t, c) => t + c.v, 0)).toBeLessThanOrEqual(120);
   });
 });

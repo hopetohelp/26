@@ -8,6 +8,7 @@
  */
 import modelFile from "../data/model.json";
 import { lists2026, results } from "./data";
+import { largestRemainder, MIN_PASSING } from "./fillAll";
 
 export type Split = "polls" | "crowd" | "manual";
 export interface Lineage {
@@ -171,3 +172,18 @@ export function share2022ByList(lin: Lineage, crowd: Record<string, number> | nu
 }
 
 export const sameLineage = (a: Lineage, b: Lineage) => JSON.stringify(cleanLineage(a)) === JSON.stringify(cleanLineage(b));
+
+/**
+ * נקודת הפתיחה "מבחירות 22" בהשערה: מנדטי 2022 לפי השיוך, בשלמים (שארית גדולה).
+ * שיוך ודאי — נעול (זו התוצאה עצמה); שיוך חלקי — פתוח (הערכה); 1–3 מנדטים ⇐ 0 ופתוח (אין ערך מתחת לסף), ואין שיוך ⇐ 0.
+ */
+export function start2022(lin: Lineage, crowd: Record<string, number> | null = null): Record<string, { v: number; locked: boolean }> {
+  const { rows } = lineageRows(lin, crowd);
+  const total = Math.round(rows.reduce((t, r) => t + r.seats2022, 0));
+  const ints = largestRemainder(total, Object.fromEntries(rows.map((r) => [r.id, r.seats2022])));
+  return Object.fromEntries(rows.map((r) => {
+    const v = ints[r.id] ?? 0;
+    if (v > 0 && v < MIN_PASSING) return [r.id, { v: 0, locked: false }];
+    return [r.id, { v, locked: r.category === "certain" }];
+  }));
+}
