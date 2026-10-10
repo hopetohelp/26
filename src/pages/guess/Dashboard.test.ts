@@ -2,7 +2,7 @@ import { nameOf } from "./model";
 import { expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { BlocStats, SeatsStats, StatTable, VotingStats } from "./Dashboard";
+import { BlocStats, Matrix, SeatsStats, StatTable, VoteComparison, VotingStats } from "./Dashboard";
 import type { Dashboard, SeatStat } from "../../lib/crowdApi";
 
 const stat: SeatStat = { list: "likud", n: 1, mean: 30, min: 30, max: 30, median: 30, p25: 30, p75: 30 };
@@ -109,4 +109,30 @@ it("ברשימה ובגרף מוצגות רק מפלגות שעברו אצל מ�
 it("טור שלי אינו מופיע כאשר אין נתונים אישיים להשוואה", () => {
  const html=renderToStaticMarkup(createElement(SeatsStats,{rows:[stat],polls:{},view:"table"}));
  expect(html).not.toContain('>שלי</th>');
+});
+
+it("מתג אחוז/מספר בהצבעה: מספרים בכל הטבלה, והרשמי כפול מספר המשתתפים", () => {
+  const d: Dashboard = { participants: 20, open: true, publishedAt: null, aggregationId: null,
+    vote2022: { all: { "מחל": { n: 4, of: 20 } }, valid: {}, official: {} }, vote2026: { all: { likud: { n: 6, of: 20 } }, named: {} } };
+  const pct = renderToStaticMarkup(createElement(VoteComparison, { d, unit: "pct", participants: 20 }));
+  expect(pct).toContain(">23.41%</td>");
+  expect(pct).toContain(">20%</td>");
+  expect(pct).toContain(">30%</td>");
+  const num = renderToStaticMarkup(createElement(VoteComparison, { d, unit: "num", participants: 20 }));
+  expect(num).toContain(">4.68</td>");
+  expect(num).toContain(">4</td>");
+  expect(num).toContain(">6</td>");
+  expect(num).not.toContain("%</td>");
+});
+
+it("שורת הסיכום של המעבר: מספרים או אחוזים לפי המתג", () => {
+  const cell = (n: number) => ({ n, of: 10 });
+  const d: Dashboard = { participants: 10, open: true, publishedAt: null, aggregationId: null,
+    matrix: { publishedAt: "", rows: { "מחל": { n: 10, cells: { likud: cell(6), shas: cell(2) } } } } };
+  const num = renderToStaticMarkup(createElement(Matrix, { d, unit: "num" }));
+  expect(num).toContain("<strong>6</strong>");
+  expect(num).toContain("<strong>2</strong>");
+  const pct = renderToStaticMarkup(createElement(Matrix, { d, unit: "pct" }));
+  expect(pct).toContain("<strong>75%</strong>");
+  expect(pct).toContain("<strong>25%</strong>");
 });
