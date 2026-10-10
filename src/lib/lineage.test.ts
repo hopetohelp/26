@@ -84,6 +84,7 @@ describe("התחלה מבחירות 22", () => {
     expect(s.reservists).toEqual({ v: 0, locked: false });
     expect(s.rzp.locked).toBe(false);
     expect(Object.values(s).every((c) => Number.isInteger(c.v) && (c.v === 0 || c.v >= 4))).toBe(true);
-    expect(Object.values(s).reduce((t, c) => t + c.v, 0)).toBe(120); // מנדט מתחת לסף עובר לשותפה מאותה רשימה
+    expect(Object.values(s).reduce((t, c) => t + c.v, 0)).toBe(120); // מלכתחילה בלי יתרה
+    for (const r of lineageRows(DEFAULT_LINEAGE).rows) if (r.category === "certain") expect(s[r.id].v).toBe(r.seats2022); // ודאי — בדיוק התוצאה
   });
 });

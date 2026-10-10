@@ -175,20 +175,24 @@ export const sameLineage = (a: Lineage, b: Lineage) => JSON.stringify(cleanLinea
 
 /**
  * נקודת הפתיחה "מבחירות 22" בהשערה: מנדטי 2022 לפי השיוך, בשלמים (שארית גדולה).
- * שיוך ודאי — נעול (זו התוצאה עצמה); שיוך חלקי — פתוח (הערכה); 1–3 מנדטים ⇐ 0 ופתוח (אין ערך מתחת לסף), ואין שיוך ⇐ 0.
+ * סכום 120 מלכתחילה, בלי 1–3 מנדטים: רשימה שיוצאת מתחת לסף מקבלת 0, והחלוקה מחושבת מחדש בין השאר.
+ * שיוך ודאי — נעול (זו התוצאה עצמה); שיוך חלקי — פתוח (הערכה); אין שיוך ⇐ 0.
  */
 export function start2022(lin: Lineage, crowd: Record<string, number> | null = null): Record<string, { v: number; locked: boolean }> {
   const { rows } = lineageRows(lin, crowd);
   const total = Math.round(rows.reduce((t, r) => t + r.seats2022, 0));
-  const ints = largestRemainder(total, Object.fromEntries(rows.map((r) => [r.id, r.seats2022])));
-  const out: Record<string, { v: number; locked: boolean }> = Object.fromEntries(rows.map((r) => [r.id, { v: ints[r.id] ?? 0, locked: r.category === "certain" }]));
-  // 1–3 מנדטים ⇐ 0, והמנדטים עוברים לשותפה הגדולה מאותה רשימת 2022 (כמו "השלם הכול")
-  for (const r of rows) {
-    const v = out[r.id].v;
-    if (v <= 0 || v >= MIN_PASSING) continue;
-    out[r.id] = { v: 0, locked: false };
-    const to = rows.filter((o) => o.id !== r.id && o.from.some((l) => r.from.includes(l)) && out[o.id].v >= MIN_PASSING).sort((a, b) => out[b.id].v - out[a.id].v)[0];
-    if (to) out[to.id] = { ...out[to.id], v: out[to.id].v + v };
+  // מלכתחילה בלי יתרה: רשימה שיוצאת 1–3 מנדטים מקבלת 0, והחלוקה מחושבת מחדש בין השאר — עד שכולן 0 או לפחות 4
+  // שיוך ודאי — בדיוק התוצאה (שלמים); רק רשימות מפיצול מתחלקות ביתרה
+  const fixed = rows.filter((r) => r.category === "certain");
+  const fixedSum = fixed.reduce((t, r) => t + Math.round(r.seats2022), 0);
+  const weights = Object.fromEntries(rows.filter((r) => r.category === "partial").map((r) => [r.id, r.seats2022]));
+  const split = () => ({ ...Object.fromEntries(fixed.map((r) => [r.id, Math.round(r.seats2022)])), ...largestRemainder(total - fixedSum, weights) });
+  let seats: Record<string, number> = split();
+  for (let guard = 0; guard < rows.length; guard++) {
+    const small = Object.keys(weights).filter((id) => seats[id] > 0 && seats[id] < MIN_PASSING).sort((x, y) => weights[x] - weights[y])[0];
+    if (!small) break;
+    weights[small] = 0;
+    seats = split();
   }
-  return out;
+  return Object.fromEntries(rows.map((r) => [r.id, { v: seats[r.id] ?? 0, locked: r.category === "certain" && (seats[r.id] ?? 0) > 0 }]));
 }

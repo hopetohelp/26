@@ -197,11 +197,11 @@ export default function Seats({
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <CompareToggles value={cmp} onChange={setCmp} />
             {cmp.length > 0 && (
-              <div className="flex items-end gap-2 text-xs text-ink-soft pb-1" aria-hidden="true">
+              <div className="flex items-end gap-2 text-xs text-ink-soft pb-1 border-b-2 border-ink/30" aria-hidden="true">
                 <div className="flex-1 min-w-0"><CompareCells on={cmp} cells={{ k22: <Link to="/changes" className="underline">בחירות 22</Link>, polls: "סקרים", crowd: "גולשים" }} /></div>
               </div>
             )}
-            <ul className="divide-y divide-paper-line border-y border-paper-line" aria-label="מנדטים לכל רשימה">
+            <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
                 const name = nameOf(id);
@@ -289,7 +289,7 @@ export default function Seats({
           />
         )}
         {both.error && <div className="bg-paper-card rounded-theme"><SaveError unit={both} /></div>}
-        {invalid && left >= 0 && <p role="status" className="bg-paper-card rounded-theme p-2 text-sm text-warn">{invalid}</p>}
+        {invalid && left === 0 && <p role="status" className="bg-paper-card rounded-theme p-2 text-sm text-warn">{invalid}</p>}
         {!CROWD_URL && <p className="sr-only">השמירה עוד לא פעילה באתר.</p>}
       </>}>
         {resetAsk ? (
@@ -444,12 +444,12 @@ function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
 function CompareToggles({ value, onChange }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void }) {
   return (
     <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-2 mb-2">
-      <span className="text-sm text-ink-soft">להשוואה:</span>
+      <span className="text-xs text-ink-soft">להשוואה:</span>
       {COMPARE.map((c) => {
         const on = value.includes(c.id);
         return (
           <button key={c.id} type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))}
-            className={`min-h-[44px] px-3 rounded-full border-2 text-sm font-bold ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`}>
+            className={`min-h-[32px] px-2.5 rounded-full border text-xs font-bold ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`}>
             {c.label}
           </button>
         );
@@ -460,9 +460,9 @@ function CompareToggles({ value, onChange }: { value: CompareKey[]; onChange: (v
 /** שלושה מספרים קטנים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה */
 function CompareCells({ on, cells, labels = false }: { on: CompareKey[]; cells: Record<CompareKey, ReactNode>; labels?: boolean }) {
   return (
-    <span className="grid grid-cols-3 gap-1 max-w-[15rem] text-xs">
-      {COMPARE.map((c) => (
-        <span key={c.id} className={`truncate ${on.includes(c.id) ? "" : "invisible"} ${labels ? "font-num tabular text-ink-soft" : ""}`}>
+    <span className="flex text-xs mt-0.5">
+      {COMPARE.filter((c) => on.includes(c.id)).map((c) => (
+        <span key={c.id} className={`w-16 shrink-0 truncate px-1.5 border-s border-paper-line first:border-s-0 first:ps-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
           {labels && <span className="sr-only">{c.label}: </span>}
           {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
         </span>
