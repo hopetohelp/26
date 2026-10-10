@@ -78,7 +78,10 @@ export default function Seats({
     return (
       <div>
         <HowTo />
-        <h2 className="text-3xl font-display leading-tight mb-3">מאיפה מתחילים?</h2>
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
+          <h2 className="text-3xl font-display leading-tight">מאיפה מתחילים?</h2>
+          <Link to="/changes" className="text-sm">איך המפלגות משויכות להיום?</Link>
+        </div>
         <div className="grid sm:grid-cols-3 gap-3 [&>*]:min-w-0">
           {START_OPTIONS.map((o) => (
             <button
@@ -92,7 +95,6 @@ export default function Seats({
               {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
             </button>
           ))}
-          <Link to="/changes" className="inline-flex items-center min-h-[44px] text-sm sm:col-start-3">איך המפלגות משויכות להיום?</Link>
         </div>
         <div className="mt-5 opacity-80">
           <SeatBoard values={{}} />
