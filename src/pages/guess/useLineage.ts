@@ -84,6 +84,6 @@ export function useLineage(session: ReturnType<typeof useSession>) {
   return { draft, setDraft, reset, saved, dirty, custom: !sameLineage(draft, DEFAULT_LINEAGE), unit };
 }
 
-/** ממוצע הגולשים — מהמקור האחד (src/lib/sources.ts) */
+/** ממוצע המשתתפים — מהמקור האחד (src/lib/sources.ts) */
 export const useCrowd = () => { const c = useCrowdAverage(); return { seats: c.seats, pct: c.pct }; };
 export const useCrowdSeats = () => useCrowdAverage().seats;

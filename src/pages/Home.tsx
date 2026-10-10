@@ -55,7 +55,7 @@ export default function Home() {
 
         <aside aria-labelledby="home-cta" className="mt-10 lg:col-start-1 lg:row-start-2 lg:self-start rounded-theme bg-band text-band-ink p-5">
           <h2 id="home-cta" className="text-2xl font-display leading-tight">כמה תקבל כל רשימה? תנחשו.</h2>
-          <p className="mt-2 text-sm text-band-soft">השערות גולשים, אינן סקר.</p>
+          <p className="mt-2 text-sm text-band-soft">השערות משתתפים, אינן סקר.</p>
           <Link
             to="/guess"
             className="mt-4 inline-flex items-center justify-center min-h-12 px-6 rounded-full bg-signal text-signal-ink font-extrabold no-underline hover:text-signal-ink"

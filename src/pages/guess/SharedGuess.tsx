@@ -6,7 +6,7 @@ import SeatBoard from "./SeatBoard";
 
 /**
  * "ההשערה ששיתפו איתכם" — מי שהגיע מקישור שיתוף (?g=) רואה את הכנסת ששותפה, ואז מוזמן לבנות את שלו.
- * ההשערה של גולש — לא סקר ולא תחזית; בלי המלצה.
+ * ההשערה של משתתף — לא סקר ולא תחזית; בלי המלצה.
  */
 export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; hasDraft: boolean; onStart: (fromThis: boolean) => void; onClose: () => void }) {
   const order = useMemo(() => IDS.filter((id) => g.seats[id] > 0).sort((a, b) => g.seats[b] - g.seats[a]), [g]);
@@ -21,10 +21,10 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
                 הכנסת של <bdi>{g.username}</bdi>
               </>
             ) : (
-              "כך ניחשו את הכנסת ה-26"
+              "כך שיערו את הכנסת ה-26"
             )}
           </h2>
-          <p className="text-sm text-ink-soft mt-1">השערה של גולש{g.pct ? ", לפי אחוזי הצבעה ומחושבת לפי החוק" : ""} — לא סקר ולא תחזית.</p>
+          <p className="text-sm text-ink-soft mt-1">השערה של משתתף{g.pct ? ", לפי אחוזי הצבעה ומחושבת לפי החוק" : ""} — לא סקר ולא תחזית.</p>
         </div>
         <button type="button" onClick={onClose} aria-label="סגירת ההשערה ששותפה" className="w-11 h-11 shrink-0 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">
           ×
@@ -57,7 +57,7 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
       </div>
       <div className="mt-4 bg-ink text-paper-card rounded-theme p-4 space-y-3">
         <p className="font-display text-3xl md:text-4xl leading-none">עכשיו תורכם — בנו את הכנסת שלכם</p>
-        <p className="text-sm opacity-90">120 מושבים, בדרך שלכם. אחר כך משווים לממוצע הגולשים ולסקרים.</p>
+        <p className="text-sm opacity-90">120 מושבים, בדרך שלכם. אחר כך משווים לממוצע המשתתפים ולסקרים.</p>
         <div className="flex gap-2 flex-wrap">
           <button type="button" onClick={() => onStart(false)} className="min-h-[44px] px-5 rounded-full border-2 border-paper-card bg-paper-card text-ink text-sm font-bold">
             בנו את הכנסת שלכם

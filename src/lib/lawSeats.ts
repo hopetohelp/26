@@ -41,7 +41,7 @@ export function seatsFromPct(ids: string[], pct: Record<string, number>, agreeme
 }
 
 /**
- * מנדטים ⇐ אחוזים — הליבה ב-src/engine/pctForSeats.ts (משותפת לאתר ולשרת הגולשים); כאן עם ברירות המחדל של האתר.
+ * מנדטים ⇐ אחוזים — הליבה ב-src/engine/pctForSeats.ts (משותפת לאתר ולשרת המשתתפים); כאן עם ברירות המחדל של האתר.
  */
 export function pctForSeats(
   ids: string[],

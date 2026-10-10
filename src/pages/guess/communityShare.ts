@@ -73,7 +73,7 @@ export async function voteImage(d: Dashboard): Promise<Blob> {
     ctx.beginPath(); ctx.moveTo(L, y + 24); ctx.lineTo(R, y + 24); ctx.stroke();
   });
   ctx.textAlign = "right"; ctx.fillStyle = c.soft; ctx.font = `400 26px ${body}`;
-  ctx.fillText("אחוז מתוך המשתתפים שענו. השערות גולשים, לא סקר מייצג.", R, H - 208, R - L);
+  ctx.fillText("אחוז מתוך המשתתפים שענו. השערות משתתפים, לא סקר מייצג.", R, H - 208, R - L);
   ctx.fillStyle = c.card === c.bg ? c.line : c.card; ctx.fillRect(0, H - 176, IMG_W, 176);
   ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
   ctx.fillText("רוצים שזה יהיה מדויק יותר? הצטרפו", R, H - 100, R - L);

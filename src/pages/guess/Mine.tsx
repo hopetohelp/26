@@ -41,11 +41,6 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "blocs" ? blocs : s === "vote" ? vote : null;
   return (
     <div>
-      {!session.online && (
-        <div className="mb-4">
-          <Notice>השמירה עוד לא פעילה באתר. אפשר כבר לבנות את הכנסת שלכם — הטיוטה נשמרת בדפדפן הזה, ותחכה לכם.</Notice>
-        </div>
-      )}
       {session.me?.seatsPending && sec === "seats" && (
         <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר המשתתפים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
       )}

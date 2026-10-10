@@ -119,7 +119,7 @@ function PrivacyNote() {
       <ul className="list-disc ps-5 space-y-1 pb-2">
         <li>המייל והשם נשמרים בשרת האתר <strong>מוצפנים</strong>, מוצגים רק לכם, ומשמשים רק לזיהוי ולמניעת חשבון כפול. לא נשלחים אליהם מיילים.</li>
         <li>מ-Google נשמרים רק מזהה פנימי והמייל (מוצפן). תמונת הפרופיל נשמרת רק בדפדפן הזה.</li>
-        <li>הגרסה האחרונה שלכם נכנסת לממוצע הגולשים, בלי שום פרט מזהה. גם צוות האתר רואה את ההשערות בלי שם ובלי מייל.</li>
+        <li>הגרסה האחרונה שלכם נכנסת לממוצע המשתתפים, בלי שום פרט מזהה. גם צוות האתר רואה את ההשערות בלי שם ובלי מייל.</li>
         <li>אם החיבור לשרת נכשל, נשלח אלינו דיווח אוטומטי עם פרטים טכניים בלבד, בלי סיסמה, מייל או ההשערה.</li>
         <li>אפשר למחוק הכול בכל רגע באזור האישי.</li>
       </ul>
@@ -154,7 +154,7 @@ export function AuthForm({
     <div className="space-y-4">
       <label className="flex items-start gap-2 text-sm font-bold">
         <input type="checkbox" className="mt-1 w-5 h-5 shrink-0" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-        הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של הגולשים, ואפשר למחוק הכול בכל רגע.
+        הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של המשתתפים, ואפשר למחוק הכול בכל רגע.
       </label>
       <section className="space-y-2" aria-label="כניסה עם Google">
         <GoogleButton session={session} onDone={onDone} disabled={!agree} />
@@ -176,7 +176,7 @@ export function AuthForm({
       >
         <h3 className="font-bold">{register ? "או: הרשמה במייל" : "כניסה במייל"}</h3>
         <div className="grid sm:grid-cols-2 gap-3 items-start [&>*]:min-w-0">
-          <Field label={register ? "מייל" : "מייל (או שם משתמש ישן)"}>
+          <Field label={register ? "מייל" : "מייל (או שם משתתף ישן)"}>
             <input required type={register ? "email" : "text"} maxLength={254} autoComplete={register ? "email" : "username"} dir="ltr" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
           </Field>
           <PasswordField label="סיסמה" hint={register ? `לפחות ${PW_MIN} תווים` : undefined} value={pw} onChange={setPw} mode={register ? "new" : "current"} />

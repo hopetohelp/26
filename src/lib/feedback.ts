@@ -40,7 +40,7 @@ export function saveThread(t: SavedThread) {
     const all = savedThreads().filter((x) => x.token !== t.token);
     localStorage.setItem(KEY, JSON.stringify([t, ...all].slice(0, 20)));
   } catch {
-    /* דפדפן חסום לאחסון — הקישור עדיין מוצג לגולש להעתקה */
+    /* דפדפן חסום לאחסון — הקישור עדיין מוצג למשתתף להעתקה */
   }
 }
 
@@ -63,7 +63,7 @@ export function absorbFeedbackToken(token: string | null) {
   saveThread({ token, created: new Date().toISOString(), preview: "" });
 }
 
-/** הקישור האישי לשיחה, כפי שהגולש מעתיק אותו */
+/** הקישור האישי לשיחה, כפי שהמשתתף מעתיק אותו */
 export const threadLink = (token: string) => `${location.origin}${location.pathname}#/feedback/${token}`;
 
 async function post(path: string, body: object): Promise<{ ok: boolean; token?: string; error?: string }> {

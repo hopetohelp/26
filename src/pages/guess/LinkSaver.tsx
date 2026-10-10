@@ -29,7 +29,7 @@ export default function LinkSaver({ token }: { token: string }) {
       await navigator.share({ title: "הקישור האישי שלי — ההשערה שלי", text: FILE_LINE, url: link });
       setMsg("נשלח. ודאו שההודעה הגיעה רק אליכם.");
     } catch {
-      /* המשתמש ביטל */
+      /* המשתתף ביטל */
     }
   };
   const download = () => {

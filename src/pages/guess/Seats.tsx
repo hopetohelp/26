@@ -79,21 +79,20 @@ export default function Seats({
       <div>
         <HowTo />
         <h2 className="text-3xl font-display leading-tight mb-3">מאיפה מתחילים?</h2>
-        <div className="grid sm:grid-cols-3 gap-3 items-start [&>*]:min-w-0">
+        <div className="grid sm:grid-cols-3 gap-3 [&>*]:min-w-0">
           {START_OPTIONS.map((o) => (
-            <div key={o.id}>
-              <button
-                type="button"
-                onClick={() => unit.setDraft(startWithTargets(o.id))}
-                className="w-full text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
-              >
-                <span className="text-xl font-display leading-tight block mb-1">{o.title}</span>
-                <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
-                {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
-              </button>
-              {o.id === "k25" && <Link to="/changes" className="inline-flex items-center min-h-[44px] text-sm">איך המפלגות משויכות להיום?</Link>}
-            </div>
+            <button
+              key={o.id}
+              type="button"
+              onClick={() => unit.setDraft(startWithTargets(o.id))}
+              className="text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
+            >
+              <span className="text-xl font-display leading-tight block mb-1">{o.title}</span>
+              <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
+              {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
+            </button>
           ))}
+          <Link to="/changes" className="inline-flex items-center min-h-[44px] text-sm sm:col-start-3">איך המפלגות משויכות להיום?</Link>
         </div>
         <div className="mt-5 opacity-80">
           <SeatBoard values={{}} />
@@ -189,7 +188,7 @@ export default function Seats({
             <CompareToggles value={cmp} onChange={setCmp} view={view} onView={setView} />
             {cmp.length > 0 && (
               <div className="flex items-end gap-2 text-xs text-ink-soft pb-1 border-b-2 border-ink/30" aria-hidden="true">
-                <div className="flex-1 min-w-0"><CompareCells on={cmp} cells={{ k22: <Link to="/changes" className="underline">בחירות 22</Link>, polls: "סקרים", crowd: "גולשים" }} /></div>
+                <div className="flex-1 min-w-0"><CompareCells on={cmp} cells={{ k22: <Link to="/changes" className="underline">בחירות 22</Link>, polls: "סקרים", crowd: "משתתפים" }} /></div>
               </div>
             )}
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
@@ -209,7 +208,7 @@ export default function Seats({
                         } : {
                           k22: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}`,
                           polls: pctFmt(POLL_SHARES[id] ?? 0),
-                          // ממוצע האחוזים של הגולשים, כמו בסקר האתר
+                          // ממוצע האחוזים של המשתתפים, כמו בסקר האתר
                           crowd: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—",
                         }} labels />}
                       </div>
@@ -377,7 +376,7 @@ function HowTo() {
           <div className="flex items-center gap-3"><span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span><p><b>פתוח:</b> "השלם הכול" רשאי לשנות אותו. לחיצה על המנעול נועלת או פותחת.</p></div>
           <p><b>מנדטים או אחוזים:</b> המתג קובע מה מקלידים, והשני מתעדכן לבד. מאחוזים למנדטים — לפי חוק הבחירות, כמו בספירה האמיתית. ממנדטים לאחוזים — האחוז שנותן בדיוק את אותם מנדטים; מפלגה עם 0 שומרת על האחוז שלה, מתחת לסף.</p>
           <p><b>אחוז החסימה:</b> מפלגה צריכה לפחות 4 מנדטים כדי להיכנס לכנסת. לכן אין 1, 2 או 3 מנדטים — מעלים ל-4 או מורידים ל-0.</p>
-          <p><b>בחירות 22 · סקרים · גולשים:</b> שלושה מספרים להשוואה ליד כל מפלגה. אפשר להסתיר כל אחד מהם. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. "גולשים" — ממוצע ההשערות באתר, אינו סקר.</p>
+          <p><b>בחירות 22 · סקרים · משתתפים:</b> שלושה מספרים להשוואה ליד כל מפלגה. אפשר להסתיר כל אחד מהם. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. "משתתפים" — ממוצע ההשערות באתר, אינו סקר.</p>
           <p><b>שמירה:</b> נשמרת בחשבון שלכם, ורק ההשערה האחרונה נספרת בסטטיסטיקות.</p>
         </div>
       </details>
@@ -422,7 +421,7 @@ function CalcAssumptions({ calc, onChange }: { calc: Calc; onChange: (c: Calc) =
 }
 
 type CompareKey = "k22" | "polls" | "crowd";
-const COMPARE: { id: CompareKey; label: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים" }, { id: "crowd", label: "גולשים" }];
+const COMPARE: { id: CompareKey; label: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים" }, { id: "crowd", label: "משתתפים" }];
 const CMP_KEY = "elections26.compare";
 /** אילו טורי השוואה מוצגים — נשמר בדפדפן */
 function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {

@@ -28,7 +28,7 @@ export function validateSeats(p: SeatsPayload, ids: string[]): string | null {
   return null;
 }
 
-/** אחוזי הצבעה (ניחוש במצב pct): 0..100, עשירית אחוז לכל היותר, סכום עד 100 — כמו בשרת */
+/** אחוזי הצבעה (השערה במצב pct): 0..100, עשירית אחוז לכל היותר, סכום עד 100 — כמו בשרת */
 export function validatePct(pct: Record<string, number>, ids: string[]): string | null {
   let sum = 0;
   for (const [id, v] of Object.entries(pct)) {

@@ -7,7 +7,7 @@ import { FEEDBACK_URL, deliverFeedback, queueFeedback, savedThreads, threadLink,
 
 /**
  * כפתור פידבק בלי מייל: טופס קצר ⇐ שרת קטן ב-Cloudflare (worker/feedback) ⇐ מאגר פרטי (D1).
- * לא נשמר שום פרט מזהה. אחרי השליחה הגולש מקבל קישור אישי לשיחה (עמוד "ההערות שלי").
+ * לא נשמר שום פרט מזהה. אחרי השליחה המשתתף מקבל קישור אישי לשיחה (עמוד "ההערות שלי").
  * הכתובת נקבעת בבנייה (VITE_FEEDBACK_URL); בלעדיה הכפתור אינו מוצג.
  */
 const MAX = 2000;
@@ -39,7 +39,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
   const { pathname } = useLocation();
   const [topic, setTopic] = useState<string>(diagnostic ? "other" : "data");
   const [text, setText] = useState(diagnostic ? "לא הצלחתי לשמור את ההשערה שלי." : "");
-  const [trap, setTrap] = useState(""); // שדה מלכודת לרובוטים — גולש אמיתי לא רואה אותו
+  const [trap, setTrap] = useState(""); // שדה מלכודת לרובוטים — משתתף אמיתי לא רואה אותו
   const [status, setStatus] = useState<Status>("idle");
   const [token, setToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);

@@ -33,7 +33,7 @@ export default function LocalBackup({ compact = false }: { compact?: boolean }) 
   };
   return (
     <div className="space-y-2">
-      <p className="text-sm text-ink">{compact ? "שמירה במכשיר, בלי שרת:" : "גיבוי במכשיר, בלי שרת. עובד גם כשהחיבור לשרת חסום. הקוד לא נכנס לממוצע הגולשים."}</p>
+      <p className="text-sm text-ink">{compact ? "שמירה במכשיר, בלי שרת:" : "גיבוי במכשיר, בלי שרת. עובד גם כשהחיבור לשרת חסום. הקוד לא נכנס לממוצע המשתתפים."}</p>
       <div className="flex gap-2 flex-wrap">
         <Btn onClick={download} disabled={!has}>הורדת גיבוי</Btn>
         <Btn onClick={copy} disabled={!has}>העתקת קוד</Btn>

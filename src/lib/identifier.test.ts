@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { isEmail, maskIdentifier } from "./identifier";
 
-describe("שם משתמש או מייל", () => {
+describe("שם משתתף או מייל", () => {
   it("מייל מוסתר ברובו, שם רגיל נשאר", () => {
     expect(maskIdentifier("dani.cohen@gmail.com")).toBe("d***@gmail.com");
     expect(maskIdentifier("דני_7")).toBe("דני_7");
