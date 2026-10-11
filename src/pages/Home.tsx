@@ -27,7 +27,7 @@ export default function Home() {
       <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש איזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
-        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} center={`${blocs.coalition}/120`} label="גוש נתניהו" footer={<ExitPollClock compact />} />
+        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} center={`${blocs.coalition}/${blocs.opposition}`} label="נתניהו/איזנקוט" footer={<ExitPollClock compact />} />
       </section>
 
       <div className="mt-8">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} />}</div>

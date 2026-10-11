@@ -41,7 +41,7 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
 /**
  * 120 מושבים בצורת פרסה (כמו אולם המליאה, `src/lib/hemicycle.ts`) בשלושה גוונים (הכרעת בעלים 11.10.2026), מהקצה הימני:
  * גוש נתניהו (מלא), המפלגות הערביות (גוון בינוני) וגוש איזנקוט (מסגרת, בהיר). שלושתם מגושי ברירת המחדל (`defaultBlocs`).
- * הספירה במרכז היא של גוש נתניהו. בלי כפתור "מקרא" (הכרעת בעלים 11.10.2026); המספרים לכל הגושים בתיאור לקורא מסך.
+ * הספירה במרכז: גוש נתניהו מול גוש איזנקוט (למשל 53/57), והכיתוב "נתניהו/איזנקוט" מתחתיה. בלי כפתור "מקרא" (הכרעת בעלים 11.10.2026); המספרים לכל הגושים בתיאור לקורא מסך.
  */
 export function Hemicycle({ coalition, arab, opposition, center, label, footer }: { coalition: number; arab: number; opposition: number; center?: string; label?: string; footer?: ReactNode }) {
   const [seenRef, seen] = useSeen<HTMLElement>();
@@ -59,9 +59,9 @@ export function Hemicycle({ coalition, arab, opposition, center, label, footer }
           ))}
         </svg>
         {(center || label) && (
-          // מרכז החלל הפנימי של הפרסה: המספר (53/120) ומתחתיו הכיתוב (גוש נתניהו), שניהם בגופן גדול
+          // מרכז החלל הפנימי של הפרסה: מספרי שני הגושים (53/57: גוש נתניהו מימין, כמו בלוח, וגוש איזנקוט משמאל) ומתחתיהם הכיתוב "נתניהו/איזנקוט", שניהם בגופן גדול (הכרעת בעלים 11.10.2026)
           <span aria-hidden="true" className="absolute flex flex-col items-center gap-0.5 whitespace-nowrap leading-none" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100}%`, transform: "translate(-50%, -50%)" }}>
-            {center && <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular" dir="ltr">{center}</span>}
+            {center && <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular" dir="rtl">{center}</span>}
             {label && <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>}
           </span>
         )}
