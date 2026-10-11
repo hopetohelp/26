@@ -51,11 +51,11 @@ function useRadioKeys<T extends string>(options: readonly ChoiceOption<T>[], val
 
 const RING = "ring-[1.5px] ring-inset";
 
-/** `size="sm"`: מתג קטן (36px) למתגי תצוגה בתוך גרף, כמו קו/נרות */
-export function Segmented<T extends string>({ value, onChange, options, label, disabled, className = "", size = "md" }: ChoiceProps<T> & { size?: "md" | "sm" }) {
+/** `size="sm"`: מתג קטן (36px) למתגי תצוגה בתוך גרף, כמו קו/נרות. `tight`: כל כפתור ברוחב הטקסט שלו ורווח קטן סביבו (11.10.2026, "המצב היום") */
+export function Segmented<T extends string>({ value, onChange, options, label, disabled, className = "", size = "md", tight = false }: ChoiceProps<T> & { size?: "md" | "sm"; tight?: boolean }) {
   const { tabbable, onKeyDown } = useRadioKeys(options, value, onChange, disabled);
   return (
-    <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={`grid grid-flow-col auto-cols-fr gap-[3px] p-[3px] rounded-theme bg-paper ${RING} ring-ink/[.35] ${className}`}>
+    <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={`grid grid-flow-col ${tight ? "auto-cols-auto" : "auto-cols-fr"} gap-[3px] p-[3px] rounded-theme bg-paper ${RING} ring-ink/[.35] ${className}`}>
       {options.map((o) => {
         const on = o.id === value;
         return (
@@ -67,7 +67,7 @@ export function Segmented<T extends string>({ value, onChange, options, label, d
             tabIndex={o.id === tabbable ? 0 : -1}
             disabled={disabled || o.disabled}
             onClick={() => onChange(o.id)}
-            className={`${size === "sm" ? "min-h-[34px]" : "min-h-[44px]"} px-2 rounded-[calc(var(--radius)-3px)] text-sm leading-tight text-center disabled:opacity-40 ${on ? `bg-paper-card text-ink font-bold ${RING} ring-ink` : "text-ink-soft font-semibold"}`}
+            className={`${size === "sm" ? "min-h-[34px]" : "min-h-[44px]"} ${tight ? "px-1.5" : "px-2"} rounded-[calc(var(--radius)-3px)] text-sm leading-tight text-center disabled:opacity-40 ${on ? `bg-paper-card text-ink font-bold ${RING} ring-ink` : "text-ink-soft font-semibold"}`}
           >
             {o.label}
           </button>
