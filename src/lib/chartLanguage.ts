@@ -254,6 +254,40 @@ export function levelSegs(all: Seg[][], scope: "candle" | "chart" = "candle"): L
   });
 }
 
+/**
+ * נר מגמה לפי שלישים (הכרעת בעלים 11.10.2026, הצעה ג): כמו "קופסה ושפם", ולא לפי ספירה בכל ערך — כך הנר לא נשבר לחתיכות כשיש מעט סקרים.
+ * הקצוות (`tail`, יחד, חצי מכל צד) — קו דק עד הנמוך והגבוה; השליש האמצעי של הנתונים — קופסה עבה; ביניהם — קופסה בינונית.
+ * תמיד בסדר הזה: דק, בינוני, עבה, בינוני, דק. ערך יחיד או כולם שווים — קופסה עבה צרה.
+ */
+export function thirdsProfile(values: number[], tail = TREND_TAIL): LSeg[] {
+  const xs = values.filter((v) => Number.isFinite(v)).sort((a, b) => a - b);
+  if (!xs.length) return [];
+  const q = (p: number) => {
+    const at = p * (xs.length - 1);
+    const i = Math.floor(at);
+    return i + 1 < xs.length ? xs[i] + (xs[i + 1] - xs[i]) * (at - i) : xs[i];
+  };
+  const lo = xs[0], hi = xs[xs.length - 1];
+  if (hi - lo < 1e-9) return [{ from: lo - 0.25, to: hi + 0.25, level: 5 }];
+  const t0 = q(tail / 2), t1 = q(1 - tail / 2), c0 = Math.max(t0, q(1 / 3)), c1 = Math.min(t1, q(2 / 3));
+  const parts: LSeg[] = [
+    { from: lo, to: t0, level: 1 },
+    { from: t0, to: c0, level: 3 },
+    { from: c0, to: c1, level: 5 },
+    { from: c1, to: t1, level: 3 },
+    { from: t1, to: hi, level: 1 },
+  ];
+  const out = parts.filter((g) => g.to - g.from > 1e-9);
+  // הליבה העבה תמיד נראית, גם כשהשליש האמצעי בערך אחד
+  if (!out.some((g) => g.level === 5)) {
+    const m = q(0.5), w = Math.max((hi - lo) * 0.03, 0.25);
+    return [...out.flatMap((g) => (g.from < m && g.to > m ? [{ ...g, to: m - w / 2 }, { from: m - w / 2, to: m + w / 2, level: 5 as Level }, { ...g, from: m + w / 2 }] : [g]))].filter((g) => g.to - g.from > 1e-9);
+  }
+  return out;
+}
+/** חלק הנתונים שמצויר כקו דק בקצוות, יחד (חצי מכל צד) */
+export const TREND_TAIL = 0.2;
+
 /** סמנים על הקו: לפחות `gap` יחידות בין סמן לסמן, והנקודה האחרונה תמיד כלולה */
 export function sparseIndices(xs: number[], gap: number): number[] {
   const out: number[] = [];

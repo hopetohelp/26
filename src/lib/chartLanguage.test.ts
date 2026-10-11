@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, valueSegs, type LSeg, type Seg } from "./chartLanguage";
+import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, thirdsProfile, valueSegs, type LSeg, type Seg } from "./chartLanguage";
 
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
@@ -172,5 +172,25 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
   it("כל הקטעים דקים: קו מלא אחד", () => {
     expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 2, filled: true }]);
+  });
+});
+
+describe("thirdsProfile: נר מגמה לפי שלישים (הצעה ג)", () => {
+  it("תמיד דק, בינוני, עבה, בינוני, דק — מהנמוך עד הגבוה", () => {
+    const segs = thirdsProfile([46, 47, 47, 48, 49, 49, 52, 56, 59, 64]);
+    expect(segs.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
+    expect(segs[0].from).toBe(46);
+    expect(segs[segs.length - 1].to).toBe(64);
+    for (let i = 1; i < segs.length; i++) expect(segs[i].from).toBeCloseTo(segs[i - 1].to, 9);
+  });
+  it("ערך יחיד או ערכים שווים — קופסה עבה צרה", () => {
+    expect(thirdsProfile([50]).map((g) => g.level)).toEqual([5]);
+    expect(thirdsProfile([50, 50, 50]).map((g) => g.level)).toEqual([5]);
+  });
+  it("שני סקרים — עדיין רציף ובלי חורים", () => {
+    const segs = thirdsProfile([46, 60]);
+    expect(segs.some((g) => g.level === 5)).toBe(true);
+    expect(segs[0].from).toBe(46);
+    expect(segs[segs.length - 1].to).toBe(60);
   });
 });

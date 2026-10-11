@@ -1,6 +1,6 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { colorOf } from "../lib/colors";
-import { CANDLE_PX, levelSegs, smoothPath, squarePath, squareRuns, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
+import { CANDLE_PX, levelSegs, smoothPath, squarePath, squareRuns, sparseIndices, SVG_MARKS, thirdsProfile, type Seg } from "../lib/chartLanguage";
 import { date, rng, seatsFmt } from "../lib/format";
 import { Segmented } from "./Choice";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
@@ -108,13 +108,13 @@ export function TrendChart({
     () => (canCandle ? series.map((s) => ({ s, pts: windows(s.points.filter((p) => p.lo !== undefined && p.hi !== undefined), windowText!.days * DAY) })) : []),
     [series, canCandle, windowText],
   );
-  // נר של חלון: קטעים לפי כמה סקרים נתנו כל ערך, ועובי כל קטע ביחס לקטע העמוס ביותר באותו נר
-  const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
+  // נר של חלון לפי שלישים (הצעה ג, 11.10.2026): דק בקצוות, בינוני, ועבה בשליש האמצעי של הסקרים; בלי סקרים בודדים — טווח אחיד
+  const segsOf = (p: TrendPoint): Seg[] => (p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
   const profiles = useMemo(() => {
-    const items: { key: string; segs: Seg[] }[] = [];
-    if (view === "line") series.forEach((s) => { const last = s.points[s.points.length - 1]; if (last && !s.dashed) items.push({ key: `${s.id}|${last.t}`, segs: segsOf(last) }); });
-    else candles.forEach(({ s, pts }) => pts.forEach((p) => items.push({ key: `${s.id}|${p.t}`, segs: segsOf(p) })));
-    const lv = levelSegs(items.map((it) => it.segs));
+    const items: { key: string; p: TrendPoint }[] = [];
+    if (view === "line") series.forEach((s) => { const last = s.points[s.points.length - 1]; if (last && !s.dashed) items.push({ key: `${s.id}|${last.t}`, p: last }); });
+    else candles.forEach(({ s, pts }) => pts.forEach((p) => items.push({ key: `${s.id}|${p.t}`, p })));
+    const lv = items.map((it) => (it.p.xs && it.p.xs.length ? thirdsProfile(it.p.xs) : levelSegs([segsOf(it.p)])[0]));
     return new Map(items.map((it, k) => [it.key, lv[k]] as const));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, series, candles]);

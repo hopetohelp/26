@@ -285,7 +285,7 @@ export function familyRows(summaries: CycleSummary[]): FamilyRow[] {
   return rows;
 }
 
-/** לאורך המערכה: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-7 הימים שמסתיימים בה (הכרעת בעלים 11.10.2026) */
+/** לאורך המערכה: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה (הכרעת בעלים 11.10.2026) */
 export function campaignTrend(c: Cycle, letters: string, days = POINT_WINDOW, minN = 1) {
   const ps = usable(c);
   if (!ps.length) return [];
