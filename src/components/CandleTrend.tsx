@@ -1,12 +1,12 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
-import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
+import ChartLegend, { type LegendEntry } from "./ChartLegend";
 import { ProfileCandleV } from "./marks";
 import type { Series, TrendPoint } from "./charts";
 import { colorOf } from "../lib/colors";
 import { candleProfiles, smoothPath, sparseIndices, valueSegs, type Seg } from "../lib/chartLanguage";
 import { dateRange, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
-import { POINT_WINDOW } from "../lib/data";
+import { POINT_DAYS, POINT_WINDOW } from "../lib/data";
 import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trendAxis";
 
 /**
@@ -169,7 +169,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   };
 
   const legend: LegendEntry[] = legendEntries ?? [
-    ...(candleMode ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowDays} הימים שמסתיימים בכל נקודה (הסקר האחרון של כל מכון)`) }] : []),
+    ...(candleMode ? [{ kind: "candle" as const, text: `עובי הנר בכל ${POINT_DAYS} ימים מראה את ממוצע המכונים שפירסמו סקר ב-${windowDays} יום האחרונים.` }] : []),
     { kind: "dot", text: candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה" },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },

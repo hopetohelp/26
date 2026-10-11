@@ -81,8 +81,13 @@ describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכ
     expect(rangeLine("p80", "התרחישים")).toBe("טווח 80% - עובי הקו מראה את כמות התרחישים שנמצאים בטווח הזה");
     expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה");
   });
+  it("הגרף האחיד: שורת הנר בנוסח הבעלים (11.10.2026), בלי הסבר רמות", () => {
+    const src = readFileSync(new URL("./CandleTrend.tsx", import.meta.url), "utf8");
+    expect(src).toContain("עובי הנר בכל ${POINT_DAYS} ימים מראה את ממוצע המכונים שפירסמו סקר ב-${windowDays} יום האחרונים.");
+    expect(src).not.toContain("thickness");
+  });
   it("כל גרף עם נר משתמש בשורה הזאת ואין בו הסבר רמות", () => {
-    for (const f of ["homeCharts.tsx", "CandleTrend.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
+    for (const f of ["homeCharts.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
       const src = readFileSync(new URL(`./${f}`, import.meta.url), "utf8");
       expect(src, f).toContain("rangeLine(");
       expect(src, f).not.toContain("thickness");
