@@ -64,8 +64,8 @@ export function Hemicycle({ gov, other, center, label, footer }: { gov: number; 
           </span>
         )}
         {footer && (
-          // החלק התחתון של החלל הפנימי, בין שני האגפים (הכרעת בעלים 11.10.2026): שם יש מקום, והשעון צר כך שייכנס בו
-          <div className="absolute" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100 + 13}%`, transform: "translateX(-50%)", width: "40%" }}>{footer}</div>
+          // משלים את הריבוע (הכרעת בעלים 11.10.2026): בפתח התחתון של הפרסה, בין שני האגפים, והשורה התחתונה שלו בקו התחתון של עיגולי הלוח
+          <div className="absolute" style={{ left: "50%", bottom: `${(HALL.pad / HALL.h) * 100}%`, transform: "translateX(-50%)", width: "54%" }}>{footer}</div>
         )}
       </div>
     </figure>

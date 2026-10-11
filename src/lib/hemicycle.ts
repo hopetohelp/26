@@ -66,10 +66,10 @@ function build() {
   const seats: Seat[] = polar
     .map((p) => ({ x: p.x, y: p.y, a: tMax === tMin ? 0 : ((p.t - tMin) / (tMax - tMin)) * Math.PI, r: p.r }))
     .sort((p, q) => p.a - q.a || q.r - p.r);
-  return { seats, hall: { w, h, cx, cy, r: SEAT_R } };
+  return { seats, hall: { w, h, cx, cy, r: SEAT_R, pad: PAD } };
 }
 
 const built = build();
-/** מידות הלוח: רוחב וגובה ה-viewBox, מרכז הטקסט (cx, cy: אמצע האגפים) ורדיוס מושב */
+/** מידות הלוח: רוחב וגובה ה-viewBox, מרכז הטקסט (cx, cy: אמצע האגפים), רדיוס מושב, ו-pad: הרווח בין שולי המושבים לשולי ה-viewBox */
 export const HALL = built.hall;
 export const hemicycleSeats = (): Seat[] => built.seats;
