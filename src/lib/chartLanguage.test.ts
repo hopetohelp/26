@@ -177,7 +177,7 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
 
 describe("candleProfile: אחוזונים, ושני אזורים לשתי קבוצות (הכרעת בעלים 11.10.2026)", () => {
   const vals = (xs: number[]) => candleProfile(valueSegs(xs));
-  it("דק 9.5%, בינוני 27%, עבה 27% באמצע — בסדר הזה, מהנמוך עד הגבוה", () => {
+  it("דק 9%, עבה 27% באמצע, בינוני ביניהם — בסדר הזה, מהנמוך עד הגבוה", () => {
     const segs = vals([46, 47, 47, 48, 49, 49, 50, 51, 52, 53]);
     expect(segs.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
     expect(segs[0].from).toBe(46);
@@ -191,8 +191,8 @@ describe("candleProfile: אחוזונים, ושני אזורים לשתי קבו
     expect(thick[0].to).toBeLessThan(50);
     expect(thick[1].from).toBeGreaterThan(55);
   });
-  it("שני סקרים חריגים רחוקים זה מזה אינם קבוצה, גם כשהם 25%", () => {
-    expect(vals([46, 47, 48, 48, 49, 49, 56, 64]).filter((g) => g.level === 5)).toHaveLength(1);
+  it("לכל היותר שני אזורים, גם כשיש שלוש קבוצות", () => {
+    expect(vals([40, 41, 41, 50, 51, 51, 60, 61, 61]).filter((g) => g.level === 5).length).toBeLessThanOrEqual(2);
   });
   it("סקר חריג אחד (פחות מ-25%) אינו קבוצה: נר אחד עם קצה דק ארוך", () => {
     const segs = vals([45, 46, 46, 47, 47, 48, 48, 49, 64]);

@@ -256,12 +256,12 @@ export function levelSegs(all: Seg[][], scope: "candle" | "chart" = "candle"): L
 
 /**
  * הנר באתר (הכרעת בעלים 11.10.2026, שילוב של אחוזונים וקבוצות): הנר נבנה לפי סדר הנתונים מהנמוך לגבוה, לא לפי ספירה בכל ערך.
- * - **אחוזונים**: 9.5% הנמוכים ו-9.5% הגבוהים — קו דק; 27% מכל צד — קופסה בינונית; 27% האמצעיים — קופסה עבה.
- * - **שתי קבוצות**: כשיש פער ריק (בלי נתונים) של לפחות `CLUSTER_GAP` מאורך הנר, ובכל צד שלו לפחות `CLUSTER_MIN` מהנתונים, צפופים (פיזור כל צד קטן מהפער),
+ * - **אחוזונים**: 9% הנמוכים ו-9% הגבוהים — קו דק; 27% האמצעיים — קופסה עבה; ביניהם (27.5% מכל צד) — קופסה בינונית.
+ * - **שתי קבוצות** (לא שלוש): כשיש פער ריק (בלי נתונים) של לפחות `CLUSTER_GAP` מאורך הנר, ובכל צד שלו לפחות `CLUSTER_MIN` מהנתונים,
  *   כל צד מצויר כנר משלו (באותם אחוזונים) והם מחוברים בקו דק — כמו שני נרות מחוברים. לכל היותר שני אזורים.
  * `density`: הספירה בכל קטע היא צפיפות (נר מרבעונים), ולכן המשקל הוא צפיפות × רוחב.
  */
-export const CANDLE_TAIL = 0.095;
+export const CANDLE_TAIL = 0.09;
 export const CANDLE_CORE = 0.27;
 export const CLUSTER_MIN = 0.25;
 export const CLUSTER_GAP = 0.2;
@@ -306,7 +306,7 @@ function percentileOne(ws: W[]): LSeg[] {
   return parts;
 }
 /** נר לפי אחוזונים, עם פיצול לשני אזורים כשיש שתי קבוצות נפרדות */
-export function candleProfile(segs: Seg[], density = false): LSeg[] {
+export function candleProfile(segs: Seg[], density = false, minGap = CLUSTER_GAP): LSeg[] {
   const ws = weighted(segs, density).filter((g) => g.to > g.from || g.w > 0);
   const occ = ws.filter((g) => g.w > 0);
   if (!occ.length) return [];
@@ -317,9 +317,7 @@ export function candleProfile(segs: Seg[], density = false): LSeg[] {
   for (let k = 0; k + 1 < occ.length; k++) {
     acc += occ[k].w;
     const gap = occ[k + 1].from - occ[k].to;
-    // קבוצה = נתונים צפופים "במקום אחד": הפער גדול מהפיזור של כל אחת משתי הקבוצות (שני סקרים חריגים רחוקים זה מזה אינם קבוצה)
-    const leftSpread = occ[k].to - lo, rightSpread = hi - occ[k + 1].from;
-    if (gap >= CLUSTER_GAP * len - 1e-9 && gap >= leftSpread && gap >= rightSpread && acc / tot >= CLUSTER_MIN - 1e-9 && 1 - acc / tot >= CLUSTER_MIN - 1e-9 && (!best || gap > best.gap)) best = { at: k, gap };
+    if (gap > 1e-9 && gap >= minGap * len - 1e-9 && acc / tot >= CLUSTER_MIN - 1e-9 && 1 - acc / tot >= CLUSTER_MIN - 1e-9 && (!best || gap > best.gap)) best = { at: k, gap };
   }
   if (!best) return percentileOne(occ);
   const left = percentileOne(occ.slice(0, best.at + 1));
