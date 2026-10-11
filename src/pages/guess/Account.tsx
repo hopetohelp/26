@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { call, CrowdError, type GroupImportResult } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
+import GroupStats from "../../components/GroupStats";
+import { GroupManagerGuide } from "../../components/GroupGuide";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
 import { FORGOT_LINE } from "./LinkSaver";
@@ -427,17 +429,26 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
         <p className="font-bold">סיסמה</p>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
       </div>
-      {(me.managedGroups ?? []).map((g) => (
-        <div key={g.id} className={row}>
-          <p className="font-bold">רשימת החברים בקבוצה {g.name ?? g.id}</p>
-          <GroupUpload send={(chunk) => call<GroupImportResult>("/group/import", { token, body: { group: g.id, ...chunk } })} />
-        </div>
-      ))}
+      {(me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className={row} />)}
       <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
       </div>
       {a.view}
+    </div>
+  );
+}
+
+/** מקטע מנהל קבוצה: מספרים מצטברים והעלאת רשימת החברים */
+function ManagedGroup({ id, name, token, className }: { id: string; name: string; token: string; className: string }) {
+  const [refresh, setRefresh] = useState(0);
+  return (
+    <div className={className}>
+      <p className="font-bold">הקבוצה {name}</p>
+      <GroupStats group={id} token={token} refresh={refresh} />
+      <GroupManagerGuide />
+      <p className="font-bold pt-2">רשימת החברים</p>
+      <GroupUpload send={(chunk) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } })} onDone={() => setRefresh((n) => n + 1)} />
     </div>
   );
 }

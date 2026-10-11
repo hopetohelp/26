@@ -37,6 +37,7 @@
  * GET  /dashboard?group=<id>        ⇐ Dashboard | {group, belowMin, min}  (בסשן) הצבירה של חברי הקבוצה בלבד; לא חבר ⇐ 403 not_member. Me.groups = הקבוצות של המשתמש.
  * POST /group/import {group,emails[],mode?} ⇐ {added,duplicates,invalid,members}  (בסשן) מנהל קבוצה בלבד, לקבוצה שלו; לא מנהל ⇐ 403 not_manager. Me.managedGroups.
  * GET  /group/mine                  ⇐ {groups:[{id,name,members}]}  הקבוצות שהמשתמש מנהל.
+ * GET  /group/stats?group=<id>     ⇐ GroupStats  (בסשן) מנהל קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה; מתחת ל-50 רשומים ⇐ belowMin.
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
  */
@@ -237,6 +238,8 @@ export interface GroupRef { id: string; name: string | null }
 export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; publishedAt: string };
 /** תשובת טעינת מנה של רשימת חברים */
 export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
+/** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */
+export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number };
 /** מיילים בבקשה אחת (כמו GROUP_CHUNK בשרת) */
 export const GROUP_CHUNK = 300;
 

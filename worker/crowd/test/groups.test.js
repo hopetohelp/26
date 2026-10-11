@@ -36,7 +36,7 @@ describe("group member lists", () => {
     await req("/admin/groups/import", { group: "g1", name: "הגזרה", emails: ["a@x.co"] });
     expect((await req("/admin/groups/import", { group: "g1", emails: ["b@x.co", "a@x.co"] })).data).toMatchObject({ added: 1, duplicates: 1, members: 2 });
     expect((await req("/admin/groups/import", { group: "g1", emails: ["z@x.co"], mode: "replace" })).data).toMatchObject({ added: 1, members: 1 });
-    expect((await req("/admin/groups")).data.groups).toEqual([{ id: "g1", name: "הגזרה", members: 1, createdAt: expect.any(String) }]);
+    expect((await req("/admin/groups")).data.groups).toEqual([{ id: "g1", name: "הגזרה", members: 1, managers: 0, createdAt: expect.any(String) }]);
     expect((await req("/admin/groups/delete", { group: "g1" })).status).toBe(200);
     expect((await req("/admin/groups")).data.groups).toEqual([]);
     expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members").first()).n).toBe(0);

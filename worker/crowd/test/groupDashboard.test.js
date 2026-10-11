@@ -86,6 +86,12 @@ describe("group managers", () => {
     expect((await call("/admin/groups/managers", { body: { group: "gizra", email: "Boss@X.co" } })).status).toBe(401);
     expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "Boss@X.co" } })).data).toEqual({ group: "gizra", managers: 1 });
     expect((await call("/me", { token: mgr })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה" }]);
+    // כמה מנהלים לאותה קבוצה
+    const mgr2 = await account("deputy@x.co");
+    expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co" } })).data).toEqual({ group: "gizra", managers: 2 });
+    expect((await call("/group/import", { token: mgr2, body: { group: "gizra", emails: ["a@x.co"] } })).data).toMatchObject({ duplicates: 1, members: 1 });
+    expect((await call("/admin/groups", { admin: true })).data.groups.find((g) => g.id === "gizra").managers).toBe(2);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co", remove: true } });
     expect((await call("/me", { token: other })).data.managedGroups).toEqual([]);
     expect((await call("/group/mine", { token: mgr })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", members: 1 }]);
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).data).toMatchObject({ added: 1, members: 2 });
@@ -105,5 +111,25 @@ describe("group managers", () => {
     await load([]);
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).status).toBe(403);
+  });
+});
+
+describe("group manager stats", () => {
+  it("counts only from the threshold, for the manager only", async () => {
+    const mgr = await account("boss@x.co");
+    await load(["boss@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const other = await account("o@x.co");
+    expect((await call("/group/stats?group=gizra", { token: other })).status).toBe(403);
+    // רשימה קטנה — אין מספרים (אי אפשר לבדוק אדם בודד)
+    expect((await call("/group/stats?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    const emails = [];
+    for (let i = 0; i < GROUP_MIN; i++) { emails.push(`m${i}@x.co`); await account(`m${i}@x.co`); }
+    await load(emails);
+    const s = (await call("/group/stats?group=gizra", { token: mgr })).data;
+    // account() שומר השערת מנדטים לכל אחד; boss נספר גם הוא (ברשימה ומאומת)
+    expect(s).toEqual({ group: "gizra", min: GROUP_MIN, registered: GROUP_MIN + 1, today: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0 });
+    t += 24 * 3600_000;
+    expect((await call("/group/stats?group=gizra", { token: mgr })).data.today).toBe(0);
   });
 });
