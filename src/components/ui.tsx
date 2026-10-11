@@ -2,7 +2,7 @@ import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, 
 import { useTabsSlot } from "./Tabbed";
 import { Segmented } from "./Choice";
 import { SPLIT_SCREENS, splitCls } from "../lib/splitScreens";
-import ChartLegend, { BAR, BarSlots, PILL, PILL_ON, PILL_RING, type LegendEntry } from "./ChartLegend";
+import ChartLegend, { BAR, BarSlots, type LegendEntry } from "./ChartLegend";
 
 /** inColumns: בתוך `Columns` — מהמחשב הכותרת לקורא מסך בלבד (היא כבר בלשונית הפעילה בסרגל), וההסבר בראש הטור הימני */
 export function PageTitle({ children, lead, inColumns = false }: { children: ReactNode; lead?: ReactNode; inColumns?: boolean }) {
@@ -31,18 +31,14 @@ export function Note({ children }: { children: ReactNode }) {
   return <p className="text-sm text-ink-soft mt-2">{children}</p>;
 }
 
-/** כפתור "הצגה כטבלה" / "הצגה כגרף": באותו עיצוב כמו כפתור "מקרא" (ChartLegend), כדי שהשורה תהיה אחידה בכל האתר */
+/** מתג גרף/טבלה (הכרעת בעלים 11.10.2026): מתג מקטעים בכל האתר, באותו עיצוב כמו מתג היחידות (אחוזים/מנדטים) */
 export function TableToggle({ asTable, onChange }: { asTable: boolean; onChange: (asTable: boolean) => void }) {
-  return (
-    <button type="button" onClick={() => onChange(!asTable)} aria-pressed={asTable} className={`${PILL} ${asTable ? PILL_ON : PILL_RING}`}>
-      {asTable ? "הצגה כגרף" : "הצגה כטבלה"}
-    </button>
-  );
+  return <Segmented size="sm" label="צורת תצוגה" value={asTable ? "table" : "chart"} onChange={(v) => onChange(v === "table")} options={[{ id: "chart", label: "גרף" }, { id: "table", label: "טבלה" }]} className="w-36" />;
 }
 
 /**
  * גרף + "הצגה כטבלה": כל גרף זמין גם כטבלת נתונים (נגישות, העתקה, נייד).
- * שורת בקרה אחת ממורכזת מעל הגרף (הכרעת בעלים 11.10.2026): "מקרא" של הגרף, פקד הגרף (קו/נרות, אם יש) ו"הצגה כטבלה" — באותה שורה ובאותו עיצוב.
+ * שורת בקרה אחת ממורכזת מעל הגרף (הכרעת בעלים 11.10.2026): "מקרא" של הגרף, פקד הגרף (קו/נרות, אם יש) ומתג גרף/טבלה — באותה שורה ובאותו עיצוב.
  * `asTable` נשלט מבחוץ: מסך שיש בו כמה גרפים מחזיק מתג אחד (`ChartBar`) שמשפיע על כולם, ואז כאן אין שורת בקרה.
  */
 export function ChartWithTable({ chart, table, summary, asTable }: { chart: ReactNode; table: ReactNode; summary?: string; asTable?: boolean }) {
@@ -72,14 +68,11 @@ export function ChartWithTable({ chart, table, summary, asTable }: { chart: Reac
 }
 
 /**
- * שורת בקרה אחת למסך שלם (הכרעת בעלים 11.10.2026): "מקרא" אחד, פקד יחידות (אחוזים/מנדטים) ו"הצגה כטבלה" — שניהם משפיעים על כל הגרפים והטבלאות במסך.
+ * שורת בקרה אחת למסך שלם (הכרעת בעלים 11.10.2026): "מקרא" אחד, פקד יחידות (אחוזים/מנדטים) ומתג גרף/טבלה — שניהם משפיעים על כל הגרפים והטבלאות במסך.
  * בתצוגת טבלה אין סימונים להסביר, ולכן "מקרא" לא מוצג.
  */
-export function ChartBar({ legend, asTable, onAsTable, children, segmented = false }: { legend: LegendEntry[]; asTable: boolean; onAsTable: (asTable: boolean) => void; children?: ReactNode; segmented?: boolean }) {
-  // segmented: גרף/טבלה כמתג מקטעים, כמו מתג היחידות (מסך "מה השתנה", הכרעת בעלים 11.10.2026)
-  const toggle = segmented
-    ? <Segmented size="sm" label="צורת תצוגה" value={asTable ? "table" : "chart"} onChange={(v) => onAsTable(v === "table")} options={[{ id: "chart", label: "גרף" }, { id: "table", label: "טבלה" }]} className="w-36" />
-    : <TableToggle asTable={asTable} onChange={onAsTable} />;
+export function ChartBar({ legend, asTable, onAsTable, children }: { legend: LegendEntry[]; asTable: boolean; onAsTable: (asTable: boolean) => void; children?: ReactNode }) {
+  const toggle = <TableToggle asTable={asTable} onChange={onAsTable} />;
   return asTable ? (
     <div className="flex flex-wrap items-center gap-2 my-1">{children}{toggle}</div>
   ) : (

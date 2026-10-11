@@ -134,9 +134,9 @@ export default function Changes() {
         <tr className="text-right border-b border-paper-line">
           <th scope="col" className="py-2 pe-3">היום</th>
           <th scope="col" className="pe-3">ב-2022</th>
-          <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
-          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}</th>
-          <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"}</th>
+          <th scope="col" className="pe-3">{pct ? "2022 אחוזים" : "2022 מנדטים"}</th>
+          <th scope="col" className="pe-3">{pct ? "אחוזים היום" : "מנדטים היום"}</th>
+          <th scope="col" className="pe-3">{pct ? "טווח 80% (אחוזים)" : "טווח 80% (מנדטים)"}</th>
           <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
       </thead>
@@ -169,7 +169,7 @@ export default function Changes() {
         lead="כל מפלגה של היום מול התוצאה של 2022. מפלגה שנוצרה מפיצול מקבלת חלק מהתוצאה של הרשימה שממנה באה."
         primary={
           <>
-            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable} segmented>
+            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable}>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>
             <PersonalBlocs

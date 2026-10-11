@@ -228,7 +228,7 @@ export default function Results() {
                   <td className="pe-3 tabular-nums">{pct((x.voted / x.eligible) * 100)}</td>
                   <td className="pe-3 tabular-nums">{x.lists.filter((l) => l.seats > 0).length}</td>
                   <td className="pe-3 tabular-nums whitespace-nowrap">
-                    {pct((ax.withAll.wasted / x.valid) * 100)} <span className="text-ink-soft">(כ-{(ax.withAll.wasted / ax.withAll.quota).toFixed(1)} מנד׳)</span>
+                    {pct((ax.withAll.wasted / x.valid) * 100)} <span className="text-ink-soft">(כ-{(ax.withAll.wasted / ax.withAll.quota).toFixed(1)} מנדטים)</span>
                   </td>
                   <td>{fmtDiffOf(x, ax.allVsNone)}</td>
                 </tr>
