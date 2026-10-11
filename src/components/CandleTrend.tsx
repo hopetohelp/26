@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { ProfileCandleV } from "./marks";
 import type { Series, TrendPoint } from "./charts";
@@ -18,7 +18,7 @@ import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trend
  * **סדרה אחת:** נרות (כאן) וקו הממוצע. **כמה סדרות (השוואת רשימות):** אותו רכיב בדיוק, בלי ציור נרות: קו לכל סדרה, ולחיצה על נקודה בקו
  * מציגה את אותו חלון על הרשימה הספציפית. סדרה מקווקווה (`dashed`) היא קו מקווקו בלי נרות.
  * הנתונים כ-`Series` של `TrendPoint` (t, ממוצע v, lo, hi, n ו-xs = הערך בכל סקר). ציר הזמן משמאל (עבר) לימין (היום); התאריך האחרון צמוד לימין.
- * חריג יחיד שנשאר ב-`TrendChart`: גרף בלי נתוני סקרים (הממוצע של המודל).
+ * גרף שאינו מסקרים (הממוצע של המודל בתרחישים): אותו רכיב, ובמקום חלון הסקרים — חלון משלו (`popup`) ומקרא משלו (`legendEntries`).
  */
 const YT = 6, YB = 84;
 const DAY = 86_400_000;
@@ -40,14 +40,25 @@ export interface CandleTrendProps {
   markers?: { t: number; v: number }[];
   /** גובה בפיקסלים */
   height?: number;
+  /** חלון משלו במקום חלון הסקרים (למשל תרחישים וממוצע המודל); מקבל את הסדרה, הנקודה וצבע הסדרה */
+  popup?: (info: { series: Series; point: TrendPoint; color: string }) => ReactNode;
+  /** מקרא משלו במקום מקרא הסקרים */
+  legendEntries?: LegendEntry[];
+  /** רוחב החלון בפיקסלים (ברירת מחדל 140) */
+  popupWidth?: number;
 }
 
 const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
+/** תווית קצה: השם נקטע ב-… כשהוא ארוך, והמספר שבסופה נשאר תמיד */
+const endText = (label: string): ReactNode => {
+  const m = /^(.+?)(\s(?:כ-)?[\d.,]+%?)$/.exec(label);
+  return m ? <><span className="min-w-0 overflow-hidden text-ellipsis">{m[1]}</span><span className="shrink-0">{m[2].trim()}</span></> : <span className="min-w-0 overflow-hidden text-ellipsis">{label}</span>;
+};
 const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 
 interface Target { si: number; i: number; p: TrendPoint }
 
-export default function CandleTrend({ title, series, line, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160 }: CandleTrendProps) {
+export default function CandleTrend({ title, series, line, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140 }: CandleTrendProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(640);
   const [active, setActive] = useState<Target | null>(null);
@@ -151,7 +162,7 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
     setActive(pool.reduce((b, tg) => (Math.abs(tg.p.t - cur.p.t) < Math.abs(b.p.t - cur.p.t) ? tg : b), pool[0]));
   };
 
-  const legend: LegendEntry[] = [
+  const legend: LegendEntry[] = legendEntries ?? [
     ...(candleMode ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowDays} הימים של כל נקודה (הסקר האחרון של כל מכון)`) }] : []),
     { kind: "dot", text: candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה" },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הממוצע בכל יום" },
@@ -212,17 +223,19 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
         {markers.map((m, i) => <span key={`m${i}`} aria-hidden="true" className="mk mk-ring" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%` }} />)}
         {ends.map((e) => (
-          <span key={e.s.id} aria-hidden="true" className="absolute -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + 10px)`, maxWidth: labelPx - 12, top: e.y, color: colors[e.si] }}>
-            {e.s.endLabel ?? `${e.s.name} ${seatsFmt(Math.round(e.last.v * 10) / 10)}`}
+          <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + 10px)`, maxWidth: labelPx - 12, top: e.y, color: colors[e.si] }}>
+            {endText(e.s.endLabel ?? `${e.s.name} ${seatsFmt(Math.round(e.last.v * 10) / 10)}`)}
           </span>
         ))}
         {act && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute z-10 w-[140px] rounded-[9px] bg-ink px-[9px] py-[7px] text-[.72rem] leading-[1.3] text-paper shadow-[0_6px_22px_rgb(var(--ink)/.25)]"
+            className="pointer-events-none absolute z-10 rounded-[9px] bg-ink px-[9px] py-[7px] text-[.72rem] leading-[1.3] text-paper shadow-[0_6px_22px_rgb(var(--ink)/.25)]"
             dir="rtl"
-            style={{ top: candleMode ? `${(YT + YB) / 2}%` : `${Math.max(24, Math.min(76, Y(act.p.v)))}%`, transform: "translateY(-50%)", ...(X(act.p.t) > 55 ? { right: `calc(${100 - X(act.p.t)}% + 14px)` } : { left: `calc(${X(act.p.t)}% + 14px)` }) }}
+            style={{ width: popupWidth, top: candleMode ? `${(YT + YB) / 2}%` : `${Math.max(24, Math.min(76, Y(act.p.v)))}%`, transform: "translateY(-50%)", ...(X(act.p.t) > 55 ? { right: `calc(${100 - X(act.p.t)}% + 14px)` } : { left: `calc(${X(act.p.t)}% + 14px)` }) }}
           >
+            {popup ? popup({ series: series[act.si], point: act.p, color: actColor }) : (
+              <>
             {multi && <div className="mb-0.5 flex items-center gap-1.5 text-[.76rem] font-bold"><i className="size-2.5 shrink-0 rounded-full" style={{ background: actColor }} />{series[act.si].name}</div>}
             <div className="mb-1 text-[.7rem] font-bold text-paper/65">חישוב: <bdi dir="ltr">{dateRange(iso(act.p.t - (windowDays - 1) * DAY), iso(act.p.t))}</bdi></div>
             <div className="flex items-baseline gap-1.5">
@@ -241,6 +254,8 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
                   <span>טווח <b className="tabular text-paper" dir="ltr">{rng(seatsFmt(act.p.lo), seatsFmt(act.p.hi))}</b></span>
                   {act.p.n !== undefined && <span><b className="tabular text-paper">{act.p.n}</b> {act.p.n === 1 ? "מכון" : "מכונים"}</span>}
                 </div>
+              </>
+            )}
               </>
             )}
           </div>

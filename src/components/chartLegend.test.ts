@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import ChartLegend, { LegendPanel, rangeLine, type LegendKind } from "./ChartLegend";
 import DeviationChart from "./deviationChart";
 import DumbbellChart from "./dumbbellChart";
-import { TrendChart } from "./charts";
+import CandleTrend from "./CandleTrend";
 import { GovTrend, Hemicycle, PollRanges, Ranking } from "./homeCharts";
 import { SeatsStats } from "../pages/guess/Dashboard";
 import { ChartBar, ChartWithTable } from "./ui";
@@ -22,7 +22,7 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
     ["הדירוג (בית, המצב היום, תרחישים)", () => renderToStaticMarkup(createElement(Ranking, { home: HOME }))],
     ["סיכום המכונים", () => renderToStaticMarkup(createElement(PollRanges, { rows: [{ id: "a", name: "א", central: 10, values: [9, 10, 11] }] }))],
     ["מגמת הממשלה היוצאת", () => renderToStaticMarkup(createElement(GovTrend, { home: HOME }))],
-    ["גרף מגמה (קו ונרות)", () => renderToStaticMarkup(createElement(TrendChart, { series, from: 0, to: 86_400_000 * 10, yMax: 10, title: "מגמה", windowText: { days: 7, label: "7 הימים" } }))],
+    ["גרף המגמה האחיד", () => renderToStaticMarkup(createElement(CandleTrend, { series, title: "מגמה" }))],
     ["הסקרים מול התוצאות", () => renderToStaticMarkup(createElement(DeviationChart, { rows: dev }))],
     ["מה השתנה", () => renderToStaticMarkup(createElement(DumbbellChart, { rows }))],
     ["סקר האתר", () => renderToStaticMarkup(createElement(SeatsStats, { rows: [stat], polls: { likud: 29 }, view: "chart" }))],
@@ -82,7 +82,7 @@ describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכ
     expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה");
   });
   it("כל גרף עם נר משתמש בשורה הזאת ואין בו הסבר רמות", () => {
-    for (const f of ["homeCharts.tsx", "charts.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
+    for (const f of ["homeCharts.tsx", "CandleTrend.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
       const src = readFileSync(new URL(`./${f}`, import.meta.url), "utf8");
       expect(src, f).toContain("rangeLine(");
       expect(src, f).not.toContain("thickness");

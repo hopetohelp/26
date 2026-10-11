@@ -52,4 +52,9 @@ describe("גרף המגמה האחיד", () => {
     expect(h).not.toContain(">5</span>");
     expect(h).not.toContain(">100</span>");
   });
+  it("גרף שאינו מסקרים (ממוצע המודל): מקרא ואחוזים, ובלי נרות", () => {
+    const h = html({ series: two, unit: "אחוזים", legendEntries: [{ kind: "dot", text: "ממוצע המודל בכל יום" }] });
+    expect(h).toContain("מקרא");
+    expect(h).not.toContain("mk-pv");
+  });
 });
