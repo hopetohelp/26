@@ -58,3 +58,20 @@ describe("מקרא רק בתוך כפתור 'מקרא'", () => {
     expect(direct).toEqual([]);
   });
 });
+
+describe("כרטיסי הגושים: מגירה אחת בכל האתר (הכרעת בעלים 11.10.2026)", () => {
+  const read = (end: string) => FILES.find((f) => f.path.endsWith(end))!.text;
+  it("כל כרטיס גושים הוא מגירה (Fold) עם כותרת, ולא כרטיס ממוסגר", () => {
+    for (const f of ["components/PersonalBlocs.tsx", "components/PersonalBlocTrends.tsx"]) {
+      const t = read(f);
+      expect(t, f).toContain("<Fold");
+      expect(t, f).not.toMatch(/<section[^>]*bg-paper-card/);
+    }
+  });
+  it("בכרטיס אין שורת מקור-ותאריך ואין תאריך בכותרות העמודות; 'איך זה חושב?' בשורה התחתונה", () => {
+    const t = read("components/PersonalBlocs.tsx");
+    expect(t).not.toContain("{source} · {asOf}");
+    expect(t).not.toMatch(/<span className="[^"]*">\{displayDate\(d\.asOf\)\}<\/span>/);
+    expect(t).toContain("showMeta={false}");
+  });
+});

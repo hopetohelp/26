@@ -170,9 +170,8 @@ export default function Changes() {
             <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable}>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>
-            <Fold title="מעבר בין הגושים">
-              <PersonalBlocs
-                title="הגושים שלי: 2022 מול היום"
+            <PersonalBlocs
+                title="מעבר בין הגושים"
                 source="תוצאות 2022 לפי השיוך שלמטה, מול ממוצע הסקרים היום"
                 asOf={date(POLL_AVERAGE.asOf)}
                 compare
@@ -182,7 +181,6 @@ export default function Changes() {
                   { values: pct ? POLL_AVERAGE.shares : POLL_AVERAGE.seats, source: "היום", asOf: date(POLL_AVERAGE.asOf) },
                 ]}
               />
-            </Fold>
           </>
         }
         secondary={
