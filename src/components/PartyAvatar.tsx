@@ -27,22 +27,24 @@ export function PartyAvatar({ id, size = 36 }: { id: string; size?: number }) {
 }
 
 /**
- * תמונת הרשימה במלבן שממלא את המיכל שלה לכל הגובה (הדו-קרב ברצועה כולה, כרטיס הרשימה על הסף): ראש הרשימה נחתך מלמעלה, סמל מוצג שלם.
- * המיכל קובע את הגודל (`self-stretch` ורוחב). לקישוט (alt ריק), מהטוקנים בלבד.
+ * תמונת הרשימה בעיגול שקוטרו חצי מגובה המיכל (הכרעת בעלים 11.10.2026): הדו-קרב ברוחב מ-1024px וכרטיס הרשימה על הסף.
+ * המיכל קובע את הגובה (`self-stretch`) והרוחב, והעיגול ממורכז בו. ראש הרשימה נחתך מלמעלה, סמל מוצג שלם. בלי מסגרת. לקישוט (alt ריק).
  */
 export function PartyPhoto({ id, className = "" }: { id: string; className?: string }) {
   const img = PARTY_IMAGES[id];
   if (!img) return null;
   return (
-    <span aria-hidden="true" className={`relative block overflow-hidden bg-paper-card ${className}`}>
-      <img
-        src={`${import.meta.env.BASE_URL}${img.file}`}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        draggable={false}
-        className={`absolute inset-0 h-full w-full ${img.kind === "logo" ? "object-contain p-3" : "object-cover object-top"}`}
-      />
+    <span aria-hidden="true" className={`items-center justify-center ${className}`}>
+      <span className="relative block h-1/2 max-w-full aspect-square overflow-hidden rounded-full bg-paper-card">
+        <img
+          src={`${import.meta.env.BASE_URL}${img.file}`}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          className={`absolute inset-0 h-full w-full ${img.kind === "logo" ? "object-contain p-2" : "object-cover object-top"}`}
+        />
+      </span>
     </span>
   );
 }

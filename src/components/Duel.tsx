@@ -35,11 +35,11 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
         methodAnchor="model"
       >
         <div aria-hidden="true" className="relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in">
-          {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בקצה החיצוני, בגובה הרצועה כולה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
-          <PartyPhoto id={a.id} className="hidden lg:block w-44 xl:w-56 self-stretch" />
+          {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בעיגול בקצה החיצוני, קוטרו חצי מגובה הרצועה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
+          <PartyPhoto id={a.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
           <Side r={b} range={rangeOf(b.id)} lead={b.central >= a.central} align="end" />
-          <PartyPhoto id={b.id} className="hidden lg:block w-44 xl:w-56 self-stretch" />
+          <PartyPhoto id={b.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <span className="absolute inset-y-4 left-1/2 border-s border-paper-line" />
           {/* העיגול במרכז: הספירה "6:2" ומתחתיה "סקרים" (בכמה סקרים כל אחת גבוהה יותר); בלי סקרים משותפים — "מול" */}
           <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 w-24 h-24 md:w-28 md:h-28 rounded-full bg-ink text-paper leading-none text-center">
@@ -110,8 +110,8 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
                   <span className="block mt-2"><PassBar pass={r.pass} /></span>
                   {s && <p className="mt-2 text-xs md:text-sm text-ink-soft">אצל {s.passing} מתוך {s.n} מכונים</p>}
                   </div>
-                  {/* יש מקום ברוחב: התמונה משמאל לטקסט, בגובה הכרטיס כולו */}
-                  <PartyPhoto id={r.id} className="hidden lg:block w-28 xl:w-32 shrink-0 self-stretch rounded-theme" />
+                  {/* יש מקום ברוחב: התמונה בעיגול משמאל לטקסט, קוטרה חצי מגובה הכרטיס */}
+                  <PartyPhoto id={r.id} className="hidden lg:flex w-28 xl:w-32 shrink-0 self-stretch" />
                 </li>
               );
             })}
