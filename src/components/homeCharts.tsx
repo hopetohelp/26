@@ -42,7 +42,7 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
  * 120 מושבים בחצי עיגול: הממשלה היוצאת (מלא), המושבים שחסרים לה עד הרוב (עיגולים אדומים בהירים), וכל השאר (מסגרת).
  * במקום קו ה-61 (הכרעת בעלים 9.10.2026): המושבים החסרים הם עצמם הפער.
  */
-export function Hemicycle({ gov, other, center }: { gov: number; other: number; center?: string }) {
+export function Hemicycle({ gov, other, center, label }: { gov: number; other: number; center?: string; label?: string }) {
   const missing = Math.min(missingToMajority(gov), other);
   return (
     <figure className="m-0">
@@ -57,6 +57,12 @@ export function Hemicycle({ gov, other, center }: { gov: number; other: number; 
             <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
           ))}
         </svg>
+        {label && (
+          // שם הקבוצה באמצע התחתית של הלוח, מעל המספר שבמרכז
+          <span aria-hidden="true" className="absolute whitespace-nowrap font-display text-xs sm:text-sm md:text-lg leading-none" style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%`, transform: "translate(-50%, calc(-100% - 0.75rem))" }}>
+            {label}
+          </span>
+        )}
         {center && (
           <span aria-hidden="true" className="absolute -translate-x-1/2 -translate-y-1/2 font-num text-lg font-extrabold tabular leading-none" style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%` }} dir="ltr">
             {center}
