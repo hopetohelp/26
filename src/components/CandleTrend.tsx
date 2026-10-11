@@ -15,7 +15,7 @@ import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trend
  * 3. נר בשלוש דרגות עובי לפי אחוזונים (`candleProfiles`); 4. קווים מקווקווים כל 5, רק היכן שיש נתונים בין הקו לסמוך לו,
  *    ובגושים 61 (רק אם הגוש עבר 55) במקום 60 (`trendAxis`, `visibleLines`); 5. חלון קטן במעבר, בלחיצה ובחצים: טווח התאריכים של החישוב,
  *    הממוצע, הטווח בסקרים ומספר המכונים; 6. כפתור "מקרא" בפינה הימנית העליונה.
- * **סדרה אחת:** נרות (כאן) וקו הממוצע. **כמה סדרות (השוואת רשימות):** אותו רכיב בדיוק, בלי ציור נרות: קו לכל סדרה, ולחיצה על נקודה בקו
+ * **סדרה אחת:** נרות (כאן) וקו שעובר דרך הממוצעים של הנקודות. **כמה סדרות (השוואת רשימות):** אותו רכיב בדיוק, בלי ציור נרות: קו לכל סדרה, ולחיצה על נקודה בקו
  * מציגה את אותו חלון על הרשימה הספציפית. סדרה מקווקווה (`dashed`) היא קו מקווקו בלי נרות.
  * הנתונים כ-`Series` של `TrendPoint` (t, ממוצע v, lo, hi, n ו-xs = הערך בכל סקר). ציר הזמן משמאל (עבר) לימין (היום); התאריך האחרון צמוד לימין.
  * גרף שאינו מסקרים (הממוצע של המודל בתרחישים): אותו רכיב, ובמקום חלון הסקרים — חלון משלו (`popup`) ומקרא משלו (`legendEntries`).
@@ -27,8 +27,6 @@ export interface CandleTrendProps {
   title: string;
   /** סדרה אחת (גרף נרות), או כמה סדרות (השוואה, בלי נרות) */
   series: Series[];
-  /** ממוצע יומי לקו החלק של סדרה אחת; בלעדיו הקו עובר דרך ממוצעי הנרות */
-  line?: { t: number; v: number }[];
   /** קו הרוב (61) בגרפים של גושים: מחליף את קו 60, רק אם הגוש עבר 55 */
   majority?: number;
   /** כל כמה יחידות קו מקווקו (ברירת מחדל 5) */
@@ -49,16 +47,16 @@ export interface CandleTrendProps {
 }
 
 const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
-/** תווית קצה: השם נקטע ב-… כשהוא ארוך, והמספר שבסופה נשאר תמיד */
+/** תווית קצה: השם נקטע ב-… כשהוא ארוך, והמספרים שאחריו (ממוצע, ובדיוק: גם התוצאה) נשארים תמיד */
 const endText = (label: string): ReactNode => {
-  const m = /^(.+?)(\s(?:כ-)?[\d.,]+%?)$/.exec(label);
-  return m ? <><span className="min-w-0 overflow-hidden text-ellipsis">{m[1]}</span><span className="shrink-0">{m[2].trim()}</span></> : <span className="min-w-0 overflow-hidden text-ellipsis">{label}</span>;
+  const m = /^(.+?)\s((?:כ-)?\d.*)$/.exec(label);
+  return m ? <><span className="min-w-0 overflow-hidden text-ellipsis">{m[1]}</span><span className="shrink-0">{m[2]}</span></> : <span className="min-w-0 overflow-hidden text-ellipsis">{label}</span>;
 };
 const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 
 interface Target { si: number; i: number; p: TrendPoint }
 
-export default function CandleTrend({ title, series, line, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140 }: CandleTrendProps) {
+export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140 }: CandleTrendProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(640);
   const [active, setActive] = useState<Target | null>(null);
@@ -66,7 +64,7 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
   const candleMode = series.length === 1 && !series[0].dashed;
   const multi = series.length > 1;
   const X0 = 10;
-  const labelPx = width < 600 ? 92 : 124;
+  const labelPx = (width < 600 ? 92 : 124) + (markers.length ? (width < 600 ? 10 : 34) : 0);
   // בהשוואה נשמר מקום לתוויות הקצה (רוחב קבוע בפיקסלים); בנרות הגרף מגיע כמעט עד הקצה
   const X1 = multi ? 100 - (labelPx / Math.max(width, 1)) * 100 : 95;
   useLayoutEffect(() => {
@@ -94,7 +92,8 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
     if (candleSeries) { const si = series.indexOf(candleSeries); return shown.map((p, i) => ({ si, i, p })); }
     return series.flatMap((s, si) => (s.dashed ? [] : s.points.map((p, i) => ({ si, i, p }))));
   }, [series, candleSeries, shown]);
-  const lineMain = candleSeries ? (line && line.length ? line : candleSeries.points.map((p) => ({ t: p.t, v: p.v }))) : [];
+  // הקו עובר דרך הממוצעים של הנקודות עצמן, כך שכל עיגול יושב על הקו (אין קו יומי נפרד בעל חישוב אחר)
+  const lineMain = candleSeries ? candleSeries.points.map((p) => ({ t: p.t, v: p.v })) : [];
 
   const allV = useMemo(() => {
     const vs: number[] = [];
@@ -165,7 +164,7 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
   const legend: LegendEntry[] = legendEntries ?? [
     ...(candleMode ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowDays} הימים של כל נקודה (הסקר האחרון של כל מכון)`) }] : []),
     { kind: "dot", text: candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה" },
-    { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הממוצע בכל יום" },
+    { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
     ...(markers.length ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
   ];
@@ -178,7 +177,12 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
         .map((e) => ({ ...e, y: (Y(e.last.v) / 100) * height }))
         .sort((a, b) => a.y - b.y)
     : [];
+  // מרווח בין תוויות, בתוך גובה הגרף: קודם מורידים את החופפות, ואם התחתונה יצאה החוצה — מרימים בחזרה
   for (let k = 1; k < ends.length; k++) if (ends[k].y - ends[k - 1].y < 14) ends[k].y = ends[k - 1].y + 14;
+  if (ends.length && ends[ends.length - 1].y > height - 4) {
+    ends[ends.length - 1].y = height - 4;
+    for (let k = ends.length - 2; k >= 0; k--) if (ends[k + 1].y - ends[k].y < 14) ends[k].y = ends[k + 1].y - 14;
+  }
 
   const act = active;
   const actColor = act ? colors[act.si] : "";
@@ -223,7 +227,7 @@ export default function CandleTrend({ title, series, line, majority, step = 5, w
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
         {markers.map((m, i) => <span key={`m${i}`} aria-hidden="true" className="mk mk-ring" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%` }} />)}
         {ends.map((e) => (
-          <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + 10px)`, maxWidth: labelPx - 12, top: e.y, color: colors[e.si] }}>
+          <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + ${markers.length ? 20 : 10}px)`, maxWidth: labelPx - (markers.length ? 22 : 12), top: e.y, color: colors[e.si] }}>
             {endText(e.s.endLabel ?? `${e.s.name} ${seatsFmt(Math.round(e.last.v * 10) / 10)}`)}
           </span>
         ))}
