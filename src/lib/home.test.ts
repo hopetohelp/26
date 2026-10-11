@@ -3,7 +3,7 @@ import modelFile from "../data/model.json";
 import { POLL_AVERAGE } from "./sources";
 import { latestPerPollster, lists2026, listName, passesInAll } from "./data";
 import { dayMonth, buildHome, type HomeModel } from "./home";
-import { hemicycleSeats } from "./hemicycle";
+import { HALL, hemicycleSeats } from "./hemicycle";
 
 /** התפלגות מלאכותית: counts מתחילים במנדט `from` (לפניו אפסים) */
 const hist = (from: number, counts: number[]) => [...Array(from).fill(0), ...counts];
@@ -116,6 +116,16 @@ describe("הבית מהנתונים האמיתיים", () => {
 });
 
 describe("hemicycleSeats", () => {
+  it("פרסה: 120 מושבים, 58 בכל צד ו-4 בציר האמצע, סימטרית, בלי מושבים חופפים", () => {
+    const s = hemicycleSeats();
+    expect(s).toHaveLength(120);
+    const rows = [...new Set(s.map((p) => Math.round(p.y * 1000)))];
+    expect(s.filter((p) => p.x < HALL.cx - 1e-9)).toHaveLength(58);
+    expect(s.filter((p) => p.x > HALL.cx + 1e-9)).toHaveLength(58); // ועוד 4 מושבים בציר האמצע של הקשת
+    for (const p of s) expect(s.some((q) => Math.abs(q.x - (HALL.w - p.x)) < 1e-9 && Math.abs(q.y - p.y) < 1e-9)).toBe(true);
+    for (let i = 0; i < s.length; i++) for (let j = i + 1; j < s.length; j++) expect(Math.hypot(s[i].x - s[j].x, s[i].y - s[j].y)).toBeGreaterThan(2 * HALL.r);
+    expect(rows.length).toBeGreaterThan(10);
+  });
   it("120 מושבים, מסודרים מהקצה הימני, והמושב הראשון בשורה החיצונית", () => {
     const s = hemicycleSeats();
     expect(s).toHaveLength(120);

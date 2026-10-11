@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { hemicycleSeats } from "../lib/hemicycle";
+import { HALL, hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { type HomeData, type HomeRow } from "../lib/home";
 import { candleProfiles, clipSegs, intSegs, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
@@ -31,17 +31,13 @@ export interface RangeRowData {
  * נר שמבוסס על סקרים, השערות, נתונים או חוק הבחירות (סיכום המכונים) הוא **מלא** (הנמוך והגבוה). הצבעים בטוקנים (`--mk-*`, `pos`, `neg`).
  * כל גרף מקבל מנדטים ממספר אחד: `buildHome` ב-`src/lib/home.ts`.
  */
-const W = 2.2;
-const H = 1.32;
-const CX = 1.1;
-const CY = 1.26;
-const SEATS = hemicycleSeats(CX, CY);
+const SEATS = hemicycleSeats();
 export const MAJORITY = 61;
 /** כמה מושבים חסרים לממשלה היוצאת עד הרוב (0 כשיש רוב) */
 export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
 
 /**
- * 120 מושבים בחצי עיגול: הממשלה היוצאת (מלא), המושבים שחסרים לה עד הרוב (עיגולים אדומים בהירים), וכל השאר (מסגרת).
+ * 120 מושבים בצורת פרסה (כמו אולם המליאה, `src/lib/hemicycle.ts`): הממשלה היוצאת (מלא), המושבים שחסרים לה עד הרוב (עיגולים אדומים בהירים), וכל השאר (מסגרת).
  * במקום קו ה-61 (הכרעת בעלים 9.10.2026): המושבים החסרים הם עצמם הפער.
  */
 export function Hemicycle({ gov, other, center, label }: { gov: number; other: number; center?: string; label?: string }) {
@@ -50,18 +46,18 @@ export function Hemicycle({ gov, other, center, label }: { gov: number; other: n
     <figure className="m-0">
       <div className="relative">
         <svg
-          viewBox={`0 0 ${W} ${H}`}
+          viewBox={`0 0 ${HALL.w} ${HALL.h}`}
           className="block w-full h-auto"
           role="img"
-          aria-label={`120 המושבים בחצי עיגול: ${gov} למפלגות הממשלה היוצאת; ${missing > 0 ? `${missing} מושבים חסרים להן עד הרוב, ${MAJORITY}; ` : `יש להן רוב, ${MAJORITY} ומעלה; `}${other - missing} לשאר הרשימות.`}
+          aria-label={`120 המושבים בצורת פרסה: ${gov} למפלגות הממשלה היוצאת; ${missing > 0 ? `${missing} מושבים חסרים להן עד הרוב, ${MAJORITY}; ` : `יש להן רוב, ${MAJORITY} ומעלה; `}${other - missing} לשאר הרשימות.`}
         >
           {SEATS.map((s, k) => (
-            <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
+            <circle key={k} cx={s.x} cy={s.y} r={HALL.r} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
           ))}
         </svg>
         {(center || label) && (
-          // תחתית האמצע של הלוח: המספר (53/120) ומתחתיו הכיתוב (הממשלה היוצאת), שניהם בגופן גדול
-          <span aria-hidden="true" className="absolute flex flex-col items-center gap-0.5 whitespace-nowrap leading-none" style={{ left: "50%", top: `${((CY - 0.01) / H) * 100}%`, transform: "translate(-50%, -100%)" }}>
+          // מרכז החלל הפנימי של הפרסה: המספר (53/120) ומתחתיו הכיתוב (הממשלה היוצאת), שניהם בגופן גדול
+          <span aria-hidden="true" className="absolute flex flex-col items-center gap-0.5 whitespace-nowrap leading-none" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100}%`, transform: "translate(-50%, -50%)" }}>
             {center && <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular" dir="ltr">{center}</span>}
             {label && <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>}
           </span>
