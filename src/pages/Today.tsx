@@ -3,6 +3,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import Select from "../components/Select";
 import { Segmented } from "../components/Choice";
+import { BarSlots } from "../components/ChartLegend";
 import { AllParties, PartyByPollster, PollsterByParty, PollsterGrid } from "../components/latestCharts";
 import { Note, Split } from "../components/ui";
 import { lists2026, listName, passesInMost, pollsterLabel, seatsIn, summarize } from "../lib/data";
@@ -30,14 +31,19 @@ export default function Today() {
   const [party, setParty] = useState(ALL);
   const [pollster, setPollster] = useState(ALL);
   const poll = latest.find((p) => p.id === pollster);
+  // "מקרא" באותה שורה עם המתג והרשימה (הכרעת בעלים 11.10.2026): הכפתור "נשלח" לכאן מתוך הגרף, והפאנל הפתוח מתחת לשורה
+  const [legendRow, setLegendRow] = useState<HTMLElement | null>(null);
+  const [legendPanel, setLegendPanel] = useState<HTMLElement | null>(null);
 
   const lead = `${latest.length} מכונים, הסקר האחרון של כל אחד ב-${WINDOW_DAYS} הימים שעד ${date(asOf)}. כל מכון נספר פעם אחת.`;
   return (
+    <BarSlots.Provider value={{ row: legendRow, panel: legendPanel }}>
     <Split
       title="המצב היום"
       lead={lead}
       primary={
-        <div className="flex items-center gap-2 mb-8">
+        <div className="mb-8">
+        <div className="flex items-center gap-2">
           <Segmented
             label="הצגה"
             value={view}
@@ -46,16 +52,19 @@ export default function Today() {
             options={[{ id: "party", label: "לפי מפלגה" }, { id: "pollster", label: "לפי מכון" }]}
           />
           {view === "party" ? (
-            <Select inline className="min-w-0 flex-1" id="today-party" label="מפלגה" value={party} onChange={setParty}>
+            <Select inline className="min-w-0" id="today-party" label="מפלגה" value={party} onChange={setParty}>
               <option value={ALL}>כל המפלגות</option>
               {summary.map((s) => <option key={s.id} value={s.id}>{listName(s.id)}</option>)}
             </Select>
           ) : (
-            <Select inline className="min-w-0 flex-1" id="today-pollster" label="מכון" value={pollster} onChange={setPollster}>
+            <Select inline className="min-w-0" id="today-pollster" label="מכון" value={pollster} onChange={setPollster}>
               <option value={ALL}>כל המכונים</option>
               {latest.map((p) => <option key={p.id} value={p.id}>{pollsterLabel(p)} · {date(p.end)}</option>)}
             </Select>
           )}
+          <div ref={setLegendRow} className="ms-auto shrink-0 flex items-center" />
+        </div>
+        <div ref={setLegendPanel} />
         </div>
       }
       secondary={
@@ -97,5 +106,6 @@ export default function Today() {
         </>
       }
     />
+    </BarSlots.Provider>
   );
 }
