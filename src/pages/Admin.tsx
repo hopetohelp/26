@@ -110,8 +110,6 @@ export default function Admin() {
               ["רשומות במאגר", data.support?.stats.participants ?? "—"],
               ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
               ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
-              ["חשבון בלי שמירה", data.support?.stats.accountsNoSave ?? "—"],
-              ["רשומות ריקות בלי משתמש", data.support?.stats.emptyGuests ?? "—"],
             ]],
             ["היום", "לפי יום UTC", [
               ["כניסות היום", today?.visits ?? 0],

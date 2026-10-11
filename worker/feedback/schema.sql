@@ -100,3 +100,7 @@ CREATE INDEX IF NOT EXISTS feedback_adopted_participant ON feedback_adopted(part
 -- הערך הראשון נקבע ב-11.10.2026 (איפוס מוני הכניסות אחרי שהסינון נפתח); איפוס נוסף = עדכון הערך, לא מחיקת הודעות.
 CREATE TABLE IF NOT EXISTS counter_marks (name TEXT PRIMARY KEY, value TEXT NOT NULL);
 INSERT OR IGNORE INTO counter_marks (name, value) VALUES ('failures_from', '2026-10-11T17:47:58.000Z');
+
+-- תמונת מצב של מוני האבחון (diag:*) ברגע איפוס הנפילות. מסך הניהול מציג את ההפרש בלבד; הערכים המלאים נשארים ב-hits.
+-- מולא פעם אחת ב-11.10.2026 מתוך hits (38 שורות); איפוס נוסף = העתקה מחדש של שורות diag מ-hits.
+CREATE TABLE IF NOT EXISTS counter_baseline (day TEXT NOT NULL, page TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY (day, page));
