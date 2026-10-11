@@ -82,6 +82,40 @@ async function myGroups(env, participant) {
   return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc) })));
 }
 
+/** הקבוצות שהמשתמש מנהל — דרך מייל מאומת, כמו החברות */
+async function managedGroups(env, participant) {
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members })));
+}
+
+/** טעינת מנה של מיילים לקבוצה. create = מותר ליצור קבוצה ולשנות שם (מנהל האתר בלבד) */
+async function importGroup(env, body, now, create) {
+  const id = groupId(body.group);
+  if (!Array.isArray(body.emails) || body.emails.length > GROUP_CHUNK) throw bad("emails");
+  if (!["add", "replace"].includes(body.mode ?? "add")) throw bad("mode");
+  const name = body.name === undefined ? null : normalizeName(body.name);
+  if (body.name !== undefined && !name) throw bad("name");
+  const exists = await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first();
+  if (!exists && (!create || !name)) throw bad("name");
+  const hashes = new Set();
+  let invalid = 0, valid = 0;
+  for (const raw of body.emails) {
+    const e = normalizeEmail(raw);
+    if (e) { valid++; hashes.add(await emailHash(env, e.norm)); }
+    else invalid++;
+  }
+  const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const stmts = [];
+  if (!exists) stmts.push(env.DB.prepare("INSERT INTO groups (id, name_enc, created_at) VALUES (?, ?, ?)").bind(id, await seal(env, name), iso(now)));
+  else if (name) stmts.push(env.DB.prepare("UPDATE groups SET name_enc = ? WHERE id = ?").bind(await seal(env, name), id));
+  if (body.mode === "replace") stmts.push(env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id));
+  for (const h of hashes) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(id, h));
+  if (stmts.length) await env.DB.batch(stmts);
+  const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const base = body.mode === "replace" ? 0 : before;
+  return { group: id, added: members - base, duplicates: valid - (members - base), invalid, members };
+}
+
 /** מזהה קבוצה: אותיות לטיניות קטנות, ספרות ומקף */
 const GROUP_ID = /^[a-z0-9-]{2,32}$/;
 /** מיילים בבקשה אחת — כדי להישאר מתחת ל-MAX_BODY; רשימה גדולה נשלחת במנות */
@@ -331,6 +365,8 @@ const routes = {
       verified: !!g || emailRows.some((r) => r.verified),
       // הקבוצות של המשתמש (לכפתור ההחלפה) — רק דרך מייל מאומת; גולש אחר לא רואה שקיימות קבוצות
       groups: await myGroups(env, participant),
+      // הקבוצות שהמשתמש מנהל (למסך העלאת הרשימה)
+      managedGroups: (await managedGroups(env, participant)).map(({ id, name }) => ({ id, name })),
       // חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google מיד בכניסה (הכרעת בעלים 10.10.2026)
       legacy: !!hasLink || !!pw?.username || (!pw && !g),
     };
@@ -897,30 +933,36 @@ const routes = {
   // התשובה לא אומרת כמה מהמיילים רשומים באתר.
   "POST /admin/groups/import": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
+    return importGroup(env, body, now, true);
+  },
+
+  // מנהל קבוצה (הכרעת בעלים 11.10.2026): טוען רשימה רק לקבוצה שהוא מנהל — בלי יצירה, בלי שינוי שם ובלי מחיקה
+  "POST /group/import": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
     const id = groupId(body.group);
-    if (!Array.isArray(body.emails) || body.emails.length > GROUP_CHUNK) throw bad("emails");
-    if (!["add", "replace"].includes(body.mode ?? "add")) throw bad("mode");
-    const name = body.name === undefined ? null : normalizeName(body.name);
-    if (body.name !== undefined && !name) throw bad("name");
-    const exists = await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first();
-    if (!exists && !name) throw bad("name");
-    const hashes = new Set();
-    let invalid = 0, valid = 0;
-    for (const raw of body.emails) {
-      const e = normalizeEmail(raw);
-      if (e) { valid++; hashes.add(await emailHash(env, e.norm)); }
-      else invalid++;
-    }
-    const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
-    const stmts = [];
-    if (!exists) stmts.push(env.DB.prepare("INSERT INTO groups (id, name_enc, created_at) VALUES (?, ?, ?)").bind(id, await seal(env, name), iso(now)));
-    else if (name) stmts.push(env.DB.prepare("UPDATE groups SET name_enc = ? WHERE id = ?").bind(await seal(env, name), id));
-    if (body.mode === "replace") stmts.push(env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id));
-    for (const h of hashes) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(id, h));
-    if (stmts.length) await env.DB.batch(stmts);
-    const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
-    const base = body.mode === "replace" ? 0 : before;
-    return { group: id, added: members - base, duplicates: valid - (members - base), invalid, members };
+    if (!(await managedGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_manager");
+    if (body.name !== undefined) throw bad("name");
+    return importGroup(env, body, now, false);
+  },
+
+  // הקבוצות שהמשתמש מנהל, עם גודל הרשימה (לא כמה מהם רשומים באתר)
+  "GET /group/mine": async ({ env, request, now }) => {
+    const { participant } = await requireAuth(env, request, now);
+    return { groups: await managedGroups(env, participant) };
+  },
+
+  // מינוי או הסרה של מנהל קבוצה לפי מייל — נשמר רק הגיבוב; המינוי תופס כשהמייל מאומת בחשבון
+  "POST /admin/groups/managers": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    const id = groupId(body.group);
+    const e = normalizeEmail(body.email);
+    if (!e) throw bad("email");
+    if (!(await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
+    const eh = await emailHash(env, e.norm);
+    if (body.remove) await env.DB.prepare("DELETE FROM group_managers WHERE group_id = ? AND email_hash = ?").bind(id, eh).run();
+    else await env.DB.prepare("INSERT OR IGNORE INTO group_managers (group_id, email_hash, added_at) VALUES (?, ?, ?)").bind(id, eh, iso(now)).run();
+    const n = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_managers WHERE group_id = ?").bind(id).first()).n;
+    return { group: id, managers: n };
   },
 
   "GET /admin/groups": async ({ env, request }) => {
@@ -933,7 +975,11 @@ const routes = {
   "POST /admin/groups/delete": async ({ env, request, body }) => {
     await requireAdmin(env, request);
     const id = groupId(body.group);
-    await env.DB.batch([env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id), env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id)]);
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_managers WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id),
+    ]);
     return { ok: true };
   },
 

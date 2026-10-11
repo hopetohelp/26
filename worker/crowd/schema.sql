@@ -221,3 +221,10 @@ CREATE TABLE IF NOT EXISTS group_members (
   PRIMARY KEY (group_id, email_hash)
 );
 CREATE INDEX IF NOT EXISTS group_members_hash ON group_members(email_hash);
+-- מנהלי קבוצה (הכרעת בעלים 11.10.2026): טוענים רשימה רק לקבוצה שלהם. נשמר גיבוב המייל; תופס כשהמייל מאומת בחשבון.
+CREATE TABLE IF NOT EXISTS group_managers (
+  group_id TEXT NOT NULL REFERENCES groups(id),
+  email_hash TEXT NOT NULL,
+  added_at TEXT NOT NULL,
+  PRIMARY KEY (group_id, email_hash)
+);
