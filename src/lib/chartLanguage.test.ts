@@ -175,7 +175,7 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
 });
 
-describe("candleProfile: אחוזונים, ושני אזורים לשתי קבוצות (הכרעת בעלים 11.10.2026)", () => {
+describe("candleProfile: נר אחד לפי אחוזונים 9 · 27 · 28 · 27 · 9 (הכרעת בעלים 11.10.2026)", () => {
   const vals = (xs: number[]) => candleProfile(valueSegs(xs));
   it("דק 9%, בינוני 27%, עבה 28% באמצע — בסדר הזה, מהנמוך עד הגבוה", () => {
     const segs = vals([46, 47, 47, 48, 49, 49, 50, 51, 52, 53]);
@@ -184,20 +184,11 @@ describe("candleProfile: אחוזונים, ושני אזורים לשתי קבו
     expect(segs[segs.length - 1].to).toBe(53);
     for (let i = 1; i < segs.length; i++) expect(segs[i].from).toBeCloseTo(segs[i - 1].to, 9);
   });
-  it("שתי קבוצות של לפחות 25% עם פער ריק ⇐ שני נרות מחוברים בקו דק", () => {
+  it("גם עם שתי קבוצות נפרדות — נר אחד רציף, בלי פיצול לשני אזורים", () => {
     const segs = vals([45, 46, 46, 47, 47, 60, 61, 61, 62]);
-    const thick = segs.filter((g) => g.level === 5);
-    expect(thick).toHaveLength(2);
-    expect(thick[0].to).toBeLessThan(50);
-    expect(thick[1].from).toBeGreaterThan(55);
-  });
-  it("לכל היותר שני אזורים, גם כשיש שלוש קבוצות", () => {
-    expect(vals([40, 41, 41, 50, 51, 51, 60, 61, 61]).filter((g) => g.level === 5).length).toBeLessThanOrEqual(2);
-  });
-  it("סקר חריג אחד (פחות מ-25%) אינו קבוצה: נר אחד עם קצה דק ארוך", () => {
-    const segs = vals([45, 46, 46, 47, 47, 48, 48, 49, 64]);
-    expect(segs.filter((g) => g.level === 5)).toHaveLength(1);
-    expect(segs[segs.length - 1]).toMatchObject({ to: 64, level: 1 });
+    expect(segs.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
+    expect(segs[0].from).toBe(45);
+    expect(segs[segs.length - 1].to).toBe(62);
   });
   it("ערך יחיד — נר זעיר סביב הערך, עם ליבה עבה", () => {
     const segs = vals([50]);
