@@ -61,10 +61,10 @@ describe("מקרא רק בתוך כפתור 'מקרא'", () => {
 
 describe("כרטיסי הגושים: מגירה אחת בכל האתר (הכרעת בעלים 11.10.2026)", () => {
   const read = (end: string) => FILES.find((f) => f.path.endsWith(end))!.text;
-  it("כל כרטיס גושים הוא מגירה (Fold) עם כותרת, ולא כרטיס ממוסגר", () => {
+  it("כל כרטיס גושים הוא מגירה אחת משותפת (BlocsDrawer) עם כותרת, ולא כרטיס ממוסגר", () => {
     for (const f of ["components/PersonalBlocs.tsx", "components/PersonalBlocTrends.tsx"]) {
       const t = read(f);
-      expect(t, f).toContain("<Fold");
+      expect(t, f).toContain("<BlocsDrawer");
       expect(t, f).not.toMatch(/<section[^>]*bg-paper-card/);
     }
   });
