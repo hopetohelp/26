@@ -1,3 +1,4 @@
+import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
@@ -165,6 +166,7 @@ export default function Seats({
   return (
     <div>
       <HowTo />
+      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בגוש, והצפי שלכם" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className={`grid ${splitCls("lg:grid-cols-[1fr_1.1fr]")} gap-5 [&>*]:min-w-0 items-start`}>
         <div className={`${splitCls("lg:sticky lg:top-4")} space-y-3`}>
           <div className="relative">

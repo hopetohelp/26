@@ -94,7 +94,6 @@ export default function Guess({ community = false }: { community?: boolean }) {
         </section>
       )}
       {community && <div id="community-share" />}
-      {community && <div id="community-blocs" />}
       </>; const body = view === "mine" ? (
         <section id="my-guess" ref={top}>
           <Mine key={mineKey} session={session} onStatistics={() => setView("statistics")} />
