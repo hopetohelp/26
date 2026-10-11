@@ -1,4 +1,4 @@
-import { createContext, useContext, useId, useState, type ReactNode } from "react";
+import { createContext, useContext, useId, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Swatch, type MarkKind } from "./marks";
 
@@ -21,6 +21,23 @@ export const PILL_ON = "ring-ink";
  * והפאנל הפתוח מתחתיה. בלי הקשר כזה המקרא מצויר במקומו, בשורה משלו.
  */
 export const BarSlots = createContext<{ row: HTMLElement | null; panel: HTMLElement | null } | null>(null);
+
+/**
+ * מקרא אחד לכל המסך (הכרעת בעלים 11.10.2026): כל גרף במסך רושם את הסימונים שלו, והכפתור מוצג פעם אחת בלבד — ליד הגרף הראשון,
+ * צמוד לשמאל — עם כל הסימונים של כל הגרפים יחד (בלי כפילויות). `ScreenLegend` עוטף את המסך (Layout); בלי עטיפה כל גרף מציג מקרא משלו.
+ */
+type Reg = { entries: LegendEntry[]; extra?: ReactNode };
+const HubApi = createContext<{ set: (id: string, r: Reg) => void; remove: (id: string) => void } | null>(null);
+const HubRegs = createContext<[string, Reg][]>([]);
+export function ScreenLegend({ children }: { children: ReactNode }) {
+  const [regs, setRegs] = useState<[string, Reg][]>([]);
+  const api = useMemo(() => ({
+    set: (id: string, r: Reg) => setRegs((rs) => { const i = rs.findIndex((x) => x[0] === id); if (i < 0) return [...rs, [id, r]]; const n = [...rs]; n[i] = [id, r]; return n; }),
+    remove: (id: string) => setRegs((rs) => rs.filter((x) => x[0] !== id)),
+  }), []);
+  return <HubApi.Provider value={api}><HubRegs.Provider value={regs}>{children}</HubRegs.Provider></HubApi.Provider>;
+}
+const entryKey = (e: LegendEntry) => `${e.kind}|${typeof e.text === "string" ? e.text : ""}`;
 
 export type LegendKind = MarkKind | "line" | "lineList" | "dash" | "pass" | "seatGov" | "seatMiss" | "seatOther";
 
@@ -98,13 +115,21 @@ export default function ChartLegend({
   const [open, setOpen] = useState(false);
   const id = useId();
   const slots = useContext(BarSlots);
+  const hub = useContext(HubApi);
+  const regs = useContext(HubRegs);
+  const key = entries.map(entryKey).join("~");
+  useLayoutEffect(() => { hub?.set(id, { entries, extra: children }); }, [hub, id, key]); // eslint-disable-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => () => hub?.remove(id), [hub, id]);
+  const leader = !hub || !regs.length || regs[0][0] === id;
+  const shown = hub && regs.length ? [...new Map(regs.flatMap((r) => r[1].entries).map((e) => [entryKey(e), e])).values()] : entries;
+  const extras = hub && regs.length ? regs.map((r, i) => r[1].extra ? <div key={i}>{r[1].extra}</div> : null) : children;
   const button = (
     <button
       type="button"
       aria-expanded={open}
       aria-controls={open ? id : undefined}
       onClick={() => setOpen((v) => !v)}
-      className={`${PILL} ${PILL_RING}`}
+      className={`${PILL} ${PILL_RING} ms-auto order-last`}
     >
       מקרא
       <svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10" className={`transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -112,16 +137,18 @@ export default function ChartLegend({
       </svg>
     </button>
   );
-  const panel = open ? (
-    <LegendPanel id={id} entries={entries}>
-      {children}
+  const panel = open && leader ? (
+    <LegendPanel id={id} entries={shown}>
+      {extras}
     </LegendPanel>
   ) : null;
+  const btn = leader ? button : null;
+  if (!leader && !action && !slots) return null;
   if (slots) {
     if (!slots.row) return null;
     return (
       <>
-        {createPortal(<>{button}{action}</>, slots.row)}
+        {createPortal(<>{btn}{action}</>, slots.row)}
         {panel && slots.panel ? createPortal(panel, slots.panel) : null}
       </>
     );
@@ -129,7 +156,7 @@ export default function ChartLegend({
   return (
     <div className={`my-1 ${className}`}>
       <div className={BAR}>
-        {button}
+        {btn}
         {action}
       </div>
       {panel}

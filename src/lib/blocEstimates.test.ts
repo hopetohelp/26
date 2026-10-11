@@ -57,14 +57,14 @@ it('פיצול היסטורי נשאר חלקי; רשימת עבר משותפת 
  expect(blocValues([{...bloc,lists:['x','y']}],{old:42},{x:'old',y:'old'})[0].total).toBe(42);
 });
 it('מגמה מחשבת ממוצע של סכומי הסקרים (10, 10, 18)',()=>{
- const polls=[p('a','2026-01-01',{x:{s:1},y:{s:9}}),p('b','2026-01-02',{x:{s:9},y:{s:1}}),p('c','2026-01-03',{x:{s:9},y:{s:9}})];
- const point=rollingBlocMean([bloc],polls,polls,'2026-01-03','2026-01-03',14,3,3,rules)[0].points[0];
+ const polls=[p('a','2026-01-01',{x:{s:1},y:{s:9}},'A'),p('b','2026-01-02',{x:{s:9},y:{s:1}},'B'),p('c','2026-01-03',{x:{s:9},y:{s:9}},'C')];
+ const point=rollingBlocMean([bloc],polls,polls,'2026-01-03','2026-01-03',3,3,3,rules)[0].points[0];
  expect(point.v).toBeCloseTo(12.667,3);expect(point.fullN).toBe(3);expect(point.estimatedN).toBe(0);
 });
 it('מגמה מציינת את הסקרים שהושלמו ומפרידה סקרים חלקיים מהממוצע',()=>{
- const full=p('full','2026-01-02',{x:{s:21},y:{s:4},other:{s:95}});
- const incomplete=p('missing','2026-01-03',{x:{s:20},z:{s:5},other:{s:95}});
- const point=rollingBlocMean([bloc],[full,target,incomplete],[previous],'2026-01-04','2026-01-04',14,2,3,rules)[0].points[0];
+ const full=p('full','2026-01-02',{x:{s:21},y:{s:4},other:{s:95}},'F');
+ const incomplete=p('missing','2026-01-03',{x:{s:20},z:{s:5},other:{s:95}},'M');
+ const point=rollingBlocMean([bloc],[full,target,incomplete],[previous],'2026-01-04','2026-01-04',3,2,3,rules)[0].points[0];
  expect(point.estimated).toBe(true);expect(point.fullN).toBe(1);expect(point.estimatedN).toBe(1);expect(point.missingN).toBe(1);expect(point.v).toBe(24.5);expect(point.missing).toEqual(['y']);
 });
 it('חסר אינו אפס, ואחוז שאינו מתחת לסף אינו ראיה לאפס מנדטים',()=>{
@@ -77,4 +77,10 @@ it('השלמת אפס אינה נחסמת בגלל מועמד חיובי שנד�
  const source={...previous,values:{y:{s:0},z:{s:4}}};
  const rows=pollBlocValues([bloc,{...bloc,id:'other',lists:['x','z']}],{...target,values:{x:{s:20},other:{s:100}}},[source],rules);
  expect(rows[0].estimate).toBe(20);expect(rows[0].total).toBeNull();expect(rows[1].estimate).toBeNull();
+});
+
+it('נקודה = 3 ימים: שני סקרים של אותו מכון באותה נקודה — רק האחרון נספר; סקר ישן יותר מ-3 ימים לא נכלל',()=>{
+ const polls=[p('old','2025-12-30',{x:{s:50},y:{s:50}},'A'),p('a1','2026-01-01',{x:{s:1},y:{s:1}},'A'),p('a2','2026-01-03',{x:{s:5},y:{s:5}},'A'),p('b','2026-01-02',{x:{s:10},y:{s:10}},'B')];
+ const point=rollingBlocMean([bloc],polls,polls,'2026-01-03','2026-01-03',3,1,3,rules)[0].points[0];
+ expect(point.n).toBe(2);expect(point.v).toBe(15);
 });

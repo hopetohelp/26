@@ -6,7 +6,7 @@ import Explained from "../components/Explained";
 import { POLL_AVERAGE } from "../lib/sources";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lists2026, listName, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lists2026, listName, POINT_DAYS, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -57,16 +57,17 @@ export default function Trends() {
   const from = p0.from || new Date(toTime(to) - 90 * 86_400_000).toISOString().slice(0, 10);
   const rawSource = useMemo(() => usablePolls.filter((p) => !who || pollsterKey(p) === who), [who]);
   const source = useMemo(() => withLineage(rawSource), [rawSource]);
-  const days = who ? 45 : 14;
-  const minN = who ? 1 : 3;
+  // נקודה = 3 ימים בכל האתר, סקר אחד לכל מכון בנקודה (הכרעת בעלים 11.10.2026)
+  const days = POINT_DAYS;
+  const minN = 1;
 
   const series: Series[] = [];
   for (const id of ids) {
     const color = colorOf(id, colorIndex(id));
-    const solid = rollingMean(id, from, to, days, 3, source).filter((x) => x.n >= minN);
+    const solid = rollingMean(id, from, to, days, days, source).filter((x) => x.n >= minN);
     const lin = LINEAGE[id];
     if (lin && from < lin.since) {
-      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, 3, source).filter((x) => x.n >= minN);
+      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, days, source).filter((x) => x.n >= minN);
       if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, color, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
     }
     if (solid.length) series.push({ id, color, name: listName(id), points: solid });
@@ -160,8 +161,8 @@ export default function Trends() {
                 asOf={`הסקרים עד ${date(to)}`}
                 assumption={
                   who
-                    ? "מכון בודד: חלון של 45 יום, כדי שיהיו מספיק סקרים. הנר הוא הנמוך והגבוה בין הסקרים של המכון בחלון."
-                    : "כל המכונים: ממוצע הסקרים ב-14 הימים האחרונים, לפחות 3 סקרים לנקודה. הנר הוא הנמוך והגבוה בין הסקרים בחלון (טווח מלא), והעובי לפי כמות הסקרים ביחס לשאר הגרף. ממוצע תיאורי — לא מודל ולא תחזית."
+                    ? "מכון בודד: נקודה כל 3 ימים: ממוצע הסקרים של 3 הימים שמסתיימים בה, והסקר האחרון בלבד של כל מכון באותם ימים. בלי סקר של המכון באותם ימים — אין נקודה."
+                    : "כל המכונים: נקודה כל 3 ימים: ממוצע הסקרים של 3 הימים שמסתיימים בה, והסקר האחרון בלבד של כל מכון באותם ימים. הנר הוא הנמוך והגבוה בין הסקרים בנקודה (טווח מלא), והעובי לפי כמות הסקרים. ממוצע תיאורי — לא מודל ולא תחזית."
                 }
                 methodAnchor="trends"
               >
