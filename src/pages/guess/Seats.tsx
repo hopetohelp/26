@@ -383,7 +383,7 @@ function CalcAssumptions({ calc, onChange }: { calc: Calc; onChange: (c: Calc) =
             <input type="number" step={10000} value={calc.eligible} onChange={(e) => { const v = Number(e.target.value); if (v > 0 && v <= 100000000) onChange({ ...calc, eligible: v }); }} className="mt-1 min-h-[44px] border border-paper-line rounded-theme px-2 tabular bg-paper-card" />
           </label>
         </div>
-        <p className="text-xs text-ink-soft">ברירת המחדל: {num(registry.k26.eligible)} בעלי זכות (דווח בתקשורת, טרם אומת), שיעור הצבעה 70%, פסולים 0.6%.</p>
+        <p className="text-xs text-ink-soft">ברירת המחדל: {num(registry.k26.eligible)} בעלי זכות (נתון רשמי של ועדת הבחירות), שיעור הצבעה 70%, פסולים 0.6%.</p>
         <fieldset>
           <legend className="font-bold">הסכמי עודפים</legend>
           {AG.map((a) => (

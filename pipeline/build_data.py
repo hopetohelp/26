@@ -680,9 +680,9 @@ def build_registry(results: list[dict]) -> dict:
                "voted": r["voted"], "valid": r["valid"], "invalid": r["invalid"]} for r in results]
     return {
         "series": series,
-        "k26": {"eligible": 7_560_000, "status": "reported_estimate",
-                "note": "דווח \"כ-7.56 מיליון\" (11% יותר מ-2022) בכתבה מ-28.9.2026; טרם אומת מול פרסום רשמי של ועדת הבחירות",
-                "source": "https://israeled.org/38-party-lists-israels-2026-parliamentary-election/"},
+        "k26": {"eligible": 7_336_553, "pollingStations": 12_018, "status": "official",
+                "note": "נתון רשמי: הודעת יו\"ר ועדת הבחירות המרכזית, השופט נעם סולברג — 7,336,553 בעלי זכות בחירה ו-12,018 קלפיות. ערך קודם (הוחלף): \"כ-7.56 מיליון\" שדווח בכתבה מ-28.9.2026 ולא אומת",
+                "source": "הודעת יו\"ר ועדת הבחירות המרכזית, השופט נעם סולברג"},
     }
 
 

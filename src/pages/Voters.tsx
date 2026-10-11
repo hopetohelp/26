@@ -27,16 +27,16 @@ export default function Voters() {
       <Card title="בעלי זכות בחירה ושיעור ההצבעה">
         <Explained
           kind="נתון רשמי"
-          source="ועדת הבחירות המרכזית — עמודי התוצאות הארציות של כל מערכת"
-          asOf="התוצאות הסופיות של כל מערכת; 2026 — מספר מדווח"
+          source="ועדת הבחירות המרכזית — עמודי התוצאות הארציות של כל מערכת; 2026: הודעת יו״ר הוועדה, השופט נעם סולברג"
+          asOf="התוצאות הסופיות של כל מערכת; 2026 — הודעת יו״ר ועדת הבחירות המרכזית"
           assumption="שיעור ההצבעה = הצביעו ÷ בעלי זכות בחירה בפנקס (כולל ישראלים שגרים בחו״ל)."
           methodAnchor="voters"
         >
           <ChartWithTable
-            summary={`מ-${num(series[0].eligible)} בעלי זכות ב-2019 ל-${num(last.eligible)} ב-2022, וכ-${num(k26.eligible)} ב-2026 (מדווח).`}
+            summary={`מ-${num(series[0].eligible)} בעלי זכות ב-2019 ל-${num(last.eligible)} ב-2022, ו-${num(k26.eligible)} ב-2026 (נתון רשמי).`}
             chart={
               <ul className="space-y-2" aria-hidden="true">
-                {[...series.map((s) => ({ label: s.label, e: s.eligible, v: s.voted, est: false })), { label: "2026 (מדווח)", e: k26.eligible, v: 0, est: true }].map((s) => (
+                {[...series.map((s) => ({ label: s.label, e: s.eligible, v: s.voted, est: false })), { label: "2026 (רשמי)", e: k26.eligible, v: 0, est: true }].map((s) => (
                   <li key={s.label} className="grid grid-cols-[7rem_1fr_6rem] items-center gap-2 text-sm">
                     <span>{s.label}</span>
                     <span className="relative h-6 bg-paper rounded">
@@ -78,7 +78,7 @@ export default function Voters() {
           />
         </Explained>
         <Note>
-          2026: <Badge tone="warn">טרם אומת</Badge> דווח "כ-{num(k26.eligible)}" — גידול של כ-{growth.toFixed(1)}% מאז 2022. יעודכן לפי פרסום רשמי של ועדת הבחירות.
+          2026: <Badge tone="ok">נתון רשמי</Badge> {num(k26.eligible)} בעלי זכות בחירה ו-{num(k26.pollingStations)} קלפיות, לפי הודעת יו״ר ועדת הבחירות המרכזית — גידול של כ-{growth.toFixed(1)}% מאז 2022 בבעלי הזכות.
         </Note>
       </Card>
 
@@ -95,7 +95,7 @@ export default function Voters() {
         </div>
         <Explained
           kind="תרחיש"
-          source="מספר בעלי הזכות המדווח × שיעור ההצבעה שבחרתם; פסולים 0.6%"
+          source="מספר בעלי הזכות הרשמי × שיעור ההצבעה שבחרתם; פסולים 0.6%"
           asOf="תרחיש בלבד, לפי ההנחות שבחרתם"
           assumption="המספרים תלויים בשני ההנחות שבחרתם. בשנים 2019–2022 השיעור נע בין 67.4% ל-71.5%, והקולות שלא עברו בין 0.8% ל-8.8%."
           methodAnchor="voters"
