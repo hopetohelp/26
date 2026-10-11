@@ -8,6 +8,7 @@ import { dateRange, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
 import { POINT_DAYS, POINT_WINDOW } from "../lib/data";
 import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trendAxis";
+import { useSeen, whenVisible } from "../lib/useSeen";
 
 /**
  * גרף המגמה האחיד של האתר (הכרעת בעלים 11.10.2026) — ברירת המחדל לכל גרף מגמה:
@@ -59,7 +60,8 @@ const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 interface Target { si: number; i: number; p: TrendPoint }
 
 export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading }: CandleTrendProps) {
-  const wrap = useRef<HTMLDivElement>(null);
+  const wrap = useRef<HTMLDivElement | null>(null);
+  const [seenRef, seen] = useSeen<HTMLDivElement>();
   const [width, setWidth] = useState(640);
   const [active, setActive] = useState<Target | null>(null);
   const id = useId();
@@ -212,9 +214,9 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const lastShown = candleMode ? shown[shown.length - 1] : undefined;
   const Inner = (
     <div
-      ref={wrap}
+      ref={(el) => { wrap.current = el; seenRef(el); }}
       dir="ltr"
-      className="relative mt-1 outline-offset-2 touch-pan-y select-none"
+      className={`relative mt-1 outline-offset-2 touch-pan-y select-none ${whenVisible(seen)}`}
       style={{ height: dateTop + 22 }}
       tabIndex={0}
       role="group"
