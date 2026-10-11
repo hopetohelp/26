@@ -64,13 +64,6 @@ export function Hemicycle({ gov, other }: { gov: number; other: number }) {
           120 מושבים
         </span>
       </div>
-      <ChartLegend
-        entries={[
-          { kind: "seatGov", text: `מפלגות הממשלה היוצאת (ממשלה 37): ${gov} מושבים, סכום הממוצעים שלהן` },
-          ...(missing > 0 ? [{ kind: "seatMiss" as const, text: `מושבים שחסרים להן עד הרוב, ${MAJORITY}` }] : []),
-          { kind: "seatOther", text: missing > 0 ? "שאר הכנסת" : "כל השאר" },
-        ]}
-      />
     </figure>
   );
 }
