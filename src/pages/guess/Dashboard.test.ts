@@ -131,11 +131,11 @@ it("שורת הסיכום של המעבר: מספרים או אחוזים לפי
   const d: Dashboard = { participants: 10, open: true, publishedAt: null, aggregationId: null,
     matrix: { publishedAt: "", rows: { "מחל": { n: 10, cells: { likud: cell(6), shas: cell(2) } } } } };
   const num = renderToStaticMarkup(createElement(Matrix, { d, unit: "num" }));
-  expect(num).toContain("מצביעים עברו מפלגה מבחירות קודמות");
+  expect(num).toContain("מצביעים בבחירות קודמות עברו מפלגה");
   expect(num).not.toContain("נשארו באותה רשימה");
   expect(num).not.toContain("התפצלה");
   const pct = renderToStaticMarkup(createElement(Matrix, { d, unit: "pct" }));
-  expect(pct).toMatch(/<strong>\d+(\.\d+)?%<\/strong> מהמצביעים עברו מפלגה מבחירות קודמות/);
+  expect(pct).toMatch(/<strong>\d+(\.\d+)?%<\/strong> מהמצביעים בבחירות קודמות עברו מפלגה/);
 });
 
 it("גוש של חמש רשימות הממשלה בלי נעם אינו מוצג כגוש נפרד", () => {
