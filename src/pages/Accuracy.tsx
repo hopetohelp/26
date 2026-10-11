@@ -103,7 +103,6 @@ export default function Accuracy() {
         <p className="text-sm text-ink-soft mb-3">הכנסת ה-{c.knesset} ({c.label}) · {s.snapshot.length} מכונים · סך הפער {seatsFmt(s.gap)} מנדטים</p>
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
           <ChartWithTable
-            summary="עיגול ריק שחור = התוצאה הרשמית, נר כחול = הנמוך והגבוה בין הסקרים, עיגול מלא כתום = ממוצע הסקרים (0)."
             chart={<DeviationChart rows={s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n, values: r.values }))} />}
             table={
               <table className="text-sm w-full">
@@ -155,7 +154,7 @@ export default function Accuracy() {
           methodAnchor="accuracy"
         >
           <ChartWithTable
-            summary={`${all.length} סקרים, ${dateRange(first, c.date)}. העיגולים השחורים הריקים בקצה — התוצאה בפועל.`}
+            summary={`${all.length} סקרים, ${dateRange(first, c.date)}.`}
             chart={<TrendChart series={series} markers={markers} windowText={{ days: 7, label: "7 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
             table={
               <table className="text-sm w-full">

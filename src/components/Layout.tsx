@@ -5,7 +5,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
-import { dateLong } from "../lib/format";
+import { date } from "../lib/format";
 import { useMode, type ModeId } from "../lib/theme";
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
@@ -42,14 +42,12 @@ function Icon({ name }: { name: string }) {
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
 }
 
-/** תאריך הבחירות בשורה הקטנה: מלא כשיש מקום, מקוצר (27/10/26) בטלפון. "הבחירות" מבדיל את התאריך מהספירה לנעילת ההשערות במסך "הכנסת שלי" (9.10.2026); בטלפון המילה לקורא מסך בלבד, כדי שהשורה תיכנס. */
+/** תאריך הבחירות בשורה הקטנה: תמיד בתבנית היום/חודש (27/10), כמו כל תאריך באתר. "הבחירות" מבדיל את התאריך מהספירה לנעילת ההשערות במסך "הכנסת שלי" (9.10.2026); בטלפון המילה לקורא מסך בלבד, כדי שהשורה תיכנס. */
 function ElectionDate() {
-  const [y, m, d] = meta.electionDay.split("-");
   return (
     <span className="whitespace-nowrap">
       <span className="sr-only sm:not-sr-only">הבחירות </span>
-      <span className="hidden sm:inline">{dateLong(meta.electionDay)}</span>
-      <span className="sm:hidden" dir="ltr">{`${Number(d)}/${Number(m)}/${y.slice(2)}`}</span>
+      <span dir="ltr">{date(meta.electionDay)}</span>
     </span>
   );
 }

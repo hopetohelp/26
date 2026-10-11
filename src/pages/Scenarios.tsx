@@ -10,7 +10,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
 import { lists2026, listName, meta, results } from "../lib/data";
-import { date, dateLong, dateRange, num, rng, seatsFmt } from "../lib/format";
+import { date, dateRange, num, rng, seatsFmt } from "../lib/format";
 
 interface ListScenario {
   seats: number[];
@@ -67,7 +67,7 @@ const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 const edge = ids.filter((id) => sc.lists[id].pass > 0.005 && sc.lists[id].pass < 0.995);
 const k25 = results[results.length - 1];
 const wasted2022 = ((k25.valid - k25.lists.filter((l) => l.seats > 0).reduce((a, l) => a + l.votes, 0)) / k25.valid) * 100;
-const SOURCE = `${m.polls} סקרים של ${m.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
+const SOURCE = `${POLL_AVERAGE.polls} סקרים של ${POLL_AVERAGE.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
 
 function coverageRange() {
   const byCycle = new Map<string, number[]>();
@@ -76,7 +76,7 @@ function coverageRange() {
 }
 
 export default function Scenarios() {
-  const asOfText = `הסקרים עד ${dateLong(m.asof)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
+  const asOfText = `הסקרים עד ${date(POLL_AVERAGE.asOf)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
   const trendIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0).slice(0, 9);
   // באחוזים ולא במנדטים: שינוי של עשיריות האחוז אינו מזיז מנדט שלם, והקו היה נראה שטוח
   const series: Series[] = trendIds.map((id) => ({
@@ -93,7 +93,7 @@ export default function Scenarios() {
 
   return (
     <>
-      <Split title="תחזית ותרחישים" lead={`התחזית ליום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={dateLong(m.asof)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: dateLong(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: dateLong(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: dateLong(m.asof) }))]} />} secondary={<>
+      <Split title="תחזית ותרחישים" lead={`התחזית ליום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(POLL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(POLL_AVERAGE.asOf) }))]} />} secondary={<>
 
       <Card title="לכל רשימה">
         <Explained
@@ -104,7 +104,7 @@ export default function Scenarios() {
           methodAnchor="model"
         >
           <ChartWithTable
-            summary={`עיגול מלא כתום = ממוצע המודל · נר כחול = 80% מהתרחישים, העובי לפי כמה תרחישים נותנים כל ערך (בטבלה גם הממוצע והחציון של התרחישים). ${edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : ""}`}
+            summary={edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : undefined}
             chart={
               <Ranking home={HOME} />
             }
@@ -187,7 +187,7 @@ export default function Scenarios() {
           kind="תרחיש"
           source={`${SOURCE}; ההסכמים: ${meta.agreements2026.map((a) => `${listName(a.pair[0])}–${listName(a.pair[1])}`).join(" · ")}`}
           asOf={asOfText}
-          assumption="אותם קולות בדיוק, עם ההסכמים שדווחו ובלעדיהם. ההסכמים הרשמיים יפורסמו ב-19.10.2026."
+          assumption="אותם קולות בדיוק, עם ההסכמים שדווחו ובלעדיהם. ההסכמים הרשמיים יפורסמו ב-19/10."
           methodAnchor="agreements"
         >
           <p className="text-sm">
@@ -214,7 +214,7 @@ export default function Scenarios() {
         <Explained
           kind="סיכום סקרים"
           source={SOURCE}
-          asOf={`הסקרים עד ${dateLong(m.asof)}`}
+          asOf={`הסקרים עד ${date(POLL_AVERAGE.asOf)}`}
           assumption="בכל יום: הממוצע המוחלק אחרי תיקון אפקט הבית של כל מכון. באחוזים — כי שינוי של עשיריות האחוז אינו מזיז מנדט שלם."
           methodAnchor="model"
         >
@@ -253,7 +253,7 @@ export default function Scenarios() {
         <Explained
           kind="סיכום סקרים"
           source={SOURCE}
-          asOf={`הסקרים עד ${dateLong(m.asof)}`}
+          asOf={`הסקרים עד ${date(POLL_AVERAGE.asOf)}`}
           assumption="לכל מכון נאמד 'אפקט בית' — כמה הוא שונה בעקביות מהשאר. הממוצע מניח שסכום האפקטים הוא אפס, כלומר שהמכונים יחד אינם מוטים. זו הנחה, לא עובדה."
           methodAnchor="model"
         >
@@ -272,7 +272,7 @@ export default function Scenarios() {
               <tbody>
                 <tr className="border-b border-paper-line bg-accent-soft">
                   <th scope="row" className="py-2 pe-3 text-right">הממוצע (כל המכונים)</th>
-                  <td className="pe-3 tabular-nums">{m.polls}</td>
+                  <td className="pe-3 tabular-nums">{POLL_AVERAGE.polls}</td>
                   {houseIds.map((id) => (
                     <td key={id} className="pe-2 tabular-nums font-bold">{POLL_AVERAGE.seats[id]}</td>
                   ))}

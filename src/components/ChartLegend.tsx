@@ -1,4 +1,5 @@
-import { useId, useState, type ReactNode } from "react";
+import { createContext, useContext, useId, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Swatch, type MarkKind } from "./marks";
 
 /**
@@ -6,6 +7,21 @@ import { Swatch, type MarkKind } from "./marks";
  * רשימת הסימונים קבועה לכל גרף (`entries`). נר שעוביו משתנה מוסבר בשורה אחת בלבד (`rangeLine`), בלי פירוט הרמות (הכרעת בעלים 9.10.2026).
  * הצבעים והצורות מגיעים מאותם רכיבים של הגרפים (`Swatch`), כך שהמקרא לא יכול להיות שונה ממה שמצויר.
  */
+/**
+ * שורת בקרה אחת לכל גרף (הכרעת בעלים 11.10.2026): "מקרא", פקד הגרף (אם יש) ו"הצגה כטבלה" — תמיד בשורה אחת ממורכזת, בכפתורים באותו עיצוב.
+ * כשיש מקום אחד שורה; בחלון צר השורה יורדת, ותמיד ממורכזת. מקרא קיים רק בתוך כפתור "מקרא": אין הסבר סימונים בשום מקום אחר.
+ */
+export const BAR = "flex flex-wrap items-center justify-center gap-2";
+export const PILL = "inline-flex items-center justify-center gap-1.5 min-h-[34px] px-3.5 rounded-full bg-paper-card text-sm font-semibold text-ink ring-[1.5px] ring-inset";
+export const PILL_RING = "ring-ink/[.35]";
+export const PILL_ON = "ring-ink";
+
+/**
+ * `ChartWithTable` פותח שורת בקרה ומעמיד אותה כאן: מקרא בתוך הגרף "נשלח" אליה (פורטל), כך שהמקרא והצגה כטבלה באותה שורה
+ * והפאנל הפתוח מתחתיה. בלי הקשר כזה המקרא מצויר במקומו, בשורה משלו.
+ */
+export const BarSlots = createContext<{ row: HTMLElement | null; panel: HTMLElement | null } | null>(null);
+
 export type LegendKind = MarkKind | "line" | "lineList" | "dash" | "pass" | "seatGov" | "seatMiss" | "seatOther";
 
 export interface LegendEntry {
@@ -75,34 +91,48 @@ export default function ChartLegend({
 }: {
   entries: LegendEntry[];
   children?: ReactNode;
-  /** פקד של הגרף באותה שורה עם הכפתור, בקצה השני (למשל מתג קו/נרות) */
+  /** פקד של הגרף באותה שורה עם הכפתור, אחריו (למשל מתג קו/נרות) */
   action?: ReactNode;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const id = useId();
+  const slots = useContext(BarSlots);
+  const button = (
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-controls={open ? id : undefined}
+      onClick={() => setOpen((v) => !v)}
+      className={`${PILL} ${PILL_RING}`}
+    >
+      מקרא
+      <svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10" className={`transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 4.5l4 4 4-4" />
+      </svg>
+    </button>
+  );
+  const panel = open ? (
+    <LegendPanel id={id} entries={entries}>
+      {children}
+    </LegendPanel>
+  ) : null;
+  if (slots) {
+    if (!slots.row) return null;
+    return (
+      <>
+        {createPortal(<>{button}{action}</>, slots.row)}
+        {panel && slots.panel ? createPortal(panel, slots.panel) : null}
+      </>
+    );
+  }
   return (
     <div className={`my-1 ${className}`}>
-      <div className="flex items-center justify-between gap-3">
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={open ? id : undefined}
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex items-center gap-1.5 min-h-[34px] px-3.5 rounded-full bg-paper-card text-sm font-semibold text-ink ring-[1.5px] ring-inset ring-ink/[.35]"
-        >
-          מקרא
-          <svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10" className={`transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 4.5l4 4 4-4" />
-          </svg>
-        </button>
+      <div className={BAR}>
+        {button}
         {action}
       </div>
-      {open && (
-        <LegendPanel id={id} entries={entries}>
-          {children}
-        </LegendPanel>
-      )}
+      {panel}
     </div>
   );
 }

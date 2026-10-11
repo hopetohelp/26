@@ -8,6 +8,7 @@ import DumbbellChart from "./dumbbellChart";
 import { TrendChart } from "./charts";
 import { GovTrend, Hemicycle, PollRanges, Ranking } from "./homeCharts";
 import { SeatsStats } from "../pages/guess/Dashboard";
+import { ChartBar, ChartWithTable } from "./ui";
 import { HOME } from "../lib/homeData";
 import type { DevInput } from "../lib/deviation";
 
@@ -83,5 +84,45 @@ describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכ
       expect(src, f).toContain("rangeLine(");
       expect(src, f).not.toContain("thickness");
     }
+  });
+});
+
+describe("שורת בקרה אחת: מקרא והצגה כטבלה (הכרעת בעלים 11.10.2026)", () => {
+  const entries = [{ kind: "mean" as const, text: "ממוצע בדיקה" }];
+  const row = (html: string) => html.match(/<div class="flex flex-wrap items-center justify-center gap-2[^"]*">/)?.index ?? -1;
+
+  it("ChartBar: מקרא, פקד היחידות והצגה כטבלה באותה שורה ממורכזת, בסדר הזה, ובאותו עיצוב כפתור", () => {
+    const html = renderToStaticMarkup(createElement(ChartBar, { legend: entries, asTable: false, onAsTable: () => {} }, createElement("i", { id: "unit" })));
+    expect(row(html)).toBeGreaterThanOrEqual(0);
+    expect(html.indexOf("מקרא")).toBeLessThan(html.indexOf('id="unit"'));
+    expect(html.indexOf('id="unit"')).toBeLessThan(html.indexOf("הצגה כטבלה"));
+    const pills = [...html.matchAll(/<button[^>]*class="([^"]*)"/g)].map((m) => m[1]);
+    expect(pills).toHaveLength(2);
+    for (const c of pills) expect(c).toContain("min-h-[34px] px-3.5 rounded-full");
+    expect(html).not.toContain("ממוצע בדיקה"); // המקרא סגור
+  });
+  it("ChartBar בתצוגת טבלה: אין 'מקרא' (אין סימונים), ויש 'הצגה כגרף' עם פקד היחידות", () => {
+    const html = renderToStaticMarkup(createElement(ChartBar, { legend: entries, asTable: true, onAsTable: () => {} }, createElement("i", { id: "unit" })));
+    expect(html).not.toContain("מקרא");
+    expect(html).toContain("הצגה כגרף");
+    expect(html).toContain('id="unit"');
+  });
+  it("ChartWithTable עצמאי: כפתור הצגה כטבלה בשורה ממורכזת מעל הגרף", () => {
+    const html = renderToStaticMarkup(createElement(ChartWithTable, { chart: createElement("p", { id: "chart" }), table: createElement("p", { id: "table" }), summary: "תיאור" }));
+    expect(row(html)).toBeGreaterThanOrEqual(0);
+    expect(html.indexOf("הצגה כטבלה")).toBeLessThan(html.indexOf('id="chart"'));
+    expect(html).not.toContain('id="table"');
+  });
+  it("ChartWithTable נשלט מבחוץ (asTable): אין בו כפתור, והתצוגה לפי המתג של המסך", () => {
+    const chartView = renderToStaticMarkup(createElement(ChartWithTable, { asTable: false, chart: createElement("p", { id: "chart" }), table: createElement("p", { id: "table" }) }));
+    const tableView = renderToStaticMarkup(createElement(ChartWithTable, { asTable: true, chart: createElement("p", { id: "chart" }), table: createElement("p", { id: "table" }) }));
+    expect(chartView).not.toContain("הצגה כ");
+    expect(chartView).toContain('id="chart"');
+    expect(tableView).toContain('id="table"');
+    expect(tableView).not.toContain('id="chart"');
+  });
+  it("מה השתנה: עם legend={false} אין בגרף כפתור מקרא משלו (המקרא היחיד במסך הוא בשורת הבקרה)", () => {
+    const html = renderToStaticMarkup(createElement(DumbbellChart, { rows, legend: false }));
+    expect(html).not.toContain("מקרא");
   });
 });

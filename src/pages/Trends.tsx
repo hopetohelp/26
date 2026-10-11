@@ -3,16 +3,17 @@ import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
 import { Segmented } from "../components/Choice";
 import Explained from "../components/Explained";
+import { POLL_AVERAGE } from "../lib/sources";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lastPollDate, lists2026, listName, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
-import { date, dateLong, dateRange, seatsFmt, signed } from "../lib/format";
+import { lists2026, listName, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { date, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
 const LINEAGE: Record<string, { parts: string[]; since: string; note: string }> = {
-  together: { parts: ["yesh_atid", "bennett"], since: "2026-04-27", note: "לפני 27.4.2026: יש עתיד + בנט 2026" },
-  democrats: { parts: ["labor", "meretz"], since: "2024-06-30", note: "לפני 30.6.2024: העבודה + מרצ" },
-  joint: { parts: ["hadash_taal", "balad"], since: "2026-06-10", note: 'לפני 10.6.2026: חד"ש-תע"ל + בל"ד' },
+  together: { parts: ["yesh_atid", "bennett"], since: "2026-04-27", note: "לפני 27/4: יש עתיד + בנט 2026" },
+  democrats: { parts: ["labor", "meretz"], since: "2024-06-30", note: "לפני 30/6/2024: העבודה + מרצ" },
+  joint: { parts: ["hadash_taal", "balad"], since: "2026-06-10", note: 'לפני 10/6: חד"ש-תע"ל + בל"ד' },
 };
 
 function withLineage(ps: Poll[]): Poll[] {
@@ -41,7 +42,7 @@ const GOV_LISTS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
 
 export default function Trends() {
-  const to = lastPollDate();
+  const to = POLL_AVERAGE.asOf;
   const [period, setPeriod] = useState<PeriodId>("2026");
   const [who, setWho] = useState("");
   const [ids, setIds] = useState<string[]>(DEFAULT_IDS);
@@ -156,7 +157,7 @@ export default function Trends() {
               <Explained
                 kind="סיכום סקרים"
                 source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
-                asOf={`הסקרים עד ${dateLong(to)}`}
+                asOf={`הסקרים עד ${date(to)}`}
                 assumption={
                   who
                     ? "מכון בודד: חלון של 45 יום, כדי שיהיו מספיק סקרים. הנר הוא הנמוך והגבוה בין הסקרים של המכון בחלון."

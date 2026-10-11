@@ -25,6 +25,16 @@ describe("dumbbellAxis", () => {
   });
 });
 
+describe("dumbbellAxis במנדטים", () => {
+  it("לפחות 10, בצעד 5 עד 20", () => {
+    expect(dumbbellAxis([row(3, 4)], "seats")).toEqual({ max: 10, ticks: [0, 5, 10] });
+  });
+  it("מעל 20 צעד 10, ומעל 60 צעד 20", () => {
+    expect(dumbbellAxis([row(23, 27)], "seats")).toEqual({ max: 30, ticks: [0, 10, 20, 30] });
+    expect(dumbbellAxis([row(23, 67)], "seats")).toEqual({ max: 80, ticks: [0, 20, 40, 60, 80] });
+  });
+});
+
 describe("change", () => {
   it("מעוגל לעשירית ועם סימן נכון", () => {
     expect(change({ before: 9.1, now: 18.2 })).toBe(9.1);
@@ -45,6 +55,17 @@ describe("על הנתונים האמיתיים", () => {
         expect(r.range ? r.range[1] : 0).toBeLessThanOrEqual(max);
       }
     }
+  });
+});
+
+describe("dumbbellSegs: התפלגות מנדטים שלמים", () => {
+  it("מערך ספירות לפי מנדט נחתך בדיוק לטווח 80%", () => {
+    // 20 תרחישים: 2 עם 20 מנדטים, 6 עם 21, 8 עם 22, 3 עם 23, 1 עם 24
+    const counts = [...Array(20).fill(0), 2, 6, 8, 3, 1];
+    const segs = dumbbellSegs({ hist: counts, range: [21, 23] });
+    expect(segs[0].from).toBe(21);
+    expect(segs[segs.length - 1].to).toBe(23);
+    expect(segs.every((g) => g.from >= 21 && g.to <= 23)).toBe(true);
   });
 });
 

@@ -3,13 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import { Card, Note, PageTitle } from "../components/ui";
 import { FeedbackSheet } from "../components/Feedback";
 import { FEEDBACK_URL, getThread, mergeSavedThreads, replyToThread, saveThread, savedThreads, threadLink, type Thread } from "../lib/feedback";
-import { dateLong } from "../lib/format";
+import { date } from "../lib/format";
 
 const TOPIC: Record<string, string> = { data: "נתון שגוי", idea: "רעיון", design: "עיצוב ונוחות", other: "אחר" };
 const STATUS: Record<Thread["status"], string> = { new: "ממתינה לתשובה", answered: "נענתה", closed: "נסגרה" };
 const when = (iso: string) => {
   const d = new Date(iso);
-  return `${dateLong(iso)}, ${d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" })}`;
+  return `${date(iso)}, ${d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" })}`;
 };
 
 /** "ההערות שלי": רשימת הקישורים שנשמרו בדפדפן, או שיחה אחת לפי הקישור האישי */

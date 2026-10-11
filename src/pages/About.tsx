@@ -1,6 +1,6 @@
 import { Card, PageTitle } from "../components/ui";
 import { meta } from "../lib/data";
-import { dateLong } from "../lib/format";
+import { date } from "../lib/format";
 
 export default function About() {
   return (
@@ -15,7 +15,7 @@ export default function About() {
           {/* לשעבר בסרגל התחתון של כל עמוד (אוחד לכאן בהכרעת בעלים 8.10.2026) */}
           <p>
             <strong>האתר אינו עורך סקרים.</strong> הממוצעים, הטווחים והתרחישים הם ניתוח של סקרים שכבר פורסמו, עם פרטי כל סקר ומקורו.
-            תוצאות האמת — מקובצי ועדת הבחירות המרכזית. הנתונים נכונים ל-{dateLong(meta.dataAsOf)}.
+            תוצאות האמת — מקובצי ועדת הבחירות המרכזית. הנתונים נכונים ל-{date(meta.dataAsOf)}.
           </p>
           <p>
             הצבעים באתר ניטרליים במכוון ואינם צבעי המפלגות, ואין בו סמלי מפלגות. "מפלגות הממשלה היוצאת" היא הגדרה עובדתית לפי הרכב הממשלה

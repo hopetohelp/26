@@ -5,10 +5,9 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import { Segmented } from "../components/Choice";
 import { PollRanges, Ranking } from "../components/homeCharts";
-import modelFile from "../data/model.json";
 import { Badge, Fold, Note, Split } from "../components/ui";
-import { lastPollDate, lists2026, listName, mean, meta, passesInMost, pollsterLabel, seatsIn, summarize, type Poll } from "../lib/data";
-import { date, dateLong, dateRange, num, rng, seatsFmt } from "../lib/format";
+import { lists2026, listName, mean, meta, passesInMost, pollsterLabel, seatsIn, summarize, type Poll } from "../lib/data";
+import { date, dateRange, num, rng, seatsFmt } from "../lib/format";
 import { HOME, LATEST_POLLS } from "../lib/homeData";
 
 const WINDOW_DAYS = 14;
@@ -24,18 +23,10 @@ function govSum(p: Poll): number | undefined {
   return s;
 }
 
-interface ModelLite {
-  asof: string;
-  polls: number;
-  pollsters: number;
-  central: { seats: Record<string, number> };
-}
-const model = modelFile as unknown as ModelLite;
-
 type BlocBasis = "model" | "polls";
 
 export default function Today() {
-  const asOf = lastPollDate();
+  const asOf = POLL_AVERAGE.asOf;
   const latest = LATEST_POLLS;
   const ids = lists2026.map((l) => l.id);
   const summary = summarize(latest, ids);
@@ -46,7 +37,7 @@ export default function Today() {
     .map((p) => ({ p, v: seatsIn(p, "likud") }))
     .filter((x): x is { p: Poll; v: number } => typeof x.v === "number")
     .sort((a, b) => b.v - a.v);
-  const asOfText = `הסקרים שפורסמו עד ${dateLong(asOf)}`;
+  const asOfText = `הסקרים שפורסמו עד ${date(asOf)}`;
   // מופע אחד של "הגושים שלי" (החלטה 10, 9.10.2026): מעבר בין ממוצע המודל לבין כל סקר אחרון
   const [basis, setBasis] = useState<BlocBasis>("model");
 
@@ -55,7 +46,7 @@ export default function Today() {
       <Split
         title="המצב היום"
         secondaryFirst
-        lead={`${model.polls} סקרים של ${model.pollsters} מכונים, עד ${dateLong(model.asof)}.`}
+        lead={`${POLL_AVERAGE.polls} סקרים של ${POLL_AVERAGE.pollsters} מכונים, עד ${date(POLL_AVERAGE.asOf)}.`}
         primary={
           <>
             <Segmented
@@ -65,13 +56,13 @@ export default function Today() {
               options={[{ id: "model", label: "ממוצע המודל" }, { id: "polls", label: "כל סקר אחרון" }]}
             />
             {basis === "model" ? (
-              <PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={POLL_AVERAGE.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={dateLong(model.asof)} />
+              <PersonalBlocs title="הגושים שלי לפי ממוצע הסקרים" values={POLL_AVERAGE.seats} source="מנדטים לפי ממוצע המודל, זהים לטבלת המפלגות" asOf={date(POLL_AVERAGE.asOf)} />
             ) : (
               <PersonalBlocs
                 title="הגושים שלי בכל סקר אחרון"
                 source="הסקרים האחרונים של המכונים, כל מקור בנפרד"
-                asOf={dateLong(model.asof)}
-                datasets={latest.map((p) => ({ poll: p, values: Object.fromEntries(ids.map((id) => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: dateLong(p.end) }))}
+                asOf={date(POLL_AVERAGE.asOf)}
+                datasets={latest.map((p) => ({ poll: p, values: Object.fromEntries(ids.map((id) => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: date(p.end) }))}
               />
             )}
           </>
@@ -82,8 +73,8 @@ export default function Today() {
               <h2 className="text-xl font-display leading-tight mb-3">כל הרשימות</h2>
               <Explained
                 kind="תרחיש"
-                source={`${model.polls} סקרים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-${num(20000)} תרחישים`}
-                asOf={`הסקרים עד ${dateLong(model.asof)}`}
+                source={`${POLL_AVERAGE.polls} סקרים, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-${num(20000)} תרחישים`}
+                asOf={`הסקרים עד ${date(POLL_AVERAGE.asOf)}`}
                 assumption="מנדטים לפי הממוצע של המודל; הטווח והסטטוס — מתוך התרחישים ליום הבחירות. לא תחזית ולא סיכוי."
                 methodAnchor="model"
               >
@@ -98,7 +89,7 @@ export default function Today() {
 
             <Fold title="לפי המכונים: הסקר האחרון של כל אחד">
               <p className="text-sm text-ink-soft mb-3">
-                {`הסקר האחרון של כל מכון ב-${WINDOW_DAYS} הימים שעד ${dateLong(asOf)} — ${latest.length} מכונים. הממוצע בין המכונים, והטווח מהנמוך לגבוה.`}
+                {`הסקר האחרון של כל מכון ב-${WINDOW_DAYS} הימים שעד ${date(asOf)} — ${latest.length} מכונים. הממוצע בין המכונים, והטווח מהנמוך לגבוה.`}
               </p>
               <Explained
                 kind="סיכום סקרים"

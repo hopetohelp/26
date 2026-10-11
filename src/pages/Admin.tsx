@@ -2,6 +2,7 @@ import { FEEDBACK_TOPICS, conversationTopic, topicLabel } from "../lib/feedbackT
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
+import { dateTime } from "../lib/format";
 import { getToken } from "../lib/crowdSession";
 import { Chips, Segmented } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
@@ -19,7 +20,7 @@ type Day = { day: string; visits: number; users: number; guessUsers?: number; co
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
 type Data = { accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
-const when = (s: string) => new Date(s).toLocaleString("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
+const when = (s: string) => dateTime(s);
 
 function Conversation({ title, items, waiting, onReply }: { title: string; items: Item[]; waiting: boolean; onReply: (text: string) => Promise<boolean> }) {
   const [open, setOpen] = useState(waiting);
@@ -132,7 +133,7 @@ export default function Admin() {
                 <tbody>{data.days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
               </table>
             </div>
-            <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "מייל מאומת (בקישור)" = חשבונות שאימתו את המייל דרך הקישור שנשלח אליהם, בלי אלה ש-Google אימת; "חשבון Google" = חשבונות שנכנסו עם Google. "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8.10.2026), ולא אנשים.</p>
+            <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "מייל מאומת (בקישור)" = חשבונות שאימתו את המייל דרך הקישור שנשלח אליהם, בלי אלה ש-Google אימת; "חשבון Google" = חשבונות שנכנסו עם Google. "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8/10), ולא אנשים.</p>
           </section>
 
           <AdminGuesses api={api} />
