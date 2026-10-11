@@ -13,6 +13,8 @@ export const date = (iso: string) => {
   const p = Object.fromEntries(df.formatToParts(new Date(iso.length === 10 ? iso + "T12:00:00Z" : iso)).map((x) => [x.type, x.value]));
   return `${Number(p.day)}/${Number(p.month)}${Number(p.year) === SITE_YEAR ? "" : `/${p.year}`}`;
 };
+/** התאריך של היום (11/10), בשעון ישראל, בכל כניסה (הכותרת "תמונת מצב" בבית) */
+export const today = () => date(new Date().toISOString());
 /** שעה בשעון ישראל (14:05) */
 export const time = (iso: string) => tf.format(new Date(iso));
 /** תאריך ושעה: 8/10, 14:05 */
