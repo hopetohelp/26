@@ -51,8 +51,8 @@
   --pos: 22 120 70;
   --neg: 190 40 50;
   --mk-range: 52 105 214;
-  --mk-mean: 240 124 0;
-  --mk-result: var(--ink);
+  --mk-mean: 0 150 70;
+  --mk-result: 220 0 30;
   --frame: 255 255 255;
   --frame-ink: 19 23 29;
   --frame-soft: 74 85 99;
@@ -85,8 +85,8 @@
   --pos: 100 205 150;
   --neg: 245 125 125;
   --mk-range: 106 150 235;
-  --mk-mean: 255 158 60;
-  --mk-result: var(--ink);
+  --mk-mean: 60 210 120;
+  --mk-result: 255 70 80;
   --frame: 26 29 35;
   --frame-ink: 236 239 243;
   --frame-soft: 176 184 196;
@@ -159,7 +159,7 @@
   top: 50%;
   translate: 0 -50%;
   display: block;
-  height: 16px;
+  height: 15px;
   overflow: visible;
 }
 /* אנכי (בגרפים עם ציר זמן): הרוחב קבוע והגובה לפי הציר */
@@ -167,19 +167,19 @@
   position: absolute;
   translate: -50% 0;
   display: block;
-  width: 16px;
+  width: 15px;
   overflow: visible;
 }
 .mk-prof-sw {
   width: 2.6rem;
-  height: 16px;
+  height: 15px;
   overflow: visible;
 }
 /* נר מרובע: קופסה חלולה (מסגרת בלבד), ורמה 1 קו מלא; המסגרת באותו עובי בכל קנה מידה */
 .mk-sq {
   fill: none;
   stroke: rgb(var(--mk-range));
-  stroke-width: 1.5px;
+  stroke-width: 3px;
   stroke-linejoin: miter;
   vector-effect: non-scaling-stroke;
 }
@@ -188,7 +188,7 @@
 }
 /* שטח הציור של מסלול אופקי: מרוחק מכל קצה, כדי שעיגול בקצה הציר לא יחרוג אל עמודת המספרים או הטקסט (`MARK_PAD`) */
 :root {
-  --mk-pad: 14px;
+  --mk-pad: 13.5px;
 }
 .mk-plot {
   position: absolute;
@@ -204,18 +204,18 @@
   border: 2px solid rgb(var(--ink));
   background: rgb(var(--mk-bg, var(--paper)));
 }
-/* ממוצע ותוצאה: קוטר 22, גדול מהנר העבה (16) */
+/* ממוצע ותוצאה (הכרעת בעלים 11.10.2026): קוטר 21, קו 4, פנים שקוף — רואים את הנר ואת העיגול השני מבעד; גדולים מהנר העבה (15) */
 .mk-mean {
-  width: 22px;
-  height: 22px;
+  width: 21px;
+  height: 21px;
   border-radius: 50%;
-  background: rgb(var(--mk-mean));
+  border: 4px solid rgb(var(--mk-mean));
 }
 .mk-ring {
-  width: 22px;
-  height: 22px;
+  width: 21px;
+  height: 21px;
   border-radius: 50%;
-  border: 5px solid rgb(var(--mk-result));
+  border: 4px solid rgb(var(--mk-result));
 }
 /* עיגול מושב חסר (עד הרוב) בלוח המושבים: אדום בהיר */
 .seat-miss {

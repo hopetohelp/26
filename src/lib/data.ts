@@ -174,11 +174,11 @@ export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
 /** ממוצע מתגלגל של מנדטים — חלון של `days` ימים, נקודה כל `step` ימים */
 /**
  * נקודת זמן בכל האתר (הכרעת בעלים 11.10.2026): נקודה כל 3 ימים, אחורה מהתאריך האחרון, ובה הסקר האחרון של כל מכון (מכון + מזמין)
- * מ-7 הימים שמסתיימים בה. כך כל מכון נספר פעם אחת, וכמעט כל המכונים בכל נקודה.
+ * מ-14 הימים שמסתיימים בה. כך כל מכון נספר פעם אחת, וכמעט כל המכונים בכל נקודה.
  */
 export const POINT_DAYS = 3;
-/** כל נקודה: הסקר האחרון של כל מכון בשבוע שמסתיים בה (הכרעת בעלים 11.10.2026, דרך הביניים) */
-export const POINT_WINDOW = 7;
+/** כל נקודה: הסקר האחרון של כל מכון ב-14 הימים שמסתיימים בה (הכרעת בעלים 11.10.2026: 14 ימים) */
+export const POINT_WINDOW = 14;
 export function bucketLatest<T>(source: T[], endOf: (p: T) => string, keyOf: (p: T) => string, t: number, days = POINT_WINDOW): T[] {
   const map = new Map<string, T>();
   for (const p of source) {

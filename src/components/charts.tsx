@@ -1,6 +1,6 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { colorOf } from "../lib/colors";
-import { CANDLE_PX, levelSegs, smoothPath, squarePath, squareRuns, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
+import { CANDLE_PX, candleProfiles, smoothPath, squarePath, squareRuns, sparseIndices, SVG_MARKS, valueSegs, type Seg } from "../lib/chartLanguage";
 import { date, rng, seatsFmt } from "../lib/format";
 import { Segmented } from "./Choice";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
@@ -108,13 +108,13 @@ export function TrendChart({
     () => (canCandle ? series.map((s) => ({ s, pts: windows(s.points.filter((p) => p.lo !== undefined && p.hi !== undefined), windowText!.days * DAY) })) : []),
     [series, canCandle, windowText],
   );
-  // נר של חלון: קטעים לפי כמה סקרים נתנו כל ערך, ועובי כל קטע ביחס לקטע העמוס ביותר באותו נר
+  // נר של חלון: לפי אחוזונים של הסקרים, ושני אזורים כשיש שתי קבוצות נפרדות (`candleProfile`)
   const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
   const profiles = useMemo(() => {
-    const items: { key: string; segs: Seg[] }[] = [];
-    if (view === "line") series.forEach((s) => { const last = s.points[s.points.length - 1]; if (last && !s.dashed) items.push({ key: `${s.id}|${last.t}`, segs: segsOf(last) }); });
-    else candles.forEach(({ s, pts }) => pts.forEach((p) => items.push({ key: `${s.id}|${p.t}`, segs: segsOf(p) })));
-    const lv = levelSegs(items.map((it) => it.segs));
+    const items: { key: string; p: TrendPoint }[] = [];
+    if (view === "line") series.forEach((s) => { const last = s.points[s.points.length - 1]; if (last && !s.dashed) items.push({ key: `${s.id}|${last.t}`, p: last }); });
+    else candles.forEach(({ s, pts }) => pts.forEach((p) => items.push({ key: `${s.id}|${p.t}`, p })));
+    const lv = candleProfiles(items.map((it) => segsOf(it.p)));
     return new Map(items.map((it, k) => [it.key, lv[k]] as const));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, series, candles]);
@@ -255,7 +255,7 @@ export function TrendChart({
                     <circle key={k} cx={pts[k].x} cy={pts[k].y} r={SVG_MARKS.smallR} strokeWidth={SVG_MARKS.smallStroke} stroke={ink} style={markFill} />
                   ))}
                   {!s.dashed && last && profileShape(`${s.id}|${last.t}`, x(last.t), last.estimated ? 0.45 : 0.9)}
-                  {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR} fill="rgb(var(--mk-mean))" />}
+                  {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.ringR} fill="none" stroke="rgb(var(--mk-mean))" strokeWidth={SVG_MARKS.ringStroke} />}
                   {last && last.estimated && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR + 3} fill="none" stroke="rgb(var(--mk-mean))" strokeDasharray="3 3" />}
                 </g>
               );
@@ -266,7 +266,7 @@ export function TrendChart({
                 {pts.map((p) => (
                   <g key={p.t}>
                     {profileShape(`${s.id}|${p.t}`, x(p.t), p.estimated ? 0.45 : 0.85)}
-                    <circle cx={x(p.t)} cy={y(p.v)} r={meanR} fill="rgb(var(--mk-mean))" />
+                    <circle cx={x(p.t)} cy={y(p.v)} r={meanR - Math.min(SVG_MARKS.ringStroke, meanR * 0.45) / 2} fill="none" stroke="rgb(var(--mk-mean))" strokeWidth={Math.min(SVG_MARKS.ringStroke, meanR * 0.45)} />
                   </g>
                 ))}
               </g>

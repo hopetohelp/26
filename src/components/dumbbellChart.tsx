@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { levelSegs, type LSeg } from "../lib/chartLanguage";
+import { candleProfiles, type LSeg } from "../lib/chartLanguage";
 import { change, diffText, dumbbellAxis, dumbbellSegs, r1, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
 import { seatsFmt, signed } from "../lib/format";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
@@ -89,7 +89,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
  */
 export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode }) {
   const { min, max, ticks } = dumbbellAxis(rows, unit);
-  const levels = levelSegs(rows.map(dumbbellSegs));
+  const levels = candleProfiles(rows.map(dumbbellSegs));
   return (
     <div>
       {legend && <ChartLegend entries={DUMBBELL_LEGEND} />}

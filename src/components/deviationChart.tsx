@@ -1,6 +1,6 @@
 import { rng, signed } from "../lib/format";
 import { deviation, type DevInput, type DevRow } from "../lib/deviation";
-import { levelSegs, type LSeg } from "../lib/chartLanguage";
+import { candleProfiles, type LSeg } from "../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "./ChartLegend";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 
@@ -55,7 +55,7 @@ function Row({ r, bound, lsegs }: { r: DevRow; bound: number; lsegs: LSeg[] }) {
 
 export default function DeviationChart({ rows }: { rows: DevInput[] }) {
   const { outside, inside, notAsked, bound } = deviation(rows);
-  const levels = new Map(levelSegs([...outside, ...inside].map((r) => r.segs)).map((l, i) => [[...outside, ...inside][i].id, l] as const));
+  const levels = new Map(candleProfiles([...outside, ...inside].map((r) => r.segs)).map((l, i) => [[...outside, ...inside][i].id, l] as const));
   const ticks = devTicks(bound);
   const x = (v: number) => ((v + bound) / (2 * bound)) * 100;
   return (

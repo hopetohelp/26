@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, valueSegs, type LSeg, type Seg } from "./chartLanguage";
+import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, candleProfile, valueSegs, type LSeg, type Seg } from "./chartLanguage";
 
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
     expect(Object.keys(CANDLE_PX)).toEqual(["1", "3", "5"]);
-    expect(CANDLE_PX).toEqual({ 1: 4, 3: 10, 5: 16 });
+    expect(CANDLE_PX).toEqual({ 1: 3, 3: 9, 5: 15 });
   });
   it("שטח הציור מרוחק מקצה המסלול מעבר לרדיוס העיגול, והערך זהה ב-CSS", () => {
     expect(MARK_PAD).toBeGreaterThan(MARK_PX / 2);
@@ -13,7 +13,7 @@ describe("עובי הנר ומידות הסימנים", () => {
     expect(css).toContain(`--mk-pad: ${MARK_PAD}px;`);
   });
   it("עיגול הממוצע ועיגול התוצאה בקוטר 22, גדולים מהנר העבה", () => {
-    expect(MARK_PX).toBe(22);
+    expect(MARK_PX).toBe(21);
     expect(MARK_PX).toBeGreaterThan(CANDLE_PX[5]);
     expect(SVG_MARKS.meanR * 2).toBe(MARK_PX);
     expect((SVG_MARKS.ringR + SVG_MARKS.ringStroke / 2) * 2).toBe(MARK_PX);
@@ -142,7 +142,7 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
   it("רמה 1 קו מלא (4), רמות 3 ו-5 קופסה חלולה (10 ו-16)", () => {
     expect(runs.map((r) => r.filled)).toEqual([true, false, false, false, true]);
-    expect(runs.map((r) => r.half * 2)).toEqual([4, 10, 16, 10, 4]);
+    expect(runs.map((r) => r.half * 2)).toEqual([3, 9, 15, 9, 3]);
   });
   it("אין רמת ביניים: כל קטע באחד משלושת הגדלים", () => {
     runs.forEach((r) => expect(Object.values(CANDLE_PX)).toContain(r.half * 2));
@@ -168,9 +168,41 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
   it("בלי קטעים: ריק; קטע בודד: קופסה אחת", () => {
     expect(squareRuns([], map)).toEqual([]);
-    expect(squareRuns([{ from: 0, to: 2, level: 5 }], map)).toEqual([{ a: 0, b: 200, half: 8, filled: false }]);
+    expect(squareRuns([{ from: 0, to: 2, level: 5 }], map)).toEqual([{ a: 0, b: 200, half: 7.5, filled: false }]);
   });
   it("כל הקטעים דקים: קו מלא אחד", () => {
-    expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 2, filled: true }]);
+    expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 1.5, filled: true }]);
+  });
+});
+
+describe("candleProfile: אחוזונים, ושני אזורים לשתי קבוצות (הכרעת בעלים 11.10.2026)", () => {
+  const vals = (xs: number[]) => candleProfile(valueSegs(xs));
+  it("דק 9%, בינוני 27%, עבה 28% באמצע — בסדר הזה, מהנמוך עד הגבוה", () => {
+    const segs = vals([46, 47, 47, 48, 49, 49, 50, 51, 52, 53]);
+    expect(segs.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
+    expect(segs[0].from).toBe(46);
+    expect(segs[segs.length - 1].to).toBe(53);
+    for (let i = 1; i < segs.length; i++) expect(segs[i].from).toBeCloseTo(segs[i - 1].to, 9);
+  });
+  it("שתי קבוצות של לפחות 25% עם פער ריק ⇐ שני נרות מחוברים בקו דק", () => {
+    const segs = vals([45, 46, 46, 47, 47, 60, 61, 61, 62]);
+    const thick = segs.filter((g) => g.level === 5);
+    expect(thick).toHaveLength(2);
+    expect(thick[0].to).toBeLessThan(50);
+    expect(thick[1].from).toBeGreaterThan(55);
+  });
+  it("לכל היותר שני אזורים, גם כשיש שלוש קבוצות", () => {
+    expect(vals([40, 41, 41, 50, 51, 51, 60, 61, 61]).filter((g) => g.level === 5).length).toBeLessThanOrEqual(2);
+  });
+  it("סקר חריג אחד (פחות מ-25%) אינו קבוצה: נר אחד עם קצה דק ארוך", () => {
+    const segs = vals([45, 46, 46, 47, 47, 48, 48, 49, 64]);
+    expect(segs.filter((g) => g.level === 5)).toHaveLength(1);
+    expect(segs[segs.length - 1]).toMatchObject({ to: 64, level: 1 });
+  });
+  it("ערך יחיד — נר זעיר סביב הערך, עם ליבה עבה", () => {
+    const segs = vals([50]);
+    expect(segs.some((g) => g.level === 5)).toBe(true);
+    expect(segs[0].from).toBeGreaterThan(49.5);
+    expect(segs[segs.length - 1].to).toBeLessThan(50.5);
   });
 });

@@ -1,25 +1,25 @@
 /**
  * שפת הציור האחידה של כל הגרפים (הכרעת בעלים 9.10.2026). ארבעה סימנים, וכל אחד משמעותו אחת בכל האתר:
  * - **טווח** = נר: פס מהנמוך אל הגבוה, **שעוביו משתנה לאורכו** לפי כמות הנתונים בכל קטע: עבה היכן שרוב הנתונים, דק בקצוות.
- *   העובי בשלוש רמות **ביחס לקטע העמוס ביותר באותו נר** (כל נר בנפרד; הכרעת בעלים 9.10.2026, אחרי ניסיון של "ביחס לכל הגרף"): מתחת לשליש רמה 1 (דק, 4 פיקסלים), משליש רמה 3 (בינוני, 10), מ-⅔ רמה 5 (עבה, 16). (הכרעת בעלים 9.10.2026; היה 3, 10, 18.)
+ *   העובי בשלוש רמות **ביחס לקטע העמוס ביותר באותו נר** (כל נר בנפרד; הכרעת בעלים 9.10.2026, אחרי ניסיון של "ביחס לכל הגרף"): מתחת לשליש רמה 1 (דק, 3 פיקסלים; היה 4 עד 11.10.2026), משליש רמה 3 (בינוני, 10), מ-⅔ רמה 5 (עבה, 16). (הכרעת בעלים 9.10.2026; היה 3, 10, 18.)
  *   (הרמות הן 1, 3 ו-5 כדי לשמור את שמות הרמות מההכרעה; רמות 2 ו-4 בוטלו, 9.10.2026.)
  *   הנר **מרובע** (כמו נר יפני; הכרעת בעלים 9.10.2026): רמה 1 קו מלא, ורמות 3 ו-5 קופסה סגורה וחלולה (`squareRuns`, `squarePath`).
  *   דוגמה (הבעלים): נר אחד בגרף, 20 משתתפים בין 28 ל-30, 8 בין 26 ל-32, 2 בין 24 ל-34 ⇐ באמצע 5, מהצדדים 3, ובקצוות 1.
  *   כל נר מראה את הצורה שלו: עבה היכן שרוב הנתונים בו, דק בקצוות. אפשר גם ביחס לכל הגרף (`levelSegs(…, "chart")`, כמו נרות ווליום; היה ברירת המחדל זמן קצר ב-9.10.2026 ובוטל).
  *   הנר נבנה מקטעים (`Seg`): מהתפלגות של מספרים שלמים (`intSegs`), מרשימת ערכים (`valueSegs`), מתאים רציפים (`binSegs`) או מרבעונים (`quantileSegs`).
- * - **ממוצע** = עיגול מלא כתום בקוטר 22, **גדול מהנר העבה** (`MARK_PX`; הכרעת בעלים 9.10.2026).
+ * - **ממוצע** = עיגול ריק ירוק בקוטר 22 (הכרעת בעלים 11.10.2026; היה מלא כתום), **גדול מהנר העבה** (`MARK_PX`; הכרעת בעלים 9.10.2026).
  * - **תוצאה (מציאות)** = עיגול ריק שחור בקוטר חיצוני 22, גדול מהנר העבה. גם ממוצע המשתתפים בסקר האתר (שאינו סקר) מצויר כך.
  * - **סמן על קו** = עיגול קטן ריק (עובי 2). גרף מגמה הוא תמיד קו, עם סמנים כאלה.
- * - צבע לכל סימן (הכרעת בעלים 9.10.2026): טווח כחול, סמן על קו שחור, ממוצע כתום, תוצאה שחורה (`--ink`: שחור בבהיר ובהיר בכהה). טוקנים `--mk-*` ב-`src/index.css`; בלי קו לבן מסביב לסימנים.
+ * - צבע לכל סימן (הכרעת בעלים 9.10.2026): טווח כחול, סמן על קו שחור, ממוצע ירוק, תוצאה אדומה חזקה (עיגולים ריקים; הכרעת בעלים 11.10.2026). טוקנים `--mk-*` ב-`src/index.css`; בלי קו לבן מסביב לסימנים.
  *   הגדלים כאן הם מקור אחד ל-SVG ול-HTML (`src/index.css`, מחלקות `mk-*`).
  */
 export type Level = 1 | 3 | 5;
 
 /** עובי הנר בפיקסלים לפי הרמה: דק, בינוני, עבה */
-export const CANDLE_PX: Readonly<Record<Level, number>> = { 1: 4, 3: 10, 5: 16 };
+export const CANDLE_PX: Readonly<Record<Level, number>> = { 1: 3, 3: 9, 5: 15 };
 
 /** קוטר עיגול הממוצע והתוצאה: גדול מהנר העבה (הכרעת בעלים 9.10.2026) */
-export const MARK_PX = 22;
+export const MARK_PX = 21;
 
 /**
  * הרווח בין קצה המסלול לקצה שטח הציור, בפיקסלים: חצי קוטר העיגול ועוד 3. כך עיגול בקצה הציר (למשל 0 מנדטים) לא חורג אל עמודת
@@ -38,8 +38,8 @@ export const SVG_MARKS = {
   /** ממוצע: עיגול מלא, גדול מהנר העבה */
   meanR: MARK_PX / 2,
   /** תוצאה: עיגול ריק, קוטר חיצוני 22 (רדיוס הקו 8.5 וקו בעובי 5) */
-  ringR: (MARK_PX - 5) / 2,
-  ringStroke: 5,
+  ringR: (MARK_PX - 4) / 2,
+  ringStroke: 4,
 } as const;
 
 interface Pt {
@@ -108,7 +108,7 @@ export function smoothPath(points: Pt[]): string {
 }
 
 /** עובי מסגרת הקופסה בנר, בפיקסלים */
-export const SQUARE_STROKE = 1.5;
+export const SQUARE_STROKE = 3;
 
 /** קטע רצוף בנר באותה רמה: מ-`a` עד `b` (במיקום לאורך הנר), מחצית העובי הכולל `half`, ו-`filled` = קו מלא (רמה 1) ולא קופסה חלולה */
 export interface SquareRun {
@@ -119,7 +119,7 @@ export interface SquareRun {
 }
 
 /**
- * הנר המרובע (הכרעת בעלים 9.10.2026, כמו נר יפני): הקטעים הסמוכים באותה רמה מתחברים לקטע אחד. רמה 1 היא **קו מלא** (4 פיקסלים),
+ * הנר המרובע (הכרעת בעלים 9.10.2026, כמו נר יפני): הקטעים הסמוכים באותה רמה מתחברים לקטע אחד. רמה 1 היא **קו מלא** (3 פיקסלים),
  * ורמות 3 ו-5 הן **קופסה סגורה וחלולה** (מסגרת בלבד, 10 ו-16 פיקסלים). הקטעים מצוירים זה ליד זה בזוויות ישרות, בלי החלקה.
  * `map` ממפה ערך על הציר למיקום לאורך הנר, בכל כיוון (גם יורד, בנר אנכי). `scale` מקטין את כל העוביים יחד (בנרות צפופים).
  */
@@ -253,6 +253,80 @@ export function levelSegs(all: Seg[][], scope: "candle" | "chart" = "candle"): L
     return segs.map((g) => ({ from: g.from, to: g.to, level: segLevel(max > 0 ? g.count / max : 0) }));
   });
 }
+
+/**
+ * הנר באתר (הכרעת בעלים 11.10.2026, שילוב של אחוזונים וקבוצות): הנר נבנה לפי סדר הנתונים מהנמוך לגבוה, לא לפי ספירה בכל ערך.
+ * - **אחוזונים** (הכרעת בעלים 11.10.2026: 9% · 27% · 28% · 27% · 9%): 9% הנמוכים ו-9% הגבוהים — קו דק; 27% מכל צד — קופסה בינונית; 28% האמצעיים — קופסה עבה.
+ * - **שתי קבוצות** (לא שלוש): כשיש פער ריק (בלי נתונים) של לפחות `CLUSTER_GAP` מאורך הנר, ובכל צד שלו לפחות `CLUSTER_MIN` מהנתונים,
+ *   כל צד מצויר כנר משלו (באותם אחוזונים) והם מחוברים בקו דק — כמו שני נרות מחוברים. לכל היותר שני אזורים.
+ * `density`: הספירה בכל קטע היא צפיפות (נר מרבעונים), ולכן המשקל הוא צפיפות × רוחב.
+ */
+export const CANDLE_TAIL = 0.09;
+export const CANDLE_CORE = 0.28;
+export const CLUSTER_MIN = 0.25;
+export const CLUSTER_GAP = 0.2;
+
+type W = { from: number; to: number; w: number };
+function weighted(segs: Seg[], density: boolean): W[] {
+  return segs
+    .map((g) => ({ from: Math.min(g.from, g.to), to: Math.max(g.from, g.to), w: Math.max(0, density ? g.count * Math.abs(g.to - g.from) : g.count) }))
+    .sort((a, b) => a.from - b.from);
+}
+/** הערך שמתחתיו `p` מהמשקל (אינטרפולציה לינארית בתוך הקטע) */
+function quantileOf(ws: W[], p: number): number {
+  const tot = ws.reduce((a, g) => a + g.w, 0);
+  let acc = 0;
+  const t = p * tot;
+  for (const g of ws) {
+    if (g.w > 0 && acc + g.w >= t - 1e-12) return g.from + (g.to - g.from) * Math.min(1, Math.max(0, (t - acc) / g.w));
+    acc += g.w;
+  }
+  return ws[ws.length - 1].to;
+}
+/** נר אחד לפי אחוזונים, מהקצה הנמוך של הנתונים ועד הגבוה */
+function percentileOne(ws: W[]): LSeg[] {
+  const occ = ws.filter((g) => g.w > 0);
+  if (!occ.length) return [];
+  const lo = occ[0].from, hi = occ[occ.length - 1].to;
+  if (hi - lo < 1e-9) return [{ from: lo - 0.25, to: hi + 0.25, level: 5 }];
+  const a = CANDLE_TAIL, b = 0.5 - CANDLE_CORE / 2;
+  const [t0, c0, c1, t1] = [a, b, 1 - b, 1 - a].map((p) => quantileOf(occ, p));
+  const parts: LSeg[] = [
+    { from: lo, to: t0, level: 1 },
+    { from: t0, to: c0, level: 3 },
+    { from: c0, to: c1, level: 5 },
+    { from: c1, to: t1, level: 3 },
+    { from: t1, to: hi, level: 1 },
+  ].filter((g) => g.to - g.from > 1e-9) as LSeg[];
+  if (!parts.some((g) => g.level === 5)) {
+    // הליבה העבה תמיד נראית, גם כשהאמצע הוא ערך אחד
+    const m = quantileOf(occ, 0.5), half = Math.max((hi - lo) * 0.015, 0.125);
+    return [...parts.flatMap((g) => (g.from <= m && g.to >= m ? [{ ...g, to: m - half }, { from: m - half, to: m + half, level: 5 as Level }, { ...g, from: m + half }] : [g])).filter((g) => g.to - g.from > 1e-9)];
+  }
+  return parts;
+}
+/** נר לפי אחוזונים, עם פיצול לשני אזורים כשיש שתי קבוצות נפרדות */
+export function candleProfile(segs: Seg[], density = false, minGap = CLUSTER_GAP): LSeg[] {
+  const ws = weighted(segs, density).filter((g) => g.to > g.from || g.w > 0);
+  const occ = ws.filter((g) => g.w > 0);
+  if (!occ.length) return [];
+  const tot = occ.reduce((a, g) => a + g.w, 0);
+  const lo = occ[0].from, hi = occ[occ.length - 1].to, len = hi - lo;
+  let best: { at: number; gap: number } | null = null;
+  let acc = 0;
+  for (let k = 0; k + 1 < occ.length; k++) {
+    acc += occ[k].w;
+    const gap = occ[k + 1].from - occ[k].to;
+    if (gap > 1e-9 && gap >= minGap * len - 1e-9 && acc / tot >= CLUSTER_MIN - 1e-9 && 1 - acc / tot >= CLUSTER_MIN - 1e-9 && (!best || gap > best.gap)) best = { at: k, gap };
+  }
+  if (!best) return percentileOne(occ);
+  const left = percentileOne(occ.slice(0, best.at + 1));
+  const right = percentileOne(occ.slice(best.at + 1));
+  const a = left[left.length - 1].to, b = right[0].from;
+  return [...left, ...(b > a ? [{ from: a, to: b, level: 1 as Level }] : []), ...right];
+}
+/** אותו נר לכל קבוצת קטעים (מקור אחד לכל הגרפים) */
+export const candleProfiles = (all: Seg[][], density = false): LSeg[][] => all.map((segs) => candleProfile(segs, density));
 
 /** סמנים על הקו: לפחות `gap` יחידות בין סמן לסמן, והנקודה האחרונה תמיד כלולה */
 export function sparseIndices(xs: number[], gap: number): number[] {
