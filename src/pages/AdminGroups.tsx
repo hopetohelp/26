@@ -14,14 +14,14 @@ type Api = (path: string, body?: unknown) => Promise<unknown>;
 export default function AdminGroups({ api }: { api: Api }) {
   const [groups, setGroups] = useState<Group[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [newId, setNewId] = useState("");
   const [newName, setNewName] = useState("");
   const load = async () => {
     try { setGroups(((await api("/admin/groups")) as { groups: Group[] }).groups); } catch (e) { setError((e as Error).message); }
   };
   useEffect(() => { void load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const act = (f: () => Promise<unknown>) => async () => { setError(null); try { await f(); await load(); } catch (e) { setError((e as Error).message); } };
-  const idOk = /^[a-z0-9-]{2,32}$/.test(newId);
+  // מזהה פנימי — נוצר לבד (אותיות וספרות אקראיות); מוצג רק השם
+  const newId = () => "g" + Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => (b % 36).toString(36)).join("");
 
   return (
     <section className="space-y-3" aria-label="קבוצות">
@@ -32,9 +32,8 @@ export default function AdminGroups({ api }: { api: Api }) {
       {groups?.map((g) => <GroupRow key={g.id} g={g} api={api} act={act} />)}
       <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">
         <p className="font-bold">קבוצה חדשה</p>
-        <Field label="מזהה (אותיות לטיניות קטנות, ספרות ומקף)"><input dir="ltr" className={inputCls} value={newId} onChange={(e) => setNewId(e.target.value.trim())} /></Field>
         <Field label="שם שיוצג לחברים"><input className={inputCls} value={newName} onChange={(e) => setNewName(e.target.value)} /></Field>
-        <Btn kind="primary" disabled={!idOk || !newName.trim()} onClick={act(async () => { await api("/admin/groups/import", { group: newId, name: newName.trim(), emails: [] }); setNewId(""); setNewName(""); })}>יצירה</Btn>
+        <Btn kind="primary" disabled={!newName.trim()} onClick={act(async () => { await api("/admin/groups/import", { group: newId(), name: newName.trim(), emails: [] }); setNewName(""); })}>יצירה</Btn>
       </div>
     </section>
   );
