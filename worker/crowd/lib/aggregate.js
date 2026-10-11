@@ -299,12 +299,13 @@ export function computeUnderReview(reviewSeatVersions, reviewParticipants) {
  */
 const isVerified = (p) => p.verified !== 0 && p.verified !== false;
 
-export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {}, decisions = new Map() }) {
+export function aggregate({ participants, versions, now, previous = {}, lastDailyDay = null, aggregationId, wasOpen = true, blocNames = {}, decisions = new Map(), moderation = null }) {
   const review = new Set(participants.filter((p) => p.review).map((p) => p.id));
   const known = new Set(participants.map((p) => p.id));
   const main = latestByUnit(versions, (v) => known.has(v.participant) && !review.has(v.participant));
   // השערות חריגות ממתינות לאישור מנהל (moderation.js): לא נספרות בשום חלק עד שאושרו
-  const mod = moderate([...main.seats.values()], decisions);
+  // moderation: תוצאת הבדיקה של כלל המשתתפים — לחישוב של קבוצה, כדי שהחריגות ייקבעו מול כולם ולא מול הקבוצה בלבד
+  const mod = moderation ?? moderate([...main.seats.values()], decisions);
   // הכרעת בעלים 11.10.2026 (מחליפה את ההכרעה הקודמת באותו יום): מי שהשערת המפלגות שלו נדחתה — הגושים שלו לא נכנסים לסטטיסטיקה, ורק ההצבעה שלו נשארת
   for (const [p, v] of [...main.seats]) if (mod.rejected.has(v.id)) main.blocs.delete(p);
   for (const [p, v] of [...main.seats]) if (mod.pending.has(v.id) || mod.rejected.has(v.id)) main.seats.delete(p);
@@ -370,5 +371,5 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
     dashboard.underReview = sections.underReview.json;
   }
   if (!("underReview" in dashboard)) dashboard.underReview = null;
-  return { dashboard, sections, daily, today, pending: mod.pending, rejected: mod.rejected };
+  return { dashboard, sections, daily, today, pending: mod.pending, rejected: mod.rejected, mod };
 }

@@ -34,6 +34,7 @@
  *
  * שחזור סיסמה: איפוס במייל (/auth/forgot ⇐ /auth/reset). המייל נשמר מוצפן.
  * GET  /dashboard                   ⇐ Dashboard            צבירה מפורסמת (ציבורי, בלי זהות).
+ * GET  /dashboard?group=<id>        ⇐ Dashboard | {group, belowMin, min}  (בסשן) הצבירה של חברי הקבוצה בלבד; לא חבר ⇐ 403 not_member. Me.groups = הקבוצות של המשתמש.
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
  */

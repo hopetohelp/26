@@ -77,10 +77,17 @@ async function requireAdmin(env, request) {
   throw new HttpError(401, "unauthorized");
 }
 
+async function myGroups(env, participant) {
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc FROM groups g JOIN group_members m ON m.group_id = g.id JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc) })));
+}
+
 /** מזהה קבוצה: אותיות לטיניות קטנות, ספרות ומקף */
 const GROUP_ID = /^[a-z0-9-]{2,32}$/;
 /** מיילים בבקשה אחת — כדי להישאר מתחת ל-MAX_BODY; רשימה גדולה נשלחת במנות */
 export const GROUP_CHUNK = 300;
+/** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
+export const GROUP_MIN = 50;
 function groupId(v) {
   if (typeof v !== "string" || !GROUP_ID.test(v)) throw bad("group");
   return v;
@@ -322,6 +329,8 @@ const routes = {
       isAdmin: !!(await env.DB.prepare("SELECT 1 AS x FROM admins WHERE participant = ?").bind(participant).first()),
       // נספר בסטטיסטיקות רק חשבון מאומת: Google או מייל שאומת
       verified: !!g || emailRows.some((r) => r.verified),
+      // הקבוצות של המשתמש (לכפתור ההחלפה) — רק דרך מייל מאומת; גולש אחר לא רואה שקיימות קבוצות
+      groups: await myGroups(env, participant),
       // חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google מיד בכניסה (הכרעת בעלים 10.10.2026)
       legacy: !!hasLink || !!pw?.username || (!pw && !g),
     };
@@ -983,8 +992,27 @@ async function computeDashboard(env) {
   const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
   const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
-  return { dashboard: res.dashboard, pending: res.pending };
+  return { dashboard: res.dashboard, pending: res.pending, groups: await groupDashboards(env, { participants, versions, now, blocNames, decisions, mod: res.mod }) };
 }
+
+/**
+ * הדשבורד של כל קבוצה (docs/פילוח-קבוצות-תכנון.md): אותו חישוב על החברים בלבד — חשבון שאחד המיילים המאומתים שלו ברשימת הקבוצה.
+ * החריגות נקבעות מול כלל המשתתפים. מתחת ל-GROUP_MIN משתתפים — רק הודעה, בלי שום נתון.
+ */
+async function groupDashboards(env, { participants, versions, now, blocNames, decisions, mod }) {
+  const rows = (await env.DB.prepare(GROUP_MEMBERS_SQL).all()).results || [];
+  const byGroup = new Map();
+  for (const r of rows) (byGroup.get(r.group_id) ?? byGroup.set(r.group_id, new Set()).get(r.group_id)).add(r.participant);
+  const out = new Map();
+  for (const [id, members] of byGroup) {
+    const sub = participants.filter((p) => members.has(p.id));
+    const d = aggregate({ participants: sub, versions: versions.filter((v) => members.has(v.participant)), now, blocNames, decisions, moderation: mod, aggregationId: `live-${now}` }).dashboard;
+    if (d.participants < GROUP_MIN) out.set(id, { group: id, belowMin: true, min: GROUP_MIN, publishedAt: now });
+    else out.set(id, { ...d, group: id, min: GROUP_MIN, pendingGuesses: undefined, underReview: null });
+  }
+  return out;
+}
+const GROUP_MEMBERS_SQL = "SELECT DISTINCT m.group_id, e.participant FROM group_members m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1";
 
 // ---- המשימה השעתית
 const hourOf = (t) => iso(Math.floor(t / HOUR) * HOUR).slice(0, 13);
@@ -1100,6 +1128,14 @@ export default {
         return env.FEEDBACK.fetch(new Request("https://feedback.internal" + target, {
           method: "POST", headers: { "content-type": "application/json", origin: request.headers.get("origin") || "", "cf-connecting-ip": request.headers.get("cf-connecting-ip") || "", ...(admin ? { authorization: `Bearer ${request.headers.get("x-admin-key")}` } : {}) }, body: JSON.stringify(payload),
         }));
+      }
+      // דשבורד של קבוצה — רק לחבר בה (השרת בודק; הכפתור באתר אינו ההגנה)
+      if (request.method === "GET" && url.pathname === "/dashboard" && url.searchParams.has("group")) {
+        const id = groupId(url.searchParams.get("group"));
+        const { participant } = await requireAuth(env, request, now);
+        if (!(await myGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_member");
+        const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, publishedAt: iso(now) };
+        return new Response(JSON.stringify(d), { headers: { ...headers, "cache-control": "no-store" } });
       }
       if (request.method === "GET" && url.pathname === "/dashboard")
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
