@@ -12,7 +12,7 @@ it('משחזר שלושה הרכבים נפרדים בכל גרסה ושומר �
   expect(() => upgradeVersion({id:2,unit:'seats',payload:{seats:{likud:{v:90}}}})).toThrow();
 });
 it('משדרג ברירות מחדל ישנות, בלי לשנות גוש אישי או הימור ישיר', () => {
-  const p = { mode:'custom',blocs:[{id:'gov',name:'גוש הקואליציה',lists:COALITION.filter(id => id!=='haredi_public'),target:60},{id:'arab',name:'ערבים',lists:['joint','raam'],target:null},{id:'rest',name:'כל השאר',lists:[...OPPOSITION,'haredi_public'],target:45}] };
+  const p = { mode:'custom',blocs:[{id:'gov',name:'גוש נתניהו',lists:COALITION.filter(id => id!=='haredi_public'),target:60},{id:'arab',name:'ערבים',lists:['joint','raam'],target:null},{id:'rest',name:'כל השאר',lists:[...OPPOSITION,'haredi_public'],target:45}] };
   const result = migrateBlocs(p);
   expect(result.blocs.map(b=>b.id)).toEqual(['gov','rest','arab']);
   expect(result.blocs[0].lists).toEqual(COALITION);
@@ -24,7 +24,7 @@ it('משדרג ברירות מחדל ישנות, בלי לשנות גוש איש
 });
 it('ארבע שורות קבועות מחושבות לכל בעלי השערת מפלגות גם בלי הגדרת גושים', () => {
   const b = computeBlocs([{participant:'a',payload},{participant:'b',payload}],[]);
-  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש הקואליציה',80,2],['גוש האופוזיציה',28,2],['אחדות',68,2],['מפלגות ערביות',12,2]]);
+  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש נתניהו',80,2],['גוש איזנקוט',28,2],['אחדות',68,2],['מפלגות ערביות',12,2]]);
 });
 it('פרסום היסטורי משתמש בגרסאות המקור ולא בהשערה מאוחרת', () => {
   const versions = [{id:1,participant:'a',unit:'seats',created_at:'2026-10-01',payload},{id:2,participant:'a',unit:'seats',created_at:'2026-10-03',payload:{...payload,seats:{likud:{v:120}}}}];
@@ -40,6 +40,6 @@ it('שומר סכום והרכב אישי בכל גרסה ומשחזר לפי ה
 });
 
 it('הרכב ששונה במפורש אינו משוחזר לפי שמו הישן', () => {
-  const custom={mode:'custom',schemaVersion:2,blocs:[{id:'gov',name:'גוש הקואליציה',lists:COALITION.filter(id=>id!=='haredi_public'),target:null}]};
+  const custom={mode:'custom',schemaVersion:2,blocs:[{id:'gov',name:'גוש נתניהו',lists:COALITION.filter(id=>id!=='haredi_public'),target:null}]};
   expect(migrateBlocs(custom)).toBe(custom);
 });

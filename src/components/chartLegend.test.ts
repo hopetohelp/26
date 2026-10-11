@@ -43,7 +43,7 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
 });
 
 it("לוח המושבים בבית: בלי כפתור מקרא (הכרעת בעלים 11.10.2026 — פשוט להבנה)", () => {
-  expect(renderToStaticMarkup(createElement(Hemicycle, { gov: 52, other: 68 }))).not.toContain("מקרא");
+  expect(renderToStaticMarkup(createElement(Hemicycle, { coalition: 53, arab: 10, opposition: 57 }))).not.toContain("מקרא");
 });
 
 describe("ChartLegend", () => {

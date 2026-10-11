@@ -138,3 +138,12 @@ describe("hemicycleSeats", () => {
 describe("dayMonth", () => {
   it("יום וחודש בלי אפס מוביל", () => expect(dayMonth("2026-09-09")).toBe("9/9"));
 });
+
+describe("לוח המושבים בבית: שלושה גושים", () => {
+  it("גוש נתניהו, המפלגות הערביות וגוש איזנקוט מסתכמים ל-120", async () => {
+    const { HOME } = await import("./homeData");
+    const { coalition, arab, opposition } = HOME.blocs;
+    expect(coalition + arab + opposition).toBe(120);
+    expect(arab).toBeGreaterThanOrEqual(0);
+  });
+});

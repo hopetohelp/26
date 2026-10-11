@@ -48,7 +48,7 @@ it("מספר המשתתפים בכותרות נלקח מכל חלק, בטבלה 
 });
 
 it("ארבע שורות קבועות תמיד בראש; השם פותח את רשימת המפלגות", () => {
-  const fixed = ["הממשלה היוצאת", "גוש הקואליציה", "גוש האופוזיציה", "ערבים"].map((name,i) => ({id:["government","coalition","opposition","arab"][i],name,lists:["likud","shas"],stat:{...stat,mean:i,n:1}}));
+  const fixed = ["הממשלה היוצאת", "גוש נתניהו", "גוש איזנקוט", "ערבים"].map((name,i) => ({id:["government","coalition","opposition","arab"][i],name,lists:["likud","shas"],stat:{...stat,mean:i,n:1}}));
   const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:2,fixed,custom:[{name:"גוש נוסף",lists:["joint","raam"],n:2,explicit:null,derived:{...stat,mean:12}}]}};
   for(const view of ["table","chart"] as const) {
     const html=renderToStaticMarkup(createElement(BlocStats,{d,view}));

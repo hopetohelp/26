@@ -55,15 +55,31 @@ export function defaultBlocs(): Bloc[] {
   const arab: string[] = IDS.filter(id => id === "joint" || id === "raam");
   return [
     { id: "government", name: "הממשלה היוצאת", lists: [...GOV_IDS], target: null },
-    { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
-    { id: "rest", name: "גוש האופוזיציה", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
+    { id: "gov", name: "גוש נתניהו", lists: coalition, target: null },
+    { id: "rest", name: "גוש איזנקוט", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
     { id: "unity", name: "אחדות", lists: [...UNITY_IDS], target: null },
     { id: "arab", name: "מפלגות ערביות", lists: arab, target: null },
   ];
 }
+/** שמות ברירת המחדל הישנים של שני הגושים (הכרעת בעלים 11.10.2026: "גוש נתניהו" ו"גוש איזנקוט"); משנים רק גוש שהרכבו כברירת המחדל */
+const RENAMED: Record<string, { old: string; now: string }> = {
+  gov: { old: "גוש הקואליציה", now: "גוש נתניהו" },
+  rest: { old: "גוש האופוזיציה", now: "גוש איזנקוט" },
+};
+function renameDefaultBlocs(p: BlocsPayload): BlocsPayload {
+  const current = defaultBlocs();
+  let changed = false;
+  const blocs = p.blocs.map(b => {
+    const r = RENAMED[b.id];
+    if (!r || b.name !== r.old || keyOf(b.lists) !== keyOf(current.find(c => c.id === b.id)?.lists ?? [])) return b;
+    changed = true;
+    return { ...b, name: r.now };
+  });
+  return changed ? { ...p, blocs } : p;
+}
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
 export function normalizeBlocs(p: BlocsPayload): BlocsPayload {
-  if (p.mode === "custom") return p.schemaVersion === 2 ? p : upgradeLegacyCoalition(p);
+  if (p.mode === "custom") return renameDefaultBlocs(p.schemaVersion === 2 ? p : upgradeLegacyCoalition(p));
   return { mode: "custom", blocs: p.blocs.map(b => ({ ...b,
     name: b.name || (b.id === "gov" ? "מפלגות הממשלה היוצאת" : "יתר המפלגות"),
     lists: b.id === "gov" ? [...GOV_IDS] : b.id === "rest" ? IDS.filter(id => !GOV_IDS.includes(id)) : b.lists,
@@ -95,9 +111,9 @@ function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
   }));
   let changed = false;
   const blocs = p.blocs.map(b => {
-    if (oldCoalitions.has(keyOf(b.lists)) && ["גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: current[1].lists }; }
-    if (oldRest.has(keyOf(b.lists)) && ["כל השאר", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
-      changed = true; return { ...b, name: "גוש האופוזיציה", lists: current[2].lists };
+    if (oldCoalitions.has(keyOf(b.lists)) && ["גוש נתניהו", "גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: current[1].lists }; }
+    if (oldRest.has(keyOf(b.lists)) && ["כל השאר", "גוש איזנקוט", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
+      changed = true; return { ...b, name: "גוש איזנקוט", lists: current[2].lists };
     }
     return b;
   });

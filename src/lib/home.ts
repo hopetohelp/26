@@ -36,6 +36,8 @@ export interface HomeData {
   start: string;
   gov: number;
   other: number;
+  /** לוח המושבים: גוש הקואליציה (גוש נתניהו), המפלגות הערביות, והשאר (גוש איזנקוט); הסכום 120 */
+  blocs: { coalition: number; arab: number; opposition: number };
   /** טווח 80% של הגוש (מ-10% עד 90%) */
   blocLo: number;
   blocHi: number;
@@ -57,7 +59,7 @@ export const EDGE_MAX = 0.995;
 
 export function buildHome(
   model: HomeModel,
-  opts: { govIds: string[]; nameOf: (id: string) => string; sure: (id: string) => boolean },
+  opts: { govIds: string[]; nameOf: (id: string) => string; sure: (id: string) => boolean; coalitionIds?: string[]; arabIds?: string[] },
 ): HomeData {
   const { govIds, nameOf, sure } = opts;
   const rows: HomeRow[] = Object.keys(model.scenarios.lists)
@@ -74,12 +76,16 @@ export function buildHome(
 
   const govSum = (seats: Record<string, number>) => govIds.reduce((a, id) => a + (seats[id] ?? 0), 0);
   const gov = govSum(model.central.seats);
+  const sumOf = (ids: string[]) => ids.reduce((a, id) => a + (model.central.seats[id] ?? 0), 0);
+  const coalition = opts.coalitionIds ? sumOf(opts.coalitionIds) : gov;
+  const arab = opts.arabIds ? sumOf(opts.arabIds) : 0;
   const series = model.trend.map((t) => ({ date: t.date, v: govSum(t.seats) }));
 
   return {
     start: model.start,
     gov,
     other: TOTAL - gov,
+    blocs: { coalition, arab, opposition: TOTAL - coalition - arab },
     blocLo: model.scenarios.bloc.seats[0],
     blocHi: model.scenarios.bloc.seats[2],
     blocHist: model.scenarios.bloc.seatsHist ?? [],

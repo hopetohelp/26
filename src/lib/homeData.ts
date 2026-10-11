@@ -2,6 +2,7 @@ import modelFile from "../data/model.json";
 import { POLL_AVERAGE } from "./sources";
 import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, seatsIn, usablePolls, latestPerPollster, lists2026, listName, passesInAll } from "./data";
 import { buildHome, type HomeModel } from "./home";
+import { defaultBlocs } from "../pages/guess/model";
 
 /**
  * הסקר האחרון של כל מכון (14 הימים האחרונים) ונתוני הדירוג, מחושבים פעם אחת: אותו מקור לבית, ל"המצב היום" ול"תרחישים",
@@ -11,6 +12,9 @@ export const LATEST_POLLS = latestPerPollster(POLL_AVERAGE.asOf, 14);
 
 export const HOME = buildHome(modelFile as unknown as HomeModel, {
   govIds: lists2026.filter((l) => l.gov37).map((l) => l.id),
+  // לוח המושבים בבית: גוש נתניהו, המפלגות הערביות והשאר — מגושי ברירת המחדל (הכרעת בעלים 11.10.2026)
+  coalitionIds: defaultBlocs().find((b) => b.id === "gov")!.lists,
+  arabIds: defaultBlocs().find((b) => b.id === "arab")!.lists,
   nameOf: listName,
   sure: (id) => passesInAll(LATEST_POLLS, id),
 });
