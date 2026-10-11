@@ -96,5 +96,12 @@
   "id": "2026-10-04-kantar-kan-11",
   "source": "https://www.kan.org.il/content/kan-news/politic/1105927/",
   "to": 554
+ },
+ {
+  "field": "firmHe",
+  "from": "S.M.L.T.",
+  "id": "2026-09-15-s-m-l-t-x",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4154, עותק: raw/gov/Survey_4154.pdf)",
+  "to": "מכון DRI"
  }
 ]
