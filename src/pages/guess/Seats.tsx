@@ -246,7 +246,7 @@ export default function Seats({
                               className="w-14 h-11 text-center font-num tabular text-2xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
                               style={{ textAlign: "center" }}
                             />
-                            <span className="text-xs text-ink-soft tabular" dir="ltr">{pctNow ? `≈${pctFmt(pctNow[id] ?? 0)}` : ""}</span>
+                            <span className="text-xs text-ink-soft tabular" dir="ltr">{pctNow ? pctFmt(pctNow[id] ?? 0) : ""}</span>
                           </div>
                           <button type="button" aria-label={`עוד ל${name}`} disabled={c.v >= TOTAL || !canSetSeats(p.seats, IDS, id, snapSeats(c.v + 1, c.v))} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
                             +
