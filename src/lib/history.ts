@@ -1,4 +1,4 @@
-import { bucketLatest, pointTimes, POINT_DAYS } from "./data";
+import { bucketLatest, pointTimes, POINT_WINDOW } from "./data";
 /**
  * דיוק הסקרים בעבר: הסקרים של חמש המערכות 2019א–2022 מול התוצאות הרשמיות.
  * כל החישובים טהורים (מקבלים את הנתונים כפרמטר) — כדי שאפשר יהיה לבדוק אותם, ושקובץ הסקרים הישנים
@@ -285,8 +285,8 @@ export function familyRows(summaries: CycleSummary[]): FamilyRow[] {
   return rows;
 }
 
-/** לאורך המערכה: נקודה כל 3 ימים, ממוצע הסקרים של 3 הימים שמסתיימים בה; סקר אחד לכל מכון בנקודה — האחרון (הכרעת בעלים 11.10.2026) */
-export function campaignTrend(c: Cycle, letters: string, days = POINT_DAYS, minN = 1) {
+/** לאורך המערכה: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-7 הימים שמסתיימים בה (הכרעת בעלים 11.10.2026) */
+export function campaignTrend(c: Cycle, letters: string, days = POINT_WINDOW, minN = 1) {
   const ps = usable(c);
   if (!ps.length) return [];
   const first = ps.reduce((a, p) => (p.end < a ? p.end : a), ps[0].end);

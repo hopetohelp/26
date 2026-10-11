@@ -123,18 +123,20 @@ export default function ChartLegend({
   const leader = !hub || !regs.length || regs[0][0] === id;
   const shown = hub && regs.length ? [...new Map(regs.flatMap((r) => r[1].entries).map((e) => [entryKey(e), e])).values()] : entries;
   const extras = hub && regs.length ? regs.map((r, i) => r[1].extra ? <div key={i}>{r[1].extra}</div> : null) : children;
+  // תגית קטנה עם סמל מידע (הכרעת בעלים 11.10.2026, אפשרות ב): מלבן מעוגל, מסגרת דקה בצבע הקווים, טקסט אפור; מתחזק בריחוף ובפתיחה
   const button = (
     <button
       type="button"
       aria-expanded={open}
       aria-controls={open ? id : undefined}
       onClick={() => setOpen((v) => !v)}
-      className={`${PILL} ${PILL_RING} ms-auto order-last`}
+      className={`ms-auto order-last inline-flex items-center gap-1.5 min-h-[32px] px-2.5 rounded-[7px] border border-paper-line text-[0.8rem] font-medium text-ink-soft hover:bg-paper hover:text-ink aria-expanded:bg-paper aria-expanded:text-ink`}
     >
-      מקרא
-      <svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10" className={`transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 4.5l4 4 4-4" />
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v5M12 8h.01" />
       </svg>
+      מקרא
     </button>
   );
   const panel = open && leader ? (

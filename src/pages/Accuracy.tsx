@@ -150,12 +150,12 @@ export default function Accuracy() {
           kind="סיכום סקרים"
           source={SOURCE}
           asOf={`מהגשת הרשימות (${date(first)}) ועד הבחירות`}
-          assumption="נקודה כל 3 ימים: ממוצע הסקרים של 3 הימים שמסתיימים בה, והסקר האחרון בלבד של כל מכון באותם ימים. הנר הוא הנמוך והגבוה בין הסקרים באותם 3 ימים. עיגול שחור ריק = התוצאה ביום הבחירות."
+          assumption="נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-7 הימים שמסתיימים בה. הנר הוא הנמוך והגבוה בין הסקרים האלה. עיגול שחור ריק = התוצאה ביום הבחירות."
           methodAnchor="accuracy"
         >
           <ChartWithTable
             summary={`${all.length} סקרים, ${dateRange(first, c.date)}.`}
-            chart={<TrendChart series={series} markers={markers} windowText={{ days: 3, label: "3 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
+            chart={<TrendChart series={series} markers={markers} windowText={{ days: 7, label: "7 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">לכל רשימה: ממוצע הסקרים בתחילת המערכה ובסופה, והתוצאה</caption>

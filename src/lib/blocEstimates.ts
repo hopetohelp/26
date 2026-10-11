@@ -1,4 +1,4 @@
-import { bucketLatest, mean, pointTimes, POINT_DAYS, pollsterKey, pollsterLabel, seatsIn, toTime, type Poll } from "./data";
+import { bucketLatest, mean, pointTimes, POINT_DAYS, POINT_WINDOW, pollsterKey, pollsterLabel, seatsIn, toTime, type Poll } from "./data";
 import { blocValues, type BlocImputation, type BlocRow } from "./personalBlocs";
 import type { Bloc } from "./crowdApi";
 import policy from "./blocEstimatePolicy.json";
@@ -47,7 +47,7 @@ export function pollBlocValues(blocs: Bloc[], target: Poll, source: Poll[], rule
   });
 }
 
-export function rollingBlocMean(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days = POINT_DAYS, minN = 1, step = POINT_DAYS, rules = BLOC_ESTIMATE_POLICY) {
+export function rollingBlocMean(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days = POINT_WINDOW, minN = 1, step = POINT_DAYS, rules = BLOC_ESTIMATE_POLICY) {
   const projected = source.map(p=>({end:p.end,key:pollsterKey(p),rows:pollBlocValues(blocs,p,donors,rules)}));
   return blocs.map(b=>{
     const points: {t:number;v:number;lo:number;hi:number;xs:number[];n:number;fullN:number;estimatedN:number;missingN:number;estimated:boolean;missing:string[];imputed:BlocImputation[];breakBefore:boolean}[]=[];
