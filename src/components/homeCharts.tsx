@@ -57,15 +57,11 @@ export function Hemicycle({ gov, other, center, label }: { gov: number; other: n
             <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
           ))}
         </svg>
-        {label && (
-          // שם הקבוצה באמצע התחתית של הלוח, מעל המספר שבמרכז
-          <span aria-hidden="true" className="absolute whitespace-nowrap font-display text-xs sm:text-sm md:text-lg leading-none" style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%`, transform: "translate(-50%, calc(-100% - 0.75rem))" }}>
-            {label}
-          </span>
-        )}
-        {center && (
-          <span aria-hidden="true" className="absolute -translate-x-1/2 -translate-y-1/2 font-num text-lg font-extrabold tabular leading-none" style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%` }} dir="ltr">
-            {center}
+        {(center || label) && (
+          // תחתית האמצע של הלוח: המספר (53/120) ומתחתיו הכיתוב (הממשלה היוצאת), שניהם בגופן גדול
+          <span aria-hidden="true" className="absolute flex flex-col items-center gap-0.5 whitespace-nowrap leading-none" style={{ left: "50%", top: `${((CY - 0.01) / H) * 100}%`, transform: "translate(-50%, -100%)" }}>
+            {center && <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular" dir="ltr">{center}</span>}
+            {label && <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>}
           </span>
         )}
       </div>

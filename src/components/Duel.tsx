@@ -1,5 +1,5 @@
 import Explained from "./Explained";
-import { PartyAvatar } from "./PartyAvatar";
+import { PartyAvatar, PartyPhoto } from "./PartyAvatar";
 import { PassBar } from "./homeCharts";
 import { seatsIn, summarize, type Poll } from "../lib/data";
 import { rng, seatsFmt } from "../lib/format";
@@ -34,9 +34,12 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
         assumption="המספר הגדול: ממוצע המודל. הטווח: הנמוך והגבוה בין המכונים בסקר האחרון של כל אחד. הספירה: בכמה סקרים כל רשימה גבוהה יותר. לא סיכוי."
         methodAnchor="model"
       >
-        <div aria-hidden="true" className="relative grid grid-cols-2 border-y-2 border-ink duel-in">
+        <div aria-hidden="true" className="relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in">
+          {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בקצה החיצוני, בגובה הרצועה כולה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
+          <PartyPhoto id={a.id} className="hidden lg:block w-44 xl:w-56 self-stretch" />
           <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
           <Side r={b} range={rangeOf(b.id)} lead={b.central >= a.central} align="end" />
+          <PartyPhoto id={b.id} className="hidden lg:block w-44 xl:w-56 self-stretch" />
           <span className="absolute inset-y-4 left-1/2 border-s border-paper-line" />
           {/* העיגול במרכז: הספירה "6:2" ומתחתיה "סקרים" (בכמה סקרים כל אחת גבוהה יותר); בלי סקרים משותפים — "מול" */}
           <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 w-24 h-24 md:w-28 md:h-28 rounded-full bg-ink text-paper leading-none text-center">
@@ -60,9 +63,8 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
 function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: boolean; align: "start" | "end" }) {
   return (
     <div className={`py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
-      {/* תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד: ימין לצד הימני, שמאל לשמאלי */}
-      <span className="md:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
-      <span className="hidden md:block mb-3"><PartyAvatar id={r.id} size={112} /></span>
+      {/* צר: תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד (ימין לצד הימני, שמאל לשמאלי); ברוחב מ-1024px התמונה ברצועה כולה */}
+      <span className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
       <p className={`font-num tabular leading-none mt-2 text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
         {seatsFmt(r.central)}
@@ -97,16 +99,19 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
             {rows.map((r) => {
               const s = counts.get(r.id);
               return (
-                <li key={r.id} className="border-s-4 border-ink ps-3 md:ps-4 min-w-0">
+                <li key={r.id} className="border-s-4 border-ink ps-3 md:ps-4 min-w-0 flex items-stretch gap-3 md:gap-4">
+                  <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 md:gap-3">
-                    <span className="md:hidden"><PartyAvatar id={r.id} size={40} /></span>
-                    <span className="hidden md:block"><PartyAvatar id={r.id} size={56} /></span>
+                    <span className="lg:hidden"><PartyAvatar id={r.id} size={40} /></span>
                     <p className="min-w-0 font-display text-base md:text-xl leading-tight break-words [overflow-wrap:anywhere]">{r.name}</p>
                   </div>
                   <p className="font-num text-4xl md:text-5xl font-extrabold tabular leading-none mt-1">{Math.round(r.pass * 100)}%</p>
                   <p className="text-xs md:text-sm text-ink-soft mt-1">מהתרחישים עוברת</p>
                   <span className="block mt-2"><PassBar pass={r.pass} /></span>
                   {s && <p className="mt-2 text-xs md:text-sm text-ink-soft">אצל {s.passing} מתוך {s.n} מכונים</p>}
+                  </div>
+                  {/* יש מקום ברוחב: התמונה משמאל לטקסט, בגובה הכרטיס כולו */}
+                  <PartyPhoto id={r.id} className="hidden lg:block w-28 xl:w-32 shrink-0 self-stretch rounded-theme" />
                 </li>
               );
             })}

@@ -73,7 +73,7 @@ export function BlocAvatar({ id, lists, size = 24, center = false }: { id?: stri
   if (!ids.length) return null;
   const n = fitCount(widths, avail, leads.length, size);
   const extra = ids.length - n;
-  const ring = "rounded-full shadow-[0_0_0_1.5px_rgb(var(--card))]";
+  const ring = "rounded-full";
   const gap = { marginInlineStart: -OVERLAP_PX };
   return (
     // width:0 + min-width:100% — המלא את רוחב התא בלי להרחיב אותו בגלל מספר התמונות
