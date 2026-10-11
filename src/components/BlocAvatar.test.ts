@@ -1,24 +1,21 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
-import { defaultBlocs } from "../pages/guess/model";
 import { BlocAvatar } from "./BlocAvatar";
+import { PARTY_IMAGES } from "../lib/partyImages";
+import { defaultBlocs } from "../pages/guess/model";
 
-const html = (id: string, lists?: string[]) => renderToStaticMarkup(createElement(BlocAvatar, { id, lists }));
-const imgs = (h: string) => [...h.matchAll(/parties\/(\w+)\./g)].map((m) => m[1]);
-const lists = (id: string) => defaultBlocs().find((b) => b.id === id)!.lists;
+const imgs = (lists: string[]) => [...renderToStaticMarkup(createElement(BlocAvatar, { lists })).matchAll(/parties\/(\w+)\./g)].map((m) => m[1]);
 
-it("גושי ברירת המחדל: נתניהו לממשלה ולקואליציה, איזנקוט לאופוזיציה, שניהם באחדות, עבאס למפלגות הערביות", () => {
-  expect(imgs(html("government", lists("government")))).toEqual(["likud"]);
-  expect(imgs(html("gov", lists("gov")))).toEqual(["likud"]);
-  expect(imgs(html("coalition", lists("gov")))).toEqual(["likud"]);
-  expect(imgs(html("rest", lists("rest")))).toEqual(["yashar"]);
-  expect(imgs(html("opposition", lists("rest")))).toEqual(["yashar"]);
-  expect(imgs(html("unity", lists("unity")))).toEqual(["likud", "yashar"]);
-  expect(imgs(html("arab", lists("arab")))).toEqual(["raam"]);
+it("מוצגות תמונות כל המפלגות שבגוש, לפי סדר הגוש", () => {
+  expect(imgs(["likud", "shas", "raam"])).toEqual(["likud", "shas", "raam"]);
 });
 
-it("גוש שהמשתתף שינה את הרכבו, או גוש אישי, אינו מציג תמונה", () => {
-  expect(html("arab", ["joint"])).toBe("");
-  expect(html("my-own-bloc", ["likud"])).toBe("");
+it("מפלגה בלי תמונה לא מוצגת, ומפלגה שמופיעה פעמיים מוצגת פעם אחת", () => {
+  expect(imgs(["haredi_public", "code_black"])).toEqual([]);
+  expect(imgs(["likud", "haredi_public", "likud"])).toEqual(["likud"]);
+});
+
+it("בכל גוש ברירת מחדל יש תמונה לפחות לאחת מהמפלגות", () => {
+  for (const b of defaultBlocs()) expect(b.lists.some((id) => PARTY_IMAGES[id]), b.name).toBe(true);
 });
