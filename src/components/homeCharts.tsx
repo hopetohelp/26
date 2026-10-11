@@ -34,6 +34,8 @@ const CX = 1.1;
 const CY = 1.26;
 const SEATS = hemicycleSeats(CX, CY);
 export const MAJORITY = 61;
+/** קו עזר מקווקו ב-50 מנדטים בגרף מגמת הממשלה (הכרעת בעלים 11.10.2026) */
+const HALF = 50;
 
 /** כמה מושבים חסרים לממשלה היוצאת עד הרוב (0 כשיש רוב) */
 export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
@@ -214,17 +216,20 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
 }
 
 /**
- * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, 
+ * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), ארבעה קווים מקווקווים (הנקודה הנמוכה, 50, 61 והנקודה הגבוהה), 
  * ונר של טווח 80% ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
  */
 export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: number; values: number[] }[] }) {
   const { series } = home;
   if (series.length < 2) return null;
-  const X0 = 3, X1 = 86, YT = 6, YB = 84;
+  const X0 = 7, X1 = 95, YT = 6, YB = 84;
   const vals = series.map((s) => s.v);
   const pv = points.flatMap((p) => p.values);
-  const vmin = Math.floor((Math.min(...vals, ...pv) - 2) / 2) * 2;
-  const vmax = Math.ceil((Math.max(...vals, ...pv, MAJORITY) + 3) / 2) * 2;
+  // הנקודה הנמוכה והגבוהה בגרף (כולל קצוות הנרות של הסקרים): שני קווים מקווקווים, ועוד קו 50 וקו 61
+  const lo = Math.min(...vals, ...pv);
+  const hi = Math.max(...vals, ...pv);
+  const vmin = Math.floor((Math.min(lo, HALF) - 2) / 2) * 2;
+  const vmax = Math.ceil((Math.max(hi, MAJORITY) + 3) / 2) * 2;
   const Y = (v: number) => YB - ((YB - YT) * (v - vmin)) / (vmax - vmin);
   const t0 = Date.parse(series[0].date);
   const t1 = Date.parse(series[series.length - 1].date);
@@ -238,7 +243,8 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
     ? points.map((p) => ({ date: dayOf(p.t), values: p.values })).filter((p) => p.date >= series[0].date && p.date <= lastDate)
     : sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1).map((i) => ({ date: series[i].date, values: [] as number[] }));
   const pollCandles = candleProfiles(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
-  const grid = [50, 55].filter((v) => v > vmin && v < vmax);
+  // ארבעה קווים מקווקווים, לפי הערך מלמטה למעלה; שני קווים צמודים מדי (פחות מ-2.5 מנדטים) — התווית של הנמוך בלבד
+  const dashed = [...new Set([lo, HALF, MAJORITY, hi])].sort((a, b) => a - b).map((v, i, all) => ({ v, label: i === 0 || v - all[i - 1] >= 2.5 }));
   const min = Math.min(...vals);
   const max = Math.max(...vals);
   const line = { vectorEffect: "non-scaling-stroke" as const };
@@ -253,24 +259,25 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
           role="img"
           aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב`}
         >
-          {grid.map((v) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className="stroke-paper-line" strokeWidth={1} {...line} />)}
-          <line x1={X0} x2={100} y1={Y(MAJORITY)} y2={Y(MAJORITY)} className="stroke-ink" strokeWidth={1.5} strokeDasharray="5 4" {...line} />
+          {dashed.map(({ v }) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className={v === MAJORITY ? "stroke-ink" : "stroke-ink-soft"} strokeWidth={v === MAJORITY ? 1.5 : 1} strokeDasharray="5 4" {...line} />)}
           <path d={smoothPath(pts)} className="fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...line} />
         </svg>
         {marks.map((m, i) => <ProfileCandleV key={`c${m.date}`} segs={pollCandles[i]} y={Y} left={`${X(m.date)}%`} />)}
         {marks.map((m) => (
           <span key={m.date} aria-hidden="true" className="mk mk-dot" style={{ left: `${X(m.date)}%`, top: `${Y(valueAt(m.date))}%` }} />
         ))}
-        <span aria-hidden="true" className={`${label} text-base font-extrabold`} style={{ left: "6%", top: `${Y(MAJORITY) - 7}%` }}>{MAJORITY}</span>
+        {dashed.filter((d) => d.label).map(({ v }) => (
+          <span key={v} aria-hidden="true" className={`${label} font-num ${v === MAJORITY ? "text-base font-extrabold" : "text-xs text-ink-soft"}`} style={{ left: `${X0 / 2}%`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
+        ))}
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X0 + 2}%`, top: "88%" }}>{dayMonth(series[0].date)}</span>
-        <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X1}%`, top: "88%" }}>{dayMonth(series[series.length - 1].date)}</span>
+        <span aria-hidden="true" className="absolute right-0 text-xs leading-none whitespace-nowrap text-ink-soft" style={{ top: "88%" }}>{dayMonth(series[series.length - 1].date)}</span>
       </div>
       <ChartLegend
         entries={[
           { kind: "line", text: "הממוצע של מנדטי הממשלה היוצאת בכל יום" },
           { kind: "dot", text: "נקודה על הקו, כל 3 ימים" },
           ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "ב-14 הימים של כל נקודה (הסקר האחרון של כל מכון)") }] : []),
-          { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
+          { kind: "dash", text: `קווים מקווקווים: הנקודה הנמוכה והגבוהה בגרף, 50 ו-${MAJORITY} (קו הרוב)` },
         ]}
       />
     </>

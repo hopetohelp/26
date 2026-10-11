@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ScreenLegend } from "../components/ChartLegend";
 import { Duel, ThresholdLine } from "../components/Duel";
+import ExitPollClock from "../components/ExitPollClock";
 import InstallApp from "../components/InstallApp";
 import { GovTrend, Hemicycle, MAJORITY } from "../components/homeCharts";
-import { timeLeftText } from "../lib/countdown";
 import { date } from "../lib/format";
-import { dayMonth } from "../lib/home";
 import { GOV_POINTS, HOME, LATEST_POLLS } from "../lib/homeData";
 import { POLL_AVERAGE } from "../lib/sources";
-import { LOCK_AT } from "./guess/model";
 
 /**
  * מסך הבית (הכרעת בעלים 11.10.2026), לפי הסדר: כותרת "תמונת מצב" עם התאריך של היום; לוח 120 המושבים עם "הממשלה היוצאת" בצד;
@@ -20,24 +17,14 @@ import { LOCK_AT } from "./guess/model";
 const home = HOME;
 
 export default function Home() {
-  const { gov, other, series } = home;
-  const lo = Math.min(...series.map((s) => s.v));
-  const hi = Math.max(...series.map((s) => s.v));
+  const { gov, other } = home;
   const [a, b] = [...home.safe, ...home.edge].sort((x, y) => y.central - x.central);
   const asOf = date(POLL_AVERAGE.asOf);
-  // הזמן שנשאר למדגמי הבחירות (27.10, 22:00), מתעדכן בכל דקה
-  const [now, setNow] = useState(Date.now);
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 60_000);
-    return () => clearInterval(t);
-  }, []);
-  const left = timeLeftText(LOCK_AT - now);
   return (
     <>
-      {/* שורה אחת ממורכזת, והגופן מתכווץ לפי רוחב המסך כדי שלא תישבר */}
-      <h1 className="text-center whitespace-nowrap font-display leading-tight text-[min(4.6vw,2.25rem)]">
-        תמונת מצב{left && <> <span className="font-num tabular text-ink-soft">{left} למדגמים</span></>}
-      </h1>
+      {/* במקום כותרת גלויה: שעון עצר (ימים, שעות ודקות) עד מדגמי הבחירות. הכותרת נשארת לקורא מסך */}
+      <h1 className="sr-only">תמונת מצב</h1>
+      <ExitPollClock />
       <p className="sr-only">מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[40rem] mx-auto">
@@ -49,9 +36,7 @@ export default function Home() {
 
 
       <ScreenLegend><section aria-labelledby="home-trend" className="mt-10">
-        <h2 id="home-trend" className="text-xl font-display leading-tight">
-          {lo === hi ? `הממשלה היוצאת: ${gov} מנדטים מאז ${dayMonth(home.start)}` : `הממשלה היוצאת: ${lo} עד ${hi} מנדטים מאז ${dayMonth(home.start)}`}
-        </h2>
+        <h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת בסקרים</h2>
         <GovTrend home={home} points={GOV_POINTS} />
       </section></ScreenLegend>
       <aside aria-labelledby="home-cta" className="mt-10 rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
