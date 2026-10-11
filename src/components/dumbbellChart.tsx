@@ -56,7 +56,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
       </span>
       <span className="col-start-2 row-start-1 md:col-start-3 md:row-span-2 flex items-baseline gap-1 md:block md:text-end md:leading-none">
         <b className="block font-num font-extrabold tabular text-lg"><bdi dir="ltr">{sign(d)}</bdi></b>
-        <span className="block text-xs text-ink-soft md:mt-0.5">{pct ? "נק'" : "מנדטים"}</span>
+        <span className="block text-xs text-ink-soft md:mt-0.5">{pct ? "אחוזים" : "מנדטים"}</span>
       </span>
       <span aria-hidden="true" dir="ltr" className="relative block h-8 col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-span-2">
         <span className="mk-plot">
@@ -75,7 +75,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
       </span>
       <span className="sr-only">
         {pct
-          ? `; 2022: ${before} מהקולות הכשרים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} ב-80% מהתרחישים` : ""}. שינוי נטו: ${sign(d)} נקודות אחוז`
+          ? `; 2022: ${before} מהקולות הכשרים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} ב-80% מהתרחישים` : ""}. שינוי נטו: ${sign(d)} אחוזים`
           : `; 2022: ${before} מנדטים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} ב-80% מהתרחישים` : ""}. שינוי נטו: ${sign(d)} מנדטים`}
       </span>
       {open && below && <div className="col-span-full row-start-4">{below}</div>}

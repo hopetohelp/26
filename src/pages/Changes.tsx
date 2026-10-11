@@ -137,7 +137,7 @@ export default function Changes() {
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
           <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}</th>
           <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"}</th>
-          <th scope="col">{pct ? "שינוי (נק')" : "שינוי (מנדטים)"}</th>
+          <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
       </thead>
       <tbody>
@@ -169,7 +169,7 @@ export default function Changes() {
         lead="כל מפלגה של היום מול התוצאה של 2022. מפלגה שנוצרה מפיצול מקבלת חלק מהתוצאה של הרשימה שממנה באה."
         primary={
           <>
-            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable} segmented>
+            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable}>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>
             <PersonalBlocs

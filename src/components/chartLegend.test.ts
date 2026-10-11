@@ -98,23 +98,24 @@ describe("שורת בקרה אחת: מקרא והצגה כטבלה (הכרעת �
     const html = renderToStaticMarkup(createElement(ChartBar, { legend: entries, asTable: false, onAsTable: () => {} }, createElement("i", { id: "unit" })));
     expect(row(html)).toBeGreaterThanOrEqual(0);
     expect(html.indexOf("מקרא")).toBeLessThan(html.indexOf('id="unit"'));
-    expect(html.indexOf('id="unit"')).toBeLessThan(html.indexOf("הצגה כטבלה"));
+    expect(html.indexOf('id="unit"')).toBeLessThan(html.indexOf('aria-label="צורת תצוגה"'));
     const pills = [...html.matchAll(/<button[^>]*class="([^"]*)"/g)].map((m) => m[1]);
-    expect(pills).toHaveLength(2);
-    // מקרא: תגית שקטה צמודה לשמאל (אפשרות ב, 11.10.2026); הצגה כטבלה: גלולה
+    // מקרא: תגית שקטה צמודה לשמאל (אפשרות ב, 11.10.2026); גרף/טבלה: מתג מקטעים (שני כפתורי רדיו)
+    expect(pills).toHaveLength(3);
     expect(pills.find((c) => c.includes("ms-auto"))).toContain("rounded-[7px]");
+    expect(html).toContain("גרף");
     expect(html).not.toContain("ממוצע בדיקה"); // המקרא סגור
   });
-  it("ChartBar בתצוגת טבלה: אין 'מקרא' (אין סימונים), ויש 'הצגה כגרף' עם פקד היחידות", () => {
+  it("ChartBar בתצוגת טבלה: אין 'מקרא' (אין סימונים), והמתג גרף/טבלה עם פקד היחידות", () => {
     const html = renderToStaticMarkup(createElement(ChartBar, { legend: entries, asTable: true, onAsTable: () => {} }, createElement("i", { id: "unit" })));
     expect(html).not.toContain("מקרא");
-    expect(html).toContain("הצגה כגרף");
+    expect(html).toContain('aria-label="צורת תצוגה"');
     expect(html).toContain('id="unit"');
   });
   it("ChartWithTable עצמאי: כפתור הצגה כטבלה בשורה ממורכזת מעל הגרף", () => {
     const html = renderToStaticMarkup(createElement(ChartWithTable, { chart: createElement("p", { id: "chart" }), table: createElement("p", { id: "table" }), summary: "תיאור" }));
     expect(row(html)).toBeGreaterThanOrEqual(0);
-    expect(html.indexOf("הצגה כטבלה")).toBeLessThan(html.indexOf('id="chart"'));
+    expect(html.indexOf('aria-label="צורת תצוגה"')).toBeLessThan(html.indexOf('id="chart"'));
     expect(html).not.toContain('id="table"');
   });
   it("ChartWithTable נשלט מבחוץ (asTable): אין בו כפתור, והתצוגה לפי המתג של המסך", () => {
