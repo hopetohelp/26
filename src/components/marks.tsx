@@ -49,7 +49,7 @@ export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number)
   );
 }
 
-/** ממוצע = עיגול מלא כתום בקוטר 22, גדול מהנר העבה */
+/** ממוצע = עיגול ריק ירוק בקוטר 22, גדול מהנר העבה */
 export const MeanDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-mean" style={{ left: `${at}%` }} />;
 
 /** תוצאה (מציאות) = עיגול ריק שחור בקוטר 22, גדול מהנר העבה (גם ממוצע המשתתפים בסקר האתר, שאינו סקר) */

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
-import { clipSegs, intSegs, levelSegs, smoothPath, sparseIndices, thirdsProfile, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
+import { clipSegs, intSegs, levelSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ProfileCandleV, Track } from "./marks";
 
@@ -231,7 +231,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   const marks = points.length
     ? points.map((p) => ({ date: dayOf(p.t), values: p.values })).filter((p) => p.date >= series[0].date && p.date <= lastDate)
     : sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1).map((i) => ({ date: series[i].date, values: [] as number[] }));
-  const pollCandles = marks.map((m) => thirdsProfile(m.values));
+  const pollCandles = levelSegs(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
   const grid = [50, 55].filter((v) => v > vmin && v < vmax);
   const min = Math.min(...vals);
   const max = Math.max(...vals);

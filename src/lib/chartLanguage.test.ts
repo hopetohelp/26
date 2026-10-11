@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, thirdsProfile, valueSegs, type LSeg, type Seg } from "./chartLanguage";
+import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, fillGaps, valueSegs, type LSeg, type Seg } from "./chartLanguage";
 
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
     expect(Object.keys(CANDLE_PX)).toEqual(["1", "3", "5"]);
-    expect(CANDLE_PX).toEqual({ 1: 4, 3: 10, 5: 16 });
+    expect(CANDLE_PX).toEqual({ 1: 3, 3: 10, 5: 16 });
   });
   it("שטח הציור מרוחק מקצה המסלול מעבר לרדיוס העיגול, והערך זהה ב-CSS", () => {
     expect(MARK_PAD).toBeGreaterThan(MARK_PX / 2);
@@ -142,7 +142,7 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
   it("רמה 1 קו מלא (4), רמות 3 ו-5 קופסה חלולה (10 ו-16)", () => {
     expect(runs.map((r) => r.filled)).toEqual([true, false, false, false, true]);
-    expect(runs.map((r) => r.half * 2)).toEqual([4, 10, 16, 10, 4]);
+    expect(runs.map((r) => r.half * 2)).toEqual([3, 10, 16, 10, 3]);
   });
   it("אין רמת ביניים: כל קטע באחד משלושת הגדלים", () => {
     runs.forEach((r) => expect(Object.values(CANDLE_PX)).toContain(r.half * 2));
@@ -171,26 +171,21 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
     expect(squareRuns([{ from: 0, to: 2, level: 5 }], map)).toEqual([{ a: 0, b: 200, half: 8, filled: false }]);
   });
   it("כל הקטעים דקים: קו מלא אחד", () => {
-    expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 2, filled: true }]);
+    expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 1.5, filled: true }]);
   });
 });
 
-describe("thirdsProfile: נר מגמה לפי שלישים (הצעה ג)", () => {
-  it("תמיד דק, בינוני, עבה, בינוני, דק — מהנמוך עד הגבוה", () => {
-    const segs = thirdsProfile([46, 47, 47, 48, 49, 49, 52, 56, 59, 64]);
-    expect(segs.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
-    expect(segs[0].from).toBe(46);
-    expect(segs[segs.length - 1].to).toBe(64);
-    for (let i = 1; i < segs.length; i++) expect(segs[i].from).toBeCloseTo(segs[i - 1].to, 9);
+describe("fillGaps: הצעה ב — כל רוחב ממשיך עד הרוחב הבא", () => {
+  const g = (from: number, to: number, level: 1 | 3 | 5): LSeg => ({ from, to, level });
+  it("חור קצר (עד 20% מהנר) מתמלא בעובי הנמוך מבין שני הקירות", () => {
+    const out = fillGaps([g(0, 4, 5), g(4, 5, 1), g(5, 10, 3)], 0.2);
+    expect(out.map((x) => x.level)).toEqual([5, 3, 3]);
   });
-  it("ערך יחיד או ערכים שווים — קופסה עבה צרה", () => {
-    expect(thirdsProfile([50]).map((g) => g.level)).toEqual([5]);
-    expect(thirdsProfile([50, 50, 50]).map((g) => g.level)).toEqual([5]);
+  it("חור ארוך (מעל 20%) נשאר דק: פער אמיתי", () => {
+    const out = fillGaps([g(0, 2, 5), g(2, 6, 1), g(6, 10, 5)], 0.2);
+    expect(out.map((x) => x.level)).toEqual([5, 1, 5]);
   });
-  it("שני סקרים — עדיין רציף ובלי חורים", () => {
-    const segs = thirdsProfile([46, 60]);
-    expect(segs.some((g) => g.level === 5)).toBe(true);
-    expect(segs[0].from).toBe(46);
-    expect(segs[segs.length - 1].to).toBe(60);
+  it("קצה דק אינו חור ונשאר דק", () => {
+    expect(fillGaps([g(0, 1, 1), g(1, 9, 5), g(9, 10, 1)], 0.2).map((x) => x.level)).toEqual([1, 5, 1]);
   });
 });

@@ -51,8 +51,8 @@
   --pos: 22 120 70;
   --neg: 190 40 50;
   --mk-range: 52 105 214;
-  --mk-mean: 240 124 0;
-  --mk-result: var(--neg);
+  --mk-mean: 0 150 70;
+  --mk-result: 220 0 30;
   --frame: 255 255 255;
   --frame-ink: 19 23 29;
   --frame-soft: 74 85 99;
@@ -85,8 +85,8 @@
   --pos: 100 205 150;
   --neg: 245 125 125;
   --mk-range: 106 150 235;
-  --mk-mean: 255 158 60;
-  --mk-result: var(--neg);
+  --mk-mean: 60 210 120;
+  --mk-result: 255 70 80;
   --frame: 26 29 35;
   --frame-ink: 236 239 243;
   --frame-soft: 176 184 196;
