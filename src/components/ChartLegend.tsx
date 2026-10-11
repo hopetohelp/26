@@ -105,12 +105,15 @@ export default function ChartLegend({
   children,
   action,
   className = "",
+  side = "end",
 }: {
   entries: LegendEntry[];
   children?: ReactNode;
   /** פקד של הגרף באותה שורה עם הכפתור, אחריו (למשל מתג קו/נרות) */
   action?: ReactNode;
   className?: string;
+  /** מיקום הכפתור בשורה: `end` (ברירת מחדל) — צמוד לשמאל; `start` — צמוד לימין (הפינה הימנית העליונה בגרף המגמה האחיד, הכרעת בעלים 11.10.2026) */
+  side?: "start" | "end";
 }) {
   const [open, setOpen] = useState(false);
   const id = useId();
@@ -130,7 +133,7 @@ export default function ChartLegend({
       aria-expanded={open}
       aria-controls={open ? id : undefined}
       onClick={() => setOpen((v) => !v)}
-      className={`ms-auto order-last inline-flex items-center gap-1.5 min-h-[32px] px-2.5 rounded-[7px] border border-paper-line text-[0.8rem] font-medium text-ink-soft hover:bg-paper hover:text-ink aria-expanded:bg-paper aria-expanded:text-ink`}
+      className={`${side === "start" ? "me-auto" : "ms-auto"} order-last inline-flex items-center gap-1.5 min-h-[32px] px-2.5 rounded-[7px] border border-paper-line text-[0.8rem] font-medium text-ink-soft hover:bg-paper hover:text-ink aria-expanded:bg-paper aria-expanded:text-ink`}
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
         <circle cx="12" cy="12" r="9" />
