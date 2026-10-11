@@ -1,5 +1,5 @@
 import Explained from "./Explained";
-import { PartyAvatar } from "./PartyAvatar";
+import { PartyAvatar, PartyPhoto } from "./PartyAvatar";
 import { PassBar } from "./homeCharts";
 import { seatsIn, summarize, type Poll } from "../lib/data";
 import { rng, seatsFmt } from "../lib/format";
@@ -34,9 +34,12 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
         assumption="המספר הגדול: ממוצע המודל. הטווח: הנמוך והגבוה בין המכונים בסקר האחרון של כל אחד. הספירה: בכמה סקרים כל רשימה גבוהה יותר. לא סיכוי."
         methodAnchor="model"
       >
-        <div aria-hidden="true" className="relative grid grid-cols-2 border-y-2 border-ink duel-in">
+        <div aria-hidden="true" className="relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in">
+          {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בעיגול בקצה החיצוני, קוטרו חצי מגובה הרצועה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
+          <PartyPhoto id={a.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
           <Side r={b} range={rangeOf(b.id)} lead={b.central >= a.central} align="end" />
+          <PartyPhoto id={b.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <span className="absolute inset-y-4 left-1/2 border-s border-paper-line" />
           {/* העיגול במרכז: הספירה "6:2" ומתחתיה "סקרים" (בכמה סקרים כל אחת גבוהה יותר); בלי סקרים משותפים — "מול" */}
           <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 w-24 h-24 md:w-28 md:h-28 rounded-full bg-ink text-paper leading-none text-center">
@@ -60,9 +63,8 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
 function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: boolean; align: "start" | "end" }) {
   return (
     <div className={`py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
-      {/* תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד: ימין לצד הימני, שמאל לשמאלי */}
-      <span className="md:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
-      <span className="hidden md:block mb-3"><PartyAvatar id={r.id} size={112} /></span>
+      {/* צר: תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד (ימין לצד הימני, שמאל לשמאלי); ברוחב מ-1024px התמונה ברצועה כולה */}
+      <span className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
       <p className={`font-num tabular leading-none mt-2 text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
         {seatsFmt(r.central)}

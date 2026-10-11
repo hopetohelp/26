@@ -34,10 +34,10 @@ export default function Home() {
   const left = timeLeftText(LOCK_AT - now);
   return (
     <>
-      <header className="text-center">
-        <h1 className="font-display text-3xl md:text-4xl leading-tight">תמונת מצב</h1>
-        {left && <p className="mt-1 font-display text-xl md:text-2xl leading-tight text-ink-soft"><span className="font-num tabular">{left}</span> למדגמים</p>}
-      </header>
+      {/* שורה אחת ממורכזת, והגופן מתכווץ לפי רוחב המסך כדי שלא תישבר */}
+      <h1 className="text-center whitespace-nowrap font-display leading-tight text-[min(4.6vw,2.25rem)]">
+        תמונת מצב{left && <> <span className="font-num tabular text-ink-soft">{left} למדגמים</span></>}
+      </h1>
       <p className="sr-only">מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[40rem] mx-auto">
