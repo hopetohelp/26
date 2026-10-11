@@ -1,3 +1,4 @@
+import { bucketLatest, pointTimes, POINT_DAYS } from "./data";
 /**
  * דיוק הסקרים בעבר: הסקרים של חמש המערכות 2019א–2022 מול התוצאות הרשמיות.
  * כל החישובים טהורים (מקבלים את הנתונים כפרמטר) — כדי שאפשר יהיה לבדוק אותם, ושקובץ הסקרים הישנים
@@ -284,16 +285,15 @@ export function familyRows(summaries: CycleSummary[]): FamilyRow[] {
   return rows;
 }
 
-/** ממוצע מתגלגל לאורך המערכה: בכל יום — ממוצע הסקרים מ-`days` הימים שקדמו לו (לפחות `minN` סקרים) */
-export function campaignTrend(c: Cycle, letters: string, days = 7, minN = 3) {
+/** לאורך המערכה: נקודה כל 3 ימים, ממוצע הסקרים של 3 הימים שמסתיימים בה; סקר אחד לכל מכון בנקודה — האחרון (הכרעת בעלים 11.10.2026) */
+export function campaignTrend(c: Cycle, letters: string, days = POINT_DAYS, minN = 1) {
   const ps = usable(c);
   if (!ps.length) return [];
   const first = ps.reduce((a, p) => (p.end < a ? p.end : a), ps[0].end);
   const last = ps.reduce((a, p) => (p.end > a ? p.end : a), ps[0].end);
   const out: { t: number; v: number; n: number; lo: number; hi: number; xs: number[] }[] = [];
-  for (let t = toTime(first); t <= toTime(last); t += DAY) {
-    const xs = ps
-      .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
+  for (const t of pointTimes(first, last)) {
+    const xs = bucketLatest(ps, (p) => p.end, pollsterOf, t, days)
       .map((p) => seatsOf(p, letters))
       .filter((x): x is number => typeof x === "number");
     if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length, lo: Math.min(...xs), hi: Math.max(...xs), xs });

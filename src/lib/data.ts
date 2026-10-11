@@ -172,11 +172,33 @@ export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
 }
 
 /** ממוצע מתגלגל של מנדטים — חלון של `days` ימים, נקודה כל `step` ימים */
-export function rollingMean(id: string, from: string, to: string, days = 14, step = 3, source = usablePolls) {
+/**
+ * נקודת זמן בכל האתר = 3 ימים (הכרעת בעלים 11.10.2026): כל נקודה בגרף זמן מסכמת את הסקרים של 3 הימים שמסתיימים בה,
+ * והנקודות כל 3 ימים, אחורה מהתאריך האחרון. שני סקרים של אותו מכון (מכון + מזמין) באותה נקודה ⇐ רק האחרון נספר.
+ */
+export const POINT_DAYS = 3;
+export function bucketLatest<T>(source: T[], endOf: (p: T) => string, keyOf: (p: T) => string, t: number, days = POINT_DAYS): T[] {
+  const map = new Map<string, T>();
+  for (const p of source) {
+    const e = toTime(endOf(p));
+    if (e > t || e <= t - days * DAY) continue;
+    const k = keyOf(p);
+    const cur = map.get(k);
+    if (!cur || endOf(p) > endOf(cur)) map.set(k, p);
+  }
+  return [...map.values()];
+}
+/** נקודות הזמן: כל 3 ימים, מהתאריך האחרון אחורה (כך שהנקודה האחרונה היא תמיד היום האחרון) */
+export function pointTimes(from: string, to: string, step = POINT_DAYS): number[] {
+  const out: number[] = [];
+  for (let t = toTime(to); t >= toTime(from); t -= step * DAY) out.unshift(t);
+  return out;
+}
+
+export function rollingMean(id: string, from: string, to: string, days = POINT_DAYS, step = POINT_DAYS, source = usablePolls) {
   const out: { t: number; v: number; n: number; lo: number; hi: number; xs: number[] }[] = [];
-  for (let t = toTime(from); t <= toTime(to); t += step * DAY) {
-    const xs = source
-      .filter((p) => toTime(p.end) <= t && toTime(p.end) > t - days * DAY)
+  for (const t of pointTimes(from, to, step)) {
+    const xs = bucketLatest(source, (p) => p.end, pollsterKey, t, days)
       .map((p) => seatsIn(p, id))
       .filter((x): x is number => typeof x === "number");
     // lo ו-hi = הנמוך והגבוה בין הסקרים בחלון (טווח מלא): נר הטווח בגרפי המגמה

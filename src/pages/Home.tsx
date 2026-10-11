@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import InstallApp from "../components/InstallApp";
-import { GovTrend, Hemicycle, MAJORITY, Ranking, missingToMajority } from "../components/homeCharts";
+import { GovTrend, Hemicycle, MAJORITY, Ranking } from "../components/homeCharts";
 import { date, num } from "../lib/format";
 import { dayMonth } from "../lib/home";
-import { HOME } from "../lib/homeData";
+import { GOV_POINTS, HOME } from "../lib/homeData";
 import { POLL_AVERAGE } from "../lib/sources";
 
 /**
@@ -15,7 +15,6 @@ const home = HOME;
 
 export default function Home() {
   const { gov, other, series } = home;
-  const missing = Math.min(missingToMajority(gov), other);
   const lo = Math.min(...series.map((s) => s.v));
   const hi = Math.max(...series.map((s) => s.v));
   return (
@@ -30,12 +29,7 @@ export default function Home() {
           <Hemicycle gov={gov} other={other} />
         </div>
         <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
-          <p className="flex flex-wrap items-center gap-x-5 gap-y-1 font-semibold">
-            <span className="inline-flex items-baseline gap-2">הממשלה היוצאת <b className="font-num text-xl font-extrabold tabular">{gov}</b></span>
-            {missing > 0 && <span className="inline-flex items-baseline gap-2">חסרים לרוב <b className="font-num text-xl font-extrabold tabular">{missing}</b></span>}
-            <span className="inline-flex items-baseline gap-2">{missing > 0 ? "שאר הכנסת" : "כל השאר"} <b className="font-num text-xl font-extrabold tabular">{other - missing}</b></span>
-          </p>
-          <p className="mt-2.5 text-sm text-ink-soft">
+          <p className="text-sm text-ink-soft">
             נכון ל-{date(POLL_AVERAGE.asOf)} · {num(POLL_AVERAGE.polls)} סקרים · <Link to="/method#model" className="font-semibold">איך זה חושב?</Link>
           </p>
         </div>
@@ -51,15 +45,17 @@ export default function Home() {
           <h2 id="home-trend" className="text-xl font-display leading-tight">
             {lo === hi ? `הממשלה היוצאת: ${gov} מנדטים מאז ${dayMonth(home.start)}` : `הממשלה היוצאת: ${lo} עד ${hi} מנדטים מאז ${dayMonth(home.start)}`}
           </h2>
-          <GovTrend home={home} />
+          <GovTrend home={home} points={GOV_POINTS} />
         </section>
 
-        <aside aria-labelledby="home-cta" className="mt-10 lg:col-start-1 lg:row-start-2 lg:self-start rounded-theme bg-band text-band-ink p-5">
-          <h2 id="home-cta" className="text-2xl font-display leading-tight">כמה תקבל כל רשימה? תנחשו.</h2>
-          <p className="mt-2 text-sm text-band-soft">השערות משתתפים, אינן סקר.</p>
+        <aside aria-labelledby="home-cta" className="mt-10 lg:col-start-1 lg:row-start-2 lg:self-start rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+          <div>
+            <h2 id="home-cta" className="text-2xl font-display leading-tight">כמה תקבל כל רשימה? תנחשו.</h2>
+            <p className="mt-2 text-sm text-band-soft">השערות משתתפים, אינן סקר.</p>
+          </div>
           <Link
             to="/guess"
-            className="mt-4 inline-flex items-center justify-center min-h-12 px-6 rounded-full bg-signal text-signal-ink font-extrabold no-underline hover:text-signal-ink"
+            className="ms-auto inline-flex items-center justify-center min-h-12 px-6 rounded-full bg-signal text-signal-ink font-extrabold no-underline hover:text-signal-ink"
           >
             לבנות את הכנסת שלי
           </Link>

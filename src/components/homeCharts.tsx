@@ -56,13 +56,6 @@ export function Hemicycle({ gov, other }: { gov: number; other: number }) {
             <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
           ))}
         </svg>
-        <span
-          aria-hidden="true"
-          className="absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-none text-ink-soft"
-          style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%` }}
-        >
-          120 מושבים
-        </span>
       </div>
     </figure>
   );
@@ -103,10 +96,7 @@ function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg
       {withPass && r.pass !== undefined && (
         <span className="col-span-full flex items-center gap-2.5 text-sm text-ink-soft pb-1">
           <PassBar pass={r.pass} />
-          <span className="flex flex-wrap gap-x-3">
-            <span className="whitespace-nowrap">עוברת ב-{Math.round(r.pass * 100)}% מהתרחישים</span>
-            <span className="whitespace-nowrap">לא עוברת ב-{100 - Math.round(r.pass * 100)}%</span>
-          </span>
+          <span className="whitespace-nowrap">עוברת ב-{Math.round(r.pass * 100)}% מהתרחישים</span>
         </span>
       )}
     </li>
@@ -216,19 +206,27 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
  * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, ובסופו עיגול מלא כתום (הממוצע היום)
  * ונר של טווח 80% ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
  */
-export function GovTrend({ home }: { home: HomeData }) {
+export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: number; values: number[] }[] }) {
   const { series, blocLo: lo, blocHi: hi } = home;
   if (series.length < 2) return null;
   const X0 = 3, X1 = 86, YT = 6, YB = 84;
   const vals = series.map((s) => s.v);
-  const vmin = Math.floor((Math.min(...vals, lo) - 2) / 2) * 2;
-  const vmax = Math.ceil((Math.max(...vals, hi, MAJORITY) + 3) / 2) * 2;
+  const pv = points.flatMap((p) => p.values);
+  const vmin = Math.floor((Math.min(...vals, ...pv, lo) - 2) / 2) * 2;
+  const vmax = Math.ceil((Math.max(...vals, ...pv, hi, MAJORITY) + 3) / 2) * 2;
   const Y = (v: number) => YB - ((YB - YT) * (v - vmin)) / (vmax - vmin);
   const t0 = Date.parse(series[0].date);
   const t1 = Date.parse(series[series.length - 1].date);
   const X = (d: string) => (t1 === t0 ? X0 : X0 + ((X1 - X0) * (Date.parse(d) - t0)) / (t1 - t0));
   const pts = series.map((s) => ({ x: X(s.date), y: Y(s.v) }));
-  const markers = sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1);
+  // נקודה כל 3 ימים: סמן על הקו ונר של הסקרים באותם ימים (לא בנקודה האחרונה — שם נר התרחישים ליום הבחירות)
+  const dayOf = (t: number) => new Date(t).toISOString().slice(0, 10);
+  const valueAt = (d: string) => (series.find((s) => s.date === d) ?? series[series.length - 1]).v;
+  const lastDate = series[series.length - 1].date;
+  const marks = points.length
+    ? points.map((p) => ({ date: dayOf(p.t), values: p.values })).filter((p) => p.date >= series[0].date && p.date < lastDate)
+    : sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1).map((i) => ({ date: series[i].date, values: [] as number[] }));
+  const pollCandles = levelSegs(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
   const last = pts[pts.length - 1];
   const grid = [50, 55].filter((v) => v > vmin && v < vmax);
   const min = Math.min(...vals);
@@ -250,8 +248,9 @@ export function GovTrend({ home }: { home: HomeData }) {
           <line x1={X0} x2={100} y1={Y(MAJORITY)} y2={Y(MAJORITY)} className="stroke-ink" strokeWidth={1.5} strokeDasharray="5 4" {...line} />
           <path d={smoothPath(pts)} className="fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...line} />
         </svg>
-        {markers.map((i) => (
-          <span key={i} aria-hidden="true" className="mk mk-dot" style={{ left: `${pts[i].x}%`, top: `${pts[i].y}%` }} />
+        {marks.map((m, i) => <ProfileCandleV key={`c${m.date}`} segs={pollCandles[i]} y={Y} left={`${X(m.date)}%`} />)}
+        {marks.map((m) => (
+          <span key={m.date} aria-hidden="true" className="mk mk-dot" style={{ left: `${X(m.date)}%`, top: `${Y(valueAt(m.date))}%` }} />
         ))}
         <ProfileCandleV segs={profile} y={Y} left={`${X1}%`} />
         <span aria-hidden="true" className="mk mk-mean" style={{ left: `${last.x}%`, top: `${last.y}%` }} />
@@ -264,7 +263,8 @@ export function GovTrend({ home }: { home: HomeData }) {
       <ChartLegend
         entries={[
           { kind: "line", text: "הממוצע של מנדטי הממשלה היוצאת בכל יום" },
-          { kind: "dot", text: "נקודה על הקו" },
+          { kind: "dot", text: "נקודה על הקו, כל 3 ימים" },
+          ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "ב-3 הימים של כל נקודה") }] : []),
           { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
           { kind: "mean", text: "הממוצע היום" },
           { kind: "candle", text: rangeLine("p80", "התרחישים", "ליום הבחירות") },

@@ -2,6 +2,7 @@ import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { ScreenLegend } from "./ChartLegend";
 import { useEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
@@ -255,7 +256,7 @@ export default function Layout() {
       </header>
       <AccessCard />
       <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
-        <PersonalBlocsProvider><PageErrorBoundary><Outlet /></PageErrorBoundary></PersonalBlocsProvider>
+        <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <MobileTabs unread={unread} />
       <GuessCta pathname={pathname} />

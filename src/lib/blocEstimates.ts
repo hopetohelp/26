@@ -1,4 +1,4 @@
-import { mean, pollsterKey, pollsterLabel, seatsIn, toTime, type Poll } from "./data";
+import { bucketLatest, mean, pointTimes, POINT_DAYS, pollsterKey, pollsterLabel, seatsIn, toTime, type Poll } from "./data";
 import { blocValues, type BlocImputation, type BlocRow } from "./personalBlocs";
 import type { Bloc } from "./crowdApi";
 import policy from "./blocEstimatePolicy.json";
@@ -47,12 +47,12 @@ export function pollBlocValues(blocs: Bloc[], target: Poll, source: Poll[], rule
   });
 }
 
-export function rollingBlocMean(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days: number, minN: number, step = 3, rules = BLOC_ESTIMATE_POLICY) {
-  const projected = source.map(p=>({t:toTime(p.end),rows:pollBlocValues(blocs,p,donors,rules)}));
+export function rollingBlocMean(blocs: Bloc[], source: Poll[], donors: Poll[], from: string, to: string, days = POINT_DAYS, minN = 1, step = POINT_DAYS, rules = BLOC_ESTIMATE_POLICY) {
+  const projected = source.map(p=>({end:p.end,key:pollsterKey(p),rows:pollBlocValues(blocs,p,donors,rules)}));
   return blocs.map(b=>{
     const points: {t:number;v:number;lo:number;hi:number;xs:number[];n:number;fullN:number;estimatedN:number;missingN:number;estimated:boolean;missing:string[];imputed:BlocImputation[];breakBefore:boolean}[]=[];
-    for(let t=toTime(from);t<=toTime(to);t+=step*DAY){
-      const rows=projected.filter(p=>p.t<=t && p.t>t-days*DAY).map(p=>p.rows.find(r=>r.id===b.id)!);
+    for(const t of pointTimes(from,to,step)){
+      const rows=bucketLatest(projected,p=>p.end,p=>p.key,t,days).map(p=>p.rows.find(r=>r.id===b.id)!);
       const ready=rows.filter(r=>r.total!==null || r.estimate!==null);
       if(ready.length<minN)continue;
       const estimatedRows=ready.filter(r=>r.estimate!==null);
