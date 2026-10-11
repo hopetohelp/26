@@ -7,9 +7,11 @@ import { date, dateRange, num } from "../lib/format";
 const PAGE = 50;
 
 function valuesText(p: Pick<Poll, "values"> | SubgroupPoll) {
+  // סקר שהמכון לא המיר למנדטים (רק אחוזים): מציגים אחוז רגיל; הסוגריים שמורים ל"מתחת לאחוז החסימה" בסקר עם מנדטים
+  const pctOnly = Object.values(p.values).every((v) => v.s === undefined);
   return Object.entries(p.values)
-    .sort(([, a], [, b]) => (b.s ?? -1) - (a.s ?? -1))
-    .map(([id, v]) => `${listName(id)} ${v.s ?? `(${v.p}%)`}`)
+    .sort(([, a], [, b]) => (b.s ?? b.p ?? -1) - (a.s ?? a.p ?? -1))
+    .map(([id, v]) => `${listName(id)} ${v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}`)
     .join(" · ");
 }
 
@@ -166,7 +168,7 @@ export default function Polls() {
         <Card>
           <h2 className="font-bold text-lg">סקרים על קבוצת אוכלוסייה מסוימת</h2>
           <p className="text-sm text-ink-soft mt-1">
-            סקרים שנשאלה בהם רק קבוצה אחת (למשל צעירים), ולכן אינם מייצגים את כלל הציבור. הם מוצגים כאן לעיון בלבד.
+            סקרים שנשאלה בהם רק קבוצה אחת (למשל צעירים, ליברלים או הציבור הערבי), ולכן אינם מייצגים את כלל הציבור. הם מוצגים כאן לעיון בלבד, ואינם נכנסים לממוצעים ולחישובים. סקר שהמכון לא המיר למנדטים מוצג באחוזים.
           </p>
           <ul className="divide-y divide-paper-line mt-2">
             {subgroupPolls.map((p) => (

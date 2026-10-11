@@ -103,5 +103,61 @@
   "id": "2026-09-15-s-m-l-t-x",
   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4154, עותק: raw/gov/Survey_4154.pdf)",
   "to": "מכון DRI"
+ },
+ {
+  "field": "sample",
+  "from": 1013,
+  "id": "2026-10-07-mp-tm-sn-a-channel-13",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4193, עותק: raw/gov/Survey_4193.pdf; מספר המשיבים בפועל 1,263)",
+  "to": 1263
+ },
+ {
+  "field": "start",
+  "from": "2026-10-07",
+  "id": "2026-10-07-mp-tm-sn-a-channel-13",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4193, עותק: raw/gov/Survey_4193.pdf; איסוף נתונים 6.10 09:00 עד 7.10 09:00)",
+  "to": "2026-10-06"
+ },
+ {
+  "field": "start",
+  "from": "2026-10-07",
+  "id": "2026-10-08-lri-p4a-maariv",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; איסוף נתונים 8.10 12:30 עד 9.10 13:00)",
+  "to": "2026-10-08"
+ },
+ {
+  "field": "end",
+  "from": "2026-10-08",
+  "id": "2026-10-08-lri-p4a-maariv",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; איסוף נתונים 8.10 12:30 עד 9.10 13:00)",
+  "to": "2026-10-09"
+ },
+ {
+  "field": "sample",
+  "from": 504,
+  "id": "2026-10-07-direct-polls-i24-news",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4199, עותק: raw/gov/Survey_4199.pdf; מספר המשיבים בפועל 518)",
+  "to": 518
+ },
+ {
+  "field": "start",
+  "from": "2026-08-16",
+  "id": "2026-08-16-kantar-kan-11",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4079, עותק: raw/gov/Survey_4079.pdf; ביצוע הסקר 13.8 עד 16.8)",
+  "to": "2026-08-13"
+ },
+ {
+  "field": "end",
+  "from": "2026-08-09",
+  "id": "2026-08-09-sf-nd-channel-14",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4071, עותק: raw/gov/Survey_4071.pdf; ביצוע הסקר 9.8 עד 10.8)",
+  "to": "2026-08-10"
+ },
+ {
+  "field": "start",
+  "from": "2026-07-29",
+  "id": "2026-07-29-mp-tm-sn-a-channel-13",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4048, עותק: raw/gov/Survey_4048.pdf; איסוף נתונים 28.7 09:00 עד 29.7 09:00)",
+  "to": "2026-07-28"
  }
 ]
