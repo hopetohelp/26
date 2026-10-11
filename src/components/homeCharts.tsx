@@ -34,8 +34,8 @@ const CX = 1.1;
 const CY = 1.26;
 const SEATS = hemicycleSeats(CX, CY);
 export const MAJORITY = 61;
-/** קו עזר מקווקו ב-50 מנדטים בגרף מגמת הממשלה (הכרעת בעלים 11.10.2026) */
-const HALF = 50;
+/** קווי עזר מקווקווים בגרף מגמת הממשלה, באפור (הכרעת בעלים 11.10.2026): 50 ו-55. קו 61 (הרוב) בשחור */
+const REF_LINES = [50, 55];
 /** גבולות הקווים המקווקווים בגרף המגמה: העליון לא יורד מ-65, והתחתון לא עולה על 45 */
 const TREND_HIGH = 65;
 const TREND_LOW = 45;
@@ -232,7 +232,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   // הקו העליון רק מעל 65 והתחתון רק מתחת ל-45 (הכרעת בעלים 11.10.2026): הנקודה הגבוהה/הנמוכה בגרף, ולא פחות/יותר מהגבולות
   const lo = Math.min(...vals, ...pv, TREND_LOW);
   const hi = Math.max(...vals, ...pv, TREND_HIGH);
-  const vmin = Math.floor((Math.min(lo, HALF) - 2) / 2) * 2;
+  const vmin = Math.floor((Math.min(lo, ...REF_LINES) - 2) / 2) * 2;
   const vmax = Math.ceil((Math.max(hi, MAJORITY) + 3) / 2) * 2;
   const Y = (v: number) => YB - ((YB - YT) * (v - vmin)) / (vmax - vmin);
   const t0 = Date.parse(series[0].date);
@@ -248,7 +248,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
     : sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1).map((i) => ({ date: series[i].date, values: [] as number[] }));
   const pollCandles = candleProfiles(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
   // ארבעה קווים מקווקווים, לפי הערך מלמטה למעלה; שני קווים צמודים מדי (פחות מ-2.5 מנדטים) — התווית של הנמוך בלבד
-  const dashed = [...new Set([lo, HALF, MAJORITY, hi])].sort((a, b) => a - b).map((v, i, all) => ({ v, label: i === 0 || v - all[i - 1] >= 2.5 }));
+  const dashed = [...new Set([lo, ...REF_LINES, MAJORITY, hi])].sort((a, b) => a - b).map((v, i, all) => ({ v, label: i === 0 || v - all[i - 1] >= 2.5 }));
   const min = Math.min(...vals);
   const max = Math.max(...vals);
   const line = { vectorEffect: "non-scaling-stroke" as const };
@@ -263,7 +263,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
           role="img"
           aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב`}
         >
-          {dashed.map(({ v }) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className={v === MAJORITY ? "stroke-ink" : "stroke-ink-soft"} strokeWidth={v === MAJORITY ? 1.5 : 1} strokeDasharray="5 4" {...line} />)}
+          {dashed.map(({ v }) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className={v === MAJORITY ? "stroke-ink" : "stroke-ink-faint"} strokeWidth={v === MAJORITY ? 1.5 : 1} strokeDasharray="5 4" {...line} />)}
           <path d={smoothPath(pts)} className="fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...line} />
         </svg>
         {marks.map((m, i) => <ProfileCandleV key={`c${m.date}`} segs={pollCandles[i]} y={Y} left={`${X(m.date)}%`} />)}
@@ -272,7 +272,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
         ))}
         {/* תגית הערך משמאל לקו: הקצה הימני שלה במרחק קבוע מתחילת הקו (הכרעת בעלים 11.10.2026) */}
         {dashed.filter((d) => d.label).map(({ v }) => (
-          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${v === MAJORITY ? "text-sm font-extrabold" : "text-xs text-ink-soft"}`} style={{ right: `calc(${100 - X0}% + 6px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
+          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${v === MAJORITY ? "text-sm font-extrabold" : "text-xs text-ink-faint"}`} style={{ right: `calc(${100 - X0}% + 6px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
         ))}
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X0 + 2}%`, top: "88%" }}>{dayMonth(series[0].date)}</span>
         <span aria-hidden="true" className="absolute right-0 text-xs leading-none whitespace-nowrap text-ink-soft" style={{ top: "88%" }}>{dayMonth(series[series.length - 1].date)}</span>
@@ -282,7 +282,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
           { kind: "line", text: "הממוצע של מנדטי הממשלה היוצאת בכל יום" },
           { kind: "dot", text: "נקודה על הקו, כל 3 ימים" },
           ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "ב-14 הימים של כל נקודה (הסקר האחרון של כל מכון)") }] : []),
-          { kind: "dash", text: `קווים מקווקווים: הנקודה הגבוהה בגרף (לפחות ${TREND_HIGH}), ${MAJORITY} (קו הרוב), 50 והנקודה הנמוכה (לכל היותר ${TREND_LOW})` },
+          { kind: "dash", text: `קווים מקווקווים: הנקודה הגבוהה בגרף (לפחות ${TREND_HIGH}), ${MAJORITY} (קו הרוב), 55, 50 והנקודה הנמוכה (לכל היותר ${TREND_LOW})` },
         ]}
       />
     </>
