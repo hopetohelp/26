@@ -1,6 +1,7 @@
 import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
+import CandleTrend from "../components/CandleTrend";
 import { Segmented } from "../components/Choice";
 import Explained from "../components/Explained";
 import { POLL_AVERAGE } from "../lib/sources";
@@ -169,7 +170,10 @@ export default function Trends() {
                 <ChartWithTable
                   summary={`${labeled.length} רשימות, ${dateRange(from, to)}${who0 ? `, ${who0}` : ", כל המכונים"}.`}
                   chart={
-                    labeled.length ? (
+                    labeled.length === 1 && series.length === 1 ? (
+                      // רשימה אחת: הגרף האחיד (נר כל 3 ימים, חלון במעבר על הנר). כמה רשימות בגרף אחד הן חריג ונשארות ב-TrendChart
+                      <CandleTrend title={`מגמת המנדטים: ${labeled[0].name}`} points={labeled[0].points} windowDays={days} />
+                    ) : labeled.length ? (
                       <TrendChart series={series} from={toTime(from)} to={toTime(to)} yMax={yMax} title="מגמת המנדטים לפי רשימה" windowText={{ days, label: `${days} הימים` }} />
                     ) : (
                       <p className="text-ink-soft py-8 text-center">אין מספיק סקרים בתקופה ובמכון שנבחרו. בחרו תקופה ארוכה יותר או כל המכונים.</p>

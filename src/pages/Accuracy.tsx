@@ -1,6 +1,7 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { TrendChart, type Series } from "../components/charts";
+import CandleTrend from "../components/CandleTrend";
 import { Chips } from "../components/Choice";
 import DeviationChart from "../components/deviationChart";
 import { deviation, finding } from "../lib/deviation";
@@ -155,7 +156,12 @@ export default function Accuracy() {
         >
           <ChartWithTable
             summary={`${all.length} סקרים, ${dateRange(first, c.date)}.`}
-            chart={<TrendChart series={series} markers={markers} windowText={{ days: 14, label: "14 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />}
+            chart={series.length === 1 ? (
+              // רשימה אחת: הגרף האחיד, עם התוצאה בפועל. כמה רשימות בגרף אחד הן חריג ונשארות ב-TrendChart
+              <CandleTrend title={`מגמת הסקרים והתוצאה: ${series[0].name}`} points={series[0].points} markers={markers.filter((m) => m.id === series[0].id)} windowDays={14} />
+            ) : (
+              <TrendChart series={series} markers={markers} windowText={{ days: 14, label: "14 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />
+            )}
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">לכל רשימה: ממוצע הסקרים בתחילת המערכה ובסופה, והתוצאה</caption>
