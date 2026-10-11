@@ -73,4 +73,8 @@ describe("גרף המגמה האחיד", () => {
     expect(html({ series: two })).not.toContain('stroke-dasharray="4 3"');
     expect(html({ markers: [{ t: points[9].t + 6 * DAY, v: 55 }] })).toContain('stroke-dasharray="4 3"');
   });
+  it("הכותרת באותה שורה של כפתור המקרא: כותרת מימין, מקרא משמאל, בלי שורה ביניהם", () => {
+    const h = html({ heading: createElement("h2", null, "כותרת הגרף") });
+    expect(h).toMatch(/<div class="flex items-center gap-3"><div class="min-w-0 flex-1"><h2>כותרת הגרף<\/h2><\/div><button/);
+  });
 });
