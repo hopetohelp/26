@@ -12,7 +12,7 @@ const two = (n: number) => String(n).padStart(2, "0");
 
 /**
  * שעון עצר למדגמי הבחירות (הכרעת בעלים 11.10.2026, מחליף את הכותרת "תמונת מצב 16 ימים ו-8 שעות למדגמים"):
- * ימים · שעות · דקות עד 27.10, 22:00. מתעדכן בכל שנייה, כך שהדקות מתחלפות בדיוק. הכותרת של המסך נשארת לקורא מסך בלבד.
+ * ימים · שעות · דקות עד 27.10, 22:00, משמאל לימין (הכרעת בעלים 11.10.2026): ימים בשמאל, שעות במרכז ודקות בימין. מתעדכן בכל שנייה, כך שהדקות מתחלפות בדיוק. הכותרת של המסך נשארת לקורא מסך בלבד.
  * מהטוקנים בלבד, ממורכז, שורה אחת בכל רוחב.
  */
 export default function ExitPollClock() {
@@ -27,7 +27,7 @@ export default function ExitPollClock() {
   return (
     <div role="timer" aria-label={`עד המדגמים: ${p.days} ימים, ${p.hours} שעות ו-${p.minutes} דקות`} className="text-center">
       <p aria-hidden="true" className="font-display text-base md:text-xl text-ink-soft leading-tight">עד המדגמים</p>
-      <div aria-hidden="true" dir="rtl" className="mt-1 flex items-start justify-center gap-2 md:gap-4">
+      <div aria-hidden="true" dir="ltr" className="mt-1 flex items-start justify-center gap-2 md:gap-4">
         {cells.map(([value, unit], i) => (
           <div key={unit} className="flex items-start gap-2 md:gap-4">
             {i > 0 && <span className="font-num font-extrabold text-4xl md:text-6xl leading-none text-ink-faint">:</span>}

@@ -5,7 +5,6 @@ import ExitPollClock from "../components/ExitPollClock";
 import InstallApp from "../components/InstallApp";
 import { GovTrend, Hemicycle, MAJORITY } from "../components/homeCharts";
 import { date } from "../lib/format";
-import { dayMonth } from "../lib/home";
 import { GOV_POINTS, HOME, LATEST_POLLS } from "../lib/homeData";
 import { POLL_AVERAGE } from "../lib/sources";
 
@@ -18,9 +17,7 @@ import { POLL_AVERAGE } from "../lib/sources";
 const home = HOME;
 
 export default function Home() {
-  const { gov, other, series } = home;
-  const lo = Math.min(...series.map((s) => s.v));
-  const hi = Math.max(...series.map((s) => s.v));
+  const { gov, other } = home;
   const [a, b] = [...home.safe, ...home.edge].sort((x, y) => y.central - x.central);
   const asOf = date(POLL_AVERAGE.asOf);
   return (
@@ -39,9 +36,7 @@ export default function Home() {
 
 
       <ScreenLegend><section aria-labelledby="home-trend" className="mt-10">
-        <h2 id="home-trend" className="text-xl font-display leading-tight">
-          {lo === hi ? `הממשלה היוצאת: ${gov} מנדטים מאז ${dayMonth(home.start)}` : `הממשלה היוצאת: ${lo} עד ${hi} מנדטים מאז ${dayMonth(home.start)}`}
-        </h2>
+        <h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת בסקרים</h2>
         <GovTrend home={home} points={GOV_POINTS} />
       </section></ScreenLegend>
       <aside aria-labelledby="home-cta" className="mt-10 rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
