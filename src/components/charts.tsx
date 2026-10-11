@@ -255,7 +255,7 @@ export function TrendChart({
                     <circle key={k} cx={pts[k].x} cy={pts[k].y} r={SVG_MARKS.smallR} strokeWidth={SVG_MARKS.smallStroke} stroke={ink} style={markFill} />
                   ))}
                   {!s.dashed && last && profileShape(`${s.id}|${last.t}`, x(last.t), last.estimated ? 0.45 : 0.9)}
-                  {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.ringR} fill="rgb(var(--mk-bg, var(--paper)))" stroke="rgb(var(--mk-mean))" strokeWidth={SVG_MARKS.ringStroke} />}
+                  {!s.dashed && last && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.ringR} fill="none" stroke="rgb(var(--mk-mean))" strokeWidth={SVG_MARKS.ringStroke} />}
                   {last && last.estimated && <circle cx={x(last.t)} cy={y(last.v)} r={SVG_MARKS.meanR + 3} fill="none" stroke="rgb(var(--mk-mean))" strokeDasharray="3 3" />}
                 </g>
               );
@@ -266,7 +266,7 @@ export function TrendChart({
                 {pts.map((p) => (
                   <g key={p.t}>
                     {profileShape(`${s.id}|${p.t}`, x(p.t), p.estimated ? 0.45 : 0.85)}
-                    <circle cx={x(p.t)} cy={y(p.v)} r={meanR - Math.min(SVG_MARKS.ringStroke, meanR * 0.45) / 2} fill="rgb(var(--mk-bg, var(--paper)))" stroke="rgb(var(--mk-mean))" strokeWidth={Math.min(SVG_MARKS.ringStroke, meanR * 0.45)} />
+                    <circle cx={x(p.t)} cy={y(p.v)} r={meanR - Math.min(SVG_MARKS.ringStroke, meanR * 0.45) / 2} fill="none" stroke="rgb(var(--mk-mean))" strokeWidth={Math.min(SVG_MARKS.ringStroke, meanR * 0.45)} />
                   </g>
                 ))}
               </g>

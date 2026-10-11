@@ -5,7 +5,7 @@ import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, ma
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
     expect(Object.keys(CANDLE_PX)).toEqual(["1", "3", "5"]);
-    expect(CANDLE_PX).toEqual({ 1: 3, 3: 10, 5: 16 });
+    expect(CANDLE_PX).toEqual({ 1: 3, 3: 9, 5: 15 });
   });
   it("שטח הציור מרוחק מקצה המסלול מעבר לרדיוס העיגול, והערך זהה ב-CSS", () => {
     expect(MARK_PAD).toBeGreaterThan(MARK_PX / 2);
@@ -13,7 +13,7 @@ describe("עובי הנר ומידות הסימנים", () => {
     expect(css).toContain(`--mk-pad: ${MARK_PAD}px;`);
   });
   it("עיגול הממוצע ועיגול התוצאה בקוטר 22, גדולים מהנר העבה", () => {
-    expect(MARK_PX).toBe(22);
+    expect(MARK_PX).toBe(21);
     expect(MARK_PX).toBeGreaterThan(CANDLE_PX[5]);
     expect(SVG_MARKS.meanR * 2).toBe(MARK_PX);
     expect((SVG_MARKS.ringR + SVG_MARKS.ringStroke / 2) * 2).toBe(MARK_PX);
@@ -142,7 +142,7 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
   it("רמה 1 קו מלא (4), רמות 3 ו-5 קופסה חלולה (10 ו-16)", () => {
     expect(runs.map((r) => r.filled)).toEqual([true, false, false, false, true]);
-    expect(runs.map((r) => r.half * 2)).toEqual([3, 10, 16, 10, 3]);
+    expect(runs.map((r) => r.half * 2)).toEqual([3, 9, 15, 9, 3]);
   });
   it("אין רמת ביניים: כל קטע באחד משלושת הגדלים", () => {
     runs.forEach((r) => expect(Object.values(CANDLE_PX)).toContain(r.half * 2));
@@ -168,7 +168,7 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
   it("בלי קטעים: ריק; קטע בודד: קופסה אחת", () => {
     expect(squareRuns([], map)).toEqual([]);
-    expect(squareRuns([{ from: 0, to: 2, level: 5 }], map)).toEqual([{ a: 0, b: 200, half: 8, filled: false }]);
+    expect(squareRuns([{ from: 0, to: 2, level: 5 }], map)).toEqual([{ a: 0, b: 200, half: 7.5, filled: false }]);
   });
   it("כל הקטעים דקים: קו מלא אחד", () => {
     expect(squareRuns(([1, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level })), map)).toEqual([{ a: 0, b: 300, half: 1.5, filled: true }]);

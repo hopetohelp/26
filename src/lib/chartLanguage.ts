@@ -16,10 +16,10 @@
 export type Level = 1 | 3 | 5;
 
 /** עובי הנר בפיקסלים לפי הרמה: דק, בינוני, עבה */
-export const CANDLE_PX: Readonly<Record<Level, number>> = { 1: 3, 3: 10, 5: 16 };
+export const CANDLE_PX: Readonly<Record<Level, number>> = { 1: 3, 3: 9, 5: 15 };
 
 /** קוטר עיגול הממוצע והתוצאה: גדול מהנר העבה (הכרעת בעלים 9.10.2026) */
-export const MARK_PX = 22;
+export const MARK_PX = 21;
 
 /**
  * הרווח בין קצה המסלול לקצה שטח הציור, בפיקסלים: חצי קוטר העיגול ועוד 3. כך עיגול בקצה הציר (למשל 0 מנדטים) לא חורג אל עמודת
@@ -38,8 +38,8 @@ export const SVG_MARKS = {
   /** ממוצע: עיגול מלא, גדול מהנר העבה */
   meanR: MARK_PX / 2,
   /** תוצאה: עיגול ריק, קוטר חיצוני 22 (רדיוס הקו 8.5 וקו בעובי 5) */
-  ringR: (MARK_PX - 5) / 2,
-  ringStroke: 5,
+  ringR: (MARK_PX - 3) / 2,
+  ringStroke: 3,
 } as const;
 
 interface Pt {
@@ -108,7 +108,7 @@ export function smoothPath(points: Pt[]): string {
 }
 
 /** עובי מסגרת הקופסה בנר, בפיקסלים */
-export const SQUARE_STROKE = 1.5;
+export const SQUARE_STROKE = 3;
 
 /** קטע רצוף בנר באותה רמה: מ-`a` עד `b` (במיקום לאורך הנר), מחצית העובי הכולל `half`, ו-`filled` = קו מלא (רמה 1) ולא קופסה חלולה */
 export interface SquareRun {
