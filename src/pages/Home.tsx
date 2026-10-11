@@ -20,29 +20,24 @@ export default function Home() {
   const hi = Math.max(...series.map((s) => s.v));
   return (
     <>
-      <section aria-labelledby="home-h1" className="grid gap-y-3 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-x-12 lg:items-center">
-        <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
-          <h1 id="home-h1" className="font-display text-[1.8rem] lg:text-[2.8rem] leading-[1.06] [text-wrap:balance]">
-            מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.
-          </h1>
-        </div>
-        <div className="mt-2 w-full max-w-[34rem] mx-auto lg:mt-0 lg:mx-0 lg:max-w-[46rem] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-center">
-          {/* בפינות לוח המושבים (הכרעת בעלים 11.10.2026): "הממשלה היוצאת" מימין למעלה, מעל מושבי הממשלה; מספר הסקרים והקישור משמאל למעלה; במרכז 53/120 */}
-          <div className="relative">
-            <span className="absolute top-0 right-0 text-sm font-bold">הממשלה היוצאת</span>
-            <span className="absolute top-0 left-0 text-sm text-ink-soft leading-snug text-left">
-              {num(POLL_AVERAGE.polls)} סקרים
-              <br />
-              <Link to="/method#model" className="font-semibold">איך זה חושב?</Link>
-            </span>
-            <Hemicycle gov={gov} other={other} center={`${gov}/120`} />
-          </div>
+      {/* לוח המושבים הוא הכותרת (הכרעת בעלים 11.10.2026): בלי משפט כותרת מעליו. "הממשלה היוצאת" בשתי שורות בגופן הכותרת בפינה הימנית,
+          "איך זה חושב?" ומתחתיו מספר הסקרים בשמאלית; הקו העליון של שני הטקסטים הוא הקו העליון של הלוח. */}
+      <section aria-labelledby="home-h1" className="w-full max-w-[40rem] mx-auto">
+        <h1 id="home-h1" className="sr-only">מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.</h1>
+        <div className="relative">
+          <span aria-hidden="true" className="absolute top-0 right-0 font-display text-xl md:text-2xl leading-[1.05]">הממשלה<br />היוצאת</span>
+          <span className="absolute top-0 left-0 text-sm text-ink-soft leading-tight text-left">
+            <Link to="/method#model" className="font-semibold">איך זה חושב?</Link>
+            <br />
+            {num(POLL_AVERAGE.polls)} סקרים
+          </span>
+          <Hemicycle gov={gov} other={other} center={`${gov}/120`} />
         </div>
       </section>
 
       <div className="mt-10 lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-x-12 lg:items-start">
         <ScreenLegend><section aria-labelledby="home-rank" className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
-          <h2 id="home-rank" className="text-xl font-display leading-tight mb-1">כל הרשימות</h2>
+          <h2 id="home-rank" className="sr-only">כל הרשימות</h2>
           <Ranking home={home} />
         </section></ScreenLegend>
 
