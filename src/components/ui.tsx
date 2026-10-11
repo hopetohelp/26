@@ -77,7 +77,7 @@ export function ChartWithTable({ chart, table, summary, asTable }: { chart: Reac
 export function ChartBar({ legend, asTable, onAsTable, children }: { legend: LegendEntry[]; asTable: boolean; onAsTable: (asTable: boolean) => void; children?: ReactNode }) {
   const toggle = <TableToggle asTable={asTable} onChange={onAsTable} />;
   return asTable ? (
-    <div className={`${BAR} my-1`}>{children}{toggle}</div>
+    <div className="flex flex-wrap items-center gap-2 my-1">{children}{toggle}</div>
   ) : (
     <ChartLegend entries={legend} action={<>{children}{toggle}</>} />
   );
