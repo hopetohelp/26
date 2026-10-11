@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { HALL, hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
@@ -40,11 +41,11 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
  * 120 מושבים בצורת פרסה (כמו אולם המליאה, `src/lib/hemicycle.ts`): הממשלה היוצאת (מלא), המושבים שחסרים לה עד הרוב (עיגולים אדומים בהירים), וכל השאר (מסגרת).
  * במקום קו ה-61 (הכרעת בעלים 9.10.2026): המושבים החסרים הם עצמם הפער.
  */
-export function Hemicycle({ gov, other, center, label }: { gov: number; other: number; center?: string; label?: string }) {
+export function Hemicycle({ gov, other, center, label, footer }: { gov: number; other: number; center?: string; label?: string; footer?: ReactNode }) {
   const missing = Math.min(missingToMajority(gov), other);
   return (
     <figure className="m-0">
-      <div className="relative">
+      <div className="relative [container-type:inline-size]">
         <svg
           viewBox={`0 0 ${HALL.w} ${HALL.h}`}
           className="block w-full h-auto"
@@ -61,6 +62,10 @@ export function Hemicycle({ gov, other, center, label }: { gov: number; other: n
             {center && <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular" dir="ltr">{center}</span>}
             {label && <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>}
           </span>
+        )}
+        {footer && (
+          // החלק התחתון של החלל הפנימי, בין שני האגפים (הכרעת בעלים 11.10.2026): שם יש מקום, והשעון צר כך שייכנס בו
+          <div className="absolute" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100 + 13}%`, transform: "translateX(-50%)", width: "40%" }}>{footer}</div>
         )}
       </div>
     </figure>
