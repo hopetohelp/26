@@ -20,8 +20,7 @@ export default function GuessIntro({ signedIn }: { signedIn: boolean }) {
       <p className="text-xl font-display leading-tight mb-2">
         {left ? <>מה ההשערה שלכם לתוצאות האמת בעוד <span className="font-num tabular">{left}</span>?</> : "מדגמי הבחירות פורסמו. ההשערות נסגרו."}
       </p>
-      <p className="text-sm leading-relaxed">כאן כל אחד משער כמה מנדטים תקבל כל רשימה.</p>
-      <ul className="text-sm leading-relaxed list-disc ps-5 mt-2 space-y-1">
+      <ul className="text-sm leading-relaxed list-disc ps-5 space-y-1">
         {signedIn ? (
           <>
             <li>ההשערה נשמרת בחשבון שלכם, ורק האחרונה נספרת בסקר האתר.</li>

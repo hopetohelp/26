@@ -321,3 +321,8 @@
   .seat-head, .seat-grid { --cw: 8rem; }
   .cmp-long { display: inline; }
 }
+
+/* גלגל בורר המנדטים (SeatPicker): גלילה עם נעילה למספר, בלי פס גלילה, והקצוות מעומעמים מעט (חצי מספר בקצה) */
+.seat-wheel { scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none; -webkit-mask-image: linear-gradient(rgba(0,0,0,.4), #000 24%, #000 76%, rgba(0,0,0,.4)); mask-image: linear-gradient(rgba(0,0,0,.4), #000 24%, #000 76%, rgba(0,0,0,.4)); }
+.seat-wheel::-webkit-scrollbar { display: none; }
+.seat-opt { scroll-snap-align: center; }
