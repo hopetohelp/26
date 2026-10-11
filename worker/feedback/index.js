@@ -237,7 +237,7 @@ export default {
         return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
-      if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || /^\/admin\/groups(\/(import|delete|managers))?$/.test(url.pathname)) {
+      if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || /^\/admin\/groups(\/(import|delete|managers|stats))?$/.test(url.pathname)) {
         if (!env.CROWD) return reply({ ok: false, error: "offline" }, 503);
         const res = await env.CROWD.fetch(new Request("https://crowd.internal" + url.pathname, { method: request.method, headers: { "x-admin-key": key, "content-type": "application/json" }, body: request.method === "POST" ? await request.text() : undefined }));
         return new Response(await res.text(), { status: res.status, headers });
