@@ -326,6 +326,22 @@ const BLIND = new Set(["/auth/guest", "/auth/register", "/auth/google", "/save"]
 /** הפעולה האחרונה הסתיימה בלי אישור מהשרת (התשובה נחסמה) */
 export let lastBlind = false;
 
+/**
+ * האם תשובות השרת נחסמות בדרך (למשל בנטפרי: "blockByNetFree", "unknown" — נבדק 11.10.2026). הבקשה מגיעה לשרת, אבל הסינון מחליף את
+ * התשובה בדף חסימה, והדפדפן רואה רק "Failed to fetch". כל המסלולים (כולל הממסר) נכשלו ברשת ⇐ חסום; תשובה כלשהי מהשרת ⇐ לא חסום.
+ * האזור האישי מציג אז הסבר וכתובות לבקשה מהסינון, במקום "טוען…" בלי סוף.
+ */
+export const BLOCK_EVENT = "crowd-reach";
+let blocked = false;
+export const serverBlocked = () => blocked;
+function setBlocked(on: boolean) {
+  if (on === blocked) return;
+  blocked = on;
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(BLOCK_EVENT));
+}
+/** הכתובות של השרת (שם המארח בלבד), לבקשת פתיחה מספק הסינון */
+export const SERVER_HOSTS = [...new Set([feedbackUrl, directUrl].filter((u): u is string => !!u).map((u) => { try { return new URL(u).host; } catch { return ""; } }).filter(Boolean))];
+
 export async function call<T>(path: string, opts: CallOptions = {}): Promise<T> {
   if (!BASES.length) throw new CrowdError(0, "offline");
   lastBlind = false;
@@ -349,6 +365,7 @@ export async function call<T>(path: string, opts: CallOptions = {}): Promise<T> 
     try { res = await relay(path, opts, attempts); } catch (e) { first ??= e as CrowdError; }
     if (!res) {
       const diagnostic = { ...first?.diagnostic, ...environment(), elapsedMs: Date.now() - started, timeoutMs: REQUEST_TIMEOUT_MS, attempts };
+      setBlocked(true);
       reportFailure(path, diagnostic);
       if (BLIND.has(p0)) {
         lastBlind = true;
@@ -360,6 +377,7 @@ export async function call<T>(path: string, opts: CallOptions = {}): Promise<T> 
       throw new CrowdError(0, "network", diagnostic);
     }
   }
+  setBlocked(false);
   let data: unknown;
   try { data = await res.json(); } catch (cause) {
     const diagnostic = { ...environment(), elapsedMs: Date.now() - started, attempts, status: res.status, stage: "response-json", cause: { name: cause instanceof Error ? cause.name : "UnknownError" } };
