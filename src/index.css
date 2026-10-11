@@ -52,7 +52,7 @@
   --neg: 190 40 50;
   --mk-range: 52 105 214;
   --mk-mean: 240 124 0;
-  --mk-result: var(--ink);
+  --mk-result: var(--neg);
   --frame: 255 255 255;
   --frame-ink: 19 23 29;
   --frame-soft: 74 85 99;
@@ -86,7 +86,7 @@
   --neg: 245 125 125;
   --mk-range: 106 150 235;
   --mk-mean: 255 158 60;
-  --mk-result: var(--ink);
+  --mk-result: var(--neg);
   --frame: 26 29 35;
   --frame-ink: 236 239 243;
   --frame-soft: 176 184 196;
@@ -205,11 +205,13 @@
   background: rgb(var(--mk-bg, var(--paper)));
 }
 /* ממוצע ותוצאה: קוטר 22, גדול מהנר העבה (16) */
+/* ממוצע: עיגול ריק כתום; תוצאה: עיגול ריק אדום (הכרעת בעלים 11.10.2026) */
 .mk-mean {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgb(var(--mk-mean));
+  border: 5px solid rgb(var(--mk-mean));
+  background: rgb(var(--mk-bg, var(--paper)));
 }
 .mk-ring {
   width: 22px;
