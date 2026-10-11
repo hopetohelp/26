@@ -35,8 +35,7 @@ export default function Home() {
 
 
       <ScreenLegend><section aria-labelledby="home-trend" className="mt-10">
-        <h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת בסקרים</h2>
-        <GovTrend home={home} points={GOV_POINTS} />
+        <GovTrend home={home} points={GOV_POINTS} heading={<h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת בסקרים</h2>} />
       </section></ScreenLegend>
       <aside aria-labelledby="home-cta" className="mt-10 rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
         <div>

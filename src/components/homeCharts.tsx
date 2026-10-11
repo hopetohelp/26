@@ -220,7 +220,7 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
  * מגמת הממשלה היוצאת: הגרף האחיד `CandleTrend` (נר כל 3 ימים, 14 יום אחורה, שלוש דרגות עובי, הקו עובר דרך הממוצעים של הנקודות, קווים כל 5 ו-61 במקום 60,
  * חלון במעבר על הנר, מקרא בפינה השמאלית העליונה). `points` = לכל נקודה: סכום המנדטים של הממשלה היוצאת בכל סקר בחלון.
  */
-export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: number; values: number[] }[] }) {
+export function GovTrend({ home, points = [], heading }: { home: HomeData; points?: { t: number; values: number[] }[]; heading?: ReactNode }) {
   const { series } = home;
   if (series.length < 2) return null;
   const trend: TrendPoint[] = points
@@ -229,6 +229,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   return (
     <CandleTrend
       title="מגמת הממשלה היוצאת בסקרים"
+      heading={heading}
       series={[{ id: "gov", name: "הממשלה היוצאת", points: trend }]}
       majority={MAJORITY}
     />

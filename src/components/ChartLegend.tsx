@@ -111,6 +111,7 @@ export default function ChartLegend({
   action,
   className = "",
   side = "end",
+  heading,
 }: {
   entries: LegendEntry[];
   children?: ReactNode;
@@ -119,6 +120,8 @@ export default function ChartLegend({
   className?: string;
   /** מיקום הכפתור בשורה: `end` (ברירת מחדל) — צמוד לשמאל; `start` — צמוד לימין (לא בשימוש בגרף המגמה האחיד: שם המקרא תמיד בפינה השמאלית העליונה) */
   side?: "start" | "end";
+  /** כותרת הגרף: תמיד באותה שורה של כפתור "מקרא" (כותרת מימין, מקרא משמאל), בלי שורה נוספת ביניהם (הכרעת בעלים 11.10.2026) */
+  heading?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const id = useId();
@@ -153,14 +156,29 @@ export default function ChartLegend({
     </LegendPanel>
   ) : null;
   const btn = leader ? button : null;
-  if (!leader && !action && !slots) return null;
+  const head = heading ? <div className="min-w-0 flex-1">{heading}</div> : null;
+  if (!leader && !action && !slots) return head;
   if (slots) {
-    if (!slots.row) return null;
+    // במסך עם שורת בקרה משותפת (גרף/טבלה) הכפתור נשלח אליה, והכותרת נשארת במקומה
+    if (!slots.row) return head;
     return (
       <>
+        {head}
         {createPortal(<>{btn}{action}</>, slots.row)}
         {panel && slots.panel ? createPortal(panel, slots.panel) : null}
       </>
+    );
+  }
+  if (head) {
+    return (
+      <div className={className}>
+        <div className="flex items-center gap-3">
+          {head}
+          {btn}
+          {action}
+        </div>
+        {panel}
+      </div>
     );
   }
   return (

@@ -38,6 +38,8 @@ export interface CandleTrendProps {
   markers?: { t: number; v: number; id?: string }[];
   /** גובה בפיקסלים */
   height?: number;
+  /** כותרת הגרף, בשורה אחת עם כפתור "מקרא" (כותרת מימין, מקרא משמאל) */
+  heading?: ReactNode;
   /** חלון משלו במקום חלון הסקרים (למשל תרחישים וממוצע המודל); מקבל את הסדרה, הנקודה וצבע הסדרה */
   popup?: (info: { series: Series; point: TrendPoint; color: string }) => ReactNode;
   /** מקרא משלו במקום מקרא הסקרים */
@@ -56,7 +58,7 @@ const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 
 interface Target { si: number; i: number; p: TrendPoint }
 
-export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140 }: CandleTrendProps) {
+export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading }: CandleTrendProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(640);
   const [active, setActive] = useState<Target | null>(null);
@@ -306,7 +308,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   return (
     <div>
       {/* תמיד בפינה השמאלית העליונה של הגרף */}
-      <ChartLegend entries={legend} className="mb-1" />
+      <ChartLegend entries={legend} heading={heading} className="mb-1" />
       {Inner}
     </div>
   );
