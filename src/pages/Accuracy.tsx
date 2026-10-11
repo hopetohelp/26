@@ -1,6 +1,6 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
-import { TrendChart, type Series } from "../components/charts";
+import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
 import { Chips } from "../components/Choice";
 import DeviationChart from "../components/deviationChart";
@@ -77,7 +77,6 @@ export default function Accuracy() {
     })
     .filter((x) => x.points.length > 0);
   const markers = shown.map((letters) => ({ id: letters, t: toTime(c.date), v: lists.find((l) => l.letters === letters)?.seats ?? 0 }));
-  const yMax = Math.max(10, Math.ceil(Math.max(...series.flatMap((x) => x.points.map((p) => p.v)), ...markers.map((m) => m.v), 0) / 5) * 5 + 5);
   const dev = deviation(s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n, values: r.values })));
   const eveText = `הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני ${date(c.date)}`;
 
@@ -156,12 +155,10 @@ export default function Accuracy() {
         >
           <ChartWithTable
             summary={`${all.length} סקרים, ${dateRange(first, c.date)}.`}
-            chart={series.length === 1 ? (
-              // רשימה אחת: הגרף האחיד, עם התוצאה בפועל. כמה רשימות בגרף אחד הן חריג ונשארות ב-TrendChart
-              <CandleTrend title={`מגמת הסקרים והתוצאה: ${series[0].name}`} points={series[0].points} markers={markers.filter((m) => m.id === series[0].id)} windowDays={14} />
-            ) : (
-              <TrendChart series={series} markers={markers} windowText={{ days: 14, label: "14 הימים" }} from={toTime(first)} to={toTime(c.date)} yMax={yMax} title={`מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} />
-            )}
+            chart={
+              // הגרף האחיד: רשימה אחת — נרות; כמה רשימות — אותו רכיב בלי נרות. עיגול ריק = התוצאה בפועל
+              <CandleTrend title={series.length === 1 ? `מגמת הסקרים והתוצאה: ${series[0].name}` : `מגמת הסקרים והתוצאה, הכנסת ה-${c.knesset}`} series={series} markers={markers} windowDays={14} />
+            }
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">לכל רשימה: ממוצע הסקרים בתחילת המערכה ובסופה, והתוצאה</caption>
