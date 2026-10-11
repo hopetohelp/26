@@ -8,7 +8,8 @@ import { defaultBlocs } from "../pages/guess/model";
  * כמה מהשאר נכנסים נקבע לפי הרוחב הפנוי; מה שלא נכנס מסומן "+N". מפלגה בלי תמונה (הציבור החרדי, צבע שחור) לא מוצגת.
  * גוש ששונה או אישי מציג את ההרכב בפועל, בלי תמונות קבועות. השמות כתובים לצד הגוש, ולכן לקישוט בלבד.
  */
-const OVERLAP = 0.32;
+/** כמה פיקסלים כל עיגול עולה על הקודם: מעט, כדי שלא יהיה צפוף */
+const OVERLAP_PX = 4;
 
 /** תמונות שמוצגות תמיד בגושי ברירת המחדל (הכרעת בעלים 11.10.2026): נתניהו — הממשלה היוצאת והקואליציה; איזנקוט — האופוזיציה; שניהם — אחדות; עבאס — מפלגות ערביות */
 const LEADERS: Record<string, string[]> = {
@@ -31,7 +32,7 @@ export function BlocAvatar({ id, lists, size = 24, center = false }: { id?: stri
   const ids = [...new Set([...first, ...lists])].filter((p) => PARTY_IMAGES[p]);
   const ref = useRef<HTMLSpanElement>(null);
   const [fit, setFit] = useState(ids.length);
-  const step = Math.round(size * (1 - OVERLAP));
+  const step = size - OVERLAP_PX;
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
