@@ -208,17 +208,17 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
 }
 
 /**
- * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, ובסופו עיגול מלא כתום (הממוצע היום)
+ * הממשלה היוצאת לאורך זמן: קו חלק עם סמנים קטנים (עיגולים ריקים שחורים), קו 61 מקווקו, 
  * ונר של טווח 80% ליום הבחירות (שעוביו משתנה לפי כמה תרחישים נותנים כל סכום). SVG בקנה מידה חופשי לקו; הסמנים והנר ב-HTML כדי שיישארו עגולים.
  */
 export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: number; values: number[] }[] }) {
-  const { series, blocLo: lo, blocHi: hi } = home;
+  const { series } = home;
   if (series.length < 2) return null;
   const X0 = 3, X1 = 86, YT = 6, YB = 84;
   const vals = series.map((s) => s.v);
   const pv = points.flatMap((p) => p.values);
-  const vmin = Math.floor((Math.min(...vals, ...pv, lo) - 2) / 2) * 2;
-  const vmax = Math.ceil((Math.max(...vals, ...pv, hi, MAJORITY) + 3) / 2) * 2;
+  const vmin = Math.floor((Math.min(...vals, ...pv) - 2) / 2) * 2;
+  const vmax = Math.ceil((Math.max(...vals, ...pv, MAJORITY) + 3) / 2) * 2;
   const Y = (v: number) => YB - ((YB - YT) * (v - vmin)) / (vmax - vmin);
   const t0 = Date.parse(series[0].date);
   const t1 = Date.parse(series[series.length - 1].date);
@@ -229,14 +229,12 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   const valueAt = (d: string) => (series.find((s) => s.date === d) ?? series[series.length - 1]).v;
   const lastDate = series[series.length - 1].date;
   const marks = points.length
-    ? points.map((p) => ({ date: dayOf(p.t), values: p.values })).filter((p) => p.date >= series[0].date && p.date < lastDate)
+    ? points.map((p) => ({ date: dayOf(p.t), values: p.values })).filter((p) => p.date >= series[0].date && p.date <= lastDate)
     : sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1).map((i) => ({ date: series[i].date, values: [] as number[] }));
   const pollCandles = levelSegs(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
-  const last = pts[pts.length - 1];
   const grid = [50, 55].filter((v) => v > vmin && v < vmax);
   const min = Math.min(...vals);
   const max = Math.max(...vals);
-  const profile = levelSegs([blocRangeSegs(home)])[0];
   const line = { vectorEffect: "non-scaling-stroke" as const };
   const label = "absolute -translate-x-1/2 -translate-y-1/2 text-sm font-bold leading-none whitespace-nowrap";
   return (
@@ -247,7 +245,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
           preserveAspectRatio="none"
           className="block w-full h-40"
           role="img"
-          aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב; בטווח 80% ליום הבחירות: ${lo} עד ${hi}`}
+          aria-label={`הממשלה היוצאת: ${min === max ? min : `${min} עד ${max}`} מנדטים בממוצע מאז ${dayMonth(series[0].date)}; קו ${MAJORITY} מסמן את הרוב`}
         >
           {grid.map((v) => <line key={v} x1={X0} x2={100} y1={Y(v)} y2={Y(v)} className="stroke-paper-line" strokeWidth={1} {...line} />)}
           <line x1={X0} x2={100} y1={Y(MAJORITY)} y2={Y(MAJORITY)} className="stroke-ink" strokeWidth={1.5} strokeDasharray="5 4" {...line} />
@@ -257,11 +255,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
         {marks.map((m) => (
           <span key={m.date} aria-hidden="true" className="mk mk-dot" style={{ left: `${X(m.date)}%`, top: `${Y(valueAt(m.date))}%` }} />
         ))}
-        <ProfileCandleV segs={profile} y={Y} left={`${X1}%`} />
-        <span aria-hidden="true" className="mk mk-mean" style={{ left: `${last.x}%`, top: `${last.y}%` }} />
         <span aria-hidden="true" className={`${label} text-base font-extrabold`} style={{ left: "6%", top: `${Y(MAJORITY) - 7}%` }}>{MAJORITY}</span>
-        <span aria-hidden="true" className={label} style={{ left: `${X1 + 6}%`, top: `${Y(hi)}%` }}>{hi}</span>
-        <span aria-hidden="true" className={label} style={{ left: `${X1 + 6}%`, top: `${Y(lo)}%` }}>{lo}</span>
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X0 + 2}%`, top: "88%" }}>{dayMonth(series[0].date)}</span>
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X1}%`, top: "88%" }}>{dayMonth(series[series.length - 1].date)}</span>
       </div>
@@ -271,8 +265,6 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
           { kind: "dot", text: "נקודה על הקו, כל 3 ימים" },
           ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "בשבוע של כל נקודה (הסקר האחרון של כל מכון)") }] : []),
           { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
-          { kind: "mean", text: "הממוצע היום" },
-          { kind: "candle", text: rangeLine("p80", "התרחישים", "ליום הבחירות") },
         ]}
       />
     </>
