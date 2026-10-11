@@ -185,7 +185,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.textAlign = "center";
   ctx.fillStyle = c.ink;
   ctx.font = `700 150px ${num}`;
-  ctx.fillText(String(total), IMG_W / 2, top + HALL.cy * scale + 50);
+  ctx.fillText(String(total), IMG_W / 2, top + HALL.cy * scale + 54);
 
   // הרשימות, מהגדולה: שתי עמודות
   const rows = order.slice(0, 12);

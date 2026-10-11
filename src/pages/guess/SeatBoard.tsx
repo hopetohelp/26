@@ -53,7 +53,7 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
           );
         })}
         {/* המספר במרכז הפרסה: שניהם באותו גודל, והגודל נגזר מרוחב הלוח (viewBox) כדי שייכנס בחלל הפנימי גם כש"120/120" */}
-        <text x={HALL.cx} y={HALL.cy + 0.05} textAnchor="middle" direction="ltr" className="font-num tabular" fontSize={0.16} fontWeight={700}>
+        <text x={HALL.cx} y={HALL.cy + 0.058} textAnchor="middle" direction="ltr" className="font-num tabular" fontSize={0.16} fontWeight={700}>
           <tspan style={{ fill: "rgb(var(--ink))" }}>{total}</tspan>
           <tspan style={{ fill: "rgb(var(--ink-soft))" }}>/120</tspan>
         </text>
