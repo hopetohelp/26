@@ -69,4 +69,17 @@ describe("השערות חריגות", () => {
     expect(ok.pendingGuesses).toBe(0);
     expect(ok.seats.n).toBe(3);
   });
+
+  it("מי שהשערת המפלגות שלו נדחתה: גם ההצבעה שלו לא נכנסת לסטטיסטיקה", () => {
+    const ps = people(3);
+    const vs = [
+      ver("p0", "seats", guess({ yashar: 20 })), ver("p1", "seats", guess({ yashar: 20 })), ver("p2", "seats", guess({ yashar: 40 })),
+      ver("p0", "vote", { v2022: "מחל", v2026: "likud" }), ver("p1", "vote", { v2022: "מחל", v2026: "likud" }), ver("p2", "vote", { v2022: "פה", v2026: "yashar" }),
+    ];
+    const run = (decisions) => aggregate({ participants: ps, versions: vs, now: "2026-10-05T12:00:00Z", aggregationId: "a", decisions }).sections.vote2026.json;
+    expect(run(new Map([[vs[2].id, "approved"]])).all.yashar).toBeDefined();
+    const rejected = run(new Map([[vs[2].id, "rejected"]]));
+    expect(rejected.all.yashar).toBeUndefined();
+    expect(rejected.all.likud).toBeDefined();
+  });
 });
