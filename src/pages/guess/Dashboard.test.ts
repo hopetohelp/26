@@ -136,3 +136,11 @@ it("שורת הסיכום של המעבר: מספרים או אחוזים לפי
   expect(pct).toContain("<strong>75%</strong>");
   expect(pct).toContain("<strong>25%</strong>");
 });
+
+it("גוש של חמש רשימות הממשלה בלי נעם אינו מוצג כגוש נפרד", () => {
+  const stat = { n: 2, mean: 63.5, min: 63, p25: 63, median: 63.5, p75: 64, max: 64 };
+  const d = { participants: 2, open: true, publishedAt: null, aggregationId: null, blocs: { derived: null, explicit: null, customCount: 2, fixed: [], custom: [{ name: "גוש 1", lists: ["likud", "otzma", "rzp", "shas", "utj"], n: 2, explicit: null, derived: stat }, { name: "גוש נוסף", lists: ["joint", "raam"], n: 2, explicit: null, derived: { ...stat, mean: 12 } }] } } as unknown as Dashboard;
+  const html = renderToStaticMarkup(createElement(BlocStats, { d, view: "table" }));
+  expect(html).not.toContain("גוש 1");
+  expect(html).toContain("גוש נוסף");
+});
