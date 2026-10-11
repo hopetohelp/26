@@ -8,7 +8,7 @@ import type { GroupImportResult } from "../lib/crowdApi";
  * קבוצות למנהל האתר (docs/פילוח-קבוצות-תכנון.md): יצירה, העלאת רשימת מיילים, מינוי מנהל קבוצה ומחיקה.
  * הנתונים נשמרים בשרת ההשתתפות; ממשק הניהול מעביר אליו עם הרשאת הניהול.
  */
-type Group = { id: string; name: string | null; members: number; createdAt: string };
+type Group = { id: string; name: string | null; members: number; managers?: number; createdAt: string };
 type Api = (path: string, body?: unknown) => Promise<unknown>;
 
 export default function AdminGroups({ api }: { api: Api }) {
@@ -45,9 +45,9 @@ function GroupRow({ g, api, act }: { g: Group; api: Api; act: (f: () => Promise<
   const [sure, setSure] = useState(false);
   return (
     <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">
-      <p className="font-bold">{g.name ?? g.id} <span className="font-normal text-sm text-ink-soft tabular">· {g.members} מיילים ברשימה</span></p>
+      <p className="font-bold">{g.name ?? g.id} <span className="font-normal text-sm text-ink-soft tabular">· {g.members} מיילים ברשימה · {g.managers ?? 0} {g.managers === 1 ? "מנהל" : "מנהלים"}</span></p>
       <GroupUpload send={(chunk) => api("/admin/groups/import", { group: g.id, ...chunk }) as Promise<GroupImportResult>} />
-      <Field label="מנהל קבוצה (מייל)" hint="ההרשאה תופסת כשהמייל מאומת בחשבון. מנהל קבוצה מעלה רשימה רק לקבוצה הזו.">
+      <Field label="מנהל קבוצה (מייל)" hint="אפשר למנות כמה מנהלים — כל מייל בנפרד. ההרשאה תופסת כשהמייל מאומת בחשבון. מנהל קבוצה מעלה רשימה רק לקבוצה הזו.">
         <input dir="ltr" type="email" className={inputCls} value={manager} onChange={(e) => setManager(e.target.value)} />
       </Field>
       <div className="flex flex-wrap gap-2">

@@ -992,8 +992,8 @@ const routes = {
 
   "GET /admin/groups": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g ORDER BY g.created_at").all()).results || [];
-    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, createdAt: r.created_at }))) };
+    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers FROM groups g ORDER BY g.created_at").all()).results || [];
+    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, managers: r.managers, createdAt: r.created_at }))) };
   },
 
   // מחיקת קבוצה מוחקת את כל הגיבובים שלה

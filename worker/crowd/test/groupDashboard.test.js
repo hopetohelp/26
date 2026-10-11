@@ -86,6 +86,12 @@ describe("group managers", () => {
     expect((await call("/admin/groups/managers", { body: { group: "gizra", email: "Boss@X.co" } })).status).toBe(401);
     expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "Boss@X.co" } })).data).toEqual({ group: "gizra", managers: 1 });
     expect((await call("/me", { token: mgr })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה" }]);
+    // כמה מנהלים לאותה קבוצה
+    const mgr2 = await account("deputy@x.co");
+    expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co" } })).data).toEqual({ group: "gizra", managers: 2 });
+    expect((await call("/group/import", { token: mgr2, body: { group: "gizra", emails: ["a@x.co"] } })).data).toMatchObject({ duplicates: 1, members: 1 });
+    expect((await call("/admin/groups", { admin: true })).data.groups.find((g) => g.id === "gizra").managers).toBe(2);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co", remove: true } });
     expect((await call("/me", { token: other })).data.managedGroups).toEqual([]);
     expect((await call("/group/mine", { token: mgr })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", members: 1 }]);
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).data).toMatchObject({ added: 1, members: 2 });
