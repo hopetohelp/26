@@ -191,7 +191,7 @@ export function VotingStats({ d }: { d: D }) {
     </div>
     {unit === "num" && <p className="text-xs text-ink-soft mb-3">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
-    {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} unit={unit} /></section>}
+    {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} /></section>}
   </Card>;
 }
 
@@ -213,7 +213,7 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
   const show = (n: number) => unit === "pct" ? `${Math.round(n / continuity.total * 1000) / 10}%` : String(n);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3"><strong>{show(continuity.changed)}</strong> {unit === "pct" ? "מהמצביעים" : "מצביעים"} עברו מפלגה מבחירות קודמות</p>}
+    {continuity.total > 0 && <p className="text-base text-center mb-3"><strong>{show(continuity.changed)}</strong> {unit === "pct" ? "מהמצביעים" : "מצביעים"} עברו מפלגה מבחירות קודמות</p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>
