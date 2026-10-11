@@ -1,6 +1,6 @@
 import { polls, VERIFICATION_LABEL } from "./data";
 import { expect, it } from "vitest";
-import { blocValues, historicalBlocValues } from "./personalBlocs";
+import { blocComparable, blocValues, formatBlocValue, historicalBlocValues } from "./personalBlocs";
 import { validateBlocs } from "./crowdValidate";
 import { fillAll } from "./fillAll";
 import type { Bloc } from "./crowdApi";
@@ -54,4 +54,23 @@ it("רשימת עבר משותפת נספרת פעם אחת, וחוסר נתון
 it("מחיקת כל הגושים ושם ריק מתקבלים", () => {
   expect(validateBlocs({mode:"custom",blocs:[]},["x"])).toBeNull();
   expect(validateBlocs({mode:"custom",blocs:[{...b("one",["x"]),name:""}]},["x"])).toBeNull();
+});
+
+it("סכום חלקי נכתב כמספר בלי המילה 'לפחות', והחסר מסומן בשדה נפרד", () => {
+  const [row] = blocValues([b("a", ["x", "y"])], { x: 30 }, { x: "x", y: "y" });
+  expect(row.total).toBeNull();
+  expect(row.missing).toEqual(["y"]);
+  expect(formatBlocValue(row)).toBe("30");
+  expect(formatBlocValue(row, (n) => `${n}%`)).toBe("30%");
+  expect(formatBlocValue(blocValues([b("a", ["y"])], {}, { y: "y" })[0])).toBe("—");
+});
+it("הפער בין שני מקורות נכתב גם כשאחד מהנתונים חסר (הסכום הידוע), ו-null רק כשאין שום נתון", () => {
+  const map = { x: "x", y: "y" };
+  const full = blocValues([b("a", ["x", "y"])], { x: 30, y: 20 }, map)[0];
+  const partial = blocValues([b("a", ["x", "y"])], { x: 25 }, map)[0];
+  const none = blocValues([b("a", ["x", "y"])], {}, map)[0];
+  expect(blocComparable(full)).toBe(50);
+  expect(blocComparable(partial)).toBe(25);
+  expect(blocComparable(none)).toBeNull();
+  expect(blocComparable(undefined)).toBeNull();
 });

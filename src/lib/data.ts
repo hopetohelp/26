@@ -184,7 +184,3 @@ export function rollingMean(id: string, from: string, to: string, days = 14, ste
   }
   return out;
 }
-
-export function lastPollDate(): string {
-  return usablePolls.length ? usablePolls[0].end : meta.dataAsOf.slice(0, 10);
-}

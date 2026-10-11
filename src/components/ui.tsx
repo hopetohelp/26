@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTabsSlot } from "./Tabbed";
+import ChartLegend, { BAR, BarSlots, PILL, PILL_ON, PILL_RING, type LegendEntry } from "./ChartLegend";
 
 /** inColumns: בתוך `Columns` — מהמחשב הכותרת לקורא מסך בלבד (היא כבר בלשונית הפעילה בסרגל), וההסבר בראש הטור הימני */
 export function PageTitle({ children, lead, inColumns = false }: { children: ReactNode; lead?: ReactNode; inColumns?: boolean }) {
@@ -28,22 +29,56 @@ export function Note({ children }: { children: ReactNode }) {
   return <p className="text-sm text-ink-soft mt-2">{children}</p>;
 }
 
-/** גרף + "הצג כטבלה": כל גרף זמין גם כטבלת נתונים (נגישות, העתקה, נייד) */
-export function ChartWithTable({ chart, table, summary }: { chart: ReactNode; table: ReactNode; summary: string }) {
-  const [asTable, setAsTable] = useState(false);
+/** כפתור "הצגה כטבלה" / "הצגה כגרף": באותו עיצוב כמו כפתור "מקרא" (ChartLegend), כדי שהשורה תהיה אחידה בכל האתר */
+export function TableToggle({ asTable, onChange }: { asTable: boolean; onChange: (asTable: boolean) => void }) {
+  return (
+    <button type="button" onClick={() => onChange(!asTable)} aria-pressed={asTable} className={`${PILL} ${asTable ? PILL_ON : PILL_RING}`}>
+      {asTable ? "הצגה כגרף" : "הצגה כטבלה"}
+    </button>
+  );
+}
+
+/**
+ * גרף + "הצגה כטבלה": כל גרף זמין גם כטבלת נתונים (נגישות, העתקה, נייד).
+ * שורת בקרה אחת ממורכזת מעל הגרף (הכרעת בעלים 11.10.2026): "מקרא" של הגרף, פקד הגרף (קו/נרות, אם יש) ו"הצגה כטבלה" — באותה שורה ובאותו עיצוב.
+ * `asTable` נשלט מבחוץ: מסך שיש בו כמה גרפים מחזיק מתג אחד (`ChartBar`) שמשפיע על כולם, ואז כאן אין שורת בקרה.
+ */
+export function ChartWithTable({ chart, table, summary, asTable }: { chart: ReactNode; table: ReactNode; summary?: string; asTable?: boolean }) {
+  const [own, setOwn] = useState(false);
+  const [row, setRow] = useState<HTMLElement | null>(null);
+  const [panel, setPanel] = useState<HTMLElement | null>(null);
+  const controlled = asTable !== undefined;
+  const showTable = controlled ? asTable : own;
+  const slots = useMemo(() => ({ row, panel }), [row, panel]);
   return (
     <div>
-      <p className="text-sm text-ink-soft mb-2">{summary}</p>
-      <button
-        type="button"
-        onClick={() => setAsTable((v) => !v)}
-        aria-pressed={asTable}
-        className="text-sm border border-paper-line rounded px-2 py-1 mb-3 hover:border-ink-faint"
-      >
-        {asTable ? "הצגה כגרף" : "הצגה כטבלה"}
-      </button>
-      {asTable ? <div className="overflow-x-auto">{table}</div> : chart}
+      {!controlled && (
+        <>
+          <div className={`${BAR} mb-2`}>
+            <span ref={setRow} className="contents" />
+            <TableToggle asTable={own} onChange={setOwn} />
+          </div>
+          <div ref={setPanel} />
+        </>
+      )}
+      {summary && <p className="text-sm text-ink-soft mb-2">{summary}</p>}
+      <BarSlots.Provider value={controlled ? null : slots}>
+        {showTable ? <div className="overflow-x-auto">{table}</div> : chart}
+      </BarSlots.Provider>
     </div>
+  );
+}
+
+/**
+ * שורת בקרה אחת למסך שלם (הכרעת בעלים 11.10.2026): "מקרא" אחד, פקד יחידות (אחוזים/מנדטים) ו"הצגה כטבלה" — שניהם משפיעים על כל הגרפים והטבלאות במסך.
+ * בתצוגת טבלה אין סימונים להסביר, ולכן "מקרא" לא מוצג.
+ */
+export function ChartBar({ legend, asTable, onAsTable, children }: { legend: LegendEntry[]; asTable: boolean; onAsTable: (asTable: boolean) => void; children?: ReactNode }) {
+  const toggle = <TableToggle asTable={asTable} onChange={onAsTable} />;
+  return asTable ? (
+    <div className={`${BAR} my-1`}>{children}{toggle}</div>
+  ) : (
+    <ChartLegend entries={legend} action={<>{children}{toggle}</>} />
   );
 }
 
@@ -77,6 +112,9 @@ export function Fold({ title, children, open = false }: { title: ReactNode; chil
  * 🔴 הסדר בקוד הוא סדר הטלפון — בטלפון ובמסך צר שום דבר אינו משתנה.
  */
 const SPLIT_AT = 1024;
+/** true כשהמסך מוצג בשני טורים (מחשב). כרטיס הגושים נפתח אז מעצמו (הכרעת בעלים 11.10.2026) */
+const SplitOn = createContext(false);
+export const useSplitOn = () => useContext(SplitOn);
 const SETTLE_MS = 2000;
 /** secondaryFirst: בטור אחד (טלפון) הטור הרחב קודם — למשל שיחת התמיכה לפני הנתונים שלי */
 export function Split({ primary, secondary, title, lead, secondaryFirst = false }: { primary: ReactNode; secondary: ReactNode; title?: ReactNode; lead?: ReactNode; secondaryFirst?: boolean }) {
@@ -121,7 +159,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
   }, [split, state.top]);
   const hasHead = title !== undefined;
   return (
-    <>
+    <SplitOn.Provider value={split}>
       {!split && tabs}
       {hasHead && !split && <PageTitle lead={lead}>{title}</PageTitle>}
       {hasHead && split && <h1 className="sr-only">{title}</h1>}
@@ -142,7 +180,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
         {/* pb-24: הכפתור הצף "לבנות את הכנסת שלי" לא מסתיר את סוף הטור */}
         <div className={split ? "relative overflow-y-auto pt-6 ps-6 pb-24" : ""}>{secondary}</div>
       </div>
-    </>
+    </SplitOn.Provider>
   );
 }
 

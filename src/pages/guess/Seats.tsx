@@ -5,7 +5,7 @@ import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
-import { dateLong } from "../../lib/format";
+import { date } from "../../lib/format";
 import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
 import { Segmented } from "../../components/Choice";
@@ -28,7 +28,7 @@ import type { useSession, useUnit } from "./useCrowd";
 
 const START_OPTIONS: { id: SeatsPayload["start"]; title: string; desc: string }[] = [
   { id: "zero", title: "מאפס", desc: "120 מושבים ריקים. אתם מחלקים הכול." },
-  { id: "polls", title: "מממוצע הסקרים", desc: `הממוצע נכון ל-${dateLong(POLLS_AS_OF)}. משנים מה שרוצים.` },
+  { id: "polls", title: "מממוצע הסקרים", desc: `הממוצע נכון ל-${date(POLLS_AS_OF)}. משנים מה שרוצים.` },
   { id: "k25", title: "מבחירות 22", desc: "התוצאה של 2022 לפי השיוך של כל מפלגה היום." },
 ];
 
@@ -390,7 +390,7 @@ function CalcAssumptions({ calc, onChange }: { calc: Calc; onChange: (c: Calc) =
               <Badge tone="warn">{a.status === "reported_single_source" ? "דווח במקור יחיד" : "דווח, טרם רשמי"}</Badge>
             </label>
           ))}
-          <p className="text-xs text-ink-soft">ההסכמים הרשמיים מוגשים עד 16.10.2026 ומתפרסמים עד 19.10.2026.</p>
+          <p className="text-xs text-ink-soft">ההסכמים הרשמיים מוגשים עד 16/10 ומתפרסמים עד 19/10.</p>
         </fieldset>
       </div>
     </details>
@@ -521,7 +521,7 @@ function FillPreview({
               ))}
             </ul>
           )}
-          <p className="text-xs text-ink-soft mb-3">לפי חלק כל רשימה בממוצע הסקרים מ-{dateLong(POLLS_AS_OF)}; רשימה שבממוצע מתחת לסף מקבלת 0. נעולים לא זזו.</p>
+          <p className="text-xs text-ink-soft mb-3">לפי חלק כל רשימה בממוצע הסקרים מ-{date(POLLS_AS_OF)}; רשימה שבממוצע מתחת לסף מקבלת 0. נעולים לא זזו.</p>
           <div className="flex gap-2">
             <Btn kind="primary" onClick={onApply}>
               להחיל

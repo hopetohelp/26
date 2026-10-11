@@ -27,15 +27,19 @@ export interface ExplainProps {
   details?: ReactNode;
   /** false = מציגים רק את הקישור "איך זה חושב?" (הכרעת בעלים 11.10.2026, כרטיס הגושים ב"הכנסת שלי"); הסוג והתאריך נשארים חובה בחוזה */
   showMeta?: boolean;
+  /** טקסט קטן בשורה התחתונה, בצד ההתחלה; "איך זה חושב?" בצד הנגדי (בפינה התחתונה השמאלית) באותה שורה אם יש מקום (הכרעת בעלים 11.10.2026) */
+  trailing?: ReactNode;
 }
 
-export default function Explained({ kind, asOf, methodAnchor, children, details, showMeta = true }: ExplainProps) {
+export default function Explained({ kind, asOf, methodAnchor, children, details, showMeta = true, trailing }: ExplainProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
     <div>
       {children}
-      <p className="mt-2 text-sm text-ink-soft">
+      <div className={`mt-2 text-sm text-ink-soft ${showMeta ? "" : "flex flex-wrap items-end justify-between gap-x-4 gap-y-1"}`}>
+        {!showMeta && <div className="min-w-0 flex-1 basis-56 space-y-1 text-xs">{trailing}</div>}
+        <p>
         {showMeta && <>{kind} · {asOf} · </>}<Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
         {details && (
           <>
@@ -51,7 +55,8 @@ export default function Explained({ kind, asOf, methodAnchor, children, details,
             </button>
           </>
         )}
-      </p>
+        </p>
+      </div>
       {details && open && <div id={id} className="mt-2 text-sm">{details}</div>}
     </div>
   );

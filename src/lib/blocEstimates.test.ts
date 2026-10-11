@@ -39,7 +39,7 @@ it('מקור חלופי דורש שלושה מכונים עצמאיים, עם ס
 });
 it('כיסוי נמוך או השלמה שסותרת 120 חוזרים לסכום החלקי',()=>{
  const over={...target,values:{x:{s:20},other:{s:100}}};
- const row=pollBlocValues([bloc],over,[previous],rules)[0];expect(row.estimate).toBeNull();expect(formatBlocValue(row)).toBe('לפחות 20');
+ const row=pollBlocValues([bloc],over,[previous],rules)[0];expect(row.estimate).toBeNull();expect(formatBlocValue(row)).toBe('20');
  expect(pollBlocValues([{...bloc,lists:['x','y','z']}],target,[previous],rules)[0].estimate).toBeNull();
  expect(pollBlocValues([bloc],{...target,values:{x:{s:2}}},[previous],rules)[0].estimate).toBeNull();
  expect(pollBlocValues([bloc],{...target,values:{}},[previous],rules)[0].knownTotal).toBeNull();
@@ -53,7 +53,7 @@ it('השלמות בין גושים חופפים נשארות עקביות עם �
 });
 it('פיצול היסטורי נשאר חלקי; רשימת עבר משותפת נספרת פעם אחת',()=>{
  const rows=historicalBlocValues([{...bloc,lists:['x','new']}],[{k26:['x'],k25:['old']},{k26:['new','second'],k25:['shared']}],{old:42,shared:18});
- expect(rows[0].knownTotal).toBe(42);expect(rows[0].total).toBeNull();expect(formatBlocValue(rows[0])).toBe('לפחות 42');
+ expect(rows[0].knownTotal).toBe(42);expect(rows[0].total).toBeNull();expect(formatBlocValue(rows[0])).toBe('42');
  expect(blocValues([{...bloc,lists:['x','y']}],{old:42},{x:'old',y:'old'})[0].total).toBe(42);
 });
 it('מגמה מחשבת ממוצע של סכומי הסקרים (10, 10, 18)',()=>{

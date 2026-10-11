@@ -39,10 +39,16 @@ export function historicalBlocValues(blocs: Bloc[], families: { k26: string[]; k
     return { ...b, lists, missing, knownTotal, knownCount: lists.length - missing.length, total: !lists.length || missing.length ? null : knownTotal, estimate: null, imputed: [] };
   });
 }
-export function formatBlocValue(row?: BlocRow): string {
+/**
+ * מספר הגוש כפי שמוצג. סכום חלקי (חסרה מפלגה) נכתב כמספר בלי מילת הסבר (הכרעת בעלים 11.10.2026, "בלי 'לפחות'"):
+ * החסר מסומן בנפרד מתחת למספר ("חסר 1/3 מפלגות"). `fmt` — עיצוב המספר (מנדטים כברירת מחדל; אחוזים במסך שמציג אחוזים).
+ */
+export function formatBlocValue(row?: BlocRow, fmt: (n: number) => string = seatsFmt): string {
   if (!row) return "—";
-  if (row.total !== null) return seatsFmt(row.total);
-  if (row.estimate !== null) return `כ-${seatsFmt(row.estimate)}`;
-  if (row.knownTotal !== null) return `לפחות ${seatsFmt(row.knownTotal)}`;
+  if (row.total !== null) return fmt(row.total);
+  if (row.estimate !== null) return `כ-${fmt(row.estimate)}`;
+  if (row.knownTotal !== null) return fmt(row.knownTotal);
   return "—";
 }
+/** הערך שמשווים בין שני מקורות: מלא, אומדן, ובהיעדרם הסכום הידוע (חלקי); null כשאין שום נתון */
+export const blocComparable = (row?: BlocRow): number | null => row ? row.total ?? row.estimate ?? row.knownTotal : null;

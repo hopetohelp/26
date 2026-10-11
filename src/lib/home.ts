@@ -33,9 +33,7 @@ export interface HomeRow {
 }
 
 export interface HomeData {
-  asOf: string;
   start: string;
-  polls: number;
   gov: number;
   other: number;
   /** טווח 80% של הגוש (מ-10% עד 90%) */
@@ -79,9 +77,7 @@ export function buildHome(
   const series = model.trend.map((t) => ({ date: t.date, v: govSum(t.seats) }));
 
   return {
-    asOf: model.asof,
     start: model.start,
-    polls: model.polls,
     gov,
     other: TOTAL - gov,
     blocLo: model.scenarios.bloc.seats[0],
@@ -94,5 +90,5 @@ export function buildHome(
   };
 }
 
-/** "9.9" מתוך 2026-09-09 */
-export const dayMonth = (iso: string) => `${Number(iso.slice(8, 10))}.${Number(iso.slice(5, 7))}`;
+/** "9/9" מתוך 2026-09-09 */
+export const dayMonth = (iso: string) => `${Number(iso.slice(8, 10))}/${Number(iso.slice(5, 7))}`;

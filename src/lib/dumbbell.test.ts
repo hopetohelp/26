@@ -13,15 +13,27 @@ const row = (before: number, now: number, hi: number | null = null): DumbbellRow
   range: hi === null ? null : [now - 0.5, hi],
 });
 
-describe("dumbbellAxis", () => {
-  it("לפחות 20, בצעד 5", () => {
-    expect(dumbbellAxis([row(3, 4)])).toEqual({ max: 20, ticks: [0, 5, 10, 15, 20] });
+describe("dumbbellAxis: לפי הטווח הדרוש, עם רווח משני הצדדים", () => {
+  it("לא מתחיל ב-0 כשאין צורך, וכל הערכים בפנים עם רווח", () => {
+    const a = dumbbellAxis([row(23.4, 17.4, 20.6)]);
+    expect(a.min).toBeGreaterThan(0);
+    expect(a.min).toBeLessThan(17.4);
+    expect(a.max).toBeGreaterThan(23.4);
+    expect(a.ticks[0]).toBe(a.min);
+    expect(a.ticks[a.ticks.length - 1]).toBe(a.max);
+    expect(a.ticks.length).toBeGreaterThanOrEqual(2);
+    expect(a.ticks.length).toBeLessThanOrEqual(6);
   });
-  it("מעל 20 עוברים לצעד 10 ומעגלים כלפי מעלה", () => {
-    expect(dumbbellAxis([row(23.4, 17.4, 20.6)])).toEqual({ max: 30, ticks: [0, 10, 20, 30] });
+  it("טווח צר — צעד קטן; לא יורד מתחת ל-0", () => {
+    const a = dumbbellAxis([row(3, 4)]);
+    expect(a.ticks[1] - a.ticks[0]).toBeLessThanOrEqual(2);
+    expect(dumbbellAxis([row(0, 6)], "seats").min).toBe(0);
   });
-  it("הטווח העליון נכלל גם כשהוא מעל שתי הנקודות", () => {
-    expect(dumbbellAxis([row(18, 19, 24.5)]).max).toBe(30);
+  it("מנדטים: טווח רחב — צעד גדול", () => {
+    const a = dumbbellAxis([row(4, 32)], "seats");
+    expect(a.min).toBe(0);
+    expect(a.max).toBeGreaterThanOrEqual(32);
+    expect(a.ticks.length).toBeLessThanOrEqual(6);
   });
 });
 
@@ -38,13 +50,25 @@ describe("על הנתונים האמיתיים", () => {
     const alts = (modelFile as unknown as { changes: { alternatives: { families: { share2022: number; shareNow: number; shareRange: number[] | null; shareHist: { start: number; step: number; counts: number[] } | null }[] }[] } }).changes.alternatives;
     for (const a of alts) {
       const rows = a.families.map((f, i) => ({ id: String(i), name: "", from: "", before: f.share2022, now: f.shareNow, hist: f.shareHist, range: f.shareRange ? [f.shareRange[0], f.shareRange[2]] as [number, number] : null }));
-      const { max } = dumbbellAxis(rows);
+      const { min, max } = dumbbellAxis(rows);
       for (const r of rows) {
         expect(r.before).toBeLessThanOrEqual(max);
         expect(r.now).toBeLessThanOrEqual(max);
         expect(r.range ? r.range[1] : 0).toBeLessThanOrEqual(max);
+        expect(Math.min(r.before, r.now, ...(r.range ?? []))).toBeGreaterThanOrEqual(min);
       }
     }
+  });
+});
+
+describe("dumbbellSegs: התפלגות מנדטים שלמים", () => {
+  it("מערך ספירות לפי מנדט נחתך בדיוק לטווח 80%", () => {
+    // 20 תרחישים: 2 עם 20 מנדטים, 6 עם 21, 8 עם 22, 3 עם 23, 1 עם 24
+    const counts = [...Array(20).fill(0), 2, 6, 8, 3, 1];
+    const segs = dumbbellSegs({ hist: counts, range: [21, 23] });
+    expect(segs[0].from).toBe(21);
+    expect(segs[segs.length - 1].to).toBe(23);
+    expect(segs.every((g) => g.from >= 21 && g.to <= 23)).toBe(true);
   });
 });
 

@@ -4,6 +4,7 @@ import { GovTrend, Hemicycle, MAJORITY, Ranking, missingToMajority } from "../co
 import { date, num } from "../lib/format";
 import { dayMonth } from "../lib/home";
 import { HOME } from "../lib/homeData";
+import { POLL_AVERAGE } from "../lib/sources";
 
 /**
  * מסך הבית (הכרעות בעלים 9.10.2026): התשובה והגרפים קודם, ובלי כפתורי הפניה חוץ מ"הכנסת שלי".
@@ -30,12 +31,12 @@ export default function Home() {
         </div>
         <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
           <p className="flex flex-wrap items-center gap-x-5 gap-y-1 font-semibold">
-            <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-a" />הממשלה היוצאת <b className="font-num text-xl font-extrabold tabular">{gov}</b></span>
-            {missing > 0 && <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-miss" />חסרים לרוב <b className="font-num text-xl font-extrabold tabular">{missing}</b></span>}
-            <span className="inline-flex items-center gap-2"><i className="size-[.9rem] rounded-full sw-b" />{missing > 0 ? "שאר הכנסת" : "כל השאר"} <b className="font-num text-xl font-extrabold tabular">{other - missing}</b></span>
+            <span className="inline-flex items-baseline gap-2">הממשלה היוצאת <b className="font-num text-xl font-extrabold tabular">{gov}</b></span>
+            {missing > 0 && <span className="inline-flex items-baseline gap-2">חסרים לרוב <b className="font-num text-xl font-extrabold tabular">{missing}</b></span>}
+            <span className="inline-flex items-baseline gap-2">{missing > 0 ? "שאר הכנסת" : "כל השאר"} <b className="font-num text-xl font-extrabold tabular">{other - missing}</b></span>
           </p>
           <p className="mt-2.5 text-sm text-ink-soft">
-            נכון ל-{date(home.asOf)} · {num(home.polls)} סקרים · <Link to="/method#model" className="font-semibold">איך זה חושב?</Link>
+            נכון ל-{date(POLL_AVERAGE.asOf)} · {num(POLL_AVERAGE.polls)} סקרים · <Link to="/method#model" className="font-semibold">איך זה חושב?</Link>
           </p>
         </div>
       </section>

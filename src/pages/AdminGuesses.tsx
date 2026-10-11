@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { lists2026, listName } from "../lib/data";
+import { dateTime } from "../lib/format";
 import { Chips } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 
@@ -22,7 +23,7 @@ const FILTERS: { id: Filter; label: string }[] = [
 ];
 
 /** תאריך ושעה בשעון ישראל, לשדות הפעילות (נרשם / כניסה אחרונה) */
-export const stamp = (iso?: string | null) => iso ? new Date(iso).toLocaleString("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+export const stamp = (iso?: string | null) => iso ? dateTime(iso) : "—";
 
 export function reasonText(r: GuessReason) {
   return r.rule === "ratio"
@@ -82,7 +83,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
       <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
-      <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10.10.2026 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>
       <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>
       {!!data?.unverified?.participants && (
         <details className="border border-paper-line rounded-theme p-3">

@@ -8,7 +8,7 @@ import { colorOf } from "../../lib/colors";
 import { SITE_URL } from "../../lib/shareGuess";
 import { type BlocTotal } from "./blocSummary";
 import { IDS, nameOf } from "./model";
-import { dateLong, seatsFmt } from "../../lib/format";
+import { date, seatsFmt } from "../../lib/format";
 import { shareBlocRows, SHARE_POLLS, SHARE_POLLS_AS_OF, SHARE_FORECAST_AS_OF, SHARE_FORECAST_CAUTION } from "./shareComparison";
 import { SEATS, seatFills } from "./SeatBoard";
 
@@ -98,7 +98,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.font = `400 30px ${body}`;
     ctx.fillText("השערה, לא סקר · אותם הרכבי מפלגות בשלוש השוואות", R, 200, R - L);
     ctx.font = `400 26px ${body}`;
-    ctx.fillText(`ממוצע סקרים: ${dateLong(SHARE_POLLS_AS_OF)} · תחזית: ${dateLong(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
+    ctx.fillText(`ממוצע סקרים: ${date(SHARE_POLLS_AS_OF)} · תחזית: ${date(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
     const columns = [R - 145, IMG_W / 2, L + 145];
     ctx.textAlign = "center";
     ctx.font = `700 32px ${body}`;
@@ -127,7 +127,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.textAlign = "right";
     ctx.fillStyle = c.soft;
     ctx.font = `400 26px ${body}`;
-    ctx.fillText("גושים חופפים; אין לחברם. לפחות = חלקי · כ- = אומדן · — = אין נתון.", R, imageHeight - 245, R - L);
+    ctx.fillText("גושים חופפים; אין לחברם. מפלגה חסרה = סכום הידועות · כ- = אומדן · — = אין נתון.", R, imageHeight - 245, R - L);
     if (SHARE_FORECAST_CAUTION) ctx.fillText("התחזית לא עברה את רף הדיוק שנקבע בבדיקת העבר.", R, imageHeight - 208, R - L);
     ctx.fillStyle = c.line;
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
@@ -232,7 +232,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.textAlign = "right";
   ctx.fillStyle = c.soft;
   ctx.font = `400 26px ${body}`;
-  ctx.fillText(`ממוצע הסקרים האחרון נכון ל-${dateLong(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
+  ctx.fillText(`ממוצע הסקרים האחרון נכון ל-${date(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
 
   // תחתית: קריאה לפעולה + כתובת
   ctx.fillStyle = c.card === c.bg ? c.line : c.card;

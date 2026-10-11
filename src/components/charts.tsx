@@ -88,7 +88,7 @@ export function TrendChart({
   const y = (v: number) => M.top + (1 - v / yMax) * (H - M.top - M.bottom);
   const yStep = yMax <= 40 ? 5 : yMax <= 80 ? 10 : 20;
   const yTicks = Array.from({ length: Math.floor(yMax / yStep) + 1 }, (_, i) => i * yStep);
-  // תוויות ציר הזמן: בטווח קצר (עד כ-10 שבועות) — כל שבוע, "יום.חודש"; בטווח ארוך — תחילת כל חודש, "חודש.שנה"
+  // תוויות ציר הזמן: בטווח קצר (עד כ-10 שבועות) — כל שבוע, "יום/חודש"; בטווח ארוך — תחילת כל חודש, "חודש/שנה"
   const short = to - from <= 70 * DAY;
   const months: number[] = [];
   const d0 = new Date(from);
@@ -100,7 +100,7 @@ export function TrendChart({
   const monthStep = Math.max(1, Math.ceil(months.length / 8));
   const tick = (t: number) => {
     const d = new Date(t);
-    return short ? `${d.getUTCDate()}.${d.getUTCMonth() + 1}` : `${d.getUTCMonth() + 1}.${String(d.getUTCFullYear()).slice(2)}`;
+    return short ? `${d.getUTCDate()}/${d.getUTCMonth() + 1}` : `${d.getUTCMonth() + 1}/${String(d.getUTCFullYear()).slice(2)}`;
   };
 
   // נקודות הנרות: חלונות שאינם חופפים, ועובי הנר ביחס למקסימום בכל נר
