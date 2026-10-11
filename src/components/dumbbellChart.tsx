@@ -56,7 +56,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
       </span>
       <span className="col-start-2 row-start-1 md:col-start-3 md:row-span-2 flex items-baseline gap-1 md:block md:text-end md:leading-none">
         <b className="block font-num font-extrabold tabular text-lg"><bdi dir="ltr">{sign(d)}</bdi></b>
-        <span className="block text-xs text-ink-soft md:mt-0.5">{pct ? "נק'" : "מנד'"}</span>
+        <span className="block text-xs text-ink-soft md:mt-0.5">{pct ? "נק'" : "מנדטים"}</span>
       </span>
       <span aria-hidden="true" dir="ltr" className="relative block h-8 col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-span-2">
         <span className="mk-plot">
@@ -69,10 +69,9 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
         </span>
       </span>
       <span className="col-span-2 row-start-3 md:col-span-1 md:col-start-1 md:row-start-2 text-sm text-ink-soft leading-snug">
-        <span className="whitespace-nowrap">2022: <b className="font-num tabular text-ink">{before}</b></span>
+        <span>2022 - {r.from}: <b className="font-num tabular text-ink whitespace-nowrap">{before}</b></span>
         {" · "}
         <span className="whitespace-nowrap">היום: <b className="font-num tabular text-ink">{fmt(r.now)}</b></span>
-        <span className="block text-xs">ב-2022: {r.from}</span>
       </span>
       <span className="sr-only">
         {pct

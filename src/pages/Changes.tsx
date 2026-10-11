@@ -61,6 +61,8 @@ export default function Changes() {
   const effective = lin.split === "crowd" && !crowd ? { ...lin, split: "polls" as const } : lin;
   const { rows, unassigned2022 } = lineageRows(effective, crowd);
   const [open, setOpen] = useState<string | null>(null);
+  // רשימה של 2022 שלא שויכה: נפתחת בחירה לאיזו רשימה של היום היא נכנסה
+  const [openOld, setOpenOld] = useState<string | null>(null);
   // שני המתגים של המסך (שורת הבקרה העליונה) משפיעים על כל הכרטיסים, הגרפים והטבלאות
   const [unit, setUnit] = useState<DumbbellUnit>("seats");
   const [asTable, setAsTable] = useState(false);
@@ -167,7 +169,7 @@ export default function Changes() {
         lead="כל מפלגה של היום מול התוצאה של 2022. מפלגה שנוצרה מפיצול מקבלת חלק מהתוצאה של הרשימה שממנה באה."
         primary={
           <>
-            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable}>
+            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable} segmented>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>
             <PersonalBlocs
@@ -252,9 +254,31 @@ export default function Changes() {
                   </section>
                 );
               })}
-              <p className="text-sm text-ink-soft mt-4">
-                לא שויך מ-2022: {r1(unassigned2022.share)}% מהקולות ({[...unassigned2022.lists.map(k25ListName), unassigned2022.others ? `${unassigned2022.others} רשימות קטנות` : ""].filter(Boolean).join(", ")}).
-              </p>
+              <div className="mt-4 text-sm text-ink-soft">
+                <p>לא שויך מ-2022: {r1(unassigned2022.share)}% מהקולות{unassigned2022.others ? ` (כולל ${unassigned2022.others} רשימות קטנות)` : ""}.</p>
+                {unassigned2022.lists.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {unassigned2022.lists.map((l) => (
+                      <NameButton key={l} id={`old-${l}`} name={k25ListName(l)} open={openOld === l} onToggle={() => setOpenOld(openOld === l ? null : l)} />
+                    ))}
+                  </div>
+                )}
+                {openOld && unassigned2022.lists.includes(openOld) && (
+                  <fieldset id={`lineage-old-${openOld}`} className="rounded-theme border border-paper-line p-3 mt-2 text-ink">
+                    <legend className="text-sm font-bold px-1">{k25ListName(openOld)} נכנסה ל…</legend>
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-3">
+                      {rows.map((r) => (
+                        <label key={r.id} className="flex items-center gap-2 min-h-[44px] text-sm">
+                          <input type="checkbox" checked={r.from.includes(openOld)} onChange={(e) => setMap(r.id, e.target.checked ? [...r.from, openOld] : r.from.filter((x) => x !== openOld))} />
+                          {listName(r.id)}
+                        </label>
+                      ))}
+                    </div>
+                    <p className="text-xs text-ink-soft mt-1">אפשר לסמן כמה רשימות — התוצאה של 2022 תתחלק ביניהן.</p>
+                    <Btn className="mt-2" onClick={() => setOpenOld(null)}>סיום</Btn>
+                  </fieldset>
+                )}
+              </div>
             </Explained>
 
             <Fold title="הסברים">
