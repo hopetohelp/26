@@ -18,7 +18,7 @@ type Item = { author: "visitor" | "team"; text: string; created_at: string; topi
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
 type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
-type Data = { accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type Data = { accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 
@@ -87,7 +87,9 @@ export default function Admin() {
   };
 
   if (!credential) return <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>;
-  const today = data?.days[0];
+  // "היום" לפי יום UTC, כמו בשרת: אם עוד לא נספרה כניסה היום — אפסים, ולא נתוני אתמול
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const today = data?.days.find((d) => d.day === todayKey);
   const waiting = (data?.feedback.filter((t) => t.waiting).length ?? 0) + (data?.support?.threads.filter((t) => t.status === "new").length ?? 0);
   return (
     <div className="space-y-6">
@@ -100,30 +102,47 @@ export default function Admin() {
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
       {data && (
         <>
-          <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              ["כניסות היום", today?.visits ?? 0],
-              ["משתמשים היום", today?.users ?? 0],
-              ["נפילות היום", (today?.autoFailures ?? 0)],
-              ["ממתינים לתשובה", waiting],
+          {([
+            ["סך הכול", "מאז תחילת הספירה החדשה בכניסות; בשמירות וברשומות — מהתחלה", [
+              ["כניסות", data.totalVisits ?? "—"],
               ["משתמשים מצטבר", data.totalVisitors],
-              ["נכנסו להשערה היום", today?.guessUsers ?? "—"],
               ["שמרו (בדשבורד)", data.support?.stats.savers ?? "—"],
-              ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
-              ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
               ["רשומות במאגר", data.support?.stats.participants ?? "—"],
-              ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
-              ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
               ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
+              ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
               ["חשבון בלי שמירה", data.support?.stats.accountsNoSave ?? "—"],
               ["רשומות ריקות בלי משתמש", data.support?.stats.emptyGuests ?? "—"],
-            ].map(([label, n]) => (
-              <div key={label} className="bg-paper-card border border-paper-line rounded-theme p-3">
-                <p className="text-xs text-ink-soft">{label}</p>
-                <p className="font-num tabular text-3xl leading-none mt-1">{n}</p>
+            ]],
+            ["היום", "לפי יום UTC", [
+              ["כניסות היום", today?.visits ?? 0],
+              ["משתמשים היום", today?.users ?? 0],
+              ["נכנסו להשערה היום", today?.guessUsers ?? 0],
+              ["נכנסו לסטטיסטיקות היום", today?.communityUsers ?? 0],
+              ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
+              ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
+              ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
+              ["ממתינים לתשובה", waiting],
+            ]],
+            ["נפילות", data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה", [
+              ["נפילות סך הכול", data.failures?.total ?? "—"],
+              ["נפילות היום", today?.autoFailures ?? 0],
+              ["חסימה מלאה היום", today?.blocked ?? 0],
+              ["נשמר בעקיפה היום", today?.relaySaved ?? 0],
+              ["נשמר בלי תשובה היום", today?.blindSaved ?? 0],
+            ]],
+          ] as [string, string, [string, string | number][]][]).map(([title, note, tiles]) => (
+            <section key={title} className="space-y-2" aria-label={title}>
+              <h2 className="flex items-baseline gap-2 flex-wrap"><span className="font-display text-xl">{title}</span><span className="text-xs text-ink-soft">{note}</span></h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {tiles.map(([label, n]) => (
+                  <div key={label} className="bg-paper-card border border-paper-line rounded-theme p-3">
+                    <p className="text-xs text-ink-soft">{label}</p>
+                    <p className="font-num tabular text-3xl leading-none mt-1">{n}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </section>
+            </section>
+          ))}
 
           <section className="space-y-2">
             <h2 className="font-display text-2xl">לפי יום</h2>
