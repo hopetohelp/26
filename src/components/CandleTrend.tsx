@@ -34,8 +34,8 @@ export interface CandleTrendProps {
   windowDays?: number;
   /** "מנדטים" (ברירת מחדל) או "אחוזים" וכו' */
   unit?: string;
-  /** התוצאה בפועל: עיגול ריק */
-  markers?: { t: number; v: number }[];
+  /** התוצאה בפועל: עיגול ריק, וקו מקווקו אליו מהנקודה האחרונה של הסדרה (`id` = מזהה הסדרה; בסדרה אחת אפשר בלעדיו) */
+  markers?: { t: number; v: number; id?: string }[];
   /** גובה בפיקסלים */
   height?: number;
   /** חלון משלו במקום חלון הסקרים (למשל תרחישים וממוצע המודל); מקבל את הסדרה, הנקודה וצבע הסדרה */
@@ -125,6 +125,18 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   // תאריכים צמודים לתחתית הציור (הקו התחתון), לא לתחתית השוליים
   const dateTop = Math.round((height * YB) / 100) + 8;
   const Y = (v: number) => YB - ((YB - YT) * (v - axis.lo)) / (axis.hi - axis.lo);
+  // קו מקווקו מהסקר האחרון אל התוצאה בפועל: מתחיל בקצה העיגול הקטן ונגמר בקצה העיגול הריק (בפיקסלים, ואז חזרה לאחוזים)
+  const links = markers.flatMap((m) => {
+    const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : series.length === 1 ? 0 : -1;
+    const last = si >= 0 ? series[si].points[series[si].points.length - 1] : undefined;
+    if (!last) return [];
+    const [ax, ay, bx, by] = [(X(last.t) / 100) * width, (Y(last.v) / 100) * height, (X(m.t) / 100) * width, (Y(m.v) / 100) * height];
+    const len = Math.hypot(bx - ax, by - ay);
+    if (len < 16) return [];
+    const [ux, uy] = [(bx - ax) / len, (by - ay) / len];
+    const [r1, r2] = [6, 11];
+    return [{ si, x1: ((ax + ux * r1) / width) * 100, y1: ((ay + uy * r1) / height) * 100, x2: ((bx - ux * r2) / width) * 100, y2: ((by - uy * r2) / height) * 100 }];
+  });
   const ln = { vectorEffect: "non-scaling-stroke" as const };
   const dateTicks = candleMode ? shown.map((p) => p.t) : [...new Set(series.flatMap((s) => s.points.map((p) => p.t)))].sort((a, b) => a - b);
   const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 46)));
@@ -174,6 +186,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
     ...(markers.length ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
+    ...(links.length ? [{ kind: "dash" as const, text: "קו מקווקו: מהסקר האחרון אל התוצאה בפועל" }] : []),
   ];
 
   // תוויות קצה לקווים (בהשוואה), מפוזרות כדי שלא יעלו זו על זו
@@ -219,6 +232,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {multi && series.map((s, si) => (
           <path key={s.id} className="trend-line" d={smoothPath(s.points.map((p) => ({ x: X(p.t), y: Y(p.v) })))} fill="none" stroke={colors[si]} strokeWidth={2.4} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dashed ? "5 4" : undefined} {...ln} />
         ))}
+        {links.map((l, i) => <line key={`k${i}`} className={`trend-pop ${candleMode ? "stroke-accent" : ""}`} style={{ animationDelay: "900ms" }} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={2} strokeDasharray="4 3" {...ln} />)}
       </svg>
       <div className="absolute left-0 top-0 w-full" style={{ height }}>
         {axis.lines.map(({ v, major }) => (
@@ -278,7 +292,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {lab.map((i) => {
           const isLast = dateTicks[i] === lastT;
           return (
-            <span key={dateTicks[i]} className="absolute whitespace-nowrap" style={isLast && !multi ? { right: 0 } : { left: `${X(dateTicks[i])}%`, transform: "translateX(-50%)" }}>{dayMonth(iso(dateTicks[i]))}</span>
+            <span key={dateTicks[i]} className="absolute whitespace-nowrap" style={isLast && !multi && X(dateTicks[i]) >= X1 - 0.5 ? { right: 0 } : { left: `${X(dateTicks[i])}%`, transform: "translateX(-50%)" }}>{dayMonth(iso(dateTicks[i]))}</span>
           );
         })}
       </div>

@@ -66,4 +66,11 @@ describe("גרף המגמה האחיד", () => {
     expect(Number(first[1])).toBeCloseTo(Number(x), 1);
     expect(Number(first[2])).toBeCloseTo(Number(y), 1);
   });
+  it("תוצאה בפועל: קו מקווקו מהסקר האחרון אל התוצאה, בכל סדרה לפי מזהה", () => {
+    const m = [{ id: "b", t: points[9].t + 6 * DAY, v: 25 }];
+    const h = html({ series: two, markers: m });
+    expect((h.match(/stroke-dasharray="4 3"/g) ?? []).length).toBe(1);
+    expect(html({ series: two })).not.toContain('stroke-dasharray="4 3"');
+    expect(html({ markers: [{ t: points[9].t + 6 * DAY, v: 55 }] })).toContain('stroke-dasharray="4 3"');
+  });
 });
