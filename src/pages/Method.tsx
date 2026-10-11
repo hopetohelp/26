@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
-import { Card, Columns, PageTitle } from "../components/ui";
+import { Card, PageTitle } from "../components/ui";
 import { meta } from "../lib/data";
 import { BLOC_ESTIMATE_POLICY } from "../lib/blocEstimates";
 import { date } from "../lib/format";
@@ -422,12 +422,10 @@ export function MethodNumbers() {
   useAnchor();
   return (
     <>
-      <Columns>
-        <PageTitle inColumns lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיעים סוג המספר והתאריך המעודכן.">מילון המספרים</PageTitle>
-        {DICTIONARY.map((e) => (
-          <Entry key={e.id} e={e} />
-        ))}
-      </Columns>
+      <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיעים סוג המספר והתאריך המעודכן.">מילון המספרים</PageTitle>
+      {DICTIONARY.map((e) => (
+        <Entry key={e.id} e={e} />
+      ))}
     </>
   );
 }

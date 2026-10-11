@@ -6,7 +6,7 @@ export default function About() {
   return (
     <>
       <PageTitle>אודות</PageTitle>
-      <Card className="max-w-3xl">
+      <Card>
         <div className="text-sm space-y-3">
           <p>
             האתר מנתח את הבחירות לכנסת ה-26 על בסיס נתונים פומביים: התוצאות הרשמיות של ועדת הבחירות המרכזית, והסקרים שפורסמו בכלי התקשורת. הוא
