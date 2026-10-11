@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { colorOf } from "../../lib/colors";
 import { TOTAL } from "../../lib/fillAll";
 import { HALL, hemicycleSeats } from "../../lib/hemicycle";
+import { useSeen, whenVisible } from "../../lib/useSeen";
 import { IDS, nameOf } from "./model";
 
 /** 120 מושבים בצורת פרסה: המיקומים ב-`src/lib/hemicycle.ts` (משותפים גם לבית ולתמונת השיתוף) */
@@ -35,9 +36,10 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
     prev.current = total;
   }, [total]);
 
+  const [seenRef, seen] = useSeen<HTMLElement>();
   const status = left === 0 ? "הכנסת שלך מלאה" : left > 0 ? `נותרו ${left} לחלוקה` : `${-left} יותר מדי`;
   return (
-    <figure className="rounded-theme p-3 md:p-4 bg-paper-card border border-paper-line">
+    <figure ref={seenRef} className={`rounded-theme p-3 md:p-4 bg-paper-card border border-paper-line ${whenVisible(seen)}`}>
       <svg viewBox={`0 0 ${HALL.w} ${HALL.h}`} className={`w-full h-auto block ${pop ? "seat-pop" : ""}`} role="img" aria-label={`${total} מתוך 120 מנדטים חולקו`}>
         {SEATS.map((s, k) => {
           const f = fills[k];

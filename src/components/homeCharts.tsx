@@ -6,6 +6,7 @@ import { type HomeData, type HomeRow } from "../lib/home";
 import { candleProfiles, clipSegs, intSegs, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
 import ChartLegend, { pollCandleLine, rangeLine, type LegendEntry } from "./ChartLegend";
 import { POINT_WINDOW } from "../lib/data";
+import { useSeen, whenVisible } from "../lib/useSeen";
 import { PartyAvatar } from "./PartyAvatar";
 import CandleTrend from "./CandleTrend";
 import type { TrendPoint } from "./charts";
@@ -43,8 +44,9 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
  */
 export function Hemicycle({ gov, other, center, label, footer }: { gov: number; other: number; center?: string; label?: string; footer?: ReactNode }) {
   const missing = Math.min(missingToMajority(gov), other);
+  const [seenRef, seen] = useSeen<HTMLElement>();
   return (
-    <figure className="m-0">
+    <figure ref={seenRef} className={`m-0 ${whenVisible(seen)}`}>
       <div className="relative [container-type:inline-size]">
         <svg
           viewBox={`0 0 ${HALL.w} ${HALL.h}`}

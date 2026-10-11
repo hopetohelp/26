@@ -301,6 +301,9 @@
   to { clip-path: inset(-60px -60px -60px -60px); }
 }
 @keyframes trend-pop { from { opacity: 0; } }
+/* האנימציות מתחילות רק כשהרכיב גלוי (`useSeen`): עד אז מושהות, במצב ההתחלתי (מוסתר) */
+.when-visible:not(.is-seen) :is(.seat-in, .trend-line, .trend-pop),
+.duel-in.when-visible:not(.is-seen) > * { animation-play-state: paused; }
 .trend-line { animation: trend-draw 900ms linear both; }
 .trend-pop { animation: trend-pop 260ms ease-out both; }
 

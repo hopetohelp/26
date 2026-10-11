@@ -1,4 +1,5 @@
 import CountUp from "./CountUp";
+import { useSeen, whenVisible } from "../lib/useSeen";
 import Explained from "./Explained";
 import { PartyAvatar, PartyPhoto } from "./PartyAvatar";
 import { PassBar } from "./homeCharts";
@@ -21,6 +22,7 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
     const xs = polls.map((p) => seatsIn(p, id)).filter((v): v is number => typeof v === "number");
     return xs.length ? rng(Math.min(...xs), Math.max(...xs)) : "";
   };
+  const [seenRef, seen] = useSeen<HTMLDivElement>();
   return (
     <section aria-labelledby="duel-h" className="w-full">
       <h2 id="duel-h" className="sr-only">
@@ -35,7 +37,7 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
         assumption="המספר הגדול: ממוצע המודל. הטווח: הנמוך והגבוה בין המכונים בסקר האחרון של כל אחד. הספירה: בכמה סקרים כל רשימה גבוהה יותר. לא סיכוי."
         methodAnchor="model"
       >
-        <div aria-hidden="true" className="relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in">
+        <div ref={seenRef} aria-hidden="true" className={`relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in ${whenVisible(seen)}`}>
           {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בעיגול בקצה החיצוני, קוטרו חצי מגובה הרצועה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
           <PartyPhoto id={a.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
