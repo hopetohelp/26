@@ -55,8 +55,8 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
       </svg>
       <div className="flex items-baseline justify-center gap-3 -mt-8 md:-mt-12 relative" aria-hidden="true">
         <span dir="ltr" className="inline-flex items-baseline">
-          <span className="font-num tabular leading-none text-6xl md:text-7xl text-ink">{total}</span>
-          <span className="font-num text-2xl md:text-3xl text-ink-soft">/120</span>
+          <span className="font-num tabular leading-none text-5xl md:text-6xl text-ink">{total}</span>
+          <span className="font-num leading-none text-5xl md:text-6xl text-ink-soft">/120</span>
         </span>
       </div>
       <p className={`text-center text-sm font-bold ${left < 0 ? "text-warn" : "text-ink-soft"}`} aria-hidden="true">

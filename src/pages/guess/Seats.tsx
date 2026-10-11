@@ -21,6 +21,7 @@ import { blocSummary } from "./blocSummary";
 import { canSetSeats } from "./seatEditing";
 import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
+import SeatPicker from "./SeatPicker";
 import Share from "./Share";
 import { ActionBar, Btn, ShortLabel, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
@@ -49,7 +50,6 @@ export default function Seats({
   const fillBtn = useRef<HTMLButtonElement>(null);
   const [justSaved, setJustSaved] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
-  const typedFrom = useRef<Record<string, number>>({});
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
   const lineage = useLineage(session);
   const { seats: crowd, pct: crowdPct } = useCrowd();
@@ -227,30 +227,12 @@ export default function Seats({
                           </div>
                         </div>
                       ) : (
-                        <div className="seat-ctl flex items-start gap-1" dir="ltr">
+                        <div className="seat-ctl flex items-start gap-2" dir="ltr">
                           {lock(id, c, name)}
-                          <button type="button" aria-label={`פחות ל${name}`} disabled={c.v <= 0} onClick={() => setV(id, c.v - 1)} className="w-11 h-11 rounded-full border-2 border-ink text-2xl font-bold leading-none disabled:opacity-30 active:bg-ink active:text-paper-card">
-                            −
-                          </button>
                           <div className="flex flex-col items-center">
-                            <input
-                              type="number"
-                              inputMode="numeric"
-                              min={0}
-                              max={TOTAL}
-                              aria-label={`מנדטים ל${name}`}
-                              value={c.v}
-                              onFocus={() => (typedFrom.current[id] = c.v)}
-                              onChange={(e) => setV(id, Number(e.target.value), false)}
-                              onBlur={() => setV(id, c.v, true, typedFrom.current[id] ?? c.v)}
-                              className="w-14 h-11 text-center font-num tabular text-2xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                              style={{ textAlign: "center" }}
-                            />
+                            <SeatPicker value={c.v} name={name} onCommit={(v) => setV(id, v)} />
                             <span className="text-xs text-ink-soft tabular" dir="ltr">{pctNow ? pctFmt(pctNow[id] ?? 0) : ""}</span>
                           </div>
-                          <button type="button" aria-label={`עוד ל${name}`} disabled={c.v >= TOTAL || !canSetSeats(p.seats, IDS, id, snapSeats(c.v + 1, c.v))} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
-                            +
-                          </button>
                         </div>
                       )}
                     </div>
