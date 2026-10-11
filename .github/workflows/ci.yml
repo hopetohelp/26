@@ -41,3 +41,7 @@ jobs:
         run: npm test
       - name: בנייה
         run: npm run build
+      - name: שני השרתים נטענים כמו בפריסה (Node וחבילת Cloudflare, בלי העלאה)
+        run: |
+          for f in worker/crowd/lib/*.js; do node --input-type=module -e "await import('./$f')"; done
+          for w in crowd feedback; do (cd worker/$w && npx --yes wrangler@3 deploy --dry-run --outdir "$RUNNER_TEMP/wr-$w"); done
