@@ -1,5 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTabsSlot } from "./Tabbed";
+import { Segmented } from "./Choice";
 import { SPLIT_SCREENS, splitCls } from "../lib/splitScreens";
 import ChartLegend, { BAR, BarSlots, PILL, PILL_ON, PILL_RING, type LegendEntry } from "./ChartLegend";
 
@@ -74,8 +75,11 @@ export function ChartWithTable({ chart, table, summary, asTable }: { chart: Reac
  * שורת בקרה אחת למסך שלם (הכרעת בעלים 11.10.2026): "מקרא" אחד, פקד יחידות (אחוזים/מנדטים) ו"הצגה כטבלה" — שניהם משפיעים על כל הגרפים והטבלאות במסך.
  * בתצוגת טבלה אין סימונים להסביר, ולכן "מקרא" לא מוצג.
  */
-export function ChartBar({ legend, asTable, onAsTable, children }: { legend: LegendEntry[]; asTable: boolean; onAsTable: (asTable: boolean) => void; children?: ReactNode }) {
-  const toggle = <TableToggle asTable={asTable} onChange={onAsTable} />;
+export function ChartBar({ legend, asTable, onAsTable, children, segmented = false }: { legend: LegendEntry[]; asTable: boolean; onAsTable: (asTable: boolean) => void; children?: ReactNode; segmented?: boolean }) {
+  // segmented: גרף/טבלה כמתג מקטעים, כמו מתג היחידות (מסך "מה השתנה", הכרעת בעלים 11.10.2026)
+  const toggle = segmented
+    ? <Segmented size="sm" label="צורת תצוגה" value={asTable ? "table" : "chart"} onChange={(v) => onAsTable(v === "table")} options={[{ id: "chart", label: "גרף" }, { id: "table", label: "טבלה" }]} className="w-36" />
+    : <TableToggle asTable={asTable} onChange={onAsTable} />;
   return asTable ? (
     <div className="flex flex-wrap items-center gap-2 my-1">{children}{toggle}</div>
   ) : (

@@ -169,7 +169,7 @@ export default function Changes() {
         lead="כל מפלגה של היום מול התוצאה של 2022. מפלגה שנוצרה מפיצול מקבלת חלק מהתוצאה של הרשימה שממנה באה."
         primary={
           <>
-            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable}>
+            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable} segmented>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>
             <PersonalBlocs
