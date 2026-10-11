@@ -94,13 +94,14 @@ const PICK = "העובי בכל קטע: כמה נתונים נותנים ערך 
 /**
  * כמה מהתרחישים הרשימה עוברת את אחוז החסימה: פס אחד, אדום (לא עוברת) משמאל וירוק (עוברת) מימין.
  * הצבע לא לבדו: המספרים כתובים ליד הפס.
+ * אנימציה (הכרעת בעלים 11.10.2026): כשהפס נגלל אל המסך הוא מתחיל כולו ירוק, והאדום מתפשט משמאל עד חלקו (`pass-red` ב-`index.css`).
  */
 export function PassBar({ pass }: { pass: number }) {
   const p = Math.round(pass * 100);
+  const [seenRef, seen] = useSeen<HTMLSpanElement>(0.6);
   return (
-    <span aria-hidden="true" dir="ltr" className="inline-flex h-[.7rem] w-24 rounded-full overflow-hidden shadow-[inset_0_0_0_1.5px_rgb(var(--ink-faint)/.6)]">
-      <i className="bg-neg" style={{ width: `${100 - p}%` }} />
-      <i className="bg-pos" style={{ width: `${p}%` }} />
+    <span ref={seenRef} aria-hidden="true" dir="ltr" className={`inline-flex h-[.7rem] w-24 rounded-full overflow-hidden bg-pos shadow-[inset_0_0_0_1.5px_rgb(var(--ink-faint)/.6)] ${whenVisible(seen)}`}>
+      <i className="pass-red bg-neg" style={{ width: `${100 - p}%` }} />
     </span>
   );
 }

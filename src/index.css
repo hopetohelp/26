@@ -289,6 +289,12 @@
   40% { opacity: .55; }
 }
 
+/* על קו החסימה: הפס מתחיל ירוק והאדום מתפשט אליו משמאל, כשהוא נגלל אל המסך (מכובה ב-prefers-reduced-motion למעלה) */
+@keyframes pass-red {
+  from { width: 0; }
+}
+.pass-red { animation: pass-red 900ms cubic-bezier(.2, .8, .2, 1) both; }
+
 /* מילוי 120 המושבים בכניסה — בבית ובלוח "הכנסת שלי" (מכובה ב-prefers-reduced-motion למעלה) */
 @keyframes seat-in {
   from { opacity: 0; transform: scale(0.4); }
@@ -307,7 +313,7 @@
 }
 @keyframes trend-pop { from { opacity: 0; } }
 /* האנימציות מתחילות רק כשהרכיב גלוי (`useSeen`): עד אז מושהות, במצב ההתחלתי (מוסתר) */
-.when-visible:not(.is-seen) :is(.seat-in, .trend-line, .trend-pop),
+.when-visible:not(.is-seen) :is(.seat-in, .trend-line, .trend-pop, .pass-red),
 .duel-in.when-visible:not(.is-seen) > * { animation-play-state: paused; }
 .trend-line { animation: trend-draw 900ms linear both; }
 .trend-pop { animation: trend-pop 260ms ease-out both; }
