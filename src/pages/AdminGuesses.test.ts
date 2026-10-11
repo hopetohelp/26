@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { blocsText, toCsv, type GuessRow } from "./AdminGuesses";
+import { blocsText, sortRows, toCsv, type GuessRow } from "./AdminGuesses";
 
 const row = (blocs?: GuessRow["blocs"]): GuessRow => ({ handle: "h", day: "2026-10-09", mode: "seats", seats: { likud: 60, yashar: 60 }, status: "ok", reasons: [], blocs });
 
@@ -24,4 +24,14 @@ it("שדות הפעילות מוצגים בעמודות ה-CSV: הצבעה שמ�
   expect(line).toContain('"3"');
   const none = toCsv([row()]).split("\n")[1];
   expect(none).toContain('"לא","0","—","—","0"');
+});
+
+it("מיון לפי רישום, כניסה אחרונה ושמירת ההשערה: מהחדש לישן, בלי ערך בסוף; אקראי משאיר את הסדר", () => {
+  const mk = (handle: string, registered: string | null, lastLogin: string | null, savedAt: string): GuessRow => ({ ...row(), handle, registered, lastLogin, savedAt });
+  const rows = [mk("a", "2026-10-01T10:00:00Z", null, "2026-10-09T08:00:00Z"), mk("b", "2026-10-03T10:00:00Z", "2026-10-05T10:00:00Z", "2026-10-07T08:00:00Z"), mk("c", null, "2026-10-08T10:00:00Z", "2026-10-10T08:00:00Z")];
+  const order = (s: Parameters<typeof sortRows>[1]) => sortRows(rows, s).map((r) => r.handle).join("");
+  expect(order("registered")).toBe("bac");
+  expect(order("lastLogin")).toBe("cba");
+  expect(order("saved")).toBe("cab");
+  expect(order("random")).toBe("abc");
 });

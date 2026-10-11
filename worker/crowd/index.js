@@ -832,6 +832,7 @@ const routes = {
       rows.push({
         handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
         day: v.created_at.slice(0, 10),
+        savedAt: v.created_at,
         mode: v.payload.mode === "pct" ? "pct" : "seats",
         seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
         ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
