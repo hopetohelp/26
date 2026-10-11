@@ -207,3 +207,17 @@ CREATE TABLE IF NOT EXISTS participant_activity (
   last_login_at TEXT,
   pruned INTEGER NOT NULL DEFAULT 0
 );
+
+-- קבוצות (הכרעת בעלים 11.10.2026, docs/פילוח-קבוצות-תכנון.md): מנהל קבוצה מוסר רשימת מיילים, ונשמר רק הגיבוב שלהם —
+-- אותו HMAC של emails.hash, כך שהשיוך הוא הצלבה עם המיילים המאומתים של החשבונות. אין מייל גלוי. השם מוצפן.
+CREATE TABLE IF NOT EXISTS groups (
+  id TEXT PRIMARY KEY,
+  name_enc TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS group_members (
+  group_id TEXT NOT NULL REFERENCES groups(id),
+  email_hash TEXT NOT NULL,
+  PRIMARY KEY (group_id, email_hash)
+);
+CREATE INDEX IF NOT EXISTS group_members_hash ON group_members(email_hash);
