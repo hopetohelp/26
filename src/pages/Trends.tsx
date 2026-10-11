@@ -6,7 +6,7 @@ import Explained from "../components/Explained";
 import { POLL_AVERAGE } from "../lib/sources";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lists2026, listName, POINT_DAYS, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -58,16 +58,16 @@ export default function Trends() {
   const rawSource = useMemo(() => usablePolls.filter((p) => !who || pollsterKey(p) === who), [who]);
   const source = useMemo(() => withLineage(rawSource), [rawSource]);
   // נקודה = 3 ימים בכל האתר, סקר אחד לכל מכון בנקודה (הכרעת בעלים 11.10.2026)
-  const days = POINT_DAYS;
+  const days = POINT_WINDOW;
   const minN = 1;
 
   const series: Series[] = [];
   for (const id of ids) {
     const color = colorOf(id, colorIndex(id));
-    const solid = rollingMean(id, from, to, days, days, source).filter((x) => x.n >= minN);
+    const solid = rollingMean(id, from, to, days, POINT_DAYS, source).filter((x) => x.n >= minN);
     const lin = LINEAGE[id];
     if (lin && from < lin.since) {
-      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, days, source).filter((x) => x.n >= minN);
+      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, POINT_DAYS, source).filter((x) => x.n >= minN);
       if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, color, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
     }
     if (solid.length) series.push({ id, color, name: listName(id), points: solid });
@@ -161,8 +161,8 @@ export default function Trends() {
                 asOf={`הסקרים עד ${date(to)}`}
                 assumption={
                   who
-                    ? "מכון בודד: נקודה כל 3 ימים: ממוצע הסקרים של 3 הימים שמסתיימים בה, והסקר האחרון בלבד של כל מכון באותם ימים. בלי סקר של המכון באותם ימים — אין נקודה."
-                    : "כל המכונים: נקודה כל 3 ימים: ממוצע הסקרים של 3 הימים שמסתיימים בה, והסקר האחרון בלבד של כל מכון באותם ימים. הנר הוא הנמוך והגבוה בין הסקרים בנקודה (טווח מלא), והעובי לפי כמות הסקרים. ממוצע תיאורי — לא מודל ולא תחזית."
+                    ? "מכון בודד: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-7 הימים שמסתיימים בה. בלי סקר של המכון בשבוע הזה — אין נקודה."
+                    : "כל המכונים: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-7 הימים שמסתיימים בה. הנר הוא הנמוך והגבוה בין הסקרים בנקודה (טווח מלא), והעובי לפי כמות הסקרים. ממוצע תיאורי — לא מודל ולא תחזית."
                 }
                 methodAnchor="trends"
               >

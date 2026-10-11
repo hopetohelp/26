@@ -41,7 +41,7 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
  * 120 מושבים בחצי עיגול: הממשלה היוצאת (מלא), המושבים שחסרים לה עד הרוב (עיגולים אדומים בהירים), וכל השאר (מסגרת).
  * במקום קו ה-61 (הכרעת בעלים 9.10.2026): המושבים החסרים הם עצמם הפער.
  */
-export function Hemicycle({ gov, other }: { gov: number; other: number }) {
+export function Hemicycle({ gov, other, center }: { gov: number; other: number; center?: string }) {
   const missing = Math.min(missingToMajority(gov), other);
   return (
     <figure className="m-0">
@@ -56,6 +56,11 @@ export function Hemicycle({ gov, other }: { gov: number; other: number }) {
             <circle key={k} cx={s.x} cy={s.y} r={0.038} className={`${k < gov ? "seat-a" : k < gov + missing ? "seat-miss" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
           ))}
         </svg>
+        {center && (
+          <span aria-hidden="true" className="absolute -translate-x-1/2 -translate-y-1/2 font-num text-lg font-extrabold tabular leading-none" style={{ left: "50%", top: `${((CY - 0.06) / H) * 100}%` }} dir="ltr">
+            {center}
+          </span>
+        )}
       </div>
     </figure>
   );
@@ -219,7 +224,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   const t1 = Date.parse(series[series.length - 1].date);
   const X = (d: string) => (t1 === t0 ? X0 : X0 + ((X1 - X0) * (Date.parse(d) - t0)) / (t1 - t0));
   const pts = series.map((s) => ({ x: X(s.date), y: Y(s.v) }));
-  // נקודה כל 3 ימים: סמן על הקו ונר של הסקרים באותם ימים (לא בנקודה האחרונה — שם נר התרחישים ליום הבחירות)
+  // נקודה כל 3 ימים: סמן על הקו ונר של הסקר האחרון של כל מכון בשבוע שמסתיים בה (לא בנקודה האחרונה — שם נר התרחישים ליום הבחירות)
   const dayOf = (t: number) => new Date(t).toISOString().slice(0, 10);
   const valueAt = (d: string) => (series.find((s) => s.date === d) ?? series[series.length - 1]).v;
   const lastDate = series[series.length - 1].date;
@@ -264,7 +269,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
         entries={[
           { kind: "line", text: "הממוצע של מנדטי הממשלה היוצאת בכל יום" },
           { kind: "dot", text: "נקודה על הקו, כל 3 ימים" },
-          ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "ב-3 הימים של כל נקודה") }] : []),
+          ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "בשבוע של כל נקודה (הסקר האחרון של כל מכון)") }] : []),
           { kind: "dash", text: `קו הרוב, ${MAJORITY} מנדטים` },
           { kind: "mean", text: "הממוצע היום" },
           { kind: "candle", text: rangeLine("p80", "התרחישים", "ליום הבחירות") },

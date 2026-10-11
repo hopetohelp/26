@@ -30,7 +30,7 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
   for (const [name, render] of charts) {
     it(`${name}: יש כפתור "מקרא" סגור, והמקרא הישן לא מוצג בשורה`, () => {
       const html = render();
-      expect(html).toMatch(/<button[^>]*aria-expanded="false"[^>]*>מקרא/);
+      expect(html).toMatch(/<button[^>]*aria-expanded="false"[^>]*>(?:<svg[\s\S]*?<\/svg>)?מקרא/);
       expect(html).not.toContain("עובי הנר:");
     });
   }
@@ -101,7 +101,8 @@ describe("שורת בקרה אחת: מקרא והצגה כטבלה (הכרעת �
     expect(html.indexOf('id="unit"')).toBeLessThan(html.indexOf("הצגה כטבלה"));
     const pills = [...html.matchAll(/<button[^>]*class="([^"]*)"/g)].map((m) => m[1]);
     expect(pills).toHaveLength(2);
-    for (const c of pills) expect(c).toContain("min-h-[34px] px-3.5 rounded-full");
+    // מקרא: תגית שקטה צמודה לשמאל (אפשרות ב, 11.10.2026); הצגה כטבלה: גלולה
+    expect(pills.find((c) => c.includes("ms-auto"))).toContain("rounded-[7px]");
     expect(html).not.toContain("ממוצע בדיקה"); // המקרא סגור
   });
   it("ChartBar בתצוגת טבלה: אין 'מקרא' (אין סימונים), ויש 'הצגה כגרף' עם פקד היחידות", () => {
