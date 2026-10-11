@@ -2,7 +2,7 @@
  * מנדטים ⇐ אחוזים (הכרעת בעלים 10.10.2026) — ליבה טהורה, בלי נתוני האתר: משותפת לאתר (src/lib/lawSeats.ts)
  * ולשרת המשתתפים (worker/crowd), כדי שכל השערה שמורה תכלול גם מנדטים וגם אחוזים לפי אותו חישוב בדיוק.
  */
-import { allocate, type Agreement } from "./baderOfer";
+import { allocate, type Agreement } from "./baderOfer.ts";
 
 export const THRESHOLD_PCT = 3.25;
 /** אחוז לרשימה שקיבלה 0 מנדטים ובמקור הייתה מעל הסף: נשארת מתחת לסף, קרוב ככל האפשר */
