@@ -450,9 +450,9 @@ function CompareHeader({ value, onChange, view, onView }: { value: CompareKey[];
           );
         })}
       </div>
-      <Link to="/changes" className="seat-head-link inline-flex items-center gap-1.5 min-h-[32px] px-3 rounded-full border-2 border-ink text-xs font-bold text-ink no-underline hover:bg-paper">
+      <Link to="/changes" aria-label="שיוך בחירות 22" className="seat-head-link inline-flex items-center gap-1.5 min-h-[32px] px-3 rounded-full border-2 border-ink text-xs font-bold text-ink no-underline hover:bg-paper">
         <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5" /><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5" /></svg>
-        שיוך בחירות 22
+        <span><span className="seat-link-long">שיוך </span>בחירות 22</span>
       </Link>
     </div>
   );

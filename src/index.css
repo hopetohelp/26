@@ -294,10 +294,12 @@
   transform-origin: center;
 }
 
-/* "הכנסת שלי", רשימת המפלגות (הכרעת בעלים 11.10.2026): שורת כותרות אחת (כפתורי ההדלקה) מעל טורי ההשוואה. ברוחב צר: מתג מנדטים|אחוזים וקישור בשורה אחת,
-   הכפתורים בשורה מתחתיהם, וטורי ההשוואה בכל מפלגה בשורה מתחת לשם. כשיש מקום (46rem): הכול בשורה אחת, ו"ממוצע " לפני "סקרים" ו"משתתפים". */
+/* "הכנסת שלי", רשימת המפלגות (הכרעת בעלים 11.10.2026): שורת כותרות אחת (כפתורי ההדלקה) מעל טורי ההשוואה.
+   צר: מתג מנדטים|אחוזים וקישור "בחירות 22" בשורה אחת, הכפתורים-כותרות בשורה מתחתיהם, וטורי ההשוואה בכל מפלגה מתחת לשם.
+   30rem: הקישור המלא "שיוך בחירות 22". 37rem (כמה שהשורה צריכה בפועל): הכול בשורה אחת עם שם המפלגה.
+   50rem: טורים רחבים יותר, ו"ממוצע " לפני "סקרים" ו"משתתפים" — הכפתורים לא נוגעים זה בזה. */
 .seat-box { container-type: inline-size; --cw: 4.75rem; }
-.cmp-long { display: none; }
+.cmp-long, .seat-link-long { display: none; }
 .seat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "mode link" "chips chips"; align-items: center; gap: 0.5rem; }
 .seat-head-mode { grid-area: mode; }
 .seat-head-chips { grid-area: chips; }
@@ -306,11 +308,16 @@
 .seat-name { grid-area: name; }
 .seat-cells { grid-area: cells; }
 .seat-ctl { grid-area: ctl; }
-@container (min-width: 46rem) {
-  .seat-head, .seat-grid { --cw: 7.25rem; }
-  .cmp-long { display: inline; }
+@container (min-width: 30rem) {
+  .seat-link-long { display: inline; }
+}
+@container (min-width: 37rem) {
   .seat-head { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "mode chips link"; }
   .seat-head-link { justify-self: end; }
   .seat-grid { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "name cells ctl"; }
   .seat-ctl { justify-self: end; }
+}
+@container (min-width: 50rem) {
+  .seat-head, .seat-grid { --cw: 8rem; }
+  .cmp-long { display: inline; }
 }
