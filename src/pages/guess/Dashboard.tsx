@@ -12,7 +12,7 @@ import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, V2022_LABE
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
-import { levelSegs, quantileSegs } from "../../lib/chartLanguage";
+import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import type { useSession } from "./useCrowd";
@@ -139,7 +139,7 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
   const axisMax = Math.max(step * 2, Math.ceil(top / step) * step);
   const at = (v: number) => (v / axisMax) * 100;
   const withPoll = rows.some(r => r.poll !== undefined);
-  const levels = levelSegs(rows.map(r => r.q ? quantileSegs(r.q, suffix ? 0.25 : 0.5) : []));
+  const levels = candleProfiles(rows.map(r => r.q ? quantileSegs(r.q, suffix ? 0.25 : 0.5) : []), true);
   const COLS = "grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto]";
   return <Card title={title}>
     <ChartLegend

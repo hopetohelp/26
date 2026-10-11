@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
-import { clipSegs, intSegs, levelSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
+import { candleProfiles, clipSegs, intSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ProfileCandleV, Track } from "./marks";
 
@@ -153,7 +153,7 @@ export function Ranking({ home, meanLabel = "ממוצע המודל" }: { home: H
   const edge = home.edge.map((r) => rangeRow(r));
   const below = home.below;
   const axisMax = axisMaxOf([...safe, ...edge]);
-  const levels = levelSegs([...safe, ...edge].map((r) => r.segs));
+  const levels = candleProfiles([...safe, ...edge].map((r) => r.segs));
   const lvOf = (i: number) => levels[i];
   const rangeText = rangeLine("p80", "התרחישים");
   return (
@@ -191,7 +191,7 @@ export interface MachineRow {
 export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { rows: MachineRow[]; meanLabel?: string }) {
   const data: RangeRowData[] = rows.map((r) => ({ id: r.id, name: r.name, central: r.central, lo: Math.min(...r.values), hi: Math.max(...r.values), segs: valueSegs(r.values) }));
   const axisMax = axisMaxOf(data);
-  const levels = levelSegs(data.map((r) => r.segs));
+  const levels = candleProfiles(data.map((r) => r.segs));
   return (
     <>
       <RankLegend meanLabel={meanLabel} rangeText={rangeLine("full", "הסקרים")} />
@@ -231,7 +231,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   const marks = points.length
     ? points.map((p) => ({ date: dayOf(p.t), values: p.values })).filter((p) => p.date >= series[0].date && p.date <= lastDate)
     : sparseIndices(pts.map((p) => p.x), 8).filter((i) => i !== pts.length - 1).map((i) => ({ date: series[i].date, values: [] as number[] }));
-  const pollCandles = levelSegs(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
+  const pollCandles = candleProfiles(marks.map((m) => (m.values.length ? valueSegs(m.values) : [])));
   const grid = [50, 55].filter((v) => v > vmin && v < vmax);
   const min = Math.min(...vals);
   const max = Math.max(...vals);

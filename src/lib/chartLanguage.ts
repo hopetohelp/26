@@ -246,41 +246,89 @@ export function segLevel(share: number): Level {
  * - "candle" (ברירת המחדל, הכרעת בעלים 9.10.2026): ביחס לקטע העמוס ביותר באותו נר, כך שכל נר מראה את הצורה שלו: עבה היכן שרוב הנתונים, דק בקצוות.
  * - "chart": ביחס לקטע העמוס ביותר בכל הגרף (כל הנרות יחד), כמו נרות ווליום: נר רחב ופזור נראה דק כולו. לא בשימוש כרגע.
  */
-export function levelSegs(all: Seg[][], scope: "candle" | "chart" = "candle", gap = GAP_FILL): LSeg[][] {
+export function levelSegs(all: Seg[][], scope: "candle" | "chart" = "candle"): LSeg[][] {
   const chartMax = maxVolume(all.flatMap((segs) => segs.map((g) => g.count)));
   return all.map((segs) => {
     const max = scope === "chart" ? chartMax : maxVolume(segs.map((g) => g.count));
-    return fillGaps(segs.map((g) => ({ from: g.from, to: g.to, level: segLevel(max > 0 ? g.count / max : 0) })), gap);
+    return segs.map((g) => ({ from: g.from, to: g.to, level: segLevel(max > 0 ? g.count / max : 0) }));
   });
 }
 
-/** אורך "חור" מרבי שממלאים, כחלק מאורך הנר (הכרעת בעלים 11.10.2026, הצעה ב) */
-export const GAP_FILL = 0.2;
-
 /**
- * הצעה ב (הכרעת בעלים 11.10.2026): כל רוחב ממשיך עד הרוחב הבא. קטע שדק משני צדדיו ("חור") מקבל את העובי של הנמוך מבין שני
- * הקירות שלו — רק כשאורך החור עד `limit` מאורך הנר. חור ארוך יותר נשאר: הוא פער אמיתי בין הנתונים.
+ * הנר באתר (הכרעת בעלים 11.10.2026, שילוב של אחוזונים וקבוצות): הנר נבנה לפי סדר הנתונים מהנמוך לגבוה, לא לפי ספירה בכל ערך.
+ * - **אחוזונים**: 9.5% הנמוכים ו-9.5% הגבוהים — קו דק; 27% מכל צד — קופסה בינונית; 27% האמצעיים — קופסה עבה.
+ * - **שתי קבוצות**: כשיש פער ריק (בלי נתונים) של לפחות `CLUSTER_GAP` מאורך הנר, ובכל צד שלו לפחות `CLUSTER_MIN` מהנתונים, צפופים (פיזור כל צד קטן מהפער),
+ *   כל צד מצויר כנר משלו (באותם אחוזונים) והם מחוברים בקו דק — כמו שני נרות מחוברים. לכל היותר שני אזורים.
+ * `density`: הספירה בכל קטע היא צפיפות (נר מרבעונים), ולכן המשקל הוא צפיפות × רוחב.
  */
-export function fillGaps(segs: LSeg[], limit = GAP_FILL): LSeg[] {
-  const n = segs.length;
-  if (n < 3) return segs;
-  const order = segs.map((_, i) => i).sort((a, b) => segs[a].from - segs[b].from);
-  const L = order.map((i) => segs[i]);
-  const len = L[n - 1].to - L[0].from;
-  const lm: number[] = [], rm: number[] = [];
-  for (let i = 0, m = 0; i < n; i++) lm[i] = m = Math.max(m, L[i].level);
-  for (let i = n - 1, m = 0; i >= 0; i--) rm[i] = m = Math.max(m, L[i].level);
-  const out = L.map((g) => ({ ...g }));
-  const low = (k: number) => L[k].level < Math.min(lm[k], rm[k]);
-  for (let i = 0; i < n; ) {
-    if (!low(i)) { i++; continue; }
-    let j = i;
-    while (j + 1 < n && low(j + 1)) j++;
-    if (L[j].to - L[i].from <= limit * len + 1e-9) for (let k = i; k <= j; k++) out[k].level = Math.min(lm[k], rm[k]) as Level;
-    i = j + 1;
-  }
-  return out;
+export const CANDLE_TAIL = 0.095;
+export const CANDLE_CORE = 0.27;
+export const CLUSTER_MIN = 0.25;
+export const CLUSTER_GAP = 0.2;
+
+type W = { from: number; to: number; w: number };
+function weighted(segs: Seg[], density: boolean): W[] {
+  return segs
+    .map((g) => ({ from: Math.min(g.from, g.to), to: Math.max(g.from, g.to), w: Math.max(0, density ? g.count * Math.abs(g.to - g.from) : g.count) }))
+    .sort((a, b) => a.from - b.from);
 }
+/** הערך שמתחתיו `p` מהמשקל (אינטרפולציה לינארית בתוך הקטע) */
+function quantileOf(ws: W[], p: number): number {
+  const tot = ws.reduce((a, g) => a + g.w, 0);
+  let acc = 0;
+  const t = p * tot;
+  for (const g of ws) {
+    if (g.w > 0 && acc + g.w >= t - 1e-12) return g.from + (g.to - g.from) * Math.min(1, Math.max(0, (t - acc) / g.w));
+    acc += g.w;
+  }
+  return ws[ws.length - 1].to;
+}
+/** נר אחד לפי אחוזונים, מהקצה הנמוך של הנתונים ועד הגבוה */
+function percentileOne(ws: W[]): LSeg[] {
+  const occ = ws.filter((g) => g.w > 0);
+  if (!occ.length) return [];
+  const lo = occ[0].from, hi = occ[occ.length - 1].to;
+  if (hi - lo < 1e-9) return [{ from: lo - 0.25, to: hi + 0.25, level: 5 }];
+  const a = CANDLE_TAIL, b = 0.5 - CANDLE_CORE / 2;
+  const [t0, c0, c1, t1] = [a, b, 1 - b, 1 - a].map((p) => quantileOf(occ, p));
+  const parts: LSeg[] = [
+    { from: lo, to: t0, level: 1 },
+    { from: t0, to: c0, level: 3 },
+    { from: c0, to: c1, level: 5 },
+    { from: c1, to: t1, level: 3 },
+    { from: t1, to: hi, level: 1 },
+  ].filter((g) => g.to - g.from > 1e-9) as LSeg[];
+  if (!parts.some((g) => g.level === 5)) {
+    // הליבה העבה תמיד נראית, גם כשהאמצע הוא ערך אחד
+    const m = quantileOf(occ, 0.5), half = Math.max((hi - lo) * 0.015, 0.125);
+    return [...parts.flatMap((g) => (g.from <= m && g.to >= m ? [{ ...g, to: m - half }, { from: m - half, to: m + half, level: 5 as Level }, { ...g, from: m + half }] : [g])).filter((g) => g.to - g.from > 1e-9)];
+  }
+  return parts;
+}
+/** נר לפי אחוזונים, עם פיצול לשני אזורים כשיש שתי קבוצות נפרדות */
+export function candleProfile(segs: Seg[], density = false): LSeg[] {
+  const ws = weighted(segs, density).filter((g) => g.to > g.from || g.w > 0);
+  const occ = ws.filter((g) => g.w > 0);
+  if (!occ.length) return [];
+  const tot = occ.reduce((a, g) => a + g.w, 0);
+  const lo = occ[0].from, hi = occ[occ.length - 1].to, len = hi - lo;
+  let best: { at: number; gap: number } | null = null;
+  let acc = 0;
+  for (let k = 0; k + 1 < occ.length; k++) {
+    acc += occ[k].w;
+    const gap = occ[k + 1].from - occ[k].to;
+    // קבוצה = נתונים צפופים "במקום אחד": הפער גדול מהפיזור של כל אחת משתי הקבוצות (שני סקרים חריגים רחוקים זה מזה אינם קבוצה)
+    const leftSpread = occ[k].to - lo, rightSpread = hi - occ[k + 1].from;
+    if (gap >= CLUSTER_GAP * len - 1e-9 && gap >= leftSpread && gap >= rightSpread && acc / tot >= CLUSTER_MIN - 1e-9 && 1 - acc / tot >= CLUSTER_MIN - 1e-9 && (!best || gap > best.gap)) best = { at: k, gap };
+  }
+  if (!best) return percentileOne(occ);
+  const left = percentileOne(occ.slice(0, best.at + 1));
+  const right = percentileOne(occ.slice(best.at + 1));
+  const a = left[left.length - 1].to, b = right[0].from;
+  return [...left, ...(b > a ? [{ from: a, to: b, level: 1 as Level }] : []), ...right];
+}
+/** אותו נר לכל קבוצת קטעים (מקור אחד לכל הגרפים) */
+export const candleProfiles = (all: Seg[][], density = false): LSeg[][] => all.map((segs) => candleProfile(segs, density));
 
 /** סמנים על הקו: לפחות `gap` יחידות בין סמן לסמן, והנקודה האחרונה תמיד כלולה */
 export function sparseIndices(xs: number[], gap: number): number[] {

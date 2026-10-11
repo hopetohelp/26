@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, fillGaps, valueSegs, type LSeg, type Seg } from "./chartLanguage";
+import { binSegs, CANDLE_PX, clipSegs, intSegs, levelSegs, MARK_PAD, MARK_PX, maxVolume, quantileSegs, segLevel, smoothPath, sparseIndices, SQUARE_STROKE, squarePath, squareRuns, SVG_MARKS, candleProfile, valueSegs, type LSeg, type Seg } from "./chartLanguage";
 
 describe("עובי הנר ומידות הסימנים", () => {
   it("שלוש רמות בלבד (1, 3, 5), בעובי 4, 10 ו-16 פיקסלים", () => {
@@ -175,17 +175,34 @@ describe("הנר המרובע: קו מלא לרמה 1 וקופסה חלולה ל
   });
 });
 
-describe("fillGaps: הצעה ב — כל רוחב ממשיך עד הרוחב הבא", () => {
-  const g = (from: number, to: number, level: 1 | 3 | 5): LSeg => ({ from, to, level });
-  it("חור קצר (עד 20% מהנר) מתמלא בעובי הנמוך מבין שני הקירות", () => {
-    const out = fillGaps([g(0, 4, 5), g(4, 5, 1), g(5, 10, 3)], 0.2);
-    expect(out.map((x) => x.level)).toEqual([5, 3, 3]);
+describe("candleProfile: אחוזונים, ושני אזורים לשתי קבוצות (הכרעת בעלים 11.10.2026)", () => {
+  const vals = (xs: number[]) => candleProfile(valueSegs(xs));
+  it("דק 9.5%, בינוני 27%, עבה 27% באמצע — בסדר הזה, מהנמוך עד הגבוה", () => {
+    const segs = vals([46, 47, 47, 48, 49, 49, 50, 51, 52, 53]);
+    expect(segs.map((g) => g.level)).toEqual([1, 3, 5, 3, 1]);
+    expect(segs[0].from).toBe(46);
+    expect(segs[segs.length - 1].to).toBe(53);
+    for (let i = 1; i < segs.length; i++) expect(segs[i].from).toBeCloseTo(segs[i - 1].to, 9);
   });
-  it("חור ארוך (מעל 20%) נשאר דק: פער אמיתי", () => {
-    const out = fillGaps([g(0, 2, 5), g(2, 6, 1), g(6, 10, 5)], 0.2);
-    expect(out.map((x) => x.level)).toEqual([5, 1, 5]);
+  it("שתי קבוצות של לפחות 25% עם פער ריק ⇐ שני נרות מחוברים בקו דק", () => {
+    const segs = vals([45, 46, 46, 47, 47, 60, 61, 61, 62]);
+    const thick = segs.filter((g) => g.level === 5);
+    expect(thick).toHaveLength(2);
+    expect(thick[0].to).toBeLessThan(50);
+    expect(thick[1].from).toBeGreaterThan(55);
   });
-  it("קצה דק אינו חור ונשאר דק", () => {
-    expect(fillGaps([g(0, 1, 1), g(1, 9, 5), g(9, 10, 1)], 0.2).map((x) => x.level)).toEqual([1, 5, 1]);
+  it("שני סקרים חריגים רחוקים זה מזה אינם קבוצה, גם כשהם 25%", () => {
+    expect(vals([46, 47, 48, 48, 49, 49, 56, 64]).filter((g) => g.level === 5)).toHaveLength(1);
+  });
+  it("סקר חריג אחד (פחות מ-25%) אינו קבוצה: נר אחד עם קצה דק ארוך", () => {
+    const segs = vals([45, 46, 46, 47, 47, 48, 48, 49, 64]);
+    expect(segs.filter((g) => g.level === 5)).toHaveLength(1);
+    expect(segs[segs.length - 1]).toMatchObject({ to: 64, level: 1 });
+  });
+  it("ערך יחיד — נר זעיר סביב הערך, עם ליבה עבה", () => {
+    const segs = vals([50]);
+    expect(segs.some((g) => g.level === 5)).toBe(true);
+    expect(segs[0].from).toBeGreaterThan(49.5);
+    expect(segs[segs.length - 1].to).toBeLessThan(50.5);
   });
 });
