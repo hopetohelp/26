@@ -10,7 +10,8 @@ import { Btn, Notice } from "./guess/ui";
  */
 export type GuessReason = { list: string; rule: "ratio" | "watched"; value: number; mean?: number };
 export type GuessBloc = { name: string; lists: string[]; seats: number; target: number | null };
-export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; verified?: boolean; reasons: GuessReason[]; hasVote?: boolean; saves?: number; registered?: string | null; lastLogin?: string | null; logins?: number };
+export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; savedAt?: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; verified?: boolean; reasons: GuessReason[]; hasVote?: boolean; saves?: number; registered?: string | null; lastLogin?: string | null; logins?: number };
+export type Sort = "random" | "registered" | "lastLogin" | "saved";
 type Filter = "pending" | "all" | "approved" | "rejected" | "unverified";
 
 const STATUS: Record<GuessRow["status"], string> = { ok: "תקינה", pending: "ממתינה לאישור", approved: "אושרה", rejected: "נדחתה", review: "בבדיקת שעה חשודה" };
@@ -21,6 +22,20 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "rejected", label: "נדחו" },
   { id: "unverified", label: "לא מאומתים" },
 ];
+
+const SORTS: { id: Sort; label: string }[] = [
+  { id: "random", label: "אקראי" },
+  { id: "registered", label: "רישום משתמש" },
+  { id: "lastLogin", label: "כניסה אחרונה" },
+  { id: "saved", label: "שמירת ההשערה" },
+];
+
+/** מיון מהחדש לישן לפי השדה שנבחר; בלי ערך — בסוף. "אקראי" משאיר את סדר השרת. */
+export function sortRows(rows: GuessRow[], sort: Sort): GuessRow[] {
+  if (sort === "random") return rows;
+  const key = (r: GuessRow) => (sort === "registered" ? r.registered : sort === "lastLogin" ? r.lastLogin : r.savedAt ?? r.day) ?? "";
+  return [...rows].sort((a, b) => (key(b) > key(a) ? 1 : key(b) < key(a) ? -1 : 0));
+}
 
 /** תאריך ושעה בשעון ישראל, לשדות הפעילות (נרשם / כניסה אחרונה) */
 export const stamp = (iso?: string | null) => iso ? dateTime(iso) : "—";
@@ -47,6 +62,7 @@ export function toCsv(rows: GuessRow[]) {
 export default function AdminGuesses({ api }: { api: (path: string, body?: unknown) => Promise<any> }) {
   const [data, setData] = useState<{ salt: string; rows: GuessRow[]; unverified?: { participants: number; means: Record<string, number> } } | null>(null);
   const [filter, setFilter] = useState<Filter>("pending");
+  const [sort, setSort] = useState<Sort>("random");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -64,7 +80,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
     finally { setBusy(null); }
   };
 
-  const rows = (data?.rows ?? []).filter((r) => filter === "all" || (filter === "unverified" ? r.verified === false : r.status === filter));
+  const rows = sortRows((data?.rows ?? []).filter((r) => filter === "all" || (filter === "unverified" ? r.verified === false : r.status === filter)), sort);
   const pending = data?.rows.filter((r) => r.status === "pending").length ?? 0;
   const ids = lists2026.map((l) => l.id);
   const download = () => {
@@ -82,7 +98,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         <h2 className="font-display text-2xl">השערות הגולשים ({data?.rows.length ?? "…"} · ממתינות {pending})</h2>
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן לפי רישום, כניסה אחרונה או שמירת ההשערה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
       <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>
       <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>
       {!!data?.unverified?.participants && (
@@ -94,6 +110,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
         </details>
       )}
       <Chips label="סינון" value={filter} onChange={setFilter} options={FILTERS} />
+      <Chips label="מיון" value={sort} onChange={setSort} options={SORTS} />
       {error && <Notice tone="warn">{error}</Notice>}
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
       {data && !rows.length && <p className="text-sm text-ink-soft">אין השערות במצב הזה.</p>}
