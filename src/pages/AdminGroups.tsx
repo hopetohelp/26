@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Btn, Field, Notice, inputCls } from "./guess/ui";
 import GroupUpload from "../components/GroupUpload";
+import { AdminGroupsGuide } from "../components/GroupGuide";
 import type { GroupImportResult } from "../lib/crowdApi";
 
 /**
@@ -26,6 +27,7 @@ export default function AdminGroups({ api }: { api: Api }) {
     <section className="space-y-3" aria-label="קבוצות">
       <h2 className="font-display text-2xl">קבוצות</h2>
       <p className="text-xs text-ink-soft">חבר בקבוצה = חשבון שמייל מאומת שלו ברשימה. הנתונים מוצגים לחברים בלבד, מ-50 משתתפים.</p>
+      <AdminGroupsGuide />
       {error && <Notice tone="warn">{error}</Notice>}
       {groups?.map((g) => <GroupRow key={g.id} g={g} api={api} act={act} />)}
       <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">

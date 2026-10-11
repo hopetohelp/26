@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { call, CrowdError, type GroupImportResult } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
 import GroupStats from "../../components/GroupStats";
+import { GroupManagerGuide } from "../../components/GroupGuide";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
 import { FORGOT_LINE } from "./LinkSaver";
@@ -445,6 +446,7 @@ function ManagedGroup({ id, name, token, className }: { id: string; name: string
     <div className={className}>
       <p className="font-bold">הקבוצה {name}</p>
       <GroupStats group={id} token={token} refresh={refresh} />
+      <GroupManagerGuide />
       <p className="font-bold pt-2">רשימת החברים</p>
       <GroupUpload send={(chunk) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } })} onDone={() => setRefresh((n) => n + 1)} />
     </div>
