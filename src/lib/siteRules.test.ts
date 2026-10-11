@@ -68,6 +68,11 @@ describe("כרטיסי הגושים: מגירה אחת בכל האתר (הכרע
       expect(t, f).not.toMatch(/<section[^>]*bg-paper-card/);
     }
   });
+  it("המגירה ככרטיס עם מסגרת, וכפתור העריכה רק כשהיא פתוחה", () => {
+    const t = read("components/BlocsDrawer.tsx");
+    expect(t).toMatch(/<section[^>]*bg-paper-card[^>]*border border-paper-line/);
+    expect(t).toContain("{expanded && <EditBlocsButton");
+  });
   it("בכרטיס אין שורת מקור-ותאריך ואין תאריך בכותרות העמודות; 'איך זה חושב?' בשורה התחתונה", () => {
     const t = read("components/PersonalBlocs.tsx");
     expect(t).not.toContain("{source} · {asOf}");
