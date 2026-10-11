@@ -39,14 +39,22 @@ export function dumbbellSegs(r: Pick<DumbbellRow, "hist" | "range">): Seg[] {
   return clipSegs(all, r.range[0], r.range[1]);
 }
 
-/** ציר 0 עד גבול עגול: באחוזים צעד 5 עד 20 ואחרי זה צעד 10; במנדטים צעד 5 עד 20, 10 עד 60 ואחרי זה 20 (עד ארבעה-חמישה סימונים, שייכנסו בטלפון) */
-export function dumbbellAxis(rows: DumbbellRow[], unit: DumbbellUnit = "pct"): { max: number; ticks: number[] } {
-  const raw = Math.max(unit === "pct" ? 20 : 10, ...rows.flatMap((r) => [r.before, r.now, r.range ? r.range[1] : 0]));
-  const step = raw <= 20 ? 5 : unit === "pct" || raw <= 60 ? 10 : 20;
-  const max = Math.ceil(raw / step) * step;
+/**
+ * ציר לפי הטווח הדרוש (הכרעת בעלים 11.10.2026): מהערך הנמוך ועד הגבוה בכל השורות (2022, היום וקצות הנר), ועוד רווח משני הצדדים
+ * (10% מהטווח, לפחות חצי יחידה). הקצוות מעוגלים לצעד עגול (1, 2, 5, 10, 20) כך שיש 3–6 סימונים, ואינם יורדים מתחת ל-0.
+ */
+export function dumbbellAxis(rows: DumbbellRow[], unit: DumbbellUnit = "pct"): { min: number; max: number; ticks: number[] } {
+  const vals = rows.flatMap((r) => [r.before, r.now, ...(r.range ?? [])]);
+  const lo = vals.length ? Math.min(...vals) : 0;
+  const hi = vals.length ? Math.max(...vals) : 10;
+  const pad = Math.max((hi - lo) * 0.1, unit === "pct" ? 0.5 : 1);
+  const a = Math.max(0, lo - pad), b = hi + pad;
+  const step = [1, 2, 5, 10, 20, 50].find((st) => (b - a) / st <= 5) ?? 50;
+  const min = Math.floor(a / step) * step;
+  const max = Math.max(min + step, Math.ceil(b / step) * step);
   const ticks: number[] = [];
-  for (let v = 0; v <= max; v += step) ticks.push(v);
-  return { max, ticks };
+  for (let v = min; v <= max + 1e-9; v += step) ticks.push(v);
+  return { min, max, ticks };
 }
 
 /** השינוי בנקודות אחוז, מעוגל לעשירית (כמו שמוצג), כך שהסימן והמספר תמיד מתאימים */

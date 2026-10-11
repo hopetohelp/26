@@ -13,25 +13,27 @@ const row = (before: number, now: number, hi: number | null = null): DumbbellRow
   range: hi === null ? null : [now - 0.5, hi],
 });
 
-describe("dumbbellAxis", () => {
-  it("לפחות 20, בצעד 5", () => {
-    expect(dumbbellAxis([row(3, 4)])).toEqual({ max: 20, ticks: [0, 5, 10, 15, 20] });
+describe("dumbbellAxis: לפי הטווח הדרוש, עם רווח משני הצדדים", () => {
+  it("לא מתחיל ב-0 כשאין צורך, וכל הערכים בפנים עם רווח", () => {
+    const a = dumbbellAxis([row(23.4, 17.4, 20.6)]);
+    expect(a.min).toBeGreaterThan(0);
+    expect(a.min).toBeLessThan(17.4);
+    expect(a.max).toBeGreaterThan(23.4);
+    expect(a.ticks[0]).toBe(a.min);
+    expect(a.ticks[a.ticks.length - 1]).toBe(a.max);
+    expect(a.ticks.length).toBeGreaterThanOrEqual(2);
+    expect(a.ticks.length).toBeLessThanOrEqual(6);
   });
-  it("מעל 20 עוברים לצעד 10 ומעגלים כלפי מעלה", () => {
-    expect(dumbbellAxis([row(23.4, 17.4, 20.6)])).toEqual({ max: 30, ticks: [0, 10, 20, 30] });
+  it("טווח צר — צעד קטן; לא יורד מתחת ל-0", () => {
+    const a = dumbbellAxis([row(3, 4)]);
+    expect(a.ticks[1] - a.ticks[0]).toBeLessThanOrEqual(2);
+    expect(dumbbellAxis([row(0, 6)], "seats").min).toBe(0);
   });
-  it("הטווח העליון נכלל גם כשהוא מעל שתי הנקודות", () => {
-    expect(dumbbellAxis([row(18, 19, 24.5)]).max).toBe(30);
-  });
-});
-
-describe("dumbbellAxis במנדטים", () => {
-  it("לפחות 10, בצעד 5 עד 20", () => {
-    expect(dumbbellAxis([row(3, 4)], "seats")).toEqual({ max: 10, ticks: [0, 5, 10] });
-  });
-  it("מעל 20 צעד 10, ומעל 60 צעד 20", () => {
-    expect(dumbbellAxis([row(23, 27)], "seats")).toEqual({ max: 30, ticks: [0, 10, 20, 30] });
-    expect(dumbbellAxis([row(23, 67)], "seats")).toEqual({ max: 80, ticks: [0, 20, 40, 60, 80] });
+  it("מנדטים: טווח רחב — צעד גדול", () => {
+    const a = dumbbellAxis([row(4, 32)], "seats");
+    expect(a.min).toBe(0);
+    expect(a.max).toBeGreaterThanOrEqual(32);
+    expect(a.ticks.length).toBeLessThanOrEqual(6);
   });
 });
 
@@ -48,11 +50,12 @@ describe("על הנתונים האמיתיים", () => {
     const alts = (modelFile as unknown as { changes: { alternatives: { families: { share2022: number; shareNow: number; shareRange: number[] | null; shareHist: { start: number; step: number; counts: number[] } | null }[] }[] } }).changes.alternatives;
     for (const a of alts) {
       const rows = a.families.map((f, i) => ({ id: String(i), name: "", from: "", before: f.share2022, now: f.shareNow, hist: f.shareHist, range: f.shareRange ? [f.shareRange[0], f.shareRange[2]] as [number, number] : null }));
-      const { max } = dumbbellAxis(rows);
+      const { min, max } = dumbbellAxis(rows);
       for (const r of rows) {
         expect(r.before).toBeLessThanOrEqual(max);
         expect(r.now).toBeLessThanOrEqual(max);
         expect(r.range ? r.range[1] : 0).toBeLessThanOrEqual(max);
+        expect(Math.min(r.before, r.now, ...(r.range ?? []))).toBeGreaterThanOrEqual(min);
       }
     }
   });

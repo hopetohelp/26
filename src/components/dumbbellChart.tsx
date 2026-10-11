@@ -42,8 +42,8 @@ export function NameButton({ id, name, open, onToggle }: { id: string; name: str
   );
 }
 
-function Row({ r, max, ticks, lsegs, unit, open, onName, below }: { r: DumbbellRow; max: number; ticks: number[]; lsegs: LSeg[]; unit: DumbbellUnit; open: boolean; onName?: () => void; below?: ReactNode }) {
-  const x = (v: number) => (Math.min(v, max) / max) * 100;
+function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: DumbbellRow; min: number; max: number; ticks: number[]; lsegs: LSeg[]; unit: DumbbellUnit; open: boolean; onName?: () => void; below?: ReactNode }) {
+  const x = (v: number) => ((Math.min(Math.max(v, min), max) - min) / (max - min)) * 100;
   const d = change(r);
   const pct = unit === "pct";
   const fmt = (v: number) => (pct ? `${r1(v)}%` : seatsFmt(Math.round(v * 10) / 10));
@@ -88,7 +88,7 @@ function Row({ r, max, ticks, lsegs, unit, open, onName, below }: { r: DumbbellR
  * `legend={false}`: המקרא מוצג במקום אחר (שורת הבקרה של המסך). `onName` — שם הרשימה ככפתור; `openId` — מי פתוחה, ו-`below` — מה נפתח מתחת לשורה שלה.
  */
 export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode }) {
-  const { max, ticks } = dumbbellAxis(rows, unit);
+  const { min, max, ticks } = dumbbellAxis(rows, unit);
   const levels = levelSegs(rows.map(dumbbellSegs));
   return (
     <div>
@@ -97,13 +97,13 @@ export default function DumbbellChart({ rows, unit = "pct", legend = true, onNam
         <div dir="ltr" className="md:col-start-2 relative h-5">
           <span className="mk-plot">
             {ticks.map((v) => (
-              <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${(v / max) * 100}%` }}>{v === 0 || unit === "seats" ? v : `${v}%`}</span>
+              <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${((v - min) / (max - min)) * 100}%` }}>{v === 0 || unit === "seats" ? v : `${v}%`}</span>
             ))}
           </span>
         </div>
       </div>
       <ul aria-label="משפחות הרשימות, 2022 מול היום">
-        {rows.map((r, i) => <Row key={r.id} r={r} max={max} ticks={ticks} lsegs={levels[i]} unit={unit} open={openId === r.id} onName={onName ? () => onName(r.id) : undefined} below={below?.(r.id)} />)}
+        {rows.map((r, i) => <Row key={r.id} r={r} min={min} max={max} ticks={ticks} lsegs={levels[i]} unit={unit} open={openId === r.id} onName={onName ? () => onName(r.id) : undefined} below={below?.(r.id)} />)}
       </ul>
     </div>
   );
