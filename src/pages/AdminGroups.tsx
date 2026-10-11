@@ -45,8 +45,12 @@ function GroupRow({ g, api, act }: { g: Group; api: Api; act: (f: () => Promise<
   const [manager, setManager] = useState("");
   const [sure, setSure] = useState(false);
   return (
-    <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">
-      <p className="font-bold">{g.name ?? g.id} <span className="font-normal text-sm text-ink-soft tabular">· {g.members.toLocaleString("he-IL")} מיילים ברשימה · {g.managers ?? 0} {g.managers === 1 ? "מנהל" : "מנהלים"}</span></p>
+    <details className="group bg-paper-card border border-paper-line rounded-theme [&_summary::-webkit-details-marker]:hidden">
+      <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-3 min-h-[56px]">
+        <span><span className="font-bold">{g.name ?? g.id}</span> <span className="text-sm text-ink-soft tabular">· {g.members.toLocaleString("he-IL")} מיילים ברשימה · {g.managers ?? 0} {g.managers === 1 ? "מנהל" : "מנהלים"}</span></span>
+        <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
+      </summary>
+      <div className="px-3 pb-3 space-y-3">
       <GroupStats load={() => api("/admin/groups/stats", { group: g.id }) as Promise<Stats>} refresh={g.members} />
       <p className="font-bold text-sm">מנהלי הקבוצה</p>
       {g.managerList?.length ? (
@@ -73,6 +77,7 @@ function GroupRow({ g, api, act }: { g: Group; api: Api; act: (f: () => Promise<
           ? <Btn kind="danger" onClick={act(() => api("/admin/groups/delete", { group: g.id }))}>למחוק את הקבוצה והרשימה?</Btn>
           : <Btn kind="danger" onClick={() => setSure(true)}>מחיקת הקבוצה</Btn>}
       </div>
-    </div>
+      </div>
+    </details>
   );
 }
