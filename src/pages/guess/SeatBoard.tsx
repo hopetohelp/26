@@ -52,13 +52,12 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
             />
           );
         })}
+        {/* המספר בתוך מרכז קשת המושבים: שניהם באותו גודל, והגודל נגזר מרוחב הלוח (viewBox) כדי שייכנס בחלל הפנימי גם כש"120/120" */}
+        <text x={1.1} y={1.035} textAnchor="middle" direction="ltr" className="font-num tabular" fontSize={0.16} fontWeight={700}>
+          <tspan style={{ fill: "rgb(var(--ink))" }}>{total}</tspan>
+          <tspan style={{ fill: "rgb(var(--ink-soft))" }}>/120</tspan>
+        </text>
       </svg>
-      <div className="flex items-baseline justify-center gap-3 -mt-8 md:-mt-12 relative" aria-hidden="true">
-        <span dir="ltr" className="inline-flex items-baseline">
-          <span className="font-num tabular leading-none text-5xl md:text-6xl text-ink">{total}</span>
-          <span className="font-num leading-none text-5xl md:text-6xl text-ink-soft">/120</span>
-        </span>
-      </div>
       <p className={`text-center text-sm font-bold ${left < 0 ? "text-warn" : "text-ink-soft"}`} aria-hidden="true">
         {status}
       </p>
