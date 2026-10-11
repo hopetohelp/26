@@ -145,6 +145,7 @@ export default function Seats({
     setPreview(null);
   };
   const rows = IDS;
+  const lock = (id: string, c: SeatCell, name: string) => <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />;
   const calc = calcOf(p);
   const pctSum = pctNow ? IDS.reduce((a, id) => a + (pctNow[id] || 0), 0) : 0;
   /** עריכה באחוזים: המנדטים לפי החוק; רשימה שהוקלדה ננעלת */
@@ -163,20 +164,16 @@ export default function Seats({
   return (
     <div>
       <HowTo />
-          <PersonalBlocs title="הגושים שלי: חלוקת ההשערה ויעדי ההשלמה" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
+      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בכל גוש, הצפי שלכם, ובהתאמה למפלגות." values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
           <div className="relative">
             <SeatBoard values={values} />
             {sum === TOTAL && !invalid && <Share values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
+          {both.status !== "draft" && <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} queued={unit.queued || (blocsToSave && blocsUnit.queued)} />
-            <span className="text-xs text-ink-soft">
-              נקודת פתיחה: {START_OPTIONS.find((o) => o.id === p.start)?.title}
-              {p.pollsAsOf ? ` · ממוצע הסקרים מ-${dateLong(p.pollsAsOf)}` : ""}
-            </span>
-          </div>
+          </div>}
           {justSaved && both.status === "saved" && (
             <div role="status" className="flex items-center gap-2 flex-wrap">
               <p className="text-sm font-bold">נשמר.</p>
@@ -216,6 +213,8 @@ export default function Seats({
                       </div>
                       {view === "pct" ? (
                         <div className="flex flex-col items-center">
+                          <div className="flex items-center gap-2" dir="ltr">
+                          {lock(id, c, name)}
                           <label className="flex items-center gap-1" dir="ltr">
                             <input
                               type="number"
@@ -231,11 +230,13 @@ export default function Seats({
                             />
                             <span className="text-sm text-ink-soft">%</span>
                           </label>
+                          </div>
                           <span className="text-xs text-ink-soft tabular">{c.v ? `${c.v} מנדטים` : (pctNow?.[id] ?? 0) > 0 ? <Badge tone="warn">מתחת לסף</Badge> : "0 מנדטים"}</span>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center">
                       <div className="flex items-center gap-1" dir="ltr">
+                          {lock(id, c, name)}
                           <button type="button" aria-label={`פחות ל${name}`} disabled={c.v <= 0} onClick={() => setV(id, c.v - 1)} className="w-11 h-11 rounded-full border-2 border-ink text-2xl font-bold leading-none disabled:opacity-30 active:bg-ink active:text-paper-card">
                             −
                           </button>
@@ -259,7 +260,6 @@ export default function Seats({
                           <span className="text-xs text-ink-soft tabular" dir="ltr">{pctNow ? `≈${pctFmt(pctNow[id] ?? 0)}` : ""}</span>
                         </div>
                       )}
-                      <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />
                     </div>
                   </li>
                 );
@@ -362,8 +362,7 @@ function HowTo() {
     <section className="mb-4 rounded-theme border border-paper-line bg-paper-card p-4" aria-labelledby="howto-title">
       <h2 id="howto-title" className="text-xl font-display leading-tight mb-2">איך משערים?</h2>
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
-        <li>מגדירים גוש משלכם, או נשארים עם ברירת המחדל.</li>
-        <li>מגדירים מספר מנדטים כולל לגוש, או משאירים ריק.</li>
+        <li>מגדירים גושי מפלגות, וצפי ס״ה לגוש, או נשארים עם ברירת המחדל.</li>
         <li>בוחרים מאיפה מתחילים: מאפס, מממוצע הסקרים או מבחירות 22.</li>
         <li>נועלים מפלגה או משנים לה את המספר.</li>
         <li>לוחצים "השלם הכול": המפלגות הנעולות ומספרי הגושים נשמרים, ושאר המפלגות מקבלות את היתרה ביחס לסקרים.</li>
@@ -423,7 +422,7 @@ function CalcAssumptions({ calc, onChange }: { calc: Calc; onChange: (c: Calc) =
 }
 
 type CompareKey = "k22" | "polls" | "crowd";
-const COMPARE: { id: CompareKey; label: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים" }, { id: "crowd", label: "משתתפים" }];
+const COMPARE: { id: CompareKey; label: string; long?: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים", long: "ממוצע " }, { id: "crowd", label: "משתתפים", long: "ממוצע " }];
 const CMP_KEY = "elections26.compare";
 /** אילו טורי השוואה מוצגים — נשמר בדפדפן */
 function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
@@ -438,7 +437,7 @@ const chipCls = (on: boolean) => `${CHIP} ${on ? "bg-ink text-paper-card border-
 /** שורה אחת: מתג מנדטים | אחוזים, ולידו שלושת מספרי ההשוואה — באותו עיצוב */
 function CompareToggles({ value, onChange, view, onView }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-2">
+    <div className="cmp-box mb-2"><div className="flex flex-wrap items-center gap-2">
       <Segmented size="sm" label="מה מקלידים" value={view} onChange={onView} className="!inline-grid w-auto text-xs" options={[{ id: "seats", label: "מנדטים" }, { id: "pct", label: "אחוזים" }]} />
       <span aria-hidden="true" className="w-px h-6 bg-paper-line" />
       <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-1">
@@ -446,12 +445,12 @@ function CompareToggles({ value, onChange, view, onView }: { value: CompareKey[]
           const on = value.includes(c.id);
           return (
             <button key={c.id} type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))} className={chipCls(on)}>
-              {c.label}
+              {c.long && <span className="cmp-long">{c.long}</span>}{c.label}
             </button>
           );
         })}
       </div>
-    </div>
+    </div></div>
   );
 }
 /** שלושה מספרים קטנים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה */

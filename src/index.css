@@ -293,3 +293,8 @@
   transform-box: fill-box;
   transform-origin: center;
 }
+
+/* מתגי ההשוואה ב"הכנסת שלי": "ממוצע " לפני "סקרים" ו"משתתפים" רק כשיש מקום בשורה (הכרעת בעלים 11.10.2026) */
+.cmp-box { container-type: inline-size; }
+.cmp-long { display: none; }
+@container (min-width: 28rem) { .cmp-long { display: inline; } }
