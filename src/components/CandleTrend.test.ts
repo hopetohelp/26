@@ -57,4 +57,13 @@ describe("גרף המגמה האחיד", () => {
     expect(h).toContain("מקרא");
     expect(h).not.toContain("mk-pv");
   });
+  it("הקו עובר דרך הממוצע של כל נקודה: כל עיגול יושב על הקו", () => {
+    const h = html();
+    const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="fill-none stroke-accent"/.exec(h);
+    expect(d).not.toBeNull();
+    const [x, y] = [d![1], d![2]];
+    const first = /class="mk mk-dot" style="left:([\d.]+)%;top:([\d.]+)%/.exec(h)!;
+    expect(Number(first[1])).toBeCloseTo(Number(x), 1);
+    expect(Number(first[2])).toBeCloseTo(Number(y), 1);
+  });
 });

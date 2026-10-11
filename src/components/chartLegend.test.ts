@@ -21,7 +21,7 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
   const charts: [string, () => string][] = [
     ["הדירוג (בית, המצב היום, תרחישים)", () => renderToStaticMarkup(createElement(Ranking, { home: HOME }))],
     ["סיכום המכונים", () => renderToStaticMarkup(createElement(PollRanges, { rows: [{ id: "a", name: "א", central: 10, values: [9, 10, 11] }] }))],
-    ["מגמת הממשלה היוצאת", () => renderToStaticMarkup(createElement(GovTrend, { home: HOME }))],
+    ["מגמת הממשלה היוצאת", () => renderToStaticMarkup(createElement(GovTrend, { home: HOME, points: [{ t: 0, values: [50, 52, 54] }, { t: 86_400_000 * 3, values: [51, 53] }] }))],
     ["גרף המגמה האחיד", () => renderToStaticMarkup(createElement(CandleTrend, { series, title: "מגמה" }))],
     ["הסקרים מול התוצאות", () => renderToStaticMarkup(createElement(DeviationChart, { rows: dev }))],
     ["מה השתנה", () => renderToStaticMarkup(createElement(DumbbellChart, { rows }))],
