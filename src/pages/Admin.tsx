@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
 import { dateTime } from "../lib/format";
 import { getToken } from "../lib/crowdSession";
+import { setOwnerBrowser } from "../lib/visits";
 import { Chips, Segmented } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
@@ -80,7 +81,7 @@ export default function Admin() {
   };
   const load = async () => {
     setError(null);
-    try { setData(await api("/admin/data")); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
+    try { setData(await api("/admin/data")); setOwnerBrowser(true); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
   };
   useEffect(() => { if (credential && FEEDBACK_URL) void load(); }, [credential]); // eslint-disable-line react-hooks/exhaustive-deps
   const reply = (kind: "feedback" | "support", id: number | string) => async (text: string) => {
