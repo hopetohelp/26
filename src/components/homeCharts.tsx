@@ -222,7 +222,7 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
 export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: number; values: number[] }[] }) {
   const { series } = home;
   if (series.length < 2) return null;
-  const X0 = 7, X1 = 95, YT = 6, YB = 84;
+  const X0 = 10, X1 = 95, YT = 6, YB = 84;
   const vals = series.map((s) => s.v);
   const pv = points.flatMap((p) => p.values);
   // הנקודה הנמוכה והגבוהה בגרף (כולל קצוות הנרות של הסקרים): שני קווים מקווקווים, ועוד קו 50 וקו 61
@@ -266,8 +266,9 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
         {marks.map((m) => (
           <span key={m.date} aria-hidden="true" className="mk mk-dot" style={{ left: `${X(m.date)}%`, top: `${Y(valueAt(m.date))}%` }} />
         ))}
+        {/* תגית הערך משמאל לקו: הקצה הימני שלה במרחק קבוע מתחילת הקו (הכרעת בעלים 11.10.2026) */}
         {dashed.filter((d) => d.label).map(({ v }) => (
-          <span key={v} aria-hidden="true" className={`${label} font-num ${v === MAJORITY ? "text-base font-extrabold" : "text-xs text-ink-soft"}`} style={{ left: `${X0 / 2}%`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
+          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${v === MAJORITY ? "text-sm font-extrabold" : "text-xs text-ink-soft"}`} style={{ right: `calc(${100 - X0}% + 6px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
         ))}
         <span aria-hidden="true" className={`${label} !translate-y-0 !font-normal text-xs text-ink-soft`} style={{ left: `${X0 + 2}%`, top: "88%" }}>{dayMonth(series[0].date)}</span>
         <span aria-hidden="true" className="absolute right-0 text-xs leading-none whitespace-nowrap text-ink-soft" style={{ top: "88%" }}>{dayMonth(series[series.length - 1].date)}</span>
