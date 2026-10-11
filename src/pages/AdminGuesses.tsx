@@ -111,6 +111,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
       )}
       <Chips label="סינון" value={filter} onChange={setFilter} options={FILTERS} />
       <Chips label="מיון" value={sort} onChange={setSort} options={SORTS} />
+      {data && <p className="text-sm font-bold" aria-live="polite">{rows.length === data.rows.length ? `מוצגות ${rows.length} השערות` : `מוצגות ${rows.length} השערות מתוך ${data.rows.length}, לפי הסינון`}</p>}
       {error && <Notice tone="warn">{error}</Notice>}
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
       {data && !rows.length && <p className="text-sm text-ink-soft">אין השערות במצב הזה.</p>}
