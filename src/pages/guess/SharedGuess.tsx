@@ -24,7 +24,7 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
               "כך שיערו את הכנסת ה-26"
             )}
           </h2>
-          <p className="text-sm text-ink-soft mt-1">השערה של משתתף{g.pct ? ", לפי אחוזי הצבעה ומחושבת לפי החוק" : ""} — לא סקר ולא תחזית.</p>
+          <p className="text-sm text-ink-soft mt-1">השערה של משתתף{g.pct ? ", לפי אחוזי הצבעה ומחושבת לפי החוק" : ""} . אינה סקר.</p>
         </div>
         <button type="button" onClick={onClose} aria-label="סגירת ההשערה ששותפה" className="w-11 h-11 shrink-0 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">
           ×

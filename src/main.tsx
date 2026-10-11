@@ -65,7 +65,7 @@ createRoot(document.getElementById("root")!).render(
             path="today"
             element={<Tabbed label="המצב והתרחישים" tabs={[
               { id: "today", label: "היום", element: <Today /> },
-              { id: "scenarios", label: "תחזית ותרחישים", element: <Scenarios /> },
+              { id: "scenarios", label: "תרחישים", element: <Scenarios /> },
             ]} aliases={{ forecast: "scenarios" }} />}
           />
           <Route

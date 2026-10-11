@@ -85,7 +85,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
             <div role="radiogroup" aria-label="איזו תמונה לשתף?" className="space-y-2">
               <p className="font-bold text-sm">איזו תמונה?</p>
               <Segmented label="איזו תמונה לשתף?" value={imageKind} onChange={setKind} disabled={busy} options={[{ id: "parties", label: "מפלגות" }, { id: "blocs", label: "גושים", disabled: !blocs?.length }]} />
-              <p className="text-xs text-ink-soft">{imageKind === "blocs" ? "רק הגושים: ההשערה שלי, ממוצע סקרים ותחזית לפי אותו הרכב מפלגות." : "המנדטים שלי לכל מפלגה, עם ממוצע הסקרים האחרון בקטן."}{!blocs?.length && " כדי לשתף גושים, הוסיפו להם מפלגות בלשונית לפי גושים."}</p>
+              <p className="text-xs text-ink-soft">{imageKind === "blocs" ? "רק הגושים: ההשערה שלי, ממוצע סקרים ומודל המגמות, לפי אותו הרכב מפלגות." : "המנדטים שלי לכל מפלגה, עם ממוצע הסקרים האחרון בקטן."}{!blocs?.length && " כדי לשתף גושים, הוסיפו להם מפלגות בלשונית לפי גושים."}</p>
             </div>
             {username && !isEmail(username) && (
               <button type="button" role="switch" aria-checked={withName} onClick={() => setWithName(!withName)} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start">

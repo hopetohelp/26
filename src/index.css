@@ -294,6 +294,12 @@
   transform-origin: center;
 }
 
+/* בית, דו-קרב (הכרעת בעלים 11.10.2026): שני הצדדים נכנסים מהקצוות אל המרכז, פעם אחת. מכובה ב-prefers-reduced-motion למעלה */
+@keyframes duel-r { from { opacity: 0; transform: translateX(24px); } }
+@keyframes duel-l { from { opacity: 0; transform: translateX(-24px); } }
+.duel-in > :nth-child(1) { animation: duel-r 520ms cubic-bezier(.16, 1, .3, 1) both; }
+.duel-in > :nth-child(2) { animation: duel-l 520ms cubic-bezier(.16, 1, .3, 1) both; }
+
 /* "הכנסת שלי", רשימת המפלגות (הכרעת בעלים 11.10.2026): שורת כותרות אחת (כפתורי ההדלקה) מעל טורי ההשוואה.
    צר: מתג מנדטים|אחוזים וקישור "בחירות 22" בשורה אחת, הכפתורים-כותרות בשורה מתחתיהם, וטורי ההשוואה בכל מפלגה מתחת לשם.
    30rem: הקישור המלא "שיוך בחירות 22". 37rem (כמה שהשורה צריכה בפועל): הכול בשורה אחת עם שם המפלגה.

@@ -79,7 +79,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     };
     ctx.font = `400 30px ${body}`;
     const rows = shareBlocRows(blocs, values).map(b => {
-      const incomplete = [["ההשערה שלי",b.mineInfo],["ממוצע סקרים",b.pollsInfo],["תחזית",b.forecastInfo]] as const;
+      const incomplete = [["ההשערה שלי",b.mineInfo],["ממוצע סקרים",b.pollsInfo],["מודל המגמות",b.forecastInfo]] as const;
       const notes = incomplete.filter(([,info])=>info.missing.length).flatMap(([label,info])=>wrap(`${label}: נתון ל-${info.knownCount}/${info.lists.length} מפלגות; חסר: ${info.missing.map(nameOf).join(" · ")}`,R-L));
       return {...b,names:wrap(b.lists.map(nameOf).join(" · "),R-L),notes};
     });
@@ -98,11 +98,11 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.font = `400 30px ${body}`;
     ctx.fillText("השערה, לא סקר · אותם הרכבי מפלגות בשלוש השוואות", R, 200, R - L);
     ctx.font = `400 26px ${body}`;
-    ctx.fillText(`ממוצע סקרים: ${date(SHARE_POLLS_AS_OF)} · תחזית: ${date(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
+    ctx.fillText(`ממוצע סקרים: ${date(SHARE_POLLS_AS_OF)} · מודל המגמות: ${date(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
     const columns = [R - 145, IMG_W / 2, L + 145];
     ctx.textAlign = "center";
     ctx.font = `700 32px ${body}`;
-    ["ההשערה שלי", "ממוצע סקרים", "תחזית"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
+    ["ההשערה שלי", "ממוצע סקרים", "מודל המגמות"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
     let y = 382;
     rows.forEach(row => {
       ctx.textAlign = "right";
@@ -128,7 +128,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.fillStyle = c.soft;
     ctx.font = `400 26px ${body}`;
     ctx.fillText("גושים חופפים; אין לחברם. מפלגה חסרה = סכום הידועות · כ- = אומדן · — = אין נתון.", R, imageHeight - 245, R - L);
-    if (SHARE_FORECAST_CAUTION) ctx.fillText("התחזית לא עברה את רף הדיוק שנקבע בבדיקת העבר.", R, imageHeight - 208, R - L);
+    if (SHARE_FORECAST_CAUTION) ctx.fillText("מודל המגמות לא עבר את רף הדיוק שנקבע בבדיקת העבר.", R, imageHeight - 208, R - L);
     ctx.fillStyle = c.line;
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
     ctx.fillStyle = c.ink;
