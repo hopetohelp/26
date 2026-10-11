@@ -16,6 +16,7 @@ import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import { PartyAvatar } from "../../components/PartyAvatar";
+import { BlocAvatar } from "../../components/BlocAvatar";
 import type { useSession } from "./useCrowd";
 
 
@@ -118,15 +119,15 @@ export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   if (view==="chart") return <Bars title={<SectionTitle title="גושים" />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
   return <Card title={<SectionTitle title="גושים" />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע המשתתפים</th><th className="font-normal">ממוצע הסקרים</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
-    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
+    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
   </table></div></Card>;
 }
 
 /** ממוצע הסקרים של גוש: סכום הרשימות שיש להן נתון */
 const blocPoll = (d: D, lists: string[]) => [...new Set(lists)].reduce((sum, id) => { const value = d.seats?.polls[id]; return sum + (typeof value === "number" && Number.isFinite(value) ? value : 0); }, 0);
 
-function BlocName({ name, lists }: { name: string; lists: string[] }) {
-  return <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold" aria-label={`מפלגות ${name}`}>{name}</summary><p className="text-xs font-normal text-ink-soft py-1 whitespace-normal">{lists.map(nameOf).join(" · ")}</p></details>;
+function BlocName({ id, name, lists }: { id: string; name: string; lists: string[] }) {
+  return <details><summary className="cursor-pointer min-h-[44px] py-1 flex flex-col items-start justify-center font-bold" aria-label={`מפלגות ${name}`}><span>{name}</span><BlocAvatar id={id} lists={lists} /></summary><p className="text-xs font-normal text-ink-soft py-1 whitespace-normal">{lists.map(nameOf).join(" · ")}</p></details>;
 }
 
 interface BarRow { key: string; label: string; lists?: string[]; mean: number | null; lo: number; hi: number; q?: [number, number, number, number, number]; poll?: number }
@@ -156,7 +157,7 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
     <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
       <span className="flex items-center gap-2 min-w-0">
         {!r.lists && <PartyAvatar id={r.key} size={28} />}
-        <span className="min-w-0 break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span>
+        <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} /> : r.label}</span>
       </span>
       <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה משתתפים שיערו ערך כזה`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}

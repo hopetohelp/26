@@ -52,7 +52,7 @@ it("ארבע שורות קבועות תמיד בראש; השם פותח את ר�
   const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:2,fixed,custom:[{name:"גוש נוסף",lists:["joint","raam"],n:2,explicit:null,derived:{...stat,mean:12}}]}};
   for(const view of ["table","chart"] as const) {
     const html=renderToStaticMarkup(createElement(BlocStats,{d,view}));
-    const indices=[...fixed.map(g=>g.name),"גוש נוסף"].map(name=>html.indexOf(`>${name}</summary>`));
+    const indices=[...fixed.map(g=>g.name),"גוש נוסף"].map(name=>html.indexOf(`>${name}</span>`));
     expect(indices.every(n=>n>=0)).toBe(true);
     expect(indices).toEqual([...indices].sort((a,b)=>a-b));
     expect(html).toContain('aria-label="מפלגות הממשלה היוצאת"');
@@ -77,7 +77,7 @@ it('גושים נוספים מסודרים לפי מספר המגדירים וא
   const group=(name:string,n:number,mean:number)=>({name,lists:[name],n,eligible:true,explicit:null,derived:{...stat,n:1,mean}});
   const d:Dashboard={participants:5,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:5,fixed:[],custom:[group('קטן',2,80),group('רבים נמוך',3,30),group('רבים גבוה',3,50)]}};
   const html=renderToStaticMarkup(createElement(BlocStats,{d,view:'table'}));
-  const order=['רבים גבוה','רבים נמוך','קטן'].map(name=>html.indexOf(`>${name}</summary>`));
+  const order=['רבים גבוה','רבים נמוך','קטן'].map(name=>html.indexOf(`>${name}</span>`));
   expect(order.every(i=>i>=0)).toBe(true);
   expect(order).toEqual([...order].sort((a,b)=>a-b));
 });

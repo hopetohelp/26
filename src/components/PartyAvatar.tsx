@@ -11,7 +11,7 @@ export function PartyAvatar({ id, size = 36 }: { id: string; size?: number }) {
   const src = `${import.meta.env.BASE_URL}${img.file}`;
   return (
     <span
-      className={`shrink-0 inline-flex items-center justify-center overflow-hidden rounded-full bg-paper-card shadow-[inset_0_0_0_1px_rgb(var(--paper-line))] ${img.kind === "logo" ? "p-1" : ""}`}
+      className={`shrink-0 inline-flex items-center justify-center overflow-hidden rounded-full bg-paper-card shadow-[inset_0_0_0_1px_rgb(var(--line))] ${img.kind === "logo" ? "p-1" : ""}`}
       style={box}
     >
       <img
