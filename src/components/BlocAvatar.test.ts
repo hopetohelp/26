@@ -29,6 +29,13 @@ it("גוש ששונה או שהמשתתף הגדיר: המפלגה הגדולה 
   expect(leadsOf("arab", ["joint"])).toEqual(["joint"]);
 });
 
+it("הגדולה בגוש נקבעת לפי ממוצע המשתתפים; בלעדיו, לפי ממוצע הסקרים", () => {
+  expect(leadsOf("my", ["shas", "likud", "raam"], { shas: 30, likud: 10, raam: 5 })).toEqual(["shas"]);
+  expect(leadsOf("my", ["shas", "likud", "raam"], { shas: 3, likud: 10, raam: 5 })).toEqual(["likud"]);
+  expect(leadsOf("my", ["haredi_public", "raam"], { haredi_public: 99, raam: 1 })).toEqual(["raam"]); // בלי תמונה לא מנהיגה
+  expect(leadsOf("unity", lists("unity"), { together: 99 })).toEqual(["likud", "yashar"]); // גוש ברירת מחדל: מנהיגים קבועים
+});
+
 it("מפלגה בלי תמונה לא מוצגת", () => {
   expect(shown(["haredi_public", "code_black"])).toEqual([]);
   expect(shown(["likud", "haredi_public", "likud"])).toEqual([["likud", 36]]);
