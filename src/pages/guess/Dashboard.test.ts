@@ -3,7 +3,7 @@ import { expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BlocStats, Matrix, SeatsStats, StatTable, VoteComparison, VotingStats } from "./Dashboard";
-import type { Dashboard, SeatStat } from "../../lib/crowdApi";
+import type { Dashboard, SeatStat, SeatsPayload } from "../../lib/crowdApi";
 
 const stat: SeatStat = { list: "likud", n: 1, mean: 30, min: 30, max: 30, median: 30, p25: 30, p75: 30 };
 
@@ -26,7 +26,7 @@ it("מציג ממוצע, סקרים וההשערה שלי; טווח זהה נש�
     polls: { likud: 28 },
     mine: { start: "zero", pollsAsOf: null, seats: { likud: { v: 0, src: "manual", locked: true } } },
   }));
-  for (const label of ["ממוצע", "סקרים", "שלי"]) expect(html).toContain(label);
+  for (const label of ["משתתפים", "סקרים", "שלך"]) expect(html).toContain(label);
   expect(html).toContain(">0</td>");
   expect(html).toContain("<bdi dir=\"ltr\"></bdi>");
 });
@@ -49,7 +49,7 @@ it("מספר המשתתפים בכותרות נלקח מכל חלק, בטבלה 
 
 it("ארבע שורות קבועות תמיד בראש; השם פותח את רשימת המפלגות", () => {
   const fixed = ["הממשלה היוצאת", "גוש נתניהו", "גוש איזנקוט", "ערבים"].map((name,i) => ({id:["government","coalition","opposition","arab"][i],name,lists:["likud","shas"],stat:{...stat,mean:i,n:1}}));
-  const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:2,fixed,custom:[{name:"גוש נוסף",lists:["joint","raam"],n:2,explicit:null,derived:{...stat,mean:12}}]}};
+  const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:2,fixed,custom:[{name:"גוש נוסף",lists:["joint","raam"],n:5,explicit:null,derived:{...stat,mean:12}}]}};
   for(const view of ["table","chart"] as const) {
     const html=renderToStaticMarkup(createElement(BlocStats,{d,view}));
     const indices=[...fixed.map(g=>g.name),"גוש נוסף"].map(name=>html.indexOf(`>${name}</span>`));
@@ -60,14 +60,14 @@ it("ארבע שורות קבועות תמיד בראש; השם פותח את ר�
     expect(html).toContain('<details>');
   }
 });
-it("מסנן גושים נוספים לפי שני מגדירים, שתי מפלגות וסף לפני עיגול", () => {
+it("מסנן גושים נוספים לפי חמישה מגדירים, שתי מפלגות וסף לפני עיגול", () => {
   const group=(name:string,lists:string[],n:number,mean:number)=>({name,lists,n,explicit:null,derived:{...stat,n,mean}});
   const d: Dashboard = {participants:4,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:4,fixed:[],custom:[
-    group("מגדיר יחיד",["likud","shas"],1,60), group("מפלגה יחידה",["likud"],2,60),
-    group("מתחת לסף",["likud","shas"],2,7.999),group("בדיוק בסף",["joint","raam"],2,8),
+    group("מגדיר יחיד",["likud","shas"],4,60), group("מפלגה יחידה",["likud"],5,60),
+    group("מתחת לסף",["likud","shas"],5,7.999),group("בדיוק בסף",["joint","raam"],5,8),
   ]}};
   for(const view of ["table","chart"] as const) {
-    const html=renderToStaticMarkup(createElement(BlocStats,{d,view,mine:[["likud","shas"]]}));
+    const html=renderToStaticMarkup(createElement(BlocStats,{d,view}));
     expect(html).toContain('בדיוק בסף');
     for(const name of ['מגדיר יחיד','מפלגה יחידה','מתחת לסף'])expect(html).not.toContain(name);
   }
@@ -75,7 +75,7 @@ it("מסנן גושים נוספים לפי שני מגדירים, שתי מפל
 
 it('גושים נוספים מסודרים לפי מספר המגדירים ואז המנדטים', () => {
   const group=(name:string,n:number,mean:number)=>({name,lists:[name],n,eligible:true,explicit:null,derived:{...stat,n:1,mean}});
-  const d:Dashboard={participants:5,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:5,fixed:[],custom:[group('קטן',2,80),group('רבים נמוך',3,30),group('רבים גבוה',3,50)]}};
+  const d:Dashboard={participants:5,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:5,fixed:[],custom:[group('קטן',5,80),group('רבים נמוך',6,30),group('רבים גבוה',6,50)]}};
   const html=renderToStaticMarkup(createElement(BlocStats,{d,view:'table'}));
   const order=['רבים גבוה','רבים נמוך','קטן'].map(name=>html.indexOf(`>${name}</span>`));
   expect(order.every(i=>i>=0)).toBe(true);
@@ -88,7 +88,7 @@ it("ממוצע הסקרים בגוש מסכם רק מפלגות עם נתון, �
     seats:{n:2,full:[],manual:[],filledShare:0,usedFillAll:0,pollsAsOf:null,starts:{zero:2,polls:0,k25:0},polls:{likud:23.5,shas:8,utj:0}},
     blocs:{derived:null,explicit:null,customCount:0,fixed:[{id:"coalition",name:"בדיקת סכום",lists:["likud","shas","utj","noam"],stat}]}};
   const html = renderToStaticMarkup(createElement(BlocStats,{d,view:"table"}));
-  expect(html).toContain("ממוצע הסקרים");
+  expect(html).toContain("סקרים");
   expect(html).toContain(">31.5</td>");
   expect(html).not.toContain("לפחות");
   expect(html).not.toContain("חסר");
@@ -109,7 +109,7 @@ it("ברשימה ובגרף מוצגות רק מפלגות שעברו אצל מ�
 
 it("טור שלי אינו מופיע כאשר אין נתונים אישיים להשוואה", () => {
  const html=renderToStaticMarkup(createElement(SeatsStats,{rows:[stat],polls:{},view:"table"}));
- expect(html).not.toContain('>שלי</th>');
+ expect(html).not.toContain('>שלך</th>');
 });
 
 it("מתג אחוז/מספר בהצבעה: מספרים בכל הטבלה, והרשמי כפול מספר המשתתפים", () => {
@@ -131,17 +131,28 @@ it("שורת הסיכום של המעבר: מספרים או אחוזים לפי
   const d: Dashboard = { participants: 10, open: true, publishedAt: null, aggregationId: null,
     matrix: { publishedAt: "", rows: { "מחל": { n: 10, cells: { likud: cell(6), shas: cell(2) } } } } };
   const num = renderToStaticMarkup(createElement(Matrix, { d, unit: "num" }));
-  expect(num).toContain("עברו לרשימה אחרת: <strong>");
+  expect(num).toContain("מצביעים עברו מפלגה מבחירות קודמות");
   expect(num).not.toContain("נשארו באותה רשימה");
   expect(num).not.toContain("התפצלה");
   const pct = renderToStaticMarkup(createElement(Matrix, { d, unit: "pct" }));
-  expect(pct).toMatch(/עברו לרשימה אחרת: <strong>\d+(\.\d+)?%<\/strong>/);
+  expect(pct).toMatch(/<strong>\d+(\.\d+)?%<\/strong> מהמצביעים עברו מפלגה מבחירות קודמות/);
 });
 
 it("גוש של חמש רשימות הממשלה בלי נעם אינו מוצג כגוש נפרד", () => {
   const stat = { n: 2, mean: 63.5, min: 63, p25: 63, median: 63.5, p75: 64, max: 64 };
-  const d = { participants: 2, open: true, publishedAt: null, aggregationId: null, blocs: { derived: null, explicit: null, customCount: 2, fixed: [], custom: [{ name: "גוש 1", lists: ["likud", "otzma", "rzp", "shas", "utj"], n: 2, explicit: null, derived: stat }, { name: "גוש נוסף", lists: ["joint", "raam"], n: 2, explicit: null, derived: { ...stat, mean: 12 } }] } } as unknown as Dashboard;
+  const d = { participants: 2, open: true, publishedAt: null, aggregationId: null, blocs: { derived: null, explicit: null, customCount: 2, fixed: [], custom: [{ name: "גוש 1", lists: ["likud", "otzma", "rzp", "shas", "utj"], n: 2, explicit: null, derived: stat }, { name: "גוש נוסף", lists: ["joint", "raam"], n: 5, explicit: null, derived: { ...stat, mean: 12 } }] } } as unknown as Dashboard;
   const html = renderToStaticMarkup(createElement(BlocStats, { d, view: "table" }));
   expect(html).not.toContain("גוש 1");
   expect(html).toContain("גוש נוסף");
+});
+
+it("גוש שהגדרתם ואינו ברשימה מוצג עם הכיתוב שלך וסכום המנדטים שלך", () => {
+  const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:0,fixed:[{id:"coalition",name:"קבוע",lists:["likud"],stat}],custom:[]}};
+  const mineSeats = { start: "zero", pollsAsOf: null, seats: { shas: { v: 7, src: "manual", locked: false }, utj: { v: 5, src: "manual", locked: false }, likud: { v: 30, src: "manual", locked: false } } } as SeatsPayload;
+  const html = renderToStaticMarkup(createElement(BlocStats, { d, view: "table", mineSeats, mineBlocs: [{ name: "החרדים", lists: ["shas", "utj"] }, { name: "כפול", lists: ["likud"] }] }));
+  expect(html).toContain("החרדים");
+  expect(html).toContain(">שלך</span>");
+  expect(html).toContain(">12</td>");
+  expect(html).not.toContain("כפול");
+  expect(html).toContain(">שלך</th>");
 });

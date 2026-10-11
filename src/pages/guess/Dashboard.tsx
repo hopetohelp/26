@@ -8,7 +8,7 @@ import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
 import { type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, rng, seatsFmt } from "../../lib/format";
-import { DEFAULT_BLOCS, normalizeBlocs, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
+import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
@@ -16,6 +16,8 @@ import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import { PartyAvatar } from "../../components/PartyAvatar";
+import EditBlocsButton from "../../components/EditBlocsButton";
+import { useLocation } from "react-router-dom";
 import { BlocAvatar } from "../../components/BlocAvatar";
 import type { useSession } from "./useCrowd";
 
@@ -40,7 +42,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
   const personal = usePersonalBlocs();
-  const myBlocs = (personal.draft ? normalizeBlocs(personal.draft) : DEFAULT_BLOCS).blocs.map(b => b.lists);
+  const { pathname, search } = useLocation();
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => setSlot(document.getElementById("community-blocs")), []);
 
@@ -74,7 +76,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       </div>
       {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       {d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
-      {d.blocs ? <BlocStats d={d} view={view} mine={myBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
+      {d.blocs ? <BlocStats d={d} view={view} mineBlocs={hasDefinedBlocs ? definedBlocs!.blocs : []} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>
   );
@@ -98,8 +100,8 @@ export function SeatsStats({ rows, polls, mine, view, passedLists }: { passedLis
   const myValue = (id: string) => mine?.seats[id]?.v;
   if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
   return <Card title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
-    <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th>{mine && <th className="font-normal">שלי</th>}</tr></thead>
-    <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
+    <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">סקרים</th><th className="font-normal">משתתפים</th><th className="font-normal">טווח</th>{mine && <th className="font-normal">שלך</th>}</tr></thead>
+    <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
   </table></div>{hiddenNote}</Card>;
 }
 
@@ -108,33 +110,42 @@ const HIDDEN_BLOC = ["likud", "rzp", "otzma", "shas", "utj"].sort().join(",");
 const compKey = (lists: string[]) => [...new Set(lists)].sort().join(",");
 
 /** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
-export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
+export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo }: { d:D; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string }) {
   const b=d.blocs!;
   const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.filter(g => g.id !== "government").map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
   const fixedKeys = new Set(fixed.map(g => [...g.lists].sort().join(",")));
   const fixedOrder = ["government", "coalition", "gov", "opposition", "rest", "unity", "arab"];
-  const fixedRows = [...fixed].sort((a,b) => fixedOrder.indexOf(a.id)-fixedOrder.indexOf(b.id)).map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
-  const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")) && compKey(g.lists) !== HIDDEN_BLOC)
+  const fixedRows: BlocRow[] = [...fixed].sort((a,b) => fixedOrder.indexOf(a.id)-fixedOrder.indexOf(b.id)).map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
+  // גוש מותאם נכנס לטבלה כשלפחות חמישה משתתפים הגדירו אותו (הכרעת בעלים 11.10.2026)
+  const customRows: BlocRow[] = (b.custom ?? []).filter(g => g.derived && g.n >= 5 && !fixedKeys.has([...g.lists].sort().join(",")) && compKey(g.lists) !== HIDDEN_BLOC)
     .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
     .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!, n: g.n}))
-    .sort((a,b) => b.n-a.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
-  const rows = [...fixedRows, ...customRows];
-  if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
-  if (view==="chart") return <Bars title={<SectionTitle title="גושים" />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
-  return <Card title={<SectionTitle title="גושים" />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
-    <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע המשתתפים</th><th className="font-normal">ממוצע הסקרים</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
-    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
+    .sort((a,b) => (b.n ?? 0)-(a.n ?? 0) || b.stat!.mean-a.stat!.mean || a.label.localeCompare(b.label,"he"));
+  // גושים שהגדרתם ואינם ברשימה: מוצגים עם הכיתוב "שלך"
+  const shown = new Set([...fixedRows, ...customRows].map(r => compKey(r.lists)));
+  const ownRows: BlocRow[] = mineBlocs.filter(g => g.lists.length > 0 && !shown.has(compKey(g.lists)) && shown.add(compKey(g.lists)))
+    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: null, own: true }));
+  const rows = [...fixedRows, ...customRows, ...ownRows];
+  const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
+  const title = <span className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"><span>גושים</span>{editReturnTo && <EditBlocsButton returnTo={editReturnTo} compact />}</span>;
+  if (!rows.length) return <Notice>עדיין אין גושים להצגה.</Notice>;
+  if (view==="chart") return <Bars title={title} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,own:r.own,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
+  return <Card title={title}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
+    <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">משתתפים</th><th className="font-normal">טווח</th>{mineSeats && <th className="font-normal">שלך</th>}</tr></thead>
+    <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /></th><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}</tr>)}</tbody>
   </table></div></Card>;
 }
+
+interface BlocRow { key: string; lists: string[]; label: string; stat: SeatStat | null; n?: number; own?: boolean }
 
 /** ממוצע הסקרים של גוש: סכום הרשימות שיש להן נתון */
 const blocPoll = (d: D, lists: string[]) => [...new Set(lists)].reduce((sum, id) => { const value = d.seats?.polls[id]; return sum + (typeof value === "number" && Number.isFinite(value) ? value : 0); }, 0);
 
-function BlocName({ id, name, lists }: { id: string; name: string; lists: string[] }) {
-  return <details><summary className="cursor-pointer min-h-[44px] py-1 flex flex-col items-start justify-center font-bold" aria-label={`מפלגות ${name}`}><span>{name}</span><BlocAvatar id={id} lists={lists} /></summary><p className="text-xs font-normal text-ink-soft py-1 whitespace-normal">{lists.map(nameOf).join(" · ")}</p></details>;
+function BlocName({ id, name, lists, own = false }: { id: string; name: string; lists: string[]; own?: boolean }) {
+  return <details><summary className="cursor-pointer min-h-[44px] py-1 flex flex-col items-start justify-center font-bold" aria-label={`מפלגות ${name}`}><span>{name}{own && <span className="ms-1.5 text-xs font-normal text-ink-soft">שלך</span>}</span><BlocAvatar id={id} lists={lists} /></summary><p className="text-xs font-normal text-ink-soft py-1 whitespace-normal">{lists.map(nameOf).join(" · ")}</p></details>;
 }
 
-interface BarRow { key: string; label: string; lists?: string[]; mean: number | null; lo: number; hi: number; q?: [number, number, number, number, number]; poll?: number }
+interface BarRow { key: string; label: string; lists?: string[]; own?: boolean; mean: number | null; lo: number; hi: number; q?: [number, number, number, number, number]; poll?: number }
 
 /**
  * סקר האתר בגרף (הכרעת בעלים 9.10.2026): נר כחול = הנמוך והגבוה בין השערות המשתתפים (טווח מלא), שעוביו משתנה לאורכו:
@@ -161,7 +172,7 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
     <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
       <span className="flex items-center gap-2 min-w-0">
         {!r.lists && <PartyAvatar id={r.key} size={28} />}
-        <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} /> : r.label}</span>
+        <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /> : r.label}</span>
       </span>
       <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה משתתפים שיערו ערך כזה`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
@@ -188,7 +199,7 @@ export function VotingStats({ d }: { d: D }) {
       <div className="order-3 sm:order-2"><Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} /></div>
       {count !== undefined && <span className="text-2xl tabular font-display order-2 sm:order-3">{count} משתתפים</span>}
     </div>
-    {unit === "num" && <p className="text-xs text-ink-soft mb-3">במספרים: כל נתון הוא מספר המשתתפים שענו כך. בבחירות קודמות — כלל המצביעים: התוצאה הרשמית באחוזים כפול מספר המשתתפים בסקר{count ? ` (${count})` : ""}.</p>}
+    {unit === "num" && <p className="text-xs text-ink-soft mb-3">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
     {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} unit={unit} /></section>}
   </Card>;
@@ -212,7 +223,7 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
   const show = (n: number) => unit === "pct" ? `${Math.round(n / continuity.total * 1000) / 10}%` : String(n);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3">עברו לרשימה אחרת: <strong>{show(continuity.changed)}</strong></p>}
+    {continuity.total > 0 && <p className="text-sm mb-3"><strong>{show(continuity.changed)}</strong> {unit === "pct" ? "מהמצביעים" : "מצביעים"} עברו מפלגה מבחירות קודמות</p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>
