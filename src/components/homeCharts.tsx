@@ -40,10 +40,10 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
 
 /**
  * 120 מושבים בצורת פרסה (כמו אולם המליאה, `src/lib/hemicycle.ts`) בשלושה גוונים (הכרעת בעלים 11.10.2026), מהקצה הימני:
- * גוש נתניהו (מלא), המפלגות הערביות (גוון בינוני) וגוש איזנקוט (מסגרת, בהיר). שלושתם מגושי ברירת המחדל (`defaultBlocs`).
- * הספירה במרכז: גוש נתניהו מול גוש איזנקוט (למשל 53/57), והכיתוב "נתניהו/איזנקוט" מתחתיה. בלי כפתור "מקרא" (הכרעת בעלים 11.10.2026); המספרים לכל הגושים בתיאור לקורא מסך.
+ * גוש נתניהו (מלא), המפלגות הערביות (גוון בינוני) וגוש אייזנקוט (מסגרת, בהיר). שלושתם מגושי ברירת המחדל (`defaultBlocs`).
+ * במרכז: שורה לכל אחד משני הגושים ("53 גוש נתניהו" ו"53 גוש אייזנקוט") עם קו הפרדה ו"&" באלכסון. בלי כפתור "מקרא" (הכרעת בעלים 11.10.2026); המספרים לכל הגושים בתיאור לקורא מסך.
  */
-export function Hemicycle({ coalition, arab, opposition, center, label, footer }: { coalition: number; arab: number; opposition: number; center?: string; label?: string; footer?: ReactNode }) {
+export function Hemicycle({ coalition, arab, opposition, duel, footer }: { coalition: number; arab: number; opposition: number; duel?: [string, string]; footer?: ReactNode }) {
   const [seenRef, seen] = useSeen<HTMLElement>();
   return (
     <figure ref={seenRef} className={`m-0 ${whenVisible(seen)}`}>
@@ -52,18 +52,21 @@ export function Hemicycle({ coalition, arab, opposition, center, label, footer }
           viewBox={`0 0 ${HALL.w} ${HALL.h}`}
           className="block w-full h-auto"
           role="img"
-          aria-label={`120 המושבים בצורת פרסה: ${coalition} לגוש נתניהו, ${arab} למפלגות הערביות, ${opposition} לגוש איזנקוט.`}
+          aria-label={`120 המושבים בצורת פרסה: ${coalition} לגוש נתניהו, ${arab} למפלגות הערביות, ${opposition} לגוש אייזנקוט.`}
         >
           {SEATS.map((s, k) => (
             <circle key={k} cx={s.x} cy={s.y} r={HALL.r} className={`${k < coalition ? "seat-a" : k < coalition + arab ? "seat-arab" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
           ))}
         </svg>
-        {(center || label) && (
-          // מרכז החלל הפנימי של הפרסה: מספרי שני הגושים (53/57: גוש נתניהו מימין, כמו בלוח, וגוש איזנקוט משמאל) ומתחתיהם הכיתוב "נתניהו/איזנקוט", שניהם בגופן גדול (הכרעת בעלים 11.10.2026)
-          <span aria-hidden="true" className="absolute flex flex-col items-center gap-0.5 whitespace-nowrap leading-none" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100}%`, transform: "translate(-50%, -50%)" }}>
-            {center && <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular" dir="rtl">{center}</span>}
-            {label && <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>}
-          </span>
+        {duel && (
+          // מרכז החלל הפנימי של הפרסה (הכרעת בעלים 11.10.2026): שורה לכל גוש — המספר ושם הגוש, גוש נתניהו למעלה — עם קו הפרדה ו"&" באלכסון באמצעו
+          <div aria-hidden="true" className="absolute flex flex-col items-stretch whitespace-nowrap leading-none" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100}%`, transform: "translate(-50%, -50%)" }}>
+            <DuelRow n={coalition} label={duel[0]} />
+            <span className="relative my-1.5 md:my-2.5 h-0 border-t-2 border-ink-faint">
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[18deg] bg-paper px-1.5 font-display text-sm sm:text-xl md:text-3xl font-extrabold text-ink-soft">&amp;</span>
+            </span>
+            <DuelRow n={opposition} label={duel[1]} />
+          </div>
         )}
         {footer && (
           // משלים את הריבוע (הכרעת בעלים 11.10.2026): בפתח התחתון של הפרסה, בין שני האגפים, והשורה התחתונה שלו בקו התחתון של עיגולי הלוח
@@ -71,6 +74,16 @@ export function Hemicycle({ coalition, arab, opposition, center, label, footer }
         )}
       </div>
     </figure>
+  );
+}
+
+/** שורת גוש במרכז הלוח: המספר מימין ושם הגוש משמאלו */
+function DuelRow({ n, label }: { n: number; label: string }) {
+  return (
+    <span dir="rtl" className="flex items-baseline justify-center gap-1.5 md:gap-3">
+      <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular">{n}</span>
+      <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>
+    </span>
   );
 }
 

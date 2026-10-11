@@ -56,22 +56,22 @@ export function defaultBlocs(): Bloc[] {
   return [
     { id: "government", name: "הממשלה היוצאת", lists: [...GOV_IDS], target: null },
     { id: "gov", name: "גוש נתניהו", lists: coalition, target: null },
-    { id: "rest", name: "גוש איזנקוט", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
+    { id: "rest", name: "גוש אייזנקוט", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
     { id: "unity", name: "אחדות", lists: [...UNITY_IDS], target: null },
     { id: "arab", name: "מפלגות ערביות", lists: arab, target: null },
   ];
 }
-/** שמות ברירת המחדל הישנים של שני הגושים (הכרעת בעלים 11.10.2026: "גוש נתניהו" ו"גוש איזנקוט"); משנים רק גוש שהרכבו כברירת המחדל */
-const RENAMED: Record<string, { old: string; now: string }> = {
-  gov: { old: "גוש הקואליציה", now: "גוש נתניהו" },
-  rest: { old: "גוש האופוזיציה", now: "גוש איזנקוט" },
+/** שמות ברירת המחדל הישנים של שני הגושים (הכרעת בעלים 11.10.2026: "גוש נתניהו" ו"גוש אייזנקוט"); משנים רק גוש שהרכבו כברירת המחדל */
+const RENAMED: Record<string, { old: string[]; now: string }> = {
+  gov: { old: ["גוש הקואליציה"], now: "גוש נתניהו" },
+  rest: { old: ["גוש האופוזיציה", "גוש איזנקוט"], now: "גוש אייזנקוט" },
 };
 function renameDefaultBlocs(p: BlocsPayload): BlocsPayload {
   const current = defaultBlocs();
   let changed = false;
   const blocs = p.blocs.map(b => {
     const r = RENAMED[b.id];
-    if (!r || b.name !== r.old || keyOf(b.lists) !== keyOf(current.find(c => c.id === b.id)?.lists ?? [])) return b;
+    if (!r || !r.old.includes(b.name) || keyOf(b.lists) !== keyOf(current.find(c => c.id === b.id)?.lists ?? [])) return b;
     changed = true;
     return { ...b, name: r.now };
   });
@@ -112,8 +112,8 @@ function upgradeLegacyCoalition(p: BlocsPayload): BlocsPayload {
   let changed = false;
   const blocs = p.blocs.map(b => {
     if (oldCoalitions.has(keyOf(b.lists)) && ["גוש נתניהו", "גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: current[1].lists }; }
-    if (oldRest.has(keyOf(b.lists)) && ["כל השאר", "גוש איזנקוט", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
-      changed = true; return { ...b, name: "גוש איזנקוט", lists: current[2].lists };
+    if (oldRest.has(keyOf(b.lists)) && ["כל השאר", "גוש אייזנקוט", "גוש איזנקוט", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
+      changed = true; return { ...b, name: "גוש אייזנקוט", lists: current[2].lists };
     }
     return b;
   });

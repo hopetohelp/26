@@ -24,10 +24,10 @@ export default function Home() {
     <>
       {/* במקום כותרת גלויה: שעון עצר עד מדגמי הבחירות, בתוך חלל הפרסה. הכותרת נשארת לקורא מסך */}
       <h1 className="sr-only">תמונת מצב</h1>
-      <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש איזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
+      <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש אייזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
-        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} center={`${blocs.coalition}/${blocs.opposition}`} label="נתניהו/איזנקוט" footer={<ExitPollClock compact />} />
+        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} duel={["גוש נתניהו", "גוש אייזנקוט"]} footer={<ExitPollClock compact />} />
       </section>
 
       <div className="mt-8">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} />}</div>

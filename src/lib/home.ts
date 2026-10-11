@@ -36,7 +36,7 @@ export interface HomeData {
   start: string;
   gov: number;
   other: number;
-  /** לוח המושבים: גוש הקואליציה (גוש נתניהו), המפלגות הערביות, והשאר (גוש איזנקוט); הסכום 120 */
+  /** לוח המושבים: גוש הקואליציה (גוש נתניהו), המפלגות הערביות, והשאר (גוש אייזנקוט); הסכום 120 */
   blocs: { coalition: number; arab: number; opposition: number };
   /** טווח 80% של הגוש (מ-10% עד 90%) */
   blocLo: number;
