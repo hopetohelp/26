@@ -4,7 +4,8 @@ import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
 import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
-import { type BlocsPayload, type Cell, type Dashboard as D, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { SAVED_EVENT } from "../../lib/outbox";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
@@ -32,10 +33,27 @@ const pctOf = (cell: Cell) => cell.of ? Math.round((cell.n / cell.of) * 1000) / 
 export default function Dashboard({ session }: { session: ReturnType<typeof useSession> }) {
   // ממוצע המשתתפים — מהמקור האחד (src/lib/sources.ts): מתעדכן כל דקה, בחזרה לדף ואחרי כל שמירה
   const crowd = useCrowdDashboard();
-  const d0 = crowd.dashboard;
+  // פילוח לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): הכפתור מוצג רק לחבר בקבוצה; השרת בודק את החברות ואוכף את הסף
+  const groups = session.me?.groups ?? [];
+  const [picked, setPicked] = useState("all");
+  const scope = groups.some((g) => g.id === picked) ? picked : "all";
+  const [group, setGroup] = useState<{ id: string; data: GroupDashboard | null; failed: boolean } | null>(null);
+  useEffect(() => {
+    if (scope === "all" || !session.token) return;
+    let live = true;
+    const load = () => call<GroupDashboard>(`/dashboard?group=${encodeURIComponent(scope)}`, { token: session.token })
+      .then((data) => { if (live) setGroup({ id: scope, data, failed: false }); })
+      .catch(() => { if (live) setGroup((g) => ({ id: scope, data: g?.id === scope ? g.data : null, failed: true })); });
+    void load();
+    const timer = window.setInterval(load, 60_000);
+    window.addEventListener(SAVED_EVENT, load);
+    return () => { live = false; window.clearInterval(timer); window.removeEventListener(SAVED_EVENT, load); };
+  }, [scope, session.token]);
+  const groupData = scope !== "all" && group?.id === scope ? group.data : null;
+  const d0 = scope === "all" ? crowd.dashboard : groupData && !groupData.belowMin ? groupData : null;
   // ממוצע הסקרים — תמיד מהמקור האחד של האתר (מתעדכן עם רענון הנתונים), לא מהעותק שבשרת
   const d: D | null = d0 && d0.seats ? { ...d0, seats: { ...d0.seats, polls: POLL_AVERAGE.seats, pollsAsOf: POLL_AVERAGE.asOf } } : d0;
-  const err = crowd.failed ? "הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות." : null;
+  const err = (scope === "all" ? crowd.failed : group?.id === scope && group.failed && !groupData) ? "הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות." : null;
   const [view, setView] = useState<View>("table");
 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
@@ -43,8 +61,14 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const personal = usePersonalBlocs();
   const { pathname, search } = useLocation();
 
-  if (err) return <Notice tone="warn">{err}</Notice>;
-  if (!d) return <p className="text-ink-soft">טוען…</p>;
+  const scopeBar = groups.length > 0 && (
+    <div className="mb-4">
+      <Segmented className="max-w-md" value={scope} onChange={setPicked} label="של מי הסטטיסטיקות" options={[{ id: "all", label: "כל המשתתפים" }, ...groups.slice(0, 3).map((g) => ({ id: g.id, label: g.name ?? g.id }))]} />
+    </div>
+  );
+  if (err) return <>{scopeBar}<Notice tone="warn">{err}</Notice></>;
+  if (groupData?.belowMin) return <>{scopeBar}<Notice>עדיין אין מספיק משתתפים מהקבוצה. הנתונים יוצגו מ-{groupData.min} משתתפים.</Notice></>;
+  if (!d) return <>{scopeBar}<p className="text-ink-soft">טוען…</p></>;
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   // "נכון ל" מוצג רק כשהפרסום ישן בשעתיים לפחות
@@ -54,7 +78,9 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
   return (
     <div>
-      <CommunityShare d={d} />
+      {scopeBar}
+      {/* שיתוף — רק של כלל המשתתפים, כדי שנתוני קבוצה לא ייצאו החוצה */}
+      {scope === "all" && <CommunityShare d={d} />}
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>

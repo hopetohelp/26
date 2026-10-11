@@ -7,6 +7,7 @@ import { getToken } from "../lib/crowdSession";
 import { Chips, Segmented } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
+import AdminGroups from "./AdminGroups";
 
 /**
  * ממשק ניהול: כל הפניות עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
@@ -154,6 +155,8 @@ export default function Admin() {
           </section>
 
           <AdminGuesses api={api} />
+
+          <AdminGroups api={api} />
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
           <InquirySections data={data} reply={reply} />

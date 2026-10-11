@@ -148,6 +148,10 @@ export interface Me {
   legacy?: boolean;
   /** חשבון מנהל (טבלת admins): נכנס לממשק הניהול בלי קישור */
   isAdmin?: boolean;
+  /** הקבוצות שהמשתמש חבר בהן (מייל מאומת ברשימת הקבוצה) — לכפתור ההחלפה בסטטיסטיקות */
+  groups?: GroupRef[];
+  /** הקבוצות שהמשתמש מנהל — להעלאת רשימת החברים */
+  managedGroups?: GroupRef[];
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */
@@ -227,6 +231,14 @@ export interface LogEntry {
   decision: "pending" | "excluded" | "restored";
   aggregationId: string;
 }
+
+export interface GroupRef { id: string; name: string | null }
+/** תשובת GET /dashboard?group= — מתחת לסף: רק הודעה, בלי נתונים */
+export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; publishedAt: string };
+/** תשובת טעינת מנה של רשימת חברים */
+export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
+/** מיילים בבקשה אחת (כמו GROUP_CHUNK בשרת) */
+export const GROUP_CHUNK = 300;
 
 /** הפרסום המאוחר מבין השניים (לפי publishedAt). */
 export function newerDashboard(a: Dashboard | null, b: Dashboard): Dashboard {

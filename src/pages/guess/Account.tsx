@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { call, CrowdError } from "../../lib/crowdApi";
+import { call, CrowdError, type GroupImportResult } from "../../lib/crowdApi";
+import GroupUpload from "../../components/GroupUpload";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
 import { FORGOT_LINE } from "./LinkSaver";
@@ -426,6 +427,12 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
         <p className="font-bold">סיסמה</p>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
       </div>
+      {(me.managedGroups ?? []).map((g) => (
+        <div key={g.id} className={row}>
+          <p className="font-bold">רשימת החברים בקבוצה {g.name ?? g.id}</p>
+          <GroupUpload send={(chunk) => call<GroupImportResult>("/group/import", { token, body: { group: g.id, ...chunk } })} />
+        </div>
+      ))}
       <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
