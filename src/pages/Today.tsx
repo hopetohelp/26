@@ -100,7 +100,6 @@ export default function Today() {
               title="הגושים שלי בכל אחד מהסקרים"
               source="הסקר האחרון של כל מכון, כל מקור בנפרד"
               asOf={date(asOf)}
-              open
               datasets={latest.map((p) => ({ poll: p, values: Object.fromEntries(ids.map((id) => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: date(p.end) }))}
             />
           </section>
