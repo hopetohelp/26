@@ -227,7 +227,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   return (
     <CandleTrend
       title="מגמת הממשלה היוצאת בסקרים"
-      points={trend}
+      series={[{ id: "gov", name: "הממשלה היוצאת", points: trend }]}
       line={series.map((s) => ({ t: Date.parse(s.date), v: s.v }))}
       majority={MAJORITY}
     />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { labelIndexes, thinCandles, trendAxis } from "./trendAxis";
+import { labelIndexes, thinCandles, trendAxis, visibleLines } from "./trendAxis";
 
 describe("trendAxis", () => {
   it("קווים כל 5, והתחום מכסה את הערכים", () => {
@@ -13,12 +13,16 @@ describe("trendAxis", () => {
     expect(a.lines.map((l) => l.v)).toEqual([45, 50, 55, 61, 65]);
     expect(a.lines.filter((l) => l.major).map((l) => l.v)).toEqual([61]);
   });
+  it("61 רק אם הגוש עבר 55", () => {
+    expect(trendAxis([40, 55], { majority: 61 }).lines.some((l) => l.major)).toBe(false);
+    expect(trendAxis([40, 56], { majority: 61 }).lines.some((l) => l.major && l.v === 61)).toBe(true);
+  });
   it("גוש קטן לא מותח את הציר עד 61", () => {
     const a = trendAxis([8, 14, 21], { majority: 61 });
     expect(a.hi).toBe(25);
     expect(a.lines.some((l) => l.major)).toBe(false);
   });
-  it("רוב קרוב מעל הנתונים מרחיב את התחום", () => {
+  it("רוב קרוב מעל הנתונים (עברו 55) מרחיב את התחום", () => {
     const a = trendAxis([50, 58], { majority: 61 });
     expect(a.lines.some((l) => l.major && l.v === 61)).toBe(true);
     expect(a.hi).toBeGreaterThanOrEqual(61);
@@ -51,4 +55,16 @@ describe("labelIndexes", () => {
     expect(labelIndexes(30, 5).length).toBeLessThanOrEqual(5);
   });
   it("מעט נקודות — כולן", () => expect(labelIndexes(3, 5)).toEqual([0, 1, 2]));
+});
+
+describe("visibleLines", () => {
+  const lines = [10, 15, 20, 25, 30, 35].map((v) => ({ v, major: false }));
+  it("קו בלי נתונים בשתי הרצועות שלידו נעלם", () => {
+    // נתונים רק ב-10–15 וב-30–35: הקווים 20 ו-25 אינם נוגעים ברצועה מאוכלסת
+    expect(visibleLines(lines, [[11, 13], [31, 34]]).map((l) => l.v)).toEqual([10, 15, 30, 35]);
+  });
+  it("נתון שחוצה כמה רצועות מאכלס את כולן", () => {
+    expect(visibleLines(lines, [[11, 29]]).map((l) => l.v)).toEqual([10, 15, 20, 25, 30]);
+  });
+  it("בלי נתונים — כל הקווים", () => expect(visibleLines(lines, [])).toHaveLength(6));
 });

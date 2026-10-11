@@ -14,10 +14,13 @@ export interface TrendAxis {
   lines: AxisLine[];
 }
 
+/** קו הרוב (61) מוצג רק כשהגוש עבר את 55 (הכרעת בעלים 11.10.2026) */
+export const MAJORITY_SHOWN_ABOVE = 55;
+
 /**
  * התחום וקווי העזר. התחום מעוגל כלפי מטה וכלפי מעלה לכפולות של `step` (5), כך שכל הערכים בפנים.
- * `majority`: מוצג רק כשהוא בתוך התחום או במרחק צעד אחד ממנו (ואז התחום מתרחב אליו) — גוש קטן לא מותח את הציר עד 61.
- * הקו שהכי קרוב לרוב (60) מוחלף בקו הרוב. מעל 14 קווים הצעד גדל ל-10, ל-20 וכן הלאה, כדי שהציר לא יתמלא.
+ * `majority` (61, בגרפים של גושים): מוצג רק אם הערך הגבוה בגרף מעל 55 (`MAJORITY_SHOWN_ABOVE`), והקו שהכי קרוב אליו (60) מוחלף בו.
+ * מעל 14 קווים הצעד גדל ל-10, ל-20 וכן הלאה, כדי שהציר לא יתמלא.
  */
 export function trendAxis(values: number[], opts: { step?: number; majority?: number } = {}): TrendAxis {
   const vs = values.filter((v) => Number.isFinite(v));
@@ -25,8 +28,8 @@ export function trendAxis(values: number[], opts: { step?: number; majority?: nu
   let min = vs.length ? Math.min(...vs) : 0;
   let max = vs.length ? Math.max(...vs) : step;
   const m = opts.majority;
-  const useMajority = m !== undefined && m >= min - step && m <= max + step;
-  if (useMajority) { min = Math.min(min, m!); max = Math.max(max, m!); }
+  const useMajority = m !== undefined && max > MAJORITY_SHOWN_ABOVE;
+  if (useMajority) max = Math.max(max, m!);
   let lo = Math.floor(min / step) * step;
   let hi = Math.ceil(max / step) * step;
   if (hi === lo) hi = lo + step;
@@ -38,6 +41,16 @@ export function trendAxis(values: number[], opts: { step?: number; majority?: nu
     lines[at] = { v: m!, major: true };
   }
   return { lo, hi, lines };
+}
+
+/**
+ * קו מקווקו מוצג רק אם יש נתונים בין הקו לקו הסמוך לו: ברצועה שמתחתיו או ברצועה שמעליו (הכרעת בעלים 11.10.2026).
+ * נתון = נר (`[lo, hi]`) או נקודה בקו (`[v, v]`); רצועה שנתון נוגע בה נחשבת מאוכלסת. בלי נתונים — כל הקווים.
+ */
+export function visibleLines(lines: AxisLine[], spans: [number, number][]): AxisLine[] {
+  if (!spans.length || lines.length < 2) return lines;
+  const populated = lines.slice(0, -1).map((l, i) => spans.some(([a, b]) => a <= lines[i + 1].v && b >= l.v));
+  return lines.filter((_, i) => (i > 0 && populated[i - 1]) || (i < lines.length - 1 && populated[i]));
 }
 
 /**

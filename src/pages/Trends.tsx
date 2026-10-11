@@ -1,6 +1,6 @@
 import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
-import { TrendChart, type Series } from "../components/charts";
+import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
 import { Segmented } from "../components/Choice";
 import Explained from "../components/Explained";
@@ -75,7 +75,6 @@ export default function Trends() {
   }
   // תוויות קצה רק לקו המלא של כל רשימה
   const labeled = series.filter((s) => !s.dashed);
-  const yMax = Math.max(10, Math.ceil(Math.max(...series.flatMap((s) => s.points.map((p) => p.v)), 0) / 5) * 5 + 5);
 
   const toggle = (id: string) => setIds((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
   const rows = labeled
@@ -170,11 +169,9 @@ export default function Trends() {
                 <ChartWithTable
                   summary={`${labeled.length} רשימות, ${dateRange(from, to)}${who0 ? `, ${who0}` : ", כל המכונים"}.`}
                   chart={
-                    labeled.length === 1 && series.length === 1 ? (
-                      // רשימה אחת: הגרף האחיד (נר כל 3 ימים, חלון במעבר על הנר). כמה רשימות בגרף אחד הן חריג ונשארות ב-TrendChart
-                      <CandleTrend title={`מגמת המנדטים: ${labeled[0].name}`} points={labeled[0].points} windowDays={days} />
-                    ) : labeled.length ? (
-                      <TrendChart series={series} from={toTime(from)} to={toTime(to)} yMax={yMax} title="מגמת המנדטים לפי רשימה" windowText={{ days, label: `${days} הימים` }} />
+                    labeled.length ? (
+                      // הגרף האחיד: רשימה אחת — נרות; כמה רשימות — אותו רכיב בלי נרות, ולחיצה על נקודה בקו מציגה את החלון של הרשימה
+                      <CandleTrend title={labeled.length === 1 ? `מגמת המנדטים: ${labeled[0].name}` : "מגמת המנדטים לפי רשימה"} series={series} windowDays={days} />
                     ) : (
                       <p className="text-ink-soft py-8 text-center">אין מספיק סקרים בתקופה ובמכון שנבחרו. בחרו תקופה ארוכה יותר או כל המכונים.</p>
                     )
