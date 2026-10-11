@@ -35,7 +35,8 @@ export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number)
 }
 
 /** אותו נר בכיוון אנכי (גרף עם ציר זמן): `y` ממפה ערך לאחוז מגובה המסלול, מלמעלה. הערך הגבוה למעלה. */
-export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number) => number; left: string }) {
+/** `delay` (באלפיות שנייה): הנר מופיע כשהקו מגיע אליו בפתיחת המסך (`trend-pop`) */
+export function ProfileCandleV({ segs, y, left, delay }: { segs: LSeg[]; y: (v: number) => number; left: string; delay?: number }) {
   if (!segs.length) return null;
   const top = y(segs[segs.length - 1].to);
   const bottom = y(segs[0].from);
@@ -43,7 +44,7 @@ export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number)
   const top0 = top - (height - (bottom - top)) / 2;
   const runs = squareRuns(segs, (v) => ((y(v) - top0) / height) * LOCAL);
   return (
-    <svg aria-hidden="true" focusable="false" className="mk-pv" viewBox={`0 0 ${THICK} ${LOCAL}`} preserveAspectRatio="none" style={{ left, top: `${top0}%`, height: `${height}%` }}>
+    <svg aria-hidden="true" focusable="false" className={delay === undefined ? "mk-pv" : "mk-pv trend-pop"} viewBox={`0 0 ${THICK} ${LOCAL}`} preserveAspectRatio="none" style={{ left, top: `${top0}%`, height: `${height}%`, ...(delay === undefined ? null : { animationDelay: `${delay}ms` }) }}>
       <SquarePaths runs={runs} mid={THICK / 2} across="x" />
     </svg>
   );

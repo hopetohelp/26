@@ -13,9 +13,9 @@ const two = [
 const html = (props: Record<string, unknown> = {}) => renderToStaticMarkup(createElement(CandleTrend, { title: "בדיקה", series: one, ...props }));
 
 describe("גרף המגמה האחיד", () => {
-  it("כפתור מקרא בפינה הימנית העליונה (צמוד להתחלה, ימין בעברית), סגור כברירת מחדל", () => {
+  it("כפתור מקרא בפינה השמאלית העליונה (צמוד לסוף, שמאל בעברית), סגור כברירת מחדל", () => {
     const h = html();
-    expect(h).toMatch(/<button[^>]*aria-expanded="false"[^>]*me-auto[^>]*>/);
+    expect(h).toMatch(/<button[^>]*aria-expanded="false"[^>]*ms-auto[^>]*>/);
     expect(h).toContain("מקרא");
   });
   it("קווים מקווקווים כל 5 מנדטים, בגוש 61 במקום 60", () => {
@@ -29,7 +29,7 @@ describe("גרף המגמה האחיד", () => {
     expect(html()).not.toContain("חישוב:");
   });
   it("נר לכל נקודה (3 דרגות עובי מהאחוזונים): SVG לכל נר", () => {
-    expect((html().match(/class="mk-pv"/g) ?? []).length).toBe(points.length);
+    expect((html().match(/class="mk-pv[ "]/g) ?? []).length).toBe(points.length);
   });
   it("תוצאה בפועל: עיגול ריק", () => {
     expect(html({ markers: [{ t: points[9].t + 3 * DAY, v: 55 }] })).toContain("mk-ring");
@@ -59,10 +59,10 @@ describe("גרף המגמה האחיד", () => {
   });
   it("הקו עובר דרך הממוצע של כל נקודה: כל עיגול יושב על הקו", () => {
     const h = html();
-    const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="fill-none stroke-accent"/.exec(h);
+    const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="trend-line fill-none stroke-accent"/.exec(h);
     expect(d).not.toBeNull();
     const [x, y] = [d![1], d![2]];
-    const first = /class="mk mk-dot" style="left:([\d.]+)%;top:([\d.]+)%/.exec(h)!;
+    const first = /class="mk mk-dot[^"]*" style="left:([\d.]+)%;top:([\d.]+)%/.exec(h)!;
     expect(Number(first[1])).toBeCloseTo(Number(x), 1);
     expect(Number(first[2])).toBeCloseTo(Number(y), 1);
   });
