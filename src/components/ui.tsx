@@ -1,12 +1,13 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTabsSlot } from "./Tabbed";
+import { SPLIT_SCREENS, splitCls } from "../lib/splitScreens";
 import ChartLegend, { BAR, BarSlots, PILL, PILL_ON, PILL_RING, type LegendEntry } from "./ChartLegend";
 
 /** inColumns: בתוך `Columns` — מהמחשב הכותרת לקורא מסך בלבד (היא כבר בלשונית הפעילה בסרגל), וההסבר בראש הטור הימני */
 export function PageTitle({ children, lead, inColumns = false }: { children: ReactNode; lead?: ReactNode; inColumns?: boolean }) {
   return (
     <div className="mb-6">
-      <h1 className={`font-display text-3xl md:text-5xl leading-[1.05] ${inColumns ? "lg:sr-only" : ""}`}>{children}</h1>
+      <h1 className={`font-display text-3xl md:text-5xl leading-[1.05] ${inColumns ? splitCls("lg:sr-only") : ""}`}>{children}</h1>
       {lead && <p className="mt-3 text-ink-soft max-w-3xl leading-relaxed">{lead}</p>}
     </div>
   );
@@ -134,7 +135,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
       if (!root.current) return;
       timers.forEach(clearTimeout);
       const top = root.current.getBoundingClientRect().top + window.scrollY;
-      setState({ split: root.current.clientWidth >= SPLIT_AT, top });
+      setState({ split: SPLIT_SCREENS && root.current.clientWidth >= SPLIT_AT, top });
       document.fonts.ready.then(() => timers.push(window.setTimeout(measure, 50)));
       timers.push(window.setTimeout(measure, SETTLE_MS));
     };
@@ -189,5 +190,5 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
  * זורמים לטור הימני ואז לשמאלי, באותו סדר כמו בטלפון, והאורכים מתאזנים לבד. כרטיס אינו נחתך בין טורים.
  */
 export function Columns({ children }: { children: ReactNode }) {
-  return <div className="lg:columns-2 lg:gap-6 [&>*]:break-inside-avoid">{children}</div>;
+  return <div className={`${splitCls("lg:columns-2 lg:gap-6")} [&>*]:break-inside-avoid`}>{children}</div>;
 }
