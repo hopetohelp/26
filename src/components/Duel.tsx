@@ -15,7 +15,6 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
     .filter((d): d is { va: number; vb: number } => typeof d.va === "number" && typeof d.vb === "number");
   const nA = pairs.filter((x) => x.va > x.vb).length;
   const nB = pairs.filter((x) => x.vb > x.va).length;
-  const nT = pairs.length - nA - nB;
   const rangeOf = (id: string) => {
     const xs = polls.map((p) => seatsIn(p, id)).filter((v): v is number => typeof v === "number");
     return xs.length ? rng(Math.min(...xs), Math.max(...xs)) : "";
@@ -24,7 +23,7 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
     <section aria-labelledby="duel-h" className="w-full">
       <h2 id="duel-h" className="sr-only">
         שתי הרשימות הגדולות: {a.name} {seatsFmt(a.central)} מנדטים, {b.name} {seatsFmt(b.central)} מנדטים, לפי ממוצע המודל.
-        {pairs.length > 0 && ` ${a.name} גבוהה יותר ב-${nA} סקרים, ${b.name} ב-${nB}${nT ? `, שוויון ב-${nT}` : ""}.`}
+        {pairs.length > 0 && ` ${a.name} גבוהה יותר ב-${nA} סקרים, ${b.name} ב-${nB}$.`}
       </h2>
       <Explained
         bare
@@ -47,11 +46,6 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
             )}
           </span>
         </div>
-        {pairs.length > 0 && (
-          <p aria-hidden="true" className="mt-2 text-center text-xs text-ink-soft">
-            סקרים שבהם כל אחת גבוהה יותר{nT > 0 ? ` · שוויון ב-${nT}` : ""}
-          </p>
-        )}
       </Explained>
     </section>
   );

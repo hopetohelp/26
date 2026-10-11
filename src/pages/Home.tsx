@@ -10,7 +10,7 @@ import { POLL_AVERAGE } from "../lib/sources";
 
 /**
  * מסך הבית (הכרעת בעלים 11.10.2026), לפי הסדר: כותרת "תמונת מצב" עם התאריך של היום; לוח 120 המושבים עם "הממשלה היוצאת" בצד;
- * דו-קרב שתי הרשימות הגדולות; על קו החסימה (זו לצד זו); פעולה אחת "הכנסת שלי"; ובתחתית מגמת הממשלה היוצאת.
+ * דו-קרב שתי הרשימות הגדולות; על קו החסימה (זו לצד זו); פעולה אחת "הכנסת שלי"; ובתחתית מגמת הממשלה היוצאת והכפתור "הכנסת שלי".
  * בכל המסך אין שורת סוג/תאריך/"איך זה חושב?" (`Explained bare`). הדירוג המלא — בלשונית "תרחישים".
  * מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר בלוח, במגמה ובתרחישים (החלטה 14).
  */
@@ -37,6 +37,13 @@ export default function Home() {
       <div className="mt-8">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} />}</div>
       <ThresholdLine rows={home.edge} polls={LATEST_POLLS} asOf={asOf} />
 
+
+      <ScreenLegend><section aria-labelledby="home-trend" className="mt-10">
+        <h2 id="home-trend" className="text-xl font-display leading-tight">
+          {lo === hi ? `הממשלה היוצאת: ${gov} מנדטים מאז ${dayMonth(home.start)}` : `הממשלה היוצאת: ${lo} עד ${hi} מנדטים מאז ${dayMonth(home.start)}`}
+        </h2>
+        <GovTrend home={home} points={GOV_POINTS} />
+      </section></ScreenLegend>
       <aside aria-labelledby="home-cta" className="mt-10 rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
         <div>
           <h2 id="home-cta" className="text-2xl font-display leading-tight">כמה תקבל כל רשימה? תנחשו.</h2>
@@ -49,13 +56,6 @@ export default function Home() {
           לבנות את הכנסת שלי
         </Link>
       </aside>
-
-      <ScreenLegend><section aria-labelledby="home-trend" className="mt-10">
-        <h2 id="home-trend" className="text-xl font-display leading-tight">
-          {lo === hi ? `הממשלה היוצאת: ${gov} מנדטים מאז ${dayMonth(home.start)}` : `הממשלה היוצאת: ${lo} עד ${hi} מנדטים מאז ${dayMonth(home.start)}`}
-        </h2>
-        <GovTrend home={home} points={GOV_POINTS} />
-      </section></ScreenLegend>
       <InstallApp />
     </>
   );
