@@ -103,7 +103,7 @@ export default function Admin() {
       {data && (
         <>
           {([
-            ["סך הכול", "מהתחלה (6.10.2026)", [
+            ["סך הכול", "מהתחלה (6/10)", [
               ["כניסות", data.totalVisits ?? "—"],
               ["משתמשים מצטבר", data.totalVisitors],
               ["שמרו (בדשבורד)", data.support?.stats.savers ?? "—"],
