@@ -1477,5 +1477,33 @@
   "access": [
    "direct"
   ]
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-11",
+  "id": "2026-09-15-s-m-l-t-x",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": true,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "הסקר נקלט ישירות מהדוח הרשמי לוועדת הבחירות (מספר סימוכין 4154); המנדטים, המכון, התאריך והמדגם הם אלה שבדוח.",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26",
+  "sourceDetails": {
+   "asked_to_participate": 18184,
+   "method": "מערכת איסוף דיגיטלית אינטרנטית בשילוב פאנל; דגימת שכבות",
+   "moe": "±3.5% (95%)",
+   "population": "בוגרים (18+), מדגם מייצג של אזרחי ישראל בעלי זכות בחירה",
+   "published": "הועבר לוועדה 18.9.2026, פורסם באתר הוועדה 23.9.2026",
+   "sample_respondents": 1891
+  },
+  "status": "match"
  }
 ]

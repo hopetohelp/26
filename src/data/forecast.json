@@ -340,7 +340,7 @@
   "beta": -0.2938,
   "betaElections": 7,
   "others": 1.43,
-  "polls": 43,
+  "polls": 44,
   "residualSd": {
    "large": 0.2056,
    "nLarge": 47,
@@ -364,14 +364,15 @@
   ],
   "wA": 0.4961,
   "weights": {
-   "direct_polls": 0.1334,
-   "kantar": 0.137,
-   "maagar_mochot": 0.1195,
-   "midgam": 0.124,
-   "new_mp_tm_sn_a": 0.124,
-   "new_sf_nd": 0.124,
-   "new_yossi_tatika": 0.124,
-   "panels_politics": 0.1142
+   "direct_polls": 0.1187,
+   "kantar": 0.1219,
+   "maagar_mochot": 0.1063,
+   "midgam": 0.1103,
+   "new_mp_tm_sn_a": 0.1103,
+   "new_s_m_l_t": 0.1103,
+   "new_sf_nd": 0.1103,
+   "new_yossi_tatika": 0.1103,
+   "panels_politics": 0.1016
   }
  },
  "selection": {
@@ -411,6 +412,7 @@
   "maagar_mochot",
   "midgam",
   "new_mp_tm_sn_a",
+  "new_s_m_l_t",
   "new_sf_nd",
   "new_yossi_tatika",
   "panels_politics"
@@ -422,6 +424,7 @@
   "maagar_mochot": "מאגר מוחות",
   "midgam": "מדגם מחקר וייעוץ",
   "new_mp_tm_sn_a": "מדגם, המדד, סטטנט ואסקריה",
+  "new_s_m_l_t": "מכון DRI",
   "new_sf_nd": "שלמה פילבר + NEXT DATA",
   "new_yossi_tatika": "יוסי טטיקה",
   "panels_politics": "לזר מחקרים + Panel4All"
