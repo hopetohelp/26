@@ -305,6 +305,8 @@ export function aggregate({ participants, versions, now, previous = {}, lastDail
   const main = latestByUnit(versions, (v) => known.has(v.participant) && !review.has(v.participant));
   // השערות חריגות ממתינות לאישור מנהל (moderation.js): לא נספרות בשום חלק עד שאושרו
   const mod = moderate([...main.seats.values()], decisions);
+  // הכרעת בעלים 11.10.2026: מי שהשערת המפלגות שלו נדחתה — גם ההצבעה שלו לא נכנסת לסטטיסטיקה
+  for (const [p, v] of [...main.seats]) if (mod.rejected.has(v.id)) main.vote.delete(p);
   for (const [p, v] of [...main.seats]) if (mod.pending.has(v.id) || mod.rejected.has(v.id)) main.seats.delete(p);
   const countedSeat = (v) => v.unit === "seats" && known.has(v.participant) && !review.has(v.participant) && !mod.isExcluded(v);
   const rev = latestByUnit(versions, (v) => review.has(v.participant));

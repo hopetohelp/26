@@ -95,6 +95,10 @@ export function SeatsStats({ rows, polls, mine, view, passedLists }: { passedLis
   </table></div>{hiddenNote}</Card>;
 }
 
+/** הכרעת בעלים 11.10.2026: הרכב חמש רשימות (ממשלה יוצאת בלי נעם) לא מוצג כגוש נפרד בסטטיסטיקות; תצוגה בלבד. */
+const HIDDEN_BLOC = ["likud", "rzp", "otzma", "shas", "utj"].sort().join(",");
+const compKey = (lists: string[]) => [...new Set(lists)].sort().join(",");
+
 /** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
 export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   const b=d.blocs!;
@@ -102,7 +106,7 @@ export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
   const fixedKeys = new Set(fixed.map(g => [...g.lists].sort().join(",")));
   const fixedOrder = ["government", "coalition", "gov", "opposition", "rest", "unity", "arab"];
   const fixedRows = [...fixed].sort((a,b) => fixedOrder.indexOf(a.id)-fixedOrder.indexOf(b.id)).map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
-  const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")))
+  const customRows = (b.custom ?? []).filter(g => g.derived && g.n >= 2 && !fixedKeys.has([...g.lists].sort().join(",")) && compKey(g.lists) !== HIDDEN_BLOC)
     .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
     .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!, n: g.n}))
     .sort((a,b) => b.n-a.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
