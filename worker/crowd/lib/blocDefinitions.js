@@ -8,7 +8,7 @@ export const FIXED_BLOCS = [
   { id: "coalition", name: "גוש הקואליציה", lists: COALITION },
   { id: "opposition", name: "גוש האופוזיציה", lists: OPPOSITION },
   { id: "unity", name: "אחדות", lists: UNITY },
-  { id: "arab", name: "ערבים", lists: ARAB },
+  { id: "arab", name: "מפלגות ערביות", lists: ARAB },
 ];
 export const compositionKey = lists => [...new Set(lists)].sort().join(",");
 const legacyCoalitions = [
@@ -49,7 +49,7 @@ export function personalTotals(payload, definition) {
     {id:"gov",name:"גוש הקואליציה",lists:COALITION},
     {id:"rest",name:"גוש האופוזיציה",lists:OPPOSITION},
     {id:"unity",name:"אחדות",lists:UNITY},
-    {id:"arab",name:"ערבים",lists:ARAB},
+    {id:"arab",name:"מפלגות ערביות",lists:ARAB},
   ];
   return blocs.map(b => ({ id:b.id,name:b.name,lists:[...new Set(b.lists)],seats:[...new Set(b.lists)].reduce((sum,id)=>sum+(payload.seats[id]?.v??0),0) }));
 }

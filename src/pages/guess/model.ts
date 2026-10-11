@@ -58,7 +58,7 @@ export function defaultBlocs(): Bloc[] {
     { id: "gov", name: "גוש הקואליציה", lists: coalition, target: null },
     { id: "rest", name: "גוש האופוזיציה", lists: IDS.filter(id => !coalition.includes(id) && !arab.includes(id)), target: null },
     { id: "unity", name: "אחדות", lists: [...UNITY_IDS], target: null },
-    { id: "arab", name: "ערבים", lists: arab, target: null },
+    { id: "arab", name: "מפלגות ערביות", lists: arab, target: null },
   ];
 }
 /** הרכב הממשלה הישן היה מרומז; משמרים אותו ואת יעדיו כתסריטים עצמאיים. */
