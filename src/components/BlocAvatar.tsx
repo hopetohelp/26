@@ -2,11 +2,11 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { PARTY_IMAGES } from "../lib/partyImages";
 import { PartyAvatar } from "./PartyAvatar";
 import { defaultBlocs } from "../pages/guess/model";
-import { POLL_AVERAGE } from "../lib/sources";
+import { POLL_AVERAGE, useCrowdAverage } from "../lib/sources";
 
 /**
  * תמונות הגוש (הכרעת בעלים 11.10.2026): קודם תמונת מנהיג/י הגוש, גדולה פי 1.5 מהשאר ותמיד מוצגת, ואחריה שאר המפלגות שבגוש.
- * גוש ברירת מחדל: המנהיגים הקבועים. גוש ששונה או שהמשתתף הגדיר: המפלגה הגדולה בו (ממוצע הסקרים) כמנהיגה.
+ * גוש ברירת מחדל: המנהיגים הקבועים. גוש ששונה או שהמשתתף הגדיר: המפלגה הגדולה בו (ממוצע המשתתפים) כמנהיגה.
  * העיגולים חופפים מעט מימין לשמאל, והראשון על כולם וגלוי כולו (z-index יורד), ולכן כל אחד מכסה חלק קטן מהבא אחריו.
  * כמה מהשאר נכנסים נקבע לפי הרוחב הפנוי; מה שלא נכנס מסומן "+N". מפלגה בלי תמונה (הציבור החרדי, צבע שחור) לא מוצגת.
  * השמות כתובים לצד הגוש, ולכן התמונות לקישוט בלבד.
@@ -32,11 +32,14 @@ function leadersOf(id: string | undefined, lists: string[]): string[] {
   return l && base && key(lists) === key(base.lists) ? l : [];
 }
 
-/** מי המנהיגים: המנהיגים הקבועים בגוש ברירת מחדל; אחרת המפלגה הגדולה בגוש (ממוצע הסקרים) שיש לה תמונה */
-export function leadsOf(id: string | undefined, lists: string[]): string[] {
+/**
+ * מי המנהיגים: המנהיגים הקבועים בגוש ברירת מחדל; אחרת המפלגה הגדולה בגוש הזה — לפי ממוצע המשתתפים (הכרעת בעלים 11.10.2026),
+ * ובלי סטטיסטיקות משתתפים (עדיין לא נטענו) לפי ממוצע הסקרים — ושיש לה תמונה.
+ */
+export function leadsOf(id: string | undefined, lists: string[], crowdSeats?: Record<string, number> | null): string[] {
   const fixed = leadersOf(id, lists);
   if (fixed.length) return fixed;
-  const seats = POLL_AVERAGE.seats as Record<string, number>;
+  const seats = crowdSeats ?? (POLL_AVERAGE.seats as Record<string, number>);
   const biggest = [...new Set(lists)].filter((p) => PARTY_IMAGES[p]).sort((a, b) => (seats[b] ?? 0) - (seats[a] ?? 0))[0];
   return biggest ? [biggest] : [];
 }
@@ -51,7 +54,8 @@ export function fitCount(widths: number[], avail: number, leads: number, chip: n
 }
 
 export function BlocAvatar({ id, lists, size = 24, center = false }: { id?: string; lists: string[]; size?: number; center?: boolean }) {
-  const leads = leadsOf(id, lists);
+  const crowd = useCrowdAverage().seats;
+  const leads = leadsOf(id, lists, crowd);
   const ids = [...new Set([...leads, ...lists])].filter((p) => PARTY_IMAGES[p]);
   const big = Math.round(size * LEAD_SCALE);
   const widths = ids.map((p) => (leads.includes(p) ? big : size));
