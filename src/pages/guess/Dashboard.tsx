@@ -48,6 +48,8 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   if (!d) return <p className="text-ink-soft">טוען…</p>;
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
+  // "נכון ל" מוצג רק כשהפרסום ישן בשעתיים לפחות
+  const stale = !!d.publishedAt && Date.now() - Date.parse(d.publishedAt) >= 2 * 3600_000;
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   const definedBlocs = loadDraft<BlocsPayload>("blocs") ?? personal.saved ?? session.me?.latest.blocs?.payload as BlocsPayload | undefined;
   const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
@@ -61,14 +63,16 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
     <div>
       <CommunityShare d={d} />
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
-      <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
-      {d.accounts && d.accounts.total > 0 && <p className="text-xs text-ink-soft mb-1">{d.accounts.verified}/{d.accounts.total} מאומתים (Google או מייל)</p>}
-      {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
-      {d.publishedAt && <p className="text-sm text-ink-soft mb-4">נכון ל-{asOf}</p>}
-      {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
-      <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
+        <div>
+          <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
+          {d.accounts && d.accounts.total > 0 && <p className="text-xs text-ink-soft mb-1">{d.accounts.verified}/{d.accounts.total} מאומתים (Google או מייל)</p>}
+          {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
+          {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
+        </div>
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
+      {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       {d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
       {d.blocs ? <BlocStats d={d} view={view} mine={myBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
@@ -178,8 +182,12 @@ const fmtNum = (v: number) => String(Math.round(v * 100) / 100);
 export function VotingStats({ d }: { d: D }) {
   const [unit, setUnit] = useState<Unit>("pct");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
-  return <Card title={<SectionTitle title="הצבעה וכוונות הצבעה" count={count} />}>
-    <div className="mb-3"><Toggle value={unit} setValue={setUnit} options={[["pct","אחוז"],["num","מספר"]]} label="יחידת התצוגה" /></div>
+  return <Card>
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-3">
+      <h2 className="text-xl font-display leading-tight order-1">הצבעה וכוונות הצבעה</h2>
+      <div className="order-3 sm:order-2"><Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} /></div>
+      {count !== undefined && <span className="text-2xl tabular font-display order-2 sm:order-3">{count} משתתפים</span>}
+    </div>
     {unit === "num" && <p className="text-xs text-ink-soft mb-3">במספרים: כל נתון הוא מספר המשתתפים שענו כך. בבחירות קודמות — כלל המצביעים: התוצאה הרשמית באחוזים כפול מספר המשתתפים בסקר{count ? ` (${count})` : ""}.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
     {d.matrix && <section className="mt-6"><h3 className="font-bold mb-2">מעבר 2022–2026</h3><Matrix d={d} unit={unit} /></section>}
@@ -204,7 +212,7 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
   const show = (n: number) => unit === "pct" ? `${Math.round(n / continuity.total * 1000) / 10}%` : String(n);
   const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
   return <div>
-    {continuity.total > 0 && <p className="text-sm mb-3">נשארו באותה רשימה: <strong>{show(continuity.same)}</strong> · עברו לרשימה אחרת: <strong>{show(continuity.changed)}</strong> · המשיכו לאחת ממפלגות הרשימה שהתפצלה: <strong>{show(continuity.split)}</strong></p>}
+    {continuity.total > 0 && <p className="text-sm mb-3">עברו לרשימה אחרת: <strong>{show(continuity.changed)}</strong></p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>

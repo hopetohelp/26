@@ -22,7 +22,10 @@ export default function CommunityShare({ d }: { d: Dashboard }) {
   useEffect(() => setSlot(document.getElementById("community-share")), []);
   const banner = (
     <section aria-label="שיתוף סקר האתר" className="mb-5 rounded-theme border-2 border-ink bg-paper-card p-4 flex flex-wrap items-center justify-between gap-3">
+      <div>
+      <h1 className="font-display text-3xl leading-tight mb-2">סקר האתר</h1>
       <p className="font-display text-xl leading-tight">רוצים שהסקר יהיה מדויק יותר? <span className="text-signal">זה תלוי בכם!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים — כל משתתף נוסף מחדד את התמונה.</span></p>
+      </div>
       <Btn kind="primary" onClick={() => setOpen(true)} className="shrink-0">שיתוף</Btn>
     </section>
   );
