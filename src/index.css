@@ -298,3 +298,17 @@
 .cmp-box { container-type: inline-size; }
 .cmp-long { display: none; }
 @container (min-width: 28rem) { .cmp-long { display: inline; } }
+
+/* רשימת המפלגות ב"הכנסת שלי": ברוחב צר — שם ושדה המילוי בשורה אחת וטורי ההשוואה בשורה מתחתיהם; כשיש מקום (38rem), שלושת הטורים באותה שורה עם השם, והכותרות מוזזות איתם (הכרעת בעלים 11.10.2026) */
+.seat-box { container-type: inline-size; }
+.seat-name-spacer { display: none; }
+.seat-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name ctl" "cells cells"; align-items: center; column-gap: 0.5rem; }
+.seat-name { grid-area: name; }
+.seat-cells { grid-area: cells; }
+.seat-ctl { grid-area: ctl; }
+@container (min-width: 38rem) {
+  .seat-grid { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "name cells ctl"; }
+  .seat-ctl { justify-self: end; }
+  .seat-head { display: flex; align-items: flex-end; gap: 0.5rem; }
+  .seat-head > .seat-name-spacer { display: block; width: 9rem; flex-shrink: 0; }
+}

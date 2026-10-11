@@ -185,9 +185,15 @@ export default function Seats({
         <div>
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <CompareToggles value={cmp} onChange={setCmp} view={view} onView={setView} />
+            <div className="seat-box">
             {cmp.length > 0 && (
-              <div className="flex items-end gap-2 text-xs text-ink-soft pb-1 border-b-2 border-ink/30" aria-hidden="true">
-                <div className="flex-1 min-w-0"><CompareCells on={cmp} cells={{ k22: <Link to="/changes" className="underline">בחירות 22</Link>, polls: "סקרים", crowd: "משתתפים" }} /></div>
+              <div className="seat-head text-xs text-ink-soft pb-1 border-b-2 border-ink/30">
+                <span className="seat-name-spacer" aria-hidden="true" />
+                <div><CompareCells on={cmp} cells={{
+                  k22: <Link to="/changes" className="inline-flex items-center min-h-[28px] px-1.5 rounded-full border-2 border-ink text-xs font-bold text-ink no-underline hover:bg-paper">בחירות 22</Link>,
+                  polls: <span aria-hidden="true">סקרים</span>,
+                  crowd: <span aria-hidden="true">משתתפים</span>,
+                }} /></div>
               </div>
             )}
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
@@ -196,11 +202,12 @@ export default function Seats({
                 const name = nameOf(id);
                 return (
                   <li key={id} className="py-2">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 min-w-0">
+                    <div className="seat-grid">
+                      <div className="seat-name min-w-0">
                         <span className="font-bold block truncate">{name}</span>
                         <span className="sr-only">{rowState(c)}</span>
-                        {cmp.length > 0 && <CompareCells on={cmp} cells={view === "seats" ? {
+                      </div>
+                      {cmp.length > 0 && <div className="seat-cells"><CompareCells on={cmp} cells={view === "seats" ? {
                           k22: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0),
                           polls: seatsFmt(POLLS[id] ?? 0),
                           crowd: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—",
@@ -209,13 +216,11 @@ export default function Seats({
                           polls: pctFmt(POLL_SHARES[id] ?? 0),
                           // ממוצע האחוזים של המשתתפים, כמו בסקר האתר
                           crowd: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—",
-                        }} labels />}
-                      </div>
+                        }} labels /></div>}
                       {view === "pct" ? (
-                        <div className="flex flex-col items-center">
-                          <div className="flex items-center gap-2" dir="ltr">
+                        <div className="seat-ctl flex items-start gap-2" dir="ltr">
                           {lock(id, c, name)}
-                          <label className="flex items-center gap-1" dir="ltr">
+                          <div className="flex flex-col items-center">
                             <input
                               type="number"
                               inputMode="decimal"
@@ -228,36 +233,34 @@ export default function Seats({
                               className="w-20 h-11 text-center font-num tabular text-xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
                               style={{ textAlign: "center" }}
                             />
-                            <span className="text-sm text-ink-soft">%</span>
-                          </label>
+                            <span className="text-xs text-ink-soft tabular" dir="rtl">{c.v ? `${c.v} מנדטים` : (pctNow?.[id] ?? 0) > 0 ? <Badge tone="warn">מתחת לסף</Badge> : "0 מנדטים"}</span>
                           </div>
-                          <span className="text-xs text-ink-soft tabular">{c.v ? `${c.v} מנדטים` : (pctNow?.[id] ?? 0) > 0 ? <Badge tone="warn">מתחת לסף</Badge> : "0 מנדטים"}</span>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-1" dir="ltr">
+                        <div className="seat-ctl flex items-start gap-1" dir="ltr">
                           {lock(id, c, name)}
                           <button type="button" aria-label={`פחות ל${name}`} disabled={c.v <= 0} onClick={() => setV(id, c.v - 1)} className="w-11 h-11 rounded-full border-2 border-ink text-2xl font-bold leading-none disabled:opacity-30 active:bg-ink active:text-paper-card">
                             −
                           </button>
-                          <input
-                            type="number"
-                            inputMode="numeric"
-                            min={0}
-                            max={TOTAL}
-                            aria-label={`מנדטים ל${name}`}
-                            value={c.v}
-                            onFocus={() => (typedFrom.current[id] = c.v)}
-                            onChange={(e) => setV(id, Number(e.target.value), false)}
-                            onBlur={() => setV(id, c.v, true, typedFrom.current[id] ?? c.v)}
-                            className="w-14 h-11 text-center font-num tabular text-2xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                            style={{ textAlign: "center" }}
-                          />
+                          <div className="flex flex-col items-center">
+                            <input
+                              type="number"
+                              inputMode="numeric"
+                              min={0}
+                              max={TOTAL}
+                              aria-label={`מנדטים ל${name}`}
+                              value={c.v}
+                              onFocus={() => (typedFrom.current[id] = c.v)}
+                              onChange={(e) => setV(id, Number(e.target.value), false)}
+                              onBlur={() => setV(id, c.v, true, typedFrom.current[id] ?? c.v)}
+                              className="w-14 h-11 text-center font-num tabular text-2xl bg-paper text-ink rounded-theme border border-paper-line [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                              style={{ textAlign: "center" }}
+                            />
+                            <span className="text-xs text-ink-soft tabular" dir="ltr">{pctNow ? `≈${pctFmt(pctNow[id] ?? 0)}` : ""}</span>
+                          </div>
                           <button type="button" aria-label={`עוד ל${name}`} disabled={c.v >= TOTAL || !canSetSeats(p.seats, IDS, id, snapSeats(c.v + 1, c.v))} onClick={() => setV(id, c.v + 1)} className="w-11 h-11 rounded-full border-2 border-ink bg-ink text-paper-card text-2xl font-bold leading-none disabled:opacity-30">
                             +
                           </button>
-                        </div>
-                          <span className="text-xs text-ink-soft tabular" dir="ltr">{pctNow ? `≈${pctFmt(pctNow[id] ?? 0)}` : ""}</span>
                         </div>
                       )}
                     </div>
@@ -265,6 +268,7 @@ export default function Seats({
                 );
               })}
             </ul>
+            </div>
             {view === "pct" && pctNow && <p className="text-sm text-ink-soft mt-2">אחרות (רשימות שאינן כאן): <span className={`tabular ${pctSum > 100.05 ? "text-warn font-bold" : ""}`}>{pctSum > 100.05 ? `חריגה: ${pctFmt(pctSum)}` : pctFmt(Math.max(0, 100 - pctSum))}</span></p>}
             <CalcAssumptions calc={calc} onChange={setCalc} />
       <ActionBar above={<>
@@ -458,7 +462,7 @@ function CompareCells({ on, cells, labels = false }: { on: CompareKey[]; cells: 
   return (
     <span className="flex text-xs mt-0.5">
       {COMPARE.filter((c) => on.includes(c.id)).map((c) => (
-        <span key={c.id} className={`w-16 shrink-0 truncate px-1.5 border-s border-paper-line first:border-s-0 first:ps-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
+        <span key={c.id} className={`w-[4.5rem] shrink-0 truncate px-1.5 border-s border-paper-line first:border-s-0 first:ps-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
           {labels && <span className="sr-only">{c.label}: </span>}
           {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
         </span>
