@@ -1,16 +1,34 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { PARTY_IMAGES } from "../lib/partyImages";
 import { PartyAvatar } from "./PartyAvatar";
+import { defaultBlocs } from "../pages/guess/model";
 
 /**
- * תמונות כל המפלגות שבגוש (הכרעת בעלים 11.10.2026, מחליפה את "תמונה אחת לגוש"): עיגולי פרופיל צמודים וחופפים מעט.
- * כמה נכנסים נקבע לפי הרוחב הפנוי; מה שלא נכנס מסומן "+N". מפלגה בלי תמונה (הציבור החרדי, צבע שחור) לא מוצגת.
- * מציגה את ההרכב בפועל, ולכן נכון גם לגוש שהמשתתף שינה ולגוש אישי. השמות כתובים לצד הגוש, ולכן לקישוט בלבד.
+ * תמונות הגוש: קודם התמונות הקבועות של גוש ברירת המחדל (תמיד מוצגות), ואחריהן שאר המפלגות שבגוש (הכרעת בעלים 11.10.2026): עיגולי פרופיל צמודים וחופפים מעט.
+ * כמה מהשאר נכנסים נקבע לפי הרוחב הפנוי; מה שלא נכנס מסומן "+N". מפלגה בלי תמונה (הציבור החרדי, צבע שחור) לא מוצגת.
+ * גוש ששונה או אישי מציג את ההרכב בפועל, בלי תמונות קבועות. השמות כתובים לצד הגוש, ולכן לקישוט בלבד.
  */
 const OVERLAP = 0.32;
 
-export function BlocAvatar({ lists, size = 24, center = false }: { lists: string[]; size?: number; center?: boolean }) {
-  const ids = [...new Set(lists)].filter((id) => PARTY_IMAGES[id]);
+/** תמונות שמוצגות תמיד בגושי ברירת המחדל (הכרעת בעלים 11.10.2026): נתניהו — הממשלה היוצאת והקואליציה; איזנקוט — האופוזיציה; שניהם — אחדות; עבאס — מפלגות ערביות */
+const LEADERS: Record<string, string[]> = {
+  government: ["likud"], gov: ["likud"], coalition: ["likud"],
+  rest: ["yashar"], opposition: ["yashar"],
+  unity: ["likud", "yashar"],
+  arab: ["raam"],
+};
+const CANON: Record<string, string> = { coalition: "gov", opposition: "rest" };
+const key = (lists: string[]) => [...new Set(lists)].sort().join(",");
+/** התמונות הקבועות רק להרכב ברירת המחדל: גוש שהמשתתף שינה לא יציג מנהיג שאינו מייצג אותו */
+function leadersOf(id: string | undefined, lists: string[]): string[] {
+  const l = id ? LEADERS[id] : undefined;
+  const base = id ? defaultBlocs().find((b) => b.id === (CANON[id] ?? id)) : undefined;
+  return l && base && key(lists) === key(base.lists) ? l : [];
+}
+
+export function BlocAvatar({ id, lists, size = 24, center = false }: { id?: string; lists: string[]; size?: number; center?: boolean }) {
+  const first = leadersOf(id, lists);
+  const ids = [...new Set([...first, ...lists])].filter((p) => PARTY_IMAGES[p]);
   const ref = useRef<HTMLSpanElement>(null);
   const [fit, setFit] = useState(ids.length);
   const step = Math.round(size * (1 - OVERLAP));
@@ -25,7 +43,7 @@ export function BlocAvatar({ lists, size = 24, center = false }: { lists: string
   }, [size, step]);
   if (!ids.length) return null;
   const all = fit >= ids.length;
-  const shown = all ? ids : ids.slice(0, Math.max(1, fit - 1));
+  const shown = all ? ids : ids.slice(0, Math.max(first.length, 1, fit - 1));
   const extra = ids.length - shown.length;
   const ring = "rounded-full shadow-[0_0_0_1.5px_rgb(var(--card))]";
   const gap = { marginInlineStart: -(size - step) };
