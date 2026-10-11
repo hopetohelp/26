@@ -77,6 +77,15 @@ async function requireAdmin(env, request) {
   throw new HttpError(401, "unauthorized");
 }
 
+/** מזהה קבוצה: אותיות לטיניות קטנות, ספרות ומקף */
+const GROUP_ID = /^[a-z0-9-]{2,32}$/;
+/** מיילים בבקשה אחת — כדי להישאר מתחת ל-MAX_BODY; רשימה גדולה נשלחת במנות */
+export const GROUP_CHUNK = 300;
+function groupId(v) {
+  if (typeof v !== "string" || !GROUP_ID.test(v)) throw bad("group");
+  return v;
+}
+
 async function requireAuth(env, request, now) {
   const a = await authenticate(env, bearer(request), now);
   if (!a) throw new HttpError(401, "unauthorized");
@@ -872,6 +881,50 @@ const routes = {
       await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
         .bind(target.id, decision, iso(now))
         .run();
+    return { ok: true };
+  },
+
+  // קבוצות (docs/פילוח-קבוצות-תכנון.md): טעינת רשימת מיילים במנות. נשמר רק הגיבוב; replace מוחק את הרשימה הקודמת (למנה הראשונה בלבד).
+  // התשובה לא אומרת כמה מהמיילים רשומים באתר.
+  "POST /admin/groups/import": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    const id = groupId(body.group);
+    if (!Array.isArray(body.emails) || body.emails.length > GROUP_CHUNK) throw bad("emails");
+    if (!["add", "replace"].includes(body.mode ?? "add")) throw bad("mode");
+    const name = body.name === undefined ? null : normalizeName(body.name);
+    if (body.name !== undefined && !name) throw bad("name");
+    const exists = await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first();
+    if (!exists && !name) throw bad("name");
+    const hashes = new Set();
+    let invalid = 0, valid = 0;
+    for (const raw of body.emails) {
+      const e = normalizeEmail(raw);
+      if (e) { valid++; hashes.add(await emailHash(env, e.norm)); }
+      else invalid++;
+    }
+    const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+    const stmts = [];
+    if (!exists) stmts.push(env.DB.prepare("INSERT INTO groups (id, name_enc, created_at) VALUES (?, ?, ?)").bind(id, await seal(env, name), iso(now)));
+    else if (name) stmts.push(env.DB.prepare("UPDATE groups SET name_enc = ? WHERE id = ?").bind(await seal(env, name), id));
+    if (body.mode === "replace") stmts.push(env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id));
+    for (const h of hashes) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(id, h));
+    if (stmts.length) await env.DB.batch(stmts);
+    const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+    const base = body.mode === "replace" ? 0 : before;
+    return { group: id, added: members - base, duplicates: valid - (members - base), invalid, members };
+  },
+
+  "GET /admin/groups": async ({ env, request }) => {
+    await requireAdmin(env, request);
+    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g ORDER BY g.created_at").all()).results || [];
+    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, createdAt: r.created_at }))) };
+  },
+
+  // מחיקת קבוצה מוחקת את כל הגיבובים שלה
+  "POST /admin/groups/delete": async ({ env, request, body }) => {
+    await requireAdmin(env, request);
+    const id = groupId(body.group);
+    await env.DB.batch([env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id), env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id)]);
     return { ok: true };
   },
 
