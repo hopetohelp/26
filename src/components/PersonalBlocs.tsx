@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useId, useState, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import Explained from "./Explained";
-import { Fold } from "./ui";
+import { Fold, useSplitOn } from "./ui";
 import EditBlocsButton, { BlocNameButton } from "./EditBlocsButton";
 import type { BlocsPayload } from "../lib/crowdApi";
 import { useSession, useUnit } from "../pages/guess/useCrowd";
@@ -47,6 +47,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   compact?: boolean;
 }) {
   const unit = usePersonalBlocs();
+  const splitOn = useSplitOn();
   const { pathname, search } = useLocation();
   const definition = unit.draft ? normalizeBlocs(unit.draft) : DEFAULT_BLOCS;
   const p = { ...definition, blocs: definition.blocs.map((b, i) => ({ ...b, name: b.name.trim() || `גוש ${i + 1}` })) };
@@ -79,7 +80,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
     <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[5.5rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-1.5 min-w-[4.5rem] py-2">{labelOf(d)}</th>)}{compare && series.length === 2 && <th scope="col" className="px-1.5">{pct ? "שינוי (נק')" : "שינוי במנדטים"}</th>}</tr></thead>
     <tbody>{p.blocs.map(b => { const first = blocComparable(series[0]?.rows.find(r => r.id === b.id)); const last = blocComparable(series[1]?.rows.find(r => r.id === b.id)); const delta = first !== null && last !== null ? last - first : null; return <BlocTableRow key={b.id} name={b.name} lists={b.lists.map(nameOf).join(" · ")} cols={series.length + 1 + (compare && series.length === 2 ? 1 : 0)} nameClass="text-start py-2 break-words" cellClass="px-1.5 text-center tabular" extra={compare && series.length === 2 ? <td className="text-center tabular"><bdi>{delta === null ? "—" : pct ? diffText(delta) : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td> : null}>{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <>{display(row)}<BlocCoverage row={row} /></>; })}</BlocTableRow>; })}</tbody>
   </table>;
-  return <Fold title={title} open={editTargets}>
+  return <Fold title={title} open={editTargets || splitOn}>
     <div data-personal-blocs-card className="space-y-2">
     <div><EditBlocsButton returnTo={pathname + search} /></div>
     <Explained showMeta={false} kind="השוואה" source={source} asOf={asOf} assumption="סכום מקור מלא, סכום חלקי (כשחסרה מפלגה, והחסר מסומן מתחת למספר) ואומדן (כ-) מוצגים בנפרד. השלמה רק מסקרים קודמים קרובים שעברו בדיקת דיוק; המקור לא משתנה. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות או השלמה שרירותית של תוצאות אמת." methodAnchor="personal-blocs" trailing={<>

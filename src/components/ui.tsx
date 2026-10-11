@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTabsSlot } from "./Tabbed";
 import ChartLegend, { BAR, BarSlots, PILL, PILL_ON, PILL_RING, type LegendEntry } from "./ChartLegend";
 
@@ -112,6 +112,9 @@ export function Fold({ title, children, open = false }: { title: ReactNode; chil
  * 🔴 הסדר בקוד הוא סדר הטלפון — בטלפון ובמסך צר שום דבר אינו משתנה.
  */
 const SPLIT_AT = 1024;
+/** true כשהמסך מוצג בשני טורים (מחשב). כרטיס הגושים נפתח אז מעצמו (הכרעת בעלים 11.10.2026) */
+const SplitOn = createContext(false);
+export const useSplitOn = () => useContext(SplitOn);
 const SETTLE_MS = 2000;
 /** secondaryFirst: בטור אחד (טלפון) הטור הרחב קודם — למשל שיחת התמיכה לפני הנתונים שלי */
 export function Split({ primary, secondary, title, lead, secondaryFirst = false }: { primary: ReactNode; secondary: ReactNode; title?: ReactNode; lead?: ReactNode; secondaryFirst?: boolean }) {
@@ -156,7 +159,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
   }, [split, state.top]);
   const hasHead = title !== undefined;
   return (
-    <>
+    <SplitOn.Provider value={split}>
       {!split && tabs}
       {hasHead && !split && <PageTitle lead={lead}>{title}</PageTitle>}
       {hasHead && split && <h1 className="sr-only">{title}</h1>}
@@ -177,7 +180,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
         {/* pb-24: הכפתור הצף "לבנות את הכנסת שלי" לא מסתיר את סוף הטור */}
         <div className={split ? "relative overflow-y-auto pt-6 ps-6 pb-24" : ""}>{secondary}</div>
       </div>
-    </>
+    </SplitOn.Provider>
   );
 }
 
