@@ -164,7 +164,7 @@ export default function Seats({
   return (
     <div>
       <HowTo />
-      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בכל גוש, הצפי שלכם, ובהתאמה למפלגות." values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
+      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בגוש, והצפי שלכם" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
           <div className="relative">
@@ -359,7 +359,7 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
 /** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
 function HowTo() {
   return (
-    <section className="mb-4 rounded-theme border border-paper-line bg-paper-card p-4" aria-labelledby="howto-title">
+    <section className="mb-4 rounded-theme border border-paper-line bg-paper-card px-4 pt-4 pb-1" aria-labelledby="howto-title">
       <h2 id="howto-title" className="text-xl font-display leading-tight mb-2">איך משערים?</h2>
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
         <li>מגדירים גושי מפלגות, וצפי ס״ה לגוש, או נשארים עם ברירת המחדל.</li>
@@ -367,8 +367,8 @@ function HowTo() {
         <li>נועלים מפלגה או משנים לה את המספר.</li>
         <li>לוחצים "השלם הכול": המפלגות הנעולות ומספרי הגושים נשמרים, ושאר המפלגות מקבלות את היתרה ביחס לסקרים.</li>
       </ol>
-      <details className="group mt-3 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">
-        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[44px] text-sm font-bold">
+      <details className="group mt-2 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">
+        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[40px] text-sm font-bold">
           הסברים
           <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
         </summary>

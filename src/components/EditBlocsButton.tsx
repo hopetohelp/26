@@ -16,7 +16,23 @@ export default function EditBlocsButton({ returnTo }: { returnTo: string }) {
   );
 }
 
-/** שם גוש עם חץ קטן שפותח את רשימת המפלגות שלו (ברירת מחדל: סגור) */
+const Chevron = ({ open }: { open: boolean }) => (
+  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-ink-soft transition-transform ${open ? "rotate-180" : ""}`}>
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+/** כפתור שם גוש עם חץ קטן: פותח ומסתיר את רשימת המפלגות. הרשימה עצמה מוצגת בנפרד, לרוחב כל הכרטיס. */
+export function BlocNameButton({ name, open, onToggle, controls }: { name: string; open: boolean; onToggle: () => void; controls: string }) {
+  return (
+    <button type="button" aria-expanded={open} aria-controls={controls} aria-label={`מפלגות ${name}`} onClick={onToggle} className="min-w-0 text-start flex items-center gap-1.5 min-h-[32px] font-bold">
+      <span className="break-words min-w-0">{name}</span>
+      <Chevron open={open} />
+    </button>
+  );
+}
+
+/** שם גוש עם חץ שפותח את הרשימה במקום (בתא צר בטבלה) */
 export function BlocNameToggle({ name, lists, className = "" }: { name: string; lists: string; className?: string }) {
   return (
     <details className={`group ${className}`}>
