@@ -4,6 +4,7 @@ import { rng, seatsFmt } from "../lib/format";
 import { dayMonth, type HomeData, type HomeRow } from "../lib/home";
 import { candleProfiles, clipSegs, intSegs, smoothPath, sparseIndices, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
+import { PartyAvatar } from "./PartyAvatar";
 import { AxisLabels, MeanDot, ProfileCandle, ProfileCandleV, Track } from "./marks";
 
 /**
@@ -66,7 +67,7 @@ export function Hemicycle({ gov, other, center }: { gov: number; other: number; 
   );
 }
 
-const COLS = "grid-cols-[minmax(0,1fr)_2.1rem_minmax(5.5rem,38%)] md:grid-cols-[minmax(0,13rem)_2.6rem_minmax(0,1fr)_5rem]";
+const COLS = "grid-cols-[minmax(0,1fr)_2.1rem_minmax(4.5rem,32%)] md:grid-cols-[minmax(0,13rem)_2.6rem_minmax(0,1fr)_5rem]";
 
 const PICK = "העובי בכל קטע: כמה נתונים נותנים ערך כזה";
 
@@ -88,7 +89,10 @@ function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg
   const x = (v: number) => (v / axisMax) * 100;
   return (
     <li className={`grid ${COLS} items-center gap-x-3 min-h-12 py-1.5 border-t border-paper-line last:border-b`}>
-      <span className="font-semibold leading-tight">{r.name}</span>
+      <span className="flex items-center gap-2 min-w-0">
+        <PartyAvatar id={r.id} size={32} />
+        <span className="min-w-0 font-semibold leading-tight text-[.95rem] md:text-base [overflow-wrap:anywhere]">{r.name}</span>
+      </span>
       <span className="font-num text-xl font-extrabold tabular">{seatsFmt(r.central)}</span>
       <Track axisMax={axisMax} title={`${r.name}: ${PICK}`}>
         <ProfileCandle segs={lsegs} x={x} />

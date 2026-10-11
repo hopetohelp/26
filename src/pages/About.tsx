@@ -1,6 +1,8 @@
 import { Card, PageTitle } from "../components/ui";
 import { meta } from "../lib/data";
 import { date } from "../lib/format";
+import { PARTY_IMAGES } from "../lib/partyImages";
+import { PartyAvatar } from "../components/PartyAvatar";
 
 export default function About() {
   return (
@@ -18,7 +20,7 @@ export default function About() {
             תוצאות האמת — מקובצי ועדת הבחירות המרכזית. הנתונים נכונים ל-{date(meta.dataAsOf)}.
           </p>
           <p>
-            הצבעים באתר ניטרליים במכוון ואינם צבעי המפלגות, ואין בו סמלי מפלגות. "מפלגות הממשלה היוצאת" היא הגדרה עובדתית לפי הרכב הממשלה
+            הצבעים באתר ניטרליים במכוון ואינם צבעי המפלגות. ליד שם כל רשימה מוצגת תמונת ראש הרשימה, או סמל הרשימה כשאין לה ראש אחד; הקרדיט המלא בכרטיס "תמונות" שמתחת. "מפלגות הממשלה היוצאת" היא הגדרה עובדתית לפי הרכב הממשלה
             ה-37, לא הערכה לגבי הקואליציה הבאה.
           </p>
           <p>
@@ -46,6 +48,25 @@ export default function About() {
           </p>
           <p>מקורות הנתונים ושיטת החישוב — בעמוד "שיטה ומקורות". שימוש חוזר בנתונים — עם ציון המקור.</p>
         </div>
+      </Card>
+      <Card title="תמונות" className="max-w-3xl">
+        <p className="text-sm mb-3">
+          התמונות נועדו לזיהוי הרשימה בלבד, ואינן מעידות על הסכמת מי שמופיע בהן. תמונות האנשים מוויקימדיה קומונס ברישיונות חופשיים, וכאן היוצר והרישיון של כל אחת.
+        </p>
+        <ul className="text-sm divide-y divide-paper-line border-y border-paper-line">
+          {Object.entries(PARTY_IMAGES).map(([id, img]) => (
+            <li key={id} className="flex items-center gap-3 py-2">
+              <PartyAvatar id={id} size={36} />
+              <span className="min-w-0">
+                <span className="font-semibold">{img.subject}</span>
+                {" · "}
+                <a href={img.source}>מקור</a>
+                <span className="block text-ink-soft">{img.author} · {img.license}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="text-sm mt-3 text-ink-soft">לרשימות הציבור החרדי וצבע שחור לא נמצאה תמונה חופשית או סמל רשמי להורדה, ולכן אין להן תמונה.</p>
       </Card>
     </>
   );
