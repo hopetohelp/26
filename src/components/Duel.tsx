@@ -1,4 +1,5 @@
 import Explained from "./Explained";
+import { PartyAvatar } from "./PartyAvatar";
 import { PassBar } from "./homeCharts";
 import { seatsIn, summarize, type Poll } from "../lib/data";
 import { rng, seatsFmt } from "../lib/format";
@@ -37,12 +38,17 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
           <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
           <Side r={b} range={rangeOf(b.id)} lead={b.central >= a.central} align="end" />
           <span className="absolute inset-y-4 left-1/2 border-s border-paper-line" />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center w-16 h-16 rounded-full bg-ink text-paper leading-none text-center">
-            <span className="font-display text-base">מול</span>
-            {pairs.length > 0 && (
-              <span className="flex items-center justify-center gap-0.5 font-num text-xs tabular" dir="rtl">
-                <span>{nA}</span><span>:</span><span>{nB}</span>
-              </span>
+          {/* העיגול במרכז: הספירה "6:2" ומתחתיה "סקרים" (בכמה סקרים כל אחת גבוהה יותר); בלי סקרים משותפים — "מול" */}
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 w-24 h-24 md:w-28 md:h-28 rounded-full bg-ink text-paper leading-none text-center">
+            {pairs.length > 0 ? (
+              <>
+                <span className="flex items-center justify-center gap-0.5 font-num text-3xl md:text-4xl font-extrabold tabular" dir="rtl">
+                  <span>{nA}</span><span>:</span><span>{nB}</span>
+                </span>
+                <span className="font-display text-sm md:text-base">סקרים</span>
+              </>
+            ) : (
+              <span className="font-display text-xl">מול</span>
             )}
           </span>
         </div>
@@ -53,7 +59,10 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
 
 function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: boolean; align: "start" | "end" }) {
   return (
-    <div className={`py-5 md:py-8 ${align === "start" ? "pe-10 md:pe-16 text-start" : "ps-10 md:ps-16 text-end"}`}>
+    <div className={`py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
+      {/* תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד: ימין לצד הימני, שמאל לשמאלי */}
+      <span className="md:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
+      <span className="hidden md:block mb-3"><PartyAvatar id={r.id} size={112} /></span>
       <p className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
       <p className={`font-num tabular leading-none mt-2 text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
         {seatsFmt(r.central)}
@@ -89,7 +98,11 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
               const s = counts.get(r.id);
               return (
                 <li key={r.id} className="border-s-4 border-ink ps-3 md:ps-4 min-w-0">
-                  <p className="font-display text-base md:text-xl leading-tight break-words [overflow-wrap:anywhere]">{r.name}</p>
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <span className="md:hidden"><PartyAvatar id={r.id} size={40} /></span>
+                    <span className="hidden md:block"><PartyAvatar id={r.id} size={56} /></span>
+                    <p className="min-w-0 font-display text-base md:text-xl leading-tight break-words [overflow-wrap:anywhere]">{r.name}</p>
+                  </div>
                   <p className="font-num text-4xl md:text-5xl font-extrabold tabular leading-none mt-1">{Math.round(r.pass * 100)}%</p>
                   <p className="text-xs md:text-sm text-ink-soft mt-1">מהתרחישים עוברת</p>
                   <span className="block mt-2"><PassBar pass={r.pass} /></span>
