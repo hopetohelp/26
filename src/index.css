@@ -294,21 +294,23 @@
   transform-origin: center;
 }
 
-/* מתגי ההשוואה ב"הכנסת שלי": "ממוצע " לפני "סקרים" ו"משתתפים" רק כשיש מקום בשורה (הכרעת בעלים 11.10.2026) */
-.cmp-box { container-type: inline-size; }
+/* "הכנסת שלי", רשימת המפלגות (הכרעת בעלים 11.10.2026): שורת כותרות אחת (כפתורי ההדלקה) מעל טורי ההשוואה. ברוחב צר: מתג מנדטים|אחוזים וקישור בשורה אחת,
+   הכפתורים בשורה מתחתיהם, וטורי ההשוואה בכל מפלגה בשורה מתחת לשם. כשיש מקום (46rem): הכול בשורה אחת, ו"ממוצע " לפני "סקרים" ו"משתתפים". */
+.seat-box { container-type: inline-size; --cw: 4.75rem; }
 .cmp-long { display: none; }
-@container (min-width: 28rem) { .cmp-long { display: inline; } }
-
-/* רשימת המפלגות ב"הכנסת שלי": ברוחב צר — שם ושדה המילוי בשורה אחת וטורי ההשוואה בשורה מתחתיהם; כשיש מקום (38rem), שלושת הטורים באותה שורה עם השם, והכותרות מוזזות איתם (הכרעת בעלים 11.10.2026) */
-.seat-box { container-type: inline-size; }
-.seat-name-spacer { display: none; }
+.seat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "mode link" "chips chips"; align-items: center; gap: 0.5rem; }
+.seat-head-mode { grid-area: mode; }
+.seat-head-chips { grid-area: chips; }
+.seat-head-link { grid-area: link; }
 .seat-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name ctl" "cells cells"; align-items: center; column-gap: 0.5rem; }
 .seat-name { grid-area: name; }
 .seat-cells { grid-area: cells; }
 .seat-ctl { grid-area: ctl; }
-@container (min-width: 38rem) {
+@container (min-width: 46rem) {
+  .seat-head, .seat-grid { --cw: 7.25rem; }
+  .cmp-long { display: inline; }
+  .seat-head { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "mode chips link"; }
+  .seat-head-link { justify-self: end; }
   .seat-grid { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "name cells ctl"; }
   .seat-ctl { justify-self: end; }
-  .seat-head { display: flex; align-items: flex-end; gap: 0.5rem; }
-  .seat-head > .seat-name-spacer { display: block; width: 9rem; flex-shrink: 0; }
 }

@@ -184,18 +184,8 @@ export default function Seats({
 
         <div>
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
-            <CompareToggles value={cmp} onChange={setCmp} view={view} onView={setView} />
             <div className="seat-box">
-            {cmp.length > 0 && (
-              <div className="seat-head text-xs text-ink-soft pb-1 border-b-2 border-ink/30">
-                <span className="seat-name-spacer" aria-hidden="true" />
-                <div><CompareCells on={cmp} cells={{
-                  k22: <Link to="/changes" className={HEAD_CELL + " border-ink no-underline hover:bg-paper"}>בחירות 22</Link>,
-                  polls: <span aria-hidden="true" className={HEAD_CELL + " border-transparent"}>סקרים</span>,
-                  crowd: <span aria-hidden="true" className={HEAD_CELL + " border-transparent"}>משתתפים</span>,
-                }} /></div>
-              </div>
-            )}
+            <CompareHeader value={cmp} onChange={setCmp} view={view} onView={setView} />
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
@@ -436,37 +426,47 @@ function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
   });
   return [v, (next) => { setV(next); try { localStorage.setItem(CMP_KEY, JSON.stringify(next)); } catch { /* לא נשמר */ } }];
 }
-/** כותרת טור השוואה: שלוש הכותרות באותו עיצוב וממורכזות; ההבדל היחיד הוא מסגרת הכפתור של "בחירות 22" */
-const HEAD_CELL = "inline-flex items-center justify-center min-h-[28px] px-1.5 rounded-full border-2 text-xs font-bold text-ink";
 const CHIP = "min-h-[32px] px-2.5 rounded-full border text-xs font-bold";
 const chipCls = (on: boolean) => `${CHIP} ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`;
-/** שורה אחת: מתג מנדטים | אחוזים, ולידו שלושת מספרי ההשוואה — באותו עיצוב */
-function CompareToggles({ value, onChange, view, onView }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
+/**
+ * שורת הכותרות היחידה (הכרעת בעלים 11.10.2026): כפתורי ההדלקה הם כותרות הטורים, ממורכזים מעל הטור שלהם; ליד שם המפלגה — מתג מנדטים | אחוזים,
+ * ובצד — כפתור קישור "שיוך בחירות 22". טור כבוי נשאר ריק במקומו, כך שהכותרות תמיד מיושרות לנתונים.
+ */
+function CompareHeader({ value, onChange, view, onView }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
   return (
-    <div className="cmp-box mb-2"><div className="flex flex-wrap items-center gap-2">
-      <Segmented size="sm" label="מה מקלידים" value={view} onChange={onView} className="!inline-grid w-auto text-xs" options={[{ id: "seats", label: "מנדטים" }, { id: "pct", label: "אחוזים" }]} />
-      <span aria-hidden="true" className="w-px h-6 bg-paper-line" />
-      <div role="group" aria-label="מספרים להשוואה" className="flex flex-wrap items-center gap-1">
+    <div className="seat-head pb-2 border-b-2 border-ink/30">
+      <div className="seat-head-mode">
+        <Segmented size="sm" label="מה מקלידים" value={view} onChange={onView} className="!inline-grid w-auto text-xs" options={[{ id: "seats", label: "מנדטים" }, { id: "pct", label: "אחוזים" }]} />
+      </div>
+      <div role="group" aria-label="מספרים להשוואה — הדלקה וכיבוי של טור" className="seat-head-chips flex">
         {COMPARE.map((c) => {
           const on = value.includes(c.id);
           return (
-            <button key={c.id} type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))} className={chipCls(on)}>
-              {c.long && <span className="cmp-long">{c.long}</span>}{c.label}
-            </button>
+            <span key={c.id} className="w-[var(--cw)] shrink-0 flex justify-center">
+              <button type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))} className={chipCls(on) + " !px-2 whitespace-nowrap"}>
+                {c.long && <span className="cmp-long">{c.long}</span>}{c.label}
+              </button>
+            </span>
           );
         })}
       </div>
-    </div></div>
+      <Link to="/changes" className="seat-head-link inline-flex items-center gap-1.5 min-h-[32px] px-3 rounded-full border-2 border-ink text-xs font-bold text-ink no-underline hover:bg-paper">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5" /><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5" /></svg>
+        שיוך בחירות 22
+      </Link>
+    </div>
   );
 }
 /** שלושה מספרים קטנים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה */
 function CompareCells({ on, cells, labels = false }: { on: CompareKey[]; cells: Record<CompareKey, ReactNode>; labels?: boolean }) {
   return (
     <span className="flex text-xs mt-0.5">
-      {COMPARE.filter((c) => on.includes(c.id)).map((c) => (
-        <span key={c.id} className={`w-[4.5rem] shrink-0 truncate text-center px-1.5 border-s border-paper-line first:border-s-0 first:ps-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
-          {labels && <span className="sr-only">{c.label}: </span>}
-          {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
+      {COMPARE.map((c) => (
+        <span key={c.id} className={`w-[var(--cw)] shrink-0 truncate text-center px-1.5 border-s border-paper-line first:border-s-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
+          {on.includes(c.id) && <>
+            {labels && <span className="sr-only">{c.label}: </span>}
+            {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
+          </>}
         </span>
       ))}
     </span>
