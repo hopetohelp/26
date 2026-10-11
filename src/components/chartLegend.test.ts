@@ -19,7 +19,6 @@ const stat = { list: "likud", n: 3, mean: 30, min: 25, max: 35, median: 30, p25:
 
 describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.2026)", () => {
   const charts: [string, () => string][] = [
-    ["לוח המושבים", () => renderToStaticMarkup(createElement(Hemicycle, { gov: 52, other: 68 }))],
     ["הדירוג (בית, המצב היום, תרחישים)", () => renderToStaticMarkup(createElement(Ranking, { home: HOME }))],
     ["סיכום המכונים", () => renderToStaticMarkup(createElement(PollRanges, { rows: [{ id: "a", name: "א", central: 10, values: [9, 10, 11] }] }))],
     ["מגמת הממשלה היוצאת", () => renderToStaticMarkup(createElement(GovTrend, { home: HOME }))],
@@ -41,6 +40,10 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
     expect(html).toContain("mk-ring");
     expect(html).toContain("mk-mean");
   });
+});
+
+it("לוח המושבים בבית: בלי כפתור מקרא (הכרעת בעלים 11.10.2026 — פשוט להבנה)", () => {
+  expect(renderToStaticMarkup(createElement(Hemicycle, { gov: 52, other: 68 }))).not.toContain("מקרא");
 });
 
 describe("ChartLegend", () => {
