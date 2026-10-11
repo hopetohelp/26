@@ -164,7 +164,7 @@ export default function Seats({
   return (
     <div>
       <HowTo />
-      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בכל גוש, הצפי שלכם, ובהתאמה למפלגות." values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
+      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בגוש, והצפי שלכם" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
         <div className="lg:sticky lg:top-4 space-y-3">
           <div className="relative">
