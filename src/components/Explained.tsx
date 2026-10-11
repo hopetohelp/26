@@ -29,11 +29,14 @@ export interface ExplainProps {
   showMeta?: boolean;
   /** טקסט קטן בשורה התחתונה, בצד ההתחלה; "איך זה חושב?" בצד הנגדי (בפינה התחתונה השמאלית) באותה שורה אם יש מקום (הכרעת בעלים 11.10.2026) */
   trailing?: ReactNode;
+  /** true = בלי שורת הסוג, התאריך והקישור (הכרעת בעלים 11.10.2026, מסך הבית); החוזה נשמר: כל השדות חובה והערך במילון קיים */
+  bare?: boolean;
 }
 
-export default function Explained({ kind, asOf, methodAnchor, children, details, showMeta = true, trailing }: ExplainProps) {
+export default function Explained({ kind, asOf, methodAnchor, children, details, showMeta = true, trailing, bare = false }: ExplainProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
+  if (bare) return <div>{children}</div>;
   return (
     <div>
       {children}
