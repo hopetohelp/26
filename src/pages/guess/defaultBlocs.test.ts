@@ -4,13 +4,13 @@ it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל,
   expect(defaultBlocs()).toEqual([
     { id: "government", name: "הממשלה היוצאת", lists: [...GOV_IDS], target: null },
     { id: "gov", name: "גוש נתניהו", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha", "haredi_public", "noam", "code_black"], target: null },
-    { id: "rest", name: "גוש איזנקוט", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite"], target: null },
+    { id: "rest", name: "גוש אייזנקוט", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite"], target: null },
     { id: "unity", name: "אחדות", lists: ["likud", "yashar", "together", "yb", "bluewhite", "reservists"], target: null },
     { id: "arab", name: "מפלגות ערביות", lists: ["joint", "raam"], target: null },
   ]);
   const assigned = defaultBlocs().flatMap(b => b.lists);
   expect([...new Set(assigned)].sort()).toEqual([...IDS].sort());
-  expect(defaultBlocs().map(b=>b.name)).toEqual(["הממשלה היוצאת","גוש נתניהו","גוש איזנקוט","אחדות","מפלגות ערביות"]);
+  expect(defaultBlocs().map(b=>b.name)).toEqual(["הממשלה היוצאת","גוש נתניהו","גוש אייזנקוט","אחדות","מפלגות ערביות"]);
 });
 it("חלוקה אישית שמורה אינה מוחלפת בברירת המחדל החדשה", () => {
   const saved = { mode: "custom" as const, blocs: [{ id: "mine", name: "שלי", lists: ["raam", "amcha"], target: 20 }] };
@@ -31,7 +31,8 @@ it("גוש שמור בשמות הישנים (הקואליציה/האופוזיצ
   const d = defaultBlocs();
   const gov = d.find(b => b.id === "gov")!, rest = d.find(b => b.id === "rest")!;
   const out = normalizeBlocs({ mode: "custom", schemaVersion: 2, blocs: [{ ...gov, name: "גוש הקואליציה" }, { ...rest, name: "גוש האופוזיציה" }] });
-  expect(out.blocs.map(b => b.name)).toEqual(["גוש נתניהו", "גוש איזנקוט"]);
+  expect(normalizeBlocs({ mode: "custom", schemaVersion: 2, blocs: [{ ...rest, name: "גוש איזנקוט" }] }).blocs[0].name).toBe("גוש אייזנקוט");
+  expect(out.blocs.map(b => b.name)).toEqual(["גוש נתניהו", "גוש אייזנקוט"]);
   const changed = { mode: "custom" as const, schemaVersion: 2 as const, blocs: [{ ...gov, name: "גוש הקואליציה", lists: ["likud"] }] };
   expect(normalizeBlocs(changed)).toBe(changed);
 });

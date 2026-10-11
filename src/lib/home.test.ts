@@ -140,7 +140,7 @@ describe("dayMonth", () => {
 });
 
 describe("לוח המושבים בבית: שלושה גושים", () => {
-  it("גוש נתניהו, המפלגות הערביות וגוש איזנקוט מסתכמים ל-120", async () => {
+  it("גוש נתניהו, המפלגות הערביות וגוש אייזנקוט מסתכמים ל-120", async () => {
     const { HOME } = await import("./homeData");
     const { coalition, arab, opposition } = HOME.blocs;
     expect(coalition + arab + opposition).toBe(120);
