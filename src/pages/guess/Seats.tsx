@@ -190,9 +190,9 @@ export default function Seats({
               <div className="seat-head text-xs text-ink-soft pb-1 border-b-2 border-ink/30">
                 <span className="seat-name-spacer" aria-hidden="true" />
                 <div><CompareCells on={cmp} cells={{
-                  k22: <Link to="/changes" className="inline-flex items-center min-h-[28px] px-1.5 rounded-full border-2 border-ink text-xs font-bold text-ink no-underline hover:bg-paper">בחירות 22</Link>,
-                  polls: <span aria-hidden="true">סקרים</span>,
-                  crowd: <span aria-hidden="true">משתתפים</span>,
+                  k22: <Link to="/changes" className={HEAD_CELL + " border-ink no-underline hover:bg-paper"}>בחירות 22</Link>,
+                  polls: <span aria-hidden="true" className={HEAD_CELL + " border-transparent"}>סקרים</span>,
+                  crowd: <span aria-hidden="true" className={HEAD_CELL + " border-transparent"}>משתתפים</span>,
                 }} /></div>
               </div>
             )}
@@ -436,6 +436,8 @@ function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
   });
   return [v, (next) => { setV(next); try { localStorage.setItem(CMP_KEY, JSON.stringify(next)); } catch { /* לא נשמר */ } }];
 }
+/** כותרת טור השוואה: שלוש הכותרות באותו עיצוב וממורכזות; ההבדל היחיד הוא מסגרת הכפתור של "בחירות 22" */
+const HEAD_CELL = "inline-flex items-center justify-center min-h-[28px] px-1.5 rounded-full border-2 text-xs font-bold text-ink";
 const CHIP = "min-h-[32px] px-2.5 rounded-full border text-xs font-bold";
 const chipCls = (on: boolean) => `${CHIP} ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`;
 /** שורה אחת: מתג מנדטים | אחוזים, ולידו שלושת מספרי ההשוואה — באותו עיצוב */
@@ -462,7 +464,7 @@ function CompareCells({ on, cells, labels = false }: { on: CompareKey[]; cells: 
   return (
     <span className="flex text-xs mt-0.5">
       {COMPARE.filter((c) => on.includes(c.id)).map((c) => (
-        <span key={c.id} className={`w-[4.5rem] shrink-0 truncate px-1.5 border-s border-paper-line first:border-s-0 first:ps-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
+        <span key={c.id} className={`w-[4.5rem] shrink-0 truncate text-center px-1.5 border-s border-paper-line first:border-s-0 first:ps-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
           {labels && <span className="sr-only">{c.label}: </span>}
           {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
         </span>
