@@ -3,7 +3,8 @@ import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { type HomeData, type HomeRow } from "../lib/home";
 import { candleProfiles, clipSegs, intSegs, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
-import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
+import ChartLegend, { pollCandleLine, rangeLine, type LegendEntry } from "./ChartLegend";
+import { POINT_WINDOW } from "../lib/data";
 import { PartyAvatar } from "./PartyAvatar";
 import CandleTrend from "./CandleTrend";
 import type { TrendPoint } from "./charts";
@@ -201,7 +202,7 @@ export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { 
   const levels = candleProfiles(data.map((r) => r.segs));
   return (
     <>
-      <RankLegend meanLabel={meanLabel} rangeText={rangeLine("full", "הסקרים")} />
+      <RankLegend meanLabel={meanLabel} rangeText={pollCandleLine(POINT_WINDOW)} />
       <Axis axisMax={axisMax} />
       <ol className="mt-1">{data.map((r, i) => <RankRow key={r.id} r={r} lsegs={levels[i]} axisMax={axisMax} />)}</ol>
     </>
@@ -216,7 +217,7 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
 
 /**
  * מגמת הממשלה היוצאת: הגרף האחיד `CandleTrend` (נר כל 3 ימים, 14 יום אחורה, שלוש דרגות עובי, הקו עובר דרך הממוצעים של הנקודות, קווים כל 5 ו-61 במקום 60,
- * חלון במעבר על הנר, מקרא בפינה הימנית העליונה). `points` = לכל נקודה: סכום המנדטים של הממשלה היוצאת בכל סקר בחלון.
+ * חלון במעבר על הנר, מקרא בפינה השמאלית העליונה). `points` = לכל נקודה: סכום המנדטים של הממשלה היוצאת בכל סקר בחלון.
  */
 export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: number; values: number[] }[] }) {
   const { series } = home;

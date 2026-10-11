@@ -1,12 +1,12 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
-import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
+import ChartLegend, { pollCandleLine, type LegendEntry } from "./ChartLegend";
 import { ProfileCandleV } from "./marks";
 import type { Series, TrendPoint } from "./charts";
 import { colorOf } from "../lib/colors";
 import { candleProfiles, smoothPath, sparseIndices, valueSegs, type Seg } from "../lib/chartLanguage";
 import { dateRange, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
-import { POINT_WINDOW } from "../lib/data";
+import { POINT_DAYS, POINT_WINDOW } from "../lib/data";
 import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trendAxis";
 
 /**
@@ -14,7 +14,7 @@ import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trend
  * 1. נר כל 3 ימים (`POINT_DAYS`); 2. כל נקודה: 14 הימים שמסתיימים בה, הסקר האחרון של כל מכון (`POINT_WINDOW`);
  * 3. נר בשלוש דרגות עובי לפי אחוזונים (`candleProfiles`); 4. קווים מקווקווים כל 5, רק היכן שיש נתונים בין הקו לסמוך לו,
  *    ובגושים 61 (רק אם הגוש עבר 55) במקום 60 (`trendAxis`, `visibleLines`); 5. חלון קטן במעבר, בלחיצה ובחצים: טווח התאריכים של החישוב,
- *    הממוצע, הטווח בסקרים ומספר המכונים; 6. כפתור "מקרא" בפינה הימנית העליונה.
+ *    הממוצע, הטווח בסקרים ומספר המכונים; 6. כפתור "מקרא" תמיד בפינה השמאלית העליונה. 7. בפתיחת המסך הקו נמתח מהקצה השמאלי (תחילת הזמן) והנרות והעיגולים מופיעים כשהקו מגיע אליהם.
  * **סדרה אחת:** נרות (כאן) וקו שעובר דרך הממוצעים של הנקודות. **כמה סדרות (השוואת רשימות):** אותו רכיב בדיוק, בלי ציור נרות: קו לכל סדרה, ולחיצה על נקודה בקו
  * מציגה את אותו חלון על הרשימה הספציפית. סדרה מקווקווה (`dashed`) היא קו מקווקו בלי נרות.
  * הנתונים כ-`Series` של `TrendPoint` (t, ממוצע v, lo, hi, n ו-xs = הערך בכל סקר). ציר הזמן משמאל (עבר) לימין (היום); התאריך האחרון צמוד לימין.
@@ -34,8 +34,8 @@ export interface CandleTrendProps {
   windowDays?: number;
   /** "מנדטים" (ברירת מחדל) או "אחוזים" וכו' */
   unit?: string;
-  /** התוצאה בפועל: עיגול ריק */
-  markers?: { t: number; v: number }[];
+  /** התוצאה בפועל: עיגול ריק, וקו מקווקו אליו מהנקודה האחרונה של הסדרה (`id` = מזהה הסדרה; בסדרה אחת אפשר בלעדיו) */
+  markers?: { t: number; v: number; id?: string }[];
   /** גובה בפיקסלים */
   height?: number;
   /** חלון משלו במקום חלון הסקרים (למשל תרחישים וממוצע המודל); מקבל את הסדרה, הנקודה וצבע הסדרה */
@@ -63,7 +63,6 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const id = useId();
   const candleMode = series.length === 1 && !series[0].dashed;
   const multi = series.length > 1;
-  const X0 = 10;
   const labelPx = (width < 600 ? 92 : 124) + (markers.length ? (width < 600 ? 10 : 34) : 0);
   // בהשוואה נשמר מקום לתוויות הקצה (רוחב קבוע בפיקסלים); בנרות הגרף מגיע כמעט עד הקצה
   const X1 = multi ? 100 - (labelPx / Math.max(width, 1)) * 100 : 95;
@@ -83,7 +82,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     return () => document.removeEventListener("pointerdown", off);
   }, []);
 
-  const plotPx = (width * (X1 - X0)) / 100;
+  // לדילול נרות ולתוויות תאריך: רוחב הציור המשוער (הקצה השמאלי מחושב בהמשך, לפי רוחב המספרים)
+  const plotPx = (width * (X1 - 10)) / 100;
   const colors = series.map((s, i) => s.color ?? colorOf(s.colorId ?? s.id, i));
   // נקודות לנר ולבחירה: בנרות — הנקודות של הסדרה (מדוללות); בהשוואה — כל הנקודות של כל הסדרות
   const candleSeries = candleMode ? series[0] : undefined;
@@ -110,6 +110,9 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     lineMain.forEach((l) => spans.push([l.v, l.v]));
     return { ...a, lines: visibleLines(a.lines, spans) };
   }, [allV, step, majority, series, candleMode, lineMain]);
+  // המספרים צמודים לקצה השמאלי, כמו הקווים לקצה הימני: אותו רווח משני הצדדים (הכרעת בעלים 11.10.2026)
+  const numPx = Math.max(...axis.lines.map((l) => seatsFmt(l.v).length), 1) * 9 + 12;
+  const X0 = (numPx / Math.max(width, 1)) * 100;
   const profiles = useMemo(() => candleProfiles(shown.map(segsOf)), [shown]);
   const hasData = series.some((s) => s.points.length) || lineMain.length;
   if (!hasData) return null;
@@ -117,10 +120,26 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const ts = [...series.flatMap((s) => s.points.map((p) => p.t)), ...lineMain.map((l) => l.t), ...markers.map((m) => m.t)];
   const tA = Math.min(...ts), tB = Math.max(...ts);
   const X = (t: number) => (tB === tA ? X0 : X0 + ((X1 - X0) * (t - tA)) / (tB - tA));
+  // הנרות והעיגולים מופיעים כשהקו (0.9 שנייה, בקצב אחיד) מגיע אליהם
+  const delayOf = (t: number) => Math.round(((X(t) - X0) / Math.max(X1 - X0, 1)) * 900);
+  // תאריכים צמודים לתחתית הציור (הקו התחתון), לא לתחתית השוליים
+  const dateTop = Math.round((height * YB) / 100) + 8;
   const Y = (v: number) => YB - ((YB - YT) * (v - axis.lo)) / (axis.hi - axis.lo);
+  // קו מקווקו מהסקר האחרון אל התוצאה בפועל: מתחיל בקצה העיגול הקטן ונגמר בקצה העיגול הריק (בפיקסלים, ואז חזרה לאחוזים)
+  const links = markers.flatMap((m) => {
+    const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : series.length === 1 ? 0 : -1;
+    const last = si >= 0 ? series[si].points[series[si].points.length - 1] : undefined;
+    if (!last) return [];
+    const [ax, ay, bx, by] = [(X(last.t) / 100) * width, (Y(last.v) / 100) * height, (X(m.t) / 100) * width, (Y(m.v) / 100) * height];
+    const len = Math.hypot(bx - ax, by - ay);
+    if (len < 16) return [];
+    const [ux, uy] = [(bx - ax) / len, (by - ay) / len];
+    const [r1, r2] = [6, 11];
+    return [{ si, x1: ((ax + ux * r1) / width) * 100, y1: ((ay + uy * r1) / height) * 100, x2: ((bx - ux * r2) / width) * 100, y2: ((by - uy * r2) / height) * 100 }];
+  });
   const ln = { vectorEffect: "non-scaling-stroke" as const };
   const dateTicks = candleMode ? shown.map((p) => p.t) : [...new Set(series.flatMap((s) => s.points.map((p) => p.t)))].sort((a, b) => a - b);
-  const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 70)));
+  const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 46)));
   const lastT = dateTicks[dateTicks.length - 1];
 
   // הסמן: בנרות — הנר הקרוב לאורך הציר; בהשוואה — הנקודה הקרובה ביותר בקו (עד 28px)
@@ -162,11 +181,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   };
 
   const legend: LegendEntry[] = legendEntries ?? [
-    ...(candleMode ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowDays} הימים של כל נקודה (הסקר האחרון של כל מכון)`) }] : []),
+    ...(candleMode ? [{ kind: "candle" as const, text: pollCandleLine(windowDays, POINT_DAYS) }] : []),
     { kind: "dot", text: candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה" },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
     ...(markers.length ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
+    ...(links.length ? [{ kind: "dash" as const, text: "קו מקווקו: מהסקר האחרון אל התוצאה בפועל" }] : []),
   ];
 
   // תוויות קצה לקווים (בהשוואה), מפוזרות כדי שלא יעלו זו על זו
@@ -179,8 +199,9 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     : [];
   // מרווח בין תוויות, בתוך גובה הגרף: קודם מורידים את החופפות, ואם התחתונה יצאה החוצה — מרימים בחזרה
   for (let k = 1; k < ends.length; k++) if (ends[k].y - ends[k - 1].y < 14) ends[k].y = ends[k - 1].y + 14;
-  if (ends.length && ends[ends.length - 1].y > height - 4) {
-    ends[ends.length - 1].y = height - 4;
+  const endBottom = ends.length * 14 <= (height * YB) / 100 - 6 ? (height * YB) / 100 + 2 : height - 4;
+  if (ends.length && ends[ends.length - 1].y > endBottom) {
+    ends[ends.length - 1].y = endBottom;
     for (let k = ends.length - 2; k >= 0; k--) if (ends[k + 1].y - ends[k].y < 14) ends[k].y = ends[k + 1].y - 14;
   }
 
@@ -192,7 +213,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
       ref={wrap}
       dir="ltr"
       className="relative mt-1 outline-offset-2 touch-pan-y select-none"
-      style={{ height: height + 28 }}
+      style={{ height: dateTop + 22 }}
       tabIndex={0}
       role="group"
       aria-label={`${title}. חצים ימינה ושמאלה בין הנקודות${multi ? ", ולמעלה ולמטה בין הרשימות" : ""}`}
@@ -207,22 +228,23 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {axis.lines.map(({ v, major }) => (
           <line key={v} x1={X0} x2={X1 === 95 ? 100 : X1 + 2} y1={Y(v)} y2={Y(v)} className={major ? "stroke-ink" : "stroke-ink-faint"} strokeWidth={major ? 1.5 : 1} strokeDasharray="5 4" {...ln} />
         ))}
-        {candleSeries && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
+        {candleSeries && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="trend-line fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
         {multi && series.map((s, si) => (
-          <path key={s.id} d={smoothPath(s.points.map((p) => ({ x: X(p.t), y: Y(p.v) })))} fill="none" stroke={colors[si]} strokeWidth={2.4} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dashed ? "5 4" : undefined} {...ln} />
+          <path key={s.id} className="trend-line" d={smoothPath(s.points.map((p) => ({ x: X(p.t), y: Y(p.v) })))} fill="none" stroke={colors[si]} strokeWidth={2.4} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dashed ? "5 4" : undefined} {...ln} />
         ))}
+        {links.map((l, i) => <line key={`k${i}`} className={`trend-pop ${candleMode ? "stroke-accent" : ""}`} style={{ animationDelay: "900ms" }} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={2} strokeDasharray="4 3" {...ln} />)}
       </svg>
       <div className="absolute left-0 top-0 w-full" style={{ height }}>
         {axis.lines.map(({ v, major }) => (
-          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${major ? "text-sm font-extrabold" : "text-xs text-ink-faint"}`} style={{ right: `calc(${100 - X0}% + 6px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
+          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${major ? "text-sm font-extrabold" : "text-xs text-ink-faint"}`} style={{ right: `calc(${100 - X0}% + 12px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
         ))}
         {candleMode && act && <span aria-hidden="true" className="absolute top-0 bottom-0 -translate-x-1/2 w-8 bg-ink/[.07] rounded-[4px]" style={{ left: `${X(act.p.t)}%` }} />}
-        {candleMode && shown.map((p, i) => (p.lo === undefined && !p.xs ? null : <ProfileCandleV key={`c${p.t}`} segs={profiles[i]} y={Y} left={`${X(p.t)}%`} />))}
+        {candleMode && shown.map((p, i) => (p.lo === undefined && !p.xs ? null : <ProfileCandleV key={`c${p.t}`} segs={profiles[i]} y={Y} left={`${X(p.t)}%`} delay={delayOf(p.t)} />))}
         {candleMode && shown.map((p) => (
-          <span key={`d${p.t}`} aria-hidden="true" className="mk mk-dot" style={{ left: `${X(p.t)}%`, top: `${Y(p.v)}%`, ...(act && act.p.t === p.t ? { borderColor: "rgb(var(--mk-mean))" } : null) }} />
+          <span key={`d${p.t}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(p.t)}%`, top: `${Y(p.v)}%`, animationDelay: `${delayOf(p.t)}ms`, ...(act && act.p.t === p.t ? { borderColor: "rgb(var(--mk-mean))" } : null) }} />
         ))}
-        {multi && series.map((s, si) => !s.dashed && sparseIndices(s.points.map((p) => (X(p.t) / 100) * plotPx / ((X1 - X0) / 100)), 46).map((k) => (
-          <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si] }} />
+        {multi && series.map((s, si) => !s.dashed && sparseIndices(s.points.map((p) => (X(p.t) / 100) * width), 46).map((k) => (
+          <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si], animationDelay: `${delayOf(s.points[k].t)}ms` }} />
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
         {markers.map((m, i) => <span key={`m${i}`} aria-hidden="true" className="mk mk-ring" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%` }} />)}
@@ -266,11 +288,11 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         )}
       </div>
       {/* תאריכים: הראשון משמאל, והאחרון צמוד לימין של שטח הציור */}
-      <div aria-hidden="true" className="absolute left-0 w-full text-xs text-ink-soft font-num" style={{ top: height + 6 }}>
+      <div aria-hidden="true" className="absolute left-0 w-full text-xs text-ink-soft font-num" style={{ top: dateTop }}>
         {lab.map((i) => {
           const isLast = dateTicks[i] === lastT;
           return (
-            <span key={dateTicks[i]} className="absolute whitespace-nowrap" style={isLast && !multi ? { right: 0 } : { left: `${X(dateTicks[i])}%`, transform: "translateX(-50%)" }}>{dayMonth(iso(dateTicks[i]))}</span>
+            <span key={dateTicks[i]} className="absolute whitespace-nowrap" style={isLast && !multi && X(dateTicks[i]) >= X1 - 0.5 ? { right: 0 } : { left: `${X(dateTicks[i])}%`, transform: "translateX(-50%)" }}>{dayMonth(iso(dateTicks[i]))}</span>
           );
         })}
       </div>
@@ -283,8 +305,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   );
   return (
     <div>
-      {/* הפינה הימנית העליונה */}
-      <ChartLegend side="start" entries={legend} className="mb-1" />
+      {/* תמיד בפינה השמאלית העליונה של הגרף */}
+      <ChartLegend entries={legend} className="mb-1" />
       {Inner}
     </div>
   );

@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import ChartLegend, { LegendPanel, rangeLine, type LegendKind } from "./ChartLegend";
+import ChartLegend, { LegendPanel, pollCandleLine, rangeLine, type LegendKind } from "./ChartLegend";
 import DeviationChart from "./deviationChart";
 import DumbbellChart from "./dumbbellChart";
 import CandleTrend from "./CandleTrend";
@@ -61,7 +61,7 @@ describe("ChartLegend", () => {
   });
   it("הפאנל הפתוח מסביר כל סימון, ובלי הסבר על רמות העובי (שורה אחת בלבד, בתוך הסימון של הנר)", () => {
     const html = renderToStaticMarkup(createElement(LegendPanel, { entries: [...entries, { kind: "candle", text: rangeLine("full", "הסקרים") }] }));
-    for (const t of ["ממוצע בדיקה", "טווח בדיקה", "טווח מלא - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה"]) expect(html).toContain(t);
+    for (const t of ["ממוצע בדיקה", "טווח בדיקה", "טווח מלא - עובי הנר מראה את כמות הסקרים שנמצאים בטווח הזה"]) expect(html).toContain(t);
     for (const t of ["דק:", "בינוני:", "עבה:", "שליש", "mk-c1", "mk-c3", "mk-c5", "mk-candle"]) expect(html).not.toContain(t);
   });
   it("כל סוגי הדוגמיות מצוירים", () => {
@@ -74,17 +74,26 @@ describe("ChartLegend", () => {
 });
 
 describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכרעת בעלים 9.10.2026)", () => {
-  it('"טווח מלא - עובי הקו מראה את כמות … שנמצאים בטווח הזה"', () => {
-    expect(rangeLine("full", "הסקרים")).toBe("טווח מלא - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה");
+  it('"טווח מלא - עובי הנר מראה את כמות … שנמצאים בטווח הזה"', () => {
+    expect(rangeLine("full", "הסקרים")).toBe("טווח מלא - עובי הנר מראה את כמות הסקרים שנמצאים בטווח הזה");
   });
   it("טווח של תרחישים הוא 80%, ואפשר להוסיף חלון זמן", () => {
-    expect(rangeLine("p80", "התרחישים")).toBe("טווח 80% - עובי הקו מראה את כמות התרחישים שנמצאים בטווח הזה");
-    expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - עובי הקו מראה את כמות הסקרים שנמצאים בטווח הזה");
+    expect(rangeLine("p80", "התרחישים")).toBe("טווח 80% - עובי הנר מראה את כמות התרחישים שנמצאים בטווח הזה");
+    expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - עובי הנר מראה את כמות הסקרים שנמצאים בטווח הזה");
+  });
+  it("הגרף האחיד: שורת הנר בנוסח הבעלים (11.10.2026), בלי הסבר רמות", () => {
+    const src = readFileSync(new URL("./CandleTrend.tsx", import.meta.url), "utf8");
+    expect(src).toContain("pollCandleLine(windowDays, POINT_DAYS)");
+    expect(src).not.toContain("thickness");
+  });
+  it("נר של סקרים: נוסח הבעלים (11.10.2026)", () => {
+    expect(pollCandleLine(14, 3)).toBe("עובי הנר בכל 3 ימים מראה את ממוצע המכונים שפירסמו סקר ב-14 יום האחרונים.");
+    expect(pollCandleLine(14)).toBe("עובי הנר מראה את ממוצע המכונים שפירסמו סקר ב-14 יום האחרונים.");
   });
   it("כל גרף עם נר משתמש בשורה הזאת ואין בו הסבר רמות", () => {
-    for (const f of ["homeCharts.tsx", "CandleTrend.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
+    for (const f of ["homeCharts.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {
       const src = readFileSync(new URL(`./${f}`, import.meta.url), "utf8");
-      expect(src, f).toContain("rangeLine(");
+      expect(src, f).toMatch(/rangeLine\(|pollCandleLine\(/);
       expect(src, f).not.toContain("thickness");
     }
   });

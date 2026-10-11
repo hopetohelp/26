@@ -1,3 +1,4 @@
+import CountUp from "./CountUp";
 import Explained from "./Explained";
 import { PartyAvatar, PartyPhoto } from "./PartyAvatar";
 import { PassBar } from "./homeCharts";
@@ -67,7 +68,7 @@ function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: bool
       <span className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
       <p className={`font-num tabular leading-none mt-2 text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
-        {seatsFmt(r.central)}
+        <CountUp value={r.central} format={seatsFmt} />
       </p>
       {range && <p className="mt-2 text-sm text-ink-soft"><bdi>{range}</bdi> בסקרים האחרונים</p>}
     </div>

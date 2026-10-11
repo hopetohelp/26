@@ -35,7 +35,8 @@ export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number)
 }
 
 /** אותו נר בכיוון אנכי (גרף עם ציר זמן): `y` ממפה ערך לאחוז מגובה המסלול, מלמעלה. הערך הגבוה למעלה. */
-export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number) => number; left: string }) {
+/** `delay` (באלפיות שנייה): הנר מופיע כשהקו מגיע אליו בפתיחת המסך (`trend-pop`) */
+export function ProfileCandleV({ segs, y, left, delay }: { segs: LSeg[]; y: (v: number) => number; left: string; delay?: number }) {
   if (!segs.length) return null;
   const top = y(segs[segs.length - 1].to);
   const bottom = y(segs[0].from);
@@ -43,7 +44,7 @@ export function ProfileCandleV({ segs, y, left }: { segs: LSeg[]; y: (v: number)
   const top0 = top - (height - (bottom - top)) / 2;
   const runs = squareRuns(segs, (v) => ((y(v) - top0) / height) * LOCAL);
   return (
-    <svg aria-hidden="true" focusable="false" className="mk-pv" viewBox={`0 0 ${THICK} ${LOCAL}`} preserveAspectRatio="none" style={{ left, top: `${top0}%`, height: `${height}%` }}>
+    <svg aria-hidden="true" focusable="false" className={delay === undefined ? "mk-pv" : "mk-pv trend-pop"} viewBox={`0 0 ${THICK} ${LOCAL}`} preserveAspectRatio="none" style={{ left, top: `${top0}%`, height: `${height}%`, ...(delay === undefined ? null : { animationDelay: `${delay}ms` }) }}>
       <SquarePaths runs={runs} mid={THICK / 2} across="x" />
     </svg>
   );
@@ -60,11 +61,11 @@ export const SmallDot = ({ at }: { at: number }) => <span aria-hidden="true" cla
 
 export type MarkKind = "candle" | "mean" | "result" | "dot";
 
-/** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן: זנב דק, בינוני, עבה, בינוני, זנב דק */
+/** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן באותו יחס כמו בגרף: זנב דק קצר בכל קצה, קטע בינוני ארוך, וליבה עבה באמצע (כמו `percentileOne`: 9% מהסקרים בכל זנב) */
 export function Swatch({ kind }: { kind: MarkKind }) {
   if (kind === "candle") {
-    const segs: LSeg[] = ([1, 1, 3, 5, 5, 3, 1, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
-    const runs = squareRuns(segs, (v) => (v / 8) * LOCAL);
+    const segs: LSeg[] = ([1, 3, 3, 3, 5, 5, 3, 3, 3, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
+    const runs = squareRuns(segs, (v) => (v / 10) * LOCAL);
     return (
       <svg aria-hidden="true" focusable="false" className="mk-sw mk-prof-sw" viewBox={`0 0 ${LOCAL} ${THICK}`} preserveAspectRatio="none">
         <SquarePaths runs={runs} mid={THICK / 2} />

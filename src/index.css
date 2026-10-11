@@ -294,6 +294,16 @@
   transform-origin: center;
 }
 
+/* גרף המגמה האחיד (הכרעת בעלים 11.10.2026): בפתיחת המסך הקו נמתח מהקצה השמאלי (תחילת הזמן) עד היום, והנרות והעיגולים מופיעים כשהקו מגיע אליהם.
+   מכובה ב-prefers-reduced-motion למעלה. השוליים השליליים: קו אופקי לגמרי הוא בלי גובה, וחיתוך בלעדיהם היה מעלים אותו. */
+@keyframes trend-draw {
+  from { clip-path: inset(-60px 100% -60px -60px); }
+  to { clip-path: inset(-60px -60px -60px -60px); }
+}
+@keyframes trend-pop { from { opacity: 0; } }
+.trend-line { animation: trend-draw 900ms linear both; }
+.trend-pop { animation: trend-pop 260ms ease-out both; }
+
 /* בית, דו-קרב (הכרעת בעלים 11.10.2026): שני הצדדים נכנסים מהקצוות אל המרכז, פעם אחת. מכובה ב-prefers-reduced-motion למעלה */
 @keyframes duel-r { from { opacity: 0; transform: translateX(24px); } }
 @keyframes duel-l { from { opacity: 0; transform: translateX(-24px); } }
