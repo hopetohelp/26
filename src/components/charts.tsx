@@ -108,7 +108,7 @@ export function TrendChart({
     () => (canCandle ? series.map((s) => ({ s, pts: windows(s.points.filter((p) => p.lo !== undefined && p.hi !== undefined), windowText!.days * DAY) })) : []),
     [series, canCandle, windowText],
   );
-  // נר של חלון: לפי אחוזונים של הסקרים, ושני אזורים כשיש שתי קבוצות נפרדות (`candleProfile`)
+  // נר של חלון: לפי אחוזונים של הסקרים (`candleProfile`)
   const segsOf = (p: TrendPoint): Seg[] => (p.xs && p.xs.length ? valueSegs(p.xs) : p.lo !== undefined && p.hi !== undefined ? [{ from: p.lo, to: p.hi, count: 1 }] : []);
   const profiles = useMemo(() => {
     const items: { key: string; p: TrendPoint }[] = [];

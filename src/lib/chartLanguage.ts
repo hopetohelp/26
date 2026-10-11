@@ -255,16 +255,12 @@ export function levelSegs(all: Seg[][], scope: "candle" | "chart" = "candle"): L
 }
 
 /**
- * הנר באתר (הכרעת בעלים 11.10.2026, שילוב של אחוזונים וקבוצות): הנר נבנה לפי סדר הנתונים מהנמוך לגבוה, לא לפי ספירה בכל ערך.
+ * הנר באתר (הכרעת בעלים 11.10.2026): הנר נבנה לפי סדר הנתונים מהנמוך לגבוה, לא לפי ספירה בכל ערך.
  * - **אחוזונים** (הכרעת בעלים 11.10.2026: 9% · 27% · 28% · 27% · 9%): 9% הנמוכים ו-9% הגבוהים — קו דק; 27% מכל צד — קופסה בינונית; 28% האמצעיים — קופסה עבה.
- * - **שתי קבוצות** (לא שלוש): כשיש פער ריק (בלי נתונים) של לפחות `CLUSTER_GAP` מאורך הנר, ובכל צד שלו לפחות `CLUSTER_MIN` מהנתונים,
- *   כל צד מצויר כנר משלו (באותם אחוזונים) והם מחוברים בקו דק — כמו שני נרות מחוברים. לכל היותר שני אזורים.
  * `density`: הספירה בכל קטע היא צפיפות (נר מרבעונים), ולכן המשקל הוא צפיפות × רוחב.
  */
 export const CANDLE_TAIL = 0.09;
 export const CANDLE_CORE = 0.28;
-export const CLUSTER_MIN = 0.25;
-export const CLUSTER_GAP = 0.2;
 
 type W = { from: number; to: number; w: number };
 function weighted(segs: Seg[], density: boolean): W[] {
@@ -305,25 +301,9 @@ function percentileOne(ws: W[]): LSeg[] {
   }
   return parts;
 }
-/** נר לפי אחוזונים, עם פיצול לשני אזורים כשיש שתי קבוצות נפרדות */
-export function candleProfile(segs: Seg[], density = false, minGap = CLUSTER_GAP): LSeg[] {
-  const ws = weighted(segs, density).filter((g) => g.to > g.from || g.w > 0);
-  const occ = ws.filter((g) => g.w > 0);
-  if (!occ.length) return [];
-  const tot = occ.reduce((a, g) => a + g.w, 0);
-  const lo = occ[0].from, hi = occ[occ.length - 1].to, len = hi - lo;
-  let best: { at: number; gap: number } | null = null;
-  let acc = 0;
-  for (let k = 0; k + 1 < occ.length; k++) {
-    acc += occ[k].w;
-    const gap = occ[k + 1].from - occ[k].to;
-    if (gap > 1e-9 && gap >= minGap * len - 1e-9 && acc / tot >= CLUSTER_MIN - 1e-9 && 1 - acc / tot >= CLUSTER_MIN - 1e-9 && (!best || gap > best.gap)) best = { at: k, gap };
-  }
-  if (!best) return percentileOne(occ);
-  const left = percentileOne(occ.slice(0, best.at + 1));
-  const right = percentileOne(occ.slice(best.at + 1));
-  const a = left[left.length - 1].to, b = right[0].from;
-  return [...left, ...(b > a ? [{ from: a, to: b, level: 1 as Level }] : []), ...right];
+/** נר אחד לפי אחוזונים (הכרעת בעלים 11.10.2026: קבוצה אחת בלבד, בלי פיצול לשני אזורים) */
+export function candleProfile(segs: Seg[], density = false): LSeg[] {
+  return percentileOne(weighted(segs, density).filter((g) => g.to > g.from || g.w > 0));
 }
 /** אותו נר לכל קבוצת קטעים (מקור אחד לכל הגרפים) */
 export const candleProfiles = (all: Seg[][], density = false): LSeg[][] => all.map((segs) => candleProfile(segs, density));
