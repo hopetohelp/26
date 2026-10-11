@@ -36,6 +36,9 @@ const SEATS = hemicycleSeats(CX, CY);
 export const MAJORITY = 61;
 /** קו עזר מקווקו ב-50 מנדטים בגרף מגמת הממשלה (הכרעת בעלים 11.10.2026) */
 const HALF = 50;
+/** גבולות הקווים המקווקווים בגרף המגמה: העליון לא יורד מ-65, והתחתון לא עולה על 45 */
+const TREND_HIGH = 65;
+const TREND_LOW = 45;
 
 /** כמה מושבים חסרים לממשלה היוצאת עד הרוב (0 כשיש רוב) */
 export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
@@ -226,8 +229,9 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
   const vals = series.map((s) => s.v);
   const pv = points.flatMap((p) => p.values);
   // הנקודה הנמוכה והגבוהה בגרף (כולל קצוות הנרות של הסקרים): שני קווים מקווקווים, ועוד קו 50 וקו 61
-  const lo = Math.min(...vals, ...pv);
-  const hi = Math.max(...vals, ...pv);
+  // הקו העליון רק מעל 65 והתחתון רק מתחת ל-45 (הכרעת בעלים 11.10.2026): הנקודה הגבוהה/הנמוכה בגרף, ולא פחות/יותר מהגבולות
+  const lo = Math.min(...vals, ...pv, TREND_LOW);
+  const hi = Math.max(...vals, ...pv, TREND_HIGH);
   const vmin = Math.floor((Math.min(lo, HALF) - 2) / 2) * 2;
   const vmax = Math.ceil((Math.max(hi, MAJORITY) + 3) / 2) * 2;
   const Y = (v: number) => YB - ((YB - YT) * (v - vmin)) / (vmax - vmin);
@@ -278,7 +282,7 @@ export function GovTrend({ home, points = [] }: { home: HomeData; points?: { t: 
           { kind: "line", text: "הממוצע של מנדטי הממשלה היוצאת בכל יום" },
           { kind: "dot", text: "נקודה על הקו, כל 3 ימים" },
           ...(points.length ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", "ב-14 הימים של כל נקודה (הסקר האחרון של כל מכון)") }] : []),
-          { kind: "dash", text: `קווים מקווקווים: הנקודה הנמוכה והגבוהה בגרף, 50 ו-${MAJORITY} (קו הרוב)` },
+          { kind: "dash", text: `קווים מקווקווים: הנקודה הגבוהה בגרף (לפחות ${TREND_HIGH}), ${MAJORITY} (קו הרוב), 50 והנקודה הנמוכה (לכל היותר ${TREND_LOW})` },
         ]}
       />
     </>
