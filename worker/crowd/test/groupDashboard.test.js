@@ -133,3 +133,27 @@ describe("group manager stats", () => {
     expect((await call("/group/stats?group=gizra", { token: mgr })).data.today).toBe(0);
   });
 });
+
+describe("admin: managers list and group stats", () => {
+  it("lists managers with email and status, removes by handle, shows the same stats", async () => {
+    await load([]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "Boss@X.co" } });
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "later@x.co" } });
+    await account("boss@x.co");
+    let g = (await call("/admin/groups", { admin: true })).data.groups[0];
+    expect(g.managerList.map((m) => [m.email, m.active])).toEqual([["boss@x.co", true], ["later@x.co", false]]);
+    // אין מייל גלוי במאגר
+    expect(JSON.stringify((await env.DB.prepare("SELECT * FROM group_manager_labels").all()).results)).not.toMatch(/@/);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", remove: true, handle: g.managerList[1].handle } });
+    g = (await call("/admin/groups", { admin: true })).data.groups[0];
+    expect(g.managerList.map((m) => m.email)).toEqual(["boss@x.co"]);
+    expect(g.managers).toBe(1);
+    // הדשבורד של מנהל האתר — אותם מספרים ואותו סף
+    expect((await call("/admin/groups/stats", { body: { group: "gizra" } })).status).toBe(401);
+    expect((await call("/admin/groups/stats", { admin: true, body: { group: "gizra" } })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    const emails = [];
+    for (let i = 0; i < GROUP_MIN; i++) { emails.push(`m${i}@x.co`); await account(`m${i}@x.co`); }
+    await load(emails);
+    expect((await call("/admin/groups/stats", { admin: true, body: { group: "gizra" } })).data).toMatchObject({ registered: GROUP_MIN, seats: GROUP_MIN, vote: 0 });
+  });
+});

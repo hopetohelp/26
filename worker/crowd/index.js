@@ -89,6 +89,27 @@ function israelDayStart(now) {
   return iso(Date.parse(day + "T00:00:00Z"));
 }
 
+async function removeManager(env, id, eh) {
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM group_managers WHERE group_id = ? AND email_hash = ?").bind(id, eh),
+    env.DB.prepare("DELETE FROM group_manager_labels WHERE group_id = ? AND email_hash = ?").bind(id, eh),
+  ]);
+}
+
+/** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה — רק מ-GROUP_MIN רשומים */
+async function groupStats(env, id, now) {
+  const r = await env.DB.prepare(
+    `WITH m AS (SELECT DISTINCT e.participant AS id FROM group_members g JOIN emails e ON e.hash = g.email_hash WHERE g.group_id = ? AND e.verified = 1)
+     SELECT COUNT(*) AS registered,
+            SUM(CASE WHEN p.created_at >= ? THEN 1 ELSE 0 END) AS today,
+            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'seats')) AS seats,
+            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'vote')) AS vote
+     FROM m JOIN participants p ON p.id = m.id`,
+  ).bind(id, israelDayStart(now)).first();
+  if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+  return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
+}
+
 /** הקבוצות שהמשתמש מנהל — דרך מייל מאומת, כמו החברות */
 async function managedGroups(env, participant) {
   const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
@@ -964,28 +985,34 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     const id = groupId(url.searchParams.get("group"));
     if (!(await managedGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_manager");
-    const r = await env.DB.prepare(
-      `WITH m AS (SELECT DISTINCT e.participant AS id FROM group_members g JOIN emails e ON e.hash = g.email_hash WHERE g.group_id = ? AND e.verified = 1)
-       SELECT COUNT(*) AS registered,
-              SUM(CASE WHEN p.created_at >= ? THEN 1 ELSE 0 END) AS today,
-              SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'seats')) AS seats,
-              SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'vote')) AS vote
-       FROM m JOIN participants p ON p.id = m.id`,
-    ).bind(id, israelDayStart(now)).first();
-    if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
-    return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
+    return groupStats(env, id, now);
+  },
+
+  // אותם מספרים למנהל האתר (POST כדי שהקבוצה תעבור בגוף דרך שרת ההערות)
+  "POST /admin/groups/stats": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    return groupStats(env, groupId(body.group), now);
   },
 
   // מינוי או הסרה של מנהל קבוצה לפי מייל — נשמר רק הגיבוב; המינוי תופס כשהמייל מאומת בחשבון
   "POST /admin/groups/managers": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
     const id = groupId(body.group);
+    // הסרה מתוך הרשימה — לפי הידית (הגיבוב) שברשימת המנהלים
+    if (body.remove && typeof body.handle === "string" && /^[0-9a-f]{64}$/.test(body.handle)) {
+      await removeManager(env, id, body.handle);
+      return { group: id, managers: (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_managers WHERE group_id = ?").bind(id).first()).n };
+    }
     const e = normalizeEmail(body.email);
     if (!e) throw bad("email");
     if (!(await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
     const eh = await emailHash(env, e.norm);
-    if (body.remove) await env.DB.prepare("DELETE FROM group_managers WHERE group_id = ? AND email_hash = ?").bind(id, eh).run();
-    else await env.DB.prepare("INSERT OR IGNORE INTO group_managers (group_id, email_hash, added_at) VALUES (?, ?, ?)").bind(id, eh, iso(now)).run();
+    if (body.remove) await removeManager(env, id, eh);
+    else await env.DB.batch([
+      env.DB.prepare("INSERT OR IGNORE INTO group_managers (group_id, email_hash, added_at) VALUES (?, ?, ?)").bind(id, eh, iso(now)),
+      // המייל של המנהל נשמר מוצפן, כדי להציג למנהל האתר את רשימת המנהלים (רק למנהלים — לא לחברי הקבוצה)
+      env.DB.prepare("INSERT OR REPLACE INTO group_manager_labels (group_id, email_hash, email_enc) VALUES (?, ?, ?)").bind(id, eh, await seal(env, e.display)),
+    ]);
     const n = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_managers WHERE group_id = ?").bind(id).first()).n;
     return { group: id, managers: n };
   },
@@ -993,7 +1020,9 @@ const routes = {
   "GET /admin/groups": async ({ env, request }) => {
     await requireAdmin(env, request);
     const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers FROM groups g ORDER BY g.created_at").all()).results || [];
-    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, managers: r.managers, createdAt: r.created_at }))) };
+    const mgr = (await env.DB.prepare("SELECT a.group_id, a.email_hash, a.added_at, l.email_enc, EXISTS(SELECT 1 FROM emails e WHERE e.hash = a.email_hash AND e.verified = 1) AS active FROM group_managers a LEFT JOIN group_manager_labels l ON l.group_id = a.group_id AND l.email_hash = a.email_hash ORDER BY a.added_at").all()).results || [];
+    const list = async (id) => Promise.all(mgr.filter((m) => m.group_id === id).map(async (m) => ({ handle: m.email_hash, email: m.email_enc ? await open(env, m.email_enc) : null, active: !!m.active, addedAt: m.added_at })));
+    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, managers: r.managers, managerList: await list(r.id), createdAt: r.created_at }))) };
   },
 
   // מחיקת קבוצה מוחקת את כל הגיבובים שלה
@@ -1003,6 +1032,7 @@ const routes = {
     await env.DB.batch([
       env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM group_managers WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_manager_labels WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id),
     ]);
     return { ok: true };

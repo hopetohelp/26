@@ -228,3 +228,10 @@ CREATE TABLE IF NOT EXISTS group_managers (
   added_at TEXT NOT NULL,
   PRIMARY KEY (group_id, email_hash)
 );
+-- המייל של מנהל קבוצה, מוצפן — להצגת רשימת המנהלים למנהל האתר בלבד (הכרעת בעלים 11.10.2026)
+CREATE TABLE IF NOT EXISTS group_manager_labels (
+  group_id TEXT NOT NULL,
+  email_hash TEXT NOT NULL,
+  email_enc TEXT NOT NULL,
+  PRIMARY KEY (group_id, email_hash)
+);

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { call, type GroupStats as Stats } from "../lib/crowdApi";
+import type { GroupStats as Stats } from "../lib/crowdApi";
 
-/** מספרים למנהל קבוצה (docs/פילוח-קבוצות-תכנון.md): רק מצטבר, ורק מ-50 רשומים מהקבוצה. refresh = מונה שמשתנה אחרי העלאה */
-export default function GroupStats({ group, token, refresh }: { group: string; token: string; refresh: number }) {
+/** מספרים לקבוצה (docs/פילוח-קבוצות-תכנון.md) — למנהל הקבוצה ולמנהל האתר: רק מצטבר, ורק מ-50 רשומים. load = הבקשה; refresh = מונה שמשתנה אחרי העלאה */
+export default function GroupStats({ load, refresh }: { load: () => Promise<Stats>; refresh: number }) {
   const [s, setS] = useState<Stats | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
-    call<Stats>(`/group/stats?group=${encodeURIComponent(group)}`, { token })
+    load()
       .then((x) => { if (live) { setS(x); setFailed(false); } })
       .catch(() => { if (live) setFailed(true); });
     return () => { live = false; };
-  }, [group, token, refresh]);
+  }, [refresh]); // eslint-disable-line react-hooks/exhaustive-deps
   if (failed) return <p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p>;
   if (!s) return <p className="text-sm text-ink-soft">טוען…</p>;
   if (s.belowMin) return <p className="text-sm text-ink-soft">פחות מ-{s.min} חברים מהקבוצה רשומים באתר. המספרים יוצגו מ-{s.min} רשומים.</p>;

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { call, CrowdError, type GroupImportResult } from "../../lib/crowdApi";
+import { call, CrowdError, type GroupImportResult, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
 import GroupStats from "../../components/GroupStats";
 import { GroupManagerGuide } from "../../components/GroupGuide";
@@ -445,7 +445,7 @@ function ManagedGroup({ id, name, token, className }: { id: string; name: string
   return (
     <div className={className}>
       <p className="font-bold">הקבוצה {name}</p>
-      <GroupStats group={id} token={token} refresh={refresh} />
+      <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
       <GroupManagerGuide />
       <p className="font-bold pt-2">רשימת החברים</p>
       <GroupUpload send={(chunk) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } })} onDone={() => setRefresh((n) => n + 1)} />
