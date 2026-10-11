@@ -6,6 +6,7 @@ import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { date } from "../../lib/format";
+import { splitCls } from "../../lib/splitScreens";
 import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
 import { Segmented } from "../../components/Choice";
@@ -166,8 +167,8 @@ export default function Seats({
     <div>
       <HowTo />
       <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בגוש, והצפי שלכם" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
-      <div className="grid lg:grid-cols-[1fr_1.1fr] gap-5 [&>*]:min-w-0 items-start">
-        <div className="lg:sticky lg:top-4 space-y-3">
+      <div className={`grid ${splitCls("lg:grid-cols-[1fr_1.1fr]")} gap-5 [&>*]:min-w-0 items-start`}>
+        <div className={`${splitCls("lg:sticky lg:top-4")} space-y-3`}>
           <div className="relative">
             <SeatBoard values={values} />
             {sum === TOTAL && !invalid && <Share values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}

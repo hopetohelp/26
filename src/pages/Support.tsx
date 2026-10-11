@@ -169,21 +169,21 @@ export default function Support() {
           <p className="text-sm text-ink-soft">{status}</p>
         </div>
       </header>
-      {/* טלפון: מגירה אחרי מגירה. מחשב (הכרעת בעלים 8.10.2026): הפרטים בטור הצר, השיחה בטור הרחב */}
-      <div className="border-t border-paper-line lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-x-10 lg:items-start lg:border-t-0 [&>*]:min-w-0">
-        <Drawer className="lg:col-start-1 lg:border-t" title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
+      {/* טור אחד ברוחב מלא בכל רוחב מסך (הכרעת בעלים 11.10.2026): מגירה אחרי מגירה */}
+      <div className="border-t border-paper-line [&>*]:min-w-0">
+        <Drawer title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
           <Account session={session} />
         </Drawer>
-        <Drawer className="lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:border-t" title="תמיכה" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
+        <Drawer title="תמיכה" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
           <Conversation session={session} />
         </Drawer>
         {me?.isAdmin && (
-          <div className="border-b border-paper-line lg:col-start-1">
+          <div className="border-b border-paper-line">
             <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
           </div>
         )}
         {token && (
-          <Drawer className="lg:col-start-1" title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>
+          <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>
             <MyData session={session} part="data" />
           </Drawer>
         )}

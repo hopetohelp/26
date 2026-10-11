@@ -82,7 +82,7 @@ export function PollsterByParty({ poll, polls, parties }: { poll: Poll; polls: P
           </li>
         ))}
       </ol>
-      <p className="mt-2 text-sm text-ink-soft">"—" = המכון לא דיווח על הרשימה. "מול הממוצע" = ההפרש ממוצע המכונים, במנדטים.</p>
+      <p className="mt-2 text-sm text-ink-soft">"מול הממוצע" = ההפרש ממוצע המכונים, במנדטים.</p>
     </>
   );
 }
@@ -130,7 +130,6 @@ export function PollsterGrid({ polls, parties }: { polls: Poll[]; parties: Party
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-sm text-ink-soft">"—" = המכון לא דיווח על הרשימה.</p>
     </>
   );
 }

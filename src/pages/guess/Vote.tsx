@@ -1,4 +1,5 @@
 import type { VotePayload } from "../../lib/crowdApi";
+import { splitCls } from "../../lib/splitScreens";
 import { validateVote } from "../../lib/crowdValidate";
 import { ALPHA, EMPTY_VOTE, IDS, K25_IDS, K25_LISTS, K25_PASSED, V2022_LABEL, V2026_LABEL, k25VoteName } from "./model";
 import SaveButton, { SaveError } from "./SaveButton";
@@ -16,7 +17,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
         <p className="text-sm leading-relaxed">כדי להשוות את התפלגות העונים בסקר לתוצאות הבחירות בפועל, חשוב מאוד שהתשובה על הצבעתכם בבחירות הקודמות תהיה אמיתית. בחרו את הרשימה שהצבעתם לה אז, גם אם היום אתם בוחרים אחרת.</p>
       </div>
       <p className="text-sm text-ink-soft">שתי השאלות הן רשות. אפשר להשיב רק על אחת, והבחירה נשמרת בלחיצה על ״שמירה״ או ביציאה מהמסך.</p>
-      <div className="grid md:grid-cols-2 gap-3 [&>*]:min-w-0">
+      <div className={`grid ${splitCls("md:grid-cols-2")} gap-3 [&>*]:min-w-0`}>
         <section className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2">
           <Select id="vote-2022" label="בבחירות 2022 הצבעתי ל…" value={p.v2022 ?? ""} onChange={v => set({ v2022: v || null })} hint="הרשימות בהרכבן בבחירות הקודמות, כולל רשימות שלא עברו את הסף.">
             <option value="">בחירת ההצבעה הקודמת</option>

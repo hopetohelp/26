@@ -1,4 +1,5 @@
 import { POLL_AVERAGE } from "../lib/sources";
+import { splitCls } from "../lib/splitScreens";
 import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import { TrendChart, type Series } from "../components/charts";
@@ -150,7 +151,7 @@ export default function Scenarios() {
       </Card>
 
 
-      <div className="grid md:grid-cols-2 gap-5 [&>*]:min-w-0">
+      <div className={`grid ${splitCls("md:grid-cols-2")} gap-5 [&>*]:min-w-0`}>
         <Card title="קולות שלא הופכים למנדטים">
           <Explained kind="תרחיש" source={SOURCE} asOf={asOfText} assumption="רשימה שלא עוברת את הסף מקבלת אפס מנדטים, וקולותיה אינם נספרים בחלוקה." methodAnchor="model">
             <p className="text-sm">
