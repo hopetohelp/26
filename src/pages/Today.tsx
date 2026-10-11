@@ -48,6 +48,7 @@ export default function Today() {
             label="הצגה"
             value={view}
             onChange={setView}
+            tight
             className="w-max shrink-0"
             options={[{ id: "party", label: "לפי מפלגה" }, { id: "pollster", label: "לפי מכון" }]}
           />
