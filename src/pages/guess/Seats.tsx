@@ -23,6 +23,7 @@ import SaveButton, { SaveError, type SaveUnit } from "./SaveButton";
 import SeatBoard from "./SeatBoard";
 import SeatPicker from "./SeatPicker";
 import Share from "./Share";
+import { PartyAvatar } from "../../components/PartyAvatar";
 import { ActionBar, Btn, ShortLabel, StatusPill } from "./ui";
 import type { useSession, useUnit } from "./useCrowd";
 
@@ -193,8 +194,9 @@ export default function Seats({
                 return (
                   <li key={id} className="py-2">
                     <div className="seat-grid">
-                      <div className="seat-name min-w-0">
-                        <span className="font-bold block truncate">{name}</span>
+                      <div className="seat-name min-w-0 flex items-center gap-2">
+                        <PartyAvatar id={id} size={28} />
+                        <span className="font-bold block min-w-0 leading-tight [overflow-wrap:anywhere]">{name}</span>
                         <span className="sr-only">{rowState(c)}</span>
                       </div>
                       {cmp.length > 0 && <div className="seat-cells"><CompareCells on={cmp} cells={view === "seats" ? {
