@@ -37,7 +37,7 @@ export default function Home() {
 
       <div className="mt-10 lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-x-12 lg:items-start">
         <ScreenLegend><section aria-labelledby="home-rank" className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
-          <h2 id="home-rank" className="text-xl font-display leading-tight mb-1">כל הרשימות</h2>
+          <h2 id="home-rank" className="sr-only">כל הרשימות</h2>
           <Ranking home={home} />
         </section></ScreenLegend>
 
