@@ -70,16 +70,20 @@ describe("השערות חריגות", () => {
     expect(ok.seats.n).toBe(3);
   });
 
-  it("מי שהשערת המפלגות שלו נדחתה: גם ההצבעה שלו לא נכנסת לסטטיסטיקה", () => {
+  it("מי שהשערת המפלגות שלו נדחתה: הגושים שלו לא נכנסים לסטטיסטיקה, ההצבעה שלו כן", () => {
     const ps = people(3);
+    const bl = (name) => ({ mode: "custom", schemaVersion: 2, blocs: [{ id: "b", name, lists: ["likud", "yashar"], target: null }] });
     const vs = [
       ver("p0", "seats", guess({ yashar: 20 })), ver("p1", "seats", guess({ yashar: 20 })), ver("p2", "seats", guess({ yashar: 40 })),
       ver("p0", "vote", { v2022: "מחל", v2026: "likud" }), ver("p1", "vote", { v2022: "מחל", v2026: "likud" }), ver("p2", "vote", { v2022: "פה", v2026: "yashar" }),
+      ver("p0", "blocs", bl("א")), ver("p1", "blocs", bl("א")), ver("p2", "blocs", bl("ב")),
     ];
-    const run = (decisions) => aggregate({ participants: ps, versions: vs, now: "2026-10-05T12:00:00Z", aggregationId: "a", decisions }).sections.vote2026.json;
-    expect(run(new Map([[vs[2].id, "approved"]])).all.yashar).toBeDefined();
+    const run = (decisions) => aggregate({ participants: ps, versions: vs, now: "2026-10-05T12:00:00Z", aggregationId: "a", decisions });
     const rejected = run(new Map([[vs[2].id, "rejected"]]));
-    expect(rejected.all.yashar).toBeUndefined();
-    expect(rejected.all.likud).toBeDefined();
+    expect(rejected.sections.vote2026.json.all.yashar).toBeDefined();
+    expect(rejected.sections.blocs.contributors).toBe(2);
+    expect(rejected.dashboard.participants).toBe(3);
+    const approved = run(new Map([[vs[2].id, "approved"]]));
+    expect(approved.sections.blocs.contributors).toBe(3);
   });
 });
