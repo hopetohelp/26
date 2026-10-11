@@ -38,8 +38,8 @@ export const SVG_MARKS = {
   /** ממוצע: עיגול מלא, גדול מהנר העבה */
   meanR: MARK_PX / 2,
   /** תוצאה: עיגול ריק, קוטר חיצוני 22 (רדיוס הקו 8.5 וקו בעובי 5) */
-  ringR: (MARK_PX - 3) / 2,
-  ringStroke: 3,
+  ringR: (MARK_PX - 4) / 2,
+  ringStroke: 4,
 } as const;
 
 interface Pt {
