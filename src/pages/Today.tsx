@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import Select from "../components/Select";
@@ -38,33 +37,32 @@ export default function Today() {
       title="המצב היום"
       lead={lead}
       primary={
-        <div className="space-y-4 mb-8">
+        <div className="flex items-center gap-2 mb-8">
           <Segmented
             label="הצגה"
             value={view}
             onChange={setView}
+            className="w-max shrink-0"
             options={[{ id: "party", label: "לפי מפלגה" }, { id: "pollster", label: "לפי מכון" }]}
           />
           {view === "party" ? (
-            <Select id="today-party" label="מפלגה" value={party} onChange={setParty}>
+            <Select inline className="min-w-0 flex-1" id="today-party" label="מפלגה" value={party} onChange={setParty}>
               <option value={ALL}>כל המפלגות</option>
               {summary.map((s) => <option key={s.id} value={s.id}>{listName(s.id)}</option>)}
             </Select>
           ) : (
-            <Select id="today-pollster" label="מכון" value={pollster} onChange={setPollster}>
+            <Select inline className="min-w-0 flex-1" id="today-pollster" label="מכון" value={pollster} onChange={setPollster}>
               <option value={ALL}>כל המכונים</option>
               {latest.map((p) => <option key={p.id} value={p.id}>{pollsterLabel(p)} · {date(p.end)}</option>)}
             </Select>
           )}
-          <p className="text-sm text-ink-soft">
-            כל הסקרים לאורך זמן: <Link to="/polls">סקרים ומגמות</Link>. טווחים ליום הבחירות: <Link to="/today?tab=scenarios">תרחישים</Link>.
-          </p>
         </div>
       }
       secondary={
         <>
           <section aria-label="הסקרים האחרונים">
             <Explained
+              bare
               kind="סיכום סקרים"
               source="טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר"
               asOf={`הסקרים שפורסמו עד ${date(asOf)}`}
