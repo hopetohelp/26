@@ -85,17 +85,26 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const anyMissing = series.some(d => d.rows.some(row => row.missing.length > 0));
   /** שורת הסבר אחת מעל הטבלה במקום הסבר בכל תא (הכרעת בעלים 11.10.2026) */
   const coverageNote = anyMissing ? <p className="text-xs text-ink-soft">מספר קטן מתחת לנתון, למשל <bdi>5/6</bdi>: על כמה מהמפלגות בגוש הנתון בנוי, כלומר כמה מהן היו בסקר. בלי מספר = כל המפלגות בגוש. "כ-" = הושלם באומדן.</p> : null;
-  return <Fold title={title} open={open || editTargets || splitOn}>
+  const Shell = ({ children }: { children: ReactNode }) => open
+    ? <section aria-label={title}>
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <h2 className="text-base font-bold leading-tight">{title}</h2>
+          <EditBlocsButton returnTo={pathname + search} compact />
+        </div>
+        {children}
+      </section>
+    : <Fold title={title} open={editTargets || splitOn}>{children}</Fold>;
+  return <Shell>
     <div data-personal-blocs-card className="space-y-2">
-    <div><EditBlocsButton returnTo={pathname + search} /></div>
+    {!open && <div><EditBlocsButton returnTo={pathname + search} /></div>}
     <Explained showMeta={false} kind="השוואה" source={source} asOf={asOf} assumption="סכום מקור מלא, סכום חלקי (כשחסרה מפלגה, והחסר מסומן מתחת למספר) ואומדן (כ-) מוצגים בנפרד. השלמה רק מסקרים קודמים קרובים שעברו בדיקת דיוק; המקור לא משתנה. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות או השלמה שרירותית של תוצאות אמת." methodAnchor="personal-blocs" trailing={<>
       {compare && <p>{pct ? "השינוי בנקודות אחוז" : "השינוי במנדטים"} מחושב מהנתון שיש בכל מקור; כשחסרה מפלגה, הסכום הוא של המפלגות הידועות.</p>}
       {editTargets ? <p>״השלם הכול״ מתאים את המספר בכל מפלגה לצפי שלכם לגוש. הגושים הם תרחישים נפרדים, ומפלגה יכולה להופיע בכמה גושים.</p> : <p>תרחישים עצמאיים וחופפים; אין לחבר את סכומיהם. {unit.status !== "saved" ? "הרכב הגושים הוא טיוטה בדפדפן הזה." : "לפי הרכב הגושים השמור שלכם."}</p>}
     </>}>
-      {!anyKnown ? <p className="text-sm text-ink-soft">אין נתון תואם למפלגות הגושים במקור הזה. לא ניתן להציג סכום או אומדן אמין.{series.length === 0 && " נסו להרחיב את המסננים."}</p> : series.length === 1 && one ? <>{coverageNote}<ul className="space-y-2">{one.rows.map(row => <BlocCardRow key={row.id} name={row.name} lists={row.lists.map(nameOf).join(" · ")} aside={<div className="flex items-center justify-end gap-x-3"><span className="font-num tabular font-bold whitespace-nowrap">{display(row)} מנדטים<BlocCoverage row={row} /></span>{editTargets && <label className="font-sans text-xs font-normal flex items-center gap-1.5 whitespace-nowrap">הצפי שלי<input aria-label={`מנדטים צפויים לגוש ${row.name}`} type="number" min={0} max={120} inputMode="numeric" value={row.target ?? ""} className="w-16 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-lg" onChange={e => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs: p.blocs.map(b => b.id === row.id ? { ...b, target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) } : b) })} /></label>}</div>} />)}</ul></> : series.length > 0 ? <>{series.length > 6 && <ul className="text-xs text-ink-soft space-y-1">{p.blocs.map(b => <li key={b.id}><b>{b.name}:</b> {b.lists.map(nameOf).join(" · ") || "אין מפלגות"}</li>)}</ul>}{series.length > 6 && !open ? <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold">נתוני הגושים בכל {series.length} המקורות</summary>{coverageNote}<div className="overflow-x-auto">{table}</div></details> : <>{coverageNote}<div className="overflow-x-auto">{table}</div></>}</> : <p>אין נתונים להצגה לפי המסננים שנבחרו.</p>}
+      {!anyKnown ? <p className="text-sm text-ink-soft">אין נתון תואם למפלגות הגושים במקור הזה. לא ניתן להציג סכום או אומדן אמין.{series.length === 0 && " נסו להרחיב את המסננים."}</p> : series.length === 1 && one ? <>{coverageNote}<ul className="space-y-2">{one.rows.map(row => <BlocCardRow key={row.id} name={row.name} lists={row.lists.map(nameOf).join(" · ")} aside={<div className="flex items-center justify-end gap-x-3"><span className="font-num tabular font-bold whitespace-nowrap">{display(row)} מנדטים<BlocCoverage row={row} /></span>{editTargets && <label className="font-sans text-xs font-normal flex items-center gap-1.5 whitespace-nowrap">הצפי שלי<input aria-label={`מנדטים צפויים לגוש ${row.name}`} type="number" min={0} max={120} inputMode="numeric" value={row.target ?? ""} className="w-16 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-lg" onChange={e => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs: p.blocs.map(b => b.id === row.id ? { ...b, target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) } : b) })} /></label>}</div>} />)}</ul></> : series.length > 0 ? <>{series.length > 6 && !open && <ul className="text-xs text-ink-soft space-y-1">{p.blocs.map(b => <li key={b.id}><b>{b.name}:</b> {b.lists.map(nameOf).join(" · ") || "אין מפלגות"}</li>)}</ul>}{series.length > 6 && !open ? <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold">נתוני הגושים בכל {series.length} המקורות</summary>{coverageNote}<div className="overflow-x-auto">{table}</div></details> : <>{coverageNote}<div className="overflow-x-auto">{table}</div></>}</> : <p>אין נתונים להצגה לפי המסננים שנבחרו.</p>}
     </Explained>
     </div>
-  </Fold>;
+  </Shell>;
 }
 
 /** מתחת לנתון חסר רק "5/6": כמה מהמפלגות בגוש היו בסקר (הכרעת בעלים 11.10.2026); שמות המפלגות ומקורות האומדן — בריחוף ולקורא מסך */
