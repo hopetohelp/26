@@ -7,6 +7,7 @@ import { Btn, Field, inputCls } from "./ui";
 import { errorText, type useSession } from "./useCrowd";
 
 import ErrorReport from "../../components/ErrorReport";
+import FilterBlocked, { useServerBlocked } from "../../components/FilterBlocked";
 import GoogleButton from "./GoogleButton";
 
 const PW_MIN = 6;
@@ -383,8 +384,10 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
   const { me, token } = session;
   const [showEmail, setShowEmail] = useState(false);
   const a = useAction("התנתקות");
+  const blocked = useServerBlocked();
   if (!token) return <AuthForm session={session} />;
-  if (!me) return <p className="text-ink-soft">טוען…</p>;
+  // הסשן נשמר, אבל התשובות מהשרת נחסמות בדרך (סינון): במקום "טוען…" בלי סוף — הסבר ובקשה מוכנה לספק הסינון
+  if (!me) return blocked ? <FilterBlocked signedIn onRetry={() => void session.refresh()} /> : <p className="text-ink-soft">טוען…</p>;
   const emails = (me.emails ?? []).filter((e) => e.email);
   const row = "py-3 border-b border-paper-line space-y-2";
   return (

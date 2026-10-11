@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { FeedbackSheet } from "./Feedback";
 import { checkConnection, deepProbe, reportDiag, type ConnectionCheck, type ConnectionKind } from "../lib/crowdApi";
 import { FEEDBACK_URL } from "../lib/feedback";
+import FilterBlocked, { useServerBlocked } from "./FilterBlocked";
 
 /** כשל ברשת (ולא תשובת שרת): הלוג נושא code=network */
 export const isNetworkLog = (log?: string | null) => !!log && /"code":\s*"network"/.test(log);
@@ -24,6 +25,7 @@ export default function ErrorReport({ error, errorLog }: { error: string | null;
   const [report, setReport] = useState(false);
   const [check, setCheck] = useState<ConnectionCheck | "running" | null>(null);
   const net = isNetworkLog(errorLog);
+  const blocked = useServerBlocked();
   useEffect(() => {
     if (!error || !net) {
       setCheck(null);
@@ -47,8 +49,10 @@ export default function ErrorReport({ error, errorLog }: { error: string | null;
     <div className="bg-paper-card rounded-theme px-3 py-2 mt-1 space-y-1">
       <p role="alert" className="text-sm text-warn">{error}</p>
       {net && FEEDBACK_URL && <p className="text-xs text-ink">התקלה דווחה אוטומטית לתמיכה, עם פרטים טכניים בלבד.</p>}
-      {check === "running" && <p className="text-sm text-ink">בודקים את החיבור…</p>}
-      {check && check !== "running" && <p role="status" className="text-sm text-ink">{connectionAdvice(check.kind)}</p>}
+      {net && blocked ? <FilterBlocked /> : <>
+        {check === "running" && <p className="text-sm text-ink">בודקים את החיבור…</p>}
+        {check && check !== "running" && <p role="status" className="text-sm text-ink">{connectionAdvice(check.kind)}</p>}
+      </>}
       {FEEDBACK_URL && log && (
         <button type="button" aria-haspopup="dialog" onClick={() => setReport(true)} className="min-h-[44px] px-3 rounded-full border border-ink-faint text-ink text-sm font-bold">
           שליחת הערה עם לוג התקלה

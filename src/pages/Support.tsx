@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import MyData from "./guess/MyData";
 import Account from "./guess/Account";
+import { useServerBlocked } from "../components/FilterBlocked";
 import { Btn, Notice } from "./guess/ui";
 import { PageTitle } from "../components/ui";
 import { Segmented } from "../components/Choice";
@@ -79,7 +80,8 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
         setClosed(t?.status === "closed");
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : errorText(e));
+      // "Failed to fetch" = כשל רשת (אצל מסוננים: התשובה נחסמה בדרך) — במילים פשוטות, וההסבר המלא ב"הפרטים שלי"
+      setError(e instanceof TypeError ? "אין חיבור לשרת התמיכה, כנראה בגלל סינון אינטרנט. ההסבר והכתובות לבקשה מהסינון — ב\"הפרטים שלי\"." : e instanceof Error ? e.message : errorText(e));
       setMessages([]);
     }
   }
@@ -156,8 +158,11 @@ export default function Support() {
   const toggle = (id: DrawerId) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   useEffect(() => { if (unread) setOpen((s) => new Set(s).add("support")); }, [unread]);
   useEffect(() => { if (me?.needsEmail) setOpen((s) => new Set(s).add("details")); }, [me?.needsEmail]);
+  const blocked = useServerBlocked();
+  // הסינון חוסם את השרת ⇐ ההסבר (בתוך "הפרטים שלי") נפתח לבד
+  useEffect(() => { if (token && !me && blocked) setOpen((s) => new Set(s).add("details")); }, [token, me, blocked]);
   const email = me?.emails?.find((e) => e.email)?.email ?? null;
-  const status = !token ? "לא מחוברים — הכול נשמר רק במכשיר הזה ולא נכנס לסטטיסטיקות." : !me ? "טוען…" : me.google ? "מחוברים עם Google" : email ? "מחוברים במייל" : "חסר מייל או Google";
+  const status = !token ? "לא מחוברים — הכול נשמר רק במכשיר הזה ולא נכנס לסטטיסטיקות." : !me ? (blocked ? "הסינון חוסם את החיבור לשרת" : "טוען…") : me.google ? "מחוברים עם Google" : email ? "מחוברים במייל" : "חסר מייל או Google";
 
   return (
     <div>
