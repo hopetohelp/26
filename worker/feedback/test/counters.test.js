@@ -38,3 +38,14 @@ it("סך הכניסות מתעלם ממוני האבחון", async () => {
   env.DB.raw.prepare("INSERT INTO hits (day, page, count) VALUES ('2026-10-11', '/', 5), ('2026-10-11', 'diag:all-blocked', 7)").run();
   expect((await data()).totalVisits).toBe(5);
 });
+
+it("מוני האבחון בשורת הנפילות מוצגים בהפרש מתמונת המצב של האיפוס; ב-hits נשארים המלאים", async () => {
+  const day = new Date().toISOString().slice(0, 10);
+  env.DB.raw.prepare("INSERT INTO hits (day, page, count) VALUES (?, '/', 3), (?, 'diag:blind-sent', 1162), (?, 'diag:all-blocked', 4)").run(day, day, day);
+  env.DB.raw.prepare("INSERT INTO counter_baseline (day, page, count) VALUES (?, 'diag:blind-sent', 1162), (?, 'diag:all-blocked', 4)").run(day, day);
+  const before = (await data()).days.find((d) => d.day === day);
+  expect([before.blindSaved, before.blocked, before.relaySaved]).toEqual([0, 0, 0]);
+  env.DB.raw.prepare("UPDATE hits SET count = count + 2 WHERE page = 'diag:blind-sent'").run();
+  expect((await data()).days.find((d) => d.day === day).blindSaved).toBe(2);
+  expect(env.DB.raw.prepare("SELECT count FROM hits WHERE page = 'diag:blind-sent'").get().count).toBe(1164);
+});
