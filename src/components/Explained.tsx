@@ -25,16 +25,18 @@ export interface ExplainProps {
   methodAnchor: string;
   children: ReactNode;
   details?: ReactNode;
+  /** false = מציגים רק את הקישור "איך זה חושב?" (הכרעת בעלים 11.10.2026, כרטיס הגושים ב"הכנסת שלי"); הסוג והתאריך נשארים חובה בחוזה */
+  showMeta?: boolean;
 }
 
-export default function Explained({ kind, asOf, methodAnchor, children, details }: ExplainProps) {
+export default function Explained({ kind, asOf, methodAnchor, children, details, showMeta = true }: ExplainProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
     <div>
       {children}
       <p className="mt-2 text-sm text-ink-soft">
-        {kind} · {asOf} · <Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
+        {showMeta && <>{kind} · {asOf} · </>}<Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
         {details && (
           <>
             {" · "}

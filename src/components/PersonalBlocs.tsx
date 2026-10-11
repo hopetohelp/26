@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useId, useState, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import Explained from "./Explained";
-import EditBlocsButton, { BlocNameToggle } from "./EditBlocsButton";
+import EditBlocsButton, { BlocNameButton } from "./EditBlocsButton";
 import type { BlocsPayload } from "../lib/crowdApi";
 import { useSession, useUnit } from "../pages/guess/useCrowd";
 import { DEFAULT_BLOCS, IDS, K25_MAP, nameOf, normalizeBlocs } from "../pages/guess/model";
@@ -60,7 +60,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const stacked = <table className="w-full table-fixed text-xs">
     <caption className="sr-only">הגושים שלי מול המשתתפים והסקרים</caption>
     <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal" title={`${d.source} · ${displayDate(d.asOf)}`}>{d.source.includes("המשתתפים") ? "משתתפים" : d.source === "ההשערה שלי" ? "שלי" : d.source}</th>)}</tr></thead>
-    <tbody>{p.blocs.map(b => <tr key={b.id} className="border-b border-paper-line"><th scope="row" className="text-start py-1.5 pe-1 font-normal break-words"><BlocNameToggle name={b.name} lists={b.lists.map(nameOf).join(" · ")} /></th>{series.map((d,i) => { const row = d.rows.find(r => r.id === b.id); return <td key={i} className="text-center px-1 tabular font-bold">{display(row)}{row?.missing.length ? <span title={row.missing.map(nameOf).join(" · ")} className="block text-[10px] font-normal">חסר {row.missing.length}/{row.lists.length}</span> : null}</td>; })}</tr>)}</tbody>
+    <tbody>{p.blocs.map(b => <BlocTableRow key={b.id} name={b.name} lists={b.lists.map(nameOf).join(" · ")} cols={series.length + 1} nameClass="text-start py-1.5 pe-1 font-normal break-words" cellClass="text-center px-1 tabular font-bold">{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <>{display(row)}{row?.missing.length ? <span title={row.missing.map(nameOf).join(" · ")} className="block text-[10px] font-normal">חסר {row.missing.length}/{row.lists.length}</span> : null}</>; })}</BlocTableRow>)}</tbody>
   </table>;
   const table = compact ? stacked : series.length > 3 ? <table className="w-full text-sm">
     <caption className="sr-only">מנדטים לפי הגושים שלי בכל מקור</caption>
@@ -69,13 +69,13 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   </table> : <table className="w-full text-sm">
     <caption className="sr-only">השוואת מנדטים לפי הגושים שלי</caption>
     <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[8rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-3 min-w-[7rem] py-2">{d.source}<span className="block font-normal text-xs text-ink-soft">{displayDate(d.asOf)}</span></th>)}{compare && series.length === 2 && <th scope="col" className="px-3">שינוי במנדטים</th>}</tr></thead>
-    <tbody>{p.blocs.map(b => { const first = series[0]?.rows.find(r => r.id === b.id)?.total; const last = series[1]?.rows.find(r => r.id === b.id)?.total; const delta = first != null && last != null ? last - first : null; return <tr key={b.id} className="border-b border-paper-line"><th scope="row" className="text-start py-2 break-words"><BlocNameToggle name={b.name} lists={b.lists.map(nameOf).join(" · ")} /></th>{series.map((d,i) => { const row = d.rows.find(r => r.id === b.id); return <td key={i} className="px-3 text-center tabular">{display(row)}<BlocCoverage row={row} /></td>; })}{compare && series.length === 2 && <td className="text-center tabular"><bdi>{delta === null ? "—" : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td>}</tr>; })}</tbody>
+    <tbody>{p.blocs.map(b => { const first = series[0]?.rows.find(r => r.id === b.id)?.total; const last = series[1]?.rows.find(r => r.id === b.id)?.total; const delta = first != null && last != null ? last - first : null; return <BlocTableRow key={b.id} name={b.name} lists={b.lists.map(nameOf).join(" · ")} cols={series.length + 1 + (compare && series.length === 2 ? 1 : 0)} nameClass="text-start py-2 break-words" cellClass="px-3 text-center tabular" extra={compare && series.length === 2 ? <td className="text-center tabular"><bdi>{delta === null ? "—" : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td> : null}>{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <>{display(row)}<BlocCoverage row={row} /></>; })}</BlocTableRow>; })}</tbody>
   </table>;
   return <section data-personal-blocs-card className="my-4 rounded-theme border border-paper-line bg-paper-card p-3 space-y-2" aria-label={title}>
     <div className="flex justify-between gap-3 items-center flex-wrap"><h3 className={`font-display ${compact ? "text-lg leading-tight" : "text-2xl"}`}>{title}</h3><EditBlocsButton returnTo={pathname + search} /></div>
     {!editTargets && <p className="text-xs text-ink-soft">{source} · {asOf}</p>}
-    <Explained kind="השוואה" source={source} asOf={asOf} assumption="סכום מקור מלא, סכום חלקי (לפחות) ואומדן (כ-) מוצגים בנפרד. השלמה רק מסקרים קודמים קרובים שעברו בדיקת דיוק; המקור לא משתנה. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות או השלמה שרירותית של תוצאות אמת." methodAnchor="personal-blocs">
-      {!anyKnown ? <p className="text-sm text-ink-soft">אין נתון תואם למפלגות הגושים במקור הזה. לא ניתן להציג סכום או אומדן אמין.{series.length === 0 && " נסו להרחיב את המסננים."}</p> : series.length === 1 && one ? <dl className="space-y-2">{one.rows.map(row => <div key={row.id} className="flex flex-wrap justify-between items-start gap-x-4 gap-y-2 border-b border-paper-line pb-2 text-sm"><dt className="min-w-0 flex-1 basis-40"><BlocNameToggle name={row.name} lists={row.lists.map(nameOf).join(" · ")} /></dt><dd className="flex flex-wrap items-end gap-x-4 gap-y-1 max-w-full"><span className="font-num tabular font-bold">{display(row)} מנדטים<BlocCoverage row={row} /></span>{editTargets && <label className="font-sans text-xs font-normal flex flex-col">הצפי שלי<input aria-label={`מנדטים צפויים לגוש ${row.name}`} type="number" min={0} max={120} inputMode="numeric" value={row.target ?? ""} className="mt-1 w-24 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-lg" onChange={e => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs: p.blocs.map(b => b.id === row.id ? { ...b, target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) } : b) })} /></label>}</dd></div>)}</dl> : series.length > 0 ? <>{series.length > 6 && <ul className="text-xs text-ink-soft space-y-1">{p.blocs.map(b => <li key={b.id}><b>{b.name}:</b> {b.lists.map(nameOf).join(" · ") || "אין מפלגות"}</li>)}</ul>}{series.length > 6 ? <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold">נתוני הגושים בכל {series.length} המקורות</summary><div className="overflow-x-auto">{table}</div></details> : <div className="overflow-x-auto">{table}</div>}</> : <p>אין נתונים להצגה לפי המסננים שנבחרו.</p>}
+    <Explained showMeta={!editTargets} kind="השוואה" source={source} asOf={asOf} assumption="סכום מקור מלא, סכום חלקי (לפחות) ואומדן (כ-) מוצגים בנפרד. השלמה רק מסקרים קודמים קרובים שעברו בדיקת דיוק; המקור לא משתנה. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות או השלמה שרירותית של תוצאות אמת." methodAnchor="personal-blocs">
+      {!anyKnown ? <p className="text-sm text-ink-soft">אין נתון תואם למפלגות הגושים במקור הזה. לא ניתן להציג סכום או אומדן אמין.{series.length === 0 && " נסו להרחיב את המסננים."}</p> : series.length === 1 && one ? <ul className="space-y-2">{one.rows.map(row => <BlocCardRow key={row.id} name={row.name} lists={row.lists.map(nameOf).join(" · ")} aside={<div className="flex items-center justify-end gap-x-3"><span className="font-num tabular font-bold whitespace-nowrap">{display(row)} מנדטים<BlocCoverage row={row} /></span>{editTargets && <label className="font-sans text-xs font-normal flex items-center gap-1.5 whitespace-nowrap">הצפי שלי<input aria-label={`מנדטים צפויים לגוש ${row.name}`} type="number" min={0} max={120} inputMode="numeric" value={row.target ?? ""} className="w-16 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-lg" onChange={e => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs: p.blocs.map(b => b.id === row.id ? { ...b, target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) } : b) })} /></label>}</div>} />)}</ul> : series.length > 0 ? <>{series.length > 6 && <ul className="text-xs text-ink-soft space-y-1">{p.blocs.map(b => <li key={b.id}><b>{b.name}:</b> {b.lists.map(nameOf).join(" · ") || "אין מפלגות"}</li>)}</ul>}{series.length > 6 ? <details><summary className="cursor-pointer min-h-[44px] flex items-center font-bold">נתוני הגושים בכל {series.length} המקורות</summary><div className="overflow-x-auto">{table}</div></details> : <div className="overflow-x-auto">{table}</div>}</> : <p>אין נתונים להצגה לפי המסננים שנבחרו.</p>}
     </Explained>
     {compare && <p className="text-xs text-ink-soft">שינוי במנדטים מחושב רק כששני המקורות מלאים.</p>}
     {editTargets ? <p className="text-xs text-ink-soft">״השלם הכול״ מתאים את המספר בכל מפלגה לצפי שלכם לגוש. הגושים הם תרחישים נפרדים, ומפלגה יכולה להופיע בכמה גושים.</p> : <p className="text-xs text-ink-soft">תרחישים עצמאיים וחופפים; אין לחבר את סכומיהם. {unit.status !== "saved" ? "הרכב הגושים הוא טיוטה בדפדפן הזה." : "לפי הרכב הגושים השמור שלכם."}</p>}
@@ -93,4 +93,30 @@ function BlocCoverage({ row }: { row?: BlocRow }) {
     חסר נתון על <bdi>{row.missing.length}/{row.lists.length}</bdi> מפלגות{row.estimate !== null ? " · אומדן" : ""}
     <span className="sr-only">. {detail}</span>
   </span>;
+}
+
+/** שורת גוש בכרטיס צר: השם והמספרים באותה שורה, והמפלגות — לרוחב כל הכרטיס מתחתיהם */
+function BlocCardRow({ name, lists, aside }: { name: string; lists: string; aside: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  return <li className="border-b border-paper-line pb-2 text-sm">
+    <div className="flex items-center justify-between gap-3">
+      <BlocNameButton name={name} open={open} onToggle={() => setOpen(o => !o)} controls={id} />
+      <div className="shrink-0">{aside}</div>
+    </div>
+    {open && <p id={id} className="text-xs text-ink-soft py-1 break-words">{lists || "אין מפלגות"}</p>}
+  </li>;
+}
+
+/** שורת גוש בטבלה: כשפותחים, המפלגות בשורה משלהן לרוחב כל הטבלה */
+function BlocTableRow({ name, lists, cols, nameClass, cellClass, extra = null, children }: { name: string; lists: string; cols: number; nameClass: string; cellClass: string; extra?: ReactNode; children: ReactNode[] }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  return <>
+    <tr className={open ? "" : "border-b border-paper-line"}>
+      <th scope="row" className={nameClass}><BlocNameButton name={name} open={open} onToggle={() => setOpen(o => !o)} controls={id} /></th>
+      {children.map((c, i) => <td key={i} className={cellClass}>{c}</td>)}{extra}
+    </tr>
+    {open && <tr id={id} className="border-b border-paper-line"><td colSpan={cols} className="text-xs text-ink-soft pb-2 break-words">{lists || "אין מפלגות"}</td></tr>}
+  </>;
 }
