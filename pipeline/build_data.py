@@ -605,8 +605,9 @@ def build_changes(lin: dict, results: list[dict], central: dict, groups_sc: dict
     return {"election2022": k25["id"], "valid2022": valid, "alternatives": out}
 
 
-def build_model(polls: list[dict], results: list[dict]) -> dict:
-    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). כל סקר עקבי שפורסם לציבור נכנס מיד — בלי תנאי אימות (הכרעת בעלים 9.10.2026: האתר מרכז פרסומים קיימים)."""
+def build_model(polls: list[dict], results: list[dict], build_time: datetime) -> dict:
+    """הממוצע מבוסס-המודל והתרחישים (pipeline/model.py). כל סקר עקבי שפורסם לציבור נכנס מיד — בלי תנאי אימות (הכרעת בעלים 9.10.2026: האתר מרכז פרסומים קיימים).
+    הממוצע נכון ליום הבנייה (הכרעת בעלים 11.10.2026): הבנייה רצה כל 4 שעות, ואם אין סקר חדש — הממוצע של היום הוא הממוצע האחרון."""
     import model as M
 
     use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
@@ -616,7 +617,8 @@ def build_model(polls: list[dict], results: list[dict]) -> dict:
     pairs = [tuple(a["pair"]) for a in AGREEMENTS_2026]
     gov = [l["id"] for l in LISTS_2026 if l["gov37"]]
     start = (datetime.fromisoformat(LIST_SUBMISSION_2026) + timedelta(days=1)).date().isoformat()
-    asof = max(p.end for p in inputs)
+    last_poll = max(p.end for p in inputs)
+    asof = max(last_poll, build_time.date().isoformat())
     obs_cfg, agg_cfg = M.ObsConfig(), M.AggConfig()
     fit = M.fit_average(inputs, lists, "likud", pairs, start, asof, obs_cfg, agg_cfg, MODEL_SEED)
     backtest = json.loads((OUT / "backtest.json").read_text(encoding="utf-8"))
@@ -647,7 +649,7 @@ def build_model(polls: list[dict], results: list[dict]) -> dict:
         house.append({"pollster": h, "firmHe": labels[h][0], "publisherHe": labels[h][1], "polls": counts.get(h, 0),
                       "seats": {k: seats[idx[k]] for k in model_lists}})
     return {
-        "signature": backtest["modelSignature"], "electionDay": "2026-10-27", "start": start, "asof": asof,
+        "signature": backtest["modelSignature"], "electionDay": "2026-10-27", "start": start, "asof": asof, "lastPoll": last_poll,
         "polls": len(fit["observed"]), "skipped": fit["skipped"], "pollsters": len(fit["pollsters"]),
         "others": round(others * 100, 2), "central": trend[-1], "trend": trend, "scenarios": sc, "house": house,
         "changes": build_changes(lin, results, trend[-1], sc["groups"]),
@@ -694,7 +696,7 @@ def main() -> None:
     apply_verification(polls["polls"])
     history = build_history(results)
     # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
-    model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results)
+    model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results, build_time)
     forecast_out = None if __import__("os").environ.get("SKIP_MODEL") else build_forecast(polls["polls"], build_time)
     missing = sorted({n for p in polls["polls"] for n in (p["firmHe"], p["publisherHe"]) if untranslated(n)})
     if missing:

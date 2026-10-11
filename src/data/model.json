@@ -1,7 +1,7 @@
 {
- "asof": "2026-10-08",
+ "asof": "2026-10-11",
  "central": {
-  "date": "2026-10-08",
+  "date": "2026-10-11",
   "seats": {
    "amcha": 0,
    "bluewhite": 0,
@@ -2882,6 +2882,7 @@
    }
   }
  ],
+ "lastPoll": "2026-10-08",
  "others": 0.7,
  "params": {
   "draws": 1500,
@@ -3839,7 +3840,7 @@
     }
    }
   },
-  "horizonDays": 19,
+  "horizonDays": 16,
   "lists": {
    "amcha": {
     "agreementGain": -0.045,
@@ -6378,6 +6379,117 @@
   },
   {
    "date": "2026-10-08",
+   "seats": {
+    "amcha": 0,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 23,
+    "otzma": 8,
+    "raam": 6,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 9
+   },
+   "shares": {
+    "amcha": 3.24,
+    "bluewhite": 1.05,
+    "democrats": 7.24,
+    "haredi_public": 0.68,
+    "joint": 6.14,
+    "likud": 17.22,
+    "otzma": 6.2,
+    "raam": 4.26,
+    "reservists": 3.01,
+    "rzp": 4.85,
+    "shas": 6.19,
+    "together": 9.31,
+    "utj": 6.2,
+    "yashar": 17.25,
+    "yb": 6.46
+   }
+  },
+  {
+   "date": "2026-10-09",
+   "seats": {
+    "amcha": 0,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 23,
+    "otzma": 8,
+    "raam": 6,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 9
+   },
+   "shares": {
+    "amcha": 3.24,
+    "bluewhite": 1.05,
+    "democrats": 7.24,
+    "haredi_public": 0.68,
+    "joint": 6.14,
+    "likud": 17.22,
+    "otzma": 6.2,
+    "raam": 4.26,
+    "reservists": 3.01,
+    "rzp": 4.85,
+    "shas": 6.19,
+    "together": 9.31,
+    "utj": 6.2,
+    "yashar": 17.25,
+    "yb": 6.46
+   }
+  },
+  {
+   "date": "2026-10-10",
+   "seats": {
+    "amcha": 0,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 23,
+    "otzma": 8,
+    "raam": 6,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 12,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 9
+   },
+   "shares": {
+    "amcha": 3.24,
+    "bluewhite": 1.05,
+    "democrats": 7.24,
+    "haredi_public": 0.68,
+    "joint": 6.14,
+    "likud": 17.22,
+    "otzma": 6.2,
+    "raam": 4.26,
+    "reservists": 3.01,
+    "rzp": 4.85,
+    "shas": 6.19,
+    "together": 9.31,
+    "utj": 6.2,
+    "yashar": 17.25,
+    "yb": 6.46
+   }
+  },
+  {
+   "date": "2026-10-11",
    "seats": {
     "amcha": 0,
     "bluewhite": 0,
