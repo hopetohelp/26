@@ -285,7 +285,9 @@ def build_polls(build_time: datetime) -> dict:
             if published.tzinfo is None:
                 raise ValueError("מועד פרסום סקר חייב לכלול אזור זמן")
             seat_sum = sum(v.get("s", 0) for v in d["values"].values())
-            if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]) or not d.get("population"):
+            # מכון שלא המיר למנדטים (הדוח הרשמי מציג רק אחוזים) — האחוזים מוצגים כפי שהם, בלי מנדטים
+            pct_only = bool(d["values"]) and all("p" in v and "s" not in v for v in d["values"].values())
+            if (seat_sum != 120 and not pct_only) or any(k not in PARTY_KEY.values() for k in d["values"]) or not d.get("population"):
                 raise ValueError(f"סקר קבוצת אוכלוסייה לא תקין: {d['id']}")
             subgroup.append({**d, "seatSum": seat_sum})
     subgroup.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
