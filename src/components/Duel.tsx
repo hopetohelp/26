@@ -100,7 +100,7 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
               const s = counts.get(r.id);
               return (
                 <li key={r.id} className="border-s-4 border-ink ps-3 md:ps-4 min-w-0 flex items-stretch gap-3 md:gap-4">
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0">
                   <div className="flex items-center gap-2 md:gap-3">
                     <span className="lg:hidden"><PartyAvatar id={r.id} size={40} /></span>
                     <p className="min-w-0 font-display text-base md:text-xl leading-tight break-words [overflow-wrap:anywhere]">{r.name}</p>
@@ -110,8 +110,8 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
                   <span className="block mt-2"><PassBar pass={r.pass} /></span>
                   {s && <p className="mt-2 text-xs md:text-sm text-ink-soft">אצל {s.passing} מתוך {s.n} מכונים</p>}
                   </div>
-                  {/* יש מקום ברוחב: התמונה בעיגול משמאל לטקסט, קוטרה חצי מגובה הכרטיס */}
-                  <PartyPhoto id={r.id} className="hidden lg:flex w-28 xl:w-32 shrink-0 self-stretch" />
+                  {/* יש מקום ברוחב: העיגול צמוד לטקסט משמאלו (הכרעת בעלים 11.10.2026), קוטרו חצי מגובה הכרטיס */}
+                  <PartyPhoto id={r.id} className="hidden lg:flex w-24 shrink-0 self-stretch" />
                 </li>
               );
             })}
