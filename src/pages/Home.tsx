@@ -22,14 +22,14 @@ export default function Home() {
   const asOf = date(POLL_AVERAGE.asOf);
   return (
     <>
-      {/* במקום כותרת גלויה: שעון עצר (ימים, שעות ודקות) עד מדגמי הבחירות. הכותרת נשארת לקורא מסך */}
+      {/* במקום כותרת גלויה: שעון עצר עד מדגמי הבחירות, מתחת ללוח המושבים. הכותרת נשארת לקורא מסך */}
       <h1 className="sr-only">תמונת מצב</h1>
-      <ExitPollClock />
       <p className="sr-only">מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
         <Hemicycle gov={gov} other={other} center={`${gov}/120`} label="הממשלה היוצאת" />
       </section>
+      <div className="mt-4"><ExitPollClock /></div>
 
       <div className="mt-8">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} />}</div>
       <ThresholdLine rows={home.edge} polls={LATEST_POLLS} asOf={asOf} />

@@ -20,8 +20,8 @@ const RAISE = 9.7 / 77.7; // כמה הקשת והאגפים "מתעגלים" ל�
 const SEAT_R = 0.038;
 const PAD = 0.02;
 
-function grid(): { x: number; y: number }[] {
-  const pts: { x: number; y: number }[] = [];
+function grid(): { x: number; y: number; wing?: boolean }[] {
+  const pts: { x: number; y: number; wing?: boolean }[] = [];
   // הקשת העליונה: שורות מהחיצונית (13) פנימה (7), כל שורה גבוהה יותר במרכזה
   for (let j = 0; j < 4; j++) {
     const n = 13 - 2 * j;
@@ -37,7 +37,7 @@ function grid(): { x: number; y: number }[] {
     const x0 = -7.9 + Math.abs(m - 6) * RAISE; // המושב השמאלי ביותר בשורה, יחסית לאמצע
     for (let i = 0; i < c; i++) {
       const x = x0 + i * STEP;
-      pts.push({ x, y }, { x: -x, y });
+      pts.push({ x, y, wing: true }, { x: -x, y, wing: true });
     }
   });
   return pts;
@@ -50,13 +50,16 @@ function build() {
   const minY = Math.min(...g.map((p) => p.y)), maxY = Math.max(...g.map((p) => p.y));
   const w = (maxX - minX) * k + 2 * (SEAT_R + PAD);
   const h = (maxY - minY) * k + 2 * (SEAT_R + PAD);
-  const pts = g.map((p) => ({ x: (p.x - minX) * k + SEAT_R + PAD, y: (p.y - minY) * k + SEAT_R + PAD }));
+  const pts = g.map((p) => ({ x: (p.x - minX) * k + SEAT_R + PAD, y: (p.y - minY) * k + SEAT_R + PAD, wing: !!p.wing }));
   const cx = w / 2;
-  const cy = pts.reduce((t, p) => t + p.y, 0) / pts.length;
+  const oy = pts.reduce((t, p) => t + p.y, 0) / pts.length; // מרכז הסידור (לסדר המושבים)
+  // מרכז הטקסט (הספירה והכיתוב): אמצע גובה האגפים, כלומר השורה הרחבה ביותר, גם לגובה וגם לרוחב (הכרעת בעלים 11.10.2026)
+  const wy = pts.filter((p) => p.wing).map((p) => p.y);
+  const cy = (Math.min(...wy) + Math.max(...wy)) / 2;
   // זווית מהכיוון הימני נגד כיוון השעון; מה שמתחת לקו האופקי משמאל ממשיך אחרי הקשת (אין מושבים ישר מתחת למרכז)
   const polar = pts.map((p) => {
-    const t = Math.atan2(cy - p.y, p.x - cx);
-    return { ...p, t: t < -Math.PI / 2 ? t + 2 * Math.PI : t, r: Math.hypot(p.x - cx, p.y - cy) };
+    const t = Math.atan2(oy - p.y, p.x - cx);
+    return { ...p, t: t < -Math.PI / 2 ? t + 2 * Math.PI : t, r: Math.hypot(p.x - cx, p.y - oy) };
   });
   // סדר: לפי הזווית סביב מרכז החלל הפנימי, מהחיצוני לפנימי בתוך אותה זווית
   const tMin = Math.min(...polar.map((p) => p.t)), tMax = Math.max(...polar.map((p) => p.t));
@@ -67,6 +70,6 @@ function build() {
 }
 
 const built = build();
-/** מידות הלוח: רוחב וגובה ה-viewBox, מרכז החלל הפנימי (cx, cy) ורדיוס מושב */
+/** מידות הלוח: רוחב וגובה ה-viewBox, מרכז הטקסט (cx, cy: אמצע האגפים) ורדיוס מושב */
 export const HALL = built.hall;
 export const hemicycleSeats = (): Seat[] => built.seats;
