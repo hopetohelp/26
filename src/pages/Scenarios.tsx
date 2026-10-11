@@ -2,7 +2,8 @@ import { POLL_AVERAGE } from "../lib/sources";
 import { splitCls } from "../lib/splitScreens";
 import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
-import { TrendChart, type Series } from "../components/charts";
+import CandleTrend from "../components/CandleTrend";
+import type { Series } from "../components/charts";
 import { Ranking } from "../components/homeCharts";
 import { HOME } from "../lib/homeData";
 import Explained from "../components/Explained";
@@ -12,6 +13,7 @@ import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
 import { lists2026, listName, meta, results } from "../lib/data";
 import { date, dateRange, num, rng, seatsFmt } from "../lib/format";
+import { dayMonth } from "../lib/home";
 
 interface ListScenario {
   seats: number[];
@@ -76,6 +78,30 @@ function coverageRange() {
   return [...byCycle.entries()].map(([label, xs]) => ({ label, avg: xs.reduce((a, b) => a + b, 0) / xs.length }));
 }
 
+/** חלון הנקודה בגרף המודל: ממוצע המודל והמנדטים באותו יום; בנקודה האחרונה גם התרחישים ליום הבחירות */
+function ModelPopup({ id, name, t, v, color }: { id: string; name: string; t: number; v: number; color: string }) {
+  const day = m.trend.find((d) => Date.parse(d.date + "T12:00:00Z") === t);
+  const last = m.trend[m.trend.length - 1];
+  const scn = day === last ? sc.lists[id] : undefined;
+  return (
+    <>
+      <div className="mb-0.5 flex items-center gap-1.5 text-[.76rem] font-bold"><i className="size-2.5 shrink-0 rounded-full" style={{ background: color }} />{name}</div>
+      <div className="mb-1 text-[.7rem] font-bold text-paper/65">ממוצע המודל, <bdi dir="ltr">{dayMonth(new Date(t).toISOString().slice(0, 10))}</bdi></div>
+      <div className="flex items-baseline gap-1.5">
+        <span className="font-bold tabular text-[.95rem] leading-none">{r1(v)}%</span>
+        {day && <small className="text-[.7rem] text-paper/65">{day.seats[id]} מנדטים</small>}
+      </div>
+      {scn && (
+        <div className="mt-1.5 border-t border-paper/20 pt-1 text-[.7rem] text-paper/65">
+          <div className="font-bold text-paper">{num(sc.n)} תרחישים ליום הבחירות</div>
+          <div>80% מהם: <b className="tabular text-paper" dir="ltr">{rng(seatsFmt(scn.seats[0]), seatsFmt(scn.seats[2]))}</b> מנדטים</div>
+          <div>ממוצע <b className="tabular text-paper">{r1(scn.seatsMean)}</b> · חסימה: {pctTxt(scn.pass)}</div>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function Scenarios() {
   const asOfText = `הסקרים עד ${date(POLL_AVERAGE.asOf)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
   const trendIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0).slice(0, 9);
@@ -86,8 +112,6 @@ export default function Scenarios() {
     points: m.trend.map((p) => ({ t: Date.parse(p.date + "T12:00:00Z"), v: p.shares[id] })),
     endLabel: `${listName(id)} ${r1(m.trend[m.trend.length - 1].shares[id])}%`,
   }));
-  const t0 = Date.parse(m.trend[0].date + "T12:00:00Z");
-  const t1 = Date.parse(m.trend[m.trend.length - 1].date + "T12:00:00Z");
   const cov = coverageRange();
   const govNames = sc.bloc.lists.map(listName).join(", ");
   const houseIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0);
@@ -221,7 +245,20 @@ export default function Scenarios() {
         >
           <ChartWithTable
             summary={`${trendIds.length} הרשימות הגדולות, ${dateRange(m.trend[0].date, m.trend[m.trend.length - 1].date)}.`}
-            chart={<TrendChart series={series} from={t0} to={t1} yMax={Math.ceil((Math.max(...series.flatMap((s) => s.points.map((p) => p.v))) + 2) / 5) * 5} title="הממוצע של המודל באחוזים לאורך זמן" lineLabel="ממוצע המודל בכל יום" />}
+            chart={
+              <CandleTrend
+                title="הממוצע של המודל באחוזים לאורך זמן"
+                series={series}
+                unit="אחוזים"
+                popupWidth={176}
+                legendEntries={[
+                  { kind: "dot", text: "ממוצע המודל בכל יום. לחיצה על נקודה מציגה את הממוצע ואת התרחישים ליום הבחירות" },
+                  { kind: "lineList", text: "ממוצע המודל בכל יום, בצבע הרשימה" },
+                  { kind: "dash", text: "קווים מקווקווים כל 5 אחוזים, רק היכן שיש נתונים" },
+                ]}
+                popup={({ series: s, point, color }) => <ModelPopup id={s.id} name={s.name} t={point.t} v={point.v} color={color} />}
+              />
+            }
             table={
               <table className="text-sm w-full">
                 <caption className="sr-only">האחוז והמנדטים לפי הממוצע בתחילת החלון ובסופו</caption>
