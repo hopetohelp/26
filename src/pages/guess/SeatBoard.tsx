@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colorOf } from "../../lib/colors";
 import { TOTAL } from "../../lib/fillAll";
-import { hemicycleSeats } from "../../lib/hemicycle";
+import { HALL, hemicycleSeats } from "../../lib/hemicycle";
 import { IDS, nameOf } from "./model";
 
-/** 120 מושבים בחצי עיגול: המיקומים ב-`src/lib/hemicycle.ts` (משותפים גם לבית) */
-export const SEATS = hemicycleSeats(1.1, 1.07);
+/** 120 מושבים בצורת פרסה: המיקומים ב-`src/lib/hemicycle.ts` (משותפים גם לבית ולתמונת השיתוף) */
+export const SEATS = hemicycleSeats();
 
 /** סדר הרשימות (מהגדולה) והצבע של כל מושב — משותף ללוח ולתמונת השיתוף */
 export function seatFills(values: Record<string, number>) {
@@ -38,7 +38,7 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
   const status = left === 0 ? "הכנסת שלך מלאה" : left > 0 ? `נותרו ${left} לחלוקה` : `${-left} יותר מדי`;
   return (
     <figure className="rounded-theme p-3 md:p-4 bg-paper-card border border-paper-line">
-      <svg viewBox="0 0 2.2 1.12" className={`w-full h-auto block ${pop ? "seat-pop" : ""}`} role="img" aria-label={`${total} מתוך 120 מנדטים חולקו`}>
+      <svg viewBox={`0 0 ${HALL.w} ${HALL.h}`} className={`w-full h-auto block ${pop ? "seat-pop" : ""}`} role="img" aria-label={`${total} מתוך 120 מנדטים חולקו`}>
         {SEATS.map((s, k) => {
           const f = fills[k];
           return (
@@ -46,14 +46,14 @@ export default function SeatBoard({ values }: { values: Record<string, number> }
               key={k}
               cx={s.x}
               cy={s.y}
-              r={0.038}
-              className={f ? "" : "fill-paper-line"}
-              style={f ? { fill: colorOf(f.id, f.i) } : undefined}
+              r={HALL.r}
+              className={`seat-in ${f ? "" : "fill-paper-line"}`}
+              style={{ animationDelay: `${k * 5}ms`, ...(f ? { fill: colorOf(f.id, f.i) } : {}) }}
             />
           );
         })}
-        {/* המספר בתוך מרכז קשת המושבים: שניהם באותו גודל, והגודל נגזר מרוחב הלוח (viewBox) כדי שייכנס בחלל הפנימי גם כש"120/120" */}
-        <text x={1.1} y={1.035} textAnchor="middle" direction="ltr" className="font-num tabular" fontSize={0.16} fontWeight={700}>
+        {/* המספר במרכז הפרסה: שניהם באותו גודל, והגודל נגזר מרוחב הלוח (viewBox) כדי שייכנס בחלל הפנימי גם כש"120/120" */}
+        <text x={HALL.cx} y={HALL.cy + 0.05} textAnchor="middle" direction="ltr" className="font-num tabular" fontSize={0.16} fontWeight={700}>
           <tspan style={{ fill: "rgb(var(--ink))" }}>{total}</tspan>
           <tspan style={{ fill: "rgb(var(--ink-soft))" }}>/120</tspan>
         </text>

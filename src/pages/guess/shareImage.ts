@@ -10,6 +10,7 @@ import { type BlocTotal } from "./blocSummary";
 import { IDS, nameOf } from "./model";
 import { date, seatsFmt } from "../../lib/format";
 import { shareBlocRows, SHARE_POLLS, SHARE_POLLS_AS_OF, SHARE_FORECAST_AS_OF, SHARE_FORECAST_CAUTION } from "./shareComparison";
+import { HALL } from "../../lib/hemicycle";
 import { SEATS, seatFills } from "./SeatBoard";
 
 export const IMG_W = 1080;
@@ -143,7 +144,10 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
 
   const cv = document.createElement("canvas");
   cv.width = IMG_W;
-  const imageHeight = IMG_H + 180;
+  // הפרסה גבוהה מחצי העיגול שהיה: הלוח ברוחב 60% מהתמונה, והתמונה גבוהה בהתאם
+  const boardScale = ((IMG_W - 144) * 0.6) / HALL.w;
+  const boardH = HALL.h * boardScale;
+  const imageHeight = IMG_H + 180 + Math.max(0, Math.round(boardH - (1.12 * (IMG_W - 144)) / 2.2));
   cv.height = imageHeight;
   const ctx = cv.getContext("2d")!;
   ctx.direction = "rtl";
@@ -165,14 +169,15 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.font = `400 34px ${body}`;
   ctx.fillText(labels?.subtitle ?? (pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר"), R, 196, R - L);
 
-  // חצי העיגול — אותם מיקומים כמו בלוח שבאתר (viewBox ‏2.2×1.12)
+  // הפרסה — אותם מיקומים כמו בלוח שבאתר (`HALL`), במרכז התמונה
   const { order, fills } = seatFills(values);
-  const scale = (IMG_W - 2 * L) / 2.2;
+  const scale = boardScale;
+  const left0 = (IMG_W - HALL.w * scale) / 2;
   const top = 236;
   SEATS.forEach((s, k) => {
     const f = fills[k];
     ctx.beginPath();
-    ctx.arc(L + s.x * scale, top + s.y * scale, 0.038 * scale, 0, Math.PI * 2);
+    ctx.arc(left0 + s.x * scale, top + s.y * scale, HALL.r * scale, 0, Math.PI * 2);
     ctx.fillStyle = f ? colorOf(f.id, f.i) : c.line;
     ctx.fill();
   });
@@ -180,11 +185,11 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.textAlign = "center";
   ctx.fillStyle = c.ink;
   ctx.font = `700 150px ${num}`;
-  ctx.fillText(String(total), IMG_W / 2, top + 1.07 * scale - 10);
+  ctx.fillText(String(total), IMG_W / 2, top + HALL.cy * scale + 50);
 
   // הרשימות, מהגדולה: שתי עמודות
   const rows = order.slice(0, 12);
-  const y0 = top + 1.12 * scale + 70;
+  const y0 = top + boardH + 70;
   const colW = (IMG_W - 2 * L - 40) / 2;
   const rowH = 86;
   rows.forEach((id, i) => {

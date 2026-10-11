@@ -27,7 +27,7 @@ export default function Home() {
       <ExitPollClock />
       <p className="sr-only">מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.</p>
 
-      <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[40rem] mx-auto">
+      <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
         <Hemicycle gov={gov} other={other} center={`${gov}/120`} label="הממשלה היוצאת" />
       </section>
 
