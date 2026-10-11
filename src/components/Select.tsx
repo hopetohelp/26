@@ -10,7 +10,7 @@ export const selectCls =
 
 /** באותה שורה עם מתג (`Segmented`): אותה צורה, אותה מסגרת ואותו גובה (50 פיקסלים), והתווית לקורא מסך בלבד */
 const inlineCls =
-  "w-full h-[50px] rounded-theme bg-paper text-ink px-3 text-sm font-semibold ring-[1.5px] ring-inset ring-ink/[.35] border-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal";
+  "w-full h-[50px] rounded-theme bg-paper text-ink px-1.5 text-sm font-semibold ring-[1.5px] ring-inset ring-ink/[.35] border-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal";
 
 export default function Select({ id, label, value, onChange, children, hint, className = "", inline = false }: {
   id: string;
