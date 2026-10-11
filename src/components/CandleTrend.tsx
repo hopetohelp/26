@@ -122,10 +122,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const X = (t: number) => (tB === tA ? X0 : X0 + ((X1 - X0) * (t - tA)) / (tB - tA));
   // הנרות והעיגולים מופיעים כשהקו (0.9 שנייה, בקצב אחיד) מגיע אליהם
   const delayOf = (t: number) => Math.round(((X(t) - X0) / Math.max(X1 - X0, 1)) * 900);
+  // תאריכים צמודים לתחתית הציור (הקו התחתון), לא לתחתית השוליים
+  const dateTop = Math.round((height * YB) / 100) + 8;
   const Y = (v: number) => YB - ((YB - YT) * (v - axis.lo)) / (axis.hi - axis.lo);
   const ln = { vectorEffect: "non-scaling-stroke" as const };
   const dateTicks = candleMode ? shown.map((p) => p.t) : [...new Set(series.flatMap((s) => s.points.map((p) => p.t)))].sort((a, b) => a - b);
-  const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 70)));
+  const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 46)));
   const lastT = dateTicks[dateTicks.length - 1];
 
   // הסמן: בנרות — הנר הקרוב לאורך הציר; בהשוואה — הנקודה הקרובה ביותר בקו (עד 28px)
@@ -184,8 +186,9 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     : [];
   // מרווח בין תוויות, בתוך גובה הגרף: קודם מורידים את החופפות, ואם התחתונה יצאה החוצה — מרימים בחזרה
   for (let k = 1; k < ends.length; k++) if (ends[k].y - ends[k - 1].y < 14) ends[k].y = ends[k - 1].y + 14;
-  if (ends.length && ends[ends.length - 1].y > height - 4) {
-    ends[ends.length - 1].y = height - 4;
+  const endBottom = ends.length * 14 <= (height * YB) / 100 - 6 ? (height * YB) / 100 + 2 : height - 4;
+  if (ends.length && ends[ends.length - 1].y > endBottom) {
+    ends[ends.length - 1].y = endBottom;
     for (let k = ends.length - 2; k >= 0; k--) if (ends[k + 1].y - ends[k].y < 14) ends[k].y = ends[k + 1].y - 14;
   }
 
@@ -197,7 +200,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
       ref={wrap}
       dir="ltr"
       className="relative mt-1 outline-offset-2 touch-pan-y select-none"
-      style={{ height: height + 28 }}
+      style={{ height: dateTop + 22 }}
       tabIndex={0}
       role="group"
       aria-label={`${title}. חצים ימינה ושמאלה בין הנקודות${multi ? ", ולמעלה ולמטה בין הרשימות" : ""}`}
@@ -271,7 +274,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         )}
       </div>
       {/* תאריכים: הראשון משמאל, והאחרון צמוד לימין של שטח הציור */}
-      <div aria-hidden="true" className="absolute left-0 w-full text-xs text-ink-soft font-num" style={{ top: height + 6 }}>
+      <div aria-hidden="true" className="absolute left-0 w-full text-xs text-ink-soft font-num" style={{ top: dateTop }}>
         {lab.map((i) => {
           const isLast = dateTicks[i] === lastT;
           return (
