@@ -318,9 +318,9 @@
   .seat-link-long { display: inline; }
 }
 @container (min-width: 37rem) {
-  .seat-head { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "mode chips link"; }
+  .seat-head { grid-template-columns: 12rem auto minmax(0, 1fr); grid-template-areas: "mode chips link"; }
   .seat-head-link { justify-self: end; }
-  .seat-grid { grid-template-columns: 9rem auto minmax(0, 1fr); grid-template-areas: "name cells ctl"; }
+  .seat-grid { grid-template-columns: 12rem auto minmax(0, 1fr); grid-template-areas: "name cells ctl"; }
   .seat-ctl { justify-self: end; }
 }
 @container (min-width: 50rem) {

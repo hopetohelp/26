@@ -15,6 +15,7 @@ import { Notice } from "./ui";
 import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
+import { PartyAvatar } from "../../components/PartyAvatar";
 import type { useSession } from "./useCrowd";
 
 
@@ -75,7 +76,9 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 }
 
 function SectionTitle({ title, count }: { title: string; count?: number }) {
-  return <span className="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1"><span>{title}</span><span className="text-2xl tabular">{count ?? "—"} משתתפים</span></span>;
+  // בגושים אין מספר כללי בכותרת: המספר מוצג בכל גוש בנפרד
+  if (count === undefined) return <>{title}</>;
+  return <span className="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1"><span>{title}</span><span className="text-2xl tabular">{count} משתתפים</span></span>;
 }
 
 function Toggle<T extends string>({ value, setValue, options, label }: { value: T; setValue: (v:T)=>void; options: readonly (readonly [T,string])[]; label:string }) {
@@ -91,7 +94,7 @@ export function SeatsStats({ rows, polls, mine, view, passedLists }: { passedLis
   if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
   return <Card title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">רשימה</th><th className="font-normal">ממוצע</th><th className="font-normal">טווח</th><th className="font-normal">סקרים</th>{mine && <th className="font-normal">שלי</th>}</tr></thead>
-    <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2">{nameOf(s.list)}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
+    <tbody>{sorted.map(s=><tr key={s.list} className="border-t border-paper-line"><td className="py-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}</tr>)}</tbody>
   </table></div>{hiddenNote}</Card>;
 }
 
@@ -112,8 +115,8 @@ export function BlocStats({ d, view }: { d:D; view:View; mine?: string[][] }) {
     .sort((a,b) => b.n-a.n || b.stat.mean-a.stat.mean || a.label.localeCompare(b.label,"he"));
   const rows = [...fixedRows, ...customRows];
   if (!rows.length) return <Notice>עדיין אין גושים עם לפחות שתי רשימות וממוצע של לפחות 4 מנדטים לרשימה.</Notice>;
-  if (view==="chart") return <Bars title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
-  return <Card title={<SectionTitle title="גושים" count={d.sectionParticipants?.blocs} />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
+  if (view==="chart") return <Bars title={<SectionTitle title="גושים" />} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
+  return <Card title={<SectionTitle title="גושים" />}><div className="overflow-x-auto"><table className="w-full text-sm tabular whitespace-nowrap">
     <thead><tr className="text-ink-soft"><th className="text-start font-normal">גוש</th><th className="font-normal">ממוצע המשתתפים</th><th className="font-normal">ממוצע הסקרים</th><th className="font-normal">טווח</th><th className="font-normal">משתתפים</th></tr></thead>
     <tbody>{rows.map(r=><tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal whitespace-normal min-w-32"><BlocName name={r.label} lists={r.lists} /></th><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td><td className="text-center">{r.stat?.n ?? 0}</td></tr>)}</tbody>
   </table></div></Card>;
@@ -151,7 +154,10 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
     />
     <div aria-hidden="true" className={`grid ${COLS} gap-2 text-xs text-ink-soft`}><div className="col-start-2"><AxisLabels axisMax={axisMax} step={step} format={v => `${v}${suffix}`} /></div></div>
     <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
-      <span className="break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span>
+      <span className="flex items-center gap-2 min-w-0">
+        {!r.lists && <PartyAvatar id={r.key} size={28} />}
+        <span className="min-w-0 break-words">{r.lists ? <BlocName name={r.label} lists={r.lists} /> : r.label}</span>
+      </span>
       <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה משתתפים שיערו ערך כזה`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
         {r.poll !== undefined && <MeanDot at={at(r.poll)} />}

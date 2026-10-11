@@ -38,7 +38,8 @@ it("מספר המשתתפים בכותרות נלקח מכל חלק, בטבלה 
     vote2026: { all: {}, named: {} } };
   for (const view of ["table", "chart"] as const) {
     expect(renderToStaticMarkup(createElement(SeatsStats, { rows: [{ ...stat, n: 3 }], polls: {}, view }))).toContain("3 משתתפים");
-    expect(renderToStaticMarkup(createElement(BlocStats, { d, view }))).toContain("7 משתתפים");
+    // בגושים אין מספר משתתפים כללי בכותרת (הכרעת בעלים 11.10.2026): רק מספר המשתתפים בכל גוש
+    expect(renderToStaticMarkup(createElement(BlocStats, { d, view }))).not.toContain("7 משתתפים");
   }
   const html = renderToStaticMarkup(createElement(VotingStats, { d }));
   expect(html).toContain("5 משתתפים");

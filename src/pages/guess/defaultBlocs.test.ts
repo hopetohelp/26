@@ -1,16 +1,16 @@
 import { expect, it } from "vitest";
 import { defaultBlocs, normalizeBlocs, GOV_IDS, IDS } from "./model";
-it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל, נעם לישראל וצבע שחור), אופוזיציה וערבים", () => {
+it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל, נעם לישראל וצבע שחור), אופוזיציה ומפלגות ערביות", () => {
   expect(defaultBlocs()).toEqual([
     { id: "government", name: "הממשלה היוצאת", lists: [...GOV_IDS], target: null },
     { id: "gov", name: "גוש הקואליציה", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha", "haredi_public", "noam", "code_black"], target: null },
     { id: "rest", name: "גוש האופוזיציה", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite"], target: null },
     { id: "unity", name: "אחדות", lists: ["likud", "yashar", "together", "yb", "bluewhite", "reservists"], target: null },
-    { id: "arab", name: "ערבים", lists: ["joint", "raam"], target: null },
+    { id: "arab", name: "מפלגות ערביות", lists: ["joint", "raam"], target: null },
   ]);
   const assigned = defaultBlocs().flatMap(b => b.lists);
   expect([...new Set(assigned)].sort()).toEqual([...IDS].sort());
-  expect(defaultBlocs().map(b=>b.name)).toEqual(["הממשלה היוצאת","גוש הקואליציה","גוש האופוזיציה","אחדות","ערבים"]);
+  expect(defaultBlocs().map(b=>b.name)).toEqual(["הממשלה היוצאת","גוש הקואליציה","גוש האופוזיציה","אחדות","מפלגות ערביות"]);
 });
 it("חלוקה אישית שמורה אינה מוחלפת בברירת המחדל החדשה", () => {
   const saved = { mode: "custom" as const, blocs: [{ id: "mine", name: "שלי", lists: ["raam", "amcha"], target: 20 }] };
