@@ -96,10 +96,7 @@ function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg
       {withPass && r.pass !== undefined && (
         <span className="col-span-full flex items-center gap-2.5 text-sm text-ink-soft pb-1">
           <PassBar pass={r.pass} />
-          <span className="flex flex-wrap gap-x-3">
-            <span className="whitespace-nowrap">עוברת ב-{Math.round(r.pass * 100)}% מהתרחישים</span>
-            <span className="whitespace-nowrap">לא עוברת ב-{100 - Math.round(r.pass * 100)}%</span>
-          </span>
+          <span className="whitespace-nowrap">עוברת ב-{Math.round(r.pass * 100)}% מהתרחישים</span>
         </span>
       )}
     </li>
