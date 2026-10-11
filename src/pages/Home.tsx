@@ -17,17 +17,17 @@ import { POLL_AVERAGE } from "../lib/sources";
 const home = HOME;
 
 export default function Home() {
-  const { gov, other } = home;
+  const { blocs } = home;
   const [a, b] = [...home.safe, ...home.edge].sort((x, y) => y.central - x.central);
   const asOf = date(POLL_AVERAGE.asOf);
   return (
     <>
       {/* במקום כותרת גלויה: שעון עצר עד מדגמי הבחירות, בתוך חלל הפרסה. הכותרת נשארת לקורא מסך */}
       <h1 className="sr-only">תמונת מצב</h1>
-      <p className="sr-only">מפלגות הממשלה היוצאת: {gov} מנדטים. לרוב דרושים {MAJORITY}.</p>
+      <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש איזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
-        <Hemicycle gov={gov} other={other} center={`${gov}/120`} label="הממשלה היוצאת" footer={<ExitPollClock compact />} />
+        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} center={`${blocs.coalition}/120`} label="גוש נתניהו" footer={<ExitPollClock compact />} />
       </section>
 
       <div className="mt-8">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} />}</div>

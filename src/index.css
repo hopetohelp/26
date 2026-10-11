@@ -123,6 +123,11 @@
     stroke: rgb(var(--accent) / 0.7);
     stroke-width: 0.009;
   }
+  .seat-arab {
+    fill: color-mix(in srgb, rgb(var(--accent)) 58%, rgb(var(--card)));
+    stroke: rgb(var(--accent) / 0.9);
+    stroke-width: 0.009;
+  }
   .sw-a {
     background: rgb(var(--accent));
   }

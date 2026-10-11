@@ -424,7 +424,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
     expect(mine.blocs.items).toEqual([{ name: "הגוש שלי", lists: [IDS[0], IDS[1]], seats: 120, target: 100 }]);
     const def = r.data.rows.filter((x) => !x.blocs.saved);
     expect(def).toHaveLength(3);
-    expect(def[0].blocs.items.map((b) => b.name)).toEqual(["הממשלה היוצאת", "גוש הקואליציה", "גוש האופוזיציה", "אחדות", "מפלגות ערביות"]);
+    expect(def[0].blocs.items.map((b) => b.name)).toEqual(["הממשלה היוצאת", "גוש נתניהו", "גוש איזנקוט", "אחדות", "מפלגות ערביות"]);
     const pending = r.data.rows.find((x) => x.status === "pending");
     expect(pending.reasons[0]).toMatchObject({ list: IDS[0], rule: "ratio" });
     expect((await admin("/admin/guesses/decide", { salt: "wrong-salt-1234", handle: pending.handle, decision: "approved" })).status).toBe(404);

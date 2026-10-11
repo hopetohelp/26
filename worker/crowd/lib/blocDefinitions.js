@@ -5,8 +5,8 @@ export const OPPOSITION = [...IDS_2026].filter(id => !COALITION.includes(id) && 
 export const UNITY = ["likud", "yashar", "together", "yb", "bluewhite", "reservists"];
 export const FIXED_BLOCS = [
   { id: "government", name: "הממשלה היוצאת", lists: [...GOV37].sort() },
-  { id: "coalition", name: "גוש הקואליציה", lists: COALITION },
-  { id: "opposition", name: "גוש האופוזיציה", lists: OPPOSITION },
+  { id: "coalition", name: "גוש נתניהו", lists: COALITION },
+  { id: "opposition", name: "גוש איזנקוט", lists: OPPOSITION },
   { id: "unity", name: "אחדות", lists: UNITY },
   { id: "arab", name: "מפלגות ערביות", lists: ARAB },
 ];
@@ -20,14 +20,28 @@ const oldOpposition = new Set(legacyCoalitions.flatMap(lists => {
   const rest = [...IDS_2026].filter(id => !lists.includes(id) && !ARAB.includes(id));
   return [compositionKey(rest), compositionKey(rest.filter(id => !["noam", "code_black"].includes(id)))];
 }));
+/** שמות ברירת המחדל הישנים של שני הגושים (הכרעת בעלים 11.10.2026); משנים רק גוש שהרכבו כברירת המחדל */
+const RENAMED = { gov: ["גוש הקואליציה", "גוש נתניהו", COALITION], rest: ["גוש האופוזיציה", "גוש איזנקוט", OPPOSITION] };
+function renameDefaults(payload) {
+  if (payload.mode !== "custom") return payload;
+  let changed = false;
+  const blocs = payload.blocs.map(b => {
+    const r = RENAMED[b.id];
+    if (!r || b.name !== r[0] || compositionKey(b.lists) !== compositionKey(r[2])) return b;
+    changed = true;
+    return { ...b, name: r[1] };
+  });
+  return changed ? { ...payload, blocs } : payload;
+}
 export function migrateBlocs(payload) {
-  if (payload.mode !== "custom" || payload.schemaVersion === 2) return payload;
+  if (payload.mode !== "custom") return payload;
+  if (payload.schemaVersion === 2) return renameDefaults(payload);
   let changed = false;
   let blocs = payload.blocs.map(b => {
     const key = compositionKey(b.lists);
-    if (oldCoalitions.has(key) && ["גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: [...COALITION] }; }
-    if (oldOpposition.has(key) && ["כל השאר", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
-      changed = true; return { ...b, name: "גוש האופוזיציה", lists: [...OPPOSITION] };
+    if (oldCoalitions.has(key) && ["גוש נתניהו", "גוש הקואליציה", "קואליציה", "גוש א"].includes(b.name)) { changed = true; return { ...b, lists: [...COALITION] }; }
+    if (oldOpposition.has(key) && ["כל השאר", "גוש איזנקוט", "גוש האופוזיציה", "גוש ב"].includes(b.name)) {
+      changed = true; return { ...b, name: "גוש איזנקוט", lists: [...OPPOSITION] };
     }
     return b;
   });
@@ -36,7 +50,7 @@ export function migrateBlocs(payload) {
     const expected = { gov: COALITION, rest: OPPOSITION, arab: ARAB };
     if (blocs.every(b => compositionKey(b.lists) === compositionKey(expected[b.id]))) blocs = ["gov", "rest", "arab"].map(id => blocs.find(b => b.id === id));
   }
-  return { ...payload, blocs };
+  return renameDefaults({ ...payload, blocs });
 }
 /** סכומים נגזרים בלבד; המפלגות עצמן נשמרות בשלמותן לשחזור עתידי. */
 export function fixedTotals(payload) {
@@ -46,8 +60,8 @@ export function fixedTotals(payload) {
 export function personalTotals(payload, definition) {
   const blocs = definition ? definition.mode === "gov37" ? definition.blocs.map(b => ({ ...b, lists: b.id === "gov" ? [...GOV37] : b.id === "rest" ? [...IDS_2026].filter(id => !GOV37.has(id)) : b.lists })) : migrateBlocs(definition).blocs : [
     {id:"government",name:"הממשלה היוצאת",lists:[...GOV37]},
-    {id:"gov",name:"גוש הקואליציה",lists:COALITION},
-    {id:"rest",name:"גוש האופוזיציה",lists:OPPOSITION},
+    {id:"gov",name:"גוש נתניהו",lists:COALITION},
+    {id:"rest",name:"גוש איזנקוט",lists:OPPOSITION},
     {id:"unity",name:"אחדות",lists:UNITY},
     {id:"arab",name:"מפלגות ערביות",lists:ARAB},
   ];
