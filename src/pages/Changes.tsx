@@ -137,7 +137,7 @@ export default function Changes() {
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
           <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}</th>
           <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"}</th>
-          <th scope="col">{pct ? "שינוי (נק')" : "שינוי (מנדטים)"}</th>
+          <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
       </thead>
       <tbody>
