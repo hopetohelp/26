@@ -1,7 +1,8 @@
 import { rng, signed } from "../lib/format";
 import { deviation, type DevInput, type DevRow } from "../lib/deviation";
 import { candleProfiles, type LSeg } from "../lib/chartLanguage";
-import ChartLegend, { rangeLine } from "./ChartLegend";
+import ChartLegend, { pollCandleLine } from "./ChartLegend";
+import { POINT_WINDOW } from "../lib/data";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 
 /**
@@ -63,7 +64,7 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
       <ChartLegend
         entries={[
           { kind: "mean", text: "0 = ממוצע הסקרים. כל הסימנים נמדדים ממנו, כך שהבדלים קטנים נראים" },
-          { kind: "candle", text: `${rangeLine("full", "הסקרים")} (לא טווח טעות סטטיסטי)` },
+          { kind: "candle", text: `${pollCandleLine(POINT_WINDOW)} (לא טווח טעות סטטיסטי)` },
           { kind: "result", text: "התוצאה בפועל, ביחס לממוצע הסקרים" },
         ]}
       />

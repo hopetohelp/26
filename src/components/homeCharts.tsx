@@ -3,7 +3,8 @@ import { hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
 import { type HomeData, type HomeRow } from "../lib/home";
 import { candleProfiles, clipSegs, intSegs, valueSegs, type LSeg, type Seg } from "../lib/chartLanguage";
-import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
+import ChartLegend, { pollCandleLine, rangeLine, type LegendEntry } from "./ChartLegend";
+import { POINT_WINDOW } from "../lib/data";
 import { PartyAvatar } from "./PartyAvatar";
 import CandleTrend from "./CandleTrend";
 import type { TrendPoint } from "./charts";
@@ -201,7 +202,7 @@ export function PollRanges({ rows, meanLabel = "ממוצע המכונים" }: { 
   const levels = candleProfiles(data.map((r) => r.segs));
   return (
     <>
-      <RankLegend meanLabel={meanLabel} rangeText={rangeLine("full", "הסקרים")} />
+      <RankLegend meanLabel={meanLabel} rangeText={pollCandleLine(POINT_WINDOW)} />
       <Axis axisMax={axisMax} />
       <ol className="mt-1">{data.map((r, i) => <RankRow key={r.id} r={r} lsegs={levels[i]} axisMax={axisMax} />)}</ol>
     </>
