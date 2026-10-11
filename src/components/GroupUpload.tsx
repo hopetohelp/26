@@ -8,7 +8,7 @@ import { emailsFromText, uploadChunks } from "../lib/groupUpload";
  * העלאת רשימת חברי קבוצה (docs/פילוח-קבוצות-תכנון.md): קובץ עם מייל בכל שורה, נשלח במנות. בשרת נשמר רק הגיבוב של כל מייל.
  * משמש את מנהל האתר (ממשק הניהול) ואת מנהל הקבוצה (האזור האישי). send = שליחת מנה אחת.
  */
-export default function GroupUpload({ send }: { send: (chunk: { emails: string[]; mode: "add" | "replace" }) => Promise<GroupImportResult> }) {
+export default function GroupUpload({ send, onDone }: { send: (chunk: { emails: string[]; mode: "add" | "replace" }) => Promise<GroupImportResult>; onDone?: () => void }) {
   const [mode, setMode] = useState<"add" | "replace">("add");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export default function GroupUpload({ send }: { send: (chunk: { emails: string[]
       setDone(`הועלה. נוספו ${added}${invalid ? `, ${invalid} שורות לא תקינות` : ""}. ברשימה עכשיו ${members} מיילים.`);
     } catch {
       setError("ההעלאה נעצרה באמצע. אפשר להעלות שוב את אותו קובץ במצב \"הוספה\" — מייל שכבר ברשימה לא נכפל.");
-    } finally { setBusy(null); }
+    } finally { setBusy(null); onDone?.(); }
   };
 
   return (

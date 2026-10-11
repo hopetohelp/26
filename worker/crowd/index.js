@@ -82,6 +82,13 @@ async function myGroups(env, participant) {
   return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc) })));
 }
 
+/** תחילת היום הנוכחי בשעון ישראל (ISO, UTC) — ל"נרשמו היום" */
+function israelDayStart(now) {
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem" }).format(new Date(now));
+  for (const off of [3, 2]) { const t = Date.parse(`${day}T00:00:00+0${off}:00`); if (new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem" }).format(new Date(t)) === day) return iso(t); }
+  return iso(Date.parse(day + "T00:00:00Z"));
+}
+
 /** הקבוצות שהמשתמש מנהל — דרך מייל מאומת, כמו החברות */
 async function managedGroups(env, participant) {
   const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
@@ -949,6 +956,24 @@ const routes = {
   "GET /group/mine": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
     return { groups: await managedGroups(env, participant) };
+  },
+
+  // מספרים למנהל הקבוצה (הכרעת בעלים 11.10.2026): כמה מהקבוצה רשומים (בסך הכול והיום), כמה שמרו השערה וכמה הצבעה.
+  // רק מצטבר, ורק מ-GROUP_MIN חברים רשומים — כדי שרשימה של מייל אחד לא תגלה אם אדם מסוים נרשם או הצביע.
+  "GET /group/stats": async ({ env, request, now, url }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const id = groupId(url.searchParams.get("group"));
+    if (!(await managedGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_manager");
+    const r = await env.DB.prepare(
+      `WITH m AS (SELECT DISTINCT e.participant AS id FROM group_members g JOIN emails e ON e.hash = g.email_hash WHERE g.group_id = ? AND e.verified = 1)
+       SELECT COUNT(*) AS registered,
+              SUM(CASE WHEN p.created_at >= ? THEN 1 ELSE 0 END) AS today,
+              SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'seats')) AS seats,
+              SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'vote')) AS vote
+       FROM m JOIN participants p ON p.id = m.id`,
+    ).bind(id, israelDayStart(now)).first();
+    if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+    return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
   },
 
   // מינוי או הסרה של מנהל קבוצה לפי מייל — נשמר רק הגיבוב; המינוי תופס כשהמייל מאומת בחשבון

@@ -107,3 +107,23 @@ describe("group managers", () => {
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).status).toBe(403);
   });
 });
+
+describe("group manager stats", () => {
+  it("counts only from the threshold, for the manager only", async () => {
+    const mgr = await account("boss@x.co");
+    await load(["boss@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const other = await account("o@x.co");
+    expect((await call("/group/stats?group=gizra", { token: other })).status).toBe(403);
+    // רשימה קטנה — אין מספרים (אי אפשר לבדוק אדם בודד)
+    expect((await call("/group/stats?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    const emails = [];
+    for (let i = 0; i < GROUP_MIN; i++) { emails.push(`m${i}@x.co`); await account(`m${i}@x.co`); }
+    await load(emails);
+    const s = (await call("/group/stats?group=gizra", { token: mgr })).data;
+    // account() שומר השערת מנדטים לכל אחד; boss נספר גם הוא (ברשימה ומאומת)
+    expect(s).toEqual({ group: "gizra", min: GROUP_MIN, registered: GROUP_MIN + 1, today: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0 });
+    t += 24 * 3600_000;
+    expect((await call("/group/stats?group=gizra", { token: mgr })).data.today).toBe(0);
+  });
+});
