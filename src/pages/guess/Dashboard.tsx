@@ -1,7 +1,6 @@
 import CommunityShare from "./CommunityShare";
-import PersonalBlocs, { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
+import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
 import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
@@ -43,8 +42,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
   const personal = usePersonalBlocs();
   const { pathname, search } = useLocation();
-  const [slot, setSlot] = useState<HTMLElement | null>(null);
-  useEffect(() => setSlot(document.getElementById("community-blocs")), []);
 
   if (err) return <Notice tone="warn">{err}</Notice>;
   if (!d) return <p className="text-ink-soft">טוען…</p>;
@@ -55,12 +52,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   const definedBlocs = loadDraft<BlocsPayload>("blocs") ?? personal.saved ?? session.me?.latest.blocs?.payload as BlocsPayload | undefined;
   const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
-  // במסך סקר האתר כרטיס הגושים שלי בטור הצר (הכרעת בעלים 8.10.2026) — Guess מציב שם מקום ריק
-  const blocsCard = d.seats ? <PersonalBlocs compact title="הגושים שלי: ממוצע המשתתפים מול הסקרים וההשערה שלי" source="השוואת הגושים: משתתפים, סקרים וההשערה שלי" asOf={asOf} datasets={[
-        { values: Object.fromEntries(d.seats.full.map(row => [row.list, row.mean])), source: `ממוצע ${d.seats.n} המשתתפים`, asOf },
-        { values: d.seats.polls, source: "ממוצע הסקרים", sumAvailable: true, asOf: d.seats.pollsAsOf ?? "הפרסום האחרון" },
-        ...(mine && hasDefinedBlocs ? [{ values: Object.fromEntries(Object.entries(mine.seats).map(([id,c]) => [id,c.v])), source: "ההשערה שלי", asOf: "הטיוטה הנוכחית" }] : []),
-      ]} /> : null;
   return (
     <div>
       <CommunityShare d={d} />
@@ -74,7 +65,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         </div>
         <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
       </div>
-      {blocsCard && (slot ? createPortal(blocsCard, slot) : blocsCard)}
       {d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
       {d.blocs ? <BlocStats d={d} view={view} mineBlocs={hasDefinedBlocs ? definedBlocs!.blocs : []} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
