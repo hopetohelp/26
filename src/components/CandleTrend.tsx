@@ -111,7 +111,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     return { ...a, lines: visibleLines(a.lines, spans) };
   }, [allV, step, majority, series, candleMode, lineMain]);
   // המספרים צמודים לקצה השמאלי, כמו הקווים לקצה הימני: אותו רווח משני הצדדים (הכרעת בעלים 11.10.2026)
-  const numPx = Math.max(...axis.lines.map((l) => seatsFmt(l.v).length), 1) * 9 + 6;
+  const numPx = Math.max(...axis.lines.map((l) => seatsFmt(l.v).length), 1) * 9 + 12;
   const X0 = (numPx / Math.max(width, 1)) * 100;
   const profiles = useMemo(() => candleProfiles(shown.map(segsOf)), [shown]);
   const hasData = series.some((s) => s.points.length) || lineMain.length;
@@ -167,7 +167,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   };
 
   const legend: LegendEntry[] = legendEntries ?? [
-    ...(candleMode ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowDays} הימים של כל נקודה (הסקר האחרון של כל מכון)`) }] : []),
+    ...(candleMode ? [{ kind: "candle" as const, text: rangeLine("full", "הסקרים", `ב-${windowDays} הימים שמסתיימים בכל נקודה (הסקר האחרון של כל מכון)`) }] : []),
     { kind: "dot", text: candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה" },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
@@ -219,7 +219,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
       </svg>
       <div className="absolute left-0 top-0 w-full" style={{ height }}>
         {axis.lines.map(({ v, major }) => (
-          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${major ? "text-sm font-extrabold" : "text-xs text-ink-faint"}`} style={{ right: `calc(${100 - X0}% + 6px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
+          <span key={v} aria-hidden="true" className={`absolute -translate-y-1/2 leading-none whitespace-nowrap text-end font-num ${major ? "text-sm font-extrabold" : "text-xs text-ink-faint"}`} style={{ right: `calc(${100 - X0}% + 12px)`, top: `${Y(v)}%` }}>{seatsFmt(v)}</span>
         ))}
         {candleMode && act && <span aria-hidden="true" className="absolute top-0 bottom-0 -translate-x-1/2 w-8 bg-ink/[.07] rounded-[4px]" style={{ left: `${X(act.p.t)}%` }} />}
         {candleMode && shown.map((p, i) => (p.lo === undefined && !p.xs ? null : <ProfileCandleV key={`c${p.t}`} segs={profiles[i]} y={Y} left={`${X(p.t)}%`} delay={delayOf(p.t)} />))}
