@@ -6,10 +6,10 @@ const ROW_H = 44;
 const VISIBLE = 4;
 const SHEET_H = ROW_H * VISIBLE;
 const PAD = (SHEET_H - ROW_H) / 2;
-const MAX = 40;
+const MAX = 60;
 const COMMIT_AFTER_MS = 180;
 
-/** 0 ו-4 עד 40 (אין 1 עד 3 בגלל אחוז החסימה); ערך קיים מעל 40 מוסיף את הטווח עד אליו, כדי שיוצג במרכז */
+/** 0 ו-4 עד 60 (אין 1 עד 3 בגלל אחוז החסימה); ערך קיים מעל 60 מוסיף את הטווח עד אליו, כדי שיוצג במרכז */
 export function seatChoices(current: number): number[] {
   const top = Math.max(MAX, current);
   return [0, ...Array.from({ length: top - 3 }, (_, i) => i + 4)];
