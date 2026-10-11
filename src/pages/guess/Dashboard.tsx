@@ -184,10 +184,10 @@ export function VotingStats({ d }: { d: D }) {
   const [unit, setUnit] = useState<Unit>("pct");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
   return <Card>
+    <h2 className="text-2xl font-display leading-tight text-center mb-3">הצבעה וכוונות הצבעה</h2>
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-3">
-      <h2 className="text-xl font-display leading-tight order-1">הצבעה וכוונות הצבעה</h2>
-      <div className="order-3 sm:order-2"><Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} /></div>
-      {count !== undefined && <span className="text-2xl tabular font-display order-2 sm:order-3">{count} משתתפים</span>}
+      <Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />
+      {count !== undefined && <span className="text-2xl tabular font-display">{count} משתתפים</span>}
     </div>
     {unit === "num" && <p className="text-xs text-ink-soft mb-3">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
@@ -199,7 +199,7 @@ export function VoteComparison({ d, unit, participants }: { d: D; unit: Unit; pa
   const rows = votingRows(d);
   const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${v}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
-    <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th>בחירות קודמות — כלל המצביעים</th><th>בחירות קודמות — הצביעו מהמשתתפים</th><th>בחירות הבאות — מתכננים להצביע</th></tr></thead>
+    <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th></tr></thead>
     <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>
       <td className="text-center">{r.official === null ? "—" : unit === "pct" ? `${r.official}%` : fmtNum(r.official * participants / 100)}</td>
       <td className="text-center">{cell(r.previous, r.previousN)}</td>
