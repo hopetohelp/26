@@ -33,21 +33,36 @@ export function fitSize(w: number, h: number, max: number): { w: number; h: numb
   return { w: Math.max(1, Math.round(w * k)), h: Math.max(1, Math.round(h * k)) };
 }
 
-/** תמונה ל-data URL של JPEG עד maxBytes (כמו IMAGE_MAX בשרת): מוקטנת ל-800 נקודות, ואם צריך באיכות נמוכה יותר. רקע לבן לשקיפות */
+/** יש פיקסל שקוף (או חצי שקוף) ברצף RGBA של canvas */
+export function hasAlpha(rgba: Uint8ClampedArray | number[]): boolean {
+  for (let i = 3; i < rgba.length; i += 4) if (rgba[i] < 250) return true;
+  return false;
+}
+/** גודל הקובץ בבתים מתוך data URL ב-base64 */
+export const dataUrlBytes = (url: string) => Math.floor((url.length - url.indexOf(",") - 1) * 0.75);
+
+/**
+ * תמונה ל-data URL עד maxBytes (כמו IMAGE_MAX בשרת): מוקטנת ל-800 נקודות, ואם צריך עוד — קטנה יותר.
+ * לוגו שקוף נשאר שקוף (WebP, ואם הדפדפן לא מקודד WebP — PNG), כדי שיוצג על רקע האתר; תמונה בלי שקיפות — JPEG קטן.
+ */
 export async function imageToDataUrl(file: File, maxBytes = 140 * 1024): Promise<string> {
   const bmp = await createImageBitmap(file);
-  const { w, h } = fitSize(bmp.width, bmp.height, 800);
-  const canvas = document.createElement("canvas");
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("canvas");
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, w, h);
-  ctx.drawImage(bmp, 0, 0, w, h);
-  bmp.close?.();
-  for (const q of [0.85, 0.75, 0.65, 0.5, 0.35]) {
-    const url = canvas.toDataURL("image/jpeg", q);
-    if (Math.floor((url.length - url.indexOf(",") - 1) * 0.75) <= maxBytes) return url;
-  }
+  try {
+    let size = fitSize(bmp.width, bmp.height, 800);
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const canvas = document.createElement("canvas");
+      canvas.width = size.w; canvas.height = size.h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("canvas");
+      ctx.drawImage(bmp, 0, 0, size.w, size.h);
+      const alpha = hasAlpha(ctx.getImageData(0, 0, size.w, size.h).data);
+      const tries: [string, number[]][] = alpha ? [["image/webp", [0.9, 0.75, 0.55]], ["image/png", [1]]] : [["image/jpeg", [0.85, 0.75, 0.65, 0.5, 0.35]]];
+      for (const [type, qualities] of tries) for (const q of qualities) {
+        const url = canvas.toDataURL(type, q);
+        if (url.startsWith(`data:${type};`) && dataUrlBytes(url) <= maxBytes) return url;
+      }
+      size = fitSize(size.w, size.h, Math.round(Math.max(size.w, size.h) * 0.75));
+    }
+  } finally { bmp.close?.(); }
   throw new Error("too_large");
 }

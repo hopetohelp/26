@@ -452,7 +452,7 @@ export function ManagedGroup({ id, name, slug, image, token, className, onChange
     <>
       <GroupLinkPanel
         slug={slug}
-        setSlug={async (next) => { await call("/group/link", { token, body: { group: id, slug: next } }); onChanged?.(); }}
+        setSlug={async (next) => { await call("/group/link", { token, body: next ? { group: id, slug: next } : { group: id } }); onChanged?.(); }}
         loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
       />
       <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />

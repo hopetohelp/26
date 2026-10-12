@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cleanSlugInput, finalSlug, fitSize, groupUrl, SLUG_RE } from "./groupLink";
+import { cleanSlugInput, dataUrlBytes, finalSlug, fitSize, groupUrl, hasAlpha, SLUG_RE } from "./groupLink";
 
 describe("group link name", () => {
   it("cleans while typing but keeps a trailing hyphen so 'the-gizra' can be typed", () => {
@@ -27,5 +27,14 @@ describe("group link name", () => {
     expect(fitSize(1600, 800, 800)).toEqual({ w: 800, h: 400 });
     expect(fitSize(300, 200, 800)).toEqual({ w: 300, h: 200 });
     expect(fitSize(1, 5000, 800)).toEqual({ w: 1, h: 800 });
+  });
+  it("מזהה שקיפות בתמונה: לוגו שקוף נשאר שקוף", () => {
+    expect(hasAlpha([10, 20, 30, 255, 1, 2, 3, 255])).toBe(false);
+    expect(hasAlpha([10, 20, 30, 255, 1, 2, 3, 0])).toBe(true);
+    expect(hasAlpha([10, 20, 30, 249])).toBe(true);
+    expect(hasAlpha([])).toBe(false);
+  });
+  it("גודל קובץ מתוך data URL", () => {
+    expect(dataUrlBytes("data:image/png;base64," + btoa("x".repeat(300)))).toBe(300);
   });
 });

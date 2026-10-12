@@ -19,7 +19,7 @@ const problem = (e: unknown) => {
 const tile = "bg-paper-card border border-paper-line rounded-theme p-3";
 
 /** הקישור של הקבוצה: שם באנגלית, כפתור העתקה ומספר הכניסות דרכו. בלי שם — רק שדה לקביעתו */
-export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | null | undefined; setSlug: (slug: string) => Promise<void>; loadStats: () => Promise<GroupLinkStats> }) {
+export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | null | undefined; setSlug: (slug: string | null) => Promise<void>; loadStats: () => Promise<GroupLinkStats> }) {
   const [text, setText] = useState(slug ?? "");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -41,13 +41,17 @@ export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | nu
     setBusy(true); setMsg(null);
     try { await setSlug(next); setMsg({ ok: true, text: "שם הקישור נשמר." }); } catch (err) { setMsg({ ok: false, text: problem(err) }); } finally { setBusy(false); }
   };
+  const auto = async () => {
+    setBusy(true); setMsg(null);
+    try { await setSlug(null); setMsg({ ok: true, text: "הקישור נוצר. אפשר לשנות את השם בכל עת." }); } catch (err) { setMsg({ ok: false, text: problem(err) }); } finally { setBusy(false); }
+  };
   const copy = () => {
     if (!url) return;
     navigator.clipboard?.writeText(url).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 2000); }, () => setMsg({ ok: false, text: "ההעתקה לא הצליחה. סמנו את הקישור והעתיקו ידנית." }));
   };
   const nameForm = (
     <form onSubmit={(e) => void save(e)} className="space-y-2">
-      <Field label="שם הקבוצה באנגלית (לקישור)" hint="אותיות באנגלית, ספרות ומקף, לפחות 3 תווים. למשל: the-gizra. שינוי השם מבטל קישורים שכבר נשלחו.">
+      <Field label={slug ? "שם הקבוצה באנגלית (לקישור)" : "או שם משלכם באנגלית"} hint="אותיות באנגלית, ספרות ומקף, לפחות 3 תווים. למשל: the-gizra. שינוי השם מבטל קישורים שכבר נשלחו.">
         <input dir="ltr" className={inputCls} value={text} onChange={(e) => setText(cleanSlugInput(e.target.value))} autoCapitalize="none" autoCorrect="off" spellCheck={false} />
       </Field>
       <Btn type="submit" kind={slug ? "ghost" : "primary"} disabled={busy || !finalSlug(text) || finalSlug(text) === slug}>{slug ? "שמירת השם החדש" : "יצירת הקישור"}</Btn>
@@ -78,7 +82,13 @@ export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | nu
             <div className="pt-2">{nameForm}</div>
           </details>
         </>
-      ) : nameForm}
+      ) : (
+        <>
+          <p className="text-sm text-ink-soft">אין עדיין קישור לקבוצה. אפשר ליצור אותו אוטומטית משם הקבוצה בעברית (תעתיק לאנגלית), או לכתוב שם בעצמכם.</p>
+          <Btn kind="primary" disabled={busy} onClick={() => void auto()}>יצירת קישור אוטומטית</Btn>
+          {nameForm}
+        </>
+      )}
       {msg && <Notice tone={msg.ok ? "calm" : "warn"}>{msg.text}</Notice>}
     </div>
   );
@@ -97,7 +107,7 @@ export function GroupImagePanel({ id, image, setImage }: { id: string; image: st
     <div className="space-y-3">
       <p className="font-bold text-sm">תמונת הקבוצה</p>
       <p className="text-sm text-ink-soft">מוצגת בראש סקר האתר כשהוא פתוח על הקבוצה. התמונה מוקטנת אוטומטית.</p>
-      {src && <img src={src} alt="" className="max-h-32 rounded-theme border border-paper-line bg-paper-card object-contain" />}
+      {src && <img src={src} alt="" className="max-h-32 rounded-theme border border-paper-line bg-paper object-contain" />}
       <div className="flex flex-wrap items-center gap-2">
         <label className={`inline-flex items-center min-h-[44px] px-4 rounded-full border-2 border-paper-line bg-paper-card text-ink text-sm font-bold cursor-pointer hover:border-ink-faint focus-within:ring-2 focus-within:ring-ink ${busy ? "opacity-50 pointer-events-none" : ""}`}>
           {busy ? "שולח…" : src ? "החלפת תמונה" : "בחירת תמונה"}

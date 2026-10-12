@@ -16,6 +16,14 @@ import { SEATS, seatFills } from "./SeatBoard";
 export const IMG_W = 1080;
 export const IMG_H = 1350;
 
+/** מקום הלוגו של קבוצה בפינה השמאלית העליונה: ריבוע של LOGO_BOX נקודות, והטקסט לידו מצטמצם בהתאם */
+export const LOGO_BOX = 140;
+export function drawLogo(ctx: CanvasRenderingContext2D, logo: ImageBitmap, x: number, y: number, size: number) {
+  const k = Math.min(size / logo.width, size / logo.height);
+  const w = logo.width * k, h = logo.height * k;
+  ctx.drawImage(logo, x + (size - w) / 2, y + (size - h) / 2, w, h);
+}
+
 function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
@@ -30,7 +38,7 @@ export interface ShareImageInput {
   /** תרחישים עצמאיים: שם, סכום מנדטים והרכב המפלגות (src/pages/guess/blocSummary.ts) */
   blocs?: BlocTotal[];
   /** תמונה של מקור אחר (למשל ממוצע סקר האתר): כותרות, ערך מוצג לכל רשימה וקריאה לפעולה */
-  labels?: { title: string; subtitle: string; cta: string; value?: (id: string) => string };
+  labels?: { title: string; subtitle: string; cta: string; value?: (id: string) => string; /** קבוצה (הכרעת בעלים, 12/10): לוגו בפינה השמאלית העליונה, וכתובת הקבוצה בתחתית במקום כתובת האתר */ logo?: ImageBitmap | null; address?: string };
 }
 
 /** צבעי העיצוב הפעיל וגופניו — לכל תמונות השיתוף */
@@ -161,10 +169,12 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = c.ink;
   ctx.font = `700 92px ${display}`;
-  ctx.fillText(labels?.title ?? (username ? `הכנסת של ${username}` : "הכנסת שלי"), R, 140, R - L);
+  const logoRoom = labels?.logo ? LOGO_BOX + 30 : 0;
+  if (labels?.logo) drawLogo(ctx, labels.logo, L, 44, LOGO_BOX);
+  ctx.fillText(labels?.title ?? (username ? `הכנסת של ${username}` : "הכנסת שלי"), R, 140, R - L - logoRoom);
   ctx.fillStyle = c.soft;
   ctx.font = `400 34px ${body}`;
-  ctx.fillText(labels?.subtitle ?? (pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר"), R, 196, R - L);
+  ctx.fillText(labels?.subtitle ?? (pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר"), R, 196, R - L - logoRoom);
 
   // הפרסה — אותם מיקומים כמו בלוח שבאתר (`HALL`), במרכז התמונה
   const { order, fills } = seatFills(values);
@@ -250,7 +260,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.font = `700 34px ${body}`;
   ctx.direction = "ltr";
   ctx.textAlign = "right";
-  ctx.fillText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, imageHeight - 48);
+  ctx.fillText(labels?.address ?? SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, imageHeight - 48);
 
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }

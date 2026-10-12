@@ -1,4 +1,4 @@
-import CommunityShare from "./CommunityShare";
+import CommunityShare, { type GroupShareInfo } from "./CommunityShare";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { Card } from "../../components/ui";
@@ -22,6 +22,7 @@ import { PartyAvatar } from "../../components/PartyAvatar";
 import EditBlocsButton from "../../components/EditBlocsButton";
 import GroupBanner from "../../components/GroupBanner";
 import GroupScope from "../../components/GroupScope";
+import { groupImageUrl, groupUrl } from "../../lib/groupLink";
 import { blankDashboard, blankStat, listsFromPolls } from "../../lib/groupBlank";
 import { useLocation } from "react-router-dom";
 import { BlocAvatar } from "../../components/BlocAvatar";
@@ -93,7 +94,10 @@ export default function Dashboard({ session, landing = null }: { session: Return
   // ראש המסך: תמונת הקבוצה הנבחרת, או של הקבוצה שהקישור הוביל אליה; השם רק אם אין לגולש מתג עם שמה
   const shownGroup = scope !== "all" ? groups.find((g) => g.id === scope) : landing;
   const banner = shownGroup && <GroupBanner id={shownGroup.id} name={shownGroup.name} image={shownGroup.image} showName={!groups.some((g) => g.id === shownGroup.id)} />;
-  const top = <>{banner}{scopeBar}</>;
+  // שיתוף של הקבוצה (הכרעת בעלים 12.10.2026): עם שמה ולוגו; נתוני הקבוצה בתמונות רק מ-50 משתתפים, ובקישור מהאורח — רק הזמנה וקישור
+  const groupShare: GroupShareInfo | undefined = shownGroup?.slug ? { name: shownGroup.name ?? "הקבוצה", url: groupUrl(shownGroup.slug), logoUrl: groupImageUrl({ slug: shownGroup.slug }, shownGroup.image), dataReady: scope !== "all" && !blank } : undefined;
+  // בקבוצה: תמונה, אחריה פס השיתוף, ואחריו המתג (התמונה היא בראש המסך)
+  const top = <>{banner}{groupShare && d && <CommunityShare d={d} group={groupShare} />}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
@@ -108,8 +112,8 @@ export default function Dashboard({ session, landing = null }: { session: Return
     <div>
       {top}
       {blank && <section className="border-2 border-ink rounded-theme p-4 mb-4" aria-labelledby="group-small"><h2 id="group-small" className="text-xl font-display leading-tight">לשמירה על חוק סקרי הבחירות, אי אפשר לפרסם נתונים על קבוצה קטנה. לכן הנתונים יוצגו רק אחרי {blank.min} משתתפים.</h2></section>}
-      {/* שיתוף — רק של כלל המשתתפים, כדי שנתוני קבוצה לא ייצאו החוצה */}
-      {scope === "all" && <CommunityShare d={d} />}
+      {/* שיתוף: של כלל המשתתפים, או של הקבוצה (עם שמה ולוגו) כשהמסך פתוח עליה */}
+      {!groupShare && scope === "all" && <CommunityShare d={d} />}
       {!blank && d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       {(stale || scope !== "all") && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>
