@@ -248,6 +248,25 @@ CREATE TABLE IF NOT EXISTS group_manager_labels (
   email_enc TEXT NOT NULL,
   PRIMARY KEY (group_id, email_hash)
 );
+-- קישור קבוצה (הכרעת בעלים 12.10.2026): שם באנגלית בכתובת (#/g/<slug>), תמונה שמוצגת בראש סקר האתר, ומונה כניסות דרך הקישור.
+-- טבלאות נפרדות (בלי ALTER). המונה אנונימי: ספירה ליום בלבד, בלי זהות. opens = כניסות, fresh = כניסות ראשונות של דפדפן.
+CREATE TABLE IF NOT EXISTS group_links (
+  group_id TEXT PRIMARY KEY REFERENCES groups(id),
+  slug TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS group_images (
+  group_id TEXT PRIMARY KEY REFERENCES groups(id),
+  mime TEXT NOT NULL,
+  data TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS group_visits (
+  group_id TEXT NOT NULL,
+  day TEXT NOT NULL,
+  opens INTEGER NOT NULL DEFAULT 0,
+  fresh INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (group_id, day)
+);
 -- אישור אוטומטי (הכרעת בעלים 12.10.2026): השערת מנדטים שנמצאה תקינה — בשמירה, או כשנכנסה לטווח הסקרים — מאושרת לצמיתות
 -- ולא חוזרת להמתנה. נפרד מ-version_review (אישור ודחייה ידניים), כדי שבממשק הניהול היא תוצג כ"תקינה" ולא כ"אושרה".
 CREATE TABLE IF NOT EXISTS version_accepted (

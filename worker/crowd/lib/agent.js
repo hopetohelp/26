@@ -34,6 +34,7 @@ export const AGENT_ROUTES = {
   "GET /dashboard": true,
   "GET /group/mine": true,
   "GET /group/stats": true,
+  "GET /group/link-stats": true,
   // שיחת המשתמש עם צוות האתר — שרת ההערות מזהה דרכו את המשתמש (ואת העוזר: via)
   "GET /support/access": true,
   // האזור האישי — כתיבה (אותה בדיקה ואותה הגבלת קצב כמו בדפדפן)
@@ -42,6 +43,7 @@ export const AGENT_ROUTES = {
   "POST /history/clear": true,
   "POST /account/name": true,
   "POST /group/import": true,
+  "POST /group/link": true,
   // מסך הניהול. whoami — שרת ההערות מזהה דרכו מנהל (ומקבל agent: שם העוזר), ושם קובעים מה מותר לעוזר בשיחות;
   // support — המספרים שמסך הניהול מציג (הכרעת בעלים 12.10.2026: המנהל עונה, מאשר טיוטות ומשחרר השהיה גם דרך העוזר)
   "GET /admin/whoami": true,
@@ -52,6 +54,8 @@ export const AGENT_ROUTES = {
   "GET /admin/groups": true,
   "POST /admin/groups/import": true,
   "POST /admin/groups/stats": true,
+  "POST /admin/groups/link": true,
+  "POST /admin/groups/link-stats": true,
   // מינוי מנהל קבוצה — כן; הסרה — רק במסך הניהול
   "POST /admin/groups/managers": (body) => !body.remove,
 };
