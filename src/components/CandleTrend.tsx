@@ -45,6 +45,8 @@ export interface CandleTrendProps {
   popup?: (info: { series: Series; point: TrendPoint; color: string }) => ReactNode;
   /** מקרא משלו במקום מקרא הסקרים */
   legendEntries?: LegendEntry[];
+  /** הנקודות והקו הם נתון מודל (למשל ממוצע המודל במגמת הממשלה): ההסבר נכתב בשורות המקרא שלהם, במקום אייקון מידע (הכרעת בעלים 12.10.2026) */
+  meanNote?: string;
   /** רוחב החלון בפיקסלים (ברירת מחדל 140) */
   popupWidth?: number;
 }
@@ -59,7 +61,7 @@ const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 
 interface Target { si: number; i: number; p: TrendPoint }
 
-export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading }: CandleTrendProps) {
+export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading, meanNote }: CandleTrendProps) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const [seenRef, seen] = useSeen<HTMLDivElement>();
   const [width, setWidth] = useState(640);
@@ -186,7 +188,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
 
   const legend: LegendEntry[] = legendEntries ?? [
     ...(candleMode ? [{ kind: "candle" as const, text: pollCandleLine(windowDays, POINT_DAYS) }] : []),
-    { kind: "dot", text: candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה" },
+    { kind: "dot", text: `${candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה"}${meanNote ? ` — ${meanNote}` : ""}` },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
     ...(markers.length ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),

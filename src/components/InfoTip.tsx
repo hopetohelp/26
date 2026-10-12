@@ -108,14 +108,30 @@ export const MODEL_INFO: Record<ModelInfoKind, { label: string; text: () => stri
 };
 
 /**
+ * ההסבר הקצר שנכנס לשורת המקרא, בגרף שיש לו כפתור "מקרא" (הכרעת בעלים 12.10.2026): שם אין אייקון מידע נפרד, וההסבר כתוב בתוך המקרא.
+ * אותו נוסח כמו באייקון, כדי ששני המקומות לא יגידו דברים שונים.
+ */
+export const MODEL_NOTE = "מחושב במודל, לא נתון ישיר מהסקרים";
+
+/**
  * אייקון המידע ליד נתון שחושב במודל או בתרחישים (הכרעת בעלים 12.10.2026): בכל האתר חוץ ממסך התרחישים.
+ * 🔴 כללי הבעלים (12.10.2026): (1) בגרף שיש לו "מקרא" — אין אייקון; ההסבר בתוך המקרא (`MODEL_NOTE`).
+ * (2) אין שני אייקונים זהים במסך: אייקון אחד לכל סוג, ליד הנתון הראשון במסך, ו-`items` מונה את כל הנתונים במסך שההסבר חל עליהם.
  * `link={false}` — כשבמסך כבר יש "איך זה חושב?" אל ערך המודל (בלי כפילות).
  */
-export function ModelInfo({ kind, link = true, className }: { kind: ModelInfoKind; link?: boolean; className?: string }) {
+export function ModelInfo({ kind, link = true, items, className }: { kind: ModelInfoKind; link?: boolean; items?: string[]; className?: string }) {
   const m = MODEL_INFO[kind];
   return (
     <InfoTip label={m.label} methodAnchor={link ? "model" : undefined} className={className}>
       {m.text()}
+      {items && items.length > 0 && (
+        <>
+          <span className="mt-2 block font-semibold">במסך הזה זה חל על:</span>
+          <span role="list" className="mt-0.5 block">
+            {items.map((x) => <span key={x} role="listitem" className="block before:content-['·_']">{x}</span>)}
+          </span>
+        </>
+      )}
     </InfoTip>
   );
 }

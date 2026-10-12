@@ -4,6 +4,7 @@ import { change, diffText, dumbbellAxis, r1, type DumbbellRow, type DumbbellUnit
 import { seatsFmt, signed } from "../lib/format";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
+import { MODEL_NOTE } from "./InfoTip";
 
 /**
  * "מה השתנה" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל משפחה, עיגול ריק שחור = 2022 (תוצאה רשמית), עיגול מלא כתום = היום (ממוצע המודל),
@@ -14,7 +15,8 @@ import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 /** המקרא של הגרף: זהה באחוזים ובמנדטים. מסך שמציג כמה גרפים כאלה מציג אותו פעם אחת (`ChartBar`) ומעביר `legend={false}` */
 export const DUMBBELL_LEGEND: LegendEntry[] = [
   { kind: "result", text: "2022, התוצאות הרשמיות" },
-  { kind: "mean", text: "היום, ממוצע המודל" },
+  // ההסבר על ממוצע המודל בתוך המקרא, בלי אייקון מידע נפרד בגרף (הכרעת בעלים 12.10.2026)
+  { kind: "mean", text: `היום, ממוצע המודל — ${MODEL_NOTE}` },
   { kind: "candle", text: rangeLine("full", "הסקרים") },
 ];
 
@@ -86,16 +88,14 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
 /**
  * `legend={false}`: המקרא מוצג במקום אחר (שורת הבקרה של המסך). `onName` — שם הרשימה ככפתור; `openId` — מי פתוחה, ו-`below` — מה נפתח מתחת לשורה שלה.
  */
-export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below, info }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode; info?: ReactNode }) {
+export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode }) {
   const { min, max, ticks } = dumbbellAxis(rows, unit);
   const levels = candleProfiles(rows.map((r) => r.segs));
   return (
     <div>
       {legend && <ChartLegend entries={DUMBBELL_LEGEND} />}
-      {/* `info`: אייקון המידע של "היום" (ממוצע המודל), בראש עמודת השמות; הציר עצמו מוסתר מקורא מסך */}
-      <div className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
-        {info && <div className="md:col-start-1 md:row-start-1 flex items-end gap-1 pb-0.5">היום {info}</div>}
-        <div aria-hidden="true" dir="ltr" className="md:col-start-2 md:row-start-1 relative h-5">
+      <div aria-hidden="true" className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
+        <div dir="ltr" className="md:col-start-2 relative h-5">
           <span className="mk-plot">
             {ticks.map((v) => (
               <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${((v - min) / (max - min)) * 100}%` }}>{v === 0 || unit === "seats" ? v : `${v}%`}</span>

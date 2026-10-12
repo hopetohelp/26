@@ -142,7 +142,9 @@ export default function Changes() {
   /** בטבלה (ובאין שיוך) שם המפלגה הוא כפתור; בגרף השם בתוך השורה (`DumbbellChart`). העורך נפתח מתחת. */
   const nameButton = (r: LineageRow) => <NameButton id={r.id} name={listName(r.id)} open={open === r.id} onToggle={() => toggle(r.id)} />;
 
-  const table = (list: LineageRow[]) => (
+  // בתצוגת טבלה (שאין לה "מקרא") — אייקון מידע אחד בלבד, בטבלה הראשונה במסך, וחל על כל הטבלאות (הכרעת בעלים 12.10.2026)
+  const firstTable = CATEGORIES.find((c) => c.id !== "none" && rows.some((r) => r.category === c.id))?.id;
+  const table = (list: LineageRow[], first: boolean) => (
     <table className="w-full text-sm">
       <caption className="sr-only">2022 מול היום, לפי המפלגה, {pct ? "באחוזים" : "במנדטים"}</caption>
       <thead>
@@ -150,7 +152,7 @@ export default function Changes() {
           <th scope="col" className="py-2 pe-3">היום</th>
           <th scope="col" className="pe-3">ב-2022</th>
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
-          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"} <ModelInfo kind="mean" /></th>
+          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}{first && <> <ModelInfo kind="mean" items={[`העמודה "${pct ? "היום %" : "מנדטים היום"}" בכל הטבלאות במסך`]} /></>}</th>
           <th scope="col" className="pe-3">{pct ? "טווח הסקרים %" : "טווח הסקרים (מנדטים)"}</th>
           <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
@@ -253,10 +255,9 @@ export default function Changes() {
                               onName={toggle}
                               openId={open}
                               below={(id) => { const r = list.find((x) => x.id === id); return r ? editor(r) : null; }}
-                              info={<ModelInfo kind="mean" />}
                             />
                           }
-                          table={table(list)}
+                          table={table(list, c.id === firstTable)}
                         />
                         {asTable && editorOf(list)}
                       </>

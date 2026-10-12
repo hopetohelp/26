@@ -71,13 +71,10 @@ function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: bool
       {/* צר: תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד (ימין לצד הימני, שמאל לשמאלי); ברוחב מ-1024px התמונה ברצועה כולה */}
       <span aria-hidden="true" className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p aria-hidden="true" className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
-      {/* המספר הגדול הוא ממוצע המודל ⇐ אייקון מידע צמוד אליו (הכרעת בעלים 12.10.2026) */}
-      <div className="mt-2 flex items-start gap-1">
-        <p aria-hidden="true" className={`font-num tabular leading-none text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
-          <CountUp value={r.central} format={seatsFmt} />
-        </p>
-        <ModelInfo kind="mean" className="mt-1" />
-      </div>
+      {/* המספר הגדול הוא ממוצע המודל; אייקון המידע שלו אחד למסך, בחצי העיגול שמעל (בלי שני אייקונים זהים, הכרעת בעלים 12.10.2026) */}
+      <p aria-hidden="true" className={`font-num tabular leading-none mt-2 text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
+        <CountUp value={r.central} format={seatsFmt} />
+      </p>
       {range && <p aria-hidden="true" className="mt-2 text-sm text-ink-soft"><bdi>{range}</bdi> בסקרים האחרונים</p>}
     </div>
   );
@@ -109,7 +106,7 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
           methodAnchor="model"
         >
           <ul className="mt-4 grid grid-cols-2 gap-x-4 md:gap-x-8">
-            {rows.map((r) => {
+            {rows.map((r, i) => {
               const s = counts.get(r.id);
               return (
                 <li key={r.id} className="border-s-4 border-ink ps-3 md:ps-4 min-w-0">
@@ -119,7 +116,11 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
                     <p className="min-w-0 font-display text-base md:text-xl leading-tight break-words [overflow-wrap:anywhere]">{r.name}</p>
                   </div>
                   <p className="font-num text-4xl md:text-5xl font-extrabold tabular leading-none mt-1">{Math.round(r.pass * 100)}%</p>
-                  <p className="text-xs md:text-sm text-ink-soft mt-1">מהתרחישים עוברת <ModelInfo kind="pass" className="ms-0.5" /></p>
+                  <p className="text-xs md:text-sm text-ink-soft mt-1">
+                    מהתרחישים עוברת
+                    {/* אייקון אחד בלבד, ליד הרשימה הראשונה, וחל על כולן (הכרעת בעלים 12.10.2026) */}
+                    {i === 0 && <ModelInfo kind="pass" className="ms-1" items={rows.length > 1 ? ["האחוז הגדול ופס ההתקדמות של כל רשימה ב\"על קו החסימה\""] : undefined} />}
+                  </p>
                   <span className="block mt-2"><PassBar pass={r.pass} /></span>
                   {s && <p className="mt-2 text-xs md:text-sm text-ink-soft">אצל {s.passing} מתוך {s.n} מכונים</p>}
                 </li>

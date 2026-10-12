@@ -37,3 +37,10 @@ it("נתוני המודל: כל נוסח אומר שהנתון אינו ישיר
   expect(html).toContain("לא נתון ישיר מהסקרים");
   expect(html).not.toContain("/method#");
 });
+
+it("אייקון עם `items`: מונה את הנתונים במסך שההסבר חל עליהם", () => {
+  const html = render(createElement(ModelInfo, { kind: "mean", items: ["המספרים בחצי העיגול", "המספר הגדול בדו-קרב"] }));
+  expect(html).toContain("במסך הזה זה חל על:");
+  expect(html).toContain("המספרים בחצי העיגול");
+  expect(html).toContain("המספר הגדול בדו-קרב");
+});
