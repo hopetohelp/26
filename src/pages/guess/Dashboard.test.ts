@@ -101,7 +101,7 @@ it("ברשימה ובגרף מוצגות רק מפלגות שעברו אצל מ�
     const html=renderToStaticMarkup(createElement(SeatsStats,{rows,polls:{shas:8},view}));
     expect(html).toContain(nameOf("likud"));
     expect(html).not.toContain("ש&quot;ס");
-    expect(html).toContain("מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות");
+    expect(html).not.toContain("מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות");
   }
   const historical=renderToStaticMarkup(createElement(SeatsStats,{rows,polls:{},view:"table",passedLists:["shas"]}));
   expect(historical).toContain("ש&quot;ס");
