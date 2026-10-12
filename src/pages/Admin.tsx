@@ -91,11 +91,11 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
 /** תיבה קטנה עם שני מספרים (למשל ס״ה והיום); alert = צבע אזהרה כשיש מה לטפל בו */
 function Pair({ label, a, b, alert = false, small = false }: { label: string; a: [string, string | number]; b: [string, string | number]; alert?: boolean; small?: boolean }) {
   return (
-    <div className={`bg-paper-card border rounded-theme p-2 sm:p-3 min-w-0 ${alert ? "border-warn" : "border-paper-line"}`}>
+    <div className={`bg-paper-card border rounded-theme p-2 sm:p-3 min-w-0 text-center ${alert ? "border-warn" : "border-paper-line"}`}>
       <p className="text-xs text-ink-soft leading-tight">{label}</p>
-      <div className="flex gap-2 sm:gap-4 mt-1 flex-wrap">
+      <div className="flex justify-center mt-1">
         {[a, b].map(([name, n]) => (
-          <p key={name} className="min-w-0"><span className="block text-[11px] text-ink-soft">{name}</span><span className={`font-num tabular leading-none ${small ? "text-sm sm:text-base" : "text-xl sm:text-2xl"}`}>{n}</span></p>
+          <p key={name} className="min-w-0 px-2 sm:px-3 border-s border-paper-line first:border-s-0"><span className="block text-[11px] text-ink-soft whitespace-nowrap">{name}</span><span className={`font-num tabular leading-none whitespace-nowrap ${small ? "text-sm sm:text-base" : "text-xl sm:text-2xl"}`}>{n}</span></p>
         ))}
       </div>
     </div>
@@ -188,7 +188,7 @@ export default function Admin() {
       {data && (
         <>
           {/* תיבות קטנות מאוחדות (הכרעת בעלים 12.10.2026); הדשבורד המלא — במגירה אחת */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3" role="group" aria-label="סיכום">
+          <div className="flex flex-wrap gap-2 sm:gap-3" role="group" aria-label="סיכום">
             <Pair label="משתמשים" a={["ס״ה", data.support?.stats.participants ?? "—"]} b={["היום", data.support?.stats.participantsToday ?? "—"]} />
             <Pair label="שמרו השערה או הצבעה" a={["ס״ה", data.support?.stats.savers ?? "—"]} b={["היום", data.support?.stats.saversToday ?? "—"]} />
             <Pair label="נכנסו" a={["ס״ה", data.totalVisitors]} b={["היום", today?.users ?? 0]} />
@@ -197,7 +197,7 @@ export default function Admin() {
             <Pair label="נפילות" a={["מאז האיפוס", data.failures?.total ?? "—"]} b={["היום", today?.autoFailures ?? 0]} alert={(data.failures?.total ?? 0) > 0} />
           </div>
           {/* הרענון של GitHub והסשן המרוכז רצים באותה שעה (src/lib/runSchedule.ts); בשבת — מושבתים */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3" role="group" aria-label="ריצות">
+          <div className="flex flex-wrap gap-2 sm:gap-3" role="group" aria-label="ריצות">
             <Pair label="פרסום האתר (GitHub)" a={["אחרון", lastPublish ? when(lastPublish) : "—"]} b={["הבא", next ? when(new Date(next).toISOString()) : "—"]} small />
             <Pair label="סוכן" a={["אחרון", data.agentLastRun ? when(data.agentLastRun) : "—"]} b={["הבא", next ? when(new Date(next).toISOString()) : "—"]} small />
           </div>
