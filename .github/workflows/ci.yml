@@ -41,6 +41,8 @@ jobs:
         run: npm test
       - name: בנייה
         run: npm run build
+      - name: כל קובץ שבאינדקס הנתונים הפתוחים קיים ועדכני (llms.txt, data/*.json)
+        run: npx vite-node scripts/check-open-data.ts
       - name: שני השרתים נטענים כמו בפריסה (Node וחבילת Cloudflare, בלי העלאה)
         run: |
           for f in worker/crowd/lib/*.js; do node --input-type=module -e "await import('./$f')"; done

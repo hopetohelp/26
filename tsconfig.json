@@ -16,5 +16,5 @@
     "allowImportingTsExtensions": true,
     "types": ["vitest/globals", "node"]
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "scripts/open-data.ts", "scripts/check-open-data.ts", "vite.config.ts"]
 }

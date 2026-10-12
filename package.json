@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/poll-ranges.mjs && tsc -b && vite build",
+    "build": "node scripts/poll-ranges.mjs && tsc -b && vite build && vite-node scripts/open-data.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b --pretty false",

@@ -79,6 +79,11 @@ jobs:
             exit 0
           fi
           cp /tmp/dashboard.json dist/dashboard.json
+      - name: הנתונים הפתוחים — dashboard.json נעטף ב-about, וכל קובץ שבאינדקס קיים ועדכני
+        run: |
+          set -euo pipefail
+          npx vite-node scripts/open-data.ts --dashboard
+          if [ -f dist/dashboard.json ]; then npx vite-node scripts/check-open-data.ts --with-dashboard; else npx vite-node scripts/check-open-data.ts; fi
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
