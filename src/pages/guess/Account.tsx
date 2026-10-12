@@ -433,7 +433,7 @@ export default function Account({ session, hideGroups = false }: { session: Retu
         <p className="font-bold">סיסמה</p>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
       </div>
-      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className={row} onChanged={() => void session.refresh()} />)}
+      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className={row} onChanged={() => void session.refresh()} collapsible={(me.managedGroups ?? []).length > 1} />)}
       <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
@@ -444,12 +444,12 @@ export default function Account({ session, hideGroups = false }: { session: Retu
 }
 
 /** מקטע מנהל קבוצה: קישור, מספרים, רשימת החברים (קובץ או מייל בודד) ותמונה — אותן אפשרויות כמו למנהל האתר */
-export function ManagedGroup({ id, name, slug, image, token, className, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; token: string; className: string; onChanged?: () => void }) {
+export function ManagedGroup({ id, name, slug, image, token, className, onChanged, collapsible = false }: { id: string; name: string; slug?: string | null; image?: string | null; token: string; className: string; onChanged?: () => void; collapsible?: boolean }) {
   const [refresh, setRefresh] = useState(0);
+  const [open, setOpen] = useState(false);
   const send = (chunk: { emails: string[]; mode: "add" | "replace" }) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } });
-  return (
-    <div className={className}>
-      <p className="font-bold">הקבוצה {name}</p>
+  const content = (
+    <>
       <GroupLinkPanel
         slug={slug}
         setSlug={async (next) => { await call("/group/link", { token, body: { group: id, slug: next } }); onChanged?.(); }}
@@ -465,6 +465,23 @@ export function ManagedGroup({ id, name, slug, image, token, className, onChange
         image={image}
         setImage={async (dataUrl) => { await call("/group/image", { token, body: dataUrl ? { group: id, image: dataUrl } : { group: id, remove: true } }); onChanged?.(); }}
       />
+    </>
+  );
+  // מנהל של כמה קבוצות: לכל קבוצה תת-מגירה נפרדת; התוכן (והבקשות לשרת) נטענים רק כשהיא נפתחת
+  if (collapsible)
+    return (
+      <details className={`group ps-3 border-s-2 border-paper-line [&_summary::-webkit-details-marker]:hidden ${className}`} onToggle={(e) => setOpen(e.currentTarget.open)}>
+        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[56px] font-bold">
+          <span>הקבוצה {name}</span>
+          <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
+        </summary>
+        {open && <div className="space-y-2 pb-3">{content}</div>}
+      </details>
+    );
+  return (
+    <div className={className}>
+      <p className="font-bold">הקבוצה {name}</p>
+      {content}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { FEEDBACK_TOPICS, conversationTopic, topicLabel } from "../lib/feedbackTopics";
+import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
@@ -69,7 +70,7 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
             {items.map((m, i) => (
               <li key={i} className={`max-w-[90%] rounded-theme px-3 py-2 text-sm ${m.author === "team" ? "self-end bg-accent-soft" : "self-start bg-paper-line/50"}`}>
                 <p className="text-xs font-bold text-ink-soft mb-1">{m.author === "team" ? "צוות" : "גולש"} · {when(m.created_at)}{m.page ? ` · ${m.page}` : ""}{m.via ? ` · נכתב דרך עוזר AI (${m.via})` : ""}</p>
-                <p className="whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{m.text}</p>
+                <p className="whitespace-pre-wrap break-words max-h-64 overflow-y-auto"><Linkified text={m.text} /></p>
               </li>
             ))}
           </ul>

@@ -1,4 +1,5 @@
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
+import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -30,7 +31,7 @@ function Bubble({ m }: { m: Message }) {
   const team = m.author === "team";
   return <li className={`max-w-[85%] rounded-theme px-3.5 py-2.5 ${team ? "self-end bg-accent-soft" : "self-start bg-paper-line/50"}`}>
     <p className="text-xs font-bold text-ink-soft mb-1">{team ? "צוות האתר" : "אתם"}</p>
-    <p className="whitespace-pre-wrap break-words">{m.text}</p>
+    <p className="whitespace-pre-wrap break-words"><Linkified text={m.text} /></p>
   </li>;
 }
 
@@ -193,7 +194,7 @@ export default function Support() {
   );
   const data = token ? <MyData session={session} part="data" /> : null;
   const assistants = <Assistants session={session} />;
-  const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className="py-3 border-b border-paper-line space-y-2" onChanged={() => void session.refresh()} />) : null;
+  const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className="py-3 border-b border-paper-line space-y-2" onChanged={() => void session.refresh()} collapsible={groups.length > 1} />) : null;
   const admin = (me?.isAdmin || hasAdminKey()) && (
     <div className="border-b border-paper-line">
       <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
