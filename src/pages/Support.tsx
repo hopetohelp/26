@@ -13,7 +13,7 @@ import { Chips } from "../components/Choice";
 import { errorText, useSession } from "./guess/useCrowd";
 import { getPicture } from "../lib/crowdSession";
 import { FEEDBACK_URL, accountSupport, getThread, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
-import { WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread";
+import { OLD_WELCOME, WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread";
 
 /** מפתח ניהול שנשמר בדפדפן הזה (כניסה דרך קישור הניהול) — גם הוא מציג את הכפתור לממשק הניהול */
 const hasAdminKey = () => { try { return !!localStorage.getItem("elections26.admin"); } catch { return false; } };
@@ -121,7 +121,8 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       {/* ההודעות נגללות עם המסך, מהמגירות ועד שדה הכתיבה */}
       <div className="flex-1 flex flex-col">
       <ol ref={list} className="mt-auto flex flex-col gap-3 pb-3" aria-label="שיחה עם צוות האתר" aria-live="polite">
-        {messages !== null && !messages.some((m) => m.author === "team" && m.text === WELCOME.text) && <Bubble m={WELCOME} />}
+        {/* שיחה שקיבלה את הנוסח החדש כהודעה בתוכה ⇐ בראשה נשארת הפתיחה הישנה; שיחה חדשה ⇐ הנוסח החדש בראש */}
+        {messages !== null && <Bubble m={messages.some((m) => m.author === "team" && m.text === WELCOME.text) ? OLD_WELCOME : WELCOME} />}
         {messages === null && <li className="text-ink-soft text-sm">טוען…</li>}
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
@@ -130,7 +131,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       {!closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Chips label="סוג הפנייה" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
-          {topic === "theory" && <p className="text-xs text-ink-soft">כתבו תאוריה או רעיון לחישוב על הבחירות, ונסביר איך אפשר לבדוק את זה באתר, והאם התאוריה נשמעת הגיונית. אם אין דרך לבדוק, נשמח לשמוע ממכם איך להוסיף יכולת כזו.</p>}
+          {topic === "theory" && <p className="text-xs text-ink-soft">שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם.</p>}
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
             {/* שורה אחת כברירת מחדל, ומתרחב עם הטקסט עד 5 שורות; מעבר לזה — גלילה בתוך השדה */}
