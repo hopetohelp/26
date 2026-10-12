@@ -9,6 +9,7 @@ import { POINT_WINDOW } from "../lib/data";
 import { useSeen, whenVisible } from "../lib/useSeen";
 import { PartyAvatar } from "./PartyAvatar";
 import CandleTrend from "./CandleTrend";
+import { MODEL_NOTE } from "./InfoTip";
 import type { TrendPoint } from "./charts";
 import { AxisLabels, MeanDot, ProfileCandle, Track } from "./marks";
 
@@ -253,6 +254,7 @@ export function GovTrend({ home, points = [], heading }: { home: HomeData; point
       heading={heading}
       series={[{ id: "gov", name: "הממשלה היוצאת", points: trend }]}
       majority={MAJORITY}
+      meanNote={`ממוצע המודל באותו יום: ${MODEL_NOTE}. הנרות: הסקרים עצמם`}
     />
   );
 }

@@ -14,7 +14,8 @@ import { POLL_AVERAGE } from "../lib/sources";
  * דו-קרב שתי הרשימות הגדולות; על קו החסימה (זו לצד זו); פעולה אחת "הכנסת שלי"; ובתחתית מגמת הממשלה היוצאת והכפתור "הכנסת שלי".
  * בכל המסך אין שורת סוג/תאריך/"איך זה חושב?" (`Explained bare`). הדירוג המלא — בלשונית "תרחישים".
  * מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר בלוח, במגמה ובתרחישים (החלטה 14).
- * ליד כל נתון שחושב במודל או בתרחישים — אייקון מידע (`ModelInfo`, הכרעת בעלים 12.10.2026); "על קו החסימה" לפי הסקרים האחרונים בלבד.
+ * נתוני מודל (הכרעות בעלים 12.10.2026): אייקון מידע אחד לכל סוג — ממוצע המודל בחצי העיגול (חל גם על הדו-קרב), ושיעור התרחישים ליד הרשימה
+ * הראשונה ב"על קו החסימה" (חל על כולן). בגרף המגמה, שיש לו "מקרא", ההסבר בתוך המקרא ולא באייקון. "על קו החסימה" לפי הסקרים האחרונים בלבד.
  */
 const home = HOME;
 
@@ -29,7 +30,7 @@ export default function Home() {
       <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש אייזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
 
       <section aria-label="הממשלה היוצאת בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
-        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} duel={["גוש נתניהו", "גוש אייזנקוט"]} footer={<ExitPollClock compact />} info={<ModelInfo kind="mean" />} />
+        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} duel={["גוש נתניהו", "גוש אייזנקוט"]} footer={<ExitPollClock compact />} info={<ModelInfo kind="mean" items={["המספרים במרכז חצי העיגול (גוש נתניהו וגוש אייזנקוט)", "המספר הגדול של כל רשימה בדו-קרב"]} />} />
       </section>
 
       <div className="mt-8">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} />}</div>
@@ -37,7 +38,7 @@ export default function Home() {
 
 
       <ScreenLegend><section aria-labelledby="home-trend" className="mt-10">
-        <GovTrend home={home} points={GOV_POINTS} heading={<h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת בסקרים <ModelInfo kind="trend" className="ms-1" /></h2>} />
+        <GovTrend home={home} points={GOV_POINTS} heading={<h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת בסקרים</h2>} />
       </section></ScreenLegend>
       <aside aria-labelledby="home-cta" className="mt-10 rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
         <div>
