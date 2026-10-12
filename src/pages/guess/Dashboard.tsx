@@ -88,7 +88,8 @@ export default function Dashboard({ session, landing = null }: { session: Return
   const banner = shownGroup && <GroupBanner id={shownGroup.id} name={shownGroup.name} image={shownGroup.image} showName={!groups.some((g) => g.id === shownGroup.id)} />;
   const top = <>{banner}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
-  if (groupData?.belowMin) return <>{top}<Notice>עדיין אין מספיק משתתפים מהקבוצה. הנתונים יוצגו מ-{groupData.min} משתתפים.</Notice></>;
+  // מתחת לסף: מסך הקבוצה מוצג (תמונה ומתג), אבל בלי נתונים — כותרת שמסבירה למה (הכרעת בעלים 12.10.2026)
+  if (groupData?.belowMin) return <>{top}<section className="border-2 border-ink rounded-theme p-4" aria-labelledby="group-small"><h2 id="group-small" className="text-xl font-display leading-tight">לשמירה על חוק סקרי הבחירות, אי אפשר לפרסם נתונים על קבוצה קטנה. לכן הנתונים יוצגו רק אחרי {groupData.min} משתתפים.</h2></section></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
