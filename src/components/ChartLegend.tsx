@@ -133,7 +133,9 @@ export default function ChartLegend({
   useLayoutEffect(() => () => hub?.remove(id), [hub, id]);
   const leader = !hub || !regs.length || regs[0][0] === id;
   const shown = hub && regs.length ? [...new Map(regs.flatMap((r) => r[1].entries).map((e) => [entryKey(e), e])).values()] : entries;
-  const extras = hub && regs.length ? regs.map((r, i) => r[1].extra ? <div key={i}>{r[1].extra}</div> : null) : children;
+  // מערך של null הוא "אמת" ב-JSX, ויצייר שורה ריקה עם קו בתחתית המקרא — לכן מסננים לפני ההחלטה אם יש תוכן נוסף
+  const extraList = hub && regs.length ? regs.flatMap((r, i) => r[1].extra ? [<div key={i}>{r[1].extra}</div>] : []) : null;
+  const extras = extraList ? (extraList.length ? extraList : null) : children;
   // תגית קטנה עם סמל מידע (הכרעת בעלים 11.10.2026, אפשרות ב): מלבן מעוגל, מסגרת דקה בצבע הקווים, טקסט אפור; מתחזק בריחוף ובפתיחה
   const button = (
     <button
