@@ -159,5 +159,19 @@
   "id": "2026-07-29-mp-tm-sn-a-channel-13",
   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4048, עותק: raw/gov/Survey_4048.pdf; איסוף נתונים 28.7 09:00 עד 29.7 09:00)",
   "to": "2026-07-28"
+ },
+ {
+  "field": "values.bluewhite.p",
+  "from": 1.9,
+  "id": "2026-10-08-lri-p4a-maariv",
+  "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; \"כחול לבן בראשות בני גנץ 0.9%\")",
+  "to": 0.9
+ },
+ {
+  "field": "sample",
+  "from": 2175,
+  "id": "2026-10-07-sf-nd-channel-14",
+  "source": "https://www.c14.co.il/article/1728516 (1,100 משיבים; כך גם בפרטי האימות של הרשומה)",
+  "to": 1100
  }
 ]
