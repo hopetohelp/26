@@ -133,7 +133,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       <h2 id="chat-title" className="font-bold text-lg pt-4 pb-2">צוות האתר</h2>
       {/* ההודעות נגללות עם המסך, מהמגירות ועד שדה הכתיבה */}
       <ol ref={list} className="flex-1 flex flex-col justify-end gap-3 pb-3" aria-label="שיחה עם צוות האתר" aria-live="polite">
-        <Bubble m={WELCOME} />
+        {messages !== null && !messages.some((m) => m.author === "team" && m.text === WELCOME.text) && <Bubble m={WELCOME} />}
         {messages === null && <li className="text-ink-soft text-sm">טוען…</li>}
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
