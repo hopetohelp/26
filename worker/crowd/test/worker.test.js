@@ -436,12 +436,17 @@ describe("admin guesses dashboard (no identifiers)", () => {
     expect(d.pendingGuesses).toBe(0);
     expect(d.seats.n).toBe(4);
     expect((await admin("/admin/guesses")).data.rows.filter((x) => x.status === "approved")).toHaveLength(1);
-    // הטווח זז והשערה שאושרה נכנסה אליו ⇐ רגילה (לא "אושרה")
+    // אישור ידני נשאר לתמיד, גם כשהטווח זז (הכרעת בעלים 12.10.2026)
     setPollRanges({ [IDS[0]]: { lo: 0, hi: 100 }, [IDS[1]]: { lo: 0, hi: 100 } });
     resetDashboardCache();
+    expect((await admin("/admin/guesses")).data.rows.filter((x) => x.status === "approved")).toHaveLength(1);
+    // השערות שנשמרו תקינות אושרו אוטומטית: גם כשהטווח מצטמצם הן לא חוזרות להמתנה, ומוצגות כ"תקינה"
+    setPollRanges({ [IDS[0]]: { lo: 0, hi: 10 }, [IDS[1]]: { lo: 0, hi: 10 } });
+    resetDashboardCache();
     const later = (await admin("/admin/guesses")).data.rows;
-    expect(later.filter((x) => x.status === "approved")).toHaveLength(0);
-    expect(later.every((x) => x.status === "ok")).toBe(true);
+    expect(later.filter((x) => x.status === "pending")).toHaveLength(0);
+    expect(later.filter((x) => x.status === "ok").length).toBeGreaterThan(0);
+    expect((await call("/dashboard")).data.pendingGuesses).toBe(0);
   });
 });
 
