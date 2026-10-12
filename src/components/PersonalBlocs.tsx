@@ -116,8 +116,8 @@ function BlocCoverage({ row }: { row?: BlocRow }) {
     ...row.imputed.map(c => `${nameOf(c.id)}: ${seatsFmt(c.value)} מנדטים · ${c.method === "same-firm" ? "סקר קודם של אותו מכון ומזמין" : "ממוצע המכונים הקודמים"} · ${c.sources.map(x => `${x.label} ${date(x.date)}`).join(", ")}`),
   ].join("\n");
   return <span className="block mt-0.5 text-xs font-sans font-normal text-ink-soft" title={detail}>
-    <bdi>{row.lists.length - row.missing.length}/{row.lists.length}</bdi>
-    <span className="sr-only"> מפלגות. {detail}</span>
+    <bdi>{row.lists.length - row.missing.length} מתוך {row.lists.length}</bdi> מפלגות
+    <span className="sr-only">. {detail}</span>
   </span>;
 }
 
