@@ -149,18 +149,17 @@ type Overall = { name: string; of: (key: string) => SeatStat | null | undefined 
 
 export function SeatsStats({ rows, polls, mine, view, onView, passedLists, overall }: { onView?: (v: View) => void; passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; overall?: Overall }) {
   const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= 4).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists]);
-  const hiddenNote = <p className="text-xs text-ink-soft mt-3">מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות</p>;
   const suffix = "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => mine?.seats[id]?.v;
   const head = <SectionTitle title="חלוקת המנדטים" count={rows[0]?.n ?? 0} toggle={onView && <Segmented size="sm" tight value={view} onChange={onView} label="צורת תצוגה" options={[{ id: "table", label: "טבלה" }, { id: "chart", label: "גרף" }]} />} />;
-  if (view === "chart") return <><Bars suffix={suffix} head={head} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
+  if (view === "chart") return <><Bars suffix={suffix} head={head} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} /></>;
   const dataCols = 2 + (mine ? 1 : 0) + (overall ? 1 : 0);
-  return <Card>{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
+  return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">רשימה</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mine && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
     <tbody>{sorted.map(s=>{ const o = overall?.of(s.list); return <tr key={s.list} className="border-t border-paper-line"><td className="py-2 pe-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center"><AvgRange mean={polls[s.list] === undefined ? "—" : format(polls[s.list])} range={pollRangeText(pollSeatRange(LATEST_POLLS, [s.list], POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={format(s.mean)} range={range(s) ? `${range(s)}${suffix}` : ""} /></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? format(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
-  </table></div>{hiddenNote}</Card>;
+  </table></div></Card>;
 }
 
 /** הכרעת בעלים 11.10.2026: הרכב חמש רשימות (ממשלה יוצאת בלי נעם) לא מוצג כגוש נפרד בסטטיסטיקות; תצוגה בלבד. */
@@ -190,11 +189,11 @@ function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[]): BlocRow
 export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
   const rows = blocRows(d, mineBlocs);
   const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
-  const title = <span className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"><span>גושים</span>{editReturnTo && <EditBlocsButton returnTo={editReturnTo} compact />}</span>;
+  const head = <SectionTitle title="החלוקה לגושים" toggle={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
   if (!rows.length) return <Notice>עדיין אין גושים להצגה.</Notice>;
-  if (view==="chart") return <Bars title={title} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,own:r.own,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
+  if (view==="chart") return <Bars head={head} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,own:r.own,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
   const dataCols = 2 + (mineSeats ? 1 : 0) + (overall ? 1 : 0);
-  return <Card title={title}><div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
+  return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
     <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /></th><td className="text-center"><AvgRange mean={seatsFmt(blocPoll(d, r.lists))} range={pollRangeText(pollSeatRange(LATEST_POLLS, r.lists, POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
@@ -225,7 +224,7 @@ function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[
   const withPoll = rows.some(r => r.poll !== undefined);
   const levels = candleProfiles(rows.map(r => r.q ? quantileSegs(r.q, suffix ? 0.25 : 0.5) : []), true);
   const COLS = "grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto]";
-  return <Card title={head ? undefined : title}>
+  return <Card className="!border-t-0" title={head ? undefined : title}>
     {head}
     <ChartLegend
       entries={[
@@ -259,7 +258,7 @@ const fmtNum = (v: number) => String(Math.round(v * 100) / 100);
 export function VotingStats({ d }: { d: D }) {
   const [unit, setUnit] = useState<Unit>("pct");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
-  return <Card>
+  return <Card className="!border-t-0">
     <SectionTitle title="הצבעה אז והיום" count={count} toggle={<Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />} />
     {unit === "num" && <p className="text-xs text-ink-soft mb-3">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
