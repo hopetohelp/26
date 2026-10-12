@@ -65,8 +65,8 @@ describe("group dashboard", () => {
     expect(d).toMatchObject({ group: "gizra", participants: GROUP_MIN, open: true, underReview: null });
     expect(d.pendingGuesses).toBeUndefined();
     expect(d.seats).toBeTruthy();
-    // ההשערה של מי שמחוץ לקבוצה אינה בחישוב שלה: הכללי כולל גם אותו (הלא מאומת אינו נספר בשניהם)
-    expect((await call("/dashboard")).data.participants).toBe(GROUP_MIN + 1);
+    // ההשערה של מי שמחוץ לקבוצה אינה בחישוב שלה: הכללי כולל גם אותו (גם הלא מאומת נספר בכללי, אבל אינו חבר בקבוצה)
+    expect((await call("/dashboard")).data.participants).toBe(GROUP_MIN + 2);
   });
 
   it("rejects a bad group id", async () => {

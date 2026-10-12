@@ -1,4 +1,4 @@
-import { personalTotals, migrateBlocs } from "./lib/blocDefinitions.js";
+import { personalTotals, migrateBlocs, compositionKey } from "./lib/blocDefinitions.js";
 /**
  * שרת השתתפות הגולשים — "ההשערה שלי" ודשבורד הגולשים (Cloudflare Worker + D1 ‏elections26-crowd).
  * השיטה: docs/השתתפות-גולשים.md · החוזה (נתיבים וצורות תשובה): src/lib/crowdApi.ts — השרת מממש בדיוק אותו.
@@ -17,7 +17,7 @@ import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, r
 import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
-import { moderate } from "./lib/moderation.js";
+import { setPollRanges, moderate } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
@@ -108,6 +108,18 @@ async function groupStats(env, id, now) {
   ).bind(id, israelDayStart(now)).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
   return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
+}
+
+/** הגרסה האחרונה של הגושים של כל משתתף, ומי "בבדיקה" */
+async function blocsState(env) {
+  const [p, b] = await env.DB.batch([
+    env.DB.prepare("SELECT id, review FROM participants"),
+    env.DB.prepare("SELECT v.participant, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'blocs' GROUP BY participant) m ON v.id = m.id"),
+  ]);
+  return {
+    review: new Set((p.results || []).filter((r) => r.review).map((r) => r.id)),
+    latestBlocs: (b.results || []).map((r) => [r.participant, JSON.parse(r.payload)]),
+  };
 }
 
 /** הקבוצות שהמשתמש מנהל — דרך מייל מאומת, כמו החברות */
@@ -257,9 +269,15 @@ async function moderationState(env) {
   const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
   // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
   const counted = latest.filter((v) => !review.has(v.participant));
-  const mod = moderate(counted, decisions);
   // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
   const raw = moderate(counted, new Map()).pending;
+  // השערה שאושרה ונכנסה בהמשך לטווח הסקרים ⇐ רגילה (הכרעת בעלים 12.10.2026): האישור נמחק, וחריגה חדשה תיבדק שוב
+  const inRange = counted.filter((v) => decisions.get(v.id) === "approved" && !raw.has(v.id)).map((v) => v.id);
+  if (inRange.length) {
+    await env.DB.batch(inRange.map((id) => env.DB.prepare("DELETE FROM version_review WHERE version_id = ? AND decision = 'approved'").bind(id)));
+    for (const id of inRange) decisions.delete(id);
+  }
+  const mod = moderate(counted, decisions);
   return { latest, review, verified, blocsBy, mod: { ...mod, decisions, raw } };
 }
 
@@ -957,6 +975,32 @@ const routes = {
     return { ok: true };
   },
 
+  // כל הגושים שהמשתתפים הגדירו (הכרעת בעלים 12.10.2026): לכל הרכב — כמה משתתפים, ואילו שמות נתנו לו (וכמה פעמים כל שם). בלי מזהים.
+  // לפי הגרסה האחרונה של הגושים של כל משתתף שנספר (בלי "בבדיקה").
+  "GET /admin/blocs": async ({ env, request }) => {
+    await requireAdmin(env, request);
+    const { latestBlocs, review } = await blocsState(env);
+    const by = new Map();
+    for (const [participant, payload] of latestBlocs) {
+      if (review.has(participant) || payload?.mode !== "custom") continue;
+      const seen = new Set();
+      for (const b of migrateBlocs(payload).blocs ?? []) {
+        if (!b.lists?.length) continue;
+        const key = compositionKey(b.lists);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const e = by.get(key) ?? by.set(key, { lists: [...new Set(b.lists)].sort(), n: 0, names: new Map() }).get(key);
+        e.n++;
+        const name = (b.name || "").trim() || "(בלי שם)";
+        e.names.set(name, (e.names.get(name) ?? 0) + 1);
+      }
+    }
+    const approved = new Map(((await env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'").all()).results || []).map((r) => [r.composition, r.name]));
+    const blocs = [...by.entries()].map(([key, e]) => ({ lists: e.lists, participants: e.n, approvedName: approved.get(key) ?? null, names: [...e.names].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "he")) }))
+      .sort((a, b) => b.participants - a.participants);
+    return { blocs };
+  },
+
   // קבוצות (docs/פילוח-קבוצות-תכנון.md): טעינת רשימת מיילים במנות. נשמר רק הגיבוב; replace מוחק את הרשימה הקודמת (למנה הראשונה בלבד).
   // התשובה לא אומרת כמה מהמיילים רשומים באתר.
   "POST /admin/groups/import": async ({ env, request, now, body }) => {
@@ -1065,6 +1109,21 @@ const routes = {
 // הסטטיסטיקות מחושבות כל הזמן: כל פתיחה מקבלת תמונה עדכנית. תוצאה אחת משרתת את כל הפניות בחצי הדקה
 // שאחריה (בכל עותק של השרת), כדי שרענון אוטומטי אצל גולשים רבים לא יקרא את כל המאגר בכל פעם. שמירה חדשה מבטלת אותה.
 const DASHBOARD_TTL_MS = 30_000;
+
+/** טווח הסקרים מהאתר (public/poll-ranges.json) — מתעדכן עם כל רענון נתונים; נשמר 30 דקות. נכשל ⇐ נשאר הקודם או הגיבוי שבקוד */
+let rangesAt = 0;
+async function loadPollRanges(env) {
+  const at = Date.now();
+  if (!env.POLL_RANGES_URL || at - rangesAt < 30 * 60_000) return;
+  rangesAt = at;
+  try {
+    const r = await fetch(env.POLL_RANGES_URL, { cf: { cacheTtl: 600 } });
+    if (!r.ok) return;
+    const data = await r.json();
+    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); resetDashboardCache(); }
+  } catch { /* נשאר הטווח הקודם */ }
+}
+
 let dashboardCache = null;
 export function resetDashboardCache() { dashboardCache = null; }
 
@@ -1218,6 +1277,7 @@ export default {
     const url = new URL(request.url);
     const now = clock(env);
     try {
+      await loadPollRanges(env);
       // תאימות לביקורים שכבר פתוחים: כל כתיבת תמיכה עוברת לשרת ההערות.
       if (url.pathname === "/support" || url.pathname === "/admin/support/reply") {
         if (!env.FEEDBACK) throw new HttpError(503, "support_offline");
@@ -1259,6 +1319,7 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
+    await loadPollRanges(env);
     resetDashboardCache();
     const now = clock(env);
     const job = (async () => {

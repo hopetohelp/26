@@ -3,6 +3,7 @@ import worker, { LIMITS, resetDashboardCache } from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
 import { seats, IDS } from "./helpers.js";
 import { sha256 } from "../lib/crypto.js";
+import { setPollRanges } from "../lib/moderation.js";
 
 let env;
 let t;
@@ -401,6 +402,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
   const admin = (path, body) =>
     worker.fetch(new Request("https://w.example" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json", "x-admin-key": KEY }, body: body ? JSON.stringify(body) : undefined }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
   it("lists every latest guess without ids; approving a flagged guess brings it into the statistics", async () => {
+    setPollRanges({ [IDS[0]]: { lo: 50, hi: 60 }, [IDS[1]]: { lo: 50, hi: 70 } }); // 100 ⇐ מעל פי 1.5 מ-60, ופער 40
     await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
     expect((await worker.fetch(new Request("https://w.example/admin/guesses"), env)).status).toBe(401);
     const a = await newP(), b = await newP(), c = await newP(), d4 = await newP();
@@ -426,7 +428,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
     expect(def).toHaveLength(3);
     expect(def[0].blocs.items.map((b) => b.name)).toEqual(["הממשלה היוצאת", "גוש נתניהו", "גוש אייזנקוט", "אחדות", "מפלגות ערביות"]);
     const pending = r.data.rows.find((x) => x.status === "pending");
-    expect(pending.reasons[0]).toMatchObject({ list: IDS[0], rule: "ratio" });
+    expect(pending.reasons[0]).toMatchObject({ list: IDS[0], rule: "range" });
     expect((await admin("/admin/guesses/decide", { salt: "wrong-salt-1234", handle: pending.handle, decision: "approved" })).status).toBe(404);
     expect((await admin("/admin/guesses/decide", { salt: r.data.salt, handle: pending.handle, decision: "approved" })).status).toBe(200);
     resetDashboardCache();
@@ -434,6 +436,12 @@ describe("admin guesses dashboard (no identifiers)", () => {
     expect(d.pendingGuesses).toBe(0);
     expect(d.seats.n).toBe(4);
     expect((await admin("/admin/guesses")).data.rows.filter((x) => x.status === "approved")).toHaveLength(1);
+    // הטווח זז והשערה שאושרה נכנסה אליו ⇐ רגילה (לא "אושרה")
+    setPollRanges({ [IDS[0]]: { lo: 0, hi: 100 }, [IDS[1]]: { lo: 0, hi: 100 } });
+    resetDashboardCache();
+    const later = (await admin("/admin/guesses")).data.rows;
+    expect(later.filter((x) => x.status === "approved")).toHaveLength(0);
+    expect(later.every((x) => x.status === "ok")).toBe(true);
   });
 });
 
@@ -476,4 +484,22 @@ it("אחוזים נשמרים גם בהשערה לפי מנדטים (סנכרו�
   expect(r.data.version.payload.mode).toBe("seats");
   expect(r.data.version.payload.pct).toEqual({ likud: 25.1, shas: 7.2, democrats: 66.6 });
   expect((await save(tok, "seats", { ...payload, pct: { likud: 120 } })).status).toBe(400);
+});
+
+describe("admin: all defined blocs", () => {
+  const KEY = "k".repeat(40);
+  const admin = (path) => worker.fetch(new Request("https://w.example" + path, { headers: { "x-admin-key": KEY } }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
+  it("groups by composition with participant counts and the names given, no ids", async () => {
+    await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
+    expect((await worker.fetch(new Request("https://w.example/admin/blocs"), env)).status).toBe(401);
+    const a = await newP(), b = await newP(), c = await newP();
+    const bloc = (name, lists) => ({ mode: "custom", schemaVersion: 2, blocs: [{ id: "x", name, lists, target: null }] });
+    await save(a, "blocs", bloc("הימין", [IDS[0], IDS[1]]));
+    await save(b, "blocs", bloc("גוש א", [IDS[1], IDS[0]]));
+    await save(c, "blocs", bloc("הימין", [IDS[0]]));
+    const r = await admin("/admin/blocs");
+    expect(r.data.blocs[0]).toEqual({ lists: [IDS[0], IDS[1]].sort(), participants: 2, approvedName: null, names: [{ name: "גוש א", n: 1 }, { name: "הימין", n: 1 }] });
+    expect(r.data.blocs[1]).toMatchObject({ lists: [IDS[0]], participants: 1 });
+    expect(JSON.stringify(r.data)).not.toMatch(/participant"|token/);
+  });
 });
