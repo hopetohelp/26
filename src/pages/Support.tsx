@@ -6,6 +6,7 @@ import MyData from "./guess/MyData";
 import Account, { ManagedGroup } from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
 import { Drawer } from "../components/Drawer";
+import { SideSplit } from "../components/SideSplit";
 import { Btn, Notice } from "./guess/ui";
 import { PageTitle } from "../components/ui";
 import { Chips } from "../components/Choice";
@@ -118,11 +119,13 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
     <section aria-labelledby="chat-title" className="flex-1 flex flex-col">
       <h2 id="chat-title" className="font-bold text-lg pt-4 pb-2">צוות האתר</h2>
       {/* ההודעות נגללות עם המסך, מהמגירות ועד שדה הכתיבה */}
-      <ol ref={list} className="flex-1 flex flex-col justify-end gap-3 pb-3" aria-label="שיחה עם צוות האתר" aria-live="polite">
+      <div className="flex-1 flex flex-col lg:min-h-0 lg:overflow-y-auto">
+      <ol ref={list} className="mt-auto flex flex-col gap-3 pb-3" aria-label="שיחה עם צוות האתר" aria-live="polite">
         {messages !== null && !messages.some((m) => m.author === "team" && m.text === WELCOME.text) && <Bubble m={WELCOME} />}
         {messages === null && <li className="text-ink-soft text-sm">טוען…</li>}
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
+      </div>
       <p className="text-xs text-ink-soft pb-2">התשובות מתקבלות פעם בכמה שעות.{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
       {!closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
@@ -171,10 +174,10 @@ export default function Support() {
 
   /*
    * מבנה המסך (הכרעת בעלים 12.10.2026): בראש — מגירות (הפרטים שלי, ובתוכה החשבון; הנתונים שלי; ניהול קבוצה למנהלי קבוצה; ניהול האתר),
-   * ושאר המסך — צ׳אט עם צוות האתר, ושדה כתיבה מתרחב צמוד לתחתית.
+   * ושאר המסך — צ׳אט עם צוות האתר, ושדה כתיבה מתרחב צמוד לתחתית. במסך רחב (SideSplit): המגירות מימין והשיחה משמאל.
    */
   return (
-    <div className="flex flex-col min-h-[calc(100dvh-10.5rem)] md:min-h-[calc(100dvh-7.5rem)]">
+    <SideSplit className="min-h-[calc(100dvh-10.5rem)] md:min-h-[calc(100dvh-7.5rem)] lg:h-[calc(100dvh-7.5rem)]" main={<Conversation session={session} />} side={<>
       <PageTitle>אזור אישי</PageTitle>
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
@@ -203,7 +206,6 @@ export default function Support() {
           </div>
         )}
       </div>
-      <Conversation session={session} />
-    </div>
+    </>} />
   );
 }
