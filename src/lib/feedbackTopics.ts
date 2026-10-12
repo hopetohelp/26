@@ -3,6 +3,8 @@ export const FEEDBACK_TOPICS = [
   { id: "data", label: "נתון שגוי" },
   { id: "idea", label: "רעיון" },
   { id: "design", label: "עיצוב ונוחות" },
+  // הצעת תאוריה או חישוב (הכרעת בעלים 12.10.2026): התשובה בשלוש נקודות — איך בודקים באתר, האם הגיוני, ואם אין דרך — רעיון להוסיף
+  { id: "theory", label: "תאוריה או חישוב" },
   { id: "other", label: "אחר" },
 ] as const;
 export type FeedbackTopic = typeof FEEDBACK_TOPICS[number]["id"];

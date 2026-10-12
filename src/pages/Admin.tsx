@@ -21,12 +21,32 @@ type Item = { author: "visitor" | "team"; text: string; created_at: string; topi
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
 type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
-type Data = { accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+/** טיוטת תשובה של הסקירה המתוזמנת: לא מוצגת לגולש עד אישור (הכרעת בעלים 12.10.2026) */
+type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
+type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
+type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
+type Data = { held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 
-function Conversation({ title, items, waiting, onReply }: { title: string; items: Item[]; waiting: boolean; onReply: (text: string) => Promise<boolean> }) {
-  const [open, setOpen] = useState(waiting);
+function DraftBox({ draft, actions }: { draft: Draft; actions: DraftActions }) {
+  const [text, setText] = useState(draft.text);
+  const [busy, setBusy] = useState(false);
+  const run = async (fn: () => Promise<boolean>) => { setBusy(true); await fn(); setBusy(false); };
+  return (
+    <div className="border border-dashed border-ink-faint rounded-theme p-2 space-y-2">
+      <p className="text-xs font-bold text-ink-soft">טיוטה לאישור · {when(draft.created_at)}{draft.reason ? ` · ${draft.reason}` : ""}</p>
+      <textarea value={text} onChange={(e) => setText(e.target.value)} rows={4} aria-label="נוסח הטיוטה" className="w-full rounded-theme border border-paper-line bg-paper text-ink p-2 text-sm" />
+      <div className="flex gap-2 flex-wrap">
+        <Btn kind="primary" disabled={busy || !text.trim()} onClick={() => run(() => actions.approve(draft.id, text.trim()))}>אישור ופרסום</Btn>
+        <Btn disabled={busy} onClick={() => run(() => actions.remove(draft.id))}>מחיקת הטיוטה</Btn>
+      </div>
+    </div>
+  );
+}
+
+function Conversation({ title, items, waiting, onReply, drafts = [], draftActions, held }: { title: string; items: Item[]; waiting: boolean; onReply: (text: string) => Promise<boolean>; drafts?: Draft[]; draftActions?: DraftActions; held?: Held }) {
+  const [open, setOpen] = useState(waiting || drafts.length > 0);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const first = items.find((i) => i.author === "visitor") ?? items[0];
@@ -35,7 +55,7 @@ function Conversation({ title, items, waiting, onReply }: { title: string; items
       <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="w-full text-start p-3 flex gap-2 items-start min-h-[44px]">
         <span className={`shrink-0 mt-1 w-2.5 h-2.5 rounded-full ${waiting ? "bg-warn" : "bg-paper-line"}`} aria-label={waiting ? "ממתין לתשובה" : "נענה"} />
         <span className="flex-1 min-w-0">
-          <span className="text-xs text-ink-soft block">{title} · {topicLabel(conversationTopic(items))} · התקבלה {when(items[0].created_at)} · {items.length} הודעות{waiting ? " · ממתין לתשובה" : ""}</span>
+          <span className="text-xs text-ink-soft block">{title} · {topicLabel(conversationTopic(items))} · התקבלה {when(items[0].created_at)} · {items.length} הודעות{waiting ? " · ממתין לתשובה" : ""}{drafts.length ? ` · ${drafts.length} טיוטות` : ""}{held ? " · בהשהיה" : ""}</span>
           <span className="block truncate">{first?.text.split("\n")[0]}</span>
         </span>
       </button>
@@ -49,6 +69,13 @@ function Conversation({ title, items, waiting, onReply }: { title: string; items
               </li>
             ))}
           </ul>
+          {held && draftActions && (
+            <div className="flex gap-2 items-center flex-wrap text-sm">
+              <span className="text-warn font-bold">בהשהיה: כל תשובה אליו נשמרת כטיוטה{held.reason ? ` (${held.reason})` : ""}.</span>
+              <Btn onClick={() => void draftActions.release(held.kind, held.target)}>אישור המשתתף</Btn>
+            </div>
+          )}
+          {draftActions && drafts.map((d) => <DraftBox key={d.id} draft={d} actions={draftActions} />)}
           <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} aria-label="תשובה" className="w-full rounded-theme border border-paper-line bg-paper text-ink p-2 text-sm" placeholder="תשובה לגולש…" />
           <Btn kind="primary" disabled={busy || !text.trim()} onClick={async () => { setBusy(true); if (await onReply(text.trim())) setText(""); setBusy(false); }}>{busy ? "שולח…" : "שליחת תשובה"}</Btn>
         </div>
@@ -89,6 +116,12 @@ export default function Admin() {
     try { await api("/admin/reply", { kind, id, text }); await load(); return true; } catch (e) { setError((e as Error).message); return false; }
   };
 
+  const draftActions: DraftActions = {
+    approve: async (id, text) => { try { await api("/admin/draft/approve", { id, text }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
+    release: async (kind, target) => { try { await api("/admin/release", { kind, target }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
+    remove: async (id) => { try { await api("/admin/draft/delete", { id }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
+  };
+
   if (!credential) return <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>;
   // "היום" לפי יום UTC, כמו בשרת: אם עוד לא נספרה כניסה היום — אפסים, ולא נתוני אתמול
   const todayKey = new Date().toISOString().slice(0, 10);
@@ -123,6 +156,7 @@ export default function Admin() {
               ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
               ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
               ["ממתינים לתשובה", waiting],
+              ["טיוטות לאישור", data.drafts?.length ?? 0],
             ]],
             ["נפילות", data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה", [
               ["נפילות סך הכול", data.failures?.total ?? "—"],
@@ -163,7 +197,9 @@ export default function Admin() {
           <AdminGroups api={api} />
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
-          <InquirySections data={data} reply={reply} />
+          <InquirySections data={data} reply={reply} draftActions={draftActions} />
+
+          <AiKey api={api} />
         </>
       )}
     </div>
@@ -172,31 +208,65 @@ export default function Admin() {
 
 
 type Sort = "oldest" | "newest";
-type Filter = "all" | "waiting";
+type Filter = "all" | "waiting" | "drafts";
+
+/**
+ * מפתח AI (הכרעת בעלים 12.10.2026): נשמר בשרת מוצפן ואינו מוצג שוב — רק "מוגדר" ומתי.
+ * דרך נוספת: סוד AI_API_KEY בהגדרות הריפו ב-GitHub, שנפרס לשרת. כרגע התשובות עדיין בסקירה המתוזמנת.
+ */
+function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<{ admin: { updated_at: string } | null; server: boolean }> }) {
+  const [state, setState] = useState<{ admin: { updated_at: string } | null; server: boolean } | null>(null);
+  const [value, setValue] = useState("");
+  const [msg, setMsg] = useState<string | null>(null);
+  useEffect(() => { api("/admin/ai-key").then(setState, () => setMsg("לא ניתן לבדוק את מצב המפתח.")); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const save = async (key: string | null) => {
+    setMsg(null);
+    try { setState(await api("/admin/ai-key", { key })); setValue(""); setMsg(key ? "המפתח נשמר." : "המפתח נמחק."); } catch { setMsg("השמירה נכשלה. בדקו שהמפתח הועתק במלואו."); }
+  };
+  return (
+    <section className="space-y-2" aria-labelledby="ai-key-title">
+      <h2 id="ai-key-title" className="font-display text-2xl">מפתח AI לתשובות</h2>
+      <p className="text-sm text-ink-soft">
+        {state?.admin ? `נשמר ממסך הניהול (${when(state.admin.updated_at)}).` : "לא נשמר מפתח ממסך הניהול."}{" "}
+        {state?.server ? "מוגדר גם כסוד בשרת." : ""} המפתח נשמר מוצפן ואינו מוצג שוב. כרגע התשובות נכתבות בסקירה המתוזמנת.
+      </p>
+      <form className="flex gap-2 flex-wrap items-end" onSubmit={(e) => { e.preventDefault(); if (value.trim()) void save(value.trim()); }}>
+        <label className="flex-1 min-w-[12rem]"><span className="sr-only">מפתח AI</span>
+          <input type="password" autoComplete="off" value={value} onChange={(e) => setValue(e.target.value)} placeholder="הדביקו מפתח API" className="w-full rounded-theme border border-paper-line bg-paper text-ink p-2 text-sm" />
+        </label>
+        <Btn type="submit" kind="primary" disabled={!value.trim()}>שמירה</Btn>
+        {state?.admin && <Btn onClick={() => void save(null)}>מחיקת המפתח</Btn>}
+      </form>
+      {msg && <p role="status" className="text-sm">{msg}</p>}
+    </section>
+  );
+}
 
 /**
  * כל הפניות ברשימה אחת לפי סדר קבלתן — לפי ההודעה הראשונה בכל שיחה (הכרעת בעלים 9.10.2026) — עם סינון לפי נושא ולפי "ממתינות לתשובה".
  * שני מקורות השמירה מוצגים יחד; נתיב התשובה המקורי נשמר לכל שיחה.
  */
-export function InquirySections({ data, reply }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean> }) {
+export function InquirySections({ data, reply, draftActions }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean>; draftActions?: DraftActions }) {
   const [topic, setTopic] = useState<"all" | (typeof FEEDBACK_TOPICS)[number]["id"]>("all");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("oldest");
+  const drafts = data.drafts ?? [];
+  const held = data.held ?? [];
   const all = [
-    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, onReply: reply("feedback", thread.id) })),
-    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", onReply: reply("support", thread.participant) })),
+    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, onReply: reply("feedback", thread.id), drafts: drafts.filter(d => d.kind === "feedback" && d.target === String(thread.id)), held: held.find(h => h.kind === "feedback" && h.target === String(thread.id)) })),
+    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", onReply: reply("support", thread.participant), drafts: drafts.filter(d => d.kind === "support" && d.target === thread.participant), held: held.find(h => h.kind === "support" && h.target === thread.participant) })),
   ].filter(c => c.items.length).map(c => ({ ...c, received: c.items[0].created_at, topic: conversationTopic(c.items) }));
   const count = (pick: (c: (typeof all)[number]) => boolean) => all.filter(pick).length;
   const shown = all
-    .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || c.waiting))
+    .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0 || !!c.held)))
     .sort((a, b) => (sort === "oldest" ? 1 : -1) * a.received.localeCompare(b.received));
   return <section className="space-y-3" aria-labelledby="inquiries-title">
     <h2 id="inquiries-title" className="font-display text-2xl">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h2>
     <Chips label="נושא" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
     <div className="grid sm:grid-cols-2 gap-2">
-      <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }]} />
+      <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות והשהיות (${count(c => c.drafts.length > 0 || !!c.held)})` }]} />
       <Segmented label="סדר" value={sort} onChange={setSort} options={[{ id: "oldest", label: "לפי סדר קבלה" }, { id: "newest", label: "החדשות קודם" }]} />
     </div>
-    {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
+    {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} draftActions={draftActions} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
   </section>;
 }

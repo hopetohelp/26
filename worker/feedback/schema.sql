@@ -104,3 +104,26 @@ INSERT OR IGNORE INTO counter_marks (name, value) VALUES ('failures_from', '2026
 -- תמונת מצב של מוני האבחון (diag:*) ברגע איפוס הנפילות. מסך הניהול מציג את ההפרש בלבד; הערכים המלאים נשארים ב-hits.
 -- מולא פעם אחת ב-11.10.2026 מתוך hits (38 שורות); איפוס נוסף = העתקה מחדש של שורות diag מ-hits.
 CREATE TABLE IF NOT EXISTS counter_baseline (day TEXT NOT NULL, page TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY (day, page));
+
+-- טיוטות תשובה של הסקירה המתוזמנת (הכרעת בעלים 12.10.2026): כשהסוכן אינו בטוח, התשובה נשמרת כאן ואינה מוצגת לגולש.
+-- kind = feedback (target = מזהה הפנייה הראשית) או support (target = participant). אישור במסך הניהול מפרסם ומוחק; מחיקה — בלי פרסום.
+CREATE TABLE IF NOT EXISTS drafts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  kind TEXT NOT NULL CHECK (kind IN ('feedback', 'support')),
+  target TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  text TEXT NOT NULL,
+  reason TEXT
+);
+
+-- הגדרות. ai_key = מפתח ה-AI שנשמר ממסך הניהול, מוצפן בסוד השרת; לעולם אינו מוחזר מהשרת.
+CREATE TABLE IF NOT EXISTS settings (name TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);
+
+-- משתתף בהשהיה (הכרעת בעלים 12.10.2026): שאל שאלה שנחשדה כלא עומדת בכללים ⇐ כל תשובה אליו, גם לשאלה ניטרלית, נשמרת כטיוטה עד אישור המשתתף במסך הניהול.
+CREATE TABLE IF NOT EXISTS held (
+  kind TEXT NOT NULL CHECK (kind IN ('feedback', 'support')),
+  target TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  reason TEXT,
+  PRIMARY KEY (kind, target)
+);

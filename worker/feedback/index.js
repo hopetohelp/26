@@ -18,8 +18,9 @@
  * - הערה חדשה באותו נוסח בדיוק מאותו מקור באותו יום אינה נשמרת שוב (מחזירים {ok, duplicate}, בלי token).
  * - "website" הוא שדה מלכודת שגולש אמיתי לא רואה; מילוי שלו = רובוט, ומחזירים "הצלחה" בלי לשמור.
  * - להגבלת קצב נשמר רק גיבוב של ה-IP עם התאריך: עד 8 הודעות ביום מאותו מקור (הערות ותגובות יחד).
+ * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
-const TOPICS = new Set(["data", "idea", "design", "other"]);
+const TOPICS = new Set(["data", "idea", "design", "theory", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
 /** סיווגי "בדיקת חיבור" שהדפדפן שולח אחרי כשל (POST /diag): רק מונה ליום, בלי שום פרט על המשתמש. נשמרים ב-hits בשם diag:<סיווג>. */
@@ -117,6 +118,34 @@ async function supportThread(env, participant) {
   if (!thread) return null;
   const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY created_at, id").bind(participant).all();
   return { ...thread, messages: results || [] };
+}
+
+/** תשובת צוות בשיחה — משותף לתשובה ידנית ולאישור טיוטה. מחזיר false אם השיחה אינה קיימת. */
+async function teamReply(env, kind, id, text) {
+  const at = new Date().toISOString();
+  if (kind === "support") {
+    const participant = String(id || "");
+    if (!(await supportThread(env, participant))) return false;
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(participant, at, text),
+      env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
+    ]);
+    return true;
+  }
+  const fid = Number(id);
+  if (!Number.isInteger(fid) || !(await env.DB.prepare("SELECT 1 AS x FROM feedback WHERE id = ?").bind(fid).first())) return false;
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(fid, at, text),
+    env.DB.prepare("UPDATE feedback SET status = 'answered' WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(fid, fid),
+  ]);
+  return true;
+}
+
+/** מפתח ה-AI שנשמר ממסך הניהול: מוצפן ב-AES-GCM במפתח שנגזר מסוד השרת IP_KEY, כך שקריאת המאגר לבדה אינה חושפת אותו. */
+async function aiCipher(env) {
+  if (!env.IP_KEY) return null;
+  const raw = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`ai-key|${env.IP_KEY}`));
+  return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
 }
 
 export default {
@@ -234,7 +263,9 @@ export default {
         const { results: accountThreads } = await env.DB.prepare("SELECT participant, status, created_at, updated_at FROM support_threads ORDER BY updated_at DESC").all();
         const local = [];
         for (const thread of accountThreads || []) local.push({ participant: thread.participant, ...(await supportThread(env, thread.participant)) });
-        return reply({ ok: true, days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+        const { results: drafts } = await env.DB.prepare("SELECT id, kind, target, text, reason, created_at FROM drafts ORDER BY created_at").all().catch(() => ({ results: [] }));
+        const { results: heldRows } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held").all().catch(() => ({ results: [] }));
+        return reply({ ok: true, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
       if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || url.pathname === "/admin/blocs" || /^\/admin\/groups(\/(import|delete|managers|stats))?$/.test(url.pathname)) {
@@ -247,25 +278,53 @@ export default {
         try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
         const text = String(b.text || "").trim().slice(0, 4000);
         if (!text) return reply({ ok: false, error: "empty" }, 400);
-        if (b.kind === "support") {
-          const participant = String(b.id || "");
-          const thread = await supportThread(env, participant);
-          if (!thread) return reply({ ok: false, error: "not found" }, 404);
-          const at = new Date().toISOString();
-          await env.DB.batch([
-            env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(participant, at, text),
-            env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
-          ]);
-          return reply({ ok: true });
-        }
-        const id = Number(b.id);
-        if (!Number.isInteger(id)) return reply({ ok: false }, 400);
-        const now = new Date().toISOString();
-        await env.DB.batch([
-          env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text) SELECT ?, ?, 'team', ? WHERE EXISTS (SELECT 1 FROM feedback WHERE id = ?)").bind(id, now, text, id),
-          env.DB.prepare("UPDATE feedback SET status = 'answered' WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(id, id),
-        ]);
+        if (b.kind === "support") return (await teamReply(env, "support", b.id, text)) ? reply({ ok: true }) : reply({ ok: false, error: "not found" }, 404);
+        if (!Number.isInteger(Number(b.id))) return reply({ ok: false }, 400);
+        await teamReply(env, "feedback", b.id, text);
         return reply({ ok: true });
+      }
+      // ---- טיוטות: אישור (בנוסח שנערך, אם נערך) מפרסם כתשובת צוות ומוחק את הטיוטה; מחיקה בלבד — בלי פרסום
+      if (request.method === "POST" && (url.pathname === "/admin/draft/approve" || url.pathname === "/admin/draft/delete")) {
+        let b = {};
+        try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+        const draft = await env.DB.prepare("SELECT id, kind, target, text FROM drafts WHERE id = ?").bind(Number(b.id)).first();
+        if (!draft) return reply({ ok: false, error: "not found" }, 404);
+        if (url.pathname === "/admin/draft/approve") {
+          const text = String(b.text ?? draft.text).trim().slice(0, 4000);
+          if (!text) return reply({ ok: false, error: "empty" }, 400);
+          if (!(await teamReply(env, draft.kind, draft.target, text))) return reply({ ok: false, error: "not found" }, 404);
+        }
+        await env.DB.prepare("DELETE FROM drafts WHERE id = ?").bind(draft.id).run();
+        return reply({ ok: true });
+      }
+      // ---- אישור משתתף בהשהיה: מכאן תשובות אליו שוב יכולות להתפרסם מיד
+      if (request.method === "POST" && url.pathname === "/admin/release") {
+        let b = {};
+        try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+        await env.DB.prepare("DELETE FROM held WHERE kind = ? AND target = ?").bind(String(b.kind || ""), String(b.target ?? "")).run();
+        return reply({ ok: true });
+      }
+      // ---- מפתח AI: נשמר מוצפן, ולעולם אינו מוחזר. GET = האם מוגדר (ממסך הניהול או כסוד השרת AI_API_KEY)
+      if (url.pathname === "/admin/ai-key") {
+        if (request.method === "POST") {
+          let b = {};
+          try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+          const at = new Date().toISOString();
+          if (b.key === null) {
+            await env.DB.prepare("DELETE FROM settings WHERE name = 'ai_key'").run();
+          } else {
+            const value = String(b.key || "").trim();
+            if (value.length < 20 || value.length > 400 || /\s/.test(value)) return reply({ ok: false, error: "bad_key" }, 400);
+            const cipher = await aiCipher(env);
+            if (!cipher) return reply({ ok: false, error: "no_secret" }, 503);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const sealed = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, cipher, new TextEncoder().encode(value)));
+            const packed = btoa(String.fromCharCode(...iv, ...sealed));
+            await env.DB.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('ai_key', ?, ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(packed, at).run();
+          }
+        }
+        const row = await env.DB.prepare("SELECT updated_at FROM settings WHERE name = 'ai_key'").first();
+        return reply({ ok: true, admin: row ? { updated_at: row.updated_at } : null, server: !!env.AI_API_KEY });
       }
       return reply({ ok: false }, 404);
     }
