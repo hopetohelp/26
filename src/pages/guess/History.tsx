@@ -15,6 +15,9 @@ const UNITS: { id: Unit; label: string }[] = [
 ];
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 
+/** הגרסאות מהחדשה לישנה, לפי מספר הגרסה (לא לפי סדר ההגעה מהשרת) */
+export const newestFirst = <T extends { id: number }>(versions: T[]): T[] => [...versions].sort((x, y) => y.id - x.id);
+
 /** ציר הזמן של הגרסאות, והשוואה בין שתיים (מנדטים) */
 export default function History({ session }: { session: ReturnType<typeof useSession> }) {
   const [unit, setUnit] = useState<Unit>("seats");
@@ -40,6 +43,8 @@ export default function History({ session }: { session: ReturnType<typeof useSes
 
   const toggle = (id: number) => setPick((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p.slice(-1), id]));
   const [a, b] = pick.map((id) => versions?.find((v) => v.id === id)).filter(Boolean).sort((x,y) => x!.id - y!.id) as Version<SeatsPayload>[];
+  // השרת מחזיר מהחדשה לישנה, אבל הסדר נקבע כאן במפורש לפי מספר הגרסה: הראשונה ברשימה היא תמיד האחרונה שנשמרה
+  const newest = newestFirst(versions ?? []);
   return (
     <div className="space-y-4">
       {note}
@@ -47,10 +52,10 @@ export default function History({ session }: { session: ReturnType<typeof useSes
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
       {versions?.length === 0 && <Notice>אין עדיין גרסאות ביחידה הזו.</Notice>}
-      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות ההשערה ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...versions].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: `גרסה ${v.id}`, asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
+      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות ההשערה ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: `גרסה ${v.id}`, asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {versions && versions.length > 0 && (
         <ol className="relative border-s-2 border-ink ms-2 space-y-3" aria-label="הגרסאות שלכם, מהחדשה לישנה">
-          {[...versions].reverse().map((v, i) => (
+          {newest.map((v, i) => (
             <li key={v.id} className="ps-4 relative">
               <span aria-hidden="true" className={`absolute -start-[9px] top-2 w-4 h-4 rounded-full border-2 border-ink ${i === 0 ? "bg-ink" : "bg-paper-card"}`} />
               <label className="flex items-center gap-2 text-sm min-h-[44px]">
