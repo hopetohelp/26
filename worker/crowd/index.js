@@ -83,7 +83,7 @@ async function requireAdmin(env, request) {
 }
 
 async function myGroups(env, participant) {
-  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM groups g JOIN group_members m ON m.group_id = g.id JOIN emails e ON e.hash = m.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM groups g JOIN "+GROUP_PEOPLE+" m ON m.group_id = g.id JOIN emails e ON e.hash = m.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
   return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), slug: r.slug ?? null, image: r.image ?? null })));
 }
 
@@ -104,7 +104,7 @@ async function removeManager(env, id, eh) {
 /** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה — רק מ-GROUP_MIN רשומים */
 async function groupStats(env, id, now) {
   const r = await env.DB.prepare(
-    `WITH m AS (SELECT DISTINCT e.participant AS id FROM group_members g JOIN emails e ON e.hash = g.email_hash WHERE g.group_id = ? AND e.verified = 1)
+    `WITH m AS (SELECT DISTINCT e.participant AS id FROM ${GROUP_PEOPLE} g JOIN emails e ON e.hash = g.email_hash WHERE g.group_id = ? AND e.verified = 1)
      SELECT COUNT(*) AS registered,
             SUM(CASE WHEN p.created_at >= ? THEN 1 ELSE 0 END) AS today,
             SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'seats')) AS seats,
@@ -245,6 +245,11 @@ async function limitGroupPublic(env, request, now) {
 const GROUP_ID = /^[a-z0-9-]{2,32}$/;
 /** מיילים בבקשה אחת — כדי להישאר מתחת ל-MAX_BODY; רשימה גדולה נשלחת במנות */
 export const GROUP_CHUNK = 300;
+/**
+ * חברי הקבוצה לצורך ספירה והצלבה: מי שברשימת המיילים, וגם מנהלי הקבוצה (הכרעת בעלים 12.10.2026) — מנהל שנרשם ואימת מייל נספר בקבוצה
+ * גם אם אינו ברשימה, ורואה את מסך הקבוצה. אותו מייל ברשימה ובמנהלים נספר פעם אחת (UNION).
+ */
+const GROUP_PEOPLE = "(SELECT group_id, email_hash FROM group_members UNION SELECT group_id, email_hash FROM group_managers)";
 /** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
 export const GROUP_MIN = 50;
 function groupId(v) {
@@ -1356,12 +1361,13 @@ async function groupDashboards(env, { participants, versions, now, blocNames, de
   for (const [id, members] of byGroup) {
     const sub = participants.filter((p) => members.has(p.id));
     const d = aggregate({ participants: sub, versions: versions.filter((v) => members.has(v.participant)), now, blocNames, decisions, moderation: mod, aggregationId: `live-${now}` }).dashboard;
-    if (d.participants < GROUP_MIN) out.set(id, { group: id, belowMin: true, min: GROUP_MIN, publishedAt: now });
+    // מתחת לסף: בלי נתונים, רק הספירה (הכרעת בעלים 12.10.2026) — המסך מוצג עם אפסים והמונה עובד
+    if (d.participants < GROUP_MIN) out.set(id, { group: id, belowMin: true, min: GROUP_MIN, participants: d.participants, publishedAt: now });
     else out.set(id, { ...d, group: id, min: GROUP_MIN, pendingGuesses: undefined, underReview: null });
   }
   return out;
 }
-const GROUP_MEMBERS_SQL = "SELECT DISTINCT m.group_id, e.participant FROM group_members m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1";
+const GROUP_MEMBERS_SQL = `SELECT DISTINCT m.group_id, e.participant FROM ${GROUP_PEOPLE} m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1`;
 
 // ---- המשימה השעתית
 const hourOf = (t) => iso(Math.floor(t / HOUR) * HOUR).slice(0, 13);
@@ -1499,7 +1505,7 @@ export default {
         const id = groupId(url.searchParams.get("group"));
         const { participant } = await requireAuth(env, request, now);
         if (!(await myGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_member");
-        const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, publishedAt: iso(now) };
+        const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, participants: 0, publishedAt: iso(now) };
         return new Response(JSON.stringify(d), { headers: { ...headers, "cache-control": "no-store" } });
       }
       if (request.method === "GET" && url.pathname === "/dashboard")
