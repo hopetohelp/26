@@ -19,5 +19,10 @@ describe("הודעה למנהלי קבוצות", () => {
     expect(groupInviteMessage()).toContain("רק לשלוח את הקישור בקבוצה.");
     expect(groupInviteMessage()).not.toContain("#/g/");
   });
+  it("מבהירה שזה לא בא במקום סקרים מקיפים אלא ממוקד בהשערת הכנסת הבאה", () => {
+    const m = groupInviteMessage();
+    expect(m).toContain("לא בא במקום סקרים מקיפים");
+    expect(m).toContain("איך תיראה הכנסת הבאה");
+  });
   it("אין תאריך מלא בנקודות", () => expect(groupInviteMessage()).not.toMatch(/\d{1,2}\.\d{1,2}\.20\d{2}/));
 });
