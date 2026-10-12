@@ -21,6 +21,7 @@ import { setPollRanges, moderate, flagReasons } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
+import { slugFromName, freeSlug } from "./lib/slug.js";
 import { AGENT_SESSION_MS, MAX_AGENTS, agentBodyAllowed, agentRoute, agentSession, clientLabel, connectionId, requestToken } from "./lib/agent.js";
 
 const IDS_2026_LIST = LISTS_2026.map((l) => l.id);
@@ -143,8 +144,11 @@ async function importGroup(env, body, now, create) {
   const exists = await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first();
   if (!exists && (!create || !name)) throw bad("name");
   // שם הקישור באנגלית — רק בטעינה של מנהל האתר (יצירה); מנהל קבוצה משנה אותו ב-/group/link
-  const slug = create && body.slug !== undefined ? slugOf(body.slug) : null;
+  // בלי slug בבקשה — נגזר אוטומטית משם הקבוצה (תעתיק לאנגלית, lib/slug.js), רק בהקמה
+  const given = create && body.slug !== undefined && body.slug !== null && body.slug !== "";
+  let slug = given ? slugOf(body.slug) : null;
   if (slug) await ensureSlugFree(env, id, slug);
+  else if (create && !exists) slug = await autoSlug(env, name);
   const hashes = new Set();
   let invalid = 0, valid = 0;
   for (const raw of body.emails) {
@@ -182,11 +186,26 @@ async function requireGroup(env, id) {
   if (!(await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
 }
 
-/** קביעת שם הקישור של קבוצה קיימת (מנהל האתר, או מנהל הקבוצה שלה) */
+/** שם קישור פנוי שנגזר משם הקבוצה; null אם אי אפשר לגזור (שם בלי אותיות וספרות) */
+async function autoSlug(env, name, exceptGroup = null) {
+  const base = slugFromName(name);
+  if (!base) return null;
+  return freeSlug(base, async (x) => {
+    const row = await env.DB.prepare("SELECT group_id FROM group_links WHERE slug = ?").bind(x).first();
+    return !!row && row.group_id !== exceptGroup;
+  });
+}
+
+/** קביעת שם הקישור של קבוצה קיימת (מנהל האתר, או מנהל הקבוצה שלה). בלי slug בבקשה — נגזר משם הקבוצה */
 async function setGroupSlug(env, body) {
   const id = groupId(body.group);
-  const slug = slugOf(body.slug);
   await requireGroup(env, id);
+  let slug;
+  if (body.slug === undefined) {
+    const g = await env.DB.prepare("SELECT name_enc FROM groups WHERE id = ?").bind(id).first();
+    slug = await autoSlug(env, await open(env, g.name_enc), id);
+    if (!slug) throw bad("slug");
+  } else slug = slugOf(body.slug);
   await ensureSlugFree(env, id, slug);
   await upsertSlug(env, id, slug).run();
   return { group: id, slug };
@@ -1253,6 +1272,11 @@ const routes = {
 
   "GET /admin/groups": async ({ env, request }) => {
     await requireAdmin(env, request);
+    // קבוצות שנוצרו לפני שהיה קישור: נקבע להן שם באנגלית מהשם בעברית (פעם אחת; אפשר לשנות בכרטיס)
+    for (const g of (await env.DB.prepare("SELECT g.id, g.name_enc FROM groups g LEFT JOIN group_links l ON l.group_id = g.id WHERE l.slug IS NULL").all()).results || []) {
+      const slug = await autoSlug(env, await open(env, g.name_enc));
+      if (slug) await upsertSlug(env, g.id, slug).run();
+    }
     const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers, l.slug, i.updated_at AS image FROM groups g LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id ORDER BY g.created_at").all()).results || [];
     const mgr = (await env.DB.prepare("SELECT a.group_id, a.email_hash, a.added_at, l.email_enc, EXISTS(SELECT 1 FROM emails e WHERE e.hash = a.email_hash AND e.verified = 1) AS active FROM group_managers a LEFT JOIN group_manager_labels l ON l.group_id = a.group_id AND l.email_hash = a.email_hash ORDER BY a.added_at").all()).results || [];
     const list = async (id) => Promise.all(mgr.filter((m) => m.group_id === id).map(async (m) => ({ handle: m.email_hash, email: m.email_enc ? await open(env, m.email_enc) : null, active: !!m.active, addedAt: m.added_at })));

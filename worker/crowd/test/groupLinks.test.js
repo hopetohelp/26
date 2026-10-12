@@ -169,3 +169,47 @@ describe("adding a single email", () => {
     expect((await call("/group/import", { token: boss, body: { group: "gizra", emails: ["two@x.co"], mode: "add" } })).data).toMatchObject({ added: 1, members: 2 });
   });
 });
+
+describe("automatic link name from the Hebrew name (הכרעת בעלים 12.10.2026)", () => {
+  it("a group created without a link name gets one from its name, unique, and the admin can change it", async () => {
+    const a = await call("/admin/groups/import", { admin: true, body: { group: "ga", name: "הגזרה", emails: [] } });
+    expect(a.status).toBe(200);
+    await call("/admin/groups/import", { admin: true, body: { group: "gb", name: "הגזרה", emails: [] } });
+    await call("/admin/groups/import", { admin: true, body: { group: "gc", name: "המושב", slug: "my-own", emails: [] } });
+    const slugs = Object.fromEntries((await call("/admin/groups", { admin: true })).data.groups.map((g) => [g.id, g.slug]));
+    expect(slugs).toEqual({ ga: "hagzara", gb: "hagzara-2", gc: "my-own" });
+    // שם שנקבע ידנית נשאר; שינוי שם הקבוצה לא משנה קישור קיים
+    await call("/admin/groups/import", { admin: true, body: { group: "gc", name: "המושב החדש", emails: [] } });
+    expect((await call("/group/public?slug=my-own")).data.name).toBe("המושב החדש");
+  });
+
+  it("the automatic button (no name in the request) derives it from the group name, for the admin and the manager", async () => {
+    // קבוצה שנוצרה לפני שהיה קישור: אין שורה ב-group_links
+    await create("manual-one");
+    env.DB.raw.prepare("DELETE FROM group_links").run();
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const boss = await managerToken();
+    expect((await call("/group/link", { token: boss, body: { group: "gizra" } })).data).toEqual({ group: "gizra", slug: "hagzara" });
+    // שוב — אותו שם לאותה קבוצה אינו "תפוס"
+    expect((await call("/admin/groups/link", { admin: true, body: { group: "gizra" } })).data).toEqual({ group: "gizra", slug: "hagzara" });
+    const outsider = await managerToken("who@x.co");
+    expect((await call("/group/link", { token: outsider, body: { group: "gizra" } })).status).toBe(403);
+  });
+
+  it("a name with nothing to transliterate cannot be derived (the admin sets one by hand)", async () => {
+    const id = "gz";
+    await call("/admin/groups/import", { admin: true, body: { group: id, name: "!!!", slug: "typed-by-hand", emails: [] } });
+    env.DB.raw.prepare("DELETE FROM group_links").run();
+    expect((await call("/admin/groups/link", { admin: true, body: { group: id } })).data.error).toBe("slug");
+  });
+
+  it("listing for the admin fills in the link name of groups created before links existed", async () => {
+    await create("typed-by-hand");
+    env.DB.raw.prepare("DELETE FROM group_links").run();
+    expect((await call("/group/public?slug=hagzara")).status).toBe(404);
+    expect((await call("/admin/groups", { admin: true })).data.groups[0].slug).toBe("hagzara");
+    expect((await call("/group/public?slug=hagzara")).data.name).toBe("הגזרה");
+    // שוב — לא משנה
+    expect((await call("/admin/groups", { admin: true })).data.groups[0].slug).toBe("hagzara");
+  });
+});

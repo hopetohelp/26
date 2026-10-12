@@ -6,10 +6,27 @@ import type { Dashboard } from "../../lib/crowdApi";
 import { SITE_URL } from "../../lib/shareGuess";
 import { pctValue, seatsFmt } from "../../lib/format";
 import { IDS } from "./model";
-import { renderShareImage, sharePalette, IMG_W } from "./shareImage";
+import { renderShareImage, sharePalette, drawLogo, IMG_W, LOGO_BOX } from "./shareImage";
 import { votingRows } from "./votingRows";
 
 export const COMMUNITY_URL = `${SITE_URL}#/community`;
+
+/**
+ * שיתוף במסך קבוצה (הכרעת בעלים 12.10.2026): אותם כפתורים, ובתמונות — שם הקבוצה והלוגו שלה, וכתובת הקבוצה בתחתית.
+ * logo = התמונה כבר טעונה (או null אם אין); url = קישור הקבוצה.
+ */
+export interface Brand { name: string; logo: ImageBitmap | null; url: string }
+export const groupShareText = (name: string) => `הצטרפו לסקר של ${name} לבחירות לכנסת ה-26. ככל שיותר חברי הקבוצה משתתפים — התמונה מדויקת יותר:`;
+const addressOf = (url: string) => url.replace(/^https:\/\//, "");
+
+/** טעינת תמונת הקבוצה לציור על canvas. נכשל בשקט — תמונה בלי לוגו עדיפה על שיתוף שנכשל */
+export async function loadLogo(url: string | null): Promise<ImageBitmap | null> {
+  if (!url) return null;
+  try {
+    const res = await fetch(url);
+    return res.ok ? await createImageBitmap(await res.blob()) : null;
+  } catch { return null; }
+}
 export const COMMUNITY_TEXT = "סקר האתר לבחירות לכנסת ה-26: מה חושבים המשתתפים ולמי הם מתכננים להצביע. ככל שיותר משתתפים — התמונה מדויקת יותר. הצטרפו:";
 const SITE_LABEL = SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "");
 
@@ -25,22 +42,23 @@ export function roundTo120(means: Record<string, number>): Record<string, number
   return out;
 }
 
-export async function seatsImage(d: Dashboard): Promise<Blob> {
+export async function seatsImage(d: Dashboard, brand?: Brand): Promise<Blob> {
   const means = Object.fromEntries((d.seats?.full ?? []).filter((r) => IDS.includes(r.list)).map((r) => [r.list, r.mean]));
   const board = roundTo120(means);
   return renderShareImage({
     values: board,
     kind: "parties",
     labels: {
-      title: "סקר האתר: הכנסת",
-      subtitle: `ממוצע השערות ${d.seats?.n ?? d.participants} משתתפים · השערות, לא סקר מייצג`,
+      title: brand ? `${brand.name}: הכנסת` : "סקר האתר: הכנסת",
+      subtitle: `ממוצע השערות ${d.seats?.n ?? d.participants} משתתפים${brand ? " מהקבוצה" : ""} · השערות, לא סקר מייצג`,
       cta: "רוצים שזה יהיה מדויק יותר? הצטרפו",
+      ...(brand ? { logo: brand.logo, address: addressOf(brand.url) } : {}),
       value: (id) => seatsFmt(means[id] ?? 0),
     },
   });
 }
 
-export async function voteImage(d: Dashboard): Promise<Blob> {
+export async function voteImage(d: Dashboard, brand?: Brand): Promise<Blob> {
   const { c, display, body, num } = await sharePalette();
   const rows = votingRows(d).filter((r) => (r.previous ?? 0) > 0 || (r.next ?? 0) > 0)
     .sort((a, b) => (b.next ?? 0) - (a.next ?? 0) || (b.previous ?? 0) - (a.previous ?? 0)).slice(0, 14);
@@ -54,9 +72,11 @@ export async function voteImage(d: Dashboard): Promise<Blob> {
   ctx.fillStyle = c.bg; ctx.fillRect(0, 0, IMG_W, H);
   ctx.fillStyle = c.signal; ctx.fillRect(0, 0, IMG_W, 14);
   ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `700 84px ${display}`;
-  ctx.fillText("לאן הצביעו ולאן יצביעו", R, 140, R - L);
+  const room = brand?.logo ? LOGO_BOX + 30 : 0;
+  if (brand?.logo) drawLogo(ctx, brand.logo, L, 44, LOGO_BOX);
+  ctx.fillText("לאן הצביעו ולאן יצביעו", R, 140, R - L - room);
   ctx.fillStyle = c.soft; ctx.font = `400 32px ${body}`;
-  ctx.fillText(`סקר האתר · ${count} משתתפים · מי שמשתתף בוחר בעצמו, אין דגימה`, R, 196, R - L);
+  ctx.fillText(`${brand ? brand.name : "סקר האתר"} · ${count} משתתפים · מי שמשתתף בוחר בעצמו, אין דגימה`, R, 196, R - L - room);
   const colPrev = L + 400, colNext = L + 120;
   ctx.textAlign = "center"; ctx.fillStyle = c.ink; ctx.font = `700 30px ${body}`;
   ctx.fillText("הצביעו ב-2022", colPrev, 272); ctx.fillText("מתכננים ב-2026", colNext, 272);
@@ -78,6 +98,40 @@ export async function voteImage(d: Dashboard): Promise<Blob> {
   ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
   ctx.fillText("רוצים שזה יהיה מדויק יותר? הצטרפו", R, H - 100, R - L);
   ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
-  ctx.fillText(SITE_LABEL, R, H - 48);
+  ctx.fillText(brand ? addressOf(brand.url) : SITE_LABEL, R, H - 48);
+  return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
+}
+
+/**
+ * תמונת הזמנה לקבוצה: הלוגו, השם, והזמנה להצטרף — בלי שום נתון. מתאימה גם לקבוצה שעוד מתחת ל-50 משתתפים.
+ */
+export async function groupInviteImage(brand: Brand): Promise<Blob> {
+  const { c, display, body } = await sharePalette();
+  const H = 1350, R = IMG_W - 72, L = 72, mid = IMG_W / 2;
+  const cv = document.createElement("canvas");
+  cv.width = IMG_W; cv.height = H;
+  const ctx = cv.getContext("2d")!;
+  ctx.direction = "rtl";
+  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, IMG_W, H);
+  ctx.fillStyle = c.signal; ctx.fillRect(0, 0, IMG_W, 14);
+  let y = 120;
+  if (brand.logo) {
+    const box = 560;
+    drawLogo(ctx, brand.logo, mid - box / 2, y, box);
+    y += box + 70;
+  } else y = 420;
+  ctx.textAlign = "center"; ctx.fillStyle = c.ink;
+  let size = 110;
+  do ctx.font = `800 ${size}px ${display}`; while (ctx.measureText(brand.name).width > R - L && --size > 48);
+  ctx.fillText(brand.name, mid, y, R - L);
+  ctx.fillStyle = c.soft; ctx.font = `400 40px ${body}`;
+  ctx.fillText("הסקר של הקבוצה לבחירות לכנסת ה-26", mid, y + 86, R - L);
+  ctx.font = `400 32px ${body}`;
+  ctx.fillText("מי שמשתתף בוחר בעצמו — השערות, לא סקר מייצג", mid, y + 142, R - L);
+  ctx.fillStyle = c.card === c.bg ? c.line : c.card; ctx.fillRect(0, H - 176, IMG_W, 176);
+  ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
+  ctx.fillText("מצטרפים לסקר של הקבוצה", R, H - 100, R - L);
+  ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
+  ctx.fillText(addressOf(brand.url), R, H - 48, R - L);
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }

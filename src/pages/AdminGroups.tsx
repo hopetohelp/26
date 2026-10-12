@@ -37,10 +37,10 @@ export default function AdminGroups({ api }: { api: Api }) {
       <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">
         <p className="font-bold">קבוצה חדשה</p>
         <Field label="שם שיוצג לחברים"><input className={inputCls} value={newName} onChange={(e) => setNewName(e.target.value)} /></Field>
-        <Field label="שם באנגלית לקישור" hint="אותיות באנגלית, ספרות ומקף, לפחות 3 תווים. למשל: the-gizra. אפשר לשנות אחר כך.">
+        <Field label="שם באנגלית לקישור (לא חובה)" hint="אם תשאירו ריק, יווצר אוטומטית מהשם בעברית (תעתיק לאנגלית). אפשר לשנות אחר כך.">
           <input dir="ltr" className={inputCls} value={newSlug} onChange={(e) => setNewSlug(cleanSlugInput(e.target.value))} autoCapitalize="none" autoCorrect="off" spellCheck={false} />
         </Field>
-        <Btn kind="primary" disabled={!newName.trim() || !finalSlug(newSlug)} onClick={act(async () => { await api("/admin/groups/import", { group: newId(), name: newName.trim(), slug: finalSlug(newSlug), emails: [] }); setNewName(""); setNewSlug(""); })}>יצירה</Btn>
+        <Btn kind="primary" disabled={!newName.trim() || (!!newSlug && !finalSlug(newSlug))} onClick={act(async () => { await api("/admin/groups/import", { group: newId(), name: newName.trim(), ...(finalSlug(newSlug) ? { slug: finalSlug(newSlug) } : {}), emails: [] }); setNewName(""); setNewSlug(""); })}>יצירה</Btn>
       </div>
     </section>
   );
@@ -58,7 +58,7 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
       <div className="px-3 pb-3 space-y-3">
       <GroupLinkPanel
         slug={g.slug}
-        setSlug={async (slug) => { await api("/admin/groups/link", { group: g.id, slug }); await reload(); }}
+        setSlug={async (slug) => { await api("/admin/groups/link", slug ? { group: g.id, slug } : { group: g.id }); await reload(); }}
         loadStats={() => api("/admin/groups/link-stats", { group: g.id }) as Promise<GroupLinkStats>}
       />
       <GroupStats load={() => api("/admin/groups/stats", { group: g.id }) as Promise<Stats>} refresh={g.members} />

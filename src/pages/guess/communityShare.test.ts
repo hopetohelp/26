@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { roundTo120 } from "./communityShare";
+import { groupShareText, loadLogo, roundTo120 } from "./communityShare";
 
 describe("roundTo120", () => {
   it("ממוצעים שבריים ⇐ חלוקה שלמה של 120 בדיוק", () => {
@@ -8,4 +8,14 @@ describe("roundTo120", () => {
     expect(out.b).toBe(26);
   });
   it("בלי נתונים ⇐ ריק", () => expect(roundTo120({})).toEqual({}));
+});
+
+describe("שיתוף קבוצה", () => {
+  it("המשפט מזכיר את שם הקבוצה", () => expect(groupShareText("הגזרה")).toContain("הגזרה"));
+  it("בלי כתובת לתמונה — אין לוגו, ולא נכשל", async () => expect(await loadLogo(null)).toBeNull());
+  it("כתובת שנכשלת — אין לוגו, ולא נכשל", async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = (() => Promise.reject(new Error("offline"))) as typeof fetch;
+    try { expect(await loadLogo("https://x.example/logo.png")).toBeNull(); } finally { globalThis.fetch = real; }
+  });
 });
