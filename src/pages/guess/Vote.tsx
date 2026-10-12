@@ -12,11 +12,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
   const set = (patch: Partial<VotePayload>) => unit.setDraft({ ...p, ...patch });
   return (
     <div className="space-y-4">
-      <div className="bg-accent-soft text-ink rounded-theme p-3 space-y-1">
-        <p className="font-bold">ההצבעה הקודמת שלכם עוזרת להבין את התמונה</p>
-        <p className="text-sm leading-relaxed">כדי להשוות את התפלגות העונים בסקר לתוצאות הבחירות בפועל, חשוב מאוד שהתשובה על הצבעתכם בבחירות הקודמות תהיה אמיתית. בחרו את הרשימה שהצבעתם לה אז, גם אם היום אתם בוחרים אחרת.</p>
-      </div>
-      <p className="text-sm text-ink-soft">שתי השאלות הן רשות. אפשר להשיב רק על אחת, והבחירה נשמרת בלחיצה על ״שמירה״ או ביציאה מהמסך.</p>
+      <p className="text-sm leading-relaxed">כדי להשוות את התפלגות העונים בסקר לתוצאות הבחירות בפועל, חשוב מאוד שהתשובה על הצבעתכם בבחירות הקודמות תהיה אמיתית. בחרו את הרשימה שהצבעתם לה אז, גם אם היום אתם בוחרים אחרת. שתי השאלות הן רשות: אפשר להשיב רק על אחת.</p>
       <div className={`grid ${splitCls("md:grid-cols-2")} gap-3 [&>*]:min-w-0`}>
         <section className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2">
           <Select id="vote-2022" label="בבחירות 2022 הצבעתי ל…" value={p.v2022 ?? ""} onChange={v => set({ v2022: v || null })} hint="הרשימות בהרכבן בבחירות הקודמות, כולל רשימות שלא עברו את הסף.">
@@ -53,7 +49,7 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
         </div>
       </details>
       <div><StatusPill status={unit.status} queued={unit.queued} /></div>
-      <ActionBar above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
+      <ActionBar drawer above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
         <Btn disabled={!p.v2022 && !p.v2026} onClick={() => unit.setDraft(EMPTY_VOTE)}>אפס</Btn>
         <SaveButton unit={unit} session={session} invalid={validateVote(p, K25_IDS, IDS)} compact />
       </ActionBar>
