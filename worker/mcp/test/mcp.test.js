@@ -246,6 +246,13 @@ describe("כרטיס התשובה (show_answer)", () => {
     const res = await rpc("/public", "resources/read", { uri: list._meta.ui.resourceUri });
     expect(res.data.result.contents[0].mimeType).toBe("text/html;profile=mcp-app");
   });
+  it("אינדקס בלי anchors (בנייה ישנה) — עוגני המילון עדיין תקפים", async () => {
+    const { anchors: _a, ...old } = SITE_FILES.get("data/index.json");
+    SITE_FILES.set("data/index.json", old);
+    try {
+      expect((await call("/public", "show_answer", good)).data.result.isError).toBe(false);
+    } finally { SITE_FILES.set("data/index.json", buildIndex(ISSUER)); }
+  });
   it("הכרטיס הנגזר מעודכן לטוקנים של האתר, בלי innerHTML ובלי רשת", () => {
     const r = (p) => readFileSync(new URL(p, import.meta.url), "utf8");
     const html = buildCardHtml({ indexCss: r("../../../src/index.css"), cardCss: r("../card/card.css"), cardJs: r("../card/card.js"), site: SITE });

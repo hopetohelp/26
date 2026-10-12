@@ -27,6 +27,7 @@ export const resetSiteCache = () => cache.clear();
 /** הקישור "איך זה חושב?" לעוגן, מתוך האינדקס (anchors). null ⇐ העוגן אינו קיים */
 export async function methodUrlFor(env, now) {
   const idx = await siteJson(env, "data/index.json", now);
-  const map = new Map((idx.anchors ?? []).map((a) => [a.id, a.url]));
+  // anchors — כל העוגנים (גם בתוך ערכים); בלעדיו (אינדקס ישן) — ערכי המילון עצמם
+  const map = new Map([...(idx.dictionary ?? []), ...(idx.anchors ?? [])].map((a) => [a.id, a.url]));
   return (anchor) => (typeof anchor === "string" ? map.get(anchor) ?? null : null);
 }
