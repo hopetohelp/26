@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import { Card, PageTitle } from "../components/ui";
+import SectionLink from "../components/SectionLink";
 import { meta } from "../lib/data";
 import { BLOC_ESTIMATE_POLICY } from "../lib/blocEstimates";
 import { date } from "../lib/format";
@@ -405,7 +406,7 @@ export const DICTIONARY_IDS = DICTIONARY.map((e) => e.id);
 function Entry({ e }: { e: DictEntry }) {
   return (
     <article id={e.id} className="border-t border-paper-line py-4 scroll-mt-32">
-      <h3 className="text-xl font-display leading-tight">{e.title}</h3>
+      <h3 className="text-xl font-display leading-tight">{e.title} <SectionLink id={e.id} label={e.title} /></h3>
       <p className="text-sm text-ink-soft mb-2">מופיע ב: {e.where}</p>
       <dl className="grid grid-cols-[4.5rem_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
         <dt className="font-semibold text-ink-soft">סוג</dt>
@@ -442,8 +443,8 @@ export function MethodSources() {
   return (
     <>
       <PageTitle>מקורות</PageTitle>
-      <Card title="מקורות הנתונים">
-        <ul className="list-disc ps-5 space-y-1 text-sm" id="sources">
+      <Card title="מקורות הנתונים" id="sources" tab="sources">
+        <ul className="list-disc ps-5 space-y-1 text-sm">
           <li>
             <strong>תוצאות אמת (2019–2022):</strong> עמודי התוצאות הארציות של ועדת הבחירות המרכזית (votes21–votes25.bechirot.gov.il), וקובצי
             התוצאות לפי יישוב. הקבצים שמורים בריפו עם חתימת sha256.
@@ -469,14 +470,14 @@ export function MethodSources() {
           </li>
         </ul>
       </Card>
-      <Card title="עדכונים ותיקונים">
-        <p className="text-sm" id="updates">
+      <Card title="עדכונים ותיקונים" id="updates" tab="sources">
+        <p className="text-sm">
           הסקרים מתעדכנים אוטומטית כל 4 שעות, מכל פרסום שנקלט, בלי הגבלת תאריך. כל שינוי בנתונים עובר בריפו הציבורי עם היסטוריה מלאה, ואפשר לדווח על טעות דרך
           "דיווח על טעות" בתחתית כל עמוד. הנתונים נכונים ל-{date(meta.dataAsOf)}.
         </p>
       </Card>
-      <Card title="מונה כניסות ופרטיות">
-        <p className="text-sm" id="privacy">
+      <Card title="מונה כניסות ופרטיות" id="privacy" tab="sources">
+        <p className="text-sm">
           האתר סופר כניסות כדי לדעת כמה אנשים משתמשים בו. בדפדפן נשמר מזהה אקראי, שאינו קשור לשום פרט עליך, ובשרת נשמר רק גיבוב שלו (ערבול שאי
           אפשר לשחזר ממנו את המזהה), בלי כתובת, שם או מיקום. אפשר למחוק את המזהה בכל עת במחיקת נתוני האתר בדפדפן.
         </p>
@@ -491,16 +492,16 @@ export function MethodLaw() {
   return (
     <>
       <PageTitle>החוק</PageTitle>
-      <Card title="איך סקרים נקלטים">
-        <ul className="list-disc ps-5 text-sm space-y-1" id="law">
+      <Card title="איך סקרים נקלטים" id="law" tab="law">
+        <ul className="list-disc ps-5 text-sm space-y-1">
           <li>סקר שפורסם לציבור נכנס לאתר מיד עם קליטתו, ללא השהיה נוספת.</li>
           <li>לכל סקר מוצגים עורך הסקר, המזמין, התאריכים וגודל המדגם, וקישור לפרסום המקורי שבו שאר הפרטים.</li>
           <li>האתר מרכז פרסומים קיימים של סקרים, ולכן כל סקר שמופיע בנתוני המקור נכנס לכל החישובים והתצוגות. בדיקת ההתאמה לפרסום המקורי מוצגת כתווית ("אומת"), ואינה תנאי כניסה.</li>
           <li>האתר אינו עורך סקרים, ואינו ממליץ על אף רשימה.</li>
         </ul>
       </Card>
-      <Card title="מה אי אפשר ללמוד מהנתונים">
-        <ul className="list-disc ps-5 text-sm space-y-1" id="limits">
+      <Card title="מה אי אפשר ללמוד מהנתונים" id="limits" tab="law">
+        <ul className="list-disc ps-5 text-sm space-y-1">
           <li>מי עבר ממפלגה למפלגה: השוואת שתי תמונות מראה שינוי נטו בלבד.</li>
           <li>התנהגות של אנשים מתוך נתוני יישובים (כשל אקולוגי).</li>
           <li>איזה מכון צודק — לפני הבחירות אין דרך לדעת.</li>

@@ -35,4 +35,11 @@ describe("מילון המספרים", () => {
     const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
     expect(new Set(ids).size, "מזהים כפולים").toBe(ids.length);
   });
+
+  it("לכל קטע במסך יש כפתור קישור נפרד (ערכי המילון והקטעים במקורות ובחוק)", () => {
+    const count = (C: typeof MethodNumbers) => (renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(C) })).match(/העתקת קישור לקטע:/g) ?? []).length;
+    expect(count(MethodNumbers)).toBe(DICTIONARY.length);
+    expect(count(MethodSources)).toBe(3);
+    expect(count(MethodLaw)).toBe(2);
+  });
 });
