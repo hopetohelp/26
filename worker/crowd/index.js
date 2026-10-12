@@ -28,6 +28,10 @@ const IDS_2026_LIST = LISTS_2026.map((l) => l.id);
 // שמירה אוטומטית בכל שינוי (הכרעת בעלים 9.10.2026) — המכסה הוגדלה מ-20
 export const LIMITS = { savesPerHour: 120, participantsPerHourPerIp: 15 };
 const MAX_BODY = 16 * 1024;
+/** תמונת קבוצה: עד IMAGE_MAX בתים אחרי פענוח; הבקשה נושאת אותה כ-base64 */
+export const IMAGE_MAX = 150 * 1024;
+const IMAGE_BODY = 220 * 1024;
+const IMAGE_ROUTES = new Set(["POST /group/image", "POST /admin/groups/image"]);
 const RESET_TTL = 30 * 60 * 1000;
 
 function cors(env, origin) {
@@ -57,9 +61,9 @@ class HttpError extends Error {
 }
 const bad = (code = "bad_request", extra) => new HttpError(400, code, extra);
 
-async function readJson(request) {
+async function readJson(request, max = MAX_BODY) {
   const text = await request.text();
-  if (text.length > MAX_BODY) throw new HttpError(413, "too_large");
+  if (text.length > max) throw new HttpError(413, "too_large");
   if (!text) return {};
   try {
     return JSON.parse(text);
@@ -79,8 +83,8 @@ async function requireAdmin(env, request) {
 }
 
 async function myGroups(env, participant) {
-  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc FROM groups g JOIN group_members m ON m.group_id = g.id JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
-  return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc) })));
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM groups g JOIN group_members m ON m.group_id = g.id JOIN emails e ON e.hash = m.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), slug: r.slug ?? null, image: r.image ?? null })));
 }
 
 /** תחילת היום הנוכחי בשעון ישראל (ISO, UTC) — ל"נרשמו היום" */
@@ -125,8 +129,8 @@ async function blocsState(env) {
 
 /** הקבוצות שהמשתמש מנהל — דרך מייל מאומת, כמו החברות */
 async function managedGroups(env, participant) {
-  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
-  return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members })));
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, slug: r.slug ?? null, image: r.image ?? null })));
 }
 
 /** טעינת מנה של מיילים לקבוצה. create = מותר ליצור קבוצה ולשנות שם (מנהל האתר בלבד) */
@@ -138,6 +142,9 @@ async function importGroup(env, body, now, create) {
   if (body.name !== undefined && !name) throw bad("name");
   const exists = await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first();
   if (!exists && (!create || !name)) throw bad("name");
+  // שם הקישור באנגלית — רק בטעינה של מנהל האתר (יצירה); מנהל קבוצה משנה אותו ב-/group/link
+  const slug = create && body.slug !== undefined ? slugOf(body.slug) : null;
+  if (slug) await ensureSlugFree(env, id, slug);
   const hashes = new Set();
   let invalid = 0, valid = 0;
   for (const raw of body.emails) {
@@ -149,12 +156,89 @@ async function importGroup(env, body, now, create) {
   const stmts = [];
   if (!exists) stmts.push(env.DB.prepare("INSERT INTO groups (id, name_enc, created_at) VALUES (?, ?, ?)").bind(id, await seal(env, name), iso(now)));
   else if (name) stmts.push(env.DB.prepare("UPDATE groups SET name_enc = ? WHERE id = ?").bind(await seal(env, name), id));
+  if (slug) stmts.push(upsertSlug(env, id, slug));
   if (body.mode === "replace") stmts.push(env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id));
   for (const h of hashes) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(id, h));
   if (stmts.length) await env.DB.batch(stmts);
   const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
   const base = body.mode === "replace" ? 0 : before;
   return { group: id, added: members - base, duplicates: valid - (members - base), invalid, members };
+}
+
+/** שם הקישור באנגלית: אותיות לטיניות קטנות, ספרות ומקף באמצע; 3–32 תווים */
+const SLUG = /^[a-z0-9][a-z0-9-]{1,30}[a-z0-9]$/;
+function slugOf(v) {
+  if (typeof v !== "string" || !SLUG.test(v)) throw bad("slug");
+  return v;
+}
+async function ensureSlugFree(env, id, slug) {
+  const taken = await env.DB.prepare("SELECT group_id FROM group_links WHERE slug = ?").bind(slug).first();
+  if (taken && taken.group_id !== id) throw new HttpError(409, "slug_taken");
+}
+const upsertSlug = (env, id, slug) =>
+  env.DB.prepare("INSERT INTO group_links (group_id, slug) VALUES (?, ?) ON CONFLICT(group_id) DO UPDATE SET slug = excluded.slug").bind(id, slug);
+
+async function requireGroup(env, id) {
+  if (!(await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
+}
+
+/** קביעת שם הקישור של קבוצה קיימת (מנהל האתר, או מנהל הקבוצה שלה) */
+async function setGroupSlug(env, body) {
+  const id = groupId(body.group);
+  const slug = slugOf(body.slug);
+  await requireGroup(env, id);
+  await ensureSlugFree(env, id, slug);
+  await upsertSlug(env, id, slug).run();
+  return { group: id, slug };
+}
+
+/** כניסות דרך הקישור: בסך הכול, היום, ודפדפנים שונים (כניסה ראשונה של דפדפן). מונה אנונימי — בלי סף מינימום */
+async function linkStats(env, id, now) {
+  const slug = (await env.DB.prepare("SELECT slug FROM group_links WHERE group_id = ?").bind(id).first())?.slug ?? null;
+  const t = await env.DB.prepare("SELECT COALESCE(SUM(opens), 0) AS opens, COALESCE(SUM(fresh), 0) AS fresh, COALESCE(SUM(CASE WHEN day = ? THEN opens ELSE 0 END), 0) AS today FROM group_visits WHERE group_id = ?").bind(ilDay(now), id).first();
+  return { group: id, slug, opens: t.opens, today: t.today, fresh: t.fresh };
+}
+
+const IMAGE_TYPES = {
+  "image/jpeg": (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
+  "image/png": (b) => b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47,
+  "image/webp": (b) => b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50,
+};
+/** תמונה מ-data URL: סוג מותר (בלי SVG), חתימת הקובץ תואמת, וגודל עד IMAGE_MAX */
+function parseImage(v) {
+  const m = typeof v === "string" ? /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/.exec(v) : null;
+  if (!m) throw bad("image");
+  let bytes;
+  try { bytes = Uint8Array.from(atob(m[2]), (c) => c.charCodeAt(0)); } catch { throw bad("image"); }
+  if (bytes.length < 16 || bytes.length > IMAGE_MAX || !IMAGE_TYPES[m[1]](bytes)) throw bad("image");
+  return { mime: m[1], data: m[2] };
+}
+
+/** החלפה או הסרה של תמונת הקבוצה (מנהל האתר, או מנהל הקבוצה שלה) */
+async function setGroupImage(env, body, now) {
+  const id = groupId(body.group);
+  await requireGroup(env, id);
+  if (body.remove === true) await env.DB.prepare("DELETE FROM group_images WHERE group_id = ?").bind(id).run();
+  else {
+    const { mime, data } = parseImage(body.image);
+    await env.DB.prepare("INSERT INTO group_images (group_id, mime, data, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(group_id) DO UPDATE SET mime = excluded.mime, data = excluded.data, updated_at = excluded.updated_at").bind(id, mime, data, iso(now)).run();
+  }
+  const image = (await env.DB.prepare("SELECT updated_at FROM group_images WHERE group_id = ?").bind(id).first())?.updated_at ?? null;
+  return { group: id, image };
+}
+
+/** מנהל הקבוצה המחובר — מחזיר את מזהה הקבוצה */
+async function requireManager(env, request, now, raw) {
+  const { participant } = await requireAuth(env, request, now);
+  const id = groupId(raw);
+  if (!(await managedGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_manager");
+  return id;
+}
+
+/** הגבלת קצב לנתיבים הציבוריים של הקישור (לפי IP) */
+async function limitGroupPublic(env, request, now) {
+  const [cur] = await ipKeys(env, request);
+  if (!(await hit(env, "gp:" + cur, 240, now))) throw new HttpError(429, "rate");
 }
 
 /** מזהה קבוצה: אותיות לטיניות קטנות, ספרות ומקף */
@@ -424,7 +508,7 @@ const routes = {
       // הקבוצות של המשתמש (לכפתור ההחלפה) — רק דרך מייל מאומת; גולש אחר לא רואה שקיימות קבוצות
       groups: await myGroups(env, participant),
       // הקבוצות שהמשתמש מנהל (למסך העלאת הרשימה)
-      managedGroups: (await managedGroups(env, participant)).map(({ id, name }) => ({ id, name })),
+      managedGroups: (await managedGroups(env, participant)).map(({ id, name, slug, image }) => ({ id, name, slug, image })),
       // חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google מיד בכניסה (הכרעת בעלים 10.10.2026)
       legacy: !!hasLink || !!pw?.username || (!pw && !g),
     };
@@ -1118,12 +1202,56 @@ const routes = {
     return { group: id, managers: n };
   },
 
+  // קישור הקבוצה (הכרעת בעלים 12.10.2026): שם באנגלית בכתובת, תמונה בראש סקר האתר, ומונה כניסות. מנהל האתר ומנהל הקבוצה — אותן אפשרויות.
+  "POST /admin/groups/link": async ({ env, request, body }) => {
+    await requireAdmin(env, request);
+    return setGroupSlug(env, body);
+  },
+  "POST /group/link": async ({ env, request, now, body }) => {
+    await requireManager(env, request, now, body.group);
+    return setGroupSlug(env, body);
+  },
+  "POST /admin/groups/link-stats": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    return linkStats(env, groupId(body.group), now);
+  },
+  "GET /group/link-stats": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return linkStats(env, id, now);
+  },
+  "POST /admin/groups/image": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    return setGroupImage(env, body, now);
+  },
+  "POST /group/image": async ({ env, request, now, body }) => {
+    await requireManager(env, request, now, body.group);
+    return setGroupImage(env, body, now);
+  },
+
+  // ציבורי, לבעלי הקישור: שם הקבוצה והתמונה שלה, בלי שום נתון על החברים
+  "GET /group/public": async ({ env, request, now, url }) => {
+    await limitGroupPublic(env, request, now);
+    const slug = url.searchParams.get("slug") ?? "";
+    const row = SLUG.test(slug) ? await env.DB.prepare("SELECT g.id, g.name_enc, i.updated_at AS image FROM group_links l JOIN groups g ON g.id = l.group_id LEFT JOIN group_images i ON i.group_id = g.id WHERE l.slug = ?").bind(slug).first() : null;
+    if (!row) throw new HttpError(404, "not_found");
+    return { id: row.id, slug, name: await open(env, row.name_enc), image: row.image ?? null };
+  },
+  // כניסה דרך הקישור. fresh = הדפדפן נכנס בפעם הראשונה (הלקוח זוכר). נספר ליום בלבד, בלי זהות
+  "POST /group/visit": async ({ env, request, now, body }) => {
+    await limitGroupPublic(env, request, now);
+    const slug = typeof body.slug === "string" && SLUG.test(body.slug) ? body.slug : null;
+    const link = slug ? await env.DB.prepare("SELECT group_id FROM group_links WHERE slug = ?").bind(slug).first() : null;
+    if (!link) throw new HttpError(404, "not_found");
+    await env.DB.prepare("INSERT INTO group_visits (group_id, day, opens, fresh) VALUES (?, ?, 1, ?) ON CONFLICT(group_id, day) DO UPDATE SET opens = opens + 1, fresh = fresh + excluded.fresh").bind(link.group_id, ilDay(now), body.fresh === true ? 1 : 0).run();
+    return { ok: true };
+  },
+
   "GET /admin/groups": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers FROM groups g ORDER BY g.created_at").all()).results || [];
+    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers, l.slug, i.updated_at AS image FROM groups g LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id ORDER BY g.created_at").all()).results || [];
     const mgr = (await env.DB.prepare("SELECT a.group_id, a.email_hash, a.added_at, l.email_enc, EXISTS(SELECT 1 FROM emails e WHERE e.hash = a.email_hash AND e.verified = 1) AS active FROM group_managers a LEFT JOIN group_manager_labels l ON l.group_id = a.group_id AND l.email_hash = a.email_hash ORDER BY a.added_at").all()).results || [];
     const list = async (id) => Promise.all(mgr.filter((m) => m.group_id === id).map(async (m) => ({ handle: m.email_hash, email: m.email_enc ? await open(env, m.email_enc) : null, active: !!m.active, addedAt: m.added_at })));
-    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, managers: r.managers, managerList: await list(r.id), createdAt: r.created_at }))) };
+    return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, managers: r.managers, managerList: await list(r.id), createdAt: r.created_at, slug: r.slug ?? null, image: r.image ?? null }))) };
   },
 
   // מחיקת קבוצה מוחקת את כל הגיבובים שלה
@@ -1134,6 +1262,9 @@ const routes = {
       env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM group_managers WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM group_manager_labels WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_links WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_images WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_visits WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id),
     ]);
     return { ok: true };
@@ -1354,6 +1485,15 @@ export default {
           method: "POST", headers: { "content-type": "application/json", origin: request.headers.get("origin") || "", "cf-connecting-ip": request.headers.get("cf-connecting-ip") || "", ...(admin ? { authorization: `Bearer ${request.headers.get("x-admin-key")}` } : {}) }, body: JSON.stringify(payload),
         }));
       }
+      // תמונת קבוצה (ציבורי, לתגית img): לפי שם הקישור או מזהה הקבוצה
+      if (request.method === "GET" && url.pathname === "/group/image") {
+        await limitGroupPublic(env, request, now);
+        const slug = url.searchParams.get("slug"), gid = url.searchParams.get("group");
+        const row = slug ? (SLUG.test(slug) ? await env.DB.prepare("SELECT i.mime, i.data FROM group_links l JOIN group_images i ON i.group_id = l.group_id WHERE l.slug = ?").bind(slug).first() : null)
+          : gid && GROUP_ID.test(gid) ? await env.DB.prepare("SELECT mime, data FROM group_images WHERE group_id = ?").bind(gid).first() : null;
+        if (!row) throw new HttpError(404, "not_found");
+        return new Response(Uint8Array.from(atob(row.data), (c) => c.charCodeAt(0)), { headers: { ...headers, "content-type": row.mime, "cache-control": "public, max-age=300", "x-content-type-options": "nosniff" } });
+      }
       // דשבורד של קבוצה — רק לחבר בה (השרת בודק; הכפתור באתר אינו ההגנה)
       if (request.method === "GET" && url.pathname === "/dashboard" && url.searchParams.has("group")) {
         const id = groupId(url.searchParams.get("group"));
@@ -1366,7 +1506,7 @@ export default {
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
       const handler = routes[`${request.method} ${url.pathname}`];
       if (!handler) throw new HttpError(404, "not_found");
-      const body = request.method === "POST" ? await readJson(request) : {};
+      const body = request.method === "POST" ? await readJson(request, IMAGE_ROUTES.has(`${request.method} ${url.pathname}`) ? IMAGE_BODY : MAX_BODY) : {};
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
       if (agent && !agentBodyAllowed(request.method, url.pathname, body)) throw new HttpError(403, "assistant_not_allowed");
       const out = await handler({ env, request, url, now, body });

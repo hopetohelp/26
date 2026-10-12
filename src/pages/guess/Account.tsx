@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { call, CrowdError, type GroupImportResult, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
+import { call, CrowdError, type GroupImportResult, type GroupLinkStats, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
 import GroupStats from "../../components/GroupStats";
+import { GroupAddEmail, GroupImagePanel, GroupLinkPanel } from "../../components/GroupTools";
 import { GroupManagerGuide } from "../../components/GroupGuide";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
@@ -432,7 +433,7 @@ export default function Account({ session, hideGroups = false }: { session: Retu
         <p className="font-bold">סיסמה</p>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
       </div>
-      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className={row} />)}
+      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className={row} onChanged={() => void session.refresh()} />)}
       <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
@@ -442,16 +443,28 @@ export default function Account({ session, hideGroups = false }: { session: Retu
   );
 }
 
-/** מקטע מנהל קבוצה: מספרים מצטברים והעלאת רשימת החברים */
-export function ManagedGroup({ id, name, token, className }: { id: string; name: string; token: string; className: string }) {
+/** מקטע מנהל קבוצה: קישור, מספרים, רשימת החברים (קובץ או מייל בודד) ותמונה — אותן אפשרויות כמו למנהל האתר */
+export function ManagedGroup({ id, name, slug, image, token, className, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; token: string; className: string; onChanged?: () => void }) {
   const [refresh, setRefresh] = useState(0);
+  const send = (chunk: { emails: string[]; mode: "add" | "replace" }) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } });
   return (
     <div className={className}>
       <p className="font-bold">הקבוצה {name}</p>
+      <GroupLinkPanel
+        slug={slug}
+        setSlug={async (next) => { await call("/group/link", { token, body: { group: id, slug: next } }); onChanged?.(); }}
+        loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
+      />
       <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
       <GroupManagerGuide />
       <p className="font-bold pt-2">רשימת החברים</p>
-      <GroupUpload send={(chunk) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } })} onDone={() => setRefresh((n) => n + 1)} />
+      <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={() => setRefresh((n) => n + 1)} />
+      <GroupUpload send={send} onDone={() => setRefresh((n) => n + 1)} />
+      <GroupImagePanel
+        id={id}
+        image={image}
+        setImage={async (dataUrl) => { await call("/group/image", { token, body: dataUrl ? { group: id, image: dataUrl } : { group: id, remove: true } }); onChanged?.(); }}
+      />
     </div>
   );
 }

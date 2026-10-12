@@ -193,7 +193,7 @@ export default function Support() {
   );
   const data = token ? <MyData session={session} part="data" /> : null;
   const assistants = <Assistants session={session} />;
-  const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className="py-3 border-b border-paper-line space-y-2" />) : null;
+  const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className="py-3 border-b border-paper-line space-y-2" onChanged={() => void session.refresh()} />) : null;
   const admin = (me?.isAdmin || hasAdminKey()) && (
     <div className="border-b border-paper-line">
       <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>

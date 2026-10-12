@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Split } from "../components/ui";
-import type { SeatCell, SeatsPayload } from "../lib/crowdApi";
+import type { GroupPublic, SeatCell, SeatsPayload } from "../lib/crowdApi";
 import { call } from "../lib/crowdApi";
 import { maskIdentifier } from "../lib/identifier";
 import { absorbFeedbackToken } from "../lib/feedback";
@@ -16,7 +16,8 @@ import SharedGuess from "./guess/SharedGuess";
 import { Btn, Notice } from "./guess/ui";
 import { errorText, useSession } from "./guess/useCrowd";
 
-export default function Guess({ community = false }: { community?: boolean }) {
+/** landing = קבוצה שהגולש הגיע אליה בקישור שלה (#/g/…): סקר האתר נפתח עליה */
+export default function Guess({ community = false, landing = null }: { community?: boolean; landing?: GroupPublic | null }) {
   const navigate = useNavigate();
   const session = useSession();
   const [params, setParams] = useSearchParams();
@@ -100,7 +101,7 @@ export default function Guess({ community = false }: { community?: boolean }) {
         </section>
       ) : (
         <section id="statistics">
-          <Dashboard session={session} />
+          <Dashboard session={session} landing={landing} />
         </section>
       ); return <Split primary={head} secondary={body} />; })()}
     </>

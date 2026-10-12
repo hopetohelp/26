@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Btn, Field, Notice, inputCls } from "./guess/ui";
 import GroupUpload from "../components/GroupUpload";
 import { AdminGroupsGuide } from "../components/GroupGuide";
-import type { GroupImportResult, GroupStats as Stats } from "../lib/crowdApi";
+import type { GroupImportResult, GroupLinkStats, GroupStats as Stats } from "../lib/crowdApi";
+import { GroupAddEmail, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
+import { cleanSlugInput, finalSlug } from "../lib/groupLink";
 import GroupStats from "../components/GroupStats";
 
 /**
@@ -10,18 +12,19 @@ import GroupStats from "../components/GroupStats";
  * הנתונים נשמרים בשרת ההשתתפות; ממשק הניהול מעביר אליו עם הרשאת הניהול.
  */
 type Manager = { handle: string; email: string | null; active: boolean; addedAt: string };
-type Group = { id: string; name: string | null; members: number; managers?: number; managerList?: Manager[]; createdAt: string };
+type Group = { id: string; name: string | null; members: number; managers?: number; managerList?: Manager[]; createdAt: string; slug?: string | null; image?: string | null };
 type Api = (path: string, body?: unknown) => Promise<unknown>;
 
 export default function AdminGroups({ api }: { api: Api }) {
   const [groups, setGroups] = useState<Group[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
+  const [newSlug, setNewSlug] = useState("");
   const load = async () => {
     try { setGroups(((await api("/admin/groups")) as { groups: Group[] }).groups); } catch (e) { setError((e as Error).message); }
   };
   useEffect(() => { void load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const act = (f: () => Promise<unknown>) => async () => { setError(null); try { await f(); await load(); } catch (e) { setError((e as Error).message); } };
+  const act = (f: () => Promise<unknown>) => async () => { setError(null); try { await f(); await load(); } catch (e) { const m = (e as Error).message; setError(/\(409\)/.test(m) ? "שם הקישור כבר תפוס בקבוצה אחרת." : m); } };
   // מזהה פנימי — נוצר לבד (אותיות וספרות אקראיות); מוצג רק השם
   const newId = () => "g" + Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => (b % 36).toString(36)).join("");
 
@@ -30,17 +33,20 @@ export default function AdminGroups({ api }: { api: Api }) {
             <p className="text-xs text-ink-soft">חבר בקבוצה = חשבון שמייל מאומת שלו ברשימה. הנתונים מוצגים לחברים בלבד, מ-50 משתתפים.</p>
       <AdminGroupsGuide />
       {error && <Notice tone="warn">{error}</Notice>}
-      {groups?.map((g) => <GroupRow key={g.id} g={g} api={api} act={act} />)}
+      {groups?.map((g) => <GroupRow key={g.id} g={g} api={api} act={act} reload={load} />)}
       <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">
         <p className="font-bold">קבוצה חדשה</p>
         <Field label="שם שיוצג לחברים"><input className={inputCls} value={newName} onChange={(e) => setNewName(e.target.value)} /></Field>
-        <Btn kind="primary" disabled={!newName.trim()} onClick={act(async () => { await api("/admin/groups/import", { group: newId(), name: newName.trim(), emails: [] }); setNewName(""); })}>יצירה</Btn>
+        <Field label="שם באנגלית לקישור" hint="אותיות באנגלית, ספרות ומקף, לפחות 3 תווים. למשל: the-gizra. אפשר לשנות אחר כך.">
+          <input dir="ltr" className={inputCls} value={newSlug} onChange={(e) => setNewSlug(cleanSlugInput(e.target.value))} autoCapitalize="none" autoCorrect="off" spellCheck={false} />
+        </Field>
+        <Btn kind="primary" disabled={!newName.trim() || !finalSlug(newSlug)} onClick={act(async () => { await api("/admin/groups/import", { group: newId(), name: newName.trim(), slug: finalSlug(newSlug), emails: [] }); setNewName(""); setNewSlug(""); })}>יצירה</Btn>
       </div>
     </section>
   );
 }
 
-function GroupRow({ g, api, act }: { g: Group; api: Api; act: (f: () => Promise<unknown>) => () => Promise<void> }) {
+function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => Promise<unknown>) => () => Promise<void>; reload: () => Promise<void> }) {
   const [manager, setManager] = useState("");
   const [sure, setSure] = useState(false);
   return (
@@ -50,6 +56,11 @@ function GroupRow({ g, api, act }: { g: Group; api: Api; act: (f: () => Promise<
         <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
       </summary>
       <div className="px-3 pb-3 space-y-3">
+      <GroupLinkPanel
+        slug={g.slug}
+        setSlug={async (slug) => { await api("/admin/groups/link", { group: g.id, slug }); await reload(); }}
+        loadStats={() => api("/admin/groups/link-stats", { group: g.id }) as Promise<GroupLinkStats>}
+      />
       <GroupStats load={() => api("/admin/groups/stats", { group: g.id }) as Promise<Stats>} refresh={g.members} />
       <p className="font-bold text-sm">מנהלי הקבוצה</p>
       {g.managerList?.length ? (
@@ -70,7 +81,13 @@ function GroupRow({ g, api, act }: { g: Group; api: Api; act: (f: () => Promise<
       </Field>
       <Btn disabled={!manager.includes("@")} onClick={act(async () => { await api("/admin/groups/managers", { group: g.id, email: manager }); setManager(""); })}>מינוי</Btn>
       <p className="font-bold text-sm pt-2">רשימת החברים</p>
+      <GroupAddEmail add={(email) => api("/admin/groups/import", { group: g.id, emails: [email], mode: "add" }) as Promise<GroupImportResult>} onDone={() => void reload()} />
       <GroupUpload send={(chunk) => api("/admin/groups/import", { group: g.id, ...chunk }) as Promise<GroupImportResult>} onDone={() => void act(async () => {})()} />
+      <GroupImagePanel
+        id={g.id}
+        image={g.image}
+        setImage={async (dataUrl) => { await api("/admin/groups/image", dataUrl ? { group: g.id, image: dataUrl } : { group: g.id, remove: true }); await reload(); }}
+      />
       <div className="flex flex-wrap gap-2 pt-2">
         {sure
           ? <Btn kind="danger" onClick={act(() => api("/admin/groups/delete", { group: g.id }))}>למחוק את הקבוצה והרשימה?</Btn>

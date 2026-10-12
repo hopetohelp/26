@@ -30,6 +30,7 @@ const Accuracy = lazy(() => import("./pages/Accuracy"));
 const Scenarios = lazy(() => import("./pages/Scenarios"));
 const Changes = lazy(() => import("./pages/Changes"));
 const Guess = lazy(() => import("./pages/Guess"));
+const GroupLanding = lazy(() => import("./pages/GroupLanding"));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -80,6 +81,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense>} />
           <Route path="community" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess community /></Suspense>} />
+          <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"
             element={<Tabbed label="בחירות קודמות" tabs={[

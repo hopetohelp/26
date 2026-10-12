@@ -7,7 +7,7 @@ import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
 import { LATEST_POLLS } from "../../lib/homeData";
 import { pollSeatSummary } from "../../lib/pollRange";
 import { lists2026 } from "../../lib/data";
-import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type GroupPublic, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { SAVED_EVENT } from "../../lib/outbox";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, pctValue, rng, seatsFmt } from "../../lib/format";
@@ -20,6 +20,7 @@ import ChartLegend, { rangeLine } from "../../components/ChartLegend";
 import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import EditBlocsButton from "../../components/EditBlocsButton";
+import GroupBanner from "../../components/GroupBanner";
 import { useLocation } from "react-router-dom";
 import { BlocAvatar } from "../../components/BlocAvatar";
 import type { useSession } from "./useCrowd";
@@ -38,12 +39,12 @@ const SIMPLE_POLL_MEANS = Object.fromEntries(lists2026.flatMap(({ id }) => {
   return summary ? [[id, summary.mean]] : [];
 }));
 
-export default function Dashboard({ session }: { session: ReturnType<typeof useSession> }) {
+export default function Dashboard({ session, landing = null }: { session: ReturnType<typeof useSession>; landing?: GroupPublic | null }) {
   // ממוצע המשתתפים — מהמקור האחד (src/lib/sources.ts): מתעדכן כל דקה, בחזרה לדף ואחרי כל שמירה
   const crowd = useCrowdDashboard();
   // פילוח לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): הכפתור מוצג רק לחבר בקבוצה; השרת בודק את החברות ואוכף את הסף
   const groups = session.me?.groups ?? [];
-  const [picked, setPicked] = useState("all");
+  const [picked, setPicked] = useState(landing?.id ?? "all");
   const scope = groups.some((g) => g.id === picked) ? picked : "all";
   const [group, setGroup] = useState<{ id: string; data: GroupDashboard | null; failed: boolean } | null>(null);
   useEffect(() => {
@@ -82,9 +83,14 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       <Segmented className="max-w-md" value={scope} onChange={setPicked} label="של מי הסטטיסטיקות" options={[{ id: "all", label: "כל המשתתפים" }, ...groups.slice(0, 3).map((g) => ({ id: g.id, label: g.name ?? g.id }))]} />
     </div>
   );
-  if (err) return <>{scopeBar}<Notice tone="warn">{err}</Notice></>;
-  if (groupData?.belowMin) return <>{scopeBar}<Notice>עדיין אין מספיק משתתפים מהקבוצה. הנתונים יוצגו מ-{groupData.min} משתתפים.</Notice></>;
-  if (!d) return <>{scopeBar}<p className="text-ink-soft">טוען…</p></>;
+  // ראש המסך: תמונת הקבוצה הנבחרת, או של הקבוצה שהקישור הוביל אליה; השם רק אם אין לגולש מתג עם שמה
+  const shownGroup = scope !== "all" ? groups.find((g) => g.id === scope) : landing;
+  const banner = shownGroup && <GroupBanner id={shownGroup.id} name={shownGroup.name} image={shownGroup.image} showName={!groups.some((g) => g.id === shownGroup.id)} />;
+  const top = <>{banner}{scopeBar}</>;
+  if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
+  // מתחת לסף: מסך הקבוצה מוצג (תמונה ומתג), אבל בלי נתונים — כותרת שמסבירה למה (הכרעת בעלים 12.10.2026)
+  if (groupData?.belowMin) return <>{top}<section className="border-2 border-ink rounded-theme p-4" aria-labelledby="group-small"><h2 id="group-small" className="text-xl font-display leading-tight">לשמירה על חוק סקרי הבחירות, אי אפשר לפרסם נתונים על קבוצה קטנה. לכן הנתונים יוצגו רק אחרי {groupData.min} משתתפים.</h2></section></>;
+  if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   // "נכון ל" מוצג רק כשהפרסום ישן בשעתיים לפחות
@@ -95,7 +101,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
   return (
     <div>
-      {scopeBar}
+      {top}
       {/* שיתוף — רק של כלל המשתתפים, כדי שנתוני קבוצה לא ייצאו החוצה */}
       {scope === "all" && <CommunityShare d={d} />}
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}

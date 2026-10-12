@@ -37,6 +37,12 @@
  * GET  /dashboard?group=<id>        ⇐ Dashboard | {group, belowMin, min}  (בסשן) הצבירה של חברי הקבוצה בלבד; לא חבר ⇐ 403 not_member. Me.groups = הקבוצות של המשתמש.
  * POST /group/import {group,emails[],mode?} ⇐ {added,duplicates,invalid,members}  (בסשן) מנהל קבוצה בלבד, לקבוצה שלו; לא מנהל ⇐ 403 not_manager. Me.managedGroups.
  * GET  /group/mine                  ⇐ {groups:[{id,name,members}]}  הקבוצות שהמשתמש מנהל.
+ * POST /group/link {group,slug}    ⇐ {group,slug}  (בסשן) מנהל קבוצה: שם הקישור באנגלית (3–32 תווים: a-z, ספרות, מקף באמצע). תפוס ⇐ 409 slug_taken. מנהל האתר: POST /admin/groups/link.
+ * GET  /group/link-stats?group=<id> ⇐ GroupLinkStats  (בסשן) מנהל קבוצה: כניסות דרך הקישור. מנהל האתר: POST /admin/groups/link-stats {group}.
+ * POST /group/image {group,image|remove} ⇐ {group,image}  (בסשן) מנהל קבוצה: תמונה כ-data URL (jpeg/png/webp, עד 150KB), או remove:true. מנהל האתר: POST /admin/groups/image.
+ * GET  /group/public?slug=<slug>   ⇐ GroupPublic  ציבורי, לבעלי הקישור: שם ותמונה. אין ⇐ 404.
+ * GET  /group/image?slug=<slug>|group=<id> ⇐ תמונה (בינארי)  ציבורי, לתגית img.
+ * POST /group/visit {slug,fresh?}   ⇐ {ok}  ציבורי: ספירת כניסה דרך הקישור (fresh = הדפדפן נכנס בפעם הראשונה). ליום בלבד, בלי זהות.
  * GET  /group/stats?group=<id>     ⇐ GroupStats  (בסשן) מנהל קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה; מתחת ל-50 רשומים ⇐ belowMin.
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
@@ -233,7 +239,12 @@ export interface LogEntry {
   aggregationId: string;
 }
 
-export interface GroupRef { id: string; name: string | null }
+/** slug = שם הקישור באנגלית (null עד שנקבע); image = זמן עדכון התמונה (null אם אין) — משמש גם למניעת מטמון ישן */
+export interface GroupRef { id: string; name: string | null; slug?: string | null; image?: string | null }
+/** תשובת GET /group/public?slug= — פתוחה לכל מי שיש לו את הקישור: שם ותמונה בלבד */
+export interface GroupPublic { id: string; slug: string; name: string | null; image: string | null }
+/** תשובת GET /group/link-stats — כניסות דרך הקישור: בסך הכול, היום, ודפדפנים שונים (כניסה ראשונה). מונה אנונימי */
+export interface GroupLinkStats { group: string; slug: string | null; opens: number; today: number; fresh: number }
 /** תשובת GET /dashboard?group= — מתחת לסף: רק הודעה, בלי נתונים */
 export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; publishedAt: string };
 /** תשובת טעינת מנה של רשימת חברים */

@@ -54,7 +54,7 @@ describe("group dashboard", () => {
     expect(JSON.stringify((await call("/dashboard")).data)).not.toMatch(/gizra|group/);
 
     // מתחת לסף: רק הודעה, בלי נתונים
-    expect((await call("/me", { token: members[0] })).data.groups).toEqual([{ id: "gizra", name: "הגזרה" }]);
+    expect((await call("/me", { token: members[0] })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", slug: null, image: null }]);
     let d = (await call("/dashboard?group=gizra", { token: members[0] })).data;
     expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, publishedAt: expect.any(String) });
 
@@ -85,7 +85,7 @@ describe("group managers", () => {
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).status).toBe(403);
     expect((await call("/admin/groups/managers", { body: { group: "gizra", email: "Boss@X.co" } })).status).toBe(401);
     expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "Boss@X.co" } })).data).toEqual({ group: "gizra", managers: 1 });
-    expect((await call("/me", { token: mgr })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה" }]);
+    expect((await call("/me", { token: mgr })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: null, image: null }]);
     // כמה מנהלים לאותה קבוצה
     const mgr2 = await account("deputy@x.co");
     expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co" } })).data).toEqual({ group: "gizra", managers: 2 });
@@ -93,7 +93,7 @@ describe("group managers", () => {
     expect((await call("/admin/groups", { admin: true })).data.groups.find((g) => g.id === "gizra").managers).toBe(2);
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co", remove: true } });
     expect((await call("/me", { token: other })).data.managedGroups).toEqual([]);
-    expect((await call("/group/mine", { token: mgr })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", members: 1 }]);
+    expect((await call("/group/mine", { token: mgr })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", members: 1, slug: null, image: null }]);
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).data).toMatchObject({ added: 1, members: 2 });
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["c@x.co"], mode: "replace" } })).data).toMatchObject({ members: 1 });
     // לא קבוצה אחרת, לא שינוי שם, לא יצירה
