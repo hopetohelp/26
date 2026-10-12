@@ -29,7 +29,7 @@ it('מקור ישן, מקור שלא הותר לפרסום ומפלגה שלא �
  expect(estimatePollParty({...target,end:'2026-01-15',start:'2026-01-15'},'y',[previous],7)).toBeNull();
  expect(estimatePollParty(target,'y',[{...previous,eligibleToShow:false}],7)).toBeNull();
  expect(pollBlocValues([bloc],target,[previous],{...rules,allowedIds:[]})[0].estimate).toBeNull();
- expect(pollBlocValues([bloc],{...target,consistent:false},[previous],rules)[0].estimate).toBeNull();
+ expect(pollBlocValues([bloc],{...target,eligibleToShow:false},[previous],rules)[0].estimate).toBeNull();
 });
 it('מקור חלופי דורש שלושה מכונים עצמאיים, עם סקר אחרון אחד למכון',()=>{
  const a=p('a','2026-01-01',{y:{s:4}},'B'),b=p('b','2026-01-02',{y:{s:6}},'C'),c=p('c','2026-01-03',{y:{s:8}},'D');

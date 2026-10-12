@@ -17,7 +17,7 @@ function availableBefore(p: Poll, target: Poll): boolean {
   return p.end < start && latest < Date.parse(`${start}T00:00:00+03:00`);
 }
 export function estimatePollParty(target: Poll, id: string, source: Poll[], maxAgeDays: number): BlocImputation | null {
-  const previous = source.filter(p => p.id !== target.id && p.eligibleToShow && p.consistent && p.verification?.status !== "mismatch" && availableBefore(p, target) && toTime(target.end) - toTime(p.end) <= maxAgeDays * DAY && Number.isFinite(seatsIn(p,id)))
+  const previous = source.filter(p => p.id !== target.id && p.eligibleToShow && p.verification?.status !== "mismatch" && availableBefore(p, target) && toTime(target.end) - toTime(p.end) <= maxAgeDays * DAY && Number.isFinite(seatsIn(p,id)))
     .sort((a,b) => b.end.localeCompare(a.end) || a.id.localeCompare(b.id));
   const same = previous.find(p => pollsterKey(p) === pollsterKey(target));
   const selected: Poll[] = same ? [same] : [...new Map(previous.slice().reverse().map(p=>[p.firm,p])).values()];
@@ -29,7 +29,7 @@ export function pollBlocValues(blocs: Bloc[], target: Poll, source: Poll[], rule
   const ids = [...new Set(blocs.flatMap(b=>b.lists))];
   const values = Object.fromEntries(ids.map(id=>[id,seatsIn(target,id)]));
   const rows = blocValues(blocs,values,Object.fromEntries(ids.map(id=>[id,id])));
-  if (!target.eligibleToShow || !target.consistent || target.verification?.status === "mismatch") return rows;
+  if (!target.eligibleToShow || target.verification?.status === "mismatch") return rows;
   const knownPollTotal = Object.keys(target.values).reduce((n,id)=>n+(seatsIn(target,id) ?? 0),0);
   const completions = new Map(ids.filter(id=>values[id] === undefined && rules.allowedIds.includes(id)).map(id=>[id,estimatePollParty(target,id,source,rules.maxAgeDays)]));
   const sumEstimates = [...completions.values()].reduce((n,c)=>n+(c?.value ?? 0),0);
