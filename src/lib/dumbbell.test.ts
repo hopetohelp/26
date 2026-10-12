@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { change, dumbbellAxis, pollSegs, type DumbbellRow } from "./dumbbell";
 import { LATEST_POLLS } from "./homeData";
 import { pollSeatRange, pollSeatValues } from "./pollRange";
-import { POLL_AVERAGE } from "./sources";
 import { pctForListSeats } from "../pages/guess/pctSync";
 import { lists2026 } from "./data";
 import modelFile from "../data/model.json";
@@ -85,8 +84,8 @@ describe("pollSegs: נר של טווח הסקרים (הכרעה 6) ⇐ טווח 
   });
   it("על הנתונים האמיתיים: הנר במנדטים הוא בדיוק pollSeatRange, ובאחוזים — ההמרה לפי החוק", () => {
     for (const l of lists2026) {
-      const vals = pollSeatValues(LATEST_POLLS, [l.id], POLL_AVERAGE.seats);
-      const r = pollSeatRange(LATEST_POLLS, [l.id], POLL_AVERAGE.seats);
+      const vals = pollSeatValues(LATEST_POLLS, [l.id]);
+      const r = pollSeatRange(LATEST_POLLS, [l.id]);
       if (!r) continue;
       const segs = pollSegs(vals);
       expect(Math.min(segs[0].from + (r[0] === r[1] ? 0.25 : 0), r[0])).toBe(r[0]);

@@ -3,7 +3,6 @@ export interface TrendPoint {
   t: number;
   /** ממוצע החלון */
   v: number;
-  estimated?: boolean;
   breakBefore?: boolean;
   /** הנמוך והגבוה בין הסקרים בחלון (טווח מלא), `n` = כמה סקרים בחלון, ו-`xs` = הערך בכל סקר: מזה נבנה הנר ועוביו בכל קטע */
   lo?: number;

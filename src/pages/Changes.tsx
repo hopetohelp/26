@@ -95,7 +95,7 @@ export default function Changes() {
    * באחוזים — גבולות המנדטים מומרים לאחוזים לפי החוק, והטווח כולל את הממוצע, בדיוק כמו ב"הכנסת שלי" (`pollPctRange` ב-Seats.tsx).
    */
   const pollBand = (r: LineageRow): { range: [number, number] | null; segs: DumbbellRow["segs"] } => {
-    const vals = pollSeatValues(LATEST_POLLS, [r.id], POLL_AVERAGE.seats);
+    const vals = pollSeatValues(LATEST_POLLS, [r.id]);
     if (!vals.length) return { range: null, segs: [] };
     const lo = Math.min(...vals), hi = Math.max(...vals);
     if (!pct) return { range: [lo, hi], segs: pollSegs(vals) };

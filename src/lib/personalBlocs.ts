@@ -1,31 +1,26 @@
 import type { Bloc } from "./crowdApi";
 import { seatsFmt } from "./format";
+import { groupSeatsIn, sumPresent, type Poll } from "./data";
 
-export interface BlocImputation {
-  id: string;
-  value: number;
-  sources: { id: string; date: string; label: string }[];
-  method: "same-firm" | "mean";
-}
+/**
+ * שורת גוש: `total` = הסכום לפי הכלל האחד (`sumPresent`, הכרעת בעלים 12.10.2026) — מפלגה שאין לה נתון נספרת 0 בלי שום סימון;
+ * `null` רק כשאין נתון לאף מפלגה בגוש.
+ */
 export interface BlocRow extends Bloc {
-  missing: string[];
-  /** סכום המקור נשאר חסר אם חסר רכיב; האומדן לעולם אינו מחליף אותו. */
   total: number | null;
-  knownTotal: number | null;
-  knownCount: number;
-  estimate: number | null;
-  imputed: BlocImputation[];
-  reason?: string;
 }
 const valid = (n: number | undefined): n is number => Number.isFinite(n) && n! >= 0 && n! <= 120;
 export function blocValues(blocs: Bloc[], values: Record<string, number | undefined>, mapping: Record<string, string>): BlocRow[] {
   return blocs.map(b => {
     const lists = [...new Set(b.lists)];
-    const known = lists.filter(id => mapping[id] && valid(values[mapping[id]]));
-    const missing = lists.filter(id => !known.includes(id));
-    const knownTotal = known.length ? [...new Set(known.map(id => mapping[id]))].reduce((n, id) => n + values[id]!, 0) : null;
-    return { ...b, lists, missing, knownTotal, knownCount: known.length, total: missing.length || !lists.length ? null : knownTotal, estimate: null, imputed: [] };
+    const mapped = [...new Set(lists.filter(id => mapping[id]).map(id => mapping[id]))];
+    return { ...b, lists, total: sumPresent(mapped.map(id => valid(values[id]) ? values[id] : undefined)) };
   });
+}
+
+/** גושים בסקר אחד: אותו כלל, על הערכים של הסקר (`groupSeatsIn`) */
+export function pollBlocValues(blocs: Bloc[], poll: Poll): BlocRow[] {
+  return blocs.map(b => { const lists = [...new Set(b.lists)]; return { ...b, lists, total: groupSeatsIn(poll, lists) }; });
 }
 
 /** משפחה היסטורית נספרת רק כשהגוש מכיל את כל רכיביה הנוכחיים, וכל רשימת עבר נספרת פעם אחת. */
@@ -33,22 +28,13 @@ export function historicalBlocValues(blocs: Bloc[], families: { k26: string[]; k
   return blocs.map(b => {
     const lists = [...new Set(b.lists)];
     const complete = families.filter(f => f.k26.length > 0 && f.k26.every(id => lists.includes(id)) && f.k25.length > 0 && f.k25.every(name => valid(values[name])));
-    const missing = lists.filter(id => !complete.some(f => f.k26.includes(id)));
     const previous = [...new Set(complete.flatMap(f => f.k25))];
-    const knownTotal = previous.length ? previous.reduce((n,name) => n + values[name],0) : null;
-    return { ...b, lists, missing, knownTotal, knownCount: lists.length - missing.length, total: !lists.length || missing.length ? null : knownTotal, estimate: null, imputed: [] };
+    return { ...b, lists, total: previous.length ? previous.reduce((n, name) => n + values[name], 0) : null };
   });
 }
-/**
- * מספר הגוש כפי שמוצג. 🔴 נתון שחסר לא מסתיר את הנתון הכולל (הכרעת בעלים 12.10.2026, מחליפה את "בלי 'לפחות'" מ-11.10):
- * סכום חלקי (חסרה מפלגה) נכתב "לפחות X", ומתחתיו "N מתוך M מפלגות". `fmt` — עיצוב המספר (מנדטים כברירת מחדל; אחוזים במסך שמציג אחוזים).
- */
+/** מספר הגוש כפי שמוצג: בלי סימן חסר (הכרעת בעלים 12.10.2026). `fmt` — עיצוב המספר (מנדטים כברירת מחדל; אחוזים במסך שמציג אחוזים). "—" רק כשאין נתון. */
 export function formatBlocValue(row?: BlocRow, fmt: (n: number) => string = seatsFmt): string {
-  if (!row) return "—";
-  if (row.total !== null) return fmt(row.total);
-  if (row.estimate !== null) return `כ-${fmt(row.estimate)}`;
-  if (row.knownTotal !== null) return `לפחות ${fmt(row.knownTotal)}`;
-  return "—";
+  return row?.total != null ? fmt(row.total) : "—";
 }
-/** הערך שמשווים בין שני מקורות: מלא, אומדן, ובהיעדרם הסכום הידוע (חלקי); null כשאין שום נתון */
-export const blocComparable = (row?: BlocRow): number | null => row ? row.total ?? row.estimate ?? row.knownTotal : null;
+/** הערך שמשווים בין שני מקורות; null כשאין נתון */
+export const blocComparable = (row?: BlocRow): number | null => row?.total ?? null;

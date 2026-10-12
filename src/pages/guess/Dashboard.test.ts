@@ -97,15 +97,16 @@ it('בשוויון ובנתון חסר הגושים נשארים בסדר שהמ
 });
 
 
-it("גוש עם רשימה שהסקרים לא שואלים עליה (נעם) מציג 'לפחות' וכמה מתוך כמה מפלגות, לא השלמה מהמודל", () => {
+it("גוש עם רשימה שהסקרים לא שואלים עליה (נעם) מציג את הסכום בלי סימון, והרשימה נספרת 0", () => {
   const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,
     seats:{n:2,full:[],manual:[],filledShare:0,usedFillAll:0,pollsAsOf:null,starts:{zero:2,polls:0,k25:0},polls:{likud:23.5,shas:8,utj:0}},
     blocs:{derived:null,explicit:null,customCount:0,fixed:[{id:"coalition",name:"בדיקת סכום",lists:["likud","shas","utj","noam"],stat}]}};
   const html = renderToStaticMarkup(createElement(BlocStats,{d,view:"table",mineBlocs:[{name:"סכום",lists:["likud","shas","utj","noam"]}]}));
   const expected = pollSeatSummary(LATEST_POLLS, ["likud","shas","utj","noam"]);
   expect(expected).not.toBeNull();
-  expect(html).toContain(`לפחות ${seatsFmt(expected!.mean)}`);
-  expect(html).toContain(`${expected!.listed}/${expected!.total}`);
+  expect(html).toContain(seatsFmt(expected!.mean));
+  expect(html).not.toContain("לפחות");
+  expect(html).not.toMatch(/\d\/\d/);
   expect(html).not.toContain(">31.5</span>");
   expect(html).not.toContain("חסר");
 });

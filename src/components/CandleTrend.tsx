@@ -273,7 +273,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
             {multi && <div className="mb-0.5 flex items-center gap-1.5 text-[.76rem] font-bold"><i className="size-2.5 shrink-0 rounded-full" style={{ background: actColor }} />{series[act.si].name}</div>}
             <div className="mb-1 text-[.7rem] font-bold text-paper/65">חישוב: <bdi dir="ltr">{dateRange(iso(act.p.t - (windowDays - 1) * DAY), iso(act.p.t))}</bdi></div>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-bold tabular text-[.95rem] leading-none">{act.p.estimated ? "כ-" : ""}{valueText(act.p.v)}</span>
+              <span className="font-bold tabular text-[.95rem] leading-none">{valueText(act.p.v)}</span>
               <small className="text-[.7rem] text-paper/65">ממוצע {unit}</small>
             </div>
             {act.p.lo !== undefined && act.p.hi !== undefined && (

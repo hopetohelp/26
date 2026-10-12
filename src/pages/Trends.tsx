@@ -7,7 +7,7 @@ import Explained from "../components/Explained";
 import { POLL_AVERAGE } from "../lib/sources";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, pollsterLabel, rollingMean, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, pollsterLabel, rollingMean, groupSeatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -22,8 +22,8 @@ function withLineage(ps: Poll[]): Poll[] {
     const values = { ...p.values };
     for (const [id, lin] of Object.entries(LINEAGE)) {
       if (values[id]) continue;
-      const parts = lin.parts.map((x) => seatsIn(p, x));
-      if (parts.every((x) => typeof x === "number")) values[`${id}__lineage`] = { s: parts.reduce((a, b) => a! + b!, 0) };
+      const sum = groupSeatsIn(p, lin.parts);
+      if (sum !== null) values[`${id}__lineage`] = { s: sum };
     }
     return { ...p, values };
   });
