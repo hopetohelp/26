@@ -4,7 +4,7 @@ import { IDS, VOTE_MAP, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./
 const percent = (cells: Record<string, Cell> | undefined, key: string): number | null => {
   if (!cells || !Object.values(cells).some(c => c.of > 0)) return null;
   const c = cells[key];
-  return c?.hidden ? null : c ? Math.round(c.n / c.of * 1000) / 10 : 0;
+  return c?.hidden ? null : c ? c.n / c.of * 100 : 0;
 };
 /** כמה משתתפים ענו כך (מספר), באותם כללים של `percent` */
 const count = (cells: Record<string, Cell> | undefined, key: string): number | null => {

@@ -10,7 +10,7 @@ import { lists2026 } from "../../lib/data";
 import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { SAVED_EVENT } from "../../lib/outbox";
 import { loadDraft } from "../../lib/crowdSession";
-import { date, rng, seatsFmt } from "../../lib/format";
+import { date, pctValue, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, normalizeBlocs, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
@@ -31,7 +31,7 @@ const range = (s: SeatStat) => s.min === s.max ? "" : rng(seatsFmt(s.min), seats
 const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
 const v2022Name = (k: string) => V2022_LABEL[k] ?? k25VoteName(k);
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
-const pctOf = (cell: Cell) => cell.of ? Math.round((cell.n / cell.of) * 1000) / 10 : 0;
+const pctOf = (cell: Cell) => cell.of ? cell.n / cell.of * 100 : 0;
 const pollSummary = (ids: string[]) => pollSeatSummary(LATEST_POLLS, ids);
 const SIMPLE_POLL_MEANS = Object.fromEntries(lists2026.flatMap(({ id }) => {
   const summary = pollSummary([id]);
@@ -278,7 +278,7 @@ export function VotingStats({ d }: { d: D }) {
 
 export function VoteComparison({ d, unit, participants }: { d: D; unit: Unit; participants: number }) {
   const rows = votingRows(d);
-  const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${v}%` : n === null ? "—" : fmtNum(n);
+  const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${pctValue(v)}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
     <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th></tr></thead>
     <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>
@@ -291,7 +291,7 @@ export function VoteComparison({ d, unit, participants }: { d: D; unit: Unit; pa
 export function Matrix({ d, unit }: { d: D; unit: Unit }) {
   const m = d.matrix!;
   const continuity = voteContinuity(m);
-  const show = (n: number) => unit === "pct" ? `${Math.round(n / continuity.total * 1000) / 10}%` : String(n);
+  const show = (n: number) => unit === "pct" ? `${pctValue(n / continuity.total * 100)}%` : String(n);
   // סדר (הכרעת בעלים 12.10.2026): שורות לפי מספר המשתתפים שבחרו בתשובה בבחירות קודמות, וטורים לפי מספר אלה שבחרו בה לבחירות הבאות
   const colTotal = (col: string) => d.vote2026?.all[col]?.n ?? Object.values(m.rows).reduce((a, r) => a + (r.cells[col]?.n ?? 0), 0);
   const rowTotal = (key: string, n: number) => d.vote2022?.all[key]?.n ?? n;
@@ -318,7 +318,7 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
           {cols.map((col) => {
             const cell = row.cells[col];
             const hidden = row.hidden || !cell || cell.hidden;
-            return <td key={col} className={`p-1 text-center ${hidden ? "text-ink-faint" : ""}`}>{hidden ? "—" : unit === "pct" ? `${pctOf(cell)}%` : cell.n}</td>;
+            return <td key={col} className={`p-1 text-center ${hidden ? "text-ink-faint" : ""}`}>{hidden ? "—" : unit === "pct" ? `${pctValue(pctOf(cell))}%` : cell.n}</td>;
           })}
         </tr>)}
       </tbody>

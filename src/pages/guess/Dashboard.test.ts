@@ -146,6 +146,14 @@ it("טבלת ההצבעה מסודרת לפי מספר המתכננים להצב
   expect(html.indexOf(nameOf("shas"))).toBeLessThan(html.indexOf(nameOf("likud")));
 });
 
+it("אחוז קטן חיובי בטבלת ההצבעה אינו מעוגל לאפס", () => {
+  const d: Dashboard = { participants: 2000, open: true, publishedAt: null, aggregationId: null,
+    vote2026: { all: { shas: { n: 1, of: 2000 } }, named: {} } };
+  const html = renderToStaticMarkup(createElement(VoteComparison, { d, unit: "pct", participants: 2000 }));
+  expect(html).toContain(">0.05%</td>");
+  expect(html).not.toContain(">0.0%</td>");
+});
+
 it("שורת הסיכום של המעבר: מספרים או אחוזים לפי המתג", () => {
   const cell = (n: number) => ({ n, of: 10 });
   const d: Dashboard = { participants: 10, open: true, publishedAt: null, aggregationId: null,

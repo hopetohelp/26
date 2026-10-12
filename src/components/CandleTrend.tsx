@@ -4,7 +4,7 @@ import { ProfileCandleV } from "./marks";
 import type { Series, TrendPoint } from "./charts";
 import { colorOf } from "../lib/colors";
 import { candleProfiles, smoothPath, sparseIndices, valueSegs, type Seg } from "../lib/chartLanguage";
-import { dateRange, rng, seatsFmt } from "../lib/format";
+import { dateRange, pctValue, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
 import { POINT_DAYS, POINT_WINDOW } from "../lib/data";
 import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trendAxis";
@@ -122,6 +122,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const profiles = useMemo(() => candleProfiles(shown.map(segsOf)), [shown]);
   const hasData = series.some((s) => s.points.length) || lineMain.length;
   if (!hasData) return null;
+
+  const valueText = (v: number) => unit === "אחוזים" ? pctValue(v) : seatsFmt(Math.round(v * 10) / 10);
 
   const ts = [...series.flatMap((s) => s.points.map((p) => p.t)), ...lineMain.map((l) => l.t), ...markers.map((m) => m.t)];
   const tA = Math.min(...ts), tB = Math.max(...ts);
@@ -256,7 +258,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {markers.map((m, i) => <span key={`m${i}`} aria-hidden="true" className="mk mk-ring" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%` }} />)}
         {ends.map((e) => (
           <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + ${markers.length ? 20 : 10}px)`, maxWidth: labelPx - (markers.length ? 22 : 12), top: e.y, color: colors[e.si] }}>
-            {endText(e.s.endLabel ?? `${e.s.name} ${seatsFmt(Math.round(e.last.v * 10) / 10)}`)}
+            {endText(e.s.endLabel ?? `${e.s.name} ${valueText(e.last.v)}`)}
           </span>
         ))}
         {act && (
@@ -271,7 +273,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
             {multi && <div className="mb-0.5 flex items-center gap-1.5 text-[.76rem] font-bold"><i className="size-2.5 shrink-0 rounded-full" style={{ background: actColor }} />{series[act.si].name}</div>}
             <div className="mb-1 text-[.7rem] font-bold text-paper/65">חישוב: <bdi dir="ltr">{dateRange(iso(act.p.t - (windowDays - 1) * DAY), iso(act.p.t))}</bdi></div>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-bold tabular text-[.95rem] leading-none">{act.p.estimated ? "כ-" : ""}{seatsFmt(Math.round(act.p.v * 10) / 10)}</span>
+              <span className="font-bold tabular text-[.95rem] leading-none">{act.p.estimated ? "כ-" : ""}{valueText(act.p.v)}</span>
               <small className="text-[.7rem] text-paper/65">ממוצע {unit}</small>
             </div>
             {act.p.lo !== undefined && act.p.hi !== undefined && (
@@ -283,10 +285,10 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
                 </div>
                 <div dir="ltr" className="flex justify-between text-[.66rem] text-paper/65 font-num"><span>{axis.lo}</span><span>{axis.hi}</span></div>
                 <div className="mt-1.5 flex justify-between gap-2 border-t border-paper/20 pt-1 text-[.7rem] text-paper/65">
-                  <span>טווח <b className="tabular text-paper" dir="ltr">{rng(seatsFmt(act.p.lo), seatsFmt(act.p.hi))}</b></span>
+                  <span>טווח <b className="tabular text-paper" dir="ltr">{rng(valueText(act.p.lo), valueText(act.p.hi))}</b></span>
                   {act.p.n !== undefined && <span><b className="tabular text-paper">{act.p.n}</b> {act.p.n === 1 ? "מכון" : "מכונים"}</span>}
                 </div>
-                {act.p.raw !== undefined && <div className="mt-1.5 border-t border-paper/20 pt-1 text-[.7rem] text-paper/65">ממוצע, בלי שקלול המפלגות שלא עברו: <b className="tabular text-paper">{seatsFmt(Math.round(act.p.raw * 10) / 10)}</b></div>}
+                {act.p.raw !== undefined && <div className="mt-1.5 border-t border-paper/20 pt-1 text-[.7rem] text-paper/65">ממוצע, בלי שקלול המפלגות שלא עברו: <b className="tabular text-paper">{valueText(act.p.raw)}</b></div>}
               </>
             )}
               </>
@@ -305,8 +307,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
       </div>
       <span id={`${id}-sr`} className="sr-only">
         {lastShown
-          ? `${title}: ${seatsFmt(Math.round(lastShown.v * 10) / 10)} ${unit} בממוצע ב-${dayMonth(iso(lastShown.t))}${lastShown.lo !== undefined && lastShown.hi !== undefined ? `, בין ${seatsFmt(lastShown.lo)} ל-${seatsFmt(lastShown.hi)} בסקרים` : ""}.`
-          : `${title}: ${series.filter((s) => !s.dashed).map((s) => `${s.name} ${seatsFmt(Math.round((s.points[s.points.length - 1]?.v ?? 0) * 10) / 10)}`).join(", ")}.`}
+          ? `${title}: ${valueText(lastShown.v)} ${unit} בממוצע ב-${dayMonth(iso(lastShown.t))}${lastShown.lo !== undefined && lastShown.hi !== undefined ? `, בין ${valueText(lastShown.lo)} ל-${valueText(lastShown.hi)} בסקרים` : ""}.`
+          : `${title}: ${series.filter((s) => !s.dashed).map((s) => `${s.name} ${valueText(s.points[s.points.length - 1]?.v ?? 0)}`).join(", ")}.`}
       </span>
     </div>
   );
