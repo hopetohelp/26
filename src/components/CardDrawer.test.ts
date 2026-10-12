@@ -20,3 +20,7 @@ it("בלי תג שהוגדר — אין תג; ונקודת לא-נשמר נעל�
   expect(html({ dot: true })).toContain("לא נשמר");
   expect(html({ dot: true, pendingTag: "מחכה לתשובה", seenId: "t" })).not.toContain("לא נשמר");
 });
+it("תג קבוע מוצג על המגירה, פתוחה וסגורה", () => {
+  expect(html({ badge: "האחרונה — נספרת" })).toContain("האחרונה — נספרת");
+  expect(html({ badge: "האחרונה — נספרת", open: true })).toContain("האחרונה — נספרת");
+});
