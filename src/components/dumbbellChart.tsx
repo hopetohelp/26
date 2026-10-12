@@ -1,21 +1,23 @@
 import type { ReactNode } from "react";
 import { candleProfiles, type LSeg } from "../lib/chartLanguage";
-import { change, diffText, dumbbellAxis, dumbbellSegs, r1, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
-import { seatsFmt, signed } from "../lib/format";
+import { change, diffText, dumbbellAxis, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
+import { pctOne, seatsFmt, signed } from "../lib/format";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
+import { MODEL_NOTE } from "./InfoTip";
 
 /**
  * "מה השתנה" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל משפחה, עיגול ריק שחור = 2022 (תוצאה רשמית), עיגול מלא כתום = היום (ממוצע המודל),
- * ונר כחול = טווח 80% מהתרחישים (מ-10% עד 90%), שעוביו משתנה לאורכו לפי כמה תרחישים נותנים כל אחוז (ביחס לשאר אותו נר). בלי קו בין העיגולים:
- * המרחק ביניהם ברור (הכרעת בעלים 9.10.2026). הנר מבוסס על תרחישים, ולכן הטווח הוא 80% (כלל הטווחים לפי מקור הנתון, `src/lib/home.ts`).
+ * ונר כחול = טווח הסקרים (הכרעת בעלים 12.10.2026, הכרעה 6: מהסקר הנמוך עד הגבוה), שעוביו משתנה לאורכו לפי כמה סקרים נותנים כל ערך (ביחס לשאר אותו נר).
+ * בלי קו בין העיגולים: המרחק ביניהם ברור (הכרעת בעלים 9.10.2026). הנר מבוסס על סקרים, ולכן הטווח מלא (כלל הטווחים לפי מקור הנתון).
  * כיוון השינוי מסומן במיקום ובסימן בלבד — בלי צבע לעלייה ובלי צבע לירידה (ניטרליות). הציר משמאל לימין, 0 משמאל, כמו בשאר הגרפים.
  */
 /** המקרא של הגרף: זהה באחוזים ובמנדטים. מסך שמציג כמה גרפים כאלה מציג אותו פעם אחת (`ChartBar`) ומעביר `legend={false}` */
 export const DUMBBELL_LEGEND: LegendEntry[] = [
   { kind: "result", text: "2022, התוצאות הרשמיות" },
-  { kind: "mean", text: "היום, ממוצע המודל" },
-  { kind: "candle", text: rangeLine("p80", "התרחישים") },
+  // ההסבר על ממוצע המודל בתוך המקרא, בלי אייקון מידע נפרד בגרף (הכרעת בעלים 12.10.2026)
+  { kind: "mean", text: `היום, ממוצע המודל — ${MODEL_NOTE}` },
+  { kind: "candle", text: rangeLine("full", "הסקרים") },
 ];
 
 const COLS = "grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem]";
@@ -46,7 +48,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
   const x = (v: number) => ((Math.min(Math.max(v, min), max) - min) / (max - min)) * 100;
   const d = change(r);
   const pct = unit === "pct";
-  const fmt = (v: number) => (pct ? `${r1(v)}%` : seatsFmt(Math.round(v * 10) / 10));
+  const fmt = (v: number) => (pct ? pctOne(v) : seatsFmt(Math.round(v * 10) / 10));
   const sign = pct ? diffText : signed;
   const before = `${r.approx ? "~" : ""}${fmt(r.before)}`;
   return (
@@ -75,8 +77,8 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
       </span>
       <span className="sr-only">
         {pct
-          ? `; 2022: ${before} מהקולות הכשרים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} ב-80% מהתרחישים` : ""}. שינוי נטו: ${sign(d)} אחוזים`
-          : `; 2022: ${before} מנדטים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} ב-80% מהתרחישים` : ""}. שינוי נטו: ${sign(d)} מנדטים`}
+          ? `; 2022: ${before} מהקולות הכשרים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} בין הסקרים` : ""}. שינוי נטו: ${sign(d)} אחוזים`
+          : `; 2022: ${before} מנדטים, היום ${fmt(r.now)} לפי הממוצע${r.range ? `, ובין ${fmt(r.range[0])} ל-${fmt(r.range[1])} בין הסקרים` : ""}. שינוי נטו: ${sign(d)} מנדטים`}
       </span>
       {open && below && <div className="col-span-full row-start-4">{below}</div>}
     </li>
@@ -88,7 +90,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
  */
 export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode }) {
   const { min, max, ticks } = dumbbellAxis(rows, unit);
-  const levels = candleProfiles(rows.map(dumbbellSegs));
+  const levels = candleProfiles(rows.map((r) => r.segs));
   return (
     <div>
       {legend && <ChartLegend entries={DUMBBELL_LEGEND} />}

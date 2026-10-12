@@ -7,6 +7,14 @@ export const SITE_YEAR = 2026;
 
 export const num = (n: number) => nf.format(Math.round(n));
 export const pct = (n: number) => `${pf.format(n)}%`;
+/** אחוז מחושב: ערך חיובי מתחת ל-0.1% מוצג במאיות, כדי שלא ייראה כאפס. */
+export const pctValue = (n: number, minimumFractionDigits = 0) => {
+  if (n > 0 && n < 0.005) return "<0.01";
+  const tiny = n > 0 && n < 0.1;
+  return n.toLocaleString("he-IL", { minimumFractionDigits: tiny ? 2 : minimumFractionDigits, maximumFractionDigits: tiny ? 2 : 1 });
+};
+/** אותו כלל בתצוגות שבדרך כלל מציגות עשירית אחת. */
+export const pctOne = (n: number) => `${pctValue(n, 1)}%`;
 export const seatsFmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 /** תאריך אחד בכל האתר: יום/חודש (8/10), בשעון ישראל. שנה רק כשהיא לא שנת הבחירות. */
 export const date = (iso: string) => {

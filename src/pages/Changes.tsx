@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import DumbbellChart, { DUMBBELL_LEGEND, NameButton } from "../components/dumbbellChart";
+import { ModelInfo } from "../components/InfoTip";
 import { Segmented } from "../components/Choice";
 import { ChartBar, ChartWithTable, Fold, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import { POLL_AVERAGE } from "../lib/sources";
+import { LATEST_POLLS } from "../lib/homeData";
+import { pollSeatValues } from "../lib/pollRange";
+import { pctForListSeats } from "./guess/pctSync";
 import { listName } from "../lib/data";
-import { diffText as diff, r1, type DumbbellRow, type DumbbellUnit, type ShareHist } from "../lib/dumbbell";
-import { date, num, rng, seatsFmt, signed } from "../lib/format";
+import { diffText as diff, pollSegs, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
+import { date, num, pctValue, rng, seatsFmt, signed } from "../lib/format";
 import { DEFAULT_LINEAGE, heirs, K25_LISTS, k25ListName, lineageProblem, lineageRows, manualFromCurrent, sharedLists, VALID_2022, type Category, type Lineage, type LineageRow, type Split as SplitKind } from "../lib/lineage";
 import SaveButton, { SaveError } from "./guess/SaveButton";
 import { ActionBar, Btn, ShortLabel } from "./guess/ui";
@@ -18,7 +22,6 @@ import { useCrowdSeats, useLineage } from "./guess/useLineage";
 
 interface Family { id: string; k26: string[]; why: string }
 interface ModelLite {
-  scenarios: { lists: Record<string, { share: number[]; shareHist?: ShareHist; seats: number[]; seatsHist?: number[] }> };
   changes: { alternatives: { id: string; families: Family[] }[] };
 }
 const m = modelFile as unknown as ModelLite;
@@ -44,7 +47,7 @@ const SPLITS: { id: SplitKind; label: string }[] = [
 const fromNames = (r: LineageRow) => r.from.map(k25ListName).join(" + ");
 const approx = (r: LineageRow) => (r.category === "partial" ? "~" : "");
 const seats22 = (r: LineageRow) => `${approx(r)}${seatsFmt(Math.round(r.seats2022 * 10) / 10)}`;
-const share22 = (r: LineageRow) => `${approx(r)}${r1(r.share2022)}`;
+const share22 = (r: LineageRow) => `${approx(r)}${pctValue(r.share2022, 1)}`;
 
 /** למה כך שויך: ברירת המחדל מ-raw/lineage.json; שיוך ששונה — "השיוך שלכם" */
 function why(id: string, lin: Lineage): string {
@@ -87,10 +90,22 @@ export default function Changes() {
   const showBar = lineage.custom || lineage.dirty;
 
   const pct = unit === "pct";
-  const range = (id: string) => (pct ? m.scenarios.lists[id]?.share : m.scenarios.lists[id]?.seats);
+  /**
+   * טווח הסקרים סביב "היום" (הכרעת בעלים 12.10.2026, הכרעה 6): מהסקר הנמוך עד הגבוה, הסקר האחרון של כל סדרה ב-14 הימים האחרונים.
+   * באחוזים — גבולות המנדטים מומרים לאחוזים לפי החוק, והטווח כולל את הממוצע, בדיוק כמו ב"הכנסת שלי" (`pollPctRange` ב-Seats.tsx).
+   */
+  const pollBand = (r: LineageRow): { range: [number, number] | null; segs: DumbbellRow["segs"] } => {
+    const vals = pollSeatValues(LATEST_POLLS, [r.id], POLL_AVERAGE.seats);
+    if (!vals.length) return { range: null, segs: [] };
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    if (!pct) return { range: [lo, hi], segs: pollSegs(vals) };
+    const pLo = pctForListSeats(r.id, lo), pHi = pctForListSeats(r.id, hi);
+    if (pLo === null || pHi === null) return { range: null, segs: [] };
+    const range: [number, number] = [Math.min(pLo, r.shareNow), Math.max(pHi, r.shareNow)];
+    return { range, segs: pollSegs(vals, (s) => pctForListSeats(r.id, s), range) };
+  };
   const toRow = (r: LineageRow): DumbbellRow => {
-    const sc = m.scenarios.lists[r.id];
-    const rg = range(r.id);
+    const band = pollBand(r);
     return {
       id: r.id,
       name: listName(r.id),
@@ -98,8 +113,8 @@ export default function Changes() {
       approx: r.category === "partial",
       before: pct ? r.share2022 : r.seats2022,
       now: pct ? r.shareNow : r.seatsNow,
-      hist: (pct ? sc?.shareHist : sc?.seatsHist) ?? null,
-      range: rg ? [rg[0], rg[2]] : null,
+      segs: band.segs,
+      range: band.range,
     };
   };
   const toggle = (id: string) => setOpen(open === id ? null : id);
@@ -127,7 +142,9 @@ export default function Changes() {
   /** בטבלה (ובאין שיוך) שם המפלגה הוא כפתור; בגרף השם בתוך השורה (`DumbbellChart`). העורך נפתח מתחת. */
   const nameButton = (r: LineageRow) => <NameButton id={r.id} name={listName(r.id)} open={open === r.id} onToggle={() => toggle(r.id)} />;
 
-  const table = (list: LineageRow[]) => (
+  // בתצוגת טבלה (שאין לה "מקרא") — אייקון מידע אחד בלבד, בטבלה הראשונה במסך, וחל על כל הטבלאות (הכרעת בעלים 12.10.2026)
+  const firstTable = CATEGORIES.find((c) => c.id !== "none" && rows.some((r) => r.category === c.id))?.id;
+  const table = (list: LineageRow[], first: boolean) => (
     <table className="w-full text-sm">
       <caption className="sr-only">2022 מול היום, לפי המפלגה, {pct ? "באחוזים" : "במנדטים"}</caption>
       <thead>
@@ -135,22 +152,22 @@ export default function Changes() {
           <th scope="col" className="py-2 pe-3">היום</th>
           <th scope="col" className="pe-3">ב-2022</th>
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
-          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}</th>
-          <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"}</th>
+          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}{first && <> <ModelInfo kind="mean" items={[`העמודה "${pct ? "היום %" : "מנדטים היום"}" בכל הטבלאות במסך`]} /></>}</th>
+          <th scope="col" className="pe-3">{pct ? "טווח הסקרים %" : "טווח הסקרים (מנדטים)"}</th>
           <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
       </thead>
       <tbody>
         {list.map((r) => {
-          const rg = range(r.id);
+          const rg = pollBand(r).range;
           const d = pct ? r.shareNow - r.share2022 : r.seatsNow - Math.round(r.seats2022 * 10) / 10;
           return (
             <tr key={r.id} className="border-b border-paper-line/60">
               <th scope="row" className="py-1 pe-3 text-right font-medium">{nameButton(r)}</th>
               <td className="pe-3">{fromNames(r)}</td>
               <td className="pe-3 tabular">{pct ? share22(r) : seats22(r)}</td>
-              <td className="pe-3 tabular">{pct ? r1(r.shareNow) : r.seatsNow}</td>
-              <td className="pe-3 tabular whitespace-nowrap">{rg ? (pct ? rng(r1(rg[0]), r1(rg[2])) : rng(seatsFmt(rg[0]), seatsFmt(rg[2]))) : "—"}</td>
+              <td className="pe-3 tabular">{pct ? pctValue(r.shareNow, 1) : r.seatsNow}</td>
+              <td className="pe-3 tabular whitespace-nowrap">{rg ? (pct ? rng(pctValue(rg[0], 1), pctValue(rg[1], 1)) : rng(seatsFmt(rg[0]), seatsFmt(rg[1]))) : "—"}</td>
               <td className="tabular" dir="ltr">{pct ? diff(d) : signed(Math.round(d * 10) / 10)}</td>
             </tr>
           );
@@ -240,7 +257,7 @@ export default function Changes() {
                               below={(id) => { const r = list.find((x) => x.id === id); return r ? editor(r) : null; }}
                             />
                           }
-                          table={table(list)}
+                          table={table(list, c.id === firstTable)}
                         />
                         {asTable && editorOf(list)}
                       </>
@@ -255,7 +272,7 @@ export default function Changes() {
                 );
               })}
               <div className="mt-4 text-sm text-ink-soft">
-                <p>לא שויך מ-2022: {r1(unassigned2022.share)}% מהקולות{unassigned2022.others ? ` (כולל ${unassigned2022.others} רשימות קטנות)` : ""}.</p>
+                <p>לא שויך מ-2022: {pctValue(unassigned2022.share, 1)}% מהקולות{unassigned2022.others ? ` (כולל ${unassigned2022.others} רשימות קטנות)` : ""}.</p>
                 {unassigned2022.lists.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {unassigned2022.lists.map((l) => (

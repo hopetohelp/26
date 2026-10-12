@@ -5,7 +5,7 @@ import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
-import { date, rng } from "../../lib/format";
+import { date, pctOne, rng } from "../../lib/format";
 import { splitCls } from "../../lib/splitScreens";
 import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
@@ -13,8 +13,8 @@ import { Segmented } from "../../components/Choice";
 import { Badge } from "../../components/ui";
 import { meta, listName, registry } from "../../lib/data";
 import { num } from "../../lib/format";
-/** אחוז בעשירית — כמו שמקלידים */
-const pctFmt = (x: number) => `${(Math.round(x * 10) / 10).toFixed(1)}%`;
+/** בתצוגה הראשית אחוז נכתב בעשירית, וממוצע חיובי קטן נכתב במאיות. */
+const pctFmt = pctOne;
 import { lineageRows, start2022 } from "../../lib/lineage";
 import { useCrowd, useLineage } from "./useLineage";
 import { pollSeatRange } from "../../lib/pollRange";

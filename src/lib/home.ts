@@ -3,8 +3,10 @@ import { TOTAL } from "./fillAll";
 /**
  * נתוני מסך הבית. הכול נגזר מ-`model.json` ומהסקרים האחרונים: אין כאן חישוב חדש.
  * 🔴 מספר אחד לכל עובדה (הכרעת בעלים 9.10.2026, החלטה 14 "ליישר"): מנדטי הממשלה היוצאת בכותרת, בלוח ובמגמה
- * הם סכום הממוצעים של הרשימות (`central`), אותו סכום שבדירוג. הטווח (`lo`–`hi`, `blocLo`–`blocHi`) הוא טווח 80% מהתרחישים.
- * 🔴 כלל הטווחים (הכרעת בעלים 9.10.2026): כל טווח שמבוסס על תרחישים הוא 80% (מ-10% עד 90%); כל טווח שמבוסס על סקרים, השערות, נתונים או חוק הבחירות הוא מלא (הנמוך והגבוה).
+ * הם סכום הממוצעים של הרשימות (`central`), אותו סכום שבדירוג.
+ * 🔴 הטווחים (הכרעת בעלים 12.10.2026, הכרעה 6): `lo`–`hi` ו-`blocLo`–`blocHi` כאן הם טווח 80% מהתרחישים, ומוצגים **רק במסך התרחישים**
+ * (הדירוג). במסך הבית לא מוצג טווח תרחישים: הטווח בדו-קרב ונר מגמת הממשלה הם טווח הסקרים (הנמוך והגבוה בסקר האחרון של כל סדרה),
+ * ומחושבים ב-`Duel.tsx` וב-`homeData.ts` (`GOV_POINTS`), לא כאן.
  */
 export interface HomeModel {
   asof: string;
@@ -43,25 +45,40 @@ export interface HomeData {
   blocHi: number;
   /** התפלגות סכום הגוש בכל התרחישים (לעובי הנר, נחתך לטווח 80%) */
   blocHist: number[];
-  /** מעל הקו: עוברות בבירור */
+  /**
+   * 🔴 סיכון אחוז החסימה (הכרעת בעלים 12.10.2026, הכרעה 4): לפי הסקרים האחרונים בלבד — הסקר האחרון של כל סדרה (מכון+גוף תקשורת)
+   * ב-14 הימים האחרונים, אותה הגדרה של הממוצע הפשוט. לא נגזר מהממוצע ולא מהתרחישים. חל בכל האתר חוץ ממסך התרחישים.
+   * מעל הקו: כל הסקרים האחרונים, כולל הפסימי ביותר עבורה, מעבירים אותה את אחוז החסימה — אינה בסיכון.
+   */
   safe: HomeRow[];
-  /** על הסף: עוברות בחלק מהתרחישים בלבד, עם האחוז הקיים */
+  /** בסיכון (על קו החסימה): לפחות סקר אחד מהאחרונים אינו מעביר אותה, ולפחות אחד כן. `pass` (שיעור התרחישים) מוצג לצידה עם סימון מודל */
   edge: HomeRow[];
-  /** מתחת לסף בכל התרחישים כמעט */
+  /** מתחת לסף: אף סקר מהאחרונים אינו מעביר אותה (או שלא נשאלה באף אחד מהם) */
   below: HomeRow[];
+  /** הסיכון שעולה מתרחישי המודל בלבד (רק למסך התרחישים): עוברות בחלק מהתרחישים — יותר מ-`EDGE_MIN` ופחות מ-`EDGE_MAX` */
+  scenarioEdge: HomeRow[];
   /** מנדטי הממשלה היוצאת לאורך זמן */
   series: { date: string; v: number }[];
 }
 
-/** אחוז התרחישים שמתחתיו הרשימה "מתחת לסף", ומעליו "עוברת בבירור" */
+/** הסיכון מתרחישי המודל בלבד (מסך התרחישים): עוברת ביותר מ-0.5% מהתרחישים ובפחות מ-99.5% */
 export const EDGE_MIN = 0.005;
 export const EDGE_MAX = 0.995;
 
 export function buildHome(
   model: HomeModel,
-  opts: { govIds: string[]; nameOf: (id: string) => string; sure: (id: string) => boolean; coalitionIds?: string[]; arabIds?: string[] },
+  opts: {
+    govIds: string[];
+    nameOf: (id: string) => string;
+    /** כל הסקרים האחרונים מעבירים אותה (`passesInAll`) */
+    sure: (id: string) => boolean;
+    /** אף סקר מהאחרונים אינו מעביר אותה (`passesInNone`) */
+    out: (id: string) => boolean;
+    coalitionIds?: string[];
+    arabIds?: string[];
+  },
 ): HomeData {
-  const { govIds, nameOf, sure } = opts;
+  const { govIds, nameOf, sure, out } = opts;
   const rows: HomeRow[] = Object.keys(model.scenarios.lists)
     .map((id) => {
       const l = model.scenarios.lists[id];
@@ -69,10 +86,11 @@ export function buildHome(
     })
     .sort((a, b) => b.central - a.central || model.scenarios.lists[b.id].seatsMean - model.scenarios.lists[a.id].seatsMean);
 
-  const isEdge = (r: HomeRow) => !sure(r.id) && r.pass > EDGE_MIN && r.pass < EDGE_MAX;
-  const edge = rows.filter(isEdge);
-  const below = rows.filter((r) => !isEdge(r) && r.pass <= EDGE_MIN);
-  const safe = rows.filter((r) => !isEdge(r) && r.pass > EDGE_MIN);
+  // לפי הסקרים האחרונים בלבד (הכרעה 4): עוברת בכולם ⇐ מעל הקו; באף אחד ⇐ מתחת לסף; אחרת ⇐ בסיכון
+  const safe = rows.filter((r) => sure(r.id));
+  const below = rows.filter((r) => !sure(r.id) && out(r.id));
+  const edge = rows.filter((r) => !sure(r.id) && !out(r.id));
+  const scenarioEdge = rows.filter((r) => r.pass > EDGE_MIN && r.pass < EDGE_MAX);
 
   const govSum = (seats: Record<string, number>) => govIds.reduce((a, id) => a + (seats[id] ?? 0), 0);
   const gov = govSum(model.central.seats);
@@ -92,6 +110,7 @@ export function buildHome(
     safe,
     edge,
     below,
+    scenarioEdge,
     series,
   };
 }

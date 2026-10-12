@@ -4,7 +4,7 @@ import { IDS, VOTE_MAP, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./
 const percent = (cells: Record<string, Cell> | undefined, key: string): number | null => {
   if (!cells || !Object.values(cells).some(c => c.of > 0)) return null;
   const c = cells[key];
-  return c?.hidden ? null : c ? Math.round(c.n / c.of * 1000) / 10 : 0;
+  return c?.hidden ? null : c ? c.n / c.of * 100 : 0;
 };
 /** כמה משתתפים ענו כך (מספר), באותם כללים של `percent` */
 const count = (cells: Record<string, Cell> | undefined, key: string): number | null => {
@@ -29,5 +29,5 @@ export function votingRows(d: Dashboard) {
     if (row.key.startsWith("answer:")) return row.key.slice(7) in NON_VOTER_NAME && answerCount(d, row.key.slice(7)) > 0;
     const old = row.key.startsWith("2022:") ? row.key.slice(5) : VOTE_MAP[row.key];
     return (old && (d.vote2022?.all[old]?.n ?? 0) > 0) || (d.vote2026?.all[row.key]?.n ?? 0) > 0;
-  });
+  }).sort((a, b) => (b.nextN ?? -Infinity) - (a.nextN ?? -Infinity));
 }

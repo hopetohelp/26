@@ -29,3 +29,13 @@ it("שורות למי שלא הצביע: רק כשיש תשובות כאלה, ו
   expect(rows[2]).toMatchObject({name:"לא הייתה זכות הצבעה",previous:50,next:0});
   expect(votingRows({...base,vote2022:{all:{"מחל":{n:2,of:2}},valid:{},official:{}},vote2026:{all:{likud:{n:2,of:2}},named:{}}}).some(r=>r.key.startsWith("answer:"))).toBe(false);
 });
+
+it("אפס פירושו שלא בחרו ברשימה קיימת; קו פירושו שאין נתון בר השוואה", () => {
+  const d: Dashboard = { participants: 2000, publishedAt: null, aggregationId: null, open: true,
+    vote2022: { all: { "מחל": { n: 2, of: 2000 }, "ט": { n: 1, of: 2000 } }, valid: {}, official: {} },
+    vote2026: { all: { likud: { n: 0, of: 2000 }, shas: { n: 1, of: 2000 } }, named: {} } };
+  const rows = votingRows(d);
+  expect(rows.find(r => r.key === "likud")).toMatchObject({ next: 0, nextN: 0 });
+  expect(rows.find(r => r.key === "2022:ט")).toMatchObject({ next: null, nextN: null });
+  expect(rows.find(r => r.key === "shas")).toMatchObject({ next: 0.05, nextN: 1 });
+});

@@ -12,7 +12,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
 import { lists2026, listName, meta, results } from "../lib/data";
-import { date, dateRange, num, rng, seatsFmt } from "../lib/format";
+import { date, dateRange, num, pctValue, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
 
 interface ListScenario {
@@ -67,7 +67,6 @@ const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (POLL_A
 const ids = Object.keys(sc.lists).sort((a, b) => POLL_AVERAGE.seats[b] - POLL_AVERAGE.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
 const pctTxt = (x: number) => (x >= 0.995 ? "כמעט בכל התרחישים" : x < 0.005 ? "כמעט באף תרחיש" : `ב-${Math.round(x * 100)}% מהתרחישים`);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
-const edge = ids.filter((id) => sc.lists[id].pass > 0.005 && sc.lists[id].pass < 0.995);
 const k25 = results[results.length - 1];
 const wasted2022 = ((k25.valid - k25.lists.filter((l) => l.seats > 0).reduce((a, l) => a + l.votes, 0)) / k25.valid) * 100;
 const SOURCE = `${POLL_AVERAGE.polls} סקרים של ${POLL_AVERAGE.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
@@ -88,7 +87,7 @@ function ModelPopup({ id, name, t, v, color }: { id: string; name: string; t: nu
       <div className="mb-0.5 flex items-center gap-1.5 text-[.76rem] font-bold"><i className="size-2.5 shrink-0 rounded-full" style={{ background: color }} />{name}</div>
       <div className="mb-1 text-[.7rem] font-bold text-paper/65">ממוצע המודל, <bdi dir="ltr">{dayMonth(new Date(t).toISOString().slice(0, 10))}</bdi></div>
       <div className="flex items-baseline gap-1.5">
-        <span className="font-bold tabular text-[.95rem] leading-none">{r1(v)}%</span>
+        <span className="font-bold tabular text-[.95rem] leading-none">{pctValue(v)}%</span>
         {day && <small className="text-[.7rem] text-paper/65">{day.seats[id]} מנדטים</small>}
       </div>
       {scn && (
@@ -102,6 +101,28 @@ function ModelPopup({ id, name, t, v, color }: { id: string; name: string; t: nu
   );
 }
 
+/**
+ * סיכון אחוז החסימה במסך התרחישים (הכרעת בעלים 12.10.2026, הכרעה 4): שתי קביעות נפרדות. לפי הסקרים האחרונים — כמו בכל האתר
+ * (לפחות סקר אחד מהאחרונים אינו מעביר את הרשימה; מתחת לקו בגרף). ולפי תרחישי המודל בלבד — עוברת רק בחלק מהתרחישים
+ * (פס התרחישים בגרף), עם הסבר שזה נובע מהמודל ולא מהסקרים עצמם.
+ */
+function ThresholdRisk() {
+  const names = (rows: { name: string }[]) => rows.map((r) => r.name).join(", ");
+  return (
+    <div className="space-y-1">
+      <p>
+        <b className="text-ink">לפי הסקרים האחרונים</b> (כמו בכל האתר):{" "}
+        {HOME.edge.length ? `${names(HOME.edge)} — לפחות סקר אחד מהאחרונים אינו מעביר אותן את אחוז החסימה.` : "כל הרשימות שעוברות באחד הסקרים האחרונים עוברות בכולם."}
+      </p>
+      <p>
+        <b className="text-ink">לפי תרחישי המודל בלבד</b>:{" "}
+        {HOME.scenarioEdge.length ? `${names(HOME.scenarioEdge)} — עוברות רק בחלק מהתרחישים.` : "אין רשימה שעוברת רק בחלק מהתרחישים."}{" "}
+        זה נובע מהמודל, לא מהסקרים עצמם.
+      </p>
+    </div>
+  );
+}
+
 export default function Scenarios() {
   const asOfText = `הסקרים עד ${date(POLL_AVERAGE.asOf)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
   const trendIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0).slice(0, 9);
@@ -110,7 +131,7 @@ export default function Scenarios() {
     id,
     name: listName(id),
     points: m.trend.map((p) => ({ t: Date.parse(p.date + "T12:00:00Z"), v: p.shares[id] })),
-    endLabel: `${listName(id)} ${r1(m.trend[m.trend.length - 1].shares[id])}%`,
+    endLabel: `${listName(id)} ${pctValue(m.trend[m.trend.length - 1].shares[id])}%`,
   }));
   const cov = coverageRange();
   const govNames = sc.bloc.lists.map(listName).join(", ");
@@ -129,9 +150,9 @@ export default function Scenarios() {
           methodAnchor="model"
         >
           <ChartWithTable
-            summary={edge.length ? `על סף אחוז החסימה: ${edge.map((id) => listName(id)).join(", ")}.` : undefined}
+            summary={<ThresholdRisk />}
             chart={
-              <Ranking home={HOME} />
+              <Ranking home={HOME} scenarioRisk />
             }
             table={
               <table className="text-sm w-full">
@@ -157,7 +178,7 @@ export default function Scenarios() {
                         <td className="pe-3 tabular-nums">{seatsFmt(Math.round(l.seatsMean * 10) / 10)}</td>
                         <td className="pe-3 tabular-nums">{l.seats[1]}</td>
                         <td className="pe-3 tabular-nums">{rng(l.seats[0], l.seats[2])}</td>
-                        <td className="pe-3 tabular-nums">{r1(l.share[0])}%–{r1(l.share[2])}%</td>
+                        <td className="pe-3 tabular-nums">{pctValue(l.share[0])}%–{pctValue(l.share[2])}%</td>
                         <td>{pctTxt(l.pass)}</td>
                       </tr>
                     );
@@ -179,8 +200,8 @@ export default function Scenarios() {
         <Card title="קולות שלא הופכים למנדטים">
           <Explained kind="תרחיש" source={SOURCE} asOf={asOfText} assumption="רשימה שלא עוברת את הסף מקבלת אפס מנדטים, וקולותיה אינם נספרים בחלוקה." methodAnchor="model">
             <p className="text-sm">
-              קולות כשרים לרשימות שלא עוברות את הסף: ממוצע {r1(sc.wastedMean)}%, וב-80% מהתרחישים בין {r1(sc.wasted[0])}% ל-{r1(sc.wasted[2])}%.
-              ב-2022 זה היה {r1(wasted2022)}%.
+              קולות כשרים לרשימות שלא עוברות את הסף: ממוצע {pctValue(sc.wastedMean)}%, וב-80% מהתרחישים בין {pctValue(sc.wasted[0])}% ל-{pctValue(sc.wasted[2])}%.
+              ב-2022 זה היה {pctValue(wasted2022)}%.
             </p>
           </Explained>
         </Card>
@@ -273,9 +294,9 @@ export default function Scenarios() {
                   {trendIds.map((id) => (
                     <tr key={id} className="border-b border-paper-line/60">
                       <th scope="row" className="py-1 pe-3 text-right font-medium">{listName(id)}</th>
-                      <td className="pe-3 tabular-nums">{r1(m.trend[0].shares[id])}% ({m.trend[0].seats[id]} מנדטים)</td>
+                      <td className="pe-3 tabular-nums">{pctValue(m.trend[0].shares[id])}% ({m.trend[0].seats[id]} מנדטים)</td>
                       <td className="tabular-nums">
-                        {r1(m.trend[m.trend.length - 1].shares[id])}% ({m.trend[m.trend.length - 1].seats[id]} מנדטים)
+                        {pctValue(m.trend[m.trend.length - 1].shares[id])}% ({m.trend[m.trend.length - 1].seats[id]} מנדטים)
                       </td>
                     </tr>
                   ))}

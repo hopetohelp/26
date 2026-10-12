@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { date, dateRange, rng, shortDates } from "./format";
+import { date, dateRange, pctOne, pctValue, rng, shortDates } from "./format";
+
+describe("אחוז חיובי קטן", () => {
+  it("מציג מאיות מתחת ל-0.1%, ואינו מציג ערך חיובי כאפס", () => {
+    expect(pctOne(0.05)).toBe("0.05%");
+    expect(pctValue(0.09)).toBe("0.09");
+    expect(pctOne(0.002)).toBe("<0.01%");
+    expect(pctOne(0)).toBe("0.0%");
+    expect(pctOne(0.1)).toBe("0.1%");
+  });
+});
 
 describe("rng: טווח משמאל לימין", () => {
   it("עוטף בבידוד LTR כך שהקטן משמאל", () => {

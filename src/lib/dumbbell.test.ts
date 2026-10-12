@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { change, dumbbellAxis, dumbbellSegs, type DumbbellRow } from "./dumbbell";
+import { change, dumbbellAxis, pollSegs, type DumbbellRow } from "./dumbbell";
+import { LATEST_POLLS } from "./homeData";
+import { pollSeatRange, pollSeatValues } from "./pollRange";
+import { POLL_AVERAGE } from "./sources";
+import { pctForListSeats } from "../pages/guess/pctSync";
+import { lists2026 } from "./data";
 import modelFile from "../data/model.json";
 
 const row = (before: number, now: number, hi: number | null = null): DumbbellRow => ({
@@ -8,8 +13,7 @@ const row = (before: number, now: number, hi: number | null = null): DumbbellRow
   from: "ב",
   before,
   now,
-  // התפלגות שמתחילה ב-now-1 ונגמרת ב-hi (תאים של 0.5): כל התאים עם תרחישים
-  hist: hi === null ? null : { start: now - 1, step: 0.5, counts: Array.from({ length: Math.round((hi - now + 1) / 0.5) }, () => 1) },
+  segs: hi === null ? [] : [{ from: now - 0.5, to: hi, count: 1 }],
   range: hi === null ? null : [now - 0.5, hi],
 });
 
@@ -49,7 +53,7 @@ describe("על הנתונים האמיתיים", () => {
   it("כל משפחה בכל חלופה נכנסת לציר", () => {
     const alts = (modelFile as unknown as { changes: { alternatives: { families: { share2022: number; shareNow: number; shareRange: number[] | null; shareHist: { start: number; step: number; counts: number[] } | null }[] }[] } }).changes.alternatives;
     for (const a of alts) {
-      const rows = a.families.map((f, i) => ({ id: String(i), name: "", from: "", before: f.share2022, now: f.shareNow, hist: f.shareHist, range: f.shareRange ? [f.shareRange[0], f.shareRange[2]] as [number, number] : null }));
+      const rows = a.families.map((f, i) => ({ id: String(i), name: "", from: "", before: f.share2022, now: f.shareNow, segs: [], range: f.shareRange ? [f.shareRange[0], f.shareRange[2]] as [number, number] : null }));
       const { min, max } = dumbbellAxis(rows);
       for (const r of rows) {
         expect(r.before).toBeLessThanOrEqual(max);
@@ -61,39 +65,37 @@ describe("על הנתונים האמיתיים", () => {
   });
 });
 
-describe("dumbbellSegs: התפלגות מנדטים שלמים", () => {
-  it("מערך ספירות לפי מנדט נחתך בדיוק לטווח 80%", () => {
-    // 20 תרחישים: 2 עם 20 מנדטים, 6 עם 21, 8 עם 22, 3 עם 23, 1 עם 24
-    const counts = [...Array(20).fill(0), 2, 6, 8, 3, 1];
-    const segs = dumbbellSegs({ hist: counts, range: [21, 23] });
-    expect(segs[0].from).toBe(21);
-    expect(segs[segs.length - 1].to).toBe(23);
-    expect(segs.every((g) => g.from >= 21 && g.to <= 23)).toBe(true);
+describe("pollSegs: נר של טווח הסקרים (הכרעה 6) ⇐ טווח מלא", () => {
+  it("מנדטים: מהסקר הנמוך עד הגבוה, והעובי לפי כמה סקרים נותנים כל ערך", () => {
+    const segs = pollSegs([20, 21, 21, 22, 24]);
+    expect(segs[0].from).toBe(20);
+    expect(segs[segs.length - 1].to).toBe(24);
+    expect(segs.find((g) => g.from <= 21 && g.to >= 21)!.count).toBe(2);
   });
-});
-
-describe("dumbbellSegs: נר מבוסס תרחישים ⇐ טווח 80%", () => {
-  it("הקטעים נחתכים בדיוק לטווח, והעובי מההתפלגות", () => {
-    const segs = dumbbellSegs({ hist: { start: 5, step: 0.25, counts: [1, 2, 6, 9, 6, 2, 1] }, range: [5.5, 6.25] });
-    expect(segs[0].from).toBe(5.5);
-    expect(segs[segs.length - 1].to).toBe(6.25);
-    expect(segs.every((g) => g.from >= 5.5 && g.to <= 6.25)).toBe(true);
+  it("אחוזים: הקצוות מומרים, ובין מנדטים שלמים — אינטרפולציה; הטווח נמתח עד הממוצע", () => {
+    const toPct = (s: number) => s * 0.8;
+    const segs = pollSegs([10, 12], toPct, [7.5, 9.6]);
+    expect(segs[0].from).toBe(7.5);
+    expect(segs[segs.length - 1].to).toBeCloseTo(9.6);
+    expect(segs[1].from).toBeCloseTo(10.5 * 0.8);
   });
-  it("מחנה ששונה ידנית (בלי התפלגות או בלי טווח): אין נר", () => {
-    expect(dumbbellSegs({ hist: null, range: null })).toEqual([]);
-    expect(dumbbellSegs({ hist: { start: 0, step: 1, counts: [1] }, range: null })).toEqual([]);
+  it("המרה שנכשלה ⇐ אין נר; בלי סקרים ⇐ אין נר", () => {
+    expect(pollSegs([10, 12], () => null)).toEqual([]);
+    expect(pollSegs([])).toEqual([]);
   });
-  it("על הנתונים האמיתיים: כל משפחה — הנר בתוך טווח 80%, והממוצע של היום בתוכו", () => {
-    const alts = (modelFile as unknown as { changes: { alternatives: { families: { shareNow: number; shareRange: number[] | null; shareHist: { start: number; step: number; counts: number[] } | null }[] }[] } }).changes.alternatives;
-    for (const a of alts) for (const f of a.families) {
-      if (!f.shareHist || !f.shareRange) continue;
-      const [lo, hi] = [f.shareRange[0], f.shareRange[2]];
-      const segs = dumbbellSegs({ hist: f.shareHist, range: [lo, hi] });
-      expect(segs.length).toBeGreaterThan(0);
-      expect(segs[0].from).toBeGreaterThanOrEqual(lo - 1e-9);
-      expect(segs[segs.length - 1].to).toBeLessThanOrEqual(hi + 1e-9);
-      expect(f.shareNow).toBeGreaterThanOrEqual(lo - 0.25);
-      expect(f.shareNow).toBeLessThanOrEqual(hi + 0.25);
+  it("על הנתונים האמיתיים: הנר במנדטים הוא בדיוק pollSeatRange, ובאחוזים — ההמרה לפי החוק", () => {
+    for (const l of lists2026) {
+      const vals = pollSeatValues(LATEST_POLLS, [l.id], POLL_AVERAGE.seats);
+      const r = pollSeatRange(LATEST_POLLS, [l.id], POLL_AVERAGE.seats);
+      if (!r) continue;
+      const segs = pollSegs(vals);
+      expect(Math.min(segs[0].from + (r[0] === r[1] ? 0.25 : 0), r[0])).toBe(r[0]);
+      if (r[0] !== r[1]) expect([segs[0].from, segs[segs.length - 1].to]).toEqual(r);
+      const pLo = pctForListSeats(l.id, r[0]), pHi = pctForListSeats(l.id, r[1]);
+      if (pLo === null || pHi === null || r[0] === r[1]) continue;
+      const pseg = pollSegs(vals, (s) => pctForListSeats(l.id, s));
+      expect(pseg[0].from).toBeCloseTo(pLo);
+      expect(pseg[pseg.length - 1].to).toBeCloseTo(pHi);
     }
   });
 });
