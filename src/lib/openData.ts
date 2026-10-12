@@ -316,6 +316,10 @@ export function wrapExternal(f: OpenFile, data: Record<string, unknown>): Record
 }
 
 /** האינדקס: data/index.json — רשימת הקבצים, הכללים, המסכים ומילון המספרים */
+/** שתי הכתובות של שרת ה-MCP מתוך כתובת הבסיס (MCP_URL): ציבורית, ועם התחברות לחשבון האתר */
+export const mcpAddresses = (base: string | null) =>
+  base ? { public: `${base.replace(/\/$/, "")}/public`, withLogin: `${base.replace(/\/$/, "")}/mcp` } : null;
+
 export function buildIndex(mcpUrl: string | null) {
   return {
     about: {
@@ -333,10 +337,12 @@ export function buildIndex(mcpUrl: string | null) {
     site: SITE,
     electionDay: meta.electionDay,
     llms: SITE + "llms.txt",
-    mcp: mcpUrl,
+    mcp: mcpAddresses(mcpUrl),
     screens: PAGES.map((p) => ({ label: p.label, url: screenUrl(p.to) })),
     files: OPEN_FILES.map((f) => ({ path: f.path, url: SITE + f.path, title: f.title, description: f.description, fields: f.fields, method: aboutOf(f).method, screen: screenUrl(f.screen), kind: f.kind, source: f.source })),
     dictionary: DICTIONARY.map((e) => ({ id: e.id, title: e.title, url: methodUrl(e.id) })),
+    /** כל העוגנים שקישור "איך זה חושב?" יכול להוביל אליהם (ערכים, עוגנים בתוך ערכים, ולשוניות) — לכרטיס התשובה של שרת ה-MCP */
+    anchors: [...validAnchors()].sort().map((id) => ({ id, url: methodUrl(id) })),
   };
 }
 
@@ -360,7 +366,11 @@ export function buildLlmsTxt(mcpUrl: string | null): string {
   for (const e of DICTIONARY) lines.push(`- [${e.title}](${methodUrl(e.id)}): ${e.kind}. מקור: ${e.source}. הנחה: ${e.assumption}`);
   lines.push("");
   lines.push("## שרת MCP", "");
-  lines.push(mcpUrl ? `- ${mcpUrl} — קריאת כל הנתונים הציבוריים, מחשבון המנדטים (אותו מנוע), ולמשתמש מחובר — הנתונים האישיים שלו בלבד.` : "- בבנייה. כשיעלה, הכתובת תופיע כאן ובאינדקס (data/index.json, השדה mcp).");
+  const mcp = mcpAddresses(mcpUrl);
+  if (mcp) {
+    lines.push(`- ${mcp.public} — בלי התחברות: כל הנתונים הציבוריים, מחשבון המנדטים (אותו מנוע כמו באתר) וכרטיס תשובה בעיצוב האתר.`);
+    lines.push(`- ${mcp.withLogin} — עם התחברות לחשבון האתר (OAuth): גם הנתונים והפעולות של המשתמש עצמו (ההשערה, הגושים, ההצבעה, ההיסטוריה, הקבוצות, "הנתונים שלי"), באותן הרשאות כמו באתר.`);
+  } else lines.push("- בבנייה. כשיעלה, הכתובות יופיעו כאן ובאינדקס (data/index.json, השדה mcp).");
   lines.push("");
   lines.push("## Optional", "");
   lines.push("- [קוד המקור](https://github.com/hopetohelp/26): הריפו הציבורי; AGENTS.md מסביר איפה כל קובץ ואיך הוא נבנה.");

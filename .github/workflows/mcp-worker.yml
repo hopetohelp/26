@@ -1,0 +1,58 @@
+name: שרת ה-MCP
+on:
+  push:
+    branches: [main]
+    # השרת משתמש במנוע של האתר (src/engine) ובהצפנה של שרת ההשתתפות — שינוי בהם פורס גם אותו
+    paths: ["worker/mcp/**", "src/engine/**", "worker/crowd/lib/crypto.js", "worker/crowd/lib/identity.js", ".github/workflows/mcp-worker.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a64716cf8cec4b4885a5eb06e9a3ee9a
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: מבנה המאגר (CREATE IF NOT EXISTS — בטוח להרצה חוזרת)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/mcp
+        run: npx --yes wrangler@3 d1 execute elections26-mcp --remote --file=schema.sql
+      - name: פריסה ל-Cloudflare
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/mcp
+        run: npx --yes wrangler@3 deploy
+      - name: סודות — נוצרים פעם אחת, רק אם חסרים
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker/mcp
+        run: |
+          existing="$(npx --yes wrangler@3 secret list 2>/dev/null || echo '[]')"
+          for name in IP_KEY DATA_KEY; do
+            if echo "$existing" | grep -q "\"$name\""; then
+              echo "$name קיים"
+            else
+              openssl rand -base64 32 | npx --yes wrangler@3 secret put "$name"
+              echo "$name נוצר"
+            fi
+          done
+      - name: השרת עונה (הכתובת הציבורית ומסמך הגילוי)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: |
+          set -euo pipefail
+          base=https://elections26-mcp.hopetohelp-il.workers.dev
+          for attempt in $(seq 1 12); do
+            if curl --fail --silent --max-time 10 "$base/.well-known/oauth-authorization-server" -o /dev/null \
+              && curl --fail --silent --max-time 20 -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' "$base/public" | grep -q get_poll_average; then
+              echo "שרת ה-MCP עונה"; exit 0
+            fi
+            sleep 5
+          done
+          echo "שרת ה-MCP לא ענה אחרי הפריסה" >&2; exit 1
+      - name: אין מפתח — מדלגים
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "CLOUDFLARE_API_TOKEN לא הוגדר בסודות הריפו; השרת לא נפרס."
