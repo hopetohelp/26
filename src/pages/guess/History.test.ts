@@ -10,3 +10,9 @@ it("מציג תוכן מקורי של מנדטים, אחוזים, גושים ו�
   expect(blocs).toContain("השם המקורי"); expect(blocs).toContain("0 מנדטים");
   expect(html("vote",{v2022:"none",v2026:"undecided"})).toContain("עוד לא החלטתי");
 });
+
+it("הגרסה האחרונה היא החדשה ביותר, בכל סדר שהשרת מחזיר", async () => {
+  const { newestFirst } = await import("./History");
+  expect(newestFirst([{ id: 123 }, { id: 436 }]).map((v) => v.id)).toEqual([436, 123]);
+  expect(newestFirst([{ id: 436 }, { id: 123 }]).map((v) => v.id)).toEqual([436, 123]);
+});
