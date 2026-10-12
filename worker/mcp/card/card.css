@@ -1,0 +1,52 @@
+/* כרטיס התשובה — רק מהטוקנים של האתר (DESIGN.md). הערכים עצמם נגזרים מ-src/index.css בבנייה (card/build.mjs). */
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: transparent; }
+body {
+  font-family: "Rubik", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgb(var(--ink));
+}
+.card {
+  background: rgb(var(--card));
+  border: 1px solid rgb(var(--line));
+  border-radius: var(--radius);
+  padding: 16px;
+  max-width: 100%;
+}
+body { container-type: inline-size; }
+@container (min-width: 520px) { .card { padding: 20px; } }
+.site { margin: 0 0 4px; font-size: 13px; color: rgb(var(--ink-soft)); font-weight: 600; }
+.title { margin: 0 0 8px; font-size: 24px; line-height: 1.15; font-weight: 800; }
+.summary { margin: 0 0 12px; color: rgb(var(--ink)); }
+.sec { border-top: 1px solid rgb(var(--line)); padding-top: 12px; margin-top: 12px; }
+.heading { margin: 0 0 8px; font-size: 18px; line-height: 1.25; font-weight: 700; }
+.text { margin: 0 0 8px; max-width: 48rem; }
+.list { margin: 0; padding-inline-start: 20px; }
+.list li { margin-bottom: 4px; }
+.meta { margin: 6px 0 0; font-size: 13px; color: rgb(var(--ink-soft)); }
+.link { color: rgb(var(--accent)); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.link:focus-visible, .chip:focus-visible { outline: 3px solid rgb(var(--signal)); outline-offset: 2px; }
+.tabular { font-variant-numeric: tabular-nums; }
+.numbers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.numbers > * { min-width: 0; }
+.tile { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 10px 12px; background: rgb(var(--card)); }
+.label { margin: 0; font-size: 14px; color: rgb(var(--ink-soft)); }
+.value { margin: 2px 0 0; font-size: 26px; line-height: 1.1; font-weight: 700; }
+.tablewrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.table th { text-align: start; font-weight: 700; color: rgb(var(--ink-soft)); border-bottom: 1px solid rgb(var(--line)); padding: 6px 8px; }
+.table td { border-bottom: 1px solid rgb(var(--line)); padding: 6px 8px; }
+.table td.num { font-weight: 700; }
+.questions { border-top: 1px solid rgb(var(--line)); margin-top: 12px; padding-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.qtitle { margin: 0; width: 100%; font-size: 14px; font-weight: 700; color: rgb(var(--ink-soft)); }
+.chip {
+  font: inherit; font-size: 15px; min-height: 44px; padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgb(var(--line)); background: rgb(var(--paper)); color: rgb(var(--ink)); text-align: start;
+}
+.chip:hover { border-color: rgb(var(--accent)); }
+.foot { margin-top: 12px; padding-top: 8px; border-top: 1px solid rgb(var(--line)); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 13px; color: rgb(var(--ink-soft)); }
+.footnote { margin: 0; flex: 1 1 14rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

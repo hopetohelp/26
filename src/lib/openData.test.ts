@@ -69,11 +69,12 @@ describe("קובצי הנתונים הפתוחים", () => {
   });
 
   it("llms.txt: המסכים, כל הקבצים, מילון המספרים והכללים — ובלי המילה האסורה", () => {
-    const txt = buildLlmsTxt("https://example.test/mcp");
+    const txt = buildLlmsTxt("https://example.test");
     for (const f of OPEN_FILES) expect(txt).toContain(SITE + f.path);
     expect(txt).toContain("#/method#model");
     expect(txt).toContain("אינו ממליץ");
     expect(txt).toContain("https://example.test/mcp");
+    expect(txt).toContain("https://example.test/public");
     expect(txt).not.toContain("הסתברות");
     expect(buildLlmsTxt(null)).toContain("בבנייה");
   });

@@ -1,0 +1,27 @@
+# שרת ה-MCP של האתר (הכרעת בעלים 12.10.2026): עוזר AI (Claude, ChatGPT…) קורא את נתוני האתר, מחשב מנדטים באותו מנוע,
+# ולמשתמש מחובר — הנתונים והפעולות שלו בלבד, באותן הרשאות כמו באתר. נפרס מ-.github/workflows/mcp-worker.yml
+# שתי כתובות: /public (בלי התחברות: נתונים ציבוריים ומחשבון) · /mcp (עם התחברות לחשבון האתר, OAuth).
+# סודות (נוצרים אוטומטית בפריסה, פעם אחת): DATA_KEY — הצפנת כניסות העוזר שבמאגר · IP_KEY — גיבוב כתובות להגבלת קצב.
+name = "elections26-mcp"
+main = "index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+SITE_URL = "https://hopetohelp.github.io/26/"
+ALLOWED_ORIGIN = "https://hopetohelp.github.io"
+ISSUER = "https://elections26-mcp.hopetohelp-il.workers.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "elections26-mcp"
+database_id = "c02ce097-d3b6-46cf-bca1-773164acb08a"
+
+# שרת ההשתתפות — החשבונות, ההשערות והפעולות. כל קריאה עם כניסת העוזר של המשתמש (worker/crowd/lib/agent.js)
+[[services]]
+binding = "CROWD"
+service = "elections26-crowd"
+
+# ניקוי כל שעה: בקשות התחברות, קודים ואסימונים שפגו, ומוני הגבלת הקצב
+[triggers]
+crons = ["17 * * * *"]
