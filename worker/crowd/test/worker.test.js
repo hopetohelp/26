@@ -220,6 +220,13 @@ describe("recovery via an old personal link (accounts not yet verified)", () => 
     expect((await call("/auth/password", { body: { next: "another pass 22" }, token: reg.data.link })).status).toBe(401);
     expect((await call("/auth/login", { body: { email: "session_user@example.com", password: "original pass 2" } })).status).toBe(200);
   }, 30000);
+  it("failed password changes slow down only that account, not every email account", async () => {
+    const a = await call("/auth/register", { body: { email: "slow_a@example.com", password: "original pass a" } });
+    const b = await call("/auth/register", { body: { email: "slow_b@example.com", password: "original pass b" }, ip: "9.9.9.2" });
+    for (let i = 0; i < 4; i++) await call("/auth/password", { body: { current: "wrong pass 333", next: "another pass 33" }, token: a.data.token });
+    expect((await call("/auth/password", { body: { current: "original pass a", next: "another pass 33" }, token: a.data.token })).status).toBe(429);
+    expect((await call("/auth/password", { body: { current: "original pass b", next: "another pass 44" }, token: b.data.token })).status).toBe(200);
+  }, 30000);
   it("removed email endpoints are gone", async () => {
     for (const p of ["/auth/email", "/auth/email/verify"]) expect((await call(p, { body: {} })).status).toBe(404);
   });

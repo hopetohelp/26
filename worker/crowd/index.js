@@ -820,7 +820,8 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     const cred = await passwordCred(env, participant);
     if (!cred) throw bad("no_password");
-    const keys = ["fa:" + (await hmac(env.IP_KEY, "user|" + cred.username_norm))];
+    // מפתח העיכוב לחשבון הזה בלבד: בחשבון מייל username_norm ריק, ובלי המזהה כל חשבונות המייל היו חולקים מפתח אחד ("user|null")
+    const keys = ["fa:" + (await hmac(env.IP_KEY, cred.username_norm ? "user|" + cred.username_norm : "participant|" + participant))];
     const wait = await waitMs(env, keys, now);
     if (wait > 0) throw new HttpError(429, "slow_down", { retryAfter: Math.ceil(wait / 1000) });
     if (!(await verifyPassword(String(body.current ?? ""), cred))) {
