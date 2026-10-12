@@ -34,7 +34,7 @@ const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
 const v2022Name = (k: string) => V2022_LABEL[k] ?? k25VoteName(k);
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 const pctOf = (cell: Cell) => cell.of ? cell.n / cell.of * 100 : 0;
-const pollSummary = (ids: string[]) => pollSeatSummary(LATEST_POLLS, ids, POLL_AVERAGE.seats);
+const pollSummary = (ids: string[]) => pollSeatSummary(LATEST_POLLS, ids);
 const SIMPLE_POLL_MEANS = Object.fromEntries(lists2026.flatMap(({ id }) => {
   const summary = pollSummary([id]);
   return summary ? [[id, summary.mean]] : [];
@@ -216,7 +216,7 @@ export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, ov
   return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
-    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); const poll = pollSummary(r.lists); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={poll ? seatsFmt(poll.mean) : "—"} range={pollRangeText(poll?.range ?? null)} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
+    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); const poll = pollSummary(r.lists); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={poll ? `${poll.listed < poll.total ? "לפחות " : ""}${seatsFmt(poll.mean)}` : "—"} range={pollRangeText(poll?.range ?? null)} />{poll && poll.listed < poll.total && <span className="block mt-0.5 text-xs text-ink-soft"><bdi>{poll.listed} מתוך {poll.total}</bdi> מפלגות</span>}</td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div></Card>;
 }
 

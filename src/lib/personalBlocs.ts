@@ -40,14 +40,14 @@ export function historicalBlocValues(blocs: Bloc[], families: { k26: string[]; k
   });
 }
 /**
- * מספר הגוש כפי שמוצג. סכום חלקי (חסרה מפלגה) נכתב כמספר בלי מילת הסבר (הכרעת בעלים 11.10.2026, "בלי 'לפחות'"):
- * מתחת למספר מסומן כמה מהמפלגות בגוש היו במקור ("2/3"). `fmt` — עיצוב המספר (מנדטים כברירת מחדל; אחוזים במסך שמציג אחוזים).
+ * מספר הגוש כפי שמוצג. 🔴 נתון שחסר לא מסתיר את הנתון הכולל (הכרעת בעלים 12.10.2026, מחליפה את "בלי 'לפחות'" מ-11.10):
+ * סכום חלקי (חסרה מפלגה) נכתב "לפחות X", ומתחתיו "N מתוך M מפלגות". `fmt` — עיצוב המספר (מנדטים כברירת מחדל; אחוזים במסך שמציג אחוזים).
  */
 export function formatBlocValue(row?: BlocRow, fmt: (n: number) => string = seatsFmt): string {
   if (!row) return "—";
   if (row.total !== null) return fmt(row.total);
   if (row.estimate !== null) return `כ-${fmt(row.estimate)}`;
-  if (row.knownTotal !== null) return fmt(row.knownTotal);
+  if (row.knownTotal !== null) return `לפחות ${fmt(row.knownTotal)}`;
   return "—";
 }
 /** הערך שמשווים בין שני מקורות: מלא, אומדן, ובהיעדרם הסכום הידוע (חלקי); null כשאין שום נתון */

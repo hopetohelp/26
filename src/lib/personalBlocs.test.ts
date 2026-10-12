@@ -56,12 +56,12 @@ it("מחיקת כל הגושים ושם ריק מתקבלים", () => {
   expect(validateBlocs({mode:"custom",blocs:[{...b("one",["x"]),name:""}]},["x"])).toBeNull();
 });
 
-it("סכום חלקי נכתב כמספר בלי המילה 'לפחות', והחסר מסומן בשדה נפרד", () => {
+it("סכום חלקי נכתב 'לפחות X' (נתון שחסר לא מסתיר את הכולל), והחסר מסומן בשדה נפרד", () => {
   const [row] = blocValues([b("a", ["x", "y"])], { x: 30 }, { x: "x", y: "y" });
   expect(row.total).toBeNull();
   expect(row.missing).toEqual(["y"]);
-  expect(formatBlocValue(row)).toBe("30");
-  expect(formatBlocValue(row, (n) => `${n}%`)).toBe("30%");
+  expect(formatBlocValue(row)).toBe("לפחות 30");
+  expect(formatBlocValue(row, (n) => `${n}%`)).toBe("לפחות 30%");
   expect(formatBlocValue(blocValues([b("a", ["y"])], {}, { y: "y" })[0])).toBe("—");
 });
 it("הפער בין שני מקורות נכתב גם כשאחד מהנתונים חסר (הסכום הידוע), ו-null רק כשאין שום נתון", () => {
