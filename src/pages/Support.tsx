@@ -210,7 +210,7 @@ export default function Support() {
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
       ...(token && groups.length > 0 ? [{ id: "groups", title: "ניהול קבוצה", content: groupList }] : []),
     ];
-    return <DrawerMenu className="h-[calc(100dvh-7.5rem)]" title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId | "chat")} after={admin} label="אזור אישי" />;
+    return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId | "chat")} after={admin} label="אזור אישי" />;
   }
   return (
     <div className="flex flex-col min-h-[calc(100dvh-10.5rem)]">

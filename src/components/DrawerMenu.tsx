@@ -1,9 +1,11 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * תפריט מגירות ותוכן (הכרעת בעלים 12.10.2026, המבנה "תפריט ותוכן" מקרובים מתמיד; רכיב אחיד שאפשר להעתיק למסכים אחרים).
  * מ-768 פיקסלים: מימין טור ברוחב קבוע (הגדול מבין שליש ו-24rem) — הכותרת ורשימת כותרות המגירות;
  * משמאל — התוכן של המגירה שנבחרה. כל טור בגובה המסך ונגלל לבד, ובחירה אינה מזיזה דבר.
+ * 🔴 הגובה נמדד ממקום הרכיב בדף עד תחתית המסך, כך שהדף עצמו אינו נגלל והקו בין הטורים מלא מהסרגל ועד התחתית
+ * (ניחוש קבוע של גובה הכותרת נכשל בטאבלט: הדף כולו זז והטור הימני נגלל בלי צורך).
  * מתחת ל-768 הרכיב לא מצייר כלום מזה — המסך מציג את הצורה הצרה שלו (`narrow`).
  */
 export type MenuItem = { id: string; title: string; badge?: ReactNode; content: ReactNode };
@@ -35,9 +37,18 @@ export function DrawerMenu({ title, items, selected, onSelect, after, label, cla
   className?: string;
 }) {
   const current = items.find((i) => i.id === selected) ?? items[0];
+  const root = useRef<HTMLDivElement>(null);
+  const [top, setTop] = useState(0);
+  useLayoutEffect(() => {
+    const measure = () => { if (root.current) setTop(root.current.getBoundingClientRect().top + window.scrollY); };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
   return (
-    <div className={`grid grid-cols-[max(24rem,calc(100%/3))_minmax(0,1fr)] min-h-0 ${className}`}>
-      <nav aria-label="תפריט" className="min-w-0 overflow-y-auto pe-6 border-e border-paper-line">
+    // ‎-mt-6: מבטלים את הריווח העליון של <main>, כדי שהקו בין הטורים יתחיל מתחת לסרגל (בתחתית אין ריווח במסך הזה)
+    <div ref={root} style={{ height: `calc(100dvh - ${top}px)` }} className={`-mt-6 grid grid-cols-[max(24rem,calc(100%/3))_minmax(0,1fr)] ${className}`}>
+      <nav aria-label="תפריט" className="min-w-0 min-h-0 overflow-y-auto pt-6 pe-6 border-e border-paper-line">
         {title}
         <ul className="border-t border-paper-line">
           {items.map((i) => (
@@ -52,7 +63,7 @@ export function DrawerMenu({ title, items, selected, onSelect, after, label, cla
         </ul>
         {after}
       </nav>
-      <section aria-label={label} className="min-w-0 min-h-0 flex flex-col overflow-y-auto ps-6 pt-2">{current?.content}</section>
+      <section aria-label={label} className="min-w-0 min-h-0 flex flex-col overflow-y-auto ps-6 pt-6">{current?.content}</section>
     </div>
   );
 }
