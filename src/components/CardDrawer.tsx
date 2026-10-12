@@ -17,7 +17,7 @@ export default function CardDrawer({ title, actions, dot, open, onOpenChange, cl
         <h2 className="flex-1 min-w-0 text-base font-bold leading-tight">
           <button type="button" aria-expanded={expanded} onClick={toggle} className="w-full min-h-[56px] text-start font-bold flex items-center gap-2">
             {title}
-            {dot && !expanded && <span aria-label="(לא נשמר)" className="w-2 h-2 rounded-full bg-warn shrink-0" />}
+            {dot && <span aria-label="(לא נשמר)" className="w-2 h-2 rounded-full bg-warn shrink-0" />}
           </button>
         </h2>
         {expanded && actions}
