@@ -333,6 +333,11 @@ def apply_corrections(polls: list[dict], build_time: datetime) -> None:
 
 def apply_erroneous(polls: list[dict]) -> None:
     """raw/erroneous-polls.json: סקר שסומן שגוי (id, reason, source) מוחרג מכל החישובים. רק סימון מפורש מוציא סקר; סכום מנדטים ≠ 120 לבדו לא."""
+    # הכרעת בעלים 12.10.2026: סקר שסכום המנדטים בו עולה על 120 מסומן כשגוי מיידית (אי אפשר לחלק יותר מ-120 מושבים)
+    for p in polls:
+        if p["seatSum"] > 120:
+            p["eligibleToShow"] = False
+            p["erroneous"] = {"reason": f"סכום המנדטים {p['seatSum']} — מעל 120 (סימון אוטומטי)", "source": None, "markedAt": "2026-10-12"}
     path = RAW / "erroneous-polls.json"
     if not path.exists():
         return
