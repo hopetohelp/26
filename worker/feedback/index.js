@@ -274,8 +274,10 @@ export default {
         const local = [];
         for (const thread of accountThreads || []) local.push({ participant: thread.participant, ...(await supportThread(env, thread.participant)) });
         const { results: drafts } = await env.DB.prepare("SELECT id, kind, target, text, reason, created_at FROM drafts ORDER BY created_at").all().catch(() => ({ results: [] }));
+        // ריצה אחרונה של הסשן המרוכז: הסשן רושם את עצמו בסוף כל ריצה (docs/נוהל-הערות.md)
+        const agentRun = await env.DB.prepare("SELECT value FROM settings WHERE name = 'agent_last_run'").first().catch(() => null);
         const { results: heldRows } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held").all().catch(() => ({ results: [] }));
-        return reply({ ok: true, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
       if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || url.pathname === "/admin/blocs" || /^\/admin\/groups(\/(import|delete|managers|stats))?$/.test(url.pathname)) {
