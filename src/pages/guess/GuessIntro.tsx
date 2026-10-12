@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { timeLeftText } from "../../lib/countdown";
+import { timeLeftText, wallClockLeft } from "../../lib/countdown";
 import { LOCK_AT } from "./model";
 
 /**
@@ -13,7 +13,7 @@ export default function GuessIntro({ signedIn }: { signedIn: boolean }) {
     const t = setInterval(() => setNow(Date.now()), 60_000);
     return () => clearInterval(t);
   }, []);
-  const left = timeLeftText(LOCK_AT - now);
+  const left = timeLeftText(wallClockLeft(LOCK_AT, now));
   return (
     <section aria-labelledby="guess-intro-title" className="bg-paper-card border-2 border-ink rounded-theme p-4 mb-5">
       <h1 id="guess-intro-title" className="text-3xl font-display leading-tight mb-2">הכנסת שלי</h1>

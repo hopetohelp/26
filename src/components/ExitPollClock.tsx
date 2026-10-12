@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { wallClockLeft } from "../lib/countdown";
 import { LOCK_AT } from "../pages/guess/model";
 
 /** הזמן שנשאר, מפורק לימים, שעות, דקות ושניות (מעוגל כלפי מטה לשנייה). null כשהזמן עבר. */
@@ -23,7 +24,7 @@ export default function ExitPollClock({ compact = false, bar = false }: { compac
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
-  const p = clockParts(LOCK_AT - now);
+  const p = clockParts(wallClockLeft(LOCK_AT, now));
   if (!p && bar) return <p className="flex-1 min-w-0 text-center font-bold text-sm text-frame-ink">מדגמי הבחירות פורסמו</p>;
   if (!p) return <p className={`text-center font-display ${compact ? "text-[max(.8rem,3.4cqw)] leading-tight" : "text-2xl"}`}>מדגמי הבחירות פורסמו</p>;
   const cells: [string, string][] = [[String(p.days), "ימים"], [two(p.hours), "שעות"], [two(p.minutes), "דקות"], [two(p.seconds), "שניות"]];
