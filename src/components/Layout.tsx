@@ -10,6 +10,7 @@ import { date } from "../lib/format";
 import { useMode, type ModeId } from "../lib/theme";
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
+import ExitPollClock from "./ExitPollClock";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
 /** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקר האתר · אישי. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
@@ -22,14 +23,6 @@ const TABS = [
 ];
 /** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
 const MORE = PAGES.filter((p) => !TABS.some((t) => t.to === p.to));
-
-function daysLeft(now = new Date()): string {
-  const d = Math.ceil((Date.parse(meta.electionDay + "T00:00:00+03:00") - now.getTime()) / 86_400_000);
-  if (d > 1) return `עוד ${d} ימים`;
-  if (d === 1) return "מחר בחירות";
-  if (d === 0) return "היום בחירות";
-  return "הבחירות התקיימו";
-}
 
 function Icon({ name }: { name: string }) {
   const p = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
@@ -92,10 +85,9 @@ function ModePicker() {
 
 /**
  * פס עליון אחד (הכרעת בעלים 9.10.2026, החלטה 2), בטוקנים (`frame`, `signal`, גופן, רדיוס).
- * בטלפון שורה אחת: שם האתר, מתחתיו "עוד N ימים · תאריך הבחירות", ובצד הבוררים. במחשב הספירה כשבב במרכז.
+ * שורה אחת בכל רוחב: שם האתר ומתחתיו תאריך הבחירות (מימין), שעון העצר עד המדגמים במרכז (הכרעת בעלים 12.10.2026, במקום "עוד N ימים"), ובצד הבורר.
  */
 function Masthead() {
-  const left = daysLeft();
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
       <div className="w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-4">
@@ -104,12 +96,10 @@ function Masthead() {
             בחירות 26
           </NavLink>
           <p className="mt-1 md:mt-0 text-xs md:text-sm whitespace-nowrap">
-            <span className="md:hidden font-bold text-frame-ink">{left}</span>
-            <span className="md:hidden" aria-hidden="true"> · </span>
             <ElectionDate />
           </p>
         </div>
-        <span className="hidden md:block text-sm font-extrabold border border-frame-ink/40 rounded-full px-3 py-1 whitespace-nowrap">{left}</span>
+        <ExitPollClock bar />
         <ModePicker />
       </div>
     </div>

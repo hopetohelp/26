@@ -14,19 +14,42 @@ const two = (n: number) => String(n).padStart(2, "0");
  * שעון עצר למדגמי הבחירות (הכרעת בעלים 11.10.2026, מחליף את הכותרת "תמונת מצב 16 ימים ו-8 שעות למדגמים"):
  * ימים · שעות · דקות · שניות עד 27.10, 22:00, משמאל לימין (הכרעת בעלים 11.10.2026): ימים בשמאל, ושניות בימין. מתעדכן בכל שנייה, כך שהדקות מתחלפות בדיוק. הכותרת של המסך נשארת לקורא מסך בלבד.
  * `compact`: צר, בתוך החלל הפנימי של הפרסה (גודל לפי רוחב הלוח, `cqw`). בלי כיתוב גלוי "עד המדגמים" (הכרעת בעלים 11.10.2026); ההסבר נשאר בתווית לקורא מסך.
+ * `bar`: בסרגל העליון (הכרעת בעלים 12.10.2026, במקום שבב "עוד N ימים"): צבעי המסגרת (`frame-ink`, `frame-soft`), וגודל הספרות לפי הקטן מבין גובה הסרגל לרוחב החלל שנשאר (`cqw` של המיכל), כך שנכנס גם בטלפון צר.
  * מהטוקנים בלבד, ממורכז, שורה אחת בכל רוחב.
  */
-export default function ExitPollClock({ compact = false }: { compact?: boolean }) {
+export default function ExitPollClock({ compact = false, bar = false }: { compact?: boolean; bar?: boolean }) {
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
   const p = clockParts(LOCK_AT - now);
+  if (!p && bar) return <p className="flex-1 min-w-0 text-center font-bold text-sm text-frame-ink">מדגמי הבחירות פורסמו</p>;
   if (!p) return <p className={`text-center font-display ${compact ? "text-[max(.8rem,3.4cqw)] leading-tight" : "text-2xl"}`}>מדגמי הבחירות פורסמו</p>;
   const cells: [string, string][] = [[String(p.days), "ימים"], [two(p.hours), "שעות"], [two(p.minutes), "דקות"], [two(p.seconds), "שניות"]];
+  const label = `עד המדגמים: ${p.days} ימים, ${p.hours} שעות, ${p.minutes} דקות ו-${p.seconds} שניות`;
+  if (bar) {
+    // המיכל נמתח לרוחב החלל שבין שם האתר לבורר התצורה; הגודל לפי רוחבו, עם תקרה לפי גובה הסרגל
+    return (
+      <div className="flex-1 min-w-0 flex justify-center" style={{ containerType: "inline-size" }}>
+        <div role="timer" aria-label={label} className="text-center">
+          <div aria-hidden="true" dir="ltr" className="flex items-start justify-center gap-[1.6cqw] md:gap-3">
+            {cells.map(([value, unit], i) => (
+              <div key={unit} className="flex items-start gap-[1.6cqw] md:gap-3">
+                {i > 0 && <span className="font-num font-extrabold leading-none text-frame-soft [font-size:min(1.5rem,10.5cqw)]">:</span>}
+                <div className="flex flex-col items-center">
+                  <span className="font-num font-extrabold tabular leading-none text-frame-ink [font-size:min(1.5rem,10.5cqw)]" dir="ltr">{value}</span>
+                  <span className="mt-0.5 leading-none text-frame-soft [font-size:max(9px,min(.75rem,3.6cqw))]">{unit}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
-    <div role="timer" aria-label={`עד המדגמים: ${p.days} ימים, ${p.hours} שעות, ${p.minutes} דקות ו-${p.seconds} שניות`} className="text-center">
+    <div role="timer" aria-label={label} className="text-center">
       <div aria-hidden="true" dir="ltr" className={`flex items-start justify-center ${compact ? "gap-[2cqw]" : "gap-1.5 md:gap-4"}`}>
         {cells.map(([value, unit], i) => (
           <div key={unit} className={`flex items-start ${compact ? "gap-[2cqw]" : "gap-1.5 md:gap-4"}`}>
