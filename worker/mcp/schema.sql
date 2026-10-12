@@ -65,3 +65,25 @@ CREATE TABLE IF NOT EXISTS usage (
   n INTEGER NOT NULL,
   PRIMARY KEY (day, tool, mode, client, outcome)
 );
+
+-- הגדרות שמנהל האתר משנה מהמסך (מגירת "שרת ה-MCP"): public_enabled — האם הכתובת בלי התחברות פתוחה ('1' / '0')
+CREATE TABLE IF NOT EXISTS settings (
+  name TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+-- דשבורד למנהל (הכרעת בעלים 12.10.2026): לכל יום ולכל כתובת (public · mcp) — חיבורים, שיחות, קריאות וכתיבות. בלי מזהים.
+CREATE TABLE IF NOT EXISTS stats (
+  day TEXT NOT NULL,
+  mode TEXT NOT NULL,
+  metric TEXT NOT NULL,
+  n INTEGER NOT NULL,
+  PRIMARY KEY (day, mode, metric)
+);
+
+-- מתי נראה לאחרונה כל חיבור (גיבוב בלבד) — כדי לספור "שיחה" (רצף קריאות בלי הפסקה של 30 דקות) ו"חיבור" ביום. נמחק אחרי יומיים.
+CREATE TABLE IF NOT EXISTS seen (
+  key TEXT PRIMARY KEY,
+  last_at INTEGER NOT NULL
+);

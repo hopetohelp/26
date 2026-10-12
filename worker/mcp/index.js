@@ -9,21 +9,22 @@
  */
 import { OAuthError, approve, authServerMetadata, cleanupOAuth, deny, dropGrant, exchangeToken, issuer, registerClient, requestInfo, resolveAccess, resourceMetadata, startAuthorize } from "./lib/oauth.js";
 import { AuthLost, handleRpc } from "./lib/rpc.js";
-import { ToolError } from "./lib/tools.js";
+import { TOOL_BY_NAME, ToolError } from "./lib/tools.js";
 import { siteJson } from "./lib/site.js";
 import { LIMITS, allow, cleanupLimits, logUse, publicKey, userKey } from "./lib/limits.js";
+import { cleanupStats, dashboard, publicEnabled, setPublicEnabled, track } from "./lib/stats.js";
 
 const MAX_BODY = 256 * 1024;
 const clock = (env) => (env.NOW ? env.NOW() : Date.now());
 
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...headers } });
 
-/** CORS: נתיבי האישור — רק מהאתר; כל השאר (MCP, OAuth) — לכל לקוח, בלי עוגיות */
+/** CORS: נתיבי האישור והניהול — רק מהאתר; כל השאר (MCP, OAuth) — לכל לקוח, בלי עוגיות */
 function cors(env, request, path) {
   const origin = request.headers.get("origin") || "";
-  if (path.startsWith("/authorize/")) {
+  if (path.startsWith("/authorize/") || path.startsWith("/admin/")) {
     const ok = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost(:\d+)?$/.test(origin);
-    return { "access-control-allow-origin": ok ? origin : env.ALLOWED_ORIGIN, "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "content-type", vary: "origin" };
+    return { "access-control-allow-origin": ok ? origin : env.ALLOWED_ORIGIN, "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "authorization, content-type", vary: "origin" };
   }
   return {
     "access-control-allow-origin": "*",
@@ -87,6 +88,33 @@ async function teamCall(env, agent, body) {
   return data;
 }
 
+/** מסך הניהול של שרת ההערות (פניות, תשובות, טיוטות, השהיה) — עם כניסת העוזר של המנהל; שרת ההערות מאמת מנהל מול שרת ההשתתפות */
+async function feedbackAdmin(env, agent, path, body) {
+  if (!env.FEEDBACK) throw new ToolError("unavailable", "שרת ההערות אינו זמין כרגע.");
+  let res;
+  try {
+    res = await env.FEEDBACK.fetch(new Request("https://feedback.internal" + path, { method: body === undefined ? "GET" : "POST", headers: { authorization: `Bearer ${agent}`, "content-type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) }));
+  } catch {
+    throw new ToolError("unavailable", "שרת ההערות אינו זמין כרגע. נסו שוב בעוד רגע.");
+  }
+  const data = await res.json().catch(() => null);
+  if (!res.ok || data?.ok === false) throw new ToolError(data?.error ?? `http_${res.status}`, res.status === 404 ? "לא נמצא (אולי כבר טופל)." : res.status === 401 ? "אין הרשאת ניהול." : "הפעולה לא הצליחה. נסו שוב.");
+  return data;
+}
+
+/**
+ * מסך הניהול באתר (מגירת "עוזרי AI"): כניסת המנהל — אותה כניסה של מסך הניהול (מפתח ניהול או סשן של חשבון מנהל),
+ * ושרת ההשתתפות מאשר שהיא של מנהל. כניסת עוזר AI אינה פותחת את הדשבורד ואת הכפתור — רק המנהל עצמו באתר.
+ */
+async function requireSiteAdmin(env, request) {
+  const key = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  if (key.length < 32 || key.length > 200) throw new OAuthError(401, "unauthorized");
+  const who = await env.CROWD.fetch(new Request("https://crowd.internal/admin/whoami", { headers: { "x-admin-key": key } }))
+    .then(async (r) => (r.ok ? await r.json().catch(() => ({})) : null), () => null);
+  if (!who) throw new OAuthError(401, "unauthorized");
+  if (who.agent) throw new OAuthError(403, "assistant_not_allowed");
+}
+
 function unauthorized(env, why = "invalid_token") {
   return json({ error: why }, 401, { "www-authenticate": `Bearer realm="elections26", error="${why}", resource_metadata="${issuer(env)}/.well-known/oauth-protected-resource/mcp"` });
 }
@@ -101,10 +129,18 @@ async function handleMcp(request, env, mode, now, baseHeaders) {
   }
   let msg;
   try { msg = JSON.parse(await readBody(request)); } catch { return json({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }, 400, baseHeaders); }
-  const calls = (Array.isArray(msg) ? msg : [msg]).filter((m) => m?.method === "tools/call").length;
-  if (calls) {
-    const key = mode === "user" ? await userKey(grant.grantId) : await publicKey(env, request);
-    for (let i = 0; i < calls; i++) if (!(await allow(env, key, LIMITS[mode], now))) return json({ jsonrpc: "2.0", id: Array.isArray(msg) ? null : msg.id ?? null, error: { code: -32000, message: "יותר מדי קריאות בשעה האחרונה. נסו שוב מאוחר יותר." } }, 429, { ...baseHeaders, "retry-after": "600" });
+  const rpcId = Array.isArray(msg) ? null : msg?.id ?? null;
+  // כפתור הכיבוי במסך הניהול (הכרעת בעלים 12.10.2026): הכתובת בלי התחברות סגורה; הכתובת עם התחברות אינה מושפעת
+  if (mode === "public" && !(await publicEnabled(env, now)))
+    return json({ jsonrpc: "2.0", id: rpcId, error: { code: -32001, message: "הכתובת בלי התחברות סגורה כרגע. אפשר להתחבר בכתובת /mcp עם חשבון באתר.", data: { code: "public_disabled" } } }, 403, baseHeaders);
+  const list = Array.isArray(msg) ? msg : [msg];
+  const called = list.filter((m) => m?.method === "tools/call");
+  const key = mode === "user" ? await userKey(grant.grantId) : await publicKey(env, request);
+  for (let i = 0; i < called.length; i++) if (!(await allow(env, key, LIMITS[mode], now))) return json({ jsonrpc: "2.0", id: rpcId, error: { code: -32000, message: "יותר מדי קריאות בשעה האחרונה. נסו שוב מאוחר יותר." } }, 429, { ...baseHeaders, "retry-after": "600" });
+  // דשבורד: חיבור, שיחה, קריאות וכתיבות. נספר רק מה שמראה שימוש (פתיחת חיבור או קריאה לכלי), לא בדיקות רשימה חוזרות
+  if (called.length || list.some((m) => m?.method === "initialize")) {
+    const writes = called.filter((m) => { const k = TOOL_BY_NAME.get(m?.params?.name)?.kind; return k === "write" || k === "destructive"; }).length;
+    await track(env, { mode: mode === "user" ? "mcp" : "public", key, reads: called.length - writes, writes }, now);
   }
   const crowd = crowdCaller(env, grant?.agent);
   let me = null;
@@ -116,6 +152,7 @@ async function handleMcp(request, env, mode, now, baseHeaders) {
     crowd,
     me: async () => (me ??= await crowd("/me")),
     team: (body) => teamCall(env, grant?.agent, body),
+    feedbackAdmin: (path, body) => feedbackAdmin(env, grant?.agent, path, body),
     log: (tool, outcome) => logUse(env, { tool, mode, client: grant?.clientName ?? "ציבורי", outcome }, now),
   };
   try {
@@ -149,6 +186,17 @@ export default {
       if (path.startsWith("/.well-known/oauth-protected-resource")) return json(resourceMetadata(env), 200, headers);
       if (path === "/mcp") return handleMcp(request, env, "user", now, headers);
       if (path === "/public") return handleMcp(request, env, "public", now, headers);
+      if (path === "/admin/stats" && request.method === "GET") {
+        await requireSiteAdmin(env, request);
+        return json({ ok: true, ...(await dashboard(env, now)) }, 200, headers);
+      }
+      if (path === "/admin/settings" && request.method === "POST") {
+        await requireSiteAdmin(env, request);
+        const body = JSON.parse((await readBody(request)) || "{}");
+        if (typeof body.publicEnabled !== "boolean") throw new OAuthError(400, "invalid_request", "publicEnabled חייב להיות true או false");
+        await setPublicEnabled(env, body.publicEnabled, now);
+        return json({ ok: true, publicEnabled: body.publicEnabled }, 200, headers);
+      }
       if (path === "/register" && request.method === "POST") {
         if (!(await allow(env, "reg:" + (await publicKey(env, request)), 30, now))) throw new OAuthError(429, "rate");
         return json(await registerClient(env, JSON.parse((await readBody(request)) || "{}"), now), 201, headers);
@@ -187,6 +235,6 @@ export default {
 
   async scheduled(_event, env, ctx) {
     const now = clock(env);
-    ctx.waitUntil(Promise.all([cleanupOAuth(env, now), cleanupLimits(env, now)]));
+    ctx.waitUntil(Promise.all([cleanupOAuth(env, now), cleanupLimits(env, now), cleanupStats(env, now)]));
   },
 };

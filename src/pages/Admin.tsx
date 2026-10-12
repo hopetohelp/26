@@ -12,6 +12,8 @@ import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
 import AdminGroups from "./AdminGroups";
 import AdminBlocs from "./AdminBlocs";
+import AdminMcp from "./AdminMcp";
+import { Tiles } from "../components/Tiles";
 
 /**
  * ממשק ניהול: כל הפניות עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
@@ -100,22 +102,6 @@ function Pair({ label, a, b, alert = false, small = false }: { label: string; a:
   );
 }
 
-function Tiles({ title, note, tiles }: { title: string; note: string; tiles: [string, string | number][] }) {
-  return (
-    <section className="space-y-2" aria-label={title}>
-      <h3 className="flex items-baseline gap-2 flex-wrap"><span className="font-display text-xl">{title}</span><span className="text-xs text-ink-soft">{note}</span></h3>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {tiles.map(([label, n]) => (
-          <div key={label} className="bg-paper-card border border-paper-line rounded-theme p-3">
-            <p className="text-xs text-ink-soft">{label}</p>
-            <p className="font-num tabular text-3xl leading-none mt-1">{n}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function ByDay({ days }: { days: Day[] }) {
   return (
     <section className="space-y-2">
@@ -135,7 +121,7 @@ export default function Admin() {
   const [key, setKey] = useState<string | null>(() => { try { return localStorage.getItem(KEY); } catch { return null; } });
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<string | null>(null);
-  type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai";
+  type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai" | "mcp";
   const [guessCounts, setGuessCounts] = useState({ pending: 0, rejected: 0 });
   const pendingGuesses = guessCounts.pending;
   // פרסום אחרון של האתר ב-GitHub (ממשק ציבורי); בלי תשובה — "—"
@@ -258,6 +244,7 @@ export default function Admin() {
             <Drawer title="גושים שהוגדרו" open={open.has("blocs")} onToggle={() => toggle("blocs")}><AdminBlocs api={api} /></Drawer>
             <Drawer title="קבוצות" open={open.has("groups")} onToggle={() => toggle("groups")}><AdminGroups api={api} /></Drawer>
             <Drawer title="מפתח AI לתשובות" open={open.has("ai")} onToggle={() => toggle("ai")}><AiKey api={api} /></Drawer>
+            <Drawer title="שרת העוזרים (MCP)" open={open.has("mcp")} onToggle={() => toggle("mcp")}><AdminMcp credential={credential} /></Drawer>
           </div>
         </>
       )}

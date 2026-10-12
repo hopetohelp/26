@@ -240,10 +240,16 @@ export default {
       const key = (request.headers.get("authorization") || "").replace(/^Bearer /, "");
       let ok = key.length >= 32 && (await env.DB.prepare("SELECT 1 AS x FROM admin_keys WHERE hash = ?").bind(await sha256(key)).first());
       // חשבון מנהל (הכרעת בעלים 9.10.2026): שרת ההשתתפות מאשר שהסשן שייך למנהל
+      let agent = null;
       if (!ok && key.length >= 32 && env.CROWD) {
-        ok = await env.CROWD.fetch(new Request("https://crowd.internal/admin/whoami", { headers: { "x-admin-key": key } })).then((r) => r.ok, () => false);
+        const who = await env.CROWD.fetch(new Request("https://crowd.internal/admin/whoami", { headers: { "x-admin-key": key } })).then(async (r) => (r.ok ? await r.json().catch(() => ({})) : null), () => null);
+        ok = !!who;
+        agent = who?.agent ?? null;
       }
       if (!ok) return reply({ ok: false, error: "unauthorized" }, 401);
+      // מנהל דרך עוזר AI (שרת ה-MCP; הכרעת בעלים 12.10.2026): קריאת הפניות, תשובה, טיוטות ושחרור השהיה — כמו במסך הניהול.
+      // מפתח ה-AI — רק במסך הניהול עצמו (סוד לא עובר בשיחה עם עוזר).
+      if (agent && url.pathname === "/admin/ai-key" && request.method !== "GET") return reply({ ok: false, error: "assistant_not_allowed" }, 403);
       const crowd = (path, init = {}) => env.CROWD ? env.CROWD.fetch(new Request("https://crowd.internal" + path, { ...init, headers: { "x-admin-key": key, "content-type": "application/json" } })).then((r) => r.json()).catch(() => null) : Promise.resolve(null);
       if (request.method === "GET" && url.pathname === "/admin/data") {
         const since = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
