@@ -3,7 +3,10 @@ import { Btn, Field, Notice, inputCls } from "./guess/ui";
 import GroupUpload from "../components/GroupUpload";
 import { AdminGroupsGuide } from "../components/GroupGuide";
 import type { GroupImportResult, GroupLinkStats, GroupStats as Stats } from "../lib/crowdApi";
-import { GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
+import { CopyTextButton, GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
+import { Fold } from "../components/ui";
+import { groupInviteMessage } from "../lib/groupMessage";
+import { groupUrl } from "../lib/groupLink";
 import { cleanSlugInput, finalSlug } from "../lib/groupLink";
 import GroupStats from "../components/GroupStats";
 
@@ -32,6 +35,11 @@ export default function AdminGroups({ api }: { api: Api }) {
     <section className="space-y-3" aria-label="קבוצות">
             <p className="text-xs text-ink-soft">חבר בקבוצה = חשבון שמייל מאומת שלו ברשימה. הנתונים מוצגים לחברים בלבד, מ-50 משתתפים.</p>
       <AdminGroupsGuide />
+      <Fold title="הודעה למנהלי קבוצות">
+        <p className="text-sm text-ink-soft mb-2">הודעה מוכנה לשליחה למנהלי קבוצה: מה האתר נותן לקבוצה, שהכול כבר פעיל, והקישור. בכרטיס כל קבוצה אפשר להעתיק אותה עם הקישור של אותה קבוצה.</p>
+        <textarea readOnly dir="rtl" rows={8} aria-label="נוסח ההודעה" value={groupInviteMessage()} className={`${inputCls} py-2 text-sm leading-relaxed`} onFocus={(e) => e.currentTarget.select()} />
+        <div className="mt-2"><CopyTextButton kind="primary" label="העתקת ההודעה" text={groupInviteMessage()} /></div>
+      </Fold>
       {error && <Notice tone="warn">{error}</Notice>}
       {groups?.map((g) => <GroupRow key={g.id} g={g} api={api} act={act} reload={load} />)}
       <div className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-3">
@@ -56,6 +64,7 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
         <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
       </summary>
       <div className="px-3 pb-3 space-y-3">
+      {g.slug && <div><CopyTextButton label="העתקת ההודעה למנהלים, עם קישור הקבוצה" text={groupInviteMessage(groupUrl(g.slug))} /></div>}
       <GroupLinkPanel
         slug={g.slug}
         setSlug={async (slug) => { await api("/admin/groups/link", slug ? { group: g.id, slug } : { group: g.id }); await reload(); }}

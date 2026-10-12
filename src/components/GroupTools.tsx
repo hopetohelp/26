@@ -179,3 +179,18 @@ export function GroupClearMembers({ clear, onDone }: { clear: () => Promise<Grou
     </div>
   );
 }
+
+/** כפתור העתקה של טקסט, עם אישור קצר. text = מה להעתיק; label = כיתוב הכפתור */
+export function CopyTextButton({ text, label, kind = "ghost" }: { text: string; label: string; kind?: "primary" | "ghost" }) {
+  const [state, setState] = useState<"idle" | "done" | "failed">("idle");
+  const copy = () => {
+    navigator.clipboard?.writeText(text).then(() => { setState("done"); window.setTimeout(() => setState("idle"), 2000); }, () => setState("failed"));
+    if (!navigator.clipboard) setState("failed");
+  };
+  return (
+    <span className="inline-flex flex-col items-start gap-1">
+      <Btn kind={kind} onClick={copy}>{state === "done" ? "הועתק" : label}</Btn>
+      {state === "failed" && <span role="alert" className="text-xs text-warn">ההעתקה לא הצליחה. סמנו את הטקסט והעתיקו ידנית.</span>}
+    </span>
+  );
+}
