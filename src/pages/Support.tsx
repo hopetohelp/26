@@ -141,7 +141,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       {!closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Chips label="סוג הפנייה" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
-          {topic === "theory" && <p className="text-xs text-ink-soft">כתבו תאוריה או חישוב על הבחירות. נענה בשלוש נקודות: איך אפשר לבדוק את זה באתר, האם התאוריה הגיונית, ואם אין דרך לבדוק — נשאל אם יש לכם רעיון איך להוסיף לאתר יכולת כזו.</p>}
+          {topic === "theory" && <p className="text-xs text-ink-soft">כתבו תאוריה או רעיון לחישוב על הבחירות, ונסביר איך אפשר לבדוק את זה באתר, והאם התאוריה נשמעת הגיונית. אם אין דרך לבדוק, נשמח לשמוע ממכם איך להוסיף יכולת כזו.</p>}
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
             {/* שורה אחת כברירת מחדל, ומתרחב עם הטקסט עד 5 שורות; מעבר לזה — גלילה בתוך השדה */}
