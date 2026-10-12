@@ -213,3 +213,25 @@ describe("automatic link name from the Hebrew name (הכרעת בעלים 12.10.
     expect((await call("/admin/groups", { admin: true })).data.groups[0].slug).toBe("hagzara");
   });
 });
+
+describe("clearing all group members (הכרעת בעלים 12.10.2026)", () => {
+  it("an empty replace clears the list for the admin and the manager, and keeps the group, managers, accounts and guesses", async () => {
+    await call("/admin/groups/import", { admin: true, body: { group: "gizra", name: "הגזרה", emails: ["a@x.co", "b@x.co", "boss@x.co"] } });
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const boss = await managerToken();
+    const a = await call("/auth/register", { body: { email: "a@x.co", password: "a long pass phrase" } });
+    expect((await call("/group/import", { token: boss, body: { group: "gizra", emails: [], mode: "replace" } })).data).toMatchObject({ members: 0 });
+    expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members").first()).n).toBe(0);
+    // הקבוצה, המנהל והחשבונות נשארים
+    const g = (await call("/admin/groups", { admin: true })).data.groups[0];
+    expect(g).toMatchObject({ id: "gizra", members: 0, managers: 1 });
+    expect((await call("/me", { token: a.data.token })).status).toBe(200);
+    expect((await call("/me", { token: boss })).data.managedGroups.map((x) => x.id)).toEqual(["gizra"]);
+    // טעינה מחדש אפשרית, וגם מנהל האתר יכול למחוק
+    expect((await call("/admin/groups/import", { admin: true, body: { group: "gizra", emails: ["a@x.co"] } })).data.members).toBe(1);
+    expect((await call("/admin/groups/import", { admin: true, body: { group: "gizra", emails: [], mode: "replace" } })).data.members).toBe(0);
+    // מי שאינו מנהל הקבוצה לא יכול
+    const outsider = await managerToken("who@x.co");
+    expect((await call("/group/import", { token: outsider, body: { group: "gizra", emails: [], mode: "replace" } })).status).toBe(403);
+  });
+});
