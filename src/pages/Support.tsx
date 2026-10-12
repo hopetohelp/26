@@ -119,7 +119,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       }
       setText("");
       const box = document.getElementById("support-message");
-      if (box) box.style.height = "auto";
+      if (box) box.style.height = "";
     } catch (e) {
       setError(errorText(e));
     } finally {
@@ -139,13 +139,13 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       </ol>
       <p className="text-xs text-ink-soft pb-2">התשובות מתקבלות פעם בכמה שעות.{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
       {!closed ? (
-        <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper py-3 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
+        <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Chips label="סוג הפנייה" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
           {topic === "theory" && <p className="text-xs text-ink-soft">כתבו תאוריה או חישוב על הבחירות. נענה בשלוש נקודות: איך אפשר לבדוק את זה באתר, האם התאוריה הגיונית, ואם אין דרך לבדוק — נשאל אם יש לכם רעיון איך להוסיף לאתר יכולת כזו.</p>}
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
-            {/* שדה מתרחב עם הטקסט, עד שליש מגובה המסך */}
-            <textarea id="support-message" value={text} onChange={(e) => { setText(e.target.value); e.target.style.height = "auto"; e.target.style.height = `${e.target.scrollHeight}px`; }} rows={1} maxLength={maxText} placeholder="כתבו הודעה…" className="flex-1 min-w-0 resize-none max-h-[33dvh] overflow-y-auto border border-ink-faint rounded-theme p-3 bg-paper-card" />
+            {/* שורה אחת כברירת מחדל, ומתרחב עם הטקסט עד 5 שורות; מעבר לזה — גלילה בתוך השדה */}
+            <textarea id="support-message" value={text} onChange={(e) => { setText(e.target.value); grow(e.target); }} rows={1} maxLength={maxText} placeholder="כתבו הודעה…" className="flex-1 min-w-0 resize-none overflow-y-auto border border-ink-faint rounded-theme p-3 bg-paper-card" />
             <Btn type="submit" kind="primary" disabled={!text.trim() || busy || text.trim().length > maxText}>{busy ? "שולחים…" : "שליחה"}</Btn>
           </div>
           <input aria-hidden="true" tabIndex={-1} autoComplete="off" className="hidden" value={trap} onChange={(e) => setTrap(e.target.value)} />
@@ -155,6 +155,15 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
       ) : <p className="border-t border-paper-line py-3 text-sm text-ink-soft">השיחה נסגרה.</p>}
     </section>
   );
+}
+
+/** גובה השדה לפי התוכן, עד 5 שורות */
+function grow(el: HTMLTextAreaElement) {
+  const css = getComputedStyle(el);
+  const line = parseFloat(css.lineHeight) || 24;
+  const extra = parseFloat(css.paddingTop) + parseFloat(css.paddingBottom) + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth);
+  el.style.height = "auto";
+  el.style.height = `${Math.min(el.scrollHeight + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth), line * 5 + extra)}px`;
 }
 
 type DrawerId = "details" | "data" | "groups";
@@ -179,7 +188,7 @@ export default function Support() {
    * ושאר המסך — צ׳אט עם צוות האתר, ושדה כתיבה מתרחב צמוד לתחתית.
    */
   return (
-    <div className="flex flex-col min-h-[calc(100dvh-10rem)] md:min-h-[calc(100dvh-9rem)]">
+    <div className="flex flex-col min-h-[calc(100dvh-10.5rem)] md:min-h-[calc(100dvh-7.5rem)]">
       <PageTitle>אזור אישי</PageTitle>
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>

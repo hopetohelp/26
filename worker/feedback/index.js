@@ -121,12 +121,15 @@ async function supportThread(env, participant) {
 }
 
 /** תשובת צוות בשיחה — משותף לתשובה ידנית ולאישור טיוטה. מחזיר false אם השיחה אינה קיימת. */
-async function teamReply(env, kind, id, text) {
+async function teamReply(env, kind, id, text, approved = false) {
   const at = new Date().toISOString();
+  // אישור טיוטה במסך הניהול: אישור חד-פעמי לעקוף את חסימת ההשהיה במאגר (טריגרים ב-schema.sql)
+  const pass = (target) => approved ? [env.DB.prepare("INSERT OR IGNORE INTO held_pass (kind, target) VALUES (?, ?)").bind(kind, String(target))] : [];
   if (kind === "support") {
     const participant = String(id || "");
     if (!(await supportThread(env, participant))) return false;
     await env.DB.batch([
+      ...pass(participant),
       env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(participant, at, text),
       env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
     ]);
@@ -134,7 +137,9 @@ async function teamReply(env, kind, id, text) {
   }
   const fid = Number(id);
   if (!Number.isInteger(fid) || !(await env.DB.prepare("SELECT 1 AS x FROM feedback WHERE id = ?").bind(fid).first())) return false;
+  const root = (await env.DB.prepare("SELECT root_id FROM feedback_threads WHERE feedback_id = ?").bind(fid).first())?.root_id ?? fid;
   await env.DB.batch([
+    ...pass(root),
     env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(fid, at, text),
     env.DB.prepare("UPDATE feedback SET status = 'answered' WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(fid, fid),
   ]);
@@ -292,7 +297,7 @@ export default {
         if (url.pathname === "/admin/draft/approve") {
           const text = String(b.text ?? draft.text).trim().slice(0, 4000);
           if (!text) return reply({ ok: false, error: "empty" }, 400);
-          if (!(await teamReply(env, draft.kind, draft.target, text))) return reply({ ok: false, error: "not found" }, 404);
+          if (!(await teamReply(env, draft.kind, draft.target, text, true))) return reply({ ok: false, error: "not found" }, 404);
         }
         await env.DB.prepare("DELETE FROM drafts WHERE id = ?").bind(draft.id).run();
         return reply({ ok: true });

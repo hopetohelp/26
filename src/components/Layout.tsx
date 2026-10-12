@@ -255,7 +255,7 @@ export default function Layout() {
         <DesktopNav unread={unread} />
       </header>
       <AccessCard />
-      <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
+      <main id="main" tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <MobileTabs unread={unread} />
