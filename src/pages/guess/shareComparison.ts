@@ -1,6 +1,7 @@
 import forecastFile from "../../data/forecast.json";
 import { POLLS, POLLS_AS_OF } from "./model";
 import { blocValues } from "../../lib/personalBlocs";
+import { sumPresent } from "../../lib/data";
 import type { BlocTotal } from "./blocSummary";
 
 const forecast = forecastFile as { asof: string; enough: boolean; lists: Record<string, { seats: number }> ; gate: { passedAtHorizon: boolean | null } };
@@ -10,10 +11,10 @@ export const SHARE_FORECAST = forecast.enough ? Object.fromEntries(Object.entrie
 export const SHARE_FORECAST_AS_OF = forecast.asof;
 export const SHARE_FORECAST_CAUTION = !forecast.gate.passedAtHorizon;
 
-/** חסר נתון אפילו למפלגה אחת ⇐ אין סכום מלא; גושים חופפים נשארים שורות עצמאיות. */
+/** סכום גוש לפי הכלל האחד (`sumPresent`): מפלגה בלי נתון נספרת 0; בלי נתון לאף מפלגה — null. גושים חופפים נשארים שורות עצמאיות. */
 export function sumShareBloc(lists: string[], values: Record<string, number> | null): number | null {
-  if (!values || !lists.length || lists.some(id => !Number.isFinite(values[id]))) return null;
-  return [...new Set(lists)].reduce((n, id) => n + values[id], 0);
+  if (!values) return null;
+  return sumPresent([...new Set(lists)].map(id => Number.isFinite(values[id]) ? values[id] : undefined));
 }
 export function shareBlocRows(blocs: BlocTotal[], values: Record<string, number>, polls = SHARE_POLLS, forecast: Record<string, number> | null = SHARE_FORECAST) {
   return blocs.filter(b => b.lists.length).map(b => {
@@ -23,5 +24,5 @@ export function shareBlocRows(blocs: BlocTotal[], values: Record<string, number>
     const pollsInfo=blocValues(members,polls,mapping)[0];
     const forecastInfo=blocValues(members,forecast??{},mapping)[0];
     return {...b,mine:mineInfo.total,polls:pollsInfo.total,forecast:forecastInfo.total,mineInfo,pollsInfo,forecastInfo};
-  }).sort((a,b)=>(b.mine??b.mineInfo.knownTotal??-1)-(a.mine??a.mineInfo.knownTotal??-1));
+  }).sort((a,b)=>(b.mine??-1)-(a.mine??-1));
 }

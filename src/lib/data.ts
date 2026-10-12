@@ -147,6 +147,20 @@ export function seatsIn(p: Poll, id: string): number | undefined {
 }
 
 /**
+ * 🔴 הכלל האחד לכל נתון על קבוצת מפלגות (הכרעת בעלים 12.10.2026): סכום הערכים הקיימים; מפלגה שאין לה ערך נספרת 0, בלי שום סימון.
+ * אם אין ערך לאף מפלגה בקבוצה — אין נתון (null). כל חישוב של גוש, סכום, ממוצע וטווח עובר כאן.
+ */
+export function sumPresent(values: (number | undefined)[]): number | null {
+  const present = values.filter((x): x is number => typeof x === "number");
+  return present.length ? present.reduce((a, b) => a + b, 0) : null;
+}
+
+/** מנדטי קבוצת מפלגות בסקר: מפלגה שלא נסקרה = 0; סקר שלא סקר אף מפלגה מהקבוצה = null (לא נכנס לחישוב) */
+export function groupSeatsIn(p: Poll, ids: string[]): number | null {
+  return sumPresent([...new Set(ids)].map((id) => seatsIn(p, id)));
+}
+
+/**
  * האם כל הסקרים (שנשאלו על הרשימה) נותנים לה מנדטים, כולל הפסימי ביותר עבורה — אז היא אינה בסיכון לאחוז החסימה
  * (הכרעת בעלים 12.10.2026, הכרעה 4: הקביעה לפי הסקרים בלבד, לא לפי הממוצע ולא לפי התרחישים)
  */

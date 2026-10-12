@@ -20,7 +20,6 @@ import { useCrowd, useLineage } from "./useLineage";
 import { pollSeatRange } from "../../lib/pollRange";
 import { pctForListSeats } from "./pctSync";
 import { LATEST_POLLS } from "../../lib/homeData";
-import { POLL_AVERAGE } from "../../lib/sources";
 import { seatsFmt } from "../../lib/format";
 import { blocSummary } from "./blocSummary";
 import { canSetSeats } from "./seatEditing";
@@ -151,7 +150,7 @@ export default function Seats({
   };
   const rows = IDS;
   const pollPctRange = (id: string): [number, number] | null => {
-    const r = pollSeatRange(LATEST_POLLS, [id], POLL_AVERAGE.seats);
+    const r = pollSeatRange(LATEST_POLLS, [id]);
     if (!r || r[0] === r[1]) return null;
     const lo = pctForListSeats(id, r[0]), hi = pctForListSeats(id, r[1]), mean = POLL_SHARES[id] ?? 0;
     return lo === null || hi === null ? null : [Math.min(lo, mean), Math.max(hi, mean)];
@@ -211,7 +210,7 @@ export default function Seats({
                       </div>
                       <div className="seat-cells"><CompareCells cells={view === "seats" ? {
                           k22: { mean: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0) },
-                          polls: { mean: seatsFmt(POLLS[id] ?? 0), range: rangeText(pollSeatRange(LATEST_POLLS, [id], POLL_AVERAGE.seats), seatsFmt) },
+                          polls: { mean: seatsFmt(POLLS[id] ?? 0), range: rangeText(pollSeatRange(LATEST_POLLS, [id]), seatsFmt) },
                           crowd: { mean: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—", range: rangeText(crowdSeatsRange?.[id], seatsFmt) },
                         } : {
                           k22: { mean: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}` },

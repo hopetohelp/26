@@ -80,11 +80,9 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     };
     ctx.font = `400 30px ${body}`;
     const rows = shareBlocRows(blocs, values).map(b => {
-      const incomplete = [["ההשערה שלי",b.mineInfo],["ממוצע סקרים",b.pollsInfo],["מודל המגמות",b.forecastInfo]] as const;
-      const notes = incomplete.filter(([,info])=>info.missing.length).flatMap(([label,info])=>wrap(`${label}: ${info.knownCount}/${info.lists.length}; חסר: ${info.missing.map(nameOf).join(" · ")}`,R-L));
-      return {...b,names:wrap(b.lists.map(nameOf).join(" · "),R-L),notes};
+      return {...b,names:wrap(b.lists.map(nameOf).join(" · "),R-L)};
     });
-    const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + (row.names.length + row.notes.length) * 38, 0) + 290);
+    const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + row.names.length * 38, 0) + 290);
     cv.height = imageHeight;
     ctx.direction = "rtl";
     ctx.textAlign = "right";
@@ -115,28 +113,19 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
       [row.mineInfo, row.pollsInfo, row.forecastInfo].forEach((info, i) => {
         ctx.fillStyle = c.ink;
         ctx.fillText(formatBlocValue(info), columns[i], y + 72, 285);
-        if (info.missing.length) {
-          const f = ctx.font, fill = ctx.fillStyle;
-          ctx.font = `400 24px ${body}`;
-          ctx.fillStyle = c.soft;
-          ctx.fillText(`${info.knownCount}/${info.lists.length}`, columns[i], y + 100);
-          ctx.font = f;
-          ctx.fillStyle = fill;
-        }
       });
       ctx.textAlign = "right";
       ctx.fillStyle = c.soft;
       ctx.font = `400 30px ${body}`;
       row.names.forEach((line, i) => ctx.fillText(line, R, y + 126 + i * 38));
-      row.notes.forEach((line,i)=>ctx.fillText(line,R,y+126+(row.names.length+i)*38));
-      y += 172 + (row.names.length + row.notes.length) * 38;
+      y += 172 + row.names.length * 38;
       ctx.strokeStyle = c.line; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(L, y - 48); ctx.lineTo(R, y - 48); ctx.stroke();
     });
     ctx.textAlign = "right";
     ctx.fillStyle = c.soft;
     ctx.font = `400 26px ${body}`;
-    ctx.fillText("גושים חופפים; אין לחברם. מפלגה חסרה = סכום הידועות · כ- = אומדן · — = אין נתון.", R, imageHeight - 245, R - L);
+    ctx.fillText("גושים חופפים; אין לחברם. מפלגה בלי נתון נספרת 0 · — = אין נתון.", R, imageHeight - 245, R - L);
     if (SHARE_FORECAST_CAUTION) ctx.fillText("מודל המגמות לא עבר את רף הדיוק שנקבע בבדיקת העבר.", R, imageHeight - 208, R - L);
     ctx.fillStyle = c.line;
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);

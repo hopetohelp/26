@@ -13,8 +13,7 @@ it("חמישה תרחישים חופפים מתקבלים; השישי וכפיל
 });
 it("סכום כל גוש נגזר מהמקור; יעד אינו מחליף אותו וחוסר נתון אינו אפס", () => {
   const rows = blocValues([b("a", ["x", "y"], 61), b("b", ["x", "z"]), b("empty", [])], { x: 30, y: 20 }, { x: "x", y: "y", z: "z" });
-  expect(rows.map(r => r.total)).toEqual([50, null, null]);
-  expect(rows[1].missing).toEqual(["z"]);
+  expect(rows.map(r => r.total)).toEqual([50, 30, null]);
   expect(blocValues([b("a", ["x"])], { old: 0 }, { x: "old" })[0].total).toBe(0);
 });
 it("יעדים חופפים מעל 120 במצטבר נפתרים בלי לספור מפלגה פעמיים בכנסת", () => {
@@ -43,7 +42,6 @@ it("השוואת גוש לעבר מחייבת משפחה מלאה, בלי לחל
   const families = [{ k26: ["a", "b"], k25: ["shared"] }, { k26: ["c"], k25: ["other"] }];
   const rows = historicalBlocValues([b("whole", ["a", "b", "c"]), b("partial", ["a"]), b("unknown", ["new"])], families, { shared: 14, other: 11 });
   expect(rows.map(r => r.total)).toEqual([25, null, null]);
-  expect(rows[1].missing).toEqual(["a"]);
 });
 it("רשימת עבר משותפת נספרת פעם אחת, וחוסר נתון אינו אפס", () => {
   const families = [{ k26: ["a"], k25: ["shared"] }, { k26: ["b"], k25: ["shared"] }];
@@ -56,12 +54,11 @@ it("מחיקת כל הגושים ושם ריק מתקבלים", () => {
   expect(validateBlocs({mode:"custom",blocs:[{...b("one",["x"]),name:""}]},["x"])).toBeNull();
 });
 
-it("סכום חלקי נכתב 'לפחות X' (נתון שחסר לא מסתיר את הכולל), והחסר מסומן בשדה נפרד", () => {
+it("מפלגה בלי נתון נספרת 0 בלי שום סימון; '—' רק כשאין נתון לאף מפלגה בגוש", () => {
   const [row] = blocValues([b("a", ["x", "y"])], { x: 30 }, { x: "x", y: "y" });
-  expect(row.total).toBeNull();
-  expect(row.missing).toEqual(["y"]);
-  expect(formatBlocValue(row)).toBe("לפחות 30");
-  expect(formatBlocValue(row, (n) => `${n}%`)).toBe("לפחות 30%");
+  expect(row.total).toBe(30);
+  expect(formatBlocValue(row)).toBe("30");
+  expect(formatBlocValue(row, (n) => `${n}%`)).toBe("30%");
   expect(formatBlocValue(blocValues([b("a", ["y"])], {}, { y: "y" })[0])).toBe("—");
 });
 it("הפער בין שני מקורות נכתב גם כשאחד מהנתונים חסר (הסכום הידוע), ו-null רק כשאין שום נתון", () => {

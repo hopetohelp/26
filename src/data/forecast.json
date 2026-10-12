@@ -364,8 +364,8 @@
   "candidate": "baseline",
   "summary": {
    "adaptive": {
-    "seatAccuracy": 0.91667,
-    "voteAccuracy": 0.92338
+    "seatAccuracy": 0.92167,
+    "voteAccuracy": 0.92231
    },
    "baseline": {
     "seatAccuracy": 0.92167,
