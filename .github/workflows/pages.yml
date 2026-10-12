@@ -3,9 +3,10 @@ on:
   push:
     branches: [main]
   schedule:
-    # כל 4 שעות, מיד אחרי סקירת הערות הגולשים (שרצה ב-:01 בשעות 0,4,8…): סקרים חדשים מוויקיפדיה נכנסים אוטומטית לכל החישובים,
-    # וגם עותק עדכני של הסטטיסטיקות (dashboard.json). הכרעת בעלים 9.10.2026.
-    - cron: "20 */4 * * *"
+    # באותה שעה כמו הסשן המרוכז (הכרעת בעלים 12.10.2026): 02, 06, 10, 14, 18 ו-22 שעון ישראל, בדקה 3 — לוח אחד ב-`src/lib/runSchedule.ts`.
+    # GitHub מתזמן ב-UTC בלבד, ולכן רשומות שתי עונות השעון (קיץ UTC+3, חורף UTC+2); ה-gate מדלג על כל מה שאינו שעת ריצה בישראל.
+    - cron: "3 23,3,7,11,15,19 * * *"
+    - cron: "3 0,4,8,12,16,20 * * *"
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,21 +16,23 @@ concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
-  # שבת מושבתת (הכרעת בעלים 12.10.2026): ריצות מתוזמנות לא רצות מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל. דחיפה והפעלה ידנית אינן נחסמות.
+  # שבת מושבתת (הכרעת בעלים 12.10.2026): ריצות מתוזמנות לא רצות מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל, ורק בשעות הריצה (02, 06, 10, 14, 18, 22).
+  # דחיפה והפעלה ידנית אינן נחסמות. הלוח חייב להתאים ל-`src/lib/runSchedule.ts`.
   gate:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     outputs:
-      shabbat: ${{ steps.t.outputs.shabbat }}
+      shabbat: ${{ steps.t.outputs.skip }}
     steps:
       - id: t
         run: |
-          dow=$(TZ=Asia/Jerusalem date +%u); hhmm=$(TZ=Asia/Jerusalem date +%H%M)
-          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$dow" = 5 ] && [ "$((10#$hhmm))" -ge 1600 ] || [ "$dow" = 6 ] && [ "$((10#$hhmm))" -lt 2000 ]; }; then
-            echo "שבת — מדלגים"; echo "shabbat=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "shabbat=false" >> "$GITHUB_OUTPUT"
+          dow=$(TZ=Asia/Jerusalem date +%u); hour=$((10#$(TZ=Asia/Jerusalem date +%H))); hhmm=$(TZ=Asia/Jerusalem date +%H%M)
+          skip=false
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            if [ $((hour % 4)) -ne 2 ]; then skip=true; echo "לא שעת ריצה — מדלגים"; fi
+            if { [ "$dow" = 5 ] && [ "$((10#$hhmm))" -ge 1600 ]; } || { [ "$dow" = 6 ] && [ "$((10#$hhmm))" -lt 2000 ]; }; then skip=true; echo "שבת — מדלגים"; fi
           fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
   build:
     needs: gate
     if: needs.gate.outputs.shabbat != 'true'

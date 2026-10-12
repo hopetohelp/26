@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
 import { dateTime } from "../lib/format";
+import { nextRun } from "../lib/runSchedule";
 import { getToken } from "../lib/crowdSession";
 import { setOwnerBrowser } from "../lib/visits";
 import { Chips, Segmented } from "../components/Choice";
@@ -26,7 +27,7 @@ type SupportThread = { participant: string; status: string; updated_at: string; 
 type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
 type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
-type Data = { held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type Data = { agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 
@@ -86,13 +87,13 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
 }
 
 /** תיבה קטנה עם שני מספרים (למשל ס״ה והיום); alert = צבע אזהרה כשיש מה לטפל בו */
-function Pair({ label, a, b, alert = false }: { label: string; a: [string, string | number]; b: [string, string | number]; alert?: boolean }) {
+function Pair({ label, a, b, alert = false, small = false }: { label: string; a: [string, string | number]; b: [string, string | number]; alert?: boolean; small?: boolean }) {
   return (
     <div className={`bg-paper-card border rounded-theme p-3 ${alert ? "border-warn" : "border-paper-line"}`}>
       <p className="text-xs text-ink-soft">{label}</p>
       <div className="flex gap-4 mt-1">
         {[a, b].map(([name, n]) => (
-          <p key={name} className="min-w-0"><span className="block text-[11px] text-ink-soft">{name}</span><span className="font-num tabular text-2xl leading-none">{n}</span></p>
+          <p key={name} className="min-w-0"><span className="block text-[11px] text-ink-soft">{name}</span><span className={`font-num tabular leading-none ${small ? "text-base" : "text-2xl"}`}>{n}</span></p>
         ))}
       </div>
     </div>
@@ -137,6 +138,11 @@ export default function Admin() {
   type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai";
   const [guessCounts, setGuessCounts] = useState({ pending: 0, rejected: 0 });
   const pendingGuesses = guessCounts.pending;
+  // פרסום אחרון של האתר ב-GitHub (ממשק ציבורי); בלי תשובה — "—"
+  const [lastPublish, setLastPublish] = useState<string | null>(null);
+  useEffect(() => {
+    fetch("https://api.github.com/repos/hopetohelp/26/deployments?environment=github-pages&per_page=1").then((r) => r.json()).then((d) => setLastPublish(Array.isArray(d) && d[0]?.created_at ? d[0].created_at : null)).catch(() => setLastPublish(null));
+  }, []);
   const [open, setOpen] = useState<Set<DrawerId>>(new Set());
   const toggle = (id: DrawerId) => setOpen((o) => { const n = new Set(o); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
@@ -182,6 +188,7 @@ export default function Admin() {
   // "היום" לפי יום UTC, כמו בשרת: אם עוד לא נספרה כניסה היום — אפסים, ולא נתוני אתמול
   const todayKey = new Date().toISOString().slice(0, 10);
   const today = data?.days.find((d) => d.day === todayKey);
+  const next = nextRun(Date.now());
   const waiting = (data?.feedback.filter((t) => t.waiting).length ?? 0) + (data?.support?.threads.filter((t) => t.status === "new").length ?? 0);
   return (
     <div className="space-y-6">
@@ -202,6 +209,11 @@ export default function Admin() {
             <Pair label="ממתינים לתשובה וטיוטות" a={["ממתינים", waiting]} b={["טיוטות", data.drafts?.length ?? 0]} alert={waiting + (data.drafts?.length ?? 0) > 0} />
             <Pair label="השערות" a={["ממתינות", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />
             <Pair label="נפילות" a={["מאז האיפוס", data.failures?.total ?? "—"]} b={["היום", today?.autoFailures ?? 0]} alert={(data.failures?.total ?? 0) > 0} />
+          </div>
+          {/* הרענון של GitHub והסשן המרוכז רצים באותה שעה (src/lib/runSchedule.ts); בשבת — מושבתים */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="group" aria-label="ריצות">
+            <Pair label="פרסום האתר (GitHub)" a={["אחרון", lastPublish ? when(lastPublish) : "—"]} b={["הבא", next ? when(new Date(next).toISOString()) : "—"]} small />
+            <Pair label="סוכן" a={["אחרון", data.agentLastRun ? when(data.agentLastRun) : "—"]} b={["הבא", next ? when(new Date(next).toISOString()) : "—"]} small />
           </div>
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
