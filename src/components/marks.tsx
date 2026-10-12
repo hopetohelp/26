@@ -61,10 +61,10 @@ export const SmallDot = ({ at }: { at: number }) => <span aria-hidden="true" cla
 
 export type MarkKind = "candle" | "mean" | "result" | "dot";
 
-/** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן באותו יחס כמו בגרף: זנב דק קצר בכל קצה, קטע בינוני ארוך, וליבה עבה באמצע (כמו `percentileOne`: 9% מהסקרים בכל זנב) */
+/** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן באותו יחס כמו בגרף: זנב דק קצר בכל קצה, קטע בינוני קצר, וליבה עבה ארוכה באמצע (כמו `percentileOne`: 10 · 10 · 60 · 10 · 10) */
 export function Swatch({ kind }: { kind: MarkKind }) {
   if (kind === "candle") {
-    const segs: LSeg[] = ([1, 3, 3, 3, 5, 5, 3, 3, 3, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
+    const segs: LSeg[] = ([1, 3, 5, 5, 5, 5, 5, 5, 3, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
     const runs = squareRuns(segs, (v) => (v / 10) * LOCAL);
     return (
       <svg aria-hidden="true" focusable="false" className="mk-sw mk-prof-sw" viewBox={`0 0 ${LOCAL} ${THICK}`} preserveAspectRatio="none">
