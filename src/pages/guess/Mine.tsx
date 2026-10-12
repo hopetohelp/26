@@ -6,13 +6,13 @@ import History from "./History";
 import Seats from "./Seats";
 import Vote from "./Vote";
 import { Notice } from "./ui";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import CardDrawer from "../../components/CardDrawer";
 import { flushPending, useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
   { id: "seats", label: "המפלגות" },
   { id: "blocs", label: "הגושים" },
-  { id: "vote", label: "ההצבעה שלי" },
   { id: "history", label: "ההשערות שלי" },
 ] as const;
 type Sec = (typeof SECTIONS)[number]["id"];
@@ -20,6 +20,8 @@ type Sec = (typeof SECTIONS)[number]["id"];
 export default function Mine({ session, onStatistics }: { session: ReturnType<typeof useSession>; onStatistics: () => void }) {
   const [params, setParams] = useSearchParams();
   const requested = params.get("section");
+  // ההצבעה אינה לשונית: כרטיס נפתח בראש המסך. קישור ישן (section=vote) פותח אותו
+  const [voteOpen, setVoteOpen] = useState(requested === "vote");
   const sec: Sec = SECTIONS.some(s => s.id === requested) ? requested as Sec : "seats";
   // הלשונית "האחוזים" אוחדה עם "המפלגות" (מתג מנדטים | אחוזים, הכרעת בעלים 10.10.2026): קישור ישן נפתח במצב אחוזים
   useEffect(() => {
@@ -38,9 +40,12 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
 
 
 
-  const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "blocs" ? blocs : s === "vote" ? vote : null;
+  const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "blocs" ? blocs : null;
   return (
-    <div>
+    <div data-vote-open={voteOpen ? "" : undefined}>
+      <CardDrawer title="ההצבעות שלכם בבחירות עוזרות להבין את התמונה" open={voteOpen} onOpenChange={setVoteOpen} dot={vote.status !== "saved"} className="mb-5">
+        <Vote unit={vote} session={session} />
+      </CardDrawer>
       {session.me?.seatsPending && sec === "seats" && (
         <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר המשתתפים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
       )}
@@ -64,7 +69,6 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
       </nav>
       {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} onStatistics={onStatistics} />}
       {sec === "blocs" && <><Blocs unit={blocs} session={session} mySeats={seats.draft ? Object.fromEntries(Object.entries(seats.draft.seats).map(([id, c]) => [id, c.v])) : null} />{back && /^\/(?!\/)/.test(back) && <Link className="block min-h-[44px] mt-4" to={back}>חזרה למסך הקודם</Link>}</>}
-      {sec === "vote" && <Vote unit={vote} session={session} />}
       {sec === "history" && <History session={session} />}
     </div>
   );
