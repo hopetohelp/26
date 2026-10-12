@@ -38,6 +38,19 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 CREATE INDEX IF NOT EXISTS sessions_participant ON sessions(participant);
 
+-- כניסת עוזר AI (שרת ה-MCP; הכרעת בעלים 12.10.2026): נפרדת מסשן הדפדפן, נוצרת רק ממנו (POST /auth/delegate),
+-- ומותרת רק בנתיבים שב-lib/agent.js. client = שם העוזר לרשימה "החיבורים שלי". רק הגיבוב של האסימון נשמר.
+CREATE TABLE IF NOT EXISTS agent_sessions (
+  token_hash TEXT PRIMARY KEY,
+  participant TEXT NOT NULL REFERENCES participants(id),
+  client TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  last_used_at TEXT,
+  revoked INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS agent_sessions_participant ON agent_sessions(participant);
+
 -- כל שמירה = גרסה. op_id ייחודי למשתתף וליחידה ⇐ ניסיון חוזר אינו יוצר כפילות. registry = meta.dataAsOf שעליו נבנתה התשובה.
 CREATE TABLE IF NOT EXISTS versions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
