@@ -43,7 +43,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
   const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "blocs" ? blocs : null;
   return (
     <div data-vote-open={voteOpen ? "" : undefined}>
-      <CardDrawer title="ההצבעות שלכם בבחירות עוזרות להבין את התמונה" open={voteOpen} onOpenChange={setVoteOpen} dot={!!vote.draft && vote.status !== "saved"} className="mb-5">
+      <CardDrawer title="ההצבעות שלכם בבחירות עוזרות להבין את התמונה" open={voteOpen} onOpenChange={setVoteOpen} dot={vote.status !== "saved"} className="mb-5">
         <Vote unit={vote} session={session} />
       </CardDrawer>
       {session.me?.seatsPending && sec === "seats" && (
