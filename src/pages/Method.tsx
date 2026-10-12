@@ -425,7 +425,7 @@ export function MethodNumbers() {
   useAnchor();
   return (
     <>
-      <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיעים סוג המספר והתאריך המעודכן.">מילון המספרים</PageTitle>
+      <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיע התאריך המעודכן.">מילון המספרים</PageTitle>
       {DICTIONARY.map((e) => (
         <Entry key={e.id} e={e} />
       ))}
