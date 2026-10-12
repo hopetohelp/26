@@ -131,6 +131,7 @@ export const errorText = (e: unknown): string => {
   if (e.code === "verify_failed") return "שליחת מייל האימות נכשלה. נסו שוב בעוד כמה דקות.";
   if (e.code === "nothing_to_verify") return "אין מייל שממתין לאימות.";
   if (e.code === "bad_name") return "השם ארוך מדי (עד 40 תווים).";
+  if (e.code === "too_many_connections") return "כבר מחוברים 10 עוזרים לחשבון. נתקו אחד באזור האישי ⇐ עוזרי AI, ונסו שוב.";
   if (e.code === "account_required") return "כדי לשמור בשרת צריך חשבון: Google או מייל.";
   if (e.code === "bad_username") return "שם משתתף: 3–24 אותיות (עבריות או לטיניות, לא שתיהן), ספרות או קו תחתון, או כתובת מייל תקינה.";
   if (e.code === "weak_password") return "הסיסמה קצרה או נפוצה מדי. לפחות 6 תווים.";

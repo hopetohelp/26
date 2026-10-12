@@ -66,6 +66,9 @@ jobs:
           # כפתור "הערה?" — השרת הקטן ב-worker/feedback (Cloudflare). בלי המשתנה הכפתור אינו מוצג.
           VITE_FEEDBACK_URL: https://elections26-feedback.hopetohelp-il.workers.dev
           VITE_CROWD_URL: https://elections26-crowd.hopetohelp-il.workers.dev
+          # שרת ה-MCP (worker/mcp): מסך "חיבור עוזר AI", מגירת "עוזרי AI", ושתי הכתובות ב-llms.txt וב-data/index.json
+          VITE_MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
+          MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
       - name: עותק הסטטיסטיקות בתוך האתר — מוצג לכולם גם בלי חיבור לשרת ההשתתפות
         run: |
           set -uo pipefail

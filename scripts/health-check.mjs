@@ -62,6 +62,17 @@ try {
   failed++;
   console.log(`❌ אינדקס הנתונים: ${e instanceof Error ? e.message : e}`);
 }
+// שרת ה-MCP (worker/mcp): מסך הגילוי של ההתחברות, והכתובת הציבורית עונה עם רשימת הכלים
+const MCP = process.env.MCP_URL ?? "https://elections26-mcp.hopetohelp-il.workers.dev";
+try {
+  const meta = await fetch(MCP + "/.well-known/oauth-authorization-server", { signal: AbortSignal.timeout(15000) });
+  const list = await fetch(MCP + "/public", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }), signal: AbortSignal.timeout(15000) });
+  const tools = list.ok ? (await list.json()).result?.tools?.map((t) => t.name) ?? [] : [];
+  if (!meta.ok || !tools.includes("calculate_seats")) { failed++; console.log(`❌ שרת ה-MCP: גילוי ${meta.status}, כלים ${list.status}`); } else console.log(`✅ שרת ה-MCP (${tools.length} כלים ציבוריים)`);
+} catch (e) {
+  failed++;
+  console.log(`❌ שרת ה-MCP: ${e instanceof Error ? e.message : e}`);
+}
 // הרשמה אמיתית נבדקת בבדיקות האוטומטיות של השרת (worker/crowd/test), לא כאן — כדי לא ליצור משתתפים בייצור.
 if (failed) {
   console.log(`\n${failed} בדיקות נכשלו`);
