@@ -38,16 +38,21 @@ export function DrawerMenu({ title, items, selected, onSelect, after, label, cla
 }) {
   const current = items.find((i) => i.id === selected) ?? items[0];
   const root = useRef<HTMLDivElement>(null);
-  const [top, setTop] = useState(0);
+  const [height, setHeight] = useState<number | null>(null);
   useLayoutEffect(() => {
-    const measure = () => { if (root.current) setTop(root.current.getBoundingClientRect().top + window.scrollY); };
+    // הדף עצמו אינו נגלל כל עוד הרכיב מוצג — רק הטורים (בטאבלט 100dvh ומיקום הגלילה הפילו את המדידה)
+    const html = document.documentElement;
+    const prev = html.style.overflow;
+    html.style.overflow = "hidden";
+    window.scrollTo(0, 0);
+    const measure = () => { if (root.current) setHeight(window.innerHeight - (root.current.getBoundingClientRect().top + window.scrollY)); };
     measure();
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => { window.removeEventListener("resize", measure); html.style.overflow = prev; };
   }, []);
   return (
     // ‎-mt-6: מבטלים את הריווח העליון של <main>, כדי שהקו בין הטורים יתחיל מתחת לסרגל (בתחתית אין ריווח במסך הזה)
-    <div ref={root} style={{ height: `calc(100dvh - ${top}px)` }} className={`-mt-6 grid grid-cols-[max(24rem,calc(100%/3))_minmax(0,1fr)] ${className}`}>
+    <div ref={root} style={height === null ? undefined : { height }} className={`-mt-6 grid grid-cols-[max(24rem,calc(100%/3))_minmax(0,1fr)] ${className}`}>
       <nav aria-label="תפריט" className="min-w-0 min-h-0 overflow-y-auto pt-6 pe-6 border-e border-paper-line">
         {title}
         <ul className="border-t border-paper-line">
