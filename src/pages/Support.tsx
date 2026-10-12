@@ -1,6 +1,7 @@
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+
 import MyData from "./guess/MyData";
 import Account from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
@@ -11,6 +12,9 @@ import { errorText, useSession } from "./guess/useCrowd";
 import { getPicture } from "../lib/crowdSession";
 import { FEEDBACK_URL, accountSupport, getThread, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread";
+
+/** מפתח ניהול שנשמר בדפדפן הזה (כניסה דרך קישור הניהול) — גם הוא מציג את הכפתור לממשק הניהול */
+const hasAdminKey = () => { try { return !!localStorage.getItem("elections26.admin"); } catch { return false; } };
 
 /**
  * האזור האישי (הכרעת בעלים 9.10.2026, במקום "תמיכה"): תמונה ושם, ומגירות — הפרטים שלי · תמיכה · הנתונים שלי (מגירת הקישור הוסרה 10.10.2026).
@@ -182,7 +186,7 @@ export default function Support() {
         <Drawer title="תמיכה" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
           <Conversation session={session} />
         </Drawer>
-        {me?.isAdmin && (
+        {(me?.isAdmin || hasAdminKey()) && (
           <div className="border-b border-paper-line">
             <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
           </div>
