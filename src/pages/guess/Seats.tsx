@@ -5,7 +5,7 @@ import type { BlocsPayload, SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
-import { date } from "../../lib/format";
+import { date, rng } from "../../lib/format";
 import { splitCls } from "../../lib/splitScreens";
 import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
@@ -17,6 +17,9 @@ import { num } from "../../lib/format";
 const pctFmt = (x: number) => `${(Math.round(x * 10) / 10).toFixed(1)}%`;
 import { lineageRows, start2022 } from "../../lib/lineage";
 import { useCrowd, useLineage } from "./useLineage";
+import { pollSeatRange } from "../../lib/pollRange";
+import { LATEST_POLLS } from "../../lib/homeData";
+import { POLL_AVERAGE } from "../../lib/sources";
 import { seatsFmt } from "../../lib/format";
 import { blocSummary } from "./blocSummary";
 import { canSetSeats } from "./seatEditing";
@@ -54,10 +57,9 @@ export default function Seats({
   const [editError, setEditError] = useState<string | null>(null);
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
   const lineage = useLineage(session);
-  const { seats: crowd, pct: crowdPct } = useCrowd();
+  const { seats: crowd, pct: crowdPct, seatsRange: crowdSeatsRange, pctRange: crowdPctRange } = useCrowd();
   const lin = lineage.draft.split === "crowd" && !crowd ? { ...lineage.draft, split: "polls" as const } : lineage.draft;
   const rows22 = Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r]));
-  const [cmp, setCmp] = useCompare();
   // מתג מנדטים | אחוזים (הכרעת בעלים 10.10.2026): קובע מה מקלידים; הערך השני מוצג קטן לידו
   const [params] = useSearchParams();
   const [view, setView] = useState<"seats" | "pct">(() => (params.get("unit") === "pct" || p?.mode === "pct" ? "pct" : "seats"));
@@ -187,7 +189,7 @@ export default function Seats({
         <div>
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <div className="seat-box">
-            <CompareHeader value={cmp} onChange={setCmp} view={view} onView={setView} />
+            <CompareHeader view={view} onView={setView} />
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
@@ -200,16 +202,17 @@ export default function Seats({
                         <span className="font-bold block min-w-0 leading-tight [overflow-wrap:anywhere]">{name}</span>
                         <span className="sr-only">{rowState(c)}</span>
                       </div>
-                      {cmp.length > 0 && <div className="seat-cells"><CompareCells on={cmp} cells={view === "seats" ? {
-                          k22: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0),
-                          polls: seatsFmt(POLLS[id] ?? 0),
-                          crowd: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—",
+                      <div className="seat-cells"><CompareCells cells={view === "seats" ? {
+                          k22: { mean: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0) },
+                          polls: { mean: seatsFmt(POLLS[id] ?? 0), range: rangeText(pollSeatRange(LATEST_POLLS, [id], POLL_AVERAGE.seats), seatsFmt) },
+                          crowd: { mean: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—", range: rangeText(crowdSeatsRange?.[id], seatsFmt) },
                         } : {
-                          k22: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}`,
-                          polls: pctFmt(POLL_SHARES[id] ?? 0),
+                          k22: { mean: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}` },
+                          // בסקרים האחוז מפורסם רק לרשימות מתחת לסף, ולכן באחוזים אין טווח סקרים
+                          polls: { mean: pctFmt(POLL_SHARES[id] ?? 0) },
                           // ממוצע האחוזים של המשתתפים, כמו בסקר האתר
-                          crowd: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—",
-                        }} labels /></div>}
+                          crowd: { mean: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—", range: rangeText(crowdPctRange?.[id], pctFmt) },
+                        }} /></div>
                       {view === "pct" ? (
                         <div className="seat-ctl flex items-start gap-2" dir="ltr">
                           {lock(id, c, name)}
@@ -356,7 +359,7 @@ function HowTo() {
           <div className="flex items-center gap-3"><span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span><p><b>פתוח:</b> "השלם הכול" רשאי לשנות אותו. לחיצה על המנעול נועלת או פותחת.</p></div>
           <p><b>מנדטים או אחוזים:</b> המתג קובע מה מקלידים, והשני מתעדכן לבד. מאחוזים למנדטים — לפי חלוקת המנדטים, כמו בספירה האמיתית. ממנדטים לאחוזים — האחוז שנותן בדיוק את אותם מנדטים; מפלגה עם 0 שומרת על האחוז שלה, מתחת לסף.</p>
           <p><b>אחוז החסימה:</b> מפלגה צריכה לפחות 4 מנדטים כדי להיכנס לכנסת. לכן אין 1, 2 או 3 מנדטים — מעלים ל-4 או מורידים ל-0.</p>
-          <p><b>בחירות 22 · סקרים · משתתפים:</b> שלושה מספרים להשוואה ליד כל מפלגה. אפשר להסתיר כל אחד מהם. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. "משתתפים" — ממוצע ההשערות באתר, אינו סקר.</p>
+          <p><b>בחירות 22 · סקרים · משתתפים:</b> שלושה מספרים להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. "משתתפים" — ממוצע ההשערות באתר, אינו סקר. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין ההשערות), כמו בסקר האתר.</p>
           <p><b>שמירה:</b> נשמרת בחשבון שלכם, ורק ההשערה האחרונה נספרת בסטטיסטיקות.</p>
         </div>
       </details>
@@ -402,38 +405,24 @@ function CalcAssumptions({ calc, onChange }: { calc: Calc; onChange: (c: Calc) =
 
 type CompareKey = "k22" | "polls" | "crowd";
 const COMPARE: { id: CompareKey; label: string; long?: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים", long: "ממוצע " }, { id: "crowd", label: "משתתפים", long: "ממוצע " }];
-const CMP_KEY = "elections26.compare";
-/** אילו טורי השוואה מוצגים — נשמר בדפדפן */
-function useCompare(): [CompareKey[], (v: CompareKey[]) => void] {
-  const [v, setV] = useState<CompareKey[]>(() => {
-    try { const x = JSON.parse(localStorage.getItem(CMP_KEY) ?? "null"); if (Array.isArray(x)) return COMPARE.map((c) => c.id).filter((id) => x.includes(id)); } catch { /* ברירת מחדל */ }
-    return COMPARE.map((c) => c.id);
-  });
-  return [v, (next) => { setV(next); try { localStorage.setItem(CMP_KEY, JSON.stringify(next)); } catch { /* לא נשמר */ } }];
-}
-const CHIP = "min-h-[32px] px-2.5 rounded-full border text-xs font-bold";
-const chipCls = (on: boolean) => `${CHIP} ${on ? "bg-ink text-paper-card border-ink" : "bg-paper-card text-ink-soft border-paper-line"}`;
+/** טווח כטקסט (הנמוך–הגבוה), או ריק כשאין טווח או שהנמוך שווה לגבוה — כמו בסקר האתר */
+const rangeText = (r: [number, number] | null | undefined, fmt: (x: number) => string) => (r && r[0] !== r[1] ? rng(fmt(r[0]), fmt(r[1])) : "");
 /**
- * שורת הכותרות היחידה (הכרעת בעלים 11.10.2026): כפתורי ההדלקה הם כותרות הטורים, ממורכזים מעל הטור שלהם; ליד שם המפלגה — מתג מנדטים | אחוזים,
- * ובצד — כפתור קישור "שיוך בחירות 22". טור כבוי נשאר ריק במקומו, כך שהכותרות תמיד מיושרות לנתונים.
+ * שורת הכותרות היחידה (הכרעת בעלים 11.10.2026, עודכן 12.10.2026): "בחירות 22", "סקרים" ו"משתתפים" הן כותרות גלויות תמיד, ממורכזות מעל הטור שלהן (לא כפתורים); ליד שם המפלגה — מתג מנדטים | אחוזים,
+ * ובצד — כפתור קישור "שיוך בחירות 22".
  */
-function CompareHeader({ value, onChange, view, onView }: { value: CompareKey[]; onChange: (v: CompareKey[]) => void; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
+function CompareHeader({ view, onView }: { view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
   return (
     <div className="seat-head pb-2 border-b-2 border-ink/30">
       <div className="seat-head-mode">
         <Segmented size="sm" label="מה מקלידים" value={view} onChange={onView} className="!inline-grid w-auto text-xs" options={[{ id: "seats", label: "מנדטים" }, { id: "pct", label: "אחוזים" }]} />
       </div>
-      <div role="group" aria-label="מספרים להשוואה — הדלקה וכיבוי של טור" className="seat-head-chips flex">
-        {COMPARE.map((c) => {
-          const on = value.includes(c.id);
-          return (
-            <span key={c.id} className="w-[var(--cw)] shrink-0 flex justify-center">
-              <button type="button" aria-pressed={on} onClick={() => onChange(on ? value.filter((x) => x !== c.id) : COMPARE.map((x) => x.id).filter((id) => id === c.id || value.includes(id)))} className={chipCls(on) + " !px-2 whitespace-nowrap"}>
-                {c.long && <span className="cmp-long">{c.long}</span>}{c.label}
-              </button>
-            </span>
-          );
-        })}
+      <div role="row" className="seat-head-chips flex">
+        {COMPARE.map((c) => (
+          <span key={c.id} role="columnheader" className="w-[var(--cw)] shrink-0 flex justify-center text-xs font-bold text-ink whitespace-nowrap">
+            <span>{c.long && <span className="cmp-long">{c.long}</span>}{c.label}</span>
+          </span>
+        ))}
       </div>
       <Link to="/changes" aria-label="שיוך בחירות 22" className="seat-head-link inline-flex items-center gap-1.5 min-h-[32px] px-3 rounded-full border-2 border-ink text-xs font-bold text-ink no-underline hover:bg-paper">
         <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5" /><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5" /></svg>
@@ -442,16 +431,17 @@ function CompareHeader({ value, onChange, view, onView }: { value: CompareKey[];
     </div>
   );
 }
-/** שלושה מספרים קטנים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה */
-function CompareCells({ on, cells, labels = false }: { on: CompareKey[]; cells: Record<CompareKey, ReactNode>; labels?: boolean }) {
+/**
+ * שלושה מספרים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה. המספר בגופן 14px; כשיש מקום ברוחב (50rem ומעלה) הטווח (הנמוך–הגבוה) לידו בגופן קטן, כמו בסקר האתר.
+ */
+function CompareCells({ cells }: { cells: Record<CompareKey, { mean: ReactNode; range?: string }> }) {
   return (
-    <span className="flex text-xs mt-0.5">
+    <span className="flex mt-0.5">
       {COMPARE.map((c) => (
-        <span key={c.id} className={`w-[var(--cw)] shrink-0 truncate text-center px-1.5 border-s border-paper-line first:border-s-0 ${labels ? "font-num tabular text-ink-soft" : ""}`}>
-          {on.includes(c.id) && <>
-            {labels && <span className="sr-only">{c.label}: </span>}
-            {labels ? <bdi dir="ltr">{cells[c.id]}</bdi> : cells[c.id]}
-          </>}
+        <span key={c.id} className="w-[var(--cw)] shrink-0 px-1.5 border-s border-paper-line first:border-s-0 font-num tabular text-ink-soft flex items-baseline justify-center gap-1.5 whitespace-nowrap overflow-hidden">
+          <span className="sr-only">{c.label}: </span>
+          <bdi dir="ltr" className="text-sm leading-tight">{cells[c.id].mean}</bdi>
+          {cells[c.id].range ? <bdi dir="ltr" className="cmp-range text-xs leading-tight">{cells[c.id].range}</bdi> : null}
         </span>
       ))}
     </span>

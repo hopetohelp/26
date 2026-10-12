@@ -67,8 +67,11 @@ const MCP = process.env.MCP_URL ?? "https://elections26-mcp.hopetohelp-il.worker
 try {
   const meta = await fetch(MCP + "/.well-known/oauth-authorization-server", { signal: AbortSignal.timeout(15000) });
   const list = await fetch(MCP + "/public", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }), signal: AbortSignal.timeout(15000) });
-  const tools = list.ok ? (await list.json()).result?.tools?.map((t) => t.name) ?? [] : [];
-  if (!meta.ok || !tools.includes("calculate_seats")) { failed++; console.log(`❌ שרת ה-MCP: גילוי ${meta.status}, כלים ${list.status}`); } else console.log(`✅ שרת ה-MCP (${tools.length} כלים ציבוריים)`);
+  const body = await list.json().catch(() => null);
+  const tools = list.ok ? body?.result?.tools?.map((t) => t.name) ?? [] : [];
+  // המנהל סגר את הכתובת בלי התחברות (כפתור במסך הניהול) ⇐ זו בחירה, לא תקלה
+  const closed = list.status === 403 && body?.error?.data?.code === "public_disabled";
+  if (!meta.ok || (!closed && !tools.includes("calculate_seats"))) { failed++; console.log(`❌ שרת ה-MCP: גילוי ${meta.status}, כלים ${list.status}`); } else console.log(closed ? "✅ שרת ה-MCP (הכתובת בלי התחברות סגורה במסך הניהול)" : `✅ שרת ה-MCP (${tools.length} כלים ציבוריים)`);
 } catch (e) {
   failed++;
   console.log(`❌ שרת ה-MCP: ${e instanceof Error ? e.message : e}`);
