@@ -235,3 +235,9 @@ CREATE TABLE IF NOT EXISTS group_manager_labels (
   email_enc TEXT NOT NULL,
   PRIMARY KEY (group_id, email_hash)
 );
+-- אישור אוטומטי (הכרעת בעלים 12.10.2026): השערת מנדטים שנמצאה תקינה — בשמירה, או כשנכנסה לטווח הסקרים — מאושרת לצמיתות
+-- ולא חוזרת להמתנה. נפרד מ-version_review (אישור ודחייה ידניים), כדי שבממשק הניהול היא תוצג כ"תקינה" ולא כ"אושרה".
+CREATE TABLE IF NOT EXISTS version_accepted (
+  version_id INTEGER PRIMARY KEY REFERENCES versions(id),
+  accepted_at TEXT NOT NULL
+);
