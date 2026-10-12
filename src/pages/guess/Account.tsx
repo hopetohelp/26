@@ -33,7 +33,7 @@ export function PasswordField({ label, hint, value, onChange, mode }: { label: s
 }
 
 /** explain = הסבר מיוחד לפעולה הזו (למשל סיסמה נוכחית שגויה בהחלפת סיסמה); בלי — errorText */
-function useAction(action: string, explain?: (e: unknown) => string | null) {
+export function useAction(action: string, explain?: (e: unknown) => string | null) {
   const [msg, setMsg] = useState<{ ok: boolean; text: string; log?: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const run = (fn: () => Promise<string>) => async (e?: FormEvent) => {
@@ -383,7 +383,7 @@ export function VerifyEmail({ session }: { session: ReturnType<typeof useSession
   );
 }
 
-const mask = (email: string) => email.replace(/^(.)(.*)(@.*)$/, (_, a: string, b: string, d: string) => a + "•".repeat(Math.min(6, b.length)) + d);
+export const mask = (email: string) => email.replace(/^(.)(.*)(@.*)$/, (_, a: string, b: string, d: string) => a + "•".repeat(Math.min(6, b.length)) + d);
 
 /** "הפרטים שלי" באזור האישי: Google, מייל, שם, סיסמה, יציאה. בלי חשבון ⇐ הרשמה או כניסה */
 export default function Account({ session, hideGroups = false }: { session: ReturnType<typeof useSession>; hideGroups?: boolean }) {

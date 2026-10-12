@@ -22,6 +22,7 @@ import { setVerifyCode } from "./lib/verifyEmail";
 import { setResetSecret, SECRET_RE } from "./lib/resetPassword";
 const Admin = lazy(() => import("./pages/Admin"));
 import MyFeedback from "./pages/MyFeedback";
+import Connect from "./pages/Connect";
 import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
@@ -109,6 +110,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="voters" element={<Moved to="/past" tab="voters" />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="support" element={<Support />} />
+          <Route path="connect" element={<Connect />} />
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Admin /></Suspense>} />

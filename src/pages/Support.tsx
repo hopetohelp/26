@@ -7,6 +7,7 @@ import Account, { ManagedGroup } from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
 import { Drawer } from "../components/Drawer";
 import { DrawerMenu, useWide } from "../components/DrawerMenu";
+import Assistants from "./guess/Assistants";
 import { Btn, Notice } from "./guess/ui";
 import { PageTitle } from "../components/ui";
 import { Segmented } from "../components/Choice";
@@ -156,7 +157,7 @@ function grow(el: HTMLTextAreaElement) {
   el.style.height = `${Math.min(el.scrollHeight + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth), line * 5 + extra)}px`;
 }
 
-type DrawerId = "details" | "data" | "groups";
+type DrawerId = "details" | "data" | "groups" | "assistants";
 
 export default function Support() {
   const session = useSession();
@@ -191,6 +192,7 @@ export default function Support() {
     </>
   );
   const data = token ? <MyData session={session} part="data" /> : null;
+  const assistants = <Assistants session={session} />;
   const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className="py-3 border-b border-paper-line space-y-2" />) : null;
   const admin = (me?.isAdmin || hasAdminKey()) && (
     <div className="border-b border-paper-line">
@@ -209,6 +211,7 @@ export default function Support() {
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
       ...(token && groups.length > 0 ? [{ id: "groups", title: "ניהול קבוצה", content: groupList }] : []),
+      { id: "assistants", title: "עוזרי AI", content: assistants },
     ];
     return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId | "chat")} after={admin} label="אזור אישי" />;
   }
@@ -219,6 +222,7 @@ export default function Support() {
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
         {token && groups.length > 0 && <Drawer title="ניהול קבוצה" open={open.has("groups")} onToggle={() => toggle("groups")}>{groupList}</Drawer>}
+        <Drawer title="עוזרי AI" open={open.has("assistants")} onToggle={() => toggle("assistants")}>{assistants}</Drawer>
         {admin}
       </div>
       <Conversation session={session} />
