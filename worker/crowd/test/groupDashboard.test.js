@@ -53,10 +53,10 @@ describe("group dashboard", () => {
     resetDashboardCache();
     expect(JSON.stringify((await call("/dashboard")).data)).not.toMatch(/gizra|group/);
 
-    // מתחת לסף: רק הודעה, בלי נתונים
+    // מתחת לסף: בלי נתונים, רק המונה (הכרעת בעלים 12.10.2026)
     expect((await call("/me", { token: members[0] })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", slug: null, image: null }]);
     let d = (await call("/dashboard?group=gizra", { token: members[0] })).data;
-    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, publishedAt: expect.any(String) });
+    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: GROUP_MIN - 1, publishedAt: expect.any(String) });
 
     // חבר נוסף נרשם אחרי טעינת הרשימה — נכנס לבד (הצלבה בכל חישוב)
     members.push(await account(`m${GROUP_MIN - 1}@x.co`, true, 70));
@@ -154,6 +154,44 @@ describe("admin: managers list and group stats", () => {
     const emails = [];
     for (let i = 0; i < GROUP_MIN; i++) { emails.push(`m${i}@x.co`); await account(`m${i}@x.co`); }
     await load(emails);
-    expect((await call("/admin/groups/stats", { admin: true, body: { group: "gizra" } })).data).toMatchObject({ registered: GROUP_MIN, seats: GROUP_MIN, vote: 0 });
+    expect((await call("/admin/groups/stats", { admin: true, body: { group: "gizra" } })).data).toMatchObject({ registered: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0 }); // boss מנהל ואינו ברשימה — נספר בקבוצה
+  });
+});
+
+describe("managers count as group members (הכרעת בעלים 12.10.2026)", () => {
+  it("a verified manager outside the list is counted, sees the group, and is counted once if also listed", async () => {
+    await load(["a@x.co", "b@x.co"]);
+    const a = await account("a@x.co"), b = await account("b@x.co");
+    const boss = await account("boss@x.co");
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    // המנהל אינו ברשימה, ובכל זאת: הקבוצה אצלו ב-/me, והוא נספר
+    expect((await call("/me", { token: boss })).data.groups.map((g) => g.id)).toEqual(["gizra"]);
+    expect((await call("/dashboard?group=gizra", { token: a })).data).toMatchObject({ belowMin: true, participants: 3 });
+    expect((await call("/dashboard?group=gizra", { token: boss })).data).toMatchObject({ belowMin: true, participants: 3 });
+    // אותו מייל גם ברשימה וגם במנהלים — פעם אחת
+    await load(["a@x.co", "b@x.co", "boss@x.co"]);
+    resetDashboardCache();
+    expect((await call("/dashboard?group=gizra", { token: b })).data.participants).toBe(3);
+    // מנהל שלא אימת מייל אינו נספר ואינו רואה את הקבוצה, כמו כל חשבון
+    const lazy = await account("lazy@x.co", false);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "lazy@x.co" } });
+    resetDashboardCache();
+    expect((await call("/me", { token: lazy })).data.groups).toEqual([]);
+    expect((await call("/dashboard?group=gizra", { token: a })).data.participants).toBe(3);
+    // הסרת המינוי — מי שאינו ברשימה יוצא מהספירה
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "lazy@x.co", remove: true } });
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co", remove: true } });
+    await call("/admin/groups/import", { admin: true, body: { group: "gizra", emails: ["a@x.co", "b@x.co"], mode: "replace" } });
+    resetDashboardCache();
+    expect((await call("/dashboard?group=gizra", { token: a })).data.participants).toBe(2);
+    expect((await call("/me", { token: boss })).data.groups).toEqual([]);
+  });
+
+  it("the counter is the group's real count even with nobody counted yet, and the group page is never data below the threshold", async () => {
+    await load(["a@x.co"]);
+    const a = await account("a@x.co");
+    const d = (await call("/dashboard?group=gizra", { token: a })).data;
+    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: 1, publishedAt: expect.any(String) });
+    expect(JSON.stringify(d)).not.toMatch(/seats|blocs|vote|mean/);
   });
 });

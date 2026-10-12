@@ -15,7 +15,11 @@ const count = (cells: Record<string, Cell> | undefined, key: string): number | n
 /** שורות למי שלא הצביע (הכרעת בעלים 9.10.2026): לא הצביעו בעבר / לא מתכננים להצביע, ומי שלא הייתה לו זכות הצבעה. נוסח בגוף שלישי, בניגוד לתשובות בשאלון. */
 const NON_VOTER_NAME: Record<string, string> = { none: "לא הצביעו / לא מתכננים להצביע", ineligible: "לא הייתה זכות הצבעה" };
 const answerCount = (d: Dashboard, key: string) => (d.vote2022?.all[key]?.n ?? 0) + (d.vote2026?.all[key]?.n ?? 0);
-export function votingRows(d: Dashboard) {
+/**
+ * blank = רשימת מפלגות להצגה כשאין נתוני קבוצה (קבוצה מתחת לסף, הכרעת בעלים 12.10.2026): שורה לכל אחת, ובטורי המשתתפים 0.
+ * מפלגה שלא התמודדה ב-2022 נשארת "—" בטור הבחירות הקודמות.
+ */
+export function votingRows(d: Dashboard, blank?: string[]) {
   const previous = results.find(r => r.id === "k25")!;
   const matched = new Set(Object.values(VOTE_MAP));
   const rows = IDS.map(id => {
@@ -25,6 +29,7 @@ export function votingRows(d: Dashboard) {
   for (const l of previous.lists) if (!matched.has(l.letters)) rows.push({ key: `2022:${l.letters}`, name: `${k25VoteName(l.letters)} (2022)`, official: Math.round(l.votes / previous.valid * 10000) / 100, previous: percent(d.vote2022?.all, l.letters), next: null, previousN: count(d.vote2022?.all, l.letters), nextN: null });
   const keys = new Set([...Object.keys(d.vote2022?.all ?? {}).filter(k => k in V2022_LABEL), ...Object.keys(d.vote2026?.all ?? {}).filter(k => k in V2026_LABEL)]);
   for (const key of Object.keys(NON_VOTER_NAME)) if (keys.has(key)) rows.push({ key: `answer:${key}`, name: NON_VOTER_NAME[key] ?? V2022_LABEL[key] ?? V2026_LABEL[key], official: null, previous: key in V2022_LABEL ? percent(d.vote2022?.all,key) : null, next: key in V2026_LABEL ? percent(d.vote2026?.all,key) : null, previousN: key in V2022_LABEL ? count(d.vote2022?.all,key) : null, nextN: key in V2026_LABEL ? count(d.vote2026?.all,key) : null });
+  if (blank) return rows.filter(r => blank.includes(r.key)).map(r => ({ ...r, previous: r.official === null ? null : 0, previousN: r.official === null ? null : 0, next: 0, nextN: 0 }));
   return rows.filter(row => {
     if (row.key.startsWith("answer:")) return row.key.slice(7) in NON_VOTER_NAME && answerCount(d, row.key.slice(7)) > 0;
     const old = row.key.startsWith("2022:") ? row.key.slice(5) : VOTE_MAP[row.key];

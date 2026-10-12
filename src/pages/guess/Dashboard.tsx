@@ -22,6 +22,7 @@ import { PartyAvatar } from "../../components/PartyAvatar";
 import EditBlocsButton from "../../components/EditBlocsButton";
 import GroupBanner from "../../components/GroupBanner";
 import GroupScope from "../../components/GroupScope";
+import { blankDashboard, blankStat, listsFromPolls } from "../../lib/groupBlank";
 import { useLocation } from "react-router-dom";
 import { BlocAvatar } from "../../components/BlocAvatar";
 import type { useSession } from "./useCrowd";
@@ -62,7 +63,12 @@ export default function Dashboard({ session, landing = null }: { session: Return
   const groupData = scope !== "all" && group?.id === scope ? group.data : null;
   const d0 = scope === "all" ? crowd.dashboard : groupData && !groupData.belowMin ? groupData : null;
   // טור הסקרים: ממוצע פשוט של הסקר האחרון של כל מכון, מאותו מקור שממנו מחושב הטווח.
-  const d: D | null = d0 && d0.seats ? { ...d0, seats: { ...d0.seats, polls: SIMPLE_POLL_MEANS, pollsAsOf: POLL_AVERAGE.asOf } } : d0;
+  // קבוצה מתחת לסף: המסך כולו עם אפסים בטורי המשתתפים, והמונה הוא הספירה האמיתית (הכרעת בעלים 12.10.2026)
+  const blank = groupData?.belowMin ? groupData : null;
+  const blankLists = crowd.dashboard?.seats?.everPassedLists ?? listsFromPolls(SIMPLE_POLL_MEANS);
+  const d: D | null = blank
+    ? blankDashboard(blank.participants ?? 0, blankLists, SIMPLE_POLL_MEANS, POLL_AVERAGE.asOf)
+    : d0 && d0.seats ? { ...d0, seats: { ...d0.seats, polls: SIMPLE_POLL_MEANS, pollsAsOf: POLL_AVERAGE.asOf } } : d0;
   const err = (scope === "all" ? crowd.failed : group?.id === scope && group.failed && !groupData) ? "הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות." : null;
   const [view, setView] = useState<View>("table");
   // השוואה לכלל המשתתפים בתצוגת קבוצה: טורי ממוצע וטווח של כולם, אחרי קו הפרדה
@@ -89,8 +95,6 @@ export default function Dashboard({ session, landing = null }: { session: Return
   const banner = shownGroup && <GroupBanner id={shownGroup.id} name={shownGroup.name} image={shownGroup.image} showName={!groups.some((g) => g.id === shownGroup.id)} />;
   const top = <>{banner}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
-  // מתחת לסף: מסך הקבוצה מוצג (תמונה ומתג), אבל בלי נתונים — כותרת שמסבירה למה (הכרעת בעלים 12.10.2026)
-  if (groupData?.belowMin) return <>{top}<section className="border-2 border-ink rounded-theme p-4" aria-labelledby="group-small"><h2 id="group-small" className="text-xl font-display leading-tight">לשמירה על חוק סקרי הבחירות, אי אפשר לפרסם נתונים על קבוצה קטנה. לכן הנתונים יוצגו רק אחרי {groupData.min} משתתפים.</h2></section></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
@@ -103,9 +107,10 @@ export default function Dashboard({ session, landing = null }: { session: Return
   return (
     <div>
       {top}
+      {blank && <section className="border-2 border-ink rounded-theme p-4 mb-4" aria-labelledby="group-small"><h2 id="group-small" className="text-xl font-display leading-tight">לשמירה על חוק סקרי הבחירות, אי אפשר לפרסם נתונים על קבוצה קטנה. לכן הנתונים יוצגו רק אחרי {blank.min} משתתפים.</h2></section>}
       {/* שיתוף — רק של כלל המשתתפים, כדי שנתוני קבוצה לא ייצאו החוצה */}
       {scope === "all" && <CommunityShare d={d} />}
-      {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
+      {!blank && d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       {(stale || scope !== "all") && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
@@ -113,8 +118,8 @@ export default function Dashboard({ session, landing = null }: { session: Return
         {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
       </div>}
       {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
-      {d.blocs ? <BlocStats d={d} view={view} mineBlocs={userBlocs} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
-      {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
+      {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
+      {(blank || d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} blankLists={blank ? blankLists : undefined} />}
     </div>
   );
 }
@@ -199,15 +204,15 @@ function blocStats(d: D): Map<string, SeatStat> {
  * שורות טבלת הגושים (הכרעת בעלים 12.10.2026): לכל משתתף מוצגים רק הגושים שהגדיר אישית, בשמות שנתן להם;
  * מחק חלק או הכול — יוצגו לו פחות. הנתון של כל גוש הוא של כלל המשתתפים באותו הרכב (או חסר כשאין מספיק מגדירים).
  */
-function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[]): BlocRow[] {
+function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[], blank = false): BlocRow[] {
   const stats = blocStats(d);
   return mineBlocs.filter(g => g.lists.length > 0)
-    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: stats.get(compKey(g.lists)) ?? null }))
+    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: blank ? blankStat("", 0) : stats.get(compKey(g.lists)) ?? null }))
     .sort((a, b) => (b.stat?.mean ?? -Infinity) - (a.stat?.mean ?? -Infinity));
 }
 
-export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
-  const rows = blocRows(d, mineBlocs);
+export function BlocStats({ d, blank = false, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; blank?: boolean; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
+  const rows = blocRows(d, mineBlocs, blank);
   const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
   const head = <SectionTitle title="החלוקה לגושים" action={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
   if (!rows.length) return <Card className="!border-t-0">{head}<Notice>אין לך גושים מוגדרים. אפשר להוסיף גוש בעריכת הגושים.</Notice></Card>;
@@ -272,19 +277,19 @@ type Unit = "pct" | "num";
 /** עד שתי ספרות אחרי הנקודה, בלי אפסים מיותרים: 1.65, 3, 0.5 */
 const fmtNum = (v: number) => String(Math.round(v * 100) / 100);
 
-export function VotingStats({ d }: { d: D }) {
+export function VotingStats({ d, blankLists }: { d: D; blankLists?: string[] }) {
   const [unit, setUnit] = useState<Unit>("num");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
   return <Card className="!border-t-0">
     <SectionTitle title="הצבעה אז והיום" count={count} toggle={<Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />} />
-    <VoteComparison d={d} unit={unit} participants={count ?? 0} />
+    <VoteComparison d={d} unit={unit} participants={count ?? 0} blankLists={blankLists} />
     {unit === "num" && <p className="text-xs text-ink-soft mt-2">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} /></section>}
   </Card>;
 }
 
-export function VoteComparison({ d, unit, participants }: { d: D; unit: Unit; participants: number }) {
-  const rows = votingRows(d);
+export function VoteComparison({ d, unit, participants, blankLists }: { d: D; unit: Unit; participants: number; blankLists?: string[] }) {
+  const rows = votingRows(d, blankLists);
   const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${pctValue(v)}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
     <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th></tr></thead>
