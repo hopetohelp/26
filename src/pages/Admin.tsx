@@ -85,6 +85,20 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
   );
 }
 
+/** תיבה קטנה עם שני מספרים (למשל ס״ה והיום); alert = צבע אזהרה כשיש מה לטפל בו */
+function Pair({ label, a, b, alert = false }: { label: string; a: [string, string | number]; b: [string, string | number]; alert?: boolean }) {
+  return (
+    <div className={`bg-paper-card border rounded-theme p-3 ${alert ? "border-warn" : "border-paper-line"}`}>
+      <p className="text-xs text-ink-soft">{label}</p>
+      <div className="flex gap-4 mt-1">
+        {[a, b].map(([name, n]) => (
+          <p key={name} className="min-w-0"><span className="block text-[11px] text-ink-soft">{name}</span><span className="font-num tabular text-2xl leading-none">{n}</span></p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Tiles({ title, note, tiles }: { title: string; note: string; tiles: [string, string | number][] }) {
   return (
     <section className="space-y-2" aria-label={title}>
@@ -120,8 +134,9 @@ export default function Admin() {
   const [key, setKey] = useState<string | null>(() => { try { return localStorage.getItem(KEY); } catch { return null; } });
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<string | null>(null);
-  type DrawerId = "totals" | "failures" | "byday" | "inquiries" | "guesses" | "blocs" | "groups" | "ai";
-  const [pendingGuesses, setPendingGuesses] = useState(0);
+  type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai";
+  const [guessCounts, setGuessCounts] = useState({ pending: 0, rejected: 0 });
+  const pendingGuesses = guessCounts.pending;
   const [open, setOpen] = useState<Set<DrawerId>>(new Set());
   const toggle = (id: DrawerId) => setOpen((o) => { const n = new Set(o); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
@@ -146,7 +161,7 @@ export default function Admin() {
     setError(null);
     try { setData(await api("/admin/data")); setOwnerBrowser(true); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
     // מונה השערות ממתינות לתג על המגירה (המגירה עצמה נטענת רק כשפותחים אותה)
-    try { setPendingGuesses(((await api("/admin/guesses")) as { rows: { status: string }[] }).rows.filter((r) => r.status === "pending").length); } catch { /* בלי מונה — בלי תג */ }
+    try { const rows = ((await api("/admin/guesses")) as { rows: { status: string }[] }).rows; setGuessCounts({ pending: rows.filter((r) => r.status === "pending").length, rejected: rows.filter((r) => r.status === "rejected").length }); } catch { /* בלי מונה — בלי תג */ }
   };
   useEffect(() => { if (credential && FEEDBACK_URL) void load(); }, [credential]); // eslint-disable-line react-hooks/exhaustive-deps
   // יש ממתינים או טיוטות ⇐ מגירת הפניות נפתחת לבד, פעם אחת
@@ -179,49 +194,55 @@ export default function Admin() {
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
       {data && (
         <>
-          {/* "היום" גלוי תמיד; שאר הדשבורד, וכל מה שמעבר לו, במגירות לפי נושא (הכרעת בעלים 12.10.2026) */}
-          <Tiles title="היום" note="לפי יום UTC" tiles={[
-            ["כניסות היום", today?.visits ?? 0],
-            ["משתמשים היום", today?.users ?? 0],
-            ["נכנסו להשערה היום", today?.guessUsers ?? 0],
-            ["נכנסו לסטטיסטיקות היום", today?.communityUsers ?? 0],
-            ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
-            ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
-            ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
-            ["ממתינים לתשובה", waiting],
-            ["טיוטות לאישור", data.drafts?.length ?? 0],
-          ]} />
+          {/* תיבות קטנות מאוחדות (הכרעת בעלים 12.10.2026); הדשבורד המלא — במגירה אחת */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3" role="group" aria-label="סיכום">
+            <Pair label="משתמשים" a={["ס״ה", data.support?.stats.participants ?? "—"]} b={["היום", data.support?.stats.participantsToday ?? "—"]} />
+            <Pair label="שמרו השערה או הצבעה" a={["ס״ה", data.support?.stats.savers ?? "—"]} b={["היום", data.support?.stats.saversToday ?? "—"]} />
+            <Pair label="נכנסו" a={["ס״ה", data.totalVisitors]} b={["היום", today?.users ?? 0]} />
+            <Pair label="ממתינים לתשובה וטיוטות" a={["ממתינים", waiting]} b={["טיוטות", data.drafts?.length ?? 0]} alert={waiting + (data.drafts?.length ?? 0) > 0} />
+            <Pair label="השערות" a={["ממתינות", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />
+            <Pair label="נפילות" a={["מאז האיפוס", data.failures?.total ?? "—"]} b={["היום", today?.autoFailures ?? 0]} alert={(data.failures?.total ?? 0) > 0} />
+          </div>
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
 
-          {/* כל מה שמעבר לדשבורד — במגירות לפי נושא (הכרעת בעלים 12.10.2026). תוכן מגירה נטען רק כשפותחים אותה. */}
+          {/* הדשבורד המלא וכל מה שמעבר לו — במגירות (הכרעת בעלים 12.10.2026). תוכן מגירה נטען רק כשפותחים אותה. */}
           <div className="border-t border-paper-line">
-            <Drawer title="סך הכול" open={open.has("totals")} onToggle={() => toggle("totals")}>
-              <Tiles title="סך הכול" note="מהתחלה (6/10)" tiles={[
-                ["כניסות", data.totalVisits ?? "—"],
-                ["משתמשים מצטבר", data.totalVisitors],
-                ["שמרו (בדשבורד)", data.support?.stats.savers ?? "—"],
-                ["רשומות במאגר", data.support?.stats.participants ?? "—"],
-                ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
-                ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
-              ]} />
-            </Drawer>
-            <Drawer title="נפילות" open={open.has("failures")} onToggle={() => toggle("failures")} badge={(data.failures?.total ?? 0) > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${data.failures?.total} נפילות מאז האיפוס`}>{data.failures?.total}</span> : undefined}>
-              <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
-                ["נפילות סך הכול", data.failures?.total ?? "—"],
-                ["נפילות היום", today?.autoFailures ?? 0],
-                ["חסימה מלאה היום", today?.blocked ?? 0],
-                ["נשמר בעקיפה היום", today?.relaySaved ?? 0],
-                ["נשמר בלי תשובה היום", today?.blindSaved ?? 0],
-              ]} />
-            </Drawer>
-            <Drawer title="לפי יום" open={open.has("byday")} onToggle={() => toggle("byday")}>
-              <ByDay days={data.days} />
+            <Drawer title="דשבורד מלא" open={open.has("dashboard")} onToggle={() => toggle("dashboard")}>
+              <div className="space-y-5">
+                <Tiles title="היום" note="לפי יום UTC" tiles={[
+                  ["כניסות היום", today?.visits ?? 0],
+                  ["משתמשים היום", today?.users ?? 0],
+                  ["נכנסו להשערה היום", today?.guessUsers ?? 0],
+                  ["נכנסו לסטטיסטיקות היום", today?.communityUsers ?? 0],
+                  ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
+                  ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
+                  ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
+                  ["ממתינים לתשובה", waiting],
+                  ["טיוטות לאישור", data.drafts?.length ?? 0],
+                ]} />
+                <Tiles title="סך הכול" note="מהתחלה (6/10)" tiles={[
+                  ["כניסות", data.totalVisits ?? "—"],
+                  ["משתמשים מצטבר", data.totalVisitors],
+                  ["שמרו (בדשבורד)", data.support?.stats.savers ?? "—"],
+                  ["רשומות במאגר", data.support?.stats.participants ?? "—"],
+                  ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
+                  ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
+                ]} />
+                <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
+                  ["נפילות סך הכול", data.failures?.total ?? "—"],
+                  ["נפילות היום", today?.autoFailures ?? 0],
+                  ["חסימה מלאה היום", today?.blocked ?? 0],
+                  ["נשמר בעקיפה היום", today?.relaySaved ?? 0],
+                  ["נשמר בלי תשובה היום", today?.blindSaved ?? 0],
+                ]} />
+                <section className="space-y-2"><h3 className="font-display text-xl">לפי יום</h3><ByDay days={data.days} /></section>
+              </div>
             </Drawer>
             <Drawer title="פניות והודעות" open={open.has("inquiries")} onToggle={() => toggle("inquiries")} badge={waiting + (data.drafts?.length ?? 0) > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${waiting} ממתינים לתשובה, ${data.drafts?.length ?? 0} טיוטות`}>{waiting + (data.drafts?.length ?? 0)}</span> : undefined}>
               <InquirySections data={data} reply={reply} draftActions={draftActions} />
             </Drawer>
-            <Drawer title="השערות הגולשים" open={open.has("guesses")} onToggle={() => toggle("guesses")} badge={pendingGuesses > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${pendingGuesses} השערות ממתינות לאישור`}>{pendingGuesses}</span> : undefined}><AdminGuesses api={api} onPending={setPendingGuesses} /></Drawer>
+            <Drawer title="השערות הגולשים" open={open.has("guesses")} onToggle={() => toggle("guesses")} badge={pendingGuesses > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${pendingGuesses} השערות ממתינות לאישור`}>{pendingGuesses}</span> : undefined}><AdminGuesses api={api} onCounts={setGuessCounts} /></Drawer>
             <Drawer title="גושים שהוגדרו" open={open.has("blocs")} onToggle={() => toggle("blocs")}><AdminBlocs api={api} /></Drawer>
             <Drawer title="קבוצות" open={open.has("groups")} onToggle={() => toggle("groups")}><AdminGroups api={api} /></Drawer>
             <Drawer title="מפתח AI לתשובות" open={open.has("ai")} onToggle={() => toggle("ai")}><AiKey api={api} /></Drawer>
