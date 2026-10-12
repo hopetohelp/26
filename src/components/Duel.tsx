@@ -32,7 +32,7 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
       <Explained
         bare
         kind="תרחיש"
-        source="הסקרים שנכנסים לחישובים, מנוע החוק והסקר האחרון של כל מכון"
+        source="כל הסקרים, מנוע החוק והסקר האחרון של כל מכון"
         asOf={`הסקרים עד ${asOf}`}
         assumption="המספר הגדול: ממוצע המודל. הטווח: הנמוך והגבוה בין המכונים בסקר האחרון של כל אחד. הספירה: בכמה סקרים כל רשימה גבוהה יותר. לא סיכוי."
         methodAnchor="model"
@@ -93,7 +93,7 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
         <Explained
           bare
           kind="תרחיש"
-          source="הסקרים שנכנסים לחישובים, מנוע החוק ו-20,000 תרחישים; והסקר האחרון של כל מכון"
+          source="כל הסקרים, מנוע החוק ו-20,000 תרחישים; והסקר האחרון של כל מכון"
           asOf={`הסקרים עד ${asOf}`}
           assumption="האחוז הגדול: בכמה מהתרחישים הרשימה עוברת את אחוז החסימה, לא סיכוי. מתחתיו: ספירת המכונים שנתנו לה מנדטים."
           methodAnchor="model"
