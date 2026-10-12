@@ -66,11 +66,19 @@ export function useCrowdDashboard(): CrowdState {
 }
 
 /** ממוצע המשתתפים לכל רשימה: מנדטים, ואחוזים (מכל ההשערות). null כשאין סטטיסטיקות. */
-export function crowdAverage(d: Dashboard | null): { seats: Record<string, number> | null; pct: Record<string, number> | null; asOf: string | null } {
+export function crowdAverage(d: Dashboard | null): {
+  seats: Record<string, number> | null; pct: Record<string, number> | null; asOf: string | null;
+  /** הנמוך והגבוה בין ההשערות, לכל רשימה */
+  seatsRange: Record<string, [number, number]> | null; pctRange: Record<string, [number, number]> | null;
+} {
   const open = !!d?.open && !!d.seats?.n;
+  const seats = open && d!.seats!.full.length ? d!.seats!.full : null;
+  const pct = open && d!.seats!.pctStats?.length ? d!.seats!.pctStats : null;
   return {
-    seats: open && d!.seats!.full.length ? Object.fromEntries(d!.seats!.full.map((s) => [s.list, s.mean])) : null,
-    pct: open && d!.seats!.pctStats?.length ? Object.fromEntries(d!.seats!.pctStats.map((s) => [s.list, s.mean])) : null,
+    seats: seats && Object.fromEntries(seats.map((s) => [s.list, s.mean])),
+    pct: pct && Object.fromEntries(pct.map((s) => [s.list, s.mean])),
+    seatsRange: seats && Object.fromEntries(seats.map((s) => [s.list, [s.min, s.max] as [number, number]])),
+    pctRange: pct && Object.fromEntries(pct.map((s) => [s.list, [s.min, s.max] as [number, number]])),
     asOf: d?.publishedAt ?? null,
   };
 }

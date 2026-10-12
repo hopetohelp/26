@@ -85,5 +85,5 @@ export function useLineage(session: ReturnType<typeof useSession>) {
 }
 
 /** ממוצע המשתתפים — מהמקור האחד (src/lib/sources.ts) */
-export const useCrowd = () => { const c = useCrowdAverage(); return { seats: c.seats, pct: c.pct }; };
+export const useCrowd = () => { const c = useCrowdAverage(); return { seats: c.seats, pct: c.pct, seatsRange: c.seatsRange, pctRange: c.pctRange }; };
 export const useCrowdSeats = () => useCrowdAverage().seats;
