@@ -32,6 +32,6 @@ it('מציג סינון לפי נושא עם ספירה, וסינון ממתינ
   const { html } = render(data([thread(1, 'א', '2026-10-01T10:00:00Z', true, 'data'), thread(2, 'ב', '2026-10-02T10:00:00Z', false, 'idea'), thread(3, 'ג', '2026-10-03T10:00:00Z', true, 'idea')]));
   expect(html).toContain('הכול (3)');
   expect(html).toContain('תקלה או שגיאה (1)');
-  expect(html).toContain('רעיון (2)');
+  expect(html).toContain('רעיון לשיפור (2)');
   expect(html).toContain('ממתינות לתשובה (2)');
 });

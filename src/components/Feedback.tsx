@@ -1,7 +1,7 @@
 import { FEEDBACK_TOPICS as TOPICS } from "../lib/feedbackTopics";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Chips } from "./Choice";
+import { Segmented } from "./Choice";
 import { getLink } from "../lib/crowdSession";
 import { FEEDBACK_URL, deliverFeedback, queueFeedback, savedThreads, threadLink, type FeedbackItem } from "../lib/feedback";
 
@@ -138,7 +138,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
             </div>
             <div>
               <p className="text-sm font-bold mb-2">על מה?</p>
-              <Chips label="על מה?" value={topic} onChange={setTopic} options={TOPICS} />
+              <Segmented label="על מה?" value={topic} onChange={setTopic} options={TOPICS} />
             </div>
             <label htmlFor={textId} className="text-sm font-bold -mb-2">
               מה תרצו להגיד?
