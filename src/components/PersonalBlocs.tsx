@@ -82,20 +82,20 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const stacked = <table className="w-full table-fixed text-xs">
     <caption className="sr-only">הגושים שלי מול המשתתפים והסקרים</caption>
     <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal" title={labelOf(d)}>{d.source.includes("המשתתפים") ? "משתתפים" : d.source === "ההשערה שלי" ? "שלי" : labelOf(d)}</th>)}</tr></thead>
-    <tbody>{p.blocs.map(b => <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-1.5 pe-1 font-normal break-words" cellClass="text-center px-1 tabular font-bold">{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <>{display(row)}<BlocCoverage row={row} /></>; })}</BlocTableRow>)}</tbody>
+    <tbody>{p.blocs.map(b => <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-1.5 pe-1 font-normal break-words" cellClass="text-center px-1 tabular font-bold">{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <BlocCell text={display(row)} row={row} />; })}</BlocTableRow>)}</tbody>
   </table>;
   const table = compact ? stacked : series.length > 3 ? <table className="w-full text-sm">
     <caption className="sr-only">מנדטים לפי הגושים שלי בכל מקור</caption>
     <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start py-2 min-w-[12rem]">מקור · תאריך</th>{p.blocs.map(b => <th key={b.id} scope="col" className="px-3 min-w-[7rem] break-words">{b.name}<BlocAvatar id={b.id} lists={b.lists} size={22} center /></th>)}</tr></thead>
-    <tbody>{series.map((d, i) => <tr key={i} className="border-b border-paper-line"><th scope="row" className="text-start py-2 font-normal">{labelOf(d)}</th>{p.blocs.map(b => { const row = d.rows.find(r => r.id === b.id); return <td key={b.id} className="text-center px-3 tabular">{display(row)}<BlocCoverage row={row} /></td>; })}</tr>)}</tbody>
+    <tbody>{series.map((d, i) => <tr key={i} className="border-b border-paper-line"><th scope="row" className="text-start py-2 font-normal">{labelOf(d)}</th>{p.blocs.map(b => { const row = d.rows.find(r => r.id === b.id); return <td key={b.id} className="text-center px-3 tabular"><BlocCell text={display(row)} row={row} /></td>; })}</tr>)}</tbody>
   </table> : <table className="w-full text-sm">
     <caption className="sr-only">השוואת מנדטים לפי הגושים שלי</caption>
     <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[5.5rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-1.5 min-w-[4.5rem] py-2">{labelOf(d)}</th>)}{compare && series.length === 2 && <th scope="col" className="px-1.5">{pct ? "שינוי באחוזים" : "שינוי במנדטים"}</th>}</tr></thead>
-    <tbody>{p.blocs.map(b => { const first = blocComparable(series[0]?.rows.find(r => r.id === b.id)); const last = blocComparable(series[1]?.rows.find(r => r.id === b.id)); const delta = first !== null && last !== null ? last - first : null; return <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-2 break-words" cellClass="px-1.5 text-center tabular" extra={compare && series.length === 2 ? <td className="text-center tabular"><bdi>{delta === null ? "—" : pct ? diffText(delta) : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td> : null}>{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <>{display(row)}<BlocCoverage row={row} /></>; })}</BlocTableRow>; })}</tbody>
+    <tbody>{p.blocs.map(b => { const first = blocComparable(series[0]?.rows.find(r => r.id === b.id)); const last = blocComparable(series[1]?.rows.find(r => r.id === b.id)); const delta = first !== null && last !== null ? last - first : null; return <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-2 break-words" cellClass="px-1.5 text-center tabular" extra={compare && series.length === 2 ? <td className="text-center tabular"><bdi>{delta === null ? "—" : pct ? diffText(delta) : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td> : null}>{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return <BlocCell text={display(row)} row={row} />; })}</BlocTableRow>; })}</tbody>
   </table>;
   const anyMissing = series.some(d => d.rows.some(row => row.missing.length > 0));
   /** שורת הסבר אחת מעל הטבלה במקום הסבר בכל תא (הכרעת בעלים 11.10.2026) */
-  const coverageNote = anyMissing ? <p className="text-xs text-ink-soft">מספר קטן מתחת לנתון, למשל <bdi>5/6</bdi>: על כמה מהמפלגות בגוש הנתון בנוי, כלומר כמה מהן היו בסקר. בלי מספר = כל המפלגות בגוש. "כ-" = הושלם באומדן.</p> : null;
+  const coverageNote = anyMissing ? <p className="text-xs text-ink-soft">מספר קטן ליד הנתון (או מתחתיו כשאין מקום), למשל <bdi>5/6</bdi>: על כמה מהמפלגות בגוש הנתון בנוי, כלומר כמה מהן היו בסקר. בלי מספר = כל המפלגות בגוש. "כ-" = הושלם באומדן.</p> : null;
   return <BlocsDrawer title={title} returnTo={pathname + search}>
     <div data-personal-blocs-card className="space-y-2">
     <Explained showMeta={false} kind="השוואה" source={source} asOf={asOf} assumption="סכום מקור מלא, סכום חלקי (כשחסרה מפלגה, והחסר מסומן מתחת למספר) ואומדן (כ-) מוצגים בנפרד. השלמה רק מסקרים קודמים קרובים שעברו בדיקת דיוק; המקור לא משתנה. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות או השלמה שרירותית של תוצאות אמת." methodAnchor="personal-blocs" trailing={<>
@@ -109,14 +109,18 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
 }
 
 /** מתחת לנתון חסר רק "5/6": כמה מהמפלגות בגוש היו בסקר (הכרעת בעלים 11.10.2026); שמות המפלגות ומקורות האומדן — בריחוף ולקורא מסך */
+/** הנתון והכיסוי שלו (5/6): לצד הנתון כשיש מקום ברוחב התא, ומתחתיו כשאין (הכרעת בעלים 12.10.2026) */
+function BlocCell({ text, row }: { text: string; row?: BlocRow }) {
+  return <span className="inline-flex flex-wrap items-baseline justify-center gap-x-1.5">{text}<BlocCoverage row={row} /></span>;
+}
 function BlocCoverage({ row }: { row?: BlocRow }) {
   if (!row?.missing.length) return null;
   const detail = [
     `${row.estimate !== null ? "הושלם באומדן" : "חסר נתון או אין התאמה"}: ${row.missing.map(nameOf).join(" · ")}`,
     ...row.imputed.map(c => `${nameOf(c.id)}: ${seatsFmt(c.value)} מנדטים · ${c.method === "same-firm" ? "סקר קודם של אותו מכון ומזמין" : "ממוצע המכונים הקודמים"} · ${c.sources.map(x => `${x.label} ${date(x.date)}`).join(", ")}`),
   ].join("\n");
-  return <span className="block mt-0.5 text-xs font-sans font-normal text-ink-soft" title={detail}>
-    <bdi>{row.lists.length - row.missing.length} מתוך {row.lists.length}</bdi> מפלגות
+  return <span className="font-sans font-normal text-ink-soft [font-size:max(10px,.7em)]" title={detail}>
+    <bdi dir="ltr">{row.lists.length - row.missing.length}/{row.lists.length}</bdi>
     <span className="sr-only">. {detail}</span>
   </span>;
 }

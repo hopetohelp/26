@@ -81,7 +81,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.font = `400 30px ${body}`;
     const rows = shareBlocRows(blocs, values).map(b => {
       const incomplete = [["ההשערה שלי",b.mineInfo],["ממוצע סקרים",b.pollsInfo],["מודל המגמות",b.forecastInfo]] as const;
-      const notes = incomplete.filter(([,info])=>info.missing.length).flatMap(([label,info])=>wrap(`${label}: נתון ל-${info.knownCount}/${info.lists.length} מפלגות; חסר: ${info.missing.map(nameOf).join(" · ")}`,R-L));
+      const notes = incomplete.filter(([,info])=>info.missing.length).flatMap(([label,info])=>wrap(`${label}: ${info.knownCount}/${info.lists.length}; חסר: ${info.missing.map(nameOf).join(" · ")}`,R-L));
       return {...b,names:wrap(b.lists.map(nameOf).join(" · "),R-L),notes};
     });
     const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + (row.names.length + row.notes.length) * 38, 0) + 290);
@@ -115,6 +115,14 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
       [row.mineInfo, row.pollsInfo, row.forecastInfo].forEach((info, i) => {
         ctx.fillStyle = c.ink;
         ctx.fillText(formatBlocValue(info), columns[i], y + 72, 285);
+        if (info.missing.length) {
+          const f = ctx.font, fill = ctx.fillStyle;
+          ctx.font = `400 24px ${body}`;
+          ctx.fillStyle = c.soft;
+          ctx.fillText(`${info.knownCount}/${info.lists.length}`, columns[i], y + 100);
+          ctx.font = f;
+          ctx.fillStyle = fill;
+        }
       });
       ctx.textAlign = "right";
       ctx.fillStyle = c.soft;

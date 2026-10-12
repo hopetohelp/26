@@ -105,7 +105,7 @@ it("גוש עם רשימה שהסקרים לא שואלים עליה (נעם) מ
   const expected = pollSeatSummary(LATEST_POLLS, ["likud","shas","utj","noam"]);
   expect(expected).not.toBeNull();
   expect(html).toContain(`לפחות ${seatsFmt(expected!.mean)}`);
-  expect(html).toContain(`${expected!.listed} מתוך ${expected!.total}`);
+  expect(html).toContain(`${expected!.listed}/${expected!.total}`);
   expect(html).not.toContain(">31.5</span>");
   expect(html).not.toContain("חסר");
 });
