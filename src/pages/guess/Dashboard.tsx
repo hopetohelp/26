@@ -21,6 +21,7 @@ import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../com
 import { PartyAvatar } from "../../components/PartyAvatar";
 import EditBlocsButton from "../../components/EditBlocsButton";
 import GroupBanner from "../../components/GroupBanner";
+import GroupScope from "../../components/GroupScope";
 import { useLocation } from "react-router-dom";
 import { BlocAvatar } from "../../components/BlocAvatar";
 import type { useSession } from "./useCrowd";
@@ -80,7 +81,7 @@ export default function Dashboard({ session, landing = null }: { session: Return
 
   const scopeBar = groups.length > 0 && (
     <div className="mb-4">
-      <Segmented className="max-w-md" value={scope} onChange={setPicked} label="של מי הסטטיסטיקות" options={[{ id: "all", label: "כל המשתתפים" }, ...groups.slice(0, 3).map((g) => ({ id: g.id, label: g.name ?? g.id }))]} />
+      <GroupScope groups={groups} value={scope} onChange={setPicked} />
     </div>
   );
   // ראש המסך: תמונת הקבוצה הנבחרת, או של הקבוצה שהקישור הוביל אליה; השם רק אם אין לגולש מתג עם שמה

@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from "react";
+import Linkified from "../components/Linkified";
 import { Link, useParams } from "react-router-dom";
 import { Card, Note, PageTitle } from "../components/ui";
 import { FeedbackSheet } from "../components/Feedback";
@@ -171,7 +172,7 @@ function Bubble({ author, text, at }: { author: "team" | "visitor"; text: string
       <p className="text-xs font-bold text-ink-soft mb-1">
         {team ? "צוות האתר" : "אתם"} · {when(at)}
       </p>
-      <p className="text-base leading-relaxed whitespace-pre-wrap break-words">{text}</p>
+      <p className="text-base leading-relaxed whitespace-pre-wrap break-words"><Linkified text={text} /></p>
     </li>
   );
 }
