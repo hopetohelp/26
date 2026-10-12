@@ -29,5 +29,5 @@ export function votingRows(d: Dashboard) {
     if (row.key.startsWith("answer:")) return row.key.slice(7) in NON_VOTER_NAME && answerCount(d, row.key.slice(7)) > 0;
     const old = row.key.startsWith("2022:") ? row.key.slice(5) : VOTE_MAP[row.key];
     return (old && (d.vote2022?.all[old]?.n ?? 0) > 0) || (d.vote2026?.all[row.key]?.n ?? 0) > 0;
-  });
+  }).sort((a, b) => (b.nextN ?? -Infinity) - (a.nextN ?? -Infinity));
 }

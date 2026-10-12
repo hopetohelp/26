@@ -1,4 +1,4 @@
-import { seatsIn, type Poll } from "./data";
+import { mean, seatsIn, type Poll } from "./data";
 
 /**
  * המנדטים של מפלגה או של גוש בכל סקר (סכום המנדטים של הרשימות בסקר), סקר אחד לכל ערך.
@@ -20,4 +20,15 @@ export function pollSeatValues(polls: Poll[], ids: string[], average: Record<str
 export function pollSeatRange(polls: Poll[], ids: string[], average: Record<string, number>): [number, number] | null {
   const sums = pollSeatValues(polls, ids, average);
   return sums.length ? [Math.min(...sums), Math.max(...sums)] : null;
+}
+
+/** ממוצע חשבוני וטווח מלא מתוך הסקרים בלבד; גוש נספר רק בסקרים עם נתון לכל רשימה בהרכב. */
+export function pollSeatSummary(polls: Poll[], ids: string[]): { mean: number; range: [number, number] } | null {
+  const unique = [...new Set(ids)];
+  if (!unique.length) return null;
+  const values = polls.flatMap(p => {
+    const parts = unique.map(id => seatsIn(p, id));
+    return parts.every((x): x is number => typeof x === "number") ? [parts.reduce((a, b) => a + b, 0)] : [];
+  });
+  return values.length ? { mean: mean(values), range: [Math.min(...values), Math.max(...values)] } : null;
 }
