@@ -22,6 +22,11 @@ database_id = "c02ce097-d3b6-46cf-bca1-773164acb08a"
 binding = "CROWD"
 service = "elections26-crowd"
 
+# שרת ההערות — שיחת המשתמש עם צוות האתר (שלב 3), באותו נתיב כמו האזור האישי; נוהל ההערות חל במלואו
+[[services]]
+binding = "FEEDBACK"
+service = "elections26-feedback"
+
 # ניקוי כל שעה: בקשות התחברות, קודים ואסימונים שפגו, ומוני הגבלת הקצב
 [triggers]
 crons = ["17 * * * *"]

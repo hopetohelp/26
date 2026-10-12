@@ -69,6 +69,24 @@ function crowdCaller(env, agent) {
   };
 }
 
+/**
+ * שיחת המשתמש עם צוות האתר — אותו נתיב בדיוק כמו האזור האישי (POST / עם kind "account-support" בשרת ההערות).
+ * שרת ההערות מזהה את המשתמש ואת העוזר דרך שרת ההשתתפות; ההודעה מסומנת "נכתב דרך עוזר AI" במסך הניהול.
+ */
+async function teamCall(env, agent, body) {
+  if (!env.FEEDBACK) throw new ToolError("unavailable", "שיחת הצוות אינה זמינה כרגע.");
+  let res;
+  try {
+    res = await env.FEEDBACK.fetch(new Request("https://feedback.internal/", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: "account-support", token: agent, ...body }) }));
+  } catch {
+    throw new ToolError("unavailable", "שרת ההערות אינו זמין כרגע. נסו שוב בעוד רגע.");
+  }
+  const data = await res.json().catch(() => null);
+  if (res.status === 401) throw new AuthLost();
+  if (!res.ok || !data?.ok) throw new ToolError(data?.error ?? `http_${res.status}`, data?.error === "bad_request" ? "ההודעה ארוכה מדי או ריקה." : "השיחה אינה זמינה כרגע. נסו שוב בעוד רגע.");
+  return data;
+}
+
 function unauthorized(env, why = "invalid_token") {
   return json({ error: why }, 401, { "www-authenticate": `Bearer realm="elections26", error="${why}", resource_metadata="${issuer(env)}/.well-known/oauth-protected-resource/mcp"` });
 }
@@ -97,6 +115,7 @@ async function handleMcp(request, env, mode, now, baseHeaders) {
     site: (path) => siteJson(env, path, now),
     crowd,
     me: async () => (me ??= await crowd("/me")),
+    team: (body) => teamCall(env, grant?.agent, body),
     log: (tool, outcome) => logUse(env, { tool, mode, client: grant?.clientName ?? "ציבורי", outcome }, now),
   };
   try {

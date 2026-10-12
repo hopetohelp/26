@@ -1139,10 +1139,11 @@ const routes = {
 
   // קריאה בלבד לצורך העברה לשרת ההערות; רק בעל הסשן מקבל את ההיסטוריה שלו.
   "GET /support/access": async ({ env, request, now }) => {
-    const { participant } = await requireAuth(env, request, now);
+    const { participant, agent, client } = await requireAuth(env, request, now);
     const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
     const { results } = await env.DB.prepare("SELECT id, author, text, created_at FROM support_messages WHERE participant = ? ORDER BY id").bind(participant).all();
-    return { participant, thread: thread ? { ...thread, messages: results || [] } : null };
+    // via — שם העוזר, כשהבקשה באה מכניסת עוזר AI: שרת ההערות מסמן כך את ההודעה במסך הניהול
+    return { participant, thread: thread ? { ...thread, messages: results || [] } : null, ...(agent ? { via: client } : {}) };
   },
 
   "GET /log": async ({ env }) => {

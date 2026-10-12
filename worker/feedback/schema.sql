@@ -165,3 +165,10 @@ WHEN NEW.status = 'answered' AND EXISTS (SELECT 1 FROM held WHERE kind = 'suppor
 BEGIN
   UPDATE support_threads SET status = 'new' WHERE participant = NEW.participant;
 END;
+
+-- הודעה בשיחת החשבון שנכתבה דרך עוזר AI (שרת ה-MCP; הכרעת בעלים 12.10.2026): שם העוזר, לסימון במסך הניהול.
+-- נקבע בשרת לפי כניסת העוזר (GET /support/access בשרת ההשתתפות), לא לפי מה שהעוזר כתב. כל נוהל ההערות חל כרגיל.
+CREATE TABLE IF NOT EXISTS support_message_via (
+  message_id INTEGER PRIMARY KEY,
+  via TEXT NOT NULL
+);

@@ -552,7 +552,11 @@ describe("כניסת עוזר AI (שרת ה-MCP): דלת אחת, החיבורי�
       ["/account/connections/revoke", { all: true }],
       ["/support", { text: "hi" }],
     ]) expect((await agentCall(path, agent, body)).status, path).toBe(403);
-    expect((await agentCall("/support/access", agent)).status).toBe(403);
+    // שיחת המשתמש עם הצוות (שלב 3): שרת ההערות מזהה דרכו את המשתמש, ויודע שזה עוזר
+    const access = await agentCall("/support/access", agent);
+    expect(access.status).toBe(200);
+    expect(access.data.via).toBe("Claude");
+    expect((await call("/support/access", { token: web })).data.via).toBeUndefined();
     expect((await agentCall("/account/connections", agent)).status).toBe(403);
     expect((await call("/me", { token: web })).status).toBe(200);
   });

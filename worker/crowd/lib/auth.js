@@ -25,8 +25,8 @@ export async function authenticate(env, token, now) {
   const at = new Date(now).toISOString();
   const s = await env.DB.prepare("SELECT participant FROM sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?").bind(th, at).first();
   if (s) return { participant: s.participant, session: th, agent: false };
-  const g = await env.DB.prepare("SELECT participant FROM agent_sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?").bind(th, at).first();
-  return g ? { participant: g.participant, session: th, agent: true } : null;
+  const g = await env.DB.prepare("SELECT participant, client FROM agent_sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?").bind(th, at).first();
+  return g ? { participant: g.participant, session: th, agent: true, client: g.client } : null;
 }
 
 /** אסימון סשן שהדפדפן יצר בעצמו (שמירה כשהתשובות נחסמות ברשת): 32–64 תווי base64url */
