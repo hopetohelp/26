@@ -7,7 +7,7 @@ import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
 import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
-import { errorText, type useSession } from "./useCrowd";
+import { errorText, isUserError, type useSession } from "./useCrowd";
 
 import ErrorReport from "../../components/ErrorReport";
 import FilterBlocked, { useServerBlocked } from "../../components/FilterBlocked";
@@ -32,7 +32,8 @@ export function PasswordField({ label, hint, value, onChange, mode }: { label: s
   );
 }
 
-function useAction(action: string) {
+/** explain = הסבר מיוחד לפעולה הזו (למשל סיסמה נוכחית שגויה בהחלפת סיסמה); בלי — errorText */
+function useAction(action: string, explain?: (e: unknown) => string | null) {
   const [msg, setMsg] = useState<{ ok: boolean; text: string; log?: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const run = (fn: () => Promise<string>) => async (e?: FormEvent) => {
@@ -42,7 +43,9 @@ function useAction(action: string) {
     try {
       setMsg({ ok: true, text: await fn() });
     } catch (err) {
-      setMsg({ ok: false, text: errorText(err), log: JSON.stringify({ action, ...(err instanceof CrowdError ? { code: err.code, status: err.status, ...err.diagnostic } : { code: "unexpected" }) }, null, 2) });
+      // טעות קלט או פרטי כניסה ⇐ רק הסבר; לוג וכפתור דיווח — רק לתקלה אמיתית (רשת, שרת)
+      const log = isUserError(err) ? undefined : JSON.stringify({ action, ...(err instanceof CrowdError ? { code: err.code, status: err.status, ...err.diagnostic } : { code: "unexpected" }) }, null, 2);
+      setMsg({ ok: false, text: explain?.(err) ?? errorText(err), log });
     } finally {
       setBusy(false);
     }
@@ -56,7 +59,7 @@ export function NewPasswordForm({ session, onDone }: { session: ReturnType<typeo
   const { token } = session;
   const [cur, setCur] = useState("");
   const [next, setNext] = useState("");
-  const a = useAction("החלפת סיסמה");
+  const a = useAction("החלפת סיסמה", (e) => e instanceof CrowdError && e.code === "bad_credentials" ? "הסיסמה הנוכחית שהוקלדה אינה נכונה, ולכן הסיסמה לא הוחלפה. בדקו אותה ונסו שוב. שכחתם אותה? התנתקו ולחצו על \"שכחתי סיסמה\" במסך הכניסה." : null);
   return (
     <form
       className="space-y-2"

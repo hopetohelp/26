@@ -113,6 +113,9 @@ export function useSession() {
 }
 
 export type SaveState = "idle" | "saving" | "error";
+/** טעות של המשתמש (קלט או פרטי כניסה) ולא תקלה: מסבירים במסך, ואין מה לדווח לתמיכה */
+export const isUserError = (e: unknown) => e instanceof CrowdError && e.status >= 400 && e.status < 500;
+
 export const errorText = (e: unknown): string => {
   if (!(e instanceof CrowdError)) return "משהו השתבש. אפשר לנסות שוב.";
   if (e.code === "offline") return "השמירה עוד לא פעילה באתר. הטיוטה נשמרת בדפדפן הזה.";
@@ -131,6 +134,7 @@ export const errorText = (e: unknown): string => {
   if (e.code === "weak_password") return "הסיסמה קצרה או נפוצה מדי. לפחות 6 תווים.";
   if (e.code === "bad_reset") return "הקישור לאיפוס הסיסמה אינו תקף או שפג תוקפו (30 דקות). אפשר לבקש מייל חדש בטופס הכניסה ← \"שכחתי סיסמה\".";
   if (e.code === "bad_link") return "הקישור האישי הזה אינו בתוקף (אולי נוצר אחריו קישור חדש).";
+  if (e.code === "bad_credentials") return "המייל או הסיסמה אינם נכונים. בדקו ונסו שוב, או לחצו על \"שכחתי סיסמה\" במסך הכניסה.";
   if (e.status === 429) return "יותר מדי ניסיונות. כדאי לחכות דקה ולנסות שוב.";
   if (e.status === 401) return "פרטי הכניסה אינם נכונים או שהכניסה פגה.";
   return `השרת דחה את הבקשה (${e.code}).`;

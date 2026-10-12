@@ -35,10 +35,17 @@ export default function Feedback() {
   );
 }
 
+export function openingLine(diagnostic: string): string {
+  const action = /"action":\s*"([^"]+)"/.exec(diagnostic)?.[1];
+  if (!action || action === "שמירת השערה") return "לא הצלחתי לשמור את ההשערה שלי.";
+  return action.startsWith("/") ? "משהו לא עבד באתר." : `לא הצלחתי: ${action}.`;
+}
+
 export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; diagnostic?: string }) {
   const { pathname } = useLocation();
   const [topic, setTopic] = useState<string>(diagnostic ? "other" : "data");
-  const [text, setText] = useState(diagnostic ? "לא הצלחתי לשמור את ההשערה שלי." : "");
+  // הנוסח הפותח לפי הפעולה שבלוג (לא תמיד שמירת השערה — למשל החלפת סיסמה)
+  const [text, setText] = useState(diagnostic ? openingLine(diagnostic) : "");
   const [trap, setTrap] = useState(""); // שדה מלכודת לרובוטים — משתתף אמיתי לא רואה אותו
   const [status, setStatus] = useState<Status>("idle");
   const [token, setToken] = useState<string | null>(null);
