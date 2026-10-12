@@ -24,6 +24,8 @@ const emit = () => {
  */
 const pendingSends = new Map<string, () => void>();
 export function flushPending() { [...pendingSends.values()].forEach((f) => f()); }
+/** שליחה ממתינה של יחידה אחת בלבד (סגירת מגירת ההצבעה שומרת רק את ההצבעה) */
+export function flushUnit(key: string) { pendingSends.get(key)?.(); }
 /** שליחה ממתינה ליציאה; null מבטל. המחשבון רושם כאן את התוצאה שלו תחת "seats" */
 export function setExitSave(key: string, send: (() => void) | null) {
   if (send) pendingSends.set(key, send);
