@@ -62,14 +62,13 @@ export const inputCls = "w-full min-h-[44px] rounded-theme border border-paper-l
 
 /**
  * כרטיס הפעולות הצף של "הכנסת שלי" (הכרעת בעלים 10.10.2026): בכל לשונית, בתחתית המסך, צמוד לשמאל וברוחב הכפתורים.
- * `drawer`: הכרטיס של מגירת ההצבעה; כשהיא פתוחה (`data-vote-open` על המסך) כרטיס הלשונית מוסתר, כדי שלא יעלו זה על זה.
  * הילדים נכתבים בסדר הקריאה (מימין לשמאל), כך ש״שמירה״ — האחרון — יוצא הכי שמאלי. `above` — התראות מעל הכרטיס.
  */
-export function ActionBar({ children, above, drawer = false }: { children: ReactNode; above?: ReactNode; drawer?: boolean }) {
+export function ActionBar({ children, above }: { children: ReactNode; above?: ReactNode }) {
   return (
     <>
       <div aria-hidden="true" className="h-24" />
-      <div className={`fixed z-20 left-4 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 max-w-[calc(100%-2rem)] md:max-w-lg flex flex-col items-end gap-2 ${drawer ? "" : "[[data-vote-open]_&]:hidden"}`}>
+      <div className="fixed z-20 left-4 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 max-w-[calc(100%-2rem)] md:max-w-lg flex flex-col items-end gap-2">
         {above}
         <div role="group" aria-label="פעולות" className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-2 py-2 flex items-center gap-1.5 flex-wrap justify-end [&_button]:px-3 [&_button]:whitespace-nowrap">
           {children}

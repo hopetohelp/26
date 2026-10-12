@@ -8,7 +8,7 @@ import Vote from "./Vote";
 import { Notice } from "./ui";
 import { useEffect, useState } from "react";
 import CardDrawer from "../../components/CardDrawer";
-import { flushPending, useUnit, type useSession } from "./useCrowd";
+import { flushPending, flushUnit, useUnit, type useSession } from "./useCrowd";
 
 const SECTIONS = [
   { id: "seats", label: "המפלגות" },
@@ -42,8 +42,8 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
 
   const statusOf = (s: Sec) => s === "seats" ? seats.status !== "saved" ? seats : blocs : s === "blocs" ? blocs : null;
   return (
-    <div data-vote-open={voteOpen ? "" : undefined}>
-      <CardDrawer title="ההצבעות שלכם בבחירות עוזרות להבין את התמונה" open={voteOpen} onOpenChange={setVoteOpen} dot={vote.status !== "saved"} className="mb-5">
+    <div>
+      <CardDrawer title="ההצבעות שלכם בבחירות עוזרות להבין את התמונה" open={voteOpen} onOpenChange={(v) => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" pendingTag={vote.status === "saved" ? undefined : "מחכה לתשובה"} dot={vote.status !== "saved"} className="mb-5">
         <Vote unit={vote} session={session} />
       </CardDrawer>
       {session.me?.seatsPending && sec === "seats" && (

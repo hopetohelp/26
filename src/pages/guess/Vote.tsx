@@ -3,7 +3,7 @@ import { splitCls } from "../../lib/splitScreens";
 import { validateVote } from "../../lib/crowdValidate";
 import { ALPHA, EMPTY_VOTE, IDS, K25_IDS, K25_LISTS, K25_PASSED, V2022_LABEL, V2026_LABEL, k25VoteName } from "./model";
 import SaveButton, { SaveError } from "./SaveButton";
-import { ActionBar, Btn, StatusPill } from "./ui";
+import { Btn } from "./ui";
 import Select from "../../components/Select";
 import type { useSession, useUnit } from "./useCrowd";
 
@@ -40,19 +40,21 @@ export default function Vote({ unit, session }: { unit: ReturnType<typeof useUni
           </Select>
         </section>
       </div>
-      <details className="text-sm text-ink-soft border-b border-paper-line pb-2">
-        <summary className="cursor-pointer min-h-[44px] py-3 font-bold">איך נשמרת הפרטיות?</summary>
-        <div className="space-y-2 pb-2 leading-relaxed">
-          <p>באתר מוצגים רק נתונים מצטברים, ללא שם המשתתף וללא שיוך של תשובה לאדם.</p>
-          <p>התשובות האישיות נשמרות בחשבון שלכם כדי שתוכלו לחזור ולעדכן אותן. אין צורך למסור שם אמיתי או כתובת מייל.</p>
-          <p>בקבוצות קטנות, גם נתונים מצטברים עשויים לאפשר הסקת תשובות אישיות.</p>
+      <div className="flex items-start gap-3 border-b border-paper-line pb-2">
+        <details className="min-w-0 flex-1 text-sm text-ink-soft">
+          <summary className="cursor-pointer min-h-[44px] py-3 font-bold">איך נשמרת הפרטיות?</summary>
+          <div className="space-y-2 pb-2 leading-relaxed">
+            <p>באתר מוצגים רק נתונים מצטברים, ללא שם המשתתף וללא שיוך של תשובה לאדם.</p>
+            <p>התשובות האישיות נשמרות בחשבון שלכם כדי שתוכלו לחזור ולעדכן אותן. אין צורך למסור שם אמיתי או כתובת מייל.</p>
+            <p>בקבוצות קטנות, גם נתונים מצטברים עשויים לאפשר הסקת תשובות אישיות.</p>
+          </div>
+        </details>
+        <div className="flex shrink-0 items-center gap-1.5 pt-1">
+          <Btn disabled={!p.v2022 && !p.v2026} onClick={() => unit.setDraft(EMPTY_VOTE)}>אפס</Btn>
+          <SaveButton unit={unit} session={session} invalid={validateVote(p, K25_IDS, IDS)} compact />
         </div>
-      </details>
-      <div><StatusPill status={unit.status} queued={unit.queued} /></div>
-      <ActionBar drawer above={unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}>
-        <Btn disabled={!p.v2022 && !p.v2026} onClick={() => unit.setDraft(EMPTY_VOTE)}>אפס</Btn>
-        <SaveButton unit={unit} session={session} invalid={validateVote(p, K25_IDS, IDS)} compact />
-      </ActionBar>
+      </div>
+      {unit.error && <div className="bg-paper-card rounded-theme"><SaveError unit={unit} /></div>}
     </div>
   );
 }
