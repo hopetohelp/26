@@ -12,8 +12,8 @@ import { LATEST_POLLS } from "../lib/homeData";
 import { pollSeatValues } from "../lib/pollRange";
 import { pctForListSeats } from "./guess/pctSync";
 import { listName } from "../lib/data";
-import { diffText as diff, pollSegs, r1, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
-import { date, num, rng, seatsFmt, signed } from "../lib/format";
+import { diffText as diff, pollSegs, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
+import { date, num, pctValue, rng, seatsFmt, signed } from "../lib/format";
 import { DEFAULT_LINEAGE, heirs, K25_LISTS, k25ListName, lineageProblem, lineageRows, manualFromCurrent, sharedLists, VALID_2022, type Category, type Lineage, type LineageRow, type Split as SplitKind } from "../lib/lineage";
 import SaveButton, { SaveError } from "./guess/SaveButton";
 import { ActionBar, Btn, ShortLabel } from "./guess/ui";
@@ -47,7 +47,7 @@ const SPLITS: { id: SplitKind; label: string }[] = [
 const fromNames = (r: LineageRow) => r.from.map(k25ListName).join(" + ");
 const approx = (r: LineageRow) => (r.category === "partial" ? "~" : "");
 const seats22 = (r: LineageRow) => `${approx(r)}${seatsFmt(Math.round(r.seats2022 * 10) / 10)}`;
-const share22 = (r: LineageRow) => `${approx(r)}${r1(r.share2022)}`;
+const share22 = (r: LineageRow) => `${approx(r)}${pctValue(r.share2022, 1)}`;
 
 /** למה כך שויך: ברירת המחדל מ-raw/lineage.json; שיוך ששונה — "השיוך שלכם" */
 function why(id: string, lin: Lineage): string {
@@ -166,8 +166,8 @@ export default function Changes() {
               <th scope="row" className="py-1 pe-3 text-right font-medium">{nameButton(r)}</th>
               <td className="pe-3">{fromNames(r)}</td>
               <td className="pe-3 tabular">{pct ? share22(r) : seats22(r)}</td>
-              <td className="pe-3 tabular">{pct ? r1(r.shareNow) : r.seatsNow}</td>
-              <td className="pe-3 tabular whitespace-nowrap">{rg ? (pct ? rng(r1(rg[0]), r1(rg[1])) : rng(seatsFmt(rg[0]), seatsFmt(rg[1]))) : "—"}</td>
+              <td className="pe-3 tabular">{pct ? pctValue(r.shareNow, 1) : r.seatsNow}</td>
+              <td className="pe-3 tabular whitespace-nowrap">{rg ? (pct ? rng(pctValue(rg[0], 1), pctValue(rg[1], 1)) : rng(seatsFmt(rg[0]), seatsFmt(rg[1]))) : "—"}</td>
               <td className="tabular" dir="ltr">{pct ? diff(d) : signed(Math.round(d * 10) / 10)}</td>
             </tr>
           );
@@ -272,7 +272,7 @@ export default function Changes() {
                 );
               })}
               <div className="mt-4 text-sm text-ink-soft">
-                <p>לא שויך מ-2022: {r1(unassigned2022.share)}% מהקולות{unassigned2022.others ? ` (כולל ${unassigned2022.others} רשימות קטנות)` : ""}.</p>
+                <p>לא שויך מ-2022: {pctValue(unassigned2022.share, 1)}% מהקולות{unassigned2022.others ? ` (כולל ${unassigned2022.others} רשימות קטנות)` : ""}.</p>
                 {unassigned2022.lists.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {unassigned2022.lists.map((l) => (

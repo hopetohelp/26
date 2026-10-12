@@ -4,7 +4,7 @@
  */
 import type { Dashboard } from "../../lib/crowdApi";
 import { SITE_URL } from "../../lib/shareGuess";
-import { seatsFmt } from "../../lib/format";
+import { pctValue, seatsFmt } from "../../lib/format";
 import { IDS } from "./model";
 import { renderShareImage, sharePalette, IMG_W } from "./shareImage";
 import { votingRows } from "./votingRows";
@@ -67,8 +67,8 @@ export async function voteImage(d: Dashboard): Promise<Blob> {
     while (ctx.measureText(name).width > R - colPrev - 110 && name.length > 3) name = name.slice(0, -2) + "…";
     ctx.fillText(name, R, y);
     ctx.textAlign = "center"; ctx.font = `700 40px ${num}`;
-    ctx.fillStyle = c.soft; ctx.fillText(r.previous === null ? "—" : `${r.previous}%`, colPrev, y);
-    ctx.fillStyle = c.ink; ctx.fillText(r.next === null ? "—" : `${r.next}%`, colNext, y);
+    ctx.fillStyle = c.soft; ctx.fillText(r.previous === null ? "—" : `${pctValue(r.previous)}%`, colPrev, y);
+    ctx.fillStyle = c.ink; ctx.fillText(r.next === null ? "—" : `${pctValue(r.next)}%`, colNext, y);
     ctx.strokeStyle = c.line; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(L, y + 24); ctx.lineTo(R, y + 24); ctx.stroke();
   });

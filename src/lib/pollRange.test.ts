@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { pollSeatRange } from "./pollRange";
+import { pollSeatRange, pollSeatSummary } from "./pollRange";
 import type { Poll } from "./data";
 
 const poll = (s: Record<string, number | undefined>) => ({ values: Object.fromEntries(Object.entries(s).filter(([, v]) => v !== undefined).map(([k, v]) => [k, { s: v }])) }) as unknown as Poll;
@@ -14,4 +14,10 @@ it("טווח של גוש: סכום הרשימות בכל סקר; סקר שחסר
 it("רשימה שבממוצע מתחת לסף ולא נשאלה נחשבת אפס; בלי סקרים — אין טווח", () => {
   expect(pollSeatRange([poll({ likud: 20 })], ["likud", "noam"], { likud: 20 })).toEqual([20, 20]);
   expect(pollSeatRange([], ["likud"], { likud: 20 })).toBeNull();
+});
+it("ממוצע הסקרים והטווח נגזרים מאותה רשימת סקרים, וגוש חסר אינו מושלם לפי המודל", () => {
+  const polls = [poll({ likud: 20, shas: 8 }), poll({ likud: 30, shas: 10 }), poll({ likud: 40 })];
+  expect(pollSeatSummary(polls, ["likud"])).toEqual({ mean: 30, range: [20, 40] });
+  expect(pollSeatSummary(polls, ["likud", "shas"])).toEqual({ mean: 34, range: [28, 40] });
+  expect(pollSeatSummary(polls, ["utj"])).toBeNull();
 });

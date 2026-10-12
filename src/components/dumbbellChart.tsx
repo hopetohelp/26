@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { candleProfiles, type LSeg } from "../lib/chartLanguage";
-import { change, diffText, dumbbellAxis, r1, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
-import { seatsFmt, signed } from "../lib/format";
+import { change, diffText, dumbbellAxis, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
+import { pctOne, seatsFmt, signed } from "../lib/format";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
 import { MeanDot, ProfileCandle, ResultRing } from "./marks";
 import { MODEL_NOTE } from "./InfoTip";
@@ -48,7 +48,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
   const x = (v: number) => ((Math.min(Math.max(v, min), max) - min) / (max - min)) * 100;
   const d = change(r);
   const pct = unit === "pct";
-  const fmt = (v: number) => (pct ? `${r1(v)}%` : seatsFmt(Math.round(v * 10) / 10));
+  const fmt = (v: number) => (pct ? pctOne(v) : seatsFmt(Math.round(v * 10) / 10));
   const sign = pct ? diffText : signed;
   const before = `${r.approx ? "~" : ""}${fmt(r.before)}`;
   return (
