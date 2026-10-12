@@ -8,7 +8,24 @@ on:
 permissions:
   contents: read
 jobs:
+  # שבת מושבתת (הכרעת בעלים 12.10.2026): ריצות מתוזמנות לא רצות מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל. דחיפה והפעלה ידנית אינן נחסמות.
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      shabbat: ${{ steps.t.outputs.shabbat }}
+    steps:
+      - id: t
+        run: |
+          dow=$(TZ=Asia/Jerusalem date +%u); hhmm=$(TZ=Asia/Jerusalem date +%H%M)
+          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$dow" = 5 ] && [ "$((10#$hhmm))" -ge 1600 ] || [ "$dow" = 6 ] && [ "$((10#$hhmm))" -lt 2000 ]; }; then
+            echo "שבת — מדלגים"; echo "shabbat=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "shabbat=false" >> "$GITHUB_OUTPUT"
+          fi
   health:
+    needs: gate
+    if: needs.gate.outputs.shabbat != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
