@@ -23,16 +23,19 @@ export function pollSeatRange(polls: Poll[], ids: string[], average: Record<stri
 }
 
 /**
- * ממוצע חשבוני וטווח מלא מתוך הסקרים בלבד; גוש נספר רק בסקרים עם נתון לכל רשימה בהרכב.
- * רשימה שהסקרים כמעט לא שואלים עליה (ממוצע 0 ב-`average`, למשל נעם או צבע שחור) — 0 בסקר שלא שאל עליה,
- * כמו במגמת הממשלה היוצאת; בלי זה גוש שמכיל אותה לא נספר באף סקר.
+ * ממוצע חשבוני וטווח מלא מתוך הסקרים בלבד. 🔴 נתון שחסר לא מסתיר את הנתון הכולל (הכרעת בעלים 12.10.2026):
+ * רשימות הגוש ש"נשאלות" בסקרים (מופיעות בחצי מהסקרים לפחות) נסכמות, והסכום הוא "לפחות" כשיש רשימה שהסקרים לא שואלים עליה
+ * (למשל נעם או צבע שחור). `listed`/`total` = כמה מרשימות הגוש נכללו בסכום מתוך כמה יש בו. אין השלמה מהמודל ואין השלמה באפס.
+ * סקר נספר רק אם יש בו נתון לכל הרשימות הנשאלות.
  */
-export function pollSeatSummary(polls: Poll[], ids: string[], average?: Record<string, number>): { mean: number; range: [number, number] } | null {
+export function pollSeatSummary(polls: Poll[], ids: string[]): { mean: number; range: [number, number]; listed: number; total: number } | null {
   const unique = [...new Set(ids)];
-  if (!unique.length) return null;
+  if (!unique.length || !polls.length) return null;
+  const asked = unique.filter(id => polls.filter(p => seatsIn(p, id) !== undefined).length * 2 >= polls.length);
+  if (!asked.length) return null;
   const values = polls.flatMap(p => {
-    const parts = unique.map(id => seatsIn(p, id) ?? (average && unique.length > 1 && !average[id] ? 0 : undefined));
+    const parts = asked.map(id => seatsIn(p, id));
     return parts.every((x): x is number => typeof x === "number") ? [parts.reduce((a, b) => a + b, 0)] : [];
   });
-  return values.length ? { mean: mean(values), range: [Math.min(...values), Math.max(...values)] } : null;
+  return values.length ? { mean: mean(values), range: [Math.min(...values), Math.max(...values)], listed: asked.length, total: unique.length } : null;
 }

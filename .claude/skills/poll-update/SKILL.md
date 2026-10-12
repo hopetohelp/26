@@ -80,10 +80,13 @@ python3 -c "import sys; sys.path.insert(0,'pipeline'); from build_data import sl
 - **אימות** של כל סקר חדש (גם מוויקיפדיה) ⇐ `raw/verification.json` עם `status`: `match` (מקור ראשוני זהה) · `secondary` (מקור משני זהה בכל המנדטים; לכתוב מה לא אומת) · `mismatch` (פער; לפרט) · `unreachable`.
 - **דוח PDF מ-gov.il** שהבעלים הוריד ⇐ `raw/gov/Survey_<מספר>.pdf` ושורה בטבלה ב-`raw/gov/README.md`.
 
+## אתר שחסום לגלישה (403)
+כתבת הסקר עצמה חסומה (למשל c14.co.il) ⇐ מחפשים דיווח באתר שמתיר (כיפה `kipa.co.il/חדשות/...`, וואלה, מעריב) עם חיפוש רשת מהסוג `"סקר חדשות 14" מנדטים <תאריך>`, וקוראים אותו עם WebFetch. הבעלים יכול גם להדביק את נוסח הכתבה — זה מקור ראשוני לכל דבר. בודקים: סכום 120, השינוי לעומת הסקר הקודם שבדיווח, וגוש (ימין/אופוזיציה) אם מצוין. מכון לא מוזכר בדיווח ⇐ שם הסדרה לפי סקרי אותו גוף מזמין הקודמים, ונרשם ב-`note` כ"לא אומת".
+
 ## שלב 5 — בדיקה, PR, מיזוג
 ```bash
 git checkout -b claude/polls-$(TZ=Asia/Jerusalem date +%F)
-python3 pipeline/build_data.py        # נכשל על סכום ≠ 120 או מפתח רשימה לא מוכר
+python3.11 pipeline/build_data.py     # חובה Python 3.11 (כמו ב-CI; אחרת בדיקת הדטרמיניזם נכשלת). נכשל על סכום ≠ 120 או מפתח רשימה לא מוכר
 python3 pipeline/test_model.py && python3 pipeline/test_forecast.py && python3 pipeline/test_direct_polls.py
 npx tsc --noEmit -p tsconfig.json && npm test && npm run build
 ```

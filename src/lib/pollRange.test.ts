@@ -15,19 +15,14 @@ it("רשימה שבממוצע מתחת לסף ולא נשאלה נחשבת אפ�
   expect(pollSeatRange([poll({ likud: 20 })], ["likud", "noam"], { likud: 20 })).toEqual([20, 20]);
   expect(pollSeatRange([], ["likud"], { likud: 20 })).toBeNull();
 });
-it("ממוצע הסקרים והטווח נגזרים מאותה רשימת סקרים, וגוש חסר אינו מושלם לפי המודל", () => {
+it("ממוצע הסקרים והטווח נגזרים מאותה רשימת סקרים; רשימה שנשאלת בפחות מחצי מהסקרים היא חסרה ולא מושלמת בפרטי המודל", () => {
   const polls = [poll({ likud: 20, shas: 8 }), poll({ likud: 30, shas: 10 }), poll({ likud: 40 })];
-  expect(pollSeatSummary(polls, ["likud"])).toEqual({ mean: 30, range: [20, 40] });
-  expect(pollSeatSummary(polls, ["likud", "shas"])).toEqual({ mean: 34, range: [28, 40] });
+  expect(pollSeatSummary(polls, ["likud"])).toEqual({ mean: 30, range: [20, 40], listed: 1, total: 1 });
+  expect(pollSeatSummary(polls, ["likud", "shas"])).toEqual({ mean: 34, range: [28, 40], listed: 2, total: 2 });
   expect(pollSeatSummary(polls, ["utj"])).toBeNull();
 });
-
-it("pollSeatSummary: רשימה שהסקרים לא שואלים עליה נספרת 0 בגוש", () => {
-  const polls = [
-    { values: { likud: { s: 30 }, shas: { s: 10 } } },
-    { values: { likud: { s: 26 }, shas: { s: 8 } } },
-  ] as unknown as Parameters<typeof pollSeatSummary>[0];
-  expect(pollSeatSummary(polls, ["likud", "shas", "noam"], { likud: 28, shas: 9 })).toEqual({ mean: 37, range: [34, 40] });
-  expect(pollSeatSummary(polls, ["likud", "shas", "utj"], { likud: 28, shas: 9, utj: 8 })).toBeNull();
-  expect(pollSeatSummary(polls, ["noam"], {})).toBeNull();
+it("נתון שחסר לא מסתיר את הכולל: גוש עם רשימה שהסקרים לא שואלים עליה נספר 'לפחות', עם כמה מתוך כמה", () => {
+  const polls = [poll({ likud: 30, shas: 10 }), poll({ likud: 26, shas: 8 })];
+  expect(pollSeatSummary(polls, ["likud", "shas", "noam"])).toEqual({ mean: 37, range: [34, 40], listed: 2, total: 3 });
+  expect(pollSeatSummary(polls, ["noam"])).toBeNull();
 });
