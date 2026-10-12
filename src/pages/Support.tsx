@@ -7,7 +7,7 @@ import Account from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
 import { Btn, Notice } from "./guess/ui";
 import { PageTitle } from "../components/ui";
-import { Segmented } from "../components/Choice";
+import { Chips } from "../components/Choice";
 import { errorText, useSession } from "./guess/useCrowd";
 import { getPicture } from "../lib/crowdSession";
 import { FEEDBACK_URL, accountSupport, getThread, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
@@ -17,7 +17,7 @@ import { WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread
 const hasAdminKey = () => { try { return !!localStorage.getItem("elections26.admin"); } catch { return false; } };
 
 /**
- * האזור האישי (הכרעת בעלים 9.10.2026, במקום "תמיכה"): תמונה ושם, ומגירות — הפרטים שלי · תמיכה · הנתונים שלי (מגירת הקישור הוסרה 10.10.2026).
+ * האזור האישי (הכרעת בעלים 9.10.2026, במקום "תמיכה"): תמונה ושם, ומגירות — הפרטים שלי · צוות האתר (לשעבר "תמיכה", 12.10.2026) · הנתונים שלי (מגירת הקישור הוסרה 10.10.2026).
  * התמיכה היא שיחה אחת ארוכה עם כל ההודעות של המשתתף והצוות, ושדה ההודעה בתחתית.
  * בלי חשבון: השיחה נשמרת אצלנו, והזיהוי שלה רק בדפדפן הזה; בהרשמה היא עוברת לחשבון (syncLocal).
  */
@@ -128,15 +128,17 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
   if (!FEEDBACK_URL) return <Notice>התמיכה תיפתח יחד עם השמירה באתר.</Notice>;
   return (
     <div className="flex flex-col border border-paper-line rounded-theme bg-paper-card">
-      <ol ref={list} className="flex flex-col gap-3 p-3 md:p-4 overflow-y-auto max-h-[55dvh] min-h-[12rem]" aria-label="שיחת תמיכה" aria-live="polite">
+      <ol ref={list} className="flex flex-col gap-3 p-3 md:p-4 overflow-y-auto max-h-[55dvh] min-h-[12rem]" aria-label="שיחה עם צוות האתר" aria-live="polite">
         <Bubble m={WELCOME} />
         {messages === null && <li className="text-ink-soft text-sm">טוען…</li>}
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
+      <p className="text-xs text-ink-soft px-3 md:px-4 pb-2">התשובות מתקבלות פעם בכמה שעות.</p>
       {!session.token && <p className="text-xs text-ink-soft px-3 md:px-4 pb-2">אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון.</p>}
       {!closed ? (
         <form className="border-t border-paper-line p-3 md:p-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
-          <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
+          <Chips label="סוג הפנייה" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
+          {topic === "theory" && <p className="text-xs text-ink-soft">כתבו תאוריה או חישוב על הבחירות. נענה בשלוש נקודות: איך אפשר לבדוק את זה באתר, האם התאוריה הגיונית, ואם אין דרך לבדוק — נשאל אם יש לכם רעיון איך להוסיף לאתר יכולת כזו.</p>}
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
             <textarea id="support-message" value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={maxText} placeholder="כתבו הודעה…" className="flex-1 min-w-0 border border-ink-faint rounded-theme p-3 bg-paper-card" />
@@ -170,7 +172,7 @@ export default function Support() {
 
   return (
     <div>
-      <PageTitle lead="הפרטים שלכם והשיחה עם צוות האתר — במקום אחד. התמיכה פתוחה גם בלי חשבון.">אזור אישי</PageTitle>
+      <PageTitle lead="הפרטים שלכם והשיחה עם צוות האתר — במקום אחד. השיחה עם הצוות פתוחה גם בלי חשבון, וגם להצעת תאוריות וחישובים.">אזור אישי</PageTitle>
       <header className="flex items-center gap-4 mb-4">
         <Avatar name={me?.name ?? email} picture={token ? getPicture() : null} />
         <div className="min-w-0">
@@ -183,7 +185,7 @@ export default function Support() {
         <Drawer title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
           <Account session={session} />
         </Drawer>
-        <Drawer title="תמיכה" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
+        <Drawer title="צוות האתר" open={open.has("support")} onToggle={() => toggle("support")} badge={unread ? <span className="w-2.5 h-2.5 rounded-full bg-signal" aria-label="(הודעה חדשה)" /> : undefined}>
           <Conversation session={session} />
         </Drawer>
         {(me?.isAdmin || hasAdminKey()) && (
