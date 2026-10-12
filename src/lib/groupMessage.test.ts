@@ -14,10 +14,26 @@ describe("הודעה למנהלי קבוצות", () => {
     expect(m).toContain("הנתונים שלו נשמרים כבר עכשיו");
     expect(m).toContain("גם אם תעלו את הרשימה רק אחרי הבחירות");
   });
-  it("עם קישור הקבוצה — הקישור בהודעה; בלי — ההודעה הכללית", () => {
-    expect(groupInviteMessage("https://hopetohelp.github.io/26/#/g/hagzara")).toContain("הקבוצה בקבוצה: https://hopetohelp.github.io/26/#/g/hagzara");
-    expect(groupInviteMessage()).toContain("רק לשלוח את הקישור בקבוצה.");
-    expect(groupInviteMessage()).not.toContain("#/g/");
+  it("עם קישור הקבוצה — הוא מחליף את כתובת האתר ואינו חוזר בסוף; בלי — ההודעה הכללית", () => {
+    const link = "https://hopetohelp.github.io/26/#/g/hagzara";
+    const m = groupInviteMessage({ groupLink: link });
+    expect(m).toContain(`הבחירות לכנסת ה-26 (${link})`);
+    expect(m.split(link).length - 1).toBe(1);
+    expect(m).not.toContain("(https://hopetohelp.github.io/26/)");
+    const general = groupInviteMessage();
+    expect(general).toContain("(https://hopetohelp.github.io/26/)");
+    expect(general).not.toContain("#/g/");
+  });
+  it("מיילים של המנהלים שכבר הוגדרו מופיעים במשפט ההגדרה", () => {
+    const m = groupInviteMessage({ groupLink: "https://x.example/g", managers: ["a@x.co", "b@y.co"] });
+    expect(m).toContain("כבר מוגדרות אצלי כמנהלי הקבוצה (a@x.co, b@y.co). הקישור והמסך פעילים");
+    expect(groupInviteMessage()).toContain("כבר מוגדרות אצלי כמנהלי הקבוצה. הקישור");
+    expect(groupInviteMessage({ managers: [] })).not.toContain("()");
+  });
+  it("מה צריך מכם: לא צריך לדאוג גם לניסוח פוסטים והודעות", () => {
+    const m = groupInviteMessage();
+    expect(m).toContain("אפילו על ניסוח פוסטים והודעות על הסקר אין צורך לדאוג");
+    expect(m).toContain("כפתור שיתוף עם נוסח ייעודי למנהלי קבוצה");
   });
   it("מבהירה שזה לא בא במקום סקרים מקיפים אלא ממוקד בהשערת הכנסת הבאה", () => {
     const m = groupInviteMessage();

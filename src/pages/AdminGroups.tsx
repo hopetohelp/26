@@ -64,7 +64,7 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
         <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
       </summary>
       <div className="px-3 pb-3 space-y-3">
-      {g.slug && <div><CopyTextButton label="העתקת ההודעה למנהלים, עם קישור הקבוצה" text={groupInviteMessage(groupUrl(g.slug))} /></div>}
+      {g.slug && <div><CopyTextButton label="העתקת ההודעה למנהלים, עם קישור הקבוצה" text={groupInviteMessage({ groupLink: groupUrl(g.slug), managers: (g.managerList ?? []).map((m) => m.email ?? "").filter(Boolean) })} /></div>}
       <GroupLinkPanel
         slug={g.slug}
         setSlug={async (slug) => { await api("/admin/groups/link", slug ? { group: g.id, slug } : { group: g.id }); await reload(); }}
