@@ -1536,5 +1536,53 @@
     "source": "https://www.c14.co.il/article/1735305"
    }
   }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-12",
+  "id": "2026-10-11-kantar-kan-11",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "המקור הראשוני (כאן) לא נבדק. המנדטים של כל 13 הרשימות, סך 120 והגושים (53/50/13/4) הושוו לדיווח וואלה על סקר כאן חדשות מ-11.10 (21:15) וזהים לרשומה באתר. מקור משני יחיד. המכון והמזמין, המדגם, תאריכי השדה והאחוזים לא אומתו.",
+  "source": "https://walla.co.il/news/politics/383957098",
+  "sourceDetails": {
+   "published": "2026-10-11T21:15:00+03:00",
+   "sample_respondents": null
+  },
+  "status": "secondary"
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-12",
+  "id": "2026-10-12-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "המקור הראשוני (mako) חוסם גישה אוטומטית ולכן לא נסרק. מנדטי כל 12 הרשימות, סך 120 והגושים (קואליציה 49, אופוזיציה 54, ערביות 13, הנדל-זליכה 4) הושוו לדיווח כיפה (21:24) וזהים לרשומה באתר; מעריב ווואלה מאשרים חלק מהרשימות. המכון והמזמין, המדגם, תאריכי השדה והאחוזים לא אומתו.",
+  "source": "https://kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233529-0",
+  "sourceDetails": {
+   "published": "2026-10-12T21:24:00+03:00",
+   "sample_respondents": null
+  },
+  "status": "secondary"
  }
 ]
