@@ -318,7 +318,8 @@ def apply_corrections(polls: list[dict], build_time: datetime) -> None:
         if current != c["from"]:
             raise SystemExit(f"תיקון {c['id']} {c['field']}: הערך הנוכחי {current!r} אינו {c['from']!r} — המקור השתנה")
         holder[last] = c["to"]
-        p.setdefault("corrections", []).append({"field": c["field"], "from": c["from"], "to": c["to"], "source": c["source"]})
+        p.setdefault("corrections", []).append({"field": c["field"], "from": c["from"], "to": c["to"], "source": c["source"],
+                                                **({"reason": c["reason"]} if c.get("reason") else {})})
     for p in polls:
         if not p.get("corrections"):
             continue
@@ -348,15 +349,113 @@ def apply_verification(polls: list[dict]) -> None:
                              "details": v.get("sourceDetails") or {}, "law16E": v.get("law16E") or {}}
 
 
-def sample_conflicts(polls: list[dict]) -> list[str]:
-    """סתירה בין גודל המדגם בשדה הראשי לגודל שנרשם בפרטי האימות (sample_respondents).
-    מתריעה בלבד ואינה חוסמת קליטה (כלל ברזל 2) — התיקון נעשה רק ב-raw/corrections.json."""
-    out = []
+FIELD_GROUPS = ("seats", "pct", "sample", "dates")
+
+
+def field_group(field: str) -> str:
+    """לאיזו קבוצת שדות שייך שדה מתוקן: מנדטים / אחוזים / מדגם / תאריכי איסוף (אחרת: עורך הסקר)."""
+    if field == "sample":
+        return "sample"
+    if field in ("start", "end"):
+        return "dates"
+    if field == "firmHe":
+        return "pollster"
+    if field == "gov" or field.endswith(".s"):
+        return "seats"
+    if field.endswith(".p") or field == "others.pct":
+        return "pct"
+    return "other"
+
+
+def apply_field_checks(polls: list[dict]) -> None:
+    """מצב אימות נפרד לכל קבוצת שדות (מנדטים, אחוזים, מדגם, תאריכים) בכל סקר שיש לו אימות או תיקון.
+    סדר ההכרעה: רישום מפורש ב-verification.json (שדה `fields`) ⇐ סתירה מדודה ⇐ תיקון לפי מקור ⇐ התאמה מדודה ⇐ בדיקה כוללת.
+    "overall" = הסקר נבדק כולו מול המקור, בלי רישום נפרד לשדה — אין לקרוא לזה אימות של השדה.
+    רק הסטטוסים "conflict" ו"corrected" נגזרים מהנתונים; את "match" לשדה מנדטים/אחוזים/תאריכים רושמים ידנית ב-`fields`.
+    סתירה אינה חוסמת קליטה (כלל ברזל 2) ואינה מתוקנת בשקט (כלל ברזל 5)."""
+    explicit = {}
+    path = RAW / "verification.json"
+    if path.exists():
+        explicit = {v["id"]: v.get("fields") or {} for v in json.loads(path.read_text(encoding="utf-8"))}
     for p in polls:
-        recorded = ((p.get("verification") or {}).get("details") or {}).get("sample_respondents")
-        if recorded is not None and p.get("sample") is not None and p["sample"] != recorded:
-            out.append(f"{p['id']}: sample={p['sample']}, באימות={recorded}")
-    return out
+        ver = p.get("verification")
+        corrections = p.get("corrections") or []
+        if not ver and not corrections:
+            continue
+        details = (ver or {}).get("details") or {}
+        checks = {}
+        for g in FIELD_GROUPS:
+            given = (explicit.get(p["id"]) or {}).get(g)
+            fixed = [c for c in corrections if field_group(c["field"]) == g]
+            if given:
+                checks[g] = {"status": given["status"], "source": given.get("source") or (ver or {}).get("source")}
+                continue
+            if g == "sample" and details.get("sample_respondents") is not None and p.get("sample") is not None:
+                if p["sample"] != details["sample_respondents"]:
+                    checks[g] = {"status": "conflict", "source": (ver or {}).get("source"),
+                                 "note": f"באתר {p['sample']:,}, בפרטי האימות {details['sample_respondents']:,}"}
+                else:
+                    checks[g] = {"status": "match", "source": (ver or {}).get("source")}
+                continue
+            if fixed:
+                checks[g] = {"status": "corrected", "source": fixed[0]["source"]}
+                continue
+            if ver and ver["status"] in ("match", "partial", "secondary", "corrected"):
+                checks[g] = {"status": "overall", "source": ver.get("source")}
+            else:
+                checks[g] = {"status": "none"}
+        p["fieldChecks"] = checks
+
+
+# מה כל שדה מתוקן משנה: הקבוצה קובעת אילו תוצרים נגזרים ממנה ונבנים מחדש בבנייה הבאה (כל 4 שעות)
+FIELD_AFFECTS = {
+    "seats": ["ארכיון הסקרים", "ממוצע פשוט", "מגמות", "מודל", "תחזית"],
+    "pct": ["ארכיון הסקרים", "ממוצע פשוט", "מגמות", "מודל", "תחזית"],
+    "sample": ["ארכיון הסקרים", "משקל הסקר במודל ובתחזית"],
+    "dates": ["ארכיון הסקרים", "חלון הממוצע הפשוט והמגמות", "מודל", "תחזית"],
+    "pollster": ["ארכיון הסקרים", "ספירת המכונים בממוצע הפשוט", "אפקט הבית במודל"],
+    "other": ["ארכיון הסקרים"],
+}
+
+
+def build_quality(polls: list[dict], model_out: dict | None, build_time: datetime) -> dict:
+    """quality.json — מסך המקורות: כיסוי (כל הסקרים מול החישובים), סתירות פתוחות ויומן התיקונים."""
+    spec = json.loads((Path(__file__).resolve().parent / "forecast_spec.json").read_text(encoding="utf-8"))
+    excluded = [p for p in polls if not (p["consistent"] and p["eligibleToShow"])]
+    in_cycle = [p for p in polls if p["end"] > LIST_SUBMISSION_2026]
+    coverage = {
+        "total": len(polls),
+        "usable": len(polls) - len(excluded),
+        "firstEnd": min(p["end"] for p in polls),
+        "listSubmission": LIST_SUBMISSION_2026,
+        "sinceListSubmission": len(in_cycle),
+        "model": None if model_out is None else {"start": model_out["start"], "used": model_out["polls"], "skipped": len(model_out["skipped"])},
+        "forecastWindowDays": spec["data"]["windowDays"],
+    }
+
+    def who(p: dict) -> dict:
+        return {"id": p["id"], "firmHe": p["firmHe"], "publisherHe": p["publisherHe"], "end": p["end"]}
+
+    conflicts = []
+    for p in polls:
+        for g, c in (p.get("fieldChecks") or {}).items():
+            if c["status"] == "conflict":
+                conflicts.append({**who(p), "group": g, "detail": c.get("note") or "סתירה בין השדה הראשי לפרטי האימות", "source": c.get("source")})
+        if not p["consistent"]:
+            conflicts.append({**who(p), "group": "seats", "detail": f"סכום המנדטים {p['seatSum']} במקום 120 — הסקר הוצא מהחישובים", "source": (p.get("urls") or [None])[0]})
+    conflicts.sort(key=lambda c: (c["end"], c["id"], c["group"]), reverse=True)
+
+    log = []
+    for p in polls:
+        for c in p.get("corrections") or []:
+            g = field_group(c["field"])
+            affects = list(FIELD_AFFECTS[g])
+            if p["end"] <= LIST_SUBMISSION_2026:
+                affects = [a for a in affects if a not in ("מודל", "תחזית", "משקל הסקר במודל ובתחזית")]
+            log.append({**who(p), "field": c["field"], "group": g, "from": c["from"], "to": c["to"], "source": c["source"],
+                        "reason": c.get("reason") or "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי", "affects": affects})
+    log.sort(key=lambda c: (c["end"], c["id"], c["field"]), reverse=True)
+    return {"asOf": build_time.isoformat(), "coverage": coverage, "conflicts": conflicts, "corrections": log}
 
 
 # ---------------------------------------------------------------- רשימות 2026
@@ -707,13 +806,15 @@ def main() -> None:
     registry = build_registry(results)
     apply_corrections(polls["polls"], build_time)
     apply_verification(polls["polls"])
-    for line in sample_conflicts(polls["polls"]):
-        # ::warning:: — התרעה גלויה בריצת GitHub Actions; הבנייה ממשיכה
-        print(f"::warning::סתירת גודל מדגם מול פרטי האימות — {line}")
+    apply_field_checks(polls["polls"])
     history = build_history(results)
     # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
     model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results, build_time)
     forecast_out = None if __import__("os").environ.get("SKIP_MODEL") else build_forecast(polls["polls"], build_time)
+    quality = build_quality(polls["polls"], model_out, build_time)
+    for c in quality["conflicts"]:
+        # ::warning:: — התרעה גלויה בריצת GitHub Actions; הבנייה ממשיכה (סתירה אינה חוסמת קליטה ואינה מתוקנת בשקט)
+        print(f"::warning::סתירת נתונים ({c['group']}) — {c['id']}: {c['detail']}")
     missing = sorted({n for p in polls["polls"] for n in (p["firmHe"], p["publisherHe"]) if untranslated(n)})
     if missing:
         print("⚠️ שמות בלי תרגום לעברית (להוסיף ל-FIRM_HE/PUB_HE):", ", ".join(missing))
@@ -723,7 +824,7 @@ def main() -> None:
         "lists2026": LISTS_2026, "agreements2026": AGREEMENTS_2026, "historyNames": HISTORY_NAMES,
         "historyPolls": sum(len(c["polls"]) for c in history["cycles"]),  # לריבוע "דיוק הסקרים" במסך הבית, בלי לטעון את הקובץ הגדול
     }
-    outputs = [("results", results), ("polls", polls), ("registry", registry), ("meta", meta), ("history", history)]
+    outputs = [("results", results), ("polls", polls), ("registry", registry), ("meta", meta), ("history", history), ("quality", quality)]
     if model_out is not None:
         outputs.append(("model", model_out))
     if forecast_out is not None:

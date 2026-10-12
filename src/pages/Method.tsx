@@ -1,10 +1,12 @@
 import { useEffect, type ReactNode } from "react";
-import { useLocation } from "react-router-dom";
-import { Card, PageTitle } from "../components/ui";
+import { Card, Fold, PageTitle } from "../components/ui";
 import SectionLink from "../components/SectionLink";
-import { meta } from "../lib/data";
+import { Link, useLocation } from "react-router-dom";
+import { fieldLabel, latestPerPollster, meta } from "../lib/data";
+import { groupLabel, quality } from "../lib/quality";
+import { POLL_AVERAGE } from "../lib/sources";
 import { BLOC_ESTIMATE_POLICY } from "../lib/blocEstimates";
-import { date } from "../lib/format";
+import { date, num } from "../lib/format";
 
 /**
  * שיטה, מקורות ואודות (הכרעת בעלים 9.10.2026, החלטה 9): ההסבר המלא נמצא כאן ורק כאן.
@@ -137,7 +139,7 @@ export const DICTIONARY: DictEntry[] = [
               המכון הפעיל את הסכמי העודפים, ולכן נבדקות שתי האפשרויות.
             </li>
             <li>
-              <strong>הממוצע.</strong> כל רשימה נמדדת ביחס לליכוד (לוג של היחס), כך שסך האחוזים נשמר. בכל יום — הממוצע המוחלק של כל הסקרים
+              <strong>הממוצע.</strong> כל רשימה נמדדת ביחס לליכוד (לוג של היחס), כך שסך האחוזים נשמר. בכל יום — הממוצע המוחלק של הסקרים שנכנסים למודל (מאז הגשת הרשימות)
               (מודל "רמה מקומית": מסנן קלמן והחלקה קדימה-אחורה), אחרי תיקון "אפקט הבית" של כל מכון+מזמין — כמה הוא שונה בעקביות מהשאר. האפקטים
               מכווצים לכיוון אפס, וסכומם אפס: הממוצע מניח שהמכונים יחד אינם מוטים. זו הנחה, לא עובדה.
             </li>
@@ -437,14 +439,124 @@ export function MethodNumbers() {
   );
 }
 
+
+/** כל הסקרים מול החישובים: מה נכנס לכל תוצר ולמה (ביקורת קודקס 12.10.2026, סעיף "תיאור מדויק של הכיסוי") */
+function Coverage() {
+  const c = quality.coverage;
+  const simple = latestPerPollster(POLL_AVERAGE.asOf).length;
+  const rows: [string, string, string][] = [
+    ["ארכיון הסקרים", `כל סקר של המחזור שנקלט, מ-${date(c.firstEnd)}. כולל סקרים שסכום המנדטים בהם אינו 120 — הם מסומנים ואינם נכנסים לחישוב.`, num(c.total)],
+    ["סקרים שנכנסים לחישובים", "סקרים שפורסמו לציבור וסכום המנדטים בהם 118–122. כל חישוב מתחיל מהם, ולא מכל הארכיון.", num(c.usable)],
+    ["ממוצע פשוט (בית והמצב היום)", "הסקר האחרון של כל מכון ומזמין ב-14 הימים האחרונים. מכון שפרסם הרבה סקרים בחלון נספר פעם אחת.", `${num(simple)} סקרים`],
+    ["מגמות", "בכל נקודה (כל 3 ימים): הסקר האחרון של כל מכון ומזמין מ-14 הימים שהסתיימו בה, מתוך הסקרים שנכנסים לחישובים.", "לפי הטווח שנבחר"],
+    ["המודל והתרחישים", `רק סקרים שהסתיימו אחרי הגשת הרשימות (${date(c.listSubmission)}), שהמנוע משחזר. סקרים מוקדמים יותר אינם משפיעים עליו.${c.model && c.model.skipped ? ` ${num(c.model.skipped)} סקרים הוצאו כי המנוע אינו משחזר אותם.` : ""}`, `${num(POLL_AVERAGE.polls)} סקרים`],
+    ["התחזית", `אותם סקרים כמו המודל. נקודת הבסיס: הסקר האחרון של כל מכון ב-${c.forecastWindowDays} הימים האחרונים; המגמה נלמדת מכל סקרי המכון מאז הגשת הרשימות.`, `${num(c.sinceListSubmission)} סקרים`],
+  ];
+  return (
+    <Card title="כל הסקרים מול החישובים" id="coverage" tab="sources">
+      <p className="text-sm">
+        לא כל סקר שבארכיון נכנס לכל מספר באתר. כשכתוב &quot;כל הסקרים&quot; הכוונה לארכיון; כל חישוב בוחר מתוכו לפי כלל קבוע, והמספרים כאן מתעדכנים
+        עם כל בנייה של הנתונים. איך כל מספר מחושב — במילון המספרים.
+      </p>
+      <ul className="mt-3 divide-y divide-paper-line text-sm">
+        {rows.map(([name, rule, n]) => (
+          <li key={name} className="py-3">
+            <p className="flex flex-wrap items-baseline justify-between gap-x-3">
+              <strong>{name}</strong>
+              <span className="font-bold">{n}</span>
+            </p>
+            <p className="text-ink-soft mt-1">{rule}</p>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+const who = (x: { firmHe: string; publisherHe: string | null; end: string }) => `${x.firmHe}${x.publisherHe ? ` · ${x.publisherHe}` : ""}, ${date(x.end)}`;
+
+/** איך נבדק כל שדה, וסתירות פתוחות */
+function DataChecks() {
+  const open = quality.conflicts;
+  return (
+    <Card title="בדיקה לפי שדה וסתירות פתוחות" id="data-checks" tab="sources">
+      <p className="text-sm">
+        לכל סקר שנבדק נרשם מצב נפרד לארבע קבוצות שדות: מנדטים, אחוזים, גודל המדגם ותאריכי העבודה בשטח. המצבים: <strong>תואם למקור</strong> (נבדק ונמצא תואם),
+        <strong> תוקן לפי המקור</strong> (יש תיקון ביומן), <strong>סתירה פתוחה</strong> (שני מספרים שונים באותו סקר, ועדיין לא הוכרע), <strong>נבדק רק בבדיקת הסקר
+        כולו</strong> (הסקר הושווה למקור, אך לא נרשם מה נבדק בשדה הזה) ו<strong>טרם נבדק</strong>. מצב &quot;תואם&quot; לגודל המדגם נקבע אוטומטית משוואת המספר הראשי
+        לפרטי האימות; לשאר השדות הוא נרשם רק כשנבדקו ידנית. מצב הסקר מוצג בכרטיס כל סקר ב<Link to="/polls" className="underline">ארכיון הסקרים</Link>.
+      </p>
+      <p className="text-sm mt-2">
+        סתירה אינה עוצרת קליטה של סקר, והאתר אינו מתקן אותה בעצמו: התיקון נעשה רק לפי המקור וברישום ביומן. בכל בנייה של הנתונים נבדקות גם סתירות בין השדה
+        הראשי לפרטי האימות, וסכום מנדטים שאינו 120.
+      </p>
+      {open.length === 0 ? (
+        <p className="text-sm mt-3">כרגע אין סתירות פתוחות.</p>
+      ) : (
+        <Fold title={`סתירות פתוחות (${num(open.length)})`}>
+          <ul className="text-sm space-y-2">
+            {open.map((c) => (
+              <li key={`${c.id}-${c.group}`}>
+                <strong>{who(c)}</strong> — {groupLabel(c.group)}: {c.detail}
+                {c.source && /^https?:/.test(c.source) && (
+                  <> · <a href={c.source} rel="noopener noreferrer" className="underline">מקור</a></>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Fold>
+      )}
+    </Card>
+  );
+}
+
+/** יומן התיקונים: מה השתנה, מדוע, ומה נבנה מחדש בעקבותיו */
+function CorrectionsLog() {
+  const log = quality.corrections;
+  return (
+    <Card title="יומן התיקונים" id="corrections-log" tab="sources">
+      <p className="text-sm">
+        כל תיקון נתון נרשם בקובץ אחד בריפו (<code>raw/corrections.json</code>) עם הערך הקודם, הערך החדש והמקור, ואינו נעשה בשקט. בטבלה: מה השתנה, מדוע, ואילו
+        תוצרים נגזרים מהשדה. כל התוצרים נבנים מחדש אוטומטית בבנייה הבאה של הנתונים (כל 4 שעות), ולכן אין צורך בחישוב ידני. תוצר שהסקר אינו נכנס אליו
+        (למשל המודל, לסקר שקדם להגשת הרשימות) אינו מופיע ברשימה. נכון ל-{date(meta.dataAsOf)}: {num(log.length)} תיקונים.
+      </p>
+      <Fold title={`כל התיקונים (${num(log.length)})`}>
+        <ul className="divide-y divide-paper-line text-sm">
+          {log.map((c) => (
+            <li key={`${c.id}-${c.field}`} className="py-3">
+              <p className="font-bold">{who(c)}</p>
+              <p>
+                {fieldLabel(c.field)}: <bdi>{String(c.from)}</bdi> ⇐ <bdi>{String(c.to)}</bdi>
+              </p>
+              <p className="text-ink-soft">{c.reason}</p>
+              <p className="text-ink-soft">נבנים מחדש: {c.affects.join(" · ")}</p>
+              <p className="break-all text-ink-soft">
+                מקור:{" "}
+                {/^https?:/.test(c.source ?? "") ? (
+                  <a href={(c.source ?? "").split(" ")[0]} rel="noopener noreferrer" className="underline">{c.source}</a>
+                ) : (
+                  c.source
+                )}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Fold>
+    </Card>
+  );
+}
+
 /** מקורות, עדכונים ופרטיות */
 export function MethodSources() {
   useAnchor();
   return (
     <>
       <PageTitle>מקורות</PageTitle>
+      <Coverage />
+      <DataChecks />
+      <CorrectionsLog />
       <Card title="מקורות הנתונים" id="sources" tab="sources">
-        <ul className="list-disc ps-5 space-y-1 text-sm">
+        <ul className="list-disc ps-5 space-y-1 text-sm break-words">
           <li>
             <strong>תוצאות אמת (2019–2022):</strong> עמודי התוצאות הארציות של ועדת הבחירות המרכזית (votes21–votes25.bechirot.gov.il), וקובצי
             התוצאות לפי יישוב. הקבצים שמורים בריפו עם חתימת sha256.
@@ -473,7 +585,7 @@ export function MethodSources() {
       <Card title="עדכונים ותיקונים" id="updates" tab="sources">
         <p className="text-sm">
           הסקרים מתעדכנים אוטומטית כל 4 שעות, מכל פרסום שנקלט, בלי הגבלת תאריך. כל שינוי בנתונים עובר בריפו הציבורי עם היסטוריה מלאה, ואפשר לדווח על טעות דרך
-          "דיווח על טעות" בתחתית כל עמוד. הנתונים נכונים ל-{date(meta.dataAsOf)}.
+          "דיווח על טעות" בתחתית כל עמוד. תיקוני נתונים נרשמים ביומן התיקונים שלמעלה. הנתונים נכונים ל-{date(meta.dataAsOf)}.
         </p>
       </Card>
       <Card title="מונה כניסות ופרטיות" id="privacy" tab="sources">

@@ -164,6 +164,7 @@
   "field": "values.bluewhite.p",
   "from": 1.9,
   "id": "2026-10-08-lri-p4a-maariv",
+  "reason": "בטבלת ויקיפדיה נרשם 1.9%; הדוח הרשמי 4197 מציג 0.9% (ביקורת קודקס 12.10.2026)",
   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; \"כחול לבן בראשות בני גנץ 0.9%\")",
   "to": 0.9
  },
@@ -171,6 +172,7 @@
   "field": "sample",
   "from": 2175,
   "id": "2026-10-07-sf-nd-channel-14",
+  "reason": "בטבלת ויקיפדיה נרשם 2,175; הפרסום המקורי מציין 1,100 משיבים (ביקורת קודקס 12.10.2026)",
   "source": "https://www.c14.co.il/article/1728516 (1,100 משיבים; כך גם בפרטי האימות של הרשומה)",
   "to": 1100
  }

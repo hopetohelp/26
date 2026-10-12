@@ -87,7 +87,7 @@ export const TOOLS = [
       return {
         averages: {
           simple: { label: "ממוצע פשוט", explain: "ממוצע המנדטים בסקר האחרון של כל מכון ב-14 הימים האחרונים, והטווח מהנמוך לגבוה", kind: "סיכום סקרים", asOf: d.latestPerPollster?.asOf, method: "current", methodUrl: url("current"), seats: simple },
-          model: { label: "ממוצע המודל", explain: "ממוצע של הקולות בכל הסקרים, שעובר חלוקת מנדטים לפי החוק — המספרים שבמסך הבית", kind: "סיכום סקרים", asOf: d.average?.asOf, method: "model", methodUrl: url("model"), seats: d.average?.seats, shares: d.average?.shares },
+          model: { label: "ממוצע המודל", explain: "ממוצע של הקולות בסקרים שנכנסים למודל (מאז הגשת הרשימות), שעובר חלוקת מנדטים לפי החוק — המספרים שבמסך הבית", kind: "סיכום סקרים", asOf: d.average?.asOf, method: "model", methodUrl: url("model"), seats: d.average?.seats, shares: d.average?.shares },
           difference: { method: "means", methodUrl: url("means") },
         },
         ...d,
