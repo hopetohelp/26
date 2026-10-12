@@ -6,7 +6,7 @@ import MyData from "./guess/MyData";
 import Account, { ManagedGroup } from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
 import { Drawer } from "../components/Drawer";
-import { SideSplit } from "../components/SideSplit";
+import { DrawerMenu, useWide } from "../components/DrawerMenu";
 import { Btn, Notice } from "./guess/ui";
 import { PageTitle } from "../components/ui";
 import { Chips } from "../components/Choice";
@@ -119,7 +119,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
     <section aria-labelledby="chat-title" className="flex-1 flex flex-col">
       <h2 id="chat-title" className="font-bold text-lg pt-4 pb-2">צוות האתר</h2>
       {/* ההודעות נגללות עם המסך, מהמגירות ועד שדה הכתיבה */}
-      <div className="flex-1 flex flex-col md:min-h-0 md:overflow-y-auto">
+      <div className="flex-1 flex flex-col">
       <ol ref={list} className="mt-auto flex flex-col gap-3 pb-3" aria-label="שיחה עם צוות האתר" aria-live="polite">
         {messages !== null && !messages.some((m) => m.author === "team" && m.text === WELCOME.text) && <Bubble m={WELCOME} />}
         {messages === null && <li className="text-ink-soft text-sm">טוען…</li>}
@@ -172,40 +172,55 @@ export default function Support() {
   const status = !token ? "לא מחוברים — הכול נשמר רק במכשיר הזה ולא נכנס לסטטיסטיקות." : !me ? (blocked ? "הסינון חוסם את החיבור לשרת" : "טוען…") : me.google ? "מחוברים עם Google" : email ? "מחוברים במייל" : "חסר מייל או Google";
   const groups = me?.managedGroups ?? [];
 
+  // מסך רחב: תפריט מגירות מימין ותוכן המגירה שנבחרה משמאל; ברירת המחדל — השיחה עם צוות האתר
+  const wide = useWide();
+  const [selected, setSelected] = useState<DrawerId | "chat">("chat");
+  useEffect(() => { if (me?.needsEmail || (token && !me && blocked)) setSelected("details"); }, [me?.needsEmail, token, me, blocked]);
+  const badge = me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined;
+  const details = (
+    <>
+      <header className="flex items-center gap-4 mb-4">
+        <Avatar name={me?.name ?? email} picture={token ? getPicture() : null} />
+        <div className="min-w-0">
+          <p className="font-display text-2xl leading-tight truncate">{me?.name || (token ? "החשבון שלי" : "אורח")}</p>
+          <p className="text-sm text-ink-soft">{status}</p>
+        </div>
+      </header>
+      <Account session={session} hideGroups />
+    </>
+  );
+  const data = token ? <MyData session={session} part="data" /> : null;
+  const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className="py-3 border-b border-paper-line space-y-2" />) : null;
+  const admin = (me?.isAdmin || hasAdminKey()) && (
+    <div className="border-b border-paper-line">
+      <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
+    </div>
+  );
+  const detailsTitle = token ? "הפרטים שלי" : "הרשמה או כניסה";
+
   /*
-   * מבנה המסך (הכרעת בעלים 12.10.2026): בראש — מגירות (הפרטים שלי, ובתוכה החשבון; הנתונים שלי; ניהול קבוצה למנהלי קבוצה; ניהול האתר),
-   * ושאר המסך — צ׳אט עם צוות האתר, ושדה כתיבה מתרחב צמוד לתחתית. במסך רחב (SideSplit): המגירות מימין והשיחה משמאל.
+   * מבנה המסך (הכרעת בעלים 12.10.2026). צר: בראש מגירות (הפרטים שלי, הנתונים שלי, ניהול קבוצה, ניהול האתר),
+   * ושאר המסך — צ׳אט עם צוות האתר, ושדה כתיבה מתרחב צמוד לתחתית. רחב (DrawerMenu): גם השיחה היא מגירה, והיא הפתוחה בכניסה.
    */
+  if (wide) {
+    const items = [
+      { id: "chat", title: "צוות האתר", content: <Conversation session={session} /> },
+      { id: "details", title: detailsTitle, badge, content: details },
+      ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
+      ...(token && groups.length > 0 ? [{ id: "groups", title: "ניהול קבוצה", content: groupList }] : []),
+    ];
+    return <DrawerMenu className="h-[calc(100dvh-7.5rem)]" title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId | "chat")} after={admin} label="אזור אישי" />;
+  }
   return (
-    <SideSplit className="min-h-[calc(100dvh-10.5rem)] md:h-[calc(100dvh-7.5rem)]" main={<Conversation session={session} />} side={<>
+    <div className="flex flex-col min-h-[calc(100dvh-10.5rem)]">
       <PageTitle>אזור אישי</PageTitle>
       <div className="border-t border-paper-line [&>*]:min-w-0">
-        <Drawer title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
-          <header className="flex items-center gap-4 mb-4">
-            <Avatar name={me?.name ?? email} picture={token ? getPicture() : null} />
-            <div className="min-w-0">
-              <p className="font-display text-2xl leading-tight truncate">{me?.name || (token ? "החשבון שלי" : "אורח")}</p>
-              <p className="text-sm text-ink-soft">{status}</p>
-            </div>
-          </header>
-          <Account session={session} hideGroups />
-        </Drawer>
-        {token && (
-          <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>
-            <MyData session={session} part="data" />
-          </Drawer>
-        )}
-        {token && groups.length > 0 && (
-          <Drawer title="ניהול קבוצה" open={open.has("groups")} onToggle={() => toggle("groups")}>
-            {groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className="py-3 border-b border-paper-line space-y-2" />)}
-          </Drawer>
-        )}
-        {(me?.isAdmin || hasAdminKey()) && (
-          <div className="border-b border-paper-line">
-            <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
-          </div>
-        )}
+        <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
+        {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
+        {token && groups.length > 0 && <Drawer title="ניהול קבוצה" open={open.has("groups")} onToggle={() => toggle("groups")}>{groupList}</Drawer>}
+        {admin}
       </div>
-    </>} />
+      <Conversation session={session} />
+    </div>
   );
 }
