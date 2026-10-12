@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { call, CrowdError, type GroupImportResult, type GroupLinkStats, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
 import GroupStats from "../../components/GroupStats";
-import { GroupAddEmail, GroupImagePanel, GroupLinkPanel } from "../../components/GroupTools";
+import { GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../../components/GroupTools";
 import { GroupManagerGuide } from "../../components/GroupGuide";
 import { hasConsent, setConsent } from "../../lib/crowdSession";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
@@ -460,6 +460,7 @@ export function ManagedGroup({ id, name, slug, image, token, className, onChange
       <p className="font-bold pt-2">רשימת החברים</p>
       <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={() => setRefresh((n) => n + 1)} />
       <GroupUpload send={send} onDone={() => setRefresh((n) => n + 1)} />
+      <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={() => { setRefresh((n) => n + 1); onChanged?.(); }} />
       <GroupImagePanel
         id={id}
         image={image}

@@ -150,3 +150,32 @@ export function GroupAddEmail({ add, onDone }: { add: (email: string) => Promise
     </form>
   );
 }
+
+/**
+ * מחיקת כל חברי הקבוצה (הכרעת בעלים 12.10.2026): מוחקת את רשימת המיילים של הקבוצה, בשני שלבים (אישור כפול).
+ * החשבונות וההשערות של החברים לא נמחקים, ומנהלי הקבוצה נשארים; אפשר להעלות רשימה מחדש.
+ * clear = אותה קריאה של "החלפת הרשימה" ברשימה ריקה.
+ */
+export function GroupClearMembers({ clear, onDone }: { clear: () => Promise<GroupImportResult>; onDone?: () => void }) {
+  const [sure, setSure] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const run = async () => {
+    setBusy(true); setMsg(null);
+    try { await clear(); setMsg({ ok: true, text: "רשימת החברים נמחקה." }); setSure(false); onDone?.(); } catch { setMsg({ ok: false, text: "המחיקה לא הצליחה. נסו שוב." }); } finally { setBusy(false); }
+  };
+  return (
+    <div className="space-y-2">
+      {sure ? (
+        <>
+          <Notice tone="warn">פעולה זו מוחקת את כל רשימת המיילים של הקבוצה, וכולם יוצאים ממנה. החשבונות וההשערות של החברים לא נמחקים, ומנהלי הקבוצה נשארים. אפשר להעלות רשימה מחדש.</Notice>
+          <div className="flex flex-wrap gap-2">
+            <Btn kind="danger" disabled={busy} onClick={() => void run()}>{busy ? "מוחק…" : "כן, למחוק את כל החברים"}</Btn>
+            <Btn disabled={busy} onClick={() => setSure(false)}>ביטול</Btn>
+          </div>
+        </>
+      ) : <Btn kind="danger" onClick={() => { setSure(true); setMsg(null); }}>מחיקת כל חברי הקבוצה</Btn>}
+      {msg && <Notice tone={msg.ok ? "calm" : "warn"}>{msg.text}</Notice>}
+    </div>
+  );
+}

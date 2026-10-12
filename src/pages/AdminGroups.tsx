@@ -3,7 +3,7 @@ import { Btn, Field, Notice, inputCls } from "./guess/ui";
 import GroupUpload from "../components/GroupUpload";
 import { AdminGroupsGuide } from "../components/GroupGuide";
 import type { GroupImportResult, GroupLinkStats, GroupStats as Stats } from "../lib/crowdApi";
-import { GroupAddEmail, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
+import { GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
 import { cleanSlugInput, finalSlug } from "../lib/groupLink";
 import GroupStats from "../components/GroupStats";
 
@@ -83,6 +83,7 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
       <p className="font-bold text-sm pt-2">רשימת החברים</p>
       <GroupAddEmail add={(email) => api("/admin/groups/import", { group: g.id, emails: [email], mode: "add" }) as Promise<GroupImportResult>} onDone={() => void reload()} />
       <GroupUpload send={(chunk) => api("/admin/groups/import", { group: g.id, ...chunk }) as Promise<GroupImportResult>} onDone={() => void act(async () => {})()} />
+      <GroupClearMembers clear={() => api("/admin/groups/import", { group: g.id, emails: [], mode: "replace" }) as Promise<GroupImportResult>} onDone={() => void reload()} />
       <GroupImagePanel
         id={g.id}
         image={g.image}
