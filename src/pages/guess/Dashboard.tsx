@@ -10,7 +10,7 @@ import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDash
 import { SAVED_EVENT } from "../../lib/outbox";
 import { loadDraft } from "../../lib/crowdSession";
 import { date, rng, seatsFmt } from "../../lib/format";
-import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
+import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, normalizeBlocs, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
@@ -63,7 +63,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const comparing = scope !== "all" && compare && view === "table" && !!all?.open;
   const groupName = groups.find((g) => g.id === scope)?.name ?? "הקבוצה";
   const overallSeats: Overall | undefined = comparing && all?.seats ? { name: groupName, of: (id) => all.seats!.full.find((x) => x.list === id) } : undefined;
-  const allBlocs = useMemo(() => comparing && all?.blocs ? new Map(blocRows(all, []).map((r) => [compKey(r.lists), r.stat])) : null, [comparing, all]);
+  const allBlocs = useMemo(() => comparing && all?.blocs ? blocStats(all) : null, [comparing, all]);
   const overallBlocs: Overall | undefined = allBlocs ? { name: groupName, of: (k) => allBlocs.get(k) } : undefined;
 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
@@ -85,6 +85,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
   const stale = !!d.publishedAt && Date.now() - Date.parse(d.publishedAt) >= 2 * 3600_000;
   const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
   const definedBlocs = loadDraft<BlocsPayload>("blocs") ?? personal.saved ?? session.me?.latest.blocs?.payload as BlocsPayload | undefined;
+  const userBlocs = (personal.draft ? normalizeBlocs(personal.draft) : DEFAULT_BLOCS).blocs;
   const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
   return (
     <div>
@@ -100,7 +101,7 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
         {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
       </div>}
       {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
-      {d.blocs ? <BlocStats d={d} view={view} mineBlocs={hasDefinedBlocs ? definedBlocs!.blocs : []} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
+      {d.blocs ? <BlocStats d={d} view={view} mineBlocs={userBlocs} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>
   );
@@ -108,11 +109,13 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
 /**
  * כותרת קטע סטטיסטיקה (הכרעת בעלים 12.10.2026): הכותרת באמצע, ומתחתיה שורה — מתג מימין ומספר המשתתפים משמאל.
- * אותה כותרת למנדטים ולהצבעה. בגושים אין מספר כללי: המספר מוצג בכל גוש בנפרד.
+ * אותה כותרת למנדטים ולהצבעה. `action`: כפתור באותה שורה של הכותרת, לצידה (עריכת הגושים; הכרעת בעלים 12.10.2026). בגושים אין מספר כללי: המספר מוצג בכל גוש בנפרד.
  */
-function SectionTitle({ title, count, toggle }: { title: string; count?: number; toggle?: ReactNode }) {
+function SectionTitle({ title, count, toggle, action }: { title: string; count?: number; toggle?: ReactNode; action?: ReactNode }) {
   return <>
-    <h2 className="text-2xl font-display leading-tight text-center mb-3">{title}</h2>
+    {action
+      ? <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-3"><h2 className="text-2xl font-display leading-tight">{title}</h2>{action}</div>
+      : <h2 className="text-2xl font-display leading-tight text-center mb-3">{title}</h2>}
     {(toggle || count !== undefined) && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-3">
       {toggle ?? <span />}
       {count !== undefined && <span className="text-2xl tabular font-display">{count} משתתפים</span>}
@@ -162,41 +165,45 @@ export function SeatsStats({ rows, polls, mine, view, onView, passedLists, overa
   </table></div></Card>;
 }
 
-/** הכרעת בעלים 11.10.2026: הרכב חמש רשימות (ממשלה יוצאת בלי נעם) לא מוצג כגוש נפרד בסטטיסטיקות; תצוגה בלבד. */
-const HIDDEN_BLOC = ["likud", "rzp", "otzma", "shas", "utj"].sort().join(",");
 const compKey = (lists: string[]) => [...new Set(lists)].sort().join(",");
 
-/** ארבע שורות קבועות קודמות לגושים שהגדירו לפחות שני משתתפים. */
-/** שורות טבלת הגושים: ארבעה קבועים, מותאמים (5 משתתפים ומעלה) והגושים שלך */
-function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[]): BlocRow[] {
-  const b=d.blocs!;
+/**
+ * הנתון של כל הרכב גוש אצל כלל המשתתפים: הגושים הקבועים, וגוש מותאם שלפחות חמישה משתתפים הגדירו (הכרעת בעלים 11.10.2026)
+ * וכשיש לו לפחות שתי רשימות וממוצע של 4 מנדטים לרשימה. הרכב שאין לו נתון — אין במפה.
+ */
+function blocStats(d: D): Map<string, SeatStat> {
+  const b = d.blocs!;
   const fixed = b.fixed ?? [{ id: "government", name: "הממשלה היוצאת", lists: GOV_IDS, stat: b.derived?.gov ?? null }, ...DEFAULT_BLOCS.blocs.filter(g => g.id !== "government").map(g => ({ id: g.id, name: g.name, lists: g.lists, stat: null }))];
-  const fixedKeys = new Set(fixed.map(g => [...g.lists].sort().join(",")));
-  const fixedOrder = ["government", "coalition", "gov", "opposition", "rest", "unity", "arab"];
-  const fixedRows: BlocRow[] = [...fixed].sort((a,b) => fixedOrder.indexOf(a.id)-fixedOrder.indexOf(b.id)).map(g => ({ key: g.id, lists: g.lists, label: g.name, stat: g.stat }));
-  // גוש מותאם נכנס לטבלה כשלפחות חמישה משתתפים הגדירו אותו (הכרעת בעלים 11.10.2026)
-  const customRows: BlocRow[] = (b.custom ?? []).filter(g => g.derived && g.n >= 5 && !fixedKeys.has([...g.lists].sort().join(",")) && compKey(g.lists) !== HIDDEN_BLOC)
-    .filter(g => g.eligible ?? (new Set(g.lists).size >= 2 && g.derived!.mean >= 4 * new Set(g.lists).size))
-    .map(g => ({key: [...g.lists].sort().join(","), lists: g.lists, label: g.name, stat: g.derived!, n: g.n}))
-    .sort((a,b) => (b.n ?? 0)-(a.n ?? 0) || b.stat!.mean-a.stat!.mean || a.label.localeCompare(b.label,"he"));
-  // גושים שהגדרתם ואינם ברשימה: מוצגים עם הכיתוב "שלך"
-  const shown = new Set([...fixedRows, ...customRows].map(r => compKey(r.lists)));
-  const ownRows: BlocRow[] = mineBlocs.filter(g => g.lists.length > 0 && !shown.has(compKey(g.lists)) && shown.add(compKey(g.lists)))
-    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: null, own: true }));
-  return [...fixedRows, ...customRows, ...ownRows];
+  const map = new Map<string, SeatStat>();
+  for (const g of fixed) if (g.stat) map.set(compKey(g.lists), g.stat);
+  for (const g of b.custom ?? []) {
+    const eligible = g.eligible ?? (new Set(g.lists).size >= 2 && g.derived != null && g.derived.mean >= 4 * new Set(g.lists).size);
+    if (g.derived && g.n >= 5 && eligible && !map.has(compKey(g.lists))) map.set(compKey(g.lists), g.derived);
+  }
+  return map;
+}
+
+/**
+ * שורות טבלת הגושים (הכרעת בעלים 12.10.2026): לכל משתתף מוצגים רק הגושים שהגדיר אישית, בשמות שנתן להם;
+ * מחק חלק או הכול — יוצגו לו פחות. הנתון של כל גוש הוא של כלל המשתתפים באותו הרכב (או חסר כשאין מספיק מגדירים).
+ */
+function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[]): BlocRow[] {
+  const stats = blocStats(d);
+  return mineBlocs.filter(g => g.lists.length > 0)
+    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: stats.get(compKey(g.lists)) ?? null }));
 }
 
 export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
   const rows = blocRows(d, mineBlocs);
   const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
-  const head = <SectionTitle title="החלוקה לגושים" toggle={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
-  if (!rows.length) return <Notice>עדיין אין גושים להצגה.</Notice>;
-  if (view==="chart") return <Bars head={head} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,own:r.own,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
+  const head = <SectionTitle title="החלוקה לגושים" action={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
+  if (!rows.length) return <Card className="!border-t-0">{head}<Notice>אין לך גושים מוגדרים. אפשר להוסיף גוש בעריכת הגושים.</Notice></Card>;
+  if (view==="chart") return <Bars head={head} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
   const dataCols = 2 + (mineSeats ? 1 : 0) + (overall ? 1 : 0);
   return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
-    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /></th><td className="text-center"><AvgRange mean={seatsFmt(blocPoll(d, r.lists))} range={pollRangeText(pollSeatRange(LATEST_POLLS, r.lists, POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
+    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={seatsFmt(blocPoll(d, r.lists))} range={pollRangeText(pollSeatRange(LATEST_POLLS, r.lists, POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div></Card>;
 }
 
@@ -237,7 +244,7 @@ function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[
     <ul className="mt-1">{rows.map((r, i) => <li key={r.key} className={`grid ${COLS} gap-2 items-center text-sm min-h-12 py-1 border-t border-paper-line last:border-b`}>
       <span className="flex items-center gap-2 min-w-0">
         {!r.lists && <PartyAvatar id={r.key} size={28} />}
-        <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /> : r.label}</span>
+        <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} /> : r.label}</span>
       </span>
       <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה משתתפים שיערו ערך כזה`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
