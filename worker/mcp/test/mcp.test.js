@@ -337,7 +337,10 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(validateAnswer({ ...good, summary: "לפי ממוצע הסקרים: ממוצע המודל 53, ממוצע פשוט 54." }, urlFor).ok).toBe(true);
   });
   it("get_poll_average מחזיר את שני הממוצעים זה לצד זה, מתוך הקובץ", async () => {
-    const d = (await call("/public", "get_poll_average", {})).data.result.structuredContent;
+    const res = (await call("/public", "get_poll_average", {})).data.result;
+    // תזכורת לסיים בכרטיס בכל תוצאת נתונים (Claude ענה בטקסט רגיל בלי show_answer, 12.10.2026)
+    expect(res.content.at(-1).text).toContain("show_answer");
+    const d = res.structuredContent;
     const file = SITE_FILES.get("data/average.json");
     expect(d.averages.model.seats).toEqual(file.average.seats);
     expect(d.averages.simple.seats.likud.mean).toBe(file.latestPerPollster.summary.find((r) => r.id === "likud").mean);
