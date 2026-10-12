@@ -93,9 +93,8 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       {/* שיתוף — רק של כלל המשתתפים, כדי שנתוני קבוצה לא ייצאו החוצה */}
       {scope === "all" && <CommunityShare d={d} />}
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
-      {(!!d.pendingGuesses || stale || scope !== "all") && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
+      {(stale || scope !== "all") && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>
-          {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
         </div>
         {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
@@ -263,12 +262,12 @@ type Unit = "pct" | "num";
 const fmtNum = (v: number) => String(Math.round(v * 100) / 100);
 
 export function VotingStats({ d }: { d: D }) {
-  const [unit, setUnit] = useState<Unit>("pct");
+  const [unit, setUnit] = useState<Unit>("num");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
   return <Card className="!border-t-0">
     <SectionTitle title="הצבעה אז והיום" count={count} toggle={<Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />} />
-    {unit === "num" && <p className="text-xs text-ink-soft mb-3">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
+    {unit === "num" && <p className="text-xs text-ink-soft mt-2">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} /></section>}
   </Card>;
 }
@@ -289,9 +288,13 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
   const m = d.matrix!;
   const continuity = voteContinuity(m);
   const show = (n: number) => unit === "pct" ? `${Math.round(n / continuity.total * 1000) / 10}%` : String(n);
-  const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))];
+  // סדר (הכרעת בעלים 12.10.2026): שורות לפי מספר המשתתפים שבחרו בתשובה בבחירות קודמות, וטורים לפי מספר אלה שבחרו בה לבחירות הבאות
+  const colTotal = (col: string) => d.vote2026?.all[col]?.n ?? Object.values(m.rows).reduce((a, r) => a + (r.cells[col]?.n ?? 0), 0);
+  const rowTotal = (key: string, n: number) => d.vote2022?.all[key]?.n ?? n;
+  const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))].sort((a, b) => colTotal(b) - colTotal(a));
+  const rowsSorted = Object.entries(m.rows).sort(([ka, a], [kb, b]) => rowTotal(kb, b.n) - rowTotal(ka, a.n));
   return <div>
-    {continuity.total > 0 && <p className="text-base text-center mb-3"><strong>{show(continuity.changed)}</strong> {unit === "pct" ? "מהמצביעים בבחירות קודמות" : "מצביעים בבחירות קודמות"} עברו מפלגה</p>}
+    {continuity.total > 0 && <p className="text-base text-center mb-3"><strong>{unit === "pct" ? show(continuity.changed) : `${continuity.changed}/${continuity.total}`}</strong> מהמצביעים בבחירות קודמות עברו מפלגה</p>}
     <div className="overflow-x-auto">
     <table className="text-xs tabular min-w-full border-collapse">
       <thead>
@@ -306,7 +309,7 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(m.rows).map(([key, row]) => <tr key={key} className="border-t border-paper-line">
+        {rowsSorted.map(([key, row]) => <tr key={key} className="border-t border-paper-line">
           <th className="text-center p-1 font-bold whitespace-nowrap sticky start-0 bg-paper-card border-e-2 border-e-ink-faint/60">{v2022Name(key)}</th>
           {cols.map((col) => {
             const cell = row.cells[col];

@@ -142,11 +142,21 @@ it("שורת הסיכום של המעבר: מספרים או אחוזים לפי
   const d: Dashboard = { participants: 10, open: true, publishedAt: null, aggregationId: null,
     matrix: { publishedAt: "", rows: { "מחל": { n: 10, cells: { likud: cell(6), shas: cell(2) } } } } };
   const num = renderToStaticMarkup(createElement(Matrix, { d, unit: "num" }));
-  expect(num).toContain("מצביעים בבחירות קודמות עברו מפלגה");
+  expect(num).toMatch(/<strong>\d+\/\d+<\/strong> מהמצביעים בבחירות קודמות עברו מפלגה/);
   expect(num).not.toContain("נשארו באותה רשימה");
   expect(num).not.toContain("התפצלה");
   const pct = renderToStaticMarkup(createElement(Matrix, { d, unit: "pct" }));
   expect(pct).toMatch(/<strong>\d+(\.\d+)?%<\/strong> מהמצביעים בבחירות קודמות עברו מפלגה/);
+});
+
+it("טבלת המעבר: שורות לפי מספר הבוחרים בתשובה בבחירות קודמות, וטורים לפי מספר הבוחרים בה לבחירות הבאות", () => {
+  const cell = (n: number) => ({ n, of: 20 });
+  const d: Dashboard = { participants: 20, open: true, publishedAt: null, aggregationId: null,
+    vote2026: { all: { likud: cell(3), shas: cell(9) }, valid: {}, official: {} },
+    matrix: { publishedAt: "", rows: { "ש": { n: 4, cells: { likud: cell(1), shas: cell(3) } }, "מחל": { n: 12, cells: { likud: cell(2), shas: cell(6) } } } } } as unknown as Dashboard;
+  const html = renderToStaticMarkup(createElement(Matrix, { d, unit: "num" }));
+  expect(html.indexOf(">מחל<")).toBeLessThan(html.indexOf(">ש<"));
+  expect(html.indexOf(nameOf("shas"))).toBeLessThan(html.indexOf(nameOf("likud")));
 });
 
 it("גוש של חמש רשימות הממשלה בלי נעם מוצג כשהמשתתף הגדיר אותו", () => {
