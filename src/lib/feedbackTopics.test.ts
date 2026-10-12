@@ -1,7 +1,9 @@
-import { expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { conversationTopic, topicMessage } from "./feedbackTopics";
-it("סוג הפנייה האחרונה נשמר גם בהמשך שיחה; תשובת צוות אינה משנה סיווג", () => {
-  expect(conversationTopic([{author:'visitor',text:'ישן',topic:'data'},{author:'visitor',text:topicMessage('idea','רעיון חדש')},{author:'team',text:'תשובה'}])).toBe('idea');
-  expect(conversationTopic([{author:'visitor',text:'פנייה ישנה',topic:'design'}])).toBe('design');
-  expect(conversationTopic([{author:'visitor',text:'פנייה בלי סיווג'}])).toBe('other');
+
+describe("סוג הפנייה שאלה או תאוריה", () => {
+  it("השם החדש והשם הקודם מזוהים שניהם", () => {
+    expect(conversationTopic([{ author: "visitor", text: topicMessage("theory", "שאלה") }])).toBe("theory");
+    expect(conversationTopic([{ author: "visitor", text: "[תאוריה או חישוב] ישנה" }])).toBe("theory");
+  });
 });

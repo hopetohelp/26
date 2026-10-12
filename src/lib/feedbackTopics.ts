@@ -3,10 +3,12 @@ export const FEEDBACK_TOPICS = [
   { id: "data", label: "נתון שגוי" },
   { id: "idea", label: "רעיון" },
   { id: "design", label: "עיצוב ונוחות" },
-  // הצעת תאוריה או חישוב (הכרעת בעלים 12.10.2026): התשובה בשלוש נקודות — איך בודקים באתר, האם הגיוני, ואם אין דרך — רעיון להוסיף
-  { id: "theory", label: "תאוריה או חישוב" },
+  // שאלה או תאוריה על הבחירות (הכרעת בעלים 12.10.2026): תשובה על פי הנתונים בשלוש נקודות — docs/נוהל-הערות.md
+  { id: "theory", label: "שאלה או תאוריה" },
   { id: "other", label: "אחר" },
 ] as const;
+/** השם הקודם של "שאלה או תאוריה" — פניות ישנות עדיין מזוהות לפיו */
+const LEGACY_THEORY = "תאוריה או חישוב";
 export type FeedbackTopic = typeof FEEDBACK_TOPICS[number]["id"];
 export const topicLabel = (id: string) => FEEDBACK_TOPICS.find(topic => topic.id === id)?.label ?? "אחר";
 export const topicMessage = (topic: string, text: string) => `[${topicLabel(topic)}] ${text.trim()}`;
@@ -15,6 +17,6 @@ export type TopicMessage = { author: "visitor" | "team"; text: string; topic?: s
 export function conversationTopic(items: TopicMessage[]): FeedbackTopic {
   const message = [...items].reverse().find(item => item.author === "visitor");
   if (!message) return "other";
-  const tagged = FEEDBACK_TOPICS.find(topic => message.text.startsWith(`[${topic.label}] `));
+  const tagged = FEEDBACK_TOPICS.find(topic => message.text.startsWith(`[${topic.label}] `)) ?? (message.text.startsWith(`[${LEGACY_THEORY}] `) ? { id: "theory" as const } : undefined);
   return tagged?.id ?? FEEDBACK_TOPICS.find(topic => topic.id === message.topic)?.id ?? "other";
 }
