@@ -1,5 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTabsSlot } from "./Tabbed";
+import SectionLink from "./SectionLink";
 import { Segmented } from "./Choice";
 import { SPLIT_SCREENS, splitCls } from "../lib/splitScreens";
 import ChartLegend, { BAR, BarSlots, type LegendEntry } from "./ChartLegend";
@@ -18,10 +19,11 @@ export function PageTitle({ children, lead, inColumns = false }: { children: Rea
  * שלוש רמות (הכרעת בעלים 9.10.2026): משטח (ברירת המחדל, קו דק בלי קופסה), כרטיס (`boxed`: מסגרת, ליחידה
  * שאפשר לשתף או לפעול עליה, כמו טופס), ופאנל (כהה, פעולה ראשית אחת במסך). כותרת 20px. אין קופסה בתוך קופסה.
  */
-export function Card({ title, children, className = "", boxed = false }: { title?: ReactNode; children: ReactNode; className?: string; boxed?: boolean }) {
+/** `id` (עוגן) ו-`tab`: ליד הכותרת כפתור "העתקת קישור לקטע" (`SectionLink`) — רק כשהכותרת טקסט */
+export function Card({ title, children, className = "", boxed = false, id, tab }: { title?: ReactNode; children: ReactNode; className?: string; boxed?: boolean; id?: string; tab?: string }) {
   return (
-    <section className={`${boxed ? "bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
-      {title && <h2 className="text-xl font-display leading-tight mb-3">{title}</h2>}
+    <section id={id} className={`${id ? "scroll-mt-32 " : ""}${boxed ? "bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
+      {title && <h2 className="text-xl font-display leading-tight mb-3">{title}{id && typeof title === "string" && <> <SectionLink id={id} tab={tab} label={title} /></>}</h2>}
       {children}
     </section>
   );
