@@ -16,7 +16,7 @@ const anchors = validAnchors();
 describe("קובצי הנתונים הפתוחים", () => {
   it("כל הקבצים שבמשימה קיימים בקטלוג", () => {
     const paths = OPEN_FILES.map((f) => f.path);
-    for (const p of ["data/polls.json", "data/average.json", "data/scenarios.json", "data/forecast.json", "data/results.json", "data/accuracy.json", "dashboard.json", "data/party-images.json"])
+    for (const p of ["data/polls.json", "data/average.json", "data/scenarios.json", "data/forecast.json", "data/results.json", "data/law.json", "data/accuracy.json", "dashboard.json", "data/party-images.json"])
       expect(paths).toContain(p);
     expect(new Set(paths).size).toBe(paths.length);
   });
@@ -82,6 +82,14 @@ describe("קובצי הנתונים הפתוחים", () => {
     const agents = readFileSync("AGENTS.md", "utf8");
     for (const f of OPEN_FILES) expect(agents, f.path).toContain(f.path);
     for (const s of ["src/lib/openData.ts", "scripts/open-data.ts", "scripts/check-open-data.ts", "llms.txt"]) expect(agents, s).toContain(s);
+  });
+
+  it("קובץ החוק: אותם הסכמים, סף וקולות כשרים שהמחשבון באתר משתמש בהם", async () => {
+    const { AGREEMENTS_2026, validVotes } = await import("./lawSeats");
+    const law = buildFile(OPEN_FILES.find((f) => f.path === "data/law.json")!) as { agreements: { pair: string[] }[]; validVotesDefault: number; threshold: number };
+    expect(law.agreements.map((a) => a.pair)).toEqual(AGREEMENTS_2026.map((p) => [...p]));
+    expect(law.validVotesDefault).toBe(validVotes());
+    expect(law.threshold).toBe(3.25);
   });
 
   it("הממוצע בקובץ הוא אותו מספר שבאתר (מקור אחד, בלי חישוב חדש)", async () => {
