@@ -20,6 +20,9 @@ function useAnchor() {
     if (!el) return;
     for (let p = el.parentElement; p; p = p.parentElement) if (p instanceof HTMLDetailsElement) p.open = true;
     el.scrollIntoView();
+    // כניסה ישירה מקישור חיצוני (העוזר): אחרי שהעמוד סיים להיבנות — שוב, כדי שהערך יהיה בראש המסך
+    const t = window.setTimeout(() => el.scrollIntoView(), 300);
+    return () => window.clearTimeout(t);
   }, [hash]);
 }
 
