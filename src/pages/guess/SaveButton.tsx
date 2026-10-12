@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { CROWD_URL } from "../../lib/crowdApi";
+import { CROWD_URL, serverBlocked } from "../../lib/crowdApi";
 import { AuthForm } from "./Account";
 import { Btn } from "./ui";
 import ErrorReport from "../../components/ErrorReport";
+import FilterBlocked, { useServerBlocked } from "../../components/FilterBlocked";
 import type { useSession, SaveState } from "./useCrowd";
 
 export interface SaveUnit {
@@ -32,10 +33,15 @@ export default function SaveButton({
   onSaved?: () => void;
 }) {
   const [ask, setAsk] = useState(false);
+  // השמירה לא הגיעה לשרת (כל הנתיבים נחסמו) ⇐ הסבר בעברית פשוטה, ולא רק דיווח שקט למערכת
+  const blocked = useServerBlocked();
+  const [notice, setNotice] = useState(false);
   const busy = unit.state === "saving";
   const run = async (token: string) => {
     if (invalid) return;
-    if (await unit.save(token)) onSaved?.();
+    const ok = await unit.save(token);
+    if (ok) onSaved?.();
+    if (ok && serverBlocked()) setNotice(true);
   };
   const go = () => (session.token ? void run(session.token) : setAsk(true));
   return (
@@ -56,6 +62,7 @@ export default function SaveButton({
           />,
           document.body,
         )}
+      {notice && blocked && createPortal(<BlockedSaveNotice onClose={() => setNotice(false)} />, document.body)}
       {unit.error && !compact && (
         <SaveError unit={unit} />
       )}
@@ -99,6 +106,25 @@ export function AuthSheet({ session, onClose, onDone }: { session: ReturnType<ty
         </div>
         <p className="text-sm text-ink-soft">ההשערה שלכם שמורה כרגע רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל. מה שכבר כתבתם עולה לחשבון.</p>
         <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * שמירה שלא הגיעה לשרת: כל הנתיבים נחסמו (בדרך כלל סינון כמו נטפרי, או חיבור שנפל).
+ * ההשערה נשמרה בדפדפן ותישלח לבד כשהחיבור יחזור (src/lib/outbox.ts); כאן מסבירים את זה, ואת מה שאפשר לעשות.
+ */
+function BlockedSaveNotice({ onClose }: { onClose: () => void }) {
+  const [more, setMore] = useState(false);
+  return (
+    <div role="status" className="fixed inset-x-4 bottom-24 md:bottom-6 z-40 mx-auto max-w-lg bg-paper-card text-ink border-2 border-warn rounded-theme p-4 space-y-3 shadow-lg max-h-[70vh] overflow-y-auto">
+      <p className="font-bold">ההשערה נשמרה אצלכם, אבל עדיין לא הגיעה לשרת</p>
+      <p className="text-sm">לא הצלחנו להתחבר לשרת של האתר. ההשערה שמורה בדפדפן הזה ותישלח לבד כשהחיבור יחזור — אין צורך לשמור שוב. עד אז היא לא נספרת בסטטיסטיקות.</p>
+      {more && <FilterBlocked signedIn />}
+      <div className="flex gap-2 flex-wrap">
+        {!more && <Btn onClick={() => setMore(true)}>למה זה קורה?</Btn>}
+        <Btn kind="primary" onClick={onClose}>הבנתי</Btn>
       </div>
     </div>
   );
