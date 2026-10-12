@@ -274,8 +274,8 @@ function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<{ admin
  */
 export function InquirySections({ data, reply, draftActions }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean>; draftActions?: DraftActions }) {
   const [topic, setTopic] = useState<"all" | (typeof FEEDBACK_TOPICS)[number]["id"]>("all");
-  const [filter, setFilter] = useState<Filter>("all");
-  const [sort, setSort] = useState<Sort>("oldest");
+  const [filter, setFilter] = useState<Filter>("waiting");
+  const [sort, setSort] = useState<Sort>("newest");
   const drafts = data.drafts ?? [];
   const held = data.held ?? [];
   const all = [
