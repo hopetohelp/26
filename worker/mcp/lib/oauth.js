@@ -19,7 +19,9 @@ import { seal, open } from "../../crowd/lib/identity.js";
 export const ACCESS_TTL = 3600 * 1000;
 export const REQUEST_TTL = 10 * 60 * 1000;
 export const CODE_TTL = 5 * 60 * 1000;
+/** חיבור שלא היה בו שימוש כל הזמן הזה — מתנתק לבד (אותו משך כמו AGENT_SESSION_MS בשרת ההשתתפות); כל שימוש מאריך */
 export const AGENT_FALLBACK_MS = 30 * 24 * 3600 * 1000;
+const RENEW_MS = 24 * 3600 * 1000;
 const MAX_REDIRECTS = 5;
 
 export class OAuthError extends Error {
@@ -212,7 +214,10 @@ export async function exchangeToken(env, form, now) {
     if (!tok || tok.expires_at < now || Date.parse(tok.grant_expires) < now) throw new OAuthError(400, "invalid_grant", "החיבור פג. התחברו מחדש.");
     if (clientId && clientId !== tok.client_id) throw new OAuthError(400, "invalid_grant", "האסימון שייך לעוזר אחר.");
     await env.DB.prepare("DELETE FROM tokens WHERE token_hash = ?").bind(th).run();
-    return issueTokens(env, tok.grant_id, Date.parse(tok.grant_expires), now);
+    // רענון = שימוש ⇐ החיבור מתארך
+    const until = now + AGENT_FALLBACK_MS;
+    await env.DB.prepare("UPDATE grants SET expires_at = ? WHERE id = ?").bind(iso(until), tok.grant_id).run();
+    return issueTokens(env, tok.grant_id, until, now);
   }
   throw new OAuthError(400, "unsupported_grant_type");
 }
@@ -224,7 +229,11 @@ export async function resolveAccess(env, token, now) {
     .bind(await sha256(token)).first();
   if (!row || row.expires_at < now || Date.parse(row.grant_expires) < now) return null;
   const agent = await open(env, row.agent_enc);
-  return agent ? { grantId: row.grant_id, clientName: row.client ?? "עוזר AI", agent } : null;
+  if (!agent) return null;
+  // החיבור מתארך בכל שימוש (הכרעת בעלים 12.10.2026); נכתב לכל היותר פעם ביום ⇐ renewed: גם הכניסה בשרת ההשתתפות מתארכת
+  const renewed = Date.parse(row.grant_expires) < now + AGENT_FALLBACK_MS - RENEW_MS;
+  if (renewed) await env.DB.prepare("UPDATE grants SET expires_at = ? WHERE id = ?").bind(iso(now + AGENT_FALLBACK_MS), row.grant_id).run();
+  return { grantId: row.grant_id, clientName: row.client ?? "עוזר AI", agent, renewed };
 }
 
 /** החיבור נותק באתר (שרת ההשתתפות ענה 401) ⇐ מוחקים את החיבור ואת כל האסימונים שלו */

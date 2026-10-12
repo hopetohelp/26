@@ -66,7 +66,7 @@ export default function Connect() {
               </ul>
             </div>
           </div>
-          <p className="text-sm text-ink-soft">אפשר לנתק בכל רגע: אזור אישי ⇐ עוזרי AI. החיבור בתוקף 30 יום.</p>
+          <p className="text-sm text-ink-soft">אפשר לנתק בכל רגע: אזור אישי ⇐ עוזרי AI. החיבור נשאר כל עוד משתמשים בו, ומתנתק לבד אחרי 30 יום בלי שימוש.</p>
           <div className="flex flex-wrap gap-3">
             <Btn kind="primary" disabled={a.busy} onClick={a.run(async () => {
               const del = await call<{ token: string; expiresAt: string }>("/auth/delegate", { token, body: { client: req.client } });

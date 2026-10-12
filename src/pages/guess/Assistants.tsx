@@ -74,7 +74,7 @@ export default function Assistants({ session }: { session: ReturnType<typeof use
                 <li key={c.id} className="py-2 flex flex-wrap items-center justify-between gap-2 [&>*]:min-w-0">
                   <div>
                     <p className="font-bold">{c.client}</p>
-                    <p className="text-xs text-ink-soft">חובר ב-{date(c.createdAt)}{c.lastUsedAt ? ` · שימוש אחרון ${date(c.lastUsedAt)}` : ""} · בתוקף עד {date(c.expiresAt)}</p>
+                    <p className="text-xs text-ink-soft">חובר ב-{date(c.createdAt)}{c.lastUsedAt ? ` · שימוש אחרון ${date(c.lastUsedAt)}` : ""} · יתנתק לבד ב-{date(c.expiresAt)} אם לא ישתמשו בו</p>
                   </div>
                   <Btn kind="danger" disabled={a.busy} onClick={a.run(async () => (await call("/account/connections/revoke", { token, body: { id: c.id } }), await load(), `${c.client} נותק.`))}>ניתוק</Btn>
                 </li>
