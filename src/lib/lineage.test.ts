@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import modelFile from "../data/model.json";
-import { cleanLineage, DEFAULT_LINEAGE, K25_LISTS, lineageProblem, lineageRows, manualFromCurrent, seats2022ByList, start2022, VALID_2022, type Lineage } from "./lineage";
+import { cleanLineage, k25Families, DEFAULT_LINEAGE, K25_LISTS, lineageProblem, lineageRows, manualFromCurrent, seats2022ByList, start2022, VALID_2022, type Lineage } from "./lineage";
 
 const shares = (modelFile as unknown as { central: { shares: Record<string, number> } }).central.shares;
 const row = (lin: Lineage, id: string) => lineageRows(lin).rows.find((r) => r.id === id)!;
@@ -87,4 +87,11 @@ describe("התחלה מבחירות 22", () => {
     expect(Object.values(s).reduce((t, c) => t + c.v, 0)).toBe(120); // מלכתחילה בלי יתרה
     for (const r of lineageRows(DEFAULT_LINEAGE).rows) if (r.category === "certain") expect(s[r.id].v).toBe(r.seats2022); // ודאי — בדיוק התוצאה
   });
+});
+
+it("משפחות השיוך: רשימות שבאו מאותה רשימת 2022 באותה משפחה, ורשימה חדשה מחוץ למשפחות", () => {
+  const fam = k25Families({ rzp: ["ט"], otzma: ["ט"], noam: ["ט"], likud: ["מחל"], amcha: [] });
+  expect(fam).toContainEqual({ k26: expect.arrayContaining(["rzp", "otzma", "noam"]), k25: ["ט"] });
+  expect(fam).toContainEqual({ k26: ["likud"], k25: ["מחל"] });
+  expect(fam.flatMap(f => f.k26)).not.toContain("amcha");
 });

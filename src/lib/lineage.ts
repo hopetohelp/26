@@ -197,3 +197,20 @@ export function start2022(lin: Lineage, crowd: Record<string, number> | null = n
   }
   return Object.fromEntries(rows.map((r) => [r.id, { v: seats[r.id] ?? 0, locked: r.category === "certain" && (seats[r.id] ?? 0) > 0 }]));
 }
+
+/**
+ * משפחות השיוך לפי ברירת המחדל: קבוצת רשימות של היום ⇐ רשימות 2022 (אותיות) שממנה באו, כשרשימות שחולקות רשימת 2022
+ * (פיצול או איחוד) נמצאות באותה משפחה. רשימה חדשה (בלי שיוך) אינה במשפחה — בתוצאות 2022 היא 0.
+ * לגושים שלי בתוצאות 2022 (`historicalBlocValues`): משפחה נספרת רק כשכל רשימותיה של היום בגוש.
+ */
+export function k25Families(map: Record<string, string[]> = DEFAULT_LINEAGE.map): { k26: string[]; k25: string[] }[] {
+  const groups: { k26: Set<string>; k25: Set<string> }[] = [];
+  for (const [id, from] of Object.entries(map)) {
+    if (!from.length) continue;
+    const hit = groups.filter((g) => from.some((l) => g.k25.has(l)));
+    const merged = { k26: new Set([id, ...hit.flatMap((g) => [...g.k26])]), k25: new Set([...from, ...hit.flatMap((g) => [...g.k25])]) };
+    for (const g of hit) groups.splice(groups.indexOf(g), 1);
+    groups.push(merged);
+  }
+  return groups.map((g) => ({ k26: [...g.k26], k25: [...g.k25] }));
+}

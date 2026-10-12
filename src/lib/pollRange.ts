@@ -22,12 +22,16 @@ export function pollSeatRange(polls: Poll[], ids: string[], average: Record<stri
   return sums.length ? [Math.min(...sums), Math.max(...sums)] : null;
 }
 
-/** ממוצע חשבוני וטווח מלא מתוך הסקרים בלבד; גוש נספר רק בסקרים עם נתון לכל רשימה בהרכב. */
-export function pollSeatSummary(polls: Poll[], ids: string[]): { mean: number; range: [number, number] } | null {
+/**
+ * ממוצע חשבוני וטווח מלא מתוך הסקרים בלבד; גוש נספר רק בסקרים עם נתון לכל רשימה בהרכב.
+ * רשימה שהסקרים כמעט לא שואלים עליה (ממוצע 0 ב-`average`, למשל נעם או צבע שחור) — 0 בסקר שלא שאל עליה,
+ * כמו במגמת הממשלה היוצאת; בלי זה גוש שמכיל אותה לא נספר באף סקר.
+ */
+export function pollSeatSummary(polls: Poll[], ids: string[], average?: Record<string, number>): { mean: number; range: [number, number] } | null {
   const unique = [...new Set(ids)];
   if (!unique.length) return null;
   const values = polls.flatMap(p => {
-    const parts = unique.map(id => seatsIn(p, id));
+    const parts = unique.map(id => seatsIn(p, id) ?? (average && unique.length > 1 && !average[id] ? 0 : undefined));
     return parts.every((x): x is number => typeof x === "number") ? [parts.reduce((a, b) => a + b, 0)] : [];
   });
   return values.length ? { mean: mean(values), range: [Math.min(...values), Math.max(...values)] } : null;

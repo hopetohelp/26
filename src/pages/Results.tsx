@@ -5,6 +5,7 @@ import { Badge, Card, Fold, Note, Split } from "../components/ui";
 import { Chips } from "../components/Choice";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
+import { k25Families } from "../lib/lineage";
 import { num, pct } from "../lib/format";
 
 type Election = (typeof results)[number];
@@ -103,7 +104,9 @@ export default function Results() {
         </dl>
       </Card>
       </>} secondary={<>
-      <PersonalBlocs title={`הגושים שלי בתוצאות ${e.label}`} historical mapping={e.knesset === 25 ? undefined : {}} values={Object.fromEntries(e.lists.map(l => [l.letters, l.seats]))} source={`תוצאות אמת ${e.label}; התאמות מובהקות בלבד`} asOf="התוצאות הסופיות" />
+      <PersonalBlocs title={`הגושים שלי בתוצאות ${e.label}`} source={`תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`} asOf="התוצאות הסופיות" datasets={[e.knesset === 25
+        ? { families: k25Families(), values: Object.fromEntries(e.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`, asOf: "התוצאות הסופיות" }
+        : { historical: true, mapping: {}, values: Object.fromEntries(e.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${e.label}; התאמות מובהקות בלבד`, asOf: "התוצאות הסופיות" }]} />
 
       <Card title="בקצרה">
         <Explained
