@@ -21,3 +21,13 @@ it("ממוצע הסקרים והטווח נגזרים מאותה רשימת סק
   expect(pollSeatSummary(polls, ["likud", "shas"])).toEqual({ mean: 34, range: [28, 40] });
   expect(pollSeatSummary(polls, ["utj"])).toBeNull();
 });
+
+it("pollSeatSummary: רשימה שהסקרים לא שואלים עליה נספרת 0 בגוש", () => {
+  const polls = [
+    { values: { likud: { s: 30 }, shas: { s: 10 } } },
+    { values: { likud: { s: 26 }, shas: { s: 8 } } },
+  ] as unknown as Parameters<typeof pollSeatSummary>[0];
+  expect(pollSeatSummary(polls, ["likud", "shas", "noam"], { likud: 28, shas: 9 })).toEqual({ mean: 37, range: [34, 40] });
+  expect(pollSeatSummary(polls, ["likud", "shas", "utj"], { likud: 28, shas: 9, utj: 8 })).toBeNull();
+  expect(pollSeatSummary(polls, ["noam"], {})).toBeNull();
+});

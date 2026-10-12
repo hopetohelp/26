@@ -32,7 +32,7 @@ const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
 const v2022Name = (k: string) => V2022_LABEL[k] ?? k25VoteName(k);
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 const pctOf = (cell: Cell) => cell.of ? cell.n / cell.of * 100 : 0;
-const pollSummary = (ids: string[]) => pollSeatSummary(LATEST_POLLS, ids);
+const pollSummary = (ids: string[]) => pollSeatSummary(LATEST_POLLS, ids, POLL_AVERAGE.seats);
 const SIMPLE_POLL_MEANS = Object.fromEntries(lists2026.flatMap(({ id }) => {
   const summary = pollSummary([id]);
   return summary ? [[id, summary.mean]] : [];

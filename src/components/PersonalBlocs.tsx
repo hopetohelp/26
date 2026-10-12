@@ -3,11 +3,11 @@ import { useLocation } from "react-router-dom";
 import Explained from "./Explained";
 import BlocsDrawer from "./BlocsDrawer";
 import { BlocAvatar } from "./BlocAvatar";
-import type { BlocsPayload } from "../lib/crowdApi";
+import type { Bloc, BlocsPayload } from "../lib/crowdApi";
 import { useSession, useUnit } from "../pages/guess/useCrowd";
 import { DEFAULT_BLOCS, IDS, K25_MAP, nameOf, normalizeBlocs } from "../pages/guess/model";
 import { pctOne, seatsFmt } from "../lib/format";
-import { blocComparable, blocValues, formatBlocValue, type BlocRow } from "../lib/personalBlocs";
+import { blocComparable, blocValues, formatBlocValue, historicalBlocValues, type BlocRow } from "../lib/personalBlocs";
 import { diffText } from "../lib/dumbbell";
 import { pollBlocValues } from "../lib/blocEstimates";
 import { usablePolls, type Poll } from "../lib/data";
@@ -35,6 +35,20 @@ export interface BlocDataset {
   rows?: BlocRow[];
   poll?: Poll;
   sumAvailable?: boolean;
+  /** תוצאות עבר לפי משפחות שיוך (`k25Families`): `values` לפי אותיות רשימות העבר; רשימה של היום בלי שיוך נספרת 0 */
+  families?: { k26: string[]; k25: string[] }[];
+}
+
+/** גושים בתוצאות עבר לפי משפחות השיוך: רשימה של היום שאינה באף משפחה (חדשה) נספרת 0 ואינה "חסרה" */
+function familyRows(blocs: Bloc[], families: { k26: string[]; k25: string[] }[], values: Record<string, number | undefined>): BlocRow[] {
+  const inFamily = new Set(families.flatMap(f => f.k26));
+  const known = Object.fromEntries(Object.entries(values).filter((e): e is [string, number] => typeof e[1] === "number"));
+  return historicalBlocValues(blocs.map(b => ({ ...b, lists: b.lists.filter(id => inFamily.has(id)) })), families, known)
+    .map((row, i) => {
+      const lists = [...new Set(blocs[i].lists)];
+      const extra = lists.length - row.lists.length;
+      return !row.lists.length && lists.length ? { ...row, lists, missing: [], knownTotal: 0, total: 0, knownCount: lists.length } : { ...row, lists, knownCount: row.knownCount + extra };
+    });
 }
 
 /** כרטיס משותף מרכז כמה מקורות; נתון חסר נשאר חסר והמקורות אינם מתמזגים. */
@@ -51,7 +65,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const definition = unit.draft ? normalizeBlocs(unit.draft) : DEFAULT_BLOCS;
   const p = { ...definition, blocs: definition.blocs.map((b, i) => ({ ...b, name: b.name.trim() || `גוש ${i + 1}` })) };
   const series = (datasets ?? [{ values, source, asOf, historical, mapping }]).map(d => ({
-    ...d, rows: d.rows ?? (d.poll ? pollBlocValues(p.blocs, d.poll, usablePolls) : blocValues(p.blocs, d.values ?? {}, d.mapping ?? (d.historical ? K25_MAP : Object.fromEntries(IDS.map(id => [id, id]))))),
+    ...d, rows: d.rows ?? (d.families ? familyRows(p.blocs, d.families, d.values ?? {}) : d.poll ? pollBlocValues(p.blocs, d.poll, usablePolls) : blocValues(p.blocs, d.values ?? {}, d.mapping ?? (d.historical ? K25_MAP : Object.fromEntries(IDS.map(id => [id, id]))))),
   }));
   for (const d of series) {
     if (d.sumAvailable) d.rows = d.rows.map(row => ({ ...row, total: row.knownTotal ?? 0, missing: [], estimate: null, imputed: [] }));
