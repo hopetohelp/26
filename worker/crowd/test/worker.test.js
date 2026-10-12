@@ -601,8 +601,11 @@ describe("כניסת עוזר AI (שרת ה-MCP): דלת אחת, החיבורי�
     expect((await asAdmin("/admin/groups/managers", { group: "grp-agent", email: "boss@example.com" })).status).toBe(200);
     expect((await asAdmin("/admin/groups/managers", { group: "grp-agent", email: "boss@example.com", remove: true })).status).toBe(403);
     expect((await asAdmin("/admin/groups/delete", { group: "grp-agent" })).status).toBe(403);
-    expect((await asAdmin("/admin/support")).status).toBe(403);
-    expect((await asAdmin("/admin/whoami")).status).toBe(403);
+    // שיחות הצוות דרך העוזר (הכרעת בעלים 12.10.2026): whoami מזהה מנהל ומחזיר את שם העוזר
+    expect((await asAdmin("/admin/support")).status).toBe(200);
+    const who = await asAdmin("/admin/whoami");
+    expect(who.status).toBe(200);
+    expect(who.data.agent).toBe("Claude");
     // עוזר של משתמש שאינו מנהל — אין מסך ניהול
     const other = await delegate(await newP());
     expect((await agentCall("/admin/guesses", null, undefined, { "x-admin-key": other })).status).toBe(401);

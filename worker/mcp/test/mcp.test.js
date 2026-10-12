@@ -9,6 +9,7 @@ import { fakeD1 } from "../../crowd/test/fakeD1.js";
 import { seats as seatsPayload } from "../../crowd/test/helpers.js";
 import mcp from "../index.js";
 import { resetSiteCache } from "../lib/site.js";
+import { resetSettingsCache } from "../lib/stats.js";
 import { pkceChallenge } from "../lib/oauth.js";
 import { validateAnswer, hasNumber } from "../lib/answer.js";
 import { TOOLS } from "../lib/tools.js";
@@ -27,6 +28,7 @@ let crowdEnv, feedbackEnv, env, t;
 beforeEach(() => {
   resetDashboardCache();
   resetSiteCache();
+  resetSettingsCache();
   t = Date.parse("2026-10-05T10:05:00Z");
   crowdEnv = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", SITE_URL: SITE, IP_KEY: "ip-secret", DATA_KEY: "data-secret", NOW: () => t };
   feedbackEnv = { DB: fakeD1(new URL("../../feedback/schema.sql", import.meta.url)), ALLOWED_ORIGIN: "https://hopetohelp.github.io", IP_KEY: "fb-secret", CROWD: { fetch: (r) => crowdWorker.fetch(r, crowdEnv) } };
@@ -67,7 +69,7 @@ async function connect({ admin = false } = {}) {
   const reg = await crowd("/auth/register", { body: { email: `u${Math.random().toString(36).slice(2)}@example.com`, password: "a long pass phrase" } });
   const web = reg.data.token;
   if (admin) {
-    const p = crowdEnv.DB.raw.prepare("SELECT participant FROM sessions").all().at(-1).participant;
+    const p = crowdEnv.DB.raw.prepare("SELECT participant FROM sessions WHERE token_hash = ?").get(await sha256(web)).participant;
     crowdEnv.DB.raw.prepare("INSERT INTO admins (participant, added_at) VALUES (?, ?)").run(p, "2026-10-01T00:00:00Z");
   }
   const client = await (await req("/register", { body: { client_name: "Claude", redirect_uris: ["https://claude.ai/api/mcp/auth_callback"] } })).json();
@@ -241,6 +243,34 @@ describe("שיחה עם צוות האתר (שלב 3)", () => {
     expect(conv.thread.messages.some((m) => m.author === "team")).toBe(false);
   });
 
+  it("מנהל דרך העוזר: קורא פניות, עונה, מאשר טיוטה ומשחרר השהיה — כמו במסך הניהול; מפתח ה-AI נשאר רק במסך", async () => {
+    const user = await connect();
+    await call("/mcp", "send_message_to_team", { topic: "theory", text: "שאלה למנהל" }, user.access);
+    const p = crowdEnv.DB.raw.prepare("SELECT participant FROM agent_sessions").get().participant;
+    const { access, web: adminWeb } = await connect({ admin: true });
+    const res = await call("/mcp", "admin_get_conversations", {}, access);
+    const conv = res.data.result.structuredContent;
+    expect(res.data.result.isError, res.data.result.content[0].text).toBe(false);
+    expect(conv.support.find((th) => th.participant === p).messages.at(-1).text).toContain("שאלה למנהל");
+    expect((await call("/mcp", "admin_reply", { kind: "support", id: p, text: "תשובת הצוות" }, access)).data.result.isError).toBe(false);
+    expect((await call("/mcp", "get_my_team_conversation", {}, user.access)).data.result.structuredContent.thread.messages.at(-1).text).toBe("תשובת הצוות");
+    // השהיה ⇐ התשובה נשמרת כטיוטה; אישור הטיוטה מפרסם אותה; שחרור ההשהיה
+    feedbackEnv.DB.raw.prepare("INSERT INTO held (kind, target, created_at, reason) VALUES ('support', ?, '2026-10-05', 'בדיקה')").run(p);
+    await call("/mcp", "admin_reply", { kind: "support", id: p, text: "תשובה בהשהיה" }, access);
+    const draft = (await call("/mcp", "admin_get_conversations", {}, access)).data.result.structuredContent.drafts[0];
+    expect(draft.text).toBe("תשובה בהשהיה");
+    expect((await call("/mcp", "admin_approve_draft", { id: draft.id }, access)).data.result.isError).toBe(false);
+    expect((await call("/mcp", "get_my_team_conversation", {}, user.access)).data.result.structuredContent.thread.messages.at(-1).text).toBe("תשובה בהשהיה");
+    expect((await call("/mcp", "admin_release_hold", { kind: "support", target: p }, access)).data.result.isError).toBe(false);
+    expect(feedbackEnv.DB.raw.prepare("SELECT COUNT(*) AS n FROM held").get().n).toBe(0);
+    // משתמש רגיל — הכלים אינם שלו
+    expect((await call("/mcp", "admin_reply", { kind: "support", id: p, text: "x" }, user.access)).data.result.structuredContent.error.code).toBe("forbidden");
+    // מפתח ה-AI — לא דרך עוזר (גם לא בפנייה ישירה לשרת ההערות עם כניסת העוזר)
+    const agentToken = (await crowd("/auth/delegate", { token: adminWeb, body: { client: "Claude" } })).data.token;
+    const aiKey = await feedbackWorker.fetch(new Request("https://f.example/admin/ai-key", { method: "POST", headers: { authorization: `Bearer ${agentToken}`, "content-type": "application/json" }, body: JSON.stringify({ key: "sk-test" }) }), feedbackEnv);
+    expect(aiKey.status).toBe(403);
+  });
+
   it("בכתובת הציבורית — אין שיחה", async () => {
     const r = await call("/public", "send_message_to_team", { topic: "other", text: "x" });
     expect(r.data.result.structuredContent.error.code).toBe("needs_login");
@@ -317,5 +347,51 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(CARD_HTML).toContain('lang="he" dir="rtl"');
     expect(CARD_HTML).toContain("prefers-color-scheme: dark");
     expect(r("../card/card.css")).not.toMatch(/#[0-9a-f]{3,6}\b/i);
+  });
+});
+
+describe("דשבורד למנהל וכפתור הכיבוי של הכתובת הציבורית", () => {
+  const adminHeaders = (token) => ({ authorization: `Bearer ${token}`, origin: "https://hopetohelp.github.io" });
+  it("סופר חיבורים, שיחות, קריאות וכתיבות לכל כתובת — בלי מזהים", async () => {
+    await rpc("/public", "initialize", {});
+    await call("/public", "get_polls", {});
+    await call("/public", "get_site_overview", {});
+    const { access, web } = await connect();
+    await call("/mcp", "get_my_account", {}, access);
+    await call("/mcp", "save_my_guess", { unit: "seats", payload: seatsPayload(60) }, access);
+    t += 31 * 60 * 1000; // הפסקה של חצי שעה ⇐ שיחה חדשה
+    await call("/mcp", "get_my_guess", {}, access);
+    // משתמש רגיל — אין דשבורד
+    expect((await req("/admin/stats", { headers: adminHeaders(web) })).status).toBe(401);
+    const admin = await connect({ admin: true });
+    const r = await req("/admin/stats", { headers: adminHeaders(admin.web) });
+    expect(r.status).toBe(200);
+    expect(r.headers.get("access-control-allow-origin")).toBe("https://hopetohelp.github.io");
+    const d = await r.json();
+    expect(d.totals.public).toEqual({ connections: 1, sessions: 1, reads: 2, writes: 0 });
+    expect(d.totals.mcp).toEqual({ connections: 1, sessions: 2, reads: 2, writes: 1 });
+    expect(d.publicEnabled).toBe(true);
+    expect(d.activeConnections).toBe(2);
+    expect(d.tools.find((x) => x.tool === "get_polls").n).toBe(1);
+    const cols = env.DB.raw.prepare("PRAGMA table_info(stats)").all().map((c) => c.name);
+    expect(cols).toEqual(["day", "mode", "metric", "n"]);
+    // כניסת עוזר של מנהל אינה פותחת את הדשבורד (רק המנהל באתר)
+    const agentToken = (await crowd("/auth/delegate", { token: admin.web, body: { client: "Claude" } })).data.token;
+    expect((await req("/admin/stats", { headers: adminHeaders(agentToken) })).status).toBe(403);
+  });
+
+  it("כיבוי הכתובת בלי התחברות: /public מחזיר שגיאה ברורה, /mcp ממשיך לעבוד; הדלקה מחזירה", async () => {
+    const admin = await connect({ admin: true });
+    const { access, web } = await connect();
+    expect((await req("/admin/settings", { body: { publicEnabled: false }, headers: adminHeaders(web) })).status).toBe(401);
+    expect((await req("/admin/settings", { body: { publicEnabled: false }, headers: adminHeaders(admin.web) })).status).toBe(200);
+    const off = await call("/public", "get_polls", {});
+    expect(off.status).toBe(403);
+    expect(off.data.error.data.code).toBe("public_disabled");
+    expect((await call("/mcp", "get_polls", {}, access)).data.result.isError).toBe(false);
+    expect((await (await req("/admin/stats", { headers: adminHeaders(admin.web) })).json()).publicEnabled).toBe(false);
+    await req("/admin/settings", { body: { publicEnabled: true }, headers: adminHeaders(admin.web) });
+    expect((await call("/public", "get_polls", {})).data.result.isError).toBe(false);
+    expect((await req("/admin/settings", { body: { publicEnabled: "כן" }, headers: adminHeaders(admin.web) })).status).toBe(400);
   });
 });

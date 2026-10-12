@@ -963,9 +963,11 @@ const routes = {
     return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
   // שרת ההערות בודק כאן אם הסשן או המפתח שקיבל שייכים למנהל (חשבון מנהל נכנס לממשק הניהול בלי קישור)
-  "GET /admin/whoami": async ({ env, request }) => {
+  "GET /admin/whoami": async ({ env, request, now }) => {
     await requireAdmin(env, request);
-    return { ok: true };
+    // כניסת עוזר AI של מנהל ⇐ agent = שם העוזר: שרת ההערות מגביל אותה לפעולות השיחה שהבעלים התיר
+    const agent = await agentSession(env, requestToken(request), now);
+    return { ok: true, ...(agent ? { agent: agent.client } : {}) };
   },
   // דשבורד השערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה — בלי מזהה משתתף, גרסה או פעולה; מועד ההשערה ביום בלבד (ופעילות המשתתף — הרשמה, כניסות ושמירות — נוספה ב-10.10.2026),
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
