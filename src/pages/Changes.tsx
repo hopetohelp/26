@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import DumbbellChart, { DUMBBELL_LEGEND, NameButton } from "../components/dumbbellChart";
+import { ModelInfo } from "../components/InfoTip";
 import { Segmented } from "../components/Choice";
 import { ChartBar, ChartWithTable, Fold, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
@@ -135,8 +136,8 @@ export default function Changes() {
           <th scope="col" className="py-2 pe-3">היום</th>
           <th scope="col" className="pe-3">ב-2022</th>
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
-          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}</th>
-          <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"}</th>
+          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"} <ModelInfo kind="mean" /></th>
+          <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"} <ModelInfo kind="range" /></th>
           <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
       </thead>
@@ -238,6 +239,7 @@ export default function Changes() {
                               onName={toggle}
                               openId={open}
                               below={(id) => { const r = list.find((x) => x.id === id); return r ? editor(r) : null; }}
+                              info={<ModelInfo kind="meanRange" />}
                             />
                           }
                           table={table(list)}

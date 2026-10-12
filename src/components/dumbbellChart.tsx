@@ -86,14 +86,16 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
 /**
  * `legend={false}`: המקרא מוצג במקום אחר (שורת הבקרה של המסך). `onName` — שם הרשימה ככפתור; `openId` — מי פתוחה, ו-`below` — מה נפתח מתחת לשורה שלה.
  */
-export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode }) {
+export default function DumbbellChart({ rows, unit = "pct", legend = true, onName, openId = null, below, info }: { rows: DumbbellRow[]; unit?: DumbbellUnit; legend?: boolean; onName?: (id: string) => void; openId?: string | null; below?: (id: string) => ReactNode; info?: ReactNode }) {
   const { min, max, ticks } = dumbbellAxis(rows, unit);
   const levels = candleProfiles(rows.map(dumbbellSegs));
   return (
     <div>
       {legend && <ChartLegend entries={DUMBBELL_LEGEND} />}
-      <div aria-hidden="true" className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
-        <div dir="ltr" className="md:col-start-2 relative h-5">
+      {/* `info`: אייקון המידע של "היום" והנר (נתוני מודל), בראש עמודת השמות; הציר עצמו מוסתר מקורא מסך */}
+      <div className="md:grid md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_4rem] gap-x-3 text-xs text-ink-soft mt-1.5">
+        {info && <div className="md:col-start-1 md:row-start-1 flex items-end gap-1 pb-0.5">היום והטווח {info}</div>}
+        <div aria-hidden="true" dir="ltr" className="md:col-start-2 md:row-start-1 relative h-5">
           <span className="mk-plot">
             {ticks.map((v) => (
               <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${((v - min) / (max - min)) * 100}%` }}>{v === 0 || unit === "seats" ? v : `${v}%`}</span>
