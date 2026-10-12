@@ -45,3 +45,11 @@ it("מפתח ה-AI נשמר מוצפן ולעולם אינו מוחזר", async 
   expect(env.DB.raw.prepare("SELECT value FROM settings").get().value).not.toContain("sk-test");
   expect((await api("/admin/ai-key", { key: null })).data.admin).toBe(null);
 });
+
+it("משתתף בהשהיה מוצג במסך הניהול ומשתחרר באישור", async () => {
+  env.DB.raw.prepare("INSERT INTO held (kind, target, created_at, reason) VALUES ('feedback', '7', ?, 'חשד')").run("2026-10-12T00:00:00Z");
+  expect((await api("/admin/data")).data.held.map(h => h.target)).toEqual(["7"]);
+  expect((await api("/admin/release", { kind: "feedback", target: "7" }, "b".repeat(40))).status).toBe(401);
+  await api("/admin/release", { kind: "feedback", target: "7" });
+  expect((await api("/admin/data")).data.held).toEqual([]);
+});

@@ -118,3 +118,12 @@ CREATE TABLE IF NOT EXISTS drafts (
 
 -- הגדרות. ai_key = מפתח ה-AI שנשמר ממסך הניהול, מוצפן בסוד השרת; לעולם אינו מוחזר מהשרת.
 CREATE TABLE IF NOT EXISTS settings (name TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);
+
+-- משתתף בהשהיה (הכרעת בעלים 12.10.2026): שאל שאלה שנחשדה כלא עומדת בכללים ⇐ כל תשובה אליו, גם לשאלה ניטרלית, נשמרת כטיוטה עד אישור המשתתף במסך הניהול.
+CREATE TABLE IF NOT EXISTS held (
+  kind TEXT NOT NULL CHECK (kind IN ('feedback', 'support')),
+  target TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  reason TEXT,
+  PRIMARY KEY (kind, target)
+);

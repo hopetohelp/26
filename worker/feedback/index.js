@@ -264,7 +264,8 @@ export default {
         const local = [];
         for (const thread of accountThreads || []) local.push({ participant: thread.participant, ...(await supportThread(env, thread.participant)) });
         const { results: drafts } = await env.DB.prepare("SELECT id, kind, target, text, reason, created_at FROM drafts ORDER BY created_at").all().catch(() => ({ results: [] }));
-        return reply({ ok: true, drafts: drafts || [], days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+        const { results: heldRows } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held").all().catch(() => ({ results: [] }));
+        return reply({ ok: true, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
       if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || url.pathname === "/admin/blocs" || /^\/admin\/groups(\/(import|delete|managers|stats))?$/.test(url.pathname)) {
@@ -294,6 +295,13 @@ export default {
           if (!(await teamReply(env, draft.kind, draft.target, text))) return reply({ ok: false, error: "not found" }, 404);
         }
         await env.DB.prepare("DELETE FROM drafts WHERE id = ?").bind(draft.id).run();
+        return reply({ ok: true });
+      }
+      // ---- אישור משתתף בהשהיה: מכאן תשובות אליו שוב יכולות להתפרסם מיד
+      if (request.method === "POST" && url.pathname === "/admin/release") {
+        let b = {};
+        try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+        await env.DB.prepare("DELETE FROM held WHERE kind = ? AND target = ?").bind(String(b.kind || ""), String(b.target ?? "")).run();
         return reply({ ok: true });
       }
       // ---- מפתח AI: נשמר מוצפן, ולעולם אינו מוחזר. GET = האם מוגדר (ממסך הניהול או כסוד השרת AI_API_KEY)

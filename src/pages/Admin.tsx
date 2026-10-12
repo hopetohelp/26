@@ -23,8 +23,9 @@ type Day = { day: string; visits: number; users: number; guessUsers?: number; co
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
 /** טיוטת תשובה של הסקירה המתוזמנת: לא מוצגת לגולש עד אישור (הכרעת בעלים 12.10.2026) */
 type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
-type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean> };
-type Data = { drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
+type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
+type Data = { held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 
@@ -44,7 +45,7 @@ function DraftBox({ draft, actions }: { draft: Draft; actions: DraftActions }) {
   );
 }
 
-function Conversation({ title, items, waiting, onReply, drafts = [], draftActions }: { title: string; items: Item[]; waiting: boolean; onReply: (text: string) => Promise<boolean>; drafts?: Draft[]; draftActions?: DraftActions }) {
+function Conversation({ title, items, waiting, onReply, drafts = [], draftActions, held }: { title: string; items: Item[]; waiting: boolean; onReply: (text: string) => Promise<boolean>; drafts?: Draft[]; draftActions?: DraftActions; held?: Held }) {
   const [open, setOpen] = useState(waiting || drafts.length > 0);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -54,7 +55,7 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
       <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="w-full text-start p-3 flex gap-2 items-start min-h-[44px]">
         <span className={`shrink-0 mt-1 w-2.5 h-2.5 rounded-full ${waiting ? "bg-warn" : "bg-paper-line"}`} aria-label={waiting ? "ממתין לתשובה" : "נענה"} />
         <span className="flex-1 min-w-0">
-          <span className="text-xs text-ink-soft block">{title} · {topicLabel(conversationTopic(items))} · התקבלה {when(items[0].created_at)} · {items.length} הודעות{waiting ? " · ממתין לתשובה" : ""}{drafts.length ? ` · ${drafts.length} טיוטות` : ""}</span>
+          <span className="text-xs text-ink-soft block">{title} · {topicLabel(conversationTopic(items))} · התקבלה {when(items[0].created_at)} · {items.length} הודעות{waiting ? " · ממתין לתשובה" : ""}{drafts.length ? ` · ${drafts.length} טיוטות` : ""}{held ? " · בהשהיה" : ""}</span>
           <span className="block truncate">{first?.text.split("\n")[0]}</span>
         </span>
       </button>
@@ -68,6 +69,12 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
               </li>
             ))}
           </ul>
+          {held && draftActions && (
+            <div className="flex gap-2 items-center flex-wrap text-sm">
+              <span className="text-warn font-bold">בהשהיה: כל תשובה אליו נשמרת כטיוטה{held.reason ? ` (${held.reason})` : ""}.</span>
+              <Btn onClick={() => void draftActions.release(held.kind, held.target)}>אישור המשתתף</Btn>
+            </div>
+          )}
           {draftActions && drafts.map((d) => <DraftBox key={d.id} draft={d} actions={draftActions} />)}
           <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} aria-label="תשובה" className="w-full rounded-theme border border-paper-line bg-paper text-ink p-2 text-sm" placeholder="תשובה לגולש…" />
           <Btn kind="primary" disabled={busy || !text.trim()} onClick={async () => { setBusy(true); if (await onReply(text.trim())) setText(""); setBusy(false); }}>{busy ? "שולח…" : "שליחת תשובה"}</Btn>
@@ -111,6 +118,7 @@ export default function Admin() {
 
   const draftActions: DraftActions = {
     approve: async (id, text) => { try { await api("/admin/draft/approve", { id, text }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
+    release: async (kind, target) => { try { await api("/admin/release", { kind, target }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
     remove: async (id) => { try { await api("/admin/draft/delete", { id }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
   };
 
@@ -243,19 +251,20 @@ export function InquirySections({ data, reply, draftActions }: { data: Data; rep
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("oldest");
   const drafts = data.drafts ?? [];
+  const held = data.held ?? [];
   const all = [
-    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, onReply: reply("feedback", thread.id), drafts: drafts.filter(d => d.kind === "feedback" && d.target === String(thread.id)) })),
-    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", onReply: reply("support", thread.participant), drafts: drafts.filter(d => d.kind === "support" && d.target === thread.participant) })),
+    ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, onReply: reply("feedback", thread.id), drafts: drafts.filter(d => d.kind === "feedback" && d.target === String(thread.id)), held: held.find(h => h.kind === "feedback" && h.target === String(thread.id)) })),
+    ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", onReply: reply("support", thread.participant), drafts: drafts.filter(d => d.kind === "support" && d.target === thread.participant), held: held.find(h => h.kind === "support" && h.target === thread.participant) })),
   ].filter(c => c.items.length).map(c => ({ ...c, received: c.items[0].created_at, topic: conversationTopic(c.items) }));
   const count = (pick: (c: (typeof all)[number]) => boolean) => all.filter(pick).length;
   const shown = all
-    .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0)))
+    .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0 || !!c.held)))
     .sort((a, b) => (sort === "oldest" ? 1 : -1) * a.received.localeCompare(b.received));
   return <section className="space-y-3" aria-labelledby="inquiries-title">
     <h2 id="inquiries-title" className="font-display text-2xl">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h2>
     <Chips label="נושא" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
     <div className="grid sm:grid-cols-2 gap-2">
-      <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות (${count(c => c.drafts.length > 0)})` }]} />
+      <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות והשהיות (${count(c => c.drafts.length > 0 || !!c.held)})` }]} />
       <Segmented label="סדר" value={sort} onChange={setSort} options={[{ id: "oldest", label: "לפי סדר קבלה" }, { id: "newest", label: "החדשות קודם" }]} />
     </div>
     {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} draftActions={draftActions} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
