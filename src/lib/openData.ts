@@ -19,6 +19,8 @@ import { DEFAULT_LINEAGE, K25_LISTS, lineageRows } from "./lineage";
 import { PARTY_IMAGES } from "./partyImages";
 import { PAGES } from "./pages";
 import { THRESHOLD_PCT } from "../engine/pctForSeats";
+import { DEFAULT_TURNOUT, INVALID_SHARE, validVotesFor } from "../engine/law";
+import { TOTAL } from "./fillAll";
 import { DICTIONARY, MethodNumbers } from "../pages/Method";
 
 /** נתב סטטי לרינדור טקסט המילון בבנייה (אותו מופע של react-router כמו במסכים; אין ניווט) */
@@ -172,6 +174,26 @@ export const OPEN_FILES: OpenFile[] = [
     screen: "/past",
     fields: "elections[] (id, knesset, date, label, valid, lists[] {letters, short, name, votes, seats}), turnout{series[], k26}",
     build: () => ({ elections: results, turnout: registry }),
+  },
+  {
+    path: "data/law.json",
+    title: "חוק הבחירות והמחשבון",
+    description: "הפרמטרים שמחשבון המנדטים משתמש בהם: אחוז החסימה, הסכמי העודפים של 2026 (עם מקור ומצב לכל הסכם), בעלי זכות הבחירה, ברירות המחדל לשיעור ההצבעה ולפסולים, ורשימות 2026. החישוב עצמו — במנוע של האתר (src/engine).",
+    methodAnchor: "engine",
+    kind: "חישוב לפי החוק",
+    source: "חוק הבחירות לכנסת, סעיפים 81–82; הסכמי העודפים — כפי שדווחו בתקשורת עד פרסום ועדת הבחירות; בעלי זכות הבחירה — הודעת יו\"ר ועדת הבחירות המרכזית",
+    screen: "/guess",
+    fields: "seats, threshold, defaultTurnout, invalidShare, eligible{value, source, status}, validVotesDefault, agreements[] {pair, names, status, source}, lists[] {id, name, leader, gov37}",
+    build: () => ({
+      seats: TOTAL,
+      threshold: THRESHOLD_PCT,
+      defaultTurnout: DEFAULT_TURNOUT,
+      invalidShare: INVALID_SHARE,
+      eligible: { value: registry.k26.eligible, source: registry.k26.source, status: registry.k26.status },
+      validVotesDefault: validVotesFor(registry.k26.eligible),
+      agreements: meta.agreements2026.map((a) => ({ ...a, names: a.pair.map(listName) })),
+      lists: lists2026,
+    }),
   },
   {
     path: "data/accuracy.json",

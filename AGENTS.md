@@ -28,6 +28,7 @@
 | `data/scenarios.json` | שיעור תרחישים, טווח 80%, עוברות / על הסף / מתחת, בדיקת עבר | `model.json` · `home.ts` · `backtest.json` | `model` |
 | `data/forecast.json` | מודל המגמות | `forecast.json` | `forecast` |
 | `data/results.json` | תוצאות רשמיות 2019–2022 ובעלי זכות בחירה | `results.json` · `registry.json` | `results` |
+| `data/law.json` | חוק הבחירות: סף, הסכמי עודפים, בעלי זכות בחירה, ברירות המחדל של המחשבון | `src/engine/law.ts` · `meta.json` · `registry.json` | `engine` |
 | `data/accuracy.json` | דיוק הסקרים בעבר + כל סקרי המערכות הקודמות | `src/lib/history.ts` | `accuracy` |
 | `data/changes.json` | מה השתנה מאז 2022 (שיוך הרשימות) | `src/lib/lineage.ts` | `changes` |
 | `dashboard.json` | סטטיסטיקות הגולשים (עותק משרת ההשתתפות) | `pages.yml` + `wrapExternal` | `crowd` |
@@ -35,7 +36,7 @@
 | `data/dictionary.json` | מילון המספרים בטקסט | `src/pages/Method.tsx` | המילון |
 
 ### שאר הריפו
-- `src/engine/baderOfer.ts` — מנוע המנדטים (חוק הבחירות); `src/engine/pctForSeats.ts` — מנדטים ⇐ אחוזים. משותף לאתר ולשרת ההשתתפות.
+- `src/engine/baderOfer.ts` — מנוע המנדטים (חוק הבחירות); `src/engine/law.ts` — אחוזים ⇐ מנדטים וקולות כשרים; `src/engine/pctForSeats.ts` — מנדטים ⇐ אחוזים. משותף לאתר, לשרת ההשתתפות ולשרת ה-MCP — אין חישוב משוכפל.
 - `src/pages/` — המסכים (הרשימה: `src/lib/pages.ts`); `src/pages/Method.tsx` — מילון המספרים (`DICTIONARY`).
 - `worker/crowd/` — שרת ההשתתפות (חשבונות, השערות, גושים, הצבעה, קבוצות, סטטיסטיקות); `worker/feedback/` — שרת ההערות והשיחות עם הצוות.
 - `PRODUCT.md` · `DESIGN.md` — חובה לקרוא לפני כל שינוי שנראה באתר.
