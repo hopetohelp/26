@@ -51,7 +51,7 @@ assert p["fieldChecks"]["dates"]["status"] == "corrected" and p["fieldChecks"]["
 
 # quality: conflicts and corrections log, with what each correction affects
 good = poll(id="a")
-bad = poll(id="b", consistent=False, seatSum=601, end="2026-08-24")
+bad = poll(id="b", consistent=False, seatSum=601, end="2026-08-24", eligibleToShow=False, erroneous={"reason": "x", "source": "s", "markedAt": "2026-10-12"})
 old = poll(id="c", end="2026-05-01", corrections=[{"field": "sample", "from": 1, "to": 2, "source": "s"}])
 for x in (good, bad, old):
     x.setdefault("fieldChecks", None)

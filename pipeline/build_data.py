@@ -124,6 +124,7 @@ PARTY_KEY = {
     "The Reservists (political party)+New Economic Party": "reservists",
     "The Reservists (political party)": "reservists", "Reserv.": "reservists",
     "Zionist Home – The Reservists": "reservists", "New Economic Party": "nep",
+    "Noam (political party)": "noam", "Noam": "noam",
     "Amcha Yisrael": "amcha", "Winter party": "amcha", "Haredi Public": "haredi_public",
     "Yesh Atid": "yesh_atid", "Bennett 2026": "bennett", "Bennett party": "bennett",
     "New Hope (Israel)": "new_hope", "Unity (Israel)": "unity",
@@ -330,6 +331,20 @@ def apply_corrections(polls: list[dict], build_time: datetime) -> None:
         p["eligibleToShow"] = True
 
 
+def apply_erroneous(polls: list[dict]) -> None:
+    """raw/erroneous-polls.json: סקר שסומן שגוי (id, reason, source) מוחרג מכל החישובים. רק סימון מפורש מוציא סקר; סכום מנדטים ≠ 120 לבדו לא."""
+    path = RAW / "erroneous-polls.json"
+    if not path.exists():
+        return
+    by_id = {p["id"]: p for p in polls}
+    for e in json.loads(path.read_text(encoding="utf-8")):
+        p = by_id.get(e["id"])
+        if p is None:
+            raise SystemExit(f"סימון שגוי לסקר שאינו קיים: {e['id']}")
+        p["eligibleToShow"] = False
+        p["erroneous"] = {"reason": e["reason"], "source": e.get("source"), "markedAt": e["markedAt"]}
+
+
 def apply_verification(polls: list[dict]) -> None:
     """raw/verification.json: תוצאת ההשוואה לפרסום המקורי לכל סקר שנבדק."""
     path = RAW / "verification.json"
@@ -421,7 +436,7 @@ FIELD_AFFECTS = {
 def build_quality(polls: list[dict], model_out: dict | None, build_time: datetime) -> dict:
     """quality.json — מסך המקורות: כיסוי (כל הסקרים מול החישובים), סתירות פתוחות ויומן התיקונים."""
     spec = json.loads((Path(__file__).resolve().parent / "forecast_spec.json").read_text(encoding="utf-8"))
-    excluded = [p for p in polls if not (p["consistent"] and p["eligibleToShow"])]
+    excluded = [p for p in polls if not p["eligibleToShow"]]
     in_cycle = [p for p in polls if p["end"] > LIST_SUBMISSION_2026]
     coverage = {
         "total": len(polls),
@@ -442,7 +457,8 @@ def build_quality(polls: list[dict], model_out: dict | None, build_time: datetim
             if c["status"] == "conflict":
                 conflicts.append({**who(p), "group": g, "detail": c.get("note") or "סתירה בין השדה הראשי לפרטי האימות", "source": c.get("source")})
         if not p["consistent"]:
-            conflicts.append({**who(p), "group": "seats", "detail": f"סכום המנדטים {p['seatSum']} במקום 120 — הסקר הוצא מהחישובים", "source": (p.get("urls") or [None])[0]})
+            note = f"סומן כשגוי ({p['erroneous']['reason']}) — הסקר הוצא מהחישובים" if p.get("erroneous") else "הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)"
+            conflicts.append({**who(p), "group": "seats", "detail": f"סכום המנדטים {p['seatSum']} במקום 120 — {note}", "source": (p.get("urls") or [None])[0]})
     conflicts.sort(key=lambda c: (c["end"], c["id"], c["group"]), reverse=True)
 
     log = []
@@ -722,7 +738,7 @@ def build_model(polls: list[dict], results: list[dict], build_time: datetime) ->
     הממוצע נכון ליום הבנייה (הכרעת בעלים 11.10.2026): הבנייה רצה כל 4 שעות, ואם אין סקר חדש — הממוצע של היום הוא הממוצע האחרון."""
     import model as M
 
-    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
+    use = [p for p in polls if p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
     inputs = [M.ModelInput(p["id"], f"{p['firm']}|{p['publisher'] or ''}", p["end"], p["values"],
                            (p.get("others") or {}).get("pct"), p.get("sample")) for p in use]
     lists = [l["id"] for l in LISTS_2026]
@@ -774,7 +790,7 @@ def build_forecast(polls: list[dict], build_time: datetime) -> dict:
     """מודל החיזוי (pipeline/forecast_live.py): אותם סקרים כמו הממוצע, סדרת מכון לפי HIST_FIRMS — כמו בבדיקת העבר."""
     import forecast_live as FL
 
-    use = [p for p in polls if p["consistent"] and p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
+    use = [p for p in polls if p["eligibleToShow"] and p["end"] > LIST_SUBMISSION_2026]
     series_of = lambda firm: FL.K26["seriesMap"].get(firm) or "new_" + norm_name(firm).replace(" ", "_")
     out = FL.build(use, series_of, [tuple(a["pair"]) for a in AGREEMENTS_2026],
                    [l["id"] for l in LISTS_2026 if l["gov37"]], build_time.date())
@@ -807,6 +823,7 @@ def main() -> None:
     apply_corrections(polls["polls"], build_time)
     apply_verification(polls["polls"])
     apply_field_checks(polls["polls"])
+    apply_erroneous(polls["polls"])
     history = build_history(results)
     # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
     model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results, build_time)
