@@ -5,7 +5,7 @@ import { FeedbackSheet } from "../components/Feedback";
 import { FEEDBACK_URL, getThread, mergeSavedThreads, replyToThread, saveThread, savedThreads, threadLink, type Thread } from "../lib/feedback";
 import { date } from "../lib/format";
 
-const TOPIC: Record<string, string> = { data: "נתון שגוי", idea: "רעיון", design: "עיצוב ונוחות", other: "אחר" };
+const TOPIC: Record<string, string> = { data: "תקלה או שגיאה", idea: "רעיון", design: "עיצוב ונוחות", other: "אחר" };
 const STATUS: Record<Thread["status"], string> = { new: "ממתינה לתשובה", answered: "נענתה", closed: "נסגרה" };
 const when = (iso: string) => {
   const d = new Date(iso);
