@@ -1505,5 +1505,36 @@
    "sample_respondents": 1891
   },
   "status": "match"
+ },
+ {
+  "access": [
+   "manual",
+   "secondary"
+  ],
+  "checkedAt": "2026-10-12",
+  "id": "2026-10-12-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "נוסח כתבת ערוץ 14 הועתק ידנית מהדפדפן בידי הבעלים (12.10.2026), כי האתר חוסם גישה אוטומטית. מנדטי כל 12 הרשימות, סך 120 והשינויים לעומת הסקר הקודם זהים לדיווח כיפה (https://kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233523-0) ולנוסח שהועתק. גוש הימין 61 (29+10+8+7+7) תואם לדיווח. הנוסח שהועתק אינו כולל מכון, מדגם, תאריכי שדה ואחוזים, ולכן לא אומתו.",
+  "source": "https://www.c14.co.il/article/1735305",
+  "sourceDetails": {
+   "published": "2026-10-12T21:13:00+03:00",
+   "sample_respondents": null
+  },
+  "status": "partial",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.c14.co.il/article/1735305"
+   }
+  }
  }
 ]
