@@ -14,8 +14,8 @@ const UNITS: { id: Unit; label: string }[] = [
   { id: "blocs", label: "גושים" },
   { id: "vote", label: "הצבעה" },
 ];
-/** תאריך ושעה של גרסה: הכותרת היחידה שלה, ושל הטור בהשוואות */
-const stamp = (v: { created_at: string }) => `${date(v.created_at)} ${time(v.created_at)}`;
+/** תאריך הגרסה: הכותרת היחידה שלה, ושל הטור בהשוואות (נשמרת רק השערה אחת ביום, הכרעת בעלים 12.10.2026) */
+const stamp = (v: { created_at: string }) => date(v.created_at);
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 
 /** הגרסאות מהחדשה לישנה, לפי מספר הגרסה (לא לפי סדר ההגעה מהשרת) */
