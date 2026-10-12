@@ -1,8 +1,9 @@
 /**
  * "מה השתנה" (הכרעת בעלים 9.10.2026, החלטה 8): לכל משפחת רשימות, נקודה אחת ל-2022 ונקודה אחת להיום על אותו ציר,
- * (בלי קו ביניהן). אין כאן חישוב חדש — האחוזים והטווח כבר מחושבים בצינור (`model.json`), וכאן רק גובה הציר והשינוי.
+ * (בלי קו ביניהן), ונר של טווח הסקרים סביב "היום" (הכרעת בעלים 12.10.2026, הכרעה 6: מהסקר הנמוך עד הגבוה, הסקר האחרון של כל סדרה
+ * ב-14 הימים האחרונים). כאן רק הנר, גובה הציר והשינוי; האחוזים של 2022 והיום מחושבים בצינור, וההמרה של מנדטים לאחוזים — לפי החוק (`pctForListSeats`).
  */
-import { binSegs, clipSegs, intSegs, type Seg } from "./chartLanguage";
+import { valueSegs, type Seg } from "./chartLanguage";
 
 /** יחידת המדידה בגרף: אחוז מהקולות, או מנדטים (מתג אחד למסך, הכרעת בעלים 11.10.2026) */
 export type DumbbellUnit = "pct" | "seats";
@@ -19,24 +20,42 @@ export interface DumbbellRow {
   now: number;
   /** רשימה של 2022 שהתפצלה: ה-2022 שלה הוא הערכה, ומסומן "~" */
   approx?: boolean;
-  /** התפלגות כל התרחישים: תאים של רבע אחוז (`ShareHist`) או כמה תרחישים בכל מספר שלם של מנדטים (מערך). ממנה עובי הנר בכל קטע (נחתך לטווח 80%); null — מחנה ששונה ידנית */
-  hist: ShareHist | number[] | null;
-  /** טווח 80% מהתרחישים (מ-10% עד 90%): הקצוות של הנר; null — מחנה ששונה ידנית */
+  /** קטעי הנר, ביחידה של הגרף: עובי כל קטע לפי כמה סקרים נותנים את הערך (`pollSegs`); ריק — אין נר */
+  segs: Seg[];
+  /** טווח הסקרים (הנמוך והגבוה, טווח מלא): הקצוות של הנר; null — אין סקרים לרשימה */
   range: [number, number] | null;
 }
 
-/** התפלגות רציפה בתאים: `counts[i]` = כמה תרחישים באחוז שבין `start + i*step` ל-`start + (i+1)*step` */
-export interface ShareHist {
-  start: number;
-  step: number;
-  counts: number[];
-}
-
-/** קטעי הנר של משפחה: ההתפלגות בכל התרחישים, חתוכה לטווח 80% (כלל הטווחים: תרחישים ⇐ 80%). מחנה ששונה ידנית: אין נר */
-export function dumbbellSegs(r: Pick<DumbbellRow, "hist" | "range">): Seg[] {
-  if (!r.hist || !r.range) return [];
-  const all = Array.isArray(r.hist) ? intSegs(r.hist) : binSegs(r.hist.start, r.hist.step, r.hist.counts);
-  return clipSegs(all, r.range[0], r.range[1]);
+/**
+ * הנר של טווח הסקרים (כלל הטווחים: סקרים ⇐ טווח מלא): `seats` = המנדטים של הרשימה בכל סקר (`pollSeatValues`), והעובי לפי כמה סקרים נותנים כל ערך.
+ * באחוזים (`toPct`, מנדטים שלמים ⇐ אחוז לפי החוק): כל קצה של קטע מומר, ובין שני מספרים שלמים של מנדטים — באינטרפולציה. אין שום המרה ⇐ אין נר.
+ * `range` (לא חובה): הנר נמתח עד הקצוות האלה, כשהטווח באחוזים הורחב כך שיכלול את הממוצע (כמו ב"הכנסת שלי").
+ */
+export function pollSegs(seats: number[], toPct?: (seats: number) => number | null, range?: [number, number] | null): Seg[] {
+  const segs = valueSegs(seats);
+  if (!toPct || !segs.length) return segs;
+  // מספר מנדטים שאין לו אחוז (1 עד 3: מתחת לסף אי אפשר לקבל אותם) — אינטרפולציה בין הערכים הקרובים שיש להם
+  const lo = Math.max(0, Math.floor(segs[0].from)), hi = Math.ceil(segs[segs.length - 1].to);
+  const known: [number, number][] = [];
+  for (let k = lo; k <= hi; k++) { const v = toPct(k); if (v !== null) known.push([k, v]); }
+  const at = (x: number): number | null => {
+    if (!known.length) return null;
+    const below = [...known].reverse().find(([k]) => k <= x + 1e-9) ?? known[0];
+    const above = known.find(([k]) => k >= x - 1e-9) ?? known[known.length - 1];
+    if (above[0] === below[0]) return below[1];
+    return below[1] + ((above[1] - below[1]) * (x - below[0])) / (above[0] - below[0]);
+  };
+  const out: Seg[] = [];
+  for (const g of segs) {
+    const from = at(g.from), to = at(g.to);
+    if (from === null || to === null) return [];
+    out.push({ from, to, count: g.count });
+  }
+  if (range) {
+    out[0] = { ...out[0], from: Math.min(out[0].from, range[0]) };
+    out[out.length - 1] = { ...out[out.length - 1], to: Math.max(out[out.length - 1].to, range[1]) };
+  }
+  return out;
 }
 
 /**
