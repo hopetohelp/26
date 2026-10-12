@@ -9,6 +9,7 @@ import { Chips, Segmented } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
 import AdminGroups from "./AdminGroups";
+import AdminBlocs from "./AdminBlocs";
 
 /**
  * ממשק ניהול: כל הפניות עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
@@ -156,6 +157,8 @@ export default function Admin() {
           </section>
 
           <AdminGuesses api={api} />
+
+          <AdminBlocs api={api} />
 
           <AdminGroups api={api} />
 
