@@ -11,10 +11,10 @@ const render = (props: Record<string, unknown>) =>
     ...props,
   } as never) }));
 
-it("בגרף: הסוג, התאריך וקישור לערך במילון; המקור וההנחה המלאים לא מוצגים (החלטה 9)", () => {
+it("בגרף: התאריך וקישור לערך במילון; הסוג, המקור וההנחה המלאים — רק במילון (החלטה 9; הסוג — הכרעת בעלים 12.10.2026)", () => {
   const html = render({});
   expect(html).toContain("תוצאה: 61 מנדטים");
-  expect(html).toContain("חישוב לפי החוק");
+  expect(html).not.toContain("חישוב לפי החוק");
   expect(html).toContain("היום");
   expect(html).toContain('href="/method#engine"');
   expect(html).toContain("איך זה חושב?");

@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 /**
  * חוזה ההסבר הצמוד לכל מספר מחושב (הכרעת בעלים 9.10.2026, החלטה 9). כל השדות חובה (הטיפוסים אוכפים זאת): סוג המספר, מקור,
  * נכון ל-, ההנחה המרכזית, וקישור לערך במילון המספרים. כך אי אפשר להוסיף מספר בלי מקור.
- * מה שמוצג בגרף: הסוג, התאריך, וקישור "איך זה חושב?" אל הערך. המקור וההנחה המלאים נמצאים במילון (`src/pages/Method.tsx`),
+ * מה שמוצג בגרף: התאריך וקישור "איך זה חושב?" אל הערך — בלי הסוג (הכרעת בעלים 12.10.2026: הסוג בתחילת השורה אינו אומר
+ * לגולש דבר; הוא נשאר חובה בחוזה ומוצג בערך שבמילון). המקור וההנחה המלאים נמצאים במילון (`src/pages/Method.tsx`),
  * ולכן `source` ו-`assumption` כאן הם התיעוד של מה שהערך מבטיח, ועליהם להתאים לו.
  * `details`: פירוט החישוב עצמו (למשל טבלת תוצאות המחשבון), נפתח בכפתור אמיתי (מקלדת ומגע), לא בריחוף.
  */
@@ -33,7 +34,7 @@ export interface ExplainProps {
   bare?: boolean;
 }
 
-export default function Explained({ kind, asOf, methodAnchor, children, details, showMeta = true, trailing, bare = false }: ExplainProps) {
+export default function Explained({ asOf, methodAnchor, children, details, showMeta = true, trailing, bare = false }: ExplainProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   if (bare) return <div>{children}</div>;
@@ -43,7 +44,7 @@ export default function Explained({ kind, asOf, methodAnchor, children, details,
       <div className={`mt-2 text-sm text-ink-soft ${showMeta ? "" : "flex flex-wrap items-end justify-between gap-x-4 gap-y-1"}`}>
         {!showMeta && <div className="min-w-0 flex-1 basis-56 space-y-1 text-xs">{trailing}</div>}
         <p>
-        {showMeta && <>{kind} · {asOf} · </>}<Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
+        {showMeta && <>{asOf} · </>}<Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
         {details && (
           <>
             {" · "}
