@@ -348,6 +348,17 @@ def apply_verification(polls: list[dict]) -> None:
                              "details": v.get("sourceDetails") or {}, "law16E": v.get("law16E") or {}}
 
 
+def sample_conflicts(polls: list[dict]) -> list[str]:
+    """סתירה בין גודל המדגם בשדה הראשי לגודל שנרשם בפרטי האימות (sample_respondents).
+    מתריעה בלבד ואינה חוסמת קליטה (כלל ברזל 2) — התיקון נעשה רק ב-raw/corrections.json."""
+    out = []
+    for p in polls:
+        recorded = ((p.get("verification") or {}).get("details") or {}).get("sample_respondents")
+        if recorded is not None and p.get("sample") is not None and p["sample"] != recorded:
+            out.append(f"{p['id']}: sample={p['sample']}, באימות={recorded}")
+    return out
+
+
 # ---------------------------------------------------------------- רשימות 2026
 
 LISTS_2026 = [
@@ -696,6 +707,9 @@ def main() -> None:
     registry = build_registry(results)
     apply_corrections(polls["polls"], build_time)
     apply_verification(polls["polls"])
+    for line in sample_conflicts(polls["polls"]):
+        # ::warning:: — התרעה גלויה בריצת GitHub Actions; הבנייה ממשיכה
+        print(f"::warning::סתירת גודל מדגם מול פרטי האימות — {line}")
     history = build_history(results)
     # SKIP_MODEL: בדיקות ההקפאה בונות את הנתונים שש פעמים — שם המודל אינו נבדק ואינו נכתב מחדש
     model_out = None if __import__("os").environ.get("SKIP_MODEL") else build_model(polls["polls"], results, build_time)
