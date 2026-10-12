@@ -152,9 +152,10 @@ const CMP_HEAD = "text-xs sm:text-sm leading-tight";
  * תא ממוצע וטווח (הכרעת בעלים 12.10.2026): הממוצע בגופן גדול מעט (16px), הטווח קטן מעט (12px).
  * במסך צר הטווח מתחת לממוצע, ובמסך רחב הוא לידו.
  */
-const AvgRange = ({ mean, range: rangeText = "", bold = false }: { mean: ReactNode; range?: string; bold?: boolean }) => (
+const AvgRange = ({ mean, range: rangeText = "", bold = false, coverage = "" }: { mean: ReactNode; range?: string; bold?: boolean; coverage?: string }) => (
   <span className="flex flex-col items-center sm:flex-row sm:items-baseline sm:justify-center sm:gap-1.5">
     <span className={`text-base leading-tight ${bold ? "font-bold" : ""}`}>{mean}</span>
+    {coverage ? <bdi dir="ltr" className="text-xs leading-tight text-ink-soft whitespace-nowrap">{coverage}</bdi> : null}
     {rangeText ? <bdi dir="ltr" className="text-xs leading-tight text-ink-soft whitespace-nowrap">{rangeText}</bdi> : null}
   </span>
 );
@@ -216,7 +217,7 @@ export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, ov
   return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
-    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); const poll = pollSummary(r.lists); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={poll ? `${poll.listed < poll.total ? "לפחות " : ""}${seatsFmt(poll.mean)}` : "—"} range={pollRangeText(poll?.range ?? null)} />{poll && poll.listed < poll.total && <span className="block mt-0.5 text-xs text-ink-soft"><bdi>{poll.listed} מתוך {poll.total}</bdi> מפלגות</span>}</td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
+    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); const poll = pollSummary(r.lists); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={poll ? `${poll.listed < poll.total ? "לפחות " : ""}${seatsFmt(poll.mean)}` : "—"} range={pollRangeText(poll?.range ?? null)} coverage={poll && poll.listed < poll.total ? `${poll.listed}/${poll.total}` : ""} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div></Card>;
 }
 
