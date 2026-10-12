@@ -95,7 +95,6 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>
           <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
-          {d.accounts && d.accounts.total > 0 && <p className="text-xs text-ink-soft mb-1">{d.accounts.verified}/{d.accounts.total} מאומתים (Google או מייל)</p>}
           {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
         </div>
