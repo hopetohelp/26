@@ -24,6 +24,7 @@ export interface Poll {
   gov: number | null;
   consistent: boolean;
   eligibleToShow: boolean;
+  erroneous?: { reason: string; source: string | null; markedAt: string };
   urls: string[];
   verified: boolean;
   verification?: {
@@ -109,7 +110,7 @@ export const listName = (id: string) =>
   lists2026.find((l) => l.id === id)?.name ?? meta.historyNames[id] ?? id;
 
 /** סקרים שמותר ונכון להציג בניתוח: פורסמו לציבור ועקביים (סכום ≈ 120) */
-export const usablePolls = polls.filter((p) => p.eligibleToShow && p.consistent);
+export const usablePolls = polls.filter((p) => p.eligibleToShow);
 
 export const pollsterKey = (p: Poll) => `${p.firm}|${p.publisher ?? ""}`;
 export const pollsterLabel = (p: Poll) => `${p.firmHe}${p.publisherHe ? ` · ${p.publisherHe}` : ""}`;

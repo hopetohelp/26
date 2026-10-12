@@ -89,6 +89,7 @@ export default function Polls() {
                   <span>{pollsterLabel(p)}</span>
                   {p.sample && <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>}
                   {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
+                  {p.erroneous && <Badge tone="warn">סומן כשגוי — לא נכנס לחישובים</Badge>}
                   {p.verification ? (
                     <Badge tone={label!.tone === "ok" ? "ok" : label!.tone === "warn" ? "warn" : "neutral"}>
                       {label!.text}
