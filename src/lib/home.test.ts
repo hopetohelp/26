@@ -147,3 +147,9 @@ describe("לוח המושבים בבית: שלושה גושים", () => {
     expect(arab).toBeGreaterThanOrEqual(0);
   });
 });
+
+it("הנקודה האחרונה במגמת הממשלה היוצאת שווה למספר בכותרת ובלוח המושבים (מספר אחד לכל עובדה)", async () => {
+  const { GOV_POINTS, HOME: home } = await import("./homeData");
+  expect(GOV_POINTS[GOV_POINTS.length - 1].mean).toBe(home.gov);
+  expect(GOV_POINTS.every((p) => typeof p.mean === "number")).toBe(true);
+});

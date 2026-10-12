@@ -1,6 +1,6 @@
 import modelFile from "../data/model.json";
 import { POLL_AVERAGE } from "./sources";
-import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, seatsIn, usablePolls, latestPerPollster, lists2026, listName, passesInAll } from "./data";
+import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, seatsIn, usablePolls, latestPerPollster, lists2026, listName, passesInAll, toTime } from "./data";
 import { buildHome, type HomeModel } from "./home";
 import { defaultBlocs } from "../pages/guess/model";
 
@@ -24,9 +24,12 @@ export const HOME = buildHome(modelFile as unknown as HomeModel, {
  * מהסקר האחרון של כל מכון ב-14 הימים שמסתיימים בה. סקר שחסרה בו אחת המפלגות שעוברות את הסף בממוצע — לא נספר.
  */
 const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
-export const GOV_POINTS: { t: number; values: number[] }[] = HOME.series.length
+const MODEL_GOV = new Map(HOME.series.map((s) => [toTime(s.date), s.v]));
+export const GOV_POINTS: { t: number; values: number[]; mean?: number }[] = HOME.series.length
   ? pointTimes(HOME.series[0].date, HOME.series[HOME.series.length - 1].date).map((t) => ({
       t,
+      // 🔴 הנקודה בגרף היא ממוצע המודל באותו יום — אותו מספר שבלוח המושבים ובכותרת (מספר אחד לכל עובדה); הנר מראה את טווח הסקרים בחלון
+      mean: MODEL_GOV.get(t),
       values: bucketLatest(usablePolls, (p) => p.end, pollsterKey, t, POINT_WINDOW)
         // רשימה שבממוצע מתחת לסף (למשל נעם) ולא נשאלה בסקר — 0; רשימה גדולה שחסרה — הסקר לא נספר
         .map((p) => GOV_IDS.map((id) => seatsIn(p, id) ?? (POLL_AVERAGE.seats[id] ? undefined : 0)))

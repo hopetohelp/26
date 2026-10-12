@@ -234,14 +234,14 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
 
 /**
  * מגמת הממשלה היוצאת: הגרף האחיד `CandleTrend` (נר כל 3 ימים, 14 יום אחורה, שלוש דרגות עובי, הקו עובר דרך הממוצעים של הנקודות, קווים כל 5 ו-61 במקום 60,
- * חלון במעבר על הנר, מקרא בפינה השמאלית העליונה). `points` = לכל נקודה: סכום המנדטים של הממשלה היוצאת בכל סקר בחלון.
+ * חלון במעבר על הנר, מקרא בפינה השמאלית העליונה). `points` = לכל נקודה: סכום המנדטים של הממשלה היוצאת בכל סקר בחלון (הנר), ו-`mean` = ממוצע המודל באותו יום (הנקודה והקו), כך שהנקודה האחרונה שווה למספר שבלוח המושבים.
  */
-export function GovTrend({ home, points = [], heading }: { home: HomeData; points?: { t: number; values: number[] }[]; heading?: ReactNode }) {
+export function GovTrend({ home, points = [], heading }: { home: HomeData; points?: { t: number; values: number[]; mean?: number }[]; heading?: ReactNode }) {
   const { series } = home;
   if (series.length < 2) return null;
   const trend: TrendPoint[] = points
     .filter((p) => p.values.length)
-    .map((p) => ({ t: p.t, v: p.values.reduce((a, b) => a + b, 0) / p.values.length, lo: Math.min(...p.values), hi: Math.max(...p.values), n: p.values.length, xs: p.values }));
+    .map((p) => ({ t: p.t, v: p.mean ?? p.values.reduce((a, b) => a + b, 0) / p.values.length, lo: Math.min(...p.values), hi: Math.max(...p.values), n: p.values.length, xs: p.values }));
   return (
     <CandleTrend
       title="מגמת הממשלה היוצאת בסקרים"
