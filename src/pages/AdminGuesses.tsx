@@ -66,7 +66,7 @@ export function toCsv(rows: GuessRow[]) {
   return [head, ...lines].map((l) => l.map((x) => `"${String(x).replace(/"/g, '""')}"`).join(",")).join("\n");
 }
 
-export default function AdminGuesses({ api }: { api: (path: string, body?: unknown) => Promise<any> }) {
+export default function AdminGuesses({ api, onPending }: { api: (path: string, body?: unknown) => Promise<any>; onPending?: (n: number) => void }) {
   const [data, setData] = useState<{ salt: string; rows: GuessRow[]; unverified?: { participants: number; means: Record<string, number> } } | null>(null);
   const [filter, setFilter] = useState<Filter>("pending");
   const [sort, setSort] = useState<Sort>("random");
@@ -75,7 +75,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
 
   const load = async () => {
     setError(null);
-    try { setData(await api("/admin/guesses")); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
+    try { const d = await api("/admin/guesses"); setData(d); onPending?.((d.rows as GuessRow[]).filter((r) => r.status === "pending").length); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
   };
   useEffect(() => { void load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
