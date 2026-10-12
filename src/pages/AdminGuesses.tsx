@@ -40,8 +40,15 @@ export function sortRows(rows: GuessRow[], sort: Sort): GuessRow[] {
 /** תאריך ושעה בשעון ישראל, לשדות הפעילות (נרשם / כניסה אחרונה) */
 export const stamp = (iso?: string | null) => iso ? dateTime(iso) : "—";
 
+/** בכמה אחוז ההשערה חורגת מקצה טווח הסקרים (מעל העליון / מתחת לתחתון). קצה 0 ⇐ אין אחוז, רק הפער במנדטים */
+export function rangeGap(r: Pick<GuessReason, "value" | "lo" | "hi">): string {
+  const lo = r.lo ?? 0, hi = r.hi ?? 0;
+  if (r.value > hi) return hi > 0 ? `${Math.round((r.value / hi - 1) * 100)}% מעל טווח הסקרים` : `${r.value} מנדטים מעל טווח הסקרים`;
+  return `${Math.round((1 - r.value / lo) * 100)}% מתחת לטווח הסקרים`;
+}
+
 export function reasonText(r: GuessReason) {
-  if (r.rule === "range") return `${listName(r.list)}: ${r.value} מנדטים — מחוץ לטווח הסקרים ${r.lo === r.hi ? r.lo : rng(String(r.lo), String(r.hi))} (יותר מ-50% ובפער של 4.1 לפחות)`;
+  if (r.rule === "range") return `${listName(r.list)}: ${r.value} מנדטים — ${rangeGap(r)} ${r.lo === r.hi ? r.lo : rng(String(r.lo), String(r.hi))}`;
   if (r.rule === "ratio") return `${listName(r.list)}: ${r.value} מנדטים, ממוצע הגולשים ${r.mean}`;
   return `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה ממתין לאישור`;
 }

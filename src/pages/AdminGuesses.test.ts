@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { blocsText, sortRows, toCsv, type GuessRow } from "./AdminGuesses";
+import { blocsText, reasonText, sortRows, toCsv, type GuessRow } from "./AdminGuesses";
 
 const row = (blocs?: GuessRow["blocs"]): GuessRow => ({ handle: "h", day: "2026-10-09", mode: "seats", seats: { likud: 60, yashar: 60 }, status: "ok", reasons: [], blocs });
 
@@ -34,4 +34,10 @@ it("מיון לפי רישום, כניסה אחרונה ושמירת ההשער�
   expect(order("lastLogin")).toBe("cba");
   expect(order("saved")).toBe("cab");
   expect(order("random")).toBe("abc");
+});
+
+it("outlier text says by how much the guess is beyond the poll range", () => {
+  expect(reasonText({ list: "likud", rule: "range", value: 48, lo: 20, hi: 32 })).toMatch(/50% מעל טווח הסקרים/);
+  expect(reasonText({ list: "likud", rule: "range", value: 8, lo: 20, hi: 32 })).toMatch(/60% מתחת לטווח הסקרים/);
+  expect(reasonText({ list: "likud", rule: "range", value: 5, lo: 0, hi: 0 })).toMatch(/5 מנדטים מעל טווח הסקרים 0/);
 });
