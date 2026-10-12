@@ -71,3 +71,9 @@ it("חסימה במאגר: תשובת צוות למשתתף בהשהיה הופ�
   expect(env.DB.raw.prepare("SELECT status FROM feedback").get().status).toBe("answered");
   expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM held_pass").get().n).toBe(0);
 });
+
+it("ריצה אחרונה של הסשן המרוכז מוחזרת במסך הניהול", async () => {
+  expect((await api("/admin/data")).data.agentLastRun).toBe(null);
+  env.DB.raw.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('agent_last_run', ?1, ?1)").run("2026-10-12T11:05:00Z");
+  expect((await api("/admin/data")).data.agentLastRun).toBe("2026-10-12T11:05:00Z");
+});
