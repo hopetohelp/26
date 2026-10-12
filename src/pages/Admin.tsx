@@ -1,11 +1,12 @@
 import { FEEDBACK_TOPICS, conversationTopic, topicLabel } from "../lib/feedbackTopics";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
 import { dateTime } from "../lib/format";
 import { getToken } from "../lib/crowdSession";
 import { setOwnerBrowser } from "../lib/visits";
 import { Chips, Segmented } from "../components/Choice";
+import { Drawer } from "../components/Drawer";
 import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
 import AdminGroups from "./AdminGroups";
@@ -89,6 +90,9 @@ export default function Admin() {
   const [key, setKey] = useState<string | null>(() => { try { return localStorage.getItem(KEY); } catch { return null; } });
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<string | null>(null);
+  type DrawerId = "inquiries" | "guesses" | "blocs" | "groups" | "ai";
+  const [open, setOpen] = useState<Set<DrawerId>>(new Set());
+  const toggle = (id: DrawerId) => setOpen((o) => { const n = new Set(o); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
   useEffect(() => {
     const k = params.get("k");
@@ -112,6 +116,10 @@ export default function Admin() {
     try { setData(await api("/admin/data")); setOwnerBrowser(true); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
   };
   useEffect(() => { if (credential && FEEDBACK_URL) void load(); }, [credential]); // eslint-disable-line react-hooks/exhaustive-deps
+  // יש ממתינים או טיוטות ⇐ מגירת הפניות נפתחת לבד, פעם אחת
+  const needsAttention = !!data && ((data.feedback.filter((t) => t.waiting).length + (data.support?.threads.filter((t) => t.status === "new").length ?? 0) + (data.drafts?.length ?? 0)) > 0);
+  const autoOpened = useRef(false);
+  useEffect(() => { if (needsAttention && !autoOpened.current) { autoOpened.current = true; setOpen((o) => new Set(o).add("inquiries")); } }, [needsAttention]);
   const reply = (kind: "feedback" | "support", id: number | string) => async (text: string) => {
     try { await api("/admin/reply", { kind, id, text }); await load(); return true; } catch (e) { setError((e as Error).message); return false; }
   };
@@ -190,16 +198,18 @@ export default function Admin() {
             <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "מייל מאומת (בקישור)" = חשבונות שאימתו את המייל דרך הקישור שנשלח אליהם, בלי אלה ש-Google אימת; "חשבון Google" = חשבונות שנכנסו עם Google. "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8/10), ולא אנשים.</p>
           </section>
 
-          <AdminGuesses api={api} />
-
-          <AdminBlocs api={api} />
-
-          <AdminGroups api={api} />
-
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
-          <InquirySections data={data} reply={reply} draftActions={draftActions} />
 
-          <AiKey api={api} />
+          {/* כל מה שמעבר לדשבורד — במגירות לפי נושא (הכרעת בעלים 12.10.2026). תוכן מגירה נטען רק כשפותחים אותה. */}
+          <div className="border-t border-paper-line">
+            <Drawer title="פניות והודעות" open={open.has("inquiries")} onToggle={() => toggle("inquiries")} badge={waiting + (data.drafts?.length ?? 0) > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${waiting} ממתינים לתשובה, ${data.drafts?.length ?? 0} טיוטות`}>{waiting + (data.drafts?.length ?? 0)}</span> : undefined}>
+              <InquirySections data={data} reply={reply} draftActions={draftActions} />
+            </Drawer>
+            <Drawer title="השערות הגולשים" open={open.has("guesses")} onToggle={() => toggle("guesses")}><AdminGuesses api={api} /></Drawer>
+            <Drawer title="גושים שהוגדרו" open={open.has("blocs")} onToggle={() => toggle("blocs")}><AdminBlocs api={api} /></Drawer>
+            <Drawer title="קבוצות" open={open.has("groups")} onToggle={() => toggle("groups")}><AdminGroups api={api} /></Drawer>
+            <Drawer title="מפתח AI לתשובות" open={open.has("ai")} onToggle={() => toggle("ai")}><AiKey api={api} /></Drawer>
+          </div>
         </>
       )}
     </div>
@@ -225,7 +235,7 @@ function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<{ admin
   };
   return (
     <section className="space-y-2" aria-labelledby="ai-key-title">
-      <h2 id="ai-key-title" className="font-display text-2xl">מפתח AI לתשובות</h2>
+      <h3 id="ai-key-title" className="font-bold text-lg">מפתח AI לתשובות</h3>
       <p className="text-sm text-ink-soft">
         {state?.admin ? `נשמר ממסך הניהול (${when(state.admin.updated_at)}).` : "לא נשמר מפתח ממסך הניהול."}{" "}
         {state?.server ? "מוגדר גם כסוד בשרת." : ""} המפתח נשמר מוצפן ואינו מוצג שוב. כרגע התשובות נכתבות בסקירה המתוזמנת.
@@ -261,7 +271,7 @@ export function InquirySections({ data, reply, draftActions }: { data: Data; rep
     .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0 || !!c.held)))
     .sort((a, b) => (sort === "oldest" ? 1 : -1) * a.received.localeCompare(b.received));
   return <section className="space-y-3" aria-labelledby="inquiries-title">
-    <h2 id="inquiries-title" className="font-display text-2xl">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h2>
+    <h3 id="inquiries-title" className="font-bold text-lg">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h3>
     <Chips label="נושא" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
     <div className="grid sm:grid-cols-2 gap-2">
       <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות והשהיות (${count(c => c.drafts.length > 0 || !!c.held)})` }]} />

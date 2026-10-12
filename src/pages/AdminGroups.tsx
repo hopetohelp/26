@@ -27,8 +27,7 @@ export default function AdminGroups({ api }: { api: Api }) {
 
   return (
     <section className="space-y-3" aria-label="קבוצות">
-      <h2 className="font-display text-2xl">קבוצות</h2>
-      <p className="text-xs text-ink-soft">חבר בקבוצה = חשבון שמייל מאומת שלו ברשימה. הנתונים מוצגים לחברים בלבד, מ-50 משתתפים.</p>
+            <p className="text-xs text-ink-soft">חבר בקבוצה = חשבון שמייל מאומת שלו ברשימה. הנתונים מוצגים לחברים בלבד, מ-50 משתתפים.</p>
       <AdminGroupsGuide />
       {error && <Notice tone="warn">{error}</Notice>}
       {groups?.map((g) => <GroupRow key={g.id} g={g} api={api} act={act} />)}

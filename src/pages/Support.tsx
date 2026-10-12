@@ -1,10 +1,11 @@
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import MyData from "./guess/MyData";
 import Account, { ManagedGroup } from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
+import { Drawer } from "../components/Drawer";
 import { Btn, Notice } from "./guess/ui";
 import { PageTitle } from "../components/ui";
 import { Chips } from "../components/Choice";
@@ -29,21 +30,6 @@ function Bubble({ m }: { m: Message }) {
     <p className="text-xs font-bold text-ink-soft mb-1">{team ? "צוות האתר" : "אתם"}</p>
     <p className="whitespace-pre-wrap break-words">{m.text}</p>
   </li>;
-}
-
-/** מגירה נפתחת: כותרת בשורה של 56px, תוכן מתחת. נשלטת מבחוץ כדי לפתוח אוטומטית (למשל תמיכה עם הודעה חדשה). */
-function Drawer({ title, open, onToggle, children, badge, className = "" }: { title: string; open: boolean; onToggle: () => void; children: ReactNode; badge?: ReactNode; className?: string }) {
-  return (
-    <section className={`border-b border-paper-line ${className}`}>
-      <h2>
-        <button type="button" aria-expanded={open} onClick={onToggle} className="w-full flex items-center justify-between gap-3 min-h-[56px] text-start font-bold text-lg">
-          <span className="flex items-center gap-2">{title}{badge}</span>
-          <span aria-hidden="true" className={`text-ink-soft text-xl transition-transform ${open ? "rotate-45" : ""}`}>+</span>
-        </button>
-      </h2>
-      {open && <div className="pb-5">{children}</div>}
-    </section>
-  );
 }
 
 function Avatar({ name, picture }: { name: string | null; picture: string | null }) {
