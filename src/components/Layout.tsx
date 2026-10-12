@@ -220,7 +220,7 @@ function MobileTabs({ unread }: { unread: boolean }) {
 }
 
 /** במחשב: הזמנה צפה להשערה (הכרעת בעלים 8.10.2026). לא במסכי ההשערה והסטטיסטיקות ולא בניהול; לתוכן יש ריווח תחתון כדי שלא יוסתר. */
-const NO_GUESS_CTA = ["/guess", "/community", "/admin"];
+const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/support"]; // אזור אישי: שדה הצ׳אט צמוד לתחתית
 function GuessCta({ pathname }: { pathname: string }) {
   // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
   if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
@@ -255,7 +255,7 @@ export default function Layout() {
         <DesktopNav unread={unread} />
       </header>
       <AccessCard />
-      <main id="main" tabIndex={-1} className="flex-1 w-full mx-auto px-4 md:px-6 py-6 pb-28 md:pb-24 outline-none">
+      <main id="main" tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <MobileTabs unread={unread} />

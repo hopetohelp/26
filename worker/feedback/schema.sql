@@ -127,3 +127,41 @@ CREATE TABLE IF NOT EXISTS held (
   reason TEXT,
   PRIMARY KEY (kind, target)
 );
+
+-- חסימה במאגר עצמו למשתתף בהשהיה (הכרעת בעלים 12.10.2026): כל תשובת צוות — דרך השרת, ממסך הניהול, מהסקירה המתוזמנת
+-- או בכתיבה ישירה למאגר — הופכת לטיוטה, וסטטוס "נענתה" חוזר ל"ממתינה". עוקף רק אישור טיוטה במסך הניהול:
+-- השרת מכניס שורה ל-held_pass באותה אצווה, והטריגר מוחק אותה מיד אחרי שימוש אחד.
+CREATE TABLE IF NOT EXISTS held_pass (kind TEXT NOT NULL, target TEXT NOT NULL, PRIMARY KEY (kind, target));
+CREATE TRIGGER IF NOT EXISTS held_feedback_message AFTER INSERT ON messages
+WHEN NEW.author = 'team' AND EXISTS (SELECT 1 FROM held WHERE kind = 'feedback' AND target = CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.feedback_id), NEW.feedback_id) AS TEXT))
+BEGIN
+  INSERT INTO drafts (kind, target, created_at, text, reason)
+    SELECT 'feedback', CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.feedback_id), NEW.feedback_id) AS TEXT), NEW.created_at, NEW.text, 'משתתף בהשהיה'
+    WHERE NOT EXISTS (SELECT 1 FROM held_pass WHERE kind = 'feedback' AND target = CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.feedback_id), NEW.feedback_id) AS TEXT));
+  DELETE FROM messages WHERE id = NEW.id
+    AND NOT EXISTS (SELECT 1 FROM held_pass WHERE kind = 'feedback' AND target = CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.feedback_id), NEW.feedback_id) AS TEXT));
+  DELETE FROM held_pass WHERE kind = 'feedback' AND target = CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.feedback_id), NEW.feedback_id) AS TEXT);
+END;
+CREATE TRIGGER IF NOT EXISTS held_feedback_status AFTER UPDATE OF status ON feedback
+WHEN NEW.status = 'answered' AND EXISTS (SELECT 1 FROM held WHERE kind = 'feedback' AND target = CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.id), NEW.id) AS TEXT))
+  AND NOT EXISTS (SELECT 1 FROM messages m WHERE m.author = 'team' AND m.created_at >= COALESCE((SELECT MAX(v.created_at) FROM messages v WHERE v.author = 'visitor' AND v.feedback_id = NEW.id), NEW.created_at)
+    AND m.feedback_id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = CAST(COALESCE((SELECT root_id FROM feedback_threads WHERE feedback_id = NEW.id), NEW.id) AS INTEGER) UNION SELECT NEW.id))
+BEGIN
+  UPDATE feedback SET status = 'new' WHERE id = NEW.id;
+END;
+CREATE TRIGGER IF NOT EXISTS held_support_message AFTER INSERT ON support_messages
+WHEN NEW.author = 'team' AND EXISTS (SELECT 1 FROM held WHERE kind = 'support' AND target = NEW.participant)
+BEGIN
+  INSERT INTO drafts (kind, target, created_at, text, reason)
+    SELECT 'support', NEW.participant, NEW.created_at, NEW.text, 'משתתף בהשהיה'
+    WHERE NOT EXISTS (SELECT 1 FROM held_pass WHERE kind = 'support' AND target = NEW.participant);
+  DELETE FROM support_messages WHERE id = NEW.id AND NOT EXISTS (SELECT 1 FROM held_pass WHERE kind = 'support' AND target = NEW.participant);
+  DELETE FROM held_pass WHERE kind = 'support' AND target = NEW.participant;
+END;
+CREATE TRIGGER IF NOT EXISTS held_support_status AFTER UPDATE OF status ON support_threads
+WHEN NEW.status = 'answered' AND EXISTS (SELECT 1 FROM held WHERE kind = 'support' AND target = NEW.participant)
+  AND NOT EXISTS (SELECT 1 FROM support_messages m WHERE m.participant = NEW.participant AND m.author = 'team'
+    AND m.id > COALESCE((SELECT MAX(v.id) FROM support_messages v WHERE v.participant = NEW.participant AND v.author = 'visitor'), 0))
+BEGIN
+  UPDATE support_threads SET status = 'new' WHERE participant = NEW.participant;
+END;

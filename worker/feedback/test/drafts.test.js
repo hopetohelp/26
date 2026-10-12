@@ -53,3 +53,21 @@ it("משתתף בהשהיה מוצג במסך הניהול ומשתחרר באי
   await api("/admin/release", { kind: "feedback", target: "7" });
   expect((await api("/admin/data")).data.held).toEqual([]);
 });
+
+it("חסימה במאגר: תשובת צוות למשתתף בהשהיה הופכת לטיוטה בכל דרך, ואישור טיוטה עובר", async () => {
+  const { data: { token } } = await api("/", { topic: "theory", text: "שאלה" });
+  env.DB.raw.prepare("INSERT INTO held (kind, target, created_at) VALUES ('feedback', '1', ?)").run("2026-10-12T00:00:00Z");
+  // כתיבה ישירה למאגר, כמו בסקירה המתוזמנת
+  env.DB.raw.prepare("INSERT INTO messages (feedback_id, created_at, author, text) VALUES (1, ?, 'team', 'ישירה')").run("2026-10-12T01:00:00Z");
+  env.DB.raw.prepare("UPDATE feedback SET status = 'answered' WHERE id = 1").run();
+  // וגם ממסך הניהול
+  await api("/admin/reply", { kind: "feedback", id: 1, text: "מהניהול" });
+  expect((await api(`/thread?t=${token}`)).data.messages).toEqual([]);
+  expect(env.DB.raw.prepare("SELECT status FROM feedback").get().status).toBe("new");
+  const drafts = (await api("/admin/data")).data.drafts;
+  expect(drafts.map(d => d.text)).toEqual(["ישירה", "מהניהול"]);
+  await api("/admin/draft/approve", { id: drafts[0].id });
+  expect((await api(`/thread?t=${token}`)).data.messages.map(m => m.text)).toEqual(["ישירה"]);
+  expect(env.DB.raw.prepare("SELECT status FROM feedback").get().status).toBe("answered");
+  expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM held_pass").get().n).toBe(0);
+});
