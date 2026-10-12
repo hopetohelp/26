@@ -117,8 +117,8 @@ async function adoptThread(env, participant, token) {
 async function supportThread(env, participant) {
   const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
   if (!thread) return null;
-  const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY created_at, id").bind(participant).all();
-  return { ...thread, messages: results || [] };
+  const { results } = await env.DB.prepare("SELECT m.author, m.text, m.created_at, v.via FROM support_messages m LEFT JOIN support_message_via v ON v.message_id = m.id WHERE m.participant = ? ORDER BY m.created_at, m.id").bind(participant).all();
+  return { ...thread, messages: (results || []).map(({ via, ...m }) => (via ? { ...m, via } : m)) };
 }
 
 /** תשובת צוות בשיחה — משותף לתשובה ידנית ולאישור טיוטה. מחזיר false אם השיחה אינה קיימת. */
@@ -209,6 +209,7 @@ export default {
           env.DB.prepare(`DELETE FROM feedback_threads WHERE feedback_id IN (${list}) OR root_id IN (${list})`).bind(...ids, ...ids),
           env.DB.prepare("DELETE FROM feedback_adopted WHERE participant = ?").bind(participant),
           env.DB.prepare(`DELETE FROM feedback WHERE id IN (${list})`).bind(...ids),
+          env.DB.prepare("DELETE FROM support_message_via WHERE message_id IN (SELECT id FROM support_messages WHERE participant = ?)").bind(participant),
           env.DB.prepare("DELETE FROM support_messages WHERE participant = ?").bind(participant),
           env.DB.prepare("DELETE FROM support_threads WHERE participant = ?").bind(participant),
         ]);
@@ -227,6 +228,9 @@ export default {
           env.DB.prepare("INSERT OR IGNORE INTO support_messages (participant, created_at, author, text, op_id) VALUES (?, ?, 'visitor', ?, ?)").bind(participant, at, text, body.op_id),
           env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'new' WHERE participant = ? AND changes() = 1").bind(at, participant),
         ]);
+        // נכתב דרך עוזר AI ⇐ סימון במסך הניהול (שם העוזר משרת ההשתתפות, לא מהבקשה)
+        if (typeof access.via === "string" && access.via)
+          await env.DB.prepare("INSERT OR IGNORE INTO support_message_via (message_id, via) SELECT id, ? FROM support_messages WHERE participant = ? AND op_id = ?").bind(access.via.slice(0, 60), participant, body.op_id).run();
       }
       return reply({ ok: true, thread: await supportThread(env, participant) });
     }

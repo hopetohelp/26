@@ -18,7 +18,7 @@ import AdminBlocs from "./AdminBlocs";
  * (טבלת admins; הכרעת בעלים 9.10.2026) — הסשן של החשבון משמש כמפתח, בלי קישור.
  */
 const KEY = "elections26.admin";
-type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string };
+type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string; via?: string };
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
 type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
 type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
@@ -65,7 +65,7 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
           <ul className="flex flex-col gap-2">
             {items.map((m, i) => (
               <li key={i} className={`max-w-[90%] rounded-theme px-3 py-2 text-sm ${m.author === "team" ? "self-end bg-accent-soft" : "self-start bg-paper-line/50"}`}>
-                <p className="text-xs font-bold text-ink-soft mb-1">{m.author === "team" ? "צוות" : "גולש"} · {when(m.created_at)}{m.page ? ` · ${m.page}` : ""}</p>
+                <p className="text-xs font-bold text-ink-soft mb-1">{m.author === "team" ? "צוות" : "גולש"} · {when(m.created_at)}{m.page ? ` · ${m.page}` : ""}{m.via ? ` · נכתב דרך עוזר AI (${m.via})` : ""}</p>
                 <p className="whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{m.text}</p>
               </li>
             ))}

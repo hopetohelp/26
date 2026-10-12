@@ -3,6 +3,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import crowdWorker, { resetDashboardCache } from "../../crowd/index.js";
+import feedbackWorker from "../../feedback/index.js";
+import { sha256 } from "../../crowd/lib/crypto.js";
 import { fakeD1 } from "../../crowd/test/fakeD1.js";
 import { seats as seatsPayload } from "../../crowd/test/helpers.js";
 import mcp from "../index.js";
@@ -21,17 +23,20 @@ const SITE_FILES = new Map(OPEN_FILES.filter((f) => f.build).map((f) => [f.path,
 SITE_FILES.set("data/index.json", buildIndex(ISSUER));
 SITE_FILES.set("dashboard.json", wrapExternal(OPEN_FILES.find((f) => f.path === "dashboard.json"), { publishedAt: "2026-10-05T09:00:00Z", participants: 0, open: false }));
 
-let crowdEnv, env, t;
+let crowdEnv, feedbackEnv, env, t;
 beforeEach(() => {
   resetDashboardCache();
   resetSiteCache();
   t = Date.parse("2026-10-05T10:05:00Z");
   crowdEnv = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", SITE_URL: SITE, IP_KEY: "ip-secret", DATA_KEY: "data-secret", NOW: () => t };
+  feedbackEnv = { DB: fakeD1(new URL("../../feedback/schema.sql", import.meta.url)), ALLOWED_ORIGIN: "https://hopetohelp.github.io", IP_KEY: "fb-secret", CROWD: { fetch: (r) => crowdWorker.fetch(r, crowdEnv) } };
+  crowdEnv.FEEDBACK = { fetch: (r) => feedbackWorker.fetch(r, feedbackEnv) };
   env = {
     DB: fakeD1(new URL("../schema.sql", import.meta.url)),
     SITE_URL: SITE, ALLOWED_ORIGIN: "https://hopetohelp.github.io", ISSUER,
     IP_KEY: "mcp-ip-secret", DATA_KEY: "mcp-data-secret", NOW: () => t,
     CROWD: { fetch: (req) => crowdWorker.fetch(req, crowdEnv) },
+    FEEDBACK: { fetch: (req) => feedbackWorker.fetch(req, feedbackEnv) },
   };
   vi.stubGlobal("fetch", async (url) => {
     const path = String(url).replace(SITE, "");
@@ -203,6 +208,42 @@ describe("הכלים", () => {
     const cols = env.DB.raw.prepare("PRAGMA table_info(usage)").all().map((c) => c.name);
     expect(cols).toEqual(["day", "tool", "mode", "client", "outcome", "n"]);
     expect(env.DB.raw.prepare("SELECT SUM(n) AS n FROM usage WHERE tool = 'get_site_overview'").get().n).toBe(60);
+  });
+});
+
+describe("שיחה עם צוות האתר (שלב 3)", () => {
+  it("הודעה לצוות: נכנסת לשיחה של המשתמש עם סוג הפנייה, ומסומנת במסך הניהול כנכתבה דרך העוזר", async () => {
+    const { access, web } = await connect();
+    const sent = await call("/mcp", "send_message_to_team", { topic: "theory", text: "למה הממוצע שונה מהסקר האחרון?" }, access);
+    expect(sent.data.result.isError).toBe(false);
+    const conv = (await call("/mcp", "get_my_team_conversation", {}, access)).data.result.structuredContent;
+    expect(conv.thread.messages.at(-1).text).toBe("[שאלה או תאוריה] למה הממוצע שונה מהסקר האחרון?");
+    // מסך הניהול: אותה שיחה, עם שם העוזר
+    const KEY = "k".repeat(40);
+    await feedbackEnv.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
+    const admin = await (await feedbackWorker.fetch(new Request("https://f.example/admin/data", { headers: { authorization: `Bearer ${KEY}` } }), feedbackEnv)).json();
+    const msg = admin.support.threads.flatMap((th) => th.messages).find((m) => m.text.includes("הממוצע"));
+    expect(msg.via).toBe("Claude");
+    // הודעה מהדפדפן — בלי סימון
+    await feedbackWorker.fetch(new Request("https://f.example/", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: "account-support", token: web, text: "[אחר] מהדפדפן", op_id: "web-op-0000000001", website: "" }) }), feedbackEnv);
+    const again = (await call("/mcp", "get_my_team_conversation", {}, access)).data.result.structuredContent;
+    expect(again.thread.messages.find((m) => m.text === "[אחר] מהדפדפן").via).toBeUndefined();
+  });
+
+  it("השהיה ונוהל ההערות חלים כמו שהם: תשובת צוות למשתתף בהשהיה הופכת לטיוטה", async () => {
+    const { access } = await connect();
+    await call("/mcp", "send_message_to_team", { topic: "theory", text: "שאלה" }, access);
+    const p = crowdEnv.DB.raw.prepare("SELECT participant FROM agent_sessions").get().participant;
+    feedbackEnv.DB.raw.prepare("INSERT INTO held (kind, target, created_at, reason) VALUES ('support', ?, '2026-10-05', 'בדיקה')").run(p);
+    feedbackEnv.DB.raw.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'team', 'תשובה')").run(p, "2026-10-05T10:06:00Z");
+    expect(feedbackEnv.DB.raw.prepare("SELECT COUNT(*) AS n FROM drafts WHERE target = ?").get(p).n).toBe(1);
+    const conv = (await call("/mcp", "get_my_team_conversation", {}, access)).data.result.structuredContent;
+    expect(conv.thread.messages.some((m) => m.author === "team")).toBe(false);
+  });
+
+  it("בכתובת הציבורית — אין שיחה", async () => {
+    const r = await call("/public", "send_message_to_team", { topic: "other", text: "x" });
+    expect(r.data.result.structuredContent.error.code).toBe("needs_login");
   });
 });
 
