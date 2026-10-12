@@ -386,7 +386,7 @@ export function VerifyEmail({ session }: { session: ReturnType<typeof useSession
 const mask = (email: string) => email.replace(/^(.)(.*)(@.*)$/, (_, a: string, b: string, d: string) => a + "•".repeat(Math.min(6, b.length)) + d);
 
 /** "הפרטים שלי" באזור האישי: Google, מייל, שם, סיסמה, יציאה. בלי חשבון ⇐ הרשמה או כניסה */
-export default function Account({ session }: { session: ReturnType<typeof useSession> }) {
+export default function Account({ session, hideGroups = false }: { session: ReturnType<typeof useSession>; hideGroups?: boolean }) {
   const { me, token } = session;
   const [showEmail, setShowEmail] = useState(false);
   const a = useAction("התנתקות");
@@ -432,7 +432,7 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
         <p className="font-bold">סיסמה</p>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
       </div>
-      {(me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className={row} />)}
+      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} token={token} className={row} />)}
       <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
@@ -443,7 +443,7 @@ export default function Account({ session }: { session: ReturnType<typeof useSes
 }
 
 /** מקטע מנהל קבוצה: מספרים מצטברים והעלאת רשימת החברים */
-function ManagedGroup({ id, name, token, className }: { id: string; name: string; token: string; className: string }) {
+export function ManagedGroup({ id, name, token, className }: { id: string; name: string; token: string; className: string }) {
   const [refresh, setRefresh] = useState(0);
   return (
     <div className={className}>

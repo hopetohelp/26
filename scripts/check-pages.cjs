@@ -16,7 +16,7 @@ const assert = require('node:assert/strict');
       page.on('pageerror', error => errors.push(error.message));
       for (const route of routes) {
         await page.goto(`${base}#${route}`);
-        await (route === '/support' ? page.getByText('התמיכה תיפתח יחד עם השמירה באתר.', { exact: true }) : page.locator('main h1').first()).waitFor({ state: 'visible', timeout: 10000 }).catch(async error => { console.error({ route, errors, body: (await page.locator('body').innerText()).slice(0, 1500) }); throw error; });
+        await (route === '/support' ? page.getByText('השיחה עם הצוות תיפתח יחד עם השמירה באתר.', { exact: true }) : page.locator('main h1').first()).waitFor({ state: 'visible', timeout: 10000 }).catch(async error => { console.error({ route, errors, body: (await page.locator('body').innerText()).slice(0, 1500) }); throw error; });
         assert.equal(await page.getByRole('alert').filter({ hasText: 'המסך לא נטען' }).count(), 0, route);
         assert.equal(errors.length, 0, `${theme}/${width}/${route}: ${errors.join('; ')}`);
       }

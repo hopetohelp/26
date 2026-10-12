@@ -220,7 +220,7 @@ function MobileTabs({ unread }: { unread: boolean }) {
 }
 
 /** במחשב: הזמנה צפה להשערה (הכרעת בעלים 8.10.2026). לא במסכי ההשערה והסטטיסטיקות ולא בניהול; לתוכן יש ריווח תחתון כדי שלא יוסתר. */
-const NO_GUESS_CTA = ["/guess", "/community", "/admin"];
+const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/support"]; // אזור אישי: שדה הצ׳אט צמוד לתחתית
 function GuessCta({ pathname }: { pathname: string }) {
   // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
   if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
