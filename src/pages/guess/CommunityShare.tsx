@@ -31,7 +31,7 @@ export default function CommunityShare({ d, group }: { d: Dashboard; group?: Gro
   const banner = (
     <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="mb-5 rounded-theme border-2 border-ink bg-paper-card p-4 flex flex-wrap items-center justify-between gap-3">
       {group
-        ? <p className="font-display text-xl leading-tight">רוצים שהסקר של הקבוצה יהיה מדויק יותר? <span className="text-signal">זה תלוי בכם!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים — כל משתתף נוסף מחדד את התמונה.</span></p>
+        ? <p className="font-display text-xl leading-tight">רוצים ש{group.name.startsWith("סקר") ? "" : "סקר "}{group.name} יהיה מדויק יותר? <span className="text-signal">זה תלוי בכם!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים — כל משתתף נוסף מחדד את התמונה.</span></p>
         : <div>
       <h1 className="font-display text-3xl leading-tight mb-2">סקר האתר</h1>
       <p className="font-display text-xl leading-tight">רוצים שהסקר יהיה מדויק יותר? <span className="text-signal">זה תלוי בכם!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים — כל משתתף נוסף מחדד את התמונה.</span></p>
