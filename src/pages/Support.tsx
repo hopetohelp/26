@@ -119,7 +119,7 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
     <section aria-labelledby="chat-title" className="flex-1 flex flex-col">
       <h2 id="chat-title" className="font-bold text-lg pt-4 pb-2">צוות האתר</h2>
       {/* ההודעות נגללות עם המסך, מהמגירות ועד שדה הכתיבה */}
-      <div className="flex-1 flex flex-col lg:min-h-0 lg:overflow-y-auto">
+      <div className="flex-1 flex flex-col md:min-h-0 md:overflow-y-auto">
       <ol ref={list} className="mt-auto flex flex-col gap-3 pb-3" aria-label="שיחה עם צוות האתר" aria-live="polite">
         {messages !== null && !messages.some((m) => m.author === "team" && m.text === WELCOME.text) && <Bubble m={WELCOME} />}
         {messages === null && <li className="text-ink-soft text-sm">טוען…</li>}
@@ -177,7 +177,7 @@ export default function Support() {
    * ושאר המסך — צ׳אט עם צוות האתר, ושדה כתיבה מתרחב צמוד לתחתית. במסך רחב (SideSplit): המגירות מימין והשיחה משמאל.
    */
   return (
-    <SideSplit className="min-h-[calc(100dvh-10.5rem)] md:min-h-[calc(100dvh-7.5rem)] lg:h-[calc(100dvh-7.5rem)]" main={<Conversation session={session} />} side={<>
+    <SideSplit className="min-h-[calc(100dvh-10.5rem)] md:h-[calc(100dvh-7.5rem)]" main={<Conversation session={session} />} side={<>
       <PageTitle>אזור אישי</PageTitle>
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={token ? "הפרטים שלי" : "הרשמה או כניסה"} open={open.has("details")} onToggle={() => toggle("details")} badge={me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined}>
