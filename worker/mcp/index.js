@@ -144,6 +144,12 @@ async function handleMcp(request, env, mode, now, baseHeaders) {
   }
   const crowd = crowdCaller(env, grant?.agent);
   let me = null;
+  // החיבור התארך כאן ⇐ גם הכניסה בשרת ההשתתפות (שם היא מתארכת בכל פנייה), גם כשהעוזר משתמש רק בנתונים ציבוריים
+  if (grant?.renewed) {
+    try { me = await crowd("/me"); } catch (e) {
+      if (e instanceof AuthLost) { await dropGrant(env, grant.grantId); return unauthorized(env, "invalid_token"); }
+    }
+  }
   const ctx = {
     env,
     now,

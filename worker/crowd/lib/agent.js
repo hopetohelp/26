@@ -82,8 +82,9 @@ export async function agentSession(env, token, now) {
     .bind(th, new Date(now).toISOString())
     .first();
   if (!row) return null;
+  // החיבור מתארך בכל שימוש (הכרעת בעלים 12.10.2026): מתנתק לבד רק אחרי AGENT_SESSION_MS בלי שימוש. נכתב לכל היותר פעם בשעה.
   if (!row.last_used_at || Date.parse(row.last_used_at) < now - TOUCH_MS)
-    await env.DB.prepare("UPDATE agent_sessions SET last_used_at = ? WHERE token_hash = ?").bind(new Date(now).toISOString(), th).run();
+    await env.DB.prepare("UPDATE agent_sessions SET last_used_at = ?, expires_at = ? WHERE token_hash = ?").bind(new Date(now).toISOString(), new Date(now + AGENT_SESSION_MS).toISOString(), th).run();
   return { participant: row.participant, client: row.client, tokenHash: th };
 }
 

@@ -114,6 +114,22 @@ describe("גילוי והתחברות (OAuth)", () => {
     expect((await rpc("/mcp", "ping", {}, again.access_token)).data.result).toEqual({});
   });
 
+  it("החיבור מתארך בכל שימוש, ומתנתק לבד רק אחרי 30 יום בלי שימוש (הכרעת בעלים 12.10.2026)", async () => {
+    const { refresh, clientId } = await connect();
+    const DAY = 86400000;
+    let rt = refresh;
+    const use = async () => {
+      const tok = await (await req("/token", { form: { grant_type: "refresh_token", refresh_token: rt, client_id: clientId } })).json();
+      rt = tok.refresh_token;
+      return call("/mcp", "get_my_account", {}, tok.access_token);
+    };
+    // שימוש כל 20 יום — 60 יום אחרי החיבור עדיין עובד, גם הנתונים האישיים
+    for (let i = 0; i < 3; i++) { t += 20 * DAY; expect((await use()).data.result.isError).toBe(false); }
+    // 31 יום בלי שימוש ⇐ מתנתק
+    t += 31 * DAY;
+    expect((await req("/token", { form: { grant_type: "refresh_token", refresh_token: rt, client_id: clientId } })).status).toBe(400);
+  });
+
   it("כתובת חזרה שאינה של הלקוח — דף שגיאה, לא הפניה; לקוח עם http חיצוני — נדחה ברישום", async () => {
     const bad = await req("/register", { body: { client_name: "x", redirect_uris: ["http://evil.example/cb"] } });
     expect(bad.status).toBe(400);
