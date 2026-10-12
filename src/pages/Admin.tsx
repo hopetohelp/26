@@ -1,5 +1,5 @@
 import { FEEDBACK_TOPICS, conversationTopic, topicLabel } from "../lib/feedbackTopics";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
 import { dateTime } from "../lib/format";
@@ -88,14 +88,23 @@ function Conversation({ title, items, waiting, onReply, drafts = [], draftAction
   );
 }
 
+/** שעה (גדולה) ותאריך יום/חודש (קטן) בשעון ישראל — לתיבות הריצות, באותו גודל כמו שאר המספרים */
+function Clock({ at }: { at: string | number | null | undefined }) {
+  if (!at) return <>—</>;
+  const d = new Date(at);
+  const time = new Intl.DateTimeFormat("he-IL", { timeZone: "Asia/Jerusalem", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(d);
+  const date = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric" }).format(d);
+  return <>{time}<span className="block text-[11px] font-sans text-ink-soft mt-0.5">{date}</span></>;
+}
+
 /** תיבה קטנה עם שני מספרים (למשל ס״ה והיום); alert = צבע אזהרה כשיש מה לטפל בו */
-function Pair({ label, a, b, alert = false, small = false }: { label: string; a: [string, string | number]; b: [string, string | number]; alert?: boolean; small?: boolean }) {
+function Pair({ label, a, b, alert = false }: { label: string; a: [string, ReactNode]; b: [string, ReactNode]; alert?: boolean }) {
   return (
     <div className={`bg-paper-card border rounded-theme p-2 sm:p-3 min-w-0 text-center ${alert ? "border-warn" : "border-paper-line"}`}>
       <p className="text-xs text-ink-soft leading-tight">{label}</p>
       <div className="flex justify-center mt-1">
         {[a, b].map(([name, n]) => (
-          <p key={name} className="min-w-0 px-2 sm:px-3 border-s border-paper-line first:border-s-0"><span className="block text-[11px] text-ink-soft whitespace-nowrap">{name}</span><span className={`font-num tabular leading-none whitespace-nowrap ${small ? "text-sm sm:text-base" : "text-xl sm:text-2xl"}`}>{n}</span></p>
+          <p key={name} className="min-w-0 px-2 sm:px-3 border-s border-paper-line first:border-s-0"><span className="block text-[11px] text-ink-soft whitespace-nowrap">{name}</span><span className="block font-num tabular leading-none whitespace-nowrap text-xl">{n}</span></p>
         ))}
       </div>
     </div>
@@ -188,18 +197,16 @@ export default function Admin() {
       {data && (
         <>
           {/* תיבות קטנות מאוחדות (הכרעת בעלים 12.10.2026); הדשבורד המלא — במגירה אחת */}
-          <div className="flex flex-wrap gap-2 sm:gap-3" role="group" aria-label="סיכום">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="סיכום">
             <Pair label="משתמשים" a={["ס״ה", data.support?.stats.participants ?? "—"]} b={["היום", data.support?.stats.participantsToday ?? "—"]} />
             <Pair label="שמרו השערה או הצבעה" a={["ס״ה", data.support?.stats.savers ?? "—"]} b={["היום", data.support?.stats.saversToday ?? "—"]} />
             <Pair label="נכנסו" a={["ס״ה", data.totalVisitors]} b={["היום", today?.users ?? 0]} />
             <Pair label="ממתינים לתשובה וטיוטות" a={["ממתינים", waiting]} b={["טיוטות", data.drafts?.length ?? 0]} alert={waiting + (data.drafts?.length ?? 0) > 0} />
             <Pair label="השערות" a={["ממתינות", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />
             <Pair label="נפילות" a={["מאז האיפוס", data.failures?.total ?? "—"]} b={["היום", today?.autoFailures ?? 0]} alert={(data.failures?.total ?? 0) > 0} />
-          </div>
-          {/* הרענון של GitHub והסשן המרוכז רצים באותה שעה (src/lib/runSchedule.ts); בשבת — מושבתים */}
-          <div className="flex flex-wrap gap-2 sm:gap-3" role="group" aria-label="ריצות">
-            <Pair label="פרסום האתר (GitHub)" a={["אחרון", lastPublish ? when(lastPublish) : "—"]} b={["הבא", next ? when(new Date(next).toISOString()) : "—"]} small />
-            <Pair label="סוכן" a={["אחרון", data.agentLastRun ? when(data.agentLastRun) : "—"]} b={["הבא", next ? when(new Date(next).toISOString()) : "—"]} small />
+            {/* הרענון של GitHub והסשן המרוכז רצים באותה שעה (src/lib/runSchedule.ts); בשבת — מושבתים */}
+            <Pair label="פרסום האתר (GitHub)" a={["אחרון", <Clock at={lastPublish} />]} b={["הבא", <Clock at={next} />]} />
+            <Pair label="סוכן" a={["אחרון", <Clock at={data.agentLastRun} />]} b={["הבא", <Clock at={next} />]} />
           </div>
 
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}

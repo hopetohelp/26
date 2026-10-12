@@ -348,7 +348,7 @@
   .seat-ctl { justify-self: end; }
 }
 @container (min-width: 50rem) {
-  .seat-head, .seat-grid { --cw: 8rem; }
+  .seat-head, .seat-grid { --cw: 9.5rem; }
   .cmp-long { display: inline; }
   .cmp-range { display: inline-block; }
 }

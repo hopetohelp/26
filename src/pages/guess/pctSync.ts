@@ -7,7 +7,7 @@ import { allocate, type Agreement } from "../../engine/baderOfer";
 import type { SeatCell, SeatsPayload } from "../../lib/crowdApi";
 import { registry } from "../../lib/data";
 import { AGREEMENTS_2026, DEFAULT_TURNOUT, pctForSeats, sharesToVotes, validVotes } from "../../lib/lawSeats";
-import { IDS, POLL_SHARES } from "./model";
+import { IDS, POLLS, POLL_SHARES } from "./model";
 
 export type Calc = NonNullable<SeatsPayload["calculation"]>;
 export const DEFAULT_CALC: Calc = { turnout: DEFAULT_TURNOUT, eligible: registry.k26.eligible, agreements: AGREEMENTS_2026.map((p) => [...p]) };
@@ -18,6 +18,29 @@ const r1 = (x: number) => Math.round(x * 10) / 10;
 
 /** "אחרות" (קולות לרשימות שאינן ברשימה) — כמו שהיה, ובלי אחוזים קודמים — כמו בממוצע הסקרים */
 const othersOf = (prev?: Record<string, number>) => Math.max(0, r1(100 - sumOf(prev ?? POLL_SHARES)));
+
+const memoPct = new Map<string, number | null>();
+/**
+ * האחוז שמתאים ל-`seats` מנדטים לרשימה אחת, לפי החוק (אותה המרה כמו בעריכה: `pctForSeats`). שאר המנדטים מתחלקים בין שאר הרשימות
+ * שעוברות את הסף ביחס לממוצע הסקרים (לפחות 4 לכל אחת). משמש להצגת טווח הסקרים באחוזים. null כשאין פתרון.
+ */
+export function pctForListSeats(id: string, seats: number): number | null {
+  const key = `${id}:${seats}`;
+  if (memoPct.has(key)) return memoPct.get(key)!;
+  const rest = IDS.filter((x) => x !== id && (POLLS[x] ?? 0) >= 4);
+  const left = 120 - seats;
+  const weight = rest.reduce((a, x) => a + POLLS[x], 0);
+  const alloc: Record<string, number> = {};
+  let given = 0;
+  for (const x of rest) { alloc[x] = Math.max(4, Math.floor((POLLS[x] / weight) * left)); given += alloc[x]; }
+  // יישור לסכום 120: מוסיפים או מורידים מהגדולות ביותר
+  const bySize = [...rest].sort((a, b) => POLLS[b] - POLLS[a]);
+  for (let i = 0; given !== left && i < 1000; i++) { const x = bySize[i % bySize.length]; if (given < left) { alloc[x]++; given++; } else if (alloc[x] > 4) { alloc[x]--; given--; } }
+  const full = Object.fromEntries(IDS.map((x) => [x, x === id ? seats : alloc[x] ?? 0]));
+  const out = given === left ? pctForSeats(IDS, full, POLL_SHARES, { ...law(DEFAULT_CALC), others: othersOf() })?.[id] ?? null : null;
+  memoPct.set(key, out);
+  return out;
+}
 
 /** מנדטים ⇐ אחוזים לכל השערה של 120 מנדטים; אחוזים שנשמרו גוברים */
 export function pctOf(p: SeatsPayload): Record<string, number> | null {
