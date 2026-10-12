@@ -319,6 +319,17 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(bad({ summary: "הליכוד ינצח בבחירות" }).problems.join()).toContain("מי ינצח");
     expect(bad({ summary: "This whole answer is in English" }).problems.join()).toContain("בעברית");
   });
+  it("תיבת מספר: רק הנתון המרכזי, והטווח או ההקשר בשורה נפרדת; כותרת אינה סוג הנתון (הכרעת בעלים 12.10.2026)", () => {
+    const item = good.sections[0].items[0];
+    const one = (it, heading) => validateAnswer({ ...good, sections: [{ kind: "numbers", ...(heading ? { heading } : {}), items: [it] }] }, urlFor);
+    expect(one({ ...item, value: "53 מנדטים; חסרים 8 לרוב" }).problems.join()).toContain("detail");
+    expect(one({ ...item, value: "51.7; טווח הסקרים 47–63" }).ok).toBe(false);
+    const ok = one({ ...item, value: "53 מנדטים", detail: "חסרים 8 לרוב" });
+    expect(ok.ok).toBe(true);
+    expect(ok.answer.sections[0].items[0].detail).toBe("חסרים 8 לרוב");
+    expect(one(item, "סיכום סקרים — נכון ל-12.10.2026").problems.join()).toContain("לא סוג הנתון");
+    expect(one(item, "מנדטים לפי גושים").ok).toBe(true);
+  });
   it("ממוצע הסקרים ⇐ גם הממוצע הפשוט וגם ממוצע המודל (הכרעת בעלים 12.10.2026)", () => {
     const one = validateAnswer({ ...good, summary: "לפי ממוצע הסקרים, 53 מנדטים." }, urlFor);
     expect(one.ok).toBe(false);
@@ -326,7 +337,10 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(validateAnswer({ ...good, summary: "לפי ממוצע הסקרים: ממוצע המודל 53, ממוצע פשוט 54." }, urlFor).ok).toBe(true);
   });
   it("get_poll_average מחזיר את שני הממוצעים זה לצד זה, מתוך הקובץ", async () => {
-    const d = (await call("/public", "get_poll_average", {})).data.result.structuredContent;
+    const res = (await call("/public", "get_poll_average", {})).data.result;
+    // תזכורת לסיים בכרטיס בכל תוצאת נתונים (Claude ענה בטקסט רגיל בלי show_answer, 12.10.2026)
+    expect(res.content.at(-1).text).toContain("show_answer");
+    const d = res.structuredContent;
     const file = SITE_FILES.get("data/average.json");
     expect(d.averages.model.seats).toEqual(file.average.seats);
     expect(d.averages.simple.seats.likud.mean).toBe(file.latestPerPollster.summary.find((r) => r.id === "likud").mean);

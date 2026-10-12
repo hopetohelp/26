@@ -8,7 +8,7 @@ import { date } from "../lib/format";
 
 /**
  * שיטה, מקורות ואודות (הכרעת בעלים 9.10.2026, החלטה 9): ההסבר המלא נמצא כאן ורק כאן.
- * בכל גרף באתר: סוג, תאריך וקישור "איך זה חושב?" אל הערך שלו במילון (`Explained`). בערך: סוג, מקור, הנחה, ופירוט מלא.
+ * בכל גרף באתר: תאריך וקישור "איך זה חושב?" אל הערך שלו במילון (`Explained`). בערך: סוג, מקור, הנחה, ופירוט מלא.
  * העוגנים הישנים (/method#model, #accuracy ועוד) ממשיכים לעבוד: הערך נפתח והמסך גולל אליו.
  */
 
@@ -21,6 +21,9 @@ function useAnchor() {
     if (!el) return;
     for (let p = el.parentElement; p; p = p.parentElement) if (p instanceof HTMLDetailsElement) p.open = true;
     el.scrollIntoView();
+    // כניסה ישירה מקישור חיצוני (העוזר): אחרי שהעמוד סיים להיבנות — שוב, כדי שהערך יהיה בראש המסך
+    const t = window.setTimeout(() => el.scrollIntoView(), 300);
+    return () => window.clearTimeout(t);
   }, [hash]);
 }
 
@@ -426,7 +429,7 @@ export function MethodNumbers() {
   useAnchor();
   return (
     <>
-      <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיעים סוג המספר והתאריך המעודכן.">מילון המספרים</PageTitle>
+      <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיע התאריך המעודכן.">מילון המספרים</PageTitle>
       {DICTIONARY.map((e) => (
         <Entry key={e.id} e={e} />
       ))}

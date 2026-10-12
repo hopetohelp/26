@@ -30,11 +30,15 @@ body { container-type: inline-size; }
 .link { color: rgb(var(--accent)); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
 .link:focus-visible, .chip:focus-visible { outline: 3px solid rgb(var(--signal)); outline-offset: 2px; }
 .tabular { font-variant-numeric: tabular-nums; }
-.numbers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-.numbers > * { min-width: 0; }
-.tile { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 10px 12px; background: rgb(var(--card)); }
+/* תיבות ממורכזות לאורך ולרוחב, בשורות מאוזנות (--cols נקבע ב-card.js לפי מספר התיבות והרוחב) */
+.numbers { --cols: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.numbers > * { min-width: 0; flex: 0 0 calc((100% - (var(--cols) - 1) * 12px) / var(--cols)); }
+.tile { border: 1px solid rgb(var(--line)); border-radius: var(--radius); padding: 12px; background: rgb(var(--card)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 .label { margin: 0; font-size: 14px; color: rgb(var(--ink-soft)); }
 .value { margin: 2px 0 0; font-size: 26px; line-height: 1.1; font-weight: 700; }
+/* הטווח או ההקשר — שורה נפרדת, בגופן קטן יותר מהנתון המרכזי */
+.detail { margin: 4px 0 0; font-size: 14px; color: rgb(var(--ink-soft)); }
+.meta.center { text-align: center; }
 .tablewrap { overflow-x: auto; }
 .table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .table th { text-align: start; font-weight: 700; color: rgb(var(--ink-soft)); border-bottom: 1px solid rgb(var(--line)); padding: 6px 8px; }

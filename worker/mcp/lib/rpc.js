@@ -19,10 +19,11 @@ export class AuthLost extends Error {}
 export const INSTRUCTIONS = [
   "This server is the data of \"בחירות 2026 — ניתוח\" (https://hopetohelp.github.io/26/), an independent Hebrew site that analyses Israel's Knesset election of 27.10.2026. It collects published polls (it does not conduct polls) and recommends no list.",
   "Answer only from this site's data (the tools), in Hebrew. Stay neutral: no opinion, no recommendation, no prediction of who will win. Scenarios are \"שיעור תרחישים\" — never chance or probability. Participants' guesses are not a poll.",
-  "Numbers the site computed: give their kind, date and \"איך זה חושב?\" link (the data file's about.kind, about.updatedAt and about.method) — in show_answer, in a \"numbers\" section. General knowledge (61 seats for a majority, the 3.25% threshold) needs no source line. \"מפלגות הממשלה היוצאת\" is a factual definition (government 37).",
+  "Numbers the site computed: in show_answer, in a \"numbers\" section, pass kind, asOf and method (the data file's about.kind, about.updatedAt and about.method); the card shows only the date and the \"איך זה חושב?\" link, once per source. Never write the data type (\"סיכום סקרים\") in the text. General knowledge (61 seats for a majority, the 3.25% threshold) needs no source line. \"מפלגות הממשלה היוצאת\" is a factual definition (government 37).",
   "Whenever you mention the poll average, give both: the simple average (ממוצע פשוט — the mean of each pollster's latest poll in the last 14 days, latestPerPollster.summary) and the model average (ממוצע המודל — average.seats). They differ; neither is a predicted result.",
   "Do not state a well-known fact on its own; connect it to the data. Not \"לרוב בכנסת דרושים 61 מנדטים\" but \"חסרים להם 8 מנדטים לרוב\" (61 minus their seats).",
-  "Finish with show_answer: it shows the final answer as a card in the site's design, and checks those rules.",
+  "Never repeat the same information on one screen: one date, one \"איך זה חושב?\" link per source — the card prints each only once. A heading says what the reader sees (\"מנדטים לפי גושים\"), never the data type (\"סיכום סקרים\"). In a number tile, value is only the main number; the range or the context goes in detail (a separate, smaller line).",
+  "Always finish with show_answer — also when you searched the web or used other sources: it shows the final answer as a card in the site's design, and checks those rules. Do not write the answer as plain text or a table instead of the card. Information that is not from the site goes in one short line after the card, marked as not from the site.",
   "Changing anything for the user (saving a guess, clearing history, admin actions) — only when the user asked for it; confirm before destructive actions.",
 ].join("\n");
 
@@ -71,7 +72,9 @@ export async function handleRpc(msg, ctx) {
   }
 }
 
-const textResult = (data) => ({ content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data && typeof data === "object" && !Array.isArray(data) ? data : { value: data }, isError: false });
+// אחרי כל כלי נתונים — תזכורת לסיים בכרטיס (נמדד 12.10.2026: Claude קרא לנתונים וענה בטקסט רגיל, בלי show_answer)
+const NEXT_STEP = "Next: give the final answer only through show_answer (the site's card, in Hebrew). Anything not from the site goes in one short line after the card.";
+const textResult = (data) => ({ content: [{ type: "text", text: JSON.stringify(data) }, { type: "text", text: NEXT_STEP }], structuredContent: data && typeof data === "object" && !Array.isArray(data) ? data : { value: data }, isError: false });
 const toolError = (code, message) => ({ content: [{ type: "text", text: message }], structuredContent: { error: { code, message } }, isError: true });
 
 async function callTool(params, ctx) {
@@ -92,7 +95,7 @@ async function callTool(params, ctx) {
         return toolError("invalid_input", `התשובה נדחתה: ${check.problems.slice(0, 10).join(" · ")}${check.problems.length > 10 ? ` · ועוד ${check.problems.length - 10}` : ""}. תקנו הכול ושלחו שוב את התשובה המלאה.`);
       }
       await ctx.log(name, "ok");
-      return { content: [{ type: "text", text: "התשובה הועברה להצגה בכרטיס." }], structuredContent: { answer: check.answer }, isError: false };
+      return { content: [{ type: "text", text: "The card is now shown to the user. Do not repeat its content in text; add only what is not in it (another source), in one short line." }], structuredContent: { answer: check.answer }, isError: false };
     }
     if (tool.audience === "admin" && !(await ctx.me()).isAdmin) {
       await ctx.log(name, "forbidden");

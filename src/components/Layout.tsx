@@ -225,14 +225,15 @@ function GuessCta({ pathname }: { pathname: string }) {
 }
 
 export default function Layout() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const unread = useSupportUnread(pathname);
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // קישור לעוגן (למשל /method#model מהעוזר או מ"איך זה חושב?") — המסך מגלל לערך בעצמו; לא מחזירים לראש העמוד
+    if (!hash) window.scrollTo(0, 0);
     document.getElementById("main")?.focus({ preventScroll: true });
     // מונה כניסות (src/lib/visits.ts)
     pingVisit(pathname);
-  }, [pathname]);
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen flex flex-col">

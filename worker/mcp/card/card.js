@@ -41,17 +41,46 @@
     a.addEventListener("click", function (ev) { ev.preventDefault(); openLink(url); });
     return a;
   }
-  // שורת המקור, כמו Explained באתר: סוג · נכון ל- · איך זה חושב?
+  // שורת המקור: נכון ל- · איך זה חושב? — בלי סוג הנתון, ובלי לחזור על מה שכבר כתוב בכרטיס
+  // (הכרעת בעלים 12.10.2026: "לא כותבים נתון זהה פעמיים באותו מסך"): תאריך שכבר הופיע — בטקסט או בשורה קודמת —
+  // אינו נכתב שוב, וקישור "איך זה חושב?" שכבר הופיע — אינו נכתב שוב. שורה שלא נשאר בה כלום — אינה מוצגת.
+  var seenDates, seenUrls, cardText;
+  function dateForms(asOf) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(asOf));
+    if (!m) return { show: String(asOf), keys: [String(asOf)] };
+    var d = String(+m[3]), mo = String(+m[2]);
+    // התבנית של האתר: יום/חודש (DESIGN.md, 11.10.2026)
+    return { show: d + "/" + mo, keys: [m[0], d + "/" + mo, d + "." + mo + "." + m[1], m[3] + "." + m[2] + "." + m[1], d + "." + mo + "." + m[1].slice(2)] };
+  }
   function meta(src) {
+    if (!src) return null;
+    var f = dateForms(src.asOf);
+    var dateKnown = f.keys.some(function (k) { return seenDates[k] || cardText.indexOf(k) >= 0; });
+    var linkKnown = !siteLink(src.url) || seenUrls[src.url];
+    f.keys.forEach(function (k) { seenDates[k] = true; });
+    if (siteLink(src.url)) seenUrls[src.url] = true;
+    if (dateKnown && linkKnown) return null;
     var p = el("p", "meta");
-    if (!src) return p;
-    p.appendChild(document.createTextNode(src.kind + " · " + src.asOf + " · "));
-    if (siteLink(src.url)) p.appendChild(link("איך זה חושב?", src.url));
+    if (!dateKnown) p.appendChild(document.createTextNode("נכון ל-" + f.show + (linkKnown ? "" : " · ")));
+    if (!linkKnown) p.appendChild(link("איך זה חושב?", src.url));
     return p;
+  }
+  function add(parent, child) { if (child) parent.appendChild(child); }
+  // טווח מספרים ("47–63") בתוך טקסט עברי — בבידוד משמאל לימין, אחרת הוא מוצג הפוך ("63–47")
+  function ltrRanges(t) { return String(t).replace(/(\d[\d.,%]*\s*[–—-]\s*\d[\d.,%]*)/g, "\u2066$1\u2069"); }
+  // תיבות המספרים: שורות מאוזנות וממורכזות (4 ⇐ 2+2, 5 ⇐ 3+2), לפי הרוחב שיש
+  var grids = [];
+  function balance(grid) {
+    var n = grid.children.length;
+    var max = Math.max(1, Math.floor((grid.clientWidth + 12) / (150 + 12)));
+    var rows = Math.ceil(n / max);
+    grid.style.setProperty("--cols", String(Math.max(1, Math.ceil(n / rows))));
   }
 
   function render(a) {
     root.textContent = "";
+    seenDates = {}; seenUrls = {}; grids = [];
+    cardText = [a.title, a.summary].concat((a.sections || []).map(function (s) { return [s.heading, s.text].concat(s.items && typeof s.items[0] === "string" ? s.items : []).join(" "); })).join(" ");
     var card = el("article", "card");
     card.setAttribute("dir", "rtl");
     card.appendChild(el("p", "site", "בחירות 2026 — ניתוח"));
@@ -61,10 +90,10 @@
       var sec = el("section", "sec");
       if (s.heading) sec.appendChild(el("h3", "heading", s.heading));
       if (s.kind === "text") {
-        String(s.text).split(/\n+/).forEach(function (line) { sec.appendChild(el("p", "text", line)); });
+        String(s.text).split(/\n+/).forEach(function (line) { sec.appendChild(el("p", "text", ltrRanges(line))); });
       } else if (s.kind === "list") {
         var ul = el(s.ordered ? "ol" : "ul", "list");
-        (s.items || []).forEach(function (it) { ul.appendChild(el("li", null, it)); });
+        (s.items || []).forEach(function (it) { ul.appendChild(el("li", null, ltrRanges(it))); });
         sec.appendChild(ul);
       } else if (s.kind === "table") {
         var wrap = el("div", "tablewrap");
@@ -77,7 +106,7 @@
         var tb = el("tbody");
         (s.rows || []).forEach(function (r) {
           var tr = el("tr");
-          r.forEach(function (c) { var td = el("td", /\d/.test(c) ? "num" : null); td.appendChild(el("bdi", null, c)); tr.appendChild(td); });
+          r.forEach(function (c) { var td = el("td", /\d/.test(c) ? "num" : null); td.appendChild(el("bdi", null, ltrRanges(c))); tr.appendChild(td); });
           tb.appendChild(tr);
         });
         table.appendChild(tb);
@@ -85,18 +114,25 @@
         sec.appendChild(wrap);
       } else if (s.kind === "numbers") {
         var grid = el("div", "numbers");
-        (s.items || []).forEach(function (n) {
+        var items = s.items || [];
+        // כל התיבות מאותו מקור ⇐ שורת מקור אחת לקטע, לא בכל תיבה
+        var shared = items.every(function (n) { return n.source && items[0].source && n.source.url === items[0].source.url && n.source.asOf === items[0].source.asOf; });
+        items.forEach(function (n) {
           var tile = el("div", "tile");
           tile.appendChild(el("p", "label", n.label));
           var v = el("p", "value tabular");
-          v.appendChild(el("bdi", null, n.value));
+          v.appendChild(el("bdi", null, ltrRanges(n.value)));
           tile.appendChild(v);
-          tile.appendChild(meta(n.source));
+          if (n.detail) tile.appendChild(el("p", "detail tabular", ltrRanges(n.detail)));
+          if (!shared) add(tile, meta(n.source));
           grid.appendChild(tile);
         });
         sec.appendChild(grid);
+        grids.push(grid);
+        var m = shared && items.length ? meta(items[0].source) : null;
+        if (m) { m.className = "meta center"; sec.appendChild(m); }
       }
-      if (s.source) sec.appendChild(meta(s.source));
+      if (s.source) add(sec, meta(s.source));
       card.appendChild(sec);
     });
     if (a.suggested_questions && a.suggested_questions.length) {
@@ -120,6 +156,7 @@
     foot.appendChild(link("מעבר לאתר", SITE));
     card.appendChild(foot);
     root.appendChild(card);
+    grids.forEach(balance);
     rendered = true;
   }
 
@@ -152,6 +189,7 @@
   // הגובה האמיתי של התוכן, כדי שהמארח יתאים את המסגרת (בלי גלילה פנימית)
   var last = -1;
   function size() {
+    grids.forEach(balance);
     var h = Math.ceil(document.documentElement.scrollHeight);
     if (h !== last) { last = h; post({ method: "ui/notifications/size-changed", params: { width: document.documentElement.scrollWidth, height: h } }); }
   }

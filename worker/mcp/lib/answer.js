@@ -8,6 +8,8 @@
  * - **שני הממוצעים:** תשובה שמזכירה ממוצע סקרים — מציגה גם את הממוצע הפשוט וגם את ממוצע המודל (הכרעת בעלים 12.10.2026).
  * - **ניטרליות:** בלי המלצה, בלי "מי ינצח", ובלי "סיכוי" או המילה האסורה — תרחישים הם "שיעור תרחישים".
  * - **עברית:** כל טקסט שהמודל ניסח — בעברית.
+ * - **בלי כפילות ובלי רעש** (הכרעת בעלים 12.10.2026): בתיבת מספר — רק הנתון המרכזי, וטווח או הקשר בשורה נפרדת (`detail`);
+ *   כותרת אינה סוג הנתון. הכרטיס עצמו אינו מציג את הסוג, ואינו חוזר על תאריך או על "איך זה חושב?" שכבר הופיעו.
  * קפדנית, לא "מתקנת": תשובה עם בעיה נדחית עם כל הבעיות, והמודל מתקן ושולח שוב.
  */
 
@@ -23,7 +25,7 @@ export const NUMBER_KINDS = [
   "תשובות משתתפים במדגם עצמי, לא מייצג, ללא דגימה וללא שקלול",
 ];
 
-export const LIMITS = { title: 80, summary: 400, heading: 60, text: 1500, item: 200, label: 60, value: 40, cell: 60, rows: 20, sections: 8, footnote: 240, question: 120, asOf: 30, minColumns: 2, maxColumns: 5 };
+export const LIMITS = { title: 80, summary: 400, heading: 60, text: 1500, item: 200, label: 60, value: 20, detail: 80, cell: 60, rows: 20, sections: 8, footnote: 240, question: 120, asOf: 30, minColumns: 2, maxColumns: 5 };
 
 const SECTION_FIELDS = { text: ["text"], list: ["items", "ordered"], numbers: ["items"], table: ["columns", "rows"] };
 const COMMON = ["kind", "heading", "source"];
@@ -119,6 +121,8 @@ export function validateAnswer(args, methodUrl) {
     if (!SECTION_FIELDS[kind]) return p(`${path}.kind`, "text | list | numbers | table");
     for (const k of Object.keys(sec)) if (!COMMON.includes(k) && !SECTION_FIELDS[kind].includes(k)) p(`${path}.${k}`, `שדה לא מוכר בקטע ${kind}`);
     const out = { kind, heading: prose(`${path}.heading`, sec.heading, LIMITS.heading) };
+    // כותרת אומרת מה רואים, לא את סוג הנתון ("סיכום סקרים — …" אינו אומר כלום; הכרעת בעלים 12.10.2026)
+    if (out.heading && NUMBER_KINDS.some((k) => out.heading.startsWith(k))) p(`${path}.heading`, "כותרת שאומרת מה רואים (למשל \"מנדטים לפי גושים\"), לא סוג הנתון");
     if (kind === "text") {
       out.text = prose(`${path}.text`, sec.text, LIMITS.text, true);
     } else if (kind === "list") {
@@ -138,11 +142,15 @@ export function validateAnswer(args, methodUrl) {
       if (!Array.isArray(sec.items) || !sec.items.length || sec.items.length > LIMITS.rows) p(`${path}.items`, `1 עד ${LIMITS.rows} מספרים`);
       else out.items = sec.items.map((it, j) => {
         const ip = `${path}.items[${j}]`;
-        if (!isObj(it)) { p(ip, "{label, value, kind, asOf, method}"); return null; }
-        for (const k of Object.keys(it)) if (!["label", "value", "kind", "asOf", "method"].includes(k)) p(`${ip}.${k}`, "שדה לא מוכר");
+        if (!isObj(it)) { p(ip, "{label, value, detail?, kind, asOf, method}"); return null; }
+        for (const k of Object.keys(it)) if (!["label", "value", "detail", "kind", "asOf", "method"].includes(k)) p(`${ip}.${k}`, "שדה לא מוכר");
         const label = prose(`${ip}.label`, it.label, LIMITS.label, true);
         if (label && hasNumber(label)) p(`${ip}.label`, "המספר — בשדה value");
-        return { label, value: value(`${ip}.value`, it.value, LIMITS.value), source: source(ip, { kind: it.kind, asOf: it.asOf, method: it.method }) };
+        const v = value(`${ip}.value`, it.value, LIMITS.value);
+        // הנתון המרכזי לבדו; טווח או הקשר — בשורה נפרדת וקטנה (detail), הכרעת בעלים 12.10.2026
+        if (/;|טווח|חסר|מתוך|לרוב/u.test(v)) p(`${ip}.value`, "רק הנתון המרכזי (\"53 מנדטים\"); טווח או הקשר (\"טווח 47–63\", \"חסרים 8 לרוב\") — בשדה detail");
+        const detail = it.detail === undefined ? undefined : prose(`${ip}.detail`, it.detail, LIMITS.detail);
+        return { label, value: v, ...(detail ? { detail } : {}), source: source(ip, { kind: it.kind, asOf: it.asOf, method: it.method }) };
       });
       if (sec.source !== undefined) p(`${path}.source`, "בקטע numbers המקור בכל פריט");
     }
@@ -186,7 +194,7 @@ export const ANSWER_SCHEMA = {
       type: "array", minItems: 1, maxItems: LIMITS.sections,
       items: {
         anyOf: [
-          sec("numbers", { items: { type: "array", minItems: 1, maxItems: LIMITS.rows, items: { type: "object", properties: { label: s(LIMITS.label, "Hebrew, no number."), value: s(LIMITS.value, "The number as text, e.g. \"23 מנדטים\" or \"3.1%\"."), ...SOURCE_PROPS }, required: ["label", "value", "kind", "asOf", "method"], additionalProperties: false } } }, ["items"]),
+          sec("numbers", { items: { type: "array", minItems: 1, maxItems: LIMITS.rows, items: { type: "object", properties: { label: s(LIMITS.label, "Hebrew, no number."), value: s(LIMITS.value, "Only the main number, e.g. \"23 מנדטים\" or \"3.1%\"."), detail: s(LIMITS.detail, "Optional second, smaller line: the range or the practical context, e.g. \"טווח הסקרים 47–63\" or \"חסרים 8 לרוב\"."), ...SOURCE_PROPS }, required: ["label", "value", "kind", "asOf", "method"], additionalProperties: false } } }, ["items"]),
           sec("text", { text: s(LIMITS.text, "Hebrew paragraph."), source: SOURCE }, ["text"]),
           sec("list", { items: { type: "array", minItems: 1, maxItems: LIMITS.rows, items: s(LIMITS.item) }, ordered: { type: "boolean" }, source: SOURCE }, ["items"]),
           sec("table", { columns: { type: "array", minItems: LIMITS.minColumns, maxItems: LIMITS.maxColumns, items: s(LIMITS.cell) }, rows: { type: "array", minItems: 1, maxItems: LIMITS.rows, items: { type: "array", items: s(LIMITS.cell) } }, source: SOURCE }, ["columns", "rows"]),
