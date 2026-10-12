@@ -32,9 +32,23 @@ export interface Poll {
     source: string | null;
     details: { published?: string | null; population?: string | null; moe?: string | number | null; method?: string | null; sample_respondents?: number | null };
   };
-  corrections?: { field: string; from: unknown; to: unknown; source: string | null }[];
+  corrections?: { field: string; from: unknown; to: unknown; source: string | null; reason?: string }[];
+  /** מצב אימות נפרד לכל קבוצת שדות (נבנה בצינור; חסר בסקר שאין לו אימות ותיקון) */
+  fieldChecks?: Partial<Record<FieldGroup, { status: FieldStatus; source?: string | null; note?: string }>>;
   source: { page: string; tableLine: number };
 }
+
+export type FieldGroup = "seats" | "pct" | "sample" | "dates";
+export type FieldStatus = "match" | "corrected" | "conflict" | "overall" | "none";
+export const FIELD_GROUP_LABEL: Record<FieldGroup, string> = { seats: "מנדטים", pct: "אחוזים", sample: "גודל המדגם", dates: "תאריכי העבודה בשטח" };
+/** "overall" = הסקר נבדק כולו מול המקור, בלי רישום נפרד לשדה — לא מוצג כאימות של השדה */
+export const FIELD_STATUS_LABEL: Record<FieldStatus, { text: string; tone: "ok" | "warn" | "neutral" }> = {
+  match: { text: "תואם למקור", tone: "ok" },
+  corrected: { text: "תוקן לפי המקור", tone: "ok" },
+  conflict: { text: "סתירה פתוחה", tone: "warn" },
+  overall: { text: "נבדק רק בבדיקת הסקר כולו", tone: "neutral" },
+  none: { text: "טרם נבדק", tone: "neutral" },
+};
 
 export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "warn" | "neutral" }> = {
   secondary: { text: "מקור משני", tone: "neutral" },

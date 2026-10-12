@@ -27,6 +27,6 @@
 
 ## בדיקות מקומיות לפני כל PR
 ```bash
-python3 pipeline/build_data.py && python3 pipeline/test_model.py && python3 pipeline/test_forecast.py
+python3 pipeline/build_data.py && python3 pipeline/test_model.py && python3 pipeline/test_forecast.py && python3 pipeline/test_quality.py
 npx tsc --noEmit -p tsconfig.json && npm test && npm run build
 ```

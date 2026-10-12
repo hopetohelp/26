@@ -1,8 +1,11 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
-import { fieldLabel, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
+import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, fieldLabel, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
+
+const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
 const PAGE = 50;
 
@@ -119,6 +122,25 @@ export default function Polls() {
                         </dd>
                       </>
                     )}
+                    {p.fieldChecks && (
+                      <>
+                        <dt className="font-bold">בדיקה לפי שדה</dt>
+                        <dd>
+                          <ul>
+                            {FIELD_GROUPS.map((g) => {
+                              const c = p.fieldChecks![g];
+                              return (
+                                <li key={g}>
+                                  {FIELD_GROUP_LABEL[g]}: {FIELD_STATUS_LABEL[c?.status ?? "none"].text}
+                                  {c?.note && <> ({c.note})</>}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          <Link to="/method?tab=sources#data-checks" className="underline">איך נבדק כל שדה</Link>
+                        </dd>
+                      </>
+                    )}
                     {p.corrections && p.corrections.length > 0 && (
                       <>
                         <dt className="font-bold">תיקונים</dt>
@@ -130,6 +152,7 @@ export default function Polls() {
                               </li>
                             ))}
                           </ul>
+                          <Link to="/method?tab=sources#corrections-log" className="underline">יומן התיקונים המלא</Link>
                         </dd>
                       </>
                     )}
@@ -159,7 +182,7 @@ export default function Polls() {
           </button>
         )}
         <Note>
-          אחוז בסוגריים = הרשימה מתחת לאחוז החסימה באותו סקר. "אומת" = המספרים הושוו לפרסום המקורי ותואמים. "תוקן לפי המקור" = נמצא
+          אחוז בסוגריים = הרשימה מתחת לאחוז החסימה באותו סקר. "אומת" = הסקר הושווה לפרסום המקורי (מצב הבדיקה של כל שדה — בכרטיס הסקר). "תוקן לפי המקור" = נמצא
           הבדל מטבלת ויקיפדיה, והאתר מציג את מה שבפרסום המקורי (הפירוט בכרטיס הסקר). "מקור: ויקיפדיה" = טרם הושווה לפרסום המקורי.
           העדכון האחרון: {date(polls[0]?.end ?? "")}.
         </Note>

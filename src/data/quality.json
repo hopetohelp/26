@@ -1,0 +1,619 @@
+{
+ "asOf": "2026-10-12T15:26:26+03:00",
+ "conflicts": [
+  {
+   "detail": "באתר 1,263, בפרטי האימות 1,013",
+   "end": "2026-10-07",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "group": "sample",
+   "id": "2026-10-07-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "source": "https://13tv.co.il/item/news/politics/politics/survey-905386103/"
+  },
+  {
+   "detail": "סכום המנדטים 72 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2026-08-30",
+   "firmHe": "קנטר",
+   "group": "seats",
+   "id": "2026-08-30-kantar-kan-11-b",
+   "publisherHe": "כאן 11",
+   "source": null
+  },
+  {
+   "detail": "סכום המנדטים 601 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2026-08-24",
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "group": "seats",
+   "id": "2026-08-24-sf-nd-channel-14",
+   "publisherHe": "ערוץ 14",
+   "source": "https://www.c14.co.il/article/1674991"
+  },
+  {
+   "detail": "סכום המנדטים 117 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2026-06-11",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "group": "seats",
+   "id": "2026-06-11-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-899199"
+  },
+  {
+   "detail": "סכום המנדטים 116 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2025-02-20",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "group": "seats",
+   "id": "2025-02-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "source": null
+  },
+  {
+   "detail": "סכום המנדטים 116 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2024-03-28",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "group": "seats",
+   "id": "2024-03-28-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "source": "https://www.maariv.co.il/news/politics/Article-1087651"
+  },
+  {
+   "detail": "סכום המנדטים 116 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2024-01-21",
+   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+   "group": "seats",
+   "id": "2024-01-21-cf-mp-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "source": "https://13tv.co.il/item/news/politics/politics/survey-903902650/"
+  },
+  {
+   "detail": "סכום המנדטים 116 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-12-11",
+   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+   "group": "seats",
+   "id": "2023-12-11-cf-mp-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "source": "https://13tv.co.il/item/news/politics/politics/bs81j-903845166/"
+  },
+  {
+   "detail": "סכום המנדטים 91 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-11-16",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-11-16-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "source": null
+  },
+  {
+   "detail": "סכום המנדטים 111 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-09-26",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-09-26-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q3/Article-9278c05ea72da81027.htm"
+  },
+  {
+   "detail": "סכום המנדטים 112 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-09-26",
+   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+   "group": "seats",
+   "id": "2023-09-26-cf-mp-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "source": "https://13tv.co.il/item/news/politics/politics/e86nq-903724639/"
+  },
+  {
+   "detail": "סכום המנדטים 112 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-07-25",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-07-25-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q3/Article-59a23770bad8981026.htm"
+  },
+  {
+   "detail": "סכום המנדטים 110 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-06-25",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-06-25-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-16c825c9263f881026.htm"
+  },
+  {
+   "detail": "סכום המנדטים 110 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-06-15",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-06-15-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-3762dd484afb881027.htm"
+  },
+  {
+   "detail": "סכום המנדטים 116 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-06-15",
+   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+   "group": "seats",
+   "id": "2023-06-15-cf-mp-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903569276/"
+  },
+  {
+   "detail": "סכום המנדטים 110 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-05-30",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-05-30-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-77a7187328d6881026.htm"
+  },
+  {
+   "detail": "סכום המנדטים 110 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-05-14",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-05-14-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-1aaa3d0863b1881027.htm"
+  },
+  {
+   "detail": "סכום המנדטים 109 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-05-07",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "group": "seats",
+   "id": "2023-05-07-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-78cdc06e817f781026.htm"
+  },
+  {
+   "detail": "סכום המנדטים 116 במקום 120 — הסקר הוצא מהחישובים",
+   "end": "2023-04-30",
+   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+   "group": "seats",
+   "id": "2023-04-30-cf-mp-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "source": "https://13tv.co.il/item/news/politics/politics/poll-903509362/"
+  }
+ ],
+ "corrections": [
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-10-09",
+   "field": "values.bluewhite.p",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": 1.9,
+   "group": "pct",
+   "id": "2026-10-08-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "בטבלת ויקיפדיה נרשם 1.9%; הדוח הרשמי 4197 מציג 0.9% (ביקורת קודקס 12.10.2026)",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; \"כחול לבן בראשות בני גנץ 0.9%\")",
+   "to": 0.9
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-10-09",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-10-07",
+   "group": "dates",
+   "id": "2026-10-08-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; איסוף נתונים 8.10 12:30 עד 9.10 13:00)",
+   "to": "2026-10-08"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-10-09",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-10-08",
+   "group": "dates",
+   "id": "2026-10-08-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4197, עותק: raw/gov/Survey_4197.pdf; איסוף נתונים 8.10 12:30 עד 9.10 13:00)",
+   "to": "2026-10-09"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "משקל הסקר במודל ובתחזית"
+   ],
+   "end": "2026-10-07",
+   "field": "sample",
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "from": 2175,
+   "group": "sample",
+   "id": "2026-10-07-sf-nd-channel-14",
+   "publisherHe": "ערוץ 14",
+   "reason": "בטבלת ויקיפדיה נרשם 2,175; הפרסום המקורי מציין 1,100 משיבים (ביקורת קודקס 12.10.2026)",
+   "source": "https://www.c14.co.il/article/1728516 (1,100 משיבים; כך גם בפרטי האימות של הרשומה)",
+   "to": 1100
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-10-07",
+   "field": "start",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "from": "2026-10-07",
+   "group": "dates",
+   "id": "2026-10-07-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4193, עותק: raw/gov/Survey_4193.pdf; איסוף נתונים 6.10 09:00 עד 7.10 09:00)",
+   "to": "2026-10-06"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "משקל הסקר במודל ובתחזית"
+   ],
+   "end": "2026-10-07",
+   "field": "sample",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "from": 1013,
+   "group": "sample",
+   "id": "2026-10-07-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4193, עותק: raw/gov/Survey_4193.pdf; מספר המשיבים בפועל 1,263)",
+   "to": 1263
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "משקל הסקר במודל ובתחזית"
+   ],
+   "end": "2026-10-07",
+   "field": "sample",
+   "firmHe": "דיירקט פולס",
+   "from": 504,
+   "group": "sample",
+   "id": "2026-10-07-direct-polls-i24-news",
+   "publisherHe": "i24NEWS",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4199, עותק: raw/gov/Survey_4199.pdf; מספר המשיבים בפועל 518)",
+   "to": 518
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "משקל הסקר במודל ובתחזית"
+   ],
+   "end": "2026-10-04",
+   "field": "sample",
+   "firmHe": "קנטר",
+   "from": 553,
+   "group": "sample",
+   "id": "2026-10-04-kantar-kan-11",
+   "publisherHe": "כאן 11",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.kan.org.il/content/kan-news/politic/1105927/",
+   "to": 554
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-09-30",
+   "field": "values.reservists.p",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "from": 2.5,
+   "group": "pct",
+   "id": "2026-09-30-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://13tv.co.il/item/news/politics/politics/survey-905376242/",
+   "to": 2.8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-09-23",
+   "field": "values.utj.s",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "from": 7,
+   "group": "seats",
+   "id": "2026-09-23-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://13tv.co.il/item/news/politics/politics/hcp4l-905367553/",
+   "to": 8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-09-23",
+   "field": "values.shas.s",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "from": 8,
+   "group": "seats",
+   "id": "2026-09-23-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://13tv.co.il/item/news/politics/politics/hcp4l-905367553/",
+   "to": 7
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות",
+    "מודל",
+    "תחזית"
+   ],
+   "end": "2026-09-15",
+   "field": "gov",
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "from": 63,
+   "group": "seats",
+   "id": "2026-09-15-sf-nd-channel-14",
+   "publisherHe": "ערוץ 14",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.c14.co.il/article/1706627",
+   "to": 64
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ספירת המכונים בממוצע הפשוט",
+    "אפקט הבית במודל"
+   ],
+   "end": "2026-09-15",
+   "field": "firmHe",
+   "firmHe": "מכון DRI",
+   "from": "S.M.L.T.",
+   "group": "pollster",
+   "id": "2026-09-15-s-m-l-t-x",
+   "publisherHe": null,
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4154, עותק: raw/gov/Survey_4154.pdf)",
+   "to": "מכון DRI"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ספירת המכונים בממוצע הפשוט",
+    "אפקט הבית במודל"
+   ],
+   "end": "2026-09-07",
+   "field": "firmHe",
+   "firmHe": "מכון DRI",
+   "from": "S.M.L.T.",
+   "group": "pollster",
+   "id": "2026-09-07-s-m-l-t-x",
+   "publisherHe": null,
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election59/he/Survey_4135.pdf",
+   "to": "מכון DRI"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-09-07",
+   "field": "values.haredi_public.p",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 1.2,
+   "group": "pct",
+   "id": "2026-09-07-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-067c7eb8e9c70a1026.htm",
+   "to": 1.1
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-09-07",
+   "field": "others.pct",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 0.4,
+   "group": "pct",
+   "id": "2026-09-07-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-067c7eb8e9c70a1026.htm",
+   "to": 0.3
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-09-03",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-09-03",
+   "group": "dates",
+   "id": "2026-09-04-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.maariv.co.il/news/politics/article-1362890",
+   "to": "2026-09-02"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-09-03",
+   "field": "others.pct",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": 1.9,
+   "group": "pct",
+   "id": "2026-09-04-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.maariv.co.il/news/politics/article-1362890",
+   "to": 2.8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-09-03",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-09-04",
+   "group": "dates",
+   "id": "2026-09-04-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.maariv.co.il/news/politics/article-1362890",
+   "to": "2026-09-03"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-09-02",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-09-02",
+   "group": "dates",
+   "id": "2026-09-02-lri-p4a-walla",
+   "publisherHe": "וואלה",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://news.walla.co.il/item/3865040",
+   "to": "2026-09-01"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-09-02",
+   "field": "values.yb.s",
+   "firmHe": "דיירקט פולס",
+   "from": 8,
+   "group": "seats",
+   "id": "2026-09-02-direct-polls-i24-news",
+   "publisherHe": "i24NEWS",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-7cad3b3e",
+   "to": 7
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-09-02",
+   "field": "values.democrats.s",
+   "firmHe": "דיירקט פולס",
+   "from": 10,
+   "group": "seats",
+   "id": "2026-09-02-direct-polls-i24-news",
+   "publisherHe": "i24NEWS",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-7cad3b3e",
+   "to": 9
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-08-16",
+   "field": "start",
+   "firmHe": "קנטר",
+   "from": "2026-08-16",
+   "group": "dates",
+   "id": "2026-08-16-kantar-kan-11",
+   "publisherHe": "כאן 11",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4079, עותק: raw/gov/Survey_4079.pdf; ביצוע הסקר 13.8 עד 16.8)",
+   "to": "2026-08-13"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-08-10",
+   "field": "end",
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "from": "2026-08-09",
+   "group": "dates",
+   "id": "2026-08-09-sf-nd-channel-14",
+   "publisherHe": "ערוץ 14",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4071, עותק: raw/gov/Survey_4071.pdf; ביצוע הסקר 9.8 עד 10.8)",
+   "to": "2026-08-10"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-07-29",
+   "field": "start",
+   "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+   "from": "2026-07-29",
+   "group": "dates",
+   "id": "2026-07-29-mp-tm-sn-a-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "הערך בטבלת ויקיפדיה שונה מהפרסום המקורי",
+   "source": "https://www.gov.il/he/departments/topics/knesset_election_polls26 (דוח 4048, עותק: raw/gov/Survey_4048.pdf; איסוף נתונים 28.7 09:00 עד 29.7 09:00)",
+   "to": "2026-07-28"
+  }
+ ],
+ "coverage": {
+  "firstEnd": "2022-12-23",
+  "forecastWindowDays": 7,
+  "listSubmission": "2026-09-08",
+  "model": {
+   "skipped": 0,
+   "start": "2026-09-09",
+   "used": 44
+  },
+  "sinceListSubmission": 44,
+  "total": 778,
+  "usable": 760
+ }
+}

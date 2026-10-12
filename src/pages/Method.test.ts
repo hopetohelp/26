@@ -4,6 +4,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { describe, expect, it } from "vitest";
+import { quality } from "../lib/quality";
+import { polls } from "../lib/data";
 import { DICTIONARY, DICTIONARY_IDS, MethodLaw, MethodNumbers, MethodSources } from "./Method";
 
 const walk = (dir: string): string[] =>
@@ -31,7 +33,7 @@ describe("מילון המספרים", () => {
     const html = [MethodNumbers, MethodSources, MethodLaw]
       .map((C) => renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(C) })))
       .join("");
-    for (const id of [...DICTIONARY_IDS, "agreements", "voters", "sources", "updates", "privacy", "law", "limits"]) expect(html, id).toContain(`id="${id}"`);
+    for (const id of [...DICTIONARY_IDS, "agreements", "voters", "sources", "coverage", "data-checks", "corrections-log", "updates", "privacy", "law", "limits"]) expect(html, id).toContain(`id="${id}"`);
     const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
     expect(new Set(ids).size, "מזהים כפולים").toBe(ids.length);
   });
@@ -39,7 +41,19 @@ describe("מילון המספרים", () => {
   it("לכל קטע במסך יש כפתור קישור נפרד (ערכי המילון והקטעים במקורות ובחוק)", () => {
     const count = (C: typeof MethodNumbers) => (renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(C) })).match(/העתקת קישור לקטע:/g) ?? []).length;
     expect(count(MethodNumbers)).toBe(DICTIONARY.length);
-    expect(count(MethodSources)).toBe(3);
+    expect(count(MethodSources)).toBe(6);
     expect(count(MethodLaw)).toBe(2);
+  });
+
+  it("מסך המקורות מציג את הכיסוי, הסתירות הפתוחות ויומן התיקונים מהנתונים", () => {
+    const html = renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(MethodSources) }));
+    expect(html).toContain("כל הסקרים מול החישובים");
+    expect(quality.coverage.total).toBe(polls.length);
+    expect(quality.coverage.usable).toBeLessThanOrEqual(quality.coverage.total);
+    expect(html).toContain(`כל התיקונים (${quality.corrections.length})`);
+    expect(quality.corrections.length).toBe(polls.reduce((n, p) => n + (p.corrections?.length ?? 0), 0));
+    for (const c of quality.conflicts) expect(html).toContain(c.detail.replace(/&/g, "&amp;"));
+    // כל סקר שיש לו אימות או תיקון נושא מצב לפי שדה
+    for (const p of polls) if (p.verification || p.corrections?.length) expect(p.fieldChecks, p.id).toBeDefined();
   });
 });
