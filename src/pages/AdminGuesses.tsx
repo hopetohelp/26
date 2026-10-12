@@ -102,7 +102,7 @@ export default function AdminGuesses({ api }: { api: (path: string, body?: unkno
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h2 className="font-display text-2xl">השערות הגולשים ({data?.rows.length ?? "…"} · ממתינות {pending})</h2>
+        <h3 className="font-bold text-lg">השערות הגולשים ({data?.rows.length ?? "…"} · ממתינות {pending})</h3>
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
       </div>
       <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן לפי רישום, כניסה אחרונה או שמירת ההשערה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
