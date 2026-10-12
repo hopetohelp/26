@@ -92,28 +92,32 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
       {/* שיתוף — רק של כלל המשתתפים, כדי שנתוני קבוצה לא ייצאו החוצה */}
       {scope === "all" && <CommunityShare d={d} />}
       {d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
+      {(!!d.pendingGuesses || stale || scope !== "all") && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>
-          <p className="font-display text-2xl mb-1">{d.participants} משתתפים בסך הכול</p>
           {!!d.pendingGuesses && <p className="text-sm text-ink-soft mb-1">עוד {d.pendingGuesses} {d.pendingGuesses === 1 ? "השערה חריגה ממתינה" : "השערות חריגות ממתינות"} לבדיקה ואינן נספרות.</p>}
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
         </div>
-        <div className="flex flex-wrap gap-3">
-          {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
-          <Toggle value={view} setValue={setView} options={[["table","טבלה"],["chart","גרף"]]} label="צורת תצוגה" />
-        </div>
-      </div>
-      {d.seats ? <SeatsStats rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
+        {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
+      </div>}
+      {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
       {d.blocs ? <BlocStats d={d} view={view} mineBlocs={hasDefinedBlocs ? definedBlocs!.blocs : []} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} />}
     </div>
   );
 }
 
-function SectionTitle({ title, count }: { title: string; count?: number }) {
-  // בגושים אין מספר כללי בכותרת: המספר מוצג בכל גוש בנפרד
-  if (count === undefined) return <>{title}</>;
-  return <span className="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1"><span>{title}</span><span className="text-2xl tabular">{count} משתתפים</span></span>;
+/**
+ * כותרת קטע סטטיסטיקה (הכרעת בעלים 12.10.2026): הכותרת באמצע, ומתחתיה שורה — מתג מימין ומספר המשתתפים משמאל.
+ * אותה כותרת למנדטים ולהצבעה. בגושים אין מספר כללי: המספר מוצג בכל גוש בנפרד.
+ */
+function SectionTitle({ title, count, toggle }: { title: string; count?: number; toggle?: ReactNode }) {
+  return <>
+    <h2 className="text-2xl font-display leading-tight text-center mb-3">{title}</h2>
+    {(toggle || count !== undefined) && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-3">
+      {toggle ?? <span />}
+      {count !== undefined && <span className="text-2xl tabular font-display">{count} משתתפים</span>}
+    </div>}
+  </>;
 }
 
 function Toggle<T extends string>({ value, setValue, options, label }: { value: T; setValue: (v:T)=>void; options: readonly (readonly [T,string])[]; label:string }) {
@@ -143,15 +147,16 @@ const AvgRange = ({ mean, range: rangeText = "", bold = false }: { mean: ReactNo
 const pollRangeText = (r: [number, number] | null) => r && r[0] !== r[1] ? rng(seatsFmt(r[0]), seatsFmt(r[1])) : "";
 type Overall = { name: string; of: (key: string) => SeatStat | null | undefined };
 
-export function SeatsStats({ rows, polls, mine, view, passedLists, overall }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; overall?: Overall }) {
+export function SeatsStats({ rows, polls, mine, view, onView, passedLists, overall }: { onView?: (v: View) => void; passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; overall?: Overall }) {
   const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= 4).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists]);
   const hiddenNote = <p className="text-xs text-ink-soft mt-3">מפלגות שלא עברו את אחוז החסימה אצל אף משתתף לא מוצגות</p>;
   const suffix = "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => mine?.seats[id]?.v;
-  if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
+  const head = <SectionTitle title="חלוקת המנדטים" count={rows[0]?.n ?? 0} toggle={onView && <Segmented size="sm" tight value={view} onChange={onView} label="צורת תצוגה" options={[{ id: "table", label: "טבלה" }, { id: "chart", label: "גרף" }]} />} />;
+  if (view === "chart") return <><Bars suffix={suffix} head={head} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
   const dataCols = 2 + (mine ? 1 : 0) + (overall ? 1 : 0);
-  return <Card title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
+  return <Card>{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">רשימה</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mine && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
     <tbody>{sorted.map(s=>{ const o = overall?.of(s.list); return <tr key={s.list} className="border-t border-paper-line"><td className="py-2 pe-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center"><AvgRange mean={polls[s.list] === undefined ? "—" : format(polls[s.list])} range={pollRangeText(pollSeatRange(LATEST_POLLS, [s.list], POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={format(s.mean)} range={range(s) ? `${range(s)}${suffix}` : ""} /></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? format(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
@@ -212,7 +217,7 @@ interface BarRow { key: string; label: string; lists?: string[]; own?: boolean; 
  * הסיכום של המשתתפים כולל רבעונים (נמוך, רבעון תחתון, חציון, רבעון עליון, גבוה), ובכל קטע ביניהם 25% מהמשתתפים, ולכן הנר עבה היכן שהם צפופים ודק בזנבות.
  * עיגול ריק שחור = ממוצע המשתתפים (אינו סקר), עיגול מלא כתום = ממוצע הסקרים, כשיש.
  */
-function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suffix?: string; title?: import("react").ReactNode }) {
+function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[]; suffix?: string; title?: import("react").ReactNode; head?: import("react").ReactNode }) {
   const top = Math.max(1, ...rows.flatMap(r => [r.hi, r.mean ?? 0, r.poll ?? 0]));
   const step = suffix ? 5 : top > 60 ? 20 : 10;
   const axisMax = Math.max(step * 2, Math.ceil(top / step) * step);
@@ -220,7 +225,8 @@ function Bars({ rows, suffix = "", title = "גושים" }: { rows: BarRow[]; suf
   const withPoll = rows.some(r => r.poll !== undefined);
   const levels = candleProfiles(rows.map(r => r.q ? quantileSegs(r.q, suffix ? 0.25 : 0.5) : []), true);
   const COLS = "grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto]";
-  return <Card title={title}>
+  return <Card title={head ? undefined : title}>
+    {head}
     <ChartLegend
       entries={[
         { kind: "result", text: "ממוצע המשתתפים (אינו סקר)" },
@@ -254,11 +260,7 @@ export function VotingStats({ d }: { d: D }) {
   const [unit, setUnit] = useState<Unit>("pct");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
   return <Card>
-    <h2 className="text-2xl font-display leading-tight text-center mb-3">הצבעה וכוונות הצבעה</h2>
-    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-3">
-      <Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />
-      {count !== undefined && <span className="text-2xl tabular font-display">{count} משתתפים</span>}
-    </div>
+    <SectionTitle title="הצבעה אז והיום" count={count} toggle={<Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />} />
     {unit === "num" && <p className="text-xs text-ink-soft mb-3">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     <VoteComparison d={d} unit={unit} participants={count ?? 0} />
     {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} /></section>}
