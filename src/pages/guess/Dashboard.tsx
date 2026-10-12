@@ -1,9 +1,11 @@
 import CommunityShare from "./CommunityShare";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
 import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
+import { LATEST_POLLS } from "../../lib/homeData";
+import { pollSeatRange } from "../../lib/pollRange";
 import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { SAVED_EVENT } from "../../lib/outbox";
 import { loadDraft } from "../../lib/crowdSession";
@@ -119,18 +121,27 @@ function Toggle<T extends string>({ value, setValue, options, label }: { value: 
   return <Segmented value={value} onChange={setValue} label={label} className="min-w-[12rem]" options={options.map(([id, text]) => ({ id, label: text }))} />;
 }
 
-/** רוחב הטורים: הראשון רחב, השאר שווים (4 טורי מספרים, או 6 עם השוואה לכלל המשתתפים) */
-const StatCols = ({ compare = false }: { compare?: boolean }) => compare
-  ? <colgroup><col className="w-[22%]" />{Array.from({ length: 6 }, (_, i) => <col key={i} className="w-[13%]" />)}</colgroup>
-  : <colgroup><col className="w-[34%]" /><col className="w-[16.5%]" /><col className="w-[16.5%]" /><col className="w-[16.5%]" /><col className="w-[16.5%]" /></colgroup>;
-/** השוואה לכלל המשתתפים (בתצוגת קבוצה): קו הפרדה עבה לפני הטורים של הכלל */
+/** רוחב הטורים: הראשון רחב, ושאר טורי המספרים שווים (סקרים, משתתפים, "שלך", וכל המשתתפים בהשוואה) */
+const StatCols = ({ data }: { data: number }) => {
+  const first = data >= 4 ? 28 : data === 3 ? 34 : 40;
+  return <colgroup><col style={{ width: `${first}%` }} />{Array.from({ length: data }, (_, i) => <col key={i} style={{ width: `${(100 - first) / data}%` }} />)}</colgroup>;
+};
+/** השוואה לכלל המשתתפים (בתצוגת קבוצה): קו הפרדה עבה לפני הטור של הכלל */
 const SEP = "border-s-2 border-ink-faint ps-1";
-/** בהשוואה הטורים צרים: כותרות קטנות, ו"ממוצע" במקום "משתתפים" (מעליהן כתוב של מי) */
+/** בהשוואה הטורים צרים: כותרות קטנות */
 const CMP_HEAD = "text-xs sm:text-sm leading-tight";
-/** שורת כותרת עליונה: "הקבוצה" מעל טורי הקבוצה, "כל המשתתפים" מעל טורי ההשוואה */
-const CompareHead = ({ groupName, mineCol }: { groupName: string; mineCol: boolean }) => (
-  <tr className="text-ink-soft text-xs"><th /><th colSpan={mineCol ? 4 : 3} className="font-bold pb-1">{groupName}</th><th colSpan={2} className={`font-bold pb-1 ${SEP}`}>כל המשתתפים</th></tr>
+/**
+ * תא ממוצע וטווח (הכרעת בעלים 12.10.2026): הממוצע בגופן גדול מעט (16px), הטווח קטן מעט (12px).
+ * במסך צר הטווח מתחת לממוצע, ובמסך רחב הוא לידו.
+ */
+const AvgRange = ({ mean, range: rangeText = "", bold = false }: { mean: ReactNode; range?: string; bold?: boolean }) => (
+  <span className="flex flex-col items-center sm:flex-row sm:items-baseline sm:justify-center sm:gap-1.5">
+    <span className={`text-base leading-tight ${bold ? "font-bold" : ""}`}>{mean}</span>
+    {rangeText ? <bdi dir="ltr" className="text-xs leading-tight text-ink-soft whitespace-nowrap">{rangeText}</bdi> : null}
+  </span>
 );
+/** טווח הסקרים כטקסט, או ריק (אין טווח, או שהנמוך שווה לגבוה) */
+const pollRangeText = (r: [number, number] | null) => r && r[0] !== r[1] ? rng(seatsFmt(r[0]), seatsFmt(r[1])) : "";
 type Overall = { name: string; of: (key: string) => SeatStat | null | undefined };
 
 export function SeatsStats({ rows, polls, mine, view, passedLists, overall }: { passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; overall?: Overall }) {
@@ -140,10 +151,11 @@ export function SeatsStats({ rows, polls, mine, view, passedLists, overall }: { 
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
   const myValue = (id: string) => mine?.seats[id]?.v;
   if (view === "chart") return <><Bars suffix={suffix} title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />} rows={sorted.map(s=>({key:s.list,label:nameOf(s.list),mean:s.mean,lo:s.min,hi:s.max,q:[s.min,s.p25,s.median,s.p75,s.max],poll:polls[s.list]}))} />{hiddenNote}</>;
+  const dataCols = 2 + (mine ? 1 : 0) + (overall ? 1 : 0);
   return <Card title={<SectionTitle title={"מנדטים"} count={rows[0]?.n ?? 0} />}><div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
-    <StatCols compare={!!overall} />
-    <thead>{overall && <CompareHead groupName={overall.name} mineCol={!!mine} />}<tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">רשימה</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? "ממוצע" : "משתתפים"}</th><th className="font-normal">טווח</th>{mine && <th className="font-normal">שלך</th>}{overall && <><th className={`font-normal ${SEP}`}>ממוצע</th><th className="font-normal">טווח</th></>}</tr></thead>
-    <tbody>{sorted.map(s=>{ const o = overall?.of(s.list); return <tr key={s.list} className="border-t border-paper-line"><td className="py-2 pe-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center">{polls[s.list] === undefined ? "—" : format(polls[s.list])}</td><td className="text-center font-bold">{format(s.mean)}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{range(s) ? `${range(s)}${suffix}` : ""}</bdi></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}{overall && <><td className={`text-center font-bold ${SEP}`}>{o ? format(o.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{o && range(o) ? range(o) : ""}</bdi></td></>}</tr>; })}</tbody>
+    <StatCols data={dataCols} />
+    <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">רשימה</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mine && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
+    <tbody>{sorted.map(s=>{ const o = overall?.of(s.list); return <tr key={s.list} className="border-t border-paper-line"><td className="py-2 pe-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center"><AvgRange mean={polls[s.list] === undefined ? "—" : format(polls[s.list])} range={pollRangeText(pollSeatRange(LATEST_POLLS, [s.list], POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={format(s.mean)} range={range(s) ? `${range(s)}${suffix}` : ""} /></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? format(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div>{hiddenNote}</Card>;
 }
 
@@ -177,10 +189,11 @@ export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, ov
   const title = <span className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"><span>גושים</span>{editReturnTo && <EditBlocsButton returnTo={editReturnTo} compact />}</span>;
   if (!rows.length) return <Notice>עדיין אין גושים להצגה.</Notice>;
   if (view==="chart") return <Bars title={title} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,own:r.own,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
+  const dataCols = 2 + (mineSeats ? 1 : 0) + (overall ? 1 : 0);
   return <Card title={title}><div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
-    <StatCols compare={!!overall} />
-    <thead>{overall && <CompareHead groupName={overall.name} mineCol={!!mineSeats} />}<tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? "ממוצע" : "משתתפים"}</th><th className="font-normal">טווח</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <><th className={`font-normal ${SEP}`}>ממוצע</th><th className="font-normal">טווח</th></>}</tr></thead>
-    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /></th><td className="text-center">{seatsFmt(blocPoll(d, r.lists))}</td><td className="text-center font-bold">{r.stat ? seatsFmt(r.stat.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{r.stat ? range(r.stat) : ""}</bdi></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <><td className={`text-center font-bold ${SEP}`}>{o ? seatsFmt(o.mean) : "—"}</td><td className="text-center whitespace-nowrap"><bdi dir="ltr">{o ? range(o) : ""}</bdi></td></>}</tr>; })}</tbody>
+    <StatCols data={dataCols} />
+    <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
+    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} own={r.own} /></th><td className="text-center"><AvgRange mean={seatsFmt(blocPoll(d, r.lists))} range={pollRangeText(pollSeatRange(LATEST_POLLS, r.lists, POLL_AVERAGE.seats))} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div></Card>;
 }
 

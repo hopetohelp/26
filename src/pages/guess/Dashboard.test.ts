@@ -28,7 +28,8 @@ it("מציג ממוצע, סקרים וההשערה שלי; טווח זהה נש�
   }));
   for (const label of ["משתתפים", "סקרים", "שלך"]) expect(html).toContain(label);
   expect(html).toContain(">0</td>");
-  expect(html).toContain("<bdi dir=\"ltr\"></bdi>");
+  // טווח זהה: לא נכתב טווח ריק
+  expect(html).not.toContain("<bdi dir=\"ltr\"></bdi>");
 });
 
 it("מספר המשתתפים בכותרות נלקח מכל חלק, בטבלה ובגרף", () => {
@@ -89,7 +90,7 @@ it("ממוצע הסקרים בגוש מסכם רק מפלגות עם נתון, �
     blocs:{derived:null,explicit:null,customCount:0,fixed:[{id:"coalition",name:"בדיקת סכום",lists:["likud","shas","utj","noam"],stat}]}};
   const html = renderToStaticMarkup(createElement(BlocStats,{d,view:"table"}));
   expect(html).toContain("סקרים");
-  expect(html).toContain(">31.5</td>");
+  expect(html).toContain(">31.5</span>");
   expect(html).not.toContain("לפחות");
   expect(html).not.toContain("חסר");
 });
@@ -155,4 +156,16 @@ it("גוש שהגדרתם ואינו ברשימה מוצג עם הכיתוב ש�
   expect(html).toContain(">12</td>");
   expect(html).not.toContain("כפול");
   expect(html).toContain(">שלך</th>");
+});
+
+it("בטבלאות המפלגות והגוש: טור אחד לסקרים וטור אחד למשתתפים, בכל תא ממוצע וטווח (מתחת בטלפון, ליד במסך רחב)", () => {
+  const spread = { ...stat, mean: 27.8, min: 19, max: 35 };
+  const html = renderToStaticMarkup(createElement(SeatsStats, { rows: [spread], polls: { likud: 23 }, view: "table" }));
+  expect(html.match(/<th class="font-normal">/g)?.length).toBe(2);
+  expect(html).not.toContain(">טווח</th>");
+  expect(html).toContain("flex-col");
+  expect(html).toContain("sm:flex-row");
+  expect(html).toContain("text-base");
+  expect(html).toContain("text-xs");
+  expect(html).toContain("19–35");
 });
