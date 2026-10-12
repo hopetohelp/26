@@ -10,6 +10,8 @@ export interface TrendPoint {
   hi?: number;
   n?: number;
   xs?: number[];
+  /** ממוצע הסקרים הגולמי, כשהוא שונה מהממוצע שבנקודה (`v`, ממוצע המודל): מוצג בחלון הנקודה, כי הסכומים בסקרים אינם מותאמים ל-120 */
+  raw?: number;
 }
 
 export interface Series {

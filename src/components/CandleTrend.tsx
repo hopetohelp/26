@@ -284,6 +284,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
                   <span>טווח <b className="tabular text-paper" dir="ltr">{rng(seatsFmt(act.p.lo), seatsFmt(act.p.hi))}</b></span>
                   {act.p.n !== undefined && <span><b className="tabular text-paper">{act.p.n}</b> {act.p.n === 1 ? "מכון" : "מכונים"}</span>}
                 </div>
+                {act.p.raw !== undefined && <div className="mt-1.5 border-t border-paper/20 pt-1 text-[.7rem] text-paper/65">ממוצע סקרים ללא התאמה ל-120: <b className="tabular text-paper">{seatsFmt(Math.round(act.p.raw * 10) / 10)}</b></div>}
               </>
             )}
               </>
