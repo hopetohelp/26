@@ -75,9 +75,23 @@ export const TOOLS = [
     title: "ממוצע ומודל",
     audience: "public",
     kind: "read",
-    description: "The site's poll average (the model average: seats and vote shares per list — the same numbers as the home screen), the latest poll of each pollster in the last 14 days with mean and full range, the model's trend over the campaign, and the outgoing-government parties (a factual definition: government 37). " + ABOUT_NOTE,
+    description: "The site's two poll averages — always give both when you mention a poll average: averages.simple (ממוצע פשוט: the mean of each pollster's latest poll in the last 14 days, with the full low–high range) and averages.model (ממוצע המודל: seats and vote shares per list, the home screen's numbers). Also the latest polls, the model's trend over the campaign, and the outgoing-government parties (a factual definition: government 37). " + ABOUT_NOTE,
     inputSchema: obj(),
-    run: file("data/average.json"),
+    async run(ctx) {
+      const d = await ctx.site("data/average.json");
+      const idx = await ctx.site("data/index.json");
+      const url = (a) => idx.dictionary?.find((e) => e.id === a)?.url ?? null;
+      // שני הממוצעים זה לצד זה (הכרעת בעלים 12.10.2026) — מתוך הקובץ, בלי חישוב חדש
+      const simple = Object.fromEntries((d.latestPerPollster?.summary ?? []).map((r) => [r.id, { mean: r.mean, min: r.min, max: r.max, pollsters: r.n }]));
+      return {
+        averages: {
+          simple: { label: "ממוצע פשוט", explain: "ממוצע המנדטים בסקר האחרון של כל מכון ב-14 הימים האחרונים, והטווח מהנמוך לגבוה", kind: "סיכום סקרים", asOf: d.latestPerPollster?.asOf, method: "current", methodUrl: url("current"), seats: simple },
+          model: { label: "ממוצע המודל", explain: "ממוצע של הקולות בכל הסקרים, שעובר חלוקת מנדטים לפי החוק — המספרים שבמסך הבית", kind: "סיכום סקרים", asOf: d.average?.asOf, method: "model", methodUrl: url("model"), seats: d.average?.seats, shares: d.average?.shares },
+          difference: { method: "means", methodUrl: url("means") },
+        },
+        ...d,
+      };
+    },
   },
   {
     name: "get_scenarios",
@@ -457,7 +471,7 @@ export const TOOLS = [
     title: "הצגת התשובה בכרטיס",
     audience: "public",
     kind: "read",
-    description: "Shows the final answer as one card in the site's design (Hebrew, RTL, day and night). Call it once, at the end, with the answer built only from the site's data. Rules the server enforces: Hebrew text; every number in a \"numbers\" item, or in a section that carries source {kind, asOf, method} — kind as the data file's about.kind, asOf its date, method its dictionary anchor (about.methodAnchor); no number in the title, summary or headings; neutral — no recommendation, no \"who will win\", and say \"שיעור תרחישים\" (never chance/probability); participants' guesses are not a poll. A rejected answer returns every problem — fix them all and call again.",
+    description: "Shows the final answer as one card in the site's design (Hebrew, RTL, day and night). Call it once, at the end, with the answer built only from the site's data. Put the numbers the site computed in a \"numbers\" section, each with kind (the data file's about.kind), asOf (its date) and method (its dictionary anchor, about.methodAnchor); text, lists and tables may carry the same source line, but general knowledge (61 for a majority) needs none. Do not state a well-known fact on its own — tie it to the data (not \"לרוב דרושים 61\" but \"חסרים להם 8 מנדטים לרוב\"). Mentioning the poll average ⇒ show both the simple average (ממוצע פשוט) and the model average (ממוצע המודל). Rules the server enforces: Hebrew; both averages; neutral — no recommendation, no \"who will win\", \"שיעור תרחישים\" (never chance/probability); participants' guesses are not a poll. A rejected answer returns every problem — fix them all and call again.",
     inputSchema: ANSWER_SCHEMA,
     // מטופל ב-lib/rpc.js (בדיקה מול המילון והחזרת הכרטיס)
     run: null,

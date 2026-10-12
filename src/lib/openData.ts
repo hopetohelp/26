@@ -316,9 +316,11 @@ export function wrapExternal(f: OpenFile, data: Record<string, unknown>): Record
 }
 
 /** האינדקס: data/index.json — רשימת הקבצים, הכללים, המסכים ומילון המספרים */
-/** שתי הכתובות של שרת ה-MCP מתוך כתובת הבסיס (MCP_URL): ציבורית, ועם התחברות לחשבון האתר */
-export const mcpAddresses = (base: string | null) =>
-  base ? { public: `${base.replace(/\/$/, "")}/public`, withLogin: `${base.replace(/\/$/, "")}/mcp` } : null;
+/**
+ * כתובת שרת ה-MCP לפרסום, מתוך כתובת הבסיס (MCP_URL): רק הכתובת עם ההתחברות לחשבון האתר.
+ * 🔴 הכתובת בלי התחברות (/public) אינה מפורסמת — היא גלויה כרגע רק למנהל האתר, באזור האישי (הכרעת בעלים 12.10.2026).
+ */
+export const mcpAddresses = (base: string | null) => (base ? { withLogin: `${base.replace(/\/$/, "")}/mcp` } : null);
 
 export function buildIndex(mcpUrl: string | null) {
   return {
@@ -368,8 +370,7 @@ export function buildLlmsTxt(mcpUrl: string | null): string {
   lines.push("## שרת MCP", "");
   const mcp = mcpAddresses(mcpUrl);
   if (mcp) {
-    lines.push(`- ${mcp.public} — בלי התחברות: כל הנתונים הציבוריים, מחשבון המנדטים (אותו מנוע כמו באתר) וכרטיס תשובה בעיצוב האתר.`);
-    lines.push(`- ${mcp.withLogin} — עם התחברות לחשבון האתר (OAuth): גם הנתונים והפעולות של המשתמש עצמו (ההשערה, הגושים, ההצבעה, ההיסטוריה, הקבוצות, "הנתונים שלי"), באותן הרשאות כמו באתר.`);
+    lines.push(`- ${mcp.withLogin} — עם התחברות לחשבון האתר (OAuth): כל נתוני האתר, מחשבון המנדטים (אותו מנוע כמו באתר), כרטיס תשובה בעיצוב האתר, והנתונים והפעולות של המשתמש עצמו (ההשערה, הגושים, ההצבעה, ההיסטוריה, הקבוצות, "הנתונים שלי", השיחה עם צוות האתר), באותן הרשאות כמו באתר.`);
   } else lines.push("- בבנייה. כשיעלה, הכתובות יופיעו כאן ובאינדקס (data/index.json, השדה mcp).");
   lines.push("");
   lines.push("## Optional", "");

@@ -2,8 +2,10 @@
  * כרטיס התשובה (`show_answer`) — המבנה והבדיקה. טהור, בלי ייבוא: השרת בודק כאן, והכרטיס מציג רק תשובה שעברה.
  *
  * 🔴 כללי האתר נאכפים כאן ולא רק בתיאור הכלי (CLAUDE.md, כללי הברזל):
- * - **שקיפות:** כל מספר בכרטיס — עם סוג, תאריך וקישור "איך זה חושב?" לערך קיים במילון המספרים. מספר בקטע "numbers" —
- *   בכל פריט; מספר בטקסט, ברשימה או בטבלה — הקטע חייב `source` (כמו `Explained` לגרף שלם). תאריכים ושנים אינם "מספר".
+ * - **שקיפות:** מספר שהאתר חישב — בקטע "numbers", ובכל פריט סוג, תאריך וקישור "איך זה חושב?" לערך קיים במילון.
+ *   לטקסט, לרשימה ולטבלה שורת מקור (`source`) היא רשות: עובדה שכל אחד יודע ("61 לרוב") אינה צריכה אותה
+ *   (הכרעת בעלים 12.10.2026: "לא בכל מקום צריך לדחוף שורה של תאריך ואיך זה חושב").
+ * - **שני הממוצעים:** תשובה שמזכירה ממוצע סקרים — מציגה גם את הממוצע הפשוט וגם את ממוצע המודל (הכרעת בעלים 12.10.2026).
  * - **ניטרליות:** בלי המלצה, בלי "מי ינצח", ובלי "סיכוי" או המילה האסורה — תרחישים הם "שיעור תרחישים".
  * - **עברית:** כל טקסט שהמודל ניסח — בעברית.
  * קפדנית, לא "מתקנת": תשובה עם בעיה נדחית עם כל הבעיות, והמודל מתקן ושולח שוב.
@@ -48,6 +50,11 @@ export function stripDates(s) {
     .replace(/(כנסת|הכנסת)\s+ה[-־]?\d{2}/g, " ");
 }
 export const hasNumber = (s) => /\d/.test(stripDates(s));
+
+/** "ממוצע (ה)סקרים" ⇐ חובה גם "ממוצע פשוט" וגם "ממוצע (ה)מודל" באותה תשובה */
+const POLL_AVERAGE = /ממוצע\s+(ה)?סקרים/u;
+const SIMPLE_AVERAGE = /ממוצע\s+(ה)?פשוט/u;
+const MODEL_AVERAGE = /ממוצע\s+(ה)?מודל/u;
 
 /** עברית: יש אותיות עבריות, והלטיניות אינן רבות מהן (שם מוצר כמו Claude מותר) */
 export function isHebrew(s) {
@@ -102,8 +109,6 @@ export function validateAnswer(args, methodUrl) {
     footnote: prose("footnote", args.footnote, LIMITS.footnote),
     suggested_questions: [],
   };
-  for (const [k, v] of [["title", answer.title], ["summary", answer.summary], ["footnote", answer.footnote]])
-    if (v && hasNumber(v)) p(k, "מספר מחושב רק בקטע עם מקור (numbers, או קטע עם source)");
 
   const sections = args.sections;
   if (!Array.isArray(sections) || !sections.length || sections.length > LIMITS.sections) p("sections", `1 עד ${LIMITS.sections} קטעים`);
@@ -114,16 +119,12 @@ export function validateAnswer(args, methodUrl) {
     if (!SECTION_FIELDS[kind]) return p(`${path}.kind`, "text | list | numbers | table");
     for (const k of Object.keys(sec)) if (!COMMON.includes(k) && !SECTION_FIELDS[kind].includes(k)) p(`${path}.${k}`, `שדה לא מוכר בקטע ${kind}`);
     const out = { kind, heading: prose(`${path}.heading`, sec.heading, LIMITS.heading) };
-    if (out.heading && hasNumber(out.heading)) p(`${path}.heading`, "בלי מספר בכותרת");
-    let numeric = false;
     if (kind === "text") {
       out.text = prose(`${path}.text`, sec.text, LIMITS.text, true);
-      numeric = !!out.text && hasNumber(out.text);
     } else if (kind === "list") {
       if (!Array.isArray(sec.items) || !sec.items.length || sec.items.length > LIMITS.rows) p(`${path}.items`, `1 עד ${LIMITS.rows} פריטים`);
       else out.items = sec.items.map((it, j) => prose(`${path}.items[${j}]`, it, LIMITS.item, true));
       out.ordered = sec.ordered === true;
-      numeric = (out.items || []).some((x) => x && hasNumber(x));
     } else if (kind === "table") {
       const cols = sec.columns;
       if (!Array.isArray(cols) || cols.length < LIMITS.minColumns || cols.length > LIMITS.maxColumns) p(`${path}.columns`, `${LIMITS.minColumns} עד ${LIMITS.maxColumns} עמודות`);
@@ -133,7 +134,6 @@ export function validateAnswer(args, methodUrl) {
         if (!Array.isArray(row) || (out.columns && row.length !== out.columns.length)) { p(`${path}.rows[${j}]`, "תא לכל עמודה"); return []; }
         return row.map((c, k) => value(`${path}.rows[${j}][${k}]`, c, LIMITS.cell));
       });
-      numeric = (out.rows || []).some((r) => r.some((c) => hasNumber(c)));
     } else if (kind === "numbers") {
       if (!Array.isArray(sec.items) || !sec.items.length || sec.items.length > LIMITS.rows) p(`${path}.items`, `1 עד ${LIMITS.rows} מספרים`);
       else out.items = sec.items.map((it, j) => {
@@ -146,12 +146,15 @@ export function validateAnswer(args, methodUrl) {
       });
       if (sec.source !== undefined) p(`${path}.source`, "בקטע numbers המקור בכל פריט");
     }
-    if (kind !== "numbers") {
-      if (sec.source !== undefined) out.source = source(`${path}.source`, sec.source);
-      else if (numeric) p(`${path}.source`, "יש בקטע מספר — חובה מקור: {kind, asOf, method}");
-    }
+    // שורת מקור לטקסט, רשימה וטבלה — רשות (מספרים מחושבים: בקטע numbers)
+    if (kind !== "numbers" && sec.source !== undefined) out.source = source(`${path}.source`, sec.source);
     answer.sections.push(out);
   });
+
+  // שני הממוצעים: מי שכותב "ממוצע הסקרים" מציג גם את הפשוט וגם את המודל
+  const all = JSON.stringify(answer);
+  if (POLL_AVERAGE.test(all) && !(SIMPLE_AVERAGE.test(all) && MODEL_AVERAGE.test(all)))
+    p("sections", "כשכותבים \"ממוצע הסקרים\" — מציגים גם \"ממוצע פשוט\" (הסקר האחרון של כל מכון) וגם \"ממוצע המודל\"");
 
   const qs = args.suggested_questions;
   if (!Array.isArray(qs) || qs.length < 1 || qs.length > 3) p("suggested_questions", "1 עד 3 שאלות להמשך");
@@ -170,15 +173,15 @@ const SOURCE_PROPS = {
 const SOURCE = { type: "object", properties: SOURCE_PROPS, required: ["kind", "asOf", "method"], additionalProperties: false };
 const sec = (kind, props, required) => ({
   type: "object",
-  properties: { kind: { type: "string", enum: [kind] }, heading: s(LIMITS.heading, "Optional. Hebrew, no numbers."), ...props },
+  properties: { kind: { type: "string", enum: [kind] }, heading: s(LIMITS.heading, "Optional. Hebrew."), ...props },
   required: ["kind", ...required],
   additionalProperties: false,
 });
 export const ANSWER_SCHEMA = {
   type: "object",
   properties: {
-    title: s(LIMITS.title, "Hebrew. No computed numbers."),
-    summary: s(LIMITS.summary, "Optional. Hebrew, one or two sentences, no computed numbers."),
+    title: s(LIMITS.title, "Hebrew."),
+    summary: s(LIMITS.summary, "Optional. Hebrew, one or two sentences."),
     sections: {
       type: "array", minItems: 1, maxItems: LIMITS.sections,
       items: {

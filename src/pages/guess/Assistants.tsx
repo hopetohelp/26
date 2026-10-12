@@ -25,21 +25,21 @@ function Address({ label, url }: { label: string; url: string }) {
   );
 }
 
-/** ההסבר והכתובות — גם בלי חשבון (הכתובת הציבורית פתוחה לכולם) */
-export function AssistantsHowTo({ signedIn }: { signedIn: boolean }) {
+/** ההסבר והכתובת. הכתובת בלי התחברות — רק למנהל האתר (הכרעת בעלים 12.10.2026: לא מפורסמת כרגע) */
+export function AssistantsHowTo({ signedIn, admin = false }: { signedIn: boolean; admin?: boolean }) {
   if (!MCP_ADDRESSES) return <p className="text-sm text-ink-soft">החיבור לעוזרי AI עוד לא פעיל באתר.</p>;
   return (
     <div className="space-y-3 text-sm">
       <p>אפשר לחבר לאתר עוזר AI (למשל Claude או ChatGPT) ולשאול אותו על הסקרים, התרחישים והתוצאות. העוזר עונה רק מנתוני האתר, בכרטיס בעיצוב האתר, ועם "איך זה חושב?" לכל מספר.</p>
-      <Address label="בלי התחברות — נתוני האתר ומחשבון המנדטים" url={MCP_ADDRESSES.public} />
-      <Address label="עם התחברות לחשבון — גם ההשערה, הגושים, ההצבעה וההיסטוריה שלכם" url={MCP_ADDRESSES.withLogin} />
+      <Address label="הכתובת לחיבור — עם התחברות לחשבון באתר" url={MCP_ADDRESSES.withLogin} />
+      {admin && <Address label="למנהל האתר בלבד: בלי התחברות (נתוני האתר ומחשבון המנדטים; לא מפורסמת)" url={MCP_ADDRESSES.public} />}
       <div>
         <p className="font-bold">איך מחברים</p>
         <ul className="list-disc ps-5 space-y-1">
           <li><strong>Claude:</strong> הגדרות (Settings) ⇐ מחברים (Connectors) ⇐ הוספת מחבר מותאם אישית (Add custom connector) ⇐ מדביקים את הכתובת ⇐ התחברות (Connect).</li>
           <li><strong>ChatGPT:</strong> הגדרות (Settings) ⇐ אפליקציות ומחברים (Apps &amp; Connectors) ⇐ הגדרות מתקדמות (Advanced settings) ⇐ מצב מפתחים (Developer mode) ⇐ יצירה (Create) ⇐ מדביקים את הכתובת.</li>
         </ul>
-        <p className="text-ink-soft mt-1">בכתובת עם התחברות העוזר פותח את מסך "חיבור עוזר AI" באתר, ושם מאשרים. {signedIn ? "" : "צריך חשבון באתר."}</p>
+        <p className="text-ink-soft mt-1">העוזר פותח את מסך "חיבור עוזר AI" באתר, ושם מאשרים. {signedIn ? "" : "צריך חשבון באתר."}</p>
       </div>
       <p className="text-ink-soft">מה עוזר מחובר יכול: לקרוא ולשנות את מה שאתם יכולים באתר (השערה, גושים, הצבעה, שיוך, שם, מחיקת ההיסטוריה, קבוצות שאתם מנהלים), ולכתוב בשמכם בשיחה עם צוות האתר — ההודעה מסומנת "נכתב דרך עוזר AI". מה הוא לא יכול: סיסמה, מייל, חיבור Google ומחיקת החשבון — רק כאן באתר.</p>
     </div>
@@ -62,7 +62,7 @@ export default function Assistants({ session }: { session: ReturnType<typeof use
   useEffect(() => { void load(); }, [load]);
   return (
     <div className="space-y-3">
-      <AssistantsHowTo signedIn={!!token} />
+      <AssistantsHowTo signedIn={!!token} admin={!!session.me?.isAdmin} />
       {token && (
         <section aria-label="העוזרים המחוברים" className="border-t border-paper-line pt-3">
           <p className="font-bold">העוזרים המחוברים לחשבון</p>

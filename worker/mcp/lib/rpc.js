@@ -19,7 +19,9 @@ export class AuthLost extends Error {}
 export const INSTRUCTIONS = [
   "This server is the data of \"בחירות 2026 — ניתוח\" (https://hopetohelp.github.io/26/), an independent Hebrew site that analyses Israel's Knesset election of 27.10.2026. It collects published polls (it does not conduct polls) and recommends no list.",
   "Answer only from this site's data (the tools), in Hebrew. Stay neutral: no opinion, no recommendation, no prediction of who will win. Scenarios are \"שיעור תרחישים\" — never chance or probability. Participants' guesses are not a poll.",
-  "With every number give its kind, its date and its \"איך זה חושב?\" link (the data file's about.kind, about.updatedAt and about.method). \"מפלגות הממשלה היוצאת\" is a factual definition (government 37).",
+  "Numbers the site computed: give their kind, date and \"איך זה חושב?\" link (the data file's about.kind, about.updatedAt and about.method) — in show_answer, in a \"numbers\" section. General knowledge (61 seats for a majority, the 3.25% threshold) needs no source line. \"מפלגות הממשלה היוצאת\" is a factual definition (government 37).",
+  "Whenever you mention the poll average, give both: the simple average (ממוצע פשוט — the mean of each pollster's latest poll in the last 14 days, latestPerPollster.summary) and the model average (ממוצע המודל — average.seats). They differ; neither is a predicted result.",
+  "Do not state a well-known fact on its own; connect it to the data. Not \"לרוב בכנסת דרושים 61 מנדטים\" but \"חסרים להם 8 מנדטים לרוב\" (61 minus their seats).",
   "Finish with show_answer: it shows the final answer as a card in the site's design, and checks those rules.",
   "Changing anything for the user (saving a guess, clearing history, admin actions) — only when the user asked for it; confirm before destructive actions.",
 ].join("\n");
