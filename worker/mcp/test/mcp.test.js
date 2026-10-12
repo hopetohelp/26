@@ -250,10 +250,10 @@ describe("שיחה עם צוות האתר (שלב 3)", () => {
 describe("כרטיס התשובה (show_answer)", () => {
   const urlFor = (a) => (["model", "current", "engine"].includes(a) ? `${SITE}#/method#${a}` : null);
   const good = {
-    title: "מפלגות הממשלה היוצאת בממוצע הסקרים",
+    title: "מפלגות הממשלה היוצאת בממוצע המודל",
     sections: [
       { kind: "numbers", items: [{ label: "מפלגות הממשלה היוצאת", value: "53 מנדטים", kind: "סיכום סקרים", asOf: "11.10.2026", method: "model" }] },
-      { kind: "text", heading: "מה זה אומר", text: "לרוב דרושים 61 מנדטים.", source: { kind: "חישוב לפי החוק", asOf: "11.10.2026", method: "engine" } },
+      { kind: "text", heading: "מה זה אומר", text: "חסרים להן 8 מנדטים לרוב.", source: { kind: "חישוב לפי החוק", asOf: "11.10.2026", method: "engine" } },
     ],
     suggested_questions: ["מה טווח התרחישים?"],
   };
@@ -262,15 +262,30 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(r.ok).toBe(true);
     expect(r.answer.sections[0].items[0].source.url).toBe(`${SITE}#/method#model`);
   });
-  it("מספר בלי מקור, עוגן שאינו במילון, המילה האסורה, תחזית מי ינצח, אנגלית — נדחים", () => {
+  it("עוגן שאינו במילון, פריט מספר בלי מקור, המילה האסורה, תחזית מי ינצח, אנגלית — נדחים; עובדה ידועה בטקסט — בלי שורת מקור", () => {
     const bad = (patch) => validateAnswer({ ...good, ...patch }, urlFor);
-    expect(bad({ sections: [{ kind: "text", text: "לליכוד 23 מנדטים." }] }).problems.join()).toContain("חובה מקור");
+    // הכרעת בעלים 12.10.2026: לא בכל מקום צריך שורת תאריך ו"איך זה חושב?"
+    expect(bad({ sections: [{ kind: "text", text: "חסרים להן 8 מנדטים לרוב של 61." }] }).ok).toBe(true);
+    expect(bad({ sections: [{ kind: "numbers", items: [{ label: "הליכוד", value: "23" }] }] }).problems.join()).toContain("חובה");
     expect(bad({ sections: [{ kind: "numbers", items: [{ ...good.sections[0].items[0], method: "nope" }] }] }).ok).toBe(false);
     expect(bad({ summary: "ההסתברות גבוהה" }).problems.join()).toContain("אסורה");
     expect(bad({ summary: "הסיכוי שלו גבוה" }).ok).toBe(false);
     expect(bad({ summary: "הליכוד ינצח בבחירות" }).problems.join()).toContain("מי ינצח");
     expect(bad({ summary: "This whole answer is in English" }).problems.join()).toContain("בעברית");
-    expect(bad({ title: "53 מנדטים לממשלה" }).ok).toBe(false);
+  });
+  it("ממוצע הסקרים ⇐ גם הממוצע הפשוט וגם ממוצע המודל (הכרעת בעלים 12.10.2026)", () => {
+    const one = validateAnswer({ ...good, summary: "לפי ממוצע הסקרים, 53 מנדטים." }, urlFor);
+    expect(one.ok).toBe(false);
+    expect(one.problems.join()).toContain("ממוצע פשוט");
+    expect(validateAnswer({ ...good, summary: "לפי ממוצע הסקרים: ממוצע המודל 53, ממוצע פשוט 54." }, urlFor).ok).toBe(true);
+  });
+  it("get_poll_average מחזיר את שני הממוצעים זה לצד זה, מתוך הקובץ", async () => {
+    const d = (await call("/public", "get_poll_average", {})).data.result.structuredContent;
+    const file = SITE_FILES.get("data/average.json");
+    expect(d.averages.model.seats).toEqual(file.average.seats);
+    expect(d.averages.simple.seats.likud.mean).toBe(file.latestPerPollster.summary.find((r) => r.id === "likud").mean);
+    expect(d.averages.simple.label).toBe("ממוצע פשוט");
+    expect(d.averages.model.label).toBe("ממוצע המודל");
   });
   it("תאריכים ושנים אינם מספר מחושב; אחוז כן", () => {
     expect(hasNumber("נכון ל-11.10.2026 ובבחירות 2022, הכנסת ה-26")).toBe(false);

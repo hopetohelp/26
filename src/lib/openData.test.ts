@@ -74,7 +74,8 @@ describe("קובצי הנתונים הפתוחים", () => {
     expect(txt).toContain("#/method#model");
     expect(txt).toContain("אינו ממליץ");
     expect(txt).toContain("https://example.test/mcp");
-    expect(txt).toContain("https://example.test/public");
+    // הכתובת בלי התחברות אינה מפורסמת (גלויה רק למנהל האתר, הכרעת בעלים 12.10.2026)
+    expect(txt).not.toContain("https://example.test/public");
     expect(txt).not.toContain("הסתברות");
     expect(buildLlmsTxt(null)).toContain("בבנייה");
   });

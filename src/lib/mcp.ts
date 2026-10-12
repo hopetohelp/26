@@ -4,7 +4,7 @@
  * ושולח אותה לשרת ה-MCP. סשן הדפדפן עצמו אינו נשלח לשרת ה-MCP לעולם.
  */
 export const MCP_URL = (import.meta.env.VITE_MCP_URL ?? "").replace(/\/$/, "") || null;
-/** שתי הכתובות: בלי התחברות, ועם התחברות לחשבון */
+/** שתי הכתובות: עם התחברות לחשבון (המפורסמת), ובלי התחברות — מוצגת רק למנהל האתר (הכרעת בעלים 12.10.2026) */
 export const MCP_ADDRESSES = MCP_URL ? { public: `${MCP_URL}/public`, withLogin: `${MCP_URL}/mcp` } : null;
 
 export interface ConnectRequest {
