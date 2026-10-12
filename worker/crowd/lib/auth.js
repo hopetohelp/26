@@ -15,14 +15,18 @@ export function bearer(request) {
   return m ? m[1] : null;
 }
 
-/** אסימון סשן ⇐ {participant, session: token_hash} או null */
+/**
+ * אסימון סשן ⇐ {participant, session: token_hash, agent} או null.
+ * agent = true ⇐ כניסת עוזר AI (lib/agent.js); מה שמותר לה נבדק פעם אחת לפני הנתיב (agentGate ב-index.js).
+ */
 export async function authenticate(env, token, now) {
   if (!token) return null;
   const th = await sha256(token);
-  const s = await env.DB.prepare("SELECT participant FROM sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?")
-    .bind(th, new Date(now).toISOString())
-    .first();
-  return s ? { participant: s.participant, session: th } : null;
+  const at = new Date(now).toISOString();
+  const s = await env.DB.prepare("SELECT participant FROM sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?").bind(th, at).first();
+  if (s) return { participant: s.participant, session: th, agent: false };
+  const g = await env.DB.prepare("SELECT participant FROM agent_sessions WHERE token_hash = ? AND revoked = 0 AND expires_at > ?").bind(th, at).first();
+  return g ? { participant: g.participant, session: th, agent: true } : null;
 }
 
 /** אסימון סשן שהדפדפן יצר בעצמו (שמירה כשהתשובות נחסמות ברשת): 32–64 תווי base64url */

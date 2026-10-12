@@ -21,6 +21,7 @@ import { setPollRanges, moderate, flagReasons } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
+import { AGENT_SESSION_MS, MAX_AGENTS, agentBodyAllowed, agentRoute, agentSession, clientLabel, connectionId, requestToken } from "./lib/agent.js";
 
 const IDS_2026_LIST = LISTS_2026.map((l) => l.id);
 
@@ -216,6 +217,8 @@ async function setPassword(env, participant, password, now) {
       participant,
     ),
     env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE participant = ?").bind(participant),
+    // סיסמה חדשה מנתקת גם את העוזרים המחוברים (אותו כלל כמו כל מכשיר אחר)
+    env.DB.prepare("UPDATE agent_sessions SET revoked = 1 WHERE participant = ?").bind(participant),
     sess,
   ]);
   return token;
@@ -550,7 +553,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "credentials", "sessions", "prefs", "lineage_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "participant_activity", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -808,9 +811,44 @@ const routes = {
     return { token };
   },
 
+  // חיבור עוזר AI (מסך "חיבור עוזר AI" באתר): כניסה נפרדת לעוזר, רק מתוך סשן דפדפן. האסימון חוזר פעם אחת ולא נשמר.
+  "POST /auth/delegate": async ({ env, request, now, body }) => {
+    const a = await requireAuth(env, request, now);
+    if (a.agent) throw new HttpError(403, "assistant_not_allowed");
+    const active = (await env.DB.prepare("SELECT COUNT(*) AS n FROM agent_sessions WHERE participant = ? AND revoked = 0 AND expires_at > ?").bind(a.participant, iso(now)).first()).n;
+    if (active >= MAX_AGENTS) throw new HttpError(409, "too_many_connections");
+    const token = randomToken();
+    await env.DB.prepare("INSERT INTO agent_sessions (token_hash, participant, client, created_at, expires_at) VALUES (?, ?, ?, ?, ?)")
+      .bind(await sha256(token), a.participant, clientLabel(body.client), iso(now), iso(now + AGENT_SESSION_MS)).run();
+    return { token, expiresAt: iso(now + AGENT_SESSION_MS) };
+  },
+
+  // "החיבורים שלי": העוזרים המחוברים לחשבון (בלי האסימונים)
+  "GET /account/connections": async ({ env, request, now }) => {
+    const a = await requireAuth(env, request, now);
+    const { results } = await env.DB.prepare("SELECT token_hash, client, created_at, last_used_at, expires_at FROM agent_sessions WHERE participant = ? AND revoked = 0 AND expires_at > ? ORDER BY created_at DESC")
+      .bind(a.participant, iso(now)).all();
+    return { connections: (results || []).map((r) => ({ id: connectionId(r.token_hash), client: r.client, createdAt: r.created_at, lastUsedAt: r.last_used_at, expiresAt: r.expires_at })) };
+  },
+
+  // ניתוק עוזר (או כולם). העוזר מקבל מיד 401, וצריך להתחבר מחדש.
+  "POST /account/connections/revoke": async ({ env, request, now, body }) => {
+    const a = await requireAuth(env, request, now);
+    if (a.agent) throw new HttpError(403, "assistant_not_allowed");
+    if (body.all === true) await env.DB.prepare("UPDATE agent_sessions SET revoked = 1 WHERE participant = ?").bind(a.participant).run();
+    else {
+      if (typeof body.id !== "string" || !/^[0-9a-f]{16}$/.test(body.id)) throw bad("id");
+      await env.DB.prepare("UPDATE agent_sessions SET revoked = 1 WHERE participant = ? AND substr(token_hash, 1, 16) = ?").bind(a.participant, body.id).run();
+    }
+    return { ok: true };
+  },
+
   "POST /auth/logout": async ({ env, request, now, body }) => {
     const a = await requireAuth(env, request, now);
-    if (body.all) await env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE participant = ?").bind(a.participant).run();
+    if (body.all) await env.DB.batch([
+      env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE participant = ?").bind(a.participant),
+      env.DB.prepare("UPDATE agent_sessions SET revoked = 1 WHERE participant = ?").bind(a.participant),
+    ]);
     else await env.DB.prepare("UPDATE sessions SET revoked = 1 WHERE token_hash = ?").bind(a.session).run();
     return { ok: true };
   },
@@ -1283,6 +1321,7 @@ export async function cleanup(env, now) {
       "INSERT INTO participant_activity (participant, logins, last_login_at) SELECT participant, COUNT(*), MAX(created_at) FROM sessions WHERE expires_at < ?1 OR revoked = 1 GROUP BY participant ON CONFLICT(participant) DO UPDATE SET logins = logins + excluded.logins, last_login_at = MAX(COALESCE(last_login_at, ''), excluded.last_login_at)",
     ).bind(iso(now - 24 * HOUR)),
     env.DB.prepare("DELETE FROM sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
+    env.DB.prepare("DELETE FROM agent_sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
     env.DB.prepare("DELETE FROM password_reset WHERE created_at < ?").bind(iso(now - RESET_TTL)),
     env.DB.prepare("DELETE FROM password_reset_email WHERE participant NOT IN (SELECT participant FROM password_reset)"),
     env.DB.prepare("DELETE FROM aggregates WHERE section = 'dashboard' AND published_at < ?").bind(iso(now - 7 * 24 * HOUR)),
@@ -1297,6 +1336,9 @@ export default {
     const now = clock(env);
     try {
       await loadPollRanges(env);
+      // 🔴 דלת אחת לעוזרי AI (lib/agent.js): נתיב שאינו ברשימה נחסם כאן, לפני כל טיפול
+      const agent = await agentSession(env, requestToken(request), now);
+      if (agent && !agentRoute(request.method, url.pathname)) throw new HttpError(403, "assistant_not_allowed");
       // תאימות לביקורים שכבר פתוחים: כל כתיבת תמיכה עוברת לשרת ההערות.
       if (url.pathname === "/support" || url.pathname === "/admin/support/reply") {
         if (!env.FEEDBACK) throw new HttpError(503, "support_offline");
@@ -1323,6 +1365,7 @@ export default {
       if (!handler) throw new HttpError(404, "not_found");
       const body = request.method === "POST" ? await readJson(request) : {};
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
+      if (agent && !agentBodyAllowed(request.method, url.pathname, body)) throw new HttpError(403, "assistant_not_allowed");
       const out = await handler({ env, request, url, now, body });
       if (request.method === "POST") resetDashboardCache();
       return new Response(JSON.stringify(out), { headers: { ...headers, "cache-control": "no-store" } });

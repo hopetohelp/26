@@ -515,3 +515,92 @@ describe("admin: all defined blocs", () => {
     expect(JSON.stringify(r.data)).not.toMatch(/participant"|token/);
   });
 });
+
+describe("כניסת עוזר AI (שרת ה-MCP): דלת אחת, החיבורים שלי, ניתוק", () => {
+  const agentCall = (path, token, body, headers = {}) =>
+    worker.fetch(new Request("https://w.example" + path, {
+      method: body === undefined ? "GET" : "POST",
+      headers: { "content-type": "application/json", "cf-connecting-ip": "7.7.7.7", ...(token ? { authorization: `Bearer ${token}` } : {}), ...headers },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    }), env).then(async (r) => ({ status: r.status, data: await r.json().catch(() => null) }));
+  const delegate = async (web, client = "Claude") => (await call("/auth/delegate", { token: web, body: { client } })).data.token;
+
+  it("נוצרת רק מסשן דפדפן; קוראת וכותבת באזור האישי כמו המשתמש", async () => {
+    const web = await newP();
+    expect((await call("/auth/delegate", { body: { client: "Claude" } })).status).toBe(401);
+    const agent = await delegate(web);
+    expect(agent).toMatch(/^[\w-]{40,}$/);
+    expect((await agentCall("/me", agent)).status).toBe(200);
+    expect((await agentCall("/save", agent, { unit: "seats", op_id: "agent-op-000001", registry: "r", payload: seats() })).status).toBe(200);
+    expect((await agentCall("/history?unit=seats", agent)).data.versions).toHaveLength(1);
+    expect((await agentCall("/export", agent)).status).toBe(200);
+    // עוזר אינו יוצר עוזר נוסף
+    expect((await agentCall("/auth/delegate", agent, { client: "x" })).status).toBe(403);
+  });
+
+  it("החריגים: סיסמה, מייל, Google, מחיקת חשבון, ניתוק, שיחת הצוות — 403 לפני כל טיפול", async () => {
+    const web = await newP();
+    const agent = await delegate(web);
+    for (const [path, body] of [
+      ["/auth/password", { current: PW, next: "another pass 99" }],
+      ["/account/password", { password: "another pass 99" }],
+      ["/auth/claim", { email: "x@example.com" }],
+      ["/account/verify/send", {}],
+      ["/auth/google", { credential: "x" }],
+      ["/delete", { confirm: "מחק" }],
+      ["/auth/logout", { all: true }],
+      ["/account/connections/revoke", { all: true }],
+      ["/support", { text: "hi" }],
+    ]) expect((await agentCall(path, agent, body)).status, path).toBe(403);
+    expect((await agentCall("/support/access", agent)).status).toBe(403);
+    expect((await agentCall("/account/connections", agent)).status).toBe(403);
+    expect((await call("/me", { token: web })).status).toBe(200);
+  });
+
+  it("החיבורים שלי: הרשימה בלי אסימונים, ניתוק אחד ⇐ 401 לעוזר; עד 10 חיבורים", async () => {
+    const web = await newP();
+    const a = await delegate(web, "Claude");
+    const b = await delegate(web, "ChatGPT <script>");
+    const list = (await call("/account/connections", { token: web })).data.connections;
+    expect(list.map((c) => c.client).sort()).toEqual(["ChatGPT script", "Claude"]);
+    expect(JSON.stringify(list)).not.toContain(a);
+    const claude = list.find((c) => c.client === "Claude");
+    expect((await call("/account/connections/revoke", { token: web, body: { id: claude.id } })).status).toBe(200);
+    expect((await agentCall("/me", a)).status).toBe(401);
+    expect((await agentCall("/me", b)).status).toBe(200);
+    for (let i = 0; i < 9; i++) await delegate(web, "c" + i);
+    expect((await call("/auth/delegate", { token: web, body: { client: "one more" } })).status).toBe(409);
+    expect((await call("/account/connections/revoke", { token: web, body: { all: true } })).status).toBe(200);
+    expect((await agentCall("/me", b)).status).toBe(401);
+  });
+
+  it("שינוי סיסמה ויציאה מכל המכשירים מנתקים גם את העוזרים", async () => {
+    const reg = await register();
+    const a1 = await delegate(reg.data.token);
+    const ch = await call("/auth/password", { token: reg.data.token, body: { current: PW, next: "brand new pass 1" } });
+    expect(ch.status).toBe(200);
+    expect((await agentCall("/me", a1)).status).toBe(401);
+    const a2 = await delegate(ch.data.token);
+    await call("/auth/logout", { token: ch.data.token, body: { all: true } });
+    expect((await agentCall("/me", a2)).status).toBe(401);
+  });
+
+  it("מנהל האתר: מסך הניהול דרך העוזר — חוץ ממחיקת קבוצה והסרת מנהלים", async () => {
+    const web = await newP();
+    const p = env.DB.raw.prepare("SELECT participant FROM sessions WHERE token_hash = ?").get(await sha256(web)).participant;
+    env.DB.raw.prepare("INSERT INTO admins (participant, added_at) VALUES (?, ?)").run(p, "2026-10-01T00:00:00Z");
+    const agent = await delegate(web);
+    const asAdmin = (path, body) => agentCall(path, null, body, { "x-admin-key": agent });
+    expect((await asAdmin("/admin/guesses")).status).toBe(200);
+    expect((await asAdmin("/admin/blocs")).status).toBe(200);
+    expect((await asAdmin("/admin/groups/import", { group: "grp-agent", name: "קבוצה", emails: ["m1@example.com"], mode: "replace" })).status).toBe(200);
+    expect((await asAdmin("/admin/groups/managers", { group: "grp-agent", email: "boss@example.com" })).status).toBe(200);
+    expect((await asAdmin("/admin/groups/managers", { group: "grp-agent", email: "boss@example.com", remove: true })).status).toBe(403);
+    expect((await asAdmin("/admin/groups/delete", { group: "grp-agent" })).status).toBe(403);
+    expect((await asAdmin("/admin/support")).status).toBe(403);
+    expect((await asAdmin("/admin/whoami")).status).toBe(403);
+    // עוזר של משתמש שאינו מנהל — אין מסך ניהול
+    const other = await delegate(await newP());
+    expect((await agentCall("/admin/guesses", null, undefined, { "x-admin-key": other })).status).toBe(401);
+  });
+});
