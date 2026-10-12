@@ -8,8 +8,11 @@ import { Segmented } from "../components/Choice";
 import { ChartBar, ChartWithTable, Fold, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
 import { POLL_AVERAGE } from "../lib/sources";
+import { LATEST_POLLS } from "../lib/homeData";
+import { pollSeatValues } from "../lib/pollRange";
+import { pctForListSeats } from "./guess/pctSync";
 import { listName } from "../lib/data";
-import { diffText as diff, r1, type DumbbellRow, type DumbbellUnit, type ShareHist } from "../lib/dumbbell";
+import { diffText as diff, pollSegs, r1, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
 import { date, num, rng, seatsFmt, signed } from "../lib/format";
 import { DEFAULT_LINEAGE, heirs, K25_LISTS, k25ListName, lineageProblem, lineageRows, manualFromCurrent, sharedLists, VALID_2022, type Category, type Lineage, type LineageRow, type Split as SplitKind } from "../lib/lineage";
 import SaveButton, { SaveError } from "./guess/SaveButton";
@@ -19,7 +22,6 @@ import { useCrowdSeats, useLineage } from "./guess/useLineage";
 
 interface Family { id: string; k26: string[]; why: string }
 interface ModelLite {
-  scenarios: { lists: Record<string, { share: number[]; shareHist?: ShareHist; seats: number[]; seatsHist?: number[] }> };
   changes: { alternatives: { id: string; families: Family[] }[] };
 }
 const m = modelFile as unknown as ModelLite;
@@ -88,10 +90,22 @@ export default function Changes() {
   const showBar = lineage.custom || lineage.dirty;
 
   const pct = unit === "pct";
-  const range = (id: string) => (pct ? m.scenarios.lists[id]?.share : m.scenarios.lists[id]?.seats);
+  /**
+   * טווח הסקרים סביב "היום" (הכרעת בעלים 12.10.2026, הכרעה 6): מהסקר הנמוך עד הגבוה, הסקר האחרון של כל סדרה ב-14 הימים האחרונים.
+   * באחוזים — גבולות המנדטים מומרים לאחוזים לפי החוק, והטווח כולל את הממוצע, בדיוק כמו ב"הכנסת שלי" (`pollPctRange` ב-Seats.tsx).
+   */
+  const pollBand = (r: LineageRow): { range: [number, number] | null; segs: DumbbellRow["segs"] } => {
+    const vals = pollSeatValues(LATEST_POLLS, [r.id], POLL_AVERAGE.seats);
+    if (!vals.length) return { range: null, segs: [] };
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    if (!pct) return { range: [lo, hi], segs: pollSegs(vals) };
+    const pLo = pctForListSeats(r.id, lo), pHi = pctForListSeats(r.id, hi);
+    if (pLo === null || pHi === null) return { range: null, segs: [] };
+    const range: [number, number] = [Math.min(pLo, r.shareNow), Math.max(pHi, r.shareNow)];
+    return { range, segs: pollSegs(vals, (s) => pctForListSeats(r.id, s), range) };
+  };
   const toRow = (r: LineageRow): DumbbellRow => {
-    const sc = m.scenarios.lists[r.id];
-    const rg = range(r.id);
+    const band = pollBand(r);
     return {
       id: r.id,
       name: listName(r.id),
@@ -99,8 +113,8 @@ export default function Changes() {
       approx: r.category === "partial",
       before: pct ? r.share2022 : r.seats2022,
       now: pct ? r.shareNow : r.seatsNow,
-      hist: (pct ? sc?.shareHist : sc?.seatsHist) ?? null,
-      range: rg ? [rg[0], rg[2]] : null,
+      segs: band.segs,
+      range: band.range,
     };
   };
   const toggle = (id: string) => setOpen(open === id ? null : id);
@@ -137,13 +151,13 @@ export default function Changes() {
           <th scope="col" className="pe-3">ב-2022</th>
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
           <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"} <ModelInfo kind="mean" /></th>
-          <th scope="col" className="pe-3">{pct ? "טווח 80%" : "טווח 80% (מנדטים)"} <ModelInfo kind="range" /></th>
+          <th scope="col" className="pe-3">{pct ? "טווח הסקרים %" : "טווח הסקרים (מנדטים)"}</th>
           <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
       </thead>
       <tbody>
         {list.map((r) => {
-          const rg = range(r.id);
+          const rg = pollBand(r).range;
           const d = pct ? r.shareNow - r.share2022 : r.seatsNow - Math.round(r.seats2022 * 10) / 10;
           return (
             <tr key={r.id} className="border-b border-paper-line/60">
@@ -151,7 +165,7 @@ export default function Changes() {
               <td className="pe-3">{fromNames(r)}</td>
               <td className="pe-3 tabular">{pct ? share22(r) : seats22(r)}</td>
               <td className="pe-3 tabular">{pct ? r1(r.shareNow) : r.seatsNow}</td>
-              <td className="pe-3 tabular whitespace-nowrap">{rg ? (pct ? rng(r1(rg[0]), r1(rg[2])) : rng(seatsFmt(rg[0]), seatsFmt(rg[2]))) : "—"}</td>
+              <td className="pe-3 tabular whitespace-nowrap">{rg ? (pct ? rng(r1(rg[0]), r1(rg[1])) : rng(seatsFmt(rg[0]), seatsFmt(rg[1]))) : "—"}</td>
               <td className="tabular" dir="ltr">{pct ? diff(d) : signed(Math.round(d * 10) / 10)}</td>
             </tr>
           );
@@ -239,7 +253,7 @@ export default function Changes() {
                               onName={toggle}
                               openId={open}
                               below={(id) => { const r = list.find((x) => x.id === id); return r ? editor(r) : null; }}
-                              info={<ModelInfo kind="meanRange" />}
+                              info={<ModelInfo kind="mean" />}
                             />
                           }
                           table={table(list)}
