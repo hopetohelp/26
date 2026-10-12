@@ -241,7 +241,7 @@ export function GovTrend({ home, points = [], heading }: { home: HomeData; point
   if (series.length < 2) return null;
   const trend: TrendPoint[] = points
     .filter((p) => p.values.length)
-    .map((p) => ({ t: p.t, v: p.mean ?? p.values.reduce((a, b) => a + b, 0) / p.values.length, lo: Math.min(...p.values), hi: Math.max(...p.values), n: p.values.length, xs: p.values }));
+    .map((p) => ({ t: p.t, v: p.mean ?? p.values.reduce((a, b) => a + b, 0) / p.values.length, lo: Math.min(...p.values), hi: Math.max(...p.values), n: p.values.length, xs: p.values, raw: p.values.reduce((a, b) => a + b, 0) / p.values.length }));
   return (
     <CandleTrend
       title="מגמת הממשלה היוצאת בסקרים"
