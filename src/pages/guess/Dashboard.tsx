@@ -109,11 +109,13 @@ export default function Dashboard({ session }: { session: ReturnType<typeof useS
 
 /**
  * כותרת קטע סטטיסטיקה (הכרעת בעלים 12.10.2026): הכותרת באמצע, ומתחתיה שורה — מתג מימין ומספר המשתתפים משמאל.
- * אותה כותרת למנדטים ולהצבעה. בגושים אין מספר כללי: המספר מוצג בכל גוש בנפרד.
+ * אותה כותרת למנדטים ולהצבעה. `action`: כפתור באותה שורה של הכותרת, לצידה (עריכת הגושים; הכרעת בעלים 12.10.2026). בגושים אין מספר כללי: המספר מוצג בכל גוש בנפרד.
  */
-function SectionTitle({ title, count, toggle }: { title: string; count?: number; toggle?: ReactNode }) {
+function SectionTitle({ title, count, toggle, action }: { title: string; count?: number; toggle?: ReactNode; action?: ReactNode }) {
   return <>
-    <h2 className="text-2xl font-display leading-tight text-center mb-3">{title}</h2>
+    {action
+      ? <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-3"><h2 className="text-2xl font-display leading-tight">{title}</h2>{action}</div>
+      : <h2 className="text-2xl font-display leading-tight text-center mb-3">{title}</h2>}
     {(toggle || count !== undefined) && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-3">
       {toggle ?? <span />}
       {count !== undefined && <span className="text-2xl tabular font-display">{count} משתתפים</span>}
@@ -194,7 +196,7 @@ function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[]): BlocRow
 export function BlocStats({ d, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
   const rows = blocRows(d, mineBlocs);
   const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
-  const head = <SectionTitle title="החלוקה לגושים" toggle={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
+  const head = <SectionTitle title="החלוקה לגושים" action={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
   if (!rows.length) return <Card className="!border-t-0">{head}<Notice>אין לך גושים מוגדרים. אפשר להוסיף גוש בעריכת הגושים.</Notice></Card>;
   if (view==="chart") return <Bars head={head} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:blocPoll(d,r.lists)}))} />;
   const dataCols = 2 + (mineSeats ? 1 : 0) + (overall ? 1 : 0);
