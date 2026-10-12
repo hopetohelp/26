@@ -1,4 +1,5 @@
 import PersonalBlocs from "../../components/PersonalBlocs";
+import CardDrawer from "../../components/CardDrawer";
 import { useEffect, useState } from "react";
 import { call, type BlocsPayload, type VotePayload, type SeatsPayload, type Unit, type Version } from "../../lib/crowdApi";
 import { date } from "../../lib/format";
@@ -13,6 +14,8 @@ const UNITS: { id: Unit; label: string }[] = [
   { id: "blocs", label: "גושים" },
   { id: "vote", label: "הצבעה" },
 ];
+/** תאריך ושעה של גרסה: הכותרת היחידה שלה, ושל הטור בהשוואות */
+const stamp = (v: { created_at: string }) => `${date(v.created_at)} ${time(v.created_at)}`;
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 
 /** הגרסאות מהחדשה לישנה, לפי מספר הגרסה (לא לפי סדר ההגעה מהשרת) */
@@ -52,22 +55,18 @@ export default function History({ session }: { session: ReturnType<typeof useSes
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
       {versions?.length === 0 && <Notice>אין עדיין גרסאות ביחידה הזו.</Notice>}
-      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות ההשערה ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: `גרסה ${v.id}`, asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
+      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות ההשערה ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: stamp(v), asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {versions && versions.length > 0 && (
         <ol className="relative border-s-2 border-ink ms-2 space-y-3" aria-label="הגרסאות שלכם, מהחדשה לישנה">
           {newest.map((v, i) => (
             <li key={v.id} className="ps-4 relative">
               <span aria-hidden="true" className={`absolute -start-[9px] top-2 w-4 h-4 rounded-full border-2 border-ink ${i === 0 ? "bg-ink" : "bg-paper-card"}`} />
-              <label className="flex items-center gap-2 text-sm min-h-[44px]">
-                {unit === "seats" && <input type="checkbox" className="w-5 h-5" checked={pick.includes(v.id)} onChange={() => toggle(v.id)} aria-label={`להשוואה: גרסה מ-${date(v.created_at)}`} />}
-                <span className="font-bold tabular">{date(v.created_at)}</span>
-                <span className="text-ink-soft tabular">{time(v.created_at)}</span>
-                {i === 0 && <span className="text-xs border border-ink rounded-full px-2">האחרונה — נספרת</span>}
-              </label>
-              <details className="bg-paper-card border border-paper-line rounded-theme p-3">
-                <summary className="cursor-pointer min-h-[44px] font-bold flex items-center">תוכן גרסה {v.id}</summary>
-                <VersionContent version={v} />
-              </details>
+              <div className="flex items-start gap-2">
+                {unit === "seats" && <input type="checkbox" className="w-5 h-5 mt-[18px] shrink-0" checked={pick.includes(v.id)} onChange={() => toggle(v.id)} aria-label={`להשוואה: ${stamp(v)}`} />}
+                <CardDrawer title={stamp(v)} badge={i === 0 ? "האחרונה — נספרת" : undefined} className="min-w-0 flex-1">
+                  <VersionContent version={v} />
+                </CardDrawer>
+              </div>
             </li>
           ))}
         </ol>
@@ -76,13 +75,13 @@ export default function History({ session }: { session: ReturnType<typeof useSes
       {a && b && (
         <table className="w-full text-sm tabular">
           <caption className="text-start font-bold mb-1">
-            קודם: גרסה {a.id}, {date(a.created_at)} {time(a.created_at)} · אחר כך: גרסה {b.id}, {date(b.created_at)} {time(b.created_at)}
+            קודם: {stamp(a)} · אחר כך: {stamp(b)}
           </caption>
           <thead>
             <tr className="text-ink-soft">
               <th className="text-start font-normal">רשימה</th>
-              <th className="font-normal">{date(a.created_at)}</th>
-              <th className="font-normal">{date(b.created_at)}</th>
+              <th className="font-normal">{stamp(a)}</th>
+              <th className="font-normal">{stamp(b)}</th>
               <th className="font-normal">שינוי</th>
             </tr>
           </thead>

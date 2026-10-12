@@ -7,10 +7,11 @@ const wasSeen = (id?: string) => { if (!id) return true; try { return localStora
  * מגירה בצורת כרטיס עם מסגרת (הכרעת בעלים 11.10.2026): סגורה כברירת מחדל, בשורה הסגורה רק הכותרת והסימן.
  * אותו עיצוב כמו `BlocsDrawer`, לכרטיס ההצבעה בראש "הכנסת שלי".
  * `pendingTag` + `seenId`: תג על המגירה הסגורה (למשל "מחכה לתשובה") כל עוד המשתתף לא נכנס אליה; הוא נעלם בכניסה הראשונה ונזכר בדפדפן, ובזמן שהתג מוצג אין נקודת "לא נשמר".
+ * `badge`: תג קבוע על כותרת המגירה, פתוחה וסגורה (למשל "האחרונה — נספרת").
  * `actions` — כפתורים בשורת הכותרת, רק כשהמגירה פתוחה. `open`/`onOpenChange` — שליטה מבחוץ (בלי זה המגירה מנהלת את עצמה).
  */
-export default function CardDrawer({ title, actions, dot, pendingTag, seenId, open, onOpenChange, className = "mt-8 mb-5", children }: {
-  title: string; actions?: ReactNode; dot?: boolean; pendingTag?: string; seenId?: string; open?: boolean; onOpenChange?: (v: boolean) => void; className?: string; children: ReactNode;
+export default function CardDrawer({ title, actions, dot, badge, pendingTag, seenId, open, onOpenChange, className = "mt-8 mb-5", children }: {
+  title: string; actions?: ReactNode; dot?: boolean; badge?: string; pendingTag?: string; seenId?: string; open?: boolean; onOpenChange?: (v: boolean) => void; className?: string; children: ReactNode;
 }) {
   const [own, setOwn] = useState(false);
   const [seen, setSeen] = useState(() => wasSeen(seenId));
@@ -33,6 +34,7 @@ export default function CardDrawer({ title, actions, dot, pendingTag, seenId, op
         <h2 className="flex-1 min-w-0 text-base font-bold leading-tight">
           <button type="button" aria-expanded={expanded} onClick={toggle} className="w-full min-h-[56px] text-start font-bold flex items-center gap-2">
             {title}
+            {badge && <span className="shrink-0 text-xs font-bold border border-ink rounded-full px-2 py-0.5">{badge}</span>}
             {tag && <span className="shrink-0 text-xs font-bold border border-warn/40 bg-warn-soft text-warn rounded-full px-2.5 py-0.5">{pendingTag}</span>}
             {dot && !tag && <span aria-label="(לא נשמר)" className="w-2 h-2 rounded-full bg-warn shrink-0" />}
           </button>
