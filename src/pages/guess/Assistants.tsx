@@ -37,7 +37,7 @@ export function AssistantsHowTo({ signedIn, admin = false }: { signedIn: boolean
         <p className="font-bold">איך מחברים</p>
         <ul className="list-disc ps-5 space-y-1">
           <li><strong>Claude:</strong> הגדרות (Settings) ⇐ מחברים (Connectors) ⇐ הוספת מחבר מותאם אישית (Add custom connector) ⇐ מדביקים את הכתובת ⇐ התחברות (Connect).</li>
-          <li><strong>ChatGPT:</strong> הגדרות (Settings) ⇐ אפליקציות ומחברים (Apps &amp; Connectors) ⇐ הגדרות מתקדמות (Advanced settings) ⇐ מצב מפתחים (Developer mode) ⇐ יצירה (Create) ⇐ מדביקים את הכתובת.</li>
+          <li><strong>ChatGPT:</strong> תוספים (Plugins) ⇐ כפתור הפלוס (+) ⇐ הוספת שרת MCP מותאם אישית (Add custom MCP server) ⇐ שם, ומדביקים את הכתובת ⇐ אימות: OAuth ⇐ "אני מבין ורוצה להמשיך" (I understand and want to continue) ⇐ יצירה כתוסף (Create as a plugin). בשיחה חדשה מקלידים @ ובוחרים בו. אין כפתור פלוס? מפעילים קודם מצב מפתחים (Developer mode) בהגדרות (Settings) ⇐ אבטחה והתחברות (Security and login). זמין רק בחלק מהמנויים בתשלום.</li>
         </ul>
         <p className="text-ink-soft mt-1">העוזר פותח את מסך "חיבור עוזר AI" באתר, ושם מאשרים. {signedIn ? "" : "צריך חשבון באתר."}</p>
       </div>
