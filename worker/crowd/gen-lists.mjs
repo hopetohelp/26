@@ -1,11 +1,13 @@
 // מייצר את lib/lists.js מנתוני האתר (מקור אחד): רשימות 2026 עם סימון "ממשלה 37", רשימות 2022 (letters) ותוצאות 2022 הרשמיות,
 // וממוצע הסקרים האחרון (model.json) להצגה בדשבורד. להריץ אחרי כל שינוי ברשימות: node worker/crowd/gen-lists.mjs
 import { readFileSync, writeFileSync } from "node:fs";
+import { pollRanges } from "../../scripts/poll-ranges.mjs";
 const root = new URL("../../src/data/", import.meta.url);
 const meta = JSON.parse(readFileSync(new URL("meta.json", root), "utf8"));
 const results = JSON.parse(readFileSync(new URL("results.json", root), "utf8"));
 const model = JSON.parse(readFileSync(new URL("model.json", root), "utf8"));
 const registry = JSON.parse(readFileSync(new URL("registry.json", root), "utf8"));
+const polls = JSON.parse(readFileSync(new URL("polls.json", root), "utf8")).polls;
 const k25 = results.find((e) => e.id === "k25");
 const lists2026 = meta.lists2026.map((l) => ({ id: l.id, gov37: !!l.gov37 }));
 const lists2022 = k25.lists.map((l) => l.letters);
@@ -21,6 +23,8 @@ export const OFFICIAL_2022 = ${JSON.stringify(official2022)};
 /** ממוצע הסקרים (מנדטים) מתמונת המודל האחרונה */
 export const POLLS = ${JSON.stringify(model.central.seats)};
 export const POLLS_AS_OF = ${JSON.stringify(model.asof)};
+/** טווח הסקרים (הנמוך והגבוה בין המכונים) — גיבוי לבדיקת השערות חריגות כשאין חיבור לקובץ שבאתר (public/poll-ranges.json) */
+export const POLL_RANGES = ${JSON.stringify(pollRanges(polls, meta.lists2026.map((l) => l.id), model.asof).ranges)};
 /** ממוצע הסקרים (אחוזים) — לאחוז של רשימה עם 0 מנדטים כשהשערה נשמרה בלי אחוזים */
 export const POLL_SHARES = ${JSON.stringify(model.central.shares)};
 /** ברירות המחדל של החישוב באתר (src/pages/guess/pctSync.ts): בעלי זכות, הסכמי עודפים */

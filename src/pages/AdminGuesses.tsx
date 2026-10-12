@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { lists2026, listName } from "../lib/data";
-import { dateTime } from "../lib/format";
+import { dateTime, rng } from "../lib/format";
 import { Chips } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
 
@@ -8,7 +8,7 @@ import { Btn, Notice } from "./guess/ui";
  * דשבורד ההשערות למנהל (הכרעת בעלים 9.10.2026): כל ההשערות, בלי שום מזהה גולש.
  * השרת מחזיר את ההשערות בסדר אקראי, עם יום בלבד, ו"ידית" חד-פעמית לאישור/דחייה של השערה חריגה.
  */
-export type GuessReason = { list: string; rule: "ratio" | "watched"; value: number; mean?: number };
+export type GuessReason = { list: string; rule: "range" | "ratio" | "watched"; value: number; mean?: number; lo?: number; hi?: number };
 export type GuessBloc = { name: string; lists: string[]; seats: number; target: number | null };
 export type GuessRow = { blocs?: { saved: boolean; items: GuessBloc[] }; handle: string; day: string; savedAt?: string; mode: "seats" | "pct"; seats: Record<string, number>; pct?: Record<string, number>; status: "ok" | "pending" | "approved" | "rejected" | "review"; verified?: boolean; reasons: GuessReason[]; hasVote?: boolean; saves?: number; registered?: string | null; lastLogin?: string | null; logins?: number };
 export type Sort = "random" | "registered" | "lastLogin" | "saved";
@@ -41,9 +41,9 @@ export function sortRows(rows: GuessRow[], sort: Sort): GuessRow[] {
 export const stamp = (iso?: string | null) => iso ? dateTime(iso) : "—";
 
 export function reasonText(r: GuessReason) {
-  return r.rule === "ratio"
-    ? `${listName(r.list)}: ${r.value} מנדטים, ממוצע הגולשים ${r.mean}`
-    : `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה ממתין לאישור`;
+  if (r.rule === "range") return `${listName(r.list)}: ${r.value} מנדטים — מחוץ לטווח הסקרים ${r.lo === r.hi ? r.lo : rng(String(r.lo), String(r.hi))} (יותר מ-50% ובפער של 4.1 לפחות)`;
+  if (r.rule === "ratio") return `${listName(r.list)}: ${r.value} מנדטים, ממוצע הגולשים ${r.mean}`;
+  return `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה ממתין לאישור`;
 }
 
 /** הגושים של השערה בשורה אחת: "שם: מנדטים (יעד) [רשימות]" */
