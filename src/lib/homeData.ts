@@ -1,6 +1,6 @@
 import modelFile from "../data/model.json";
 import { POLL_AVERAGE } from "./sources";
-import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, seatsIn, usablePolls, latestPerPollster, lists2026, listName, passesInAll, toTime } from "./data";
+import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, seatsIn, usablePolls, latestPerPollster, lists2026, listName, passesInAll, passesInNone, toTime } from "./data";
 import { buildHome, type HomeModel } from "./home";
 import { defaultBlocs } from "../pages/guess/model";
 
@@ -16,7 +16,9 @@ export const HOME = buildHome(modelFile as unknown as HomeModel, {
   coalitionIds: defaultBlocs().find((b) => b.id === "gov")!.lists,
   arabIds: defaultBlocs().find((b) => b.id === "arab")!.lists,
   nameOf: listName,
+  // סיכון אחוז החסימה — לפי הסקרים האחרונים בלבד (הכרעת בעלים 12.10.2026, הכרעה 4)
   sure: (id) => passesInAll(LATEST_POLLS, id),
+  out: (id) => passesInNone(LATEST_POLLS, id),
 });
 
 /**

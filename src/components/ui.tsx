@@ -43,7 +43,7 @@ export function TableToggle({ asTable, onChange }: { asTable: boolean; onChange:
  * שורת בקרה אחת ממורכזת מעל הגרף (הכרעת בעלים 11.10.2026): "מקרא" של הגרף, פקד הגרף (קו/נרות, אם יש) ומתג גרף/טבלה — באותה שורה ובאותו עיצוב.
  * `asTable` נשלט מבחוץ: מסך שיש בו כמה גרפים מחזיק מתג אחד (`ChartBar`) שמשפיע על כולם, ואז כאן אין שורת בקרה.
  */
-export function ChartWithTable({ chart, table, summary, asTable }: { chart: ReactNode; table: ReactNode; summary?: string; asTable?: boolean }) {
+export function ChartWithTable({ chart, table, summary, asTable }: { chart: ReactNode; table: ReactNode; summary?: ReactNode; asTable?: boolean }) {
   const [own, setOwn] = useState(false);
   const [row, setRow] = useState<HTMLElement | null>(null);
   const [panel, setPanel] = useState<HTMLElement | null>(null);
@@ -61,7 +61,7 @@ export function ChartWithTable({ chart, table, summary, asTable }: { chart: Reac
           <div ref={setPanel} />
         </>
       )}
-      {summary && <p className="text-sm text-ink-soft mb-2">{summary}</p>}
+      {summary && <div className="text-sm text-ink-soft mb-2">{summary}</div>}
       <BarSlots.Provider value={controlled ? null : slots}>
         {showTable ? <div className="overflow-x-auto">{table}</div> : chart}
       </BarSlots.Provider>

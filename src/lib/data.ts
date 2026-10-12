@@ -131,10 +131,18 @@ export function seatsIn(p: Poll, id: string): number | undefined {
   return undefined;
 }
 
-/** האם כל הסקרים (שנשאלו על הרשימה) נותנים לה מנדטים — אז היא "עוברת" בוודאות, לא "על הסף" (הכרעת בעלים) */
+/**
+ * האם כל הסקרים (שנשאלו על הרשימה) נותנים לה מנדטים, כולל הפסימי ביותר עבורה — אז היא אינה בסיכון לאחוז החסימה
+ * (הכרעת בעלים 12.10.2026, הכרעה 4: הקביעה לפי הסקרים בלבד, לא לפי הממוצע ולא לפי התרחישים)
+ */
 export function passesInAll(ps: Poll[], id: string): boolean {
   const xs = ps.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
   return xs.length > 0 && xs.every((x) => x > 0);
+}
+
+/** אף סקר (מאלה שנשאלו על הרשימה) אינו נותן לה מנדטים, או שלא נשאלה באף אחד — "מתחת לסף" */
+export function passesInNone(ps: Poll[], id: string): boolean {
+  return ps.every((p) => !(seatsIn(p, id)! > 0));
 }
 
 export interface PartySummary {

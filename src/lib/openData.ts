@@ -136,18 +136,19 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/scenarios.json",
     title: "תרחישים",
-    description: "שיעור התרחישים שבהם כל רשימה עוברת את אחוז החסימה, טווח 80% מהתרחישים לכל רשימה ולגוש, החלוקה לעוברות / על הסף / מתחת לסף, ובדיקת העבר של המודל. \"שיעור תרחישים\", לא \"סיכוי\".",
+    description: "שיעור התרחישים שבהם כל רשימה עוברת את אחוז החסימה, טווח 80% מהתרחישים לכל רשימה ולגוש, החלוקה לעוברות / על הסף / מתחת לסף (לפי הסקרים האחרונים בלבד: הסקר האחרון של כל סדרה ב-14 הימים האחרונים), הסיכון לפי התרחישים בלבד (scenarioEdge), ובדיקת העבר של המודל. \"שיעור תרחישים\", לא \"סיכוי\".",
     methodAnchor: "model",
     kind: "תרחיש",
     source: "מודל האתר על בסיס הסקרים שפורסמו (טבלאות הסקרים בוויקיפדיה) וחוק הבחירות",
     screen: "/today?tab=scenarios",
-    fields: "scenarios (count, lists{id:{pass, seats[10%,50%,90%], seatsMean, seatsHist}}, bloc, agreementsMoveSeat), groups{safe, edge, below}, blocs{coalition, arab, opposition}, backtest (summary, horizons, rows)",
+    fields: "scenarios (count, lists{id:{pass, seats[10%,50%,90%], seatsMean, seatsHist}}, bloc, agreementsMoveSeat), groups{safe, edge, below, scenarioEdge}, blocs{coalition, arab, opposition}, backtest (summary, horizons, rows)",
     build: () => ({
       names: nameMap(),
       asOf: POLL_AVERAGE.asOf,
       threshold: THRESHOLD_PCT,
       scenarios: { count: modelFile.params.scenarios, ...modelFile.scenarios },
-      groups: { safe: HOME.safe.map((r) => r.id), edge: HOME.edge.map((r) => r.id), below: HOME.below.map((r) => r.id) },
+      // safe/edge/below — לפי הסקרים האחרונים בלבד (הכרעה 4); scenarioEdge — הסיכון שעולה מתרחישי המודל בלבד
+      groups: { safe: HOME.safe.map((r) => r.id), edge: HOME.edge.map((r) => r.id), below: HOME.below.map((r) => r.id), scenarioEdge: HOME.scenarioEdge.map((r) => r.id) },
       rows: [...HOME.safe, ...HOME.edge, ...HOME.below].map(({ hist: _h, ...r }) => r),
       blocs: { ...HOME.blocs, range80: [HOME.blocLo, HOME.blocHi] },
       backtest: backtestFile,

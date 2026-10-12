@@ -99,7 +99,7 @@ export const TOOLS = [
     title: "תרחישים",
     audience: "public",
     kind: "read",
-    description: "Model scenarios: for each list the share of scenarios in which it passes the threshold (say \"שיעור תרחישים\", never \"chance\"), the 80% scenario range of seats, the grouping into clearly passing / on the edge / below, the bloc range, and the model's backtest on past elections. Not a prediction of who wins. " + ABOUT_NOTE,
+    description: "Model scenarios: for each list the share of scenarios in which it passes the threshold (say \"שיעור תרחישים\", never \"chance\"), the 80% scenario range of seats, the grouping into clearly passing / on the edge / below (groups.safe/edge/below: by the latest polls only — the latest poll of each series in the last 14 days; a list is not at risk only if every one of them, including the most pessimistic for it, gives it seats), the risk from the model scenarios only (groups.scenarioEdge: passes in only part of the scenarios — say it comes from the model's scenarios, not from the polls), the bloc range, and the model's backtest on past elections. Not a prediction of who wins. " + ABOUT_NOTE,
     inputSchema: obj({ include_backtest_rows: { type: "boolean", description: "Include every backtest row (large). Default: summary only." } }),
     async run(ctx, a) {
       const d = await ctx.site("data/scenarios.json");
