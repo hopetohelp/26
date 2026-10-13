@@ -6,6 +6,7 @@ import { FEEDBACK_URL } from "../lib/feedback";
 import { dateTime } from "../lib/format";
 import { nextRun } from "../lib/runSchedule";
 import { getToken } from "../lib/crowdSession";
+import { call } from "../lib/crowdApi";
 import { setOwnerBrowser } from "../lib/visits";
 import { Chips, Segmented } from "../components/Choice";
 import { Drawer } from "../components/Drawer";
@@ -151,6 +152,21 @@ export default function Admin() {
     setParams(params, { replace: true });
   }, [params, setParams]);
 
+  // קישור חד-פעמי להגדרת מנהל (?claim=): החשבון הפתוח בדפדפן הזה הופך למנהל. בלי כניסה — הקוד נשאר בכתובת עד שנכנסים ופותחים שוב
+  const [claim, setClaim] = useState<"busy" | "ok" | "signin" | "bad" | null>(null);
+  const claimed = useRef(false);
+  useEffect(() => {
+    const code = params.get("claim");
+    if (!code || claimed.current) return;
+    const token = getToken();
+    if (!token) { setClaim("signin"); return; }
+    claimed.current = true;
+    setClaim("busy");
+    params.delete("claim");
+    setParams(params, { replace: true });
+    call("/admin/claim", { method: "POST", token, body: { code } }).then(() => { setClaim("ok"); void load(); }, () => setClaim("bad"));
+  }, [params, setParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // מפתח הניהול, ואם אין — הסשן של החשבון (מנהל לפי חשבון)
   const credential = key ?? getToken();
   const api = async (path: string, body?: unknown) => {
@@ -180,7 +196,15 @@ export default function Admin() {
     remove: async (id) => { try { await api("/admin/draft/delete", { id }); await load(); return true; } catch (e) { setError((e as Error).message); return false; } },
   };
 
-  if (!credential) return <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>;
+  const claimNotice = claim && (
+    <Notice tone={claim === "ok" ? "calm" : "warn"}>
+      {claim === "busy" && "מגדיר את החשבון כמנהל…"}
+      {claim === "ok" && "החשבון הזה הוגדר כמנהל. הקישור כבר אינו תקף."}
+      {claim === "signin" && "כדי להגדיר מנהל צריך להיכנס קודם לחשבון באזור האישי, ואז לפתוח את הקישור שוב."}
+      {claim === "bad" && "הקישור אינו תקף: הוא כבר נוצל, פג תוקפו, או שהכניסה לחשבון פקעה."}
+    </Notice>
+  );
+  if (!credential || (claim === "signin" && !key)) return <div className="space-y-3">{claimNotice}{!credential && <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>}</div>;
   // "היום" לפי יום UTC, כמו בשרת: אם עוד לא נספרה כניסה היום — אפסים, ולא נתוני אתמול
   const todayKey = new Date().toISOString().slice(0, 10);
   const today = data?.days.find((d) => d.day === todayKey);
@@ -193,7 +217,8 @@ export default function Admin() {
         <h1 className="text-3xl font-display leading-tight">ניהול</h1>
         <Btn onClick={load}>רענון</Btn>
       </div>
-      {error && <Notice tone="warn">{error}</Notice>}
+      {claimNotice}
+      {error && claim !== "ok" && <Notice tone="warn">{error}</Notice>}
       {!data && !error && <p className="text-ink-soft">טוען…</p>}
       {data && (
         <>

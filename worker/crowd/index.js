@@ -1131,6 +1131,18 @@ const routes = {
     const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
     return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
+  // הגדרת חשבון מנהל בקישור חד-פעמי (הכרעת בעלים 13.10.2026): הסשן הפתוח בדפדפן הוא החשבון שהופך למנהל. הקוד נמחק בשימוש הראשון ופג תוקף.
+  "POST /admin/claim": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const [cur] = await ipKeys(env, request);
+    if (!(await hit(env, "ac:" + cur, 10, now))) throw new HttpError(429, "rate");
+    const code = typeof body.code === "string" ? body.code : "";
+    if (!/^[\w-]{32,100}$/.test(code)) throw bad("code");
+    const used = await env.DB.prepare("DELETE FROM admin_claims WHERE hash = ? AND expires_at > ? RETURNING hash").bind(await sha256(code), iso(now)).first();
+    if (!used) throw new HttpError(403, "invalid_code");
+    await env.DB.prepare("INSERT OR IGNORE INTO admins (participant, added_at) VALUES (?, ?)").bind(participant, iso(now)).run();
+    return { ok: true };
+  },
   // שרת ההערות בודק כאן אם הסשן או המפתח שקיבל שייכים למנהל (חשבון מנהל נכנס לממשק הניהול בלי קישור)
   "GET /admin/whoami": async ({ env, request, now }) => {
     await requireAdmin(env, request);

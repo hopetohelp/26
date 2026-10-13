@@ -222,6 +222,13 @@ CREATE TABLE IF NOT EXISTS admins (
   added_at TEXT NOT NULL
 );
 
+-- קוד חד-פעמי להגדרת חשבון מנהל (הכרעת בעלים 13.10.2026): נשמר רק הגיבוב, תוקף קצר, ונמחק בשימוש הראשון. הקוד עצמו נמסר לבעלים בלבד.
+CREATE TABLE IF NOT EXISTS admin_claims (
+  hash TEXT PRIMARY KEY,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL
+);
+
 -- פעילות משתתף לממשק הניהול (הכרעת בעלים 10.10.2026): סשנים נמחקים אחרי שפגו או בוטלו, וגרסאות נמחקות לפי "ההשערה האחרונה של כל יום",
 -- לכן המחיקה מגלגלת לכאן את הספירה לפני שהשורות נמחקות. כניסות = logins + הסשנים הקיימים; שמירות = pruned + הגרסאות הקיימות.
 CREATE TABLE IF NOT EXISTS participant_activity (
