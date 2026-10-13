@@ -2,16 +2,17 @@ import type { Selection } from "../../lib/dataResolver";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Dashboard } from "../../lib/crowdApi";
-import { COMMUNITY_TEXT, COMMUNITY_URL, groupInviteImage, groupShareText, loadLogo, seatsImage, voteImage, type Brand } from "./communityShare";
+import { COMMUNITY_TEXT, COMMUNITY_URL, LONG_SHARE_TEXT, groupInviteImage, groupShareText, loadLogo, seatsImage, voteImage, type Brand } from "./communityShare";
 import { Btn } from "./ui";
 
-type Kind = "seats" | "vote" | "link" | "invite";
+type Kind = "seats" | "vote" | "link" | "long" | "invite";
 /** במסך קבוצה (הכרעת בעלים 12.10.2026): name = שם הקבוצה, url = קישור הקבוצה, logoUrl = תמונתה; dataReady = יש לקבוצה נתונים להצגה (מ-50 משתתפים) */
 export interface GroupShareInfo { name: string; url: string; logoUrl: string | null; dataReady: boolean }
 const OPTIONS: { id: Kind; label: string; hint: string }[] = [
   { id: "seats", label: "חלוקת המנדטים", hint: "תמונה מעוצבת: לוח 120 המושבים לפי ממוצע המשתתפים" },
   { id: "vote", label: "לאן הצביעו ויצביעו", hint: "תמונה מעוצבת: הצבעה ב-2022 מול הכוונה ב-2026" },
   { id: "link", label: "קישור", hint: "משפט קצר עם קישור לסקר האתר" },
+  { id: "long", label: "נוסח ארוך", hint: "הודעה מלאה שמסבירה מה יש באתר, עם קישור" },
 ];
 const GROUP_OPTIONS: { id: Kind; label: string; hint: string }[] = [
   { id: "invite", label: "תמונת הזמנה", hint: "תמונה מעוצבת עם לוגו הקבוצה, שמה וקישור — בלי נתונים" },
@@ -19,7 +20,7 @@ const GROUP_OPTIONS: { id: Kind; label: string; hint: string }[] = [
   { id: "vote", label: "לאן הצביעו ויצביעו", hint: "תמונה מעוצבת עם שם הקבוצה ולוגו: הצבעה ב-2022 מול הכוונה ב-2026" },
   { id: "link", label: "קישור", hint: "משפט קצר עם קישור לסקר הקבוצה" },
 ];
-const FILE: Record<Exclude<Kind, "link">, string> = { seats: "סקר-האתר-מנדטים.png", vote: "סקר-האתר-הצבעה.png", invite: "הזמנה-לסקר-הקבוצה.png" };
+const FILE: Record<Exclude<Kind, "link" | "long">, string> = { seats: "סקר-האתר-מנדטים.png", vote: "סקר-האתר-הצבעה.png", invite: "הזמנה-לסקר-הקבוצה.png" };
 
 /**
  * שיתוף סקר האתר (הכרעת בעלים 10.10.2026): פס עליון שמזמין לשתף, כפתור צף בפינה השמאלית התחתונה,
@@ -72,7 +73,7 @@ function ShareDialog({ d, group, onClose, selection }: { d: Dashboard; group?: G
   const noData = !!group && !group.dataReady;
   const disabled = (k: Kind) => (k === "seats" && (!hasSeats || noData)) || (k === "vote" && (!hasVote || noData));
 
-  const makeFile = async (k: Exclude<Kind, "link">) => {
+  const makeFile = async (k: Exclude<Kind, "link" | "long">) => {
     let brand: Brand | undefined;
     if (group) { logo.current ??= loadLogo(group.logoUrl); brand = { name: group.name, url: group.url, logo: await logo.current }; }
     const blob = k === "invite" ? await groupInviteImage(brand!) : k === "seats" ? await seatsImage(d, brand, selection) : await voteImage(d, brand);
@@ -80,24 +81,27 @@ function ShareDialog({ d, group, onClose, selection }: { d: Dashboard; group?: G
   };
   const share = async () => {
     setBusy(true); setMsg(null);
-    const data: ShareData = { title: group ? `${group.name} — הבחירות לכנסת ה-26` : "סקר האתר — הבחירות לכנסת ה-26", text, url };
+    const textOnly = kind === "link" || kind === "long";
+    // בנוסח הארוך הקישור כבר בתוך הטקסט, ולכן אין url נפרד
+    const body = kind === "long" ? LONG_SHARE_TEXT : `${text}\n${url}`;
+    const data: ShareData = kind === "long" ? { title: "בחירות 2026", text: LONG_SHARE_TEXT } : { title: group ? `${group.name} — הבחירות לכנסת ה-26` : "סקר האתר — הבחירות לכנסת ה-26", text, url };
     try {
-      if (kind === "link" && !navigator.share && navigator.clipboard) {
-        await navigator.clipboard.writeText(`${text}\n${url}`);
-        setMsg("המשפט והקישור הועתקו. אפשר להדביק בכל הודעה.");
+      if (textOnly && !navigator.share && navigator.clipboard) {
+        await navigator.clipboard.writeText(body);
+        setMsg(kind === "long" ? "ההודעה הועתקה. אפשר להדביק בכל הודעה." : "המשפט והקישור הועתקו. אפשר להדביק בכל הודעה.");
       } else if (navigator.share) {
         let file: File | null = null;
-        if (kind !== "link") try { file = await makeFile(kind); } catch { file = null; }
+        if (!textOnly) try { file = await makeFile(kind); } catch { file = null; }
         await navigator.share(file && navigator.canShare?.({ files: [file] }) ? { ...data, files: [file] } : data);
       } else {
-        window.open(`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`, "_blank", "noopener,noreferrer");
+        window.open(`https://wa.me/?text=${encodeURIComponent(body)}`, "_blank", "noopener,noreferrer");
       }
     } catch (e) {
       if ((e as Error)?.name !== "AbortError") setMsg("השיתוף לא הצליח. נסו שוב.");
     } finally { setBusy(false); }
   };
   const download = async () => {
-    if (kind === "link") return;
+    if (kind === "link" || kind === "long") return;
     setBusy(true); setMsg(null);
     try {
       const file = await makeFile(kind);
@@ -128,7 +132,7 @@ function ShareDialog({ d, group, onClose, selection }: { d: Dashboard; group?: G
           ))}
         </fieldset>
         <Btn kind="primary" onClick={share} disabled={busy} className="w-full text-base">{busy ? "מכינים…" : "שתפו"}</Btn>
-        {kind !== "link" && <Btn onClick={download} disabled={busy} className="w-full">הורדת תמונה</Btn>}
+        {kind !== "link" && kind !== "long" && <Btn onClick={download} disabled={busy} className="w-full">הורדת תמונה</Btn>}
         {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
       </div>
     </div>, document.body);

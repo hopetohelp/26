@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { groupShareText, loadLogo, roundTo120 } from "./communityShare";
+import { LONG_SHARE_TEXT, groupShareText, loadLogo, roundTo120 } from "./communityShare";
 
 describe("roundTo120", () => {
   it("ממוצעים שבריים ⇐ חלוקה שלמה של 120 בדיוק", () => {
@@ -11,6 +11,11 @@ describe("roundTo120", () => {
 });
 
 describe("שיתוף קבוצה", () => {
+  it("הנוסח הארוך נחתם בקישור לאתר, פעם אחת בלבד", () => {
+    expect(LONG_SHARE_TEXT.startsWith("לאחרונה נחשפתי לאתר בשם „בחירות 2026”")).toBe(true);
+    expect(LONG_SHARE_TEXT.endsWith("הנה הקישור:\nhttps://26.hopetohelp.net")).toBe(true);
+    expect(LONG_SHARE_TEXT.match(/https?:\/\//g)).toHaveLength(1);
+  });
   it("המשפט מזכיר את שם הקבוצה", () => expect(groupShareText("הגזרה")).toContain("הגזרה"));
   it("בלי כתובת לתמונה — אין לוגו, ולא נכשל", async () => expect(await loadLogo(null)).toBeNull());
   it("כתובת שנכשלת — אין לוגו, ולא נכשל", async () => {
