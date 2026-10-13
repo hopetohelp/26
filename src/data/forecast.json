@@ -22,7 +22,7 @@
    "rzp",
    "noam"
   ],
-  "mean": 49.53,
+  "mean": 49.54,
   "seats": [
    43,
    49,
@@ -40,7 +40,7 @@
    "rzp",
    "amcha"
   ],
-  "mean": 52.03,
+  "mean": 52.04,
   "seats": [
    45,
    52,
@@ -111,7 +111,7 @@
  "horizon": 14,
  "lists": {
   "amcha": {
-   "pass": 0.5086,
+   "pass": 0.5087,
    "seats": 4,
    "seatsMean": 2.5,
    "seatsRange": [
@@ -196,7 +196,7 @@
    ],
    "share": 15.92,
    "shareRange": [
-    11.94,
+    11.95,
     19.62
    ]
   },
@@ -246,9 +246,9 @@
    ]
   },
   "rzp": {
-   "pass": 0.954,
+   "pass": 0.9542,
    "seats": 6,
-   "seatsMean": 5.92,
+   "seatsMean": 5.93,
    "seatsRange": [
     4,
     6,
@@ -284,10 +284,10 @@
     13,
     17
    ],
-   "share": 10.37,
+   "share": 10.36,
    "shareRange": [
     7.67,
-    13.07
+    13.06
    ]
   },
   "utj": {
