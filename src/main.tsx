@@ -5,7 +5,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { startOutbox } from "./lib/outbox";
 import { registerOffline } from "./lib/offline";
-import { receiveLegacyMigration } from "./lib/legacyMigration";
+import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Today from "./pages/Today";
@@ -37,6 +37,10 @@ function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
 }
 
+// כרטיס מעבר מגיע בעוגן בלבד. מוחקים אותו מהכתובת לפני טעינת האתר או קריאות רשת נוספות.
+const handoffTicket = location.origin === "https://26.hopetohelp.net" ? /^#handoff=([\w-]{43})$/.exec(location.hash)?.[1] : undefined;
+if (handoffTicket) history.replaceState(null, "", location.pathname + location.search);
+
 // קישור אימות המייל של Firebase מגיע לאתר כ-?mode=verifyEmail&oobCode=… (לפני ה-#). מעבירים אותו לדף האימות, בלי להשאיר את הקוד בכתובת.
 {
   const q = new URLSearchParams(location.search);
@@ -56,7 +60,35 @@ function NotFound() {
 
 // שמירה מקומית קודם: השערות והערות שלא הגיעו לשרת נשלחות שוב אוטומטית; האתר עצמו נשמר במכשיר לפתיחה גם בלי רשת
 const migrationOnly = location.origin === "https://26.hopetohelp.net" && new URLSearchParams(location.search).get("migration") === "1";
-if (migrationOnly) {
+if (handoffTicket) {
+  // לפני רישום ביקור ושליחת טיוטות: אסימון החשבון הישן צריך להיקלט ראשון.
+  const root = createRoot(document.getElementById("root")!);
+  function screen(kind: "loading" | "conflict" | "error", next?: string) {
+    root.render(<main className="min-h-screen bg-paper px-4 py-16 text-ink flex items-center justify-center" dir="rtl">
+      <section className="w-full max-w-xl rounded-xl border border-paper-line bg-paper-card p-8 shadow-lg sm:p-12">
+        <p className="text-sm font-bold text-accent">בחירות 2026 · מעבר לכתובת הפרטית</p>
+        <h1 className="font-display text-3xl sm:text-4xl mt-5 mb-4">{kind === "loading" ? "מעבירים אותך לאתר" : kind === "conflict" ? "נמצא מידע בשני האתרים" : "לא הצלחנו להשלים את המעבר"}</h1>
+        <p className="text-ink-soft">{kind === "loading" ? "המידע נשמר ואותו עמוד ייפתח מיד." : kind === "conflict" ? "באתר החדש כבר שמור מידע אחר. בחר איזה מידע לשמור; לא החלפנו דבר בלי החלטתך." : "המידע בכתובת הישנה נשמר. אפשר לנסות שוב או להמשיך לאתר החדש."}</p>
+        {kind !== "loading" && <div className="flex flex-wrap gap-3 mt-8">
+          <button className="rounded-lg bg-signal px-5 py-3 font-bold text-signal-ink" onClick={() => void attempt(kind === "conflict")}>{kind === "conflict" ? "להשתמש במידע מהאתר הישן" : "לנסות שוב"}</button>
+          <a className="rounded-lg border border-paper-line px-5 py-3 font-bold" href={next || "https://26.hopetohelp.net/"} onClick={(event) => {
+            if (kind !== "conflict" || !next) return;
+            event.preventDefault();
+            void keepNewLegacyHandoff(handoffTicket!).catch(() => {}).finally(() => location.replace(next));
+          }}>להמשיך עם המידע באתר החדש</a>
+        </div>}
+        {kind === "conflict" && <p className="mt-5 text-sm text-ink-soft">בחירה במידע הישן תחליף את ההתחברות והטיוטות המקומיות השונות שכבר שמורות באתר החדש. אם ממשיכים עם המידע החדש, המידע הישן נשאר בדפדפן הישן.</p>}
+      </section>
+    </main>);
+  }
+  async function attempt(replace = false) {
+    screen("loading");
+    const result = await completeLegacyHandoff(handoffTicket!, replace);
+    if (result.kind === "done" && result.next) location.replace(result.next);
+    else screen(result.kind === "conflict" ? "conflict" : "error", result.next);
+  }
+  void attempt();
+} else if (migrationOnly) {
   // חלון העברה זמני: בלי רינדור האתר ובלי רישום ביקור לפני העתקת מזהה הביקור מהכתובת הישנה.
   receiveLegacyMigration();
   const root = document.getElementById("root")!;

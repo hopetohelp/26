@@ -12,7 +12,7 @@ function memory(values: Record<string, string> = {}) {
 }
 
 describe("העברת מידע מקומי מהאתר הישן", () => {
-  it("מעבירה סשן וטיוטה לכתובת החדשה בלי קישור או פרמטר URL", () => {
+  it("מעבירה סשן וטיוטה לאחסון של הכתובת החדשה", () => {
     const { data, storage } = memory();
     const entries = [["elections26.crowd.token", "private-token"], ["elections26.crowd.draft.seats", "{\"seats\":{}}"]];
     expect(importLegacyEntries(entries, storage)).toBe("done");
@@ -23,6 +23,12 @@ describe("העברת מידע מקומי מהאתר הישן", () => {
     const { data, storage } = memory({ "elections26.crowd.token": "new-account" });
     expect(importLegacyEntries([["elections26.crowd.token", "old-account"], ["elections26.camps", "[]"]], storage)).toBe("conflict");
     expect([...data]).toEqual([["elections26.crowd.token", "new-account"]]);
+  });
+  it("מחליפה מידע קיים רק אחרי בחירה מפורשת, תוך שמירת העדפת התצוגה החדשה", () => {
+    const { data, storage } = memory({ "elections26.crowd.token": "new-account", "elections26.mode": "dark" });
+    expect(importLegacyEntries([["elections26.crowd.token", "old-account"], ["elections26.mode", "light"]], storage, true)).toBe("done");
+    expect(data.get("elections26.crowd.token")).toBe("old-account");
+    expect(data.get("elections26.mode")).toBe("dark");
   });
   it("מעבירה מזהה ביקור ישן ושומרת העדפה ומזהה קיימים באתר החדש", () => {
     const { data, storage } = memory({ "elections26.mode": "dark", "elections26.vid": "new-visitor" });

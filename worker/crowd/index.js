@@ -35,6 +35,10 @@ const MAX_BODY = 16 * 1024;
 export const IMAGE_MAX = 150 * 1024;
 const IMAGE_BODY = 220 * 1024;
 const IMAGE_ROUTES = new Set(["POST /group/image", "POST /admin/groups/image"]);
+const HANDOFF_BODY = 220 * 1024;
+const HANDOFF_TTL = 10 * 60 * 1000;
+const HANDOFF_RECEIPT_TTL = 30 * 24 * HOUR;
+const LEGACY_KEY = /^(?:elections26\.(?:crowd\.(?:token|link|linkAck|consent|intro|picture|(?:draft|saved|pending)\.(?:seats|blocs|vote))|feedback(?:\.outbox)?|camps|lineage|source\.v1\.[\w-]+|mode|vid|noCount|supportSeen|install\.dismissed|drawerSeen\.[\w-]+)|g-seen:[\w-]+)$/;
 const RESET_TTL = 30 * 60 * 1000;
 
 function cors(env, origin) {
@@ -487,6 +491,54 @@ const DUMMY = { algo: "pbkdf2-sha256", salt: "AAAAAAAAAAAAAAAAAAAAAA==", iterati
 
 // ---- הנתיבים
 const routes = {
+  "POST /migration/create": async ({ env, request, now, body }) => {
+    if (request.headers.get("origin") !== "https://hopetohelp.github.io") throw new HttpError(403, "origin");
+    const [ip] = await ipKeys(env, request);
+    // סינון כמו נטפרי עשוי לשתף כתובת IP בין גולשים רבים; הגבול כאן מגן רק מפני הצפה חריגה.
+    if (!(await hit(env, "migration:create:" + ip, 1000, now))) throw new HttpError(429, "rate");
+    if (!Array.isArray(body.entries) || body.entries.length < 1 || body.entries.length > 60 || JSON.stringify(body.entries).length > 200_000) throw bad("entries");
+    const seen = new Set();
+    for (const item of body.entries) {
+      if (!Array.isArray(item) || item.length !== 2 || typeof item[0] !== "string" || typeof item[1] !== "string" || !LEGACY_KEY.test(item[0]) || seen.has(item[0])) throw bad("entries");
+      seen.add(item[0]);
+    }
+    let next;
+    try { next = new URL(body.next); } catch { throw bad("next"); }
+    if (next.origin !== "https://26.hopetohelp.net" || next.username || next.password) throw bad("next");
+    const ticket = randomToken();
+    await env.DB.prepare("INSERT INTO legacy_handoffs (ticket_hash, payload_enc, expires_at) VALUES (?, ?, ?)")
+      .bind(await sha256(ticket), await seal(env, JSON.stringify({ entries: body.entries, next: next.href })), iso(now + HANDOFF_TTL)).run();
+    return { ticket };
+  },
+  "POST /migration/read": async ({ env, request, now, body }) => {
+    if (request.headers.get("origin") !== "https://26.hopetohelp.net") throw new HttpError(403, "origin");
+    if (typeof body.ticket !== "string" || !/^[\w-]{43}$/.test(body.ticket)) throw bad("ticket");
+    const row = await env.DB.prepare("SELECT payload_enc FROM legacy_handoffs WHERE ticket_hash = ? AND expires_at > ? AND completed_at IS NULL")
+      .bind(await sha256(body.ticket), iso(now)).first();
+    if (!row?.payload_enc) throw new HttpError(410, "handoff_expired");
+    const value = await open(env, row.payload_enc);
+    if (!value) throw new HttpError(500, "handoff_unavailable");
+    return JSON.parse(value);
+  },
+  "POST /migration/finish": async ({ env, request, now, body }) => {
+    if (request.headers.get("origin") !== "https://26.hopetohelp.net") throw new HttpError(403, "origin");
+    if (typeof body.ticket !== "string" || !/^[\w-]{43}$/.test(body.ticket)) throw bad("ticket");
+    const result = await env.DB.prepare("UPDATE legacy_handoffs SET payload_enc = NULL, completed_at = ?, expires_at = ? WHERE ticket_hash = ? AND expires_at > ? AND completed_at IS NULL")
+      .bind(iso(now), iso(now + HANDOFF_RECEIPT_TTL), await sha256(body.ticket), iso(now)).run();
+    if (!result.meta?.changes) {
+      const existing = await env.DB.prepare("SELECT completed_at FROM legacy_handoffs WHERE ticket_hash = ? AND expires_at > ?")
+        .bind(await sha256(body.ticket), iso(now)).first();
+      if (!existing?.completed_at) throw new HttpError(410, "handoff_expired");
+    }
+    return { ok: true };
+  },
+  "POST /migration/status": async ({ env, request, now, body }) => {
+    if (request.headers.get("origin") !== "https://hopetohelp.github.io") throw new HttpError(403, "origin");
+    if (typeof body.ticket !== "string" || !/^[\w-]{43}$/.test(body.ticket)) throw bad("ticket");
+    const row = await env.DB.prepare("SELECT completed_at FROM legacy_handoffs WHERE ticket_hash = ? AND expires_at > ?")
+      .bind(await sha256(body.ticket), iso(now)).first();
+    return { complete: !!row?.completed_at };
+  },
   // בדיקת חיבור: בלי מאגר ובלי זהות. GET ו-POST (עם גוף) — כדי שהבדיקה בדפדפן תוכל להבדיל חסימה של סוג בקשה.
   "GET /ping": async () => ({ ok: true }),
   "POST /ping": async () => ({ ok: true }),
@@ -1497,6 +1549,7 @@ export async function cleanup(env, now) {
     env.DB.prepare("DELETE FROM agent_sessions WHERE expires_at < ? OR revoked = 1").bind(iso(now - 24 * HOUR)),
     env.DB.prepare("DELETE FROM password_reset WHERE created_at < ?").bind(iso(now - RESET_TTL)),
     env.DB.prepare("DELETE FROM password_reset_email WHERE participant NOT IN (SELECT participant FROM password_reset)"),
+    env.DB.prepare("DELETE FROM legacy_handoffs WHERE expires_at < ?").bind(iso(now)),
     env.DB.prepare("DELETE FROM aggregates WHERE section = 'dashboard' AND published_at < ?").bind(iso(now - 7 * 24 * HOUR)),
   ]);
 }
@@ -1545,7 +1598,7 @@ export default {
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
       const handler = routes[`${request.method} ${url.pathname}`];
       if (!handler) throw new HttpError(404, "not_found");
-      const body = request.method === "POST" ? await readJson(request, IMAGE_ROUTES.has(`${request.method} ${url.pathname}`) ? IMAGE_BODY : MAX_BODY) : {};
+      const body = request.method === "POST" ? await readJson(request, url.pathname === "/migration/create" ? HANDOFF_BODY : IMAGE_ROUTES.has(`${request.method} ${url.pathname}`) ? IMAGE_BODY : MAX_BODY) : {};
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
       if (agent && !agentBodyAllowed(request.method, url.pathname, body)) throw new HttpError(403, "assistant_not_allowed");
       const out = await handler({ env, request, url, now, body });

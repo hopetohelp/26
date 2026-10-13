@@ -38,6 +38,16 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 CREATE INDEX IF NOT EXISTS sessions_participant ON sessions(participant);
 
+-- העברת דפדפן חד-פעמית מכתובת GitHub לכתובת הפרטית. התוכן מוצפן ב-DATA_KEY;
+-- במסד נשמר רק גיבוב של כרטיס המעבר. אחרי אישור קליטה נשמרת קבלה ללא תוכן ל-30 יום.
+CREATE TABLE IF NOT EXISTS legacy_handoffs (
+  ticket_hash TEXT PRIMARY KEY,
+  payload_enc TEXT,
+  expires_at TEXT NOT NULL,
+  completed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS legacy_handoffs_expires ON legacy_handoffs(expires_at);
+
 -- כניסת עוזר AI (שרת ה-MCP; הכרעת בעלים 12.10.2026): נפרדת מסשן הדפדפן, נוצרת רק ממנו (POST /auth/delegate),
 -- ומותרת רק בנתיבים שב-lib/agent.js. client = שם העוזר לרשימה "החיבורים שלי". רק הגיבוב של האסימון נשמר.
 CREATE TABLE IF NOT EXISTS agent_sessions (
