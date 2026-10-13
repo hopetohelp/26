@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// האתר מתפרסם בנתיב יחסי, כדי שיעבוד גם בתת-תיקייה (GitHub Pages) וגם בשורש (Cloudflare)
+// נתיבים יחסיים שומרים על בנייה תקינה בתצוגה מקדימה ובדומיין הפרטי.
 export default defineConfig({
   base: "./",
   plugins: [react()],

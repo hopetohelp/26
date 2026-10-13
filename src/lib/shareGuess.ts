@@ -1,7 +1,7 @@
 import { cleanDataPreference } from "./dataPreferences";
 import type { Selection } from "./dataResolver";
 /**
- * קישור שיתוף להשערה: https://hopetohelp.github.io/26/#/guess?g=<base64url של JSON קומפקטי>.
+ * קישור שיתוף להשערה: https://26.hopetohelp.net/#/guess?g=<base64url של JSON קומפקטי>.
  * התוכן: מנדטים לכל רשימה, אחוזים (אם ההשערה הייתה לפי אחוזים) ושם משתתף — רק אם המשתתף בחר לצרף אותו.
  * אין בו שום פרט אחר. הפענוח הגנתי: כל ערך נבדק, ומה שלא עובר ⇐ null (הכרטיס פשוט לא מוצג).
  */

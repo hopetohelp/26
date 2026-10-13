@@ -8,7 +8,7 @@ compatibility_date = "2026-09-01"
 workers_dev = true
 
 [vars]
-SITE_URL = "https://hopetohelp.github.io/26/"
+SITE_URL = "https://26.hopetohelp.net/"
 ALLOWED_ORIGIN = "https://hopetohelp.github.io"
 ALLOWED_ORIGINS = "https://hopetohelp.github.io,https://26.hopetohelp.net"
 ISSUER = "https://elections26-mcp.hopetohelp-il.workers.dev"

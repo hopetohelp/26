@@ -16,7 +16,7 @@ export function finalSlug(text: string): string | null {
   return SLUG_RE.test(s) ? s : null;
 }
 
-/** הכתובת שמוסרים לחברים: https://hopetohelp.github.io/26/#/g/<slug> */
+/** הכתובת שמוסרים לחברים: https://26.hopetohelp.net/#/g/<slug> */
 export const groupUrl = (slug: string) => `${SITE_URL}#/g/${slug}`;
 
 /** כתובת התמונה לתגית img. ver = זמן העדכון (GroupRef.image), כדי שהחלפה תוצג מיד */

@@ -18,7 +18,7 @@ import { buildCardHtml } from "../card/template.mjs";
 import { OPEN_FILES, buildFile, buildIndex, wrapExternal } from "../../../src/lib/openData.ts";
 import { seatsFromPct } from "../../../src/lib/lawSeats.ts";
 
-const SITE = "https://hopetohelp.github.io/26/";
+const SITE = "https://26.hopetohelp.net/";
 const ISSUER = "https://mcp.example";
 const SITE_FILES = new Map(OPEN_FILES.filter((f) => f.build).map((f) => [f.path, buildFile(f)]));
 SITE_FILES.set("data/index.json", buildIndex(ISSUER));

@@ -177,7 +177,7 @@ async function handleMcp(request, env, mode, now, baseHeaders) {
 
 function errorPage(message, status) {
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
-  return new Response(`<!DOCTYPE html><html lang="he" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>חיבור עוזר AI</title><body style="font-family:system-ui,sans-serif;max-width:32rem;margin:3rem auto;padding:0 1rem;line-height:1.6"><h1 style="font-size:1.5rem">החיבור לא הצליח</h1><p>${esc(message)}</p><p><a href="https://hopetohelp.github.io/26/">חזרה לאתר</a></p></body></html>`, { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
+  return new Response(`<!DOCTYPE html><html lang="he" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>חיבור עוזר AI</title><body style="font-family:system-ui,sans-serif;max-width:32rem;margin:3rem auto;padding:0 1rem;line-height:1.6"><h1 style="font-size:1.5rem">החיבור לא הצליח</h1><p>${esc(message)}</p><p><a href="https://26.hopetohelp.net/">חזרה לאתר</a></p></body></html>`, { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
 }
 
 export default {
@@ -229,7 +229,7 @@ export default {
         return json(await exchangeToken(env, form, now), 200, headers);
       }
       if (path === "/" && request.method === "GET")
-        return json({ name: "בחירות 2026 — ניתוח · שרת MCP", public: `${issuer(env)}/public`, withLogin: `${issuer(env)}/mcp`, docs: `${env.SITE_URL}llms.txt` }, 200, headers);
+        return json({ name: "בחירות 2026 · שרת MCP", public: `${issuer(env)}/public`, withLogin: `${issuer(env)}/mcp`, docs: `${env.SITE_URL}llms.txt` }, 200, headers);
       return json({ error: "not_found" }, 404, headers);
     } catch (e) {
       if (e instanceof OAuthError) return json({ error: e.code, ...(e.description ? { error_description: e.description } : {}) }, e.status, headers);

@@ -15,13 +15,13 @@ describe("הודעה למנהלי קבוצות", () => {
     expect(m).toContain("גם אם תעלו את הרשימה רק אחרי הבחירות");
   });
   it("עם קישור הקבוצה — הוא מחליף את כתובת האתר ואינו חוזר בסוף; בלי — ההודעה הכללית", () => {
-    const link = "https://hopetohelp.github.io/26/#/g/hagzara";
+    const link = "https://26.hopetohelp.net/#/g/hagzara";
     const m = groupInviteMessage({ groupLink: link });
-    expect(m).toContain(`הבחירות לכנסת ה-26 (${link})`);
+    expect(m).toContain(`אתר בחירות 2026 (${link})`);
     expect(m.split(link).length - 1).toBe(1);
-    expect(m).not.toContain("(https://hopetohelp.github.io/26/)");
+    expect(m).not.toContain("(https://26.hopetohelp.net/)");
     const general = groupInviteMessage();
-    expect(general).toContain("(https://hopetohelp.github.io/26/)");
+    expect(general).toContain("(https://26.hopetohelp.net/)");
     expect(general).not.toContain("#/g/");
   });
   it("מיילים של המנהלים שכבר הוגדרו מופיעים במשפט ההגדרה", () => {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { siteUrl } from "../lib/siteUrls";
 
 /**
  * קישור נפרד לקטע (הכרעת בעלים 12.10.2026): כפתור קטן ליד הכותרת שמעתיק את הכתובת של הקטע בלבד (המסך, הלשונית והעוגן),
@@ -15,7 +16,7 @@ export default function SectionLink({ id, tab, label }: { id: string; tab?: stri
     return () => clearTimeout(t);
   }, [done]);
   const copy = () => {
-    const href = `${window.location.origin}${window.location.pathname}#${pathname}${tab ? `?tab=${tab}` : ""}#${id}`;
+    const href = `${siteUrl()}#${pathname}${tab ? `?tab=${tab}` : ""}#${id}`;
     const ask = () => window.prompt("העתיקו את הקישור לקטע", href);
     if (!navigator.clipboard) return void ask();
     navigator.clipboard.writeText(href).then(() => setDone(true), ask);

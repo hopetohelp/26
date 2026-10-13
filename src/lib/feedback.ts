@@ -3,6 +3,7 @@
  * הבעלים היחיד של המפתחות "elections26.feedback" ו-"elections26.feedback.outbox" ב-localStorage.
  */
 import { topicMessage } from "./feedbackTopics";
+import { siteUrl } from "./siteUrls";
 
 export const FEEDBACK_URL = import.meta.env.VITE_FEEDBACK_URL as string | undefined;
 
@@ -64,7 +65,7 @@ export function absorbFeedbackToken(token: string | null) {
 }
 
 /** הקישור האישי לשיחה, כפי שהמשתתף מעתיק אותו */
-export const threadLink = (token: string) => `${location.origin}${location.pathname}#/feedback/${token}`;
+export const threadLink = (token: string) => `${siteUrl()}#/feedback/${token}`;
 
 async function post(path: string, body: object): Promise<{ ok: boolean; token?: string; error?: string }> {
   const res = await fetch(`${FEEDBACK_URL}${path}`, {

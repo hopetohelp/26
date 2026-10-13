@@ -83,7 +83,7 @@
     cardText = [a.title, a.summary].concat((a.sections || []).map(function (s) { return [s.heading, s.text].concat(s.items && typeof s.items[0] === "string" ? s.items : []).join(" "); })).join(" ");
     var card = el("article", "card");
     card.setAttribute("dir", "rtl");
-    card.appendChild(el("p", "site", "בחירות 2026 — ניתוח"));
+    card.appendChild(el("p", "site", "בחירות 2026"));
     card.appendChild(el("h2", "title", a.title));
     if (a.summary) card.appendChild(el("p", "summary", a.summary));
     (a.sections || []).forEach(function (s) {

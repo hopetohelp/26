@@ -27,14 +27,14 @@ import { THRESHOLD_PCT } from "../engine/pctForSeats";
 import { DEFAULT_TURNOUT, INVALID_SHARE, validVotesFor } from "../engine/law";
 import { TOTAL } from "./fillAll";
 import { DICTIONARY, MethodNumbers } from "../pages/Method";
-import { LEGACY_SITE_URL } from "./siteUrls";
+import { PARALLEL_SITE_URL } from "./siteUrls";
 
 /** נתב סטטי לרינדור טקסט המילון בבנייה (אותו מופע של react-router כמו במסכים; אין ניווט) */
 const NO_NAV = {} as never;
 
-/** כתובת האתר החי (GitHub Pages). כל הקישורים בקבצים מוחלטים, כדי שיעבדו גם מחוץ לאתר */
-export const SITE = LEGACY_SITE_URL;
-/** הקבצים מתפרסמים כאן: https://hopetohelp.github.io/26/data/<שם> */
+/** הכתובת הציבורית המועדפת. כל הקישורים בקבצים מוחלטים, כדי שיעבדו גם מחוץ לאתר. */
+export const SITE = PARALLEL_SITE_URL;
+/** הקבצים מתפרסמים כאן: https://26.hopetohelp.net/data/<שם> */
 export const DATA_DIR = "data";
 /** קישור "איך זה חושב?": ערך במילון (/method#<עוגן>), או לשונית שלמה במסך השיטה (אודות — הקרדיטים; numbers — המילון כולו) */
 export const TAB_ANCHORS: Record<string, string> = { about: "/method?tab=about", numbers: "/method?tab=numbers" };
@@ -376,8 +376,8 @@ export function buildIndex(mcpUrl: string | null) {
 /** llms.txt בשורש האתר — לפי המוסכמה (llmstxt.org): כותרת, תקציר, ואז רשימות קישורים */
 export function buildLlmsTxt(mcpUrl: string | null): string {
   const lines: string[] = [];
-  lines.push("# בחירות 2026 — ניתוח", "");
-  lines.push(`> אתר עצמאי לניתוח הבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2019–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
+  lines.push("# בחירות 2026", "");
+  lines.push(`> אתר עצמאי לבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2019–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
   lines.push(`הנתונים נכונים ל-${meta.dataAsOf} ומתעדכנים אוטומטית כל 4 שעות (חוץ משבת: מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל אין רענון).`, "");
   lines.push("## כללים לכל מי שמשתמש בנתונים", "");
   for (const r of Object.values(RULES)) lines.push(`- ${r}`);

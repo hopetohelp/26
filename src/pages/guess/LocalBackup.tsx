@@ -16,7 +16,7 @@ export default function LocalBackup({ compact = false }: { compact?: boolean }) 
     }
   };
   const download = () => {
-    const url = URL.createObjectURL(new Blob([`גיבוי ההשערה שלי לאתר ניתוח הבחירות לכנסת ה-26. כדי לשחזר: "הנתונים שלי" ← "שחזור מגיבוי", והדביקו את השורה הבאה.\n\n${encodeBackup(currentBackup())}\n`], { type: "text/plain;charset=utf-8" }));
+    const url = URL.createObjectURL(new Blob([`גיבוי ההשערה שלי לאתר בחירות 2026. כדי לשחזר: "הנתונים שלי" ← "שחזור מגיבוי", והדביקו את השורה הבאה.\n\n${encodeBackup(currentBackup())}\n`], { type: "text/plain;charset=utf-8" }));
     const a = Object.assign(document.createElement("a"), { href: url, download: "גיבוי-ההשערה-שלי.txt" });
     document.body.appendChild(a);
     a.click();

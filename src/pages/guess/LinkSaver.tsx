@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { FEEDBACK_URL, linkWithFeedback, primaryThread } from "../../lib/feedback";
+import { siteUrl } from "../../lib/siteUrls";
 import { Btn, inputCls } from "./ui";
 
 /** הקישור האישי להשערות; אם יש שיחת הערות בדפדפן — היא נוספת אליו (&f=), וכניסה בקישור מחזירה גם אותה */
 export const personalLink = (token: string) =>
-  linkWithFeedback(`${location.origin}${location.pathname}#/guess?t=${encodeURIComponent(token)}`, FEEDBACK_URL ? primaryThread()?.token : null);
+  linkWithFeedback(`${siteUrl()}#/guess?t=${encodeURIComponent(token)}`, FEEDBACK_URL ? primaryThread()?.token : null);
 
 /** שורת ההסבר על השחזור — אותו ניסוח בכל מקום (10.10.2026: איפוס במייל; אין יותר קישורים אישיים חדשים) */
 export const FORGOT_LINE = "שכחתם סיסמה? לחצו \"שכחתי סיסמה\" ונשלח מייל לאיפוס. יש לכם קישור אישי ישן? הוא עדיין מכניס, עד שתאמתו מייל או תחברו Google.";
 
-const FILE_LINE = "זה הקישור האישי שלכם לאתר ניתוח הבחירות לכנסת ה-26: הוא מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אל תשתפו אותו.";
+const FILE_LINE = "זה הקישור האישי שלכם לאתר בחירות 2026: הוא מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אל תשתפו אותו.";
 
 /** שמירת הקישור האישי: העתקה, שליחה לעצמי (שיתוף המכשיר), הורדה כקובץ */
 export default function LinkSaver({ token }: { token: string }) {
