@@ -1,3 +1,4 @@
+import type { Selection } from "../../lib/dataResolver";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Dashboard } from "../../lib/crowdApi";
@@ -24,17 +25,17 @@ const FILE: Record<Exclude<Kind, "link">, string> = { seats: "סקר-האתר-מ
  * שיתוף סקר האתר (הכרעת בעלים 10.10.2026): פס עליון שמזמין לשתף, כפתור צף בפינה השמאלית התחתונה,
  * ושניהם פותחים חלון עם שלוש אפשרויות — בכולן קישור לאתר. במסך קבוצה (group): הפס בא אחרי תמונת הקבוצה (לא בראש העמוד), והאפשרויות כוללות תמונת הזמנה עם שם הקבוצה ולוגו.
  */
-export default function CommunityShare({ d, group }: { d: Dashboard; group?: GroupShareInfo }) {
+export default function CommunityShare({ d, group, selection = { product: "polls.mean" } }: { d: Dashboard; group?: GroupShareInfo; selection?: Selection }) {
   const [open, setOpen] = useState(false);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => setSlot(document.getElementById("community-share")), []);
   const banner = (
     <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="mb-5 rounded-theme border-2 border-ink bg-paper-card p-4 flex flex-wrap items-center justify-between gap-3">
       {group
-        ? <p className="font-display text-xl leading-tight">רוצים ש{group.name.startsWith("סקר") ? "" : "סקר "}{group.name} יהיה מדויק יותר? <span className="text-signal">זה תלוי בכם!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים — כל משתתף נוסף מחדד את התמונה.</span></p>
+        ? <p className="font-display text-xl leading-tight">הוסיפו את ההשערה שלכם ל{group.name} <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים והרחיבו את מעגל המשתתפים.</span></p>
         : <div>
       <h1 className="font-display text-3xl leading-tight mb-2">סקר האתר</h1>
-      <p className="font-display text-xl leading-tight">רוצים שהסקר יהיה מדויק יותר? <span className="text-signal">זה תלוי בכם!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים — כל משתתף נוסף מחדד את התמונה.</span></p>
+      <p className="font-display text-xl leading-tight">הוסיפו את ההשערה שלכם <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים והרחיבו את מעגל המשתתפים.</span></p>
       </div>}
       <Btn kind="primary" onClick={() => setOpen(true)} className="shrink-0">שיתוף</Btn>
     </section>
@@ -47,12 +48,12 @@ export default function CommunityShare({ d, group }: { d: Dashboard; group?: Gro
           className="fixed z-30 left-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] md:bottom-6 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">
           שיתוף
         </button>, document.body)}
-      {open && <ShareDialog d={d} group={group} onClose={() => setOpen(false)} />}
+      {open && <ShareDialog d={d} group={group} selection={selection} onClose={() => setOpen(false)} />}
     </>
   );
 }
 
-function ShareDialog({ d, group, onClose }: { d: Dashboard; group?: GroupShareInfo; onClose: () => void }) {
+function ShareDialog({ d, group, onClose, selection }: { d: Dashboard; group?: GroupShareInfo; selection: Selection; onClose: () => void }) {
   const box = useRef<HTMLDivElement>(null);
   const [kind, setKind] = useState<Kind>(group ? "invite" : "seats");
   const logo = useRef<Promise<Brand["logo"]> | null>(null);
@@ -74,7 +75,7 @@ function ShareDialog({ d, group, onClose }: { d: Dashboard; group?: GroupShareIn
   const makeFile = async (k: Exclude<Kind, "link">) => {
     let brand: Brand | undefined;
     if (group) { logo.current ??= loadLogo(group.logoUrl); brand = { name: group.name, url: group.url, logo: await logo.current }; }
-    const blob = k === "invite" ? await groupInviteImage(brand!) : k === "seats" ? await seatsImage(d, brand) : await voteImage(d, brand);
+    const blob = k === "invite" ? await groupInviteImage(brand!) : k === "seats" ? await seatsImage(d, brand, selection) : await voteImage(d, brand);
     return new File([blob], FILE[k], { type: "image/png" });
   };
   const share = async () => {

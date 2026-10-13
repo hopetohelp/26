@@ -1,3 +1,4 @@
+import { cleanDataPreference } from "../../src/lib/dataPreferences.ts";
 import { personalTotals, migrateBlocs, compositionKey } from "./lib/blocDefinitions.js";
 import { allowedOrigin, returnSiteUrl } from "../shared/origins.js";
 /**
@@ -517,10 +518,12 @@ const routes = {
     const camps = pref?.camps ? JSON.parse(pref.camps) : null;
     const lin = await env.DB.prepare("SELECT lineage FROM lineage_prefs WHERE participant = ?").bind(participant).first();
     const lineage = lin?.lineage ? JSON.parse(lin.lineage) : null;
+    const sourcePref = await env.DB.prepare("SELECT value FROM data_source_prefs WHERE participant = ?").bind(participant).first();
+    const dataSource = sourcePref?.value ? JSON.parse(sourcePref.value) : null;
     // ההשערה האחרונה ממתינה לאישור מנהל (חריגה) — הגולש רואה אותה כרגיל, עם הסבר
     const seatsPending = latest.seats ? (await dashboardState(env)).pending.has(latest.seats.id) : false;
     return {
-      participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps, lineage }, seatsPending,
+      participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps, lineage, dataSource }, seatsPending,
       emails, name: prof ? await open(env, prof.name_enc) : null, hasPassword: !!pw,
       // חשבון בלי מייל ובלי Google (אורח או שם משתמש ישן) — נדרש להוסיף בכניסה הבאה (הכרעת בעלים 9.10.2026)
       needsEmail: !emails.length && !g,
@@ -542,7 +545,9 @@ const routes = {
   "POST /prefs": async ({ env, request, now, body }) => {
     const { participant } = await requireAuth(env, request, now);
     // camps (המחנות, הגרסה הקודמת) ו/או lineage (השיוך האישי) — לפחות אחד
-    if (body.camps === undefined && body.lineage === undefined) throw bad("invalid", { field: "prefs" });
+    if (body.camps === undefined && body.lineage === undefined && body.dataSource === undefined) throw bad("invalid", { field: "prefs" });
+    const dataSource = body.dataSource === undefined ? null : cleanDataPreference(body.dataSource);
+    if (body.dataSource !== undefined && (!dataSource || Date.parse(dataSource.updatedAt) > now + 60_000)) throw bad("invalid", { field: "dataSource" });
     const c = body.camps === undefined ? null : validateCamps(body.camps);
     if (c && !c.ok) throw bad("invalid", { field: c.error });
     const l = body.lineage === undefined ? null : validateLineage(body.lineage);
@@ -554,7 +559,10 @@ const routes = {
     if (l) await env.DB.prepare("INSERT INTO lineage_prefs (participant, lineage, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET lineage = excluded.lineage, updated_at = excluded.updated_at")
       .bind(participant, JSON.stringify(l.value), iso(now))
       .run();
-    return { ok: true, ...(c ? { camps: c.value } : {}), ...(l ? { lineage: l.value } : {}) };
+    if (dataSource) await env.DB.prepare("INSERT INTO data_source_prefs (participant, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at WHERE excluded.updated_at > data_source_prefs.updated_at")
+      .bind(participant, JSON.stringify(dataSource), dataSource.updatedAt).run();
+    const savedSource = dataSource ? await env.DB.prepare("SELECT value FROM data_source_prefs WHERE participant = ?").bind(participant).first() : null;
+    return { ok: true, ...(savedSource ? { dataSource: JSON.parse(savedSource.value) } : {}), ...(c ? { camps: c.value } : {}), ...(l ? { lineage: l.value } : {}) };
   },
 
   "POST /save": async ({ env, request, now, body }) => {
@@ -637,6 +645,7 @@ const routes = {
       created_at: p.created_at,
       underReview: !!p.review,
       prefs: (await env.DB.prepare("SELECT camps, updated_at FROM prefs WHERE participant = ?").bind(participant).first()) ?? null,
+      dataSource: (await env.DB.prepare("SELECT value, updated_at FROM data_source_prefs WHERE participant = ?").bind(participant).first()) ?? null,
       lineage: (await env.DB.prepare("SELECT lineage, updated_at FROM lineage_prefs WHERE participant = ?").bind(participant).first()) ?? null,
       versions: versions.map((r) => ({ ...parseVersion(r), op_id: r.op_id, registry: r.registry })),
       credentials: creds,
@@ -661,7 +670,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "participant_activity", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )

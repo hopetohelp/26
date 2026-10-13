@@ -1,32 +1,16 @@
 /**
  * מקור אמת אחד לכל ממוצע באתר (הכרעת בעלים 10.10.2026). כל מסך קורא מכאן, ולא מחשב או מעתיק בעצמו.
  *
- * - **ממוצע הסקרים** — מ-model.json (המודל שהצינור בונה מחדש בכל רענון נתונים, כל 4 שעות).
+ * - **ממוצע המודל** — מ-model.json (המודל שהצינור בונה מחדש בכל רענון נתונים, כל 4 שעות).
  * - **ממוצע המשתתפים** — מהסטטיסטיקות: העותק שבאתר מוצג מיד, והשרת מחליף אותו כשהוא חדש יותר;
  *   רענון כל דקה כשהדף גלוי, מיד כשחוזרים אליו, ואחרי כל שמירה. מאגר אחד לכל המסכים.
  */
 import { useEffect, useSyncExternalStore } from "react";
-import modelFile from "../data/model.json";
+
 import { liveDashboard, newerDashboard, siteDashboard, type Dashboard } from "./crowdApi";
 import { OUTBOX_EVENT, SAVED_EVENT } from "./outbox";
 
-interface ModelCentral { asof: string; lastPoll: string; polls: number; pollsters: number; central: { seats: Record<string, number>; shares: Record<string, number> } }
-const model = modelFile as unknown as ModelCentral;
-
-/**
- * ממוצע הסקרים: מנדטים ואחוזים לכל רשימה, ו"נכון ל" = יום הבנייה האחרונה (הכרעת בעלים 11.10.2026: הבנייה רצה כל 4 שעות
- * ובודקת את כל המקורות; אם אין סקר חדש — הממוצע של היום זהה לממוצע האחרון, ולכן הוא נכון להיום). lastPoll = מועד הסקר האחרון שנקלט.
- * 🔴 כל "נכון ל" של ממוצע (טקסט, כותרת, כרטיס, תמונת שיתוף) נלקח מכאן ורק מכאן — לא מ-`model.json` ישירות ולא מ-`lastPollDate()`.
- * בדיקה אוטומטית (`singleSource.test.ts`) נכשלת אם קובץ אחר קורא את התאריך מהמודל.
- */
-export const POLL_AVERAGE = {
-  seats: model.central.seats,
-  shares: model.central.shares,
-  asOf: model.asof,
-  lastPoll: model.lastPoll,
-  polls: model.polls,
-  pollsters: model.pollsters,
-} as const;
+export { MODEL_AVERAGE } from "./dataResolver";
 
 // ---- ממוצע המשתתפים: מאגר משותף
 

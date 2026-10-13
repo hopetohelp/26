@@ -2,7 +2,7 @@
  "asof": "2026-10-13",
  "attempts": {
   "bestVoteAccuracy": 0.92997,
-  "runs": 41,
+  "runs": 42,
   "versions": [
    1,
    2,
@@ -88,11 +88,11 @@
    "summary": {
     "V0": {
      "seatAccuracy": 0.918334,
-     "voteAccuracy": 0.9217359999999999
+     "voteAccuracy": 0.921736
     },
     "V5": {
      "seatAccuracy": 0.908334,
-     "voteAccuracy": 0.9233799999999999
+     "voteAccuracy": 0.92338
     }
    },
    "valid": true

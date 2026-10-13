@@ -1,12 +1,13 @@
+import SourcePicker from "../../components/SourcePicker";
+import { useSourcePreference } from "../../lib/sourcePreference";
+import { createContext, useContext } from "react";
+import { resolveDataset, resolveData, type Selection } from "../../lib/dataResolver";
 import CommunityShare, { type GroupShareInfo } from "./CommunityShare";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
-import { POLL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
-import { LATEST_POLLS } from "../../lib/homeData";
-import { pollSeatSummary } from "../../lib/pollRange";
-import { lists2026 } from "../../lib/data";
+import { MODEL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
 import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type GroupPublic, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { SAVED_EVENT } from "../../lib/outbox";
 import { loadDraft } from "../../lib/crowdSession";
@@ -36,14 +37,22 @@ const v2026Name = (k: string) => V2026_LABEL[k] ?? nameOf(k);
 const v2022Name = (k: string) => V2022_LABEL[k] ?? k25VoteName(k);
 const time = (iso: string) => new Date(iso).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jerusalem" });
 const pctOf = (cell: Cell) => cell.of ? cell.n / cell.of * 100 : 0;
-const pollSummary = (ids: string[]) => pollSeatSummary(LATEST_POLLS, ids);
-const SIMPLE_POLL_MEANS = Object.fromEntries(lists2026.flatMap(({ id }) => {
-  const summary = pollSummary([id]);
-  return summary ? [[id, summary.mean]] : [];
-}));
+const ComparisonContext = createContext<Selection>({ product: "polls.mean" });
+function usePollSummary() {
+  const selection = useContext(ComparisonContext);
+  return (ids: string[]) => {
+    const r = resolveData(selection, ids, "community");
+    return r.value === null || !r.range ? null : { mean: r.value, range: r.range };
+  };
+}
+
 
 export default function Dashboard({ session, landing = null }: { session: ReturnType<typeof useSession>; landing?: GroupPublic | null }) {
   // ממוצע המשתתפים — מהמקור האחד (src/lib/sources.ts): מתעדכן כל דקה, בחזרה לדף ואחרי כל שמירה
+  const preference = useSourcePreference("community");
+  const [temporary, setTemporary] = useState<Selection | null>(null);
+  const selection = temporary ?? preference.selection;
+  const SIMPLE_POLL_MEANS = resolveDataset(selection, "community").seats;
   const crowd = useCrowdDashboard();
   // פילוח לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): הכפתור מוצג רק לחבר בקבוצה; השרת בודק את החברות ואוכף את הסף
   const groups = session.me?.groups ?? [];
@@ -68,8 +77,8 @@ export default function Dashboard({ session, landing = null }: { session: Return
   const blank = groupData?.belowMin ? groupData : null;
   const blankLists = crowd.dashboard?.seats?.everPassedLists ?? listsFromPolls(SIMPLE_POLL_MEANS);
   const d: D | null = blank
-    ? blankDashboard(blank.participants ?? 0, blankLists, SIMPLE_POLL_MEANS, POLL_AVERAGE.asOf)
-    : d0 && d0.seats ? { ...d0, seats: { ...d0.seats, polls: SIMPLE_POLL_MEANS, pollsAsOf: POLL_AVERAGE.asOf } } : d0;
+    ? blankDashboard(blank.participants ?? 0, blankLists, SIMPLE_POLL_MEANS, MODEL_AVERAGE.asOf)
+    : d0 && d0.seats ? { ...d0, seats: { ...d0.seats, polls: SIMPLE_POLL_MEANS, pollsAsOf: MODEL_AVERAGE.asOf } } : d0;
   const err = (scope === "all" ? crowd.failed : group?.id === scope && group.failed && !groupData) ? "הסטטיסטיקות אינן זמינות כרגע. נסו שוב בעוד כמה דקות." : null;
   const [view, setView] = useState<View>("table");
   // השוואה לכלל המשתתפים בתצוגת קבוצה: טורי ממוצע וטווח של כולם, אחרי קו הפרדה
@@ -97,7 +106,7 @@ export default function Dashboard({ session, landing = null }: { session: Return
   // שיתוף של הקבוצה (הכרעת בעלים 12.10.2026): עם שמה ולוגו; נתוני הקבוצה בתמונות רק מ-50 משתתפים, ובקישור מהאורח — רק הזמנה וקישור
   const groupShare: GroupShareInfo | undefined = shownGroup?.slug ? { name: shownGroup.name ?? "הקבוצה", url: groupUrl(shownGroup.slug), logoUrl: groupImageUrl({ slug: shownGroup.slug }, shownGroup.image), dataReady: scope !== "all" && !blank } : undefined;
   // בקבוצה: תמונה, אחריה פס השיתוף, ואחריו המתג (התמונה היא בראש המסך)
-  const top = <>{banner}{groupShare && d && <CommunityShare d={d} group={groupShare} />}{scopeBar}</>;
+  const top = <>{banner}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
@@ -113,7 +122,7 @@ export default function Dashboard({ session, landing = null }: { session: Return
       {top}
       {blank && <section className="border-2 border-ink rounded-theme p-4 mb-4" aria-labelledby="group-small"><h2 id="group-small" className="text-xl font-display leading-tight">לשמירה על חוק סקרי הבחירות, אי אפשר לפרסם נתונים על קבוצה קטנה. לכן הנתונים יוצגו רק אחרי {blank.min} משתתפים.</h2></section>}
       {/* שיתוף: של כלל המשתתפים, או של הקבוצה (עם שמה ולוגו) כשהמסך פתוח עליה */}
-      {!groupShare && scope === "all" && <CommunityShare d={d} />}
+      {!groupShare && scope === "all" && <CommunityShare selection={selection} d={d} />}
       {!blank && d.participants < 30 && <div className="mb-4"><Notice tone="warn">מעט משתתפים — הנתונים אינם מייצגים את הציבור.</Notice></div>}
       {(stale || scope !== "all") && <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-4">
         <div>
@@ -121,9 +130,12 @@ export default function Dashboard({ session, landing = null }: { session: Return
         </div>
         {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
       </div>}
+      <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
+      <ComparisonContext.Provider value={selection}>
       {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
       {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(blank || d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} blankLists={blank ? blankLists : undefined} />}
+      </ComparisonContext.Provider>
     </div>
   );
 }
@@ -172,6 +184,7 @@ const pollRangeText = (r: [number, number] | null) => r && r[0] !== r[1] ? rng(s
 type Overall = { name: string; of: (key: string) => SeatStat | null | undefined };
 
 export function SeatsStats({ rows, polls, mine, view, onView, passedLists, overall }: { onView?: (v: View) => void; passedLists?: string[]; rows: SeatStat[]; polls: Record<string,number>; mine?: SeatsPayload | null; view: View; overall?: Overall }) {
+  const pollSummary = usePollSummary();
   const sorted = useMemo(() => rows.filter(s => passedLists ? passedLists.includes(s.list) : s.max >= 4).sort((a,b)=>b.mean-a.mean || b.max-a.max), [rows, passedLists]);
   const suffix = "";
   const format = (n: number) => `${seatsFmt(n)}${suffix}`;
@@ -216,6 +229,7 @@ function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[], blank = 
 }
 
 export function BlocStats({ d, blank = false, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; blank?: boolean; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
+  const pollSummary = usePollSummary();
   const rows = blocRows(d, mineBlocs, blank);
   const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
   const head = <SectionTitle title="החלוקה לגושים" action={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;

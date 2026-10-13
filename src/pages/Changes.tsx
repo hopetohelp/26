@@ -1,3 +1,7 @@
+import SourcePicker from "../components/SourcePicker";
+import { useSourcePreference } from "../lib/sourcePreference";
+import { resolveDataset, resolveSupport, resolveSupportMetric, selectedPolls, type Selection } from "../lib/dataResolver";
+import { DATA_PRODUCTS } from "../lib/dataCatalog";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import PersonalBlocs from "../components/PersonalBlocs";
@@ -7,10 +11,8 @@ import { ModelInfo } from "../components/InfoTip";
 import { Segmented } from "../components/Choice";
 import { ChartBar, ChartWithTable, Fold, Note, Split } from "../components/ui";
 import modelFile from "../data/model.json";
-import { POLL_AVERAGE } from "../lib/sources";
-import { LATEST_POLLS } from "../lib/homeData";
+import { MODEL_AVERAGE } from "../lib/sources";
 import { pollSeatValues } from "../lib/pollRange";
-import { pctForListSeats } from "./guess/pctSync";
 import { listName } from "../lib/data";
 import { diffText as diff, pollSegs, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
 import { date, num, pctValue, rng, seatsFmt, signed } from "../lib/format";
@@ -62,7 +64,16 @@ export default function Changes() {
   const crowd = useCrowdSeats();
   const lin = lineage.draft;
   const effective = lin.split === "crowd" && !crowd ? { ...lin, split: "polls" as const } : lin;
-  const { rows, unassigned2022 } = lineageRows(effective, crowd);
+  const preference = useSourcePreference("changes");
+  const [temporary, setTemporary] = useState<Selection | null>(null);
+  const selection = temporary ?? preference.selection;
+  const current = resolveDataset(selection, "changes");
+  const currentShares = resolveSupport(selection).shares ?? {};
+  const LATEST_POLLS = selectedPolls(selection);
+  const definition = { ...DATA_PRODUCTS[selection.product], name: current.rows[0]?.label ?? DATA_PRODUCTS[selection.product].name };
+  const history = lineageRows(effective, crowd);
+  const unassigned2022 = history.unassigned2022;
+  const rows = history.rows.map(r => ({ ...r, seatsNow: current.seats[r.id] ?? NaN, shareNow: currentShares[r.id] ?? NaN }));
   const [open, setOpen] = useState<string | null>(null);
   // רשימה של 2022 שלא שויכה: נפתחת בחירה לאיזו רשימה של היום היא נכנסה
   const [openOld, setOpenOld] = useState<string | null>(null);
@@ -99,10 +110,8 @@ export default function Changes() {
     if (!vals.length) return { range: null, segs: [] };
     const lo = Math.min(...vals), hi = Math.max(...vals);
     if (!pct) return { range: [lo, hi], segs: pollSegs(vals) };
-    const pLo = pctForListSeats(r.id, lo), pHi = pctForListSeats(r.id, hi);
-    if (pLo === null || pHi === null) return { range: null, segs: [] };
-    const range: [number, number] = [Math.min(pLo, r.shareNow), Math.max(pHi, r.shareNow)];
-    return { range, segs: pollSegs(vals, (s) => pctForListSeats(r.id, s), range) };
+    const support = resolveSupportMetric(selection, [r.id], "changes");
+    return { range: support.range, segs: pollSegs(support.values ?? []) };
   };
   const toRow = (r: LineageRow): DumbbellRow => {
     const band = pollBand(r);
@@ -152,7 +161,7 @@ export default function Changes() {
           <th scope="col" className="py-2 pe-3">היום</th>
           <th scope="col" className="pe-3">ב-2022</th>
           <th scope="col" className="pe-3">{pct ? "2022 %" : "2022 מנדטים"}</th>
-          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}{first && <> <ModelInfo kind="mean" items={[`העמודה "${pct ? "היום %" : "מנדטים היום"}" בכל הטבלאות במסך`]} /></>}</th>
+          <th scope="col" className="pe-3">{pct ? "היום %" : "מנדטים היום"}{first && selection.product === "model.mean" && <> <ModelInfo kind="mean" items={[`העמודה "${pct ? "היום %" : "מנדטים היום"}" בכל הטבלאות במסך`]} /></>}</th>
           <th scope="col" className="pe-3">{pct ? "טווח הסקרים %" : "טווח הסקרים (מנדטים)"}</th>
           <th scope="col">{pct ? "שינוי (אחוזים)" : "שינוי (מנדטים)"}</th>
         </tr>
@@ -177,42 +186,44 @@ export default function Changes() {
   );
 
   const shared = sharedLists(effective);
-  const splitNote = lin.split === "manual" ? "לפי החלוקה שלכם" : effective.split === "crowd" ? "לפי ממוצע המשתתפים (אינו סקר)" : `לפי ממוצע הסקרים (${date(POLL_AVERAGE.asOf)})`;
+  const splitNote = lin.split === "manual" ? "לפי החלוקה שלכם" : effective.split === "crowd" ? "לפי ממוצע המשתתפים (אינו סקר)" : `לפי ממוצע המודל (${date(MODEL_AVERAGE.asOf)})`;
 
   return (
     <>
+      <SourcePicker screen="changes" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <Split
         title="מה השתנה מהבחירות האחרונות"
         lead="כל מפלגה של היום מול התוצאה של 2022. מפלגה שנוצרה מפיצול מקבלת חלק מהתוצאה של הרשימה שממנה באה."
         primary={
           <>
-            <ChartBar legend={DUMBBELL_LEGEND} asTable={asTable} onAsTable={setAsTable}>
+            <ChartBar legend={DUMBBELL_LEGEND.map(e => e.kind === "mean" ? { ...e, text: definition.name } : e)} asTable={asTable} onAsTable={setAsTable}>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>
             <PersonalBlocs
                 title="מעבר בין הגושים"
-                source="תוצאות 2022 לפי השיוך שלמטה, מול ממוצע הסקרים היום"
-                asOf={date(POLL_AVERAGE.asOf)}
+                source={`תוצאות 2022 לפי השיוך, מול ${definition.name}`}
+                asOf={date(MODEL_AVERAGE.asOf)}
                 compare
                 unit={unit}
                 datasets={[
                   { values: pct ? shares2022 : values2022, source: "2022 לפי השיוך", asOf: "תוצאות סופיות" },
-                  { values: pct ? POLL_AVERAGE.shares : POLL_AVERAGE.seats, source: "היום", asOf: date(POLL_AVERAGE.asOf) },
+                  { selection, values: pct ? currentShares : current.seats, source: definition.name, asOf: date(MODEL_AVERAGE.asOf) },
                 ]}
               />
           </>
         }
         secondary={
           <>
+            {!current.rows.some(r => r.status === "available") && <p role="status">—</p>}
             <Explained
               kind="השוואה"
-              source={`תוצאות 2022 (ועדת הבחירות המרכזית) מול ממוצע הסקרים — ${POLL_AVERAGE.polls} סקרים עד ${date(POLL_AVERAGE.asOf)}`}
-              asOf={`הסקרים עד ${date(POLL_AVERAGE.asOf)}`}
+              source={`תוצאות 2022 (ועדת הבחירות המרכזית) מול ${definition.name} — עד ${date(MODEL_AVERAGE.asOf)}`}
+              asOf={`הסקרים עד ${date(MODEL_AVERAGE.asOf)}`}
               assumption="שינוי נטו בין שתי תמונות, לא מעבר בוחרים. בפיצול — התוצאה של 2022 מתחלקת לפי היחס בין הרשימות היום."
               methodAnchor="changes"
             >
               {CATEGORIES.map((c) => {
-                const list = rows.filter((r) => r.category === c.id);
+                const list = rows.filter((r) => r.category === c.id && Number.isFinite(pct ? r.shareNow : r.seatsNow));
                 if (!list.length) return null;
                 return (
                   <section key={c.id} className="border-t border-paper-line pt-4 mt-6 first:mt-0" aria-labelledby={`cat-${c.id}`}>

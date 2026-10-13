@@ -1,6 +1,5 @@
 import modelFile from "../data/model.json";
-import { POLL_AVERAGE } from "./sources";
-import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, groupSeatsIn, usablePolls, latestPerPollster, lists2026, listName, passesInAll, passesInNone, toTime } from "./data";
+import { POINT_WINDOW, bucketLatest, pointTimes, pollsterKey, groupSeatsIn, usablePolls, lists2026, listName, passesInAll, passesInNone, toTime } from "./data";
 import { buildHome, type HomeModel } from "./home";
 import { defaultBlocs } from "../pages/guess/model";
 
@@ -8,7 +7,8 @@ import { defaultBlocs } from "../pages/guess/model";
  * הסקר האחרון של כל מכון (14 הימים האחרונים) ונתוני הדירוג, מחושבים פעם אחת: אותו מקור לבית, ל"המצב היום" ול"תרחישים",
  * כדי שלא יהיו שני מספרים לאותה עובדה (החלטה 14, 9.10.2026).
  */
-export const LATEST_POLLS = latestPerPollster(POLL_AVERAGE.asOf, 14);
+export { CURRENT_POLLS as LATEST_POLLS } from "./dataResolver";
+import { CURRENT_POLLS as LATEST_POLLS } from "./dataResolver";
 
 export const HOME = buildHome(modelFile as unknown as HomeModel, {
   govIds: lists2026.filter((l) => l.gov37).map((l) => l.id),

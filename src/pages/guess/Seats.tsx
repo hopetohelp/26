@@ -1,3 +1,7 @@
+import SourcePicker from "../../components/SourcePicker";
+import { useSourcePreference } from "../../lib/sourcePreference";
+import { resolveDataset, resolveSupport, resolveSupportMetric, selectedPolls, type Selection } from "../../lib/dataResolver";
+import { DATA_PRODUCTS } from "../../lib/dataCatalog";
 import PersonalBlocs from "../../components/PersonalBlocs";
 import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -7,7 +11,7 @@ import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { date, pctOne, rng } from "../../lib/format";
 import { splitCls } from "../../lib/splitScreens";
-import { IDS, nameOf, POLL_RANGES, POLL_SHARES, POLLS, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
+import { IDS, nameOf, POLL_RANGES, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
 import { Segmented } from "../../components/Choice";
 import { Badge } from "../../components/ui";
@@ -18,8 +22,6 @@ const pctFmt = pctOne;
 import { lineageRows, start2022 } from "../../lib/lineage";
 import { useCrowd, useLineage } from "./useLineage";
 import { pollSeatRange } from "../../lib/pollRange";
-import { pctForListSeats } from "./pctSync";
-import { LATEST_POLLS } from "../../lib/homeData";
 import { seatsFmt } from "../../lib/format";
 import { blocSummary } from "./blocSummary";
 import { canSetSeats } from "./seatEditing";
@@ -48,6 +50,15 @@ export default function Seats({
   blocsUnit: ReturnType<typeof useUnit<BlocsPayload>>;
   onStatistics: () => void;
 }) {
+  const preference = useSourcePreference("guess");
+  const [temporary, setTemporary] = useState<Selection | null>(null);
+  const selection = temporary ?? preference.selection;
+  const current = resolveDataset(selection, "guess");
+  const POLLS = current.seats;
+  const POLL_SHARES = resolveSupport(selection).shares ?? {};
+  const LATEST_POLLS = selectedPolls(selection);
+  const sourceName = current.rows[0]?.label ?? DATA_PRODUCTS[selection.product].name;
+  const sourcePicker = <SourcePicker screen="guess" selection={selection} onChange={setTemporary} notice={preference.notice} />;
   const p = unit.draft;
   const blocs = blocsUnit.draft;
   const [preview, setPreview] = useState<ReturnType<typeof fillAll> | null>(null);
@@ -69,7 +80,11 @@ export default function Seats({
   const startWithTargets = (start: SeatsPayload["start"]): SeatsPayload => {
     const base = start === "k25"
       ? { ...startSeats("zero"), start, seats: Object.fromEntries(Object.entries(start2022(lin, crowd)).map(([id, c]) => [id, { v: c.v, src: c.locked ? "manual" as const : "filled" as const, locked: c.locked }])) }
-      : startSeats(start);
+      : start === "polls" ? { ...startSeats("zero"), start: "polls" as const, pollsAsOf: POLLS_AS_OF, seats: Object.fromEntries(IDS.map(id => [id, { v: POLLS[id] ?? 0, src: "filled" as const, locked: false }])) } : startSeats(start);
+    if (start === "polls") {
+      const completed = fillAll(IDS, startSeats("zero").seats, POLLS, blocs?.blocs ?? [], POLL_RANGES);
+      return completed.ok ? { ...base, seats: completed.seats } : base;
+    }
     if (!blocs?.blocs.some((b) => b.target !== null)) return base;
     const r = fillAll(IDS, base.seats, POLLS, blocs.blocs, POLL_RANGES);
     return r.ok ? { ...base, seats: r.seats, pollsAsOf: POLLS_AS_OF } : base;
@@ -82,6 +97,7 @@ export default function Seats({
     return (
       <div>
         <HowTo />
+        {sourcePicker}
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
           <h2 className="text-3xl font-display leading-tight">מאיפה מתחילים?</h2>
           <Link to="/changes" className="text-sm">איך המפלגות משויכות להיום?</Link>
@@ -91,11 +107,12 @@ export default function Seats({
             <button
               key={o.id}
               type="button"
+              disabled={o.id === "polls" && !current.rows.some(r => r.status === "available")}
               onClick={() => unit.setDraft(startWithTargets(o.id))}
               className="text-start bg-paper-card border-2 border-paper-line hover:border-ink rounded-theme p-4 min-h-[44px]"
             >
-              <span className="text-xl font-display leading-tight block mb-1">{o.title}</span>
-              <span className="text-sm text-ink-soft leading-relaxed block">{o.desc}</span>
+              <span className="text-xl font-display leading-tight block mb-1">{o.id === "polls" ? `לפי ${sourceName}` : o.title}</span>
+              <span className="text-sm text-ink-soft leading-relaxed block">{o.id === "polls" ? current.rows.some(r => r.status === "available") ? "נקודת פתיחה לעריכה שלכם" : "אין בסיס לחישוב" : o.desc}</span>
               {targetNote && <span className="text-sm text-ink font-bold leading-relaxed block mt-1">{targetNote}</span>}
             </button>
           ))}
@@ -149,12 +166,7 @@ export default function Seats({
     setPreview(null);
   };
   const rows = IDS;
-  const pollPctRange = (id: string): [number, number] | null => {
-    const r = pollSeatRange(LATEST_POLLS, [id]);
-    if (!r || r[0] === r[1]) return null;
-    const lo = pctForListSeats(id, r[0]), hi = pctForListSeats(id, r[1]), mean = POLL_SHARES[id] ?? 0;
-    return lo === null || hi === null ? null : [Math.min(lo, mean), Math.max(hi, mean)];
-  };
+  const pollPctRange = (id: string): [number, number] | null => resolveSupportMetric(selection, [id], "guess").range;
   const lock = (id: string, c: SeatCell, name: string) => <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />;
   const calc = calcOf(p);
   const pctSum = pctNow ? IDS.reduce((a, id) => a + (pctNow[id] || 0), 0) : 0;
@@ -174,12 +186,13 @@ export default function Seats({
   return (
     <div>
       <HowTo />
+      {sourcePicker}
       <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בגוש, והצפי שלכם" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className={`grid ${splitCls("lg:grid-cols-[1fr_1.1fr]")} gap-5 [&>*]:min-w-0 items-start`}>
         <div className={`${splitCls("lg:sticky lg:top-4")} space-y-3`}>
           <div className="relative">
             <SeatBoard values={values} />
-            {sum === TOTAL && !invalid && <Share values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
+            {sum === TOTAL && !invalid && <Share selection={selection} values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           </div>
           {both.status !== "draft" && <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} queued={unit.queued || (blocsToSave && blocsUnit.queued)} />
@@ -195,7 +208,7 @@ export default function Seats({
         <div>
             {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <div className="seat-box">
-            <CompareHeader view={view} onView={setView} />
+            <CompareHeader sourceName={sourceName} view={view} onView={setView} />
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
               {rows.map((id) => {
                 const c = p.seats[id] ?? { v: 0, src: "manual", locked: false };
@@ -208,14 +221,14 @@ export default function Seats({
                         <span className="font-bold block min-w-0 leading-tight [overflow-wrap:anywhere]">{name}</span>
                         <span className="sr-only">{rowState(c)}</span>
                       </div>
-                      <div className="seat-cells"><CompareCells cells={view === "seats" ? {
+                      <div className="seat-cells"><CompareCells sourceName={sourceName} cells={view === "seats" ? {
                           k22: { mean: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0) },
-                          polls: { mean: seatsFmt(POLLS[id] ?? 0), range: rangeText(pollSeatRange(LATEST_POLLS, [id]), seatsFmt) },
+                          polls: { mean: POLLS[id] === undefined ? "—" : seatsFmt(POLLS[id]), range: rangeText(pollSeatRange(LATEST_POLLS, [id]), seatsFmt) },
                           crowd: { mean: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—", range: rangeText(crowdSeatsRange?.[id], seatsFmt) },
                         } : {
                           k22: { mean: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}` },
                           // טווח הסקרים באחוזים: הנמוך והגבוה במנדטים, מומרים לאחוזים לפי חוק הבחירות
-                          polls: { mean: pctFmt(POLL_SHARES[id] ?? 0), range: rangeText(pollPctRange(id), pctFmt) },
+                          polls: { mean: POLL_SHARES[id] === undefined ? "—" : pctFmt(POLL_SHARES[id]), range: rangeText(pollPctRange(id), pctFmt) },
                           // ממוצע האחוזים של המשתתפים, כמו בסקר האתר
                           crowd: { mean: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—", range: rangeText(crowdPctRange?.[id], pctFmt) },
                         }} /></div>
@@ -417,7 +430,7 @@ const rangeText = (r: [number, number] | null | undefined, fmt: (x: number) => s
  * שורת הכותרות היחידה (הכרעת בעלים 11.10.2026, עודכן 12.10.2026): "בחירות 22", "סקרים" ו"משתתפים" הן כותרות גלויות תמיד, ממורכזות מעל הטור שלהן (לא כפתורים); ליד שם המפלגה — מתג מנדטים | אחוזים,
  * ובצד — כפתור קישור "שיוך בחירות 22".
  */
-function CompareHeader({ view, onView }: { view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
+function CompareHeader({ view, onView, sourceName }: { sourceName: string; view: "seats" | "pct"; onView: (v: "seats" | "pct") => void }) {
   return (
     <div className="seat-head pb-2 border-b-2 border-ink/30">
       <div className="seat-head-mode">
@@ -426,7 +439,7 @@ function CompareHeader({ view, onView }: { view: "seats" | "pct"; onView: (v: "s
       <div role="row" className="seat-head-chips flex">
         {COMPARE.map((c) => (
           <span key={c.id} role="columnheader" className="w-[var(--cw)] shrink-0 flex justify-center text-xs font-bold text-ink whitespace-nowrap">
-            <span>{c.long && <span className="cmp-long">{c.long}</span>}{c.label}</span>
+            <span className="truncate max-w-full" title={c.id === "polls" ? sourceName : c.label}>{c.id === "polls" ? sourceName : <>{c.long && <span className="cmp-long">{c.long}</span>}{c.label}</>}</span>
           </span>
         ))}
       </div>
@@ -440,12 +453,12 @@ function CompareHeader({ view, onView }: { view: "seats" | "pct"; onView: (v: "s
 /**
  * שלושה מספרים בטורים קבועים — מתחת לשם המפלגה, מיושרים לכותרת שמעל הרשימה. המספר בגופן 14px; כשיש מקום ברוחב (50rem ומעלה) הטווח (הנמוך–הגבוה) לידו בגופן קטן, כמו בסקר האתר.
  */
-function CompareCells({ cells }: { cells: Record<CompareKey, { mean: ReactNode; range?: string }> }) {
+function CompareCells({ cells, sourceName }: { sourceName: string; cells: Record<CompareKey, { mean: ReactNode; range?: string }> }) {
   return (
     <span className="flex mt-0.5">
       {COMPARE.map((c) => (
         <span key={c.id} className="w-[var(--cw)] shrink-0 px-1.5 border-s border-paper-line first:border-s-0 font-num tabular text-ink-soft flex items-baseline justify-center gap-1.5 whitespace-nowrap overflow-hidden">
-          <span className="sr-only">{c.label}: </span>
+          <span className="sr-only">{c.id === "polls" ? sourceName : c.label}: </span>
           <bdi dir="ltr" className="text-sm leading-tight">{cells[c.id].mean}</bdi>
           {cells[c.id].range ? <bdi dir="ltr" className="cmp-range text-xs leading-tight">{cells[c.id].range}</bdi> : null}
         </span>
@@ -520,7 +533,7 @@ function FillPreview({
               ))}
             </ul>
           )}
-          <p className="text-xs text-ink-soft mb-3">לפי חלק כל רשימה בממוצע הסקרים מ-{date(POLLS_AS_OF)}; רשימה שבממוצע מתחת לסף מקבלת 0. נעולים לא זזו.</p>
+          <p className="text-xs text-ink-soft mb-3">לפי חלק כל רשימה במקור שנבחר מ-{date(POLLS_AS_OF)}; רשימה שבממוצע מתחת לסף מקבלת 0. נעולים לא זזו.</p>
           <div className="flex gap-2">
             <Btn kind="primary" onClick={onApply}>
               להחיל

@@ -1,3 +1,4 @@
+import { SNAPSHOT_ID, type Selection } from "../../lib/dataResolver";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { shareUrl, type SharedGuess } from "../../lib/shareGuess";
@@ -14,7 +15,7 @@ const TEXT = "בניתי כנסת של 120 — השערה, לא סקר. ומה �
  * משפט קצר וקישור לאתר שמציג את ההשערה המלאה (?g=). בלי תפריט שיתוף במכשיר ⇐ וואטסאפ ישירות.
  * רק המספרים — ושם המשתתף, אם בחרתם לצרף אותו (ברירת מחדל: לא). בלי הקישור האישי ובלי שום פרט אחר.
  */
-export default function Share({ values, pct, username, blocs }: { values: Record<string, number>; pct?: Record<string, number>; username?: string | null; blocs?: BlocTotal[]; open?: boolean }) {
+export default function Share({ values, pct, username, blocs, selection = { product: "polls.mean" } }: { values: Record<string, number>; pct?: Record<string, number>; username?: string | null; blocs?: BlocTotal[]; open?: boolean; selection?: Selection }) {
   const [withName, setWithName] = useState(false);
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
@@ -28,7 +29,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
   const [msg, setMsg] = useState<string | null>(null);
   const [kind, setKind] = useState<"parties" | "blocs">(blocs?.length ? "blocs" : "parties");
   const imageKind = blocs?.length ? kind : "parties";
-  const imageFile = async () => new File([await renderShareImage({ values, pct, username: withName && username ? username : undefined, blocs, kind: imageKind })], imageKind === "blocs" ? "הגושים-שלי.png" : "הכנסת-שלי.png", { type: "image/png" });
+  const imageFile = async () => new File([await renderShareImage({ selection, values, pct, username: withName && username ? username : undefined, blocs, kind: imageKind })], imageKind === "blocs" ? "הגושים-שלי.png" : "הכנסת-שלי.png", { type: "image/png" });
   const download = async () => {
     setBusy(true); setMsg(null);
     try {
@@ -47,7 +48,7 @@ export default function Share({ values, pct, username, blocs }: { values: Record
     setMsg(null);
     setBusy(true);
     const name = withName && username ? username : undefined;
-    const guess: SharedGuess = { seats: values, ...(pct ? { pct } : {}), ...(name ? { username: name } : {}) };
+    const guess: SharedGuess = { comparison: { selection, snapshotId: SNAPSHOT_ID }, seats: values, ...(pct ? { pct } : {}), ...(name ? { username: name } : {}) };
     const url = shareUrl(guess);
     try {
       if (navigator.share) {

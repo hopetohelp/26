@@ -1,8 +1,9 @@
+import { SIMPLE_POLL_MEANS } from "../lib/dataResolver";
 import { useLayoutEffect, useRef, useState } from "react";
 import { PARTY_IMAGES } from "../lib/partyImages";
 import { PartyAvatar } from "./PartyAvatar";
 import { defaultBlocs } from "../pages/guess/model";
-import { POLL_AVERAGE, useCrowdAverage } from "../lib/sources";
+import { useCrowdAverage } from "../lib/sources";
 
 /**
  * תמונות הגוש (הכרעת בעלים 11.10.2026): קודם תמונת מנהיג/י הגוש, גדולה פי 1.5 מהשאר ותמיד מוצגת, ואחריה שאר המפלגות שבגוש.
@@ -39,7 +40,7 @@ function leadersOf(id: string | undefined, lists: string[]): string[] {
 export function leadsOf(id: string | undefined, lists: string[], crowdSeats?: Record<string, number> | null): string[] {
   const fixed = leadersOf(id, lists);
   if (fixed.length) return fixed;
-  const seats = crowdSeats ?? (POLL_AVERAGE.seats as Record<string, number>);
+  const seats = crowdSeats ?? SIMPLE_POLL_MEANS;
   const biggest = [...new Set(lists)].filter((p) => PARTY_IMAGES[p]).sort((a, b) => (seats[b] ?? 0) - (seats[a] ?? 0))[0];
   return biggest ? [biggest] : [];
 }

@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import forecast as F  # noqa: E402
+from forecast_log import summaries_match
 
 LOG = Path(__file__).resolve().parent / "forecast_runs.jsonl"
 FIELDS = {"runAt", "commit", "dirty", "specVersion", "specSha", "codeSha", "dataSha", "horizon", "valid", "passed",
@@ -90,7 +91,20 @@ def test_latest_run_reproduces():
         return
     r = mine[-1]
     out = F.run_backtest(spec, r["horizon"])
-    assert out["passed"] == r["passed"] and out["summary"] == r["summary"], "ההרצה החוזרת שונה מהיומן"
+    assert out["passed"] == r["passed"] and out["valid"] == r["valid"], "תוצאת השער שונה מהיומן"
+    assert summaries_match(out["summary"], r["summary"]), "ההרצה החוזרת שונה מהיומן"
+    per_election = {str(row["knesset"]): {v: [x["voteAccuracy"], x["seatAccuracy"]]
+                    for v, x in row["variants"].items()} for row in out["rows"]}
+    assert per_election == r["perElection"], "המדדים למערכת בחירות שונו"
+
+
+def test_log_summary_binary_noise_only():
+    recorded = {"V5": {"voteAccuracy": 0.9233800000000001}}
+    assert summaries_match(recorded, {"V5": {"voteAccuracy": 0.9233799999999999}})
+    assert not summaries_match(recorded, {"V5": {"voteAccuracy": 0.923379}})
+    assert not summaries_match(recorded, {})
+    assert not summaries_match(recorded, {"V5": {"seatAccuracy": 0.92338}})
+    assert not summaries_match(recorded, {"V5": {"voteAccuracy": float("nan")}})
 
 
 def test_published_disclosure_is_logged():
@@ -100,6 +114,14 @@ def test_published_disclosure_is_logged():
         return
     fc = json.loads(path.read_text(encoding="utf-8"))
     assert fc["gate"]["atHorizon"]["logged"], f"אופק {fc['horizon']} של גרסה {fc['specVersion']} לא נרשם ביומן"
+
+
+def test_published_gate_precision():
+    """פרסום מדדי השער יציב מול שינוי סכימת float בין גרסאות Python."""
+    fc = json.loads((F.ROOT / "src" / "data" / "forecast.json").read_text(encoding="utf-8"))
+    for metrics in fc["gate"]["atHorizon"]["summary"].values():
+        assert all(value == round(value, 10) for value in metrics.values()), metrics
+    assert round(0.9233800000000001, 10) == round(0.9233799999999999, 10)
 
 
 def test_scenario_means():

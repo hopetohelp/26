@@ -1,13 +1,16 @@
+import SourcePicker from "../components/SourcePicker";
+import { useSourcePreference } from "../lib/sourcePreference";
+import { SOURCE_OPTIONS, type Selection } from "../lib/dataResolver";
 import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
 import { Segmented } from "../components/Choice";
 import Explained from "../components/Explained";
-import { POLL_AVERAGE } from "../lib/sources";
+import { MODEL_AVERAGE } from "../lib/sources";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, pollsterLabel, rollingMean, groupSeatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -43,20 +46,17 @@ const GOV_LISTS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
 
 export default function Trends() {
-  const to = POLL_AVERAGE.asOf;
+  const to = MODEL_AVERAGE.asOf;
   const [period, setPeriod] = useState<PeriodId>("2026");
-  const [who, setWho] = useState("");
+  const preference = useSourcePreference("trends");
+  const [temporary, setTemporary] = useState<Selection | null>(null);
+  const selection = temporary ?? preference.selection;
+  const option = SOURCE_OPTIONS.find(o => o.id === selection.source);
   const [ids, setIds] = useState<string[]>(DEFAULT_IDS);
-
-  const pollsters = useMemo(() => {
-    const m = new Map<string, string>();
-    for (const p of usablePolls) if (p.end >= "2026-01-01") m.set(pollsterKey(p), pollsterLabel(p));
-    return [...m.entries()];
-  }, []);
 
   const p0 = PERIODS.find((p) => p.id === period)!;
   const from = p0.from || new Date(toTime(to) - 90 * 86_400_000).toISOString().slice(0, 10);
-  const rawSource = useMemo(() => usablePolls.filter((p) => !who || pollsterKey(p) === who), [who]);
+  const rawSource = useMemo(() => usablePolls.filter((p) => selection.product !== "poll.single" || !!option && p.firm === option.firmId && (!option.seriesId || pollsterKey(p) === option.seriesId)), [selection.product, option]);
   const source = useMemo(() => withLineage(rawSource), [rawSource]);
   // נקודה = 3 ימים בכל האתר, סקר אחד לכל מכון בנקודה (הכרעת בעלים 11.10.2026)
   const days = POINT_WINDOW;
@@ -81,7 +81,7 @@ export default function Trends() {
     .map((s) => ({ s, first: s.points[0], last: s.points[s.points.length - 1] }))
     .sort((a, b) => b.last.v - a.last.v);
   const nowOf = (id: string) => rows.find((r) => r.s.id === id)?.last.v;
-  const who0 = who ? pollsters.find(([k]) => k === who)?.[1] : undefined;
+  const who0 = selection.product === "poll.single" ? option?.label : undefined;
 
   const PRESETS: { label: string; ids: string[] }[] = [
     { label: "הגדולות", ids: DEFAULT_IDS },
@@ -103,17 +103,7 @@ export default function Trends() {
                 <div id="trend-period" className="text-sm font-bold mb-1.5">תקופה</div>
                 <Segmented label="תקופה" value={period} onChange={setPeriod} options={PERIODS.map((p) => ({ id: p.id, label: p.label }))} />
               </div>
-              <label className="block">
-                <span className="block text-sm font-bold mb-1.5">מכון</span>
-                <select className="w-full min-h-[44px] rounded-theme border border-ink/[.35] bg-paper-card px-3 text-sm" value={who} onChange={(e) => setWho(e.target.value)}>
-                  <option value="">כל המכונים</option>
-                  {pollsters.map(([k, l]) => (
-                    <option key={k} value={k}>
-                      {l}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <SourcePicker screen="trends" selection={selection} onChange={setTemporary} notice={preference.notice} />
               <fieldset>
                 <legend className="text-sm font-bold mb-1.5">רשימות ({ids.length})</legend>
                 <div className="flex flex-wrap gap-1.5 mb-2.5" role="group" aria-label="קיצורי בחירה">
@@ -160,7 +150,7 @@ export default function Trends() {
                 source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
                 asOf={`הסקרים עד ${date(to)}`}
                 assumption={
-                  who
+                  who0
                     ? "מכון בודד: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה. בלי סקר של המכון ב-14 הימים האלה — אין נקודה."
                     : "כל המכונים: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה. הנר הוא הנמוך והגבוה בין הסקרים בנקודה (טווח מלא), והעובי לפי כמות הסקרים. ממוצע תיאורי . לא מודל."
                 }

@@ -1,4 +1,4 @@
-import { POLL_AVERAGE } from "../lib/sources";
+import { MODEL_AVERAGE } from "../lib/sources";
 import { splitCls } from "../lib/splitScreens";
 import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
-import { lists2026, listName, meta, results } from "../lib/data";
+import { listName, meta, results } from "../lib/data";
 import { date, dateRange, num, pctValue, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
 
@@ -63,13 +63,13 @@ const m = modelFile as unknown as ModelData;
 const bt = backtestFile as unknown as BacktestData;
 const sc = m.scenarios;
 /** מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר כמו בבית ובדירוג (החלטה 14, 9.10.2026) */
-const govCentral = lists2026.filter((l) => l.gov37).reduce((a, l) => a + (POLL_AVERAGE.seats[l.id] ?? 0), 0);
-const ids = Object.keys(sc.lists).sort((a, b) => POLL_AVERAGE.seats[b] - POLL_AVERAGE.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
+const govCentral = HOME.gov;
+const ids = Object.keys(sc.lists).sort((a, b) => MODEL_AVERAGE.seats[b] - MODEL_AVERAGE.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
 const pctTxt = (x: number) => (x >= 0.995 ? "כמעט בכל התרחישים" : x < 0.005 ? "כמעט באף תרחיש" : `ב-${Math.round(x * 100)}% מהתרחישים`);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 const k25 = results[results.length - 1];
 const wasted2022 = ((k25.valid - k25.lists.filter((l) => l.seats > 0).reduce((a, l) => a + l.votes, 0)) / k25.valid) * 100;
-const SOURCE = `${POLL_AVERAGE.polls} סקרים של ${POLL_AVERAGE.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
+const SOURCE = `${MODEL_AVERAGE.polls} סקרים של ${MODEL_AVERAGE.pollsters} מכונים, מאז הגשת הרשימות (${date(m.start)}); מנוע החוק עם הסכמי העודפים שדווחו`;
 
 function coverageRange() {
   const byCycle = new Map<string, number[]>();
@@ -124,8 +124,8 @@ function ThresholdRisk() {
 }
 
 export default function Scenarios() {
-  const asOfText = `הסקרים עד ${date(POLL_AVERAGE.asOf)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
-  const trendIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0).slice(0, 9);
+  const asOfText = `הסקרים עד ${date(MODEL_AVERAGE.asOf)} · ${num(sc.n)} תרחישים ליום הבחירות (${sc.horizonDays} ימים קדימה)`;
+  const trendIds = ids.filter((id) => MODEL_AVERAGE.seats[id] > 0).slice(0, 9);
   // באחוזים ולא במנדטים: שינוי של עשיריות האחוז אינו מזיז מנדט שלם, והקו היה נראה שטוח
   const series: Series[] = trendIds.map((id) => ({
     id,
@@ -135,11 +135,11 @@ export default function Scenarios() {
   }));
   const cov = coverageRange();
   const govNames = sc.bloc.lists.map(listName).join(", ");
-  const houseIds = ids.filter((id) => POLL_AVERAGE.seats[id] > 0);
+  const houseIds = ids.filter((id) => MODEL_AVERAGE.seats[id] > 0);
 
   return (
     <>
-      <Split title="תרחישים" lead={`יום הבחירות: ממוצע הסקרים, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(POLL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(POLL_AVERAGE.asOf) }))]} />} secondary={<>
+      <Split title="תרחישים" lead={`ממוצע המודל היום, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(MODEL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(MODEL_AVERAGE.asOf) }))]} />} secondary={<>
 
       <Card title="לכל רשימה">
         <Explained
@@ -174,7 +174,7 @@ export default function Scenarios() {
                     return (
                       <tr key={id} className="border-b border-paper-line/60">
                         <th scope="row" className="py-1 pe-3 text-right font-medium">{listName(id)}</th>
-                        <td className="pe-3 tabular-nums font-bold">{POLL_AVERAGE.seats[id]}</td>
+                        <td className="pe-3 tabular-nums font-bold">{MODEL_AVERAGE.seats[id]}</td>
                         <td className="pe-3 tabular-nums">{seatsFmt(Math.round(l.seatsMean * 10) / 10)}</td>
                         <td className="pe-3 tabular-nums">{l.seats[1]}</td>
                         <td className="pe-3 tabular-nums">{rng(l.seats[0], l.seats[2])}</td>
@@ -260,7 +260,7 @@ export default function Scenarios() {
         <Explained
           kind="סיכום סקרים"
           source={SOURCE}
-          asOf={`הסקרים עד ${date(POLL_AVERAGE.asOf)}`}
+          asOf={`הסקרים עד ${date(MODEL_AVERAGE.asOf)}`}
           assumption="בכל יום: הממוצע המוחלק אחרי תיקון אפקט הבית של כל מכון. באחוזים — כי שינוי של עשיריות האחוז אינו מזיז מנדט שלם."
           methodAnchor="model"
         >
@@ -312,7 +312,7 @@ export default function Scenarios() {
         <Explained
           kind="סיכום סקרים"
           source={SOURCE}
-          asOf={`הסקרים עד ${date(POLL_AVERAGE.asOf)}`}
+          asOf={`הסקרים עד ${date(MODEL_AVERAGE.asOf)}`}
           assumption="לכל מכון נאמד 'אפקט בית' — כמה הוא שונה בעקביות מהשאר. הממוצע מניח שסכום האפקטים הוא אפס, כלומר שהמכונים יחד אינם מוטים. זו הנחה, לא עובדה."
           methodAnchor="model"
         >
@@ -331,9 +331,9 @@ export default function Scenarios() {
               <tbody>
                 <tr className="border-b border-paper-line bg-accent-soft">
                   <th scope="row" className="py-2 pe-3 text-right">הממוצע (כל המכונים)</th>
-                  <td className="pe-3 tabular-nums">{POLL_AVERAGE.polls}</td>
+                  <td className="pe-3 tabular-nums">{MODEL_AVERAGE.polls}</td>
                   {houseIds.map((id) => (
-                    <td key={id} className="pe-2 tabular-nums font-bold">{POLL_AVERAGE.seats[id]}</td>
+                    <td key={id} className="pe-2 tabular-nums font-bold">{MODEL_AVERAGE.seats[id]}</td>
                   ))}
                 </tr>
                 {[...m.house].sort((a, b) => b.seats.likud - a.seats.likud).map((h) => (
@@ -344,7 +344,7 @@ export default function Scenarios() {
                     </th>
                     <td className="pe-3 tabular-nums">{h.polls}</td>
                     {houseIds.map((id) => {
-                      const d = h.seats[id] - POLL_AVERAGE.seats[id];
+                      const d = h.seats[id] - MODEL_AVERAGE.seats[id];
                       return (
                         <td key={id} className={`pe-2 tabular-nums ${Math.abs(d) >= 3 ? "font-bold text-warn" : ""}`}>
                           {h.seats[id]}

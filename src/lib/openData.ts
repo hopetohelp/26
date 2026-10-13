@@ -1,3 +1,8 @@
+import { compareMethods } from "./methodComparison";
+import { PUBLIC_METRICS } from "./publicMetricResolver";
+import { DATA_PRODUCTS, SUPPORT_RECONSTRUCTION, SCREEN_POLICY, METHOD_VERSION, identity } from "./dataCatalog";
+import { SNAPSHOT_ID, SOURCE_OPTIONS, ADJUSTED_AVERAGE, resolveDataset } from "./dataResolver";
+import { quality } from "./quality";
 /**
  * קובצי הנתונים הפתוחים ו-llms.txt (הכרעת בעלים 12.10.2026): מקור אמת אחד לשלושה צרכנים — מפתח (אדם או סוכן קוד בריפו),
  * סשן Claude Code שעובד על האתר, ושרת ה-MCP. אין עותק נפרד לאף אחד מהם: הכול נבנה כאן, מאותן פונקציות שהמסכים משתמשים בהן,
@@ -12,7 +17,7 @@ import forecastFile from "../data/forecast.json";
 import backtestFile from "../data/backtest.json";
 import historyFile from "../data/history.json";
 import { lists2026, listName, meta, polls, registry, results, subgroupPolls, summarize, usablePolls } from "./data";
-import { POLL_AVERAGE } from "./sources";
+import { MODEL_AVERAGE } from "./sources";
 import { GOV_POINTS, HOME, LATEST_POLLS } from "./homeData";
 import { familyRows, pollsterRecords, summarizeCycle, type Cycle, type ElectionResult } from "./history";
 import { DEFAULT_LINEAGE, K25_LISTS, lineageRows } from "./lineage";
@@ -39,9 +44,9 @@ export const screenUrl = (path: string) => `${SITE}#${path}`;
 /** כללי האתר שכל צרכן חייב לכבד (מופיעים בכל קובץ וב-llms.txt) */
 export const RULES = {
   neutrality: "האתר אינו עורך סקרים ואינו ממליץ על אף רשימה. בלי עמדה, בלי המלצה ובלי תחזית מי ינצח. \"מפלגות הממשלה היוצאת\" היא הגדרה עובדתית (ממשלה 37).",
-  transparency: "לכל מספר מחושב: תאריך וקישור \"איך זה חושב?\" לערך שלו במילון המספרים (הסוג — בשדה about.kind ובערך). מי שמצטט מספר — מצטט גם אותם, פעם אחת לכל מקור.",
+  transparency: "לכל מספר מחושב: תאריך וקישור \"איך זה חושב?\" לערך שלו במילון המספרים (הסוג נשמר בחוזה הנתונים). מי שמצטט מספר — מצטט גם אותם, פעם אחת לכל מקור.",
   wording: "תרחישים מוצגים כ\"שיעור תרחישים\": לא כ\"סיכוי\" ולא כתוצאה צפויה.",
-  polls: "האתר מרכז פרסומים קיימים של סקרים: כל סקר שבנתוני המקור נכנס לכל החישובים. \"אומת\" / \"לא אומת\" היא תווית שקיפות בלבד, לא תנאי כניסה.",
+  polls: "האתר מרכז פרסומים קיימים של סקרים: הסקרים נקלטים ללא עיכוב; כל מוצר בוחר קלט לפי כלל ההכללה הרשום שלו. \"אומת\" / \"לא אומת\" היא תווית שקיפות בלבד, לא תנאי כניסה.",
   crowd: "השערות המשתתפים אינן סקר: מדגם עצמי, לא מייצג, בלי דגימה ובלי שקלול.",
 } as const;
 
@@ -61,6 +66,8 @@ export interface About {
   screen: string;
   file: string;
   rules: typeof RULES;
+  snapshotId?: string;
+  methodVersion?: string;
 }
 
 export interface OpenFile {
@@ -83,11 +90,6 @@ export interface OpenFile {
 const SRC_POLLS = "טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר";
 const SRC_CEC = "ועדת הבחירות המרכזית — התוצאות הרשמיות (votes21–votes25.bechirot.gov.il)";
 
-/** עיגול לשלוש ספרות, כדי שהקבצים יהיו קריאים; NaN ⇐ null (כמו JSON רגיל) */
-function tidy<T>(x: T): T {
-  return JSON.parse(JSON.stringify(x, (_k, v) => (typeof v === "number" && !Number.isInteger(v) ? Math.round(v * 1000) / 1000 : v)));
-}
-
 const cycles = historyFile.cycles as unknown as Cycle[];
 const pastResults = results as unknown as ElectionResult[];
 const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
@@ -107,7 +109,7 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/average.json",
     title: "ממוצע ומודל",
-    description: "ממוצע המודל (מנדטים ואחוזים) — אותו מספר שבבית ובמצב היום; הסקר האחרון של כל מכון ב-14 הימים האחרונים והממוצע והטווח ביניהם; מגמת המודל לאורך המחזור ומגמת מפלגות הממשלה היוצאת.",
+    description: "שלושה מוצרים נפרדים: ממוצע סקרים, ממוצע מותאם וממוצע המודל; הסקר האחרון של כל מכון ב-14 הימים האחרונים והממוצע והטווח ביניהם; מגמת המודל לאורך המחזור ומגמת מפלגות הממשלה היוצאת.",
     methodAnchor: "means",
     kind: "סיכום סקרים",
     source: SRC_POLLS,
@@ -115,9 +117,16 @@ export const OPEN_FILES: OpenFile[] = [
     fields: "average (seats, shares, asOf, lastPoll, polls, pollsters), latestPerPollster{asOf, polls[], summary[] (id, mean, min, max, n, passing)}, house[] (מכון ⇐ מנדטים), trend[] (date, seats, shares), government{lists, seats, series, candles}",
     build: () => ({
       names: nameMap(),
-      average: POLL_AVERAGE,
+      average: { ...MODEL_AVERAGE, productId: "model.mean", label: DATA_PRODUCTS["model.mean"].name },
+      products: Object.fromEntries(Object.keys(DATA_PRODUCTS).filter(id => id !== "poll.single").map(id => [id, resolveDataset({ product: id as keyof typeof DATA_PRODUCTS })])),
+      catalog: DATA_PRODUCTS,
+      reconstruction: SUPPORT_RECONSTRUCTION,
+      sourceOptions: SOURCE_OPTIONS,
+      providerInput: { polls, meta, lists2026, model: modelFile },
+      screenPolicy: SCREEN_POLICY,
+      adjusted: ADJUSTED_AVERAGE,
       latestPerPollster: {
-        asOf: POLL_AVERAGE.asOf,
+        asOf: MODEL_AVERAGE.asOf,
         windowDays: 14,
         polls: LATEST_POLLS.map((p) => ({ id: p.id, end: p.end, firmHe: p.firmHe, publisherHe: p.publisherHe, sample: p.sample, values: p.values, urls: p.urls, verified: p.verified })),
         summary: summarize(LATEST_POLLS, lists2026.map((l) => l.id)),
@@ -145,7 +154,7 @@ export const OPEN_FILES: OpenFile[] = [
     fields: "scenarios (count, lists{id:{pass, seats[10%,50%,90%], seatsMean, seatsHist}}, bloc, agreementsMoveSeat), groups{safe, edge, below, scenarioEdge}, blocs{coalition, arab, opposition}, backtest (summary, horizons, rows)",
     build: () => ({
       names: nameMap(),
-      asOf: POLL_AVERAGE.asOf,
+      asOf: MODEL_AVERAGE.asOf,
       threshold: THRESHOLD_PCT,
       scenarios: { count: modelFile.params.scenarios, ...modelFile.scenarios },
       // safe/edge/below — לפי הסקרים האחרונים בלבד (הכרעה 4); scenarioEdge — הסיכון שעולה מתרחישי המודל בלבד
@@ -265,6 +274,12 @@ export const OPEN_FILES: OpenFile[] = [
     }),
   },
   {
+    path: "data/method-comparison.json", title: "בדיקת שלושת הממוצעים", description: "שלושת המוצרים מול תוצאות עבר, רק מסקרים שהיו זמינים עד מועד הבדיקה; הנחות ההסכמים מפורשות", methodAnchor: "means", kind: "השוואה", source: SRC_POLLS + "; " + SRC_CEC, screen: "/method", fields: "rows[] (cycle, asOf, inputRefs, actual, products, assumptions)", build: () => ({ modelSignature: backtestFile.modelSignature, rows: compareMethods(cycles, pastResults, backtestFile.rows) }),
+  },
+  {
+    path: "data/quality.json", title: "איכות הנתונים", description: "כיסוי, סתירות ותיקונים לפי שדה, ללא חסימת פרסום", methodAnchor: "current", kind: "סיכום סקרים", source: SRC_POLLS, screen: "/method?tab=sources", fields: "coverage, conflicts, corrections", build: () => ({ ...quality }),
+  },
+  {
     path: "data/dictionary.json",
     title: "מילון המספרים",
     description: "ערך לכל מספר שהאתר מחשב: איפה הוא מופיע, סוג, מקור, ההנחה המרכזית והפירוט המלא — אותו תוכן שבמסך \"שיטה, מקורות ואודות\".",
@@ -308,13 +323,13 @@ export function aboutOf(f: OpenFile, updatedAt = meta.dataAsOf): About {
 /** תוכן קובץ: `about` ראשון, ואחריו הנתונים */
 export function buildFile(f: OpenFile): Record<string, unknown> {
   if (!f.build) throw new Error(`${f.path} מגיע ממקור חיצוני`);
-  return { about: aboutOf(f), ...tidy(f.build()) };
+  return { about: { ...aboutOf(f), snapshotId: SNAPSHOT_ID, methodVersion: METHOD_VERSION }, ...f.build() };
 }
 
 /** עטיפת קובץ חיצוני (dashboard.json) ב-`about`, בלי לשנות את שאר השדות; "נכון ל" = מועד הפרסום של השרת */
 export function wrapExternal(f: OpenFile, data: Record<string, unknown>): Record<string, unknown> {
   const { about: _old, ...rest } = data;
-  return { about: aboutOf(f, typeof rest.publishedAt === "string" ? rest.publishedAt : meta.dataAsOf), ...rest };
+  return { about: { ...aboutOf(f, typeof rest.publishedAt === "string" ? rest.publishedAt : meta.dataAsOf), snapshotId: `crowd-${identity(rest)}`, methodVersion: METHOD_VERSION }, ...rest };
 }
 
 /** האינדקס: data/index.json — רשימת הקבצים, הכללים, המסכים ומילון המספרים */
@@ -330,6 +345,8 @@ export function buildIndex(mcpUrl: string | null) {
       title: "אינדקס הנתונים הפתוחים",
       description: "כל קובצי הנתונים של האתר בכתובות קבועות. אותם קבצים משמשים את האתר, את המפתחים ואת שרת ה-MCP.",
       updatedAt: meta.dataAsOf,
+      snapshotId: SNAPSHOT_ID,
+      methodVersion: METHOD_VERSION,
       kind: "נתון רשמי",
       source: "האתר עצמו — נבנה בכל פרסום (כל 4 שעות)",
       method: methodUrl("numbers"),
@@ -338,6 +355,12 @@ export function buildIndex(mcpUrl: string | null) {
       file: SITE + "data/index.json",
       rules: RULES,
     },
+    snapshotId: SNAPSHOT_ID,
+    catalog: DATA_PRODUCTS,
+      reconstruction: SUPPORT_RECONSTRUCTION,
+    publicMetrics: PUBLIC_METRICS,
+    screenPolicy: SCREEN_POLICY,
+    sourceOptions: SOURCE_OPTIONS,
     site: SITE,
     electionDay: meta.electionDay,
     llms: SITE + "llms.txt",
@@ -412,9 +435,11 @@ export function checkOpenData(read: (path: string) => string | null, opts: { wit
     if (!a) { errors.push(`${f.path}: אין about`); continue; }
     for (const k of ["title", "updatedAt", "kind", "source", "method", "screen"] as const) if (!a[k]) errors.push(`${f.path}: about.${k} חסר`);
     if (a.method !== methodUrl(f.methodAnchor)) errors.push(`${f.path}: about.method אינו הקישור למילון`);
+    if (f.build && a.snapshotId !== SNAPSHOT_ID) errors.push(`${f.path}: גרסת הנתונים אינה תואמת לאינדקס`);
     if (f.build && a.updatedAt !== meta.dataAsOf) errors.push(`${f.path}: לא עדכני (${a.updatedAt} ולא ${meta.dataAsOf})`);
     if (!f.build && Number.isNaN(Date.parse(a.updatedAt ?? ""))) errors.push(`${f.path}: about.updatedAt אינו תאריך`);
   }
+  if (idx.snapshotId !== SNAPSHOT_ID) errors.push("data/index.json: גרסת הנתונים אינה תואמת לבנייה");
   if (idx.about.updatedAt !== meta.dataAsOf) errors.push("data/index.json אינו עדכני");
   return errors;
 }

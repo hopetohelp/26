@@ -18,18 +18,18 @@ const hits = (re: RegExp, except: string[] = []) =>
   FILES.filter((f) => !except.some((e) => f.path.endsWith(e))).flatMap((f) => codeLines(f.text).filter(({ line }) => re.test(line)).map(({ n }) => `${f.path}:${n}`));
 
 describe("מקור אמת אחד לממוצעי הסקרים", () => {
-  it("תאריך הממוצע, מספר הסקרים והמכונים נקראים רק מ-POLL_AVERAGE (src/lib/sources.ts)", () => {
+  it("תאריך הממוצע, מספר הסקרים והמכונים נקראים רק מ-MODEL_AVERAGE (src/lib/sources.ts)", () => {
     // הקוד שמחשב מהמודל (home.ts) אינו מציג "נכון ל"; כל השאר חייב לקרוא מ-sources.ts
-    expect(hits(/\b(model|m|modelFile)\.(asof|polls|pollsters)\b/, ["lib/sources.ts"])).toEqual([]);
+    expect(hits(/\b(model|m|modelFile)\.(asof|polls|pollsters)\b/, ["lib/dataResolverCore.ts"])).toEqual([]);
   });
   it("אין עוד פונקציית 'תאריך הסקר האחרון' שעלולה לסטות מהממוצע", () => {
     expect(hits(/lastPollDate/)).toEqual([]);
   });
-  it("מסך שמציג ממוצע סקרים משתמש ב-POLL_AVERAGE", () => {
+  it("מסך שמציג ממוצע סקרים משתמש ב-MODEL_AVERAGE", () => {
     const changes = FILES.find((f) => f.path.endsWith("pages/Changes.tsx"))!.text;
-    expect(changes).toContain("POLL_AVERAGE.asOf");
-    expect(changes).toContain("POLL_AVERAGE.shares");
-    expect(changes).toContain("POLL_AVERAGE.seats");
+    expect(changes).toContain("MODEL_AVERAGE.asOf");
+    expect(changes).toContain("resolveDataset(selection");
+    expect(changes).toContain("resolveSupport(selection");
   });
 });
 
