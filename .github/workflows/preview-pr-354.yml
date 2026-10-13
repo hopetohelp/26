@@ -34,7 +34,7 @@ jobs:
       - name: בדיקת טעינת האתר והקבצים דרך GitHub Actions
         run: |
           set -euo pipefail
-          site=https://preview-pr-354.elections26.pages.dev/
+          site=https://preview-pr-354.elections26-1hb.pages.dev/
           for attempt in 1 2 3 4 5 6; do
             if curl --fail --silent --show-error --location --max-time 15 "$site" -o /tmp/preview.html && grep -q '<div id="root"></div>' /tmp/preview.html; then break; fi
             if [ "$attempt" -eq 6 ]; then exit 1; fi
