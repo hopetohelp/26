@@ -1584,5 +1584,43 @@
    "sample_respondents": null
   },
   "status": "secondary"
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-13",
+  "id": "2026-10-12-lri-p4a-walla",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "הנתונים הועתקו ישירות מכתבת וואלה (המזמין): מנדטי כל 12 הרשימות, סך 120, ארבעת האחוזים מתחת לחסימה והגושים (49/54/13/4) — כולם תואמים. יום השדה (\"אתמול (שני)\") נלקח מהכתבה. המדגם, טעות הדגימה והאוכלוסייה לא נמסרו.",
+  "source": "https://www.walla.co.il/news/politics/383957251",
+  "sourceDetails": {
+   "published": "2026-10-13T13:27:00+03:00",
+   "sample_respondents": null
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383957251"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383957251"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383957251"
+   }
+  }
  }
 ]
