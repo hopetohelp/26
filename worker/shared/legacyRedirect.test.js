@@ -4,6 +4,9 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { buildLegacyRedirect, redirectHtml } from "../../scripts/build-legacy-redirect.mjs";
+import { webcrypto } from "node:crypto";
+import { TextEncoder } from "node:util";
+import { vi } from "vitest";
 
 const script = redirectHtml().match(/<script>([\s\S]*?)<\/script>/)?.[1];
 function redirected(url) {
@@ -20,8 +23,8 @@ describe("העברת קישורים ישנים לאתר החדש", () => {
     expect(redirected("https://hopetohelp.github.io/26/#/guess?t=private-token&f=feedback-token")).toBe("https://26.hopetohelp.net/#/guess?t=private-token&f=feedback-token");
   });
 
-  it("ממשיכה ישירות כשיש רק מזהה ביקור או העדפת תצוגה", () => {
-    const data = new Map([["elections26.vid", "visitor"], ["elections26.mode", "dark"]]);
+  it("ממשיכה ישירות כשאין מידע מקומי", () => {
+    const data = new Map();
     let next;
     runInNewContext(script, {
       window: { location: { href: "https://hopetohelp.github.io/26/#/polls", replace: (value) => { next = value; } } },
@@ -44,45 +47,47 @@ describe("העברת קישורים ישנים לאתר החדש", () => {
       expect(existsSync(join(target, "assets"))).toBe(false);
       expect(readFileSync(join(target, "index.html"), "utf8")).toContain("26.hopetohelp.net");
       expect(existsSync(join(target, "404.html"))).toBe(true);
+      expect(existsSync(join(target, "redirect.css"))).toBe(true);
+      expect(existsSync(join(target, "fonts", "rubik-hebrew.woff2"))).toBe(true);
     } finally { rmSync(root, { recursive: true, force: true }); }
   });
 
-  it("מעבירה מידע מקומי דרך חלון האתר החדש לפני המעבר, בלי למחוק לפני אישור", () => {
+  it("מוסרת מידע אוטומטית לשרת חד-פעמי ושומרת את המקור", async () => {
     const data = new Map([["elections26.crowd.token", "private-token"], ["elections26.vid", "old-visitor"]]);
     const storage = {
       get length() { return data.size; },
       key: (i) => [...data.keys()][i],
       getItem: (key) => data.get(key) ?? null,
       removeItem: (key) => data.delete(key),
+      setItem: (key, value) => data.set(key, value),
     };
     const listeners = {};
     const elements = {
       status: { textContent: "" },
-      transfer: { hidden: true, onclick: null },
       manual: { href: "" },
+      fallback: { hidden: true },
+      progress: { hidden: false },
+      retry: { addEventListener: () => {} },
     };
     const sent = [];
-    const popup = { postMessage: (value, target) => sent.push([value, target]), close: () => {} };
     let next;
-    let popupUrl;
     const window = {
       location: { href: "https://hopetohelp.github.io/26/#/g/group", replace: (value) => { next = value; } },
-      addEventListener: (name, fn) => { listeners[name] = fn; },
-      open: (url) => { popupUrl = url; return popup; },
     };
-    runInNewContext(script, { window, URL, localStorage: storage, document: { getElementById: (id) => elements[id] } });
+    runInNewContext(script, {
+      window, URL, localStorage: storage, TextEncoder, crypto: webcrypto, AbortController, setTimeout, clearTimeout,
+      fetch: async (url, init) => {
+        sent.push({ url, body: JSON.parse(init.body) });
+        return { ok: true, json: async () => ({ ticket: "T".repeat(43) }) };
+      },
+      document: { readyState: "loading", addEventListener: (name, fn) => { listeners[name] = fn; }, getElementById: (id) => elements[id] },
+    });
     expect(next).toBeUndefined();
     listeners.DOMContentLoaded();
-    expect(elements.transfer.hidden).toBe(false);
-    elements.transfer.onclick();
-    expect(popupUrl).toBe("https://26.hopetohelp.net/?migration=1");
+    await vi.waitFor(() => expect(next).toBe("https://26.hopetohelp.net/#handoff=" + "T".repeat(43)));
     expect(data.get("elections26.crowd.token")).toBe("private-token");
-    listeners.message({ origin: "https://26.hopetohelp.net", source: popup, data: { kind: "e26-migration-ready" } });
-    expect(sent[0][0].kind).toBe("e26-migration-data");
-    expect(sent[0][0].entries.length).toBe(2);
-    expect(sent[0][1]).toBe("https://26.hopetohelp.net");
-    listeners.message({ origin: "https://26.hopetohelp.net", source: popup, data: { kind: "e26-migration-done" } });
-    expect(data.size).toBe(0);
-    expect(next).toBe("https://26.hopetohelp.net/#/g/group");
+    expect(sent[0].body.entries.length).toBe(2);
+    expect(sent[0].body.next).toBe("https://26.hopetohelp.net/#/g/group");
+    expect(sent[0].url).toContain("/migration/create");
   });
 });
