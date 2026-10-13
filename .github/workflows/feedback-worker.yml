@@ -2,7 +2,7 @@ name: שרת הפידבק
 on:
   push:
     branches: [main]
-    paths: ["worker/feedback/**", ".github/workflows/feedback-worker.yml"]
+    paths: ["worker/feedback/**", "worker/shared/**", ".github/workflows/feedback-worker.yml"]
   workflow_dispatch:
 permissions:
   contents: read

@@ -24,10 +24,10 @@ beforeEach(() => {
   env = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", IP_KEY: "k", DATA_KEY: "d", GOOGLE_CLIENT_ID: CLIENT, GOOGLE_JWKS: [jwk], NOW: () => Date.parse("2026-10-08T10:00:00Z") };
 });
 let ip = 0;
-const call = async (path, { body, token } = {}) => {
+const call = async (path, { body, token, origin = env.ALLOWED_ORIGIN } = {}) => {
   const res = await worker.fetch(new Request("https://w.example" + path, {
     method: body === undefined ? "GET" : "POST",
-    headers: { "content-type": "application/json", origin: env.ALLOWED_ORIGIN, "cf-connecting-ip": `9.9.${ip >> 8}.${ip++ & 255}`, ...(token ? { authorization: "Bearer " + token } : {}) },
+    headers: { "content-type": "application/json", origin, "cf-connecting-ip": `9.9.${ip >> 8}.${ip++ & 255}`, ...(token ? { authorization: "Bearer " + token } : {}) },
     body: body === undefined ? undefined : JSON.stringify(body),
   }), env);
   return { status: res.status, data: await res.json().catch(() => null) };
@@ -261,6 +261,18 @@ describe("אימות מייל", () => {
     expect(deleted).toEqual(["real.person@example.com"]);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM email_verify").get().n).toBe(0);
     expect((await call("/account/verify/send", { token: r.data.token, body: {} })).data.error).toBe("nothing_to_verify");
+  });
+
+  it("קישורי אימות ואיפוס חוזרים לאתר החדש כשממנו התחילה הבקשה", async () => {
+    env.ALLOWED_ORIGINS = "https://hopetohelp.github.io,https://26.hopetohelp.net";
+    const origin = "https://26.hopetohelp.net";
+    const r = await call("/auth/register", { body: { email: "parallel@example.com", password: PW }, origin });
+    expect((await call("/account/verify/send", { token: r.data.token, body: {}, origin })).status).toBe(200);
+    expect(sent[0].continueUrl).toBe(`${origin}/#/support`);
+    const id = (await call("/me", { token: r.data.token })).data.participant;
+    env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = ?").run(id);
+    expect((await call("/auth/forgot", { body: { email: "parallel@example.com" }, origin })).status).toBe(200);
+    expect(sent[1].continueUrl).toMatch(/^https:\/\/26\.hopetohelp\.net\/\?reset=[\w-]+$/);
   });
 
   it("שליחה חוזרת משתמשת באותו משתמש זמני; מוגבלת ל-3 בשעה; בלי מפתח Firebase — לא זמין", async () => {

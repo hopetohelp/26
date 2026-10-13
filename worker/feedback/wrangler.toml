@@ -6,6 +6,7 @@ workers_dev = true
 
 [vars]
 ALLOWED_ORIGIN = "https://hopetohelp.github.io"
+ALLOWED_ORIGINS = "https://hopetohelp.github.io,https://26.hopetohelp.net"
 
 [[d1_databases]]
 binding = "DB"

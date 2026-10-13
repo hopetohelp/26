@@ -1,4 +1,5 @@
 import { personalTotals, migrateBlocs, compositionKey } from "./lib/blocDefinitions.js";
+import { allowedOrigin, returnSiteUrl } from "../shared/origins.js";
 /**
  * שרת השתתפות הגולשים — "ההשערה שלי" ודשבורד הגולשים (Cloudflare Worker + D1 ‏elections26-crowd).
  * השיטה: docs/השתתפות-גולשים.md · החוזה (נתיבים וצורות תשובה): src/lib/crowdApi.ts — השרת מממש בדיוק אותו.
@@ -36,9 +37,8 @@ const IMAGE_ROUTES = new Set(["POST /group/image", "POST /admin/groups/image"]);
 const RESET_TTL = 30 * 60 * 1000;
 
 function cors(env, origin) {
-  const allowed = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost:\d+$/.test(origin || "");
   return {
-    "access-control-allow-origin": allowed ? origin : env.ALLOWED_ORIGIN,
+    ...(allowedOrigin(env, origin) ? { "access-control-allow-origin": origin } : {}),
     "access-control-allow-methods": "GET, POST, OPTIONS",
     "access-control-allow-headers": "content-type, authorization",
     "access-control-max-age": "86400",
@@ -812,7 +812,7 @@ const routes = {
         idToken = await fb.signUp(env, email, password);
         await env.DB.prepare("INSERT INTO email_verify (participant, fb_enc, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET fb_enc = excluded.fb_enc, created_at = excluded.created_at").bind(participant, await seal(env, password), iso(now)).run();
       }
-      await fb.sendVerify(env, idToken, env.SITE_URL ? `${env.SITE_URL}#/support` : undefined);
+      await fb.sendVerify(env, idToken, `${returnSiteUrl(env, request.headers.get("origin"))}#/support`);
     } catch (e) {
       throw fbFailure(e);
     }
@@ -1026,7 +1026,7 @@ const routes = {
         env.DB.prepare("INSERT INTO password_reset (participant, secret_hash, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET secret_hash = excluded.secret_hash, created_at = excluded.created_at").bind(row.participant, await sha256(secret), iso(now)),
         env.DB.prepare("INSERT INTO password_reset_email (participant, email_hash) VALUES (?, ?) ON CONFLICT(participant) DO UPDATE SET email_hash = excluded.email_hash").bind(row.participant, eh),
       ]);
-      await fb.sendVerify(env, idToken, `${env.SITE_URL || ""}?reset=${secret}`, { strict: true });
+      await fb.sendVerify(env, idToken, `${returnSiteUrl(env, request.headers.get("origin"))}?reset=${secret}`, { strict: true });
     } catch (e) {
       throw fbFailure(e);
     }

@@ -93,6 +93,11 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+          if-no-files-found: error
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -116,4 +121,43 @@ jobs:
             sleep 10
           done
           echo "האתר החי לא עבר בדיקת smoke לאחר הפרסום" >&2
+          exit 1
+  deploy-parallel:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: cloudflare-pages
+      url: https://26.hopetohelp.net/
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a64716cf8cec4b4885a5eb06e9a3ee9a
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+      - name: פרסום אותו תוצר ל-Cloudflare Pages
+        run: |
+          set -euo pipefail
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN חסר — הפרסום המקביל לא בוצע" >&2
+            exit 1
+          fi
+          npx --yes wrangler@4 pages deploy dist --project-name elections26 --branch main
+      - name: בדיקת האתר המקביל
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            if curl --fail --silent --show-error --location --max-time 15 https://26.hopetohelp.net/ -o /tmp/parallel.html \
+              && grep -q '<div id="root"></div>' /tmp/parallel.html; then
+              echo "האתר המקביל נגיש"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "האתר המקביל לא עבר בדיקת smoke" >&2
           exit 1

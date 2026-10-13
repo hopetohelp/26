@@ -13,6 +13,7 @@ import { TOOL_BY_NAME, ToolError } from "./lib/tools.js";
 import { siteJson } from "./lib/site.js";
 import { LIMITS, allow, cleanupLimits, logUse, publicKey, userKey } from "./lib/limits.js";
 import { cleanupStats, dashboard, publicEnabled, setPublicEnabled, track } from "./lib/stats.js";
+import { allowedOrigin } from "../shared/origins.js";
 
 const MAX_BODY = 256 * 1024;
 const clock = (env) => (env.NOW ? env.NOW() : Date.now());
@@ -23,8 +24,7 @@ const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(d
 function cors(env, request, path) {
   const origin = request.headers.get("origin") || "";
   if (path.startsWith("/authorize/") || path.startsWith("/admin/")) {
-    const ok = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost(:\d+)?$/.test(origin);
-    return { "access-control-allow-origin": ok ? origin : env.ALLOWED_ORIGIN, "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "authorization, content-type", vary: "origin" };
+    return { ...(allowedOrigin(env, origin) ? { "access-control-allow-origin": origin } : {}), "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "authorization, content-type", vary: "origin" };
   }
   return {
     "access-control-allow-origin": "*",

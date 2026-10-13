@@ -11,6 +11,7 @@ GOOGLE_CLIENT_ID = "842977993302-8n4sibbf7rgr6e1ludvi28oojua9ht9t.apps.googleuse
 # מפתח ה-Web של פרויקט Firebase לאימות מייל. גלוי לפי Firebase (לא סוד); מומלץ להגביל אותו ב-Google Cloud ל-Identity Toolkit API
 FIREBASE_API_KEY = "AIzaSyCpQqdBDjlh9zWEDBwnDhBK93wLONlvXzs"
 ALLOWED_ORIGIN = "https://hopetohelp.github.io"
+ALLOWED_ORIGINS = "https://hopetohelp.github.io,https://26.hopetohelp.net"
 SITE_URL = "https://hopetohelp.github.io/26/"
 # טווח הסקרים לבדיקת השערות חריגות (נבנה עם האתר: scripts/poll-ranges.mjs)
 POLL_RANGES_URL = "https://hopetohelp.github.io/26/poll-ranges.json"

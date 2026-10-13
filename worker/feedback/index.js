@@ -20,6 +20,7 @@
  * - להגבלת קצב נשמר רק גיבוב של ה-IP עם התאריך: עד 8 הודעות ביום מאותו מקור (הערות ותגובות יחד).
  * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
+import { allowedOrigin } from "../shared/origins.js";
 // "design" נשאר לתאימות עם דפדפנים ישנים; במסך מוצג כ"רעיון לשיפור"
 const TOPICS = new Set(["data", "idea", "design", "theory", "other"]);
 const MAX_TEXT = 2000;
@@ -36,9 +37,8 @@ const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "
 const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread", "/guess", "/community"]);
 
 function cors(env, origin) {
-  const allowed = origin === env.ALLOWED_ORIGIN || /^http:\/\/localhost:\d+$/.test(origin || "");
   return {
-    "access-control-allow-origin": allowed ? origin : env.ALLOWED_ORIGIN,
+    ...(allowedOrigin(env, origin) ? { "access-control-allow-origin": origin } : {}),
     "access-control-allow-methods": "GET, POST, DELETE, OPTIONS",
     "access-control-allow-headers": "content-type, authorization",
     "access-control-max-age": "86400",

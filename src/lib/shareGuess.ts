@@ -4,8 +4,9 @@
  * אין בו שום פרט אחר. הפענוח הגנתי: כל ערך נבדק, ומה שלא עובר ⇐ null (הכרטיס פשוט לא מוצג).
  */
 import { TOTAL } from "./fillAll";
+import { siteUrl } from "./siteUrls";
 
-export const SITE_URL = "https://hopetohelp.github.io/26/";
+export const SITE_URL = siteUrl();
 const MAX_LEN = 1500;
 const USER_RE = /^[א-תA-Za-z0-9_]{3,24}$/;
 
