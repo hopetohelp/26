@@ -427,6 +427,28 @@ describe("מנהל לפי חשבון ומספרי ניהול", () => {
     expect((await asAdmin("short")).status).toBe(401);
   });
 
+  it("קישור חד-פעמי להגדרת מנהל: דורש כניסה, תקף פעם אחת, ופג תוקפו", async () => {
+    const a = await call("/auth/register", { body: { email: "owner@example.com", password: PW } });
+    const b = await call("/auth/register", { body: { email: "other@example.com", password: PW } });
+    const code = "c".repeat(40);
+    const put = async (c, expires) => env.DB.raw.prepare("INSERT INTO admin_claims (hash, created_at, expires_at) VALUES (?, ?, ?)").run(await sha256(c), "x", expires);
+    await put(code, "2026-10-08T11:00:00.000Z");
+    expect((await call("/admin/claim", { body: { code } })).status).toBe(401);
+    expect((await call("/admin/claim", { token: a.data.token, body: { code: "short" } })).status).toBe(400);
+    expect((await call("/admin/claim", { token: a.data.token, body: { code: "d".repeat(40) } })).status).toBe(403);
+    expect((await call("/me", { token: a.data.token })).data.isAdmin).toBe(false);
+    expect((await call("/admin/claim", { token: a.data.token, body: { code } })).data).toEqual({ ok: true });
+    expect((await call("/me", { token: a.data.token })).data.isAdmin).toBe(true);
+    // נוצל: לא משמש שוב, גם לא חשבון אחר
+    expect((await call("/admin/claim", { token: b.data.token, body: { code } })).status).toBe(403);
+    expect((await call("/me", { token: b.data.token })).data.isAdmin).toBe(false);
+    // פג תוקף
+    const old = "e".repeat(40);
+    await put(old, "2026-10-08T09:00:00.000Z");
+    expect((await call("/admin/claim", { token: b.data.token, body: { code: old } })).status).toBe(403);
+    expect((await call("/me", { token: b.data.token })).data.isAdmin).toBe(false);
+  });
+
   it("מספרי הניהול: מייל מאומת בקישור (בלי אימות Google) וחשבונות Google", async () => {
     const KEY = "k".repeat(40);
     await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
