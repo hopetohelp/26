@@ -1,3 +1,6 @@
+import { PUBLIC_METRICS } from "../../../src/lib/publicMetricResolver.ts";
+import { EVIDENCE_SCHEMA } from "./evidence.js";
+import { dataProvider, metricResult } from "./data.js";
 /**
  * הכלים של שרת ה-MCP — המרשם היחיד: כלי קיים רק אם הוא כאן (הכרעת בעלים 12.10.2026).
  *
@@ -57,6 +60,7 @@ export const TOOLS = [
       from: str("YYYY-MM-DD, fieldwork end on or after."),
       to: str("YYYY-MM-DD, fieldwork end on or before."),
       limit: { type: "integer", minimum: 1, maximum: 100, description: "Default 30." },
+      offset: { type: "integer", minimum: 0, description: "Pagination offset, default 0." },
       include_subgroups: { type: "boolean", description: "Also polls of population subgroups (shown in the archive only, outside every average)." },
     }),
     async run(ctx, a) {
@@ -67,31 +71,31 @@ export const TOOLS = [
         .filter((p) => !a.list || p.values?.[a.list] !== undefined)
         .filter((p) => (!a.from || p.end >= a.from) && (!a.to || p.end <= a.to))
         .sort((x, y) => (x.end < y.end ? 1 : -1));
-      const limit = a.limit ?? 30;
-      return { about: d.about, lists: d.lists, counts: d.counts, matched: rows.length, polls: rows.slice(0, limit), ...(a.include_subgroups ? { subgroupPolls: d.subgroupPolls } : {}) };
+      const limit = Math.min(100, Math.max(1, Number(a.limit) || 30));
+      const offset = Math.max(0, Math.floor(Number(a.offset) || 0));
+      return { about: d.about, lists: d.lists, counts: d.counts, matched: rows.length, nextOffset: offset + limit < rows.length ? offset + limit : null, polls: rows.slice(offset, offset + limit), ...(a.include_subgroups ? { subgroupPolls: d.subgroupPolls } : {}) };
     },
   },
   {
-    name: "get_poll_average",
-    title: "ממוצע ומודל",
-    audience: "public",
-    kind: "read",
-    description: "The site's two poll averages — always give both when you mention a poll average: averages.simple (ממוצע פשוט: the mean of each pollster's latest poll in the last 14 days, with the full low–high range) and averages.model (ממוצע המודל: seats and vote shares per list, the home screen's numbers). Also the latest polls, the model's trend over the campaign, and the outgoing-government parties (a factual definition: government 37). " + ABOUT_NOTE,
-    inputSchema: obj(),
-    async run(ctx) {
-      const d = await ctx.site("data/average.json");
-      const idx = await ctx.site("data/index.json");
-      const url = (a) => idx.dictionary?.find((e) => e.id === a)?.url ?? null;
-      // שני הממוצעים זה לצד זה (הכרעת בעלים 12.10.2026) — מתוך הקובץ, בלי חישוב חדש
-      const simple = Object.fromEntries((d.latestPerPollster?.summary ?? []).map((r) => [r.id, { mean: r.mean, min: r.min, max: r.max, pollsters: r.n }]));
-      return {
-        averages: {
-          simple: { label: "ממוצע פשוט", explain: "ממוצע המנדטים בסקר האחרון של כל מכון ב-14 הימים האחרונים, והטווח מהנמוך לגבוה", kind: "סיכום סקרים", asOf: d.latestPerPollster?.asOf, method: "current", methodUrl: url("current"), seats: simple },
-          model: { label: "ממוצע המודל", explain: "ממוצע של הקולות בכל הסקרים, שעובר חלוקת מנדטים לפי החוק — המספרים שבמסך הבית", kind: "סיכום סקרים", asOf: d.average?.asOf, method: "model", methodUrl: url("model"), seats: d.average?.seats, shares: d.average?.shares },
-          difference: { method: "means", methodUrl: url("means") },
-        },
-        ...d,
-      };
+    name: "get_data_metric", title: "שליפת נתון לפי מקור", audience: "public", kind: "read",
+    description: "Resolve seats for a list or explicit bloc composition using the same provider as the site. Returns value, source selection, snapshot, input refs, dates, quality and evidence for show_answer. Public default: polls.mean; signed-in default: the account preference. Never silently substitutes an unavailable source. Pass screen to enforce its policy (community/groups permit only raw polls).",
+    inputSchema: obj({
+      metricId: { type: "string", enum: Object.keys(PUBLIC_METRICS) }, election: str("Election id, e.g. k25, for official results"),
+      ids: { type: "array", items: str("List id"), minItems: 1, maxItems: 30 },
+      selection: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: str("An id from sourceOptions in the index") }, ["product"]),
+      measure: { type: "string", enum: ["seats", "support"] }, operation: { type: "string", enum: ["difference", "majorityGap"] }, compareTo: obj({ selection: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: str("Source option") }, ["product"]), ids: { type: "array", items: str("List id"), minItems: 1 } }, ["selection", "ids"]),
+      screen: { type: "string", enum: ["home", "today", "changes", "guess", "community", "groups", "method"] },
+    }, ["ids"]),
+    run: metricResult,
+  },
+  {
+    name: "get_poll_average", title: "שלושת הממוצעים", audience: "public", kind: "read",
+    description: "Compatibility adapter for the three distinct averages: polls.mean (ממוצע סקרים), polls.adjusted (ממוצע מותאם), model.mean (ממוצע המודל). Summary by default. Choose one requested product; compare=true returns all three. Identify the actual source; do not force a second average. Unavailable adjusted inputs remain missing. For a single list or bloc and evidence, use get_data_metric.",
+    inputSchema: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean"] }, compare: { type: "boolean" } }),
+    async run(ctx, a) {
+      const { provider, about } = await dataProvider(ctx);
+      const products = a.compare ? ["polls.mean", "polls.adjusted", "model.mean"] : [a.product ?? "polls.mean"];
+      return { about, averages: Object.fromEntries(products.map(id => [id, provider.resolveDataset({ product: id })])) };
     },
   },
   {
@@ -337,8 +341,8 @@ export const TOOLS = [
     audience: "user",
     kind: "write",
     description: "Saves the user's personal list mapping on \"מה השתנה\" (lineage: {map:{listId:[2022 letters]}, split:\"polls\"|\"crowd\"|\"manual\", manual?}) and/or camps ({listId: campId}). Not part of any statistic.",
-    inputSchema: obj({ lineage: { type: "object" }, camps: { type: "object" } }),
-    run: (ctx, a) => ctx.crowd("/prefs", { body: a }),
+    inputSchema: obj({ lineage: { type: "object" }, camps: { type: "object" }, dataSource: obj({ selection: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: str("Source option id") }, ["product"]), preferredAverage: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean"] } }, ["selection", "preferredAverage"]) }),
+    run: (ctx, a) => ctx.crowd("/prefs", { body: { ...a, ...(a.dataSource ? { dataSource: { ...a.dataSource, version: 1, updatedAt: new Date(ctx.now).toISOString() } } : {}) } }),
   },
   {
     name: "set_my_display_name",
@@ -528,8 +532,18 @@ export const TOOLS = [
     title: "הצגת התשובה בכרטיס",
     audience: "public",
     kind: "read",
-    description: "Shows the final answer as one card in the site's design (Hebrew, RTL, day and night). Always call it once, at the end — also when you searched the web — with the answer built only from the site's data; never answer in plain text or a table instead of it. Put the numbers the site computed in a \"numbers\" section, each with kind (the data file's about.kind), asOf (its date) and method (its dictionary anchor, about.methodAnchor); text, lists and tables may carry the same source line, but general knowledge (61 for a majority) needs none. Do not state a well-known fact on its own — tie it to the data (not \"לרוב דרושים 61\" but \"חסרים להם 8 מנדטים לרוב\"). Never repeat information: a date or an \"איך זה חושב?\" link appears once (the card drops repeats); headings say what the reader sees, not the data type; a tile's value is only the main number, with the range or context in detail. Mentioning the poll average ⇒ show both the simple average (ממוצע פשוט) and the model average (ממוצע המודל). Rules the server enforces: Hebrew; both averages; neutral — no recommendation, no \"who will win\", \"שיעור תרחישים\" (never chance/probability); participants' guesses are not a poll. A rejected answer returns every problem — fix them all and call again.",
-    inputSchema: ANSWER_SCHEMA,
+    description: "Shows the final answer as one card in the site's design (Hebrew, RTL, day and night). Always call it once, at the end — also when you searched the web — with the answer built only from the site's data; never answer in plain text or a table instead of it. Put the numbers the site computed in a \"numbers\" section, each with kind (the data file's about.kind), asOf (its date) and method (its dictionary anchor, about.methodAnchor); text, lists and tables may carry the same source line, but general knowledge (61 for a majority) needs none. Do not state a well-known fact on its own — tie it to the data (not \"לרוב דרושים 61\" but \"חסרים להם 8 מנדטים לרוב\"). Never repeat information: a date or an \"איך זה חושב?\" link appears once (the card drops repeats); headings say what the reader sees, not the data type; a tile's value is only the main number, with the range or context in detail. Identify the selected source: ממוצע סקרים, ממוצע מותאם or ממוצע המודל. Numeric tiles and table cells require evidence from get_data_metric; the server supplies their values. Rules the server enforces: Hebrew; source evidence; neutral — no recommendation, no \"who will win\", \"שיעור תרחישים\" (never chance/probability); participants' guesses are not a poll. A rejected answer returns every problem — fix them all and call again.",
+    inputSchema: {
+      ...ANSWER_SCHEMA,
+      properties: { ...ANSWER_SCHEMA.properties, evidence: { type: "array", items: EVIDENCE_SCHEMA }, sections: { type: "array", minItems: 1, maxItems: 8, items: {
+        type: "object", additionalProperties: false,
+        properties: { kind: { type: "string", enum: ["text", "list", "numbers", "table"] }, heading: { type: "string" }, text: { type: "string" }, ordered: { type: "boolean" },
+          items: { type: "array", items: { anyOf: [{ type: "string" }, { type: "object", additionalProperties: false, properties: { label: { type: "string" }, detail: { type: "string" }, evidence: EVIDENCE_SCHEMA }, required: ["label", "evidence"] }] } },
+          rows: { type: "array", items: { type: "array", items: { anyOf: [{ type: "string" }, { type: "object", additionalProperties: false, properties: { evidence: EVIDENCE_SCHEMA }, required: ["evidence"] }] } } },
+          columns: { type: "array", items: { type: "string" } }, evidence: { type: "array", items: EVIDENCE_SCHEMA }, source: { type: "object" },
+        }, required: ["kind"],
+      } } },
+    },
     // מטופל ב-lib/rpc.js (בדיקה מול המילון והחזרת הכרטיס)
     run: null,
   },

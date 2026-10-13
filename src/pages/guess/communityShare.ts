@@ -1,3 +1,5 @@
+import type { Selection } from "../../lib/dataResolver";
+import { largestRemainder } from "../../lib/fillAll";
 /**
  * שיתוף מסך "סקר האתר": תמונת חלוקת המנדטים (ממוצע המשתתפים), תמונת ההצבעה (בחירות קודמות ← הבאות) וקישור.
  * באותו סגנון של תמונת "הכנסת שלי" (shareImage.ts). השאלות שבכל אחת נשענות על הנתונים שבמסך — בלי מספר חדש.
@@ -16,7 +18,7 @@ export const COMMUNITY_URL = `${SITE_URL}#/community`;
  * logo = התמונה כבר טעונה (או null אם אין); url = קישור הקבוצה.
  */
 export interface Brand { name: string; logo: ImageBitmap | null; url: string }
-export const groupShareText = (name: string) => `הצטרפו לסקר של ${name} לבחירות לכנסת ה-26. ככל שיותר חברי הקבוצה משתתפים — התמונה מדויקת יותר:`;
+export const groupShareText = (name: string) => `הצטרפו לסקר של ${name} לבחירות לכנסת ה-26. שתפו את הקבוצה והוסיפו את ההשערה שלכם:`;
 const addressOf = (url: string) => url.replace(/^https:\/\//, "");
 
 /** טעינת תמונת הקבוצה לציור על canvas. נכשל בשקט — תמונה בלי לוגו עדיפה על שיתוף שנכשל */
@@ -27,31 +29,25 @@ export async function loadLogo(url: string | null): Promise<ImageBitmap | null> 
     return res.ok ? await createImageBitmap(await res.blob()) : null;
   } catch { return null; }
 }
-export const COMMUNITY_TEXT = "סקר האתר לבחירות לכנסת ה-26: מה חושבים המשתתפים ולמי הם מתכננים להצביע. ככל שיותר משתתפים — התמונה מדויקת יותר. הצטרפו:";
+export const COMMUNITY_TEXT = "סקר האתר לבחירות לכנסת ה-26: מה חושבים המשתתפים ולמי הם מתכננים להצביע. הוסיפו את ההשערה וההצבעה שלכם. הצטרפו:";
 const SITE_LABEL = SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "");
 
 /** עיגול ממוצעים לחלוקה שלמה של 120 (שארית גדולה) — רק לציור לוח המושבים, המספרים בתמונה הם הממוצעים עצמם */
 export function roundTo120(means: Record<string, number>): Record<string, number> {
-  const ids = Object.keys(means).filter((id) => means[id] > 0);
-  const sum = ids.reduce((a, id) => a + means[id], 0);
-  if (!sum) return {};
-  const scaled = ids.map((id) => ({ id, v: (means[id] / sum) * 120 }));
-  const out: Record<string, number> = Object.fromEntries(scaled.map((x) => [x.id, Math.floor(x.v)]));
-  let left = 120 - Object.values(out).reduce((a, b) => a + b, 0);
-  for (const x of [...scaled].sort((a, b) => (b.v % 1) - (a.v % 1))) if (left-- > 0) out[x.id]++;
-  return out;
+  return largestRemainder(120, Object.fromEntries(Object.entries(means).filter(([, value]) => value > 0)));
 }
 
-export async function seatsImage(d: Dashboard, brand?: Brand): Promise<Blob> {
+export async function seatsImage(d: Dashboard, brand?: Brand, selection: Selection = { product: "polls.mean" }): Promise<Blob> {
   const means = Object.fromEntries((d.seats?.full ?? []).filter((r) => IDS.includes(r.list)).map((r) => [r.list, r.mean]));
   const board = roundTo120(means);
   return renderShareImage({
+    selection,
     values: board,
     kind: "parties",
     labels: {
       title: brand ? `${brand.name}: הכנסת` : "סקר האתר: הכנסת",
       subtitle: `ממוצע השערות ${d.seats?.n ?? d.participants} משתתפים${brand ? " מהקבוצה" : ""} · השערות, לא סקר מייצג`,
-      cta: "רוצים שזה יהיה מדויק יותר? הצטרפו",
+      cta: "הוסיפו את ההשערה שלכם — הצטרפו",
       ...(brand ? { logo: brand.logo, address: addressOf(brand.url) } : {}),
       value: (id) => seatsFmt(means[id] ?? 0),
     },
@@ -96,7 +92,7 @@ export async function voteImage(d: Dashboard, brand?: Brand): Promise<Blob> {
   ctx.fillText("אחוז מתוך המשתתפים שענו. השערות משתתפים, לא סקר מייצג.", R, H - 208, R - L);
   ctx.fillStyle = c.card === c.bg ? c.line : c.card; ctx.fillRect(0, H - 176, IMG_W, 176);
   ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
-  ctx.fillText("רוצים שזה יהיה מדויק יותר? הצטרפו", R, H - 100, R - L);
+  ctx.fillText("הוסיפו את ההשערה שלכם — הצטרפו", R, H - 100, R - L);
   ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
   ctx.fillText(brand ? addressOf(brand.url) : SITE_LABEL, R, H - 48);
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));

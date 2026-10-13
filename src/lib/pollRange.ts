@@ -1,4 +1,5 @@
-import { groupSeatsIn, mean, type Poll } from "./data";
+import { groupSeatsIn, mean } from "./pollMath";
+import type { Poll } from "./data";
 
 /**
  * המנדטים של מפלגה או של גוש בכל סקר (סכום המנדטים של הרשימות בסקר), סקר אחד לכל ערך.

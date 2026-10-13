@@ -168,7 +168,7 @@ describe("הכלים", () => {
     const r = await call("/public", "get_poll_average", {});
     const d = r.data.result.structuredContent;
     expect(d.about.method).toContain("#/method#means");
-    expect(d.average.seats).toEqual(SITE_FILES.get("data/average.json").average.seats);
+    expect(d.averages["polls.mean"].seats).toEqual(SITE_FILES.get("data/average.json").products["polls.mean"].seats);
     const polls = (await call("/public", "get_polls", { limit: 3 })).data.result.structuredContent;
     expect(polls.polls.length).toBeLessThanOrEqual(3);
     expect(polls.about.updatedAt).toBeTruthy();
@@ -330,22 +330,21 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(one(item, "סיכום סקרים — נכון ל-12.10.2026").problems.join()).toContain("לא סוג הנתון");
     expect(one(item, "מנדטים לפי גושים").ok).toBe(true);
   });
-  it("ממוצע הסקרים ⇐ גם הממוצע הפשוט וגם ממוצע המודל (הכרעת בעלים 12.10.2026)", () => {
+  it("זיהוי מקור אינו מחייב ממוצע משני נוסף", () => {
     const one = validateAnswer({ ...good, summary: "לפי ממוצע הסקרים, 53 מנדטים." }, urlFor);
-    expect(one.ok).toBe(false);
-    expect(one.problems.join()).toContain("ממוצע פשוט");
+    expect(one.ok).toBe(true);
     expect(validateAnswer({ ...good, summary: "לפי ממוצע הסקרים: ממוצע המודל 53, ממוצע פשוט 54." }, urlFor).ok).toBe(true);
   });
-  it("get_poll_average מחזיר את שני הממוצעים זה לצד זה, מתוך הקובץ", async () => {
-    const res = (await call("/public", "get_poll_average", {})).data.result;
-    // תזכורת לסיים בכרטיס בכל תוצאת נתונים (Claude ענה בטקסט רגיל בלי show_answer, 12.10.2026)
+  it("get_poll_average מבדיל בין שלושה מוצרים והתקציר אינו כופה מודל", async () => {
+    const res = (await call("/public", "get_poll_average", { compare: true })).data.result;
+    expect(res.isError).toBe(false);
     expect(res.content.at(-1).text).toContain("show_answer");
     const d = res.structuredContent;
     const file = SITE_FILES.get("data/average.json");
-    expect(d.averages.model.seats).toEqual(file.average.seats);
-    expect(d.averages.simple.seats.likud.mean).toBe(file.latestPerPollster.summary.find((r) => r.id === "likud").mean);
-    expect(d.averages.simple.label).toBe("ממוצע פשוט");
-    expect(d.averages.model.label).toBe("ממוצע המודל");
+    expect(d.averages["model.mean"].seats).toEqual(file.average.seats);
+    expect(d.averages["polls.mean"].seats.likud).toBe(file.latestPerPollster.summary.find((r) => r.id === "likud").mean);
+    expect(d.averages["polls.adjusted"].rows[0].label).toBe("ממוצע מותאם");
+    expect(Object.keys((await call("/public", "get_poll_average", {})).data.result.structuredContent.averages)).toEqual(["polls.mean"]);
   });
   it("תאריכים ושנים אינם מספר מחושב; אחוז כן", () => {
     expect(hasNumber("נכון ל-11.10.2026 ובבחירות 2022, הכנסת ה-26")).toBe(false);
@@ -354,11 +353,13 @@ describe("כרטיס התשובה (show_answer)", () => {
   it("דרך השרת: נדחית עם כל הבעיות, ותקינה חוזרת לכרטיס; הכרטיס מוצהר ככלי עם ממשק", async () => {
     const list = (await rpc("/public", "tools/list", {})).data.result.tools.find((x) => x.name === "show_answer");
     expect(list._meta.ui.resourceUri).toMatch(/^ui:\/\/elections26\/answer-card\?v=/);
-    const rej = await call("/public", "show_answer", { ...good, summary: "הסתברות" });
+    const metric = (await call("/public", "get_data_metric", { ids: ["likud"], selection: { product: "model.mean" } })).data.result.structuredContent;
+    const card = { title: "מנדטים לליכוד", sections: [{ kind: "numbers", items: [{ label: "הליכוד", evidence: metric.evidence }] }], suggested_questions: ["מה אומרים הסקרים?"] };
+    const rej = await call("/public", "show_answer", { ...card, summary: "הסתברות" });
     expect(rej.data.result.isError).toBe(true);
     expect(rej.data.result.content[0].text).toContain("התשובה נדחתה");
-    const ok = await call("/public", "show_answer", good);
-    expect(ok.data.result.structuredContent.answer.title).toBe(good.title);
+    const ok = await call("/public", "show_answer", card);
+    expect(ok.data.result.structuredContent.answer.title).toBe(card.title);
     const res = await rpc("/public", "resources/read", { uri: list._meta.ui.resourceUri });
     expect(res.data.result.contents[0].mimeType).toBe("text/html;profile=mcp-app");
   });
@@ -366,7 +367,9 @@ describe("כרטיס התשובה (show_answer)", () => {
     const { anchors: _a, ...old } = SITE_FILES.get("data/index.json");
     SITE_FILES.set("data/index.json", old);
     try {
-      expect((await call("/public", "show_answer", good)).data.result.isError).toBe(false);
+      const metric = (await call("/public", "get_data_metric", { ids: ["likud"] })).data.result.structuredContent;
+      const card = { title: "מנדטים לליכוד", sections: [{ kind: "numbers", items: [{ label: "הליכוד", evidence: metric.evidence }] }], suggested_questions: ["מה אומרים הסקרים?"] };
+      expect((await call("/public", "show_answer", card)).data.result.isError).toBe(false);
     } finally { SITE_FILES.set("data/index.json", buildIndex(ISSUER)); }
   });
   it("הכרטיס הנגזר מעודכן לטוקנים של האתר, בלי innerHTML ובלי רשת", () => {
@@ -423,5 +426,38 @@ describe("דשבורד למנהל וכפתור הכיבוי של הכתובת ה
     await req("/admin/settings", { body: { publicEnabled: true }, headers: adminHeaders(admin.web) });
     expect((await call("/public", "get_polls", {})).data.result.isError).toBe(false);
     expect((await req("/admin/settings", { body: { publicEnabled: "כן" }, headers: adminHeaders(admin.web) })).status).toBe(400);
+  });
+});
+
+describe("שליפה וראיות מול אותו ספק באתר", () => {
+  it("התוצאה זהה בדיוק לפרסום; ערך מומצא או ראיה בגרסה אחרת אינם עוברים", async () => {
+    const metric = (await call("/public", "get_data_metric", { ids: ["likud"], selection: { product: "polls.mean" } })).data.result.structuredContent;
+    const actual = SITE_FILES.get("data/average.json").products["polls.mean"].rows.find(r => r.subject.ids[0] === "likud");
+    expect(metric.value).toBe(actual.value);
+    expect(metric.snapshotId).toBe(actual.snapshotId);
+    const card = evidence => ({ title: "מנדטים לליכוד", sections: [{ kind: "numbers", items: [{ label: "הליכוד", evidence }] }], suggested_questions: ["מה אומרים הסקרים?"] });
+    const good = (await call("/public", "show_answer", card(metric.evidence))).data.result;
+    expect(good.isError).toBe(false);
+    expect(good.structuredContent.answer.sections[0].items[0].value).toBe(`${Math.round(metric.value * 10) / 10} מנדטים`);
+    const invented = card(metric.evidence); invented.sections[0].items[0].value = "999";
+    expect((await call("/public", "show_answer", invented)).data.result.isError).toBe(true);
+    expect((await call("/public", "show_answer", card({ ...metric.evidence, snapshotId: "polls-old" }))).data.result.isError).toBe(true);
+    const unsupported = (await call("/public", "get_data_metric", { ids: ["likud"], selection: { product: "model.mean" }, screen: "community" })).data.result.structuredContent;
+    expect(unsupported).toMatchObject({ status: "unsupported", value: null });
+  });
+  it("גרסאות אינדקס ונתונים שונות אינן מחוברות", async () => {
+    const original = SITE_FILES.get("data/index.json");
+    SITE_FILES.set("data/index.json", { ...original, snapshotId: "polls-old" });
+    try { expect((await call("/public", "get_data_metric", { ids: ["likud"] })).data.result.structuredContent.error.code).toBe("snapshot_mismatch"); }
+    finally { SITE_FILES.set("data/index.json", original); }
+  });
+  it("תוצאות רשמיות מקבלות ראיה; ממוצע מותאם עם חסר מוצג כערך רגיל", async () => {
+    const official = (await call("/public", "get_data_metric", { metricId: "official.results.seats", election: "k25", ids: ["מחל"] })).data.result.structuredContent;
+    expect(official.value).toBe(32);
+    const card = { title: "תוצאות הליכוד", sections: [{ kind: "numbers", items: [{ label: "הליכוד", evidence: official.evidence }] }], suggested_questions: ["מה אומרים הסקרים?"] };
+    expect((await call("/public", "show_answer", card)).data.result.isError).toBe(false);
+    const adjusted = (await call("/public", "get_data_metric", { ids: ["likud"], selection: { product: "polls.adjusted" } })).data.result.structuredContent;
+    expect(adjusted.status).toBe("available");
+    expect(typeof adjusted.value).toBe("number");
   });
 });

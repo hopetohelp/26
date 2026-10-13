@@ -160,10 +160,16 @@ def build(polls: list[dict], series_of, pairs: list[tuple[str, str]], gov: list[
 
     # הגילוי הנאות: אותה בדיקת עבר בדיוק באופק של היום (bt), ויומן הניסיונות. "logged" = ההרצה הרשמית ביומן זהה לה
     rows = log_rows()
-    logged = [r for r in rows if r["specVersion"] == spec["version"] and r["horizon"] == h and r["summary"] == bt["summary"]]
+    from forecast_log import summaries_match
+    logged = [r for r in rows if r["specVersion"] == spec["version"] and r["horizon"] == h
+              and r["passed"] == bt["passed"] and r["valid"] == bt["valid"]
+              and summaries_match(r["summary"], bt["summary"])]
     at_h = {"passed": bt["passed"], "valid": bt["valid"], "logged": bool(logged),
             "invalidElections": [int(k) for k, v in bt["validity"].items() if not v["valid"] and int(k) in spec["gate"]["elections"]],
-            "summary": {v: bt["summary"][v] for v in ("V0", primary) if v in bt["summary"]},
+            # Python 3.12 שינה את סכימת float; בפרסום מסירים רק רעש בינארי,
+            # בלי לשנות את חישוב השער או את ההשוואה ליומן ההרצות.
+            "summary": {v: {metric: round(value, 10) for metric, value in bt["summary"][v].items()}
+                        for v in ("V0", primary) if v in bt["summary"]},
             "perElection": {str(r["knesset"]): [r["variants"][primary]["voteAccuracy"], r["variants"][primary]["seatAccuracy"]]
                             for r in bt["rows"]}}
     attempts = sorted({r["specVersion"] for r in rows})

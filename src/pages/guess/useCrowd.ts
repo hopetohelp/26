@@ -1,3 +1,4 @@
+import { synchronizeOwnedSource, clearSourceAccount, syncSourcePreference } from "../../lib/sourcePreference";
 /** מצב ההשתתפות בדפדפן: אסימון, מצב המשתתף מהשרת, וטיוטה+שמירה לכל יחידה. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CROWD_URL, CrowdError, call, type Me, type Payload, type Unit } from "../../lib/crowdApi";
@@ -69,6 +70,10 @@ export async function syncLocal(token: string): Promise<void> {
     const lineage = localStorage.getItem(LINEAGE_KEY);
     if (lineage) { await call("/prefs", { token, body: { lineage: JSON.parse(lineage) } }); localStorage.removeItem(LINEAGE_KEY); }
   } catch { /* נשאר בדפדפן */ }
+  try {
+    const account = await call<Me>("/me", { token });
+    await syncSourcePreference(token, account.participant, account.prefs?.dataSource);
+  } catch { /* העדפה מקומית נשארת לניסיון הבא */ }
   try { await adoptSupportThreads(token); } catch { /* ינוסה שוב בכניסה הבאה */ }
   window.dispatchEvent(new Event("crowd-clear"));
   window.dispatchEvent(new Event(SAVED_EVENT));
@@ -89,6 +94,7 @@ export function useSession() {
   const setToken = useCallback((t: string | null, keepLink = false) => {
     const changed = t !== S.getToken();
     S.setToken(t);
+    if (changed) { setMe(null); clearSourceAccount(); }
     if (!keepLink) S.setLink(null);
     if (!t) S.setPicture(null);
     emit();
@@ -103,7 +109,10 @@ export function useSession() {
   const refresh = useCallback(async () => {
     if (!CROWD_URL || !token) return setMe(null);
     try {
-      setMe(await call<Me>("/me", { token }));
+      const account = await call<Me>("/me", { token });
+      if (token !== S.getToken()) return;
+      setMe(account);
+      await synchronizeOwnedSource(token, account.participant, account.prefs?.dataSource);
     } catch (e) {
       if (e instanceof CrowdError && e.status === 401) setToken(null);
     }

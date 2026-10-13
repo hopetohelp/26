@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     # השרת משתמש בליבת החישוב של האתר (מנדטים ⇐ אחוזים) — שינוי בה פורס גם אותו
-    paths: ["worker/crowd/**", "src/engine/**", ".github/workflows/crowd-worker.yml"]
+    paths: ["worker/crowd/**", "src/engine/**", "src/lib/dataCatalog.ts", "src/lib/dataPreferences.ts", ".github/workflows/crowd-worker.yml"]
   workflow_dispatch:
 permissions:
   contents: read

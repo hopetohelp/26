@@ -35,7 +35,8 @@ export interface RangeRowData {
  * כל גרף מקבל מנדטים ממספר אחד: `buildHome` ב-`src/lib/home.ts`.
  */
 const SEATS = hemicycleSeats();
-export const MAJORITY = 61;
+export { MAJORITY_SEATS as MAJORITY } from "../lib/dataCatalog";
+import { MAJORITY_SEATS as MAJORITY } from "../lib/dataCatalog";
 /** כמה מושבים חסרים לממשלה היוצאת עד הרוב (0 כשיש רוב) */
 export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
 

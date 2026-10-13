@@ -137,7 +137,7 @@ export interface Me {
   /** נשמר בלי שם משתתף וסיסמה (POST /auth/guest): אי אפשר לשחזר אם הסשן אבד */
   guest: boolean;
   /** העדפות שאינן השערה (POST /prefs): המחנות במסך "מה השתנה" */
-  prefs?: { camps: Record<string, string> | null; lineage?: unknown };
+  prefs?: { dataSource?: unknown; camps: Record<string, string> | null; lineage?: unknown };
   /** ההשערה האחרונה חריגה וממתינה לאישור מנהל: לא נספרת בסטטיסטיקות עד אז */
   seatsPending?: boolean;
   /** המיילים של החשבון (מפוענחים בשרת רק לבעל החשבון). verified = אומת (Google) */

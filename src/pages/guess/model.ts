@@ -1,20 +1,21 @@
+import { fillAll } from "../../lib/fillAll";
 /** נתוני היסוד של "ההשערה שלך": הרשימות, ממוצע הסקרים, תוצאות 2022 והמיפוי המובהק ביניהן. */
-import { POLL_AVERAGE } from "../../lib/sources";
+import { resolveDataset, resolveSupport, DATA_AS_OF } from "../../lib/dataResolver";
 import type { Bloc, BlocsPayload, SeatCell, SeatsPayload, VotePayload } from "../../lib/crowdApi";
 import { latestPerPollster, lists2026, results, seatsIn } from "../../lib/data";
 
 export const IDS = lists2026.map((l) => l.id);
 export const ALPHA = [...lists2026].sort((a, b) => a.name.localeCompare(b.name, "he"));
 /** ממוצע הסקרים — מהמקור האחד (src/lib/sources.ts) */
-export const POLLS: Record<string, number> = POLL_AVERAGE.seats;
-export const POLLS_AS_OF = POLL_AVERAGE.asOf;
+export const POLLS: Record<string, number> = resolveDataset({ product: "polls.mean" }, "guess").seats;
+export const POLLS_AS_OF = DATA_AS_OF;
 const recentPolls = latestPerPollster(POLLS_AS_OF, 14);
 export const POLL_RANGES: Record<string, [number, number]> = Object.fromEntries(IDS.map((id) => {
   const xs = recentPolls.map((p) => seatsIn(p, id)).filter((x): x is number => typeof x === "number");
   return [id, xs.length ? [Math.min(...xs), Math.max(...xs)] : [POLLS[id] ?? 0, POLLS[id] ?? 0]];
 }));
 /** ממוצע הסקרים באחוזים מהקולות הכשרים — בסיס "השלם הכול" בהשערה לפי אחוזים */
-export const POLL_SHARES: Record<string, number> = POLL_AVERAGE.shares;
+export const POLL_SHARES: Record<string, number> = resolveSupport({ product: "polls.mean" }).shares ?? {};
 export const nameOf = (id: string) => lists2026.find((l) => l.id === id)?.name ?? id;
 
 const k25 = results.find((r) => r.id === "k25")!;
@@ -43,6 +44,11 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
       const l = K25_MAP[id] ? K25_LISTS.find((x) => x.letters === K25_MAP[id]) : undefined;
       seats[id] = l ? { v: l.seats, src: "manual", locked: true } : { v: 0, src: "manual", locked: false };
     }
+  }
+  if (start === "polls") {
+    const empty = Object.fromEntries(IDS.map(id => [id, { v: 0, src: "filled" as const, locked: false }]));
+    const initial = fillAll(IDS, empty, POLLS, [], POLL_RANGES);
+    if (initial.ok) return { seats: initial.seats, start, pollsAsOf: POLLS_AS_OF };
   }
   return { seats, start, pollsAsOf: start === "polls" ? POLLS_AS_OF : null };
 }

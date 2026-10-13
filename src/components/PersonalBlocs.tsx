@@ -1,3 +1,4 @@
+import { resolveData, resolveSupportMetric, type Selection } from "../lib/dataResolver";
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import Explained from "./Explained";
@@ -26,6 +27,7 @@ export function usePersonalBlocs() {
 }
 export type { BlocRow } from "../lib/personalBlocs";
 export interface BlocDataset {
+  selection?: Selection;
   values?: Record<string, number | undefined>;
   source: string;
   asOf: string;
@@ -63,7 +65,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const definition = unit.draft ? normalizeBlocs(unit.draft) : DEFAULT_BLOCS;
   const p = { ...definition, blocs: definition.blocs.map((b, i) => ({ ...b, name: b.name.trim() || `גוש ${i + 1}` })) };
   const series = (datasets ?? [{ values, source, asOf, historical, mapping }]).map(d => ({
-    ...d, rows: d.rows ?? (d.families ? familyRows(p.blocs, d.families, d.values ?? {}) : d.poll ? pollBlocValues(p.blocs, d.poll) : blocValues(p.blocs, d.values ?? {}, d.mapping ?? (d.historical ? K25_MAP : Object.fromEntries(IDS.map(id => [id, id]))))),
+    ...d, rows: d.rows ?? (d.selection ? p.blocs.map(b => ({ ...b, total: (shown === "pct" ? resolveSupportMetric : resolveData)(d.selection!, b.lists).value })) : d.families ? familyRows(p.blocs, d.families, d.values ?? {}) : d.poll ? pollBlocValues(p.blocs, d.poll) : blocValues(p.blocs, d.values ?? {}, d.mapping ?? (d.historical ? K25_MAP : Object.fromEntries(IDS.map(id => [id, id]))))),
   }));
   for (const d of series) {
     if (d.sumAvailable) d.rows = d.rows.map(row => ({ ...row, total: row.total ?? 0 }));

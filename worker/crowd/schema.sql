@@ -273,3 +273,10 @@ CREATE TABLE IF NOT EXISTS version_accepted (
   version_id INTEGER PRIMARY KEY REFERENCES versions(id),
   accepted_at TEXT NOT NULL
 );
+
+-- העדפת מקור נפרדת מההשערות; גרסה ומועד שינוי מונעים דריסה בסנכרון.
+CREATE TABLE IF NOT EXISTS data_source_prefs (
+  participant TEXT PRIMARY KEY REFERENCES participants(id) ON DELETE CASCADE,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);

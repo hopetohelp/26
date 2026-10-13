@@ -1,3 +1,5 @@
+import { resolveDataset, type Selection } from "../../lib/dataResolver";
+import { DATA_PRODUCTS } from "../../lib/dataCatalog";
 /**
  * תמונת שיתוף להשערה (PNG, רוחב 1080 וגובה 1350 ומעלה): בחירה בין תמונת מפלגות לתמונת גושים עם ההשערה, ממוצע הסקרים והתחזית.
  * הצבעים נקראים ממשתני ה-CSS של העיצוב הפעיל (בהיר/חשוך) — אין כאן צבע קבוע, מלבד צבעי הרשימות
@@ -9,7 +11,7 @@ import { SITE_URL } from "../../lib/shareGuess";
 import { type BlocTotal } from "./blocSummary";
 import { IDS, nameOf } from "./model";
 import { date, seatsFmt } from "../../lib/format";
-import { shareBlocRows, SHARE_POLLS, SHARE_POLLS_AS_OF, SHARE_FORECAST_AS_OF, SHARE_FORECAST_CAUTION } from "./shareComparison";
+import { shareBlocRows, SHARE_POLLS_AS_OF, SHARE_FORECAST_AS_OF, SHARE_FORECAST_CAUTION } from "./shareComparison";
 import { HALL } from "../../lib/hemicycle";
 import { SEATS, seatFills } from "./SeatBoard";
 
@@ -31,6 +33,7 @@ const rgb = (name: string) => `rgb(${cssVar(name)})`;
 const font = (name: string, fallback: string) => `${cssVar(name) || fallback}, system-ui, sans-serif`;
 
 export interface ShareImageInput {
+  selection?: Selection;
   values: Record<string, number>;
   kind?: "parties" | "blocs";
   pct?: Record<string, number>;
@@ -53,7 +56,10 @@ export async function sharePalette() {
   return { c, ...f };
 }
 
-export async function renderShareImage({ values, pct, username, blocs, labels, kind = blocs?.length ? "blocs" : "parties" }: ShareImageInput): Promise<Blob> {
+export async function renderShareImage({ values, pct, username, blocs, labels, selection = { product: "polls.mean" }, kind = blocs?.length ? "blocs" : "parties" }: ShareImageInput): Promise<Blob> {
+  const dataset = resolveDataset(selection, "guess");
+  const SHARE_POLLS = dataset.seats;
+  const sourceName = dataset.rows[0]?.label ?? DATA_PRODUCTS[selection.product].name;
   const c = {
     bg: rgb("--paper"),
     card: rgb("--card"),
@@ -87,7 +93,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
       return lines;
     };
     ctx.font = `400 30px ${body}`;
-    const rows = shareBlocRows(blocs, values).map(b => {
+    const rows = shareBlocRows(blocs, values, SHARE_POLLS, undefined, selection).map(b => {
       return {...b,names:wrap(b.lists.map(nameOf).join(" · "),R-L)};
     });
     const imageHeight = Math.max(IMG_H, 380 + rows.reduce((n, row) => n + 172 + row.names.length * 38, 0) + 290);
@@ -105,11 +111,11 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.font = `400 30px ${body}`;
     ctx.fillText("השערה, לא סקר · אותם הרכבי מפלגות בשלוש השוואות", R, 200, R - L);
     ctx.font = `400 26px ${body}`;
-    ctx.fillText(`ממוצע סקרים: ${date(SHARE_POLLS_AS_OF)} · מודל המגמות: ${date(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
+    ctx.fillText(`${sourceName}: ${date(SHARE_POLLS_AS_OF)} · מודל המגמות: ${date(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
     const columns = [R - 145, IMG_W / 2, L + 145];
     ctx.textAlign = "center";
     ctx.font = `700 32px ${body}`;
-    ["ההשערה שלי", "ממוצע סקרים", "מודל המגמות"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
+    ["ההשערה שלי", sourceName, "מודל המגמות"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
     let y = 382;
     rows.forEach(row => {
       ctx.textAlign = "right";
@@ -226,7 +232,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
     ctx.textAlign = "right";
     ctx.font = `400 26px ${body}`;
     ctx.fillStyle = c.soft;
-    ctx.fillText(`ממוצע סקרים: ${SHARE_POLLS[id] === undefined ? "—" : seatsFmt(SHARE_POLLS[id])}`, right - 36, y + 30);
+    ctx.fillText(`${sourceName}: ${SHARE_POLLS[id] === undefined ? "—" : seatsFmt(SHARE_POLLS[id])}`, right - 36, y + 30);
     ctx.strokeStyle = c.line;
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -244,7 +250,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, k
   ctx.textAlign = "right";
   ctx.fillStyle = c.soft;
   ctx.font = `400 26px ${body}`;
-  ctx.fillText(`ממוצע הסקרים האחרון נכון ל-${date(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
+  ctx.fillText(`${sourceName} נכון ל-${date(SHARE_POLLS_AS_OF)}`, R, imageHeight - 208);
 
   // תחתית: קריאה לפעולה + כתובת
   ctx.fillStyle = c.card === c.bg ? c.line : c.card;

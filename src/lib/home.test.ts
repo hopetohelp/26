@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import modelFile from "../data/model.json";
-import { POLL_AVERAGE } from "./sources";
+import { MODEL_AVERAGE } from "./sources";
 import { latestPerPollster, lists2026, listName, passesInAll, passesInNone, seatsIn } from "./data";
 import { dayMonth, buildHome, type HomeModel } from "./home";
 import { HALL, hemicycleSeats } from "./hemicycle";
@@ -95,7 +95,7 @@ describe("buildHome", () => {
 
 describe("הבית מהנתונים האמיתיים", () => {
   const model = modelFile as unknown as HomeModel;
-  const latest = latestPerPollster(POLL_AVERAGE.asOf, 14);
+  const latest = latestPerPollster(MODEL_AVERAGE.asOf, 14);
   const h = buildHome(model, {
     govIds: lists2026.filter((l) => l.gov37).map((l) => l.id),
     nameOf: listName,
