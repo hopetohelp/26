@@ -1,3 +1,5 @@
+import { SNAPSHOT_ID } from "../../lib/dataResolver";
+import { DATA_PRODUCTS } from "../../lib/dataCatalog";
 import PersonalBlocs from "../../components/PersonalBlocs";
 import { useMemo } from "react";
 import { splitCls } from "../../lib/splitScreens";
@@ -31,6 +33,7 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
           ×
         </button>
       </div>
+      {g.comparison && <p className="text-sm text-ink-soft mb-3">מקור ההשוואה בשיתוף: {DATA_PRODUCTS[g.comparison.selection.product].name}. {g.comparison.snapshotId !== SNAPSHOT_ID && "ההשוואה מבוססת על גרסת נתונים קודמת; ההשערה עצמה נשמרה."}</p>}
       <PersonalBlocs title="הגושים שלי לפי ההשערה ששותפה איתי" values={g.seats} source="השערת המשתתף ששיתף את הקישור, לפי הגושים שלכם" asOf="תוכן הקישור" />
       <div className={`grid ${splitCls("md:grid-cols-[1.2fr_1fr]")} gap-4 [&>*]:min-w-0 items-start`}>
         <SeatBoard values={g.seats} />

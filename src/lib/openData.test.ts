@@ -95,8 +95,8 @@ describe("קובצי הנתונים הפתוחים", () => {
   });
 
   it("הממוצע בקובץ הוא אותו מספר שבאתר (מקור אחד, בלי חישוב חדש)", async () => {
-    const { POLL_AVERAGE } = await import("./sources");
+    const { MODEL_AVERAGE } = await import("./sources");
     const avg = buildFile(OPEN_FILES.find((f) => f.path === "data/average.json")!) as { average: { seats: Record<string, number> } };
-    expect(avg.average.seats).toEqual(POLL_AVERAGE.seats);
+    expect(avg.average.seats).toEqual(MODEL_AVERAGE.seats);
   });
 });

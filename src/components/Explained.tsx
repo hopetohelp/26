@@ -1,3 +1,4 @@
+import { NUMBER_KINDS } from "../lib/dataCatalog";
 import { useId, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -10,15 +11,7 @@ import { Link } from "react-router-dom";
  * `details`: פירוט החישוב עצמו (למשל טבלת תוצאות המחשבון), נפתח בכפתור אמיתי (מקלדת ומגע), לא בריחוף.
  */
 export interface ExplainProps {
-  kind:
-    | "נתון רשמי"
-    | "חישוב לפי החוק"
-    | "סיכום סקרים"
-    | "תרחיש"
-    | "השוואה"
-    | "מודל המגמות"
-    | "השערות משתתפים, אינן סקר"
-    | "תשובות משתתפים במדגם עצמי, לא מייצג, ללא דגימה וללא שקלול";
+  kind: typeof NUMBER_KINDS[number];
   source: string;
   asOf: string;
   assumption: string;

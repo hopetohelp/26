@@ -1,3 +1,4 @@
+import { materializeAnswer } from "./evidence.js";
 /**
  * MCP מעל HTTP (Streamable HTTP, בלי מצב: כל בקשה עומדת בפני עצמה) — JSON-RPC 2.0.
  * initialize · tools/list · tools/call · resources/list · resources/read · ping. הודעה (בלי id) ⇐ 202 בלי גוף.
@@ -20,7 +21,7 @@ export const INSTRUCTIONS = [
   "This server is the data of \"בחירות 2026 — ניתוח\" (https://hopetohelp.github.io/26/), an independent Hebrew site that analyses Israel's Knesset election of 27.10.2026. It collects published polls (it does not conduct polls) and recommends no list.",
   "Answer only from this site's data (the tools), in Hebrew. Stay neutral: no opinion, no recommendation, no prediction of who will win. Scenarios are \"שיעור תרחישים\" — never chance or probability. Participants' guesses are not a poll.",
   "Numbers the site computed: in show_answer, in a \"numbers\" section, pass kind, asOf and method (the data file's about.kind, about.updatedAt and about.method); the card shows only the date and the \"איך זה חושב?\" link, once per source. Never write the data type (\"סיכום סקרים\") in the text. General knowledge (61 seats for a majority, the 3.25% threshold) needs no source line. \"מפלגות הממשלה היוצאת\" is a factual definition (government 37).",
-  "Whenever you mention the poll average, give both: the simple average (ממוצע פשוט — the mean of each pollster's latest poll in the last 14 days, latestPerPollster.summary) and the model average (ממוצע המודל — average.seats). They differ; neither is a predicted result.",
+  "Identify the actual requested source: ממוצע סקרים, ממוצע מותאם, ממוצע המודל. Show three only when comparing methods. Fetch get_data_metric and pass its evidence; never supply numeric tile values or numeric table cells as free text.",
   "Do not state a well-known fact on its own; connect it to the data. Not \"לרוב בכנסת דרושים 61 מנדטים\" but \"חסרים להם 8 מנדטים לרוב\" (61 minus their seats).",
   "Never repeat the same information on one screen: one date, one \"איך זה חושב?\" link per source — the card prints each only once. A heading says what the reader sees (\"מנדטים לפי גושים\"), never the data type (\"סיכום סקרים\"). In a number tile, value is only the main number; the range or the context goes in detail (a separate, smaller line).",
   "Always finish with show_answer — also when you searched the web or used other sources: it shows the final answer as a card in the site's design, and checks those rules. Do not write the answer as plain text or a table instead of the card. Information that is not from the site goes in one short line after the card, marked as not from the site.",
@@ -89,7 +90,7 @@ async function callTool(params, ctx) {
   if (!args || typeof args !== "object" || Array.isArray(args)) return toolError("invalid_input", "הארגומנטים חייבים להיות אובייקט.");
   try {
     if (tool.name === "show_answer") {
-      const check = validateAnswer(args, await methodUrlFor(ctx.env, ctx.now));
+      const check = validateAnswer(await materializeAnswer(ctx, args), await methodUrlFor(ctx.env, ctx.now));
       if (!check.ok) {
         await ctx.log(name, "rejected");
         return toolError("invalid_input", `התשובה נדחתה: ${check.problems.slice(0, 10).join(" · ")}${check.problems.length > 10 ? ` · ועוד ${check.problems.length - 10}` : ""}. תקנו הכול ושלחו שוב את התשובה המלאה.`);

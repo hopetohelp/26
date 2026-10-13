@@ -13,7 +13,7 @@ import type { HomeRow } from "../lib/home";
  * מתחתיו בקטן הטווח בסקרים האחרונים (הנמוך והגבוה בין המכונים). מתחת ל"מול": בכמה סקרים כל אחת גבוהה יותר.
  * ניטרלי: בלי צבע לרשימה, הגדולה מודגשת רק במשקל. בבית אין שורת סוג/תאריך/"איך זה חושב?" (`bare`).
  */
-export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Poll[]; asOf: string }) {
+export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", method = "model" }: { a: HomeRow; b: HomeRow; polls: Poll[]; asOf: string; label?: string; method?: string }) {
   const pairs = polls
     .map((p) => ({ va: seatsIn(p, a.id), vb: seatsIn(p, b.id) }))
     .filter((d): d is { va: number; vb: number } => typeof d.va === "number" && typeof d.vb === "number");
@@ -27,7 +27,7 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
   return (
     <section aria-labelledby="duel-h" className="w-full">
       <h2 id="duel-h" className="sr-only">
-        שתי הרשימות הגדולות: {a.name} {seatsFmt(a.central)} מנדטים, {b.name} {seatsFmt(b.central)} מנדטים, לפי ממוצע המודל.
+        שתי הרשימות הגדולות: {a.name} {seatsFmt(a.central)} מנדטים, {b.name} {seatsFmt(b.central)} מנדטים, לפי {label}.
         {pairs.length > 0 && ` ${a.name} גבוהה יותר ב-${nA} סקרים, ${b.name} ב-${nB}$.`}
       </h2>
       <Explained
@@ -35,8 +35,8 @@ export function Duel({ a, b, polls, asOf }: { a: HomeRow; b: HomeRow; polls: Pol
         kind="תרחיש"
         source="כל הסקרים, מנוע החוק והסקר האחרון של כל מכון"
         asOf={`הסקרים עד ${asOf}`}
-        assumption="המספר הגדול: ממוצע המודל. הטווח: הנמוך והגבוה בין המכונים בסקר האחרון של כל אחד. הספירה: בכמה סקרים כל רשימה גבוהה יותר. לא סיכוי."
-        methodAnchor="model"
+        assumption={`המספר הגדול: ${label}. הטווח: הסקרים האחרונים. הספירה: השוואת הסקרים.`}
+        methodAnchor={method}
       >
         {/* הרצועה מוסתרת מקורא מסך (הכותרת למעלה אומרת הכול), חוץ מאייקוני המידע שליד המספרים */}
         <div ref={seenRef} className={`relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in ${whenVisible(seen)}`}>
@@ -72,7 +72,7 @@ function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: bool
       <span aria-hidden="true" className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p aria-hidden="true" className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
       {/* המספר הגדול הוא ממוצע המודל; אייקון המידע שלו אחד למסך, בחצי העיגול שמעל (בלי שני אייקונים זהים, הכרעת בעלים 12.10.2026) */}
-      <p aria-hidden="true" className={`font-num tabular leading-none mt-2 text-[4.5rem] md:text-[8rem] ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
+      <p aria-hidden="true" className={`font-num tabular leading-none mt-2 ${seatsFmt(r.central).length > 2 ? "text-[2.75rem] md:text-[5rem]" : "text-[4.5rem] md:text-[8rem]"} ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
         <CountUp value={r.central} format={seatsFmt} />
       </p>
       {range && <p aria-hidden="true" className="mt-2 text-sm text-ink-soft"><bdi>{range}</bdi> בסקרים האחרונים</p>}

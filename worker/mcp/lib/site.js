@@ -9,16 +9,21 @@ const cache = new Map();
 export class SiteUnavailable extends Error {}
 
 export async function siteJson(env, path, now = Date.now()) {
-  const hit = cache.get(path);
+  const key = env.SITE_URL + path;
+  const hit = cache.get(key);
   if (hit && hit.at > now - TTL) return hit.data;
   let res;
   try { res = await fetch(env.SITE_URL + path, { cf: { cacheTtl: 60 } }); } catch { res = null; }
   if (!res || !res.ok) {
-    if (hit) return hit.data; // האתר לא ענה — העותק האחרון שבזיכרון
+    if (hit) return { ...hit.data, about: { ...hit.data.about, cacheStatus: "saved-after-failure", cachedAt: new Date(hit.at).toISOString() } }; // מועד הנתון המקורי נשמר
     throw new SiteUnavailable(path);
   }
-  const data = await res.json();
-  cache.set(path, { at: now, data });
+  let data;
+  try { data = await res.json(); } catch {
+    if (hit) return { ...hit.data, about: { ...hit.data.about, cacheStatus: "saved-after-failure", cachedAt: new Date(hit.at).toISOString() } };
+    throw new SiteUnavailable(path);
+  }
+  cache.set(key, { at: now, data });
   return data;
 }
 

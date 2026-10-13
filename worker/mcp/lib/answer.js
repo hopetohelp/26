@@ -14,16 +14,8 @@
  */
 
 /** סוגי המספר — אותה רשימה כמו בחוזה `Explained` (src/components/Explained.tsx) */
-export const NUMBER_KINDS = [
-  "נתון רשמי",
-  "חישוב לפי החוק",
-  "סיכום סקרים",
-  "תרחיש",
-  "השוואה",
-  "מודל המגמות",
-  "השערות משתתפים, אינן סקר",
-  "תשובות משתתפים במדגם עצמי, לא מייצג, ללא דגימה וללא שקלול",
-];
+export { NUMBER_KINDS } from "../../../src/lib/dataCatalog.ts";
+import { NUMBER_KINDS } from "../../../src/lib/dataCatalog.ts";
 
 export const LIMITS = { title: 80, summary: 400, heading: 60, text: 1500, item: 200, label: 60, value: 20, detail: 80, cell: 60, rows: 20, sections: 8, footnote: 240, question: 120, asOf: 30, minColumns: 2, maxColumns: 5 };
 
@@ -52,11 +44,6 @@ export function stripDates(s) {
     .replace(/(כנסת|הכנסת)\s+ה[-־]?\d{2}/g, " ");
 }
 export const hasNumber = (s) => /\d/.test(stripDates(s));
-
-/** "ממוצע (ה)סקרים" ⇐ חובה גם "ממוצע פשוט" וגם "ממוצע (ה)מודל" באותה תשובה */
-const POLL_AVERAGE = /ממוצע\s+(ה)?סקרים/u;
-const SIMPLE_AVERAGE = /ממוצע\s+(ה)?פשוט/u;
-const MODEL_AVERAGE = /ממוצע\s+(ה)?מודל/u;
 
 /** עברית: יש אותיות עבריות, והלטיניות אינן רבות מהן (שם מוצר כמו Claude מותר) */
 export function isHebrew(s) {
@@ -158,11 +145,6 @@ export function validateAnswer(args, methodUrl) {
     if (kind !== "numbers" && sec.source !== undefined) out.source = source(`${path}.source`, sec.source);
     answer.sections.push(out);
   });
-
-  // שני הממוצעים: מי שכותב "ממוצע הסקרים" מציג גם את הפשוט וגם את המודל
-  const all = JSON.stringify(answer);
-  if (POLL_AVERAGE.test(all) && !(SIMPLE_AVERAGE.test(all) && MODEL_AVERAGE.test(all)))
-    p("sections", "כשכותבים \"ממוצע הסקרים\" — מציגים גם \"ממוצע פשוט\" (הסקר האחרון של כל מכון) וגם \"ממוצע המודל\"");
 
   const qs = args.suggested_questions;
   if (!Array.isArray(qs) || qs.length < 1 || qs.length > 3) p("suggested_questions", "1 עד 3 שאלות להמשך");

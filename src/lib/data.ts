@@ -1,3 +1,6 @@
+import { POLL_WINDOW_DAYS } from "./dataCatalog";
+import { pollsterKey, mean, toTime, seatsIn, bucketLatest } from "./pollMath";
+export { pollsterKey, mean, toTime, seatsIn, sumPresent, groupSeatsIn, bucketLatest } from "./pollMath";
 import pollsFile from "../data/polls.json";
 import metaFile from "../data/meta.json";
 import resultsFile from "../data/results.json";
@@ -112,19 +115,17 @@ export const listName = (id: string) =>
 /** סקרים שמותר ונכון להציג בניתוח: פורסמו לציבור ועקביים (סכום ≈ 120) */
 export const usablePolls = polls.filter((p) => p.eligibleToShow);
 
-export const pollsterKey = (p: Poll) => `${p.firm}|${p.publisher ?? ""}`;
+
 export const pollsterLabel = (p: Poll) => `${p.firmHe}${p.publisherHe ? ` · ${p.publisherHe}` : ""}`;
 
 /** ממוצע חשבוני. הכרעת בעלים 9.10.2026: באתר מציגים תמיד ממוצע, אף פעם לא חציון. */
-export function mean(xs: number[]): number {
-  return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN;
-}
+
 
 const DAY = 86_400_000;
-export const toTime = (d: string) => Date.parse(d + "T12:00:00Z");
+
 
 /** הסקר האחרון של כל מכון+מזמין בחלון של `days` ימים עד `asOf` */
-export function latestPerPollster(asOf: string, days = 14): Poll[] {
+export function latestPerPollster(asOf: string, days = POLL_WINDOW_DAYS): Poll[] {
   const end = toTime(asOf);
   const map = new Map<string, Poll>();
   for (const p of usablePolls) {
@@ -138,27 +139,16 @@ export function latestPerPollster(asOf: string, days = 14): Poll[] {
 }
 
 /** מנדטים בסקר: מפלגה מתחת לסף = 0; לא נשאלה = undefined */
-export function seatsIn(p: Poll, id: string): number | undefined {
-  const v = p.values[id];
-  if (!v) return undefined;
-  if (Number.isFinite(v.s) && v.s! >= 0 && v.s! <= 120) return v.s;
-  if (Number.isFinite(v.p) && v.p! >= 0 && v.p! < 3.25) return 0;
-  return undefined;
-}
+
 
 /**
  * 🔴 הכלל האחד לכל נתון על קבוצת מפלגות (הכרעת בעלים 12.10.2026): סכום הערכים הקיימים; מפלגה שאין לה ערך נספרת 0, בלי שום סימון.
  * אם אין ערך לאף מפלגה בקבוצה — אין נתון (null). כל חישוב של גוש, סכום, ממוצע וטווח עובר כאן.
  */
-export function sumPresent(values: (number | undefined)[]): number | null {
-  const present = values.filter((x): x is number => typeof x === "number");
-  return present.length ? present.reduce((a, b) => a + b, 0) : null;
-}
+
 
 /** מנדטי קבוצת מפלגות בסקר: מפלגה שלא נסקרה = 0; סקר שלא סקר אף מפלגה מהקבוצה = null (לא נכנס לחישוב) */
-export function groupSeatsIn(p: Poll, ids: string[]): number | null {
-  return sumPresent([...new Set(ids)].map((id) => seatsIn(p, id)));
-}
+
 
 /**
  * האם כל הסקרים (שנשאלו על הרשימה) נותנים לה מנדטים, כולל הפסימי ביותר עבורה — אז היא אינה בסיכון לאחוז החסימה
@@ -215,18 +205,8 @@ export function summarize(ps: Poll[], ids: string[]): PartySummary[] {
  */
 export const POINT_DAYS = 3;
 /** כל נקודה: הסקר האחרון של כל מכון ב-14 הימים שמסתיימים בה (הכרעת בעלים 11.10.2026: 14 ימים) */
-export const POINT_WINDOW = 14;
-export function bucketLatest<T>(source: T[], endOf: (p: T) => string, keyOf: (p: T) => string, t: number, days = POINT_WINDOW): T[] {
-  const map = new Map<string, T>();
-  for (const p of source) {
-    const e = toTime(endOf(p));
-    if (e > t || e <= t - days * DAY) continue;
-    const k = keyOf(p);
-    const cur = map.get(k);
-    if (!cur || endOf(p) > endOf(cur)) map.set(k, p);
-  }
-  return [...map.values()];
-}
+export const POINT_WINDOW = POLL_WINDOW_DAYS;
+
 /** נקודות הזמן: כל 3 ימים, מהתאריך האחרון אחורה (כך שהנקודה האחרונה היא תמיד היום האחרון) */
 export function pointTimes(from: string, to: string, step = POINT_DAYS): number[] {
   const out: number[] = [];

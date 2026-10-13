@@ -1,3 +1,7 @@
+import SourcePicker from "../components/SourcePicker";
+import { useSourcePreference } from "../lib/sourcePreference";
+import { selectedPolls, type Selection } from "../lib/dataResolver";
+import { POLL_WINDOW_DAYS } from "../lib/dataCatalog";
 import { useState } from "react";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
@@ -8,10 +12,9 @@ import { AllParties, PartyByPollster, PollsterByParty, PollsterGrid } from "../c
 import { Note, Split } from "../components/ui";
 import { lists2026, listName, passesInMost, pollsterLabel, seatsIn, summarize } from "../lib/data";
 import { date } from "../lib/format";
-import { LATEST_POLLS } from "../lib/homeData";
-import { POLL_AVERAGE } from "../lib/sources";
+import { MODEL_AVERAGE } from "../lib/sources";
 
-const WINDOW_DAYS = 14;
+const WINDOW_DAYS = POLL_WINDOW_DAYS;
 const ALL = "all";
 type View = "party" | "pollster";
 
@@ -21,16 +24,18 @@ type View = "party" | "pollster";
  * מתג: לפי מפלגה / לפי מכון, ורשימת בחירה: כולן או אחת. מתחת — הגושים האישיים בכל אחד מהסקרים.
  */
 export default function Today() {
-  const asOf = POLL_AVERAGE.asOf;
-  const latest = LATEST_POLLS;
+  const asOf = MODEL_AVERAGE.asOf;
+  const preference = useSourcePreference("today");
+  const [temporary, setTemporary] = useState<Selection | null>(null);
+  const selection = temporary ?? preference.selection;
+  const latest = selectedPolls(selection);
   const ids = lists2026.map((l) => l.id);
   const summary = summarize(latest, ids);
   const above = summary.filter(passesInMost);
   const below = summary.filter((s) => !passesInMost(s));
   const [view, setView] = useState<View>("party");
   const [party, setParty] = useState(ALL);
-  const [pollster, setPollster] = useState(ALL);
-  const poll = latest.find((p) => p.id === pollster);
+  const poll = latest.length === 1 ? latest[0] : undefined;
   // "מקרא" באותה שורה עם המתג והרשימה (הכרעת בעלים 11.10.2026): הכפתור "נשלח" לכאן מתוך הגרף, והפאנל הפתוח מתחת לשורה
   const [legendRow, setLegendRow] = useState<HTMLElement | null>(null);
   const [legendPanel, setLegendPanel] = useState<HTMLElement | null>(null);
@@ -43,6 +48,7 @@ export default function Today() {
       lead={lead}
       primary={
         <div className="mb-8">
+        <SourcePicker screen="today" selection={selection} onChange={setTemporary} notice={preference.notice} />
         <div className="flex items-center gap-2">
           <Segmented
             label="הצגה"
@@ -57,12 +63,7 @@ export default function Today() {
               <option value={ALL}>כל המפלגות</option>
               {summary.map((s) => <option key={s.id} value={s.id}>{listName(s.id)}</option>)}
             </Select>
-          ) : (
-            <Select inline className="min-w-0" id="today-pollster" label="מכון" value={pollster} onChange={setPollster}>
-              <option value={ALL}>כל המכונים</option>
-              {latest.map((p) => <option key={p.id} value={p.id}>{pollsterLabel(p)} · {date(p.end)}</option>)}
-            </Select>
-          )}
+          ) : null}
           <div ref={setLegendRow} className="ms-auto shrink-0 flex items-center" />
         </div>
         <div ref={setLegendPanel} />

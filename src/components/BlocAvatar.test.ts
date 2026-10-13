@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
 import { BlocAvatar, fitCount, leadsOf } from "./BlocAvatar";
 import { PARTY_IMAGES } from "../lib/partyImages";
-import { POLL_AVERAGE } from "../lib/sources";
+import { SIMPLE_POLL_MEANS } from "../lib/dataResolver";
 import { defaultBlocs } from "../pages/guess/model";
 
 /** [מפלגה, קוטר בפיקסלים] לפי סדר הציור */
@@ -20,7 +20,7 @@ it("גוש ברירת מחדל: המנהיגים הקבועים ראשונים �
 });
 
 it("גוש ששונה או שהמשתתף הגדיר: המפלגה הגדולה בגוש ראשונה וגדולה פי 1.5", () => {
-  const seats = POLL_AVERAGE.seats as Record<string, number>;
+  const seats = SIMPLE_POLL_MEANS as Record<string, number>;
   const biggest = (["shas", "likud", "raam"]).sort((a, b) => (seats[b] ?? 0) - (seats[a] ?? 0))[0];
   const r = shown(["shas", "likud", "raam"], "my-bloc");
   expect(r[0]).toEqual([biggest, 36]);

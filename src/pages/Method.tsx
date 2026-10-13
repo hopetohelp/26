@@ -1,10 +1,14 @@
+import MethodComparison from "../components/MethodComparison";
+import { DATA_PRODUCTS } from "../lib/dataCatalog";
+import { DICTIONARY_DEFINITIONS } from "../lib/dictionaryDefinitions";
+import DataTable from "../components/DataTable";
 import { useEffect, type ReactNode } from "react";
 import { Card, Fold, PageTitle } from "../components/ui";
 import SectionLink from "../components/SectionLink";
 import { Link, useLocation } from "react-router-dom";
 import { fieldLabel, latestPerPollster, meta } from "../lib/data";
 import { groupLabel, quality } from "../lib/quality";
-import { POLL_AVERAGE } from "../lib/sources";
+import { MODEL_AVERAGE } from "../lib/sources";
 import { date, num } from "../lib/format";
 
 /**
@@ -40,14 +44,8 @@ export interface DictEntry {
 }
 
 export const DICTIONARY: DictEntry[] = [
-  {
-    id: "current",
-    title: "סיכום הסקרים היום",
-    where: "המצב היום",
-    kind: "סיכום סקרים",
-    source: "טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר",
-    assumption: "לכל מכון נלקח הסקר האחרון שלו ב-14 הימים האחרונים, והמוצג הוא הממוצע בין המכונים והטווח מהנמוך לגבוה. סיכום תיאורי של מה שפורסם, לא מודל.",
-    detail: (
+{id: "current",
+detail: (
       <>
         <p className="text-sm">
           לכל מכון סקרים (מכון + גוף מזמין) נלקח הסקר האחרון שלו ב-14 הימים האחרונים. לכל רשימה מוצג הממוצע בין המכונים והטווח מהנמוך
@@ -55,32 +53,18 @@ export const DICTIONARY: DictEntry[] = [
           המכונים במחזור הזה גדולים מאוד, ולכן הטווח חשוב לא פחות מהממוצע.
         </p>
       </>
-    ),
-  },
-  {
-    id: "trends",
-    title: "מגמות",
-    where: "סקרים ומגמות",
-    kind: "סיכום סקרים",
-    source: "טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר",
-    assumption: "נקודה כל 3 ימים: ממוצע המנדטים בסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה (מכון נספר פעם אחת). תיאורי, לא מודל.",
-    detail: (
+    )},
+{id: "trends",
+detail: (
       <>
         <p className="text-sm">
           נקודה כל 3 ימים: ממוצע המנדטים בסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה (מכון נספר פעם אחת). לרשימות שנוצרו מאיחוד (ביחד, הדמוקרטים, הרשימה
           המשותפת) מוצג לפני מועד האיחוד קו מקווקו של סכום המרכיבים — סכום של רשימות נפרדות, לא תמיכה ברשימה המאוחדת.
         </p>
       </>
-    ),
-  },
-  {
-    id: "accuracy",
-    title: "דיוק הסקרים בעבר",
-    where: "בחירות קודמות",
-    kind: "סיכום סקרים",
-    source: "טבלאות הסקרים בוויקיפדיה האנגלית לכל מערכת (עם קישור לפרסום המקורי), והתוצאות הרשמיות של ועדת הבחירות",
-    assumption: "הפער = ההפרש בין ממוצע הסקרים ערב הבחירות לתוצאה, לכל רשימה. הטווח הוא הנמוך והגבוה בין הסקרים, לא טווח טעות סטטיסטי.",
-    detail: (
+    )},
+{id: "accuracy",
+detail: (
       <>
         <div className="text-sm space-y-2">
           <p>
@@ -110,16 +94,9 @@ export const DICTIONARY: DictEntry[] = [
           </p>
         </div>
       </>
-    ),
-  },
-  {
-    id: "model",
-    title: "ממוצע המודל, טווח התרחישים, שיעור תרחישים וקו החסימה",
-    where: "בית · התרחישים · מה השתנה (ממוצע המודל)",
-    kind: "תרחיש",
-    source: "הסקרים שנכללו, מנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר) ו-20,000 תרחישים",
-    assumption: "שלוש שכבות אי-ודאות: כמה הממוצע של היום בטוח, כמה הוא עוד יזוז עד יום הבחירות, וטעות הסקרים המשותפת כפי שנמדדה בחמש המערכות הקודמות. לא סיכוי.",
-    detail: (
+    )},
+{id: "model",
+detail: (
       <>
         <div className="text-sm space-y-2">
           <p>
@@ -149,7 +126,7 @@ export const DICTIONARY: DictEntry[] = [
             </li>
           </ol>
           <p>
-            <strong>מה נכנס:</strong> רק סקרים שהושוו לפרסום המקורי ופורסמו לציבור, מאז הגשת הרשימות. סקר שהמנוע אינו מצליח לשחזר
+            <strong>מה נכנס:</strong> סקרים כלליים שנקלטו ולא סומנו כשגויים, מאז הגשת הרשימות. אימות אינו תנאי כניסה. סקר שהמנוע אינו מצליח לשחזר
             נשאר בארכיון ואינו נכנס לממוצע.
           </p>
           <p>
@@ -180,59 +157,13 @@ export const DICTIONARY: DictEntry[] = [
           </p>
         </div>
       </>
-    ),
-  },
-  {
-    id: "means",
-    title: "ממוצע המודל מול ממוצע המכונים",
-    where: "בית · המצב היום · התרחישים",
-    kind: "השוואה",
-    source: "הסקרים שפורסמו, ומנוע החוק (אחוז חסימה, הסכמי עודפים שדווחו, באדר-עופר)",
-    assumption: "שני מספרים שונים לאותה שאלה. ממוצע המכונים: ממוצע פשוט של המנדטים שהמכונים פרסמו. ממוצע המודל: ממוצע של הקולות, שעובר אחר כך חלוקת מנדטים. אף אחד מהם אינו תוצאה צפויה.",
-    detail: (
-      <>
-        <div className="text-sm space-y-2">
-          <p>
-            <strong>ממוצע המכונים.</strong> לכל מכון נלקח הסקר האחרון שלו, ומחושב הממוצע הפשוט של המנדטים שפורסמו (למשל 23.4). המספר הוא
-            "מה המכונים אמרו, בממוצע". הוא אינו עובר חלוקת מנדטים: הוא עשרוני, וסכום הממוצעים של כל הרשימות אינו בהכרח 120.
-          </p>
-          <p>
-            <strong>ממוצע המודל.</strong> המודל מחשב קודם ממוצע של <em>אחוזי הקולות</em> (אחרי תיקון הנטייה הקבועה של כל מכון), ורק אז מחלק אותם למנדטים, בדיוק כמו ביום הבחירות. התוצאה היא מספרים שלמים שסכומם 120.
-          </p>
-          <ul className="list-disc ps-5 space-y-1">
-            <li>
-              <strong>אחוז החסימה (3.25%).</strong> רשימה שלא עוברת אותו מקבלת אפס, וקולותיה נשארים בחוץ: הם לא נחלקים בין השאר. ממוצע של
-              מנדטים אינו מתחשב בכך.
-            </li>
-            <li>
-              <strong>הסכמי עודפים.</strong> זוגות רשימות חולקים ביניהם את שאריות הקולות, ולפעמים זה מזיז מנדט שלם. המודל מחשב אותם לפי
-              ההסכמים שדווחו.
-            </li>
-            <li>
-              <strong>באדר-עופר.</strong> שיטת חלוקת המנדטים והשאריות. היא קובעת איזו רשימה מקבלת את המנדטים האחרונים, ולכן גם הם מחושבים
-              כאן ולא מוערכים.
-            </li>
-          </ul>
-          <p>
-            <strong>למה המספרים שונים.</strong> ממוצע המכונים מתעלם מחלוקת המנדטים, ולכן יכול לתת לרשימה ‎3.4‎ מנדטים שאינם אפשריים. ממוצע המודל מראה
-            מה חלוקת המנדטים נותנת לממוצע הקולות. הפער הגדול ביותר מופיע ברשימות על הסף ובשאריות.
-          </p>
-          <p>
-            <strong>ממוצע התרחישים וחציון התרחישים</strong> (בתרחישים). ממוצע התרחישים הוא ממוצע המנדטים של 20,000 התרחישים; החציון הוא
-            הערך האמצעי: חצי מהתרחישים נמוכים ממנו וחצי גבוהים. מוצגים שניהם, כי לרשימה שנופלת מתחת לסף בחלק מהתרחישים הם שונים.
-          </p>
-        </div>
-      </>
-    ),
-  },
-  {
-    id: "forecast",
-    title: "מודל המגמות",
-    where: "תמונת השיתוף ב\"הכנסת שלי\"",
-    kind: "מודל המגמות",
-    source: "כל הסקרים של כל מכון מאז הגשת הרשימות, ותוצאות המערכות הקודמות",
-    assumption: "מודל אחד עם אותם כללים בכל מערכת בחירות, שנבדק על חמש המערכות הקודמות; בכל יום נבחרת השיטה שדייקה יותר בעבר. אין בכך הבטחה לעתיד.",
-    detail: (
+    )},
+{id: "adjusted",
+detail: <><p>{DATA_PRODUCTS["polls.adjusted"].missing}</p><DataTable selection={{ product: "polls.adjusted" }} /></>},
+{id: "means",
+detail: <div className="space-y-4">{(["polls.mean", "polls.adjusted", "model.mean"] as const).map(id => <section key={id}><h4 className="font-semibold">{DATA_PRODUCTS[id].name}</h4><p>{DATA_PRODUCTS[id].explain}. {DATA_PRODUCTS[id].assumption}</p><DataTable selection={{ product: id }} /></section>)}<MethodComparison /></div>},
+{id: "forecast",
+detail: (
       <>
         <div className="text-sm space-y-2">
           <p>
@@ -278,16 +209,9 @@ export const DICTIONARY: DictEntry[] = [
           </p>
         </div>
       </>
-    ),
-  },
-  {
-    id: "changes",
-    title: "השוואה לבחירות קודמות",
-    where: "מה השתנה מהבחירות האחרונות",
-    kind: "השוואה",
-    source: "תוצאות האמת של בחירות 2022 (ועדת הבחירות המרכזית) מול ממוצע המודל של היום, וטווח הסקרים האחרונים",
-    assumption: "שינוי נטו בין שתי תמונות. זה לא מעבר בוחרים; אי אפשר לדעת מכאן מי עבר לאן. בפיצול — התוצאה של 2022 מתחלקת לפי היחס בין הרשימות היום.",
-    detail: (
+    )},
+{id: "changes",
+detail: (
       <>
         <div className="text-sm space-y-2">
           <p>
@@ -310,16 +234,9 @@ export const DICTIONARY: DictEntry[] = [
           </p>
         </div>
       </>
-    ),
-  },
-  {
-    id: "engine",
-    title: "חוק הבחירות: אחוז חסימה והסכמי עודפים",
-    where: "בכל מקום",
-    kind: "חישוב לפי החוק",
-    source: "חוק הבחירות לכנסת, סעיפים 81–82; המנוע נבדק מול תוצאות 2019–2022",
-    assumption: "האחוזים הם מתוך הקולות הכשרים. אחוז החסימה הוא 3.25%; רשימה מתחתיו לא מקבלת מנדטים. הסכמי עודפים לפי הדיווחים.",
-    detail: (
+    )},
+{id: "engine",
+detail: (
       <>
         <div className="text-sm space-y-2">
           <p>המנוע מממש את חוק הבחירות לכנסת [נוסח משולב], סעיפים 81–82:</p>
@@ -347,16 +264,9 @@ export const DICTIONARY: DictEntry[] = [
           31 ⇐ 32 והעבודה 5 ⇐ 4; אבל הסרת הסכם בודד מראה שכל אחד משני ההסכמים הפעילים "לקח" מנדט מיהדות התורה.
         </p>
       </>
-    ),
-  },
-  {
-    id: "results",
-    title: "תוצאות רשמיות ומצביעים",
-    where: "בחירות קודמות",
-    kind: "נתון רשמי",
-    source: "ועדת הבחירות המרכזית (votes21–votes25.bechirot.gov.il), ומנוע החוק של האתר",
-    assumption: "כל המספרים מהתוצאות הרשמיות. ״מה הזיזו ההסכמים״ היא השוואה נגד-עובדתית על אותם קולות.",
-    detail: (
+    )},
+{id: "results",
+detail: (
       <>
         <p className="text-sm">
           "קולות שלא הומרו למנדטים" = קולות כשרים לרשימות שלא עברו את אחוז החסימה. פתקים פסולים אינם בכלל הזה — הם לא נספרים מלכתחילה.
@@ -366,16 +276,9 @@ export const DICTIONARY: DictEntry[] = [
           בהנחות שהקורא בוחר, ואינם תוצאה צפויה.
         </p>
       </>
-    ),
-  },
-  {
-    id: "crowd",
-    title: "השערות משתתפים",
-    where: "הכנסת שלי · סקר האתר",
-    kind: "השערות משתתפים, אינן סקר",
-    source: "מה שמשתתפי האתר שיערו ב״הכנסת שלי״",
-    assumption: "זה אינו סקר: מי שמשתתף בוחר בזה בעצמו, אין דגימה ואין שקלול. הדשבורד מתאר את המשתתפים באתר, לא את כלל הבוחרים.",
-    detail: (
+    )},
+{id: "crowd",
+detail: (
       <>
         <div className="text-sm space-y-2">
           <p>
@@ -397,25 +300,17 @@ export const DICTIONARY: DictEntry[] = [
           </p>
         </div>
       </>
-    ),
-  },
-  {
-    id: "personal-blocs",
-    title: "הגושים האישיים",
-    where: "המצב היום · סקרים · הכנסת שלי",
-    kind: "השוואה",
-    source: "מנדטי המפלגות בכל מקור, כפי שהמשתתף הגדיר את הגוש",
-    assumption: "כל גוש הוא תרחיש עצמאי של עד חמש קבוצות; סכומי גושים אינם חלוקה של הכנסת ואין לחברם. מפלגה שלא נסקרה נספרת 0, בלי סימון.",
-    detail: (
+    )},
+{id: "personal-blocs",
+detail: (
       <>
 
         <p>כל גוש הוא תרחיש עצמאי של עד חמש קבוצות. מפלגה רשאית להופיע בכמה תרחישים, אך פעם אחת בכל תרחיש. בכל מקור סכום הגוש מחושב רק ממנדטי מפלגותיו באותו מקור. סכומי הגושים אינם חלוקה של הכנסת ואין לחברם.</p>
         <p className="mt-2">הכלל האחד לכל נתון על קבוצת מפלגות (גוש, ממוצע, טווח, מגמה): נכנס כל סקר שסקר לפחות מפלגה אחת מהקבוצה, וסכום הגוש בו הוא סכום מנדטי המפלגות שנסקרו. מפלגה שלא נסקרה בסקר נספרת 0. אין סימון באתר — לא ״לפחות״, לא ״כ-״ ולא ״כמה מתוך כמה״. סקר שלא סקר אף מפלגה מהקבוצה אינו נכנס, וכשאין אף סקר כזה מוצג ״—״. אין השלמה מסקרים אחרים ואין השלמה מהמודל.</p>
         <p className="mt-2">אין מסיקים טווח של גוש מחיבור טווחי המפלגות, ואין מחברים נתונים משקלולים שונים כדי לטעון לגוש. במגמות מסכמים כל סקר תחילה, ואז מחשבים ממוצע. תוצאות אמת ונתונים אישיים אינם מושלמים באמצעות סקרים. יעד אישי משמש בקשת השלמה בלבד ואינו מחליף נתון מקור. בשיתוף ממוצע הסקרים ומודל המגמות נשארים מקורות נפרדים.</p>
       </>
-    ),
-  },
-];
+    )}
+].map(entry => ({ ...DICTIONARY_DEFINITIONS.find(d => d.id === entry.id)!, detail: entry.detail }));
 
 export const DICTIONARY_IDS = DICTIONARY.map((e) => e.id);
 
@@ -424,13 +319,11 @@ function Entry({ e }: { e: DictEntry }) {
     <article id={e.id} className="border-t border-paper-line py-4 scroll-mt-32">
       <h3 className="text-xl font-display leading-tight">{e.title} <SectionLink id={e.id} label={e.title} /></h3>
       <p className="text-sm text-ink-soft mb-2">מופיע ב: {e.where}</p>
-      <dl className="grid grid-cols-[4.5rem_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
-        <dt className="font-semibold text-ink-soft">סוג</dt>
-        <dd>{e.kind}</dd>
-        <dt className="font-semibold text-ink-soft">מקור</dt>
-        <dd>{e.source}</dd>
-        <dt className="font-semibold text-ink-soft">הנחה</dt>
-        <dd>{e.assumption}</dd>
+      <dl className="grid grid-cols-[minmax(5rem,auto)_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
+        <dt className="font-semibold text-ink-soft">נתונים לחישוב</dt><dd>{e.source}</dd>
+        <dt className="font-semibold text-ink-soft">דרך החישוב</dt><dd>{e.assumption}</dd>
+        <dt className="font-semibold text-ink-soft">תוצאה עדכנית</dt><dd>{e.id === "current" ? <DataTable selection={{ product: "polls.mean" }} /> : e.id === "model" ? <DataTable selection={{ product: "model.mean" }} /> : "בפירוט המלא ובמסך המקושר"}</dd>
+        <dt className="font-semibold text-ink-soft">תאריך עדכון</dt><dd>{date(meta.dataAsOf)}</dd>
       </dl>
       <details className="mt-3">
         <summary className="cursor-pointer min-h-[44px] inline-flex items-center text-sm font-semibold text-accent underline underline-offset-2">פירוט מלא</summary>
@@ -457,13 +350,13 @@ export function MethodNumbers() {
 /** כל הסקרים מול החישובים: מה נכנס לכל תוצר ולמה (ביקורת קודקס 12.10.2026, סעיף "תיאור מדויק של הכיסוי") */
 function Coverage() {
   const c = quality.coverage;
-  const simple = latestPerPollster(POLL_AVERAGE.asOf).length;
+  const simple = latestPerPollster(MODEL_AVERAGE.asOf).length;
   const rows: [string, string, string][] = [
     ["ארכיון הסקרים", `כל סקר של המחזור שנקלט, מ-${date(c.firstEnd)}. כולל סקרים שסכום המנדטים בהם אינו 120 — הם מסומנים בתווית ונכנסים לחישוב. רק סקר שסומן כשגוי מוחרג.`, num(c.total)],
-    ["סקרים שנכנסים לחישובים", "סקרים שפורסמו לציבור וסכום המנדטים בהם 118–122. כל חישוב מתחיל מהם, ולא מכל הארכיון.", num(c.usable)],
-    ["ממוצע פשוט (בית והמצב היום)", "הסקר האחרון של כל מכון ומזמין ב-14 הימים האחרונים. מכון שפרסם הרבה סקרים בחלון נספר פעם אחת.", `${num(simple)} סקרים`],
+    ["סקרים שנכנסים לחישובים", "כל סקר כללי שנקלט, למעט סקר שסומן במפורש כשגוי. אימות אינו תנאי כניסה.", num(c.usable)],
+    ["ממוצע סקרים", "הסקר האחרון של כל מכון ומזמין ב-14 הימים האחרונים. מכון שפרסם הרבה סקרים בחלון נספר פעם אחת.", `${num(simple)} סקרים`],
     ["מגמות", "בכל נקודה (כל 3 ימים): הסקר האחרון של כל מכון ומזמין מ-14 הימים שהסתיימו בה, מתוך הסקרים שנכנסים לחישובים.", "לפי הטווח שנבחר"],
-    ["המודל והתרחישים", `רק סקרים שהסתיימו אחרי הגשת הרשימות (${date(c.listSubmission)}), שהמנוע משחזר. סקרים מוקדמים יותר אינם משפיעים עליו.${c.model && c.model.skipped ? ` ${num(c.model.skipped)} סקרים הוצאו כי המנוע אינו משחזר אותם.` : ""}`, `${num(POLL_AVERAGE.polls)} סקרים`],
+    ["המודל והתרחישים", `רק סקרים שהסתיימו אחרי הגשת הרשימות (${date(c.listSubmission)}), שהמנוע משחזר. סקרים מוקדמים יותר אינם משפיעים עליו.${c.model && c.model.skipped ? ` ${num(c.model.skipped)} סקרים הוצאו כי המנוע אינו משחזר אותם.` : ""}`, `${num(MODEL_AVERAGE.polls)} סקרים`],
     ["התחזית", `אותם סקרים כמו המודל. נקודת הבסיס: הסקר האחרון של כל מכון ב-${c.forecastWindowDays} הימים האחרונים; המגמה נלמדת מכל סקרי המכון מאז הגשת הרשימות.`, `${num(c.sinceListSubmission)} סקרים`],
   ];
   return (

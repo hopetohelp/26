@@ -1,3 +1,5 @@
+import { cleanDataPreference } from "./dataPreferences";
+import type { Selection } from "./dataResolver";
 /**
  * קישור שיתוף להשערה: https://hopetohelp.github.io/26/#/guess?g=<base64url של JSON קומפקטי>.
  * התוכן: מנדטים לכל רשימה, אחוזים (אם ההשערה הייתה לפי אחוזים) ושם משתתף — רק אם המשתתף בחר לצרף אותו.
@@ -10,6 +12,7 @@ const MAX_LEN = 1500;
 const USER_RE = /^[א-תA-Za-z0-9_]{3,24}$/;
 
 export interface SharedGuess {
+  comparison?: { selection: Selection; snapshotId: string };
   seats: Record<string, number>;
   pct?: Record<string, number>;
   username?: string;
@@ -30,9 +33,10 @@ function fromB64url(s: string): string {
 /** קידוד: רק רשימות עם ערך; אחוזים בעשיריות (שלמים) */
 export function encodeGuess(g: SharedGuess): string {
   const s = Object.fromEntries(Object.entries(g.seats).filter(([, v]) => v > 0));
-  const o: { s: Record<string, number>; p?: Record<string, number>; u?: string } = { s };
+  const o: { s: Record<string, number>; p?: Record<string, number>; u?: string; c?: SharedGuess["comparison"] } = { s };
   if (g.pct) o.p = Object.fromEntries(Object.entries(g.pct).filter(([, v]) => v > 0).map(([k, v]) => [k, Math.round(v * 10)]));
   if (g.username) o.u = g.username;
+  if (g.comparison) o.c = g.comparison;
   return toB64url(JSON.stringify(o));
 }
 
@@ -76,6 +80,12 @@ export function decodeGuess(raw: string | null, ids: string[]): SharedGuess | nu
   if (o.u !== undefined) {
     if (typeof o.u !== "string" || !USER_RE.test(o.u)) return null;
     out.username = o.u;
+  }
+  if (o.c !== undefined) {
+    if (!isObj(o.c) || typeof o.c.snapshotId !== "string" || !/^polls-[a-f0-9]{8}$/.test(o.c.snapshotId)) return null;
+    const preference = cleanDataPreference({ version: 1, selection: o.c.selection, preferredAverage: "polls.mean", updatedAt: "2026-01-01T00:00:00Z" });
+    if (!preference) return null;
+    out.comparison = { selection: preference.selection, snapshotId: o.c.snapshotId };
   }
   return out;
 }

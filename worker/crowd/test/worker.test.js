@@ -340,10 +340,10 @@ describe("העדפות — השיוך האישי נשמר על המשתמש", ()
 describe("העדפות — המחנות נשמרים על המשתמש", () => {
   it("נשמרים, מוחזרים ב-/me, נדחים כשאינם תקינים ונמחקים עם החשבון", async () => {
     const token = await newP();
-    expect((await call("/me", { token })).data.prefs).toEqual({ camps: null, lineage: null });
+    expect((await call("/me", { token })).data.prefs).toEqual({ camps: null, lineage: null, dataSource: null });
     const ok = await call("/prefs", { token, body: { camps: { yashar: "", likud: "likud" } } });
     expect(ok.status).toBe(200);
-    expect((await call("/me", { token })).data.prefs).toEqual({ camps: { yashar: "", likud: "likud" }, lineage: null });
+    expect((await call("/me", { token })).data.prefs).toEqual({ camps: { yashar: "", likud: "likud" }, lineage: null, dataSource: null });
     await call("/prefs", { token, body: { camps: { yashar: "nu_camp" } } });
     expect((await call("/me", { token })).data.prefs.camps).toEqual({ yashar: "nu_camp" });
     expect((await call("/prefs", { token, body: { camps: { nope: "x" } } })).status).toBe(400);
@@ -610,4 +610,23 @@ describe("כניסת עוזר AI (שרת ה-MCP): דלת אחת, החיבורי�
     const other = await delegate(await newP());
     expect((await agentCall("/admin/guesses", null, undefined, { "x-admin-key": other })).status).toBe(401);
   });
+});
+
+it("מקור מועדף נשמר בנפרד, אינו נדרס מעדכון ישן ואינו עובר בין חשבונות", async () => {
+  const token = await newP();
+  const second = await newP();
+  const source = { version: 1, selection: { product: "model.mean" }, preferredAverage: "model.mean", updatedAt: new Date(t).toISOString() };
+  expect((await call("/prefs", { token, body: { dataSource: source } })).status).toBe(200);
+  const old = { ...source, selection: { product: "polls.mean" }, updatedAt: new Date(t - 1000).toISOString() };
+  const response = await call("/prefs", { token, body: { dataSource: old } });
+  expect(response.data.dataSource.selection.product).toBe("model.mean");
+  const me = (await call("/me", { token })).data;
+  expect(me.prefs.dataSource).toEqual(source);
+  expect(me.latest).toEqual({});
+  expect((await call("/me", { token: second })).data.prefs.dataSource).toBeNull();
+  expect((await call("/export", { token })).data.dataSource).toBeTruthy();
+  expect((await call("/prefs", { token, body: { dataSource: { ...source, selection: { product: "nope" } } } })).status).toBe(400);
+  expect((await call("/prefs", { token, body: { dataSource: { ...source, updatedAt: new Date(t + 120_000).toISOString() } } })).status).toBe(400);
+  await call("/delete", { token, body: { confirm: "מחק" } });
+  expect(env.DB.raw.prepare("SELECT count(*) AS n FROM data_source_prefs").get().n).toBe(0);
 });
