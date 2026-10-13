@@ -253,7 +253,7 @@ export default function Accuracy() {
                     <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
                       {p.firmHe}
                       {p.publisherHe ? ` · ${p.publisherHe}` : ""}
-                      {!p.consistent && <span className="sr-only"> (לא נכלל בניתוח: סכום המנדטים {p.seatSum})</span>}
+                      {!p.consistent && <span className="sr-only"> (לא נכלל בחישוב: סכום המנדטים {p.seatSum})</span>}
                     </th>
                     <td className="pe-3 whitespace-nowrap">{dateRange(p.start, p.end)}</td>
                     {lists.map((l) => {

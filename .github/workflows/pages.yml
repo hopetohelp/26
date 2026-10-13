@@ -78,7 +78,7 @@ jobs:
           valid() { node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); if (typeof d.participants !== "number") process.exit(1)' "$1"; }
           if curl --fail --silent --show-error --retry 3 --max-time 30 https://elections26-crowd.hopetohelp-il.workers.dev/dashboard -o /tmp/dashboard.json && valid /tmp/dashboard.json; then
             echo "עותק חדש מהשרת"
-          elif curl --fail --silent --show-error --retry 2 --max-time 30 https://hopetohelp.github.io/26/dashboard.json -o /tmp/dashboard.json && valid /tmp/dashboard.json; then
+          elif curl --fail --silent --show-error --retry 2 --max-time 30 https://26.hopetohelp.net/dashboard.json -o /tmp/dashboard.json && valid /tmp/dashboard.json; then
             echo "::warning::השרת לא ענה — נשאר העותק הקודם שבאתר"
           else
             echo "::warning::אין עותק סטטיסטיקות — המסך ינסה את השרת בלבד"
@@ -90,16 +90,18 @@ jobs:
           set -euo pipefail
           npx vite-node scripts/open-data.ts --dashboard
           if [ -f dist/dashboard.json ]; then npx vite-node scripts/check-open-data.ts --with-dashboard; else npx vite-node scripts/check-open-data.ts; fi
+      - name: בניית דף מעבר לקישורי GitHub הישנים
+        run: node scripts/build-legacy-redirect.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: legacy-redirect
       - uses: actions/upload-artifact@v4
         with:
           name: site-dist
           path: dist
           if-no-files-found: error
   deploy:
-    needs: build
+    needs: deploy-parallel
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -107,20 +109,23 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-      - name: אמת שהאתר החי נגיש ומכיל את הבנייה הנוכחית
+      - name: אמת ש-GitHub מציג מעבר לדומיין הפרטי ושקובצי נתונים ישנים זמינים
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           set -euo pipefail
           for attempt in 1 2 3 4 5 6; do
             if curl --fail --silent --show-error --location --retry 2 --retry-delay 2 "$PAGE_URL" -o /tmp/live.html; then
-              grep -q '<div id="root"></div>' /tmp/live.html
-              echo "האתר החי נגיש: $PAGE_URL"
+              grep -q '26.hopetohelp.net' /tmp/live.html
+              if grep -q '<div id="root"></div>' /tmp/live.html; then exit 1; fi
+              curl --fail --silent --show-error --location "${PAGE_URL}data/index.json" -o /tmp/legacy-data.json
+              node -e 'const d=JSON.parse(require("fs").readFileSync("/tmp/legacy-data.json","utf8")); if (!Array.isArray(d.files)) process.exit(1)'
+              echo "דף המעבר והנתונים הישנים נגישים: $PAGE_URL"
               exit 0
             fi
             sleep 10
           done
-          echo "האתר החי לא עבר בדיקת smoke לאחר הפרסום" >&2
+          echo "דף המעבר ב-GitHub לא עבר בדיקת smoke לאחר הפרסום" >&2
           exit 1
   deploy-parallel:
     needs: build
@@ -140,7 +145,7 @@ jobs:
         with:
           name: site-dist
           path: dist
-      - name: פרסום אותו תוצר ל-Cloudflare Pages
+      - name: פרסום האתר המלא ל-Cloudflare Pages
         run: |
           set -euo pipefail
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
@@ -148,16 +153,16 @@ jobs:
             exit 1
           fi
           npx --yes wrangler@4 pages deploy dist --project-name elections26 --branch main
-      - name: בדיקת האתר המקביל
+      - name: בדיקת האתר המלא בדומיין הפרטי
         run: |
           set -euo pipefail
           for attempt in 1 2 3 4 5 6; do
             if curl --fail --silent --show-error --location --max-time 15 https://26.hopetohelp.net/ -o /tmp/parallel.html \
               && grep -q '<div id="root"></div>' /tmp/parallel.html; then
-              echo "האתר המקביל נגיש"
+              echo "האתר המלא בדומיין הפרטי נגיש"
               exit 0
             fi
             sleep 10
           done
-          echo "האתר המקביל לא עבר בדיקת smoke" >&2
+          echo "האתר בדומיין הפרטי לא עבר בדיקת smoke" >&2
           exit 1

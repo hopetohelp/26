@@ -66,7 +66,7 @@ export function resourceMetadata(env) {
     authorization_servers: [base],
     bearer_methods_supported: ["header"],
     scopes_supported: ["elections26"],
-    resource_name: "בחירות 2026 — ניתוח",
+    resource_name: "בחירות 2026",
     resource_documentation: `${env.SITE_URL}llms.txt`,
   };
 }

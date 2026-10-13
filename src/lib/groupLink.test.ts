@@ -21,7 +21,7 @@ describe("group link name", () => {
     for (const bad of ["ab", "-ab", "ab-", "A-b", "x".repeat(33), "a b"]) expect(SLUG_RE.test(bad), bad).toBe(false);
   });
   it("builds the address shared with members", () => {
-    expect(groupUrl("hagzara")).toBe("https://hopetohelp.github.io/26/#/g/hagzara");
+    expect(groupUrl("hagzara")).toBe("https://26.hopetohelp.net/#/g/hagzara");
   });
   it("fits an image to 800 without enlarging", () => {
     expect(fitSize(1600, 800, 800)).toEqual({ w: 800, h: 400 });

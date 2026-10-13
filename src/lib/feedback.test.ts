@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isFeedbackToken, linkWithFeedback } from "./feedback";
+import { isFeedbackToken, linkWithFeedback, threadLink } from "./feedback";
 
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
@@ -16,6 +16,9 @@ describe("שיחת הערות בקישור האישי", () => {
     expect(isFeedbackToken(tok)).toBe(true);
     expect(isFeedbackToken("short")).toBe(false);
     expect(isFeedbackToken(5)).toBe(false);
+  });
+  it("קישור שיחה חדש נוצר בדומיין הפרטי", () => {
+    expect(threadLink(tok)).toBe(`https://26.hopetohelp.net/#/feedback/${tok}`);
   });
 });
 

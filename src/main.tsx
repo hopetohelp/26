@@ -5,6 +5,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { startOutbox } from "./lib/outbox";
 import { registerOffline } from "./lib/offline";
+import { receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Today from "./pages/Today";
@@ -54,6 +55,17 @@ function NotFound() {
 }
 
 // שמירה מקומית קודם: השערות והערות שלא הגיעו לשרת נשלחות שוב אוטומטית; האתר עצמו נשמר במכשיר לפתיחה גם בלי רשת
+const migrationOnly = location.origin === "https://26.hopetohelp.net" && new URLSearchParams(location.search).get("migration") === "1";
+if (migrationOnly) {
+  // חלון העברה זמני: בלי רינדור האתר ובלי רישום ביקור לפני העתקת מזהה הביקור מהכתובת הישנה.
+  receiveLegacyMigration();
+  const root = document.getElementById("root")!;
+  root.textContent = "מעבירים מידע מהאתר הישן…";
+  const link = document.createElement("a");
+  link.href = "https://26.hopetohelp.net/";
+  link.textContent = "מעבר לאתר";
+  root.appendChild(link);
+} else {
 startOutbox();
 registerOffline();
 
@@ -124,6 +136,7 @@ createRoot(document.getElementById("root")!).render(
     </HashRouter>
   </StrictMode>,
 );
+}
 
 function LegacyCalculator() {
   const [params] = useCalculatorParams();

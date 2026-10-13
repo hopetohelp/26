@@ -9,7 +9,7 @@ describe("shareGuess", () => {
     const g = { seats, pct: { likud: 45.5, yashar: 30, shas: 20.1, haredi_public: 0 }, username: "דני_7" };
     const back = decodeGuess(encodeGuess(g), IDS);
     expect(back).toEqual(g);
-    expect(shareUrl({ seats })).toMatch(/^https:\/\/hopetohelp\.github\.io\/26\/#\/guess\?g=[\w-]+$/);
+    expect(shareUrl({ seats })).toMatch(/^https:\/\/26\.hopetohelp\.net\/#\/guess\?g=[\w-]+$/);
   });
   it("omits username unless given", () => {
     expect(decodeGuess(encodeGuess({ seats }), IDS)).toEqual({ seats });

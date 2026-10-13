@@ -7,6 +7,7 @@ export function allowedOrigin(env, origin) {
 
 /** כתובת חזרה לאימות לפי האתר שהתחיל את הבקשה, מתוך שתי כתובות ידועות בלבד. */
 export function returnSiteUrl(env, origin) {
+  if (origin === "https://hopetohelp.github.io" && allowedOrigin(env, origin)) return "https://hopetohelp.github.io/26/";
   if (origin === "https://26.hopetohelp.net" && allowedOrigin(env, origin)) return "https://26.hopetohelp.net/";
-  return env.SITE_URL || "https://hopetohelp.github.io/26/";
+  return env.SITE_URL || "https://26.hopetohelp.net/";
 }

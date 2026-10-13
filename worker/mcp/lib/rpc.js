@@ -18,7 +18,7 @@ const CARD_META = { ui: { prefersBorder: false, csp: {} } };
 export class AuthLost extends Error {}
 
 export const INSTRUCTIONS = [
-  "This server is the data of \"בחירות 2026 — ניתוח\" (https://hopetohelp.github.io/26/), an independent Hebrew site that analyses Israel's Knesset election of 27.10.2026. It collects published polls (it does not conduct polls) and recommends no list.",
+  "This server is the data of \"בחירות 2026\" (https://26.hopetohelp.net/), an independent Hebrew site that analyses Israel's Knesset election of 27.10.2026. It collects published polls (it does not conduct polls) and recommends no list.",
   "Answer only from this site's data (the tools), in Hebrew. Stay neutral: no opinion, no recommendation, no prediction of who will win. Scenarios are \"שיעור תרחישים\" — never chance or probability. Participants' guesses are not a poll.",
   "Numbers the site computed: in show_answer, in a \"numbers\" section, pass kind, asOf and method (the data file's about.kind, about.updatedAt and about.method); the card shows only the date and the \"איך זה חושב?\" link, once per source. Never write the data type (\"סיכום סקרים\") in the text. General knowledge (61 seats for a majority, the 3.25% threshold) needs no source line. \"מפלגות הממשלה היוצאת\" is a factual definition (government 37).",
   "Identify the actual requested source: ממוצע סקרים, ממוצע מותאם, ממוצע המודל. Show three only when comparing methods. Fetch get_data_metric and pass its evidence; never supply numeric tile values or numeric table cells as free text.",
@@ -45,7 +45,7 @@ export async function handleRpc(msg, ctx) {
       return rpcResult(id, {
         protocolVersion: PROTOCOL_VERSIONS.includes(asked) ? asked : PROTOCOL_VERSIONS[0],
         capabilities: { tools: { listChanged: false }, resources: { listChanged: false } },
-        serverInfo: { name: "elections26", title: "בחירות 2026 — ניתוח", version: "1.0.0", websiteUrl: ctx.env.SITE_URL },
+        serverInfo: { name: "elections26", title: "בחירות 2026", version: "1.0.0", websiteUrl: ctx.env.SITE_URL },
         instructions: INSTRUCTIONS,
       });
     }

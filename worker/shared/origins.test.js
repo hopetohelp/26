@@ -15,6 +15,7 @@ describe("שני אתרים מול אותם שרתים", () => {
       expect(allowedOrigin(env, origin)).toBe(false);
     expect(returnSiteUrl(env, NEW)).toBe(`${NEW}/`);
     expect(returnSiteUrl(env, "https://evil.example")).toBe(`${OLD}/26/`);
+    expect(returnSiteUrl({ ...env, SITE_URL: `${NEW}/` }, OLD)).toBe(`${OLD}/26/`);
   });
 
   it("בקשות OPTIONS עם Authorization נתמכות בשני המקורות בכל שרת", async () => {

@@ -13,9 +13,11 @@ it("קישור חיצוני נפתח בלשונית חדשה ובלי הרשאו
   expect(h).toContain("</a><span>.</span>");
 });
 it("קישור לאתר עצמו (קבוצה) נפתח באותה לשונית", () => {
-  const h = html("https://hopetohelp.github.io/26/#/g/hagzara");
-  expect(h).toContain('href="https://hopetohelp.github.io/26/#/g/hagzara"');
-  expect(h).not.toContain("target=");
+  for (const url of ["https://hopetohelp.github.io/26/#/g/hagzara", "https://26.hopetohelp.net/#/g/hagzara"]) {
+    const h = html(url);
+    expect(h).toContain(`href="${url}"`);
+    expect(h).not.toContain("target=");
+  }
 });
 it("טקסט הודעה אינו הופך ל-HTML", () => {
   const h = html('<img src=x onerror=alert(1)> https://a.co/x');
