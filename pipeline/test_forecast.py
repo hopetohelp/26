@@ -102,6 +102,14 @@ def test_published_disclosure_is_logged():
     assert fc["gate"]["atHorizon"]["logged"], f"אופק {fc['horizon']} של גרסה {fc['specVersion']} לא נרשם ביומן"
 
 
+def test_published_gate_precision():
+    """פרסום מדדי השער יציב מול שינוי סכימת float בין גרסאות Python."""
+    fc = json.loads((F.ROOT / "src" / "data" / "forecast.json").read_text(encoding="utf-8"))
+    for metrics in fc["gate"]["atHorizon"]["summary"].values():
+        assert all(value == round(value, 10) for value in metrics.values()), metrics
+    assert round(0.9233800000000001, 10) == round(0.9233799999999999, 10)
+
+
 def test_scenario_means():
     """ממוצע התרחישים בפלט (הכרעת בעלים 9.10.2026): בכל תרחיש סכום המנדטים 120, ולכן סכום ממוצעי הרשימות 120 (עד עיגול),
     וממוצע הגוש הוא סכום ממוצעי רשימותיו."""

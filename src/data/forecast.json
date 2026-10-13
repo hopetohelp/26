@@ -88,11 +88,11 @@
    "summary": {
     "V0": {
      "seatAccuracy": 0.918334,
-     "voteAccuracy": 0.9217359999999999
+     "voteAccuracy": 0.921736
     },
     "V5": {
      "seatAccuracy": 0.908334,
-     "voteAccuracy": 0.9233800000000001
+     "voteAccuracy": 0.92338
     }
    },
    "valid": true
