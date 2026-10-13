@@ -59,3 +59,21 @@ jobs:
         run: |
           test -n "$CLOUDFLARE_API_TOKEN"
           npx --yes wrangler@4 pages deploy dist --project-name elections26 --branch preview-pr-351
+      - name: בדיקת טעינה חיה של תצוגת האתר
+        run: |
+          set -euo pipefail
+          base=https://preview-pr-351.elections26-1hb.pages.dev
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            if curl --fail --silent --show-error --location --max-time 15 "$base/" -o /tmp/preview.html \
+              && cmp -s /tmp/preview.html dist/index.html; then break; fi
+            sleep 10
+          done
+          grep -q '<div id="root"></div>' /tmp/preview.html
+          js=$(node -e 'const s=require("fs").readFileSync("/tmp/preview.html","utf8"); const m=s.match(/src="(\.\/assets\/index-[^"]+\.js)"/); if(!m) process.exit(1); process.stdout.write(m[1])')
+          css=$(node -e 'const s=require("fs").readFileSync("/tmp/preview.html","utf8"); const m=s.match(/href="(\.\/assets\/index-[^"]+\.css)"/); if(!m) process.exit(1); process.stdout.write(m[1])')
+          cmp /tmp/preview.html dist/index.html
+          curl --fail --silent --show-error --location --max-time 15 "$base/${js#./}" -o /tmp/preview.js
+          curl --fail --silent --show-error --location --max-time 15 "$base/${css#./}" -o /tmp/preview.css
+          curl --fail --silent --show-error --location --max-time 15 "$base/data/index.json" -o /tmp/preview-data.json
+          node -e 'const d=require("/tmp/preview-data.json"); if(!Array.isArray(d.files) || d.files.length < 10) process.exit(1)'
+          echo "תצוגת האתר, קובצי JS ו־CSS ואינדקס הנתונים נטענו בהצלחה"
