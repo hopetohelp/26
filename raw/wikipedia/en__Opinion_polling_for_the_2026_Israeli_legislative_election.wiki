@@ -94,7 +94,7 @@ This graph shows the polling trends from the [[2022 Israeli legislative election
 }}
 
 === Guide to the table ===
-The parties which hold Knesset seats are listed in descending order by the number of seats they received in the 2022 election: [[Likud]], [[Together (Israel)|Together]] ([[Yesh Atid]] competed on its own previously but will run with [[Bennett 2026]] in this election), the [[Religious Zionist Party]] (which formed a [[technical bloc]] with [[Zehut]] this election) and [[Otzma Yehudit]] (which previously ran with RZP), [[Blue and White (political party)|Blue and White]], [[Shas]], [[United Torah Judaism]] (which consists of [[Agudat Yisrael]] and [[Degel HaTorah]]), [[Yisrael Beiteinu]], [[Ra'am]] (which formed a technical bloc with [[Yoav Segalovitz]] this election), the [[Joint List]] (which previously ran separately as [[Hadash–Ta'al]] and [[Balad (political party)|Balad]]), followed by [[The Democrats (Israel)|The Democrats]] (which won seats as [[Israeli Labor Party|Labor]] and merged with [[Meretz]] to form the new party).
+The parties which hold Knesset seats are listed in descending order by the number of seats they received in the 2022 election: [[Likud]], [[Together (Israel)|Together]] ([[Yesh Atid]] competed on its own previously but will run with [[Bennett 2026]] in this election), the [[Religious Zionist Party]] (which formed a [[technical bloc]] with [[Zehut]] this election) and [[Otzma Yehudit]] (which previously ran with RZP), [[Blue and White (political party)|Blue and White]], [[Shas]], [[United Torah Judaism]] (which consists of [[Agudat Yisrael]], [[Homat Torat Yisrael]] and [[Degel HaTorah]]), [[Yisrael Beiteinu]], [[Ra'am]] (which formed a technical bloc with [[Yoav Segalovitz]] this election), the [[Joint List]] (which previously ran separately as [[Hadash–Ta'al]] and [[Balad (political party)|Balad]]), followed by [[The Democrats (Israel)|The Democrats]] (which won seats as [[Israeli Labor Party|Labor]] and merged with [[Meretz]] to form the new party).
 
 The table also includes new parties that do not hold seats, specifically [[Yashar (political party)|Yashar]], [[The Reservists (political party)|The Reservists]], [[Amcha Yisrael]], and [[Haredi Public]]. Parties that are not polled on consistently are listed in footnotes, including [[Noam (political party)|Noam]], which currently holds a seat. 
 
@@ -153,6 +153,31 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | style="font-style:italic;" {{Opdrts||16|Oct|2026}}
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
+|{{Opdrts||12|Oct|2026}}
+| style=background:DarkOrange |SF+ND
+|[[Channel 14 (Israel)|Channel 14]]<ref>{{cite web|date=12 October 2026|lang=en|title=Drama on the bloc map: This is the party that passes the threshold for the first time in Filbert's poll|url=https://ch10.co.il/en/news/1107207/|access-date=12 October 2026 |work=Haredim10}}</ref>
+|538
+|style="background:#BBCDE4" |'''29'''
+|7
+|colspan=2|7
+|7
+|{{small|(0.6%)}}
+|10
+|8
+|5
+|5
+|8
+|10
+|20
+|colspan=2|4
+|{{small|(2.9%)}}
+|{{small|(0.6%)}}
+|{{N/A}}
+|style="background:#b2b2f0" |'''61'''
+|-
+| {{Opdrts||11|Oct|2026}}
+| colspan="22" |[[Shas]] and [[United Torah Judaism]] sign a surplus-vote agreement<ref>{{Cite web|last1=Neev|first1=Keshet |date=11 October 2026 |title=Shas, UTJ sign surplus vote-sharing deal, pledge cooperation in next Knesset |url=https://www.jpost.com/israel-election-2026/article-911320 |access-date=11 October 2026|website=The Jerusalem Post}}</ref>
+|-
 |{{Opdrts|7|8|Oct|2026}}
 | style=background:#F86B61 |LRI+P4A
 |[[Maariv (newspaper)|''Maariv'']]<ref name="maariv8oct">{{cite news |title=מפלגת הליכוד מתחזקת - והקרב מול איזנקוט מתחמם {{!}} סקר המנדטים של מעריב  |work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1375198|date=9 October 2026|access-date=9 October 2026|author=Moshe Cohen}}</ref>
@@ -174,7 +199,6 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(0.8%)}}
 |0.9%{{efn|[[Noam (political party)|Noam]] at 0.6% <br/>[[Tzomet]]-[[Gadi Yevarkan|Beit Yisrael]] at 0.3% <br/>}}
 |48
-|-
 |-
 |{{Opdrts|7|8|Oct|2026}}
 | style=background:Turquoise |Yossi Tatika
@@ -220,7 +244,6 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{N/A}}
 |51
 |-
-
 |{{Opdrts||7|Oct|2026}}
 |style=background:yellow |Direct Polls
 | [[i24NEWS (Israeli TV channel)|i24 News]]<ref>{{Cite web |title=סקר מנדטים דרמטי של i24NEWS: נתניהו ואיזנקוט בירידה, בנט מתחזק {{!}} הנתונים המלאים|work=i24 News |date=8 October 2026|url=https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-fa0f56f4|lang=he-IL|access-date=9 October 2026 }}</ref>
@@ -245,7 +268,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||7|Oct|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber7octp>{{cite web|date=7 October 2026|lang=he|title=סקר חדשות 14: איזנקוט מצמצם דרמטית את הפער מנתניהו|url=https://www.c14.co.il/article/1728516|access-date=8 October 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber7octp>{{cite web|date=7 October 2026|lang=he-IL|title=סקר חדשות 14: איזנקוט מצמצם דרמטית את הפער מנתניהו|url=https://www.c14.co.il/article/1728516|access-date=8 October 2026 |work=Channel 14}}</ref>
 |2175
 |style="background:#BBCDE4" |'''31'''
 |8
@@ -364,7 +387,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||1|Oct|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber1octp>{{cite web|date=1 October 2026|lang=he|title=מתקרבים לרגע האמת: כך נראית מפת המנדטים המעודכנת|url=https://www.c14.co.il/article/1720749|access-date=4 October 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber1octp>{{cite web|date=1 October 2026|lang=he-IL|title=מתקרבים לרגע האמת: כך נראית מפת המנדטים המעודכנת|url=https://www.c14.co.il/article/1720749|access-date=4 October 2026 |work=Channel 14}}</ref>
 |2175
 |style="background:#BBCDE4" |'''32'''
 |8
@@ -474,7 +497,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||28|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber28Sep>{{cite web|date=28 September 2026|lang=he|title=סקר חדשות 14: בנט מתחזק, איזנקוט נחלש - ומה עם וינטר?|url=https://www.c14.co.il/article/1716250|access-date=30 September 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber28Sep>{{cite web|date=28 September 2026|lang=he-IL|title=סקר חדשות 14: בנט מתחזק, איזנקוט נחלש - ומה עם וינטר?|url=https://www.c14.co.il/article/1716250|access-date=30 September 2026 |work=Channel 14}}</ref>
 |573
 | style="background:#BBCDE4" |'''31'''
 |9
@@ -609,7 +632,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||23|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber23Sep>{{cite web|date=23 September 2026|lang=he|title=וינטר בקריסה - הפער בין נתניהו לאיזנקוט מצטמצם משמעותית|url=https://www.c14.co.il/article/1711606|access-date=25 September 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber23Sep>{{cite web|date=23 September 2026|lang=he-IL|title=וינטר בקריסה - הפער בין נתניהו לאיזנקוט מצטמצם משמעותית|url=https://www.c14.co.il/article/1711606|access-date=25 September 2026|work=Channel 14}}</ref>
 |647
 | style="background:#BBCDE4" |'''32'''
 |7
@@ -678,7 +701,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||17|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber17Sep>{{cite web|date=17 September 2026|lang=he|title=אחרי הסערה עם רע״מ: איזנקוט נחלש, נתניהו פותח פער דרמטי|url=https://www.c14.co.il/article/1706627|access-date=17 September 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber17Sep>{{cite web|date=17 September 2026|lang=he-IL|title=אחרי הסערה עם רע״מ: איזנקוט נחלש, נתניהו פותח פער דרמטי|url=https://www.c14.co.il/article/1706627|access-date=17 September 2026 |work=Channel 14}}</ref>
 |817
 | style="background:#BBCDE4" |'''31'''
 |9
@@ -1014,7 +1037,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||9|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber9Sep">{{Cite web |title=אפקט השריונים? השינוי במפת המנדטים אחרי המהלך של נתניהו|work=Channel 14 |date=9 September 2026|url=https://www.c14.co.il/article/1697000|lang=he|access-date=9 September 2026 }}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber9Sep">{{Cite web |title=אפקט השריונים? השינוי במפת המנדטים אחרי המהלך של נתניהו|work=Channel 14 |date=9 September 2026|url=https://www.c14.co.il/article/1697000|lang=he-IL|access-date=9 September 2026 }}</ref>
 |537
 | style="background:#BBCDE4" |'''31'''
 |7
@@ -1127,7 +1150,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||7|Sep|2026}}
 |style=background:Ivory |S.M.L.T.
-|{{N/A}}<ref name="SMLT7sep">{{Cite web |title=דיווח תוצאות סקר בחירות לכנסת ה־26|work=D.R.I. Consulting |date=7 September 2026|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election59/he/Survey_4135.pdf|lang=he|access-date=17 September 2026 }}</ref>
+|{{N/A}}<ref name="SMLT7sep">{{Cite web |title=דיווח תוצאות סקר בחירות לכנסת ה־26|work=D.R.I. Consulting |date=7 September 2026|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election59/he/Survey_4135.pdf|lang=he-IL|access-date=17 September 2026 }}</ref>
 |2,185
 | style="background:#BBCDE4" |'''25'''
 |9
@@ -1149,7 +1172,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||7|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber7Sep">{{Cite web |title=סקר חדשות 14: כמה מניב איחוד הנדל-זליכה - והאם וינטר עובר?|work=Channel 14 |date=7 September 2026|url=https://www.c14.co.il/article/1693697|lang=he|access-date=7 September 2026 }}</ref><ref>{{cite web|date=7 September 2026|title=Poll: Gap between blocs closes |url=https://www.israelnationalnews.com/news/432858|access-date=13 September 2026 |work=[[Arutz Sheva]]}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber7Sep">{{Cite web |title=סקר חדשות 14: כמה מניב איחוד הנדל-זליכה - והאם וינטר עובר?|work=Channel 14 |date=7 September 2026|url=https://www.c14.co.il/article/1693697|lang=he-IL|access-date=7 September 2026 }}</ref><ref>{{cite web|date=7 September 2026|title=Poll: Gap between blocs closes |url=https://www.israelnationalnews.com/news/432858|access-date=13 September 2026 |work=[[Arutz Sheva]]}}</ref>
 |1,057
 | style="background:#BBCDE4" |'''30'''
 |6
@@ -1288,7 +1311,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||3|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber3Sep">{{Cite web |title=תוצאות האיחוד: סמוטריץ' ופייגלין בפנים - וינטר בחוץ|work=Channel 14 |date=3 September 2026|url=https://www.c14.co.il/article/1690265|lang=he|access-date=3 September 2026 }}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber3Sep">{{Cite web |title=תוצאות האיחוד: סמוטריץ' ופייגלין בפנים - וינטר בחוץ|work=Channel 14 |date=3 September 2026|url=https://www.c14.co.il/article/1690265|lang=he-IL|access-date=3 September 2026 }}</ref>
 |865
 | style="background:#BBCDE4" |'''31'''
 |9
@@ -13838,7 +13861,7 @@ Some surveys only polled the Arab population and estimated the strength of each 
 |-
 |rowspan=3 {{Opdrts|27|1|Sep|2026}} 2026
 |rowspan=3 |Afkar
-|rowspan=3 |Nazareth-Mashur W. Publishing Ltd.<ref name=Afkar>{{cite web|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election55/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%207.9.2026%204126.pdf|lang=he|title=ממצאי סקר בחירות בחברה הערבית|date=5 September 2026|access-date=7 September 2026}}</ref>
+|rowspan=3 |Nazareth-Mashur W. Publishing Ltd.<ref name=Afkar>{{cite web|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election55/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%207.9.2026%204126.pdf|lang=he-IL|title=ממצאי סקר בחירות בחברה הערבית|date=5 September 2026|access-date=7 September 2026}}</ref>
 |rowspan=3 |800
 |colspan=2|5
 |colspan="3" style=background:#79d4d0|'''9'''

@@ -1622,5 +1622,59 @@
     "source": "https://www.walla.co.il/news/politics/383957251"
    }
   }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-13",
+  "id": "2026-10-13-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "המקור הראשוני (ערוץ 16) אוסר סריקה אוטומטית ולא נסרק. מנדטי כל 13 הרשימות, סך 120 והגושים (52/50/13/5) הושוו בין דיווח סרוגים לדיווח כיפה וזהים. המכון, המזמין ותאריך השדה לפי סרוגים; המדגם המדויק והאחוזים לא אומתו.",
+  "source": "https://www.srugim.co.il/101013419-%D7%A1%D7%A7%D7%A8-%D7%9E%D7%A0%D7%93%D7%98%D7%99%D7%9D-%D7%A0%D7%AA%D7%A0%D7%99%D7%94%D7%95-%D7%91%D7%A9%D7%A4%D7%9C-%D7%97%D7%93%D7%A9-%D7%92%D7%95%D7%A9",
+  "sourceDetails": {
+   "published": "2026-10-13T20:45:00+03:00",
+   "sample_respondents": null
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233633-0/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-13",
+  "id": "2026-10-13-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הועתק מדיווח כיפה (מצוטט מילה במילה): מנדטי 11 הרשימות (סך 120), הגושים 57/50/13, ואחוזי עמך ישראל והמילואימניקים-הכלכלית. מבזק סרוגים (17:50) מאשר גוש נתניהו 57. המכון לא אומת (לא נזכר בדיווח); המנדטים לא הושוו למקור ראשוני.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233628-0/",
+  "sourceDetails": {
+   "published": "2026-10-13T20:55:00+03:00",
+   "sample_respondents": 1210
+  },
+  "status": "secondary"
  }
 ]
