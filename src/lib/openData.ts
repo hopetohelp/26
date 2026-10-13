@@ -27,12 +27,13 @@ import { THRESHOLD_PCT } from "../engine/pctForSeats";
 import { DEFAULT_TURNOUT, INVALID_SHARE, validVotesFor } from "../engine/law";
 import { TOTAL } from "./fillAll";
 import { DICTIONARY, MethodNumbers } from "../pages/Method";
+import { LEGACY_SITE_URL } from "./siteUrls";
 
 /** נתב סטטי לרינדור טקסט המילון בבנייה (אותו מופע של react-router כמו במסכים; אין ניווט) */
 const NO_NAV = {} as never;
 
 /** כתובת האתר החי (GitHub Pages). כל הקישורים בקבצים מוחלטים, כדי שיעבדו גם מחוץ לאתר */
-export const SITE = "https://hopetohelp.github.io/26/";
+export const SITE = LEGACY_SITE_URL;
 /** הקבצים מתפרסמים כאן: https://hopetohelp.github.io/26/data/<שם> */
 export const DATA_DIR = "data";
 /** קישור "איך זה חושב?": ערך במילון (/method#<עוגן>), או לשונית שלמה במסך השיטה (אודות — הקרדיטים; numbers — המילון כולו) */

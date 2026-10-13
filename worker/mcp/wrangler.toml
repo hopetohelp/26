@@ -10,6 +10,7 @@ workers_dev = true
 [vars]
 SITE_URL = "https://hopetohelp.github.io/26/"
 ALLOWED_ORIGIN = "https://hopetohelp.github.io"
+ALLOWED_ORIGINS = "https://hopetohelp.github.io,https://26.hopetohelp.net"
 ISSUER = "https://elections26-mcp.hopetohelp-il.workers.dev"
 
 [[d1_databases]]
