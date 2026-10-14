@@ -33,7 +33,7 @@ export function PrivateKeyEntry() {
   return (
     <div className="pb-2 text-sm">
       {!open ? (
-        <button type="button" className="underline text-ink-soft min-h-[44px]" aria-expanded="false" onClick={() => setOpen(true)}>רוצים לשאול כל שאלה על נתוני האתר? חברו מפתח AI אישי</button>
+        <button type="button" className="underline text-ink-soft min-h-[44px]" aria-expanded="false" onClick={() => setOpen(true)}>מומלץ: חברו מפתח AI אישי ושאלו כל שאלה על נתוני האתר, עם תשובה מיידית</button>
       ) : (
         <form className="space-y-2 border border-paper-line rounded-theme p-3" onSubmit={(e) => { e.preventDefault(); save(); }}>
           <p className="font-bold">מפתח AI אישי — שיחה פרטית על חשבונכם</p>
