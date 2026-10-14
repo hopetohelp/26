@@ -23,10 +23,13 @@
 import { allowedOrigin } from "../shared/origins.js";
 import { sealKey } from "./lib/aiKey.js";
 import { runAutoReplies } from "./lib/autoReply.js";
+import { privateAsk } from "./lib/privateAsk.js";
 // "design" נשאר לתאימות עם דפדפנים ישנים; במסך מוצג כ"רעיון לשיפור"
 const TOPICS = new Set(["data", "idea", "design", "theory", "other"]);
 const MAX_TEXT = 2000;
 const MAX_PER_DAY = 8;
+/** שאלות בצ'אט הפרטי (על חשבון המשתמש) לכל מקור ביום — רק כדי שהשרת לא ישמש מתווך בלי גבול */
+const PRIVATE_PER_DAY = 100;
 /** סיווגי "בדיקת חיבור" שהדפדפן שולח אחרי כשל (POST /diag): רק מונה ליום, בלי שום פרט על המשתמש. נשמרים ב-hits בשם diag:<סיווג>. */
 /** דיווח כשל חיבור אוטומטי (POST /autoreport, בלי אישור הגולש — הכרעת בעלים 8.10.2026): נשמר כהערה עם התחילית הזו, עד 3 ליום מכל מקור, ולא נספר במכסת ההערות. */
 const AUTO = "[כשל חיבור אוטומטי]";
@@ -150,12 +153,27 @@ async function teamReply(env, kind, id, text, approved = false) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get("origin");
     const headers = { ...cors(env, origin), "content-type": "application/json; charset=utf-8" };
     const reply = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers });
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     const url = new URL(request.url);
+    // תשובה אוטומטית מיידית לפנייה שהתקבלה (lib/autoReply.js; התקרה — שלוש בשעה); לא מעכבת את התגובה לגולש ואינה מפילה דבר
+    const kick = () => ctx?.waitUntil?.(runAutoReplies(env, { teamReply }).catch(() => null));
+
+    // ---- הצ'אט הפרטי (lib/privateAsk.js): המפתח של השואל, בלי מאגר, בלי שיחות הצוות ובלי מפתח האתר. הטבלה היחידה — מונה יומי לפי גיבוב מקור.
+    if (url.pathname === "/private/ask" && request.method === "POST") {
+      let body;
+      try { body = await request.json(); } catch { return reply({ ok: false, error: "bad_request" }, 400); }
+      const day = new Date().toISOString().slice(0, 10);
+      const used = await env.DB.prepare("INSERT INTO private_hits (day, day_key, count) VALUES (?, ?, 1) ON CONFLICT(day, day_key) DO UPDATE SET count = count + 1 RETURNING count")
+        .bind(day, await dayKey(env, request.headers.get("cf-connecting-ip") || "unknown")).first();
+      await env.DB.prepare("DELETE FROM private_hits WHERE day < ?").bind(day).run();
+      if ((used?.count ?? 0) > PRIVATE_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
+      const out = await privateAsk(body, { models: { gemini: env.AI_MODEL_GEMINI, anthropic: env.AI_MODEL_ANTHROPIC } });
+      return reply(out.body, out.status);
+    }
 
     // Keep the original authentication, origin and client-IP headers across the internal service binding.
     if (url.pathname.startsWith("/crowd/")) {
@@ -226,6 +244,7 @@ export default {
         // נכתב דרך עוזר AI ⇐ סימון במסך הניהול (שם העוזר משרת ההשתתפות, לא מהבקשה)
         if (typeof access.via === "string" && access.via)
           await env.DB.prepare("INSERT OR IGNORE INTO support_message_via (message_id, via) SELECT id, ? FROM support_messages WHERE participant = ? AND op_id = ?").bind(access.via.slice(0, 60), participant, body.op_id).run();
+        kick();
       }
       return reply({ ok: true, thread: await supportThread(env, participant) });
     }
@@ -493,6 +512,7 @@ export default {
           .bind(fb.id, now, text, key),
         env.DB.prepare("UPDATE feedback SET status = 'new' WHERE id = ?").bind(fb.id),
       ]);
+      kick();
       return reply({ ok: true });
     }
 
@@ -504,6 +524,7 @@ export default {
     )
       .bind(now, topic, text, String(body.page || "").slice(0, 120), String(body.theme || "").slice(0, 20), key, await sha256(token))
       .run();
+    kick();
     return reply({ ok: true, token });
   },
 

@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS drafts (
 CREATE TABLE IF NOT EXISTS settings (name TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);
 
 -- ריצות התשובות האוטומטיות (lib/autoReply.js; הכרעת בעלים 14.10.2026): כל פנייה מטופלת פעם אחת לכל הודעה אחרונה של הגולש.
--- outcome = published (פורסמה) · drafted (טיוטה לאישור) · skipped (המודל או הקוד התעלמו; הפנייה נשארת ממתינה). settings: ai_mode (auto/drafts), ai_status.
+-- outcome = working (בטיפול) · published (פורסמה) · drafted (טיוטה לאישור) · skipped (המודל התעלם; הפנייה נשארת ממתינה) · filtered (נעצרה בקוד לפני המודל; אינה נספרת בתקרה). settings: ai_mode (auto/drafts), ai_status.
 CREATE TABLE IF NOT EXISTS ai_runs (
   kind TEXT NOT NULL,
   target TEXT NOT NULL,
@@ -129,6 +129,14 @@ CREATE TABLE IF NOT EXISTS ai_runs (
   outcome TEXT NOT NULL,
   note TEXT,
   PRIMARY KEY (kind, target, last_key)
+);
+
+-- מונה יומי לצ'אט הפרטי (lib/privateAsk.js): גיבוב חד-כיווני של המקור עם התאריך בלבד, בלי תוכן ובלי מפתח; נמחק למחרת.
+CREATE TABLE IF NOT EXISTS private_hits (
+  day TEXT NOT NULL,
+  day_key TEXT NOT NULL,
+  count INTEGER NOT NULL,
+  PRIMARY KEY (day, day_key)
 );
 
 -- משתתף בהשהיה (הכרעת בעלים 12.10.2026): שאל שאלה שנחשדה כלא עומדת בכללים ⇐ כל תשובה אליו, גם לשאלה ניטרלית, נשמרת כטיוטה עד אישור המשתתף במסך הניהול.

@@ -1,4 +1,4 @@
-import { beforeEach, expect, it } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import feedback from "../index.js";
 import { runAutoReplies, checkAnswer, isShabbat } from "../lib/autoReply.js";
 import { sealKey } from "../lib/aiKey.js";
@@ -131,4 +131,58 @@ it("בלי פניות ממתינות נבדק המפתח, והסטטוס מגי�
   expect(JSON.stringify(data)).not.toContain(SECRET_KEY);
   const mode = await feedback.fetch(new Request("https://w.example/admin/ai-key", { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${admin}` }, body: JSON.stringify({ mode: "drafts" }) }), env);
   expect((await mode.json()).mode).toBe("drafts");
+});
+
+afterEach(() => vi.unstubAllGlobals());
+
+it("מיידי: פנייה חדשה מקבלת תשובה באותה בקשה (waitUntil), בלי לחכות לריצה המתוזמנת", async () => {
+  vi.stubGlobal("fetch", fetcher);
+  vi.setSystemTime(at());
+  const waits = [];
+  const r = await feedback.fetch(new Request("https://w.example/", { method: "POST", headers: { "content-type": "application/json", "cf-connecting-ip": "1.2.3.4" }, body: JSON.stringify({ topic: "theory", text: "[שאלה או תאוריה] כמה מנדטים לגוש?" }) }), env, { waitUntil: (p) => waits.push(p) });
+  expect((await r.json()).ok).toBe(true);
+  await Promise.all(waits);
+  expect(rows("SELECT author FROM messages").map((m) => m.author)).toEqual(["team"]);
+  expect(rows("SELECT outcome FROM ai_runs")[0].outcome).toBe("published");
+  vi.useRealTimers();
+});
+
+it("תקרה: עד שלוש תשובות בשעה; השאר ממתינות ונענות בשעה הבאה", async () => {
+  for (let i = 0; i < 5; i++) await ask(`[שאלה או תאוריה] שאלה ${i}`);
+  expect(await run(at())).toMatchObject({ published: 3 });
+  expect(await run(at() + 60_000)).toMatchObject({ published: 0 });
+  expect(rows("SELECT COUNT(*) AS n FROM messages")[0].n).toBe(3);
+  expect(rows("SELECT COUNT(*) AS n FROM ai_runs WHERE outcome = 'working'")[0].n).toBe(0);
+  expect(await run(at() + 61 * 60_000)).toMatchObject({ published: 2 });
+  expect(rows("SELECT COUNT(*) AS n FROM messages")[0].n).toBe(5);
+});
+
+it("פנייה שנעצרה בקוד (נושא להתעלמות) אינה נספרת בתקרה", async () => {
+  for (let i = 0; i < 4; i++) await ask(`[שאלה או תאוריה] מה הרבנים אומרים ${i}?`);
+  await ask("[שאלה או תאוריה] כמה מנדטים לגוש?");
+  expect(await run(at())).toMatchObject({ skipped: 3 });
+  expect(await run(at() + 1)).toMatchObject({ skipped: 1, published: 1 });
+});
+
+it("שתי ריצות במקביל אינן עונות פעמיים לאותה פנייה", async () => {
+  await ask();
+  await Promise.all([run(at()), run(at())]);
+  expect(rows("SELECT COUNT(*) AS n FROM messages")[0].n).toBe(1);
+});
+
+it("כשל זמני של הספק משחרר את הפנייה לניסיון חוזר", async () => {
+  model = 500;
+  await ask();
+  expect((await run(at())).ok).toBe(false);
+  expect(rows("SELECT COUNT(*) AS n FROM ai_runs")[0].n).toBe(0);
+  model = GOOD;
+  expect(await run(at() + 1000)).toMatchObject({ ok: true, published: 1 });
+});
+
+it("מפתח שנשמר אך אי אפשר לפענח (סוד ההצפנה הוחלף) ⇐ סטטוס 'no_key' במסך הניהול, בלי קריאה לספק", async () => {
+  env.IP_KEY = "a-different-secret";
+  await ask();
+  expect(await run(at())).toMatchObject({ ok: false, error: "no_key" });
+  expect(calls).toEqual([]);
+  expect(JSON.parse(rows("SELECT value FROM settings WHERE name = 'ai_status'")[0].value).error).toBe("no_key");
 });
