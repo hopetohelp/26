@@ -81,45 +81,54 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const labelOf = (d: (typeof series)[number]) => series.filter(x => x.source === d.source).length > 1 ? `${d.source} · ${displayDate(d.asOf)}` : d.source;
   const stacked = <table className="w-full table-fixed text-xs">
     <caption className="sr-only">הגושים שלי מול המשתתפים והסקרים</caption>
-    <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal" title={labelOf(d)}>{d.source.includes("המשתתפים") ? "משתתפים" : d.source === "ההשערה שלי" ? "שלי" : labelOf(d)}</th>)}</tr></thead>
+    <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal border-s border-paper-line" title={labelOf(d)}>{d.source.includes("המשתתפים") ? "משתתפים" : d.source === "ההשערה שלי" ? "שלי" : labelOf(d)}</th>)}</tr></thead>
     <tbody>{p.blocs.map(b => <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-1.5 pe-1 font-normal break-words" cellClass="text-center px-1 tabular font-bold">{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return display(row); })}</BlocTableRow>)}</tbody>
   </table>;
-  const table = compact ? stacked : series.length > 3 ? <table className="w-full text-sm">
-    <caption className="sr-only">מנדטים לפי הגושים שלי בכל מקור</caption>
-    <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start py-2 min-w-[12rem]">מקור · תאריך</th>{p.blocs.map(b => <th key={b.id} scope="col" className="px-3 min-w-[7rem] break-words">{b.name}<BlocAvatar id={b.id} lists={b.lists} size={22} center /></th>)}</tr></thead>
-    <tbody>{series.map((d, i) => <tr key={i} className="border-b border-paper-line"><th scope="row" className="text-start py-2 font-normal">{labelOf(d)}</th>{p.blocs.map(b => { const row = d.rows.find(r => r.id === b.id); return <td key={b.id} className="text-center px-3 tabular">{display(row)}</td>; })}</tr>)}</tbody>
-  </table> : <table className="w-full text-sm">
+  const table = compact ? stacked : <table className="w-full text-sm">
     <caption className="sr-only">השוואת מנדטים לפי הגושים שלי</caption>
-    <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[5.5rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-1.5 min-w-[4.5rem] py-2">{labelOf(d)}</th>)}{compare && series.length === 2 && <th scope="col" className="px-1.5">{pct ? "שינוי באחוזים" : "שינוי במנדטים"}</th>}</tr></thead>
-    <tbody>{p.blocs.map(b => { const first = blocComparable(series[0]?.rows.find(r => r.id === b.id)); const last = blocComparable(series[1]?.rows.find(r => r.id === b.id)); const delta = first !== null && last !== null ? last - first : null; return <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-2 break-words" cellClass="px-1.5 text-center tabular" extra={compare && series.length === 2 ? <td className="text-center tabular"><bdi>{delta === null ? "—" : pct ? diffText(delta) : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td> : null}>{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return display(row); })}</BlocTableRow>; })}</tbody>
+    <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start min-w-[5.5rem]">גוש</th>{series.map((d,i) => <th key={i} scope="col" className="px-1.5 min-w-[4.5rem] py-2 border-s border-paper-line">{labelOf(d)}</th>)}{compare && series.length === 2 && <th scope="col" className="px-1.5 border-s border-paper-line">{pct ? "שינוי באחוזים" : "שינוי במנדטים"}</th>}</tr></thead>
+    <tbody>{p.blocs.map(b => { const first = blocComparable(series[0]?.rows.find(r => r.id === b.id)); const last = blocComparable(series[1]?.rows.find(r => r.id === b.id)); const delta = first !== null && last !== null ? last - first : null; return <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-2 break-words" cellClass="px-1.5 text-center tabular" extra={compare && series.length === 2 ? <td className="text-center tabular border-s border-paper-line"><bdi>{delta === null ? "—" : pct ? diffText(delta) : `${delta > 0 ? "+" : ""}${seatsFmt(delta)}`}</bdi></td> : null}>{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return display(row); })}</BlocTableRow>; })}</tbody>
   </table>;
+  const singleTable = <div className="[container-type:inline-size]">
+    <table className="w-full table-fixed text-sm">
+      <caption className="sr-only">מנדטים ויעדים לגושים שלי</caption>
+      <thead><tr className="border-b-2 border-ink/30">
+        <th scope="col" className="text-start py-2">גוש</th>
+        <th scope="col" className="w-16 sm:w-20 px-1 border-s border-paper-line">{pct ? "אחוזים" : "מנדטים"}</th>
+        {editTargets && <th scope="col" className="w-20 sm:w-24 px-1 border-s border-paper-line">הצפי שלי</th>}
+      </tr></thead>
+      <tbody>{one?.rows.map(row => <tr key={row.id} className="border-b border-paper-line">
+        <th scope="row" className="py-2 pe-2 text-start">
+          <BlocName id={row.id} lists={p.blocs.find(b => b.id === row.id)?.lists ?? []} name={row.name} />
+        </th>
+        <td className="text-center font-num tabular font-bold px-1 border-s border-paper-line">{display(row)}</td>
+        {editTargets && <td className="text-center px-1 border-s border-paper-line"><input aria-label={`מנדטים צפויים לגוש ${row.name}`} type="number" min={0} max={120} inputMode="numeric" value={row.target ?? ""} className="w-16 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-lg" onChange={e => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs: p.blocs.map(b => b.id === row.id ? { ...b, target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) } : b) })} /></td>}
+      </tr>)}</tbody>
+    </table>
+  </div>;
   return <BlocsDrawer title={title} returnTo={pathname + search}>
     <div data-personal-blocs-card className="space-y-2">
-    <Explained showMeta={false} kind="השוואה" source={source} asOf={asOf} assumption="סכום הגוש הוא סכום המנדטים של המפלגות שיש עליהן נתון במקור; מפלגה שאין עליה נתון נספרת 0. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות." methodAnchor="personal-blocs" trailing={<>
-      {compare && <p>{pct ? "השינוי באחוזים" : "השינוי במנדטים"} מחושב מהסכום בכל מקור.</p>}
-      {editTargets ? <p>״השלם הכול״ מתאים את המספר בכל מפלגה לצפי שלכם לגוש. הגושים הם תרחישים נפרדים, ומפלגה יכולה להופיע בכמה גושים.</p> : <p>תרחישים עצמאיים וחופפים; אין לחבר את סכומיהם. {unit.status !== "saved" ? "הרכב הגושים הוא טיוטה בדפדפן הזה." : "לפי הרכב הגושים השמור שלכם."}</p>}
-    </>}>
-      {!anyKnown ? <p className="text-sm text-ink-soft">אין נתון תואם למפלגות הגושים במקור הזה. לא ניתן להציג סכום.{series.length === 0 && " נסו להרחיב את המסננים."}</p> : series.length === 1 && one ? <><ul className="space-y-2">{one.rows.map(row => <BlocCardRow key={row.id} id={row.id} lists={p.blocs.find(b => b.id === row.id)?.lists ?? []} name={row.name} aside={<div className="flex items-center justify-end gap-x-3"><span className="font-num tabular font-bold whitespace-nowrap">{display(row)} מנדטים</span>{editTargets && <label className="font-sans text-xs font-normal flex items-center gap-1.5 whitespace-nowrap">הצפי שלי<input aria-label={`מנדטים צפויים לגוש ${row.name}`} type="number" min={0} max={120} inputMode="numeric" value={row.target ?? ""} className="w-16 min-h-[44px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-lg" onChange={e => unit.setDraft({ mode: "custom", schemaVersion: 2, blocs: p.blocs.map(b => b.id === row.id ? { ...b, target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) } : b) })} /></label>}</div>} />)}</ul></> : series.length > 0 ? <><><div className="overflow-x-auto">{table}</div></></> : <p>אין נתונים להצגה לפי המסננים שנבחרו.</p>}
+    <Explained bare showMeta={false} kind="השוואה" source={source} asOf={asOf} assumption="סכום הגוש הוא סכום המנדטים של המפלגות שיש עליהן נתון במקור; מפלגה שאין עליה נתון נספרת 0. גושים יכולים לחפוף ואין לחברם. אין חיבור טווחי מפלגות." methodAnchor="personal-blocs">
+      {!anyKnown ? <p className="text-sm text-ink-soft">אין נתון תואם למפלגות הגושים במקור הזה. לא ניתן להציג סכום.{series.length === 0 && " נסו להרחיב את המסננים."}</p> : series.length === 1 && one ? singleTable : series.length > 0 ? <><><div className="overflow-x-auto">{table}</div></></> : <p>אין נתונים להצגה לפי המסננים שנבחרו.</p>}
     </Explained>
     </div>
   </BlocsDrawer>;
 }
 
-/** מתחת לנתון חסר רק "5/6": כמה מהמפלגות בגוש היו בסקר (הכרעת בעלים 11.10.2026); שמות המפלגות ומקורות האומדן — בריחוף ולקורא מסך */
-/** שורת גוש בכרטיס צר: השם והמספרים באותה שורה (בלי פירוט מפלגות) */
-function BlocCardRow({ id, lists, name, aside }: { id: string; lists: string[]; name: string; aside: ReactNode }) {
-  return <li className="border-b border-paper-line pb-2 text-sm">
-    <div className="flex items-center justify-between gap-3">
-      <span className="min-w-0"><span className="break-words font-bold">{name}</span><BlocAvatar id={id} lists={lists} /></span>
-      <div className="shrink-0">{aside}</div>
-    </div>
-  </li>;
+/** שם ותמונות בשורה אחת; התמונות מופיעות רק כשהתא רחב מספיק. */
+function BlocName({ id, lists, name }: { id: string; lists: string[]; name: string }) {
+  return <span className="block [container-type:inline-size]">
+    <span className="flex items-center gap-2 min-w-0">
+      <span className="font-bold truncate shrink-0 max-w-full" title={name}>{name}</span>
+      <span className="hidden min-w-0 flex-1 [@container(min-width:12rem)]:block"><BlocAvatar id={id} lists={lists} size={20} /></span>
+    </span>
+  </span>;
 }
 
 /** שורת גוש בטבלה */
 function BlocTableRow({ id, lists, name, nameClass, cellClass, extra = null, children }: { id: string; lists: string[]; name: string; nameClass: string; cellClass: string; extra?: ReactNode; children: ReactNode[] }) {
   return <tr className="border-b border-paper-line">
-    <th scope="row" className={nameClass}><span className="font-bold break-words">{name}</span><BlocAvatar id={id} lists={lists} /></th>
-    {children.map((c, i) => <td key={i} className={cellClass}>{c}</td>)}{extra}
+    <th scope="row" className={nameClass}><BlocName id={id} lists={lists} name={name} /></th>
+    {children.map((c, i) => <td key={i} className={`${cellClass} border-s border-paper-line`}>{c}</td>)}{extra}
   </tr>;
 }

@@ -96,7 +96,6 @@ export default function Seats({
   if (!p) {
     return (
       <div>
-        <HowTo />
         {sourcePicker}
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
           <h2 className="text-3xl font-display leading-tight">מאיפה מתחילים?</h2>
@@ -185,28 +184,25 @@ export default function Seats({
 
   return (
     <div>
-      <HowTo />
       {sourcePicker}
-      <PersonalBlocs title="הגושים שלי: ס״ה מנדטים בגוש, והצפי שלכם" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
+      <PersonalBlocs title="הגושים שלי" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className={`grid ${splitCls("lg:grid-cols-[1fr_1.1fr]")} gap-5 [&>*]:min-w-0 items-start`}>
         <div className={`${splitCls("lg:sticky lg:top-4")} space-y-3`}>
           <div className="relative">
             <SeatBoard values={values} />
             {sum === TOTAL && !invalid && <Share selection={selection} values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
           </div>
-          {both.status !== "draft" && <div className="flex items-center gap-2 flex-wrap">
+          {both.status !== "draft" && (both.status !== "saved" || unit.queued || (blocsToSave && blocsUnit.queued)) && <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} queued={unit.queued || (blocsToSave && blocsUnit.queued)} />
           </div>}
           {justSaved && both.status === "saved" && (
             <div role="status" className="flex items-center gap-2 flex-wrap">
-              <p className="text-sm font-bold">נשמר.</p>
               <Btn kind="primary" onClick={onStatistics}>מעבר לסטטיסטיקות</Btn>
             </div>
           )}
         </div>
 
         <div>
-            {targets.length > 0 && <p className="text-sm text-ink mb-2">"השלם הכול" מתחשב גם ביעדי הגושים שלכם ({targets.map((b) => `${b.name}: ${b.target}`).join(", ")}).</p>}
             <div className="seat-box">
             <CompareHeader sourceName={sourceName} view={view} onView={setView} />
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
@@ -268,7 +264,7 @@ export default function Seats({
             </div>
             {view === "pct" && pctNow && <p className="text-sm text-ink-soft mt-2">אחרות (רשימות שאינן כאן): <span className={`tabular ${pctSum > 100.05 ? "text-warn font-bold" : ""}`}>{pctSum > 100.05 ? `חריגה: ${pctFmt(pctSum)}` : pctFmt(Math.max(0, 100 - pctSum))}</span></p>}
             <CalcAssumptions calc={calc} onChange={setCalc} />
-      <ActionBar above={<>
+      <ActionBar note={targets.length > 0 ? `השלם הכל מתחשב ביעד ל${targets.map((b) => `${b.name.startsWith("גוש ") ? b.name : `גוש ${b.name}`} ${b.target}`).join(" ול")}` : undefined} above={<>
         {(left < 0 || editError) && <p role="alert" className="rounded-theme border-2 border-warn bg-paper-card text-ink p-3 text-sm font-bold">
           {editError ?? `יש כרגע ${sum} מנדטים — ${-left} מעל 120. הפחיתו מנדטים או השתמשו ב״השלם הכול״ למפלגות הפתוחות. אפשר לשמור רק כשהסכום חוזר ל־120.`}
         </p>}
@@ -358,15 +354,15 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
   );
 }
 /** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
-function HowTo() {
+export function HowTo() {
   return (
     <section className="mb-4 rounded-theme border border-paper-line bg-paper-card px-4 pt-4 pb-1" aria-labelledby="howto-title">
-      <h2 id="howto-title" className="text-xl font-display leading-tight mb-2">איך משערים?</h2>
+      <h2 id="howto-title" className="text-xl font-display leading-tight mb-2">איך בונים את הכנסת שלי?</h2>
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
-        <li>מגדירים גושי מפלגות, וצפי ס״ה לגוש, או נשארים עם ברירת המחדל.</li>
-        <li>בוחרים מאיפה מתחילים: מאפס, מממוצע הסקרים או מבחירות 22.</li>
-        <li>נועלים מפלגה או משנים לה את המספר.</li>
-        <li>לוחצים "השלם הכול": המפלגות הנעולות ומספרי הגושים נשמרים, ושאר המפלגות מקבלות את היתרה ביחס לסקרים.</li>
+        <li>מתחילים מאפס, מבחירות 22, מממוצע סקרים או מסקר בודד — מה שנוח לכם.</li>
+        <li>נועלים את המספרים שרוצים לשמור, ומשאירים את שאר המפלגות פתוחות לשינויים.</li>
+        <li>רוצים? אפשר להגדיר גם יעד מנדטים לגוש משלכם.</li>
+        <li>זהו, לוחצים ״השלם הכל״. שאר המפלגות מתעדכנות בהתאם למספרים שנעלתם וליעדי הגושים שהגדרתם.</li>
       </ol>
       <details className="group mt-2 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">
         <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[40px] text-sm font-bold">
