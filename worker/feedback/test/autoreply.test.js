@@ -178,3 +178,11 @@ it("כשל זמני של הספק משחרר את הפנייה לניסיון ח
   model = GOOD;
   expect(await run(at() + 1000)).toMatchObject({ ok: true, published: 1 });
 });
+
+it("מפתח שנשמר אך אי אפשר לפענח (סוד ההצפנה הוחלף) ⇐ סטטוס 'no_key' במסך הניהול, בלי קריאה לספק", async () => {
+  env.IP_KEY = "a-different-secret";
+  await ask();
+  expect(await run(at())).toMatchObject({ ok: false, error: "no_key" });
+  expect(calls).toEqual([]);
+  expect(JSON.parse(rows("SELECT value FROM settings WHERE name = 'ai_status'")[0].value).error).toBe("no_key");
+});

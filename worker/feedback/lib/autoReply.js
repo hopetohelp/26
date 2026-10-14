@@ -115,7 +115,12 @@ export async function runAutoReplies(env, helpers, now = Date.now(), fetcher = f
   if (isShabbat(now)) return null;
   const at = new Date(now).toISOString();
   const key = await openKey(env);
-  if (!key) return null;
+  if (!key) {
+    // אין מפתח, או שנשמר מפתח שאי אפשר לפענח (סוד ההצפנה הוחלף) ⇐ הסטטוס במסך הניהול אומר זאת, במקום שקט
+    const status = { at, ok: false, mode: "auto", error: "no_key", published: 0, drafted: 0, skipped: 0 };
+    await setting(env, "ai_status", JSON.stringify(status), at);
+    return status;
+  }
   const previous = JSON.parse((await env.DB.prepare("SELECT value FROM settings WHERE name = 'ai_status'").first())?.value || "null");
   const mode = (await env.DB.prepare("SELECT value FROM settings WHERE name = 'ai_mode'").first())?.value === "drafts" ? "drafts" : "auto";
   const status = { at, ok: true, mode, published: 0, drafted: 0, skipped: 0 };
