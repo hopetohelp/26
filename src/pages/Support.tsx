@@ -16,6 +16,8 @@ import { errorText, useSession } from "./guess/useCrowd";
 import { getPicture } from "../lib/crowdSession";
 import { FEEDBACK_URL, accountSupport, getThread, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { OLD_WELCOME, WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread";
+import PrivateChat, { PrivateKeyEntry } from "./PrivateChat";
+import { usePrivateKey } from "../lib/privateChat";
 
 /** מפתח ניהול שנשמר בדפדפן הזה (כניסה דרך קישור הניהול) — גם הוא מציג את הכפתור לממשק הניהול */
 const hasAdminKey = () => { try { return !!localStorage.getItem("elections26.admin"); } catch { return false; } };
@@ -58,6 +60,8 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
   const [trap, setTrap] = useState("");
   const pending = useRef<{ token: string; text: string; op_id: string } | null>(null);
   const list = useRef<HTMLOListElement>(null);
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   async function load() {
     setError(null);
@@ -107,6 +111,8 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
         await load();
       }
       setText("");
+      // שאלה או תאוריה נענית מיד (עד שלוש בשעה): מרעננים כמה פעמים בדקה הראשונה, כדי שהתשובה תופיע בלי רענון ידני
+      if (topic === "theory") for (const s of [5, 12, 25, 45, 75]) timers.current.push(window.setTimeout(() => void load(), s * 1000));
       const box = document.getElementById("support-message");
       if (box) box.style.height = "";
     } catch (e) {
@@ -129,7 +135,8 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
       </div>
-      <p className="text-xs text-ink-soft pb-2">התשובות מתקבלות פעם בכמה שעות.{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
+      <p className="text-xs text-ink-soft pb-2">שאלות ותאוריות נענות בדרך כלל תוך דקה (עד שלוש בשעה בסך הכול); שאר הפניות — פעם בכמה שעות.{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
+      <PrivateKeyEntry />
       {!closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
@@ -146,6 +153,24 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
         </form>
       ) : <p className="border-t border-paper-line py-3 text-sm text-ink-soft">השיחה נסגרה.</p>}
     </section>
+  );
+}
+
+/**
+ * שיחה עם צוות האתר, ולמי שחיבר מפתח AI אישי — גם מתג למצב פרטי (הכרעת בעלים 14.10.2026).
+ * שני הרכיבים נשארים טעונים כדי שהשיחה בכל אחד מהם לא תיעלם במעבר; הם אינם חולקים מצב, אחסון או נתיב לשרת.
+ */
+function Chat({ session }: { session: ReturnType<typeof useSession> }) {
+  const key = usePrivateKey();
+  const [mode, setMode] = useState<"team" | "private">("team");
+  const priv = !!key && mode === "private";
+  useEffect(() => { if (!key) setMode("team"); }, [key]);
+  return (
+    <>
+      {key && <div className="pt-4"><Segmented label="מצב השיחה" size="sm" value={mode} onChange={setMode} options={[{ id: "team", label: "צוות האתר" }, { id: "private", label: "פרטי (על חשבוני)" }]} /></div>}
+      <div className={priv ? "hidden" : "flex-1 flex flex-col"}><Conversation session={session} /></div>
+      {key && <div className={priv ? "flex-1 flex flex-col" : "hidden"}><PrivateChat /></div>}
+    </>
   );
 }
 
@@ -208,7 +233,7 @@ export default function Support() {
    */
   if (wide) {
     const items = [
-      { id: "chat", title: "צוות האתר", content: <Conversation session={session} /> },
+      { id: "chat", title: "צוות האתר", content: <Chat session={session} /> },
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
       ...(token && groups.length > 0 ? [{ id: "groups", title: "ניהול קבוצה", content: groupList }] : []),
@@ -226,7 +251,7 @@ export default function Support() {
         <Drawer title="עוזרי AI" open={open.has("assistants")} onToggle={() => toggle("assistants")}>{assistants}</Drawer>
         {admin}
       </div>
-      <Conversation session={session} />
+      <Chat session={session} />
     </div>
   );
 }
