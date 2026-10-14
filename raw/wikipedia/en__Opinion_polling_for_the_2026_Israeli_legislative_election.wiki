@@ -153,6 +153,30 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | style="font-style:italic;" {{Opdrts||16|Oct|2026}}
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
+|14 Oct
+|
+|Channel 13
+|
+|18
+|12
+|6
+|
+|8
+|
+|7
+|
+|9
+|6
+|
+|9
+|20
+|4
+|
+|4
+|
+|
+|
+|-
 |{{Opdrts||12|Oct|2026}}
 | style=background:DarkOrange |SF+ND
 |[[Channel 14 (Israel)|Channel 14]]<ref>{{cite web|date=12 October 2026|lang=en|title=Drama on the bloc map: This is the party that passes the threshold for the first time in Filbert's poll|url=https://ch10.co.il/en/news/1107207/|access-date=12 October 2026 |work=Haredim10}}</ref>
@@ -174,6 +198,52 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(0.6%)}}
 |{{N/A}}
 |style="background:#b2b2f0" |'''61'''
+|-
+|12 Oct
+|Channel 12 News
+|Midgam R&C
+|
+|20
+|13
+|6
+|
+|8
+|
+|8
+|7
+|9
+|
+|8
+|9
+|23
+|
+|
+|
+|
+|
+|
+|-
+|{{Opdrts||11|Oct|2026}}
+| style=background:Burlywood |Kantar
+|[[Kan 11]]<ref>{{cite web |title=מהפך בתמונת הגושים: הקואליציה עלתה ל-53 מנדטים, גוש איזנקוט עם 50 |trans-title=Kan News Poll: Revolution in the picture of the blocs: The coalition rose to 53 seats, Eisenkot's bloc with 50 |publisher=[[Kan 11]] |date=11 October 2026 |url=https://www.kan.org.il/content/kan-news/politic/1108256/ |language=he-il |access-date=13 October 2026}}</ref>
+|553
+|20
+|12
+|colspan=2|5
+|9
+|{{N/A}}
+|7
+|8
+|8
+|5
+|8
+|8
+|style="background:#d0eafb" |'''22'''
+|colspan=2|4
+|4
+|{{N/A}}
+|{{N/A}}
+|49
 |-
 | {{Opdrts||11|Oct|2026}}
 | colspan="22" |[[Shas]] and [[United Torah Judaism]] sign a surplus-vote agreement<ref>{{Cite web|last1=Neev|first1=Keshet |date=11 October 2026 |title=Shas, UTJ sign surplus vote-sharing deal, pledge cooperation in next Knesset |url=https://www.jpost.com/israel-election-2026/article-911320 |access-date=11 October 2026|website=The Jerusalem Post}}</ref>
@@ -260,7 +330,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |7
 |10
 |20
-|colspan=2|{{small|2.3%}}
+|colspan=2|{{small|(2.3%)}}
 |4
 |{{small|(<1%)}}
 |{{small|(<4%)}}{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
