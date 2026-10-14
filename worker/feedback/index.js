@@ -21,6 +21,8 @@
  * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
 import { allowedOrigin } from "../shared/origins.js";
+import { sealKey } from "./lib/aiKey.js";
+import { runAutoReplies } from "./lib/autoReply.js";
 // "design" נשאר לתאימות עם דפדפנים ישנים; במסך מוצג כ"רעיון לשיפור"
 const TOPICS = new Set(["data", "idea", "design", "theory", "other"]);
 const MAX_TEXT = 2000;
@@ -145,13 +147,6 @@ async function teamReply(env, kind, id, text, approved = false) {
     env.DB.prepare("UPDATE feedback SET status = 'answered' WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(fid, fid),
   ]);
   return true;
-}
-
-/** מפתח ה-AI שנשמר ממסך הניהול: מוצפן ב-AES-GCM במפתח שנגזר מסוד השרת IP_KEY, כך שקריאת המאגר לבדה אינה חושפת אותו. */
-async function aiCipher(env) {
-  if (!env.IP_KEY) return null;
-  const raw = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`ai-key|${env.IP_KEY}`));
-  return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
 }
 
 export default {
@@ -328,21 +323,29 @@ export default {
           let b = {};
           try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
           const at = new Date().toISOString();
-          if (b.key === null) {
-            await env.DB.prepare("DELETE FROM settings WHERE name = 'ai_key'").run();
+          if (b.mode !== undefined && b.key === undefined) {
+            // מצב תשובות אוטומטיות: auto = מפרסם כשהכול עומד בנוהל · drafts = הכול טיוטה לאישור (מתג עצירה)
+            if (b.mode !== "auto" && b.mode !== "drafts") return reply({ ok: false, error: "bad_mode" }, 400);
+            await env.DB.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('ai_mode', ?, ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(b.mode, at).run();
           } else {
-            const value = String(b.key || "").trim();
-            if (value.length < 20 || value.length > 400 || /\s/.test(value)) return reply({ ok: false, error: "bad_key" }, 400);
-            const cipher = await aiCipher(env);
-            if (!cipher) return reply({ ok: false, error: "no_secret" }, 503);
-            const iv = crypto.getRandomValues(new Uint8Array(12));
-            const sealed = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, cipher, new TextEncoder().encode(value)));
-            const packed = btoa(String.fromCharCode(...iv, ...sealed));
-            await env.DB.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('ai_key', ?, ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(packed, at).run();
+            if (b.key === null) {
+              await env.DB.prepare("DELETE FROM settings WHERE name = 'ai_key'").run();
+            } else {
+              const value = String(b.key || "").trim();
+              if (value.length < 20 || value.length > 400 || /\s/.test(value)) return reply({ ok: false, error: "bad_key" }, 400);
+              const packed = await sealKey(env, value);
+              if (!packed) return reply({ ok: false, error: "no_secret" }, 503);
+              await env.DB.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('ai_key', ?, ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(packed, at).run();
+            }
+            // מפתח חדש או נמחק ⇐ הבדיקה הקודמת אינה תקפה; הריצה הבאה בודקת מחדש
+            await env.DB.prepare("DELETE FROM settings WHERE name = 'ai_status'").run();
           }
         }
-        const row = await env.DB.prepare("SELECT updated_at FROM settings WHERE name = 'ai_key'").first();
-        return reply({ ok: true, admin: row ? { updated_at: row.updated_at } : null, server: !!env.AI_API_KEY });
+        const { results: rows } = await env.DB.prepare("SELECT name, value, updated_at FROM settings WHERE name IN ('ai_key', 'ai_status', 'ai_mode')").all();
+        const by = Object.fromEntries((rows || []).map((r) => [r.name, r]));
+        let status = null;
+        try { status = by.ai_status ? JSON.parse(by.ai_status.value) : null; } catch { /* סטטוס פגום — כמו שאין */ }
+        return reply({ ok: true, admin: by.ai_key ? { updated_at: by.ai_key.updated_at } : null, server: !!env.AI_API_KEY, mode: by.ai_mode?.value === "drafts" ? "drafts" : "auto", status });
       }
       return reply({ ok: false }, 404);
     }
@@ -502,5 +505,10 @@ export default {
       .bind(now, topic, text, String(body.page || "").slice(0, 120), String(body.theme || "").slice(0, 20), key, await sha256(token))
       .run();
     return reply({ ok: true, token });
+  },
+
+  // תשובות אוטומטיות לשאלות ותאוריות (lib/autoReply.js; הכרעת בעלים 14.10.2026). כל כשל נשמר כסטטוס במסך הניהול ואינו מפיל דבר.
+  async scheduled(_event, env, ctx) {
+    ctx.waitUntil(runAutoReplies(env, { teamReply }).catch(() => null));
   },
 };

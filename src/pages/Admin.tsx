@@ -289,12 +289,24 @@ export default function Admin() {
 type Sort = "oldest" | "newest";
 type Filter = "all" | "waiting" | "drafts";
 
+type AiState = { admin: { updated_at: string } | null; server: boolean; mode: "auto" | "drafts"; status: { at: string; ok: boolean; error?: string; provider?: string; published?: number; drafted?: number; skipped?: number; verifiedAt?: string } | null };
+
+/** מצב המפתח והתשובות האוטומטיות במילים: עובד / נכשל / עדיין לא נבדק */
+function aiStatusLine(s: AiState): string {
+  if (!s.admin && !s.server) return "אין מפתח, ולכן אין תשובות אוטומטיות.";
+  if (!s.status) return "המפתח נשמר ויבדק בריצה הקרובה (עד רבע שעה; בשבת לא רצים).";
+  const { ok, at, error, published = 0, drafted = 0, skipped = 0 } = s.status;
+  if (!ok) return `הבדיקה האחרונה (${when(at)}) נכשלה (${error || "שגיאה"}). בדקו שהמפתח הועתק במלואו ושהשירות פעיל בחשבון הספק.`;
+  return `המפתח עובד (נבדק ${when(s.status.verifiedAt || at)}). בריצה האחרונה: ${published} פורסמו, ${drafted} טיוטות, ${skipped} דולגו.`;
+}
+
 /**
- * מפתח AI (הכרעת בעלים 12.10.2026): נשמר בשרת מוצפן ואינו מוצג שוב — רק "מוגדר" ומתי.
- * דרך נוספת: סוד AI_API_KEY בהגדרות הריפו ב-GitHub, שנפרס לשרת. כרגע התשובות עדיין בסקירה המתוזמנת.
+ * מפתח AI ותשובות אוטומטיות (הכרעת בעלים 12.10.2026 ו-14.10.2026): המפתח נשמר בשרת מוצפן ואינו מוצג שוב.
+ * שרת ההערות עונה לשאלות ותאוריות לפי נוהל ההערות: מפרסם רק כשהכול עומד בנוהל, וכל ספק הופך לטיוטה למעלה. "טיוטות בלבד" — מתג עצירה.
+ * דרך נוספת למפתח: סוד AI_API_KEY בהגדרות הריפו ב-GitHub, שנפרס לשרת.
  */
-function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<{ admin: { updated_at: string } | null; server: boolean }> }) {
-  const [state, setState] = useState<{ admin: { updated_at: string } | null; server: boolean } | null>(null);
+function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<AiState> }) {
+  const [state, setState] = useState<AiState | null>(null);
   const [value, setValue] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   useEffect(() => { api("/admin/ai-key").then(setState, () => setMsg("לא ניתן לבדוק את מצב המפתח.")); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -302,13 +314,18 @@ function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<{ admin
     setMsg(null);
     try { setState(await api("/admin/ai-key", { key })); setValue(""); setMsg(key ? "המפתח נשמר." : "המפתח נמחק."); } catch { setMsg("השמירה נכשלה. בדקו שהמפתח הועתק במלואו."); }
   };
+  const setMode = async (mode: "auto" | "drafts") => {
+    setMsg(null);
+    try { setState(await api("/admin/ai-key", { mode })); setMsg(mode === "auto" ? "תשובות שעומדות בנוהל יתפרסמו אוטומטית." : "מעכשיו כל תשובה תישמר כטיוטה לאישור."); } catch { setMsg("השינוי נכשל."); }
+  };
   return (
     <section className="space-y-2" aria-labelledby="ai-key-title">
       <h3 id="ai-key-title" className="font-bold text-lg">מפתח AI לתשובות</h3>
       <p className="text-sm text-ink-soft">
         {state?.admin ? `נשמר ממסך הניהול (${when(state.admin.updated_at)}).` : "לא נשמר מפתח ממסך הניהול."}{" "}
-        {state?.server ? "מוגדר גם כסוד בשרת." : ""} המפתח נשמר מוצפן ואינו מוצג שוב. כרגע התשובות נכתבות בסקירה המתוזמנת.
+        {state?.server ? "מוגדר גם כסוד בשרת." : ""} המפתח נשמר מוצפן ואינו מוצג שוב.
       </p>
+      {state && <p role="status" className="text-sm">{aiStatusLine(state)}</p>}
       <form className="flex gap-2 flex-wrap items-end" onSubmit={(e) => { e.preventDefault(); if (value.trim()) void save(value.trim()); }}>
         <label className="flex-1 min-w-[12rem]"><span className="sr-only">מפתח AI</span>
           <input type="password" autoComplete="off" value={value} onChange={(e) => setValue(e.target.value)} placeholder="הדביקו מפתח API" className="w-full rounded-theme border border-paper-line bg-paper text-ink p-2 text-sm" />
@@ -316,6 +333,16 @@ function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<{ admin
         <Btn type="submit" kind="primary" disabled={!value.trim()}>שמירה</Btn>
         {state?.admin && <Btn onClick={() => void save(null)}>מחיקת המפתח</Btn>}
       </form>
+      {(state?.admin || state?.server) && (
+        <div className="space-y-1">
+          <p className="text-sm text-ink-soft">
+            {state.mode === "auto"
+              ? "תשובות לשאלות ותאוריות שעומדות בכל הנוהל מתפרסמות אוטומטית; כל ספק הופך לטיוטה."
+              : "מצב טיוטות בלבד: כל תשובה ממתינה לאישור שלך."}
+          </p>
+          <Btn onClick={() => void setMode(state.mode === "auto" ? "drafts" : "auto")}>{state.mode === "auto" ? "מעבר לטיוטות בלבד" : "חזרה לפרסום אוטומטי"}</Btn>
+        </div>
+      )}
       {msg && <p role="status" className="text-sm">{msg}</p>}
     </section>
   );

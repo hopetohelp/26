@@ -119,6 +119,18 @@ CREATE TABLE IF NOT EXISTS drafts (
 -- הגדרות. ai_key = מפתח ה-AI שנשמר ממסך הניהול, מוצפן בסוד השרת; לעולם אינו מוחזר מהשרת.
 CREATE TABLE IF NOT EXISTS settings (name TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);
 
+-- ריצות התשובות האוטומטיות (lib/autoReply.js; הכרעת בעלים 14.10.2026): כל פנייה מטופלת פעם אחת לכל הודעה אחרונה של הגולש.
+-- outcome = published (פורסמה) · drafted (טיוטה לאישור) · skipped (המודל או הקוד התעלמו; הפנייה נשארת ממתינה). settings: ai_mode (auto/drafts), ai_status.
+CREATE TABLE IF NOT EXISTS ai_runs (
+  kind TEXT NOT NULL,
+  target TEXT NOT NULL,
+  last_key TEXT NOT NULL,
+  at TEXT NOT NULL,
+  outcome TEXT NOT NULL,
+  note TEXT,
+  PRIMARY KEY (kind, target, last_key)
+);
+
 -- משתתף בהשהיה (הכרעת בעלים 12.10.2026): שאל שאלה שנחשדה כלא עומדת בכללים ⇐ כל תשובה אליו, גם לשאלה ניטרלית, נשמרת כטיוטה עד אישור המשתתף במסך הניהול.
 CREATE TABLE IF NOT EXISTS held (
   kind TEXT NOT NULL CHECK (kind IN ('feedback', 'support')),

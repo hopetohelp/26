@@ -16,3 +16,7 @@ database_id = "69ba3e11-7cce-4823-a3be-ac7cf82999ea"
 [[services]]
 binding = "CROWD"
 service = "elections26-crowd"
+
+# תשובות אוטומטיות לשאלות ותאוריות (הכרעת בעלים 14.10.2026): כל רבע שעה; בשבת הקוד עצמו מדלג. המפתח — ממסך הניהול או סוד AI_API_KEY.
+[triggers]
+crons = ["*/15 * * * *"]
