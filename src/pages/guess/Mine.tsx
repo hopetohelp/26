@@ -3,7 +3,7 @@ import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import Blocs from "./Blocs";
 import { type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
-import Seats from "./Seats";
+import Seats, { HowTo } from "./Seats";
 import Vote from "./Vote";
 import { Notice } from "./ui";
 import { useEffect, useState } from "react";
@@ -49,6 +49,7 @@ export default function Mine({ session, onStatistics }: { session: ReturnType<ty
       {session.me?.seatsPending && sec === "seats" && (
         <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר המשתתפים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
       )}
+      <HowTo />
       <nav aria-label="חלקי ההשערה" className="flex gap-1 overflow-x-auto -mx-4 px-4 pb-1 mb-5 border-b border-paper-line">
         {SECTIONS.map((s) => {
           const on = sec === s.id;
