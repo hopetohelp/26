@@ -1,5 +1,5 @@
 {
- "asOf": "2026-10-14T22:06:34+03:00",
+ "asOf": "2026-10-15T18:07:06+03:00",
  "conflicts": [
   {
    "detail": "באתר 1,263, בפרטי האימות 1,013",
@@ -610,10 +610,10 @@
   "model": {
    "skipped": 0,
    "start": "2026-09-09",
-   "used": 52
+   "used": 53
   },
-  "sinceListSubmission": 52,
-  "total": 786,
-  "usable": 773
+  "sinceListSubmission": 53,
+  "total": 787,
+  "usable": 774
  }
 }
