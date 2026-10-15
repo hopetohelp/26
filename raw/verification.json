@@ -1755,5 +1755,48 @@
     "source": "https://www.srugim.co.il/101013517-%D7%A1%D7%A7%D7%A8-%D7%A2%D7%A8%D7%95%D7%A5-14-%D7%A0%D7%AA%D7%A0%D7%99%D7%94%D7%95-%D7%9E%D7%95%D7%91%D7%99%D7%9C-%D7%91%D7%A0%D7%98-%D7%9E%D7%AA%D7%97%D7%96%D7%A7-%D7%95%D7%95%D7%99%D7%A0%D7%98%D7%A8"
    }
   }
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-15",
+  "id": "2026-10-15-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "הועתק מהכתבה המקורית בזמן ישראל (המזמין): מנדטי 12 הרשימות (סך 120), שני האחוזים מתחת לחסימה, המכון (טאטיקה), תאריכי השדה 14–15.10 ומדגם 500 — תואמים.",
+  "source": "https://www.zman.co.il/733625/",
+  "sourceDetails": {
+   "published": "2026-10-15T17:00:00+03:00",
+   "sample_respondents": 500,
+   "moe": "4.4%"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/733625/"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.zman.co.il/733625/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/733625/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/733625/"
+   }
+  }
  }
 ]
