@@ -153,29 +153,27 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | style="font-style:italic;" {{Opdrts||16|Oct|2026}}
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
-|14 Oct
-|
-|Channel 13
-|
+|{{Opdrts||14|Oct|2026}}
+| style="background:mediumseagreen" |MP+TM+SN+A
+| [[Channel 13 (Israel)|Channel 13]]<ref>{{Cite web |title=שוויון בין נתניהו לאיזנקוט בצמרת - וגוש הקואליציה מגדיל את הפער |trans-title=Netanyahu weakens, Handel and Zlika pass - and the bloc map is changing again |publisher=Channel 13 |date=14 October 2026 |access-date=14 October 2026 |url=https://13tv.co.il/item/news/politics/politics/survey-905396904/?pid=106628 |language=he-IL }}</ref>
+|1018
 |18
 |12
-|6
-|
+|colspan=2|6
 |8
-|
+|{{small|(1.2%)}}
 |7
-|
+|8
 |9
 |6
-|
 |9
-|20
+|9
+|style="background:#d0eafb" |'''20'''
+|colspan=2|4
 |4
-|
-|4
-|
-|
-|
+|{{small|(1.1%)}}
+|{{N/A}}
+|47
 |-
 |{{Opdrts||12|Oct|2026}}
 | style=background:DarkOrange |SF+ND
@@ -199,29 +197,27 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{N/A}}
 |style="background:#b2b2f0" |'''61'''
 |-
-|12 Oct
-|Channel 12 News
-|Midgam R&C
-|
+|{{Opdrts||12|Oct|2026}}
+|style=background:#FFDFCC |Midgam R&C
+|[[HaHadashot 12]]<ref>{{Cite web |title=סקר המנדטים של חדשות 12: וינטר רחוק מאחוז החסימה, ש"ס מתחזקת אחרי תקופה ארוכה |trans-title=News 12 Mandate Survey: Winter far from the electoral threshold; Shas strengthens after a long period |publisher=Channel 12 |date=12 October 2026 |access-date=14 October 2026 | url=https://www.mako.co.il/news-israel-elections/2026/Article-cc91389788031a1026.htm |language=he-IL}}</ref>
+|509
 |20
 |13
-|6
-|
+|colspan=2|6
 |8
-|
+|{{small|(0.9%)}}
 |8
 |7
 |9
-|
+|5
 |8
 |9
-|23
-|
-|
-|
-|
-|
-|
+|style="background:#d0eafb" |'''23'''
+|colspan=2|4
+|{{small|(1.8%)}}
+|{{small|(0.1%)}}
+|0.5%{{efn|[[Noam (political party)|Noam]] at 0.5%}}
+|49
 |-
 |{{Opdrts||11|Oct|2026}}
 | style=background:Burlywood |Kantar
@@ -2018,7 +2014,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | colspan="21" |[[Hadash]], [[Ta'al]] and [[Balad (political party)|Balad]] re-form the [[Joint List]]<ref>{{Cite web |title=Arab Knesset parties revive Joint List, without Ra'am|publisher=[[Arutz Sheva]]|access-date=20 August 2026|url=https://www.israelnationalnews.com/news/431955|date=19 August 2026}}</ref>
 |-
 |{{Opdrts||19|Aug|2026}}
-| style="background:DarkSeaGreen|Midgam Project
+| style=background:mediumseagreen |MP+TM+SN+A
 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here">{{cite web|date=19 August 2026 |title=הזינוק של איזנקוט - וכמה מנדטים שווה רשימת הליכוד החדשה? |url=https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628 |access-date=19 August 2026 |publisher=[[Channel 13 (Israel)|Channel 13]] |language=he-IL}}</ref>
 |1,247
 |23
