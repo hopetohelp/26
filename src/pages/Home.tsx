@@ -52,26 +52,22 @@ export default function Home() {
         <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} duel={["גוש נתניהו", "גוש אייזנקוט"]} footer={<ExitPollClock compact />} info={selection.product === "model.mean" ? <ModelInfo kind="mean" items={["המספרים במרכז חצי העיגול (גוש נתניהו וגוש אייזנקוט)", "המספר הגדול של כל רשימה בדו-קרב"]} /> : undefined} />
       </section> : <p role="status" className="text-center my-6 text-ink-soft">—</p>}
 
-      </div><div className="c-home-duel">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} label={def.name} method={def.method} />}<Link className="c-chart-link" to="/polls">להשוואת הרשימות ←</Link></div>
+      <Participation className="c-participation-wide" /></div><div className="c-home-duel">{a && b && <Duel a={a} b={b} polls={LATEST_POLLS} asOf={asOf} label={def.name} method={def.method} />}<Link className="c-chart-link" to="/polls">להשוואת הרשימות ←</Link></div>
       <div className="c-home-edge"><ThresholdLine rows={home.edge} polls={LATEST_POLLS} asOf={asOf} /><Link className="c-chart-link" to="/scenarios">לתרחישי אחוז החסימה ←</Link></div>
 
 
       <div className="c-home-trend"><ScreenLegend><section aria-labelledby="home-trend"><Link className="c-chart-link" to="/polls?tab=trends">למגמות ←</Link>
         <GovTrend home={home} points={GOV_POINTS} heading={<h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת — ממוצע המודל</h2>} />
       </section></ScreenLegend></div></div>
-      <aside aria-labelledby="home-cta" className="mt-10 rounded-theme bg-band text-band-ink p-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
-        <div>
-          <h2 id="home-cta" className="text-2xl font-display leading-tight">כמה תקבל כל רשימה? תנחשו.</h2>
-          <p className="mt-2 text-sm text-band-soft">השערות משתתפים, אינן סקר.</p>
-        </div>
-        <Link
-          to="/guess"
-          className="ms-auto inline-flex items-center justify-center min-h-12 px-6 rounded-full bg-signal text-signal-ink font-extrabold no-underline hover:text-signal-ink"
-        >
-          לבנות את הכנסת שלי
-        </Link>
-      </aside>
+      <Participation className="c-participation-mobile" />
       <InstallApp />
     </div>
   );
+}
+
+function Participation({ className }: { className: string }) {
+  return <aside aria-label="ההשערה שלך" className={`c-participation ${className}`}>
+    <div><h2 className="font-display">מה ההשערה שלך?</h2><p>השערות משתתפים, אינן סקר.</p></div>
+    <Link to="/guess">לבניית הכנסת שלי ←</Link>
+  </aside>;
 }

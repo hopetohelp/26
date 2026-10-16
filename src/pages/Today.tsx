@@ -18,11 +18,7 @@ const WINDOW_DAYS = POLL_WINDOW_DAYS;
 const ALL = "all";
 type View = "party" | "pollster";
 
-/**
- * המצב היום (הכרעת בעלים 11.10.2026): רק הסקר האחרון של כל מכון ב-14 הימים האחרונים, בלי מודל ובלי תרחישים
- * (אלה בלשונית "תרחישים"; כל הסקרים — ב"סקרים ומגמות").
- * מתג: לפי מפלגה / לפי מכון, ורשימת בחירה: כולן או אחת. מתחת — הגושים האישיים בכל אחד מהסקרים.
- */
+/** סיכום מהספק המשותף, ומתחתיו השוואת הפרסומים המקוריים. */
 export default function Today() {
   const asOf = MODEL_AVERAGE.asOf;
   const preference = useSourcePreference("today");
@@ -53,6 +49,12 @@ export default function Today() {
       primary={
         <div className="mb-8 c-poll-controls"><section className="c-average-explainer" aria-label="שלושת הממוצעים"><h2 className="text-xl font-display">שלוש דרכים לקרוא את הסקרים</h2><div className="c-average-options">{(["polls.mean", "polls.adjusted", "model.mean"] as const).map(id => <button key={id} type="button" aria-pressed={selection.product === id} onClick={() => setTemporary({ product: id })}><strong>{DATA_PRODUCTS[id].name}</strong><span>{DATA_PRODUCTS[id].explain}</span></button>)}</div><p className="text-sm text-ink-soft">{def.assumption}. <a href={`#/method#${def.method}`}>הסבר מלא</a></p></section>
         <SourcePicker screen="today" selection={selection} onChange={setTemporary} notice={preference.notice} />
+
+        </div>
+      }
+      secondary={
+        <>
+          <section aria-label="הנתון הנבחר" className="mb-8"><h2 className="font-display text-xl mb-4">{def.name}</h2><Explained kind={selection.product === "model.mean" ? "תרחיש" : selection.product === "polls.adjusted" ? "חישוב לפי החוק" : "סיכום סקרים"} source={def.source} asOf={date(asOf)} assumption={def.assumption} methodAnchor={def.method}><ChartWithTable chart={<div className="c-poll-bars">{selectedRows.map(r => <div key={r.id}><span>{listName(r.id)}</span><i style={{ width: `${r.value / maximum * 100}%` }} /><b>{seatsFmt(r.value)}</b></div>)}</div>} table={<table className="w-full text-sm"><caption>{def.name}</caption><thead><tr><th>רשימה</th><th>מנדטים</th></tr></thead><tbody>{selectedRows.map(r => <tr key={r.id}><th>{listName(r.id)}</th><td>{seatsFmt(r.value)}</td></tr>)}</tbody></table>} /></Explained></section><details className="c-poll-comparison" open><summary className="font-display text-xl py-3 cursor-pointer">הפרסומים המקוריים — השוואה בין המכונים</summary><section aria-label="הסקרים האחרונים">
         <div className="flex items-center gap-2">
           <Segmented
             label="הצגה"
@@ -71,11 +73,6 @@ export default function Today() {
           <div ref={setLegendRow} className="ms-auto shrink-0 flex items-center" />
         </div>
         <div ref={setLegendPanel} />
-        </div>
-      }
-      secondary={
-        <>
-          <section aria-label="הנתון הנבחר" className="mb-8"><h2 className="font-display text-xl mb-4">{def.name}</h2><Explained kind="סיכום סקרים" source={def.source} asOf={date(asOf)} assumption={def.assumption} methodAnchor={def.method}><ChartWithTable chart={<div className="c-poll-bars">{selectedRows.map(r => <div key={r.id}><span>{listName(r.id)}</span><i style={{ width: `${r.value / maximum * 100}%` }} /><b>{seatsFmt(r.value)}</b></div>)}</div>} table={<table className="w-full text-sm"><caption>{def.name}</caption><thead><tr><th>רשימה</th><th>מנדטים</th></tr></thead><tbody>{selectedRows.map(r => <tr key={r.id}><th>{listName(r.id)}</th><td>{seatsFmt(r.value)}</td></tr>)}</tbody></table>} /></Explained></section><details className="c-poll-comparison" open><summary className="font-display text-xl py-3 cursor-pointer">הפרסומים המקוריים — השוואה בין המכונים</summary><section aria-label="הסקרים האחרונים">
             <Explained
               bare
               kind="סיכום סקרים"
