@@ -153,6 +153,50 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 | style="font-style:italic;" {{Opdrts||16|Oct|2026}}
 | colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
+|{{Opdrts|14|15|Oct|2026}}
+| style=background:#F86B61 |LRI+P4A
+|[[Maariv (newspaper)|''Maariv'']]<ref>{{cite news |title=Majority of Israelis favor unity government if October 27 election ends without clear winner - poll|work=[[The Jerusalem Post]]|url=https://www.jpost.com/israel-election-2026/article-911902|date=16 October 2026|access-date=16 October 2026}}</ref>
+|700
+|18
+|13
+|colspan=2|6
+|8
+|{{small|(1.1%)}}
+|7
+|8
+|8
+|6
+|8
+|9
+|style="background:#d0eafb" |'''21'''
+|colspan=2|4
+|4
+|{{small|(0.5%)}}
+|0.7%{{efn|[[Noam (political party)|Noam]] at 0.5% <br/>[[Tzomet]]-[[Gadi Yevarkan|Beit Yisrael]] at 0.2% <br/>}}
+|47
+|-
+|{{Opdrts|14|15|Oct|2026}}
+| style=background:Turquoise |Yossi Tatika
+|''[[Zman Yisrael]]''<ref>{{Cite web |title=ToI poll: Eisenkot’s party opens up big lead on Netanyahu’s, but both blocs short of majority |work=The Times of Israel|date=15 October 2026|url=https://www.timesofisrael.com/toi-poll-eisenkot-opens-up-big-lead-on-netanyahu-but-both-blocs-short-of-majority/ |language=en}}</ref>
+|500
+|20
+|11
+|colspan=2|6
+|7
+|{{small|(1.2%)}}
+|8
+|8
+|9
+|5
+|8
+|8
+|style="background:#d0eafb" |'''26'''
+|colspan=2|4
+|{{small|(2.8%)}}
+|{{N/A}}
+|{{N/A}}
+|49
+|-
 |{{Opdrts||14|Oct|2026}}
 | style="background:mediumseagreen" |MP+TM+SN+A
 | [[Channel 13 (Israel)|Channel 13]]<ref>{{Cite web |title=שוויון בין נתניהו לאיזנקוט בצמרת - וגוש הקואליציה מגדיל את הפער |trans-title=Netanyahu weakens, Handel and Zlika pass - and the bloc map is changing again |publisher=Channel 13 |date=14 October 2026 |access-date=14 October 2026 |url=https://13tv.co.il/item/news/politics/politics/survey-905396904/?pid=106628 |language=he-IL }}</ref>
@@ -174,6 +218,51 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{small|(1.1%)}}
 |{{N/A}}
 |47
+|-
+|-
+|{{Opdrts||13|Oct|2026}}
+| style=background:skyblue |Maagar Mochot
+|[[Channel 16 (Israel)|Channel 16]]<ref>{{cite web|date=13 October 2026 |title=Main News Edition, from 24:55 to 26:20 |url=https://www.ch16.co.il/player/episode/6ace7ddac544041ace194b0b|access-date=16 October 2026 |publisher=Channel 16|language=he-IL}}</ref>
+|2099
+|18
+|13
+|colspan=2|6
+|9
+|{{small|(1.2%)}}
+|7
+|8
+|7
+|5
+|8
+|9
+|style="background:#d0eafb" |'''21'''
+|colspan=2|5
+|4
+|{{small|(1.1%)}}
+|0.7%{{efn|Other parties not specified}}
+|48
+|-
+|{{Opdrts||12|Oct|2026}}
+| style=background:#F86B61 |LRI+P4A
+|[[Walla! Communications|Walla]]<ref name=Walla12October>{{cite news |title=הנדל עובר את אחוז החסימה, וינטר בחוץ - ואיך זה משפיע על מפת הגושים? {{!}} סקר וואלה|work=[[Walla! Communications|Walla]] |url=https://www.walla.co.il/news/politics/383957251|date=12 October 2026|access-date=16 October 2026|author=Avi Solomon|language=he-IL}}</ref>
+|601
+|20
+|13
+|colspan=2|6
+|8
+|{{small|(1.1%)}}
+|7
+|8
+|9
+|5
+|8
+|10
+|style="background:#d0eafb" |'''22'''
+|colspan=2 | 4
+|{{N/A}}
+|{{small|(1.0%)}}
+|0.2%{{efn|[[Noam (political party)|Noam]] at 0.2%}}
+|49
 |-
 |{{Opdrts||12|Oct|2026}}
 | style=background:DarkOrange |SF+ND
@@ -221,7 +310,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||11|Oct|2026}}
 | style=background:Burlywood |Kantar
-|[[Kan 11]]<ref>{{cite web |title=מהפך בתמונת הגושים: הקואליציה עלתה ל-53 מנדטים, גוש איזנקוט עם 50 |trans-title=Kan News Poll: Revolution in the picture of the blocs: The coalition rose to 53 seats, Eisenkot's bloc with 50 |publisher=[[Kan 11]] |date=11 October 2026 |url=https://www.kan.org.il/content/kan-news/politic/1108256/ |language=he-il |access-date=13 October 2026}}</ref>
+|[[Kan 11]]<ref>{{cite web |title=מהפך בתמונת הגושים: הקואליציה עלתה ל-53 מנדטים, גוש איזנקוט עם 50 |trans-title=Kan News Poll: Revolution in the picture of the blocs: The coalition rose to 53 seats, Eisenkot's bloc with 50 |publisher=[[Kan 11]] |date=11 October 2026 |url=https://www.kan.org.il/content/kan-news/politic/1108256/ |language=he-IL|access-date=16 October 2026}}</ref>
 |553
 |20
 |12
@@ -246,7 +335,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|7|8|Oct|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Maariv (newspaper)|''Maariv'']]<ref name="maariv8oct">{{cite news |title=מפלגת הליכוד מתחזקת - והקרב מול איזנקוט מתחמם {{!}} סקר המנדטים של מעריב  |work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1375198|date=9 October 2026|access-date=9 October 2026|author=Moshe Cohen}}</ref>
+|[[Maariv (newspaper)|''Maariv'']]<ref name="maariv8oct">{{cite news |title=מפלגת הליכוד מתחזקת - והקרב מול איזנקוט מתחמם {{!}} סקר המנדטים של מעריב  |work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1375198|date=9 October 2026|access-date=16 October 2026|author=Moshe Cohen|language=he-IL}}</ref>
 |700
 |20
 |13
@@ -312,7 +401,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||7|Oct|2026}}
 |style=background:yellow |Direct Polls
-| [[i24NEWS (Israeli TV channel)|i24 News]]<ref>{{Cite web |title=סקר מנדטים דרמטי של i24NEWS: נתניהו ואיזנקוט בירידה, בנט מתחזק {{!}} הנתונים המלאים|work=i24 News |date=8 October 2026|url=https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-fa0f56f4|lang=he-IL|access-date=9 October 2026 }}</ref>
+| [[i24NEWS (Israeli TV channel)|i24 News]]<ref>{{Cite web |title=סקר מנדטים דרמטי של i24NEWS: נתניהו ואיזנקוט בירידה, בנט מתחזק {{!}} הנתונים המלאים|work=i24 News |date=8 October 2026|url=https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-fa0f56f4|lang=he-IL|access-date=9 October 2026}}</ref>
 |504
 | style="background:#BBCDE4" |'''26'''
 |11
