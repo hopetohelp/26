@@ -12,7 +12,7 @@ export type ProductId = keyof typeof DATA_PRODUCTS;
 export type AverageId = Exclude<ProductId, "poll.single">;
 export const SCREEN_POLICY = {
   home: ["polls.mean", "polls.adjusted", "model.mean"],
-  today: ["polls.mean", "poll.single"],
+  today: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"],
   scenarios: [],
   polls: ["poll.single"],
   trends: ["polls.mean", "poll.single"],

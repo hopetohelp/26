@@ -2,10 +2,10 @@
 name: בחירות 26
 description: ניתוח הבחירות לכנסת ה-26 — עיצוב אחד: מקצועי
 colors:
-  league-paper: "#EEF1F5"
-  league-ink: "#13171D"
-  league-accent: "#1B3A8C"
-  league-signal: "#E8770E"
+  league-paper: "#FFFFFF"
+  league-ink: "#142B50"
+  league-accent: "#1762D0"
+  league-signal: "#1762D0"
 typography:
   display:
     fontFamily: "Roboto Mono, Rubik, system-ui, sans-serif"
@@ -29,6 +29,10 @@ components:
 ---
 
 # DESIGN.md — בחירות 26
+
+## אישור C — 16.10.2026
+
+נבחרה C המשלבת A+B: צעיר, מקצועי, ידידותי, מינימליסטי וחדשותי; בתרחישים גם עשיר במידע. כחול־לבן עם תצורת לילה. בבית במחשב ובטאבלט גדול: הכנסת מימין על פני שלוש שורות, ומשמאל דו־קרב, חסימה ומגמה; בטלפון סדר אנכי. בתרחישים רק 80% מרכזיים; בנתונים אמיתיים תמיד הטווח המלא. הכרעה זו גוברת על ההנחיות ההיסטוריות לצבע כתום ולהקפאת הפיצול במסכים שאושרו.
 
 ## Overview
 

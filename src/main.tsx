@@ -107,20 +107,13 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route
-            path="today"
-            element={<Tabbed label="המצב והתרחישים" tabs={[
-              { id: "today", label: "היום", element: <Today /> },
-              { id: "scenarios", label: "תרחישים", element: <Scenarios /> },
-            ]} aliases={{ forecast: "scenarios" }} />}
-          />
-          <Route
-            path="polls"
-            element={<Tabbed label="סקרים ומגמות" tabs={[
-              { id: "archive", label: "ארכיון", element: <Polls /> },
-              { id: "trends", label: "מגמות", element: <Trends /> },
-            ]} />}
-          />
+          <Route path="today" element={<LegacyToday />} />
+          <Route path="scenarios" element={<Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense>} />
+          <Route path="polls" element={<Tabbed label="סקרים" tabs={[
+            { id: "today", label: "היום", element: <Today /> },
+            { id: "trends", label: "מגמות", element: <Trends /> },
+            { id: "archive", label: "ארכיון", element: <Polls /> },
+          ]} />} />
           <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense>} />
@@ -189,4 +182,12 @@ function LegacyGuess() {
   const next = new URLSearchParams(params);
   next.delete("view");
   return <CalculatorRedirect replace to={`/community${next.size ? `?${next}` : ""}`} />;
+}
+
+function LegacyToday() {
+  const [params] = useCalculatorParams();
+  const next = new URLSearchParams(params);
+  const scenarios = ["scenarios", "forecast"].includes(next.get("tab") ?? "");
+  next.delete("tab");
+  return <CalculatorRedirect replace to={`${scenarios ? "/scenarios" : "/polls"}${next.size ? `?${next}` : ""}`} />;
 }
