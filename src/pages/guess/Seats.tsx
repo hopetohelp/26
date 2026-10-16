@@ -1,3 +1,4 @@
+import { GuessChart } from "./Workspace";
 import SourcePicker from "../../components/SourcePicker";
 import { useSourcePreference } from "../../lib/sourcePreference";
 import { resolveDataset, resolveSupport, resolveSupportMetric, selectedPolls, type Selection } from "../../lib/dataResolver";
@@ -10,7 +11,6 @@ import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { date, pctOne, rng } from "../../lib/format";
-import { splitCls } from "../../lib/splitScreens";
 import { IDS, nameOf, POLL_RANGES, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
 import { Segmented } from "../../components/Choice";
@@ -68,7 +68,7 @@ export default function Seats({
   const [editError, setEditError] = useState<string | null>(null);
   const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
   const lineage = useLineage(session);
-  const { seats: crowd, pct: crowdPct, seatsRange: crowdSeatsRange, pctRange: crowdPctRange } = useCrowd();
+  const { seats: crowd } = useCrowd();
   const lin = lineage.draft.split === "crowd" && !crowd ? { ...lineage.draft, split: "polls" as const } : lineage.draft;
   const rows22 = Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r]));
   // מתג מנדטים | אחוזים (הכרעת בעלים 10.10.2026): קובע מה מקלידים; הערך השני מוצג קטן לידו
@@ -95,8 +95,8 @@ export default function Seats({
 
   if (!p) {
     return (
-      <div>
-        {sourcePicker}
+      <div className="c-guess-workspace c-guess-start">
+        <div className="c-guess-start-controls">{sourcePicker}
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
           <h2 className="text-3xl font-display leading-tight">מאיפה מתחילים?</h2>
           <Link to="/changes" className="text-sm">איך המפלגות משויכות להיום?</Link>
@@ -116,9 +116,9 @@ export default function Seats({
             </button>
           ))}
         </div>
-        <div className="mt-5 opacity-80">
+        </div><GuessChart><div className="c-guess-hall opacity-80">
           <SeatBoard values={{}} />
-        </div>
+        </div></GuessChart>
       </div>
     );
   }
@@ -186,8 +186,8 @@ export default function Seats({
     <div>
       {sourcePicker}
       <PersonalBlocs title="הגושים שלי" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
-      <div className={`grid ${splitCls("lg:grid-cols-[1fr_1.1fr]")} gap-5 [&>*]:min-w-0 items-start`}>
-        <div className={`${splitCls("lg:sticky lg:top-4")} space-y-3`}>
+      <div className="c-guess-workspace">
+        <GuessChart><div className="c-guess-hall space-y-3">
           <div className="relative">
             <SeatBoard values={values} />
             {sum === TOTAL && !invalid && <Share selection={selection} values={values} pct={p.mode === "pct" ? p.pct : undefined} username={session.me?.username} blocs={blocSummary(blocs, values)} open={justSaved} />}
@@ -200,9 +200,9 @@ export default function Seats({
               <Btn kind="primary" onClick={onStatistics}>מעבר לסטטיסטיקות</Btn>
             </div>
           )}
-        </div>
+        </div></GuessChart>
 
-        <div>
+        <div className="c-guess-editor">
             <div className="seat-box">
             <CompareHeader sourceName={sourceName} view={view} onView={setView} />
             <ul className="divide-y divide-ink/15 border-b border-ink/15" aria-label="מנדטים לכל רשימה">
@@ -220,13 +220,10 @@ export default function Seats({
                       <div className="seat-cells"><CompareCells sourceName={sourceName} cells={view === "seats" ? {
                           k22: { mean: rows22[id]?.category === "none" ? "—" : rows22[id]?.category === "partial" ? `~${seatsFmt(Math.round(rows22[id].seats2022 * 10) / 10)}` : seatsFmt(rows22[id]?.seats2022 ?? 0) },
                           polls: { mean: POLLS[id] === undefined ? "—" : seatsFmt(POLLS[id]), range: rangeText(pollSeatRange(LATEST_POLLS, [id]), seatsFmt) },
-                          crowd: { mean: crowd ? seatsFmt(Math.round((crowd[id] ?? 0) * 10) / 10) : "—", range: rangeText(crowdSeatsRange?.[id], seatsFmt) },
                         } : {
                           k22: { mean: rows22[id]?.category === "none" ? "—" : `${rows22[id]?.category === "partial" ? "~" : ""}${pctFmt(rows22[id]?.share2022 ?? 0)}` },
                           // טווח הסקרים באחוזים: הנמוך והגבוה במנדטים, מומרים לאחוזים לפי חוק הבחירות
                           polls: { mean: POLL_SHARES[id] === undefined ? "—" : pctFmt(POLL_SHARES[id]), range: rangeText(pollPctRange(id), pctFmt) },
-                          // ממוצע האחוזים של המשתתפים, כמו בסקר האתר
-                          crowd: { mean: crowdPct ? pctFmt(crowdPct[id] ?? 0) : "—", range: rangeText(crowdPctRange?.[id], pctFmt) },
                         }} /></div>
                       {view === "pct" ? (
                         <div className="seat-ctl flex items-start gap-2" dir="ltr">
@@ -356,8 +353,7 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
 /** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
 export function HowTo() {
   return (
-    <section className="mb-4 rounded-theme border border-paper-line bg-paper-card px-4 pt-4 pb-1" aria-labelledby="howto-title">
-      <h2 id="howto-title" className="text-xl font-display leading-tight mb-2">איך בונים את הכנסת שלי?</h2>
+    <details className="c-howto c-fold mb-4"><summary className="min-h-11 flex items-center cursor-pointer font-bold">איך בונים את הכנסת שלי?</summary>
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
         <li>מתחילים מאפס, מבחירות 22, מממוצע סקרים או מסקר בודד — מה שנוח לכם.</li>
         <li>נועלים את המספרים שרוצים לשמור, ומשאירים את שאר המפלגות פתוחות לשינויים.</li>
@@ -374,11 +370,11 @@ export function HowTo() {
           <div className="flex items-center gap-3"><span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span><p><b>פתוח:</b> "השלם הכול" רשאי לשנות אותו. לחיצה על המנעול נועלת או פותחת.</p></div>
           <p><b>מנדטים או אחוזים:</b> המתג קובע מה מקלידים, והשני מתעדכן לבד. מאחוזים למנדטים — לפי חלוקת המנדטים, כמו בספירה האמיתית. ממנדטים לאחוזים — האחוז שנותן בדיוק את אותם מנדטים; מפלגה עם 0 שומרת על האחוז שלה, מתחת לסף.</p>
           <p><b>אחוז החסימה:</b> מפלגה צריכה לפחות 4 מנדטים כדי להיכנס לכנסת. לכן אין 1, 2 או 3 מנדטים — מעלים ל-4 או מורידים ל-0.</p>
-          <p><b>בחירות 22 · סקרים · משתתפים:</b> שלושה מספרים להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. "משתתפים" — ממוצע ההשערות באתר, אינו סקר. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין ההשערות), כמו בסקר האתר.</p>
+          <p><b>בחירות 22 · סקרים:</b> שני מקורות להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. ממוצע המשתתפים מוצג רק בשלב הבא, אחרי השלמת הכנסת. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין ההשערות), כמו בסקר האתר.</p>
           <p><b>שמירה:</b> נשמרת בחשבון שלכם, ורק ההשערה האחרונה נספרת בסטטיסטיקות.</p>
         </div>
       </details>
-    </section>
+    </details>
   );
 }
 
@@ -418,8 +414,8 @@ function CalcAssumptions({ calc, onChange }: { calc: Calc; onChange: (c: Calc) =
   );
 }
 
-type CompareKey = "k22" | "polls" | "crowd";
-const COMPARE: { id: CompareKey; label: string; long?: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים", long: "ממוצע " }, { id: "crowd", label: "משתתפים", long: "ממוצע " }];
+type CompareKey = "k22" | "polls";
+const COMPARE: { id: CompareKey; label: string; long?: string }[] = [{ id: "k22", label: "בחירות 22" }, { id: "polls", label: "סקרים", long: "ממוצע " }];
 /** טווח כטקסט (הנמוך–הגבוה), או ריק כשאין טווח או שהנמוך שווה לגבוה — כמו בסקר האתר */
 const rangeText = (r: [number, number] | null | undefined, fmt: (x: number) => string) => (r && r[0] !== r[1] ? rng(fmt(r[0]), fmt(r[1])) : "");
 /**

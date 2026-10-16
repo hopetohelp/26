@@ -11,7 +11,7 @@ import { quality } from "./quality";
  */
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Router } from "react-router-dom";
+import { Router, createPath, type Navigator } from "react-router-dom";
 import modelFile from "../data/model.json";
 import forecastFile from "../data/forecast.json";
 import backtestFile from "../data/backtest.json";
@@ -29,8 +29,12 @@ import { TOTAL } from "./fillAll";
 import { DICTIONARY, MethodNumbers } from "../pages/Method";
 import { PARALLEL_SITE_URL } from "./siteUrls";
 
-/** נתב סטטי לרינדור טקסט המילון בבנייה (אותו מופע של react-router כמו במסכים; אין ניווט) */
-const NO_NAV = {} as never;
+/** אותו מופע נתב כמו במסכים: תומך ביצירת קישורים גם בייצוא המילון. */
+const noNavigation = () => { throw new Error("Static dictionary rendering cannot navigate"); };
+const NO_NAV: Navigator = {
+  createHref: to => typeof to === "string" ? to : createPath(to),
+  go: noNavigation, push: noNavigation, replace: noNavigation,
+};
 
 /** הכתובת הציבורית המועדפת. כל הקישורים בקבצים מוחלטים, כדי שיעבדו גם מחוץ לאתר. */
 export const SITE = PARALLEL_SITE_URL;

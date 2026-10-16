@@ -8,9 +8,8 @@ import { usePersonalBlocs } from "../../components/PersonalBlocs";
 import { Card } from "../../components/ui";
 import { Segmented } from "../../components/Choice";
 import { MODEL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
-import { call, type BlocsPayload, type Cell, type Dashboard as D, type GroupDashboard, type GroupPublic, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
+import { call, type Cell, type Dashboard as D, type GroupDashboard, type GroupPublic, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { SAVED_EVENT } from "../../lib/outbox";
-import { loadDraft } from "../../lib/crowdSession";
 import { date, pctValue, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, normalizeBlocs, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
@@ -47,7 +46,7 @@ function usePollSummary() {
 }
 
 
-export default function Dashboard({ session, landing = null }: { session: ReturnType<typeof useSession>; landing?: GroupPublic | null }) {
+export default function Dashboard({ session, landing = null, mine }: { session: ReturnType<typeof useSession>; landing?: GroupPublic | null; mine: SeatsPayload | null }) {
   // ממוצע המשתתפים — מהמקור האחד (src/lib/sources.ts): מתעדכן כל דקה, בחזרה לדף ואחרי כל שמירה
   const preference = useSourcePreference("community");
   const [temporary, setTemporary] = useState<Selection | null>(null);
@@ -113,10 +112,7 @@ export default function Dashboard({ session, landing = null }: { session: Return
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   // "נכון ל" מוצג רק כשהפרסום ישן בשעתיים לפחות
   const stale = !!d.publishedAt && Date.now() - Date.parse(d.publishedAt) >= 2 * 3600_000;
-  const mine = loadDraft<SeatsPayload>("seats") ?? session.me?.latest.seats?.payload as SeatsPayload | undefined;
-  const definedBlocs = loadDraft<BlocsPayload>("blocs") ?? personal.saved ?? session.me?.latest.blocs?.payload as BlocsPayload | undefined;
   const userBlocs = (personal.draft ? normalizeBlocs(personal.draft) : DEFAULT_BLOCS).blocs;
-  const hasDefinedBlocs = !!definedBlocs?.blocs.some(b => b.lists.length > 0);
   return (
     <div>
       {top}
@@ -132,8 +128,8 @@ export default function Dashboard({ session, landing = null }: { session: Return
       </div>}
       <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <ComparisonContext.Provider value={selection}>
-      {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={hasDefinedBlocs ? mine : undefined} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
-      {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={hasDefinedBlocs ? mine : undefined} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
+      {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={mine} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
+      {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={mine} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
       {(blank || d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} blankLists={blank ? blankLists : undefined} />}
       </ComparisonContext.Provider>
     </div>

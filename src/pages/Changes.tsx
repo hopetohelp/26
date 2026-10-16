@@ -190,12 +190,12 @@ export default function Changes() {
 
   return (
     <>
-      <SourcePicker screen="changes" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <Split
         title="מה השתנה מהבחירות האחרונות"
         lead="כל מפלגה של היום מול התוצאה של 2022. מפלגה שנוצרה מפיצול מקבלת חלק מהתוצאה של הרשימה שממנה באה."
         primary={
           <>
+      <SourcePicker screen="changes" selection={selection} onChange={setTemporary} notice={preference.notice} />
             <ChartBar legend={DUMBBELL_LEGEND.map(e => e.kind === "mean" ? { ...e, text: definition.name } : e)} asTable={asTable} onAsTable={setAsTable}>
               <Segmented size="sm" label="יחידות" value={unit} onChange={setUnit} options={UNITS} className="w-36" />
             </ChartBar>

@@ -35,5 +35,5 @@ export default function GroupLanding() {
   }, [slug]);
   if (info === null) return <p className="text-ink-soft">טוען…</p>;
   if (info === "missing") return <PageTitle lead="בדקו שהקישור הועתק במלואו, או בקשו ממנהל הקבוצה קישור חדש.">קישור הקבוצה אינו קיים</PageTitle>;
-  return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess community landing={info === "offline" ? null : info} /></Suspense>;
+  return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess landing={info === "offline" ? null : info} /></Suspense>;
 }

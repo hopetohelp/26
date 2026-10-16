@@ -31,12 +31,11 @@ export default function CommunityShare({ d, group, selection = { product: "polls
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => setSlot(document.getElementById("community-share")), []);
   const banner = (
-    <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="mb-5 rounded-theme border-2 border-ink bg-paper-card p-4 flex flex-wrap items-center justify-between gap-3">
+    <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="c-share-banner mb-5 rounded-theme border border-paper-line bg-accent-soft p-4 flex flex-wrap items-center justify-between gap-3">
       {group
         ? <p className="font-display text-xl leading-tight">הוסיפו את ההשערה שלכם ל{group.name} <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים והרחיבו את מעגל המשתתפים.</span></p>
         : <div>
-      <h1 className="font-display text-3xl leading-tight mb-2">סקר האתר</h1>
-      <p className="font-display text-xl leading-tight">הוסיפו את ההשערה שלכם <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים והרחיבו את מעגל המשתתפים.</span></p>
+      <p className="font-display text-xl leading-tight">עוד נקודות מבט על הבחירות <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים והרחיבו את מעגל המשתתפים.</span></p>
       </div>}
       <Btn kind="primary" onClick={() => setOpen(true)} className="shrink-0">שיתוף</Btn>
     </section>

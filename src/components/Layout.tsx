@@ -13,12 +13,12 @@ import { useSupportUnread } from "../lib/supportUnread";
 import ExitPollClock from "./ExitPollClock";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
-/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקר האתר · אישי. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
+/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקרים · אישי. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/guess", label: "הכנסת שלי", icon: "guess" },
   { to: "more", label: "עוד", icon: "more" },
-  { to: "/community", label: "סקר האתר", icon: "bars" },
+  { to: "/polls", label: "סקרים", icon: "bars" },
   { to: "/support", label: "אישי", icon: "user" },
 ];
 /** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
@@ -246,7 +246,7 @@ export default function Layout() {
         <DesktopNav unread={unread} />
       </header>
       <AccessCard />
-      <main id="main" tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
+      <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <MobileTabs unread={unread} />

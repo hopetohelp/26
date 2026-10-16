@@ -1,5 +1,6 @@
+import { useSearchParams } from "react-router-dom";
+import Voters from "./Voters";
 import PersonalBlocs from "../components/PersonalBlocs";
-import { useState } from "react";
 import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, Split } from "../components/ui";
 import { Chips } from "../components/Choice";
@@ -73,7 +74,9 @@ function Story({ e, a }: { e: Election; a: ReturnType<typeof analysis> }) {
 }
 
 export default function Results() {
-  const [id, setId] = useState(results[results.length - 1].id);
+  const [params, setParams] = useSearchParams();
+  const summary = params.get("view") === "summary" || params.get("tab") === "voters";
+  const id = results.some(e => e.id === params.get("election")) ? params.get("election")! : results[results.length - 1].id;
   const e = results.find((x) => x.id === id)!;
   const short = (letters: string) => shortOf(e, letters);
   const a = ALL.find((x) => x.e.id === id)!.a;
@@ -85,25 +88,26 @@ export default function Results() {
   return (
     <>
 
-      <Split title="תוצאות אמת" lead={`התוצאות הרשמיות של ועדת הבחירות המרכזית בכל ${results.length} מערכות הבחירות מאז 2019, וחלוקת המנדטים כפי שהחוק קובע. לכל מערכת אותו פירוט: מי עבר, כמה קולות נשרפו, ומה הזיזו הסכמי העודפים. המנוע של האתר משחזר כל אחת מהן בדיוק.`} primary={<>
+      <Split title={summary ? "מה השתנה בין מערכות הבחירות?" : "איך נראתה הכנסת שנבחרה?"} lead="תוצאות רשמיות, שיעור ההצבעה וחלוקת המנדטים בכל מערכת. בחרו שנה, או סיכום להשוואה בין המערכות." primary={<>
       <Card>
         <Chips
           label="מערכת בחירות"
-          value={id}
-          onChange={setId}
-          options={[...results].reverse().map((x) => ({ id: x.id, label: <>{yearLabel(x)}<span className="sr-only"> — הכנסת ה-{x.knesset}</span></> }))}
+          value={summary ? "summary" : id}
+          onChange={(nextId) => { const next = new URLSearchParams(params); next.delete("tab"); if (nextId === "summary") next.set("view", "summary"); else { next.set("election", nextId); next.delete("view"); } setParams(next, { replace: true }); }}
+          options={[...[...results].reverse().map((x) => ({ id: x.id, label: <>{yearLabel(x)}<span className="sr-only"> — הכנסת ה-{x.knesset}</span></> })), { id: "summary", label: "סיכום" }]}
         />
+        {!summary && <>
         <h2 className="text-xl font-display leading-tight mt-4">
           הכנסת ה-{e.knesset} · {e.label}
         </h2>
-        <dl className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">
+        <dl className="c-result-stats grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">
           <div><dt className="text-ink-soft">בעלי זכות בחירה</dt><dd className="text-xl font-bold tabular-nums">{num(e.eligible)}</dd></div>
           <div><dt className="text-ink-soft">הצביעו</dt><dd className="text-xl font-bold tabular-nums">{num(e.voted)} <span className="text-sm font-normal">({pct((e.voted / e.eligible) * 100)})</span></dd></div>
           <div><dt className="text-ink-soft">קולות כשרים</dt><dd className="text-xl font-bold tabular-nums">{num(e.valid)}</dd></div>
           <div><dt className="text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-xl font-bold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
-        </dl>
+        </dl></>}
       </Card>
-      </>} secondary={<>
+      </>} secondary={summary ? <><ElectionSummary /><Voters embedded /></> : <>
       <PersonalBlocs title={`הגושים שלי בתוצאות ${e.label}`} source={`תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`} asOf="התוצאות הסופיות" datasets={[e.knesset === 25
         ? { families: k25Families(), values: Object.fromEntries(e.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`, asOf: "התוצאות הסופיות" }
         : { historical: true, mapping: {}, values: Object.fromEntries(e.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${e.label}; התאמות מובהקות בלבד`, asOf: "התוצאות הסופיות" }]} />
@@ -204,6 +208,12 @@ export default function Results() {
         </Explained>
       </Card>
 
+      </>} />
+    </>
+  );
+}
+
+function ElectionSummary() { return <>
       <Fold title="פרטי החישוב בכל מערכת">
         <ul className="text-sm space-y-1">{[...ALL].reverse().map(({ e: x, a: ax }) => <li key={x.id}>{x.label}: אחוז החסימה {num(ax.withAll.thresholdVotes)} קולות; מודד {num(ax.withAll.quota)} קולות למנדט שלם.</li>)}</ul>
       </Fold>
@@ -223,7 +233,7 @@ export default function Results() {
             </thead>
             <tbody>
               {[...ALL].reverse().map(({ e: x, a: ax }) => (
-                <tr key={x.id} className={`border-b border-paper-line/60 ${x.id === id ? "bg-accent-soft" : ""}`}>
+                <tr key={x.id} className={`border-b border-paper-line/60 `}>
                   <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
                     {x.label} <span className="text-ink-soft font-normal">(ה-{x.knesset})</span>
                   </th>
@@ -243,7 +253,5 @@ export default function Results() {
           "נשרפו" = קולות כשרים לרשימות שלא עברו את אחוז החסימה. "מה הזיזו ההסכמים" = כל ההסכמים יחד לעומת אף הסכם, על אותם קולות.
         </Note>
       </Card>
-      </>} />
-    </>
-  );
-}
+
+</>; }

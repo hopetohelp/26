@@ -12,7 +12,6 @@ import Today from "./pages/Today";
 import Polls from "./pages/Polls";
 import Trends from "./pages/Trends";
 import Results from "./pages/Results";
-import Voters from "./pages/Voters";
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 import About from "./pages/About";
 import { PageTitle } from "./components/ui";
@@ -117,14 +116,13 @@ createRoot(document.getElementById("root")!).render(
           <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense>} />
-          <Route path="community" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Guess community /></Suspense>} />
+          <Route path="community" element={<LegacyCommunity />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"
-            element={<Tabbed label="בחירות קודמות" tabs={[
+            element={<Tabbed label="בחירות קודמות" aliases={{ voters: "results" }} tabs={[
               { id: "results", label: "תוצאות אמת", element: <Results /> },
               { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
-              { id: "voters", label: "מצביעים", element: <Voters /> },
             ]} />}
           />
           <Route
@@ -141,7 +139,6 @@ createRoot(document.getElementById("root")!).render(
               ]}
             />}
           />
-          <Route path="scenarios" element={<Moved to="/today" tab="scenarios" />} />
           <Route path="forecast" element={<Moved to="/today" tab="scenarios" />} />
           <Route path="trends" element={<Moved to="/polls" tab="trends" />} />
           <Route path="results" element={<Moved to="/past" tab="results" />} />
@@ -177,11 +174,14 @@ function LegacyCalculator() {
 
 /** קישורים ישנים לסטטיסטיקות נשארים תקינים, לרבות פרמטרי הקישור האישי. */
 function LegacyGuess() {
+  return <Guess />;
+}
+
+function LegacyCommunity() {
   const [params] = useCalculatorParams();
-  if (params.get("view") !== "statistics") return <Guess />;
   const next = new URLSearchParams(params);
-  next.delete("view");
-  return <CalculatorRedirect replace to={`/community${next.size ? `?${next}` : ""}`} />;
+  next.set("view", "statistics");
+  return <CalculatorRedirect replace to={`/guess?${next}`} />;
 }
 
 function LegacyToday() {

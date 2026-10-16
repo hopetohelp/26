@@ -1,11 +1,14 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class Boundary extends Component<{ children: ReactNode; resetKey: string }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("שגיאה בטעינת מסך", error, info.componentStack);
+  }
+  componentDidUpdate(previous: Readonly<{ children: ReactNode; resetKey: string }>) {
+    if (this.state.failed && previous.resetKey !== this.props.resetKey) this.setState({ failed: false });
   }
   render() {
     if (!this.state.failed) return this.props.children;
@@ -23,5 +26,5 @@ class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
 /** כשל במסך משאיר את הניווט זמין; מעבר למסך או ללשונית אחרת מאפשר ניסיון חדש. */
 export default function PageErrorBoundary({ children }: { children: ReactNode }) {
   const { pathname, search, hash } = useLocation();
-  return <Boundary key={pathname + search + hash}>{children}</Boundary>;
+  return <Boundary key={pathname} resetKey={search + hash}>{children}</Boundary>;
 }
