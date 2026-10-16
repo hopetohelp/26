@@ -1828,5 +1828,35 @@
     "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233841-0/"
    }
   }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-16",
+  "id": "2026-10-16-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "המקור הראשוני (מעריב) טרם נמצא. מנדטי 13 הרשימות, סך 120 והגושים (51/51/14/4) הושוו בין דיווחי וואלה, כיפה וסרוגים וזהים; האחוזים מתחת לחסימה מסרוגים בלבד. המכון (לזר מחקרים) לפי סרוגים; ימי השדה והמדגם לא נמסרו — לא אומת.",
+  "source": "https://www.walla.co.il/news/politics/383957641",
+  "sourceDetails": {
+   "published": "2026-10-16T07:56:00+03:00",
+   "sample_respondents": null
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233861-0/"
+   }
+  }
  }
 ]
