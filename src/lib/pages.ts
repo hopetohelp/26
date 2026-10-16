@@ -10,9 +10,9 @@ export interface PageInfo {
 export const PAGES: PageInfo[] = [
   { to: "/guess", label: "הכנסת שלי" },
   { to: "/community", label: "סקר האתר" },
-  { to: "/today", label: "המצב והתרחישים", short: "המצב היום" },
-  { to: "/polls", label: "סקרים ומגמות", short: "סקרים" },
+  { to: "/polls", label: "סקרים" },
   { to: "/past", label: "בחירות קודמות" },
   { to: "/changes", label: "מה השתנה מהבחירות האחרונות", short: "מה השתנה" },
+  { to: "/scenarios", label: "תרחישים" },
   { to: "/method", label: "שיטה, מקורות ואודות", short: "שיטה ואודות" },
 ];

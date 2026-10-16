@@ -4,7 +4,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { Link } from "react-router-dom";
 import CandleTrend from "../components/CandleTrend";
 import type { Series } from "../components/charts";
-import { Ranking } from "../components/homeCharts";
+import ScenarioExplorer from "../components/ScenarioExplorer";
 import { HOME } from "../lib/homeData";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
@@ -139,7 +139,7 @@ export default function Scenarios() {
 
   return (
     <>
-      <Split title="תרחישים" lead={`ממוצע המודל היום, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(MODEL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(MODEL_AVERAGE.asOf) }))]} />} secondary={<>
+      <Split title="אותו ממוצע. כמה תוצאות אפשריות?" lead={`ממוצע המודל היום, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(MODEL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(MODEL_AVERAGE.asOf) }))]} />} secondary={<>
 
       <Card title="לכל רשימה">
         <Explained
@@ -152,7 +152,7 @@ export default function Scenarios() {
           <ChartWithTable
             summary={<ThresholdRisk />}
             chart={
-              <Ranking home={HOME} scenarioRisk />
+              <ScenarioExplorer />
             }
             table={
               <table className="text-sm w-full">
@@ -196,6 +196,7 @@ export default function Scenarios() {
       </Card>
 
 
+      <details className="mt-8 border-t border-paper-line"><summary className="py-4 font-display text-xl cursor-pointer">להעמקה: גושים, הסכמי עודפים ובדיקות עבר</summary>
       <div className={`grid ${splitCls("md:grid-cols-2")} gap-5 [&>*]:min-w-0`}>
         <Card title="קולות שלא הופכים למנדטים">
           <Explained kind="תרחיש" source={SOURCE} asOf={asOfText} assumption="רשימה שלא עוברת את הסף מקבלת אפס מנדטים, וקולותיה אינם נספרים בחלוקה." methodAnchor="model">
@@ -412,7 +413,7 @@ export default function Scenarios() {
           <li>חמש מערכות אינן מספיקות כדי להוכיח שהמספרים "מכוילים". לכן האתר מדבר על "שיעור התרחישים", ולא על סיכוי.</li>
         </ul>
       </Card>
-      </>} />
+      </details></>} />
     </>
   );
 }

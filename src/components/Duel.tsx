@@ -39,7 +39,7 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
         methodAnchor={method}
       >
         {/* הרצועה מוסתרת מקורא מסך (הכותרת למעלה אומרת הכול), חוץ מאייקוני המידע שליד המספרים */}
-        <div ref={seenRef} className={`relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in ${whenVisible(seen)}`}>
+        <div ref={seenRef} className={`c-duel-grid relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in ${whenVisible(seen)}`}>
           {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בעיגול בקצה החיצוני, קוטרו חצי מגובה הרצועה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
           <PartyPhoto id={a.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
@@ -67,7 +67,7 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
 
 function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: boolean; align: "start" | "end" }) {
   return (
-    <div className={`py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
+    <div className={`c-duel-side py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
       {/* צר: תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד (ימין לצד הימני, שמאל לשמאלי); ברוחב מ-1024px התמונה ברצועה כולה */}
       <span aria-hidden="true" className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p aria-hidden="true" className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>

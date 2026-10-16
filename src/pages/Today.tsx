@@ -1,7 +1,7 @@
 import SourcePicker from "../components/SourcePicker";
 import { useSourcePreference } from "../lib/sourcePreference";
-import { selectedPolls, type Selection } from "../lib/dataResolver";
-import { POLL_WINDOW_DAYS } from "../lib/dataCatalog";
+import { selectedPolls, resolveDataset, type Selection } from "../lib/dataResolver";
+import { DATA_PRODUCTS, POLL_WINDOW_DAYS } from "../lib/dataCatalog";
 import { useState } from "react";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
@@ -9,26 +9,26 @@ import Select from "../components/Select";
 import { Segmented } from "../components/Choice";
 import { BarSlots } from "../components/ChartLegend";
 import { AllParties, PartyByPollster, PollsterByParty, PollsterGrid } from "../components/latestCharts";
-import { Note, Split } from "../components/ui";
+import { ChartWithTable, Note, Split } from "../components/ui";
 import { lists2026, listName, passesInMost, pollsterLabel, seatsIn, summarize } from "../lib/data";
-import { date } from "../lib/format";
+import { date, seatsFmt } from "../lib/format";
 import { MODEL_AVERAGE } from "../lib/sources";
 
 const WINDOW_DAYS = POLL_WINDOW_DAYS;
 const ALL = "all";
 type View = "party" | "pollster";
 
-/**
- * המצב היום (הכרעת בעלים 11.10.2026): רק הסקר האחרון של כל מכון ב-14 הימים האחרונים, בלי מודל ובלי תרחישים
- * (אלה בלשונית "תרחישים"; כל הסקרים — ב"סקרים ומגמות").
- * מתג: לפי מפלגה / לפי מכון, ורשימת בחירה: כולן או אחת. מתחת — הגושים האישיים בכל אחד מהסקרים.
- */
+/** סיכום מהספק המשותף, ומתחתיו השוואת הפרסומים המקוריים. */
 export default function Today() {
   const asOf = MODEL_AVERAGE.asOf;
   const preference = useSourcePreference("today");
   const [temporary, setTemporary] = useState<Selection | null>(null);
   const selection = temporary ?? preference.selection;
   const latest = selectedPolls(selection);
+  const dataset = resolveDataset(selection, "today");
+  const def = DATA_PRODUCTS[selection.product];
+  const selectedRows = lists2026.map(l => ({ id: l.id, value: dataset.seats[l.id] })).filter(r => r.value !== undefined).sort((a, b) => b.value - a.value);
+  const maximum = Math.max(1, ...selectedRows.map(r => r.value));
   const ids = lists2026.map((l) => l.id);
   const summary = summarize(latest, ids);
   const above = summary.filter(passesInMost);
@@ -40,15 +40,21 @@ export default function Today() {
   const [legendRow, setLegendRow] = useState<HTMLElement | null>(null);
   const [legendPanel, setLegendPanel] = useState<HTMLElement | null>(null);
 
-  const lead = `${latest.length} מכונים, הסקר האחרון של כל אחד ב-${WINDOW_DAYS} הימים שעד ${date(asOf)}. כל מכון נספר פעם אחת.`;
+  const lead = `${latest.length} סדרות מכון–מזמין, הפרסום האחרון של כל סדרה ב-${WINDOW_DAYS} הימים שעד ${date(asOf)}.`;
   return (
     <BarSlots.Provider value={{ row: legendRow, panel: legendPanel }}>
     <Split
-      title="המצב היום"
+      title="מה אומרים הסקרים היום?"
       lead={lead}
       primary={
-        <div className="mb-8">
+        <div className="mb-8 c-poll-controls"><section className="c-average-explainer" aria-label="שלושת הממוצעים"><h2 className="text-xl font-display">שלוש דרכים לקרוא את הסקרים</h2><div className="c-average-options">{(["polls.mean", "polls.adjusted", "model.mean"] as const).map(id => <button key={id} type="button" aria-pressed={selection.product === id} onClick={() => setTemporary({ product: id })}><strong>{DATA_PRODUCTS[id].name}</strong><span>{DATA_PRODUCTS[id].explain}</span></button>)}</div><p className="text-sm text-ink-soft">{def.assumption}. <a href={`#/method#${def.method}`}>הסבר מלא</a></p></section>
         <SourcePicker screen="today" selection={selection} onChange={setTemporary} notice={preference.notice} />
+
+        </div>
+      }
+      secondary={
+        <>
+          <section aria-label="הנתון הנבחר" className="mb-8"><h2 className="font-display text-xl mb-4">{def.name}</h2><Explained kind={selection.product === "model.mean" ? "תרחיש" : selection.product === "polls.adjusted" ? "חישוב לפי החוק" : "סיכום סקרים"} source={def.source} asOf={date(asOf)} assumption={def.assumption} methodAnchor={def.method}><ChartWithTable chart={<div className="c-poll-bars">{selectedRows.map(r => <div key={r.id}><span>{listName(r.id)}</span><i style={{ width: `${r.value / maximum * 100}%` }} /><b>{seatsFmt(r.value)}</b></div>)}</div>} table={<table className="w-full text-sm"><caption>{def.name}</caption><thead><tr><th>רשימה</th><th>מנדטים</th></tr></thead><tbody>{selectedRows.map(r => <tr key={r.id}><th>{listName(r.id)}</th><td>{seatsFmt(r.value)}</td></tr>)}</tbody></table>} /></Explained></section><details className="c-poll-comparison" open><summary className="font-display text-xl py-3 cursor-pointer">הפרסומים המקוריים — השוואה בין המכונים</summary><section aria-label="הסקרים האחרונים">
         <div className="flex items-center gap-2">
           <Segmented
             label="הצגה"
@@ -67,11 +73,6 @@ export default function Today() {
           <div ref={setLegendRow} className="ms-auto shrink-0 flex items-center" />
         </div>
         <div ref={setLegendPanel} />
-        </div>
-      }
-      secondary={
-        <>
-          <section aria-label="הסקרים האחרונים">
             <Explained
               bare
               kind="סיכום סקרים"
@@ -96,7 +97,7 @@ export default function Today() {
             )}
           </section>
 
-          <section aria-label="הגושים שלי בכל סקר" className="mt-10">
+          </details><section aria-label="הגושים שלי בכל סקר" className="mt-10">
             <PersonalBlocs
               title="הגושים שלי בכל אחד מהסקרים"
               source="הסקר האחרון של כל מכון, כל מקור בנפרד"
