@@ -23,7 +23,7 @@ export default function Mine({ session, seats, onStatistics }: { session: Return
   // ההצבעה במגירת פרטים נוספים; קישור ישן פותח אותה וגולל אליה.
   const [voteOpen, setVoteOpen] = useState(requested === "vote");
   const voteCard = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (requested === "vote") voteCard.current?.scrollIntoView({ block: "start" }); }, [requested]);
+  useEffect(() => { if (requested === "vote") { setVoteOpen(true); voteCard.current?.scrollIntoView({ block: "start" }); } }, [requested]);
   const sec: Sec = SECTIONS.some(s => s.id === requested) ? requested as Sec : "seats";
   // הלשונית "האחוזים" אוחדה עם "המפלגות" (מתג מנדטים | אחוזים, הכרעת בעלים 10.10.2026): קישור ישן נפתח במצב אחוזים
   useEffect(() => {

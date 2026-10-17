@@ -74,6 +74,10 @@ export default function Seats({
   // מתג מנדטים | אחוזים (הכרעת בעלים 10.10.2026): קובע מה מקלידים; הערך השני מוצג קטן לידו
   const [params] = useSearchParams();
   const [view, setView] = useState<"seats" | "pct">(() => (params.get("unit") === "pct" || p?.mode === "pct" ? "pct" : "seats"));
+  const requestedUnit = params.get("unit");
+  useEffect(() => {
+    if (requestedUnit === "pct" || requestedUnit === "seats") setView(requestedUnit);
+  }, [requestedUnit]);
   const pctNow = useMemo(() => (p ? pctOf(p) : null), [p]);
 
   /** נקודת פתיחה שמכבדת יעד שכבר נכתב לגוש (הכרעת בעלים 8.10.2026): בכל שלוש האפשרויות, ההשלמה מתאימה את הגושים ליעד */
