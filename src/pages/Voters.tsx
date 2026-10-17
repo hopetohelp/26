@@ -4,7 +4,7 @@ import { Badge, Card, ChartWithTable, Note, PageTitle, Columns } from "../compon
 import { registry, results } from "../lib/data";
 import { num, pct } from "../lib/format";
 
-export default function Voters() {
+export default function Voters({ embedded = false }: { embedded?: boolean }) {
   const [turnout, setTurnout] = useState(70);
   const [wastedPct, setWastedPct] = useState(5);
   const series = registry.series;
@@ -20,9 +20,9 @@ export default function Voters() {
     <>
       
       <Columns>
-      <PageTitle inColumns lead="כמה בעלי זכות בחירה היו בכל מערכת, כמה הצביעו, וכמה קולות עלה לעבור את אחוז החסימה — ומה זה אומר על 2026.">
+      {!embedded && <PageTitle inColumns lead="כמה בעלי זכות בחירה היו בכל מערכת, כמה הצביעו, וכמה קולות עלה לעבור את אחוז החסימה — ומה זה אומר על 2026.">
         מצביעים — אז והיום
-      </PageTitle>
+      </PageTitle>}
 
       <Card title="בעלי זכות בחירה ושיעור ההצבעה">
         <Explained

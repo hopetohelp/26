@@ -55,7 +55,7 @@ const RING = "ring-[1.5px] ring-inset";
 export function Segmented<T extends string>({ value, onChange, options, label, disabled, className = "", size = "md", tight = false }: ChoiceProps<T> & { size?: "md" | "sm"; tight?: boolean }) {
   const { tabbable, onKeyDown } = useRadioKeys(options, value, onChange, disabled);
   return (
-    <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={`grid grid-flow-col ${tight ? "auto-cols-auto" : "auto-cols-fr"} gap-[3px] p-[3px] rounded-theme bg-paper ${RING} ring-ink/[.35] ${className}`}>
+    <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={`c-segmented grid grid-flow-col ${tight ? "auto-cols-auto" : "auto-cols-fr"} gap-[3px] p-[3px] rounded-theme bg-paper ${RING} ring-ink/[.35] ${className}`}>
       {options.map((o) => {
         const on = o.id === value;
         return (
@@ -115,7 +115,7 @@ export function Chips<T extends string>({ value, onChange, options, label, disab
       onKeyDown={onKeyDown}
       onScroll={(e) => setMask(edgeMask(e.currentTarget))}
       style={mask}
-      className={`flex gap-2 ${wrap ? "flex-wrap" : "relative overflow-x-auto p-1 -m-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"} ${className}`}
+      className={`c-chips flex gap-2 ${wrap ? "flex-wrap" : "relative overflow-x-auto p-1 -m-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"} ${className}`}
     >
       {options.map((o) => {
         const on = o.id === value;

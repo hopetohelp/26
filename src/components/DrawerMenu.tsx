@@ -52,7 +52,7 @@ export function DrawerMenu({ title, items, selected, onSelect, after, label, cla
   }, []);
   return (
     // ‎-mt-6: מבטלים את הריווח העליון של <main>, כדי שהקו בין הטורים יתחיל מתחת לסרגל (בתחתית אין ריווח במסך הזה)
-    <div ref={root} style={height === null ? undefined : { height }} className={`-mt-6 grid grid-cols-[max(24rem,calc(100%/3))_minmax(0,1fr)] ${className}`}>
+    <div ref={root} style={height === null ? undefined : { height }} className={`c-drawer-menu -mt-6 grid grid-cols-[max(24rem,calc(100%/3))_minmax(0,1fr)] ${className}`}>
       <nav aria-label="תפריט" className="min-w-0 min-h-0 overflow-y-auto pt-6 pe-6 border-e border-paper-line">
         {title}
         <ul className="border-t border-paper-line">

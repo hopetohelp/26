@@ -8,7 +8,7 @@ import ChartLegend, { BAR, BarSlots, type LegendEntry } from "./ChartLegend";
 /** inColumns: בתוך `Columns` — מהמחשב הכותרת לקורא מסך בלבד (היא כבר בלשונית הפעילה בסרגל), וההסבר בראש הטור הימני */
 export function PageTitle({ children, lead, inColumns = false }: { children: ReactNode; lead?: ReactNode; inColumns?: boolean }) {
   return (
-    <div className="mb-6">
+    <div className="c-page-title mb-6">
       <h1 className={`font-display text-3xl md:text-5xl leading-[1.05] ${inColumns ? splitCls("lg:sr-only") : ""}`}>{children}</h1>
       {lead && <p className="mt-3 text-ink-soft max-w-3xl leading-relaxed">{lead}</p>}
     </div>
@@ -22,7 +22,7 @@ export function PageTitle({ children, lead, inColumns = false }: { children: Rea
 /** `id` (עוגן) ו-`tab`: ליד הכותרת כפתור "העתקת קישור לקטע" (`SectionLink`) — רק כשהכותרת טקסט */
 export function Card({ title, children, className = "", boxed = false, id, tab }: { title?: ReactNode; children: ReactNode; className?: string; boxed?: boolean; id?: string; tab?: string }) {
   return (
-    <section id={id} className={`${id ? "scroll-mt-32 " : ""}${boxed ? "bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
+    <section id={id} data-boxed={boxed || undefined} className={`c-surface ${id ? "scroll-mt-32 " : ""}${boxed ? "bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme p-4 md:p-5 mb-5" : "border-t border-paper-line pt-4 mt-8 first:mt-0"} ${className}`}>
       {title && <h2 className="text-xl font-display leading-tight mb-3">{title}{id && typeof title === "string" && <> <SectionLink id={id} tab={tab} label={title} /></>}</h2>}
       {children}
     </section>
@@ -91,7 +91,7 @@ export function Badge({ tone = "neutral", children }: { tone?: "neutral" | "ok" 
 /** שורת קיפול: קווים עליון ותחתון (בלי קופסה), כותרת 16px. קיפולים רצופים חולקים קו אחד. */
 export function Fold({ title, children, open = false }: { title: ReactNode; children: ReactNode; open?: boolean }) {
   return (
-    <details open={open} className="group border-y border-paper-line mt-8 [&+&]:mt-0 [&+&]:border-t-0 [&_summary::-webkit-details-marker]:hidden">
+    <details open={open} className="c-fold group border-y border-paper-line mt-8 [&+&]:mt-0 [&+&]:border-t-0 [&_summary::-webkit-details-marker]:hidden">
       <summary className="cursor-pointer list-none flex items-center justify-between gap-3 py-3 min-h-[56px]">
         <h2 className="text-base font-bold leading-tight">{title}</h2>
         <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
@@ -168,9 +168,9 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
         data-split={split || undefined}
         style={split ? { height: `calc(100dvh - ${state.top}px)` } : undefined}
         // ‎-mt-6 -mb-24: מבטלים את הריווח של <main> (py-6 md:pb-24 ב-Layout), כדי שהטורים והקו ימלאו את כל הגובה בלי גלילת עמוד
-        className={split ? "-mt-6 -mb-24 grid grid-cols-[minmax(22rem,1fr)_2fr] [&>*]:min-w-0" : secondaryFirst ? "flex flex-col [&>*:last-child]:order-first [&>*:last-child]:mb-8" : ""}
+        className={split ? "c-workspace -mt-6 -mb-24 grid grid-cols-[minmax(22rem,1fr)_2fr] [&>*]:min-w-0" : secondaryFirst ? "c-workspace flex flex-col [&>*:last-child]:order-first [&>*:last-child]:mb-8" : "c-workspace"}
       >
-        <div ref={prim} className={split ? "relative overflow-hidden pt-6 pe-6 border-e border-paper-line" : ""}>
+        <div ref={prim} className={split ? "c-workspace-controls relative overflow-hidden pt-6 pe-6 border-e border-paper-line" : "c-workspace-controls"}>
           <div>
             {split && tabs}
             {hasHead && split && lead && <p className="text-ink-soft leading-relaxed mb-5">{lead}</p>}
@@ -178,7 +178,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
           </div>
         </div>
         {/* pb-24: הכפתור הצף "לבנות את הכנסת שלי" לא מסתיר את סוף הטור */}
-        <div className={split ? "relative overflow-y-auto pt-6 ps-6 pb-24" : ""}>{secondary}</div>
+        <div className={split ? "c-workspace-result relative overflow-y-auto pt-6 ps-6 pb-24" : "c-workspace-result"}>{secondary}</div>
       </div>
     </SplitOn.Provider>
   );

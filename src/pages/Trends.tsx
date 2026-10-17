@@ -94,17 +94,17 @@ export default function Trends() {
   return (
     <>
       <Split
-        title="מגמות"
-        lead="ממוצע מתגלגל של המנדטים בסקרים שפורסמו. בקו: בכל נקודה הממוצע של כל הסקרים מהחלון שקדם לה, ובסופו נר של הנמוך והגבוה. בנרות: נר לכל חלון."
+        title="איך השתנו הסקרים לאורך הזמן?"
+        lead="בחרו תקופה ורשימות להשוואה. כל נקודה מסכמת את הסקר האחרון של כל מכון ומזמין ב-14 הימים שקדמו לה."
         primary={
           <Card>
-            <div className="space-y-4">
+            <div className="c-trend-controls space-y-4">
               <div>
                 <div id="trend-period" className="text-sm font-bold mb-1.5">תקופה</div>
                 <Segmented label="תקופה" value={period} onChange={setPeriod} options={PERIODS.map((p) => ({ id: p.id, label: p.label }))} />
               </div>
               <SourcePicker screen="trends" selection={selection} onChange={setTemporary} notice={preference.notice} />
-              <fieldset>
+              <details className="c-trend-parties"><summary>בחירת רשימות להשוואה · {ids.length} נבחרו</summary><fieldset>
                 <legend className="text-sm font-bold mb-1.5">רשימות ({ids.length})</legend>
                 <div className="flex flex-wrap gap-1.5 mb-2.5" role="group" aria-label="קיצורי בחירה">
                   {PRESETS.map((p) => (
@@ -138,7 +138,7 @@ export default function Trends() {
                     );
                   })}
                 </div>
-              </fieldset>
+              </fieldset></details>
             </div>
           </Card>
         }

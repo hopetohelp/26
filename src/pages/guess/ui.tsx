@@ -33,12 +33,12 @@ export function Btn({
 }) {
   const cls =
     kind === "primary"
-      ? "bg-ink text-paper-card border-ink"
+      ? "bg-signal text-signal-ink border-signal"
       : kind === "danger"
         ? "bg-paper-card text-warn border-warn"
         : "bg-paper-card text-ink border-paper-line hover:border-ink-faint";
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={`min-h-[44px] px-4 rounded-full border-2 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed ${cls} ${className}`} {...rest}>
+    <button type={type} onClick={onClick} disabled={disabled} className={`c-button min-h-[44px] px-4 rounded-full border text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed ${cls} ${className}`} {...rest}>
       {children}
     </button>
   );
@@ -70,7 +70,7 @@ export function ActionBar({ children, above, note }: { children: ReactNode; abov
       <div aria-hidden="true" className={note ? "h-40" : "h-24"} />
       <div className="fixed z-20 left-4 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 max-w-[calc(100%-2rem)] md:max-w-lg flex flex-col items-end gap-2">
         {above}
-        <div role="group" aria-label="פעולות" className="bg-paper-card border-2 border-ink rounded-theme shadow-lg px-2 py-2 flex items-center gap-1.5 flex-wrap justify-end [&_button]:px-3 [&_button]:whitespace-nowrap">
+        <div role="group" aria-label="פעולות" className="c-action-bar bg-paper-card border border-paper-line rounded-theme shadow-lg px-2 py-2 flex items-center gap-1.5 flex-wrap justify-end [&_button]:px-3 [&_button]:whitespace-nowrap">
           {children}
           {note && <p className="basis-full min-w-0 text-xs text-ink leading-relaxed px-1 pt-1 border-t border-paper-line [overflow-wrap:anywhere]">{note}</p>}
         </div>

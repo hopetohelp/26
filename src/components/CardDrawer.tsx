@@ -29,7 +29,7 @@ export default function CardDrawer({ title, actions, dot, badge, pendingTag, see
   };
   const tag = !!pendingTag && !expanded && !seen;
   return (
-    <section aria-label={title} className={`bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme px-4 md:px-5 ${className}`}>
+    <section aria-label={title} className={`c-card-drawer bg-paper-card [--mk-bg:var(--card)] border border-paper-line rounded-theme px-4 md:px-5 ${className}`}>
       <div className="flex items-center gap-2 min-h-[56px]">
         <h2 className="flex-1 min-w-0 text-base font-bold leading-tight">
           <button type="button" aria-expanded={expanded} onClick={toggle} className="w-full min-h-[56px] text-start font-bold flex items-center gap-2">

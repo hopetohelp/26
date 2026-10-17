@@ -1,3 +1,4 @@
+import { PageTitle } from "../components/ui";
 import { FEEDBACK_TOPICS, conversationTopic, topicLabel } from "../lib/feedbackTopics";
 import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -204,7 +205,7 @@ export default function Admin() {
       {claim === "bad" && "הקישור אינו תקף: הוא כבר נוצל, פג תוקפו, או שהכניסה לחשבון פקעה."}
     </Notice>
   );
-  if (!credential || (claim === "signin" && !key)) return <div className="space-y-3">{claimNotice}{!credential && <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>}</div>;
+  if (!credential || (claim === "signin" && !key)) return <div className="space-y-3"><PageTitle>ניהול</PageTitle>{claimNotice}{!credential && <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>}</div>;
   // "היום" לפי יום UTC, כמו בשרת: אם עוד לא נספרה כניסה היום — אפסים, ולא נתוני אתמול
   const todayKey = new Date().toISOString().slice(0, 10);
   const today = data?.days.find((d) => d.day === todayKey);
@@ -214,7 +215,7 @@ export default function Admin() {
     <div className="space-y-6">
       <meta name="robots" content="noindex" />
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h1 className="text-3xl font-display leading-tight">ניהול</h1>
+        <PageTitle>ניהול</PageTitle>
         <Btn onClick={load}>רענון</Btn>
       </div>
       {claimNotice}

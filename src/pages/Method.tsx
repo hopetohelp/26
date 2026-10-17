@@ -25,6 +25,7 @@ function useAnchor() {
     const el = document.getElementById(decodeURIComponent(hash.slice(1)));
     if (!el) return;
     for (let p = el.parentElement; p; p = p.parentElement) if (p instanceof HTMLDetailsElement) p.open = true;
+    if (el.matches(".c-method-entry")) { const detail = el.querySelector("details"); if (detail) detail.open = true; }
     el.scrollIntoView();
     // כניסה ישירה מקישור חיצוני (העוזר): אחרי שהעמוד סיים להיבנות — שוב, כדי שהערך יהיה בראש המסך
     const t = window.setTimeout(() => el.scrollIntoView(), 300);
@@ -316,18 +317,18 @@ export const DICTIONARY_IDS = DICTIONARY.map((e) => e.id);
 
 function Entry({ e }: { e: DictEntry }) {
   return (
-    <article id={e.id} className="border-t border-paper-line py-4 scroll-mt-32">
-      <h3 className="text-xl font-display leading-tight">{e.title} <SectionLink id={e.id} label={e.title} /></h3>
-      <p className="text-sm text-ink-soft mb-2">מופיע ב: {e.where}</p>
-      <dl className="grid grid-cols-[minmax(5rem,auto)_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
-        <dt className="font-semibold text-ink-soft">נתונים לחישוב</dt><dd>{e.source}</dd>
-        <dt className="font-semibold text-ink-soft">דרך החישוב</dt><dd>{e.assumption}</dd>
-        <dt className="font-semibold text-ink-soft">תוצאה עדכנית</dt><dd>{e.id === "current" ? <DataTable selection={{ product: "polls.mean" }} /> : e.id === "model" ? <DataTable selection={{ product: "model.mean" }} /> : "בפירוט המלא ובמסך המקושר"}</dd>
-        <dt className="font-semibold text-ink-soft">תאריך עדכון</dt><dd>{date(meta.dataAsOf)}</dd>
-      </dl>
-      <details className="mt-3">
-        <summary className="cursor-pointer min-h-[44px] inline-flex items-center text-sm font-semibold text-accent underline underline-offset-2">פירוט מלא</summary>
-        <div className="text-sm space-y-2 pb-2">{e.detail}</div>
+    <article id={e.id} className="c-method-entry scroll-mt-32">
+      <h2 className="text-xl font-display leading-tight">{e.title} <SectionLink id={e.id} label={e.title} /></h2>
+      <p className="mt-2 text-sm leading-relaxed">{e.assumption}</p>
+      <details className="c-fold mt-3">
+        <summary className="cursor-pointer min-h-[44px] flex items-center text-sm font-semibold text-accent">נתונים, חישוב ופירוט מלא</summary>
+        <dl className="c-method-fields grid grid-cols-[minmax(5rem,auto)_1fr] gap-x-4 gap-y-3 text-sm leading-relaxed py-4">
+          <dt className="font-semibold text-ink-soft">נתונים לחישוב</dt><dd>{e.source}</dd>
+          <dt className="font-semibold text-ink-soft">תוצאה עדכנית</dt><dd>{e.id === "current" ? <DataTable selection={{ product: "polls.mean" }} /> : e.id === "model" ? <DataTable selection={{ product: "model.mean" }} /> : "בפירוט המלא ובמסך המקושר"}</dd>
+          <dt className="font-semibold text-ink-soft">תאריך עדכון</dt><dd>{date(meta.dataAsOf)}</dd>
+          <dt className="font-semibold text-ink-soft">מופיע ב</dt><dd>{e.where}</dd>
+        </dl>
+        <div className="text-sm space-y-2 pb-4">{e.detail}</div>
       </details>
     </article>
   );
@@ -339,6 +340,7 @@ export function MethodNumbers() {
   return (
     <>
       <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיע התאריך המעודכן.">מילון המספרים</PageTitle>
+      <nav className="c-method-index" aria-label="נושאים במילון">{DICTIONARY.map(e => <Link key={e.id} to={`#${e.id}`}>{e.title}</Link>)}</nav>
       {DICTIONARY.map((e) => (
         <Entry key={e.id} e={e} />
       ))}
@@ -391,7 +393,7 @@ function DataChecks() {
         לכל סקר שנבדק נרשם מצב נפרד לארבע קבוצות שדות: מנדטים, אחוזים, גודל המדגם ותאריכי העבודה בשטח. המצבים: <strong>תואם למקור</strong> (נבדק ונמצא תואם),
         <strong> תוקן לפי המקור</strong> (יש תיקון ביומן), <strong>סתירה פתוחה</strong> (שני מספרים שונים באותו סקר, ועדיין לא הוכרע), <strong>נבדק רק בבדיקת הסקר
         כולו</strong> (הסקר הושווה למקור, אך לא נרשם מה נבדק בשדה הזה) ו<strong>טרם נבדק</strong>. מצב &quot;תואם&quot; לגודל המדגם נקבע אוטומטית משוואת המספר הראשי
-        לפרטי האימות; לשאר השדות הוא נרשם רק כשנבדקו ידנית. מצב הסקר מוצג בכרטיס כל סקר ב<Link to="/polls" className="underline">ארכיון הסקרים</Link>.
+        לפרטי האימות; לשאר השדות הוא נרשם רק כשנבדקו ידנית. מצב הסקר מוצג בכרטיס כל סקר ב<Link to="/polls?tab=archive" className="underline">ארכיון הסקרים</Link>.
       </p>
       <p className="text-sm mt-2">
         סתירה אינה עוצרת קליטה של סקר, והאתר אינו מתקן אותה בעצמו: התיקון נעשה רק לפי המקור וברישום ביומן. בכל בנייה של הנתונים נבדקות גם סתירות בין השדה

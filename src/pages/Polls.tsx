@@ -71,6 +71,7 @@ export default function Polls() {
       </Card>
 
       </>} secondary={<>
+      {filtered.length === 0 && <p role="status" className="c-empty">אין סקרים בטווח שנבחר. <button type="button" className="underline min-h-11" onClick={() => { setWho(""); setFrom(""); setTo(""); setShown(PAGE); }}>איפוס המסננים</button></p>}
       <PersonalBlocs title="הגושים שלי בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={filtered.slice(0, shown).map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />
       <Card>
         <ul className="divide-y divide-paper-line">
@@ -78,13 +79,14 @@ export default function Polls() {
             const isOpen = open === p.id;
             const label = p.verification ? verificationLabel(p.verification.status) : null;
             return (
-              <li key={p.id} className="py-3 min-w-0">
+              <li key={p.id} className="c-archive-row py-3 min-w-0">
                 <button
                   type="button"
-                  className="w-full text-right flex flex-wrap gap-x-3 gap-y-1 items-baseline"
+                  className="w-full min-h-11 text-right flex flex-wrap gap-x-3 gap-y-1 items-center"
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? null : p.id)}
                 >
+                  <span aria-hidden="true" className="text-accent font-bold">{isOpen ? "−" : "+"}</span>
                   <span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span>
                   <span>{pollsterLabel(p)}</span>
                   {p.sample && <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>}
