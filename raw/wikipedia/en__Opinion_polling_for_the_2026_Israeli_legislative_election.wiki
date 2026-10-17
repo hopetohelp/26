@@ -21,7 +21,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | style="background:#FFCCFF" |Camil Fuchs, Midgam Project, Stat-Net<ref>{{Cite news |author1=[[Hila Korach]]|author2=[[Raviv Drucker]] |title=סקר חדשות 13: גוש נתניהו יורד ל-58 מנדטים, מרצ עוברת |url=https://13tv.co.il/item/news/politics/politics/new-survey-903379652/ |access-date=2 January 2023 |date=1 January 2023 |website=Channel 13 |language=he-IL}}</ref><ref>{{Cite news |author=Michael Shemesh |title=סקר כאן חדשות: עמדת פתיחה חלשה לסער |url=https://www.kan.org.il/content/kan-news/politic/722543/ |access-date=13 March 2024 |date=13 March 2024 |website=Israeli Public Broadcasting Corporation|language=he-IL}}</ref>
 |2022 election - 13 March 2024 
 |-
-| style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name="Ch13June9">{{Cite news |author1=Sefi Ovadia|author2=[[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
+| style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name=Ch13June9>{{Cite news |author1=Sefi Ovadia|author2=[[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
 |10 June 2024 - 25 May 2026
 |-
 | style="background:mediumseagreen" |Midgam Project, The Madad, Stat-Net, Askaria<ref name="auto7">{{cite web  |title=דרמה בגוש מתנגדי נתניהו: איזנקוט מזנק, בנט מתרסק|publisher=[[Channel 13 (Israel)|Channel 13]] |url=https://13tv.co.il/item/news/politics/politics/v0v13-905221091/|date=17 June 2026|access-date=18 June 2026 |language=he-IL}}</ref>
@@ -63,7 +63,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | 2022 election - 29 June 2023
 |-
 | style="background:indianred" |Lazar Research Institute<ref>{{Cite news |author=Moshe Cohen |title=חוזרים להוביל: 29 מנדטים לליכוד, גנץ ממשיך להיחלש
-|url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name="Maariv11Aug23">{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים? |url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
+|url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name=Maariv11Aug23>{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים?|url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
 | 5 July 2023 - 10 August 2023
 |-
 | style="background:#F86B61" |Lazar Research Institute, Panel4All<ref>{{Cite news |author=Matan Wasserman |title=סקר "מעריב": גנץ מזנק, אך הקואליציה מצמצמת פערים |url=https://www.maariv.co.il/news/politics/Article-1031166 |access-date=18 August 2023 |date=18 August 2023 |website=Maariv |language=he-IL}}</ref>
@@ -150,8 +150,8 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:#f5c518" |
 ! style="background:#0000CD" |
 |-
-| style="font-style:italic;" {{Opdrts||16|Oct|2026}}
-| colspan="22" |''Deadline for submission of surplus-vote agreements to the Central Elections Committee''<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
+| {{Opdrts||16|Oct|2026}}
+| colspan="22" |Deadline for submission of surplus-vote agreements to the Central Elections Committee<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
 |-
 |{{Opdrts|14|15|Oct|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -2622,7 +2622,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||5|Aug|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
-|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam5aug">{{cite web|date=5 August 2026 |title=השינוי במפת הגושים - וכמה מנדטים שווה איחוד עבאס-סגלוביץ'? |url=https://13tv.co.il/item/news/politics/politics/r8iw1-905298096/?pid=106628/ |access-date=5 August 2026 |publisher=[[Channel 13 (Israel)|Channel 13]] |language=he-IL}}</ref>
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here"/>
 |961
 |22
 |13
@@ -8215,7 +8215,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |-
 |rowspan=2 {{Opdrts||5|August|2026}}
 |rowspan=2 style=background:mediumseagreen |MP+TM+SN+A
-|rowspan=2 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam5aug"/>
+|rowspan=2 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here"/>
 |22
 |{{N/A}}
 |colspan=2|13
@@ -12357,7 +12357,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |-
 |rowspan="2" data-sort-value=2023-08-10 |9–10 Aug 23
 |rowspan="2" style=background:indianred |Lazar
-|rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref>{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים?|url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
+|rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv11Aug23/>
 |28
 |16
 |6
@@ -13132,7 +13132,7 @@ Scenarios where [[Avigdor Lieberman]], [[Naftali Bennett]], [[Yossi Cohen]], [[A
 |-
 | rowspan="2" data-sort-value="2024-06-10" |10 Jun 24
 | rowspan="2" style=background:#BAD1E6 |MM+SN
-| rowspan="2" |[[Channel 13 (Israel)|Channel 13]]<ref>{{Cite news| author=Sefi Ovadia, [[Raviv Drucker]]| title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים?|url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/| access-date=10 June 2024| date=10 June 2024| publisher=[[Channel 13 (Israel)|Channel 13]]| language=he-IL}}</ref>
+| rowspan="2" |[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13June9/>
 |20
 |5
 |9
@@ -14245,7 +14245,7 @@ Some surveys only polled the Arab population and estimated the strength of each 
 |-
 |rowspan=2 {{Opdrts||5|August|2026}} 2026
 |rowspan=2 style=background:mediumseagreen |MP+TM+SN+A
-|rowspan=2 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam5aug"/>
+|rowspan=2 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here"/>
 |rowspan="2"|
 |{{N/A}}
 |5
@@ -15325,7 +15325,7 @@ These questions were posed to the Arab population of Israel.
 !Combined Yes
 !Combined No
 |-
-|{{Opdrts||5|August|2026}} 26<ref name="Midgam5aug"/>
+|{{Opdrts||5|August|2026}} 26<ref name="Midgam19aug here"/>
 | style=background:mediumseagreen |MP+TM+SN+A
 |[[Channel 13 (Israel)|Channel 13]]
 |{{N/A}}
@@ -15457,7 +15457,7 @@ These questions were posed to the Arab population of Israel.
 |-
 |{{Opdrts||5|August|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
-|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam5aug"/>
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here"/>
 |29
 |style=background:pink |'''45'''
 |26
@@ -15481,7 +15481,7 @@ These questions were posed to the Arab population of Israel.
 |-
 |{{Opdrts||5|August|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
-|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam5aug"/>
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here"/>
 |6
 |style=background:pink |'''79'''
 |14
@@ -15505,7 +15505,7 @@ These questions were posed to the Arab population of Israel.
 |-
 |{{Opdrts||5|August|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
-|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam5aug"/>
+|[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here"/>
 |style=background:#CEF6D8 |'''37'''
 |32
 |31
@@ -15735,27 +15735,8 @@ These questions were posed to the Arab population of Israel.
 
 ==References==
 {{Duplicated citations|reason=DuplicateReferences script detected:
-* https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ (refs: 4, 362)
-* https://www.maariv.co.il/news/politics/Article-1029407 (refs: 20, 346)
-* https://www.gov.il/en/pages/candidates-lists-26 (refs: 26, 60)
-* https://www.kan.org.il/content/kan-news/politic/1099439/ (refs: 49, 386)
-* https://13tv.co.il/item/news/politics/politics/z10wm-905351997/ (refs: 55, 388)
-* https://www.kan.org.il/content/kan-news/politic/1096840/ (refs: 67, 389)
-* https://www.ch16.co.il/vod.html?id=430a18f3-fe1e-498b-9587-218e51b73cbf&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2026.08.26 (refs: 75, 86, 392)
-* https://13tv.co.il/item/news/politics/politics/survey-905340911/ (refs: 76, 390)
-* https://www.kan.org.il/content/kan-news/politic/1092076/ (refs: 92, 393)
-* https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628 (refs: 98, 394)
-* https://www.maariv.co.il/news/politics/article-1355736 (refs: 106, 396)
-* https://13tv.co.il/item/news/politics/politics/yj7o4-905308914/?pid=519 (refs: 108, 397)
-* https://www.ch16.co.il/vod.html?id=7e05a626-9b42-43d0-ba30-0f025d1def28&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2010.8.26 (refs: 109, 398)
-* https://13tv.co.il/item/news/politics/politics/r8iw1-905298096/?pid=106628/ (refs: 120, 399)
-* https://www.mako.co.il/news-israel-elections/2026/Article-bf734bfa938cf91027.htm (refs: 123, 306)
-* https://13tv.co.il/item/news/politics/politics/pcmyp-905287233/ (refs: 127, 400)
-* https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-02214cba (refs: 130, 401)
-* https://www.kan.org.il/content/kan-news/politic/1081690/ (refs: 131, 402)
-* https://www.kan.org.il/content/kan-news/politic/1078705/ (refs: 140, 403)
-* https://www.i24news.tv/he/news/israel-elections-2026/artc-34cc4bf9 (refs: 145, 404)
-* https://www.mako.co.il/news-politics/2024_q2/Article-5fcff4e52da3091027.htm (refs: 412, 419)
+* https://www.ch16.co.il/vod.html?id=430a18f3-fe1e-498b-9587-218e51b73cbf&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2026.08.26 (refs: 98, 109, 417)
+* https://www.ch16.co.il/vod.html?id=7e05a626-9b42-43d0-ba30-0f025d1def28&title=%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94%20%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA%2010.8.26 (refs: 132, 423)
 |date=October 2026}}
 
 {{reflist|refs=
