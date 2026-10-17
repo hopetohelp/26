@@ -1,7 +1,7 @@
 {
- "asof": "2026-10-16",
+ "asof": "2026-10-17",
  "central": {
-  "date": "2026-10-16",
+  "date": "2026-10-17",
   "seats": {
    "amcha": 0,
    "bluewhite": 0,
@@ -3661,7 +3661,7 @@
     }
    }
   },
-  "horizonDays": 11,
+  "horizonDays": 10,
   "lists": {
    "amcha": {
     "agreementGain": -0.038,
@@ -6546,6 +6546,45 @@
   },
   {
    "date": "2026-10-16",
+   "seats": {
+    "amcha": 0,
+    "bluewhite": 0,
+    "democrats": 9,
+    "haredi_public": 0,
+    "joint": 8,
+    "likud": 23,
+    "noam": 0,
+    "otzma": 8,
+    "raam": 6,
+    "reservists": 0,
+    "rzp": 6,
+    "shas": 8,
+    "together": 13,
+    "utj": 8,
+    "yashar": 23,
+    "yb": 8
+   },
+   "shares": {
+    "amcha": 3.11,
+    "bluewhite": 1.11,
+    "democrats": 7.06,
+    "haredi_public": 0.69,
+    "joint": 6.4,
+    "likud": 16.58,
+    "noam": 0.62,
+    "otzma": 6.45,
+    "raam": 4.31,
+    "reservists": 3.23,
+    "rzp": 4.9,
+    "shas": 6.11,
+    "together": 9.34,
+    "utj": 6.21,
+    "yashar": 16.87,
+    "yb": 6.32
+   }
+  },
+  {
+   "date": "2026-10-17",
    "seats": {
     "amcha": 0,
     "bluewhite": 0,
