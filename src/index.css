@@ -561,8 +561,8 @@
 .c-masthead-source .c-source-row { margin:0; }
 .c-masthead-source .c-source-picker { min-height:40px; }
 .c-masthead-source .c-source-picker select { min-height:40px;font-size:12px;padding:8px 6px 8px 34px;text-overflow:ellipsis; }
-.c-masthead-source .c-source-width { font-size:12px;padding:8px 6px 8px 34px;text-overflow:ellipsis; }
-.c-source-width { visibility:hidden;white-space:nowrap;overflow:hidden;padding:10px 12px 10px 32px;font-weight:600;font-size:14px; }
+.c-masthead-source .c-source-width { font-size:12px;padding:8px 8px 8px 36px;text-overflow:ellipsis; }
+.c-source-width { border:1px solid transparent;visibility:hidden;white-space:nowrap;overflow:hidden;padding:10px 12px 10px 32px;font-weight:600;font-size:14px; }
 .c-source-picker select { position:absolute;inset:0;width:100%;min-width:0;min-height:44px;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--card));color:rgb(var(--ink));font-size:14px;font-weight:600;padding:10px 12px 10px 32px;appearance:none; }
 .c-chart-footer { display:flex;justify-content:flex-end;clear:both;margin-top:12px;width:100%; }
 .c-home-source { display:block; }
