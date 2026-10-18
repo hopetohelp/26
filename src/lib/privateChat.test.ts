@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// הצ'אט הפרטי (הכרעת בעלים 18.10.2026): המפתח נשמר בשרת לפי החשבון; הדפדפן שולח אסימון ושיחה, ואינו מחזיק את המפתח.
+// הצ'אט הפרטי (הכרעת בעלים 18.10.2026): המפתח בחשבון (בשרת) או במכשיר בלבד, לבחירת המשתמש.
 const KEY = "AQ.personal-key-" + "p".repeat(30);
 const TOKEN = "session-token-" + "t".repeat(20);
 
@@ -43,18 +43,27 @@ describe("המפתח האישי נשמר בשרת לפי החשבון", () => {
   it("בלי חשבון אין שמירה ואין פנייה לשרת", async () => {
     const calls = server(() => ({ ok: true }));
     const { savePrivateKey, askPrivate } = await load();
-    expect(await savePrivateKey(KEY)).toMatch(/להיכנס לחשבון/);
+    expect(await savePrivateKey(KEY, "account")).toMatch(/להיכנס לחשבון/);
     expect(await askPrivate([], "ש")).toEqual({ ok: false, error: "unauthorized" });
     expect(calls).toHaveLength(0);
   });
-  it("מפתח ישן מהדפדפן עובר לשרת ונמחק מהדפדפן", async () => {
+  it("במכשיר בלבד: בלי חשבון ובלי פנייה לשמירה, והמפתח נשלח עם השאלה", async () => {
+    const calls = server(() => ({ ok: true, text: "תשובה" }));
+    const { savePrivateKey, askPrivate } = await load();
+    expect(await savePrivateKey(KEY, "device")).toBeNull();
+    expect(local.getItem("elections26.privateKey")).toBe(KEY);
+    expect(calls).toHaveLength(0);
+    expect(await askPrivate([], "ש")).toEqual({ ok: true, text: "תשובה" });
+    expect(calls[0].body).toEqual({ key: KEY, messages: [{ role: "user", text: "ש" }] });
+  });
+  it("השיחה השמורה נטענת ונמחקת מול השרת עם האסימון", async () => {
     local.setItem("elections26.crowd.token", TOKEN);
-    session.setItem("elections26.privateKey", KEY);
-    const calls = server(() => ({ ok: true, has: true }));
-    const { refreshPrivateKey } = await load();
-    await refreshPrivateKey();
-    expect(calls[0].body).toEqual({ token: TOKEN, key: KEY });
-    expect(session.has("elections26.privateKey")).toBe(false);
+    const turns = [{ role: "user", text: "א" }, { role: "assistant", text: "ב" }];
+    const calls = server(() => ({ ok: true, turns }));
+    const { loadPrivateHistory, clearPrivateHistory } = await load();
+    expect(await loadPrivateHistory()).toEqual(turns);
+    await clearPrivateHistory();
+    expect(calls.map((c) => [c.url, c.body])).toEqual([["https://feedback.example/private/history", { token: TOKEN }], ["https://feedback.example/private/history", { token: TOKEN, clear: true }]]);
   });
 });
 

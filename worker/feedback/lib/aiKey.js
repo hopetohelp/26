@@ -52,3 +52,11 @@ export async function unsealKey(env, packed, label) {
 const PERSONAL = "private-key";
 export const sealPersonalKey = (env, value) => sealKey(env, value, PERSONAL);
 export const unsealPersonalKey = (env, packed) => unsealKey(env, packed, PERSONAL);
+
+/** היסטוריית הצ'אט הפרטי של חשבון (הכרעת בעלים 18.10.2026): נשמרת מוצפנת בתווית נפרדת, ומוחזרת רק לבעליה */
+const CHATS = "private-chat";
+export const sealChat = (env, turns) => sealKey(env, JSON.stringify(turns), CHATS);
+export async function unsealChat(env, packed) {
+  const raw = await unsealKey(env, packed, CHATS);
+  try { const t = JSON.parse(raw ?? "[]"); return Array.isArray(t) ? t : []; } catch { return []; }
+}

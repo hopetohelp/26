@@ -27,7 +27,7 @@ const TOKENS = { [USER_KEY]: "token-user-a-" + "a".repeat(20), [OTHER_USER_KEY]:
 const post = (path, body) => feedback.fetch(new Request(`https://w.example${path}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }), env, { waitUntil() {} });
 const ask = (messages, key = USER_KEY) => post("/private/ask", { token: TOKENS[key], messages });
 const q = (text = SECRET_QUESTION) => [{ role: "user", text }];
-const dump = () => JSON.stringify(["feedback", "messages", "support_threads", "support_messages", "drafts", "settings", "ai_runs", "held", "hits", "visitors", "private_keys"].map((t) => env.DB.raw.prepare(`SELECT * FROM ${t}`).all()));
+const dump = () => JSON.stringify(["feedback", "messages", "support_threads", "support_messages", "drafts", "settings", "ai_runs", "held", "hits", "visitors", "private_keys", "private_chats"].map((t) => env.DB.raw.prepare(`SELECT * FROM ${t}`).all()));
 
 beforeEach(async () => {
   sent = [];
@@ -70,17 +70,15 @@ it("שני משתמשים עם מפתחות שונים: כל קריאה נושא
   expect(JSON.stringify(b)).not.toContain(USER_KEY);
 });
 
-it("שום דבר מהשיחה או מהמפתח אינו נשמר בשרת, ואינו מגיע לשיחות הצוות, לטיוטות או למסך הניהול", async () => {
-  const before = dump();
+it("השיחה נשמרת רק מוצפנת, ואינה מגיעה לשיחות הצוות, לטיוטות או למסך הניהול", async () => {
   await ask(q());
   await ask([{ role: "user", text: "ראשונה" }, { role: "assistant", text: "תשובה" }, { role: "user", text: SECRET_QUESTION }]);
-  expect(dump()).toBe(before);
   expect(dump()).not.toContain(USER_KEY);
   expect(dump()).not.toContain(SECRET_QUESTION);
+  expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM private_chats").get().n).toBe(1);
   const adminData = await (await feedback.fetch(new Request("https://w.example/admin/data", { headers: { authorization: `Bearer ${admin}` } }), env)).text();
   expect(adminData).not.toContain(SECRET_QUESTION);
   expect(adminData).not.toContain(USER_KEY);
-  // המונה היחיד: גיבוב מקור + תאריך + מספר
   expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM private_hits").get().n).toBe(1);
   expect(JSON.stringify(env.DB.raw.prepare("SELECT * FROM private_hits").all())).not.toContain("participant-0");
 });
@@ -142,11 +140,25 @@ it("המפתח נשמר בשרת לפי החשבון, מוצפן, ואינו מ�
   expect((await ask(q(), OTHER_USER_KEY)).status).toBe(200);
 });
 
-it("בלי חשבון אין שמירה ואין שאלה, ומפתח בגוף הבקשה אינו מתקבל במקום המפתח השמור", async () => {
+it("בלי חשבון: אין שמירת מפתח, אבל מפתח מהמכשיר עובד בלי לשמור דבר", async () => {
   expect((await post("/private/key", { key: USER_KEY })).status).toBe(401);
-  expect((await post("/private/ask", { key: USER_KEY, messages: q() })).status).toBe(401);
   expect((await post("/private/ask", { token: "unknown-" + "x".repeat(30), messages: q() })).status).toBe(401);
   expect(providerCalls()).toHaveLength(0);
+  const before = dump();
+  expect(await (await post("/private/ask", { key: OTHER_USER_KEY, messages: q() })).json()).toMatchObject({ ok: true });
+  expect(providerCalls()[0].headers["x-goog-api-key"]).toBe(OTHER_USER_KEY);
+  expect(dump()).toBe(before);
+});
+
+it("שיחה שמורה מוחזרת רק לבעליה, מפתח מהמכשיר עם חשבון נשמר בשיחה, וניקוי מוחק", async () => {
+  await ask(q("שאלה א"));
+  await post("/private/ask", { token: TOKENS[USER_KEY], key: OTHER_USER_KEY, messages: q("שאלה ב") });
+  expect(providerCalls()[1].headers["x-goog-api-key"]).toBe(OTHER_USER_KEY);
+  const mine = await (await post("/private/history", { token: TOKENS[USER_KEY] })).json();
+  expect(mine.turns.map((t) => t.text)).toEqual(["שאלה א", "לפי הנתונים: 32 מנדטים.", "שאלה ב", "לפי הנתונים: 32 מנדטים."]);
+  expect((await (await post("/private/history", { token: TOKENS[OTHER_USER_KEY] })).json()).turns).toEqual([]);
+  expect((await post("/private/history", {})).status).toBe(401);
+  expect((await (await post("/private/history", { token: TOKENS[USER_KEY], clear: true })).json()).turns).toEqual([]);
 });
 
 it("מודל ברירת המחדל לא קיים בחשבון (404) ⇐ ניסיון אחד עם הכינוי העדכני, עם אותו מפתח של השואל", async () => {
