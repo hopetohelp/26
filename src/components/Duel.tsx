@@ -32,7 +32,7 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
       </h2>
       <Explained
         bare
-        kind="תרחיש"
+        kind={method === "model" ? "תרחיש" : "סיכום סקרים"}
         source="כל הסקרים, מנוע החוק והסקר האחרון של כל מכון"
         asOf={`הסקרים עד ${asOf}`}
         assumption={`המספר הגדול: ${label}. הטווח: הסקרים האחרונים. הספירה: השוואת הסקרים.`}
@@ -42,8 +42,8 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
         <div ref={seenRef} className={`c-duel-grid relative grid grid-cols-2 lg:grid-cols-[auto_1fr_1fr_auto] border-y-2 border-ink duel-in ${whenVisible(seen)}`}>
           {/* יש מקום ברוחב (מ-1024px): תמונת כל רשימה בעיגול בקצה החיצוני, קוטרו חצי מגובה הרצועה; צר מזה — תמונה קטנה מעל השם בתוך כל צד */}
           <PartyPhoto id={a.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
-          <Side r={a} range={rangeOf(a.id)} lead={a.central >= b.central} align="start" />
-          <Side r={b} range={rangeOf(b.id)} lead={b.central >= a.central} align="end" />
+          <Side r={a} range={rangeOf(a.id)} align="start" />
+          <Side r={b} range={rangeOf(b.id)} align="end" />
           <PartyPhoto id={b.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <span aria-hidden="true" className="absolute inset-y-4 left-1/2 border-s border-paper-line" />
           {/* העיגול במרכז: הספירה "6:2" ומתחתיה "סקרים" (בכמה סקרים כל אחת גבוהה יותר); בלי סקרים משותפים — "מול" */}
@@ -65,14 +65,14 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
   );
 }
 
-function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: boolean; align: "start" | "end" }) {
+function Side({ r, range, align }: { r: HomeRow; range: string; align: "start" | "end" }) {
   return (
     <div className={`c-duel-side py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
       {/* צר: תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד (ימין לצד הימני, שמאל לשמאלי); ברוחב מ-1024px התמונה ברצועה כולה */}
       <span aria-hidden="true" className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p aria-hidden="true" className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
       {/* המספר הגדול הוא ממוצע המודל; אייקון המידע שלו אחד למסך, בחצי העיגול שמעל (בלי שני אייקונים זהים, הכרעת בעלים 12.10.2026) */}
-      <p aria-hidden="true" className={`font-num tabular leading-none mt-2 ${seatsFmt(r.central).length > 2 ? "text-[2.75rem] md:text-[5rem]" : "text-[4.5rem] md:text-[8rem]"} ${lead ? "font-extrabold text-ink" : "font-semibold text-ink-soft"}`}>
+      <p aria-hidden="true" className="font-num tabular leading-none mt-2 text-[3rem] md:text-[5rem] font-extrabold text-ink">
         <CountUp value={r.central} format={seatsFmt} />
       </p>
       {range && <p aria-hidden="true" className="mt-2 text-sm text-ink-soft"><bdi>{range}</bdi> בסקרים האחרונים</p>}
@@ -85,7 +85,7 @@ function Side({ r, range, lead, align }: { r: HomeRow; range: string; lead: bool
  * מהאחרונים אינו מעביר אותה (`HOME.edge`), לא לפי הממוצע ולא לפי התרחישים. לכל אחת: כמה מהתרחישים עוברת (עם אייקון מידע, כי זה נתון מודל),
  * ובכמה מהמכונים עוברת בסקר האחרון.
  */
-export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: Poll[]; asOf: string }) {
+export function ThresholdLine({ rows, polls, asOf, observedOnly = false }: { rows: HomeRow[]; polls: Poll[]; asOf: string; observedOnly?: boolean }) {
   const counts = new Map(summarize(polls, rows.map((r) => r.id)).map((s) => [s.id, s]));
   return (
     <section aria-labelledby="edge-h" className="mt-10">
@@ -99,11 +99,11 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
       ) : (
         <Explained
           bare
-          kind="תרחיש"
-          source="הסקר האחרון של כל מכון (מי על הקו); כל הסקרים, מנוע החוק ו-20,000 תרחישים (האחוז)"
+          kind={observedOnly ? "סיכום סקרים" : "תרחיש"}
+          source={observedOnly ? "הסקר האחרון של כל סדרת מכון ומזמין בחלון הסקרים" : "הסקר האחרון של כל מכון (מי על הקו); כל הסקרים, מנוע החוק ו-20,000 תרחישים (האחוז)"}
           asOf={`הסקרים עד ${asOf}`}
-          assumption="על הקו: לפחות סקר אחד מהאחרונים אינו מעביר אותה (לא לפי הממוצע ולא לפי התרחישים). האחוז הגדול: בכמה מהתרחישים הרשימה עוברת את אחוז החסימה, לא סיכוי. מתחתיו: ספירת המכונים שנתנו לה מנדטים."
-          methodAnchor="model"
+          assumption={observedOnly ? "מספר הסדרות שנתנו לרשימה לפחות ארבעה מנדטים מתוך הסדרות שסקרו אותה. אין הסקה לגבי תוצאה עתידית." : "על הקו: לפחות סקר אחד אינו מעביר אותה. האחוז הוא שיעור התרחישים שבהם הרשימה עוברת, לא סיכוי."}
+          methodAnchor={observedOnly ? "current" : "model"}
         >
           <ul className="mt-4 grid grid-cols-2 gap-x-4 md:gap-x-8">
             {rows.map((r, i) => {
@@ -115,14 +115,14 @@ export function ThresholdLine({ rows, polls, asOf }: { rows: HomeRow[]; polls: P
                     <span className="hidden md:block"><PartyAvatar id={r.id} size={56} /></span>
                     <p className="min-w-0 font-display text-base md:text-xl leading-tight break-words [overflow-wrap:anywhere]">{r.name}</p>
                   </div>
-                  <p className="font-num text-4xl md:text-5xl font-extrabold tabular leading-none mt-1">{Math.round(r.pass * 100)}%</p>
+                  <p className="font-num text-4xl md:text-5xl font-extrabold tabular leading-none mt-1">{observedOnly ? `${s?.passing ?? 0}/${s?.n ?? 0}` : `${Math.round(r.pass * 100)}%`}</p>
                   <p className="text-xs md:text-sm text-ink-soft mt-1">
-                    מהתרחישים עוברת
+                    {observedOnly ? "מהמכונים מעבירים את הרשימה" : "מהתרחישים עוברת"}
                     {/* אייקון אחד בלבד, ליד הרשימה הראשונה, וחל על כולן (הכרעת בעלים 12.10.2026) */}
-                    {i === 0 && <ModelInfo kind="pass" className="ms-1" items={rows.length > 1 ? ["האחוז הגדול ופס ההתקדמות של כל רשימה ב\"על קו החסימה\""] : undefined} />}
+                    {!observedOnly && i === 0 && <ModelInfo kind="pass" className="ms-1" items={rows.length > 1 ? ["האחוז הגדול ופס ההתקדמות של כל רשימה ב\"על קו החסימה\""] : undefined} />}
                   </p>
-                  <span className="block mt-2"><PassBar pass={r.pass} /></span>
-                  {s && <p className="mt-2 text-xs md:text-sm text-ink-soft">אצל {s.passing} מתוך {s.n} מכונים</p>}
+                  <span className="block mt-2"><PassBar pass={observedOnly ? (s?.n ? s.passing / s.n : 0) : r.pass} /></span>
+                  {!observedOnly && s && <p className="mt-2 text-xs md:text-sm text-ink-soft">אצל {s.passing} מתוך {s.n} מכונים</p>}
                 </li>
               );
             })}

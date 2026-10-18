@@ -1,3 +1,4 @@
+import { SHOW_MODEL } from "./modelVisibility";
 import { useSyncExternalStore } from "react";
 import { call } from "./crowdApi";
 import { getToken } from "./crowdSession";
@@ -73,9 +74,10 @@ export async function saveSourcePreference(selection: Selection): Promise<"accou
 }
 export function useSourcePreference(screen: DataScreen) {
   const p = useSyncExternalStore(l => { listeners.add(l); return () => { listeners.delete(l); }; }, () => state, () => null);
-  const wanted: Selection = p?.selection ?? { product: screen === "home" ? "polls.adjusted" : "polls.mean" };
+  const stored = !SHOW_MODEL && p?.selection.product === "model.mean" ? { product: "polls.adjusted" as const } : p?.selection;
+  const wanted: Selection = stored ?? { product: screen === "home" ? "polls.adjusted" : "polls.mean" };
   if (sourceAllowed(screen, wanted.product)) return { selection: wanted, preference: p, notice: null };
-  const fallback = p?.preferredAverage;
+  const fallback = !SHOW_MODEL && p?.preferredAverage === "model.mean" ? "polls.adjusted" : p?.preferredAverage;
   const selection: Selection = { product: fallback && sourceAllowed(screen, fallback) ? fallback : "polls.mean" };
   return { selection, preference: p, notice: "המקור המועדף אינו מתאים למסך הזה. המקור שמוצג נבחר לפי מדיניות המסך." };
 }

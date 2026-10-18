@@ -436,7 +436,7 @@
 .c-average-options span { display:block;font-size:.8rem;margin-top:8px;color:rgb(var(--ink-soft)); }
 .c-poll-bars>div { display:grid;grid-template-columns:minmax(110px,1fr) minmax(0,3fr) 45px;gap:14px;align-items:center;min-height:44px;border-top:1px solid rgb(var(--line)); }
 .c-poll-bars i { background:rgb(var(--accent));height:12px;border-radius:4px; }.c-poll-bars b { text-align:left; }
-@media(min-width:768px) { .c-average-options { grid-template-columns:repeat(3,1fr); } }
+@media(min-width:768px) { .c-average-options { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .c-assistant { margin:auto 16px auto auto;width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid rgb(var(--line));border-radius:18px;padding:24px;background:rgb(var(--card));color:rgb(var(--ink)); }
 .c-assistant::backdrop { background:rgb(var(--ink) / .35); }
 @media(min-width:960px) {
@@ -556,3 +556,16 @@
  .c-archive-row { padding:12px; }
  .c-archive-row dl { grid-template-columns:1fr;gap:4px; }
 }
+
+/* בחירת מקור קומפקטית וקישורי תרשימים באותו מקום בכל הגדלים. */
+.c-source-row { display:flex;justify-content:center;margin-block:12px;min-width:0; }
+.c-source-picker { position:relative;display:inline-grid;max-width:100%;min-height:44px; }
+.c-source-width { visibility:hidden;white-space:nowrap;overflow:hidden;padding:10px 12px 10px 32px;font-weight:600;font-size:14px; }
+.c-source-picker select { position:absolute;inset:0;width:100%;min-width:0;min-height:44px;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--card));color:rgb(var(--ink));font-size:14px;font-weight:600;padding-inline:10px 24px; }
+.c-chart-footer { display:flex;justify-content:flex-end;clear:both;margin-top:12px;width:100%; }
+.c-home-source { display:block; }
+.c-chart-footer .c-chart-link { float:none; }
+.seat-stop-a { stop-color:rgb(var(--accent)); }
+.seat-stop-arab { stop-color:color-mix(in srgb, rgb(var(--accent)) 58%, rgb(var(--card))); }
+.seat-stop-b { stop-color:color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card))); }
+.c-home .c-duel-side>p.font-num { font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:rgb(var(--ink)); }

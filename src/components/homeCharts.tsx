@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { HALL, hemicycleSeats } from "../lib/hemicycle";
 import { rng, seatsFmt } from "../lib/format";
@@ -47,6 +47,12 @@ export const missingToMajority = (gov: number) => Math.max(0, MAJORITY - gov);
  */
 export function Hemicycle({ coalition, arab, opposition, duel, footer, info }: { coalition: number; arab: number; opposition: number; duel?: [string, string]; footer?: ReactNode; info?: ReactNode }) {
   const [seenRef, seen] = useSeen<HTMLElement>();
+  const gradientId = useId();
+  const total = coalition + arab + opposition;
+  const scale = total > 0 ? 120 / total : 0;
+  const boundaries = [coalition * scale, (coalition + arab) * scale];
+  const classes = { a: "seat-a", arab: "seat-arab", b: "seat-b" };
+  const tone = (n: number) => n < boundaries[0] ? "a" : n < boundaries[1] ? "arab" : "b";
   return (
     <figure ref={seenRef} className={`m-0 ${whenVisible(seen)}`}>
       <div className="relative [container-type:inline-size]">
@@ -56,19 +62,18 @@ export function Hemicycle({ coalition, arab, opposition, duel, footer, info }: {
           role="img"
           aria-label={`120 המושבים בצורת פרסה: ${coalition} לגוש נתניהו, ${arab} למפלגות הערביות, ${opposition} לגוש אייזנקוט.`}
         >
-          {SEATS.map((s, k) => (
-            <circle key={k} cx={s.x} cy={s.y} r={HALL.r} className={`${k < coalition ? "seat-a" : k < coalition + arab ? "seat-arab" : "seat-b"} seat-in`} style={{ animationDelay: `${k * 5}ms` }} />
-          ))}
+          {SEATS.map((s, k) => {
+            const start = tone(k + 0.000001), end = tone(k + 0.999999);
+            const split = start !== end;
+            const id = `${gradientId}-${k}`;
+            return <g key={k}>{split && <defs><linearGradient id={id}><stop offset="50%" className={`seat-stop-${start}`} /><stop offset="50%" className={`seat-stop-${end}`} /></linearGradient></defs>}<circle cx={s.x} cy={s.y} r={HALL.r} className={`${classes[start]} seat-in`} data-split={split || undefined} style={{ animationDelay: `${k * 5}ms`, ...(split ? { fill: `url(#${id})` } : {}) }} /></g>;
+          })}
         </svg>
         {duel && (
           // מרכז החלל הפנימי של הפרסה (הכרעת בעלים 11.10.2026): שורה לכל גוש — המספר ושם הגוש, גוש נתניהו למעלה — עם קו הפרדה ו"&" באלכסון באמצעו
           // `info`: אייקון המידע של המספרים (ממוצע המודל), ממורכז מתחת לשתי השורות בלי להזיז אותן; הוא היחיד כאן שאינו מוסתר מקורא מסך
           <div className="absolute z-10 flex flex-col items-stretch whitespace-nowrap leading-none" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100}%`, transform: "translate(-50%, -50%)" }}>
-            <DuelRow n={coalition} label={duel[0]} />
-            <span aria-hidden="true" className="relative my-1.5 md:my-2.5 h-0 border-t-2 border-ink-faint">
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[18deg] bg-paper px-1.5 font-display text-sm sm:text-xl md:text-3xl font-extrabold text-ink-soft">&amp;</span>
-            </span>
-            <DuelRow n={opposition} label={duel[1]} />
+            <span className="font-num font-extrabold text-center" style={{ fontSize: "clamp(18px, 7cqw, 40px)" }} aria-label={`${duel[0]}: ${seatsFmt(coalition)}; ${duel[1]}: ${seatsFmt(opposition)}`}><bdi>{seatsFmt(coalition)}</bdi><span className="mx-1.5 text-ink-faint" aria-hidden="true">:</span><bdi>{seatsFmt(opposition)}</bdi></span>
             {info && <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 md:mt-2">{info}</span>}
           </div>
         )}
@@ -81,15 +86,7 @@ export function Hemicycle({ coalition, arab, opposition, duel, footer, info }: {
   );
 }
 
-/** שורת גוש במרכז הלוח: המספר מימין ושם הגוש משמאלו */
-function DuelRow({ n, label }: { n: number; label: string }) {
-  return (
-    <span aria-hidden="true" dir="rtl" className="flex items-baseline justify-center gap-1.5 md:gap-3">
-      <span className="font-num text-lg sm:text-2xl md:text-4xl font-extrabold tabular">{n}</span>
-      <span className="font-display text-xs sm:text-base md:text-2xl">{label}</span>
-    </span>
-  );
-}
+
 
 const COLS = "grid-cols-[minmax(0,1fr)_2.1rem_minmax(4.5rem,32%)] md:grid-cols-[minmax(0,13rem)_2.6rem_minmax(0,1fr)_5rem]";
 
@@ -243,7 +240,7 @@ export function blocRangeSegs(home: Pick<HomeData, "blocLo" | "blocHi" | "blocHi
  * מגמת הממשלה היוצאת: הגרף האחיד `CandleTrend` (נר כל 3 ימים, 14 יום אחורה, שלוש דרגות עובי, הקו עובר דרך הממוצעים של הנקודות, קווים כל 5 ו-61 במקום 60,
  * חלון במעבר על הנר, מקרא בפינה השמאלית העליונה). `points` = לכל נקודה: סכום המנדטים של הממשלה היוצאת בכל סקר בחלון (הנר), ו-`mean` = ממוצע המודל באותו יום (הנקודה והקו), כך שהנקודה האחרונה שווה למספר שבלוח המושבים.
  */
-export function GovTrend({ home, points = [], heading }: { home: HomeData; points?: { t: number; values: number[]; mean?: number }[]; heading?: ReactNode }) {
+export function GovTrend({ home, points = [], heading, observedOnly = false }: { observedOnly?: boolean; home: HomeData; points?: { t: number; values: number[]; mean?: number }[]; heading?: ReactNode }) {
   const { series } = home;
   if (series.length < 2) return null;
   const trend: TrendPoint[] = points
@@ -255,7 +252,7 @@ export function GovTrend({ home, points = [], heading }: { home: HomeData; point
       heading={heading}
       series={[{ id: "gov", name: "הממשלה היוצאת", points: trend }]}
       majority={MAJORITY}
-      meanNote={`ממוצע המודל באותו יום: ${MODEL_NOTE}. הנרות: הסקרים עצמם`}
+      meanNote={observedOnly ? undefined : `ממוצע המודל באותו יום: ${MODEL_NOTE}. הנרות: הסקרים עצמם`}
     />
   );
 }

@@ -410,7 +410,7 @@ export function buildLlmsTxt(mcpUrl: string | null): string {
 
 /** העוגנים שקישור "איך זה חושב?" יכול להוביל אליהם: כל id במסך המילון, ולשוניות מסך השיטה */
 export function validAnchors(): Set<string> {
-  const html = renderToStaticMarkup(createElement(Router, { location: "/method", navigator: NO_NAV, static: true, children: createElement(MethodNumbers) }));
+  const html = renderToStaticMarkup(createElement(Router, { location: "/method", navigator: NO_NAV, static: true, children: createElement(MethodNumbers, { includeArchived: true }) }));
   return new Set([...[...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]), ...Object.keys(TAB_ANCHORS)]);
 }
 

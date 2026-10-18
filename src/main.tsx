@@ -1,3 +1,4 @@
+import { SHOW_MODEL } from "./lib/modelVisibility";
 import { useSearchParams as useCalculatorParams, Navigate as CalculatorRedirect } from "react-router-dom";
 import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
@@ -107,7 +108,7 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="today" element={<LegacyToday />} />
-          <Route path="scenarios" element={<Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense>} />
+          <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<Tabbed label="סקרים" tabs={[
             { id: "today", label: "היום", element: <Today /> },
             { id: "trends", label: "מגמות", element: <Trends /> },

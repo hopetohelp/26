@@ -10,7 +10,9 @@ import { MODEL_NOTE } from "../components/InfoTip";
 it("מסך הבית: כל אייקון מידע מופיע פעם אחת בלבד", () => {
   const html = renderToStaticMarkup(createElement(StaticRouter, { location: "/", children: createElement(Home) }));
   const labels = [...html.matchAll(/aria-label="(הסבר:[^"]+)"/g)].map((m) => m[1]);
-  expect(labels.length).toBeGreaterThan(0);
+  expect(labels).not.toContain("הסבר: ממוצע המודל");
+  expect(html).not.toContain("מהתרחישים עוברת");
+  expect(html).toContain("ממוצע סקרים");
   expect(new Set(labels).size).toBe(labels.length);
   // מגמת הממשלה (גרף עם מקרא) — בלי אייקון נפרד
   expect(labels).not.toContain("הסבר: ממוצע המודל בגרף");

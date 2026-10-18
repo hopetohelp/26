@@ -1,3 +1,4 @@
+import { ARCHIVED_METHODS } from "../lib/modelVisibility";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { createElement } from "react";
@@ -20,7 +21,7 @@ describe("מילון המספרים", () => {
     for (const f of walk("src")) for (const m of readFileSync(f, "utf8").matchAll(/methodAnchor="([a-z-]+)"/g)) used.add(m[1]);
     expect(used.size).toBeGreaterThan(5);
     // ערך במילון, או עוגן בתוך ערך (agreements בתוך engine, voters בתוך results): ב-DOM של מסך המילון
-    const html = renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(MethodNumbers) }));
+    const html = renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(MethodNumbers, { includeArchived: true }) }));
     for (const a of used) expect(html, `methodAnchor="${a}" חסר במילון`).toContain(`id="${a}"`);
   });
 
@@ -31,7 +32,7 @@ describe("מילון המספרים", () => {
 
   it("הלשוניות מציגות את כל העוגנים הישנים (שיטה, מקורות, חוק)", () => {
     const html = [MethodNumbers, MethodSources, MethodLaw]
-      .map((C) => renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(C) })))
+      .map((C) => renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(C, C === MethodNumbers ? { includeArchived: true } : {}) })))
       .join("");
     for (const id of [...DICTIONARY_IDS, "agreements", "voters", "sources", "coverage", "data-checks", "corrections-log", "updates", "privacy", "law", "limits"]) expect(html, id).toContain(`id="${id}"`);
     const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
@@ -40,7 +41,7 @@ describe("מילון המספרים", () => {
 
   it("לכל קטע במסך יש כפתור קישור נפרד (ערכי המילון והקטעים במקורות ובחוק)", () => {
     const count = (C: typeof MethodNumbers) => (renderToStaticMarkup(createElement(StaticRouter, { location: "/method", children: createElement(C) })).match(/העתקת קישור לקטע:/g) ?? []).length;
-    expect(count(MethodNumbers)).toBe(DICTIONARY.length);
+    expect(count(MethodNumbers)).toBe(DICTIONARY.length - ARCHIVED_METHODS.size);
     expect(count(MethodSources)).toBe(6);
     expect(count(MethodLaw)).toBe(2);
   });
