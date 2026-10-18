@@ -104,7 +104,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   const banner = shownGroup && <GroupBanner id={shownGroup.id} name={shownGroup.name} image={shownGroup.image} showName={!groups.some((g) => g.id === shownGroup.id)} />;
   // שיתוף של הקבוצה (הכרעת בעלים 12.10.2026): עם שמה ולוגו; נתוני הקבוצה בתמונות רק מ-50 משתתפים, ובקישור מהאורח — רק הזמנה וקישור
   const groupShare: GroupShareInfo | undefined = shownGroup?.slug ? { name: shownGroup.name ?? "הקבוצה", url: groupUrl(shownGroup.slug), logoUrl: groupImageUrl({ slug: shownGroup.slug }, shownGroup.image), dataReady: scope !== "all" && !blank } : undefined;
-  // בקבוצה: תמונה, אחריה פס השיתוף, ואחריו המתג (התמונה היא בראש המסך)
+  // בקבוצה: תמונה בראש המסך והמתג אחריה; פס השיתוף צף בתחתית.
   const top = <>{banner}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;

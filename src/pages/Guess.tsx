@@ -92,7 +92,7 @@ export default function Guess({ landing = null }: { landing?: GroupPublic | null
       {(() => { const head = <>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
       {!statistics && !shared && !auxiliary && <GuessIntro signedIn={!!session.token} />}
-      {!statistics && !auxiliary && <p className="c-stage-notice" role="status">{complete ? "הכנסת הושלמה. אפשר להמשיך לערוך או לצפות בממוצע המשתתפים." : "הצפייה בממוצע המשתתפים תיפתח אחרי השלמת הכנסת: 120 מנדטים, ולכל רשימה 0 או לפחות 4."}{complete && <Btn onClick={() => setStage("statistics")}>לממוצע המשתתפים ←</Btn>}</p>}
+      {!statistics && !auxiliary && <div className="c-stage-notice" role="status">{complete ? "הכנסת הושלמה. אפשר להמשיך לערוך או לצפות בממוצע המשתתפים." : "הצפייה בממוצע המשתתפים תיפתח אחרי השלמת הכנסת: 120 מנדטים, ולכל רשימה 0 או לפחות 4."}{complete && <Btn onClick={() => setStage("statistics")}>לממוצע המשתתפים ←</Btn>}</div>}
       {auxiliary && <PageTitle>{params.get("section") === "blocs" ? "הגושים שלי" : "היסטוריית השערות"}</PageTitle>}
       {statistics && <div className="c-stage-heading"><PageTitle lead="שלב 2 · ההשערה שלכם מול הסקרים וממוצע המשתתפים. השערות המשתתפים אינן סקר.">הכנסת שלי — סקר האתר</PageTitle><div className="flex flex-wrap gap-2"><Btn onClick={() => setStage("edit")}>חזרה לעדכון ההשערה</Btn><SaveButton unit={seats} session={session} invalid={null} compact /></div></div>}
       {flash && (

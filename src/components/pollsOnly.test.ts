@@ -15,6 +15,10 @@ it("סיכום שברי נשאר מדויק במרכז, והגבולות מסו�
   expect(html).toContain('class="seat-b seat-in"');
   expect(html).toContain('>52.3</bdi>');
   expect(html).toContain('>54.2</bdi>');
+  expect(html).toContain('x1="100%" x2="0%"');
+  expect(html).toContain('<span>א</span>');
+  expect(html).toContain('<span>ב</span>');
+  expect(html).toContain("&amp;");
 });
 it("חלוקה שלמה אינה מייצרת חצאי סמלים", () => {
   const html = renderToStaticMarkup(createElement(Hemicycle, { coalition: 53, arab: 14, opposition: 53 }));

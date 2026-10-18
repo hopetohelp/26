@@ -1,3 +1,4 @@
+import { useCandleStyle } from "../lib/candleStyle";
 import type { ReactNode } from "react";
 import { CANDLE_PX, squarePath, squareRuns, type LSeg } from "../lib/chartLanguage";
 
@@ -16,7 +17,9 @@ const THICK = CANDLE_PX[5];
  */
 /** הקטעים כרכיבי path: קו מלא (`mk-sq-f`) או קופסה חלולה (`mk-sq`) */
 export function SquarePaths({ runs, mid, across = "y" }: { runs: ReturnType<typeof squareRuns>; mid: number; across?: "x" | "y" }) {
-  return <>{runs.map((r, i) => <path key={i} d={squarePath(r, mid, across)} className={r.filled ? "mk-sq mk-sq-f" : "mk-sq"} />)}</>;
+  const style = useCandleStyle();
+  const shown = style === "uniform" && runs.length ? [{ a: Math.min(...runs.map(r => r.a)), b: Math.max(...runs.map(r => r.b)), half: 5, filled: false }] : runs;
+  return <g data-candle-style={style}>{shown.map((r, i) => <path key={i} d={squarePath(r, mid, across)} className={r.filled ? "mk-sq mk-sq-f" : "mk-sq"} />)}</g>;
 }
 
 export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number) => number; title?: string }) {
@@ -51,7 +54,7 @@ export function ProfileCandleV({ segs, y, left, delay }: { segs: LSeg[]; y: (v: 
 }
 
 /** ממוצע = עיגול ריק ירוק בקוטר 22, גדול מהנר העבה */
-export const MeanDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-mean" style={{ left: `${at}%` }} />;
+export const MeanDot = ({ at }: { at: number }) => { const style = useCandleStyle(); return <span aria-hidden="true" className={`mk ${style === "uniform" ? "mk-dot" : "mk-mean"}`} style={{ left: `${at}%` }} />; };
 
 /** תוצאה (מציאות) = עיגול ריק שחור בקוטר 22, גדול מהנר העבה (גם ממוצע המשתתפים בסקר האתר, שאינו סקר) */
 export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-ring" style={{ left: `${at}%` }} />;
@@ -63,6 +66,7 @@ export type MarkKind = "candle" | "mean" | "result" | "dot";
 
 /** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן באותו יחס כמו בגרף: זנב דק קצר בכל קצה, קטע בינוני קצר, וליבה עבה ארוכה באמצע (כמו `percentileOne`: 10 · 10 · 60 · 10 · 10) */
 export function Swatch({ kind }: { kind: MarkKind }) {
+  const style = useCandleStyle();
   if (kind === "candle") {
     const segs: LSeg[] = ([1, 3, 5, 5, 5, 5, 5, 5, 3, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
     const runs = squareRuns(segs, (v) => (v / 10) * LOCAL);
@@ -72,7 +76,7 @@ export function Swatch({ kind }: { kind: MarkKind }) {
       </svg>
     );
   }
-  const cls = { mean: "mk-mean", result: "mk-ring", dot: "mk-dot" }[kind];
+  const cls = { mean: style === "uniform" ? "mk-dot" : "mk-mean", result: "mk-ring", dot: "mk-dot" }[kind];
   return <i aria-hidden="true" className={`mk mk-sw ${cls}`} />;
 }
 

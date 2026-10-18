@@ -23,7 +23,7 @@ const GROUP_OPTIONS: { id: Kind; label: string; hint: string }[] = [
 const FILE: Record<Exclude<Kind, "link" | "long">, string> = { seats: "סקר-האתר-מנדטים.png", vote: "סקר-האתר-הצבעה.png", invite: "הזמנה-לסקר-הקבוצה.png" };
 
 /**
- * שיתוף סקר האתר: שורת ההזמנה צפה בתחתית עם ריווח מדוד; אין כפתור שיתוף כפול. במסך קבוצה (group): הפס בא אחרי תמונת הקבוצה (לא בראש העמוד), והאפשרויות כוללות תמונת הזמנה עם שם הקבוצה ולוגו.
+ * שיתוף סקר האתר: שורת ההזמנה צפה בתחתית עם ריווח מדוד; אין כפתור שיתוף כפול. גם במסך קבוצה (group) הפס צף בתחתית, והאפשרויות כוללות תמונת הזמנה עם שם הקבוצה ולוגו.
  */
 export default function CommunityShare({ d, group, selection = { product: "polls.mean" } }: { d: Dashboard; group?: GroupShareInfo; selection?: Selection }) {
   const [open, setOpen] = useState(false);
@@ -39,10 +39,7 @@ export default function CommunityShare({ d, group, selection = { product: "polls
   );
   return (
     <>
-      {group ? <>
-        <div className="mb-5">{banner}</div>
-        <FloatingPanel><Btn kind="primary" onClick={() => setOpen(true)}>שיתוף</Btn></FloatingPanel>
-      </> : <FloatingPanel className="c-community-share">{banner}</FloatingPanel>}
+      <FloatingPanel className="c-community-share">{banner}</FloatingPanel>
       {open && <ShareDialog d={d} group={group} selection={selection} onClose={() => setOpen(false)} />}
     </>
   );

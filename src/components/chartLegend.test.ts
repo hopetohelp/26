@@ -38,7 +38,7 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
     const html = renderToStaticMarkup(createElement(SeatsStats, { rows: [stat], polls: { likud: 29 }, view: "chart" }));
     expect(html).not.toContain("mk-dia");
     expect(html).toContain("mk-ring");
-    expect(html).toContain("mk-mean");
+    expect(html).toContain("mk-dot");
   });
 });
 
@@ -59,15 +59,15 @@ describe("ChartLegend", () => {
     const html = renderToStaticMarkup(createElement(ChartLegend, { entries, action: createElement("i", { id: "act" }) }));
     expect(html.indexOf("מקרא")).toBeLessThan(html.indexOf('id="act"'));
   });
-  it("הפאנל הפתוח מסביר כל סימון, ובלי הסבר על רמות העובי (שורה אחת בלבד, בתוך הסימון של הנר)", () => {
+  it("הפאנל הפתוח מציע את שתי צורות הנר ומסביר טווח מלא כברירת מחדל", () => {
     const html = renderToStaticMarkup(createElement(LegendPanel, { entries: [...entries, { kind: "candle", text: rangeLine("full", "הסקרים") }] }));
-    for (const t of ["ממוצע בדיקה", "טווח בדיקה", "טווח מלא - עובי הנר מראה את כמות הסקרים שנמצאים בטווח הזה"]) expect(html).toContain(t);
+    for (const t of ["ממוצע בדיקה", "נר אחיד", "שלוש רמות", "טווח מלא"]) expect(html).toContain(t);
     for (const t of ["דק:", "בינוני:", "עבה:", "שליש", "mk-c1", "mk-c3", "mk-c5", "mk-candle"]) expect(html).not.toContain(t);
   });
   it("כל סוגי הדוגמיות מצוירים", () => {
     const kinds: LegendKind[] = ["candle", "mean", "result", "dot", "line", "lineList", "dash", "pass", "seatGov", "seatMiss", "seatOther"];
     const html = renderToStaticMarkup(createElement(LegendPanel, { entries: kinds.map((kind) => ({ kind, text: kind })) }));
-    for (const k of kinds) expect(html).toContain(`>${k}<`);
+    for (const k of kinds.filter(k => k !== "candle")) expect(html).toContain(`>${k}<`);
     expect(html).toContain("mk-prof-sw");
     expect(html).toContain("sw-miss");
   });
