@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { wallClockLeft } from "../lib/countdown";
 import { LOCK_AT } from "../pages/guess/model";
 
@@ -15,7 +15,7 @@ const two = (n: number) => String(n).padStart(2, "0");
  * שעון עצר למדגמי הבחירות (הכרעת בעלים 11.10.2026, מחליף את הכותרת "תמונת מצב 16 ימים ו-8 שעות למדגמים"):
  * ימים · שעות · דקות · שניות עד 27.10, 22:00, משמאל לימין (הכרעת בעלים 11.10.2026): ימים בשמאל, ושניות בימין. מתעדכן בכל שנייה, כך שהדקות מתחלפות בדיוק. הכותרת של המסך נשארת לקורא מסך בלבד.
  * `compact`: צר, בתוך החלל הפנימי של הפרסה (גודל לפי רוחב הלוח, `cqw`). בלי כיתוב גלוי "עד המדגמים" (הכרעת בעלים 11.10.2026); ההסבר נשאר בתווית לקורא מסך.
- * `bar`: בסרגל העליון (הכרעת בעלים 12.10.2026, במקום שבב "עוד N ימים"): צבעי המסגרת (`frame-ink`, `frame-soft`), וגודל הספרות לפי הקטן מבין גובה הסרגל לרוחב החלל שנשאר (`cqw` של המיכל). בטלפון (מתחת ל-`md`) בלי שניות, ובספרות גדולות יותר.
+ * `bar`: בסרגל העליון (הכרעת בעלים 12.10.2026, במקום שבב "עוד N ימים"): צבעי המסגרת (`frame-ink`, `frame-soft`), וגודל הספרות לפי הקטן מבין גובה הסרגל לרוחב החלל שנשאר (`cqw` של המיכל). השניות מוצגות רק כשמדידת הרוחב הפנוי מאפשרת זאת.
  * מהטוקנים בלבד, ממורכז, שורה אחת בכל רוחב.
  */
 export default function ExitPollClock({ compact = false, bar = false }: { compact?: boolean; bar?: boolean }) {
@@ -29,27 +29,7 @@ export default function ExitPollClock({ compact = false, bar = false }: { compac
   if (!p) return <p className={`text-center font-display ${compact ? "text-[max(.8rem,3.4cqw)] leading-tight" : "text-2xl"}`}>מדגמי הבחירות פורסמו</p>;
   const cells: [string, string][] = [[String(p.days), "ימים"], [two(p.hours), "שעות"], [two(p.minutes), "דקות"], [two(p.seconds), "שניות"]];
   const label = `עד המדגמים: ${p.days} ימים, ${p.hours} שעות, ${p.minutes} דקות ו-${p.seconds} שניות`;
-  if (bar) {
-    // המיכל נמתח לרוחב החלל שבין שם האתר לבורר התצורה; הגודל לפי רוחבו, עם תקרה לפי גובה הסרגל
-    return (
-      <div className="flex-1 min-w-0 flex justify-center" style={{ containerType: "inline-size" }}>
-        <div role="timer" aria-label={label} className="text-center">
-          <div aria-hidden="true" dir="ltr" className="flex items-start justify-center gap-[2cqw] md:gap-3">
-            {cells.map(([value, unit], i) => (
-              // בטלפון בלי שניות (הכרעת בעלים 12.10.2026): שלושה תאים, וספרות גדולות יותר
-              <div key={unit} className={`${unit === "שניות" ? "hidden md:flex" : "flex"} items-start gap-[2cqw] md:gap-3`}>
-                {i > 0 && <span className="font-num font-extrabold leading-none text-frame-soft [font-size:min(1.75rem,19cqw)] md:[font-size:min(1.5rem,10.5cqw)]">:</span>}
-                <div className="flex flex-col items-center">
-                  <span className="font-num font-extrabold tabular leading-none text-frame-ink [font-size:min(1.75rem,19cqw)] md:[font-size:min(1.5rem,10.5cqw)]" dir="ltr">{value}</span>
-                  <span className="mt-0.5 leading-none text-frame-soft [font-size:max(10px,min(.75rem,4cqw))] md:[font-size:max(9px,min(.75rem,3.6cqw))]">{unit}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (bar) return <MeasuredBarClock cells={cells} label={label} />;
   return (
     <div role="timer" aria-label={label} className="text-center">
       <div aria-hidden="true" dir="ltr" className={`flex items-start justify-center ${compact ? "gap-[2cqw]" : "gap-1.5 md:gap-4"}`}>
@@ -65,4 +45,21 @@ export default function ExitPollClock({ compact = false, bar = false }: { compac
       </div>
     </div>
   );
+}
+
+/** מחליטים לפי רוחב התוכן שנמדד, ולא לפי סוג המכשיר או נקודת שבירה. */
+function MeasuredBarClock({ cells, label }: { cells: [string, string][]; label: string }) {
+  const host = useRef<HTMLDivElement>(null);
+  const probe = useRef<HTMLDivElement>(null);
+  const [seconds, setSeconds] = useState(false);
+  useLayoutEffect(() => {
+    const update = () => { if (host.current && probe.current) setSeconds(host.current.clientWidth >= probe.current.scrollWidth); };
+    const observer = new ResizeObserver(update);
+    if (host.current) observer.observe(host.current);
+    if (probe.current) observer.observe(probe.current);
+    document.fonts.ready.then(update); update();
+    return () => observer.disconnect();
+  }, []);
+  const content = (all: boolean) => <div className="c-clock-cells" dir="ltr">{cells.filter(([, unit]) => all || unit !== "שניות").map(([value, unit], i) => <div className="c-clock-cell" key={unit}>{i > 0 && <b aria-hidden="true">:</b>}<span><b className="font-num">{value}</b><small>{unit}</small></span></div>)}</div>;
+  return <div ref={host} className="c-clock-host"><div ref={probe} className="c-clock-probe" aria-hidden="true">{content(true)}</div><div role="timer" aria-label={label} data-seconds={seconds}>{content(seconds)}</div></div>;
 }

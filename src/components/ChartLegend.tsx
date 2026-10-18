@@ -1,3 +1,5 @@
+import { useCandleStyle, setCandleStyle } from "../lib/candleStyle";
+import { Segmented } from "./Choice";
 import { createContext, useContext, useId, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Swatch, type MarkKind } from "./marks";
@@ -88,15 +90,17 @@ function LegendSwatch({ kind }: { kind: LegendKind }) {
 
 /** תוכן המקרא הפתוח: הסימונים */
 export function LegendPanel({ id, entries, children }: { id?: string; entries: LegendEntry[]; children?: ReactNode }) {
+  const style = useCandleStyle();
   return (
     <div id={id} className="mt-2 rounded-theme border border-paper-line bg-paper-card p-3 text-sm text-ink-soft">
+      {entries.some(e => e.kind === "candle") && <div className="mb-3"><Segmented label="צורת הנר" value={style} onChange={setCandleStyle} options={[{ id: "uniform", label: "נר אחיד" }, { id: "profile", label: "שלוש רמות" }]} /><p className="text-xs mt-2">הבחירה נשמרת לכל הגרפים. בנתונים אמיתיים הטווח תמיד מלא; הנקודה מציינת את הממוצע.</p></div>}
       <ul className="grid gap-y-2">
         {entries.map((e, i) => (
           <li key={i} className="flex items-center gap-2.5">
             <span className="w-12 shrink-0 flex justify-center">
               <LegendSwatch kind={e.kind} />
             </span>
-            <span className="min-w-0">{e.text}</span>
+            <span className="min-w-0">{e.kind === "candle" && style === "uniform" ? (typeof e.text === "string" && e.text.includes("80%") ? "טווח 80% בנר אחיד (תרחישים בלבד)" : "טווח מלא — מהנתון הנמוך ביותר לגבוה ביותר, בנר אחיד") : e.text}</span>
           </li>
         ))}
       </ul>

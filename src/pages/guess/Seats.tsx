@@ -1,3 +1,4 @@
+import CardDrawer from "../../components/CardDrawer";
 import { GuessChart } from "./Workspace";
 import SourcePicker from "../../components/SourcePicker";
 import { useSourcePreference } from "../../lib/sourcePreference";
@@ -357,7 +358,7 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
 /** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
 export function HowTo({ signedIn = false }: { signedIn?: boolean }) {
   return (
-    <details className="c-howto c-fold mb-4"><summary className="min-h-11 flex items-center cursor-pointer font-bold">איך בונים את הכנסת שלי?</summary>
+    <CardDrawer title="איך בונים את הכנסת שלי?" className="c-howto mb-2">
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
         <li>מתחילים מאפס, מבחירות 22, מממוצע סקרים או מסקר בודד — מה שנוח לכם.</li>
         <li>נועלים את המספרים שרוצים לשמור, ומשאירים את שאר המפלגות פתוחות לשינויים.</li>
@@ -382,7 +383,7 @@ export function HowTo({ signedIn = false }: { signedIn?: boolean }) {
           <p><b>בחירות 22 · סקרים:</b> שני מקורות להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. ממוצע המשתתפים מוצג רק בשלב הבא, אחרי השלמת הכנסת. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין ההשערות), כמו בסקר האתר.</p>
         </div>
       </details>
-    </details>
+    </CardDrawer>
   );
 }
 

@@ -286,10 +286,10 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/dictionary.json",
     title: "מילון המספרים",
-    description: "ערך לכל מספר שהאתר מחשב: איפה הוא מופיע, סוג, מקור, ההנחה המרכזית והפירוט המלא — אותו תוכן שבמסך \"שיטה, מקורות ואודות\".",
+    description: "ערך לכל מספר שהאתר מחשב: איפה הוא מופיע, סוג, מקור, ההנחה המרכזית והפירוט המלא — אותו תוכן שבמסך \"מידע\".",
     methodAnchor: "numbers",
     kind: "השוואה",
-    source: "מסך \"שיטה, מקורות ואודות\" באתר",
+    source: "מסך \"מידע\" באתר",
     screen: "/method",
     fields: "entries[] (id, title, where, kind, source, assumption, detail, url)",
     build: () => ({ entries: dictionaryEntries() }),

@@ -114,7 +114,7 @@ createRoot(document.getElementById("root")!).render(
             { id: "trends", label: "מגמות", element: <Trends /> },
             { id: "archive", label: "ארכיון", element: <Polls /> },
           ]} />} />
-          <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען את ההשוואה…</p>}><Changes /></Suspense>} />
+          <Route path="changes" element={<Moved to="/past" tab="changes" />} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense>} />
           <Route path="community" element={<LegacyCommunity />} />
@@ -124,12 +124,13 @@ createRoot(document.getElementById("root")!).render(
             element={<Tabbed label="בחירות קודמות" aliases={{ voters: "results" }} tabs={[
               { id: "results", label: "תוצאות אמת", element: <Results /> },
               { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
+              { id: "changes", label: "מה השתנה", element: <Changes /> },
             ]} />}
           />
           <Route
             path="method"
             element={<Tabbed
-              label="שיטה, מקורות ואודות"
+              label="מידע"
               aliases={{ method: "numbers" }}
               anchors={{ sources: "sources", updates: "sources", privacy: "sources", law: "law", limits: "law", about: "about" }}
               tabs={[

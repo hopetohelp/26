@@ -591,3 +591,55 @@
 
 .c-source-picker::after { content:"";position:absolute;left:14px;top:50%;width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-70%) rotate(45deg);pointer-events:none; }
 @media(min-width:768px) { #main[data-screen=home] { padding-bottom:24px; } }
+
+/* קטעי הבית: פעולות בתוך הקטע, לפני הקו המפריד. */
+.c-home-heading h1 { font-size:clamp(1.25rem,2vw,1.65rem);font-weight:700; }
+.c-home-duel,.c-home-edge,.c-home-trend { border-bottom:1px solid rgb(var(--line));padding-bottom:16px; }
+.c-home .c-duel-grid { border:0; }
+.c-home .c-home-edge>section { margin-top:0; }
+.c-home-grid { row-gap:20px; }
+.c-hall-bloc { display:flex;align-items:baseline;justify-content:center;gap:5px;font-weight:700;font-size:clamp(9px,3.5cqw,18px); }
+.c-hall-bloc .font-num { font-size:clamp(16px,6cqw,30px); }
+.c-hall-separator { position:relative;border-top:1px solid rgb(var(--ink-faint));margin:14px 0; }
+.c-hall-separator>span { position:absolute;left:50%;top:0;transform:translate(-50%,-50%) rotate(-15deg);padding:2px 5px;background:rgb(var(--accent-soft));font-size:clamp(12px,4cqw,21px);font-weight:800; }
+/* הכותרת ופעולות סקר האתר מעל קו משותף מלא. */
+.c-stage-heading { border-bottom:1px solid rgb(var(--line));padding-bottom:16px;margin-bottom:16px; }
+.c-stage-heading .c-page-title { border:0;margin:0;padding-bottom:0; }
+.c-floating-panel.c-community-share { left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));width:100%;max-width:100%; }
+@media(min-width:768px) { .c-floating-panel.c-community-share { bottom:0; } }
+.c-community-share .c-share-banner { border-radius:0;padding:10px 16px; }
+/* אותו קצב קומפקטי למגירות ולהודעת ההשלמה בכנסת שלי. */
+#main[data-screen=guess] .c-card-drawer,#main[data-screen=guess] .c-stage-notice { background:rgb(var(--accent-soft));border:1px solid rgb(var(--line));border-radius:10px;margin-block:8px;padding-inline:12px;font-size:13px; }
+#main[data-screen=guess] .c-card-drawer>div:first-child,#main[data-screen=guess] .c-card-drawer>div:first-child button { min-height:44px; }
+#main[data-screen=guess] .c-card-drawer h2 { font-size:13px; }
+#main[data-screen=guess] .c-stage-notice { min-height:44px;padding-block:4px;gap:6px; }
+#main[data-screen=guess] .c-stage-notice button { min-height:36px;padding:4px 10px;font-size:12px; }
+#main[data-screen=guess] .c-howto { padding-block:0; }
+.c-clock-host { flex:1;min-width:0;position:relative;display:flex;justify-content:center;container-type:inline-size; }
+.c-clock-probe { position:absolute;visibility:hidden;pointer-events:none;width:max-content; }
+.c-clock-cells { display:flex;justify-content:center;gap:8px; }
+.c-clock-cell { display:flex;gap:8px;align-items:start; }
+.c-clock-cell>span { display:flex;flex-direction:column;align-items:center; }
+.c-clock-cell b { font-size:24px;line-height:1;font-weight:800;color:rgb(var(--frame-ink)); }
+.c-clock-cell small { font-size:10px;line-height:1.4;color:rgb(var(--frame-soft)); }
+.c-clock-host [data-seconds=false] .c-clock-cell b { font-size:clamp(10px,15cqw,24px); }
+.c-clock-host [data-seconds=false] .c-clock-cells,.c-clock-host [data-seconds=false] .c-clock-cell { gap:clamp(2px,2cqw,8px); }
+@media(min-width:960px) { .c-masthead-source { margin-inline-end:clamp(8px,2vw,32px); } }
+.c-mobile-tabs { display:flex;align-items:center; }
+.c-mobile-tab-list { display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain; }
+.c-mobile-tab-list::-webkit-scrollbar { display:none; }
+.c-mobile-tab-list>li { flex:1 0 auto;min-width:72px;padding-inline:8px;white-space:nowrap; }
+.c-tab-scroll { flex:none;width:32px;min-height:64px;color:rgb(var(--accent));border-inline-start:1px solid rgb(var(--line)); }
+@media(min-width:768px) { .c-mobile-tabs { display:none; } }
+/* מפנים לשעון רוחב קריא גם לצד בורר המקור בטלפון צר. */
+.c-masthead-row>button { flex-shrink:0; }
+@media(max-width:479px) {
+ .c-masthead-row { padding-inline:12px;column-gap:4px; }
+ .c-masthead-row>div:first-child>a { font-size:20px; }
+}
+@media(max-width:359px) {
+ .c-masthead-row { padding-inline:8px;column-gap:3px; }
+ .c-masthead-row>div:first-child>a { font-size:16px; }
+ .c-masthead-source .c-source-picker select,.c-masthead-source .c-source-width { font-size:11px;padding-left:26px; }
+ .c-masthead-source .c-source-picker::after { left:10px; }
+}

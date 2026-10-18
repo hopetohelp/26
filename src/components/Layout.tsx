@@ -3,7 +3,7 @@ import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { ScreenLegend } from "./ChartLegend";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
 import { date } from "../lib/format";
@@ -14,20 +14,19 @@ import ExitPollClock from "./ExitPollClock";
 import { MASTHEAD_SLOT } from "./SourcePicker";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
-/** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקרים · אישי. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
+/** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
   { to: "/guess", label: "הכנסת שלי", icon: "guess" },
-  { to: "more", label: "עוד", icon: "more" },
   { to: "/polls", label: "סקרים", icon: "bars" },
+  { to: "/past", label: "בחירות קודמות", icon: "board" },
+  { to: "/method", label: "מידע", icon: "info" },
   { to: "/support", label: "אישי", icon: "user" },
 ];
-/** המסכים שאינם בסרגל — נגזר מ-PAGES, כדי שמסך חדש לא יישכח */
-const MORE = PAGES.filter((p) => !TABS.some((t) => t.to === p.to));
-
 function Icon({ name }: { name: string }) {
   const p = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   if (name === "home") return <svg {...p}><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /><path d="M10 20v-6h4v6" /></svg>;
+  if (name === "info") return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7v.1" /></svg>;
   if (name === "board") return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 10h18M9 4v16" /></svg>;
   if (name === "bars") return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" /></svg>;
   if (name === "guess") return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" /></svg>;
@@ -91,7 +90,7 @@ function ModePicker() {
 function Masthead() {
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
-      <div className="w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
+      <div className="c-masthead-row w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
         <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
           <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
             בחירות 26
@@ -139,81 +138,25 @@ function UnreadDot() {
 
 function MobileTabs({ unread }: { unread: boolean }) {
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(false);
-  const moreBtn = useRef<HTMLButtonElement>(null);
-  const closeBtn = useRef<HTMLButtonElement>(null);
-  const inMore = MORE.some((p) => pathname === p.to || pathname.startsWith(`${p.to}/`));
-  const close = () => { setOpen(false); moreBtn.current?.focus(); };
-  useEffect(() => setOpen(false), [pathname]);
-  useEffect(() => {
-    if (!open) return;
-    closeBtn.current?.focus();
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); moreBtn.current?.focus(); } };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-  const tabClass = (active: boolean) =>
-    `flex flex-col items-center justify-center gap-0.5 h-16 w-full text-xs no-underline ${active ? "text-ink font-bold" : "text-ink-faint"}`;
-  return (
-    <>
-      {open && <div className="md:hidden fixed inset-0 z-40 bg-black/45" onClick={close} aria-hidden="true" />}
-      {open && (
-        <div
-          id="more-sheet"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="more-title"
-          className="md:hidden fixed inset-x-0 z-40 bg-paper-card text-ink rounded-t-theme border-t border-paper-line px-4 pb-2 bottom-[calc(4rem+env(safe-area-inset-bottom))]"
-        >
-          <div className="flex items-center justify-between min-h-[52px]">
-            <h2 id="more-title" className="text-xl font-extrabold">עוד</h2>
-            <button ref={closeBtn} type="button" onClick={close} aria-label="סגירה" className="w-11 h-11 grid place-items-center rounded-full border border-paper-line">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-            </button>
-          </div>
-          <ul>
-            {MORE.map((p) => (
-              <li key={p.to}>
-                <Link to={p.to} className="flex items-center min-h-[56px] border-t border-paper-line font-semibold no-underline text-ink hover:text-ink">{p.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <nav aria-label="ניווט בטלפון" className={`md:hidden fixed bottom-0 inset-x-0 ${open ? "z-50" : "z-30"} bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]`}>
-        <ul className="grid grid-cols-5">
-          {TABS.map((t) => (
-            <li key={t.to}>
-              {t.to === "more" ? (
-                <button
-                  ref={moreBtn}
-                  type="button"
-                  aria-haspopup="dialog"
-                  aria-expanded={open}
-                  aria-controls="more-sheet"
-                  onClick={() => setOpen((v) => !v)}
-                  className={tabClass(open || inMore)}
-                  aria-current={inMore && !open ? "page" : undefined}
-                >
-                  <span className="relative"><Icon name={t.icon} /></span>
-                  {t.label}
-                </button>
-              ) : (
-                <NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => tabClass(isActive && !open)}>
-                  <span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span>
-                  {t.label}
-                </NavLink>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </>
-  );
+  const scroller = useRef<HTMLUListElement>(null);
+  const [overflow, setOverflow] = useState(false);
+  const [atEnd, setAtEnd] = useState(false);
+  useLayoutEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const update = () => { const required = Array.from(el.children).reduce((sum, child) => sum + (child as HTMLElement).offsetWidth, 0); setOverflow(required > (el.parentElement?.clientWidth ?? 0) + 1); setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2); };
+    const observer = new ResizeObserver(update); observer.observe(el);
+    el.addEventListener("scroll", update); document.fonts.ready.then(update); update();
+    return () => { observer.disconnect(); el.removeEventListener("scroll", update); };
+  }, []);
+  useEffect(() => { scroller.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [pathname]);
+  return <nav aria-label="ניווט בטלפון" className="c-mobile-tabs md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
+    <ul ref={scroller} className="c-mobile-tab-list">{TABS.map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
+    {overflow && <button type="button" className="c-tab-scroll" aria-label={atEnd ? "גלילה לתחילת הניווט" : "גלילה להמשך הניווט"} onClick={() => scroller.current?.scrollBy({ left: (atEnd ? 1 : -1) * scroller.current.clientWidth * .7, behavior: "smooth" })}>{atEnd ? "→" : "←"}</button>}
+  </nav>;
 }
 
-/** במחשב: הזמנה צפה להשערה (הכרעת בעלים 8.10.2026). לא במסכי ההשערה והסטטיסטיקות ולא בניהול; לתוכן יש ריווח תחתון כדי שלא יוסתר. */
-const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/support"]; // אזור אישי: שדה הצ׳אט צמוד לתחתית
+const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/support"];
 function GuessCta({ pathname }: { pathname: string }) {
   // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
   if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;

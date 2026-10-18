@@ -66,14 +66,16 @@ export function Hemicycle({ coalition, arab, opposition, duel, footer, info }: {
             const start = tone(k + 0.000001), end = tone(k + 0.999999);
             const split = start !== end;
             const id = `${gradientId}-${k}`;
-            return <g key={k}>{split && <defs><linearGradient id={id}><stop offset="50%" className={`seat-stop-${start}`} /><stop offset="50%" className={`seat-stop-${end}`} /></linearGradient></defs>}<circle cx={s.x} cy={s.y} r={HALL.r} className={`${classes[start]} seat-in`} data-split={split || undefined} style={{ animationDelay: `${k * 5}ms`, ...(split ? { fill: `url(#${id})` } : {}) }} /></g>;
+            return <g key={k}>{split && <defs><linearGradient id={id} x1="100%" x2="0%" y1="0%" y2="0%"><stop offset="50%" className={`seat-stop-${start}`} /><stop offset="50%" className={`seat-stop-${end}`} /></linearGradient></defs>}<circle cx={s.x} cy={s.y} r={HALL.r} className={`${classes[start]} seat-in`} data-split={split || undefined} style={{ animationDelay: `${k * 5}ms`, ...(split ? { fill: `url(#${id})` } : {}) }} /></g>;
           })}
         </svg>
         {duel && (
           // מרכז החלל הפנימי של הפרסה (הכרעת בעלים 11.10.2026): שורה לכל גוש — המספר ושם הגוש, גוש נתניהו למעלה — עם קו הפרדה ו"&" באלכסון באמצעו
           // `info`: אייקון המידע של המספרים (ממוצע המודל), ממורכז מתחת לשתי השורות בלי להזיז אותן; הוא היחיד כאן שאינו מוסתר מקורא מסך
           <div className="absolute z-10 flex flex-col items-stretch whitespace-nowrap leading-none" style={{ left: "50%", top: `${(HALL.cy / HALL.h) * 100}%`, transform: "translate(-50%, -50%)" }}>
-            <span className="font-num font-extrabold text-center" style={{ fontSize: "clamp(18px, 7cqw, 40px)" }} aria-label={`${duel[0]}: ${seatsFmt(coalition)}; ${duel[1]}: ${seatsFmt(opposition)}`}><bdi>{seatsFmt(coalition)}</bdi><span className="mx-1.5 text-ink-faint" aria-hidden="true">:</span><bdi>{seatsFmt(opposition)}</bdi></span>
+            <div className="c-hall-bloc"><bdi className="font-num">{seatsFmt(coalition)}</bdi><span>{duel[0]}</span></div>
+            <div className="c-hall-separator" aria-hidden="true"><span>&amp;</span></div>
+            <div className="c-hall-bloc"><bdi className="font-num">{seatsFmt(opposition)}</bdi><span>{duel[1]}</span></div>
             {info && <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 md:mt-2">{info}</span>}
           </div>
         )}
