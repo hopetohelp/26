@@ -1,7 +1,7 @@
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
 import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import MyData from "./guess/MyData";
 import Account, { ManagedGroup } from "./guess/Account";
@@ -49,11 +49,13 @@ function Avatar({ name, picture }: { name: string | null; picture: string | null
 }
 
 /** שיחת התמיכה: כל ההודעות ברצף אחד, נגללת מעל שדה ההודעה הקבוע בתחתית */
-function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
+function Conversation({ session, ask }: { session: ReturnType<typeof useSession>; ask: boolean }) {
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [closed, setClosed] = useState(false);
   const [text, setText] = useState("");
-  const [topic, setTopic] = useState<FeedbackTopic>("other");
+  // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ שאלה או תאוריה, והסמן בשדה הכתיבה
+  const [topic, setTopic] = useState<FeedbackTopic>(ask ? "theory" : "other");
+  useEffect(() => { if (ask) { setTopic("theory"); document.getElementById("support-message")?.focus(); } }, [ask]);
   const maxText = 2000 - topicMessage(topic, "").length;
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -135,12 +137,15 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
       </div>
-      <p className="text-xs text-ink-soft pb-2">התשובות מתקבלות פעם בכמה שעות. כדי לשאול ולקבל תשובה מיידית על נתוני האתר, מומלץ לחבר מפתח AI אישי (על חשבונכם).{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
-      <PrivateKeyEntry />
       {!closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
-          {topic === "theory" && <p className="text-xs text-ink-soft">שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם.</p>}
+          {/* בחלק הקבוע מעל שדה הכתיבה; כל מה שנוגע למפתח AI — רק בשאלה או תאוריה */}
+          <p className="text-xs text-ink-soft">התשובות מתקבלות פעם בכמה שעות.{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
+          {topic === "theory" && <>
+            <p className="text-xs text-ink-soft">שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם.</p>
+            <PrivateKeyEntry />
+          </>}
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
             {/* שורה אחת כברירת מחדל, ומתרחב עם הטקסט עד 5 שורות; מעבר לזה — גלילה בתוך השדה */}
@@ -162,13 +167,15 @@ function Conversation({ session }: { session: ReturnType<typeof useSession> }) {
  */
 function Chat({ session }: { session: ReturnType<typeof useSession> }) {
   const key = usePrivateKey();
+  const ask = useSearchParams()[0].has("ask");
   const [mode, setMode] = useState<"team" | "private">("team");
   const priv = !!key && mode === "private";
-  useEffect(() => { if (!key) setMode("team"); }, [key]);
+  // בלי מפתח ⇐ צוות האתר; כניסה מ"שאלו את הצ׳ט החכם" עם מפתח מחובר ⇐ ישר לשיחה הפרטית
+  useEffect(() => { setMode(key && ask ? "private" : "team"); }, [key, ask]);
   return (
     <>
       {key && <div className="pt-4"><Segmented label="מצב השיחה" size="sm" value={mode} onChange={setMode} options={[{ id: "team", label: "צוות האתר" }, { id: "private", label: "פרטי (על חשבוני)" }]} /></div>}
-      <div className={priv ? "hidden" : "flex-1 flex flex-col"}><Conversation session={session} /></div>
+      <div className={priv ? "hidden" : "flex-1 flex flex-col"}><Conversation session={session} ask={ask} /></div>
       {key && <div className={priv ? "flex-1 flex flex-col" : "hidden"}><PrivateChat /></div>}
     </>
   );
@@ -190,7 +197,9 @@ export default function Support() {
   const { me, token } = session;
   // הודעה חדשה מהצוות ⇐ השיחה מוצגת תמיד; הביקור במסך מסמן אותה כנקראה
   useSupportUnread("/");
-  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(token ? [] : ["details"]));
+  // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
+  const ask = useSearchParams()[0].has("ask");
+  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(token || ask ? [] : ["details"]));
   const toggle = (id: DrawerId) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   useEffect(() => { if (me?.needsEmail) setOpen((s) => new Set(s).add("details")); }, [me?.needsEmail]);
   const blocked = useServerBlocked();

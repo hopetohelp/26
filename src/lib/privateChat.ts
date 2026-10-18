@@ -1,81 +1,101 @@
 /**
- * הצ'אט הפרטי עם מפתח AI אישי (הכרעת בעלים 14.10.2026). הבעלים היחיד של המפתח האישי בדפדפן ושל הקריאה ל-`/private/ask`.
+ * הצ'אט החכם עם מפתח AI אישי. הבעלים היחיד של המפתח האישי ושל הקריאות ל-`/private/key` ו-`/private/ask`.
  *
- * 🔴 הפרדה מלאה מהצ'אט עם צוות האתר ומכל מה שהאתר שומר:
- *  - המפתח נשמר בדפדפן הזה בלבד — כברירת מחדל ב-sessionStorage (נמחק בסגירת הלשונית); רק בבחירה "לזכור" גם ב-localStorage. אינו נשמר בשרת.
- *  - המפתח נשלח רק ל-`/private/ask` ומשם לספק שלו; לעולם לא לשרת ההשתתפות, לשיחות הצוות או לכל נתיב אחר.
- *  - הבקשה אינה נושאת אסימון חשבון, שיחה או מזהה כלשהו; השיחה עצמה נשארת בזיכרון הדף ואינה נשמרת בשום מקום.
+ * 🔴 הכרעת בעלים 18.10.2026 (מחליפה את "בדפדפן בלבד" של 14.10.2026): המפתח נשמר בשרת לפי החשבון, מוצפן,
+ * ואינו חוזר לדפדפן לעולם — כך הוא זמין לבעליו מכל מכשיר. לכן הצ'אט דורש כניסה לחשבון.
+ * השיחה עצמה נשארת בזיכרון הדף ואינה נשמרת בשרת, ונפרדת לגמרי מהשיחה עם צוות האתר.
  */
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { FEEDBACK_URL } from "./feedback";
+import { getToken } from "./crowdSession";
 
-const KEY = "elections26.privateKey";
-const EVENT = "elections26:private-key";
+/** המפתח נשמר בעבר בדפדפן; בכניסה הראשונה עם חשבון הוא עובר לשרת ונמחק מכאן */
+const LEGACY = "elections26.privateKey";
 
 export interface PrivateTurn { role: "user" | "assistant"; text: string }
-export type PrivateError = "bad_key" | "quota" | "rate" | "unavailable" | "offline";
+export type PrivateError = "bad_key" | "quota" | "rate" | "unavailable" | "offline" | "no_key" | "unauthorized";
 
 /** צורת מפתח סבירה: בלי רווחים, באורך שהשרת מקבל */
 export const isPlausibleKey = (k: string) => k.length >= 20 && k.length <= 400 && !/\s/.test(k);
 
-function read(): string | null {
+/** האם לחשבון המחובר יש מפתח שמור בשרת (null = לא ידוע / לא מחוברים) */
+let state: { token: string | null; has: boolean | null } = { token: null, has: null };
+const listeners = new Set<() => void>();
+const emit = (next: typeof state) => { state = next; listeners.forEach((l) => l()); };
+
+async function call(body: object): Promise<{ ok: boolean; has?: boolean; error?: string; text?: string; status: number }> {
+  if (!FEEDBACK_URL) return { ok: false, error: "offline", status: 0 };
+  try {
+    const res = await fetch(`${FEEDBACK_URL}${"messages" in body ? "/private/ask" : "/private/key"}`, {
+      method: "POST", cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer",
+      headers: { "content-type": "application/json" }, body: JSON.stringify(body),
+    });
+    return { ...(await res.json().catch(() => ({}))), status: res.status };
+  } catch { return { ok: false, error: "offline", status: 0 }; }
+}
+
+function takeLegacy(): string | null {
+  let found: string | null = null;
   for (const store of [() => sessionStorage, () => localStorage]) {
-    try { const v = store().getItem(KEY); if (v && isPlausibleKey(v)) return v; } catch { /* אחסון חסום */ }
+    try { const v = store().getItem(LEGACY); if (v && isPlausibleKey(v)) found = found ?? v; store().removeItem(LEGACY); } catch { /* אחסון חסום */ }
   }
+  return found;
+}
+
+/** בודק מול השרת אם לחשבון יש מפתח; מפתח ישן מהדפדפן עובר לשרת */
+export async function refreshPrivateKey(token = getToken()) {
+  if (!token) return emit({ token: null, has: null });
+  const legacy = takeLegacy();
+  const r = await call(legacy ? { token, key: legacy } : { token });
+  if (getToken() === token) emit({ token, has: r.ok ? !!r.has : null });
+}
+
+/** שומר את המפתח בשרת לחשבון המחובר. מחזיר שגיאה, או null בהצלחה */
+export async function savePrivateKey(key: string): Promise<string | null> {
+  const token = getToken();
+  if (!token) return "כדי לחבר מפתח צריך להיכנס לחשבון.";
+  const r = await call({ token, key: key.trim() });
+  if (!r.ok) return r.error === "bad_key" ? "המפתח לא נראה תקין. בדקו שהועתק במלואו, בלי רווחים." : "לא הצלחנו לשמור את המפתח כרגע. נסו שוב בעוד רגע.";
+  emit({ token, has: !!r.has });
   return null;
 }
 
-export const getPrivateKey = read;
-
-const notify = () => { try { window.dispatchEvent(new Event(EVENT)); } catch { /* סביבה בלי חלון */ } };
-
-/** שומר את המפתח בדפדפן. remember=false ⇐ עד סגירת הלשונית. false ⇐ הדפדפן חוסם אחסון. */
-export function setPrivateKey(key: string, remember: boolean): boolean {
-  clearPrivateKey();
-  try { (remember ? localStorage : sessionStorage).setItem(KEY, key.trim()); } catch { return false; }
-  notify();
-  return true;
+export async function removePrivateKey() {
+  const token = getToken();
+  takeLegacy();
+  if (!token) return emit({ token: null, has: null });
+  const r = await call({ token, key: null });
+  emit({ token, has: r.ok ? !!r.has : state.has });
 }
 
-export function clearPrivateKey() {
-  for (const store of [() => sessionStorage, () => localStorage]) { try { store().removeItem(KEY); } catch { /* אחסון חסום */ } }
-  notify();
-}
-
-/** המפתח האישי הנוכחי (או null), מתעדכן בכל לשונית */
-export function usePrivateKey(): string | null {
-  return useSyncExternalStore(
-    (cb) => { window.addEventListener(EVENT, cb); window.addEventListener("storage", cb); return () => { window.removeEventListener(EVENT, cb); window.removeEventListener("storage", cb); }; },
-    read,
-    () => null,
-  );
+/** האם לחשבון המחובר יש מפתח AI אישי שמור; נבדק מול השרת בכל החלפת חשבון */
+export function usePrivateKey(): boolean {
+  const token = getToken();
+  const snap = useSyncExternalStore((cb) => { listeners.add(cb); return () => { listeners.delete(cb); }; }, () => state, () => state);
+  useEffect(() => { if (snap.token !== token) void refreshPrivateKey(token); }, [token, snap.token]);
+  return snap.token === token && !!token && snap.has === true;
 }
 
 /** מגביל את ההיסטוריה שנשלחת לשרת: עד שש שאלות ותשובות אחרונות (מתחיל תמיד בשאלה) */
 export const recentTurns = (history: PrivateTurn[]): PrivateTurn[] => history.slice(-10);
 
 /** שאלה אחת בצ'אט הפרטי. history = זוגות שאלה–תשובה קודמים. מחזיר את התשובה, או סוג השגיאה. */
-export async function askPrivate(key: string, history: PrivateTurn[], question: string): Promise<{ ok: true; text: string } | { ok: false; error: PrivateError }> {
-  if (!FEEDBACK_URL) return { ok: false, error: "offline" };
-  try {
-    const res = await fetch(`${FEEDBACK_URL}/private/ask`, {
-      method: "POST", cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ key, messages: [...recentTurns(history), { role: "user", text: question }] }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (res.ok && data.ok && typeof data.text === "string") return { ok: true, text: data.text };
-    const e = data.error;
-    return { ok: false, error: e === "bad_key" || e === "quota" || e === "rate" ? e : "unavailable" };
-  } catch {
-    return { ok: false, error: "offline" };
-  }
+export async function askPrivate(history: PrivateTurn[], question: string): Promise<{ ok: true; text: string } | { ok: false; error: PrivateError }> {
+  const token = getToken();
+  if (!token) return { ok: false, error: "unauthorized" };
+  const data = await call({ token, messages: [...recentTurns(history), { role: "user", text: question }] });
+  if (data.ok && typeof data.text === "string") return { ok: true, text: data.text };
+  const e = data.error;
+  if (e === "no_key") emit({ token, has: false });
+  return { ok: false, error: e === "bad_key" || e === "quota" || e === "rate" || e === "offline" || e === "no_key" || e === "unauthorized" ? e : "unavailable" };
 }
 
 export const PRIVATE_ERROR_TEXT: Record<PrivateError, string> = {
   bad_key: "הספק לא קיבל את המפתח. בדקו שהועתק במלואו ושהשירות פעיל בחשבון שלכם.",
   quota: "המפתח חרג מהמכסה או מהתקציב שלו אצל הספק. בדקו בחשבון שלכם.",
-  rate: "יותר מדי שאלות היום ממקור זה. נסו שוב מחר.",
+  rate: "יותר מדי שאלות היום מהחשבון הזה. נסו שוב מחר.",
+  no_key: "לא נמצא מפתח שמור בחשבון. חברו מפתח מחדש.",
+  unauthorized: "כדי לשאול צריך להיכנס לחשבון.",
   unavailable: "לא הצלחנו לקבל תשובה כרגע. נסו שוב בעוד רגע.",
   offline: "אין חיבור לשרת האתר.",
 };
