@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Dashboard } from "../../lib/crowdApi";
 import { COMMUNITY_TEXT, COMMUNITY_URL, LONG_SHARE_TEXT, groupInviteImage, groupShareText, loadLogo, seatsImage, voteImage, type Brand } from "./communityShare";
-import { Btn } from "./ui";
+import { Btn, FloatingPanel } from "./ui";
 
 type Kind = "seats" | "vote" | "link" | "long" | "invite";
 /** במסך קבוצה (הכרעת בעלים 12.10.2026): name = שם הקבוצה, url = קישור הקבוצה, logoUrl = תמונתה; dataReady = יש לקבוצה נתונים להצגה (מ-50 משתתפים) */
@@ -23,15 +23,12 @@ const GROUP_OPTIONS: { id: Kind; label: string; hint: string }[] = [
 const FILE: Record<Exclude<Kind, "link" | "long">, string> = { seats: "סקר-האתר-מנדטים.png", vote: "סקר-האתר-הצבעה.png", invite: "הזמנה-לסקר-הקבוצה.png" };
 
 /**
- * שיתוף סקר האתר (הכרעת בעלים 10.10.2026): פס עליון שמזמין לשתף, כפתור צף בפינה השמאלית התחתונה,
- * ושניהם פותחים חלון עם שלוש אפשרויות — בכולן קישור לאתר. במסך קבוצה (group): הפס בא אחרי תמונת הקבוצה (לא בראש העמוד), והאפשרויות כוללות תמונת הזמנה עם שם הקבוצה ולוגו.
+ * שיתוף סקר האתר: שורת ההזמנה צפה בתחתית עם ריווח מדוד; אין כפתור שיתוף כפול. במסך קבוצה (group): הפס בא אחרי תמונת הקבוצה (לא בראש העמוד), והאפשרויות כוללות תמונת הזמנה עם שם הקבוצה ולוגו.
  */
 export default function CommunityShare({ d, group, selection = { product: "polls.mean" } }: { d: Dashboard; group?: GroupShareInfo; selection?: Selection }) {
   const [open, setOpen] = useState(false);
-  const [slot, setSlot] = useState<HTMLElement | null>(null);
-  useEffect(() => setSlot(document.getElementById("community-share")), []);
   const banner = (
-    <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="c-share-banner mb-5 rounded-theme border border-paper-line bg-accent-soft p-4 flex flex-wrap items-center justify-between gap-3">
+    <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="c-share-banner rounded-theme border border-paper-line bg-accent-soft p-4 flex flex-wrap items-center justify-between gap-3">
       {group
         ? <p className="font-display text-xl leading-tight">הוסיפו את ההשערה שלכם ל{group.name} <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים והרחיבו את מעגל המשתתפים.</span></p>
         : <div>
@@ -42,12 +39,10 @@ export default function CommunityShare({ d, group, selection = { product: "polls
   );
   return (
     <>
-      {slot && !group ? createPortal(banner, slot) : banner}
-      {createPortal(
-        <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}
-          className="fixed z-30 left-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] md:bottom-6 min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">
-          שיתוף
-        </button>, document.body)}
+      {group ? <>
+        <div className="mb-5">{banner}</div>
+        <FloatingPanel><Btn kind="primary" onClick={() => setOpen(true)}>שיתוף</Btn></FloatingPanel>
+      </> : <FloatingPanel className="c-community-share">{banner}</FloatingPanel>}
       {open && <ShareDialog d={d} group={group} selection={selection} onClose={() => setOpen(false)} />}
     </>
   );

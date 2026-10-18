@@ -355,7 +355,7 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
   );
 }
 /** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
-export function HowTo() {
+export function HowTo({ signedIn = false }: { signedIn?: boolean }) {
   return (
     <details className="c-howto c-fold mb-4"><summary className="min-h-11 flex items-center cursor-pointer font-bold">איך בונים את הכנסת שלי?</summary>
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
@@ -364,6 +364,11 @@ export function HowTo() {
         <li>רוצים? אפשר להגדיר גם יעד מנדטים לגוש משלכם.</li>
         <li>זהו, לוחצים ״השלם הכל״. שאר המפלגות מתעדכנות בהתאם למספרים שנעלתם וליעדי הגושים שהגדרתם.</li>
       </ol>
+      <section className="py-3 text-sm" aria-label="שמירה ושיתוף ההשערה">
+        <h2 className="font-bold mb-1">שמירה ושיתוף ההשערה</h2>
+        <p>{signedIn ? "ההשערה נשמרת בחשבון שלכם, ורק האחרונה נספרת בסקר האתר." : <>הטיוטה נשמרת במכשיר הזה ואפשר לשתף אותה. כדי שתיספר בסקר האתר ותישמר בהיסטוריה, נכנסים לחשבון בזמן השמירה או <Link to="/support">באזור האישי</Link>.</>}</p>
+        <p>לאחר השלמת הכנסת אפשר לשתף את ההשערה. גרסאות שנשמרו בחשבון זמינות בכפתור ״היסטוריית השערות״ במסך ההשערה.</p>
+      </section>
       <details className="group mt-2 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">
         <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[40px] text-sm font-bold">
           הסברים
@@ -375,7 +380,6 @@ export function HowTo() {
           <p><b>מנדטים או אחוזים:</b> המתג קובע מה מקלידים, והשני מתעדכן לבד. מאחוזים למנדטים — לפי חלוקת המנדטים, כמו בספירה האמיתית. ממנדטים לאחוזים — האחוז שנותן בדיוק את אותם מנדטים; מפלגה עם 0 שומרת על האחוז שלה, מתחת לסף.</p>
           <p><b>אחוז החסימה:</b> מפלגה צריכה לפחות 4 מנדטים כדי להיכנס לכנסת. לכן אין 1, 2 או 3 מנדטים — מעלים ל-4 או מורידים ל-0.</p>
           <p><b>בחירות 22 · סקרים:</b> שני מקורות להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. ממוצע המשתתפים מוצג רק בשלב הבא, אחרי השלמת הכנסת. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין ההשערות), כמו בסקר האתר.</p>
-          <p><b>שמירה:</b> נשמרת בחשבון שלכם, ורק ההשערה האחרונה נספרת בסטטיסטיקות.</p>
         </div>
       </details>
     </details>
