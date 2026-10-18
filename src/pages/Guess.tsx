@@ -91,8 +91,7 @@ export default function Guess({ landing = null }: { landing?: GroupPublic | null
       {/* ההשערה שלי: הפתיחה והבחירה בטור הצר, ההשערה או הסטטיסטיקות ברחב */}
       {(() => { const head = <>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
-      {!statistics && !shared && !auxiliary && <GuessIntro signedIn={!!session.token} />}
-      {!statistics && !auxiliary && <div className="c-stage-notice" role="status">{complete ? "הכנסת הושלמה. אפשר להמשיך לערוך או לצפות בממוצע המשתתפים." : "הצפייה בממוצע המשתתפים תיפתח אחרי השלמת הכנסת: 120 מנדטים, ולכל רשימה 0 או לפחות 4."}{complete && <Btn onClick={() => setStage("statistics")}>לממוצע המשתתפים ←</Btn>}</div>}
+      {!statistics && !shared && !auxiliary && <GuessIntro />}
       {auxiliary && <PageTitle>{params.get("section") === "blocs" ? "הגושים שלי" : "היסטוריית השערות"}</PageTitle>}
       {statistics && <div className="c-stage-heading"><PageTitle lead="שלב 2 · ההשערה שלכם מול הסקרים וממוצע המשתתפים. השערות המשתתפים אינן סקר.">הכנסת שלי — סקר האתר</PageTitle><div className="flex flex-wrap gap-2"><Btn onClick={() => setStage("edit")}>חזרה לעדכון ההשערה</Btn><SaveButton unit={seats} session={session} invalid={null} compact /></div></div>}
       {flash && (
@@ -116,7 +115,7 @@ export default function Guess({ landing = null }: { landing?: GroupPublic | null
       )}
       </>; const body = !statistics ? (
         <section id="my-guess" ref={top}>
-          <Mine key={mineKey} session={session} seats={seats} onStatistics={() => setStage("statistics")} />
+          <Mine key={mineKey} session={session} seats={seats} complete={complete} shared={sharedLink} onStatistics={() => setStage("statistics")} />
         </section>
       ) : (
         <section id="statistics">

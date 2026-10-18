@@ -511,7 +511,8 @@
 .c-stage-heading { display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap; }
 .c-stage-heading .c-page-title { flex:1;min-width:240px; }
 .c-guess-intro ul { max-width:80ch; }
-.c-howto { padding:0 4px;border-block:1px solid rgb(var(--line)); }
+.c-guess-intro { border-bottom:0;padding-bottom:0; }
+.c-howto { padding:0 4px; }
 .c-howto>ol { margin-block:12px; }
 .c-guess-workspace { display:grid;gap:24px;align-items:start; }
 .c-guess-workspace>* { min-width:0; }
@@ -609,7 +610,7 @@
 @media(min-width:768px) { .c-floating-panel.c-community-share { bottom:0; } }
 .c-community-share .c-share-banner { border-radius:0;padding:10px 16px; }
 /* אותו קצב קומפקטי למגירות ולהודעת ההשלמה בכנסת שלי. */
-#main[data-screen=guess] .c-card-drawer,#main[data-screen=guess] .c-stage-notice { background:rgb(var(--accent-soft));border:1px solid rgb(var(--line));border-radius:10px;margin-block:8px;padding-inline:12px;font-size:13px; }
+#main[data-screen=guess] .c-card-drawer,#main[data-screen=guess] .c-stage-notice { background:rgb(var(--accent-soft));border:1px solid rgb(var(--line));border-radius:10px;margin-block:23px;padding-inline:12px;font-size:13px; }
 #main[data-screen=guess] .c-card-drawer>div:first-child,#main[data-screen=guess] .c-card-drawer>div:first-child button { min-height:44px; }
 #main[data-screen=guess] .c-card-drawer h2 { font-size:13px; }
 #main[data-screen=guess] .c-stage-notice { min-height:44px;padding-block:4px;gap:6px; }
