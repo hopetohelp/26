@@ -1858,5 +1858,93 @@
     "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233861-0/"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-18",
+  "id": "2026-10-18-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "הועתק מכתבת i24NEWS (מקור ראשוני). סכום המנדטים 120 לאחר איחוד הציונות הדתית וזהות לרשימה אחת (6); הגושים 57/49/14 תואמים. שעת הפרסום משוערת.",
+  "source": "https://www.i24news.tv/en/news/israeli-elections/artc-i24news-poll-likud-slips-to-25-seats-as-ben-gvir-s-party-reaches-double-digits",
+  "sourceDetails": {
+   "published": "2026-10-18T21:00:00+03:00",
+   "sample_respondents": 525
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/en/news/israeli-elections/artc-i24news-poll-likud-slips-to-25-seats-as-ben-gvir-s-party-reaches-double-digits"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-18",
+  "id": "2026-10-18-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ch10 + כיפה: מנדטים 11 הרשימות (סך 120) וגושים 61/46/13 תואמים בשני דיווחים. לא הושווה לפרסום הראשוני (ערוץ 14 חסום).",
+  "source": "https://ch10.co.il/news/1108423/",
+  "sourceDetails": {
+   "published": "2026-10-18T09:00:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/1108423/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-18",
+  "id": "2026-10-18-kantar-kan-11",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "כיפה + מעריב: מנדטים 12 הרשימות (סך 120) וגושים 51/52 תואמים. לא הושווה לפרסום הראשוני של כאן (חסום); מדגם לא פורסם.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/%D7%A4%D7%95%D7%9C%D7%99%D7%98%D7%99/1233999-0/",
+  "sourceDetails": {
+   "published": "2026-10-18T20:41:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/%D7%A4%D7%95%D7%9C%D7%99%D7%98%D7%99/1233999-0/"
+   }
+  }
  }
 ]
