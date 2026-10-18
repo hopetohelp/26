@@ -393,15 +393,19 @@
  .c-home-edge>section { margin:0; }
  .c-home .c-duel-grid { grid-template-columns:1fr 1fr;border-top:0;border-bottom:1px solid rgb(var(--line)); }
  .c-home .c-duel-grid>.hidden { display:none; }
- .c-home .c-duel-side { padding:8px 38px;align-items:center;text-align:center; }
+ .c-home .c-duel-grid { column-gap:72px; }
+ .c-home .c-duel-side { display:flex;flex-direction:column;min-width:0;padding:8px 0; }
+ .c-home .c-duel-side[data-side=start] { align-items:flex-start;text-align:start; }
+ .c-home .c-duel-side[data-side=end] { align-items:flex-end;text-align:end; }
+ .c-home .c-duel-side>.lg\:hidden>span { width:48px!important;height:48px!important; }
  .c-home .c-duel-side>.lg\:hidden { display:block; }
  .c-home .c-duel-side img { width:48px;height:48px; }
  .c-home .c-duel-side>p { font-size:18px; }
  .c-home .c-duel-side>p.font-num { font-size:48px;margin-top:4px; }
  .c-home .c-duel-side>p:last-child { font-size:10px;margin-top:4px; }
  .c-home .c-duel-grid>span:last-child { width:54px;height:54px; }
- .c-home .c-duel-grid>span:last-child>span { font-size:18px; }
- .c-home .c-duel-grid>span:last-child>span:last-child { font-size:10px; }
+ .c-home .c-duel-counter>span { font-size:18px;line-height:1; }
+ .c-home .c-duel-counter>span:last-child { font-size:10px;line-height:1; }
  .c-home-edge h2 { font-size:18px; }.c-home-edge ul { margin-top:8px;gap:12px; }
  .c-home-edge li { border-width:2px;padding-inline-start:10px; }
  .c-home-edge li img { width:32px;height:32px; }.c-home-edge li .font-display { font-size:13px; }
@@ -416,11 +420,6 @@
  .c-distribution { padding:18px; }
 }
 @media(min-width:960px) {
- .c-home .c-duel-side { display:grid;grid-template-columns:48px minmax(0,1fr);gap:2px 10px;padding:8px 32px; }
- .c-home .c-duel-side>.lg\:hidden { grid-column:1;grid-row:1/4;margin:0; }
- .c-home .c-duel-side>.lg\:hidden>span { width:48px!important;height:48px!important; }
- .c-home .c-duel-side>p { grid-column:2;margin:0; }.c-home .c-duel-side>p:last-child { font-size:10px; }
- .c-home .c-duel-grid>span:last-child { gap:2px; }
  .c-home-edge li { border-width:0;border-inline-start-width:2px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px; }
  .c-home-edge li>div { grid-column:1;grid-row:1; }.c-home-edge li>p.font-num { grid-column:2;grid-row:1; }
  .c-home-edge li>p:not(.font-num) { grid-column:1/-1;margin-top:2px; }
@@ -444,7 +443,6 @@
  .c-home-edge li>p { line-height:1.3; }.c-home-edge li>p.font-num { line-height:1; }
  .c-home-edge li>span { line-height:1; }.c-home-edge li>div span[style] { width:32px!important;height:32px!important; }
  .c-home-hall .c-home-source button { font-size:11px;padding-inline:4px; }
- .c-home-hall .c-home-source select { font-size:12px; }
 }
 
 /* הזמנה להשתתפות: בתוך עמודת הכנסת במסך רחב, אחרי התרשימים בטלפון. */
@@ -560,7 +558,7 @@
 .c-source-row { display:flex;justify-content:center;margin-block:12px;min-width:0; }
 .c-source-picker { position:relative;display:inline-grid;max-width:100%;min-height:44px; }
 .c-source-width { visibility:hidden;white-space:nowrap;overflow:hidden;padding:10px 12px 10px 32px;font-weight:600;font-size:14px; }
-.c-source-picker select { position:absolute;inset:0;width:100%;min-width:0;min-height:44px;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--card));color:rgb(var(--ink));font-size:14px;font-weight:600;padding-inline:10px 24px; }
+.c-source-picker select { position:absolute;inset:0;width:100%;min-width:0;min-height:44px;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--card));color:rgb(var(--ink));font-size:14px;font-weight:600;padding:10px 12px 10px 32px;appearance:none; }
 .c-chart-footer { display:flex;justify-content:flex-end;clear:both;margin-top:12px;width:100%; }
 .c-home-source { display:block; }
 .c-chart-footer .c-chart-link { float:none; }
@@ -585,3 +583,6 @@
  #main[data-floating]:has(.c-guess-desktop) { padding-bottom:20px; }
  #main[data-floating] .c-guess-edit-pane { padding-bottom:calc(var(--floating-height, 0px) + 32px); }
 }
+
+.c-source-picker::after { content:"";position:absolute;left:14px;top:50%;width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-70%) rotate(45deg);pointer-events:none; }
+@media(min-width:768px) { #main[data-screen=home] { padding-bottom:24px; } }

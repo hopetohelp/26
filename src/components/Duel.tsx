@@ -47,7 +47,7 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
           <PartyPhoto id={b.id} className="hidden lg:flex w-44 xl:w-56 self-stretch" />
           <span aria-hidden="true" className="absolute inset-y-4 left-1/2 border-s border-paper-line" />
           {/* העיגול במרכז: הספירה "6:2" ומתחתיה "סקרים" (בכמה סקרים כל אחת גבוהה יותר); בלי סקרים משותפים — "מול" */}
-          <span aria-hidden="true" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 w-24 h-24 md:w-28 md:h-28 rounded-full bg-ink text-paper leading-none text-center">
+          <span aria-hidden="true" className="c-duel-counter absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 w-24 h-24 md:w-28 md:h-28 rounded-full bg-ink text-paper leading-none text-center">
             {pairs.length > 0 ? (
               <>
                 <span className="flex items-center justify-center gap-0.5 font-num text-3xl md:text-4xl font-extrabold tabular" dir="rtl">
@@ -67,7 +67,7 @@ export function Duel({ a, b, polls, asOf, label = "ממוצע המודל", metho
 
 function Side({ r, range, align }: { r: HomeRow; range: string; align: "start" | "end" }) {
   return (
-    <div className={`c-duel-side py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
+    <div data-side={align} className={`c-duel-side py-5 md:py-8 flex flex-col ${align === "start" ? "pe-14 md:pe-24 items-start text-start" : "ps-14 md:ps-24 items-end text-end"}`}>
       {/* צר: תמונת מנהיג/ת הרשימה בקצה החיצוני של הצד (ימין לצד הימני, שמאל לשמאלי); ברוחב מ-1024px התמונה ברצועה כולה */}
       <span aria-hidden="true" className="lg:hidden mb-2"><PartyAvatar id={r.id} size={72} /></span>
       <p aria-hidden="true" className="font-display text-xl md:text-3xl leading-tight">{r.name}</p>
