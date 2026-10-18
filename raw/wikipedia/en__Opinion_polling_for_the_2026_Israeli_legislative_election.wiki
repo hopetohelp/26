@@ -21,7 +21,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | style="background:#FFCCFF" |Camil Fuchs, Midgam Project, Stat-Net<ref>{{Cite news |author1=[[Hila Korach]]|author2=[[Raviv Drucker]] |title=סקר חדשות 13: גוש נתניהו יורד ל-58 מנדטים, מרצ עוברת |url=https://13tv.co.il/item/news/politics/politics/new-survey-903379652/ |access-date=2 January 2023 |date=1 January 2023 |website=Channel 13 |language=he-IL}}</ref><ref>{{Cite news |author=Michael Shemesh |title=סקר כאן חדשות: עמדת פתיחה חלשה לסער |url=https://www.kan.org.il/content/kan-news/politic/722543/ |access-date=13 March 2024 |date=13 March 2024 |website=Israeli Public Broadcasting Corporation|language=he-IL}}</ref>
 |2022 election - 13 March 2024 
 |-
-| style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name=Ch13June9>{{Cite news |author1=Sefi Ovadia|author2=[[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
+| style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name="Ch13June9">{{Cite news |author1=Sefi Ovadia|author2=[[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
 |10 June 2024 - 25 May 2026
 |-
 | style="background:mediumseagreen" |Midgam Project, The Madad, Stat-Net, Askaria<ref name="auto7">{{cite web  |title=דרמה בגוש מתנגדי נתניהו: איזנקוט מזנק, בנט מתרסק|publisher=[[Channel 13 (Israel)|Channel 13]] |url=https://13tv.co.il/item/news/politics/politics/v0v13-905221091/|date=17 June 2026|access-date=18 June 2026 |language=he-IL}}</ref>
@@ -63,7 +63,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | 2022 election - 29 June 2023
 |-
 | style="background:indianred" |Lazar Research Institute<ref>{{Cite news |author=Moshe Cohen |title=חוזרים להוביל: 29 מנדטים לליכוד, גנץ ממשיך להיחלש
-|url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name=Maariv11Aug23>{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים?|url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
+|url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name="Maariv11Aug23">{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים?|url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
 | 5 July 2023 - 10 August 2023
 |-
 | style="background:#F86B61" |Lazar Research Institute, Panel4All<ref>{{Cite news |author=Matan Wasserman |title=סקר "מעריב": גנץ מזנק, אך הקואליציה מצמצמת פערים |url=https://www.maariv.co.il/news/politics/Article-1031166 |access-date=18 August 2023 |date=18 August 2023 |website=Maariv |language=he-IL}}</ref>
@@ -177,7 +177,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|14|15|Oct|2026}}
 | style=background:Turquoise |Yossi Tatika
-|''[[Zman Yisrael]]''<ref>{{Cite web |title=ToI poll: Eisenkot’s party opens up big lead on Netanyahu’s, but both blocs short of majority |work=The Times of Israel|date=15 October 2026|url=https://www.timesofisrael.com/toi-poll-eisenkot-opens-up-big-lead-on-netanyahu-but-both-blocs-short-of-majority/ |language=en}}</ref>
+|''[[Zman Yisrael]]''<ref>{{Cite web |title=ToI poll: Eisenkot's party opens up big lead on Netanyahu's, but both blocs short of majority |work=The Times of Israel|date=15 October 2026|url=https://www.timesofisrael.com/toi-poll-eisenkot-opens-up-big-lead-on-netanyahu-but-both-blocs-short-of-majority/ |language=en}}</ref>
 |500
 |20
 |11
@@ -244,7 +244,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||12|Oct|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Walla! Communications|Walla]]<ref name=Walla12October>{{cite news |title=הנדל עובר את אחוז החסימה, וינטר בחוץ - ואיך זה משפיע על מפת הגושים? {{!}} סקר וואלה|work=[[Walla! Communications|Walla]] |url=https://www.walla.co.il/news/politics/383957251|date=12 October 2026|access-date=16 October 2026|author=Avi Solomon|language=he-IL}}</ref>
+|[[Walla! Communications|Walla]]<ref name="Walla12October">{{cite news |title=הנדל עובר את אחוז החסימה, וינטר בחוץ - ואיך זה משפיע על מפת הגושים? {{!}} סקר וואלה|work=[[Walla! Communications|Walla]] |url=https://www.walla.co.il/news/politics/383957251|date=12 October 2026|access-date=16 October 2026|author=Avi Solomon|language=he-IL}}</ref>
 |601
 |20
 |13
@@ -331,7 +331,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |49
 |-
 | {{Opdrts||11|Oct|2026}}
-| colspan="22" |[[Shas]] and [[United Torah Judaism]] sign a surplus-vote agreement<ref>{{Cite web|last1=Neev|first1=Keshet |date=11 October 2026 |title=Shas, UTJ sign surplus vote-sharing deal, pledge cooperation in next Knesset |url=https://www.jpost.com/israel-election-2026/article-911320 |access-date=11 October 2026|website=The Jerusalem Post}}</ref>
+| colspan="22" |[[Shas]] and [[United Torah Judaism]] sign a surplus-vote agreement<ref>{{Cite web|author=Keshet Neev |date=11 October 2026 |title=Shas, UTJ sign surplus vote-sharing deal, pledge cooperation in next Knesset |url=https://www.jpost.com/israel-election-2026/article-911320 |access-date=11 October 2026|website=The Jerusalem Post}}</ref>
 |-
 |{{Opdrts|7|8|Oct|2026}}
 | style=background:#F86B61 |LRI+P4A
@@ -423,7 +423,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||7|Oct|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber7octp>{{cite web|date=7 October 2026|lang=he-IL|title=סקר חדשות 14: איזנקוט מצמצם דרמטית את הפער מנתניהו|url=https://www.c14.co.il/article/1728516|access-date=8 October 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber7octp">{{cite web|date=7 October 2026|lang=he-IL|title=סקר חדשות 14: איזנקוט מצמצם דרמטית את הפער מנתניהו|url=https://www.c14.co.il/article/1728516|access-date=8 October 2026 |work=Channel 14}}</ref>
 |2175
 |style="background:#BBCDE4" |'''31'''
 |8
@@ -542,7 +542,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||1|Oct|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber1octp>{{cite web|date=1 October 2026|lang=he-IL|title=מתקרבים לרגע האמת: כך נראית מפת המנדטים המעודכנת|url=https://www.c14.co.il/article/1720749|access-date=4 October 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber1octp">{{cite web|date=1 October 2026|lang=he-IL|title=מתקרבים לרגע האמת: כך נראית מפת המנדטים המעודכנת|url=https://www.c14.co.il/article/1720749|access-date=4 October 2026 |work=Channel 14}}</ref>
 |2175
 |style="background:#BBCDE4" |'''32'''
 |8
@@ -652,7 +652,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||28|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber28Sep>{{cite web|date=28 September 2026|lang=he-IL|title=סקר חדשות 14: בנט מתחזק, איזנקוט נחלש - ומה עם וינטר?|url=https://www.c14.co.il/article/1716250|access-date=30 September 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber28Sep">{{cite web|date=28 September 2026|lang=he-IL|title=סקר חדשות 14: בנט מתחזק, איזנקוט נחלש - ומה עם וינטר?|url=https://www.c14.co.il/article/1716250|access-date=30 September 2026 |work=Channel 14}}</ref>
 |573
 | style="background:#BBCDE4" |'''31'''
 |9
@@ -787,7 +787,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||23|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber23Sep>{{cite web|date=23 September 2026|lang=he-IL|title=וינטר בקריסה - הפער בין נתניהו לאיזנקוט מצטמצם משמעותית|url=https://www.c14.co.il/article/1711606|access-date=25 September 2026|work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber23Sep">{{cite web|date=23 September 2026|lang=he-IL|title=וינטר בקריסה - הפער בין נתניהו לאיזנקוט מצטמצם משמעותית|url=https://www.c14.co.il/article/1711606|access-date=25 September 2026|work=Channel 14}}</ref>
 |647
 | style="background:#BBCDE4" |'''32'''
 |7
@@ -856,7 +856,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||17|Sep|2026}}
 | style=background:DarkOrange |SF+ND
-|[[Channel 14 (Israel)|Channel 14]]<ref name=Filber17Sep>{{cite web|date=17 September 2026|lang=he-IL|title=אחרי הסערה עם רע״מ: איזנקוט נחלש, נתניהו פותח פער דרמטי|url=https://www.c14.co.il/article/1706627|access-date=17 September 2026 |work=Channel 14}}</ref>
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber17Sep">{{cite web|date=17 September 2026|lang=he-IL|title=אחרי הסערה עם רע״מ: איזנקוט נחלש, נתניהו פותח פער דרמטי|url=https://www.c14.co.il/article/1706627|access-date=17 September 2026 |work=Channel 14}}</ref>
 |817
 | style="background:#BBCDE4" |'''31'''
 |9
@@ -1082,7 +1082,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|9|10|Sep|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Maariv (newspaper)|''Maariv'']]<ref name=Maariv11September>{{cite news |title=סקר מנדטים של מעריב: הליכוד מתרסק לשפל היסטורי – אבל נתניהו מקבל חבל הצלה דרמטי|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1365318|date=11 September 2026|access-date=11 September 2026|author=Moshe Cohen}}</ref>
+|[[Maariv (newspaper)|''Maariv'']]<ref name="Maariv11September">{{cite news |title=סקר מנדטים של מעריב: הליכוד מתרסק לשפל היסטורי – אבל נתניהו מקבל חבל הצלה דרמטי|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1365318|date=11 September 2026|access-date=11 September 2026|author=Moshe Cohen}}</ref>
 |601
 |19
 |14
@@ -1444,7 +1444,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|3|4|Sep|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Maariv (newspaper)|''Maariv'']]<ref name=Maariv4September>{{cite news |title=סקר מנדטים של מעריב: סמוטריץ' ופייגלין חברו – כך זה השפיע על מפת הגושים|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1362890|date=4 September 2026|access-date=4 September 2026|author=Moshe Cohen}}</ref>
+|[[Maariv (newspaper)|''Maariv'']]<ref name="Maariv4September">{{cite news |title=סקר מנדטים של מעריב: סמוטריץ' ופייגלין חברו – כך זה השפיע על מפת הגושים|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1362890|date=4 September 2026|access-date=4 September 2026|author=Moshe Cohen}}</ref>
 |600
 |20
 |15
@@ -1601,7 +1601,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||2|Sep|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Walla! Communications|Walla]]<ref name=Walla2September>{{cite news |title=מעבר של גוטליב לעוצמה יהודית מעלה אותה במנדט, איך זה משפיע על נתניהו? - סקר וואלה|work=[[Walla! Communications|Walla]] |url=https://news.walla.co.il/item/3865040|date=2 September 2026|access-date=2 September 2026|author=Avi Solomon}}</ref>
+|[[Walla! Communications|Walla]]<ref name="Walla2September">{{cite news |title=מעבר של גוטליב לעוצמה יהודית מעלה אותה במנדט, איך זה משפיע על נתניהו? - סקר וואלה|work=[[Walla! Communications|Walla]] |url=https://news.walla.co.il/item/3865040|date=2 September 2026|access-date=2 September 2026|author=Avi Solomon}}</ref>
 |500
 |22
 |15
@@ -1762,7 +1762,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|26|27|Aug|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Maariv (newspaper)|''Maariv'']]<ref name=Maariv28August>{{cite news |title=סקר מעריב: וינטר עולה למגרש - כך משתנה מפת המנדטים|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1360437|date=28 August 2026|access-date=28 August 2026|author=Moshe Cohen}}</ref>
+|[[Maariv (newspaper)|''Maariv'']]<ref name="Maariv28August">{{cite news |title=סקר מעריב: וינטר עולה למגרש - כך משתנה מפת המנדטים|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1360437|date=28 August 2026|access-date=28 August 2026|author=Moshe Cohen}}</ref>
 |506
 |20
 |15
@@ -1854,7 +1854,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts||26|Aug|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Walla! Communications|Walla]]<ref name=Walla26August>{{cite news |title=אפקט וינטר: סמוטריץ' מחוץ לכנסת, ארדן צולל - ומה עם נתניהו?|work=[[Walla! Communications|Walla]] |url=https://news.walla.co.il/item/3863376|date=26 August 2026|access-date=26 August 2026|author=Avi Solomon}}</ref>
+|[[Walla! Communications|Walla]]<ref name="Walla26August">{{cite news |title=אפקט וינטר: סמוטריץ' מחוץ לכנסת, ארדן צולל - ומה עם נתניהו?|work=[[Walla! Communications|Walla]] |url=https://news.walla.co.il/item/3863376|date=26 August 2026|access-date=26 August 2026|author=Avi Solomon}}</ref>
 |500
 |21
 |15
@@ -2078,7 +2078,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |-
 |{{Opdrts|19|20|Aug|2026}}
 | style=background:#F86B61 |LRI+P4A
-|[[Maariv (newspaper)|''Maariv'']]<ref name=Maariv20August>{{cite news |title=הסיוט של נתניהו מתחיל לקבל מספרים: איזנקוט בשיא חדש {{!}} סקר מנדטים מעריב|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1358140|date=21 August 2026|access-date=22 August 2026|author=Moshe Cohen}}</ref>
+|[[Maariv (newspaper)|''Maariv'']]<ref name="Maariv20August">{{cite news |title=הסיוט של נתניהו מתחיל לקבל מספרים: איזנקוט בשיא חדש {{!}} סקר מנדטים מעריב|work=[[Maariv (newspaper)|Maariv]] |url=https://www.maariv.co.il/news/politics/article-1358140|date=21 August 2026|access-date=22 August 2026|author=Moshe Cohen}}</ref>
 |501
 |20
 |14
@@ -7014,7 +7014,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 |-
 |rowspan=2 {{Opdrts||2|September|2026}}
 |rowspan=2 style=background:#F86B61 |LRI+P4A
-|rowspan=2 |[[Walla! Communications|Walla]]<ref name=Walla2September/>
+|rowspan=2 |[[Walla! Communications|Walla]]<ref name="Walla2September"/>
 |22
 |15
 |5
@@ -7174,7 +7174,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 |-
 |rowspan=2 {{Opdrts||30|August|2026}}
 |rowspan=2 style=background:burlywood |Kantar
-|rowspan=2 |[[Kan 11]]<ref name=Kantar30Aug/>
+|rowspan=2 |[[Kan 11]]<ref name="Kantar30Aug"/>
 |21
 |14
 |–
@@ -12357,7 +12357,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 |-
 |rowspan="2" data-sort-value=2023-08-10 |9–10 Aug 23
 |rowspan="2" style=background:indianred |Lazar
-|rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref name=Maariv11Aug23/>
+|rowspan="2" |''[[Maariv (newspaper)|Maariv]]''<ref name="Maariv11Aug23"/>
 |28
 |16
 |6
@@ -13132,7 +13132,7 @@ Scenarios where [[Avigdor Lieberman]], [[Naftali Bennett]], [[Yossi Cohen]], [[A
 |-
 | rowspan="2" data-sort-value="2024-06-10" |10 Jun 24
 | rowspan="2" style=background:#BAD1E6 |MM+SN
-| rowspan="2" |[[Channel 13 (Israel)|Channel 13]]<ref name=Ch13June9/>
+| rowspan="2" |[[Channel 13 (Israel)|Channel 13]]<ref name="Ch13June9"/>
 |20
 |5
 |9
@@ -14016,7 +14016,7 @@ Some surveys only polled the Arab population and estimated the strength of each 
 |-
 |rowspan=3 {{Opdrts|27|1|Sep|2026}} 2026
 |rowspan=3 |Afkar
-|rowspan=3 |Nazareth-Mashur W. Publishing Ltd.<ref name=Afkar>{{cite web|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election55/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%207.9.2026%204126.pdf|lang=he-IL|title=ממצאי סקר בחירות בחברה הערבית|date=5 September 2026|access-date=7 September 2026}}</ref>
+|rowspan=3 |Nazareth-Mashur W. Publishing Ltd.<ref name="Afkar">{{cite web|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election55/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%207.9.2026%204126.pdf|lang=he-IL|title=ממצאי סקר בחירות בחברה הערבית|date=5 September 2026|access-date=7 September 2026}}</ref>
 |rowspan=3 |800
 |colspan=2|5
 |colspan="3" style=background:#79d4d0|'''9'''
@@ -15029,7 +15029,7 @@ Some surveys only polled the Arab population and estimated the strength of each 
 |-
 |rowspan=3 {{Opdrts|27|1|Sep|2026}} 2026
 |rowspan=3 |Afkar
-|rowspan=3 |Nazareth-Mashur W. Publishing Ltd.<ref name=Afkar/>
+|rowspan=3 |Nazareth-Mashur W. Publishing Ltd.<ref name="Afkar"/>
 |19%
 |colspan="3" style=background:#79d4d0|'''38%'''
 |7%

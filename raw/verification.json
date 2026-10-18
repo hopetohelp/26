@@ -1858,5 +1858,35 @@
     "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1233861-0/"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-18",
+  "id": "2026-10-18-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "הועתק מכתבת i24NEWS (מקור ראשוני). סכום המנדטים 120 לאחר איחוד הציונות הדתית וזהות לרשימה אחת (6); הגושים 57/49/14 תואמים. שעת הפרסום משוערת.",
+  "source": "https://www.i24news.tv/en/news/israeli-elections/artc-i24news-poll-likud-slips-to-25-seats-as-ben-gvir-s-party-reaches-double-digits",
+  "sourceDetails": {
+   "published": "2026-10-18T21:00:00+03:00",
+   "sample_respondents": 525
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/en/news/israeli-elections/artc-i24news-poll-likud-slips-to-25-seats-as-ben-gvir-s-party-reaches-double-digits"
+   }
+  }
  }
 ]
