@@ -534,7 +534,6 @@
  .c-guess-chart-host,.c-guess-edit-pane { min-width:0;min-height:0; }
  .c-guess-edit-pane { overflow:auto;padding-inline:8px; }
  #main:has(.c-guess-desktop) { padding-bottom:20px; }
- .c-guess-desktop nav[aria-label="חלקי ההשערה"] { margin-inline:0;padding-inline:0; }
  .c-guess-desktop .c-guess-workspace { display:block; }
  .c-guess-hall { height:100%;display:flex;flex-direction:column;justify-content:center;overflow:auto; }
  .c-guess-start-controls>.grid { grid-template-columns:1fr; }
@@ -569,3 +568,20 @@
 .seat-stop-arab { stop-color:color-mix(in srgb, rgb(var(--accent)) 58%, rgb(var(--card))); }
 .seat-stop-b { stop-color:color-mix(in srgb, rgb(var(--accent)) 22%, rgb(var(--card))); }
 .c-home .c-duel-side>p.font-num { font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:rgb(var(--ink)); }
+
+/* הסרגל הצף תופס רק את רוחב תוכנו; הריווח נמדד בסוף הגלילה ולא באמצע התוכן. */
+.c-floating-panel { position:fixed;z-index:20;left:16px;bottom:calc(76px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100vw - 32px);display:flex;flex-direction:column;align-items:flex-start;gap:8px; }
+.c-floating-panel>* { max-width:100%; }
+.c-floating-panel .c-action-bar { width:max-content;max-width:min(512px,calc(100vw - 32px)); }
+.c-community-share { width:min(620px,calc(100vw - 32px)); }
+.c-community-share .c-share-banner { width:100%;padding:12px;gap:8px;box-shadow:0 4px 18px rgb(var(--ink) / .12); }
+.c-community-share .c-share-banner>div { flex:1;min-width:180px; }
+#main[data-floating] { padding-bottom:calc(var(--floating-height, 0px) + 92px + env(safe-area-inset-bottom)); }
+@media(min-width:768px) {
+ .c-floating-panel { bottom:16px; }
+ #main[data-floating] { padding-bottom:calc(var(--floating-height, 0px) + 32px); }
+}
+@media(min-width:1024px) {
+ #main[data-floating]:has(.c-guess-desktop) { padding-bottom:20px; }
+ #main[data-floating] .c-guess-edit-pane { padding-bottom:calc(var(--floating-height, 0px) + 32px); }
+}

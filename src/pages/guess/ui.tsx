@@ -1,5 +1,6 @@
 /** רכיבים קטנים שחוזרים בכל יחידות "שלי" */
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { STATUS_LABEL } from "./useCrowd";
 
 /** queued = נשמר בדפדפן ויישלח לשרת אוטומטית כשהחיבור יחזור (src/lib/outbox.ts) */
@@ -60,22 +61,32 @@ export function Field({ label, children, hint }: { label: string; children: Reac
 
 export const inputCls = "w-full min-h-[44px] rounded-theme border border-paper-line bg-paper-card text-ink px-3";
 
-/**
- * כרטיס הפעולות הצף של "הכנסת שלי" (הכרעת בעלים 10.10.2026): בכל לשונית, בתחתית המסך, צמוד לשמאל וברוחב הכפתורים.
- * הילדים נכתבים בסדר הקריאה (מימין לשמאל), כך ש״שמירה״ — האחרון — יוצא הכי שמאלי. `above` — התראות מעל הכרטיס.
- */
+/** ריווח בקצה אזור הגלילה לפי הגובה בפועל, גם כשהכפתורים או הודעה נשברים לשורה. */
+export function FloatingPanel({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const panel = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const main = document.getElementById("main");
+    if (!main || !panel.current) return;
+    const update = () => main.style.setProperty("--floating-height", `${panel.current?.getBoundingClientRect().height ?? 0}px`);
+    main.setAttribute("data-floating", "true");
+    const observer = new ResizeObserver(update);
+    observer.observe(panel.current);
+    update();
+    return () => { observer.disconnect(); main.removeAttribute("data-floating"); main.style.removeProperty("--floating-height"); };
+  }, []);
+  return createPortal(<div ref={panel} className={`c-floating-panel ${className}`}>{children}</div>, document.body);
+}
+
+/** פעולות בסדר הקריאה מימין לשמאל; שמירה אחרונה, משמאל. */
 export function ActionBar({ children, above, note }: { children: ReactNode; above?: ReactNode; note?: ReactNode }) {
   return (
-    <>
-      <div aria-hidden="true" className={note ? "h-40" : "h-24"} />
-      <div className="fixed z-20 left-4 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-4 max-w-[calc(100%-2rem)] md:max-w-lg flex flex-col items-end gap-2">
-        {above}
-        <div role="group" aria-label="פעולות" className="c-action-bar bg-paper-card border border-paper-line rounded-theme shadow-lg px-2 py-2 flex items-center gap-1.5 flex-wrap justify-end [&_button]:px-3 [&_button]:whitespace-nowrap">
-          {children}
-          {note && <p className="basis-full min-w-0 text-xs text-ink leading-relaxed px-1 pt-1 border-t border-paper-line [overflow-wrap:anywhere]">{note}</p>}
-        </div>
+    <FloatingPanel>
+      {above}
+      <div role="group" aria-label="פעולות" className="c-action-bar bg-paper-card border border-paper-line rounded-theme shadow-lg px-2 py-2 flex items-center gap-1.5 flex-wrap justify-end [&_button]:px-3 [&_button]:whitespace-nowrap">
+        {children}
+        {note && <p className="basis-full w-0 min-w-full text-xs text-ink leading-relaxed px-1 pt-1 border-t border-paper-line [overflow-wrap:anywhere]">{note}</p>}
       </div>
-    </>
+    </FloatingPanel>
   );
 }
 
