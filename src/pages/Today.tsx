@@ -47,7 +47,7 @@ export default function Today() {
       title="מה אומרים הסקרים היום?"
       lead={lead}
       primary={
-        <div className="mb-8 c-poll-controls"><section className="c-average-explainer" aria-label="שלושת הממוצעים"><h2 className="text-xl font-display">שלוש דרכים לקרוא את הסקרים</h2><div className="c-average-options">{(["polls.mean", "polls.adjusted", "model.mean"] as const).map(id => <button key={id} type="button" aria-pressed={selection.product === id} onClick={() => setTemporary({ product: id })}><strong>{DATA_PRODUCTS[id].name}</strong><span>{DATA_PRODUCTS[id].explain}</span></button>)}</div><p className="text-sm text-ink-soft">{def.assumption}. <a href={`#/method#${def.method}`}>הסבר מלא</a></p></section>
+        <div className="mb-8 c-poll-controls"><section className="c-average-explainer" aria-label="שני הממוצעים"><h2 className="text-xl font-display">שתי דרכים לקרוא את הסקרים</h2><div className="c-average-options">{(["polls.mean", "polls.adjusted"] as const).map(id => <button key={id} type="button" aria-pressed={selection.product === id} onClick={() => setTemporary({ product: id })}><strong>{DATA_PRODUCTS[id].name}</strong><span>{DATA_PRODUCTS[id].explain}</span></button>)}</div><p className="text-sm text-ink-soft">{def.assumption}. <a href={`#/method#${def.method}`}>הסבר מלא</a></p></section>
         <SourcePicker screen="today" selection={selection} onChange={setTemporary} notice={preference.notice} />
 
         </div>

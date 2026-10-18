@@ -1,3 +1,5 @@
+import AverageSettings from "../components/AverageSettings";
+import { ARCHIVED_METHODS, SHOW_MODEL } from "../lib/modelVisibility";
 import MethodComparison from "../components/MethodComparison";
 import { DATA_PRODUCTS } from "../lib/dataCatalog";
 import { DICTIONARY_DEFINITIONS } from "../lib/dictionaryDefinitions";
@@ -91,7 +93,7 @@ detail: (
           </ul>
           <p>
             חמש מערכות הן מדגם קטן. דפוס שחזר (למשל רשימה שקיבלה בפועל יותר מהסקרים פעם אחר פעם) הוא רקע לקריאת הסקרים של היום, לא תיקון
-            שלהם — הממוצע והתרחישים אינם "מכיילים" את הסקרים לפי העבר. התיקון לפי העבר נעשה רק במודל המגמות, ונבדק בגלוי (למטה).
+            שלהם — ממוצעי הסקרים אינם מתקנים את הפרסומים לפי הטעות בבחירות הקודמות.
           </p>
         </div>
       </>
@@ -216,7 +218,7 @@ detail: (
       <>
         <div className="text-sm space-y-2">
           <p>
-            לכל מפלגה של היום — אחוז הקולות הכשרים שקיבלה ב-2022 הרשימה (או הרשימות) שממנה באה, מול ממוצע המודל של היום.
+            לכל מפלגה של היום — אחוז הקולות הכשרים שקיבלה ב-2022 הרשימה (או הרשימות) שממנה באה, מול מקור הנתונים שנבחר למסך.
           </p>
           <p>
             <strong>הנר סביב "היום" — טווח הסקרים:</strong> מהסקר הנמוך עד הגבוה, לפי הסקר האחרון של כל סדרה ב-14 הימים האחרונים.
@@ -308,41 +310,43 @@ detail: (
 
         <p>כל גוש הוא תרחיש עצמאי של עד חמש קבוצות. מפלגה רשאית להופיע בכמה תרחישים, אך פעם אחת בכל תרחיש. בכל מקור סכום הגוש מחושב רק ממנדטי מפלגותיו באותו מקור. סכומי הגושים אינם חלוקה של הכנסת ואין לחברם.</p>
         <p className="mt-2">הכלל האחד לכל נתון על קבוצת מפלגות (גוש, ממוצע, טווח, מגמה): נכנס כל סקר שסקר לפחות מפלגה אחת מהקבוצה, וסכום הגוש בו הוא סכום מנדטי המפלגות שנסקרו. מפלגה שלא נסקרה בסקר נספרת 0. אין סימון באתר — לא ״לפחות״, לא ״כ-״ ולא ״כמה מתוך כמה״. סקר שלא סקר אף מפלגה מהקבוצה אינו נכנס, וכשאין אף סקר כזה מוצג ״—״. אין השלמה מסקרים אחרים ואין השלמה מהמודל.</p>
-        <p className="mt-2">אין מסיקים טווח של גוש מחיבור טווחי המפלגות, ואין מחברים נתונים משקלולים שונים כדי לטעון לגוש. במגמות מסכמים כל סקר תחילה, ואז מחשבים ממוצע. תוצאות אמת ונתונים אישיים אינם מושלמים באמצעות סקרים. יעד אישי משמש בקשת השלמה בלבד ואינו מחליף נתון מקור. בשיתוף ממוצע הסקרים ומודל המגמות נשארים מקורות נפרדים.</p>
+        <p className="mt-2">אין מסיקים טווח של גוש מחיבור טווחי המפלגות, ואין מחברים נתונים משקלולים שונים כדי לטעון לגוש. במגמות מסכמים כל סקר תחילה, ואז מחשבים ממוצע. תוצאות אמת ונתונים אישיים אינם מושלמים באמצעות סקרים. יעד אישי משמש בקשת השלמה בלבד ואינו מחליף נתון מקור. בשיתוף נשמרים שם המקור והתאריך.</p>
       </>
     )}
 ].map(entry => ({ ...DICTIONARY_DEFINITIONS.find(d => d.id === entry.id)!, detail: entry.detail }));
 
 export const DICTIONARY_IDS = DICTIONARY.map((e) => e.id);
 
-function Entry({ e }: { e: DictEntry }) {
+function Entry({ e, archived = false }: { e: DictEntry; archived?: boolean }) {
+  if (e.id === "means" && !archived) return <article id="means" className="c-method-entry scroll-mt-32"><h2 className="text-xl font-display mb-4">ממוצעים ובחירה קבועה <SectionLink id="means" label="ממוצעים ובחירה קבועה" /></h2><AverageSettings /></article>;
   return (
     <article id={e.id} className="c-method-entry scroll-mt-32">
-      <h2 className="text-xl font-display leading-tight">{e.title} <SectionLink id={e.id} label={e.title} /></h2>
-      <p className="mt-2 text-sm leading-relaxed">{e.assumption}</p>
+      <h2 className="text-xl font-display leading-tight">{e.id === "means" && !archived ? "ממוצעים ובחירה קבועה" : e.title} <SectionLink id={e.id} label={e.title} /></h2>
+      <p className="mt-2 text-sm leading-relaxed">{e.id === "means" && !archived ? "מה ההבדל בין ממוצע סקרים לממוצע מותאם? כאן בוחרים גם ברירת מחדל לכל האתר." : e.assumption}</p>
       <details className="c-fold mt-3">
         <summary className="cursor-pointer min-h-[44px] flex items-center text-sm font-semibold text-accent">נתונים, חישוב ופירוט מלא</summary>
         <dl className="c-method-fields grid grid-cols-[minmax(5rem,auto)_1fr] gap-x-4 gap-y-3 text-sm leading-relaxed py-4">
-          <dt className="font-semibold text-ink-soft">נתונים לחישוב</dt><dd>{e.source}</dd>
+          <dt className="font-semibold text-ink-soft">נתונים לחישוב</dt><dd>{!archived && e.id === "changes" ? e.source.replace("ממוצע המודל של היום", "מקור הנתונים שנבחר") : e.source}</dd>
           <dt className="font-semibold text-ink-soft">תוצאה עדכנית</dt><dd>{e.id === "current" ? <DataTable selection={{ product: "polls.mean" }} /> : e.id === "model" ? <DataTable selection={{ product: "model.mean" }} /> : "בפירוט המלא ובמסך המקושר"}</dd>
           <dt className="font-semibold text-ink-soft">תאריך עדכון</dt><dd>{date(meta.dataAsOf)}</dd>
           <dt className="font-semibold text-ink-soft">מופיע ב</dt><dd>{e.where}</dd>
         </dl>
-        <div className="text-sm space-y-2 pb-4">{e.detail}</div>
+        <div className="text-sm space-y-2 pb-4">{e.id === "means" && !archived ? <AverageSettings /> : e.detail}</div>
       </details>
     </article>
   );
 }
 
 /** מילון המספרים: ערך לכל מספר שהאתר מחשב, בצורה קבועה */
-export function MethodNumbers() {
+export function MethodNumbers({ includeArchived = false }: { includeArchived?: boolean }) {
+  const visible = includeArchived || SHOW_MODEL ? DICTIONARY : DICTIONARY.filter(e => !ARCHIVED_METHODS.has(e.id));
   useAnchor();
   return (
     <>
       <PageTitle lead="כל גרף באתר מקשר לערך שלו כאן. ליד כל גרף מופיע התאריך המעודכן.">מילון המספרים</PageTitle>
-      <nav className="c-method-index" aria-label="נושאים במילון">{DICTIONARY.map(e => <Link key={e.id} to={`#${e.id}`}>{e.title}</Link>)}</nav>
-      {DICTIONARY.map((e) => (
-        <Entry key={e.id} e={e} />
+      <nav className="c-method-index" aria-label="נושאים במילון">{visible.map(e => <Link key={e.id} to={`#${e.id}`}>{e.id === "means" && !includeArchived ? "ממוצעים ובחירה קבועה" : e.title}</Link>)}</nav>
+      {visible.map((e) => (
+        <Entry key={e.id} e={e} archived={includeArchived} />
       ))}
     </>
   );
@@ -368,7 +372,7 @@ function Coverage() {
         עם כל בנייה של הנתונים. איך כל מספר מחושב — במילון המספרים.
       </p>
       <ul className="mt-3 divide-y divide-paper-line text-sm">
-        {rows.map(([name, rule, n]) => (
+        {rows.filter(([name]) => SHOW_MODEL || !["המודל והתרחישים", "התחזית"].includes(name)).map(([name, rule, n]) => (
           <li key={name} className="py-3">
             <p className="flex flex-wrap items-baseline justify-between gap-x-3">
               <strong>{name}</strong>
@@ -526,7 +530,7 @@ export function MethodLaw() {
           <li>מי עבר ממפלגה למפלגה: השוואת שתי תמונות מראה שינוי נטו בלבד.</li>
           <li>התנהגות של אנשים מתוך נתוני יישובים (כשל אקולוגי).</li>
           <li>איזה מכון צודק — לפני הבחירות אין דרך לדעת.</li>
-          <li>מה תהיה התוצאה: האתר מציג סיכום של סקרים ותרחישים, לא תוצאה צפויה.</li>
+          <li>מה תהיה התוצאה: האתר מציג סיכום של סקרים, לא תוצאה צפויה.</li>
         </ul>
       </Card>
     </>
