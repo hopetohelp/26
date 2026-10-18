@@ -11,6 +11,7 @@ import { useMode, type ModeId } from "../lib/theme";
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 import ExitPollClock from "./ExitPollClock";
+import { MASTHEAD_SLOT } from "./SourcePicker";
 
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
 /** הלשוניות בתחתית המסך בטלפון (הכרעת בעלים 9.10.2026): בית · הכנסת שלי · עוד · סקרים · אישי. "עוד" באמצע פותחת חלון עם כל המסכים שאינם בסרגל. */
@@ -85,12 +86,12 @@ function ModePicker() {
 
 /**
  * פס עליון אחד (הכרעת בעלים 9.10.2026, החלטה 2), בטוקנים (`frame`, `signal`, גופן, רדיוס).
- * שורה אחת בכל רוחב: שם האתר ומתחתיו תאריך הבחירות (מימין), שעון העצר עד המדגמים במרכז (הכרעת בעלים 12.10.2026, במקום "עוד N ימים"), ובצד הבורר.
+ * שורה אחת בכל רוחב: שם האתר ומתחתיו תאריך הבחירות (מימין), שעון העצר עד המדגמים במרכז (הכרעת בעלים 12.10.2026, במקום "עוד N ימים"), בורר הממוצע של המסך הפתוח (18.10.2026) ובורר התצורה.
  */
 function Masthead() {
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
-      <div className="w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-4">
+      <div className="w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
         <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
           <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
             בחירות 26
@@ -100,6 +101,8 @@ function Masthead() {
           </p>
         </div>
         <ExitPollClock bar />
+        {/* בורר הממוצע של המסך הפתוח (SourcePicker נכנס לכאן); ריק במסכים בלי בחירת מקור */}
+        <div id={MASTHEAD_SLOT} className="c-masthead-source empty:hidden" />
         <ModePicker />
       </div>
     </div>

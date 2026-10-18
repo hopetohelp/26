@@ -21,7 +21,7 @@
  * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
 import { allowedOrigin } from "../shared/origins.js";
-import { sealKey } from "./lib/aiKey.js";
+import { sealKey, sealPersonalKey, unsealPersonalKey } from "./lib/aiKey.js";
 import { runAutoReplies } from "./lib/autoReply.js";
 import { privateAsk } from "./lib/privateAsk.js";
 // "design" נשאר לתאימות עם דפדפנים ישנים; במסך מוצג כ"רעיון לשיפור"
@@ -152,6 +152,19 @@ async function teamReply(env, kind, id, text, approved = false) {
   return true;
 }
 
+/** בעל החשבון לפי אסימון הסשן (דרך שרת ההשתתפות). null = לא מחובר · undefined = השרת לא זמין */
+async function accountOf(env, token, origin) {
+  if (typeof token !== "string" || !token || token.length > 256) return null;
+  if (!env.CROWD) return undefined;
+  try {
+    const me = await env.CROWD.fetch(new Request("https://crowd.internal/support/access", { headers: { authorization: `Bearer ${token}`, origin: origin || "" } }));
+    if (me.status === 401) return null;
+    if (!me.ok) return undefined;
+    const p = (await me.json())?.participant;
+    return typeof p === "string" && p ? p : undefined;
+  } catch { return undefined; }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get("origin");
@@ -162,16 +175,35 @@ export default {
     // תשובה אוטומטית מיידית לפנייה שהתקבלה (lib/autoReply.js; התקרה — שלוש בשעה); לא מעכבת את התגובה לגולש ואינה מפילה דבר
     const kick = () => ctx?.waitUntil?.(runAutoReplies(env, { teamReply }).catch(() => null));
 
-    // ---- הצ'אט הפרטי (lib/privateAsk.js): המפתח של השואל, בלי מאגר, בלי שיחות הצוות ובלי מפתח האתר. הטבלה היחידה — מונה יומי לפי גיבוב מקור.
-    if (url.pathname === "/private/ask" && request.method === "POST") {
+    // ---- הצ'אט הפרטי (lib/privateAsk.js). המפתח האישי נשמר מוצפן לפי החשבון (הכרעת בעלים 18.10.2026) ואינו מוחזר לעולם.
+    // privateAsk עצמו נשאר בלי מאגר: הנתיב הזה שולף את המפתח ומעביר רק אותו ואת השיחה.
+    if ((url.pathname === "/private/ask" || url.pathname === "/private/key") && request.method === "POST") {
       let body;
       try { body = await request.json(); } catch { return reply({ ok: false, error: "bad_request" }, 400); }
+      const participant = await accountOf(env, body?.token, origin);
+      if (participant === null) return reply({ ok: false, error: "unauthorized" }, 401);
+      if (!participant) return reply({ ok: false, error: "unavailable" }, 503);
+      if (url.pathname === "/private/key") {
+        if (body.key === null) await env.DB.prepare("DELETE FROM private_keys WHERE participant = ?").bind(participant).run();
+        else if (body.key !== undefined) {
+          const value = typeof body.key === "string" ? body.key.trim() : "";
+          if (value.length < 20 || value.length > 400 || /\s/.test(value)) return reply({ ok: false, error: "bad_key" }, 400);
+          const packed = await sealPersonalKey(env, value);
+          if (!packed) return reply({ ok: false, error: "unavailable" }, 503);
+          await env.DB.prepare("INSERT INTO private_keys (participant, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(participant, packed, new Date().toISOString()).run();
+        }
+        const row = await env.DB.prepare("SELECT 1 AS x FROM private_keys WHERE participant = ?").bind(participant).first();
+        return reply({ ok: true, has: !!row });
+      }
+      const row = await env.DB.prepare("SELECT value FROM private_keys WHERE participant = ?").bind(participant).first();
+      const key = row && await unsealPersonalKey(env, row.value);
+      if (!key) return reply({ ok: false, error: "no_key" }, 400);
       const day = new Date().toISOString().slice(0, 10);
       const used = await env.DB.prepare("INSERT INTO private_hits (day, day_key, count) VALUES (?, ?, 1) ON CONFLICT(day, day_key) DO UPDATE SET count = count + 1 RETURNING count")
-        .bind(day, await dayKey(env, request.headers.get("cf-connecting-ip") || "unknown")).first();
+        .bind(day, await dayKey(env, "p:" + participant)).first();
       await env.DB.prepare("DELETE FROM private_hits WHERE day < ?").bind(day).run();
       if ((used?.count ?? 0) > PRIVATE_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
-      const out = await privateAsk(body, { models: { gemini: env.AI_MODEL_GEMINI, anthropic: env.AI_MODEL_ANTHROPIC } });
+      const out = await privateAsk({ key, messages: body.messages }, { models: { gemini: env.AI_MODEL_GEMINI, anthropic: env.AI_MODEL_ANTHROPIC } });
       return reply(out.body, out.status);
     }
 
@@ -225,6 +257,7 @@ export default {
           env.DB.prepare("DELETE FROM support_message_via WHERE message_id IN (SELECT id FROM support_messages WHERE participant = ?)").bind(participant),
           env.DB.prepare("DELETE FROM support_messages WHERE participant = ?").bind(participant),
           env.DB.prepare("DELETE FROM support_threads WHERE participant = ?").bind(participant),
+          env.DB.prepare("DELETE FROM private_keys WHERE participant = ?").bind(participant),
         ]);
         return reply({ ok: true });
       }
