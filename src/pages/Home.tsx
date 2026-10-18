@@ -8,7 +8,6 @@ import { DATA_PRODUCTS } from "../lib/dataCatalog";
 import { Link } from "react-router-dom";
 import { ScreenLegend } from "../components/ChartLegend";
 import { Duel, ThresholdLine } from "../components/Duel";
-import ExitPollClock from "../components/ExitPollClock";
 import InstallApp from "../components/InstallApp";
 import { GovTrend, Hemicycle, MAJORITY } from "../components/homeCharts";
 import { date } from "../lib/format";
@@ -34,13 +33,12 @@ export default function Home() {
   const asOf = date(MODEL_AVERAGE.asOf);
   return (
     <div className="c-home">
-      {/* במקום כותרת גלויה: שעון עצר עד מדגמי הבחירות, בתוך חלל הפרסה. הכותרת נשארת לקורא מסך */}
       <div className="c-home-heading"><h1 className="font-display text-2xl">תמונת מצב</h1><HomeAssistant /></div><div className="c-home-grid"><div className="c-home-hall">
       <SourcePicker screen="home" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש אייזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
 
       {available ? <section aria-label="תרשים הגושים בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">
-        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} duel={["גוש נתניהו", "גוש אייזנקוט"]} footer={<ExitPollClock compact />} />
+        <Hemicycle coalition={blocs.coalition} arab={blocs.arab} opposition={blocs.opposition} duel={["גוש נתניהו", "גוש אייזנקוט"]} />
         {selection.product === "polls.mean" && <p className="text-xs text-ink-soft text-center">תרשים יחסי של הממוצע; מושב בשני צבעים מסמן שבר. המספרים במרכז אינם מעוגלים למנדטים שלמים.</p>}
       </section> : <p role="status" className="text-center my-6 text-ink-soft">—</p>}
       <div className="c-chart-footer"><Link className="c-chart-link" to="/polls">לסקרים ←</Link></div>
