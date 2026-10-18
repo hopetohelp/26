@@ -21,7 +21,7 @@
  * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
 import { allowedOrigin } from "../shared/origins.js";
-import { sealKey, sealPersonalKey, unsealPersonalKey } from "./lib/aiKey.js";
+import { sealChat, sealKey, sealPersonalKey, unsealChat, unsealPersonalKey } from "./lib/aiKey.js";
 import { runAutoReplies } from "./lib/autoReply.js";
 import { privateAsk } from "./lib/privateAsk.js";
 // "design" נשאר לתאימות עם דפדפנים ישנים; במסך מוצג כ"רעיון לשיפור"
@@ -175,14 +175,20 @@ export default {
     // תשובה אוטומטית מיידית לפנייה שהתקבלה (lib/autoReply.js; התקרה — שלוש בשעה); לא מעכבת את התגובה לגולש ואינה מפילה דבר
     const kick = () => ctx?.waitUntil?.(runAutoReplies(env, { teamReply }).catch(() => null));
 
-    // ---- הצ'אט הפרטי (lib/privateAsk.js). המפתח האישי נשמר מוצפן לפי החשבון (הכרעת בעלים 18.10.2026) ואינו מוחזר לעולם.
-    // privateAsk עצמו נשאר בלי מאגר: הנתיב הזה שולף את המפתח ומעביר רק אותו ואת השיחה.
-    if ((url.pathname === "/private/ask" || url.pathname === "/private/key") && request.method === "POST") {
+    // ---- הצ'אט הפרטי (lib/privateAsk.js), הכרעת בעלים 18.10.2026: המפתח — שמור מוצפן בחשבון, או במכשיר בלבד ונשלח בגוף הבקשה.
+    // לחשבון מחובר השיחה נשמרת מוצפנת (private_chats) ומוחזרת רק לו. privateAsk עצמו נשאר בלי מאגר.
+    if ((url.pathname === "/private/ask" || url.pathname === "/private/key" || url.pathname === "/private/history") && request.method === "POST") {
       let body;
       try { body = await request.json(); } catch { return reply({ ok: false, error: "bad_request" }, 400); }
       const participant = await accountOf(env, body?.token, origin);
-      if (participant === null) return reply({ ok: false, error: "unauthorized" }, 401);
-      if (!participant) return reply({ ok: false, error: "unavailable" }, 503);
+      const deviceKey = url.pathname === "/private/ask" && typeof body?.key === "string";
+      if (participant === undefined) return reply({ ok: false, error: "unavailable" }, 503);
+      if (participant === null && !deviceKey) return reply({ ok: false, error: "unauthorized" }, 401);
+      if (url.pathname === "/private/history") {
+        if (body.clear === true) await env.DB.prepare("DELETE FROM private_chats WHERE participant = ?").bind(participant).run();
+        const row = await env.DB.prepare("SELECT value FROM private_chats WHERE participant = ?").bind(participant).first();
+        return reply({ ok: true, turns: row ? await unsealChat(env, row.value) : [] });
+      }
       if (url.pathname === "/private/key") {
         if (body.key === null) await env.DB.prepare("DELETE FROM private_keys WHERE participant = ?").bind(participant).run();
         else if (body.key !== undefined) {
@@ -195,15 +201,26 @@ export default {
         const row = await env.DB.prepare("SELECT 1 AS x FROM private_keys WHERE participant = ?").bind(participant).first();
         return reply({ ok: true, has: !!row });
       }
-      const row = await env.DB.prepare("SELECT value FROM private_keys WHERE participant = ?").bind(participant).first();
-      const key = row && await unsealPersonalKey(env, row.value);
-      if (!key) return reply({ ok: false, error: "no_key" }, 400);
+      let key = deviceKey ? body.key : null;
+      if (!deviceKey) {
+        const row = await env.DB.prepare("SELECT value FROM private_keys WHERE participant = ?").bind(participant).first();
+        key = row && await unsealPersonalKey(env, row.value);
+        if (!key) return reply({ ok: false, error: "no_key" }, 400);
+      }
       const day = new Date().toISOString().slice(0, 10);
       const used = await env.DB.prepare("INSERT INTO private_hits (day, day_key, count) VALUES (?, ?, 1) ON CONFLICT(day, day_key) DO UPDATE SET count = count + 1 RETURNING count")
-        .bind(day, await dayKey(env, "p:" + participant)).first();
+        .bind(day, await dayKey(env, participant ? "p:" + participant : request.headers.get("cf-connecting-ip") || "unknown")).first();
       await env.DB.prepare("DELETE FROM private_hits WHERE day < ?").bind(day).run();
       if ((used?.count ?? 0) > PRIVATE_PER_DAY) return reply({ ok: false, error: "rate" }, 429);
       const out = await privateAsk({ key, messages: body.messages }, { models: { gemini: env.AI_MODEL_GEMINI, anthropic: env.AI_MODEL_ANTHROPIC } });
+      // חשבון מחובר ⇐ השאלה והתשובה נוספות לשיחה השמורה, מוצפנת (עד 200 הודעות אחרונות)
+      if (participant && out.body.ok) {
+        const row = await env.DB.prepare("SELECT value FROM private_chats WHERE participant = ?").bind(participant).first();
+        const question = body.messages[body.messages.length - 1].text.trim();
+        const turns = [...(row ? await unsealChat(env, row.value) : []), { role: "user", text: question }, { role: "assistant", text: out.body.text }].slice(-200);
+        const packed = await sealChat(env, turns);
+        if (packed) await env.DB.prepare("INSERT INTO private_chats (participant, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(participant, packed, new Date().toISOString()).run();
+      }
       return reply(out.body, out.status);
     }
 
@@ -258,6 +275,7 @@ export default {
           env.DB.prepare("DELETE FROM support_messages WHERE participant = ?").bind(participant),
           env.DB.prepare("DELETE FROM support_threads WHERE participant = ?").bind(participant),
           env.DB.prepare("DELETE FROM private_keys WHERE participant = ?").bind(participant),
+          env.DB.prepare("DELETE FROM private_chats WHERE participant = ?").bind(participant),
         ]);
         return reply({ ok: true });
       }

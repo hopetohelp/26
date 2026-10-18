@@ -199,3 +199,10 @@ CREATE TABLE IF NOT EXISTS private_keys (
   value TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+
+-- שיחות הצ'אט הפרטי (הכרעת בעלים 18.10.2026): לפי חשבון, מוצפנות (lib/aiKey.js), מוחזרות רק לבעליהן
+CREATE TABLE IF NOT EXISTS private_chats (
+  participant TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
