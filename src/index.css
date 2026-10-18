@@ -436,8 +436,6 @@
 .c-poll-bars>div { display:grid;grid-template-columns:minmax(110px,1fr) minmax(0,3fr) 45px;gap:14px;align-items:center;min-height:44px;border-top:1px solid rgb(var(--line)); }
 .c-poll-bars i { background:rgb(var(--accent));height:12px;border-radius:4px; }.c-poll-bars b { text-align:left; }
 @media(min-width:768px) { .c-average-options { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-.c-assistant { margin:auto 16px auto auto;width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid rgb(var(--line));border-radius:18px;padding:24px;background:rgb(var(--card));color:rgb(var(--ink)); }
-.c-assistant::backdrop { background:rgb(var(--ink) / .35); }
 @media(min-width:960px) {
  .c-home .c-duel-side>p { line-height:1.2; }.c-home .c-duel-side>p.font-num { line-height:1; }
  .c-home-edge li>p { line-height:1.3; }.c-home-edge li>p.font-num { line-height:1; }
@@ -557,6 +555,13 @@
 /* בחירת מקור קומפקטית וקישורי תרשימים באותו מקום בכל הגדלים. */
 .c-source-row { display:flex;justify-content:center;margin-block:12px;min-width:0; }
 .c-source-picker { position:relative;display:inline-grid;max-width:100%;min-height:44px; }
+/* בורר הממוצע בפס העליון (18.10.2026): צר בטלפון, השעון מתכווץ לפי החלל שנשאר */
+.c-masthead-source { flex:none;min-width:0;max-width:7.75rem; }
+@media (min-width:768px) { .c-masthead-source { max-width:16rem; } }
+.c-masthead-source .c-source-row { margin:0; }
+.c-masthead-source .c-source-picker { min-height:40px; }
+.c-masthead-source .c-source-picker select { min-height:40px;font-size:12px;padding:8px 6px 8px 34px;text-overflow:ellipsis; }
+.c-masthead-source .c-source-width { font-size:12px;padding:8px 6px 8px 34px;text-overflow:ellipsis; }
 .c-source-width { visibility:hidden;white-space:nowrap;overflow:hidden;padding:10px 12px 10px 32px;font-weight:600;font-size:14px; }
 .c-source-picker select { position:absolute;inset:0;width:100%;min-width:0;min-height:44px;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--card));color:rgb(var(--ink));font-size:14px;font-weight:600;padding:10px 12px 10px 32px;appearance:none; }
 .c-chart-footer { display:flex;justify-content:flex-end;clear:both;margin-top:12px;width:100%; }

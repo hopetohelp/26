@@ -33,8 +33,8 @@ export default function Home() {
   const asOf = date(MODEL_AVERAGE.asOf);
   return (
     <div className="c-home">
-      <div className="c-home-heading"><h1 className="font-display text-2xl">תמונת מצב</h1><HomeAssistant /></div><div className="c-home-grid"><div className="c-home-hall"><div className="c-home-source">
-      <SourcePicker screen="home" selection={selection} onChange={setTemporary} notice={preference.notice} /></div>
+      <div className="c-home-heading"><h1 className="font-display text-2xl">תמונת מצב</h1><HomeAssistant /></div><div className="c-home-grid"><div className="c-home-hall">
+      <SourcePicker screen="home" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <p className="sr-only">גוש נתניהו: {blocs.coalition} מנדטים, המפלגות הערביות: {blocs.arab}, גוש אייזנקוט: {blocs.opposition}. לרוב דרושים {MAJORITY}.</p>
 
       {available ? <section aria-label="תרשים הגושים בכנסת" className="mt-6 w-full max-w-[32rem] mx-auto">

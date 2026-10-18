@@ -18,7 +18,7 @@ it("אף מודול בשרת אינו כותב מפתח או שאלה ללוג",
 it("התשובות האוטומטיות אינן מכירות את הצ'אט הפרטי, ונתיב הצ'אט הפרטי מעביר רק את גוף הבקשה ואת שמות המודלים", () => {
   expect(code(lib("autoReply.js"))).not.toMatch(/privateAsk|private_hits|\/private/);
   const index = readFileSync(new URL("../index.js", import.meta.url), "utf8");
-  expect(index).toMatch(/privateAsk\(body, \{ models: \{ gemini: env\.AI_MODEL_GEMINI, anthropic: env\.AI_MODEL_ANTHROPIC \} \}\)/);
+  expect(index).toMatch(/privateAsk\(\{ key, messages: body\.messages \}, \{ models: \{ gemini: env\.AI_MODEL_GEMINI, anthropic: env\.AI_MODEL_ANTHROPIC \} \}\)/);
 });
 
 it("המפתח נשלח רק לשני כתובות הספקים", () => {

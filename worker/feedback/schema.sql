@@ -192,3 +192,17 @@ CREATE TABLE IF NOT EXISTS support_message_via (
   message_id INTEGER PRIMARY KEY,
   via TEXT NOT NULL
 );
+
+-- המפתח האישי לצ'אט החכם (הכרעת בעלים 18.10.2026): לפי חשבון, מוצפן (lib/aiKey.js), לעולם אינו מוחזר ללקוח
+CREATE TABLE IF NOT EXISTS private_keys (
+  participant TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+-- שיחות הצ'אט הפרטי (הכרעת בעלים 18.10.2026): לפי חשבון, מוצפנות (lib/aiKey.js), מוחזרות רק לבעליהן
+CREATE TABLE IF NOT EXISTS private_chats (
+  participant TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
