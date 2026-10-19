@@ -1978,7 +1978,7 @@
  },
  {
   "access": [
-   "secondary"
+   "primary"
   ],
   "checkedAt": "2026-10-19",
   "id": "2026-10-19-midgam-r-c-hahadashot-12",
@@ -1992,16 +1992,21 @@
    "population": false,
    "questions": false
   },
-  "note": "כיפה + וואלה (חלקי): מנדטי 11 הרשימות (סך 120) וגושים 69/51 תואמים. לא הושווה לפרסום הראשוני (חדשות 12 חסום לסריקה).",
-  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234133-0/",
+  "note": "הושווה לכתבת חדשות 12 עצמה (מקור ראשוני): מנדטי 11 הרשימות (סך 120), הגושים 69/51 ואחוזי הרשימות מתחת לחסימה זהים לרשומה; תואם גם דיווחי כיפה ווואלה.",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm",
   "sourceDetails": {
-   "published": "2026-10-19T21:00:00+03:00"
+   "published": "2026-10-19T21:00:00+03:00",
+   "sample_respondents": 507
   },
-  "status": "secondary",
+  "status": "match",
   "fields": {
    "seats": {
     "status": "match",
-    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234133-0/"
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm"
    }
   }
  },
