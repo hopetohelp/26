@@ -117,6 +117,47 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! class="unsortable" style="width:40px; letter-spacing:-1px;" | [[Together (Israel)|Together]]
 ! colspan="2" class="unsortable" style="width:40px; background:#D9D9F8;" | [[Religious Zionist Party|RZP]]-<br/>[[Zehut]]
 ! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Otzma Yehudit|Otzma]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Shas]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[United Torah Judaism|UTJ]]
+! class="unsortable" style="width:40px; letter-spacing:-1px;" | [[Yisrael Beiteinu]]
+! class="unsortable" style="width:40px;" | [[Ra'am]]
+! class="unsortable" style="width:40px;" | [[Joint List]]
+! class="unsortable" style="width:40px;" | [[The Democrats (Israel)|Dems]]
+! class="unsortable" style="width:40px;" | [[Yashar (political party)|Yashar]]
+! colspan="2" class="unsortable" style="width:40px; letter-spacing:-1px;" | [[The Reservists (political party)|Reserv.]]-<br/>[[New Economic Party|NEP]]
+! class="unsortable" style="width:40px;" | {{small|[[Amcha Yisrael]]}}
+! rowspan="2" class="unsortable" style="width:40px;" | Others
+! class="unsortable" style="width:40px; background:#D9D9F8;" | Gov.{{efn|name=GovWinter|This column shows the total for the 37th government parties. If a source includes any non-government party as a member of a Netanyahu-led bloc, the source's total for that bloc will differ from the figure shown in this column.}}
+|-
+! style="background:{{party color|Likud}}" |
+! style="background:{{party color|Together (Israel)}}" |
+! style="background:{{party color|Religious Zionist Party}}" |
+! style="background:{{party color|Zehut}}" |
+! style="background:{{party color|Otzma Yehudit}}" |
+! style="background:{{party color|Shas}}" |
+! style="background:{{party color|United Torah Judaism}}" |
+! style="background:{{party color|Yisrael Beiteinu}}" |
+! style="background:{{party color|United Arab List}}" |
+! style="background:{{party color|Joint List}}" |
+! style="background:{{party color|The Democrats (Israel)}}" |
+! style="background:{{party color|Yashar (political party)}}" |
+! style="background:{{party color|The Reservists (political party)}}" |
+! style="background:{{party color|New Economic Party}}" |
+! style="background:{{Party color|Amcha Yisrael}}" |
+! style="background:#0000CD" |
+|-
+|19 Oct
+| colspan="21" |[[Blue and White (political party)|Blue & White]] withdraws from race<ref>{{Cite news |last=Edit |first=1 |title=Gantz pulls out of election race, eight days ahead of vote |url=https://www.timesofisrael.com/liveblog_entry/gantz-pulls-out-of-election-race-eight-days-ahead-of-vote/ |access-date=2026-10-19 |work=The Times of Israel |language=en-US |issn=0040-7909}}</ref>
+|}
+{| class="wikitable sortable sticky-header-multi" style="text-align:center;font-size:90%;line-height:12px"
+! rowspan="2" class="unsortable" style="width:65px;" | Fieldwork<br />date
+! rowspan="2" style="width:110px;" | Polling firm
+! rowspan="2" style="width:110px;" | Publisher
+! rowspan="2" class="unsortable" style="width:40px;" | Sample<br />size
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Likud]]
+! class="unsortable" style="width:40px; letter-spacing:-1px;" | [[Together (Israel)|Together]]
+! colspan="2" class="unsortable" style="width:40px; background:#D9D9F8;" | [[Religious Zionist Party|RZP]]-<br/>[[Zehut]]
+! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Otzma Yehudit|Otzma]]
 ! class="unsortable" style="width:40px;" | [[Blue and White (political party)|Blue & White]]
 ! class="unsortable" style="width:40px; background:#D9D9F8;" | [[Shas]]
 ! class="unsortable" style="width:40px; background:#D9D9F8;" | [[United Torah Judaism|UTJ]]
@@ -146,9 +187,54 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:{{party color|Yashar (political party)}}" |
 ! style="background:{{party color|The Reservists (political party)}}" |
 ! style="background:{{party color|New Economic Party}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#f5c518" |
 ! style="background:#0000CD" |
+|-
+|{{Opdrts||18|Oct|2026}}
+| style=background:DarkOrange |SF+ND
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber18oct">{{cite web|date=18 October 2026|lang=he-IL|title=איזנקוט מצמצם דרמטית את הפער מנתניהו, גם במנדטים וגם בהתאמה
+|url=https://www.c14.co.il/article/1743088|access-date=19 October 2026 |work=Channel 14}}</ref>
+|538
+|style="background:#BBCDE4" |'''29'''
+|10
+|colspan=2|7
+|7
+|{{small|(0.9%)}}
+|10
+|8
+|6
+|6
+|7
+|8
+|22
+|colspan=2|{{small|(2.4%)}}
+|{{small|(2.4%)}}
+|{{small|(0.5%)}}
+|{{small|(1.0%)}}{{efn|[[Noam (political party)|Noam]] at 0.8%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
+|style="background:#b2b2f0" |'''61'''
+|-
+|{{Opdrts||18|Oct|2026}}
+| style=background:Burlywood |Kantar
+|[[Kan 11]]<ref>{{cite web |title=סקר כאן חדשות: גוש איזנקוט חוזר להוביל עם 52 מנדטים, הקואליציה נחלשה ל-51 |trans-title=Kan News Poll: Eisenkot's Bloc returns to lead with 52 seats, the coalition weakened to 51|publisher=[[Kan 11]] |date=18 October 2026 |url=https://www.kan.org.il/content/kan-news/politic/1110393/ |language=he-IL|access-date=19 October 2026}}</ref>
+|554
+|21
+|12
+|colspan=2|7
+|8
+|{{N/A}}
+|8
+|7
+|8
+|5
+|8
+|9
+|style="background:#d0eafb" |'''23'''
+|colspan=2|4
+|{{small|(3.1%)}}
+|{{N/A}}
+|{{N/A}}
+|51
 |-
 | {{Opdrts||16|Oct|2026}}
 | colspan="22" |Deadline for submission of surplus-vote agreements to the Central Elections Committee<ref>{{cite web |title=Pressure intensifies on Israel's smaller parties to merge or drop out of race|url=https://www.jns.org/news/israel-news/pressure-intensifies-on-israels-smaller-parties-to-merge-or-drop-out-of-race|website=[[Jerusalem News Syndicate]] |access-date=20 September 2026|date=6 September 2026 |author=David Israel}}</ref>
@@ -1439,7 +1525,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:{{party color|Yashar (political party)}}" |
 ! style="background:{{party color|Zionist Home – The Reservists}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#0000CD" |
 |-
 |{{Opdrts|3|4|Sep|2026}}
@@ -1923,7 +2009,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:{{party color|Yashar (political party)}}" |
 ! style="background:{{party color|Zionist Home – The Reservists}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#0000CD" |
 |-
 |rowspan=2 {{Opdrts||24|Aug|2026}}
@@ -6998,7 +7084,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 ! style="background:{{party color|Likud}}" |
 ! style="background:{{party color|Together (Israel)}}" |
 ! style="background:{{party color|Religious Zionist Party}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:{{party color|Otzma Yehudit}}" |
 ! style="background:{{party color|Blue and White (political party)}}" |
 ! style="background:{{party color|Shas}}" |
@@ -7129,7 +7215,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 ! style="background:{{party color|Yashar (political party)}}" |
 ! style="background:{{party color|Zionist Home – The Reservists}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#0000CD" |
 |-
 |rowspan=2 {{Opdrts||31|August|2026}}
@@ -7258,7 +7344,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 ! style="background:{{party color|Balad (political party)}}" |
 ! style="background:{{Party color|The Democrats (Israel)}}" |
 ! style="background:{{party color|Yashar (political party)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#0000CD" |
 |-
 |rowspan=2 {{Opdrts||2|Sep|2026}}
@@ -7424,7 +7510,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 ! style="background:{{party color|Yashar (political party)}}" |
 ! style="background:{{party color|Zionist Home – The Reservists}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 !
 ! style="background:#0000CD" |
 |-
@@ -7741,7 +7827,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 ! style="background:{{Party color|The Democrats (Israel)}}" |
 ! style="background:{{party color|Yashar (political party)}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#0000CD" |
 |-
 |rowspan=2 {{Opdrts||31|August|2026}}
@@ -7976,7 +8062,7 @@ Most often, opinion polling about hypothetical scenarios is done in the same sur
 ! style="background:{{party color|The Reservists (political party)}}" |
 ! style="background:{{party color|Zehut}}" |
 ! style="background:{{party color|Religious Zionist Party}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:{{party color|Otzma Yehudit}}" |
 ! style="background:{{party color|Blue and White (political party)}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
@@ -8159,7 +8245,7 @@ New parties from [[Benjamin Netanyahu]], [[Ofer Winter]], and a right-wing bloc 
 ! style="background:#44C5BF" |
 ! style="background:{{party color|Yesh Atid}}" |
 ! style="background:{{party color|Yashar (political party)}}" |
-! style="background:#8301d2" |
+! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:{{party color|Religious Zionist Party}}" |
 ! style="background:{{party color|Otzma Yehudit}}" |
 ! style="background:{{party color|Unity (Israel)}}" |
