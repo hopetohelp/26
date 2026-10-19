@@ -1946,5 +1946,92 @@
     "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/%D7%A4%D7%95%D7%9C%D7%99%D7%98%D7%99/1233999-0/"
    }
   }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-19",
+  "id": "2026-10-19-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "וואלה + כיפה: מנדטי 13 הרשימות (סך 120) וגושים 50/51/15/4 תואמים בשני דיווחים. לא הושווה לפרסום הראשוני (13tv לא נסרק).",
+  "source": "https://www.walla.co.il/news/israel/383958107",
+  "sourceDetails": {
+   "published": "2026-10-19T21:06:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/israel/383958107"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-19",
+  "id": "2026-10-19-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "כיפה + וואלה (חלקי): מנדטי 11 הרשימות (סך 120) וגושים 69/51 תואמים. לא הושווה לפרסום הראשוני (חדשות 12 חסום לסריקה).",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234133-0/",
+  "sourceDetails": {
+   "published": "2026-10-19T21:00:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234133-0/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-19",
+  "id": "2026-10-19-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "דיווח כיפה יחיד: מנדטי 11 הרשימות (סך 120) וגושים 62/45/13 תואמים. דיווח נוסף לא נמצא; לא הושווה לפרסום הראשוני.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234129-0/",
+  "sourceDetails": {
+   "published": "2026-10-19T20:00:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234129-0/"
+   }
+  }
  }
 ]

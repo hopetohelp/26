@@ -1,6 +1,15 @@
 {
- "asOf": "2026-10-18T22:08:42+03:00",
+ "asOf": "2026-10-19T22:06:45+03:00",
  "conflicts": [
+  {
+   "detail": "סכום המנדטים 651 במקום 120 — סומן כשגוי (סכום המנדטים 651 — מעל 120 (סימון אוטומטי)) — הסקר הוצא מהחישובים",
+   "end": "2026-10-18",
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "group": "seats",
+   "id": "2026-10-18-sf-nd-channel-14",
+   "publisherHe": "ערוץ 14",
+   "source": "https://www.c14.co.il/article/1743088"
+  },
   {
    "detail": "באתר 1,263, בפרטי האימות 1,013",
    "end": "2026-10-07",
@@ -610,10 +619,10 @@
   "model": {
    "skipped": 0,
    "start": "2026-09-09",
-   "used": 58
+   "used": 60
   },
-  "sinceListSubmission": 58,
-  "total": 792,
-  "usable": 779
+  "sinceListSubmission": 61,
+  "total": 795,
+  "usable": 781
  }
 }
