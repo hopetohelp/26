@@ -79,6 +79,8 @@ export interface ListInfo {
   name: string;
   leader: string;
   gov37: boolean;
+  /** תאריך פרישה מהמרוץ (YYYY-MM-DD): הרשימה יוצאת מבחירות ומהסקרים העדכניים, ונשארת במגמות עד הסקר האחרון שלה */
+  withdrawn?: string;
 }
 
 export const polls = pollsFile.polls as unknown as Poll[];
@@ -109,6 +111,8 @@ export const results = resultsFile;
 export const registry = registryFile;
 
 export const lists2026 = meta.lists2026;
+/** הרשימות שעדיין במרוץ: אלה שנבחרות בהשערות ומוצגות בסקרים העדכניים */
+export const activeLists2026 = lists2026.filter((l) => !l.withdrawn);
 export const listName = (id: string) =>
   lists2026.find((l) => l.id === id)?.name ?? meta.historyNames[id] ?? id;
 
