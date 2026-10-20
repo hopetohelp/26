@@ -2038,5 +2038,39 @@
     "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234129-0/"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-20",
+  "id": "2026-10-19-lri-p4a-walla",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת וואלה עצמה (מקור ראשוני): מנדטי 12 הרשימות (סך 120), הגושים 48/54/14 ו-2.9% לעמך ישראל זהים לרשומה; תואם דיווח ערוץ 7.",
+  "source": "https://www.walla.co.il/news/politics/383958175",
+  "sourceDetails": {
+   "published": "2026-10-20T12:20:00+03:00",
+   "sample_respondents": 601
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383958175"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383958175"
+   }
+  }
  }
 ]
