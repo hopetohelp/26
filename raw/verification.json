@@ -2072,5 +2072,69 @@
     "source": "https://www.walla.co.il/news/politics/383958175"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-20",
+  "id": "2026-10-20-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת i24NEWS עצמה (מקור ראשוני): מנדטי 11 הרשימות (סך 120), הגושים ואחוזי עמך ישראל והמילואימניקים זהים לרשומה; תואם דיווח אייס.",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-91da6024",
+  "sourceDetails": {
+   "published": "2026-10-20T21:00:00+03:00",
+   "sample_respondents": 521
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-91da6024"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-91da6024"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-20",
+  "id": "2026-10-20-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "דיווח אייס יחיד: מנדטי 11 הרשימות (סך 120) וגושים 62/44/14 תואמים. ערוץ 14 חסום; לא נמצא דיווח נוסף; לא הושווה לפרסום הראשוני.",
+  "source": "https://www.ice.co.il/research/news/article/1134443",
+  "sourceDetails": {
+   "published": "2026-10-20T20:40:00+03:00",
+   "sample_respondents": 2116
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1134443"
+   }
+  }
  }
 ]
