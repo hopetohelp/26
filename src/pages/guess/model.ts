@@ -2,10 +2,10 @@ import { fillAll } from "../../lib/fillAll";
 /** נתוני היסוד של "ההשערה שלך": הרשימות, ממוצע הסקרים, תוצאות 2022 והמיפוי המובהק ביניהן. */
 import { resolveDataset, resolveSupport, DATA_AS_OF } from "../../lib/dataResolver";
 import type { Bloc, BlocsPayload, SeatCell, SeatsPayload, VotePayload } from "../../lib/crowdApi";
-import { latestPerPollster, lists2026, results, seatsIn } from "../../lib/data";
+import { activeLists2026, latestPerPollster, lists2026, results, seatsIn } from "../../lib/data";
 
-export const IDS = lists2026.map((l) => l.id);
-export const ALPHA = [...lists2026].sort((a, b) => a.name.localeCompare(b.name, "he"));
+export const IDS = activeLists2026.map((l) => l.id);
+export const ALPHA = [...activeLists2026].sort((a, b) => a.name.localeCompare(b.name, "he"));
 /** ממוצע הסקרים — מהמקור האחד (src/lib/sources.ts) */
 export const POLLS: Record<string, number> = resolveDataset({ product: "polls.mean" }, "guess").seats;
 export const POLLS_AS_OF = DATA_AS_OF;
@@ -53,7 +53,7 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
   return { seats, start, pollsAsOf: start === "polls" ? POLLS_AS_OF : null };
 }
 
-export const UNITY_IDS = ["likud", "yashar", "together", "yb", "bluewhite", "reservists"];
+export const UNITY_IDS = ["likud", "yashar", "together", "yb", "bluewhite", "reservists"].filter((id) => IDS.includes(id));
 export const GOV_IDS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 /** חלוקת פתיחה למשתתף חדש לפי הכרעת הבעלים; אינה משנה גושים שמורים. */
 export function defaultBlocs(): Bloc[] {

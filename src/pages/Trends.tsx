@@ -10,7 +10,7 @@ import Explained from "../components/Explained";
 import { MODEL_AVERAGE } from "../lib/sources";
 import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateRange, seatsFmt, signed } from "../lib/format";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -42,6 +42,11 @@ type PeriodId = (typeof PERIODS)[number]["id"];
 const DEFAULT_IDS = ["likud", "yashar", "together", "democrats", "yb", "shas", "utj", "otzma"];
 const GOV_LISTS = lists2026.filter((l) => l.gov37).map((l) => l.id);
 
+const withdrawnOf = (id: string) => lists2026.find((l) => l.id === id)?.withdrawn;
+/** מועד סיום הסקר האחרון שבו נמדדה הרשימה (מנדטים או אחוז) */
+const lastMeasuredTime = (id: string, ps: Poll[]) =>
+  ps.reduce((acc, p) => (typeof seatsIn(p, id) === "number" ? Math.max(acc, toTime(p.end)) : acc), 0) || undefined;
+
 /** צבע קבוע לכל רשימה (לפי מקומה ברשימת הרשימות), כך שהמתג, המקרא והקו תמיד באותו צבע */
 const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
 
@@ -65,13 +70,15 @@ export default function Trends() {
   const series: Series[] = [];
   for (const id of ids) {
     const color = colorOf(id, colorIndex(id));
-    const solid = rollingMean(id, from, to, days, POINT_DAYS, source).filter((x) => x.n >= minN);
+    // רשימה שפרשה מהמרוץ: הקו נגמר בסקר האחרון שבו נמדדה, ומסומן בשם (הכרעת בעלים 20.10.2026)
+    const lastMeasured = withdrawnOf(id) ? lastMeasuredTime(id, source) : undefined;
+    const solid = rollingMean(id, from, to, days, POINT_DAYS, source).filter((x) => x.n >= minN && (lastMeasured === undefined || x.t <= lastMeasured));
     const lin = LINEAGE[id];
     if (lin && from < lin.since) {
       const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, POINT_DAYS, source).filter((x) => x.n >= minN);
       if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, color, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
     }
-    if (solid.length) series.push({ id, color, name: listName(id), points: solid });
+    if (solid.length) series.push({ id, color, name: lastMeasured === undefined ? listName(id) : `${listName(id)} (פרשה, הסקר האחרון ${date(new Date(lastMeasured).toISOString())})`, points: solid });
   }
   // תוויות קצה רק לקו המלא של כל רשימה
   const labeled = series.filter((s) => !s.dashed);
@@ -133,6 +140,7 @@ export default function Trends() {
                       >
                         <i className="size-2.5 rounded-full" style={{ background: on ? colorOf(l.id, colorIndex(l.id)) : "transparent", boxShadow: on ? undefined : `inset 0 0 0 1.5px ${colorOf(l.id, colorIndex(l.id))}` }} />
                         {l.name}
+                        {l.withdrawn && <span className="text-xs text-ink-soft">פרשה</span>}
                         {on && now !== undefined && <span className="font-num tabular text-xs text-ink-soft">{seatsFmt(now)}</span>}
                       </button>
                     );

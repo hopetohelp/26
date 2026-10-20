@@ -11,7 +11,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 
 import modelFile from "../data/model.json";
 import backtestFile from "../data/backtest.json";
-import { listName, meta, results } from "../lib/data";
+import { listName, lists2026, meta, results } from "../lib/data";
 import { date, dateRange, num, pctValue, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
 
@@ -64,7 +64,7 @@ const bt = backtestFile as unknown as BacktestData;
 const sc = m.scenarios;
 /** מנדטי הממשלה היוצאת: סכום הממוצעים של הרשימות, אותו מספר כמו בבית ובדירוג (החלטה 14, 9.10.2026) */
 const govCentral = HOME.gov;
-const ids = Object.keys(sc.lists).sort((a, b) => MODEL_AVERAGE.seats[b] - MODEL_AVERAGE.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
+const ids = Object.keys(sc.lists).filter((id) => !lists2026.find((l) => l.id === id)?.withdrawn).sort((a, b) => MODEL_AVERAGE.seats[b] - MODEL_AVERAGE.seats[a] || sc.lists[b].seatsMean - sc.lists[a].seatsMean);
 const pctTxt = (x: number) => (x >= 0.995 ? "כמעט בכל התרחישים" : x < 0.005 ? "כמעט באף תרחיש" : `ב-${Math.round(x * 100)}% מהתרחישים`);
 const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL");
 const k25 = results[results.length - 1];

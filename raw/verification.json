@@ -1946,5 +1946,195 @@
     "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/%D7%A4%D7%95%D7%9C%D7%99%D7%98%D7%99/1233999-0/"
    }
   }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-19",
+  "id": "2026-10-19-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "וואלה + כיפה: מנדטי 13 הרשימות (סך 120) וגושים 50/51/15/4 תואמים בשני דיווחים. לא הושווה לפרסום הראשוני (13tv לא נסרק).",
+  "source": "https://www.walla.co.il/news/israel/383958107",
+  "sourceDetails": {
+   "published": "2026-10-19T21:06:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/israel/383958107"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-19",
+  "id": "2026-10-19-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת חדשות 12 עצמה (מקור ראשוני): מנדטי 11 הרשימות (סך 120), הגושים 69/51 ואחוזי הרשימות מתחת לחסימה זהים לרשומה; תואם גם דיווחי כיפה ווואלה.",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm",
+  "sourceDetails": {
+   "published": "2026-10-19T21:00:00+03:00",
+   "sample_respondents": 507
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-19",
+  "id": "2026-10-19-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "דיווח כיפה יחיד: מנדטי 11 הרשימות (סך 120) וגושים 62/45/13 תואמים. דיווח נוסף לא נמצא; לא הושווה לפרסום הראשוני.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234129-0/",
+  "sourceDetails": {
+   "published": "2026-10-19T20:00:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234129-0/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-20",
+  "id": "2026-10-19-lri-p4a-walla",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת וואלה עצמה (מקור ראשוני): מנדטי 12 הרשימות (סך 120), הגושים 48/54/14 ו-2.9% לעמך ישראל זהים לרשומה; תואם דיווח ערוץ 7.",
+  "source": "https://www.walla.co.il/news/politics/383958175",
+  "sourceDetails": {
+   "published": "2026-10-20T12:20:00+03:00",
+   "sample_respondents": 601
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383958175"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.walla.co.il/news/politics/383958175"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-20",
+  "id": "2026-10-20-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת i24NEWS עצמה (מקור ראשוני): מנדטי 11 הרשימות (סך 120), הגושים ואחוזי עמך ישראל והמילואימניקים זהים לרשומה; תואם דיווח אייס.",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-91da6024",
+  "sourceDetails": {
+   "published": "2026-10-20T21:00:00+03:00",
+   "sample_respondents": 521
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-91da6024"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-91da6024"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-20",
+  "id": "2026-10-20-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "דיווח אייס יחיד: מנדטי 11 הרשימות (סך 120) וגושים 62/44/14 תואמים. ערוץ 14 חסום; לא נמצא דיווח נוסף; לא הושווה לפרסום הראשוני.",
+  "source": "https://www.ice.co.il/research/news/article/1134443",
+  "sourceDetails": {
+   "published": "2026-10-20T20:40:00+03:00",
+   "sample_respondents": 2116
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1134443"
+   }
+  }
  }
 ]

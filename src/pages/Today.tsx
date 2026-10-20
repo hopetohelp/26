@@ -9,7 +9,7 @@ import { Segmented } from "../components/Choice";
 import { BarSlots } from "../components/ChartLegend";
 import { AllParties, PartyByPollster, PollsterByParty, PollsterGrid } from "../components/latestCharts";
 import { ChartWithTable, Note, Split } from "../components/ui";
-import { lists2026, listName, passesInMost, pollsterLabel, seatsIn, summarize } from "../lib/data";
+import { activeLists2026, listName, passesInMost, pollsterLabel, seatsIn, summarize } from "../lib/data";
 import { date, seatsFmt } from "../lib/format";
 import { MODEL_AVERAGE } from "../lib/sources";
 
@@ -28,9 +28,9 @@ export default function Today() {
   const def = DATA_PRODUCTS[selection.product];
   const firms = [...new Map(CURRENT_POLLS.map(p => [p.firm, p.firmHe])).entries()].sort((a, b) => a[1].localeCompare(b[1], "he"));
   const chosen = selection.firms ?? firms.map(([id]) => id);
-  const selectedRows = lists2026.map(l => ({ id: l.id, value: dataset.seats[l.id] })).filter(r => r.value !== undefined).sort((a, b) => b.value - a.value);
+  const selectedRows = activeLists2026.map(l => ({ id: l.id, value: dataset.seats[l.id] })).filter(r => r.value !== undefined).sort((a, b) => b.value - a.value);
   const maximum = Math.max(1, ...selectedRows.map(r => r.value));
-  const ids = lists2026.map((l) => l.id);
+  const ids = activeLists2026.map((l) => l.id);
   const summary = summarize(latest, ids);
   const above = summary.filter(passesInMost);
   const below = summary.filter((s) => !passesInMost(s));

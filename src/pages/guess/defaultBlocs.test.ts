@@ -4,8 +4,8 @@ it("משתתף חדש מתחיל בקואליציה (כולל עמך ישראל,
   expect(defaultBlocs()).toEqual([
     { id: "government", name: "הממשלה היוצאת", lists: [...GOV_IDS], target: null },
     { id: "gov", name: "גוש נתניהו", lists: ["likud", "shas", "utj", "otzma", "rzp", "amcha", "haredi_public", "noam", "code_black"], target: null },
-    { id: "rest", name: "גוש אייזנקוט", lists: ["yashar", "together", "democrats", "yb", "reservists", "bluewhite"], target: null },
-    { id: "unity", name: "אחדות", lists: ["likud", "yashar", "together", "yb", "bluewhite", "reservists"], target: null },
+    { id: "rest", name: "גוש אייזנקוט", lists: ["yashar", "together", "democrats", "yb", "reservists"], target: null },
+    { id: "unity", name: "אחדות", lists: ["likud", "yashar", "together", "yb", "reservists"], target: null },
     { id: "arab", name: "מפלגות ערביות", lists: ["joint", "raam"], target: null },
   ]);
   const assigned = defaultBlocs().flatMap(b => b.lists);
