@@ -126,6 +126,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! class="unsortable" style="width:40px;" | [[Yashar (political party)|Yashar]]
 ! colspan="2" class="unsortable" style="width:40px; letter-spacing:-1px;" | [[The Reservists (political party)|Reserv.]]-<br/>[[New Economic Party|NEP]]
 ! class="unsortable" style="width:40px;" | {{small|[[Amcha Yisrael]]}}
+! class="unsortable" style="width:40px;" | [[Haredi Public]]
 ! rowspan="2" class="unsortable" style="width:40px;" | Others
 ! class="unsortable" style="width:40px; background:#D9D9F8;" | Gov.{{efn|name=GovWinter|This column shows the total for the 37th government parties. If a source includes any non-government party as a member of a Netanyahu-led bloc, the source's total for that bloc will differ from the figure shown in this column.}}
 |-
@@ -144,10 +145,55 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:{{party color|The Reservists (political party)}}" |
 ! style="background:{{party color|New Economic Party}}" |
 ! style="background:{{Party color|Amcha Yisrael}}" |
+! style="background:#f5c518" |
 ! style="background:#0000CD" |
 |-
+|{{Opdrts||19|Oct|2026}}
+| style="background:mediumseagreen" |MP+TM+SN+A
+| [[Channel 13 (Israel)|Channel 13]]<ref>{{Cite web |title=בנט מזנק, וינטר והנדל עוברים - וגוש איזנקוט חוזר להוביל |trans-title=Bennett leaps, Winter and Hendel pass - and Eisenkot's Bloc returns to the lead |publisher=Channel 13 |date=19 October 2026 |url=https://13tv.co.il/item/news/politics/politics/jw3wm-905406894/ |language=he }}</ref>
+|1016
+|18
+|14
+|colspan=2|7
+|7
+|7
+|7
+|8
+|6
+|9
+|9
+|style="background:#d0eafb" |'''20'''
+|colspan=2|4
+|4
+|{{N/A}}
+|{{N/A}}
+|46
+|-
+|{{Opdrts||19|Oct|2026}}
+| style=background:DarkOrange |SF+ND
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber19oct">{{cite web|date=19 October 2026|lang=he-IL|title=הפער בין נתניהו לאיזנקוט שוב מזנק - גם במנדטים וגם בהתאמה
+|url=https://www.c14.co.il/article/1745051|access-date=20 October 2026 |work=Channel 14}}</ref>
+|454
+|style="background:#BBCDE4" |'''30'''
+|10
+|colspan=2|7
+|7
+|10
+|8
+|6
+|5
+|8
+|10
+|19
+|colspan=2|{{small|(2.6%)}}
+|{{small|(2.2%)}}
+|{{small|(0.3%)}}
+|{{small|(2.0%)}}{{efn|[[Noam (political party)|Noam]] at 1.5%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.5%}}
+|style="background:#b2b2f0" |'''62'''
+|-
 |19 Oct
-| colspan="21" |[[Blue and White (political party)|Blue & White]] withdraws from race<ref>{{Cite news |last=Edit |first=1 |title=Gantz pulls out of election race, eight days ahead of vote |url=https://www.timesofisrael.com/liveblog_entry/gantz-pulls-out-of-election-race-eight-days-ahead-of-vote/ |access-date=2026-10-19 |work=The Times of Israel |language=en-US |issn=0040-7909}}</ref>
+| colspan="21" |[[Blue and White (political party)|Blue & White]] withdraws from race<ref>{{Cite news |last=Karmel |first=Ariela |title=Blue and White’s Benny Gantz pulls out of race, sealing precipitous political fall |url=https://www.timesofisrael.com/blue-and-whites-benny-gantz-pulls-out-of-race-sealing-precipitous-political-fall/ |access-date=2026-10-19 |work=The Times of Israel |language=en-US|date=19 October 2026}}</ref>
+|-
 |}
 {| class="wikitable sortable sticky-header-multi" style="text-align:center;font-size:90%;line-height:12px"
 ! rowspan="2" class="unsortable" style="width:65px;" | Fieldwork<br />date
@@ -190,6 +236,28 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#f5c518" |
 ! style="background:#0000CD" |
+|-
+|{{Opdrts||19|Oct|2026}}
+|style=background:#FFDFCC |Midgam R&C
+|[[HaHadashot 12]]<ref>{{Cite web |title=סקר המנדטים של חדשות 12: וינטר רחוק מאחוז החסימה, ש"ס מתחזקת אחרי תקופה ארוכה |trans-title=News 12 Mandate Survey: The Big Parties Are Getting Stronger, Hendel and Zelekha Outside the Knesset |publisher=Channel 12 |date=19 October 2026 |access-date=20 October 2026 | url=https://www.mako.co.il/news-israel-elections/2026/Article-a6eb664b9d451a1026.htm |language=he-IL}}</ref>
+|507
+|21
+|14
+|colspan=2|7
+|8
+|{{small|(1.4%)}}
+|8
+|7
+|8
+|5
+|9
+|9
+|style="background:#d0eafb" |'''24'''
+|colspan=2|{{small|(2.1%)}}
+|{{small|(2.8%)}}
+|{{small|(0.2%)}}
+|{{N/A}}
+|51
 |-
 |{{Opdrts||18|Oct|2026}}
 | style=background:DarkOrange |SF+ND
