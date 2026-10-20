@@ -479,7 +479,9 @@ describe('נתונים חדשים דרך MCP וראיות לכרטיס', () => {
     expect(metric.unit).toContain('מושבי הכנסת');
   });
   it('סינון מכונים עובר דרך אותו ספק ונשמר בראיה', async () => {
-    const firm = SITE_FILES.get('data/index.json').sourceOptions[0].firmId;
+    const published = SITE_FILES.get('data/average.json');
+    const latestId = published.latestPerPollster.polls[0].id;
+    const firm = published.providerInput.polls.find(p => p.id === latestId).firm;
     const metric = (await call('/public', 'get_data_metric', { selection: { product: 'polls.adjusted', firms: [firm] }, ids: ['likud'] })).data.result.structuredContent;
     expect(metric.evidence.selection.firms).toEqual([firm]);
     expect(metric.status).toBe('available');
