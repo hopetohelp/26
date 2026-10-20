@@ -1,3 +1,4 @@
+import localitiesFile from "../data/localities.json";
 import { compareMethods } from "./methodComparison";
 import { PUBLIC_METRICS } from "./publicMetricResolver";
 import { DATA_PRODUCTS, SUPPORT_RECONSTRUCTION, SCREEN_POLICY, METHOD_VERSION, identity } from "./dataCatalog";
@@ -19,7 +20,7 @@ import historyFile from "../data/history.json";
 import { lists2026, listName, meta, polls, registry, results, subgroupPolls, summarize, usablePolls } from "./data";
 import { MODEL_AVERAGE } from "./sources";
 import { GOV_POINTS, HOME, LATEST_POLLS } from "./homeData";
-import { familyRows, pollsterRecords, summarizeCycle, type Cycle, type ElectionResult } from "./history";
+import { lastPollErrors, familyRows, pollsterRecords, summarizeCycle, type Cycle, type ElectionResult } from "./history";
 import { DEFAULT_LINEAGE, K25_LISTS, lineageRows } from "./lineage";
 import { PARTY_IMAGES } from "./partyImages";
 import { PAGES } from "./pages";
@@ -99,6 +100,7 @@ const pastResults = results as unknown as ElectionResult[];
 const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
 
 export const OPEN_FILES: OpenFile[] = [
+  { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/past", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
   {
     path: "data/polls.json",
     title: "סקרים",
@@ -124,6 +126,9 @@ export const OPEN_FILES: OpenFile[] = [
       average: { ...MODEL_AVERAGE, productId: "model.mean", label: DATA_PRODUCTS["model.mean"].name },
       products: Object.fromEntries(Object.keys(DATA_PRODUCTS).filter(id => id !== "poll.single").map(id => [id, resolveDataset({ product: id as keyof typeof DATA_PRODUCTS })])),
       catalog: DATA_PRODUCTS,
+    visibleProducts: ["polls.mean", "polls.adjusted", "poll.single"],
+    archivedProducts: ["model.mean"],
+    customAverage: { field: "selection.firms", ids: "sourceOptions[].firmId", weighting: "equal latest firm-publisher series within 14 days", screen: screenUrl("/polls") },
       reconstruction: SUPPORT_RECONSTRUCTION,
       sourceOptions: SOURCE_OPTIONS,
       providerInput: { polls, meta, lists2026, model: modelFile },
@@ -174,7 +179,7 @@ export const OPEN_FILES: OpenFile[] = [
     description: "מודל המגמות: המשך המגמה הנוכחית עד יום הבחירות, לכל רשימה ולגושים, ומדדי הבדיקה מול מערכות קודמות. מוצג באתר רק בתמונת השיתוף; אינו תחזית מי ינצח.",
     methodAnchor: "forecast",
     kind: "מודל המגמות",
-    source: "מודל המגמות של האתר על בסיס הסקרים שפורסמו (טבלאות הסקרים בוויקיפדיה) ובדיקה מול מערכות 2019–2022",
+    source: "מודל המגמות של האתר על בסיס הסקרים שפורסמו (טבלאות הסקרים בוויקיפדיה) ובדיקה מול מערכות 2015–2022",
     screen: "/guess",
     fields: "asof, daysToElection, lists{id:{seats, seatsRange, pass, …}}, bloc, camp, gate, series, attempts",
     build: () => ({ names: nameMap(), ...forecastFile }),
@@ -182,7 +187,7 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/results.json",
     title: "תוצאות עבר",
-    description: "התוצאות הרשמיות של מערכות הבחירות 2019–2022 (כנסות 21–25): קולות ומנדטים לכל רשימה, ובעלי זכות בחירה, מצביעים ופסולים בכל מערכת, ובעלי זכות הבחירה ב-2026.",
+    description: "התוצאות הרשמיות של מערכות הבחירות 2015–2022 (כנסות 20–25): קולות ומנדטים לכל רשימה, ובעלי זכות בחירה, מצביעים ופסולים בכל מערכת, ובעלי זכות הבחירה ב-2026.",
     methodAnchor: "results",
     kind: "נתון רשמי",
     source: SRC_CEC,
@@ -213,7 +218,7 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/accuracy.json",
     title: "דיוק הסקרים",
-    description: "סקרי ערב הבחירות (14 הימים האחרונים) בכל מערכת 2019–2022 מול התוצאה: לכל רשימה הממוצע, הטווח וההפרש; סך הפער; גוש הממליצים על נתניהו; מכונים לאורך המערכות; משפחות רשימות. וגם כל סקרי המערכות הקודמות.",
+    description: "סקרי ערב הבחירות (14 הימים האחרונים) בכל מערכת 2015–2022 מול התוצאה: לכל רשימה הממוצע, הטווח וההפרש; סך הפער; גוש הממליצים על נתניהו; מכונים לאורך המערכות; משפחות רשימות. וגם כל סקרי המערכות הקודמות.",
     methodAnchor: "accuracy",
     kind: "סיכום סקרים",
     source: "טבלאות הסקרים בוויקיפדיה האנגלית לכל מערכת (עם קישור לפרסום המקורי), והתוצאות הרשמיות של ועדת הבחירות",
@@ -223,6 +228,7 @@ export const OPEN_FILES: OpenFile[] = [
       const summaries = cycles.map((c) => summarizeCycle(c, pastResults.find((r) => r.id === c.id)!));
       return {
         eveDays: 14,
+        lastPollErrors: Object.fromEntries(cycles.map(c => [c.id, lastPollErrors(c, pastResults.find(r => r.id === c.id)!)])),
         cycles: summaries.map((s) => ({
           id: s.cycle.id,
           knesset: s.cycle.knesset,
@@ -248,7 +254,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "changes",
     kind: "השוואה",
     source: `${SRC_CEC}; שיוך הרשימות: raw/lineage.json בריפו`,
-    screen: "/changes",
+    screen: "/past?tab=changes",
     fields: "lineage{rows[] (id, category, from, part, share2022, seats2022, shareNow, seatsNow), unassigned2022}, lists2022[], alternatives[]",
     build: () => ({ names: nameMap(), lineage: lineageRows(DEFAULT_LINEAGE), lists2022: K25_LISTS, alternatives: modelFile.changes.alternatives }),
   },
@@ -361,6 +367,9 @@ export function buildIndex(mcpUrl: string | null) {
     },
     snapshotId: SNAPSHOT_ID,
     catalog: DATA_PRODUCTS,
+    visibleProducts: ["polls.mean", "polls.adjusted", "poll.single"],
+    archivedProducts: ["model.mean"],
+    customAverage: { field: "selection.firms", ids: "sourceOptions[].firmId", weighting: "equal latest firm-publisher series within 14 days", screen: screenUrl("/polls") },
       reconstruction: SUPPORT_RECONSTRUCTION,
     publicMetrics: PUBLIC_METRICS,
     screenPolicy: SCREEN_POLICY,
@@ -381,7 +390,7 @@ export function buildIndex(mcpUrl: string | null) {
 export function buildLlmsTxt(mcpUrl: string | null): string {
   const lines: string[] = [];
   lines.push("# בחירות 2026", "");
-  lines.push(`> אתר עצמאי לבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2019–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
+  lines.push(`> אתר עצמאי לבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2015–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
   lines.push(`הנתונים נכונים ל-${meta.dataAsOf} ומתעדכנים אוטומטית כל 4 שעות (חוץ משבת: מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל אין רענון).`, "");
   lines.push("## כללים לכל מי שמשתמש בנתונים", "");
   for (const r of Object.values(RULES)) lines.push(`- ${r}`);

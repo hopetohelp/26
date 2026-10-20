@@ -31,6 +31,7 @@ def sha256(path: Path) -> str:
 # ---------------------------------------------------------------- תוצאות רשמיות
 
 ELECTIONS = {
+    20: {"date": "2015-03-17", "label": "מרץ 2015"},
     21: {"date": "2019-04-09", "label": "אפריל 2019"},
     22: {"date": "2019-09-17", "label": "ספטמבר 2019"},
     23: {"date": "2020-03-02", "label": "מרץ 2020"},
@@ -57,6 +58,7 @@ SHORT = {
 
 # הסכמי עודפים (מקור: ויקיפדיה העברית, ערכי הבחירות; לכנסת 21 — הודעת ועדת הבחירות דרך ארכיון האינטרנט)
 AGREEMENTS = {
+    20: [["אמת", "מרצ"], ["מחל", "טב"], ["ג", "שס"], ["ל", "כ"]],
     21: [["אמת", "מרצ"], ["נ", "ל"], ["דעם", "ום"], ["מחל", "טב"], ["שס", "ג"]],
     22: [["פה", "ל"], ["מחל", "טב"], ["אמת", "מרצ"], ["ג", "שס"]],
     23: [["מחל", "טב"], ["פה", "אמת"], ["ג", "שס"]],
@@ -66,6 +68,9 @@ AGREEMENTS = {
 
 
 def parse_national(n: int) -> dict:
+    if n == 20:
+        from historical_data import national_2015
+        return {**national_2015(), "sha256": sha256(RAW / "cec" / "k20_expc.csv")}
     path = RAW / "cec" / f"k{n}_nationalresults.html"
     text = path.read_text(encoding="utf-8", errors="replace")
     rows = re.findall(r"<tr[^>]*>(.*?)</tr>", text, re.S)
@@ -97,7 +102,7 @@ def build_results() -> list[dict]:
             "eligible": r["eligible"], "voted": r["voted"], "valid": r["valid"], "invalid": r["invalid"],
             "lists": sorted(r["lists"], key=lambda l: -l["votes"]),
             "agreements": AGREEMENTS[n],
-            "source": {"url": f"https://votes{n}.bechirot.gov.il/nationalresults", "sha256": r["sha256"],
+            "source": {"url": r.get("url", f"https://votes{n}.bechirot.gov.il/nationalresults"), "sha256": r["sha256"],
                        "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-%d, פרק הסכמי עודפים" % n},
         })
     return out
@@ -620,7 +625,8 @@ def hist_firm_pub(firm: str, pub: str | None, combined: bool) -> tuple[str, str,
 
 def build_history(results: list[dict]) -> dict:
     by_n = {r["knesset"]: r for r in results}
-    cycles = []
+    from historical_data import history_2015
+    cycles = [history_2015(by_n[20], sha256)]
     for n, cfg in HISTORY.items():
         election = by_n[n]
         path = RAW / "wikipedia" / cfg["page"]
@@ -823,6 +829,8 @@ def main() -> None:
     env_time = __import__("os").environ.get("BUILD_TIME")
     build_time = datetime.fromisoformat(env_time) if env_time else datetime.now(ISRAEL_TZ).replace(microsecond=0)
     results = build_results()
+    from historical_data import build_localities
+    (OUT / "localities.json").write_text(json.dumps(build_localities(results, sha256), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     polls = build_polls(build_time)
     registry = build_registry(results)
     apply_corrections(polls["polls"], build_time)

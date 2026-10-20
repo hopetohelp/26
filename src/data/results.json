@@ -6,6 +6,216 @@
     "מרצ"
    ],
    [
+    "מחל",
+    "טב"
+   ],
+   [
+    "ג",
+    "שס"
+   ],
+   [
+    "ל",
+    "כ"
+   ]
+  ],
+  "date": "2015-03-17",
+  "eligible": 5881696,
+  "id": "k20",
+  "invalid": 43854,
+  "knesset": 20,
+  "label": "מרץ 2015",
+  "lists": [
+   {
+    "letters": "מחל",
+    "name": "הליכוד",
+    "seats": 30,
+    "short": "הליכוד",
+    "votes": 985408
+   },
+   {
+    "letters": "אמת",
+    "name": "המחנה הציוני",
+    "seats": 24,
+    "short": "המחנה הציוני",
+    "votes": 786313
+   },
+   {
+    "letters": "ודעם",
+    "name": "הרשימה המשותפת",
+    "seats": 13,
+    "short": "הרשימה המשותפת",
+    "votes": 446583
+   },
+   {
+    "letters": "פה",
+    "name": "יש עתיד",
+    "seats": 11,
+    "short": "יש עתיד",
+    "votes": 371602
+   },
+   {
+    "letters": "כ",
+    "name": "כולנו",
+    "seats": 10,
+    "short": "כולנו",
+    "votes": 315360
+   },
+   {
+    "letters": "טב",
+    "name": "הבית היהודי",
+    "seats": 8,
+    "short": "הבית היהודי",
+    "votes": 283910
+   },
+   {
+    "letters": "שס",
+    "name": "ש״ס",
+    "seats": 7,
+    "short": "ש״ס",
+    "votes": 241613
+   },
+   {
+    "letters": "ל",
+    "name": "ישראל ביתנו",
+    "seats": 6,
+    "short": "ישראל ביתנו",
+    "votes": 214906
+   },
+   {
+    "letters": "ג",
+    "name": "יהדות התורה",
+    "seats": 6,
+    "short": "יהדות התורה",
+    "votes": 210143
+   },
+   {
+    "letters": "מרצ",
+    "name": "מרצ",
+    "seats": 5,
+    "short": "מרצ",
+    "votes": 165529
+   },
+   {
+    "letters": "קץ",
+    "name": "יחד",
+    "seats": 0,
+    "short": "יחד",
+    "votes": 125158
+   },
+   {
+    "letters": "קנ",
+    "name": "עלה ירוק",
+    "seats": 0,
+    "short": "עלה ירוק",
+    "votes": 47180
+   },
+   {
+    "letters": "ע",
+    "name": "הרשימה הערבית",
+    "seats": 0,
+    "short": "הרשימה הערבית",
+    "votes": 4301
+   },
+   {
+    "letters": "רק",
+    "name": "הירוקים",
+    "seats": 0,
+    "short": "הירוקים",
+    "votes": 2992
+   },
+   {
+    "letters": "ףץ",
+    "name": "כולנו חברים",
+    "seats": 0,
+    "short": "כולנו חברים",
+    "votes": 2493
+   },
+   {
+    "letters": "נז",
+    "name": "ובזכותן — חרדיות עושות שינוי",
+    "seats": 0,
+    "short": "ובזכותן — חרדיות עושות שינוי",
+    "votes": 1802
+   },
+   {
+    "letters": "יץ",
+    "name": "התקווה לשינוי",
+    "seats": 0,
+    "short": "התקווה לשינוי",
+    "votes": 1385
+   },
+   {
+    "letters": "ף",
+    "name": "הפיראטים",
+    "seats": 0,
+    "short": "הפיראטים",
+    "votes": 895
+   },
+   {
+    "letters": "נץ",
+    "name": "פרח",
+    "seats": 0,
+    "short": "פרח",
+    "votes": 823
+   },
+   {
+    "letters": "זץ",
+    "name": "נבחרת העם (הזמנית)",
+    "seats": 0,
+    "short": "נבחרת העם (הזמנית)",
+    "votes": 761
+   },
+   {
+    "letters": "ני",
+    "name": "אור",
+    "seats": 0,
+    "short": "אור",
+    "votes": 502
+   },
+   {
+    "letters": "י",
+    "name": "שכירות בכבוד",
+    "seats": 0,
+    "short": "שכירות בכבוד",
+    "votes": 423
+   },
+   {
+    "letters": "ז",
+    "name": "מפלגת כלכלה",
+    "seats": 0,
+    "short": "מפלגת כלכלה",
+    "votes": 337
+   },
+   {
+    "letters": "זך",
+    "name": "מפלגת הדמוקראטורה",
+    "seats": 0,
+    "short": "מפלגת הדמוקראטורה",
+    "votes": 242
+   },
+   {
+    "letters": "יז",
+    "name": "מנהיגות חברתית",
+    "seats": 0,
+    "short": "מנהיגות חברתית",
+    "votes": 223
+   }
+  ],
+  "source": {
+   "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-20, פרק הסכמי עודפים",
+   "sha256": "52c7d113e95ab501ccb2edb6a5e49978c8eb8e25ccf4ed17b51bf353276fd28e",
+   "url": "https://data.gov.il/he/datasets/central-election-committee/votes-knesset/"
+  },
+  "valid": 4210884,
+  "voted": 4254738
+ },
+ {
+  "agreements": [
+   [
+    "אמת",
+    "מרצ"
+   ],
+   [
     "נ",
     "ל"
    ],

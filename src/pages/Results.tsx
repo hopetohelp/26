@@ -1,3 +1,4 @@
+import LocalityResults from "../components/LocalityResults";
 import { useSearchParams } from "react-router-dom";
 import Voters from "./Voters";
 import PersonalBlocs from "../components/PersonalBlocs";
@@ -175,6 +176,7 @@ export default function Results() {
       </Card>
 
 
+      <LocalityResults key={e.id} electionId={e.id} />
       <Card title="מה הזיזו הסכמי העודפים">
         <ul className="text-sm space-y-1 mb-3">
           {e.agreements.map(([x, y]) => {

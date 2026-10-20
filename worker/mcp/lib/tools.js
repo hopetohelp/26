@@ -1,3 +1,4 @@
+import { queryLocalities } from "../../../src/lib/localities.ts";
 import { PUBLIC_METRICS } from "../../../src/lib/publicMetricResolver.ts";
 import { EVIDENCE_SCHEMA } from "./evidence.js";
 import { dataProvider, metricResult } from "./data.js";
@@ -82,20 +83,20 @@ export const TOOLS = [
     inputSchema: obj({
       metricId: { type: "string", enum: Object.keys(PUBLIC_METRICS) }, election: str("Election id, e.g. k25, for official results"),
       ids: { type: "array", items: str("List id"), minItems: 1, maxItems: 30 },
-      selection: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: str("An id from sourceOptions in the index") }, ["product"]),
+      selection: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: str("An id from sourceOptions in the index"), firms: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 50 } }, ["product"]),
       measure: { type: "string", enum: ["seats", "support"] }, operation: { type: "string", enum: ["difference", "majorityGap"] }, compareTo: obj({ selection: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: str("Source option") }, ["product"]), ids: { type: "array", items: str("List id"), minItems: 1 } }, ["selection", "ids"]),
       screen: { type: "string", enum: ["home", "today", "changes", "guess", "community", "groups", "method"] },
     }, ["ids"]),
     run: metricResult,
   },
   {
-    name: "get_poll_average", title: "שלושת הממוצעים", audience: "public", kind: "read",
-    description: "Compatibility adapter for the three distinct averages: polls.mean (ממוצע סקרים), polls.adjusted (ממוצע מותאם), model.mean (ממוצע המודל). Summary by default. Choose one requested product; compare=true returns all three. Identify the actual source; do not force a second average. Unavailable adjusted inputs remain missing. For a single list or bloc and evidence, use get_data_metric.",
-    inputSchema: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean"] }, compare: { type: "boolean" } }),
+    name: "get_poll_average", title: "ממוצעי הסקרים", audience: "public", kind: "read",
+    description: "Compatibility adapter for the three distinct averages: polls.mean (ממוצע סקרים), polls.adjusted (ממוצע מותאם), model.mean (ממוצע המודל). Summary by default. Choose one requested product; compare=true returns the two visible poll averages; model.mean is archived research, not shown on the current site. Identify the actual source; do not force a second average. Unavailable adjusted inputs remain missing. For a single list or bloc and evidence, use get_data_metric.",
+    inputSchema: obj({ product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean"] }, firms: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 50, description: "Optional pollster firmIds from sourceOptions; equal weight per latest firm-publisher series." }, compare: { type: "boolean" } }),
     async run(ctx, a) {
       const { provider, about } = await dataProvider(ctx);
-      const products = a.compare ? ["polls.mean", "polls.adjusted", "model.mean"] : [a.product ?? "polls.mean"];
-      return { about, averages: Object.fromEntries(products.map(id => [id, provider.resolveDataset({ product: id })])) };
+      const products = a.compare ? ["polls.mean", "polls.adjusted"] : [a.product ?? "polls.mean"];
+      return { about, averages: Object.fromEntries(products.map(id => [id, provider.resolveDataset({ product: id, ...(a.firms ? { firms: a.firms } : {}) })])) };
     },
   },
   {
@@ -103,7 +104,7 @@ export const TOOLS = [
     title: "תרחישים",
     audience: "public",
     kind: "read",
-    description: "Model scenarios: for each list the share of scenarios in which it passes the threshold (say \"שיעור תרחישים\", never \"chance\"), the 80% scenario range of seats, the grouping into clearly passing / on the edge / below (groups.safe/edge/below: by the latest polls only — the latest poll of each series in the last 14 days; a list is not at risk only if every one of them, including the most pessimistic for it, gives it seats), the risk from the model scenarios only (groups.scenarioEdge: passes in only part of the scenarios — say it comes from the model's scenarios, not from the polls), the bloc range, and the model's backtest on past elections. Not a prediction of who wins. " + ABOUT_NOTE,
+    description: "ARCHIVED RESEARCH — hidden from the current site. Only retrieve on explicit request for archived model research. Model scenarios: for each list the share of scenarios in which it passes the threshold (say \"שיעור תרחישים\", never \"chance\"), the 80% scenario range of seats, the grouping into clearly passing / on the edge / below (groups.safe/edge/below: by the latest polls only — the latest poll of each series in the last 14 days; a list is not at risk only if every one of them, including the most pessimistic for it, gives it seats), the risk from the model scenarios only (groups.scenarioEdge: passes in only part of the scenarios — say it comes from the model's scenarios, not from the polls), the bloc range, and the model's backtest on past elections. Not a prediction of who wins. " + ABOUT_NOTE,
     inputSchema: obj({ include_backtest_rows: { type: "boolean", description: "Include every backtest row (large). Default: summary only." } }),
     async run(ctx, a) {
       const d = await ctx.site("data/scenarios.json");
@@ -117,17 +118,29 @@ export const TOOLS = [
     title: "מודל המגמות",
     audience: "public",
     kind: "read",
-    description: "The trend model: the current trend continued to election day, per list and for blocs, with its checks against past elections. The site shows it only in the share image; it is not a forecast of who wins. " + ABOUT_NOTE,
+    description: "ARCHIVED RESEARCH — hidden from the current site. The trend model: the current trend continued to election day, per list and for blocs, with its checks against past elections. The current site does not show this model; it is not a forecast of who wins. " + ABOUT_NOTE,
     inputSchema: obj(),
     run: file("data/forecast.json"),
+  },
+  {
+    name: "get_locality_results", title: "תוצאות לפי יישוב", audience: "public", kind: "read",
+    description: "Full official voting results by locality, all lists, 2015–2022. External envelopes are a separate row, never a city. Search a Hebrew locality name or exact code. Paginated. For numeric card evidence use official.locality.votes with ids [localityCode, listLetters] and election.",
+    inputSchema: obj({ election: { type: "string", enum: ["k20", "k21", "k22", "k23", "k24", "k25"] }, query: str("Locality name or code"), offset: { type: "integer", minimum: 0 }, limit: { type: "integer", minimum: 1, maximum: 100 } }, ["election"]),
+    async run(ctx, a) {
+      const d = await ctx.site("data/localities.json");
+      const e = d.elections.find(e => e.id === a.election);
+      if (!e) throw new ToolError("invalid_input", "בחרו מערכת בחירות קיימת");
+      const { rows: _rows, ...meta } = e;
+      return { about: d.about, ...meta, ...queryLocalities(e, a.query, a.offset, a.limit) };
+    },
   },
   {
     name: "get_past_results",
     title: "תוצאות עבר",
     audience: "public",
     kind: "read",
-    description: "Official results of the 2019–2022 elections (Knessets 21–25): votes and seats per list, eligible voters, turnout and invalid votes; and the official number of eligible voters in 2026. " + ABOUT_NOTE,
-    inputSchema: obj({ knesset: { type: "integer", minimum: 21, maximum: 25, description: "One election only." } }),
+    description: "Official results of the 2015–2022 elections (Knessets 20–25): votes and seats per list, eligible voters, turnout and invalid votes; and the official number of eligible voters in 2026. " + ABOUT_NOTE,
+    inputSchema: obj({ knesset: { type: "integer", minimum: 20, maximum: 25, description: "One election only." } }),
     async run(ctx, a) {
       const d = await ctx.site("data/results.json");
       return a.knesset ? { ...d, elections: d.elections.filter((e) => e.knesset === a.knesset) } : d;
@@ -138,7 +151,7 @@ export const TOOLS = [
     title: "דיוק הסקרים",
     audience: "public",
     kind: "read",
-    description: "How past polls did: for each election 2019–2022, the last-14-days polls against the result — per list the mean, range and gap; total gap; the bloc that recommended Netanyahu; pollsters across elections; list families. Optionally the full list of that election's polls. " + ABOUT_NOTE,
+    description: "How past polls did: for each election 2015–2022, lastPollErrors gives the latest available poll per firm (ties kept separately), largest party error and three bloc errors in percentage points of 120 seats, NOT reported vote percentages. The remaining fields compare the last-14-days polls against the result — per list the mean, range and gap; total gap; the bloc that recommended Netanyahu; pollsters across elections; list families. Optionally the full list of that election's polls. " + ABOUT_NOTE,
     inputSchema: obj({
       election: str("Cycle id from the file (e.g. k25) — limits the answer to one election."),
       include_polls: { type: "boolean", description: "With election: also every poll of that campaign." },
@@ -147,7 +160,7 @@ export const TOOLS = [
       const d = await ctx.site("data/accuracy.json");
       const { pastPolls, ...rest } = d;
       if (!a.election) return rest;
-      return { ...rest, cycles: rest.cycles.filter((c) => c.id === a.election), ...(a.include_polls ? { polls: pastPolls?.[a.election] ?? [] } : {}) };
+      return { ...rest, lastPollErrors: { [a.election]: rest.lastPollErrors?.[a.election] ?? [] }, cycles: rest.cycles.filter((c) => c.id === a.election), ...(a.include_polls ? { polls: pastPolls?.[a.election] ?? [] } : {}) };
     },
   },
   {

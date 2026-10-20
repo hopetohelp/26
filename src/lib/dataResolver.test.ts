@@ -94,3 +94,18 @@ it("הפרש ונתון לרוב נגזרים בשרת בלי מספר שהעו�
   expect(p.resolveMetric({ selection: { product: "polls.mean" }, ids: ["a"], operation: "majorityGap" }).value).toBe(11);
   expect(p.resolveMetric({ selection: { product: "polls.mean" }, ids: ["a"], operation: "difference", compareTo: { selection: { product: "model.mean" }, ids: ["a"] } }).value).toBe(-30);
 });
+
+describe('ממוצע אישי — אין זליגת מכונים שלא נבחרו', () => {
+  it('מסנן גם מנדטים וגם שחזור תמיכה והשלמות', () => {
+    const a = poll('a', { a: { p: 60 }, b: { p: 40 } }, 'A');
+    const b = poll('b', { a: { p: 20 }, b: { p: 80 } }, 'B');
+    const all = provider([a, b]);
+    const only = provider([a]);
+    for (const product of ['polls.mean', 'polls.adjusted'] as const) {
+      expect(all.resolveDataset({ product, firms: ['A'] }).seats).toEqual(only.resolveDataset({ product }).seats);
+      expect(all.resolveSupport({ product, firms: ['A'] })).toEqual(only.resolveSupport({ product }));
+      expect(all.resolveData({ product, firms: ['A'] }, ['a']).inputRefs).toEqual(['a']);
+      expect(all.resolveData({ product, firms: [] }, ['a']).status).toBe('missing');
+    }
+  });
+});

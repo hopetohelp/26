@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     # השרת משתמש במנוע של האתר (src/engine) ובהצפנה של שרת ההשתתפות — שינוי בהם פורס גם אותו
-    paths: ["worker/mcp/**", "worker/shared/**", "src/engine/**", "src/lib/dataCatalog.ts", "src/lib/dataResolverCore.ts", "src/lib/dataPreferences.ts", "src/lib/pollMath.ts", "src/lib/pollRange.ts", "src/lib/publicMetricResolver.ts", "worker/crowd/lib/crypto.js", "worker/crowd/lib/identity.js", ".github/workflows/mcp-worker.yml"]
+    paths: ["worker/mcp/**", "src/index.css", "src/lib/localities.ts", "worker/shared/**", "src/engine/**", "src/lib/dataCatalog.ts", "src/lib/dataResolverCore.ts", "src/lib/dataPreferences.ts", "src/lib/pollMath.ts", "src/lib/pollRange.ts", "src/lib/publicMetricResolver.ts", "worker/crowd/lib/crypto.js", "worker/crowd/lib/identity.js", ".github/workflows/mcp-worker.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: התאמת כרטיס התשובה לעיצוב האתר
+        run: node worker/mcp/card/build.mjs
       - name: מבנה המאגר (CREATE IF NOT EXISTS — בטוח להרצה חוזרת)
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: worker/mcp

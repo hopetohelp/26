@@ -15,6 +15,8 @@ export interface HistValue {
 }
 
 export interface HistPoll {
+  dateBasis?: "fieldwork" | "publication";
+  published?: string;
   id: string;
   start: string;
   end: string;
@@ -234,14 +236,14 @@ export function pollsterRecords(cycles: Cycle[], results: ElectionResult[]) {
  * "המפלגות הערביות" = כל הרשימות שהתמודדו בכל מערכת, ביחד (פעם ברשימה משותפת אחת, פעם בכמה).
  */
 export const FAMILIES: { id: string; name: string; byKnesset: Record<number, string[]> }[] = [
-  { id: "likud", name: "הליכוד", byKnesset: { 21: ["מחל"], 22: ["מחל"], 23: ["מחל"], 24: ["מחל"], 25: ["מחל"] } },
-  { id: "shas", name: 'ש"ס', byKnesset: { 21: ["שס"], 22: ["שס"], 23: ["שס"], 24: ["שס"], 25: ["שס"] } },
-  { id: "utj", name: "יהדות התורה", byKnesset: { 21: ["ג"], 22: ["ג"], 23: ["ג"], 24: ["ג"], 25: ["ג"] } },
-  { id: "yb", name: "ישראל ביתנו", byKnesset: { 21: ["ל"], 22: ["ל"], 23: ["ל"], 24: ["ל"], 25: ["ל"] } },
+  { id: "likud", name: "הליכוד", byKnesset: { 20: ["מחל"], 21: ["מחל"], 22: ["מחל"], 23: ["מחל"], 24: ["מחל"], 25: ["מחל"] } },
+  { id: "shas", name: 'ש"ס', byKnesset: { 20: ["שס"], 21: ["שס"], 22: ["שס"], 23: ["שס"], 24: ["שס"], 25: ["שס"] } },
+  { id: "utj", name: "יהדות התורה", byKnesset: { 20: ["ג"], 21: ["ג"], 22: ["ג"], 23: ["ג"], 24: ["ג"], 25: ["ג"] } },
+  { id: "yb", name: "ישראל ביתנו", byKnesset: { 20: ["ל"], 21: ["ל"], 22: ["ל"], 23: ["ל"], 24: ["ל"], 25: ["ל"] } },
   {
     id: "arab",
     name: "המפלגות הערביות (יחד)",
-    byKnesset: { 21: ["ום", "דעם"], 22: ["ודעם"], 23: ["ודעם"], 24: ["ודעם", "עם"], 25: ["ום", "עם", "ד"] },
+    byKnesset: { 20: ["ודעם"], 21: ["ום", "דעם"], 22: ["ודעם"], 23: ["ודעם"], 24: ["ודעם", "עם"], 25: ["ום", "עם", "ד"] },
   },
 ];
 
@@ -299,4 +301,27 @@ export function campaignTrend(c: Cycle, letters: string, days = POINT_WINDOW, mi
     if (xs.length >= minN) out.push({ t, v: mean(xs), n: xs.length, lo: Math.min(...xs), hi: Math.max(...xs), xs });
   }
   return out;
+}
+
+/** הסקר המאוחר ביותר של כל מכון במאגר לפני הבחירות, ללא חלון 14 יום.
+ * בשוויון תאריכים נשמר כל פרסום, בלי למצע או לבחור שרירותית.
+ * נקודות אחוז ממושבי הכנסת, לא אחוזי קולות ולא טעות יחסית. */
+export function lastPollErrors(c: Cycle, r: ElectionResult) {
+  const ps = usable(c);
+  const last = new Map<string, string>();
+  for (const p of ps) if (p.end > (last.get(p.firmKey) ?? "")) last.set(p.firmKey, p.end);
+  const arab = FAMILIES.find(f => f.id === "arab")?.byKnesset[c.knesset] ?? [];
+  const blocs = [
+    { id: 'recommended', name: 'הממליצות על נתניהו', letters: c.recommendedNetanyahu },
+    { id: 'arab', name: 'הרשימות הערביות', letters: arab },
+    { id: 'rest', name: 'יתר הרשימות', letters: r.lists.map(l => l.letters).filter(l => !c.recommendedNetanyahu.includes(l) && !arab.includes(l)) },
+  ];
+  return ps.filter(p => p.end === last.get(p.firmKey)).map(p => {
+    const parties = comparedLists(c, r).map(l => ({ letters: l.letters, name: l.short, estimate: seatsOf(p, l.letters) ?? 0, actual: l.seats, diffPp: ((seatsOf(p, l.letters) ?? 0) - l.seats) / 120 * 100 }));
+    const maxAbsPp = Math.max(...parties.map(l => Math.abs(l.diffPp)));
+    return { pollId: p.id, firmKey: p.firmKey, firmHe: p.firmHe, publisher: p.publisherHe, date: p.end, dateBasis: p.dateBasis ?? 'source', urls: p.urls,
+      maxAbsPp, worstParties: parties.filter(l => Math.abs(l.diffPp) === maxAbsPp),
+      blocs: blocs.map(b => { const estimate = b.letters.reduce((a, l) => a + (seatsOf(p, l) ?? 0), 0); const actual = r.lists.filter(l => b.letters.includes(l.letters)).reduce((a, l) => a + l.seats, 0); return { ...b, estimate, actual, diffPp: (estimate - actual) / 120 * 100 }; }),
+    };
+  }).sort((a, b) => a.firmHe.localeCompare(b.firmHe, 'he') || a.pollId.localeCompare(b.pollId));
 }

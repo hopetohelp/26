@@ -53,7 +53,7 @@ export const EVIDENCE_SCHEMA = {
   type: "object", additionalProperties: false,
   properties: {
     metricId: { type: "string" }, election: { type: "string" },
-    selection: { type: "object", additionalProperties: false, properties: { product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: { type: "string" }, asOf: { type: "string" }, days: { type: "integer" } }, required: ["product"] },
+    selection: { type: "object", additionalProperties: false, properties: { product: { type: "string", enum: ["polls.mean", "polls.adjusted", "model.mean", "poll.single"] }, source: { type: "string" }, firms: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 50 }, asOf: { type: "string" }, days: { type: "integer" } }, required: ["product"] },
     ids: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 30 },
     measure: { type: "string", enum: ["seats", "support"] }, operation: { type: "string", enum: ["difference", "majorityGap"] }, compareTo: { type: "object", properties: { selection: { type: "object" }, ids: { type: "array", items: { type: "string" } } }, required: ["selection", "ids"] },
     screen: { type: "string" }, snapshotId: { type: "string" }, evidenceId: { type: "string" },
