@@ -32,6 +32,7 @@ export async function metricResult(ctx, request = {}, existing = null) {
   selection ??= { product: "polls.mean" };
   if (!Object.prototype.hasOwnProperty.call(DATA_PRODUCTS, selection.product)) throw Object.assign(new Error("מקור לא מוכר"), { code: "invalid_input", userMessage: "מקור לא מוכר" });
   if (request.screen && !Object.prototype.hasOwnProperty.call(SCREEN_POLICY, request.screen) || request.measure && !["seats", "support"].includes(request.measure) || request.operation && !["difference", "majorityGap"].includes(request.operation)) throw Object.assign(new Error("בקשת מדד לא תקינה"), { code: "invalid_input", userMessage: "בקשת מדד לא תקינה" });
+  if (selection.firms && (!Array.isArray(selection.firms) || !selection.firms.length || selection.firms.length > 50 || selection.firms.some(f => typeof f !== "string" || !provider.SOURCE_OPTIONS.some(o => o.firmId === f)))) throw Object.assign(new Error("בחרו מכונים קיימים"), { code: "invalid_input", userMessage: "בחרו מכונים קיימים" });
   const ids = [...new Set(request.ids ?? [])];
   if (!ids.length || ids.some(id => !providerIds(provider).includes(id))) throw Object.assign(new Error("בחרו מזהי רשימות קיימים"), { code: "invalid_input", userMessage: "בחרו מזהי רשימות קיימים" });
   const result = provider.resolveMetric({ selection, ids, screen: request.screen ?? "method", measure: request.measure, operation: request.operation, compareTo: request.compareTo });

@@ -335,13 +335,13 @@ describe("כרטיס התשובה (show_answer)", () => {
     expect(one.ok).toBe(true);
     expect(validateAnswer({ ...good, summary: "לפי ממוצע הסקרים: ממוצע המודל 53, ממוצע פשוט 54." }, urlFor).ok).toBe(true);
   });
-  it("get_poll_average מבדיל בין שלושה מוצרים והתקציר אינו כופה מודל", async () => {
+  it("get_poll_average משווה את שני המוצרים הגלויים ושומר את המודל למחקר מפורש", async () => {
     const res = (await call("/public", "get_poll_average", { compare: true })).data.result;
     expect(res.isError).toBe(false);
     expect(res.content.at(-1).text).toContain("show_answer");
     const d = res.structuredContent;
     const file = SITE_FILES.get("data/average.json");
-    expect(d.averages["model.mean"].seats).toEqual(file.average.seats);
+    expect(d.averages["model.mean"]).toBeUndefined();
     expect(d.averages["polls.mean"].seats.likud).toBe(file.latestPerPollster.summary.find((r) => r.id === "likud").mean);
     expect(d.averages["polls.adjusted"].rows[0].label).toBe("ממוצע מותאם");
     expect(Object.keys((await call("/public", "get_poll_average", {})).data.result.structuredContent.averages)).toEqual(["polls.mean"]);
@@ -459,5 +459,31 @@ describe("שליפה וראיות מול אותו ספק באתר", () => {
     const adjusted = (await call("/public", "get_data_metric", { ids: ["likud"], selection: { product: "polls.adjusted" } })).data.result.structuredContent;
     expect(adjusted.status).toBe("available");
     expect(typeof adjusted.value).toBe("number");
+  });
+});
+
+describe('נתונים חדשים דרך MCP וראיות לכרטיס', () => {
+  it('טבלת יישוב מסוננת והמספר בכרטיס נשלף מאותו מקור', async () => {
+    const response = (await call('/public', 'get_locality_results', { election: 'k20', query: 'ירושלים' })).data.result;
+    expect(response.isError).toBe(false);
+    const row = response.structuredContent.rows.find(r => r.name === 'ירושלים');
+    expect(row).toBeDefined();
+    const metric = (await call('/public', 'get_data_metric', { metricId: 'official.locality.votes', election: 'k20', ids: [row.code, 'מחל'] })).data.result.structuredContent;
+    expect(metric.value).toBe(row.votes['מחל']);
+    const card = (await call('/public', 'show_answer', { title: 'הצבעה בירושלים', sections: [{ kind: 'numbers', items: [{ label: 'קולות לליכוד', evidence: metric.evidence }] }], suggested_questions: ['מה היו התוצאות הארציות?'] })).data.result;
+    expect(card.isError).toBe(false);
+  });
+  it('טעות סקר היסטורי נשמרת בנקודות אחוז עם ראיה', async () => {
+    const metric = (await call('/public', 'get_data_metric', { metricId: 'accuracy.lastPoll.maxPartyPp', election: 'k20', ids: ['k20-2015-03-13-0'] })).data.result.structuredContent;
+    expect(metric.value).toBeCloseTo(8 / 120 * 100);
+    expect(metric.unit).toContain('מושבי הכנסת');
+  });
+  it('סינון מכונים עובר דרך אותו ספק ונשמר בראיה', async () => {
+    const firm = SITE_FILES.get('data/index.json').sourceOptions[0].firmId;
+    const metric = (await call('/public', 'get_data_metric', { selection: { product: 'polls.adjusted', firms: [firm] }, ids: ['likud'] })).data.result.structuredContent;
+    expect(metric.evidence.selection.firms).toEqual([firm]);
+    expect(metric.status).toBe('available');
+    const bad = (await call('/public', 'get_data_metric', { selection: { product: 'polls.mean', firms: ['unknown'] }, ids: ['likud'] })).data.result;
+    expect(bad.isError).toBe(true);
   });
 });

@@ -31,8 +31,8 @@ function perfectPoll(c: Cycle): HistPoll {
 }
 
 describe("נתוני המערכות הקודמות", () => {
-  it("חמש מערכות, לכל אחת תוצאה רשמית וסקרים", () => {
-    expect(cycles.map((c) => c.id)).toEqual(["k21", "k22", "k23", "k24", "k25"]);
+  it("שש מערכות, לכל אחת תוצאה רשמית וסקרים", () => {
+    expect(cycles.map((c) => c.id)).toEqual(["k20", "k21", "k22", "k23", "k24", "k25"]);
     for (const c of cycles) {
       expect(resultOf(c)).toBeDefined();
       expect(c.polls.length).toBeGreaterThan(30);
@@ -49,7 +49,7 @@ describe("נתוני המערכות הקודמות", () => {
 
   it("גוש ההמלצה על נתניהו תואם את מספר הממליצים שדווח (65 · 55 · 58 · 52 · 64)", () => {
     const seats = cycles.map((c) => c.recommendedNetanyahu.reduce((a, x) => a + resultOf(c).lists.find((l) => l.letters === x)!.seats, 0));
-    expect(seats).toEqual([65, 55, 58, 52, 64]);
+    expect(seats).toEqual([67, 65, 55, 58, 52, 64]);
   });
 
   it("אין סקר מיום הבחירות או אחריו (מדגמי הקלפיות אינם סקר)", () => {
@@ -96,7 +96,7 @@ describe("ערב הבחירות — אותה שיטה כמו 'המצב היום'
   });
 
   it("המספרים המרכזיים (נבדקו בחישוב נפרד בפייתון)", () => {
-    const s = cycles.map((c) => summarizeCycle(c, resultOf(c)));
+    const s = cycles.filter(c => c.knesset >= 21).map((c) => summarizeCycle(c, resultOf(c)));
     expect(s.map((x) => x.snapshot.length)).toEqual([14, 10, 10, 9, 9]);
     // ממוצע בין המכונים (הכרעת בעלים 9.10.2026). הערכים נבדקו בחישוב נפרד בפייתון, ובאותו חישוב עם חציון התקבלו הערכים הישנים 37, 14, 7.5, 20, 14.
     const close = (got: number[], want: number[]) => got.forEach((v, i) => expect(v).toBeCloseTo(want[i], 3));
@@ -116,7 +116,7 @@ describe("מכונים ומשפחות לאורך זמן", () => {
   });
 
   it("ש\"ס: בכל חמש המערכות קיבלה יותר מממוצע הסקרים", () => {
-    const rows = familyRows(cycles.map((c) => summarizeCycle(c, resultOf(c))));
+    const rows = familyRows(cycles.filter(c => c.knesset >= 21).map((c) => summarizeCycle(c, resultOf(c))));
     const shas = rows.find((r) => r.id === "shas")!;
     expect(shas.under).toBe(5);
     shas.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-2.643, -1.9, -0.6, -0.889, -2.556][i], 3));

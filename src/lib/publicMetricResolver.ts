@@ -4,7 +4,8 @@ export { PUBLIC_METRICS } from "./dataCatalog";
 export type PublicMetricId = keyof typeof PUBLIC_METRICS;
 interface PublicInput {
   about?: { snapshotId?: string; updatedAt?: string; cacheStatus?: string };
-  elections?: { id: string; date: string; valid: number; lists: { letters: string; votes: number; seats: number }[] }[];
+  elections?: { id: string; date: string; valid?: number; lists: { letters: string; votes?: number; seats?: number }[]; rows?: { code: string; votes: Record<string, number> }[] }[];
+  lastPollErrors?: Record<string, { pollId: string; date: string; maxAbsPp: number; blocs: { id: string; diffPp: number }[] }[]>;
   scenarios?: { lists: Record<string, { pass: number; seatsMean: number; seats: number[] }> };
   seats?: { full: { list: string; mean: number; min: number; max: number }[] };
   publishedAt?: string;
@@ -13,14 +14,21 @@ interface PublicInput {
 }
 export function resolvePublicMetric(metricId: PublicMetricId, data: PublicInput, ids: string[], election?: string, screen = "method") {
   const definition = PUBLIC_METRICS[metricId];
-  const members = [...new Set(ids)].sort();
+  const members = metricId.startsWith("accuracy.lastPoll.") || metricId === "official.locality.votes" ? [...ids] : [...new Set(ids)].sort();
   let value: number | null = null;
   let range: [number, number] | null = null;
   let sourceDate = data.asOf ?? data.about?.updatedAt ?? "";
-  if (metricId.startsWith("official.results.")) {
+  if (metricId === "official.locality.votes") {
+    const result = data.elections?.find(r => r.id === election);
+    const row = result?.rows?.find(r => r.code === ids[0]);
+    if (ids.length === 2 && row && Object.prototype.hasOwnProperty.call(row.votes, ids[1])) { value = row.votes[ids[1]]; sourceDate = result!.date; }
+  } else if (metricId.startsWith("accuracy.lastPoll.")) {
+    const row = data.lastPollErrors?.[election ?? ""]?.find(r => r.pollId === ids[0]);
+    if (row) { value = metricId.endsWith("maxPartyPp") && ids.length === 1 ? row.maxAbsPp : ids.length === 2 ? row.blocs.find(b => b.id === ids[1])?.diffPp ?? null : null; sourceDate = row.date; }
+  } else if (metricId.startsWith("official.results.")) {
     const result = data.elections?.find(r => r.id === election);
     if (result && members.length && members.every(id => result.lists.some(l => l.letters === id))) {
-      value = result.lists.filter(l => members.includes(l.letters)).reduce((a, l) => a + (metricId.endsWith(".support") ? l.votes / result.valid * 100 : l.seats), 0);
+      value = result.lists.filter(l => members.includes(l.letters)).reduce((a, l) => a + (metricId.endsWith(".support") ? (l.votes ?? 0) / result.valid! * 100 : (l.seats ?? 0)), 0);
       sourceDate = result.date;
     }
   } else if (metricId.startsWith("scenario.model.")) {

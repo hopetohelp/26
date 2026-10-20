@@ -5,7 +5,7 @@ import type { Poll } from "./data";
 import { pollSeatSummary } from "./pollRange";
 import { DATA_PRODUCTS, SUPPORT_RECONSTRUCTION, MAJORITY_SEATS, METHOD_VERSION, POLL_WINDOW_DAYS, identity, sourceAllowed, type ProductId, type DataScreen } from "./dataCatalog";
 
-export interface Selection { product: ProductId; source?: string; asOf?: string; days?: number }
+export interface Selection { product: ProductId; source?: string; firms?: string[]; asOf?: string; days?: number }
 export interface SourceOption { id: string; label: string; firmId: string; publisherId: string | null; seriesId: string | null; explain: string }
 /** המזהים נשענים על שמות המקור הפנימיים הקבועים, ולא על תווית התצוגה בעברית. */
 export function sourceOptions(input: Poll[] = []): SourceOption[] {
@@ -141,7 +141,7 @@ export function createDataProvider({ polls, meta, lists2026, model }: ProviderIn
   const ADJUSTED_AVERAGE = adjusted;
   const completionCache = new Map<string, ReturnType<typeof adjustedAverage>>();
   const completedFor = (selection: Selection) => {
-    if (selection.product !== "poll.single" && (selection.asOf ?? DATA_AS_OF) === DATA_AS_OF && (selection.days ?? POLL_WINDOW_DAYS) === POLL_WINDOW_DAYS) return adjusted;
+    if (!selection.firms && selection.product !== "poll.single" && (selection.asOf ?? DATA_AS_OF) === DATA_AS_OF && (selection.days ?? POLL_WINDOW_DAYS) === POLL_WINDOW_DAYS) return adjusted;
     const key = identity(selection);
     let result = completionCache.get(key);
     if (!result) { result = adjustedAverage(selectedPolls(selection), lists2026.map(l => l.id), AGREEMENTS); completionCache.set(key, result); }
@@ -151,21 +151,22 @@ function resolveData(selection: Selection, ids: string[], screen: DataScreen = "
   const definition = DATA_PRODUCTS[selection.product];
   const members = [...new Set(ids)].sort();
   const normalized = { ...selection, asOf: selection.asOf ?? DATA_AS_OF, days: selection.days ?? POLL_WINDOW_DAYS };
-  let input = latestPerPollster(normalized.asOf, normalized.days);
+  const input = selectedPolls(normalized);
+  const completed = selection.firms ? completedFor(selection) : adjusted;
   const option = SOURCE_OPTIONS.find(o => o.id === selection.source);
-  if (selection.product === "poll.single") input = option ? input.filter(p => p.firm === option.firmId && (!option.seriesId || pollsterKey(p) === option.seriesId)) : [];
+
   const summary = pollSeatSummary(input, members);
-  let status: DataResult["status"] = sourceAllowed(screen, selection.product) ? "available" : "unsupported";
+  let status: DataResult["status"] = sourceAllowed(screen, selection.product) && (!selection.firms || ["polls.mean", "polls.adjusted"].includes(selection.product)) ? "available" : "unsupported";
   let value: number | null = null;
-  let assumptions: string[] = [definition.assumption];
+  let assumptions: string[] = [definition.assumption, ...(selection.firms ? ["ממוצע אישי: רק המכונים שנבחרו; משקל שווה לכל סדרת מכון–מזמין אחרונה בחלון"] : [])];
   if (status === "available") {
     if (selection.product === "polls.mean" || selection.product === "poll.single") value = summary?.mean ?? (input.length ? 0 : null);
     else if (normalized.asOf !== DATA_AS_OF || normalized.days !== POLL_WINDOW_DAYS || selection.source) status = "unsupported";
     else {
-      const values = selection.product === "model.mean" ? model.central.seats : adjusted.seats;
+      const values = selection.product === "model.mean" ? model.central.seats : completed.seats;
       if (selection.product === "polls.adjusted") {
-        status = adjusted.status;
-        assumptions = [...assumptions, ...new Set(adjusted.observations.flatMap(o => o.assumptions))];
+        status = completed.status;
+        assumptions = [...assumptions, ...new Set(completed.observations.flatMap(o => o.assumptions))];
       }
       // מדד קבוצה: סכום ערכים קיימים בלבד, לפי המדיניות הרשומה.
       value = sumPresent(members.map(id => values?.[id]));
@@ -174,7 +175,7 @@ function resolveData(selection: Selection, ids: string[], screen: DataScreen = "
   if (status === "available" && value === null) status = "missing";
   const inputRefs = selection.product === "model.mean" ? ["src/data/model.json"] : input.map(p => p.id);
   const evidenceId = identity({ metricId: `${selection.product}.seats`, members, normalized, snapshot: SNAPSHOT_ID, method: METHOD_VERSION, screen });
-  return { metricId: `${selection.product}.seats`, subject: { ids: members }, selection: normalized, value: status === "available" ? value : null, unit: definition.unit, snapshotId: SNAPSHOT_ID, methodVersion: METHOD_VERSION, inputRefs, assumptions, computedAt: meta.dataAsOf, latestFieldworkEnd: selection.product === "model.mean" ? model.lastPoll : input.map(p => p.end).sort().slice(-1)[0] ?? null, sourcePublishedAt: input.flatMap(p => p.verification?.details.published ? [p.verification.details.published] : []), checkedAt: input.flatMap(p => p.verification?.checkedAt ? [p.verification.checkedAt] : []), status, quality: { verified: input.filter(p => p.verified).length, total: input.length, imputed: selection.product === "polls.adjusted" && adjusted.observations.some(o => Object.values(o.origin).some(x => x === "imputed" || x === "assumed-zero")), fieldConflicts: input.filter(p => Object.values(p.fieldChecks ?? {}).some(f => f.status === "conflict")).length, reconstructed: selection.product === "polls.adjusted" && adjusted.observations.some(o => Object.values(o.origin).includes("reconstructed")) }, evidenceId, label: option && selection.product === "poll.single" ? option.label : definition.name, explain: option && selection.product === "poll.single" ? option.explain : definition.explain, method: definition.method, range: (selection.product === "polls.mean" || selection.product === "poll.single") ? summary?.range ?? (input.length ? [0, 0] : null) : null };
+  return { metricId: `${selection.product}.seats`, subject: { ids: members }, selection: normalized, value: status === "available" ? value : null, unit: definition.unit, snapshotId: SNAPSHOT_ID, methodVersion: METHOD_VERSION, inputRefs, assumptions, computedAt: meta.dataAsOf, latestFieldworkEnd: selection.product === "model.mean" ? model.lastPoll : input.map(p => p.end).sort().slice(-1)[0] ?? null, sourcePublishedAt: input.flatMap(p => p.verification?.details.published ? [p.verification.details.published] : []), checkedAt: input.flatMap(p => p.verification?.checkedAt ? [p.verification.checkedAt] : []), status, quality: { verified: input.filter(p => p.verified).length, total: input.length, imputed: selection.product === "polls.adjusted" && completed.observations.some(o => Object.values(o.origin).some(x => x === "imputed" || x === "assumed-zero")), fieldConflicts: input.filter(p => Object.values(p.fieldChecks ?? {}).some(f => f.status === "conflict")).length, reconstructed: selection.product === "polls.adjusted" && completed.observations.some(o => Object.values(o.origin).includes("reconstructed")) }, evidenceId, label: option && selection.product === "poll.single" ? option.label : definition.name + (selection.firms ? " — אישי" : ""), explain: option && selection.product === "poll.single" ? option.explain : definition.explain, method: definition.method, range: (selection.product === "polls.mean" || selection.product === "poll.single") ? summary?.range ?? (input.length ? [0, 0] : null) : null };
 }
 function resolveDataset(selection: Selection, screen: DataScreen = "method") {
   const rows = lists2026.map(l => resolveData(selection, [l.id], screen));
@@ -186,7 +187,7 @@ const resolveBloc = resolveData;
 /** אחוז תמיכה אינו מנדטים / 120. כל תצפית מסומנת כמדווחת או משוחזרת. */
 function resolveSupport(selection: Selection) {
   if (selection.product === "model.mean") return { shares: MODEL_AVERAGE.shares, origin: "model" as const };
-  if (selection.product === "polls.adjusted") return { shares: adjusted.status === "available" ? adjusted.shares : null, origin: "reconstructed" as const };
+  if (selection.product === "polls.adjusted") { const completed = completedFor(selection); return { shares: completed.status === "available" ? completed.shares : null, origin: "reconstructed" as const }; }
   const observations = completedFor(selection).observations;
   const shares: Record<string, number> = {};
   for (const { id } of lists2026) {
@@ -196,7 +197,8 @@ function resolveSupport(selection: Selection) {
   return { shares, origin: "reported-or-reconstructed" as const };
 }
 function selectedPolls(selection: Selection): Poll[] {
-  const input = latestPerPollster(selection.asOf ?? DATA_AS_OF, selection.days ?? POLL_WINDOW_DAYS);
+  let input = latestPerPollster(selection.asOf ?? DATA_AS_OF, selection.days ?? POLL_WINDOW_DAYS);
+  if (selection.firms) input = input.filter(p => selection.firms!.includes(p.firm));
   if (selection.product !== "poll.single") return input;
   const option = SOURCE_OPTIONS.find(o => o.id === selection.source);
   return option ? input.filter(p => p.firm === option.firmId && (!option.seriesId || pollsterKey(p) === option.seriesId)) : [];

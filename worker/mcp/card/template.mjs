@@ -4,10 +4,10 @@
  * טהור (בלי fs) — כדי שהבדיקה תבנה אותו ותשווה.
  */
 const block = (css, selector) => {
-  const i = css.indexOf(selector + " {");
-  if (i < 0) throw new Error(`חסר ${selector} ב-src/index.css`);
-  const body = css.slice(i, css.indexOf("}", i));
-  return [...body.matchAll(/(--[a-z-]+)\s*:\s*([^;]+);/g)].filter(([, k]) => !k.startsWith("--font")).map(([, k, v]) => `${k}:${v.trim()}`).join(";");
+  const blocks = [...css.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([, selectors]) => selectors.trim() === selector);
+  if (!blocks.length) throw new Error(`חסר ${selector} ב-src/index.css`);
+  const values = new Map(blocks.flatMap(([, , body]) => [...body.matchAll(/(--[a-z-]+)\s*:\s*([^;]+);/g)].map(([, k, v]) => [k, v.trim()])));
+  return [...values].map(([k, v]) => `${k}:${v}`).join(";");
 };
 
 export function buildCardHtml({ indexCss, cardCss, cardJs, site }) {

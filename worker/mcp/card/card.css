@@ -4,7 +4,7 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; background: transparent; }
 body {
-  font-family: "Rubik", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: rgb(var(--ink));
@@ -54,3 +54,7 @@ body { container-type: inline-size; }
 .foot { margin-top: 12px; padding-top: 8px; border-top: 1px solid rgb(var(--line)); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 13px; color: rgb(var(--ink-soft)); }
 .footnote { margin: 0; flex: 1 1 14rem; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* אותו סדר חזותי כמו עיצוב C: כותרת, תוצאה, פירוט ומקור. */
+.card { border-radius: 14px; padding: clamp(16px, 3vw, 28px); }
+h1, h2, h3 { font-family: var(--font-display), sans-serif; color: rgb(var(--ink)); }
