@@ -28,10 +28,10 @@ describe("גרף המגמה האחיד", () => {
   it("אין חלון פתוח במנוחה (נפתח במעבר, בלחיצה ובחצים)", () => {
     expect(html()).not.toContain("חישוב:");
   });
-  it("קפסולות מדוללות לפי מקום עם תג לכל ממוצע", () => {
+  it("קפסולות צרות מדוללות לפי מקום ללא תגי ערך", () => {
     expect((html().match(/class="mk-pv[ "]/g) ?? []).length).toBeGreaterThan(0);
   });
-  it("תוצאה בפועל: קו משני מקווקו עם תג", () => {
+  it("תוצאה בפועל: קו משני מקווקו ללא תג", () => {
     expect(html({ markers: [{ t: points[9].t + 3 * DAY, v: 55 }] })).toContain('data-kind="secondary"');
   });
   it("השוואת רשימות: אותו רכיב, קו לכל רשימה ובלי ציור נרות", () => {
@@ -61,9 +61,8 @@ describe("גרף המגמה האחיד", () => {
     const h = html();
     const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="trend-line fill-none stroke-accent"/.exec(h);
     expect(d).not.toBeNull();
-    const marks = [...h.matchAll(/data-kind="primary" data-side="[^"]*" style="left:([\d.]+)%;top:([\d.]+)%[^"]*" title="ממוצע: ([\d.]+)/g)];
-    expect(marks.length).toBeGreaterThan(0);
-    expect(marks.every(m => points.some(p => p.v === Number(m[3])))).toBe(true);
+    expect(h).toContain('data-kind="primary"');
+    expect(h).not.toContain('class="mk-capsule-tag"');
   });
   it("תוצאה בפועל: קו מקווקו מהסקר האחרון אל התוצאה, בכל סדרה לפי מזהה", () => {
     const m = [{ id: "b", t: points[9].t + 6 * DAY, v: 25 }];
