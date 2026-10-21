@@ -480,9 +480,14 @@ describe('נתונים חדשים דרך MCP וראיות לכרטיס', () => {
   });
   it('סינון מכונים עובר דרך אותו ספק ונשמר בראיה', async () => {
     const published = SITE_FILES.get('data/average.json');
-    const latestId = published.latestPerPollster.polls[0].id;
-    const firm = published.providerInput.polls.find(p => p.id === latestId).firm;
-    const metric = (await call('/public', 'get_data_metric', { selection: { product: 'polls.adjusted', firms: [firm] }, ids: ['likud'] })).data.result.structuredContent;
+    // סקר יחיד שחלוקת המושבים שלו נופלת על תיקו מדויק מוחזר כ"סתירה" (תיקו אינו מוכרע בסתר) — הבדיקה בוחרת מכון שהתוצאה שלו אינה תיקו
+    let firm = null, metric = null;
+    for (const entry of published.latestPerPollster.polls) {
+      const candidate = published.providerInput.polls.find(p => p.id === entry.id).firm;
+      const result = (await call('/public', 'get_data_metric', { selection: { product: 'polls.adjusted', firms: [candidate] }, ids: ['likud'] })).data.result.structuredContent;
+      if (result.status === 'available') { firm = candidate; metric = result; break; }
+    }
+    expect(firm).not.toBeNull();
     expect(metric.evidence.selection.firms).toEqual([firm]);
     expect(metric.status).toBe('available');
     const bad = (await call('/public', 'get_data_metric', { selection: { product: 'polls.mean', firms: ['unknown'] }, ids: ['likud'] })).data.result;
