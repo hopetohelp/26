@@ -1,23 +1,14 @@
 {
- "asOf": "2026-10-21T22:27:35+03:00",
+ "asOf": "2026-10-21T23:16:01+03:00",
  "conflicts": [
   {
-   "detail": "סכום המנדטים 567 במקום 120 — סומן כשגוי (סכום המנדטים 567 — מעל 120 (סימון אוטומטי)) — הסקר הוצא מהחישובים",
-   "end": "2026-10-19",
+   "detail": "באתר 454, בפרטי האימות 2,116",
+   "end": "2026-10-20",
    "firmHe": "שלמה פילבר + NEXT DATA",
-   "group": "seats",
-   "id": "2026-10-19-sf-nd-channel-14",
+   "group": "sample",
+   "id": "2026-10-20-sf-nd-channel-14",
    "publisherHe": "ערוץ 14",
-   "source": "https://www.c14.co.il/article/1745051"
-  },
-  {
-   "detail": "סכום המנדטים 651 במקום 120 — סומן כשגוי (סכום המנדטים 651 — מעל 120 (סימון אוטומטי)) — הסקר הוצא מהחישובים",
-   "end": "2026-10-18",
-   "firmHe": "שלמה פילבר + NEXT DATA",
-   "group": "seats",
-   "id": "2026-10-18-sf-nd-channel-14",
-   "publisherHe": "ערוץ 14",
-   "source": "https://www.c14.co.il/article/1743088"
+   "source": "https://www.ice.co.il/research/news/article/1134443"
   },
   {
    "detail": "באתר 1,263, בפרטי האימות 1,013",
@@ -38,15 +29,6 @@
    "source": null
   },
   {
-   "detail": "סכום המנדטים 601 במקום 120 — סומן כשגוי (סכום המנדטים 601 — שגיאת העתקה בטבלת המקור) — הסקר הוצא מהחישובים",
-   "end": "2026-08-24",
-   "firmHe": "שלמה פילבר + NEXT DATA",
-   "group": "seats",
-   "id": "2026-08-24-sf-nd-channel-14",
-   "publisherHe": "ערוץ 14",
-   "source": "https://www.c14.co.il/article/1674991"
-  },
-  {
    "detail": "סכום המנדטים 117 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
    "end": "2026-06-11",
    "firmHe": "לזר מחקרים + Panel4All",
@@ -65,33 +47,6 @@
    "source": null
   },
   {
-   "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2024-03-28",
-   "firmHe": "לזר מחקרים + Panel4All",
-   "group": "seats",
-   "id": "2024-03-28-lri-p4a-maariv",
-   "publisherHe": "מעריב",
-   "source": "https://www.maariv.co.il/news/politics/Article-1087651"
-  },
-  {
-   "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2024-01-21",
-   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
-   "group": "seats",
-   "id": "2024-01-21-cf-mp-sn-channel-13",
-   "publisherHe": "חדשות 13",
-   "source": "https://13tv.co.il/item/news/politics/politics/survey-903902650/"
-  },
-  {
-   "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-12-11",
-   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
-   "group": "seats",
-   "id": "2023-12-11-cf-mp-sn-channel-13",
-   "publisherHe": "חדשות 13",
-   "source": "https://13tv.co.il/item/news/politics/politics/bs81j-903845166/"
-  },
-  {
    "detail": "סכום המנדטים 91 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
    "end": "2023-11-16",
    "firmHe": "מדגם מחקר וייעוץ",
@@ -99,96 +54,6 @@
    "id": "2023-11-16-midgam-r-c-hahadashot-12-b",
    "publisherHe": "חדשות 12",
    "source": null
-  },
-  {
-   "detail": "סכום המנדטים 111 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-09-26",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-09-26-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q3/Article-9278c05ea72da81027.htm"
-  },
-  {
-   "detail": "סכום המנדטים 112 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-09-26",
-   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
-   "group": "seats",
-   "id": "2023-09-26-cf-mp-sn-channel-13",
-   "publisherHe": "חדשות 13",
-   "source": "https://13tv.co.il/item/news/politics/politics/e86nq-903724639/"
-  },
-  {
-   "detail": "סכום המנדטים 112 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-07-25",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-07-25-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q3/Article-59a23770bad8981026.htm"
-  },
-  {
-   "detail": "סכום המנדטים 110 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-06-25",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-06-25-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-16c825c9263f881026.htm"
-  },
-  {
-   "detail": "סכום המנדטים 110 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-06-15",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-06-15-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-3762dd484afb881027.htm"
-  },
-  {
-   "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-06-15",
-   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
-   "group": "seats",
-   "id": "2023-06-15-cf-mp-sn-channel-13",
-   "publisherHe": "חדשות 13",
-   "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903569276/"
-  },
-  {
-   "detail": "סכום המנדטים 110 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-05-30",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-05-30-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-77a7187328d6881026.htm"
-  },
-  {
-   "detail": "סכום המנדטים 110 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-05-14",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-05-14-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-1aaa3d0863b1881027.htm"
-  },
-  {
-   "detail": "סכום המנדטים 109 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-05-07",
-   "firmHe": "מדגם מחקר וייעוץ",
-   "group": "seats",
-   "id": "2023-05-07-midgam-r-c-hahadashot-12",
-   "publisherHe": "חדשות 12",
-   "source": "https://www.mako.co.il/news-politics/2023_q2/Article-78cdc06e817f781026.htm"
-  },
-  {
-   "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2023-04-30",
-   "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
-   "group": "seats",
-   "id": "2023-04-30-cf-mp-sn-channel-13",
-   "publisherHe": "חדשות 13",
-   "source": "https://13tv.co.il/item/news/politics/politics/poll-903509362/"
   }
  ],
  "corrections": [
@@ -628,10 +493,10 @@
   "model": {
    "skipped": 0,
    "start": "2026-09-09",
-   "used": 63
+   "used": 65
   },
   "sinceListSubmission": 65,
   "total": 799,
-  "usable": 784
+  "usable": 786
  }
 }

@@ -150,11 +150,19 @@ def tables(wikitext):
         i = j
     return out
 
+def ref_open(text):
+    """האם בטקסט התא יש <ref ...> שטרם נסגר (למשל cite web שנשבר לכמה שורות, עם '|url=' בשורה חדשה)."""
+    opened = len(re.findall(r"<ref\b[^>]*?(?<!/)>", text))
+    return opened > len(re.findall(r"</ref\s*>", text))
+
 def rows_of(table):
     """מחזיר רשימת שורות; כל שורה = רשימת (סוג, תא גולמי)."""
     rows, cur = [], []
     for line in table.split("\n")[1:]:
         st = line.strip()
+        if cur and ref_open(cur[-1][1]):  # שורת "|..." בתוך הפניה פתוחה היא המשך הפניה ולא תא
+            k, c = cur[-1]; cur[-1] = (k, c + "\n" + line)
+            continue
         if st.startswith("|}"): break
         if st.startswith("|-"):
             if cur: rows.append(cur)

@@ -19,20 +19,20 @@ The below table only lists pollsters and publishers that regularly publish manda
 |-
 | rowspan="3" |[[Channel 13 (Israel)|Channel 13]]
 | style="background:#FFCCFF" |Camil Fuchs, Midgam Project, Stat-Net<ref>{{Cite news |author1=[[Hila Korach]]|author2=[[Raviv Drucker]] |title=סקר חדשות 13: גוש נתניהו יורד ל-58 מנדטים, מרצ עוברת |url=https://13tv.co.il/item/news/politics/politics/new-survey-903379652/ |access-date=2 January 2023 |date=1 January 2023 |website=Channel 13 |language=he-IL}}</ref><ref>{{Cite news |author=Michael Shemesh |title=סקר כאן חדשות: עמדת פתיחה חלשה לסער |url=https://www.kan.org.il/content/kan-news/politic/722543/ |access-date=13 March 2024 |date=13 March 2024 |website=Israeli Public Broadcasting Corporation|language=he-IL}}</ref>
-|2022 election - 13 March 2024 
+|2022 election – 13 March 2024 
 |-
 | style="background:#BAD1E6" |Maagar Mochot, Stat-Net<ref name="Ch13June9">{{Cite news |author1=Sefi Ovadia|author2=[[Raviv Drucker]] |title=סקר חדשות 13: כמה תומכים בפרישת גנץ - ומה תמונת המנדטים? |url=https://13tv.co.il/item/news/politics/politics/new-poll-904096972/ |access-date=10 June 2024 |date=10 June 2024 |website=Reshet 13 |language=he-IL}}</ref><ref name="Maagar25May">{{Cite web |title=בנט נחלש, אך מפת הגושים ללא שינוי – ומי ניצח במלחמה? {{!}} חדשות 13 |url=https://13tv.co.il/item/news/politics/politics/survey-905173261/ |access-date=26 May 2026 |publisher=רשת 13|language=he-IL}}</ref>
-|10 June 2024 - 25 May 2026
+|10 June 2024 – 25 May 2026
 |-
 | style="background:mediumseagreen" |Midgam Project, The Madad, Stat-Net, Askaria<ref name="auto7">{{cite web  |title=דרמה בגוש מתנגדי נתניהו: איזנקוט מזנק, בנט מתרסק|publisher=[[Channel 13 (Israel)|Channel 13]] |url=https://13tv.co.il/item/news/politics/politics/v0v13-905221091/|date=17 June 2026|access-date=18 June 2026 |language=he-IL}}</ref>
 | Since 17 June 2026
 |-
 | rowspan="3" |[[Channel 14 (Israel)|Channel 14]]
 | style="background:Gold" |Shlomo Filber, Direct Polls<ref>{{Cite news |date=2 February 2023 |title=סקר חדשות 14: מפת הגושים אילו הבחירות היו מתקיימות כיום |url=https://www.now14.co.il/סקר-חדשות-14-מפת-הגושים-אילו-הבחירות-היו/ |access-date=7 February 2023 |website=Now 14 |language=he-IL}}</ref><ref>{{Cite web |date=5 June 2025 |title=לאחר הטלטלה הפוליטית: אין שינוי במפת המנדטים |url=https://www.c14.co.il/article/1232068 |access-date=20 September 2025 |website=Channel 14 |language=he-IL}}</ref>
-| 2022 election - 5 June 2025
+| 2022 election – 5 June 2025
 |-
 | style="background:orange" |Shlomo Filber<ref>{{Cite web |date=12 June 2025 |title=למרות המשבר הפוליטי: הקואליציה עדיין שומרת על רוב יציב |url=https://www.c14.co.il/article/1237820 |access-date=20 September 2025 |website=Channel 14 |language=he-IL}}</ref><ref name="auto6">{{cite web |title=סקר חדשות 14: כמה מנדטים מקבלת המפלגה המאוחדת של בנט ולפיד? |trans-title=News 14 poll: How many mandates does the united party of Bennett and Lapid receive? |publisher=Channel 14 |url=https://www.c14.co.il/article/1537442 |date=26 April 2026 |access-date=26 April 2026 |language=Hebrew}}</ref>
-|12 June 2025 - 26 April 2026
+|12 June 2025 – 26 April 2026
 |-
 | style="background:DarkOrange" |Shlomo Filber, NEXT DATA<ref name="auto3">{{Cite web |title=מפלגת "ביחד" בראשות בנט ולפיד מתרסקת, נתניהו פותח פער |trans-title=The "Together" party led by Bennett and Lapid is collapsing, Netanyahu is opening a gap |publisher=Channel 14 |date=7 May 2026 |url=https://www.c14.co.il/article/1549974|language=he-IL|access-date=9 May 2026}}</ref>
 | Since 7 May 2026
@@ -60,11 +60,11 @@ The below table only lists pollsters and publishers that regularly publish manda
 | rowspan="3" |[[Maariv (newspaper)|''Maariv'']]
 | style="background:lightpink" |Panels Politics<ref>{{Cite news |author=Moshe Cohen |title=סקר "מעריב": אילו הבחירות היו מתקיימות היום - כך הייתה נראית המפה הפוליטית |url=https://www.maariv.co.il/news/politics/Article-967331 |date=23 December 2022 |access-date=23 December 2022 |work=Maariv |language=he-IL}}</ref><ref>{{Cite news |author=Moshe Cohen |title=המחנה הממלכתי במגמת ירידה, ומי זינקה במנדטים?
 |url=https://www.maariv.co.il/news/politics/Article-1019055 |date=30 June 2023 |access-date=30 June 2023 |website=Maariv |language=he-IL}}</ref>
-| 2022 election - 29 June 2023
+| 2022 election – 29 June 2023
 |-
 | style="background:indianred" |Lazar Research Institute<ref>{{Cite news |author=Moshe Cohen |title=חוזרים להוביל: 29 מנדטים לליכוד, גנץ ממשיך להיחלש
 |url=https://www.maariv.co.il/news/politics/Article-1020798 |date=7 July 2023 |access-date=7 July 2023 |website=Maariv |language=he-IL}}</ref><ref name="Maariv11Aug23">{{Cite news |author=Moshe Cohen |title=סקר "מעריב" חושף: מפלגת מחאה משנה את מאזן הכוחות; מי מוביל בתמונת המנדטים?|url=https://www.maariv.co.il/news/politics/Article-1029407 |access-date=11 August 2023 |date=11 August 2023 |website=Maariv |language=he-IL}}</ref>
-| 5 July 2023 - 10 August 2023
+| 5 July 2023 – 10 August 2023
 |-
 | style="background:#F86B61" |Lazar Research Institute, Panel4All<ref>{{Cite news |author=Matan Wasserman |title=סקר "מעריב": גנץ מזנק, אך הקואליציה מצמצמת פערים |url=https://www.maariv.co.il/news/politics/Article-1031166 |access-date=18 August 2023 |date=18 August 2023 |website=Maariv |language=he-IL}}</ref>
 | Since 17 August 2023
@@ -78,7 +78,7 @@ The below table only lists pollsters and publishers that regularly publish manda
 | Since 2022 election
 |}
 
-Shlomo Filber is affiliated with Likud and its leader [[Benjamin Netanyahu]]. Filber is implicated in [[Case 4000]] on charges of breach of trust; thus it may be advisable to approach opinion polls edited by him with caution.<ref>{{Cite web|author=Netael Bandel |url=https://www.haaretz.com/israel-news/2022-06-14/ty-article/filber-changes-his-story-a-second-time-on-key-case-4000-meeting/00000181-5e9b-dde4-a187-febf1ebd0000|title=Netanyahu Trial: Witness Changes Story on Key Meeting a Second Time|date=14 June 2022|work=Haaretz|access-date=9 May 2026}}</ref>
+Shlomo Filber is affiliated with Likud and its leader [[Benjamin Netanyahu]]. Filber is implicated in [[Trial of Benjamin Netanyahu|Case 4000]] on charges of breach of trust; thus it may be advisable to approach opinion polls edited by him with caution.<ref>{{Cite web|author=Netael Bandel |url=https://www.haaretz.com/israel-news/2022-06-14/ty-article/filber-changes-his-story-a-second-time-on-key-case-4000-meeting/00000181-5e9b-dde4-a187-febf1ebd0000|title=Netanyahu Trial: Witness Changes Story on Key Meeting a Second Time|date=14 June 2022|work=Haaretz|access-date=9 May 2026}}</ref>
 
 == Seat projections ==
 This section displays voting intention estimates referring to the next [[Knesset]] election. The figures listed are Knesset seat counts rather than percentages, unless otherwise stated.
@@ -147,6 +147,31 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:{{Party color|Amcha Yisrael}}" |
 ! style="background:#f5c518" |
 ! style="background:#0000CD" |
+|-
+|23 Oct
+| colspan="21" |''From 23:59 local time today until the close of polls on 27 Oct, new opinion polls must not be published''<ref>{{Cite news |last=Shirkani Kofman |first=Elinor |date=2026-10-20 |title=Israel warns of illegal election polls ahead of vote |url=https://www.israelhayom.com/2026/10/20/israel-warns-of-illegal-election-polls-ahead-of-vote/ |access-date=2026-10-21 |work=[[Israel Hayom]]}}</ref>
+|-
+|{{Opdrts||20|Oct|2026}}
+| style=background:DarkOrange |SF+ND
+|[[Channel 14 (Israel)|Channel 14]]<ref name="Filber20oct">{{cite web|date=20 October 2026|lang=he-IL|title=מי מרוויח מהפרישה? השינויים במפת המנדטים לאחר העזיבה של גנץ
+|url=https://www.c14.co.il/article/1746819|access-date=21 October 2026 |work=Channel 14}}</ref>
+|454
+|style="background:#BBCDE4" |'''30'''
+|9
+|colspan=2|7
+|8
+|9
+|8
+|6
+|6
+|8
+|9
+|20
+|colspan=2|{{small|(2.5%)}}
+|{{small|(1.9%)}}
+|{{small|(0.9%)}}
+|{{small|(1.3%)}}{{efn|[[Noam (political party)|Noam]] at 0.9%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.4%}}
+|style="background:#b2b2f0" |'''62'''
 |-
 |{{Opdrts||19|Oct|2026}}
 | style="background:mediumseagreen" |MP+TM+SN+A
