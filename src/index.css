@@ -642,3 +642,5 @@
 .mk-capsule-cross { border-left-width:2.5px; }
 .mk-capsule-mark-v>.mk-capsule-cross { border-top-width:2.5px; }
 .mk-capsule-mark-v>.mk-capsule-tag { left:16px;transform:none;min-width:30px;max-width:none; }
+.mk-capsule-mark[data-kind=secondary]>.mk-capsule-cross { border-left-style:dashed; }
+.mk-capsule-mark-v[data-kind=secondary]>.mk-capsule-cross { border-top-style:dashed; }
