@@ -3,7 +3,7 @@ import { candleProfiles, type LSeg } from "../lib/chartLanguage";
 import { change, diffText, dumbbellAxis, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
 import { pctOne, seatsFmt, signed } from "../lib/format";
 import ChartLegend, { rangeLine, type LegendEntry } from "./ChartLegend";
-import { MeanDot, ProfileCandle, ResultRing } from "./marks";
+import { CapsuleMarks, ProfileCandle } from "./marks";
 import { MODEL_NOTE } from "./InfoTip";
 
 /**
@@ -60,14 +60,13 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
         <b className="block font-num font-extrabold tabular text-lg"><bdi dir="ltr">{sign(d)}</bdi></b>
         <span className="block text-xs text-ink-soft md:mt-0.5">{pct ? "אחוזים" : "מנדטים"}</span>
       </span>
-      <span aria-hidden="true" dir="ltr" className="relative block h-8 col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-span-2">
+      <span aria-hidden="true" dir="ltr" className="mk-capsule-track relative block h-14 col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-span-2">
         <span className="mk-plot">
           {ticks.map((v) => (
             <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
           ))}
           {lsegs.length > 0 && <ProfileCandle segs={lsegs} x={x} />}
-          <ResultRing at={x(r.before)} />
-          <MeanDot at={x(r.now)} />
+          <CapsuleMarks primary={{ at: x(r.now), value: r.now, label: "היום", text: fmt(r.now) }} secondary={{ at: x(r.before), value: r.before, label: "2022", text: before }} />
         </span>
       </span>
       <span className="col-span-2 row-start-3 md:col-span-1 md:col-start-1 md:row-start-2 text-sm text-ink-soft leading-snug">

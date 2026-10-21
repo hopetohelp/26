@@ -3,7 +3,7 @@ import { seatsFmt, signed } from "../lib/format";
 import { candleProfiles, valueSegs } from "../lib/chartLanguage";
 import ChartLegend from "./ChartLegend";
 import { axisMaxOf, PollRanges } from "./homeCharts";
-import { AxisLabels, MeanDot, ProfileCandle, SmallDot, Track } from "./marks";
+import { AxisLabels, CapsuleMarks, MeanDot, ProfileCandle, SmallDot, Track } from "./marks";
 
 /**
  * גרפי "המצב היום" (הכרעת בעלים 11.10.2026): רק הסקר האחרון של כל מכון. ארבע תצוגות מאותם נתונים:
@@ -67,7 +67,7 @@ export function PollsterByParty({ poll, polls, parties }: { poll: Poll; polls: P
   const x = (v: number) => (v / axisMax) * 100;
   return (
     <>
-      <ChartLegend entries={[{ kind: "dot", text: `${pollsterLabel(poll)}` }, { kind: "candle", text: "הנמוך עד הגבוה בין כל המכונים" }]} />
+      <ChartLegend entries={[{ kind: "mean", text: "ממוצע הסקרים" }, { kind: "result", text: pollsterLabel(poll) }, { kind: "candle", text: "הנמוך עד הגבוה בין כל המכונים" }]} />
       <Head axisMax={axisMax} />
       <ol className="mt-1">
         {data.map((r, i) => (
@@ -76,7 +76,7 @@ export function PollsterByParty({ poll, polls, parties }: { poll: Poll; polls: P
             <span className="font-num text-xl font-extrabold tabular">{r.v ?? "—"}</span>
             <Track axisMax={axisMax}>
               <ProfileCandle segs={levels[i]} x={x} />
-              {r.v !== undefined && <SmallDot at={x(r.v)} />}
+              <CapsuleMarks primary={{ at: x(r.avg), value: r.avg, label: "ממוצע הסקרים" }} secondary={r.v !== undefined ? { at: x(r.v), value: r.v, label: pollsterLabel(poll) } : undefined} />
             </Track>
             <span className="font-num text-sm text-ink-soft text-end tabular" dir="ltr">{r.v === undefined ? "" : diffText(r.v, r.avg)}</span>
           </li>

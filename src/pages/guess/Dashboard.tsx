@@ -17,7 +17,7 @@ import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
-import { AxisLabels, MeanDot, ProfileCandle, ResultRing, Track } from "../../components/marks";
+import { AxisLabels, CapsuleMarks, ProfileCandle, Track } from "../../components/marks";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import EditBlocsButton from "../../components/EditBlocsButton";
 import GroupBanner from "../../components/GroupBanner";
@@ -264,9 +264,9 @@ function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[
     {head}
     <ChartLegend
       entries={[
-        { kind: "result", text: "ממוצע המשתתפים (אינו סקר)" },
+        { kind: "mean", text: "ממוצע המשתתפים (אינו סקר)" },
         { kind: "candle", text: rangeLine("full", "ההשערות") },
-        ...(withPoll ? [{ kind: "mean" as const, text: "ממוצע הסקרים" }] : []),
+        ...(withPoll ? [{ kind: "result" as const, text: "ממוצע הסקרים" }] : []),
       ]}
     />
     <div aria-hidden="true" className={`grid ${COLS} gap-2 text-xs text-ink-soft`}><div className="col-start-2"><AxisLabels axisMax={axisMax} step={step} format={v => `${v}${suffix}`} /></div></div>
@@ -275,12 +275,11 @@ function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[
         {!r.lists && <PartyAvatar id={r.key} size={28} />}
         <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} /> : r.label}</span>
       </span>
-      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: העובי בכל קטע: כמה משתתפים שיערו ערך כזה`}>
+      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: הטווח המלא של השערות המשתתפים`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
-        {r.poll !== undefined && <MeanDot at={at(r.poll)} />}
-        {r.mean !== null && <ResultRing at={at(r.mean)} />}
+        <CapsuleMarks primary={r.mean !== null ? { at: at(r.mean), value: r.mean, label: "ממוצע המשתתפים", text: `${seatsFmt(r.mean)}${suffix}` } : undefined} secondary={r.poll !== undefined ? { at: at(r.poll), value: r.poll, label: "ממוצע הסקרים", text: `${seatsFmt(r.poll)}${suffix}` } : undefined} />
       </Track>
-      <span className="font-num tabular whitespace-nowrap">{r.mean === null ? "חסר נתון" : <><b>{seatsFmt(r.mean)}{suffix}</b>{r.lo !== r.hi ? ` · ${rng(seatsFmt(r.lo), seatsFmt(r.hi))}${suffix}` : ""}</>}</span>
+      <span className="font-num tabular whitespace-nowrap">{r.mean === null ? "חסר נתון" : <>{r.lo !== r.hi ? `טווח ${rng(seatsFmt(r.lo), seatsFmt(r.hi))}${suffix}` : ""}</>}</span>
       <span className="sr-only">; {r.mean === null ? "חסר נתון" : `ממוצע המשתתפים ${seatsFmt(r.mean)}${suffix}, בין ${seatsFmt(r.lo)} ל-${seatsFmt(r.hi)}`}{r.poll !== undefined ? `; ממוצע הסקרים ${seatsFmt(r.poll)}${suffix}` : ""}</span>
     </li>)}</ul>
   </Card>;

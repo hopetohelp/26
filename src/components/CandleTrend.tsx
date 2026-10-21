@@ -1,6 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import ChartLegend, { pollCandleLine, type LegendEntry } from "./ChartLegend";
-import { ProfileCandleV } from "./marks";
+import { CapsuleMarksV, ProfileCandleV } from "./marks";
 import type { Series, TrendPoint } from "./charts";
 import { colorOf } from "../lib/colors";
 import { candleProfiles, smoothPath, sparseIndices, valueSegs, type Seg } from "../lib/chartLanguage";
@@ -21,7 +21,7 @@ import { useSeen, whenVisible } from "../lib/useSeen";
  * הנתונים כ-`Series` של `TrendPoint` (t, ממוצע v, lo, hi, n ו-xs = הערך בכל סקר). ציר הזמן משמאל (עבר) לימין (היום); התאריך האחרון צמוד לימין.
  * גרף שאינו מסקרים (הממוצע של המודל בתרחישים): אותו רכיב, ובמקום חלון הסקרים — חלון משלו (`popup`) ומקרא משלו (`legendEntries`).
  */
-const YT = 6, YB = 84;
+const YT = 13, YB = 82;
 const DAY = 86_400_000;
 
 export interface CandleTrendProps {
@@ -71,7 +71,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const multi = series.length > 1;
   const labelPx = (width < 600 ? 92 : 124) + (markers.length ? (width < 600 ? 10 : 34) : 0);
   // בהשוואה נשמר מקום לתוויות הקצה (רוחב קבוע בפיקסלים); בנרות הגרף מגיע כמעט עד הקצה
-  const X1 = multi ? 100 - (labelPx / Math.max(width, 1)) * 100 : 95;
+  const X1 = multi ? 100 - (labelPx / Math.max(width, 1)) * 100 : 100 - 48 / Math.max(width, 1) * 100;
   useLayoutEffect(() => {
     const el = wrap.current;
     if (!el) return;
@@ -93,7 +93,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const colors = series.map((s, i) => s.color ?? colorOf(s.colorId ?? s.id, i));
   // נקודות לנר ולבחירה: בנרות — הנקודות של הסדרה (מדוללות); בהשוואה — כל הנקודות של כל הסדרות
   const candleSeries = candleMode ? series[0] : undefined;
-  const shown = useMemo(() => (candleSeries ? thinCandles(candleSeries.points, plotPx) : []), [candleSeries, plotPx]);
+  const shown = useMemo(() => (candleSeries ? thinCandles(candleSeries.points, plotPx, 72) : []), [candleSeries, plotPx]);
   const targets: Target[] = useMemo(() => {
     if (candleSeries) { const si = series.indexOf(candleSeries); return shown.map((p, i) => ({ si, i, p })); }
     return series.flatMap((s, si) => (s.dashed ? [] : s.points.map((p, i) => ({ si, i, p }))));
@@ -190,7 +190,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
 
   const legend: LegendEntry[] = legendEntries ?? [
     ...(candleMode ? [{ kind: "candle" as const, text: pollCandleLine(windowDays, POINT_DAYS) }] : []),
-    { kind: "dot", text: `${candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה"}${meanNote ? ` — ${meanNote}` : ""}` },
+    { kind: candleMode ? "mean" : "dot", text: `${candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה"}${meanNote ? ` — ${meanNote}` : ""}` },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
     ...(markers.length ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
@@ -234,7 +234,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     >
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute left-0 top-0 w-full" style={{ height }} aria-hidden="true">
         {axis.lines.map(({ v, major }) => (
-          <line key={v} x1={X0} x2={X1 === 95 ? 100 : X1 + 2} y1={Y(v)} y2={Y(v)} className={major ? "stroke-ink" : "stroke-ink-faint"} strokeWidth={major ? 1.5 : 1} strokeDasharray="5 4" {...ln} />
+          <line key={v} x1={X0} x2={candleMode ? 100 : X1 + 2} y1={Y(v)} y2={Y(v)} className={major ? "stroke-ink" : "stroke-ink-faint"} strokeWidth={major ? 1.5 : 1} strokeDasharray="5 4" {...ln} />
         ))}
         {candleSeries && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="trend-line fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
         {multi && series.map((s, si) => (
@@ -248,14 +248,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         ))}
         {candleMode && act && <span aria-hidden="true" className="absolute top-0 bottom-0 -translate-x-1/2 w-8 bg-ink/[.07] rounded-[4px]" style={{ left: `${X(act.p.t)}%` }} />}
         {candleMode && shown.map((p, i) => (p.lo === undefined && !p.xs ? null : <ProfileCandleV key={`c${p.t}`} segs={profiles[i]} y={Y} left={`${X(p.t)}%`} delay={delayOf(p.t)} />))}
-        {candleMode && shown.map((p) => (
-          <span key={`d${p.t}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(p.t)}%`, top: `${Y(p.v)}%`, animationDelay: `${delayOf(p.t)}ms`, ...(act && act.p.t === p.t ? { borderColor: "rgb(var(--mk-mean))" } : null) }} />
-        ))}
+        {candleMode && shown.map((p) => <CapsuleMarksV key={`d${p.t}`} left={`${X(p.t)}%`} primary={{ value: p.v, label: 'ממוצע' }} secondary={markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id)) ? { value: markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id))!.v, label: 'תוצאה בפועל' } : undefined} y={Y} format={valueText} delay={delayOf(p.t)} />)}
         {multi && series.map((s, si) => !s.dashed && sparseIndices(s.points.map((p) => (X(p.t) / 100) * width), 46).map((k) => (
           <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si], animationDelay: `${delayOf(s.points[k].t)}ms` }} />
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
-        {markers.map((m, i) => <span key={`m${i}`} aria-hidden="true" className="mk mk-ring" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%` }} />)}
+        {markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV key={`m${i}`} left={`${X(m.t)}%`} secondary={{ value: m.v, label: "תוצאה בפועל" }} y={Y} format={valueText} />)}
         {ends.map((e) => (
           <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + ${markers.length ? 20 : 10}px)`, maxWidth: labelPx - (markers.length ? 22 : 12), top: e.y, color: colors[e.si] }}>
             {endText(e.s.endLabel ?? `${e.s.name} ${valueText(e.last.v)}`)}
@@ -281,7 +279,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
                 <div dir="ltr" className="relative mx-0.5 mt-1.5 h-4">
                   <span className="absolute inset-x-0 top-[7px] h-0.5 bg-paper/25" />
                   <span className="absolute top-1 h-2 rounded-[4px]" style={{ left: `${((act.p.lo - axis.lo) / (axis.hi - axis.lo)) * 100}%`, width: `${((act.p.hi - act.p.lo) / (axis.hi - axis.lo)) * 100}%`, background: "rgb(var(--mk-range))" }} />
-                  <span className="absolute top-0.5 size-3 -ml-1.5 rounded-full border-2 border-ink" style={{ left: `${((act.p.v - axis.lo) / (axis.hi - axis.lo)) * 100}%`, background: "rgb(var(--mk-mean))" }} />
+                  <span className="absolute top-0 h-4 w-0 border-l-2 border-paper" style={{ left: `${((act.p.v - axis.lo) / (axis.hi - axis.lo)) * 100}%`, background: "transparent" }} />
                 </div>
                 <div dir="ltr" className="flex justify-between text-[.66rem] text-paper/65 font-num"><span>{axis.lo}</span><span>{axis.hi}</span></div>
                 <div className="mt-1.5 flex justify-between gap-2 border-t border-paper/20 pt-1 text-[.7rem] text-paper/65">

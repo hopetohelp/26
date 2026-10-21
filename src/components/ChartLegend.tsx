@@ -1,5 +1,3 @@
-import { useCandleStyle, setCandleStyle } from "../lib/candleStyle";
-import { Segmented } from "./Choice";
 import { createContext, useContext, useId, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Swatch, type MarkKind } from "./marks";
@@ -55,11 +53,11 @@ export interface LegendEntry {
  * `what` = מה נספר, עם ה' הידיעה ("הסקרים", "התרחישים"). `window` = חלון הזמן, כשיש ("ב-14 הימים האחרונים").
  */
 export const rangeLine = (range: "full" | "p80", what: string, window = "") =>
-  `${range === "p80" ? "טווח 80%" : "טווח מלא"}${window ? ` ${window}` : ""} - עובי הנר מראה את כמות ${what} שנמצאים בטווח הזה`;
+  `${range === "p80" ? "טווח 80%" : "טווח מלא"}${window ? ` ${window}` : ""} - קפסולה מעוגלת; מילוי מלא ל־60% המרכזיים של ${what}, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה`;
 
 /** נר של סקרים: `every` = כל כמה ימים נקודה (בגרף מגמה), `days` = חלון הסקרים. */
 export const pollCandleLine = (days: number, every?: number) =>
-  `עובי הנר${every ? ` בכל ${every} ימים` : ""} מראה את ממוצע המכונים שפירסמו סקר ב-${days} יום האחרונים.`;
+  `טווח מלא של סקרי המכונים ב-${days} הימים האחרונים${every ? `, בכל ${every} ימים` : ""}; מילוי מלא ל־60% המרכזיים, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה.`;
 
 const MARKS: readonly LegendKind[] = ["candle", "mean", "result", "dot"];
 
@@ -90,17 +88,16 @@ function LegendSwatch({ kind }: { kind: LegendKind }) {
 
 /** תוכן המקרא הפתוח: הסימונים */
 export function LegendPanel({ id, entries, children }: { id?: string; entries: LegendEntry[]; children?: ReactNode }) {
-  const style = useCandleStyle();
   return (
     <div id={id} className="mt-2 rounded-theme border border-paper-line bg-paper-card p-3 text-sm text-ink-soft">
-      {entries.some(e => e.kind === "candle") && <div className="mb-3"><Segmented label="צורת הנר" value={style} onChange={setCandleStyle} options={[{ id: "uniform", label: "נר אחיד" }, { id: "profile", label: "שלוש רמות" }]} /><p className="text-xs mt-2">הבחירה נשמרת לכל הגרפים. בנתונים אמיתיים הטווח תמיד מלא; הנקודה מציינת את הממוצע.</p></div>}
+
       <ul className="grid gap-y-2">
         {entries.map((e, i) => (
           <li key={i} className="flex items-center gap-2.5">
             <span className="w-12 shrink-0 flex justify-center">
               <LegendSwatch kind={e.kind} />
             </span>
-            <span className="min-w-0">{e.kind === "candle" && style === "uniform" ? (typeof e.text === "string" && e.text.includes("80%") ? "טווח 80% בנר אחיד (תרחישים בלבד)" : "טווח מלא — מהנתון הנמוך ביותר לגבוה ביותר, בנר אחיד") : e.text}</span>
+            <span className="min-w-0">{e.text}{e.kind === "mean" ? " — קו רצוף" : e.kind === "result" ? " — קו מקווקו" : ""}</span>
           </li>
         ))}
       </ul>
