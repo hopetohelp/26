@@ -44,17 +44,7 @@ jobs:
           done
       - name: השרת עונה (הכתובת הציבורית ומסמך הגילוי)
         if: env.CLOUDFLARE_API_TOKEN != ''
-        run: |
-          set -euo pipefail
-          base=https://elections26-mcp.hopetohelp-il.workers.dev
-          for attempt in $(seq 1 12); do
-            if curl --fail --silent --max-time 10 "$base/.well-known/oauth-authorization-server" -o /dev/null \
-              && curl --fail --silent --max-time 20 -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' "$base/public" | grep -q get_poll_average; then
-              echo "שרת ה-MCP עונה"; exit 0
-            fi
-            sleep 5
-          done
-          echo "שרת ה-MCP לא ענה אחרי הפריסה" >&2; exit 1
+        run: node worker/mcp/smoke.mjs
       - name: אין מפתח — מדלגים
         if: env.CLOUDFLARE_API_TOKEN == ''
         run: echo "CLOUDFLARE_API_TOKEN לא הוגדר בסודות הריפו; השרת לא נפרס."
