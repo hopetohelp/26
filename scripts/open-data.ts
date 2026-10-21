@@ -4,7 +4,7 @@
  * MCP_URL (משתנה סביבה) = כתובת שרת ה-MCP, כשהוא קיים; בלעדיו האינדקס אומר "בבנייה".
  *
  *   npx vite-node scripts/open-data.ts               # dist/data/*.json, dist/data/index.json, dist/llms.txt
- *   npx vite-node scripts/open-data.ts --dashboard   # עוטף את dist/dashboard.json (אם קיים)
+ *   npx vite-node scripts/open-data.ts --dashboard   # עוטף את הקבצים החיצוניים שקיימים ב-dist
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -19,12 +19,13 @@ const write = (path: string, body: string) => {
 };
 
 if (process.argv.includes("--dashboard")) {
-  const f = OPEN_FILES.find((x) => x.path === "dashboard.json")!;
-  const p = join(OUT, f.path);
-  if (existsSync(p)) {
-    write(f.path, JSON.stringify(wrapExternal(f, JSON.parse(readFileSync(p, "utf8")))));
-    console.log(`עטיפה: ${f.path}`);
-  } else console.log(`${f.path} אינו קיים — אין מה לעטוף`);
+  for (const f of OPEN_FILES.filter(x => !x.build)) {
+    const p = join(OUT, f.path);
+    if (existsSync(p)) {
+      write(f.path, JSON.stringify(wrapExternal(f, JSON.parse(readFileSync(p, "utf8")))));
+      console.log(`עטיפה: ${f.path}`);
+    } else console.log(`${f.path} אינו קיים — אין מה לעטוף`);
+  }
 } else {
   for (const f of OPEN_FILES) {
     if (!f.build) continue;

@@ -90,6 +90,7 @@ export interface OpenFile {
   fields: string;
   /** null = הקובץ מגיע ממקור חיצוני בזמן הפרסום (dashboard.json, משרת ההשתתפות) ונעטף ב-`about` שם */
   build: (() => Record<string, unknown>) | null;
+  optional?: boolean;
 }
 
 const SRC_POLLS = "טבלאות הסקרים בוויקיפדיה האנגלית, עם קישור לפרסום המקורי של כל סקר";
@@ -100,6 +101,7 @@ const pastResults = results as unknown as ElectionResult[];
 const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
 
 export const OPEN_FILES: OpenFile[] = [
+  { path: "data/usage.json", title: "משתמשים וכניסות לאתר", description: "עותק מוני השימוש המצטברים משרת ההערות. הבית קורא גם את /usage החי מדי דקה. משתמשים לפי דפדפן וכניסות לפי צפייה בעמוד, ללא פרטים אישיים.", methodAnchor: "usage", kind: "נתוני שימוש באתר", source: "מוני שרת ההערות — אותו מקור כמו ממשק הניהול", screen: "/", fields: "publishedAt, totalVisitors (דפדפנים), totalVisits (צפיות בעמודים)", build: null, optional: true },
   { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/past", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
   {
     path: "data/polls.json",
@@ -339,7 +341,7 @@ export function buildFile(f: OpenFile): Record<string, unknown> {
 /** עטיפת קובץ חיצוני (dashboard.json) ב-`about`, בלי לשנות את שאר השדות; "נכון ל" = מועד הפרסום של השרת */
 export function wrapExternal(f: OpenFile, data: Record<string, unknown>): Record<string, unknown> {
   const { about: _old, ...rest } = data;
-  return { about: { ...aboutOf(f, typeof rest.publishedAt === "string" ? rest.publishedAt : meta.dataAsOf), snapshotId: `crowd-${identity(rest)}`, methodVersion: METHOD_VERSION }, ...rest };
+  return { about: { ...aboutOf(f, typeof rest.publishedAt === "string" ? rest.publishedAt : meta.dataAsOf), snapshotId: `${f.methodAnchor}-${identity(rest)}`, methodVersion: METHOD_VERSION }, ...rest };
 }
 
 /** האינדקס: data/index.json — רשימת הקבצים, הכללים, המסכים ומילון המספרים */
@@ -440,6 +442,7 @@ export function checkOpenData(read: (path: string) => string | null, opts: { wit
     if (!opts.anchors.has(f.methodAnchor)) errors.push(`${f.path}: העוגן "${f.methodAnchor}" אינו קיים במילון המספרים`);
     if (!llms.includes(SITE + f.path)) errors.push(`llms.txt אינו מזכיר את ${f.path}`);
     if (!f.build && !opts.withDashboard) continue;
+    if (f.optional && !read(f.path)) continue;
     const body = read(f.path);
     if (!body) { errors.push(`${f.path} חסר בבנייה`); continue; }
     let data: { about?: Partial<About> };

@@ -1,3 +1,4 @@
+import SiteUsage from "../components/SiteUsage";
 import HomeAssistant from "../components/HomeAssistant";
 import { useState } from "react";
 import SourcePicker from "../components/SourcePicker";
@@ -51,6 +52,7 @@ export default function Home() {
         <GovTrend home={home} points={GOV_POINTS.map(({ t, values }) => ({ t, values }))} observedOnly heading={<h2 id="home-trend" className="text-xl font-display leading-tight">מגמת הממשלה היוצאת — ממוצע סקרים</h2>} />
       </section></ScreenLegend><div className="c-chart-footer"><Link className="c-chart-link" to="/polls?tab=trends">למגמות ←</Link></div></div></div>
       <Participation className="c-participation-mobile" />
+      <SiteUsage />
       <InstallApp />
     </div>
   );

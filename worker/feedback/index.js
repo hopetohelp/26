@@ -9,6 +9,7 @@
  * POST /relay      {d}   ⇐ ממסר שמירה כשהמסלולים הרגילים חסומים: מעביר לשרת ההשתתפות את הבקשה המקודדת ב-d.
  * POST /autoreport {log} ⇐ דיווח כשל חיבור אוטומטי (בלי אישור הגולש), עד 3 ליום מכל מקור.
  * POST /diag        {kind} ⇐ סיווג כשל חיבור (מונה ליום; hits.page = diag:<kind>).
+ * GET  /usage       ⇐ מספר דפדפנים וצפיות מצטברים בלבד, ללא פרטי גולשים.
  * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
  *                    המזהה היומי הוא גיבוב חד-כיווני של ה-IP, הדפדפן והתאריך: אי אפשר לשחזר ממנו כתובת או לקשור גולש בין ימים.
  *                    {v} = מזהה אקראי של הדפדפן (localStorage) לספירה מצטברת; נשמר רק גיבוב שלו, יחד עם יום ראשון ואחרון.
@@ -20,6 +21,7 @@
  * - להגבלת קצב נשמר רק גיבוב של ה-IP עם התאריך: עד 8 הודעות ביום מאותו מקור (הערות ותגובות יחד).
  * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
+import { usageTotals } from "./lib/usage.js";
 import { allowedOrigin } from "../shared/origins.js";
 import { sealChat, sealKey, sealPersonalKey, unsealChat, unsealPersonalKey } from "./lib/aiKey.js";
 import { runAutoReplies } from "./lib/autoReply.js";
@@ -172,6 +174,15 @@ export default {
     const reply = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers });
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     const url = new URL(request.url);
+    // מספרים מצטברים בלבד; ללא זיהוי גולשים וללא פתיחת ממשק הניהול.
+    if (url.pathname === "/usage" && request.method === "GET") {
+      try {
+        const totals = await usageTotals(env.DB);
+        return new Response(JSON.stringify({ ...totals, publishedAt: new Date().toISOString() }), {
+          headers: { ...headers, "cache-control": "public, max-age=60" },
+        });
+      } catch { return reply({ error: "unavailable" }, 503); }
+    }
     // תשובה אוטומטית מיידית לפנייה שהתקבלה (lib/autoReply.js; התקרה — שלוש בשעה); לא מעכבת את התגובה לגולש ואינה מפילה דבר
     const kick = () => ctx?.waitUntil?.(runAutoReplies(env, { teamReply }).catch(() => null));
 
@@ -325,8 +336,7 @@ export default {
         const mark = await env.DB.prepare("SELECT value FROM counter_marks WHERE name = 'failures_from'").first().catch(() => null);
         const failuresFrom = mark?.value || "";
         const { results: days } = await env.DB.prepare("SELECT d.day, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page NOT LIKE 'diag:%') AS visits, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day) AS users, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/guess') AS guessUsers, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/community') AS communityUsers, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:all-blocked') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:all-blocked')) AS blocked, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:blind-sent') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:blind-sent')) AS blindSaved, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:relay-saved') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:relay-saved')) AS relaySaved, (SELECT COUNT(*) FROM feedback f WHERE substr(f.created_at,1,10) = d.day AND f.text LIKE ?2 AND f.created_at >= ?3) AS autoFailures FROM (SELECT DISTINCT day FROM hits WHERE day >= ?1) d ORDER BY d.day DESC").bind(since, AUTO + "%", failuresFrom).all();
-        const total = await env.DB.prepare("SELECT COUNT(*) AS n FROM visitors_all").first();
-        const visitsAll = await env.DB.prepare("SELECT COALESCE(SUM(count),0) AS n FROM hits WHERE page NOT LIKE 'diag:%'").first();
+        const usage = await usageTotals(env.DB);
         const failuresAll = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE text LIKE ?1 AND created_at >= ?2").bind(AUTO + "%", failuresFrom).first();
         const threads = {};
         for (const n of notes || []) (threads[n.root] ??= { id: n.root, items: [] }).items.push({ kind: "note", id: n.id, author: "visitor", text: n.text, created_at: n.created_at, topic: n.topic, page: n.page, status: n.status });
@@ -348,7 +358,7 @@ export default {
         // ריצה אחרונה של הסשן המרוכז: הסשן רושם את עצמו בסוף כל ריצה (docs/נוהל-הערות.md)
         const agentRun = await env.DB.prepare("SELECT value FROM settings WHERE name = 'agent_last_run'").first().catch(() => null);
         const { results: heldRows } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held").all().catch(() => ({ results: [] }));
-        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: total?.n ?? 0, totalVisits: visitsAll?.n ?? 0, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: usage.totalVisitors, totalVisits: usage.totalVisits, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
       if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || url.pathname === "/admin/blocs" || /^\/admin\/groups(\/(import|delete|managers|stats|link|link-stats|image))?$/.test(url.pathname)) {
