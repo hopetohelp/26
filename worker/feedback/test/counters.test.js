@@ -49,3 +49,36 @@ it("מוני האבחון בשורת הנפילות מוצגים בהפרש מת
   expect((await data()).days.find((d) => d.day === day).blindSaved).toBe(2);
   expect(env.DB.raw.prepare("SELECT count FROM hits WHERE page = 'diag:blind-sent'").get().count).toBe(1164);
 });
+
+it("המונים הציבוריים זהים לניהול, אינם כוללים אבחון ואינם חושפים פרטי גולשים", async () => {
+  env.DB.raw.prepare("INSERT INTO hits (day,page,count) VALUES ('2026-10-20','/',4), ('2026-10-21','/polls',3), ('2026-10-21','diag:all-ok',99)").run();
+  env.DB.raw.prepare("INSERT INTO visitors_all VALUES ('secret-hash-a','2026-10-20','2026-10-21'), ('secret-hash-b','2026-10-21','2026-10-21')").run();
+  const r = await feedback.fetch(new Request("https://w.example/usage", { headers: { origin } }), env);
+  expect(r.status).toBe(200);
+  expect(r.headers.get("access-control-allow-origin")).toBe(origin);
+  expect(r.headers.get("cache-control")).toContain("max-age=60");
+  const out = await r.json();
+  expect(Object.keys(out).sort()).toEqual(["publishedAt", "totalVisitors", "totalVisits"]);
+  expect(out).toMatchObject({ totalVisitors: 2, totalVisits: 7 });
+  expect(Number.isFinite(Date.parse(out.publishedAt))).toBe(true);
+  expect(await data()).toMatchObject({ totalVisitors: out.totalVisitors, totalVisits: out.totalVisits });
+});
+
+it("מאגר ריק הוא אפס אמיתי; כשל מאגר מחזיר אי-זמינות ולא אפס", async () => {
+  const request = () => new Request("https://w.example/usage");
+  expect(await (await feedback.fetch(request(), env)).json()).toMatchObject({ totalVisitors: 0, totalVisits: 0 });
+  const broken = { ...env, DB: { prepare() { throw new Error("offline"); } } };
+  const response = await feedback.fetch(request(), broken);
+  expect(response.status).toBe(503);
+  expect(await response.json()).toEqual({ error: "unavailable" });
+});
+
+it("אותו דפדפן נספר פעם אחת ומשאיר את כל הצפיות; דפדפן נוסף מוסיף משתמש", async () => {
+  const hit = (page, v) => feedback.fetch(new Request("https://w.example/hit", { method: "POST", body: JSON.stringify({ page, v }) }), env);
+  await hit("/", "a".repeat(22));
+  await hit("/polls", "a".repeat(22));
+  await hit("/", "b".repeat(22));
+  await hit("/", ""); // אחסון חסום: צפייה בלי משתמש ייחודי
+  const response = await feedback.fetch(new Request("https://w.example/usage"), env);
+  expect(await response.json()).toMatchObject({ totalVisitors: 2, totalVisits: 4 });
+});

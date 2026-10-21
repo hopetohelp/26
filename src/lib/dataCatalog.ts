@@ -39,7 +39,7 @@ export function identity(value: unknown): string {
   return (h >>> 0).toString(16).padStart(8, "0");
 }
 export const MAJORITY_SEATS = 61;
-export const NUMBER_KINDS = ["נתון רשמי", "חישוב לפי החוק", "סיכום סקרים", "תרחיש", "השוואה", "מודל המגמות", "השערות משתתפים, אינן סקר", "תשובות משתתפים במדגם עצמי, לא מייצג, ללא דגימה וללא שקלול"] as const;
+export const NUMBER_KINDS = ["נתוני שימוש באתר", "נתון רשמי", "חישוב לפי החוק", "סיכום סקרים", "תרחיש", "השוואה", "מודל המגמות", "השערות משתתפים, אינן סקר", "תשובות משתתפים במדגם עצמי, לא מייצג, ללא דגימה וללא שקלול"] as const;
 
 export const PUBLIC_METRICS = {
   "official.locality.votes": { path: "data/localities.json", name: "קולות לפי יישוב", method: "results", unit: "קולות", kind: "נתון רשמי", screens: ["past", "method"] },

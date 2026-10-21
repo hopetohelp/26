@@ -1,6 +1,12 @@
 import { DATA_PRODUCTS } from "./dataCatalog";
 /** הגדרות המילון ללא React. התצוגה בלבד נמצאת במסך. */
 export const DICTIONARY_DEFINITIONS = [
+{id: "usage",
+title: "משתמשים וכניסות לאתר",
+where: "בית",
+kind: "נתוני שימוש באתר",
+source: "מוני השימוש המצטברים בשרת ההערות של האתר",
+assumption: "משתמשים הם דפדפנים בעלי מזהה אקראי שמור, ולא אנשים מזוהים או חשבונות רשומים. כניסות הן צפיות בעמודים, כולל מעבר בין מסכים; מוני אבחון וכניסות מדפדפן הבעלים המסומן אינם נכללים."},
 {id: "current",
 title: DATA_PRODUCTS["polls.mean"].name,
 where: "המצב היום",
