@@ -61,7 +61,6 @@ describe("גרף המגמה האחיד", () => {
     const h = html();
     const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="trend-line fill-none stroke-accent"/.exec(h);
     expect(d).not.toBeNull();
-    const [x, y] = [d![1], d![2]];
     const marks = [...h.matchAll(/data-kind="primary" data-side="[^"]*" style="left:([\d.]+)%;top:([\d.]+)%[^"]*" title="ממוצע: ([\d.]+)/g)];
     expect(marks.length).toBeGreaterThan(0);
     expect(marks.every(m => points.some(p => p.v === Number(m[3])))).toBe(true);

@@ -70,9 +70,7 @@ function Row({ r, min, max, ticks, lsegs, unit, open, onName, below }: { r: Dumb
         </span>
       </span>
       <span className="col-span-2 row-start-3 md:col-span-1 md:col-start-1 md:row-start-2 text-sm text-ink-soft leading-snug">
-        <span>2022 - {r.from}: <b className="font-num tabular text-ink whitespace-nowrap">{before}</b></span>
-        {" · "}
-        <span className="whitespace-nowrap">היום: <b className="font-num tabular text-ink">{fmt(r.now)}</b></span>
+        <span>השוואה ל־2022: {r.from}</span>
       </span>
       <span className="sr-only">
         {pct

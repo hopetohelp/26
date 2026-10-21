@@ -19,7 +19,7 @@ export interface CapsuleDatum { at: number; value: number; label: string; text?:
 export function CapsuleMarks({ primary, secondary }: { primary?: CapsuleDatum; secondary?: CapsuleDatum }) {
   return <>{([['primary', primary], ['secondary', secondary]] as const).map(([kind, datum]) => datum && <span key={kind} aria-hidden="true" className="mk-capsule-mark" data-kind={kind} style={{ left: `${datum.at}%` }} title={`${datum.label}: ${datum.text ?? seatsFmt(datum.value)}`}><i className="mk-capsule-cross" /><bdi className="mk-capsule-tag" dir="ltr">{datum.text ?? seatsFmt(Math.round(datum.value * 10) / 10)}</bdi></span>)}</>;
 }
-/** אנכי: קו ברוחב הקפסולה ותג שקוף מעליו או מתחתיו. */
+/** אנכי: קו ברוחב הקפסולה ותג צדדי צמוד מעליו או מתחתיו. */
 export function CapsuleMarksV({ left, primary, secondary, y, format = seatsFmt, delay }: { left: string; primary?: { value: number; label: string }; secondary?: { value: number; label: string }; y: (v: number) => number; format?: (v: number) => string; delay?: number }) {
   if (!primary && !secondary) return null;
   const sides = verticalTagSides(primary?.value ?? secondary!.value, secondary?.value);

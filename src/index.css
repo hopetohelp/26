@@ -158,13 +158,13 @@
   display: inline-block;
   vertical-align: middle;
 }
-/* נר שעוביו משתנה לאורכו: SVG אחד של קטעים סמוכים (קו מלא וקופסאות חלולות). אופקי: הגובה קבוע (פיקסלים) והרוחב לפי הציר */
+/* קפסולת טווח: העובי קבוע, האורך והגוונים לפי הנתונים. */
 .mk-prof {
   position: absolute;
   top: 50%;
   translate: 0 -50%;
   display: block;
-  height: 15px;
+  height: 18px;
   overflow: visible;
 }
 /* אנכי (בגרפים עם ציר זמן): הרוחב קבוע והגובה לפי הציר */
@@ -172,24 +172,13 @@
   position: absolute;
   translate: -50% 0;
   display: block;
-  width: 15px;
+  width: 32px;
   overflow: visible;
 }
 .mk-prof-sw {
   width: 2.6rem;
   height: 15px;
   overflow: visible;
-}
-/* נר מרובע: קופסה חלולה (מסגרת בלבד), ורמה 1 קו מלא; המסגרת באותו עובי בכל קנה מידה */
-.mk-sq {
-  fill: none;
-  stroke: rgb(var(--mk-range));
-  stroke-width: 3px;
-  stroke-linejoin: miter;
-  vector-effect: non-scaling-stroke;
-}
-.mk-sq-f {
-  fill: rgb(var(--mk-range));
 }
 /* שטח הציור של מסלול אופקי: מרוחק מכל קצה, כדי שעיגול בקצה הציר לא יחרוג אל עמודת המספרים או הטקסט (`MARK_PAD`) */
 :root {
@@ -208,19 +197,6 @@
   border-radius: 50%;
   border: 2px solid rgb(var(--ink));
   background: rgb(var(--mk-bg, var(--paper)));
-}
-/* ממוצע ותוצאה (הכרעת בעלים 11.10.2026): קוטר 21, קו 4, פנים שקוף — רואים את הנר ואת העיגול השני מבעד; גדולים מהנר העבה (15) */
-.mk-mean {
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-  border: 4px solid rgb(var(--mk-mean));
-}
-.mk-ring {
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-  border: 4px solid rgb(var(--mk-result));
 }
 /* עיגול מושב חסר (עד הרוב) בלוח המושבים: אדום בהיר */
 .seat-miss {
@@ -646,13 +622,11 @@
 }
 /* 21.10.2026 — קפסולת טווח אחידה: גוונים רכים וקווי נתונים עם תגים. */
 .mk-capsule { display:block;border:1.25px solid rgb(var(--mk-range) / .75);border-radius:999px;box-sizing:border-box;overflow:hidden; }
-.mk-prof { height:18px; }
-.mk-pv { width:32px; }
 .mk-prof-sw { display:inline-block;width:42px;height:18px; }
 .mk-primary-line,.mk-secondary-line { width:0;height:18px;border:0;border-left:2px solid rgb(var(--ink));background:transparent;border-radius:0; }
-.mk-secondary-line { border-left-style:dashed;border-color:rgb(var(--ink-soft)); }
+.mk-secondary-line { border-left-style:dashed; }
 .mk-sw.mk-primary-line,.mk-sw.mk-secondary-line { width:26px;height:0;border-left:0;border-top:2px solid rgb(var(--ink)); }
-.mk-sw.mk-secondary-line { border-top-style:dashed;border-color:rgb(var(--ink-soft)); }
+.mk-sw.mk-secondary-line { border-top-style:dashed; }
 .mk-capsule-mark,.mk-capsule-mark-v { position:absolute;top:50%;width:0;height:0;pointer-events:none;color:rgb(var(--ink)); }
 .mk-capsule-cross { position:absolute;display:block;left:0;top:-9px;height:18px;border-left:2px solid currentColor; }
 .mk-capsule-mark[data-kind=secondary],.mk-capsule-mark-v[data-kind=secondary] { color:rgb(var(--ink-soft)); }

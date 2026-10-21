@@ -29,12 +29,10 @@ function Row({ r, bound, lsegs }: { r: DevRow; bound: number; lsegs: LSeg[] }) {
       <span className="leading-tight">
         <span className="block font-semibold">{r.name}</span>
         <span className="block text-sm text-ink-soft">
-          <span className="whitespace-nowrap">בפועל <b className="font-num tabular text-ink">{r.actual}</b></span>
-          {" · "}
           <span className="whitespace-nowrap">סקרים {r.min === r.max ? r.min : rng(r.min, r.max)}</span>
         </span>
       </span>
-      <span aria-hidden="true" dir="ltr" className="mk-capsule-track relative block h-14" title={`${r.name}: העובי בכל קטע: כמה מכונים נתנו ערך כזה`}>
+      <span aria-hidden="true" dir="ltr" className="mk-capsule-track relative block h-14" title={`${r.name}: הטווח המלא של הסקרים`}>
         <span className="mk-plot">
           {ticks.map((v) => (
             <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint/60" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
