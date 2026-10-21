@@ -39,6 +39,11 @@ jobs:
         if: env.CLOUDFLARE_API_TOKEN != '' && env.AI_API_KEY != ''
         working-directory: worker/feedback
         run: printf '%s' "$AI_API_KEY" | npx --yes wrangler@3 secret put AI_API_KEY
+      - name: בדיקת המונים הציבוריים אחרי הפריסה
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --max-time 15 https://elections26-feedback.hopetohelp-il.workers.dev/usage -o /tmp/public-usage.json
+          node -e 'const d=JSON.parse(require("fs").readFileSync("/tmp/public-usage.json","utf8")); if(!Number.isSafeInteger(d.totalVisitors)||d.totalVisitors<0||!Number.isSafeInteger(d.totalVisits)||d.totalVisits<0||!Number.isFinite(Date.parse(d.publishedAt))||Object.keys(d).sort().join(",")!=="publishedAt,totalVisitors,totalVisits")process.exit(1);console.log("מוני השימוש הציבוריים זמינים וללא שדות אישיים")'
       - name: אין מפתח — מדלגים
         if: env.CLOUDFLARE_API_TOKEN == ''
         run: echo "CLOUDFLARE_API_TOKEN לא הוגדר בסודות הריפו; השרת לא נפרס."
