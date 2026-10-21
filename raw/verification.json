@@ -2136,5 +2136,39 @@
     "source": "https://www.ice.co.il/research/news/article/1134443"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-21",
+  "id": "2026-10-21-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת חדשות 12 עצמה (מקור ראשוני): מנדטי 12 הרשימות (סך 120), הגושים 55/51 ואחוזי הרשימות מתחת לחסימה זהים לרשומה; תואם גם דיווח מעריב.",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-bf175ad340f51a1027.htm",
+  "sourceDetails": {
+   "published": "2026-10-21T21:07:00+03:00",
+   "sample_respondents": 505
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-bf175ad340f51a1027.htm"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-bf175ad340f51a1027.htm"
+   }
+  }
  }
 ]
