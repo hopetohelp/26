@@ -11,7 +11,7 @@ import { PartyAvatar } from "./PartyAvatar";
 import CandleTrend from "./CandleTrend";
 import { MODEL_NOTE } from "./InfoTip";
 import type { TrendPoint } from "./charts";
-import { AxisLabels, MeanDot, ProfileCandle, Track } from "./marks";
+import { AxisLabels, CapsuleMarks, ProfileCandle, Track } from "./marks";
 
 /**
  * שורת טווח: הממוצע (עיגול מלא כתום) והטווח (נר כחול שעוביו משתנה לאורכו). `segs` = קטעי הנר וכמות הנתונים בכל אחד.
@@ -90,9 +90,9 @@ export function Hemicycle({ coalition, arab, opposition, duel, footer, info }: {
 
 
 
-const COLS = "grid-cols-[minmax(0,1fr)_2.1rem_minmax(4.5rem,32%)] md:grid-cols-[minmax(0,13rem)_2.6rem_minmax(0,1fr)_5rem]";
+const COLS = "grid-cols-[minmax(0,1fr)_minmax(7rem,50%)] md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)_5rem]";
 
-const PICK = "העובי בכל קטע: כמה נתונים נותנים ערך כזה";
+const PICK = "הטווח המלא והאחוזונים של הנתונים";
 
 /**
  * כמה מהתרחישים הרשימה עוברת את אחוז החסימה: פס אחד, אדום (לא עוברת) משמאל וירוק (עוברת) מימין.
@@ -117,10 +117,9 @@ function RankRow({ r, lsegs, axisMax, withPass }: { r: RangeRowData; lsegs: LSeg
         <PartyAvatar id={r.id} size={32} />
         <span className="min-w-0 font-semibold leading-tight text-[.95rem] md:text-base [overflow-wrap:anywhere]">{r.name}</span>
       </span>
-      <span className="font-num text-xl font-extrabold tabular">{seatsFmt(r.central)}</span>
       <Track axisMax={axisMax} title={`${r.name}: ${PICK}`}>
         <ProfileCandle segs={lsegs} x={x} />
-        <MeanDot at={x(r.central)} />
+        <CapsuleMarks primary={{ at: x(r.central), value: r.central, label: "ממוצע" }} />
       </Track>
       <span className="hidden md:block text-sm text-ink-soft text-end">
         {rng(r.lo, r.hi)}
@@ -154,7 +153,7 @@ function RankLegend({ meanLabel, rangeText, withPass }: { meanLabel: string; ran
 function Axis({ axisMax }: { axisMax: number }) {
   return (
     <div aria-hidden="true" className={`grid ${COLS} gap-x-3 text-xs text-ink-soft mt-1.5`}>
-      <div className="col-start-3">
+      <div className="col-start-2">
         <AxisLabels axisMax={axisMax} />
       </div>
     </div>

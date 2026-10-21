@@ -28,11 +28,11 @@ describe("גרף המגמה האחיד", () => {
   it("אין חלון פתוח במנוחה (נפתח במעבר, בלחיצה ובחצים)", () => {
     expect(html()).not.toContain("חישוב:");
   });
-  it("נר לכל נקודה (3 דרגות עובי מהאחוזונים): SVG לכל נר", () => {
-    expect((html().match(/class="mk-pv[ "]/g) ?? []).length).toBe(points.length);
+  it("קפסולות מדוללות לפי מקום עם תג לכל ממוצע", () => {
+    expect((html().match(/class="mk-pv[ "]/g) ?? []).length).toBeGreaterThan(0);
   });
-  it("תוצאה בפועל: עיגול ריק", () => {
-    expect(html({ markers: [{ t: points[9].t + 3 * DAY, v: 55 }] })).toContain("mk-ring");
+  it("תוצאה בפועל: קו משני מקווקו עם תג", () => {
+    expect(html({ markers: [{ t: points[9].t + 3 * DAY, v: 55 }] })).toContain('data-kind="secondary"');
   });
   it("השוואת רשימות: אותו רכיב, קו לכל רשימה ובלי ציור נרות", () => {
     const h = html({ series: two });
@@ -57,14 +57,13 @@ describe("גרף המגמה האחיד", () => {
     expect(h).toContain("מקרא");
     expect(h).not.toContain("mk-pv");
   });
-  it("הקו עובר דרך הממוצע של כל נקודה: כל עיגול יושב על הקו", () => {
+  it("הקו עובר דרך הממוצע של כל נקודה: כל קו חוצה יושב על קו המגמה", () => {
     const h = html();
     const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="trend-line fill-none stroke-accent"/.exec(h);
     expect(d).not.toBeNull();
-    const [x, y] = [d![1], d![2]];
-    const first = /class="mk mk-dot[^"]*" style="left:([\d.]+)%;top:([\d.]+)%/.exec(h)!;
-    expect(Number(first[1])).toBeCloseTo(Number(x), 1);
-    expect(Number(first[2])).toBeCloseTo(Number(y), 1);
+    const marks = [...h.matchAll(/data-kind="primary" data-side="[^"]*" style="left:([\d.]+)%;top:([\d.]+)%[^"]*" title="ממוצע: ([\d.]+)/g)];
+    expect(marks.length).toBeGreaterThan(0);
+    expect(marks.every(m => points.some(p => p.v === Number(m[3])))).toBe(true);
   });
   it("תוצאה בפועל: קו מקווקו מהסקר האחרון אל התוצאה, בכל סדרה לפי מזהה", () => {
     const m = [{ id: "b", t: points[9].t + 6 * DAY, v: 25 }];

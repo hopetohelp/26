@@ -3,7 +3,7 @@ import { deviation, type DevInput, type DevRow } from "../lib/deviation";
 import { candleProfiles, type LSeg } from "../lib/chartLanguage";
 import ChartLegend, { pollCandleLine } from "./ChartLegend";
 import { POINT_WINDOW } from "../lib/data";
-import { MeanDot, ProfileCandle, ResultRing } from "./marks";
+import { CapsuleMarks, ProfileCandle } from "./marks";
 
 /**
  * "הסקרים מול התוצאות" (החלטה 8, 9.10.2026) בשפת הציור האחידה: לכל רשימה, נר כחול = הנמוך והגבוה בין הסקרים ערב הבחירות (טווח מלא),
@@ -29,19 +29,16 @@ function Row({ r, bound, lsegs }: { r: DevRow; bound: number; lsegs: LSeg[] }) {
       <span className="leading-tight">
         <span className="block font-semibold">{r.name}</span>
         <span className="block text-sm text-ink-soft">
-          <span className="whitespace-nowrap">בפועל <b className="font-num tabular text-ink">{r.actual}</b></span>
-          {" · "}
           <span className="whitespace-nowrap">סקרים {r.min === r.max ? r.min : rng(r.min, r.max)}</span>
         </span>
       </span>
-      <span aria-hidden="true" dir="ltr" className="relative block h-8" title={`${r.name}: העובי בכל קטע: כמה מכונים נתנו ערך כזה`}>
+      <span aria-hidden="true" dir="ltr" className="mk-capsule-track relative block h-14" title={`${r.name}: הטווח המלא של הסקרים`}>
         <span className="mk-plot">
           {ticks.map((v) => (
             <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint/60" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
           ))}
           <ProfileCandle segs={lsegs} x={x} />
-          <MeanDot at={x(0)} />
-          <ResultRing at={x(r.dev)} />
+          <CapsuleMarks primary={{ at: x(0), value: r.estimate, label: "ממוצע הסקרים" }} secondary={{ at: x(r.dev), value: r.actual, label: "תוצאה בפועל" }} />
         </span>
       </span>
       <span className="text-end font-num font-extrabold tabular">

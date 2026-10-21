@@ -34,11 +34,11 @@ describe("כפתור מקרא ליד כל גרף (הכרעת בעלים 9.10.202
       expect(html).not.toContain("עובי הנר:");
     });
   }
-  it("בסקר האתר אין מעוין: ממוצע המשתתפים הוא עיגול תוצאה (טבעת)", () => {
+  it("בסקר האתר ממוצע המשתתפים עיקרי והשוואת הסקרים משנית", () => {
     const html = renderToStaticMarkup(createElement(SeatsStats, { rows: [stat], polls: { likud: 29 }, view: "chart" }));
     expect(html).not.toContain("mk-dia");
-    expect(html).toContain("mk-ring");
-    expect(html).toContain("mk-dot");
+    expect(html).toContain('data-kind="primary"');
+    expect(html).toContain('data-kind="secondary"');
   });
 });
 
@@ -59,15 +59,15 @@ describe("ChartLegend", () => {
     const html = renderToStaticMarkup(createElement(ChartLegend, { entries, action: createElement("i", { id: "act" }) }));
     expect(html.indexOf("מקרא")).toBeLessThan(html.indexOf('id="act"'));
   });
-  it("הפאנל הפתוח מציע את שתי צורות הנר ומסביר טווח מלא כברירת מחדל", () => {
+  it("הפאנל מציג קפסולה אחת ומסביר גוונים וקווים", () => {
     const html = renderToStaticMarkup(createElement(LegendPanel, { entries: [...entries, { kind: "candle", text: rangeLine("full", "הסקרים") }] }));
-    for (const t of ["ממוצע בדיקה", "נר אחיד", "שלוש רמות", "טווח מלא"]) expect(html).toContain(t);
-    for (const t of ["דק:", "בינוני:", "עבה:", "שליש", "mk-c1", "mk-c3", "mk-c5", "mk-candle"]) expect(html).not.toContain(t);
+    for (const t of ["ממוצע בדיקה", "60%", "10%", "טווח מלא", "קו רצוף"]) expect(html).toContain(t);
+    for (const t of ["נר אחיד", "שלוש רמות", "צורת הנר", "mk-sq"]) expect(html).not.toContain(t);
   });
   it("כל סוגי הדוגמיות מצוירים", () => {
     const kinds: LegendKind[] = ["candle", "mean", "result", "dot", "line", "lineList", "dash", "pass", "seatGov", "seatMiss", "seatOther"];
     const html = renderToStaticMarkup(createElement(LegendPanel, { entries: kinds.map((kind) => ({ kind, text: kind })) }));
-    for (const k of kinds.filter(k => k !== "candle")) expect(html).toContain(`>${k}<`);
+    for (const k of kinds.filter(k => k !== "candle")) expect(html).toContain(k);
     expect(html).toContain("mk-prof-sw");
     expect(html).toContain("sw-miss");
   });
@@ -75,11 +75,11 @@ describe("ChartLegend", () => {
 
 describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכרעת בעלים 9.10.2026)", () => {
   it('"טווח מלא - עובי הנר מראה את כמות … שנמצאים בטווח הזה"', () => {
-    expect(rangeLine("full", "הסקרים")).toBe("טווח מלא - עובי הנר מראה את כמות הסקרים שנמצאים בטווח הזה");
+    expect(rangeLine("full", "הסקרים")).toBe("טווח מלא - קפסולה מעוגלת; מילוי מלא ל־60% המרכזיים של הסקרים, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה");
   });
   it("טווח של תרחישים הוא 80%, ואפשר להוסיף חלון זמן", () => {
-    expect(rangeLine("p80", "התרחישים")).toBe("טווח 80% - עובי הנר מראה את כמות התרחישים שנמצאים בטווח הזה");
-    expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - עובי הנר מראה את כמות הסקרים שנמצאים בטווח הזה");
+    expect(rangeLine("p80", "התרחישים")).toBe("טווח 80% - קפסולה מעוגלת; מילוי מלא ל־60% המרכזיים של התרחישים, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה");
+    expect(rangeLine("full", "הסקרים", "ב-14 הימים האחרונים")).toBe("טווח מלא ב-14 הימים האחרונים - קפסולה מעוגלת; מילוי מלא ל־60% המרכזיים של הסקרים, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה");
   });
   it("הגרף האחיד: שורת הנר בנוסח הבעלים (11.10.2026), בלי הסבר רמות", () => {
     const src = readFileSync(new URL("./CandleTrend.tsx", import.meta.url), "utf8");
@@ -87,8 +87,8 @@ describe("rangeLine: שורת המקרא היחידה על עובי הנר (הכ
     expect(src).not.toContain("thickness");
   });
   it("נר של סקרים: נוסח הבעלים (11.10.2026)", () => {
-    expect(pollCandleLine(14, 3)).toBe("עובי הנר בכל 3 ימים מראה את ממוצע המכונים שפירסמו סקר ב-14 יום האחרונים.");
-    expect(pollCandleLine(14)).toBe("עובי הנר מראה את ממוצע המכונים שפירסמו סקר ב-14 יום האחרונים.");
+    expect(pollCandleLine(14, 3)).toBe("טווח מלא של סקרי המכונים ב-14 הימים האחרונים, בכל 3 ימים; מילוי מלא ל־60% המרכזיים, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה.");
+    expect(pollCandleLine(14)).toBe("טווח מלא של סקרי המכונים ב-14 הימים האחרונים; מילוי מלא ל־60% המרכזיים, בהיר ל־10% מכל צד ושקוף ל־10% בכל קצה.");
   });
   it("כל גרף עם נר משתמש בשורה הזאת ואין בו הסבר רמות", () => {
     for (const f of ["homeCharts.tsx", "deviationChart.tsx", "dumbbellChart.tsx", "../pages/guess/Dashboard.tsx"]) {

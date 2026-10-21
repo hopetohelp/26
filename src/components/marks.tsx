@@ -1,89 +1,44 @@
-import { useCandleStyle } from "../lib/candleStyle";
 import type { ReactNode } from "react";
-import { CANDLE_PX, squarePath, squareRuns, type LSeg } from "../lib/chartLanguage";
+import type { LSeg } from "../lib/chartLanguage";
+import { capsuleGradient, verticalTagSides } from "../lib/capsule";
+import { seatsFmt } from "../lib/format";
 
-/**
- * הסימנים של שפת הציור האחידה (`src/lib/chartLanguage.ts`, מחלקות `mk-*` ב-`src/index.css`), לגרפים של שורות ב-HTML.
- * כולם מוצבים באחוזים על מסלול `relative` ב-`dir="ltr"`, כך שהציר (0 משמאל) נשאר זהה בכל האתר.
- */
-
-/** נר אופקי: קטעים סמוכים של קו מלא וקופסאות חלולות. הקואורדינטות המקומיות: 0 עד 1000 לאורך ו-0 עד 16 לרוחב (פיקסלים) */
-const LOCAL = 1000;
-const THICK = CANDLE_PX[5];
-
-/**
- * נר = טווח, בעובי שמשתנה לאורכו לפי כמות הנתונים בכל קטע (רמה 1, 3 או 5): נר מרובע כמו נר יפני, שבו רמה 1 היא קו מלא
- * ורמות 3 ו-5 הן קופסה סגורה וחלולה (הכרעת בעלים 9.10.2026). `x` ממפה ערך על הציר לאחוז מהמסלול. עבה היכן שרוב הנתונים, ודק בקצוות.
- */
-/** הקטעים כרכיבי path: קו מלא (`mk-sq-f`) או קופסה חלולה (`mk-sq`) */
-export function SquarePaths({ runs, mid, across = "y" }: { runs: ReturnType<typeof squareRuns>; mid: number; across?: "x" | "y" }) {
-  const style = useCandleStyle();
-  const shown = style === "uniform" && runs.length ? [{ a: Math.min(...runs.map(r => r.a)), b: Math.max(...runs.map(r => r.b)), half: 5, filled: false }] : runs;
-  return <g data-candle-style={style}>{shown.map((r, i) => <path key={i} d={squarePath(r, mid, across)} className={r.filled ? "mk-sq mk-sq-f" : "mk-sq"} />)}</g>;
-}
-
+/** קפסולה אחת לכל טווח, באחוזונים הקיימים ובקצוות המקוריים. */
 export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number) => number; title?: string }) {
   if (!segs.length) return null;
-  const from = x(segs[0].from);
-  const to = x(segs[segs.length - 1].to);
-  const width = Math.max(to - from, 0.8);
-  const left = from - (width - (to - from)) / 2;
-  const runs = squareRuns(segs, (v) => ((x(v) - left) / width) * LOCAL);
-  return (
-    <svg aria-hidden="true" focusable="false" className="mk-prof" viewBox={`0 0 ${LOCAL} ${THICK}`} preserveAspectRatio="none" style={{ left: `${left}%`, width: `${width}%` }}>
-      {title && <title>{title}</title>}
-      <SquarePaths runs={runs} mid={THICK / 2} />
-    </svg>
-  );
+  const from = Math.min(...segs.map(s => x(s.from))), to = Math.max(...segs.map(s => x(s.to)));
+  return <span aria-hidden="true" title={title} className="mk-prof mk-capsule" data-candle-style="capsule" data-range-start={from} data-range-end={to} style={{ left: `${from}%`, width: `${to - from}%`, minWidth: 1, backgroundImage: capsuleGradient(segs, x) }} />;
 }
-
-/** אותו נר בכיוון אנכי (גרף עם ציר זמן): `y` ממפה ערך לאחוז מגובה המסלול, מלמעלה. הערך הגבוה למעלה. */
-/** `delay` (באלפיות שנייה): הנר מופיע כשהקו מגיע אליו בפתיחת המסך (`trend-pop`) */
 export function ProfileCandleV({ segs, y, left, delay }: { segs: LSeg[]; y: (v: number) => number; left: string; delay?: number }) {
   if (!segs.length) return null;
-  const top = y(segs[segs.length - 1].to);
-  const bottom = y(segs[0].from);
-  const height = Math.max(bottom - top, 0.8);
-  const top0 = top - (height - (bottom - top)) / 2;
-  const runs = squareRuns(segs, (v) => ((y(v) - top0) / height) * LOCAL);
-  return (
-    <svg aria-hidden="true" focusable="false" className={delay === undefined ? "mk-pv" : "mk-pv trend-pop"} viewBox={`0 0 ${THICK} ${LOCAL}`} preserveAspectRatio="none" style={{ left, top: `${top0}%`, height: `${height}%`, ...(delay === undefined ? null : { animationDelay: `${delay}ms` }) }}>
-      <SquarePaths runs={runs} mid={THICK / 2} across="x" />
-    </svg>
-  );
+  const top = Math.min(...segs.map(s => y(s.to))), bottom = Math.max(...segs.map(s => y(s.from)));
+  return <span aria-hidden="true" className={delay === undefined ? "mk-pv mk-capsule" : "mk-pv mk-capsule trend-pop"} data-candle-style="capsule" data-range-start={top} data-range-end={bottom} style={{ left, top: `${top}%`, height: `${bottom - top}%`, minHeight: 1, backgroundImage: capsuleGradient(segs, y, true), ...(delay === undefined ? {} : { animationDelay: `${delay}ms` }) }} />;
 }
-
-/** ממוצע = עיגול ריק ירוק בקוטר 22, גדול מהנר העבה */
-export const MeanDot = ({ at }: { at: number }) => { const style = useCandleStyle(); return <span aria-hidden="true" className={`mk ${style === "uniform" ? "mk-dot" : "mk-mean"}`} style={{ left: `${at}%` }} />; };
-
-/** תוצאה (מציאות) = עיגול ריק שחור בקוטר 22, גדול מהנר העבה (גם ממוצע המשתתפים בסקר האתר, שאינו סקר) */
-export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-ring" style={{ left: `${at}%` }} />;
-
-/** סמן על קו = עיגול קטן ריק */
+export interface CapsuleDatum { at: number; value: number; label: string; text?: string }
+/** בשורות אופקיות התגים מעל ומתחת לנר. הקו החוצה נשאר בדיוק על הערך בציר. */
+export function CapsuleMarks({ primary, secondary }: { primary?: CapsuleDatum; secondary?: CapsuleDatum }) {
+  return <>{([['primary', primary], ['secondary', secondary]] as const).map(([kind, datum]) => datum && <span key={kind} aria-hidden="true" className="mk-capsule-mark" data-kind={kind} style={{ left: `${datum.at}%` }} title={`${datum.label}: ${datum.text ?? seatsFmt(datum.value)}`}><i className="mk-capsule-cross" /><bdi className="mk-capsule-tag" dir="ltr">{datum.text ?? seatsFmt(Math.round(datum.value * 10) / 10)}</bdi></span>)}</>;
+}
+/** אנכי: קו ברוחב הקפסולה ותג צדדי צמוד מעליו או מתחתיו. */
+export function CapsuleMarksV({ left, primary, secondary, y, format = seatsFmt, delay }: { left: string; primary?: { value: number; label: string }; secondary?: { value: number; label: string }; y: (v: number) => number; format?: (v: number) => string; delay?: number }) {
+  if (!primary && !secondary) return null;
+  const sides = verticalTagSides(primary?.value ?? secondary!.value, secondary?.value);
+  return <>{([['primary', primary], ['secondary', secondary]] as const).map(([kind, datum]) => datum && <span key={kind} aria-hidden="true" className={`mk-capsule-mark-v${delay === undefined ? '' : ' trend-pop'}`} data-kind={kind} data-side={sides[kind]} style={{ left, top: `${y(datum.value)}%`, ...(delay === undefined ? {} : { animationDelay: `${delay}ms` }) }} title={`${datum.label}: ${format(datum.value)}`}><i className="mk-capsule-cross" /><bdi className="mk-capsule-tag" dir="ltr">{format(datum.value)}</bdi></span>)}</>;
+}
+/** ממוצעים מחוץ לנר הם קווים, וסמני קו מגמה רגילים נשארים נקודות. */
+export const MeanDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-primary-line" style={{ left: `${at}%` }} />;
+export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-secondary-line" style={{ left: `${at}%` }} />;
 export const SmallDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-dot" style={{ left: `${at}%` }} />;
-
 export type MarkKind = "candle" | "mean" | "result" | "dot";
-
-/** דוגמית סימן למקרא. הנר מצויר כפרופיל קטן באותו יחס כמו בגרף: זנב דק קצר בכל קצה, קטע בינוני קצר, וליבה עבה ארוכה באמצע (כמו `percentileOne`: 10 · 10 · 60 · 10 · 10) */
 export function Swatch({ kind }: { kind: MarkKind }) {
-  const style = useCandleStyle();
-  if (kind === "candle") {
-    const segs: LSeg[] = ([1, 3, 5, 5, 5, 5, 5, 5, 3, 1] as const).map((level, i) => ({ from: i, to: i + 1, level }));
-    const runs = squareRuns(segs, (v) => (v / 10) * LOCAL);
-    return (
-      <svg aria-hidden="true" focusable="false" className="mk-sw mk-prof-sw" viewBox={`0 0 ${LOCAL} ${THICK}`} preserveAspectRatio="none">
-        <SquarePaths runs={runs} mid={THICK / 2} />
-      </svg>
-    );
-  }
-  const cls = { mean: style === "uniform" ? "mk-dot" : "mk-mean", result: "mk-ring", dot: "mk-dot" }[kind];
-  return <i aria-hidden="true" className={`mk mk-sw ${cls}`} />;
+  if (kind === 'candle') return <span aria-hidden="true" className="mk-prof-sw mk-capsule" style={{ backgroundImage: capsuleGradient(([1, 3, 5, 3, 1] as const).map((level, i) => ({ from: [0, 1, 2, 8, 9][i], to: [1, 2, 8, 9, 10][i], level })), v => v) }} />;
+  return <i aria-hidden="true" className={`mk mk-sw ${{ mean: 'mk-primary-line', result: 'mk-secondary-line', dot: 'mk-dot' }[kind]}`} />;
 }
 
 /** מסלול של שורה: `relative`, שמאל לימין, ורשת של קווים דקים כל `step` יחידות. 0 משמאל בכל האתר. הסימנים והרשת בשטח פנימי (`mk-plot`) שמרוחק `MARK_PAD` מכל קצה, כדי שעיגול בקצה (למשל 0) לא יחרוג אל עמודת המספרים או הטקסט (הכרעת בעלים 9.10.2026) */
 export function Track({ axisMax, step = 10, className = "h-5", title, children }: { axisMax: number; step?: number; className?: string; title?: string; children: ReactNode }) {
   return (
-    <span aria-hidden="true" title={title} dir="ltr" className={`relative block ${className}`}>
+    <span aria-hidden="true" title={title} dir="ltr" className={`mk-capsule-track relative block ${className}`}>
       <span
         className="mk-plot"
         style={{ backgroundImage: "linear-gradient(to right, rgb(var(--line)) 1px, transparent 1px)", backgroundSize: `${(step / axisMax) * 100}% 100%`, backgroundRepeat: "repeat-x" }}
