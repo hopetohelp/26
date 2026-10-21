@@ -2170,5 +2170,39 @@
     "source": "https://www.mako.co.il/news-israel-elections/2026/Article-bf175ad340f51a1027.htm"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-21",
+  "id": "2026-10-21-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת חדשות 13 עצמה (מקור ראשוני): מנדטי 12 הרשימות (סך 120), הגושים 52/49/15/4 ואחוזי הרשימות מתחת לחסימה זהים לרשומה; תואם גם דיווח מעריב.",
+  "source": "https://13tv.co.il/item/news/politics/politics/ksgoq-905411865/",
+  "sourceDetails": {
+   "published": "2026-10-21T20:54:00+03:00",
+   "sample_respondents": 1084
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/ksgoq-905411865/"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/ksgoq-905411865/"
+   }
+  }
  }
 ]
