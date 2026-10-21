@@ -70,8 +70,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const candleMode = series.length === 1 && !series[0].dashed;
   const multi = series.length > 1;
   const labelPx = (width < 600 ? 92 : 124) + (markers.length ? (width < 600 ? 10 : 34) : 0);
-  // בהשוואה נשמר מקום לתוויות הקצה (רוחב קבוע בפיקסלים); בנרות הגרף מגיע כמעט עד הקצה
-  const X1 = multi ? 100 - (labelPx / Math.max(width, 1)) * 100 : 100 - 48 / Math.max(width, 1) * 100;
+  // בהשוואה נשמר מקום לתוויות הקצה; בנרות אין תגי ערך והגרף מגיע כמעט עד הקצה
+  const X1 = multi ? 100 - (labelPx / Math.max(width, 1)) * 100 : 95;
   useLayoutEffect(() => {
     const el = wrap.current;
     if (!el) return;
@@ -93,7 +93,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const colors = series.map((s, i) => s.color ?? colorOf(s.colorId ?? s.id, i));
   // נקודות לנר ולבחירה: בנרות — הנקודות של הסדרה (מדוללות); בהשוואה — כל הנקודות של כל הסדרות
   const candleSeries = candleMode ? series[0] : undefined;
-  const shown = useMemo(() => (candleSeries ? thinCandles(candleSeries.points, plotPx, 72) : []), [candleSeries, plotPx]);
+  const shown = useMemo(() => (candleSeries ? thinCandles(candleSeries.points, plotPx, 24) : []), [candleSeries, plotPx]);
   const targets: Target[] = useMemo(() => {
     if (candleSeries) { const si = series.indexOf(candleSeries); return shown.map((p, i) => ({ si, i, p })); }
     return series.flatMap((s, si) => (s.dashed ? [] : s.points.map((p, i) => ({ si, i, p }))));
@@ -248,12 +248,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         ))}
         {candleMode && act && <span aria-hidden="true" className="absolute top-0 bottom-0 -translate-x-1/2 w-8 bg-ink/[.07] rounded-[4px]" style={{ left: `${X(act.p.t)}%` }} />}
         {candleMode && shown.map((p, i) => (p.lo === undefined && !p.xs ? null : <ProfileCandleV key={`c${p.t}`} segs={profiles[i]} y={Y} left={`${X(p.t)}%`} delay={delayOf(p.t)} />))}
-        {candleMode && shown.map((p) => <CapsuleMarksV key={`d${p.t}`} left={`${X(p.t)}%`} primary={{ value: p.v, label: 'ממוצע' }} secondary={markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id)) ? { value: markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id))!.v, label: 'תוצאה בפועל' } : undefined} y={Y} format={valueText} delay={delayOf(p.t)} />)}
+        {candleMode && shown.map((p) => <CapsuleMarksV showLabels={false} key={`d${p.t}`} left={`${X(p.t)}%`} primary={{ value: p.v, label: 'ממוצע' }} secondary={markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id)) ? { value: markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id))!.v, label: 'תוצאה בפועל' } : undefined} y={Y} format={valueText} delay={delayOf(p.t)} />)}
         {multi && series.map((s, si) => !s.dashed && sparseIndices(s.points.map((p) => (X(p.t) / 100) * width), 46).map((k) => (
           <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si], animationDelay: `${delayOf(s.points[k].t)}ms` }} />
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
-        {markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV key={`m${i}`} left={`${X(m.t)}%`} secondary={{ value: m.v, label: "תוצאה בפועל" }} y={Y} format={valueText} />)}
+        {markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV showLabels={false} key={`m${i}`} left={`${X(m.t)}%`} secondary={{ value: m.v, label: "תוצאה בפועל" }} y={Y} format={valueText} />)}
         {ends.map((e) => (
           <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + ${markers.length ? 20 : 10}px)`, maxWidth: labelPx - (markers.length ? 22 : 12), top: e.y, color: colors[e.si] }}>
             {endText(e.s.endLabel ?? `${e.s.name} ${valueText(e.last.v)}`)}
