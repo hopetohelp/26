@@ -88,7 +88,7 @@ jobs:
       - name: עותק ציבורי של מוני המשתמשים והכניסות
         run: |
           mkdir -p dist/data
-          if curl --fail --silent --show-error --retry 2 --max-time 15 https://elections26-feedback.hopetohelp-il.workers.dev/usage -o /tmp/usage.json && node -e 'const d=JSON.parse(require("fs").readFileSync("/tmp/usage.json","utf8")); if(!Number.isSafeInteger(d.totalVisitors)||d.totalVisitors<0||!Number.isSafeInteger(d.totalVisits)||d.totalVisits<0||!Number.isFinite(Date.parse(d.publishedAt)))process.exit(1)'; then
+          if curl --fail --silent --show-error --retry 2 --max-time 15 https://elections26-feedback.hopetohelp-il.workers.dev/usage -o /tmp/usage.json && node -e 'const d=JSON.parse(require("fs").readFileSync("/tmp/usage.json","utf8")); if(!Number.isSafeInteger(d.totalUsers)||d.totalUsers<0||!Number.isSafeInteger(d.totalVisits)||d.totalVisits<0||!Number.isFinite(Date.parse(d.publishedAt)))process.exit(1)'; then
             cp /tmp/usage.json dist/data/usage.json
           else
             echo "::warning::מוני השימוש לא זמינים לפרסום; הבית ינסה את המקור החי, ללא הצגת אפס מדומה"

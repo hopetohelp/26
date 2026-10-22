@@ -1,7 +1,7 @@
 import { FEEDBACK_URL } from "./feedback";
 
 export interface SiteUsage {
-  totalVisitors: number;
+  totalUsers: number;
   totalVisits: number;
   publishedAt: string;
 }
@@ -9,7 +9,7 @@ export interface SiteUsage {
 export function isSiteUsage(v: unknown): v is SiteUsage {
   if (!v || typeof v !== "object") return false;
   const x = v as SiteUsage;
-  return Number.isSafeInteger(x.totalVisitors) && x.totalVisitors >= 0 &&
+  return Number.isSafeInteger(x.totalUsers) && x.totalUsers >= 0 &&
     Number.isSafeInteger(x.totalVisits) && x.totalVisits >= 0 &&
     typeof x.publishedAt === "string" && Number.isFinite(Date.parse(x.publishedAt));
 }

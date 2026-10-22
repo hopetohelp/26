@@ -9,7 +9,7 @@
  * POST /relay      {d}   ⇐ ממסר שמירה כשהמסלולים הרגילים חסומים: מעביר לשרת ההשתתפות את הבקשה המקודדת ב-d.
  * POST /autoreport {log} ⇐ דיווח כשל חיבור אוטומטי (בלי אישור הגולש), עד 3 ליום מכל מקור.
  * POST /diag        {kind} ⇐ סיווג כשל חיבור (מונה ליום; hits.page = diag:<kind>).
- * GET  /usage       ⇐ מספר דפדפנים וצפיות מצטברים בלבד, ללא פרטי גולשים.
+ * GET  /usage       ⇐ מספר חשבונות וכניסות בלבד, ללא פרטי גולשים.
  * POST /hit         {page} ⇐ מונה כניסות: +1 לעמוד באותו יום, וגם ספירת גולשים שונים (מזהה אנונימי שמתחלף מדי יום).
  *                    המזהה היומי הוא גיבוב חד-כיווני של ה-IP, הדפדפן והתאריך: אי אפשר לשחזר ממנו כתובת או לקשור גולש בין ימים.
  *                    {v} = מזהה אקראי של הדפדפן (localStorage) לספירה מצטברת; נשמר רק גיבוב שלו, יחד עם יום ראשון ואחרון.
@@ -178,7 +178,11 @@ export default {
     if (url.pathname === "/usage" && request.method === "GET") {
       try {
         const totals = await usageTotals(env.DB);
-        return new Response(JSON.stringify({ ...totals, publishedAt: new Date().toISOString() }), {
+        const response = await env.CROWD.fetch(new Request("https://crowd.internal/usage"));
+        if (!response.ok) throw new Error("accounts unavailable");
+        const { totalUsers } = await response.json();
+        if (!Number.isSafeInteger(totalUsers) || totalUsers < 0) throw new Error("invalid accounts count");
+        return new Response(JSON.stringify({ totalUsers, totalVisits: totals.totalVisits, publishedAt: new Date().toISOString() }), {
           headers: { ...headers, "cache-control": "public, max-age=60" },
         });
       } catch { return reply({ error: "unavailable" }, 503); }

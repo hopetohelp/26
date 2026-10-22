@@ -11,7 +11,7 @@ const data = async () => (await feedback.fetch(new Request("https://w.example/ad
 const note = (at, text) => env.DB.raw.prepare("INSERT INTO feedback (created_at, topic, text, day_key) VALUES (?, 'other', ?, 'k')").run(at, text);
 
 beforeEach(async () => {
-  env = { DB: fakeD1(new URL("../schema.sql", import.meta.url)), ALLOWED_ORIGIN: origin };
+  env = { DB: fakeD1(new URL("../schema.sql", import.meta.url)), ALLOWED_ORIGIN: origin, CROWD: { fetch: async request => new Response(JSON.stringify(new URL(request.url).pathname === "/usage" ? { totalUsers: 0 } : { stats: {}, threads: [] })) } };
   await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(admin), "2026-10-01").run();
 });
 
@@ -58,15 +58,15 @@ it("המונים הציבוריים זהים לניהול, אינם כוללים
   expect(r.headers.get("access-control-allow-origin")).toBe(origin);
   expect(r.headers.get("cache-control")).toContain("max-age=60");
   const out = await r.json();
-  expect(Object.keys(out).sort()).toEqual(["publishedAt", "totalVisitors", "totalVisits"]);
-  expect(out).toMatchObject({ totalVisitors: 2, totalVisits: 7 });
+  expect(Object.keys(out).sort()).toEqual(["publishedAt", "totalUsers", "totalVisits"]);
+  expect(out).toMatchObject({ totalUsers: 0, totalVisits: 7 });
   expect(Number.isFinite(Date.parse(out.publishedAt))).toBe(true);
-  expect(await data()).toMatchObject({ totalVisitors: out.totalVisitors, totalVisits: out.totalVisits });
+  expect(await data()).toMatchObject({ totalVisitors: 2, totalVisits: out.totalVisits });
 });
 
 it("מאגר ריק הוא אפס אמיתי; כשל מאגר מחזיר אי-זמינות ולא אפס", async () => {
   const request = () => new Request("https://w.example/usage");
-  expect(await (await feedback.fetch(request(), env)).json()).toMatchObject({ totalVisitors: 0, totalVisits: 0 });
+  expect(await (await feedback.fetch(request(), env)).json()).toMatchObject({ totalUsers: 0, totalVisits: 0 });
   const broken = { ...env, DB: { prepare() { throw new Error("offline"); } } };
   const response = await feedback.fetch(request(), broken);
   expect(response.status).toBe(503);
@@ -80,5 +80,13 @@ it("אותו דפדפן נספר פעם אחת ומשאיר את כל הצפיו
   await hit("/", "b".repeat(22));
   await hit("/", ""); // אחסון חסום: צפייה בלי משתמש ייחודי
   const response = await feedback.fetch(new Request("https://w.example/usage"), env);
-  expect(await response.json()).toMatchObject({ totalVisitors: 2, totalVisits: 4 });
+  expect(await response.json()).toMatchObject({ totalUsers: 0, totalVisits: 4 });
+});
+
+it("מספר החשבונות מגיע משרת ההתחברות, וכשל שלו אינו מוצג כאפס", async () => {
+  env.CROWD.fetch = async () => new Response(JSON.stringify({ totalUsers: 17 }));
+  const request = () => new Request("https://w.example/usage");
+  expect(await (await feedback.fetch(request(), env)).json()).toMatchObject({ totalUsers: 17 });
+  env.CROWD.fetch = async () => new Response("offline", { status: 503 });
+  expect((await feedback.fetch(request(), env)).status).toBe(503);
 });
