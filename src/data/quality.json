@@ -1,15 +1,6 @@
 {
- "asOf": "2026-10-22T18:11:09+03:00",
+ "asOf": "2026-10-22T22:06:59+03:00",
  "conflicts": [
-  {
-   "detail": "באתר 454, בפרטי האימות 2,116",
-   "end": "2026-10-20",
-   "firmHe": "שלמה פילבר + NEXT DATA",
-   "group": "sample",
-   "id": "2026-10-20-sf-nd-channel-14",
-   "publisherHe": "ערוץ 14",
-   "source": "https://www.ice.co.il/research/news/article/1134443"
-  },
   {
    "detail": "באתר 1,263, בפרטי האימות 1,013",
    "end": "2026-10-07",
@@ -493,10 +484,10 @@
   "model": {
    "skipped": 0,
    "start": "2026-09-09",
-   "used": 67
+   "used": 69
   },
-  "sinceListSubmission": 67,
-  "total": 801,
-  "usable": 788
+  "sinceListSubmission": 69,
+  "total": 803,
+  "usable": 790
  }
 }

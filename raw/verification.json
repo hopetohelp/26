@@ -2247,5 +2247,61 @@
     "source": "https://www.zman.co.il/735649/"
    }
   }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-10-22",
+  "id": "2026-10-21-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הרשומה נקלטה אוטומטית מטבלת ויקיפדיה. הכתבה המקורית באתר ערוץ 14 חסומה לסריקה (403), ולא נמצא דיווח עצמאי אחר עם מנדטי כל הרשימות; לכן לא אומת מול הפרסום.",
+  "source": "https://www.c14.co.il/article/1748686",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-10-22",
+  "id": "2026-10-22-sf-nd-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הרשומה נקלטה אוטומטית מטבלת ויקיפדיה. הכתבה המקורית באתר ערוץ 14 חסומה לסריקה (403), ולא נמצא דיווח עצמאי אחר עם מנדטי כל הרשימות; לכן לא אומת מול הפרסום.",
+  "source": "https://www.c14.co.il/article/1750553",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null
+  },
+  "status": "unreachable"
  }
 ]
