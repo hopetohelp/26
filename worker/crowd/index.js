@@ -1,3 +1,4 @@
+import { accountCount } from "./lib/accountCount.js";
 import { cleanDataPreference } from "../../src/lib/dataPreferences.ts";
 import { personalTotals, migrateBlocs, compositionKey } from "./lib/blocDefinitions.js";
 import { allowedOrigin, returnSiteUrl } from "../shared/origins.js";
@@ -1128,8 +1129,9 @@ const routes = {
     await requireAdmin(env, request);
     const { results: threads } = await env.DB.prepare("SELECT participant, created_at, updated_at, status FROM support_threads ORDER BY updated_at DESC").all();
     const { results: msgs } = await env.DB.prepare("SELECT id, participant, author, text, created_at FROM support_messages ORDER BY id").all();
-    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants) AS participants, (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
-    return { stats, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
+    const participants = await accountCount(env.DB);
+    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
+    return { stats: { ...stats, participants }, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
   // הגדרת חשבון מנהל בקישור חד-פעמי (הכרעת בעלים 13.10.2026): הסשן הפתוח בדפדפן הוא החשבון שהופך למנהל. הקוד נמחק בשימוש הראשון ופג תוקף.
   "POST /admin/claim": async ({ env, request, now, body }) => {
@@ -1573,6 +1575,8 @@ export default {
     const url = new URL(request.url);
     const now = clock(env);
     try {
+      if (request.method === "GET" && url.pathname === "/usage")
+        return new Response(JSON.stringify({ totalUsers: await accountCount(env.DB) }), { headers: { ...headers, "cache-control": "public, max-age=60" } });
       await loadPollRanges(env);
       // 🔴 דלת אחת לעוזרי AI (lib/agent.js): נתיב שאינו ברשימה נחסם כאן, לפני כל טיפול
       const agent = await agentSession(env, requestToken(request), now);

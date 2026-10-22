@@ -101,7 +101,7 @@ const pastResults = results as unknown as ElectionResult[];
 const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
 
 export const OPEN_FILES: OpenFile[] = [
-  { path: "data/usage.json", title: "משתמשים וכניסות לאתר", description: "עותק מוני השימוש המצטברים משרת ההערות. הבית קורא גם את /usage החי מדי דקה. משתמשים לפי דפדפן וכניסות לפי צפייה בעמוד, ללא פרטים אישיים.", methodAnchor: "usage", kind: "נתוני שימוש באתר", source: "מוני שרת ההערות — אותו מקור כמו ממשק הניהול", screen: "/", fields: "publishedAt, totalVisitors (דפדפנים), totalVisits (צפיות בעמודים)", build: null, optional: true },
+  { path: "data/usage.json", title: "משתמשים וכניסות לאתר", description: "עותק מוני השימוש המצטברים משרת ההערות. הבית קורא גם את /usage החי מדי דקה. משתמשים שהתחברו לפי חשבונות (כולל אורחים) וכניסות לפי צפייה בעמוד, ללא פרטים אישיים.", methodAnchor: "usage", kind: "נתוני שימוש באתר", source: "מוני שרתי החשבונות וההערות — אותם מקורות כמו ממשק הניהול", screen: "/", fields: "publishedAt, totalUsers (חשבונות, כולל אורחים), totalVisits (צפיות בעמודים)", build: null, optional: true },
   { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/past", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
   {
     path: "data/polls.json",
