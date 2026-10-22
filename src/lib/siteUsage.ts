@@ -2,7 +2,7 @@ import { FEEDBACK_URL } from "./feedback";
 
 export interface SiteUsage {
   totalUsers: number;
-  totalVisits: number;
+  totalVisitors: number;
   publishedAt: string;
 }
 
@@ -10,14 +10,14 @@ export function isSiteUsage(v: unknown): v is SiteUsage {
   if (!v || typeof v !== "object") return false;
   const x = v as SiteUsage;
   return Number.isSafeInteger(x.totalUsers) && x.totalUsers >= 0 &&
-    Number.isSafeInteger(x.totalVisits) && x.totalVisits >= 0 &&
+    Number.isSafeInteger(x.totalVisitors) && x.totalVisitors >= 0 &&
     typeof x.publishedAt === "string" && Number.isFinite(Date.parse(x.publishedAt));
 }
 
 /** אותו מקור כמו הניהול; העותק הציבורי הוא גיבוי בלבד, לא ספירה נוספת. */
 export async function loadSiteUsage(signal: AbortSignal): Promise<{ data: SiteUsage; live: boolean }> {
   const read = async (url: string) => {
-    const r = await fetch(url, { signal, credentials: "omit" });
+    const r = await fetch(url, { signal, credentials: "omit", cache: "no-store" });
     if (!r.ok) throw new Error("usage unavailable");
     const data: unknown = await r.json();
     if (!isSiteUsage(data)) throw new Error("invalid usage");

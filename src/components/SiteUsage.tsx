@@ -45,7 +45,7 @@ export default function SiteUsage() {
           <span className="mt-1 text-sm text-ink-soft">משתמשים שהתחברו</span>
         </div>
         <div className="flex min-w-0 w-44 flex-col items-center rounded-2xl border border-accent/15 bg-accent/5 px-3 py-4 text-center">
-          <strong className="font-num text-2xl text-ink">{data ? num(data.totalVisits) : "—"}</strong>
+          <strong className="font-num text-2xl text-ink">{data ? num(data.totalVisitors) : "—"}</strong>
           <span className="mt-1 text-sm text-ink-soft">כניסות</span>
         </div>
       </div>

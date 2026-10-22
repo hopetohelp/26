@@ -182,7 +182,7 @@ export default {
         if (!response.ok) throw new Error("accounts unavailable");
         const { totalUsers } = await response.json();
         if (!Number.isSafeInteger(totalUsers) || totalUsers < 0) throw new Error("invalid accounts count");
-        return new Response(JSON.stringify({ totalUsers, totalVisits: totals.totalVisits, publishedAt: new Date().toISOString() }), {
+        return new Response(JSON.stringify({ totalUsers, totalVisitors: totals.totalVisitors, publishedAt: new Date().toISOString() }), {
           headers: { ...headers, "cache-control": "public, max-age=60" },
         });
       } catch { return reply({ error: "unavailable" }, 503); }
