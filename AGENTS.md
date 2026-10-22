@@ -70,4 +70,4 @@ npx vite-node scripts/check-open-data.ts   # כל קובץ שבאינדקס קי
 - `data/localities.json` — כל הקולות לפי יישוב בבחירות 2015–2022: קובצי ועדת הבחירות ← `pipeline/historical_data.py`; טבלת האתר ו-MCP מסננים באמצעות `src/lib/localities.ts`. מעטפות חיצוניות נפרדות.
 - `data/accuracy.json` כולל `lastPollErrors`: הסקר האחרון לכל מכון, פער מפלגה מרבי ופערי גושים בנקודות אחוז ממושבי הכנסת; מקור חישוב אחד ב-`history.ts`. הממוצע האישי מסנן מכונים דרך `Selection.firms` בספק המשותף.
 
-- `data/usage.json` — עותק ציבורי של מספר החשבונות (כולל אורחים) והצפיות המצטברים; `worker/feedback/lib/usage.js` משותף לספירת הכניסות בבית ובניהול; `worker/crowd/lib/accountCount.js` משותף לספירת החשבונות. הבית מתרענן מהנתיב החי `/usage` מדי דקה; ללא פרטים אישיים. מילון: `usage`.
+- `data/usage.json` — עותק ציבורי של מספר החשבונות (כולל אורחים) והדפדפנים הייחודיים; `worker/feedback/lib/usage.js` משותף לספירת הדפדפנים הייחודיים (`totalVisitors`, כרטיס ״נכנסו״) בבית ובניהול; `worker/crowd/lib/accountCount.js` משותף לספירת החשבונות. הבית מתרענן מהנתיב החי `/usage` מדי דקה; ללא פרטים אישיים. מילון: `usage`.

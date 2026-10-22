@@ -1,11 +1,11 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { isSiteUsage } from "./siteUsage";
-const data = { totalUsers: 2, totalVisits: 7, publishedAt: "2026-10-21T10:00:00Z" };
+const data = { totalUsers: 2, totalVisitors: 7, publishedAt: "2026-10-21T10:00:00Z" };
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); vi.resetModules(); });
 it("מקבל אפס אמיתי ודוחה נתונים חלקיים או ערכים לא תקינים", () => {
   expect(isSiteUsage(data)).toBe(true);
-  expect(isSiteUsage({ ...data, totalUsers: 0, totalVisits: 0 })).toBe(true);
-  for (const bad of [null, {}, { ...data, totalUsers: -1 }, { ...data, totalVisits: 1.5 }, { ...data, publishedAt: "bad" }]) expect(isSiteUsage(bad)).toBe(false);
+  expect(isSiteUsage({ ...data, totalUsers: 0, totalVisitors: 0 })).toBe(true);
+  for (const bad of [null, {}, { totalUsers: 2, totalVisits: 99, publishedAt: data.publishedAt }, { ...data, totalUsers: -1 }, { ...data, totalVisitors: 1.5 }, { ...data, publishedAt: "bad" }]) expect(isSiteUsage(bad)).toBe(false);
 });
 it("קורא מספרים חיים ללא זיהוי אישי", async () => {
   vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.test");
@@ -14,7 +14,7 @@ it("קורא מספרים חיים ללא זיהוי אישי", async () => {
   const { loadSiteUsage } = await import("./siteUsage");
   const signal = new AbortController().signal;
   expect(await loadSiteUsage(signal)).toEqual({ data, live: true });
-  expect(fetch).toHaveBeenCalledWith("https://feedback.test/usage", { signal, credentials: "omit" });
+  expect(fetch).toHaveBeenCalledWith("https://feedback.test/usage", { signal, credentials: "omit", cache: "no-store" });
 });
 it("משתמש בעותק מתוארך כשהשרת נכשל ואינו ממציא אפס כשגם הגיבוי נכשל", async () => {
   vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.test");

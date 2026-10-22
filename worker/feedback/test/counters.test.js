@@ -58,15 +58,15 @@ it("המונים הציבוריים זהים לניהול, אינם כוללים
   expect(r.headers.get("access-control-allow-origin")).toBe(origin);
   expect(r.headers.get("cache-control")).toContain("max-age=60");
   const out = await r.json();
-  expect(Object.keys(out).sort()).toEqual(["publishedAt", "totalUsers", "totalVisits"]);
-  expect(out).toMatchObject({ totalUsers: 0, totalVisits: 7 });
+  expect(Object.keys(out).sort()).toEqual(["publishedAt", "totalUsers", "totalVisitors"]);
+  expect(out).toMatchObject({ totalUsers: 0, totalVisitors: 2 });
   expect(Number.isFinite(Date.parse(out.publishedAt))).toBe(true);
-  expect(await data()).toMatchObject({ totalVisitors: 2, totalVisits: out.totalVisits });
+  expect(await data()).toMatchObject({ totalVisitors: out.totalVisitors, totalVisits: 7 });
 });
 
 it("מאגר ריק הוא אפס אמיתי; כשל מאגר מחזיר אי-זמינות ולא אפס", async () => {
   const request = () => new Request("https://w.example/usage");
-  expect(await (await feedback.fetch(request(), env)).json()).toMatchObject({ totalUsers: 0, totalVisits: 0 });
+  expect(await (await feedback.fetch(request(), env)).json()).toMatchObject({ totalUsers: 0, totalVisitors: 0 });
   const broken = { ...env, DB: { prepare() { throw new Error("offline"); } } };
   const response = await feedback.fetch(request(), broken);
   expect(response.status).toBe(503);
@@ -80,7 +80,8 @@ it("אותו דפדפן נספר פעם אחת ומשאיר את כל הצפיו
   await hit("/", "b".repeat(22));
   await hit("/", ""); // אחסון חסום: צפייה בלי משתמש ייחודי
   const response = await feedback.fetch(new Request("https://w.example/usage"), env);
-  expect(await response.json()).toMatchObject({ totalUsers: 0, totalVisits: 4 });
+  expect(await response.json()).toMatchObject({ totalUsers: 0, totalVisitors: 2 });
+  expect(await data()).toMatchObject({ totalVisitors: 2, totalVisits: 4 });
 });
 
 it("מספר החשבונות מגיע משרת ההתחברות, וכשל שלו אינו מוצג כאפס", async () => {
