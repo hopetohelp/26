@@ -2204,5 +2204,48 @@
     "source": "https://13tv.co.il/item/news/politics/politics/ksgoq-905411865/"
    }
   }
+ },
+ {
+  "access": [
+   "direct"
+  ],
+  "checkedAt": "2026-10-22",
+  "id": "2026-10-22-yossi-tatika-zman-yisrael",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "הועתק מהכתבה המקורית בזמן ישראל (המזמין): מנדטי 12 הרשימות (סך 120), עמך ישראל 3.00%, המכון (טאטיקה), תאריכי השדה 21–22.10 ומדגם 500 — תואמים.",
+  "source": "https://www.zman.co.il/735649/",
+  "sourceDetails": {
+   "published": "2026-10-22T18:00:00+03:00",
+   "sample_respondents": 500,
+   "moe": "4.4%"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/735649/"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.zman.co.il/735649/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/735649/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/735649/"
+   }
+  }
  }
 ]
