@@ -134,9 +134,9 @@ function Stack({ slices, values }: { slices: Slice[]; values: Record<string, num
   </div>{pop && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
 /** סיכום הגושים: עוגה במחשב, פס צמוד לתחתית בטלפון. בלי כותרת ובלי מסגרת. */
-export function BlocChart({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
+export function BlocChart({ values, missing = 0, logo = null }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null }) {
   const slices = blocSlices(values, missing);
-  return <><div className="f-pie-wrap"><Pie slices={slices} values={values} /></div><Stack slices={slices} values={values} /></>;
+  return <><div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}<Pie slices={slices} values={values} /></div><Stack slices={slices} values={values} /></>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
 export function InlineBlocBar({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {

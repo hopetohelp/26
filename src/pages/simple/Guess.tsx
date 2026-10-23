@@ -34,6 +34,7 @@ export default function SimpleGuess() {
     unit.setDraft({ ...rest, mode: "seats", seats: { ...draft.seats, [id]: { ...draft.seats[id], v, src: "manual", locked: draft.seats[id]?.locked ?? false } } });
   };
   useEffect(() => { void session.refresh(); }, [session.refresh]);
+  const hagzaraLogo = hagzara?.logoUrl ?? null;
   const values = Object.fromEntries(IDS.map(id => [id, draft.seats[id]?.v ?? 0]));
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת שלי</h1><SourceBar source={source} />
     <div className="f-grid"><div className="f-card">
@@ -52,7 +53,7 @@ export default function SimpleGuess() {
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}
       <div className="flex justify-end mt-4"><SaveButton unit={unit} session={session} invalid={invalid} compact onSaved={() => setSharing(true)} /></div>
     </div>
-    <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} />
+    <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} />
       <CardDrawer title="ההצבעה שלי" open={voteOpen} onOpenChange={v => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" className="mt-5"><Vote unit={vote} session={session} /></CardDrawer></div></div>
     <FocusFoot />
     {sharing && <ShareCard heading="נשמר! לשתף את הכנסת שלך?" input={{ kind: "mine", values, name: session.me?.username, group: hagzara }} onClose={() => setSharing(false)} />}

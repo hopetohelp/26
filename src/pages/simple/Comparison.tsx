@@ -70,6 +70,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const polls = (id: string) => simpleValue(source.selection, [id]);
   const lists = orderedLists(source.selection, [crowdMeans, groupMeans]);
   const blocValues = member ? groupMeans : crowdMeans;
+  const hagzaraLogo = hagzara?.logoUrl ?? null;
   const voters = member ? group : all;
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת הממוצעת</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
@@ -81,7 +82,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
       <PartyChart selection={source.selection} lists={lists}
         marks={id => member ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
         legend={<><LegendCapsule />{!member && <LegendLine kind="soft" label="ממוצע הסקרים" />}<LegendLine label={`משתתפים${all?.seats ? ` (${all.seats.n})` : ""}`} />{member && <LegendLine kind="dash" label="הגזרה" />}</>} />
-      <div className="f-side"><BlocChart values={blocValues} />
+      <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
     <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף הכנסת הממוצעת</button></div>
