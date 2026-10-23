@@ -14,6 +14,7 @@ describe("מצב פשוט ללא שינוי ביכולות מתקדמות", () =
     expect(requiresAdvanced("/guess", "?view=edit")).toBe(false);
     expect(requiresAdvanced("/community", "")).toBe(false);
     expect(requiresAdvanced("/g/hagzara", "")).toBe(false);
+    expect(requiresAdvanced("/g/another-group", "")).toBe(true);
   });
   it("כל מסלול שמירה חוסם כנסת חלקית, עודפת או מפלגה לא תקינה", () => {
     for (const values of [[119], [121], [1, 119], [3, 117], [4.5, 115.5], [-1, 121], [NaN]]) expect(seatSaveError("seats", payload(values))).not.toBeNull();

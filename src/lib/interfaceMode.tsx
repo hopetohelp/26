@@ -7,6 +7,7 @@ export const INTERFACE_KEY = "elections26.interface";
 /** קישורים ישירים לכלים קיימים פותחים אותם, בלי לשנות את ההעדפה הקבועה. */
 export function requiresAdvanced(path: string, search: string): boolean {
   const q = new URLSearchParams(search);
+  if (path.startsWith("/g/") && path !== "/g/hagzara") return true;
   if (path === "/guess" || path.startsWith("/g/")) return ["section", "g", "t", "f", "unit"].some(k => q.has(k));
   return ["/polls", "/today", "/past", "/changes", "/calculator", "/scenarios", "/forecast", "/trends", "/results", "/accuracy", "/voters"].includes(path);
 }
