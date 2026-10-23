@@ -145,7 +145,9 @@ function FocusClock() {
   return <span className="f-clock" role="timer" aria-label={`עד המדגמים: ${p.days} ימים, ${p.hours} שעות ו-${p.minutes} דקות`}><span aria-hidden="true">⏱</span><b dir="ltr" aria-hidden="true">{p.days}:{two(p.hours)}:{two(p.minutes)}</b></span>;
 }
 function FocusNav({ className }: { className: string }) {
-  return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>{SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"}>{t.label}</NavLink>)}</nav>;
+  const { pathname } = useLocation();
+  // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
+  return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>{SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.label}</NavLink>)}</nav>;
 }
 
 function DesktopNav({ unread }: { unread: boolean }) {
