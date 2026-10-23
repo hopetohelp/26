@@ -2,11 +2,13 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageTitle } from "../components/ui";
 import { call, CrowdError, type GroupPublic } from "../lib/crowdApi";
+import { rememberLinkJoin } from "../lib/linkJoin";
 
 const Guess = lazy(() => import("./Guess"));
 
 /** כניסה אחת לכל ביקור בלשונית, וכניסה "ראשונה" לדפדפן שעוד לא ביקר בקישור הזה. נכשל בשקט — הספירה אינה חוסמת את הדף */
 function recordVisit(slug: string) {
+  rememberLinkJoin(slug);
   let fresh = true;
   try {
     if (sessionStorage.getItem(`g-open:${slug}`)) return;

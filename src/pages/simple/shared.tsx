@@ -6,6 +6,7 @@ import { POLLSTER_LOGOS } from "../../lib/pollsterLogos";
 import { SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, simpleSelection, simpleSpread, simpleValue } from "../../lib/simpleSources";
 import type { Selection } from "../../lib/dataResolver";
 import { seatsFmt } from "../../lib/format";
+import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 
 const SOURCE_KEY = "elections26.simple-source";
 let current = (() => { try { return localStorage.getItem(SOURCE_KEY) ?? "all"; } catch { return "all"; } })();
@@ -58,8 +59,9 @@ function Capsule({ spread }: { spread: [number, number, number, number, number, 
   const w = Math.max(mx - mn, .6), pc = (v: number) => (v - mn) / w * 100;
   const fill = (alpha: (o: number) => string) => `linear-gradient(90deg,transparent 0 ${pc(p10)}%,${alpha(.32)} ${pc(p10)}% ${pc(p25)}%,${alpha(.88)} ${pc(p25)}% ${pc(p75)}%,${alpha(.32)} ${pc(p75)}% ${pc(p90)}%,transparent ${pc(p90)}%)`;
   const mask = fill(o => `rgba(0,0,0,${o})`);
-  // בצבעי הגזרה הגוון נקבע לפי המקום על הציר: אדום במספרים נמוכים, כחול בגבוהים
-  const heat = { background: "linear-gradient(90deg,rgb(var(--heat-lo)),rgb(var(--heat-hi)))", backgroundSize: `${AXIS_MAX / w * 100}% 100%`, backgroundPosition: `${AXIS_MAX - w > 0 ? mn / (AXIS_MAX - w) * 100 : 0}% 0`, WebkitMask: mask, mask };
+  // בצבעי הגזרה כל קפסולה עוברת בעצמה מאדום בהיר לכחול, בדגש על הכחול; מתחת לאחוז החסימה — בעיקר אדום (הכרעת בעלים 23.10.2026)
+  const below = mx < THRESHOLD_SEATS;
+  const heat = { background: below ? "linear-gradient(90deg,rgb(var(--heat-lo)) 0 75%,rgb(var(--heat-hi)))" : "linear-gradient(90deg,rgb(var(--heat-lo)),rgb(var(--heat-hi)) 45%)", WebkitMask: mask, mask };
   return <span className="f-cap" style={{ left: x(mn), width: x(w) }}><i style={heat} /></span>;
 }
 export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };

@@ -90,7 +90,7 @@ async function requireAdmin(env, request) {
 }
 
 async function myGroups(env, participant) {
-  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM groups g JOIN "+GROUP_PEOPLE+" m ON m.group_id = g.id JOIN emails e ON e.hash = m.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM groups g JOIN ("+GROUP_PARTICIPANTS+") m ON m.group_id = g.id LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE m.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
   return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), slug: r.slug ?? null, image: r.image ?? null })));
 }
 
@@ -108,10 +108,22 @@ async function removeManager(env, id, eh) {
   ]);
 }
 
+async function linkMembers(env, id) {
+  const p = await env.DB.prepare("SELECT include_link FROM group_link_policy WHERE group_id = ?").bind(id).first();
+  const on = p?.include_link === 1;
+  const joined = on ? (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_link_joins WHERE group_id = ?").bind(id).first()).n : null;
+  return { group: id, on, joined };
+}
+async function setLinkMembers(env, id, on, now) {
+  if (!(await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
+  await env.DB.prepare("INSERT INTO group_link_policy (group_id, include_link, updated_at) VALUES (?, ?, ?) ON CONFLICT(group_id) DO UPDATE SET include_link = excluded.include_link, updated_at = excluded.updated_at").bind(id, on ? 1 : 0, iso(now)).run();
+  return linkMembers(env, id);
+}
+
 /** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה — רק מ-GROUP_MIN רשומים */
 async function groupStats(env, id, now) {
   const r = await env.DB.prepare(
-    `WITH m AS (SELECT DISTINCT e.participant AS id FROM ${GROUP_PEOPLE} g JOIN emails e ON e.hash = g.email_hash WHERE g.group_id = ? AND e.verified = 1)
+    `WITH m AS (SELECT DISTINCT participant AS id FROM (${GROUP_PARTICIPANTS}) WHERE group_id = ?)
      SELECT COUNT(*) AS registered,
             SUM(CASE WHEN p.created_at >= ? THEN 1 ELSE 0 END) AS today,
             SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'seats')) AS seats,
@@ -275,6 +287,9 @@ export const GROUP_CHUNK = 300;
  * גם אם אינו ברשימה, ורואה את מסך הקבוצה. אותו מייל ברשימה ובמנהלים נספר פעם אחת (UNION).
  */
 const GROUP_PEOPLE = "(SELECT group_id, email_hash FROM group_members UNION SELECT group_id, email_hash FROM group_managers)";
+/** חברי קבוצה לפי חשבון: מייל מאומת ברשימה או של מנהל, ומי שנכנס דרך הקישור — רק כשהמנהל הפעיל זאת (הכרעת בעלים 23.10.2026) */
+const GROUP_PARTICIPANTS = `SELECT m.group_id, e.participant FROM ${GROUP_PEOPLE} m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1
+  UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_policy p ON p.group_id = j.group_id AND p.include_link = 1`;
 /** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
 export const GROUP_MIN = 50;
 function groupId(v) {
@@ -1345,6 +1360,30 @@ const routes = {
     return { ok: true };
   },
 
+  // הצטרפות דרך הקישור (בסשן): נשמר מזהה המשתתף בלבד. נספר כחבר רק אחרי שמנהל הקבוצה הפעיל את המתג
+  "POST /group/link-join": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const slug = typeof body.slug === "string" && SLUG.test(body.slug) ? body.slug : null;
+    const link = slug ? await env.DB.prepare("SELECT group_id FROM group_links WHERE slug = ?").bind(slug).first() : null;
+    if (!link) throw new HttpError(404, "not_found");
+    await env.DB.prepare("INSERT OR IGNORE INTO group_link_joins (group_id, participant, joined_at) VALUES (?, ?, ?)").bind(link.group_id, participant, iso(now)).run();
+    return { ok: true };
+  },
+  // מתג המנהל: לכלול כחברים את מי שנכנס דרך הקישור. כבוי ⇐ מוסתר; מספר המצטרפים מוצג רק כשהמתג פעיל
+  "GET /group/link-members": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return linkMembers(env, id);
+  },
+  "POST /group/link-members": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    return setLinkMembers(env, id, body.on === true, now);
+  },
+  "POST /admin/groups/link-members": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    const id = groupId(body.group);
+    return typeof body.on === "boolean" ? setLinkMembers(env, id, body.on, now) : linkMembers(env, id);
+  },
+
   "GET /admin/groups": async ({ env, request }) => {
     await requireAdmin(env, request);
     // קבוצות שנוצרו לפני שהיה קישור: נקבע להן שם באנגלית מהשם בעברית (פעם אחת; אפשר לשנות בכרטיס)
@@ -1466,7 +1505,7 @@ async function groupDashboards(env, { participants, versions, now, blocNames, de
   }
   return out;
 }
-const GROUP_MEMBERS_SQL = `SELECT DISTINCT m.group_id, e.participant FROM ${GROUP_PEOPLE} m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1`;
+const GROUP_MEMBERS_SQL = `SELECT DISTINCT group_id, participant FROM (${GROUP_PARTICIPANTS})`;
 
 // ---- המשימה השעתית
 const hourOf = (t) => iso(Math.floor(t / HOUR) * HOUR).slice(0, 13);

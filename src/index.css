@@ -649,8 +649,8 @@
 :root { --bloc-1: 59 74 143; --bloc-2: 138 116 64; --bloc-3: 138 79 125; --bloc-4: 46 138 138; --bloc-miss: 185 191 208; --heat-lo: var(--mk-range); --heat-hi: var(--mk-range); }
 [data-dark] { --bloc-1: 143 158 230; --bloc-2: 210 187 125; --bloc-3: 212 150 198; --bloc-4: 111 207 207; --bloc-miss: 74 82 114; }
 /* משתתפי הגזרה: צבעי סמל הקבוצה בכל האתר */
-[data-group="hagzara"] { --signal: 31 95 181; --accent: 31 95 181; --mk-range: 31 95 181; --bloc-1: 31 95 181; --bloc-2: 123 135 148; --bloc-3: 183 194 207; --bloc-4: 225 38 45; --heat-lo: 225 38 45; --heat-hi: 31 95 181; }
-[data-group="hagzara"][data-dark] { --signal: 111 163 236; --signal-ink: 16 18 22; --accent: 111 163 236; --mk-range: 111 163 236; --bloc-1: 111 163 236; --bloc-2: 154 168 184; --bloc-3: 93 107 124; --bloc-4: 255 90 95; --heat-lo: 255 90 95; --heat-hi: 111 163 236; }
+[data-group="hagzara"] { --signal: 31 95 181; --accent: 31 95 181; --mk-range: 31 95 181; --bloc-1: 31 95 181; --bloc-2: 123 135 148; --bloc-3: 183 194 207; --bloc-4: 240 110 116; --heat-lo: 244 128 133; --heat-hi: 31 95 181; }
+[data-group="hagzara"][data-dark] { --signal: 111 163 236; --signal-ink: 16 18 22; --accent: 111 163 236; --mk-range: 111 163 236; --bloc-1: 111 163 236; --bloc-2: 154 168 184; --bloc-3: 93 107 124; --bloc-4: 255 140 145; --heat-lo: 255 150 155; --heat-hi: 111 163 236; }
 .f-bar { position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgb(var(--paper) / .85);backdrop-filter:blur(12px); }
 .f-logo { font-family:var(--font-display);font-size:20px;white-space:nowrap;color:rgb(var(--ink));text-decoration:none;display:flex;align-items:center;gap:6px; }
 .f-logo img { width:28px;height:28px;border-radius:50%; }

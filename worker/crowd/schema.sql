@@ -284,6 +284,20 @@ CREATE TABLE IF NOT EXISTS group_visits (
   fresh INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (group_id, day)
 );
+-- הצטרפות דרך קישור הקבוצה (הכרעת בעלים 23.10.2026): חשבון שנכנס דרך הקישור נרשם כאן (מזהה משתתף, בלי מייל),
+-- ונספר כחבר רק אחרי שמנהל הקבוצה הפעיל את המתג. עד אז הרישום שמור ואינו משפיע על דבר.
+CREATE TABLE IF NOT EXISTS group_link_joins (
+  group_id TEXT NOT NULL,
+  participant TEXT NOT NULL,
+  joined_at TEXT NOT NULL,
+  PRIMARY KEY (group_id, participant)
+);
+CREATE INDEX IF NOT EXISTS group_link_joins_participant ON group_link_joins(participant);
+CREATE TABLE IF NOT EXISTS group_link_policy (
+  group_id TEXT PRIMARY KEY,
+  include_link INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL
+);
 -- אישור אוטומטי (הכרעת בעלים 12.10.2026): השערת מנדטים שנמצאה תקינה — בשמירה, או כשנכנסה לטווח הסקרים — מאושרת לצמיתות
 -- ולא חוזרת להמתנה. נפרד מ-version_review (אישור ודחייה ידניים), כדי שבממשק הניהול היא תוצג כ"תקינה" ולא כ"אושרה".
 CREATE TABLE IF NOT EXISTS version_accepted (
