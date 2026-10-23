@@ -1,3 +1,4 @@
+import { seatSaveError } from "../../lib/seatSaveGuard";
 import { synchronizeOwnedSource, clearSourceAccount, syncSourcePreference } from "../../lib/sourcePreference";
 /** מצב ההשתתפות בדפדפן: אסימון, מצב המשתתף מהשרת, וטיוטה+שמירה לכל יחידה. */
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -54,7 +55,7 @@ const LINEAGE_KEY = "elections26.lineage";
 export async function syncLocal(token: string): Promise<void> {
   for (const unit of ["seats", "blocs", "vote"] as Unit[]) {
     const draft = S.loadDraft<Payload>(unit);
-    if (!draft || JSON.stringify(draft) === JSON.stringify(S.loadSaved(unit))) continue;
+    if (!draft || seatSaveError(unit, draft) || JSON.stringify(draft) === JSON.stringify(S.loadSaved(unit))) continue;
     try {
       await call("/save", { token, body: { unit, op_id: S.opIdFor(unit, draft), registry: meta.dataAsOf, payload: draft } });
       S.clearPending(unit);
@@ -155,7 +156,8 @@ export const errorText = (e: unknown): string => {
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
 /** טיוטה ביחידה אחת: נשמרת בדפדפן עד שמירה, עם מצב (טיוטה / נשמר / שינויים שלא נשמרו) */
-export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote?: P) {
+export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote?: P, options: { exitSave?: boolean } = {}) {
+  const exitSave = options.exitSave !== false;
   const [draft, setDraftState] = useState<P | null>(() => S.loadDraft<P>(unit) ?? S.loadSaved<P>(unit) ?? initial);
   const [saved, setSavedState] = useState<P | null>(() => S.loadSaved<P>(unit));
   const [state, setState] = useState<SaveState>("idle");
@@ -171,7 +173,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       else S.saveDraft(unit, p);
       // נשמר בלחיצה על "שמירה" או ביציאה מהמסך (flushPending) — לא בזמן העריכה
       window.clearTimeout(timer.current);
-      if (p === null || same(p, S.loadSaved(unit))) return setExitSave(unit, null);
+      if (p === null || !exitSave || seatSaveError(unit, p) || same(p, S.loadSaved(unit))) return setExitSave(unit, null);
       let tries = 0;
       const send = () => {
         setExitSave(unit, null);
@@ -187,7 +189,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
       // בלי חשבון — נשאר בדפדפן בלבד; עולה לחשבון בהרשמה (syncLocal)
       setExitSave(unit, S.getToken() ? send : null);
     },
-    [unit],
+    [unit, exitSave],
   );
   useEffect(() => {
     const sync = () => {
@@ -222,6 +224,8 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
   const save = useCallback(
     async (token: string, payload: P | null = draft) => {
       if (!payload) return false;
+      const invalid = seatSaveError(unit, payload);
+      if (invalid) { setError(invalid); return false; }
       setState("saving");
       setError(null);
       setErrorLog(null);

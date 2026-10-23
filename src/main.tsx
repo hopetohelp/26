@@ -1,3 +1,6 @@
+import { useInterface } from "./lib/interfaceMode";
+import SimpleOverview from "./pages/simple/Overview";
+import SimpleComparison from "./pages/simple/Comparison";
 import { SHOW_MODEL } from "./lib/modelVisibility";
 import { useSearchParams as useCalculatorParams, Navigate as CalculatorRedirect } from "react-router-dom";
 import { StrictMode, Suspense, lazy } from "react";
@@ -106,7 +109,7 @@ createRoot(document.getElementById("root")!).render(
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<ModeHome />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<Tabbed label="סקרים" tabs={[
@@ -180,9 +183,11 @@ function LegacyGuess() {
 }
 
 function LegacyCommunity() {
+  const { advanced } = useInterface();
   const [params] = useCalculatorParams();
   const next = new URLSearchParams(params);
   next.set("view", "statistics");
+  if (!advanced) return <SimpleComparison />;
   return <CalculatorRedirect replace to={`/guess?${next}`} />;
 }
 
@@ -192,4 +197,9 @@ function LegacyToday() {
   const scenarios = ["scenarios", "forecast"].includes(next.get("tab") ?? "");
   next.delete("tab");
   return <CalculatorRedirect replace to={`${scenarios ? "/scenarios" : "/polls"}${next.size ? `?${next}` : ""}`} />;
+}
+
+function ModeHome() {
+  const { advanced } = useInterface();
+  return advanced ? <Home /> : <SimpleOverview />;
 }

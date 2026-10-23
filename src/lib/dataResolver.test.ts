@@ -109,3 +109,33 @@ describe('ממוצע אישי — אין זליגת מכונים שלא נבחר
     }
   });
 });
+
+describe("ממוצע שני ערוצים לפי מזמין", () => {
+  const selection = { product: "polls.mean" as const, publishers: ["Channel 14", "i24 News"] };
+  it("מבודד את הערוצים גם כשמכון סוקר למזמין אחר, ושומר את כלל הסקרים", () => {
+    const p = provider([
+      poll("14", { a: { s: 30 }, b: { s: 90 } }, "Same", "Channel 14"),
+      poll("24", { a: { s: 50 }, b: { s: 70 } }, "Same", "i24 News"),
+      poll("other", { a: { s: 100 }, b: { s: 20 } }, "Same", "Other"),
+      poll("old14", { a: { s: 90 } }, "Same", "Channel 14", "2026-10-01"),
+    ]);
+    const selected = p.resolveData(selection, ["a"], "community");
+    expect(selected.value).toBe(40);
+    expect(selected.inputRefs.sort()).toEqual(["14", "24"]);
+    expect(p.resolveData({ product: "polls.mean" }, ["a"]).value).toBe(60);
+    expect(selected.evidenceId).not.toBe(p.resolveData({ product: "polls.mean" }, ["a"]).evidenceId);
+    expect(p.resolveData(selection, ["a", "b"]).value).toBe(120);
+    expect(p.resolveData({ ...selection, publishers: [] }, ["a"]).status).toBe("missing");
+  });
+  it("ערוץ יחיד זמין נשאר יחיד; סקר מחוץ לחלון לא מחליף קלט חסר", () => {
+    const p = provider([poll("14", { a: { s: 30 } }, "A", "Channel 14"), poll("24old", { a: { s: 90 } }, "B", "i24 News", "2026-09-01")]);
+    expect(p.resolveData(selection, ["a"]).value).toBe(30);
+    expect(p.resolveData(selection, ["a", "b"]).value).toBe(30);
+    expect(p.resolveData({ ...selection, publishers: ["i24 News"] }, ["a"]).value).toBeNull();
+  });
+  it("בחירת מכון מאחדת סדרות גם כשהקטלוג מכיל סדרה אחת", () => {
+    const p = provider([poll("only", { a: { s: 31 } }, "Solo", "Other")]);
+    expect(p.resolveData({ product: "poll.single", source: "firm:Solo" }, ["a"]).value).toBe(31);
+    expect(p.resolveData({ product: "poll.single", source: "firm:unknown" }, ["a"]).value).toBeNull();
+  });
+});

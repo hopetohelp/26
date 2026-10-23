@@ -1,3 +1,6 @@
+import { useInterface } from "../lib/interfaceMode";
+import SimpleGuess from "./simple/Guess";
+import SimpleComparison from "./simple/Comparison";
 import GuessWorkspace from "./guess/Workspace";
 import SaveButton from "./guess/SaveButton";
 import { canViewCommunity } from "./guess/stage";
@@ -21,6 +24,13 @@ import { errorText, useSession, useUnit } from "./guess/useCrowd";
 
 /** landing = קבוצה שהגולש הגיע אליה בקישור שלה (#/g/…): סקר האתר נפתח עליה */
 export default function Guess({ landing = null }: { landing?: GroupPublic | null }) {
+  const { advanced, setLanding, landing: rememberedLanding } = useInterface();
+  const [params] = useSearchParams();
+  useEffect(() => { if (landing) setLanding(landing); }, [landing, setLanding]);
+  if (!advanced) return landing || params.get("view") === "statistics" ? <SimpleComparison landing={landing} /> : <SimpleGuess />;
+  return <AdvancedGuess landing={landing ?? rememberedLanding} />;
+}
+function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
   const navigate = useNavigate();
   const session = useSession();
   const [params, setParams] = useSearchParams();
