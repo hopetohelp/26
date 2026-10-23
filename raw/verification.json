@@ -2303,5 +2303,63 @@
    "sample_respondents": null
   },
   "status": "unreachable"
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-23",
+  "id": "2026-10-22-kantar-israel-hayom",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "כיפה: מנדטי 12 הרשימות (סך 120). לא הושווה לפרסום הראשוני (ישראל היום חסום לסריקה, 403); מכון, מדגם ותאריכי שדה לא אומתו.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234436-0/",
+  "sourceDetails": {
+   "published": "2026-10-22T18:14:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1234436-0/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-23",
+  "id": "2026-10-22-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "כיפה: מנדטי 13 הרשימות (סך 120). לא הושווה לפרסום הראשוני; מכון, מדגם, תאריכי שדה ואחוזים מתחת לחסימה לא אומתו.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/%D7%A4%D7%95%D7%9C%D7%99%D7%98%D7%99/1234448-0/",
+  "sourceDetails": {
+   "published": "2026-10-22T20:55:00+03:00"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/%D7%A4%D7%95%D7%9C%D7%99%D7%98%D7%99/1234448-0/"
+   }
+  }
  }
 ]
