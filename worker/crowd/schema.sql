@@ -293,6 +293,20 @@ CREATE TABLE IF NOT EXISTS group_link_joins (
   PRIMARY KEY (group_id, participant)
 );
 CREATE INDEX IF NOT EXISTS group_link_joins_participant ON group_link_joins(participant);
+-- מי שהקישור היה הכניסה הראשונה שלו לאתר (הדפדפן לא ביקר קודם), ומתגי המנהל לכל אחד משני הסוגים: all / first
+CREATE TABLE IF NOT EXISTS group_link_first (
+  group_id TEXT NOT NULL,
+  participant TEXT NOT NULL,
+  PRIMARY KEY (group_id, participant)
+);
+CREATE TABLE IF NOT EXISTS group_link_flags (
+  group_id TEXT NOT NULL,
+  flag TEXT NOT NULL,
+  on_ INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY (group_id, flag)
+);
+-- (הוחלף ב-group_link_flags; נשאר ריק)
 CREATE TABLE IF NOT EXISTS group_link_policy (
   group_id TEXT PRIMARY KEY,
   include_link INTEGER NOT NULL DEFAULT 0,

@@ -108,15 +108,24 @@ async function removeManager(env, id, eh) {
   ]);
 }
 
+/** שני המתגים עם מספר עדכני לכל אחד, כמה מרשימת המיילים מחוברים, וכמה חשבונות באתר בכלל.
+ *  מספרי הקבוצה מוצגים רק מ-GROUP_MIN (כמו המספרים למנהל): ברשימה קטנה מספר מדויק היה מגלה אם אדם מסוים נרשם. */
 async function linkMembers(env, id) {
-  const p = await env.DB.prepare("SELECT include_link FROM group_link_policy WHERE group_id = ?").bind(id).first();
-  const on = p?.include_link === 1;
-  const joined = on ? (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_link_joins WHERE group_id = ?").bind(id).first()).n : null;
-  return { group: id, on, joined };
+  const r = await env.DB.prepare(
+    `SELECT (SELECT on_ FROM group_link_flags WHERE group_id = ?1 AND flag = 'all') AS all_on,
+            (SELECT on_ FROM group_link_flags WHERE group_id = ?1 AND flag = 'first') AS first_on,
+            (SELECT COUNT(*) FROM group_link_joins WHERE group_id = ?1) AS all_n,
+            (SELECT COUNT(*) FROM group_link_first WHERE group_id = ?1) AS first_n,
+            (SELECT COUNT(DISTINCT e.participant) FROM group_members m JOIN emails e ON e.hash = m.email_hash WHERE m.group_id = ?1 AND e.verified = 1) AS list_n,
+            (SELECT COUNT(*) FROM participants p WHERE EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS site_n`,
+  ).bind(id).first();
+  const shown = (n) => (n >= GROUP_MIN ? n : null);
+  return { group: id, min: GROUP_MIN, all: { on: r.all_on === 1, count: shown(r.all_n) }, first: { on: r.first_on === 1, count: shown(r.first_n) }, list: shown(r.list_n), site: r.site_n };
 }
-async function setLinkMembers(env, id, on, now) {
+async function setLinkMembers(env, id, flag, on, now) {
+  if (flag !== "all" && flag !== "first") throw bad("flag");
   if (!(await env.DB.prepare("SELECT 1 AS x FROM groups WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
-  await env.DB.prepare("INSERT INTO group_link_policy (group_id, include_link, updated_at) VALUES (?, ?, ?) ON CONFLICT(group_id) DO UPDATE SET include_link = excluded.include_link, updated_at = excluded.updated_at").bind(id, on ? 1 : 0, iso(now)).run();
+  await env.DB.prepare("INSERT INTO group_link_flags (group_id, flag, on_, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(group_id, flag) DO UPDATE SET on_ = excluded.on_, updated_at = excluded.updated_at").bind(id, flag, on ? 1 : 0, iso(now)).run();
   return linkMembers(env, id);
 }
 
@@ -289,7 +298,8 @@ export const GROUP_CHUNK = 300;
 const GROUP_PEOPLE = "(SELECT group_id, email_hash FROM group_members UNION SELECT group_id, email_hash FROM group_managers)";
 /** חברי קבוצה לפי חשבון: מייל מאומת ברשימה או של מנהל, ומי שנכנס דרך הקישור — רק כשהמנהל הפעיל זאת (הכרעת בעלים 23.10.2026) */
 const GROUP_PARTICIPANTS = `SELECT m.group_id, e.participant FROM ${GROUP_PEOPLE} m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1
-  UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_policy p ON p.group_id = j.group_id AND p.include_link = 1`;
+  UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'all' AND f.on_ = 1
+  UNION SELECT j.group_id, j.participant FROM group_link_first j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'first' AND f.on_ = 1`;
 /** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
 export const GROUP_MIN = 50;
 function groupId(v) {
@@ -1367,6 +1377,8 @@ const routes = {
     const link = slug ? await env.DB.prepare("SELECT group_id FROM group_links WHERE slug = ?").bind(slug).first() : null;
     if (!link) throw new HttpError(404, "not_found");
     await env.DB.prepare("INSERT OR IGNORE INTO group_link_joins (group_id, participant, joined_at) VALUES (?, ?, ?)").bind(link.group_id, participant, iso(now)).run();
+    // first: הקישור היה הכניסה הראשונה של הדפדפן לאתר (הלקוח זוכר)
+    if (body.first === true) await env.DB.prepare("INSERT OR IGNORE INTO group_link_first (group_id, participant) VALUES (?, ?)").bind(link.group_id, participant).run();
     return { ok: true };
   },
   // מתג המנהל: לכלול כחברים את מי שנכנס דרך הקישור. כבוי ⇐ מוסתר; מספר המצטרפים מוצג רק כשהמתג פעיל
@@ -1376,12 +1388,12 @@ const routes = {
   },
   "POST /group/link-members": async ({ env, request, now, body }) => {
     const id = await requireManager(env, request, now, body.group);
-    return setLinkMembers(env, id, body.on === true, now);
+    return setLinkMembers(env, id, body.flag, body.on === true, now);
   },
   "POST /admin/groups/link-members": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
     const id = groupId(body.group);
-    return typeof body.on === "boolean" ? setLinkMembers(env, id, body.on, now) : linkMembers(env, id);
+    return typeof body.on === "boolean" ? setLinkMembers(env, id, body.flag, body.on, now) : linkMembers(env, id);
   },
 
   "GET /admin/groups": async ({ env, request }) => {

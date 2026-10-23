@@ -236,22 +236,32 @@ describe("clearing all group members (הכרעת בעלים 12.10.2026)", () => 
   });
 });
 
-// הצטרפות דרך הקישור (הכרעת בעלים 23.10.2026): נרשמת תמיד, נספרת רק אחרי שהמנהל מפעיל
+// הצטרפות דרך הקישור (הכרעת בעלים 23.10.2026): נרשמת תמיד, נספרת רק אחרי שהמנהל מפעיל אחד משני המתגים
 describe("members through the group link", () => {
-  it("count only after the manager turns it on, retroactively, and only for managers", async () => {
+  it("two switches, counted only when on, retroactively, and only for managers", async () => {
     await create();
     const boss = await managerToken();
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
-    const guest = (await call("/auth/register", { body: { email: "guest@x.co", password: "a long pass phrase" } })).data.token;
-    expect((await call("/group/link-join", { token: guest, body: { slug: "hagzara" } })).status).toBe(200);
-    expect((await call("/group/link-join", { token: guest, body: { slug: "nope-nope" } })).status).toBe(404);
+    const reg = async (email) => (await call("/auth/register", { body: { email, password: "a long pass phrase" } })).data.token;
+    const old = await reg("old@x.co"), fresh = await reg("new@x.co");
+    expect((await call("/group/link-join", { token: old, body: { slug: "hagzara" } })).status).toBe(200);
+    expect((await call("/group/link-join", { token: fresh, body: { slug: "hagzara", first: true } })).status).toBe(200);
+    expect((await call("/group/link-join", { token: old, body: { slug: "nope-nope" } })).status).toBe(404);
     expect((await call("/group/link-join", { body: { slug: "hagzara" } })).status).toBe(401);
-    expect((await call("/me", { token: guest })).data.groups).toEqual([]);
-    expect((await call("/group/link-members?group=gizra", { token: boss })).data).toMatchObject({ on: false, joined: null });
-    expect((await call("/group/link-members", { token: guest, body: { group: "gizra", on: true } })).status).toBe(403);
-    expect((await call("/group/link-members", { token: boss, body: { group: "gizra", on: true } })).data).toMatchObject({ on: true, joined: 1 });
-    expect((await call("/me", { token: guest })).data.groups.map((g) => g.id)).toEqual(["gizra"]);
-    await call("/group/link-members", { token: boss, body: { group: "gizra", on: false } });
-    expect((await call("/me", { token: guest })).data.groups).toEqual([]);
+    const ids = async (t) => (await call("/me", { token: t })).data.groups.map((g) => g.id);
+    expect(await ids(old)).toEqual([]);
+    const st = (await call("/group/link-members?group=gizra", { token: boss })).data;
+    expect(st).toMatchObject({ all: { on: false, count: null }, first: { on: false, count: null }, list: null });
+    expect(st.site).toBeGreaterThanOrEqual(3);
+    expect((await call("/group/link-members", { token: old, body: { group: "gizra", flag: "first", on: true } })).status).toBe(403);
+    expect((await call("/group/link-members", { token: boss, body: { group: "gizra", flag: "bogus", on: true } })).status).toBe(400);
+    await call("/group/link-members", { token: boss, body: { group: "gizra", flag: "first", on: true } });
+    expect(await ids(fresh)).toEqual(["gizra"]);
+    expect(await ids(old)).toEqual([]);
+    await call("/group/link-members", { token: boss, body: { group: "gizra", flag: "all", on: true } });
+    expect(await ids(old)).toEqual(["gizra"]);
+    await call("/group/link-members", { token: boss, body: { group: "gizra", flag: "all", on: false } });
+    await call("/group/link-members", { token: boss, body: { group: "gizra", flag: "first", on: false } });
+    expect(await ids(fresh)).toEqual([]);
   });
 });
