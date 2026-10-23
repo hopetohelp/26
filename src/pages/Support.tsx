@@ -198,7 +198,9 @@ export default function Support() {
   useSupportUnread("/");
   // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
   const ask = useSearchParams()[0].has("ask");
-  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(token || ask ? [] : ["details"]));
+  const groupsLink = useSearchParams()[0].has("groups");
+  // קישור ישיר למנהל קבוצה (#/support?groups): פותח את "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
+  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(groupsLink ? (token ? ["groups"] : ["details"]) : token || ask ? [] : ["details"]));
   const toggle = (id: DrawerId) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   useEffect(() => { if (me?.needsEmail) setOpen((s) => new Set(s).add("details")); }, [me?.needsEmail]);
   const blocked = useServerBlocked();
