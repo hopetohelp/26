@@ -41,7 +41,8 @@ try {
     await page.close();
   }
   // חברות ושמירה מול שרת מדומה בלבד: אין אסימון או כתיבה לחשבון אמיתי.
-  const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+  // בלי קובץ השירות של האתר (public/sw.js): הוא היה מחזיר את העותק האמיתי של הנתונים ועוקף את השרת המדומה.
+  const page = await browser.newPage({ viewport: { width: 390, height: 900 }, serviceWorkers: 'block' });
   await page.addInitScript(() => localStorage.setItem('elections26.crowd.token', 'test-session-only'));
   let member = true, below = false, saves = 0;
   const group = { id: 'gy7lelpbo', slug: 'hagzara', name: 'הגזרה', image: null };
@@ -70,7 +71,10 @@ try {
   await page.goto(`${base}/#/community`);
   await page.waitForFunction(() => document.querySelector('table thead tr')?.children.length === 4);
   const row = page.locator('table').first().locator('tbody tr').filter({ hasText: 'הליכוד' }).first();
-  assert.equal((await row.locator('td').allTextContents()).slice(-2).join(','), '23,17');
+  const lastTwo = async () => (await row.locator('td').allTextContents()).slice(-2).join(',');
+  // נתוני הגזרה נטענים אחרי הטבלה: ממתינים לערך ולא קוראים מיד.
+  for (let i = 0; i < 50 && await lastTwo() !== '23,17'; i++) await page.waitForTimeout(100);
+  assert.equal(await lastTwo(), '23,17');
   await page.screenshot({ path: 'minimal-check/member.png', fullPage: true });
   below = true;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
