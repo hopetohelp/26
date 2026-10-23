@@ -97,7 +97,8 @@ function Masthead() {
   const { advanced, toggle } = useInterface();
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
-      {advanced && <div className="flex justify-end px-4 md:px-6 pt-1"><button type="button" onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">לתצוגה הממוקדת</button></div>}
+      {/* בטלפון בשורה נפרדת; כשיש מקום — באותה שורה של הכותרת */}
+      {advanced && <div className="flex md:hidden justify-end px-4 pt-1"><button type="button" onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">לתצוגה הממוקדת</button></div>}
       <div className="c-masthead-row w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
         <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
           <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
@@ -110,6 +111,7 @@ function Masthead() {
         <ExitPollClock bar />
         {/* בורר הממוצע של המסך הפתוח (SourcePicker נכנס לכאן); ריק במסכים בלי בחירת מקור */}
         <div id={MASTHEAD_SLOT} className="c-masthead-source empty:hidden" />
+        {advanced && <button type="button" onClick={toggle} className="hidden md:inline-flex items-center shrink-0 min-h-[40px] rounded-full border border-frame-line px-3 text-sm font-bold whitespace-nowrap">לתצוגה הממוקדת</button>}
         <ModePicker />
       </div>
     </div>
