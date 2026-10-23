@@ -40,5 +40,45 @@ try {
     assert.deepEqual(errors, []);
     await page.close();
   }
+  // חברות ושמירה מול שרת מדומה בלבד: אין אסימון או כתיבה לחשבון אמיתי.
+  const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+  await page.addInitScript(() => localStorage.setItem('elections26.crowd.token', 'test-session-only'));
+  let member = true, below = false, saves = 0;
+  const group = { id: 'gy7lelpbo', slug: 'hagzara', name: 'הגזרה', image: null };
+  const dashboard = (value) => ({ participants: 12, open: true, publishedAt: '2026-10-23T09:00:00Z', blocs: { fixed: [] }, seats: { n: 12, full: [{ list: 'likud', mean: value }], polls: {}, everPassedLists: ['likud'] } });
+  await page.route('**/*', async route => {
+    const url = new URL(route.request().url());
+    const reply = (data, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(data) });
+    if (url.pathname.endsWith('/me')) return reply({ participant: 'test', latest: {}, verified: true, groups: member ? [group] : [] });
+    if (url.pathname.endsWith('/save')) { saves++; return reply({ ok: true }); }
+    if (url.pathname.endsWith('/dashboard') || url.pathname.endsWith('/dashboard.json')) {
+      if (url.searchParams.has('group')) return member ? reply(below ? { group: group.id, belowMin: true, min: 5, participants: 2 } : { ...dashboard(17), group: group.id, min: 5 }) : reply({ error: 'forbidden' }, 403);
+      return reply(dashboard(23));
+    }
+    if (url.hostname.endsWith('.workers.dev') || !['GET', 'HEAD'].includes(route.request().method())) return reply({});
+    return route.continue();
+  });
+  await page.goto(`${base}/#/guess`);
+  const input = page.getByRole('textbox', { name: /^מנדטים ל/ }).first();
+  await input.fill('119'); await input.blur();
+  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
+  assert.equal(saves, 0);
+  await input.fill('120'); await input.blur();
+  await page.getByRole('button', { name: 'שמירה', exact: true }).click();
+  await page.getByRole('button', { name: 'נשמר', exact: true }).waitFor();
+  assert.equal(saves, 1);
+  await page.goto(`${base}/#/community`);
+  await page.waitForFunction(() => document.querySelector('table thead tr')?.children.length === 4);
+  const row = page.locator('table').first().locator('tbody tr').filter({ hasText: 'הליכוד' }).first();
+  assert.equal((await row.locator('td').allTextContents()).slice(-2).join(','), '23,17');
+  await page.screenshot({ path: 'minimal-check/member.png', fullPage: true });
+  below = true;
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await page.getByText('נתוני הגזרה יוצגו אחרי', { exact: false }).waitFor();
+  assert.equal(await row.locator('td').last().textContent(), '0');
+  member = false;
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await page.waitForFunction(() => document.querySelector('table thead tr')?.children.length === 3);
+  await page.close();
   console.log('בדיקות מסך פשוט: ארבעה רוחבים, יום ולילה, 119/120/121 ושחזור טיוטה עברו.');
 } finally { await browser.close(); }
