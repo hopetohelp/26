@@ -11,8 +11,14 @@ import { date } from "../lib/format";
 import { useMode, type ModeId } from "../lib/theme";
 import { PAGES } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
-import ExitPollClock from "./ExitPollClock";
+import ExitPollClock, { clockParts } from "./ExitPollClock";
+import { wallClockLeft } from "../lib/countdown";
+import { LOCK_AT } from "../pages/guess/model";
 import { MASTHEAD_SLOT } from "./SourcePicker";
+import { useSession } from "../pages/guess/useCrowd";
+import { useHagzaraTheme } from "../pages/simple/hagzara";
+import { refImageUrl } from "../lib/groupLink";
+import { HAGZARA_GROUP_ID } from "../lib/simpleSources";
 
 const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "הכנסת הממוצעת", icon: "bars" }];
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
@@ -93,7 +99,7 @@ function Masthead() {
   const { advanced, toggle } = useInterface();
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
-      {advanced && <div className="flex justify-end px-4 md:px-6 pt-1"><button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">מתקדם <span aria-hidden="true">{advanced ? "✓" : "○"}</span></button></div>}
+      {advanced && <div className="flex justify-end px-4 md:px-6 pt-1"><button type="button" onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">לתצוגה הממוקדת</button></div>}
       <div className="c-masthead-row w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
         <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
           <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
@@ -103,14 +109,43 @@ function Masthead() {
             <ElectionDate />
           </p>
         </div>
-        {advanced && <ExitPollClock bar />}
+        <ExitPollClock bar />
         {/* בורר הממוצע של המסך הפתוח (SourcePicker נכנס לכאן); ריק במסכים בלי בחירת מקור */}
         <div id={MASTHEAD_SLOT} className="c-masthead-source empty:hidden" />
-        {!advanced && <button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">מתקדם <span aria-hidden="true">{advanced ? "✓" : "○"}</span></button>}
         <ModePicker />
       </div>
     </div>
   );
+}
+
+/**
+ * התצוגה הממוקדת (הכרעות בעלים 23.10.2026): פס דק — שם האתר (וסמל הגזרה לחבריה), שעון העצר, "יש שאלה?" ו"למחקר מתקדם".
+ * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
+ */
+function FocusBar({ logo }: { logo: string | null }) {
+  // חברי הגזרה: הסמל במחשב ובטאבלט, השם בטלפון (הכרעת בעלים 23.10.2026)
+  const { toggle } = useInterface();
+  return <div className="f-bar">
+    <NavLink to="/" className="f-logo">{logo && <><img src={logo} alt="הגזרה" className="f-glogo" /><span className="f-gname">הגזרה ·</span></>}בחירות 26</NavLink>
+    <FocusClock />
+    <FocusNav className="f-nav-top" />
+    <span className="flex-1" />
+    <Link to="/support" className="f-btn f-ask" aria-label="יש שאלה?"><span className="t">יש שאלה?</span><span className="q" aria-hidden="true">?</span></Link>
+    <button type="button" onClick={toggle} className="f-btn pri">למחקר מתקדם</button>
+    <span className="f-mode"><ModePicker /></span>
+  </div>;
+}
+/** שעון העצר עד המדגמים, קומפקטי: ימים:שעות:דקות */
+function FocusClock() {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 15_000); return () => clearInterval(t); }, []);
+  const p = clockParts(wallClockLeft(LOCK_AT, now));
+  const two = (n: number) => String(n).padStart(2, "0");
+  if (!p) return <span className="f-clock">המדגמים פורסמו</span>;
+  return <span className="f-clock" role="timer" aria-label={`עד המדגמים: ${p.days} ימים, ${p.hours} שעות ו-${p.minutes} דקות`}><span aria-hidden="true">⏱</span><b dir="ltr" aria-hidden="true">{p.days}:{two(p.hours)}:{two(p.minutes)}</b></span>;
+}
+function FocusNav({ className }: { className: string }) {
+  return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>{SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"}>{t.label}</NavLink>)}</nav>;
 }
 
 function DesktopNav({ unread }: { unread: boolean }) {
@@ -184,6 +219,10 @@ function LayoutBody() {
   const { advanced } = useInterface();
   const { pathname, hash } = useLocation();
   const unread = useSupportUnread(pathname);
+  const session = useSession();
+  const hagzara = useHagzaraTheme(session);
+  const group = session.me?.groups?.find(g => g.id === HAGZARA_GROUP_ID);
+  const logo = hagzara && group ? refImageUrl(group) : null;
   useEffect(() => {
     // קישור לעוגן (למשל /method#model מהעוזר או מ"איך זה חושב?") — המסך מגלל לערך בעצמו; לא מחזירים לראש העמוד
     if (!hash) window.scrollTo(0, 0);
@@ -198,15 +237,15 @@ function LayoutBody() {
         דילוג לתוכן
       </a>
       {/* במחשב הסרגל העליון תמיד גלוי (הכרעת בעלים 8.10.2026) */}
-      <header className="md:sticky md:top-0 md:z-40">
+      {advanced ? <header className="md:sticky md:top-0 md:z-40">
         <Masthead />
         <DesktopNav unread={unread} />
-      </header>
+      </header> : <header className="sticky top-0 z-40"><FocusBar logo={logo} /></header>}
       <AccessCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      <MobileTabs unread={unread} />
+      {advanced ? <MobileTabs unread={unread} /> : <FocusNav className="f-nav-bottom" />}
       {advanced && <GuessCta pathname={pathname} />}
     </div>
   );

@@ -1,30 +1,36 @@
 import { useEffect, useState } from "react";
-import { Card, PageTitle } from "../../components/ui";
-import Explained from "../../components/Explained";
-import GroupBanner from "../../components/GroupBanner";
-import { call, CrowdError, type Dashboard, type GroupDashboard, type GroupPublic } from "../../lib/crowdApi";
+import { Link } from "react-router-dom";
+import { call, CrowdError, type Dashboard, type GroupDashboard, type GroupPublic, type SeatsPayload } from "../../lib/crowdApi";
+import { seatsSum, validateSeats } from "../../lib/crowdValidate";
 import { useInterface } from "../../lib/interfaceMode";
 import { HAGZARA_GROUP_ID, simpleValue } from "../../lib/simpleSources";
 import { useCrowdDashboard } from "../../lib/sources";
 import { SAVED_EVENT } from "../../lib/outbox";
-import { DEFAULT_BLOCS, IDS } from "../guess/model";
-import { useSession } from "../guess/useCrowd";
+import { IDS, startSeats } from "../guess/model";
+import { useSession, useUnit } from "../guess/useCrowd";
 import { Notice } from "../guess/ui";
-import { blankDashboard } from "../../lib/groupBlank";
-import { PartyName, PollExplanation, SimpleFooter, SimpleSourcePicker, SimpleTable, number, useSimpleSource } from "./shared";
-import { date } from "../../lib/format";
-const keyOf = (ids: string[]) => [...new Set(ids)].sort().join(",");
-/** מזהים הרכב, לא שם או מיקום. האגרגציה הקיימת בשרת כבר מסכמת את הגושים מכל ההשערות. */
-export function fixedBlocValue(d: Dashboard | null, lists: string[]) {
-  return d?.blocs?.fixed?.find(b => keyOf(b.lists) === keyOf(lists))?.stat?.mean ?? null;
-}
-export default function Comparison({ landing: direct = null }: { landing?: GroupPublic | null }) {
+import { VotingStats } from "../guess/Dashboard";
+import CardDrawer from "../../components/CardDrawer";
+import { BlocChart, FocusFoot, InlineBlocBar, LegendCapsule, LegendLine, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
+import ShareCard from "./ShareCard";
+import { useHagzara } from "./hagzara";
+
+const meansOf = (d: Dashboard | null | undefined) => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, r.mean]));
+const EMPTY = startSeats("zero");
+/** הכנסת הממוצעת: נפתחת אחרי שמירת הכנסת שלך במלואה. ממוצע המשתתפים, ולחברי הגזרה — הגזרה במקום ממוצע הסקרים. */
+export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const session = useSession();
-  const { landing, setLanding } = useInterface();
-  const source = useSimpleSource();
+  const { setLanding } = useInterface();
+  const source = useSimpleSource(true);
   const crowd = useCrowdDashboard();
+  const hagzara = useHagzara(session);
   const member = session.me?.groups?.find(g => g.id === HAGZARA_GROUP_ID);
+  const seats = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
+  const mine = seats.draft ?? EMPTY;
+  const unlocked = seats.status === "saved" && !validateSeats(mine, IDS);
   const [result, setResult] = useState<{ token: string; data: GroupDashboard | null; failed: boolean } | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [votersOpen, setVotersOpen] = useState(false);
   const allowed = !!member && !!session.token;
   useEffect(() => { if (member) setLanding({ id: member.id, name: member.name, slug: member.slug ?? "hagzara", image: member.image ?? null }); }, [member?.id, member?.name, member?.slug, member?.image, setLanding]);
   useEffect(() => {
@@ -47,23 +53,39 @@ export default function Comparison({ landing: direct = null }: { landing?: Group
     window.addEventListener(SAVED_EVENT, load);
     return () => { live = false; clearInterval(timer); window.removeEventListener("focus", focus); window.removeEventListener(SAVED_EVENT, load); };
   }, [allowed, session.token, session.refresh]);
+  if (!unlocked) {
+    const total = seatsSum(mine);
+    return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת הממוצעת</h1>
+      <div className="f-card f-lock"><p className="text-3xl" aria-hidden="true">🔒</p><h2 className="text-lg font-bold my-2">הכנסת הממוצעת נפתחת אחרי שמירת הכנסת שלך</h2>
+        <p className="text-ink-soft mb-4">ממלאים את כל 120 המנדטים, שומרים, ורואים איך כולם חושבים.</p>
+        <InlineBlocBar values={Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0]))} missing={Math.max(0, 120 - total)} />
+        <Link to="/guess" className="f-btn pri mt-5">להשלמת הכנסת שלי</Link></div><FocusFoot /></div>;
+  }
   const response = allowed && result?.token === session.token ? result : null;
   const raw = response?.data;
   const below = raw?.belowMin ? raw : null;
-  const group: Dashboard | null = raw ? raw.belowMin ? blankDashboard(raw.participants ?? 0, IDS, {}, null) : raw : null;
+  const group = raw && !raw.belowMin ? raw as Dashboard : null;
   const all = crowd.dashboard;
-  const shown = member ?? direct ?? landing;
-  const headers = ["סקרים", <span>משתתפים{all?.seats && <small className="block">{all.seats.n} משתתפים</small>}</span>, ...(allowed ? [<span>הגזרה{group && <small className="block">{below ? below.participants ?? 0 : group.seats?.n ?? 0} משתתפים</small>}</span>] : [])];
-  const ids = [...new Set([...IDS, ...(all?.seats?.full.map(r => r.list) ?? []), ...(group?.seats?.full.map(r => r.list) ?? [])])].sort((a, b) => (simpleValue(source.selection, [b]) ?? 0) - (simpleValue(source.selection, [a]) ?? 0));
-  const value = (d: Dashboard | null, id: string) => d?.seats?.full.find(r => r.list === id)?.mean ?? null;
-  return <div className="simple-page max-w-4xl mx-auto"><PageTitle>הכנסת הממוצעת</PageTitle>
-    {shown && <GroupBanner showName id={shown.id} name={shown.name} image={shown.image} />}
-    <p className="text-sm text-ink-soft mb-4">השערות המשתתפים אינן סקר.</p><SimpleSourcePicker source={source} />
+  const crowdMeans = meansOf(all), groupMeans = meansOf(group);
+  const polls = (id: string) => simpleValue(source.selection, [id]);
+  const lists = orderedLists(source.selection, [crowdMeans, groupMeans]);
+  const blocValues = member ? groupMeans : crowdMeans;
+  const voters = member ? group : all;
+  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת הממוצעת</h1>
+    {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
+    <SourceBar source={source} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
-    {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע. נתוני כלל המשתתפים מוצגים בנפרד.</Notice>}
-    {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים. עד אז טור הגזרה מוצג עם אפסים.</Notice>}
-    <PollExplanation><Explained kind="השערות משתתפים, אינן סקר" source="צבירת ההשערות הקיימת בשרת, כלל המשתתפים וחברי הגזרה בנפרד" asOf={all?.publishedAt ? date(all.publishedAt) : "הפרסום האחרון"} assumption="השערה אחרונה לכל משתתף לפי כללי ההכללה והסף הקיימים" methodAnchor="crowd">
-      <SimpleTable label="השוואת הכנסת הממוצעת" headers={headers} rows={ids.map(id => ({ id, label: <PartyName id={id} />, cells: [number(simpleValue(source.selection, [id])), number(value(all, id)), ...(allowed ? [number(value(group, id))] : [])] }))} />
-      <Card title="החלוקה לגושים"><SimpleTable label="חלוקה לגושים" headers={headers} rows={DEFAULT_BLOCS.blocs.map(b => ({ id: b.id, label: b.name, cells: [number(simpleValue(source.selection, b.lists)), number(fixedBlocValue(all, b.lists)), ...(allowed ? [number(below ? 0 : fixedBlocValue(group, b.lists))] : [])] }))} /></Card>
-    </Explained></PollExplanation><SimpleFooter /></div>;
+    {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
+    {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
+    <div className="f-grid">
+      <PartyChart selection={source.selection} lists={lists}
+        marks={id => member ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
+        legend={<><LegendCapsule />{!member && <LegendLine kind="soft" label="ממוצע הסקרים" />}<LegendLine label={`משתתפים${all?.seats ? ` (${all.seats.n})` : ""}`} />{member && <LegendLine kind="dash" label="הגזרה" />}</>} />
+      <div className="f-side"><BlocChart values={blocValues} />
+        {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
+    </div>
+    <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף הכנסת הממוצעת</button></div>
+    <FocusFoot />
+    {sharing && <ShareCard heading="שיתוף הכנסת הממוצעת" input={{ kind: "average", values: blocValues, group: hagzara }} onClose={() => setSharing(false)} />}
+  </div>;
 }
