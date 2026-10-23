@@ -2,6 +2,7 @@ import { Card, PageTitle } from "../components/ui";
 import { meta } from "../lib/data";
 import { date } from "../lib/format";
 import { PARTY_IMAGES } from "../lib/partyImages";
+import { POLLSTER_LOGOS } from "../lib/pollsterLogos";
 import { PartyAvatar } from "../components/PartyAvatar";
 
 export default function About() {
@@ -67,6 +68,10 @@ export default function About() {
           ))}
         </ul>
         <p className="text-sm mt-3 text-ink-soft">לרשימות הציבור החרדי וצבע שחור לא נמצאה תמונה חופשית או סמל רשמי להורדה, ולכן אין להן תמונה.</p>
+        <p className="text-sm mt-4 mb-2">סמלי מכוני הסקרים והערוצים בבורר המקור הם סמלי האתרים הרשמיים שלהם, וסימנים מסחריים של בעליהם:</p>
+        <ul className="text-sm flex flex-wrap gap-x-4 gap-y-1">
+          {Object.values(POLLSTER_LOGOS).map((l) => <li key={l.file}><a href={l.source}>{l.owner}</a></li>)}
+        </ul>
       </Card>
     </>
   );

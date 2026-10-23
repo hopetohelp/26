@@ -1,13 +1,14 @@
-/** בדיקת דפדפן ללא כתיבה לשירותים החיים. מופעלת מול בנייה מקומית או Preview. */
+/** בדיקת דפדפן לתצוגה הממוקדת, ללא כתיבה לשירותים החיים. מופעלת מול בנייה מקומית או Preview. */
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const base = process.env.CHECK_URL || 'http://127.0.0.1:4173';
 await mkdir('minimal-check', { recursive: true });
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
+const likudRow = page => page.locator('.f-row').filter({ hasText: 'הליכוד' }).first();
 try {
   for (const width of [320, 390, 768, 1440]) for (const colorScheme of ['light', 'dark']) {
-    const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme });
+    const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme, serviceWorkers: 'block' });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     await page.route('**/*', async route => {
@@ -17,9 +18,11 @@ try {
     for (const path of ['/', '/guess', '/community']) {
       await page.goto(`${base}/#${path}`);
       await page.locator('[data-interface="simple"]').waitFor();
-      await page.locator('table').first().waitFor();
+      await page.locator('.f-card').first().waitFor();
       await page.evaluate(() => document.fonts.ready);
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `overflow ${width} ${path}`);
+      assert.equal(await page.locator('main h1:not(.sr-only)').count(), 0, 'אין כותרת מסך גלויה');
+      if (path === '/') assert(await page.locator('.f-row').count() > 5, 'גרף המפלגות');
       if (path === '/guess') {
         const input = page.getByRole('textbox', { name: /^מנדטים ל/ }).first();
         const save = page.getByRole('button', { name: 'שמירה', exact: true });
@@ -27,21 +30,20 @@ try {
         await input.fill('120'); assert(await save.isEnabled());
         await input.fill('121'); assert(await save.isDisabled());
         await input.fill('60'); await input.blur();
-        await page.getByRole('switch', { name: /מתקדם/ }).click();
+        await page.getByRole('button', { name: 'למחקר מתקדם' }).click();
         await page.locator('[data-interface="advanced"]').waitFor();
-        await page.getByRole('switch', { name: /מתקדם/ }).click();
+        await page.getByRole('button', { name: 'לתצוגה הממוקדת' }).click();
         await page.locator('[data-interface="simple"]').waitFor();
         assert.equal(await input.inputValue(), '60');
         await page.reload(); assert.equal(await input.inputValue(), '60');
       }
-      if (path === '/community') assert.equal(await page.locator('table').first().locator('thead th').count(), 3, 'אורח: שם מפלגה ושני טורי נתונים בלבד');
+      if (path === '/community') await page.getByText('נפתחת אחרי שמירת הכנסת שלך').waitFor();
       await page.screenshot({ path: `minimal-check/${width}-${colorScheme}-${path.slice(1) || 'home'}.png`, fullPage: true });
     }
     assert.deepEqual(errors, []);
     await page.close();
   }
   // חברות ושמירה מול שרת מדומה בלבד: אין אסימון או כתיבה לחשבון אמיתי.
-  // בלי קובץ השירות של האתר (public/sw.js): הוא היה מחזיר את העותק האמיתי של הנתונים ועוקף את השרת המדומה.
   const page = await browser.newPage({ viewport: { width: 390, height: 900 }, serviceWorkers: 'block' });
   await page.addInitScript(() => localStorage.setItem('elections26.crowd.token', 'test-session-only'));
   let member = true, below = false, saves = 0;
@@ -60,29 +62,34 @@ try {
     return route.continue();
   });
   await page.goto(`${base}/#/guess`);
+  await page.waitForFunction(() => document.documentElement.dataset.group === 'hagzara');
   const input = page.getByRole('textbox', { name: /^מנדטים ל/ }).first();
   await input.fill('119'); await input.blur();
   await page.evaluate(() => window.dispatchEvent(new Event('offline')));
   assert.equal(saves, 0);
   await input.fill('120'); await input.blur();
   await page.getByRole('button', { name: 'שמירה', exact: true }).click();
-  await page.getByRole('button', { name: 'נשמר', exact: true }).waitFor();
+  await page.getByRole('dialog', { name: /נשמר/ }).waitFor();
   assert.equal(saves, 1);
+  await page.screenshot({ path: 'minimal-check/share-mine.png' });
+  await page.getByRole('button', { name: 'סגירה', exact: true }).click();
   await page.goto(`${base}/#/community`);
-  await page.waitForFunction(() => document.querySelector('table thead tr')?.children.length === 4);
-  const row = page.locator('table').first().locator('tbody tr').filter({ hasText: 'הליכוד' }).first();
-  const lastTwo = async () => (await row.locator('td').allTextContents()).slice(-2).join(',');
-  // נתוני הגזרה נטענים אחרי הטבלה: ממתינים לערך ולא קוראים מיד.
-  for (let i = 0; i < 50 && await lastTwo() !== '23,17'; i++) await page.waitForTimeout(100);
-  assert.equal(await lastTwo(), '23,17');
+  const row = likudRow(page);
+  // נתוני הגזרה נטענים אחרי המסך: ממתינים לערכים ולא קוראים מיד.
+  for (let i = 0; i < 50 && !/23[\s\S]*17|17[\s\S]*23/.test(await row.innerText().catch(() => '')); i++) await page.waitForTimeout(100);
+  const tags = await row.locator('.f-tag').allTextContents();
+  assert(tags.includes('23') && tags.includes('17'), `תגיות: ${tags}`);
+  assert.equal(await page.locator('.f-legend').first().getByText('ממוצע הסקרים').count(), 0, 'לגזרה אין קו ממוצע הסקרים');
   await page.screenshot({ path: 'minimal-check/member.png', fullPage: true });
+  await page.getByRole('button', { name: 'שיתוף הכנסת הממוצעת' }).click();
+  await page.getByRole('dialog').getByText('זו תחזית משתתפי הגזרה').waitFor();
+  await page.getByRole('button', { name: 'סגירה', exact: true }).click();
   below = true;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await page.getByText('נתוני הגזרה יוצגו אחרי', { exact: false }).waitFor();
-  assert.equal(await row.locator('td').last().textContent(), '0');
   member = false;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
-  await page.waitForFunction(() => document.querySelector('table thead tr')?.children.length === 3);
+  await page.waitForFunction(() => !document.documentElement.dataset.group);
   await page.close();
-  console.log('בדיקות מסך פשוט: ארבעה רוחבים, יום ולילה, 119/120/121 ושחזור טיוטה עברו.');
+  console.log('בדיקות התצוגה הממוקדת: ארבעה רוחבים, יום ולילה, 119/120/121, נעילה, שיתוף וגזרה עברו.');
 } finally { await browser.close(); }

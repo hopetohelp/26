@@ -1,49 +1,148 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Card } from "../../components/ui";
 import { PartyAvatar } from "../../components/PartyAvatar";
-import Explained from "../../components/Explained";
-import { DEFAULT_BLOCS, nameOf } from "../guess/model";
-import { DATA_AS_OF } from "../../lib/dataResolver";
-import { SIMPLE_FIRMS, simpleSelection } from "../../lib/simpleSources";
-import { date, seatsFmt } from "../../lib/format";
+import { nameOf, IDS } from "../guess/model";
+import { POLLSTER_LOGOS } from "../../lib/pollsterLogos";
+import { SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, simpleSelection, simpleSpread, simpleValue } from "../../lib/simpleSources";
+import type { Selection } from "../../lib/dataResolver";
+import { seatsFmt } from "../../lib/format";
 
 const SOURCE_KEY = "elections26.simple-source";
 let current = (() => { try { return localStorage.getItem(SOURCE_KEY) ?? "all"; } catch { return "all"; } })();
 const listeners = new Set<(key: string) => void>();
-export function useSimpleSource() {
-  const [key, setKey] = useState(current);
-  useEffect(() => { listeners.add(setKey); return () => { listeners.delete(setKey); }; }, []);
-  return { key, selection: simpleSelection(key), setKey: (next: string) => {
+/** מקור הסקרים של התצוגה הממוקדת. `averagesOnly`: רק ממוצע הסקרים או ממוצע 14 ו־i24 (הכנסת הממוצעת). */
+export function useSimpleSource(averagesOnly = false) {
+  const [stored, setStored] = useState(current);
+  useEffect(() => { listeners.add(setStored); return () => { listeners.delete(setStored); }; }, []);
+  const key = averagesOnly && stored !== "14-24" ? "all" : stored;
+  return { key, selection: simpleSelection(key), averagesOnly, setKey: (next: string) => {
     current = next;
     try { localStorage.setItem(SOURCE_KEY, next); } catch { /* מקומי לביקור */ }
     listeners.forEach(fn => fn(next));
   } };
 }
-export function SimpleSourcePicker({ source }: { source: ReturnType<typeof useSimpleSource> }) {
-  return <label className="flex flex-wrap items-center gap-2 mb-5 text-sm"><span className="font-bold">מקור הסקרים</span><select className="min-h-[44px] max-w-full rounded-theme border border-paper-line bg-paper-card text-ink px-3" value={source.key} onChange={e => source.setKey(e.target.value)}>
-    <option value="all">ממוצע כל הסקרים</option><option value="14-24">ממוצע 14 ו־i24</option>
-    <optgroup label="לפי מכון">{SIMPLE_FIRMS.map(f => <option key={f.id} value={`firm:${f.id}`}>{f.name}</option>)}</optgroup>
-  </select></label>;
+export type SimpleSource = ReturnType<typeof useSimpleSource>;
+
+const Logo = ({ id, initials }: { id: string; initials: string }) => {
+  const logo = POLLSTER_LOGOS[id];
+  return logo ? <img src={`${import.meta.env.BASE_URL}${logo.file}`} alt="" /> : <span className="f-ini" aria-hidden="true">{initials}</span>;
+};
+const initialsOf = (name: string) => name.split(/[\s+,]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("");
+
+/** סרגל בחירה נגלל: ממוצע, 14 ו־i24, ומכונים (רק כשמותר) */
+export function SourceBar({ source }: { source: SimpleSource }) {
+  const options: [string, ReactNode, string][] = [
+    ["all", <span className="f-ini" aria-hidden="true">∑</span>, "ממוצע הסקרים"],
+    ["14-24", <><Logo id="Channel 14" initials="14" /><Logo id="i24 News" initials="24" /></>, "ממוצע 14 ו־i24"],
+    ...(source.averagesOnly ? [] : SIMPLE_FIRMS.map(f => [`firm:${f.id}`, <Logo id={f.id} initials={initialsOf(f.name)} />, f.name] as [string, ReactNode, string])),
+  ];
+  return <div className="f-seg" role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
+    <button key={key} type="button" aria-pressed={source.key === key} onClick={() => source.setKey(key)}>{icon}{label}</button>)}</div>;
 }
-export const number = (n: number | null | undefined) => n == null ? "—" : seatsFmt(n);
+
+export const fmt = (n: number | null | undefined) => n == null ? "—" : seatsFmt(n);
 export function PartyName({ id }: { id: string }) {
-  return <span className="flex items-center gap-1 sm:gap-2"><span className="hidden min-[360px]:contents"><PartyAvatar id={id} size={28} /></span><span>{nameOf(id)}</span></span>;
+  return <span className="f-who"><PartyAvatar id={id} size={34} /><span>{nameOf(id)}</span></span>;
 }
-export function SimpleTable({ label, headers, rows, editor = false }: { label: string; headers: ReactNode[]; rows: { id: string; label: ReactNode; cells: ReactNode[] }[]; editor?: boolean }) {
-  return <table className={`simple-table w-full table-fixed text-sm tabular ${editor ? "simple-editor" : ""}`}>
-    <caption className="sr-only">{label}</caption>
-    <colgroup><col style={{ width: editor ? "31%" : headers.length === 3 ? "34%" : "46%" }} />{headers.map((_, i) => <col key={i} style={{ width: editor ? (i === 2 ? "31%" : "19%") : `${(headers.length === 3 ? 66 : 54) / headers.length}%` }} />)}</colgroup>
-    <thead><tr><th scope="col" className="text-start font-normal py-3">{editor ? "מפלגה" : label === "חלוקה לגושים" ? "גוש" : "מפלגה"}</th>{headers.map((h, i) => <th scope="col" key={i} className="text-center font-normal text-ink-soft px-1 py-3">{h}</th>)}</tr></thead>
-    <tbody>{rows.map(r => <tr key={r.id} className="border-t border-paper-line"><th scope="row" className="text-start font-normal py-3 pe-1">{r.label}</th>{r.cells.map((c, i) => <td key={i} className="text-center border-s border-paper-line px-1 py-2">{c}</td>)}</tr>)}</tbody>
-  </table>;
+/** הרשימות לפי הסדר של המקור הנבחר; רשימה בלי ערך בשום מקור נשמטת */
+export function orderedLists(selection: Selection, extra: Record<string, number>[] = []) {
+  const value = (id: string) => simpleValue(selection, [id]) ?? 0;
+  return IDS.filter(id => value(id) > 0 || extra.some(e => (e[id] ?? 0) >= .5)).sort((a, b) => value(b) - value(a));
 }
-export function SimpleBlocs({ of }: { of: (ids: string[]) => number | null }) {
-  return <Card title="החלוקה לגושים"><div className="flex flex-wrap gap-x-5 gap-y-3">{DEFAULT_BLOCS.blocs.map(b => <div key={b.id} className="flex items-baseline gap-2"><span className="text-sm text-ink-soft">{b.name}</span><strong className="text-xl tabular">{number(of(b.lists))}</strong></div>)}</div></Card>;
+
+const AXIS_MAX = 32;
+const x = (v: number) => `${Math.min(100, v / AXIS_MAX * 100)}%`;
+/** קפסולת הסקרים בסולם המחקר המתקדם: קצוות ריקים, כתפיים בהירות, ליבה כהה; על הטווח המלא */
+function Capsule({ spread }: { spread: [number, number, number, number, number, number] }) {
+  const [mn, p10, p25, p75, p90, mx] = spread;
+  const w = Math.max(mx - mn, .6), pc = (v: number) => (v - mn) / w * 100;
+  const fill = (alpha: (o: number) => string) => `linear-gradient(90deg,transparent 0 ${pc(p10)}%,${alpha(.32)} ${pc(p10)}% ${pc(p25)}%,${alpha(.88)} ${pc(p25)}% ${pc(p75)}%,${alpha(.32)} ${pc(p75)}% ${pc(p90)}%,transparent ${pc(p90)}%)`;
+  const mask = fill(o => `rgba(0,0,0,${o})`);
+  // בצבעי הגזרה הגוון נקבע לפי המקום על הציר: אדום במספרים נמוכים, כחול בגבוהים
+  const heat = { background: "linear-gradient(90deg,rgb(var(--heat-lo)),rgb(var(--heat-hi)))", backgroundSize: `${AXIS_MAX / w * 100}% 100%`, backgroundPosition: `${AXIS_MAX - w > 0 ? mn / (AXIS_MAX - w) * 100 : 0}% 0`, WebkitMask: mask, mask };
+  return <span className="f-cap" style={{ left: x(mn), width: x(w) }}><i style={heat} /></span>;
 }
-export function PollExplanation({ children }: { children: ReactNode }) {
-  return <Explained kind="סיכום סקרים" source="הסקרים האחרונים בכל סדרת מכון ומזמין" asOf={date(DATA_AS_OF)} assumption="משקל שווה לסדרה בחלון הסקרים, ללא התאמה ל־120; 14 ו־i24 מסוננים לפי מזמין" methodAnchor="current">{children}</Explained>;
+export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };
+/** גרף המפלגות: קפסולה לסקרים ותגיות ערך לקווים */
+export function PartyChart({ selection, lists, marks, legend }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode }) {
+  const tall = lists.some(id => marks(id).some(m => m.side === "down"));
+  return <div className="f-card">
+    <div className="f-legend">{legend}</div>
+    <div className="f-axis" aria-hidden="true"><span /><div className="font-num"><span>0</span><span>8</span><span>16</span><span>24</span><span>32</span></div></div>
+    {lists.map(id => {
+      const spread = simpleSpread(selection, id);
+      return <div key={id} className={`f-row ${tall ? "tall" : ""}`}><PartyName id={id} />
+        <div className="f-track" role="img" aria-label={`${nameOf(id)}: ${marks(id).filter(m => m.value != null).map(m => fmt(m.value)).join(", ")}`}>
+          {spread && <Capsule spread={spread} />}
+          {marks(id).map((m, i) => m.value == null ? null : <span key={i} className={`f-mark ${m.kind === "dash" ? "dash" : m.kind === "soft" ? "soft" : ""}`} style={{ left: x(m.value) }}><span className={`f-tag ${m.side}`}>{fmt(m.value)}</span></span>)}
+        </div></div>;
+    })}
+  </div>;
 }
-export function SimpleFooter() {
-  return <nav aria-label="קישורים נוספים" className="mt-8 pt-4 border-t border-paper-line flex flex-wrap gap-5 text-sm"><Link to="/support">חשבון ותמיכה</Link><Link to="/method">מידע ומקורות</Link></nav>;
+export const LegendCapsule = () => <span><span className="f-lg-cap" />טווח הסקרים</span>;
+export const LegendLine = ({ kind, label }: { kind?: "dash" | "soft"; label: string }) => <span><span className={`f-lg-line ${kind ?? ""}`} />{label}</span>;
+
+/** גושים לתרשים; "חסר" — מנדטים שעוד לא חולקו */
+type Slice = { id: string; name: string; short: string; lists: readonly string[]; value: number; color: string };
+export function blocSlices(values: Record<string, number | null | undefined>, missing = 0): Slice[] {
+  const slices: Slice[] = SIMPLE_BLOCS.map((b, i) => ({ ...b, value: blocTotal(values, b.lists), color: `rgb(var(--bloc-${i + 1}))` }));
+  if (missing > 0) slices.push({ id: "missing", name: "חסר", short: "חסר", lists: [], value: missing, color: "rgb(var(--bloc-miss))" });
+  return slices.filter(s => s.value > 0);
+}
+function Pop({ slice, values, at }: { slice: Slice; values: Record<string, number | null | undefined>; at: { left: number; top?: number } }) {
+  const lists = slice.lists.filter(id => (values[id] ?? 0) > 0);
+  return <div className="f-pop" style={{ left: at.left, top: at.top }}><strong>{slice.name} · <span className="font-num">{Math.round(slice.value)}</span></strong>
+    {lists.length > 0 && <ul>{lists.map(id => <li key={id}><PartyAvatar id={id} size={20} />{nameOf(id)}</li>)}</ul>}</div>;
+}
+function usePop() {
+  const [pop, setPop] = useState<{ i: number; left: number; top?: number } | null>(null);
+  const host = useRef<HTMLDivElement>(null);
+  useEffect(() => { const close = () => setPop(null); document.addEventListener("click", close); return () => document.removeEventListener("click", close); }, []);
+  const open = (i: number, el: Element, below: boolean) => {
+    const h = host.current!.getBoundingClientRect(), r = el.getBoundingClientRect();
+    setPop({ i, left: Math.max(0, Math.min(h.width - 200, r.left - h.left + r.width / 2 - 100)), top: below ? r.top - h.top + r.height / 2 : undefined });
+  };
+  const handlers = (i: number, below: boolean) => ({
+    onMouseEnter: (e: React.MouseEvent) => open(i, e.currentTarget, below), onMouseLeave: () => setPop(null),
+    onClick: (e: React.MouseEvent) => { e.stopPropagation(); if (pop?.i === i) setPop(null); else open(i, e.currentTarget, below); },
+  });
+  return { pop, host, handlers };
+}
+/** עוגה (מחשב וטאבלט): מלמעלה בכיוון השעון, שם ומספר על הפלח */
+function Pie({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
+  const { pop, host, handlers } = usePop();
+  const total = slices.reduce((s, b) => s + b.value, 0) || 1, R = 112, r = 52, c = 130;
+  const at = (a: number, rad: number) => [c + rad * Math.cos(a), c + rad * Math.sin(a)];
+  let a = -Math.PI / 2;
+  return <div className="f-pie" ref={host}><svg viewBox="0 0 260 260" role="img" aria-label={slices.map(s => `${s.name} ${Math.round(s.value)}`).join(", ")}>
+    {slices.map((s, i) => {
+      const da = s.value / total * 2 * Math.PI, a2 = a + da, [x1, y1] = at(a, R), [x2, y2] = at(a2, R), [x3, y3] = at(a2, r), [x4, y4] = at(a, r), big = da > Math.PI ? 1 : 0, [lx, ly] = at(a + da / 2, (R + r) / 2);
+      a = a2;
+      return <g key={s.id} {...handlers(i, true)}><path d={`M${x1} ${y1}A${R} ${R} 0 ${big} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${big} 0 ${x4} ${y4}Z`} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
+        {da > .35 && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize={da > 1.4 ? 11 : 10} fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{Math.round(s.value)}</text></>}</g>;
+    })}
+    <text x="130" y="134" textAnchor="middle" fontSize="26" fontWeight="700" fill="rgb(var(--ink))" className="font-num">120</text>
+    <text x="130" y="154" textAnchor="middle" fontSize="11.5" fill="rgb(var(--ink-soft))">מנדטים</text>
+  </svg>{pop && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
+}
+/** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר */
+function Stack({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
+  const { pop, host, handlers } = usePop();
+  return <div className="f-dock floating" ref={host}><div className="f-stack">{slices.map((s, i) =>
+    <button key={s.id} type="button" aria-label={`${s.name} ${Math.round(s.value)}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
+      {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{Math.round(s.value)}</button>)}
+  </div>{pop && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
+}
+/** סיכום הגושים: עוגה במחשב, פס צמוד לתחתית בטלפון. בלי כותרת ובלי מסגרת. */
+export function BlocChart({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
+  const slices = blocSlices(values, missing);
+  return <><div className="f-pie-wrap"><Pie slices={slices} values={values} /></div><Stack slices={slices} values={values} /></>;
+}
+/** פס הגושים בתוך התוכן (למשל במסך הנעול) */
+export function InlineBlocBar({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
+  const slices = blocSlices(values, missing);
+  return <div className="f-stack" role="img" aria-label={slices.map(s => `${s.name} ${Math.round(s.value)}`).join(", ")}>{slices.map(s => <button key={s.id} type="button" tabIndex={-1} style={{ flex: s.value, background: s.color }}>{s.value >= 18 && <span>{s.short}</span>}{Math.round(s.value)}</button>)}</div>;
+}
+export function FocusFoot() {
+  return <div className="f-foot"><Link to="/method" className="f-info" aria-label="מידע ומקורות">i</Link><Link to="/method">מידע ומקורות</Link></div>;
 }
