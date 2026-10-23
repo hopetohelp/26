@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { GroupPublic } from "./crowdApi";
 
@@ -15,18 +15,14 @@ const ModeContext = createContext<{ advanced: boolean; toggle: () => void; landi
 export function InterfaceProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [preferred, setPreferred] = useState<InterfaceMode>(() => { try { return localStorage.getItem(INTERFACE_KEY) === "advanced" ? "advanced" : "simple"; } catch { return "simple"; } });
+  // כל כניסה לאתר נפתחת בתצוגה הממוקדת (הכרעת בעלים 23.10.2026); "למחקר מתקדם" נשמר רק לביקור הנוכחי בלשונית
+  const [preferred, setPreferred] = useState<InterfaceMode>(() => { try { localStorage.removeItem(INTERFACE_KEY); return sessionStorage.getItem(INTERFACE_KEY) === "advanced" ? "advanced" : "simple"; } catch { return "simple"; } });
   const [landing, setLanding] = useState<GroupPublic | null>(null);
   const advanced = preferred === "advanced" || requiresAdvanced(location.pathname, location.search);
-  useEffect(() => {
-    const sync = (e: StorageEvent) => { if (e.key === INTERFACE_KEY) setPreferred(e.newValue === "advanced" ? "advanced" : "simple"); };
-    window.addEventListener("storage", sync);
-    return () => window.removeEventListener("storage", sync);
-  }, []);
   const toggle = () => {
     const next = advanced ? "simple" : "advanced";
     setPreferred(next);
-    try { localStorage.setItem(INTERFACE_KEY, next); } catch { /* הבחירה נשארת לביקור */ }
+    try { sessionStorage.setItem(INTERFACE_KEY, next); } catch { /* הבחירה נשארת לביקור */ }
     if (next === "simple" && requiresAdvanced(location.pathname, location.search)) navigate(location.pathname === "/guess" ? "/guess?view=edit" : "/");
     else if (next === "advanced" && location.pathname === "/community") navigate("/guess?view=statistics");
     requestAnimationFrame(() => document.getElementById("main")?.focus({ preventScroll: true }));

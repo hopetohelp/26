@@ -72,7 +72,7 @@ try {
   await page.getByRole('dialog', { name: /נשמר/ }).waitFor();
   assert.equal(saves, 1);
   await page.screenshot({ path: 'minimal-check/share-mine.png' });
-  await page.getByRole('button', { name: 'סגירה', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'סגירה', exact: true }).click();
   await page.goto(`${base}/#/community`);
   const row = likudRow(page);
   // נתוני הגזרה נטענים אחרי המסך: ממתינים לערכים ולא קוראים מיד.
@@ -81,9 +81,17 @@ try {
   assert(tags.includes('23') && tags.includes('17'), `תגיות: ${tags}`);
   assert.equal(await page.locator('.f-legend').first().getByText('ממוצע הסקרים').count(), 0, 'לגזרה אין קו ממוצע הסקרים');
   await page.screenshot({ path: 'minimal-check/member.png', fullPage: true });
+  // בטלפון: פס הגושים בתחתית וסרגל הניווט מעליו; פתיחת המגירה לא מרחיבה את המסך
+  const [dock, nav] = await Promise.all([page.locator('.f-dock.floating').boundingBox(), page.locator('.f-nav-bottom').boundingBox()]);
+  assert(dock && nav && nav.y + nav.height <= dock.y + 1, 'הניווט מעל פס הגושים');
+  for (let i = 0; i < 2; i++) {
+    await page.locator('.f-side').getByRole('button').filter({ hasText: 'התפלגות המצביעים' }).first().click();
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'המגירה לא מרחיבה את המסך');
+  }
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'המגירה לא מרחיבה את המסך');
   await page.getByRole('button', { name: 'שיתוף הכנסת הממוצעת' }).click();
   await page.getByRole('dialog').getByText('זו תחזית משתתפי הגזרה').waitFor();
-  await page.getByRole('button', { name: 'סגירה', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'סגירה', exact: true }).click();
   below = true;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await page.getByText('נתוני הגזרה יוצגו אחרי', { exact: false }).waitFor();

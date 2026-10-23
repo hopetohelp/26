@@ -36,7 +36,7 @@ export function SourceBar({ source }: { source: SimpleSource }) {
     ["14-24", <><Logo id="Channel 14" initials="14" /><Logo id="i24 News" initials="24" /></>, "ממוצע 14 ו־i24"],
     ...(source.averagesOnly ? [] : SIMPLE_FIRMS.map(f => [`firm:${f.id}`, <Logo id={f.id} initials={initialsOf(f.name)} />, f.name] as [string, ReactNode, string])),
   ];
-  return <div className="f-seg" role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
+  return <div className={`f-seg ${source.averagesOnly ? "fit" : ""}`} role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
     <button key={key} type="button" aria-pressed={source.key === key} onClick={() => source.setKey(key)}>{icon}{label}</button>)}</div>;
 }
 
