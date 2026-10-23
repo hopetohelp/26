@@ -443,6 +443,26 @@ export default function Account({ session, hideGroups = false }: { session: Retu
   );
 }
 
+type LinkMembersState = { on: boolean; joined: number | null };
+/**
+ * מתג המנהל (הכרעת בעלים 23.10.2026): לכלול כחברים את כל מי שנכנס דרך קישור הקבוצה, בנוסף לרשימת המיילים.
+ * הכניסות נרשמות תמיד (מזהה חשבון בלבד), אבל משפיעות ומוצגות רק אחרי ההפעלה.
+ */
+export function LinkMembersToggle({ load, set, onChanged }: { load: () => Promise<LinkMembersState>; set: (on: boolean) => Promise<LinkMembersState>; onChanged?: () => void }) {
+  const [state, setState] = useState<LinkMembersState | null>(null);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { void load().then(setState).catch(() => setState(null)); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!state) return null;
+  const toggle = async () => { setBusy(true); try { setState(await set(!state.on)); onChanged?.(); } finally { setBusy(false); } };
+  return <div className="pt-2 space-y-1">
+    <button type="button" role="switch" aria-checked={state.on} disabled={busy} onClick={toggle} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start font-bold">
+      <span>לכלול כחברים את כל מי שנכנס דרך קישור הקבוצה</span>
+      <span aria-hidden="true" className={`shrink-0 w-12 h-7 rounded-full border-2 border-ink p-0.5 flex ${state.on ? "bg-ink justify-end" : "bg-paper-card justify-start"}`}><span className={`w-5 h-5 rounded-full ${state.on ? "bg-paper-card" : "bg-ink"}`} /></span>
+    </button>
+    <p className="text-xs text-ink-soft">{state.on ? `פעיל: ${state.joined ?? 0} חשבונות נכנסו דרך הקישור ונספרים בקבוצה, בנוסף לרשימת המיילים.` : "כבוי: רק מי שהמייל שלו ברשימה נספר. כשמפעילים, נספרים גם כל מי שנכנסו דרך הקישור עד עכשיו ומכאן והלאה."}</p>
+  </div>;
+}
+
 /** מקטע מנהל קבוצה: קישור, מספרים, רשימת החברים (קובץ או מייל בודד) ותמונה — אותן אפשרויות כמו למנהל האתר */
 export function ManagedGroup({ id, name, slug, image, token, className, onChanged, collapsible = false }: { id: string; name: string; slug?: string | null; image?: string | null; token: string; className: string; onChanged?: () => void; collapsible?: boolean }) {
   const [refresh, setRefresh] = useState(0);
@@ -456,6 +476,7 @@ export function ManagedGroup({ id, name, slug, image, token, className, onChange
         loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
       />
       <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
+      <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, on } })} onChanged={() => { setRefresh((n) => n + 1); onChanged?.(); }} />
       <GroupManagerGuide />
       <p className="font-bold pt-2">רשימת החברים</p>
       <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={() => setRefresh((n) => n + 1)} />

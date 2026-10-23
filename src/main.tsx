@@ -7,17 +7,23 @@ import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
+// מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון אחד טוען את הגרסה החדשה.
+window.addEventListener("vite:preloadError", (e) => {
+  try { if (sessionStorage.getItem("elections26.chunk-reload")) return; sessionStorage.setItem("elections26.chunk-reload", "1"); } catch { return; }
+  e.preventDefault();
+  location.reload();
+});
 import { startOutbox } from "./lib/outbox";
 import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import Today from "./pages/Today";
-import Polls from "./pages/Polls";
-import Trends from "./pages/Trends";
-import Results from "./pages/Results";
+const Home = lazy(() => import("./pages/Home"));
+const Today = lazy(() => import("./pages/Today"));
+const Polls = lazy(() => import("./pages/Polls"));
+const Trends = lazy(() => import("./pages/Trends"));
+const Results = lazy(() => import("./pages/Results"));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
-import About from "./pages/About";
+const About = lazy(() => import("./pages/About"));
 import { PageTitle } from "./components/ui";
 import Support from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -25,8 +31,8 @@ import ResetPassword from "./pages/ResetPassword";
 import { setVerifyCode } from "./lib/verifyEmail";
 import { setResetSecret, SECRET_RE } from "./lib/resetPassword";
 const Admin = lazy(() => import("./pages/Admin"));
-import MyFeedback from "./pages/MyFeedback";
-import Connect from "./pages/Connect";
+const MyFeedback = lazy(() => import("./pages/MyFeedback"));
+const Connect = lazy(() => import("./pages/Connect"));
 import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם

@@ -4,7 +4,7 @@ import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { ScreenLegend } from "./ChartLegend";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import { meta } from "../lib/data";
 import { date } from "../lib/format";
@@ -17,8 +17,6 @@ import { LOCK_AT } from "../pages/guess/model";
 import { MASTHEAD_SLOT } from "./SourcePicker";
 import { useSession } from "../pages/guess/useCrowd";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
-import { refImageUrl } from "../lib/groupLink";
-import { HAGZARA_GROUP_ID } from "../lib/simpleSources";
 
 const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "הכנסת הממוצעת", icon: "bars" }];
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
@@ -99,7 +97,8 @@ function Masthead() {
   const { advanced, toggle } = useInterface();
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
-      {advanced && <div className="flex justify-end px-4 md:px-6 pt-1"><button type="button" onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">לתצוגה הממוקדת</button></div>}
+      {/* בטלפון בשורה נפרדת; כשיש מקום — באותה שורה של הכותרת */}
+      {advanced && <div className="flex md:hidden justify-end px-4 pt-1"><button type="button" onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">לתצוגה הממוקדת</button></div>}
       <div className="c-masthead-row w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
         <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
           <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
@@ -112,6 +111,7 @@ function Masthead() {
         <ExitPollClock bar />
         {/* בורר הממוצע של המסך הפתוח (SourcePicker נכנס לכאן); ריק במסכים בלי בחירת מקור */}
         <div id={MASTHEAD_SLOT} className="c-masthead-source empty:hidden" />
+        {advanced && <button type="button" onClick={toggle} className="hidden md:inline-flex items-center shrink-0 min-h-[40px] rounded-full border border-frame-line px-3 text-sm font-bold whitespace-nowrap">לתצוגה הממוקדת</button>}
         <ModePicker />
       </div>
     </div>
@@ -122,11 +122,11 @@ function Masthead() {
  * התצוגה הממוקדת (הכרעות בעלים 23.10.2026): פס דק — שם האתר (וסמל הגזרה לחבריה), שעון העצר, "יש שאלה?" ו"למחקר מתקדם".
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
-function FocusBar({ logo }: { logo: string | null }) {
+function FocusBar({ member }: { member: boolean }) {
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const { toggle } = useInterface();
   return <div className="f-bar">
-    <NavLink to="/" className="f-logo">{logo && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
+    <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
     <FocusNav className="f-nav-top" />
     <span className="flex-1" />
@@ -223,8 +223,6 @@ function LayoutBody() {
   const unread = useSupportUnread(pathname);
   const session = useSession();
   const hagzara = useHagzaraTheme(session);
-  const group = session.me?.groups?.find(g => g.id === HAGZARA_GROUP_ID);
-  const logo = hagzara && group ? refImageUrl(group) : null;
   useEffect(() => {
     // קישור לעוגן (למשל /method#model מהעוזר או מ"איך זה חושב?") — המסך מגלל לערך בעצמו; לא מחזירים לראש העמוד
     if (!hash) window.scrollTo(0, 0);
@@ -242,10 +240,10 @@ function LayoutBody() {
       {advanced ? <header className="md:sticky md:top-0 md:z-40">
         <Masthead />
         <DesktopNav unread={unread} />
-      </header> : <header className="sticky top-0 z-40"><FocusBar logo={logo} /></header>}
+      </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} /></header>}
       <AccessCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
-        <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
+        <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       {advanced ? <MobileTabs unread={unread} /> : <FocusNav className="f-nav-bottom" />}
       {advanced && <GuessCta pathname={pathname} />}

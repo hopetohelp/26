@@ -42,6 +42,7 @@
  * POST /group/image {group,image|remove} ⇐ {group,image}  (בסשן) מנהל קבוצה: תמונה כ-data URL (jpeg/png/webp, עד 150KB), או remove:true. מנהל האתר: POST /admin/groups/image.
  * GET  /group/public?slug=<slug>   ⇐ GroupPublic  ציבורי, לבעלי הקישור: שם ותמונה. אין ⇐ 404.
  * GET  /group/image?slug=<slug>|group=<id> ⇐ תמונה (בינארי)  ציבורי, לתגית img.
+ * POST /group/link-join {slug}     ⇐ {ok}  (בסשן) נכנס דרך קישור הקבוצה; נספר כחבר רק אם המנהל הפעיל. GET|POST /group/link-members ⇐ {on,joined} מתג המנהל.
  * POST /group/visit {slug,fresh?}   ⇐ {ok}  ציבורי: ספירת כניסה דרך הקישור (fresh = הדפדפן נכנס בפעם הראשונה). ליום בלבד, בלי זהות.
  * GET  /group/stats?group=<id>     ⇐ GroupStats  (בסשן) מנהל קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה; מתחת ל-50 רשומים ⇐ belowMin.
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.

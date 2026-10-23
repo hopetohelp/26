@@ -235,3 +235,23 @@ describe("clearing all group members (הכרעת בעלים 12.10.2026)", () => 
     expect((await call("/group/import", { token: outsider, body: { group: "gizra", emails: [], mode: "replace" } })).status).toBe(403);
   });
 });
+
+// הצטרפות דרך הקישור (הכרעת בעלים 23.10.2026): נרשמת תמיד, נספרת רק אחרי שהמנהל מפעיל
+describe("members through the group link", () => {
+  it("count only after the manager turns it on, retroactively, and only for managers", async () => {
+    await create();
+    const boss = await managerToken();
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const guest = (await call("/auth/register", { body: { email: "guest@x.co", password: "a long pass phrase" } })).data.token;
+    expect((await call("/group/link-join", { token: guest, body: { slug: "hagzara" } })).status).toBe(200);
+    expect((await call("/group/link-join", { token: guest, body: { slug: "nope-nope" } })).status).toBe(404);
+    expect((await call("/group/link-join", { body: { slug: "hagzara" } })).status).toBe(401);
+    expect((await call("/me", { token: guest })).data.groups).toEqual([]);
+    expect((await call("/group/link-members?group=gizra", { token: boss })).data).toMatchObject({ on: false, joined: null });
+    expect((await call("/group/link-members", { token: guest, body: { group: "gizra", on: true } })).status).toBe(403);
+    expect((await call("/group/link-members", { token: boss, body: { group: "gizra", on: true } })).data).toMatchObject({ on: true, joined: 1 });
+    expect((await call("/me", { token: guest })).data.groups.map((g) => g.id)).toEqual(["gizra"]);
+    await call("/group/link-members", { token: boss, body: { group: "gizra", on: false } });
+    expect((await call("/me", { token: guest })).data.groups).toEqual([]);
+  });
+});

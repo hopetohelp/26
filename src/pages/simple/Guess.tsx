@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { SeatsPayload, VotePayload } from "../../lib/crowdApi";
 import { seatsSum, validateSeats } from "../../lib/crowdValidate";
-import { simpleValue } from "../../lib/simpleSources";
+import { SIMPLE_GUESS_HIDDEN, simpleValue } from "../../lib/simpleSources";
 import { IDS, startSeats, nameOf } from "../guess/model";
 import { flushUnit, useSession, useUnit } from "../guess/useCrowd";
 import SaveButton, { SaveError } from "../guess/SaveButton";
@@ -27,7 +27,7 @@ export default function SimpleGuess() {
   const invalidInput = !!editing && (!/^\d+$/.test(editing.text) || Number(editing.text) > 120);
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
   const ref = (id: string) => simpleValue(source.selection, [id]);
-  const order = [...IDS].sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
+  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id) || (draft.seats[id]?.v ?? 0) > 0).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
   const change = (id: string, v: number) => {
     // עריכה במנדטים מחליפה קלט אחוזים רק אחרי שינוי מפורש; יתר התאים והנעילות נשמרים.
     const { pct: _pct, calculation: _calculation, ...rest } = draft;
