@@ -1,3 +1,4 @@
+import { InterfaceProvider, useInterface } from "../lib/interfaceMode";
 import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
@@ -13,6 +14,7 @@ import { useSupportUnread } from "../lib/supportUnread";
 import ExitPollClock from "./ExitPollClock";
 import { MASTHEAD_SLOT } from "./SourcePicker";
 
+const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "הכנסת הממוצעת", icon: "bars" }];
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
 /** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
 const TABS = [
@@ -88,8 +90,10 @@ function ModePicker() {
  * שורה אחת בכל רוחב: שם האתר ומתחתיו תאריך הבחירות (מימין), שעון העצר עד המדגמים במרכז (הכרעת בעלים 12.10.2026, במקום "עוד N ימים"), בורר הממוצע של המסך הפתוח (18.10.2026) ובורר התצורה.
  */
 function Masthead() {
+  const { advanced, toggle } = useInterface();
   return (
     <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
+      {advanced && <div className="flex justify-end px-4 md:px-6 pt-1"><button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">מתקדם <span aria-hidden="true">{advanced ? "✓" : "○"}</span></button></div>}
       <div className="c-masthead-row w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
         <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
           <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
@@ -99,9 +103,10 @@ function Masthead() {
             <ElectionDate />
           </p>
         </div>
-        <ExitPollClock bar />
+        {advanced && <ExitPollClock bar />}
         {/* בורר הממוצע של המסך הפתוח (SourcePicker נכנס לכאן); ריק במסכים בלי בחירת מקור */}
         <div id={MASTHEAD_SLOT} className="c-masthead-source empty:hidden" />
+        {!advanced && <button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">מתקדם <span aria-hidden="true">{advanced ? "✓" : "○"}</span></button>}
         <ModePicker />
       </div>
     </div>
@@ -109,10 +114,11 @@ function Masthead() {
 }
 
 function DesktopNav({ unread }: { unread: boolean }) {
+  const { advanced } = useInterface();
   return (
     <nav aria-label="ניווט ראשי" className="hidden md:block bg-frame border-b border-frame-line">
       <ul className="w-full mx-auto px-2 md:px-4 flex flex-wrap gap-1 text-sm">
-        {NAV.map((n) => (
+        {(advanced ? NAV : SIMPLE_TABS).map((n) => (
           <li key={n.to}>
             <NavLink
               to={n.to}
@@ -137,6 +143,7 @@ function UnreadDot() {
 }
 
 function MobileTabs({ unread }: { unread: boolean }) {
+  const { advanced } = useInterface();
   const { pathname } = useLocation();
   const scroller = useRef<HTMLUListElement>(null);
   const [overflow, setOverflow] = useState(false);
@@ -148,10 +155,10 @@ function MobileTabs({ unread }: { unread: boolean }) {
     const observer = new ResizeObserver(update); observer.observe(el);
     el.addEventListener("scroll", update); document.fonts.ready.then(update); update();
     return () => { observer.disconnect(); el.removeEventListener("scroll", update); };
-  }, []);
+  }, [advanced]);
   useEffect(() => { scroller.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [pathname]);
   return <nav aria-label="ניווט בטלפון" className="c-mobile-tabs md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-    <ul ref={scroller} className="c-mobile-tab-list">{TABS.map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
+    <ul ref={scroller} className="c-mobile-tab-list">{(advanced ? TABS : SIMPLE_TABS).map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
     {overflow && <button type="button" className="c-tab-scroll" aria-label={atEnd ? "גלילה לתחילת הניווט" : "גלילה להמשך הניווט"} onClick={() => scroller.current?.scrollBy({ left: (atEnd ? 1 : -1) * scroller.current.clientWidth * .7, behavior: "smooth" })}>{atEnd ? "→" : "←"}</button>}
   </nav>;
 }
@@ -171,6 +178,10 @@ function GuessCta({ pathname }: { pathname: string }) {
 }
 
 export default function Layout() {
+  return <InterfaceProvider><LayoutBody /></InterfaceProvider>;
+}
+function LayoutBody() {
+  const { advanced } = useInterface();
   const { pathname, hash } = useLocation();
   const unread = useSupportUnread(pathname);
   useEffect(() => {
@@ -182,7 +193,7 @@ export default function Layout() {
   }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div data-interface={advanced ? "advanced" : "simple"} className="min-h-screen flex flex-col">
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
@@ -196,7 +207,7 @@ export default function Layout() {
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Outlet /></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       <MobileTabs unread={unread} />
-      <GuessCta pathname={pathname} />
+      {advanced && <GuessCta pathname={pathname} />}
     </div>
   );
 }

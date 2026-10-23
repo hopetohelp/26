@@ -5,7 +5,7 @@ import type { Poll } from "./data";
 import { pollSeatSummary } from "./pollRange";
 import { DATA_PRODUCTS, SUPPORT_RECONSTRUCTION, MAJORITY_SEATS, METHOD_VERSION, POLL_WINDOW_DAYS, identity, sourceAllowed, type ProductId, type DataScreen } from "./dataCatalog";
 
-export interface Selection { product: ProductId; source?: string; firms?: string[]; asOf?: string; days?: number }
+export interface Selection { product: ProductId; source?: string; firms?: string[]; publishers?: string[]; asOf?: string; days?: number }
 export interface SourceOption { id: string; label: string; firmId: string; publisherId: string | null; seriesId: string | null; explain: string }
 /** המזהים נשענים על שמות המקור הפנימיים הקבועים, ולא על תווית התצוגה בעברית. */
 export function sourceOptions(input: Poll[] = []): SourceOption[] {
@@ -141,7 +141,7 @@ export function createDataProvider({ polls, meta, lists2026, model }: ProviderIn
   const ADJUSTED_AVERAGE = adjusted;
   const completionCache = new Map<string, ReturnType<typeof adjustedAverage>>();
   const completedFor = (selection: Selection) => {
-    if (!selection.firms && selection.product !== "poll.single" && (selection.asOf ?? DATA_AS_OF) === DATA_AS_OF && (selection.days ?? POLL_WINDOW_DAYS) === POLL_WINDOW_DAYS) return adjusted;
+    if (!selection.firms && !selection.publishers && selection.product !== "poll.single" && (selection.asOf ?? DATA_AS_OF) === DATA_AS_OF && (selection.days ?? POLL_WINDOW_DAYS) === POLL_WINDOW_DAYS) return adjusted;
     const key = identity(selection);
     let result = completionCache.get(key);
     if (!result) { result = adjustedAverage(selectedPolls(selection), lists2026.map(l => l.id), AGREEMENTS); completionCache.set(key, result); }
@@ -152,13 +152,13 @@ function resolveData(selection: Selection, ids: string[], screen: DataScreen = "
   const members = [...new Set(ids)].sort();
   const normalized = { ...selection, asOf: selection.asOf ?? DATA_AS_OF, days: selection.days ?? POLL_WINDOW_DAYS };
   const input = selectedPolls(normalized);
-  const completed = selection.firms ? completedFor(selection) : adjusted;
+  const completed = selection.firms || selection.publishers ? completedFor(selection) : adjusted;
   const option = SOURCE_OPTIONS.find(o => o.id === selection.source);
 
   const summary = pollSeatSummary(input, members);
-  let status: DataResult["status"] = sourceAllowed(screen, selection.product) && (!selection.firms || ["polls.mean", "polls.adjusted"].includes(selection.product)) ? "available" : "unsupported";
+  let status: DataResult["status"] = sourceAllowed(screen, selection.product) && (!(selection.firms || selection.publishers) || ["polls.mean", "polls.adjusted"].includes(selection.product)) ? "available" : "unsupported";
   let value: number | null = null;
-  let assumptions: string[] = [definition.assumption, ...(selection.firms ? ["ממוצע אישי: רק המכונים שנבחרו; משקל שווה לכל סדרת מכון–מזמין אחרונה בחלון"] : [])];
+  let assumptions: string[] = [definition.assumption, ...(selection.publishers ? [`מזמינים נבחרים בלבד: ${selection.publishers.join(", ")}; משקל שווה לסדרה האחרונה בחלון`] : []), ...(selection.firms ? ["ממוצע אישי: רק המכונים שנבחרו; משקל שווה לכל סדרת מכון–מזמין אחרונה בחלון"] : [])];
   if (status === "available") {
     if (selection.product === "polls.mean" || selection.product === "poll.single") value = summary?.mean ?? (input.length ? 0 : null);
     else if (normalized.asOf !== DATA_AS_OF || normalized.days !== POLL_WINDOW_DAYS || selection.source) status = "unsupported";
@@ -199,8 +199,10 @@ function resolveSupport(selection: Selection) {
 function selectedPolls(selection: Selection): Poll[] {
   let input = latestPerPollster(selection.asOf ?? DATA_AS_OF, selection.days ?? POLL_WINDOW_DAYS);
   if (selection.firms) input = input.filter(p => selection.firms!.includes(p.firm));
+  if (selection.publishers) input = input.filter(p => p.publisher !== null && selection.publishers!.includes(p.publisher));
   if (selection.product !== "poll.single") return input;
   const option = SOURCE_OPTIONS.find(o => o.id === selection.source);
+  if (!option && selection.source?.startsWith("firm:")) return input.filter(p => p.firm === selection.source!.slice(5));
   return option ? input.filter(p => p.firm === option.firmId && (!option.seriesId || pollsterKey(p) === option.seriesId)) : [];
 }
 

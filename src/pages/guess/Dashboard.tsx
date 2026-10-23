@@ -1,3 +1,4 @@
+import { HAGZARA_GROUP_ID } from "../../lib/simpleSources";
 import SourcePicker from "../../components/SourcePicker";
 import { useSourcePreference } from "../../lib/sourcePreference";
 import { createContext, useContext } from "react";
@@ -83,7 +84,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // השוואה לכלל המשתתפים בתצוגת קבוצה: טורי ממוצע וטווח של כולם, אחרי קו הפרדה
   const [compare, setCompare] = useState(false);
   const all = crowd.dashboard;
-  const comparing = scope !== "all" && compare && view === "table" && !!all?.open;
+  const comparing = scope !== "all" && (compare || scope === HAGZARA_GROUP_ID) && view === "table" && !!all?.open;
   const groupName = groups.find((g) => g.id === scope)?.name ?? "הקבוצה";
   const overallSeats: Overall | undefined = comparing && all?.seats ? { name: groupName, of: (id) => all.seats!.full.find((x) => x.list === id) } : undefined;
   const allBlocs = useMemo(() => comparing && all?.blocs ? blocStats(all) : null, [comparing, all]);
@@ -124,7 +125,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
         <div>
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
         </div>
-        {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
+        {scope !== "all" && scope !== HAGZARA_GROUP_ID && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
       </div>}
       <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <ComparisonContext.Provider value={selection}>

@@ -1,3 +1,4 @@
+import { seatSaveError } from "./seatSaveGuard";
 /**
  * תור השליחה: גרסה שנשמרה בדפדפן ולא אושרה בשרת (אין חיבור, או שהתשובה נחסמה בדרך) נשלחת שוב
  * (וכך גם הערות מכפתור "הערה?" — src/lib/feedback.ts) בפתיחת האתר, כשהחיבור חוזר, כשחוזרים ללשונית, ופעם בשתי דקות כל עוד יש בתור משהו.
@@ -26,6 +27,7 @@ export function flushOutbox(): Promise<void> {
     for (const unit of queuedUnits()) {
       const p = S.pendingOp(unit);
       if (!p) continue;
+      try { if (seatSaveError(unit, JSON.parse(p.body))) { S.clearPending(unit); continue; } } catch { S.clearPending(unit); continue; }
       try {
         const r = await call<{ blind?: boolean }>("/save", { token, body: { unit, op_id: p.op, registry: meta.dataAsOf, payload: JSON.parse(p.body) } });
         // התשובה נחסמה ⇐ עוד לא בטוח שנקלט; נשאר בתור לסבב הבא

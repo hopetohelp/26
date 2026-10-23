@@ -644,3 +644,13 @@
 .mk-capsule-mark-v>.mk-capsule-tag { left:9px;transform:none;min-width:30px;max-width:none; }
 .mk-capsule-mark[data-kind=secondary]>.mk-capsule-cross { border-left-style:dashed; }
 .mk-capsule-mark-v[data-kind=secondary]>.mk-capsule-cross { border-top-style:dashed; }
+
+/* מצב פשוט משתמש באותה שפה וברכיבים; רק צפיפות ופריסה מותאמות לתוכן המצומצם. */
+[data-interface="simple"] .c-mobile-tab-list > li { flex: 1 1 0; min-width: 0; }
+.simple-table th, .simple-table td { overflow-wrap: anywhere; }
+.simple-table small { font-size: .7rem; font-weight: 400; }
+@media (min-width: 640px) {
+  .simple-editor input { max-width: 5rem; }
+  .simple-editor td:last-child > div { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .25rem; }
+  .simple-editor td:last-child > div > div { min-width: 5.5rem; }
+}
