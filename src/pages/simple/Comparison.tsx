@@ -72,6 +72,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const blocValues = member ? groupMeans : crowdMeans;
   const voters = member ? group : all;
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת הממוצעת</h1>
+    {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
     <SourceBar source={source} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}

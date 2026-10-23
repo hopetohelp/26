@@ -123,9 +123,10 @@ function Masthead() {
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
 function FocusBar({ logo }: { logo: string | null }) {
+  // חברי הגזרה: הסמל במחשב ובטאבלט, השם בטלפון (הכרעת בעלים 23.10.2026)
   const { toggle } = useInterface();
   return <div className="f-bar">
-    <NavLink to="/" className="f-logo">{logo && <img src={logo} alt="הגזרה" />}בחירות 26</NavLink>
+    <NavLink to="/" className="f-logo">{logo && <><img src={logo} alt="הגזרה" className="f-glogo" /><span className="f-gname">הגזרה ·</span></>}בחירות 26</NavLink>
     <FocusClock />
     <FocusNav className="f-nav-top" />
     <span className="flex-1" />
