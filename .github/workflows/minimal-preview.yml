@@ -8,11 +8,6 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    env:
-      VITE_FEEDBACK_URL: https://elections26-feedback.hopetohelp-il.workers.dev
-      VITE_CROWD_URL: https://elections26-crowd.hopetohelp-il.workers.dev
-      VITE_MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
-      MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
