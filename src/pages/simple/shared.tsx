@@ -61,7 +61,8 @@ function Capsule({ spread }: { spread: [number, number, number, number, number, 
   const mask = fill(o => `rgba(0,0,0,${o})`);
   // בצבעי הגזרה כל קפסולה עוברת בעצמה מאדום בהיר לכחול, בדגש על הכחול; מתחת לאחוז החסימה — בעיקר אדום (הכרעת בעלים 23.10.2026)
   const below = mx < THRESHOLD_SEATS;
-  const heat = { background: below ? "linear-gradient(90deg,rgb(var(--heat-lo)) 0 75%,rgb(var(--heat-hi)))" : "linear-gradient(90deg,rgb(var(--heat-lo)),rgb(var(--heat-hi)) 45%)", WebkitMask: mask, mask };
+  // מעבר עדין: הגוון מתחלף בהדרגה, והבדלי הבהירות הם אותם שלושה דרגים של המחקר המתקדם
+  const heat = { background: below ? "linear-gradient(90deg,rgb(var(--heat-lo)),color-mix(in srgb,rgb(var(--heat-lo)) 70%,rgb(var(--heat-hi))))" : "linear-gradient(90deg,color-mix(in srgb,rgb(var(--heat-lo)) 55%,rgb(var(--heat-hi))),rgb(var(--heat-hi)) 70%)", WebkitMask: mask, mask };
   return <span className="f-cap" style={{ left: x(mn), width: x(w) }}><i style={heat} /></span>;
 }
 export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };
