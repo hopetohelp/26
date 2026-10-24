@@ -753,7 +753,17 @@
 @media (max-width: 767px) { .f-nav a { padding:8px 10px;font-size:13px; } .f-nav-bottom { max-width:calc(100vw - 16px); } }
 .c-ai { border:1px solid rgb(var(--ai) / .45);background:rgb(var(--ai-soft));border-radius:var(--radius);padding:16px; }
 .c-ai .c-ai-ico { color:rgb(var(--ai));font-weight:800; }
-.f-save-float { position:fixed;z-index:44;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom));filter:drop-shadow(0 6px 16px rgb(var(--ink) / .25)); }
-@media (min-width: 768px) { .f-save-float { bottom:24px; } }
-body:has(.f-save-float) main { padding-bottom:9rem; }
 .c-ai-chat { border-top:3px solid rgb(var(--ai));padding-top:8px; }
+.f-seg-row { display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px; }
+.f-seg-row .f-seg { margin-bottom:0; }
+.f-count { font-size:13px;color:rgb(var(--ink-soft));margin-inline-start:auto; }
+.f-count b { color:rgb(var(--ink)); }
+/* מנדטים שלא חולקו: מסגרת אדומה מהבהבת (הכרעת בעלים 24.10.2026) */
+@keyframes f-miss-blink { 50% { stroke-opacity:.15; outline-color:rgb(var(--neg) / .15); } }
+path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s ease-in-out infinite; }
+.f-stack button.f-miss { outline:2px solid rgb(var(--neg));outline-offset:-2px;animation:f-miss-blink 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { path.f-miss, .f-stack button.f-miss { animation:none; } }
+.f-toast { position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(64px + env(safe-area-inset-top));max-width:calc(100vw - 32px);padding:10px 16px;border-radius:999px;background:rgb(var(--ink));color:rgb(var(--paper));font-weight:700;font-size:14px;box-shadow:0 8px 24px rgb(var(--ink) / .25); }
+/* התא של כל נתון במסגרת כמו הקו שלו — מקוטע לגזרה, רציף למשתתפים — כדי שיהיה ברור לאיזה קו שייך כל מספר כשהקווים צמודים (הכרעת בעלים 24.10.2026) */
+.f-mark:not(.soft) .f-tag { border:1.5px solid currentColor; }
+.f-mark.dash .f-tag { border-style:dashed; }

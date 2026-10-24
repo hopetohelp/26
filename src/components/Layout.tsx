@@ -20,7 +20,7 @@ import { useSession } from "../pages/guess/useCrowd";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
 
-const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "הכנסת הממוצעת", icon: "bars" }];
+const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "ממוצע הניחושים", icon: "bars" }];
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/ai", label: "AI" }, { to: "/account", label: "אזור אישי" }];
 /** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
 const TABS = [
