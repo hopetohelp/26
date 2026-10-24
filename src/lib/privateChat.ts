@@ -79,6 +79,9 @@ export async function removePrivateKey() {
   emit({ token, has: r.ok ? !!r.has : state.has });
 }
 
+/** החלפת משתמש: המפתח שנשמר במכשיר הזה נמחק, כדי שהמשתמש הבא לא ישתמש במפתח של קודמו */
+export function forgetDeviceKey() { writeDevice(null); }
+
 /** היכן המפתח האישי הזמין כעת: במכשיר, בחשבון, או null */
 export function usePrivateKey(): KeyPlace | null {
   const token = getToken();
