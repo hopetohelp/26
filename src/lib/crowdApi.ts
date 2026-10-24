@@ -160,6 +160,8 @@ export interface Me {
   groups?: GroupRef[];
   /** הקבוצות שהמשתמש מנהל — להעלאת רשימת החברים */
   managedGroups?: GroupRef[];
+  /** גרסת נוסח הפרטיות שאושרה (null = טרם אושר; חסר = שרת ישן) — src/lib/privacy.ts */
+  privacy?: number | null;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */

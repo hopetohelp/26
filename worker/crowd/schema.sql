@@ -325,3 +325,10 @@ CREATE TABLE IF NOT EXISTS data_source_prefs (
   value TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+
+-- אישור נוסח הפרטיות (הכרעת בעלים 24.10.2026): הגרסה האחרונה שהמשתמש אישר. גרסה חדשה של הנוסח ⇐ אישור מחדש בכניסה הבאה.
+CREATE TABLE IF NOT EXISTS privacy_consents (
+  participant TEXT PRIMARY KEY REFERENCES participants(id) ON DELETE CASCADE,
+  version INTEGER NOT NULL,
+  accepted_at TEXT NOT NULL
+);

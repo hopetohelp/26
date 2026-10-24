@@ -600,9 +600,12 @@ const routes = {
     const dataSource = sourcePref?.value ? JSON.parse(sourcePref.value) : null;
     // ההשערה האחרונה ממתינה לאישור מנהל (חריגה) — הגולש רואה אותה כרגיל, עם הסבר
     const seatsPending = latest.seats ? (await dashboardState(env)).pending.has(latest.seats.id) : false;
+    const consent = await env.DB.prepare("SELECT version FROM privacy_consents WHERE participant = ?").bind(participant).first();
     return {
       participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps, lineage, dataSource }, seatsPending,
       emails, name: prof ? await open(env, prof.name_enc) : null, hasPassword: !!pw,
+      // גרסת נוסח הפרטיות שהמשתמש אישר (null = טרם אישר) — האתר מבקש אישור כשהגרסה הנוכחית חדשה יותר
+      privacy: consent?.version ?? null,
       // חשבון בלי מייל ובלי Google (אורח או שם משתמש ישן) — נדרש להוסיף בכניסה הבאה (הכרעת בעלים 9.10.2026)
       needsEmail: !emails.length && !g,
       // אימות מייל במייל: זמין כשמוגדר מפתח Firebase
@@ -748,7 +751,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "participant_activity", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -872,6 +875,16 @@ const routes = {
   },
 
   // שם תצוגה (רשות) — נשמר מוצפן, מוצג רק לבעל החשבון
+  // אישור נוסח הפרטיות (הכרעת בעלים 24.10.2026): נשמרת הגרסה והמועד בלבד. מהדפדפן בלבד — לא דרך עוזר AI.
+  "POST /account/privacy": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const version = body.version;
+    if (!Number.isInteger(version) || version < 1 || version > 1000) throw bad("version");
+    await env.DB.prepare("INSERT INTO privacy_consents (participant, version, accepted_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET version = excluded.version, accepted_at = excluded.accepted_at WHERE excluded.version >= privacy_consents.version")
+      .bind(participant, version, iso(now)).run();
+    return { privacy: (await env.DB.prepare("SELECT version FROM privacy_consents WHERE participant = ?").bind(participant).first())?.version ?? null };
+  },
+
   "POST /account/name": async ({ env, request, now, body }) => {
     const { participant } = await requireAuth(env, request, now);
     const name = normalizeName(body.name);
