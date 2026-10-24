@@ -4,7 +4,9 @@ import GroupUpload from "../../components/GroupUpload";
 import GroupStats from "../../components/GroupStats";
 import { GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../../components/GroupTools";
 import { GroupManagerGuide } from "../../components/GroupGuide";
-import { hasConsent, setConsent } from "../../lib/crowdSession";
+import { setConsent } from "../../lib/crowdSession";
+import { PRIVACY_AGREE, recordPrivacy } from "../../lib/privacy";
+import { PrivacyBox } from "../../components/PrivacyConsent";
 import { clearResetSecret, getResetSecret } from "../../lib/resetPassword";
 import { FORGOT_LINE } from "./LinkSaver";
 import { Btn, Field, inputCls } from "./ui";
@@ -154,19 +156,16 @@ export function AuthForm({
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [pw, setPw] = useState("");
-  const [agree, setAgree] = useState(hasConsent);
+  const [agree, setAgree] = useState(false);
   const [forgot, setForgot] = useState(false);
   const a = useAction(mode === "register" ? "הרשמה" : "כניסה");
   const register = mode === "register";
   return (
     <div className="space-y-4">
-      <label className="flex items-start gap-2 text-sm font-bold">
-        <input type="checkbox" className="mt-1 w-5 h-5 shrink-0" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-        הבנתי: הגרסה האחרונה שלי נכנסת לממוצע האנונימי של המשתתפים, ואפשר למחוק הכול בכל רגע.
-      </label>
+      <PrivacyBox agree={agree} onAgree={setAgree} />
       <section className="space-y-2" aria-label="כניסה עם Google">
-        <GoogleButton session={session} onDone={onDone} disabled={!agree} />
-        {!agree && <p className="text-xs text-ink">הכפתור יופיע אחרי סימון "הבנתי".</p>}
+        <GoogleButton session={session} onDone={(t) => { void recordPrivacy(t).then(() => session.refresh(), () => {}); onDone?.(t); }} disabled={!agree} />
+        {!agree && <p className="text-xs text-ink">הכפתור יופיע אחרי סימון "{PRIVACY_AGREE}".</p>}
       </section>
       <form
         className="space-y-3 border-t border-paper-line pt-3"
@@ -174,6 +173,7 @@ export function AuthForm({
           const r = await call<{ token: string; link?: string }>(`/auth/${mode}`, { body: register ? { email, password: pw, ...(name.trim() ? { name } : {}) } : { email, password: pw } });
           setPw("");
           setConsent(true);
+          if (agree) await recordPrivacy(r.token).catch(() => {});
           session.setToken(r.token);
           // הרשמה במייל ⇐ נשלח מייל אימות; כישלון אינו חוסם (אפשר לשלוח שוב ב"הפרטים שלי")
           let note = "";

@@ -6,6 +6,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { ScreenLegend } from "./ChartLegend";
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
+import PrivacyCard from "./PrivacyConsent";
 import { meta } from "../lib/data";
 import { date } from "../lib/format";
 import { useMode, type ModeId } from "../lib/theme";
@@ -242,6 +243,7 @@ function LayoutBody() {
         <DesktopNav unread={unread} />
       </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} /></header>}
       <AccessCard />
+      <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
