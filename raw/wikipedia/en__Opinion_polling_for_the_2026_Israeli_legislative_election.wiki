@@ -1,7 +1,7 @@
 {{Short description|None}}
 {{For|polling on leadership specifically|Leadership opinion polling for the 2026 Israeli legislative election}}
 {{protection padlock|small=yes}}
-{{Use dmy dates|date=September 2026}} 
+{{Use dmy dates|date=October 2026}} 
 
 In the run up to the [[2026 Israeli legislative election]], various organisations are conducting [[opinion poll]]ing to gauge voting intention in [[Israel]] during the term of the [[List of members of the twenty-fifth Knesset|twenty-fifth Knesset]]. This article lists the results of such polls. The date range for these opinion polls is from the [[2022 Israeli legislative election]], held on 1 November, to the present day. In keeping with the [[election silence]] law, no polls may be published from the end of the Friday before the election until the [[polling station]]s close on election day at 22:00.<ref name="silence">[[s:he:חוק הבחירות (דרכי תעמולה)#סעיף 16ה]] (ח) (in Hebrew)</ref>
 
@@ -94,7 +94,7 @@ This graph shows the polling trends from the [[2022 Israeli legislative election
 === Guide to the table ===
 Polls are listed in reverse chronological order and using the dates when the survey fieldwork was done, as opposed to the date of publication. Where the fieldwork dates are unknown, the date of publication is given instead.
 
-The parties which hold Knesset seats are listed in descending order by the number of seats they received in the 2022 election: [[Likud]], [[Together (Israel)|Together]] ([[Yesh Atid]] competed on its own previously but will run with [[Bennett 2026]] in this election), the [[Religious Zionist Party]] (which formed a [[technical bloc]] with [[Zehut]] this election) and [[Otzma Yehudit]] (which previously ran with RZP), [[Blue and White (political party)|Blue and White]], [[Shas]], [[United Torah Judaism]] (which consists of [[Agudat Yisrael]], [[Homat Torat Yisrael]] and [[Degel HaTorah]]), [[Yisrael Beiteinu]], [[Ra'am]] (which formed a technical bloc with [[Yoav Segalovitz]] this election), the [[Joint List]] (which previously ran separately as [[Hadash–Ta'al]] and [[Balad (political party)|Balad]]), followed by [[The Democrats (Israel)|The Democrats]] (which won seats as [[Israeli Labor Party|Labor]] and merged with [[Meretz]] to form the new party).
+The parties which hold Knesset seats are listed in descending order by the number of seats they received in the 2022 election: [[Likud]], [[Together (Israel)|Together]] ([[Yesh Atid]] competed on its own previously but will run with [[Bennett 2026]] in this election), the [[Religious Zionist Party]] (which formed a [[technical bloc]] with [[Zehut]] this election) and [[Otzma Yehudit]] (which previously ran with RZP), [[Shas]], [[United Torah Judaism]] (which consists of [[Agudat Yisrael]], [[Homat Torat Yisrael]] and [[Degel HaTorah]]), [[Yisrael Beiteinu]], [[Ra'am]] (which formed a technical bloc with [[Yoav Segalovitz]] this election), the [[Joint List]] (which previously ran separately as [[Hadash–Ta'al]] and [[Balad (political party)|Balad]]), followed by [[The Democrats (Israel)|The Democrats]] (which won seats as [[Israeli Labor Party|Labor]] and merged with [[Meretz]] to form the new party).
 
 The table also includes new parties that do not hold seats, specifically [[Yashar (political party)|Yashar]], [[The Reservists (political party)|The Reservists]], [[Amcha Yisrael]], and [[Haredi Public]]. Parties that are not polled on consistently are listed in footnotes, including [[Noam (political party)|Noam]], which currently holds a seat. 
 
@@ -105,6 +105,8 @@ The column headed Others contains figures for assorted smaller parties in cases 
 The party receiving the highest number of projected seats has its figure displayed in bold with the background shaded in the party's colour. In the case of a tie, the parties tying for the highest number of projected seats have their figures displayed in bold with the backgrounds shaded in their colours.
 
 The [[Thirty-seventh government of Israel|37th government]] parties and alliances (Likud, Religious Zionist Party, Otzma Yehudit, Shas, and United Torah Judaism) are <span style="background-color: #D9D9F8;">highlighted</span>. The sum of their projected seats is shown in the column headed "Gov." If that sum constitutes a majority of the Knesset (61 or more seats), it is highlighted and bolded.
+
+The results of [[exit poll]]s are highlighted in <span style="background-color: #ffffdd;">yellow</span>, while the election results are highlighted in <span style="background-color: #c0c0c0;">gray</span>.
 
 === 2026 ===
 {{Sticky header}}
@@ -149,7 +151,28 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 ! style="background:#0000CD" |
 |-
 |23 Oct
-| colspan="21" |''From 23:59 local time on Friday 23 October until the close of polls on Tuesday 27 October, no new opinion polls may be published''<ref>{{Cite news |last=Shirkani Kofman |first=Elinor |date=2026-10-20 |title=Israel warns of illegal election polls ahead of vote |url=https://www.israelhayom.com/2026/10/20/israel-warns-of-illegal-election-polls-ahead-of-vote/ |access-date=2026-10-21 |work=[[Israel Hayom]]}}</ref>
+| colspan="21" |From 23:59 local time on Friday 23 October until the close of polls on Tuesday 27 October, no new opinion polls may be published<ref>{{Cite news |last=Shirkani Kofman |first=Elinor |date=20 October 2026 |title=Israel warns of illegal election polls ahead of vote |url=https://www.israelhayom.com/2026/10/20/israel-warns-of-illegal-election-polls-ahead-of-vote/ |access-date=21 October 2026 |work=[[Israel Hayom]]}}</ref>
+|-
+|{{Opdrts||22|Oct|2026}}
+|style=background:Burlywood |Kantar
+|''[[Israel Hayom]]''<ref name="Kantar23oct">{{Cite web |title=גוש איזנקוט שומר על יתרון - לאף צד אין 61 {{!}} סקרי המנדטים האחרונים" |trans-title= |work=Israel Hayom |date=23 October 2026 |url=https://www.israelhayom.co.il/news/politics/article/21694000|language=he-IL|access-date=24 October 2026}}</ref>
+|{{N/A}}
+|21
+|14
+|colspan=2|6
+|8
+|8
+|7
+|7
+|5
+|9
+|8
+|style=background:#d0eafb|'''23'''
+|colspan=2|4
+|{{N/A}}
+|{{N/A}}
+|{{N/A}}
+|50
 |-
 |{{Opdrts||22|Oct|2026}}
 | style=background:DarkOrange |SF+ND
@@ -169,12 +192,75 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(1.9%)}}
 |{{small|(1.5%)}}
 |{{small|(0.3%)}}
-|{{small|(0.8%)}}{{efn|[[Noam (political party)|Noam]] at 0.6%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
+|0.8%{{efn|[[Noam (political party)|Noam]] at 0.6%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
 |style="background:#b2b2f0" |'''62'''
+|-
+|{{Opdrts|21|22|Oct|2026}}
+| style=background:Turquoise |Yossi Tatika
+|''[[Zman Yisrael]]''<ref name="22OctYossi">{{Cite web |title= שוויון בין הגושים |trans-title= |work=Zman Yisrael |date=22 October 2026 |url=https://www.zman.co.il/735649/ |language=he-IL}}</ref>
+|500
+|21
+|11
+|colspan=2|6
+|8
+|8
+|8
+|9
+|5
+|9
+|8
+|style="background:#d0eafb" |'''23'''
+|colspan=2|4
+|{{small|(3.0%)}}
+|{{N/A}}
+|{{N/A}}
+|51
+|-
+|{{Opdrts|19|22|Oct|2026}}
+| style=background:#F86B61 |LRI+P4A
+|[[Maariv (newspaper)|''Maariv'']]<ref>{{cite news |title=סקר מנדטים של מעריב: עופר וינטר בחוץ - וגוש נתניהו נכנס לצרות|work=[[Maariv (newspaper)|Maariv]]|url=https://www.maariv.co.il/news/elections-2026/article-1380289|date=22 October 2026|access-date=23 October 2026|language=he}}</ref>
+|1048
+|19
+|15
+|colspan=2|7
+|7
+|8
+|7
+|8
+|5
+|9
+|10
+|style="background:#d0eafb" |'''21'''
+|colspan=2|4
+|{{small|(3.0%)}}
+|{{small|(0.9%)}}
+|1.0%{{efn|[[Noam (political party)|Noam]] at 0.5%, <br/>[[Tzomet]]-[[Gadi Yevarkan|Beit Yisrael]] at 0.5%}}
+|48
+|-
+|{{Opdrts||21|Oct|2026}}
+| style="background:mediumseagreen" |MP+TM+SN+A
+| [[Channel 13 (Israel)|Channel 13]]<ref>{{Cite web |title=וינטר לא עובר את אחוז החסימה - ומשנה את תמונת הגושים |trans-title=Winter does not pass the threshold - and changes the picture of the blocs |publisher=Channel 13 |date=21 October 2026 |url=https://13tv.co.il/item/news/politics/politics/ksgoq-905411865/?pid=106628/ |language=he-IL }}</ref>
+|1084
+|19
+|14
+|colspan=2|8
+|7
+|7
+|8
+|8
+|6
+|9
+|10
+|style="background:#d0eafb" |'''20'''
+|colspan=2|4
+|{{small|(3.2%)}}
+|{{small|(1.2%)}}
+|{{N/A}}
+|49
 |-
 |{{Opdrts||21|Oct|2026}}
 |style=background:#FFDFCC |Midgam R&C
-|[[HaHadashot 12]]<ref>{{Cite web |title=בנט ממשיך להתחזק, וינטר עובר את אחוז החסימה {{!}} סקר חדשות 12 |trans-title=Bennett continues to strengthen, Winter passes the treashold | News Poll 12 |publisher=Channel 12 |date=21 October 2026 |access-date=22 October 2026 | url=https://www.mako.co.il/news-israel-elections/2026/Article-bf175ad340f51a1027.htm |language=he-IL}}</ref>
+|[[HaHadashot 12]]<ref>{{Cite web |title=בנט ממשיך להתחזק, וינטר עובר את אחוז החסימה {{!}} סקר חדשות 12 |trans-title=Bennett continues to strengthen, Winter passes the threshold {{!}} News Poll 12 |publisher=Channel 12 |date=21 October 2026 |access-date=22 October 2026 | url=https://www.mako.co.il/news-israel-elections/2026/Article-bf175ad340f51a1027.htm |language=he-IL}}</ref>
 |505
 |19
 |15
@@ -190,7 +276,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.8%)}}
 |4
 |{{small|(0.3%)}}
-|{{small|(0.3%)}}{{efn|[[Jerusalem Faction|Code Black]] at 0.3%}}
+|0.3%{{efn|[[Jerusalem Faction|Code Black]] at 0.3%}}
 |47
 |-
 |{{Opdrts||21|Oct|2026}}
@@ -211,7 +297,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.2%)}}
 |{{small|(1.7%)}}
 |{{small|(0.3%)}}
-|{{small|(0.8%)}}{{efn|[[Noam (political party)|Noam]] at 0.6%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
+|0.8%{{efn|[[Noam (political party)|Noam]] at 0.6%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
 |style="background:#b2b2f0" |'''62'''
 |-
 |{{Opdrts||20|Oct|2026}}
@@ -232,7 +318,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.6%)}}
 |{{small|(3.1%)}}
 |{{small|(<1%)}}
-|{{small|(<4%)}}{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
+|<4%{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
 |58
 |-
 |{{Opdrts||20|Oct|2026}}
@@ -253,8 +339,50 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.5%)}}
 |{{small|(1.9%)}}
 |{{small|(0.9%)}}
-|{{small|(1.3%)}}{{efn|[[Noam (political party)|Noam]] at 0.9%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.4%}}
+|1.3%{{efn|[[Noam (political party)|Noam]] at 0.9%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.4%}}
 |style="background:#b2b2f0" |'''62'''
+|-
+|{{Opdrts||19|Oct|2026}}
+| style=background:#F86B61 |LRI+P4A
+|[[Walla! Communications|Walla]]<ref name="Walla20October">{{cite news |title=וינטר בחוץ, איזנקוט פותח פער מנתניהו ובנט מתחזק - מפת הגושים החדשה {{!}} סקר וואלה|work=[[Walla! Communications|Walla]] |url=https://www.walla.co.il/news/politics/383958175|date=20 October 2026|access-date=22 October 2026|author=Avi Solomon|language=he-IL}}</ref>
+|601
+|19
+|14
+|colspan=2|6
+|8
+|8
+|7
+|8
+|6
+|8
+|9
+|style="background:#d0eafb" |'''23'''
+|colspan=2 | 4
+||{{small|(2.9%)}}
+|{{N/A}}
+|0.2%{{efn|[[Noam (political party)|Noam]] at 0.2%}}
+|48
+|-
+|{{Opdrts||20|Oct|2026}}
+| style=background:skyblue |Maagar Mochot
+|[[Channel 16 (Israel)|Channel 16]]<ref>{{cite web|date=20 October 2026 |title=Main News Edition, from 27:05 to 28:10 |url=https://www.ch16.co.il/player/episode/6ad7c75c42b177b76126222c|access-date=22 October 2026 |publisher=Channel 16|language=he-IL}}</ref>
+|2026
+|18
+|15
+|colspan=2|6
+|9
+|6
+|7
+|7
+|5
+|9
+|9
+|style="background:#d0eafb" |'''21'''
+|colspan=2|4
+|4
+|{{small|(0.6%)}}
+|0.2%{{efn|Other parties not specified}}
+|46
 |-
 |{{Opdrts||19|Oct|2026}}
 | style="background:mediumseagreen" |MP+TM+SN+A
@@ -296,11 +424,11 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.6%)}}
 |{{small|(2.2%)}}
 |{{small|(0.3%)}}
-|{{small|(2.0%)}}{{efn|[[Noam (political party)|Noam]] at 1.5%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.5%}}
+|2.0%{{efn|[[Noam (political party)|Noam]] at 1.5%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.5%}}
 |style="background:#b2b2f0" |'''62'''
 |-
 |19 Oct
-| colspan="21" |[[Blue and White (political party)|Blue & White]] withdraws from race<ref>{{Cite news |last=Karmel |first=Ariela |title=Blue and White’s Benny Gantz pulls out of race, sealing precipitous political fall |url=https://www.timesofisrael.com/blue-and-whites-benny-gantz-pulls-out-of-race-sealing-precipitous-political-fall/ |access-date=2026-10-19 |work=The Times of Israel |language=en-US|date=19 October 2026}}</ref>
+| colspan="21" |[[Blue and White (political party)|Blue & White]] withdraws from race<ref>{{Cite news |last=Karmel |first=Ariela |title=Blue and White’s Benny Gantz pulls out of race, sealing precipitous political fall |url=https://www.timesofisrael.com/blue-and-whites-benny-gantz-pulls-out-of-race-sealing-precipitous-political-fall/ |access-date=19 October 2026 |work=The Times of Israel |language=en-US|date=19 October 2026}}</ref>
 |-
 |}
 {| class="wikitable sortable sticky-header-multi" style="text-align:center;font-size:90%;line-height:12px"
@@ -386,7 +514,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.4%)}}
 |{{small|(2.9%)}}
 |{{small|(<1%)}}
-|{{small|(<4%)}}{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
+|<4%{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
 |57
 |-
 |{{Opdrts||18|Oct|2026}}
@@ -409,7 +537,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.4%)}}
 |{{small|(2.4%)}}
 |{{small|(0.5%)}}
-|{{small|(1.0%)}}{{efn|[[Noam (political party)|Noam]] at 0.8%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
+|1.0%{{efn|[[Noam (political party)|Noam]] at 0.8%, <br/>[[Haim Yosef Abergel|Ahi]] at 0.2%}}
 |style="background:#b2b2f0" |'''61'''
 |-
 |{{Opdrts||18|Oct|2026}}
@@ -522,7 +650,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.2%)}}
 |{{small|(3.1%)}}
 |{{small|(<1%)}}
-|{{small|(<4%)}}{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
+|<4%{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
 |57
 |-
 |{{Opdrts||13|Oct|2026}}
@@ -723,7 +851,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |colspan=2|{{small|(2.3%)}}
 |4
 |{{small|(<1%)}}
-|{{small|(<4%)}}{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
+|<4%{{efn|[[Haim Yosef Abergel|Ahi]] at <1%,<br/>  [[Jerusalem Faction|Code Black]] at <1%,<br/> [[Israel First (political party)|Israel First]]-[[Ale Yarok]] at <1%, <br/> and [[Noam (political party)|Noam]] at <1%.}}
 |56
 |-
 |{{Opdrts||7|Oct|2026}}
@@ -1454,7 +1582,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||9|Sep|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
 |[[Channel 13 (Israel)|Channel 13]]<ref>{{Cite web |title=אחרי סגירת הרשימות: נתניהו נחלש, שוויון במפת הגושים |trans-title=|publisher=Channel 13 |date=9 September 2026 |access-date=9 September 2026 |url=https://13tv.co.il/item/news/politics/politics/z10wm-905351997/ |language=he-IL }}</ref>
-|1,119
+|1119
 |19
 |13
 |colspan=2|6
@@ -1476,7 +1604,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||9|Sep|2026}}
 | style=background:yellow |Direct Polls
 |[[i24NEWS (Israeli TV channel)|i24 News]]<ref>{{Cite web |date=9 September 2026 |title=סקר i24NEWS אחרי סגירת הרשימות: הליכוד שומרת על כוחה, וינטר נחלש {{!}} הנתונים המלאים|url=https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-a92f58d0|access-date=9 September 2026 |publisher=i24NEWS}}</ref>
-|1,054
+|1054
 |style="background:#BBCDE4" |'''27'''
 |10
 |colspan=2|6
@@ -1611,7 +1739,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||7|Sep|2026}}
 |style=background:Ivory |S.M.L.T.
 |{{N/A}}<ref name="SMLT7sep">{{Cite web |title=דיווח תוצאות סקר בחירות לכנסת ה־26|work=D.R.I. Consulting |date=7 September 2026|url=https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election59/he/Survey_4135.pdf|lang=he-IL|access-date=17 September 2026 }}</ref>
-|2,185
+|2185
 | style="background:#BBCDE4" |'''25'''
 |9
 |colspan=2|8
@@ -1633,7 +1761,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||7|Sep|2026}}
 | style=background:DarkOrange |SF+ND
 |[[Channel 14 (Israel)|Channel 14]]<ref name="Filber7Sep">{{Cite web |title=סקר חדשות 14: כמה מניב איחוד הנדל-זליכה - והאם וינטר עובר?|work=Channel 14 |date=7 September 2026|url=https://www.c14.co.il/article/1693697|lang=he-IL|access-date=7 September 2026 }}</ref><ref>{{cite web|date=7 September 2026|title=Poll: Gap between blocs closes |url=https://www.israelnationalnews.com/news/432858|access-date=13 September 2026 |work=[[Arutz Sheva]]}}</ref>
-|1,057
+|1057
 | style="background:#BBCDE4" |'''30'''
 |6
 |colspan=2|8
@@ -2114,7 +2242,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||26|Aug|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam26aug">{{cite web|date=26 August 2026 |title=כמה מנדטים שווה מפלגת וינטר - והטלטלה הדרמטית במפת הגושים |url=https://13tv.co.il/item/news/politics/politics/ykep2-905329839/?pid=519 |access-date=19 August 2026 |publisher=[[Channel 13 (Israel)|Channel 13]] |language=he-IL}}</ref>
-|1,407
+|1407
 |19
 |13
 |5
@@ -2410,7 +2538,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||19|Aug|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam19aug here">{{cite web|date=19 August 2026 |title=הזינוק של איזנקוט - וכמה מנדטים שווה רשימת הליכוד החדשה? |url=https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628 |access-date=19 August 2026 |publisher=[[Channel 13 (Israel)|Channel 13]] |language=he-IL}}</ref>
-|1,247
+|1247
 |23
 |13
 |5
@@ -2570,7 +2698,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||16|Aug|2026}}
 |style=background:burlywood |Kantar
 |[[Kan 11]]<ref name="Kan16Aug">{{Cite web |title=סקר כאן חדשות: איזנקוט ונתניהו בשוויון, בנט מתחזק|publisher=[[Kan 11]] |access-date=16 August 2026 |url=https://www.kan.org.il/content/kan-news/politic/1089536/|date=16 August 2026}}</ref>
-|1,103
+|1103
 | style="background:#BBCDE4" |'''23'''
 |14
 |4
@@ -2661,7 +2789,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||12|Aug|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A
 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam12aug">{{cite web|date=12 August 2026 |title=השינוי במפת המנדטים והגושים - והאם ארדן עובר את אחוז החסימה? |url=https://13tv.co.il/item/news/politics/politics/yj7o4-905308914/?pid=519 |access-date=12 August 2026 |publisher=[[Channel 13 (Israel)|Channel 13]] |language=he-IL}}</ref>
-|1,240
+|1240
 |21
 |12
 |5
@@ -3743,7 +3871,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||1|July|2026}}
 | style=background:mediumseagreen |MP+TM+SN+A`
 |[[Channel 13 (Israel)|Channel 13]]<ref name="Midgam1Jul2">{{cite web |title=בנט ממשיך לקרוס - וכמהבנט מתחזק, גוש נתניהו נחלש - וכמה רוצים ממשלת אחדות?|publisher=[[Channel 13 (Israel)|Channel 13]] |url=https://13tv.co.il/item/news/politics/politics/avnex-905246247/?pid=517&refc=902986281|date=1 July 2026|access-date=1 July 2026 |language=he-IL}}</ref>
-|1,108<ref name="Midgam1Jul">{{cite web |title=סקר המדד – יולי 1, 2026|website=themadad.com |url=https://themadad.com/%d7%a1%d7%a7%d7%a8-%d7%94%d7%9e%d7%93%d7%93-%d7%99%d7%95%d7%9c%d7%99-1-2026/|date=1 July 2026|access-date=22 July 2026 |language=he-IL}}</ref>
+|1108<ref name="Midgam1Jul">{{cite web |title=סקר המדד – יולי 1, 2026|website=themadad.com |url=https://themadad.com/%d7%a1%d7%a7%d7%a8-%d7%94%d7%9e%d7%93%d7%93-%d7%99%d7%95%d7%9c%d7%99-1-2026/|date=1 July 2026|access-date=22 July 2026 |language=he-IL}}</ref>
 |style="background:#BBCDE4" |'''21'''
 |17
 |5
@@ -3992,7 +4120,7 @@ The [[Thirty-seventh government of Israel|37th government]] parties and alliance
 |{{Opdrts||18|June|2026}}
 | style=background:DarkOrange |SF+ND
 |[[Channel 14 (Israel)|Channel 14]]<ref>{{Cite web |title=דרמה: בנט מתקרב למספר חד-ספרתי של מנדטים, איזנקוט מזנק ל-20 |trans-title= |publisher=Channel 14 |date=18 June 2026 |url=https://www.c14.co.il/article/1592468|language=he-IL|access-date=30 June 2026}}</ref>
-|1,552
+|1552
 | style="background:#BBCDE4" |'''33'''
 |10
 |4

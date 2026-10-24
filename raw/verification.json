@@ -2390,5 +2390,127 @@
     "source": "https://www.ice.co.il/research/news/article/1134790"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-24",
+  "id": "2026-10-22-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת i24NEWS עצמה (מקור ראשוני): מנדטי 12 הרשימות (סך 120) ואחוזי המילואימניקים זהים לרשומה.",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-07d162ea",
+  "sourceDetails": {
+   "published": "2026-10-23T20:00:00+03:00",
+   "sample_respondents": 5124
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-07d162ea"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-07d162ea"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-24",
+  "id": "2026-10-23-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת חדשות 12 עצמה (מקור ראשוני) ול-ynet: מנדטי 11 הרשימות (סך 120) והאחוזים זהים.",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-8ea5e45ec2961a1027.htm",
+  "sourceDetails": {
+   "published": "2026-10-23T21:18:00+03:00",
+   "sample_respondents": 1018
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-8ea5e45ec2961a1027.htm"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-8ea5e45ec2961a1027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-10-24",
+  "id": "2026-10-23-mp-tm-sn-a-channel-13",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "הושווה לכתבת חדשות 13 עצמה (מקור ראשוני) ול-ynet ולהארץ: מנדטי 11 הרשימות (סך 120) זהים; גודל המדגם בהארץ (1,084) שונה מהמקור.",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905415900/",
+  "sourceDetails": {
+   "published": "2026-10-23T21:10:00+03:00",
+   "sample_respondents": 1875
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-905415900/"
+   },
+   "pct": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-905415900/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-10-24",
+  "id": "2026-10-20-maagar-mochot-channel-16",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "נקלט מרענון טבלת ויקיפדיה (שידור ערוץ 16, 20.10.2026). לא נמצא פרסום כתוב בגלישה; המספרים לא אומתו מול מקור נוסף.",
+  "source": "https://www.ch16.co.il/player/episode/6ad7c75c42b177b76126222c",
+  "status": "unreachable"
  }
 ]
