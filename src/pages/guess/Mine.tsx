@@ -7,7 +7,8 @@ import Seats, { HowTo } from "./Seats";
 import Vote from "./Vote";
 import { Btn, Notice } from "./ui";
 import { HistoryLink } from "./GuessIntro";
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { useOpenVote } from "./ClosedNote";
 import CardDrawer from "../../components/CardDrawer";
 import { flushPending, flushUnit, useUnit, type useSession } from "./useCrowd";
 
@@ -19,6 +20,7 @@ export default function Mine({ session, seats, complete, shared, onStatistics }:
   // ההצבעה במגירת פרטים נוספים; קישור ישן פותח אותה וגולל אליה.
   const [voteOpen, setVoteOpen] = useState(requested === "vote");
   const voteCard = useRef<HTMLDivElement>(null);
+  useOpenVote(useCallback(() => { setVoteOpen(true); voteCard.current?.scrollIntoView({ block: "start", behavior: "smooth" }); }, []));
   useEffect(() => { if (requested === "vote") { setVoteOpen(true); voteCard.current?.scrollIntoView({ block: "start" }); } }, [requested]);
   const sec: Sec = requested === "blocs" || requested === "history" ? requested : "seats";
   // הלשונית "האחוזים" אוחדה עם "המפלגות" (מתג מנדטים | אחוזים, הכרעת בעלים 10.10.2026): קישור ישן נפתח במצב אחוזים

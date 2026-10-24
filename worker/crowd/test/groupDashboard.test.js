@@ -58,7 +58,7 @@ describe("group dashboard", () => {
     // מתחת לסף: בלי נתונים, רק המונה (הכרעת בעלים 12.10.2026)
     expect((await call("/me", { token: members[0] })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", slug: "hagzara", image: null }]);
     let d = (await call("/dashboard?group=gizra", { token: members[0] })).data;
-    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: GROUP_MIN - 1, publishedAt: expect.any(String) });
+    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: GROUP_MIN - 1, publishedAt: expect.any(String), compare: "polls" });
 
     // חבר נוסף נרשם אחרי טעינת הרשימה — נכנס לבד (הצלבה בכל חישוב)
     members.push(await account(`m${GROUP_MIN - 1}@x.co`, true, 70));
@@ -193,7 +193,7 @@ describe("managers count as group members (הכרעת בעלים 12.10.2026)", (
     await load(["a@x.co"]);
     const a = await account("a@x.co");
     const d = (await call("/dashboard?group=gizra", { token: a })).data;
-    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: 1, publishedAt: expect.any(String) });
+    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: 1, publishedAt: expect.any(String), compare: "polls" });
     expect(JSON.stringify(d)).not.toMatch(/seats|blocs|vote|mean/);
   });
 });
@@ -275,5 +275,20 @@ describe("group guess moderation", () => {
     expect((await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: d.salt, handle: row.handle, decision: "rejected" } })).data).toEqual({ ok: true });
     const member = await account("x@x.co");
     expect((await call("/group/guesses?group=gizra", { token: member })).status).toBe(403);
+  });
+});
+
+describe("group comparison reference", () => {
+  it("defaults to polls; only the manager changes it; members see it", async () => {
+    const mgr = await account("boss@x.co");
+    const member = await account("m0@x.co");
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/dashboard?group=gizra", { token: member })).data.compare).toBe("polls");
+    expect((await call("/group/compare", { token: member, body: { group: "gizra", compare: "crowd" } })).status).toBe(403);
+    expect((await call("/group/compare", { token: mgr, body: { group: "gizra", compare: "x" } })).status).toBe(400);
+    expect((await call("/group/compare", { token: mgr, body: { group: "gizra", compare: "crowd" } })).data).toEqual({ group: "gizra", compare: "crowd" });
+    expect((await call("/group/compare?group=gizra", { token: mgr })).data.compare).toBe("crowd");
+    expect((await call("/dashboard?group=gizra", { token: member })).data.compare).toBe("crowd");
   });
 });

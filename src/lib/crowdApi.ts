@@ -252,7 +252,9 @@ export interface GroupPublic { id: string; slug: string; name: string | null; im
 /** תשובת GET /group/link-stats — כניסות דרך הקישור: בסך הכול, היום, ודפדפנים שונים (כניסה ראשונה). מונה אנונימי */
 export interface GroupLinkStats { group: string; slug: string | null; opens: number; today: number; fresh: number }
 /** תשובת GET /dashboard?group= — מתחת לסף: בלי נתונים, רק הספירה (participants) */
-export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; participants?: number; publishedAt: string };
+/** compare = למה משווים את ממוצע הקבוצה (מנהל הקבוצה קובע; ברירת מחדל polls) */
+export type GroupCompare = "polls" | "crowd";
+export type GroupDashboard = ((Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; participants?: number; publishedAt: string }) & { compare?: GroupCompare };
 /** תשובת טעינת מנה של רשימת חברים */
 export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
 /** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */

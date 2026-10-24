@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
+import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
 import GroupSeriesChart from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
@@ -75,6 +75,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
             <Guesses ins={ins} />
             <Questions q={ins.questions} />
           </div>)}
+      <CompareSwitch id={id} token={token} />
       <Section title="אישור השערות">
         <AdminGuesses group={{
           load: () => call(`/group/guesses?group=${q(id)}`, { token }),
@@ -85,6 +86,25 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
       </Section>
     </>
+  );
+}
+
+/** למה משווים את ממוצע הניחושים של הקבוצה במסך "ממוצע הניחושים" של החברים (הכרעת בעלים 24.10.2026) */
+function CompareSwitch({ id, token }: { id: string; token: string }) {
+  const [value, setValue] = useState<GroupCompare | null>(null);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { void call<{ compare: GroupCompare }>(`/group/compare?group=${q(id)}`, { token }).then((r) => setValue(r.compare), () => setValue(null)); }, [id, token]);
+  if (!value) return null;
+  const change = async (next: GroupCompare) => {
+    if (next === value) return;
+    setBusy(true);
+    try { setValue((await call<{ compare: GroupCompare }>("/group/compare", { token, body: { group: id, compare: next } })).compare); } finally { setBusy(false); }
+  };
+  return (
+    <Section title="השוואה בממוצע הניחושים">
+      <p className="text-sm text-ink-soft">חברי הקבוצה רואים את ממוצע הניחושים של הקבוצה לצד:</p>
+      <Segmented label="השוואת ממוצע הקבוצה" value={value} disabled={busy} onChange={(v: GroupCompare) => void change(v)} options={[{ id: "polls", label: "ממוצע הסקרים" }, { id: "crowd", label: "ממוצע כל המשתתפים" }]} />
+    </Section>
   );
 }
 

@@ -390,3 +390,11 @@ CREATE TABLE IF NOT EXISTS group_size_log (
   members INTEGER NOT NULL,
   PRIMARY KEY (group_id, hour)
 );
+
+-- למה משווים את ממוצע הניחושים של הקבוצה במסך "ממוצע הניחושים" (הכרעת בעלים 24.10.2026): polls = ממוצע הסקרים · crowd = ממוצע כל המשתתפים.
+-- נקבע על ידי מנהל הקבוצה; בלי שורה ⇐ polls.
+CREATE TABLE IF NOT EXISTS group_compare (
+  group_id TEXT PRIMARY KEY,
+  ref TEXT NOT NULL CHECK (ref IN ('polls', 'crowd')),
+  updated_at TEXT NOT NULL
+);

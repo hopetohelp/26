@@ -12,7 +12,7 @@ import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { date, pctOne, rng } from "../../lib/format";
-import { CLOSED_LISTS } from "../../lib/data";
+import ClosedNote from "./ClosedNote";
 import { dropClosed, GUESS_IDS, IDS, nameOf, POLL_RANGES, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
 import { Segmented } from "../../components/Choice";
@@ -266,7 +266,7 @@ export default function Seats({
                 );
               })}
             </ul>
-            {CLOSED_LISTS.length > 0 && <p className="text-sm text-ink-soft pt-2">אי אפשר לנחש על מפלגה שלא עברה את אחוז החסימה באף סקר ({CLOSED_LISTS.map(nameOf).join(", ")}).</p>}
+            <ClosedNote className="pt-2" />
             </div>
             {view === "pct" && pctNow && <p className="text-sm text-ink-soft mt-2">אחרות (רשימות שאינן כאן): <span className={`tabular ${pctSum > 100.05 ? "text-warn font-bold" : ""}`}>{pctSum > 100.05 ? `חריגה: ${pctFmt(pctSum)}` : pctFmt(Math.max(0, 100 - pctSum))}</span></p>}
             <CalcAssumptions calc={calc} onChange={setCalc} />

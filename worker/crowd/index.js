@@ -180,6 +180,11 @@ export async function groupInsights(env, id, now) {
   return { group: id, min: GROUP_MIN, asOf: iso(now), guesses, status, outside: [...outside.values()].filter((o) => o.above + o.below > 0).map((o) => ({ ...o, ...pollRange(o.list) })), questions };
 }
 
+/** ההשוואה של ממוצע הקבוצה: ממוצע הסקרים (ברירת המחדל) או ממוצע כל המשתתפים */
+async function groupCompare(env, id) {
+  try { return (await env.DB.prepare("SELECT ref FROM group_compare WHERE group_id = ?").bind(id).first())?.ref ?? "polls"; } catch { return "polls"; }
+}
+
 /** כמה שעות אחורה הגרף שעתי; לפני כן — נקודה ליום (הכרעת בעלים 24.10.2026) */
 export const SERIES_HOURS = 72;
 /** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
@@ -1550,6 +1555,17 @@ const routes = {
     return groupStats(env, id, now);
   },
 
+  // למה משווים את ממוצע הקבוצה במסך "ממוצע הניחושים": polls / crowd — מנהל הקבוצה קובע (הכרעת בעלים 24.10.2026)
+  "GET /group/compare": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return { group: id, compare: await groupCompare(env, id) };
+  },
+  "POST /group/compare": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    if (body.compare !== "polls" && body.compare !== "crowd") throw bad("compare");
+    await env.DB.prepare("INSERT INTO group_compare (group_id, ref, updated_at) VALUES (?, ?, ?) ON CONFLICT(group_id) DO UPDATE SET ref = excluded.ref, updated_at = excluded.updated_at").bind(id, body.compare, iso(now)).run();
+    return { group: id, compare: body.compare };
+  },
   // סדרות זמן למסך "ניהול קבוצה": שבעה מדדים, שעתי ב-72 השעות האחרונות ויומי לפני כן — למנהל הקבוצה בלבד
   "GET /group/series": async ({ env, request, now, url }) => {
     const id = await requireManager(env, request, now, url.searchParams.get("group"));
@@ -1966,7 +1982,7 @@ export default {
         const { participant } = await requireAuth(env, request, now);
         if (!(await myGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_member");
         const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, participants: 0, publishedAt: iso(now) };
-        return new Response(JSON.stringify(d), { headers: { ...headers, "cache-control": "no-store" } });
+        return new Response(JSON.stringify({ ...d, compare: await groupCompare(env, id) }), { headers: { ...headers, "cache-control": "no-store" } });
       }
       if (request.method === "GET" && url.pathname === "/dashboard")
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
