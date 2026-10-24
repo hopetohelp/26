@@ -517,7 +517,7 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
         <GroupUpload send={send} staged={{
           start: async (c) => { const r = await call<UploadState>("/group/upload", { token, body: { group: id, ...c } }); setCount(r.members); return r; },
           next: async (upload) => { const r = await call<UploadState>("/group/upload/continue", { token, body: { group: id, upload } }); setCount(r.members); return r; },
-        }} onDone={changed} />
+        }} onDone={changed} current={count} />
         <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={changed} />
       </GroupFold>
       <GroupFold title="מספרים">
