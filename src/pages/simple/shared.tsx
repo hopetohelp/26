@@ -128,7 +128,7 @@ function Pie({ slices, values }: { slices: Slice[]; values: Record<string, numbe
     })}
     <text x="130" y="134" textAnchor="middle" fontSize="26" fontWeight="700" fill="rgb(var(--ink))" className="font-num">120</text>
     <text x="130" y="154" textAnchor="middle" fontSize="11.5" fill="rgb(var(--ink-soft))">מנדטים</text>
-  </svg>{pop && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
+  </svg>{pop && slices[pop.i] && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
 /** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר */
 function Stack({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
@@ -136,7 +136,7 @@ function Stack({ slices, values }: { slices: Slice[]; values: Record<string, num
   return <div className="f-dock floating" ref={host}><div className="f-stack">{slices.map((s, i) =>
     <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${Math.round(s.value)}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
       {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{Math.round(s.value)}</button>)}
-  </div>{pop && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
+  </div>{pop && slices[pop.i] && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
 /** סיכום הגושים: עוגה במחשב, פס צמוד לתחתית בטלפון. בלי כותרת ובלי מסגרת. */
 export function BlocChart({ values, missing = 0, logo = null }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null }) {

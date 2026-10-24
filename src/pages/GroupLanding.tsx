@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { PageTitle } from "../components/ui";
 import { call, CrowdError, type GroupPublic } from "../lib/crowdApi";
 import { rememberLinkJoin } from "../lib/linkJoin";
+import { page } from "../lib/chunkReload";
 
-const Guess = lazy(() => import("./Guess"));
+const Guess = lazy(page(() => import("./Guess")));
 
 /** כניסה אחת לכל ביקור בלשונית, וכניסה "ראשונה" לדפדפן שעוד לא ביקר בקישור הזה. נכשל בשקט — הספירה אינה חוסמת את הדף */
 function recordVisit(slug: string) {
