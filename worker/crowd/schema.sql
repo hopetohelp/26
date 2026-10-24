@@ -381,3 +381,12 @@ END;
 INSERT INTO group_sizes (group_id, members) SELECT group_id, COUNT(*) FROM group_members WHERE true GROUP BY group_id
   ON CONFLICT(group_id) DO UPDATE SET members = excluded.members;
 UPDATE group_sizes SET members = 0 WHERE members <> 0 AND NOT EXISTS (SELECT 1 FROM group_members m WHERE m.group_id = group_sizes.group_id);
+
+-- גודל רשימת המיילים של כל קבוצה, לכל שעה (נרשם במשימה השעתית) — לגרף "מיילים ברשימה" במסך ניהול קבוצה.
+-- מועד הוספת מייל לרשימה אינו נשמר, ולכן ההיסטוריה מתחילה מהפריסה (24.10.2026).
+CREATE TABLE IF NOT EXISTS group_size_log (
+  group_id TEXT NOT NULL,
+  hour TEXT NOT NULL,
+  members INTEGER NOT NULL,
+  PRIMARY KEY (group_id, hour)
+);

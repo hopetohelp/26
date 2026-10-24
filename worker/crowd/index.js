@@ -179,6 +179,74 @@ export async function groupInsights(env, id, now) {
   return { group: id, min: GROUP_MIN, asOf: iso(now), guesses, status, outside: [...outside.values()].filter((o) => o.above + o.below > 0).map((o) => ({ ...o, ...pollRange(o.list) })), questions };
 }
 
+/** כמה שעות אחורה הגרף שעתי; לפני כן — נקודה ליום (הכרעת בעלים 24.10.2026) */
+export const SERIES_HOURS = 72;
+/** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
+export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"];
+
+/**
+ * סדרות זמן לקבוצה: לכל מדד — סך הכול ונקודות מצטברות: שעתיות ב-72 השעות האחרונות, ויומיות (יום בשעון ישראל) לפני כן.
+ * מדד שסך הכול שלו מתחת ל-GROUP_MIN מוחזר בלי נקודות ובלי מספר (כמו שאר מספרי הקבוצה), חוץ מגודל הרשימה.
+ */
+export async function groupSeries(env, id, now) {
+  const LIST = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash WHERE e.verified = 1";
+  const [size, joins, reg, firstUnit, first, created] = await env.DB.batch([
+    env.DB.prepare("SELECT hour, members FROM group_size_log WHERE group_id = ?1 ORDER BY hour").bind(id),
+    env.DB.prepare(`SELECT j.joined_at AS t, j.participant IN (${LIST}) AS inList FROM group_link_joins j WHERE j.group_id = ?1`).bind(id),
+    env.DB.prepare(`SELECT p.created_at AS t FROM (${LIST}) l JOIN participants p ON p.id = l.id`).bind(id),
+    env.DB.prepare(`SELECT v.unit, MIN(v.created_at) AS t FROM (${LIST}) l JOIN versions v ON v.participant = l.id AND v.unit IN ('seats', 'vote') GROUP BY v.participant, v.unit`).bind(id),
+    env.DB.prepare(`SELECT j.joined_at AS t FROM group_link_first f JOIN group_link_joins j ON j.group_id = f.group_id AND j.participant = f.participant WHERE f.group_id = ?1 AND f.participant NOT IN (${LIST})`).bind(id),
+    env.DB.prepare("SELECT created_at, COALESCE((SELECT members FROM group_sizes WHERE group_id = ?1), 0) AS members FROM groups WHERE id = ?1").bind(id),
+  ]);
+  const g = created.results?.[0];
+  if (!g) throw new HttpError(404, "not_found");
+  const ts = (rows) => rows.map((r) => Date.parse(r.t)).filter(Number.isFinite);
+  const J = joins.results || [], U = firstUnit.results || [];
+  const events = {
+    linkFirst: ts(J.filter((r) => r.inList)),
+    registered: ts(reg.results || []),
+    seats: ts(U.filter((r) => r.unit === "seats")),
+    vote: ts(U.filter((r) => r.unit === "vote")),
+    outsideLink: ts(J.filter((r) => !r.inList)),
+    outsideFirst: ts(first.results || []),
+  };
+  const start = Math.min(Date.parse(g.created_at), ...Object.values(events).flat());
+  const buckets = seriesBuckets(start, now);
+  const cumulative = (list) => { const s = [...list].sort((a, b) => a - b); let i = 0; return buckets.map((b) => { while (i < s.length && s[i] < b.end) i++; return i; }); };
+  // גודל הרשימה: הערך האחרון שנרשם עד סוף כל נקודה; לפני הרישום הראשון — אין ערך
+  const sizes = (size.results || []).map((r) => [Date.parse(r.hour + ":00:00Z"), r.members]);
+  const listPoints = buckets.map((b) => { let v = null; for (const [t, m] of sizes) if (t < b.end) v = m; return v; });
+  listPoints[listPoints.length - 1] = g.members;
+  const out = [{ key: "list", total: g.members, points: listPoints }];
+  for (const key of SERIES_KEYS.slice(1)) {
+    const total = events[key].length;
+    out.push(total >= GROUP_MIN ? { key, total, points: cumulative(events[key]) } : { key, total: null, points: null });
+  }
+  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
+}
+
+/** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
+export function seriesBuckets(start, now) {
+  const HOUR_MS = 3600_000;
+  const hourStart = Math.floor(now / HOUR_MS) * HOUR_MS - (SERIES_HOURS - 1) * HOUR_MS;
+  const out = [];
+  let t = Date.parse(israelDayStart(start));
+  while (t < hourStart) {
+    const next = Date.parse(israelDayStart(t + 26 * HOUR_MS));
+    out.push({ start: t, end: Math.min(next, hourStart), hourly: false });
+    t = next;
+  }
+  for (let h = hourStart; h <= now; h += HOUR_MS) out.push({ start: h, end: Math.min(h + HOUR_MS, now + 1), hourly: true });
+  return out;
+}
+
+/** המשימה השעתית: גודל הרשימה של כל קבוצה לשעה הנוכחית */
+async function logGroupSizes(env, now) {
+  try {
+    await env.DB.prepare("INSERT OR REPLACE INTO group_size_log (group_id, hour, members) SELECT g.id, ?, COALESCE((SELECT s.members FROM group_sizes s WHERE s.group_id = g.id), 0) FROM groups g").bind(iso(now).slice(0, 13)).run();
+  } catch { /* הטבלה עוד לא קיימת — בפעם הבאה */ }
+}
+
 /** מספר הפניות של חברי הקבוצה לצוות האתר, לפי נושא (משרת ההערות; ספירה בלבד). null = לא זמין */
 async function groupQuestions(env, participants) {
   if (!env.FEEDBACK) return null;
@@ -1438,6 +1506,11 @@ const routes = {
     return groupStats(env, id, now);
   },
 
+  // סדרות זמן למסך "ניהול קבוצה": שבעה מדדים, שעתי ב-72 השעות האחרונות ויומי לפני כן — למנהל הקבוצה בלבד
+  "GET /group/series": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return groupSeries(env, id, now);
+  },
   // תמונת הקבוצה למסך "ניהול קבוצה" (השערות מול טווח הסקרים, פניות לצוות) — למנהל הקבוצה בלבד
   "GET /group/insights": async ({ env, request, now, url }) => {
     const id = await requireManager(env, request, now, url.searchParams.get("group"));
@@ -1878,6 +1951,7 @@ export default {
     const job = (async () => {
       await cleanup(env, now);
       await finishUploads(env);
+      await logGroupSizes(env, now);
       await runAggregation(env, now);
     })();
     if (ctx?.waitUntil) ctx.waitUntil(job);

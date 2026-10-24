@@ -223,3 +223,33 @@ describe("group insights", () => {
     expect(JSON.stringify(d)).not.toMatch(/participant|@/);
   });
 });
+
+describe("group series", () => {
+  it("hourly for 72 hours, daily before; counts hidden below the threshold", async () => {
+    const { seriesBuckets, SERIES_HOURS } = await import("../index.js");
+    const now = Date.parse("2026-10-24T10:30:00Z");
+    const b = seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), now);
+    expect(b.filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
+    expect(b.filter((x) => !x.hourly).length).toBeGreaterThanOrEqual(5);
+    for (let i = 1; i < b.length; i++) expect(b[i].start).toBe(b[i - 1].end);
+
+    const mgr = await account("boss@x.co");
+    for (let i = 0; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const outsider = await account("o@x.co");
+    await call("/group/link-join", { token: outsider, body: { slug: "hagzara", first: true } });
+    expect((await call("/group/series?group=gizra", { token: outsider })).status).toBe(403);
+    const d = (await call("/group/series?group=gizra", { token: mgr })).data;
+    const by = Object.fromEntries(d.series.map((s) => [s.key, s]));
+    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"]);
+    expect(by.list.total).toBe(GROUP_MIN);
+    expect(by.registered.total).toBe(GROUP_MIN);
+    expect(by.registered.points.at(-1)).toBe(GROUP_MIN);
+    expect(by.registered.points).toHaveLength(d.buckets.length);
+    expect(by.seats.total).toBe(GROUP_MIN);
+    // מתחת לסף — בלי מספר ובלי נקודות
+    expect(by.vote).toEqual({ key: "vote", total: null, points: null });
+    expect(by.outsideLink).toEqual({ key: "outsideLink", total: null, points: null });
+  });
+});

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupInsights, type GroupLinkStats, type GroupStats } from "../lib/crowdApi";
+import { call, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
+import GroupSeriesChart from "../components/GroupSeriesChart";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { listName } from "../lib/data";
 import { PageTitle } from "../components/ui";
@@ -39,20 +40,17 @@ const n = (v: number) => v.toLocaleString("he-IL");
 const q = (id: string) => encodeURIComponent(id);
 
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
-  const [stats, setStats] = useState<GroupStats | null>(null);
-  const [link, setLink] = useState<GroupLinkStats | null>(null);
+  const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
     void Promise.allSettled([
-      call<GroupStats>(`/group/stats?group=${q(id)}`, { token }),
-      call<GroupLinkStats>(`/group/link-stats?group=${q(id)}`, { token }),
+      call<GroupSeries>(`/group/series?group=${q(id)}`, { token }),
       call<GroupInsights>(`/group/insights?group=${q(id)}`, { token }),
-    ]).then(([s, l, i]) => {
+    ]).then(([s, i]) => {
       if (!live) return;
-      if (s.status === "fulfilled") setStats(s.value);
-      if (l.status === "fulfilled") setLink(l.value);
+      if (s.status === "fulfilled") setSeries(s.value);
       if (i.status === "fulfilled") setIns(i.value);
       setFailed(s.status === "rejected" && i.status === "rejected");
     });
@@ -65,11 +63,11 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         {img && <img src={img} alt="" className="w-14 h-14 rounded-theme object-cover border border-paper-line" />}
         <div className="min-w-0">
           <p className="font-display text-2xl leading-tight truncate">{name}</p>
-          <p className="text-sm text-ink-soft">{members ? `${n(members)} מיילים ברשימה` : "אין עדיין מיילים ברשימה"}{slug && <> · <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a></>}</p>
+          <p className="text-sm text-ink-soft">{slug ? <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a> : "אין עדיין קישור לקבוצה"}</p>
         </div>
       </header>
       {failed && <p className="text-sm text-ink-soft">הנתונים אינם זמינים כרגע. כלי הניהול למטה פועלים.</p>}
-      <Overview stats={stats} link={link} />
+      <Measures data={series} failed={failed} />
       {ins && (ins.belowMin
         ? <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב ההשערות והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>
         : <div className="grid lg:grid-cols-2 gap-4 [&>*]:min-w-0">
@@ -102,20 +100,44 @@ function Tile({ label, value, sub }: { label: string; value: string; sub?: strin
   );
 }
 
-/** תמונת מצב: רשומים, השערות, הצבעות וכניסות דרך הקישור. אחוז = מתוך הרשומים */
-function Overview({ stats, link }: { stats: GroupStats | null; link: GroupLinkStats | null }) {
-  if (!stats && !link) return <p className="text-sm text-ink-soft">טוען…</p>;
-  const s = stats && !stats.belowMin ? stats : null;
-  const pct = (x: number) => s && s.registered ? `${Math.round((100 * x) / s.registered)}% מהרשומים` : undefined;
+/** שבעת המדדים (הכרעת בעלים 24.10.2026), בסדר הזה. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת המיילים של הקבוצה */
+const MEASURES: { key: GroupSeriesKey; label: string; group: "list" | "outside" }[] = [
+  { key: "list", label: "מיילים ברשימה", group: "list" },
+  { key: "linkFirst", label: "נכנסו דרך הקישור", group: "list" },
+  { key: "registered", label: "נרשמו לאתר", group: "list" },
+  { key: "seats", label: "שמרו ניחוש", group: "list" },
+  { key: "vote", label: "שמרו הצבעה", group: "list" },
+  { key: "outsideLink", label: "נכנסו דרך הקישור", group: "outside" },
+  { key: "outsideFirst", label: "הקישור היה הכניסה הראשונה שלהם לאתר", group: "outside" },
+];
+
+function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean }) {
+  if (!data) return failed ? null : <p className="text-sm text-ink-soft">טוען…</p>;
+  const by = new Map(data.series.map((s) => [s.key, s]));
+  const list = by.get("list")?.total ?? 0;
+  const card = (m: (typeof MEASURES)[number], i: number) => {
+    const s = by.get(m.key);
+    const pct = m.group === "list" && m.key !== "list" && s?.total != null && list ? `${Math.round((100 * s.total) / list)}% מהרשימה` : null;
+    return (
+      <li key={m.key} className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2 min-w-0">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-sm min-w-0"><span className="text-ink-soft font-num tabular">{i + 1}.</span> {m.label}</p>
+          <p className="text-end shrink-0"><span className="font-num tabular text-2xl leading-none">{s?.total != null ? n(s.total) : "—"}</span>{pct && <span className="block text-xs text-ink-soft">{pct}</span>}</p>
+        </div>
+        {s?.points ? <GroupSeriesChart buckets={data.buckets} points={s.points} label={m.label} /> : <p className="text-xs text-ink-soft">פחות מ-{data.min} — המספר והגרף יוצגו מ-{data.min}.</p>}
+      </li>
+    );
+  };
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {s ? <>
-        <Tile label="רשומים באתר" value={n(s.registered)} sub={s.today ? `${n(s.today)} היום` : undefined} />
-        <Tile label="שמרו השערת מנדטים" value={n(s.seats)} sub={pct(s.seats)} />
-        <Tile label="שמרו הצבעה" value={n(s.vote)} sub={pct(s.vote)} />
-      </> : stats?.belowMin && <p className="col-span-2 md:col-span-3 text-sm text-ink-soft self-center">פחות מ-{stats.min} חברים רשומים — המספרים יוצגו מ-{stats.min}.</p>}
-      {link && <Tile label="כניסות דרך הקישור" value={n(link.opens)} sub={`${n(link.today)} היום · ${n(link.fresh)} דפדפנים חדשים`} />}
-    </div>
+    <>
+      <Section title="חברי הקבוצה (מרשימת המיילים)" aside={`שעתי ב-${data.hours} השעות האחרונות, יומי לפני כן`}>
+        <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
+        {by.get("list")?.points?.[0] == null && <p className="text-xs text-ink-soft">גודל הרשימה נשמר מדי שעה מ-24.10.2026; לפני כן אין היסטוריה.</p>}
+      </Section>
+      <Section title="מחוץ לרשימה (נכנסו דרך הקישור)">
+        <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
+      </Section>
+    </>
   );
 }
 
