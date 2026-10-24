@@ -247,6 +247,84 @@ async function logGroupSizes(env, now) {
   } catch { /* הטבלה עוד לא קיימת — בפעם הבאה */ }
 }
 
+/** חברי הקבוצה (מזהי משתתפים) — אותה הגדרה כמו בכל מספרי הקבוצה */
+async function groupMemberSet(env, id) {
+  return new Set(((await env.DB.prepare(`SELECT DISTINCT participant FROM (${groupParticipants({ group: "?1" })})`).bind(id).all()).results || []).map((r) => r.participant));
+}
+
+/**
+ * ההשערה האחרונה של כל גולש לממשק האישור, בסדר אקראי ובלי מזהה. members = רק חברי קבוצה (למנהל הקבוצה), ואז בלי נתוני פעילות.
+ */
+async function guessRows(env, members = null) {
+  const { latest, mod, review, verified, blocsBy } = await moderationState(env);
+  // פעילות לכל משתתף (הכרעת בעלים 10.10.2026): הצבעה שמורה, סך שמירות, מועד הרשמה, כניסה אחרונה ומספר כניסות. בלי מזהה בתשובה.
+  const activity = new Map();
+  if (!members) {
+    const { results: act } = await env.DB.prepare(
+      "SELECT p.id, p.created_at AS registered, EXISTS(SELECT 1 FROM versions v WHERE v.participant = p.id AND v.unit = 'vote') AS has_vote, (SELECT COUNT(*) FROM versions v WHERE v.participant = p.id) + COALESCE(a.pruned, 0) AS saves, COALESCE(a.logins, 0) + (SELECT COUNT(*) FROM sessions s WHERE s.participant = p.id) AS logins, MAX(COALESCE((SELECT MAX(s.created_at) FROM sessions s WHERE s.participant = p.id), ''), COALESCE(a.last_login_at, '')) AS last_login FROM participants p LEFT JOIN participant_activity a ON a.participant = p.id",
+    ).all();
+    for (const r of act || []) activity.set(r.id, r);
+  }
+  const salt = randomToken(12);
+  const rows = [];
+  for (const v of latest) {
+    if (members && !members.has(v.participant)) continue;
+    const reasons = mod.pending.get(v.id) ?? [];
+    const decision = mod.decisions.get(v.id) ?? null;
+    const shown = decision === "approved" && !mod.manual.has(v.id) ? "ok" : decision;
+    const status = review.has(v.participant) ? "review" : shown ?? (reasons.length ? "pending" : "ok");
+    const a = activity.get(v.participant);
+    rows.push({
+      handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
+      day: v.created_at.slice(0, 10),
+      savedAt: v.created_at,
+      mode: v.payload.mode === "pct" ? "pct" : "seats",
+      seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
+      ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
+      status,
+      reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
+      blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
+      ...(members ? {} : {
+        verified: verified.has(v.participant),
+        hasVote: !!a?.has_vote,
+        saves: a?.saves ?? 0,
+        registered: a?.registered ?? null,
+        lastLogin: a?.last_login || null,
+        logins: a?.logins ?? 0,
+      }),
+    });
+  }
+  for (let i = rows.length - 1; i > 0; i--) {
+    const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+    [rows[i], rows[j]] = [rows[j], rows[i]];
+  }
+  if (members) return { salt, rows };
+  // האזור הנפרד בניהול: חשבונות שלא אומתו — כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים). הם נספרים בסטטיסטיקות כרגיל.
+  const unv = rows.filter((r) => !r.verified);
+  const means = Object.fromEntries(IDS_2026_LIST.map((id) => [id, unv.length ? Math.round((unv.reduce((a, r) => a + (r.seats[id] ?? 0), 0) / unv.length) * 100) / 100 : 0]));
+  return { salt, rows, unverified: { participants: unv.length, means } };
+}
+
+/** אישור / דחייה / ביטול לפי ידית. members = מנהל קבוצה: רק השערה של חבר בקבוצה (אחרת — כאילו לא נמצאה) */
+async function decideGuess(env, body, now, members = null) {
+  const decision = body.decision;
+  if (!["approved", "rejected", "clear"].includes(decision)) throw bad("decision");
+  if (typeof body.salt !== "string" || typeof body.handle !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
+  const { latest } = await moderationState(env);
+  let target = null;
+  for (const v of latest) {
+    if (members && !members.has(v.participant)) continue;
+    if ((await hmac(env.IP_KEY, `guess|${body.salt}|${v.id}`)).slice(0, 32) === body.handle) { target = v; break; }
+  }
+  if (!target) throw new HttpError(404, "not_found");
+  if (decision === "clear") await env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(target.id).run();
+  else
+    await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
+      .bind(target.id, decision, iso(now))
+      .run();
+  return { ok: true };
+}
+
 /** מספר הפניות של חברי הקבוצה לצוות האתר, לפי נושא (משרת ההערות; ספירה בלבד). null = לא זמין */
 async function groupQuestions(env, participants) {
   if (!env.FEEDBACK) return null;
@@ -1373,63 +1451,28 @@ const routes = {
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
   "GET /admin/guesses": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const { latest, mod, review, verified, blocsBy } = await moderationState(env);
-    // פעילות לכל משתתף (הכרעת בעלים 10.10.2026): הצבעה שמורה, סך שמירות, מועד הרשמה, כניסה אחרונה ומספר כניסות. בלי מזהה בתשובה.
-    const { results: act } = await env.DB.prepare(
-      "SELECT p.id, p.created_at AS registered, EXISTS(SELECT 1 FROM versions v WHERE v.participant = p.id AND v.unit = 'vote') AS has_vote, (SELECT COUNT(*) FROM versions v WHERE v.participant = p.id) + COALESCE(a.pruned, 0) AS saves, COALESCE(a.logins, 0) + (SELECT COUNT(*) FROM sessions s WHERE s.participant = p.id) AS logins, MAX(COALESCE((SELECT MAX(s.created_at) FROM sessions s WHERE s.participant = p.id), ''), COALESCE(a.last_login_at, '')) AS last_login FROM participants p LEFT JOIN participant_activity a ON a.participant = p.id",
-    ).all();
-    const activity = new Map((act || []).map((r) => [r.id, r]));
-    const salt = randomToken(12);
-    const rows = [];
-    for (const v of latest) {
-      const reasons = mod.pending.get(v.id) ?? [];
-      const decision = mod.decisions.get(v.id) ?? null;
-      const shown = decision === "approved" && !mod.manual.has(v.id) ? "ok" : decision;
-      const status = review.has(v.participant) ? "review" : shown ?? (reasons.length ? "pending" : "ok");
-      rows.push({
-        handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
-        day: v.created_at.slice(0, 10),
-        savedAt: v.created_at,
-        mode: v.payload.mode === "pct" ? "pct" : "seats",
-        seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
-        ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
-        status,
-        verified: verified.has(v.participant),
-        reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
-        blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
-        hasVote: !!activity.get(v.participant)?.has_vote,
-        saves: activity.get(v.participant)?.saves ?? 0,
-        registered: activity.get(v.participant)?.registered ?? null,
-        lastLogin: activity.get(v.participant)?.last_login || null,
-        logins: activity.get(v.participant)?.logins ?? 0,
-      });
-    }
-    for (let i = rows.length - 1; i > 0; i--) {
-      const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
-      [rows[i], rows[j]] = [rows[j], rows[i]];
-    }
-    // האזור הנפרד בניהול: חשבונות שלא אומתו — כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים). הם נספרים בסטטיסטיקות כרגיל.
-    const unv = rows.filter((r) => !r.verified);
-    const means = Object.fromEntries(IDS_2026_LIST.map((id) => [id, unv.length ? Math.round((unv.reduce((a, r) => a + (r.seats[id] ?? 0), 0) / unv.length) * 100) / 100 : 0]));
-    return { salt, rows, unverified: { participants: unv.length, means } };
+    return guessRows(env);
   },
 
   // אישור / דחייה / ביטול החלטה — לפי ידית מהטעינה (salt + handle). אין קלט של מזהה גרסה או משתתף.
   "POST /admin/guesses/decide": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
-    const decision = body.decision;
-    if (!["approved", "rejected", "clear"].includes(decision)) throw bad("decision");
-    if (typeof body.salt !== "string" || typeof body.handle !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
-    const { latest } = await moderationState(env);
-    let target = null;
-    for (const v of latest) if ((await hmac(env.IP_KEY, `guess|${body.salt}|${v.id}`)).slice(0, 32) === body.handle) { target = v; break; }
-    if (!target) throw new HttpError(404, "not_found");
-    if (decision === "clear") await env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(target.id).run();
-    else
-      await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
-        .bind(target.id, decision, iso(now))
-        .run();
-    return { ok: true };
+    return decideGuess(env, body, now);
+  },
+
+  // אותו ממשק למנהל קבוצה (הכרעת בעלים 24.10.2026) — רק השערות של חברי הקבוצה שלו, ומ-GROUP_MIN חברים.
+  // בלי נתוני פעילות (רישום, כניסות, הצבעה) — כדי שמנהל הקבוצה לא יזהה חבר מסוים לפי מועד ההרשמה.
+  "GET /group/guesses": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    const members = await groupMemberSet(env, id);
+    if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+    return { group: id, min: GROUP_MIN, ...(await guessRows(env, members)) };
+  },
+  "POST /group/guesses/decide": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    const members = await groupMemberSet(env, id);
+    if (members.size < GROUP_MIN) throw new HttpError(403, "below_min");
+    return decideGuess(env, body, now, members);
   },
 
   // כל הגושים שהמשתתפים הגדירו (הכרעת בעלים 12.10.2026): לכל הרכב — כמה משתתפים, ואילו שמות נתנו לו (וכמה פעמים כל שם). בלי מזהים.

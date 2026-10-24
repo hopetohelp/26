@@ -253,3 +253,27 @@ describe("group series", () => {
     expect(by.outsideLink).toEqual({ key: "outsideLink", total: null, points: null });
   });
 });
+
+describe("group guess moderation", () => {
+  it("manager sees and decides only their members' guesses, without activity data", async () => {
+    const mgr = await account("boss@x.co");
+    for (let i = 0; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await account("o@x.co", true, 40);
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/group/guesses?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    const d = (await call("/group/guesses?group=gizra", { token: mgr })).data;
+    // החברים והמנהל (שנספר כחבר) — בלי הגולש שמחוץ לקבוצה
+    expect(d.rows).toHaveLength(GROUP_MIN + 1);
+    for (const r of d.rows) for (const k of ["registered", "lastLogin", "logins", "saves", "hasVote", "verified"]) expect(r[k]).toBeUndefined();
+    const all = (await call("/admin/guesses", { admin: true })).data;
+    const outsider = all.rows.find((r) => r.seats[IDS[0]] === 40);
+    // ידית של מי שמחוץ לקבוצה (מטעינת מנהל האתר) — לא נמצאת למנהל הקבוצה
+    expect((await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: all.salt, handle: outsider.handle, decision: "rejected" } })).status).toBe(404);
+    const row = d.rows[0];
+    expect((await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: d.salt, handle: row.handle, decision: "rejected" } })).data).toEqual({ ok: true });
+    const member = await account("x@x.co");
+    expect((await call("/group/guesses?group=gizra", { token: member })).status).toBe(403);
+  });
+});

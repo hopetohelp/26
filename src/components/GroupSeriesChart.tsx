@@ -40,10 +40,9 @@ export default function GroupSeriesChart({ buckets, points, label }: { buckets: 
         <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {points[h] !== null && <circle cx={x(h)} cy={y(points[h]!)} r="3.5" fill="currentColor" />}
       </svg>
-      <figcaption className="flex justify-between gap-2 text-xs text-ink-soft">
-        <span>{buckets[0] && bucketLabel(buckets[0])}</span>
+      {/* התאריך והשעה רק בהצבעה על הגרף — לא בכל גרף כל הזמן (הכרעת בעלים 24.10.2026) */}
+      <figcaption className={`text-xs text-ink-soft min-h-[1rem] ${hover === null ? "invisible" : ""}`}>
         <span className="font-num tabular text-ink">{bucketLabel(buckets[h])}: {points[h] ?? "—"}</span>
-        <span>{split > 0 ? "72 שעות אחרונות ←" : "עכשיו"}</span>
       </figcaption>
     </figure>
   );

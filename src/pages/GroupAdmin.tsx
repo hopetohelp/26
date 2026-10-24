@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { call, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
 import GroupSeriesChart from "../components/GroupSeriesChart";
+import AdminGuesses from "./AdminGuesses";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { listName } from "../lib/data";
 import { PageTitle } from "../components/ui";
@@ -74,6 +75,12 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
             <Guesses ins={ins} />
             <Questions q={ins.questions} />
           </div>)}
+      <Section title="אישור השערות">
+        <AdminGuesses group={{
+          load: () => call(`/group/guesses?group=${q(id)}`, { token }),
+          decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
+        }} />
+      </Section>
       <Section title="כלי ניהול">
         <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
       </Section>
