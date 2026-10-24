@@ -613,8 +613,8 @@ const routes = {
       verified: !!g || emailRows.some((r) => r.verified),
       // הקבוצות של המשתמש (לכפתור ההחלפה) — רק דרך מייל מאומת; גולש אחר לא רואה שקיימות קבוצות
       groups: await myGroups(env, participant),
-      // הקבוצות שהמשתמש מנהל (למסך העלאת הרשימה)
-      managedGroups: (await managedGroups(env, participant)).map(({ id, name, slug, image }) => ({ id, name, slug, image })),
+      // הקבוצות שהמשתמש מנהל (למסך העלאת הרשימה), עם מספר המיילים ברשימה
+      managedGroups: (await managedGroups(env, participant)).map(({ id, name, slug, image, members }) => ({ id, name, slug, image, members })),
       // חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google מיד בכניסה (הכרעת בעלים 10.10.2026)
       legacy: !!hasLink || !!pw?.username || (!pw && !g),
     };
