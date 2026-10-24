@@ -19,6 +19,7 @@ beforeEach(() => {
     IP_KEY: "ip-secret",
     DATA_KEY: "data-secret",
     NOW: () => t,
+    DASHBOARD_MIN_MS: 0,
   };
 });
 afterEach(() => vi.unstubAllGlobals());
@@ -396,11 +397,20 @@ it('רק שם שאושר מוצג לכולם לפי הרכב ולא לפי שם 
 });
 
 describe("סטטיסטיקות חיות", () => {
-  it("שמירה חדשה נכנסת מיד לסטטיסטיקות, בלי להמתין לחצי הדקה", async () => {
+  it("חישוב אחד לכל היותר פעם בדקה (הכרעת בעלים 24.10.2026): שמירה חדשה נכנסת בחישוב הבא", async () => {
+    env.DASHBOARD_MIN_MS = 60_000;
     const first = (await call("/dashboard")).data;
-    expect((await call("/dashboard")).data).toEqual(first);
     expect((await save(await newP(), "seats", seats(60))).status).toBe(200);
+    resetDashboardCache(); // שרת אחר: בלי עותק בזיכרון — קורא את התוצאה השמורה במאגר
+    expect((await call("/dashboard")).data.participants).toBe(first.participants);
+    t += 61_000;
     expect((await call("/dashboard")).data.participants).toBe(first.participants + 1);
+    // בלי שינוי — אין חישוב חדש גם אחרי דקה
+    const computed = env.DB.raw.prepare("SELECT computed_at FROM dashboard_snapshot").get().computed_at;
+    t += 61_000;
+    resetDashboardCache();
+    await call("/dashboard");
+    expect(env.DB.raw.prepare("SELECT computed_at FROM dashboard_snapshot").get().computed_at).toBe(computed);
   });
 });
 

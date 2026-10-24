@@ -10,7 +10,7 @@ let env, t, ipN = 0, un = 0, op = 0;
 beforeEach(async () => {
   resetDashboardCache();
   t = Date.parse("2026-10-11T10:05:00Z");
-  env = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", SITE_URL: "https://hopetohelp.github.io/26/", IP_KEY: "ip-secret", DATA_KEY: "data-secret", NOW: () => t };
+  env = { DB: fakeD1(), ALLOWED_ORIGIN: "https://hopetohelp.github.io", SITE_URL: "https://hopetohelp.github.io/26/", IP_KEY: "ip-secret", DATA_KEY: "data-secret", NOW: () => t, DASHBOARD_MIN_MS: 0 };
   await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
 });
 const call = async (path, { body, token, admin } = {}) => {
