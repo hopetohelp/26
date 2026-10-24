@@ -18,7 +18,7 @@ export default function ResetPassword() {
         <ResetPasswordForm session={session} />
       ) : (
         <Notice tone="warn">
-          הקישור לא נטען, או שכבר נעשה בו שימוש. אפשר לבקש מייל חדש: <Link to="/support" className="font-bold underline">אזור אישי</Link> ← כניסה ← "שכחתי סיסמה".
+          הקישור לא נטען, או שכבר נעשה בו שימוש. אפשר לבקש מייל חדש: <Link to="/account" className="font-bold underline">אזור אישי</Link> ← כניסה ← "שכחתי סיסמה".
         </Notice>
       )}
     </>

@@ -367,7 +367,7 @@ export function HowTo({ signedIn = false }: { signedIn?: boolean }) {
       </ol>
       <section className="py-3 text-sm" aria-label="שמירה ושיתוף ההשערה">
         <h2 className="font-bold mb-1">שמירה ושיתוף ההשערה</h2>
-        <p>{signedIn ? "ההשערה נשמרת בחשבון שלכם, ורק האחרונה נספרת בסקר האתר." : <>הטיוטה נשמרת במכשיר הזה ואפשר לשתף אותה. כדי שתיספר בסקר האתר ותישמר בהיסטוריה, נכנסים לחשבון בזמן השמירה או <Link to="/support">באזור האישי</Link>.</>}</p>
+        <p>{signedIn ? "ההשערה נשמרת בחשבון שלכם, ורק האחרונה נספרת בסקר האתר." : <>הטיוטה נשמרת במכשיר הזה ואפשר לשתף אותה. כדי שתיספר בסקר האתר ותישמר בהיסטוריה, נכנסים לחשבון בזמן השמירה או <Link to="/account">באזור האישי</Link>.</>}</p>
         <p>לאחר השלמת הכנסת אפשר לשתף את ההשערה. גרסאות שנשמרו בחשבון זמינות בכפתור ״היסטוריית השערות״ במסך ההשערה.</p>
       </section>
       <details className="group mt-2 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">

@@ -67,5 +67,5 @@ export function useSupportUnread(pathname: string): boolean {
     window.addEventListener("storage", sync);
     return () => { window.removeEventListener(EVENT, sync); window.removeEventListener("storage", sync); };
   }, []);
-  return !pathname.startsWith("/support") && latest !== "" && ms(latest) > ms(seen);
+  return !pathname.startsWith("/ai") && latest !== "" && ms(latest) > ms(seen);
 }

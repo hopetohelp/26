@@ -1,4 +1,8 @@
-import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
+import { topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
+import { switchUser } from "../lib/switchUser";
+
+/** שני סוגי פנייה לצוות האתר (הכרעת בעלים 24.10.2026): שאלה או תאוריה · תקלה או שיפור (נשמר כ-data) */
+const SUPPORT_TOPICS = [{ id: "theory", label: "שאלה או תאוריה" }, { id: "data", label: "תקלה או שיפור" }] as const;
 import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -54,7 +58,7 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
   const [closed, setClosed] = useState(false);
   const [text, setText] = useState("");
   // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ שאלה או תאוריה, והסמן בשדה הכתיבה
-  const [topic, setTopic] = useState<FeedbackTopic>(ask ? "theory" : "other");
+  const [topic, setTopic] = useState<FeedbackTopic>("theory");
   useEffect(() => { if (ask) { setTopic("theory"); document.getElementById("support-message")?.focus(); } }, [ask]);
   const maxText = 2000 - topicMessage(topic, "").length;
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +110,7 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
         const primary = await mergeSavedThreads();
         let res = primary ? await replyToThread(primary.token, message, trap) : null;
         if (!res || res.error === "not found") {
-          res = await sendFeedback({ topic, text: message, page: "/support", theme: "league", website: trap });
+          res = await sendFeedback({ topic, text: message, page: "/ai", theme: "league", website: trap });
           if (res.ok && res.token) saveThread({ token: res.token, created: new Date().toISOString(), preview: text.trim().slice(0, 80) });
         }
         if (!res.ok) throw new Error("send failed");
@@ -139,11 +143,10 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
       </div>
       {!closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
-          <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={FEEDBACK_TOPICS} />
+          <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={SUPPORT_TOPICS as unknown as { id: FeedbackTopic; label: string }[]} />
           {/* בחלק הקבוע מעל שדה הכתיבה; כל מה שנוגע למפתח AI — רק בשאלה או תאוריה */}
           <div className="c-support-guidance">
             <p className="text-xs text-ink-soft">התשובות מתקבלות פעם בכמה שעות.{topic === "theory" && " שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם."}{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
-            {topic === "theory" && <PrivateKeyEntry />}
           </div>
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
@@ -161,22 +164,38 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
 }
 
 /**
- * שיחה עם צוות האתר, ולמי שחיבר מפתח AI אישי — גם מתג למצב פרטי (הכרעת בעלים 14.10.2026).
- * שני הרכיבים נשארים טעונים כדי שהשיחה בכל אחד מהם לא תיעלם במעבר; הם אינם חולקים מצב, אחסון או נתיב לשרת.
+ * מסך "AI" (הכרעת בעלים 24.10.2026): שלוש לשוניות — מפתח אישי · צוות האתר · עוזרי AI.
+ * הרכיבים נשארים טעונים כדי שהשיחה לא תיעלם במעבר; הם אינם חולקים מצב, אחסון או נתיב לשרת.
  */
-function Chat({ session }: { session: ReturnType<typeof useSession> }) {
+type AiTab = "private" | "team" | "assistants";
+export function AiScreen() {
+  const session = useSession();
+  useSupportUnread("/");
   const key = usePrivateKey();
-  const ask = useSearchParams()[0].has("ask");
-  const [mode, setMode] = useState<"team" | "private">("team");
-  const priv = !!key && mode === "private";
-  // בלי מפתח ⇐ צוות האתר; כניסה מ"שאלו את הצ׳ט החכם" עם מפתח מחובר ⇐ ישר לשיחה הפרטית
-  useEffect(() => { setMode(key && ask ? "private" : "team"); }, [key, ask]);
+  const [params] = useSearchParams();
+  const ask = params.has("ask");
+  const [tab, setTab] = useState<AiTab>(() => (params.has("team") ? "team" : key ? "private" : "team"));
+  useEffect(() => { if (key && ask) setTab("private"); }, [key, ask]);
   return (
-    <>
-      {key && <div className="pt-4"><Segmented label="מצב השיחה" size="sm" value={mode} onChange={setMode} options={[{ id: "team", label: "צוות האתר" }, { id: "private", label: "פרטי (על חשבוני)" }]} /></div>}
-      <div className={priv ? "hidden" : "flex-1 flex flex-col"}><Conversation session={session} ask={ask} /></div>
-      {key && <div className={priv ? "flex-1 flex flex-col" : "hidden"}><PrivateChat /></div>}
-    </>
+    <div className="flex flex-col min-h-[calc(100dvh-10.5rem)] max-w-3xl w-full mx-auto">
+      <h1 className="sr-only">AI</h1>
+      <div className="pt-1 pb-2"><Segmented label="סוג השיחה" value={tab} onChange={setTab} options={[{ id: "private", label: "מפתח אישי" }, { id: "team", label: "צוות האתר" }, { id: "assistants", label: "עוזרי AI" }]} /></div>
+      <div className={tab === "team" ? "flex-1 flex flex-col" : "hidden"}><Conversation session={session} ask={ask} /></div>
+      <div className={tab === "private" ? "flex-1 flex flex-col" : "hidden"}>{key ? <div className="c-ai-chat flex-1 flex flex-col"><PrivateChat /></div> : <NoKey />}</div>
+      {tab === "assistants" && <div className="pt-2"><Assistants session={session} /></div>}
+    </div>
+  );
+}
+
+/** בלי מפתח: הסבר קצר וחיבור */
+function NoKey() {
+  return (
+    <section className="c-ai rounded-theme border p-5 mt-2 space-y-3 text-center" aria-labelledby="nokey-title">
+      <p className="inline-flex items-center gap-2"><span className="c-ai-ico" aria-hidden="true">AI</span><span className="font-bold">העוזר האישי שלי</span><span className="text-xs rounded-full px-2 py-0.5 bg-paper-line/60 text-ink-soft">אין מפתח</span></p>
+      <h2 id="nokey-title" className="font-display text-2xl">אין מפתח מחובר</h2>
+      <p className="text-sm text-ink-soft">עם מפתח AI משלכם (Google Gemini או Anthropic) שואלים כל שאלה על נתוני האתר ומקבלים תשובה מיד. העלות אצל הספק שלכם, והמפתח לא מוצג לאף אחד.</p>
+      <div className="text-start"><PrivateKeyEntry open /></div>
+    </section>
   );
 }
 
@@ -194,9 +213,7 @@ type DrawerId = "details" | "data" | "groups" | "assistants";
 export default function Support() {
   const session = useSession();
   const { me, token } = session;
-  // הודעה חדשה מהצוות ⇐ השיחה מוצגת תמיד; הביקור במסך מסמן אותה כנקראה
-  useSupportUnread("/");
-  // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
+    // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
   const ask = useSearchParams()[0].has("ask");
   const groupsLink = useSearchParams()[0].has("groups");
   // קישור ישיר למנהל קבוצה (#/support?groups): פותח את "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
@@ -212,7 +229,7 @@ export default function Support() {
 
   // מסך רחב: תפריט מגירות מימין ותוכן המגירה שנבחרה משמאל; ברירת המחדל — השיחה עם צוות האתר
   const wide = useWide();
-  const [selected, setSelected] = useState<DrawerId | "chat">("chat");
+  const [selected, setSelected] = useState<DrawerId>(groupsLink && token ? "groups" : "details");
   useEffect(() => { if (me?.needsEmail || (token && !me && blocked)) setSelected("details"); }, [me?.needsEmail, token, me, blocked]);
   const badge = me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined;
   const details = (
@@ -223,12 +240,12 @@ export default function Support() {
           <p className="font-display text-2xl leading-tight truncate">{me?.name || (token ? "החשבון שלי" : "אורח")}</p>
           <p className="text-sm text-ink-soft">{status}</p>
         </div>
+        {token && <Btn className="ms-auto shrink-0" onClick={() => void switchUser()}>החלפת משתמש</Btn>}
       </header>
       <Account session={session} hideGroups />
     </>
   );
   const data = token ? <MyData session={session} part="data" /> : null;
-  const assistants = <Assistants session={session} />;
   const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} members={g.members} token={token} className="py-3 border-b border-paper-line space-y-2" onChanged={() => void session.refresh()} collapsible={groups.length > 1} />) : null;
   const admin = (me?.isAdmin || hasAdminKey()) && (
     <div className="border-b border-paper-line">
@@ -243,13 +260,11 @@ export default function Support() {
    */
   if (wide) {
     const items = [
-      { id: "chat", title: "צוות האתר", content: <Chat session={session} /> },
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
       ...(token && groups.length > 0 ? [{ id: "groups", title: "ניהול קבוצה", content: groupList }] : []),
-      { id: "assistants", title: "עוזרי AI", content: assistants },
     ];
-    return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId | "chat")} after={admin} label="אזור אישי" />;
+    return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId)} after={admin} label="אזור אישי" />;
   }
   return (
     <div className="flex flex-col min-h-[calc(100dvh-10.5rem)]">
@@ -258,10 +273,8 @@ export default function Support() {
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
         {token && groups.length > 0 && <Drawer title="ניהול קבוצה" open={open.has("groups")} onToggle={() => toggle("groups")}>{groupList}</Drawer>}
-        <Drawer title="עוזרי AI" open={open.has("assistants")} onToggle={() => toggle("assistants")}>{assistants}</Drawer>
         {admin}
       </div>
-      <Chat session={session} />
     </div>
   );
 }

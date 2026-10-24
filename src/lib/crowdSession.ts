@@ -119,4 +119,5 @@ export function isQueued(u: Unit): boolean {
   const saved = get(K.saved(u));
   return !!cur && saved !== null && cur.body === saved;
 }
+export const hasPending = () => (["vote", "seats", "blocs"] as Unit[]).some((u) => !!get(K.pending(u)));
 export const pendingOp = (u: Unit) => getJson<{ op: string; body: string }>(K.pending(u));

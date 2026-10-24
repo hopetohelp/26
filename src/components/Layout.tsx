@@ -17,10 +17,11 @@ import { wallClockLeft } from "../lib/countdown";
 import { LOCK_AT } from "../pages/guess/model";
 import { MASTHEAD_SLOT } from "./SourcePicker";
 import { useSession } from "../pages/guess/useCrowd";
+import { getPicture } from "../lib/crowdSession";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
 
 const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "הכנסת הממוצעת", icon: "bars" }];
-const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/support", label: "אזור אישי" }];
+const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/ai", label: "AI" }, { to: "/account", label: "אזור אישי" }];
 /** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
@@ -28,7 +29,8 @@ const TABS = [
   { to: "/polls", label: "סקרים", icon: "bars" },
   { to: "/past", label: "בחירות קודמות", icon: "board" },
   { to: "/method", label: "מידע", icon: "info" },
-  { to: "/support", label: "אישי", icon: "user" },
+  { to: "/ai", label: "AI", icon: "comments" },
+  { to: "/account", label: "אישי", icon: "user" },
 ];
 function Icon({ name }: { name: string }) {
   const p = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
@@ -129,9 +131,8 @@ function FocusBar({ member }: { member: boolean }) {
   return <div className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
-    <FocusNav className="f-nav-top" />
+    <FocusNav className="f-nav-top" unread={false} />
     <span className="flex-1" />
-    <Link to="/support" className="f-btn f-ask" aria-label="יש שאלה?"><span className="t">יש שאלה?</span><span className="q" aria-hidden="true">?</span></Link>
     <button type="button" onClick={toggle} className="f-btn pri">למחקר מתקדם</button>
     <span className="f-mode"><ModePicker /></span>
   </div>;
@@ -145,10 +146,24 @@ function FocusClock() {
   if (!p) return <span className="f-clock">המדגמים פורסמו</span>;
   return <span className="f-clock" role="timer" aria-label={`עד המדגמים: ${p.days} ימים, ${p.hours} שעות ו-${p.minutes} דקות`}><span aria-hidden="true">⏱</span><b dir="ltr" aria-hidden="true">{p.days}:{two(p.hours)}:{two(p.minutes)}</b></span>;
 }
-function FocusNav({ className }: { className: string }) {
+function FocusNav({ className, unread }: { className: string; unread: boolean }) {
   const { pathname } = useLocation();
+  // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
-  return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>{SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.label}</NavLink>)}</nav>;
+  return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>
+    <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
+    {SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.label}</NavLink>)}
+    <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
+  </nav>;
+}
+/** תמונת Google של המחובר, ואם אין — האות הראשונה של השם, ואם אין — סמל אדם */
+function ProfileFace() {
+  const { me, token } = useSession();
+  const [broken, setBroken] = useState(false);
+  const pic = token ? getPicture() : null;
+  if (pic && !broken) return <img src={pic} alt="" referrerPolicy="no-referrer" onError={() => setBroken(true)} />;
+  const letter = (me?.name ?? "").trim().charAt(0);
+  return <span aria-hidden="true">{letter || <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>}</span>;
 }
 
 function DesktopNav({ unread }: { unread: boolean }) {
@@ -166,7 +181,7 @@ function DesktopNav({ unread }: { unread: boolean }) {
               }
             >
               {n.label}
-              {n.to === "/support" && unread && <UnreadDot />}
+              {n.to === "/ai" && unread && <UnreadDot />}
             </NavLink>
           </li>
         ))}
@@ -196,12 +211,12 @@ function MobileTabs({ unread }: { unread: boolean }) {
   }, [advanced]);
   useEffect(() => { scroller.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [pathname]);
   return <nav aria-label="ניווט בטלפון" className="c-mobile-tabs md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-    <ul ref={scroller} className="c-mobile-tab-list">{(advanced ? TABS : SIMPLE_TABS).map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/support" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
+    <ul ref={scroller} className="c-mobile-tab-list">{(advanced ? TABS : SIMPLE_TABS).map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/ai" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
     {overflow && <button type="button" className="c-tab-scroll" aria-label={atEnd ? "גלילה לתחילת הניווט" : "גלילה להמשך הניווט"} onClick={() => scroller.current?.scrollBy({ left: (atEnd ? 1 : -1) * scroller.current.clientWidth * .7, behavior: "smooth" })}>{atEnd ? "→" : "←"}</button>}
   </nav>;
 }
 
-const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/support"];
+const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/ai", "/account"];
 function GuessCta({ pathname }: { pathname: string }) {
   // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
   if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
@@ -244,10 +259,10 @@ function LayoutBody() {
       </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} /></header>}
       <AccessCard />
       <PrivacyCard />
-      <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/support" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
+      <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      {advanced ? <MobileTabs unread={unread} /> : <FocusNav className="f-nav-bottom" />}
+      {advanced ? <MobileTabs unread={unread} /> : <FocusNav className="f-nav-bottom" unread={unread} />}
       {advanced && <GuessCta pathname={pathname} />}
     </div>
   );

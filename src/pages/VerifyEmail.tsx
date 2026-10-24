@@ -20,9 +20,9 @@ export default function VerifyEmail() {
     <>
       <PageTitle lead="אימות כתובת המייל">אימות מייל</PageTitle>
       {state === "working" && <p role="status">מאמתים…</p>}
-      {state === "ok" && <Notice>המייל אומת. אפשר לחזור ל<Link to="/support" className="font-bold underline">אזור האישי</Link>.</Notice>}
-      {state === "expired" && <Notice tone="warn">פג תוקף הקישור. אפשר לשלוח מייל אימות חדש מ<Link to="/support" className="font-bold underline">אזור האישי</Link> ← "הפרטים שלי".</Notice>}
-      {state === "bad" && <Notice tone="warn">הקישור אינו תקף או כבר נוצל. אם המייל כבר אומת — אין צורך בשום פעולה. אחרת אפשר לשלוח מייל אימות חדש מ<Link to="/support" className="font-bold underline">אזור האישי</Link> ← "הפרטים שלי".</Notice>}
+      {state === "ok" && <Notice>המייל אומת. אפשר לחזור ל<Link to="/account" className="font-bold underline">אזור האישי</Link>.</Notice>}
+      {state === "expired" && <Notice tone="warn">פג תוקף הקישור. אפשר לשלוח מייל אימות חדש מ<Link to="/account" className="font-bold underline">אזור האישי</Link> ← "הפרטים שלי".</Notice>}
+      {state === "bad" && <Notice tone="warn">הקישור אינו תקף או כבר נוצל. אם המייל כבר אומת — אין צורך בשום פעולה. אחרת אפשר לשלוח מייל אימות חדש מ<Link to="/account" className="font-bold underline">אזור האישי</Link> ← "הפרטים שלי".</Notice>}
       {state === "error" && <Notice tone="warn">לא הצלחנו להשלים את האימות כרגע. נסו לפתוח את הקישור שוב בעוד כמה דקות.</Notice>}
     </>
   );
