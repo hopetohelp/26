@@ -333,6 +333,16 @@ CREATE TABLE IF NOT EXISTS privacy_consents (
   accepted_at TEXT NOT NULL
 );
 
+-- הסטטיסטיקה המחושבת (הכרעת בעלים 24.10.2026): חישוב אחד לכל היותר פעם בדקה, וכל הבקשות קוראות ממנו.
+-- changed_at = שינוי אחרון (POST); computed_at = מועד החישוב; lock_until = נעילה קצרה נגד חישובים מקבילים
+CREATE TABLE IF NOT EXISTS dashboard_snapshot (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  data TEXT NOT NULL,
+  computed_at INTEGER NOT NULL,
+  changed_at INTEGER NOT NULL DEFAULT 0,
+  lock_until INTEGER NOT NULL DEFAULT 0
+);
+
 -- העלאת רשימת קבוצה בשלבים (הכרעת בעלים 24.10.2026): הקובץ נשמר מוצפן בחלקים עד שכל חלק מעובד, ואז נמחק
 CREATE TABLE IF NOT EXISTS group_uploads (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

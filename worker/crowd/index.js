@@ -1544,7 +1544,6 @@ const routes = {
 
 // הסטטיסטיקות מחושבות כל הזמן: כל פתיחה מקבלת תמונה עדכנית. תוצאה אחת משרתת את כל הפניות בחצי הדקה
 // שאחריה (בכל עותק של השרת), כדי שרענון אוטומטי אצל גולשים רבים לא יקרא את כל המאגר בכל פעם. שמירה חדשה מבטלת אותה.
-const DASHBOARD_TTL_MS = 30_000;
 
 /** טווח הסקרים מהאתר (public/poll-ranges.json) — מתעדכן עם כל רענון נתונים; נשמר 30 דקות. נכשל ⇐ נשאר הקודם או הגיבוי שבקוד */
 let rangesAt = 0;
@@ -1556,20 +1555,55 @@ async function loadPollRanges(env) {
     const r = await fetch(env.POLL_RANGES_URL, { cf: { cacheTtl: 600 } });
     if (!r.ok) return;
     const data = await r.json();
-    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); resetDashboardCache(); }
+    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); await markDashboardChanged(env); }
   } catch { /* נשאר הטווח הקודם */ }
 }
 
 let dashboardCache = null;
 export function resetDashboardCache() { dashboardCache = null; }
 
-/** ⇐ {dashboard, pending: Map(versionId ⇐ reasons)} — pending נשאר בשרת בלבד */
+/**
+ * חישוב אחד משותף (הכרעת בעלים 24.10.2026): הסטטיסטיקה מחושבת לכל היותר פעם ב-DASHBOARD_MIN_MS (דקה) ונשמרת במאגר
+ * (dashboard_snapshot), וכל הבקשות קוראות את התוצאה השמורה. חישוב חדש רק כשהיה שינוי מאז החישוב הקודם
+ * (changed_at, מסומן בכל פעולת POST) או אחרי DASHBOARD_MAX_AGE_MS. נעילה קצרה מונעת חישובים מקבילים: מי שלא קיבל
+ * אותה משתמש בתוצאה הקודמת. בכל שרת נשמר גם עותק בזיכרון לכמה שניות, כדי לא לקרוא את המאגר בכל בקשה.
+ */
+const DASHBOARD_MAX_AGE_MS = 10 * 60_000;
+const SNAPSHOT_MEMORY_MS = 10_000;
+const minMs = (env) => (env.DASHBOARD_MIN_MS === undefined ? 60_000 : Number(env.DASHBOARD_MIN_MS));
+const packState = (d) => JSON.stringify({ dashboard: d.dashboard, pending: [...d.pending.keys()], groups: [...d.groups] });
+const unpackState = (s) => { const o = JSON.parse(s); return { dashboard: o.dashboard, pending: new Set(o.pending), groups: new Map(o.groups) }; };
+/** סימון שינוי — החישוב הבא (לא לפני דקה מהקודם) יכלול אותו */
+async function markDashboardChanged(env) {
+  dashboardCache = null;
+  try { await env.DB.prepare("UPDATE dashboard_snapshot SET changed_at = ? WHERE id = 1").bind(clock(env)).run(); } catch { /* הטבלה עוד לא קיימת — החישוב הבא ייעשה ממילא */ }
+}
+
+/** ⇐ {dashboard, pending: Set(versionId), groups: Map(id ⇐ dashboard)} — pending נשאר בשרת בלבד */
 async function dashboardState(env) {
   const at = clock(env);
-  if (dashboardCache && at >= dashboardCache.at && at - dashboardCache.at < DASHBOARD_TTL_MS) return dashboardCache.data;
+  const min = minMs(env);
+  if (dashboardCache && at >= dashboardCache.at && at - dashboardCache.at < Math.min(min, SNAPSHOT_MEMORY_MS)) return dashboardCache.data;
+  let row = null;
+  try { row = await env.DB.prepare("SELECT data, computed_at, changed_at FROM dashboard_snapshot WHERE id = 1").first(); } catch { /* בלי טבלה — חישוב ישיר */ }
+  const age = row ? at - row.computed_at : Infinity;
+  // min = 0 (בדיקות): כל שינוי מחושב מיד
+  const stale = !row || min <= 0 || age >= DASHBOARD_MAX_AGE_MS || (row.changed_at >= row.computed_at && age >= min);
+  if (!stale) { const data = unpackState(row.data); dashboardCache = { at, data }; return data; }
+  // נעילה: רק בקשה אחת מחשבת; האחרות מקבלות את התוצאה הקודמת
+  let mine = !row;
+  if (row) {
+    try { mine = (await env.DB.prepare("UPDATE dashboard_snapshot SET lock_until = ? WHERE id = 1 AND lock_until < ?").bind(at + 30_000, at).run()).meta?.changes === 1; } catch { mine = true; }
+    if (!mine) { const data = unpackState(row.data); dashboardCache = { at, data }; return data; }
+  }
   const data = await computeDashboard(env);
-  dashboardCache = { at, data };
-  return data;
+  try {
+    await env.DB.prepare("INSERT INTO dashboard_snapshot (id, data, computed_at, changed_at, lock_until) VALUES (1, ?, ?, 0, 0) ON CONFLICT(id) DO UPDATE SET data = excluded.data, computed_at = excluded.computed_at, lock_until = 0")
+      .bind(packState(data), at).run();
+  } catch { /* בלי טבלה — התוצאה נשמרת רק בזיכרון */ }
+  const unpacked = unpackState(packState(data));
+  dashboardCache = { at, data: unpacked };
+  return unpacked;
 }
 const dashboard = async (env) => (await dashboardState(env)).dashboard;
 
@@ -1761,7 +1795,7 @@ export default {
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
       if (agent && !agentBodyAllowed(request.method, url.pathname, body)) throw new HttpError(403, "assistant_not_allowed");
       const out = await handler({ env, request, url, now, body });
-      if (request.method === "POST") resetDashboardCache();
+      if (request.method === "POST") await markDashboardChanged(env);
       return new Response(JSON.stringify(out), { headers: { ...headers, "cache-control": "no-store" } });
     } catch (e) {
       if (e instanceof HttpError) {
