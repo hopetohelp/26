@@ -23,6 +23,7 @@ export default function SimpleGuess() {
   const [sharing, setSharing] = useState(false);
   const draft = unit.draft ?? EMPTY;
   const total = seatsSum(draft);
+  const firstName = (session.me?.name ?? "").trim().split(/\s+/)[0];
   const [editing, setEditing] = useState<{ id: string; text: string } | null>(null);
   const invalidInput = !!editing && (!/^\d+$/.test(editing.text) || Number(editing.text) > 120);
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
@@ -51,7 +52,9 @@ export default function SimpleGuess() {
       <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}
-      <div className="flex justify-end mt-4"><SaveButton unit={unit} session={session} invalid={invalid} compact onSaved={() => setSharing(true)} /></div>
+      {/* כפתור שמירה צף — רק כשכל 120 המושבים חולקו (הכרעת בעלים 24.10.2026) */}
+      {total === 120 ? <div className="f-save-float"><SaveButton unit={unit} session={session} invalid={invalid} compact label={`לשמור את הניחוש ${firstName ? `של ${firstName}` : "שלי"}`} onSaved={() => setSharing(true)} /></div>
+        : <div className="flex justify-end mt-4"><SaveButton unit={unit} session={session} invalid={invalid} compact onSaved={() => setSharing(true)} /></div>}
     </div>
     <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} />
       <CardDrawer title="ההצבעה שלי" open={voteOpen} onOpenChange={v => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" className="mt-5"><Vote unit={vote} session={session} /></CardDrawer></div></div>

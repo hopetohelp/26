@@ -66,6 +66,7 @@
   --font-body: "Roboto Mono", "Rubik";
   --font-num: "Roboto Mono", "Rubik";
   --radius: 12px;
+  --ai: 109 64 200; --ai-soft: 243 238 253;
   --grid: 226 230 236;
 }
 
@@ -96,6 +97,7 @@
   --band: 38 44 56;
   --band-ink: 236 239 243;
   --band-soft: 176 184 196;
+  --ai: 190 160 255; --ai-soft: 40 30 64;
   --grid: 40 45 54;
 }
 
@@ -739,3 +741,19 @@
 /* חברי הגזרה בטלפון: שם הקבוצה בכותרת מוסיף רוחב — מקטינים מרווחים ומסתירים את סמל השעון, כדי שלא תהיה גלילה הצידה */
 @media (max-width: 480px) { .f-bar.member { gap:5px;padding:8px; } .f-bar.member .f-clock { padding:4px 6px; } .f-bar.member .f-clock > span { display:none; } .f-bar.member .f-logo { font-size:15px;gap:4px; } }
 @media (max-width: 767px) { .f-gname { display:inline; font-size:.8em; } .f-gphone { display:block;width:64px;height:64px;border-radius:50%;margin:0 auto 10px; } }
+
+/* סבב 9 (הכרעת בעלים 24.10.2026): פרופיל ו-AI בקצות הסרגל הצף; מפתח אישי בסגול נפרד; שמירה צפה ב-120 */
+.f-nav { align-items:center; }
+.f-nav a.f-me { padding:0;width:34px;height:34px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:999px;overflow:hidden;background:rgb(var(--frame));color:rgb(var(--ink));font-weight:800;border:1px solid rgb(var(--line)); }
+.f-nav a.f-me img { width:100%;height:100%;object-fit:cover; }
+.f-nav a.f-me[aria-current=page] { outline:2px solid rgb(var(--signal));outline-offset:1px;box-shadow:none;background:rgb(var(--frame)); }
+.f-nav a.f-ai { position:relative;font-weight:800;color:rgb(var(--ai));background:rgb(var(--ai-soft)); }
+.f-nav a.f-ai[aria-current=page] { background:rgb(var(--ai));color:rgb(var(--card));box-shadow:none; }
+.f-dot { position:absolute;top:4px;inset-inline-end:4px;width:8px;height:8px;border-radius:999px;background:rgb(var(--neg)); }
+@media (max-width: 767px) { .f-nav a { padding:8px 10px;font-size:13px; } .f-nav-bottom { max-width:calc(100vw - 16px); } }
+.c-ai { border:1px solid rgb(var(--ai) / .45);background:rgb(var(--ai-soft));border-radius:var(--radius);padding:16px; }
+.c-ai .c-ai-ico { color:rgb(var(--ai));font-weight:800; }
+.f-save-float { position:fixed;z-index:44;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom));filter:drop-shadow(0 6px 16px rgb(var(--ink) / .25)); }
+@media (min-width: 768px) { .f-save-float { bottom:24px; } }
+body:has(.f-save-float) main { padding-bottom:9rem; }
+.c-ai-chat { border-top:3px solid rgb(var(--ai));padding-top:8px; }

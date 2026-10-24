@@ -26,7 +26,8 @@ const Results = lazy(() => import("./pages/Results"));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 const About = lazy(() => import("./pages/About"));
 import { PageTitle } from "./components/ui";
-import Support from "./pages/Support";
+import Support, { AiScreen } from "./pages/Support";
+import { useSearchParams, Navigate } from "react-router-dom";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import { setVerifyCode } from "./lib/verifyEmail";
@@ -158,12 +159,14 @@ createRoot(document.getElementById("root")!).render(
           <Route path="accuracy" element={<Moved to="/past" tab="accuracy" />} />
           <Route path="voters" element={<Moved to="/past" tab="voters" />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
-          <Route path="support" element={<Support />} />
+          <Route path="account" element={<Support />} />
+          <Route path="ai" element={<AiScreen />} />
+          <Route path="support" element={<SupportMoved />} />
           <Route path="connect" element={<Connect />} />
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Admin /></Suspense>} />
-          <Route path="feedback" element={<Moved to="/support" />} />
+          <Route path="feedback" element={<Moved to="/ai" />} />
           <Route path="feedback/:token" element={<MyFeedback />} />
           <Route path="*" element={<NotFound />} />
         </Route>
@@ -211,4 +214,10 @@ function LegacyToday() {
 function ModeHome() {
   const { advanced } = useInterface();
   return advanced ? <Home /> : <SimpleOverview />;
+}
+
+/** הכתובת הישנה #/support (גם בקישורים במיילים): ?groups ⇐ האזור האישי, אחרת ⇐ מסך AI (סבב 9) */
+function SupportMoved() {
+  const [q] = useSearchParams();
+  return <Navigate replace to={`${q.has("groups") ? "/account" : "/ai"}${q.toString() ? `?${q}` : ""}`} />;
 }

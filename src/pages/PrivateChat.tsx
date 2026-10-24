@@ -18,9 +18,9 @@ function Bubble({ turn }: { turn: PrivateTurn }) {
 }
 
 /** בסוג "שאלה או תאוריה": חיבור מפתח אישי. מוצג רק למי שעוד לא חיבר. */
-export function PrivateKeyEntry() {
+export function PrivateKeyEntry({ open: startOpen = false }: { open?: boolean } = {}) {
   const key = usePrivateKey();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

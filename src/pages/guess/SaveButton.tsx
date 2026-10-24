@@ -25,12 +25,14 @@ export default function SaveButton({
   invalid,
   compact = false,
   onSaved,
+  label = "שמירה",
 }: {
   unit: SaveUnit;
   session: ReturnType<typeof useSession>;
   invalid: string | null;
   compact?: boolean;
   onSaved?: () => void;
+  label?: string;
 }) {
   const [ask, setAsk] = useState(false);
   // השמירה לא הגיעה לשרת (כל הנתיבים נחסמו) ⇐ הסבר בעברית פשוטה, ולא רק דיווח שקט למערכת
@@ -47,7 +49,7 @@ export default function SaveButton({
   return (
     <div className={compact ? "contents" : "space-y-2"}>
       <Btn kind="primary" onClick={go} disabled={!!invalid || busy || !CROWD_URL || unit.status === "saved"}>
-        {busy ? "שומר…" : unit.state === "error" ? "לנסות שוב" : unit.status === "saved" ? "נשמר" : "שמירה"}
+        {busy ? "שומר…" : unit.state === "error" ? "לנסות שוב" : unit.status === "saved" ? "נשמר" : label}
       </Btn>
       {ask &&
         // בפורטל: הגיליון נמצא בתוך סרגל הפעולות הדביק (z-20), ובלי פורטל סרגל הניווט התחתון בטלפון (z-30) מכסה את כפתורי הגיליון
