@@ -307,3 +307,22 @@ describe("מגבלת דיווח כשל אוטומטי", () => {
     expect(reports()).toBe(2);
   });
 });
+
+describe("דיווח קריסה", () => {
+  it("נשלח פעם אחת לטעינה, בלי מיילים", async () => {
+    vi.stubEnv("VITE_FEEDBACK_URL", "https://feedback.example/");
+    vi.resetModules();
+    const { reportCrash } = await import("./crowdApi");
+    const fetcher = vi.fn().mockResolvedValue(new Response('{"ok":true}'));
+    vi.stubGlobal("fetch", fetcher);
+    reportCrash("root", new TypeError("bad value for a.b@example.com 0501234567"), "\n    at GroupUpload\n    at ManagedGroup");
+    reportCrash("root", new Error("again"));
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    const [url, init] = fetcher.mock.calls[0];
+    expect(url).toBe("https://feedback.example/autoreport");
+    const log = JSON.parse(JSON.parse(init.body).log);
+    expect(log).toMatchObject({ action: "crash", where: "root", name: "TypeError", components: "at GroupUpload < at ManagedGroup" });
+    expect(log.message).not.toContain("@");
+    expect(log.message).not.toContain("0501234567");
+  });
+});

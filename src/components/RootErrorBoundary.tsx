@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { reportCrash } from "../lib/crowdApi";
 
 /**
  * רשת ביטחון לכל האתר: קריסה מחוץ למסך עצמו (כותרת, ניווט, חלונות) מציגה הודעה וכפתור רענון במקום מסך לבן.
@@ -9,6 +10,7 @@ export default class RootErrorBoundary extends Component<{ children: ReactNode }
   static getDerivedStateFromError() { return { failed: true }; }
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("שגיאה באתר", error, info.componentStack);
+    reportCrash("root", error, info.componentStack);
   }
   render() {
     if (!this.state.failed) return this.props.children;

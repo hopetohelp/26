@@ -552,3 +552,24 @@ export function reportFailure(path: string, diagnostic?: Record<string, unknown>
   const log = JSON.stringify({ action: path.split("?")[0], code: "network", ...diagnostic });
   void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
 }
+
+/** בלי פרטים אישיים בדיווח: מיילים ומספרים ארוכים מוחלפים */
+const scrub = (s: string) => s.replace(/[^\s@"'<>]+@[^\s@"'<>]+/g, "<מייל>").replace(/\d{6,}/g, "<מספר>");
+let crashSent = false;
+/**
+ * דיווח אוטומטי על קריסת מסך (פעם אחת לטעינה), באותו ערוץ של דיווח כשל החיבור: איפה קרס, סוג השגיאה והשורות הראשונות של המחסנית.
+ * בלי תוכן הקובץ, בלי מייל ובלי פרט מזהה. נועד לאתר תקלות שלא ניתן לשחזר (למשל "מסך לבן" אצל מנהל קבוצה).
+ */
+export function reportCrash(where: string, error: unknown, componentStack?: string | null) {
+  if (!feedbackUrl || crashSent) return;
+  crashSent = true;
+  const e = error instanceof Error ? error : new Error(String(error));
+  const log = JSON.stringify({
+    action: "crash", code: "crash", where, screen: typeof location === "undefined" ? undefined : location.hash.split("?")[0],
+    name: e.name, message: scrub(e.message).slice(0, 300),
+    stack: scrub(e.stack ?? "").split("\n").slice(0, 8).join("\n"),
+    components: scrub(componentStack ?? "").trim().split("\n").slice(0, 10).map((l) => l.trim()).join(" < "),
+    ...environment(),
+  });
+  void fetch(feedbackUrl.replace(/\/$/, "") + "/autoreport", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ log }), keepalive: true }).catch(() => {});
+}
