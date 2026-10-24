@@ -18,8 +18,9 @@ export default function GroupUpload({ send, onDone }: { send: (chunk: { emails: 
   const upload = async () => {
     if (!file) return;
     setError(null); setDone(null);
-    const emails = emailsFromText(await file.text());
-    const chunks = uploadChunks(emails, mode);
+    let text: string;
+    try { text = await file.text(); } catch { setError("לא הצלחנו לקרוא את הקובץ. אפשר לשמור אותו מחדש כקובץ טקסט או CSV ולנסות שוב."); return; }
+    const chunks = uploadChunks(emailsFromText(text), mode);
     if (!chunks.length) { setError("לא נמצאו מיילים בקובץ."); return; }
     let added = 0, invalid = 0, members = 0;
     try {

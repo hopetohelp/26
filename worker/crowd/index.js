@@ -21,7 +21,7 @@ import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername,
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 import { setPollRanges, moderate, flagReasons } from "./lib/moderation.js";
-import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
+import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
 import { slugFromName, freeSlug } from "./lib/slug.js";
@@ -177,10 +177,11 @@ async function importGroup(env, body, now, create) {
   if (slug) await ensureSlugFree(env, id, slug);
   else if (create && !exists) slug = await autoSlug(env, name);
   const hashes = new Set();
+  const hash = await emailHasher(env);
   let invalid = 0, valid = 0;
   for (const raw of body.emails) {
     const e = normalizeEmail(raw);
-    if (e) { valid++; hashes.add(await emailHash(env, e.norm)); }
+    if (e) { valid++; hashes.add(await hash(e.norm)); }
     else invalid++;
   }
   const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
