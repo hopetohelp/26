@@ -241,7 +241,8 @@ export interface LogEntry {
 }
 
 /** slug = שם הקישור באנגלית (null עד שנקבע); image = זמן עדכון התמונה (null אם אין) — משמש גם למניעת מטמון ישן */
-export interface GroupRef { id: string; name: string | null; slug?: string | null; image?: string | null }
+/** members — כמה מיילים שמורים ברשימת הקבוצה (רק בקבוצות שהמשתמש מנהל) */
+export interface GroupRef { id: string; name: string | null; slug?: string | null; image?: string | null; members?: number }
 /** תשובת GET /group/public?slug= — פתוחה לכל מי שיש לו את הקישור: שם ותמונה בלבד */
 export interface GroupPublic { id: string; slug: string; name: string | null; image: string | null }
 /** תשובת GET /group/link-stats — כניסות דרך הקישור: בסך הכול, היום, ודפדפנים שונים (כניסה ראשונה). מונה אנונימי */

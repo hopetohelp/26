@@ -43,9 +43,10 @@ export function AdminGroupsGuide() {
   );
 }
 
-export function GroupManagerGuide() {
-  return (
-    <Fold title="הסבר למנהל הקבוצה">
+/** bare = בלי מגירה משלו (בתוך תת-מגירה של ניהול הקבוצה) */
+export function GroupManagerGuide({ bare = false }: { bare?: boolean }) {
+  const body = (
+    <>
       <H>הקישור והתמונה</H>
       <Rules items={[
         "הקישור שבראש הכרטיס מוביל לסקר האתר עם תמונת הקבוצה בראשו. \"העתקה\" ושליחה לחברים. המספרים מתחתיו: כמה נכנסו דרכו, כמה היום, ומכמה דפדפנים שונים.",
@@ -77,6 +78,7 @@ export function GroupManagerGuide() {
         "אין דרך לראות מי מהרשימה נרשם או מה הצביע. המיילים נשמרים רק כ\"טביעת אצבע\" מוצפנת.",
         "אפשר לנהל רק את הרשימה של הקבוצה הזו. שינוי שם או מחיקה — דרך צוות האתר (בתמיכה).",
       ]} />
-    </Fold>
+    </>
   );
+  return bare ? body : <Fold title="הסבר למנהל הקבוצה">{body}</Fold>;
 }

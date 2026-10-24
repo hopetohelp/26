@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Segmented } from "./Choice";
 import { Btn, Notice } from "../pages/guess/ui";
 import type { GroupImportResult } from "../lib/crowdApi";
-import { emailsFromText, uploadChunks } from "../lib/groupUpload";
+import { emailsFromText, sendWithSplit, uploadChunks } from "../lib/groupUpload";
 
 /**
  * העלאת רשימת חברי קבוצה (docs/פילוח-קבוצות-תכנון.md): קובץ עם מייל בכל שורה, נשלח במנות. בשרת נשמר רק הגיבוב של כל מייל.
@@ -22,14 +22,15 @@ export default function GroupUpload({ send, onDone }: { send: (chunk: { emails: 
     try { text = await file.text(); } catch { setError("לא הצלחנו לקרוא את הקובץ. אפשר לשמור אותו מחדש כקובץ טקסט או CSV ולנסות שוב."); return; }
     const chunks = uploadChunks(emailsFromText(text), mode);
     if (!chunks.length) { setError("לא נמצאו מיילים בקובץ."); return; }
-    let added = 0, invalid = 0, members = 0;
+    let added = 0, invalid = 0, failed = 0, members: number | null = null;
     try {
       for (let i = 0; i < chunks.length; i++) {
         setBusy(`שולח ${i + 1} מתוך ${chunks.length}…`);
-        const r = await send(chunks[i]);
-        added += r.added; invalid += r.invalid; members = r.members;
+        const r = await sendWithSplit(send, chunks[i]);
+        added += r.added; invalid += r.invalid; failed += r.failed; members = r.members ?? members;
       }
-      setDone(`הועלה. נוספו ${added}${invalid ? `, ${invalid} שורות לא תקינות` : ""}. ברשימה עכשיו ${members} מיילים.`);
+      setDone(`הועלה. נוספו ${added}${invalid ? `, ${invalid} שורות לא תקינות` : ""}.${members !== null ? ` ברשימה עכשיו ${members} מיילים.` : ""}`);
+      if (failed) setError(`${failed} מיילים לא נשמרו בגלל תקלה בחיבור. אפשר להעלות שוב את אותו קובץ במצב "הוספה" — מייל שכבר ברשימה לא נכפל.`);
     } catch {
       setError("ההעלאה נעצרה באמצע. אפשר להעלות שוב את אותו קובץ במצב \"הוספה\" — מייל שכבר ברשימה לא נכפל.");
     } finally { setBusy(null); onDone?.(); }
