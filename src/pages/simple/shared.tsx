@@ -123,7 +123,7 @@ function Pie({ slices, values }: { slices: Slice[]; values: Record<string, numbe
     {slices.map((s, i) => {
       const da = s.value / total * 2 * Math.PI, a2 = a + da, [x1, y1] = at(a, R), [x2, y2] = at(a2, R), [x3, y3] = at(a2, r), [x4, y4] = at(a, r), big = da > Math.PI ? 1 : 0, [lx, ly] = at(a + da / 2, (R + r) / 2);
       a = a2;
-      return <g key={s.id} {...handlers(i, true)}><path d={`M${x1} ${y1}A${R} ${R} 0 ${big} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${big} 0 ${x4} ${y4}Z`} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
+      return <g key={s.id} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={`M${x1} ${y1}A${R} ${R} 0 ${big} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${big} 0 ${x4} ${y4}Z`} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
         {da > .35 && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize={da > 1.4 ? 11 : 10} fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{Math.round(s.value)}</text></>}</g>;
     })}
     <text x="130" y="134" textAnchor="middle" fontSize="26" fontWeight="700" fill="rgb(var(--ink))" className="font-num">120</text>
@@ -134,7 +134,7 @@ function Pie({ slices, values }: { slices: Slice[]; values: Record<string, numbe
 function Stack({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
   const { pop, host, handlers } = usePop();
   return <div className="f-dock floating" ref={host}><div className="f-stack">{slices.map((s, i) =>
-    <button key={s.id} type="button" aria-label={`${s.name} ${Math.round(s.value)}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
+    <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${Math.round(s.value)}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
       {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{Math.round(s.value)}</button>)}
   </div>{pop && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
@@ -146,8 +146,17 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
 export function InlineBlocBar({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
   const slices = blocSlices(values, missing);
-  return <div className="f-stack" role="img" aria-label={slices.map(s => `${s.name} ${Math.round(s.value)}`).join(", ")}>{slices.map(s => <button key={s.id} type="button" tabIndex={-1} style={{ flex: s.value, background: s.color }}>{s.value >= 18 && <span>{s.short}</span>}{Math.round(s.value)}</button>)}</div>;
+  return <div className="f-stack" role="img" aria-label={slices.map(s => `${s.name} ${Math.round(s.value)}`).join(", ")}>{slices.map(s => <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} tabIndex={-1} style={{ flex: s.value, background: s.color }}>{s.value >= 18 && <span>{s.short}</span>}{Math.round(s.value)}</button>)}</div>;
 }
 export function FocusFoot() {
   return <div className="f-foot"><Link to="/method" className="f-info" aria-label="מידע ומקורות">i</Link><Link to="/method">מידע ומקורות</Link></div>;
+}
+
+/** הודעה קצרה צפה, שנשארת גם אחרי מעבר מסך (נבנית מחוץ ל-React ונעלמת לבד) */
+export function flashNotice(text: string) {
+  document.querySelector(".f-toast")?.remove();
+  const el = document.createElement("div");
+  el.className = "f-toast"; el.setAttribute("role", "status"); el.textContent = text;
+  document.body.appendChild(el);
+  window.setTimeout(() => el.remove(), 3500);
 }

@@ -761,3 +761,9 @@ body:has(.f-save-float) main { padding-bottom:9rem; }
 .f-seg-row .f-seg { margin-bottom:0; }
 .f-count { font-size:13px;color:rgb(var(--ink-soft));margin-inline-start:auto; }
 .f-count b { color:rgb(var(--ink)); }
+/* מנדטים שלא חולקו: מסגרת אדומה מהבהבת (הכרעת בעלים 24.10.2026) */
+@keyframes f-miss-blink { 50% { stroke-opacity:.15; outline-color:rgb(var(--neg) / .15); } }
+path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s ease-in-out infinite; }
+.f-stack button.f-miss { outline:2px solid rgb(var(--neg));outline-offset:-2px;animation:f-miss-blink 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { path.f-miss, .f-stack button.f-miss { animation:none; } }
+.f-toast { position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(64px + env(safe-area-inset-top));max-width:calc(100vw - 32px);padding:10px 16px;border-radius:999px;background:rgb(var(--ink));color:rgb(var(--paper));font-weight:700;font-size:14px;box-shadow:0 8px 24px rgb(var(--ink) / .25); }
