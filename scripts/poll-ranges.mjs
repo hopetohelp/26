@@ -35,12 +35,17 @@ export function pollRanges(polls, lists, asOf, days = 14) {
   return { asOf, polls: latest.length, ranges: out };
 }
 
+/** רשימות שלא עברו את אחוז החסימה (4 מנדטים) באף סקר שפורסם ועקבי — אי אפשר לנחש עליהן (הכרעת בעלים 24.10.2026). כמו CLOSED_LISTS באתר */
+export function closedLists(polls, lists) {
+  return lists.filter((id) => !polls.some((p) => p.eligibleToShow && p.consistent && (seatsIn(p, id) ?? 0) >= 4));
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
   const root = new URL("../src/data/", import.meta.url);
   const polls = JSON.parse(readFileSync(new URL("polls.json", root), "utf8")).polls;
   const model = JSON.parse(readFileSync(new URL("model.json", root), "utf8"));
   const meta = JSON.parse(readFileSync(new URL("meta.json", root), "utf8"));
-  const res = pollRanges(polls, meta.lists2026.map((l) => l.id), model.asof);
+  const res = { ...pollRanges(polls, meta.lists2026.map((l) => l.id), model.asof), closed: closedLists(polls, meta.lists2026.filter((l) => !l.withdrawn).map((l) => l.id)) };
   writeFileSync(new URL("../public/poll-ranges.json", import.meta.url), JSON.stringify(res) + "\n");
   console.log(`poll-ranges: ${Object.keys(res.ranges).length} lists from ${res.polls} polls (as of ${res.asOf})`);
 }

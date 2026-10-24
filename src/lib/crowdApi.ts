@@ -44,6 +44,8 @@
  * GET  /group/image?slug=<slug>|group=<id> ⇐ תמונה (בינארי)  ציבורי, לתגית img.
  * POST /group/link-join {slug}     ⇐ {ok}  (בסשן) נכנס דרך קישור הקבוצה; נספר כחבר רק אם המנהל הפעיל. GET|POST /group/link-members ⇐ {on,joined} מתג המנהל.
  * POST /group/visit {slug,fresh?}   ⇐ {ok}  ציבורי: ספירת כניסה דרך הקישור (fresh = הדפדפן נכנס בפעם הראשונה). ליום בלבד, בלי זהות.
+ * GET  /group/series?group=<id>    ⇐ GroupSeries  (בסשן) מנהל קבוצה: שבעה מדדים לאורך זמן (שעתי 72 שעות, יומי לפני כן).
+ * GET  /group/insights?group=<id>  ⇐ GroupInsights  (בסשן) מנהל קבוצה: מצב ההשערות מול טווח הסקרים ופניות לצוות — ספירות בלבד.
  * GET  /group/stats?group=<id>     ⇐ GroupStats  (בסשן) מנהל קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה; מתחת ל-50 רשומים ⇐ belowMin.
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
@@ -250,11 +252,28 @@ export interface GroupPublic { id: string; slug: string; name: string | null; im
 /** תשובת GET /group/link-stats — כניסות דרך הקישור: בסך הכול, היום, ודפדפנים שונים (כניסה ראשונה). מונה אנונימי */
 export interface GroupLinkStats { group: string; slug: string | null; opens: number; today: number; fresh: number }
 /** תשובת GET /dashboard?group= — מתחת לסף: בלי נתונים, רק הספירה (participants) */
-export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; participants?: number; publishedAt: string };
+/** compare = למה משווים את ממוצע הקבוצה (מנהל הקבוצה קובע; ברירת מחדל polls) */
+export type GroupCompare = "polls" | "crowd";
+export type GroupDashboard = ((Dashboard & { group: string; min: number; belowMin?: undefined }) | { group: string; belowMin: true; min: number; participants?: number; publishedAt: string }) & { compare?: GroupCompare };
 /** תשובת טעינת מנה של רשימת חברים */
 export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
 /** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */
 export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number };
+/** תשובת GET /group/insights — מסך "ניהול קבוצה": מצב ההשערות של החברים מול טווח הסקרים ומספר הפניות לצוות. מצטבר בלבד, מ-50 רשומים */
+export interface GroupQuestions { askers: number; messages: number; week: number; byTopic: Partial<Record<"data" | "idea" | "theory" | "other", number>>; aiUsers: number }
+export type GroupInsights = { group: string; min: number; belowMin: true } | {
+  group: string; min: number; belowMin?: undefined; asOf: string; guesses: number;
+  status: { inRange: number; approved: number; pending: number; rejected: number };
+  outside: { list: string; above: number; below: number; lo: number; hi: number }[];
+  questions: GroupQuestions | null;
+};
+/** תשובת GET /group/series — שבעה מדדים למסך "ניהול קבוצה": נקודות מצטברות, שעתיות ב-72 השעות האחרונות ויומיות לפני כן. total/points = null מתחת ל-50 */
+export type GroupSeriesKey = "list" | "linkFirst" | "registered" | "seats" | "vote" | "outsideLink" | "outsideFirst";
+export interface GroupSeries {
+  group: string; min: number; hours: number;
+  buckets: { t: string; hourly: boolean }[];
+  series: { key: GroupSeriesKey; total: number | null; points: (number | null)[] | null }[];
+}
 /** מיילים בבקשה אחת — מנה קטנה מהתקרה בשרת (GROUP_CHUNK = 300), כדי שכל בקשה תישאר קצרה */
 export const GROUP_CHUNK = 100;
 

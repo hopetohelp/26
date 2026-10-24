@@ -751,6 +751,10 @@
 .f-nav a.f-ai[aria-current=page] { background:rgb(var(--ai));color:rgb(var(--card));box-shadow:none; }
 .f-dot { position:absolute;top:4px;inset-inline-end:4px;width:8px;height:8px;border-radius:999px;background:rgb(var(--neg)); }
 @media (max-width: 767px) { .f-nav a { padding:8px 10px;font-size:13px; } .f-nav-bottom { max-width:calc(100vw - 16px); } }
+/* לשונית "ניהול קבוצה" (למנהלי קבוצה בלבד): בטלפון רק סמל, כדי שהסרגל לא יחרוג מרוחב המסך */
+.f-nav a.f-grp { display:flex;align-items:center;gap:6px; }
+.f-nav a.f-grp svg { width:18px;height:18px; }
+@media (max-width: 767px) { .f-nav:has(.f-grp) { gap:2px; } .f-nav:has(.f-grp) a { padding:8px 7px;font-size:12.5px; } .f-nav a.f-grp { padding:8px; } .f-nav a.f-grp .t { display:none; } }
 .c-ai { border:1px solid rgb(var(--ai) / .45);background:rgb(var(--ai-soft));border-radius:var(--radius);padding:16px; }
 .c-ai .c-ai-ico { color:rgb(var(--ai));font-weight:800; }
 .c-ai-chat { border-top:3px solid rgb(var(--ai));padding-top:8px; }

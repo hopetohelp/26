@@ -397,7 +397,7 @@ export default function Account({ session, hideGroups = false }: { session: Retu
   // הסשן נשמר, אבל התשובות מהשרת נחסמות בדרך (סינון): במקום "טוען…" בלי סוף — הסבר ובקשה מוכנה לספק הסינון
   if (!me) return blocked ? <FilterBlocked signedIn onRetry={() => void session.refresh()} /> : <p className="text-ink-soft">טוען…</p>;
   const emails = (me.emails ?? []).filter((e) => e.email);
-  const row = "py-3 border-b border-paper-line space-y-2";
+  const row = "py-2.5 border-b border-paper-line space-y-2";
   return (
     <div className="space-y-1">
       {me.needsEmail && (
@@ -408,34 +408,37 @@ export default function Account({ session, hideGroups = false }: { session: Retu
           <ClaimForm session={session} />
         </div>
       )}
+      {/* כניסה: Google ומייל בשורות מצב קצרות; פעולה מוצגת רק כשיש מה לעשות */}
       <div className={row}>
-        <p className="font-bold">Google</p>
-        {me.google ? <p className="text-sm">מחובר.</p> : <><p className="text-sm text-ink-soft">לא מחובר. חיבור מאפשר להיכנס בלחיצה אחת.</p><GoogleButton session={session} onDone={() => void session.refresh()} /></>}
-      </div>
-      <div className={row}>
-        <p className="font-bold">מייל</p>
-        {emails.length ? (
-          <ul className="text-sm space-y-1">
-            {emails.map((e) => (
-              <li key={e.email}>
-                <span dir="ltr">{showEmail ? e.email : mask(e.email!)}</span>
-                <span className="block text-xs text-ink-soft">{e.verified ? (e.source === "google" ? "אומת ב-Google" : "אומת") : "לא אומת"}</span>
-              </li>
-            ))}
-          </ul>
-        ) : <p className="text-sm text-ink-soft">אין עדיין.</p>}
+        <p className="font-bold">דרכי כניסה</p>
+        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm items-baseline">
+          <dt className="text-ink-soft">Google</dt>
+          <dd>{me.google ? "מחובר" : "לא מחובר"}</dd>
+          <dt className="text-ink-soft">מייל</dt>
+          <dd className="min-w-0">
+            {emails.length ? (
+              <ul className="space-y-0.5">
+                {emails.map((e) => <li key={e.email} className="truncate"><span dir="ltr">{showEmail ? e.email : mask(e.email!)}</span> <span className="text-xs text-ink-soft">· {e.verified ? (e.source === "google" ? "אומת ב-Google" : "אומת") : "לא אומת"}</span></li>)}
+              </ul>
+            ) : <span className="text-ink-soft">אין עדיין</span>}
+            {!!emails.length && <button type="button" onClick={() => setShowEmail((x) => !x)} className="text-xs underline min-h-[32px]">{showEmail ? "הסתרה" : "הצגה מלאה"}</button>}
+          </dd>
+        </dl>
+        {!me.google && <GoogleButton session={session} onDone={() => void session.refresh()} />}
         {emails.some((e) => !e.verified) && (me.verifyAvailable ? <VerifyEmail session={session} /> : <p className="text-xs text-ink-soft">אימות המייל יתאפשר בקרוב.</p>)}
-        {!!emails.length && <button type="button" onClick={() => setShowEmail((x) => !x)} className="text-sm underline min-h-[44px]">{showEmail ? "הסתרה" : "הצגה מלאה"}</button>}
       </div>
       <div className={row}>
         <NameForm session={session} />
       </div>
-      <div className={row}>
-        <p className="font-bold">סיסמה</p>
+      <details className={`${row} group/pw [&_summary::-webkit-details-marker]:hidden`}>
+        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[44px] font-bold">
+          <span>סיסמה <span className="font-normal text-sm text-ink-soft">· {me.hasPassword ? "קיימת" : "לא נקבעה"}</span></span>
+          <span aria-hidden="true" className="text-ink-soft text-lg transition-transform group-open/pw:rotate-45">+</span>
+        </summary>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
-      </div>
+      </details>
       {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} members={g.members} token={token} className={row} onChanged={() => void session.refresh()} collapsible={(me.managedGroups ?? []).length > 1} />)}
-      <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
+      <div className="pt-3 flex flex-wrap gap-2 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
       </div>
@@ -475,7 +478,10 @@ export function LinkMembersToggle({ load, set, onChanged }: { load: () => Promis
 }
 
 /** תת-מגירה בניהול הקבוצה: התוכן (והבקשות לשרת) נטען רק כשהיא נפתחת */
-function GroupFold({ title, children }: { title: ReactNode; children: ReactNode }) {
+function FlatPart({ title, children }: { title: ReactNode; children: ReactNode }) {
+  return <div className="space-y-3 py-3 border-b border-paper-line last:border-b-0"><p className="font-bold text-sm">{title}</p>{children}</div>;
+}
+function FoldPart({ title, children }: { title: ReactNode; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <details className="group/f border-b border-paper-line last:border-b-0 [&_summary::-webkit-details-marker]:hidden" onToggle={(e) => setOpen(e.currentTarget.open)}>
@@ -489,7 +495,8 @@ function GroupFold({ title, children }: { title: ReactNode; children: ReactNode 
 }
 
 /** מקטע מנהל קבוצה: תתי-מגירות — קישור, מספרים, רשימת המיילים, תמונה והסבר. אותן אפשרויות כמו למנהל האתר */
-export function ManagedGroup({ id, name, slug, image, members, token, className, onChanged, collapsible = false }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; className: string; onChanged?: () => void; collapsible?: boolean }) {
+/** tools = רק כלי הניהול (במסך "ניהול קבוצה" המספרים מוצגים בראש המסך, ולא פעמיים) */
+export function ManagedGroup({ id, name, slug, image, members, token, className, onChanged, collapsible = false, tools = false }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; className: string; onChanged?: () => void; collapsible?: boolean; tools?: boolean }) {
   const [refresh, setRefresh] = useState(0);
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(members ?? null);
@@ -501,17 +508,18 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
   };
   const changed = () => { setRefresh((n) => n + 1); onChanged?.(); };
   const countText = count === null ? null : count === 0 ? "אין עדיין מיילים ברשימה" : `${count.toLocaleString("he-IL")} מיילים ברשימה`;
+  // במסך "ניהול קבוצה" (tools) — בלי תתי-מגירות: כל כלי בכותרת משלו, פתוח (הכרעת בעלים 24.10.2026)
+  const GroupFold = tools ? FlatPart : FoldPart;
   const content = (
     <>
       <GroupFold title="קישור הקבוצה">
         <GroupLinkPanel
           slug={slug}
-          setSlug={async (next) => { await call("/group/link", { token, body: next ? { group: id, slug: next } : { group: id } }); onChanged?.(); }}
           loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
           bare
         />
       </GroupFold>
-      <GroupFold title={<>רשימת המיילים{countText && <span className="font-normal text-ink-soft"> · {countText}</span>}</>}>
+      <GroupFold title={<>רשימת המיילים{countText && !tools && <span className="font-normal text-ink-soft"> · {countText}</span>}</>}>
         <p className="text-sm">{countText ? <><strong>{countText}</strong> — כל המיילים שהעלו מנהלי הקבוצה, בלי קשר למי שכבר נרשם לאתר.</> : "טוען…"}</p>
         <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={changed} />
         <GroupUpload send={send} staged={{
@@ -520,8 +528,8 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
         }} onDone={changed} current={count} />
         <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={changed} />
       </GroupFold>
-      <GroupFold title="מספרים">
-        <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
+      <GroupFold title={tools ? "מי נספר בקבוצה" : "מספרים"}>
+        {!tools && <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />}
         <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} />
       </GroupFold>
       <GroupFold title="תמונת הקבוצה">
@@ -548,7 +556,7 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
     );
   return (
     <div className={className}>
-      <p className="font-bold">הקבוצה {name}</p>
+      {!tools && <p className="font-bold">הקבוצה {name}</p>}
       {content}
     </div>
   );

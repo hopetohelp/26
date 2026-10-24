@@ -32,6 +32,13 @@ const TABS = [
   { to: "/ai", label: "AI", icon: "comments" },
   { to: "/account", label: "אישי", icon: "user" },
 ];
+/** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
+const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
+function useGroupTab() {
+  const { me, token } = useSession();
+  return token && (me?.managedGroups?.length ?? 0) > 0 ? [GROUP_TAB] : [];
+}
+
 function Icon({ name }: { name: string }) {
   const p = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   if (name === "home") return <svg {...p}><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /><path d="M10 20v-6h4v6" /></svg>;
@@ -41,6 +48,7 @@ function Icon({ name }: { name: string }) {
   if (name === "guess") return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" /></svg>;
   if (name === "comments") return <svg {...p}><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M7 8h10M7 12h7" /></svg>;
   if (name === "user") return <svg {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>;
+  if (name === "group") return <svg {...p}><circle cx="9" cy="8" r="3.5" /><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5" /><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2.4.6 4 2.4 4 5.2" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
 }
@@ -148,11 +156,13 @@ function FocusClock() {
 }
 function FocusNav({ className, unread }: { className: string; unread: boolean }) {
   const { pathname } = useLocation();
+  const groupTab = useGroupTab();
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
   return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
     {SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.label}</NavLink>)}
+    {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
 }
@@ -168,10 +178,11 @@ function ProfileFace() {
 
 function DesktopNav({ unread }: { unread: boolean }) {
   const { advanced } = useInterface();
+  const groupTab = useGroupTab();
   return (
     <nav aria-label="ניווט ראשי" className="hidden md:block bg-frame border-b border-frame-line">
       <ul className="w-full mx-auto px-2 md:px-4 flex flex-wrap gap-1 text-sm">
-        {(advanced ? NAV : SIMPLE_TABS).map((n) => (
+        {[...(advanced ? NAV : SIMPLE_TABS), ...groupTab].map((n) => (
           <li key={n.to}>
             <NavLink
               to={n.to}
@@ -197,6 +208,7 @@ function UnreadDot() {
 
 function MobileTabs({ unread }: { unread: boolean }) {
   const { advanced } = useInterface();
+  const groupTab = useGroupTab();
   const { pathname } = useLocation();
   const scroller = useRef<HTMLUListElement>(null);
   const [overflow, setOverflow] = useState(false);
@@ -211,12 +223,12 @@ function MobileTabs({ unread }: { unread: boolean }) {
   }, [advanced]);
   useEffect(() => { scroller.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [pathname]);
   return <nav aria-label="ניווט בטלפון" className="c-mobile-tabs md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-    <ul ref={scroller} className="c-mobile-tab-list">{(advanced ? TABS : SIMPLE_TABS).map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/ai" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
+    <ul ref={scroller} className="c-mobile-tab-list">{[...(advanced ? TABS : SIMPLE_TABS), ...groupTab.map((t) => ({ ...t, label: t.short }))].map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/ai" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
     {overflow && <button type="button" className="c-tab-scroll" aria-label={atEnd ? "גלילה לתחילת הניווט" : "גלילה להמשך הניווט"} onClick={() => scroller.current?.scrollBy({ left: (atEnd ? 1 : -1) * scroller.current.clientWidth * .7, behavior: "smooth" })}>{atEnd ? "→" : "←"}</button>}
   </nav>;
 }
 
-const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/ai", "/account"];
+const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/ai", "/account", "/group-admin"];
 function GuessCta({ pathname }: { pathname: string }) {
   // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
   if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;

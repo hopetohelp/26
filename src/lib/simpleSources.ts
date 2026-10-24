@@ -1,5 +1,5 @@
 import { CURRENT_POLLS, resolveData, selectedPolls, type Selection } from "./dataResolver";
-import type { Poll } from "./data";
+import { CLOSED_LISTS, type Poll } from "./data";
 import { pollSeatValues } from "./pollRange";
 import { IDS } from "../pages/guess/model";
 /** אומת ב־GET /group/public?slug=hagzara ב־23.10.2026. חברות נאכפת בשרת. */
@@ -25,8 +25,8 @@ export function simpleSpread(selection: Selection, id: string): [number, number,
   const q = (x: number) => v[Math.min(v.length - 1, Math.round(x * (v.length - 1)))];
   return [v[0], q(.1), q(.25), q(.75), q(.9), v[v.length - 1]];
 }
-/** לא מוצעות לבחירה בעורך "הכנסת שלי" בתצוגה הממוקדת (הכרעת בעלים 23.10.2026); במגירת ההצבעה הן נשארות */
-export const SIMPLE_GUESS_HIDDEN = ["code_black", "noam", "haredi_public"];
+/** לא מוצעות לבחירה בעורך "הכנסת שלי" — רשימות שלא עברו באף סקר (CLOSED_LISTS, הכרעת בעלים 24.10.2026); במגירת ההצבעה הן נשארות */
+export const SIMPLE_GUESS_HIDDEN = CLOSED_LISTS;
 /** ארבעת הגושים של התצוגה הממוקדת (הכרעת בעלים 23.10.2026), בסדר התצוגה: מלמעלה בכיוון השעון. */
 const NETANYAHU = ["likud", "otzma", "rzp", "amcha", "noam"], HAREDI = ["shas", "utj", "code_black", "haredi_public"], ARAB = ["joint", "raam"];
 export const SIMPLE_BLOCS = [

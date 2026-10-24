@@ -167,6 +167,21 @@ async function accountOf(env, token, origin) {
   } catch { return undefined; }
 }
 
+/** ספירת הפניות של רשימת משתתפים: מי פנה לצוות, כמה הודעות (בסך הכול וב-7 הימים האחרונים), לפי נושא, וכמה השתמשו בצ'אט החכם */
+export async function groupQuestions(env, participants, now) {
+  const ids = JSON.stringify(Array.isArray(participants) ? participants.filter((p) => typeof p === "string").slice(0, 50_000) : []);
+  const week = new Date(now - 7 * 864e5).toISOString();
+  const [msgs, topics, ai] = await env.DB.batch([
+    env.DB.prepare("SELECT COUNT(DISTINCT participant) AS askers, COUNT(*) AS messages, SUM(CASE WHEN created_at >= ?2 THEN 1 ELSE 0 END) AS week FROM support_messages WHERE author = 'visitor' AND participant IN (SELECT value FROM json_each(?1))").bind(ids, week),
+    env.DB.prepare("SELECT f.topic, COUNT(*) AS n FROM feedback_adopted a JOIN feedback f ON f.id = a.feedback_id WHERE a.participant IN (SELECT value FROM json_each(?1)) GROUP BY f.topic").bind(ids),
+    env.DB.prepare("SELECT COUNT(*) AS n FROM private_chats WHERE participant IN (SELECT value FROM json_each(?1))").bind(ids),
+  ]);
+  const m = msgs.results?.[0] ?? {};
+  const byTopic = {};
+  for (const r of topics.results || []) { const t = r.topic === "design" ? "idea" : r.topic; byTopic[t] = (byTopic[t] ?? 0) + r.n; }
+  return { askers: m.askers ?? 0, messages: m.messages ?? 0, week: m.week ?? 0, byTopic, aiUsers: ai.results?.[0]?.n ?? 0 };
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get("origin");
@@ -174,6 +189,14 @@ export default {
     const reply = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers });
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     const url = new URL(request.url);
+    // פניות חברי קבוצה (למסך "ניהול קבוצה" בשרת ההשתתפות): ספירה בלבד, בלי טקסט ובלי מזהה. רק דרך הקישור הפנימי בין השרתים —
+    // בקשה מבחוץ לעולם אינה מגיעה בשם feedback.internal.
+    if (url.pathname === "/internal/group-questions" && request.method === "POST") {
+      if (url.hostname !== "feedback.internal") return reply({ error: "not_found" }, 404);
+      let body;
+      try { body = await request.json(); } catch { return reply({ error: "bad_request" }, 400); }
+      return reply(await groupQuestions(env, body?.participants, Date.now()));
+    }
     // מספרים מצטברים בלבד; ללא זיהוי גולשים וללא פתיחת ממשק הניהול.
     if (url.pathname === "/usage" && request.method === "GET") {
       try {

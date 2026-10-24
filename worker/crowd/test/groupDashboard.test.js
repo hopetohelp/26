@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import worker, { resetDashboardCache, GROUP_MIN } from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
-import { seats } from "./helpers.js";
+import { seats, IDS } from "./helpers.js";
 import { sha256 } from "../lib/crypto.js";
+import { setPollRanges } from "../lib/moderation.js";
+import { TEST_RANGES } from "./setup.js";
 
 // דשבורד לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): רק לחבר, רק מייל מאומת, סף מינימום, ובלי סימן לגולש אחר
 const KEY = "k".repeat(40);
@@ -56,7 +58,7 @@ describe("group dashboard", () => {
     // מתחת לסף: בלי נתונים, רק המונה (הכרעת בעלים 12.10.2026)
     expect((await call("/me", { token: members[0] })).data.groups).toEqual([{ id: "gizra", name: "הגזרה", slug: "hagzara", image: null }]);
     let d = (await call("/dashboard?group=gizra", { token: members[0] })).data;
-    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: GROUP_MIN - 1, publishedAt: expect.any(String) });
+    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: GROUP_MIN - 1, publishedAt: expect.any(String), compare: "polls" });
 
     // חבר נוסף נרשם אחרי טעינת הרשימה — נכנס לבד (הצלבה בכל חישוב)
     members.push(await account(`m${GROUP_MIN - 1}@x.co`, true, 70));
@@ -191,7 +193,102 @@ describe("managers count as group members (הכרעת בעלים 12.10.2026)", (
     await load(["a@x.co"]);
     const a = await account("a@x.co");
     const d = (await call("/dashboard?group=gizra", { token: a })).data;
-    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: 1, publishedAt: expect.any(String) });
+    expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: 1, publishedAt: expect.any(String), compare: "polls" });
     expect(JSON.stringify(d)).not.toMatch(/seats|blocs|vote|mean/);
+  });
+});
+
+describe("group insights", () => {
+  it("manager only, threshold, counts only — no ids or text", async () => {
+    const mgr = await account("boss@x.co");
+    const member = await account("m0@x.co", true, 70);
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/group/insights?group=gizra", { token: member })).status).toBe(403);
+    expect((await call("/group/insights?group=gizra")).status).toBe(401);
+    expect((await call("/group/insights?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    for (let i = 1; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    // רשימה ראשונה: טווח 20–30 ⇐ 70 מנדטים (וגם 60 של המנהל) חורגים
+    setPollRanges({ ...TEST_RANGES, [IDS[0]]: { lo: 20, hi: 30 } });
+    const d = (await call("/group/insights?group=gizra", { token: mgr })).data;
+    // מנהל הקבוצה נספר גם הוא כחבר
+    expect(d).toMatchObject({ group: "gizra", guesses: GROUP_MIN + 1, questions: null });
+    expect(d.status.inRange + d.status.pending + d.status.approved + d.status.rejected).toBe(GROUP_MIN + 1);
+    // נשמרו כשהיו בטווח ⇐ אושרו אוטומטית לצמיתות (version_accepted), ונספרות כ"חריגה שאושרה"
+    expect(d.status.approved).toBe(GROUP_MIN + 1);
+    expect(d.outside).toEqual([{ list: IDS[0], above: GROUP_MIN + 1, below: 0, lo: 20, hi: 30 }]);
+    expect(d.outside.length).toBeGreaterThan(0);
+    for (const o of d.outside) expect(Object.keys(o).sort()).toEqual(["above", "below", "hi", "list", "lo"]);
+    expect(JSON.stringify(d)).not.toMatch(/participant|@/);
+  });
+});
+
+describe("group series", () => {
+  it("hourly for 72 hours, daily before; counts hidden below the threshold", async () => {
+    const { seriesBuckets, SERIES_HOURS } = await import("../index.js");
+    const now = Date.parse("2026-10-24T10:30:00Z");
+    const b = seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), now);
+    expect(b.filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
+    expect(b.filter((x) => !x.hourly).length).toBeGreaterThanOrEqual(5);
+    for (let i = 1; i < b.length; i++) expect(b[i].start).toBe(b[i - 1].end);
+
+    const mgr = await account("boss@x.co");
+    for (let i = 0; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const outsider = await account("o@x.co");
+    await call("/group/link-join", { token: outsider, body: { slug: "hagzara", first: true } });
+    expect((await call("/group/series?group=gizra", { token: outsider })).status).toBe(403);
+    const d = (await call("/group/series?group=gizra", { token: mgr })).data;
+    const by = Object.fromEntries(d.series.map((s) => [s.key, s]));
+    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"]);
+    expect(by.list.total).toBe(GROUP_MIN);
+    expect(by.registered.total).toBe(GROUP_MIN);
+    expect(by.registered.points.at(-1)).toBe(GROUP_MIN);
+    expect(by.registered.points).toHaveLength(d.buckets.length);
+    expect(by.seats.total).toBe(GROUP_MIN);
+    // מתחת לסף — בלי מספר ובלי נקודות
+    expect(by.vote).toEqual({ key: "vote", total: null, points: null });
+    expect(by.outsideLink).toEqual({ key: "outsideLink", total: null, points: null });
+  });
+});
+
+describe("group guess moderation", () => {
+  it("manager sees and decides only their members' guesses, without activity data", async () => {
+    const mgr = await account("boss@x.co");
+    for (let i = 0; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await account("o@x.co", true, 40);
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/group/guesses?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    const d = (await call("/group/guesses?group=gizra", { token: mgr })).data;
+    // החברים והמנהל (שנספר כחבר) — בלי הגולש שמחוץ לקבוצה
+    expect(d.rows).toHaveLength(GROUP_MIN + 1);
+    for (const r of d.rows) for (const k of ["registered", "lastLogin", "logins", "saves", "hasVote", "verified"]) expect(r[k]).toBeUndefined();
+    const all = (await call("/admin/guesses", { admin: true })).data;
+    const outsider = all.rows.find((r) => r.seats[IDS[0]] === 40);
+    // ידית של מי שמחוץ לקבוצה (מטעינת מנהל האתר) — לא נמצאת למנהל הקבוצה
+    expect((await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: all.salt, handle: outsider.handle, decision: "rejected" } })).status).toBe(404);
+    const row = d.rows[0];
+    expect((await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: d.salt, handle: row.handle, decision: "rejected" } })).data).toEqual({ ok: true });
+    const member = await account("x@x.co");
+    expect((await call("/group/guesses?group=gizra", { token: member })).status).toBe(403);
+  });
+});
+
+describe("group comparison reference", () => {
+  it("defaults to polls; only the manager changes it; members see it", async () => {
+    const mgr = await account("boss@x.co");
+    const member = await account("m0@x.co");
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/dashboard?group=gizra", { token: member })).data.compare).toBe("polls");
+    expect((await call("/group/compare", { token: member, body: { group: "gizra", compare: "crowd" } })).status).toBe(403);
+    expect((await call("/group/compare", { token: mgr, body: { group: "gizra", compare: "x" } })).status).toBe(400);
+    expect((await call("/group/compare", { token: mgr, body: { group: "gizra", compare: "crowd" } })).data).toEqual({ group: "gizra", compare: "crowd" });
+    expect((await call("/group/compare?group=gizra", { token: mgr })).data.compare).toBe("crowd");
+    expect((await call("/dashboard?group=gizra", { token: member })).data.compare).toBe("crowd");
   });
 });

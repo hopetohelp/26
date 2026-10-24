@@ -54,18 +54,18 @@ describe("group link name", () => {
     expect((await call("/admin/groups/link", { body: { group: "gizra", slug: "valid-one" } })).status).toBe(401);
   });
 
-  it("a group manager sets their own group's link only", async () => {
+  it("a group manager cannot change the link — only the site admin (owner decision 24.10.2026)", async () => {
     await create();
     await call("/admin/groups/import", { admin: true, body: { group: "other", name: "אחרת", slug: "other-one", emails: [] } });
     const outsider = await managerToken("who@x.co");
     expect((await call("/group/link", { token: outsider, body: { group: "gizra", slug: "mine-now" } })).status).toBe(403);
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
     const boss = await managerToken();
-    expect((await call("/group/link", { token: boss, body: { group: "gizra", slug: "mine-now" } })).data).toEqual({ group: "gizra", slug: "mine-now" });
-    expect((await call("/group/link", { token: boss, body: { group: "gizra", slug: "other-one" } })).data.error).toBe("slug_taken");
+    const before = (await call("/me", { token: boss })).data.managedGroups[0].slug;
+    expect((await call("/group/link", { token: boss, body: { group: "gizra", slug: "mine-now" } })).data).toEqual({ error: "admin_only" });
     expect((await call("/group/link", { token: boss, body: { group: "other", slug: "stolen-one" } })).status).toBe(403);
     expect((await call("/group/link", { body: { group: "gizra", slug: "mine-now" } })).status).toBe(401);
-    expect((await call("/me", { token: boss })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: "mine-now", image: null, members: 0 }]);
+    expect((await call("/me", { token: boss })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: before, image: null, members: 0 }]);
   });
 
   it("public info shows only the name and image to whoever has the link", async () => {
@@ -183,13 +183,14 @@ describe("automatic link name from the Hebrew name (הכרעת בעלים 12.10.
     expect((await call("/group/public?slug=my-own")).data.name).toBe("המושב החדש");
   });
 
-  it("the automatic button (no name in the request) derives it from the group name, for the admin and the manager", async () => {
+  it("the automatic button (no name in the request) derives it from the group name — admin only", async () => {
     // קבוצה שנוצרה לפני שהיה קישור: אין שורה ב-group_links
     await create("manual-one");
     env.DB.raw.prepare("DELETE FROM group_links").run();
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
     const boss = await managerToken();
-    expect((await call("/group/link", { token: boss, body: { group: "gizra" } })).data).toEqual({ group: "gizra", slug: "hagzara" });
+    expect((await call("/group/link", { token: boss, body: { group: "gizra" } })).status).toBe(403);
+    expect((await call("/admin/groups/link", { admin: true, body: { group: "gizra" } })).data).toEqual({ group: "gizra", slug: "hagzara" });
     // שוב — אותו שם לאותה קבוצה אינו "תפוס"
     expect((await call("/admin/groups/link", { admin: true, body: { group: "gizra" } })).data).toEqual({ group: "gizra", slug: "hagzara" });
     const outsider = await managerToken("who@x.co");

@@ -1,7 +1,7 @@
 // מייצר את lib/lists.js מנתוני האתר (מקור אחד): רשימות 2026 עם סימון "ממשלה 37", רשימות 2022 (letters) ותוצאות 2022 הרשמיות,
 // וממוצע הסקרים האחרון (model.json) להצגה בדשבורד. להריץ אחרי כל שינוי ברשימות: node worker/crowd/gen-lists.mjs
 import { readFileSync, writeFileSync } from "node:fs";
-import { pollRanges } from "../../scripts/poll-ranges.mjs";
+import { pollRanges, closedLists } from "../../scripts/poll-ranges.mjs";
 const root = new URL("../../src/data/", import.meta.url);
 const meta = JSON.parse(readFileSync(new URL("meta.json", root), "utf8"));
 const results = JSON.parse(readFileSync(new URL("results.json", root), "utf8"));
@@ -25,6 +25,8 @@ export const POLLS = ${JSON.stringify(model.central.seats)};
 export const POLLS_AS_OF = ${JSON.stringify(model.asof)};
 /** טווח הסקרים (הנמוך והגבוה בין המכונים) — גיבוי לבדיקת השערות חריגות כשאין חיבור לקובץ שבאתר (public/poll-ranges.json) */
 export const POLL_RANGES = ${JSON.stringify(pollRanges(polls, meta.lists2026.map((l) => l.id), model.asof).ranges)};
+/** רשימות שלא עברו את אחוז החסימה באף סקר — אי אפשר לנחש עליהן, והן נמחקות מהשערות קיימות בקריאה (הכרעת בעלים 24.10.2026). גיבוי: השרת קורא את הרשימה העדכנית מ-poll-ranges.json */
+export const CLOSED_LISTS = ${JSON.stringify(closedLists(polls, meta.lists2026.filter((l) => !l.withdrawn).map((l) => l.id)))};
 /** ממוצע הסקרים (אחוזים) — לאחוז של רשימה עם 0 מנדטים כשהשערה נשמרה בלי אחוזים */
 export const POLL_SHARES = ${JSON.stringify(model.central.shares)};
 /** ברירות המחדל של החישוב באתר (src/pages/guess/pctSync.ts): בעלי זכות, הסכמי עודפים */

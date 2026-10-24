@@ -12,7 +12,8 @@ import { CROWD_URL } from "../../lib/crowdApi";
 import { fillAll, fillErrorText, TOTAL } from "../../lib/fillAll";
 import { seatsSum, validateBlocs, validateSeats } from "../../lib/crowdValidate";
 import { date, pctOne, rng } from "../../lib/format";
-import { IDS, nameOf, POLL_RANGES, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
+import ClosedNote from "./ClosedNote";
+import { dropClosed, GUESS_IDS, IDS, nameOf, POLL_RANGES, POLLS_AS_OF, startSeats, THRESHOLD_SEATS } from "./model";
 import { calcOf, pctOf, withPct, withSeats, type Calc } from "./pctSync";
 import { Segmented } from "../../components/Choice";
 import { Badge } from "../../components/ui";
@@ -67,7 +68,9 @@ export default function Seats({
   const fillBtn = useRef<HTMLButtonElement>(null);
   const [justSaved, setJustSaved] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
-  const values = useMemo(() => Object.fromEntries(IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
+  const values = useMemo(() => Object.fromEntries(GUESS_IDS.map((id) => [id, p?.seats[id]?.v ?? 0])), [p]);
+  // השערה שנשמרה לפני ההחלטה עם רשימה שלא עברה באף סקר (הכרעת בעלים 24.10.2026): הרשימה יורדת, והמנדטים שלה פנויים לחלוקה מחדש
+  useEffect(() => { const clean = dropClosed(p); if (clean) unit.setDraft(clean); }, [p]); // eslint-disable-line react-hooks/exhaustive-deps
   const lineage = useLineage(session);
   const { seats: crowd } = useCrowd();
   const lin = lineage.draft.split === "crowd" && !crowd ? { ...lineage.draft, split: "polls" as const } : lineage.draft;
@@ -85,13 +88,13 @@ export default function Seats({
   const startWithTargets = (start: SeatsPayload["start"]): SeatsPayload => {
     const base = start === "k25"
       ? { ...startSeats("zero"), start, seats: Object.fromEntries(Object.entries(start2022(lin, crowd)).map(([id, c]) => [id, { v: c.v, src: c.locked ? "manual" as const : "filled" as const, locked: c.locked }])) }
-      : start === "polls" ? { ...startSeats("zero"), start: "polls" as const, pollsAsOf: POLLS_AS_OF, seats: Object.fromEntries(IDS.map(id => [id, { v: POLLS[id] ?? 0, src: "filled" as const, locked: false }])) } : startSeats(start);
+      : start === "polls" ? { ...startSeats("zero"), start: "polls" as const, pollsAsOf: POLLS_AS_OF, seats: Object.fromEntries(GUESS_IDS.map(id => [id, { v: POLLS[id] ?? 0, src: "filled" as const, locked: false }])) } : startSeats(start);
     if (start === "polls") {
-      const completed = fillAll(IDS, startSeats("zero").seats, POLLS, blocs?.blocs ?? [], POLL_RANGES);
+      const completed = fillAll(GUESS_IDS, startSeats("zero").seats, POLLS, blocs?.blocs ?? [], POLL_RANGES);
       return completed.ok ? { ...base, seats: completed.seats } : base;
     }
     if (!blocs?.blocs.some((b) => b.target !== null)) return base;
-    const r = fillAll(IDS, base.seats, POLLS, blocs.blocs, POLL_RANGES);
+    const r = fillAll(GUESS_IDS, base.seats, POLLS, blocs.blocs, POLL_RANGES);
     return r.ok ? { ...base, seats: r.seats, pollsAsOf: POLLS_AS_OF } : base;
   };
 
@@ -130,7 +133,7 @@ export default function Seats({
 
   const sum = seatsSum(p);
   const left = TOTAL - sum;
-  const invalid = validateSeats(p, IDS);
+  const invalid = validateSeats(p, GUESS_IDS);
   // שמירה אחת למנדטים ולכל חלוקת גושים שנערכה, גם בלי יעד מספרי.
   const blocsToSave = !!blocs;
   const blocsInvalid = blocsToSave ? validateBlocs(blocs!, IDS) : null;
@@ -155,25 +158,25 @@ export default function Seats({
   /** snap = false בזמן הקלדה (כדי שאפשר יהיה להקליד 12); היישור נעשה ביציאה מהשדה מול הערך שלפני ההקלדה */
   const setV = (id: string, v: number, snap = true, from = p.seats[id]?.v ?? 0) => {
     const value = snap ? snapSeats(v, from) : Math.max(0, Math.min(TOTAL, Math.round(v) || 0));
-    if (!canSetSeats(p.seats, IDS, id, value)) {
+    if (!canSetSeats(p.seats, GUESS_IDS, id, value)) {
       setEditError("אי אפשר להוסיף מעל 120 בלי להשאיר מפלגה אחרת פתוחה. פתחו נעילה של מפלגה אחרת או הפחיתו מנדטים.");
       return;
     }
     setCell(id, { v: value, src: "manual", locked: true });
   };
   const targets = blocs?.blocs.filter((b) => b.target !== null) ?? [];
-  const runFill = () => setPreview(fillAll(IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES));
+  const runFill = () => setPreview(fillAll(GUESS_IDS, p.seats, POLLS, blocs?.blocs ?? [], POLL_RANGES));
   const apply = () => {
     // "השלם הכול" — אותה השלמה בשני המצבים (גושים, נעילות, טווחי הסקרים); באחוזים — האחוזים מחושבים מהתוצאה
     if (preview?.ok) unit.setDraft(withSeats(p, preview.seats, { pollsAsOf: POLLS_AS_OF }, view));
     setEditError(null);
     setPreview(null);
   };
-  const rows = IDS;
+  const rows = GUESS_IDS;
   const pollPctRange = (id: string): [number, number] | null => resolveSupportMetric(selection, [id], "guess").range;
   const lock = (id: string, c: SeatCell, name: string) => <LockToggle name={name} locked={c.locked} onToggle={() => setCell(id, { ...c, locked: !c.locked, src: c.locked ? c.src : "manual" })} />;
   const calc = calcOf(p);
-  const pctSum = pctNow ? IDS.reduce((a, id) => a + (pctNow[id] || 0), 0) : 0;
+  const pctSum = pctNow ? GUESS_IDS.reduce((a, id) => a + (pctNow[id] || 0), 0) : 0;
   /** עריכה באחוזים: המנדטים לפי החוק; רשימה שהוקלדה ננעלת */
   const setPctValue = (id: string, v: number) => {
     const next = { ...(pctNow ?? {}), [id]: Math.max(0, Math.min(100, Math.round((Number.isFinite(v) ? v : 0) * 10) / 10)) };
@@ -263,6 +266,7 @@ export default function Seats({
                 );
               })}
             </ul>
+            <ClosedNote className="pt-2" />
             </div>
             {view === "pct" && pctNow && <p className="text-sm text-ink-soft mt-2">אחרות (רשימות שאינן כאן): <span className={`tabular ${pctSum > 100.05 ? "text-warn font-bold" : ""}`}>{pctSum > 100.05 ? `חריגה: ${pctFmt(pctSum)}` : pctFmt(Math.max(0, 100 - pctSum))}</span></p>}
             <CalcAssumptions calc={calc} onChange={setCalc} />

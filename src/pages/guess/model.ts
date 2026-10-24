@@ -2,9 +2,16 @@ import { fillAll } from "../../lib/fillAll";
 /** נתוני היסוד של "ההשערה שלך": הרשימות, ממוצע הסקרים, תוצאות 2022 והמיפוי המובהק ביניהן. */
 import { resolveDataset, resolveSupport, DATA_AS_OF } from "../../lib/dataResolver";
 import type { Bloc, BlocsPayload, SeatCell, SeatsPayload, VotePayload } from "../../lib/crowdApi";
-import { activeLists2026, latestPerPollster, lists2026, results, seatsIn } from "../../lib/data";
+import { activeLists2026, CLOSED_LISTS, latestPerPollster, lists2026, results, seatsIn } from "../../lib/data";
 
 export const IDS = activeLists2026.map((l) => l.id);
+/** הרשימות שאפשר לנחש עליהן: בלי רשימות שלא עברו באף סקר (הכרעת בעלים 24.10.2026). בהצבעה ובגושים — כל הרשימות (IDS) */
+export const GUESS_IDS = IDS.filter((id) => !CLOSED_LISTS.includes(id));
+/** הסרת רשימות סגורות מהשערה שנשמרה לפני ההחלטה. null = אין מה להסיר */
+export function dropClosed<T extends { seats: Record<string, unknown> }>(p: T | null): T | null {
+  if (!p || !Object.keys(p.seats).some((id) => CLOSED_LISTS.includes(id))) return null;
+  return { ...p, seats: Object.fromEntries(Object.entries(p.seats).filter(([id]) => !CLOSED_LISTS.includes(id))) };
+}
 export const ALPHA = [...activeLists2026].sort((a, b) => a.name.localeCompare(b.name, "he"));
 /** ממוצע הסקרים — מהמקור האחד (src/lib/sources.ts) */
 export const POLLS: Record<string, number> = resolveDataset({ product: "polls.mean" }, "guess").seats;
@@ -37,7 +44,7 @@ export { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 
 export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
   const seats: Record<string, SeatCell> = {};
-  for (const id of IDS) {
+  for (const id of GUESS_IDS) {
     if (start === "zero") seats[id] = { v: 0, src: "manual", locked: false };
     else if (start === "polls") seats[id] = { v: POLLS[id] ?? 0, src: "filled", locked: false };
     else {
@@ -46,8 +53,8 @@ export function startSeats(start: SeatsPayload["start"]): SeatsPayload {
     }
   }
   if (start === "polls") {
-    const empty = Object.fromEntries(IDS.map(id => [id, { v: 0, src: "filled" as const, locked: false }]));
-    const initial = fillAll(IDS, empty, POLLS, [], POLL_RANGES);
+    const empty = Object.fromEntries(GUESS_IDS.map(id => [id, { v: 0, src: "filled" as const, locked: false }]));
+    const initial = fillAll(GUESS_IDS, empty, POLLS, [], POLL_RANGES);
     if (initial.ok) return { seats: initial.seats, start, pollsAsOf: POLLS_AS_OF };
   }
   return { seats, start, pollsAsOf: start === "polls" ? POLLS_AS_OF : null };

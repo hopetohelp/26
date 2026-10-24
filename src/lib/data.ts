@@ -118,6 +118,12 @@ export const listName = (id: string) =>
 
 /** סקרים שמותר ונכון להציג בחישוב: פורסמו לציבור ועקביים (סכום ≈ 120) */
 export const usablePolls = polls.filter((p) => p.eligibleToShow);
+/**
+ * רשימות שלא עברו את אחוז החסימה (4 מנדטים) באף סקר שפורסם ועקבי — אי אפשר לנחש עליהן (הכרעת בעלים 24.10.2026).
+ * אותה הגדרה בשרת (worker/crowd/gen-lists.mjs ⇐ CLOSED_LISTS); בדיקה מוודאת ששתיהן זהות.
+ */
+export const CLOSED_LISTS: string[] = activeLists2026.map((l) => l.id).filter((id) =>
+  !usablePolls.some((p) => p.consistent && (seatsIn(p, id) ?? 0) >= 4));
 
 
 export const pollsterLabel = (p: Poll) => `${p.firmHe}${p.publisherHe ? ` · ${p.publisherHe}` : ""}`;

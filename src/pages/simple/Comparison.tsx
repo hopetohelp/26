@@ -72,6 +72,8 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const blocValues = member ? groupMeans : crowdMeans;
   const hagzaraLogo = hagzara?.logoUrl ?? null;
   const voters = member ? group : all;
+  // חברי הקבוצה: ממוצע הקבוצה מול ממוצע הסקרים או מול כל המשתתפים — לפי בחירת מנהל הקבוצה (הכרעת בעלים 24.10.2026)
+  const vsPolls = (raw?.compare ?? "polls") === "polls";
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
     <SourceBar source={source} />
@@ -80,8 +82,8 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
     {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists}
-        marks={id => member ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule />{!member && <LegendLine kind="soft" label="ממוצע הסקרים" />}<LegendBox label="משתתפים" n={all?.seats?.n} />{member && <LegendBox kind="dash" label="הגזרה" n={group?.seats?.n} />}</>} />
+        marks={id => member && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : member ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
+        legend={<><LegendCapsule />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="משתתפים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>

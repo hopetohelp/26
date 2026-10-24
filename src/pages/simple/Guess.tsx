@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { SeatsPayload, VotePayload } from "../../lib/crowdApi";
 import { seatsSum, validateSeats } from "../../lib/crowdValidate";
 import { SIMPLE_GUESS_HIDDEN, simpleValue } from "../../lib/simpleSources";
-import { IDS, startSeats, nameOf } from "../guess/model";
+import { GUESS_IDS as IDS, startSeats, nameOf } from "../guess/model";
+import ClosedNote, { useOpenVote } from "../guess/ClosedNote";
 import { flushUnit, useSession, useUnit } from "../guess/useCrowd";
 import { AuthSheet, SaveError } from "../guess/SaveButton";
 import { useNavigate } from "react-router-dom";
@@ -23,13 +24,15 @@ export default function SimpleGuess() {
   const unit = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, session.me?.latest.vote?.payload as VotePayload | undefined);
   const [voteOpen, setVoteOpen] = useState(false);
+  const voteCard = useRef<HTMLDivElement>(null);
+  useOpenVote(useCallback(() => { setVoteOpen(true); window.setTimeout(() => voteCard.current?.scrollIntoView({ block: "center", behavior: "smooth" }), 50); }, []));
   const draft = unit.draft ?? EMPTY;
   const total = seatsSum(draft);
   const [editing, setEditing] = useState<{ id: string; text: string } | null>(null);
   const invalidInput = !!editing && (!/^\d+$/.test(editing.text) || Number(editing.text) > 120);
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
   const ref = (id: string) => simpleValue(source.selection, [id]);
-  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id) || (draft.seats[id]?.v ?? 0) > 0).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
+  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id)).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
   // רשימה שכבר אינה מתמודדת (טיוטה או שמירה ישנה) ⇐ יוצאת מהטיוטה, והמנדטים שלה חוזרים לחלוקה; אחרת "רשימה לא מוכרת" בלי שאפשר לראות למה
   const stale = Object.keys(draft.seats).filter(id => !IDS.includes(id));
   useEffect(() => {
@@ -89,11 +92,13 @@ export default function SimpleGuess() {
             <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} aria-disabled={total >= 120 || undefined} onClick={() => { setEditing(null); change(id, value === 0 ? 4 : value + 1); }}>+</button>
           </div></div>;
       })}
+      <ClosedNote className="mt-3" />
       <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}
     </div>
     <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} />
+      <div ref={voteCard} />
       <CardDrawer title="ההצבעה שלי" open={voteOpen} onOpenChange={v => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" className="mt-5"><Vote unit={vote} session={session} /></CardDrawer></div></div>
     <FocusFoot />
     {exit?.step === "share" && <ShareCard heading={session.token ? "הכנסת שלך נשמרה! לשתף?" : "לשתף את הכנסת שלך?"} input={{ kind: "mine", values, name: session.me?.username, group: hagzara }} onClose={() => leave(exit.to)} />}

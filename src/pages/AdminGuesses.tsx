@@ -53,6 +53,29 @@ export function reasonText(r: GuessReason) {
   return `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה ממתין לאישור`;
 }
 
+/** החריגה של רשימה בתוך הטור שלה: כמה מנדטים מעל/מתחת לטווח הסקרים, או "סף" לרשימה נבחרת */
+export function cellGap(reasons: GuessReason[], list: string): string | null {
+  const out: string[] = [];
+  for (const r of reasons) {
+    if (r.list !== list) continue;
+    if (r.rule === "range") out.push(r.value > (r.hi ?? 0) ? `+${r.value - (r.hi ?? 0)}` : `−${(r.lo ?? 0) - r.value}`);
+    else if (r.rule === "watched") out.push("סף");
+    else out.push(`ממוצע ${r.mean}`);
+  }
+  return out.length ? out.join(" · ") : null;
+}
+
+/** מתג אישור/דחייה בתחילת השורה. לחיצה על המצב הפעיל מבטלת את ההחלטה. השערה תקינה — בלי מתג */
+function Decision({ row, busy, decide }: { row: GuessRow; busy: boolean; decide: (d: "approved" | "rejected" | "clear") => void }) {
+  if (row.status !== "pending" && row.status !== "approved" && row.status !== "rejected") return <span className="text-ink-soft">—</span>;
+  const opt = (d: "approved" | "rejected", label: string) => {
+    const on = row.status === d;
+    return <button type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => decide(on ? "clear" : d)} title={on ? "לחיצה מבטלת את ההחלטה" : undefined}
+      className={`px-3 min-h-[36px] rounded-theme text-sm font-bold ${on ? (d === "approved" ? "bg-ink text-paper-card" : "bg-warn text-paper-card") : "text-ink-soft hover:text-ink"}`}>{label}</button>;
+  };
+  return <div role="radiogroup" aria-label="החלטה על ההשערה" className="inline-flex gap-0.5 p-0.5 rounded-theme border border-paper-line bg-paper">{opt("approved", "אישור")}{opt("rejected", "דחייה")}</div>;
+}
+
 /** הגושים של השערה בשורה אחת: "שם: מנדטים (יעד) [רשימות]" */
 export function blocsText(r: GuessRow): string {
   if (!r.blocs) return "";
@@ -66,8 +89,13 @@ export function toCsv(rows: GuessRow[]) {
   return [head, ...lines].map((l) => l.map((x) => `"${String(x).replace(/"/g, '""')}"`).join(",")).join("\n");
 }
 
-export default function AdminGuesses({ api, onCounts }: { api: (path: string, body?: unknown) => Promise<any>; onCounts?: (c: { pending: number; rejected: number }) => void }) {
-  const [data, setData] = useState<{ salt: string; rows: GuessRow[]; unverified?: { participants: number; means: Record<string, number> } } | null>(null);
+type GuessData = { salt: string; rows: GuessRow[]; unverified?: { participants: number; means: Record<string, number> } };
+/**
+ * api = ממשק מנהל האתר (כל ההשערות). group = מנהל קבוצה (הכרעת בעלים 24.10.2026): אותו ממשק, רק לחברי הקבוצה, בלי נתוני פעילות.
+ */
+export default function AdminGuesses({ api, group, onCounts }: { api?: (path: string, body?: unknown) => Promise<any>; group?: { load: () => Promise<GuessData & { belowMin?: boolean; min?: number }>; decide: (body: { salt: string; handle: string; decision: string }) => Promise<unknown> }; onCounts?: (c: { pending: number; rejected: number }) => void }) {
+  const [data, setData] = useState<GuessData | null>(null);
+  const [belowMin, setBelowMin] = useState<number | null>(null);
   const [filter, setFilter] = useState<Filter>("pending");
   const [sort, setSort] = useState<Sort>("random");
   const [error, setError] = useState<string | null>(null);
@@ -75,14 +103,14 @@ export default function AdminGuesses({ api, onCounts }: { api: (path: string, bo
 
   const load = async () => {
     setError(null);
-    try { const d = await api("/admin/guesses"); setData(d); { const rs = d.rows as GuessRow[]; onCounts?.({ pending: rs.filter((r) => r.status === "pending").length, rejected: rs.filter((r) => r.status === "rejected").length }); } } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
+    try { const d = group ? await group.load() : await api!("/admin/guesses"); if (d.belowMin) { setBelowMin(d.min); return; } setData(d); { const rs = d.rows as GuessRow[]; onCounts?.({ pending: rs.filter((r) => r.status === "pending").length, rejected: rs.filter((r) => r.status === "rejected").length }); } } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
   };
   useEffect(() => { void load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const decide = async (row: GuessRow, decision: "approved" | "rejected" | "clear") => {
     if (!data) return;
     setBusy(row.handle);
-    try { await api("/admin/guesses/decide", { salt: data.salt, handle: row.handle, decision }); await load(); }
+    try { const body = { salt: data.salt, handle: row.handle, decision }; await (group ? group.decide(body) : api!("/admin/guesses/decide", body)); await load(); }
     catch (e) { setError((e as Error).message); }
     finally { setBusy(null); }
   };
@@ -102,12 +130,13 @@ export default function AdminGuesses({ api, onCounts }: { api: (path: string, bo
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h3 className="font-bold text-lg">השערות הגולשים ({data?.rows.length ?? "…"} · ממתינות {pending})</h3>
-        <div className="flex gap-2"><Btn onClick={load}>רענון</Btn><Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn></div>
+        <h3 className="font-bold text-lg">{group ? "השערות חברי הקבוצה" : "השערות הגולשים"} ({data?.rows.length ?? "…"} · ממתינות {pending})</h3>
+        <div className="flex gap-2"><Btn onClick={load}>רענון</Btn>{!group && <Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn>}</div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן לפי רישום, כניסה אחרונה או שמירת ההשערה. השערה חריגה — מפלגה עם פי 1.5 מממוצע הגולשים ולפחות 4.1 מנדטים יותר, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור.</p>
-      <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>
-      <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן{group ? " לפי שמירת ההשערה" : " לפי רישום, כניסה אחרונה או שמירת ההשערה"}. השערה חריגה — רשימה שחורגת מטווח הסקרים ב-50% ולפחות ב-4.1 מנדטים, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח, או "סף".</p>
+      {group && <p className="text-sm text-ink-soft max-w-3xl">רק ההשערות של חברי הקבוצה, בלי שום מזהה ובלי נתוני פעילות. ההחלטה כאן קובעת אם ההשערה נספרת בכל האתר — כמו החלטה של מנהל האתר.</p>}
+      {!group && <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>}
+      {!group && <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>}
       {!!data?.unverified?.participants && (
         <details className="border border-paper-line rounded-theme p-3">
           <summary className="cursor-pointer font-bold min-h-[44px] flex items-center">אזור נפרד: חשבונות שלא אומתו ({data.unverified.participants}) — ממוצע מנדטים לכל רשימה</summary>
@@ -116,51 +145,52 @@ export default function AdminGuesses({ api, onCounts }: { api: (path: string, bo
           </ul>
         </details>
       )}
-      <Chips label="סינון" value={filter} onChange={setFilter} options={FILTERS} />
-      <Chips label="מיון" value={sort} onChange={setSort} options={SORTS} />
+      <Chips label="סינון" value={filter} onChange={setFilter} options={group ? FILTERS.filter((f) => f.id !== "unverified") : FILTERS} />
+      <Chips label="מיון" value={sort} onChange={setSort} options={group ? SORTS.filter((o) => o.id === "random" || o.id === "saved") : SORTS} />
       {data && <p className="text-sm font-bold" aria-live="polite">{rows.length === data.rows.length ? `מוצגות ${rows.length} השערות` : `מוצגות ${rows.length} השערות מתוך ${data.rows.length}, לפי הסינון`}</p>}
       {error && <Notice tone="warn">{error}</Notice>}
-      {!data && !error && <p className="text-ink-soft">טוען…</p>}
+      {belowMin !== null && <p className="text-sm text-ink-soft">פחות מ-{belowMin} חברים מהקבוצה רשומים — ההשערות יוצגו מ-{belowMin}.</p>}
+      {!data && !error && belowMin === null && <p className="text-ink-soft">טוען…</p>}
       {data && !rows.length && <p className="text-sm text-ink-soft">אין השערות במצב הזה.</p>}
       {!!rows.length && (
         <div className="overflow-x-auto">
           <table className="w-full text-sm tabular">
             <thead>
               <tr className="text-ink-soft">
+                <th className="text-start font-medium py-1 pe-3">החלטה</th>
                 <th className="text-start font-medium py-1 pe-3">יום</th>
                 <th className="text-start font-medium py-1 pe-3">מצב</th>
-                <th className="text-start font-medium py-1 pe-3">הצבעה שמורה</th>
-                <th className="text-start font-medium py-1 pe-3">שמירות (סה״כ)</th>
-                <th className="text-start font-medium py-1 pe-3">נרשם</th>
-                <th className="text-start font-medium py-1 pe-3">כניסה אחרונה</th>
-                <th className="text-start font-medium py-1 pe-3">כניסות</th>
+                {!group && <>
+                  <th className="text-start font-medium py-1 pe-3">הצבעה שמורה</th>
+                  <th className="text-start font-medium py-1 pe-3">שמירות (סה״כ)</th>
+                  <th className="text-start font-medium py-1 pe-3">נרשם</th>
+                  <th className="text-start font-medium py-1 pe-3">כניסה אחרונה</th>
+                  <th className="text-start font-medium py-1 pe-3">כניסות</th>
+                </>}
                 {ids.map((id) => <th key={id} className="text-start font-medium py-1 pe-2 whitespace-nowrap">{listName(id)}</th>)}
-                <th className="text-start font-medium py-1">פעולה</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => (
                 <Fragment key={r.handle}>
                 <tr className="border-t border-paper-line align-top">
+                  <td className="py-1 pe-3 whitespace-nowrap"><Decision row={r} busy={busy === r.handle} decide={(d) => void decide(r, d)} /></td>
                   <td className="py-1 pe-3 whitespace-nowrap">{r.day}</td>
-                  <td className="py-1 pe-3 min-w-[12rem]">
+                  <td className="py-1 pe-3 whitespace-nowrap">
                     <span className="font-bold">{STATUS[r.status]}</span>{r.mode === "pct" ? " · באחוזים" : ""}{r.verified === false && <span className="text-xs text-ink-soft"> · חשבון לא מאומת</span>}
-                    {!!r.reasons.length && <ul className="text-xs text-ink-soft">{r.reasons.map((x, i) => <li key={i}>{reasonText(x)}</li>)}</ul>}
                   </td>
-                  <td className="py-1 pe-3">{r.hasVote ? "כן" : "לא"}</td>
-                  <td className="py-1 pe-3">{r.saves ?? 0}</td>
-                  <td className="py-1 pe-3 whitespace-nowrap">{stamp(r.registered)}</td>
-                  <td className="py-1 pe-3 whitespace-nowrap">{stamp(r.lastLogin)}</td>
-                  <td className="py-1 pe-3">{r.logins ?? 0}</td>
-                  {ids.map((id) => <td key={id} className={`py-1 pe-2 ${r.reasons.some((x) => x.list === id) ? "font-bold text-warn" : ""}`}>{r.seats[id] ?? 0}</td>)}
-                  <td className="py-1 whitespace-nowrap space-x-1 space-x-reverse">
-                    {r.status === "pending" && <><Btn kind="primary" disabled={busy === r.handle} onClick={() => decide(r, "approved")}>אישור</Btn><Btn disabled={busy === r.handle} onClick={() => decide(r, "rejected")}>דחייה</Btn></>}
-                    {(r.status === "approved" || r.status === "rejected") && <Btn disabled={busy === r.handle} onClick={() => decide(r, "clear")}>ביטול ההחלטה</Btn>}
-                  </td>
+                  {!group && <>
+                    <td className="py-1 pe-3">{r.hasVote ? "כן" : "לא"}</td>
+                    <td className="py-1 pe-3">{r.saves ?? 0}</td>
+                    <td className="py-1 pe-3 whitespace-nowrap">{stamp(r.registered)}</td>
+                    <td className="py-1 pe-3 whitespace-nowrap">{stamp(r.lastLogin)}</td>
+                    <td className="py-1 pe-3">{r.logins ?? 0}</td>
+                  </>}
+                  {ids.map((id) => { const gap = cellGap(r.reasons, id); return <td key={id} className={`py-1 pe-2 ${gap ? "font-bold text-warn" : ""}`} title={gap ? r.reasons.filter((x) => x.list === id).map(reasonText).join("\n") : undefined}>{r.seats[id] ?? 0}{gap && <span className="block text-xs font-normal whitespace-nowrap" dir="ltr">{gap}</span>}</td>; })}
                 </tr>
                 {r.blocs && (
                   <tr>
-                    <td colSpan={ids.length + 8} className="pb-2">
+                    <td colSpan={ids.length + (group ? 3 : 8)} className="pb-2">
                       <details>
                         <summary className="cursor-pointer text-xs text-ink-soft min-h-[32px] flex items-center">גושים ({r.blocs.items.length}{r.blocs.saved ? "" : " · ברירת מחדל"})</summary>
                         <ul className="text-xs space-y-0.5 pt-1">

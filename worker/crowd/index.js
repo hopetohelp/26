@@ -20,10 +20,11 @@ import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, r
 import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
-import { setPollRanges, moderate, flagReasons } from "./lib/moderation.js";
+import { setPollRanges, moderate, flagReasons, pollRange } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
+import { readPayload, setClosedLists } from "./lib/closed.js";
 import { slugFromName, freeSlug } from "./lib/slug.js";
 import { AGENT_SESSION_MS, MAX_AGENTS, agentBodyAllowed, agentRoute, agentSession, clientLabel, connectionId, requestToken } from "./lib/agent.js";
 
@@ -144,6 +145,199 @@ async function groupStats(env, id, now) {
   ).bind(id, israelDayStart(now)).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
   return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
+}
+
+/**
+ * תמונת הקבוצה למסך "ניהול קבוצה": מצב ההשערות של החברים מול טווח הסקרים, ומספר הפניות שלהם לצוות האתר.
+ * רק מצטבר, ורק מ-GROUP_MIN רשומים (כמו groupStats). בלי מזהה, בלי טקסט ובלי פרט על חבר מסוים.
+ * status: inRange = תקינה · approved = חריגה שאושרה · pending = ממתינה לאישור · rejected = נדחתה.
+ */
+export async function groupInsights(env, id, now) {
+  const [who, latest, dec] = await env.DB.batch([
+    env.DB.prepare(`SELECT DISTINCT participant FROM (${groupParticipants({ group: "?1" })})`).bind(id),
+    env.DB.prepare(`SELECT v.id, v.participant, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id`),
+    env.DB.prepare(DECISIONS_SQL),
+  ]);
+  const members = new Set((who.results || []).map((r) => r.participant));
+  if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+  const decisions = new Map((dec.results || []).map((r) => [r.version_id, r.decision]));
+  const status = { inRange: 0, approved: 0, pending: 0, rejected: 0 };
+  const outside = new Map(LISTS_2026.map((l) => [l.id, { list: l.id, above: 0, below: 0 }]));
+  for (const r of latest.results || []) {
+    if (!members.has(r.participant)) continue;
+    const v = { id: r.id, payload: readPayload({ unit: "seats", payload: r.payload }) };
+    const reasons = flagReasons(v);
+    const d = decisions.get(v.id);
+    status[d === "rejected" ? "rejected" : !reasons.length ? "inRange" : d === "approved" ? "approved" : "pending"]++;
+    // חריגה רכה: כל רשימה שההשערה מחוץ לטווח הסקרים שלה (גם בלי לעבור את סף ההמתנה)
+    for (const l of LISTS_2026) {
+      const x = v.payload?.seats?.[l.id]?.v ?? 0, { lo, hi } = pollRange(l.id), o = outside.get(l.id);
+      if (x > hi) o.above++; else if (x < lo) o.below++;
+    }
+  }
+  const guesses = status.inRange + status.approved + status.pending + status.rejected;
+  const questions = await groupQuestions(env, [...members]);
+  return { group: id, min: GROUP_MIN, asOf: iso(now), guesses, status, outside: [...outside.values()].filter((o) => o.above + o.below > 0).map((o) => ({ ...o, ...pollRange(o.list) })), questions };
+}
+
+/** ההשוואה של ממוצע הקבוצה: ממוצע הסקרים (ברירת המחדל) או ממוצע כל המשתתפים */
+async function groupCompare(env, id) {
+  try { return (await env.DB.prepare("SELECT ref FROM group_compare WHERE group_id = ?").bind(id).first())?.ref ?? "polls"; } catch { return "polls"; }
+}
+
+/** כמה שעות אחורה הגרף שעתי; לפני כן — נקודה ליום (הכרעת בעלים 24.10.2026) */
+export const SERIES_HOURS = 72;
+/** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
+export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"];
+
+/**
+ * סדרות זמן לקבוצה: לכל מדד — סך הכול ונקודות מצטברות: שעתיות ב-72 השעות האחרונות, ויומיות (יום בשעון ישראל) לפני כן.
+ * מדד שסך הכול שלו מתחת ל-GROUP_MIN מוחזר בלי נקודות ובלי מספר (כמו שאר מספרי הקבוצה), חוץ מגודל הרשימה.
+ */
+export async function groupSeries(env, id, now) {
+  const LIST = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash WHERE e.verified = 1";
+  const [size, joins, reg, firstUnit, first, created] = await env.DB.batch([
+    env.DB.prepare("SELECT hour, members FROM group_size_log WHERE group_id = ?1 ORDER BY hour").bind(id),
+    env.DB.prepare(`SELECT j.joined_at AS t, j.participant IN (${LIST}) AS inList FROM group_link_joins j WHERE j.group_id = ?1`).bind(id),
+    env.DB.prepare(`SELECT p.created_at AS t FROM (${LIST}) l JOIN participants p ON p.id = l.id`).bind(id),
+    env.DB.prepare(`SELECT v.unit, MIN(v.created_at) AS t FROM (${LIST}) l JOIN versions v ON v.participant = l.id AND v.unit IN ('seats', 'vote') GROUP BY v.participant, v.unit`).bind(id),
+    env.DB.prepare(`SELECT j.joined_at AS t FROM group_link_first f JOIN group_link_joins j ON j.group_id = f.group_id AND j.participant = f.participant WHERE f.group_id = ?1 AND f.participant NOT IN (${LIST})`).bind(id),
+    env.DB.prepare("SELECT created_at, COALESCE((SELECT members FROM group_sizes WHERE group_id = ?1), 0) AS members FROM groups WHERE id = ?1").bind(id),
+  ]);
+  const g = created.results?.[0];
+  if (!g) throw new HttpError(404, "not_found");
+  const ts = (rows) => rows.map((r) => Date.parse(r.t)).filter(Number.isFinite);
+  const J = joins.results || [], U = firstUnit.results || [];
+  const events = {
+    linkFirst: ts(J.filter((r) => r.inList)),
+    registered: ts(reg.results || []),
+    seats: ts(U.filter((r) => r.unit === "seats")),
+    vote: ts(U.filter((r) => r.unit === "vote")),
+    outsideLink: ts(J.filter((r) => !r.inList)),
+    outsideFirst: ts(first.results || []),
+  };
+  const start = Math.min(Date.parse(g.created_at), ...Object.values(events).flat());
+  const buckets = seriesBuckets(start, now);
+  const cumulative = (list) => { const s = [...list].sort((a, b) => a - b); let i = 0; return buckets.map((b) => { while (i < s.length && s[i] < b.end) i++; return i; }); };
+  // גודל הרשימה: הערך האחרון שנרשם עד סוף כל נקודה; לפני הרישום הראשון — אין ערך
+  const sizes = (size.results || []).map((r) => [Date.parse(r.hour + ":00:00Z"), r.members]);
+  const listPoints = buckets.map((b) => { let v = null; for (const [t, m] of sizes) if (t < b.end) v = m; return v; });
+  listPoints[listPoints.length - 1] = g.members;
+  const out = [{ key: "list", total: g.members, points: listPoints }];
+  for (const key of SERIES_KEYS.slice(1)) {
+    const total = events[key].length;
+    out.push(total >= GROUP_MIN ? { key, total, points: cumulative(events[key]) } : { key, total: null, points: null });
+  }
+  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
+}
+
+/** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
+export function seriesBuckets(start, now) {
+  const HOUR_MS = 3600_000;
+  const hourStart = Math.floor(now / HOUR_MS) * HOUR_MS - (SERIES_HOURS - 1) * HOUR_MS;
+  const out = [];
+  let t = Date.parse(israelDayStart(start));
+  while (t < hourStart) {
+    const next = Date.parse(israelDayStart(t + 26 * HOUR_MS));
+    out.push({ start: t, end: Math.min(next, hourStart), hourly: false });
+    t = next;
+  }
+  for (let h = hourStart; h <= now; h += HOUR_MS) out.push({ start: h, end: Math.min(h + HOUR_MS, now + 1), hourly: true });
+  return out;
+}
+
+/** המשימה השעתית: גודל הרשימה של כל קבוצה לשעה הנוכחית */
+async function logGroupSizes(env, now) {
+  try {
+    await env.DB.prepare("INSERT OR REPLACE INTO group_size_log (group_id, hour, members) SELECT g.id, ?, COALESCE((SELECT s.members FROM group_sizes s WHERE s.group_id = g.id), 0) FROM groups g").bind(iso(now).slice(0, 13)).run();
+  } catch { /* הטבלה עוד לא קיימת — בפעם הבאה */ }
+}
+
+/** חברי הקבוצה (מזהי משתתפים) — אותה הגדרה כמו בכל מספרי הקבוצה */
+async function groupMemberSet(env, id) {
+  return new Set(((await env.DB.prepare(`SELECT DISTINCT participant FROM (${groupParticipants({ group: "?1" })})`).bind(id).all()).results || []).map((r) => r.participant));
+}
+
+/**
+ * ההשערה האחרונה של כל גולש לממשק האישור, בסדר אקראי ובלי מזהה. members = רק חברי קבוצה (למנהל הקבוצה), ואז בלי נתוני פעילות.
+ */
+async function guessRows(env, members = null) {
+  const { latest, mod, review, verified, blocsBy } = await moderationState(env);
+  // פעילות לכל משתתף (הכרעת בעלים 10.10.2026): הצבעה שמורה, סך שמירות, מועד הרשמה, כניסה אחרונה ומספר כניסות. בלי מזהה בתשובה.
+  const activity = new Map();
+  if (!members) {
+    const { results: act } = await env.DB.prepare(
+      "SELECT p.id, p.created_at AS registered, EXISTS(SELECT 1 FROM versions v WHERE v.participant = p.id AND v.unit = 'vote') AS has_vote, (SELECT COUNT(*) FROM versions v WHERE v.participant = p.id) + COALESCE(a.pruned, 0) AS saves, COALESCE(a.logins, 0) + (SELECT COUNT(*) FROM sessions s WHERE s.participant = p.id) AS logins, MAX(COALESCE((SELECT MAX(s.created_at) FROM sessions s WHERE s.participant = p.id), ''), COALESCE(a.last_login_at, '')) AS last_login FROM participants p LEFT JOIN participant_activity a ON a.participant = p.id",
+    ).all();
+    for (const r of act || []) activity.set(r.id, r);
+  }
+  const salt = randomToken(12);
+  const rows = [];
+  for (const v of latest) {
+    if (members && !members.has(v.participant)) continue;
+    const reasons = mod.pending.get(v.id) ?? [];
+    const decision = mod.decisions.get(v.id) ?? null;
+    const shown = decision === "approved" && !mod.manual.has(v.id) ? "ok" : decision;
+    const status = review.has(v.participant) ? "review" : shown ?? (reasons.length ? "pending" : "ok");
+    const a = activity.get(v.participant);
+    rows.push({
+      handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
+      day: v.created_at.slice(0, 10),
+      savedAt: v.created_at,
+      mode: v.payload.mode === "pct" ? "pct" : "seats",
+      seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
+      ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
+      status,
+      reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
+      blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
+      ...(members ? {} : {
+        verified: verified.has(v.participant),
+        hasVote: !!a?.has_vote,
+        saves: a?.saves ?? 0,
+        registered: a?.registered ?? null,
+        lastLogin: a?.last_login || null,
+        logins: a?.logins ?? 0,
+      }),
+    });
+  }
+  for (let i = rows.length - 1; i > 0; i--) {
+    const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+    [rows[i], rows[j]] = [rows[j], rows[i]];
+  }
+  if (members) return { salt, rows };
+  // האזור הנפרד בניהול: חשבונות שלא אומתו — כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים). הם נספרים בסטטיסטיקות כרגיל.
+  const unv = rows.filter((r) => !r.verified);
+  const means = Object.fromEntries(IDS_2026_LIST.map((id) => [id, unv.length ? Math.round((unv.reduce((a, r) => a + (r.seats[id] ?? 0), 0) / unv.length) * 100) / 100 : 0]));
+  return { salt, rows, unverified: { participants: unv.length, means } };
+}
+
+/** אישור / דחייה / ביטול לפי ידית. members = מנהל קבוצה: רק השערה של חבר בקבוצה (אחרת — כאילו לא נמצאה) */
+async function decideGuess(env, body, now, members = null) {
+  const decision = body.decision;
+  if (!["approved", "rejected", "clear"].includes(decision)) throw bad("decision");
+  if (typeof body.salt !== "string" || typeof body.handle !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
+  const { latest } = await moderationState(env);
+  let target = null;
+  for (const v of latest) {
+    if (members && !members.has(v.participant)) continue;
+    if ((await hmac(env.IP_KEY, `guess|${body.salt}|${v.id}`)).slice(0, 32) === body.handle) { target = v; break; }
+  }
+  if (!target) throw new HttpError(404, "not_found");
+  if (decision === "clear") await env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(target.id).run();
+  else
+    await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
+      .bind(target.id, decision, iso(now))
+      .run();
+  return { ok: true };
+}
+
+/** מספר הפניות של חברי הקבוצה לצוות האתר, לפי נושא (משרת ההערות; ספירה בלבד). null = לא זמין */
+async function groupQuestions(env, participants) {
+  if (!env.FEEDBACK) return null;
+  try {
+    const r = await env.FEEDBACK.fetch(new Request("https://feedback.internal/internal/group-questions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants }) }));
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
 }
 
 /** הגרסה האחרונה של הגושים של כל משתתף, ומי "בבדיקה" */
@@ -407,7 +601,7 @@ async function loadDecisions(env) {
   return new Map((results || []).map((r) => [r.version_id, r.decision]));
 }
 
-const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: JSON.parse(r.payload) });
+const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: readPayload(r) });
 
 async function passwordCred(env, participant) {
   return env.DB.prepare("SELECT * FROM credentials WHERE participant = ? AND kind = 'password'").bind(participant).first();
@@ -483,7 +677,7 @@ async function moderationState(env) {
   const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
   const known = new Set((data[0].results || []).map((p) => p.id));
   const verified = new Set((data[0].results || []).filter((p) => p.verified).map((p) => p.id));
-  const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: JSON.parse(r.payload) }));
+  const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: readPayload(r) }));
   const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
   // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
   const counted = latest.filter((v) => !review.has(v.participant));
@@ -1263,63 +1457,28 @@ const routes = {
   // בסדר אקראי בכל טעינה. לכל השערה "ידית" חד-פעמית (HMAC עם מלח אקראי של הטעינה) שמשמשת רק לאישור או לדחייה.
   "GET /admin/guesses": async ({ env, request }) => {
     await requireAdmin(env, request);
-    const { latest, mod, review, verified, blocsBy } = await moderationState(env);
-    // פעילות לכל משתתף (הכרעת בעלים 10.10.2026): הצבעה שמורה, סך שמירות, מועד הרשמה, כניסה אחרונה ומספר כניסות. בלי מזהה בתשובה.
-    const { results: act } = await env.DB.prepare(
-      "SELECT p.id, p.created_at AS registered, EXISTS(SELECT 1 FROM versions v WHERE v.participant = p.id AND v.unit = 'vote') AS has_vote, (SELECT COUNT(*) FROM versions v WHERE v.participant = p.id) + COALESCE(a.pruned, 0) AS saves, COALESCE(a.logins, 0) + (SELECT COUNT(*) FROM sessions s WHERE s.participant = p.id) AS logins, MAX(COALESCE((SELECT MAX(s.created_at) FROM sessions s WHERE s.participant = p.id), ''), COALESCE(a.last_login_at, '')) AS last_login FROM participants p LEFT JOIN participant_activity a ON a.participant = p.id",
-    ).all();
-    const activity = new Map((act || []).map((r) => [r.id, r]));
-    const salt = randomToken(12);
-    const rows = [];
-    for (const v of latest) {
-      const reasons = mod.pending.get(v.id) ?? [];
-      const decision = mod.decisions.get(v.id) ?? null;
-      const shown = decision === "approved" && !mod.manual.has(v.id) ? "ok" : decision;
-      const status = review.has(v.participant) ? "review" : shown ?? (reasons.length ? "pending" : "ok");
-      rows.push({
-        handle: (await hmac(env.IP_KEY, `guess|${salt}|${v.id}`)).slice(0, 32),
-        day: v.created_at.slice(0, 10),
-        savedAt: v.created_at,
-        mode: v.payload.mode === "pct" ? "pct" : "seats",
-        seats: Object.fromEntries(Object.entries(v.payload.seats || {}).map(([id, c]) => [id, c?.v ?? 0])),
-        ...(v.payload.mode === "pct" && v.payload.pct ? { pct: v.payload.pct } : {}),
-        status,
-        verified: verified.has(v.participant),
-        reasons: reasons.length ? reasons : mod.raw.get(v.id) ?? [],
-        blocs: blocsOf(v.payload, blocsBy.get(v.participant) ?? null),
-        hasVote: !!activity.get(v.participant)?.has_vote,
-        saves: activity.get(v.participant)?.saves ?? 0,
-        registered: activity.get(v.participant)?.registered ?? null,
-        lastLogin: activity.get(v.participant)?.last_login || null,
-        logins: activity.get(v.participant)?.logins ?? 0,
-      });
-    }
-    for (let i = rows.length - 1; i > 0; i--) {
-      const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
-      [rows[i], rows[j]] = [rows[j], rows[i]];
-    }
-    // האזור הנפרד בניהול: חשבונות שלא אומתו — כמה, וממוצע המנדטים שלהם לכל רשימה (בלי מזהים). הם נספרים בסטטיסטיקות כרגיל.
-    const unv = rows.filter((r) => !r.verified);
-    const means = Object.fromEntries(IDS_2026_LIST.map((id) => [id, unv.length ? Math.round((unv.reduce((a, r) => a + (r.seats[id] ?? 0), 0) / unv.length) * 100) / 100 : 0]));
-    return { salt, rows, unverified: { participants: unv.length, means } };
+    return guessRows(env);
   },
 
   // אישור / דחייה / ביטול החלטה — לפי ידית מהטעינה (salt + handle). אין קלט של מזהה גרסה או משתתף.
   "POST /admin/guesses/decide": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
-    const decision = body.decision;
-    if (!["approved", "rejected", "clear"].includes(decision)) throw bad("decision");
-    if (typeof body.salt !== "string" || typeof body.handle !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
-    const { latest } = await moderationState(env);
-    let target = null;
-    for (const v of latest) if ((await hmac(env.IP_KEY, `guess|${body.salt}|${v.id}`)).slice(0, 32) === body.handle) { target = v; break; }
-    if (!target) throw new HttpError(404, "not_found");
-    if (decision === "clear") await env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(target.id).run();
-    else
-      await env.DB.prepare("INSERT INTO version_review (version_id, decision, decided_at) VALUES (?, ?, ?) ON CONFLICT(version_id) DO UPDATE SET decision = excluded.decision, decided_at = excluded.decided_at")
-        .bind(target.id, decision, iso(now))
-        .run();
-    return { ok: true };
+    return decideGuess(env, body, now);
+  },
+
+  // אותו ממשק למנהל קבוצה (הכרעת בעלים 24.10.2026) — רק השערות של חברי הקבוצה שלו, ומ-GROUP_MIN חברים.
+  // בלי נתוני פעילות (רישום, כניסות, הצבעה) — כדי שמנהל הקבוצה לא יזהה חבר מסוים לפי מועד ההרשמה.
+  "GET /group/guesses": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    const members = await groupMemberSet(env, id);
+    if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+    return { group: id, min: GROUP_MIN, ...(await guessRows(env, members)) };
+  },
+  "POST /group/guesses/decide": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    const members = await groupMemberSet(env, id);
+    if (members.size < GROUP_MIN) throw new HttpError(403, "below_min");
+    return decideGuess(env, body, now, members);
   },
 
   // כל הגושים שהמשתתפים הגדירו (הכרעת בעלים 12.10.2026): לכל הרכב — כמה משתתפים, ואילו שמות נתנו לו (וכמה פעמים כל שם). בלי מזהים.
@@ -1396,6 +1555,28 @@ const routes = {
     return groupStats(env, id, now);
   },
 
+  // למה משווים את ממוצע הקבוצה במסך "ממוצע הניחושים": polls / crowd — מנהל הקבוצה קובע (הכרעת בעלים 24.10.2026)
+  "GET /group/compare": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return { group: id, compare: await groupCompare(env, id) };
+  },
+  "POST /group/compare": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    if (body.compare !== "polls" && body.compare !== "crowd") throw bad("compare");
+    await env.DB.prepare("INSERT INTO group_compare (group_id, ref, updated_at) VALUES (?, ?, ?) ON CONFLICT(group_id) DO UPDATE SET ref = excluded.ref, updated_at = excluded.updated_at").bind(id, body.compare, iso(now)).run();
+    return { group: id, compare: body.compare };
+  },
+  // סדרות זמן למסך "ניהול קבוצה": שבעה מדדים, שעתי ב-72 השעות האחרונות ויומי לפני כן — למנהל הקבוצה בלבד
+  "GET /group/series": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return groupSeries(env, id, now);
+  },
+  // תמונת הקבוצה למסך "ניהול קבוצה" (השערות מול טווח הסקרים, פניות לצוות) — למנהל הקבוצה בלבד
+  "GET /group/insights": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return groupInsights(env, id, now);
+  },
+
   // אותם מספרים למנהל האתר (POST כדי שהקבוצה תעבור בגוף דרך שרת ההערות)
   "POST /admin/groups/stats": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
@@ -1430,9 +1611,10 @@ const routes = {
     await requireAdmin(env, request);
     return setGroupSlug(env, body);
   },
+  // מנהל קבוצה אינו משנה את הקישור (הכרעת בעלים 24.10.2026): שינוי מבטל קישורים שכבר הופצו. רק מנהל האתר (/admin/groups/link)
   "POST /group/link": async ({ env, request, now, body }) => {
     await requireManager(env, request, now, body.group);
-    return setGroupSlug(env, body);
+    throw new HttpError(403, "admin_only");
   },
   "POST /admin/groups/link-stats": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
@@ -1565,7 +1747,7 @@ async function loadPollRanges(env) {
     const r = await fetch(env.POLL_RANGES_URL, { cf: { cacheTtl: 600 } });
     if (!r.ok) return;
     const data = await r.json();
-    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); await markDashboardChanged(env); }
+    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); setClosedLists(data.closed); await markDashboardChanged(env); }
   } catch { /* נשאר הטווח הקודם */ }
 }
 
@@ -1629,7 +1811,7 @@ async function computeDashboard(env) {
   ]);
   const participants = data[0].results || [];
   const decisions = new Map((data[3].results || []).map((r) => [r.version_id, r.decision]));
-  const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
+  const versions = (data[1].results || []).map(r => ({ ...r, payload: readPayload(r) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
   const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
   return { dashboard: res.dashboard, pending: res.pending, groups: await groupDashboards(env, { participants, versions, now, blocNames, decisions, mod: res.mod }) };
@@ -1711,7 +1893,7 @@ export async function runAggregation(env, now) {
   const participants = (await env.DB.prepare(PARTICIPANTS_SQL).all()).results || [];
   const versions = ((await env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id").all()).results || []).map((r) => ({
     ...r,
-    payload: JSON.parse(r.payload),
+    payload: readPayload(r),
   }));
   const previous = {};
   for (const name of [...HOURLY, ...DAILY]) {
@@ -1800,7 +1982,7 @@ export default {
         const { participant } = await requireAuth(env, request, now);
         if (!(await myGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_member");
         const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, participants: 0, publishedAt: iso(now) };
-        return new Response(JSON.stringify(d), { headers: { ...headers, "cache-control": "no-store" } });
+        return new Response(JSON.stringify({ ...d, compare: await groupCompare(env, id) }), { headers: { ...headers, "cache-control": "no-store" } });
       }
       if (request.method === "GET" && url.pathname === "/dashboard")
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
@@ -1830,6 +2012,7 @@ export default {
     const job = (async () => {
       await cleanup(env, now);
       await finishUploads(env);
+      await logGroupSizes(env, now);
       await runAggregation(env, now);
     })();
     if (ctx?.waitUntil) ctx.waitUntil(job);
