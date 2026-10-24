@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Segmented } from "./Choice";
 import { Btn, Notice } from "../pages/guess/ui";
 import type { GroupImportResult } from "../lib/crowdApi";
-import { emailsFromText, sendWithSplit, uploadChunks } from "../lib/groupUpload";
+import { emailsFromText, sendWithSplit, uploadChunks, uploadStaged, type StagedApi } from "../lib/groupUpload";
+import { CrowdError } from "../lib/crowdApi";
 
 /**
  * העלאת רשימת חברי קבוצה (docs/פילוח-קבוצות-תכנון.md): קובץ עם מייל בכל שורה, נשלח במנות. בשרת נשמר רק הגיבוב של כל מייל.
  * משמש את מנהל האתר (ממשק הניהול) ואת מנהל הקבוצה (האזור האישי). send = שליחת מנה אחת.
  */
-export default function GroupUpload({ send, onDone }: { send: (chunk: { emails: string[]; mode: "add" | "replace" }) => Promise<GroupImportResult>; onDone?: () => void }) {
+export default function GroupUpload({ send, staged, onDone }: { send: (chunk: { emails: string[]; mode: "add" | "replace" }) => Promise<GroupImportResult>; staged?: StagedApi; onDone?: () => void }) {
   const [mode, setMode] = useState<"add" | "replace">("add");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -20,7 +21,25 @@ export default function GroupUpload({ send, onDone }: { send: (chunk: { emails: 
     setError(null); setDone(null);
     let text: string;
     try { text = await file.text(); } catch { setError("לא הצלחנו לקרוא את הקובץ. אפשר לשמור אותו מחדש כקובץ טקסט או CSV ולנסות שוב."); return; }
-    const chunks = uploadChunks(emailsFromText(text), mode);
+    const emails = emailsFromText(text);
+    if (!emails.length && mode !== "replace") { setError("לא נמצאו מיילים בקובץ."); return; }
+    // העלאה בשלבים: הקובץ נשמר בשרת ומעובד שם; שרת ישן (404) ⇐ המסלול הקודם, במנות
+    if (staged) {
+      try {
+        setBusy("שומר את הקובץ…");
+        const r = await uploadStaged(staged, emails, mode, (done, total) => setBusy(`מעבד ${done.toLocaleString("he-IL")} מתוך ${total.toLocaleString("he-IL")}…`));
+        setDone(`הועלה. נוספו ${r.added}${r.invalid ? `, ${r.invalid} שורות לא תקינות` : ""}.${r.members !== null ? ` ברשימה עכשיו ${r.members} מיילים.` : ""}`);
+        setBusy(null); onDone?.();
+        return;
+      } catch (e) {
+        if (!((e instanceof CrowdError && e.status === 404) || (e instanceof Error && e.message.includes("(404)")))) {
+          setError("ההעלאה נעצרה. הקובץ שכבר נשמר בשרת ממשיך להיות מעובד לבד; אפשר גם להעלות שוב את אותו קובץ במצב \"הוספה\" — מייל שכבר ברשימה לא נכפל.");
+          setBusy(null); onDone?.();
+          return;
+        }
+      }
+    }
+    const chunks = uploadChunks(emails, mode);
     if (!chunks.length) { setError("לא נמצאו מיילים בקובץ."); return; }
     let added = 0, invalid = 0, failed = 0, members: number | null = null;
     try {
