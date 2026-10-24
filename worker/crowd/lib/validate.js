@@ -9,7 +9,7 @@ import { derivePct } from "./derivePct.js";
 
 export const UNITS = new Set(["vote", "seats", "blocs"]);
 export const V2022_CODES = new Set(["other", "none", "blank", "ineligible", "private"]);
-export const V2026_CODES = new Set(["undecided", "none", "private"]);
+export const V2026_CODES = new Set(["undecided", "none", "ineligible", "private"]);
 const TOTAL = 120;
 const THRESHOLD_SEATS = 4;
 const MAX_BLOCS = 5;
