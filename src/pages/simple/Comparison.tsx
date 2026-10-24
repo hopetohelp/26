@@ -55,8 +55,8 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   }, [allowed, session.token, session.refresh]);
   if (!unlocked) {
     const total = seatsSum(mine);
-    return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת הממוצעת</h1>
-      <div className="f-card f-lock"><p className="text-3xl" aria-hidden="true">🔒</p><h2 className="text-lg font-bold my-2">הכנסת הממוצעת נפתחת אחרי שמירת הכנסת שלך</h2>
+    return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
+      <div className="f-card f-lock"><p className="text-3xl" aria-hidden="true">🔒</p><h2 className="text-lg font-bold my-2">ממוצע הניחושים נפתח אחרי שמירת הכנסת שלך</h2>
         <p className="text-ink-soft mb-4">ממלאים את כל 120 המנדטים, שומרים, ורואים איך כולם חושבים.</p>
         <InlineBlocBar values={Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0]))} missing={Math.max(0, 120 - total)} />
         <Link to="/guess" className="f-btn pri mt-5">להשלמת הכנסת שלי</Link></div><FocusFoot /></div>;
@@ -72,9 +72,9 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const blocValues = member ? groupMeans : crowdMeans;
   const hagzaraLogo = hagzara?.logoUrl ?? null;
   const voters = member ? group : all;
-  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת הממוצעת</h1>
+  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    <SourceBar source={source} />
+    <SourceBar source={source} extra={<span className="f-count">{all?.seats ? <>משתתפים: <b className="font-num">{all.seats.n.toLocaleString("he-IL")}</b></> : null}{member && group?.seats ? <> · הגזרה: <b className="font-num">{group.seats.n.toLocaleString("he-IL")}</b></> : null}</span>} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
     {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
@@ -85,8 +85,8 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
-    <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף הכנסת הממוצעת</button></div>
+    <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף ממוצע הניחושים</button></div>
     <FocusFoot />
-    {sharing && <ShareCard heading="שיתוף הכנסת הממוצעת" input={{ kind: "average", values: blocValues, group: hagzara }} onClose={() => setSharing(false)} />}
+    {sharing && <ShareCard heading="שיתוף ממוצע הניחושים" input={{ kind: "average", values: blocValues, group: hagzara }} onClose={() => setSharing(false)} />}
   </div>;
 }

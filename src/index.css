@@ -757,3 +757,7 @@
 @media (min-width: 768px) { .f-save-float { bottom:24px; } }
 body:has(.f-save-float) main { padding-bottom:9rem; }
 .c-ai-chat { border-top:3px solid rgb(var(--ai));padding-top:8px; }
+.f-seg-row { display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px; }
+.f-seg-row .f-seg { margin-bottom:0; }
+.f-count { font-size:13px;color:rgb(var(--ink-soft));margin-inline-start:auto; }
+.f-count b { color:rgb(var(--ink)); }

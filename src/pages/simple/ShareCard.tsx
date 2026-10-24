@@ -21,7 +21,7 @@ export function inviteText({ kind, group }: ShareInput): string {
   return group ? `הגזרה בונה את הכנסת שלה. זו התחזית שלי, ואני סקרן לראות את שלכם. מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זו הכנסת שלי. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם ורואים איך כולם חושבים: ${link}`;
 }
 export function shareTitle({ kind, name, group }: ShareInput): string {
-  if (kind === "average") return group ? "הכנסת הממוצעת של הגזרה" : "הכנסת הממוצעת של המשתתפים";
+  if (kind === "average") return group ? "ממוצע הניחושים בגזרה" : "ממוצע הניחושים של המשתתפים";
   return name ? `הכנסת של ${name}` : "הכנסת שלי";
 }
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });

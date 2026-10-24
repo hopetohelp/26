@@ -31,14 +31,16 @@ const Logo = ({ id, initials }: { id: string; initials: string }) => {
 const initialsOf = (name: string) => name.split(/[\s+,]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("");
 
 /** סרגל בחירה נגלל: ממוצע, 14 ו־i24, ומכונים (רק כשמותר) */
-export function SourceBar({ source }: { source: SimpleSource }) {
+export function SourceBar({ source, extra }: { source: SimpleSource; extra?: ReactNode }) {
   const options: [string, ReactNode, string][] = [
     ["all", <span className="f-ini" aria-hidden="true">∑</span>, "ממוצע הסקרים"],
     ["14-24", <><Logo id="Channel 14" initials="14" /><Logo id="i24 News" initials="24" /></>, "ממוצע 14 ו־i24"],
     ...(source.averagesOnly ? [] : SIMPLE_FIRMS.map(f => [`firm:${f.id}`, <Logo id={f.id} initials={initialsOf(f.name)} />, f.name] as [string, ReactNode, string])),
   ];
-  return <div className={`f-seg ${source.averagesOnly ? "fit" : ""}`} role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
+  const seg = <div className={`f-seg ${source.averagesOnly ? "fit" : ""}`} role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
     <button key={key} type="button" aria-pressed={source.key === key} onClick={() => source.setKey(key)}>{icon}{label}</button>)}</div>;
+  // משמאל למתג (הכרעת בעלים 24.10.2026): מספר המשתתפים הכללי, ולחברי הגזרה — גם של הגזרה
+  return extra ? <div className="f-seg-row">{seg}{extra}</div> : seg;
 }
 
 export const fmt = (n: number | null | undefined) => n == null ? "—" : seatsFmt(n);
