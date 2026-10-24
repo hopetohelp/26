@@ -48,9 +48,9 @@ export function rangeGap(r: Pick<GuessReason, "value" | "lo" | "hi">): string {
 }
 
 export function reasonText(r: GuessReason) {
-  if (r.rule === "range") return `${listName(r.list)}: ${r.value} מנדטים — ${rangeGap(r)} ${r.lo === r.hi ? r.lo : rng(String(r.lo), String(r.hi))}`;
+  if (r.rule === "range") return `${listName(r.list)}: ${r.value} מנדטים — ${rangeGap(r)} ${r.lo === r.hi ? r.lo : rng(String(r.lo), String(r.hi))}${r.mean !== undefined ? `, ממוצע שאר המשתתפים ${r.mean}` : ""}`;
   if (r.rule === "ratio") return `${listName(r.list)}: ${r.value} מנדטים, ממוצע הגולשים ${r.mean}`;
-  return `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה ממתין לאישור`;
+  return `${listName(r.list)}: ${r.value} מנדטים — רשימה שמעבר הסף שלה המתין לאישור (כלל קודם)`;
 }
 
 /** החריגה של רשימה בתוך הטור שלה: כמה מנדטים מעל/מתחת לטווח הסקרים, או "סף" לרשימה נבחרת */
@@ -133,7 +133,7 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
         <h3 className="font-bold text-lg">{group ? "השערות חברי הקבוצה" : "השערות הגולשים"} ({data?.rows.length ?? "…"} · ממתינות {pending})</h3>
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn>{!group && <Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn>}</div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן{group ? " לפי שמירת ההשערה" : " לפי רישום, כניסה אחרונה או שמירת ההשערה"}. השערה חריגה — רשימה שחורגת מטווח הסקרים ב-50% ולפחות ב-4.1 מנדטים, או הציבור החרדי, צבע שחור או נועם עם 4 מנדטים ומעלה — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח, או "סף".</p>
+      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן{group ? " לפי שמירת ההשערה" : " לפי רישום, כניסה אחרונה או שמירת ההשערה"}. השערה חריגה — רשימה שרחוקה לפחות 75% מממוצע שאר המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח.</p>
       {group && <p className="text-sm text-ink-soft max-w-3xl">רק ההשערות של חברי הקבוצה, בלי שום מזהה ובלי נתוני פעילות. ההחלטה כאן קובעת אם ההשערה נספרת בכל האתר — כמו החלטה של מנהל האתר.</p>}
       {!group && <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>}
       {!group && <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>}

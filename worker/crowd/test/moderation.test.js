@@ -10,42 +10,35 @@ const guess = (parts) => {
 };
 
 describe("השערות חריגות", () => {
-  // טווח סקרים לבדיקה (הכרעת בעלים 12.10.2026): חריגה = מעל פי 1.5 מהקצה העליון או מתחת לחצי מהתחתון, ובפער של 4.1 לפחות
+  // כלל 24.10.2026: ממתינה = רשימה שגם רחוקה לפחות 75% מממוצע המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים
   const RANGES = { likud: { lo: 0, hi: 120 }, yashar: { lo: 18, hi: 24 }, shas: { lo: 8, hi: 10 }, amcha: { lo: 0, hi: 5 } };
   beforeEach(() => setPollRanges(RANGES));
   const typical = (p) => ver(p, "seats", guess({ yashar: 20, shas: 10 }));
+  // ממוצע המשתתפים: yashar 20, shas 10, amcha 0
+  const MEANS = { yashar: 20, shas: 10, amcha: 0, likud: 90 };
 
-  it("מעל פי 1.5 מהקצה העליון ובפער של לפחות 4.1 ⇐ ממתינה", () => {
-    const odd = ver("c", "seats", guess({ yashar: 36, shas: 10 }));
-    const m = moderate([typical("a"), odd]);
-    expect(m.pending.size).toBe(1);
-    expect(m.pending.get(odd.id)).toEqual([{ list: "yashar", rule: "range", value: 36, lo: 18, hi: 24 }]);
-    expect(moderate([ver("c", "seats", guess({ yashar: 35, shas: 10 }))]).pending.size).toBe(0); // מתחת לפי 1.5
+  it("רחוקה 75% מממוצע המשתתפים וגם 5 מחוץ לטווח ⇐ ממתינה", () => {
+    // yashar 36: מעל 1.75×20=35 ו-12 מעל הטווח
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 36, shas: 10 })), MEANS)).toEqual([{ list: "yashar", rule: "range", value: 36, lo: 18, hi: 24, mean: 20 }]);
+    // yashar 34: 10 מעל הטווח, אבל פחות מ-75% מהממוצע ⇐ תקינה
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 34, shas: 10 })), MEANS)).toEqual([]);
+    // מתחת: yashar 5 = רבע מהממוצע ומטה, 13 מתחת לטווח
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 5, shas: 10 })), MEANS)).toHaveLength(1);
   });
 
-  it("מתחת לחצי מהקצה התחתון ובפער של לפחות 4.1 ⇐ ממתינה", () => {
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 9, shas: 10 })))).toEqual([{ list: "yashar", rule: "range", value: 9, lo: 18, hi: 24 }]);
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 10, shas: 10 })))).toEqual([]); // יותר מחצי
-    // shas: חצי מ-8 = 4, אבל פער 4 בלבד ⇐ תקינה
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 4 })))).toEqual([]);
+  it("רחוקה מהממוצע אבל פחות מ-5 מחוץ לטווח ⇐ תקינה", () => {
+    // amcha 9: ממוצע 0 (כל מרחק הוא 75%+), אבל רק 4 מעל הטווח 0–5
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 9 })), MEANS)).toEqual([]);
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 10 })), MEANS)).toHaveLength(1);
   });
 
-  it("פי 1.5 בלי פער של 4.1 ⇐ תקינה (amcha: עד 5; 8 = פער 3, 10 = פער 5)", () => {
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 8 })))).toEqual([]);
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 10 })))).toHaveLength(1);
-  });
-
-  it("רשימה שלא נסקרה (טווח 0–0): 4.1 מנדטים ומעלה ⇐ ממתינה", () => {
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, democrats: 5 })))).toEqual([{ list: "democrats", rule: "range", value: 5, lo: 0, hi: 0 }]);
-  });
-
-  it("הציבור החרדי, צבע שחור ונועם: מעבר הסף (4 ומעלה) ממתין לאישור", () => {
-    setPollRanges({ ...RANGES, haredi_public: { lo: 0, hi: 10 }, code_black: { lo: 0, hi: 10 }, noam: { lo: 0, hi: 10 } });
-    for (const list of ["haredi_public", "code_black", "noam"]) {
-      const first = ver("a", "seats", guess({ yashar: 20, shas: 10, [list]: 4 }));
-      expect(moderate([first]).pending.get(first.id)).toEqual([{ list, rule: "watched", value: 4 }]);
-      expect(moderate([ver("a", "seats", guess({ yashar: 20, shas: 10, [list]: 3 }))]).pending.size).toBe(0);
-    }
+  it("moderate מחשב את ממוצע המשתתפים מההשערות עצמן", () => {
+    const vs = Array.from({ length: 9 }, (_, i) => typical("p" + i));
+    const odd = ver("c", "seats", guess({ yashar: 40, shas: 10 }));
+    expect(moderate([...vs, odd]).pending.has(odd.id)).toBe(true);
+    // אם כולם מנחשים 40 — הממוצע 40, וההשערה אינה רחוקה ממנו
+    const same = Array.from({ length: 10 }, (_, i) => ver("q" + i, "seats", guess({ yashar: 40, shas: 10 })));
+    expect(moderate(same).pending.size).toBe(0);
   });
 
   it("אישור מכניס, דחייה מוציאה, גרסה חדשה נבדקת מחדש", () => {
@@ -59,9 +52,9 @@ describe("השערות חריגות", () => {
 
   it("ממתינה שנכנסה לטווח (הסקרים זזו) ⇐ רגילה לבד", () => {
     const odd = ver("c", "seats", guess({ yashar: 40, shas: 10 }));
-    expect(moderate([odd]).pending.size).toBe(1);
-    setPollRanges({ ...RANGES, yashar: { lo: 18, hi: 30 } });
-    expect(moderate([odd]).pending.size).toBe(0);
+    expect(moderate([typical("a"), typical("b"), typical("d"), odd]).pending.size).toBe(1);
+    setPollRanges({ ...RANGES, yashar: { lo: 18, hi: 36 } });
+    expect(moderate([typical("a"), typical("b"), typical("d"), odd]).pending.size).toBe(0);
   });
 
   it("השערה ממתינה לא נספרת בסטטיסטיקות, והמספר מוצג", () => {

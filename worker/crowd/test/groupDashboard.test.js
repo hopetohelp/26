@@ -215,8 +215,8 @@ describe("group insights", () => {
     // מנהל הקבוצה נספר גם הוא כחבר
     expect(d).toMatchObject({ group: "gizra", guesses: GROUP_MIN + 1, questions: null });
     expect(d.status.inRange + d.status.pending + d.status.approved + d.status.rejected).toBe(GROUP_MIN + 1);
-    // נשמרו כשהיו בטווח ⇐ אושרו אוטומטית לצמיתות (version_accepted), ונספרות כ"חריגה שאושרה"
-    expect(d.status.approved).toBe(GROUP_MIN + 1);
+    // כולם מחוץ לטווח, אבל אף השערה אינה רחוקה 75% מממוצע שאר המשתתפים (כולם קרובים זה לזה) ⇐ בטווח לפי הכלל
+    expect(d.status.inRange).toBe(GROUP_MIN + 1);
     expect(d.outside).toEqual([{ list: IDS[0], above: GROUP_MIN + 1, below: 0, lo: 20, hi: 30 }]);
     expect(d.outside.length).toBeGreaterThan(0);
     for (const o of d.outside) expect(Object.keys(o).sort()).toEqual(["above", "below", "hi", "list", "lo"]);
@@ -290,5 +290,16 @@ describe("group comparison reference", () => {
     expect((await call("/group/compare", { token: mgr, body: { group: "gizra", compare: "crowd" } })).data).toEqual({ group: "gizra", compare: "crowd" });
     expect((await call("/group/compare?group=gizra", { token: mgr })).data.compare).toBe("crowd");
     expect((await call("/dashboard?group=gizra", { token: member })).data.compare).toBe("crowd");
+  });
+});
+
+describe("group support threads", () => {
+  it("manager only; nothing below the threshold", async () => {
+    const mgr = await account("boss@x.co");
+    const member = await account("m0@x.co");
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/group/support?group=gizra", { token: member })).status).toBe(403);
+    expect((await call("/group/support?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
   });
 });

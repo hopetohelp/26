@@ -398,3 +398,10 @@ CREATE TABLE IF NOT EXISTS group_compare (
   ref TEXT NOT NULL CHECK (ref IN ('polls', 'crowd')),
   updated_at TEXT NOT NULL
 );
+
+-- אישור אוטומטי לפי כלל ההמתנה של 24.10.2026 (75% מממוצע המשתתפים ו-5 מנדטים מחוץ לטווח הסקרים). מחליף את version_accepted
+-- (אישורים לפי הכלל הקודם, שאינם נקראים עוד), כך שהכלל החדש חל רטרואקטיבית על כל ההשערות. החלטות ידניות (version_review) נשארות.
+CREATE TABLE IF NOT EXISTS version_accepted_v2 (
+  version_id INTEGER PRIMARY KEY REFERENCES versions(id),
+  accepted_at TEXT NOT NULL
+);
