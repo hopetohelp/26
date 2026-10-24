@@ -287,17 +287,14 @@ describe("cron: aggregation & anomaly", () => {
     expect(d.data.vote2026.all.yashar).toEqual({ n: 16, of: 30 });
     expect(d.data.matrix.rows["מחל"].n).toBe(30); // הפילוח עדכני בתמונת הפרסום הראשונה
   }, 30000);
-  it("surge hour flags newcomers for review and logs it", async () => {
+  it("surge hour no longer flags anyone (הכרעת בעלים 25.10.2026): all newcomers are counted, the hour is recorded", async () => {
     await crowd(30, () => seats(77));
     t += 3600 * 1000;
     await cron();
-    const log = await call("/log");
-    expect(log.data.entries.length).toBe(1);
-    expect(log.data.entries[0]).toMatchObject({ participants: 30, decision: "pending" });
-    const d = await call("/dashboard");
-    expect(d.data.participants).toBe(0);
-    expect(d.data.underReview.participants).toBe(30);
-    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM participants WHERE review = 1").get().n).toBe(30);
+    expect((await call("/log")).data.entries.length).toBe(0);
+    expect((await call("/dashboard")).data.participants).toBe(30);
+    expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM participants WHERE review = 1").get().n).toBe(0);
+    expect(env.DB.raw.prepare("SELECT newcomers, flagged FROM hours").get()).toMatchObject({ newcomers: 30, flagged: 0 });
   }, 30000);
   it("cron deletes rate rows older than 24h", async () => {
     await newP();

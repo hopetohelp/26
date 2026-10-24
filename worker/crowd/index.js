@@ -1658,6 +1658,11 @@ const GROUP_MEMBERS_SQL = `SELECT DISTINCT group_id, participant FROM (${groupPa
 // ---- המשימה השעתית
 const hourOf = (t) => iso(Math.floor(t / HOUR) * HOUR).slice(0, 13);
 
+/**
+ * סימון "בבדיקה" אוטומטי בשעה של הצפת נרשמים — מבוטל (הכרעת בעלים 25.10.2026): ההרשמה של קבוצה דרך הקישור שלה
+ * נראתה כהצפה וכל הנרשמים יצאו מהסטטיסטיקה. מספר הנרשמים בכל שעה עדיין נרשם בטבלה hours, בלי לסמן איש.
+ */
+export const SURGE_REVIEW = false;
 /** זיהוי חריגות לכל שעה שלמה שטרם נבדקה (עד 48 אחורה) */
 export async function runAnomaly(env, now, aggregationId) {
   const last = await env.DB.prepare("SELECT hour FROM hours ORDER BY hour DESC LIMIT 1").first();
@@ -1678,7 +1683,7 @@ export async function runAnomaly(env, now, aggregationId) {
       .bind(hourOf(t - BASELINE_HOURS * HOUR), hour)
       .all();
     const newcomers = (news || []).map((r) => ({ id: r.id, seats: r.seats ? JSON.parse(r.seats) : null }));
-    const d = detectHour(newcomers, (hist || []).map((h) => h.newcomers));
+    const d = SURGE_REVIEW ? detectHour(newcomers, (hist || []).map((h) => h.newcomers)) : { flagged: false };
     const stmts = [env.DB.prepare("INSERT OR REPLACE INTO hours (hour, newcomers, flagged) VALUES (?, ?, ?)").bind(hour, newcomers.length, d.flagged ? 1 : 0)];
     if (d.flagged) {
       stmts.push(env.DB.prepare("UPDATE participants SET review = 1 WHERE created_at >= ? AND created_at < ?").bind(iso(t), iso(t + HOUR)));
