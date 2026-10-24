@@ -43,8 +43,13 @@ function keyBytes(env) {
 }
 
 export async function emailHash(env, norm) {
+  return (await emailHasher(env))(norm);
+}
+
+/** גיבוב לרשימה: המפתח נטען פעם אחת לכל המיילים (טעינת רשימת קבוצה — חיסכון בזמן המעבד של השרת) */
+export async function emailHasher(env) {
   const key = await crypto.subtle.importKey("raw", keyBytes(env), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  return [...new Uint8Array(await crypto.subtle.sign("HMAC", key, enc.encode("email|" + norm)))].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return async (norm) => [...new Uint8Array(await crypto.subtle.sign("HMAC", key, enc.encode("email|" + norm)))].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 async function aes(env) {

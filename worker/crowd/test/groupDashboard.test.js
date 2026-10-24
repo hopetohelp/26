@@ -85,7 +85,7 @@ describe("group managers", () => {
     expect((await call("/group/import", { token: mgr, body: { group: "gizra", emails: ["b@x.co"] } })).status).toBe(403);
     expect((await call("/admin/groups/managers", { body: { group: "gizra", email: "Boss@X.co" } })).status).toBe(401);
     expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "Boss@X.co" } })).data).toEqual({ group: "gizra", managers: 1 });
-    expect((await call("/me", { token: mgr })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: "hagzara", image: null }]);
+    expect((await call("/me", { token: mgr })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: "hagzara", image: null, members: 1 }]);
     // כמה מנהלים לאותה קבוצה
     const mgr2 = await account("deputy@x.co");
     expect((await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "deputy@x.co" } })).data).toEqual({ group: "gizra", managers: 2 });

@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { call, CrowdError, type GroupImportResult, type GroupLinkStats, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
 import GroupStats from "../../components/GroupStats";
@@ -433,7 +433,7 @@ export default function Account({ session, hideGroups = false }: { session: Retu
         <p className="font-bold">סיסמה</p>
         {me.hasPassword ? <NewPasswordForm session={session} /> : emails.length ? <SetPasswordForm session={session} /> : <p className="text-sm text-ink-soft">אפשר לקבוע סיסמה אחרי הוספת מייל.</p>}
       </div>
-      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} token={token} className={row} onChanged={() => void session.refresh()} collapsible={(me.managedGroups ?? []).length > 1} />)}
+      {!hideGroups && (me.managedGroups ?? []).map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} members={g.members} token={token} className={row} onChanged={() => void session.refresh()} collapsible={(me.managedGroups ?? []).length > 1} />)}
       <div className="pt-3 grid sm:grid-cols-2 gap-3 [&>*]:min-w-0">
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: {} }), session.setToken(null), "התנתקתם מהמכשיר הזה."))}>התנתקות</Btn>
         <Btn onClick={a.run(async () => (await call("/auth/logout", { token, body: { all: true } }), session.setToken(null), "התנתקתם מכל המכשירים."))}>התנתקות מכל המכשירים</Btn>
@@ -473,30 +473,62 @@ export function LinkMembersToggle({ load, set, onChanged }: { load: () => Promis
   </div>;
 }
 
-/** מקטע מנהל קבוצה: קישור, מספרים, רשימת החברים (קובץ או מייל בודד) ותמונה — אותן אפשרויות כמו למנהל האתר */
-export function ManagedGroup({ id, name, slug, image, token, className, onChanged, collapsible = false }: { id: string; name: string; slug?: string | null; image?: string | null; token: string; className: string; onChanged?: () => void; collapsible?: boolean }) {
+/** תת-מגירה בניהול הקבוצה: התוכן (והבקשות לשרת) נטען רק כשהיא נפתחת */
+function GroupFold({ title, children }: { title: ReactNode; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <details className="group/f border-b border-paper-line last:border-b-0 [&_summary::-webkit-details-marker]:hidden" onToggle={(e) => setOpen(e.currentTarget.open)}>
+      <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[48px] font-bold text-sm">
+        <span>{title}</span>
+        <span aria-hidden="true" className="text-ink-soft text-lg transition-transform group-open/f:rotate-45">+</span>
+      </summary>
+      {open && <div className="space-y-3 pb-4">{children}</div>}
+    </details>
+  );
+}
+
+/** מקטע מנהל קבוצה: תתי-מגירות — קישור, מספרים, רשימת המיילים, תמונה והסבר. אותן אפשרויות כמו למנהל האתר */
+export function ManagedGroup({ id, name, slug, image, members, token, className, onChanged, collapsible = false }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; className: string; onChanged?: () => void; collapsible?: boolean }) {
   const [refresh, setRefresh] = useState(0);
   const [open, setOpen] = useState(false);
-  const send = (chunk: { emails: string[]; mode: "add" | "replace" }) => call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } });
+  const [count, setCount] = useState(members ?? null);
+  useEffect(() => { setCount(members ?? null); }, [members]);
+  const send = async (chunk: { emails: string[]; mode: "add" | "replace" }) => {
+    const r = await call<GroupImportResult>("/group/import", { token, body: { group: id, ...chunk } });
+    setCount(r.members);
+    return r;
+  };
+  const changed = () => { setRefresh((n) => n + 1); onChanged?.(); };
+  const countText = count === null ? null : count === 0 ? "אין עדיין מיילים ברשימה" : `${count.toLocaleString("he-IL")} מיילים ברשימה`;
   const content = (
     <>
-      <GroupLinkPanel
-        slug={slug}
-        setSlug={async (next) => { await call("/group/link", { token, body: next ? { group: id, slug: next } : { group: id } }); onChanged?.(); }}
-        loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
-      />
-      <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
-      <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={() => { setRefresh((n) => n + 1); onChanged?.(); }} />
-      <GroupManagerGuide />
-      <p className="font-bold pt-2">רשימת החברים</p>
-      <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={() => setRefresh((n) => n + 1)} />
-      <GroupUpload send={send} onDone={() => setRefresh((n) => n + 1)} />
-      <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={() => { setRefresh((n) => n + 1); onChanged?.(); }} />
-      <GroupImagePanel
-        id={id}
-        image={image}
-        setImage={async (dataUrl) => { await call("/group/image", { token, body: dataUrl ? { group: id, image: dataUrl } : { group: id, remove: true } }); onChanged?.(); }}
-      />
+      <GroupFold title="קישור הקבוצה">
+        <GroupLinkPanel
+          slug={slug}
+          setSlug={async (next) => { await call("/group/link", { token, body: next ? { group: id, slug: next } : { group: id } }); onChanged?.(); }}
+          loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
+          bare
+        />
+      </GroupFold>
+      <GroupFold title={<>רשימת המיילים{countText && <span className="font-normal text-ink-soft"> · {countText}</span>}</>}>
+        <p className="text-sm">{countText ? <><strong>{countText}</strong> — כל המיילים שהעלו מנהלי הקבוצה, בלי קשר למי שכבר נרשם לאתר.</> : "טוען…"}</p>
+        <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={changed} />
+        <GroupUpload send={send} onDone={changed} />
+        <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={changed} />
+      </GroupFold>
+      <GroupFold title="מספרים">
+        <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
+        <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} />
+      </GroupFold>
+      <GroupFold title="תמונת הקבוצה">
+        <GroupImagePanel
+          id={id}
+          image={image}
+          setImage={async (dataUrl) => { await call("/group/image", { token, body: dataUrl ? { group: id, image: dataUrl } : { group: id, remove: true } }); onChanged?.(); }}
+          bare
+        />
+      </GroupFold>
+      <GroupFold title="הסבר למנהל הקבוצה"><GroupManagerGuide bare /></GroupFold>
     </>
   );
   // מנהל של כמה קבוצות: לכל קבוצה תת-מגירה נפרדת; התוכן (והבקשות לשרת) נטענים רק כשהיא נפתחת
