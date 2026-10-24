@@ -4,12 +4,12 @@ import { seatsSum, validateSeats } from "../../lib/crowdValidate";
 import { SIMPLE_GUESS_HIDDEN, simpleValue } from "../../lib/simpleSources";
 import { IDS, startSeats, nameOf } from "../guess/model";
 import { flushUnit, useSession, useUnit } from "../guess/useCrowd";
-import SaveButton, { SaveError } from "../guess/SaveButton";
+import { SaveError } from "../guess/SaveButton";
+import { Link } from "react-router-dom";
 import Vote from "../guess/Vote";
 import CardDrawer from "../../components/CardDrawer";
 import { Notice } from "../guess/ui";
 import { BlocChart, FocusFoot, flashNotice, PartyName, SourceBar, fmt, useSimpleSource } from "./shared";
-import ShareCard from "./ShareCard";
 import { useHagzara } from "./hagzara";
 const EMPTY = startSeats("zero");
 /** הכנסת שלי: עורך ידני מול טור ממוצע נבחר, גושים חיים ("חסר" עד 120), מגירת ההצבעה ושיתוף אחרי שמירה */
@@ -20,10 +20,8 @@ export default function SimpleGuess() {
   const unit = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, session.me?.latest.vote?.payload as VotePayload | undefined);
   const [voteOpen, setVoteOpen] = useState(false);
-  const [sharing, setSharing] = useState(false);
   const draft = unit.draft ?? EMPTY;
   const total = seatsSum(draft);
-  const firstName = (session.me?.name ?? "").trim().split(/\s+/)[0];
   const [editing, setEditing] = useState<{ id: string; text: string } | null>(null);
   const invalidInput = !!editing && (!/^\d+$/.test(editing.text) || Number(editing.text) > 120);
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
@@ -38,7 +36,17 @@ export default function SimpleGuess() {
   // יציאה מהמסך לפני השלמה ⇐ הודעה כמה חסר (הכרעת בעלים 24.10.2026)
   const totalRef = useRef(total);
   totalRef.current = total;
-  useEffect(() => () => { const t = totalRef.current; if (t > 0 && t < 120) flashNotice(`חסר ${120 - t === 1 ? "מנדט אחד" : `${120 - t} מנדטים`} לכנסת שלמה`); }, []);
+  // בלי כפתור שמירה (הכרעת בעלים 24.10.2026): הניחוש נשמר ביציאה מהמסך; יציאה לפני 120 ⇐ שאלת אישור
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as Element | null)?.closest?.("a[href]");
+      const t = totalRef.current;
+      if (!a || a.getAttribute("href")?.startsWith("#/guess") || t <= 0 || t >= 120) return;
+      if (!window.confirm("האם אתה בטוח לצאת לפני שהשלמת ל־120?")) { e.preventDefault(); e.stopPropagation(); }
+    };
+    document.addEventListener("click", onClick, true);
+    return () => { document.removeEventListener("click", onClick, true); flushUnit("seats"); };
+  }, []);
   const change = (id: string, next: number) => {
     // אי אפשר לעבור את 120 יחד (הכרעת בעלים 24.10.2026): התוספת נעצרת במה שנשאר לחלוקה
     const cur = draft.seats[id]?.v ?? 0;
@@ -68,13 +76,10 @@ export default function SimpleGuess() {
       <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}
-      {/* כפתור שמירה צף — רק כשכל 120 המושבים חולקו (הכרעת בעלים 24.10.2026) */}
-      {total === 120 ? <div className="f-save-float"><SaveButton unit={unit} session={session} invalid={invalid} compact label={`לשמור את הניחוש ${firstName ? `של ${firstName}` : "שלי"}`} onSaved={() => setSharing(true)} /></div>
-        : <div className="flex justify-end mt-4"><SaveButton unit={unit} session={session} invalid={invalid} compact onSaved={() => setSharing(true)} /></div>}
+      {total === 120 && !invalid && !session.token && <Notice>כדי שהניחוש יישמר וייספר, <Link to="/account" className="font-bold underline">נכנסים לחשבון</Link>.</Notice>}
     </div>
     <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} />
       <CardDrawer title="ההצבעה שלי" open={voteOpen} onOpenChange={v => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" className="mt-5"><Vote unit={vote} session={session} /></CardDrawer></div></div>
     <FocusFoot />
-    {sharing && <ShareCard heading="נשמר! לשתף את הכנסת שלך?" input={{ kind: "mine", values, name: session.me?.username, group: hagzara }} onClose={() => setSharing(false)} />}
   </div>;
 }

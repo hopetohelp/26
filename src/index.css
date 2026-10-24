@@ -753,9 +753,6 @@
 @media (max-width: 767px) { .f-nav a { padding:8px 10px;font-size:13px; } .f-nav-bottom { max-width:calc(100vw - 16px); } }
 .c-ai { border:1px solid rgb(var(--ai) / .45);background:rgb(var(--ai-soft));border-radius:var(--radius);padding:16px; }
 .c-ai .c-ai-ico { color:rgb(var(--ai));font-weight:800; }
-.f-save-float { position:fixed;z-index:44;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom));filter:drop-shadow(0 6px 16px rgb(var(--ink) / .25)); }
-@media (min-width: 768px) { .f-save-float { bottom:24px; } }
-body:has(.f-save-float) main { padding-bottom:9rem; }
 .c-ai-chat { border-top:3px solid rgb(var(--ai));padding-top:8px; }
 .f-seg-row { display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px; }
 .f-seg-row .f-seg { margin-bottom:0; }
