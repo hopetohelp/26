@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { emailsFromText, sendWithSplit, uploadChunks } from "./groupUpload";
+import { emailsFromText, sendWithSplit, stagedChunks, uploadChunks, uploadStaged } from "./groupUpload";
 import { CrowdError, GROUP_CHUNK } from "./crowdApi";
 
 describe("group list upload", () => {
@@ -39,5 +39,34 @@ describe("sendWithSplit", () => {
     const send = async () => { calls++; throw new CrowdError(403, "not_manager"); };
     await expect(sendWithSplit(send, { emails: ["a@x.co", "b@x.co"], mode: "add" }, async () => {})).rejects.toBeInstanceOf(CrowdError);
     expect(calls).toBe(1);
+  });
+});
+
+describe("uploadStaged", () => {
+  it("מחלק לבקשות שמירה, ממשיך עד הסוף ומדווח התקדמות", async () => {
+    const parts: number[] = [];
+    const progress: Record<number, number> = {};
+    let members = 0;
+    const api = {
+      start: async (c: { emails: string[]; mode: "add" | "replace" }) => { parts.push(c.emails.length); members += Math.min(200, c.emails.length); return { upload: parts.length, total: c.emails.length, done: Math.min(200, c.emails.length), invalid: 0, added: Math.min(200, c.emails.length), members, finished: c.emails.length <= 200 }; },
+      next: async (u: number) => { const total = parts[u - 1]; progress[u] = Math.min(total, (progress[u] ?? 200) + 200); members += 200; const done = progress[u]; return { upload: u, total, done, invalid: 0, added: done, members, finished: done >= total }; },
+    };
+    const seen: number[] = [];
+    const r = await uploadStaged(api, Array.from({ length: 2300 }, (_, i) => `u${i}@x.co`), "add", (d) => seen.push(d), async () => {});
+    expect(parts).toEqual([2000, 300]);
+    expect(seen[seen.length - 1]).toBe(2300);
+    expect(r.members).toBe(members);
+  });
+  it("תקלה רגעית בהמשך ⇐ ניסיון חוזר", async () => {
+    let fails = 1;
+    const api = {
+      start: async () => ({ upload: 1, total: 400, done: 200, invalid: 0, added: 200, members: 200, finished: false }),
+      next: async () => { if (fails-- > 0) throw new Error("network"); return { upload: 1, total: 400, done: 400, invalid: 0, added: 400, members: 400, finished: true }; },
+    };
+    const r = await uploadStaged(api, Array.from({ length: 400 }, (_, i) => `u${i}@x.co`), "add", () => {}, async () => {});
+    expect(r.added).toBe(400);
+  });
+  it("החלפה רק בבקשה הראשונה", () => {
+    expect(stagedChunks(Array.from({ length: 4001 }, (_, i) => `u${i}@x.co`), "replace").map((c) => [c.emails.length, c.mode])).toEqual([[2000, "replace"], [2000, "add"], [1, "add"]]);
   });
 });

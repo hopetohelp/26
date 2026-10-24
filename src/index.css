@@ -733,4 +733,6 @@
 @media (min-width: 768px) and (max-width: 1099px) { .f-nav-top { position:static;transform:none; } .f-ask .t { display:none; } .f-ask .q { display:inline; } }
 .f-gname, .f-gphone { display:none; }
 .f-glogo { display:block;width:72px;height:72px;border-radius:50%;margin:0 auto 12px; }
+/* חברי הגזרה בטלפון: שם הקבוצה בכותרת מוסיף רוחב — מקטינים מרווחים ומסתירים את סמל השעון, כדי שלא תהיה גלילה הצידה */
+@media (max-width: 480px) { .f-bar.member { gap:5px;padding:8px; } .f-bar.member .f-clock { padding:4px 6px; } .f-bar.member .f-clock > span { display:none; } .f-bar.member .f-logo { font-size:15px;gap:4px; } }
 @media (max-width: 767px) { .f-gname { display:inline; font-size:.8em; } .f-gphone { display:block;width:64px;height:64px;border-radius:50%;margin:0 auto 10px; } }

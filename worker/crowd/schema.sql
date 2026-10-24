@@ -332,3 +332,21 @@ CREATE TABLE IF NOT EXISTS privacy_consents (
   version INTEGER NOT NULL,
   accepted_at TEXT NOT NULL
 );
+
+-- העלאת רשימת קבוצה בשלבים (הכרעת בעלים 24.10.2026): הקובץ נשמר מוצפן בחלקים עד שכל חלק מעובד, ואז נמחק
+CREATE TABLE IF NOT EXISTS group_uploads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  group_id TEXT NOT NULL,
+  mode TEXT NOT NULL,
+  total INTEGER NOT NULL,
+  done INTEGER NOT NULL DEFAULT 0,
+  invalid INTEGER NOT NULL DEFAULT 0,
+  base INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS group_upload_parts (
+  upload_id INTEGER NOT NULL,
+  idx INTEGER NOT NULL,
+  data_enc TEXT NOT NULL,
+  PRIMARY KEY (upload_id, idx)
+);

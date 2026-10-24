@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Btn, Field, Notice, inputCls } from "./guess/ui";
 import GroupUpload from "../components/GroupUpload";
+import type { UploadState } from "../lib/groupUpload";
 import { AdminGroupsGuide } from "../components/GroupGuide";
 import type { GroupImportResult, GroupLinkStats, GroupStats as Stats } from "../lib/crowdApi";
 import { CopyTextButton, GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
@@ -91,7 +92,11 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
       <Btn disabled={!manager.includes("@")} onClick={act(async () => { await api("/admin/groups/managers", { group: g.id, email: manager }); setManager(""); })}>מינוי</Btn>
       <p className="font-bold text-sm pt-2">רשימת החברים</p>
       <GroupAddEmail add={(email) => api("/admin/groups/import", { group: g.id, emails: [email], mode: "add" }) as Promise<GroupImportResult>} onDone={() => void reload()} />
-      <GroupUpload send={(chunk) => api("/admin/groups/import", { group: g.id, ...chunk }) as Promise<GroupImportResult>} onDone={() => void act(async () => {})()} />
+      <GroupUpload
+        send={(chunk) => api("/admin/groups/import", { group: g.id, ...chunk }) as Promise<GroupImportResult>}
+        staged={{ start: (c) => api("/admin/groups/upload", { group: g.id, ...c }) as Promise<UploadState>, next: (upload) => api("/admin/groups/upload/continue", { group: g.id, upload }) as Promise<UploadState> }}
+        onDone={() => void act(async () => {})()}
+      />
       <GroupClearMembers clear={() => api("/admin/groups/import", { group: g.id, emails: [], mode: "replace" }) as Promise<GroupImportResult>} onDone={() => void reload()} />
       <GroupImagePanel
         id={g.id}
