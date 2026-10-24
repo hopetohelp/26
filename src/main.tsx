@@ -7,9 +7,10 @@ import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
-// מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון אחד טוען את הגרסה החדשה.
+import { page, shouldReload } from "./lib/chunkReload";
+// מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
-  try { if (sessionStorage.getItem("elections26.chunk-reload")) return; sessionStorage.setItem("elections26.chunk-reload", "1"); } catch { return; }
+  if (!shouldReload()) return;
   e.preventDefault();
   location.reload();
 });
@@ -18,13 +19,13 @@ import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import RootErrorBoundary from "./components/RootErrorBoundary";
-const Home = lazy(() => import("./pages/Home"));
-const Today = lazy(() => import("./pages/Today"));
-const Polls = lazy(() => import("./pages/Polls"));
-const Trends = lazy(() => import("./pages/Trends"));
-const Results = lazy(() => import("./pages/Results"));
+const Home = lazy(page(() => import("./pages/Home")));
+const Today = lazy(page(() => import("./pages/Today")));
+const Polls = lazy(page(() => import("./pages/Polls")));
+const Trends = lazy(page(() => import("./pages/Trends")));
+const Results = lazy(page(() => import("./pages/Results")));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
-const About = lazy(() => import("./pages/About"));
+const About = lazy(page(() => import("./pages/About")));
 import { PageTitle } from "./components/ui";
 import Support, { AiScreen } from "./pages/Support";
 import { useSearchParams, Navigate } from "react-router-dom";
@@ -32,17 +33,17 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import { setVerifyCode } from "./lib/verifyEmail";
 import { setResetSecret, SECRET_RE } from "./lib/resetPassword";
-const Admin = lazy(() => import("./pages/Admin"));
-const MyFeedback = lazy(() => import("./pages/MyFeedback"));
-const Connect = lazy(() => import("./pages/Connect"));
+const Admin = lazy(page(() => import("./pages/Admin")));
+const MyFeedback = lazy(page(() => import("./pages/MyFeedback")));
+const Connect = lazy(page(() => import("./pages/Connect")));
 import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
-const Accuracy = lazy(() => import("./pages/Accuracy"));
-const Scenarios = lazy(() => import("./pages/Scenarios"));
-const Changes = lazy(() => import("./pages/Changes"));
-const Guess = lazy(() => import("./pages/Guess"));
-const GroupLanding = lazy(() => import("./pages/GroupLanding"));
+const Accuracy = lazy(page(() => import("./pages/Accuracy")));
+const Scenarios = lazy(page(() => import("./pages/Scenarios")));
+const Changes = lazy(page(() => import("./pages/Changes")));
+const Guess = lazy(page(() => import("./pages/Guess")));
+const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
