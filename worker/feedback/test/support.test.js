@@ -122,3 +122,13 @@ it("חשבון מנהל נכנס לממשק הניהול של שרת ההערו�
   expect(guesses.status).toBe(200);
   expect((await api("/admin/data", undefined, "x".repeat(43))).status).toBe(401);
 });
+
+it("ספירת פניות של קבוצה: רק דרך הקישור הפנימי, ספירה בלבד", async () => {
+  await support({ text: "שאלה על ההשערה", op_id: "operation-987654321" });
+  const outside = await feedback.fetch(new Request("https://w.example/internal/group-questions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [participant] }) }), env);
+  expect(outside.status).toBe(404);
+  const inside = await feedback.fetch(new Request("https://feedback.internal/internal/group-questions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [participant, "nobody"] }) }), env);
+  const d = await inside.json();
+  expect(d).toMatchObject({ askers: 1, messages: 1, week: 1, aiUsers: 0 });
+  expect(JSON.stringify(d)).not.toMatch(/שאלה|participant/);
+});

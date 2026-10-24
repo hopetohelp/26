@@ -20,7 +20,7 @@ import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, r
 import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
-import { setPollRanges, moderate, flagReasons } from "./lib/moderation.js";
+import { setPollRanges, moderate, flagReasons, pollRange } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
@@ -144,6 +144,48 @@ async function groupStats(env, id, now) {
   ).bind(id, israelDayStart(now)).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
   return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
+}
+
+/**
+ * תמונת הקבוצה למסך "ניהול קבוצה": מצב ההשערות של החברים מול טווח הסקרים, ומספר הפניות שלהם לצוות האתר.
+ * רק מצטבר, ורק מ-GROUP_MIN רשומים (כמו groupStats). בלי מזהה, בלי טקסט ובלי פרט על חבר מסוים.
+ * status: inRange = תקינה · approved = חריגה שאושרה · pending = ממתינה לאישור · rejected = נדחתה.
+ */
+export async function groupInsights(env, id, now) {
+  const [who, latest, dec] = await env.DB.batch([
+    env.DB.prepare(`SELECT DISTINCT participant FROM (${groupParticipants({ group: "?1" })})`).bind(id),
+    env.DB.prepare(`SELECT v.id, v.participant, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id`),
+    env.DB.prepare(DECISIONS_SQL),
+  ]);
+  const members = new Set((who.results || []).map((r) => r.participant));
+  if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+  const decisions = new Map((dec.results || []).map((r) => [r.version_id, r.decision]));
+  const status = { inRange: 0, approved: 0, pending: 0, rejected: 0 };
+  const outside = new Map(LISTS_2026.map((l) => [l.id, { list: l.id, above: 0, below: 0 }]));
+  for (const r of latest.results || []) {
+    if (!members.has(r.participant)) continue;
+    const v = { id: r.id, payload: JSON.parse(r.payload) };
+    const reasons = flagReasons(v);
+    const d = decisions.get(v.id);
+    status[d === "rejected" ? "rejected" : !reasons.length ? "inRange" : d === "approved" ? "approved" : "pending"]++;
+    // חריגה רכה: כל רשימה שההשערה מחוץ לטווח הסקרים שלה (גם בלי לעבור את סף ההמתנה)
+    for (const l of LISTS_2026) {
+      const x = v.payload?.seats?.[l.id]?.v ?? 0, { lo, hi } = pollRange(l.id), o = outside.get(l.id);
+      if (x > hi) o.above++; else if (x < lo) o.below++;
+    }
+  }
+  const guesses = status.inRange + status.approved + status.pending + status.rejected;
+  const questions = await groupQuestions(env, [...members]);
+  return { group: id, min: GROUP_MIN, asOf: iso(now), guesses, status, outside: [...outside.values()].filter((o) => o.above + o.below > 0).map((o) => ({ ...o, ...pollRange(o.list) })), questions };
+}
+
+/** מספר הפניות של חברי הקבוצה לצוות האתר, לפי נושא (משרת ההערות; ספירה בלבד). null = לא זמין */
+async function groupQuestions(env, participants) {
+  if (!env.FEEDBACK) return null;
+  try {
+    const r = await env.FEEDBACK.fetch(new Request("https://feedback.internal/internal/group-questions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants }) }));
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
 }
 
 /** הגרסה האחרונה של הגושים של כל משתתף, ומי "בבדיקה" */
@@ -1394,6 +1436,12 @@ const routes = {
     const id = groupId(url.searchParams.get("group"));
     if (!(await managedGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_manager");
     return groupStats(env, id, now);
+  },
+
+  // תמונת הקבוצה למסך "ניהול קבוצה" (השערות מול טווח הסקרים, פניות לצוות) — למנהל הקבוצה בלבד
+  "GET /group/insights": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    return groupInsights(env, id, now);
   },
 
   // אותם מספרים למנהל האתר (POST כדי שהקבוצה תעבור בגוף דרך שרת ההערות)

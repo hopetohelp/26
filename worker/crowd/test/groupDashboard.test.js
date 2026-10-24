@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import worker, { resetDashboardCache, GROUP_MIN } from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
-import { seats } from "./helpers.js";
+import { seats, IDS } from "./helpers.js";
 import { sha256 } from "../lib/crypto.js";
+import { setPollRanges } from "../lib/moderation.js";
+import { TEST_RANGES } from "./setup.js";
 
 // דשבורד לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): רק לחבר, רק מייל מאומת, סף מינימום, ובלי סימן לגולש אחר
 const KEY = "k".repeat(40);
@@ -193,5 +195,31 @@ describe("managers count as group members (הכרעת בעלים 12.10.2026)", (
     const d = (await call("/dashboard?group=gizra", { token: a })).data;
     expect(d).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN, participants: 1, publishedAt: expect.any(String) });
     expect(JSON.stringify(d)).not.toMatch(/seats|blocs|vote|mean/);
+  });
+});
+
+describe("group insights", () => {
+  it("manager only, threshold, counts only — no ids or text", async () => {
+    const mgr = await account("boss@x.co");
+    const member = await account("m0@x.co", true, 70);
+    await load(["m0@x.co"]);
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    expect((await call("/group/insights?group=gizra", { token: member })).status).toBe(403);
+    expect((await call("/group/insights?group=gizra")).status).toBe(401);
+    expect((await call("/group/insights?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    for (let i = 1; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    // רשימה ראשונה: טווח 20–30 ⇐ 70 מנדטים (וגם 60 של המנהל) חורגים
+    setPollRanges({ ...TEST_RANGES, [IDS[0]]: { lo: 20, hi: 30 } });
+    const d = (await call("/group/insights?group=gizra", { token: mgr })).data;
+    // מנהל הקבוצה נספר גם הוא כחבר
+    expect(d).toMatchObject({ group: "gizra", guesses: GROUP_MIN + 1, questions: null });
+    expect(d.status.inRange + d.status.pending + d.status.approved + d.status.rejected).toBe(GROUP_MIN + 1);
+    // נשמרו כשהיו בטווח ⇐ אושרו אוטומטית לצמיתות (version_accepted), ונספרות כ"חריגה שאושרה"
+    expect(d.status.approved).toBe(GROUP_MIN + 1);
+    expect(d.outside).toEqual([{ list: IDS[0], above: GROUP_MIN + 1, below: 0, lo: 20, hi: 30 }]);
+    expect(d.outside.length).toBeGreaterThan(0);
+    for (const o of d.outside) expect(Object.keys(o).sort()).toEqual(["above", "below", "hi", "list", "lo"]);
+    expect(JSON.stringify(d)).not.toMatch(/participant|@/);
   });
 });

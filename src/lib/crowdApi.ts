@@ -44,6 +44,7 @@
  * GET  /group/image?slug=<slug>|group=<id> ⇐ תמונה (בינארי)  ציבורי, לתגית img.
  * POST /group/link-join {slug}     ⇐ {ok}  (בסשן) נכנס דרך קישור הקבוצה; נספר כחבר רק אם המנהל הפעיל. GET|POST /group/link-members ⇐ {on,joined} מתג המנהל.
  * POST /group/visit {slug,fresh?}   ⇐ {ok}  ציבורי: ספירת כניסה דרך הקישור (fresh = הדפדפן נכנס בפעם הראשונה). ליום בלבד, בלי זהות.
+ * GET  /group/insights?group=<id>  ⇐ GroupInsights  (בסשן) מנהל קבוצה: מצב ההשערות מול טווח הסקרים ופניות לצוות — ספירות בלבד.
  * GET  /group/stats?group=<id>     ⇐ GroupStats  (בסשן) מנהל קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה; מתחת ל-50 רשומים ⇐ belowMin.
  *      עותק שלה מתפרסם גם עם האתר עצמו (dashboard.json, כל שעה) — הסטטיסטיקות מוצגות לכולם גם בלי חיבור לשרת.
  * GET  /log                         ⇐ {entries: LogEntry[]} יומן ההחרגות הציבורי.
@@ -255,6 +256,14 @@ export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin
 export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
 /** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */
 export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number };
+/** תשובת GET /group/insights — מסך "ניהול קבוצה": מצב ההשערות של החברים מול טווח הסקרים ומספר הפניות לצוות. מצטבר בלבד, מ-50 רשומים */
+export interface GroupQuestions { askers: number; messages: number; week: number; byTopic: Partial<Record<"data" | "idea" | "theory" | "other", number>>; aiUsers: number }
+export type GroupInsights = { group: string; min: number; belowMin: true } | {
+  group: string; min: number; belowMin?: undefined; asOf: string; guesses: number;
+  status: { inRange: number; approved: number; pending: number; rejected: number };
+  outside: { list: string; above: number; below: number; lo: number; hi: number }[];
+  questions: GroupQuestions | null;
+};
 /** מיילים בבקשה אחת — מנה קטנה מהתקרה בשרת (GROUP_CHUNK = 300), כדי שכל בקשה תישאר קצרה */
 export const GROUP_CHUNK = 100;
 

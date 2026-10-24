@@ -5,10 +5,10 @@ import { switchUser } from "../lib/switchUser";
 const SUPPORT_TOPICS = [{ id: "theory", label: "שאלה או תאוריה" }, { id: "data", label: "תקלה או שיפור" }] as const;
 import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 
 import MyData from "./guess/MyData";
-import Account, { ManagedGroup } from "./guess/Account";
+import Account from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
 import { Drawer } from "../components/Drawer";
 import { DrawerMenu, useWide } from "../components/DrawerMenu";
@@ -208,7 +208,7 @@ function grow(el: HTMLTextAreaElement) {
   el.style.height = `${Math.min(el.scrollHeight + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth), line * 5 + extra)}px`;
 }
 
-type DrawerId = "details" | "data" | "groups" | "assistants";
+type DrawerId = "details" | "data" | "assistants";
 
 export default function Support() {
   const session = useSession();
@@ -216,8 +216,8 @@ export default function Support() {
     // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
   const ask = useSearchParams()[0].has("ask");
   const groupsLink = useSearchParams()[0].has("groups");
-  // קישור ישיר למנהל קבוצה (#/support?groups): פותח את "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
-  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(groupsLink ? (token ? ["groups"] : ["details"]) : token || ask ? [] : ["details"]));
+  // קישור ישיר למנהל קבוצה (#/support?groups): מחובר ⇐ מסך "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
+  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(groupsLink ? ["details"] : token || ask ? [] : ["details"]));
   const toggle = (id: DrawerId) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   useEffect(() => { if (me?.needsEmail) setOpen((s) => new Set(s).add("details")); }, [me?.needsEmail]);
   const blocked = useServerBlocked();
@@ -229,7 +229,7 @@ export default function Support() {
 
   // מסך רחב: תפריט מגירות מימין ותוכן המגירה שנבחרה משמאל; ברירת המחדל — השיחה עם צוות האתר
   const wide = useWide();
-  const [selected, setSelected] = useState<DrawerId>(groupsLink && token ? "groups" : "details");
+  const [selected, setSelected] = useState<DrawerId>("details");
   useEffect(() => { if (me?.needsEmail || (token && !me && blocked)) setSelected("details"); }, [me?.needsEmail, token, me, blocked]);
   const badge = me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined;
   const details = (
@@ -246,13 +246,15 @@ export default function Support() {
     </>
   );
   const data = token ? <MyData session={session} part="data" /> : null;
-  const groupList = token ? groups.map((g) => <ManagedGroup key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} members={g.members} token={token} className="py-3 border-b border-paper-line space-y-2" onChanged={() => void session.refresh()} collapsible={groups.length > 1} />) : null;
-  const admin = (me?.isAdmin || hasAdminKey()) && (
-    <div className="border-b border-paper-line">
-      <Link to="/admin" className="flex items-center justify-between gap-3 min-h-[56px] font-bold text-lg">ניהול האתר<span aria-hidden="true" className="text-ink-soft">←</span></Link>
-    </div>
-  );
+  // ניהול קבוצה וניהול האתר — מסכים נפרדים; כאן רק קישור בשורה אחת לכל אחד
+  const goTo = (to: string, label: string) => <Link key={to} to={to} className="flex items-center justify-between gap-3 min-h-[52px] font-bold text-lg text-ink no-underline border-b border-paper-line">{label}<span aria-hidden="true" className="text-ink-soft">←</span></Link>;
+  const links = [
+    token && groups.length > 0 && goTo("/group-admin", groups.length > 1 ? `ניהול קבוצות (${groups.length})` : `ניהול הקבוצה ${groups[0].name ?? ""}`.trim()),
+    (me?.isAdmin || hasAdminKey()) && goTo("/admin", "ניהול האתר"),
+  ].filter(Boolean);
+  const admin = links.length > 0 && <div>{links}</div>;
   const detailsTitle = token ? "הפרטים שלי" : "הרשמה או כניסה";
+  if (groupsLink && token && groups.length > 0) return <Navigate replace to="/group-admin" />;
 
   /*
    * מבנה המסך (הכרעת בעלים 12.10.2026). צר: בראש מגירות (הפרטים שלי, הנתונים שלי, ניהול קבוצה, ניהול האתר),
@@ -262,7 +264,6 @@ export default function Support() {
     const items = [
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
-      ...(token && groups.length > 0 ? [{ id: "groups", title: "ניהול קבוצה", content: groupList }] : []),
     ];
     return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId)} after={admin} label="אזור אישי" />;
   }
@@ -272,7 +273,6 @@ export default function Support() {
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
-        {token && groups.length > 0 && <Drawer title="ניהול קבוצה" open={open.has("groups")} onToggle={() => toggle("groups")}>{groupList}</Drawer>}
         {admin}
       </div>
     </div>

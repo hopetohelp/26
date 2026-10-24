@@ -1,0 +1,185 @@
+import { useEffect, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { call, type GroupInsights, type GroupLinkStats, type GroupStats } from "../lib/crowdApi";
+import { groupImageUrl, groupUrl } from "../lib/groupLink";
+import { listName } from "../lib/data";
+import { PageTitle } from "../components/ui";
+import { Segmented } from "../components/Choice";
+import { ManagedGroup } from "./guess/Account";
+import { useSession } from "./guess/useCrowd";
+
+/**
+ * מסך "ניהול קבוצה" — לשונית בסרגל רק למנהלי קבוצה. בראש: תמונת מצב (רשומים, השערות, כניסות דרך הקישור);
+ * אחריה מצב ההשערות של החברים מול טווח הסקרים (כולל חריגות), הפניות של החברים לצוות האתר, ובסוף כלי הניהול.
+ * הכול מצטבר בלבד ומ-50 רשומים (השרת אוכף) — בלי פרט על חבר מסוים. ניטרלי: בלי צבעי מפלגות, צבע רק למצב.
+ */
+export default function GroupAdmin() {
+  const session = useSession();
+  const { me, token } = session;
+  const groups = me?.managedGroups ?? [];
+  const [picked, setPicked] = useState<string | null>(null);
+  const g = groups.find((x) => x.id === picked) ?? groups[0];
+  if (!token) return <Empty>כדי לנהל קבוצה צריך להיכנס לחשבון. <Link to="/account">לכניסה</Link></Empty>;
+  if (!me) return <p className="text-ink-soft">טוען…</p>;
+  if (!g) return <Empty>החשבון הזה אינו מנהל קבוצה. מנהל האתר ממנה מנהלי קבוצה לפי מייל מאומת.</Empty>;
+  return (
+    <div className="space-y-6 max-w-5xl">
+      <PageTitle>ניהול קבוצה</PageTitle>
+      {groups.length > 1 && <Segmented label="הקבוצה" value={g.id} onChange={(id: string) => setPicked(id)} options={groups.map((x) => ({ id: x.id, label: x.name ?? x.id }))} />}
+      <GroupView key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} members={g.members} token={token} onChanged={() => void session.refresh()} />
+    </div>
+  );
+}
+
+function Empty({ children }: { children: ReactNode }) {
+  return <div className="space-y-3"><PageTitle>ניהול קבוצה</PageTitle><p className="text-ink-soft">{children}</p></div>;
+}
+
+const n = (v: number) => v.toLocaleString("he-IL");
+const q = (id: string) => encodeURIComponent(id);
+
+function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
+  const [stats, setStats] = useState<GroupStats | null>(null);
+  const [link, setLink] = useState<GroupLinkStats | null>(null);
+  const [ins, setIns] = useState<GroupInsights | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let live = true;
+    void Promise.allSettled([
+      call<GroupStats>(`/group/stats?group=${q(id)}`, { token }),
+      call<GroupLinkStats>(`/group/link-stats?group=${q(id)}`, { token }),
+      call<GroupInsights>(`/group/insights?group=${q(id)}`, { token }),
+    ]).then(([s, l, i]) => {
+      if (!live) return;
+      if (s.status === "fulfilled") setStats(s.value);
+      if (l.status === "fulfilled") setLink(l.value);
+      if (i.status === "fulfilled") setIns(i.value);
+      setFailed(s.status === "rejected" && i.status === "rejected");
+    });
+    return () => { live = false; };
+  }, [id, token]);
+  const img = image ? groupImageUrl({ id }, image) : null;
+  return (
+    <>
+      <header className="flex items-center gap-4">
+        {img && <img src={img} alt="" className="w-14 h-14 rounded-theme object-cover border border-paper-line" />}
+        <div className="min-w-0">
+          <p className="font-display text-2xl leading-tight truncate">{name}</p>
+          <p className="text-sm text-ink-soft">{members ? `${n(members)} מיילים ברשימה` : "אין עדיין מיילים ברשימה"}{slug && <> · <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a></>}</p>
+        </div>
+      </header>
+      {failed && <p className="text-sm text-ink-soft">הנתונים אינם זמינים כרגע. כלי הניהול למטה פועלים.</p>}
+      <Overview stats={stats} link={link} />
+      {ins && (ins.belowMin
+        ? <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב ההשערות והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>
+        : <div className="grid lg:grid-cols-2 gap-4 [&>*]:min-w-0">
+            <Guesses ins={ins} />
+            <Questions q={ins.questions} />
+          </div>)}
+      <Section title="כלי ניהול">
+        <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
+      </Section>
+    </>
+  );
+}
+
+function Section({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) {
+  return (
+    <section className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-3">
+      <div className="flex items-baseline justify-between gap-3"><h2 className="font-bold text-lg">{title}</h2>{aside && <span className="text-xs text-ink-soft">{aside}</span>}</div>
+      {children}
+    </section>
+  );
+}
+
+function Tile({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div className="bg-paper border border-paper-line rounded-theme p-3 min-w-0">
+      <p className="text-xs text-ink-soft truncate">{label}</p>
+      <p className="font-num tabular text-3xl leading-none mt-1">{value}</p>
+      {sub && <p className="text-xs text-ink-soft mt-1">{sub}</p>}
+    </div>
+  );
+}
+
+/** תמונת מצב: רשומים, השערות, הצבעות וכניסות דרך הקישור. אחוז = מתוך הרשומים */
+function Overview({ stats, link }: { stats: GroupStats | null; link: GroupLinkStats | null }) {
+  if (!stats && !link) return <p className="text-sm text-ink-soft">טוען…</p>;
+  const s = stats && !stats.belowMin ? stats : null;
+  const pct = (x: number) => s && s.registered ? `${Math.round((100 * x) / s.registered)}% מהרשומים` : undefined;
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {s ? <>
+        <Tile label="רשומים באתר" value={n(s.registered)} sub={s.today ? `${n(s.today)} היום` : undefined} />
+        <Tile label="שמרו השערת מנדטים" value={n(s.seats)} sub={pct(s.seats)} />
+        <Tile label="שמרו הצבעה" value={n(s.vote)} sub={pct(s.vote)} />
+      </> : stats?.belowMin && <p className="col-span-2 md:col-span-3 text-sm text-ink-soft self-center">פחות מ-{stats.min} חברים רשומים — המספרים יוצגו מ-{stats.min}.</p>}
+      {link && <Tile label="כניסות דרך הקישור" value={n(link.opens)} sub={`${n(link.today)} היום · ${n(link.fresh)} דפדפנים חדשים`} />}
+    </div>
+  );
+}
+
+/** מצב ההשערות: פס אחד לפי מצב (תקינה / חריגה שאושרה / ממתינה / נדחתה), ובטבלה — רשימות שהחברים חרגו בהן מטווח הסקרים */
+function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }> }) {
+  const parts: { key: keyof typeof ins.status; label: string; cls: string }[] = [
+    { key: "inRange", label: "בטווח הסקרים", cls: "bg-ink" },
+    { key: "approved", label: "חריגות שאושרו", cls: "bg-ink-soft" },
+    { key: "pending", label: "ממתינות לאישור", cls: "bg-warn" },
+    { key: "rejected", label: "נדחו", cls: "bg-paper-line" },
+  ];
+  const total = ins.guesses || 1;
+  const rows = [...ins.outside].sort((a, b) => b.above + b.below - (a.above + a.below));
+  return (
+    <Section title="השערות החברים" aside={`${n(ins.guesses)} השערות`}>
+      <div className="flex h-3 rounded-full overflow-hidden bg-paper border border-paper-line" role="img" aria-label={parts.map((p) => `${p.label}: ${ins.status[p.key]}`).join(", ")}>
+        {parts.map((p) => ins.status[p.key] > 0 && <span key={p.key} className={p.cls} style={{ width: `${(100 * ins.status[p.key]) / total}%` }} />)}
+      </div>
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+        {parts.map((p) => <li key={p.key} className="flex items-center gap-2"><span aria-hidden="true" className={`w-2.5 h-2.5 rounded-full shrink-0 border border-paper-line ${p.cls}`} /><span className="flex-1">{p.label}</span><strong className="font-num tabular">{n(ins.status[p.key])}</strong></li>)}
+      </ul>
+      {ins.status.pending > 0 && <p className="text-xs text-ink-soft">השערה ממתינה אינה נספרת בממוצע הקבוצה עד שמנהל האתר יאשר אותה. היא חוזרת לבד להיות רגילה אם הסקרים מתקרבים אליה.</p>}
+      {rows.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <caption className="text-start font-bold pb-1">מחוץ לטווח הסקרים, לפי רשימה</caption>
+            <thead className="text-xs text-ink-soft"><tr><th className="text-start font-normal py-1">רשימה</th><th className="font-normal">טווח הסקרים</th><th className="font-normal">מעל</th><th className="font-normal">מתחת</th></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.list} className="border-t border-paper-line">
+                  <td className="py-1.5">{listName(r.list)}</td>
+                  <td className="text-center font-num tabular" dir="ltr">{r.lo}–{r.hi}</td>
+                  <td className="text-center font-num tabular">{r.above ? n(r.above) : "—"}</td>
+                  <td className="text-center font-num tabular">{r.below ? n(r.below) : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="text-xs text-ink-soft pt-1">כל השערה שרשימה בה נמצאת מעל הסקר הגבוה או מתחת לנמוך. רק חריגה גדולה ממתינה לאישור.</p>
+        </div>
+      ) : <p className="text-sm text-ink-soft">כל ההשערות בתוך טווח הסקרים.</p>}
+    </Section>
+  );
+}
+
+const TOPIC_LABEL: Record<string, string> = { data: "תיקון נתון", idea: "רעיון לשיפור", theory: "שאלה או תאוריה", other: "אחר" };
+
+/** פניות החברים לצוות האתר: כמה פנו, כמה הודעות (ובשבוע האחרון), לפי נושא, וכמה השתמשו בצ׳אט החכם. בלי תוכן */
+function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined }>["questions"] }) {
+  if (!d) return <Section title="שאלות ופניות"><p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p></Section>;
+  const topics = Object.entries(d.byTopic).filter(([, v]) => v);
+  return (
+    <Section title="שאלות ופניות" aside="ספירה בלבד, בלי תוכן">
+      <div className="grid grid-cols-3 gap-3">
+        <Tile label="פנו לצוות" value={n(d.askers)} />
+        <Tile label="הודעות" value={n(d.messages)} sub={`${n(d.week)} בשבוע האחרון`} />
+        <Tile label="בצ׳אט החכם" value={n(d.aiUsers)} />
+      </div>
+      {topics.length > 0 && (
+        <ul className="text-sm space-y-1">
+          {topics.map(([k, v]) => <li key={k} className="flex justify-between gap-3 border-t border-paper-line pt-1"><span>{TOPIC_LABEL[k] ?? k}</span><strong className="font-num tabular">{n(v!)}</strong></li>)}
+        </ul>
+      )}
+      <p className="text-xs text-ink-soft">תוכן הפניות נשאר בין החבר לצוות האתר. מספר גבוה בנושא מסוים — סימן שכדאי להסביר אותו לקבוצה.</p>
+    </Section>
+  );
+}
