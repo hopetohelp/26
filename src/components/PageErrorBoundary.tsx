@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { reportCrash } from "../lib/crowdApi";
 import { Link, useLocation } from "react-router-dom";
 
 class Boundary extends Component<{ children: ReactNode; resetKey: string }, { failed: boolean }> {
@@ -6,6 +7,7 @@ class Boundary extends Component<{ children: ReactNode; resetKey: string }, { fa
   static getDerivedStateFromError() { return { failed: true }; }
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("שגיאה בטעינת מסך", error, info.componentStack);
+    reportCrash("page", error, info.componentStack);
   }
   componentDidUpdate(previous: Readonly<{ children: ReactNode; resetKey: string }>) {
     if (this.state.failed && previous.resetKey !== this.props.resetKey) this.setState({ failed: false });
