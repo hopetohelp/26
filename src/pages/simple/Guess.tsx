@@ -64,7 +64,9 @@ export default function SimpleGuess() {
   const change = (id: string, next: number) => {
     // אי אפשר לעבור את 120 יחד (הכרעת בעלים 24.10.2026): התוספת נעצרת במה שנשאר לחלוקה
     const cur = draft.seats[id]?.v ?? 0;
-    const v = Math.max(0, Math.min(next, cur + Math.max(0, 120 - total)));
+    let v = Math.max(0, Math.min(next, cur + Math.max(0, 120 - total)));
+    // 1–3 מנדטים אינם אפשריים (אחוז החסימה): אם התקרה עוצרת שם — נשארים במה שהיה
+    if (v >= 1 && v <= 3) v = cur >= 4 ? cur : 0;
     if (next > cur && v < next) flashNotice("הגעתם ל־120 מנדטים");
     if (v === cur) return v;
     // עריכה במנדטים מחליפה קלט אחוזים רק אחרי שינוי מפורש; יתר התאים והנעילות נשמרים.
@@ -82,9 +84,9 @@ export default function SimpleGuess() {
         return <div key={id} className="f-edit"><div className="min-w-0"><PartyName id={id} /><div className="f-ref font-num">ממוצע {fmt(ref(id))}</div>
           {inputBad && <span className="text-xs text-warn">0 עד 120</span>}{bad && <span className="text-xs text-warn">0 או לפחות 4</span>}</div>
           <div className="f-step">
-            <button type="button" aria-label={`הפחתת מנדט ל${nameOf(id)}`} disabled={value <= 0} onClick={() => { setEditing(null); change(id, value - 1); }}>−</button>
-            <input aria-label={`מנדטים ל${nameOf(id)}`} aria-invalid={bad || inputBad || undefined} inputMode="numeric" type="text" value={editing?.id === id ? editing.text : value} onChange={e => { const text = e.target.value; setEditing({ id, text }); if (/^\d+$/.test(text) && Number(text) <= 120) { const v = change(id, Number(text)); if (v !== Number(text)) setEditing({ id, text: String(v) }); } }} onBlur={() => { if (!invalidInput) setEditing(null); }} />
-            <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} aria-disabled={total >= 120 || undefined} onClick={() => { setEditing(null); change(id, value + 1); }}>+</button>
+            <button type="button" aria-label={`הפחתת מנדט ל${nameOf(id)}`} disabled={value <= 0} onClick={() => { setEditing(null); change(id, value <= 4 ? 0 : value - 1); }}>−</button>
+            <input aria-label={`מנדטים ל${nameOf(id)}`} aria-invalid={bad || inputBad || undefined} inputMode="numeric" type="text" value={editing?.id === id ? editing.text : value} onChange={e => { const text = e.target.value; setEditing({ id, text }); if (/^\d+$/.test(text) && Number(text) <= 120 && !(Number(text) >= 1 && Number(text) <= 3)) { const v = change(id, Number(text)); if (v !== Number(text)) setEditing({ id, text: String(v) }); } }} onBlur={() => { if (editing && /^[1-3]$/.test(editing.text)) { change(id, 4); setEditing(null); flashNotice("מפלגה מקבלת 0 או לפחות 4 מנדטים"); } else if (!invalidInput) setEditing(null); }} />
+            <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} aria-disabled={total >= 120 || undefined} onClick={() => { setEditing(null); change(id, value === 0 ? 4 : value + 1); }}>+</button>
           </div></div>;
       })}
       <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}

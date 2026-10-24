@@ -11,7 +11,7 @@ import { useSession, useUnit } from "../guess/useCrowd";
 import { Notice } from "../guess/ui";
 import { VotingStats } from "../guess/Dashboard";
 import CardDrawer from "../../components/CardDrawer";
-import { BlocChart, FocusFoot, InlineBlocBar, LegendCapsule, LegendLine, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
+import { BlocChart, FocusFoot, InlineBlocBar, LegendCapsule, LegendLine, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
 import ShareCard from "./ShareCard";
 import { useHagzara } from "./hagzara";
 
@@ -74,14 +74,14 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const voters = member ? group : all;
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    <SourceBar source={source} extra={<span className="f-count">{all?.seats ? <>משתתפים: <b className="font-num">{all.seats.n.toLocaleString("he-IL")}</b></> : null}{member && group?.seats ? <> · הגזרה: <b className="font-num">{group.seats.n.toLocaleString("he-IL")}</b></> : null}</span>} />
+    <SourceBar source={source} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
     {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists}
         marks={id => member ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule />{!member && <LegendLine kind="soft" label="ממוצע הסקרים" />}<LegendLine label={`משתתפים${all?.seats ? ` (${all.seats.n})` : ""}`} />{member && <LegendLine kind="dash" label="הגזרה" />}</>} />
+        legend={<><LegendCapsule />{!member && <LegendLine kind="soft" label="ממוצע הסקרים" />}<LegendBox label="משתתפים" n={all?.seats?.n} />{member && <LegendBox kind="dash" label="הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>

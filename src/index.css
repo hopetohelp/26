@@ -733,7 +733,7 @@
 .f-modal > div { background:rgb(var(--card));color:rgb(var(--ink));border-radius:22px;padding:16px;max-width:440px;width:100%;display:grid;gap:12px; }
 .f-modal img { width:100%;height:auto;border-radius:14px;border:1px solid rgb(var(--line)); }
 .f-invite { font-size:14px;line-height:1.55;background:rgb(var(--accent-soft));border-radius:12px;padding:10px 12px; }
-[data-interface="simple"] main { padding-bottom:200px; }
+[data-interface="simple"] main { padding-bottom:calc(124px + env(safe-area-inset-bottom)); }
 @media (min-width: 768px) { [data-interface="simple"] main { padding-bottom:60px; } }
 @media (min-width: 768px) and (max-width: 1099px) { .f-nav-top { position:static;transform:none; } .f-ask .t { display:none; } .f-ask .q { display:inline; } }
 .f-gname, .f-gphone { display:none; }
@@ -767,3 +767,5 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* התא של כל נתון במסגרת כמו הקו שלו — מקוטע לגזרה, רציף למשתתפים — כדי שיהיה ברור לאיזה קו שייך כל מספר כשהקווים צמודים (הכרעת בעלים 24.10.2026) */
 .f-mark:not(.soft) .f-tag { border:1.5px solid currentColor; }
 .f-mark.dash .f-tag { border-style:dashed; }
+.f-legend .f-lg-box { border:1.5px solid rgb(var(--ink));border-radius:6px;padding:1px 7px;color:rgb(var(--ink)); }
+.f-legend .f-lg-box.dash { border-style:dashed; }
