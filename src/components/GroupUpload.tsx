@@ -4,17 +4,20 @@ import { Btn, Notice } from "../pages/guess/ui";
 import type { GroupImportResult } from "../lib/crowdApi";
 import { emailsFromText, sendWithSplit, uploadChunks, uploadStaged, type StagedApi } from "../lib/groupUpload";
 import { CrowdError } from "../lib/crowdApi";
+import ConfirmDialog from "./ConfirmDialog";
 
 /**
  * העלאת רשימת חברי קבוצה (docs/פילוח-קבוצות-תכנון.md): קובץ עם מייל בכל שורה, נשלח במנות. בשרת נשמר רק הגיבוב של כל מייל.
  * משמש את מנהל האתר (ממשק הניהול) ואת מנהל הקבוצה (האזור האישי). send = שליחת מנה אחת.
+ * החלפת הרשימה נפתחת בחלון "האם אתם בטוחים?" עם מספר המיילים שיימחקו (current) ומספר המיילים בקובץ (הכרעת בעלים 24.10.2026).
  */
-export default function GroupUpload({ send, staged, onDone }: { send: (chunk: { emails: string[]; mode: "add" | "replace" }) => Promise<GroupImportResult>; staged?: StagedApi; onDone?: () => void }) {
+export default function GroupUpload({ send, staged, onDone, current }: { send: (chunk: { emails: string[]; mode: "add" | "replace" }) => Promise<GroupImportResult>; staged?: StagedApi; onDone?: () => void; current?: number | null }) {
   const [mode, setMode] = useState<"add" | "replace">("add");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [ask, setAsk] = useState<string[] | null>(null);
 
   const upload = async () => {
     if (!file) return;
@@ -23,6 +26,11 @@ export default function GroupUpload({ send, staged, onDone }: { send: (chunk: { 
     try { text = await file.text(); } catch { setError("לא הצלחנו לקרוא את הקובץ. אפשר לשמור אותו מחדש כקובץ טקסט או CSV ולנסות שוב."); return; }
     const emails = emailsFromText(text);
     if (!emails.length && mode !== "replace") { setError("לא נמצאו מיילים בקובץ."); return; }
+    if (mode === "replace") { setAsk(emails); return; }
+    await run(emails);
+  };
+
+  const run = async (emails: string[]) => {
     // העלאה בשלבים: הקובץ נשמר בשרת ומעובד שם; שרת ישן (404) ⇐ המסלול הקודם, במנות
     if (staged) {
       try {
@@ -69,6 +77,17 @@ export default function GroupUpload({ send, staged, onDone }: { send: (chunk: { 
       <Btn kind="primary" onClick={() => void upload()} disabled={!file || !!busy}>{busy ?? "העלאה"}</Btn>
       {done && <Notice>{done}</Notice>}
       {error && <Notice tone="warn">{error}</Notice>}
+      {ask && (
+        <ConfirmDialog
+          title="להחליף את כל הרשימה?"
+          confirm="כן, להחליף"
+          onCancel={() => setAsk(null)}
+          onConfirm={() => { const emails = ask; setAsk(null); void run(emails); }}
+        >
+          <p>{typeof current === "number" ? <>הרשימה הנוכחית (<strong>{current.toLocaleString("he-IL")}</strong> מיילים) תימחק</> : "הרשימה הנוכחית תימחק"} ותוחלף ב-<strong>{ask.length.toLocaleString("he-IL")}</strong> מיילים מהקובץ.</p>
+          <p className="text-ink-soft">מי שלא מופיע בקובץ יוצא מהקבוצה. החשבונות וההשערות לא נמחקים.</p>
+        </ConfirmDialog>
+      )}
     </div>
   );
 }

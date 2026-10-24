@@ -93,7 +93,7 @@ async function requireAdmin(env, request) {
 }
 
 async function myGroups(env, participant) {
-  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM groups g JOIN ("+GROUP_PARTICIPANTS+") m ON m.group_id = g.id LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE m.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image FROM (" + groupParticipants({ participant: "?1" }) + ") x JOIN groups g ON g.id = x.group_id LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id ORDER BY g.id").bind(participant).all()).results || [];
   return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), slug: r.slug ?? null, image: r.image ?? null })));
 }
 
@@ -119,7 +119,7 @@ async function linkMembers(env, id) {
             (SELECT on_ FROM group_link_flags WHERE group_id = ?1 AND flag = 'first') AS first_on,
             (SELECT COUNT(*) FROM group_link_joins WHERE group_id = ?1) AS all_n,
             (SELECT COUNT(*) FROM group_link_first WHERE group_id = ?1) AS first_n,
-            (SELECT COUNT(DISTINCT e.participant) FROM group_members m JOIN emails e ON e.hash = m.email_hash WHERE m.group_id = ?1 AND e.verified = 1) AS list_n,
+            (SELECT COUNT(DISTINCT e.participant) FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash WHERE e.verified = 1) AS list_n,
             (SELECT COUNT(*) FROM participants p WHERE EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS site_n`,
   ).bind(id).first();
   const shown = (n) => (n >= GROUP_MIN ? n : null);
@@ -135,12 +135,12 @@ async function setLinkMembers(env, id, flag, on, now) {
 /** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה — רק מ-GROUP_MIN רשומים */
 async function groupStats(env, id, now) {
   const r = await env.DB.prepare(
-    `WITH m AS (SELECT DISTINCT participant AS id FROM (${GROUP_PARTICIPANTS}) WHERE group_id = ?)
+    `WITH who AS (SELECT DISTINCT participant AS id FROM (${groupParticipants({ group: "?1" })}))
      SELECT COUNT(*) AS registered,
-            SUM(CASE WHEN p.created_at >= ? THEN 1 ELSE 0 END) AS today,
-            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'seats')) AS seats,
-            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = m.id AND v.unit = 'vote')) AS vote
-     FROM m JOIN participants p ON p.id = m.id`,
+            SUM(CASE WHEN p.created_at >= ?2 THEN 1 ELSE 0 END) AS today,
+            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = who.id AND v.unit = 'seats')) AS seats,
+            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = who.id AND v.unit = 'vote')) AS vote
+     FROM who JOIN participants p ON p.id = who.id`,
   ).bind(id, israelDayStart(now)).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
   return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
@@ -160,7 +160,7 @@ async function blocsState(env) {
 
 /** הקבוצות שהמשתמש מנהל — דרך מייל מאומת, כמו החברות */
 async function managedGroups(env, participant) {
-  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
+  const rows = (await env.DB.prepare("SELECT DISTINCT g.id, g.name_enc, l.slug, i.updated_at AS image, COALESCE((SELECT s.members FROM group_sizes s WHERE s.group_id = g.id), 0) AS members FROM groups g JOIN group_managers a ON a.group_id = g.id JOIN emails e ON e.hash = a.email_hash LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id WHERE e.verified = 1 AND e.participant = ? ORDER BY g.id").bind(participant).all()).results || [];
   return Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, slug: r.slug ?? null, image: r.image ?? null })));
 }
 
@@ -187,7 +187,7 @@ async function importGroup(env, body, now, create) {
     if (e) { valid++; hashes.add(await hash(e.norm)); }
     else invalid++;
   }
-  const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const before = await groupSize(env, id);
   const stmts = [];
   if (!exists) stmts.push(env.DB.prepare("INSERT INTO groups (id, name_enc, created_at) VALUES (?, ?, ?)").bind(id, await seal(env, name), iso(now)));
   else if (name) stmts.push(env.DB.prepare("UPDATE groups SET name_enc = ? WHERE id = ?").bind(await seal(env, name), id));
@@ -195,7 +195,7 @@ async function importGroup(env, body, now, create) {
   if (body.mode === "replace") stmts.push(env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id));
   for (const h of hashes) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(id, h));
   if (stmts.length) await env.DB.batch(stmts);
-  const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const members = await groupSize(env, id);
   const base = body.mode === "replace" ? 0 : before;
   return { group: id, added: members - base, duplicates: valid - (members - base), invalid, members };
 }
@@ -212,7 +212,7 @@ async function createUpload(env, id, body, now) {
   const mode = body.mode ?? "add";
   if (!["add", "replace"].includes(mode)) throw bad("mode");
   await requireGroup(env, id);
-  const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const before = await groupSize(env, id);
   const up = await env.DB.prepare("INSERT INTO group_uploads (group_id, mode, total, base, created_at) VALUES (?, ?, ?, ?, ?) RETURNING id").bind(id, mode, body.emails.length, mode === "replace" ? 0 : before, iso(now)).first();
   const stmts = mode === "replace" ? [env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id)] : [];
   for (let i = 0; i < body.emails.length; i += UPLOAD_PART)
@@ -241,7 +241,7 @@ async function processUpload(env, id, uploadId) {
   }
   const left = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_upload_parts WHERE upload_id = ?").bind(uploadId).first()).n;
   const cur = await env.DB.prepare("SELECT total, done, invalid, base FROM group_uploads WHERE id = ?").bind(uploadId).first();
-  const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const members = await groupSize(env, id);
   if (!left) await env.DB.prepare("DELETE FROM group_uploads WHERE id = ?").bind(uploadId).run();
   return { group: id, upload: uploadId, total: cur.total, done: cur.done, invalid: cur.invalid, added: Math.max(0, members - cur.base), members, finished: !left };
 }
@@ -354,12 +354,21 @@ export const GROUP_CHUNK = 300;
 /**
  * חברי הקבוצה לצורך ספירה והצלבה: מי שברשימת המיילים, וגם מנהלי הקבוצה (הכרעת בעלים 12.10.2026) — מנהל שנרשם ואימת מייל נספר בקבוצה
  * גם אם אינו ברשימה, ורואה את מסך הקבוצה. אותו מייל ברשימה ובמנהלים נספר פעם אחת (UNION).
- */
-const GROUP_PEOPLE = "(SELECT group_id, email_hash FROM group_members UNION SELECT group_id, email_hash FROM group_managers)";
-/** חברי קבוצה לפי חשבון: מייל מאומת ברשימה או של מנהל, ומי שנכנס דרך הקישור — רק כשהמנהל הפעיל זאת (הכרעת בעלים 23.10.2026) */
-const GROUP_PARTICIPANTS = `SELECT m.group_id, e.participant FROM ${GROUP_PEOPLE} m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1
-  UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'all' AND f.on_ = 1
-  UNION SELECT j.group_id, j.participant FROM group_link_first j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'first' AND f.on_ = 1`;
+ * חברי קבוצה לפי חשבון: מייל מאומת ברשימה או של מנהל, ומי שנכנס דרך הקישור — רק כשהמנהל הפעיל זאת (הכרעת בעלים 23.10.2026).
+ * החיפוש מתחיל מהמיילים המאומתים (CROSS JOIN קובע את הסדר) ומחפש כל אחד באינדקס של הרשימות — בלי לעבור על כל הרשימות
+ * (הכרעת בעלים 24.10.2026). participant / group = מקום הפרמטר בשאילתה ("?1"), לסינון למשתמש אחד או לקבוצה אחת. */
+export function groupParticipants({ participant, group } = {}) {
+  const who = (col) => (participant ? ` AND ${col} = ${participant}` : "");
+  const grp = (col) => (group ? ` AND ${col} = ${group}` : "");
+  return `SELECT m.group_id, e.participant FROM emails e CROSS JOIN group_members m ON m.email_hash = e.hash${grp("m.group_id")} WHERE e.verified = 1${who("e.participant")}
+  UNION SELECT a.group_id, e.participant FROM emails e CROSS JOIN group_managers a ON a.email_hash = e.hash${grp("a.group_id")} WHERE e.verified = 1${who("e.participant")}
+  UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'all' AND f.on_ = 1 WHERE 1${who("j.participant")}${grp("j.group_id")}
+  UNION SELECT j.group_id, j.participant FROM group_link_first j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'first' AND f.on_ = 1 WHERE 1${who("j.participant")}${grp("j.group_id")}`;
+}
+/** מספר המיילים ברשימת הקבוצה — מהמונה המוכן (group_sizes, מתעדכן בטריגר), בלי לספור את הרשימה */
+async function groupSize(env, id) {
+  return (await env.DB.prepare("SELECT members FROM group_sizes WHERE group_id = ?").bind(id).first())?.members ?? 0;
+}
 /** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
 export const GROUP_MIN = 50;
 function groupId(v) {
@@ -1493,7 +1502,7 @@ const routes = {
       const slug = await autoSlug(env, await open(env, g.name_enc));
       if (slug) await upsertSlug(env, g.id, slug).run();
     }
-    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, (SELECT COUNT(*) FROM group_members m WHERE m.group_id = g.id) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers, l.slug, i.updated_at AS image FROM groups g LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id ORDER BY g.created_at").all()).results || [];
+    const rows = (await env.DB.prepare("SELECT g.id, g.name_enc, g.created_at, COALESCE((SELECT s.members FROM group_sizes s WHERE s.group_id = g.id), 0) AS members, (SELECT COUNT(*) FROM group_managers a WHERE a.group_id = g.id) AS managers, l.slug, i.updated_at AS image FROM groups g LEFT JOIN group_links l ON l.group_id = g.id LEFT JOIN group_images i ON i.group_id = g.id ORDER BY g.created_at").all()).results || [];
     const mgr = (await env.DB.prepare("SELECT a.group_id, a.email_hash, a.added_at, l.email_enc, EXISTS(SELECT 1 FROM emails e WHERE e.hash = a.email_hash AND e.verified = 1) AS active FROM group_managers a LEFT JOIN group_manager_labels l ON l.group_id = a.group_id AND l.email_hash = a.email_hash ORDER BY a.added_at").all()).results || [];
     const list = async (id) => Promise.all(mgr.filter((m) => m.group_id === id).map(async (m) => ({ handle: m.email_hash, email: m.email_enc ? await open(env, m.email_enc) : null, active: !!m.active, addedAt: m.added_at })));
     return { groups: await Promise.all(rows.map(async (r) => ({ id: r.id, name: await open(env, r.name_enc), members: r.members, managers: r.managers, managerList: await list(r.id), createdAt: r.created_at, slug: r.slug ?? null, image: r.image ?? null }))) };
@@ -1513,6 +1522,7 @@ const routes = {
       env.DB.prepare("DELETE FROM group_upload_parts WHERE upload_id IN (SELECT id FROM group_uploads WHERE group_id = ?)").bind(id),
       env.DB.prepare("DELETE FROM group_uploads WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_sizes WHERE group_id = ?").bind(id),
     ]);
     return { ok: true };
   },
@@ -1643,7 +1653,7 @@ async function groupDashboards(env, { participants, versions, now, blocNames, de
   }
   return out;
 }
-const GROUP_MEMBERS_SQL = `SELECT DISTINCT group_id, participant FROM (${GROUP_PARTICIPANTS})`;
+const GROUP_MEMBERS_SQL = `SELECT DISTINCT group_id, participant FROM (${groupParticipants()})`;
 
 // ---- המשימה השעתית
 const hourOf = (t) => iso(Math.floor(t / HOUR) * HOUR).slice(0, 13);

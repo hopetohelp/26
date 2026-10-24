@@ -5,6 +5,7 @@ import type { UploadState } from "../lib/groupUpload";
 import { AdminGroupsGuide } from "../components/GroupGuide";
 import type { GroupImportResult, GroupLinkStats, GroupStats as Stats } from "../lib/crowdApi";
 import { CopyTextButton, GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../components/GroupTools";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { Fold } from "../components/ui";
 import { groupInviteMessage } from "../lib/groupMessage";
 import { groupUrl } from "../lib/groupLink";
@@ -96,6 +97,7 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
         send={(chunk) => api("/admin/groups/import", { group: g.id, ...chunk }) as Promise<GroupImportResult>}
         staged={{ start: (c) => api("/admin/groups/upload", { group: g.id, ...c }) as Promise<UploadState>, next: (upload) => api("/admin/groups/upload/continue", { group: g.id, upload }) as Promise<UploadState> }}
         onDone={() => void act(async () => {})()}
+        current={g.members}
       />
       <GroupClearMembers clear={() => api("/admin/groups/import", { group: g.id, emails: [], mode: "replace" }) as Promise<GroupImportResult>} onDone={() => void reload()} />
       <GroupImagePanel
@@ -104,9 +106,13 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
         setImage={async (dataUrl) => { await api("/admin/groups/image", dataUrl ? { group: g.id, image: dataUrl } : { group: g.id, remove: true }); await reload(); }}
       />
       <div className="flex flex-wrap gap-2 pt-2">
-        {sure
-          ? <Btn kind="danger" onClick={act(() => api("/admin/groups/delete", { group: g.id }))}>למחוק את הקבוצה והרשימה?</Btn>
-          : <Btn kind="danger" onClick={() => setSure(true)}>מחיקת הקבוצה</Btn>}
+        <Btn kind="danger" onClick={() => setSure(true)}>מחיקת הקבוצה</Btn>
+        {sure && (
+          <ConfirmDialog title={`למחוק את הקבוצה "${g.name ?? g.id}"?`} confirm="כן, למחוק את הקבוצה" onCancel={() => setSure(false)} onConfirm={() => { setSure(false); void act(() => api("/admin/groups/delete", { group: g.id }))(); }}>
+            <p>הקבוצה תימחק יחד עם רשימת המיילים (<strong>{g.members.toLocaleString("he-IL")}</strong> מיילים), המינויים, הקישור והתמונה.</p>
+            <p className="text-ink-soft">החשבונות וההשערות של החברים לא נמחקים.</p>
+          </ConfirmDialog>
+        )}
       </div>
       </div>
     </details>

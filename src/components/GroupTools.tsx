@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Btn, Field, Notice, inputCls } from "../pages/guess/ui";
 import type { GroupImportResult, GroupLinkStats } from "../lib/crowdApi";
 import { cleanSlugInput, finalSlug, groupImageUrl, groupUrl, imageToDataUrl } from "../lib/groupLink";
+import ConfirmDialog from "./ConfirmDialog";
 
 /**
  * כלי הקבוצה (docs/פילוח-קבוצות-תכנון.md, סעיף 10) — אותם רכיבים למנהל האתר (ממשק הניהול) ולמנהל הקבוצה (האזור האישי);
@@ -152,7 +153,7 @@ export function GroupAddEmail({ add, onDone }: { add: (email: string) => Promise
 }
 
 /**
- * מחיקת כל חברי הקבוצה (הכרעת בעלים 12.10.2026): מוחקת את רשימת המיילים של הקבוצה, בשני שלבים (אישור כפול).
+ * מחיקת כל חברי הקבוצה (הכרעת בעלים 12.10.2026): מוחקת את רשימת המיילים של הקבוצה, אחרי אישור בחלון (הכרעת בעלים 24.10.2026).
  * החשבונות וההשערות של החברים לא נמחקים, ומנהלי הקבוצה נשארים; אפשר להעלות רשימה מחדש.
  * clear = אותה קריאה של "החלפת הרשימה" ברשימה ריקה.
  */
@@ -166,15 +167,13 @@ export function GroupClearMembers({ clear, onDone }: { clear: () => Promise<Grou
   };
   return (
     <div className="space-y-2">
-      {sure ? (
-        <>
-          <Notice tone="warn">פעולה זו מוחקת את כל רשימת המיילים של הקבוצה, וכולם יוצאים ממנה. החשבונות וההשערות של החברים לא נמחקים, ומנהלי הקבוצה נשארים. אפשר להעלות רשימה מחדש.</Notice>
-          <div className="flex flex-wrap gap-2">
-            <Btn kind="danger" disabled={busy} onClick={() => void run()}>{busy ? "מוחק…" : "כן, למחוק את כל החברים"}</Btn>
-            <Btn disabled={busy} onClick={() => setSure(false)}>ביטול</Btn>
-          </div>
-        </>
-      ) : <Btn kind="danger" onClick={() => { setSure(true); setMsg(null); }}>מחיקת כל חברי הקבוצה</Btn>}
+      <Btn kind="danger" onClick={() => { setSure(true); setMsg(null); }}>מחיקת כל חברי הקבוצה</Btn>
+      {sure && (
+        <ConfirmDialog title="למחוק את כל חברי הקבוצה?" confirm={busy ? "מוחק…" : "כן, למחוק את כל החברים"} busy={busy} onConfirm={() => void run()} onCancel={() => setSure(false)}>
+          <p>כל רשימת המיילים של הקבוצה תימחק, וכולם יוצאים ממנה.</p>
+          <p className="text-ink-soft">החשבונות וההשערות של החברים לא נמחקים, ומנהלי הקבוצה נשארים. אפשר להעלות רשימה מחדש.</p>
+        </ConfirmDialog>
+      )}
       {msg && <Notice tone={msg.ok ? "calm" : "warn"}>{msg.text}</Notice>}
     </div>
   );

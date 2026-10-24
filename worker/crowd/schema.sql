@@ -360,3 +360,24 @@ CREATE TABLE IF NOT EXISTS group_upload_parts (
   data_enc TEXT NOT NULL,
   PRIMARY KEY (upload_id, idx)
 );
+
+-- חיסכון בקריאות (הכרעת בעלים 24.10.2026, docs/תוכנית-חיסכון-קריאות-קבוצות-24-10-2026.md):
+-- חיפוש החברות מתחיל מהמיילים המאומתים של המשתמש ומחפש אותם באינדקס, בלי לעבור על כל רשימות הקבוצות.
+CREATE INDEX IF NOT EXISTS group_managers_hash ON group_managers(email_hash);
+CREATE INDEX IF NOT EXISTS group_link_first_participant ON group_link_first(participant);
+-- מספר המיילים בכל קבוצה — נשמר מוכן ומתעדכן אוטומטית בכל הוספה ומחיקה (טריגר), במקום ספירה מלאה בכל פתיחת מסך.
+-- שורה חסרה = 0. בכל פרסום של השרת המספר מחושב מחדש מהרשימה עצמה (שתי הפקודות שבסוף), כך שאין סטייה מצטברת.
+CREATE TABLE IF NOT EXISTS group_sizes (
+  group_id TEXT PRIMARY KEY,
+  members INTEGER NOT NULL DEFAULT 0
+);
+CREATE TRIGGER IF NOT EXISTS group_members_added AFTER INSERT ON group_members BEGIN
+  INSERT OR IGNORE INTO group_sizes (group_id, members) VALUES (NEW.group_id, 0);
+  UPDATE group_sizes SET members = members + 1 WHERE group_id = NEW.group_id;
+END;
+CREATE TRIGGER IF NOT EXISTS group_members_removed AFTER DELETE ON group_members BEGIN
+  UPDATE group_sizes SET members = members - 1 WHERE group_id = OLD.group_id;
+END;
+INSERT INTO group_sizes (group_id, members) SELECT group_id, COUNT(*) FROM group_members WHERE true GROUP BY group_id
+  ON CONFLICT(group_id) DO UPDATE SET members = excluded.members;
+UPDATE group_sizes SET members = 0 WHERE members <> 0 AND NOT EXISTS (SELECT 1 FROM group_members m WHERE m.group_id = group_sizes.group_id);
