@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { call, CrowdError, type GroupImportResult, type GroupLinkStats, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
+import type { UploadState } from "../../lib/groupUpload";
 import GroupStats from "../../components/GroupStats";
 import { GroupAddEmail, GroupClearMembers, GroupImagePanel, GroupLinkPanel } from "../../components/GroupTools";
 import { GroupManagerGuide } from "../../components/GroupGuide";
@@ -513,7 +514,10 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
       <GroupFold title={<>רשימת המיילים{countText && <span className="font-normal text-ink-soft"> · {countText}</span>}</>}>
         <p className="text-sm">{countText ? <><strong>{countText}</strong> — כל המיילים שהעלו מנהלי הקבוצה, בלי קשר למי שכבר נרשם לאתר.</> : "טוען…"}</p>
         <GroupAddEmail add={(email) => send({ emails: [email], mode: "add" })} onDone={changed} />
-        <GroupUpload send={send} onDone={changed} />
+        <GroupUpload send={send} staged={{
+          start: async (c) => { const r = await call<UploadState>("/group/upload", { token, body: { group: id, ...c } }); setCount(r.members); return r; },
+          next: async (upload) => { const r = await call<UploadState>("/group/upload/continue", { token, body: { group: id, upload } }); setCount(r.members); return r; },
+        }} onDone={changed} />
         <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={changed} />
       </GroupFold>
       <GroupFold title="מספרים">

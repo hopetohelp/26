@@ -37,6 +37,9 @@ export const IMAGE_MAX = 150 * 1024;
 const IMAGE_BODY = 220 * 1024;
 const IMAGE_ROUTES = new Set(["POST /group/image", "POST /admin/groups/image"]);
 const HANDOFF_BODY = 220 * 1024;
+/** העלאת רשימה בשלבים: עד UPLOAD_MAX מיילים בבקשה */
+const UPLOAD_BODY = 220 * 1024;
+const UPLOAD_ROUTES = new Set(["POST /group/upload", "POST /admin/groups/upload"]);
 const HANDOFF_TTL = 10 * 60 * 1000;
 const HANDOFF_RECEIPT_TTL = 30 * 24 * HOUR;
 const LEGACY_KEY = /^(?:elections26\.(?:crowd\.(?:token|link|linkAck|consent|intro|picture|(?:draft|saved|pending)\.(?:seats|blocs|vote))|feedback(?:\.outbox)?|camps|lineage|source\.v1\.[\w-]+|mode|vid|noCount|supportSeen|install\.dismissed|drawerSeen\.[\w-]+)|g-seen:[\w-]+)$/;
@@ -195,6 +198,62 @@ async function importGroup(env, body, now, create) {
   const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
   const base = body.mode === "replace" ? 0 : before;
   return { group: id, added: members - base, duplicates: valid - (members - base), invalid, members };
+}
+
+/**
+ * העלאת רשימה בשלבים (הכרעת בעלים 24.10.2026): כל הקובץ נשמר מיד בשרת — מוצפן, בחלקים של UPLOAD_PART —
+ * ואז כל חלק מעובד בנפרד (גיבוב והוספה לרשימה) ונמחק. כך העלאה אינה נכשלת בגלל עומס, והעיבוד ממשיך גם אם הדף נסגר
+ * (המשימה השעתית משלימה). אחרי העיבוד נשארת רק "טביעת האצבע" של כל מייל.
+ */
+export const UPLOAD_MAX = 2000;
+export const UPLOAD_PART = 200;
+async function createUpload(env, id, body, now) {
+  if (!Array.isArray(body.emails) || body.emails.length > UPLOAD_MAX || body.emails.some((e) => typeof e !== "string" || e.length > 320)) throw bad("emails");
+  const mode = body.mode ?? "add";
+  if (!["add", "replace"].includes(mode)) throw bad("mode");
+  await requireGroup(env, id);
+  const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  const up = await env.DB.prepare("INSERT INTO group_uploads (group_id, mode, total, base, created_at) VALUES (?, ?, ?, ?, ?) RETURNING id").bind(id, mode, body.emails.length, mode === "replace" ? 0 : before, iso(now)).first();
+  const stmts = mode === "replace" ? [env.DB.prepare("DELETE FROM group_members WHERE group_id = ?").bind(id)] : [];
+  for (let i = 0; i < body.emails.length; i += UPLOAD_PART)
+    stmts.push(env.DB.prepare("INSERT INTO group_upload_parts (upload_id, idx, data_enc) VALUES (?, ?, ?)").bind(up.id, i / UPLOAD_PART, await seal(env, JSON.stringify(body.emails.slice(i, i + UPLOAD_PART)))));
+  if (stmts.length) await env.DB.batch(stmts);
+  return processUpload(env, id, up.id);
+}
+/** עיבוד החלק הבא של העלאה (אחד בכל קריאה) — מחזיר את המצב */
+async function processUpload(env, id, uploadId) {
+  const up = await env.DB.prepare("SELECT * FROM group_uploads WHERE id = ? AND group_id = ?").bind(uploadId, id).first();
+  if (!up) throw new HttpError(404, "not_found");
+  const part = await env.DB.prepare("SELECT idx, data_enc FROM group_upload_parts WHERE upload_id = ? ORDER BY idx LIMIT 1").bind(uploadId).first();
+  if (part) {
+    const emails = JSON.parse(await open(env, part.data_enc));
+    const hash = await emailHasher(env);
+    const hashes = new Set();
+    let invalid = 0;
+    for (const raw of emails) {
+      const e = normalizeEmail(raw);
+      if (e) hashes.add(await hash(e.norm)); else invalid++;
+    }
+    const stmts = [...hashes].map((h) => env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(id, h));
+    stmts.push(env.DB.prepare("UPDATE group_uploads SET done = done + ?, invalid = invalid + ? WHERE id = ?").bind(emails.length, invalid, uploadId));
+    stmts.push(env.DB.prepare("DELETE FROM group_upload_parts WHERE upload_id = ? AND idx = ?").bind(uploadId, part.idx));
+    await env.DB.batch(stmts);
+  }
+  const left = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_upload_parts WHERE upload_id = ?").bind(uploadId).first()).n;
+  const cur = await env.DB.prepare("SELECT total, done, invalid, base FROM group_uploads WHERE id = ?").bind(uploadId).first();
+  const members = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
+  if (!left) await env.DB.prepare("DELETE FROM group_uploads WHERE id = ?").bind(uploadId).run();
+  return { group: id, upload: uploadId, total: cur.total, done: cur.done, invalid: cur.invalid, added: Math.max(0, members - cur.base), members, finished: !left };
+}
+/** המשימה השעתית: משלימה העלאות שהדף שלהן נסגר באמצע */
+async function finishUploads(env, maxParts = 50) {
+  for (let i = 0; i < maxParts; i++) {
+    const row = await env.DB.prepare("SELECT u.id, u.group_id FROM group_uploads u WHERE EXISTS (SELECT 1 FROM group_upload_parts p WHERE p.upload_id = u.id) ORDER BY u.id LIMIT 1").first();
+    if (!row) break;
+    await processUpload(env, row.group_id, row.id);
+  }
+  // העלאה בלי חלקים שנותרה (נקטעה בין השלבים) — נמחקת
+  await env.DB.prepare("DELETE FROM group_uploads WHERE NOT EXISTS (SELECT 1 FROM group_upload_parts p WHERE p.upload_id = group_uploads.id)").run();
 }
 
 /** שם הקישור באנגלית: אותיות לטיניות קטנות, ספרות ומקף באמצע; 3–32 תווים */
@@ -1296,6 +1355,23 @@ const routes = {
     return importGroup(env, body, now, false);
   },
 
+  // העלאה בשלבים: שמירת הקובץ (מוצפן, בחלקים) ועיבוד החלק הראשון; המשך — חלק אחד בכל קריאה
+  "POST /group/upload": async ({ env, request, now, body }) => createUpload(env, await requireManager(env, request, now, body.group), body, now),
+  "POST /group/upload/continue": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    if (!Number.isInteger(body.upload)) throw bad("upload");
+    return processUpload(env, id, body.upload);
+  },
+  "POST /admin/groups/upload": async ({ env, request, now, body }) => {
+    await requireAdmin(env, request);
+    return createUpload(env, groupId(body.group), body, now);
+  },
+  "POST /admin/groups/upload/continue": async ({ env, request, body }) => {
+    await requireAdmin(env, request);
+    if (!Number.isInteger(body.upload)) throw bad("upload");
+    return processUpload(env, groupId(body.group), body.upload);
+  },
+
   // הקבוצות שהמשתמש מנהל, עם גודל הרשימה (לא כמה מהם רשומים באתר)
   "GET /group/mine": async ({ env, request, now }) => {
     const { participant } = await requireAuth(env, request, now);
@@ -1434,6 +1510,8 @@ const routes = {
       env.DB.prepare("DELETE FROM group_links WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM group_images WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM group_visits WHERE group_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM group_upload_parts WHERE upload_id IN (SELECT id FROM group_uploads WHERE group_id = ?)").bind(id),
+      env.DB.prepare("DELETE FROM group_uploads WHERE group_id = ?").bind(id),
       env.DB.prepare("DELETE FROM groups WHERE id = ?").bind(id),
     ]);
     return { ok: true };
@@ -1713,7 +1791,7 @@ export default {
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });
       const handler = routes[`${request.method} ${url.pathname}`];
       if (!handler) throw new HttpError(404, "not_found");
-      const body = request.method === "POST" ? await readJson(request, url.pathname === "/migration/create" ? HANDOFF_BODY : IMAGE_ROUTES.has(`${request.method} ${url.pathname}`) ? IMAGE_BODY : MAX_BODY) : {};
+      const body = request.method === "POST" ? await readJson(request, url.pathname === "/migration/create" ? HANDOFF_BODY : IMAGE_ROUTES.has(`${request.method} ${url.pathname}`) ? IMAGE_BODY : UPLOAD_ROUTES.has(`${request.method} ${url.pathname}`) ? UPLOAD_BODY : MAX_BODY) : {};
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
       if (agent && !agentBodyAllowed(request.method, url.pathname, body)) throw new HttpError(403, "assistant_not_allowed");
       const out = await handler({ env, request, url, now, body });
@@ -1736,6 +1814,7 @@ export default {
     const now = clock(env);
     const job = (async () => {
       await cleanup(env, now);
+      await finishUploads(env);
       await runAggregation(env, now);
     })();
     if (ctx?.waitUntil) ctx.waitUntil(job);

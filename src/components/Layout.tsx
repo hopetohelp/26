@@ -126,7 +126,7 @@ function Masthead() {
 function FocusBar({ member }: { member: boolean }) {
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const { toggle } = useInterface();
-  return <div className="f-bar">
+  return <div className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
     <FocusNav className="f-nav-top" />

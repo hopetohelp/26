@@ -44,3 +44,38 @@ export async function sendWithSplit(send: (c: Chunk) => Promise<GroupImportResul
     return { added: a.added + b.added, invalid: a.invalid + b.invalid, members: b.members ?? a.members, failed: a.failed + b.failed };
   }
 }
+
+/** מצב העלאה בשלבים (POST /group/upload, /group/upload/continue) */
+export interface UploadState { upload: number; total: number; done: number; invalid: number; added: number; members: number; finished: boolean }
+export interface StagedApi { start: (c: Chunk) => Promise<UploadState>; next: (upload: number) => Promise<UploadState> }
+/** עד 2,000 מיילים ועד ~150KB בבקשת שמירה אחת (התקרה בשרת: UPLOAD_MAX ו-UPLOAD_BODY) */
+export function stagedChunks(emails: string[], mode: "add" | "replace", max = 2000, bytes = 150_000): Chunk[] {
+  const out: Chunk[] = [];
+  let cur: string[] = [], size = 0;
+  for (const e of emails) {
+    if (cur.length && (cur.length >= max || size + e.length + 3 > bytes)) { out.push({ emails: cur, mode: out.length ? "add" : mode }); cur = []; size = 0; }
+    cur.push(e); size += e.length + 3;
+  }
+  if (cur.length || (!out.length && mode === "replace")) out.push({ emails: cur, mode: out.length ? "add" : mode });
+  return out;
+}
+const retry = async <T>(f: () => Promise<T>, wait: (ms: number) => Promise<unknown>, tries = 5): Promise<T> => {
+  for (let i = 0; ; i++) {
+    try { return await f(); } catch (e) { if (permanent(e) || i >= tries - 1) throw e; await wait(1000 * 2 ** i); }
+  }
+};
+/**
+ * העלאה בשלבים (הכרעת בעלים 24.10.2026): כל הקובץ נשמר בשרת מיד (מוצפן), ואז השרת מעבד חלק אחרי חלק.
+ * תקלה רגעית ⇐ ניסיון חוזר; דף שנסגר באמצע ⇐ השרת משלים לבד בבדיקה השעתית.
+ */
+export async function uploadStaged(api: StagedApi, emails: string[], mode: "add" | "replace", progress: (done: number, total: number) => void, wait = (ms: number) => new Promise((r) => setTimeout(r, ms))) {
+  const total = emails.length;
+  let before = 0, added = 0, invalid = 0, members: number | null = null;
+  for (const chunk of stagedChunks(emails, mode)) {
+    let s = await retry(() => api.start(chunk), wait);
+    progress(before + s.done, total);
+    while (!s.finished) { const id = s.upload; s = await retry(() => api.next(id), wait); progress(before + s.done, total); }
+    before += s.total; added += s.added; invalid += s.invalid; members = s.members;
+  }
+  return { added, invalid, members };
+}
