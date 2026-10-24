@@ -21,7 +21,7 @@ import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername,
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
 import { setPollRanges, moderate, flagReasons } from "./lib/moderation.js";
-import { normalizeEmail, normalizeName, emailHash, seal, open } from "./lib/identity.js";
+import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
 import { slugFromName, freeSlug } from "./lib/slug.js";
@@ -177,10 +177,11 @@ async function importGroup(env, body, now, create) {
   if (slug) await ensureSlugFree(env, id, slug);
   else if (create && !exists) slug = await autoSlug(env, name);
   const hashes = new Set();
+  const hash = await emailHasher(env);
   let invalid = 0, valid = 0;
   for (const raw of body.emails) {
     const e = normalizeEmail(raw);
-    if (e) { valid++; hashes.add(await emailHash(env, e.norm)); }
+    if (e) { valid++; hashes.add(await hash(e.norm)); }
     else invalid++;
   }
   const before = (await env.DB.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = ?").bind(id).first()).n;
@@ -615,8 +616,8 @@ const routes = {
       verified: !!g || emailRows.some((r) => r.verified),
       // הקבוצות של המשתמש (לכפתור ההחלפה) — רק דרך מייל מאומת; גולש אחר לא רואה שקיימות קבוצות
       groups: await myGroups(env, participant),
-      // הקבוצות שהמשתמש מנהל (למסך העלאת הרשימה)
-      managedGroups: (await managedGroups(env, participant)).map(({ id, name, slug, image }) => ({ id, name, slug, image })),
+      // הקבוצות שהמשתמש מנהל (למסך העלאת הרשימה), עם מספר המיילים ברשימה
+      managedGroups: (await managedGroups(env, participant)).map(({ id, name, slug, image, members }) => ({ id, name, slug, image, members })),
       // חשבון ישן (קישור אישי, שם משתמש או אורח) שעוד לא אומת — נדרש לאמת מייל או לחבר Google מיד בכניסה (הכרעת בעלים 10.10.2026)
       legacy: !!hasLink || !!pw?.username || (!pw && !g),
     };

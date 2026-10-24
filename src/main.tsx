@@ -17,6 +17,7 @@ import { startOutbox } from "./lib/outbox";
 import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
+import RootErrorBoundary from "./components/RootErrorBoundary";
 const Home = lazy(() => import("./pages/Home"));
 const Today = lazy(() => import("./pages/Today"));
 const Polls = lazy(() => import("./pages/Polls"));
@@ -112,6 +113,7 @@ registerOffline();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <RootErrorBoundary>
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
@@ -167,6 +169,7 @@ createRoot(document.getElementById("root")!).render(
         </Route>
       </Routes>
     </HashRouter>
+    </RootErrorBoundary>
   </StrictMode>,
 );
 }

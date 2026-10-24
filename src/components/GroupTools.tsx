@@ -19,7 +19,7 @@ const problem = (e: unknown) => {
 const tile = "bg-paper-card border border-paper-line rounded-theme p-3";
 
 /** הקישור של הקבוצה: שם באנגלית, כפתור העתקה ומספר הכניסות דרכו. בלי שם — רק שדה לקביעתו */
-export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | null | undefined; setSlug: (slug: string | null) => Promise<void>; loadStats: () => Promise<GroupLinkStats> }) {
+export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slug: string | null | undefined; setSlug: (slug: string | null) => Promise<void>; loadStats: () => Promise<GroupLinkStats>; bare?: boolean }) {
   const [text, setText] = useState(slug ?? "");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -59,7 +59,7 @@ export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | nu
   );
   return (
     <div className="space-y-3">
-      <p className="font-bold text-sm">קישור הקבוצה</p>
+      {!bare && <p className="font-bold text-sm">קישור הקבוצה</p>}
       {url ? (
         <>
           <div className="flex flex-wrap items-center gap-2">
@@ -95,7 +95,7 @@ export function GroupLinkPanel({ slug, setSlug, loadStats }: { slug: string | nu
 }
 
 /** תמונת הקבוצה: תופיעה בראש סקר האתר כשהוא פתוח על הקבוצה. נבחרת, מוקטנת בדפדפן ונשמרת מיד */
-export function GroupImagePanel({ id, image, setImage }: { id: string; image: string | null | undefined; setImage: (dataUrl: string | null) => Promise<void> }) {
+export function GroupImagePanel({ id, image, setImage, bare = false }: { id: string; image: string | null | undefined; setImage: (dataUrl: string | null) => Promise<void>; bare?: boolean }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const src = groupImageUrl({ id }, image);
@@ -105,7 +105,7 @@ export function GroupImagePanel({ id, image, setImage }: { id: string; image: st
   };
   return (
     <div className="space-y-3">
-      <p className="font-bold text-sm">תמונת הקבוצה</p>
+      {!bare && <p className="font-bold text-sm">תמונת הקבוצה</p>}
       <p className="text-sm text-ink-soft">מוצגת בראש סקר האתר כשהוא פתוח על הקבוצה. התמונה מוקטנת אוטומטית.</p>
       {src && <img src={src} alt="" className="max-h-32 rounded-theme border border-paper-line bg-paper object-contain" />}
       <div className="flex flex-wrap items-center gap-2">

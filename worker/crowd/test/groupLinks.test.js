@@ -65,7 +65,7 @@ describe("group link name", () => {
     expect((await call("/group/link", { token: boss, body: { group: "gizra", slug: "other-one" } })).data.error).toBe("slug_taken");
     expect((await call("/group/link", { token: boss, body: { group: "other", slug: "stolen-one" } })).status).toBe(403);
     expect((await call("/group/link", { body: { group: "gizra", slug: "mine-now" } })).status).toBe(401);
-    expect((await call("/me", { token: boss })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: "mine-now", image: null }]);
+    expect((await call("/me", { token: boss })).data.managedGroups).toEqual([{ id: "gizra", name: "הגזרה", slug: "mine-now", image: null, members: 0 }]);
   });
 
   it("public info shows only the name and image to whoever has the link", async () => {

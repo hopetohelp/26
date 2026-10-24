@@ -243,7 +243,8 @@ export interface LogEntry {
 }
 
 /** slug = שם הקישור באנגלית (null עד שנקבע); image = זמן עדכון התמונה (null אם אין) — משמש גם למניעת מטמון ישן */
-export interface GroupRef { id: string; name: string | null; slug?: string | null; image?: string | null }
+/** members — כמה מיילים שמורים ברשימת הקבוצה (רק בקבוצות שהמשתמש מנהל) */
+export interface GroupRef { id: string; name: string | null; slug?: string | null; image?: string | null; members?: number }
 /** תשובת GET /group/public?slug= — פתוחה לכל מי שיש לו את הקישור: שם ותמונה בלבד */
 export interface GroupPublic { id: string; slug: string; name: string | null; image: string | null }
 /** תשובת GET /group/link-stats — כניסות דרך הקישור: בסך הכול, היום, ודפדפנים שונים (כניסה ראשונה). מונה אנונימי */
@@ -254,8 +255,8 @@ export type GroupDashboard = (Dashboard & { group: string; min: number; belowMin
 export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
 /** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */
 export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number };
-/** מיילים בבקשה אחת (כמו GROUP_CHUNK בשרת) */
-export const GROUP_CHUNK = 300;
+/** מיילים בבקשה אחת — מנה קטנה מהתקרה בשרת (GROUP_CHUNK = 300), כדי שכל בקשה תישאר קצרה */
+export const GROUP_CHUNK = 100;
 
 /** הפרסום המאוחר מבין השניים (לפי publishedAt). */
 export function newerDashboard(a: Dashboard | null, b: Dashboard): Dashboard {
