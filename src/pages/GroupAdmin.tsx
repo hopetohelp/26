@@ -131,7 +131,7 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
           <p className="text-sm min-w-0"><span className="text-ink-soft font-num tabular">{i + 1}.</span> {m.label}</p>
           <p className="text-end shrink-0"><span className="font-num tabular text-2xl leading-none">{s?.total != null ? n(s.total) : "—"}</span>{pct && <span className="block text-xs text-ink-soft">{pct}</span>}</p>
         </div>
-        {s?.points ? <GroupSeriesChart buckets={data.buckets} points={s.points} label={m.label} /> : <p className="text-xs text-ink-soft">פחות מ-{data.min} — המספר והגרף יוצגו מ-{data.min}.</p>}
+        {m.key === "list" ? null : s?.points ? <GroupSeriesChart buckets={data.buckets} points={s.points} label={m.label} /> : <p className="text-xs text-ink-soft">פחות מ-{data.min} — המספר והגרף יוצגו מ-{data.min}.</p>}
       </li>
     );
   };
@@ -139,7 +139,6 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
     <>
       <Section title="חברי הקבוצה (מרשימת המיילים)" aside={`שעתי ב-${data.hours} השעות האחרונות, יומי לפני כן`}>
         <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-        {by.get("list")?.points?.[0] == null && <p className="text-xs text-ink-soft">גודל הרשימה נשמר מדי שעה מ-24/10; לפני כן אין היסטוריה.</p>}
       </Section>
       <Section title="מחוץ לרשימה (נכנסו דרך הקישור)">
         <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>

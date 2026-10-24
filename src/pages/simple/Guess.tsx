@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import type { SeatsPayload, VotePayload } from "../../lib/crowdApi";
 import { seatsSum, validateSeats } from "../../lib/crowdValidate";
 import { SIMPLE_GUESS_HIDDEN, simpleValue } from "../../lib/simpleSources";
-import { IDS, startSeats, nameOf } from "../guess/model";
+import { GUESS_IDS as IDS, startSeats, nameOf } from "../guess/model";
+import { CLOSED_LISTS } from "../../lib/data";
 import { flushUnit, useSession, useUnit } from "../guess/useCrowd";
 import { AuthSheet, SaveError } from "../guess/SaveButton";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +30,7 @@ export default function SimpleGuess() {
   const invalidInput = !!editing && (!/^\d+$/.test(editing.text) || Number(editing.text) > 120);
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
   const ref = (id: string) => simpleValue(source.selection, [id]);
-  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id) || (draft.seats[id]?.v ?? 0) > 0).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
+  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id)).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
   // רשימה שכבר אינה מתמודדת (טיוטה או שמירה ישנה) ⇐ יוצאת מהטיוטה, והמנדטים שלה חוזרים לחלוקה; אחרת "רשימה לא מוכרת" בלי שאפשר לראות למה
   const stale = Object.keys(draft.seats).filter(id => !IDS.includes(id));
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function SimpleGuess() {
             <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} aria-disabled={total >= 120 || undefined} onClick={() => { setEditing(null); change(id, value === 0 ? 4 : value + 1); }}>+</button>
           </div></div>;
       })}
+      {CLOSED_LISTS.length > 0 && <p className="text-sm text-ink-soft mt-3">אי אפשר לנחש על מפלגה שלא עברה את אחוז החסימה באף סקר ({CLOSED_LISTS.map(nameOf).join(", ")}).</p>}
       <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}

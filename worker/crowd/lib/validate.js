@@ -1,3 +1,4 @@
+import { CLOSED } from "./closed.js";
 /**
  * חוזי השמירה (docs/השתתפות-גולשים.md, "חוזי שמירה"). כל פונקציה מחזירה {ok, value} עם מטען נקי, או {ok:false, error}.
  * המטען שנשמר נבנה מחדש מהשדות המוכרים בלבד — שדה זר לא נכנס למאגר.
@@ -41,6 +42,8 @@ export function validateSeats(p) {
   let sum = 0;
   for (const [id, cell] of Object.entries(p.seats)) {
     if (!IDS_2026.has(id)) return fail("list");
+    // רשימה שלא עברה באף סקר — אי אפשר לנחש עליה (הכרעת בעלים 24.10.2026); 0 מתקבל ונמחק
+    if (CLOSED.has(id)) { if (isObj(cell) && cell.v > 0) return fail("closed_list"); continue; }
     if (!isObj(cell) || !isInt(cell.v, 0, TOTAL)) return fail("value");
     if (cell.src !== "manual" && cell.src !== "filled") return fail("src");
     if (typeof cell.locked !== "boolean") return fail("locked");

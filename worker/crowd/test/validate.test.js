@@ -98,10 +98,24 @@ describe("validate", () => {
 it("שומר סכום קואליציה מחושב במנדטים ובאחוזים ומתעלם מערך לקוח", () => {
   for (const mode of ['seats', 'pct']) {
     const payload = { mode, start: 'zero', pollsAsOf: null, coalitionSeats: 119,
-      seats: {likud:{v:30,src:'manual',locked:true},shas:{v:8,src:'filled',locked:false},utj:{v:7,src:'manual',locked:true},noam:{v:4,src:'manual',locked:true},code_black:{v:4,src:'manual',locked:true},democrats:{v:67,src:'manual',locked:true}},
+      seats: {likud:{v:30,src:'manual',locked:true},shas:{v:8,src:'filled',locked:false},utj:{v:7,src:'manual',locked:true},otzma:{v:4,src:'manual',locked:true},yb:{v:4,src:'manual',locked:true},democrats:{v:67,src:'manual',locked:true}},
       ...(mode === 'pct' ? {pct:{likud:25,shas:7,utj:6,democrats:62}} : {}) };
     expect(save('seats',payload).value.payload.coalitionSeats).toBe(49);
   }
+});
+
+it("רשימה שלא עברה באף סקר: מנדטים עליה נדחים, 0 מתקבל ונמחק (הכרעת בעלים 24.10.2026)", () => {
+  const base = { mode: 'seats', start: 'zero', pollsAsOf: null, seats: { likud: { v: 116, src: 'manual', locked: true } } };
+  expect(save('seats', { ...base, seats: { ...base.seats, noam: { v: 4, src: 'manual', locked: true } } }).error).toBe('closed_list');
+  const ok = save('seats', { ...base, seats: { likud: { v: 120, src: 'manual', locked: true }, noam: { v: 0, src: 'manual', locked: false } } });
+  expect(Object.keys(ok.value.payload.seats)).toEqual(['likud']);
+});
+
+import { withoutClosed } from "../lib/closed.js";
+it("השערה ישנה עם רשימה סגורה: הרשימה נמחקת בקריאה, השאר נשאר", () => {
+  const p = { seats: { likud: { v: 116 }, noam: { v: 4 } }, pct: { likud: 30, noam: 3.3 } };
+  expect(withoutClosed('seats', p)).toEqual({ seats: { likud: { v: 116 } }, pct: { likud: 30 } });
+  expect(withoutClosed('vote', p)).toBe(p);
 });
 
 import { allocate } from "../../../src/engine/baderOfer.ts";

@@ -24,6 +24,7 @@ import { setPollRanges, moderate, flagReasons, pollRange } from "./lib/moderatio
 import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
+import { readPayload, setClosedLists } from "./lib/closed.js";
 import { slugFromName, freeSlug } from "./lib/slug.js";
 import { AGENT_SESSION_MS, MAX_AGENTS, agentBodyAllowed, agentRoute, agentSession, clientLabel, connectionId, requestToken } from "./lib/agent.js";
 
@@ -164,7 +165,7 @@ export async function groupInsights(env, id, now) {
   const outside = new Map(LISTS_2026.map((l) => [l.id, { list: l.id, above: 0, below: 0 }]));
   for (const r of latest.results || []) {
     if (!members.has(r.participant)) continue;
-    const v = { id: r.id, payload: JSON.parse(r.payload) };
+    const v = { id: r.id, payload: readPayload({ unit: "seats", payload: r.payload }) };
     const reasons = flagReasons(v);
     const d = decisions.get(v.id);
     status[d === "rejected" ? "rejected" : !reasons.length ? "inRange" : d === "approved" ? "approved" : "pending"]++;
@@ -595,7 +596,7 @@ async function loadDecisions(env) {
   return new Map((results || []).map((r) => [r.version_id, r.decision]));
 }
 
-const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: JSON.parse(r.payload) });
+const parseVersion = (r) => ({ id: r.id, unit: r.unit, created_at: r.created_at, payload: readPayload(r) });
 
 async function passwordCred(env, participant) {
   return env.DB.prepare("SELECT * FROM credentials WHERE participant = ? AND kind = 'password'").bind(participant).first();
@@ -671,7 +672,7 @@ async function moderationState(env) {
   const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
   const known = new Set((data[0].results || []).map((p) => p.id));
   const verified = new Set((data[0].results || []).filter((p) => p.verified).map((p) => p.id));
-  const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: JSON.parse(r.payload) }));
+  const latest = (data[1].results || []).filter((r) => known.has(r.participant)).map((r) => ({ ...r, payload: readPayload(r) }));
   const decisions = new Map((data[2].results || []).map((r) => [r.version_id, r.decision]));
   // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
   const counted = latest.filter((v) => !review.has(v.participant));
@@ -1730,7 +1731,7 @@ async function loadPollRanges(env) {
     const r = await fetch(env.POLL_RANGES_URL, { cf: { cacheTtl: 600 } });
     if (!r.ok) return;
     const data = await r.json();
-    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); await markDashboardChanged(env); }
+    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); setClosedLists(data.closed); await markDashboardChanged(env); }
   } catch { /* נשאר הטווח הקודם */ }
 }
 
@@ -1794,7 +1795,7 @@ async function computeDashboard(env) {
   ]);
   const participants = data[0].results || [];
   const decisions = new Map((data[3].results || []).map((r) => [r.version_id, r.decision]));
-  const versions = (data[1].results || []).map(r => ({ ...r, payload: JSON.parse(r.payload) }));
+  const versions = (data[1].results || []).map(r => ({ ...r, payload: readPayload(r) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
   const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
   return { dashboard: res.dashboard, pending: res.pending, groups: await groupDashboards(env, { participants, versions, now, blocNames, decisions, mod: res.mod }) };
@@ -1876,7 +1877,7 @@ export async function runAggregation(env, now) {
   const participants = (await env.DB.prepare(PARTICIPANTS_SQL).all()).results || [];
   const versions = ((await env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id").all()).results || []).map((r) => ({
     ...r,
-    payload: JSON.parse(r.payload),
+    payload: readPayload(r),
   }));
   const previous = {};
   for (const name of [...HOURLY, ...DAILY]) {
