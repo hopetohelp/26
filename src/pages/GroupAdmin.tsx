@@ -132,7 +132,7 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
     <>
       <Section title="חברי הקבוצה (מרשימת המיילים)" aside={`שעתי ב-${data.hours} השעות האחרונות, יומי לפני כן`}>
         <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-        {by.get("list")?.points?.[0] == null && <p className="text-xs text-ink-soft">גודל הרשימה נשמר מדי שעה מ-24.10.2026; לפני כן אין היסטוריה.</p>}
+        {by.get("list")?.points?.[0] == null && <p className="text-xs text-ink-soft">גודל הרשימה נשמר מדי שעה מ-24/10; לפני כן אין היסטוריה.</p>}
       </Section>
       <Section title="מחוץ לרשימה (נכנסו דרך הקישור)">
         <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>

@@ -4,9 +4,12 @@ import { useState } from "react";
 export type SeriesBucket = { t: string; hourly: boolean };
 
 const TZ = "Asia/Jerusalem";
-const dayFmt = new Intl.DateTimeFormat("he-IL", { timeZone: TZ, day: "numeric", month: "numeric" });
-const hourFmt = new Intl.DateTimeFormat("he-IL", { timeZone: TZ, day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
-export const bucketLabel = (b: SeriesBucket) => (b.hourly ? hourFmt : dayFmt).format(new Date(b.t));
+const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+/** תאריך כמו בכל האתר (יום/חודש), ובנקודה שעתית גם השעה בשעון ישראל */
+export const bucketLabel = (b: SeriesBucket) => {
+  const p = Object.fromEntries(fmt.formatToParts(new Date(b.t)).map((x) => [x.type, x.value]));
+  return b.hourly ? `${p.day}/${p.month} ${p.hour}:${p.minute}` : `${p.day}/${p.month}`;
+};
 
 /**
  * קו מצטבר לפי סדר הנקודות (לא לפי זמן אמיתי): הימים בחלק הימני, ו-72 השעות האחרונות משמאל, עם קו הפרדה.
