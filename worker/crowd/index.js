@@ -591,10 +591,11 @@ async function createParticipant(env, request, now, limited = false) {
 
 /** החלטות המנהל על השערות חריגות ⇐ Map(versionId ⇐ decision) */
 /**
- * החלטות לבדיקת חריגות: ידניות (version_review) ואישור אוטומטי (version_accepted, הכרעת בעלים 12.10.2026):
+ * החלטות לבדיקת חריגות: ידניות (version_review) ואישור אוטומטי (version_accepted_v2, הכרעת בעלים 12.10.2026; הטבלה הוחלפה ב-24.10.2026
+ * כדי שהכלל החדש יחול רטרואקטיבית — אישורים אוטומטיים לפי הכלל הקודם, ב-version_accepted, אינם נקראים עוד):
  * השערה שנמצאה תקינה — בשמירה או כשנכנסה לטווח — מאושרת לצמיתות ולא חוזרת להמתנה, גם אם טווח הסקרים זז.
  */
-const DECISIONS_SQL = "SELECT version_id, decision FROM version_review UNION ALL SELECT a.version_id, 'approved' AS decision FROM version_accepted a WHERE a.version_id NOT IN (SELECT version_id FROM version_review)";
+const DECISIONS_SQL = "SELECT version_id, decision FROM version_review UNION ALL SELECT a.version_id, 'approved' AS decision FROM version_accepted_v2 a WHERE a.version_id NOT IN (SELECT version_id FROM version_review)";
 
 async function loadDecisions(env) {
   const { results } = await env.DB.prepare(DECISIONS_SQL).all();
@@ -686,7 +687,7 @@ async function moderationState(env) {
   // השערה ממתינה שנכנסה לטווח, או תקינה שעוד לא סומנה ⇐ מאושרת אוטומטית, לצמיתות (הכרעת בעלים 12.10.2026)
   const fresh = counted.filter((v) => !decisions.has(v.id) && !raw.has(v.id)).map((v) => v.id);
   if (fresh.length) {
-    await env.DB.batch(fresh.map((id) => env.DB.prepare("INSERT OR IGNORE INTO version_accepted (version_id, accepted_at) VALUES (?, ?)").bind(id, iso(clock(env)))));
+    await env.DB.batch(fresh.map((id) => env.DB.prepare("INSERT OR IGNORE INTO version_accepted_v2 (version_id, accepted_at) VALUES (?, ?)").bind(id, iso(clock(env)))));
     for (const id of fresh) decisions.set(id, "approved");
   }
   // "אושרה" בתצוגה = אישור ידני; אישור אוטומטי מוצג כ"תקינה"
@@ -934,7 +935,7 @@ const routes = {
     const saved = await find();
     // השערת מנדטים תקינה בשמירה ⇐ מאושרת אוטומטית לצמיתות (לא תחזור להמתנה אם טווח הסקרים יזוז)
     if (unit === "seats" && !flagReasons(parseVersion(saved)).length)
-      await env.DB.prepare("INSERT OR IGNORE INTO version_accepted (version_id, accepted_at) VALUES (?, ?)").bind(saved.id, iso(now)).run();
+      await env.DB.prepare("INSERT OR IGNORE INTO version_accepted_v2 (version_id, accepted_at) VALUES (?, ?)").bind(saved.id, iso(now)).run();
     // כלל קבוע (הכרעת בעלים 10.10.2026): בכל יחידה נשמרת ההשערה האחרונה של כל יום (שעון ישראל); גרסאות קודמות מאותו יום נמחקות.
     // "מצב בסוף יום" (מגמות) אינו משתנה, כי האחרונה היא מצב סוף היום.
     const { results: earlier } = await env.DB.prepare("SELECT id, created_at FROM versions WHERE participant = ? AND unit = ? AND id < ?").bind(participant, unit, saved.id).all();
@@ -945,6 +946,7 @@ const routes = {
         env.DB.prepare("INSERT INTO participant_activity (participant, pruned) VALUES (?, ?) ON CONFLICT(participant) DO UPDATE SET pruned = pruned + excluded.pruned").bind(participant, sameDay.length),
         env.DB.prepare(`DELETE FROM version_review WHERE version_id IN (${marks})`).bind(...sameDay),
         env.DB.prepare(`DELETE FROM version_accepted WHERE version_id IN (${marks})`).bind(...sameDay),
+        env.DB.prepare(`DELETE FROM version_accepted_v2 WHERE version_id IN (${marks})`).bind(...sameDay),
         env.DB.prepare(`DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (${marks})`).bind(...sameDay),
         env.DB.prepare(`DELETE FROM versions WHERE id IN (${marks})`).bind(...sameDay),
       ]);
@@ -969,6 +971,7 @@ const routes = {
     await env.DB.batch([
       env.DB.prepare("DELETE FROM version_review WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM version_accepted WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
+      env.DB.prepare("DELETE FROM version_accepted_v2 WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM versions WHERE participant = ?").bind(participant),
       env.DB.prepare("UPDATE participant_activity SET pruned = 0 WHERE participant = ?").bind(participant),
@@ -1011,6 +1014,7 @@ const routes = {
       [
         env.DB.prepare("DELETE FROM version_review WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM version_accepted WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
+      env.DB.prepare("DELETE FROM version_accepted_v2 WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
@@ -1466,6 +1470,17 @@ const routes = {
     return decideGuess(env, body, now);
   },
 
+  // שיחות חברי הקבוצה עם צוות האתר — למנהל הקבוצה, לקריאה בלבד, מ-GROUP_MIN חברים (הכרעת בעלים 24.10.2026)
+  "GET /group/support": async ({ env, request, now, url }) => {
+    const id = await requireManager(env, request, now, url.searchParams.get("group"));
+    const members = await groupMemberSet(env, id);
+    if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
+    if (!env.FEEDBACK) throw new HttpError(503, "support_offline");
+    const r = await env.FEEDBACK.fetch(new Request("https://feedback.internal/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [...members] }) }));
+    if (!r.ok) throw new HttpError(503, "support_offline");
+    return { group: id, min: GROUP_MIN, ...(await r.json()) };
+  },
+
   // אותו ממשק למנהל קבוצה (הכרעת בעלים 24.10.2026) — רק השערות של חברי הקבוצה שלו, ומ-GROUP_MIN חברים.
   // בלי נתוני פעילות (רישום, כניסות, הצבעה) — כדי שמנהל הקבוצה לא יזהה חבר מסוים לפי מועד ההרשמה.
   "GET /group/guesses": async ({ env, request, now, url }) => {
@@ -1888,7 +1903,7 @@ export async function runAnomaly(env, now, aggregationId) {
 export async function runAggregation(env, now) {
   const aggregationId = "agg-" + hourOf(now);
   await runAnomaly(env, now, aggregationId);
-  // אישור אוטומטי לצמיתות של השערות תקינות ושל ממתינות שנכנסו לטווח (moderationState כותב את version_accepted)
+  // אישור אוטומטי לצמיתות של השערות תקינות ושל ממתינות שנכנסו לטווח (moderationState כותב את version_accepted_v2)
   await moderationState(env);
   const participants = (await env.DB.prepare(PARTICIPANTS_SQL).all()).results || [];
   const versions = ((await env.DB.prepare("SELECT id, participant, unit, created_at, payload FROM versions ORDER BY id").all()).results || []).map((r) => ({

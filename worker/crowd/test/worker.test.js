@@ -416,7 +416,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
   const admin = (path, body) =>
     worker.fetch(new Request("https://w.example" + path, { method: body ? "POST" : "GET", headers: { "content-type": "application/json", "x-admin-key": KEY }, body: body ? JSON.stringify(body) : undefined }), env).then(async (r) => ({ status: r.status, data: await r.json() }));
   it("lists every latest guess without ids; approving a flagged guess brings it into the statistics", async () => {
-    setPollRanges({ [IDS[0]]: { lo: 50, hi: 60 }, [IDS[1]]: { lo: 50, hi: 70 } }); // 100 ⇐ מעל פי 1.5 מ-60, ופער 40
+    setPollRanges({ [IDS[0]]: { lo: 50, hi: 60 }, [IDS[1]]: { lo: 50, hi: 70 } }); // 110 ⇐ 50 מעל הטווח, ופי 1.75 מממוצע השאר (60) ומעלה
     await env.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();
     expect((await worker.fetch(new Request("https://w.example/admin/guesses"), env)).status).toBe(401);
     const a = await newP(), b = await newP(), c = await newP(), d4 = await newP();
@@ -425,7 +425,7 @@ describe("admin guesses dashboard (no identifiers)", () => {
     await save(d4, "seats", seats(60));
     // גושים: a שמר גוש אישי, והאחרים בברירת מחדל
     expect((await save(a, "blocs", { mode: "custom", blocs: [{ id: "x1", name: "הגוש שלי", lists: [IDS[0], IDS[1]], target: 100 }] })).status).toBe(200);
-    const odd = await save(c, "seats", seats(100));
+    const odd = await save(c, "seats", seats(110));
     resetDashboardCache();
     expect((await call("/dashboard")).data.pendingGuesses).toBe(1);
     expect((await call("/me", { token: c })).data.seatsPending).toBe(true);

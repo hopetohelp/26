@@ -132,3 +132,14 @@ it("ספירת פניות של קבוצה: רק דרך הקישור הפנימי
   expect(d).toMatchObject({ askers: 1, messages: 1, week: 1, aiUsers: 0 });
   expect(JSON.stringify(d)).not.toMatch(/שאלה|participant/);
 });
+
+it("שיחות של קבוצה: רק דרך הקישור הפנימי, בלי מזהה משתתף", async () => {
+  await support({ text: "שאלה לצוות", op_id: "operation-111222333" });
+  const out = await feedback.fetch(new Request("https://w.example/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [participant] }) }), env);
+  expect(out.status).toBe(404);
+  const d = await (await feedback.fetch(new Request("https://feedback.internal/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [participant] }) }), env)).json();
+  expect(d.threads).toHaveLength(1);
+  expect(d.threads[0].messages.some((m) => m.text === "שאלה לצוות" && m.author === "visitor")).toBe(true);
+  expect(JSON.stringify(d)).not.toContain(participant);
+  expect((await (await feedback.fetch(new Request("https://feedback.internal/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: ["other"] }) }), env)).json()).threads).toEqual([]);
+});

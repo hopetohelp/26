@@ -167,6 +167,18 @@ async function accountOf(env, token, origin) {
   } catch { return undefined; }
 }
 
+/** השיחות של רשימת משתתפים עם צוות האתר: 40 האחרונות, מהחדשה לישנה, בלי מזהה משתתף (רק מספר סידורי בתשובה) */
+export async function groupSupport(env, participants) {
+  const ids = JSON.stringify(Array.isArray(participants) ? participants.filter((p) => typeof p === "string").slice(0, 50_000) : []);
+  const { results: threads } = await env.DB.prepare("SELECT participant, status, updated_at FROM support_threads WHERE participant IN (SELECT value FROM json_each(?1)) AND EXISTS (SELECT 1 FROM support_messages m WHERE m.participant = support_threads.participant AND m.author = 'visitor') ORDER BY updated_at DESC LIMIT 40").bind(ids).all();
+  const out = [];
+  for (const t of threads || []) {
+    const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY created_at, id").bind(t.participant).all();
+    out.push({ status: t.status, updated_at: t.updated_at, messages: results || [] });
+  }
+  return { threads: out };
+}
+
 /** ספירת הפניות של רשימת משתתפים: מי פנה לצוות, כמה הודעות (בסך הכול וב-7 הימים האחרונים), לפי נושא, וכמה השתמשו בצ'אט החכם */
 export async function groupQuestions(env, participants, now) {
   const ids = JSON.stringify(Array.isArray(participants) ? participants.filter((p) => typeof p === "string").slice(0, 50_000) : []);
@@ -196,6 +208,13 @@ export default {
       let body;
       try { body = await request.json(); } catch { return reply({ error: "bad_request" }, 400); }
       return reply(await groupQuestions(env, body?.participants, Date.now()));
+    }
+    // שיחות חברי קבוצה עם צוות האתר — למנהל הקבוצה, לקריאה בלבד (הכרעת בעלים 24.10.2026). בלי מזהה משתתף; רק דרך הקישור הפנימי.
+    if (url.pathname === "/internal/group-support" && request.method === "POST") {
+      if (url.hostname !== "feedback.internal") return reply({ error: "not_found" }, 404);
+      let body;
+      try { body = await request.json(); } catch { return reply({ error: "bad_request" }, 400); }
+      return reply(await groupSupport(env, body?.participants));
     }
     // מספרים מצטברים בלבד; ללא זיהוי גולשים וללא פתיחת ממשק הניהול.
     if (url.pathname === "/usage" && request.method === "GET") {

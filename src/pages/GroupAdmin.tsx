@@ -76,6 +76,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
             <Questions q={ins.questions} />
           </div>)}
       <CompareSwitch id={id} token={token} />
+      <SupportThreads id={id} token={token} />
       <Section title="אישור השערות">
         <AdminGuesses group={{
           load: () => call(`/group/guesses?group=${q(id)}`, { token }),
@@ -86,6 +87,35 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
       </Section>
     </>
+  );
+}
+
+type Thread = { status: string; updated_at: string; messages: { author: "visitor" | "team"; text: string; created_at: string }[] };
+/** שיחות חברי הקבוצה עם צוות האתר — לקריאה בלבד (הכרעת בעלים 24.10.2026). בלי שם או מזהה; התשובה — רק מצוות האתר */
+function SupportThreads({ id, token }: { id: string; token: string }) {
+  const [d, setD] = useState<{ belowMin?: boolean; min?: number; threads?: Thread[] } | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => { void call<typeof d>(`/group/support?group=${q(id)}`, { token }).then(setD, () => setFailed(true)); }, [id, token]);
+  const when = (iso: string) => new Intl.DateTimeFormat("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)).replace(/\./g, "/");
+  return (
+    <Section title="פניות החברים לצוות האתר" aside="לקריאה בלבד">
+      {failed ? <p className="text-sm text-ink-soft">השיחות אינן זמינות כרגע.</p>
+        : !d ? <p className="text-sm text-ink-soft">טוען…</p>
+        : d.belowMin ? <p className="text-sm text-ink-soft">השיחות יוצגו מ-{d.min} חברים רשומים.</p>
+        : !d.threads?.length ? <p className="text-sm text-ink-soft">אין עדיין פניות של חברי הקבוצה.</p>
+        : <ul className="space-y-3">
+            {d.threads.map((t, i) => (
+              <li key={i} className="border border-paper-line rounded-theme p-3 space-y-2">
+                <p className="text-xs text-ink-soft flex justify-between gap-2"><span className="font-bold text-ink">{t.status === "new" ? "ממתינה לתשובה" : "נענתה"}</span><span className="font-num tabular">{when(t.updated_at)}</span></p>
+                {t.messages.map((m, j) => (
+                  <div key={j} className={`text-sm rounded-theme px-3 py-2 max-w-[85%] whitespace-pre-wrap break-words ${m.author === "team" ? "bg-paper me-auto" : "bg-paper-card border border-paper-line ms-0"}`}>
+                    <span className="block text-xs text-ink-soft">{m.author === "team" ? "צוות האתר" : "חבר בקבוצה"}</span>{m.text}
+                  </div>
+                ))}
+              </li>
+            ))}
+          </ul>}
+    </Section>
   );
 }
 
@@ -216,7 +246,7 @@ function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined 
   if (!d) return <Section title="שאלות ופניות"><p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p></Section>;
   const topics = Object.entries(d.byTopic).filter(([, v]) => v);
   return (
-    <Section title="שאלות ופניות" aside="ספירה בלבד, בלי תוכן">
+    <Section title="שאלות ופניות">
       <div className="grid grid-cols-3 gap-3">
         <Tile label="פנו לצוות" value={n(d.askers)} />
         <Tile label="הודעות" value={n(d.messages)} sub={`${n(d.week)} בשבוע האחרון`} />
@@ -227,7 +257,7 @@ function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined 
           {topics.map(([k, v]) => <li key={k} className="flex justify-between gap-3 border-t border-paper-line pt-1"><span>{TOPIC_LABEL[k] ?? k}</span><strong className="font-num tabular">{n(v!)}</strong></li>)}
         </ul>
       )}
-      <p className="text-xs text-ink-soft">תוכן הפניות נשאר בין החבר לצוות האתר. מספר גבוה בנושא מסוים — סימן שכדאי להסביר אותו לקבוצה.</p>
+      <p className="text-xs text-ink-soft">מספר גבוה בנושא מסוים — סימן שכדאי להסביר אותו לקבוצה.</p>
     </Section>
   );
 }
