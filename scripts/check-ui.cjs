@@ -70,8 +70,8 @@ for(const theme of ['league']) for(const width of [360,820,1280]){
  assert.ok(page.url().includes('/feedback/'));
  await page.goto(`${baseUrl}#/guess`);
  assert.equal(await page.locator('[data-bloc-id]').count(),0,'לשונית מנדטים אינה מציגה גושים');
- await page.getByRole('heading',{name:'הגושים שלי: חלוקת ההשערה ויעדי ההשלמה',exact:true}).waitFor();
- assert.equal(await page.getByRole('heading',{name:'הגושים שלי: חלוקת ההשערה ויעדי ההשלמה',exact:true}).count(),1);
+ await page.getByRole('heading',{name:'הגושים שלי: חלוקת הניחוש ויעדי ההשלמה',exact:true}).waitFor();
+ assert.equal(await page.getByRole('heading',{name:'הגושים שלי: חלוקת הניחוש ויעדי ההשלמה',exact:true}).count(),1);
  assert.equal(await page.locator('[data-personal-blocs-card]').count(),1);
  const targetInput=page.getByRole('spinbutton',{name:'מנדטים צפויים לגוש הקואליציה הנוכחית',exact:true});
  await targetInput.fill('61');
@@ -87,7 +87,7 @@ for(const theme of ['league']) for(const width of [360,820,1280]){
  await page.getByRole('button',{name:'לא',exact:true}).click();
  assert.equal(await page.getByRole('button',{name:'אפס הכול',exact:true}).count(),1);
  await page.getByRole('button',{name:'לפי גושים',exact:true}).click();
- assert.deepEqual(await page.locator('nav[aria-label="חלקי ההשערה"] button').allTextContents(),['לפי מנדטים','לפי אחוזים','לפי גושים','ההצבעה שלי','ההיסטוריה שלי']);
+ assert.deepEqual(await page.locator('nav[aria-label="חלקי הניחוש"] button').allTextContents(),['לפי מנדטים','לפי אחוזים','לפי גושים','ההצבעה שלי','ההיסטוריה שלי']);
  await page.locator('[data-bloc-id="coalition"]').waitFor();
  assert.equal(await page.locator('[data-bloc-id]').count(),4);
  assert.equal(await page.locator('[data-bloc-party] select').count(),0);
@@ -141,7 +141,7 @@ for(const theme of ['league']) for(const width of [360,820,1280]){
  await arabs.locator('[data-bloc-party="likud"]').waitFor();
  await dragCard(page,poolLikud,arabs.locator('h3'));
  assert.equal(await arabs.locator('[data-bloc-party="likud"]').count(),1,'adding twice does not duplicate');
- await dragCard(page,arabs.locator('[data-bloc-party="likud"] [data-party-drag]'),page.locator('nav[aria-label="חלקי ההשערה"]'),cdp);
+ await dragCard(page,arabs.locator('[data-bloc-party="likud"] [data-party-drag]'),page.locator('nav[aria-label="חלקי הניחוש"]'),cdp);
  assert.equal(await arabs.locator('[data-bloc-party="likud"]').count(),0,'touch drag out removes only source');
  assert.equal(await page.locator('[data-bloc-id="opposition"] [data-bloc-party="likud"]').count(),1);
  assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1);
@@ -161,7 +161,7 @@ for(const theme of ['league']) for(const width of [360,820,1280]){
  assert.equal(await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').count(),0,'button removal');
  await dragCard(page,poolLikud,page.locator('[data-bloc-id="new"] h3'),cdp);
  await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').waitFor();
- await dragCard(page,page.locator('[data-bloc-id="new"] [data-bloc-party="likud"] [data-party-drag]'),page.locator('nav[aria-label="חלקי ההשערה"]'));
+ await dragCard(page,page.locator('[data-bloc-id="new"] [data-bloc-party="likud"] [data-party-drag]'),page.locator('nav[aria-label="חלקי הניחוש"]'));
  assert.equal(await page.locator('[data-bloc-id="new"] [data-bloc-party="likud"]').count(),0,'drag outside all blocs removes source');
  assert.equal(await page.locator('[data-bloc-id="coalition"] [data-bloc-party="likud"]').count(),1);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow guess ${theme} ${width}`);

@@ -68,7 +68,7 @@ const base=process.env.UI_BASE_URL||'http://127.0.0.1:5173/';
   const shares=ids.map((id,i)=>i<2?50:0).join('_');
   const agreementFlags=meta.agreements2026.map(()=>0).join('');
   await page.goto(`${base}#/calculator?s=${shares}&t=72&e=4000000&a=${agreementFlags}`);
-  await page.getByRole('heading',{name:'מחשבון ההשערה',exact:true}).waitFor();
+  await page.getByRole('heading',{name:'מחשבון הניחוש',exact:true}).waitFor();
   assert.ok(page.url().includes('section=calculator'));
   assert.ok(page.url().includes('ct=72'));
   assert.equal(authLinkCalls,0,'קלט מחשבון אינו קישור אישי לכניסה');

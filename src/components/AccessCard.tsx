@@ -18,7 +18,7 @@ export default function AccessCard() {
         <h2 id="access-title" className="text-2xl font-display leading-tight">{me.needsEmail ? "חברו Google או הוסיפו מייל" : "אמתו את המייל או חברו Google"}</h2>
         <p className="text-sm">
           מעכשיו נכנסים לאתר רק במייל וסיסמה או עם Google. אחרי האימות הקישור האישי ושם המשתתף הישנים יימחקו, והשם יישמר כשם שלכם בחשבון.
-          ההשערה שלכם נשמרת ונספרת גם בינתיים.
+          הניחוש שלכם נשמר ונספר גם בינתיים.
         </p>
         <GoogleButton session={session} onDone={() => void session.refresh()} />
         {me.needsEmail ? <ClaimForm session={session} /> : (

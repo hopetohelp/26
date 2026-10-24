@@ -129,8 +129,8 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
       </div>}
       <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <ComparisonContext.Provider value={selection}>
-      {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={mine} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין השערות מנדטים להצגה.</Notice>}
-      {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={mine} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין השערות גושים להצגה.</Notice>}
+      {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={mine} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין ניחושי מנדטים להצגה.</Notice>}
+      {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={mine} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין ניחושי גושים להצגה.</Notice>}
       {(blank || d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} blankLists={blank ? blankLists : undefined} />}
       </ComparisonContext.Provider>
     </div>
@@ -265,8 +265,8 @@ function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[
     {head}
     <ChartLegend
       entries={[
-        { kind: "mean", text: "ממוצע המשתתפים (אינו סקר)" },
-        { kind: "candle", text: rangeLine("full", "ההשערות") },
+        { kind: "mean", text: "ממוצע הניחושים (אינו סקר)" },
+        { kind: "candle", text: rangeLine("full", "הניחושים") },
         ...(withPoll ? [{ kind: "result" as const, text: "ממוצע הסקרים" }] : []),
       ]}
     />
@@ -276,12 +276,12 @@ function Bars({ rows, suffix = "", title = "גושים", head }: { rows: BarRow[
         {!r.lists && <PartyAvatar id={r.key} size={28} />}
         <span className="min-w-0 break-words">{r.lists ? <BlocName id={r.key} name={r.label} lists={r.lists} /> : r.label}</span>
       </span>
-      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: הטווח המלא של השערות המשתתפים`}>
+      <Track axisMax={axisMax} step={step} className="h-6" title={`${r.label}: הטווח המלא של ניחושי המשתתפים`}>
         {r.mean !== null && <ProfileCandle segs={levels[i]} x={at} />}
-        <CapsuleMarks primary={r.mean !== null ? { at: at(r.mean), value: r.mean, label: "ממוצע המשתתפים", text: `${seatsFmt(r.mean)}${suffix}` } : undefined} secondary={r.poll !== undefined ? { at: at(r.poll), value: r.poll, label: "ממוצע הסקרים", text: `${seatsFmt(r.poll)}${suffix}` } : undefined} />
+        <CapsuleMarks primary={r.mean !== null ? { at: at(r.mean), value: r.mean, label: "ממוצע הניחושים", text: `${seatsFmt(r.mean)}${suffix}` } : undefined} secondary={r.poll !== undefined ? { at: at(r.poll), value: r.poll, label: "ממוצע הסקרים", text: `${seatsFmt(r.poll)}${suffix}` } : undefined} />
       </Track>
       <span className="font-num tabular whitespace-nowrap">{r.mean === null ? "חסר נתון" : <>{r.lo !== r.hi ? `טווח ${rng(seatsFmt(r.lo), seatsFmt(r.hi))}${suffix}` : ""}</>}</span>
-      <span className="sr-only">; {r.mean === null ? "חסר נתון" : `ממוצע המשתתפים ${seatsFmt(r.mean)}${suffix}, בין ${seatsFmt(r.lo)} ל-${seatsFmt(r.hi)}`}{r.poll !== undefined ? `; ממוצע הסקרים ${seatsFmt(r.poll)}${suffix}` : ""}</span>
+      <span className="sr-only">; {r.mean === null ? "חסר נתון" : `ממוצע הניחושים ${seatsFmt(r.mean)}${suffix}, בין ${seatsFmt(r.lo)} ל-${seatsFmt(r.hi)}`}{r.poll !== undefined ? `; ממוצע הסקרים ${seatsFmt(r.poll)}${suffix}` : ""}</span>
     </li>)}</ul>
   </Card>;
 }

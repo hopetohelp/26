@@ -81,7 +81,7 @@ export default function PersonalBlocs({ title, values = {}, source, asOf, histor
   const labelOf = (d: (typeof series)[number]) => series.filter(x => x.source === d.source).length > 1 ? `${d.source} · ${displayDate(d.asOf)}` : d.source;
   const stacked = <table className="w-full table-fixed text-xs">
     <caption className="sr-only">הגושים שלי מול המשתתפים והסקרים</caption>
-    <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal border-s border-paper-line" title={labelOf(d)}>{d.source.includes("המשתתפים") ? "משתתפים" : d.source === "ההשערה שלי" ? "שלי" : labelOf(d)}</th>)}</tr></thead>
+    <thead><tr className="border-b border-paper-line"><th className="text-start w-[36%] py-1">גוש</th>{series.map((d,i) => <th key={i} className="px-1 font-normal border-s border-paper-line" title={labelOf(d)}>{d.source.includes("המשתתפים") ? "משתתפים" : d.source === "הניחוש שלי" ? "שלי" : labelOf(d)}</th>)}</tr></thead>
     <tbody>{p.blocs.map(b => <BlocTableRow key={b.id} id={b.id} lists={b.lists} name={b.name} nameClass="text-start py-1.5 pe-1 font-normal break-words" cellClass="text-center px-1 tabular font-bold">{series.map((d) => { const row = d.rows.find(r => r.id === b.id); return display(row); })}</BlocTableRow>)}</tbody>
   </table>;
   const table = compact ? stacked : <table className="w-full text-sm">

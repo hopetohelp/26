@@ -27,7 +27,7 @@ const SORTS: { id: Sort; label: string }[] = [
   { id: "random", label: "אקראי" },
   { id: "registered", label: "רישום משתמש" },
   { id: "lastLogin", label: "כניסה אחרונה" },
-  { id: "saved", label: "שמירת ההשערה" },
+  { id: "saved", label: "שמירת הניחוש" },
 ];
 
 /** מיון מהחדש לישן לפי השדה שנבחר; בלי ערך — בסוף. "אקראי" משאיר את סדר השרת. */
@@ -73,7 +73,7 @@ function Decision({ row, busy, decide }: { row: GuessRow; busy: boolean; decide:
     return <button type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => decide(on ? "clear" : d)} title={on ? "לחיצה מבטלת את ההחלטה" : undefined}
       className={`px-3 min-h-[36px] rounded-theme text-sm font-bold ${on ? (d === "approved" ? "bg-ink text-paper-card" : "bg-warn text-paper-card") : "text-ink-soft hover:text-ink"}`}>{label}</button>;
   };
-  return <div role="radiogroup" aria-label="החלטה על ההשערה" className="inline-flex gap-0.5 p-0.5 rounded-theme border border-paper-line bg-paper">{opt("approved", "אישור")}{opt("rejected", "דחייה")}</div>;
+  return <div role="radiogroup" aria-label="החלטה על הניחוש" className="inline-flex gap-0.5 p-0.5 rounded-theme border border-paper-line bg-paper">{opt("approved", "אישור")}{opt("rejected", "דחייה")}</div>;
 }
 
 /** הגושים של השערה בשורה אחת: "שם: מנדטים (יעד) [רשימות]" */
@@ -130,12 +130,12 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h3 className="font-bold text-lg">{group ? "השערות חברי הקבוצה" : "השערות הגולשים"} ({data?.rows.length ?? "…"} · ממתינות {pending})</h3>
+        <h3 className="font-bold text-lg">{group ? "ניחושי חברי הקבוצה" : "ניחושי הגולשים"} ({data?.rows.length ?? "…"} · ממתינים {pending})</h3>
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn>{!group && <Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn>}</div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">ההשערה האחרונה של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן{group ? " לפי שמירת ההשערה" : " לפי רישום, כניסה אחרונה או שמירת ההשערה"}. השערה חריגה — רשימה שרחוקה לפחות 75% מממוצע שאר המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח.</p>
-      {group && <p className="text-sm text-ink-soft max-w-3xl">רק ההשערות של חברי הקבוצה, בלי שום מזהה ובלי נתוני פעילות. ההחלטה כאן קובעת אם ההשערה נספרת בכל האתר — כמו החלטה של מנהל האתר.</p>}
-      {!group && <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "ההשערה האחרונה של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>}
+      <p className="text-sm text-ink-soft max-w-3xl">הניחוש האחרון של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן{group ? " לפי שמירת הניחוש" : " לפי רישום, כניסה אחרונה או שמירת הניחוש"}. ניחוש חריג — רשימה שרחוקה לפחות 75% מממוצע שאר המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח.</p>
+      {group && <p className="text-sm text-ink-soft max-w-3xl">רק הניחושים של חברי הקבוצה, בלי שום מזהה ובלי נתוני פעילות. ההחלטה כאן קובעת אם הניחוש נספר בכל האתר — כמו החלטה של מנהל האתר.</p>}
+      {!group && <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "הניחוש האחרון של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>}
       {!group && <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>}
       {!!data?.unverified?.participants && (
         <details className="border border-paper-line rounded-theme p-3">
@@ -147,11 +147,11 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
       )}
       <Chips label="סינון" value={filter} onChange={setFilter} options={group ? FILTERS.filter((f) => f.id !== "unverified") : FILTERS} />
       <Chips label="מיון" value={sort} onChange={setSort} options={group ? SORTS.filter((o) => o.id === "random" || o.id === "saved") : SORTS} />
-      {data && <p className="text-sm font-bold" aria-live="polite">{rows.length === data.rows.length ? `מוצגות ${rows.length} השערות` : `מוצגות ${rows.length} השערות מתוך ${data.rows.length}, לפי הסינון`}</p>}
+      {data && <p className="text-sm font-bold" aria-live="polite">{rows.length === data.rows.length ? `מוצגים ${rows.length} ניחושים` : `מוצגים ${rows.length} ניחושים מתוך ${data.rows.length}, לפי הסינון`}</p>}
       {error && <Notice tone="warn">{error}</Notice>}
-      {belowMin !== null && <p className="text-sm text-ink-soft">פחות מ-{belowMin} חברים מהקבוצה רשומים — ההשערות יוצגו מ-{belowMin}.</p>}
+      {belowMin !== null && <p className="text-sm text-ink-soft">פחות מ-{belowMin} חברים מהקבוצה רשומים — הניחושים יוצגו מ-{belowMin}.</p>}
       {!data && !error && belowMin === null && <p className="text-ink-soft">טוען…</p>}
-      {data && !rows.length && <p className="text-sm text-ink-soft">אין השערות במצב הזה.</p>}
+      {data && !rows.length && <p className="text-sm text-ink-soft">אין ניחושים במצב הזה.</p>}
       {!!rows.length && (
         <div className="overflow-x-auto">
           <table className="w-full text-sm tabular">

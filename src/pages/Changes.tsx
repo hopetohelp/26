@@ -186,7 +186,7 @@ export default function Changes() {
   );
 
   const shared = sharedLists(effective);
-  const splitNote = lin.split === "manual" ? "לפי החלוקה שלכם" : effective.split === "crowd" ? "לפי ממוצע המשתתפים (אינו סקר)" : `לפי ממוצע המודל (${date(MODEL_AVERAGE.asOf)})`;
+  const splitNote = lin.split === "manual" ? "לפי החלוקה שלכם" : effective.split === "crowd" ? "לפי ממוצע הניחושים (אינו סקר)" : `לפי ממוצע המודל (${date(MODEL_AVERAGE.asOf)})`;
 
   return (
     <>
@@ -317,7 +317,7 @@ export default function Changes() {
                 </div>
                 <div>
                   <h3 className="font-bold mb-1">השיוך שלכם</h3>
-                  <p>שם המפלגה (בגרף, בטבלה וב"אין שיוך") הוא כפתור שקובע מאיזו רשימה של 2022 היא באה. השיוך נשמר בחשבון שלכם (או בדפדפן, בלי חשבון), ומשמש גם את הטור "בחירות 22" ב<Link to="/guess">הכנסת שלי</Link> ואת הגושים. הוא לא משנה את הסטטיסטיקות של האתר. הרכב הגושים עצמו נערך בכפתור "עריכת הגושים".</p>
+                  <p>שם המפלגה (בגרף, בטבלה וב"אין שיוך") הוא כפתור שקובע מאיזו רשימה של 2022 היא באה. השיוך נשמר בחשבון שלכם (או בדפדפן, בלי חשבון), ומשמש גם את הטור "בחירות 22" ב<Link to="/guess">הניחוש שלי</Link> ואת הגושים. הוא לא משנה את הסטטיסטיקות של האתר. הרכב הגושים עצמו נערך בכפתור "עריכת הגושים".</p>
                 </div>
                 <div>
                   <h3 className="font-bold mb-1">למה כך שויך</h3>

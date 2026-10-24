@@ -109,13 +109,13 @@ export async function renderShareImage({ values, pct, username, blocs, labels, s
     ctx.fillText(username ? `הגושים של ${username}` : "הגושים שלי", R, 140, R - L);
     ctx.fillStyle = c.soft;
     ctx.font = `400 30px ${body}`;
-    ctx.fillText("השערה, לא סקר · אותם הרכבי מפלגות בשלוש השוואות", R, 200, R - L);
+    ctx.fillText("ניחוש, לא סקר · אותם הרכבי מפלגות בשלוש השוואות", R, 200, R - L);
     ctx.font = `400 26px ${body}`;
     ctx.fillText(`${sourceName}: ${date(SHARE_POLLS_AS_OF)} · מודל המגמות: ${date(SHARE_FORECAST_AS_OF)}`, R, 247, R - L);
     const columns = [R - 145, IMG_W / 2, L + 145];
     ctx.textAlign = "center";
     ctx.font = `700 32px ${body}`;
-    ["ההשערה שלי", sourceName, "מודל המגמות"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
+    ["הניחוש שלי", sourceName, "מודל המגמות"].forEach((label, i) => ctx.fillText(label, columns[i], 312));
     let y = 382;
     rows.forEach(row => {
       ctx.textAlign = "right";
@@ -177,10 +177,10 @@ export async function renderShareImage({ values, pct, username, blocs, labels, s
   ctx.font = `700 92px ${display}`;
   const logoRoom = labels?.logo ? LOGO_BOX + 30 : 0;
   if (labels?.logo) drawLogo(ctx, labels.logo, L, 44, LOGO_BOX);
-  ctx.fillText(labels?.title ?? (username ? `הכנסת של ${username}` : "הכנסת שלי"), R, 140, R - L - logoRoom);
+  ctx.fillText(labels?.title ?? (username ? `הכנסת של ${username}` : "הניחוש שלי"), R, 140, R - L - logoRoom);
   ctx.fillStyle = c.soft;
   ctx.font = `400 34px ${body}`;
-  ctx.fillText(labels?.subtitle ?? (pct ? "השערה לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "השערה לבחירות לכנסת ה-26 · השערה, לא סקר"), R, 196, R - L - logoRoom);
+  ctx.fillText(labels?.subtitle ?? (pct ? "ניחוש לבחירות לכנסת ה-26 · לפי אחוזי הצבעה, מחושב לפי החוק" : "ניחוש לבחירות לכנסת ה-26 · ניחוש, לא סקר"), R, 196, R - L - logoRoom);
 
   // הפרסה — אותם מיקומים כמו בלוח שבאתר (`HALL`), במרכז התמונה
   const { order, fills } = seatFills(values);

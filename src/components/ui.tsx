@@ -177,7 +177,7 @@ export function Split({ primary, secondary, title, lead, secondaryFirst = false 
             {primary}
           </div>
         </div>
-        {/* pb-24: הכפתור הצף "לבנות את הכנסת שלי" לא מסתיר את סוף הטור */}
+        {/* pb-24: הכפתור הצף "לבנות את הניחוש שלי" לא מסתיר את סוף הטור */}
         <div className={split ? "c-workspace-result relative overflow-y-auto pt-6 ps-6 pb-24" : "c-workspace-result"}>{secondary}</div>
       </div>
     </SplitOn.Provider>

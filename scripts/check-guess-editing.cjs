@@ -62,7 +62,7 @@ const payload = (a, b, open = false) => ({ start: 'zero', pollsAsOf: null,
       for (const value of [1,2,3]) {
         await seed(payload(value,120-value));
         assert.equal(await save.isDisabled(),true);
-        await page.getByRole('status').filter({hasText:'אי אפשר לשמור השערה'}).waitFor();
+        await page.getByRole('status').filter({hasText:'אי אפשר לשמור ניחוש'}).waitFor();
       }
       assert.equal(saves.length,0,'אין בקשת שמירה עבור קלט חסום');
       await page.screenshot({path:`${screenshots}/${theme}-${width}-${dark?'dark':'light'}-threshold.png`,fullPage:true});

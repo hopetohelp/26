@@ -53,7 +53,7 @@ const dir='/tmp/elections26-bloc-plus-share'; fs.mkdirSync(dir,{recursive:true})
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   await small.scrollIntoViewIfNeeded();await page.screenshot({path:`${dir}/picker-${theme}-${width}-${dark}.png`,fullPage:true});
   await page.goto('http://127.0.0.1:5176/#/guess?section=seats');
-  await page.getByRole('button',{name:'שתפו את ההשערה',exact:true}).click();
+  await page.getByRole('button',{name:'שתפו את הניחוש',exact:true}).click();
   await page.waitForFunction(()=>Array.isArray(window.sharedImage));
   const text=await page.evaluate(()=>window.drawn);
   assert.ok(text.includes('הגוש הגדול לבדיקה'));
@@ -71,13 +71,13 @@ const dir='/tmp/elections26-bloc-plus-share'; fs.mkdirSync(dir,{recursive:true})
   const downloaded=await downloadPromise;assert.equal(downloaded.suggestedFilename(),'הגושים-שלי.png');
   await page.getByRole('radio',{name:'מפלגות',exact:true}).check();
   await page.evaluate(()=>{window.sharedImage=null;window.drawn=[];});
-  await page.getByRole('button',{name:'שתפו את ההשערה',exact:true}).click();
+  await page.getByRole('button',{name:'שתפו את הניחוש',exact:true}).click();
   await page.waitForFunction(()=>Array.isArray(window.sharedImage));
   const partyText=await page.evaluate(()=>window.drawn);
   assert.ok(partyText.some(t=>t.startsWith('ממוצע סקרים: ')));
   assert.ok(partyText.some(t=>t.startsWith('ממוצע הסקרים האחרון נכון')));
   const link=await page.evaluate(()=>window.shared.url);
-  assert.ok(link.includes('g='),'הקישור עדיין כולל את ההשערה המלאה');
+  assert.ok(link.includes('g='),'הקישור עדיין כולל את הניחוש המלאה');
   const buffer=Buffer.from(await page.evaluate(()=>window.sharedImage));
   fs.writeFileSync(`${dir}/share-${theme}-${width}-${dark}.png`,buffer);
   assert.equal(buffer.readUInt32BE(16),1080);

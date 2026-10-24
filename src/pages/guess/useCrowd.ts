@@ -241,7 +241,7 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
         if (e instanceof CrowdError && e.code === "network") { keepLocal(payload); return true; }
         setError(errorText(e));
         setErrorLog(JSON.stringify({
-          action: "שמירת השערה", unit, registry: meta.dataAsOf,
+          action: "שמירת ניחוש", unit, registry: meta.dataAsOf,
           ...(e instanceof CrowdError ? { code: e.code, status: e.status, ...e.diagnostic } : { code: "unexpected" }),
         }, null, 2));
         setState("error");

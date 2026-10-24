@@ -7,8 +7,9 @@ import { CrowdError } from "../lib/crowdApi";
 describe("error explanations", () => {
   it("opening line follows the logged action", () => {
     expect(openingLine('{"action": "החלפת סיסמה"}')).toBe("לא הצלחתי: החלפת סיסמה.");
-    expect(openingLine('{"action": "שמירת השערה"}')).toBe("לא הצלחתי לשמור את ההשערה שלי.");
-    expect(openingLine("{}")).toBe("לא הצלחתי לשמור את ההשערה שלי.");
+    expect(openingLine('{"action": "שמירת השערה"}')).toBe("לא הצלחתי לשמור את הניחוש שלי.");
+    expect(openingLine('{"action": "שמירת ניחוש"}')).toBe("לא הצלחתי לשמור את הניחוש שלי.");
+    expect(openingLine("{}")).toBe("לא הצלחתי לשמור את הניחוש שלי.");
   });
   it("wrong credentials are the user's to fix, not a fault to report", () => {
     const e = new CrowdError(401, "bad_credentials");

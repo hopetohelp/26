@@ -174,7 +174,7 @@ export function GroupClearMembers({ clear, onDone }: { clear: () => Promise<Grou
       {sure && (
         <ConfirmDialog title="למחוק את כל חברי הקבוצה?" confirm={busy ? "מוחק…" : "כן, למחוק את כל החברים"} busy={busy} onConfirm={() => void run()} onCancel={() => setSure(false)}>
           <p>כל רשימת המיילים של הקבוצה תימחק, וכולם יוצאים ממנה.</p>
-          <p className="text-ink-soft">החשבונות וההשערות של החברים לא נמחקים, ומנהלי הקבוצה נשארים. אפשר להעלות רשימה מחדש.</p>
+          <p className="text-ink-soft">החשבונות והניחושים של החברים לא נמחקים, ומנהלי הקבוצה נשארים. אפשר להעלות רשימה מחדש.</p>
         </ConfirmDialog>
       )}
       {msg && <Notice tone={msg.ok ? "calm" : "warn"}>{msg.text}</Notice>}

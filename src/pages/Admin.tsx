@@ -119,7 +119,7 @@ function ByDay({ days }: { days: Day[] }) {
     <section className="space-y-2">
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular">
-          <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נכנסו להשערה", "נכנסו לסטטיסטיקות", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
+          <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נכנסו לניחוש", "נכנסו לסטטיסטיקות", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
           <tbody>{days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
         </table>
       </div>
@@ -226,10 +226,10 @@ export default function Admin() {
           {/* תיבות קטנות מאוחדות (הכרעת בעלים 12.10.2026); הדשבורד המלא — במגירה אחת */}
           <div className="flex flex-wrap gap-2" role="group" aria-label="סיכום">
             <Pair label="משתמשים" a={["ס״ה", data.support?.stats.participants ?? "—"]} b={["היום", data.support?.stats.participantsToday ?? "—"]} />
-            <Pair label="שמרו השערה או הצבעה" a={["ס״ה", data.support?.stats.savers ?? "—"]} b={["היום", data.support?.stats.saversToday ?? "—"]} />
+            <Pair label="שמרו ניחוש או הצבעה" a={["ס״ה", data.support?.stats.savers ?? "—"]} b={["היום", data.support?.stats.saversToday ?? "—"]} />
             <Pair label="נכנסו" a={["ס״ה", data.totalVisitors]} b={["היום", today?.users ?? 0]} />
             <Pair label="ממתינים לתשובה וטיוטות" a={["ממתינים", waiting]} b={["טיוטות", data.drafts?.length ?? 0]} alert={waiting + (data.drafts?.length ?? 0) > 0} />
-            <Pair label="השערות" a={["ממתינות", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />
+            <Pair label="ניחושים" a={["ממתינים", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />
             <Pair label="נפילות" a={["מאז האיפוס", data.failures?.total ?? "—"]} b={["היום", today?.autoFailures ?? 0]} alert={(data.failures?.total ?? 0) > 0} />
             {/* הרענון של GitHub והסשן המרוכז רצים באותה שעה (src/lib/runSchedule.ts); בשבת — מושבתים */}
             <Pair label="פרסום האתר (GitHub)" a={["אחרון", <Clock at={lastPublish} />]} b={["הבא", <Clock at={next} />]} />
@@ -245,7 +245,7 @@ export default function Admin() {
                 <Tiles title="היום" note="לפי יום UTC" tiles={[
                   ["כניסות היום", today?.visits ?? 0],
                   ["משתמשים היום", today?.users ?? 0],
-                  ["נכנסו להשערה היום", today?.guessUsers ?? 0],
+                  ["נכנסו לניחוש היום", today?.guessUsers ?? 0],
                   ["נכנסו לסטטיסטיקות היום", today?.communityUsers ?? 0],
                   ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
                   ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
@@ -274,7 +274,7 @@ export default function Admin() {
             <Drawer title="פניות והודעות" open={open.has("inquiries")} onToggle={() => toggle("inquiries")} badge={waiting + (data.drafts?.length ?? 0) > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${waiting} ממתינים לתשובה, ${data.drafts?.length ?? 0} טיוטות`}>{waiting + (data.drafts?.length ?? 0)}</span> : undefined}>
               <InquirySections data={data} reply={reply} draftActions={draftActions} />
             </Drawer>
-            <Drawer title="השערות הגולשים" open={open.has("guesses")} onToggle={() => toggle("guesses")} badge={pendingGuesses > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${pendingGuesses} השערות ממתינות לאישור`}>{pendingGuesses}</span> : undefined}><AdminGuesses api={api} onCounts={setGuessCounts} /></Drawer>
+            <Drawer title="ניחושי הגולשים" open={open.has("guesses")} onToggle={() => toggle("guesses")} badge={pendingGuesses > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${pendingGuesses} ניחושים ממתינים לאישור`}>{pendingGuesses}</span> : undefined}><AdminGuesses api={api} onCounts={setGuessCounts} /></Drawer>
             <Drawer title="גושים שהוגדרו" open={open.has("blocs")} onToggle={() => toggle("blocs")}><AdminBlocs api={api} /></Drawer>
             <Drawer title="קבוצות" open={open.has("groups")} onToggle={() => toggle("groups")}><AdminGroups api={api} /></Drawer>
             <Drawer title="מפתח AI לתשובות" open={open.has("ai")} onToggle={() => toggle("ai")}><AiKey api={api} /></Drawer>

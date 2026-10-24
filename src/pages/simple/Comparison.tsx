@@ -59,7 +59,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
       <div className="f-card f-lock"><p className="text-3xl" aria-hidden="true">🔒</p><h2 className="text-lg font-bold my-2">ממוצע הניחושים נפתח אחרי שמירת הכנסת שלך</h2>
         <p className="text-ink-soft mb-4">ממלאים את כל 120 המנדטים, שומרים, ורואים איך כולם חושבים.</p>
         <InlineBlocBar values={Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0]))} missing={Math.max(0, 120 - total)} />
-        <Link to="/guess" className="f-btn pri mt-5">להשלמת הכנסת שלי</Link></div><FocusFoot /></div>;
+        <Link to="/guess" className="f-btn pri mt-5">להשלמת הניחוש שלי</Link></div><FocusFoot /></div>;
   }
   const response = allowed && result?.token === session.token ? result : null;
   const raw = response?.data;

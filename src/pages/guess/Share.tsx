@@ -8,7 +8,7 @@ import { renderShareImage } from "./shareImage";
 import { Btn } from "./ui";
 import { Segmented } from "../../components/Choice";
 
-const TEXT = "בניתי כנסת של 120 — השערה, לא סקר. ומה אתם משערים?";
+const TEXT = "בניתי כנסת של 120 — ניחוש, לא סקר. ומה אתם משערים?";
 
 /**
  * כפתור צף "שתף / הורד" מעל תמונת הכנסת פותח חלון עם בחירת התמונה, צירוף השם, שיתוף והורדה. השיתוף פותח ישר את תפריט השיתוף של המכשיר (וואטסאפ, טלגרם…) עם תמונת ההשערה,
@@ -58,7 +58,7 @@ export default function Share({ values, pct, username, blocs, selection = { prod
         } catch {
           file = null; // בלי תמונה — משתפים טקסט וקישור
         }
-        const data: ShareData = { title: "ההשערה שלי לכנסת ה-26", text: TEXT, url };
+        const data: ShareData = { title: "הניחוש שלי לכנסת ה-26", text: TEXT, url };
         await navigator.share(file && navigator.canShare?.({ files: [file] }) ? { ...data, files: [file] } : data);
       } else {
         window.open(`https://wa.me/?text=${encodeURIComponent(`${TEXT}\n${url}`)}`, "_blank", "noopener,noreferrer");
@@ -80,13 +80,13 @@ export default function Share({ values, pct, username, blocs, selection = { prod
         <div className="fixed inset-0 z-50 bg-black/45 flex items-end md:items-center justify-center" onClick={(e) => e.target === e.currentTarget && setOpen(false)} onKeyDown={(e) => e.key === "Escape" && setOpen(false)}>
           <div ref={box} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="share-title" className="bg-paper-card text-ink w-full md:max-w-md rounded-t-theme md:rounded-theme p-5 space-y-4 max-h-[92vh] overflow-y-auto focus:outline-none">
             <div className="flex items-start justify-between gap-2">
-              <h2 id="share-title" className="text-2xl font-display leading-tight">שיתוף ההשערה</h2>
+              <h2 id="share-title" className="text-2xl font-display leading-tight">שיתוף הניחוש</h2>
               <button type="button" onClick={() => setOpen(false)} aria-label="סגירה" className="w-11 h-11 -mt-2 -me-2 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">×</button>
             </div>
             <div role="radiogroup" aria-label="איזו תמונה לשתף?" className="space-y-2">
               <p className="font-bold text-sm">איזו תמונה?</p>
               <Segmented label="איזו תמונה לשתף?" value={imageKind} onChange={setKind} disabled={busy} options={[{ id: "parties", label: "מפלגות" }, { id: "blocs", label: "גושים", disabled: !blocs?.length }]} />
-              <p className="text-xs text-ink-soft">{imageKind === "blocs" ? "רק הגושים: ההשערה שלי, ממוצע סקרים ומודל המגמות, לפי אותו הרכב מפלגות." : "המנדטים שלי לכל מפלגה, עם ממוצע הסקרים האחרון בקטן."}{!blocs?.length && " כדי לשתף גושים, הוסיפו להם מפלגות בלשונית לפי גושים."}</p>
+              <p className="text-xs text-ink-soft">{imageKind === "blocs" ? "רק הגושים: הניחוש שלי, ממוצע סקרים ומודל המגמות, לפי אותו הרכב מפלגות." : "המנדטים שלי לכל מפלגה, עם ממוצע הסקרים האחרון בקטן."}{!blocs?.length && " כדי לשתף גושים, הוסיפו להם מפלגות בלשונית לפי גושים."}</p>
             </div>
             {username && !isEmail(username) && (
               <button type="button" role="switch" aria-checked={withName} onClick={() => setWithName(!withName)} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start">
@@ -96,7 +96,7 @@ export default function Share({ values, pct, username, blocs, selection = { prod
                 </span>
               </button>
             )}
-            <Btn kind="primary" onClick={share} disabled={busy} className="w-full text-base">{busy ? "מכינים…" : "שתפו את ההשערה"}</Btn>
+            <Btn kind="primary" onClick={share} disabled={busy} className="w-full text-base">{busy ? "מכינים…" : "שתפו את הניחוש"}</Btn>
             <Btn onClick={download} disabled={busy} className="w-full">הורדת תמונה</Btn>
             {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
           </div>

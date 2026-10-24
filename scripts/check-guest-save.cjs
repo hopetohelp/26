@@ -43,7 +43,7 @@ const cors = { 'access-control-allow-origin': '*' };
       await page.getByText('מממוצע הסקרים').first().click();
       await page.getByRole('button', { name: 'שמור', exact: true }).click();
       const sheet = page.getByRole('dialog');
-      await sheet.getByRole('heading', { name: 'לשמור את ההשערה' }).waitFor();
+      await sheet.getByRole('heading', { name: 'לשמור את הניחוש' }).waitFor();
       assert.ok(await sheet.getByText('מומלץ', { exact: true }).isVisible(), 'ההרשמה מסומנת כמומלצת');
       const guestBtn = sheet.getByRole('button', { name: 'שמירה בלי משתמש', exact: true });
       assert.ok(await guestBtn.isDisabled(), 'בלי הסכמה אי אפשר לשמור');
