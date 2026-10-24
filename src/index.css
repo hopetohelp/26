@@ -764,3 +764,6 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-stack button.f-miss { outline:2px solid rgb(var(--neg));outline-offset:-2px;animation:f-miss-blink 1.2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { path.f-miss, .f-stack button.f-miss { animation:none; } }
 .f-toast { position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(64px + env(safe-area-inset-top));max-width:calc(100vw - 32px);padding:10px 16px;border-radius:999px;background:rgb(var(--ink));color:rgb(var(--paper));font-weight:700;font-size:14px;box-shadow:0 8px 24px rgb(var(--ink) / .25); }
+/* התא של כל נתון במסגרת כמו הקו שלו — מקוטע לגזרה, רציף למשתתפים — כדי שיהיה ברור לאיזה קו שייך כל מספר כשהקווים צמודים (הכרעת בעלים 24.10.2026) */
+.f-mark:not(.soft) .f-tag { border:1.5px solid currentColor; }
+.f-mark.dash .f-tag { border-style:dashed; }
