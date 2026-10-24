@@ -17,7 +17,7 @@ export default function SimpleGuess() {
   const session = useSession();
   const source = useSimpleSource();
   const hagzara = useHagzara(session);
-  const unit = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
+  const unit = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined);
   const vote = useUnit<VotePayload>("vote", null, session.me?.latest.vote?.payload as VotePayload | undefined);
   const [voteOpen, setVoteOpen] = useState(false);
   const [sharing, setSharing] = useState(false);
@@ -29,10 +29,21 @@ export default function SimpleGuess() {
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
   const ref = (id: string) => simpleValue(source.selection, [id]);
   const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id) || (draft.seats[id]?.v ?? 0) > 0).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
-  const change = (id: string, v: number) => {
+  // רשימה שכבר אינה מתמודדת (טיוטה או שמירה ישנה) ⇐ יוצאת מהטיוטה, והמנדטים שלה חוזרים לחלוקה; אחרת "רשימה לא מוכרת" בלי שאפשר לראות למה
+  const stale = Object.keys(draft.seats).filter(id => !IDS.includes(id));
+  useEffect(() => {
+    if (!stale.length) return;
+    unit.setDraft({ ...draft, seats: Object.fromEntries(Object.entries(draft.seats).filter(([id]) => IDS.includes(id))) });
+  }, [stale.join()]);
+  const change = (id: string, next: number) => {
+    // אי אפשר לעבור את 120 יחד (הכרעת בעלים 24.10.2026): התוספת נעצרת במה שנשאר לחלוקה
+    const cur = draft.seats[id]?.v ?? 0;
+    const v = Math.max(0, Math.min(next, cur + Math.max(0, 120 - total)));
+    if (v === cur) return v;
     // עריכה במנדטים מחליפה קלט אחוזים רק אחרי שינוי מפורש; יתר התאים והנעילות נשמרים.
     const { pct: _pct, calculation: _calculation, ...rest } = draft;
     unit.setDraft({ ...rest, mode: "seats", seats: { ...draft.seats, [id]: { ...draft.seats[id], v, src: "manual", locked: draft.seats[id]?.locked ?? false } } });
+    return v;
   };
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   const hagzaraLogo = hagzara?.logoUrl ?? null;
@@ -45,8 +56,8 @@ export default function SimpleGuess() {
           {inputBad && <span className="text-xs text-warn">0 עד 120</span>}{bad && <span className="text-xs text-warn">0 או לפחות 4</span>}</div>
           <div className="f-step">
             <button type="button" aria-label={`הפחתת מנדט ל${nameOf(id)}`} disabled={value <= 0} onClick={() => { setEditing(null); change(id, value - 1); }}>−</button>
-            <input aria-label={`מנדטים ל${nameOf(id)}`} aria-invalid={bad || inputBad || undefined} inputMode="numeric" type="text" value={editing?.id === id ? editing.text : value} onChange={e => { const text = e.target.value; setEditing({ id, text }); if (/^\d+$/.test(text) && Number(text) <= 120) change(id, Number(text)); }} onBlur={() => { if (!invalidInput) setEditing(null); }} />
-            <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} disabled={value >= 120} onClick={() => { setEditing(null); change(id, value + 1); }}>+</button>
+            <input aria-label={`מנדטים ל${nameOf(id)}`} aria-invalid={bad || inputBad || undefined} inputMode="numeric" type="text" value={editing?.id === id ? editing.text : value} onChange={e => { const text = e.target.value; setEditing({ id, text }); if (/^\d+$/.test(text) && Number(text) <= 120) { const v = change(id, Number(text)); if (v !== Number(text)) setEditing({ id, text: String(v) }); } }} onBlur={() => { if (!invalidInput) setEditing(null); }} />
+            <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} disabled={total >= 120} onClick={() => { setEditing(null); change(id, value + 1); }}>+</button>
           </div></div>;
       })}
       <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}
