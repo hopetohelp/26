@@ -650,6 +650,9 @@
 [data-dark] { --bloc-1: 143 158 230; --bloc-2: 210 187 125; --bloc-3: 212 150 198; --bloc-4: 111 207 207; --bloc-miss: 74 82 114; }
 /* משתתפי הגזרה: צבעי סמל הקבוצה בכל האתר */
 [data-group="hagzara"] { --signal: 31 95 181; --accent: 31 95 181; --mk-range: 31 95 181; --bloc-1: 31 95 181; --bloc-2: 123 135 148; --bloc-3: 183 194 207; --bloc-4: 240 110 116; --heat-lo: 244 128 133; --heat-hi: 31 95 181; }
+/* גוון אדום בהיר לחברי הגזרה (הכרעת בעלים 24.10.2026): רקע, כרטיסים, כותרת וגופנים בכל שלושת המסכים — ביום ובלילה */
+[data-group="hagzara"] { --paper: 255 243 243; --card: 255 250 250; --frame: 255 243 243; --line: 238 208 210; --frame-line: 238 208 210; --grid: 246 222 224; --accent-soft: 253 228 230; --ink: 92 28 36; --frame-ink: 92 28 36; --ink-soft: 132 72 78; --frame-soft: 132 72 78; --ink-faint: 128 84 88; }
+[data-group="hagzara"][data-dark] { --paper: 30 18 20; --card: 44 27 30; --frame: 44 27 30; --line: 80 50 54; --frame-line: 80 50 54; --grid: 64 40 43; --accent-soft: 62 34 38; --ink: 255 230 230; --frame-ink: 255 230 230; --ink-soft: 225 186 188; --frame-soft: 225 186 188; --ink-faint: 196 156 158; }
 [data-group="hagzara"][data-dark] { --signal: 111 163 236; --signal-ink: 16 18 22; --accent: 111 163 236; --mk-range: 111 163 236; --bloc-1: 111 163 236; --bloc-2: 154 168 184; --bloc-3: 93 107 124; --bloc-4: 255 140 145; --heat-lo: 255 150 155; --heat-hi: 111 163 236; }
 .f-bar { position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgb(var(--paper) / .85);backdrop-filter:blur(12px); }
 .f-logo { font-family:var(--font-display);font-size:20px;white-space:nowrap;color:rgb(var(--ink));text-decoration:none;display:flex;align-items:center;gap:6px; }
