@@ -478,7 +478,10 @@ export function LinkMembersToggle({ load, set, onChanged }: { load: () => Promis
 }
 
 /** תת-מגירה בניהול הקבוצה: התוכן (והבקשות לשרת) נטען רק כשהיא נפתחת */
-function GroupFold({ title, children }: { title: ReactNode; children: ReactNode }) {
+function FlatPart({ title, children }: { title: ReactNode; children: ReactNode }) {
+  return <div className="space-y-3 py-3 border-b border-paper-line last:border-b-0"><p className="font-bold text-sm">{title}</p>{children}</div>;
+}
+function FoldPart({ title, children }: { title: ReactNode; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <details className="group/f border-b border-paper-line last:border-b-0 [&_summary::-webkit-details-marker]:hidden" onToggle={(e) => setOpen(e.currentTarget.open)}>
@@ -505,12 +508,13 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
   };
   const changed = () => { setRefresh((n) => n + 1); onChanged?.(); };
   const countText = count === null ? null : count === 0 ? "אין עדיין מיילים ברשימה" : `${count.toLocaleString("he-IL")} מיילים ברשימה`;
+  // במסך "ניהול קבוצה" (tools) — בלי תתי-מגירות: כל כלי בכותרת משלו, פתוח (הכרעת בעלים 24.10.2026)
+  const GroupFold = tools ? FlatPart : FoldPart;
   const content = (
     <>
       <GroupFold title="קישור הקבוצה">
         <GroupLinkPanel
           slug={slug}
-          setSlug={async (next) => { await call("/group/link", { token, body: next ? { group: id, slug: next } : { group: id } }); onChanged?.(); }}
           loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
           bare
         />

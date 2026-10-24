@@ -20,7 +20,8 @@ const problem = (e: unknown) => {
 const tile = "bg-paper-card border border-paper-line rounded-theme p-3";
 
 /** הקישור של הקבוצה: שם באנגלית, כפתור העתקה ומספר הכניסות דרכו. בלי שם — רק שדה לקביעתו */
-export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slug: string | null | undefined; setSlug: (slug: string | null) => Promise<void>; loadStats: () => Promise<GroupLinkStats>; bare?: boolean }) {
+/** setSlug חסר = קריאה בלבד (מנהל קבוצה: הקישור נקבע רק על ידי מנהל האתר — הכרעת בעלים 24.10.2026) */
+export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slug: string | null | undefined; setSlug?: (slug: string | null) => Promise<void>; loadStats: () => Promise<GroupLinkStats>; bare?: boolean }) {
   const [text, setText] = useState(slug ?? "");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -40,11 +41,11 @@ export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slu
     const next = finalSlug(text);
     if (!next) { setMsg({ ok: false, text: problem({ code: "slug" }) }); return; }
     setBusy(true); setMsg(null);
-    try { await setSlug(next); setMsg({ ok: true, text: "שם הקישור נשמר." }); } catch (err) { setMsg({ ok: false, text: problem(err) }); } finally { setBusy(false); }
+    try { await setSlug?.(next); setMsg({ ok: true, text: "שם הקישור נשמר." }); } catch (err) { setMsg({ ok: false, text: problem(err) }); } finally { setBusy(false); }
   };
   const auto = async () => {
     setBusy(true); setMsg(null);
-    try { await setSlug(null); setMsg({ ok: true, text: "הקישור נוצר. אפשר לשנות את השם בכל עת." }); } catch (err) { setMsg({ ok: false, text: problem(err) }); } finally { setBusy(false); }
+    try { await setSlug?.(null); setMsg({ ok: true, text: "הקישור נוצר. אפשר לשנות את השם בכל עת." }); } catch (err) { setMsg({ ok: false, text: problem(err) }); } finally { setBusy(false); }
   };
   const copy = () => {
     if (!url) return;
@@ -78,11 +79,13 @@ export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slu
               ))}
             </div>
           ) : <p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p>}
-          <details className="[&_summary::-webkit-details-marker]:hidden">
+          {setSlug && <details className="[&_summary::-webkit-details-marker]:hidden">
             <summary className="cursor-pointer list-none text-sm underline min-h-[44px] inline-flex items-center">שינוי שם הקישור</summary>
             <div className="pt-2">{nameForm}</div>
-          </details>
+          </details>}
         </>
+      ) : !setSlug ? (
+        <p className="text-sm text-ink-soft">אין עדיין קישור לקבוצה. מנהל האתר יוצר אותו.</p>
       ) : (
         <>
           <p className="text-sm text-ink-soft">אין עדיין קישור לקבוצה. אפשר ליצור אותו אוטומטית משם הקבוצה בעברית (תעתיק לאנגלית), או לכתוב שם בעצמכם.</p>

@@ -1551,9 +1551,10 @@ const routes = {
     await requireAdmin(env, request);
     return setGroupSlug(env, body);
   },
+  // מנהל קבוצה אינו משנה את הקישור (הכרעת בעלים 24.10.2026): שינוי מבטל קישורים שכבר הופצו. רק מנהל האתר (/admin/groups/link)
   "POST /group/link": async ({ env, request, now, body }) => {
     await requireManager(env, request, now, body.group);
-    return setGroupSlug(env, body);
+    throw new HttpError(403, "admin_only");
   },
   "POST /admin/groups/link-stats": async ({ env, request, now, body }) => {
     await requireAdmin(env, request);
