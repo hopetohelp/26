@@ -82,7 +82,6 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
               <Tile label="דפדפנים שונים" value={n(link.fresh)} sub="בלי חשבון; כל דפדפן נספר פעם אחת" />
             </div>
           </Sub>}
-          {ins && !ins.belowMin && <Questions q={ins.questions} />}
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
         </Section>
         <Section title="ניחושים">
@@ -95,7 +94,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
             }} />
           </Sub>
         </Section>
-        <SupportThreads id={id} token={token} />
+        <SupportThreads id={id} token={token} stats={ins && !ins.belowMin ? <Questions q={ins.questions} /> : null} />
         <Section title="כלי ניהול">
           <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
         </Section>
@@ -109,7 +108,8 @@ type SupportData = Parameters<typeof InquirySections>[0]["data"] & { salt: strin
  * פניות החברים לצוות האתר — אותו ממשק כמו למנהל האתר (הכרעת בעלים 25.10.2026): תשובה, טיוטות לאישור, השהיות.
  * בלי שם או מזהה: כל שיחה מזוהה בידית חד-פעמית מהטעינה. תשובה של מנהל הקבוצה מוצגת לחבר כתשובת צוות האתר.
  */
-function SupportThreads({ id, token }: { id: string; token: string }) {
+/** stats = ספירת הפניות (פנו לצוות, הודעות, צ׳אט חכם, לפי נושא) — בראש המגירה הזו (הכרעת בעלים 25.10.2026) */
+function SupportThreads({ id, token, stats }: { id: string; token: string; stats?: ReactNode }) {
   const [d, setD] = useState<SupportData | { belowMin: true; min: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const load = async () => {
@@ -126,6 +126,7 @@ function SupportThreads({ id, token }: { id: string; token: string }) {
   const target = (draftId: number) => (d && !("belowMin" in d && d.belowMin) ? (d as SupportData).drafts?.find((x) => x.id === draftId)?.target : undefined) ?? "";
   return (
     <Section title="פניות החברים לצוות האתר" lead="כל 4 שעות Claude סורק את הפניות ועונה לפי מדיניות האתר. תשובה שאינה עומדת במדיניות נשמרת כטיוטה לאישור — כאן או אצל מנהל האתר. אפשר גם לענות בעצמכם; התשובה מוצגת לחבר כתשובת צוות האתר.">
+      {stats}
       {error && <p className="text-sm text-warn">{error}</p>}
       {!d ? (!error && <p className="text-sm text-ink-soft">טוען…</p>)
         : "belowMin" in d && d.belowMin ? <p className="text-sm text-ink-soft">השיחות יוצגו מ-{d.min} חברים רשומים.</p>
