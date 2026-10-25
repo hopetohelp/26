@@ -238,16 +238,19 @@ export async function groupSeries(env, id, now) {
 /** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
 export function seriesBuckets(start, now) {
   const HOUR_MS = 3600_000;
-  // השעתי מתחיל לכל המוקדם ב-24/10 23:00 שעון ישראל (הכרעת בעלים 25.10.2026); לפני כן — נקודה ליום
+  // הגרף מתחיל ב-24/10 23:00 שעון ישראל, בלי שום נקודה לפני כן (הכרעת בעלים 25.10.2026). הנקודה הראשונה כוללת את כל מה שנצבר עד אז.
+  // 72 השעות האחרונות — נקודה לשעה; מה שלפניהן (אחרי 24/10 23:00) — נקודה ליום
   const hourStart = Math.max(SERIES_HOURLY_FROM, Math.floor(now / HOUR_MS) * HOUR_MS - (SERIES_HOURS - 1) * HOUR_MS);
   const out = [];
-  let t = Date.parse(israelDayStart(start));
+  let t = Math.max(SERIES_HOURLY_FROM, Date.parse(israelDayStart(start)));
   while (t < hourStart) {
     const next = Date.parse(israelDayStart(t + 26 * HOUR_MS));
     out.push({ start: t, end: Math.min(next, hourStart), hourly: false });
     t = next;
   }
   for (let h = hourStart; h <= now; h += HOUR_MS) out.push({ start: h, end: Math.min(h + HOUR_MS, now + 1), hourly: true });
+  // לפני תחילת הגרף (בדיקות, שעון אחר) — לפחות נקודה אחת לשעה הנוכחית
+  if (!out.length) { const h = Math.floor(now / HOUR_MS) * HOUR_MS; out.push({ start: h, end: now + 1, hourly: true }); }
   return out;
 }
 

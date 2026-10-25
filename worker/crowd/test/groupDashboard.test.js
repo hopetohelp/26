@@ -232,8 +232,13 @@ describe("group series", () => {
     // השעתי מתחיל ב-24/10 23:00 שעון ישראל (20:00 UTC): עד 10:00 UTC יש 15 שעות
     expect(b.filter((x) => x.hourly)).toHaveLength(15);
     expect(new Date(b.find((x) => x.hourly).start).toISOString()).toBe("2026-10-24T20:00:00.000Z");
-    expect(seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), Date.parse("2026-11-01T10:30:00Z")).filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
-    expect(b.filter((x) => !x.hourly).length).toBeGreaterThanOrEqual(5);
+    const later = seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), Date.parse("2026-11-01T10:30:00Z"));
+    expect(later.filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
+    expect(later[0].start).toBe(Date.parse("2026-10-24T20:00:00Z"));
+    for (let i = 1; i < later.length; i++) expect(later[i].start).toBe(later[i - 1].end);
+    // אין נקודות לפני 24/10 23:00
+    expect(b.filter((x) => !x.hourly)).toHaveLength(0);
+    expect(b[0].start).toBe(Date.parse("2026-10-24T20:00:00Z"));
     for (let i = 1; i < b.length; i++) expect(b[i].start).toBe(b[i - 1].end);
 
     const mgr = await account("boss@x.co");

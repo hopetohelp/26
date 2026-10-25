@@ -19,7 +19,11 @@ export default function GroupSeriesChart({ buckets, points, label }: { buckets: 
   const [hover, setHover] = useState<number | null>(null);
   const W = 320, H = 72, P = 4;
   const n = points.length;
-  const max = Math.max(1, ...points.map((v) => v ?? 0));
+  const top = Math.max(1, ...points.map((v) => v ?? 0));
+  // מדרגות בגובה (הכרעת בעלים 25.10.2026): קו בהיר בכל מדרגה עגולה (1, 2 או 5 כפול חזקת 10), כ-3–4 קווים
+  const raw = top / 4, pow = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 5, 10].map((m) => m * pow).find((x) => x >= raw) ?? pow * 10;
+  const max = Math.max(top, step * Math.ceil(top / step));
+  const levels = Array.from({ length: Math.floor(max / step) }, (_, i) => (i + 1) * step);
   // RTL: הזמן זורם מימין לשמאל, כמו הקריאה
   const x = (i: number) => (n <= 1 ? W / 2 : W - P - (i * (W - 2 * P)) / (n - 1));
   const y = (v: number) => H - P - (v / max) * (H - 2 * P);
@@ -39,6 +43,10 @@ export default function GroupSeriesChart({ buckets, points, label }: { buckets: 
     <figure className="space-y-1">
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[72px] text-ink touch-none" role="img" aria-label={`${label}: ${points[n - 1] ?? "אין עדיין"} עכשיו`} onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setHover(null); }}>
         <line x1={P} x2={W - P} y1={H - P} y2={H - P} className="stroke-paper-line" strokeWidth="1" />
+        {levels.map((v) => <g key={v}>
+          <line x1={P} x2={W - P} y1={y(v)} y2={y(v)} className="stroke-paper-line" strokeWidth="1" opacity=".7" />
+          <text x={W - P} y={y(v) - 2} textAnchor="end" fontSize="8" className="fill-ink-soft font-num">{v.toLocaleString("he-IL")}</text>
+        </g>)}
         {split > 0 && <line x1={x(split)} x2={x(split)} y1={P} y2={H - P} className="stroke-paper-line" strokeDasharray="3 3" />}
         <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {/* נקודה לכל שעה או יום; הנבחרת גדולה יותר */}
