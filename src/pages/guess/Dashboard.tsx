@@ -1,4 +1,4 @@
-import { HAGZARA_GROUP_ID } from "../../lib/simpleSources";
+import { HAGZARA_GROUP_ID, KNESSET_GROUPS } from "../../lib/simpleSources";
 import SourcePicker from "../../components/SourcePicker";
 import { useSourcePreference } from "../../lib/sourcePreference";
 import { createContext, useContext } from "react";
@@ -12,7 +12,7 @@ import { MODEL_AVERAGE, useCrowdDashboard } from "../../lib/sources";
 import { call, type Cell, type Dashboard as D, type GroupDashboard, type GroupPublic, type SeatStat, type SeatsPayload } from "../../lib/crowdApi";
 import { SAVED_EVENT } from "../../lib/outbox";
 import { date, pctValue, rng, seatsFmt } from "../../lib/format";
-import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, normalizeBlocs, V2022_LABEL, V2026_LABEL } from "./model";
+import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
 import { votingRows } from "./votingRows";
 import { Notice } from "./ui";
@@ -25,7 +25,6 @@ import GroupBanner from "../../components/GroupBanner";
 import GroupScope from "../../components/GroupScope";
 import { groupImageUrl, groupUrl } from "../../lib/groupLink";
 import { blankDashboard, blankStat, listsFromPolls } from "../../lib/groupBlank";
-import { useLocation } from "react-router-dom";
 import { BlocAvatar } from "../../components/BlocAvatar";
 import type { useSession } from "./useCrowd";
 
@@ -93,7 +92,6 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
   const personal = usePersonalBlocs();
-  const { pathname, search } = useLocation();
 
   const scopeBar = groups.length > 0 && (
     <div className="mb-4">
@@ -113,7 +111,9 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   const asOf = d.publishedAt ? `${date(d.publishedAt)}, ${time(d.publishedAt)}` : "הפרסום האחרון";
   // "נכון ל" מוצג רק כשהפרסום ישן בשעתיים לפחות
   const stale = !!d.publishedAt && Date.now() - Date.parse(d.publishedAt) >= 2 * 3600_000;
-  const userBlocs = (personal.draft ? normalizeBlocs(personal.draft) : DEFAULT_BLOCS).blocs;
+  // במקום הגושים האישיים הישנים — חמש הקבוצות הקבועות (הכרעת בעלים 25.10.2026)
+  void personal;
+  const userBlocs = KNESSET_GROUPS;
   return (
     <div>
       {top}
@@ -130,7 +130,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
       <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <ComparisonContext.Provider value={selection}>
       {d.seats ? <SeatsStats onView={setView} rows={d.seats.full} polls={d.seats.polls} mine={mine} view={view} passedLists={d.seats.everPassedLists} overall={overallSeats} /> : <Notice>עדיין אין ניחושי מנדטים להצגה.</Notice>}
-      {d.blocs ? <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={mine} editReturnTo={pathname + search} overall={overallBlocs} /> : <Notice>עדיין אין ניחושי גושים להצגה.</Notice>}
+      <BlocStats d={d} blank={!!blank} view={view} mineBlocs={userBlocs} mineSeats={mine} overall={overallBlocs} overallD={comparing ? all ?? undefined : undefined} />
       {(blank || d.vote2026 || d.vote2022 || d.matrix || d.byVote) && <VotingStats d={d} blankLists={blank ? blankLists : undefined} />}
       </ComparisonContext.Provider>
     </div>
@@ -192,7 +192,7 @@ export function SeatsStats({ rows, polls, mine, view, onView, passedLists, overa
   return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">רשימה</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mine && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
-    <tbody>{sorted.map(s=>{ const o = overall?.of(s.list); return <tr key={s.list} className="border-t border-paper-line"><td className="py-2 pe-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center"><AvgRange mean={format(polls[s.list] ?? 0)} range={pollRangeText(pollSummary([s.list])?.range ?? null)} /></td><td className="text-center"><AvgRange bold mean={format(s.mean)} range={range(s) ? `${range(s)}${suffix}` : ""} /></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? format(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
+    <tbody>{sorted.map(s=>{ const o = overall?.of(s.list); return <tr key={s.list} className="border-t border-paper-line"><td className="py-2 pe-2"><span className="flex items-center gap-2"><PartyAvatar id={s.list} size={28} />{nameOf(s.list)}</span></td><td className="text-center"><AvgRange mean={format(polls[s.list] ?? 0)} range={pollRangeText(pollSummary([s.list])?.range ?? null)} /></td><td className="text-center"><AvgRange bold mean={format(s.mean)} range={range(s) ? `${range(s)}${suffix}` : ""} /></td>{mine && <td className="text-center">{myValue(s.list) === undefined ? "—" : format(myValue(s.list)!)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? format(o.mean) : "—"} range={o && Number.isFinite(o.min) ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div></Card>;
 }
 
@@ -218,25 +218,34 @@ function blocStats(d: D): Map<string, SeatStat> {
  * שורות טבלת הגושים (הכרעת בעלים 12.10.2026): לכל משתתף מוצגים רק הגושים שהגדיר אישית, בשמות שנתן להם;
  * מחק חלק או הכול — יוצגו לו פחות. הנתון של כל גוש הוא של כלל המשתתפים באותו הרכב (או חסר כשאין מספיק מגדירים).
  */
+/** ממוצע הקבוצה מתוך ממוצעי המפלגות (ממוצע של סכומים = סכום הממוצעים); בלי טווח — הטווח דורש חישוב בשרת */
+function derivedStat(d: D | undefined, lists: string[]): SeatStat | null {
+  const full = d?.seats?.full;
+  if (!full?.length) return null;
+  const rows = [...new Set(lists)].map(id => full.find(x => x.list === id)).filter(x => x && x.n > 0) as SeatStat[];
+  if (!rows.length) return null;
+  const mean = rows.reduce((n, x) => n + x.mean, 0);
+  return { list: "", n: Math.max(0, ...full.map(x => x.n)), mean, min: NaN, max: NaN, median: NaN, p25: NaN, p75: NaN };
+}
 function blocRows(d: D, mineBlocs: { name: string; lists: string[] }[], blank = false): BlocRow[] {
-  const stats = blocStats(d);
+  const stats = d.blocs ? blocStats(d) : new Map<string, SeatStat>();
   return mineBlocs.filter(g => g.lists.length > 0)
-    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: blank ? blankStat("", 0) : stats.get(compKey(g.lists)) ?? null }))
+    .map((g, i) => ({ key: `own-${i}-${compKey(g.lists)}`, lists: g.lists, label: g.name.trim() || `גוש ${i + 1}`, stat: blank ? blankStat("", 0) : stats.get(compKey(g.lists)) ?? derivedStat(d, g.lists) }))
     .sort((a, b) => (b.stat?.mean ?? -Infinity) - (a.stat?.mean ?? -Infinity));
 }
 
-export function BlocStats({ d, blank = false, view, mineBlocs = [], mineSeats, editReturnTo, overall }: { d:D; blank?: boolean; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall }) {
+export function BlocStats({ d, blank = false, view, mineBlocs = [], mineSeats, editReturnTo, overall, overallD }: { d:D; blank?: boolean; view:View; mineBlocs?: { name: string; lists: string[] }[]; mineSeats?: SeatsPayload | null; editReturnTo?: string; overall?: Overall; overallD?: D }) {
   const pollSummary = usePollSummary();
   const rows = blocRows(d, mineBlocs, blank);
   const mineOf = (lists: string[]) => mineSeats ? [...new Set(lists)].reduce((sum, id) => sum + (mineSeats.seats[id]?.v ?? 0), 0) : undefined;
-  const head = <SectionTitle title="החלוקה לגושים" action={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
+  const head = <SectionTitle title="חלוקת הכנסת" action={editReturnTo ? <EditBlocsButton returnTo={editReturnTo} compact /> : undefined} />;
   if (!rows.length) return <Card className="!border-t-0">{head}<Notice>אין לך גושים מוגדרים. אפשר להוסיף גוש בעריכת הגושים.</Notice></Card>;
-  if (view==="chart") return <Bars head={head} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat?.min ?? 0,hi:r.stat?.max ?? 0,q:r.stat ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:pollSummary(r.lists)?.mean}))} />;
+  if (view==="chart") return <Bars head={head} rows={rows.map(r=>({key:r.key,label:r.label,lists:r.lists,mean:r.stat?.mean ?? null,lo:r.stat && Number.isFinite(r.stat.min) ? r.stat.min : r.stat?.mean ?? 0,hi:r.stat && Number.isFinite(r.stat.max) ? r.stat.max : r.stat?.mean ?? 0,q:r.stat && Number.isFinite(r.stat.min) ? [r.stat.min,r.stat.p25,r.stat.median,r.stat.p75,r.stat.max] as BarRow["q"] : undefined,poll:pollSummary(r.lists)?.mean}))} />;
   const dataCols = 2 + (mineSeats ? 1 : 0) + (overall ? 1 : 0);
   return <Card className="!border-t-0">{head}<div className="overflow-x-auto"><table className="w-full table-fixed text-sm tabular">
     <StatCols data={dataCols} />
     <thead><tr className={`text-ink-soft ${overall ? CMP_HEAD : ""}`}><th className="text-start font-normal">גוש</th><th className="font-normal">סקרים</th><th className="font-normal">{overall ? overall.name : "משתתפים"}</th>{mineSeats && <th className="font-normal">שלך</th>}{overall && <th className={`font-normal ${SEP}`}>כל המשתתפים</th>}</tr></thead>
-    <tbody>{rows.map(r=>{ const o = overall?.of(compKey(r.lists)); const poll = pollSummary(r.lists); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={poll ? seatsFmt(poll.mean) : "—"} range={pollRangeText(poll?.range ?? null)} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o ? range(o) : ""} /></td>}</tr>; })}</tbody>
+    <tbody>{rows.map(r=>{ const o = overall ? overall.of(compKey(r.lists)) ?? derivedStat(overallD, r.lists) : undefined; const poll = pollSummary(r.lists); return <tr key={r.key} className="border-t border-paper-line"><th className="text-start py-2 pe-2 font-normal"><BlocName id={r.key} name={r.label} lists={r.lists} /></th><td className="text-center"><AvgRange mean={poll ? seatsFmt(poll.mean) : "—"} range={pollRangeText(poll?.range ?? null)} /></td><td className="text-center"><AvgRange bold mean={r.stat ? seatsFmt(r.stat.mean) : "—"} range={r.stat && Number.isFinite(r.stat.min) ? range(r.stat) : ""} /></td>{mineSeats && <td className="text-center">{seatsFmt(mineOf(r.lists) ?? 0)}</td>}{overall && <td className={`text-center ${SEP}`}><AvgRange bold mean={o ? seatsFmt(o.mean) : "—"} range={o && Number.isFinite(o.min) ? range(o) : ""} /></td>}</tr>; })}</tbody>
   </table></div></Card>;
 }
 

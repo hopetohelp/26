@@ -1,6 +1,5 @@
 import { useSearchParams, Link } from "react-router-dom";
 import { usePersonalBlocs } from "../../components/PersonalBlocs";
-import Blocs from "./Blocs";
 import { type SeatsPayload, type VotePayload } from "../../lib/crowdApi";
 import History from "./History";
 import Seats, { HowTo } from "./Seats";
@@ -22,7 +21,8 @@ export default function Mine({ session, seats, complete, shared, onStatistics }:
   const voteCard = useRef<HTMLDivElement>(null);
   useOpenVote(useCallback(() => { setVoteOpen(true); voteCard.current?.scrollIntoView({ block: "start", behavior: "smooth" }); }, []));
   useEffect(() => { if (requested === "vote") { setVoteOpen(true); voteCard.current?.scrollIntoView({ block: "start" }); } }, [requested]);
-  const sec: Sec = requested === "blocs" || requested === "history" ? requested : "seats";
+  // עורך ניחוש הגושים הישן הוסר (הכרעת בעלים 25.10.2026): קישור ישן ל-section=blocs נפתח בעורך המנדטים
+  const sec: Sec = requested === "history" ? requested : "seats";
   // הלשונית "האחוזים" אוחדה עם "המפלגות" (מתג מנדטים | אחוזים, הכרעת בעלים 10.10.2026): קישור ישן נפתח במצב אחוזים
   useEffect(() => {
     if (requested !== "calculator") return;
@@ -52,7 +52,6 @@ export default function Mine({ session, seats, complete, shared, onStatistics }:
       </CardDrawer></div>}
       {sec === "seats" && !shared && <HowTo signedIn={!!session.token} />}
       {sec === "seats" && <Seats unit={seats} session={session} blocsUnit={blocs} onStatistics={onStatistics} />}
-      {sec === "blocs" && <Blocs unit={blocs} session={session} mySeats={seats.draft ? Object.fromEntries(Object.entries(seats.draft.seats).map(([id, c]) => [id, c.v])) : null} />}
       {sec === "history" && <History session={session} />}
 
     </div>

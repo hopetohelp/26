@@ -34,7 +34,7 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
         </button>
       </div>
       {g.comparison && <p className="text-sm text-ink-soft mb-3">מקור ההשוואה בשיתוף: {DATA_PRODUCTS[g.comparison.selection.product].name}. {g.comparison.snapshotId !== SNAPSHOT_ID && "ההשוואה מבוססת על גרסת נתונים קודמת; הניחוש עצמו נשמר."}</p>}
-      <PersonalBlocs title="הגושים שלי לפי הניחוש ששותף איתי" values={g.seats} source="ניחוש המשתתף ששיתף את הקישור, לפי הגושים שלכם" asOf="תוכן הקישור" />
+      <PersonalBlocs title="חלוקת הכנסת לפי הניחוש ששותף איתי" values={g.seats} source="ניחוש המשתתף ששיתף את הקישור, לפי הגושים שלכם" asOf="תוכן הקישור" />
       <div className={`grid ${splitCls("md:grid-cols-[1.2fr_1fr]")} gap-4 [&>*]:min-w-0 items-start`}>
         <SeatBoard values={g.seats} />
         <div>

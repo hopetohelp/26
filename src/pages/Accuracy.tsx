@@ -285,7 +285,7 @@ export default function Accuracy() {
           </Note>
         </details>
       </Card>
-      <PersonalBlocs title="הגושים שלי: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: ממוצעי המפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
+      <PersonalBlocs title="חלוקת הכנסת: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: ממוצעי המפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום ממוצעי המפלגות לפני ${c.label}`, asOf: eveText },
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
       ]} />

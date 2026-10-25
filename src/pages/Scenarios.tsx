@@ -139,7 +139,7 @@ export default function Scenarios() {
 
   return (
     <>
-      <Split title="אותו ממוצע. כמה תוצאות אפשריות?" lead={`ממוצע המודל היום, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="הגושים שלי: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(MODEL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(MODEL_AVERAGE.asOf) }))]} />} secondary={<>
+      <Split title="אותו ממוצע. כמה תוצאות אפשריות?" lead={`ממוצע המודל היום, ו-${num(sc.n)} תרחישים סביבו. לכל רשימה הטווח שבו נמצאים 80% מהתרחישים, ובכמה מהתרחישים היא עוברת את אחוז החסימה. לא "סיכוי".`} primary={<PersonalBlocs title="חלוקת הכנסת: שינוי לאורך זמן והבדלים בין מכונים" source="תחילת וסוף המגמה והשוואת המכונים" asOf={date(MODEL_AVERAGE.asOf)} datasets={[{ values: m.trend[0].seats, source: "תחילת המגמה", asOf: date(m.trend[0].date) }, { values: m.trend[m.trend.length - 1].seats, source: "סוף המגמה", asOf: date(m.trend[m.trend.length - 1].date) }, ...m.house.map(h => ({ values: h.seats, source: `הממוצע מעוגן במכון ${h.firmHe}`, asOf: date(MODEL_AVERAGE.asOf) }))]} />} secondary={<>
 
       <Card title="לכל רשימה">
         <Explained

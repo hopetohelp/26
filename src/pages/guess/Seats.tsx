@@ -135,7 +135,8 @@ export default function Seats({
   const left = TOTAL - sum;
   const invalid = validateSeats(p, GUESS_IDS);
   // שמירה אחת למנדטים ולכל חלוקת גושים שנערכה, גם בלי יעד מספרי.
-  const blocsToSave = !!blocs;
+  // שמירות גושים ישנות — לא נשלחות עוד (הכרעת בעלים 25.10.2026: מתעלמים מהן)
+  const blocsToSave = false;
   const blocsInvalid = blocsToSave ? validateBlocs(blocs!, IDS) : null;
   const both: SaveUnit = {
     status: unit.status !== "saved" ? unit.status : blocsToSave && blocsUnit.status !== "saved" ? blocsUnit.status : "saved",
@@ -193,7 +194,7 @@ export default function Seats({
   return (
     <div>
       {sourcePicker}
-      <PersonalBlocs title="הגושים שלי" values={values} source="חלוקת המנדטים בניחוש שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
+      <PersonalBlocs title="חלוקת הכנסת" values={values} source="חלוקת המנדטים בניחוש שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="c-guess-workspace">
         <GuessChart><div className="c-guess-hall space-y-3">
           <div className="relative">

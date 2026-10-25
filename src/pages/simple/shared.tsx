@@ -188,12 +188,12 @@ function Pie({ slices, values, label, overlay, inner }: { slices: Slice[]; value
       const [lx, ly] = at(mid, covered(mid) ? (R + rU) / 2 : R * .62);
       const fits = da > (covered(mid) ? .45 : .35);
       return <g key={s.id} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={sector(a1, a2, R)} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
-        {fits && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize="10.5" fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{s.shown}</text></>}</g>;
+        {fits && <><text x={lx} y={ly - 2} textAnchor="middle" style={{ fontSize: 10.5 }} fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" style={{ fontSize: 14 }} fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{s.shown}</text></>}</g>;
     })}
     {inner && inner[1] > inner[0] && (() => { const a1 = toA(inner[0]), a2 = toA(inner[1]), [x1, y1] = at(a1, rU), [x2, y2] = at(a2, rU);
       return <path d={`M${x1} ${y1}A${rU} ${rU} 0 ${a2 - a1 > Math.PI ? 1 : 0} 1 ${x2} ${y2}`} fill="none" stroke="rgb(var(--paper))" strokeWidth="2" pointerEvents="none" />; })()}
     {u && (() => { const [lx, ly] = at((u.a1 + u.a2) / 2, rU * .5); return <g {...handlers(slices.length, true)}><path d={sector(u.a1, u.a2, rU)} fill={overlay!.color} stroke="rgb(var(--paper))" strokeWidth="2" />
-      {u.a2 - u.a1 > .6 && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize="10.5" fill="#fff" pointerEvents="none">{overlay!.name}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{overlay!.shown}</text></>}</g>; })()}
+      {u.a2 - u.a1 > .6 && <><text x={lx} y={ly - 2} textAnchor="middle" style={{ fontSize: 10.5 }} fill="#fff" pointerEvents="none">{overlay!.name}</text><text x={lx} y={ly + 13} textAnchor="middle" style={{ fontSize: 14 }} fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{overlay!.shown}</text></>}</g>; })()}
   </svg><p className="f-pie-total"><b className="font-num">{shownTotal}</b> מנדטים</p>
     {pop && (slices[pop.i] ?? (u && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
 }
@@ -219,6 +219,13 @@ export function PersonalBlocsEditor() {
       <select aria-label={`החלק של ${nameOf(id)}`} value={cellOf(id)} onChange={e => personal.move(id, e.target.value)}>{PERSONAL_CELLS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></li>)}</ul>
     <button type="button" className="f-blocedit-reset" onClick={personal.reset}>חזרה לחלוקה המקורית</button>
   </div>;
+}
+/** העוגה הכפולה לבדה (בלי פס הטלפון) — לתצוגות הגושים במתקדם */
+export function DoublePie({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
+  const fixed = blocSlices(values, missing);
+  const ring = [...fixed].sort((a, b) => DOUBLE_ORDER.indexOf(a.id) - DOUBLE_ORDER.indexOf(b.id));
+  const inner: [number, number] = [0, blocTotal(values, SIMPLE_BLOCS[0].lists) + blocTotal(values, SIMPLE_BLOCS[3].lists)];
+  return <div className="f-pie-wrap is-inline"><Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unityOverlay(values)} inner={inner} /></div>;
 }
 /**
  * חלוקות הכנסת (הכרעת בעלים 25.10.2026): עוגה כפולה — הקבועה, ובתוכה האחדות (קבועה לכולם); קו העיגול הפנימי לכל אורך נתניהו ואייזנקוט.

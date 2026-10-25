@@ -80,11 +80,11 @@ it("נתון של גוש מותאם נלקח רק כשחמישה מגדירים,
   expect(cells[2]).not.toContain(">8<");
 });
 
-it("מחק הכול — מוצגת הודעה, וכפתור העריכה נשאר", () => {
+it("בלי קבוצות להצגה — מוצגת הודעה", () => {
   const d: Dashboard = {participants:2,open:true,publishedAt:null,aggregationId:null,blocs:{derived:null,explicit:null,customCount:0,fixed:[{id:"coalition",name:"קבוע",lists:["likud"],stat}],custom:[]}};
   const html=renderToStaticMarkup(createElement(StaticRouter,{location:"/community",children:createElement(BlocStats,{d,view:"table",mineBlocs:[],editReturnTo:"/community"})}));
   expect(html).toContain("אין לך גושים מוגדרים");
-  expect(html).toContain("החלוקה לגושים");
+  expect(html).toContain("חלוקת הכנסת");
   expect(html).not.toContain("קבוע");
 });
 

@@ -40,9 +40,11 @@ describe("מסך קבוצה מתחת לסף", () => {
   it("טבלת הגושים: 0 במקום מקף כשהמסך ריק", () => {
     const mine = [{ name: "גוש א", lists: ids.slice(0, 2) }];
     const on = renderToStaticMarkup(createElement(StaticRouter, { location: "/" }, createElement(BlocStats, { d, blank: true, view: "table", mineBlocs: mine })));
-    const off = renderToStaticMarkup(createElement(StaticRouter, { location: "/" }, createElement(BlocStats, { d, view: "table", mineBlocs: mine })));
+    // מעל הסף: ממוצע הקבוצה = סכום ממוצעי המפלגות שלה (הכרעת בעלים 25.10.2026 — חלוקה קבועה מתוך ניחושי המנדטים)
+    const real = { ...d, seats: { ...d.seats!, full: d.seats!.full.map((x, i) => ({ ...x, mean: i === 0 ? 5 : i === 1 ? 3 : 0 })) } };
+    const off = renderToStaticMarkup(createElement(StaticRouter, { location: "/" }, createElement(BlocStats, { d: real, view: "table", mineBlocs: mine })));
     expect(on).toContain("font-bold\">0<");
-    expect(off).not.toContain("font-bold\">0<");
+    expect(off).toContain("font-bold\">8<");
   });
   it("טבלת ההצבעה: שורה לכל רשימה עם 0 בטורי המשתתפים ובלי מטריצה", () => {
     const rows = votingRows(d, ids);
