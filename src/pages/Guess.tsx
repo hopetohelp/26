@@ -3,7 +3,7 @@ import SimpleGuess from "./simple/Guess";
 import SimpleComparison from "./simple/Comparison";
 import GuessWorkspace from "./guess/Workspace";
 import SaveButton from "./guess/SaveButton";
-import { canViewCommunity } from "./guess/stage";
+import { canViewCommunity, comparisonUnlocked } from "./guess/stage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageTitle, Split } from "../components/ui";
@@ -39,12 +39,14 @@ function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
   const [mineKey, setMineKey] = useState(0);
   const seats = useUnit<SeatsPayload>("seats", null, session.me?.latest.seats?.payload as SeatsPayload | undefined);
   const complete = canViewCommunity(seats.draft, IDS);
-  const previousComplete = useRef(complete);
+  // שער השמירה האחיד: ההשוואה נפתחת רק אחרי אישור שמירה מהשרת, כמו בממוקדת
+  const unlocked = comparisonUnlocked(seats, IDS);
+  const previousUnlocked = useRef(unlocked);
   const gRaw = params.get("g");
   const shared = useMemo(() => decodeGuess(gRaw, IDS), [gRaw]);
   const sharedLink = !!shared;
   const auxiliary = params.get("section") === "history";
-  const statistics = complete && !sharedLink && params.get("view") !== "edit" && !params.has("section");
+  const statistics = unlocked && !sharedLink && params.get("view") !== "edit" && !params.has("section");
   const setStage = (stage: "edit" | "statistics") => {
     const next = new URLSearchParams(params);
     next.set("view", stage);
@@ -52,9 +54,9 @@ function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
     setParams(next, { replace: true });
   };
   useEffect(() => {
-    if (complete && !previousComplete.current && !sharedLink) setStage("statistics");
-    previousComplete.current = complete;
-  }, [complete, sharedLink]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (unlocked && !previousUnlocked.current && !sharedLink) setStage("statistics");
+    previousUnlocked.current = unlocked;
+  }, [unlocked, sharedLink]); // eslint-disable-line react-hooks/exhaustive-deps
   const top = useRef<HTMLDivElement>(null);
 
   // קישור אישי ישן (?t=; אין הנפקה חדשה מ-10.10.2026, והוא נמחק כשהחשבון מאומת) — נקלט ונמחק מהכתובת, מכניס ישר (סשן רגיל דרך /auth/link) ומציע לקבוע סיסמה חדשה
@@ -125,7 +127,7 @@ function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
       )}
       </>; const body = !statistics ? (
         <section id="my-guess" ref={top}>
-          <Mine key={mineKey} session={session} seats={seats} complete={complete} shared={sharedLink} onStatistics={() => setStage("statistics")} />
+          <Mine key={mineKey} session={session} seats={seats} complete={complete} unlocked={unlocked} shared={sharedLink} onStatistics={() => setStage("statistics")} />
         </section>
       ) : (
         <section id="statistics">

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SeatsPayload } from "../../lib/crowdApi";
-import { canViewCommunity } from "./stage";
+import { canViewCommunity, comparisonUnlocked } from "./stage";
 
 const ids = ["a", "b", "c"];
 const guess = (...values: number[]): SeatsPayload => ({ start: "zero", pollsAsOf: null, seats: Object.fromEntries(values.map((v, i) => [ids[i], { v, src: "manual", locked: true }])) });
@@ -24,5 +24,21 @@ describe("המעבר מהשערה לממוצע המשתתפים", () => {
     expect(canViewCommunity(p, ids)).toBe(false);
     expect(canViewCommunity({ ...p, pct: { a: 51, b: 51 } }, ids)).toBe(false);
     expect(canViewCommunity({ ...p, pct: { a: 50, b: 50 } }, ids)).toBe(true);
+  });
+});
+
+describe("שער השמירה האחיד", () => {
+  const full = guess(60, 60, 0);
+  it("נפתח רק לניחוש שלם שנשמר ואושר בשרת", () => {
+    expect(comparisonUnlocked({ draft: full, status: "saved", queued: false }, ids)).toBe(true);
+  });
+  it("טיוטה מלאה שלא נשמרה, שינויים שלא נשמרו או שמירה בתור — חסומים", () => {
+    expect(comparisonUnlocked({ draft: full, status: "draft", queued: false }, ids)).toBe(false);
+    expect(comparisonUnlocked({ draft: full, status: "dirty", queued: false }, ids)).toBe(false);
+    expect(comparisonUnlocked({ draft: full, status: "saved", queued: true }, ids)).toBe(false);
+  });
+  it("שמירה של ניחוש חלקי או אחוזים לא תקינים — חסומה", () => {
+    expect(comparisonUnlocked({ draft: guess(60, 59, 0), status: "saved", queued: false }, ids)).toBe(false);
+    expect(comparisonUnlocked({ draft: { ...full, mode: "pct" }, status: "saved", queued: false }, ids)).toBe(false);
   });
 });
