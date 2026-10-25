@@ -224,7 +224,8 @@ export async function groupQuestions(env, participants, now) {
   ]);
   const m = msgs.results?.[0] ?? {};
   const byTopic = {};
-  for (const r of topics.results || []) { const t = r.topic === "design" ? "idea" : r.topic; byTopic[t] = (byTopic[t] ?? 0) + r.n; }
+  // שני סוגים בלבד (הכרעת בעלים 25.10.2026): שאלה או תאוריה, וכל השאר — תקלה או שיפור
+  for (const r of topics.results || []) { const t = r.topic === "theory" ? "theory" : "data"; byTopic[t] = (byTopic[t] ?? 0) + r.n; }
   return { askers: m.askers ?? 0, messages: m.messages ?? 0, week: m.week ?? 0, byTopic, aiUsers: ai.results?.[0]?.n ?? 0 };
 }
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { call, type GroupCompare, type GroupInsights, type GroupLinkStats, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
+import { topicLabel } from "../lib/feedbackTopics";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { listName } from "../lib/data";
@@ -273,7 +274,6 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
   );
 }
 
-const TOPIC_LABEL: Record<string, string> = { data: "תיקון נתון", idea: "רעיון לשיפור", theory: "שאלה או תאוריה", other: "אחר" };
 
 /** פניות החברים לצוות האתר: כמה פנו, כמה הודעות (ובשבוע האחרון), לפי נושא, וכמה השתמשו בצ׳אט החכם. בלי תוכן */
 function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined }>["questions"] }) {
@@ -288,7 +288,7 @@ function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined 
       </div>
       {topics.length > 0 && (
         <ul className="text-sm space-y-1">
-          {topics.map(([k, v]) => <li key={k} className="flex justify-between gap-3 border-t border-paper-line pt-1"><span>{TOPIC_LABEL[k] ?? k}</span><strong className="font-num tabular">{n(v!)}</strong></li>)}
+          {topics.map(([k, v]) => <li key={k} className="flex justify-between gap-3 border-t border-paper-line pt-1"><span>{topicLabel(k)}</span><strong className="font-num tabular">{n(v!)}</strong></li>)}
         </ul>
       )}
       <p className="text-xs text-ink-soft">מספר גבוה בנושא מסוים — סימן שכדאי להסביר אותו לקבוצה.</p>

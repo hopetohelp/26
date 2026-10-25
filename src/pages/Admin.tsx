@@ -362,7 +362,8 @@ export function InquirySections({ data, reply, draftActions }: { data: Data; rep
   const all = [
     ...data.feedback.map(thread => ({ key: `feedback-${thread.id}`, title: `פנייה ${thread.id}`, items: thread.items, waiting: thread.waiting, onReply: reply("feedback", thread.id), drafts: drafts.filter(d => d.kind === "feedback" && d.target === String(thread.id)), held: held.find(h => h.kind === "feedback" && h.target === String(thread.id)) })),
     ...(data.support?.threads ?? []).map(thread => ({ key: `support-${thread.participant}`, title: "משתמש רשום", items: thread.messages, waiting: thread.status === "new", onReply: reply("support", thread.participant), drafts: drafts.filter(d => d.kind === "support" && d.target === thread.participant), held: held.find(h => h.kind === "support" && h.target === thread.participant) })),
-  ].filter(c => c.items.length).map(c => ({ ...c, received: c.items[0].created_at, topic: conversationTopic(c.items) }));
+  // הסדר לפי הפנייה האחרונה של הגולש בכל שיחה (הכרעת בעלים 25.10.2026), לא לפי ההודעה הראשונה
+  ].filter(c => c.items.length).map(c => ({ ...c, received: [...c.items].reverse().find(i => i.author === "visitor")?.created_at ?? c.items[c.items.length - 1].created_at, topic: conversationTopic(c.items) }));
   const count = (pick: (c: (typeof all)[number]) => boolean) => all.filter(pick).length;
   const shown = all
     .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0 || !!c.held)))
@@ -372,7 +373,7 @@ export function InquirySections({ data, reply, draftActions }: { data: Data; rep
     <Chips label="נושא" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
     <div className="grid sm:grid-cols-2 gap-2">
       <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות והשהיות (${count(c => c.drafts.length > 0 || !!c.held)})` }]} />
-      <Segmented label="סדר" value={sort} onChange={setSort} options={[{ id: "oldest", label: "לפי סדר קבלה" }, { id: "newest", label: "החדשות קודם" }]} />
+      <Segmented label="סדר" value={sort} onChange={setSort} options={[{ id: "newest", label: "הפנייה האחרונה קודם" }, { id: "oldest", label: "הפנייה האחרונה בסוף" }]} />
     </div>
     {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} draftActions={draftActions} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
   </section>;

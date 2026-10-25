@@ -260,7 +260,7 @@ export interface GroupImportResult { group: string; added: number; duplicates: n
 /** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */
 export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number };
 /** תשובת GET /group/insights — מסך "ניהול קבוצה": מצב ההשערות של החברים מול טווח הסקרים ומספר הפניות לצוות. מצטבר בלבד, מ-50 רשומים */
-export interface GroupQuestions { askers: number; messages: number; week: number; byTopic: Partial<Record<"data" | "idea" | "theory" | "other", number>>; aiUsers: number }
+export interface GroupQuestions { askers: number; messages: number; week: number; byTopic: Partial<Record<"data" | "theory", number>>; aiUsers: number }
 export type GroupInsights = { group: string; min: number; belowMin: true } | {
   group: string; min: number; belowMin?: undefined; asOf: string; guesses: number;
   status: { inRange: number; approved: number; pending: number; rejected: number };

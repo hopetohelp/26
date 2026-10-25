@@ -2,7 +2,7 @@ import { expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { InquirySections } from './Admin';
-const thread = (id: number, text: string, at: string, waiting = true, topic = 'other') => ({ id, items: [{ author: 'visitor' as const, text, topic, created_at: at }], updated_at: at, waiting });
+const thread = (id: number, text: string, at: string, waiting = true, topic = 'other') => ({ id, items: [{ author: 'visitor' as 'visitor' | 'team', text, topic, created_at: at }], updated_at: at, waiting });
 const data = (feedback: ReturnType<typeof thread>[], support: { participant: string; status: string; updated_at: string; messages: { author: 'visitor' | 'team'; text: string; created_at: string }[] }[] = []) =>
   ({ days: [], totalVisitors: 0, feedback, support: { stats: {}, threads: support } });
 const render = (d: ReturnType<typeof data>, reply = vi.fn(() => async () => true)) => ({ html: renderToStaticMarkup(createElement(InquirySections, { reply, data: d })), reply });
@@ -19,20 +19,26 @@ it('משלב פניות רשומות ורגילות ברשימה אחת — בר
   expect(html).toContain('התקבלה');
 });
 
-it('הסדר (החדשות קודם) לפי ההודעה הראשונה בשיחה, ולא לפי התגובה האחרונה', () => {
+it('הסדר לפי הפנייה האחרונה של הגולש בשיחה (הכרעת בעלים 25.10.2026); תשובת צוות אינה מזיזה', () => {
   const old = { id: 1, waiting: true, updated_at: '2026-10-09T10:00:00Z', items: [
     { author: 'visitor' as const, text: 'שאלה ישנה', topic: 'other', created_at: '2026-10-01T10:00:00Z' },
     { author: 'visitor' as const, text: 'המשך חדש', topic: 'other', created_at: '2026-10-09T10:00:00Z' },
   ] };
-  const { html } = render(data([thread(2, 'שאלה חדשה', '2026-10-05T10:00:00Z'), old]));
-  expect(html.indexOf('שאלה חדשה')).toBeLessThan(html.indexOf('שאלה ישנה'));
+  const answered = { id: 3, waiting: false, updated_at: '2026-10-10T10:00:00Z', items: [
+    { author: 'visitor' as const, text: 'נענתה', topic: 'other', created_at: '2026-10-02T10:00:00Z' },
+    { author: 'team' as const, text: 'תשובה', topic: 'other', created_at: '2026-10-10T10:00:00Z' },
+  ] };
+  const { html } = render(data([thread(2, 'שאלה חדשה', '2026-10-05T10:00:00Z'), old, answered]));
+  // ממתינות בלבד כברירת מחדל: הפנייה האחרונה (9/10) לפני 5/10
+  expect(html.indexOf('שאלה ישנה')).toBeLessThan(html.indexOf('שאלה חדשה'));
 });
 
 it('מציג סינון לפי נושא עם ספירה, וסינון ממתינות', () => {
   const { html } = render(data([thread(1, 'א', '2026-10-01T10:00:00Z', true, 'data'), thread(2, 'ב', '2026-10-02T10:00:00Z', false, 'idea'), thread(3, 'ג', '2026-10-03T10:00:00Z', true, 'idea')]));
   expect(html).toContain('הכול (3)');
-  expect(html).toContain('תקלה או שגיאה (1)');
-  expect(html).toContain('רעיון לשיפור (2)');
+  // פניות "רעיון" ישנות נספרות עם התקלות (הכרעת בעלים 25.10.2026)
+  expect(html).toContain('תקלה או שיפור (3)');
+  expect(html).toContain('שאלה או תאוריה (0)');
   expect(html).toContain('ממתינות לתשובה (2)');
 });
 
