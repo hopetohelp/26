@@ -295,10 +295,10 @@ export function HagzaraCount({ members, total }: { members?: number | null; tota
   if (members == null || !total) return null;
   return <p className="f-gcount"><b className="font-num">{members.toLocaleString("he-IL")}/{total.toLocaleString("he-IL")}</b> חברים בהגזרה</p>;
 }
-/** ממוצע הניחושים (הכרעת בעלים 25.10.2026): בגדול — כמה ניחשו (כל הניחושים); לחבר הגזרה בקטן מתחת — X/N חברים בהגזרה */
+/** ממוצע הניחושים (הכרעת בעלים 25.10.2026): בגדול — כמה ניחשו (כל הניחושים); לחבר הגזרה בקטן מתחת — כמה מהם חברי הגזרה */
 export function GuessCount({ total, members }: { total?: number | null; members?: number | null }) {
   if (!total) return null;
-  return <div className="f-guesses"><p><b className="font-num">{total.toLocaleString("he-IL")}</b> ניחשו</p>{members != null && <HagzaraCount members={members} total={total} />}</div>;
+  return <div className="f-guesses"><p className="f-guesses-all"><b className="font-num">{total.toLocaleString("he-IL")}</b> ניחשו</p>{members != null && <p className="f-guesses-group"><span className="font-num">{members.toLocaleString("he-IL")}</span> חברי הגזרה</p>}</div>;
 }
 export function FocusFoot() {
   return <div className="f-foot"><Link to="/method" className="f-info" aria-label="מידע ומקורות">i</Link><Link to="/method">מידע ומקורות</Link></div>;
