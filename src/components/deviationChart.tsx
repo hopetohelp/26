@@ -37,7 +37,7 @@ function Row({ r, bound, lsegs }: { r: DevRow; bound: number; lsegs: LSeg[] }) {
           {ticks.map((v) => (
             <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint/60" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
           ))}
-          <ProfileCandle segs={lsegs} x={x} />
+          <ProfileCandle segs={lsegs} x={x} base={null} />
           <CapsuleMarks primary={{ at: x(0), value: r.estimate, label: "ממוצע הסקרים" }} secondary={{ at: x(r.dev), value: r.actual, label: "תוצאה בפועל" }} />
         </span>
       </span>

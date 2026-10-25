@@ -8,6 +8,7 @@ import type { Selection } from "../../lib/dataResolver";
 import { seatsFmt } from "../../lib/format";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 import { largestRemainder } from "../../lib/fillAll";
+import { shareOpacity } from "../../lib/capsule";
 
 const SOURCE_KEY = "elections26.simple-source";
 let current = (() => { try { return localStorage.getItem(SOURCE_KEY) ?? "all"; } catch { return "all"; } })();
@@ -56,17 +57,18 @@ export function orderedLists(selection: Selection, extra: Record<string, number>
 
 const AXIS_MAX = 32;
 const x = (v: number) => `${Math.min(100, v / AXIS_MAX * 100)}%`;
-/** קפסולת הסקרים בסולם המחקר המתקדם: קצוות ריקים, כתפיים בהירות, ליבה כהה; על הטווח המלא */
+/** קפסולת הסקרים (הכרעת בעלים 25.10.2026): מ-0 עד הסקר הגבוה; מלאה עד הנמוך, ומשם נחלשת לפי חלק הסקרים שמגיעים לכל ערך */
 function Capsule({ spread }: { spread: [number, number, number, number, number, number] }) {
   const [mn, p10, p25, p75, p90, mx] = spread;
-  const w = Math.max(mx - mn, .6), pc = (v: number) => (v - mn) / w * 100;
-  const fill = (alpha: (o: number) => string) => `linear-gradient(90deg,transparent 0 ${pc(p10)}%,${alpha(.32)} ${pc(p10)}% ${pc(p25)}%,${alpha(.88)} ${pc(p25)}% ${pc(p75)}%,${alpha(.32)} ${pc(p75)}% ${pc(p90)}%,transparent ${pc(p90)}%)`;
+  const one = mx - mn < .01, w = Math.max(mx, .6), pc = (v: number) => Math.round(v / w * 10000) / 100;
+  const pts: [number, number][] = one ? [[0, 1], [mx, 1]] : [[0, 1], [mn, 1], [p10, .9], [p25, .75], [p75, .25], [p90, .1], [mx, 0]];
+  const fill = (alpha: (o: number) => string) => `linear-gradient(90deg,${pts.map(([v, s]) => `${alpha(shareOpacity(s))} ${pc(v)}%`).join(",")})`;
   const mask = fill(o => `rgba(0,0,0,${o})`);
   // בצבעי הגזרה כל קפסולה עוברת בעצמה מאדום בהיר לכחול, בדגש על הכחול; מתחת לאחוז החסימה — בעיקר אדום (הכרעת בעלים 23.10.2026)
   const below = mx < THRESHOLD_SEATS;
   // מעבר עדין: הגוון מתחלף בהדרגה, והבדלי הבהירות הם אותם שלושה דרגים של המחקר המתקדם
   const heat = { background: below ? "linear-gradient(90deg,rgb(var(--heat-lo)),color-mix(in srgb,rgb(var(--heat-lo)) 70%,rgb(var(--heat-hi))))" : "linear-gradient(90deg,color-mix(in srgb,rgb(var(--heat-lo)) 55%,rgb(var(--heat-hi))),rgb(var(--heat-hi)) 70%)", WebkitMask: mask, mask };
-  return <span className="f-cap" style={{ left: x(mn), width: x(w) }}><i style={heat} /></span>;
+  return <span className="f-cap" style={{ left: 0, width: x(w) }}><i style={heat} /></span>;
 }
 export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };
 /** גרף המפלגות: קפסולה לסקרים ותגיות ערך לקווים */

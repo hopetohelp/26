@@ -683,7 +683,7 @@
 .f-card { background:rgb(var(--card));border:1px solid rgb(var(--line));border-radius:20px;padding:16px; }
 .f-legend { display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:rgb(var(--ink-soft));margin:0 0 10px; }
 .f-legend span { display:flex;align-items:center;gap:6px; }
-.f-lg-cap { width:26px;height:10px;border-radius:9px;border:1.25px solid rgb(var(--mk-range) / .75);background:linear-gradient(90deg,transparent 0 15%,rgb(var(--mk-range) / .32) 15% 35%,rgb(var(--mk-range) / .88) 35% 65%,rgb(var(--mk-range) / .32) 65% 85%,transparent 85%); }
+.f-lg-cap { width:26px;height:10px;border-radius:9px;border:1.25px solid rgb(var(--mk-range) / .75);background:linear-gradient(90deg,rgb(var(--mk-range) / .88) 0 45%,rgb(var(--mk-range) / .14)); }
 [data-group="hagzara"] .f-lg-cap { border-color:transparent;background:linear-gradient(90deg,rgb(var(--heat-lo)),rgb(var(--heat-hi))); }
 .f-lg-line { width:0;height:14px;border-left:2px solid rgb(var(--ink)); }
 .f-lg-line.dash { border-left-style:dashed; }
