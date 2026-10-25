@@ -260,6 +260,8 @@ export default function Admin() {
                   ["רשומות במאגר", data.support?.stats.participants ?? "—"],
                   ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
                   ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
+                  ["מייל לא מאומת", data.support?.stats.unverifiedEmails ?? "—"],
+                  ["נשלח מייל אימות ולא נלחץ", data.support?.stats.verifyMailsPending ?? "—"],
                 ]} />
                 <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
                   ["נפילות סך הכול", data.failures?.total ?? "—"],
