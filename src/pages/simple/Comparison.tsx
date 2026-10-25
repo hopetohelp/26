@@ -78,9 +78,9 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const vsPolls = (raw?.compare ?? "polls") === "polls";
   // לחברי הקבוצה הסרגל בוחר תמיד טווח (כל הסקרים / 14 ו־i24 / הניחושים), בכל השוואה שהמנהל בחר (הכרעת בעלים 25.10.2026).
   // "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
-  const ranges = !!member;
-  // ברירת המחדל בהשוואה לממוצע הניחושים: טווח כל הניחושים; בהשוואה לממוצע הסקרים — טווח הסקרים. עד שבוחרים טווח אחר במסך הזה
-  const rangeKey = ranges && !vsPolls && !pickedRange ? "crowd" : source.key;
+  // לכל הגולשים (הכרעת בעלים 25.10.2026): ברירת המחדל במסך הזה היא תמיד טווח הניחושים, עד שבוחרים טווח אחר
+  const ranges = true;
+  const rangeKey = !pickedRange ? "crowd" : source.key;
   const rangeSource = { ...source, key: rangeKey, setKey: (k: string) => { setPickedRange(true); source.setKey(k); } };
   const crowdRange = ranges && rangeKey === "crowd";
   const crowdRows = new Map((all?.seats?.full ?? []).map(r => [r.list, r]));
