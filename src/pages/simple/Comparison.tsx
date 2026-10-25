@@ -31,6 +31,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const [result, setResult] = useState<{ token: string; data: GroupDashboard | null; failed: boolean } | null>(null);
   const [sharing, setSharing] = useState(false);
   const [votersOpen, setVotersOpen] = useState(false);
+  const [pickedRange, setPickedRange] = useState(false);
   const allowed = !!member && !!session.token;
   useEffect(() => { if (member) setLanding({ id: member.id, name: member.name, slug: member.slug ?? "hagzara", image: member.image ?? null }); }, [member?.id, member?.name, member?.slug, member?.image, setLanding]);
   useEffect(() => {
@@ -76,19 +77,22 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const vsPolls = (raw?.compare ?? "polls") === "polls";
   // השוואה לממוצע הניחושים: הסרגל בוחר טווח (כל הסקרים / 14 ו־i24 / הניחושים). "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
   const ranges = !!member && !vsPolls;
-  const crowdRange = ranges && source.key === "crowd";
+  // ברירת המחדל בהשוואה לממוצע הניחושים: טווח כל הניחושים (הכרעת בעלים 25.10.2026), עד שבוחרים טווח אחר במסך הזה
+  const rangeKey = ranges && !pickedRange ? "crowd" : source.key;
+  const rangeSource = { ...source, key: rangeKey, setKey: (k: string) => { setPickedRange(true); source.setKey(k); } };
+  const crowdRange = ranges && rangeKey === "crowd";
   const crowdRows = new Map((all?.seats?.full ?? []).map(r => [r.list, r]));
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    <SourceBar source={source} ranges={ranges} />
+    <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
     {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
         marks={id => member && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : member ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule label={crowdRange ? "טווח הניחושים" : "טווח הסקרים"} />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="משתתפים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="הגזרה" n={group?.seats?.n} />}</>} />
+        legend={<><LegendCapsule label={crowdRange ? "טווח הניחושים" : "טווח הסקרים"} />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="ממוצע כל הניחושים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
