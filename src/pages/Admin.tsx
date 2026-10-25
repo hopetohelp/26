@@ -226,7 +226,7 @@ export default function Admin() {
           {/* תיבות קטנות מאוחדות (הכרעת בעלים 12.10.2026); הדשבורד המלא — במגירה אחת */}
           <div className="flex flex-wrap gap-2" role="group" aria-label="סיכום">
             <Pair label="משתמשים" a={["ס״ה", data.support?.stats.participants ?? "—"]} b={["היום", data.support?.stats.participantsToday ?? "—"]} />
-            <Pair label="שמרו ניחוש או הצבעה" a={["ס״ה", data.support?.stats.savers ?? "—"]} b={["היום", data.support?.stats.saversToday ?? "—"]} />
+            <Pair label="ניחושים" a={["כולם", data.support?.stats.guesses ?? "—"]} b={["הגזרה", data.support?.stats.hagzaraGuesses ?? "—"]} />
             <Pair label="נכנסו" a={["ס״ה", data.totalVisitors]} b={["היום", today?.users ?? 0]} />
             <Pair label="ממתינים לתשובה וטיוטות" a={["ממתינים", waiting]} b={["טיוטות", data.drafts?.length ?? 0]} alert={waiting + (data.drafts?.length ?? 0) > 0} />
             <Pair label="ניחושים" a={["ממתינים", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />

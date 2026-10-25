@@ -271,9 +271,13 @@ async function logGroupSizes(env, now) {
 }
 
 /** מי מבין החברים שהניחוש האחרון שלו נספר בממוצע (לא "בבדיקה", לא ממתין ולא נדחה) — מקור אחד ל"שמרו ניחוש" בכל מסכי הקבוצה */
+/**
+ * ניחושים שנספרים (הכרעת בעלים 25.10.2026 — שני סכומים בלבד בכל האתר: כל הניחושים, וכל הניחושים של הגזרה):
+ * ניחוש שנדחה — אף פעם; מייל שלא אומת — תמיד. members = null ⇐ כל הניחושים.
+ */
 async function countedGuessers(env, members) {
   const { latest, mod, review } = await moderationState(env);
-  return new Set(latest.filter((v) => members.has(v.participant) && !review.has(v.participant) && !mod.isExcluded(v) && !mod.rejected.has(v.id) && !mod.pending.has(v.id)).map((v) => v.participant));
+  return new Set(latest.filter((v) => (!members || members.has(v.participant)) && !review.has(v.participant) && !mod.isExcluded(v) && !mod.rejected.has(v.id) && !mod.pending.has(v.id)).map((v) => v.participant));
 }
 
 /** כניסה לאתר (כל פתיחה קוראת ל-/me): נרשמת רק אם עברה לפחות חצי שעה מהכניסה הקודמת של החשבון (הכרעת בעלים 25.10.2026) */
@@ -609,11 +613,8 @@ async function groupSize(env, id) {
 }
 /** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
 export const GROUP_MIN = 50;
-/**
- * קבוצות שהנתונים שלהן הם של כלל המשתתפים (הכרעת בעלים 25.10.2026 — הגזרה): ‎/dashboard?group מחזיר את הצבירה של כולם,
- * ו-`members` = מספר ניחושי המנדטים של חברי הקבוצה שנכללו בממוצע (אותו מכנה כמו `seats.n` של כולם). `&own=1` — נתוני הקבוצה בלבד. אין פילוח נפרד לקבוצה במסך, בעוזר או בשיתוף.
- */
-export const UNIFIED_GROUPS = new Set(["gy7lelpbo"]);
+/** מזהה קבוצת הגזרה — לסכום "כל הניחושים של הגזרה" במסך הניהול (הכרעת בעלים 25.10.2026) */
+export const HAGZARA_ID = "gy7lelpbo";
 function groupId(v) {
   if (typeof v !== "string" || !GROUP_ID.test(v)) throw bad("group");
   return v;
@@ -1487,7 +1488,9 @@ const routes = {
     const { results: msgs } = await env.DB.prepare("SELECT id, participant, author, text, created_at FROM support_messages ORDER BY id").all();
     const participants = await accountCount(env.DB);
     const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT e.participant) FROM emails e WHERE e.verified = 0 AND NOT EXISTS (SELECT 1 FROM emails x WHERE x.participant = e.participant AND x.verified = 1) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = e.participant AND c.kind = 'google')) AS unverifiedEmails, (SELECT COUNT(*) FROM email_verify) AS verifyMailsPending, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
-    return { stats: { ...stats, participants }, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
+    const guesses = (await countedGuessers(env, null)).size;
+    const hagzaraGuesses = (await countedGuessers(env, await groupMemberSet(env, HAGZARA_ID))).size;
+    return { stats: { ...stats, participants, guesses, hagzaraGuesses }, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
   // הגדרת חשבון מנהל בקישור חד-פעמי (הכרעת בעלים 13.10.2026): הסשן הפתוח בדפדפן הוא החשבון שהופך למנהל. הקוד נמחק בשימוש הראשון ופג תוקף.
   "POST /admin/claim": async ({ env, request, now, body }) => {
@@ -2067,9 +2070,7 @@ export default {
         const { participant } = await requireAuth(env, request, now);
         if (!(await myGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_member");
         const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, participants: 0, publishedAt: iso(now) };
-        // ‎&own=1 — נתוני חברי הקבוצה בלבד גם בקבוצה מאוחדת (מסך הממוצעים המתקדם, הכרעת בעלים 25.10.2026)
-        const body = UNIFIED_GROUPS.has(id) && !url.searchParams.has("own") ? { ...(await dashboard(env)), group: id, min: GROUP_MIN, unified: true, members: d.belowMin ? d.participants ?? 0 : d.seats?.n ?? d.participants ?? 0 } : { ...d, compare: await groupCompare(env, id) };
-        return new Response(JSON.stringify(body), { headers: { ...headers, "cache-control": "no-store" } });
+        return new Response(JSON.stringify({ ...d, compare: await groupCompare(env, id) }), { headers: { ...headers, "cache-control": "no-store" } });
       }
       if (request.method === "GET" && url.pathname === "/dashboard")
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });

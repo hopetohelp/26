@@ -63,7 +63,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   useEffect(() => {
     if (scope === "all" || !session.token) return;
     let live = true;
-    const load = () => call<GroupDashboard>(`/dashboard?group=${encodeURIComponent(scope)}&own=1`, { token: session.token })
+    const load = () => call<GroupDashboard>(`/dashboard?group=${encodeURIComponent(scope)}`, { token: session.token })
       .then((data) => { if (live) setGroup({ id: scope, data, failed: false }); })
       .catch(() => { if (live) setGroup((g) => ({ id: scope, data: g?.id === scope ? g.data : null, failed: true })); });
     void load();

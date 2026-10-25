@@ -66,18 +66,18 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const response = allowed && result?.token === session.token ? result : null;
   const raw = response?.data;
   const group = raw && !raw.belowMin ? raw as Dashboard : null;
+  // שני סכומים בלבד (הכרעת בעלים 25.10.2026): מי שאינו בגזרה — כל הניחושים; חבר הגזרה — כל הניחושים של הגזרה, ובכותרת X/N
+  const segmented = !!member && !!group;
+  const groupCount = group?.seats?.n ?? null;
   const all = crowd.dashboard;
   const crowdMeans = meansOf(all), groupMeans = meansOf(group);
   const polls = (id: string) => simpleValue(source.selection, [id]);
   const lists = orderedLists(source.selection, [groupMeans], crowdMeans);
-  const blocValues = crowdMeans;
+  const blocValues = segmented ? groupMeans : crowdMeans;
   const hagzaraLogo = hagzara?.logoUrl ?? null;
-  const voters = all;
+  const voters = segmented ? group : all;
   // חברי הקבוצה: ממוצע הקבוצה מול ממוצע הסקרים או מול כל המשתתפים — לפי בחירת מנהל הקבוצה (הכרעת בעלים 24.10.2026)
   const vsPolls = (raw?.compare ?? "polls") === "polls";
-  // נתוני הגזרה כוללים מעכשיו את כלל המשתתפים (הכרעת בעלים 25.10.2026): בלי קו נפרד לגזרה; רק המונה מתחת לכותרת
-  const segmented = false;
-  const groupCount = raw ? ("members" in raw && raw.members != null ? raw.members : raw.participants ?? null) : null;
   // לחברי הקבוצה הסרגל בוחר תמיד טווח (כל הסקרים / 14 ו־i24 / הניחושים), בכל השוואה שהמנהל בחר (הכרעת בעלים 25.10.2026).
   // "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
   // לכל הגולשים (הכרעת בעלים 25.10.2026): ברירת המחדל במסך הזה היא תמיד טווח הניחושים, עד שבוחרים טווח אחר
@@ -89,7 +89,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    {member && <HagzaraCount members={groupCount} total={all?.seats?.n ?? all?.participants} />}
+    {member && <HagzaraCount members={groupCount} total={all?.seats?.n} />}
     <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
