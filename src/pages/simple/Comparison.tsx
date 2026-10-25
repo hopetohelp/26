@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { call, CrowdError, type Dashboard, type GroupDashboard, type GroupPublic, type SeatsPayload } from "../../lib/crowdApi";
-import { seatsSum, validateSeats } from "../../lib/crowdValidate";
+import { seatsSum } from "../../lib/crowdValidate";
+import { comparisonUnlocked } from "../guess/stage";
 import { useInterface } from "../../lib/interfaceMode";
 import { HAGZARA_GROUP_ID, simpleValue } from "../../lib/simpleSources";
 import { useCrowdDashboard } from "../../lib/sources";
@@ -28,7 +29,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const member = session.groups.find(g => g.id === HAGZARA_GROUP_ID);
   const seats = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
   const mine = seats.draft ?? EMPTY;
-  const unlocked = seats.status === "saved" && !validateSeats(mine, IDS);
+  const unlocked = comparisonUnlocked(seats, IDS);
   const [result, setResult] = useState<{ token: string; data: GroupDashboard | null; failed: boolean } | null>(null);
   const [sharing, setSharing] = useState(false);
   const [votersOpen, setVotersOpen] = useState(false);

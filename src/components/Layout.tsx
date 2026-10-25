@@ -10,7 +10,7 @@ import PrivacyCard from "./PrivacyConsent";
 import { meta } from "../lib/data";
 import { date } from "../lib/format";
 import { useMode, type ModeId } from "../lib/theme";
-import { PAGES } from "../lib/pages";
+import { PAGES, navScreens } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
 import ExitPollClock, { clockParts } from "./ExitPollClock";
 import { wallClockLeft } from "../lib/countdown";
@@ -21,7 +21,8 @@ import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
 
-const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הניחוש שלי", icon: "guess" }, { to: "/community", label: "ממוצע הניחושים", icon: "bars" }];
+/** שלושת מסכי הליבה — מקטלוג הניווט (src/lib/pages.ts) */
+const SIMPLE_TABS = navScreens(false).map(({ to, label, icon }) => ({ to, label, icon }));
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/ai", label: "AI" }, { to: "/account", label: "אזור אישי" }];
 /** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
 const TABS = [

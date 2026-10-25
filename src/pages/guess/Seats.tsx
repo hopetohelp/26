@@ -204,7 +204,7 @@ export default function Seats({
           {both.status !== "draft" && (both.status !== "saved" || unit.queued || (blocsToSave && blocsUnit.queued)) && <div className="flex items-center gap-2 flex-wrap">
             <StatusPill status={both.status} queued={unit.queued || (blocsToSave && blocsUnit.queued)} />
           </div>}
-          {justSaved && both.status === "saved" && (
+          {justSaved && both.status === "saved" && !unit.queued && (
             <div role="status" className="flex items-center gap-2 flex-wrap">
               <Btn kind="primary" onClick={onStatistics}>מעבר לסטטיסטיקות</Btn>
             </div>
