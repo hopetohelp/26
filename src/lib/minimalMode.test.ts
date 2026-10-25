@@ -3,7 +3,8 @@ import { requiresAdvanced } from "./interfaceMode";
 import { seatSaveError } from "./seatSaveGuard";
 import { IDS, startSeats } from "../pages/guess/model";
 import type { SeatsPayload } from "./crowdApi";
-import { SIMPLE_14_24, SIMPLE_ALL, SIMPLE_BLOCS, SIMPLE_DAYS, SIMPLE_FIRMS, simpleSelection, simpleSpread, simpleValue } from "./simpleSources";
+import { SIMPLE_14_24, SIMPLE_ALL, SIMPLE_BLOCS, BLOC_IDS, personalBlocs, SIMPLE_DAYS, SIMPLE_FIRMS, simpleSelection, simpleSpread, simpleValue } from "./simpleSources";
+import { CLOSED_LISTS } from "./data";
 import { POLLSTER_LOGOS } from "./pollsterLogos";
 import { existsSync } from "node:fs";
 import { resolveData } from "./dataResolver";
@@ -31,11 +32,29 @@ describe("מצב פשוט ללא שינוי ביכולות מתקדמות", () =
     expect(simpleValue(SIMPLE_ALL, [IDS[0]])).toBe(resolveData(SIMPLE_ALL, [IDS[0]], "community").value);
     expect(simpleSelection("unrecognized")).toEqual(SIMPLE_ALL);
   });
-  it("ארבעת הגושים מכסים כל רשימה פעם אחת, בסדר התצוגה", () => {
+  it("ארבעת הגושים מכסים כל רשימה זכאית פעם אחת, בסדר התצוגה", () => {
     const all = SIMPLE_BLOCS.flatMap(b => [...b.lists]);
     expect(new Set(all).size).toBe(all.length);
-    expect([...all].sort()).toEqual([...IDS].sort());
+    expect([...all].sort()).toEqual([...BLOC_IDS].sort());
+    expect(BLOC_IDS).toEqual(IDS.filter(id => !CLOSED_LISTS.includes(id)));
     expect(SIMPLE_BLOCS.map(b => b.short)).toEqual(["נתניהו", "חרדים", "ערבים", "אייזנקוט"]);
+  });
+  it("החלוקה האישית: ברירת המחדל המאושרת, כל רשימה זכאית בתא אחד, ושינוי מעביר בין תאים", () => {
+    const d = personalBlocs();
+    expect(d.map(b => b.short)).toEqual(["חרדים", "ימין", "אחדות", "שמאל", "ערבים"]);
+    const all = d.flatMap(b => [...b.lists]);
+    expect(new Set(all).size).toBe(all.length);
+    expect([...all].sort()).toEqual([...BLOC_IDS].sort());
+    const cell = (bs: typeof d, id: string) => bs.find(b => b.lists.includes(id))?.id;
+    for (const id of ["otzma", "rzp"].filter(x => BLOC_IDS.includes(x))) expect(cell(d, id)).toBe("right");
+    if (BLOC_IDS.includes("democrats")) expect(cell(d, "democrats")).toBe("left");
+    if (BLOC_IDS.includes("likud")) expect(cell(d, "likud")).toBe("unity");
+    expect(d.find(b => b.id === "haredi")!.lists).toEqual(SIMPLE_BLOCS.find(b => b.id === "haredi")!.lists);
+    expect(d.find(b => b.id === "arab")!.lists).toEqual(SIMPLE_BLOCS.find(b => b.id === "arab")!.lists);
+    const moved = personalBlocs({ likud: "right", nope: "left", shas: "bogus" });
+    expect(cell(moved, "likud")).toBe("right");
+    if (BLOC_IDS.includes("shas")) expect(cell(moved, "shas")).toBe("haredi");
+    expect(moved.flatMap(b => b.lists)).not.toContain("nope");
   });
   it("התצוגה הממוקדת: חלון של שבועיים, והקפסולה תחומה בטווח הסקרים", () => {
     expect(SIMPLE_ALL.days).toBe(SIMPLE_DAYS);
