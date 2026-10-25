@@ -18,11 +18,11 @@ const host = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
 export function inviteText({ kind, group }: ShareInput): string {
   const link = group ? groupUrl(group.slug) : SITE_URL;
   if (kind === "average") return group ? `זו תחזית משתתפי הגזרה. מה אתם צופים? מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זו תחזית המשתתפים. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם: ${link}`;
-  return group ? `הגזרה בונה את הכנסת שלה. זו התחזית שלי, ואני סקרן לראות את שלכם. מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זו הכנסת שלי. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם ורואים איך כולם חושבים: ${link}`;
+  return group ? `הגזרה בונה את הכנסת שלה. זו התחזית שלי, ואני סקרן לראות את שלכם. מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זה הניחוש שלי. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם ורואים איך כולם חושבים: ${link}`;
 }
 export function shareTitle({ kind, name, group }: ShareInput): string {
   if (kind === "average") return group ? "ממוצע הניחושים בגזרה" : "ממוצע הניחושים של המשתתפים";
-  return name ? `הכנסת של ${name}` : "הכנסת שלי";
+  return name ? `הכנסת של ${name}` : "הניחוש שלי";
 }
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 

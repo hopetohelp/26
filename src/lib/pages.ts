@@ -8,7 +8,7 @@ export interface PageInfo {
 
 /** הסדר כאן הוא סדר הסרגל במחשב (הכרעת בעלים 8.10.2026) */
 export const PAGES: PageInfo[] = [
-  { to: "/guess", label: "הכנסת שלי" },
+  { to: "/guess", label: "הניחוש שלי" },
   { to: "/polls", label: "סקרים" },
   { to: "/past", label: "בחירות קודמות" },
   { to: "/method", label: "מידע" },

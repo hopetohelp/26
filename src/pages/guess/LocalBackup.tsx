@@ -16,8 +16,8 @@ export default function LocalBackup({ compact = false }: { compact?: boolean }) 
     }
   };
   const download = () => {
-    const url = URL.createObjectURL(new Blob([`גיבוי ההשערה שלי לאתר בחירות 2026. כדי לשחזר: "הנתונים שלי" ← "שחזור מגיבוי", והדביקו את השורה הבאה.\n\n${encodeBackup(currentBackup())}\n`], { type: "text/plain;charset=utf-8" }));
-    const a = Object.assign(document.createElement("a"), { href: url, download: "גיבוי-ההשערה-שלי.txt" });
+    const url = URL.createObjectURL(new Blob([`גיבוי הניחוש שלי לאתר בחירות 2026. כדי לשחזר: "הנתונים שלי" ← "שחזור מגיבוי", והדביקו את השורה הבאה.\n\n${encodeBackup(currentBackup())}\n`], { type: "text/plain;charset=utf-8" }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: "גיבוי-הניחוש-שלי.txt" });
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -33,7 +33,7 @@ export default function LocalBackup({ compact = false }: { compact?: boolean }) 
   };
   return (
     <div className="space-y-2">
-      <p className="text-sm text-ink">{compact ? "שמירה במכשיר, בלי שרת:" : "גיבוי במכשיר, בלי שרת. עובד גם כשהחיבור לשרת חסום. הקוד לא נכנס לממוצע המשתתפים."}</p>
+      <p className="text-sm text-ink">{compact ? "שמירה במכשיר, בלי שרת:" : "גיבוי במכשיר, בלי שרת. עובד גם כשהחיבור לשרת חסום. הקוד לא נכנס לממוצע הניחושים."}</p>
       <div className="flex gap-2 flex-wrap">
         <Btn onClick={download} disabled={!has}>הורדת גיבוי</Btn>
         <Btn onClick={copy} disabled={!has}>העתקת קוד</Btn>

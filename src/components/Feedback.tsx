@@ -37,7 +37,8 @@ export default function Feedback() {
 
 export function openingLine(diagnostic: string): string {
   const action = /"action":\s*"([^"]+)"/.exec(diagnostic)?.[1];
-  if (!action || action === "שמירת השערה") return "לא הצלחתי לשמור את ההשערה שלי.";
+  // "שמירת השערה" — השם הקודם, בדיווחים שנשלחו לפני 24.10.2026
+  if (!action || action === "שמירת ניחוש" || action === "שמירת השערה") return "לא הצלחתי לשמור את הניחוש שלי.";
   return action.startsWith("/") ? "משהו לא עבד באתר." : `לא הצלחתי: ${action}.`;
 }
 
@@ -118,7 +119,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
                 </div>
                 <p className="text-xs text-ink-soft">
                   הקישור נשמר גם בדפדפן הזה. מי שמחזיק בו יכול לקרוא את השיחה — אל תפרסמו אותו.
-                  {getLink() ? " הקישור האישי להשערות שלך פותח גם את השיחה הזו — שמרו אותו מחדש מ\"הנתונים שלי\"." : ""}
+                  {getLink() ? " הקישור האישי לניחושים שלך פותח גם את השיחה הזו — שמרו אותו מחדש מ\"הנתונים שלי\"." : ""}
                 </p>
               </div>
             )}
@@ -158,7 +159,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
               <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} className="hidden" />
             </label>
             <p className="text-sm text-ink-soft leading-relaxed">
-              {diagnostic && "לוג התקלה ופרטי הדפדפן מצורפים, בלי סיסמה, קישור אישי או תוכן ההשערה. "}
+              {diagnostic && "לוג התקלה ופרטי הדפדפן מצורפים, בלי סיסמה, קישור אישי או תוכן הניחוש. "}
               בלי מייל ובלי הרשמה. ההערה נשמרת אצלנו בלבד, לא מתפרסמת, ולא נשמר שום פרט מזהה. העמוד שממנו שלחתם מצורף. אחרי
               השליחה תקבלו קישור אישי לתשובה.
             </p>

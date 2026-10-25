@@ -42,11 +42,11 @@ export default function Mine({ session, seats, complete, shared, onStatistics }:
   return (
     <div>
       {session.me?.seatsPending && sec === "seats" && (
-        <div className="mb-4"><Notice>ההשערה שלכם כוללת ערך חריג לעומת שאר המשתתפים, ולכן תיכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. היא שמורה, ואפשר להמשיך לערוך אותה.</Notice></div>
+        <div className="mb-4"><Notice>הניחוש שלכם כולל ערך חריג לעומת שאר המשתתפים, ולכן ייכנס לסטטיסטיקות אחרי בדיקה של צוות האתר. הוא שמור, ואפשר להמשיך לערוך אותו.</Notice></div>
       )}
       {sec !== "seats" ? <div className="flex flex-wrap gap-2 mb-4"><Link className="c-chart-link" to={returnTo}>חזרה למסך הקודם ←</Link></div> : shared && <div className="flex flex-wrap gap-2 mb-4"><HistoryLink /></div>}
       {/* סדר המגירות (הכרעת בעלים 18.10.2026): הכנסת הושלמה · ההצבעות שלי · איך בונים · הגושים שלי (ב-`Seats`) */}
-      {sec === "seats" && <div className="c-stage-notice" role="status">{complete ? "הכנסת הושלמה. אפשר להמשיך לערוך או לצפות בממוצע המשתתפים." : "הצפייה בממוצע המשתתפים תיפתח אחרי השלמת הכנסת: 120 מנדטים, ולכל רשימה 0 או לפחות 4."}{complete && <Btn onClick={onStatistics}>לממוצע המשתתפים ←</Btn>}</div>}
+      {sec === "seats" && <div className="c-stage-notice" role="status">{complete ? "הכנסת הושלמה. אפשר להמשיך לערוך או לצפות בממוצע הניחושים." : "הצפייה בממוצע הניחושים תיפתח אחרי השלמת הכנסת: 120 מנדטים, ולכל רשימה 0 או לפחות 4."}{complete && <Btn onClick={onStatistics}>לממוצע הניחושים ←</Btn>}</div>}
       {sec === "seats" && <div ref={voteCard} className="scroll-mt-32"><CardDrawer title="ההצבעות שלי" open={voteOpen} onOpenChange={(v) => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" pendingTag={vote.status === "saved" ? undefined : "מחכה לתשובה"} dot={vote.status !== "saved"} className="mb-5">
         <Vote unit={vote} session={session} />
       </CardDrawer></div>}

@@ -6,6 +6,6 @@ const ids = activeLists2026.map(l => l.id);
 export function seatSaveError(unit: Unit, payload: Payload): string | null {
   if (unit !== "seats") return null;
   const p = payload as SeatsPayload;
-  if (!p?.seats || typeof p.seats !== "object" || Object.values(p.seats).some(c => !c || typeof c !== "object")) return "ההשערה אינה תקינה.";
+  if (!p?.seats || typeof p.seats !== "object" || Object.values(p.seats).some(c => !c || typeof c !== "object")) return "הניחוש אינו תקין.";
   return validateSeats(p, ids) ?? (p.mode === "pct" ? p.pct ? validatePct(p.pct, ids) : "חסרים אחוזי ההצבעה." : null);
 }

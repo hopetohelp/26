@@ -15,7 +15,7 @@ export default function GroupStats({ load, refresh }: { load: () => Promise<Stat
   if (failed) return <p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p>;
   if (!s) return <p className="text-sm text-ink-soft">טוען…</p>;
   if (s.belowMin) return <p className="text-sm text-ink-soft">פחות מ-{s.min} חברים מהקבוצה רשומים באתר. המספרים יוצגו מ-{s.min} רשומים.</p>;
-  const tiles: [string, number][] = [["נרשמו בסך הכול", s.registered], ["נרשמו היום", s.today], ["שמרו השערת מנדטים", s.seats], ["שמרו הצבעה", s.vote]];
+  const tiles: [string, number][] = [["נרשמו בסך הכול", s.registered], ["נרשמו היום", s.today], ["שמרו ניחוש מנדטים", s.seats], ["שמרו הצבעה", s.vote]];
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {tiles.map(([label, n]) => (

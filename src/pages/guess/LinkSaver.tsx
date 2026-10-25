@@ -10,7 +10,7 @@ export const personalLink = (token: string) =>
 /** שורת ההסבר על השחזור — אותו ניסוח בכל מקום (10.10.2026: איפוס במייל; אין יותר קישורים אישיים חדשים) */
 export const FORGOT_LINE = "שכחתם סיסמה? לחצו \"שכחתי סיסמה\" ונשלח מייל לאיפוס. יש לכם קישור אישי ישן? הוא עדיין מכניס, עד שתאמתו מייל או תחברו Google.";
 
-const FILE_LINE = "זה הקישור האישי שלכם לאתר בחירות 2026: הוא מכניס אתכם ישר להשערות שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אל תשתפו אותו.";
+const FILE_LINE = "זה הקישור האישי שלכם לאתר בחירות 2026: הוא מכניס אתכם ישר לניחושים שלכם, מכל מכשיר, וגם מאפשר לקבוע סיסמה חדשה. אל תשתפו אותו.";
 
 /** שמירת הקישור האישי: העתקה, שליחה לעצמי (שיתוף המכשיר), הורדה כקובץ */
 export default function LinkSaver({ token }: { token: string }) {
@@ -27,7 +27,7 @@ export default function LinkSaver({ token }: { token: string }) {
   };
   const share = async () => {
     try {
-      await navigator.share({ title: "הקישור האישי שלי — ההשערה שלי", text: FILE_LINE, url: link });
+      await navigator.share({ title: "הקישור האישי שלי — הניחוש שלי", text: FILE_LINE, url: link });
       setMsg("נשלח. ודאו שההודעה הגיעה רק אליכם.");
     } catch {
       /* המשתתף ביטל */
@@ -52,7 +52,7 @@ export default function LinkSaver({ token }: { token: string }) {
         {canShare && <Btn onClick={share}>שליחה לעצמי</Btn>}
         <Btn onClick={download}>הורדה כקובץ</Btn>
       </div>
-      {link.includes("&f=") && <p className="text-xs text-ink">הקישור כולל גם את שיחת ההערות שלכם — אותה כניסה להשערות ולהערות.</p>}
+      {link.includes("&f=") && <p className="text-xs text-ink">הקישור כולל גם את שיחת ההערות שלכם — אותה כניסה לניחושים ולהערות.</p>}
       <p className="text-xs text-ink-soft">{canShare ? "\"שליחה לעצמי\" — למשל בוואטסאפ לעצמכם. " : ""}אל תשתפו אותו עם אחרים: מי שמחזיק בו נכנס לחשבון ויכול לשנות ולמחוק.</p>
       {msg && (
         <p role="status" className="text-sm font-bold">

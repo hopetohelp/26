@@ -110,7 +110,7 @@ function GroupRow({ g, api, act, reload }: { g: Group; api: Api; act: (f: () => 
         {sure && (
           <ConfirmDialog title={`למחוק את הקבוצה "${g.name ?? g.id}"?`} confirm="כן, למחוק את הקבוצה" onCancel={() => setSure(false)} onConfirm={() => { setSure(false); void act(() => api("/admin/groups/delete", { group: g.id }))(); }}>
             <p>הקבוצה תימחק יחד עם רשימת המיילים (<strong>{g.members.toLocaleString("he-IL")}</strong> מיילים), המינויים, הקישור והתמונה.</p>
-            <p className="text-ink-soft">החשבונות וההשערות של החברים לא נמחקים.</p>
+            <p className="text-ink-soft">החשבונות והניחושים של החברים לא נמחקים.</p>
           </ConfirmDialog>
         )}
       </div>

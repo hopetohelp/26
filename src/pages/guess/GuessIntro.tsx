@@ -12,7 +12,7 @@ export function HistoryLink() {
   const to = new URLSearchParams(params);
   to.set("section", "history");
   to.set("return", `/guess?${params.toString()}`);
-  return <Link className="c-chart-link shrink-0" to={`/guess?${to}`}>היסטוריית השערות</Link>;
+  return <Link className="c-chart-link shrink-0" to={`/guess?${to}`}>היסטוריית ניחושים</Link>;
 }
 
 export default function GuessIntro() {
@@ -25,11 +25,11 @@ export default function GuessIntro() {
   return (
     <section aria-labelledby="guess-intro-title" className="c-guess-intro c-page-title mb-2">
       <div className="flex items-center justify-between gap-3 mb-2">
-        <h1 id="guess-intro-title" className="text-3xl md:text-5xl font-display leading-tight">הכנסת שלי</h1>
+        <h1 id="guess-intro-title" className="text-3xl md:text-5xl font-display leading-tight">הניחוש שלי</h1>
         <HistoryLink />
       </div>
       <p className="text-xl font-display leading-tight mb-2">
-        {left ? <>מה ההשערה שלכם לתוצאות האמת בעוד <span className="font-num tabular">{left}</span>?</> : "מדגמי הבחירות פורסמו. ההשערות נסגרו."}
+        {left ? <>מה הניחוש שלכם לתוצאות האמת בעוד <span className="font-num tabular">{left}</span>?</> : "מדגמי הבחירות פורסמו. הניחושים נסגרו."}
       </p>
     </section>
   );

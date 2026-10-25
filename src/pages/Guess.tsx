@@ -98,12 +98,12 @@ function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
 
   return (
     <>
-      {/* ההשערה שלי: הפתיחה והבחירה בטור הצר, ההשערה או הסטטיסטיקות ברחב */}
+      {/* הניחוש שלי: הפתיחה והבחירה בטור הצר, הניחוש או הסטטיסטיקות ברחב */}
       {(() => { const head = <>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
       {!statistics && !shared && !auxiliary && <GuessIntro />}
-      {auxiliary && <PageTitle>{params.get("section") === "blocs" ? "הגושים שלי" : "היסטוריית השערות"}</PageTitle>}
-      {statistics && <div className="c-stage-heading"><PageTitle lead="שלב 2 · ההשערה שלכם מול הסקרים וממוצע המשתתפים. השערות המשתתפים אינן סקר.">הכנסת שלי — סקר האתר</PageTitle><div className="flex flex-wrap gap-2"><Btn onClick={() => setStage("edit")}>חזרה לעדכון ההשערה</Btn><SaveButton unit={seats} session={session} invalid={null} compact /></div></div>}
+      {auxiliary && <PageTitle>{params.get("section") === "blocs" ? "הגושים שלי" : "היסטוריית ניחושים"}</PageTitle>}
+      {statistics && <div className="c-stage-heading"><PageTitle lead="שלב 2 · הניחוש שלכם מול הסקרים וממוצע הניחושים. ניחושי המשתתפים אינם סקר.">הניחוש שלי — סקר האתר</PageTitle><div className="flex flex-wrap gap-2"><Btn onClick={() => setStage("edit")}>חזרה לעדכון הניחוש</Btn><SaveButton unit={seats} session={session} invalid={null} compact /></div></div>}
       {flash && (
         <div className="mb-4" role={flash.ok ? "status" : "alert"}>
           <Notice tone={flash.ok ? "calm" : "warn"}>{flash.text}</Notice>

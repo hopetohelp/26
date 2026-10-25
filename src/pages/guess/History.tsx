@@ -39,7 +39,7 @@ export default function History({ session }: { session: ReturnType<typeof useSes
     return () => { active = false; };
   }, [unit, session.online, session.token]);
 
-  const note = <p className="text-sm text-ink-soft">ההשערה האחרונה היא היחידה שנספרת בסטטיסטיקות הכלליות.</p>;
+  const note = <p className="text-sm text-ink-soft">הניחוש האחרון הוא היחיד שנספר בסטטיסטיקות הכלליות.</p>;
   const bar = <ClearAll session={session} onCleared={() => { setVersions([]); setPick([]); }} />;
   if (!session.online) return <>{note}<Notice>ההיסטוריה תופיע כשהשמירה תיפתח באתר: כל שמירה תהיה נקודה על ציר הזמן, ואפשר יהיה להשוות בין שתיים.</Notice>{bar}</>;
   if (!session.token) return <>{note}<Notice>עוד לא שמרתם. אחרי השמירה הראשונה, כל גרסה תופיע כאן.</Notice>{bar}</>;
@@ -55,7 +55,7 @@ export default function History({ session }: { session: ReturnType<typeof useSes
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
       {versions?.length === 0 && <Notice>אין עדיין גרסאות ביחידה הזו.</Notice>}
-      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות ההשערה ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: stamp(v), asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
+      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות הניחוש ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: stamp(v), asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {versions && versions.length > 0 && (
         <ol className="relative border-s-2 border-ink ms-2 space-y-3" aria-label="הגרסאות שלכם, מהחדשה לישנה">
           {newest.map((v, i) => (
@@ -116,7 +116,7 @@ export function VersionContent({ version }: { version: Version }) {
   }
   if (version.unit === "blocs") {
     const p = version.payload as BlocsPayload;
-    return <ul className="space-y-3">{p.blocs.map(b => <li key={b.id}><b>{b.name || "גוש ללא שם"}</b><p className="text-sm">{b.lists.map(nameOf).join(", ") || "ללא מפלגות"}</p><p className="text-sm">הימור ישיר: {b.target === null ? "ללא השערה" : `${b.target} מנדטים`}</p></li>)}</ul>;
+    return <ul className="space-y-3">{p.blocs.map(b => <li key={b.id}><b>{b.name || "גוש ללא שם"}</b><p className="text-sm">{b.lists.map(nameOf).join(", ") || "ללא מפלגות"}</p><p className="text-sm">הימור ישיר: {b.target === null ? "ללא ניחוש" : `${b.target} מנדטים`}</p></li>)}</ul>;
   }
   const p = version.payload as VotePayload;
   return <dl className="text-sm space-y-2"><div><dt className="font-bold">הצבעה ב-2022</dt><dd>{p.v2022 === null ? "לא נמסרה תשובה" : V2022_LABEL[p.v2022] ?? k25VoteName(p.v2022)}</dd></div><div><dt className="font-bold">כוונה ל-2026</dt><dd>{p.v2026 === null ? "לא נמסרה תשובה" : V2026_LABEL[p.v2026] ?? nameOf(p.v2026)}</dd></div></dl>;
@@ -147,7 +147,7 @@ function ClearAll({ session, onCleared }: { session: ReturnType<typeof useSessio
     <ActionBar above={err && <Notice tone="warn">{err}</Notice>}>
       {ask ? (
         <>
-          <span className="text-sm">כל ההשערות והגרסאות יימחקו. בטוח?</span>
+          <span className="text-sm">כל הניחושים והגרסאות יימחקו. בטוח?</span>
           <Btn onClick={() => setAsk(false)} disabled={busy}>לא</Btn>
           <Btn kind="danger" onClick={() => void run()} disabled={busy}>{busy ? "מוחק…" : "כן, למחוק"}</Btn>
         </>

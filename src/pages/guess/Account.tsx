@@ -130,8 +130,8 @@ function PrivacyNote() {
       <ul className="list-disc ps-5 space-y-1 pb-2">
         <li>המייל והשם נשמרים בשרת האתר <strong>מוצפנים</strong>, מוצגים רק לכם, ומשמשים רק לזיהוי ולמניעת חשבון כפול. לא נשלחים אליהם מיילים.</li>
         <li>מ-Google נשמרים רק מזהה פנימי והמייל (מוצפן). תמונת הפרופיל נשמרת רק בדפדפן הזה.</li>
-        <li>הגרסה האחרונה שלכם נכנסת לממוצע המשתתפים, בלי שום פרט מזהה. גם צוות האתר רואה את ההשערות בלי שם ובלי מייל.</li>
-        <li>אם החיבור לשרת נכשל, נשלח אלינו דיווח אוטומטי עם פרטים טכניים בלבד, בלי סיסמה, מייל או ההשערה.</li>
+        <li>הגרסה האחרונה שלכם נכנסת לממוצע הניחושים, בלי שום פרט מזהה. גם צוות האתר רואה את הניחושים בלי שם ובלי מייל.</li>
+        <li>אם החיבור לשרת נכשל, נשלח אלינו דיווח אוטומטי עם פרטים טכניים בלבד, בלי סיסמה, מייל או הניחוש.</li>
         <li>אפשר למחוק הכול בכל רגע באזור האישי.</li>
       </ul>
     </details>
@@ -403,7 +403,7 @@ export default function Account({ session, hideGroups = false }: { session: Retu
       {me.needsEmail && (
         <div className="border-2 border-warn rounded-theme p-3 space-y-3 mb-3">
           <p className="font-bold">חסר מייל או Google בחשבון.</p>
-          <p className="text-sm">כל חשבון צריך מייל או Google. ההשערה שלכם נשמרת ונספרת גם בינתיים.</p>
+          <p className="text-sm">כל חשבון צריך מייל או Google. הניחוש שלכם נשמר ונספר גם בינתיים.</p>
           <GoogleButton session={session} onDone={() => void session.refresh()} />
           <ClaimForm session={session} />
         </div>

@@ -70,14 +70,14 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       {failed && <p className="text-sm text-ink-soft">הנתונים אינם זמינים כרגע. כלי הניהול למטה פועלים.</p>}
       <Measures data={series} failed={failed} />
       {ins && (ins.belowMin
-        ? <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב ההשערות והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>
+        ? <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>
         : <div className="grid lg:grid-cols-2 gap-4 [&>*]:min-w-0">
             <Guesses ins={ins} />
             <Questions q={ins.questions} />
           </div>)}
       <CompareSwitch id={id} token={token} />
       <SupportThreads id={id} token={token} />
-      <Section title="אישור השערות">
+      <Section title="אישור ניחושים">
         <AdminGuesses group={{
           load: () => call(`/group/guesses?group=${q(id)}`, { token }),
           decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
@@ -208,14 +208,14 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
   const total = ins.guesses || 1;
   const rows = [...ins.outside].sort((a, b) => b.above + b.below - (a.above + a.below));
   return (
-    <Section title="השערות החברים" aside={`${n(ins.guesses)} השערות`}>
+    <Section title="ניחושי החברים" aside={`${n(ins.guesses)} ניחושים`}>
       <div className="flex h-3 rounded-full overflow-hidden bg-paper border border-paper-line" role="img" aria-label={parts.map((p) => `${p.label}: ${ins.status[p.key]}`).join(", ")}>
         {parts.map((p) => ins.status[p.key] > 0 && <span key={p.key} className={p.cls} style={{ width: `${(100 * ins.status[p.key]) / total}%` }} />)}
       </div>
       <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
         {parts.map((p) => <li key={p.key} className="flex items-center gap-2"><span aria-hidden="true" className={`w-2.5 h-2.5 rounded-full shrink-0 border border-paper-line ${p.cls}`} /><span className="flex-1">{p.label}</span><strong className="font-num tabular">{n(ins.status[p.key])}</strong></li>)}
       </ul>
-      {ins.status.pending > 0 && <p className="text-xs text-ink-soft">השערה ממתינה אינה נספרת בממוצע הקבוצה עד שמנהל האתר יאשר אותה. היא חוזרת לבד להיות רגילה אם הסקרים מתקרבים אליה.</p>}
+      {ins.status.pending > 0 && <p className="text-xs text-ink-soft">ניחוש ממתין אינו נספר בממוצע הקבוצה עד שמנהל האתר או מנהל הקבוצה יאשר אותו. הוא חוזר לבד להיות רגיל אם הסקרים מתקרבים אליו.</p>}
       {rows.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -232,9 +232,9 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
               ))}
             </tbody>
           </table>
-          <p className="text-xs text-ink-soft pt-1">כל השערה שרשימה בה נמצאת מעל הסקר הגבוה או מתחת לנמוך. רק חריגה גדולה ממתינה לאישור.</p>
+          <p className="text-xs text-ink-soft pt-1">כל ניחוש שרשימה בה נמצאת מעל הסקר הגבוה או מתחת לנמוך. רק חריגה גדולה ממתינה לאישור.</p>
         </div>
-      ) : <p className="text-sm text-ink-soft">כל ההשערות בתוך טווח הסקרים.</p>}
+      ) : <p className="text-sm text-ink-soft">כל הניחושים בתוך טווח הסקרים.</p>}
     </Section>
   );
 }

@@ -20,12 +20,12 @@ import { useSession } from "../pages/guess/useCrowd";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
 
-const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הכנסת שלי", icon: "guess" }, { to: "/community", label: "ממוצע הניחושים", icon: "bars" }];
+const SIMPLE_TABS = [{ to: "/", label: "תמונת מצב", icon: "home" }, { to: "/guess", label: "הניחוש שלי", icon: "guess" }, { to: "/community", label: "ממוצע הניחושים", icon: "bars" }];
 const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/ai", label: "AI" }, { to: "/account", label: "אזור אישי" }];
 /** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
 const TABS = [
   { to: "/", label: "בית", icon: "home" },
-  { to: "/guess", label: "הכנסת שלי", icon: "guess" },
+  { to: "/guess", label: "הניחוש שלי", icon: "guess" },
   { to: "/polls", label: "סקרים", icon: "bars" },
   { to: "/past", label: "בחירות קודמות", icon: "board" },
   { to: "/method", label: "מידע", icon: "info" },
@@ -237,7 +237,7 @@ function GuessCta({ pathname }: { pathname: string }) {
       to="/guess"
       className="hidden md:flex fixed bottom-6 end-6 z-30 items-center min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg no-underline hover:brightness-95"
     >
-      לבנות את הכנסת שלי
+      לבנות את הניחוש שלי
     </Link>
   );
 }

@@ -30,7 +30,7 @@ export class ToolError extends Error {
 
 const obj = (properties = {}, required = []) => ({ type: "object", properties, required, additionalProperties: false });
 const str = (description, extra = {}) => ({ type: "string", description, ...extra });
-const UNIT = { type: "string", enum: ["seats", "vote", "blocs"], description: "seats = הכנסת שלי (מנדטים), vote = ההצבעה, blocs = הגושים" };
+const UNIT = { type: "string", enum: ["seats", "vote", "blocs"], description: "seats = הניחוש שלי (מנדטים), vote = ההצבעה, blocs = הגושים" };
 
 /** קובץ פתוח שלם, עם about (תאריך, מקור וקישור "איך זה חושב?") */
 const file = (path) => (ctx) => ctx.site(path);
@@ -293,10 +293,10 @@ export const TOOLS = [
   },
   {
     name: "get_my_guess",
-    title: "ההשערה, הגושים וההצבעה שלי",
+    title: "הניחוש, הגושים וההצבעה שלי",
     audience: "user",
     kind: "read",
-    description: "The user's latest saved guess: seats per list (\"הכנסת שלי\"), their blocs and their vote, exactly as saved on the site, with the server-computed bloc totals. Use it before save_my_guess to change one part.",
+    description: "The user's latest saved guess: seats per list (\"הניחוש שלי\"), their blocs and their vote, exactly as saved on the site, with the server-computed bloc totals. Use it before save_my_guess to change one part.",
     inputSchema: obj(),
     async run(ctx) {
       const me = await ctx.me();
@@ -337,7 +337,7 @@ export const TOOLS = [
   },
   {
     name: "save_my_guess",
-    title: "שמירת השערה",
+    title: "שמירת ניחוש",
     audience: "user",
     kind: "write",
     description: "Saves a new version of one unit, exactly like the site's save button (the same checks and limits; the latest version of each day is kept). Read get_my_guess first and send the whole unit. Shapes — seats: {mode:\"seats\"|\"pct\", start:\"zero\"|\"k25\"|\"polls\", pollsAsOf, seats:{listId:{v:int, src:\"manual\"|\"filled\", locked:bool}} summing to 120 (each list 0 or ≥4), pct?:{listId:percent}} · vote: {v2022, v2026} · blocs: {mode:\"gov37\"|\"custom\", blocs:[{id, name≤40, lists:[ids], target:int|null}] up to 5}. Confirm with the user before saving.",
@@ -421,7 +421,7 @@ export const TOOLS = [
   // ---------- מנהל האתר (מסך הניהול) ----------
   {
     name: "admin_get_guesses",
-    title: "ניהול: השערות",
+    title: "ניהול: ניחושים",
     audience: "admin",
     kind: "read",
     description: "Admin screen: every participant's latest seats guess, without identifiers, with its moderation status and reasons, blocs and activity; plus the unverified accounts' summary. Use salt + handle with admin_decide_guess.",
@@ -430,7 +430,7 @@ export const TOOLS = [
   },
   {
     name: "admin_decide_guess",
-    title: "ניהול: החלטה על השערה",
+    title: "ניהול: החלטה על ניחוש",
     audience: "admin",
     kind: "write",
     description: "Admin screen: approve, reject or clear the decision on a guess under review. salt and handle from admin_get_guesses (they change on every load). Confirm with the user first.",

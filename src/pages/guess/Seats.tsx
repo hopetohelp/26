@@ -193,7 +193,7 @@ export default function Seats({
   return (
     <div>
       {sourcePicker}
-      <PersonalBlocs title="הגושים שלי" values={values} source="חלוקת המנדטים בהשערה שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
+      <PersonalBlocs title="הגושים שלי" values={values} source="חלוקת המנדטים בניחוש שלכם וצפי לכל גוש" asOf="הטיוטה הנוכחית" editTargets />
       <div className="c-guess-workspace">
         <GuessChart><div className="c-guess-hall space-y-3">
           <div className="relative">
@@ -362,17 +362,17 @@ function LockToggle({ name, locked, onToggle }: { name: string; locked: boolean;
 /** כרטיס פתוח "איך משערים?", ובתחתיתו מגירה אחת לכל ההסברים (הכרעת בעלים 10.10.2026) */
 export function HowTo({ signedIn = false }: { signedIn?: boolean }) {
   return (
-    <CardDrawer title="איך בונים את הכנסת שלי?" className="c-howto mb-2">
+    <CardDrawer title="איך בונים את הניחוש שלי?" className="c-howto mb-2">
       <ol className="text-sm text-ink list-decimal ps-5 space-y-1">
         <li>מתחילים מאפס, מבחירות 22, מממוצע סקרים או מסקר בודד — מה שנוח לכם.</li>
         <li>נועלים את המספרים שרוצים לשמור, ומשאירים את שאר המפלגות פתוחות לשינויים.</li>
         <li>רוצים? אפשר להגדיר גם יעד מנדטים לגוש משלכם.</li>
         <li>זהו, לוחצים ״השלם הכל״. שאר המפלגות מתעדכנות בהתאם למספרים שנעלתם וליעדי הגושים שהגדרתם.</li>
       </ol>
-      <section className="py-3 text-sm" aria-label="שמירה ושיתוף ההשערה">
-        <h2 className="font-bold mb-1">שמירה ושיתוף ההשערה</h2>
-        <p>{signedIn ? "ההשערה נשמרת בחשבון שלכם, ורק האחרונה נספרת בסקר האתר." : <>הטיוטה נשמרת במכשיר הזה ואפשר לשתף אותה. כדי שתיספר בסקר האתר ותישמר בהיסטוריה, נכנסים לחשבון בזמן השמירה או <Link to="/account">באזור האישי</Link>.</>}</p>
-        <p>לאחר השלמת הכנסת אפשר לשתף את ההשערה. גרסאות שנשמרו בחשבון זמינות בכפתור ״היסטוריית השערות״ במסך ההשערה.</p>
+      <section className="py-3 text-sm" aria-label="שמירה ושיתוף הניחוש">
+        <h2 className="font-bold mb-1">שמירה ושיתוף הניחוש</h2>
+        <p>{signedIn ? "הניחוש נשמר בחשבון שלכם, ורק האחרון נספר בסקר האתר." : <>הטיוטה נשמרת במכשיר הזה ואפשר לשתף אותה. כדי שתיספר בסקר האתר ותישמר בהיסטוריה, נכנסים לחשבון בזמן השמירה או <Link to="/account">באזור האישי</Link>.</>}</p>
+        <p>לאחר השלמת הכנסת אפשר לשתף את הניחוש. גרסאות שנשמרו בחשבון זמינות בכפתור ״היסטוריית ניחושים״ במסך הניחוש.</p>
       </section>
       <details className="group mt-2 border-t border-paper-line [&_summary::-webkit-details-marker]:hidden">
         <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[40px] text-sm font-bold">
@@ -384,7 +384,7 @@ export function HowTo({ signedIn = false }: { signedIn?: boolean }) {
           <div className="flex items-center gap-3"><span className="shrink-0" aria-hidden="true"><LockChip locked={false} /></span><p><b>פתוח:</b> "השלם הכול" רשאי לשנות אותו. לחיצה על המנעול נועלת או פותחת.</p></div>
           <p><b>מנדטים או אחוזים:</b> המתג קובע מה מקלידים, והשני מתעדכן לבד. מאחוזים למנדטים — לפי חלוקת המנדטים, כמו בספירה האמיתית. ממנדטים לאחוזים — האחוז שנותן בדיוק את אותם מנדטים; מפלגה עם 0 שומרת על האחוז שלה, מתחת לסף.</p>
           <p><b>אחוז החסימה:</b> מפלגה צריכה לפחות 4 מנדטים כדי להיכנס לכנסת. לכן אין 1, 2 או 3 מנדטים — מעלים ל-4 או מורידים ל-0.</p>
-          <p><b>בחירות 22 · סקרים:</b> שני מקורות להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. ממוצע המשתתפים מוצג רק בשלב הבא, אחרי השלמת הכנסת. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין ההשערות), כמו בסקר האתר.</p>
+          <p><b>בחירות 22 · סקרים:</b> שני מקורות להשוואה ליד כל מפלגה. "בחירות 22" — לפי השיוך במסך <Link to="/changes">מה השתנה</Link>; "~" = חלק מרשימה שהתפצלה. ממוצע הניחושים מוצג רק בשלב הבא, אחרי השלמת הכנסת. במסך רחב נכתב ליד כל ממוצע גם הטווח (הנמוך–הגבוה בין המכונים או בין הניחושים), כמו בסקר האתר.</p>
         </div>
       </details>
     </CardDrawer>

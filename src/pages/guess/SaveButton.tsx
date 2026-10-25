@@ -100,13 +100,13 @@ export function AuthSheet({ session, onClose, onDone }: { session: ReturnType<ty
       >
         <div className="flex items-start justify-between gap-2">
           <h2 id="auth-title" className="text-2xl font-display leading-tight">
-            לשמור את ההשערה
+            לשמור את הניחוש
           </h2>
           <button type="button" onClick={onClose} aria-label="סגירה" className="w-11 h-11 -mt-2 -me-2 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">
             ×
           </button>
         </div>
-        <p className="text-sm text-ink-soft">ההשערה שלכם שמורה כרגע רק במכשיר הזה ולא נכנסת לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל. מה שכבר כתבתם עולה לחשבון.</p>
+        <p className="text-sm text-ink-soft">הניחוש שלכם שמור כרגע רק במכשיר הזה ולא נכנס לסטטיסטיקות. כדי שתיספר — היכנסו עם Google או הירשמו במייל. מה שכבר כתבתם עולה לחשבון.</p>
         <AuthForm session={session} onDone={onDone} submitSuffix=" ושמירה" />
       </div>
     </div>
@@ -121,8 +121,8 @@ function BlockedSaveNotice({ onClose }: { onClose: () => void }) {
   const [more, setMore] = useState(false);
   return (
     <div role="status" className="fixed inset-x-4 bottom-24 md:bottom-6 z-40 mx-auto max-w-lg bg-paper-card text-ink border-2 border-warn rounded-theme p-4 space-y-3 shadow-lg max-h-[70vh] overflow-y-auto">
-      <p className="font-bold">ההשערה נשמרה אצלכם, אבל עדיין לא הגיעה לשרת</p>
-      <p className="text-sm">לא הצלחנו להתחבר לשרת של האתר. ההשערה שמורה בדפדפן הזה ותישלח לבד כשהחיבור יחזור — אין צורך לשמור שוב. עד אז היא לא נספרת בסטטיסטיקות.</p>
+      <p className="font-bold">הניחוש נשמר אצלכם, אבל עדיין לא הגיע לשרת</p>
+      <p className="text-sm">לא הצלחנו להתחבר לשרת של האתר. הניחוש שמור בדפדפן הזה ויישלח לבד כשהחיבור יחזור — אין צורך לשמור שוב. עד אז הוא לא נספר בסטטיסטיקות.</p>
       {more && <FilterBlocked signedIn />}
       <div className="flex gap-2 flex-wrap">
         {!more && <Btn onClick={() => setMore(true)}>למה זה קורה?</Btn>}

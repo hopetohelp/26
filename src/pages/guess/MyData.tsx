@@ -26,7 +26,7 @@ export default function MyData({ session, part }: { session: ReturnType<typeof u
     run(async () => {
       const data = await call<unknown>("/export", { token });
       const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
-      const a = Object.assign(document.createElement("a"), { href: url, download: "ההשערה-שלי.json" });
+      const a = Object.assign(document.createElement("a"), { href: url, download: "הניחוש-שלי.json" });
       a.click();
       URL.revokeObjectURL(url);
     });
@@ -35,7 +35,7 @@ export default function MyData({ session, part }: { session: ReturnType<typeof u
     <div className="space-y-5">
       {part === "data" && (
         <section className="space-y-3">
-          <p className="text-sm">כל מה ששמרתם — ההשערות, ההיסטוריה והפרטים — בקובץ אחד.</p>
+          <p className="text-sm">כל מה ששמרתם — הניחושים, ההיסטוריה והפרטים — בקובץ אחד.</p>
           <Btn onClick={exportJson}>ייצוא (JSON)</Btn>
         </section>
       )}
@@ -43,7 +43,7 @@ export default function MyData({ session, part }: { session: ReturnType<typeof u
       {part === "data" && (
         <section className="border-2 border-warn rounded-theme p-4 space-y-4">
           <h3 className="text-xl font-display leading-tight text-warn">מחיקה מלאה</h3>
-          <p className="text-sm">מוחקת את כל ההשערות, ההיסטוריה, המייל, השם, שיחת התמיכה ופרטי הכניסה. ממוצעים שכבר פורסמו לא משתנים.</p>
+          <p className="text-sm">מוחקת את כל הניחושים, ההיסטוריה, המייל, השם, שיחת התמיכה ופרטי הכניסה. ממוצעים שכבר פורסמו לא משתנים.</p>
           {del === 0 && (
             <Btn kind="danger" onClick={() => setDel(1)}>
               למחוק את הכול

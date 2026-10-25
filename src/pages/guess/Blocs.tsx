@@ -52,7 +52,7 @@ export default function Blocs({ unit, session, mySeats, actions = true }: {
             <Btn onClick={() => setPicker(null)}>סיום בחירה</Btn>
           </div>}
 
-          {total !== null && <p className="font-display text-3xl tabular">{total} מנדטים לפי ההשערה</p>}
+          {total !== null && <p className="font-display text-3xl tabular">{total} מנדטים לפי הניחוש</p>}
           <label className="block text-sm">יעד עצמאי (רשות)<input type="number" min={0} max={120} inputMode="numeric" value={b.target ?? ""} className={`${inputCls} w-24 ms-2`} onChange={e => patch(b.id, { target: e.target.value === "" ? null : Math.max(0, Math.min(120, Math.round(Number(e.target.value) || 0))) })} /></label>
           {total !== null && b.target !== null && total !== b.target && <p className="text-sm text-warn">היעד {b.target}; סכום המפלגות {total}.</p>}
           <ul className="space-y-2">{b.lists.map(id => <BlocParty key={id} id={id} name={nameOf(id)} seats={mySeats?.[id] ?? null} current={b.id} targets={p.blocs.map(x => x.id)} onMove={assign} onRemove={remove} onHover={setHovered} />)}</ul>

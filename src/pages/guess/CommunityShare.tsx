@@ -9,7 +9,7 @@ type Kind = "seats" | "vote" | "link" | "long" | "invite";
 /** במסך קבוצה (הכרעת בעלים 12.10.2026): name = שם הקבוצה, url = קישור הקבוצה, logoUrl = תמונתה; dataReady = יש לקבוצה נתונים להצגה (מ-50 משתתפים) */
 export interface GroupShareInfo { name: string; url: string; logoUrl: string | null; dataReady: boolean }
 const OPTIONS: { id: Kind; label: string; hint: string }[] = [
-  { id: "seats", label: "חלוקת המנדטים", hint: "תמונה מעוצבת: לוח 120 המושבים לפי ממוצע המשתתפים" },
+  { id: "seats", label: "חלוקת המנדטים", hint: "תמונה מעוצבת: לוח 120 המושבים לפי ממוצע הניחושים" },
   { id: "vote", label: "לאן הצביעו ויצביעו", hint: "תמונה מעוצבת: הצבעה ב-2022 מול הכוונה ב-2026" },
   { id: "link", label: "קישור", hint: "משפט קצר עם קישור לסקר האתר" },
   { id: "long", label: "נוסח ארוך", hint: "הודעה מלאה שמסבירה מה יש באתר, עם קישור" },
@@ -30,7 +30,7 @@ export default function CommunityShare({ d, group, selection = { product: "polls
   const banner = (
     <section aria-label={group ? `שיתוף ${group.name}` : "שיתוף סקר האתר"} className="c-share-banner rounded-theme border border-paper-line bg-accent-soft p-4 flex flex-wrap items-center justify-between gap-3">
       {group
-        ? <p className="font-display text-xl leading-tight">הוסיפו את ההשערה שלכם ל{group.name} <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים והרחיבו את מעגל המשתתפים.</span></p>
+        ? <p className="font-display text-xl leading-tight">הוסיפו את הניחוש שלכם ל{group.name} <span className="text-signal">הצטרפו!</span> <span className="block text-sm font-body text-ink-soft mt-1">שתפו את הקבוצה עם חברים והרחיבו את מעגל המשתתפים.</span></p>
         : <div>
       <p className="font-display text-xl leading-tight">עוד נקודות מבט על הבחירות <span className="block text-sm font-body text-ink-soft mt-1">שתפו את האתר עם חברים והרחיבו את מעגל המשתתפים.</span></p>
       </div>}

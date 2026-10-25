@@ -80,7 +80,7 @@ export default function SimpleGuess() {
   useEffect(() => { void session.refresh(); }, [session.refresh]);
   const hagzaraLogo = hagzara?.logoUrl ?? null;
   const values = Object.fromEntries(IDS.map(id => [id, draft.seats[id]?.v ?? 0]));
-  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הכנסת שלי</h1><SourceBar source={source} />
+  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הניחוש שלי</h1><SourceBar source={source} />
     <div className="f-grid"><div className="f-card">
       {order.map(id => {
         const value = draft.seats[id]?.v ?? 0, bad = value > 0 && value < 4, inputBad = editing?.id === id && invalidInput;
@@ -93,7 +93,7 @@ export default function SimpleGuess() {
           </div></div>;
       })}
       <ClosedNote className="mt-3" />
-      <SaveError unit={unit} />{unit.queued && <Notice>ההשערה שמורה במכשיר וממתינה לאישור השרת.</Notice>}
+      <SaveError unit={unit} />{unit.queued && <Notice>הניחוש שמור במכשיר וממתין לאישור השרת.</Notice>}
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}
     </div>

@@ -85,7 +85,7 @@ export default function GroupUpload({ send, staged, onDone, current }: { send: (
           onConfirm={() => { const emails = ask; setAsk(null); void run(emails); }}
         >
           <p>{typeof current === "number" ? <>הרשימה הנוכחית (<strong>{current.toLocaleString("he-IL")}</strong> מיילים) תימחק</> : "הרשימה הנוכחית תימחק"} ותוחלף ב-<strong>{ask.length.toLocaleString("he-IL")}</strong> מיילים מהקובץ.</p>
-          <p className="text-ink-soft">מי שלא מופיע בקובץ יוצא מהקבוצה. החשבונות וההשערות לא נמחקים.</p>
+          <p className="text-ink-soft">מי שלא מופיע בקובץ יוצא מהקבוצה. החשבונות והניחושים לא נמחקים.</p>
         </ConfirmDialog>
       )}
     </div>

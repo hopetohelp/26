@@ -24,7 +24,7 @@ export function validateSeats(p: SeatsPayload, ids: string[]): string | null {
   const s = seatsSum(p);
   if (s !== TOTAL) return s < TOTAL ? `נותרו ${TOTAL - s} לחלוקה.` : `יש ${s - TOTAL} יותר מדי.`;
   if (Object.values(p.seats).some(c => c.v > 0 && c.v < THRESHOLD_SEATS))
-    return `אי אפשר לשמור השערה עם מפלגה שקיבלה 1–3 מנדטים. קבעו 0 למפלגה שלא עוברת את אחוז החסימה, או לפחות ${THRESHOLD_SEATS} מנדטים למפלגה שעוברת.`;
+    return `אי אפשר לשמור ניחוש עם מפלגה שקיבלה 1–3 מנדטים. קבעו 0 למפלגה שלא עוברת את אחוז החסימה, או לפחות ${THRESHOLD_SEATS} מנדטים למפלגה שעוברת.`;
   return null;
 }
 

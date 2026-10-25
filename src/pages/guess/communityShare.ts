@@ -18,7 +18,7 @@ export const COMMUNITY_URL = `${SITE_URL}#/community`;
  * logo = התמונה כבר טעונה (או null אם אין); url = קישור הקבוצה.
  */
 export interface Brand { name: string; logo: ImageBitmap | null; url: string }
-export const groupShareText = (name: string) => `הצטרפו לסקר של ${name} לבחירות לכנסת ה-26. שתפו את הקבוצה והוסיפו את ההשערה שלכם:`;
+export const groupShareText = (name: string) => `הצטרפו לסקר של ${name} לבחירות לכנסת ה-26. שתפו את הקבוצה והוסיפו את הניחוש שלכם:`;
 const addressOf = (url: string) => url.replace(/^https:\/\//, "");
 
 /** טעינת תמונת הקבוצה לציור על canvas. נכשל בשקט — תמונה בלי לוגו עדיפה על שיתוף שנכשל */
@@ -32,12 +32,12 @@ export async function loadLogo(url: string | null): Promise<ImageBitmap | null> 
 /** נוסח ארוך לשיתוף האתר (הכרעת בעלים 13.10.2026): הודעה מלאה בגוף ראשון, הקישור בשורה האחרונה (בלי url נפרד, כדי שלא יוצג פעמיים) */
 export const LONG_SHARE_TEXT = `לאחרונה נחשפתי לאתר בשם „בחירות 2026”, וחשבתי לשתף גם אתכם.
 האתר מרכז את סקרי הבחירות ממכונים וכלי תקשורת שונים, ומאפשר להשוות ביניהם, לראות ממוצעים ומגמות ולחזור לתוצאות של מערכות בחירות קודמות. יש בו גם מחשבון מנדטים ואפשרות לבדוק תרחישים שונים ולראות איך הם משפיעים על התמונה.
-החלק המעניין בעיניי הוא „הכנסת שלי”: אפשר להזין את ההשערה שלכם לגבי מספר המנדטים שתקבל כל מפלגה, להרכיב גושים ולראות מה משתתפים אחרים באתר חושבים שיקרה. אלה השערות של הגולשים, כמובן, ולא סקר מייצג — אבל מסקרן להשוות אותן לסקרים ולתחושה האישית שלכם.
+החלק המעניין בעיניי הוא „הניחוש שלי”: אפשר להזין את הניחוש שלכם לגבי מספר המנדטים שתקבל כל מפלגה, להרכיב גושים ולראות מה משתתפים אחרים באתר חושבים שיקרה. אלה ניחושים של הגולשים, כמובן, ולא סקר מייצג — אבל מסקרן להשוות אותן לסקרים ולתחושה האישית שלכם.
 אם אתם אוהבים לעקוב אחרי הבחירות ולהתווכח כמה מנדטים כל מפלגה תקבל, יש כאן במה להתעסק 🙂
 הנה הקישור:
 ${SITE_URL.replace(/\/$/, "")}`;
 
-export const COMMUNITY_TEXT = "סקר האתר לבחירות לכנסת ה-26: מה חושבים המשתתפים ולמי הם מתכננים להצביע. הוסיפו את ההשערה וההצבעה שלכם. הצטרפו:";
+export const COMMUNITY_TEXT = "סקר האתר לבחירות לכנסת ה-26: מה חושבים המשתתפים ולמי הם מתכננים להצביע. הוסיפו את הניחוש וההצבעה שלכם. הצטרפו:";
 const SITE_LABEL = SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "");
 
 /** עיגול ממוצעים לחלוקה שלמה של 120 (שארית גדולה) — רק לציור לוח המושבים, המספרים בתמונה הם הממוצעים עצמם */
@@ -54,8 +54,8 @@ export async function seatsImage(d: Dashboard, brand?: Brand, selection: Selecti
     kind: "parties",
     labels: {
       title: brand ? `${brand.name}: הכנסת` : "סקר האתר: הכנסת",
-      subtitle: `ממוצע השערות ${d.seats?.n ?? d.participants} משתתפים${brand ? " מהקבוצה" : ""} · השערות, לא סקר מייצג`,
-      cta: "הוסיפו את ההשערה שלכם — הצטרפו",
+      subtitle: `ממוצע ניחושים ${d.seats?.n ?? d.participants} משתתפים${brand ? " מהקבוצה" : ""} · ניחושים, לא סקר מייצג`,
+      cta: "הוסיפו את הניחוש שלכם — הצטרפו",
       ...(brand ? { logo: brand.logo, address: addressOf(brand.url) } : {}),
       value: (id) => seatsFmt(means[id] ?? 0),
     },
@@ -97,10 +97,10 @@ export async function voteImage(d: Dashboard, brand?: Brand): Promise<Blob> {
     ctx.beginPath(); ctx.moveTo(L, y + 24); ctx.lineTo(R, y + 24); ctx.stroke();
   });
   ctx.textAlign = "right"; ctx.fillStyle = c.soft; ctx.font = `400 26px ${body}`;
-  ctx.fillText("אחוז מתוך המשתתפים שענו. השערות משתתפים, לא סקר מייצג.", R, H - 208, R - L);
+  ctx.fillText("אחוז מתוך המשתתפים שענו. ניחושי משתתפים, לא סקר מייצג.", R, H - 208, R - L);
   ctx.fillStyle = c.card === c.bg ? c.line : c.card; ctx.fillRect(0, H - 176, IMG_W, 176);
   ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
-  ctx.fillText("הוסיפו את ההשערה שלכם — הצטרפו", R, H - 100, R - L);
+  ctx.fillText("הוסיפו את הניחוש שלכם — הצטרפו", R, H - 100, R - L);
   ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
   ctx.fillText(brand ? addressOf(brand.url) : SITE_LABEL, R, H - 48);
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
@@ -131,7 +131,7 @@ export async function groupInviteImage(brand: Brand): Promise<Blob> {
   ctx.fillStyle = c.soft; ctx.font = `400 40px ${body}`;
   ctx.fillText("הסקר של הקבוצה לבחירות לכנסת ה-26", mid, y + 86, R - L);
   ctx.font = `400 32px ${body}`;
-  ctx.fillText("מי שמשתתף בוחר בעצמו — השערות, לא סקר מייצג", mid, y + 142, R - L);
+  ctx.fillText("מי שמשתתף בוחר בעצמו — ניחושים, לא סקר מייצג", mid, y + 142, R - L);
   ctx.fillStyle = c.card === c.bg ? c.line : c.card; ctx.fillRect(0, H - 176, IMG_W, 176);
   ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
   ctx.fillText("מצטרפים לסקר של הקבוצה", R, H - 100, R - L);

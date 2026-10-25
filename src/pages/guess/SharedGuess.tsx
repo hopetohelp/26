@@ -17,7 +17,7 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
     <section className="mb-6 border-2 border-ink rounded-theme bg-paper-card p-4 md:p-5" aria-labelledby="shared-title">
       <div className="flex items-start justify-between gap-2 mb-3">
         <div>
-          <p className="text-xs font-bold text-ink-soft uppercase tracking-wide">ההשערה ששיתפו איתכם</p>
+          <p className="text-xs font-bold text-ink-soft uppercase tracking-wide">הניחוש ששיתפו איתכם</p>
           <h2 id="shared-title" className="font-display text-4xl md:text-5xl leading-none">
             {g.username ? (
               <>
@@ -27,19 +27,19 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
               "כך שיערו את הכנסת ה-26"
             )}
           </h2>
-          <p className="text-sm text-ink-soft mt-1">השערה של משתתף{g.pct ? ", לפי אחוזי הצבעה ומחושבת לפי החוק" : ""} . אינה סקר.</p>
+          <p className="text-sm text-ink-soft mt-1">ניחוש של משתתף{g.pct ? ", לפי אחוזי הצבעה ומחושב לפי החוק" : ""} . אינו סקר.</p>
         </div>
-        <button type="button" onClick={onClose} aria-label="סגירת ההשערה ששותפה" className="w-11 h-11 shrink-0 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">
+        <button type="button" onClick={onClose} aria-label="סגירת הניחוש ששותף" className="w-11 h-11 shrink-0 rounded-full text-2xl leading-none text-ink-soft hover:text-ink">
           ×
         </button>
       </div>
-      {g.comparison && <p className="text-sm text-ink-soft mb-3">מקור ההשוואה בשיתוף: {DATA_PRODUCTS[g.comparison.selection.product].name}. {g.comparison.snapshotId !== SNAPSHOT_ID && "ההשוואה מבוססת על גרסת נתונים קודמת; ההשערה עצמה נשמרה."}</p>}
-      <PersonalBlocs title="הגושים שלי לפי ההשערה ששותפה איתי" values={g.seats} source="השערת המשתתף ששיתף את הקישור, לפי הגושים שלכם" asOf="תוכן הקישור" />
+      {g.comparison && <p className="text-sm text-ink-soft mb-3">מקור ההשוואה בשיתוף: {DATA_PRODUCTS[g.comparison.selection.product].name}. {g.comparison.snapshotId !== SNAPSHOT_ID && "ההשוואה מבוססת על גרסת נתונים קודמת; הניחוש עצמו נשמר."}</p>}
+      <PersonalBlocs title="הגושים שלי לפי הניחוש ששותף איתי" values={g.seats} source="ניחוש המשתתף ששיתף את הקישור, לפי הגושים שלכם" asOf="תוכן הקישור" />
       <div className={`grid ${splitCls("md:grid-cols-[1.2fr_1fr]")} gap-4 [&>*]:min-w-0 items-start`}>
         <SeatBoard values={g.seats} />
         <div>
           <table className="w-full text-sm tabular">
-            <caption className="sr-only">המנדטים לכל רשימה בהשערה ששותפה</caption>
+            <caption className="sr-only">המנדטים לכל רשימה בניחוש ששותף</caption>
             <thead>
               <tr className="text-ink-soft">
                 <th className="text-start font-normal py-1">רשימה</th>
@@ -61,16 +61,16 @@ export default function SharedGuess({ g, hasDraft, onStart, onClose }: { g: G; h
       </div>
       <div className="mt-4 bg-ink text-paper-card rounded-theme p-4 space-y-3">
         <p className="font-display text-3xl md:text-4xl leading-none">עכשיו תורכם — בנו את הכנסת שלכם</p>
-        <p className="text-sm opacity-90">120 מושבים, בדרך שלכם. אחר כך משווים לממוצע המשתתפים ולסקרים.</p>
+        <p className="text-sm opacity-90">120 מושבים, בדרך שלכם. אחר כך משווים לממוצע הניחושים ולסקרים.</p>
         <div className="flex gap-2 flex-wrap">
           <button type="button" onClick={() => onStart(false)} className="min-h-[44px] px-5 rounded-full border-2 border-paper-card bg-paper-card text-ink text-sm font-bold">
             בנו את הכנסת שלכם
           </button>
           <button type="button" onClick={() => onStart(true)} className="min-h-[44px] px-5 rounded-full border-2 border-paper-card text-paper-card text-sm font-bold">
-            התחילו מההשערה הזו
+            התחילו מהניחוש הזה
           </button>
         </div>
-        {hasDraft && <p className="text-xs opacity-90">"התחילו מההשערה הזו" מחליף את הטיוטה שלכם כאן (גרסה שנשמרה נשארת בהיסטוריה).</p>}
+        {hasDraft && <p className="text-xs opacity-90">"התחילו מהניחוש הזה" מחליף את הטיוטה שלכם כאן (גרסה שנשמרה נשארת בהיסטוריה).</p>}
       </div>
     </section>
   );

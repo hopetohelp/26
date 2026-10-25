@@ -59,8 +59,8 @@ export default function Home() {
 }
 
 function Participation({ className }: { className: string }) {
-  return <aside aria-label="ההשערה שלך" className={`c-participation ${className}`}>
-    <div><h2 className="font-display">מה ההשערה שלך?</h2><p>השערות משתתפים, אינן סקר.</p></div>
-    <Link to="/guess">לבניית הכנסת שלי ←</Link>
+  return <aside aria-label="הניחוש שלך" className={`c-participation ${className}`}>
+    <div><h2 className="font-display">מה הניחוש שלך?</h2><p>ניחושי משתתפים, אינם סקר.</p></div>
+    <Link to="/guess">לבניית הניחוש שלי ←</Link>
   </aside>;
 }
