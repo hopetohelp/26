@@ -24,7 +24,10 @@ it('משדרג ברירות מחדל ישנות, בלי לשנות גוש איש
 });
 it('ארבע שורות קבועות מחושבות לכל בעלי השערת מפלגות גם בלי הגדרת גושים', () => {
   const b = computeBlocs([{participant:'a',payload},{participant:'b',payload}],[]);
-  expect(b.fixed.map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש נתניהו',80,2],['גוש אייזנקוט',28,2],['אחדות',68,2],['מפלגות ערביות',12,2]]);
+  expect(b.fixed.slice(0, 5).map(g => [g.name,g.stat.mean,g.stat.n])).toEqual([['הממשלה היוצאת',68,2],['גוש נתניהו',80,2],['גוש אייזנקוט',28,2],['אחדות',68,2],['מפלגות ערביות',12,2]]);
+  // ואחריהן חמש הקבוצות של חלוקת הכנסת (הכרעת בעלים 25.10.2026), לכל אחת טווח מסכומי המשתתפים
+  expect(b.fixed.slice(5).map(g => g.id)).toEqual(['k-netanyahu','k-haredi','k-arab','k-eisenkot','k-unity']);
+  for (const g of b.fixed.slice(5)) expect(g.stat.n).toBe(2);
 });
 it('פרסום היסטורי משתמש בגרסאות המקור ולא בהשערה מאוחרת', () => {
   const versions = [{id:1,participant:'a',unit:'seats',created_at:'2026-10-01',payload},{id:2,participant:'a',unit:'seats',created_at:'2026-10-03',payload:{...payload,seats:{likud:{v:120}}}}];

@@ -9,7 +9,7 @@ const model = JSON.parse(readFileSync(new URL("model.json", root), "utf8"));
 const registry = JSON.parse(readFileSync(new URL("registry.json", root), "utf8"));
 const polls = JSON.parse(readFileSync(new URL("polls.json", root), "utf8")).polls;
 const k25 = results.find((e) => e.id === "k25");
-const lists2026 = meta.lists2026.map((l) => ({ id: l.id, gov37: !!l.gov37 }));
+const lists2026 = meta.lists2026.map((l) => ({ id: l.id, gov37: !!l.gov37, ...(l.withdrawn ? { withdrawn: true } : {}) }));
 const lists2022 = k25.lists.map((l) => l.letters);
 const official2022 = Object.fromEntries(k25.lists.map((l) => [l.letters, Math.round((l.votes / k25.valid) * 10000) / 100]));
 const out = `// נוצר אוטומטית מ-src/data על ידי worker/crowd/gen-lists.mjs — לא לערוך ביד.

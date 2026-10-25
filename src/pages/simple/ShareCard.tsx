@@ -17,7 +17,7 @@ const SHORT = ["גוש נתניהו", "חרדים", "ערבים", "גוש איי
 const host = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
 export function inviteText({ kind, group }: ShareInput): string {
   const link = group ? groupUrl(group.slug) : SITE_URL;
-  if (kind === "average") return group ? `זו תחזית כל המשתתפים, וגם משתתפי הגזרה ביניהם. מה אתם צופים? מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זו תחזית המשתתפים. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם: ${link}`;
+  if (kind === "average") return group ? `זו תחזית כל המשתתפים. מה אתם צופים? מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זו תחזית המשתתפים. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם: ${link}`;
   return group ? `הגזרה בונה את הכנסת שלה. זו התחזית שלי, ואני סקרן לראות את שלכם. מצטרפים לקבוצה ומשערים בדקה: ${link}` : `זה הניחוש שלי. חושבים שאתם מדייקים יותר? תוך דקה בונים כנסת משלכם ורואים איך כולם חושבים: ${link}`;
 }
 export function shareTitle({ kind, name }: ShareInput): string {

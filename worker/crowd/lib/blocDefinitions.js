@@ -1,4 +1,4 @@
-import { GOV37, IDS_2026 } from "./lists.js";
+import { CLOSED_LISTS, GOV37, IDS_2026, LISTS_2026 } from "./lists.js";
 export const COALITION = [...new Set([...GOV37, "amcha", "code_black", "haredi_public"])].sort();
 export const ARAB = ["joint", "raam"];
 export const OPPOSITION = [...IDS_2026].filter(id => !COALITION.includes(id) && !ARAB.includes(id)).sort();
@@ -9,6 +9,21 @@ export const FIXED_BLOCS = [
   { id: "opposition", name: "גוש אייזנקוט", lists: OPPOSITION },
   { id: "unity", name: "אחדות", lists: UNITY },
   { id: "arab", name: "מפלגות ערביות", lists: ARAB },
+];
+/**
+ * חמש הקבוצות של חלוקת הכנסת באתר (הכרעת בעלים 25.10.2026) — אותה הגדרה כמו KNESSET_GROUPS ב-src/lib/simpleSources.ts
+ * (בדיקה מוודאת שהן זהות): נתניהו · חרדים · ערבים · אייזנקוט · אחדות, בלי רשימות שלא עברו באף סקר. האחדות חופפת לנתניהו ולאייזנקוט.
+ */
+const OPEN = LISTS_2026.filter(l => !l.withdrawn).map(l => l.id).filter(id => !CLOSED_LISTS.includes(id));
+const open = ids => ids.filter(id => OPEN.includes(id));
+const K_NET = open(["likud", "otzma", "rzp", "amcha", "noam"]), K_HAREDI = open(["shas", "utj", "code_black", "haredi_public"]), K_ARAB = open(["joint", "raam"]);
+const K_EIS = OPEN.filter(id => ![...K_NET, ...K_HAREDI, ...K_ARAB].includes(id));
+export const KNESSET_BLOCS = [
+  { id: "k-netanyahu", name: "נתניהו", lists: K_NET },
+  { id: "k-haredi", name: "חרדים", lists: K_HAREDI },
+  { id: "k-arab", name: "ערבים", lists: K_ARAB },
+  { id: "k-eisenkot", name: "אייזנקוט", lists: K_EIS },
+  { id: "k-unity", name: "אחדות", lists: OPEN.filter(id => ![...K_HAREDI, ...K_ARAB, "otzma", "rzp", "democrats"].includes(id)) },
 ];
 export const compositionKey = lists => [...new Set(lists)].sort().join(",");
 const legacyCoalitions = [

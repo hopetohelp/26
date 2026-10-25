@@ -98,7 +98,7 @@ export function PartyChart({ selection, lists, marks, legend, spreadOf }: { sele
 }
 export const LegendCapsule = ({ label = smartRange("הסקרים") }: { label?: string }) => <span><span className="f-lg-cap" />{label}</span>;
 /** מקרא בתוך מסגרת כמו הקו שלו (רציף / מקוטע), עם מספר המשתתפים — כמו התאים בגרף (הכרעת בעלים 24.10.2026) */
-export const LegendBox = ({ kind, label, n }: { kind?: "dash"; label: string; n?: number | null }) => <span className={`f-lg-box ${kind ?? ""}`}>{label}{n != null && <b className="font-num">{n.toLocaleString("he-IL")}</b>}</span>;
+export const LegendBox = ({ kind, label, n }: { kind?: "dash" | "soft"; label: string; n?: number | null }) => <span className={`f-lg-box ${kind ?? ""}`}>{label}{n != null && <b className="font-num">{n.toLocaleString("he-IL")}</b>}</span>;
 export const LegendLine = ({ kind, label }: { kind?: "dash" | "soft"; label: string }) => <span><span className={`f-lg-line ${kind ?? ""}`} />{label}</span>;
 
 /** גושים לתרשים; "חסר" — מנדטים שעוד לא חולקו */

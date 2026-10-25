@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import worker, { resetDashboardCache, GROUP_MIN, UNIFIED_GROUPS } from "../index.js";
+import worker, { resetDashboardCache, GROUP_MIN } from "../index.js";
 import { fakeD1 } from "./fakeD1.js";
 import { seats, IDS } from "./helpers.js";
 import { sha256 } from "../lib/crypto.js";
@@ -69,14 +69,6 @@ describe("group dashboard", () => {
     expect(d.seats).toBeTruthy();
     // ההשערה של מי שמחוץ לקבוצה אינה בחישוב שלה: הכללי כולל גם אותו (הלא מאומת נספר בשניהם)
     expect((await call("/dashboard")).data.participants).toBe(GROUP_MIN + 1);
-    // קבוצה מאוחדת (הגזרה, הכרעת בעלים 25.10.2026): נתוני כל המשתתפים, ו-members = משתתפי הקבוצה
-    UNIFIED_GROUPS.add("gizra");
-    try {
-      resetDashboardCache();
-      d = (await call("/dashboard?group=gizra", { token: members[0] })).data;
-      expect(d).toMatchObject({ group: "gizra", unified: true, members: GROUP_MIN, participants: GROUP_MIN + 1 });
-      expect((await call("/dashboard?group=gizra", { token: outsider })).status).toBe(403);
-    } finally { UNIFIED_GROUPS.delete("gizra"); }
   });
 
   it("rejects a bad group id", async () => {
