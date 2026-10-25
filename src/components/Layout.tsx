@@ -281,6 +281,10 @@ function useBottomCover(): number {
     const measure = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
+        // גובה פס הגושים הצף — הסרגל יושב צמוד מעליו (הכרעת בעלים 25.10.2026)
+        const dock = document.querySelector<HTMLElement>(".f-dock.floating");
+        const dh = dock && getComputedStyle(dock).position === "fixed" ? Math.round(dock.getBoundingClientRect().height) : 0;
+        if (dh) document.documentElement.style.setProperty("--dock-h", `${dh}px`);
         let top = window.innerHeight;
         document.querySelectorAll<HTMLElement>(BOTTOM_BARS).forEach((el) => {
           if (getComputedStyle(el).position !== "fixed") return;
