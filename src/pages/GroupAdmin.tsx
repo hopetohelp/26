@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { call, type GroupCompare, type GroupInsights, type GroupLinkStats, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
+import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { listName } from "../lib/data";
 import { PageTitle } from "../components/ui";
@@ -104,31 +105,36 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
   );
 }
 
-type Thread = { status: string; updated_at: string; messages: { author: "visitor" | "team"; text: string; created_at: string }[] };
-/** שיחות חברי הקבוצה עם צוות האתר — לקריאה בלבד (הכרעת בעלים 24.10.2026). בלי שם או מזהה; התשובה — רק מצוות האתר */
+type SupportData = Parameters<typeof InquirySections>[0]["data"] & { salt: string; belowMin?: undefined };
+/**
+ * פניות החברים לצוות האתר — אותו ממשק כמו למנהל האתר (הכרעת בעלים 25.10.2026): תשובה, טיוטות לאישור, השהיות.
+ * בלי שם או מזהה: כל שיחה מזוהה בידית חד-פעמית מהטעינה. תשובה של מנהל הקבוצה מוצגת לחבר כתשובת צוות האתר.
+ */
 function SupportThreads({ id, token }: { id: string; token: string }) {
-  const [d, setD] = useState<{ belowMin?: boolean; min?: number; threads?: Thread[] } | null>(null);
-  const [failed, setFailed] = useState(false);
-  useEffect(() => { void call<typeof d>(`/group/support?group=${q(id)}`, { token }).then(setD, () => setFailed(true)); }, [id, token]);
-  const when = (iso: string) => new Intl.DateTimeFormat("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)).replace(/\./g, "/");
+  const [d, setD] = useState<SupportData | { belowMin: true; min: number } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const load = async () => {
+    try { const r = await call<{ belowMin?: boolean; min: number; salt: string; threads: SupportThread[]; drafts: Draft[]; held: Held[] }>(`/group/support?group=${q(id)}`, { token });
+      setD(r.belowMin ? { belowMin: true, min: r.min } : { salt: r.salt, days: [], totalVisitors: 0, feedback: [], support: { stats: {}, threads: r.threads }, drafts: r.drafts, held: r.held }); setError(null); }
+    catch { setError("השיחות אינן זמינות כרגע."); }
+  };
+  useEffect(() => { void load(); }, [id, token]); // eslint-disable-line react-hooks/exhaustive-deps
+  const act = async (handle: string, body: Record<string, unknown>) => {
+    if (!d || "belowMin" in d && d.belowMin) return false;
+    try { await call("/group/support/act", { token, body: { group: id, salt: (d as SupportData).salt, handle, ...body } }); await load(); return true; }
+    catch { setError("הפעולה לא הצליחה. נסו שוב."); return false; }
+  };
+  const target = (draftId: number) => (d && !("belowMin" in d && d.belowMin) ? (d as SupportData).drafts?.find((x) => x.id === draftId)?.target : undefined) ?? "";
   return (
-    <Section title="פניות החברים לצוות האתר" aside="לקריאה בלבד">
-      {failed ? <p className="text-sm text-ink-soft">השיחות אינן זמינות כרגע.</p>
-        : !d ? <p className="text-sm text-ink-soft">טוען…</p>
-        : d.belowMin ? <p className="text-sm text-ink-soft">השיחות יוצגו מ-{d.min} חברים רשומים.</p>
-        : !d.threads?.length ? <p className="text-sm text-ink-soft">אין עדיין פניות של חברי הקבוצה.</p>
-        : <ul className="space-y-3">
-            {d.threads.map((t, i) => (
-              <li key={i} className="border border-paper-line rounded-theme p-3 space-y-2">
-                <p className="text-xs text-ink-soft flex justify-between gap-2"><span className="font-bold text-ink">{t.status === "new" ? "ממתינה לתשובה" : "נענתה"}</span><span className="font-num tabular">{when(t.updated_at)}</span></p>
-                {t.messages.map((m, j) => (
-                  <div key={j} className={`text-sm rounded-theme px-3 py-2 max-w-[85%] whitespace-pre-wrap break-words ${m.author === "team" ? "bg-paper me-auto" : "bg-paper-card border border-paper-line ms-0"}`}>
-                    <span className="block text-xs text-ink-soft">{m.author === "team" ? "צוות האתר" : "חבר בקבוצה"}</span>{m.text}
-                  </div>
-                ))}
-              </li>
-            ))}
-          </ul>}
+    <Section title="פניות החברים לצוות האתר" lead="כל 4 שעות Claude סורק את הפניות ועונה לפי מדיניות האתר. תשובה שאינה עומדת במדיניות נשמרת כטיוטה לאישור — כאן או אצל מנהל האתר. אפשר גם לענות בעצמכם; התשובה מוצגת לחבר כתשובת צוות האתר.">
+      {error && <p className="text-sm text-warn">{error}</p>}
+      {!d ? (!error && <p className="text-sm text-ink-soft">טוען…</p>)
+        : "belowMin" in d && d.belowMin ? <p className="text-sm text-ink-soft">השיחות יוצגו מ-{d.min} חברים רשומים.</p>
+        : <InquirySections data={d as SupportData} reply={(_kind, handle) => (text) => act(String(handle), { action: "reply", text })} draftActions={{
+            approve: (draftId, text) => act(target(draftId), { action: "approve", draft: draftId, text }),
+            remove: (draftId) => act(target(draftId), { action: "delete", draft: draftId }),
+            release: (_kind, handle) => act(handle, { action: "release" }),
+          }} />}
     </Section>
   );
 }
@@ -153,11 +159,11 @@ function CompareSwitch({ id, token }: { id: string; token: string }) {
 }
 
 /** מגירה במסך (הכרעת בעלים 25.10.2026): כל חלק מקופל; open = פתוח בכניסה */
-function Section({ title, aside, open = false, children }: { title: string; aside?: ReactNode; open?: boolean; children: ReactNode }) {
+function Section({ title, aside, lead, open = false, children }: { title: string; aside?: ReactNode; lead?: ReactNode; open?: boolean; children: ReactNode }) {
   return (
     <details open={open} className="group/s bg-paper-card border border-paper-line rounded-theme px-4 [&_summary::-webkit-details-marker]:hidden">
       <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[56px]">
-        <span className="flex items-baseline gap-3 min-w-0"><h2 className="font-bold text-lg">{title}</h2>{aside && <span className="text-xs text-ink-soft truncate">{aside}</span>}</span>
+        <span className="min-w-0 py-3"><span className="flex items-baseline gap-3 min-w-0"><h2 className="font-bold text-lg">{title}</h2>{aside && <span className="text-xs text-ink-soft truncate">{aside}</span>}</span>{lead && <span className="block text-xs text-ink-soft mt-1">{lead}</span>}</span>
         <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open/s:rotate-45">+</span>
       </summary>
       <div className="space-y-4 pb-4">{children}</div>

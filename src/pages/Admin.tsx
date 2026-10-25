@@ -27,11 +27,11 @@ const KEY = "elections26.admin";
 type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string; via?: string };
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
 type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
-type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
+export type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
 /** טיוטת תשובה של הסקירה המתוזמנת: לא מוצגת לגולש עד אישור (הכרעת בעלים 12.10.2026) */
-type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
+export type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
-type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
+export type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
 type Data = { agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);

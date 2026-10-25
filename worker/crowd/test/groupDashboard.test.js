@@ -304,5 +304,10 @@ describe("group support threads", () => {
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
     expect((await call("/group/support?group=gizra", { token: member })).status).toBe(403);
     expect((await call("/group/support?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
+    const body = { group: "gizra", salt: "saltsalt", handle: "a".repeat(32), action: "reply", text: "x" };
+    expect((await call("/group/support/act", { token: member, body })).status).toBe(403);
+    expect((await call("/group/support/act", { token: mgr, body: { ...body, handle: "bad" } })).status).toBe(400);
+    expect((await call("/group/support/act", { token: mgr, body: { ...body, action: "drop" } })).status).toBe(400);
+    expect((await call("/group/support/act", { token: mgr, body })).status).toBe(403); // מתחת לסף
   });
 });
