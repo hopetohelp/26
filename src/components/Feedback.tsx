@@ -44,7 +44,7 @@ export function openingLine(diagnostic: string): string {
 
 export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; diagnostic?: string }) {
   const { pathname } = useLocation();
-  const [topic, setTopic] = useState<string>(diagnostic ? "other" : "data");
+  const [topic, setTopic] = useState<string>("data");
   // הנוסח הפותח לפי הפעולה שבלוג (לא תמיד שמירת השערה — למשל החלפת סיסמה)
   const [text, setText] = useState(diagnostic ? openingLine(diagnostic) : "");
   const [trap, setTrap] = useState(""); // שדה מלכודת לרובוטים — משתתף אמיתי לא רואה אותו
