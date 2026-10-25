@@ -248,7 +248,7 @@ export function PersonalBlocsEditor() {
   const personal = usePersonalBlocs();
   const cellOf = (id: string) => personal.defs.find(b => b.lists.includes(id))?.id ?? "unity";
   return <div className="f-blocedit">
-    <label className="f-blocedit-show"><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת העוגה שלי (במצב מתקדם)</label>
+    <label className="f-blocedit-show"><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת עוגת המנדטים שלי (במצב מתקדם)</label>
     <p>בחרו לכל רשימה לאיזה חלק היא שייכת. זה משנה רק את התצוגה, לא את המנדטים.</p>
     <ul>{BLOC_IDS.map(id => <li key={id}><PartyAvatar id={id} size={22} /><span className="f-blocedit-name">{nameOf(id)}</span>
       <select aria-label={`החלק של ${nameOf(id)}`} value={cellOf(id)} onChange={e => personal.move(id, e.target.value)}>{PERSONAL_CELLS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></li>)}</ul>
@@ -281,9 +281,10 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
   return <>
     <div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
       <Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unity} inner={inner} parts={innerParts(values, ring)} />
-      {showMine && <figure className="f-pie-mine"><figcaption>החלוקה שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
-      {advanced && <div className="f-pie-tools"><label><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת העוגה שלי</label><Link to="/account?blocs">עריכת החלוקה שלי</Link></div>}
+      {showMine && <figure className="f-pie-mine"><figcaption>עוגת המנדטים שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
     </div>
+    {/* כפתור אחד (הכרעת בעלים 25.10.2026): יצירת העוגה ואישור הצגתה — במסך אחד באזור האישי */}
+    {advanced && <div className="f-pie-tools"><Link to="/account?blocs" className="f-btn">עוגת המנדטים שלי</Link></div>}
     <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>
   </>;
 }

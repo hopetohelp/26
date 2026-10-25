@@ -722,7 +722,7 @@
 .f-pie-mine figcaption { text-align:center;font-weight:700;font-size:14px;margin-bottom:4px; }
 .f-pie-tools { display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 16px;margin-top:8px;font-size:14px; }
 .f-pie-tools label, .f-blocedit-show { display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer; }
-.f-pie-tools a { min-height:44px;display:flex;align-items:center;color:rgb(var(--signal)); }
+.f-pie-tools a.f-btn { min-height:44px; }
 .f-stack-host { position:relative;flex:1;min-width:0; }
 .f-unity-line { display:flex;height:16px;margin-top:3px; }
 .f-unity-line > button { border:0;border-radius:8px;padding:0 4px;background:rgb(var(--bloc-unity));color:#fff;font:600 10.5px var(--font-body),sans-serif;white-space:nowrap;overflow:hidden;cursor:pointer; }
@@ -755,8 +755,8 @@
 .f-modal > div { background:rgb(var(--card));color:rgb(var(--ink));border-radius:22px;padding:16px;max-width:440px;width:100%;display:grid;gap:12px; }
 .f-modal img { width:100%;height:auto;border-radius:14px;border:1px solid rgb(var(--line)); }
 .f-invite { font-size:14px;line-height:1.55;background:rgb(var(--accent-soft));border-radius:12px;padding:10px 12px; }
-[data-interface="simple"] main { padding-bottom:calc(124px + env(safe-area-inset-bottom)); }
-@media (min-width: 768px) { [data-interface="simple"] main { padding-bottom:60px; } }
+[data-interface] main { padding-bottom:calc(124px + env(safe-area-inset-bottom)); }
+@media (min-width: 768px) { [data-interface] main { padding-bottom:60px; } }
 @media (min-width: 768px) and (max-width: 1099px) { .f-nav-top { position:static;transform:none; } .f-ask .t { display:none; } .f-ask .q { display:inline; } }
 .f-gname, .f-gphone { display:none; }
 .f-guesses { text-align:center;margin:0 0 10px; }
@@ -806,3 +806,34 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* ציר מנדטים מימין לשמאל: 0 בימין (הכרעת בעלים 25.10.2026). הציור משוקף, והטקסט בתוכו חוזר לכיוונו. ציר הסטייה (`mk-ltr`) נשאר */
 .mk-plot:not(.mk-ltr) { transform: scaleX(-1); }
 .mk-plot:not(.mk-ltr) .mk-capsule-tag, .mk-plot:not(.mk-ltr) > span:not([class*="mk-"]), .mk-plot:not(.mk-ltr) > b, .mk-plot:not(.mk-ltr) > bdi { scale: -1 1; }
+
+/* מתג "מתקדם" במעטפת היחידה (תוכנית מאוחדת, פרק ב): יעד לחיצה 44 פיקסלים, מצב מסומן גם בצורה ולא רק בצבע */
+.f-switch { display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 6px;border:0;background:none;color:rgb(var(--ink));font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer;border-radius:999px; }
+.f-switch-track { position:relative;width:34px;height:20px;border-radius:999px;background:rgb(var(--line));transition:background .15s; }
+.f-switch-track span { position:absolute;top:2px;inset-inline-start:2px;width:16px;height:16px;border-radius:50%;background:rgb(var(--card));box-shadow:0 1px 3px rgb(var(--ink) / .3);transition:inset-inline-start .15s; }
+.f-switch[aria-checked=true] .f-switch-track { background:rgb(var(--signal)); }
+.f-switch[aria-checked=true] .f-switch-track span { inset-inline-start:16px; }
+.f-switch:focus-visible { outline:2px solid rgb(var(--signal));outline-offset:2px; }
+@media (prefers-reduced-motion: reduce) { .f-switch-track, .f-switch-track span { transition:none; } }
+/* "עוד" בסרגל — רק במתקדם */
+.f-more { position:relative; }
+.f-more > button { padding:8px 14px;border-radius:999px;border:0;background:none;font-size:14px;color:rgb(var(--ink-soft));cursor:pointer;white-space:nowrap; }
+.f-more > button::after { content:"▾";margin-inline-start:4px;font-size:10px; }
+.f-more.up > button::after { content:"▴"; }
+.f-more > button.on { color:rgb(var(--signal));font-weight:800; }
+.f-more ul { position:absolute;top:calc(100% + 8px);inset-inline-end:0;z-index:50;min-width:170px;margin:0;padding:6px;list-style:none;border-radius:14px;background:rgb(var(--card));border:1px solid rgb(var(--line));box-shadow:0 8px 24px rgb(var(--ink) / .16); }
+.f-more.up ul { top:auto;bottom:calc(100% + 10px); }
+.f-more ul a { display:block;padding:10px 12px;min-height:44px;border-radius:10px;font-size:14px; }
+@media (max-width: 767px) { .f-nav:has(.f-more) { gap:1px; } .f-nav:has(.f-more) a { padding:8px 6px;font-size:12.5px; } .f-more > button { padding:8px 6px;font-size:12.5px; } .f-switch { font-size:12px;gap:5px;padding:0 2px; } }
+@media (max-width: 380px) { .f-nav:has(.f-more) a { padding:8px 5px;font-size:12px; } .f-more > button { padding:8px 5px;font-size:12px; } .f-more > button::after { display:none; } }
+
+/* תמונת מצב — פירוט המתקדם מתחת לגרפים */
+.f-details { display:grid;gap:16px;margin-top:16px;grid-template-columns:minmax(0,1fr); }
+
+/* הסרגל התחתון (טלפון) מנצל את כל רוחב המסך; בפס העליון (מחשב) — הרוחב המינימלי של הלשוניות (הכרעות בעלים 25.10.2026) */
+.f-nav-bottom { left:8px;right:8px;transform:none;max-width:none;justify-content:space-between; }
+.f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp) { flex:1 1 auto;text-align:center; }
+.f-short { display:none; }
+.f-nav-bottom .f-long { display:none; } .f-nav-bottom .f-short { display:inline; }
+.f-nav-measure { flex:none !important;width:max-content !important;position:absolute !important;left:auto !important;right:auto !important; }
+.f-nav-measure > a { flex:none !important; }

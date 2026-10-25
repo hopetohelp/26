@@ -24,6 +24,8 @@ export interface Screen {
   id: string;
   to: string;
   label: string;
+  /** תווית קצרה לסרגל בטלפון */
+  short?: string;
   icon: string;
   nav: "core" | "more" | "foot";
   /** המסך כולו רק במתקדם */
@@ -32,14 +34,17 @@ export interface Screen {
   tabs?: ScreenTab[];
 }
 export const SCREENS: Screen[] = [
-  { id: "home", to: "/", label: "תמונת מצב", icon: "home", nav: "core" },
+  // בטלפון "בית" (הכרעת בעלים 25.10.2026)
+  { id: "home", to: "/", label: "תמונת מצב", short: "בית", icon: "home", nav: "core" },
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
   { id: "community", to: "/community", label: "ממוצע הניחושים", icon: "bars", nav: "core" },
+  // זמני עד שלב 3, שבו הסקרים עוברים ללשוניות תמונת מצב (השוואת מכונים · מגמות · ארכיון)
+  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
   { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
   { id: "method", to: "/method", label: "מידע ומקורות", icon: "info", nav: "foot" },
 ];
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
-/** המסכים בסרגל: הליבה תמיד; "עוד" — רק במתקדם */
+/** המסכים בסרגל: הליבה תמיד; הנוספים ("עוד" בטלפון, בשורה במחשב) — רק במתקדם */
 export function navScreens(advanced: boolean): Screen[] {
   return SCREENS.filter(s => s.nav === "core" || (advanced && s.nav === "more"));
 }

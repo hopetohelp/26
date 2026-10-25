@@ -19,7 +19,6 @@ import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import RootErrorBoundary from "./components/RootErrorBoundary";
-const Home = lazy(page(() => import("./pages/Home")));
 const Today = lazy(page(() => import("./pages/Today")));
 const Polls = lazy(page(() => import("./pages/Polls")));
 const Trends = lazy(page(() => import("./pages/Trends")));
@@ -214,9 +213,9 @@ function LegacyToday() {
   return <CalculatorRedirect replace to={`${scenarios ? "/scenarios" : "/polls"}${next.size ? `?${next}` : ""}`} />;
 }
 
+/** תמונת מצב אחת לשני המצבים; המתקדם מוסיף פירוט באותו מסך (src/pages/simple/Overview) */
 function ModeHome() {
-  const { advanced } = useInterface();
-  return advanced ? <Home /> : <SimpleOverview />;
+  return <SimpleOverview />;
 }
 
 /** הכתובת הישנה #/support (גם בקישורים במיילים): ?groups ⇐ האזור האישי, אחרת ⇐ מסך AI (סבב 9) */

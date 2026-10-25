@@ -218,7 +218,7 @@ export default function Support() {
     // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
   const ask = useSearchParams()[0].has("ask");
   const groupsLink = useSearchParams()[0].has("groups");
-  // "עריכת החלוקה שלי" מהגרפים (?blocs) ⇐ המגירה של החלוקה פתוחה
+  // "עוגת המנדטים שלי" מהגרפים (?blocs) ⇐ המגירה של החלוקה פתוחה
   const blocsLink = useSearchParams()[0].has("blocs");
   // קישור ישיר למנהל קבוצה (#/support?groups): מחובר ⇐ מסך "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
   const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(blocsLink ? ["blocs"] : groupsLink ? ["details"] : token || ask ? [] : ["details"]));
@@ -278,7 +278,7 @@ export default function Support() {
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
-        <Drawer title="החלוקה שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>
+        <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>
         {admin}
       </div>
     </div>

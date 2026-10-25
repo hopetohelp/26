@@ -2,38 +2,22 @@ import { InterfaceProvider, useInterface } from "../lib/interfaceMode";
 import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { ScreenLegend } from "./ChartLegend";
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import AccessCard from "./AccessCard";
 import PrivacyCard from "./PrivacyConsent";
-import { meta } from "../lib/data";
-import { date } from "../lib/format";
 import { useMode, type ModeId } from "../lib/theme";
-import { PAGES, navScreens } from "../lib/pages";
+import { navScreens, type Screen } from "../lib/pages";
 import { useSupportUnread } from "../lib/supportUnread";
-import ExitPollClock, { clockParts } from "./ExitPollClock";
+import { clockParts } from "./ExitPollClock";
 import { wallClockLeft } from "../lib/countdown";
 import { LOCK_AT } from "../pages/guess/model";
-import { MASTHEAD_SLOT } from "./SourcePicker";
 import { useSession } from "../pages/guess/useCrowd";
 import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
 
-/** שלושת מסכי הליבה — מקטלוג הניווט (src/lib/pages.ts) */
-const SIMPLE_TABS = navScreens(false).map(({ to, label, icon }) => ({ to, label, icon }));
-const NAV = [{ to: "/", label: "בית" }, ...PAGES.map(({ to, label, short }) => ({ to, label: short ?? label })), { to: "/ai", label: "AI" }, { to: "/account", label: "אזור אישי" }];
-/** שש לשוניות; ברוחב צר הסרגל נגלל עם חץ לצד. */
-const TABS = [
-  { to: "/", label: "בית", icon: "home" },
-  { to: "/guess", label: "הניחוש שלי", icon: "guess" },
-  { to: "/polls", label: "סקרים", icon: "bars" },
-  { to: "/past", label: "בחירות קודמות", icon: "board" },
-  { to: "/method", label: "מידע", icon: "info" },
-  { to: "/ai", label: "AI", icon: "comments" },
-  { to: "/account", label: "אישי", icon: "user" },
-];
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
 function useGroupTab() {
@@ -53,16 +37,6 @@ function Icon({ name }: { name: string }) {
   if (name === "group") return <svg {...p}><circle cx="9" cy="8" r="3.5" /><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5" /><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2.4.6 4 2.4 4 5.2" /></svg>;
   if (name === "wave") return <svg {...p}><path d="M3 12h4l3-8 4 16 3-8h4" /></svg>;
   return <svg {...p}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>;
-}
-
-/** תאריך הבחירות בשורה הקטנה: תמיד בתבנית היום/חודש (27/10), כמו כל תאריך באתר. "הבחירות" מבדיל את התאריך מהספירה לנעילת ההשערות במסך "הכנסת שלי" (9.10.2026); בטלפון המילה לקורא מסך בלבד, כדי שהשורה תיכנס. */
-function ElectionDate() {
-  return (
-    <span className="whitespace-nowrap">
-      <span className="sr-only sm:not-sr-only">הבחירות </span>
-      <span dir="ltr">{date(meta.electionDay)}</span>
-    </span>
-  );
 }
 
 /** כפתור תצורה אחד שמתחלף בלחיצה: לפי המכשיר ⇐ יום ⇐ לילה ⇐ לפי המכשיר */
@@ -103,41 +77,12 @@ function ModePicker() {
 }
 
 /**
- * פס עליון אחד (הכרעת בעלים 9.10.2026, החלטה 2), בטוקנים (`frame`, `signal`, גופן, רדיוס).
- * שורה אחת בכל רוחב: שם האתר ומתחתיו תאריך הבחירות (מימין), שעון העצר עד המדגמים במרכז (הכרעת בעלים 12.10.2026, במקום "עוד N ימים"), בורר הממוצע של המסך הפתוח (18.10.2026) ובורר התצורה.
- */
-function Masthead() {
-  const { advanced, toggle } = useInterface();
-  return (
-    <div className="bg-frame text-frame-ink border-b border-frame-line md:border-b-0">
-      {/* בטלפון בשורה נפרדת; כשיש מקום — באותה שורה של הכותרת */}
-      {advanced && <div className="flex md:hidden justify-end px-4 pt-1"><button type="button" onClick={toggle} className="shrink-0 min-h-[44px] rounded-full border border-frame-line px-3 text-sm font-bold">לתצוגה הממוקדת</button></div>}
-      <div className="c-masthead-row w-full mx-auto px-4 md:px-6 py-1.5 md:py-3 flex items-center justify-between gap-x-2 md:gap-x-4">
-        <div className="min-w-0 md:flex md:items-baseline md:gap-3 text-frame-soft">
-          <NavLink to="/" className="block font-display leading-none no-underline text-frame-ink hover:text-frame-ink text-[28px] md:text-[32px] whitespace-nowrap">
-            בחירות 26
-          </NavLink>
-          <p className="mt-1 md:mt-0 text-xs md:text-sm whitespace-nowrap">
-            <ElectionDate />
-          </p>
-        </div>
-        <ExitPollClock bar />
-        {/* בורר הממוצע של המסך הפתוח (SourcePicker נכנס לכאן); ריק במסכים בלי בחירת מקור */}
-        <div id={MASTHEAD_SLOT} className="c-masthead-source empty:hidden" />
-        {advanced && <button type="button" onClick={toggle} className="hidden md:inline-flex items-center shrink-0 min-h-[40px] rounded-full border border-frame-line px-3 text-sm font-bold whitespace-nowrap">לתצוגה הממוקדת</button>}
-        <ModePicker />
-      </div>
-    </div>
-  );
-}
-
-/**
- * התצוגה הממוקדת (הכרעות בעלים 23.10.2026): פס דק — שם האתר (וסמל הגזרה לחבריה), שעון העצר, "יש שאלה?" ו"למחקר מתקדם".
+ * המעטפת היחידה (הכרעות בעלים 23.10.2026; תוכנית מאוחדת, פרק ב): פס דק — שם האתר (וסמל הגזרה לחבריה), שעון העצר ומתג "מתקדם".
+ * המתג מוסיף פקדים ופירוט באותו מסך; אינו מחליף מעטפת.
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
 function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean; onFit: (top: boolean) => void }) {
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
-  const { toggle } = useInterface();
   const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
   // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה.
   // מחליטים רק כשרוחב המסך משתנה (לא כשהשעון או הגופן משנים את התוכן), ועם מרווח ביטחון — כדי שלא יהבהב בין למעלה ולמטה
@@ -151,7 +96,11 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
       if (!force && !downOnly && w === lastW.current) return;
       lastW.current = w;
       const top = el.querySelector<HTMLElement>(".f-nav-top"), bottom = document.querySelector<HTMLElement>(".f-nav-bottom");
-      navW.current = Math.max(navW.current, top?.offsetWidth ?? 0, bottom?.offsetWidth ?? 0);
+      // הסרגל התחתון נמתח לכל רוחב המסך; לכן נמדד רוחבו הטבעי (בלי מתיחה) ולא הרוחב שהוא תופס
+      const natural = (nav: HTMLElement | null) => { if (!nav) return 0; nav.classList.add("f-nav-measure"); const w = nav.offsetWidth; nav.classList.remove("f-nav-measure"); return w; };
+      navW.current = Math.max(navW.current, natural(top), natural(bottom));
+      // בסרגל התחתון המסכים הנוספים מקובצים ב"עוד"; למעלה הם בשורה — מוסיפים את רוחבם המשוער
+      if (!top && bottom?.querySelector(".f-more")) navW.current = Math.max(navW.current, natural(bottom) + MORE_EXTRA);
       // רוחב שאר הפס בלי הסרגל: אם הסרגל למעלה — מורידים את רוחבו ואת הרווח
       const others = el.scrollWidth - (el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0) - (top ? top.offsetWidth + 8 : 0);
       const gap = el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0;
@@ -176,10 +125,12 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
     <FocusClock />
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
-    <button type="button" onClick={toggle} className="f-btn pri">למחקר מתקדם</button>
+    <AdvancedSwitch />
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
+/** תוספת רוחב משוערת כשהמסכים מ"עוד" עוברים לשורה בפס העליון (סקרים, בחירות קודמות) */
+const MORE_EXTRA = 150;
 /** שעון העצר עד המדגמים, קומפקטי: ימים:שעות:דקות */
 function FocusClock() {
   const [now, setNow] = useState(Date.now);
@@ -191,15 +142,44 @@ function FocusClock() {
 }
 function FocusNav({ className, unread }: { className: string; unread: boolean }) {
   const { pathname } = useLocation();
+  const { advanced } = useInterface();
   const groupTab = useGroupTab();
+  // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
+  // בפס העליון (מחשב) — כל הלשוניות בשורה, בלי "עוד"; בסרגל התחתון — "עוד" (הכרעת בעלים 25.10.2026)
+  const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
   return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {SIMPLE_TABS.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.label}</NavLink>)}
+    {(top ? [...core, ...more] : core).map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
+    {!top && more.length > 0 && <MoreMenu screens={more} up />}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
+}
+/** מתג "מתקדם" (תוכנית מאוחדת, פרק ב): אינו משנה כתובת, טיוטה או מקור; ההעדפה לביקור הנוכחי (sessionStorage) */
+function AdvancedSwitch() {
+  const { advanced, toggle } = useInterface();
+  return <button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="f-switch"><span className="f-switch-track" aria-hidden="true"><span /></span>מתקדם</button>;
+}
+/** "עוד" בסרגל — המסכים הנוספים של המתקדם. נסגר בבחירה, בלחיצה בחוץ וב-Escape */
+function MoreMenu({ screens, up = false }: { screens: Screen[]; up?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: Event) => { if (!box.current?.contains(e.target as Node)) setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); box.current?.querySelector("button")?.focus(); } };
+    document.addEventListener("pointerdown", away); document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("pointerdown", away); document.removeEventListener("keydown", esc); };
+  }, [open]);
+  const here = screens.some(s => pathname.startsWith(s.to));
+  return <div ref={box} className={`f-more${up ? " up" : ""}`}>
+    <button type="button" aria-expanded={open} aria-haspopup="true" className={here ? "on" : undefined} onClick={() => setOpen(v => !v)}>עוד</button>
+    {open && <ul>{screens.map(s => <li key={s.to}><NavLink to={s.to}>{s.label}</NavLink></li>)}</ul>}
+  </div>;
 }
 /** תמונת Google של המחובר, ואם אין — האות הראשונה של השם, ואם אין — סמל אדם */
 function ProfileFace() {
@@ -211,79 +191,8 @@ function ProfileFace() {
   return <span aria-hidden="true">{letter || <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>}</span>;
 }
 
-function DesktopNav({ unread }: { unread: boolean }) {
-  const { advanced } = useInterface();
-  const groupTab = useGroupTab();
-  return (
-    <nav aria-label="ניווט ראשי" className="hidden md:block bg-frame border-b border-frame-line">
-      <ul className="w-full mx-auto px-2 md:px-4 flex flex-wrap gap-1 text-sm">
-        {[...(advanced ? NAV : SIMPLE_TABS), ...groupTab].map((n) => (
-          <li key={n.to}>
-            <NavLink
-              to={n.to}
-              end={n.to === "/"}
-              className={({ isActive }) =>
-                `inline-block px-2 lg:px-3 py-2.5 no-underline border-b-[3px] ${isActive ? "border-signal text-frame-ink font-bold" : "border-transparent text-frame-soft hover:text-frame-ink"}`
-              }
-            >
-              {n.label}
-              {n.to === "/ai" && unread && <UnreadDot />}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
-
-/** סימון "לא נקרא" — נקודה בצבע ההדגשה, עם טקסט לקורא מסך */
-function UnreadDot() {
-  return <span className="inline-block w-2.5 h-2.5 rounded-full bg-signal ms-1 align-top" role="img" aria-label="הודעה חדשה" />;
-}
-
-function MobileTabs({ unread }: { unread: boolean }) {
-  const { advanced } = useInterface();
-  const groupTab = useGroupTab();
-  const { pathname } = useLocation();
-  const scroller = useRef<HTMLUListElement>(null);
-  const [overflow, setOverflow] = useState(false);
-  const [atEnd, setAtEnd] = useState(false);
-  useLayoutEffect(() => {
-    const el = scroller.current;
-    if (!el) return;
-    // הרוחב הדרוש נמדד מהתוויות עצמן (לא מהלשוניות שנמתחות למלא את השורה), כך שההחלטה אם צריך גלילה יציבה ולא מתהפכת כשהחץ מופיע
-    const update = () => { const required = Array.from(el.children).reduce((sum, child) => { const label = child.querySelector<HTMLElement>("a > span:last-child"); return sum + Math.max(72, Math.ceil((label?.getBoundingClientRect().width ?? 56) + 16)); }, 0); setOverflow(required > (el.parentElement?.clientWidth ?? 0) + 1); setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2); };
-    // הגלילה מעדכנת רק את כיוון החץ; ההחלטה אם צריך חץ — רק כשהרוחב משתנה
-    let lastW = -1;
-    const onResize = () => { const w = el.parentElement?.clientWidth ?? 0; if (w !== lastW) { lastW = w; update(); } };
-    const onScroll = () => setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2);
-    const observer = new ResizeObserver(onResize); observer.observe(el.parentElement ?? el);
-    el.addEventListener("scroll", onScroll); document.fonts.ready.then(update); update();
-    return () => { observer.disconnect(); el.removeEventListener("scroll", onScroll); };
-  }, [advanced]);
-  useEffect(() => { scroller.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [pathname]);
-  return <nav aria-label="ניווט בטלפון" className="c-mobile-tabs md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
-    <ul ref={scroller} className="c-mobile-tab-list">{[...(advanced ? TABS : SIMPLE_TABS), ...groupTab.map((t) => ({ ...t, label: t.short }))].map(t => <li key={t.to}><NavLink to={t.to} end={t.to === "/"} className={({ isActive }) => `flex flex-col items-center justify-center gap-0.5 h-16 text-xs no-underline ${isActive ? "text-ink font-bold" : "text-ink-faint"}`}><span className="relative"><Icon name={t.icon} />{t.to === "/ai" && unread && <span className="absolute -top-0.5 -end-1"><UnreadDot /></span>}</span><span>{t.label}</span></NavLink></li>)}</ul>
-    {overflow && <button type="button" className="c-tab-scroll" aria-label={atEnd ? "גלילה לתחילת הניווט" : "גלילה להמשך הניווט"} onClick={() => scroller.current?.scrollBy({ left: (atEnd ? 1 : -1) * scroller.current.clientWidth * .7, behavior: "smooth" })}>{atEnd ? "→" : "←"}</button>}
-  </nav>;
-}
-
-const NO_GUESS_CTA = ["/guess", "/community", "/admin", "/ai", "/account", "/group-admin"];
-function GuessCta({ pathname }: { pathname: string }) {
-  // בית: ההזמנה כבר בפאנל עצמו (הכרעת בעלים 8.10.2026)
-  if (pathname === "/" || NO_GUESS_CTA.some((p) => pathname.startsWith(p))) return null;
-  return (
-    <Link
-      to="/guess"
-      className="hidden md:flex fixed bottom-6 end-6 z-30 items-center min-h-[48px] px-5 rounded-full bg-signal text-signal-ink font-bold shadow-lg no-underline hover:brightness-95"
-    >
-      לבנות את הניחוש שלי
-    </Link>
-  );
-}
-
 /** כמה פיקסלים מתחתית המסך מכוסים בסרגלים צפים (ניווט תחתון, פס הגושים). נמדד בפועל, כדי שבכל מסך ובכל מכשיר יהיה מרווח שהסרגל לא יסתיר תוכן */
-const BOTTOM_BARS = ".f-nav-bottom, .c-mobile-tabs, .f-dock";
+const BOTTOM_BARS = ".f-nav-bottom, .f-dock";
 function useBottomCover(): number {
   const [cover, setCover] = useState(0);
   useEffect(() => {
@@ -354,18 +263,13 @@ function LayoutBody() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
-      {/* במחשב הסרגל העליון תמיד גלוי (הכרעת בעלים 8.10.2026) */}
-      {advanced ? <header className="md:sticky md:top-0 md:z-40">
-        <Masthead />
-        <DesktopNav unread={unread} />
-      </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop} onFit={setNavTop} /></header>}
+      <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop} onFit={setNavTop} /></header>
       <AccessCard />
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      {advanced ? <MobileTabs unread={unread} /> : !navTop && <FocusNav className="f-nav-bottom" unread={unread} />}
-      {advanced && <GuessCta pathname={pathname} />}
+      {!navTop && <FocusNav className="f-nav-bottom" unread={unread} />}
     </div>
   );
 }
