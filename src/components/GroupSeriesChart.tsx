@@ -27,6 +27,9 @@ export default function GroupSeriesChart({ buckets, points, label }: { buckets: 
   points.forEach((v, i) => { if (v !== null) d += `${d && points[i - 1] !== null ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; });
   const split = buckets.findIndex((b) => b.hourly);
   const h = hover ?? n - 1;
+  // השינוי לעומת הנקודה הקודמת שיש בה ערך (הכרעת בעלים 25.10.2026: לכל נקודה — השעה או היום והשינוי)
+  const prev = (i: number) => { for (let k = i - 1; k >= 0; k--) if (points[k] !== null) return points[k]; return null; };
+  const delta = (i: number) => { const v = points[i], p = prev(i); return v === null || p === null ? null : v - p; };
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     const frac = (r.right - e.clientX) / r.width;
@@ -34,15 +37,18 @@ export default function GroupSeriesChart({ buckets, points, label }: { buckets: 
   };
   return (
     <figure className="space-y-1">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[72px] text-ink touch-none" role="img" aria-label={`${label}: ${points[n - 1] ?? "אין עדיין"} עכשיו`} onPointerMove={onMove} onPointerLeave={() => setHover(null)}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[72px] text-ink touch-none" role="img" aria-label={`${label}: ${points[n - 1] ?? "אין עדיין"} עכשיו`} onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setHover(null); }}>
         <line x1={P} x2={W - P} y1={H - P} y2={H - P} className="stroke-paper-line" strokeWidth="1" />
         {split > 0 && <line x1={x(split)} x2={x(split)} y1={P} y2={H - P} className="stroke-paper-line" strokeDasharray="3 3" />}
         <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        {/* נקודה לכל שעה או יום; הנבחרת גדולה יותר */}
+        {points.map((v, i) => v !== null && i !== h && <circle key={i} cx={x(i)} cy={y(v)} r={n > 60 ? 1.2 : 1.8} fill="currentColor" opacity=".55" />)}
         {points[h] !== null && <circle cx={x(h)} cy={y(points[h]!)} r="3.5" fill="currentColor" />}
       </svg>
-      {/* התאריך והשעה רק בהצבעה על הגרף — לא בכל גרף כל הזמן (הכרעת בעלים 24.10.2026) */}
+      {/* התאריך או השעה והשינוי — רק במעבר או בלחיצה על נקודה, לא בכל גרף כל הזמן (הכרעת בעלים 24.10.2026, 25.10.2026) */}
       <figcaption className={`text-xs text-ink-soft min-h-[1rem] ${hover === null ? "invisible" : ""}`}>
         <span className="font-num tabular text-ink">{bucketLabel(buckets[h])}: {points[h] ?? "—"}</span>
+        {delta(h) !== null && <span className="font-num tabular"> ({delta(h)! > 0 ? "+" : ""}{delta(h)} {buckets[h].hourly ? "בשעה הזו" : "ביום הזה"})</span>}
       </figcaption>
     </figure>
   );
