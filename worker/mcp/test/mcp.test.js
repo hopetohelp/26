@@ -494,3 +494,118 @@ describe('נתונים חדשים דרך MCP וראיות לכרטיס', () => {
     expect(bad.isError).toBe(true);
   });
 });
+
+describe("מנהל קבוצה (audience: manager, הכרעת בעלים 25.10.2026)", () => {
+  const participantOf = async (web) => crowdEnv.DB.raw.prepare("SELECT participant FROM sessions WHERE token_hash = ?").get(await sha256(web)).participant;
+  const verify = (p) => crowdEnv.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = ?").run(p);
+  let ipN = 0;
+  const crowdAs = async (path, { body, token, admin } = {}) => {
+    const r = await crowdWorker.fetch(new Request("https://c.example" + path, { method: body === undefined ? "GET" : "POST", headers: { "content-type": "application/json", origin: "https://hopetohelp.github.io", "cf-connecting-ip": `10.7.${Math.floor(ipN / 250)}.${(ipN++ % 250) + 1}`, ...(token ? { authorization: `Bearer ${token}` } : {}), ...(admin ? { "x-admin-key": admin } : {}) }, body: body === undefined ? undefined : JSON.stringify(body) }), crowdEnv);
+    return { status: r.status, data: await r.json().catch(() => null) };
+  };
+  /** קבוצה grp-m עם n חברים (מאומתים, כל אחד עם ניחוש), ומנהל מחובר דרך העוזר ⇐ {mgr, members, admin} */
+  async function groupWithManager(n = 50) {
+    const adminWeb = (await crowdAs("/auth/register", { body: { email: "site-admin@example.com", password: "a long pass phrase" } })).data.token;
+    crowdEnv.DB.raw.prepare("INSERT INTO admins (participant, added_at) VALUES (?, ?)").run(await participantOf(adminWeb), "2026-10-01T00:00:00Z");
+    const members = [];
+    for (let i = 0; i < n; i++) {
+      const web = (await crowdAs("/auth/register", { body: { email: `m${i}@example.com`, password: "a long pass phrase" } })).data.token;
+      const p = await participantOf(web);
+      verify(p);
+      expect((await crowdAs("/save", { token: web, body: { unit: "seats", op_id: "op-" + String(i).padStart(8, "0"), registry: "r", payload: seatsPayload(60) } })).status).toBe(200);
+      members.push({ web, p });
+    }
+    expect((await crowdAs("/admin/groups/import", { admin: adminWeb, body: { group: "grp-m", name: "קבוצת בדיקה", emails: members.map((_, i) => `m${i}@example.com`), mode: "replace" } })).status).toBe(200);
+    const mgr = await connect();
+    const mp = await participantOf(mgr.web);
+    verify(mp);
+    const email = (await crowdAs("/me", { token: mgr.web })).data.emails[0].email;
+    expect((await crowdAs("/admin/groups/managers", { admin: adminWeb, body: { group: "grp-m", email } })).status).toBe(200);
+    return { mgr, members, adminWeb };
+  }
+  const names = async (access) => (await rpc("/mcp", "tools/list", {}, access)).data.result.tools.map((x) => x.name);
+  const ok = (r) => { expect(r.data.result.isError, r.data.result.content[0].text).toBe(false); return r.data.result.structuredContent; };
+  const err = (r) => r.data.result.structuredContent.error?.code;
+
+  it("הכלים מוצגים רק למנהל קבוצה; כל כלי בודק שהקבוצה בניהולו; אין כלי לשינוי הקישור", async () => {
+    const { mgr } = await groupWithManager(1);
+    const user = await connect();
+    const site = await connect({ admin: true });
+    const mine = await names(mgr.access);
+    for (const n of ["group_get_series", "group_get_insights", "group_get_guesses", "group_decide_guess", "group_get_conversations", "group_reply", "group_approve_draft", "group_delete_draft", "group_release_hold", "group_get_compare", "group_set_compare", "group_get_link_members", "group_set_link_members"]) expect(mine, n).toContain(n);
+    expect(mine.some((n) => n.startsWith("admin_"))).toBe(false);
+    expect(mine.some((n) => /link/.test(n) && !/link_members/.test(n))).toBe(false);
+    expect((await names(user.access)).some((n) => n.startsWith("group_"))).toBe(false);
+    expect((await names(site.access)).some((n) => n.startsWith("group_"))).toBe(false);
+    expect((await rpc("/public", "tools/list", {})).data.result.tools.some((x) => x.name.startsWith("group_"))).toBe(false);
+    // משתמש שאינו מנהל ⇐ forbidden; מנהל, קבוצה אחרת ⇐ not_manager; בכתובת הציבורית ⇐ needs_login
+    expect(err(await call("/mcp", "group_get_guesses", { group: "grp-m" }, user.access))).toBe("forbidden");
+    expect(err(await call("/mcp", "group_get_guesses", { group: "other" }, mgr.access))).toBe("not_manager");
+    expect(err(await call("/mcp", "group_set_compare", { group: "other", compare: "crowd" }, mgr.access))).toBe("not_manager");
+    expect(err(await call("/public", "group_get_series", { group: "grp-m" }))).toBe("needs_login");
+    // מתחת ל-50 חברים — כלום
+    expect(ok(await call("/mcp", "group_get_guesses", { group: "grp-m" }, mgr.access))).toMatchObject({ belowMin: true, min: 50 });
+    expect(ok(await call("/mcp", "group_get_conversations", { group: "grp-m" }, mgr.access))).toMatchObject({ belowMin: true });
+    const lm = ok(await call("/mcp", "group_get_link_members", { group: "grp-m" }, mgr.access));
+    expect(lm.all.count).toBeNull();
+    // שינוי הקישור — חסום גם בפנייה ישירה עם כניסת העוזר
+    const agent = (await crowdAs("/auth/delegate", { token: mgr.web, body: { client: "Claude" } })).data.token;
+    expect((await crowdAs("/group/link", { token: agent, body: { group: "grp-m", slug: "new-name" } })).data).toEqual({ error: "assistant_not_allowed" });
+  });
+
+  it("סימוני הכלים: כל כלי כתיבה של מנהל קבוצה אומר שהוא משנה נתונים, ומקבל group", () => {
+    const tools = TOOLS.filter((x) => x.audience === "manager");
+    expect(tools).toHaveLength(13);
+    for (const x of tools) {
+      expect(x.name.startsWith("group_"), x.name).toBe(true);
+      expect(x.inputSchema.required, x.name).toContain("group");
+      if (x.kind !== "read") expect(x.description.startsWith("CHANGES DATA"), x.name).toBe(true);
+    }
+    expect(tools.find((x) => x.name === "group_delete_draft").kind).toBe("destructive");
+  });
+
+  it("מ-50 חברים: קריאה וכתיבה כמו במסך — ניחושים בלי מזהים, פניות, טיוטות, השהיה, השוואה ומתגים", async () => {
+    const { mgr, members } = await groupWithManager(50);
+    // ניחושים: רק חברי הקבוצה (והמנהל שנספר כחבר), בלי מזהה ובלי נתוני פעילות
+    const g = ok(await call("/mcp", "group_get_guesses", { group: "grp-m" }, mgr.access));
+    expect(g.rows.length).toBeGreaterThanOrEqual(50);
+    const text = JSON.stringify(g);
+    for (const m of members.slice(0, 5)) expect(text).not.toContain(m.p);
+    for (const r of g.rows) for (const k of ["participant", "registered", "lastLogin", "logins", "verified"]) expect(r[k]).toBeUndefined();
+    expect(ok(await call("/mcp", "group_decide_guess", { group: "grp-m", salt: g.salt, handle: g.rows[0].handle, decision: "rejected" }, mgr.access))).toEqual({ ok: true });
+    // גרפים ותמונת הקבוצה
+    ok(await call("/mcp", "group_get_series", { group: "grp-m" }, mgr.access));
+    ok(await call("/mcp", "group_get_insights", { group: "grp-m" }, mgr.access));
+    // השוואה
+    expect(ok(await call("/mcp", "group_get_compare", { group: "grp-m" }, mgr.access)).compare).toBe("polls");
+    expect(ok(await call("/mcp", "group_set_compare", { group: "grp-m", compare: "crowd" }, mgr.access)).compare).toBe("crowd");
+    // מתגי הקישור
+    expect(ok(await call("/mcp", "group_set_link_members", { group: "grp-m", flag: "all", on: true }, mgr.access)).all.on).toBe(true);
+    expect(ok(await call("/mcp", "group_get_link_members", { group: "grp-m" }, mgr.access)).all.on).toBe(true);
+    // פניות: חבר כתב לצוות ⇐ המנהל רואה בידית, עונה; השהיה ⇐ טיוטה, אישור, מחיקה, שחרור
+    const p = members[0].p;
+    feedbackEnv.DB.raw.prepare("INSERT INTO support_threads (participant, created_at, updated_at, status) VALUES (?, ?, ?, 'new')").run(p, "2026-10-05T10:00:00Z", "2026-10-05T10:00:00Z");
+    feedbackEnv.DB.raw.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'visitor', 'שאלה של חבר')").run(p, "2026-10-05T10:00:00Z");
+    let c = ok(await call("/mcp", "group_get_conversations", { group: "grp-m" }, mgr.access));
+    expect(JSON.stringify(c)).not.toContain(p);
+    const h = c.threads[0].participant;
+    expect(c.threads[0].messages.at(-1).text).toBe("שאלה של חבר");
+    ok(await call("/mcp", "group_reply", { group: "grp-m", salt: c.salt, handle: h, text: "תשובת מנהל הקבוצה" }, mgr.access));
+    expect(feedbackEnv.DB.raw.prepare("SELECT text FROM support_messages WHERE participant = ? ORDER BY id DESC").get(p).text).toBe("תשובת מנהל הקבוצה");
+    feedbackEnv.DB.raw.prepare("INSERT INTO held (kind, target, created_at, reason) VALUES ('support', ?, '2026-10-05', 'בדיקה')").run(p);
+    ok(await call("/mcp", "group_reply", { group: "grp-m", salt: c.salt, handle: h, text: "טיוטה ראשונה" }, mgr.access));
+    ok(await call("/mcp", "group_reply", { group: "grp-m", salt: c.salt, handle: h, text: "טיוטה שנייה" }, mgr.access));
+    c = ok(await call("/mcp", "group_get_conversations", { group: "grp-m" }, mgr.access));
+    expect(c.drafts.map((d) => d.text)).toEqual(["טיוטה ראשונה", "טיוטה שנייה"]);
+    expect(c.held).toHaveLength(1);
+    const [d1, d2] = c.drafts;
+    ok(await call("/mcp", "group_approve_draft", { group: "grp-m", salt: c.salt, handle: d1.target, draft: d1.id }, mgr.access));
+    ok(await call("/mcp", "group_delete_draft", { group: "grp-m", salt: c.salt, handle: d2.target, draft: d2.id }, mgr.access));
+    ok(await call("/mcp", "group_release_hold", { group: "grp-m", salt: c.salt, handle: c.held[0].target }, mgr.access));
+    expect(feedbackEnv.DB.raw.prepare("SELECT COUNT(*) AS n FROM drafts").get().n).toBe(0);
+    expect(feedbackEnv.DB.raw.prepare("SELECT COUNT(*) AS n FROM held").get().n).toBe(0);
+    expect(feedbackEnv.DB.raw.prepare("SELECT text FROM support_messages WHERE participant = ? ORDER BY id DESC").get(p).text).toBe("טיוטה ראשונה");
+    // ידית שגויה ⇐ השרת דוחה
+    expect(err(await call("/mcp", "group_reply", { group: "grp-m", salt: c.salt, handle: "f".repeat(32), text: "x" }, mgr.access))).toBe("not_found");
+  });
+});
