@@ -832,8 +832,12 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 
 /* הסרגל התחתון (טלפון) מנצל את כל רוחב המסך; בפס העליון (מחשב) — הרוחב המינימלי של הלשוניות (הכרעות בעלים 25.10.2026) */
 .f-nav-bottom { left:8px;right:8px;transform:none;max-width:none;justify-content:space-between; }
-.f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp) { flex:1 1 auto;text-align:center; }
 .f-short { display:none; }
 .f-nav-bottom .f-long { display:none; } .f-nav-bottom .f-short { display:inline; }
 .f-nav-measure { flex:none !important;width:max-content !important;position:absolute !important;left:auto !important;right:auto !important; }
 .f-nav-measure > a { flex:none !important; }
+
+/* לשוניות ברוחב המינימלי, בלי גלישה; פרופיל ו-AI — תמיד עיגול */
+.f-nav > a, .f-more { flex:none; }
+.f-nav-bottom { justify-content:center;gap:2px; }
+.f-nav a.f-ai { width:34px;height:34px;padding:0;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%; }
