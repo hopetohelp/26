@@ -197,13 +197,16 @@ function Pie({ slices, values, label, overlay, inner }: { slices: Slice[]; value
   </svg><p className="f-pie-total"><b className="font-num">{shownTotal}</b> מנדטים</p>
     {pop && (slices[pop.i] ?? (u && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
 }
-/** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר */
-function Stack({ slices, values, label }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string }) {
+/** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר. `overlay` — קו צר מתחת לפס, במקום האחדות. */
+function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay }) {
   const { pop, host, handlers } = usePop();
+  const total = slices.reduce((s, b) => s + b.value, 0);
   return <div className="f-stack-host" ref={host}><div className="f-stack" role="group" aria-label={label}>{slices.map((s, i) =>
     <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${s.shown}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
       {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{s.shown}</button>)}
-  </div>{pop && slices[pop.i] && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
+  </div>
+    {overlay && overlay.value > 0 && <div className="f-unity-line"><span style={{ flex: overlay.start }} /><button type="button" aria-label={`אחדות ${overlay.shown}`} style={{ flex: overlay.value }} {...handlers(slices.length, false)}>אחדות {overlay.shown}</button><span style={{ flex: Math.max(0, total - overlay.start - overlay.value) }} /></div>}
+    {pop && (slices[pop.i] ?? (overlay && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
 }
 /** עריכת החלוקה האישית — במקום אחד בלבד, באזור האישי. לכל רשימה בוחרים תא; אינה משנה מנדטים. */
 export function PersonalBlocsEditor() {
@@ -231,6 +234,7 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
   const BAR = ["haredi", "netanyahu", "eisenkot", "arab", "missing"];
   const bar = [...fixed].sort((a, b) => rank(a.id, BAR) - rank(b.id, BAR));
   const inner: [number, number] = [0, blocTotal(values, SIMPLE_BLOCS[0].lists) + blocTotal(values, SIMPLE_BLOCS[3].lists)];
+  const unityBar = { ...unity, start: blocTotal(values, SIMPLE_BLOCS[1].lists) + unity.start };
   const mine = showMine ? blocSlices(values, missing, personal.defs) : [];
   return <>
     <div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
@@ -238,7 +242,7 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
       {showMine && <figure className="f-pie-mine"><figcaption>החלוקה שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
       {advanced && <div className="f-pie-tools"><label><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת העוגה שלי</label><Link to="/account?blocs">עריכת החלוקה שלי</Link></div>}
     </div>
-    <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" />}</div>
+    <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={unityBar} />}</div>
   </>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
