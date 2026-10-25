@@ -753,6 +753,10 @@
 @media (min-width: 768px) { [data-interface="simple"] main { padding-bottom:60px; } }
 @media (min-width: 768px) and (max-width: 1099px) { .f-nav-top { position:static;transform:none; } .f-ask .t { display:none; } .f-ask .q { display:inline; } }
 .f-gname, .f-gphone { display:none; }
+.f-guesses { text-align:center;margin:0 0 10px; }
+.f-guesses > p { margin:0;font-size:18px;color:rgb(var(--ink)); }
+.f-guesses > p b { font-size:30px;margin-inline-end:6px; }
+.f-guesses .f-gcount { margin:2px 0 0;font-size:13px; }
 .f-gcount { text-align:center;font-size:14px;color:rgb(var(--ink-soft));margin:0 0 10px; }
 .f-gcount b { color:rgb(var(--ink));margin-inline-end:4px; }
 .f-glogo { display:block;width:72px;height:72px;border-radius:50%;margin:0 auto 12px; }
