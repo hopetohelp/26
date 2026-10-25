@@ -13,10 +13,11 @@ const SOURCE_KEY = "elections26.simple-source";
 let current = (() => { try { return localStorage.getItem(SOURCE_KEY) ?? "all"; } catch { return "all"; } })();
 const listeners = new Set<(key: string) => void>();
 /** מקור הסקרים של התצוגה הממוקדת. `averagesOnly`: רק ממוצע הסקרים או ממוצע 14 ו־i24 (הכנסת הממוצעת). */
-export function useSimpleSource(averagesOnly = false) {
+/** `allowCrowd`: גם "טווח הניחושים" (מפתח crowd) — בממוצע הניחושים כשמנהל הקבוצה בחר להשוות לממוצע הניחושים */
+export function useSimpleSource(averagesOnly = false, allowCrowd = false) {
   const [stored, setStored] = useState(current);
   useEffect(() => { listeners.add(setStored); return () => { listeners.delete(setStored); }; }, []);
-  const key = averagesOnly && stored !== "14-24" ? "all" : stored;
+  const key = stored === "crowd" ? (allowCrowd ? "crowd" : "all") : averagesOnly && stored !== "14-24" ? "all" : stored;
   return { key, selection: simpleSelection(key), averagesOnly, setKey: (next: string) => {
     current = next;
     try { localStorage.setItem(SOURCE_KEY, next); } catch { /* מקומי לביקור */ }
@@ -31,11 +32,15 @@ const Logo = ({ id, initials }: { id: string; initials: string }) => {
 };
 const initialsOf = (name: string) => name.split(/[\s+,]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("");
 
-/** סרגל בחירה נגלל: ממוצע, 14 ו־i24, ומכונים (רק כשמותר) */
-export function SourceBar({ source, extra }: { source: SimpleSource; extra?: ReactNode }) {
+/**
+ * סרגל בחירה נגלל: ממוצע, 14 ו־i24, ומכונים (רק כשמותר).
+ * ranges = השוואה לממוצע הניחושים (הכרעת בעלים 25.10.2026): בחירת טווח — כל הסקרים, 14 ו־i24, או הניחושים של כל המשתתפים.
+ */
+export function SourceBar({ source, extra, ranges = false }: { source: SimpleSource; extra?: ReactNode; ranges?: boolean }) {
   const options: [string, ReactNode, string][] = [
-    ["all", <span className="f-ini" aria-hidden="true">∑</span>, "ממוצע הסקרים"],
-    ["14-24", <><Logo id="Channel 14" initials="14" /><Logo id="i24 News" initials="24" /></>, "ממוצע 14 ו־i24"],
+    ["all", <span className="f-ini" aria-hidden="true">∑</span>, ranges ? "טווח כל הסקרים" : "ממוצע הסקרים"],
+    ["14-24", <><Logo id="Channel 14" initials="14" /><Logo id="i24 News" initials="24" /></>, ranges ? "טווח 14 ו־i24" : "ממוצע 14 ו־i24"],
+    ...(ranges ? [["crowd", <span className="f-ini" aria-hidden="true">✓</span>, "טווח הניחושים"] as [string, ReactNode, string]] : []),
     ...(source.averagesOnly ? [] : SIMPLE_FIRMS.map(f => [`firm:${f.id}`, <Logo id={f.id} initials={initialsOf(f.name)} />, f.name] as [string, ReactNode, string])),
   ];
   const seg = <div className={`f-seg ${source.averagesOnly ? "fit" : ""}`} role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
@@ -70,13 +75,14 @@ function Capsule({ spread }: { spread: [number, number, number, number, number, 
 }
 export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };
 /** גרף המפלגות: קפסולה לסקרים ותגיות ערך לקווים */
-export function PartyChart({ selection, lists, marks, legend }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode }) {
+/** spreadOf = טווח אחר במקום טווח הסקרים (למשל טווח הניחושים של כל המשתתפים) */
+export function PartyChart({ selection, lists, marks, legend, spreadOf }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode; spreadOf?: (id: string) => [number, number, number, number, number, number] | null }) {
   const tall = lists.some(id => marks(id).some(m => m.side === "down"));
   return <div className="f-card">
     <div className="f-legend">{legend}</div>
     <div className="f-axis" aria-hidden="true"><span /><div className="font-num"><span>0</span><span>8</span><span>16</span><span>24</span><span>32</span></div></div>
     {lists.map(id => {
-      const spread = simpleSpread(selection, id);
+      const spread = spreadOf ? spreadOf(id) : simpleSpread(selection, id);
       return <div key={id} className={`f-row ${tall ? "tall" : ""}`}><PartyName id={id} />
         <div className="f-track" role="img" aria-label={`${nameOf(id)}: ${marks(id).filter(m => m.value != null).map(m => fmt(m.value)).join(", ")}`}>
           {spread && <Capsule spread={spread} />}
@@ -85,7 +91,7 @@ export function PartyChart({ selection, lists, marks, legend }: { selection: Sel
     })}
   </div>;
 }
-export const LegendCapsule = () => <span><span className="f-lg-cap" />טווח הסקרים</span>;
+export const LegendCapsule = ({ label = "טווח הסקרים" }: { label?: string }) => <span><span className="f-lg-cap" />{label}</span>;
 /** מקרא בתוך מסגרת כמו הקו שלו (רציף / מקוטע), עם מספר המשתתפים — כמו התאים בגרף (הכרעת בעלים 24.10.2026) */
 export const LegendBox = ({ kind, label, n }: { kind?: "dash"; label: string; n?: number | null }) => <span className={`f-lg-box ${kind ?? ""}`}>{label}{n != null && <b className="font-num">{n.toLocaleString("he-IL")}</b>}</span>;
 export const LegendLine = ({ kind, label }: { kind?: "dash" | "soft"; label: string }) => <span><span className={`f-lg-line ${kind ?? ""}`} />{label}</span>;

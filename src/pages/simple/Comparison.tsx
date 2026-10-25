@@ -21,7 +21,7 @@ const EMPTY = startSeats("zero");
 export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const session = useSession();
   const { setLanding } = useInterface();
-  const source = useSimpleSource(true);
+  const source = useSimpleSource(true, true);
   const crowd = useCrowdDashboard();
   const hagzara = useHagzara(session);
   const member = session.me?.groups?.find(g => g.id === HAGZARA_GROUP_ID);
@@ -74,16 +74,21 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const voters = member ? group : all;
   // חברי הקבוצה: ממוצע הקבוצה מול ממוצע הסקרים או מול כל המשתתפים — לפי בחירת מנהל הקבוצה (הכרעת בעלים 24.10.2026)
   const vsPolls = (raw?.compare ?? "polls") === "polls";
+  // השוואה לממוצע הניחושים: הסרגל בוחר טווח (כל הסקרים / 14 ו־i24 / הניחושים). "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
+  const ranges = !!member && !vsPolls;
+  const crowdRange = ranges && source.key === "crowd";
+  const crowdRows = new Map((all?.seats?.full ?? []).map(r => [r.list, r]));
+  const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    <SourceBar source={source} />
+    <SourceBar source={source} ranges={ranges} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
     {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
     <div className="f-grid">
-      <PartyChart selection={source.selection} lists={lists}
+      <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
         marks={id => member && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : member ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="משתתפים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="הגזרה" n={group?.seats?.n} />}</>} />
+        legend={<><LegendCapsule label={crowdRange ? "טווח הניחושים" : "טווח הסקרים"} />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="משתתפים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
