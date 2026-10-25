@@ -329,7 +329,7 @@ export const TOOLS = [
     title: "הקבוצות שלי",
     audience: "user",
     kind: "read",
-    description: "Groups: for each group the user manages — its numbers (registered, saved a guess, voted; aggregates only, from 50 members); for each group they belong to — its dashboard. A member of הגזרה sees the group's own data (all its members' counted guesses); present it with \"X/N חברים בהגזרה\" — X = this dashboard's seats.n, N = get_crowd_stats seats.n. Same rules as the site.",
+    description: "Groups: for each group the user manages — its numbers (registered, saved a guess, voted; aggregates only, from 50 members); for each group they belong to — its dashboard. A member of הגזרה sees the same data as everyone (get_crowd_stats); the group dashboard only gives X for \"X/N חברים בהגזרה\" (X = its seats.n, N = get_crowd_stats seats.n) and the separate הגזרה column of the advanced screen. Same rules as the site.",
     inputSchema: obj(),
     async run(ctx) {
       const me = await ctx.me();

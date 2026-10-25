@@ -86,7 +86,8 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // השוואה לכלל המשתתפים בתצוגת קבוצה: טורי ממוצע וטווח של כולם, אחרי קו הפרדה
   const [compare, setCompare] = useState(false);
   const all = crowd.dashboard;
-  const comparing = scope !== "all" && compare && view === "table" && !!all?.open;
+  // במתקדם לחבר הגזרה תמיד שני טורים: הגזרה וכל המשתתפים (הכרעת בעלים 25.10.2026)
+  const comparing = scope !== "all" && (compare || isHagzara) && view === "table" && !!all?.open;
   const groupName = groups.find((g) => g.id === scope)?.name ?? "הקבוצה";
   const overallSeats: Overall | undefined = comparing && all?.seats ? { name: groupName, of: (id) => all.seats!.full.find((x) => x.list === id) } : undefined;
   const allBlocs = useMemo(() => comparing && all?.blocs ? blocStats(all) : null, [comparing, all]);
@@ -124,7 +125,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
         <div>
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
         </div>
-        {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off", isHagzara ? "הגזרה והסקרים" : "הקבוצה בלבד"],["on","גם כל הניחושים"]]} label="טור כל הניחושים" />}
+        {scope !== "all" && !isHagzara && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
       </div>}
       <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <ComparisonContext.Provider value={selection}>
