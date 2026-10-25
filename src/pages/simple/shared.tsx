@@ -9,6 +9,7 @@ import { seatsFmt } from "../../lib/format";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 import { largestRemainder } from "../../lib/fillAll";
 import { shareOpacity } from "../../lib/capsule";
+import { smartRange } from "../../components/ChartLegend";
 
 const SOURCE_KEY = "elections26.simple-source";
 let current = (() => { try { return localStorage.getItem(SOURCE_KEY) ?? "all"; } catch { return "all"; } })();
@@ -94,7 +95,7 @@ export function PartyChart({ selection, lists, marks, legend, spreadOf }: { sele
     })}
   </div>;
 }
-export const LegendCapsule = ({ label = "טווח הסקרים" }: { label?: string }) => <span><span className="f-lg-cap" />{label}</span>;
+export const LegendCapsule = ({ label = smartRange("הסקרים") }: { label?: string }) => <span><span className="f-lg-cap" />{label}</span>;
 /** מקרא בתוך מסגרת כמו הקו שלו (רציף / מקוטע), עם מספר המשתתפים — כמו התאים בגרף (הכרעת בעלים 24.10.2026) */
 export const LegendBox = ({ kind, label, n }: { kind?: "dash"; label: string; n?: number | null }) => <span className={`f-lg-box ${kind ?? ""}`}>{label}{n != null && <b className="font-num">{n.toLocaleString("he-IL")}</b>}</span>;
 export const LegendLine = ({ kind, label }: { kind?: "dash" | "soft"; label: string }) => <span><span className={`f-lg-line ${kind ?? ""}`} />{label}</span>;

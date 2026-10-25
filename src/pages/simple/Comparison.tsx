@@ -11,6 +11,7 @@ import { useSession, useUnit } from "../guess/useCrowd";
 import { Notice } from "../guess/ui";
 import { VotingStats } from "../guess/Dashboard";
 import CardDrawer from "../../components/CardDrawer";
+import { smartRange } from "../../components/ChartLegend";
 import { BlocChart, FocusFoot, InlineBlocBar, LegendCapsule, LegendLine, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
 import ShareCard from "./ShareCard";
 import { useHagzara } from "./hagzara";
@@ -92,7 +93,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
         marks={id => member && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : member ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule label={crowdRange ? "טווח הניחושים" : "טווח הסקרים"} />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="ממוצע כל הניחושים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
+        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="ממוצע כל הניחושים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
