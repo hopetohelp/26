@@ -74,6 +74,10 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
           <p className="text-sm text-ink-soft">{listTotal != null && <><strong className="font-num tabular text-ink">{n(listTotal)}</strong> ברשימת המיילים · </>}{slug ? <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a> : "אין עדיין קישור לקבוצה"}</p>
         </div>
       </header>
+      {/* המלצה לחבר עוזר AI — אותו מסך דרך Claude או ChatGPT (כלי group_* בשרת ה-MCP, משימה 25.10.2026) */}
+      <p className="text-sm border border-paper-line rounded-theme bg-paper-card px-4 py-3">
+        <strong>מומלץ: חברו עוזר AI.</strong> עם Claude או ChatGPT מחובר אפשר לבקש בשפה חופשית את כל מה שבמסך הזה — לסכם את פניות החברים ולנסח תשובה, לעבור על ניחושים שממתינים לאישור או לשאול מה השתנה בגרפים. באותם כללים כמו כאן: רק חברי הקבוצה, מ-50 חברים ובלי שמות; העוזר משנה נתונים רק כשתבקשו. <Link to="/ai?assistants" className="text-accent underline">לחיבור עוזר AI</Link>
+      </p>
       {failed && <p className="text-sm text-ink-soft">הנתונים אינם זמינים כרגע. כלי הניהול למטה פועלים.</p>}
       {/* כל חלק במגירה (הכרעת בעלים 25.10.2026): כל המספרים בסטטיסטיקה בראש המסך, כל נושא הניחושים במגירה אחת — בלי נתון כפול */}
       <div className="space-y-3">

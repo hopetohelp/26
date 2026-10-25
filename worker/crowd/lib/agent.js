@@ -43,7 +43,18 @@ export const AGENT_ROUTES = {
   "POST /history/clear": true,
   "POST /account/name": true,
   "POST /group/import": true,
-  "POST /group/link": true,
+  // מסך "ניהול קבוצה" — מנהל קבוצה (הכרעת בעלים 25.10.2026). כל נתיב בודק בעצמו שהמשתמש מנהל את הקבוצה ושומר על סף החברים.
+  // שינוי קישור הקבוצה (POST /group/link) — אינו פתוח: מנהל קבוצה אינו משנה את הקישור, וגם לא דרך עוזר.
+  "GET /group/series": true,
+  "GET /group/insights": true,
+  "GET /group/guesses": true,
+  "POST /group/guesses/decide": true,
+  "GET /group/support": true,
+  "POST /group/support/act": true,
+  "GET /group/compare": true,
+  "POST /group/compare": true,
+  "GET /group/link-members": true,
+  "POST /group/link-members": true,
   // מסך הניהול. whoami — שרת ההערות מזהה דרכו מנהל (ומקבל agent: שם העוזר), ושם קובעים מה מותר לעוזר בשיחות;
   // support — המספרים שמסך הניהול מציג (הכרעת בעלים 12.10.2026: המנהל עונה, מאשר טיוטות ומשחרר השהיה גם דרך העוזר)
   "GET /admin/whoami": true,

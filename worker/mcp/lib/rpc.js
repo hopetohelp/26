@@ -26,7 +26,8 @@ export const INSTRUCTIONS = [
   "Never repeat the same information on one screen: one date, one \"איך זה חושב?\" link per source — the card prints each only once. A heading says what the reader sees (\"מנדטים לפי גושים\"), never the data type (\"סיכום סקרים\"). In a number tile, value is only the main number; the range or the context goes in detail (a separate, smaller line).",
   "Always finish with show_answer — also when you searched the web or used other sources: it shows the final answer as a card in the site's design, and checks those rules. Do not write the answer as plain text or a table instead of the card. Information that is not from the site goes in one short line after the card, marked as not from the site.",
   "Current navigation: בית; הניחוש שלי (complete a 120-seat guess before viewing participant averages, with a return to editing); סקרים (היום, מגמות, ארכיון); בחירות קודמות (results including 2015, accuracy, מה השתנה); מידע; אישי. Historical locality tables include external envelopes separately. Last-poll errors are percentage points of seats, not vote share. Use get_site_overview for current links. The card follows the blue-white C design in light/dark mode.",
-  "Changing anything for the user (saving a guess, clearing history, admin actions) — only when the user asked for it; confirm before destructive actions.",
+  "Changing anything for the user (saving a guess, clearing history, admin or group manager actions) — only when the user asked for it; confirm before destructive actions.",
+  "Group managers (tools named group_*): only for a group the user manages (get_my_account.managedGroups). The same privacy as the site's \"ניהול קבוצה\" screen: members of that group only, nothing below 50 members, no identifiers — never try to identify a member. Changing the group link is only for the site admin.",
 ].join("\n");
 
 const rpcError = (id, code, message, data) => ({ jsonrpc: "2.0", id: id ?? null, error: { code, message, ...(data ? { data } : {}) } });
@@ -53,9 +54,9 @@ export async function handleRpc(msg, ctx) {
     case "ping":
       return rpcResult(id, {});
     case "tools/list": {
-      const admin = ctx.mode === "user" ? !!(await ctx.me().catch((e) => { if (e instanceof AuthLost) throw e; return {}; })).isAdmin : false;
+      const me = ctx.mode === "user" ? await ctx.me().catch((e) => { if (e instanceof AuthLost) throw e; return {}; }) : {};
       return rpcResult(id, {
-        tools: visibleTools(ctx.mode, admin).map((t) => toolListEntry(t, t.name === "show_answer" ? { ui: { resourceUri: CARD_URI }, "ui/resourceUri": CARD_URI } : undefined)),
+        tools: visibleTools(ctx.mode, !!me.isAdmin, (me.managedGroups ?? []).length > 0).map((t) => toolListEntry(t, t.name === "show_answer" ? { ui: { resourceUri: CARD_URI }, "ui/resourceUri": CARD_URI } : undefined)),
       });
     }
     case "resources/list":
@@ -102,6 +103,18 @@ async function callTool(params, ctx) {
     if (tool.audience === "admin" && !(await ctx.me()).isAdmin) {
       await ctx.log(name, "forbidden");
       return toolError("forbidden", "הכלי הזה רק למנהל האתר.");
+    }
+    // מנהל קבוצה: רק לקבוצה שהמשתמש מנהל (שרת ההשתתפות בודק שוב בכל נתיב)
+    if (tool.audience === "manager") {
+      const managed = (await ctx.me()).managedGroups ?? [];
+      if (!managed.length) {
+        await ctx.log(name, "forbidden");
+        return toolError("forbidden", "הכלי הזה רק למנהל קבוצה.");
+      }
+      if (!managed.some((g) => g.id === args.group)) {
+        await ctx.log(name, "forbidden");
+        return toolError("not_manager", `המשתמש אינו מנהל את הקבוצה הזו. הקבוצות שהוא מנהל: ${managed.map((g) => g.id).join(", ")}.`);
+      }
     }
     const data = await tool.run(ctx, args);
     await ctx.log(name, "ok");
