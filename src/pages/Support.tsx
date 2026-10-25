@@ -174,7 +174,8 @@ export function AiScreen() {
   const key = usePrivateKey();
   const [params] = useSearchParams();
   const ask = params.has("ask");
-  const [tab, setTab] = useState<AiTab>(() => (params.has("team") ? "team" : key ? "private" : "team"));
+  // ?assistants — הפניה ממסך "ניהול קבוצה" ללשונית עוזרי AI
+  const [tab, setTab] = useState<AiTab>(() => (params.has("assistants") ? "assistants" : params.has("team") ? "team" : key ? "private" : "team"));
   useEffect(() => { if (key && ask) setTab("private"); }, [key, ask]);
   return (
     <div className="flex flex-col min-h-[calc(100dvh-10.5rem)] max-w-3xl w-full mx-auto">
