@@ -77,7 +77,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const vsPolls = (raw?.compare ?? "polls") === "polls";
   // נתוני הגזרה כוללים מעכשיו את כלל המשתתפים (הכרעת בעלים 25.10.2026): בלי קו נפרד לגזרה; רק המונה מתחת לכותרת
   const segmented = false;
-  const groupCount = raw ? raw.participants ?? null : null;
+  const groupCount = raw ? ("members" in raw && raw.members != null ? raw.members : raw.participants ?? null) : null;
   // לחברי הקבוצה הסרגל בוחר תמיד טווח (כל הסקרים / 14 ו־i24 / הניחושים), בכל השוואה שהמנהל בחר (הכרעת בעלים 25.10.2026).
   // "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
   // לכל הגולשים (הכרעת בעלים 25.10.2026): ברירת המחדל במסך הזה היא תמיד טווח הניחושים, עד שבוחרים טווח אחר

@@ -107,7 +107,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // שיתוף של הקבוצה (הכרעת בעלים 12.10.2026): עם שמה ולוגו; נתוני הקבוצה בתמונות רק מ-50 משתתפים, ובקישור מהאורח — רק הזמנה וקישור
   const groupShare: GroupShareInfo | undefined = shownGroup?.slug ? { name: shownGroup.name ?? "הקבוצה", url: groupUrl(shownGroup.slug), logoUrl: groupImageUrl({ slug: shownGroup.slug }, shownGroup.image), dataReady: scope !== "all" && !blank } : undefined;
   // בקבוצה: תמונה בראש המסך והמתג אחריה; פס השיתוף צף בתחתית.
-  const top = <>{banner}{unified && <HagzaraCount members={groupData?.participants ?? null} total={crowd.dashboard?.participants} />}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
+  const top = <>{banner}{unified && <HagzaraCount members={groupData ? ("members" in groupData && groupData.members != null ? groupData.members : groupData.participants ?? null) : null} total={crowd.dashboard?.participants} />}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
