@@ -27,7 +27,10 @@ export default function Guess({ landing = null }: { landing?: GroupPublic | null
   const { advanced, setLanding, landing: rememberedLanding } = useInterface();
   const [params] = useSearchParams();
   useEffect(() => { if (landing) setLanding(landing); }, [landing, setLanding]);
-  if (!advanced) return landing || params.get("view") === "statistics" ? <SimpleComparison landing={landing} /> : <SimpleGuess />;
+  // גם במתקדם — אותם מסכי "הניחוש שלי" ו"ממוצע הניחושים" כמו בממוקד (הכרעת בעלים 25.10.2026).
+  // העורך המתקדם הישן נשאר רק לקישורים ישירים לכלים (היסטוריה, אחוזים, ניחוש משותף, קישור אישי) ולקבוצות אחרות, עד שלב 4
+  const tool = ["section", "g", "t", "f", "unit"].some(k => params.has(k)) || (!!landing && landing.slug !== "hagzara");
+  if (!advanced || !tool) return landing || params.get("view") === "statistics" ? <SimpleComparison landing={landing} /> : <SimpleGuess />;
   return <AdvancedGuess landing={landing ?? rememberedLanding} />;
 }
 function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {

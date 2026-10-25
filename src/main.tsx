@@ -1,4 +1,3 @@
-import { useInterface } from "./lib/interfaceMode";
 import SimpleOverview from "./pages/simple/Overview";
 import SimpleComparison from "./pages/simple/Comparison";
 import { SHOW_MODEL } from "./lib/modelVisibility";
@@ -196,13 +195,9 @@ function LegacyGuess() {
   return <Guess />;
 }
 
+/** ממוצע הניחושים — אותו מסך בשני המצבים (הכרעת בעלים 25.10.2026) */
 function LegacyCommunity() {
-  const { advanced } = useInterface();
-  const [params] = useCalculatorParams();
-  const next = new URLSearchParams(params);
-  next.set("view", "statistics");
-  if (!advanced) return <SimpleComparison />;
-  return <CalculatorRedirect replace to={`/guess?${next}`} />;
+  return <SimpleComparison />;
 }
 
 function LegacyToday() {

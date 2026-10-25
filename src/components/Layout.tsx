@@ -136,9 +136,10 @@ function FocusClock() {
   const [now, setNow] = useState(Date.now);
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 15_000); return () => clearInterval(t); }, []);
   const p = clockParts(wallClockLeft(LOCK_AT, now));
-  const two = (n: number) => String(n).padStart(2, "0");
   if (!p) return <span className="f-clock">המדגמים פורסמו</span>;
-  return <span className="f-clock" role="timer" aria-label={`עד המדגמים: ${p.days} ימים, ${p.hours} שעות ו-${p.minutes} דקות`}><span aria-hidden="true">⏱</span><b dir="ltr" aria-hidden="true">{p.days}:{two(p.hours)}:{two(p.minutes)}</b></span>;
+  // שעות בלבד (הכרעת בעלים 25.10.2026): "49 שעות" עד המדגמים
+  const hours = p.days * 24 + p.hours;
+  return <span className="f-clock" role="timer" aria-label={`עד המדגמים: ${hours} שעות`}><span aria-hidden="true">⏱</span><b className="font-num">{hours}</b> שעות</span>;
 }
 function FocusNav({ className, unread }: { className: string; unread: boolean }) {
   const { pathname } = useLocation();
@@ -147,12 +148,27 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
   // בפס העליון (מחשב) — כל הלשוניות בשורה, בלי "עוד"; בסרגל התחתון — "עוד" (הכרעת בעלים 25.10.2026)
   const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";
+  // כל לשונית ברוחב המינימלי שלה; המסכים הנוספים נכנסים לסרגל כל עוד יש מקום, והשאר — ב"עוד" (הכרעת בעלים 25.10.2026)
+  const navRef = useRef<HTMLElement>(null);
+  const [inline, setInline] = useState(more.length);
+  const [probe, setProbe] = useState(0);
+  useEffect(() => { setInline(more.length); }, [more.length, probe]);
+  useLayoutEffect(() => {
+    const el = navRef.current;
+    if (el && inline > 0 && el.scrollWidth > el.clientWidth + 1) setInline(n => n - 1);
+  });
+  useEffect(() => {
+    let w = window.innerWidth;
+    const onResize = () => { if (window.innerWidth !== w) { w = window.innerWidth; setProbe(n => n + 1); } };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
-  return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>
+  return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {(top ? [...core, ...more] : core).map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
-    {!top && more.length > 0 && <MoreMenu screens={more} up />}
+    {[...core, ...more.slice(0, inline)].map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
+    {inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
