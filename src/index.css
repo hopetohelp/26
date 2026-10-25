@@ -830,10 +830,10 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* תמונת מצב — פירוט המתקדם מתחת לגרפים */
 .f-details { display:grid;gap:16px;margin-top:16px;grid-template-columns:minmax(0,1fr); }
 
-/* הסרגל מנצל את כל הרוחב (הכרעת בעלים 25.10.2026): בטלפון — כל רוחב המסך; במחשב — כל הרוחב שנשאר בשורה העליונה */
-.f-nav-top { position:static;transform:none;flex:1 1 auto;min-width:0; }
-.f-nav-bottom { left:8px;right:8px;transform:none;max-width:none; }
-.f-nav-top, .f-nav-bottom { justify-content:space-between; }
-.f-nav > a:not(.f-me):not(.f-ai):not(.f-grp) { flex:1 1 auto;text-align:center; }
+/* הסרגל התחתון (טלפון) מנצל את כל רוחב המסך; בפס העליון (מחשב) — הרוחב המינימלי של הלשוניות (הכרעות בעלים 25.10.2026) */
+.f-nav-bottom { left:8px;right:8px;transform:none;max-width:none;justify-content:space-between; }
+.f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp) { flex:1 1 auto;text-align:center; }
+.f-short { display:none; }
+.f-nav-bottom .f-long { display:none; } .f-nav-bottom .f-short { display:inline; }
 .f-nav-measure { flex:none !important;width:max-content !important;position:absolute !important;left:auto !important;right:auto !important; }
 .f-nav-measure > a { flex:none !important; }

@@ -99,6 +99,8 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
       // הסרגל התחתון נמתח לכל רוחב המסך; לכן נמדד רוחבו הטבעי (בלי מתיחה) ולא הרוחב שהוא תופס
       const natural = (nav: HTMLElement | null) => { if (!nav) return 0; nav.classList.add("f-nav-measure"); const w = nav.offsetWidth; nav.classList.remove("f-nav-measure"); return w; };
       navW.current = Math.max(navW.current, natural(top), natural(bottom));
+      // בסרגל התחתון המסכים הנוספים מקובצים ב"עוד"; למעלה הם בשורה — מוסיפים את רוחבם המשוער
+      if (!top && bottom?.querySelector(".f-more")) navW.current = Math.max(navW.current, natural(bottom) + MORE_EXTRA);
       // רוחב שאר הפס בלי הסרגל: אם הסרגל למעלה — מורידים את רוחבו ואת הרווח
       const others = el.scrollWidth - (el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0) - (top ? top.offsetWidth + 8 : 0);
       const gap = el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0;
@@ -121,11 +123,14 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
-    {navTop ? <FocusNav className="f-nav-top" unread={false} /> : <span className="flex-1" />}
+    {navTop && <FocusNav className="f-nav-top" unread={false} />}
+    <span className="flex-1" />
     <AdvancedSwitch />
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
+/** תוספת רוחב משוערת כשהמסכים מ"עוד" עוברים לשורה בפס העליון (סקרים, בחירות קודמות) */
+const MORE_EXTRA = 150;
 /** שעון העצר עד המדגמים, קומפקטי: ימים:שעות:דקות */
 function FocusClock() {
   const [now, setNow] = useState(Date.now);
@@ -140,13 +145,14 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const { advanced } = useInterface();
   const groupTab = useGroupTab();
   // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
-  const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more");
+  // בפס העליון (מחשב) — כל הלשוניות בשורה, בלי "עוד"; בסרגל התחתון — "עוד" (הכרעת בעלים 25.10.2026)
+  const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
   return <nav aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {core.map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.label}</NavLink>)}
-    {more.length > 0 && <MoreMenu screens={more} up={className === "f-nav-bottom"} />}
+    {(top ? [...core, ...more] : core).map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
+    {!top && more.length > 0 && <MoreMenu screens={more} up />}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
@@ -157,7 +163,7 @@ function AdvancedSwitch() {
   return <button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="f-switch"><span className="f-switch-track" aria-hidden="true"><span /></span>מתקדם</button>;
 }
 /** "עוד" בסרגל — המסכים הנוספים של המתקדם. נסגר בבחירה, בלחיצה בחוץ וב-Escape */
-function MoreMenu({ screens, up }: { screens: Screen[]; up: boolean }) {
+function MoreMenu({ screens, up = false }: { screens: Screen[]; up?: boolean }) {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const box = useRef<HTMLDivElement>(null);
