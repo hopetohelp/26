@@ -260,6 +260,33 @@ function GuessCta({ pathname }: { pathname: string }) {
   );
 }
 
+/** כמה פיקסלים מתחתית המסך מכוסים בסרגלים צפים (ניווט תחתון, פס הגושים). נמדד בפועל, כדי שבכל מסך ובכל מכשיר יהיה מרווח שהסרגל לא יסתיר תוכן */
+const BOTTOM_BARS = ".f-nav-bottom, .c-mobile-tabs, .f-dock";
+function useBottomCover(): number {
+  const [cover, setCover] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const measure = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        let top = window.innerHeight;
+        document.querySelectorAll<HTMLElement>(BOTTOM_BARS).forEach((el) => {
+          if (getComputedStyle(el).position !== "fixed") return;
+          const r = el.getBoundingClientRect();
+          if (r.height > 0 && r.top > window.innerHeight / 2) top = Math.min(top, r.top);
+        });
+        setCover(Math.max(0, Math.round(window.innerHeight - top)));
+      });
+    };
+    measure();
+    const mo = new MutationObserver(measure);
+    mo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+    window.addEventListener("resize", measure);
+    return () => { cancelAnimationFrame(raf); mo.disconnect(); window.removeEventListener("resize", measure); };
+  }, []);
+  return cover;
+}
+
 export default function Layout() {
   return <InterfaceProvider><LayoutBody /></InterfaceProvider>;
 }
@@ -280,6 +307,7 @@ function useVerifyOnLoad() {
 }
 
 function LayoutBody() {
+  const bottomCover = useBottomCover();
   const [navTop, setNavTop] = useState(() => typeof window !== "undefined" && window.innerWidth >= 1100);
   useVerifyOnLoad();
   const { advanced } = useInterface();
@@ -307,7 +335,7 @@ function LayoutBody() {
       </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop} onFit={setNavTop} /></header>}
       <AccessCard />
       <PrivacyCard />
-      <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
+      <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
       {advanced ? <MobileTabs unread={unread} /> : !navTop && <FocusNav className="f-nav-bottom" unread={unread} />}
