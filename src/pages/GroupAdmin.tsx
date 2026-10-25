@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
-import GroupSeriesChart from "../components/GroupSeriesChart";
+import { call, type GroupCompare, type GroupInsights, type GroupLinkStats, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
+import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { listName } from "../lib/data";
@@ -43,14 +43,17 @@ const q = (id: string) => encodeURIComponent(id);
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
   const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
+  const [link, setLink] = useState<GroupLinkStats | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
     void Promise.allSettled([
       call<GroupSeries>(`/group/series?group=${q(id)}`, { token }),
       call<GroupInsights>(`/group/insights?group=${q(id)}`, { token }),
-    ]).then(([s, i]) => {
+      call<GroupLinkStats>(`/group/link-stats?group=${q(id)}`, { token }),
+    ]).then(([s, i, l]) => {
       if (!live) return;
+      if (l.status === "fulfilled") setLink(l.value);
       if (s.status === "fulfilled") setSeries(s.value);
       if (i.status === "fulfilled") setIns(i.value);
       setFailed(s.status === "rejected" && i.status === "rejected");
@@ -68,24 +71,35 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         </div>
       </header>
       {failed && <p className="text-sm text-ink-soft">הנתונים אינם זמינים כרגע. כלי הניהול למטה פועלים.</p>}
-      <Measures data={series} failed={failed} />
-      {ins && (ins.belowMin
-        ? <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>
-        : <div className="grid lg:grid-cols-2 gap-4 [&>*]:min-w-0">
-            <Guesses ins={ins} />
-            <Questions q={ins.questions} />
-          </div>)}
-      <CompareSwitch id={id} token={token} />
-      <SupportThreads id={id} token={token} />
-      <Section title="אישור ניחושים">
-        <AdminGuesses group={{
-          load: () => call(`/group/guesses?group=${q(id)}`, { token }),
-          decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
-        }} />
-      </Section>
-      <Section title="כלי ניהול">
-        <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
-      </Section>
+      {/* כל חלק במגירה (הכרעת בעלים 25.10.2026): כל המספרים בסטטיסטיקה בראש המסך, כל נושא הניחושים במגירה אחת — בלי נתון כפול */}
+      <div className="space-y-3">
+        <Section title="סטטיסטיקה" open aside={series ? hourlyNote(series) : undefined}>
+          <Measures data={series} failed={failed} />
+          {link && <Sub title="כניסות דרך הקישור (דפדפנים, בלי חשבון)">
+            <div className="grid grid-cols-3 gap-3">
+              <Tile label="בסך הכול" value={n(link.opens)} />
+              <Tile label="היום" value={n(link.today)} />
+              <Tile label="דפדפנים שונים" value={n(link.fresh)} />
+            </div>
+          </Sub>}
+          {ins && !ins.belowMin && <Questions q={ins.questions} />}
+          {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
+        </Section>
+        <Section title="ניחושים">
+          {ins && !ins.belowMin && <Guesses ins={ins} />}
+          <CompareSwitch id={id} token={token} />
+          <Sub title="אישור ניחושים">
+            <AdminGuesses group={{
+              load: () => call(`/group/guesses?group=${q(id)}`, { token }),
+              decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
+            }} />
+          </Sub>
+        </Section>
+        <SupportThreads id={id} token={token} />
+        <Section title="כלי ניהול">
+          <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
+        </Section>
+      </div>
     </>
   );
 }
@@ -131,20 +145,35 @@ function CompareSwitch({ id, token }: { id: string; token: string }) {
     try { setValue((await call<{ compare: GroupCompare }>("/group/compare", { token, body: { group: id, compare: next } })).compare); } finally { setBusy(false); }
   };
   return (
-    <Section title="השוואה בממוצע הניחושים">
+    <Sub title="השוואה בממוצע הניחושים">
       <p className="text-sm text-ink-soft">חברי הקבוצה רואים את ממוצע הניחושים של הקבוצה לצד:</p>
       <Segmented label="השוואת ממוצע הקבוצה" value={value} disabled={busy} onChange={(v: GroupCompare) => void change(v)} options={[{ id: "polls", label: "ממוצע הסקרים" }, { id: "crowd", label: "ממוצע כל המשתתפים" }]} />
-    </Section>
+    </Sub>
   );
 }
 
-function Section({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) {
+/** מגירה במסך (הכרעת בעלים 25.10.2026): כל חלק מקופל; open = פתוח בכניסה */
+function Section({ title, aside, open = false, children }: { title: string; aside?: ReactNode; open?: boolean; children: ReactNode }) {
   return (
-    <section className="bg-paper-card border border-paper-line rounded-theme p-4 space-y-3">
-      <div className="flex items-baseline justify-between gap-3"><h2 className="font-bold text-lg">{title}</h2>{aside && <span className="text-xs text-ink-soft">{aside}</span>}</div>
-      {children}
-    </section>
+    <details open={open} className="group/s bg-paper-card border border-paper-line rounded-theme px-4 [&_summary::-webkit-details-marker]:hidden">
+      <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[56px]">
+        <span className="flex items-baseline gap-3 min-w-0"><h2 className="font-bold text-lg">{title}</h2>{aside && <span className="text-xs text-ink-soft truncate">{aside}</span>}</span>
+        <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open/s:rotate-45">+</span>
+      </summary>
+      <div className="space-y-4 pb-4">{children}</div>
+    </details>
   );
+}
+
+/** כותרת משנה בתוך מגירה */
+function Sub({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) {
+  return <div className="space-y-2 pt-3 border-t border-paper-line first:border-t-0 first:pt-0"><div className="flex items-baseline justify-between gap-3"><h3 className="font-bold">{title}</h3>{aside && <span className="text-xs text-ink-soft">{aside}</span>}</div>{children}</div>;
+}
+
+/** מתי מתחיל החלק השעתי של הגרפים */
+function hourlyNote(d: GroupSeries) {
+  const first = d.buckets.find((b) => b.hourly);
+  return first ? `גרפים: שעתי מ-${bucketLabel(first)}, יומי לפני כן` : undefined;
 }
 
 function Tile({ label, value, sub }: { label: string; value: string; sub?: string }) {
@@ -187,12 +216,12 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
   };
   return (
     <>
-      <Section title="חברי הקבוצה (מרשימת המיילים)" aside={`שעתי ב-${data.hours} השעות האחרונות, יומי לפני כן`}>
+      <Sub title="חברי הקבוצה (מרשימת המיילים)">
         <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-      </Section>
-      <Section title="מחוץ לרשימה (נכנסו דרך הקישור)">
+      </Sub>
+      <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
         <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-      </Section>
+      </Sub>
     </>
   );
 }
@@ -208,7 +237,7 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
   const total = ins.guesses || 1;
   const rows = [...ins.outside].sort((a, b) => b.above + b.below - (a.above + a.below));
   return (
-    <Section title="ניחושי החברים" aside={`${n(ins.guesses)} ניחושים`}>
+    <Sub title="מצב הניחושים" aside={`${n(ins.guesses)} ניחושים`}>
       <div className="flex h-3 rounded-full overflow-hidden bg-paper border border-paper-line" role="img" aria-label={parts.map((p) => `${p.label}: ${ins.status[p.key]}`).join(", ")}>
         {parts.map((p) => ins.status[p.key] > 0 && <span key={p.key} className={p.cls} style={{ width: `${(100 * ins.status[p.key]) / total}%` }} />)}
       </div>
@@ -235,7 +264,7 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
           <p className="text-xs text-ink-soft pt-1">כל ניחוש שרשימה בה נמצאת מעל הסקר הגבוה או מתחת לנמוך. רק חריגה גדולה ממתינה לאישור.</p>
         </div>
       ) : <p className="text-sm text-ink-soft">כל הניחושים בתוך טווח הסקרים.</p>}
-    </Section>
+    </Sub>
   );
 }
 
@@ -243,10 +272,10 @@ const TOPIC_LABEL: Record<string, string> = { data: "תיקון נתון", idea:
 
 /** פניות החברים לצוות האתר: כמה פנו, כמה הודעות (ובשבוע האחרון), לפי נושא, וכמה השתמשו בצ׳אט החכם. בלי תוכן */
 function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined }>["questions"] }) {
-  if (!d) return <Section title="שאלות ופניות"><p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p></Section>;
+  if (!d) return <Sub title="שאלות ופניות"><p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p></Sub>;
   const topics = Object.entries(d.byTopic).filter(([, v]) => v);
   return (
-    <Section title="שאלות ופניות">
+    <Sub title="שאלות ופניות לצוות האתר">
       <div className="grid grid-cols-3 gap-3">
         <Tile label="פנו לצוות" value={n(d.askers)} />
         <Tile label="הודעות" value={n(d.messages)} sub={`${n(d.week)} בשבוע האחרון`} />
@@ -258,6 +287,6 @@ function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined 
         </ul>
       )}
       <p className="text-xs text-ink-soft">מספר גבוה בנושא מסוים — סימן שכדאי להסביר אותו לקבוצה.</p>
-    </Section>
+    </Sub>
   );
 }

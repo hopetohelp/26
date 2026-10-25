@@ -187,6 +187,8 @@ async function groupCompare(env, id) {
 
 /** כמה שעות אחורה הגרף שעתי; לפני כן — נקודה ליום (הכרעת בעלים 24.10.2026) */
 export const SERIES_HOURS = 72;
+/** תחילת הגרף השעתי: 24/10/2026 23:00 שעון ישראל (שעון קיץ, UTC+3) */
+export const SERIES_HOURLY_FROM = Date.parse("2026-10-24T20:00:00Z");
 /** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
 export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"];
 
@@ -234,7 +236,8 @@ export async function groupSeries(env, id, now) {
 /** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
 export function seriesBuckets(start, now) {
   const HOUR_MS = 3600_000;
-  const hourStart = Math.floor(now / HOUR_MS) * HOUR_MS - (SERIES_HOURS - 1) * HOUR_MS;
+  // השעתי מתחיל לכל המוקדם ב-24/10 23:00 שעון ישראל (הכרעת בעלים 25.10.2026); לפני כן — נקודה ליום
+  const hourStart = Math.max(SERIES_HOURLY_FROM, Math.floor(now / HOUR_MS) * HOUR_MS - (SERIES_HOURS - 1) * HOUR_MS);
   const out = [];
   let t = Date.parse(israelDayStart(start));
   while (t < hourStart) {

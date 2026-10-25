@@ -227,9 +227,12 @@ describe("group insights", () => {
 describe("group series", () => {
   it("hourly for 72 hours, daily before; counts hidden below the threshold", async () => {
     const { seriesBuckets, SERIES_HOURS } = await import("../index.js");
-    const now = Date.parse("2026-10-24T10:30:00Z");
+    const now = Date.parse("2026-10-25T10:30:00Z");
     const b = seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), now);
-    expect(b.filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
+    // השעתי מתחיל ב-24/10 23:00 שעון ישראל (20:00 UTC): עד 10:00 UTC יש 15 שעות
+    expect(b.filter((x) => x.hourly)).toHaveLength(15);
+    expect(new Date(b.find((x) => x.hourly).start).toISOString()).toBe("2026-10-24T20:00:00.000Z");
+    expect(seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), Date.parse("2026-11-01T10:30:00Z")).filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
     expect(b.filter((x) => !x.hourly).length).toBeGreaterThanOrEqual(5);
     for (let i = 1; i < b.length; i++) expect(b[i].start).toBe(b[i - 1].end);
 

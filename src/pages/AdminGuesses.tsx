@@ -97,7 +97,8 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
   const [data, setData] = useState<GuessData | null>(null);
   const [belowMin, setBelowMin] = useState<number | null>(null);
   const [filter, setFilter] = useState<Filter>("pending");
-  const [sort, setSort] = useState<Sort>("random");
+  // מנהל קבוצה: מיון לפי שמירה בלבד (הכרעת בעלים 25.10.2026)
+  const [sort, setSort] = useState<Sort>(group ? "saved" : "random");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -130,10 +131,10 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h3 className="font-bold text-lg">{group ? "ניחושי חברי הקבוצה" : "ניחושי הגולשים"} ({data?.rows.length ?? "…"} · ממתינים {pending})</h3>
+        {group ? <span /> : <h3 className="font-bold text-lg">{"ניחושי הגולשים"} ({data?.rows.length ?? "…"} · ממתינים {pending})</h3>}
         <div className="flex gap-2"><Btn onClick={load}>רענון</Btn>{!group && <Btn onClick={download} disabled={!data}>הורדה (CSV)</Btn>}</div>
       </div>
-      <p className="text-sm text-ink-soft max-w-3xl">הניחוש האחרון של כל גולש, בלי שום מזהה, בסדר אקראי בכל טעינה, או ממוין מהחדש לישן{group ? " לפי שמירת הניחוש" : " לפי רישום, כניסה אחרונה או שמירת הניחוש"}. ניחוש חריג — רשימה שרחוקה לפחות 75% מממוצע שאר המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח.</p>
+      <p className="text-sm text-ink-soft max-w-3xl">הניחוש האחרון של כל גולש, בלי שום מזהה, {group ? "מהחדש לישן לפי שמירת הניחוש" : "בסדר אקראי בכל טעינה, או ממוין מהחדש לישן לפי רישום, כניסה אחרונה או שמירת הניחוש"}. ניחוש חריג — רשימה שרחוקה לפחות 75% מממוצע שאר המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים — לא נכנסת לסטטיסטיקות עד אישור. בטור של כל רשימה חורגת: כמה מנדטים מעל (+) או מתחת (−) לטווח.</p>
       {group && <p className="text-sm text-ink-soft max-w-3xl">רק הניחושים של חברי הקבוצה, בלי שום מזהה ובלי נתוני פעילות. ההחלטה כאן קובעת אם הניחוש נספר בכל האתר — כמו החלטה של מנהל האתר.</p>}
       {!group && <p className="text-sm text-ink-soft max-w-3xl">לכל גולש מוצגים: האם שמר הצבעה, כמה שמירות נשמרו לו בסך הכול (גם גרסאות שנמחקו בכלל "הניחוש האחרון של כל יום"; לפני 10/10 הספירה חלקית), מתי נרשם, מתי נכנס לאחרונה וכמה כניסות. כניסה = כניסה לחשבון או הרשמה; גולש שנשאר מחובר בדפדפן אינו נספר כל פעם מחדש.</p>}
       {!group && <p className="text-sm text-ink-soft max-w-3xl">כל החשבונות נספרים בסטטיסטיקות, גם בלי אימות; בדשבורד הציבורי מוצגת רק הערה קטנה כמה מהם מאומתים (Google או מייל). חשבונות שלא אומתו מרוכזים כאן באזור נפרד, ואפשר לסנן אותם.</p>}
@@ -146,7 +147,7 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
         </details>
       )}
       <Chips label="סינון" value={filter} onChange={setFilter} options={group ? FILTERS.filter((f) => f.id !== "unverified") : FILTERS} />
-      <Chips label="מיון" value={sort} onChange={setSort} options={group ? SORTS.filter((o) => o.id === "random" || o.id === "saved") : SORTS} />
+      {!group && <Chips label="מיון" value={sort} onChange={setSort} options={SORTS} />}
       {data && <p className="text-sm font-bold" aria-live="polite">{rows.length === data.rows.length ? `מוצגים ${rows.length} ניחושים` : `מוצגים ${rows.length} ניחושים מתוך ${data.rows.length}, לפי הסינון`}</p>}
       {error && <Notice tone="warn">{error}</Notice>}
       {belowMin !== null && <p className="text-sm text-ink-soft">פחות מ-{belowMin} חברים מהקבוצה רשומים — הניחושים יוצגו מ-{belowMin}.</p>}

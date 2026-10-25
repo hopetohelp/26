@@ -454,7 +454,8 @@ type LinkMembersState = { min: number; all: LinkFlag; first: LinkFlag; list: num
  * כולם, או רק מי שהקישור היה הכניסה הראשונה שלו לאתר. הכניסות נרשמות תמיד (מזהה חשבון בלבד) ומשפיעות רק כשהמתג פעיל.
  * מספרי הקבוצה מוצגים מ-50 (כמו המספרים למנהל), כדי שלא יגלו אם אדם מסוים נרשם.
  */
-export function LinkMembersToggle({ load, set, onChanged }: { load: () => Promise<LinkMembersState>; set: (flag: "all" | "first", on: boolean) => Promise<LinkMembersState>; onChanged?: () => void }) {
+/** compact = בלי שורות המספרים (במסך "ניהול קבוצה" הן בסטטיסטיקה) */
+export function LinkMembersToggle({ load, set, onChanged, compact = false }: { load: () => Promise<LinkMembersState>; set: (flag: "all" | "first", on: boolean) => Promise<LinkMembersState>; onChanged?: () => void; compact?: boolean }) {
   const [state, setState] = useState<LinkMembersState | null>(null);
   const [busy, setBusy] = useState(false);
   useEffect(() => { void load().then(setState).catch(() => setState(null)); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -466,11 +467,11 @@ export function LinkMembersToggle({ load, set, onChanged }: { load: () => Promis
     <span aria-hidden="true" className={`shrink-0 w-12 h-7 rounded-full border-2 border-ink p-0.5 flex ${state[flag].on ? "bg-ink justify-end" : "bg-paper-card justify-start"}`}><span className={`w-5 h-5 rounded-full ${state[flag].on ? "bg-paper-card" : "bg-ink"}`} /></span>
   </button>;
   return <div className="pt-2 space-y-1">
-    <p className="font-bold pt-1">מי נספר בקבוצה</p>
-    <ul className="text-sm space-y-0.5">
+    {!compact && <p className="font-bold pt-1">מי נספר בקבוצה</p>}
+    {!compact && <ul className="text-sm space-y-0.5">
       <li>מרשימת המיילים, מחוברים לאתר: <strong>{n(state.list)}</strong></li>
       <li>חשבונות באתר בסך הכול: <strong>{state.site.toLocaleString("he-IL")}</strong></li>
-    </ul>
+    </ul>}
     <Switch flag="all" label="לכלול את כל מי שנכנס דרך קישור הקבוצה" />
     <Switch flag="first" label="לכלול רק מי שהגיע לאתר לראשונה דרך הקישור" />
     <p className="text-xs text-ink-soft">בסוגריים: כמה חשבונות כאלה יש עכשיו. מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
@@ -515,7 +516,7 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
       <GroupFold title="קישור הקבוצה">
         <GroupLinkPanel
           slug={slug}
-          loadStats={() => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
+          loadStats={tools ? undefined : () => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
           bare
         />
       </GroupFold>
@@ -530,7 +531,7 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
       </GroupFold>
       <GroupFold title={tools ? "מי נספר בקבוצה" : "מספרים"}>
         {!tools && <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />}
-        <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} />
+        <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} compact={tools} />
       </GroupFold>
       <GroupFold title="תמונת הקבוצה">
         <GroupImagePanel

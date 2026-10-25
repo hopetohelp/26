@@ -21,7 +21,7 @@ const tile = "bg-paper-card border border-paper-line rounded-theme p-3";
 
 /** הקישור של הקבוצה: שם באנגלית, כפתור העתקה ומספר הכניסות דרכו. בלי שם — רק שדה לקביעתו */
 /** setSlug חסר = קריאה בלבד (מנהל קבוצה: הקישור נקבע רק על ידי מנהל האתר — הכרעת בעלים 24.10.2026) */
-export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slug: string | null | undefined; setSlug?: (slug: string | null) => Promise<void>; loadStats: () => Promise<GroupLinkStats>; bare?: boolean }) {
+export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slug: string | null | undefined; setSlug?: (slug: string | null) => Promise<void>; loadStats?: () => Promise<GroupLinkStats>; bare?: boolean }) {
   const [text, setText] = useState(slug ?? "");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -30,7 +30,7 @@ export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slu
   const url = slug ? groupUrl(slug) : null;
   useEffect(() => { setText(slug ?? ""); }, [slug]);
   useEffect(() => {
-    if (!slug) { setStats(null); return; }
+    if (!slug || !loadStats) { setStats(null); return; }
     let live = true;
     loadStats().then((s) => { if (live) setStats(s); }, () => { if (live) setStats(null); });
     return () => { live = false; };
@@ -68,8 +68,9 @@ export function GroupLinkPanel({ slug, setSlug, loadStats, bare = false }: { slu
             <input readOnly dir="ltr" aria-label="קישור הקבוצה" value={url} onFocus={(e) => e.currentTarget.select()} className={`${inputCls} flex-1 min-w-[12rem]`} />
             <Btn kind="primary" onClick={copy} aria-label={copied ? "הקישור הועתק" : "העתקת הקישור"}>{copied ? "הועתק" : "העתקה"}</Btn>
           </div>
-          <p className="text-sm font-bold pt-1">כניסות דרך הקישור</p>
-          {stats ? (
+          {/* בלי loadStats (מסך "ניהול קבוצה") — המספרים מוצגים בסטטיסטיקה בראש המסך */}
+          {loadStats && <p className="text-sm font-bold pt-1">כניסות דרך הקישור</p>}
+          {!loadStats ? null : stats ? (
             <div className="grid grid-cols-3 gap-3">
               {([["בסך הכול", stats.opens], ["היום", stats.today], ["דפדפנים שונים", stats.fresh]] as const).map(([label, n]) => (
                 <div key={label} className={tile}>
