@@ -220,6 +220,10 @@ function useBottomCover(): number {
         const dock = document.querySelector<HTMLElement>(".f-dock.floating");
         const dh = dock && getComputedStyle(dock).position === "fixed" ? Math.round(dock.getBoundingClientRect().height) : 0;
         if (dh) document.documentElement.style.setProperty("--dock-h", `${dh}px`);
+        // גובה סרגל הניווט התחתון — פס הכנסת יושב צמוד מעליו (הכרעת בעלים 25.10.2026)
+        const nav = document.querySelector<HTMLElement>(".f-nav-bottom");
+        const nh = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+        if (nh) document.documentElement.style.setProperty("--nav-h", `${nh}px`);
         let top = window.innerHeight;
         document.querySelectorAll<HTMLElement>(BOTTOM_BARS).forEach((el) => {
           if (getComputedStyle(el).position !== "fixed") return;
