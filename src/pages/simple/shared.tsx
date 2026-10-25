@@ -7,6 +7,7 @@ import { SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, simpleSelection, simpleSpread, s
 import type { Selection } from "../../lib/dataResolver";
 import { seatsFmt } from "../../lib/format";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
+import { largestRemainder } from "../../lib/fillAll";
 
 const SOURCE_KEY = "elections26.simple-source";
 let current = (() => { try { return localStorage.getItem(SOURCE_KEY) ?? "all"; } catch { return "all"; } })();
@@ -90,15 +91,18 @@ export const LegendBox = ({ kind, label, n }: { kind?: "dash"; label: string; n?
 export const LegendLine = ({ kind, label }: { kind?: "dash" | "soft"; label: string }) => <span><span className={`f-lg-line ${kind ?? ""}`} />{label}</span>;
 
 /** גושים לתרשים; "חסר" — מנדטים שעוד לא חולקו */
-type Slice = { id: string; name: string; short: string; lists: readonly string[]; value: number; color: string };
+type Slice = { id: string; name: string; short: string; lists: readonly string[]; value: number; color: string; shown: number };
+/** `shown` = המספר המוצג: שלמים בשיטת השארית הגדולה, כך שסכום הגושים שווה לסך המעוגל (ממוצעים לא-שלמים לא יסתכמו ב-121) */
 export function blocSlices(values: Record<string, number | null | undefined>, missing = 0): Slice[] {
-  const slices: Slice[] = SIMPLE_BLOCS.map((b, i) => ({ ...b, value: blocTotal(values, b.lists), color: `rgb(var(--bloc-${i + 1}))` }));
-  if (missing > 0) slices.push({ id: "missing", name: "חסר", short: "חסר", lists: [], value: missing, color: "rgb(var(--bloc-miss))" });
-  return slices.filter(s => s.value > 0);
+  const slices: Slice[] = SIMPLE_BLOCS.map((b, i) => ({ ...b, value: blocTotal(values, b.lists), color: `rgb(var(--bloc-${i + 1}))`, shown: 0 }));
+  if (missing > 0) slices.push({ id: "missing", name: "חסר", short: "חסר", lists: [], value: missing, color: "rgb(var(--bloc-miss))", shown: 0 });
+  const kept = slices.filter(s => s.value > 0);
+  const shown = largestRemainder(Math.round(kept.reduce((a, s) => a + s.value, 0)), Object.fromEntries(kept.map(s => [s.id, s.value])));
+  return kept.map(s => ({ ...s, shown: shown[s.id] }));
 }
 function Pop({ slice, values, at }: { slice: Slice; values: Record<string, number | null | undefined>; at: { left: number; top?: number } }) {
   const lists = slice.lists.filter(id => (values[id] ?? 0) > 0);
-  return <div className="f-pop" style={{ left: at.left, top: at.top }}><strong>{slice.name} · <span className="font-num">{Math.round(slice.value)}</span></strong>
+  return <div className="f-pop" style={{ left: at.left, top: at.top }}><strong>{slice.name} · <span className="font-num">{slice.shown}</span></strong>
     {lists.length > 0 && <ul>{lists.map(id => <li key={id}><PartyAvatar id={id} size={20} />{nameOf(id)}</li>)}</ul>}</div>;
 }
 function usePop() {
@@ -121,12 +125,12 @@ function Pie({ slices, values }: { slices: Slice[]; values: Record<string, numbe
   const total = slices.reduce((s, b) => s + b.value, 0) || 1, R = 112, r = 52, c = 130;
   const at = (a: number, rad: number) => [c + rad * Math.cos(a), c + rad * Math.sin(a)];
   let a = -Math.PI / 2;
-  return <div className="f-pie" ref={host}><svg viewBox="0 0 260 260" role="img" aria-label={slices.map(s => `${s.name} ${Math.round(s.value)}`).join(", ")}>
+  return <div className="f-pie" ref={host}><svg viewBox="0 0 260 260" role="img" aria-label={slices.map(s => `${s.name} ${s.shown}`).join(", ")}>
     {slices.map((s, i) => {
       const da = s.value / total * 2 * Math.PI, a2 = a + da, [x1, y1] = at(a, R), [x2, y2] = at(a2, R), [x3, y3] = at(a2, r), [x4, y4] = at(a, r), big = da > Math.PI ? 1 : 0, [lx, ly] = at(a + da / 2, (R + r) / 2);
       a = a2;
       return <g key={s.id} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={`M${x1} ${y1}A${R} ${R} 0 ${big} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${big} 0 ${x4} ${y4}Z`} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
-        {da > .35 && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize={da > 1.4 ? 11 : 10} fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{Math.round(s.value)}</text></>}</g>;
+        {da > .35 && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize={da > 1.4 ? 11 : 10} fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{s.shown}</text></>}</g>;
     })}
     <text x="130" y="134" textAnchor="middle" fontSize="26" fontWeight="700" fill="rgb(var(--ink))" className="font-num">120</text>
     <text x="130" y="154" textAnchor="middle" fontSize="11.5" fill="rgb(var(--ink-soft))">מנדטים</text>
@@ -136,8 +140,8 @@ function Pie({ slices, values }: { slices: Slice[]; values: Record<string, numbe
 function Stack({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
   const { pop, host, handlers } = usePop();
   return <div className="f-dock floating" ref={host}><div className="f-stack">{slices.map((s, i) =>
-    <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${Math.round(s.value)}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
-      {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{Math.round(s.value)}</button>)}
+    <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${s.shown}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
+      {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{s.shown}</button>)}
   </div>{pop && slices[pop.i] && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
 /** סיכום הגושים: עוגה במחשב, פס צמוד לתחתית בטלפון. בלי כותרת ובלי מסגרת. */
@@ -148,7 +152,7 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
 export function InlineBlocBar({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
   const slices = blocSlices(values, missing);
-  return <div className="f-stack" role="img" aria-label={slices.map(s => `${s.name} ${Math.round(s.value)}`).join(", ")}>{slices.map(s => <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} tabIndex={-1} style={{ flex: s.value, background: s.color }}>{s.value >= 18 && <span>{s.short}</span>}{Math.round(s.value)}</button>)}</div>;
+  return <div className="f-stack" role="img" aria-label={slices.map(s => `${s.name} ${s.shown}`).join(", ")}>{slices.map(s => <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} tabIndex={-1} style={{ flex: s.value, background: s.color }}>{s.value >= 18 && <span>{s.short}</span>}{s.shown}</button>)}</div>;
 }
 export function FocusFoot() {
   return <div className="f-foot"><Link to="/method" className="f-info" aria-label="מידע ומקורות">i</Link><Link to="/method">מידע ומקורות</Link></div>;

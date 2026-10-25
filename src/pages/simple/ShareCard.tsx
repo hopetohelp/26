@@ -67,7 +67,7 @@ export async function renderSimpleShare(input: ShareInput): Promise<Blob> {
     ctx.fillStyle = css(`--bloc-${k + 1}`); ctx.fillRect(x - w + 2, barY, w - 4, 56);
     ctx.textAlign = "center"; ctx.fillStyle = c.ink; ctx.font = `700 26px ${body}`;
     if (w > ctx.measureText(SHORT[k]).width + 8) ctx.fillText(SHORT[k], x - w / 2, barY - 24);
-    ctx.fillStyle = "#fff"; ctx.font = `700 30px ${num}`; if (w > 44) ctx.fillText(String(Math.round(s.value)), x - w / 2, barY + 29);
+    ctx.fillStyle = "#fff"; ctx.font = `700 30px ${num}`; if (w > 44) ctx.fillText(String(s.shown), x - w / 2, barY + 29);
     x -= w;
   });
   ctx.textAlign = "center"; ctx.fillStyle = c.soft; ctx.font = `400 30px ${body}`;
