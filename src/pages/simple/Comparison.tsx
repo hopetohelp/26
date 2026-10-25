@@ -25,7 +25,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const source = useSimpleSource(true, true);
   const crowd = useCrowdDashboard();
   const hagzara = useHagzara(session);
-  const member = session.me?.groups?.find(g => g.id === HAGZARA_GROUP_ID);
+  const member = session.groups.find(g => g.id === HAGZARA_GROUP_ID);
   const seats = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
   const mine = seats.draft ?? EMPTY;
   const unlocked = seats.status === "saved" && !validateSeats(mine, IDS);

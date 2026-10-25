@@ -54,7 +54,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   const SIMPLE_POLL_MEANS = resolveDataset(selection, "community").seats;
   const crowd = useCrowdDashboard();
   // פילוח לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): הכפתור מוצג רק לחבר בקבוצה; השרת בודק את החברות ואוכף את הסף
-  const groups = session.me?.groups ?? [];
+  const groups = session.groups;
   const [picked, setPicked] = useState(landing?.id ?? "all");
   // בלי מתג "כל המשתתפים / הגזרה" (הכרעת בעלים 25.10.2026): לחבר הגזרה — נתוני חברי הגזרה, וטור "כל הניחושים" לפי מתג
   void setPicked;
