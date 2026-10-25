@@ -29,3 +29,18 @@ describe("double pie — unity inside Netanyahu and Eisenkot", () => {
     for (const id of UNITY_LISTS) expect([...SIMPLE_BLOCS[0].lists, ...SIMPLE_BLOCS[3].lists]).toContain(id);
   });
 });
+
+describe("double pie labels — always inside, the number always shown", () => {
+  it("a one-seat slice still shows its number; no 120 total line", async () => {
+    const { createElement } = await import("react");
+    const { renderToStaticMarkup } = await import("react-dom/server");
+    const { DoublePie } = await import("./shared");
+    const [net, har, arab, eis] = SIMPLE_BLOCS.map(b => b.lists[0]);
+    const html = renderToStaticMarkup(createElement(DoublePie, { values: { [net]: 60, [har]: 1, [arab]: 4, [eis]: 55 } }));
+    expect(html).toMatch(/>1<\/text>/);
+    expect(html).toMatch(/>4<\/text>/);
+    expect(html).not.toContain("f-pie-total");
+    const sizes = [...html.matchAll(/font-size:([\d.]+)px/g)].map(m => Number(m[1]));
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(6);
+  });
+});
