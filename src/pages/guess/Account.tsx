@@ -16,6 +16,8 @@ import { errorText, isUserError, type useSession } from "./useCrowd";
 import ErrorReport from "../../components/ErrorReport";
 import FilterBlocked, { useServerBlocked } from "../../components/FilterBlocked";
 import GoogleButton from "./GoogleButton";
+/** אחרי שמירה במייל וסיסמה (הכרעת בעלים 25.10.2026): לאמת את המייל, ולחפש גם בספאם — רוב המיילים לא אומתו */
+const VERIFY_NOTE = " נשלח אליכם מייל לאימות הכתובת — צריך ללחוץ על הקישור שבו. לא מוצאים? בדקו בתיקיית הספאם (דואר זבל).";
 
 const PW_MIN = 6;
 const PW_MAX = 128;
@@ -178,7 +180,7 @@ export function AuthForm({
           session.setToken(r.token);
           // הרשמה במייל ⇐ נשלח מייל אימות; כישלון אינו חוסם (אפשר לשלוח שוב ב"הפרטים שלי")
           let note = "";
-          if (register) await call("/account/verify/send", { token: r.token, body: {} }).then(() => { note = " נשלח אליכם מייל לאימות הכתובת."; }, () => {});
+          if (register) await call("/account/verify/send", { token: r.token, body: {} }).then(() => { note = VERIFY_NOTE; }, () => {});
           onDone?.(r.token);
           return (register ? "נרשמתם." : "נכנסתם.") + note;
         })}
@@ -278,7 +280,7 @@ export function ClaimForm({ session, onDone }: { session: ReturnType<typeof useS
         await call<{ email: string }>("/auth/claim", { token: session.token, body: { email, ...(needsPassword ? { password: pw } : {}) } });
         setPw("");
         let note = "";
-        await call("/account/verify/send", { token: session.token, body: {} }).then(() => { note = " נשלח אליכם מייל לאימות הכתובת."; }, () => {});
+        await call("/account/verify/send", { token: session.token, body: {} }).then(() => { note = VERIFY_NOTE; }, () => {});
         await session.refresh();
         onDone?.();
         return "המייל נוסף." + note;
