@@ -234,7 +234,8 @@ function MobileTabs({ unread }: { unread: boolean }) {
   useLayoutEffect(() => {
     const el = scroller.current;
     if (!el) return;
-    const update = () => { const required = Array.from(el.children).reduce((sum, child) => sum + (child as HTMLElement).offsetWidth, 0); setOverflow(required > (el.parentElement?.clientWidth ?? 0) + 1); setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2); };
+    // הרוחב הדרוש נמדד מהתוויות עצמן (לא מהלשוניות שנמתחות למלא את השורה), כך שההחלטה אם צריך גלילה יציבה ולא מתהפכת כשהחץ מופיע
+    const update = () => { const required = Array.from(el.children).reduce((sum, child) => { const label = child.querySelector<HTMLElement>("a > span:last-child"); return sum + Math.max(72, Math.ceil((label?.getBoundingClientRect().width ?? 56) + 16)); }, 0); setOverflow(required > (el.parentElement?.clientWidth ?? 0) + 1); setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2); };
     const observer = new ResizeObserver(update); observer.observe(el);
     el.addEventListener("scroll", update); document.fonts.ready.then(update); update();
     return () => { observer.disconnect(); el.removeEventListener("scroll", update); };
