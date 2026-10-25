@@ -23,7 +23,6 @@ import { AxisLabels, CapsuleMarks, ProfileCandle, Track } from "../../components
 import { PartyAvatar } from "../../components/PartyAvatar";
 import EditBlocsButton from "../../components/EditBlocsButton";
 import GroupBanner from "../../components/GroupBanner";
-import GroupScope from "../../components/GroupScope";
 import { groupImageUrl, groupUrl } from "../../lib/groupLink";
 import { blankDashboard, blankStat, listsFromPolls } from "../../lib/groupBlank";
 import { BlocAvatar } from "../../components/BlocAvatar";
@@ -57,12 +56,14 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // פילוח לפי קבוצה (docs/פילוח-קבוצות-תכנון.md): הכפתור מוצג רק לחבר בקבוצה; השרת בודק את החברות ואוכף את הסף
   const groups = session.me?.groups ?? [];
   const [picked, setPicked] = useState(landing?.id ?? "all");
-  const scope = groups.some((g) => g.id === picked) ? picked : "all";
+  // בלי מתג "כל המשתתפים / הגזרה" (הכרעת בעלים 25.10.2026): לחבר הגזרה — נתוני חברי הגזרה, וטור "כל הניחושים" לפי מתג
+  void setPicked;
+  const scope = groups.some((g) => g.id === HAGZARA_GROUP_ID) ? HAGZARA_GROUP_ID : groups.some((g) => g.id === picked) ? picked : "all";
   const [group, setGroup] = useState<{ id: string; data: GroupDashboard | null; failed: boolean } | null>(null);
   useEffect(() => {
     if (scope === "all" || !session.token) return;
     let live = true;
-    const load = () => call<GroupDashboard>(`/dashboard?group=${encodeURIComponent(scope)}`, { token: session.token })
+    const load = () => call<GroupDashboard>(`/dashboard?group=${encodeURIComponent(scope)}&own=1`, { token: session.token })
       .then((data) => { if (live) setGroup({ id: scope, data, failed: false }); })
       .catch(() => { if (live) setGroup((g) => ({ id: scope, data: g?.id === scope ? g.data : null, failed: true })); });
     void load();
@@ -71,12 +72,11 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
     return () => { live = false; window.clearInterval(timer); window.removeEventListener(SAVED_EVENT, load); };
   }, [scope, session.token]);
   const groupData = scope !== "all" && group?.id === scope ? group.data : null;
-  // הגזרה = כלל המשתתפים (הכרעת בעלים 25.10.2026): הנתונים של כולם, ומתחת לכותרת — כמה מהם חברי הגזרה
-  const unified = scope === HAGZARA_GROUP_ID;
-  const d0 = scope === "all" || unified ? crowd.dashboard : groupData && !groupData.belowMin ? groupData : null;
+  const isHagzara = scope === HAGZARA_GROUP_ID;
+  const d0 = scope === "all" ? crowd.dashboard : groupData && !groupData.belowMin ? groupData : null;
   // טור הסקרים: ממוצע פשוט של הסקר האחרון של כל מכון, מאותו מקור שממנו מחושב הטווח.
   // קבוצה מתחת לסף: המסך כולו עם אפסים בטורי המשתתפים, והמונה הוא הספירה האמיתית (הכרעת בעלים 12.10.2026)
-  const blank = !unified && groupData?.belowMin ? groupData : null;
+  const blank = groupData?.belowMin ? groupData : null;
   const blankLists = crowd.dashboard?.seats?.everPassedLists ?? listsFromPolls(SIMPLE_POLL_MEANS);
   const d: D | null = blank
     ? blankDashboard(blank.participants ?? 0, blankLists, SIMPLE_POLL_MEANS, MODEL_AVERAGE.asOf)
@@ -86,7 +86,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // השוואה לכלל המשתתפים בתצוגת קבוצה: טורי ממוצע וטווח של כולם, אחרי קו הפרדה
   const [compare, setCompare] = useState(false);
   const all = crowd.dashboard;
-  const comparing = scope !== "all" && !unified && compare && view === "table" && !!all?.open;
+  const comparing = scope !== "all" && compare && view === "table" && !!all?.open;
   const groupName = groups.find((g) => g.id === scope)?.name ?? "הקבוצה";
   const overallSeats: Overall | undefined = comparing && all?.seats ? { name: groupName, of: (id) => all.seats!.full.find((x) => x.list === id) } : undefined;
   const allBlocs = useMemo(() => comparing && all?.blocs ? blocStats(all) : null, [comparing, all]);
@@ -96,18 +96,14 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // העותק שבאתר מוצג לכולם, גם בלי חיבור לשרת; הנתונים מהשרת מחליפים אותו כשהם חדשים יותר.
   const personal = usePersonalBlocs();
 
-  const scopeBar = groups.length > 0 && (
-    <div className="mb-4">
-      <GroupScope groups={groups} value={scope} onChange={setPicked} />
-    </div>
-  );
+  const scopeBar = null;
   // ראש המסך: תמונת הקבוצה הנבחרת, או של הקבוצה שהקישור הוביל אליה; השם רק אם אין לגולש מתג עם שמה
   const shownGroup = scope !== "all" ? groups.find((g) => g.id === scope) : landing;
   const banner = shownGroup && <GroupBanner id={shownGroup.id} name={shownGroup.name} image={shownGroup.image} showName={!groups.some((g) => g.id === shownGroup.id)} />;
   // שיתוף של הקבוצה (הכרעת בעלים 12.10.2026): עם שמה ולוגו; נתוני הקבוצה בתמונות רק מ-50 משתתפים, ובקישור מהאורח — רק הזמנה וקישור
   const groupShare: GroupShareInfo | undefined = shownGroup?.slug ? { name: shownGroup.name ?? "הקבוצה", url: groupUrl(shownGroup.slug), logoUrl: groupImageUrl({ slug: shownGroup.slug }, shownGroup.image), dataReady: scope !== "all" && !blank } : undefined;
   // בקבוצה: תמונה בראש המסך והמתג אחריה; פס השיתוף צף בתחתית.
-  const top = <>{banner}{unified && <HagzaraCount members={groupData ? ("members" in groupData && groupData.members != null ? groupData.members : groupData.participants ?? null) : null} total={crowd.dashboard?.participants} />}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
+  const top = <>{banner}{isHagzara && <HagzaraCount members={groupData && !groupData.belowMin ? groupData.seats?.n ?? null : null} total={crowd.dashboard?.seats?.n} />}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 
@@ -128,7 +124,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
         <div>
           {stale && <p className="text-sm text-ink-soft">נכון ל-{asOf}</p>}
         </div>
-        {scope !== "all" && scope !== HAGZARA_GROUP_ID && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off","הקבוצה בלבד"],["on","השוואה לכלל"]]} label="השוואה לכלל המשתתפים" />}
+        {scope !== "all" && view === "table" && <Toggle value={compare ? "on" : "off"} setValue={(v) => setCompare(v === "on")} options={[["off", isHagzara ? "הגזרה והסקרים" : "הקבוצה בלבד"],["on","גם כל הניחושים"]]} label="טור כל הניחושים" />}
       </div>}
       <SourcePicker screen="community" selection={selection} onChange={setTemporary} notice={preference.notice} />
       <ComparisonContext.Provider value={selection}>

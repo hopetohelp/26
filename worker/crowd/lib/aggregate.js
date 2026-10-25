@@ -13,7 +13,7 @@
  */
 import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
 
-import { FIXED_BLOCS, migrateBlocs, compositionKey } from "./blocDefinitions.js";
+import { FIXED_BLOCS, KNESSET_BLOCS, migrateBlocs, compositionKey } from "./blocDefinitions.js";
 import { moderate } from "./moderation.js";
 import { derivePct } from "./derivePct.js";
 
@@ -142,7 +142,8 @@ export function computeBlocs(seatVersions, blocVersions, blocNames = {}) {
     const gov = seatVersions.map((v) => [...GOV37].reduce((a, id) => a + seatValue(v.payload, id), 0));
     derived = { gov: seatStat("gov", gov), rest: seatStat("rest", gov.map((g) => TOTAL - g)) };
   }
-  const fixed = FIXED_BLOCS.map(b => ({ ...b, stat: seatVersions.length ? seatStat(b.id, seatVersions.map(v => b.lists.reduce((sum, id) => sum + seatValue(v.payload, id), 0))) : null }));
+  // גם חמש הקבוצות של חלוקת הכנסת — טווח לכל קבוצה מסכום המנדטים של כל משתתף (לא מחיבור טווחי מפלגות)
+  const fixed = [...FIXED_BLOCS, ...KNESSET_BLOCS].map(b => ({ ...b, stat: seatVersions.length ? seatStat(b.id, seatVersions.map(v => b.lists.reduce((sum, id) => sum + seatValue(v.payload, id), 0))) : null }));
   const g = [];
   const r = [];
   let gov37Count = 0;

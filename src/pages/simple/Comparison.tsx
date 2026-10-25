@@ -89,7 +89,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    {member && <HagzaraCount members={groupCount} total={all?.participants} />}
+    {member && <HagzaraCount members={groupCount} total={all?.seats?.n ?? all?.participants} />}
     <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
