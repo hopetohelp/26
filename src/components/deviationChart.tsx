@@ -33,7 +33,7 @@ function Row({ r, bound, lsegs }: { r: DevRow; bound: number; lsegs: LSeg[] }) {
         </span>
       </span>
       <span aria-hidden="true" dir="ltr" className="mk-capsule-track relative block h-14" title={`${r.name}: הטווח המלא של הסקרים`}>
-        <span className="mk-plot">
+        <span className="mk-plot mk-ltr">
           {ticks.map((v) => (
             <span key={v} className={`absolute inset-y-0 ${v === 0 ? "w-0.5 bg-ink-faint/60" : "w-px bg-paper-line"}`} style={{ left: `${x(v)}%` }} />
           ))}
@@ -69,7 +69,7 @@ export default function DeviationChart({ rows }: { rows: DevInput[] }) {
         <div dir="ltr" className="col-start-2 relative h-8">
           <span className="absolute left-0 top-0">פחות מהסקרים</span>
           <span className="absolute right-0 top-0">יותר מהסקרים</span>
-          <span className="mk-plot">
+          <span className="mk-plot mk-ltr">
             {ticks.map((v) => (
               <span key={v} className="absolute bottom-0 -translate-x-1/2" style={{ left: `${x(v)}%` }}>{v === 0 ? "0" : <bdi>{signed(v)}</bdi>}</span>
             ))}

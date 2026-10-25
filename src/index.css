@@ -773,3 +773,6 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-mark.dash .f-tag { border-style:dashed; }
 .f-legend .f-lg-box { border:1.5px solid rgb(var(--ink));border-radius:6px;padding:1px 7px;color:rgb(var(--ink)); }
 .f-legend .f-lg-box.dash { border-style:dashed; }
+/* ציר מנדטים מימין לשמאל: 0 בימין (הכרעת בעלים 25.10.2026). הציור משוקף, והטקסט בתוכו חוזר לכיוונו. ציר הסטייה (`mk-ltr`) נשאר */
+.mk-plot:not(.mk-ltr) { transform: scaleX(-1); }
+.mk-plot:not(.mk-ltr) .mk-capsule-tag, .mk-plot:not(.mk-ltr) > span:not([class*="mk-"]), .mk-plot:not(.mk-ltr) > b, .mk-plot:not(.mk-ltr) > bdi { scale: -1 1; }
