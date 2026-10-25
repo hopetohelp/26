@@ -197,7 +197,7 @@ function Pie({ slices, values, label, overlay, inner }: { slices: Slice[]; value
   </svg><p className="f-pie-total"><b className="font-num">{shownTotal}</b> מנדטים</p>
     {pop && (slices[pop.i] ?? (u && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
 }
-/** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר. `overlay` — קו צר מתחת לפס, במקום האחדות. */
+/** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר. `overlay` — קו צר מתחת לפס, במקום האחדות (רק במתקדם; בממוקד אין אחדות בטלפון — הכרעת בעלים 25.10.2026). */
 function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay }) {
   const { pop, host, handlers } = usePop();
   const total = slices.reduce((s, b) => s + b.value, 0);
@@ -242,7 +242,7 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
       {showMine && <figure className="f-pie-mine"><figcaption>החלוקה שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
       {advanced && <div className="f-pie-tools"><label><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת העוגה שלי</label><Link to="/account?blocs">עריכת החלוקה שלי</Link></div>}
     </div>
-    <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={unityBar} />}</div>
+    <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>
   </>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
