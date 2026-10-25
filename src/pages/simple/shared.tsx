@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { nameOf, IDS } from "../guess/model";
 import { POLLSTER_LOGOS } from "../../lib/pollsterLogos";
-import { SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, simpleSelection, simpleSpread, simpleValue } from "../../lib/simpleSources";
+import { BLOC_IDS, PERSONAL_CELLS, SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, defaultCell, personalBlocs, type BlocDef, simpleSelection, simpleSpread, simpleValue } from "../../lib/simpleSources";
 import type { Selection } from "../../lib/dataResolver";
 import { seatsFmt } from "../../lib/format";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
@@ -102,14 +102,32 @@ export const LegendLine = ({ kind, label }: { kind?: "dash" | "soft"; label: str
 
 /** גושים לתרשים; "חסר" — מנדטים שעוד לא חולקו */
 type Slice = { id: string; name: string; short: string; lists: readonly string[]; value: number; color: string; shown: number };
+/** צבע לכל תא בחלוקה האישית — מטוקני הגושים (חרדים וערבים באותו צבע כמו בחלוקה הקבועה) */
+const PERSONAL_COLOR: Record<string, number> = { haredi: 2, right: 1, unity: 4, left: 5, arab: 3 };
 /** `shown` = המספר המוצג: שלמים בשיטת השארית הגדולה, כך שסכום הגושים שווה לסך המעוגל (ממוצעים לא-שלמים לא יסתכמו ב-121) */
-export function blocSlices(values: Record<string, number | null | undefined>, missing = 0): Slice[] {
-  const slices: Slice[] = SIMPLE_BLOCS.map((b, i) => ({ ...b, value: blocTotal(values, b.lists), color: `rgb(var(--bloc-${i + 1}))`, shown: 0 }));
+export function blocSlices(values: Record<string, number | null | undefined>, missing = 0, defs: readonly BlocDef[] = SIMPLE_BLOCS): Slice[] {
+  const slices: Slice[] = defs.map((b, i) => ({ ...b, value: blocTotal(values, b.lists), color: `rgb(var(--bloc-${defs === SIMPLE_BLOCS ? i + 1 : PERSONAL_COLOR[b.id] ?? i + 1}))`, shown: 0 }));
   if (missing > 0) slices.push({ id: "missing", name: "חסר", short: "חסר", lists: [], value: missing, color: "rgb(var(--bloc-miss))", shown: 0 });
   const kept = slices.filter(s => s.value > 0);
   const shown = largestRemainder(Math.round(kept.reduce((a, s) => a + s.value, 0)), Object.fromEntries(kept.map(s => [s.id, s.value])));
   return kept.map(s => ({ ...s, shown: shown[s.id] }));
 }
+
+/** החלוקה האישית של הצופה (הכרעת בעלים 25.10.2026): העדפת תצוגה בלבד — לא משנה מנדטים ולא נשלחת כניחוש. נשמרת בדפדפן. */
+const PERSONAL_KEY = "elections26.personal-blocs.v1";
+let personal: Record<string, string> = (() => { try { const v = JSON.parse(localStorage.getItem(PERSONAL_KEY) ?? "{}"); return v && typeof v === "object" ? v : {}; } catch { return {}; } })();
+const personalListeners = new Set<(v: Record<string, string>) => void>();
+export function usePersonalBlocs() {
+  const [assign, setAssign] = useState(personal);
+  useEffect(() => { personalListeners.add(setAssign); return () => { personalListeners.delete(setAssign); }; }, []);
+  const save = (next: Record<string, string>) => {
+    personal = next;
+    try { localStorage.setItem(PERSONAL_KEY, JSON.stringify(next)); } catch { /* מקומי לביקור */ }
+    personalListeners.forEach(fn => fn(next));
+  };
+  return { assign, defs: personalBlocs(assign), move: (id: string, cell: string) => { const next = { ...assign }; if (cell === defaultCell(id)) delete next[id]; else next[id] = cell; save(next); }, reset: () => save({}) };
+}
+
 function Pop({ slice, values, at }: { slice: Slice; values: Record<string, number | null | undefined>; at: { left: number; top?: number } }) {
   const lists = slice.lists.filter(id => (values[id] ?? 0) > 0);
   return <div className="f-pop" style={{ left: at.left, top: at.top }}><strong>{slice.name} · <span className="font-num">{slice.shown}</span></strong>
@@ -129,35 +147,57 @@ function usePop() {
   });
   return { pop, host, handlers };
 }
-/** עוגה (מחשב וטאבלט): מלמעלה בכיוון השעון, שם ומספר על הפלח */
-function Pie({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
+/** עוגה (מחשב וטאבלט): מלמעלה בכיוון השעון, שם ומספר על הפלח; במרכז — הסכום האמיתי (ממוצע גולמי אינו מנורמל ל־120) */
+function Pie({ slices, values, label }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string }) {
   const { pop, host, handlers } = usePop();
   const total = slices.reduce((s, b) => s + b.value, 0) || 1, R = 112, r = 52, c = 130;
   const at = (a: number, rad: number) => [c + rad * Math.cos(a), c + rad * Math.sin(a)];
   let a = -Math.PI / 2;
-  return <div className="f-pie" ref={host}><svg viewBox="0 0 260 260" role="img" aria-label={slices.map(s => `${s.name} ${s.shown}`).join(", ")}>
+  return <div className="f-pie" ref={host}><svg viewBox="0 0 260 260" role="img" aria-label={`${label}: ${slices.map(s => `${s.name} ${s.shown}`).join(", ")}`}>
     {slices.map((s, i) => {
       const da = s.value / total * 2 * Math.PI, a2 = a + da, [x1, y1] = at(a, R), [x2, y2] = at(a2, R), [x3, y3] = at(a2, r), [x4, y4] = at(a, r), big = da > Math.PI ? 1 : 0, [lx, ly] = at(a + da / 2, (R + r) / 2);
       a = a2;
       return <g key={s.id} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={`M${x1} ${y1}A${R} ${R} 0 ${big} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${big} 0 ${x4} ${y4}Z`} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
         {da > .35 && <><text x={lx} y={ly - 2} textAnchor="middle" fontSize={da > 1.4 ? 11 : 10} fill="#fff" pointerEvents="none">{da > 1.4 ? s.name : s.short}</text><text x={lx} y={ly + 13} textAnchor="middle" fontSize="14" fontWeight="700" fill="#fff" className="font-num" pointerEvents="none">{s.shown}</text></>}</g>;
     })}
-    <text x="130" y="134" textAnchor="middle" fontSize="26" fontWeight="700" fill="rgb(var(--ink))" className="font-num">120</text>
+    <text x="130" y="134" textAnchor="middle" fontSize="26" fontWeight="700" fill="rgb(var(--ink))" className="font-num">{slices.reduce((n, s) => n + s.shown, 0)}</text>
     <text x="130" y="154" textAnchor="middle" fontSize="11.5" fill="rgb(var(--ink-soft))">מנדטים</text>
   </svg>{pop && slices[pop.i] && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
 /** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר */
-function Stack({ slices, values }: { slices: Slice[]; values: Record<string, number | null | undefined> }) {
+function Stack({ slices, values, label }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string }) {
   const { pop, host, handlers } = usePop();
-  return <div className="f-dock floating" ref={host}><div className="f-stack">{slices.map((s, i) =>
+  return <div className="f-stack-host" ref={host}><div className="f-stack" role="group" aria-label={label}>{slices.map((s, i) =>
     <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${s.shown}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
       {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{s.shown}</button>)}
   </div>{pop && slices[pop.i] && <Pop slice={slices[pop.i]} values={values} at={pop} />}</div>;
 }
-/** סיכום הגושים: עוגה במחשב, פס צמוד לתחתית בטלפון. בלי כותרת ובלי מסגרת. */
+/** עריכת החלוקה האישית: לכל רשימה — בחירת תא (נגיש במגע ובמקלדת). אינה משנה מנדטים. */
+function PersonalEditor({ personal, onClose }: { personal: ReturnType<typeof usePersonalBlocs>; onClose: () => void }) {
+  const cellOf = (id: string) => personal.defs.find(b => b.lists.includes(id))?.id ?? "unity";
+  return <div className="f-blocedit" role="dialog" aria-label="עריכת החלוקה שלי" onClick={e => e.stopPropagation()}>
+    <div className="f-blocedit-head"><strong>החלוקה שלי</strong><button type="button" onClick={onClose}>סגירה</button></div>
+    <p>בחרו לכל רשימה לאיזה חלק היא שייכת. זה משנה רק את התצוגה, לא את המנדטים.</p>
+    <ul>{BLOC_IDS.map(id => <li key={id}><PartyAvatar id={id} size={22} /><span className="f-blocedit-name">{nameOf(id)}</span>
+      <select aria-label={`החלק של ${nameOf(id)}`} value={cellOf(id)} onChange={e => personal.move(id, e.target.value)}>{PERSONAL_CELLS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></li>)}</ul>
+    <button type="button" className="f-blocedit-reset" onClick={personal.reset}>חזרה לחלוקה המקורית</button>
+  </div>;
+}
+/** שתי חלוקות הכנסת (הכרעת בעלים 25.10.2026): קבועה ואישית, מאותם מנדטים. שתי עוגות במחשב, שני פסים צמודים לתחתית בטלפון. */
 export function BlocChart({ values, missing = 0, logo = null }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null }) {
-  const slices = blocSlices(values, missing);
-  return <><div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}<Pie slices={slices} values={values} /></div><Stack slices={slices} values={values} /></>;
+  const personal = usePersonalBlocs();
+  const [editing, setEditing] = useState(false);
+  const fixed = blocSlices(values, missing), mine = blocSlices(values, missing, personal.defs);
+  const edit = <button type="button" className="f-blocedit-btn" aria-expanded={editing} onClick={e => { e.stopPropagation(); setEditing(v => !v); }}>עריכה</button>;
+  return <>
+    <div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
+      <div className="f-pie-pair">
+        <figure><figcaption>חלוקה קבועה</figcaption><Pie slices={fixed} values={values} label="חלוקה קבועה" /></figure>
+        <figure><figcaption>החלוקה שלי {edit}</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>
+      </div></div>
+    <div className="f-dock floating"><Stack slices={fixed} values={values} label="חלוקה קבועה" /><div className="f-dock-row"><Stack slices={mine} values={values} label="החלוקה שלי" />{edit}</div></div>
+    {editing && <PersonalEditor personal={personal} onClose={() => setEditing(false)} />}
+  </>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
 export function InlineBlocBar({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {

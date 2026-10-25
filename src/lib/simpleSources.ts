@@ -27,13 +27,34 @@ export function simpleSpread(selection: Selection, id: string): [number, number,
 }
 /** לא מוצעות לבחירה בעורך "הכנסת שלי" — רשימות שלא עברו באף סקר (CLOSED_LISTS, הכרעת בעלים 24.10.2026); במגירת ההצבעה הן נשארות */
 export const SIMPLE_GUESS_HIDDEN = CLOSED_LISTS;
+/** הרשימות שנכללות בשני הגרפים: בלי רשימות שלא עברו את החסימה באף סקר (CLOSED_LISTS, הכרעת בעלים 25.10.2026) */
+export const BLOC_IDS = IDS.filter(id => !CLOSED_LISTS.includes(id));
+const eligible = (ids: string[]) => ids.filter(id => BLOC_IDS.includes(id));
 /** ארבעת הגושים של התצוגה הממוקדת (הכרעת בעלים 23.10.2026), בסדר התצוגה: מלמעלה בכיוון השעון. */
-const NETANYAHU = ["likud", "otzma", "rzp", "amcha", "noam"], HAREDI = ["shas", "utj", "code_black", "haredi_public"], ARAB = ["joint", "raam"];
+const NETANYAHU = eligible(["likud", "otzma", "rzp", "amcha", "noam"]), HAREDI = eligible(["shas", "utj", "code_black", "haredi_public"]), ARAB = eligible(["joint", "raam"]);
 export const SIMPLE_BLOCS = [
   { id: "netanyahu", name: "גוש נתניהו", short: "נתניהו", lists: NETANYAHU },
   { id: "haredi", name: "מפלגות חרדיות", short: "חרדים", lists: HAREDI },
   { id: "arab", name: "מפלגות ערביות", short: "ערבים", lists: ARAB },
-  { id: "eisenkot", name: "גוש אייזנקוט", short: "אייזנקוט", lists: IDS.filter(id => ![...NETANYAHU, ...HAREDI, ...ARAB].includes(id)) },
+  { id: "eisenkot", name: "גוש אייזנקוט", short: "אייזנקוט", lists: BLOC_IDS.filter(id => ![...NETANYAHU, ...HAREDI, ...ARAB].includes(id)) },
 ] as const;
+export type BlocDef = { id: string; name: string; short: string; lists: readonly string[] };
+/** החלוקה האישית (הכרעת בעלים 25.10.2026): חמשת התאים בסדר התצוגה; "אחדות" (המרכז) = כל יתר הרשימות */
+export const PERSONAL_CELLS = [
+  { id: "haredi", name: "מפלגות חרדיות", short: "חרדים" },
+  { id: "right", name: "ימין", short: "ימין" },
+  { id: "unity", name: "אחדות", short: "אחדות" },
+  { id: "left", name: "שמאל", short: "שמאל" },
+  { id: "arab", name: "מפלגות ערביות", short: "ערבים" },
+] as const;
+export type PersonalCell = typeof PERSONAL_CELLS[number]["id"];
+const PERSONAL_DEFAULT: Record<string, PersonalCell> = Object.fromEntries([...HAREDI.map(id => [id, "haredi"]), ...eligible(["otzma", "rzp"]).map(id => [id, "right"]), ...eligible(["democrats"]).map(id => [id, "left"]), ...ARAB.map(id => [id, "arab"])]);
+/** תא ברירת המחדל של רשימה; רשימה שלא שויכה נמצאת ב"אחדות" */
+export const defaultCell = (id: string): PersonalCell => PERSONAL_DEFAULT[id] ?? "unity";
+/** החלוקה האישית כגושים: כל רשימה זכאית בדיוק בתא אחד. `assign` — שינויי המשתתף מברירת המחדל. */
+export function personalBlocs(assign: Record<string, string> = {}): BlocDef[] {
+  const cellOf = (id: string) => PERSONAL_CELLS.some(c => c.id === assign[id]) ? assign[id] : defaultCell(id);
+  return PERSONAL_CELLS.map(c => ({ ...c, lists: BLOC_IDS.filter(id => cellOf(id) === c.id) }));
+}
 /** הסכום לגוש מתוך ערכים לכל רשימה */
 export const blocTotal = (values: Record<string, number | null | undefined>, lists: readonly string[]) => lists.reduce((s, id) => s + (values[id] ?? 0), 0);
