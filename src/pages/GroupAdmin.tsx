@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupCompare, type GroupInsights, type GroupLinkStats, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
+import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
 import { topicLabel } from "../lib/feedbackTopics";
@@ -44,17 +44,14 @@ const q = (id: string) => encodeURIComponent(id);
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
   const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
-  const [link, setLink] = useState<GroupLinkStats | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
     void Promise.allSettled([
       call<GroupSeries>(`/group/series?group=${q(id)}`, { token }),
       call<GroupInsights>(`/group/insights?group=${q(id)}`, { token }),
-      call<GroupLinkStats>(`/group/link-stats?group=${q(id)}`, { token }),
-    ]).then(([s, i, l]) => {
+    ]).then(([s, i]) => {
       if (!live) return;
-      if (l.status === "fulfilled") setLink(l.value);
       if (s.status === "fulfilled") setSeries(s.value);
       if (i.status === "fulfilled") setIns(i.value);
       setFailed(s.status === "rejected" && i.status === "rejected");
@@ -79,12 +76,6 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
         <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
           <Measures data={series} failed={failed} />
-          {/* רק דפדפנים שונים (הכרעת בעלים 25.10.2026): כל דפדפן נספר פעם אחת, בלי כניסות חוזרות */}
-          {link && <Sub title="כניסות דרך הקישור">
-            <div className="grid grid-cols-3 gap-3">
-              <Tile label="דפדפנים שונים" value={n(link.fresh)} sub="בלי חשבון; כל דפדפן נספר פעם אחת" />
-            </div>
-          </Sub>}
           {ins && !ins.belowMin && <Questions q={ins.questions} />}
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
         </Section>
