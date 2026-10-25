@@ -9,7 +9,7 @@ import { nextRun } from "../lib/runSchedule";
 import { getToken } from "../lib/crowdSession";
 import { call } from "../lib/crowdApi";
 import { setOwnerBrowser } from "../lib/visits";
-import { Chips, Segmented } from "../components/Choice";
+import { Segmented } from "../components/Choice";
 import { Drawer } from "../components/Drawer";
 import { Btn, Notice } from "./guess/ui";
 import AdminGuesses from "./AdminGuesses";
@@ -289,7 +289,6 @@ export default function Admin() {
 }
 
 
-type Sort = "oldest" | "newest";
 type Filter = "all" | "waiting" | "drafts";
 
 type AiState = { admin: { updated_at: string } | null; server: boolean; mode: "auto" | "drafts"; status: { at: string; ok: boolean; error?: string; provider?: string; published?: number; drafted?: number; skipped?: number; verifiedAt?: string } | null };
@@ -358,7 +357,6 @@ function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<AiState
 export function InquirySections({ data, reply, draftActions }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean>; draftActions?: DraftActions }) {
   const [topic, setTopic] = useState<"all" | (typeof FEEDBACK_TOPICS)[number]["id"]>("all");
   const [filter, setFilter] = useState<Filter>("waiting");
-  const [sort, setSort] = useState<Sort>("newest");
   const drafts = data.drafts ?? [];
   const held = data.held ?? [];
   const all = [
@@ -369,13 +367,13 @@ export function InquirySections({ data, reply, draftActions }: { data: Data; rep
   const count = (pick: (c: (typeof all)[number]) => boolean) => all.filter(pick).length;
   const shown = all
     .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0 || !!c.held)))
-    .sort((a, b) => (sort === "oldest" ? 1 : -1) * a.received.localeCompare(b.received));
+    // תמיד מהחדשה לישנה (הכרעת בעלים 25.10.2026)
+    .sort((a, b) => b.received.localeCompare(a.received));
   return <section className="space-y-3" aria-labelledby="inquiries-title">
     <h3 id="inquiries-title" className="font-bold text-lg">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h3>
-    <Chips label="נושא" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
     <div className="grid sm:grid-cols-2 gap-2">
+      <Segmented label="סוג" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
       <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות והשהיות (${count(c => c.drafts.length > 0 || !!c.held)})` }]} />
-      <Segmented label="סדר" value={sort} onChange={setSort} options={[{ id: "newest", label: "הפנייה האחרונה קודם" }, { id: "oldest", label: "הפנייה האחרונה בסוף" }]} />
     </div>
     {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} draftActions={draftActions} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
   </section>;

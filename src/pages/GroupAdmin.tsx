@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
-import { topicLabel } from "../lib/feedbackTopics";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { PageTitle } from "../components/ui";
@@ -274,20 +273,14 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
 /** פניות החברים לצוות האתר: כמה פנו, כמה הודעות (ובשבוע האחרון), לפי נושא, וכמה השתמשו בצ׳אט החכם. בלי תוכן */
 function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined }>["questions"] }) {
   if (!d) return <Sub title="שאלות ופניות"><p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p></Sub>;
-  const topics = Object.entries(d.byTopic).filter(([, v]) => v);
   return (
     <Sub title="שאלות ופניות לצוות האתר">
-      <div className="grid grid-cols-3 gap-3">
-        <Tile label="פנו לצוות" value={n(d.askers)} />
-        <Tile label="הודעות" value={n(d.messages)} sub={`${n(d.week)} בשבוע האחרון`} />
-        <Tile label="בצ׳אט החכם" value={n(d.aiUsers)} />
+      {/* בלי פירוט לפי סוג — הוא כבר במתג הסוג שבראש רשימת הפניות (הכרעת בעלים 25.10.2026) */}
+      <div className="grid sm:grid-cols-3 gap-3">
+        <Tile label="שיחות" value={n(d.askers)} sub="חברים שכתבו לצוות האתר. כל חבר הוא שיחה אחת, גם אם כתב כמה פעמים." />
+        <Tile label="הודעות" value={n(d.messages)} sub={`כל ההודעות שהחברים כתבו בשיחות האלה; ${n(d.week)} מהן בשבוע האחרון.`} />
+        <Tile label="שיחות בצ׳אט חכם אישי" value={n(d.aiUsers)} sub="שיחות של חברים עם הצ׳אט החכם במפתח AI אישי שלהם. התוכן אינו מגיע לצוות האתר ואינו מוצג כאן." />
       </div>
-      {topics.length > 0 && (
-        <ul className="text-sm space-y-1">
-          {topics.map(([k, v]) => <li key={k} className="flex justify-between gap-3 border-t border-paper-line pt-1"><span>{topicLabel(k)}</span><strong className="font-num tabular">{n(v!)}</strong></li>)}
-        </ul>
-      )}
-      <p className="text-xs text-ink-soft">מספר גבוה בנושא מסוים — סימן שכדאי להסביר אותו לקבוצה.</p>
     </Sub>
   );
 }
