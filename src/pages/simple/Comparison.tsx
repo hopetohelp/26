@@ -69,7 +69,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const all = crowd.dashboard;
   const crowdMeans = meansOf(all), groupMeans = meansOf(group);
   const polls = (id: string) => simpleValue(source.selection, [id]);
-  const lists = orderedLists(source.selection, [crowdMeans, groupMeans]);
+  const lists = orderedLists(source.selection, [groupMeans], crowdMeans);
   const blocValues = member ? groupMeans : crowdMeans;
   const hagzaraLogo = hagzara?.logoUrl ?? null;
   const voters = member ? group : all;
