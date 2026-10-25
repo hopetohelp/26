@@ -55,9 +55,10 @@ export function PartyName({ id }: { id: string }) {
   return <span className="f-who"><PartyAvatar id={id} size={34} /><span>{nameOf(id)}</span></span>;
 }
 /** הרשימות לפי הסדר של המקור הנבחר; רשימה בלי ערך בשום מקור נשמטת */
-export function orderedLists(selection: Selection, extra: Record<string, number>[] = []) {
+/** סדר המפלגות: מהגדול לקטן לפי ממוצע המשתתפים (הכרעת בעלים 25.10.2026); בשוויון או בלי נתוני משתתפים — לפי המקור הנבחר */
+export function orderedLists(selection: Selection, extra: Record<string, number>[] = [], crowd: Record<string, number> = {}) {
   const value = (id: string) => simpleValue(selection, [id]) ?? 0;
-  return IDS.filter(id => value(id) > 0 || extra.some(e => (e[id] ?? 0) >= .5)).sort((a, b) => value(b) - value(a));
+  return IDS.filter(id => value(id) > 0 || [...extra, crowd].some(e => (e[id] ?? 0) >= .5)).sort((a, b) => (crowd[b] ?? 0) - (crowd[a] ?? 0) || value(b) - value(a));
 }
 
 const AXIS_MAX = 32;
@@ -67,13 +68,13 @@ function Capsule({ spread }: { spread: [number, number, number, number, number, 
   const [mn, p10, p25, p75, p90, mx] = spread;
   const one = mx - mn < .01, w = Math.max(mx, .6), pc = (v: number) => Math.round(v / w * 10000) / 100;
   const pts: [number, number][] = one ? [[0, 1], [mx, 1]] : [[0, 1], [mn, 1], [p10, .9], [p25, .75], [p75, .25], [p90, .1], [mx, 0]];
-  const fill = (alpha: (o: number) => string) => `linear-gradient(90deg,${pts.map(([v, s]) => `${alpha(shareOpacity(s))} ${pc(v)}%`).join(",")})`;
+  const fill = (alpha: (o: number) => string) => `linear-gradient(270deg,${pts.map(([v, s]) => `${alpha(shareOpacity(s))} ${pc(v)}%`).join(",")})`;
   const mask = fill(o => `rgba(0,0,0,${o})`);
   // בצבעי הגזרה כל קפסולה עוברת בעצמה מאדום בהיר לכחול, בדגש על הכחול; מתחת לאחוז החסימה — בעיקר אדום (הכרעת בעלים 23.10.2026)
   const below = mx < THRESHOLD_SEATS;
   // מעבר עדין: הגוון מתחלף בהדרגה, והבדלי הבהירות הם אותם שלושה דרגים של המחקר המתקדם
-  const heat = { background: below ? "linear-gradient(90deg,rgb(var(--heat-lo)),color-mix(in srgb,rgb(var(--heat-lo)) 70%,rgb(var(--heat-hi))))" : "linear-gradient(90deg,color-mix(in srgb,rgb(var(--heat-lo)) 55%,rgb(var(--heat-hi))),rgb(var(--heat-hi)) 70%)", WebkitMask: mask, mask };
-  return <span className="f-cap" style={{ left: 0, width: x(w) }}><i style={heat} /></span>;
+  const heat = { background: below ? "linear-gradient(270deg,rgb(var(--heat-lo)),color-mix(in srgb,rgb(var(--heat-lo)) 70%,rgb(var(--heat-hi))))" : "linear-gradient(270deg,color-mix(in srgb,rgb(var(--heat-lo)) 55%,rgb(var(--heat-hi))),rgb(var(--heat-hi)) 70%)", WebkitMask: mask, mask };
+  return <span className="f-cap" style={{ right: 0, width: x(w) }}><i style={heat} /></span>;
 }
 export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };
 /** גרף המפלגות: קפסולה לסקרים ותגיות ערך לקווים */
@@ -88,7 +89,7 @@ export function PartyChart({ selection, lists, marks, legend, spreadOf }: { sele
       return <div key={id} className={`f-row ${tall ? "tall" : ""}`}><PartyName id={id} />
         <div className="f-track" role="img" aria-label={`${nameOf(id)}: ${marks(id).filter(m => m.value != null).map(m => fmt(m.value)).join(", ")}`}>
           {spread && <Capsule spread={spread} />}
-          {marks(id).map((m, i) => m.value == null ? null : <span key={i} className={`f-mark ${m.kind === "dash" ? "dash" : m.kind === "soft" ? "soft" : ""}`} style={{ left: x(m.value) }}><span className={`f-tag ${m.side}`}>{fmt(m.value)}</span></span>)}
+          {marks(id).map((m, i) => m.value == null ? null : <span key={i} className={`f-mark ${m.kind === "dash" ? "dash" : m.kind === "soft" ? "soft" : ""}`} style={{ right: x(m.value) }}><span className={`f-tag ${m.side}`}>{fmt(m.value)}</span></span>)}
         </div></div>;
     })}
   </div>;
