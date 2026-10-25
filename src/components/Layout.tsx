@@ -96,7 +96,9 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
       if (!force && !downOnly && w === lastW.current) return;
       lastW.current = w;
       const top = el.querySelector<HTMLElement>(".f-nav-top"), bottom = document.querySelector<HTMLElement>(".f-nav-bottom");
-      navW.current = Math.max(navW.current, top?.offsetWidth ?? 0, bottom?.offsetWidth ?? 0);
+      // הסרגל התחתון נמתח לכל רוחב המסך; לכן נמדד רוחבו הטבעי (בלי מתיחה) ולא הרוחב שהוא תופס
+      const natural = (nav: HTMLElement | null) => { if (!nav) return 0; nav.classList.add("f-nav-measure"); const w = nav.offsetWidth; nav.classList.remove("f-nav-measure"); return w; };
+      navW.current = Math.max(navW.current, natural(top), natural(bottom));
       // רוחב שאר הפס בלי הסרגל: אם הסרגל למעלה — מורידים את רוחבו ואת הרווח
       const others = el.scrollWidth - (el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0) - (top ? top.offsetWidth + 8 : 0);
       const gap = el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0;
@@ -119,8 +121,7 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
-    {navTop && <FocusNav className="f-nav-top" unread={false} />}
-    <span className="flex-1" />
+    {navTop ? <FocusNav className="f-nav-top" unread={false} /> : <span className="flex-1" />}
     <AdvancedSwitch />
     <span className="f-mode"><ModePicker /></span>
   </div>;
