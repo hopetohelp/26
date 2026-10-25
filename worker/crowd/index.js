@@ -334,6 +334,17 @@ async function decideGuess(env, body, now, members = null) {
   return { ok: true };
 }
 
+const supportHandle = async (env, salt, participant) => (await hmac(env.IP_KEY, `support|${salt}|${participant}`)).slice(0, 32);
+/** בקשה לנתיב פנימי בשרת ההערות; כשל ⇐ 503 */
+async function feedbackInternal(env, path, body) {
+  if (!env.FEEDBACK) throw new HttpError(503, "support_offline");
+  const r = await env.FEEDBACK.fetch(new Request("https://feedback.internal" + path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }));
+  const out = await r.json().catch(() => null);
+  if (r.status === 404) throw new HttpError(404, "not_found");
+  if (!r.ok || !out) throw new HttpError(r.status === 400 ? 400 : 503, r.status === 400 ? "bad_request" : "support_offline");
+  return out;
+}
+
 /** מספר הפניות של חברי הקבוצה לצוות האתר, לפי נושא (משרת ההערות; ספירה בלבד). null = לא זמין */
 async function groupQuestions(env, participants) {
   if (!env.FEEDBACK) return null;
@@ -1473,15 +1484,34 @@ const routes = {
     return decideGuess(env, body, now);
   },
 
-  // שיחות חברי הקבוצה עם צוות האתר — למנהל הקבוצה, לקריאה בלבד, מ-GROUP_MIN חברים (הכרעת בעלים 24.10.2026)
+  // שיחות חברי הקבוצה עם צוות האתר — למנהל הקבוצה, באותו ממשק כמו מנהל האתר: תשובה, טיוטות והשהיות (הכרעת בעלים 25.10.2026).
+  // מ-GROUP_MIN חברים. בלי מזהה משתתף: כל שיחה מקבלת ידית חד-פעמית (salt + handle), כמו ניחושים.
   "GET /group/support": async ({ env, request, now, url }) => {
     const id = await requireManager(env, request, now, url.searchParams.get("group"));
     const members = await groupMemberSet(env, id);
     if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
-    if (!env.FEEDBACK) throw new HttpError(503, "support_offline");
-    const r = await env.FEEDBACK.fetch(new Request("https://feedback.internal/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [...members] }) }));
-    if (!r.ok) throw new HttpError(503, "support_offline");
-    return { group: id, min: GROUP_MIN, ...(await r.json()) };
+    const d = await feedbackInternal(env, "/internal/group-support", { participants: [...members] });
+    const salt = randomToken(12);
+    const handles = new Map();
+    for (const t of d.threads || []) handles.set(t.participant, await supportHandle(env, salt, t.participant));
+    const map = (x) => handles.get(x) ?? null;
+    return {
+      group: id, min: GROUP_MIN, salt,
+      threads: (d.threads || []).map(({ participant, ...t }) => ({ ...t, participant: map(participant) })),
+      drafts: (d.drafts || []).filter((x) => handles.has(x.target)).map((x) => ({ ...x, target: map(x.target) })),
+      held: (d.held || []).filter((x) => handles.has(x.target)).map((x) => ({ ...x, target: map(x.target) })),
+    };
+  },
+  "POST /group/support/act": async ({ env, request, now, body }) => {
+    const id = await requireManager(env, request, now, body.group);
+    if (typeof body.salt !== "string" || !/^[\w-]{8,40}$/.test(body.salt) || typeof body.handle !== "string" || !/^[0-9a-f]{32}$/.test(body.handle)) throw bad("handle");
+    if (!["reply", "approve", "delete", "release"].includes(body.action)) throw bad("action");
+    const members = await groupMemberSet(env, id);
+    if (members.size < GROUP_MIN) throw new HttpError(403, "below_min");
+    let participant = null;
+    for (const p of members) if ((await supportHandle(env, body.salt, p)) === body.handle) { participant = p; break; }
+    if (!participant) throw new HttpError(404, "not_found");
+    return feedbackInternal(env, "/internal/group-support/act", { participant, action: body.action, text: body.text, draft: body.draft });
   },
 
   // אותו ממשק למנהל קבוצה (הכרעת בעלים 24.10.2026) — רק השערות של חברי הקבוצה שלו, ומ-GROUP_MIN חברים.

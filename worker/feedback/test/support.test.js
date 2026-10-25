@@ -133,13 +133,33 @@ it("ספירת פניות של קבוצה: רק דרך הקישור הפנימי
   expect(JSON.stringify(d)).not.toMatch(/שאלה|participant/);
 });
 
-it("שיחות של קבוצה: רק דרך הקישור הפנימי, בלי מזהה משתתף", async () => {
+it("שיחות של קבוצה: רק דרך הקישור הפנימי (המזהה חוזר רק לשרת ההשתתפות)", async () => {
   await support({ text: "שאלה לצוות", op_id: "operation-111222333" });
   const out = await feedback.fetch(new Request("https://w.example/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [participant] }) }), env);
   expect(out.status).toBe(404);
   const d = await (await feedback.fetch(new Request("https://feedback.internal/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: [participant] }) }), env)).json();
   expect(d.threads).toHaveLength(1);
   expect(d.threads[0].messages.some((m) => m.text === "שאלה לצוות" && m.author === "visitor")).toBe(true);
-  expect(JSON.stringify(d)).not.toContain(participant);
+  expect(d.threads[0].participant).toBe(participant);
+  expect(d).toMatchObject({ drafts: [], held: [] });
   expect((await (await feedback.fetch(new Request("https://feedback.internal/internal/group-support", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ participants: ["other"] }) }), env)).json()).threads).toEqual([]);
+});
+
+it("פעולות מנהל קבוצה בשיחה: תשובה, אישור ומחיקת טיוטה של אותה שיחה בלבד, שחרור השהיה", async () => {
+  await support({ text: "שאלה", op_id: "operation-444555666" });
+  const act = async (body) => { const r = await feedback.fetch(new Request("https://feedback.internal/internal/group-support/act", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }), env); return { status: r.status, data: await r.json() }; };
+  expect((await feedback.fetch(new Request("https://w.example/internal/group-support/act", { method: "POST", body: "{}" }), env)).status).toBe(404);
+  expect((await act({ participant, action: "reply", text: "תשובת מנהל" })).data).toEqual({ ok: true });
+  const msgs = env.DB.raw.prepare("SELECT author, text FROM support_messages WHERE participant = ? ORDER BY id").all(participant);
+  expect(msgs.at(-1)).toEqual({ author: "team", text: "תשובת מנהל" });
+  env.DB.raw.prepare("INSERT INTO drafts (kind, target, created_at, text) VALUES ('support', ?, '2026-10-25', 'טיוטה')").run(participant);
+  env.DB.raw.prepare("INSERT INTO drafts (kind, target, created_at, text) VALUES ('support', 'someone-else', '2026-10-25', 'זרה')").run();
+  const [mine, other] = env.DB.raw.prepare("SELECT id FROM drafts ORDER BY id").all().map((r) => r.id);
+  expect((await act({ participant, action: "approve", draft: other })).status).toBe(404);
+  expect((await act({ participant, action: "approve", draft: mine, text: "טיוטה שנערכה" })).data).toEqual({ ok: true });
+  expect(env.DB.raw.prepare("SELECT text FROM support_messages WHERE participant = ? ORDER BY id DESC LIMIT 1").get(participant).text).toBe("טיוטה שנערכה");
+  expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM drafts").get().n).toBe(1);
+  env.DB.raw.prepare("INSERT INTO held (kind, target, reason, created_at) VALUES ('support', ?, 'x', '2026-10-25')").run(participant);
+  expect((await act({ participant, action: "release" })).data).toEqual({ ok: true });
+  expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM held").get().n).toBe(0);
 });
