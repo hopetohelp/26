@@ -12,7 +12,7 @@ import { Notice } from "../guess/ui";
 import { VotingStats } from "../guess/Dashboard";
 import CardDrawer from "../../components/CardDrawer";
 import { smartRange } from "../../components/ChartLegend";
-import { BlocChart, FocusFoot, HagzaraCount, InlineBlocBar, LegendCapsule, LegendLine, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
+import { BlocChart, FocusFoot, HagzaraCount, InlineBlocBar, LegendCapsule, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
 import ShareCard from "./ShareCard";
 import { useHagzara } from "./hagzara";
 
@@ -96,8 +96,8 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
-        marks={id => segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!segmented || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox label="ממוצע כל הניחושים" n={all?.seats?.n} />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
+        marks={id => segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], kind: "dash", side: "down" }]}
+        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!segmented || vsPolls) && <LegendBox kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox kind={segmented ? undefined : "dash"} label="ממוצע כל הניחושים" />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
