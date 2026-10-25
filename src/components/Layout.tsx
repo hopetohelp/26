@@ -134,13 +134,30 @@ function Masthead() {
  * התצוגה הממוקדת (הכרעות בעלים 23.10.2026): פס דק — שם האתר (וסמל הגזרה לחבריה), שעון העצר, "יש שאלה?" ו"למחקר מתקדם".
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
-function FocusBar({ member }: { member: boolean }) {
+function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean; onFit: (top: boolean) => void }) {
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const { toggle } = useInterface();
-  return <div className={`f-bar${member ? " member" : ""}`}>
+  const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
+  // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה
+  useLayoutEffect(() => {
+    const el = bar.current;
+    if (!el) return;
+    const check = () => {
+      const nav = el.querySelector<HTMLElement>(".f-nav-top");
+      if (nav) { navW.current = nav.offsetWidth; if (el.scrollWidth > el.clientWidth + 1) onFit(false); return; }
+      const spacer = el.querySelector<HTMLElement>(".flex-1");
+      if (navW.current && spacer && spacer.offsetWidth >= navW.current + 16) onFit(true);
+      else if (!navW.current && el.clientWidth >= 768) onFit(true);
+    };
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [navTop, onFit]);
+  return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
-    <FocusNav className="f-nav-top" unread={false} />
+    {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
     <button type="button" onClick={toggle} className="f-btn pri">למחקר מתקדם</button>
     <span className="f-mode"><ModePicker /></span>
@@ -263,6 +280,7 @@ function useVerifyOnLoad() {
 }
 
 function LayoutBody() {
+  const [navTop, setNavTop] = useState(() => typeof window !== "undefined" && window.innerWidth >= 1100);
   useVerifyOnLoad();
   const { advanced } = useInterface();
   const { pathname, hash } = useLocation();
@@ -286,13 +304,13 @@ function LayoutBody() {
       {advanced ? <header className="md:sticky md:top-0 md:z-40">
         <Masthead />
         <DesktopNav unread={unread} />
-      </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} /></header>}
+      </header> : <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop} onFit={setNavTop} /></header>}
       <AccessCard />
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      {advanced ? <MobileTabs unread={unread} /> : <FocusNav className="f-nav-bottom" unread={unread} />}
+      {advanced ? <MobileTabs unread={unread} /> : !navTop && <FocusNav className="f-nav-bottom" unread={unread} />}
       {advanced && <GuessCta pathname={pathname} />}
     </div>
   );
