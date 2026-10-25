@@ -2,7 +2,7 @@ import { expect, it, vi } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { InquirySections } from './Admin';
-const thread = (id: number, text: string, at: string, waiting = true, topic = 'other') => ({ id, items: [{ author: 'visitor' as const, text, topic, created_at: at }], updated_at: at, waiting });
+const thread = (id: number, text: string, at: string, waiting = true, topic = 'other') => ({ id, items: [{ author: 'visitor' as 'visitor' | 'team', text, topic, created_at: at }], updated_at: at, waiting });
 const data = (feedback: ReturnType<typeof thread>[], support: { participant: string; status: string; updated_at: string; messages: { author: 'visitor' | 'team'; text: string; created_at: string }[] }[] = []) =>
   ({ days: [], totalVisitors: 0, feedback, support: { stats: {}, threads: support } });
 const render = (d: ReturnType<typeof data>, reply = vi.fn(() => async () => true)) => ({ html: renderToStaticMarkup(createElement(InquirySections, { reply, data: d })), reply });
