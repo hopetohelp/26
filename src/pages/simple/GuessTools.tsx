@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { fillAll, fillErrorText } from "../../lib/fillAll";
 import { start2022 } from "../../lib/lineage";
@@ -47,6 +48,7 @@ export default function GuessTools({ draft, setDraft, session }: { draft: SeatsP
       <button type="button" className="f-btn" onClick={() => start("zero")}>מאפס</button>
       <button type="button" className="f-btn" onClick={() => start("polls")}>מממוצע הסקרים</button>
       <button type="button" className="f-btn" onClick={() => start("k25")}>מבחירות 22</button>
+      <Link to="/past?tab=changes" className="f-btn">שיוך 22</Link>
     </div>
     <details className="f-tools-targets">
       <summary>יעד לכל חלק{groups.some(g => g.target !== null) && <span className="f-tools-on"> · פעיל</span>}</summary>
