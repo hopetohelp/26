@@ -197,7 +197,9 @@ export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", 
  * מדד שסך הכול שלו מתחת ל-GROUP_MIN מוחזר בלי נקודות ובלי מספר (כמו שאר מספרי הקבוצה), חוץ מגודל הרשימה.
  */
 export async function groupSeries(env, id, now) {
-  const LIST = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash WHERE e.verified = 1";
+  // "מהרשימה" לספירה בלבד = כל מייל בחשבון שמופיע ברשימה, גם אם עוד לא אומת (הכרעת בעלים 25.10.2026: 97 חברים שלא אימתו נספרו
+  // בטעות "מחוץ לרשימה"). החברות עצמה בקבוצה (דשבורד הקבוצה, ניחושים) עדיין דורשת מייל מאומת — groupParticipants.
+  const LIST = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash";
   const [size, joins, reg, firstUnit, first, created] = await env.DB.batch([
     env.DB.prepare("SELECT hour, members FROM group_size_log WHERE group_id = ?1 ORDER BY hour").bind(id),
     env.DB.prepare(`SELECT j.joined_at AS t, j.participant IN (${LIST}) AS inList FROM group_link_joins j WHERE j.group_id = ?1`).bind(id),
