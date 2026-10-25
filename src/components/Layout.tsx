@@ -145,23 +145,32 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
   useLayoutEffect(() => {
     const el = bar.current;
     if (!el) return;
-    const decide = (force = false) => {
+    // downOnly: שינוי בתוכן הפס (שם הגזרה, כפתור, גופן) — רק מוריד את הסרגל כשאין לו מקום, אף פעם לא מעלה, כדי שלא יהבהב
+    const decide = (force = false, downOnly = false) => {
       const w = el.clientWidth;
-      if (!force && w === lastW.current) return;
+      if (!force && !downOnly && w === lastW.current) return;
       lastW.current = w;
       const top = el.querySelector<HTMLElement>(".f-nav-top"), bottom = document.querySelector<HTMLElement>(".f-nav-bottom");
       navW.current = Math.max(navW.current, top?.offsetWidth ?? 0, bottom?.offsetWidth ?? 0);
       // רוחב שאר הפס בלי הסרגל: אם הסרגל למעלה — מורידים את רוחבו ואת הרווח
       const others = el.scrollWidth - (el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0) - (top ? top.offsetWidth + 8 : 0);
-      const fits = navW.current > 0 ? w - others >= navW.current + 40 : w >= 1100;
+      const gap = el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0;
+      // הסרגל כבר למעלה אבל הפס צפוף (הרווח נעלם או התוכן גולש) ⇐ אין מקום, גם אם החישוב אומר אחרת
+      const crowded = !!top && (gap < 24 || el.scrollWidth > el.clientWidth + 1);
+      const fits = !crowded && (navW.current > 0 ? w - others >= navW.current + 40 : w >= 1100);
+      if (downOnly && fits) return;
       if (fits !== !!top) onFit(fits);
     };
     decide(true);
     document.fonts?.ready.then(() => decide(true));
     const ro = new ResizeObserver(() => decide());
     ro.observe(el);
-    return () => ro.disconnect();
-  }, [onFit]);
+    // גם כשהתוכן שליד הסרגל גדל (למשל "הגזרה ·" אחרי טעינת החברות) — בודקים שוב אם עדיין יש מקום
+    const content = new ResizeObserver(() => decide(false, true));
+    // כולל הסרגל עצמו: אחרי הכניסה נוספים לו כפתורים (ניהול קבוצה, ניהול האתר) והוא מתרחב
+    for (const c of Array.from(el.children)) if (!c.classList.contains("flex-1")) content.observe(c);
+    return () => { ro.disconnect(); content.disconnect(); };
+  }, [onFit, member, navTop]);
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
