@@ -165,6 +165,18 @@ export function unityOverlay(values: Record<string, number | null | undefined>) 
   return { id: "unity", name: "אחדות", short: "אחדות", lists: UNITY_LISTS, value: netU + eisU, start: netT - netU, color: "rgb(var(--bloc-unity))", shown: Math.round(netU + eisU) };
 }
 type Overlay = ReturnType<typeof unityOverlay>;
+/**
+ * שני החלקים הפנימיים שמחוץ לאחדות (הכרעת בעלים 25.10.2026): בתוך נתניהו (מימין) ובתוך אייזנקוט (משמאל).
+ * באותו צבע של הגוש, אבל פרוסה נפרדת — בלחיצה מוצגות רק הרשימות שלה והמספר שלה. `start` = במנדטים מתחילת העוגה.
+ */
+function innerParts(values: Record<string, number | null | undefined>, ring: Slice[]): (Slice & { start: number })[] {
+  const [net, , , eis] = SIMPLE_BLOCS;
+  const color = (id: string) => ring.find(s => s.id === id)?.color ?? "currentColor";
+  const part = (b: { id: string; name: string; short: string; lists: readonly string[] }, start: number) => { const lists = b.lists.filter(id => !UNITY_LISTS.includes(id)); const value = blocTotal(values, lists);
+    return { id: `${b.id}-inner`, name: `${b.name} בלי האחדות`, short: b.short, lists, value, color: color(b.id), shown: Math.round(value), start }; };
+  const netT = blocTotal(values, net.lists), eisT = blocTotal(values, eis.lists), eisU = blocTotal(values, eis.lists.filter(id => UNITY_LISTS.includes(id)));
+  return [part(net, 0), part(eis, netT + eisU)].filter(p => p.value > 0 && p.start + p.value <= netT + eisT + 1e-9);
+}
 /** סדר העוגה הכפולה: נתניהו ואייזנקוט צמודים, כדי שהאחדות תהיה רצופה */
 const DOUBLE_ORDER = ["netanyahu", "eisenkot", "arab", "haredi", "missing"];
 /**
@@ -184,7 +196,7 @@ function SliceLabel({ x, y, w, h, name, short, value }: { x: number; y: number; 
   return <><text {...common} y={y - nfs * .25} style={{ fontSize: fs }}>{text}</text><text {...common} y={y + nfs * .9} style={{ fontSize: nfs }} fontWeight="700" className="font-num">{num}</text></>;
 }
 /** עוגה מלאה (בלי חור), מלמעלה בכיוון השעון; אופציונלית — פלח אחדות פנימי. הכיתוב רק בתוך החלק שלו; הסכום מתחת לעוגה. */
-function Pie({ slices, values, label, overlay, inner }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay; inner?: [number, number] }) {
+function Pie({ slices, values, label, overlay, inner, parts = [] }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay; inner?: [number, number]; parts?: (Slice & { start: number })[] }) {
   const { pop, host, handlers } = usePop();
   const total = slices.reduce((s, b) => s + b.value, 0) || 1, R = 130, c = 140, rU = 80, toA = (seats: number) => seats / total * 2 * Math.PI - Math.PI / 2;
   const at = (a: number, rad: number) => [c + rad * Math.cos(a), c + rad * Math.sin(a)];
@@ -207,12 +219,16 @@ function Pie({ slices, values, label, overlay, inner }: { slices: Slice[]; value
       return <g key={s.id} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={sector(a1, a2, R)} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
         {s.value > 0 && <SliceLabel x={lx} y={ly} w={w} h={h} name={s.name} short={s.short} value={s.shown} />}</g>;
     })}
+    {/* החלקים הפנימיים שמחוץ לאחדות — פרוסות נפרדות ללחיצה, באותו צבע (בלי כיתוב: הוא בחלק החיצוני) */}
+    {u && parts.map((p, k) => { const a1 = toA(p.start), a2 = toA(p.start + p.value);
+      return <path key={p.id} d={sector(a1, a2, rU)} fill={p.color} stroke="rgb(var(--paper))" strokeWidth="2" {...handlers(slices.length + 1 + k, true)} />; })}
     {inner && inner[1] > inner[0] && (() => { const a1 = toA(inner[0]), a2 = toA(inner[1]), [x1, y1] = at(a1, rU), [x2, y2] = at(a2, rU);
       return <path d={`M${x1} ${y1}A${rU} ${rU} 0 ${a2 - a1 > Math.PI ? 1 : 0} 1 ${x2} ${y2}`} fill="none" stroke="rgb(var(--paper))" strokeWidth="2" pointerEvents="none" />; })()}
     {u && (() => { const [lx, ly] = at((u.a1 + u.a2) / 2, rU * .5); return <g {...handlers(slices.length, true)}><path d={sector(u.a1, u.a2, rU)} fill={overlay!.color} stroke="rgb(var(--paper))" strokeWidth="2" />
       <SliceLabel x={lx} y={ly} w={Math.min(2 * rU * .5 * Math.sin(Math.min(u.a2 - u.a1, Math.PI) / 2), rU)} h={rU * .7} name={overlay!.name} short={overlay!.short} value={overlay!.shown} /></g>; })()}
   </svg>{shownTotal !== 120 && <p className="f-pie-total"><b className="font-num">{shownTotal}</b> מנדטים</p>}
-    {pop && (slices[pop.i] ?? (u && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
+    {(() => { const picked = pop && (slices[pop.i] ?? (u && pop.i === slices.length ? overlay : u ? parts[pop.i - slices.length - 1] : null));
+      return pop && picked ? <Pop slice={picked} values={values} at={pop} /> : null; })()}</div>;
 }
 /** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר. `overlay` — קו צר מתחת לפס, במקום האחדות (רק במתקדם; בממוקד אין אחדות בטלפון — הכרעת בעלים 25.10.2026). */
 function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay }) {
@@ -242,7 +258,7 @@ export function DoublePie({ values, missing = 0 }: { values: Record<string, numb
   const fixed = blocSlices(values, missing);
   const ring = [...fixed].sort((a, b) => DOUBLE_ORDER.indexOf(a.id) - DOUBLE_ORDER.indexOf(b.id));
   const inner: [number, number] = [0, blocTotal(values, SIMPLE_BLOCS[0].lists) + blocTotal(values, SIMPLE_BLOCS[3].lists)];
-  return <div className="f-pie-wrap is-inline"><Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unityOverlay(values)} inner={inner} /></div>;
+  return <div className="f-pie-wrap is-inline"><Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unityOverlay(values)} inner={inner} parts={innerParts(values, ring)} /></div>;
 }
 /**
  * חלוקות הכנסת (הכרעת בעלים 25.10.2026): עוגה כפולה — הקבועה, ובתוכה האחדות (קבועה לכולם); קו העיגול הפנימי לכל אורך נתניהו ואייזנקוט.
@@ -262,7 +278,7 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
   const mine = showMine ? blocSlices(values, missing, personal.defs) : [];
   return <>
     <div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
-      <Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unity} inner={inner} />
+      <Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unity} inner={inner} parts={innerParts(values, ring)} />
       {showMine && <figure className="f-pie-mine"><figcaption>החלוקה שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
       {advanced && <div className="f-pie-tools"><label><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת העוגה שלי</label><Link to="/account?blocs">עריכת החלוקה שלי</Link></div>}
     </div>
