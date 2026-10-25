@@ -138,22 +138,29 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const { toggle } = useInterface();
   const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
-  // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה
+  // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה.
+  // מחליטים רק כשרוחב המסך משתנה (לא כשהשעון או הגופן משנים את התוכן), ועם מרווח ביטחון — כדי שלא יהבהב בין למעלה ולמטה
+  const lastW = useRef(-1);
   useLayoutEffect(() => {
     const el = bar.current;
     if (!el) return;
-    const check = () => {
-      const nav = el.querySelector<HTMLElement>(".f-nav-top");
-      if (nav) { navW.current = nav.offsetWidth; if (el.scrollWidth > el.clientWidth + 1) onFit(false); return; }
-      const spacer = el.querySelector<HTMLElement>(".flex-1");
-      if (navW.current && spacer && spacer.offsetWidth >= navW.current + 16) onFit(true);
-      else if (!navW.current && el.clientWidth >= 768) onFit(true);
+    const decide = (force = false) => {
+      const w = el.clientWidth;
+      if (!force && w === lastW.current) return;
+      lastW.current = w;
+      const top = el.querySelector<HTMLElement>(".f-nav-top"), bottom = document.querySelector<HTMLElement>(".f-nav-bottom");
+      navW.current = Math.max(navW.current, top?.offsetWidth ?? 0, bottom?.offsetWidth ?? 0);
+      // רוחב שאר הפס בלי הסרגל: אם הסרגל למעלה — מורידים את רוחבו ואת הרווח
+      const others = el.scrollWidth - (el.querySelector<HTMLElement>(".flex-1")?.offsetWidth ?? 0) - (top ? top.offsetWidth + 8 : 0);
+      const fits = navW.current > 0 ? w - others >= navW.current + 40 : w >= 1100;
+      if (fits !== !!top) onFit(fits);
     };
-    check();
-    const ro = new ResizeObserver(check);
+    decide(true);
+    document.fonts?.ready.then(() => decide(true));
+    const ro = new ResizeObserver(() => decide());
     ro.observe(el);
     return () => ro.disconnect();
-  }, [navTop, onFit]);
+  }, [onFit]);
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
@@ -236,9 +243,13 @@ function MobileTabs({ unread }: { unread: boolean }) {
     if (!el) return;
     // הרוחב הדרוש נמדד מהתוויות עצמן (לא מהלשוניות שנמתחות למלא את השורה), כך שההחלטה אם צריך גלילה יציבה ולא מתהפכת כשהחץ מופיע
     const update = () => { const required = Array.from(el.children).reduce((sum, child) => { const label = child.querySelector<HTMLElement>("a > span:last-child"); return sum + Math.max(72, Math.ceil((label?.getBoundingClientRect().width ?? 56) + 16)); }, 0); setOverflow(required > (el.parentElement?.clientWidth ?? 0) + 1); setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2); };
-    const observer = new ResizeObserver(update); observer.observe(el);
-    el.addEventListener("scroll", update); document.fonts.ready.then(update); update();
-    return () => { observer.disconnect(); el.removeEventListener("scroll", update); };
+    // הגלילה מעדכנת רק את כיוון החץ; ההחלטה אם צריך חץ — רק כשהרוחב משתנה
+    let lastW = -1;
+    const onResize = () => { const w = el.parentElement?.clientWidth ?? 0; if (w !== lastW) { lastW = w; update(); } };
+    const onScroll = () => setAtEnd(Math.abs(el.scrollLeft) >= el.scrollWidth - el.clientWidth - 2);
+    const observer = new ResizeObserver(onResize); observer.observe(el.parentElement ?? el);
+    el.addEventListener("scroll", onScroll); document.fonts.ready.then(update); update();
+    return () => { observer.disconnect(); el.removeEventListener("scroll", onScroll); };
   }, [advanced]);
   useEffect(() => { scroller.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [pathname]);
   return <nav aria-label="ניווט בטלפון" className="c-mobile-tabs md:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-card border-t border-paper-line pb-[env(safe-area-inset-bottom)]">
