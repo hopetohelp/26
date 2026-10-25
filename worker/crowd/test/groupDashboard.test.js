@@ -37,9 +37,9 @@ async function account(email, verified = true, a = 60) {
 const load = (emails) => call("/admin/groups/import", { admin: true, body: { group: "gizra", name: "הגזרה", emails } });
 
 describe("group dashboard", () => {
-  it("members only, verified emails only, threshold, invisible to others", async () => {
+  it("members only; unverified list email counted but not shown the group; threshold, invisible to others", async () => {
     const members = [];
-    for (let i = 0; i < GROUP_MIN - 1; i++) members.push(await account(`m${i}@x.co`, true, 70));
+    for (let i = 0; i < GROUP_MIN - 2; i++) members.push(await account(`m${i}@x.co`, true, 70));
     const unverified = await account("u@x.co", false, 70);
     const outsider = await account("o@x.co", true, 40);
     await load([...Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`), "u@x.co"]);
@@ -48,7 +48,7 @@ describe("group dashboard", () => {
     expect((await call("/me", { token: outsider })).data.groups).toEqual([]);
     expect((await call("/dashboard?group=gizra", { token: outsider })).status).toBe(403);
     expect((await call("/dashboard?group=gizra")).status).toBe(401);
-    // מייל לא מאומת אינו משייך
+    // מייל לא מאומת: נספר בקבוצה (הכרעת בעלים 25.10.2026), אבל אינו רואה אותה
     expect((await call("/me", { token: unverified })).data.groups).toEqual([]);
     expect((await call("/dashboard?group=gizra", { token: unverified })).status).toBe(403);
     // הדשבורד הכללי אינו מזכיר קבוצות
@@ -67,8 +67,8 @@ describe("group dashboard", () => {
     expect(d).toMatchObject({ group: "gizra", participants: GROUP_MIN, open: true, underReview: null });
     expect(d.pendingGuesses).toBeUndefined();
     expect(d.seats).toBeTruthy();
-    // ההשערה של מי שמחוץ לקבוצה אינה בחישוב שלה: הכללי כולל גם אותו (גם הלא מאומת נספר בכללי, אבל אינו חבר בקבוצה)
-    expect((await call("/dashboard")).data.participants).toBe(GROUP_MIN + 2);
+    // ההשערה של מי שמחוץ לקבוצה אינה בחישוב שלה: הכללי כולל גם אותו (הלא מאומת נספר בשניהם)
+    expect((await call("/dashboard")).data.participants).toBe(GROUP_MIN + 1);
   });
 
   it("rejects a bad group id", async () => {
@@ -174,12 +174,12 @@ describe("managers count as group members (הכרעת בעלים 12.10.2026)", (
     await load(["a@x.co", "b@x.co", "boss@x.co"]);
     resetDashboardCache();
     expect((await call("/dashboard?group=gizra", { token: b })).data.participants).toBe(3);
-    // מנהל שלא אימת מייל אינו נספר ואינו רואה את הקבוצה, כמו כל חשבון
+    // מנהל שלא אימת מייל נספר (הכרעת בעלים 25.10.2026), אבל אינו רואה את הקבוצה
     const lazy = await account("lazy@x.co", false);
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "lazy@x.co" } });
     resetDashboardCache();
     expect((await call("/me", { token: lazy })).data.groups).toEqual([]);
-    expect((await call("/dashboard?group=gizra", { token: a })).data.participants).toBe(3);
+    expect((await call("/dashboard?group=gizra", { token: a })).data.participants).toBe(4);
     // הסרת המינוי — מי שאינו ברשימה יוצא מהספירה
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "lazy@x.co", remove: true } });
     await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co", remove: true } });
@@ -261,7 +261,6 @@ describe("group series", () => {
     resetDashboardCache();
     const dash = (await call("/dashboard?group=gizra", { token: mgr })).data;
     expect(by.seats.total).toBe(dash.seats.n);
-    expect(d.pendingVerify).toBe(0);
     // מתחת לסף — בלי מספר ובלי נקודות
     expect(by.vote).toEqual({ key: "vote", total: null, points: null });
     expect(by.outsideLink).toEqual({ key: "outsideLink", total: null, points: null });

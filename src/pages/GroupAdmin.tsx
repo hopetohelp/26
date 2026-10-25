@@ -218,7 +218,7 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
       <Sub title="חברי הקבוצה (מרשימת המיילים)">
         <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
         {/* מקור אמת אחד: אותם חברים ואותם ניחושים כמו בממוצע הקבוצה במסך "ממוצע הניחושים" */}
-        <p className="text-xs text-ink-soft">חבר = מייל מאומת ברשימה (או מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = הניחושים שנספרים בממוצע הקבוצה — אותו מספר כמו במסך "ממוצע הניחושים".{data.pendingVerify ? ` עוד ${n(data.pendingVerify)} ברשימה עם מייל שעוד לא אומת — ייספרו אחרי האימות.` : ""}</p>
+        <p className="text-xs text-ink-soft">חבר = מייל ברשימה, גם אם עוד לא אומת (או מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = הניחושים שנספרים בממוצע הקבוצה — אותו מספר כמו במסך "ממוצע הניחושים".</p>
       </Sub>
       <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
         <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>

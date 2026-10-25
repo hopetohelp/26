@@ -33,6 +33,8 @@ async function account(email) {
 const OLD = `SELECT m.group_id, e.participant FROM (SELECT group_id, email_hash FROM group_members UNION SELECT group_id, email_hash FROM group_managers) m JOIN emails e ON e.hash = m.email_hash WHERE e.verified = 1
   UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'all' AND f.on_ = 1
   UNION SELECT j.group_id, j.participant FROM group_link_first j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'first' AND f.on_ = 1`;
+// בספירה לפי קבוצה נכלל גם מייל לא מאומת (הכרעת בעלים 25.10.2026)
+const OLD_ANY = OLD.replace(" WHERE e.verified = 1", "");
 const sorted = (r) => r.map((x) => `${x.group_id}|${x.participant}`).sort();
 
 describe("group membership — same answers, no full scan", () => {
@@ -52,11 +54,11 @@ describe("group membership — same answers, no full scan", () => {
       db.prepare("INSERT OR IGNORE INTO group_link_first (group_id, participant) VALUES (?, ?)").run("abc"[rnd(3)], `p${rnd(300)}`);
     }
     db.prepare("INSERT INTO group_link_flags (group_id, flag, on_, updated_at) VALUES ('a', 'all', 1, 't'), ('b', 'first', 1, 't'), ('c', 'all', 0, 't')").run();
-    const all = sorted(rows(OLD));
+    const all = sorted(rows(OLD_ANY));
     expect(all.length).toBeGreaterThan(100);
     expect(sorted(rows(groupParticipants()))).toEqual(all);
     for (let i = 0; i < 300; i += 7) expect(sorted(rows(groupParticipants({ participant: "?1" }), `p${i}`))).toEqual(sorted(rows(`SELECT * FROM (${OLD}) WHERE participant = ?`, `p${i}`)));
-    for (const g of "abc") expect(sorted(rows(groupParticipants({ group: "?1" }), g))).toEqual(sorted(rows(`SELECT * FROM (${OLD}) WHERE group_id = ?`, g)));
+    for (const g of "abc") expect(sorted(rows(groupParticipants({ group: "?1" }), g))).toEqual(sorted(rows(`SELECT * FROM (${OLD_ANY}) WHERE group_id = ?`, g)));
   });
 
   it("כניסה, מסכי הקבוצה, הניהול והחישוב — בלי מעבר על כל רשימת המיילים", async () => {

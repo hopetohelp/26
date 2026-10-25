@@ -120,7 +120,7 @@ async function linkMembers(env, id) {
             (SELECT on_ FROM group_link_flags WHERE group_id = ?1 AND flag = 'first') AS first_on,
             (SELECT COUNT(*) FROM group_link_joins WHERE group_id = ?1) AS all_n,
             (SELECT COUNT(*) FROM group_link_first WHERE group_id = ?1) AS first_n,
-            (SELECT COUNT(DISTINCT e.participant) FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash WHERE e.verified = 1) AS list_n,
+            (SELECT COUNT(DISTINCT e.participant) FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash WHERE 1) AS list_n,
             (SELECT COUNT(*) FROM participants p WHERE EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS site_n`,
   ).bind(id).first();
   const shown = (n) => (n >= GROUP_MIN ? n : null);
@@ -200,8 +200,8 @@ export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", 
  */
 export async function groupSeries(env, id, now) {
   // מקור אמת אחד (הכרעת בעלים 25.10.2026): "חבר בקבוצה" = groupMemberSet — אותה הגדרה כמו בדשבורד הקבוצה, בממוצע הגזרה ובאישור הניחושים
-  // (מייל מאומת ברשימה, מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = ניחוש שנספר בממוצע הקבוצה (לא ממתין ולא נדחה),
-  // כך שהמספר כאן שווה למספר שבמסך "ממוצע הניחושים". מייל ברשימה שעוד לא אומת — נספר בנפרד (pendingVerify), לא כחבר ולא כ"מחוץ לרשימה".
+  // (מייל ברשימה — גם לא מאומת, מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = ניחוש שנספר בממוצע הקבוצה (לא ממתין ולא נדחה),
+  // כך שהמספר כאן שווה למספר שבמסך "ממוצע הניחושים".
   const members = await groupMemberSet(env, id);
   const ANY = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash";
   const [size, joins, anyList, first, created, created_at, firsts] = await env.DB.batch([
@@ -216,7 +216,6 @@ export async function groupSeries(env, id, now) {
   const g = created.results?.[0];
   if (!g) throw new HttpError(404, "not_found");
   const listAny = new Set((anyList.results || []).map((r) => r.id));
-  const pendingVerify = [...listAny].filter((p) => !members.has(p)).length;
   const firstSet = new Set((first.results || []).map((r) => r.participant));
   const joinedAt = new Map((joins.results || []).map((r) => [r.participant, r.t]));
   const createdAt = new Map((created_at.results || []).map((r) => [r.id, r.t]));
@@ -246,7 +245,7 @@ export async function groupSeries(env, id, now) {
     const total = events[key].length;
     out.push(total >= GROUP_MIN ? { key, total, points: cumulative(events[key]) } : { key, total: null, points: null });
   }
-  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, pendingVerify, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
+  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
 }
 
 /** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
@@ -593,8 +592,10 @@ export const GROUP_CHUNK = 300;
 export function groupParticipants({ participant, group } = {}) {
   const who = (col) => (participant ? ` AND ${col} = ${participant}` : "");
   const grp = (col) => (group ? ` AND ${col} = ${group}` : "");
-  return `SELECT m.group_id, e.participant FROM emails e CROSS JOIN group_members m ON m.email_hash = e.hash${grp("m.group_id")} WHERE e.verified = 1${who("e.participant")}
-  UNION SELECT a.group_id, e.participant FROM emails e CROSS JOIN group_managers a ON a.email_hash = e.hash${grp("a.group_id")} WHERE e.verified = 1${who("e.participant")}
+  // בספירה נכלל גם מייל שעוד לא אומת (הכרעת בעלים 25.10.2026); "הקבוצות שלי" למשתמש אחד — רק במייל מאומת, כדי שאי אפשר לגלות חברות במייל של אחר
+  const ok = participant ? "e.verified = 1" : "1";
+  return `SELECT m.group_id, e.participant FROM emails e CROSS JOIN group_members m ON m.email_hash = e.hash${grp("m.group_id")} WHERE ${ok}${who("e.participant")}
+  UNION SELECT a.group_id, e.participant FROM emails e CROSS JOIN group_managers a ON a.email_hash = e.hash${grp("a.group_id")} WHERE ${ok}${who("e.participant")}
   UNION SELECT j.group_id, j.participant FROM group_link_joins j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'all' AND f.on_ = 1 WHERE 1${who("j.participant")}${grp("j.group_id")}
   UNION SELECT j.group_id, j.participant FROM group_link_first j JOIN group_link_flags f ON f.group_id = j.group_id AND f.flag = 'first' AND f.on_ = 1 WHERE 1${who("j.participant")}${grp("j.group_id")}`;
 }
