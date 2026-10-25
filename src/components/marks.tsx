@@ -3,16 +3,19 @@ import type { LSeg } from "../lib/chartLanguage";
 import { capsuleGradient, verticalTagSides } from "../lib/capsule";
 import { seatsFmt } from "../lib/format";
 
-/** קפסולה אחת לכל טווח, באחוזונים הקיימים ובקצוות המקוריים. */
-export function ProfileCandle({ segs, x, title }: { segs: LSeg[]; x: (v: number) => number; title?: string }) {
+/** קפסולה אחת לכל טווח (הכרעת בעלים 25.10.2026): מ-`base` (ברירת מחדל 0) עד הסקר הגבוה, מלאה עד הנמוך ונחלשת לפי כמות הסקרים.
+ * `base={null}` — מהנמוך לגבוה בלבד (ציר סטייה). */
+export function ProfileCandle({ segs, x, title, base = 0 }: { segs: LSeg[]; x: (v: number) => number; title?: string; base?: number | null }) {
   if (!segs.length) return null;
-  const from = Math.min(...segs.map(s => x(s.from))), to = Math.max(...segs.map(s => x(s.to)));
-  return <span aria-hidden="true" title={title} className="mk-prof mk-capsule" data-candle-style="capsule" data-range-start={from} data-range-end={to} style={{ left: `${from}%`, width: `${to - from}%`, minWidth: 1, backgroundImage: capsuleGradient(segs, x) }} />;
+  const b = base ?? undefined, ends = [...segs.map(s => x(s.from)), ...segs.map(s => x(s.to)), ...(b === undefined ? [] : [x(b)])];
+  const from = Math.min(...ends), to = Math.max(...ends);
+  return <span aria-hidden="true" title={title} className="mk-prof mk-capsule" data-candle-style="capsule" data-range-start={from} data-range-end={to} style={{ left: `${from}%`, width: `${to - from}%`, minWidth: 1, backgroundImage: capsuleGradient(segs, x, false, b) }} />;
 }
-export function ProfileCandleV({ segs, y, left, delay }: { segs: LSeg[]; y: (v: number) => number; left: string; delay?: number }) {
+/** אנכי: מתחתית הציר (`base`) עד הסקר הגבוה */
+export function ProfileCandleV({ segs, y, left, delay, base }: { segs: LSeg[]; y: (v: number) => number; left: string; delay?: number; base?: number }) {
   if (!segs.length) return null;
-  const top = Math.min(...segs.map(s => y(s.to))), bottom = Math.max(...segs.map(s => y(s.from)));
-  return <span aria-hidden="true" className={delay === undefined ? "mk-pv mk-capsule" : "mk-pv mk-capsule trend-pop"} data-candle-style="capsule" data-range-start={top} data-range-end={bottom} style={{ left, top: `${top}%`, height: `${bottom - top}%`, minHeight: 1, backgroundImage: capsuleGradient(segs, y, true), ...(delay === undefined ? {} : { animationDelay: `${delay}ms` }) }} />;
+  const top = Math.min(...segs.map(s => y(s.to))), bottom = Math.max(...segs.map(s => y(s.from)), ...(base === undefined ? [] : [y(base)]));
+  return <span aria-hidden="true" className={delay === undefined ? "mk-pv mk-capsule" : "mk-pv mk-capsule trend-pop"} data-candle-style="capsule" data-range-start={top} data-range-end={bottom} style={{ left, top: `${top}%`, height: `${bottom - top}%`, minHeight: 1, backgroundImage: capsuleGradient(segs, y, true, base), ...(delay === undefined ? {} : { animationDelay: `${delay}ms` }) }} />;
 }
 export interface CapsuleDatum { at: number; value: number; label: string; text?: string }
 /** בשורות אופקיות התגים מעל ומתחת לנר. הקו החוצה נשאר בדיוק על הערך בציר. */
@@ -31,7 +34,7 @@ export const ResultRing = ({ at }: { at: number }) => <span aria-hidden="true" c
 export const SmallDot = ({ at }: { at: number }) => <span aria-hidden="true" className="mk mk-dot" style={{ left: `${at}%` }} />;
 export type MarkKind = "candle" | "mean" | "result" | "dot";
 export function Swatch({ kind }: { kind: MarkKind }) {
-  if (kind === 'candle') return <span aria-hidden="true" className="mk-prof-sw mk-capsule" style={{ backgroundImage: capsuleGradient(([1, 3, 5, 3, 1] as const).map((level, i) => ({ from: [0, 1, 2, 8, 9][i], to: [1, 2, 8, 9, 10][i], level })), v => v) }} />;
+  if (kind === 'candle') return <span aria-hidden="true" className="mk-prof-sw mk-capsule" style={{ backgroundImage: capsuleGradient(([1, 3, 5, 3, 1] as const).map((level, i) => ({ from: [4, 5, 6, 8, 9][i], to: [5, 6, 8, 9, 10][i], level })), v => v, false, 0) }} />;
   return <i aria-hidden="true" className={`mk mk-sw ${{ mean: 'mk-primary-line', result: 'mk-secondary-line', dot: 'mk-dot' }[kind]}`} />;
 }
 
