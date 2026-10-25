@@ -13,6 +13,7 @@ const K = {
   consent: P + "consent",
   intro: P + "intro",
   picture: P + "picture",
+  groups: P + "groups",
   draft: (u: Unit) => `${P}draft.${u}`,
   saved: (u: Unit) => `${P}saved.${u}`,
   pending: (u: Unit) => `${P}pending.${u}`,
@@ -65,6 +66,15 @@ export const setLinkAck = (on: boolean) => set(K.linkAck, on ? "1" : null);
 
 /** תמונת הפרופיל מ-Google — נשמרת רק בדפדפן הזה, לא בשרת (הכרעת בעלים 9.10.2026) */
 export const getPicture = () => get(K.picture);
+/**
+ * הקבוצות של המשתמש (חברות בגזרה) — נשמרות במכשיר מהפעם הראשונה (הכרעת בעלים 25.10.2026), כדי שמיתוג הגזרה
+ * והמונה יופיעו מיד בכל טעינה ולא רק אחרי תשובת השרת. השרת עדיין הקובע: כל תשובה של /me מעדכנת אותן, והחלפת משתמש מוחקת.
+ */
+export function getGroups(): { id: string; name?: string; slug?: string | null; image?: string | null }[] | null {
+  const v = getJson<unknown>(K.groups);
+  return Array.isArray(v) ? v.filter((g): g is { id: string } => !!g && typeof (g as { id?: unknown }).id === "string") : null;
+}
+export const setGroups = (groups: unknown[] | null) => set(K.groups, groups ? JSON.stringify(groups) : null);
 export const setPicture = (url: string | null) => set(K.picture, url && /^https:\/\/[\w.-]+\.googleusercontent\.com\//.test(url) ? url : null);
 
 export const hasConsent = () => get(K.consent) === "1";

@@ -5,7 +5,7 @@ import { refImageUrl } from "../../lib/groupLink";
 import type { useSession } from "../guess/useCrowd";
 /** חבר בגזרה (חברות מהשרת): כתובת הקבוצה והסמל לשיתוף, או null */
 export function useHagzara(session: ReturnType<typeof useSession>) {
-  const g = session.me?.groups?.find(x => x.id === HAGZARA_GROUP_ID);
+  const g = session.groups.find(x => x.id === HAGZARA_GROUP_ID);
   return g ? { slug: g.slug ?? "hagzara", logoUrl: refImageUrl(g) } : null;
 }
 /** צבעי הגזרה בכל האתר לחברי הקבוצה (הכרעת בעלים 23.10.2026): data-group על השורש, והטוקנים מתחלפים ב-index.css */

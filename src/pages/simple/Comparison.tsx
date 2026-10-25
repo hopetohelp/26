@@ -12,7 +12,7 @@ import { Notice } from "../guess/ui";
 import { VotingStats } from "../guess/Dashboard";
 import CardDrawer from "../../components/CardDrawer";
 import { smartRange } from "../../components/ChartLegend";
-import { BlocChart, FocusFoot, HagzaraCount, InlineBlocBar, LegendCapsule, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
+import { BlocChart, FocusFoot, GuessCount, InlineBlocBar, LegendCapsule, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
 import ShareCard from "./ShareCard";
 import { useHagzara } from "./hagzara";
 
@@ -25,7 +25,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const source = useSimpleSource(true, true);
   const crowd = useCrowdDashboard();
   const hagzara = useHagzara(session);
-  const member = session.me?.groups?.find(g => g.id === HAGZARA_GROUP_ID);
+  const member = session.groups.find(g => g.id === HAGZARA_GROUP_ID);
   const seats = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
   const mine = seats.draft ?? EMPTY;
   const unlocked = seats.status === "saved" && !validateSeats(mine, IDS);
@@ -90,7 +90,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    {member && <HagzaraCount members={groupCount} total={all?.seats?.n} />}
+    <GuessCount total={all?.seats?.n} members={member ? groupCount : null} />
     <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}

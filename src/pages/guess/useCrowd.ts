@@ -95,7 +95,7 @@ export function useSession() {
   const setToken = useCallback((t: string | null, keepLink = false) => {
     const changed = t !== S.getToken();
     S.setToken(t);
-    if (changed) { setMe(null); clearSourceAccount(); }
+    if (changed) { setMe(null); clearSourceAccount(); S.setGroups(null); }
     if (!keepLink) S.setLink(null);
     if (!t) S.setPicture(null);
     emit();
@@ -113,6 +113,7 @@ export function useSession() {
       const account = await call<Me>("/me", { token });
       if (token !== S.getToken()) return;
       setMe(account);
+      S.setGroups(account.groups ?? []);
       await synchronizeOwnedSource(token, account.participant, account.prefs?.dataSource);
     } catch (e) {
       if (e instanceof CrowdError && e.status === 401) setToken(null);
@@ -121,7 +122,9 @@ export function useSession() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
-  return { token, link, setToken, setLink, me, refresh, online: !!CROWD_URL };
+  // החברות בקבוצות: מהשרת כשנטען, ועד אז — מהשמירה במכשיר (בלי בדיקה מחדש בכל טעינה)
+  const groups = (me?.groups ?? (token ? S.getGroups() : null) ?? []) as NonNullable<Me["groups"]>;
+  return { token, link, setToken, setLink, me, groups, refresh, online: !!CROWD_URL };
 }
 
 export type SaveState = "idle" | "saving" | "error";
