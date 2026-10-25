@@ -268,7 +268,7 @@ export type GroupInsights = { group: string; min: number; belowMin: true } | {
   questions: GroupQuestions | null;
 };
 /** תשובת GET /group/series — שבעה מדדים למסך "ניהול קבוצה": נקודות מצטברות, שעתיות ב-72 השעות האחרונות ויומיות לפני כן. total/points = null מתחת ל-50 */
-export type GroupSeriesKey = "list" | "linkFirst" | "registered" | "seats" | "vote" | "outsideLink" | "outsideFirst";
+export type GroupSeriesKey = "list" | "linkFirst" | "registered" | "seats" | "vote" | "visits" | "outsideLink" | "outsideFirst";
 export interface GroupSeries {
   group: string; min: number; hours: number;
   buckets: { t: string; hourly: boolean }[];

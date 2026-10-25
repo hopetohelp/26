@@ -450,7 +450,7 @@ export default function Account({ session, hideGroups = false }: { session: Retu
 }
 
 type LinkFlag = { on: boolean; count: number | null };
-type LinkMembersState = { min: number; all: LinkFlag; first: LinkFlag; list: number | null; site: number };
+export type LinkMembersState = { min: number; all: LinkFlag; first: LinkFlag; list: number | null; site: number };
 /**
  * מתגי המנהל (הכרעת בעלים 23.10.2026): לכלול כחברים, בנוסף לרשימת המיילים, את מי שנכנס דרך קישור הקבוצה —
  * כולם, או רק מי שהקישור היה הכניסה הראשונה שלו לאתר. הכניסות נרשמות תמיד (מזהה חשבון בלבד) ומשפיעות רק כשהמתג פעיל.
@@ -531,10 +531,11 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
         }} onDone={changed} current={count} />
         <GroupClearMembers clear={() => send({ emails: [], mode: "replace" })} onDone={changed} />
       </GroupFold>
-      <GroupFold title={tools ? "מי נספר בקבוצה" : "מספרים"}>
-        {!tools && <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />}
-        <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} compact={tools} />
-      </GroupFold>
+      {/* במסך "ניהול קבוצה" המתגים בכרטיסי הסטטיסטיקה של הכניסות דרך הקישור (הכרעת בעלים 25.10.2026) */}
+      {!tools && <GroupFold title="מספרים">
+        <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
+        <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} />
+      </GroupFold>}
       <GroupFold title="תמונת הקבוצה">
         <GroupImagePanel
           id={id}
