@@ -144,7 +144,9 @@ async function groupStats(env, id, now) {
      FROM who JOIN participants p ON p.id = who.id`,
   ).bind(id, israelDayStart(now)).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
-  return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats: r.seats ?? 0, vote: r.vote ?? 0 };
+  // "שמרו ניחוש" — מאותו מקור כמו בניהול הקבוצה ובממוצע הקבוצה: ניחושים שנספרים
+  const seats = (await countedGuessers(env, await groupMemberSet(env, id))).size;
+  return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats, vote: r.vote ?? 0 };
 }
 
 /**
@@ -197,28 +199,40 @@ export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", 
  * מדד שסך הכול שלו מתחת ל-GROUP_MIN מוחזר בלי נקודות ובלי מספר (כמו שאר מספרי הקבוצה), חוץ מגודל הרשימה.
  */
 export async function groupSeries(env, id, now) {
-  // "מהרשימה" לספירה בלבד = כל מייל בחשבון שמופיע ברשימה, גם אם עוד לא אומת (הכרעת בעלים 25.10.2026: 97 חברים שלא אימתו נספרו
-  // בטעות "מחוץ לרשימה"). החברות עצמה בקבוצה (דשבורד הקבוצה, ניחושים) עדיין דורשת מייל מאומת — groupParticipants.
-  const LIST = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash";
-  const [size, joins, reg, firstUnit, first, created] = await env.DB.batch([
+  // מקור אמת אחד (הכרעת בעלים 25.10.2026): "חבר בקבוצה" = groupMemberSet — אותה הגדרה כמו בדשבורד הקבוצה, בממוצע הגזרה ובאישור הניחושים
+  // (מייל מאומת ברשימה, מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = ניחוש שנספר בממוצע הקבוצה (לא ממתין ולא נדחה),
+  // כך שהמספר כאן שווה למספר שבמסך "ממוצע הניחושים". מייל ברשימה שעוד לא אומת — נספר בנפרד (pendingVerify), לא כחבר ולא כ"מחוץ לרשימה".
+  const members = await groupMemberSet(env, id);
+  const ANY = "SELECT DISTINCT e.participant AS id FROM emails e CROSS JOIN group_members m ON m.group_id = ?1 AND m.email_hash = e.hash";
+  const [size, joins, anyList, first, created, created_at, firsts] = await env.DB.batch([
     env.DB.prepare("SELECT hour, members FROM group_size_log WHERE group_id = ?1 ORDER BY hour").bind(id),
-    env.DB.prepare(`SELECT j.joined_at AS t, j.participant IN (${LIST}) AS inList FROM group_link_joins j WHERE j.group_id = ?1`).bind(id),
-    env.DB.prepare(`SELECT p.created_at AS t FROM (${LIST}) l JOIN participants p ON p.id = l.id`).bind(id),
-    env.DB.prepare(`SELECT v.unit, MIN(v.created_at) AS t FROM (${LIST}) l JOIN versions v ON v.participant = l.id AND v.unit IN ('seats', 'vote') GROUP BY v.participant, v.unit`).bind(id),
-    env.DB.prepare(`SELECT j.joined_at AS t FROM group_link_first f JOIN group_link_joins j ON j.group_id = f.group_id AND j.participant = f.participant WHERE f.group_id = ?1 AND f.participant NOT IN (${LIST})`).bind(id),
+    env.DB.prepare("SELECT participant, joined_at AS t FROM group_link_joins WHERE group_id = ?1").bind(id),
+    env.DB.prepare(ANY).bind(id),
+    env.DB.prepare("SELECT participant FROM group_link_first WHERE group_id = ?1").bind(id),
     env.DB.prepare("SELECT created_at, COALESCE((SELECT members FROM group_sizes WHERE group_id = ?1), 0) AS members FROM groups WHERE id = ?1").bind(id),
+    env.DB.prepare("SELECT id, created_at AS t FROM participants"),
+    env.DB.prepare("SELECT participant, unit, MIN(created_at) AS t FROM versions WHERE unit IN ('seats', 'vote') GROUP BY participant, unit"),
   ]);
   const g = created.results?.[0];
   if (!g) throw new HttpError(404, "not_found");
-  const ts = (rows) => rows.map((r) => Date.parse(r.t)).filter(Number.isFinite);
-  const J = joins.results || [], U = firstUnit.results || [];
+  const listAny = new Set((anyList.results || []).map((r) => r.id));
+  const pendingVerify = [...listAny].filter((p) => !members.has(p)).length;
+  const firstSet = new Set((first.results || []).map((r) => r.participant));
+  const joinedAt = new Map((joins.results || []).map((r) => [r.participant, r.t]));
+  const createdAt = new Map((created_at.results || []).map((r) => [r.id, r.t]));
+  const firstOf = { seats: new Map(), vote: new Map() };
+  for (const r of firsts.results || []) firstOf[r.unit]?.set(r.participant, r.t);
+  // ניחוש שנספר בממוצע: אותה בדיקה כמו בדשבורד (moderationState) — ההשערה האחרונה, לא "בבדיקה", לא ממתינה ולא נדחתה
+  const counted = await countedGuessers(env, members);
+  const ts = (list) => list.map((t) => Date.parse(t)).filter(Number.isFinite);
+  const outside = [...joinedAt.keys()].filter((p) => !members.has(p) && !listAny.has(p));
   const events = {
-    linkFirst: ts(J.filter((r) => r.inList)),
-    registered: ts(reg.results || []),
-    seats: ts(U.filter((r) => r.unit === "seats")),
-    vote: ts(U.filter((r) => r.unit === "vote")),
-    outsideLink: ts(J.filter((r) => !r.inList)),
-    outsideFirst: ts(first.results || []),
+    linkFirst: ts([...joinedAt].filter(([p]) => members.has(p)).map(([, t]) => t)),
+    registered: ts([...members].map((p) => createdAt.get(p))),
+    seats: ts([...counted].map((p) => firstOf.seats.get(p))),
+    vote: ts([...members].map((p) => firstOf.vote.get(p))),
+    outsideLink: ts(outside.map((p) => joinedAt.get(p))),
+    outsideFirst: ts(outside.filter((p) => firstSet.has(p)).map((p) => joinedAt.get(p))),
   };
   const start = Math.min(Date.parse(g.created_at), ...Object.values(events).flat());
   const buckets = seriesBuckets(start, now);
@@ -232,7 +246,7 @@ export async function groupSeries(env, id, now) {
     const total = events[key].length;
     out.push(total >= GROUP_MIN ? { key, total, points: cumulative(events[key]) } : { key, total: null, points: null });
   }
-  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
+  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, pendingVerify, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
 }
 
 /** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
@@ -259,6 +273,12 @@ async function logGroupSizes(env, now) {
   try {
     await env.DB.prepare("INSERT OR REPLACE INTO group_size_log (group_id, hour, members) SELECT g.id, ?, COALESCE((SELECT s.members FROM group_sizes s WHERE s.group_id = g.id), 0) FROM groups g").bind(iso(now).slice(0, 13)).run();
   } catch { /* הטבלה עוד לא קיימת — בפעם הבאה */ }
+}
+
+/** מי מבין החברים שהניחוש האחרון שלו נספר בממוצע (לא "בבדיקה", לא ממתין ולא נדחה) — מקור אחד ל"שמרו ניחוש" בכל מסכי הקבוצה */
+async function countedGuessers(env, members) {
+  const { latest, mod, review } = await moderationState(env);
+  return new Set(latest.filter((v) => members.has(v.participant) && !review.has(v.participant) && !mod.isExcluded(v) && !mod.rejected.has(v.id) && !mod.pending.has(v.id)).map((v) => v.participant));
 }
 
 /** חברי הקבוצה (מזהי משתתפים) — אותה הגדרה כמו בכל מספרי הקבוצה */

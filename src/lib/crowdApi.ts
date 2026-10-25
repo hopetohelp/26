@@ -271,6 +271,8 @@ export type GroupInsights = { group: string; min: number; belowMin: true } | {
 export type GroupSeriesKey = "list" | "linkFirst" | "registered" | "seats" | "vote" | "outsideLink" | "outsideFirst";
 export interface GroupSeries {
   group: string; min: number; hours: number;
+  /** במייל ברשימה שעוד לא אומת — לא נספרים כחברים עד האימות (מקור אמת אחד עם ממוצע הקבוצה) */
+  pendingVerify?: number;
   buckets: { t: string; hourly: boolean }[];
   series: { key: GroupSeriesKey; total: number | null; points: (number | null)[] | null }[];
 }

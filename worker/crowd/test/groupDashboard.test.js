@@ -252,10 +252,16 @@ describe("group series", () => {
     const by = Object.fromEntries(d.series.map((s) => [s.key, s]));
     expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"]);
     expect(by.list.total).toBe(GROUP_MIN);
-    expect(by.registered.total).toBe(GROUP_MIN);
-    expect(by.registered.points.at(-1)).toBe(GROUP_MIN);
+    // מנהל הקבוצה נספר כחבר — כמו בדשבורד הקבוצה (מקור אמת אחד)
+    expect(by.registered.total).toBe(GROUP_MIN + 1);
+    expect(by.registered.points.at(-1)).toBe(GROUP_MIN + 1);
     expect(by.registered.points).toHaveLength(d.buckets.length);
-    expect(by.seats.total).toBe(GROUP_MIN);
+    expect(by.seats.total).toBe(GROUP_MIN + 1);
+    // מקור אמת אחד: "שמרו ניחוש" בניהול הקבוצה = מספר הניחושים בממוצע הקבוצה (דשבורד הקבוצה)
+    resetDashboardCache();
+    const dash = (await call("/dashboard?group=gizra", { token: mgr })).data;
+    expect(by.seats.total).toBe(dash.seats.n);
+    expect(d.pendingVerify).toBe(0);
     // מתחת לסף — בלי מספר ובלי נקודות
     expect(by.vote).toEqual({ key: "vote", total: null, points: null });
     expect(by.outsideLink).toEqual({ key: "outsideLink", total: null, points: null });
