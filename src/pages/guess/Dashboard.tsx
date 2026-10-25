@@ -1,4 +1,5 @@
 import { HAGZARA_GROUP_ID, KNESSET_GROUPS } from "../../lib/simpleSources";
+import { HagzaraCount } from "../simple/shared";
 import SourcePicker from "../../components/SourcePicker";
 import { useSourcePreference } from "../../lib/sourcePreference";
 import { createContext, useContext } from "react";
@@ -70,10 +71,12 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
     return () => { live = false; window.clearInterval(timer); window.removeEventListener(SAVED_EVENT, load); };
   }, [scope, session.token]);
   const groupData = scope !== "all" && group?.id === scope ? group.data : null;
-  const d0 = scope === "all" ? crowd.dashboard : groupData && !groupData.belowMin ? groupData : null;
+  // הגזרה = כלל המשתתפים (הכרעת בעלים 25.10.2026): הנתונים של כולם, ומתחת לכותרת — כמה מהם חברי הגזרה
+  const unified = scope === HAGZARA_GROUP_ID;
+  const d0 = scope === "all" || unified ? crowd.dashboard : groupData && !groupData.belowMin ? groupData : null;
   // טור הסקרים: ממוצע פשוט של הסקר האחרון של כל מכון, מאותו מקור שממנו מחושב הטווח.
   // קבוצה מתחת לסף: המסך כולו עם אפסים בטורי המשתתפים, והמונה הוא הספירה האמיתית (הכרעת בעלים 12.10.2026)
-  const blank = groupData?.belowMin ? groupData : null;
+  const blank = !unified && groupData?.belowMin ? groupData : null;
   const blankLists = crowd.dashboard?.seats?.everPassedLists ?? listsFromPolls(SIMPLE_POLL_MEANS);
   const d: D | null = blank
     ? blankDashboard(blank.participants ?? 0, blankLists, SIMPLE_POLL_MEANS, MODEL_AVERAGE.asOf)
@@ -83,7 +86,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // השוואה לכלל המשתתפים בתצוגת קבוצה: טורי ממוצע וטווח של כולם, אחרי קו הפרדה
   const [compare, setCompare] = useState(false);
   const all = crowd.dashboard;
-  const comparing = scope !== "all" && (compare || scope === HAGZARA_GROUP_ID) && view === "table" && !!all?.open;
+  const comparing = scope !== "all" && !unified && compare && view === "table" && !!all?.open;
   const groupName = groups.find((g) => g.id === scope)?.name ?? "הקבוצה";
   const overallSeats: Overall | undefined = comparing && all?.seats ? { name: groupName, of: (id) => all.seats!.full.find((x) => x.list === id) } : undefined;
   const allBlocs = useMemo(() => comparing && all?.blocs ? blocStats(all) : null, [comparing, all]);
@@ -104,7 +107,7 @@ export default function Dashboard({ session, landing = null, mine }: { session: 
   // שיתוף של הקבוצה (הכרעת בעלים 12.10.2026): עם שמה ולוגו; נתוני הקבוצה בתמונות רק מ-50 משתתפים, ובקישור מהאורח — רק הזמנה וקישור
   const groupShare: GroupShareInfo | undefined = shownGroup?.slug ? { name: shownGroup.name ?? "הקבוצה", url: groupUrl(shownGroup.slug), logoUrl: groupImageUrl({ slug: shownGroup.slug }, shownGroup.image), dataReady: scope !== "all" && !blank } : undefined;
   // בקבוצה: תמונה בראש המסך והמתג אחריה; פס השיתוף צף בתחתית.
-  const top = <>{banner}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
+  const top = <>{banner}{unified && <HagzaraCount members={groupData?.participants ?? null} total={crowd.dashboard?.participants} />}{groupShare && d && <CommunityShare selection={selection} d={d} group={groupShare} />}{scopeBar}</>;
   if (err) return <>{top}<Notice tone="warn">{err}</Notice></>;
   if (!d) return <>{top}<p className="text-ink-soft">טוען…</p></>;
 

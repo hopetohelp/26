@@ -274,6 +274,11 @@ export function InlineBlocBar({ values, missing = 0 }: { values: Record<string, 
   const slices = blocSlices(values, missing);
   return <div className="f-stack" role="img" aria-label={slices.map(s => `${s.name} ${s.shown}`).join(", ")}>{slices.map(s => <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} tabIndex={-1} style={{ flex: s.value, background: s.color }}>{s.value >= 18 && <span>{s.short}</span>}{s.shown}</button>)}</div>;
 }
+/** נתוני הגזרה = כלל המשתתפים (הכרעת בעלים 25.10.2026); מתחת לכותרת — כמה מהמשתתפים הם חברי הגזרה. בלי מספר כשהנתון לא נטען. */
+export function HagzaraCount({ members, total }: { members?: number | null; total?: number | null }) {
+  if (members == null || !total) return null;
+  return <p className="f-gcount"><b className="font-num">{members.toLocaleString("he-IL")}/{total.toLocaleString("he-IL")}</b> חברים בהגזרה</p>;
+}
 export function FocusFoot() {
   return <div className="f-foot"><Link to="/method" className="f-info" aria-label="מידע ומקורות">i</Link><Link to="/method">מידע ומקורות</Link></div>;
 }
