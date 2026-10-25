@@ -58,3 +58,5 @@ export function personalBlocs(assign: Record<string, string> = {}): BlocDef[] {
 }
 /** הסכום לגוש מתוך ערכים לכל רשימה */
 export const blocTotal = (values: Record<string, number | null | undefined>, lists: readonly string[]) => lists.reduce((s, id) => s + (values[id] ?? 0), 0);
+/** האחדות של העוגה הכפולה — קבועה לכולם (הכרעת בעלים 25.10.2026): תא "אחדות" בחלוקה המקורית */
+export const UNITY_LISTS = personalBlocs().find(b => b.id === "unity")!.lists;
