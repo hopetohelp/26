@@ -14,11 +14,14 @@ import CardDrawer from "../../components/CardDrawer";
 import { Notice } from "../guess/ui";
 import { BlocChart, FocusFoot, flashNotice, PartyName, SourceBar, fmt, useSimpleSource } from "./shared";
 import { useHagzara } from "./hagzara";
+import { useInterface } from "../../lib/interfaceMode";
+import GuessTools from "./GuessTools";
 const EMPTY = startSeats("zero");
 /** הכנסת שלי: עורך ידני מול טור ממוצע נבחר, גושים חיים ("חסר" עד 120), מגירת ההצבעה ושיתוף אחרי שמירה */
 const SHARE_OFFERED = "elections26.shareOffered";
 export default function SimpleGuess() {
   const session = useSession();
+  const { advanced } = useInterface();
   const source = useSimpleSource();
   const hagzara = useHagzara(session);
   const unit = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined);
@@ -82,11 +85,13 @@ export default function SimpleGuess() {
   const values = Object.fromEntries(IDS.map(id => [id, draft.seats[id]?.v ?? 0]));
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הניחוש שלי</h1><SourceBar source={source} />
     <div className="f-grid"><div className="f-card">
+      {advanced && <GuessTools draft={draft} setDraft={unit.setDraft} session={session} />}
       {order.map(id => {
         const value = draft.seats[id]?.v ?? 0, bad = value > 0 && value < 4, inputBad = editing?.id === id && invalidInput;
         return <div key={id} className="f-edit"><div className="min-w-0"><PartyName id={id} /><div className="f-ref font-num">ממוצע {fmt(ref(id))}</div>
           {inputBad && <span className="text-xs text-warn">0 עד 120</span>}{bad && <span className="text-xs text-warn">0 או לפחות 4</span>}</div>
           <div className="f-step">
+            {advanced && <button type="button" className={`f-pin${draft.seats[id]?.locked ? " on" : ""}`} aria-pressed={!!draft.seats[id]?.locked} aria-label={`${draft.seats[id]?.locked ? "שחרור" : "נעילת"} ${nameOf(id)}`} title="נעילה: ההשלמה לא תשנה את המספר" onClick={() => unit.setDraft({ ...draft, seats: { ...draft.seats, [id]: { ...(draft.seats[id] ?? { v: 0, src: "manual" }), locked: !draft.seats[id]?.locked } } })}>{draft.seats[id]?.locked ? "🔒" : "🔓"}</button>}
             <button type="button" aria-label={`הפחתת מנדט ל${nameOf(id)}`} disabled={value <= 0} onClick={() => { setEditing(null); change(id, value <= 4 ? 0 : value - 1); }}>−</button>
             <input aria-label={`מנדטים ל${nameOf(id)}`} aria-invalid={bad || inputBad || undefined} inputMode="numeric" type="text" value={editing?.id === id ? editing.text : value} onChange={e => { const text = e.target.value; setEditing({ id, text }); if (/^\d+$/.test(text) && Number(text) <= 120 && !(Number(text) >= 1 && Number(text) <= 3)) { const v = change(id, Number(text)); if (v !== Number(text)) setEditing({ id, text: String(v) }); } }} onBlur={() => { if (editing && /^[1-3]$/.test(editing.text)) { change(id, 4); setEditing(null); flashNotice("מפלגה מקבלת 0 או לפחות 4 מנדטים"); } else if (!invalidInput) setEditing(null); }} />
             <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} aria-disabled={total >= 120 || undefined} onClick={() => { setEditing(null); change(id, value === 0 ? 4 : value + 1); }}>+</button>

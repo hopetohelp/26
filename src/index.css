@@ -841,3 +841,26 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-nav > a, .f-more { flex:none; }
 .f-nav-bottom { justify-content:center;gap:2px; }
 .f-nav a.f-ai { width:34px;height:34px;padding:0;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%; }
+
+/* כלי המתקדם בעורך הניחוש */
+.f-tools { display:grid;gap:10px;padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid rgb(var(--line)); }
+.f-tools-row { display:flex;flex-wrap:wrap;align-items:center;gap:6px; }
+.f-tools-label { font-size:13px;font-weight:700;color:rgb(var(--ink-soft));margin-inline-end:4px; }
+.f-tools-hint { font-size:12.5px;color:rgb(var(--ink-soft)); }
+.f-tools-targets summary { cursor:pointer;font-size:14px;font-weight:700;min-height:40px;display:flex;align-items:center; }
+.f-tools-on { color:rgb(var(--signal)); }
+.f-tools-targets p { font-size:12.5px;color:rgb(var(--ink-soft));margin:0 0 8px; }
+.f-tools-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px 12px; }
+.f-tools-grid label { display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13.5px; }
+.f-tools-grid input { width:56px;min-height:40px;text-align:center;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--card));color:rgb(var(--ink));font-family:var(--font-num),monospace; }
+.f-pin { width:36px;height:36px;border-radius:50%;border:1px solid rgb(var(--line));background:rgb(var(--card));font-size:15px;cursor:pointer;flex:none; }
+.f-pin.on { border-color:rgb(var(--signal));background:rgb(var(--accent-soft)); }
+/* סרגל: רווח בין הלשוניות, ורוחב הסרגל לפי התוכן (הכרעת בעלים 25.10.2026) */
+.f-nav { gap:6px; }
+.f-nav-bottom { left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 16px);gap:4px; }
+
+/* ממוצע הניחושים במתקדם: טור "שלי" בסוף כל שורה */
+.has-mine .f-row, .has-mine .f-axis { grid-template-columns:150px minmax(0,1fr) 36px; }
+@media (max-width: 480px) { .has-mine .f-row, .has-mine .f-axis { grid-template-columns:96px minmax(0,1fr) 30px; } }
+.f-mine, .f-mine-h { text-align:center;font-weight:800;font-size:15px;color:rgb(var(--ink)); }
+.f-mine-h { font-size:12px;color:rgb(var(--ink-soft)); }

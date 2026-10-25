@@ -22,7 +22,7 @@ const EMPTY = startSeats("zero");
 /** הכנסת הממוצעת: נפתחת אחרי שמירת הכנסת שלך במלואה. ממוצע המשתתפים, ולחברי הגזרה — הגזרה במקום ממוצע הסקרים. */
 export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const session = useSession();
-  const { setLanding } = useInterface();
+  const { setLanding, advanced } = useInterface();
   const source = useSimpleSource(true, true);
   const crowd = useCrowdDashboard();
   const hagzara = useHagzara(session);
@@ -98,6 +98,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
         marks={id => segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], kind: "dash", side: "down" }]}
+        mine={advanced ? (id => mine.seats[id]?.v ?? 0) : undefined}
         legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!segmented || vsPolls) && <LegendBox kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox kind={segmented ? undefined : "dash"} label="ממוצע כל הניחושים" />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>

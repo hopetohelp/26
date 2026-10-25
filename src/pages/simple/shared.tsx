@@ -81,18 +81,19 @@ function Capsule({ spread }: { spread: [number, number, number, number, number, 
 export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" | "soft"; side: "up" | "down" };
 /** גרף המפלגות: קפסולה לסקרים ותגיות ערך לקווים */
 /** spreadOf = טווח אחר במקום טווח הסקרים (למשל טווח הניחושים של כל המשתתפים) */
-export function PartyChart({ selection, lists, marks, legend, spreadOf }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode; spreadOf?: (id: string) => [number, number, number, number, number, number] | null }) {
+/** mine = טור "הניחוש שלי" בסוף כל שורה (במתקדם, בממוצע הניחושים; הכרעת בעלים 25.10.2026) */
+export function PartyChart({ selection, lists, marks, legend, spreadOf, mine }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode; spreadOf?: (id: string) => [number, number, number, number, number, number] | null; mine?: (id: string) => number }) {
   const tall = lists.some(id => marks(id).some(m => m.side === "down"));
-  return <div className="f-card">
+  return <div className={`f-card${mine ? " has-mine" : ""}`}>
     <div className="f-legend">{legend}</div>
-    <div className="f-axis" aria-hidden="true"><span /><div className="font-num"><span>0</span><span>8</span><span>16</span><span>24</span><span>32</span></div></div>
+    <div className="f-axis" aria-hidden="true"><span /><div className="font-num"><span>0</span><span>8</span><span>16</span><span>24</span><span>32</span></div>{mine && <b className="f-mine-h">שלי</b>}</div>
     {lists.map(id => {
       const spread = spreadOf ? spreadOf(id) : simpleSpread(selection, id);
       return <div key={id} className={`f-row ${tall ? "tall" : ""}`}><PartyName id={id} />
         <div className="f-track" role="img" aria-label={`${nameOf(id)}: ${marks(id).filter(m => m.value != null).map(m => fmt(m.value)).join(", ")}`}>
           {spread && <Capsule spread={spread} />}
           {marks(id).map((m, i) => m.value == null ? null : <span key={i} className={`f-mark ${m.kind === "dash" ? "dash" : m.kind === "soft" ? "soft" : ""}`} style={{ right: x(m.value) }}><span className={`f-tag ${m.side}`}>{fmt(m.value)}</span></span>)}
-        </div></div>;
+        </div>{mine && <span className="f-mine font-num" aria-label={`הניחוש שלי: ${mine(id)}`}>{mine(id)}</span>}</div>;
     })}
   </div>;
 }
