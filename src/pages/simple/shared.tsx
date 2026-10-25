@@ -166,16 +166,16 @@ export function unityOverlay(values: Record<string, number | null | undefined>) 
 }
 type Overlay = ReturnType<typeof unityOverlay>;
 /**
- * שני החלקים הפנימיים שמחוץ לאחדות (הכרעת בעלים 25.10.2026): בתוך נתניהו (מימין) ובתוך אייזנקוט (משמאל).
+ * שני החלקים הפנימיים שמחוץ לאחדות (הכרעת בעלים 25.10.2026): "ימין" בתוך נתניהו ו"שמאל" בתוך אייזנקוט.
  * באותו צבע של הגוש, אבל פרוסה נפרדת — בלחיצה מוצגות רק הרשימות שלה והמספר שלה. `start` = במנדטים מתחילת העוגה.
  */
 function innerParts(values: Record<string, number | null | undefined>, ring: Slice[]): (Slice & { start: number })[] {
   const [net, , , eis] = SIMPLE_BLOCS;
   const color = (id: string) => ring.find(s => s.id === id)?.color ?? "currentColor";
-  const part = (b: { id: string; name: string; short: string; lists: readonly string[] }, start: number) => { const lists = b.lists.filter(id => !UNITY_LISTS.includes(id)); const value = blocTotal(values, lists);
-    return { id: `${b.id}-inner`, name: `${b.name} בלי האחדות`, short: b.short, lists, value, color: color(b.id), shown: Math.round(value), start }; };
+  const part = (b: { id: string; name: string; short: string; lists: readonly string[] }, name: string, start: number) => { const lists = b.lists.filter(id => !UNITY_LISTS.includes(id)); const value = blocTotal(values, lists);
+    return { id: `${b.id}-inner`, name, short: name, lists, value, color: color(b.id), shown: Math.round(value), start }; };
   const netT = blocTotal(values, net.lists), eisT = blocTotal(values, eis.lists), eisU = blocTotal(values, eis.lists.filter(id => UNITY_LISTS.includes(id)));
-  return [part(net, 0), part(eis, netT + eisU)].filter(p => p.value > 0 && p.start + p.value <= netT + eisT + 1e-9);
+  return [part(net, "ימין", 0), part(eis, "שמאל", netT + eisU)].filter(p => p.value > 0 && p.start + p.value <= netT + eisT + 1e-9);
 }
 /** סדר העוגה הכפולה: נתניהו ואייזנקוט צמודים, כדי שהאחדות תהיה רצופה */
 const DOUBLE_ORDER = ["netanyahu", "eisenkot", "arab", "haredi", "missing"];
