@@ -1193,7 +1193,8 @@ const routes = {
         idToken = await fb.signUp(env, email, password);
         await env.DB.prepare("INSERT INTO email_verify (participant, fb_enc, created_at) VALUES (?, ?, ?) ON CONFLICT(participant) DO UPDATE SET fb_enc = excluded.fb_enc, created_at = excluded.created_at").bind(participant, await seal(env, password), iso(now)).run();
       }
-      await fb.sendVerify(env, idToken, `${returnSiteUrl(env, request.headers.get("origin"))}#/support`);
+      // אחרי הלחיצה במייל ⇐ מסך "הניחוש שלי" (הכרעת בעלים 25.10.2026), שם האתר בודק לבד שהמייל אומת
+      await fb.sendVerify(env, idToken, `${returnSiteUrl(env, request.headers.get("origin"))}#/guess?verified=1`);
     } catch (e) {
       throw fbFailure(e);
     }

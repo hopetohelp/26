@@ -5,7 +5,6 @@ import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
-import { listName } from "../lib/data";
 import { PageTitle } from "../components/ui";
 import { Segmented } from "../components/Choice";
 import { ManagedGroup } from "./guess/Account";
@@ -231,16 +230,15 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
   );
 }
 
-/** מצב ההשערות: פס אחד לפי מצב (תקינה / חריגה שאושרה / ממתינה / נדחתה), ובטבלה — רשימות שהחברים חרגו בהן מטווח הסקרים */
+/** מצב הניחושים: פס אחד לפי מצב (תקין / חריג שאושר / ממתין / נדחה). טבלת "מעל ומתחת לטווח" הוסרה (הכרעת בעלים 25.10.2026) */
 function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }> }) {
   const parts: { key: keyof typeof ins.status; label: string; cls: string }[] = [
-    { key: "inRange", label: "בטווח הסקרים", cls: "bg-ink" },
-    { key: "approved", label: "חריגות שאושרו", cls: "bg-ink-soft" },
-    { key: "pending", label: "ממתינות לאישור", cls: "bg-warn" },
+    { key: "inRange", label: "תקינים", cls: "bg-ink" },
+    { key: "approved", label: "חריגים שאושרו", cls: "bg-ink-soft" },
+    { key: "pending", label: "ממתינים לאישור", cls: "bg-warn" },
     { key: "rejected", label: "נדחו", cls: "bg-paper-line" },
   ];
   const total = ins.guesses || 1;
-  const rows = [...ins.outside].sort((a, b) => b.above + b.below - (a.above + a.below));
   return (
     <Sub title="מצב הניחושים" aside={`${n(ins.guesses)} ניחושים`}>
       <div className="flex h-3 rounded-full overflow-hidden bg-paper border border-paper-line" role="img" aria-label={parts.map((p) => `${p.label}: ${ins.status[p.key]}`).join(", ")}>
@@ -250,25 +248,6 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
         {parts.map((p) => <li key={p.key} className="flex items-center gap-2"><span aria-hidden="true" className={`w-2.5 h-2.5 rounded-full shrink-0 border border-paper-line ${p.cls}`} /><span className="flex-1">{p.label}</span><strong className="font-num tabular">{n(ins.status[p.key])}</strong></li>)}
       </ul>
       {ins.status.pending > 0 && <p className="text-xs text-ink-soft">ניחוש ממתין אינו נספר בממוצע הקבוצה עד שמנהל האתר או מנהל הקבוצה יאשר אותו. הוא חוזר לבד להיות רגיל אם הסקרים מתקרבים אליו.</p>}
-      {rows.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <caption className="text-start font-bold pb-1">מחוץ לטווח הסקרים, לפי רשימה</caption>
-            <thead className="text-xs text-ink-soft"><tr><th className="text-start font-normal py-1">רשימה</th><th className="font-normal">טווח הסקרים</th><th className="font-normal">מעל</th><th className="font-normal">מתחת</th></tr></thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.list} className="border-t border-paper-line">
-                  <td className="py-1.5">{listName(r.list)}</td>
-                  <td className="text-center font-num tabular" dir="ltr">{r.lo}–{r.hi}</td>
-                  <td className="text-center font-num tabular">{r.above ? n(r.above) : "—"}</td>
-                  <td className="text-center font-num tabular">{r.below ? n(r.below) : "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="text-xs text-ink-soft pt-1">כל ניחוש שרשימה בה נמצאת מעל הסקר הגבוה או מתחת לנמוך. רק חריגה גדולה ממתינה לאישור.</p>
-        </div>
-      ) : <p className="text-sm text-ink-soft">כל הניחושים בתוך טווח הסקרים.</p>}
     </Sub>
   );
 }

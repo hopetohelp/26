@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
-import { lists2026, listName } from "../lib/data";
+import { CLOSED_LISTS, lists2026, listName } from "../lib/data";
+/** טורי הרשימות: בלי רשימות שלא עברו את אחוז החסימה באף סקר (הכרעת בעלים 25.10.2026) */
 import { dateTime, rng } from "../lib/format";
 import { Chips } from "../components/Choice";
 import { Btn, Notice } from "./guess/ui";
@@ -83,7 +84,7 @@ export function blocsText(r: GuessRow): string {
 }
 
 export function toCsv(rows: GuessRow[]) {
-  const ids = lists2026.map((l) => l.id);
+  const ids = lists2026.map((l) => l.id).filter((id) => !CLOSED_LISTS.includes(id));
   const head = ["יום", "מצב", "דרך", "הצבעה שמורה", "סה״כ שמירות", "נרשם", "כניסה אחרונה", "כניסות", ...ids.map(listName), "גושים"];
   const lines = rows.map((r) => [r.day, STATUS[r.status] + (r.verified === false ? " · חשבון לא מאומת" : ""), r.mode === "pct" ? "אחוזים" : "מנדטים", r.hasVote ? "כן" : "לא", r.saves ?? 0, stamp(r.registered), stamp(r.lastLogin), r.logins ?? 0, ...ids.map((id) => r.seats[id] ?? 0), blocsText(r)]);
   return [head, ...lines].map((l) => l.map((x) => `"${String(x).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -118,7 +119,7 @@ export default function AdminGuesses({ api, group, onCounts }: { api?: (path: st
 
   const rows = sortRows((data?.rows ?? []).filter((r) => filter === "all" || (filter === "unverified" ? r.verified === false : r.status === filter)), sort);
   const pending = data?.rows.filter((r) => r.status === "pending").length ?? 0;
-  const ids = lists2026.map((l) => l.id);
+  const ids = lists2026.map((l) => l.id).filter((id) => !CLOSED_LISTS.includes(id));
   const download = () => {
     const url = URL.createObjectURL(new Blob(["﻿" + toCsv(data?.rows ?? [])], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");

@@ -17,6 +17,7 @@ import { wallClockLeft } from "../lib/countdown";
 import { LOCK_AT } from "../pages/guess/model";
 import { MASTHEAD_SLOT } from "./SourcePicker";
 import { useSession } from "../pages/guess/useCrowd";
+import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzaraTheme } from "../pages/simple/hagzara";
 
@@ -245,7 +246,24 @@ function GuessCta({ pathname }: { pathname: string }) {
 export default function Layout() {
   return <InterfaceProvider><LayoutBody /></InterfaceProvider>;
 }
+/**
+ * חשבון עם מייל שעוד לא אומת: בכל טעינה של האתר בודקים בשקט פעם אחת אם המייל כבר אומת (הכרעת בעלים 25.10.2026) —
+ * מי שלחץ על הקישור במייל מסומן מאומת בלי לחפש את הכפתור "בדקתי". השרת מגביל ל-30 בדיקות בשעה לחשבון.
+ */
+function useVerifyOnLoad() {
+  const session = useSession();
+  const pending = !!session.token && !!session.me?.emails?.some((e) => e.email && !e.verified);
+  const done = useRef(false);
+  useEffect(() => {
+    if (!pending || done.current) return;
+    done.current = true;
+    void call<{ verified: boolean }>("/account/verify/check", { token: session.token, body: {} })
+      .then((r) => { if (r.verified) void session.refresh(); }, () => { /* לא נשלח מייל עדיין, או אין חיבור — שקט */ });
+  }, [pending]); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
 function LayoutBody() {
+  useVerifyOnLoad();
   const { advanced } = useInterface();
   const { pathname, hash } = useLocation();
   const unread = useSupportUnread(pathname);
