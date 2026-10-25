@@ -167,16 +167,50 @@ async function accountOf(env, token, origin) {
   } catch { return undefined; }
 }
 
-/** השיחות של רשימת משתתפים עם צוות האתר: 40 האחרונות, מהחדשה לישנה, בלי מזהה משתתף (רק מספר סידורי בתשובה) */
+/**
+ * השיחות של רשימת משתתפים עם צוות האתר, למסך "ניהול קבוצה" (דרך שרת ההשתתפות בלבד): 40 האחרונות, עם הטיוטות וההשהיות שלהן.
+ * המזהה (participant) חוזר רק לשרת ההשתתפות, שמחליף אותו בידית חד-פעמית לפני שהוא עונה לדפדפן.
+ */
 export async function groupSupport(env, participants) {
   const ids = JSON.stringify(Array.isArray(participants) ? participants.filter((p) => typeof p === "string").slice(0, 50_000) : []);
   const { results: threads } = await env.DB.prepare("SELECT participant, status, updated_at FROM support_threads WHERE participant IN (SELECT value FROM json_each(?1)) AND EXISTS (SELECT 1 FROM support_messages m WHERE m.participant = support_threads.participant AND m.author = 'visitor') ORDER BY updated_at DESC LIMIT 40").bind(ids).all();
   const out = [];
   for (const t of threads || []) {
     const { results } = await env.DB.prepare("SELECT author, text, created_at FROM support_messages WHERE participant = ? ORDER BY created_at, id").bind(t.participant).all();
-    out.push({ status: t.status, updated_at: t.updated_at, messages: results || [] });
+    out.push({ participant: t.participant, status: t.status, updated_at: t.updated_at, messages: results || [] });
   }
-  return { threads: out };
+  const shown = JSON.stringify(out.map((t) => t.participant));
+  const { results: drafts } = await env.DB.prepare("SELECT id, kind, target, text, reason, created_at FROM drafts WHERE kind = 'support' AND target IN (SELECT value FROM json_each(?1)) ORDER BY created_at").bind(shown).all().catch(() => ({ results: [] }));
+  const { results: held } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held WHERE kind = 'support' AND target IN (SELECT value FROM json_each(?1))").bind(shown).all().catch(() => ({ results: [] }));
+  return { threads: out, drafts: drafts || [], held: held || [] };
+}
+
+/**
+ * פעולת מנהל קבוצה בשיחה של חבר (הכרעת בעלים 25.10.2026) — אותן פעולות כמו בממשק הניהול: תשובה, אישור טיוטה, מחיקת טיוטה, אישור משתתף בהשהיה.
+ * participant נקבע בשרת ההשתתפות (חבר בקבוצה של המנהל); כאן — רק שהטיוטה שייכת לשיחה הזו.
+ */
+export async function groupSupportAct(env, b) {
+  const participant = typeof b?.participant === "string" ? b.participant : "";
+  if (!participant) return { status: 400, body: { ok: false } };
+  if (b.action === "reply") {
+    const text = String(b.text || "").trim().slice(0, 4000);
+    if (!text) return { status: 400, body: { ok: false, error: "empty" } };
+    return (await teamReply(env, "support", participant, text)) ? { status: 200, body: { ok: true } } : { status: 404, body: { ok: false, error: "not found" } };
+  }
+  if (b.action === "release") {
+    await env.DB.prepare("DELETE FROM held WHERE kind = 'support' AND target = ?").bind(participant).run();
+    return { status: 200, body: { ok: true } };
+  }
+  if (b.action !== "approve" && b.action !== "delete") return { status: 400, body: { ok: false } };
+  const draft = await env.DB.prepare("SELECT id, kind, target, text FROM drafts WHERE id = ? AND kind = 'support' AND target = ?").bind(Number(b.draft), participant).first();
+  if (!draft) return { status: 404, body: { ok: false, error: "not found" } };
+  if (b.action === "approve") {
+    const text = String(b.text ?? draft.text).trim().slice(0, 4000);
+    if (!text) return { status: 400, body: { ok: false, error: "empty" } };
+    if (!(await teamReply(env, "support", participant, text, true))) return { status: 404, body: { ok: false, error: "not found" } };
+  }
+  await env.DB.prepare("DELETE FROM drafts WHERE id = ?").bind(draft.id).run();
+  return { status: 200, body: { ok: true } };
 }
 
 /** ספירת הפניות של רשימת משתתפים: מי פנה לצוות, כמה הודעות (בסך הכול וב-7 הימים האחרונים), לפי נושא, וכמה השתמשו בצ'אט החכם */
@@ -215,6 +249,13 @@ export default {
       let body;
       try { body = await request.json(); } catch { return reply({ error: "bad_request" }, 400); }
       return reply(await groupSupport(env, body?.participants));
+    }
+    if (url.pathname === "/internal/group-support/act" && request.method === "POST") {
+      if (url.hostname !== "feedback.internal") return reply({ error: "not_found" }, 404);
+      let body;
+      try { body = await request.json(); } catch { return reply({ error: "bad_request" }, 400); }
+      const r = await groupSupportAct(env, body);
+      return reply(r.body, r.status);
     }
     // מספרים מצטברים בלבד; ללא זיהוי גולשים וללא פתיחת ממשק הניהול.
     if (url.pathname === "/usage" && request.method === "GET") {
