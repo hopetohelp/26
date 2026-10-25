@@ -43,7 +43,7 @@ function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
   const gRaw = params.get("g");
   const shared = useMemo(() => decodeGuess(gRaw, IDS), [gRaw]);
   const sharedLink = !!shared;
-  const auxiliary = ["blocs", "history"].includes(params.get("section") ?? "");
+  const auxiliary = params.get("section") === "history";
   const statistics = complete && !sharedLink && params.get("view") !== "edit" && !params.has("section");
   const setStage = (stage: "edit" | "statistics") => {
     const next = new URLSearchParams(params);
@@ -102,7 +102,7 @@ function AdvancedGuess({ landing = null }: { landing?: GroupPublic | null }) {
       {(() => { const head = <>
       {shared && <SharedGuess g={shared} hasDraft={!!loadDraft("seats")} onStart={startFromShared} onClose={closeShared} />}
       {!statistics && !shared && !auxiliary && <GuessIntro />}
-      {auxiliary && <PageTitle>{params.get("section") === "blocs" ? "הגושים שלי" : "היסטוריית ניחושים"}</PageTitle>}
+      {auxiliary && <PageTitle>היסטוריית ניחושים</PageTitle>}
       {statistics && <div className="c-stage-heading"><PageTitle lead="שלב 2 · הניחוש שלכם מול הסקרים וממוצע הניחושים. ניחושי המשתתפים אינם סקר.">הניחוש שלי — סקר האתר</PageTitle><div className="flex flex-wrap gap-2"><Btn onClick={() => setStage("edit")}>חזרה לעדכון הניחוש</Btn><SaveButton unit={seats} session={session} invalid={null} compact /></div></div>}
       {flash && (
         <div className="mb-4" role={flash.ok ? "status" : "alert"}>

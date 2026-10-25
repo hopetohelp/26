@@ -329,7 +329,7 @@ export const TOOLS = [
     title: "הקבוצות שלי",
     audience: "user",
     kind: "read",
-    description: "Groups: for each group the user manages — its numbers (registered, saved a guess, voted; aggregates only, from 50 members); for each group they belong to — its dashboard. Same rules as the site.",
+    description: "Groups: for each group the user manages — its numbers (registered, saved a guess, voted; aggregates only, from 50 members); for each group they belong to — its dashboard. A dashboard with unified: true (the הגזרה group, owner decision 25.10.2026) is the data of ALL the site's participants, and members = how many of them are the group's members: present it as \"X/N חברים בהגזרה\", never as the group's own average. Same rules as the site.",
     inputSchema: obj(),
     async run(ctx) {
       const me = await ctx.me();

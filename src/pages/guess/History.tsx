@@ -55,7 +55,7 @@ export default function History({ session }: { session: ReturnType<typeof useSes
       {err && <Notice tone="warn">{err}</Notice>}
       {versions === null && !err && <p className="text-ink-soft text-sm">טוען…</p>}
       {versions?.length === 0 && <Notice>אין עדיין גרסאות ביחידה הזו.</Notice>}
-      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="הגושים שלי בגרסאות הניחוש ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: stamp(v), asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
+      {unit === "seats" && versions && versions.length > 0 && <PersonalBlocs title="חלוקת הכנסת בגרסאות הניחוש ששמרתי" source="גרסאות המנדטים לפי הרכב הגושים הנוכחי שלכם" asOf="לפי מועדי השמירה" compare={!!(a && b)} datasets={(a && b ? [a,b] : [...newest].reverse()).map(v => ({ values: Object.fromEntries(Object.entries((v.payload as SeatsPayload).seats).map(([id,c]) => [id,c.v])), source: stamp(v), asOf: `${date(v.created_at)} ${time(v.created_at)}` }))} />}
       {versions && versions.length > 0 && (
         <ol className="relative border-s-2 border-ink ms-2 space-y-3" aria-label="הגרסאות שלכם, מהחדשה לישנה">
           {newest.map((v, i) => (

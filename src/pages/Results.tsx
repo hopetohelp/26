@@ -109,7 +109,7 @@ export default function Results() {
         </dl></>}
       </Card>
       </>} secondary={summary ? <><ElectionSummary /><Voters embedded /></> : <>
-      <PersonalBlocs title={`הגושים שלי בתוצאות ${e.label}`} source={`תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`} asOf="התוצאות הסופיות" datasets={[e.knesset === 25
+      <PersonalBlocs title={`חלוקת הכנסת בתוצאות ${e.label}`} source={`תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`} asOf="התוצאות הסופיות" datasets={[e.knesset === 25
         ? { families: k25Families(), values: Object.fromEntries(e.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${e.label}; לפי השיוך במסך "מה השתנה"`, asOf: "התוצאות הסופיות" }
         : { historical: true, mapping: {}, values: Object.fromEntries(e.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${e.label}; התאמות מובהקות בלבד`, asOf: "התוצאות הסופיות" }]} />
 

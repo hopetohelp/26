@@ -12,7 +12,7 @@ import { Notice } from "../guess/ui";
 import { VotingStats } from "../guess/Dashboard";
 import CardDrawer from "../../components/CardDrawer";
 import { smartRange } from "../../components/ChartLegend";
-import { BlocChart, FocusFoot, InlineBlocBar, LegendCapsule, LegendLine, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
+import { BlocChart, FocusFoot, HagzaraCount, InlineBlocBar, LegendCapsule, LegendLine, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
 import ShareCard from "./ShareCard";
 import { useHagzara } from "./hagzara";
 
@@ -65,17 +65,19 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   }
   const response = allowed && result?.token === session.token ? result : null;
   const raw = response?.data;
-  const below = raw?.belowMin ? raw : null;
   const group = raw && !raw.belowMin ? raw as Dashboard : null;
   const all = crowd.dashboard;
   const crowdMeans = meansOf(all), groupMeans = meansOf(group);
   const polls = (id: string) => simpleValue(source.selection, [id]);
   const lists = orderedLists(source.selection, [groupMeans], crowdMeans);
-  const blocValues = member ? groupMeans : crowdMeans;
+  const blocValues = crowdMeans;
   const hagzaraLogo = hagzara?.logoUrl ?? null;
-  const voters = member ? group : all;
+  const voters = all;
   // חברי הקבוצה: ממוצע הקבוצה מול ממוצע הסקרים או מול כל המשתתפים — לפי בחירת מנהל הקבוצה (הכרעת בעלים 24.10.2026)
   const vsPolls = (raw?.compare ?? "polls") === "polls";
+  // נתוני הגזרה כוללים מעכשיו את כלל המשתתפים (הכרעת בעלים 25.10.2026): בלי קו נפרד לגזרה; רק המונה מתחת לכותרת
+  const segmented = false;
+  const groupCount = raw ? ("members" in raw && raw.members != null ? raw.members : raw.participants ?? null) : null;
   // לחברי הקבוצה הסרגל בוחר תמיד טווח (כל הסקרים / 14 ו־i24 / הניחושים), בכל השוואה שהמנהל בחר (הכרעת בעלים 25.10.2026).
   // "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
   // לכל הגולשים (הכרעת בעלים 25.10.2026): ברירת המחדל במסך הזה היא תמיד טווח הניחושים, עד שבוחרים טווח אחר
@@ -87,14 +89,14 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
+    {member && <HagzaraCount members={groupCount} total={all?.participants} />}
     <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
-    {below && <Notice>נתוני הגזרה יוצגו אחרי {below.min} משתתפים.</Notice>}
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
-        marks={id => member && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : member ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
-        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!member || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!member || !vsPolls) && <LegendBox label="ממוצע כל הניחושים" n={all?.seats?.n} />}{member && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
+        marks={id => segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], side: "down" }]}
+        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!segmented || vsPolls) && <LegendLine kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox label="ממוצע כל הניחושים" n={all?.seats?.n} />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
     </div>

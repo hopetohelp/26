@@ -609,6 +609,11 @@ async function groupSize(env, id) {
 }
 /** סף מינימום להצגת נתוני קבוצה (הכרעת בעלים 11.10.2026) */
 export const GROUP_MIN = 50;
+/**
+ * קבוצות שהנתונים שלהן הם של כלל המשתתפים (הכרעת בעלים 25.10.2026 — הגזרה): ‎/dashboard?group מחזיר את הצבירה של כולם,
+ * ו-`members` = מספר משתתפי הקבוצה שנכללו בצבירה שלה. אין פילוח נפרד לקבוצה במסך, בעוזר או בשיתוף.
+ */
+export const UNIFIED_GROUPS = new Set(["gy7lelpbo"]);
 function groupId(v) {
   if (typeof v !== "string" || !GROUP_ID.test(v)) throw bad("group");
   return v;
@@ -2062,7 +2067,8 @@ export default {
         const { participant } = await requireAuth(env, request, now);
         if (!(await myGroups(env, participant)).some((g) => g.id === id)) throw new HttpError(403, "not_member");
         const d = (await dashboardState(env)).groups.get(id) ?? { group: id, belowMin: true, min: GROUP_MIN, participants: 0, publishedAt: iso(now) };
-        return new Response(JSON.stringify({ ...d, compare: await groupCompare(env, id) }), { headers: { ...headers, "cache-control": "no-store" } });
+        const body = UNIFIED_GROUPS.has(id) ? { ...(await dashboard(env)), group: id, min: GROUP_MIN, unified: true, members: d.participants ?? 0 } : { ...d, compare: await groupCompare(env, id) };
+        return new Response(JSON.stringify(body), { headers: { ...headers, "cache-control": "no-store" } });
       }
       if (request.method === "GET" && url.pathname === "/dashboard")
         return new Response(JSON.stringify(await dashboard(env)), { headers: { ...headers, "cache-control": "no-store" } });

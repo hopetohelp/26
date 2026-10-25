@@ -102,9 +102,9 @@ export default function Today() {
             )}
           </section>
 
-          </details><section aria-label="הגושים שלי בכל סקר" className="mt-10">
+          </details><section aria-label="חלוקת הכנסת בכל סקר" className="mt-10">
             <PersonalBlocs
-              title="הגושים שלי בכל אחד מהסקרים"
+              title="חלוקת הכנסת בכל אחד מהסקרים"
               source="הסקר האחרון של כל מכון, כל מקור בנפרד"
               asOf={date(asOf)}
               datasets={latest.map((p) => ({ poll: p, values: Object.fromEntries(ids.map((id) => [id, seatsIn(p, id)])), source: pollsterLabel(p), asOf: date(p.end) }))}

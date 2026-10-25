@@ -60,3 +60,5 @@ export function personalBlocs(assign: Record<string, string> = {}): BlocDef[] {
 export const blocTotal = (values: Record<string, number | null | undefined>, lists: readonly string[]) => lists.reduce((s, id) => s + (values[id] ?? 0), 0);
 /** האחדות של העוגה הכפולה — קבועה לכולם (הכרעת בעלים 25.10.2026): תא "אחדות" בחלוקה המקורית */
 export const UNITY_LISTS = personalBlocs().find(b => b.id === "unity")!.lists;
+/** חמש הקבוצות שבכל תצוגת גושים במתקדם (הכרעת בעלים 25.10.2026): ארבעת גושי העוגה הכפולה והאחדות. האחדות חופפת לנתניהו ולאייזנקוט — אין לחבר. */
+export const KNESSET_GROUPS = [...SIMPLE_BLOCS.map(b => ({ id: b.id, name: b.short, lists: [...b.lists], target: null })), { id: "unity", name: "אחדות", lists: [...UNITY_LISTS], target: null }];
