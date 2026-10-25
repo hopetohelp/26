@@ -19,13 +19,18 @@ it('משלב פניות רשומות ורגילות ברשימה אחת — בר
   expect(html).toContain('התקבלה');
 });
 
-it('הסדר (החדשות קודם) לפי ההודעה הראשונה בשיחה, ולא לפי התגובה האחרונה', () => {
+it('הסדר לפי הפנייה האחרונה של הגולש בשיחה (הכרעת בעלים 25.10.2026); תשובת צוות אינה מזיזה', () => {
   const old = { id: 1, waiting: true, updated_at: '2026-10-09T10:00:00Z', items: [
     { author: 'visitor' as const, text: 'שאלה ישנה', topic: 'other', created_at: '2026-10-01T10:00:00Z' },
     { author: 'visitor' as const, text: 'המשך חדש', topic: 'other', created_at: '2026-10-09T10:00:00Z' },
   ] };
-  const { html } = render(data([thread(2, 'שאלה חדשה', '2026-10-05T10:00:00Z'), old]));
-  expect(html.indexOf('שאלה חדשה')).toBeLessThan(html.indexOf('שאלה ישנה'));
+  const answered = { id: 3, waiting: false, updated_at: '2026-10-10T10:00:00Z', items: [
+    { author: 'visitor' as const, text: 'נענתה', topic: 'other', created_at: '2026-10-02T10:00:00Z' },
+    { author: 'team' as const, text: 'תשובה', topic: 'other', created_at: '2026-10-10T10:00:00Z' },
+  ] };
+  const { html } = render(data([thread(2, 'שאלה חדשה', '2026-10-05T10:00:00Z'), old, answered]));
+  // ממתינות בלבד כברירת מחדל: הפנייה האחרונה (9/10) לפני 5/10
+  expect(html.indexOf('שאלה ישנה')).toBeLessThan(html.indexOf('שאלה חדשה'));
 });
 
 it('מציג סינון לפי נושא עם ספירה, וסינון ממתינות', () => {
