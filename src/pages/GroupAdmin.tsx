@@ -76,11 +76,10 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       <div className="space-y-3">
         <Section title="סטטיסטיקה" open aside={series ? hourlyNote(series) : undefined}>
           <Measures data={series} failed={failed} />
-          {link && <Sub title="כניסות דרך הקישור (דפדפנים, בלי חשבון)">
+          {/* רק דפדפנים שונים (הכרעת בעלים 25.10.2026): כל דפדפן נספר פעם אחת, בלי כניסות חוזרות */}
+          {link && <Sub title="כניסות דרך הקישור">
             <div className="grid grid-cols-3 gap-3">
-              <Tile label="בסך הכול" value={n(link.opens)} />
-              <Tile label="היום" value={n(link.today)} />
-              <Tile label="דפדפנים שונים" value={n(link.fresh)} />
+              <Tile label="דפדפנים שונים" value={n(link.fresh)} sub="בלי חשבון; כל דפדפן נספר פעם אחת" />
             </div>
           </Sub>}
           {ins && !ins.belowMin && <Questions q={ins.questions} />}
