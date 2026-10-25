@@ -8,7 +8,7 @@ import { InquirySections, type Draft, type Held, type SupportThread } from "./Ad
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
 import { PageTitle } from "../components/ui";
 import { Segmented } from "../components/Choice";
-import { ManagedGroup } from "./guess/Account";
+import { ManagedGroup, type LinkMembersState } from "./guess/Account";
 import { useSession } from "./guess/useCrowd";
 
 /**
@@ -45,6 +45,11 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
   const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
   const [failed, setFailed] = useState(false);
+  const [flags, setFlags] = useState<LinkMembersState | null>(null);
+  const [reload, setReload] = useState(0);
+  useEffect(() => { void call<LinkMembersState>(`/group/link-members?group=${q(id)}`, { token }).then(setFlags, () => setFlags(null)); }, [id, token]);
+  // מתג פעיל משנה את מי שנספר בקבוצה — טוענים מחדש את המספרים
+  const setFlag = async (flag: "all" | "first", on: boolean) => { setFlags(await call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })); setReload((r) => r + 1); onChanged(); };
   useEffect(() => {
     let live = true;
     void Promise.allSettled([
@@ -57,7 +62,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       setFailed(s.status === "rejected" && i.status === "rejected");
     });
     return () => { live = false; };
-  }, [id, token]);
+  }, [id, token, reload]);
   const img = image ? groupImageUrl({ id }, image) : null;
   const listTotal = series?.series.find((x) => x.key === "list")?.total ?? members ?? null;
   return (
@@ -75,7 +80,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       <div className="space-y-3">
         {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
         <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
-          <Measures data={series} failed={failed} />
+          <Measures data={series} failed={failed} flags={flags} setFlag={setFlag} />
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
         </Section>
         <Section title="ניחושים">
@@ -170,7 +175,7 @@ function Sub({ title, aside, children }: { title: string; aside?: ReactNode; chi
   return <div className="space-y-2 pt-3 border-t border-paper-line first:border-t-0 first:pt-0"><div className="flex items-baseline justify-between gap-3"><h3 className="font-bold">{title}</h3>{aside && <span className="text-xs text-ink-soft">{aside}</span>}</div>{children}</div>;
 }
 
-/** מתי מתחילים הגרפים (24/10 23:00) — נקודה לשעה ב-72 השעות האחרונות, וליום לפני כן */
+/** מתי מתחילים הגרפים (24/10 23:00) — נקודה לכל שעה */
 function hourlyNote(d: GroupSeries) {
   return d.buckets[0] ? `הגרפים מ-${bucketLabel(d.buckets[0])}` : undefined;
 }
@@ -192,23 +197,38 @@ const MEASURES: { key: GroupSeriesKey; label: string; group: "list" | "outside" 
   { key: "registered", label: "נרשמו לאתר", group: "list" },
   { key: "seats", label: "שמרו ניחוש", group: "list" },
   { key: "vote", label: "שמרו הצבעה", group: "list" },
+  { key: "visits", label: "כניסות לאתר (חצי שעה לפחות בין כניסות)", group: "list" },
   { key: "outsideLink", label: "נכנסו דרך הקישור", group: "outside" },
   { key: "outsideFirst", label: "הקישור היה הכניסה הראשונה שלהם לאתר", group: "outside" },
 ];
 
-function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean }) {
+/** המתג שבכרטיס: לכלול בקבוצה את מי שנכנס דרך הקישור (all) או רק מי שהקישור היה הכניסה הראשונה שלו (first) */
+const FLAG_OF: Partial<Record<GroupSeriesKey, "all" | "first">> = { outsideLink: "all", outsideFirst: "first" };
+
+function FlagSwitch({ on, onToggle }: { on: boolean; onToggle: () => Promise<void> }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button type="button" role="switch" aria-checked={on} disabled={busy} onClick={() => { setBusy(true); void onToggle().finally(() => setBusy(false)); }} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start">
+      <span>לכלול אותם בסטטיסטיקות הקבוצה</span>
+      <span aria-hidden="true" className={`shrink-0 w-12 h-7 rounded-full border-2 border-ink p-0.5 flex ${on ? "bg-ink justify-end" : "bg-paper-card justify-start"}`}><span className={`w-5 h-5 rounded-full ${on ? "bg-paper-card" : "bg-ink"}`} /></span>
+    </button>
+  );
+}
+
+function Measures({ data, failed, flags, setFlag }: { data: GroupSeries | null; failed: boolean; flags: LinkMembersState | null; setFlag: (flag: "all" | "first", on: boolean) => Promise<void> }) {
   if (!data) return failed ? null : <p className="text-sm text-ink-soft">טוען…</p>;
   const by = new Map(data.series.map((s) => [s.key, s]));
   const list = by.get("list")?.total ?? 0;
   const card = (m: (typeof MEASURES)[number], i: number) => {
     const s = by.get(m.key);
-    const pct = m.group === "list" && m.key !== "list" && s?.total != null && list ? `${Math.round((100 * s.total) / list)}% מהרשימה` : null;
+    const pct = m.group === "list" && m.key !== "list" && m.key !== "visits" && s?.total != null && list ? `${Math.round((100 * s.total) / list)}% מהרשימה` : null;
     return (
       <li key={m.key} className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2 min-w-0">
         <div className="flex items-baseline justify-between gap-3">
           <p className="text-sm min-w-0"><span className="text-ink-soft font-num tabular">{i}.</span> {m.label}</p>
           <p className="text-end shrink-0"><span className="font-num tabular text-2xl leading-none">{s?.total != null ? n(s.total) : "—"}</span>{pct && <span className="block text-xs text-ink-soft">{pct}</span>}</p>
         </div>
+        {FLAG_OF[m.key] && flags && <FlagSwitch on={flags[FLAG_OF[m.key]!].on} onToggle={() => setFlag(FLAG_OF[m.key]!, !flags[FLAG_OF[m.key]!].on)} />}
         {m.key === "list" ? null : s?.points ? <GroupSeriesChart buckets={data.buckets} points={s.points} label={m.label} /> : <p className="text-xs text-ink-soft">פחות מ-{data.min} — המספר והגרף יוצגו מ-{data.min}.</p>}
       </li>
     );
@@ -222,6 +242,7 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
       </Sub>
       <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
         <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
+        <p className="text-xs text-ink-soft">מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
       </Sub>
     </>
   );

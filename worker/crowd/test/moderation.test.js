@@ -10,7 +10,7 @@ const guess = (parts) => {
 };
 
 describe("השערות חריגות", () => {
-  // כלל 24.10.2026: ממתינה = רשימה שגם רחוקה לפחות 75% מממוצע המשתתפים וגם לפחות 5 מנדטים מחוץ לטווח הסקרים
+  // כלל 24.10.2026: ממתינה = רשימה שגם רחוקה לפחות 75% מממוצע המשתתפים וגם לפחות 7 מנדטים מחוץ לטווח הסקרים
   const RANGES = { likud: { lo: 0, hi: 120 }, yashar: { lo: 18, hi: 24 }, shas: { lo: 8, hi: 10 }, amcha: { lo: 0, hi: 5 } };
   beforeEach(() => setPollRanges(RANGES));
   const typical = (p) => ver(p, "seats", guess({ yashar: 20, shas: 10 }));
@@ -26,10 +26,10 @@ describe("השערות חריגות", () => {
     expect(flagReasons(ver("c", "seats", guess({ yashar: 5, shas: 10 })), MEANS)).toHaveLength(1);
   });
 
-  it("רחוקה מהממוצע אבל פחות מ-5 מחוץ לטווח ⇐ תקינה", () => {
-    // amcha 9: ממוצע 0 (כל מרחק הוא 75%+), אבל רק 4 מעל הטווח 0–5
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 9 })), MEANS)).toEqual([]);
-    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 10 })), MEANS)).toHaveLength(1);
+  it("רחוקה מהממוצע אבל פחות מ-7 מחוץ לטווח ⇐ תקינה (הכרעת בעלים 25.10.2026)", () => {
+    // amcha 11: ממוצע 0 (כל מרחק הוא 75%+), אבל רק 6 מעל הטווח 0–5
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 11 })), MEANS)).toEqual([]);
+    expect(flagReasons(ver("c", "seats", guess({ yashar: 20, shas: 10, amcha: 12 })), MEANS)).toHaveLength(1);
   });
 
   it("moderate מחשב את ממוצע המשתתפים מההשערות עצמן", () => {

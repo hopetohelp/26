@@ -76,10 +76,11 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const voters = member ? group : all;
   // חברי הקבוצה: ממוצע הקבוצה מול ממוצע הסקרים או מול כל המשתתפים — לפי בחירת מנהל הקבוצה (הכרעת בעלים 24.10.2026)
   const vsPolls = (raw?.compare ?? "polls") === "polls";
-  // השוואה לממוצע הניחושים: הסרגל בוחר טווח (כל הסקרים / 14 ו־i24 / הניחושים). "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
-  const ranges = !!member && !vsPolls;
-  // ברירת המחדל בהשוואה לממוצע הניחושים: טווח כל הניחושים (הכרעת בעלים 25.10.2026), עד שבוחרים טווח אחר במסך הזה
-  const rangeKey = ranges && !pickedRange ? "crowd" : source.key;
+  // לחברי הקבוצה הסרגל בוחר תמיד טווח (כל הסקרים / 14 ו־i24 / הניחושים), בכל השוואה שהמנהל בחר (הכרעת בעלים 25.10.2026).
+  // "טווח הניחושים" = מינימום, רבעונים ומקסימום של כל המשתתפים
+  const ranges = !!member;
+  // ברירת המחדל בהשוואה לממוצע הניחושים: טווח כל הניחושים; בהשוואה לממוצע הסקרים — טווח הסקרים. עד שבוחרים טווח אחר במסך הזה
+  const rangeKey = ranges && !vsPolls && !pickedRange ? "crowd" : source.key;
   const rangeSource = { ...source, key: rangeKey, setKey: (k: string) => { setPickedRange(true); source.setKey(k); } };
   const crowdRange = ranges && rangeKey === "crowd";
   const crowdRows = new Map((all?.seats?.full ?? []).map(r => [r.list, r]));

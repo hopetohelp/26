@@ -225,15 +225,16 @@ describe("group insights", () => {
 });
 
 describe("group series", () => {
-  it("hourly for 72 hours, daily before; counts hidden below the threshold", async () => {
-    const { seriesBuckets, SERIES_HOURS } = await import("../index.js");
+  it("hourly from 24/10 23:00, no daily points; counts hidden below the threshold", async () => {
+    const { seriesBuckets } = await import("../index.js");
     const now = Date.parse("2026-10-25T10:30:00Z");
     const b = seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), now);
     // השעתי מתחיל ב-24/10 23:00 שעון ישראל (20:00 UTC): עד 10:00 UTC יש 15 שעות
     expect(b.filter((x) => x.hourly)).toHaveLength(15);
     expect(new Date(b.find((x) => x.hourly).start).toISOString()).toBe("2026-10-24T20:00:00.000Z");
     const later = seriesBuckets(Date.parse("2026-10-15T08:00:00Z"), Date.parse("2026-11-01T10:30:00Z"));
-    expect(later.filter((x) => x.hourly)).toHaveLength(SERIES_HOURS);
+    expect(later.every((x) => x.hourly)).toBe(true);
+    expect(later).toHaveLength(Math.floor((Date.parse("2026-11-01T10:30:00Z") - Date.parse("2026-10-24T20:00:00Z")) / 3600_000) + 1);
     expect(later[0].start).toBe(Date.parse("2026-10-24T20:00:00Z"));
     for (let i = 1; i < later.length; i++) expect(later[i].start).toBe(later[i - 1].end);
     // אין נקודות לפני 24/10 23:00
@@ -250,7 +251,7 @@ describe("group series", () => {
     expect((await call("/group/series?group=gizra", { token: outsider })).status).toBe(403);
     const d = (await call("/group/series?group=gizra", { token: mgr })).data;
     const by = Object.fromEntries(d.series.map((s) => [s.key, s]));
-    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"]);
+    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "visits", "outsideLink", "outsideFirst"]);
     expect(by.list.total).toBe(GROUP_MIN);
     // מנהל הקבוצה נספר כחבר — כמו בדשבורד הקבוצה (מקור אמת אחד)
     expect(by.registered.total).toBe(GROUP_MIN + 1);
@@ -319,5 +320,21 @@ describe("group support threads", () => {
     expect((await call("/group/support/act", { token: mgr, body: { ...body, handle: "bad" } })).status).toBe(400);
     expect((await call("/group/support/act", { token: mgr, body: { ...body, action: "drop" } })).status).toBe(400);
     expect((await call("/group/support/act", { token: mgr, body })).status).toBe(403); // מתחת לסף
+  });
+});
+
+describe("כניסות לאתר (הכרעת בעלים 25.10.2026)", () => {
+  it("כניסה נרשמת רק אחרי חצי שעה לפחות מהקודמת", async () => {
+    const tok = await account("v@x.co");
+    const visits = () => env.DB.raw.prepare("SELECT COUNT(*) AS n FROM participant_visits").get().n;
+    await call("/me", { token: tok });
+    await call("/me", { token: tok });
+    expect(visits()).toBe(1);
+    t += 29 * 60_000;
+    await call("/me", { token: tok });
+    expect(visits()).toBe(1);
+    t += 2 * 60_000;
+    await call("/me", { token: tok });
+    expect(visits()).toBe(2);
   });
 });

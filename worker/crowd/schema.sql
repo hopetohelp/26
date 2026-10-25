@@ -405,3 +405,11 @@ CREATE TABLE IF NOT EXISTS version_accepted_v2 (
   version_id INTEGER PRIMARY KEY REFERENCES versions(id),
   accepted_at TEXT NOT NULL
 );
+
+-- כניסות של חשבונות לאתר (הכרעת בעלים 25.10.2026): כניסה אחת לכל פעם שהחשבון פותח את האתר, במרחק של לפחות חצי שעה מהקודמת.
+-- לגרף "כניסות" במסך ניהול קבוצה. מזהה חשבון וזמן בלבד.
+CREATE TABLE IF NOT EXISTS participant_visits (
+  participant TEXT NOT NULL,
+  at TEXT NOT NULL,
+  PRIMARY KEY (participant, at)
+);

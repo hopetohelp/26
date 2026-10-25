@@ -187,15 +187,15 @@ async function groupCompare(env, id) {
   try { return (await env.DB.prepare("SELECT ref FROM group_compare WHERE group_id = ?").bind(id).first())?.ref ?? "polls"; } catch { return "polls"; }
 }
 
-/** כמה שעות אחורה הגרף שעתי; לפני כן — נקודה ליום (הכרעת בעלים 24.10.2026) */
+/** נשמר בתשובה לתאימות; הגרף כולו שעתי מ-SERIES_HOURLY_FROM */
 export const SERIES_HOURS = 72;
 /** תחילת הגרף השעתי: 24/10/2026 23:00 שעון ישראל (שעון קיץ, UTC+3) */
 export const SERIES_HOURLY_FROM = Date.parse("2026-10-24T20:00:00Z");
 /** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
-export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "outsideLink", "outsideFirst"];
+export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "visits", "outsideLink", "outsideFirst"];
 
 /**
- * סדרות זמן לקבוצה: לכל מדד — סך הכול ונקודות מצטברות: שעתיות ב-72 השעות האחרונות, ויומיות (יום בשעון ישראל) לפני כן.
+ * סדרות זמן לקבוצה: לכל מדד — סך הכול ונקודות מצטברות, נקודה לכל שעה מ-24/10 23:00.
  * מדד שסך הכול שלו מתחת ל-GROUP_MIN מוחזר בלי נקודות ובלי מספר (כמו שאר מספרי הקבוצה), חוץ מגודל הרשימה.
  */
 export async function groupSeries(env, id, now) {
@@ -213,6 +213,8 @@ export async function groupSeries(env, id, now) {
     env.DB.prepare("SELECT id, created_at AS t FROM participants"),
     env.DB.prepare("SELECT participant, unit, MIN(created_at) AS t FROM versions WHERE unit IN ('seats', 'vote') GROUP BY participant, unit"),
   ]);
+  let visitRows = [];
+  try { visitRows = (await env.DB.prepare("SELECT participant, at FROM participant_visits WHERE at >= ?").bind(iso(SERIES_HOURLY_FROM)).all()).results || []; } catch { /* בלי טבלה עדיין */ }
   const g = created.results?.[0];
   if (!g) throw new HttpError(404, "not_found");
   const listAny = new Set((anyList.results || []).map((r) => r.id));
@@ -224,12 +226,15 @@ export async function groupSeries(env, id, now) {
   // ניחוש שנספר בממוצע: אותה בדיקה כמו בדשבורד (moderationState) — ההשערה האחרונה, לא "בבדיקה", לא ממתינה ולא נדחתה
   const counted = await countedGuessers(env, members);
   const ts = (list) => list.map((t) => Date.parse(t)).filter(Number.isFinite);
-  const outside = [...joinedAt.keys()].filter((p) => !members.has(p) && !listAny.has(p));
+  // מחוץ לרשימה = לא ברשימת המיילים, גם כשמתג הקישור מצרף אותם לקבוצה — כך הכרטיס עם המתג נשאר יציב (הכרעת בעלים 25.10.2026)
+  const outside = [...joinedAt.keys()].filter((p) => !listAny.has(p));
   const events = {
     linkFirst: ts([...joinedAt].filter(([p]) => members.has(p)).map(([, t]) => t)),
     registered: ts([...members].map((p) => createdAt.get(p))),
     seats: ts([...counted].map((p) => firstOf.seats.get(p))),
     vote: ts([...members].map((p) => firstOf.vote.get(p))),
+    // כניסות שונות של חברי הקבוצה (חצי שעה לפחות בין כניסות של אותו חשבון) — נרשמות מ-25.10.2026
+    visits: ts(visitRows.filter((r) => members.has(r.participant)).map((r) => r.at)),
     outsideLink: ts(outside.map((p) => joinedAt.get(p))),
     outsideFirst: ts(outside.filter((p) => firstSet.has(p)).map((p) => joinedAt.get(p))),
   };
@@ -248,20 +253,11 @@ export async function groupSeries(env, id, now) {
   return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
 }
 
-/** נקודות הזמן: יום (שעון ישראל) לכל יום שהסתיים לפני 72 השעות האחרונות, ואחר כך שעה לכל שעה עד עכשיו */
+/** נקודות הזמן: נקודה לכל שעה מ-24/10 23:00 שעון ישראל עד עכשיו, בלי תצוגה יומית (הכרעת בעלים 25.10.2026) */
 export function seriesBuckets(start, now) {
   const HOUR_MS = 3600_000;
-  // הגרף מתחיל ב-24/10 23:00 שעון ישראל, בלי שום נקודה לפני כן (הכרעת בעלים 25.10.2026). הנקודה הראשונה כוללת את כל מה שנצבר עד אז.
-  // 72 השעות האחרונות — נקודה לשעה; מה שלפניהן (אחרי 24/10 23:00) — נקודה ליום
-  const hourStart = Math.max(SERIES_HOURLY_FROM, Math.floor(now / HOUR_MS) * HOUR_MS - (SERIES_HOURS - 1) * HOUR_MS);
   const out = [];
-  let t = Math.max(SERIES_HOURLY_FROM, Date.parse(israelDayStart(start)));
-  while (t < hourStart) {
-    const next = Date.parse(israelDayStart(t + 26 * HOUR_MS));
-    out.push({ start: t, end: Math.min(next, hourStart), hourly: false });
-    t = next;
-  }
-  for (let h = hourStart; h <= now; h += HOUR_MS) out.push({ start: h, end: Math.min(h + HOUR_MS, now + 1), hourly: true });
+  for (let h = SERIES_HOURLY_FROM; h <= now; h += HOUR_MS) out.push({ start: h, end: Math.min(h + HOUR_MS, now + 1), hourly: true });
   // לפני תחילת הגרף (בדיקות, שעון אחר) — לפחות נקודה אחת לשעה הנוכחית
   if (!out.length) { const h = Math.floor(now / HOUR_MS) * HOUR_MS; out.push({ start: h, end: now + 1, hourly: true }); }
   return out;
@@ -278,6 +274,14 @@ async function logGroupSizes(env, now) {
 async function countedGuessers(env, members) {
   const { latest, mod, review } = await moderationState(env);
   return new Set(latest.filter((v) => members.has(v.participant) && !review.has(v.participant) && !mod.isExcluded(v) && !mod.rejected.has(v.id) && !mod.pending.has(v.id)).map((v) => v.participant));
+}
+
+/** כניסה לאתר (כל פתיחה קוראת ל-/me): נרשמת רק אם עברה לפחות חצי שעה מהכניסה הקודמת של החשבון (הכרעת בעלים 25.10.2026) */
+export const VISIT_GAP_MS = 30 * 60_000;
+async function logVisit(env, participant, now) {
+  try {
+    await env.DB.prepare("INSERT OR IGNORE INTO participant_visits (participant, at) SELECT ?1, ?2 WHERE NOT EXISTS (SELECT 1 FROM participant_visits WHERE participant = ?1 AND at > ?3)").bind(participant, iso(now), iso(now - VISIT_GAP_MS)).run();
+  } catch { /* הטבלה עוד לא קיימת — הכניסה לא נרשמת, ו-/me ממשיך */ }
 }
 
 /** חברי הקבוצה (מזהי משתתפים) — אותה הגדרה כמו בכל מספרי הקבוצה */
@@ -877,6 +881,7 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     const p = await env.DB.prepare("SELECT id, created_at FROM participants WHERE id = ?").bind(participant).first();
     if (!p) throw new HttpError(401, "unauthorized");
+    await logVisit(env, participant, now);
     const { results } = await env.DB.prepare(
       "SELECT v.* FROM versions v JOIN (SELECT unit, MAX(id) AS id FROM versions WHERE participant = ? GROUP BY unit) m ON v.id = m.id",
     )
@@ -1058,7 +1063,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
