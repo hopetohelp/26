@@ -62,19 +62,22 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
     return () => { live = false; };
   }, [id, token]);
   const img = image ? groupImageUrl({ id }, image) : null;
+  const listTotal = series?.series.find((x) => x.key === "list")?.total ?? members ?? null;
   return (
     <>
       <header className="flex items-center gap-4">
         {img && <img src={img} alt="" className="w-14 h-14 rounded-theme object-cover border border-paper-line" />}
         <div className="min-w-0">
           <p className="font-display text-2xl leading-tight truncate">{name}</p>
-          <p className="text-sm text-ink-soft">{slug ? <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a> : "אין עדיין קישור לקבוצה"}</p>
+          {/* מספר המיילים ברשימה — בכותרת (הכרעת בעלים 25.10.2026, במקום הכרטיס הראשון) */}
+          <p className="text-sm text-ink-soft">{listTotal != null && <><strong className="font-num tabular text-ink">{n(listTotal)}</strong> ברשימת המיילים · </>}{slug ? <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a> : "אין עדיין קישור לקבוצה"}</p>
         </div>
       </header>
       {failed && <p className="text-sm text-ink-soft">הנתונים אינם זמינים כרגע. כלי הניהול למטה פועלים.</p>}
       {/* כל חלק במגירה (הכרעת בעלים 25.10.2026): כל המספרים בסטטיסטיקה בראש המסך, כל נושא הניחושים במגירה אחת — בלי נתון כפול */}
       <div className="space-y-3">
-        <Section title="סטטיסטיקה" open aside={series ? hourlyNote(series) : undefined}>
+        {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
+        <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
           <Measures data={series} failed={failed} />
           {/* רק דפדפנים שונים (הכרעת בעלים 25.10.2026): כל דפדפן נספר פעם אחת, בלי כניסות חוזרות */}
           {link && <Sub title="כניסות דרך הקישור">
@@ -175,10 +178,9 @@ function Sub({ title, aside, children }: { title: string; aside?: ReactNode; chi
   return <div className="space-y-2 pt-3 border-t border-paper-line first:border-t-0 first:pt-0"><div className="flex items-baseline justify-between gap-3"><h3 className="font-bold">{title}</h3>{aside && <span className="text-xs text-ink-soft">{aside}</span>}</div>{children}</div>;
 }
 
-/** מתי מתחיל החלק השעתי של הגרפים */
+/** מתי מתחילים הגרפים (24/10 23:00) — נקודה לשעה ב-72 השעות האחרונות, וליום לפני כן */
 function hourlyNote(d: GroupSeries) {
-  const first = d.buckets.find((b) => b.hourly);
-  return first ? `גרפים: שעתי מ-${bucketLabel(first)}, יומי לפני כן` : undefined;
+  return d.buckets[0] ? `הגרפים מ-${bucketLabel(d.buckets[0])}` : undefined;
 }
 
 function Tile({ label, value, sub }: { label: string; value: string; sub?: string }) {
@@ -212,7 +214,7 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
     return (
       <li key={m.key} className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2 min-w-0">
         <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm min-w-0"><span className="text-ink-soft font-num tabular">{i + 1}.</span> {m.label}</p>
+          <p className="text-sm min-w-0"><span className="text-ink-soft font-num tabular">{i}.</span> {m.label}</p>
           <p className="text-end shrink-0"><span className="font-num tabular text-2xl leading-none">{s?.total != null ? n(s.total) : "—"}</span>{pct && <span className="block text-xs text-ink-soft">{pct}</span>}</p>
         </div>
         {m.key === "list" ? null : s?.points ? <GroupSeriesChart buckets={data.buckets} points={s.points} label={m.label} /> : <p className="text-xs text-ink-soft">פחות מ-{data.min} — המספר והגרף יוצגו מ-{data.min}.</p>}
@@ -222,7 +224,7 @@ function Measures({ data, failed }: { data: GroupSeries | null; failed: boolean 
   return (
     <>
       <Sub title="חברי הקבוצה (מרשימת המיילים)">
-        <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
+        <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
       </Sub>
       <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
         <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
