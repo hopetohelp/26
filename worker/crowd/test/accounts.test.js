@@ -250,7 +250,7 @@ describe("אימות מייל", () => {
     const r = await call("/auth/register", { body: { email: "real.person@example.com", password: PW } });
     expect((await call("/me", { token: r.data.token })).data.verifyAvailable).toBe(true);
     expect((await call("/account/verify/send", { token: r.data.token, body: {} })).data).toEqual({ sent: true });
-    expect(sent).toEqual([{ email: "real.person@example.com", continueUrl: "https://hopetohelp.github.io/26/#/support" }]);
+    expect(sent).toEqual([{ email: "real.person@example.com", continueUrl: "https://hopetohelp.github.io/26/#/guess?verified=1" }]);
     // הסיסמה הזמנית אינה סיסמת האתר, ושמורה מוצפנת
     expect(users.get("real.person@example.com").pw).not.toBe(PW);
     expect(JSON.stringify(env.DB.raw.prepare("SELECT * FROM email_verify").all())).not.toContain(users.get("real.person@example.com").pw);
@@ -268,7 +268,7 @@ describe("אימות מייל", () => {
     const origin = "https://26.hopetohelp.net";
     const r = await call("/auth/register", { body: { email: "parallel@example.com", password: PW }, origin });
     expect((await call("/account/verify/send", { token: r.data.token, body: {}, origin })).status).toBe(200);
-    expect(sent[0].continueUrl).toBe(`${origin}/#/support`);
+    expect(sent[0].continueUrl).toBe(`${origin}/#/guess?verified=1`);
     const id = (await call("/me", { token: r.data.token })).data.participant;
     env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = ?").run(id);
     expect((await call("/auth/forgot", { body: { email: "parallel@example.com" }, origin })).status).toBe(200);
