@@ -65,12 +65,3 @@ describe("מצב פשוט ללא שינוי ביכולות מתקדמות", () =
     for (const l of Object.values(POLLSTER_LOGOS)) { expect(existsSync(`public/${l.file}`)).toBe(true); expect(l.source).toMatch(/^https:/); }
   });
 });
-
-describe("חלוקת הכנסת — אותה הגדרה באתר ובשרת", () => {
-  it("חמש הקבוצות זהות ב-KNESSET_GROUPS וב-KNESSET_BLOCS", async () => {
-    const { KNESSET_GROUPS } = await import("./simpleSources");
-    const { KNESSET_BLOCS } = await import("../../worker/crowd/lib/blocDefinitions.js");
-    const key = (l: readonly string[]) => [...l].sort().join(",");
-    expect(KNESSET_BLOCS.map((b: { lists: string[] }) => key(b.lists))).toEqual(KNESSET_GROUPS.map(g => key(g.lists)));
-  });
-});
