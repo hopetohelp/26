@@ -209,6 +209,8 @@ function Pie({ slices, values, label, overlay, inner, parts = [] }: { slices: Sl
   const covered = (a: number) => u != null && a > u.a1 && a < u.a2;
   const shownTotal = slices.reduce((n, s) => n + s.shown, 0);
   let seats = 0;
+  // הפרוסה שהכרטיס שלה פתוח (לחיצה או מעבר עכבר) — זזה מעט החוצה וגדלה (הכרעת בעלים 25.10.2026)
+  const lift = (i: number, a1: number, a2: number, d = 7) => { if (pop?.i !== i) return undefined; const m = (a1 + a2) / 2; return { transform: `translate(${(d * Math.cos(m)).toFixed(1)}px, ${(d * Math.sin(m)).toFixed(1)}px) scale(1.03)`, transformOrigin: `${c}px ${c}px` }; };
   return <div className="f-pie" ref={host}><svg viewBox="0 0 280 280" role="img" aria-label={`${label}: ${slices.map(s => `${s.name} ${s.shown}`).join(", ")}${u ? `; אחדות ${overlay!.shown}` : ""}`}>
     {slices.map((s, i) => {
       const a1 = toA(seats), a2 = toA(seats + s.value), da = a2 - a1, mid = (a1 + a2) / 2;
@@ -216,15 +218,15 @@ function Pie({ slices, values, label, overlay, inner, parts = [] }: { slices: Sl
       const band = covered(mid), rad = band ? (R + rU) / 2 : R * .6;
       const [lx, ly] = at(mid, rad);
       const w = Math.min(2 * rad * Math.sin(Math.min(da, Math.PI) / 2), band ? 90 : 120), h = band ? R - rU : R * .55;
-      return <g key={s.id} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={sector(a1, a2, R)} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
+      return <g key={s.id} className="f-slice" style={lift(i, a1, a2)} {...handlers(i, true)}><path className={s.id === "missing" ? "f-miss" : undefined} d={sector(a1, a2, R)} fill={s.color} stroke="rgb(var(--paper))" strokeWidth="2" />
         {s.value > 0 && <SliceLabel x={lx} y={ly} w={w} h={h} name={s.name} short={s.short} value={s.shown} />}</g>;
     })}
     {/* החלקים הפנימיים שמחוץ לאחדות — פרוסות נפרדות ללחיצה, באותו צבע (בלי כיתוב: הוא בחלק החיצוני) */}
     {u && parts.map((p, k) => { const a1 = toA(p.start), a2 = toA(p.start + p.value);
-      return <path key={p.id} d={sector(a1, a2, rU)} fill={p.color} stroke="rgb(var(--paper))" strokeWidth="2" {...handlers(slices.length + 1 + k, true)} />; })}
+      return <path key={p.id} className="f-slice" style={lift(slices.length + 1 + k, a1, a2, 5)} d={sector(a1, a2, rU)} fill={p.color} stroke="rgb(var(--paper))" strokeWidth="2" {...handlers(slices.length + 1 + k, true)} />; })}
     {inner && inner[1] > inner[0] && (() => { const a1 = toA(inner[0]), a2 = toA(inner[1]), [x1, y1] = at(a1, rU), [x2, y2] = at(a2, rU);
       return <path d={`M${x1} ${y1}A${rU} ${rU} 0 ${a2 - a1 > Math.PI ? 1 : 0} 1 ${x2} ${y2}`} fill="none" stroke="rgb(var(--paper))" strokeWidth="2" pointerEvents="none" />; })()}
-    {u && (() => { const [lx, ly] = at((u.a1 + u.a2) / 2, rU * .5); return <g {...handlers(slices.length, true)}><path d={sector(u.a1, u.a2, rU)} fill={overlay!.color} stroke="rgb(var(--paper))" strokeWidth="2" />
+    {u && (() => { const [lx, ly] = at((u.a1 + u.a2) / 2, rU * .5); return <g className="f-slice" style={lift(slices.length, u.a1, u.a2, 5)} {...handlers(slices.length, true)}><path d={sector(u.a1, u.a2, rU)} fill={overlay!.color} stroke="rgb(var(--paper))" strokeWidth="2" />
       <SliceLabel x={lx} y={ly} w={Math.min(2 * rU * .5 * Math.sin(Math.min(u.a2 - u.a1, Math.PI) / 2), rU)} h={rU * .7} name={overlay!.name} short={overlay!.short} value={overlay!.shown} /></g>; })()}
   </svg>{shownTotal !== 120 && <p className="f-pie-total"><b className="font-num">{shownTotal}</b> מנדטים</p>}
     {(() => { const picked = pop && (slices[pop.i] ?? (u && pop.i === slices.length ? overlay : u ? parts[pop.i - slices.length - 1] : null));
@@ -235,10 +237,10 @@ function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Re
   const { pop, host, handlers } = usePop();
   const total = slices.reduce((s, b) => s + b.value, 0);
   return <div className="f-stack-host" ref={host}><div className="f-stack" role="group" aria-label={label}>{slices.map((s, i) =>
-    <button key={s.id} type="button" className={s.id === "missing" ? "f-miss" : undefined} aria-label={`${s.name} ${s.shown}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
+    <button key={s.id} type="button" className={`${s.id === "missing" ? "f-miss " : ""}${pop?.i === i ? "f-on" : ""}`} aria-label={`${s.name} ${s.shown}`} style={{ flex: s.value, background: s.color }} {...handlers(i, false)}>
       {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{s.shown}</button>)}
   </div>
-    {overlay && overlay.value > 0 && <div className="f-unity-line"><span style={{ flex: overlay.start }} /><button type="button" aria-label={`אחדות ${overlay.shown}`} style={{ flex: overlay.value }} {...handlers(slices.length, false)}>אחדות {overlay.shown}</button><span style={{ flex: Math.max(0, total - overlay.start - overlay.value) }} /></div>}
+    {overlay && overlay.value > 0 && <div className="f-unity-line"><span style={{ flex: overlay.start }} /><button type="button" className={pop?.i === slices.length ? "f-on" : undefined} aria-label={`אחדות ${overlay.shown}`} style={{ flex: overlay.value }} {...handlers(slices.length, false)}>אחדות {overlay.shown}</button><span style={{ flex: Math.max(0, total - overlay.start - overlay.value) }} /></div>}
     {pop && (slices[pop.i] ?? (overlay && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
 }
 /** עריכת החלוקה האישית — במקום אחד בלבד, באזור האישי. לכל רשימה בוחרים תא; אינה משנה מנדטים. */

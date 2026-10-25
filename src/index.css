@@ -732,7 +732,13 @@
 .f-blocedit-name { flex:1;min-width:0;font-size:14px; }
 .f-blocedit select { min-height:44px;border:1px solid rgb(var(--line));border-radius:10px;background:rgb(var(--paper));color:rgb(var(--ink));padding:0 8px;font:inherit; }
 .f-blocedit-reset { min-height:44px;background:none;border:0;color:rgb(var(--signal));text-decoration:underline;cursor:pointer;font:inherit;margin-top:8px; }
-.f-stack { display:flex;height:38px;border-radius:10px;overflow:hidden;gap:2px; }
+.f-slice { transition:transform .15s ease-out; }
+.f-stack > button, .f-unity-line > button { transition:transform .15s ease-out; }
+.f-stack > button.f-on, .f-unity-line > button.f-on { transform:scale(1.08);position:relative;z-index:1;box-shadow:0 2px 8px rgb(var(--ink) / .25); }
+.f-stack > button:first-child { border-start-start-radius:10px;border-end-start-radius:10px; }
+.f-stack > button:last-child { border-start-end-radius:10px;border-end-end-radius:10px; }
+@media (prefers-reduced-motion: reduce) { .f-slice, .f-stack > button, .f-unity-line > button { transition:none; } }
+.f-stack { display:flex;height:38px;border-radius:10px;overflow:visible;gap:2px; }
 .f-stack > button { display:flex;align-items:center;justify-content:center;gap:5px;overflow:hidden;white-space:nowrap;border:0;padding:0 4px;color:#fff;font:700 13px var(--font-num),sans-serif;min-width:24px; }
 .f-stack > button span { font:500 11px var(--font-body),sans-serif; }
 .f-edit { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid rgb(var(--line)); }
