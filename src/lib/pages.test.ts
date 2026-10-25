@@ -7,7 +7,8 @@ describe("קטלוג הניווט האחד", () => {
     expect(navScreens(true).slice(0, 3)).toEqual(navScreens(false));
   });
   it("במתקדם נוסף ״עוד ← בחירות קודמות״; ״מידע ומקורות״ אינו בסרגל אבל זמין תמיד", () => {
-    expect(navScreens(true).map(s => s.id)).toEqual(["home", "guess", "community", "past"]);
+    expect(navScreens(true).map(s => s.id)).toEqual(["home", "guess", "community", "polls", "past"]);
+    expect(navScreens(true).filter(s => s.nav === "more").every(s => s.advanced)).toBe(true);
     expect(screen("method").nav).toBe("foot");
     expect(screen("method").advanced).toBeFalsy();
   });

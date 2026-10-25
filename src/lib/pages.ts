@@ -35,6 +35,8 @@ export const SCREENS: Screen[] = [
   { id: "home", to: "/", label: "תמונת מצב", icon: "home", nav: "core" },
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
   { id: "community", to: "/community", label: "ממוצע הניחושים", icon: "bars", nav: "core" },
+  // זמני עד שלב 3, שבו הסקרים עוברים ללשוניות תמונת מצב (השוואת מכונים · מגמות · ארכיון)
+  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
   { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
   { id: "method", to: "/method", label: "מידע ומקורות", icon: "info", nav: "foot" },
 ];
