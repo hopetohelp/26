@@ -105,6 +105,6 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
     </div>
     <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף ממוצע הניחושים</button></div>
     <FocusFoot />
-    {sharing && <ShareCard heading="שיתוף ממוצע הניחושים" input={{ kind: "average", values: blocValues, group: hagzara }} onClose={() => setSharing(false)} />}
+    {sharing && <ShareCard heading="שיתוף ממוצע הניחושים" input={{ kind: "average", values: blocValues, group: hagzara, mine: Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0])) }} onClose={() => setSharing(false)} />}
   </div>;
 }

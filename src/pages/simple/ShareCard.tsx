@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
@@ -8,10 +8,14 @@ import { sharePalette, IMG_W, ltrText } from "../guess/shareImage";
 import { loadLogo } from "../guess/communityShare";
 import { isEmail } from "../../lib/identifier";
 import { blocSlices } from "./shared";
+import { page } from "../../lib/chunkReload";
+/** סרטון הנתונים נטען רק כשפותחים את חלון השיתוף */
+const PromoVideo = lazy(page(() => import("./PromoVideo")));
 
 /** מה משתפים: ההשערה של המשתתף, או ממוצע המשתתפים (בגזרה: ממוצע הגזרה). */
 export type ShareKind = "mine" | "average";
-export interface ShareInput { kind: ShareKind; values: Record<string, number>; name?: string | null; group?: { slug: string; logoUrl: string | null } | null }
+/** mine = הניחוש של המשתתף, לעוגה השלישית בסרטון (בשיתוף הממוצע) */
+export interface ShareInput { kind: ShareKind; values: Record<string, number>; name?: string | null; group?: { slug: string; logoUrl: string | null } | null; mine?: Record<string, number> }
 
 const SHORT = ["גוש נתניהו", "חרדים", "ערבים", "גוש אייזנקוט"];
 const host = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -112,6 +116,7 @@ export default function ShareCard({ input, heading, onClose }: { input: ShareInp
       <p className="f-invite">{text}</p>
       {input.kind === "mine" && input.name && !isEmail(input.name) && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={withName} onChange={e => setWithName(e.target.checked)} />לצרף את השם שלי (<bdi>{input.name}</bdi>)</label>}
       <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף</button><button type="button" className="f-btn flex-1" onClick={save}>שמירת התמונה</button></div>
+      <Suspense fallback={null}><PromoVideo group={input.group ?? null} mine={input.kind === "mine" ? input.values : input.mine} /></Suspense>
       <button type="button" className="f-btn" onClick={onClose}>סגירה</button>
       {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
     </div></div>, document.body);
