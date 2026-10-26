@@ -101,7 +101,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
         mine={id => mine.seats[id]?.v ?? 0}
         legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!segmented || vsPolls) && <LegendBox kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox kind={segmented ? undefined : "dash"} label="ממוצע כל הניחושים" />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
-        {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><VotingStats d={voters} /></CardDrawer>}</div>
+        {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><p className="text-xs text-ink-soft mb-3">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
     <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף ממוצע הניחושים</button></div>
     <FocusFoot />
