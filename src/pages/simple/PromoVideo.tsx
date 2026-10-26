@@ -14,7 +14,8 @@ import type { Dashboard } from "../../lib/crowdApi";
 
 /** סדר הגושים בעוגה — כמו העוגה באתר */
 const RING = ["netanyahu", "eisenkot", "arab", "haredi"];
-const GOAL = 3000;
+/** יעד המונה: 3,000 (הכרעת בעלים), וכשעוברים אותו — היעד העגול הבא, כך שהסרטון מתאים לכל כמות בלי שינוי */
+export const nextGoal = (n: number) => [3000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000].find(g => g > n) ?? Math.ceil((n + 1) / 1e6) * 1e6;
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`; };
 
@@ -22,29 +23,33 @@ const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); retu
  * נתוני הסרטון — מאותן פונקציות של המסכים (מקור אמת אחד): ממוצע הסקרים של האתר (simpleValue), ממוצע הניחושים מלוח המשתתפים,
  * סדר הרשימות של הגרף (orderedLists), הגושים והשלמים שלהם (blocSlices), ומספר הניחושים המלאים ברגע היצירה.
  */
-export async function buildPromoData(dash: Dashboard, group: { slug: string; logoUrl: string | null } | null): Promise<PromoData> {
+export async function buildPromoData(dash: Dashboard, group: { slug: string; logoUrl: string | null } | null, myGuess?: Record<string, number> | null): Promise<PromoData> {
+  // הניחוש שלי — עוגה שלישית, רק כשהוא מלא (120)
+  const total = myGuess ? Object.values(myGuess).reduce((a, b) => a + (b || 0), 0) : 0;
+  const mine = myGuess && Math.abs(total - 120) < .5 ? myGuess : null;
   const selection = simpleSelection("all");
   const crowd: Record<string, number> = Object.fromEntries((dash.seats?.full ?? []).map(r => [r.list, r.mean]));
   const polls = (id: string) => simpleValue(selection, [id]) ?? 0;
   const ids = orderedLists(selection, [], crowd);
-  const lists: PromoList[] = await Promise.all(ids.map(async id => ({ id, name: nameOf(id), polls: polls(id), crowd: crowd[id] ?? 0, img: PARTY_IMAGES[id] ? await loadImg(`${import.meta.env.BASE_URL}${PARTY_IMAGES[id].file}`) : null })));
+  const lists: PromoList[] = await Promise.all(ids.map(async id => ({ id, name: nameOf(id), polls: polls(id), crowd: crowd[id] ?? 0, ...(mine ? { mine: mine[id] ?? 0 } : {}), img: PARTY_IMAGES[id] ? await loadImg(`${import.meta.env.BASE_URL}${PARTY_IMAGES[id].file}`) : null })));
   const pollValues = Object.fromEntries(ids.map(id => [id, polls(id)]));
-  const sp = blocSlices(pollValues), sc = blocSlices(crowd);
+  const sp = blocSlices(pollValues), sc = blocSlices(crowd), sm = mine ? blocSlices(mine) : null;
   const blocs = RING.map(id => {
-    const p = sp.find(s => s.id === id), c = sc.find(s => s.id === id);
-    return { id, short: p?.short ?? c?.short ?? id, polls: p?.value ?? 0, crowd: c?.value ?? 0, shown: { polls: p?.shown ?? 0, crowd: c?.shown ?? 0 }, color: BLOC_COLORS[id] };
+    const p = sp.find(s => s.id === id), c = sc.find(s => s.id === id), m = sm?.find(s => s.id === id);
+    const my = sm ? { mine: m?.value ?? 0 } : {};
+    return { id, short: SIMPLE_BLOCS.find(b => b.id === id)?.short ?? id, polls: p?.value ?? 0, crowd: c?.value ?? 0, ...my, shown: { polls: p?.shown ?? 0, crowd: c?.shown ?? 0, ...(sm ? { mine: m?.shown ?? 0 } : {}) }, color: BLOC_COLORS[id] };
   });
-  const haredi = lists.filter(l => SIMPLE_BLOCS[1].lists.includes(l.id) && (l.polls >= .5 || l.crowd >= .5));
+  const haredi = lists.filter(l => SIMPLE_BLOCS[1].lists.includes(l.id) && (l.polls >= .5 || l.crowd >= .5 || (l.mine ?? 0) >= .5));
   const gap = [...lists].sort((a, b) => Math.abs(b.crowd - b.polls) - Math.abs(a.crowd - a.polls))[0];
   const link = group ? groupUrl(group.slug) : SITE_URL, q = qrcode(0, "M");
   q.addData(link); q.make();
   const m = q.getModuleCount(), qr = Array.from({ length: m }, (_, r) => Array.from({ length: m }, (_, k) => q.isDark(r, k)));
   const logo = await loadLogo(group?.logoUrl ?? groupImageUrl({ slug: "hagzara" }, "promo"));
-  return { asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: GOAL, host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
+  return { asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: nextGoal(dash.seats?.n ?? 0), host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
 }
 
 /** "צור סרטון" בחלון השיתוף: הסרטון נבנה בדפדפן מהנתונים של הרגע הזה — בלי AI, בלי שרת ובלי עלות */
-export default function PromoVideo({ group }: { group: { slug: string; logoUrl: string | null } | null }) {
+export default function PromoVideo({ group, mine }: { group: { slug: string; logoUrl: string | null } | null; mine?: Record<string, number> | null }) {
   const crowd = useCrowdDashboard();
   const [state, setState] = useState<"idle" | "busy" | "done" | "failed">("idle");
   const [progress, setProgress] = useState(0);
@@ -57,7 +62,7 @@ export default function PromoVideo({ group }: { group: { slug: string; logoUrl: 
     if (!dash) return;
     setState("busy"); setProgress(0); setMsg(null);
     try {
-      const [{ renderPromoVideo }, data] = await Promise.all([import("../../lib/promoEncode"), buildPromoData(dash, group)]);
+      const [{ renderPromoVideo }, data] = await Promise.all([import("../../lib/promoEncode"), buildPromoData(dash, group, mine)]);
       const f = await renderPromoVideo(data, setProgress);
       setFile(f); setUrl(URL.createObjectURL(f.blob)); setState("done");
     } catch { setState("failed"); }

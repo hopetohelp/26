@@ -6,11 +6,11 @@
 import { seatsFmt } from "./format";
 
 export const PROMO = { W: 1080, H: 1920, FPS: 30, DUR: 20 } as const;
-export interface PromoList { id: string; name: string; polls: number; crowd: number; img: CanvasImageSource | null }
+export interface PromoList { id: string; name: string; polls: number; crowd: number; mine?: number; img: CanvasImageSource | null }
 /** shown = השלמים שהאתר מציג (blocSlices), כדי שהסרטון והעוגה באתר יראו אותו מספר */
-export interface PromoBloc { id: string; short: string; polls: number; crowd: number; shown: { polls: number; crowd: number }; color: string }
+export interface PromoBloc { id: string; short: string; polls: number; crowd: number; mine?: number; shown: { polls: number; crowd: number; mine?: number }; color: string }
 export interface PromoData {
-  asOf: string; lists: PromoList[]; blocs: PromoBloc[]; haredi: { id: string; name: string; polls: number; crowd: number }[];
+  asOf: string; lists: PromoList[]; blocs: PromoBloc[]; haredi: { id: string; name: string; polls: number; crowd: number; mine?: number }[];
   gap: PromoList; guesses: number; goal: number; host: string; logo: CanvasImageSource | null; qr: boolean[][];
 }
 /** קנבסים זמניים למעברים — נוצרים פעם אחת */
@@ -24,7 +24,7 @@ export const SCENES = { open: 0, who: 1.5, chart: 3.5, pies: 7.5, haredi: 10.5, 
 const HITS = [0, 1.5, 1.875, 2.25, 2.75, 3.5, 7.5, 10.5, 13.5, 14.25, 15.5, 16.5, 17.5, 18.9];
 const FLASH: [number, number][] = [[1.5, .9], [3.5, .5], [7.5, .7], [10.5, .35], [17.5, .6]];
 /** צבעי סמל הגזרה על רקע כהה; הגושים — כמו טוקני הגזרה באתר (נתניהו כחול, אייזנקוט אדום) */
-export const PC = { bg: "#05070d", ink: "#ffffff", soft: "rgba(255,255,255,.62)", faint: "rgba(255,255,255,.1)", blue: "#2f74d8", blueHi: "#7fb0f2", red: "#e3262f", redHi: "#ff6b72" };
+export const PC = { bg: "#05070d", ink: "#ffffff", soft: "rgba(255,255,255,.62)", faint: "rgba(255,255,255,.1)", blue: "#2f74d8", blueHi: "#7fb0f2", red: "#e3262f", redHi: "#ff6b72", gold: "#b2781c", goldHi: "#e2b25c" };
 export const BLOC_COLORS: Record<string, string> = { netanyahu: "#2f74d8", eisenkot: "#e3262f", haredi: "#9aa8b8", arab: "#5d6b7c" };
 const HE = '"Rubik", sans-serif', NUM = '"Roboto Mono", "Rubik", sans-serif';
 
@@ -133,7 +133,9 @@ function sceneWho(c: Ctx, t: number, frame: number) {
 }
 
 // ── 3. 13 הרשימות ───────────────────────────────────────────────────────────
-const AX = { right: 680, left: 110, max: 32 };
+const AX = { right: 680, left: 110 };
+/** סוף הציר: 32 כמו באתר, וגדל בקפיצות של 8 כשרשימה עוברת אותו */
+const axisMax = (d: PromoData) => Math.max(32, Math.ceil(Math.max(...d.lists.flatMap(l => [l.polls, l.crowd])) / 8) * 8);
 function sceneChart(c: Ctx, t: number, d: PromoData) {
   const head = eo(pr(t, 3.5, 3.8));
   c.save(); c.globalAlpha = head;
@@ -142,8 +144,8 @@ function sceneChart(c: Ctx, t: number, d: PromoData) {
   c.font = `600 32px ${HE}`; const lw = (s: string) => c.measureText(s).width + 40, a = lw("ממוצע הסקרים"), b = lw("ממוצע הניחושים"), x1 = 540 + (a + b + 50) / 2;
   pill(c, x1 - 26, 312, 26, 26, PC.blue); text(c, "ממוצע הסקרים", x1 - 40, 326, 32, { w: 600, align: "right" });
   pill(c, x1 - a - 50 - 26, 312, 26, 26, PC.red); text(c, "ממוצע הניחושים", x1 - a - 50 - 40, 326, 32, { w: 600, align: "right" });
-  const span = AX.right - AX.left;
-  [8, 16, 24, 32].forEach(v => { const x = AX.right - v / AX.max * span; c.fillStyle = PC.faint; c.fillRect(x - 1, 380, 2, 1400); text(c, String(v), x, 372, 22, { w: 500, color: PC.soft, font: NUM, ltr: true }); });
+  const span = AX.right - AX.left, max = axisMax(d);
+  [1, 2, 3, 4].map(q => max * q / 4).forEach(v => { const x = AX.right - v / max * span; c.fillStyle = PC.faint; c.fillRect(x - 1, 380, 2, 1400); text(c, String(v), x, 372, 22, { w: 500, color: PC.soft, font: NUM, ltr: true }); });
   c.restore();
   const n = d.lists.length, top = 400, rowH = Math.min(106, 1390 / n), sheen = t > 5.3 ? ((t - 5.3) % 1.3) / 1.3 : -1;
   d.lists.forEach((l, i) => {
@@ -155,7 +157,7 @@ function sceneChart(c: Ctx, t: number, d: PromoData) {
     const nameMax = W - 98 - rowH * .34 - 18 - (AX.right + 24);
     text(c, l.name, W - 98 - rowH * .34 - 18, cy, fit(c, l.name, nameMax, 34, 600), { w: 600, align: "right" });
     const bar = (v: number, by: number, color: string, hi: string) => {
-      const w = Math.max(10, v / AX.max * span * k), x0 = AX.right - w, bh = rowH * .2;
+      const w = Math.max(10, v / max * span * k), x0 = AX.right - w, bh = rowH * .2;
       const g = c.createLinearGradient(AX.right, 0, x0, 0); g.addColorStop(0, color); g.addColorStop(1, hi);
       pill(c, x0, by - bh / 2, w, bh, g);
       if (sheen >= 0) { // ברק עדין שעובר על הקפסולות בזמן הקריאה — לא על המספרים
@@ -226,15 +228,20 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
     c.restore();
   }
 }
+/** עוגה לכל מקור: הסקרים, הניחושים, ואם יש — הניחוש שלי (שלוש עוגות קטנות יותר, באותו מסך ובאותו תזמון) */
+const PIE_KINDS = [{ key: "polls", label: "הסקרים", color: PC.blue, hi: PC.blueHi }, { key: "crowd", label: "הניחושים", color: PC.red, hi: PC.redHi }, { key: "mine", label: "הניחוש שלי", color: PC.gold, hi: PC.goldHi }] as const;
 function scenePies(c: Ctx, t: number, d: PromoData) {
   const build = pr(t, 7.55, 8.7), sweep = eo(build), labels = pr(t, 8.6, 8.95);
   const rotAt = (tt: number) => -Math.PI / 2 + .5 * (tt - 7.5) + 2.6 * (1 - eo(pr(tt, 7.5, 8.7)));
-  const S = (key: "polls" | "crowd"): Slice[] => d.blocs.map(b => ({ id: b.id, short: b.short, value: b[key], color: b.color }));
   const h = eio(pr(t, 10.5, 11.15)), pop = eo(pr(t, 10.7, 11.15)), grow = back(pr(t, 7.5, 8.05));
-  const pies = (["polls", "crowd"] as const).map((key, i) => {
-    const slices = S(key), r0 = rotAt(Math.min(t, 10.5)), m0 = midOf(slices, "haredi", r0);
+  const kinds = PIE_KINDS.filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)), n = kinds.length;
+  // פריסה: שתי עוגות — גדולות; שלוש — קטנות יותר ובמרווח שווה
+  const L = n === 3 ? { cys: [560, 1040, 1520], rx: [300, 225], card: 400 } : { cys: [650, 1330], rx: [360, 255], card: 420 };
+  const pies = kinds.map((k, i) => {
+    const slices: Slice[] = d.blocs.map(b => ({ id: b.id, short: b.short, value: b[k.key] ?? 0, color: b.color }));
+    const off = i * .35, r0 = rotAt(Math.min(t, 10.5)) + off, m0 = midOf(slices, "haredi", r0);
     const target = r0 + ((Math.PI / 2 - m0) % TAU + TAU) % TAU;  // החרדים מסתובבים לחזית
-    return { key, slices, shown: d.blocs.map(b => b.shown[key]), rot: t < 10.5 ? r0 + (i ? .35 : 0) : lerp(r0 + (i ? .35 : 0), target, h), cy: i ? 1330 : 650 };
+    return { k, slices, shown: d.blocs.map(b => b.shown[k.key] ?? 0), rot: t < 10.5 ? r0 : lerp(r0, target, h), cy: L.cys[i] };
   });
   // כותרת: חלוקת הכנסת ⇐ המפלגות החרדיות
   c.save(); c.globalAlpha = eo(pr(t, 7.6, 8)) * (1 - h); text(c, "הכנסת לפי גושים", 540, 240, 66, { w: 900 }); c.restore();
@@ -242,25 +249,29 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
   const punch = t >= 10.5 ? 1 + .12 * Math.exp(-(t - 10.5) * 9) : 1;
   c.save(); c.translate(540, 990); c.scale(punch, punch); c.translate(-540, -990);
   pies.forEach((p, i) => {
-    const cx = lerp(540, 735, h), rx = lerp(360, 255, h) * grow, ry = rx * .42;
-    const tag = eo(pr(t, 7.7 + i * .12, 8.1 + i * .12));
+    const cx = lerp(540, 735, h), rx = lerp(L.rx[0], L.rx[1], h) * grow, ry = rx * .42;
+    const tag = eo(pr(t, 7.7 + i * .12, 8.1 + i * .12)), ly = p.cy - lerp(L.rx[0], L.rx[1], h) * .42 - 70;
     c.save(); c.globalAlpha = tag * (1 - h);
-    pill(c, 540 - 120, p.cy - lerp(250, 190, h) - 30, 240, 60, i ? PC.red : PC.blue); text(c, i ? "הניחושים" : "הסקרים", 540, p.cy - lerp(250, 190, h), 34, { w: 800 });
+    c.font = `800 34px ${HE}`; const pw = c.measureText(p.k.label).width + 60;
+    pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800 });
     c.restore();
     if (rx > 1) pie3d(c, { cx, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels: labels * (1 - pop), pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: pop * .72 } : undefined });
     // כרטיס המספרים של החרדים
     const ck = eo(pr(t, 10.95 + i * .12, 11.4 + i * .12)); if (ck <= 0) return;
-    const hs = p.shown[p.slices.findIndex(s => s.id === "haredi")];
+    const hs = p.shown[p.slices.findIndex(s => s.id === "haredi")], ch = L.card, small = n === 3;
     c.save(); c.globalAlpha = ck; c.translate(-60 * (1 - ck), 0);
-    const x0 = 60, w = 400, top = p.cy - 230;
-    c.beginPath(); c.roundRect(x0, top, w, 420, 28); c.fillStyle = "rgba(255,255,255,.07)"; c.fill(); c.strokeStyle = i ? PC.red : PC.blue; c.lineWidth = 3; c.stroke();
-    pill(c, x0 + w - 200, top + 24, 176, 52, i ? PC.red : PC.blue); text(c, i ? "הניחושים" : "הסקרים", x0 + w - 112, top + 50, 30, { w: 800 });
-    text(c, String(hs), x0 + w / 2, top + 160, 140, { w: 800, font: NUM, ltr: true });
-    text(c, "מנדטים", x0 + w / 2, top + 246, 30, { w: 600, color: PC.soft });
+    const x0 = 60, w = 400, top = p.cy - ch / 2 - 10;
+    c.beginPath(); c.roundRect(x0, top, w, ch, 28); c.fillStyle = "rgba(255,255,255,.07)"; c.fill(); c.strokeStyle = p.k.color; c.lineWidth = 3; c.stroke();
+    c.font = `800 30px ${HE}`; const cw = c.measureText(p.k.label).width + 48;
+    pill(c, x0 + w - 24 - cw, top + 22, cw, 52, p.k.color); text(c, p.k.label, x0 + w - 24 - cw / 2, top + 48, 30, { w: 800 });
+    text(c, String(hs), x0 + w / 2, top + (small ? 140 : 160), small ? 120 : 140, { w: 800, font: NUM, ltr: true });
+    text(c, "מנדטים", x0 + w / 2, top + (small ? 215 : 246), 30, { w: 600, color: PC.soft });
+    // שורה לכל רשימה חרדית; כשיש הרבה — השורות מתכווצות כדי להישאר בכרטיס
+    const y0 = top + (small ? 268 : 312), step = Math.min(50, (top + ch - 26 - y0) / Math.max(1, d.haredi.length - .5)), fs = Math.min(32, step * .66);
     d.haredi.forEach((l, j) => {
-      const y = top + 312 + j * 50;
-      text(c, l.name, x0 + w - 28, y, 32, { w: 600, align: "right" });
-      text(c, num(i ? l.crowd : l.polls), x0 + 28, y, 34, { w: 700, font: NUM, align: "left", ltr: true, color: i ? PC.redHi : PC.blueHi });
+      const y = y0 + j * step, v = l[p.k.key] ?? 0;
+      text(c, l.name, x0 + w - 28, y, fit(c, l.name, w - 150, fs, 600), { w: 600, align: "right" });
+      text(c, num(v), x0 + 28, y, fs + 2, { w: 700, font: NUM, align: "left", ltr: true, color: p.k.hi });
     });
     c.restore();
   });
@@ -275,7 +286,7 @@ function sceneGap(c: Ctx, t: number, d: PromoData) {
   c.save(); c.translate(540, 600); c.scale(k, k); avatar(c, l.img, 0, 0, 140, l.name); c.restore();
   c.save(); c.globalAlpha = pr(t, 13.7, 13.9); text(c, l.name, 540, 800, 64, { w: 800 }); c.restore();
   const bar = (v: number, y: number, color: string, hi: string, label: string, s: number) => {
-    const k2 = eo(pr(t, s, s + .45)), max = 900, w = Math.max(20, v / AX.max * max * k2), x0 = 990 - w;
+    const k2 = eo(pr(t, s, s + .45)), w = Math.max(20, v / axisMax(d) * 900 * k2), x0 = 990 - w;
     c.save(); c.globalAlpha = pr(t, s, s + .1);
     text(c, label, 990, y - 62, 34, { w: 700, align: "right", color: PC.soft });
     const gr = c.createLinearGradient(990, 0, x0, 0); gr.addColorStop(0, color); gr.addColorStop(1, hi); pill(c, x0, y - 38, w, 76, gr);
@@ -309,7 +320,8 @@ function sceneCount(c: Ctx, t: number, d: PromoData) {
   const fade = (at: number) => eo(pr(t, at, at + .3));
   c.save(); c.globalAlpha = fade(17.55); text(c, "כבר ניחשו", 540, 330, 72, { w: 800, color: PC.soft }); c.restore();
   const n = d.guesses * eo(pr(t, 17.6, 18.9)), pop = t > 18.9 ? 1 + .08 * Math.exp(-(t - 18.9) * 8) : 1;
-  c.save(); c.translate(540, 520); c.scale(pop, pop); text(c, thousands(n), 0, 0, 230, { w: 700, font: NUM, ltr: true }); c.restore();
+  const big = fit(c, thousands(d.guesses), 900, 230, 700, NUM);  // הגודל לפי המספר הסופי, כדי שלא יקפוץ בספירה
+  c.save(); c.translate(540, 520); c.scale(pop, pop); text(c, thousands(n), 0, 0, big, { w: 700, font: NUM, ltr: true }); c.restore();
   const bx = 90, bw = 900, by = 690, fill = Math.min(1, n / d.goal);
   c.save(); c.globalAlpha = fade(17.6);
   pill(c, bx, by, bw, 40, "rgba(255,255,255,.12)");
