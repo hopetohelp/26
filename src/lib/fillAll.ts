@@ -7,6 +7,7 @@
  * 4. שלמים בשיטת השארית הגדולה; רשימה שבממוצע הסקרים מתחת לסף (0 מנדטים) מקבלת 0.
  * 5. סתירה ⇐ שגיאה, בלי השלמה.
  * 6. אין תוצאה של 1–3 מנדטים לרשימה פתוחה (מתחת לסף): היא מקבלת 0, והמנדטים עוברים לרשימה פתוחה עוברת באותם גושים (הכרעת בעלים 8.10.2026).
+ * 7. אין חלוקה בתוך טווחי הסקרים ⇐ הטווחים מורחבים בהדרגה, עד שנמצאת חלוקה; היציאה מהטווח היא המינימלית (הכרעת בעלים 26.10.2026).
  */
 import type { Bloc, SeatCell } from "./crowdApi";
 
@@ -45,8 +46,18 @@ export function largestRemainder(total: number, weights: Record<string, number>)
 
 export const MIN_PASSING = 4;
 
+/** הרחבת כל טווח ב-k מנדטים לכל צד (לא מתחת ל-0) */
+const widen = (ranges: Record<string, [number, number]>, k: number): Record<string, [number, number]> =>
+  Object.fromEntries(Object.entries(ranges).map(([id, [lo, hi]]) => [id, [Math.max(0, lo - k), Math.min(TOTAL, hi + k)]]));
+const RANGE_STEPS = [1, 2, 3, 5, 8, 13, 20, 40, TOTAL];
+
 export function fillAll(ids: string[], cells: Record<string, SeatCell | undefined>, polls: Record<string, number>, blocs: Bloc[], ranges: Record<string, [number, number]> = {}): FillResult {
-  const r = fillRaw(ids, cells, polls, blocs, ranges);
+  let r = fillRaw(ids, cells, polls, blocs, ranges);
+  // אין ברירה בתוך הטווחים ⇐ יוצאים מהם, רק כמה שצריך
+  for (const k of RANGE_STEPS) {
+    if (r.ok || (r.error.kind !== "range-impossible" && r.error.kind !== "overlap-impossible")) break;
+    r = fillRaw(ids, cells, polls, blocs, widen(ranges, k));
+  }
   if (!r.ok) return r;
   const seats = { ...r.seats };
   const free = ids.filter((id) => !cells[id]?.locked);
