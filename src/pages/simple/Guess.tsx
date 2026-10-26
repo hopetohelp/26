@@ -35,7 +35,7 @@ export default function SimpleGuess() {
   const invalidInput = !!editing && (!/^\d+$/.test(editing.text) || Number(editing.text) > 120);
   const invalid = invalidInput ? "הזינו מספר שלם בין 0 ל־120." : validateSeats(draft, IDS);
   const ref = (id: string) => simpleValue(source.selection, [id]);
-  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id)).sort((a, b) => (ref(b) ?? 0) - (ref(a) ?? 0));
+  const order = IDS.filter(id => !SIMPLE_GUESS_HIDDEN.includes(id)).sort((a, b) => (ref(a) ?? 0) - (ref(b) ?? 0)); // מהקטנה לגדולה (הכרעת בעלים)
   // רשימה שכבר אינה מתמודדת (טיוטה או שמירה ישנה) ⇐ יוצאת מהטיוטה, והמנדטים שלה חוזרים לחלוקה; אחרת "רשימה לא מוכרת" בלי שאפשר לראות למה
   const stale = Object.keys(draft.seats).filter(id => !IDS.includes(id));
   useEffect(() => {
