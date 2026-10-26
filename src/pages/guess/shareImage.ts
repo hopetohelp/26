@@ -1,3 +1,4 @@
+import qrcode from "qrcode-generator";
 import { resolveDataset, type Selection } from "../../lib/dataResolver";
 import { DATA_PRODUCTS } from "../../lib/dataCatalog";
 /**
@@ -28,6 +29,20 @@ export function drawLogo(ctx: CanvasRenderingContext2D, logo: ImageBitmap, x: nu
 
 /** כתובת בתוך ציור מימין לשמאל: בלי בידוד הכיוון המספר ("26") עובר לסוף ויוצא "hopetohelp.net.26" */
 // סימן שמאל־לימין (LRM) ולא בידוד (LRI): Safari באייפון מתעלם מבידוד בציור, ו-LRM עובד בכל הדפדפנים
+/**
+ * ריבוע QR קטן בפינה של תמונת שיתוף (הכרעת בעלים 26.10.2026): אותה ספרייה כמו בסרטון הנתונים (`PromoVideo`).
+ * רקע לבן ושוליים, כך שהקוד נסרק גם על רקע כהה.
+ */
+export function drawQr(ctx: CanvasRenderingContext2D, link: string, x: number, y: number, size: number) {
+  const q = qrcode(0, "M"); q.addData(link); q.make();
+  const m = q.getModuleCount(), pad = Math.round(size * 0.08), cell = (size - 2 * pad) / m;
+  ctx.save();
+  ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(x, y, size, size, 10); ctx.fill();
+  ctx.fillStyle = "#000";
+  for (let r = 0; r < m; r++) for (let k = 0; k < m; k++) if (q.isDark(r, k)) ctx.fillRect(x + pad + k * cell, y + pad + r * cell, cell + 0.5, cell + 0.5);
+  ctx.restore();
+}
+export const QR_SIZE = 140;
 export const ltrText = (text: string) => `\u200E${text}\u200E`;
 function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -148,11 +163,12 @@ export async function renderShareImage({ values, pct, username, blocs, labels, s
     ctx.fillRect(0, imageHeight - 176, IMG_W, 176);
     ctx.fillStyle = c.ink;
     ctx.font = `700 54px ${display}`;
-    ctx.fillText("ומה אתם משערים? בנו את הכנסת שלכם", R, imageHeight - 100, R - L);
+    ctx.fillText("ומה אתם משערים? בנו את הכנסת שלכם", R, imageHeight - 100, R - L - QR_SIZE - 30);
     ctx.fillStyle = c.soft;
     ctx.font = `700 34px ${body}`;
     ctx.direction = "ltr";
     ctx.fillText(ltrText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "")), R, imageHeight - 48);
+    drawQr(ctx, SITE_URL, L, imageHeight - 176 + 18, QR_SIZE);
     return new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/png"));
   }
 
@@ -264,12 +280,13 @@ export async function renderShareImage({ values, pct, username, blocs, labels, s
   let size = 64;
   do ctx.font = `700 ${size}px ${display}`;
   while (ctx.measureText(cta).width > R - L && --size > 30);
-  ctx.fillText(cta, R, imageHeight - 100);
+  ctx.fillText(cta, R, imageHeight - 100, R - L - QR_SIZE - 30);
   ctx.fillStyle = c.soft;
   ctx.font = `700 34px ${body}`;
   ctx.direction = "ltr";
   ctx.textAlign = "right";
   ctx.fillText(ltrText(labels?.address ?? SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "")), R, imageHeight - 48);
+  drawQr(ctx, labels?.address ? `https://${labels.address}` : SITE_URL, L, imageHeight - 176 + 18, QR_SIZE);
 
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }

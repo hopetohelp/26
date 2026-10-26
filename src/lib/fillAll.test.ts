@@ -189,4 +189,12 @@ describe("אין 1–3 מנדטים בהשלמה", () => {
     expect(v.reduce((a, b) => a + b, 0)).toBe(120);
     expect(r.seats.c.v).toBe(0);
   });
+  it("אין ברירה בתוך טווחי הסקרים ⇐ יוצאים מהם כמה שצריך (הכרעת בעלים 26.10.2026)", () => {
+    const r = fillAll(["a", "b"], {}, { a: 60, b: 60 }, [], { a: [50, 55], b: [50, 55] });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.seats.a.v + r.seats.b.v).toBe(120);
+      expect(Math.max(r.seats.a.v, r.seats.b.v)).toBeLessThanOrEqual(60);
+    }
+  });
 });
