@@ -250,7 +250,23 @@ export async function groupSeries(env, id, now) {
     const total = events[key].length;
     out.push(total >= GROUP_MIN ? { key, total, points: cumulative(events[key]) } : { key, total: null, points: null });
   }
-  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out };
+  // משפך הקישור לפי יום (הכרעת בעלים 26.10.2026): דפדפנים שפתחו את הקישור לראשונה ⇐ מהם נרשמו (הקישור היה הכניסה הראשונה) ⇐ מהם ניחוש שנספר
+  const visitDays = (await env.DB.prepare("SELECT day, fresh FROM group_visits WHERE group_id = ?1 ORDER BY day").bind(id).all()).results || [];
+  const savedFirst = await countedGuessers(env, firstSet);
+  const days = new Map(visitDays.map((r) => [r.day, { day: r.day, fresh: r.fresh, registered: 0, saved: 0 }]));
+  for (const p of firstSet) {
+    const t = joinedAt.get(p);
+    if (!t) continue;
+    const day = ilDay(Date.parse(t));
+    if (!days.has(day)) days.set(day, { day, fresh: 0, registered: 0, saved: 0 });
+    const d = days.get(day);
+    d.registered++;
+    if (savedFirst.has(p)) d.saved++;
+  }
+  const rows = [...days.values()].sort((a, b) => a.day.localeCompare(b.day));
+  const sum = (k) => rows.reduce((a, r) => a + r[k], 0);
+  const funnel = sum("fresh") >= GROUP_MIN ? { days: rows, total: { fresh: sum("fresh"), registered: sum("registered"), saved: sum("saved") } } : null;
+  return { group: id, min: GROUP_MIN, hours: SERIES_HOURS, buckets: buckets.map((b) => ({ t: iso(b.start), hourly: b.hourly })), series: out, funnel };
 }
 
 /** נקודות הזמן: נקודה לכל שעה מ-24/10 23:00 שעון ישראל עד עכשיו, בלי תצוגה יומית (הכרעת בעלים 25.10.2026) */

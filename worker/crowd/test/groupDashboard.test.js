@@ -265,6 +265,14 @@ describe("group series", () => {
     // מתחת לסף — בלי מספר ובלי נקודות
     expect(by.vote).toEqual({ key: "vote", total: null, points: null });
     expect(by.outsideLink).toEqual({ key: "outsideLink", total: null, points: null });
+    // משפך הקישור: מתחת לסף הפתיחות — לא מוצג
+    expect(d.funnel).toBeNull();
+    // מהסף: סך הכול ושורה ליום; הנכנס בקישור כניסה ראשונה נספר כנרשם ושמר ניחוש
+    const day = (await env.DB.prepare("SELECT day FROM group_visits LIMIT 1").first())?.day ?? "2026-10-25";
+    await env.DB.prepare("INSERT INTO group_visits (group_id, day, opens, fresh) VALUES ('gizra', ?, ?, ?) ON CONFLICT(group_id, day) DO UPDATE SET fresh = excluded.fresh").bind(day, GROUP_MIN, GROUP_MIN).run();
+    const f = (await call("/group/series?group=gizra", { token: mgr })).data.funnel;
+    expect(f.total).toEqual({ fresh: GROUP_MIN, registered: 1, saved: 1 });
+    expect(f.days.reduce((a, r) => a + r.registered, 0)).toBe(1);
   });
 });
 
