@@ -273,7 +273,10 @@ export interface GroupSeries {
   group: string; min: number; hours: number;
   buckets: { t: string; hourly: boolean }[];
   series: { key: GroupSeriesKey; total: number | null; points: (number | null)[] | null }[];
+  /** משפך הקישור לפי יום (שעון ישראל); null מתחת ל-min פתיחות */
+  funnel?: { days: GroupFunnelDay[]; total: Omit<GroupFunnelDay, "day"> } | null;
 }
+export interface GroupFunnelDay { day: string; fresh: number; registered: number; saved: number }
 /** מיילים בבקשה אחת — מנה קטנה מהתקרה בשרת (GROUP_CHUNK = 300), כדי שכל בקשה תישאר קצרה */
 export const GROUP_CHUNK = 100;
 
