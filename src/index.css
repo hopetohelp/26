@@ -806,6 +806,8 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* ציר מנדטים מימין לשמאל: 0 בימין (הכרעת בעלים 25.10.2026). הציור משוקף, והטקסט בתוכו חוזר לכיוונו. ציר הסטייה (`mk-ltr`) נשאר */
 .mk-plot:not(.mk-ltr) { transform: scaleX(-1); }
 .mk-plot:not(.mk-ltr) .mk-capsule-tag, .mk-plot:not(.mk-ltr) > span:not([class*="mk-"]), .mk-plot:not(.mk-ltr) > b, .mk-plot:not(.mk-ltr) > bdi { scale: -1 1; }
+/* תג ממורכז על הקו (‎-50%‎): השיקוף סביב נקודת העיגון (הקו), ולא סביב מרכז התג — אחרת התג זז חצי רוחב הצידה */
+.mk-plot:not(.mk-ltr) .mk-capsule-mark > .mk-capsule-tag, .mk-plot:not(.mk-ltr) > span.-translate-x-1\/2 { transform-origin: 0 50%; }
 
 /* מתג "מתקדם" במעטפת היחידה (תוכנית מאוחדת, פרק ב): יעד לחיצה 44 פיקסלים, מצב מסומן גם בצורה ולא רק בצבע */
 .f-switch { display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 6px;border:0;background:none;color:rgb(var(--ink));font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer;border-radius:999px; }

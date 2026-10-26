@@ -4,7 +4,8 @@
  *
  * לכל רשימה של היום — מאילו רשימות 2022 היא באה. רשימת 2022 שכמה רשימות של היום באות ממנה (פיצול) מתחלקת ביניהן
  * לפי משקל: ממוצע הסקרים (ברירת מחדל), ממוצע המשתתפים, או חלוקה ידנית. שלוש קטגוריות:
- * ודאי — רשימה זהה או איחוד; חלקי — לפחות רשימת 2022 אחת מתחלקת; אין שיוך — רשימה חדשה.
+ * ודאי — רשימה זהה או איחוד; חלקי — לפחות רשימת 2022 אחת מתחלקת; מכמה רשימות — רשימה חדשה שקולותיה הגיעו מכמה רשימות 2022
+ * (הכרעת בעלים 26.10.2026: רק מאיפה הגיעו הקולות, בלי שינוי בתוצאה של אף רשימה); אין שיוך — רשימה חדשה בלי מקור.
  */
 import modelFile from "../data/model.json";
 import { lists2026, results } from "./data";
@@ -18,8 +19,10 @@ export interface Lineage {
   split: Split;
   /** חלוקה ידנית: רשימת 2022 ⇐ אחוז לכל רשימה של היום שבאה ממנה (סכום 100) */
   manual: Record<string, Record<string, number>>;
+  /** רשימה חדשה (בלי `map`) ⇐ רשימות 2022 שמהן הגיעו קולותיה. לא משנה שום תוצאה — רק את הפירוק (`sourceBreakdown`) */
+  sources: Record<string, string[]>;
 }
-export type Category = "certain" | "partial" | "none";
+export type Category = "certain" | "partial" | "sources" | "none";
 export interface LineageRow {
   id: string;
   category: Category;
@@ -62,7 +65,15 @@ function defaultMap(): Record<string, string[]> {
   if ("noam" in map && map.rzp?.length) map.noam = [...map.rzp];
   return map;
 }
-export const DEFAULT_LINEAGE: Lineage = { map: defaultMap(), split: "polls", manual: {} };
+/** מקורות הקולות של הרשימות החדשות (הכרעת בעלים 26.10.2026) */
+const DEFAULT_SOURCES_BY_NAME: Record<string, string[]> = {
+  amcha: ["הליכוד", "הציונות הדתית", "המחנה הממלכתי", 'ש"ס', "ישראל ביתנו", "הבית היהודי"],
+  reservists: ["יש עתיד", "המחנה הממלכתי", "ישראל ביתנו", "הבית היהודי"],
+  haredi_public: ['ש"ס', "יהדות התורה", "הליכוד"],
+  code_black: ['ש"ס', "יהדות התורה"],
+};
+const defaultSources = () => Object.fromEntries(Object.entries(DEFAULT_SOURCES_BY_NAME).filter(([id]) => IDS_NOW.includes(id)).map(([id, names]) => [id, names.map((n) => K25_BY_NAME[n]).filter(Boolean)]));
+export const DEFAULT_LINEAGE: Lineage = { map: defaultMap(), split: "polls", manual: {}, sources: defaultSources() };
 
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
@@ -79,7 +90,9 @@ export function cleanLineage(saved: unknown): Lineage | null {
     if (!(l in K25_BY_ID) || !parts || typeof parts !== "object") continue;
     manual[l] = Object.fromEntries(Object.entries(parts).filter(([id, x]) => id in map && Number.isFinite(x) && x >= 0 && x <= 100).map(([id, x]) => [id, round1(x)]));
   }
-  return { map, split, manual };
+  const sources = { ...DEFAULT_LINEAGE.sources };
+  if (s.sources && typeof s.sources === "object") for (const [id, v] of Object.entries(s.sources)) if (IDS_NOW.includes(id) && Array.isArray(v)) sources[id] = [...new Set(v.filter((x) => typeof x === "string" && x in K25_BY_ID))];
+  return { map, split, manual, sources };
 }
 
 /** רשימת 2022 ⇐ הרשימות של היום שבאות ממנה */
@@ -143,7 +156,7 @@ export function lineageRows(lin: Lineage, crowd: Record<string, number> | null =
     const votes = from.reduce((t, l) => t + K25_BY_ID[l].votes * p[id][l], 0);
     return {
       id,
-      category: !from.length ? "none" : from.some((l) => shared.has(l)) ? "partial" : "certain",
+      category: !from.length ? ((lin.sources?.[id] ?? []).some((l) => l in K25_BY_ID) ? "sources" : "none") : from.some((l) => shared.has(l)) ? "partial" : "certain",
       from,
       part: p[id],
       votes2022: votes,
@@ -164,12 +177,22 @@ export function lineageRows(lin: Lineage, crowd: Record<string, number> | null =
   return { rows, unassigned2022 };
 }
 
+/**
+ * מאיפה הגיעו הקולות של רשימה חדשה (הכרעת בעלים 26.10.2026): הערך שלה היום (`now`, אחוז או מנדטים) מתחלק בין רשימות 2022
+ * שלה לפי היחס ביניהן ב-2022 (קולות). התוצאה של שום רשימה לא משתנה. דוגמת הבעלים: 1% מש"ס (10%) וג' (5%) ⇐ 0.67 ו-0.33.
+ */
+export function sourceBreakdown(lin: Lineage, id: string, now: number): { list: string; value: number }[] {
+  const from = (lin.sources?.[id] ?? []).filter((l) => l in K25_BY_ID);
+  const total = from.reduce((t, l) => t + K25_BY_ID[l].votes, 0);
+  return total > 0 ? from.map((l) => ({ list: l, value: (now * K25_BY_ID[l].votes) / total })) : [];
+}
+
 /** מנדטי 2022 לפי השיוך — לטור "בחירות 22" ולגושים. רשימה בלי שיוך — חסרה (undefined). */
 export function seats2022ByList(lin: Lineage, crowd: Record<string, number> | null = null): Record<string, number | undefined> {
-  return Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r.category === "none" ? undefined : r.seats2022]));
+  return Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r.category === "none" || r.category === "sources" ? undefined : r.seats2022]));
 }
 export function share2022ByList(lin: Lineage, crowd: Record<string, number> | null = null): Record<string, number | undefined> {
-  return Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r.category === "none" ? undefined : r.share2022]));
+  return Object.fromEntries(lineageRows(lin, crowd).rows.map((r) => [r.id, r.category === "none" || r.category === "sources" ? undefined : r.share2022]));
 }
 
 export const sameLineage = (a: Lineage, b: Lineage) => JSON.stringify(cleanLineage(a)) === JSON.stringify(cleanLineage(b));
