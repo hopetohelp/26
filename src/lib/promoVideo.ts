@@ -10,7 +10,8 @@ export interface PromoList { id: string; name: string; polls: number; crowd: num
 /** shown = השלמים שהאתר מציג (blocSlices), כדי שהסרטון והעוגה באתר יראו אותו מספר */
 export interface PromoBloc { id: string; short: string; polls: number; crowd: number; mine?: number; shown: { polls: number; crowd: number; mine?: number }; color: string }
 export interface PromoData {
-  asOf: string; lists: PromoList[]; blocs: PromoBloc[]; haredi: { id: string; name: string; polls: number; crowd: number; mine?: number }[];
+  /** mineLabel = "הניחוש של <שם>" כשהמשתתף כתב שם, אחרת "הניחוש שלי" */
+  mineLabel?: string; asOf: string; lists: PromoList[]; blocs: PromoBloc[]; haredi: { id: string; name: string; polls: number; crowd: number; mine?: number }[];
   gap: PromoList; guesses: number; goal: number; host: string; logo: CanvasImageSource | null; qr: boolean[][];
 }
 /** קנבסים זמניים למעברים — נוצרים פעם אחת */
@@ -176,65 +177,102 @@ function sceneChart(c: Ctx, t: number, d: PromoData) {
 // ── 4–5. העוגות והחרדים ──────────────────────────────────────────────────────
 type Slice = { id: string; short: string; value: number; color: string };
 const TAU = Math.PI * 2;
+/** מערבב צבע לכיוון הרקע (עמעום אטום — שקיפות בשכבות הייתה מציירת קווי מתאר כפולים) */
+function toward(hex: string, k: number) { const a = parseInt(hex.slice(1), 16), b = parseInt(PC.bg.slice(1), 16), ch = (x: number, y: number) => Math.round(x + (y - x) * k); return "#" + [16, 8, 0].map(sh => ch(a >> sh & 255, b >> sh & 255).toString(16).padStart(2, "0")).join(""); }
 function shade(hex: string, k: number) { const n = parseInt(hex.slice(1), 16); return `rgb(${(n >> 16 & 255) * k | 0},${(n >> 8 & 255) * k | 0},${(n & 255) * k | 0})`; }
 const midOf = (slices: Slice[], id: string, rot: number) => {
   const total = slices.reduce((a, s) => a + s.value, 0); let a = rot;
   for (const s of slices) { const sp = s.value / total * TAU; if (s.id === id) return a + sp / 2; a += sp; }
   return rot;
 };
-/** עוגה תלת־ממדית: קירות קדמיים מאחור-לפנים ואז הפנים העליונים; `pop` מוציא פרוסה החוצה ומעמעם את השאר */
+/**
+ * טקסט בקשת על פני העוגה (הכרעת בעלים 26.10.2026): כל תו — גם ספרות — במקומו על האליפסה, מסובב לפי המשיק,
+ * מימין לשמאל ותמיד זקוף. בחזית העוגה (sin > 0) הקשת מתעקלת למטה, ובגב — למעלה.
+ * ספרות של מספר מונחות מימין לשמאל בסדר הפוך, כך שהמספר נקרא נכון. מחזיר false כשאין מקום.
+ */
+function arcText(c: Ctx, str: string, cx: number, cy: number, R: number, sy: number, mid: number, maxSpan: number, size: number, w: number, min = 14) {
+  const front = Math.sin(mid) >= 0, dirn = front ? 1 : -1, chars = (str.match(/\d+|[^\d]/g) ?? []).flatMap(t => /\d/.test(t) ? [...t].reverse() : [t]);
+  const norm = (th: number) => Math.hypot(Math.sin(th), sy * Math.cos(th));
+  // מיקום כל תו לפי רוחבו האמיתי על האליפסה; מחזיר את מרכזי התווים ואת קצה הקשת
+  const lay = (start: number) => { let th = start; const at: number[] = []; for (const ch of chars) { const d = c.measureText(ch).width / (R * norm(th)); at.push(th + dirn * d / 2); th += dirn * d; } return { at, end: th }; };
+  let fs = size + 1, run = lay(mid);
+  do { fs -= 1; c.font = `${w} ${fs}px ${HE}`; run = lay(mid); } while (Math.abs(run.end - mid) > maxSpan && fs > min);
+  if (Math.abs(run.end - mid) > maxSpan) return false;
+  // מירוכז מדויק: מזיזים עד שאמצע הקשת בפועל יושב על אמצע הפרוסה (נבדק: סטייה מרבית 0.00002 רדיאן ≈ 0.01 פיקסל)
+  let start = mid - dirn * Math.abs(run.end - mid) / 2;
+  for (let i = 0; i < 12 && Math.abs(mid - (start + (run = lay(start)).end) / 2) > 1e-6; i++) start += mid - (start + run.end) / 2;
+  run = lay(start);
+  c.save(); c.fillStyle = PC.ink; c.textAlign = "center"; c.textBaseline = "middle"; c.direction = "ltr";
+  chars.forEach((ch, i) => {
+    const tc = run.at[i], dir = front ? [-Math.sin(tc), sy * Math.cos(tc)] : [Math.sin(tc), -sy * Math.cos(tc)];
+    c.save(); c.translate(cx + Math.cos(tc) * R, cy + Math.sin(tc) * R * sy); c.rotate(Math.atan2(-dir[1], -dir[0])); c.scale(1, .85); c.fillText(ch, 0, 0); c.restore();
+  });
+  c.restore();
+  return true;
+}
+/**
+ * תווית פרוסה (הכרעת בעלים 26.10.2026): שם הגוש בשורה מעוגלת לאורך השפה, ממורכז על אמצע הפרוסה;
+ * המספר ישר במרכז הפרוסה. גודל אחיד לכל הפרוסות — מוקטן רק כשהשם לא נכנס בקשת.
+ */
+function sliceLabel(c: Ctx, name: string, n: string, cx: number, cy: number, rx: number, sy: number, mid: number, span: number) {
+  arcText(c, name, cx, cy, rx * .8, sy, mid, span * .85, rx * .095, 700, 14);
+  text(c, n, cx + Math.cos(mid) * rx * .5, cy + Math.sin(mid) * rx * sy * .5, rx * .16, { w: 700 });
+}
+/**
+ * פרוסה מעוגלת (הכרעת בעלים 26.10.2026: בלי קווים ובלי פינות חדות): הצורה מוקטנת פנימה ב-r,
+ * ומקבלת קו באותו צבע ברוחב 2r עם חיבור מעוגל — כך כל הפינות מעוגלות ונשאר רווח רך בין הפרוסות.
+ * מצוירת במרחב עיגול; המתיחה לאליפסה נעשית ב-scale.
+ */
+function wedge(c: Ctx, R: number, a0: number, a1: number, r: number, gap: number) {
+  const span = a1 - a0, k = r + gap / 2;
+  if (span * (R - k) < 2.2 * k) return false;  // פרוסה צרה מדי לעיגול — לא מציירים
+  const apex = span < Math.PI ? Math.min(k / Math.sin(span / 2), R * .45) : k, m = (a0 + a1) / 2, d = Math.asin(Math.min(1, k / (R - r)));
+  c.beginPath(); c.moveTo(Math.cos(m) * apex, Math.sin(m) * apex); c.arc(0, 0, R - r, a0 + d, a1 - d); c.closePath();
+  c.lineJoin = "round"; c.lineWidth = 2 * r; c.fill(); c.stroke();
+  return true;
+}
+/** עוגה תלת־ממדית מעוגלת: הדפנות בשכבות (מאחור-לפנים) ואז הפנים העליונים; `pop` מוציא פרוסה החוצה ומעמעם את השאר */
 function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; depth: number; slices: Slice[]; shown: number[]; rot: number; sweep: number; pop?: { id: string; amt: number; dim: number }; labels: number }) {
-  const total = o.slices.reduce((a, s) => a + s.value, 0) || 1;
+  const total = o.slices.reduce((a, s) => a + s.value, 0) || 1, sy = o.ry / o.rx, r = o.rx * .02, gap = o.rx * .022;
   let a = o.rot;
   const parts = o.slices.map((s, i) => {
     const sp = s.value / total * TAU * o.sweep, a0 = a, a1 = a + sp; a = a1;
     const m = (a0 + a1) / 2, out = o.pop?.id === s.id ? o.pop.amt : 0;
-    return { s, i, a0, a1, m, dx: Math.cos(m) * out, dy: Math.sin(m) * out * o.ry / o.rx, alpha: o.pop && o.pop.id !== s.id ? 1 - o.pop.dim : 1 };
+    return { s, i, a0, a1, m, dx: Math.cos(m) * out, dy: Math.sin(m) * out * sy, color: o.pop && o.pop.id !== s.id ? toward(s.color, o.pop.dim) : s.color, alpha: o.pop && o.pop.id !== s.id ? 1 - o.pop.dim : 1 };
   });
+  const at = (p: typeof parts[number], y: number) => { c.translate(o.cx + p.dx, o.cy + p.dy + y); c.scale(1, sy); };
+  // הדפנות: אותה פרוסה מעוגלת בשכבות כלפי מטה, כהה יותר ככל שיורדים
   const order = [...parts].sort((p, q) => Math.sin(p.m) + (p.dx ? 2 : 0) - (Math.sin(q.m) + (q.dx ? 2 : 0)));
-  for (const p of order) {
-    const cx = o.cx + p.dx, cy = o.cy + p.dy;
-    c.save(); c.globalAlpha = p.alpha;
-    if (p.dx) for (const e of [p.a0, p.a1]) { // קירות החתך של הפרוסה שיצאה
-      c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(e) * o.rx, cy + Math.sin(e) * o.ry); c.lineTo(cx + Math.cos(e) * o.rx, cy + Math.sin(e) * o.ry + o.depth); c.lineTo(cx, cy + o.depth); c.closePath();
-      c.fillStyle = shade(p.s.color, .45); c.fill();
-    }
-    // הקיר החיצוני: רק החלק הפונה לצופה (sin > 0)
-    for (let k = Math.floor(p.a0 / TAU) - 1; k <= Math.ceil(p.a1 / TAU); k++) {
-      const s0 = Math.max(p.a0, k * TAU), s1 = Math.min(p.a1, k * TAU + Math.PI);
-      if (s1 <= s0) continue;
-      c.beginPath(); c.ellipse(cx, cy, o.rx, o.ry, 0, s0, s1); c.ellipse(cx, cy + o.depth, o.rx, o.ry, 0, s1, s0, true); c.closePath();
-      const g = c.createLinearGradient(cx - o.rx, 0, cx + o.rx, 0); g.addColorStop(0, shade(p.s.color, .42)); g.addColorStop(.5, shade(p.s.color, .7)); g.addColorStop(1, shade(p.s.color, .42));
-      c.fillStyle = g; c.fill();
-    }
-    c.restore();
+  const step = Math.max(2, o.depth / 16);
+  for (const p of order) for (let y = o.depth; y > 0; y -= step) {
+    c.save(); at(p, y);
+    const col = shade(p.color, .38 + .22 * (1 - y / o.depth)); c.fillStyle = col; c.strokeStyle = col;
+    wedge(c, o.rx, p.a0, p.a1, r, gap); c.restore();
   }
   for (const p of parts) {
-    if (p.a1 - p.a0 < 1e-4) continue;
-    const cx = o.cx + p.dx, cy = o.cy + p.dy;
     const popped = !!p.dx;
-    c.save(); c.globalAlpha = p.alpha;
-    if (popped) { c.shadowColor = "rgba(255,255,255,.55)"; c.shadowBlur = 40; }
-    c.beginPath(); c.moveTo(cx, cy); c.ellipse(cx, cy, o.rx, o.ry, 0, p.a0, p.a1); c.closePath();
-    const g = c.createLinearGradient(cx, cy - o.ry, cx, cy + o.ry); g.addColorStop(0, shade(p.s.color, 1.12)); g.addColorStop(1, p.s.color);
-    c.fillStyle = g; c.fill(); c.shadowBlur = 0; c.strokeStyle = popped ? "#fff" : PC.bg; c.lineWidth = popped ? 4 : 3; c.stroke();
-    const la = popped ? 1 : o.labels;
-    if (la > 0) {
-      c.globalAlpha = p.alpha * la;
-      const lx = cx + Math.cos(p.m) * o.rx * .6, ly = cy + Math.sin(p.m) * o.ry * .6;
-      text(c, String(o.shown[p.i]), lx, ly + o.ry * .1, o.rx * .15, { w: 800, font: NUM, ltr: true });
-      text(c, p.s.short, lx, ly - o.ry * .2, Math.max(26, o.rx * .085), { w: 700 });
-    }
+    c.save(); at(p, 0);
+    if (popped) { c.shadowColor = "rgba(255,255,255,.45)"; c.shadowBlur = 36; }
+    const g = c.createLinearGradient(0, -o.rx, 0, o.rx); g.addColorStop(0, shade(p.color, 1.15)); g.addColorStop(1, p.color);
+    c.fillStyle = g; c.strokeStyle = g;
+    const drawn = wedge(c, o.rx, p.a0, p.a1, r, gap);
     c.restore();
+    const la = o.labels;
+    if (drawn && la > 0) {
+      c.save(); c.globalAlpha = p.alpha * la;
+      const cx = o.cx + p.dx, cy = o.cy + p.dy, span = p.a1 - p.a0, n = String(o.shown[p.i]);
+      sliceLabel(c, p.s.short, n, cx, cy, o.rx, sy, p.m, span);
+      c.restore();
+    }
   }
 }
 /** עוגה לכל מקור: הסקרים, הניחושים, ואם יש — הניחוש שלי (שלוש עוגות קטנות יותר, באותו מסך ובאותו תזמון) */
 const PIE_KINDS = [{ key: "polls", label: "הסקרים", color: PC.blue, hi: PC.blueHi }, { key: "crowd", label: "הניחושים", color: PC.red, hi: PC.redHi }, { key: "mine", label: "הניחוש שלי", color: PC.gold, hi: PC.goldHi }] as const;
 function scenePies(c: Ctx, t: number, d: PromoData) {
-  const build = pr(t, 7.55, 8.7), sweep = eo(build), labels = pr(t, 8.6, 8.95);
+  const build = pr(t, 7.55, 8.7), sweep = eo(build), labels = pr(t, 7.7, 8);  // הטקסט נשאר לאורך כל הסיבוב
   const rotAt = (tt: number) => -Math.PI / 2 + .5 * (tt - 7.5) + 2.6 * (1 - eo(pr(tt, 7.5, 8.7)));
   const h = eio(pr(t, 10.5, 11.15)), pop = eo(pr(t, 10.7, 11.15)), grow = back(pr(t, 7.5, 8.05));
-  const kinds = PIE_KINDS.filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)), n = kinds.length;
+  const kinds = PIE_KINDS.filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)).map(k => k.key === "mine" && d.mineLabel ? { ...k, label: d.mineLabel } : k), n = kinds.length;
   // פריסה: שתי עוגות — גדולות; שלוש — קטנות יותר ובמרווח שווה
   const L = n === 3 ? { cys: [560, 1040, 1520], rx: [300, 225], card: 400 } : { cys: [650, 1330], rx: [360, 255], card: 420 };
   const pies = kinds.map((k, i) => {
@@ -255,15 +293,15 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
     c.font = `800 34px ${HE}`; const pw = c.measureText(p.k.label).width + 60;
     pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800 });
     c.restore();
-    if (rx > 1) pie3d(c, { cx, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels: labels * (1 - pop), pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: pop * .72 } : undefined });
+    if (rx > 1) pie3d(c, { cx, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: pop * .72 } : undefined });
     // כרטיס המספרים של החרדים
     const ck = eo(pr(t, 10.95 + i * .12, 11.4 + i * .12)); if (ck <= 0) return;
     const hs = p.shown[p.slices.findIndex(s => s.id === "haredi")], ch = L.card, small = n === 3;
     c.save(); c.globalAlpha = ck; c.translate(-60 * (1 - ck), 0);
     const x0 = 60, w = 400, top = p.cy - ch / 2 - 10;
     c.beginPath(); c.roundRect(x0, top, w, ch, 28); c.fillStyle = "rgba(255,255,255,.07)"; c.fill(); c.strokeStyle = p.k.color; c.lineWidth = 3; c.stroke();
-    c.font = `800 30px ${HE}`; const cw = c.measureText(p.k.label).width + 48;
-    pill(c, x0 + w - 24 - cw, top + 22, cw, 52, p.k.color); text(c, p.k.label, x0 + w - 24 - cw / 2, top + 48, 30, { w: 800 });
+    const lf = fit(c, p.k.label, w - 96, 30, 800), cw = c.measureText(p.k.label).width + 48;  // שם ארוך מוקטן כדי להישאר בכרטיס
+    pill(c, x0 + w - 24 - cw, top + 22, cw, 52, p.k.color); text(c, p.k.label, x0 + w - 24 - cw / 2, top + 48, lf, { w: 800 });
     text(c, String(hs), x0 + w / 2, top + (small ? 140 : 160), small ? 120 : 140, { w: 800, font: NUM, ltr: true });
     text(c, "מנדטים", x0 + w / 2, top + (small ? 215 : 246), 30, { w: 600, color: PC.soft });
     // שורה לכל רשימה חרדית; כשיש הרבה — השורות מתכווצות כדי להישאר בכרטיס

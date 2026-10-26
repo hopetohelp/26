@@ -23,10 +23,13 @@ const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); retu
  * נתוני הסרטון — מאותן פונקציות של המסכים (מקור אמת אחד): ממוצע הסקרים של האתר (simpleValue), ממוצע הניחושים מלוח המשתתפים,
  * סדר הרשימות של הגרף (orderedLists), הגושים והשלמים שלהם (blocSlices), ומספר הניחושים המלאים ברגע היצירה.
  */
-export async function buildPromoData(dash: Dashboard, group: { slug: string; logoUrl: string | null } | null, myGuess?: Record<string, number> | null): Promise<PromoData> {
+/** שם המנחש לסרטון: עד שתי מילים, בלי רווחים כפולים; ריק ⇐ "הניחוש שלי" */
+export const guesserName = (raw: string) => raw.trim().split(/\s+/).filter(Boolean).slice(0, 2).join(" ").slice(0, 30);
+const isFull = (g?: Record<string, number> | null) => !!g && Math.abs(Object.values(g).reduce((a, b) => a + (b || 0), 0) - 120) < .5;
+
+export async function buildPromoData(dash: Dashboard, group: { slug: string; logoUrl: string | null } | null, myGuess?: Record<string, number> | null, name = ""): Promise<PromoData> {
   // הניחוש שלי — עוגה שלישית, רק כשהוא מלא (120)
-  const total = myGuess ? Object.values(myGuess).reduce((a, b) => a + (b || 0), 0) : 0;
-  const mine = myGuess && Math.abs(total - 120) < .5 ? myGuess : null;
+  const mine = isFull(myGuess) ? myGuess! : null, who = guesserName(name);
   const selection = simpleSelection("all");
   const crowd: Record<string, number> = Object.fromEntries((dash.seats?.full ?? []).map(r => [r.list, r.mean]));
   const polls = (id: string) => simpleValue(selection, [id]) ?? 0;
@@ -45,7 +48,7 @@ export async function buildPromoData(dash: Dashboard, group: { slug: string; log
   q.addData(link); q.make();
   const m = q.getModuleCount(), qr = Array.from({ length: m }, (_, r) => Array.from({ length: m }, (_, k) => q.isDark(r, k)));
   const logo = await loadLogo(group?.logoUrl ?? groupImageUrl({ slug: "hagzara" }, "promo"));
-  return { asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: nextGoal(dash.seats?.n ?? 0), host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
+  return { ...(mine && who ? { mineLabel: `הניחוש של ${who}` } : {}), asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: nextGoal(dash.seats?.n ?? 0), host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
 }
 
 /** "צור סרטון" בחלון השיתוף: הסרטון נבנה בדפדפן מהנתונים של הרגע הזה — בלי AI, בלי שרת ובלי עלות */
@@ -56,13 +59,17 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
   const [file, setFile] = useState<PromoFile | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
+  // העוגה האישית — רק באישור מפורש (תיבת סימון), ושם רק אם נכתב
+  const [withMine, setWithMine] = useState(false);
+  const [name, setName] = useState("");
+  const canMine = isFull(mine);
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
   const dash = crowd.dashboard;
   const make = async () => {
     if (!dash) return;
     setState("busy"); setProgress(0); setMsg(null);
     try {
-      const [{ renderPromoVideo }, data] = await Promise.all([import("../../lib/promoEncode"), buildPromoData(dash, group, mine)]);
+      const [{ renderPromoVideo }, data] = await Promise.all([import("../../lib/promoEncode"), buildPromoData(dash, group, withMine && canMine ? mine : null, withMine ? name : "")]);
       const f = await renderPromoVideo(data, setProgress);
       setFile(f); setUrl(URL.createObjectURL(f.blob)); setState("done");
     } catch { setState("failed"); }
@@ -86,6 +93,13 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
     {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
   </div>;
   return <div className="grid gap-1">
+    {canMine && state !== "busy" && <div className="grid gap-2 mb-1">
+      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={withMine} onChange={e => setWithMine(e.target.checked)} />להוסיף לסרטון עוגה של הניחוש שלי</label>
+      {withMine && <label className="grid gap-1 text-sm">שם שיופיע בסרטון (לא חובה, עד שתי מילים)
+        <input type="text" value={name} maxLength={30} onChange={e => setName(e.target.value)} placeholder="למשל: יוסי כהן" className="bg-paper border border-paper-line rounded-xl px-3 py-2 w-full text-base" />
+        <span className="text-xs text-ink-soft">{guesserName(name) ? `בסרטון ייכתב: "הניחוש של ${guesserName(name)}"` : 'בסרטון ייכתב: "הניחוש שלי"'}</span>
+      </label>}
+    </div>}
     <button type="button" className="f-btn" onClick={make} disabled={!dash || state === "busy"} aria-busy={state === "busy"}>
       {state === "busy" ? `יוצרים סרטון… ${Math.round(progress * 100)}%` : "צור סרטון"}
     </button>
