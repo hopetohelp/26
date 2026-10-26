@@ -42,7 +42,9 @@ const thousands = (n: number) => Math.round(n).toLocaleString("en-US");
 function text(c: Ctx, s: string, x: number, y: number, size: number, opt: { w?: number; color?: string; align?: CanvasTextAlign; font?: string; ltr?: boolean } = {}) {
   c.font = `${opt.w ?? 700} ${size}px ${opt.font ?? HE}`; c.fillStyle = opt.color ?? PC.ink;
   c.textAlign = opt.align ?? "center"; c.textBaseline = "middle"; c.direction = opt.ltr ? "ltr" : "rtl";
-  c.fillText(s, x, y);
+  // סימני LRM סביב טקסט משמאל לימין (כמו ltrText בתמונות השיתוף, #493): Safari באייפון מתעלם מ-direction בציור,
+  // ובלעדיהם "26.hopetohelp.net" או "+7" מתהפכים
+  c.fillText(opt.ltr ? `\u200E${s}\u200E` : s, x, y);
 }
 /** הטקסט מוקטן עד שהוא נכנס ברוחב */
 function fit(c: Ctx, s: string, max: number, size: number, w = 700, font = HE) {
