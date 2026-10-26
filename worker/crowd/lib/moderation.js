@@ -5,7 +5,7 @@
  * **וגם** נמצאת לפחות 7 מנדטים (עד 25.10.2026: 5) מחוץ לטווח הסקרים (מעל הגבוה או מתחת לנמוך; רשימה שלא נסקרה = טווח 0–0).
  * ממוצע המשתתפים = ממוצע ההשערות האחרונות של כל שאר המשתתפים שנספרים (בלי ההשערה הנבדקת עצמה, כדי שהשערה קיצונית לא תזיז
  * את הממוצע שמולו היא נבדקת), כולל הממתינות.
- * השערה שאושרה נכנסת; השערה שנדחתה לא נכנסת לעולם; גרסה חדשה נבדקת מחדש.
+ * השערה שאושרה נכנסת; השערה שנדחתה לא נכנסת כל עוד היא חריגה; השערה שאינה חריגה עוד נכנסת אוטומטית; גרסה חדשה נבדקת מחדש.
  */
 import { LISTS_2026, POLL_RANGES } from "./lists.js";
 
@@ -59,11 +59,13 @@ export function moderate(latestSeats, decisions = new Map()) {
   const pending = new Map();
   const rejected = new Set();
   const check = (v) => {
+    // החלטת מנהל חלה רק על השערה שחריגה לפי הכלל הנוכחי; השערה שאינה חריגה עוד נכנסת (הכרעת בעלים 26.10.2026)
+    const reasons = flagReasons(v, meansWithout(base, v.payload, inBase.has(v)));
+    if (!reasons.length) return null;
     const d = decisions.get(v.id);
     if (d === "rejected") return "rejected";
     if (d === "approved") return null;
-    const reasons = flagReasons(v, meansWithout(base, v.payload, inBase.has(v)));
-    return reasons.length ? reasons : null;
+    return reasons;
   };
   for (const v of latestSeats) {
     const r = check(v);

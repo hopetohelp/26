@@ -170,7 +170,7 @@ export async function groupInsights(env, id, now) {
     const v = { id: r.id, payload: readPayload({ unit: "seats", payload: r.payload }) };
     const reasons = flagReasons(v);
     const d = decisions.get(v.id);
-    status[d === "rejected" ? "rejected" : !reasons.length ? "inRange" : d === "approved" ? "approved" : "pending"]++;
+    status[!reasons.length ? "inRange" : d === "rejected" ? "rejected" : d === "approved" ? "approved" : "pending"]++;
     // חריגה רכה: כל רשימה שההשערה מחוץ לטווח הסקרים שלה (גם בלי לעבור את סף ההמתנה)
     for (const l of LISTS_2026) {
       const x = v.payload?.seats?.[l.id]?.v ?? 0, { lo, hi } = pollRange(l.id), o = outside.get(l.id);
@@ -722,7 +722,7 @@ async function moderationState(env) {
     env.DB.prepare("SELECT v.id, v.participant, v.unit, v.created_at, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'seats' GROUP BY participant) m ON v.id = m.id"),
     env.DB.prepare(DECISIONS_SQL),
     env.DB.prepare("SELECT v.participant, v.payload FROM versions v JOIN (SELECT participant, MAX(id) AS id FROM versions WHERE unit = 'blocs' GROUP BY participant) m ON v.id = m.id"),
-    env.DB.prepare("SELECT version_id FROM version_review WHERE decision = 'approved'"),
+    env.DB.prepare("SELECT version_id, decision FROM version_review"),
   ]);
   const blocsBy = new Map((data[3].results || []).map((r) => [r.participant, JSON.parse(r.payload)]));
   const review = new Set((data[0].results || []).filter((p) => p.review).map((p) => p.id));
@@ -740,8 +740,18 @@ async function moderationState(env) {
     await env.DB.batch(fresh.map((id) => env.DB.prepare("INSERT OR IGNORE INTO version_accepted_v2 (version_id, accepted_at) VALUES (?, ?)").bind(id, iso(clock(env)))));
     for (const id of fresh) decisions.set(id, "approved");
   }
+  // השערה שהוכרעה ידנית (אושרה או נדחתה) ואינה חריגה עוד לפי הכלל הנוכחי ⇐ יוצאת מרשימות "אושרו" ו"נדחו" ומאושרת אוטומטית (הכרעת בעלים 26.10.2026)
+  const reviewed = new Set((data[4].results || []).map((r) => r.version_id));
+  const stale = counted.filter((v) => reviewed.has(v.id) && !raw.has(v.id)).map((v) => v.id);
+  if (stale.length) {
+    await env.DB.batch(stale.flatMap((id) => [
+      env.DB.prepare("DELETE FROM version_review WHERE version_id = ?").bind(id),
+      env.DB.prepare("INSERT OR IGNORE INTO version_accepted_v2 (version_id, accepted_at) VALUES (?, ?)").bind(id, iso(clock(env))),
+    ]));
+    for (const id of stale) { decisions.set(id, "approved"); reviewed.delete(id); }
+  }
   // "אושרה" בתצוגה = אישור ידני; אישור אוטומטי מוצג כ"תקינה"
-  const manual = new Set((data[4].results || []).map((r) => r.version_id));
+  const manual = new Set((data[4].results || []).filter((r) => r.decision === "approved" && reviewed.has(r.version_id)).map((r) => r.version_id));
   const mod = moderate(counted, decisions);
   return { latest, review, verified, blocsBy, mod: { ...mod, decisions, raw, manual } };
 }
