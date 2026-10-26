@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import modelFile from "../data/model.json";
-import { cleanLineage, k25Families, DEFAULT_LINEAGE, K25_LISTS, lineageProblem, lineageRows, manualFromCurrent, seats2022ByList, start2022, VALID_2022, type Lineage } from "./lineage";
+import { cleanLineage, k25Families, DEFAULT_LINEAGE, K25_LISTS, lineageProblem, lineageRows, manualFromCurrent, seats2022ByList, sourceBreakdown, start2022, VALID_2022, type Lineage } from "./lineage";
 
 const shares = (modelFile as unknown as { central: { shares: Record<string, number> } }).central.shares;
 const row = (lin: Lineage, id: string) => lineageRows(lin).rows.find((r) => r.id === id)!;
@@ -13,7 +13,17 @@ describe("שיוך רשימות 2022 לרשימות היום", () => {
     expect(row(DEFAULT_LINEAGE, "rzp").category).toBe("partial");
     expect(row(DEFAULT_LINEAGE, "otzma").category).toBe("partial");
     expect(row(DEFAULT_LINEAGE, "yashar").category).toBe("partial");
-    expect(row(DEFAULT_LINEAGE, "reservists").category).toBe("none");
+    expect(row(DEFAULT_LINEAGE, "reservists").category).toBe("sources");
+  });
+
+  it("מכמה רשימות: הערך של היום מתחלק לפי היחס ב-2022, והתוצאה לא משתנה (דוגמת הבעלים)", () => {
+    const lin = { ...DEFAULT_LINEAGE, sources: { ...DEFAULT_LINEAGE.sources, code_black: [...DEFAULT_LINEAGE.sources.code_black] } };
+    const [shas, utj] = ['ש"ס', "יהדות התורה"].map((n) => K25_LISTS.find((l) => l.name === n)!);
+    const b = sourceBreakdown(lin, "code_black", 1);
+    close(b.find((x) => x.list === shas.id)!.value, shas.votes / (shas.votes + utj.votes));
+    close(b.reduce((t, x) => t + x.value, 0), 1);
+    expect(seats2022ByList(lin).reservists).toBeUndefined();
+    expect(seats2022ByList(lin).shas).toBe(seats2022ByList({ ...lin, sources: {} }).shas);
   });
 
   it("איחוד = סכום הרשימות שהתאחדו", () => {
@@ -42,7 +52,7 @@ describe("שיוך רשימות 2022 לרשימות היום", () => {
   });
 
   it("חלוקה ידנית — וסכום שאינו 100 מחזיר הסבר", () => {
-    const lin: Lineage = { map: { ...DEFAULT_LINEAGE.map, noam: [] }, split: "manual", manual: { "ט": { rzp: 50, otzma: 50 }, "כן": { bluewhite: 30, yashar: 70 } } };
+    const lin: Lineage = { map: { ...DEFAULT_LINEAGE.map, noam: [] }, split: "manual", manual: { "ט": { rzp: 50, otzma: 50 }, "כן": { bluewhite: 30, yashar: 70 } }, sources: {} };
     expect(lineageProblem(lin)).toBeNull();
     close(row(lin, "rzp").seats2022, 7);
     expect(lineageProblem({ ...lin, manual: { ...lin.manual, "ט": { rzp: 50, otzma: 40 } } })).toMatch(/90%/);
