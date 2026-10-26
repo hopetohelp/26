@@ -23,6 +23,14 @@ let stop: (() => void) | null = null;
 const emit = () => listeners.forEach((l) => l());
 const show = (x: Dashboard) => { state = { dashboard: newerDashboard(state.dashboard, x), failed: false }; emit(); };
 
+/** פעם אחת, בלי רענון קבוע (סרטון הנתונים): הנתונים שבדף כשמסך פעיל מרענן אותם, אחרת בקשה אחת (וגיבוי מהעותק שבאתר) */
+export async function crowdDashboardOnce(): Promise<Dashboard | null> {
+  if (users > 0 && state.dashboard) return state.dashboard;
+  const x = await liveDashboard().catch(() => siteDashboard().catch(() => null));
+  if (x) show(x);
+  return state.dashboard;
+}
+
 function start() {
   void Promise.allSettled([siteDashboard().then(show), liveDashboard().then(show)]).then(() => {
     if (!state.dashboard) { state = { ...state, failed: true }; emit(); }

@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import qrcode from "qrcode-generator";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
-import { groupImageUrl, groupUrl } from "../../lib/groupLink";
+import { groupUrl } from "../../lib/groupLink";
 import { SIMPLE_BLOCS, simpleSelection, simpleValue } from "../../lib/simpleSources";
-import { useCrowdDashboard } from "../../lib/sources";
+import { crowdDashboardOnce } from "../../lib/sources";
 import { BLOC_COLORS, type PromoData, type PromoList } from "../../lib/promoVideo";
 import type { PromoFile } from "../../lib/promoEncode";
 import { nameOf } from "../guess/model";
-import { loadLogo } from "../guess/communityShare";
 import { blocSlices, orderedLists } from "./shared";
 import type { Dashboard } from "../../lib/crowdApi";
 
@@ -47,14 +46,14 @@ export async function buildPromoData(dash: Dashboard, group: { slug: string; log
   const link = group ? groupUrl(group.slug) : SITE_URL, q = qrcode(0, "M");
   q.addData(link); q.make();
   const m = q.getModuleCount(), qr = Array.from({ length: m }, (_, r) => Array.from({ length: m }, (_, k) => q.isDark(r, k)));
-  const logo = await loadLogo(group?.logoUrl ?? groupImageUrl({ slug: "hagzara" }, "promo"));
+  // סמל הגזרה — קובץ קבוע באתר (הכרעת בעלים 26.10.2026): בלי פנייה לשרת המשתתפים
+  const logo = await loadImg(`${import.meta.env.BASE_URL}promo/hagzara.jpg`);
   return { ...(mine && who ? { mineLabel: `הניחוש של ${who}` } : {}), asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: nextGoal(dash.seats?.n ?? 0), host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
 }
 
 /** "צור סרטון" בחלון השיתוף: הסרטון נבנה בדפדפן מהנתונים של הרגע הזה — בלי AI, בלי שרת ובלי עלות */
 export default function PromoVideo({ group, mine }: { group: { slug: string; logoUrl: string | null } | null; mine?: Record<string, number> | null }) {
-  const crowd = useCrowdDashboard();
-  const [state, setState] = useState<"idle" | "busy" | "done" | "failed">("idle");
+  const [state, setState] = useState<"idle" | "busy" | "done" | "failed" | "nodata">("idle");
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState<PromoFile | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -64,11 +63,12 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
   const [name, setName] = useState("");
   const canMine = isFull(mine);
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
-  const dash = crowd.dashboard;
   const make = async () => {
-    if (!dash) return;
     setState("busy"); setProgress(0); setMsg(null);
     try {
+      // נתוני המשתתפים רק בלחיצה — בלי רענון קבוע כשהחלון פתוח
+      const dash = await crowdDashboardOnce();
+      if (!dash) { setState("nodata"); return; }
       const [{ renderPromoVideo }, data] = await Promise.all([import("../../lib/promoEncode"), buildPromoData(dash, group, withMine && canMine ? mine : null, withMine ? name : "")]);
       const f = await renderPromoVideo(data, setProgress);
       setFile(f); setUrl(URL.createObjectURL(f.blob)); setState("done");
@@ -100,11 +100,11 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
         <span className="text-xs text-ink-soft">{guesserName(name) ? `בסרטון ייכתב: "הניחוש של ${guesserName(name)}"` : 'בסרטון ייכתב: "הניחוש שלי"'}</span>
       </label>}
     </div>}
-    <button type="button" className="f-btn" onClick={make} disabled={!dash || state === "busy"} aria-busy={state === "busy"}>
+    <button type="button" className="f-btn" onClick={make} disabled={state === "busy"} aria-busy={state === "busy"}>
       {state === "busy" ? `יוצרים סרטון… ${Math.round(progress * 100)}%` : "צור סרטון"}
     </button>
     {state === "busy" && <div className="h-1.5 rounded-full bg-paper-line overflow-hidden" aria-hidden="true"><div className="h-full bg-signal" style={{ width: `${Math.round(progress * 100)}%` }} /></div>}
     {state === "failed" && <p role="status" className="text-sm font-bold">יצירת הסרטון לא הצליחה בדפדפן הזה. נסו בכרום או בספארי עדכניים.</p>}
-    {!dash && crowd.failed && <p className="text-xs text-ink-soft">נתוני המשתתפים אינם זמינים כרגע, ולכן אי אפשר ליצור סרטון.</p>}
+    {state === "nodata" && <p role="status" className="text-sm font-bold">נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בעוד רגע.</p>}
   </div>;
 }
