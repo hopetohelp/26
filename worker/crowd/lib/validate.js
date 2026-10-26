@@ -137,7 +137,8 @@ export function validateCamps(c) {
 
 /**
  * השיוך האישי במסך "מה השתנה – מפלגות": map — רשימה של היום ⇐ אותיות רשימות 2022;
- * split — אופן החלוקה בפיצול; manual — לכל רשימת 2022, אחוז לכל רשימה של היום. לא נכנס לשום חישוב.
+ * split — אופן החלוקה בפיצול; manual — לכל רשימת 2022, אחוז לכל רשימה של היום;
+ * sources — לרשימה חדשה: רשימות 2022 שמהן הגיעו קולותיה (בלי שינוי בתוצאה). לא נכנס לשום חישוב.
  */
 export function validateLineage(x) {
   if (!isObj(x) || !isObj(x.map)) return fail("lineage");
@@ -160,7 +161,16 @@ export function validateLineage(x) {
       }
     }
   }
-  return { ok: true, value: { map, split: x.split, manual } };
+  let sources;
+  if (x.sources !== undefined) {
+    if (!isObj(x.sources)) return fail("lineage_sources");
+    sources = {};
+    for (const [k, v] of Object.entries(x.sources)) {
+      if (!IDS_2026.has(k) || !Array.isArray(v) || v.length > 10 || v.some((l) => typeof l !== "string" || !IDS_2022.has(l))) return fail("lineage_sources");
+      sources[k] = [...new Set(v)];
+    }
+  }
+  return { ok: true, value: { map, split: x.split, manual, ...(sources ? { sources } : {}) } };
 }
 
 export function validatePayload(unit, payload) {

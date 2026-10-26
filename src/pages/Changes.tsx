@@ -16,7 +16,7 @@ import { pollSeatValues } from "../lib/pollRange";
 import { listName } from "../lib/data";
 import { diffText as diff, pollSegs, type DumbbellRow, type DumbbellUnit } from "../lib/dumbbell";
 import { date, num, pctValue, rng, seatsFmt, signed } from "../lib/format";
-import { DEFAULT_LINEAGE, heirs, K25_LISTS, k25ListName, lineageProblem, lineageRows, manualFromCurrent, sharedLists, VALID_2022, type Category, type Lineage, type LineageRow, type Split as SplitKind } from "../lib/lineage";
+import { DEFAULT_LINEAGE, heirs, K25_LISTS, k25ListName, lineageProblem, lineageRows, manualFromCurrent, sharedLists, sourceBreakdown, VALID_2022, type Category, type Lineage, type LineageRow, type Split as SplitKind } from "../lib/lineage";
 import SaveButton, { SaveError } from "./guess/SaveButton";
 import { ActionBar, Btn, ShortLabel } from "./guess/ui";
 import { useSession } from "./guess/useCrowd";
@@ -38,6 +38,7 @@ const CAMP = m.changes.alternatives.find((a) => a.id === "camp")!;
 const CATEGORIES: { id: Category; title: string; lead: string }[] = [
   { id: "certain", title: "שיוך ודאי", lead: "אותה רשימה, או איחוד של רשימות מ-2022." },
   { id: "partial", title: "שיוך חלקי", lead: "רשימה של 2022 שהתפצלה. התוצאה שלה מתחלקת בין הרשימות של היום." },
+  { id: "sources", title: "מכמה רשימות", lead: "רשימה חדשה שהקולות שלה הגיעו מכמה רשימות של 2022. התוצאה שלה מתחלקת ביניהן לפי היחס ביניהן ב-2022, בלי לשנות את התוצאה של אף רשימה." },
   { id: "none", title: "אין שיוך", lead: "רשימות חדשות, בלי מקבילה ב-2022." },
 ];
 const SPLITS: { id: SplitKind; label: string }[] = [
@@ -83,6 +84,7 @@ export default function Changes() {
   const problem = lineageProblem(lin);
 
   const setMap = (id: string, from: string[]) => setLin({ ...lin, map: { ...lin.map, [id]: from } });
+  const setSources = (id: string, from: string[]) => setLin({ ...lin, sources: { ...lin.sources, [id]: from } });
   const setLin = (next: Lineage) => {
     // פיצול חדש בחלוקה ידנית ⇐ מתחיל מהחלוקה הנוכחית, כדי שלא יישאר סכום שאינו 100
     if (next.split === "manual") {
@@ -128,7 +130,26 @@ export default function Changes() {
   };
   const toggle = (id: string) => setOpen(open === id ? null : id);
 
-  const editor = (r: LineageRow) => (
+  /** רשימה חדשה (מכמה רשימות או בלי שיוך): העורך קובע מאיפה הגיעו הקולות, בלי לשנות תוצאה */
+  const sourceEditor = (r: LineageRow) => {
+    const from = lin.sources[r.id] ?? [];
+    return (
+      <fieldset id={`lineage-${r.id}`} className="rounded-theme border border-paper-line p-3 mt-2">
+        <legend className="text-sm font-bold px-1">הקולות של {listName(r.id)} הגיעו מ…</legend>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-3">
+          {K25_LISTS.map((l) => (
+            <label key={l.id} className="flex items-center gap-2 min-h-[44px] text-sm">
+              <input type="checkbox" checked={from.includes(l.id)} onChange={(e) => setSources(r.id, e.target.checked ? [...from, l.id] : from.filter((x) => x !== l.id))} />
+              {l.name} <span className="text-ink-soft tabular">({pctValue(l.share, 1)}%)</span>
+            </label>
+          ))}
+        </div>
+        <p className="text-xs text-ink-soft mt-1">התוצאה של {listName(r.id)} מתחלקת בין הרשימות שסומנו לפי היחס ביניהן ב-2022. בלי סימון — "אין שיוך".</p>
+        <Btn className="mt-2" onClick={() => setOpen(null)}>סיום</Btn>
+      </fieldset>
+    );
+  };
+  const editor = (r: LineageRow) => r.category === "sources" || r.category === "none" ? sourceEditor(r) : (
     <fieldset id={`lineage-${r.id}`} className="rounded-theme border border-paper-line p-3 mt-2">
       <legend className="text-sm font-bold px-1">{listName(r.id)} באה מ…</legend>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-3">
@@ -254,7 +275,33 @@ export default function Changes() {
                         {problem && <p role="alert" className="text-sm text-warn font-bold">{problem}</p>}
                       </div>
                     )}
-                    {c.id !== "none" && (
+                    {c.id === "sources" && (
+                      <>
+                        <ul className="space-y-3">
+                          {list.map((r) => {
+                            const now = pct ? r.shareNow : r.seatsNow;
+                            const fmt = (v: number) => (pct ? `${pctValue(v, 1)}%` : seatsFmt(Math.round(v * 10) / 10));
+                            return (
+                              <li key={r.id} className="border-t border-paper-line pt-2">
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                  {nameButton(r)}
+                                  <b className="font-num tabular">{fmt(now)}</b>
+                                  <span className="text-sm text-ink-soft">{pct ? "היום" : "מנדטים היום"}</span>
+                                </div>
+                                <p className="text-sm mt-1">
+                                  מהם:{" "}
+                                  {sourceBreakdown(lin, r.id, now).map((b, i) => (
+                                    <span key={b.list}>{i ? " · " : ""}<bdi className="tabular">{fmt(b.value)}</bdi> מ{k25ListName(b.list)}</span>
+                                  ))}
+                                </p>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                        {editorOf(list)}
+                      </>
+                    )}
+                    {c.id !== "none" && c.id !== "sources" && (
                       <>
                         <ChartWithTable
                           asTable={asTable}
