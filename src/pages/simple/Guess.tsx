@@ -85,6 +85,8 @@ export default function SimpleGuess() {
   const values = Object.fromEntries(IDS.map(id => [id, draft.seats[id]?.v ?? 0]));
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הניחוש שלי</h1><SourceBar source={source} />
     <div className="f-grid"><div className="f-card">
+      <div ref={voteCard} />
+      <CardDrawer title="ההצבעה שלי" open={voteOpen} onOpenChange={v => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" className="mb-5"><Vote unit={vote} session={session} /></CardDrawer>
       {advanced && <GuessTools draft={draft} setDraft={unit.setDraft} session={session} />}
       {order.map(id => {
         const value = draft.seats[id]?.v ?? 0, bad = value > 0 && value < 4, inputBad = editing?.id === id && invalidInput;
@@ -102,9 +104,7 @@ export default function SimpleGuess() {
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
       {total > 120 && <p className="text-sm text-warn mt-3">יש {total - 120} מנדטים יותר מדי.</p>}
     </div>
-    <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} />
-      <div ref={voteCard} />
-      <CardDrawer title="ההצבעה שלי" open={voteOpen} onOpenChange={v => { setVoteOpen(v); if (!v) flushUnit("vote"); }} seenId="vote" className="mt-5"><Vote unit={vote} session={session} /></CardDrawer></div></div>
+    <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} /></div></div>
     <FocusFoot />
     {exit?.step === "share" && <ShareCard heading={session.token ? "הכנסת שלך נשמרה! לשתף?" : "לשתף את הכנסת שלך?"} input={{ kind: "mine", values, name: session.me?.username, group: hagzara }} onClose={() => leave(exit.to)} />}
     {exit?.step === "auth" && createPortal(<AuthSheet session={session} onClose={() => setExit({ ...exit, step: "ask" })} onDone={async token => { await unit.save(token); leave(exit.to); }} />, document.body)}
