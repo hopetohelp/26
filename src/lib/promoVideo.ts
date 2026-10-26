@@ -182,11 +182,6 @@ const TAU = Math.PI * 2;
 /** מערבב צבע לכיוון הרקע (עמעום אטום — שקיפות בשכבות הייתה מציירת קווי מתאר כפולים) */
 function toward(hex: string, k: number) { const a = parseInt(hex.slice(1), 16), b = parseInt(PC.bg.slice(1), 16), ch = (x: number, y: number) => Math.round(x + (y - x) * k); return "#" + [16, 8, 0].map(sh => ch(a >> sh & 255, b >> sh & 255).toString(16).padStart(2, "0")).join(""); }
 function shade(hex: string, k: number) { const n = parseInt(hex.slice(1), 16); return `rgb(${(n >> 16 & 255) * k | 0},${(n >> 8 & 255) * k | 0},${(n & 255) * k | 0})`; }
-const midOf = (slices: Slice[], id: string, rot: number) => {
-  const total = slices.reduce((a, s) => a + s.value, 0); let a = rot;
-  for (const s of slices) { const sp = s.value / total * TAU; if (s.id === id) return a + sp / 2; a += sp; }
-  return rot;
-};
 /**
  * טקסט בקשת על פני העוגה (הכרעת בעלים 26.10.2026): כל תו — גם ספרות — במקומו על האליפסה, מסובב לפי המשיק,
  * מימין לשמאל ותמיד זקוף. בחזית העוגה (sin > 0) הקשת מתעקלת למטה, ובגב — למעלה.
@@ -279,9 +274,8 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
   const L = n === 3 ? { cys: [560, 1040, 1520], rx: [300, 225], card: 400 } : { cys: [650, 1330], rx: [360, 255], card: 420 };
   const pies = kinds.map((k, i) => {
     const slices: Slice[] = d.blocs.map(b => ({ id: b.id, short: b.short, value: b[k.key] ?? 0, color: b.color }));
-    const off = i * .35, r0 = rotAt(Math.min(t, 10.5)) + off, m0 = midOf(slices, "haredi", r0);
-    const target = r0 + ((Math.PI / 2 - m0) % TAU + TAU) % TAU;  // החרדים מסתובבים לחזית
-    return { k, slices, shown: d.blocs.map(b => b.shown[k.key] ?? 0), rot: t < 10.5 ? r0 : lerp(r0, target, h), cy: L.cys[i] };
+    // אותו סיבוב רציף בשני המסכים (הכרעת בעלים 26.10.2026: העוגות במסך החרדים זהות לעוגות במסך הגושים)
+    return { k, slices, shown: d.blocs.map(b => b.shown[k.key] ?? 0), rot: rotAt(t) + i * .35, cy: L.cys[i] };
   });
   // כותרת: חלוקת הכנסת ⇐ המפלגות החרדיות
   c.save(); c.globalAlpha = eo(pr(t, 7.6, 8)) * (1 - h); text(c, "הכנסת לפי גושים", 540, 240, 66, { w: 900 }); c.restore();
@@ -289,13 +283,16 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
   const punch = t >= 10.5 ? 1 + .12 * Math.exp(-(t - 10.5) * 9) : 1;
   c.save(); c.translate(540, 990); c.scale(punch, punch); c.translate(-540, -990);
   pies.forEach((p, i) => {
-    const cx = lerp(540, 735, h), rx = lerp(L.rx[0], L.rx[1], h) * grow, ry = rx * .42;
-    const tag = eo(pr(t, 7.7 + i * .12, 8.1 + i * .12)), ly = p.cy - lerp(L.rx[0], L.rx[1], h) * .42 - 70;
+    // העוגה מצוירת תמיד באותו גודל, ובמסך החרדים כולה מוקטנת ומוזזת כתמונה אחת — כך הצבעים, הטקסט והיחסים זהים
+    const rx = L.rx[0] * grow, ry = rx * .42, k = lerp(1, L.rx[1] / L.rx[0], h);
+    const tag = eo(pr(t, 7.7 + i * .12, 8.1 + i * .12)), ly = p.cy - L.rx[0] * .42 - 70;
     c.save(); c.globalAlpha = tag * (1 - h);
     c.font = `800 34px ${HE}`; const pw = c.measureText(p.k.label).width + 60;
     pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800 });
     c.restore();
-    if (rx > 1) pie3d(c, { cx, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: pop * .72 } : undefined });
+    c.save(); c.translate(lerp(540, 735, h), p.cy); c.scale(k, k); c.translate(-540, -p.cy);
+    if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: 0 } : undefined });
+    c.restore();
     // כרטיס המספרים של החרדים
     const ck = eo(pr(t, 10.95 + i * .12, 11.4 + i * .12)); if (ck <= 0) return;
     const hs = p.shown[p.slices.findIndex(s => s.id === "haredi")], ch = L.card, small = n === 3;
