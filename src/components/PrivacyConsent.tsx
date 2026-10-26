@@ -9,6 +9,7 @@ export function PrivacyBox({ agree, onAgree }: { agree: boolean; onAgree: (on: b
     <div className="rounded-theme border border-paper-line bg-paper p-3 space-y-2">
       <p className="font-bold text-sm">{PRIVACY_TITLE}</p>
       <ul className="list-disc ps-5 space-y-1 text-sm">{PRIVACY_POINTS.map((x) => <li key={x}>{x}</li>)}</ul>
+      <a href="#/method#privacy-policy" target="_blank" rel="noopener" className="text-sm">מדיניות הפרטיות המלאה</a>
       <label className="flex items-center gap-2 text-sm font-bold min-h-[44px]">
         <input type="checkbox" className="w-5 h-5 shrink-0" checked={agree} onChange={(e) => onAgree(e.target.checked)} />
         {PRIVACY_AGREE}

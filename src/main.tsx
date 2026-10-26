@@ -144,7 +144,7 @@ createRoot(document.getElementById("root")!).render(
             element={<Tabbed
               label="מידע"
               aliases={{ method: "numbers" }}
-              anchors={{ sources: "sources", updates: "sources", privacy: "sources", law: "law", limits: "law", about: "about" }}
+              anchors={{ sources: "sources", updates: "sources", privacy: "sources", law: "law", limits: "law", about: "about", "privacy-policy": "about", accessibility: "about" }}
               tabs={[
                 { id: "numbers", label: "מילון המספרים", element: <MethodNumbers /> },
                 { id: "sources", label: "מקורות", element: <MethodSources /> },
