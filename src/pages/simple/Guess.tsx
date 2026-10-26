@@ -43,7 +43,7 @@ export default function SimpleGuess() {
     unit.setDraft({ ...draft, seats: Object.fromEntries(Object.entries(draft.seats).filter(([id]) => IDS.includes(id))) });
   }, [stale.join()]);
   /*
-   * יציאה מהמסך (הכרעת בעלים 24.10.2026) — בלי כפתור שמירה; הניחוש נשמר ביציאה:
+   * יציאה מהמסך (הכרעת בעלים 24.10.2026) — הניחוש נשמר ביציאה (וגם בכפתור "שמירה ושיתוף", הכרעת בעלים 26.10.2026):
    * 0 מנדטים ⇐ כלום · חלקי ⇐ "האם אתה בטוח" · 120 ומחובר ⇐ פעם אחת חלון שיתוף · 120 ולא מחובר ⇐ חלון "להתחבר ולשמור או לשתף"
    */
   const navigate = useNavigate();
@@ -51,6 +51,15 @@ export default function SimpleGuess() {
   const stateRef = useRef({ total, invalid, token: session.token });
   stateRef.current = { total, invalid, token: session.token };
   const leave = (to: string) => { setExit(null); navigate(to); };
+  // כפתור "שמירה ושיתוף" (הכרעת בעלים 26.10.2026, מחזיר את הכפתור לצד השמירה ביציאה): שומר עכשיו ופותח את חלון השיתוף
+  const [shareNow, setShareNow] = useState<"share" | "auth" | null>(null);
+  const ready = total === 120 && !invalid;
+  const saveAndShare = async () => {
+    if (!ready) return;
+    if (!session.token) return setShareNow("auth");
+    if (unit.status !== "saved" && !(await unit.save(session.token))) return;
+    setShareNow("share");
+  };
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as Element | null)?.closest?.("a[href]");
@@ -99,6 +108,8 @@ export default function SimpleGuess() {
             <button type="button" aria-label={`הוספת מנדט ל${nameOf(id)}`} aria-disabled={total >= 120 || undefined} onClick={() => { setEditing(null); change(id, value === 0 ? 4 : value + 1); }}>+</button>
           </div></div>;
       })}
+      <button type="button" className="f-btn pri mt-4 w-full" disabled={!ready || unit.state === "saving"} onClick={() => void saveAndShare()}>{unit.state === "saving" ? "שומר…" : "שמירה ושיתוף"}</button>
+      {!ready && total > 0 && <p className="text-xs text-ink-soft mt-1">השמירה נפתחת כשהכנסת מגיעה ל־120 מנדטים.</p>}
       <ClosedNote className="mt-3" />
       <SaveError unit={unit} />{unit.queued && <Notice>הניחוש שמור במכשיר וממתין לאישור השרת.</Notice>}
       {total === 120 && invalid && <p className="text-sm text-warn mt-3">{invalid}</p>}
@@ -106,6 +117,8 @@ export default function SimpleGuess() {
     </div>
     <div className="f-side"><BlocChart values={values} missing={Math.max(0, 120 - total)} logo={hagzaraLogo} /></div></div>
     <FocusFoot />
+    {shareNow === "share" && <ShareCard heading="הכנסת שלך נשמרה! לשתף?" input={{ kind: "mine", values, name: session.me?.username, group: hagzara }} onClose={() => setShareNow(null)} />}
+    {shareNow === "auth" && createPortal(<AuthSheet session={session} onClose={() => setShareNow(null)} onDone={async token => { if (await unit.save(token)) setShareNow("share"); else setShareNow(null); }} />, document.body)}
     {exit?.step === "share" && <ShareCard heading={session.token ? "הכנסת שלך נשמרה! לשתף?" : "לשתף את הכנסת שלך?"} input={{ kind: "mine", values, name: session.me?.username, group: hagzara }} onClose={() => leave(exit.to)} />}
     {exit?.step === "auth" && createPortal(<AuthSheet session={session} onClose={() => setExit({ ...exit, step: "ask" })} onDone={async token => { await unit.save(token); leave(exit.to); }} />, document.body)}
     {exit?.step === "ask" && createPortal(<div className="f-modal" onClick={e => e.target === e.currentTarget && setExit(null)} onKeyDown={e => e.key === "Escape" && setExit(null)}>

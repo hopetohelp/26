@@ -203,7 +203,9 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
     window.addEventListener("crowd-clear", sync);
     window.addEventListener("storage", sync);
     window.addEventListener(OUTBOX_EVENT, outbox);
-    return () => { window.removeEventListener("crowd-clear", sync); window.removeEventListener("storage", sync); window.removeEventListener(OUTBOX_EVENT, outbox); };
+    // שמירה ביציאה מסתיימת אחרי שהמסך הבא נפתח ⇐ המסך הבא מתעדכן ולא נשאר "לא נשמר"
+    window.addEventListener(SAVED_EVENT, outbox);
+    return () => { window.removeEventListener("crowd-clear", sync); window.removeEventListener("storage", sync); window.removeEventListener(OUTBOX_EVENT, outbox); window.removeEventListener(SAVED_EVENT, outbox); };
   }, [unit, initial]);
   // מכשיר חדש אחרי כניסה: הגרסה האחרונה מהשרת, אם אין כאן טיוטה
   useEffect(() => {
@@ -236,8 +238,10 @@ export function useUnit<P extends Payload>(unit: Unit, initial: P | null, remote
         const op_id = S.opIdFor(unit, payload);
         const r = await call<{ blind?: boolean }>("/save", { token, body: { unit, op_id, registry: meta.dataAsOf, payload } });
         // התשובה נחסמה ⇐ נשמר אצל המשתתף ונשאר בתור השליחה עד אישור (src/lib/outbox.ts)
-        if (!r?.blind) { S.clearPending(unit); window.dispatchEvent(new Event(SAVED_EVENT)); }
+        if (!r?.blind) S.clearPending(unit);
         keepLocal(payload);
+        // אחרי העדכון בדפדפן: מסך אחר שכבר נפתח (ממוצע הניחושים) קורא את הגרסה השמורה ונפתח
+        if (!r?.blind) window.dispatchEvent(new Event(SAVED_EVENT));
         return true;
       } catch (e) {
         // אין חיבור לשרת ⇐ שמירה מקומית קודם: הגרסה נשמרת בדפדפן ותישלח אוטומטית כשהחיבור יחזור
