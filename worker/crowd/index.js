@@ -250,12 +250,15 @@ export async function groupSeries(env, id, now) {
     const total = events[key].length;
     out.push(total >= GROUP_MIN ? { key, total, points: cumulative(events[key]) } : { key, total: null, points: null });
   }
-  // משפך הקישור לפי יום (הכרעת בעלים 26.10.2026): דפדפנים שפתחו את הקישור לראשונה ⇐ מהם נרשמו (הקישור היה הכניסה הראשונה) ⇐ מהם ניחוש שנספר
+  // משפך הקישור לפי יום פתיחת הקישור (הכרעת בעלים 26.10.2026): דפדפנים שפתחו את הקישור לראשונה ⇐ מהם נרשמו (הקישור היה הכניסה הראשונה) ⇐ מהם ניחוש שנספר
   const visitDays = (await env.DB.prepare("SELECT day, fresh FROM group_visits WHERE group_id = ?1 ORDER BY day").bind(id).all()).results || [];
   const savedFirst = await countedGuessers(env, firstSet);
+  let openedAt = new Map();
+  try { openedAt = new Map(((await env.DB.prepare("SELECT participant, opened_at FROM group_link_opened WHERE group_id = ?1").bind(id).all()).results || []).map((r) => [r.participant, r.opened_at])); } catch { /* בלי טבלה עדיין */ }
   const days = new Map(visitDays.map((r) => [r.day, { day: r.day, fresh: r.fresh, registered: 0, saved: 0 }]));
   for (const p of firstSet) {
-    const t = joinedAt.get(p);
+    // יום הפתיחה כשהדפדפן שלח אותו (מ-26.10.2026); אחרת — יום ההצטרפות
+    const t = openedAt.get(p) ?? joinedAt.get(p);
     if (!t) continue;
     const day = ilDay(Date.parse(t));
     if (!days.has(day)) days.set(day, { day, fresh: 0, registered: 0, saved: 0 });
@@ -1774,6 +1777,11 @@ const routes = {
     await env.DB.prepare("INSERT OR IGNORE INTO group_link_joins (group_id, participant, joined_at) VALUES (?, ?, ?)").bind(link.group_id, participant, iso(now)).run();
     // first: הקישור היה הכניסה הראשונה של הדפדפן לאתר (הלקוח זוכר)
     if (body.first === true) await env.DB.prepare("INSERT OR IGNORE INTO group_link_first (group_id, participant) VALUES (?, ?)").bind(link.group_id, participant).run();
+    // מועד הפתיחה לפי הדפדפן: רק לכניסה ראשונה, ורק בשבוע האחרון ולא בעתיד
+    const opened = typeof body.openedAt === "string" ? Date.parse(body.openedAt) : NaN;
+    if (body.first === true && Number.isFinite(opened) && opened <= now && opened >= now - 7 * 86_400_000) {
+      try { await env.DB.prepare("INSERT OR IGNORE INTO group_link_opened (group_id, participant, opened_at) VALUES (?, ?, ?)").bind(link.group_id, participant, iso(opened)).run(); } catch { /* הטבלה עוד לא קיימת */ }
+    }
     return { ok: true };
   },
   // מתג המנהל: לכלול כחברים את מי שנכנס דרך הקישור. כבוי ⇐ מוסתר; מספר המצטרפים מוצג רק כשהמתג פעיל

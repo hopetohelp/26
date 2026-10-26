@@ -273,6 +273,15 @@ describe("group series", () => {
     const f = (await call("/group/series?group=gizra", { token: mgr })).data.funnel;
     expect(f.total).toEqual({ fresh: GROUP_MIN, registered: 1, saved: 1 });
     expect(f.days.reduce((a, r) => a + r.registered, 0)).toBe(1);
+    // יום הפתיחה שהדפדפן שלח קובע את השורה (לא יום ההרשמה); מועד מחוץ לשבוע האחרון — נדחה
+    const late = await account("late@x.co");
+    await call("/group/link-join", { token: late, body: { slug: "hagzara", first: true, openedAt: new Date(t - 86_400_000).toISOString() } });
+    const far = await account("far@x.co");
+    await call("/group/link-join", { token: far, body: { slug: "hagzara", first: true, openedAt: new Date(t - 30 * 86_400_000).toISOString() } });
+    const g = (await call("/group/series?group=gizra", { token: mgr })).data.funnel;
+    const ilDay = (ms) => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem" }).format(new Date(ms));
+    expect(g.days.find((r) => r.day === ilDay(t - 86_400_000))?.registered).toBe(1);
+    expect(g.total.registered).toBe(3);
   });
 });
 

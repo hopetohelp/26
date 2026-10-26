@@ -269,7 +269,7 @@ function Funnel({ f }: { f: NonNullable<GroupSeries["funnel"]> }) {
           <tbody>{[...f.days].reverse().map((r) => <tr key={r.day} className="border-b border-paper-line text-center"><td className="text-start py-1">{day(r.day)}</td><td>{n(r.fresh)}</td><td>{n(r.registered)}</td><td>{n(r.saved)}</td><td>{pct(r.saved, r.fresh)}</td></tr>)}</tbody>
         </table>
       </div>
-      <p className="text-xs text-ink-soft">"פתחו לראשונה" = דפדפן שהקישור היה הכניסה הראשונה שלו לאתר. "נרשמו" ו"שמרו ניחוש" = מתוכם, לפי יום ההרשמה; ניחוש = הניחוש שנספר בממוצע. מי שנכנס משני מכשירים נספר פעמיים.</p>
+      <p className="text-xs text-ink-soft">"פתחו לראשונה" = דפדפן שהקישור היה הכניסה הראשונה שלו לאתר. "נרשמו" ו"שמרו ניחוש" = מתוכם, לפי יום פתיחת הקישור (לפני 26.10 — לפי יום ההרשמה); ניחוש = הניחוש שנספר בממוצע. מי שנכנס משני מכשירים נספר פעמיים.</p>
     </Sub>
   );
 }

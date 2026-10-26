@@ -299,6 +299,13 @@ CREATE TABLE IF NOT EXISTS group_link_first (
   participant TEXT NOT NULL,
   PRIMARY KEY (group_id, participant)
 );
+-- מתי הדפדפן פתח את הקישור לראשונה (לפי הדפדפן; רק לכניסה ראשונה) — לשיוך הנרשם ליום הפתיחה במשפך הקישור
+CREATE TABLE IF NOT EXISTS group_link_opened (
+  group_id TEXT NOT NULL,
+  participant TEXT NOT NULL,
+  opened_at TEXT NOT NULL,
+  PRIMARY KEY (group_id, participant)
+);
 CREATE TABLE IF NOT EXISTS group_link_flags (
   group_id TEXT NOT NULL,
   flag TEXT NOT NULL,
