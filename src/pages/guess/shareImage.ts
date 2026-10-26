@@ -27,7 +27,8 @@ export function drawLogo(ctx: CanvasRenderingContext2D, logo: ImageBitmap, x: nu
 }
 
 /** כתובת בתוך ציור מימין לשמאל: בלי בידוד הכיוון המספר ("26") עובר לסוף ויוצא "hopetohelp.net.26" */
-export const ltrText = (text: string) => `\u2066${text}\u2069`;
+// סימן שמאל־לימין (LRM) ולא בידוד (LRI): Safari באייפון מתעלם מבידוד בציור, ו-LRM עובד בכל הדפדפנים
+export const ltrText = (text: string) => `\u200E${text}\u200E`;
 function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
