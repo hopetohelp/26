@@ -100,11 +100,12 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
   // "צור סרטון" ⇐ (למי שיש ניחוש מלא) סימון "להוסיף את הניחוש שלי" ⇐ הסימון פותח את שדה השם ⇐ "יצירת הסרטון"
   const options = state === "options";
   return <div className="grid gap-1">
-    {options && <div className="grid gap-2 mb-1">
+    {/* הזהב של "הניחוש שלי" — כמו בסרטון (טוקן --bloc-unity) */}
+    {options && <div className="grid gap-2 mb-1 rounded-xl border-2 p-3" style={{ borderColor: "rgb(var(--bloc-unity))", background: "rgb(var(--bloc-unity) / .08)", accentColor: "rgb(var(--bloc-unity))" }}>
       <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={withMine} onChange={e => setWithMine(e.target.checked)} />להוסיף לסרטון את הניחוש שלי</label>
       {withMine && <label className="grid gap-1 text-sm">שם שיופיע בסרטון (לא חובה, עד שתי מילים)
-        <input type="text" value={name} maxLength={30} onChange={e => setName(e.target.value)} placeholder="למשל: יוסי כהן" className="bg-paper border border-paper-line rounded-xl px-3 py-2 w-full text-base" />
-        <span className="text-xs text-ink-soft">{guesserName(name) ? `בסרטון ייכתב: "הניחוש של ${guesserName(name)}"` : 'בסרטון ייכתב: "הניחוש שלי"'}</span>
+        <input type="text" value={name} maxLength={30} onChange={e => setName(e.target.value)} placeholder="למשל: יוסי כהן" className="bg-paper border-2 rounded-xl px-3 py-2 w-full text-base" style={{ borderColor: "rgb(var(--bloc-unity))", outlineColor: "rgb(var(--bloc-unity))" }} />
+        <span className="text-xs font-bold" style={{ color: "rgb(var(--bloc-unity))" }}>{guesserName(name) ? `בסרטון ייכתב: "הניחוש של ${guesserName(name)}"` : 'בסרטון ייכתב: "הניחוש שלי"'}</span>
       </label>}
     </div>}
     <button type="button" className={`f-btn${options ? " pri" : ""}`} onClick={() => state === "idle" && canMine ? setState("options") : make()} disabled={state === "busy"} aria-busy={state === "busy"}>

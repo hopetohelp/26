@@ -68,10 +68,15 @@ async function realtime(d: PromoData, aac: Uint8Array | null, onProgress: (k: nu
   const done = new Promise<void>(r => { rec.onstop = () => r(); });
   rec.start(250); src?.start();
   const t0 = ac.currentTime;
-  await new Promise<void>(r => {
-    const tick = () => { const t = ac.currentTime - t0; drawPromo(ctx, Math.min(t, DUR), d, fx); onProgress(Math.min(1, t / DUR)); if (t >= DUR) r(); else requestAnimationFrame(tick); };
-    requestAnimationFrame(tick);
-  });
+  try {
+    await new Promise<void>((r, fail) => {
+      const tick = () => {
+        // שגיאה בציור — מסיימים בכישלון (ולא נתקעים על "יוצרים סרטון…")
+        try { const t = ac.currentTime - t0; drawPromo(ctx, Math.min(t, DUR), d, fx); onProgress(Math.min(1, t / DUR)); if (t >= DUR) r(); else requestAnimationFrame(tick); } catch (e) { fail(e); }
+      };
+      requestAnimationFrame(tick);
+    });
+  } catch (e) { rec.stop(); src?.stop(); void ac.close(); throw e; }
   rec.stop(); await done; void ac.close();
   const mp4 = (rec.mimeType || type).includes("mp4");
   return { blob: new Blob(parts, { type: mp4 ? "video/mp4" : "video/webm" }), name: `${NAME}.${mp4 ? "mp4" : "webm"}`, type: mp4 ? "video/mp4" : "video/webm" };

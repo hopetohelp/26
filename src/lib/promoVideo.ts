@@ -22,8 +22,8 @@ const { W, H } = PROMO;
 /** גבולות המסכים בשניות — על רשת של חצי פעמה (120 BPM), כמו המוזיקה */
 export const SCENES = { open: 0, who: 1.5, chart: 3.5, pies: 7.5, haredi: 10.5, gap: 13.5, invite: 15.5, count: 17.5, end: 20 } as const;
 /** מכות המוזיקה: רעידה קצרה בכל אחת. בזמני הקריאה (5.5–7.5, 11.5–13.5) אין מכות */
-const HITS = [0, 1.5, 1.875, 2.25, 2.75, 3.5, 7.5, 10.5, 13.5, 14.25, 15.5, 16.5, 17.5, 18.9];
-const FLASH: [number, number][] = [[1.5, .9], [3.5, .5], [7.5, .7], [10.5, .35], [17.5, .6]];
+const HITS = [0, 1.5, 1.875, 2.25, 2.75, 3.5, 7.5, 10.5, 13.5, 14.25, 15.5, 16.5, 17.5, 19];
+const FLASH: [number, number][] = [[1.5, .9], [3.5, .5], [7.5, .7], [10.5, .35], [17.5, .6], [19, .55]];  // 19 = מכת הסיום של המוזיקה
 /** צבעי סמל הגזרה על רקע כהה; הגושים — כמו טוקני הגזרה באתר (נתניהו כחול, אייזנקוט אדום) */
 export const PC = { bg: "#05070d", ink: "#ffffff", soft: "rgba(255,255,255,.62)", faint: "rgba(255,255,255,.1)", blue: "#2f74d8", blueHi: "#7fb0f2", red: "#e3262f", redHi: "#ff6b72", gold: "#b2781c", goldHi: "#e2b25c" };
 export const BLOC_COLORS: Record<string, string> = { netanyahu: "#2f74d8", eisenkot: "#e3262f", haredi: "#9aa8b8", arab: "#5d6b7c" };
@@ -233,7 +233,7 @@ function wedge(c: Ctx, R: number, a0: number, a1: number, r: number, gap: number
   return true;
 }
 /** עוגה תלת־ממדית מעוגלת: הדפנות בשכבות (מאחור-לפנים) ואז הפנים העליונים; `pop` מוציא פרוסה החוצה ומעמעם את השאר */
-function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; depth: number; slices: Slice[]; shown: number[]; rot: number; sweep: number; pop?: { id: string; amt: number; dim: number }; labels: number }) {
+function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; depth: number; slices: Slice[]; shown: number[]; rot: number; sweep: number; pop?: { id: string; amt: number; dim: number }; labels: number; rim?: string }) {
   const total = o.slices.reduce((a, s) => a + s.value, 0) || 1, sy = o.ry / o.rx, r = o.rx * .02, gap = o.rx * .022;
   let a = o.rot;
   const parts = o.slices.map((s, i) => {
@@ -249,6 +249,12 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
     c.save(); at(p, y);
     const col = shade(p.color, .38 + .22 * (1 - y / o.depth)); c.fillStyle = col; c.strokeStyle = col;
     wedge(c, o.rx, p.a0, p.a1, r, gap); c.restore();
+  }
+  if (o.rim) { // הניחוש שלי (הכרעת בעלים 26.10.2026: הזהב בכל מה שקשור לניחוש שלי) — טבעת זהב זוהרת סביב העוגה, נבנית יחד איתה
+    c.save(); c.translate(o.cx, o.cy); c.scale(1, sy);
+    c.beginPath(); c.arc(0, 0, o.rx * 1.035, o.rot, o.rot + TAU * o.sweep);
+    c.strokeStyle = o.rim; c.lineWidth = o.rx * .028; c.lineCap = "round"; c.shadowColor = o.rim; c.shadowBlur = o.rx * .12; c.stroke();
+    c.restore();
   }
   for (const p of parts) {
     const popped = !!p.dx;
@@ -295,7 +301,7 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
     pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800 });
     c.restore();
     c.save(); c.translate(lerp(540, 735, h), p.cy); c.scale(k, k); c.translate(-540, -p.cy);
-    if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: 0 } : undefined });
+    if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, rim: p.k.key === "mine" ? PC.goldHi : undefined, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: 0 } : undefined });
     c.restore();
     // כרטיס המספרים של החרדים
     const ck = eo(pr(t, 10.95 + i * .12, 11.4 + i * .12)); if (ck <= 0) return;
@@ -360,7 +366,7 @@ function sceneInvite(c: Ctx, t: number) {
 function sceneCount(c: Ctx, t: number, d: PromoData) {
   const fade = (at: number) => eo(pr(t, at, at + .3));
   c.save(); c.globalAlpha = fade(17.55); text(c, "כבר ניחשו", 540, 330, 72, { w: 800, color: PC.soft }); c.restore();
-  const n = d.guesses * eo(pr(t, 17.6, 18.9)), pop = t > 18.9 ? 1 + .08 * Math.exp(-(t - 18.9) * 8) : 1;
+  const n = d.guesses * eo(pr(t, 17.6, 19)), pop = t > 19 ? 1 + .1 * Math.exp(-(t - 19) * 8) : 1;
   const big = fit(c, thousands(d.guesses), 900, 230, 700, NUM);  // הגודל לפי המספר הסופי, כדי שלא יקפוץ בספירה
   c.save(); c.translate(540, 520); c.scale(pop, pop); text(c, thousands(n), 0, 0, big, { w: 700, font: NUM, ltr: true }); c.restore();
   const bx = 90, bw = 900, by = 690, fill = Math.min(1, n / d.goal);
