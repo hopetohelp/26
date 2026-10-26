@@ -26,6 +26,8 @@ import { Tiles } from "../components/Tiles";
  * (טבלת admins; הכרעת בעלים 9.10.2026) — הסשן של החשבון משמש כמפתח, בלי קישור.
  */
 const KEY = "elections26.admin";
+/** הנתונים האחרונים של מסך הניהול — לטעינה מיידית; רק בדפדפן של המנהל, נדרס בכל סנכרון */
+const CACHE_KEY = "elections26.adminCache";
 type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string; via?: string };
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
 type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
@@ -136,10 +138,12 @@ function ByDay({ days }: { days: Day[] }) {
 export default function Admin() {
   const [params, setParams] = useSearchParams();
   const [key, setKey] = useState<string | null>(() => { try { return localStorage.getItem(KEY); } catch { return null; } });
-  const [data, setData] = useState<Data | null>(null);
+  // העמוד עולה מיד מהנתונים האחרונים שנשמרו בדפדפן, והסנכרון עם השרת רץ ברקע (הכרעת בעלים 26.10.2026)
+  const [data, setData] = useState<Data | null>(() => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) ?? "null") as Data | null; } catch { return null; } });
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai" | "mcp";
-  const [guessCounts, setGuessCounts] = useState({ pending: 0, rejected: 0 });
+  const [guessCounts, setGuessCounts] = useState<{ pending: number; rejected: number }>(() => { try { return JSON.parse(localStorage.getItem(`${CACHE_KEY}.guesses`) ?? "null") ?? { pending: 0, rejected: 0 }; } catch { return { pending: 0, rejected: 0 }; } });
   const pendingGuesses = guessCounts.pending;
   // פרסום אחרון של האתר ב-GitHub (ממשק ציבורי); בלי תשובה — "—"
   const [lastPublish, setLastPublish] = useState<string | null>(null);
@@ -183,9 +187,14 @@ export default function Admin() {
   };
   const load = async () => {
     setError(null);
-    try { setData(await api("/admin/data")); setOwnerBrowser(true); } catch (e) { setError((e as Error).message || "אין חיבור לשרת."); }
-    // מונה השערות ממתינות לתג על המגירה (המגירה עצמה נטענת רק כשפותחים אותה)
-    try { const rows = ((await api("/admin/guesses")) as { rows: { status: string }[] }).rows; setGuessCounts({ pending: rows.filter((r) => r.status === "pending").length, rejected: rows.filter((r) => r.status === "rejected").length }); } catch { /* בלי מונה — בלי תג */ }
+    setSyncing(true);
+    // שתי הבקשות במקביל, כל אחת מעדכנת את המסך כשהיא חוזרת
+    await Promise.all([
+      api("/admin/data").then((d: Data) => { setData(d); setOwnerBrowser(true); try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch { /* בלי אחסון — בלי טעינה מיידית בפעם הבאה */ } }, (e) => setError((e as Error).message || "אין חיבור לשרת.")),
+      // מונה השערות ממתינות לתג על המגירה (המגירה עצמה נטענת רק כשפותחים אותה)
+      api("/admin/guesses").then((r: { rows: { status: string }[] }) => { const c = { pending: r.rows.filter((x) => x.status === "pending").length, rejected: r.rows.filter((x) => x.status === "rejected").length }; setGuessCounts(c); try { localStorage.setItem(`${CACHE_KEY}.guesses`, JSON.stringify(c)); } catch { /* כנ"ל */ } }, () => { /* בלי מונה — בלי תג */ }),
+    ]);
+    setSyncing(false);
   };
   useEffect(() => { if (credential && FEEDBACK_URL) void load(); }, [credential]); // eslint-disable-line react-hooks/exhaustive-deps
   // יש ממתינים או טיוטות ⇐ מגירת הפניות נפתחת לבד, פעם אחת
@@ -221,7 +230,10 @@ export default function Admin() {
       <meta name="robots" content="noindex" />
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <PageTitle>ניהול</PageTitle>
-        <Btn onClick={load}>רענון</Btn>
+        <div className="flex items-center gap-2">
+          {syncing && <span role="status" className="text-sm text-ink-soft">מסנכרן…</span>}
+          <Btn onClick={load} disabled={syncing}>רענון</Btn>
+        </div>
       </div>
       {claimNotice}
       {error && claim !== "ok" && <Notice tone="warn">{error}</Notice>}
