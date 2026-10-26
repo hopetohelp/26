@@ -57,6 +57,16 @@ describe("השערות חריגות", () => {
     expect(moderate([typical("a"), typical("b"), typical("d"), odd]).pending.size).toBe(0);
   });
 
+  it("השערה שנדחתה ואינה חריגה עוד ⇐ נכנסת אוטומטית (הכרעת בעלים 26.10.2026)", () => {
+    const odd = ver("c", "seats", guess({ yashar: 40, shas: 10 }));
+    const vs = [typical("a"), typical("b"), typical("d"), odd];
+    expect(moderate(vs, new Map([[odd.id, "rejected"]])).rejected.has(odd.id)).toBe(true);
+    setPollRanges({ ...RANGES, yashar: { lo: 18, hi: 36 } });
+    const m = moderate(vs, new Map([[odd.id, "rejected"]]));
+    expect(m.rejected.has(odd.id)).toBe(false);
+    expect(m.isExcluded(odd)).toBe(false);
+  });
+
   it("השערה ממתינה לא נספרת בסטטיסטיקות, והמספר מוצג", () => {
     const ps = people(3);
     const vs = [ver("p0", "seats", guess({ yashar: 20, shas: 10 })), ver("p1", "seats", guess({ yashar: 20, shas: 10 })), ver("p2", "seats", guess({ yashar: 40, shas: 10 }))];
