@@ -420,3 +420,14 @@ CREATE TABLE IF NOT EXISTS participant_visits (
   at TEXT NOT NULL,
   PRIMARY KEY (participant, at)
 );
+
+-- סרטון הנתונים (הכרעת בעלים 26.10.2026): לכל משתתף מחובר — כמה סרטונים יצר, והאם לפחות פעם אחת הוסיף לסרטון
+-- את הניחוש שלו (mine) או כתב שם (named). בלי השם עצמו, בלי הניחוש ובלי הסרטון. נמחק עם החשבון.
+CREATE TABLE IF NOT EXISTS video_makers (
+  participant TEXT PRIMARY KEY,
+  videos INTEGER NOT NULL DEFAULT 0,
+  mine INTEGER NOT NULL DEFAULT 0,
+  named INTEGER NOT NULL DEFAULT 0,
+  first_at TEXT NOT NULL,
+  last_at TEXT NOT NULL
+);

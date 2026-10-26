@@ -425,6 +425,7 @@ export default {
         const failuresFrom = mark?.value || "";
         const { results: days } = await env.DB.prepare("SELECT d.day, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page NOT LIKE 'diag:%') AS visits, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day) AS users, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/guess') AS guessUsers, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/community') AS communityUsers, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:all-blocked') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:all-blocked')) AS blocked, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:blind-sent') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:blind-sent')) AS blindSaved, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:relay-saved') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:relay-saved')) AS relaySaved, (SELECT COUNT(*) FROM feedback f WHERE substr(f.created_at,1,10) = d.day AND f.text LIKE ?2 AND f.created_at >= ?3) AS autoFailures FROM (SELECT DISTINCT day FROM hits WHERE day >= ?1) d ORDER BY d.day DESC").bind(since, AUTO + "%", failuresFrom).all();
         const usage = await usageTotals(env.DB);
+        const videoAnon = await env.DB.prepare("SELECT COUNT(*) AS makers, COALESCE(SUM(mine),0) AS withGuess, COALESCE(SUM(named),0) AS named, COALESCE(SUM(videos),0) AS videos FROM video_anon").first().catch(() => null);
         const failuresAll = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE text LIKE ?1 AND created_at >= ?2").bind(AUTO + "%", failuresFrom).first();
         const threads = {};
         for (const n of notes || []) (threads[n.root] ??= { id: n.root, items: [] }).items.push({ kind: "note", id: n.id, author: "visitor", text: n.text, created_at: n.created_at, topic: n.topic, page: n.page, status: n.status });
@@ -446,7 +447,7 @@ export default {
         // ריצה אחרונה של הסשן המרוכז: הסשן רושם את עצמו בסוף כל ריצה (docs/נוהל-הערות.md)
         const agentRun = await env.DB.prepare("SELECT value FROM settings WHERE name = 'agent_last_run'").first().catch(() => null);
         const { results: heldRows } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held").all().catch(() => ({ results: [] }));
-        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: usage.totalVisitors, totalVisits: usage.totalVisits, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: usage.totalVisitors, totalVisits: usage.totalVisits, videoAnon: videoAnon ?? { makers: 0, withGuess: 0, named: 0, videos: 0 }, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
       if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || url.pathname === "/admin/blocs" || /^\/admin\/groups(\/(import|upload|upload\/continue|delete|managers|stats|link|link-stats|link-members|image))?$/.test(url.pathname)) {
@@ -546,6 +547,19 @@ export default {
       if (!DIAG_KINDS.has(kind) && !PROBE_KIND.test(kind)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
       await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:" + kind).run();
+      return reply({ ok: true });
+    }
+
+    // ---- סרטון נוצר אצל גולש לא מחובר (הכרעת בעלים 26.10.2026): רק גיבוב מזהה הדפדפן, מונה ושני סימונים
+    if (url.pathname === "/video" && request.method === "POST") {
+      let b;
+      try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+      const v = String(b?.v || "");
+      if (!/^[A-Za-z0-9_-]{16,32}$/.test(v)) return reply({ ok: false }, 400);
+      const vh = (await sha256(`${v}|elections26-v`)).slice(0, 24), day = new Date().toISOString().slice(0, 10);
+      const mine = b.mine === true ? 1 : 0, named = mine && b.named === true ? 1 : 0;
+      await env.DB.prepare("INSERT INTO video_anon (vh, videos, mine, named, first_day, last_day) VALUES (?, 1, ?, ?, ?, ?) ON CONFLICT(vh) DO UPDATE SET videos = MIN(videos + 1, 1000), mine = MAX(mine, excluded.mine), named = MAX(named, excluded.named), last_day = excluded.last_day")
+        .bind(vh, mine, named, day, day).run();
       return reply({ ok: true });
     }
 

@@ -5,6 +5,8 @@ import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
 import { SIMPLE_BLOCS, simpleSelection, simpleValue } from "../../lib/simpleSources";
 import { crowdDashboardOnce } from "../../lib/sources";
+import { getToken } from "../../lib/crowdSession";
+import { reportVideo } from "../../lib/visits";
 import { BLOC_COLORS, type PromoData, type PromoList } from "../../lib/promoVideo";
 import type { PromoFile } from "../../lib/promoEncode";
 import { nameOf } from "../guess/model";
@@ -16,7 +18,8 @@ const RING = ["netanyahu", "eisenkot", "arab", "haredi"];
 /** יעד המונה: 3,000 (הכרעת בעלים), וכשעוברים אותו — היעד העגול הבא, כך שהסרטון מתאים לכל כמות בלי שינוי */
 export const nextGoal = (n: number) => [3000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000].find(g => g > n) ?? Math.ceil((n + 1) / 1e6) * 1e6;
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
-const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`; };
+/** תאריך כמו בכל האתר: יום/חודש (siteRules) */
+const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); return `${d.getDate()}/${d.getMonth() + 1}`; };
 
 /**
  * נתוני הסרטון — מאותן פונקציות של המסכים (מקור אמת אחד): ממוצע הסקרים של האתר (simpleValue), ממוצע הניחושים מלוח המשתתפים,
@@ -53,7 +56,7 @@ export async function buildPromoData(dash: Dashboard, group: { slug: string; log
 
 /** "צור סרטון" בחלון השיתוף: הסרטון נבנה בדפדפן מהנתונים של הרגע הזה — בלי AI, בלי שרת ובלי עלות */
 export default function PromoVideo({ group, mine }: { group: { slug: string; logoUrl: string | null } | null; mine?: Record<string, number> | null }) {
-  const [state, setState] = useState<"idle" | "busy" | "done" | "failed" | "nodata">("idle");
+  const [state, setState] = useState<"idle" | "options" | "busy" | "done" | "failed" | "nodata">("idle");
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState<PromoFile | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -72,6 +75,8 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
       const [{ renderPromoVideo }, data] = await Promise.all([import("../../lib/promoEncode"), buildPromoData(dash, group, withMine && canMine ? mine : null, withMine ? name : "")]);
       const f = await renderPromoVideo(data, setProgress);
       setFile(f); setUrl(URL.createObjectURL(f.blob)); setState("done");
+      const withGuess = withMine && canMine;
+      reportVideo({ mine: withGuess, named: withGuess && !!guesserName(name) }, getToken());
     } catch { setState("failed"); }
   };
   const share = async () => {
@@ -92,16 +97,18 @@ export default function PromoVideo({ group, mine }: { group: { slug: string; log
     <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף הסרטון</button><button type="button" className="f-btn flex-1" onClick={save}>שמירת הסרטון</button></div>
     {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
   </div>;
+  // "צור סרטון" ⇐ (למי שיש ניחוש מלא) סימון "להוסיף את הניחוש שלי" ⇐ הסימון פותח את שדה השם ⇐ "יצירת הסרטון"
+  const options = state === "options";
   return <div className="grid gap-1">
-    {canMine && state !== "busy" && <div className="grid gap-2 mb-1">
-      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={withMine} onChange={e => setWithMine(e.target.checked)} />להוסיף לסרטון עוגה של הניחוש שלי</label>
+    {options && <div className="grid gap-2 mb-1">
+      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={withMine} onChange={e => setWithMine(e.target.checked)} />להוסיף לסרטון את הניחוש שלי</label>
       {withMine && <label className="grid gap-1 text-sm">שם שיופיע בסרטון (לא חובה, עד שתי מילים)
         <input type="text" value={name} maxLength={30} onChange={e => setName(e.target.value)} placeholder="למשל: יוסי כהן" className="bg-paper border border-paper-line rounded-xl px-3 py-2 w-full text-base" />
         <span className="text-xs text-ink-soft">{guesserName(name) ? `בסרטון ייכתב: "הניחוש של ${guesserName(name)}"` : 'בסרטון ייכתב: "הניחוש שלי"'}</span>
       </label>}
     </div>}
-    <button type="button" className="f-btn" onClick={make} disabled={state === "busy"} aria-busy={state === "busy"}>
-      {state === "busy" ? `יוצרים סרטון… ${Math.round(progress * 100)}%` : "צור סרטון"}
+    <button type="button" className={`f-btn${options ? " pri" : ""}`} onClick={() => state === "idle" && canMine ? setState("options") : make()} disabled={state === "busy"} aria-busy={state === "busy"}>
+      {state === "busy" ? `יוצרים סרטון… ${Math.round(progress * 100)}%` : options ? "יצירת הסרטון" : "צור סרטון"}
     </button>
     {state === "busy" && <div className="h-1.5 rounded-full bg-paper-line overflow-hidden" aria-hidden="true"><div className="h-full bg-signal" style={{ width: `${Math.round(progress * 100)}%` }} /></div>}
     {state === "failed" && <p role="status" className="text-sm font-bold">יצירת הסרטון לא הצליחה בדפדפן הזה. נסו בכרום או בספארי עדכניים.</p>}

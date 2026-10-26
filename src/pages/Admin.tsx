@@ -9,6 +9,8 @@ import { nextRun } from "../lib/runSchedule";
 import { getToken } from "../lib/crowdSession";
 import { call } from "../lib/crowdApi";
 import { setOwnerBrowser } from "../lib/visits";
+import VideoStats from "../components/VideoStats";
+import type { VideoStats as VideoStatsT } from "../lib/crowdApi";
 import { Segmented } from "../components/Choice";
 import { Drawer } from "../components/Drawer";
 import { Btn, Notice } from "./guess/ui";
@@ -32,9 +34,12 @@ export type SupportThread = { participant: string; status: string; updated_at: s
 export type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
 export type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
-type Data = { agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+/** videoAnon = סרטונים של גולשים לא מחוברים (שרת ההערות); support.stats.videos = מחוברים (שרת ההשתתפות) */
+type Data = { videoAnon?: VideoStatsT; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
+/** סרטון הנתונים לכל האתר: מחוברים + לא מחוברים (גולש שיצר לפני ההתחברות ואחריה עשוי להיספר פעמיים) */
+const sumVideos = (a?: VideoStatsT, b?: VideoStatsT): VideoStatsT => ({ makers: (a?.makers ?? 0) + (b?.makers ?? 0), withGuess: (a?.withGuess ?? 0) + (b?.withGuess ?? 0), named: (a?.named ?? 0) + (b?.named ?? 0), videos: (a?.videos ?? 0) + (b?.videos ?? 0) });
 
 function DraftBox({ draft, actions }: { draft: Draft; actions: DraftActions }) {
   const [text, setText] = useState(draft.text);
@@ -263,6 +268,7 @@ export default function Admin() {
                   ["מייל לא מאומת", data.support?.stats.unverifiedEmails ?? "—"],
                   ["נשלח מייל אימות ולא נלחץ", data.support?.stats.verifyMailsPending ?? "—"],
                 ]} />
+                <VideoStats s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחוברים ולא מחוברים יחד; מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן. מאז 26/10." />
                 <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
                   ["נפילות סך הכול", data.failures?.total ?? "—"],
                   ["נפילות היום", today?.autoFailures ?? 0],

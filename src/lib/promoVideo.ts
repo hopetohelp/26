@@ -106,7 +106,7 @@ function sceneOpen(c: Ctx, t: number, d: PromoData) {
   const s = 1 + .14 * Math.exp(-t * 6);
   c.save(); c.translate(540, 760); c.scale(s, s); avatar(c, d.logo, 0, 0, 270); c.restore();
   const up = 40 * Math.exp(-t * 5);
-  text(c, "בחירות 2026 · 27.10", 540, 330 + up * .5, 44, { w: 600, color: PC.soft });
+  text(c, "בחירות 2026 · 27/10", 540, 330 + up * .5, 44, { w: 600, color: PC.soft });
   text(c, "מחר התוצאות.", 540, 1205 + up, 112, { w: 900 });
   text(c, "הנה מה שכולם צופים.", 540, 1335 + up * 1.4, 84, { w: 800, color: PC.blueHi });
   c.restore();
@@ -140,13 +140,15 @@ const AX = { right: 680, left: 110 };
 /** סוף הציר: 32 כמו באתר, וגדל בקפיצות של 8 כשרשימה עוברת אותו */
 const axisMax = (d: PromoData) => Math.max(32, Math.ceil(Math.max(...d.lists.flatMap(l => [l.polls, l.crowd])) / 8) * 8);
 function sceneChart(c: Ctx, t: number, d: PromoData) {
-  const head = eo(pr(t, 3.5, 3.8));
+  const head = eo(pr(t, 3.5, 3.8)), three = d.lists.some(l => l.mine != null);
   c.save(); c.globalAlpha = head;
   text(c, "הסקרים מול הניחושים", 540, 245 - 30 * (1 - head), 66, { w: 900 });
-  // מקרא ממורכז: הסקרים מימין, הניחושים משמאל
-  c.font = `600 32px ${HE}`; const lw = (s: string) => c.measureText(s).width + 40, a = lw("ממוצע הסקרים"), b = lw("ממוצע הניחושים"), x1 = 540 + (a + b + 50) / 2;
-  pill(c, x1 - 26, 312, 26, 26, PC.blue); text(c, "ממוצע הסקרים", x1 - 40, 326, 32, { w: 600, align: "right" });
-  pill(c, x1 - a - 50 - 26, 312, 26, 26, PC.red); text(c, "ממוצע הניחושים", x1 - a - 50 - 40, 326, 32, { w: 600, align: "right" });
+  // מקרא ממורכז מימין לשמאל: הסקרים, הניחושים, ואם נבחר — הניחוש של המשתתף (קפסולה שלישית בזהב)
+  const legend: [string, string][] = [["ממוצע הסקרים", PC.blue], ["ממוצע הניחושים", PC.red], ...(three ? [[d.mineLabel ?? "הניחוש שלי", PC.gold] as [string, string]] : [])];
+  let fs = 32; const widths = () => { c.font = `600 ${fs}px ${HE}`; return legend.map(([s]) => c.measureText(s).width + 40); };
+  while (widths().reduce((a, b) => a + b, 0) + 40 * (legend.length - 1) > 960 && fs > 20) fs -= 2;
+  const ws = widths(); let lx = 540 + (ws.reduce((a, b) => a + b, 0) + 40 * (legend.length - 1)) / 2;
+  legend.forEach(([s, col], j) => { pill(c, lx - 26, 326 - 13, 26, 26, col); text(c, s, lx - 40, 326, fs, { w: 600, align: "right" }); lx -= ws[j] + 40; });
   const span = AX.right - AX.left, max = axisMax(d);
   [1, 2, 3, 4].map(q => max * q / 4).forEach(v => { const x = AX.right - v / max * span; c.fillStyle = PC.faint; c.fillRect(x - 1, 380, 2, 1400); text(c, String(v), x, 372, 22, { w: 500, color: PC.soft, font: NUM, ltr: true }); });
   c.restore();
@@ -160,7 +162,7 @@ function sceneChart(c: Ctx, t: number, d: PromoData) {
     const nameMax = W - 98 - rowH * .34 - 18 - (AX.right + 24);
     text(c, l.name, W - 98 - rowH * .34 - 18, cy, fit(c, l.name, nameMax, 34, 600), { w: 600, align: "right" });
     const bar = (v: number, by: number, color: string, hi: string) => {
-      const w = Math.max(10, v / max * span * k), x0 = AX.right - w, bh = rowH * .2;
+      const w = Math.max(10, v / max * span * k), x0 = AX.right - w, bh = rowH * (three ? .16 : .2);
       const g = c.createLinearGradient(AX.right, 0, x0, 0); g.addColorStop(0, color); g.addColorStop(1, hi);
       pill(c, x0, by - bh / 2, w, bh, g);
       if (sheen >= 0) { // ברק עדין שעובר על הקפסולות בזמן הקריאה — לא על המספרים
@@ -168,10 +170,12 @@ function sceneChart(c: Ctx, t: number, d: PromoData) {
         sg.addColorStop(0, "rgba(255,255,255,0)"); sg.addColorStop(.5, "rgba(255,255,255,.38)"); sg.addColorStop(1, "rgba(255,255,255,0)");
         c.save(); c.beginPath(); c.roundRect(x0, by - bh / 2, w, bh, bh / 2); c.clip(); c.fillStyle = sg; c.fillRect(x0, by - bh, w, bh * 2); c.restore();
       }
-      text(c, num(v * k), x0 - 12, by, rowH * .27, { w: 700, font: NUM, align: "right", ltr: true, color: hi });
+      text(c, num(v * k), x0 - 12, by, rowH * (three ? .22 : .27), { w: 700, font: NUM, align: "right", ltr: true, color: hi });
     };
-    bar(l.polls, cy - rowH * .17, PC.blue, PC.blueHi);
-    bar(l.crowd, cy + rowH * .17, PC.red, PC.redHi);
+    const gap = three ? .27 : .17;
+    bar(l.polls, cy - rowH * gap, PC.blue, PC.blueHi);
+    bar(l.crowd, three ? cy : cy + rowH * gap, PC.red, PC.redHi);
+    if (three) bar(l.mine ?? 0, cy + rowH * gap, PC.gold, PC.goldHi);
     c.restore();
   });
 }

@@ -206,3 +206,15 @@ CREATE TABLE IF NOT EXISTS private_chats (
   value TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+
+-- סרטון הנתונים לגולשים לא מחוברים (הכרעת בעלים 26.10.2026): vh = אותו גיבוב של מזהה הדפדפן האקראי כמו ב-visitors_all.
+-- כמה סרטונים, והאם לפחות פעם אחת הוסיף את הניחוש שלו (mine) או כתב שם (named). בלי השם, בלי הניחוש ובלי הסרטון.
+-- מחוברים נספרים בשרת ההשתתפות (video_makers), לא כאן.
+CREATE TABLE IF NOT EXISTS video_anon (
+  vh TEXT PRIMARY KEY,
+  videos INTEGER NOT NULL DEFAULT 0,
+  mine INTEGER NOT NULL DEFAULT 0,
+  named INTEGER NOT NULL DEFAULT 0,
+  first_day TEXT NOT NULL,
+  last_day TEXT NOT NULL
+);

@@ -44,6 +44,7 @@
  * GET  /group/image?slug=<slug>|group=<id> ⇐ תמונה (בינארי)  ציבורי, לתגית img.
  * POST /group/link-join {slug}     ⇐ {ok}  (בסשן) נכנס דרך קישור הקבוצה; נספר כחבר רק אם המנהל הפעיל. GET|POST /group/link-members ⇐ {on,joined} מתג המנהל.
  * POST /group/visit {slug,fresh?}   ⇐ {ok}  ציבורי: ספירת כניסה דרך הקישור (fresh = הדפדפן נכנס בפעם הראשונה). ליום בלבד, בלי זהות.
+ * POST /video/made {mine,named}     ⇐ {ok}  (בסשן) סרטון הנתונים נוצר: מונה ושני סימונים בלבד (בלי השם, הניחוש והסרטון). לא מחובר ⇐ POST /video בשרת ההערות.
  * GET  /group/series?group=<id>    ⇐ GroupSeries  (בסשן) מנהל קבוצה: שבעה מדדים לאורך זמן (שעתי 72 שעות, יומי לפני כן).
  * GET  /group/insights?group=<id>  ⇐ GroupInsights  (בסשן) מנהל קבוצה: מצב ההשערות מול טווח הסקרים ופניות לצוות — ספירות בלבד.
  * GET  /group/stats?group=<id>     ⇐ GroupStats  (בסשן) מנהל קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה; מתחת ל-50 רשומים ⇐ belowMin.
@@ -258,7 +259,9 @@ export type GroupDashboard = ((Dashboard & { group: string; min: number; belowMi
 /** תשובת טעינת מנה של רשימת חברים */
 export interface GroupImportResult { group: string; added: number; duplicates: number; invalid: number; members: number }
 /** תשובת GET /group/stats — מספרים מצטברים למנהל הקבוצה; מתחת לסף רק belowMin */
-export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number };
+/** סרטון הנתונים (הכרעת בעלים 26.10.2026): יצרו סרטון · הוסיפו לפחות פעם את הניחוש שלהם · כתבו שם · סרטונים שנוצרו */
+export interface VideoStats { makers: number; withGuess: number; named: number; videos: number }
+export type GroupStats = { group: string; min: number; belowMin: true } | { group: string; min: number; belowMin?: undefined; registered: number; today: number; seats: number; vote: number; videos?: VideoStats };
 /** תשובת GET /group/insights — מסך "ניהול קבוצה": מצב ההשערות של החברים מול טווח הסקרים ומספר הפניות לצוות. מצטבר בלבד, מ-50 רשומים */
 export interface GroupQuestions { askers: number; messages: number; week: number; byTopic: Partial<Record<"data" | "theory", number>>; aiUsers: number }
 export type GroupInsights = { group: string; min: number; belowMin: true } | {
