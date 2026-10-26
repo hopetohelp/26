@@ -250,7 +250,7 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
     const col = shade(p.color, .38 + .22 * (1 - y / o.depth)); c.fillStyle = col; c.strokeStyle = col;
     wedge(c, o.rx, p.a0, p.a1, r, gap); c.restore();
   }
-  if (o.rim) { // הניחוש שלי (הכרעת בעלים 26.10.2026: הזהב בכל מה שקשור לניחוש שלי) — טבעת זהב זוהרת סביב העוגה, נבנית יחד איתה
+  if (o.rim) { // הניחוש שלי (הכרעת בעלים 26/10: הזהב בכל מה שקשור לניחוש שלי) — טבעת זהב זוהרת סביב העוגה, נבנית יחד איתה
     c.save(); c.translate(o.cx, o.cy); c.scale(1, sy);
     c.beginPath(); c.arc(0, 0, o.rx * 1.035, o.rot, o.rot + TAU * o.sweep);
     c.strokeStyle = o.rim; c.lineWidth = o.rx * .028; c.lineCap = "round"; c.shadowColor = o.rim; c.shadowBlur = o.rx * .12; c.stroke();
