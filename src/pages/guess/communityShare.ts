@@ -8,7 +8,7 @@ import type { Dashboard } from "../../lib/crowdApi";
 import { SITE_URL } from "../../lib/shareGuess";
 import { pctValue, seatsFmt } from "../../lib/format";
 import { IDS } from "./model";
-import { renderShareImage, sharePalette, drawLogo, IMG_W, LOGO_BOX } from "./shareImage";
+import { renderShareImage, sharePalette, drawLogo, IMG_W, LOGO_BOX, ltrText } from "./shareImage";
 import { votingRows } from "./votingRows";
 
 export const COMMUNITY_URL = `${SITE_URL}#/community`;
@@ -102,7 +102,7 @@ export async function voteImage(d: Dashboard, brand?: Brand): Promise<Blob> {
   ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
   ctx.fillText("הוסיפו את הניחוש שלכם — הצטרפו", R, H - 100, R - L);
   ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
-  ctx.fillText(brand ? addressOf(brand.url) : SITE_LABEL, R, H - 48);
+  ctx.fillText(ltrText(brand ? addressOf(brand.url) : SITE_LABEL), R, H - 48);
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }
 
@@ -136,6 +136,6 @@ export async function groupInviteImage(brand: Brand): Promise<Blob> {
   ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `700 54px ${display}`;
   ctx.fillText("מצטרפים לסקר של הקבוצה", R, H - 100, R - L);
   ctx.fillStyle = c.soft; ctx.font = `700 34px ${body}`; ctx.direction = "ltr";
-  ctx.fillText(addressOf(brand.url), R, H - 48, R - L);
+  ctx.fillText(ltrText(addressOf(brand.url)), R, H - 48, R - L);
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }
