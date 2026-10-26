@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey } from "../lib/crowdApi";
+import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
+import VideoStats from "../components/VideoStats";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
@@ -43,6 +44,7 @@ const q = (id: string) => encodeURIComponent(id);
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
   const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
+  const [stats, setStats] = useState<GroupStats | null>(null);
   const [failed, setFailed] = useState(false);
   const [flags, setFlags] = useState<LinkMembersState | null>(null);
   const [reload, setReload] = useState(0);
@@ -54,8 +56,10 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
     void Promise.allSettled([
       call<GroupSeries>(`/group/series?group=${q(id)}`, { token }),
       call<GroupInsights>(`/group/insights?group=${q(id)}`, { token }),
-    ]).then(([s, i]) => {
+      call<GroupStats>(`/group/stats?group=${q(id)}`, { token }),
+    ]).then(([s, i, st]) => {
       if (!live) return;
+      if (st.status === "fulfilled") setStats(st.value);
       if (s.status === "fulfilled") setSeries(s.value);
       if (i.status === "fulfilled") setIns(i.value);
       setFailed(s.status === "rejected" && i.status === "rejected");
@@ -85,6 +89,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
           <Measures data={series} failed={failed} flags={flags} setFlag={setFlag} />
           {series?.funnel && <Funnel f={series.funnel} />}
+          {stats && !stats.belowMin && stats.videos && <div className="mt-4"><VideoStats s={stats.videos} /></div>}
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
         </Section>
         <Section title="ניחושים">

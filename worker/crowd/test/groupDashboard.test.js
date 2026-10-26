@@ -125,12 +125,24 @@ describe("group manager stats", () => {
     expect((await call("/group/stats?group=gizra", { token: other })).status).toBe(403);
     // רשימה קטנה — אין מספרים (אי אפשר לבדוק אדם בודד)
     expect((await call("/group/stats?group=gizra", { token: mgr })).data).toEqual({ group: "gizra", belowMin: true, min: GROUP_MIN });
-    const emails = [];
-    for (let i = 0; i < GROUP_MIN; i++) { emails.push(`m${i}@x.co`); await account(`m${i}@x.co`); }
+    const emails = [], tokens = [];
+    for (let i = 0; i < GROUP_MIN; i++) { emails.push(`m${i}@x.co`); tokens.push(await account(`m${i}@x.co`)); }
     await load(emails);
+    // סרטון הנתונים: רק חברי הקבוצה נספרים; "כתב שם" רק עם "הוסיף את הניחוש"; כל גולש פעם אחת
+    const m0 = tokens[0];
+    expect((await call("/video/made", { token: mgr, body: { mine: true, named: true } })).status).toBe(200);
+    await call("/video/made", { token: m0, body: { mine: false, named: true } });
+    await call("/video/made", { token: m0, body: { mine: false } });
+    await call("/video/made", { token: other, body: { mine: true, named: true } });
+    expect((await call("/video/made", { body: { mine: true } })).status).toBe(401);
     const s = (await call("/group/stats?group=gizra", { token: mgr })).data;
     // account() שומר השערת מנדטים לכל אחד; boss נספר גם הוא (ברשימה ומאומת)
-    expect(s).toEqual({ group: "gizra", min: GROUP_MIN, registered: GROUP_MIN + 1, today: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0 });
+    expect(s).toEqual({ group: "gizra", min: GROUP_MIN, registered: GROUP_MIN + 1, today: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0, videos: { makers: 2, withGuess: 1, named: 1, videos: 3 } });
+    // לכל האתר (מנהל האתר): גם מי שאינו בקבוצה
+    expect((await call("/admin/support", { admin: true })).data.stats.videos).toEqual({ makers: 3, withGuess: 2, named: 2, videos: 4 });
+    // מחיקת חשבון מוחקת גם את הרשומה
+    await call("/delete", { token: other, body: { confirm: "מחק" } });
+    expect((await call("/admin/support", { admin: true })).data.stats.videos.makers).toBe(2);
     t += 24 * 3600_000;
     expect((await call("/group/stats?group=gizra", { token: mgr })).data.today).toBe(0);
   });

@@ -1,4 +1,5 @@
 import { FEEDBACK_URL } from "./feedback";
+import { call } from "./crowdApi";
 
 /**
  * מונה הכניסות: בכל מעבר עמוד נשלח לשרת ההערות שם העמוד ומזהה אקראי של הדפדפן.
@@ -43,4 +44,17 @@ export function pingVisit(page: string) {
   if (!FEEDBACK_URL) return;
   if (isOwnerBrowser()) return;
   fetch(`${FEEDBACK_URL}/hit`, { method: "POST", body: JSON.stringify({ page, v: visitorId() }), keepalive: true }).catch(() => {});
+}
+
+/**
+ * סרטון נוצר (הכרעת בעלים 26.10.2026) — לכרטיס הסטטיסטיקה של מנהלי האתר והקבוצות. נשלחים רק שני סימונים:
+ * האם נוסף הניחוש שלי והאם נכתב שם — לא השם, לא הניחוש ולא הסרטון. מחובר ⇐ לחשבון (נספר גם בקבוצות);
+ * לא מחובר ⇐ גיבוב מזהה הדפדפן, לסך האתר בלבד. דפדפן הבעלים אינו נספר. כישלון אינו מפריע ליצירה.
+ */
+export function reportVideo(flags: { mine: boolean; named: boolean }, token: string | null | undefined) {
+  if (isOwnerBrowser()) return;
+  if (token) { void call("/video/made", { method: "POST", body: flags, token }).catch(() => {}); return; }
+  const v = visitorId();
+  if (!FEEDBACK_URL || !v) return;
+  fetch(`${FEEDBACK_URL}/video`, { method: "POST", body: JSON.stringify({ ...flags, v }), keepalive: true }).catch(() => {});
 }

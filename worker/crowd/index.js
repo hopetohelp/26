@@ -133,7 +133,18 @@ async function setLinkMembers(env, id, flag, on, now) {
   return linkMembers(env, id);
 }
 
-/** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה — רק מ-GROUP_MIN רשומים */
+/**
+ * סרטון הנתונים (הכרעת בעלים 26.10.2026): כמה יצרו סרטון, כמה הוסיפו לפחות פעם את הניחוש שלהם, כמה כתבו שם,
+ * וכמה סרטונים נוצרו. members = קבוצה (Set של משתתפים) או null לכל האתר. מצטבר בלבד, בלי מזהים.
+ */
+export async function videoStats(env, members) {
+  let rows = [];
+  try { rows = (await env.DB.prepare("SELECT participant, videos, mine, named FROM video_makers").all()).results ?? []; } catch { /* בלי טבלה עדיין */ }
+  if (members) rows = rows.filter((r) => members.has(r.participant));
+  return { makers: rows.length, withGuess: rows.filter((r) => r.mine).length, named: rows.filter((r) => r.named).length, videos: rows.reduce((a, r) => a + r.videos, 0) };
+}
+
+/** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה, וסרטון הנתונים — רק מ-GROUP_MIN רשומים */
 async function groupStats(env, id, now) {
   const r = await env.DB.prepare(
     `WITH who AS (SELECT DISTINCT participant AS id FROM (${groupParticipants({ group: "?1" })}))
@@ -145,8 +156,9 @@ async function groupStats(env, id, now) {
   ).bind(id, israelDayStart(now)).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
   // "שמרו ניחוש" — מאותו מקור כמו בניהול הקבוצה ובממוצע הקבוצה: ניחושים שנספרים
-  const seats = (await countedGuessers(env, await groupMemberSet(env, id))).size;
-  return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats, vote: r.vote ?? 0 };
+  const members = await groupMemberSet(env, id);
+  const seats = (await countedGuessers(env, members)).size;
+  return { group: id, min: GROUP_MIN, registered: r.registered, today: r.today ?? 0, seats, vote: r.vote ?? 0, videos: await videoStats(env, members) };
 }
 
 /**
@@ -1077,6 +1089,7 @@ const routes = {
       versions: versions.map((r) => ({ ...parseVersion(r), op_id: r.op_id, registry: r.registry })),
       credentials: creds,
       sessions: sessions.map((s) => ({ ...s, revoked: !!s.revoked })),
+      videos: (await env.DB.prepare("SELECT videos, mine, named, first_at, last_at FROM video_makers WHERE participant = ?").bind(participant).first().catch(() => null)) ?? null,
     };
   },
 
@@ -1098,7 +1111,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads"].map((t) =>
+          ["versions", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads", "video_makers"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -1519,7 +1532,8 @@ const routes = {
     const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT e.participant) FROM emails e WHERE e.verified = 0 AND NOT EXISTS (SELECT 1 FROM emails x WHERE x.participant = e.participant AND x.verified = 1) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = e.participant AND c.kind = 'google')) AS unverifiedEmails, (SELECT COUNT(*) FROM email_verify) AS verifyMailsPending, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
     const guesses = (await countedGuessers(env, null)).size;
     const hagzaraGuesses = (await countedGuessers(env, await groupMemberSet(env, HAGZARA_ID))).size;
-    return { stats: { ...stats, participants, guesses, hagzaraGuesses }, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
+    const videos = await videoStats(env, null);
+    return { stats: { ...stats, participants, guesses, hagzaraGuesses, videos }, threads: (threads || []).map((t) => ({ ...t, messages: (msgs || []).filter((m) => m.participant === t.participant).map(({ participant: _p, ...m }) => m) })) };
   },
   // הגדרת חשבון מנהל בקישור חד-פעמי (הכרעת בעלים 13.10.2026): הסשן הפתוח בדפדפן הוא החשבון שהופך למנהל. הקוד נמחק בשימוש הראשון ופג תוקף.
   "POST /admin/claim": async ({ env, request, now, body }) => {
@@ -1759,6 +1773,16 @@ const routes = {
     return { id: row.id, slug, name: await open(env, row.name_enc), image: row.image ?? null };
   },
   // כניסה דרך הקישור. fresh = הדפדפן נכנס בפעם הראשונה (הלקוח זוכר). נספר ליום בלבד, בלי זהות
+  // סרטון נוצר (הכרעת בעלים 26.10.2026): רק מונה ושני סימונים — בלי השם, בלי הניחוש ובלי הסרטון
+  "POST /video/made": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    if (!(await hit(env, "vm:" + participant, 60, now))) throw new HttpError(429, "rate");
+    const mine = body.mine === true ? 1 : 0, named = mine && body.named === true ? 1 : 0;
+    await env.DB.prepare("INSERT INTO video_makers (participant, videos, mine, named, first_at, last_at) VALUES (?, 1, ?, ?, ?, ?) ON CONFLICT(participant) DO UPDATE SET videos = videos + 1, mine = MAX(mine, excluded.mine), named = MAX(named, excluded.named), last_at = excluded.last_at")
+      .bind(participant, mine, named, iso(now), iso(now)).run();
+    return { ok: true };
+  },
+
   "POST /group/visit": async ({ env, request, now, body }) => {
     await limitGroupPublic(env, request, now);
     const slug = typeof body.slug === "string" && SLUG.test(body.slug) ? body.slug : null;
@@ -2114,7 +2138,7 @@ export default {
       if (body === null || typeof body !== "object" || Array.isArray(body)) throw bad("bad_json");
       if (agent && !agentBodyAllowed(request.method, url.pathname, body)) throw new HttpError(403, "assistant_not_allowed");
       const out = await handler({ env, request, url, now, body });
-      if (request.method === "POST") await markDashboardChanged(env);
+      if (request.method === "POST" && url.pathname !== "/video/made") await markDashboardChanged(env);  // סרטון אינו משנה את נתוני הממוצע
       return new Response(JSON.stringify(out), { headers: { ...headers, "cache-control": "no-store" } });
     } catch (e) {
       if (e instanceof HttpError) {

@@ -91,3 +91,15 @@ it("מספר החשבונות מגיע משרת ההתחברות, וכשל של�
   env.CROWD.fetch = async () => new Response("offline", { status: 503 });
   expect((await feedback.fetch(request(), env)).status).toBe(503);
 });
+
+it("סרטון הנתונים לגולש לא מחובר: גיבוב בלבד, כל דפדפן פעם אחת, 'כתב שם' רק עם 'הוסיף ניחוש'", async () => {
+  const post = (b) => feedback.fetch(new Request("https://w.example/video", { method: "POST", headers: { origin }, body: JSON.stringify(b) }), env);
+  const a = "a".repeat(22), b = "b".repeat(22);
+  expect((await post({ v: a, mine: true, named: true })).status).toBe(200);
+  await post({ v: a, mine: false });
+  await post({ v: b, mine: false, named: true });
+  expect((await post({ v: "short", mine: true })).status).toBe(400);
+  expect((await data()).videoAnon).toEqual({ makers: 2, withGuess: 1, named: 1, videos: 3 });
+  // המזהה עצמו לא נשמר
+  expect(JSON.stringify(env.DB.raw.prepare("SELECT * FROM video_anon").all())).not.toContain(a);
+});
