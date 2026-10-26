@@ -648,7 +648,7 @@
 .mk-capsule-mark-v[data-kind=secondary]>.mk-capsule-cross { border-top-style:dashed; }
 
 /* תצוגה ממוקדת (הכרעות בעלים 23.10.2026): בלי כותרות מסך, סרגל ניווט צף, קפסולות סקרים וגושים כתרשים בלבד. מהטוקנים בלבד. */
-:root { --bloc-1: 59 74 143; --bloc-2: 138 116 64; --bloc-3: 138 79 125; --bloc-4: 46 138 138; --bloc-5: 104 122 66; --bloc-unity: 178 120 28; --bloc-miss: 185 191 208; --heat-lo: var(--mk-range); --heat-hi: var(--mk-range); }
+:root { --bloc-1: 59 74 143; --bloc-2: 138 116 64; --bloc-3: 138 79 125; --bloc-4: 38 118 118; --bloc-5: 104 122 66; --bloc-unity: 178 120 28; --bloc-miss: 185 191 208; --heat-lo: var(--mk-range); --heat-hi: var(--mk-range); }
 [data-dark] { --bloc-1: 143 158 230; --bloc-2: 210 187 125; --bloc-3: 212 150 198; --bloc-4: 111 207 207; --bloc-5: 176 200 128; --bloc-unity: 214 160 70; --bloc-miss: 74 82 114; }
 /* משתתפי הגזרה: צבעי סמל הקבוצה בכל האתר */
 [data-group="hagzara"] { --signal: 31 95 181; --accent: 31 95 181; --mk-range: 31 95 181; --bloc-1: 31 95 181; --bloc-2: 123 135 148; --bloc-3: 183 194 207; --bloc-4: 240 110 116; --bloc-5: 72 84 98; --bloc-unity: 178 120 28; --heat-lo: 244 128 133; --heat-hi: 31 95 181; }
@@ -741,6 +741,10 @@
 .f-stack { display:flex;height:38px;border-radius:10px;overflow:visible;gap:2px; }
 .f-stack > button { display:flex;align-items:center;justify-content:center;gap:5px;overflow:hidden;white-space:nowrap;border:0;padding:0 4px;color:#fff;font:700 13px var(--font-num),sans-serif;min-width:24px; }
 .f-stack > button span { font:500 11px var(--font-body),sans-serif; }
+/* ניגודיות טקסט לפי ת"י 5568 (AA): בלילה הגושים בהירים ⇐ טקסט כהה; "חסר" הפוך */
+[data-dark] .f-stack > button, [data-dark] .f-unity-line > button { color:rgb(16 18 22); }
+.f-stack > button.f-miss { color:rgb(16 18 22); }
+[data-dark] .f-stack > button.f-miss { color:#fff; }
 .f-edit { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid rgb(var(--line)); }
 .f-ref { font-size:11.5px;color:rgb(var(--ink-soft));margin-inline-start:42px; }
 .f-step { display:flex;align-items:center;border:1px solid rgb(var(--line));border-radius:14px;overflow:hidden; }
