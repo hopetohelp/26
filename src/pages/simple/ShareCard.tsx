@@ -4,7 +4,7 @@ import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
 import { nameOf } from "../guess/model";
-import { sharePalette, IMG_W } from "../guess/shareImage";
+import { sharePalette, IMG_W, ltrText } from "../guess/shareImage";
 import { loadLogo } from "../guess/communityShare";
 import { isEmail } from "../../lib/identifier";
 import { blocSlices } from "./shared";
@@ -75,7 +75,7 @@ export async function renderSimpleShare(input: ShareInput): Promise<Blob> {
     x -= w;
   });
   ctx.textAlign = "center"; ctx.fillStyle = c.soft; ctx.font = `400 30px ${body}`;
-  ctx.fillText(`${input.group ? "הגזרה משערת · " : ""}מה אתם חושבים? ${host}`, IMG_W / 2, H - 80);
+  ctx.fillText(`${input.group ? "הגזרה משערת · " : ""}מה אתם חושבים? ${ltrText(host)}`, IMG_W / 2, H - 80);
   return await new Promise<Blob>((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("image")), "image/png"));
 }
 
