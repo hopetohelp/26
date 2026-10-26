@@ -26,6 +26,8 @@ export function drawLogo(ctx: CanvasRenderingContext2D, logo: ImageBitmap, x: nu
   ctx.drawImage(logo, x + (size - w) / 2, y + (size - h) / 2, w, h);
 }
 
+/** כתובת בתוך ציור מימין לשמאל: בלי בידוד הכיוון המספר ("26") עובר לסוף ויוצא "hopetohelp.net.26" */
+export const ltrText = (text: string) => `\u2066${text}\u2069`;
 function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
@@ -149,7 +151,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, s
     ctx.fillStyle = c.soft;
     ctx.font = `700 34px ${body}`;
     ctx.direction = "ltr";
-    ctx.fillText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, imageHeight - 48);
+    ctx.fillText(ltrText(SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "")), R, imageHeight - 48);
     return new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/png"));
   }
 
@@ -266,7 +268,7 @@ export async function renderShareImage({ values, pct, username, blocs, labels, s
   ctx.font = `700 34px ${body}`;
   ctx.direction = "ltr";
   ctx.textAlign = "right";
-  ctx.fillText(labels?.address ?? SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, ""), R, imageHeight - 48);
+  ctx.fillText(ltrText(labels?.address ?? SITE_URL.replace(/^https:\/\//, "").replace(/\/$/, "")), R, imageHeight - 48);
 
   return new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("toBlob"))), "image/png"));
 }
