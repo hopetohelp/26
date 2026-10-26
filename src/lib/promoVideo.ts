@@ -233,7 +233,7 @@ function wedge(c: Ctx, R: number, a0: number, a1: number, r: number, gap: number
   return true;
 }
 /** עוגה תלת־ממדית מעוגלת: הדפנות בשכבות (מאחור-לפנים) ואז הפנים העליונים; `pop` מוציא פרוסה החוצה ומעמעם את השאר */
-function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; depth: number; slices: Slice[]; shown: number[]; rot: number; sweep: number; pop?: { id: string; amt: number; dim: number }; labels: number; rim?: string }) {
+function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; depth: number; slices: Slice[]; shown: number[]; rot: number; sweep: number; pop?: { id: string; amt: number; dim: number }; labels: number; rim?: string; rimAlpha?: number }) {
   const total = o.slices.reduce((a, s) => a + s.value, 0) || 1, sy = o.ry / o.rx, r = o.rx * .02, gap = o.rx * .022;
   let a = o.rot;
   const parts = o.slices.map((s, i) => {
@@ -251,7 +251,7 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
     wedge(c, o.rx, p.a0, p.a1, r, gap); c.restore();
   }
   if (o.rim) { // הניחוש שלי (הכרעת בעלים 26/10: הזהב בכל מה שקשור לניחוש שלי) — טבעת זהב זוהרת סביב העוגה, נבנית יחד איתה
-    c.save(); c.translate(o.cx, o.cy); c.scale(1, sy);
+    c.save(); c.globalAlpha = o.rimAlpha ?? 1; c.translate(o.cx, o.cy); c.scale(1, sy);  // במסך החרדים הטבעת נעלמת (הכרעת בעלים 26/10)
     c.beginPath(); c.arc(0, 0, o.rx * 1.035, o.rot, o.rot + TAU * o.sweep);
     c.strokeStyle = o.rim; c.lineWidth = o.rx * .028; c.lineCap = "round"; c.shadowColor = o.rim; c.shadowBlur = o.rx * .12; c.stroke();
     c.restore();
@@ -301,7 +301,7 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
     pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800 });
     c.restore();
     c.save(); c.translate(lerp(540, 735, h), p.cy); c.scale(k, k); c.translate(-540, -p.cy);
-    if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, rim: p.k.key === "mine" ? PC.goldHi : undefined, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: 0 } : undefined });
+    if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, rim: p.k.key === "mine" && h < 1 ? PC.goldHi : undefined, rimAlpha: 1 - h, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: 0 } : undefined });
     c.restore();
     // כרטיס המספרים של החרדים
     const ck = eo(pr(t, 10.95 + i * .12, 11.4 + i * .12)); if (ck <= 0) return;
@@ -378,7 +378,12 @@ function sceneCount(c: Ctx, t: number, d: PromoData) {
   text(c, thousands(d.goal), bx, by + 78, 30, { w: 700, font: NUM, ltr: true, align: "left" });
   c.restore();
   c.save(); c.globalAlpha = fade(18.1); text(c, `בואו נגיע ל־${thousands(d.goal)}`, 540, 900, 88, { w: 900 }); c.restore();
-  c.save(); c.globalAlpha = fade(18.3); text(c, "יותר ניחושים = נתונים מדויקים יותר", 540, 1000, 46, { w: 600, color: PC.soft }); c.restore();
+  // סרטון עם הניחוש שלי (הכרעת בעלים 26/10): הזמנה ליצור סרטון משלך, בזהב; אחרת — למה כדאי לנחש
+  const personal = d.lists.some(l => l.mine != null);
+  c.save(); c.globalAlpha = fade(18.3);
+  if (personal) text(c, "מה יהיה בסרטון שלך?", 540, 1000, 58, { w: 800, color: PC.goldHi });
+  else text(c, "יותר ניחושים = נתונים מדויקים יותר", 540, 1000, 46, { w: 600, color: PC.soft });
+  c.restore();
   const q = back(pr(t, 18.5, 18.95)), qs = 360;
   if (q > 0) {
     c.save(); c.translate(540, 1330); c.scale(q, q);
