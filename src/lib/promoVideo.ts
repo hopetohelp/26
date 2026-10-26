@@ -13,7 +13,12 @@ export interface PromoData {
   /** mineLabel = "הניחוש של <שם>" כשהמשתתף כתב שם, אחרת "הניחוש שלי" */
   mineLabel?: string; asOf: string; lists: PromoList[]; blocs: PromoBloc[]; haredi: { id: string; name: string; polls: number; crowd: number; mine?: number }[];
   gap: PromoList; guesses: number; goal: number; host: string; logo: CanvasImageSource | null; qr: boolean[][];
+  /** hagzara = חברי הגזרה (צבעי הסמל, רקע כהה); site = כל השאר (צבעי האתר, כחול לבן, קלפי, קו החסימה). ברירת מחדל: hagzara */
+  theme?: PromoTheme;
+  /** על קו החסימה (גרסת האתר): הרשימות שלפחות סקר אחד מהאחרונים אינו מעביר (`HOME.edge`), ובכמה מהמכונים עוברת — כמו באתר */
+  edge?: { id: string; passing: number; n: number }[];
 }
+export type PromoTheme = "hagzara" | "site";
 /** קנבסים זמניים למעברים — נוצרים פעם אחת */
 export interface PromoFx { layer: HTMLCanvasElement | OffscreenCanvas; small: HTMLCanvasElement | OffscreenCanvas; grain: HTMLCanvasElement | OffscreenCanvas }
 type Ctx = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -24,9 +29,25 @@ export const SCENES = { open: 0, who: 1.5, chart: 3.5, pies: 7.5, haredi: 10.5, 
 /** מכות המוזיקה: רעידה קצרה בכל אחת. בזמני הקריאה (5.5–7.5, 11.5–13.5) אין מכות */
 const HITS = [0, 1.5, 1.875, 2.25, 2.75, 3.5, 7.5, 10.5, 13.5, 14.25, 15.5, 16.5, 17.5, 19];
 const FLASH: [number, number][] = [[1.5, .9], [3.5, .5], [7.5, .7], [10.5, .35], [17.5, .6], [19, .55]];  // 19 = מכת הסיום של המוזיקה
-/** צבעי סמל הגזרה על רקע כהה; הגושים — כמו טוקני הגזרה באתר (נתניהו כחול, אייזנקוט אדום) */
-export const PC = { bg: "#05070d", ink: "#ffffff", soft: "rgba(255,255,255,.62)", faint: "rgba(255,255,255,.1)", blue: "#2f74d8", blueHi: "#7fb0f2", red: "#e3262f", redHi: "#ff6b72", gold: "#b2781c", goldHi: "#e2b25c" };
+/**
+ * שתי פלטות (הכרעת בעלים 26/10). hagzara — צבעי סמל הגזרה על רקע כהה (כמו היום, בלי שינוי).
+ * site — צבעי האתר (טוקני :root ב-index.css): רקע לבן, כחול כהה לטקסט, כחול לסקרים, כחול כהה לניחושים, זהב לניחוש שלי.
+ * blue = צבע הסקרים, red = צבע הניחושים (שמות היסטוריים); onColor = טקסט על פרוסה או תווית צבעונית.
+ */
+const THEMES = {
+  hagzara: { bg: "#05070d", ink: "#ffffff", soft: "rgba(255,255,255,.62)", faint: "rgba(255,255,255,.1)", blue: "#2f74d8", blueHi: "#7fb0f2", red: "#e3262f", redHi: "#ff6b72", gold: "#b2781c", goldHi: "#e2b25c",
+    onColor: "#ffffff", card: "rgba(255,255,255,.07)", track: "rgba(255,255,255,.12)", avatarBg: "#1a2030", avatarRing: "rgba(255,255,255,.25)", glowA: "47,116,216", glowB: "227,38,47", glowAlpha: .34, glowBAlpha: .28,
+    beam: "255,255,255", beamAlpha: .055, vignette: "rgba(0,0,0,.55)", grain: .05, flash: "255,255,255", flashK: 1, punch: "227,38,47", blend: "lighter" as GlobalCompositeOperation, ringA: "227,38,47", ringB: "127,176,242", qrRing: "", pos: "#167846", neg: "#be2832", negRgb: "190,40,50", line: "rgba(255,255,255,.2)", sheen: "255,255,255" },
+  site: { bg: "#ffffff", ink: "#142b50", soft: "rgba(20,43,80,.62)", faint: "rgba(20,43,80,.1)", blue: "#1762d0", blueHi: "#2f7be0", red: "#142b50", redHi: "#3a5a8c", gold: "#b2781c", goldHi: "#a0670f",
+    onColor: "#ffffff", card: "rgba(23,98,208,.05)", track: "rgba(20,43,80,.1)", avatarBg: "#edf5ff", avatarRing: "rgba(20,43,80,.18)", glowA: "23,98,208", glowB: "120,170,235", glowAlpha: .12, glowBAlpha: .1,
+    beam: "23,98,208", beamAlpha: .035, vignette: "rgba(20,43,80,.07)", grain: .025, flash: "23,98,208", flashK: .4, punch: "23,98,208", blend: "multiply" as GlobalCompositeOperation, ringA: "20,43,80", ringB: "23,98,208", qrRing: "#d5dbe3", pos: "#167846", neg: "#be2832", negRgb: "190,40,50", line: "#d5dbe3", sheen: "255,255,255" },
+};
+/** הפלטה הפעילה — מתחלפת בתחילת כל פריים לפי d.theme */
+export const PC = { ...THEMES.hagzara };
+/** צבעי הגושים בעוגות: בגזרה — טוקני הגזרה; באתר — טוקני הגושים של האתר (--bloc-1..4) */
 export const BLOC_COLORS: Record<string, string> = { netanyahu: "#2f74d8", eisenkot: "#e3262f", haredi: "#9aa8b8", arab: "#5d6b7c" };
+export const SITE_BLOC_COLORS: Record<string, string> = { netanyahu: "#3b4a8f", eisenkot: "#2e8a8a", haredi: "#8a7440", arab: "#8a4f7d" };
+export const blocColors = (theme: PromoTheme = "hagzara") => theme === "site" ? SITE_BLOC_COLORS : BLOC_COLORS;
 const HE = '"Rubik", sans-serif', NUM = '"Roboto Mono", "Rubik", sans-serif';
 
 const cl = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -56,10 +77,10 @@ function pill(c: Ctx, x: number, y: number, w: number, h: number, fill: string |
   c.beginPath(); c.roundRect(x, y, w, h, h / 2); c.fillStyle = fill; c.fill();
 }
 function avatar(c: Ctx, img: CanvasImageSource | null, x: number, y: number, r: number, label = "") {
-  c.save(); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fillStyle = "#1a2030"; c.fill(); c.clip();
+  c.save(); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fillStyle = PC.avatarBg; c.fill(); c.clip();
   if (img) c.drawImage(img, x - r, y - r, r * 2, r * 2); else text(c, label.slice(0, 2), x, y, r * .8);
   c.restore();
-  c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.strokeStyle = "rgba(255,255,255,.25)"; c.lineWidth = 2; c.stroke();
+  c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.strokeStyle = PC.avatarRing; c.lineWidth = 2; c.stroke();
 }
 
 /** רקע חי: זוהר כחול ואדום שנע ופועם על הביט, אלומת אור אלכסונית וגרעין. ממשיך לנוע גם כשהתוכן קפוא, ולא מסתיר אותו */
@@ -70,17 +91,17 @@ function background(c: Ctx, t: number, fx: PromoFx) {
     const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`);
     c.fillStyle = g; c.fillRect(0, 0, W, H);
   };
-  glow(860 + 90 * Math.sin(t * .6), 260 + 120 * Math.cos(t * .45), 980, "47,116,216", .34 + .1 * beat);
-  glow(220 + 80 * Math.cos(t * .5), 1660 + 100 * Math.sin(t * .4), 980, "227,38,47", .28 + .1 * beat);
+  glow(860 + 90 * Math.sin(t * .6), 260 + 120 * Math.cos(t * .45), 980, PC.glowA, PC.glowAlpha + .1 * beat * PC.glowAlpha / .34);
+  glow(220 + 80 * Math.cos(t * .5), 1660 + 100 * Math.sin(t * .4), 980, PC.glowB, PC.glowBAlpha + .1 * beat * PC.glowBAlpha / .28);
   const pos = ((t * .32) % 1.7) - .35;
   c.save(); c.translate(W / 2, H / 2); c.rotate(-.42);
   const bx = pos * 2600 - 1300, g = c.createLinearGradient(bx - 220, 0, bx + 220, 0);
-  g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(.5, "rgba(255,255,255,.055)"); g.addColorStop(1, "rgba(255,255,255,0)");
+  g.addColorStop(0, `rgba(${PC.beam},0)`); g.addColorStop(.5, `rgba(${PC.beam},${PC.beamAlpha})`); g.addColorStop(1, `rgba(${PC.beam},0)`);
   c.fillStyle = g; c.fillRect(-1600, -1600, 3200, 3200); c.restore();
-  const v = c.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .75); v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.55)");
+  const v = c.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .75); v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, PC.vignette);
   c.fillStyle = v; c.fillRect(0, 0, W, H);
   // גרעין קבוע (לא משתנה בכל פריים) — אחרת הקובץ מתנפח פי עשרה
-  c.save(); c.globalAlpha = .05; const ox = 0, oy = 0;
+  c.save(); c.globalAlpha = PC.grain; const ox = 0, oy = 0;
   for (let y = -oy; y < H; y += 256) for (let x = -ox; x < W; x += 256) c.drawImage(fx.grain, x, y);
   c.restore();
 }
@@ -89,8 +110,8 @@ function background(c: Ctx, t: number, fx: PromoFx) {
 function chrome(c: Ctx, d: PromoData, a: number) {
   if (a <= 0) return;
   c.save(); c.globalAlpha = a;
-  avatar(c, d.logo, W - 104, 112, 52);
-  text(c, "בחירות 2026", W - 176, 112, 38, { w: 800, align: "right" });
+  if (d.theme === "site") text(c, "בחירות 26", W - 60, 112, 44, { w: 800, align: "right" });  // כמו כותרת האתר, בלי סמל הגזרה
+  else { avatar(c, d.logo, W - 104, 112, 52); text(c, "בחירות 2026", W - 176, 112, 38, { w: 800, align: "right" }); }
   text(c, `נתוני האתר · ${d.asOf} · ניחושי המשתתפים אינם סקר`, W / 2, H - 52, 26, { w: 500, color: PC.soft });
   c.restore();
 }
@@ -101,10 +122,12 @@ function sceneOpen(c: Ctx, t: number, d: PromoData) {
   c.save(); c.translate(540, 760); c.scale(1 + z * 16, 1 + z * 16); c.translate(-540, -760); c.globalAlpha = 1 - pr(t, 1.38, 1.5);
   for (let i = 0; i < 3; i++) {
     const k = pr(t, i * .18, i * .18 + 1.1);
-    if (k > 0 && k < 1) { c.beginPath(); c.arc(540, 760, 270 + k * 760, 0, Math.PI * 2); c.strokeStyle = `rgba(${i % 2 ? "227,38,47" : "127,176,242"},${.55 * (1 - k)})`; c.lineWidth = 10 * (1 - k) + 2; c.stroke(); }
+    if (k > 0 && k < 1) { c.beginPath(); c.arc(540, 760, 270 + k * 760, 0, Math.PI * 2); c.strokeStyle = `rgba(${i % 2 ? PC.ringA : PC.ringB},${.55 * (1 - k)})`; c.lineWidth = 10 * (1 - k) + 2; c.stroke(); }
   }
   const s = 1 + .14 * Math.exp(-t * 6);
-  c.save(); c.translate(540, 760); c.scale(s, s); avatar(c, d.logo, 0, 0, 270); c.restore();
+  c.save(); c.translate(540, 760); c.scale(s, s);
+  if (d.theme === "site") ballot(c, t); else avatar(c, d.logo, 0, 0, 270);
+  c.restore();
   const up = 40 * Math.exp(-t * 5);
   text(c, "בחירות 2026 · 27/10", 540, 330 + up * .5, 44, { w: 600, color: PC.soft });
   text(c, "מחר התוצאות.", 540, 1205 + up, 112, { w: 900 });
@@ -127,7 +150,7 @@ function sceneWho(c: Ctx, t: number, frame: number) {
   c.restore();
   if (t >= 2.75) slam(c, t, 2.75, () => {
     const j = (rnd(frame) - .5) * 22, k = 6 + 10 * Math.exp(-(t - 2.75) * 6);
-    c.save(); c.globalCompositeOperation = "lighter"; c.globalAlpha *= .8;
+    c.save(); c.globalCompositeOperation = PC.blend; c.globalAlpha *= .8;
     const z = fit(c, "מי צודק?", 960, 250, 900);
     text(c, "מי צודק?", 540 - k + j, 960, z, { w: 900, color: PC.blue });
     text(c, "מי צודק?", 540 + k - j, 960, z, { w: 900, color: PC.red });
@@ -203,7 +226,7 @@ function arcText(c: Ctx, str: string, cx: number, cy: number, R: number, sy: num
   let start = mid - dirn * Math.abs(run.end - mid) / 2;
   for (let i = 0; i < 12 && Math.abs(mid - (start + (run = lay(start)).end) / 2) > 1e-6; i++) start += mid - (start + run.end) / 2;
   run = lay(start);
-  c.save(); c.fillStyle = PC.ink; c.textAlign = "center"; c.textBaseline = "middle"; c.direction = "ltr";
+  c.save(); c.fillStyle = PC.onColor; c.textAlign = "center"; c.textBaseline = "middle"; c.direction = "ltr";
   chars.forEach((ch, i) => {
     const tc = run.at[i], dir = front ? [-Math.sin(tc), sy * Math.cos(tc)] : [Math.sin(tc), -sy * Math.cos(tc)];
     c.save(); c.translate(cx + Math.cos(tc) * R, cy + Math.sin(tc) * R * sy); c.rotate(Math.atan2(-dir[1], -dir[0])); c.scale(1, .85); c.fillText(ch, 0, 0); c.restore();
@@ -217,7 +240,7 @@ function arcText(c: Ctx, str: string, cx: number, cy: number, R: number, sy: num
  */
 function sliceLabel(c: Ctx, name: string, n: string, cx: number, cy: number, rx: number, sy: number, mid: number, span: number) {
   arcText(c, name, cx, cy, rx * .8, sy, mid, span * .85, rx * .095, 700, 14);
-  text(c, n, cx + Math.cos(mid) * rx * .5, cy + Math.sin(mid) * rx * sy * .5, rx * .16, { w: 700 });
+  text(c, n, cx + Math.cos(mid) * rx * .5, cy + Math.sin(mid) * rx * sy * .5, rx * .16, { w: 700, color: PC.onColor });
 }
 /**
  * פרוסה מעוגלת (הכרעת בעלים 26.10.2026: בלי קווים ובלי פינות חדות): הצורה מוקטנת פנימה ב-r,
@@ -251,7 +274,7 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
     wedge(c, o.rx, p.a0, p.a1, r, gap); c.restore();
   }
   if (o.rim) { // הניחוש שלי (הכרעת בעלים 26/10: הזהב בכל מה שקשור לניחוש שלי) — טבעת זהב זוהרת סביב העוגה, נבנית יחד איתה
-    c.save(); c.globalAlpha = o.rimAlpha ?? 1; c.translate(o.cx, o.cy); c.scale(1, sy);  // במסך החרדים הטבעת נעלמת (הכרעת בעלים 26/10)
+    c.save(); c.globalAlpha *= o.rimAlpha ?? 1; c.translate(o.cx, o.cy); c.scale(1, sy);  // במסך החרדים הטבעת נעלמת (הכרעת בעלים 26/10)
     c.beginPath(); c.arc(0, 0, o.rx * 1.035, o.rot, o.rot + TAU * o.sweep);
     c.strokeStyle = o.rim; c.lineWidth = o.rx * .028; c.lineCap = "round"; c.shadowColor = o.rim; c.shadowBlur = o.rx * .12; c.stroke();
     c.restore();
@@ -266,7 +289,7 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
     c.restore();
     const la = o.labels;
     if (drawn && la > 0) {
-      c.save(); c.globalAlpha = p.alpha * la;
+      c.save(); c.globalAlpha *= p.alpha * la;  // כפול השקיפות של העוגה כולה (באתר העוגה נעלמת יחד עם הטקסט)
       const cx = o.cx + p.dx, cy = o.cy + p.dy, span = p.a1 - p.a0, n = String(o.shown[p.i]);
       sliceLabel(c, p.s.short, n, cx, cy, o.rx, sy, p.m, span);
       c.restore();
@@ -274,12 +297,12 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
   }
 }
 /** עוגה לכל מקור: הסקרים, הניחושים, ואם יש — הניחוש שלי (שלוש עוגות קטנות יותר, באותו מסך ובאותו תזמון) */
-const PIE_KINDS = [{ key: "polls", label: "הסקרים", color: PC.blue, hi: PC.blueHi }, { key: "crowd", label: "הניחושים", color: PC.red, hi: PC.redHi }, { key: "mine", label: "הניחוש שלי", color: PC.gold, hi: PC.goldHi }] as const;
+const pieKinds = () => [{ key: "polls", label: "הסקרים", color: PC.blue, hi: PC.blueHi }, { key: "crowd", label: "הניחושים", color: PC.red, hi: PC.redHi }, { key: "mine", label: "הניחוש שלי", color: PC.gold, hi: PC.goldHi }] as const;
 function scenePies(c: Ctx, t: number, d: PromoData) {
   const build = pr(t, 7.55, 8.7), sweep = eo(build), labels = pr(t, 7.7, 8);  // הטקסט נשאר לאורך כל הסיבוב
   const rotAt = (tt: number) => -Math.PI / 2 + .5 * (tt - 7.5) + 2.6 * (1 - eo(pr(tt, 7.5, 8.7)));
   const h = eio(pr(t, 10.5, 11.15)), pop = eo(pr(t, 10.7, 11.15)), grow = back(pr(t, 7.5, 8.05));
-  const kinds = PIE_KINDS.filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)).map(k => k.key === "mine" && d.mineLabel ? { ...k, label: d.mineLabel } : k), n = kinds.length;
+  const kinds = pieKinds().filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)).map(k => k.key === "mine" && d.mineLabel ? { ...k, label: d.mineLabel } : k), n = kinds.length;
   // פריסה: שתי עוגות — גדולות; שלוש — קטנות יותר ובמרווח שווה
   const L = n === 3 ? { cys: [560, 1040, 1520], rx: [300, 225], card: 400 } : { cys: [650, 1330], rx: [360, 255], card: 420 };
   const pies = kinds.map((k, i) => {
@@ -289,7 +312,8 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
   });
   // כותרת: חלוקת הכנסת ⇐ המפלגות החרדיות
   c.save(); c.globalAlpha = eo(pr(t, 7.6, 8)) * (1 - h); text(c, "הכנסת לפי גושים", 540, 240, 66, { w: 900 }); c.restore();
-  c.save(); c.globalAlpha = h; text(c, "המפלגות החרדיות", 540, 240, 72, { w: 900 }); c.restore();
+  const site = d.theme === "site";
+  if (!site) { c.save(); c.globalAlpha = h; text(c, "המפלגות החרדיות", 540, 240, fit(c, "המפלגות החרדיות", 960, 72, 900), { w: 900 }); c.restore(); }
   const punch = t >= 10.5 ? 1 + .12 * Math.exp(-(t - 10.5) * 9) : 1;
   c.save(); c.translate(540, 990); c.scale(punch, punch); c.translate(-540, -990);
   pies.forEach((p, i) => {
@@ -298,8 +322,12 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
     const tag = eo(pr(t, 7.7 + i * .12, 8.1 + i * .12)), ly = p.cy - L.rx[0] * .42 - 70;
     c.save(); c.globalAlpha = tag * (1 - h);
     c.font = `800 34px ${HE}`; const pw = c.measureText(p.k.label).width + 60;
-    pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800 });
+    pill(c, 540 - pw / 2, ly - 30, pw, 60, p.k.color); text(c, p.k.label, 540, ly, 34, { w: 800, color: PC.onColor });
     c.restore();
+    // באתר: העוגות מתכווצות ונעלמות, ובמקומן כרטיס אחוז החסימה (sceneThreshold)
+    if (site) { c.save(); c.globalAlpha = 1 - h; c.translate(540, p.cy); c.scale(1 - .4 * h, 1 - .4 * h); c.translate(-540, -p.cy);
+      if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, rim: p.k.key === "mine" ? PC.goldHi : undefined });
+      c.restore(); return; }
     c.save(); c.translate(lerp(540, 735, h), p.cy); c.scale(k, k); c.translate(-540, -p.cy);
     if (rx > 1) pie3d(c, { cx: 540, cy: p.cy, rx, ry, depth: rx * .17, slices: p.slices, shown: p.shown, rot: p.rot, sweep, labels, rim: p.k.key === "mine" && h < 1 ? PC.goldHi : undefined, rimAlpha: 1 - h, pop: t > 10.5 ? { id: "haredi", amt: pop * rx * .3, dim: 0 } : undefined });
     c.restore();
@@ -308,9 +336,9 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
     const hs = p.shown[p.slices.findIndex(s => s.id === "haredi")], ch = L.card, small = n === 3;
     c.save(); c.globalAlpha = ck; c.translate(-60 * (1 - ck), 0);
     const x0 = 60, w = 400, top = p.cy - ch / 2 - 10;
-    c.beginPath(); c.roundRect(x0, top, w, ch, 28); c.fillStyle = "rgba(255,255,255,.07)"; c.fill(); c.strokeStyle = p.k.color; c.lineWidth = 3; c.stroke();
+    c.beginPath(); c.roundRect(x0, top, w, ch, 28); c.fillStyle = PC.card; c.fill(); c.strokeStyle = p.k.color; c.lineWidth = 3; c.stroke();
     const lf = fit(c, p.k.label, w - 96, 30, 800), cw = c.measureText(p.k.label).width + 48;  // שם ארוך מוקטן כדי להישאר בכרטיס
-    pill(c, x0 + w - 24 - cw, top + 22, cw, 52, p.k.color); text(c, p.k.label, x0 + w - 24 - cw / 2, top + 48, lf, { w: 800 });
+    pill(c, x0 + w - 24 - cw, top + 22, cw, 52, p.k.color); text(c, p.k.label, x0 + w - 24 - cw / 2, top + 48, lf, { w: 800, color: PC.onColor });
     text(c, String(hs), x0 + w / 2, top + (small ? 140 : 160), small ? 120 : 140, { w: 800, font: NUM, ltr: true });
     text(c, "מנדטים", x0 + w / 2, top + (small ? 215 : 246), 30, { w: 600, color: PC.soft });
     // שורה לכל רשימה חרדית; כשיש הרבה — השורות מתכווצות כדי להישאר בכרטיס
@@ -322,6 +350,79 @@ function scenePies(c: Ctx, t: number, d: PromoData) {
     });
     c.restore();
   });
+  c.restore();
+  if (site) sceneThreshold(c, t, d, kinds.map(k => ({ key: k.key, label: k.label, color: k.color, hi: k.hi })));
+}
+
+/**
+ * מסך 5 בגרסת האתר (הכרעות בעלים 26/10): "על קו החסימה" בעיצוב של האתר — רק הרשימות שלפחות סקר אחד מהאחרונים אינו מעביר (`d.edge`, מ-`HOME.edge`).
+ * קו אחוז החסימה חוצה את המסך, וכל כרטיס נופל מלמעלה ונעצר עליו כך שהחלק שמעל הקו = חלק המכונים שמעבירים את הרשימה (6/10 ⇐ 60% מעל הקו).
+ * בכרטיס, כמו באתר: בכמה מהמכונים עוברת ופס עוברת/לא עוברת; ומתחת — ממוצע הסקרים מול ממוצע הניחושים (ומול הניחוש שלי) מנתוני הגרף.
+ */
+function sceneThreshold(c: Ctx, t: number, d: PromoData, kinds: { key: "polls" | "crowd" | "mine"; label: string; color: string; hi: string }[]) {
+  const rows = (d.edge ?? []).flatMap(e => { const l = d.lists.find(x => x.id === e.id); return l ? [{ ...e, l }] : []; }).slice(0, 2);
+  slam(c, t, 10.6, () => text(c, "על קו החסימה", 540, 250, 84, { w: 900 }));
+  // קו אחוז החסימה — נמתח לרוחב המסך
+  const L = 1010, lk = eio(pr(t, 10.6, 10.95));
+  if (lk > 0) {
+    c.save(); c.setLineDash([26, 16]); c.strokeStyle = PC.ink; c.lineWidth = 5; c.beginPath(); c.moveTo(1060, L); c.lineTo(1060 - 1040 * lk, L); c.stroke(); c.setLineDash([]);
+    c.globalAlpha = eo(pr(t, 10.8, 11)); text(c, "3.25%", 58, L - 30, 30, { w: 700, color: PC.soft, font: NUM, ltr: true }); c.restore();
+  }
+  if (!rows.length) { c.save(); c.globalAlpha = eo(pr(t, 10.8, 11.1)); text(c, "כרגע אין רשימה שעוברת", 540, 760, 60, { w: 800 }); text(c, "רק בחלק מהסקרים האחרונים", 540, 850, 60, { w: 800 }); c.restore(); return; }
+  const ch = 520 + kinds.length * 90, cw = rows.length > 1 ? 400 : 560, gapX = 60, totalW = cw * rows.length + gapX * (rows.length - 1);
+  rows.forEach((r, i) => {
+    const pass = r.n ? r.passing / r.n : 0, drop = pr(t, 10.8 + i * .2, 11.35 + i * .2); if (drop <= 0) return;
+    const xr = 540 + totalW / 2 - i * (cw + gapX), xl = xr - cw, y = lerp(-ch - 80, L - pass * ch, back(drop));
+    c.save();
+    // הכרטיס: לבן עם צל; מה שמתחת לקו — בגוון אדום עדין (כמו החלק האדום של פס עוברת/לא עוברת)
+    c.shadowColor = "rgba(20,43,80,.16)"; c.shadowBlur = 44; c.shadowOffsetY = 14;
+    c.beginPath(); c.roundRect(xl, y, cw, ch, 28); c.fillStyle = PC.bg; c.fill(); c.shadowColor = "transparent";
+    c.save(); c.clip(); c.fillStyle = `rgba(${PC.negRgb},.08)`; c.fillRect(xl, L, cw, ch); c.fillStyle = PC.ink; c.fillRect(xr - 10, y, 10, ch); c.restore();
+    c.strokeStyle = PC.line; c.lineWidth = 2; c.stroke();
+    const ix = xr - 40;
+    avatar(c, r.l.img, ix - 50, y + 90, 50, r.l.name);
+    // שם ארוך — בשתי שורות, בשבירה במקף כמו באתר
+    const parts = r.l.name.includes("-") && fit(c, r.l.name, cw - 170, 42, 900) < 36 ? [r.l.name.slice(0, r.l.name.indexOf("-")), r.l.name.slice(r.l.name.indexOf("-"))] : [r.l.name];
+    const fs = Math.min(...parts.map(s => fit(c, s, cw - 170, 42, 900)));
+    parts.forEach((s, j) => text(c, s, ix - 120, y + 90 + (j - (parts.length - 1) / 2) * fs * 1.1, fs, { w: 900, align: "right" }));
+    // בכמה מהמכונים עוברת — המספר הגדול של האתר
+    text(c, `${r.passing}/${r.n}`, ix, y + 260, 150, { w: 800, font: NUM, align: "right", ltr: true });
+    text(c, "מהמכונים מעבירים את הרשימה", ix, y + 355, fit(c, "מהמכונים מעבירים את הרשימה", cw - 70, 32, 500), { w: 500, color: PC.soft, align: "right" });
+    // פס עוברת/לא עוברת: אדום משמאל, ירוק מימין (כמו PassBar באתר); מתמלא אחרי הנחיתה
+    const bw = cw - 70, bx = ix - bw, by = y + 400, pk = pass * eo(pr(t, 11.35 + i * .2, 11.8 + i * .2));
+    pill(c, bx, by, bw, 26, PC.neg); if (pk > 0) { c.save(); c.beginPath(); c.roundRect(bx, by, bw, 26, 13); c.clip(); c.fillStyle = PC.pos; c.fillRect(bx + bw * (1 - pk), by, bw * pk, 26); c.restore(); }
+    // ממוצע הסקרים מול ממוצע הניחושים (ומול הניחוש שלי)
+    kinds.forEach((kd, j) => {
+      const ry = y + 510 + j * 90, v = (r.l as unknown as Record<string, number | undefined>)[kd.key] ?? 0;
+      text(c, kd.label, ix, ry, fit(c, kd.label, cw - 190, 34, 700), { w: 700, align: "right", color: kd.key === "mine" ? PC.goldHi : PC.soft });
+      text(c, num(v), xl + 30, ry, 66, { w: 800, font: NUM, align: "left", ltr: true, color: kd.color });
+    });
+    c.restore();
+  });
+}
+
+/** קלפי (הפתיח בגרסת האתר): קופסה כחולה-לבנה עם חריץ, ומעטפה שנופלת לתוכו. מצוירת בקוד — בלי תמונה */
+function ballot(c: Ctx, t: number) {
+  const w = 440, h = 300, top = -60, lid = 70;
+  c.save();
+  c.shadowColor = "rgba(20,43,80,.18)"; c.shadowBlur = 50; c.shadowOffsetY = 24;
+  c.beginPath(); c.roundRect(-w / 2, top, w, h, 26); c.fillStyle = "#ffffff"; c.fill(); c.shadowColor = "transparent";
+  c.lineWidth = 6; c.strokeStyle = PC.ink; c.stroke();
+  // מכסה בפרספקטיבה
+  c.beginPath(); c.moveTo(-w / 2 + 14, top); c.lineTo(-w / 2 + 64, top - lid); c.lineTo(w / 2 - 64, top - lid); c.lineTo(w / 2 - 14, top); c.closePath();
+  c.fillStyle = "#edf5ff"; c.fill(); c.stroke();
+  // מעטפה נופלת לחריץ (בפריים הראשון כבר מעל החריץ)
+  const drop = eo(pr(t, 0, .7)), ey = lerp(-270, -95, drop), clipY = top - lid / 2;
+  c.save(); c.beginPath(); c.rect(-w, -1000, 2 * w, clipY + 1000); c.clip();
+  c.beginPath(); c.roundRect(-110, ey, 220, 150, 12); c.fillStyle = "#ffffff"; c.fill(); c.lineWidth = 5; c.strokeStyle = PC.blue; c.stroke();
+  c.beginPath(); c.moveTo(-110, ey + 6); c.lineTo(0, ey + 80); c.lineTo(110, ey + 6); c.stroke();
+  c.restore();
+  // החריץ
+  pill(c, -110, clipY - 8, 220, 16, PC.ink);
+  // פס כחול ושם על הקופסה
+  c.fillStyle = PC.blue; c.fillRect(-w / 2 + 3, top + 40, w - 6, 56);
+  text(c, "קלפי", 0, top + 68, 40, { w: 900, color: "#ffffff" });
+  text(c, "בחירות לכנסת ה-26", 0, top + 175, 34, { w: 700 });
   c.restore();
 }
 
@@ -371,7 +472,7 @@ function sceneCount(c: Ctx, t: number, d: PromoData) {
   c.save(); c.translate(540, 520); c.scale(pop, pop); text(c, thousands(n), 0, 0, big, { w: 700, font: NUM, ltr: true }); c.restore();
   const bx = 90, bw = 900, by = 690, fill = Math.min(1, n / d.goal);
   c.save(); c.globalAlpha = fade(17.6);
-  pill(c, bx, by, bw, 40, "rgba(255,255,255,.12)");
+  pill(c, bx, by, bw, 40, PC.track);
   const g = c.createLinearGradient(bx + bw, 0, bx, 0); g.addColorStop(0, PC.blue); g.addColorStop(1, PC.red);
   if (fill > 0) pill(c, bx + bw - bw * fill, by, Math.max(40, bw * fill), 40, g);
   text(c, "0", bx + bw, by + 78, 30, { w: 600, font: NUM, ltr: true, color: PC.soft, align: "right" });
@@ -388,6 +489,7 @@ function sceneCount(c: Ctx, t: number, d: PromoData) {
   if (q > 0) {
     c.save(); c.translate(540, 1330); c.scale(q, q);
     c.beginPath(); c.roundRect(-qs / 2 - 26, -qs / 2 - 26, qs + 52, qs + 52, 30); c.fillStyle = "#fff"; c.fill();
+    if (PC.qrRing) { c.strokeStyle = PC.qrRing; c.lineWidth = 4; c.stroke(); }
     const m = d.qr.length, cell = qs / Math.max(1, m); c.fillStyle = "#05070d";
     d.qr.forEach((row, r) => row.forEach((on, k) => { if (on) c.fillRect(-qs / 2 + k * cell, -qs / 2 + r * cell, cell + .5, cell + .5); }));
     c.restore();
@@ -403,12 +505,12 @@ function layerOf(fx: PromoFx, draw: (c: Ctx) => void) {
 function glitch(c: Ctx, src: CanvasImageSource, amt: number, seed: number) {
   c.drawImage(src, 0, 0);
   if (amt <= 0) return;
-  c.save(); c.globalCompositeOperation = "lighter"; c.globalAlpha = .35 * amt;
+  c.save(); c.globalCompositeOperation = PC.blend; c.globalAlpha = .35 * amt;
   c.drawImage(src, -18 * amt, 0); c.drawImage(src, 18 * amt, 0); c.restore();
   for (let i = 0; i < 22; i++) {
     const y = rnd(seed * 31 + i) * H, h = 12 + rnd(seed * 17 + i) * 130, dx = (rnd(seed * 7 + i) - .5) * 420 * amt;
     c.drawImage(src, 0, y, W, h, dx, y, W, h);
-    if (rnd(seed + i * 3) > .7) { c.fillStyle = rnd(i + seed) > .5 ? `rgba(47,116,216,${.5 * amt})` : `rgba(227,38,47,${.5 * amt})`; c.fillRect(0, y, W, h * .3); }
+    if (rnd(seed + i * 3) > .7) { c.fillStyle = rnd(i + seed) > .5 ? `rgba(${PC.glowA},${.5 * amt})` : `rgba(${PC.ringA},${.5 * amt})`; c.fillRect(0, y, W, h * .3); }
   }
 }
 /** קרע: החצי העליון והתחתון נקרעים לצדדים לאורך תפר משונן */
@@ -437,6 +539,7 @@ function shutters(c: Ctx, k: number) {
 
 /** כל הפריים: רקע ⇐ מסך + מעבר ⇐ לוגו ושורת מקור ⇐ הבזקים */
 export function drawPromo(c: Ctx, t: number, d: PromoData, fx: PromoFx) {
+  Object.assign(PC, THEMES[d.theme ?? "hagzara"]);  // הפלטה לפי הגרסה: הגזרה או צבעי האתר
   const frame = Math.round(t * PROMO.FPS);
   c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = "source-over";
   background(c, t, fx);
@@ -468,8 +571,8 @@ export function drawPromo(c: Ctx, t: number, d: PromoData, fx: PromoFx) {
   c.restore();
   chrome(c, d, t < SCENES.who ? 0 : 1);
   const flash = FLASH.reduce((a, [h, s]) => a + (t >= h ? s * Math.exp(-(t - h) * 11) : 0), 0);
-  if (flash > .01) { c.fillStyle = `rgba(255,255,255,${Math.min(.9, flash)})`; c.fillRect(0, 0, W, H); }
-  if (t >= 10.5 && t < 11) { c.fillStyle = `rgba(227,38,47,${.28 * Math.exp(-(t - 10.5) * 9)})`; c.fillRect(0, 0, W, H); }
+  if (flash > .01) { c.fillStyle = `rgba(${PC.flash},${Math.min(.9, flash) * PC.flashK})`; c.fillRect(0, 0, W, H); }
+  if (t >= 10.5 && t < 11) { c.fillStyle = `rgba(${PC.punch},${.28 * Math.exp(-(t - 10.5) * 9)})`; c.fillRect(0, 0, W, H); }
 }
 
 /** קנבסי העזר. `make` — יצירת קנבס בסביבה (דפדפן) */

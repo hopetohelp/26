@@ -7,7 +7,7 @@ import { SIMPLE_BLOCS, simpleSelection, simpleValue } from "../../lib/simpleSour
 import { crowdDashboardOnce } from "../../lib/sources";
 import { getToken } from "../../lib/crowdSession";
 import { reportVideo } from "../../lib/visits";
-import { BLOC_COLORS, type PromoData, type PromoList } from "../../lib/promoVideo";
+import { blocColors, type PromoData, type PromoList, type PromoTheme } from "../../lib/promoVideo";
 import type { PromoFile } from "../../lib/promoEncode";
 import { nameOf } from "../guess/model";
 import { blocSlices, orderedLists } from "./shared";
@@ -29,9 +29,18 @@ const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); retu
 export const guesserName = (raw: string) => raw.trim().split(/\s+/).filter(Boolean).slice(0, 2).join(" ").slice(0, 30);
 const isFull = (g?: Record<string, number> | null) => !!g && Math.abs(Object.values(g).reduce((a, b) => a + (b || 0), 0) - 120) < .5;
 
+/** על קו החסימה (גרסת האתר): מאותו מקור של כרטיס "על קו החסימה" באתר — `HOME.edge` ו-`summarize` על הסקרים האחרונים */
+async function edgeLists() {
+  const [{ HOME, LATEST_POLLS }, { summarize }] = await Promise.all([import("../../lib/homeData"), import("../../lib/data")]);
+  const counts = new Map(summarize(LATEST_POLLS, HOME.edge.map(r => r.id)).map(s => [s.id, s]));
+  return HOME.edge.map(r => ({ id: r.id, passing: counts.get(r.id)?.passing ?? 0, n: counts.get(r.id)?.n ?? 0 }));
+}
+
 export async function buildPromoData(dash: Dashboard, group: { slug: string; logoUrl: string | null } | null, myGuess?: Record<string, number> | null, name = ""): Promise<PromoData> {
   // הניחוש שלי — עוגה שלישית, רק כשהוא מלא (120)
   const mine = isFull(myGuess) ? myGuess! : null, who = guesserName(name);
+  // חבר בגזרה ⇐ צבעי הגזרה והסמל; כל השאר ⇐ צבעי האתר, קלפי ומסך אחוז החסימה (הכרעת בעלים 26/10)
+  const theme: PromoTheme = group ? "hagzara" : "site", colors = blocColors(theme);
   const selection = simpleSelection("all");
   const crowd: Record<string, number> = Object.fromEntries((dash.seats?.full ?? []).map(r => [r.list, r.mean]));
   const polls = (id: string) => simpleValue(selection, [id]) ?? 0;
@@ -42,7 +51,7 @@ export async function buildPromoData(dash: Dashboard, group: { slug: string; log
   const blocs = RING.map(id => {
     const p = sp.find(s => s.id === id), c = sc.find(s => s.id === id), m = sm?.find(s => s.id === id);
     const my = sm ? { mine: m?.value ?? 0 } : {};
-    return { id, short: SIMPLE_BLOCS.find(b => b.id === id)?.short ?? id, polls: p?.value ?? 0, crowd: c?.value ?? 0, ...my, shown: { polls: p?.shown ?? 0, crowd: c?.shown ?? 0, ...(sm ? { mine: m?.shown ?? 0 } : {}) }, color: BLOC_COLORS[id] };
+    return { id, short: SIMPLE_BLOCS.find(b => b.id === id)?.short ?? id, polls: p?.value ?? 0, crowd: c?.value ?? 0, ...my, shown: { polls: p?.shown ?? 0, crowd: c?.shown ?? 0, ...(sm ? { mine: m?.shown ?? 0 } : {}) }, color: colors[id] };
   });
   const haredi = lists.filter(l => SIMPLE_BLOCS[1].lists.includes(l.id) && (l.polls >= .5 || l.crowd >= .5 || (l.mine ?? 0) >= .5));
   const gap = [...lists].sort((a, b) => Math.abs(b.crowd - b.polls) - Math.abs(a.crowd - a.polls))[0];
@@ -50,8 +59,8 @@ export async function buildPromoData(dash: Dashboard, group: { slug: string; log
   q.addData(link); q.make();
   const m = q.getModuleCount(), qr = Array.from({ length: m }, (_, r) => Array.from({ length: m }, (_, k) => q.isDark(r, k)));
   // סמל הגזרה — קובץ קבוע באתר (הכרעת בעלים 26.10.2026): בלי פנייה לשרת המשתתפים
-  const logo = await loadImg(`${import.meta.env.BASE_URL}promo/hagzara.jpg`);
-  return { ...(mine && who ? { mineLabel: `הניחוש של ${who}` } : {}), asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: nextGoal(dash.seats?.n ?? 0), host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
+  const logo = group ? await loadImg(`${import.meta.env.BASE_URL}promo/hagzara.jpg`) : null;
+  return { theme, ...(group ? {} : { edge: await edgeLists() }), ...(mine && who ? { mineLabel: `הניחוש של ${who}` } : {}), asOf: day(dash.publishedAt ?? undefined), lists, blocs, haredi, gap, guesses: dash.seats?.n ?? 0, goal: nextGoal(dash.seats?.n ?? 0), host: SITE_URL.replace(/^https?:\/\//, "").replace(/\/.*$/, ""), logo, qr };
 }
 
 /** "צור סרטון" בחלון השיתוף: הסרטון נבנה בדפדפן מהנתונים של הרגע הזה — בלי AI, בלי שרת ובלי עלות */
