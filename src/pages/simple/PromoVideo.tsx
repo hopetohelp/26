@@ -15,8 +15,8 @@ import type { Dashboard } from "../../lib/crowdApi";
 
 /** סדר הגושים בעוגה — כמו העוגה באתר */
 const RING = ["netanyahu", "eisenkot", "arab", "haredi"];
-/** יעד המונה: 3,000 (הכרעת בעלים), וכשעוברים אותו — היעד העגול הבא, כך שהסרטון מתאים לכל כמות בלי שינוי */
-export const nextGoal = (n: number) => [3000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000].find(g => g > n) ?? Math.ceil((n + 1) / 1e6) * 1e6;
+/** יעד המונה (הכרעת בעלים 26/10): 2,000, וכל פעם שעוברים את היעד — עוד 500 (2,500, 3,000…), בכל הסרטונים */
+export const nextGoal = (n: number) => Math.max(2000, (Math.floor(n / 500) + 1) * 500);
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 /** תאריך כמו בכל האתר: יום/חודש (siteRules) */
 const day = (iso?: string) => { const d = iso ? new Date(iso) : new Date(); return `${d.getDate()}/${d.getMonth() + 1}`; };
