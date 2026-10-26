@@ -4,7 +4,7 @@ import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
 import { nameOf } from "../guess/model";
-import { sharePalette, IMG_W, ltrText } from "../guess/shareImage";
+import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../guess/shareImage";
 import { loadLogo } from "../guess/communityShare";
 import { isEmail } from "../../lib/identifier";
 import { blocSlices } from "./shared";
@@ -35,7 +35,7 @@ export async function renderSimpleShare(input: ShareInput): Promise<Blob> {
   const { c, display, body, num } = await sharePalette();
   const css = (n: string) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue(n).trim()})`;
   const rows = Object.keys(input.values).filter(id => input.values[id] >= .5).sort((a, b) => input.values[b] - input.values[a]);
-  const half = Math.ceil(rows.length / 2), rowH = 92, top = 210, H = top + half * rowH + 330;
+  const half = Math.ceil(rows.length / 2), rowH = 92, top = 210, H = top + half * rowH + 400;
   const cv = document.createElement("canvas"); cv.width = IMG_W; cv.height = H;
   const ctx = cv.getContext("2d")!; ctx.direction = "rtl";
   ctx.fillStyle = c.bg; ctx.fillRect(0, 0, IMG_W, H);
@@ -75,7 +75,10 @@ export async function renderSimpleShare(input: ShareInput): Promise<Blob> {
     x -= w;
   });
   ctx.textAlign = "center"; ctx.fillStyle = c.soft; ctx.font = `400 30px ${body}`;
-  ctx.fillText(`${input.group ? "הגזרה משערת · " : ""}מה אתם חושבים? ${ltrText(host)}`, IMG_W / 2, H - 80);
+  // QR בפינה השמאלית התחתונה; הטקסט נמתח לימין ממנו
+  drawQr(ctx, input.group ? groupUrl(input.group.slug) : SITE_URL, 70, H - 70 - QR_SIZE, QR_SIZE);
+  ctx.textAlign = "right";
+  ctx.fillText(`${input.group ? "הגזרה משערת · " : ""}מה אתם חושבים? ${ltrText(host)}`, IMG_W - 70, H - 80, IMG_W - 140 - QR_SIZE - 30);
   return await new Promise<Blob>((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("image")), "image/png"));
 }
 
