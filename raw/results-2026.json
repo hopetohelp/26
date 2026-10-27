@@ -1,9 +1,41 @@
 {
-  "status": "none",
-  "asOf": null,
-  "source": "ועדת הבחירות המרכזית — votes26.bechirot.gov.il",
+  "status": "partial",
+  "asOf": "28/10 01:23",
+  "source": "ועדת הבחירות המרכזית דרך הברומטר של JDN (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר",
   "note": "status: none = עדיין אין תוצאות (המסך מוסתר) · partial = ספירה חלקית · final = תוצאות סופיות. seats: מזהה רשימה (src/data/meta.json lists2026) ⇐ מנדטים. pct: מזהה רשימה ⇐ אחוז מהקולות הכשרים (לטור תוצאות האמת בהתפלגות המצביעים). counted: אחוז הקולות שנספרו (0–100) לפי ועדת הבחירות או ויקיפדיה; null = לא ידוע.",
-  "seats": {},
-  "pct": {},
-  "counted": null
+  "seats": {
+    "likud": 35,
+    "yashar": 26,
+    "together": 11,
+    "shas": 5,
+    "otzma": 11,
+    "democrats": 11,
+    "joint": 0,
+    "rzp": 15,
+    "utj": 0,
+    "yb": 6,
+    "raam": 0,
+    "reservists": 0,
+    "amcha": 0,
+    "noam": 0,
+    "haredi_public": 0
+  },
+  "pct": {
+    "likud": 26.5,
+    "yashar": 19.32,
+    "together": 8.2,
+    "shas": 4.34,
+    "otzma": 8.15,
+    "democrats": 8.44,
+    "joint": 0.13,
+    "rzp": 11.25,
+    "utj": 1.79,
+    "yb": 5.05,
+    "raam": 0.18,
+    "reservists": 3.16,
+    "amcha": 2.68,
+    "noam": 0.32,
+    "haredi_public": 0.08
+  },
+  "counted": 0.6
 }
