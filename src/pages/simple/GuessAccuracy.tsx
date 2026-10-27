@@ -89,7 +89,7 @@ export default function GuessAccuracy() {
   return <div className="max-w-6xl mx-auto">
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
     <h1 className="sr-only">תוצאות</h1>
-    {results2026.status !== "none" && <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("JDN") ? "ועדת הבחירות דרך JDN, לא אומת · " : results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>}
+    {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     <JdnCard />
     <TurnoutCard />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
@@ -232,19 +232,20 @@ function TurnoutCard() {
   const pct = t ? turnoutPct(t.total["מצביעים"], registry.k26.eligible) : null;
   const prev = previousTurnout();
   const counted = typeof results2026.counted === "number" ? results2026.counted : null;
+  const time = results2026.asOf?.match(/\d{1,2}:\d{2}/)?.[0] ?? null;
   if (!t || pct == null || prev == null) return null;
-  return <p className="f-card mb-4 text-center text-xs sm:text-sm !py-2">
-    אחוז הצבעה: <b className="font-num">{pct}%</b> בחירות קודמות: <b className="font-num">{prev}%</b>{counted != null && <> נספרו: <b className="font-num">{counted}%</b></>}
+  return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
+    אחוז הצבעה: <b className="font-num">{pct}%</b> בחירות קודמות: <b className="font-num">{prev}%</b>{counted != null && <> <span className="whitespace-nowrap">נספרו: <b className="font-num">{counted}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
   </p>;
 }
 
-/** כפתור לאתר הבחירות של JDN בשורה אחת ובצבעי האתר (הכרעות בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN") */
+/** כפתור קטן לאתר הבחירות של JDN בשורה אחת ובצבעי האתר (הכרעות בעלים 27.10.2026, הוקטן 28.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN") */
 function JdnCard() {
   return <a href="https://elections.jdn.co.il/" target="_blank" rel="noopener noreferrer" onClick={countJdnClick}
-    className="f-card mb-4 !py-2 !px-3 flex items-center gap-2 no-underline text-ink min-w-0">
-    <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={28} height={28} className="rounded-md flex-none" />
-    <span className="font-bold text-sm truncate">הברומטר של JDN — תוצאות בזמן אמת</span>
-    <span className="text-ink-soft text-sm flex-none ms-auto" aria-hidden="true">↗</span>
+    className="f-card mb-4 !py-1 !px-2.5 inline-flex items-center gap-1.5 no-underline text-ink max-w-full">
+    <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={18} height={18} className="rounded flex-none" />
+    <span className="font-bold text-xs truncate">הברומטר של JDN — תוצאות בזמן אמת</span>
+    <span className="text-ink-soft text-xs flex-none" aria-hidden="true">↗</span>
     <span className="sr-only">(נפתח בחלון חדש)</span>
   </a>;
 }
