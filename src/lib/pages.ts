@@ -1,7 +1,4 @@
-import { guessClosed, resultsScreenOpen } from "./guessClosed";
-import results2026 from "../../raw/results-2026.json";
-/** תוצאות אמת הוזנו (raw/results-2026.json) ⇐ "הניחוש שלי" מציג את דיוק הניחושים */
-export const RESULTS_READY = results2026.status !== "none" && Object.keys(results2026.seats).length > 0;
+import { guessClosed } from "./guessClosed";
 /** כל העמודים באתר — מקור לניווט הראשי (Layout). */
 export interface PageInfo {
   to: string;
@@ -42,6 +39,8 @@ export const SCREENS: Screen[] = [
   { id: "home", to: "/", label: "תמונת מצב", short: "בית", icon: "home", nav: "core" },
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
   { id: "community", to: "/community", label: "ממוצע הניחושים", icon: "bars", nav: "core" },
+  // מ-21:58 במקום "הניחוש שלי" (הכרעת בעלים 27.10.2026)
+  { id: "results2026", to: "/results-2026", label: "תוצאות", icon: "board", nav: "core" },
   // זמני עד שלב 3, שבו הסקרים עוברים ללשוניות תמונת מצב (השוואת מכונים · מגמות · ארכיון)
   { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
   { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
@@ -49,9 +48,10 @@ export const SCREENS: Screen[] = [
 ];
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
 /** המסכים בסרגל: הליבה תמיד; הנוספים ("עוד" בטלפון, בשורה במחשב) — רק במתקדם */
-export function navScreens(advanced: boolean, now = Date.now(), withResults = RESULTS_READY): Screen[] {
-  // 21:58–22:00 "הניחוש שלי" מוסתר; מ-22:00 חוזר — דיוק הניחושים, או הודעה עד פרסום התוצאות (הכרעות בעלים 27.10.2026)
-  return SCREENS.filter(s => (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now) && !resultsScreenOpen(now) && !withResults));
+export function navScreens(advanced: boolean, now = Date.now()): Screen[] {
+  // ב-21:58 "הניחוש שלי" יורד מהסרגל ו"תוצאות" עולה במקומו (הכרעות בעלים 27.10.2026)
+  const closed = guessClosed(now);
+  return SCREENS.filter(s => (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && closed) && !(s.id === "results2026" && !closed));
 }
 /** לשוניות מסך לפי המצב: במתקדם כולן, בממוקדת רק אלה שאינן מתקדמות */
 export function screenTabs(s: Screen, advanced: boolean): ScreenTab[] {

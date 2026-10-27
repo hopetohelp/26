@@ -7,7 +7,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
-import { useGuessClosed, useResultsScreenOpen } from "./lib/guessClosed";
+import { useGuessClosed } from "./lib/guessClosed";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
   if (!shouldReload()) return;
@@ -18,7 +18,6 @@ import { startOutbox } from "./lib/outbox";
 import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
-import { RESULTS_READY } from "./lib/pages";
 import RootErrorBoundary from "./components/RootErrorBoundary";
 const Today = lazy(page(() => import("./pages/Today")));
 const Polls = lazy(page(() => import("./pages/Polls")));
@@ -50,11 +49,7 @@ const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 /** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026) */
 function GuessGate({ children }: { children: React.ReactNode }) {
   const closed = useGuessClosed();
-  const open = useResultsScreenOpen();
-  // מ-22:00: עם תוצאות האמת — דיוק הניחושים; לפני פרסומן — הודעה (הכרעות בעלים 27.10.2026)
-  if (closed && open && !RESULTS_READY) return <PageTitle lead="התוצאות יתעדכנו כאן אוטומטית במהלך הספירה.">דיוק הניחושים יוצג עם תחילת פרסום התוצאות</PageTitle>;
-  if (closed && open && RESULTS_READY) return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>;
-  return closed ? <PageTitle lead="אפשר לראות את ממוצע הניחושים במסך הבית.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
+  return closed ? <PageTitle lead="התוצאות ודיוק הניחושים — במסך ״תוצאות״.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
 }
 
 function NotFound() {
@@ -143,7 +138,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
-          <Route path="score" element={<Navigate to="/guess" replace />} />
+          <Route path="score" element={<Navigate to="/results-2026" replace />} />
+          <Route path="results-2026" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"
