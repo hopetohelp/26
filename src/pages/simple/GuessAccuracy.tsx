@@ -202,8 +202,8 @@ function TurnoutCard() {
   }, []);
   const pct = t ? turnoutPct(t.total["מצביעים"], registry.k26.eligible) : null;
   if (!t || pct == null) return null;
-  return <p className="f-card mb-4 text-center text-sm !py-2">
-    אחוז הצבעה <b className="font-num">{pct}%</b> <span className="hidden sm:inline">· ב־2022 באותה שעה <span className="font-num">{t.total.prev_percent}%</span> </span>· נכון ל־<span className="font-num">{t.total.updated}</span> · <Link to="/method#turnout" className="whitespace-nowrap">איך זה חושב?</Link>
+  return <p className="f-card mb-4 text-center text-xs sm:text-sm !py-2">
+    הצבעה היום <b className="font-num">{pct}%</b> · 2022 באותה שעה <span className="font-num">{t.total.prev_percent}%</span> <span className="text-ink-soft">(עודכן <span className="font-num">{t.total.updated}</span>)</span>
   </p>;
 }
 
