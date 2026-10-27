@@ -5,7 +5,7 @@ import { useCrowdDashboard } from "../../lib/sources";
 import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
-import { finalPolls, hasResults, histArrays, pollMean, results2026, turnoutPct } from "../../lib/guessAccuracyData";
+import { finalPolls, hasResults, histArrays, pollMean, previousTurnout, results2026, turnoutPct } from "../../lib/guessAccuracyData";
 import { registry } from "../../lib/data";
 import { IDS, nameOf, startSeats } from "../guess/model";
 import { PartyAvatar } from "../../components/PartyAvatar";
@@ -192,7 +192,8 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 
 interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
 /** אחוז ההצבעה הארצי בשורה אחת, מספרים שלמים: "אחוז הצבעה: X% בחירות קודמות: Y%" (הכרעת בעלים 27.10.2026): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
- * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים */
+ * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים.
+ * "בחירות קודמות" — אחוז ההצבעה הסופי ב-2022 מהתוצאות הרשמיות (previousTurnout). prev_percent של המפה הוא העדכון הקודם של הוועדה, לא הבחירות הקודמות */
 function TurnoutCard() {
   const [t, setT] = useState<Turnout | null>(null);
   useEffect(() => {
@@ -201,9 +202,10 @@ function TurnoutCard() {
     return () => { live = false; };
   }, []);
   const pct = t ? turnoutPct(t.total["מצביעים"], registry.k26.eligible) : null;
-  if (!t || pct == null) return null;
+  const prev = previousTurnout();
+  if (!t || pct == null || prev == null) return null;
   return <p className="f-card mb-4 text-center text-sm !py-2">
-    אחוז הצבעה: <b className="font-num">{Math.round(pct)}%</b> בחירות קודמות: <b className="font-num">{Math.round(t.total.prev_percent)}%</b>
+    אחוז הצבעה: <b className="font-num">{Math.round(pct)}%</b> בחירות קודמות: <b className="font-num">{Math.round(prev)}%</b>
   </p>;
 }
 

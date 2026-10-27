@@ -1,6 +1,6 @@
 /** נתוני מסך "דיוק הניחושים": תוצאות האמת, הסקר האחרון של כל סדרה וממוצע הסקרים — מהמקורות הקיימים באתר */
 import resultsFile from "../../raw/results-2026.json";
-import { latestPerPollster, pollsterKey, pollsterLabel, seatsIn, lists2026 } from "./data";
+import { latestPerPollster, pollsterKey, pollsterLabel, registry, seatsIn, lists2026 } from "./data";
 import { SIMPLE_ALL, SIMPLE_DAYS, simpleValue } from "./simpleSources";
 import type { Seats } from "./guessAccuracy";
 
@@ -38,4 +38,10 @@ export function histArrays(hist: Record<string, Record<string, number>> | undefi
 export function turnoutPct(voters: number, eligible: number): number | null {
   if (!Number.isFinite(voters) || !Number.isFinite(eligible) || voters < 0 || eligible <= 0) return null;
   return Math.round((voters / eligible) * 1000) / 10;
+}
+
+/** אחוז ההצבעה הסופי בבחירות הקודמות — מהתוצאות הרשמיות (registry.series, המערכת האחרונה) */
+export function previousTurnout(): number | null {
+  const last = registry.series[registry.series.length - 1];
+  return last ? turnoutPct(last.voted, last.eligible) : null;
 }
