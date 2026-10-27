@@ -15,7 +15,7 @@ import { SAVED_EVENT } from "../../lib/outbox";
 import { date, pctValue, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
-import { votingRows } from "./votingRows";
+import { HAS_ACTUAL_PCT, votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
@@ -306,7 +306,7 @@ export function VotingStats({ d, blankLists }: { d: D; blankLists?: string[] }) 
   return <Card className="!border-t-0">
     <SectionTitle title="הצבעה אז והיום" count={count} toggle={<Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />} />
     <VoteComparison d={d} unit={unit} participants={count ?? 0} blankLists={blankLists} />
-    {unit === "num" && <p className="text-xs text-ink-soft mt-2">המספר בבחירות קודמות הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
+    {unit === "num" && <p className="text-xs text-ink-soft mt-2">המספר בבחירות קודמות{HAS_ACTUAL_PCT ? " ובתוצאות האמת" : ""} הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
     {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} /></section>}
   </Card>;
 }
@@ -315,11 +315,12 @@ export function VoteComparison({ d, unit, participants, blankLists }: { d: D; un
   const rows = votingRows(d, blankLists);
   const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${pctValue(v)}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
-    <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th></tr></thead>
+    <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th>{HAS_ACTUAL_PCT && <th className="font-normal">תוצאות אמת<br />כלל המצביעים</th>}</tr></thead>
     <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>
       <td className="text-center">{r.official === null ? "—" : unit === "pct" ? `${r.official}%` : fmtNum(r.official * participants / 100)}</td>
       <td className="text-center">{cell(r.previous, r.previousN)}</td>
-      <td className="text-center">{cell(r.next, r.nextN)}</td></tr>)}</tbody>
+      <td className="text-center">{cell(r.next, r.nextN)}</td>
+      {HAS_ACTUAL_PCT && <td className="text-center">{r.actual == null ? "—" : unit === "pct" ? `${r.actual}%` : fmtNum(r.actual * participants / 100)}</td>}</tr>)}</tbody>
   </table></div>;
 }
 
