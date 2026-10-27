@@ -59,3 +59,9 @@ export function reportVideo(flags: { mine: boolean; named: boolean }, token: str
   if (!FEEDBACK_URL || !v) return;
   fetch(`${FEEDBACK_URL}/video`, { method: "POST", body: JSON.stringify({ ...flags, v }), keepalive: true }).catch(() => {});
 }
+
+/** לחיצה על כרטיס JDN במסך תוצאות (הכרעת בעלים 27.10.2026) — מונה בלבד ("diag:out-jdn"), בלי זיהוי ובלי להיספר ככניסה */
+export function countJdnClick() {
+  if (!FEEDBACK_URL) return;
+  fetch(`${FEEDBACK_URL}/diag`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: "out-jdn" }), keepalive: true }).catch(() => {});
+}

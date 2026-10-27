@@ -30,14 +30,14 @@ const KEY = "elections26.admin";
 const CACHE_KEY = "elections26.adminCache";
 type Item = { author: "visitor" | "team"; text: string; created_at: string; topic?: string; page?: string; via?: string };
 type Thread = { id: number | string; items: Item[]; updated_at: string; waiting: boolean };
-type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
+type Day = { day: string; visits: number; users: number; guessUsers?: number; communityUsers?: number; jdnClicks?: number; blocked: number; blindSaved: number; relaySaved: number; autoFailures: number };
 export type SupportThread = { participant: string; status: string; updated_at: string; messages: Item[] };
 /** טיוטת תשובה של הסקירה המתוזמנת: לא מוצגת לגולש עד אישור (הכרעת בעלים 12.10.2026) */
 export type Draft = { id: number; kind: "feedback" | "support"; target: string; text: string; reason?: string | null; created_at: string };
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
 export type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
 /** videoAnon = סרטונים של גולשים לא מחוברים (שרת ההערות); support.stats.videos = מחוברים (שרת ההשתתפות) */
-type Data = { videoAnon?: VideoStatsT; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type Data = { jdnHours?: { hour: string; clicks: number }[]; videoAnon?: VideoStatsT; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 /** סרטון הנתונים לכל האתר: מחוברים + לא מחוברים (גולש שיצר לפני ההתחברות ואחריה עשוי להיספר פעמיים) */
@@ -126,8 +126,8 @@ function ByDay({ days }: { days: Day[] }) {
     <section className="space-y-2">
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular">
-          <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נכנסו לניחוש", "נכנסו לסטטיסטיקות", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
-          <tbody>{days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
+          <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נכנסו לניחוש", "נכנסו לסטטיסטיקות", "לחצו על JDN", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
+          <tbody>{days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.jdnClicks ?? 0}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
         </table>
       </div>
       <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "מייל מאומת (בקישור)" = חשבונות שאימתו את המייל דרך הקישור שנשלח אליהם, בלי אלה ש-Google אימת; "חשבון Google" = חשבונות שנכנסו עם Google. "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8/10), ולא אנשים.</p>
@@ -281,6 +281,15 @@ export default function Admin() {
                   ["נשלח מייל אימות ולא נלחץ", data.support?.stats.verifyMailsPending ?? "—"],
                 ]} />
                 <VideoStats s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחוברים ולא מחוברים יחד; מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן. מאז 26/10." />
+                <Tiles title="כרטיס JDN במסך תוצאות" note="לחיצות על הכרטיס (כל לחיצה נספרת). מאז 27/10 בערב." tiles={[
+                  ["לחצו היום", today?.jdnClicks ?? 0],
+                  ["לחצו סך הכול", data.days.reduce((t, d) => t + (d.jdnClicks ?? 0), 0)],
+                ]} />
+                <section className="space-y-1"><h3 className="font-display text-xl">לחיצות על JDN לפי שעה</h3>
+                  {data.jdnHours?.length ? <table className="text-sm tabular"><thead><tr className="text-ink-soft"><th className="text-start font-medium pe-4">שעה (שעון ישראל)</th><th className="text-start font-medium">לחיצות</th></tr></thead>
+                    <tbody>{data.jdnHours.map(h => <tr key={h.hour} className="border-t border-paper-line"><td className="pe-4">{h.hour.slice(8, 10)}/{h.hour.slice(5, 7)} {h.hour.slice(11)}:00</td><td>{h.clicks}</td></tr>)}</tbody></table>
+                    : <p className="text-sm text-ink-soft">עוד אין לחיצות.</p>}
+                </section>
                 <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
                   ["נפילות סך הכול", data.failures?.total ?? "—"],
                   ["נפילות היום", today?.autoFailures ?? 0],
