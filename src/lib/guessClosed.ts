@@ -14,3 +14,4 @@ export function useGuessClosed(): boolean {
   }, [closed]);
   return closed;
 }
+

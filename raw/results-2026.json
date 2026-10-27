@@ -2,6 +2,7 @@
   "status": "none",
   "asOf": null,
   "source": "ועדת הבחירות המרכזית — votes26.bechirot.gov.il",
-  "note": "status: none = עדיין אין תוצאות (המסך מוסתר) · partial = ספירה חלקית · final = תוצאות סופיות. seats: מזהה רשימה (src/data/meta.json lists2026) ⇐ מנדטים.",
-  "seats": {}
+  "note": "status: none = עדיין אין תוצאות (המסך מוסתר) · partial = ספירה חלקית · final = תוצאות סופיות. seats: מזהה רשימה (src/data/meta.json lists2026) ⇐ מנדטים. pct: מזהה רשימה ⇐ אחוז מהקולות הכשרים (לטור תוצאות האמת בהתפלגות המצביעים).",
+  "seats": {},
+  "pct": {}
 }

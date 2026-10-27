@@ -1,0 +1,120 @@
+"""
+תוצאות הבחירות 2026 מוויקיפדיה העברית בליל הספירה (הכרעת בעלים 27.10.2026): raw/results-2026.json.
+המקור: טבלת "תוצאות" בערך "הבחירות לכנסת העשרים ושש" — קולות לכל רשימה. המנדטים מחושבים במנוע החוק של האתר
+(אחוז חסימה, הסכמי עודפים, באדר-עופר — pipeline/bader_ofer.py), לא נלקחים מהטבלה. תווית: "ויקיפדיה — לא אומת".
+אין טבלה, אין קולות, או שהחישוב אינו 120 — הקובץ נשאר כמו שהוא.
+שימוש: python3 pipeline/fetch_results_2026.py <קובץ wikitext>   (בלי קובץ — מוריד בעצמו)
+"""
+import json
+import re
+import sys
+import urllib.request
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+from bader_ofer import allocate  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "raw" / "results-2026.json"
+TITLE = "הבחירות_לכנסת_העשרים_ושש"
+UA = "elections26-results (https://github.com/hopetohelp/26)"
+
+# שמות לזיהוי כל רשימה בשורת הטבלה; הארוך ביותר שנמצא בשורה קובע
+ALIASES = {
+    "likud": ["הליכוד"], "yashar": ["ישר!"], "together": ["ביחד"], "democrats": ["הדמוקרטים"],
+    "yb": ["ישראל ביתנו"], "shas": ['ש"ס'], "utj": ["יהדות התורה"], "otzma": ["עוצמה יהודית"],
+    "rzp": ["הציונות הדתית"], "joint": ["הרשימה המשותפת", 'חד"ש'], "raam": ['רע"ם', "הרשימה הערבית המאוחדת"],
+    "reservists": ["המילואימניקים", "המפלגה הכלכלית"], "bluewhite": ["כחול לבן"], "amcha": ["עמך ישראל"],
+    "haredi_public": ["הציבור החרדי"], "noam": ["נעם"], "code_black": ["צבע שחור"],
+}
+NUM = re.compile(r"(?<![\d.])(\d{1,3}(?:,\d{3})+|\d{4,})(?![\d.])")
+
+
+def fetch() -> str:
+    url = f"https://he.wikipedia.org/w/index.php?title={urllib.parse.quote(TITLE)}&action=raw"
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=60) as r:
+        return r.read().decode("utf-8")
+
+
+def section(text: str) -> str:
+    """החלק "תוצאות" (עד הכותרת הבאה באותה רמה)"""
+    m = re.search(r"^==\s*תוצאות\s*==\s*$", text, re.M)
+    if not m:
+        return ""
+    rest = text[m.end():]
+    n = re.search(r"^==[^=].*==\s*$", rest, re.M)
+    return rest[: n.start()] if n else rest
+
+
+def clean(cell: str) -> str:
+    cell = re.sub(r"\[\[([^|\]]*)\|([^\]]*)\]\]", r"\1 \2", cell)  # [[יעד|טקסט]] ⇐ שניהם (השם המלא בטקסט, הקצר ביעד)
+    cell = re.sub(r"\[\[([^\]]*)\]\]", r"\1", cell)
+    cell = cell.replace("״", '"')
+    cell = re.sub(r"\{\{[^{}]*\}\}", "", cell)
+    cell = re.sub(r"<[^>]+>", "", cell)
+    return cell
+
+
+def parse(text: str) -> tuple[dict, int | None]:
+    sec = section(text)
+    valid = None
+    m = re.search(r"הקולות הכשרים[^\n:]*:\s*'*\s*([\d,]+)", sec)
+    if m:
+        valid = int(m.group(1).replace(",", ""))
+    votes: dict[str, int] = {}
+    table = sec[sec.find("{|"):] if "{|" in sec else ""
+    for row in re.split(r"^\|-", table, flags=re.M):
+        cells = [clean(c) for c in re.split(r"\n[|!]|\|\|", "\n" + row) if c.strip()]
+        if len(cells) < 3:
+            continue
+        # הזיהוי — רק בתאי השם (לפני המספרים)
+        head = " ".join(c for c in cells if not NUM.search(c))
+        best = None
+        for lid, names in ALIASES.items():
+            for n in names:
+                if n in head and (best is None or len(n) > best[1]):
+                    best = (lid, len(n))
+        if not best or best[0] in votes:
+            continue
+        nums = [int(x.replace(",", "")) for c in cells for x in NUM.findall(c)]
+        nums = [x for x in nums if x >= 1000]
+        if nums:
+            votes[best[0]] = max(nums)
+    return votes, valid
+
+
+def main() -> int:
+    text = Path(sys.argv[1]).read_text(encoding="utf-8") if len(sys.argv) > 1 else fetch()
+    votes, valid = parse(text)
+    if len(votes) < 5:
+        print(f"אין עדיין טבלת תוצאות מלאה בוויקיפדיה ({len(votes)} רשימות) — הקובץ לא שונה")
+        return 0
+    total = valid if valid and valid >= sum(votes.values()) else sum(votes.values())
+    meta = json.loads((ROOT / "src" / "data" / "meta.json").read_text(encoding="utf-8"))
+    agreements = [tuple(a["pair"]) for a in meta["agreements2026"]]
+    seats = allocate(votes, total, agreements)["seats"]
+    seats = {k: seats.get(k, 0) for k in votes}
+    if sum(seats.values()) != 120:
+        print(f"::warning::חישוב המנדטים אינו 120 ({sum(seats.values())}) — הקובץ לא שונה")
+        return 0
+    data = json.loads(OUT.read_text(encoding="utf-8"))
+    if data.get("status") == "final" and "ויקיפדיה" not in str(data.get("source")):
+        print("התוצאות כבר סופיות מוועדת הבחירות — לא דורסים")
+        return 0
+    now = datetime.now(timezone(timedelta(hours=2)))
+    data.update(
+        status="partial",
+        asOf=f"{now.day}/{now.month} {now:%H:%M}",
+        source="ויקיפדיה העברית (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר",
+        seats={k: int(v) for k, v in seats.items()},
+        pct={k: round(v / total * 100, 2) for k, v in votes.items()},
+    )
+    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("עודכן:", json.dumps(data["seats"], ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    import urllib.parse  # noqa: F401
+    sys.exit(main())

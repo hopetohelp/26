@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import qrcode from "qrcode-generator";
 import { createPortal } from "react-dom";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
-import { accuracyPct, biggestGap, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, biggestGap, closestPoll, type Seats } from "../../lib/guessAccuracy";
 import { crowdDashboardOnce } from "../../lib/sources";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 import type { PromoFile } from "../../lib/promoEncode";
@@ -22,11 +23,9 @@ const host = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const round1 = (v: number) => String(Math.round(v * 10) / 10);
 
-/** המכון הקרוב ביותר לאמת (אחוז הדיוק הגבוה) */
-export function closestPoll(input: AccuracyShareInput) {
-  let best = -1, label = "";
-  input.polls.forEach((p, i) => { const a = accuracyPct(p, input.actual); if (a > best) { best = a; label = input.pollLabels[i]; } });
-  return label;
+/** המכון הקרוב ביותר לאמת — אותו חישוב של כרטיס "הסקר הקרוב ביותר" */
+export function closestPollLabel(input: AccuracyShareInput) {
+  return closestPoll(input.polls.map((values, i) => ({ values, label: input.pollLabels[i] })), input.actual)?.label ?? "";
 }
 
 /** תמונה: למעלה אחוז דיוק הסקרים מול הניחושים; רשימות — אמת מול הניחוש (או ממוצע הניחושים); בתחתית שתי רצועות גושים */
@@ -91,7 +90,9 @@ async function renderImage(input: AccuracyShareInput, values: Seats, label: stri
 async function renderVideo(input: AccuracyShareInput, mine: Seats | null, name: string, onProgress: (k: number) => void): Promise<PromoFile | null> {
   const dash = await crowdDashboardOnce();
   if (!dash) return null;
-  const data = await buildPromoData(dash, input.group, mine, name);
+  // סרטון אחד לכולם — תמיד בגרסת הגזרה (הכרעת בעלים 27.10.2026); למי שאינו חבר הקוד מוביל לאתר ולא לקבוצה
+  const data = await buildPromoData(dash, input.group ?? { slug: "hagzara", logoUrl: null }, mine, name);
+  if (!input.group) { const q = qrcode(0, "M"); q.addData(SITE_URL); q.make(); const m = q.getModuleCount(); data.qr = Array.from({ length: m }, (_, r) => Array.from({ length: m }, (_, k) => q.isDark(r, k))); }
   const a = input.actual, crowd = input.crowdMean, slices = blocSlices(a);
   data.lists = input.ids.map(id => { const l = data.lists.find(x => x.id === id); return { id, name: nameOf(id), polls: a[id] ?? 0, crowd: crowd[id] ?? 0, ...(mine ? { mine: mine[id] ?? 0 } : {}), img: l?.img ?? null }; });
   data.blocs = data.blocs.map(b => { const s = slices.find(x => x.id === b.id); return { ...b, polls: s?.value ?? 0, shown: { ...b.shown, polls: s?.shown ?? 0 } }; });
@@ -102,7 +103,7 @@ async function renderVideo(input: AccuracyShareInput, mine: Seats | null, name: 
   const passPct = (id: string) => { const h = input.hist?.[id]; if (!h) return 0; const n = h.reduce((s, x) => s + x, 0); return n ? Math.round(h.reduce((s, x, k) => s + (k >= THRESHOLD_SEATS ? x : 0), 0) / n * 100) : 0; };
   data.edge = input.ids.filter(id => (a[id] ?? 0) <= 6 || (crowd[id] ?? 0) <= 6).sort((x, y) => Math.abs((a[x] ?? 0) - THRESHOLD_SEATS) - Math.abs((a[y] ?? 0) - THRESHOLD_SEATS)).slice(0, 2).map(id => ({ id, passing: passPct(id), n: 100 }));
   const mg = mine ? biggestGap(mine, a, input.ids) : null;
-  data.results = { pollAcc: accuracyPct(input.pollMean, a), crowdAcc: accuracyPct(crowd, a), closest: closestPoll(input), mineGap: mg ? { name: nameOf(mg.id), gap: mg.gap } : null };
+  data.results = { pollAcc: accuracyPct(input.pollMean, a), crowdAcc: accuracyPct(crowd, a), closest: closestPollLabel(input), mineGap: mg ? { name: nameOf(mg.id), gap: mg.gap } : null };
   const { renderPromoVideo } = await import("../../lib/promoEncode");
   return renderPromoVideo(data, onProgress);
 }
