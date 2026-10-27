@@ -156,7 +156,7 @@ export async function runAutoReplies(env, helpers, now = Date.now(), fetcher = f
         const why = (out.decision !== "answer" || out.confidence !== "high") ? (out.reason || "המודל לא היה בטוח")
           : checkAnswer(text, context) || (held ? "משתתף בהשהיה" : teamReplies >= MAX_TEAM_REPLIES ? "שיחה ארוכה — לבדיקת אדם" : mode === "drafts" ? "מצב טיוטות בלבד" : null);
         if (!why) {
-          if (await helpers.teamReply(env, it.kind, it.target, text)) { await record("published"); status.published++; continue; }
+          if (await helpers.teamReply(env, it.kind, it.target, text, false, true)) { await record("published"); status.published++; continue; }
           await record("skipped", "השיחה לא נמצאה"); status.skipped++; continue;
         }
         const exists = await env.DB.prepare("SELECT 1 AS x FROM drafts WHERE kind = ? AND target = ?").bind(it.kind, it.target).first();

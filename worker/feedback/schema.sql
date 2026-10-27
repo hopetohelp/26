@@ -218,3 +218,10 @@ CREATE TABLE IF NOT EXISTS video_anon (
   first_day TEXT NOT NULL,
   last_day TEXT NOT NULL
 );
+
+-- תשובות צוות שנכתבו בידי סוכן AI (הכרעת בעלים 27.10.2026): מוצגות "סוכן AI"; השאר — "צוות האתר"
+CREATE TABLE IF NOT EXISTS team_ai (
+  kind TEXT NOT NULL CHECK (kind IN ('feedback', 'support')),
+  message_id INTEGER NOT NULL,
+  PRIMARY KEY (kind, message_id)
+);
