@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
-import { accuracyPct, biggestGap, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, biggestGap, closestPoll, type Seats } from "../../lib/guessAccuracy";
 import { crowdDashboardOnce } from "../../lib/sources";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 import type { PromoFile } from "../../lib/promoEncode";
@@ -22,11 +22,9 @@ const host = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
 const loadImg = (src: string) => new Promise<HTMLImageElement | null>(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const round1 = (v: number) => String(Math.round(v * 10) / 10);
 
-/** המכון הקרוב ביותר לאמת (אחוז הדיוק הגבוה) */
-export function closestPoll(input: AccuracyShareInput) {
-  let best = -1, label = "";
-  input.polls.forEach((p, i) => { const a = accuracyPct(p, input.actual); if (a > best) { best = a; label = input.pollLabels[i]; } });
-  return label;
+/** המכון הקרוב ביותר לאמת — אותו חישוב של כרטיס "הסקר הקרוב ביותר" */
+export function closestPollLabel(input: AccuracyShareInput) {
+  return closestPoll(input.polls.map((values, i) => ({ values, label: input.pollLabels[i] })), input.actual)?.label ?? "";
 }
 
 /** תמונה: למעלה אחוז דיוק הסקרים מול הניחושים; רשימות — אמת מול הניחוש (או ממוצע הניחושים); בתחתית שתי רצועות גושים */
@@ -102,7 +100,7 @@ async function renderVideo(input: AccuracyShareInput, mine: Seats | null, name: 
   const passPct = (id: string) => { const h = input.hist?.[id]; if (!h) return 0; const n = h.reduce((s, x) => s + x, 0); return n ? Math.round(h.reduce((s, x, k) => s + (k >= THRESHOLD_SEATS ? x : 0), 0) / n * 100) : 0; };
   data.edge = input.ids.filter(id => (a[id] ?? 0) <= 6 || (crowd[id] ?? 0) <= 6).sort((x, y) => Math.abs((a[x] ?? 0) - THRESHOLD_SEATS) - Math.abs((a[y] ?? 0) - THRESHOLD_SEATS)).slice(0, 2).map(id => ({ id, passing: passPct(id), n: 100 }));
   const mg = mine ? biggestGap(mine, a, input.ids) : null;
-  data.results = { pollAcc: accuracyPct(input.pollMean, a), crowdAcc: accuracyPct(crowd, a), closest: closestPoll(input), mineGap: mg ? { name: nameOf(mg.id), gap: mg.gap } : null };
+  data.results = { pollAcc: accuracyPct(input.pollMean, a), crowdAcc: accuracyPct(crowd, a), closest: closestPollLabel(input), mineGap: mg ? { name: nameOf(mg.id), gap: mg.gap } : null };
   const { renderPromoVideo } = await import("../../lib/promoEncode");
   return renderPromoVideo(data, onProgress);
 }
@@ -151,10 +149,11 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
   return createPortal(<div className="f-modal" onClick={e => e.target === e.currentTarget && onClose()} onKeyDown={e => e.key === "Escape" && onClose()}>
     <div ref={box} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="f-acc-share">
       <h2 id="f-acc-share" className="text-lg font-bold">שיתוף דיוק הניחושים</h2>
-      <div className="f-seg fit" role="group" aria-label="תמונה או סרטון">
+      {/* סרטון — רק לחברי הגזרה (הכרעת בעלים 27.10.2026) */}
+      {input.group && <div className="f-seg fit" role="group" aria-label="תמונה או סרטון">
         <button type="button" aria-pressed={format === "image"} onClick={() => setFormat("image")}>תמונה</button>
         <button type="button" aria-pressed={format === "video"} onClick={() => { setFormat("video"); setUrl(null); setFile(null); }}>סרטון</button>
-      </div>
+      </div>}
       {input.mine && <div className="f-seg fit" role="group" aria-label="מה משתפים">
         <button type="button" aria-pressed={who === "mine"} onClick={() => { setWho("mine"); if (format === "video") { setUrl(null); setFile(null); } }}>הניחוש שלי</button>
         <button type="button" aria-pressed={who === "crowd"} onClick={() => { setWho("crowd"); if (format === "video") { setUrl(null); setFile(null); } }}>ממוצע הניחושים</button>

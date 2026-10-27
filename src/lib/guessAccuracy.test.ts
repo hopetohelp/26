@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { accuracyPct, accuracyRows, bestCombination, biggestGap, closerShareHist, distance, histStats, pollStats } from "./guessAccuracy";
+import { accuracyPct, accuracyRows, closestPoll, pollAccuracyPct, bestCombination, biggestGap, closerShareHist, distance, histStats, pollStats } from "./guessAccuracy";
 
 describe("guessAccuracy", () => {
   it("מרחק במנדטים ובאחוזים; רשימה שלא עברה מול 4", () => {
@@ -20,6 +20,10 @@ describe("guessAccuracy", () => {
   it("סקרים: סקר בלי נתון לרשימה אינו נכלל בה", () => {
     expect(pollStats([{ a: 10 }, { a: 13 }, {}], "a", 10)).toEqual({ exact: 0.5, mean: 1.5, n: 2 });
     expect(pollStats([{}], "a", 10)).toBeNull();
+  });
+  it("הסקר הקרוב ביותר — רשימה שלא פורסמה אינה טעות", () => {
+    expect(pollAccuracyPct({ a: 60 }, { a: 60, b: 60 })).toBe(100);
+    expect(closestPoll([{ k: "x", values: { a: 62, b: 58 } }, { k: "y", values: { a: 61, b: 59 } }], { a: 60, b: 60 })?.k).toBe("y");
   });
   it("שורות, אחוז דיוק, צירוף ופער", () => {
     expect(accuracyRows({ a: 10, c: 0 }, { b: 3, c: 1 })).toEqual(["a", "b"]);

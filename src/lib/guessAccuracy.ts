@@ -64,6 +64,20 @@ export function accuracyPct(values: Seats, actual: Seats): number {
   return Math.max(0, 100 * (1 - sum / 2 / TOTAL));
 }
 
+/** אחוז דיוק של סקר: כמו accuracyPct, אבל רשימה שהסקר לא פרסם עליה נתון אינה נכללת (לא נחשבת טעות) */
+export function pollAccuracyPct(poll: Seats, actual: Seats): number {
+  let sum = 0;
+  for (const id of Object.keys(poll)) sum += Math.abs(poll[id] - val(actual, id));
+  return Math.max(0, 100 * (1 - sum / 2 / TOTAL));
+}
+
+/** הסקר הקרוב ביותר: הסקר האחרון של כל מכון, לפי אחוז הדיוק */
+export function closestPoll<P extends { values: Seats }>(polls: P[], actual: Seats): (P & { acc: number }) | null {
+  let best: (P & { acc: number }) | null = null;
+  for (const p of polls) { const acc = pollAccuracyPct(p.values, actual); if (!best || acc > best.acc) best = { ...p, acc }; }
+  return best;
+}
+
 /** טעות יחסית ממוצעת (כל רשימה במשקל שווה) — הקריטריון לממוצע הקרוב ביותר */
 export function relativeError(values: Seats, actual: Seats, ids: string[]): number {
   return ids.reduce((s, id) => s + distance(val(values, id), val(actual, id)).pct, 0) / (ids.length || 1);

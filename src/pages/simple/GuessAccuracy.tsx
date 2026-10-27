@@ -2,13 +2,15 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
-import { accuracyRows, bestCombination, closerShareHist, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
+import { useInterface } from "../../lib/interfaceMode";
+import { SIMPLE_ALL } from "../../lib/simpleSources";
 import { finalPolls, hasResults, histArrays, pollMean, results2026 } from "../../lib/guessAccuracyData";
 import { IDS, nameOf, startSeats } from "../guess/model";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { useSession, useUnit } from "../guess/useCrowd";
 import { Notice } from "../guess/ui";
-import { FocusFoot, GuessCount, PartyName, fmt } from "./shared";
+import { FocusFoot, GuessCount, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
 
@@ -43,6 +45,7 @@ const COLUMNS: Record<View, [string, string][]> = {
 /** דיוק הניחושים והסקרים מול תוצאות האמת (docs/תוכנית-דיוק-הניחושים-27-10-2026.md) */
 export default function GuessAccuracy() {
   const session = useSession();
+  const { advanced } = useInterface();
   const crowd = useCrowdDashboard();
   const hagzara = useHagzara(session);
   const seats = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
@@ -58,6 +61,7 @@ export default function GuessAccuracy() {
   const actual = results2026.seats;
   const ids = useMemo(() => accuracyRows(actual, pollMean), [actual]);
   const best = useMemo(() => hasResults() ? bestCombination(finalPolls, actual, ids) : null, [actual, ids]);
+  const nearest = useMemo(() => hasResults() ? closestPoll(finalPolls, actual) : null, [actual]);
   if (!hasResults()) return <div className="max-w-6xl mx-auto"><h1 className="text-xl font-bold mb-3">דיוק הניחושים</h1>
     <div className="f-card"><p className="text-ink-soft">המסך ייפתח עם פרסום תוצאות האמת של ועדת הבחירות.</p></div><FocusFoot /></div>;
 
@@ -79,12 +83,17 @@ export default function GuessAccuracy() {
     ratio: avgOf(rows.map(r => r.dist[j] == null ? null : r.dist[j]! / Math.max(r.a, 4))),
   }));
   const polls = pollList;
+  // ממוקדת: כמה מהמנחשים היו רחוקים יותר ממני (ממוצע המפלגות), כמה מנדטים במקום הלא נכון, ושלוש תיבות אחוז הדיוק
+  const myBeat = mine ? avgOf(ids.map(id => { const h = hist?.[id]; if (!h) return null; const a = actual[id] ?? 0, err = Math.abs((mine[id] ?? 0) - a); const c = closerShareHist(err, h, a); const n = h.reduce((x, y) => x + y, 0); const tie = (h[a - err] ?? 0) + (err ? h[a + err] ?? 0 : 0); return c === null ? null : 1 - c - tie / n; })) : null;
+  const myMisplaced = mine ? (100 - accuracyPct(mine, actual)) * 1.2 : 0;
+  const tiles: [string, number | null][] = [...(mine ? [["הניחוש שלי", accuracyPct(mine, actual)] as [string, number]] : []), ["ממוצע הניחושים", d ? accuracyPct(crowdMean, actual) : null], ["ממוצע הסקרים", accuracyPct(pollMean, actual)]];
 
   return <div className="max-w-6xl mx-auto">
     <h1 className="text-xl font-bold mb-1">דיוק הניחושים</h1>
     <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.asOf ?? ""}</p>
     <GuessCount total={d?.seats?.n} />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
+    {advanced ? <>
     <div className="f-seg fit" role="group" aria-label="מה משווים">
       {(["guesses", "polls"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)}>{m === "guesses" ? "ניחושים" : "סקרים"}</button>)}
     </div>
@@ -119,8 +128,31 @@ export default function GuessAccuracy() {
       <ul className="text-sm space-y-1">{COLUMNS[view].map(([h, t]) => <li key={h}><b>{h}:</b> {t}</li>)}<li><b>כל המפלגות:</b> באחוזים — ממוצע של המפלגות, כל מפלגה במשקל שווה; במרחק — סך המנדטים, והיחס הממוצע של המפלגות.</li></ul>
       <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
     </div>
-    {best && <div className="f-card mt-4">
-      <h2 className="font-bold mb-2">הממוצע שהיה הכי קרוב לאמת</h2>
+    </> : <>
+    {/* ממוקדת: הפניה למתג "מתקדם" הקיים — בלי כפתור נוסף (הכרעת בעלים 27.10.2026) */}
+    <p className="text-sm text-ink-soft mb-4">לניתוח מורחב — הפעילו את המתג ״מתקדם״ בראש המסך.</p>
+    {mine && <div className="f-card mb-4 text-center">
+      <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
+      <p className="text-sm text-ink-soft mt-1"><span className="font-num">{fmt(Math.round(myMisplaced))}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
+    </div>}
+    <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `repeat(${tiles.length}, minmax(0, 1fr))` }}>
+      {tiles.map(([label, v]) => <div key={label} className="f-card text-center !p-3"><p className="text-xs md:text-sm text-ink-soft">{label}</p><p className="text-2xl md:text-3xl font-bold font-num">{v == null ? "—" : `${Math.round(v)}%`}</p></div>)}
+    </div>
+    <p className="text-xs text-ink-soft mb-4 text-center">אחוז הדיוק = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה.</p>
+    <PartyChart selection={SIMPLE_ALL} lists={ids} spreadOf={id => { const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
+      marks={id => [...(mine ? [{ value: mine[id] ?? 0, side: "up" as const }] : []), { value: crowdMean[id], kind: "dash" as const, side: "down" as const }]}
+      legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label="ממוצע הניחושים" /></>} />
+    <div className="f-card mt-4 grid gap-3">
+      <div><p className="text-sm font-bold mb-1">תוצאות אמת</p><InlineBlocBar values={actual} /></div>
+      <div><p className="text-sm font-bold mb-1">{mine ? "הניחוש שלי" : "ממוצע הניחושים"}</p><InlineBlocBar values={mine ?? crowdMean} /></div>
+    </div>
+    </>}
+    {nearest && <div className="f-card mt-4">
+      <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
+      <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · אחוז דיוק <span className="font-num font-bold">{Math.round(nearest.acc)}%</span></p>
+    </div>}
+    {advanced && best && <div className="f-card mt-4">
+      <h2 className="font-bold mb-2">השילוב הקרוב ביותר</h2>
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollMean[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> בממוצע כל הסקרים.</p>
     </div>}
