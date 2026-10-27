@@ -191,7 +191,7 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 }
 
 interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
-/** אחוז ההצבעה הארצי בשורה אחת (הכרעת בעלים 27.10.2026): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
+/** אחוז ההצבעה הארצי בשורה אחת, מספרים שלמים: "אחוז הצבעה: X% בחירות קודמות: Y%" (הכרעת בעלים 27.10.2026): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
  * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים */
 function TurnoutCard() {
   const [t, setT] = useState<Turnout | null>(null);
@@ -202,8 +202,8 @@ function TurnoutCard() {
   }, []);
   const pct = t ? turnoutPct(t.total["מצביעים"], registry.k26.eligible) : null;
   if (!t || pct == null) return null;
-  return <p className="f-card mb-4 text-center text-xs sm:text-sm !py-2">
-    הצבעה היום <b className="font-num">{pct}%</b> · 2022 באותה שעה <span className="font-num">{t.total.prev_percent}%</span> <span className="text-ink-soft">(עודכן <span className="font-num">{t.total.updated}</span>)</span>
+  return <p className="f-card mb-4 text-center text-sm !py-2">
+    אחוז הצבעה: <b className="font-num">{Math.round(pct)}%</b> בחירות קודמות: <b className="font-num">{Math.round(t.total.prev_percent)}%</b>
   </p>;
 }
 
