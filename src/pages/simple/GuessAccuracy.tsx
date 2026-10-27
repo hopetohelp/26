@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import InfoTip from "../../components/InfoTip";
+import { THRESHOLD_PCT } from "../../engine/pctForSeats";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
 import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
 import { finalPolls, hasResults, histArrays, pollMean, previousTurnout, results2026, turnoutPct } from "../../lib/guessAccuracyData";
-import { registry } from "../../lib/data";
+import { activeLists2026, registry } from "../../lib/data";
 import { IDS, nameOf, startSeats } from "../guess/model";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { useSession, useUnit } from "../guess/useCrowd";
@@ -131,6 +132,7 @@ export default function GuessAccuracy() {
       <div><p className="text-sm font-bold mb-1">{mine ? "הניחוש שלי" : "ממוצע הניחושים"}</p><InlineBlocBar values={mine ?? crowdMean} /></div>
     </div>
     </>}
+    <BelowThreshold ready={ready} />
     {nearest && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
       <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · אחוז דיוק <span className="font-num font-bold">{Math.round(nearest.acc)}%</span></p>
@@ -143,6 +145,26 @@ export default function GuessAccuracy() {
     <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!d || !ready}>שיתוף</button></div>
     <FocusFoot />
     {sharing && <AccuracyShare onClose={() => setSharing(false)} input={{ actual, ids, crowdMean, mine, pollMean, polls, pollLabels: finalPolls.map(p => p.label), hist, count: d?.seats?.n ?? 0, best: best ? best.keys.map(k => finalPolls.find(p => p.key === k)?.firm ?? k) : [], group: hagzara }} />}
+  </div>;
+}
+
+/** רשימות שלא עברו את אחוז החסימה (הכרעת בעלים 27.10.2026): כל רשימה פעילה בלי מנדטים, עם אחוז הקולות שלה (raw/results-2026.json pct).
+ * לפני הספירה — הרשימות הקטנות, עם קו */
+function BelowThreshold({ ready }: { ready: boolean }) {
+  const pct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
+  // לפני הספירה: הרשימות שבממוצע הסקרים מתחת ל-4 מנדטים (המילואימניקים, עמך ישראל, נעם, הציבור החרדי, צבע שחור)
+  const rows = activeLists2026.map(l => l.id)
+    .filter(id => ready ? (results2026.seats[id] ?? 0) === 0 : (pollMean[id] ?? 0) < 4)
+    .sort((a, b) => (pct[b] ?? 0) - (pct[a] ?? 0));
+  if (!rows.length) return null;
+  return <div className="f-card mt-4">
+    <h2 className="font-bold mb-2">{ready ? `לא עברו את אחוז החסימה (${THRESHOLD_PCT}%)` : "רשימות נוספות"}</h2>
+    <table className="w-full text-sm"><tbody>
+      {rows.map(id => <tr key={id} className="border-t border-line first:border-t-0">
+        <td className="py-2"><PartyName id={id} /></td>
+        <td className="py-2 text-end font-num whitespace-nowrap">{ready && pct[id] != null ? `${pct[id].toFixed(1)}% מהקולות` : "—"}</td>
+      </tr>)}
+    </tbody></table>
   </div>;
 }
 
