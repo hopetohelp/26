@@ -142,12 +142,15 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
         {messages?.map((m, i) => <Bubble key={i} m={m} />)}
       </ol>
       </div>
-      {!closed ? (
+      {/* פנייה לצוות רק לחשבון מחובר (הכרעת בעלים 27.10.2026); דיווח תקלה בהרשמה או בכניסה נשאר בחלון התקלה */}
+      {!session.token ? (
+        <p className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper py-3 text-sm">כדי לכתוב לצוות האתר צריך להתחבר. <Link to="/account" className="underline font-bold">להרשמה או כניסה</Link></p>
+      ) : !closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={SUPPORT_TOPICS as unknown as { id: FeedbackTopic; label: string }[]} />
           {/* בחלק הקבוע מעל שדה הכתיבה; כל מה שנוגע למפתח AI — רק בשאלה או תאוריה */}
           <div className="c-support-guidance">
-            <p className="text-xs text-ink-soft">התשובות מתקבלות פעם בכמה שעות.{topic === "theory" && " שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם."}{!session.token && " אפשר לכתוב גם בלי חשבון. השיחה נשמרת אצלנו, אבל הזיהוי שלה שמור רק בדפדפן הזה; כשתירשמו — היא תעבור לחשבון."}</p>
+            <p className="text-xs text-ink-soft">התשובות מתקבלות פעם בכמה שעות.{topic === "theory" && " שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם."}</p>
           </div>
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>

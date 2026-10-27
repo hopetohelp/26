@@ -1,3 +1,4 @@
+import { guessClosed } from "./guessClosed";
 /** כל העמודים באתר — מקור לניווט הראשי (Layout). */
 export interface PageInfo {
   to: string;
@@ -45,8 +46,8 @@ export const SCREENS: Screen[] = [
 ];
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
 /** המסכים בסרגל: הליבה תמיד; הנוספים ("עוד" בטלפון, בשורה במחשב) — רק במתקדם */
-export function navScreens(advanced: boolean): Screen[] {
-  return SCREENS.filter(s => s.nav === "core" || (advanced && s.nav === "more"));
+export function navScreens(advanced: boolean, now = Date.now()): Screen[] {
+  return SCREENS.filter(s => (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now)));
 }
 /** לשוניות מסך לפי המצב: במתקדם כולן, בממוקדת רק אלה שאינן מתקדמות */
 export function screenTabs(s: Screen, advanced: boolean): ScreenTab[] {

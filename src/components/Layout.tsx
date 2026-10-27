@@ -1,4 +1,5 @@
 import { InterfaceProvider, useInterface } from "../lib/interfaceMode";
+import { useGuessClosed } from "../lib/guessClosed";
 import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
@@ -145,6 +146,7 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const { pathname } = useLocation();
   const { advanced } = useInterface();
   const groupTab = useGroupTab();
+  useGuessClosed(); // הסרגל מתרענן ברגע סגירת הניחושים (21:58)
   // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
   // בפס העליון (מחשב) — כל הלשוניות בשורה, בלי "עוד"; בסרגל התחתון — "עוד" (הכרעת בעלים 25.10.2026)
   const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";

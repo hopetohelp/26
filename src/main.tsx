@@ -7,6 +7,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
+import { useGuessClosed } from "./lib/guessClosed";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
   if (!shouldReload()) return;
@@ -43,6 +44,11 @@ const Scenarios = lazy(page(() => import("./pages/Scenarios")));
 const Changes = lazy(page(() => import("./pages/Changes")));
 const Guess = lazy(page(() => import("./pages/Guess")));
 const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
+
+/** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026) */
+function GuessGate({ children }: { children: React.ReactNode }) {
+  return useGuessClosed() ? <PageTitle lead="אפשר לראות את ממוצע הניחושים במסך הבית.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
+}
 
 function NotFound() {
   return <PageTitle lead="הכתובת אינה קיימת באתר.">העמוד לא נמצא</PageTitle>;
@@ -128,7 +134,7 @@ createRoot(document.getElementById("root")!).render(
           ]} />} />
           <Route path="changes" element={<Moved to="/past" tab="changes" />} />
           <Route path="calculator" element={<LegacyCalculator />} />
-          <Route path="guess" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense>} />
+          <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
