@@ -1,4 +1,4 @@
-import { guessClosed } from "./guessClosed";
+import { guessClosed, resultsScreenOpen } from "./guessClosed";
 import results2026 from "../../raw/results-2026.json";
 /** תוצאות אמת הוזנו (raw/results-2026.json) ⇐ "הניחוש שלי" מציג את דיוק הניחושים */
 export const RESULTS_READY = results2026.status !== "none" && Object.keys(results2026.seats).length > 0;
@@ -50,8 +50,8 @@ export const SCREENS: Screen[] = [
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
 /** המסכים בסרגל: הליבה תמיד; הנוספים ("עוד" בטלפון, בשורה במחשב) — רק במתקדם */
 export function navScreens(advanced: boolean, now = Date.now(), withResults = RESULTS_READY): Screen[] {
-  // אחרי סגירת הקלפיות "הניחוש שלי" מוסתר, וחוזר עם תוצאות האמת — ובו דיוק הניחושים (הכרעת בעלים 27.10.2026)
-  return SCREENS.filter(s => (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now) && !withResults));
+  // 21:58–22:00 "הניחוש שלי" מוסתר; מ-22:00 חוזר — דיוק הניחושים, או הודעה עד פרסום התוצאות (הכרעות בעלים 27.10.2026)
+  return SCREENS.filter(s => (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now) && !resultsScreenOpen(now) && !withResults));
 }
 /** לשוניות מסך לפי המצב: במתקדם כולן, בממוקדת רק אלה שאינן מתקדמות */
 export function screenTabs(s: Screen, advanced: boolean): ScreenTab[] {

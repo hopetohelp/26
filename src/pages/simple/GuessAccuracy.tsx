@@ -90,7 +90,7 @@ export default function GuessAccuracy() {
 
   return <div className="max-w-6xl mx-auto">
     <h1 className="text-xl font-bold mb-1">דיוק הניחושים</h1>
-    <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.asOf ?? ""}</p>
+    <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>
     <GuessCount total={d?.seats?.n} />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>

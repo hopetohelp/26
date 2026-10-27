@@ -7,7 +7,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
-import { useGuessClosed } from "./lib/guessClosed";
+import { useGuessClosed, useResultsScreenOpen } from "./lib/guessClosed";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
   if (!shouldReload()) return;
@@ -50,8 +50,10 @@ const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 /** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026) */
 function GuessGate({ children }: { children: React.ReactNode }) {
   const closed = useGuessClosed();
-  // עם תוצאות האמת — "הניחוש שלי" מציג את דיוק הניחושים (הכרעת בעלים 27.10.2026)
-  if (closed && RESULTS_READY) return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>;
+  const open = useResultsScreenOpen();
+  // מ-22:00: עם תוצאות האמת — דיוק הניחושים; לפני פרסומן — הודעה (הכרעות בעלים 27.10.2026)
+  if (closed && open && !RESULTS_READY) return <PageTitle lead="התוצאות יתעדכנו כאן אוטומטית במהלך הספירה.">דיוק הניחושים יוצג עם תחילת פרסום התוצאות</PageTitle>;
+  if (closed && open && RESULTS_READY) return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>;
   return closed ? <PageTitle lead="אפשר לראות את ממוצע הניחושים במסך הבית.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
 }
 
