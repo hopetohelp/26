@@ -79,9 +79,9 @@ export default function GuessAccuracy() {
   const tiles: [string, number | null][] = [...(mine ? [["הניחוש שלי", acc(mine)] as [string, number | null]] : []), ["ממוצע הניחושים", d ? acc(crowdMean) : null], ["ממוצע הסקרים", acc(pollMean)]];
 
   return <div className="max-w-6xl mx-auto">
-    <h1 className="text-xl font-bold mb-1">תוצאות</h1>
-    {!ready && <Notice>ממתינים לתוצאות ראשונות. המסך יתעדכן אוטומטית עם תחילת הספירה.</Notice>}
-    <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>
+    {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
+    <h1 className="sr-only">תוצאות</h1>
+    {results2026.status !== "none" && <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>}
     <JdnCard />
     <TurnoutCard />
     <GuessCount total={d?.seats?.n} />
@@ -105,8 +105,6 @@ export default function GuessAccuracy() {
       <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
     </div>
     </> : <>
-    {/* ממוקדת: הפניה למתג "מתקדם" הקיים — בלי כפתור נוסף (הכרעת בעלים 27.10.2026) */}
-    <p className="text-sm text-ink-soft mb-4">לניתוח מורחב — הפעילו את המתג ״מתקדם״ בראש המסך.</p>
     {mine && ready && <div className="f-card mb-4 text-center">
       <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
       <p className="text-sm text-ink-soft mt-1"><span className="font-num">{ready ? fmt(Math.round(myMisplaced)) : "—"}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
