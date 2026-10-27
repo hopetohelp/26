@@ -41,6 +41,10 @@ describe("raw/results-2026.json", () => {
     for (const s of seats) expect(s === 0 || (Number.isInteger(s) && s >= 4)).toBe(true);
     if (results2026.status !== "none") expect(seats.reduce((a, b) => a + b, 0)).toBe(120);
   });
+  it("counted: אחוז שנספר בין 0 ל-100, או null כשלא ידוע", () => {
+    const c = (results2026 as { counted?: number | null }).counted;
+    expect(c == null || (typeof c === "number" && c >= 0 && c <= 100)).toBe(true);
+  });
 });
 
 import { previousTurnout, turnoutPct } from "./guessAccuracyData";

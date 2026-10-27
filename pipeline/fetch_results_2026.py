@@ -4,6 +4,9 @@
 (אחוז חסימה, הסכמי עודפים, באדר-עופר — pipeline/bader_ofer.py), לא נלקחים מהטבלה. תווית: "ויקיפדיה — לא אומת".
 אין טבלה, אין קולות, או שהחישוב אינו 120 — הקובץ נשאר כמו שהוא.
 שימוש: python3 pipeline/fetch_results_2026.py <קובץ wikitext>   (בלי קובץ — מוריד בעצמו)
+       python3 pipeline/fetch_results_2026.py --votes <קובץ json>
+         קולות שהועתקו ידנית ממקור (סקיל results-update): {"votes": {מזהה רשימה: קולות}, "valid": קולות כשרים או null,
+         "counted": אחוז שנספר או null, "source": "...", "status": "partial" | "final"} — המנדטים לפי מנוע החוק, כמו מוויקיפדיה.
 """
 import json
 import re
@@ -56,6 +59,16 @@ def clean(cell: str) -> str:
     return cell
 
 
+COUNTED = re.compile(r"נספרו\D{0,40}?(\d{1,3}(?:\.\d+)?)\s*(?:%|אחוז)")
+
+
+def counted_in(text: str) -> float | None:
+    """אחוז הקולות שנספרו, כשהערך מציין אותו בפרק התוצאות ("נספרו 5% מהקולות")"""
+    m = COUNTED.search(section(text))
+    v = float(m.group(1)) if m else None
+    return v if v is not None and 0 <= v <= 100 else None
+
+
 def parse(text: str) -> tuple[dict, int | None]:
     sec = section(text)
     valid = None
@@ -84,12 +97,8 @@ def parse(text: str) -> tuple[dict, int | None]:
     return votes, valid
 
 
-def main() -> int:
-    text = Path(sys.argv[1]).read_text(encoding="utf-8") if len(sys.argv) > 1 else fetch()
-    votes, valid = parse(text)
-    if len(votes) < 5:
-        print(f"אין עדיין טבלת תוצאות מלאה בוויקיפדיה ({len(votes)} רשימות) — הקובץ לא שונה")
-        return 0
+def write(votes: dict, valid: int | None, source: str, counted: float | None, status: str = "partial") -> int:
+    """המנדטים לפי מנוע החוק ⇐ raw/results-2026.json. סך שאינו 120 — הקובץ לא שונה"""
     total = valid if valid and valid >= sum(votes.values()) else sum(votes.values())
     meta = json.loads((ROOT / "src" / "data" / "meta.json").read_text(encoding="utf-8"))
     agreements = [tuple(a["pair"]) for a in meta["agreements2026"]]
@@ -99,20 +108,41 @@ def main() -> int:
         print(f"::warning::חישוב המנדטים אינו 120 ({sum(seats.values())}) — הקובץ לא שונה")
         return 0
     data = json.loads(OUT.read_text(encoding="utf-8"))
-    if data.get("status") == "final" and "ויקיפדיה" not in str(data.get("source")):
-        print("התוצאות כבר סופיות מוועדת הבחירות — לא דורסים")
+    if data.get("status") == "final" and status != "final":
+        print("התוצאות כבר סופיות — לא דורסים בספירה חלקית")
         return 0
     now = datetime.now(timezone(timedelta(hours=2)))
     data.update(
-        status="partial",
+        status=status,
         asOf=f"{now.day}/{now.month} {now:%H:%M}",
-        source="ויקיפדיה העברית (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר",
+        source=source,
         seats={k: int(v) for k, v in seats.items()},
         pct={k: round(v / total * 100, 2) for k, v in votes.items()},
+        counted=counted if counted is not None else data.get("counted"),
     )
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("עודכן:", json.dumps(data["seats"], ensure_ascii=False))
+    print("עודכן:", json.dumps(data["seats"], ensure_ascii=False), "· נספרו:", data["counted"])
     return 0
+
+
+def main() -> int:
+    if len(sys.argv) > 2 and sys.argv[1] == "--votes":
+        src = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+        votes = {k: int(v) for k, v in src["votes"].items() if int(v) > 0}
+        if len(votes) < 5:
+            print(f"פחות מ-5 רשימות עם קולות ({len(votes)}) — הקובץ לא שונה")
+            return 0
+        return write(votes, src.get("valid"), src["source"], src.get("counted"), src.get("status", "partial"))
+    text = Path(sys.argv[1]).read_text(encoding="utf-8") if len(sys.argv) > 1 else fetch()
+    votes, valid = parse(text)
+    if len(votes) < 5:
+        print(f"אין עדיין טבלת תוצאות מלאה בוויקיפדיה ({len(votes)} רשימות) — הקובץ לא שונה")
+        return 0
+    data = json.loads(OUT.read_text(encoding="utf-8"))
+    if data.get("status") == "final" and "ויקיפדיה" not in str(data.get("source")):
+        print("התוצאות כבר סופיות מוועדת הבחירות — לא דורסים")
+        return 0
+    return write(votes, valid, "ויקיפדיה העברית (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר", counted_in(text))
 
 
 if __name__ == "__main__":
