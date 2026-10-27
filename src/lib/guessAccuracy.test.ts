@@ -42,3 +42,16 @@ describe("raw/results-2026.json", () => {
     if (results2026.status !== "none") expect(seats.reduce((a, b) => a + b, 0)).toBe(120);
   });
 });
+
+import { turnoutPct } from "./guessAccuracyData";
+import { registry } from "./data";
+describe("turnoutPct — אחוז הצבעה מבעלי הזכות הרשמיים", () => {
+  it("מצביעים מתוך הנתון הרשמי, ספרה אחת אחרי הנקודה", () => {
+    expect(registry.k26.eligible).toBe(7336553);
+    expect(turnoutPct(5449277, registry.k26.eligible)).toBe(74.3);
+  });
+  it("נתון לא תקין ⇐ null", () => {
+    expect(turnoutPct(NaN, 7336553)).toBeNull();
+    expect(turnoutPct(100, 0)).toBeNull();
+  });
+});

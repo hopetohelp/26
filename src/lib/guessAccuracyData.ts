@@ -33,3 +33,9 @@ export function histArrays(hist: Record<string, Record<string, number>> | undefi
     return [id, a];
   }));
 }
+
+/** אחוז הצבעה בספרה אחת אחרי הנקודה: מצביעים מתוך בעלי זכות הבחירה הרשמיים; נתון חסר או לא תקין ⇐ null */
+export function turnoutPct(voters: number, eligible: number): number | null {
+  if (!Number.isFinite(voters) || !Number.isFinite(eligible) || voters < 0 || eligible <= 0) return null;
+  return Math.round((voters / eligible) * 1000) / 10;
+}

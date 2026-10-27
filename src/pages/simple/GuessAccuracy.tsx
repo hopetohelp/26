@@ -5,7 +5,8 @@ import { useCrowdDashboard } from "../../lib/sources";
 import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
-import { finalPolls, hasResults, histArrays, pollMean, results2026 } from "../../lib/guessAccuracyData";
+import { finalPolls, hasResults, histArrays, pollMean, results2026, turnoutPct } from "../../lib/guessAccuracyData";
+import { registry } from "../../lib/data";
 import { IDS, nameOf, startSeats } from "../guess/model";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { useSession, useUnit } from "../guess/useCrowd";
@@ -190,7 +191,8 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 }
 
 interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
-/** אחוז ההצבעה הארצי — מפת ההצבעה של ועדת הבחירות, נשמר בכל פרסום של האתר (public/turnout.json; הכרעת בעלים 27.10.2026) */
+/** אחוז ההצבעה הארצי בשורה אחת, מספרים שלמים: "אחוז הצבעה: X% בחירות קודמות: Y%" (הכרעת בעלים 27.10.2026): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
+ * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים */
 function TurnoutCard() {
   const [t, setT] = useState<Turnout | null>(null);
   useEffect(() => {
@@ -198,15 +200,11 @@ function TurnoutCard() {
     fetch(`${import.meta.env.BASE_URL}turnout.json`, { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if (live && j?.total) setT(j); }).catch(() => {});
     return () => { live = false; };
   }, []);
-  if (!t) return null;
-  const n = (x: number) => x.toLocaleString("he-IL");
-  return <div className="f-card mb-4 text-center">
-    <p className="text-sm text-ink-soft">אחוז הצבעה</p>
-    <p className="text-4xl font-bold font-num">{t.total.percent}%</p>
-    <p className="text-sm mt-1"><span className="font-num">{n(t.total["מצביעים"])}</span> מתוך <span className="font-num">{n(t.total["בזב"])}</span> בעלי זכות</p>
-    <p className="text-xs text-ink-soft mt-1">בבחירות הקודמות באותה שעה: <span className="font-num">{t.total.prev_percent}%</span> (<bdi dir="ltr" className="font-num">{t.total.delta > 0 ? "+" : ""}{t.total.delta}</bdi>)</p>
-    <p className="text-xs text-ink-soft mt-1">נכון ל־<span className="font-num">{t.total.updated}</span> · ועדת הבחירות · <Link to="/method#turnout">איך זה חושב?</Link></p>
-  </div>;
+  const pct = t ? turnoutPct(t.total["מצביעים"], registry.k26.eligible) : null;
+  if (!t || pct == null) return null;
+  return <p className="f-card mb-4 text-center text-sm !py-2">
+    אחוז הצבעה: <b className="font-num">{Math.round(pct)}%</b> בחירות קודמות: <b className="font-num">{Math.round(t.total.prev_percent)}%</b>
+  </p>;
 }
 
 /** כרטיס גדול לאתר הבחירות של JDN (הכרעת בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN"). הסמל והצבעים — מהאתר שלהם */
