@@ -9,6 +9,8 @@ export const FEEDBACK_URL = import.meta.env.VITE_FEEDBACK_URL as string | undefi
 
 export interface ThreadMessage {
   author: "team" | "visitor";
+  /** תשובת צוות שנכתבה בידי סוכן AI (הכרעת בעלים 27.10.2026) */
+  ai?: boolean;
   text: string;
   created_at: string;
 }

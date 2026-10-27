@@ -77,3 +77,14 @@ it("ריצה אחרונה של הסשן המרוכז מוחזרת במסך הנ�
   env.DB.raw.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('agent_last_run', ?1, ?1)").run("2026-10-12T11:05:00Z");
   expect((await api("/admin/data")).data.agentLastRun).toBe("2026-10-12T11:05:00Z");
 });
+
+it("תשובה שכתב סוכן AI (טיוטה מאושרת) מסומנת ai; תשובה ידנית במסך הניהול — לא", async () => {
+  const { data: { token } } = await api("/", { topic: "theory", text: "[שאלה או תאוריה] בדיקה" });
+  const id = env.DB.raw.prepare("SELECT id FROM feedback").get().id;
+  env.DB.raw.prepare("INSERT INTO drafts (kind, target, created_at, text, reason) VALUES ('feedback', ?, ?, 'מהסוכן', 'בדיקה')").run(String(id), "2026-10-12T00:00:00Z");
+  const { data } = await api("/admin/data");
+  await api("/admin/draft/approve", { id: data.drafts[0].id });
+  await api("/admin/reply", { kind: "feedback", id, text: "מהבעלים" });
+  const msgs = (await api(`/thread?t=${token}`)).data.messages;
+  expect(msgs.map(m => [m.text, !!m.ai])).toEqual([["מהסוכן", true], ["מהבעלים", false]]);
+});

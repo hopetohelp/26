@@ -20,6 +20,7 @@ import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, r
 import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
 import { detectHour, BASELINE_HOURS } from "./lib/anomaly.js";
+
 import { setPollRanges, moderate, flagReasons, pollRange } from "./lib/moderation.js";
 import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } from "./lib/identity.js";
 import * as fb from "./lib/firebase.js";
@@ -59,6 +60,8 @@ function cors(env, origin) {
 /** היום לפי שעון ישראל (YYYY-MM-DD) — גבול "ההשערה האחרונה של היום" */
 const IL_DAY = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem", year: "numeric", month: "2-digit", day: "2-digit" });
 const ilDay = (t) => IL_DAY.format(new Date(t));
+/** סגירת הניחושים: 27.10.2026 21:58 שעון ישראל (19:58 UTC) */
+export const GUESS_CLOSE_AT = Date.parse("2026-10-27T19:58:00Z");
 const clock = (env) => (env.NOW ? env.NOW() : Date.now());
 const iso = (t) => new Date(t).toISOString();
 
@@ -1007,6 +1010,8 @@ const routes = {
     const r = validateSave(body);
     if (!r.ok) throw bad("invalid", { field: r.error });
     const { unit, op_id, registry, payload } = r.value;
+    // ניחושי מנדטים וגושים נסגרים ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026); הצבעה נשארת פתוחה
+    if (unit !== "vote" && Number(now) >= GUESS_CLOSE_AT) throw new HttpError(403, "guess_closed");
     const find = () =>
       env.DB.prepare("SELECT * FROM versions WHERE participant = ? AND unit = ? AND op_id = ?").bind(participant, unit, op_id).first();
     const existing = await find();

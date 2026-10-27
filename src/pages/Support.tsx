@@ -32,12 +32,15 @@ const hasAdminKey = () => { try { return !!localStorage.getItem("elections26.adm
  * התמיכה היא שיחה אחת ארוכה עם כל ההודעות של המשתתף והצוות, ושדה ההודעה בתחתית.
  * בלי חשבון: השיחה נשמרת אצלנו, והזיהוי שלה רק בדפדפן הזה; בהרשמה היא עוברת לחשבון (syncLocal).
  */
-type Message = { author: "visitor" | "team"; text: string; created_at: string };
+type Message = { author: "visitor" | "team"; text: string; created_at: string; ai?: boolean };
+
+/** תשובה שכתב סוכן AI ⇐ "סוכן AI"; תשובה אנושית ⇐ "צוות האתר" (הכרעת בעלים 27.10.2026) */
+export const teamLabel = (ai?: boolean) => (ai ? "סוכן AI" : "צוות האתר");
 
 function Bubble({ m }: { m: Message }) {
   const team = m.author === "team";
   return <li className={`max-w-[85%] rounded-theme px-3.5 py-2.5 ${team ? "self-end bg-accent-soft" : "self-start bg-paper-line/50"}`}>
-    <p className="text-xs font-bold text-ink-soft mb-1">{team ? "צוות האתר" : "אתם"}</p>
+    <p className="text-xs font-bold text-ink-soft mb-1">{team ? teamLabel(m.ai) : "אתם"}</p>
     <p className="whitespace-pre-wrap break-words"><Linkified text={m.text} /></p>
   </li>;
 }

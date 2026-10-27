@@ -91,6 +91,16 @@ describe("participant & saves", () => {
     const me = await call("/me", { token: tok });
     expect(Object.keys(me.data.latest).sort()).toEqual(["blocs", "seats", "vote"]);
   });
+  it("guesses close at 21:58 on election day; the vote stays open", async () => {
+    const tok = await newP();
+    t = Date.parse("2026-10-27T19:57:59Z");
+    expect((await save(tok, "seats", seats())).status).toBe(200);
+    t = Date.parse("2026-10-27T19:58:00Z");
+    const closed = await save(tok, "seats", seats(70));
+    expect(closed.status).toBe(403);
+    expect(closed.data.error).toBe("guess_closed");
+    expect((await save(tok, "vote", { v2022: "מחל", v2026: "likud" })).status).toBe(200);
+  });
   it("rate limits: saves/hour per participant, 15 registrations/hour per IP", async () => {
     const tok = await newP();
     for (let i = 0; i < LIMITS.savesPerHour; i++) expect((await save(tok, "seats", seats((i % 16) + 4))).status).toBe(200);

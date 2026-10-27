@@ -96,7 +96,7 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
         <ol className="flex flex-col gap-3" aria-label="השיחה">
           <Bubble author="visitor" text={thread.text} at={thread.created_at} />
           {thread.messages.map((m, i) => (
-            <Bubble key={i} author={m.author} text={m.text} at={m.created_at} />
+            <Bubble key={i} author={m.author} text={m.text} at={m.created_at} ai={m.ai} />
           ))}
         </ol>
         {thread.status === "new" && thread.messages.every((m) => m.author !== "team") && (
@@ -113,12 +113,12 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
   );
 }
 
-function Bubble({ author, text, at }: { author: "team" | "visitor"; text: string; at: string }) {
+function Bubble({ author, text, at, ai }: { author: "team" | "visitor"; text: string; at: string; ai?: boolean }) {
   const team = author === "team";
   return (
     <li className={`max-w-[85%] rounded-theme px-3.5 py-2.5 ${team ? "self-end bg-accent-soft" : "self-start bg-paper-line/50"}`}>
       <p className="text-xs font-bold text-ink-soft mb-1">
-        {team ? "צוות האתר" : "אתם"} · {when(at)}
+        {team ? (ai ? "סוכן AI" : "צוות האתר") : "אתם"} · {when(at)}
       </p>
       <p className="text-base leading-relaxed whitespace-pre-wrap break-words"><Linkified text={text} /></p>
     </li>

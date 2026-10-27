@@ -124,12 +124,12 @@ async function adoptThread(env, participant, token) {
 async function supportThread(env, participant) {
   const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
   if (!thread) return null;
-  const { results } = await env.DB.prepare("SELECT m.author, m.text, m.created_at, v.via FROM support_messages m LEFT JOIN support_message_via v ON v.message_id = m.id WHERE m.participant = ? ORDER BY m.created_at, m.id").bind(participant).all();
-  return { ...thread, messages: (results || []).map(({ via, ...m }) => (via ? { ...m, via } : m)) };
+  const { results } = await env.DB.prepare("SELECT m.author, m.text, m.created_at, v.via, (a.message_id IS NOT NULL) AS ai FROM support_messages m LEFT JOIN support_message_via v ON v.message_id = m.id LEFT JOIN team_ai a ON a.kind = 'support' AND a.message_id = m.id WHERE m.participant = ? ORDER BY m.created_at, m.id").bind(participant).all();
+  return { ...thread, messages: (results || []).map(({ via, ai, ...m }) => ({ ...m, ...(via ? { via } : {}), ...(ai ? { ai: true } : {}) })) };
 }
 
 /** תשובת צוות בשיחה — משותף לתשובה ידנית ולאישור טיוטה. מחזיר false אם השיחה אינה קיימת. */
-async function teamReply(env, kind, id, text, approved = false) {
+async function teamReply(env, kind, id, text, approved = false, ai = false) {
   const at = new Date().toISOString();
   // אישור טיוטה במסך הניהול: אישור חד-פעמי לעקוף את חסימת ההשהיה במאגר (טריגרים ב-schema.sql)
   const pass = (target) => approved ? [env.DB.prepare("INSERT OR IGNORE INTO held_pass (kind, target) VALUES (?, ?)").bind(kind, String(target))] : [];
@@ -140,6 +140,7 @@ async function teamReply(env, kind, id, text, approved = false) {
       ...pass(participant),
       env.DB.prepare("INSERT INTO support_messages (participant, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(participant, at, text),
       env.DB.prepare("UPDATE support_threads SET updated_at = ?, status = 'answered' WHERE participant = ?").bind(at, participant),
+      ...(ai ? [env.DB.prepare("INSERT OR IGNORE INTO team_ai (kind, message_id) SELECT 'support', MAX(id) FROM support_messages WHERE participant = ? AND author = 'team'").bind(participant)] : []),
     ]);
     return true;
   }
@@ -150,6 +151,7 @@ async function teamReply(env, kind, id, text, approved = false) {
     ...pass(root),
     env.DB.prepare("INSERT INTO messages (feedback_id, created_at, author, text) VALUES (?, ?, 'team', ?)").bind(fid, at, text),
     env.DB.prepare("UPDATE feedback SET status = 'answered' WHERE id = ? OR id IN (SELECT feedback_id FROM feedback_threads WHERE root_id = ?)").bind(fid, fid),
+    ...(ai ? [env.DB.prepare("INSERT OR IGNORE INTO team_ai (kind, message_id) SELECT 'feedback', MAX(id) FROM messages WHERE feedback_id = ? AND author = 'team'").bind(fid)] : []),
   ]);
   return true;
 }
@@ -474,7 +476,7 @@ export default {
         if (url.pathname === "/admin/draft/approve") {
           const text = String(b.text ?? draft.text).trim().slice(0, 4000);
           if (!text) return reply({ ok: false, error: "empty" }, 400);
-          if (!(await teamReply(env, draft.kind, draft.target, text, true))) return reply({ ok: false, error: "not found" }, 404);
+          if (!(await teamReply(env, draft.kind, draft.target, text, true, true))) return reply({ ok: false, error: "not found" }, 404);
         }
         await env.DB.prepare("DELETE FROM drafts WHERE id = ?").bind(draft.id).run();
         return reply({ ok: true });
@@ -528,7 +530,8 @@ export default {
       if (!fb) return reply({ ok: false, error: "not found" }, 404);
       const members = "SELECT feedback_id FROM feedback_threads WHERE root_id = ?1 UNION SELECT ?1";
       const { results: notes } = await env.DB.prepare(`SELECT id, created_at, topic, text, status FROM feedback WHERE id IN (${members}) ORDER BY created_at, id`).bind(fb.id).all();
-      const { results } = await env.DB.prepare(`SELECT author, text, created_at FROM messages WHERE feedback_id IN (${members}) ORDER BY created_at, id`).bind(fb.id).all();
+      const { results: rows } = await env.DB.prepare(`SELECT m.author, m.text, m.created_at, (a.message_id IS NOT NULL) AS ai FROM messages m LEFT JOIN team_ai a ON a.kind = 'feedback' AND a.message_id = m.id WHERE m.feedback_id IN (${members}) ORDER BY m.created_at, m.id`).bind(fb.id).all();
+      const results = (rows || []).map(({ ai, ...m }) => (ai ? { ...m, ai: true } : m));
       const first = notes[0] ?? fb;
       const messages = [...notes.slice(1).map((n) => ({ author: "visitor", text: n.text, created_at: n.created_at })), ...(results || [])]
         .sort((a, b) => a.created_at.localeCompare(b.created_at));
