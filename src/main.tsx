@@ -18,6 +18,7 @@ import { startOutbox } from "./lib/outbox";
 import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
+import { RESULTS_READY } from "./lib/pages";
 import RootErrorBoundary from "./components/RootErrorBoundary";
 const Today = lazy(page(() => import("./pages/Today")));
 const Polls = lazy(page(() => import("./pages/Polls")));
@@ -48,7 +49,10 @@ const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 
 /** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026) */
 function GuessGate({ children }: { children: React.ReactNode }) {
-  return useGuessClosed() ? <PageTitle lead="אפשר לראות את ממוצע הניחושים במסך הבית.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
+  const closed = useGuessClosed();
+  // עם תוצאות האמת — "הניחוש שלי" מציג את דיוק הניחושים (הכרעת בעלים 27.10.2026)
+  if (closed && RESULTS_READY) return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>;
+  return closed ? <PageTitle lead="אפשר לראות את ממוצע הניחושים במסך הבית.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
 }
 
 function NotFound() {
@@ -137,7 +141,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
-          <Route path="score" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>} />
+          <Route path="score" element={<Navigate to="/guess" replace />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"
