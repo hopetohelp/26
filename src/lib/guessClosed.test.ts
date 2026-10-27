@@ -11,8 +11,8 @@ describe("guess screen closes at 21:58 Israel time on election day", () => {
   it("the nav hides the guess screen after closing", () => {
     expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "guess")).toBe(true);
     expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "guess")).toBe(false);
-    // ב-21:58 "תוצאות" עולה במקומו
-    expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "results2026")).toBe(false);
+    // "תוצאות" מוצג תמיד
+    expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "results2026")).toBe(true);
     expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "results2026")).toBe(true);
   });
 });
