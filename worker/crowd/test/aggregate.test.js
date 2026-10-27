@@ -85,6 +85,7 @@ describe("seats section", () => {
     expect(s.modes).toEqual({ seats: 21, pct: 0 });
     // התפלגות: ספירות בלבד, בלי מזהה משתתף
     expect(s.hist[IDS[0]]).toEqual({ 50: 12, 20: 9 });
+    expect(Object.keys(s.hist).filter((k) => k.startsWith("bloc:")).sort()).toEqual(["bloc:arab", "bloc:eisenkot", "bloc:haredi", "bloc:netanyahu"]);
     // השערות בלי אחוזים — האחוזים מחושבים מהמנדטים, כך שממוצע האחוזים כולל את כולן
     expect(s.pctStats.find((x) => x.list === IDS[0]).n).toBe(21);
   });

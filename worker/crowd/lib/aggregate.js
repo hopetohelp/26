@@ -14,6 +14,8 @@
 import { LISTS_2026, GOV37, IDS_2026, IDS_2022, OFFICIAL_2022, POLLS, POLLS_AS_OF } from "./lists.js";
 
 import { FIXED_BLOCS, KNESSET_BLOCS, migrateBlocs, compositionKey } from "./blocDefinitions.js";
+/** ארבעת הגושים של מסך התוצאות — מזהים כמו SIMPLE_BLOCS באתר */
+const RESULT_BLOCS = KNESSET_BLOCS.slice(0, 4).map((b) => ({ id: b.id.slice(2), lists: b.lists }));
 import { moderate } from "./moderation.js";
 import { derivePct } from "./derivePct.js";
 
@@ -92,11 +94,12 @@ const seatValue = (payload, id) => payload.seats[id]?.v ?? 0;
 
 /** התפלגות הניחושים לכל רשימה — {מנדטים: כמה ניחשו} (ספירות בלבד; למסך "דיוק הניחושים") */
 export function seatsHist(seatVersions) {
-  return Object.fromEntries(LISTS_2026.map((l) => {
-    const h = {};
-    for (const v of seatVersions) { const k = Math.round(seatValue(v.payload, l.id)); h[k] = (h[k] || 0) + 1; }
-    return [l.id, h];
-  }));
+  const count = (value) => { const h = {}; for (const v of seatVersions) { const k = Math.round(value(v.payload)); h[k] = (h[k] || 0) + 1; } return h; };
+  return {
+    ...Object.fromEntries(LISTS_2026.map((l) => [l.id, count((p) => seatValue(p, l.id))])),
+    // סכום המנדטים של כל גוש בכל ניחוש — ל"ניחושים מדויקים" ולחציון בחלק הגושים
+    ...Object.fromEntries(RESULT_BLOCS.map((b) => [`bloc:${b.id}`, count((p) => b.lists.reduce((a, id) => a + seatValue(p, id), 0))])),
+  };
 }
 
 function seatsStats(seatVersions) {

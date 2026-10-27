@@ -315,12 +315,12 @@ export function VoteComparison({ d, unit, participants, blankLists }: { d: D; un
   const rows = votingRows(d, blankLists);
   const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${pctValue(v)}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
-    <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th>{HAS_ACTUAL_PCT && <th className="font-normal">תוצאות אמת<br />כלל המצביעים</th>}</tr></thead>
+    <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th><th className="font-normal">תוצאות אמת<br />כלל המצביעים</th></tr></thead>
     <tbody>{rows.map(r => <tr key={r.key} className="border-t border-paper-line"><th className="text-start font-normal py-2 pe-1 break-words">{r.name}</th>
       <td className="text-center">{r.official === null ? "—" : unit === "pct" ? `${r.official}%` : fmtNum(r.official * participants / 100)}</td>
       <td className="text-center">{cell(r.previous, r.previousN)}</td>
       <td className="text-center">{cell(r.next, r.nextN)}</td>
-      {HAS_ACTUAL_PCT && <td className="text-center">{r.actual == null ? "—" : unit === "pct" ? `${r.actual}%` : fmtNum(r.actual * participants / 100)}</td>}</tr>)}</tbody>
+      <td className="text-center">{r.actual == null ? "—" : unit === "pct" ? `${r.actual}%` : fmtNum(r.actual * participants / 100)}</td></tr>)}</tbody>
   </table></div>;
 }
 
