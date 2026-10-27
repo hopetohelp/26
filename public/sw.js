@@ -2,10 +2,12 @@
  * שמירת האתר במכשיר: האתר נפתח גם בלי רשת או ברשת חלשה. נרשם מ-src/lib/offline.ts.
  * דפים ונתונים (כולל dashboard.json) — קודם מהרשת, ואם היא לא עונה תוך 4 שניות — העותק השמור.
  * קבצי הבנייה (assets/, שמם משתנה בכל בנייה) — מהעותק השמור, ונשמרים ב-60 האחרונים בלבד.
+ * קובץ בנייה שכבר לא קיים (אחרי פרסום חדש) — השרת מחזיר במקומו את דף הבית (HTML). זה לא נשמר ומוחזר כ-404,
+ * כדי שהדף יתרענן לגרסה החדשה (src/lib/chunkReload.ts) במקום לקרוס על "text/html is not a valid JavaScript MIME type".
  * פניות לשרתים אחרים (השערות, הערות) אינן עוברות כאן; לשמירה בלי חיבור יש תור משלה (src/lib/outbox.ts).
  */
 const PAGES = "elections26-pages-v1";
-const ASSETS = "elections26-assets-v1";
+const ASSETS = "elections26-assets-v2"; // v2: מוחק עותקי HTML שנשמרו בטעות כקובצי בנייה
 const TIMEOUT_MS = 4000;
 const MAX_ASSETS = 60;
 
@@ -45,6 +47,7 @@ async function cacheFirst(request) {
   const saved = await cache.match(request);
   if (saved) return saved;
   const res = await fetch(request);
+  if (res.ok && (res.headers.get("content-type") || "").includes("text/html")) return new Response("", { status: 404, statusText: "Not Found" });
   if (res.ok) { await cache.put(request, res.clone()); void trim(cache); }
   return res;
 }
