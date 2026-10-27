@@ -8,7 +8,8 @@ describe("קטלוג הניווט האחד", () => {
   });
   it("במתקדם נוסף ״עוד ← בחירות קודמות״; ״מידע ומקורות״ אינו בסרגל אבל זמין תמיד", () => {
     expect(navScreens(true, 0, false).map(s => s.id)).toEqual(["home", "guess", "community", "polls", "past"]);
-    expect(navScreens(false, 0, true).map(s => s.id)).toContain("score");
+    expect(navScreens(false, Date.parse("2026-10-28"), true).map(s => s.id)).toContain("guess");
+    expect(navScreens(false, Date.parse("2026-10-28"), false).map(s => s.id)).not.toContain("guess");
     expect(navScreens(true).filter(s => s.nav === "more").every(s => s.advanced)).toBe(true);
     expect(screen("method").nav).toBe("foot");
     expect(screen("method").advanced).toBeFalsy();
