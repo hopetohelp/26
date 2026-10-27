@@ -41,7 +41,7 @@ const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-on
 const PROBE_KIND = /^probe-(worker|crowd|site|gapi|gsi)-(ok|fail)$/;
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
 const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/google", "/prefs", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support", "/account/name", "/account/password", "/account/verify/send", "/account/verify/check", "/auth/verify-email", "/auth/forgot", "/auth/reset"]);
-const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread", "/guess", "/community", "/trends", "/ai", "/account", "/support", "/feedback"]);
+const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread", "/guess", "/community", "/trends", "/ai", "/account", "/support", "/feedback", "/results-2026", "/out/jdn"]);
 
 function cors(env, origin) {
   return {
