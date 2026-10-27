@@ -427,6 +427,7 @@ export default {
         const failuresFrom = mark?.value || "";
         const { results: days } = await env.DB.prepare("SELECT d.day, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page NOT LIKE 'diag:%') AS visits, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day) AS users, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/guess') AS guessUsers, (SELECT COUNT(DISTINCT vid) FROM visitors v WHERE v.day = d.day AND v.page = '/community') AS communityUsers, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:out-jdn') AS jdnClicks, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:all-blocked') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:all-blocked')) AS blocked, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:blind-sent') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:blind-sent')) AS blindSaved, MAX(0, (SELECT COALESCE(SUM(count),0) FROM hits h WHERE h.day = d.day AND h.page = 'diag:relay-saved') - (SELECT COALESCE(SUM(count),0) FROM counter_baseline b WHERE b.day = d.day AND b.page = 'diag:relay-saved')) AS relaySaved, (SELECT COUNT(*) FROM feedback f WHERE substr(f.created_at,1,10) = d.day AND f.text LIKE ?2 AND f.created_at >= ?3) AS autoFailures FROM (SELECT DISTINCT day FROM hits WHERE day >= ?1) d ORDER BY d.day DESC").bind(since, AUTO + "%", failuresFrom).all();
         const usage = await usageTotals(env.DB);
+        const { results: jdnHours } = await env.DB.prepare("SELECT substr(page, 14) AS hour, SUM(count) AS clicks FROM hits WHERE page LIKE 'diag:out-jdn@%' GROUP BY page ORDER BY page DESC").all().catch(() => ({ results: [] }));
         const videoAnon = await env.DB.prepare("SELECT COUNT(*) AS makers, COALESCE(SUM(mine),0) AS withGuess, COALESCE(SUM(named),0) AS named, COALESCE(SUM(videos),0) AS videos FROM video_anon").first().catch(() => null);
         const failuresAll = await env.DB.prepare("SELECT COUNT(*) AS n FROM feedback WHERE text LIKE ?1 AND created_at >= ?2").bind(AUTO + "%", failuresFrom).first();
         const threads = {};
@@ -449,7 +450,7 @@ export default {
         // ריצה אחרונה של הסשן המרוכז: הסשן רושם את עצמו בסוף כל ריצה (docs/נוהל-הערות.md)
         const agentRun = await env.DB.prepare("SELECT value FROM settings WHERE name = 'agent_last_run'").first().catch(() => null);
         const { results: heldRows } = await env.DB.prepare("SELECT kind, target, reason, created_at FROM held").all().catch(() => ({ results: [] }));
-        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], totalVisitors: usage.totalVisitors, totalVisits: usage.totalVisits, videoAnon: videoAnon ?? { makers: 0, withGuess: 0, named: 0, videos: 0 }, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
+        return reply({ ok: true, agentLastRun: agentRun?.value ?? null, held: heldRows || [], drafts: drafts || [], days: days || [], jdnHours: jdnHours || [], totalVisitors: usage.totalVisitors, totalVisits: usage.totalVisits, videoAnon: videoAnon ?? { makers: 0, withGuess: 0, named: 0, videos: 0 }, failures: { since: failuresFrom || null, total: failuresAll?.n ?? 0 }, feedback: list, support: { stats: legacy?.stats ?? {}, threads: local }, accountStatsAvailable: !!legacy?.stats });
       }
       // דשבורד ההשערות (בלי מזהים), אישור השערות חריגות ורשימות הקבוצות — נשמרים בשרת ההשתתפות; כאן רק העברה עם מפתח הניהול
       if (url.pathname === "/admin/guesses" || url.pathname === "/admin/guesses/decide" || url.pathname === "/admin/blocs" || /^\/admin\/groups(\/(import|upload|upload\/continue|delete|managers|stats|link|link-stats|link-members|image))?$/.test(url.pathname)) {
@@ -550,6 +551,11 @@ export default {
       if (!DIAG_KINDS.has(kind) && !PROBE_KIND.test(kind)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
       await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:" + kind).run();
+      // לחיצות JDN גם לפי שעה בשעון ישראל (בקשת בעלים 27.10.2026): "diag:out-jdn@YYYY-MM-DD HH"
+      if (kind === "out-jdn") {
+        const hour = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Jerusalem", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).format(new Date());
+        await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:out-jdn@" + hour).run();
+      }
       return reply({ ok: true });
     }
 

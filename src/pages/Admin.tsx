@@ -37,7 +37,7 @@ export type Draft = { id: number; kind: "feedback" | "support"; target: string; 
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
 export type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
 /** videoAnon = סרטונים של גולשים לא מחוברים (שרת ההערות); support.stats.videos = מחוברים (שרת ההשתתפות) */
-type Data = { videoAnon?: VideoStatsT; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type Data = { jdnHours?: { hour: string; clicks: number }[]; videoAnon?: VideoStatsT; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 /** סרטון הנתונים לכל האתר: מחוברים + לא מחוברים (גולש שיצר לפני ההתחברות ואחריה עשוי להיספר פעמיים) */
@@ -285,6 +285,11 @@ export default function Admin() {
                   ["לחצו היום", today?.jdnClicks ?? 0],
                   ["לחצו סך הכול", data.days.reduce((t, d) => t + (d.jdnClicks ?? 0), 0)],
                 ]} />
+                <section className="space-y-1"><h3 className="font-display text-xl">לחיצות על JDN לפי שעה</h3>
+                  {data.jdnHours?.length ? <table className="text-sm tabular"><thead><tr className="text-ink-soft"><th className="text-start font-medium pe-4">שעה (שעון ישראל)</th><th className="text-start font-medium">לחיצות</th></tr></thead>
+                    <tbody>{data.jdnHours.map(h => <tr key={h.hour} className="border-t border-paper-line"><td className="pe-4">{h.hour.slice(8, 10)}/{h.hour.slice(5, 7)} {h.hour.slice(11)}:00</td><td>{h.clicks}</td></tr>)}</tbody></table>
+                    : <p className="text-sm text-ink-soft">עוד אין לחיצות.</p>}
+                </section>
                 <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
                   ["נפילות סך הכול", data.failures?.total ?? "—"],
                   ["נפילות היום", today?.autoFailures ?? 0],
