@@ -1,9 +1,8 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import Linkified from "../components/Linkified";
 import { Link, useParams } from "react-router-dom";
 import { Card, Note, PageTitle } from "../components/ui";
-import { FeedbackSheet } from "../components/Feedback";
-import { FEEDBACK_URL, getThread, mergeSavedThreads, replyToThread, saveThread, savedThreads, threadLink, type Thread } from "../lib/feedback";
+import { FEEDBACK_URL, getThread, mergeSavedThreads, saveThread, savedThreads, threadLink, type Thread } from "../lib/feedback";
 import { date } from "../lib/format";
 
 const TOPIC: Record<string, string> = { data: "תקלה או שגיאה", idea: "רעיון לשיפור", design: "רעיון לשיפור", other: "אחר" };
@@ -29,7 +28,6 @@ export function LegacyFeedback() {
 
 function List({ embedded = false }: { embedded?: boolean }) {
   const [items, setItems] = useState(savedThreads);
-  const [open, setOpen] = useState(false);
   const [mergeError, setMergeError] = useState(false);
   const [loading, setLoading] = useState(items.length > 1);
   async function sync() {
@@ -45,7 +43,7 @@ function List({ embedded = false }: { embedded?: boolean }) {
       {!embedded && <PageTitle lead="ההערות והתשובות שלכם בשיחה אחת.">ההערות שלי</PageTitle>}
       <Card boxed>
         {loading ? <p role="status">מאחדים את השיחות…</p> : items.length === 0 ? (
-          <p className="text-base">אין כאן הערות. אפשר לשלוח את ההערה הראשונה כאן.</p>
+          <p className="text-base">אין כאן הערות. כדי לכתוב לצוות האתר מתחברים לחשבון.</p>
         ) : (
           <ul className="divide-y divide-paper-line">
             {items.map((t) => (
@@ -62,18 +60,13 @@ function List({ embedded = false }: { embedded?: boolean }) {
       </Card>
       </>}
       {mergeError && <p role="alert" className="text-sm text-warn mb-3">איחוד השיחות לא הצליח. כל השיחות נשמרו. <button type="button" onClick={() => void sync()} className="underline min-h-[44px]">לנסות שוב</button></p>}
-      {!embedded && <button type="button" onClick={() => setOpen(true)} className="min-h-[48px] px-5 rounded-theme bg-ink text-paper-card font-bold">שליחת הערה</button>}
-      {open && <FeedbackSheet onClose={() => { setOpen(false); void sync(); }} />}
+      {/* הערה חדשה בלי חשבון בוטלה (הכרעת בעלים 27.10.2026) */}
     </>
   );
 }
 
 function ThreadView({ token, embedded = false }: { token: string; embedded?: boolean }) {
   const [thread, setThread] = useState<Thread | null | undefined>(undefined);
-  const [text, setText] = useState("");
-  const [trap, setTrap] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "error">("idle");
-  const fieldId = useId();
 
   async function load() {
     try {
@@ -87,20 +80,6 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
   useEffect(() => {
     load();
   }, [token]);
-
-  async function send() {
-    if (!text.trim() || state === "sending") return;
-    setState("sending");
-    try {
-      const res = await replyToThread(token, text.trim(), trap);
-      if (!res.ok) throw new Error(res.error);
-      setText("");
-      setState("idle");
-      await load();
-    } catch {
-      setState("error");
-    }
-  }
 
   if (thread === undefined) return <p role="status">טוענים את השיחה…</p>;
   if (thread === null)
@@ -125,38 +104,7 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
         )}
       </Card>
 
-      {!embedded && thread.status !== "closed" && (
-        <Card title="להוסיף" boxed>
-          <label htmlFor={fieldId} className="text-sm font-bold">
-            מה תרצו להוסיף?
-          </label>
-          <textarea
-            id={fieldId}
-            rows={4}
-            maxLength={2000}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            className="w-full mt-1 text-base border border-ink-faint rounded-theme p-3 bg-paper-card resize-y"
-          />
-          <label className="sr-only" aria-hidden="true">
-            אתר
-            <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} className="hidden" />
-          </label>
-          {state === "error" && (
-            <p role="alert" className="text-sm font-bold text-warn mt-2">
-              השליחה לא הצליחה. בדקו את החיבור לאינטרנט ונסו שוב.
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={send}
-            disabled={!text.trim() || state === "sending"}
-            className="mt-3 min-h-[48px] px-6 rounded-theme bg-ink text-paper-card font-extrabold disabled:opacity-50"
-          >
-            {state === "sending" ? "שולחים…" : "שליחה"}
-          </button>
-        </Card>
-      )}
+      {!embedded && thread.status !== "closed" && <p className="text-sm text-ink-soft">כדי להמשיך לכתוב לצוות האתר מתחברים לחשבון: <Link to="/account" className="underline font-bold">להרשמה או כניסה</Link>.</p>}
       <Note>
         הקישור האישי לשיחה: <span className="break-all" dir="ltr">{threadLink(token)}</span>. מי שמחזיק בו יכול לקרוא את השיחה — אל תפרסמו
         אותו. <Link to="/feedback">כל ההערות שלי</Link>
