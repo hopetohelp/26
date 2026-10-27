@@ -84,6 +84,12 @@ it("אותו דפדפן נספר פעם אחת ומשאיר את כל הצפיו
   expect(await data()).toMatchObject({ totalVisitors: 2, totalVisits: 4 });
 });
 
+it("חמשת המסכים שנוספו (מגמות, AI, אזור אישי, תמיכה, הערות) נספרים; כתובת לא מוכרת נדחית", async () => {
+  const hit = (page) => feedback.fetch(new Request("https://w.example/hit", { method: "POST", body: JSON.stringify({ page, v: "c".repeat(22) }) }), env);
+  for (const p of ["/trends", "/ai", "/account", "/support", "/feedback"]) expect((await hit(p)).status).toBe(200);
+  expect((await hit("/feedback/secret-token")).status).toBe(400);
+});
+
 it("מספר החשבונות מגיע משרת ההתחברות, וכשל שלו אינו מוצג כאפס", async () => {
   env.CROWD.fetch = async () => new Response(JSON.stringify({ totalUsers: 17 }));
   const request = () => new Request("https://w.example/usage");
