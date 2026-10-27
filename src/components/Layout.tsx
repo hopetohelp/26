@@ -175,10 +175,10 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
 }
-/** מתג "מתקדם" (תוכנית מאוחדת, פרק ב): אינו משנה כתובת, טיוטה או מקור; ההעדפה לביקור הנוכחי (sessionStorage) */
+/** כפתור "לניתוח מורחב" (לשעבר מתג "מתקדם"; הכרעת בעלים 27.10.2026): אינו משנה כתובת, טיוטה או מקור; ההעדפה לביקור הנוכחי (sessionStorage). פעיל ⇐ כפתור מודגש */
 function AdvancedSwitch() {
   const { advanced, toggle } = useInterface();
-  return <button type="button" role="switch" aria-checked={advanced} onClick={toggle} className="f-switch"><span className="f-switch-track" aria-hidden="true"><span /></span>מתקדם</button>;
+  return <button type="button" aria-pressed={advanced} onClick={toggle} className={`f-btn${advanced ? " pri" : ""}`}>לניתוח מורחב</button>;
 }
 /** "עוד" בסרגל — המסכים הנוספים של המתקדם. נסגר בבחירה, בלחיצה בחוץ וב-Escape */
 function MoreMenu({ screens, up = false }: { screens: Screen[]; up?: boolean }) {
