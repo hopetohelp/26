@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import qrcode from "qrcode-generator";
 import { createPortal } from "react-dom";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
@@ -89,7 +90,9 @@ async function renderImage(input: AccuracyShareInput, values: Seats, label: stri
 async function renderVideo(input: AccuracyShareInput, mine: Seats | null, name: string, onProgress: (k: number) => void): Promise<PromoFile | null> {
   const dash = await crowdDashboardOnce();
   if (!dash) return null;
-  const data = await buildPromoData(dash, input.group, mine, name);
+  // סרטון אחד לכולם — תמיד בגרסת הגזרה (הכרעת בעלים 27.10.2026); למי שאינו חבר הקוד מוביל לאתר ולא לקבוצה
+  const data = await buildPromoData(dash, input.group ?? { slug: "hagzara", logoUrl: null }, mine, name);
+  if (!input.group) { const q = qrcode(0, "M"); q.addData(SITE_URL); q.make(); const m = q.getModuleCount(); data.qr = Array.from({ length: m }, (_, r) => Array.from({ length: m }, (_, k) => q.isDark(r, k))); }
   const a = input.actual, crowd = input.crowdMean, slices = blocSlices(a);
   data.lists = input.ids.map(id => { const l = data.lists.find(x => x.id === id); return { id, name: nameOf(id), polls: a[id] ?? 0, crowd: crowd[id] ?? 0, ...(mine ? { mine: mine[id] ?? 0 } : {}), img: l?.img ?? null }; });
   data.blocs = data.blocs.map(b => { const s = slices.find(x => x.id === b.id); return { ...b, polls: s?.value ?? 0, shown: { ...b.shown, polls: s?.shown ?? 0 } }; });
@@ -149,11 +152,10 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
   return createPortal(<div className="f-modal" onClick={e => e.target === e.currentTarget && onClose()} onKeyDown={e => e.key === "Escape" && onClose()}>
     <div ref={box} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="f-acc-share">
       <h2 id="f-acc-share" className="text-lg font-bold">שיתוף דיוק הניחושים</h2>
-      {/* סרטון — רק לחברי הגזרה (הכרעת בעלים 27.10.2026) */}
-      {input.group && <div className="f-seg fit" role="group" aria-label="תמונה או סרטון">
+      <div className="f-seg fit" role="group" aria-label="תמונה או סרטון">
         <button type="button" aria-pressed={format === "image"} onClick={() => setFormat("image")}>תמונה</button>
         <button type="button" aria-pressed={format === "video"} onClick={() => { setFormat("video"); setUrl(null); setFile(null); }}>סרטון</button>
-      </div>}
+      </div>
       {input.mine && <div className="f-seg fit" role="group" aria-label="מה משתפים">
         <button type="button" aria-pressed={who === "mine"} onClick={() => { setWho("mine"); if (format === "video") { setUrl(null); setFile(null); } }}>הניחוש שלי</button>
         <button type="button" aria-pressed={who === "crowd"} onClick={() => { setWho("crowd"); if (format === "video") { setUrl(null); setFile(null); } }}>ממוצע הניחושים</button>
