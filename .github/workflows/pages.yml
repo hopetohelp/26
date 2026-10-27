@@ -8,7 +8,7 @@ on:
     - cron: "3 23,3,7,11,15,19 * * *"
     - cron: "3 0,4,8,12,16,20 * * *"
     # ליל הבחירות ועד התוצאות הסופיות (הכרעת בעלים 27.10.2026): תוצאות מוויקיפדיה כל 15 דקות, מ-22:00 שעון ישראל (UTC+2)
-    - cron: "*/15 20-23 27 10 *"
+    - cron: "*/15 15-23 27 10 *"
     - cron: "*/15 * 28-31 10 *"
     - cron: "*/15 * 1-4 11 *"
   workflow_dispatch:
@@ -66,6 +66,15 @@ jobs:
           fi
       - name: תוצאות הבחירות מוויקיפדיה העברית — המנדטים לפי מנוע החוק, מסומן "לא אומת"
         run: python3 pipeline/fetch_results_2026.py || echo "::warning::משיכת התוצאות נכשלה — נשאר הקובץ שבריפו"
+      - name: אחוז ההצבעה הארצי — מפת ההצבעה של ועדת הבחירות (כרטיס במסך "תוצאות")
+        run: |
+          set -uo pipefail
+          if curl --fail --silent --show-error --retry 3 --max-time 60 "https://mapvotes.bechirot.gov.il/data/votes/latest/municipal_data.json" -o /tmp/turnout.json; then
+            node -e 'const d=JSON.parse(require("fs").readFileSync("/tmp/turnout.json","utf8")); const t=d.total; if(!t||typeof t.percent!=="number") process.exit(1); require("fs").writeFileSync("public/turnout.json", JSON.stringify({ time: d.time, generated: d.generated, total: t, source: "https://mapvotes.bechirot.gov.il" }))' \
+              && echo "אחוז ההצבעה עודכן" || echo "::warning::קובץ אחוז ההצבעה לא תקין — נשאר הקודם"
+          else
+            echo "::warning::הורדת אחוז ההצבעה נכשלה — נשאר הקודם"
+          fi
       - name: בניית הנתונים לרגע הפרסום
         run: python3 pipeline/build_data.py
       - run: npm test
