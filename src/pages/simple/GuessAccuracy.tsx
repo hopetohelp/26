@@ -13,7 +13,7 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, GuessCount, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
-import { pingVisit } from "../../lib/visits";
+import { countJdnClick } from "../../lib/visits";
 
 const EMPTY = startSeats("zero");
 const avgOf = (xs: (number | null)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? ok.reduce((p, q) => p + q, 0) / ok.length : null; };
@@ -209,9 +209,9 @@ function TurnoutCard() {
   </div>;
 }
 
-/** כרטיס גדול לאתר הבחירות של JDN (הכרעת בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת במונה הכניסות ("/out/jdn"). הסמל והצבעים — מהאתר שלהם */
+/** כרטיס גדול לאתר הבחירות של JDN (הכרעת בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN"). הסמל והצבעים — מהאתר שלהם */
 function JdnCard() {
-  return <a href="https://elections.jdn.co.il/" target="_blank" rel="noopener noreferrer" onClick={() => pingVisit("/out/jdn")}
+  return <a href="https://elections.jdn.co.il/" target="_blank" rel="noopener noreferrer" onClick={countJdnClick}
     className="block rounded-2xl p-5 mb-4 no-underline" style={{ background: "#081522", color: "#ffffff" }}>
     <span className="flex items-center gap-4">
       <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={64} height={64} className="rounded-xl flex-none" />
