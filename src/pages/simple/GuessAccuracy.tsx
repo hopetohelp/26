@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
@@ -80,6 +80,7 @@ export default function GuessAccuracy() {
     <h1 className="text-xl font-bold mb-1">תוצאות</h1>
     {!ready && <Notice>ממתינים לתוצאות ראשונות. המסך יתעדכן אוטומטית עם תחילת הספירה.</Notice>}
     <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>
+    <TurnoutCard />
     <GuessCount total={d?.seats?.n} />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
@@ -183,5 +184,25 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
         {totals.map((t, i) => <td key={i} className="px-1 md:px-2 font-num whitespace-nowrap">{ready ? <bdi dir="ltr">{fmt(Math.round(t.seats * 10) / 10)} ({t.ratio == null ? "—" : `${Math.round(t.ratio * 100)}%`})</bdi> : "—"}</td>)}
       </tr></tfoot>
     </table>
+  </div>;
+}
+
+interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
+/** אחוז ההצבעה הארצי — מפת ההצבעה של ועדת הבחירות, נשמר בכל פרסום של האתר (public/turnout.json; הכרעת בעלים 27.10.2026) */
+function TurnoutCard() {
+  const [t, setT] = useState<Turnout | null>(null);
+  useEffect(() => {
+    let live = true;
+    fetch(`${import.meta.env.BASE_URL}turnout.json`, { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if (live && j?.total) setT(j); }).catch(() => {});
+    return () => { live = false; };
+  }, []);
+  if (!t) return null;
+  const n = (x: number) => x.toLocaleString("he-IL");
+  return <div className="f-card mb-4 text-center">
+    <p className="text-sm text-ink-soft">אחוז הצבעה</p>
+    <p className="text-4xl font-bold font-num">{t.total.percent}%</p>
+    <p className="text-sm mt-1"><span className="font-num">{n(t.total["מצביעים"])}</span> מתוך <span className="font-num">{n(t.total["בזב"])}</span> בעלי זכות</p>
+    <p className="text-xs text-ink-soft mt-1">בבחירות הקודמות באותה שעה: <span className="font-num">{t.total.prev_percent}%</span> (<bdi dir="ltr" className="font-num">{t.total.delta > 0 ? "+" : ""}{t.total.delta}</bdi>)</p>
+    <p className="text-xs text-ink-soft mt-1">נכון ל־<span className="font-num">{t.total.updated}</span> · ועדת הבחירות · <Link to="/method#turnout">איך זה חושב?</Link></p>
   </div>;
 }
