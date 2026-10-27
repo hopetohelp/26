@@ -7,6 +7,9 @@
        python3 pipeline/fetch_results_2026.py --votes <קובץ json>
          קולות שהועתקו ידנית ממקור (סקיל results-update): {"votes": {מזהה רשימה: קולות}, "valid": קולות כשרים או null,
          "counted": אחוז שנספר או null, "source": "...", "status": "partial" | "final"} — המנדטים לפי מנוע החוק, כמו מוויקיפדיה.
+       python3 pipeline/fetch_results_2026.py --jdn [קובץ count-live.json]
+         הקולות מאתר הברומטר של JDN (elections.jdn.co.il/data/count-live.json, מתוך תוצאות ועדת הבחירות לפי קלפי;
+         הכרעת בעלים 27.10.2026). "נספרו" = קלפיות שנספרו מתוך הקלפיות הצפויות. בלי קובץ — מוריד בעצמו.
 """
 import json
 import re
@@ -97,6 +100,37 @@ def parse(text: str) -> tuple[dict, int | None]:
     return votes, valid
 
 
+JDN_URL = "https://elections.jdn.co.il/data/count-live.json"
+# מזהי הרשימות של JDN ⇐ מזהי האתר (src/data/meta.json lists2026); רשימה שאינה כאן נספרת רק בסך הקולות הכשרים
+JDN_IDS = {
+    "likud": "likud", "yashar": "yashar", "beyahad": "together", "hademokratim": "democrats", "ndi": "yb",
+    "shas": "shas", "yahadut_hatora": "utj", "ozma_yehudit": "otzma", "zionut_datit": "rzp",
+    "reshima_meshutefet": "joint", "raam": "raam", "hendel_zeliha_party": "reservists", "ofer_vinter_party": "amcha",
+    "mifleget_hazibur_haharedi": "haredi_public", "noam": "noam", "list_נר": "code_black",
+}
+
+
+def from_jdn(d: dict) -> dict | None:
+    """count-live.json ⇐ {"votes", "valid", "counted", "source", "status"}; עדיין לא נספר דבר ⇐ None"""
+    counted, expected = d.get("counted") or {}, d.get("expected") or {}
+    ballots, total = counted.get("ballots") or 0, expected.get("ballots") or 0
+    if ballots <= 0 or total <= 0:
+        return None
+    votes: dict[str, int] = {}
+    for p in d.get("parties", []):
+        lid = JDN_IDS.get(p.get("id"))
+        if lid and int(p.get("votes") or 0) > 0:
+            votes[lid] = votes.get(lid, 0) + int(p["votes"])
+    final = d.get("status") == "final"
+    return {
+        "votes": votes,
+        "valid": counted.get("valid"),
+        "counted": round(min(ballots / total, 1) * 100, 1),
+        "source": "ועדת הבחירות המרכזית דרך הברומטר של JDN (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר",
+        "status": "final" if final else "partial",
+    }
+
+
 def write(votes: dict, valid: int | None, source: str, counted: float | None, status: str = "partial") -> int:
     """המנדטים לפי מנוע החוק ⇐ raw/results-2026.json. סך שאינו 120 — הקובץ לא שונה"""
     total = valid if valid and valid >= sum(votes.values()) else sum(votes.values())
@@ -104,10 +138,15 @@ def write(votes: dict, valid: int | None, source: str, counted: float | None, st
     agreements = [tuple(a["pair"]) for a in meta["agreements2026"]]
     seats = allocate(votes, total, agreements)["seats"]
     seats = {k: seats.get(k, 0) for k in votes}
-    if sum(seats.values()) != 120:
-        print(f"::warning::חישוב המנדטים אינו 120 ({sum(seats.values())}) — הקובץ לא שונה")
-        return 0
     data = json.loads(OUT.read_text(encoding="utf-8"))
+    if sum(seats.values()) != 120:
+        # בספירה זעירה (מעט קלפיות) העיגול עלול לתת 119/121 — המנדטים לא משתנים, רק "נספרו"
+        print(f"::warning::חישוב המנדטים אינו 120 ({sum(seats.values())}) — המנדטים לא שונו")
+        if counted is not None and data.get("status") != "final":
+            data["counted"] = counted
+            OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            print("עודכן רק נספרו:", counted)
+        return 0
     if data.get("status") == "final" and status != "final":
         print("התוצאות כבר סופיות — לא דורסים בספירה חלקית")
         return 0
@@ -126,6 +165,17 @@ def write(votes: dict, valid: int | None, source: str, counted: float | None, st
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] == "--jdn":
+        if len(sys.argv) > 2:
+            raw = Path(sys.argv[2]).read_text(encoding="utf-8")
+        else:
+            with urllib.request.urlopen(urllib.request.Request(JDN_URL, headers={"User-Agent": UA}), timeout=60) as r:
+                raw = r.read().decode("utf-8")
+        src = from_jdn(json.loads(raw))
+        if not src or len(src["votes"]) < 5:
+            print("JDN: עדיין אין ספירה (או פחות מ-5 רשימות עם קולות) — הקובץ לא שונה")
+            return 0
+        return write(src["votes"], src["valid"], src["source"], src["counted"], src["status"])
     if len(sys.argv) > 2 and sys.argv[1] == "--votes":
         src = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
         votes = {k: int(v) for k, v in src["votes"].items() if int(v) > 0}

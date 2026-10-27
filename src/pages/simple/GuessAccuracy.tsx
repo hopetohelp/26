@@ -81,7 +81,7 @@ export default function GuessAccuracy() {
   return <div className="max-w-6xl mx-auto">
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
     <h1 className="sr-only">תוצאות</h1>
-    {results2026.status !== "none" && <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>}
+    {results2026.status !== "none" && <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("JDN") ? "ועדת הבחירות דרך JDN, לא אומת · " : results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>}
     <JdnCard />
     <TurnoutCard />
     <GuessCount total={d?.seats?.n} />
