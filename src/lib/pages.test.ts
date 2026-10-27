@@ -3,11 +3,12 @@ import { SCREENS, navScreens, screen, screenTabs } from "./pages";
 
 describe("קטלוג הניווט האחד", () => {
   it("שלושת מסכי הליבה בסדר הקבוע, בכל מצב", () => {
-    expect(navScreens(false).map(s => s.label)).toEqual(["תמונת מצב", "הניחוש שלי", "ממוצע הניחושים"]);
-    expect(navScreens(true).slice(0, 3)).toEqual(navScreens(false));
+    expect(navScreens(false, 0, false).map(s => s.label)).toEqual(["תמונת מצב", "הניחוש שלי", "ממוצע הניחושים"]);
+    expect(navScreens(true, 0, false).slice(0, 3)).toEqual(navScreens(false, 0, false));
   });
   it("במתקדם נוסף ״עוד ← בחירות קודמות״; ״מידע ומקורות״ אינו בסרגל אבל זמין תמיד", () => {
-    expect(navScreens(true).map(s => s.id)).toEqual(["home", "guess", "community", "polls", "past"]);
+    expect(navScreens(true, 0, false).map(s => s.id)).toEqual(["home", "guess", "community", "polls", "past"]);
+    expect(navScreens(false, 0, true).map(s => s.id)).toContain("score");
     expect(navScreens(true).filter(s => s.nav === "more").every(s => s.advanced)).toBe(true);
     expect(screen("method").nav).toBe("foot");
     expect(screen("method").advanced).toBeFalsy();

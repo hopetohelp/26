@@ -23,6 +23,7 @@ const Today = lazy(page(() => import("./pages/Today")));
 const Polls = lazy(page(() => import("./pages/Polls")));
 const Trends = lazy(page(() => import("./pages/Trends")));
 const Results = lazy(page(() => import("./pages/Results")));
+const GuessAccuracy = lazy(page(() => import("./pages/simple/GuessAccuracy")));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 const About = lazy(page(() => import("./pages/About")));
 import { PageTitle } from "./components/ui";
@@ -136,6 +137,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
+          <Route path="score" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"

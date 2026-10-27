@@ -83,6 +83,8 @@ describe("seats section", () => {
     expect(computeSeats(vs.slice(0, 9)).n).toBe(9);
     expect(computeSeats([])).toBeNull();
     expect(s.modes).toEqual({ seats: 21, pct: 0 });
+    // התפלגות: ספירות בלבד, בלי מזהה משתתף
+    expect(s.hist[IDS[0]]).toEqual({ 50: 12, 20: 9 });
     // השערות בלי אחוזים — האחוזים מחושבים מהמנדטים, כך שממוצע האחוזים כולל את כולן
     expect(s.pctStats.find((x) => x.list === IDS[0]).n).toBe(21);
   });
