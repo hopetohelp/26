@@ -37,3 +37,12 @@ describe("guessAccuracy", () => {
     expect(biggestGap({ a: 12, b: 2 }, { a: 10, b: 6 }, ["a", "b"])).toEqual({ id: "b", gap: -4 });
   });
 });
+
+import results2026 from "../../raw/results-2026.json";
+describe("raw/results-2026.json", () => {
+  it("כל רשימה: 0 או לפחות 4 מנדטים (אין 1–3), וסך 120 כשיש תוצאות", () => {
+    const seats = Object.values(results2026.seats as Record<string, number>);
+    for (const s of seats) expect(s === 0 || (Number.isInteger(s) && s >= 4)).toBe(true);
+    if (results2026.status !== "none") expect(seats.reduce((a, b) => a + b, 0)).toBe(120);
+  });
+});

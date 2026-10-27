@@ -18,9 +18,8 @@ const COLUMNS = [
   ["תוצאות אמת", "המנדטים שהרשימה קיבלה בפועל, לפי ועדת הבחירות."],
   ["הניחוש", "המנדטים בניחוש או בסקר שנבחר במתג."],
   ["המרחק", "בכמה מנדטים הניחוש טעה, ובאחוזים ממספר המנדטים בפועל (רשימה שלא עברה — מול 4)."],
-  ["מול הגולשים", "כמה מכל הניחושים היו רחוקים יותר מהאמת (שוויון נספר חצי)."],
-  ["מול הסקרים", "כמה מהסקרים האחרונים של כל מכון היו מדויקים יותר."],
-  ["שקלול", "ממוצע שווה של הדיוק מול הגולשים ומול הסקרים; בשורה האחרונה — כל המפלגות במשקל שווה. 100 = הכי מדויק."],
+  ["דיוק הניחושים", "כמה מכל הניחושים היו רחוקים יותר מהאמת (שוויון נספר חצי)."],
+  ["דיוק הסקרים", "כמה מהסקרים האחרונים של כל מכון היו מדויקים יותר."],
 ] as const;
 
 /** דיוק הניחושים והסקרים מול תוצאות האמת (docs/תוכנית-דיוק-הניחושים-27-10-2026.md) */
@@ -74,13 +73,11 @@ export default function GuessAccuracy() {
           <td className="px-1 md:px-2 font-num whitespace-nowrap">{fmt(r.seats)} / {Math.round(r.pct)}%</td>
           <td className="px-1 md:px-2 font-num whitespace-nowrap">{r.vsCrowd === null ? "—" : <>{pc(r.vsCrowd)}<span className="hidden md:inline"> רחוקים יותר</span></>}</td>
           <td className="px-1 md:px-2 font-num whitespace-nowrap">{r.pollsCloser === null ? "—" : <>{pc(r.pollsCloser)}<span className="hidden md:inline"> מדויקים יותר</span></>}</td>
-          <td className="px-1 md:px-2 font-num font-bold">{r.score === null ? "—" : Math.round(r.score * 100)}</td>
         </tr>)}</tbody>
         <tfoot><tr className="border-t-2 border-ink font-bold">
           <td className="py-2 pe-2">כל המפלגות</td><td className="px-1 md:px-2 font-num">120</td><td className="px-1 md:px-2 font-num">{fmt(Object.values(subject.values).reduce((a, b) => a + b, 0))}</td>
           <td className="px-1 md:px-2 font-num">{fmt(table.total.seats)}</td>
           <td className="px-1 md:px-2 font-num">{pc(table.total.vsCrowd)}</td><td className="px-1 md:px-2 font-num">{pc(table.total.pollsCloser)}</td>
-          <td className="px-1 md:px-2 font-num">{table.total.score === null ? "—" : Math.round(table.total.score * 100)}</td>
         </tr></tfoot>
       </table>
     </div>
