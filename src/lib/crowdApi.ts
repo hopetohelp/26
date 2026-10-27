@@ -199,6 +199,8 @@ export interface Dashboard {
   seats?: {
     n: number;
     full: SeatStat[];
+    /** התפלגות הניחושים לכל רשימה: {מנדטים: כמה ניחשו} — ספירות בלבד (מסך "דיוק הניחושים") */
+    hist?: Record<string, Record<string, number>>;
     /** רשימות שקיבלו לפחות ארבעה מנדטים באחת מגרסאות המשתתפים. */
     everPassedLists?: string[];
     /** "בקרב מי שקבעו ערך לרשימה" — לכל רשימה n משלה */

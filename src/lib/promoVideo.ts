@@ -17,6 +17,11 @@ export interface PromoData {
   theme?: PromoTheme;
   /** על קו החסימה (גרסת האתר): הרשימות שלפחות סקר אחד מהאחרונים אינו מעביר (`HOME.edge`), ובכמה מהמכונים עוברת — כמו באתר */
   edge?: { id: string; passing: number; n: number }[];
+  /**
+   * סרטון התוצאות (docs/תוכנית-דיוק-הניחושים-27-10-2026.md): השדה polls בכל רשימה וגוש = תוצאות האמת.
+   * edge = הרשימות על קו החסימה, ו-passing/n = אחוז הניחושים שהעבירו אותן. pollAcc/crowdAcc = אחוז הדיוק; closest = המכון הקרוב ביותר.
+   */
+  results?: { pollAcc: number; crowdAcc: number; closest: string; mineGap?: { name: string; gap: number } | null };
 }
 export type PromoTheme = "hagzara" | "site";
 /** קנבסים זמניים למעברים — נוצרים פעם אחת */
@@ -59,6 +64,8 @@ const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 const rnd = (i: number) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 const num = (v: number) => seatsFmt(Math.round(v * 10) / 10);
 const thousands = (n: number) => Math.round(n).toLocaleString("en-US");
+/** תווית השדה polls: בסרטון התוצאות — האמת */
+const realLabel = (d: PromoData, short = false) => d.results ? (short ? "האמת" : "תוצאות אמת") : (short ? "הסקרים" : "ממוצע הסקרים");
 
 function text(c: Ctx, s: string, x: number, y: number, size: number, opt: { w?: number; color?: string; align?: CanvasTextAlign; font?: string; ltr?: boolean } = {}) {
   c.font = `${opt.w ?? 700} ${size}px ${opt.font ?? HE}`; c.fillStyle = opt.color ?? PC.ink;
@@ -130,8 +137,8 @@ function sceneOpen(c: Ctx, t: number, d: PromoData) {
   c.restore();
   const up = 40 * Math.exp(-t * 5);
   text(c, "בחירות 2026 · 27/10", 540, 330 + up * .5, 44, { w: 600, color: PC.soft });
-  text(c, "מחר התוצאות.", 540, 1205 + up, 112, { w: 900 });
-  text(c, "הנה מה שכולם צופים.", 540, 1335 + up * 1.4, 84, { w: 800, color: PC.blueHi });
+  text(c, d.results ? "התוצאות כאן." : "מחר התוצאות.", 540, 1205 + up, 112, { w: 900 });
+  text(c, d.results ? "מי ניחש הכי טוב?" : "הנה מה שכולם צופים.", 540, 1335 + up * 1.4, 84, { w: 800, color: PC.blueHi });
   c.restore();
 }
 
@@ -141,20 +148,20 @@ function slam(c: Ctx, t: number, h: number, draw: () => void) {
   const k = pr(t, h, h + .14), s = 1 + 1.3 * (1 - eo(k));
   c.save(); c.globalAlpha *= cl((t - h) / .05); c.translate(540, 0); c.scale(s, s); c.translate(-540, 0); draw(); c.restore();
 }
-function sceneWho(c: Ctx, t: number, frame: number) {
+function sceneWho(c: Ctx, t: number, frame: number, d?: PromoData) {
   const out = pr(t, 2.72, 2.84);
   c.save(); c.globalAlpha = 1 - out; c.translate(540, 960); c.scale(1 + out * .4, 1 + out * .4); c.translate(-540, -960);
-  slam(c, t, 1.5, () => text(c, "הסקרים", 540, 700, 200, { w: 900, color: PC.blueHi }));
+  slam(c, t, 1.5, () => text(c, d?.results ? "המציאות" : "הסקרים", 540, 700, 200, { w: 900, color: PC.blueHi }));
   slam(c, t, 1.875, () => text(c, "מול", 540, 905, 120, { w: 800 }));
   slam(c, t, 2.25, () => text(c, "הניחושים", 540, 1110, 200, { w: 900, color: PC.redHi }));
   c.restore();
   if (t >= 2.75) slam(c, t, 2.75, () => {
     const j = (rnd(frame) - .5) * 22, k = 6 + 10 * Math.exp(-(t - 2.75) * 6);
     c.save(); c.globalCompositeOperation = PC.blend; c.globalAlpha *= .8;
-    const z = fit(c, "מי צודק?", 960, 250, 900);
-    text(c, "מי צודק?", 540 - k + j, 960, z, { w: 900, color: PC.blue });
-    text(c, "מי צודק?", 540 + k - j, 960, z, { w: 900, color: PC.red });
-    c.restore(); text(c, "מי צודק?", 540, 960, z, { w: 900 });
+    const z = fit(c, (d?.results ? "מי צדק?" : "מי צודק?"), 960, 250, 900);
+    text(c, (d?.results ? "מי צדק?" : "מי צודק?"), 540 - k + j, 960, z, { w: 900, color: PC.blue });
+    text(c, (d?.results ? "מי צדק?" : "מי צודק?"), 540 + k - j, 960, z, { w: 900, color: PC.red });
+    c.restore(); text(c, (d?.results ? "מי צדק?" : "מי צודק?"), 540, 960, z, { w: 900 });
   });
 }
 
@@ -165,9 +172,9 @@ const axisMax = (d: PromoData) => Math.max(32, Math.ceil(Math.max(...d.lists.fla
 function sceneChart(c: Ctx, t: number, d: PromoData) {
   const head = eo(pr(t, 3.5, 3.8)), three = d.lists.some(l => l.mine != null);
   c.save(); c.globalAlpha = head;
-  text(c, "הסקרים מול הניחושים", 540, 245 - 30 * (1 - head), 66, { w: 900 });
+  text(c, d.results ? "המציאות מול הניחושים" : "הסקרים מול הניחושים", 540, 245 - 30 * (1 - head), 66, { w: 900 });
   // מקרא ממורכז מימין לשמאל: הסקרים, הניחושים, ואם נבחר — הניחוש של המשתתף (קפסולה שלישית בזהב)
-  const legend: [string, string][] = [["ממוצע הסקרים", PC.blue], ["ממוצע הניחושים", PC.red], ...(three ? [[d.mineLabel ?? "הניחוש שלי", PC.gold] as [string, string]] : [])];
+  const legend: [string, string][] = [[realLabel(d), PC.blue], ["ממוצע הניחושים", PC.red], ...(three ? [[d.mineLabel ?? "הניחוש שלי", PC.gold] as [string, string]] : [])];
   let fs = 32; const widths = () => { c.font = `600 ${fs}px ${HE}`; return legend.map(([s]) => c.measureText(s).width + 40); };
   while (widths().reduce((a, b) => a + b, 0) + 40 * (legend.length - 1) > 960 && fs > 20) fs -= 2;
   const ws = widths(); let lx = 540 + (ws.reduce((a, b) => a + b, 0) + 40 * (legend.length - 1)) / 2;
@@ -297,12 +304,12 @@ function pie3d(c: Ctx, o: { cx: number; cy: number; rx: number; ry: number; dept
   }
 }
 /** עוגה לכל מקור: הסקרים, הניחושים, ואם יש — הניחוש שלי (שלוש עוגות קטנות יותר, באותו מסך ובאותו תזמון) */
-const pieKinds = () => [{ key: "polls", label: "הסקרים", color: PC.blue, hi: PC.blueHi }, { key: "crowd", label: "הניחושים", color: PC.red, hi: PC.redHi }, { key: "mine", label: "הניחוש שלי", color: PC.gold, hi: PC.goldHi }] as const;
+const pieKinds = (d?: PromoData) => [{ key: "polls", label: d ? realLabel(d, true) : "הסקרים", color: PC.blue, hi: PC.blueHi }, { key: "crowd", label: "הניחושים", color: PC.red, hi: PC.redHi }, { key: "mine", label: "הניחוש שלי", color: PC.gold, hi: PC.goldHi }] as const;
 function scenePies(c: Ctx, t: number, d: PromoData) {
   const build = pr(t, 7.55, 8.7), sweep = eo(build), labels = pr(t, 7.7, 8);  // הטקסט נשאר לאורך כל הסיבוב
   const rotAt = (tt: number) => -Math.PI / 2 + .5 * (tt - 7.5) + 2.6 * (1 - eo(pr(tt, 7.5, 8.7)));
   const h = eio(pr(t, 10.5, 11.15)), pop = eo(pr(t, 10.7, 11.15)), grow = back(pr(t, 7.5, 8.05));
-  const kinds = pieKinds().filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)).map(k => k.key === "mine" && d.mineLabel ? { ...k, label: d.mineLabel } : k), n = kinds.length;
+  const kinds = pieKinds(d).filter(k => k.key !== "mine" || d.blocs.every(b => b.mine != null)).map(k => k.key === "mine" && d.mineLabel ? { ...k, label: d.mineLabel } : k), n = kinds.length;
   // פריסה: שתי עוגות — גדולות; שלוש — קטנות יותר ובמרווח שווה
   const L = n === 3 ? { cys: [560, 1040, 1520], rx: [300, 225], card: 400 } : { cys: [650, 1330], rx: [360, 255], card: 420 };
   const pies = kinds.map((k, i) => {
@@ -368,7 +375,7 @@ function sceneThreshold(c: Ctx, t: number, d: PromoData, kinds: { key: "polls" |
     c.save(); c.setLineDash([26, 16]); c.strokeStyle = PC.ink; c.lineWidth = 5; c.beginPath(); c.moveTo(1060, L); c.lineTo(1060 - 1040 * lk, L); c.stroke(); c.setLineDash([]);
     c.globalAlpha = eo(pr(t, 10.8, 11)); text(c, "3.25%", 58, L - 30, 30, { w: 700, color: PC.soft, font: NUM, ltr: true }); c.restore();
   }
-  if (!rows.length) { c.save(); c.globalAlpha = eo(pr(t, 10.8, 11.1)); text(c, "כרגע אין רשימה שעוברת", 540, 760, 60, { w: 800 }); text(c, "רק בחלק מהסקרים האחרונים", 540, 850, 60, { w: 800 }); c.restore(); return; }
+  if (!rows.length) { c.save(); c.globalAlpha = eo(pr(t, 10.8, 11.1)); text(c, d.results ? "אין רשימה" : "כרגע אין רשימה שעוברת", 540, 760, 60, { w: 800 }); text(c, d.results ? "על קו החסימה" : "רק בחלק מהסקרים האחרונים", 540, 850, 60, { w: 800 }); c.restore(); return; }
   const ch = 520 + kinds.length * 90, cw = rows.length > 1 ? 400 : 560, gapX = 60, totalW = cw * rows.length + gapX * (rows.length - 1);
   rows.forEach((r, i) => {
     const pass = r.n ? r.passing / r.n : 0, drop = pr(t, 10.8 + i * .2, 11.35 + i * .2); if (drop <= 0) return;
@@ -386,8 +393,9 @@ function sceneThreshold(c: Ctx, t: number, d: PromoData, kinds: { key: "polls" |
     const fs = Math.min(...parts.map(s => fit(c, s, cw - 170, 42, 900)));
     parts.forEach((s, j) => text(c, s, ix - 120, y + 90 + (j - (parts.length - 1) / 2) * fs * 1.1, fs, { w: 900, align: "right" }));
     // בכמה מהמכונים עוברת — המספר הגדול של האתר
-    text(c, `${r.passing}/${r.n}`, ix, y + 260, 150, { w: 800, font: NUM, align: "right", ltr: true });
-    text(c, "מהמכונים מעבירים את הרשימה", ix, y + 355, fit(c, "מהמכונים מעבירים את הרשימה", cw - 70, 32, 500), { w: 500, color: PC.soft, align: "right" });
+    const what = d.results ? "מהניחושים העבירו את הרשימה" : "מהמכונים מעבירים את הרשימה";
+    text(c, d.results ? `${r.passing}%` : `${r.passing}/${r.n}`, ix, y + 260, 150, { w: 800, font: NUM, align: "right", ltr: true });
+    text(c, what, ix, y + 355, fit(c, what, cw - 70, 32, 500), { w: 500, color: PC.soft, align: "right" });
     // פס עוברת/לא עוברת: אדום משמאל, ירוק מימין (כמו PassBar באתר); מתמלא אחרי הנחיתה
     const bw = cw - 70, bx = ix - bw, by = y + 400, pk = pass * eo(pr(t, 11.35 + i * .2, 11.8 + i * .2));
     pill(c, bx, by, bw, 26, PC.neg); if (pk > 0) { c.save(); c.beginPath(); c.roundRect(bx, by, bw, 26, 13); c.clip(); c.fillStyle = PC.pos; c.fillRect(bx + bw * (1 - pk), by, bw * pk, 26); c.restore(); }
@@ -441,21 +449,34 @@ function sceneGap(c: Ctx, t: number, d: PromoData) {
     text(c, num(v * k2), x0 + 24, y + 2, 54, { w: 800, font: NUM, align: "left", ltr: true });
     c.restore();
   };
-  bar(l.polls, 960, PC.blue, PC.blueHi, "ממוצע הסקרים", 13.8);
+  bar(l.polls, 960, PC.blue, PC.blueHi, realLabel(d), 13.8);
   bar(l.crowd, 1130, PC.red, PC.redHi, "ממוצע הניחושים", 13.95);
   slam(c, t, 14.25, () => {
     text(c, `${g > 0 ? "+" : g < 0 ? "−" : ""}${seatsFmt(Math.abs(g))}`, 540, 1400, 280, { w: 900, font: NUM, ltr: true, color: g >= 0 ? PC.redHi : PC.blueHi });
     text(c, g >= 0 ? "מנדטים יותר בניחושים" : "מנדטים פחות בניחושים", 540, 1585, 54, { w: 700 });
+    // בקטן — הפער האישי (בסרטון עם הניחוש שלי)
+    const mg = d.results?.mineGap;
+    if (mg) text(c, `${d.mineLabel ?? "הניחוש שלי"}: ${mg.name} ${mg.gap > 0 ? "+" : mg.gap < 0 ? "−" : ""}${seatsFmt(Math.abs(mg.gap))}`, 540, 1690, 40, { w: 700, color: PC.goldHi });
   });
 }
 
 // ── 7. הזמנה ────────────────────────────────────────────────────────────────
-function sceneInvite(c: Ctx, t: number) {
+function sceneInvite(c: Ctx, t: number, d?: PromoData) {
   const line = (s: string, y: number, size: number, color: string, at: number) => {
     const k = eo(pr(t, at, at + .25)); if (k <= 0) return;
     c.save(); c.globalAlpha = k; c.beginPath(); c.rect(0, y - size * .75, W, size * 1.5); c.clip();
     text(c, s, 540, y + size * (1 - k), size, { w: 900, color }); c.restore();
   };
+  if (d?.results) {
+    const r = d.results, pct = (x: number) => `${Math.round(x)}%`;
+    line("דיוק הסקרים", 470, 72, PC.soft, 15.55);
+    line(pct(r.pollAcc), 600, 150, PC.blueHi, 15.7);
+    line("דיוק הניחושים", 800, 72, PC.soft, 15.95);
+    line(pct(r.crowdAcc), 930, 150, PC.redHi, 16.1);
+    line("המכון הקרוב ביותר", 1150, 64, PC.soft, 16.4);
+    line(r.closest, 1270, fit(c, r.closest, 960, 100, 900), PC.ink, 16.6);
+    return;
+  }
   line("כל הנתונים", 640, 128, PC.ink, 15.55);
   line("המלאים באתר.", 790, 128, PC.blueHi, 15.8);
   const u = eo(pr(t, 16.05, 16.4)); c.fillStyle = PC.blue; c.fillRect(540 - 330 * u, 890, 660 * u, 10);
@@ -466,11 +487,15 @@ function sceneInvite(c: Ctx, t: number) {
 // ── 8. מונה ─────────────────────────────────────────────────────────────────
 function sceneCount(c: Ctx, t: number, d: PromoData) {
   const fade = (at: number) => eo(pr(t, at, at + .3));
-  c.save(); c.globalAlpha = fade(17.55); text(c, "כבר ניחשו", 540, 330, 72, { w: 800, color: PC.soft }); c.restore();
+  c.save(); c.globalAlpha = fade(17.55); text(c, d.results ? "ניחשו" : "כבר ניחשו", 540, 330, 72, { w: 800, color: PC.soft }); c.restore();
   const n = d.guesses * eo(pr(t, 17.6, 19)), pop = t > 19 ? 1 + .1 * Math.exp(-(t - 19) * 8) : 1;
   const big = fit(c, thousands(d.guesses), 900, 230, 700, NUM);  // הגודל לפי המספר הסופי, כדי שלא יקפוץ בספירה
   c.save(); c.translate(540, 520); c.scale(pop, pop); text(c, thousands(n), 0, 0, big, { w: 700, font: NUM, ltr: true }); c.restore();
   const bx = 90, bw = 900, by = 690, fill = Math.min(1, n / d.goal);
+  if (d.results) {
+    c.save(); c.globalAlpha = fade(18.1); text(c, "תודה לכל המנחשים", 540, 760, 76, { w: 900 }); c.restore();
+    c.save(); c.globalAlpha = fade(18.3); text(c, "הדירוג המלא והניחוש שלך באתר", 540, 880, 46, { w: 600, color: PC.soft }); c.restore();
+  } else {
   c.save(); c.globalAlpha = fade(17.6);
   pill(c, bx, by, bw, 40, PC.track);
   const g = c.createLinearGradient(bx + bw, 0, bx, 0); g.addColorStop(0, PC.blue); g.addColorStop(1, PC.red);
@@ -485,6 +510,7 @@ function sceneCount(c: Ctx, t: number, d: PromoData) {
   if (personal) text(c, "מה יהיה בסרטון שלך?", 540, 1000, 58, { w: 800, color: PC.goldHi });
   else text(c, "יותר ניחושים = נתונים מדויקים יותר", 540, 1000, 46, { w: 600, color: PC.soft });
   c.restore();
+  }
   const q = back(pr(t, 18.5, 18.95)), qs = 360;
   if (q > 0) {
     c.save(); c.translate(540, 1330); c.scale(q, q);
@@ -546,9 +572,9 @@ export function drawPromo(c: Ctx, t: number, d: PromoData, fx: PromoFx) {
   const shake = HITS.reduce((a, h) => a + (t >= h ? 16 * Math.exp(-(t - h) * 13) : 0), 0);
   c.save(); c.translate((rnd(frame * 3) - .5) * shake, (rnd(frame * 5) - .5) * shake);
   if (t < SCENES.who) sceneOpen(c, t, d);
-  else if (t < 3.32) sceneWho(c, t, frame);
+  else if (t < 3.32) sceneWho(c, t, frame, d);
   else if (t < 3.68) { // גליץ' החוצה ופנימה
-    const outGoing = t < SCENES.chart, src = layerOf(fx, l => outGoing ? sceneWho(l, t, frame) : sceneChart(l, t, d));
+    const outGoing = t < SCENES.chart, src = layerOf(fx, l => outGoing ? sceneWho(l, t, frame, d) : sceneChart(l, t, d));
     glitch(c, src, outGoing ? pr(t, 3.32, 3.5) : 1 - pr(t, 3.5, 3.68), frame);
   } else if (t < 7.22) sceneChart(c, t, d);
   else if (t < SCENES.pies) { // איריס: הגרף נבלע במעגל שמתכווץ
@@ -562,11 +588,11 @@ export function drawPromo(c: Ctx, t: number, d: PromoData, fx: PromoFx) {
     if (k < .55) scenePies(c, t, d); else sceneGap(c, t, d);
     shutters(c, k);
   } else if (t < 15.3) sceneGap(c, t, d);
-  else if (t < 15.55) { sceneInvite(c, Math.max(t, 15.5)); tear(c, layerOf(fx, l => sceneGap(l, 15.3, d)), eio(pr(t, 15.3, 15.55))); }
-  else if (t < 17.3) sceneInvite(c, t);
+  else if (t < 15.55) { sceneInvite(c, Math.max(t, 15.5), d); tear(c, layerOf(fx, l => sceneGap(l, 15.3, d)), eio(pr(t, 15.3, 15.55))); }
+  else if (t < 17.3) sceneInvite(c, t, d);
   else if (t < 17.75) { // פסיפס פיקסלים: מתפרק ומתחבר מחדש
     const outGoing = t < SCENES.count, k = outGoing ? pr(t, 17.3, 17.5) : 1 - pr(t, 17.5, 17.75);
-    pixelate(c, layerOf(fx, l => outGoing ? sceneInvite(l, t) : sceneCount(l, t, d)), 1 + Math.pow(k, 1.5) * 90, fx);
+    pixelate(c, layerOf(fx, l => outGoing ? sceneInvite(l, t, d) : sceneCount(l, t, d)), 1 + Math.pow(k, 1.5) * 90, fx);
   } else sceneCount(c, t, d);
   c.restore();
   chrome(c, d, t < SCENES.who ? 0 : 1);

@@ -90,6 +90,15 @@ export function suppress(counts, of, k = K_CELL) {
 
 const seatValue = (payload, id) => payload.seats[id]?.v ?? 0;
 
+/** התפלגות הניחושים לכל רשימה — {מנדטים: כמה ניחשו} (ספירות בלבד; למסך "דיוק הניחושים") */
+export function seatsHist(seatVersions) {
+  return Object.fromEntries(LISTS_2026.map((l) => {
+    const h = {};
+    for (const v of seatVersions) { const k = Math.round(seatValue(v.payload, l.id)); h[k] = (h[k] || 0) + 1; }
+    return [l.id, h];
+  }));
+}
+
 function seatsStats(seatVersions) {
   return LISTS_2026.map((l) => seatStat(l.id, seatVersions.map((v) => seatValue(v.payload, l.id))));
 }
@@ -124,6 +133,7 @@ export function computeSeats(seatVersions, history = seatVersions) {
   return {
     n,
     full: seatsStats(seatVersions),
+    hist: seatsHist(seatVersions),
     everPassedLists: LISTS_2026.filter(l => history.some(v => seatValue(v.payload, l.id) >= 4)).map(l => l.id),
     manual,
     filledShare: r2(filled / (TOTAL * n)),
