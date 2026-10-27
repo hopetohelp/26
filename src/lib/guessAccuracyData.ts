@@ -5,7 +5,7 @@ import { SIMPLE_ALL, SIMPLE_DAYS, simpleValue } from "./simpleSources";
 import type { Seats } from "./guessAccuracy";
 
 export type ResultsStatus = "none" | "partial" | "final";
-export const results2026 = resultsFile as { status: ResultsStatus; asOf: string | null; source: string; seats: Seats };
+export const results2026 = resultsFile as { status: ResultsStatus; asOf: string | null; source: string; seats: Seats; counted?: number | null };
 export const hasResults = () => results2026.status !== "none" && Object.keys(results2026.seats).length > 0;
 
 /** יום הבחירות — חלון הסקרים נסגר בו */
