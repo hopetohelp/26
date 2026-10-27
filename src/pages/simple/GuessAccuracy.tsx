@@ -13,6 +13,7 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, GuessCount, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
+import { pingVisit } from "../../lib/visits";
 
 const EMPTY = startSeats("zero");
 const avgOf = (xs: (number | null)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? ok.reduce((p, q) => p + q, 0) / ok.length : null; };
@@ -80,6 +81,7 @@ export default function GuessAccuracy() {
     <h1 className="text-xl font-bold mb-1">תוצאות</h1>
     {!ready && <Notice>ממתינים לתוצאות ראשונות. המסך יתעדכן אוטומטית עם תחילת הספירה.</Notice>}
     <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>
+    <JdnCard />
     <TurnoutCard />
     <GuessCount total={d?.seats?.n} />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
@@ -205,4 +207,18 @@ function TurnoutCard() {
     <p className="text-xs text-ink-soft mt-1">בבחירות הקודמות באותה שעה: <span className="font-num">{t.total.prev_percent}%</span> (<bdi dir="ltr" className="font-num">{t.total.delta > 0 ? "+" : ""}{t.total.delta}</bdi>)</p>
     <p className="text-xs text-ink-soft mt-1">נכון ל־<span className="font-num">{t.total.updated}</span> · ועדת הבחירות · <Link to="/method#turnout">איך זה חושב?</Link></p>
   </div>;
+}
+
+/** כרטיס גדול לאתר הבחירות של JDN (הכרעת בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת במונה הכניסות ("/out/jdn"). הסמל והצבעים — מהאתר שלהם */
+function JdnCard() {
+  return <a href="https://elections.jdn.co.il/" target="_blank" rel="noopener noreferrer" onClick={() => pingVisit("/out/jdn")}
+    className="block rounded-2xl p-5 mb-4 no-underline" style={{ background: "#081522", color: "#ffffff" }}>
+    <span className="flex items-center gap-4">
+      <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={64} height={64} className="rounded-xl flex-none" />
+      <span className="grid gap-1">
+        <span className="text-xl font-bold">הברומטר של JDN — כל המפה במקום אחד</span>
+        <span className="text-sm" style={{ color: "#bed8db" }}>תוצאות ועדכונים בזמן אמת · נפתח בחלון חדש ↗</span>
+      </span>
+    </span>
+  </a>;
 }
