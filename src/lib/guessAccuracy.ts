@@ -18,32 +18,6 @@ export function distance(guess: number, actual: number): { seats: number; pct: n
   return { seats, pct: (seats / Math.max(actual, MIN_BASE)) * 100 };
 }
 
-/** חלק המנחשים שהיו רחוקים יותר מ-err (שוויון = חצי). errs: מרחקים של כל האחרים. בלי אחרים ⇐ null */
-export function shareFarther(err: number, errs: number[]): number | null {
-  if (!errs.length) return null;
-  let farther = 0;
-  for (const e of errs) farther += e > err ? 1 : e === err ? 0.5 : 0;
-  return farther / errs.length;
-}
-
-/** אותו חישוב מהתפלגות: hist[k] = כמה ניחשו k מנדטים */
-export function shareFartherHist(err: number, hist: number[], actual: number): number | null {
-  let n = 0, farther = 0;
-  hist.forEach((c, k) => {
-    if (!c) return;
-    const e = Math.abs(k - actual);
-    n += c;
-    farther += e > err ? c : e === err ? c / 2 : 0;
-  });
-  return n ? farther / n : null;
-}
-
-/** ממוצע של ערכים קיימים בלבד */
-const avg = (xs: (number | null)[]) => {
-  const ok = xs.filter((x): x is number => x !== null);
-  return ok.length ? ok.reduce((a, b) => a + b, 0) / ok.length : null;
-};
-
 export function meanSeats(list: Seats[], ids: string[]): Seats {
   return Object.fromEntries(ids.map(id => [id, list.length ? list.reduce((a, s) => a + val(s, id), 0) / list.length : 0]));
 }
@@ -55,45 +29,31 @@ export function accuracyRows(actual: Seats, pollMean: Seats): string[] {
     .sort((a, b) => val(actual, b) - val(actual, a) || val(pollMean, b) - val(pollMean, a));
 }
 
-export interface AccuracyRow {
-  id: string;
-  actual: number;
-  guess: number;
-  seats: number;
-  pct: number;
-  /** חלק הניחושים שהיו רחוקים יותר (0–1) */
-  vsCrowd: number | null;
-  /** חלק הסקרים שהיו מדויקים יותר (0–1) — כפי שמוצג בטור */
-  pollsCloser: number | null;
-  /** שקלול 0–1: ממוצע שווה של הדיוק מול הגולשים ומול הסקרים (הסקרים: החלק שהיו רחוקים יותר) */
-  score: number | null;
+/** חלק המנחשים שהיו קרובים לאמת יותר ממרחק err (ממש קרובים יותר; שוויון אינו נספר) */
+export function closerShareHist(err: number, hist: number[], actual: number): number | null {
+  let n = 0, closer = 0;
+  hist.forEach((c, k) => { if (!c) return; n += c; if (Math.abs(k - actual) < err) closer += c; });
+  return n ? closer / n : null;
 }
-export interface AccuracyTable { rows: AccuracyRow[]; total: { seats: number; vsCrowd: number | null; pollsCloser: number | null; score: number | null } }
 
-/**
- * הטבלה לנושא אחד (ניחוש, ממוצע ניחושים, סקר או ממוצע סקרים).
- * hist: התפלגות הניחושים לכל רשימה; polls: הסקר האחרון של כל מכון. נושא שהוא עצמו אחד הסקרים — exclude מוציא אותו מההשוואה.
- */
-export function accuracyTable({ subject, actual, ids, hist, polls, exclude }: {
-  subject: Seats; actual: Seats; ids: string[]; hist: Record<string, number[]> | null; polls: Seats[]; exclude?: number;
-}): AccuracyTable {
-  const others = polls.filter((_, i) => i !== exclude);
-  const rows = ids.map((id): AccuracyRow => {
-    const a = val(actual, id), g = val(subject, id), d = distance(g, a);
-    const vsCrowd = hist?.[id] ? shareFartherHist(d.seats, hist[id], a) : null;
-    const pollFarther = shareFarther(d.seats, others.map(p => Math.abs(val(p, id) - a)));
-    const pollsCloser = pollFarther === null ? null : others.filter(p => Math.abs(val(p, id) - a) < d.seats).length / others.length;
-    return { id, actual: a, guess: g, ...d, vsCrowd, pollsCloser, score: avg([vsCrowd, pollFarther]) };
-  });
-  return {
-    rows,
-    total: {
-      seats: rows.reduce((s, r) => s + r.seats, 0),
-      vsCrowd: avg(rows.map(r => r.vsCrowd)),
-      pollsCloser: avg(rows.map(r => r.pollsCloser)),
-      score: avg(rows.map(r => r.score)),
-    },
-  };
+/** כל הניחושים לרשימה אחת: חלק שפגעו בדיוק, המרחק הממוצע, והחציון */
+export function histStats(hist: number[], actual: number): { exact: number; mean: number; median: number } | null {
+  const n = hist.reduce((a, b) => a + b, 0);
+  if (!n) return null;
+  let sum = 0, seen = 0, median = 0;
+  hist.forEach((c, k) => { sum += c * Math.abs(k - actual); });
+  // חציון: הערך שבו מצטברת מחצית הניחושים (במספר זוגי — ממוצע שני האמצעיים)
+  const at = (q: number) => { let acc = 0; for (let k = 0; k < hist.length; k++) { acc += hist[k]; if (acc > q) return k; } return hist.length - 1; };
+  median = n % 2 ? at((n - 1) / 2) : (at(n / 2 - 1) + at(n / 2)) / 2;
+  seen = hist[actual] ?? 0;
+  return { exact: seen / n, mean: sum / n, median };
+}
+
+/** הסקרים לרשימה אחת: חלק שפגעו בדיוק והמרחק הממוצע. סקר שלא פרסם נתון לרשימה — אינו נכלל בה */
+export function pollStats(polls: Seats[], id: string, actual: number): { exact: number; mean: number; n: number } | null {
+  const xs = polls.filter(p => id in p).map(p => Math.abs(p[id] - actual));
+  if (!xs.length) return null;
+  return { exact: xs.filter(x => x === 0).length / xs.length, mean: xs.reduce((a, b) => a + b, 0) / xs.length, n: xs.length };
 }
 
 /** אחוז דיוק לשיתוף: 100 × (1 − מנדטים שהונחו במקום הלא נכון / 120); במקום הלא נכון = חצי מסכום המרחקים על כל הרשימות */

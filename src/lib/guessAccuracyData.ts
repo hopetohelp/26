@@ -12,13 +12,13 @@ export const hasResults = () => results2026.status !== "none" && Object.keys(res
 export const ELECTION_DAY = "2026-10-27";
 const IDS = lists2026.map(l => l.id);
 
-/** הסקר האחרון של כל סדרת מכון–מזמין בחלון של 14 הימים עד יום הבחירות; רשימה שלא נסקרה = 0 */
+/** הסקר האחרון של כל סדרת מכון–מזמין בחלון של 14 הימים עד יום הבחירות; רשימה שהסקר לא פרסם עליה נתון — חסרה (אינה 0) */
 export const finalPolls = latestPerPollster(ELECTION_DAY, SIMPLE_DAYS).map(p => ({
   key: pollsterKey(p),
   label: pollsterLabel(p),
   firm: p.firmHe,
   end: p.end,
-  values: Object.fromEntries(IDS.map(id => [id, seatsIn(p, id) ?? 0])) as Seats,
+  values: Object.fromEntries(IDS.flatMap(id => { const v = seatsIn(p, id); return v === undefined ? [] : [[id, v]]; })) as Seats,
 }));
 
 /** ממוצע הסקרים — אותו ממוצע של שאר האתר (polls.mean) */
