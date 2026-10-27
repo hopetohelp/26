@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import InfoTip from "../../components/InfoTip";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
 import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
@@ -11,7 +12,7 @@ import { IDS, nameOf, startSeats } from "../guess/model";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { useSession, useUnit } from "../guess/useCrowd";
 import { Notice } from "../guess/ui";
-import { FocusFoot, GuessCount, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
+import { FocusFoot, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
 import { countJdnClick } from "../../lib/visits";
@@ -76,7 +77,13 @@ export default function GuessAccuracy() {
   const myBeat = mine && ready ? avgOf(ids.map(id => { const h = hist?.[id]; if (!h) return null; const a = actual[id] ?? 0, err = Math.abs((mine[id] ?? 0) - a); const c = closerShareHist(err, h, a); const n = h.reduce((x, y) => x + y, 0); const tie = (h[a - err] ?? 0) + (err ? h[a + err] ?? 0 : 0); return c === null ? null : 1 - c - tie / n; })) : null;
   const myMisplaced = mine ? (100 - accuracyPct(mine, actual)) * 1.2 : 0;
   const acc = (v: Seats | null) => v && ready ? accuracyPct(v, actual) : null;
-  const tiles: [string, number | null][] = [...(mine ? [["הניחוש שלי", acc(mine)] as [string, number | null]] : []), ["ממוצע הניחושים", d ? acc(crowdMean) : null], ["ממוצע הסקרים", acc(pollMean)]];
+  // תיבות הדיוק (הכרעת בעלים 27.10.2026): "דיוק N הניחושים" — הגדולה, באמצע — ו"דיוק N הסקרים"; ההסבר באייקון מידע
+  const nGuesses = d?.seats?.n;
+  const tiles: { label: string; v: number | null; big?: boolean }[] = [
+    ...(mine ? [{ label: "הניחוש שלי", v: acc(mine) }] : []),
+    { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: true },
+    { label: `דיוק ${finalPolls.length} הסקרים`, v: acc(pollMean) },
+  ];
 
   return <div className="max-w-6xl mx-auto">
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
@@ -84,7 +91,6 @@ export default function GuessAccuracy() {
     {results2026.status !== "none" && <p className="text-sm text-ink-soft mb-4">{results2026.status === "partial" ? "לפי ספירה חלקית · " : ""}{results2026.source.includes("JDN") ? "ועדת הבחירות דרך JDN, לא אומת · " : results2026.source.includes("ויקיפדיה") ? "מוויקיפדיה, לא אומת · " : ""}{results2026.asOf ?? ""}</p>}
     <JdnCard />
     <TurnoutCard />
-    <GuessCount total={d?.seats?.n} />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
     <div className="f-seg fit" role="group" aria-label="מה משווים">
@@ -109,10 +115,12 @@ export default function GuessAccuracy() {
       <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
       <p className="text-sm text-ink-soft mt-1"><span className="font-num">{ready ? fmt(Math.round(myMisplaced)) : "—"}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
     </div>}
-    <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `repeat(${tiles.length}, minmax(0, 1fr))` }}>
-      {tiles.map(([label, v]) => <div key={label} className="f-card text-center !p-3"><p className="text-xs md:text-sm text-ink-soft">{label}</p><p className="text-2xl md:text-3xl font-bold font-num">{v == null ? "—" : `${Math.round(v)}%`}</p></div>)}
+    <div className="grid gap-2 mb-4 items-center" style={{ gridTemplateColumns: tiles.map(t => t.big ? "minmax(0, 1.35fr)" : "minmax(0, 1fr)").join(" ") }}>
+      {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
+        <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.big && <InfoTip label="מה זה אחוז הדיוק?" className="ms-1">אחוז הדיוק = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה.</InfoTip>}</p>
+        <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : `${Math.round(t.v)}%`}</p>
+      </div>)}
     </div>
-    <p className="text-xs text-ink-soft mb-4 text-center">אחוז הדיוק = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה.</p>
     <PartyChart selection={SIMPLE_ALL} lists={ids} spreadOf={id => { if (!ready) return null; const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
       marks={id => [...(mine ? [{ value: mine[id] ?? 0, side: "up" as const }] : []), { value: crowdMean[id], kind: "dash" as const, side: "down" as const }]}
       legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label="ממוצע הניחושים" /></>} />
@@ -208,16 +216,13 @@ function TurnoutCard() {
   </p>;
 }
 
-/** כרטיס גדול לאתר הבחירות של JDN (הכרעת בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN"). הסמל והצבעים — מהאתר שלהם */
+/** כפתור לאתר הבחירות של JDN בשורה אחת ובצבעי האתר (הכרעות בעלים 27.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN") */
 function JdnCard() {
   return <a href="https://elections.jdn.co.il/" target="_blank" rel="noopener noreferrer" onClick={countJdnClick}
-    className="block rounded-2xl p-5 mb-4 no-underline" style={{ background: "#081522", color: "#ffffff" }}>
-    <span className="flex items-center gap-4">
-      <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={64} height={64} className="rounded-xl flex-none" />
-      <span className="grid gap-1">
-        <span className="text-xl font-bold">הברומטר של JDN — כל המפה במקום אחד</span>
-        <span className="text-sm" style={{ color: "#bed8db" }}>תוצאות ועדכונים בזמן אמת · נפתח בחלון חדש ↗</span>
-      </span>
-    </span>
+    className="f-card mb-4 !py-2 !px-3 flex items-center gap-2 no-underline text-ink min-w-0">
+    <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={28} height={28} className="rounded-md flex-none" />
+    <span className="font-bold text-sm truncate">הברומטר של JDN — תוצאות בזמן אמת</span>
+    <span className="text-ink-soft text-sm flex-none ms-auto" aria-hidden="true">↗</span>
+    <span className="sr-only">(נפתח בחלון חדש)</span>
   </a>;
 }
