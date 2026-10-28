@@ -10,8 +10,8 @@ export interface PageInfo {
 /** הסדר כאן הוא סדר הסרגל במחשב (הכרעת בעלים 8.10.2026) */
 export const PAGES: PageInfo[] = [
   { to: "/guess", label: "הניחוש שלי" },
-  { to: "/polls", label: "סקרים" },
-  { to: "/past", label: "בחירות קודמות" },
+  { to: "/polls", label: "הסקרים" },
+  { to: "/past", label: "מה השתנה" },
   { to: "/method", label: "מידע" },
 ];
 
@@ -41,8 +41,8 @@ export const SCREENS: Screen[] = [
   // בסרגל רק בניתוח מורחב; המסך נשאר זמין בכתובת שלו (הכרעת בעלים 28.10.2026)
   { id: "community", to: "/community", label: "הניחושים", icon: "bars", nav: "core", advanced: true },
   // "האחרונים" (לשעבר מסך הבית "תמונת מצב") — הלשונית הראשונה של "סקרים" (הכרעת בעלים 28.10.2026)
-  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "overview", label: "האחרונים" }, { id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
-  { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
+  { id: "polls", to: "/polls", label: "הסקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "overview", label: "האחרונים" }, { id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
+  { id: "past", to: "/past", label: "מה השתנה", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
   { id: "method", to: "/method", label: "מידע ומקורות", icon: "info", nav: "foot" },
 ];
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;

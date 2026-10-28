@@ -132,7 +132,7 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<Navigate to="/results-2026" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
-          <Route path="polls" element={<Tabbed label="סקרים" tabs={[
+          <Route path="polls" element={<Tabbed label="הסקרים" tabs={[
             { id: "overview", label: "האחרונים", element: <ModeHome /> },
             { id: "today", label: "היום", element: <Today /> },
             { id: "trends", label: "מגמות", element: <Trends /> },
@@ -147,7 +147,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"
-            element={<Tabbed label="בחירות קודמות" aliases={{ voters: "results" }} tabs={[
+            element={<Tabbed label="מה השתנה" aliases={{ voters: "results" }} tabs={[
               { id: "results", label: "תוצאות אמת", element: <Results /> },
               { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
               { id: "changes", label: "מה השתנה", element: <VoterFlow /> },
