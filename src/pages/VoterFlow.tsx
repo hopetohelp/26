@@ -30,37 +30,40 @@ const blocFill = (bloc: string) => `rgb(var(${BLOC_TOKEN[bloc] ?? "--bloc-miss"}
 /** תמונת יו"ר לרשימת 2022 — רק כשזו אותה מפלגה ואותו יו"ר כמו ב-2026 */
 const IMG_2022: Record<string, string> = { "מחל": "likud", "שס": "shas", "ג": "utj", "ל": "yb", "ט": "rzp", "עם": "raam", "כן": "bluewhite" };
 
-function Row({ row, view, colorOf }: { row: FlowRow; view: View; colorOf: (id: string) => string }) {
+/** גוף הכרטיס: מספר המצביעים והפסים — בלי השם (השם והתמונה פעם אחת לכל שורה) */
+function Body({ row, view, colorOf }: { row: FlowRow; view: View; colorOf: (id: string) => string }) {
   const shown = (p: FlowRow["parts"][number]) => p.share >= MIN_SHARE || (ALWAYS.has(p.id) && smallPct(p.share) !== null);
   const main = row.parts.filter(shown);
   const rest = row.parts.filter((p) => !shown(p)).reduce((a, p) => a + p.share, 0);
-  const img = view === "from" ? row.id : IMG_2022[row.id] ?? "";
   return (
-    <li className="border-t border-paper-line py-3 grid grid-cols-[4.5rem_1fr] md:grid-cols-[6.5rem_1fr] gap-2 md:gap-3">
-      {/* מימין: תמונת יו"ר הרשימה, ומתחתיה השם בשתי שורות לכל היותר */}
-      <div className="flex flex-col items-start gap-1">
-        <PartyAvatar id={img} size={48} />
-        <h3 className="font-bold leading-tight line-clamp-2">{row.name}</h3>
-      </div>
-      <div className="min-w-0">
-        <p className="text-xs text-ink-soft mb-2">{view === "from" ? "מצביעים ב-2026" : "בעלי זכות הבחירה ב-2022"}: {num(row.total)}</p>
-        <ul className="space-y-1">
-          {main.map((p) => (
-            <li key={p.id} className="grid grid-cols-[minmax(4.5rem,9rem)_1fr_3rem] items-center gap-2 text-sm">
-              <span className="truncate">{p.name}</span>
-              <span className="h-3 flex justify-start rounded-sm bg-paper-line overflow-hidden" aria-hidden="true">
-                <span className="block h-full" style={{ width: `${p.share}%`, background: blocFill(colorOf(p.id)) }} />
-              </span>
-              <span className="tabular-nums text-end">{ALWAYS.has(p.id) && p.share < MIN_SHARE ? smallPct(p.share) : pctValue(p.share)}%</span>
-            </li>
-          ))}
-          {rest >= 0.5 && (
-            <li className="grid grid-cols-[minmax(4.5rem,9rem)_1fr_3rem] items-center gap-2 text-sm text-ink-soft">
-              <span>אחרים</span><span /><span className="tabular-nums text-end">{pctValue(rest)}%</span>
-            </li>
-          )}
-        </ul>
-      </div>
+    <div className="min-w-0 w-full">
+      <p className="text-xs text-ink-soft mb-2">{view === "from" ? "מצביעים ב-2026" : "בעלי זכות הבחירה ב-2022"}: {num(row.total)}</p>
+      <ul className="space-y-1">
+        {main.map((p) => (
+          <li key={p.id} className="grid grid-cols-[minmax(4.5rem,9rem)_1fr_3rem] items-center gap-2 text-sm">
+            <span className="truncate">{p.name}</span>
+            <span className="h-3 flex justify-start rounded-sm bg-paper-line overflow-hidden" aria-hidden="true">
+              <span className="block h-full" style={{ width: `${p.share}%`, background: blocFill(colorOf(p.id)) }} />
+            </span>
+            <span className="tabular-nums text-end">{ALWAYS.has(p.id) && p.share < MIN_SHARE ? smallPct(p.share) : pctValue(p.share)}%</span>
+          </li>
+        ))}
+        {rest >= 0.5 && (
+          <li className="grid grid-cols-[minmax(4.5rem,9rem)_1fr_3rem] items-center gap-2 text-sm text-ink-soft">
+            <span>אחרים</span><span /><span className="tabular-nums text-end">{pctValue(rest)}%</span>
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+/** טור אחד (טלפון): שורה אחת בראש הכרטיס — תמונה ושם; מתחת — הגוף */
+function Row({ row, view, colorOf }: { row: FlowRow; view: View; colorOf: (id: string) => string }) {
+  return (
+    <li className="border-t border-paper-line py-3">
+      <h3 className="font-bold flex items-center gap-2 mb-1"><PartyAvatar id={view === "from" ? row.id : IMG_2022[row.id] ?? ""} size={28} />{row.name}</h3>
+      <Body row={row} view={view} colorOf={colorOf} />
     </li>
   );
 }
@@ -70,36 +73,39 @@ const SAME: Record<string, string> = { likud: "מחל", democrats: "אמת", utj
 /** כחול לבן (בני גנץ) — התמודדה ב-2022 כמחנה הממלכתי ופרשה לפני ההצבעה ב-2026 */
 const RETIRED: Record<string, string> = { "כן": "כחול לבן" };
 
-function Empty({ name, text, img }: { name: string; text: string; img: string }) {
-  return (
-    <li className="border-t border-paper-line py-3 grid grid-cols-[4.5rem_1fr] md:grid-cols-[6.5rem_1fr] gap-2 md:gap-3">
-      <div className="flex flex-col items-start gap-1">
-        <PartyAvatar id={img} size={48} />
-        <h3 className="font-bold leading-tight line-clamp-2">{name}</h3>
-      </div>
-      <p className="text-sm text-ink-soft self-center">{text}</p>
-    </li>
-  );
-}
-
-/** מסך רחב: שני טורים — "מאיפה הגיעו" (2026) ו"לאן הלכו" (2022); אותה מפלגה באותה שורה; מפלגה שלא רצה — כרטיס ריק (הכרעת בעלים 28.10.2026) */
+/** מסך רחב: שם ותמונה פעם אחת מימין (טור צר), ואחריהם שני טורים — "מאיפה הגיעו" (2026) ו"לאן הלכו" (2022); מפלגה שלא רצה — "המפלגה לא רצה בבחירות אלו" (הכרעת בעלים 28.10.2026) */
 function Paired({ rows, same, fromColor, toColor }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] }; same: (id: string) => string | undefined; fromColor: (id: string) => string; toColor: (id: string) => string }) {
   const used = new Set<string>();
-  const pairs: [JSX.Element, JSX.Element][] = rows.cameFrom.map((r) => {
+  const empty = (text: string) => <p className="text-sm text-ink-soft self-center">{text}</p>;
+  const lines: { key: string; img: string; name: string; sub?: string; from: JSX.Element; to: JSX.Element }[] = rows.cameFrom.map((r) => {
     const o = same(r.id), old = o ? rows.wentTo.find((w) => w.id === o) : undefined;
     if (old) used.add(old.id);
-    return [<Row key={r.id} row={r} view="from" colorOf={fromColor} />, old ? <Row key={old.id} row={old} view="to" colorOf={toColor} /> : <Empty key={`e-${r.id}`} name={r.name} img={r.id} text="המפלגה לא רצה בבחירות אלו" />];
+    return {
+      key: r.id, img: r.id, name: r.name, sub: old && old.name !== r.name ? old.name : undefined,
+      from: <Body row={r} view="from" colorOf={fromColor} />,
+      to: old ? <Body row={old} view="to" colorOf={toColor} /> : empty("המפלגה לא רצה בבחירות אלו"),
+    };
   });
   for (const w of rows.wentTo.filter((w) => !used.has(w.id))) {
     const retired = RETIRED[w.id];
-    pairs.push([<Empty key={`e-${w.id}`} name={retired ?? w.name} img={IMG_2022[w.id] ?? ""} text={retired ? "המפלגה פרשה לפני ההצבעה" : "המפלגה לא רצה בבחירות אלו"} />, <Row key={w.id} row={w} view="to" colorOf={toColor} />]);
+    lines.push({ key: w.id, img: IMG_2022[w.id] ?? "", name: retired ?? w.name, sub: retired ? w.name : undefined,
+      from: empty(retired ? "המפלגה פרשה לפני ההצבעה" : "המפלגה לא רצה בבחירות אלו"), to: <Body row={w} view="to" colorOf={toColor} /> });
   }
   return (
-    <ul className="mt-2 grid grid-cols-2 gap-x-8">
-      <li className="font-bold text-ink-soft">{VIEWS[0].lead}</li>
-      <li className="font-bold text-ink-soft">{VIEWS[1].lead}</li>
-      {pairs.flat()}
-    </ul>
+    <div className="mt-2 grid grid-cols-[max-content_1fr_1fr] gap-x-6">
+      <span /><span className="font-bold text-ink-soft pb-2">{VIEWS[0].lead}</span><span className="font-bold text-ink-soft pb-2">{VIEWS[1].lead}</span>
+      {lines.map((l) => (
+        <div key={l.key} className="contents">
+          <div className="border-t border-paper-line py-3 flex flex-col items-start gap-1 max-w-[6rem]">
+            <PartyAvatar id={l.img} size={44} />
+            <h3 className="font-bold leading-tight line-clamp-2">{l.name}</h3>
+            {l.sub && <span className="text-xs text-ink-soft leading-tight">ב-2022: {l.sub}</span>}
+          </div>
+          <div className="border-t border-paper-line py-3 flex">{l.from}</div>
+          <div className="border-t border-paper-line py-3 flex">{l.to}</div>
+        </div>
+      ))}
+    </div>
   );
 }
 

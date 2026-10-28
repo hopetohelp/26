@@ -167,23 +167,30 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     if (!units) return;
     const rowH = 118;
     const n = Math.max(ids.length, Math.min(5, Math.floor((TARGET_H - (y + 62) - (QR_SIZE + 120)) / (rowH + 16))));
-    const per = Math.max(1, Math.floor(n / ids.length));
-    heading(n > 1 ? "ערים בולטות" : "עיר בולטת");
+    const two = ids.length > 1;
+    // "חרדים": לכל מפלגה — העיר עם השינוי הגדול ביותר (מבין ערים עם 5% ממצביעיה), באותו נוסח לשתיהן (הכרעת בעלים)
+    heading(two ? "השינוי הגדול ביותר" : n > 1 ? "ערים בולטות" : "עיר בולטת");
     ids.forEach((id) => {
       const all = cityShares(units, [id]), map = new Map(all.map((c) => [c.code, c]));
-      topCities(all, per).forEach((ct, i) => {
+      const change = biggestChange(all);
+      const list = two ? (change ? [{ code: change.code, name: change.name, biggest: false }] : []) : topCities(all, n);
+      list.forEach((ct) => {
         const c = map.get(ct.code)!;
         card(L, y, CW, rowH, ct.biggest ? P.blueHi : undefined);
-        const note = ct.biggest ? "השינוי הגדול ביותר" : ids.length > 1 && i === 0 ? `העיר הבולטת ב${newName(id)}` : "";
-        ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + (note ? 46 : rowH / 2));
-        if (note) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(note, R - 36, y + 88); }
+        // מימין: שם המפלגה (בחרדים) והעיר; משמאל — רק הנתונים
+        const note = two ? newName(id) : ct.biggest ? "השינוי הגדול ביותר" : "";
+        ctx.textAlign = "right";
+        if (two) { ctx.fillStyle = P.soft; ctx.font = `600 26px ${body}`; ctx.fillText(note, R - 36, y + 36); ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + 80); }
+        else {
+          ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + (note ? 46 : rowH / 2));
+          if (note) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(note, R - 36, y + 88); }
+        }
         // השינוי בגדול, ומתחתיו אז והיום (הכרעת בעלים); בלי קודמת ב-2022 — האחוז של היום בגדול
         const now = `2026: ${smallPct(c.share26) ?? "0"}%`;
         let big: string, color: string = P.ink;
         if (c.share22 !== null) { const d = c.share26 - c.share22; big = `${d >= 0 ? "▲" : "▼"} ${smallPct(Math.abs(d)) ?? "0"}%`; color = d >= 0 ? P.blueHi : P.redHi; }
         else big = pct(c.share26);
         ctx.textAlign = "left"; ctx.fillStyle = color; ctx.font = `800 50px ${num}`; ctx.fillText(ltrText(big), L + 36, y + 50);
-        if (ids.length > 1) { const w = ctx.measureText(ltrText(big)).width; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`; ctx.fillText(newName(id), L + 46 + w, y + 54); }
         ctx.fillStyle = P.soft; ctx.font = `600 24px ${num}`;
         ctx.fillText(ltrText(c.share22 !== null ? `2022: ${smallPct(c.share22) ?? "0"}%  ·  ${now}` : now), L + 36, y + 92);
         y += rowH + 16;
