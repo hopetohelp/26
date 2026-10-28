@@ -49,9 +49,11 @@ function biggestChange(all: CityShare[]): CityShare | undefined {
   const total = all.reduce((a, c) => a + c.votes, 0);
   return all.filter((c) => c.share22 !== null && c.votes >= total * MIN_CITY_SHARE).sort((a, b) => delta(b) - delta(a))[0];
 }
-/** ערים בולטות: n הערים עם הכי הרבה מצביעים לקבוצה; כשיש מקום לשתיים ומעלה — העיר עם השינוי הגדול ביותר נכנסת תמיד (במקום האחרונה, אם צריך) */
+/** ערים בולטות: n הערים עם האחוז הגבוה ביותר לקבוצה (מבין הערים עם 5% ממצביעיה); כשיש מקום לשתיים ומעלה — העיר עם השינוי הגדול ביותר נכנסת תמיד (במקום האחרונה, אם צריך) */
 function topCities(all: CityShare[], n: number, change = biggestChange(all)): { code: string; name: string; biggest: boolean }[] {
-  const top = [...all].sort((a, b) => b.votes - a.votes).slice(0, n).map((c) => ({ code: c.code, name: c.name, biggest: false }));
+  // העיר הבולטת — לפי האחוז, מבין הערים שיש בהן לפחות 5% ממצביעי המפלגה (הכרעת בעלים)
+  const total = all.reduce((a, c) => a + c.votes, 0);
+  const top = all.filter((c) => c.votes >= total * MIN_CITY_SHARE).sort((a, b) => b.share26 - a.share26).slice(0, n).map((c) => ({ code: c.code, name: c.name, biggest: false }));
   // מקום לעיר אחת בלבד — העיר החזקה; השינוי הגדול מסומן רק אם זו אותה עיר
   if (!change || n < 2) { const t = top.find((c) => c.code === change?.code); if (t) t.biggest = true; return top; }
   const hit = top.find((c) => c.code === change.code);

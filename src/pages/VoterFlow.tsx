@@ -73,8 +73,8 @@ export default function VoterFlow() {
       <p className="text-sm text-ink-soft">{partialLine()}</p>
       <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64 mt-4" />
       <p className="text-sm text-ink-soft mt-2">
-        השיוך לפי קלפי מדויקת ומיקום הקלפי מדויק יותר, אבל מכסה רק {pctValue(cov.ballots.total)}% מהקולות.
-        שאר הקלפיות משויכות לפי יישובים, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
+        השיוך לפי קלפיות זהות מדויק יותר, אבל מכסה רק {pctValue(cov.ballots.total)}% מהקולות, ומניח שההתפלגות זהה בשאר הקולות.
+        השיוך לפי יישובים משייך את השארית לפי ההתפלגות בכל היישוב, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
       </p>
       <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
       <p className="text-sm mt-2" aria-live="polite">{lead}</p>
