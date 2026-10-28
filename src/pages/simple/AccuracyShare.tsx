@@ -17,6 +17,8 @@ import { buildPromoData, guesserName } from "./PromoVideo";
 export interface AccuracyShareInput {
   actual: Seats; ids: string[]; crowdMean: Seats; mine: Seats | null; pollMean: Seats; polls: Seats[]; pollLabels: string[];
   hist: Record<string, number[]> | null; count: number; best: string[];
+  /** "ממוצע" או "חציון" — לפי המתג במסך; crowdMean ו-pollMean כבר לפיו */
+  avgWord?: string;
   group: { slug: string; logoUrl: string | null } | null;
 }
 const host = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -119,7 +121,7 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
   const [msg, setMsg] = useState<string | null>(null);
   const box = useRef<HTMLDivElement>(null);
   const mine = who === "mine" ? input.mine : null;
-  const label = mine ? (guesserName(name) ? `הניחוש של ${guesserName(name)}` : "הניחוש שלי") : "ממוצע הניחושים";
+  const label = mine ? (guesserName(name) ? `הניחוש של ${guesserName(name)}` : "הניחוש שלי") : `${input.avgWord ?? "ממוצע"} הניחושים`;
   useEffect(() => { box.current?.focus(); }, []);
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
   // תמונה — מתעדכנת מיד; סרטון — רק בלחיצה
@@ -161,7 +163,7 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
       </div>
       {input.mine && <div className="f-seg fit" role="group" aria-label="מה משתפים">
         <button type="button" aria-pressed={who === "mine"} onClick={() => { setWho("mine"); if (format === "video") { setUrl(null); setFile(null); } }}>הניחוש שלי</button>
-        <button type="button" aria-pressed={who === "crowd"} onClick={() => { setWho("crowd"); if (format === "video") { setUrl(null); setFile(null); } }}>ממוצע הניחושים</button>
+        <button type="button" aria-pressed={who === "crowd"} onClick={() => { setWho("crowd"); if (format === "video") { setUrl(null); setFile(null); } }}>{input.avgWord ?? "ממוצע"} הניחושים</button>
       </div>}
       {mine && <label className="grid gap-1 text-sm">שם שיופיע (לא חובה, עד שתי מילים)
         <input type="text" value={name} maxLength={30} onChange={e => setName(e.target.value)} className="bg-paper border border-line rounded-xl px-3 py-2 w-full text-base" /></label>}
