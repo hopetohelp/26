@@ -135,7 +135,7 @@ export default function GuessAccuracy() {
       {finalPolls.map(p => <button key={p.key} type="button" aria-pressed={chosen?.key === p.key} onClick={() => setFirm(p.key)}>{p.label}</button>)}
     </div>}
     </div>
-    <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <><PartyAvatar id={id} size={30} /><span className="sr-only">{nameOf(id)}</span></>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
+    <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <span className="inline-flex flex-col items-start gap-0.5"><PartyAvatar id={id} size={30} /><span className="text-xs leading-tight">{nameOf(id)}</span></span>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
     <AccuracyTable view={view} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={chosen ? blocs(chosen.values) : null} chosenLabel={chosen?.label} ready={ready} />
     <div className="f-card mt-4">
