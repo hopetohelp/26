@@ -10,6 +10,7 @@ import AccessCard from "./AccessCard";
 import PrivacyCard from "./PrivacyConsent";
 import { useMode, type ModeId } from "../lib/theme";
 import { navScreens, type Screen } from "../lib/pages";
+import { useNavShare } from "../lib/navShare";
 import { useSupportUnread } from "../lib/supportUnread";
 import { clockParts } from "./ExitPollClock";
 import { wallClockLeft } from "../lib/countdown";
@@ -147,6 +148,8 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const { advanced } = useInterface();
   const groupTab = useGroupTab();
   useGuessClosed(); // הסרגל מתרענן ברגע סגירת הניחושים (21:58)
+  // כפתור השיתוף של המסך הפתוח (מסך התוצאות), מימין ל-AI (הכרעת בעלים 28.10.2026)
+  const share = useNavShare();
   // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
   // בפס העליון (מחשב) — כל הלשוניות בשורה, בלי "עוד"; בסרגל התחתון — "עוד" (הכרעת בעלים 25.10.2026)
   const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";
@@ -172,6 +175,7 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
     {[...core, ...more.slice(0, inline)].map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
     {inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
+    {share && <button type="button" className="f-share" onClick={share.onClick} disabled={share.disabled}>שיתוף</button>}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
 }
@@ -263,9 +267,25 @@ function useVerifyOnLoad() {
   }, [pending]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
+/** טלפון, או טאבלט לגובה */
+const BOTTOM_NAV_QUERY = "(max-width: 767px), (orientation: portrait) and (max-width: 1100px)";
+function useForceBottomNav(): boolean {
+  const read = () => typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia(BOTTOM_NAV_QUERY).matches;
+  const [on, setOn] = useState(read);
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia(BOTTOM_NAV_QUERY), change = () => setOn(mq.matches);
+    mq.addEventListener("change", change);
+    return () => mq.removeEventListener("change", change);
+  }, []);
+  return on;
+}
+
 function LayoutBody() {
   const bottomCover = useBottomCover();
   const [navTop, setNavTop] = useState(() => typeof window !== "undefined" && window.innerWidth >= 1100);
+  // בטלפון ובטאבלט לגובה — הסרגל תמיד בתחתית, גם כשיש לו מקום למעלה (הכרעת בעלים 28.10.2026)
+  const forceBottom = useForceBottomNav();
   useVerifyOnLoad();
   const { advanced } = useInterface();
   const { pathname, hash } = useLocation();
@@ -285,13 +305,13 @@ function LayoutBody() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
-      <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop} onFit={setNavTop} /></header>
+      <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
       <AccessCard />
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
       </main>
-      {!navTop && <FocusNav className="f-nav-bottom" unread={unread} />}
+      {(!navTop || forceBottom) && <FocusNav className="f-nav-bottom" unread={unread} />}
     </div>
   );
 }
