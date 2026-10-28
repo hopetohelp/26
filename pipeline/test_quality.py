@@ -69,3 +69,8 @@ assert len(quality["corrections"]) == sum(len(p.get("corrections") or []) for p 
 assert quality["coverage"]["total"] == len(polls)
 assert not any(c["id"] == "2026-10-07-sf-nd-channel-14" and c["group"] == "sample" for c in quality["conflicts"])
 print("✅ Per-field verification, conflicts and corrections log")
+
+# מדגמי יום הבחירות אינם סקרים: אף סקר ברשימה אינו מתאריך יום הבחירות, והמדגמים נשמרים בנפרד (הכרעת בעלים 28.10.2026)
+from build_data import ELECTION_DAY_2026
+assert not [p["id"] for p in polls if p["end"] >= ELECTION_DAY_2026]
+print("✅ Exit polls are kept out of the polls list")

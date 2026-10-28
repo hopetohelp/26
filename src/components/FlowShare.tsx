@@ -24,6 +24,8 @@ const MIN_CITY_SHARE = 0.05;
 const TARGET_H = 1350;
 /** "חרדים": ש"ס ויהדות התורה, כל אחת בנפרד (הכרעת בעלים 28.10.2026) */
 const HAREDI = ["shas", "utj"];
+/** הרשימות הקטנות — מוצגות החל מ-0.1%, כמו במסך (הכרעת בעלים 28.10.2026) */
+const SMALL = new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]);
 /** "לאן הלכו" בכל המפלגות: רשימות 2022 שעברו את אחוז החסימה */
 const K25_PASSED = ["מחל", "פה", "ט", "כן", "שס", "ג", "ל", "עם", "ום", "אמת"];
 const LETTER_OF = Object.fromEntries(Object.entries(flow.letters26).map(([l, id]) => [id, l]));
@@ -47,9 +49,11 @@ function biggestChange(all: CityShare[]): CityShare | undefined {
   const total = all.reduce((a, c) => a + c.votes, 0);
   return all.filter((c) => c.share22 !== null && c.votes >= total * MIN_CITY_SHARE).sort((a, b) => delta(b) - delta(a))[0];
 }
-/** ערים בולטות: n הערים עם הכי הרבה מצביעים לקבוצה; כשיש מקום לשתיים ומעלה — העיר עם השינוי הגדול ביותר נכנסת תמיד (במקום האחרונה, אם צריך) */
+/** ערים בולטות: n הערים עם האחוז הגבוה ביותר לקבוצה (מבין הערים עם 5% ממצביעיה); כשיש מקום לשתיים ומעלה — העיר עם השינוי הגדול ביותר נכנסת תמיד (במקום האחרונה, אם צריך) */
 function topCities(all: CityShare[], n: number, change = biggestChange(all)): { code: string; name: string; biggest: boolean }[] {
-  const top = [...all].sort((a, b) => b.votes - a.votes).slice(0, n).map((c) => ({ code: c.code, name: c.name, biggest: false }));
+  // העיר הבולטת — לפי האחוז, מבין הערים שיש בהן לפחות 5% ממצביעי המפלגה (הכרעת בעלים)
+  const total = all.reduce((a, c) => a + c.votes, 0);
+  const top = all.filter((c) => c.votes >= total * MIN_CITY_SHARE).sort((a, b) => b.share26 - a.share26).slice(0, n).map((c) => ({ code: c.code, name: c.name, biggest: false }));
   // מקום לעיר אחת בלבד — העיר החזקה; השינוי הגדול מסומן רק אם זו אותה עיר
   if (!change || n < 2) { const t = top.find((c) => c.code === change?.code); if (t) t.biggest = true; return top; }
   const hit = top.find((c) => c.code === change.code);
@@ -77,7 +81,8 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 4; ctx.stroke(); }
   };
   const pill = (x: number, yy: number, w: number, h: number, color: string) => { if (w < 1) return; ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, yy, w, h, h / 2); ctx.fill(); };
-  const pct = (v: number) => ltrText(`${Math.round(v)}%`);
+  // מדיניות האחוזים של המסך גם בתמונה (הכרעת בעלים 28.10.2026): מתחת ל-2% — עשירית; בדיוק אחוז ⇐ "1%"
+  const pct = (v: number) => ltrText(`${smallPct(v) ?? "0"}%`);
   const minor = smallPct;
   const fit = (t: string, w: number) => { let n = t; while (ctx.measureText(n).width > w && n.length > 3) n = n.slice(0, -2) + "…"; return n; };
   let y = 120;
@@ -94,10 +99,14 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
 
   /** כרטיס מפלגה: שם ומנדטים, מאיפה הגיעו (חלק מרכזי) ולאן הלכו מצביעי הקודמת ב-2022 (חלק משני) */
   const partyCard = (id: string, x: number, w: number, maxRows: number) => {
-    const from = cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE)).slice(0, maxRows);
-    const prev = prevOf(id), to = prev.length ? wentToGroup(national, prev).filter((p) => p.share >= 1).slice(0, 3) : [];
+    const from = cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows);
+    const prev = prevOf(id), to = prev.length ? wentToGroup(national, prev).filter((p) => p.share >= 1 || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, 3) : []; // עד 3 תגיות (הכרעת בעלים)
     const narrow = w < CW;
-    const h = 130 + from.length * 92 + (to.length ? (narrow ? 70 + to.length * 56 : 130) : 0);
+    // שורות התגיות: בכרטיס צר — תגית בשורה; ברחב — לפי הרוחב
+    ctx.font = `600 26px ${body}`;
+    let tagRows = 0, rowW = 0;
+    for (const p of to) { const tw = ctx.measureText(`${p.name} ${minor(p.share) ?? ""}%`).width + 44; if (narrow || !tagRows || rowW + tw > w - 72) { tagRows++; rowW = tw; } else rowW += tw; }
+    const h = 130 + from.length * 92 + (to.length ? 70 + tagRows * 58 : 0);
     card(x, y, w, h);
     const xr = x + w - 36, xl = x + 36;
     ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 40px ${display}`; ctx.fillText(newName(id), xr, y + 56);
@@ -119,7 +128,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
       for (const p of to) {
         const t = `${fit(p.name, w - 170)} ${minor(p.share) ?? ""}%`, tw = ctx.measureText(t).width + 32;
         if (narrow) { pill(xr - tw, ty, tw, 46, P.faint); ctx.fillStyle = P.ink; ctx.textAlign = "center"; ctx.fillText(t, xr - tw / 2, ty + 24); ty += 56; continue; }
-        if (xx - tw < xl) break;
+        if (xx - tw < xl) { xx = xr; ty += 58; }
         pill(xx - tw, ty, tw, 48, P.faint); ctx.fillStyle = P.ink; ctx.textAlign = "center"; ctx.fillText(t, xx - tw / 2, ty + 25); xx -= tw + 12;
       }
     }
@@ -153,31 +162,40 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     const b = blocsOf(m), to = spec.who === "all" && spec.dir === "to";
     grid((to ? b.wentTo : b.cameFrom).filter((r) => BLOC_IDS.slice(0, 4).includes(r.id)), (id) => id, to ? "ל" : "מ");
   };
-  /** ערים בולטות — כמה שנכנס עד גובה התמונה, לפחות אחת */
+  /** ערים בולטות — כמה שנכנס עד גובה התמונה, לפחות אחת; ב"חרדים" — כרטיסים נפרדים לעיר הבולטת בש"ס ולעיר הבולטת ביהדות התורה (הכרעת בעלים 28.10.2026) */
   const cities = () => {
     if (!units) return;
-    const rowH = ids.length > 1 ? 150 : 118;
-    const n = Math.max(1, Math.min(5, Math.floor((TARGET_H - (y + 62) - (QR_SIZE + 120)) / (rowH + 16))));
-    const each = ids.map((id) => new Map(cityShares(units, [id]).map((c) => [c.code, c])));
-    const changes = ids.map((_, k) => biggestChange([...each[k].values()])).filter((c): c is CityShare => !!c);
-    const list = topCities(cityShares(units, ids), n, changes.sort((a, b) => delta(b) - delta(a))[0]);
-    heading(n > 1 ? "ערים בולטות" : "עיר בולטת");
-    for (const ct of list) {
-      card(L, y, CW, rowH, ct.biggest ? P.blueHi : undefined);
-      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + (ct.biggest ? 46 : rowH / 2));
-      if (ct.biggest) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText("השינוי הגדול ביותר", R - 36, y + 88); }
-      ids.forEach((id, k) => {
-        const c = each[k].get(ct.code); if (!c) return;
-        const two = ids.length > 1, cx = two && k === 0 ? L + 36 + 300 : L + 36;
-        if (two) { ctx.textAlign = "left"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`; ctx.fillText(newName(id), cx, y + 34); }
-        ctx.textAlign = "left"; ctx.fillStyle = P.ink; ctx.font = `800 50px ${num}`; ctx.fillText(pct(c.share26), cx, y + (two ? 82 : 50));
-        if (c.share22 !== null) {
-          const d = c.share26 - c.share22; ctx.font = `700 24px ${num}`; ctx.fillStyle = d >= 0 ? P.blueHi : P.redHi;
-          ctx.fillText(ltrText(`${d >= 0 ? "▲" : "▼"} ${Math.abs(Math.round(d))}%  ·  2022: ${Math.round(c.share22)}%`), cx, y + (two ? 126 : 92));
+    const rowH = 118;
+    const n = Math.max(ids.length, Math.min(5, Math.floor((TARGET_H - (y + 62) - (QR_SIZE + 120)) / (rowH + 16))));
+    const two = ids.length > 1;
+    // "חרדים": לכל מפלגה — העיר עם השינוי הגדול ביותר (מבין ערים עם 5% ממצביעיה), באותו נוסח לשתיהן (הכרעת בעלים)
+    heading(two ? "השינוי הגדול ביותר" : n > 1 ? "ערים בולטות" : "עיר בולטת");
+    ids.forEach((id) => {
+      const all = cityShares(units, [id]), map = new Map(all.map((c) => [c.code, c]));
+      const change = biggestChange(all);
+      const list = two ? (change ? [{ code: change.code, name: change.name, biggest: false }] : []) : topCities(all, n);
+      list.forEach((ct) => {
+        const c = map.get(ct.code)!;
+        card(L, y, CW, rowH, ct.biggest ? P.blueHi : undefined);
+        // מימין: שם המפלגה (בחרדים) והעיר; משמאל — רק הנתונים
+        const note = two ? newName(id) : ct.biggest ? "השינוי הגדול ביותר" : "";
+        ctx.textAlign = "right";
+        if (two) { ctx.fillStyle = P.soft; ctx.font = `600 26px ${body}`; ctx.fillText(note, R - 36, y + 36); ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + 80); }
+        else {
+          ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + (note ? 46 : rowH / 2));
+          if (note) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(note, R - 36, y + 88); }
         }
+        // השינוי בגדול, ומתחתיו אז והיום (הכרעת בעלים); בלי קודמת ב-2022 — האחוז של היום בגדול
+        const now = `2026: ${smallPct(c.share26) ?? "0"}%`;
+        let big: string, color: string = P.ink;
+        if (c.share22 !== null) { const d = c.share26 - c.share22; big = `${d >= 0 ? "▲" : "▼"} ${smallPct(Math.abs(d)) ?? "0"}%`; color = d >= 0 ? P.blueHi : P.redHi; }
+        else big = pct(c.share26);
+        ctx.textAlign = "left"; ctx.fillStyle = color; ctx.font = `800 50px ${num}`; ctx.fillText(ltrText(big), L + 36, y + 50);
+        ctx.fillStyle = P.soft; ctx.font = `600 24px ${num}`;
+        ctx.fillText(ltrText(c.share22 !== null ? `2022: ${smallPct(c.share22) ?? "0"}%  ·  ${now}` : now), L + 36, y + 92);
+        y += rowH + 16;
       });
-      y += rowH + 16;
-    }
+    });
   };
 
   if (spec.who === "all") {
@@ -195,7 +213,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
       for (const { id, s } of list) {
         ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 34px ${body}`; ctx.fillText(newName(id), R - 36, y + 10);
         ctx.textAlign = "left"; ctx.font = `800 50px ${num}`; ctx.fillText(pct(s.share26), L + 36, y + 10);
-        if (s.share22 !== null) { ctx.fillStyle = P.soft; ctx.font = `500 26px ${num}`; ctx.fillText(ltrText(`2022: ${Math.round(s.share22)}%`), L + 180, y + 12); }
+        if (s.share22 !== null) { ctx.fillStyle = P.soft; ctx.font = `500 26px ${num}`; ctx.fillText(ltrText(`2022: ${smallPct(s.share22) ?? "0"}%`), L + 180, y + 12); }
         y += 84;
       }
       ctx.textAlign = "center"; ctx.fillStyle = P.soft; ctx.font = `400 26px ${body}`; ctx.fillText("בעיר יש מעט קלפיות להשוואה, ולכן מוצגים רק האחוזים", IMG_W / 2, y + 20); y += 70;

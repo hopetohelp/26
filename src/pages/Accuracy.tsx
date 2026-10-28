@@ -9,6 +9,7 @@ import Explained from "../components/Explained";
 import { Card, ChartWithTable, Fold, Note, PageTitle, Columns } from "../components/ui";
 import historyFile from "../data/history.json";
 import { electionButtonLabel, results } from "../lib/data";
+import { Accuracy2026, K26 } from "./Results2026";
 import { dateRange, date, rng, seatsFmt, signed } from "../lib/format";
 import {
   EVE_DAYS,
@@ -57,8 +58,21 @@ const spread = cycles.map((c) => {
 });
 const r1 = (x: number) => seatsFmt(Math.round(x * 10) / 10);
 
+/** כפתור לכל מערכת: 2026 (ספירה חלקית) ואחריה המערכות שהסתיימו */
+const chipOptions = () => [K26, ...newestFirst.map((x) => ({ id: x.cycle.id, label: <>{electionButtonLabel(x.cycle.label)}<span className="sr-only"> — הכנסת ה-{x.cycle.knesset}</span></> }))];
+
 export default function Accuracy() {
-  const [id, setId] = useState("k25");
+  const [id, setId] = useState(K26.id);
+  if (id === K26.id) return (
+    <Columns>
+      <PageTitle inColumns lead="הסקר האחרון של כל מכון לפני הבחירות, מול הספירה של 2026.">דיוק הסקרים</PageTitle>
+      <Accuracy2026 chips={<Chips label="מערכת בחירות" value={id} onChange={setId} className="mb-4" options={chipOptions()} />} />
+    </Columns>
+  );
+  return <AccuracyPast id={id} setId={setId} />;
+}
+
+function AccuracyPast({ id, setId }: { id: string; setId: (id: string) => void }) {
   const s = summaries.find((x) => x.cycle.id === id)!;
   const c = s.cycle;
   const lists = useMemo(() => comparedLists(c, s.result).sort((a, b) => b.seats - a.seats), [c, s.result]);
@@ -105,7 +119,7 @@ export default function Accuracy() {
           value={id}
           onChange={setId}
           className="mb-4"
-          options={newestFirst.map((x) => ({ id: x.cycle.id, label: <>{electionButtonLabel(x.cycle.label)}<span className="sr-only"> — הכנסת ה-{x.cycle.knesset}</span></> }))}
+          options={chipOptions()}
         />
 
         <h3 className="text-xl font-display leading-tight mb-1">{finding(dev.outside.length, dev.askedCount)}</h3>
