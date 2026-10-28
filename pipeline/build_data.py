@@ -297,7 +297,21 @@ def build_polls(build_time: datetime) -> dict:
                 raise ValueError(f"סקר קבוצת אוכלוסייה לא תקין: {d['id']}")
             subgroup.append({**d, "seatSum": seat_sum})
     subgroup.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
-    return {"polls": polls, "subgroupPolls": subgroup}
+    # מדגמי יום הבחירות (22:00): מוצגים בארכיון, בנקודה נפרדת במגמות ובמסך "אחרונים",
+    # ואינם נכנסים לממוצעים, למודל או לדיוק הסקרים — לכן מחוץ לרשימת "polls" (הכרעת בעלים 28.10.2026)
+    exits = []
+    exit_path = RAW / "exit-polls.json"
+    if exit_path.exists():
+        for d in json.loads(exit_path.read_text(encoding="utf-8")):
+            published = datetime.fromisoformat(d["publishedAt"])
+            if published.tzinfo is None:
+                raise ValueError("מועד פרסום מדגם חייב לכלול אזור זמן")
+            seat_sum = sum(v.get("s", 0) for v in d["values"].values())
+            if seat_sum != 120 or any(k not in PARTY_KEY.values() for k in d["values"]):
+                raise ValueError(f"מדגם לא תקין: {d['id']}")
+            exits.append({**d, "firmHe": FIRM_HE.get(d["firm"], d["firm"]), "publisherHe": PUB_HE.get(d["publisher"], d["publisher"]), "seatSum": seat_sum})
+    exits.sort(key=lambda p: p["publisher"])
+    return {"polls": polls, "subgroupPolls": subgroup, "exitPolls": exits}
 
 
 # ---------------------------------------------------------------- תיקונים ואימות מול המקור

@@ -99,6 +99,24 @@ export interface SubgroupPoll {
   note?: string;
 }
 export const subgroupPolls = ((pollsFile as { subgroupPolls?: unknown }).subgroupPolls ?? []) as SubgroupPoll[];
+/** מדגם יום הבחירות (22:00) — בארכיון, בנקודה נפרדת במגמות ובמסך "אחרונים"; מחוץ לממוצעים, למודל ולדיוק הסקרים */
+export interface ExitPoll {
+  id: string;
+  firm: string;
+  firmHe: string;
+  publisher: string;
+  publisherHe: string;
+  publishedAt: string;
+  values: Record<string, { s: number }>;
+  urls: string[];
+  verified: boolean;
+  note?: string;
+}
+export const exitPolls = ((pollsFile as { exitPolls?: unknown }).exitPolls ?? []) as ExitPoll[];
+/** המנדטים של רשימה (או סכום קבוצת רשימות) במדגם; רשימה שלא הופיעה — 0 */
+export const exitSeats = (p: ExitPoll, ids: string[]) => ids.reduce((t, id) => t + (p.values[id]?.s ?? 0), 0);
+/** ממוצע המדגמים לרשימה או לקבוצה — מקור אחד למגמות ולמסך "אחרונים" */
+export const exitMean = (ids: string[]) => exitPolls.length ? exitPolls.reduce((t, p) => t + exitSeats(p, ids), 0) / exitPolls.length : null;
 export const meta = metaFile as unknown as {
   dataAsOf: string;
   electionDay: string;

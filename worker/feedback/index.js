@@ -401,6 +401,11 @@ export default {
       return reply({ ok: true, thread: await supportThread(env, participant) });
     }
 
+    // ---- מסכים מוסתרים (הכרעת בעלים 28.10.2026): לכל מסך off / admins / all; הקריאה פתוחה, השינוי רק למנהל (/admin/screens)
+    if (request.method === "GET" && url.pathname === "/screens") {
+      const row = await env.DB.prepare("SELECT value FROM settings WHERE name = 'screens'").first();
+      return reply({ ok: true, screens: row ? JSON.parse(row.value) : {} });
+    }
     // ---- ממשק ניהול: מפתח ב-Authorization: Bearer; במאגר רק הגיבוב שלו (admin_keys). שיחות תמיכה, תשובות ומספרים.
     if (url.pathname.startsWith("/admin/")) {
       const key = (request.headers.get("authorization") || "").replace(/^Bearer /, "");
@@ -488,6 +493,18 @@ export default {
         try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
         await env.DB.prepare("DELETE FROM held WHERE kind = ? AND target = ?").bind(String(b.kind || ""), String(b.target ?? "")).run();
         return reply({ ok: true });
+      }
+      if (url.pathname === "/admin/screens") {
+        if (request.method === "POST") {
+          if (agent) return reply({ ok: false, error: "assistant_not_allowed" }, 403);
+          let b = {};
+          try { b = await request.json(); } catch { return reply({ ok: false }, 400); }
+          const screens = b && typeof b.screens === "object" && !Array.isArray(b.screens) ? b.screens : null;
+          if (!screens || Object.keys(screens).length > 20 || Object.entries(screens).some(([k, v]) => !/^[a-z0-9-]{1,30}$/.test(k) || !["off", "admins", "all"].includes(v))) return reply({ ok: false, error: "bad_screens" }, 400);
+          await env.DB.prepare("INSERT INTO settings (name, value, updated_at) VALUES ('screens', ?, ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(JSON.stringify(screens), new Date().toISOString()).run();
+        }
+        const row = await env.DB.prepare("SELECT value FROM settings WHERE name = 'screens'").first();
+        return reply({ ok: true, screens: row ? JSON.parse(row.value) : {} });
       }
       // ---- מפתח AI: נשמר מוצפן, ולעולם אינו מוחזר. GET = האם מוגדר (ממסך הניהול או כסוד השרת AI_API_KEY)
       if (url.pathname === "/admin/ai-key") {

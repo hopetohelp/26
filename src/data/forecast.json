@@ -1,5 +1,5 @@
 {
- "asof": "2026-10-25",
+ "asof": "2026-10-28",
  "attempts": {
   "bestVoteAccuracy": 0.92997,
   "runs": 42,
@@ -12,7 +12,7 @@
   ]
  },
  "bloc": {
-  "atLeast61": 0.0482,
+  "atLeast61": 0.0534,
   "central": 54,
   "lists": [
    "likud",
@@ -22,7 +22,7 @@
    "rzp",
    "noam"
   ],
-  "mean": 52.24,
+  "mean": 52.27,
   "seats": [
    46,
    52,
@@ -30,7 +30,7 @@
   ]
  },
  "camp": {
-  "atLeast61": 0.0815,
+  "atLeast61": 0.0868,
   "central": 54,
   "lists": [
    "likud",
@@ -47,7 +47,7 @@
    60
   ]
  },
- "daysToElection": 2,
+ "daysToElection": -1,
  "electionDay": "2026-10-27",
  "enough": true,
  "gate": {
@@ -111,22 +111,22 @@
  "horizon": 4,
  "lists": {
   "amcha": {
-   "pass": 0.3116,
+   "pass": 0.3073,
    "seats": 0,
-   "seatsMean": 1.48,
+   "seatsMean": 1.46,
    "seatsRange": [
     0,
     0,
     5
    ],
-   "share": 2.84,
+   "share": 2.81,
    "shareRange": [
-    1.32,
-    4.17
+    1.33,
+    4.18
    ]
   },
   "bluewhite": {
-   "pass": 0.0151,
+   "pass": 0.0159,
    "seats": 0,
    "seatsMean": 0.08,
    "seatsRange": [
@@ -134,14 +134,14 @@
     0,
     0
    ],
-   "share": 0.23,
+   "share": 0.22,
    "shareRange": [
     0.0,
-    1.67
+    1.64
    ]
   },
   "democrats": {
-   "pass": 0.9937,
+   "pass": 0.9959,
    "seats": 9,
    "seatsMean": 8.69,
    "seatsRange": [
@@ -149,14 +149,14 @@
     9,
     11
    ],
-   "share": 6.99,
+   "share": 6.98,
    "shareRange": [
     5.27,
-    8.72
+    8.7
    ]
   },
   "haredi_public": {
-   "pass": 0.0163,
+   "pass": 0.0168,
    "seats": 0,
    "seatsMean": 0.09,
    "seatsRange": [
@@ -167,58 +167,58 @@
    "share": 0.25,
    "shareRange": [
     0.0,
-    1.71
+    1.7
    ]
   },
   "joint": {
-   "pass": 0.9956,
+   "pass": 0.9949,
    "seats": 9,
-   "seatsMean": 8.9,
+   "seatsMean": 9.02,
    "seatsRange": [
     7,
     9,
     11
    ],
-   "share": 7.1,
+   "share": 7.13,
    "shareRange": [
-    5.32,
-    8.84
+    5.39,
+    8.94
    ]
   },
   "likud": {
-   "pass": 0.9995,
+   "pass": 0.9998,
    "seats": 22,
-   "seatsMean": 21.26,
+   "seatsMean": 21.27,
    "seatsRange": [
     16,
     21,
     26
    ],
-   "share": 16.58,
+   "share": 16.57,
    "shareRange": [
-    12.82,
-    20.14
+    12.83,
+    20.2
    ]
   },
   "otzma": {
-   "pass": 0.9912,
+   "pass": 0.9948,
    "seats": 8,
-   "seatsMean": 7.97,
+   "seatsMean": 8.0,
    "seatsRange": [
     6,
     8,
     10
    ],
-   "share": 6.55,
+   "share": 6.56,
    "shareRange": [
-    4.92,
-    8.21
+    4.95,
+    8.18
    ]
   },
   "raam": {
-   "pass": 0.8301,
+   "pass": 0.8306,
    "seats": 6,
-   "seatsMean": 4.78,
+   "seatsMean": 4.77,
    "seatsRange": [
     0,
     5,
@@ -226,42 +226,42 @@
    ],
    "share": 4.42,
    "shareRange": [
-    2.84,
-    5.79
+    2.85,
+    5.73
    ]
   },
   "reservists": {
-   "pass": 0.4145,
+   "pass": 0.4179,
    "seats": 0,
-   "seatsMean": 2.0,
+   "seatsMean": 2.03,
    "seatsRange": [
     0,
     0,
     5
    ],
-   "share": 3.13,
+   "share": 3.14,
    "shareRange": [
-    1.6,
-    4.43
+    1.61,
+    4.5
    ]
   },
   "rzp": {
-   "pass": 0.978,
+   "pass": 0.9799,
    "seats": 7,
-   "seatsMean": 6.73,
+   "seatsMean": 6.76,
    "seatsRange": [
     5,
     7,
     9
    ],
-   "share": 5.52,
+   "share": 5.54,
    "shareRange": [
-    4.13,
-    6.93
+    4.14,
+    7.0
    ]
   },
   "shas": {
-   "pass": 0.9931,
+   "pass": 0.9938,
    "seats": 9,
    "seatsMean": 8.51,
    "seatsRange": [
@@ -269,31 +269,31 @@
     8,
     11
    ],
-   "share": 6.79,
+   "share": 6.78,
    "shareRange": [
-    5.06,
+    5.08,
     8.48
    ]
   },
   "together": {
-   "pass": 0.9989,
+   "pass": 0.9993,
    "seats": 13,
-   "seatsMean": 12.98,
+   "seatsMean": 12.96,
    "seatsRange": [
     10,
     13,
     16
    ],
-   "share": 10.14,
+   "share": 10.15,
    "shareRange": [
     7.69,
-    12.61
+    12.65
    ]
   },
   "utj": {
-   "pass": 0.9921,
+   "pass": 0.989,
    "seats": 8,
-   "seatsMean": 7.78,
+   "seatsMean": 7.73,
    "seatsRange": [
     6,
     8,
@@ -301,38 +301,38 @@
    ],
    "share": 6.21,
    "shareRange": [
-    4.65,
-    7.79
+    4.63,
+    7.8
    ]
   },
   "yashar": {
-   "pass": 0.9998,
+   "pass": 0.9999,
    "seats": 21,
-   "seatsMean": 21.2,
+   "seatsMean": 21.12,
    "seatsRange": [
     16,
     21,
     26
    ],
-   "share": 16.49,
+   "share": 16.47,
    "shareRange": [
-    12.8,
-    20.1
+    12.65,
+    20.06
    ]
   },
   "yb": {
-   "pass": 0.9889,
+   "pass": 0.99,
    "seats": 8,
-   "seatsMean": 7.55,
+   "seatsMean": 7.52,
    "seatsRange": [
     6,
     7,
     10
    ],
-   "share": 6.06,
+   "share": 6.05,
    "shareRange": [
-    4.56,
-    7.65
+    4.55,
+    7.6
    ]
   }
  },
@@ -432,8 +432,8 @@
  "specVersion": 5,
  "variant": "V5",
  "wasted": [
-  2.15,
-  5.07,
-  8.28
+  2.14,
+  5.03,
+  8.2
  ]
 }
