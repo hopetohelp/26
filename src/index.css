@@ -250,6 +250,19 @@
   }
 }
 
+/* הזמנה מתוך התוצאות המוטמעות: שלושה משפטים, שש שניות לכל אחד, באותו שטח בלי להזיז את העמוד. */
+.embed-cta-message { grid-area:1 / 1;min-width:0;opacity:0;animation:embed-cta-message 18s ease-in-out infinite; }
+.embed-cta-message:first-child { opacity:1; }
+.embed-cta:hover .embed-cta-message,
+.embed-cta:focus-within .embed-cta-message,
+.embed-cta[data-paused="true"] .embed-cta-message { animation-play-state:paused; }
+@keyframes embed-cta-message {
+  0%, 28% { opacity:1;transform:translateY(0); }
+  32% { opacity:0;transform:translateY(-.35em); }
+  33%, 96% { opacity:0;transform:translateY(.35em); }
+  100% { opacity:1;transform:translateY(0); }
+}
+
 /* "ההשערה שלך": רגע אחד כשהכנסת מגיעה ל-120 (מכובה ב-prefers-reduced-motion למעלה) */
 @keyframes seat-pop {
   0% { transform: scale(1); }
