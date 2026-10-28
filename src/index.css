@@ -250,9 +250,12 @@
   }
 }
 
-/* הזמנה מתוך התוצאות המוטמעות: שש שניות לכל משפט, באותו שטח בלי להזיז את העמוד. */
-.embed-cta-message { grid-area:1 / 1;min-width:0;opacity:0;transform:translateY(.35em);transition:opacity .35s ease,transform .35s ease; }
-.embed-cta-message[data-active="true"] { opacity:1;transform:translateY(0); }
+/* הזמנה מתוך התוצאות המוטמעות: דפדוף כל שתי שניות, באותו שטח בלי להזיז את העמוד. */
+.embed-cta > a { text-decoration:none; }
+.embed-cta-words { perspective:800px; }
+.embed-cta-message { grid-area:1 / 1;min-width:0;opacity:0;backface-visibility:hidden;transform-origin:center;transform:rotateX(-90deg);transition:opacity .48s ease,transform .48s cubic-bezier(.4,0,.2,1); }
+.embed-cta-message[data-previous="true"] { transform:rotateX(90deg); }
+.embed-cta-message[data-active="true"] { opacity:1;transform:rotateX(0deg); }
 
 /* "ההשערה שלך": רגע אחד כשהכנסת מגיעה ל-120 (מכובה ב-prefers-reduced-motion למעלה) */
 @keyframes seat-pop {
