@@ -5,7 +5,6 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/sh
 import { BLOC_COLORS, THEMES } from "../lib/promoVideo";
 import { results2026 } from "../lib/guessAccuracyData";
 import { DEFAULT_LINEAGE } from "../lib/lineage";
-import { BLOC_MEMBERS } from "../lib/simpleSources";
 import { BLOC_IDS, BLOC_NAMES, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, partialLine, type FlowPart, type FlowRow, type Mode } from "../lib/voterFlow";
 
 /** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
@@ -37,11 +36,13 @@ function cityShares(u: Units, ids: string[]): CityShare[] {
 }
 
 /** ערים בולטות: 4 הערים עם הכי הרבה מצביעים לקבוצה, והעיר עם השינוי הגדול ביותר באחוזים מבין הערים עם לפחות 5% מהמצביעים שלה */
-function topCities(all: CityShare[]): (CityShare & { biggest?: boolean })[] {
+function biggestChange(all: CityShare[]): CityShare | undefined {
   const total = all.reduce((a, c) => a + c.votes, 0);
-  const top = [...all].sort((a, b) => b.votes - a.votes).slice(0, 4).map((c) => ({ ...c }));
-  const change = all.filter((c) => c.share22 !== null && c.votes >= total * MIN_CITY_SHARE)
+  return all.filter((c) => c.share22 !== null && c.votes >= total * MIN_CITY_SHARE)
     .sort((a, b) => Math.abs(b.share26 - b.share22!) - Math.abs(a.share26 - a.share22!))[0];
+}
+function topCities(all: CityShare[], change = biggestChange(all)): (CityShare & { biggest?: boolean })[] {
+  const top = [...all].sort((a, b) => b.votes - a.votes).slice(0, 4).map((c) => ({ ...c }));
   if (!change) return top;
   const hit = top.find((c) => c.code === change.code);
   if (hit) { (hit as CityShare & { biggest?: boolean }).biggest = true; return top; }
@@ -58,8 +59,9 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   const cv = document.createElement("canvas"); cv.width = IMG_W; cv.height = 3600;
   const ctx = cv.getContext("2d")!; ctx.direction = "rtl"; ctx.textBaseline = "middle";
   const R = IMG_W - 90, L = 90, CW = R - L;
-  const ids = spec.who === "haredi" ? [...BLOC_MEMBERS.haredi] : spec.who === "party" ? [spec.party] : [];
-  const groupName = spec.who === "haredi" ? "המפלגות החרדיות" : newName(spec.party);
+  // "חרדים": ש"ס ויהדות התורה, כל אחת בנפרד (הכרעת בעלים 28.10.2026)
+  const ids = spec.who === "haredi" ? HAREDI : spec.who === "party" ? [spec.party] : [];
+  const groupName = spec.who === "haredi" ? ids.map(newName).join(" ו") : newName(spec.party);
   const place = spec.where === "city" && units ? Object.entries(units.places).find(([, p]) => p.name === spec.city.trim()) : undefined;
   const cityData = place ? (flow as unknown as { cities?: Record<string, { flows: number[][] }> }).cities?.[place[0]] : undefined;
   const matrix = cityData?.flows ?? (spec.where === "city" ? null : flow.modes[spec.mode].flows);
@@ -82,9 +84,10 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   pill(IMG_W / 2 - pw / 2, y - 22, pw, 44, P.faint); ctx.fillStyle = P.ink; ctx.fillText(pl, IMG_W / 2, y); y += 70;
 
   /** מאיפה הגיעו: כרטיס עם שורה לכל מקור — שם, פס בצבע הגוש של 2022 ואחוז גדול */
-  const sources = (list: FlowPart[]) => {
-    const rows = list.filter((x) => x.share >= MIN_SHARE).slice(0, 6), h = 60 + rows.length * 96;
+  const sources = (list: FlowPart[], heading?: string) => {
+    const rows = list.filter((x) => x.share >= (heading ? 1 : MIN_SHARE)).slice(0, heading ? 4 : 6), h = 60 + rows.length * 96 + (heading ? 70 : 0);
     card(L, y, CW, h); y += 48;
+    if (heading) { ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 40px ${display}`; ctx.fillText(heading, R - 36, y + 4); y += 70; }
     for (const p of rows) {
       ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 34px ${body}`; ctx.fillText(p.name, R - 36, y + 8);
       ctx.textAlign = "left"; ctx.font = `800 54px ${num}`; ctx.fillText(pct(p.share), L + 36, y + 10);
@@ -141,7 +144,29 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     y += 60;
   };
 
-  if (spec.where === "top" && units) {
+  if (spec.where === "top" && units && spec.who === "haredi") {
+    // הערים לפי סך המצביעים לשתיהן; בכל כרטיס — כל מפלגה בנפרד; השינוי הגדול ביותר — של אחת מהן
+    const each = ids.map((id) => new Map(cityShares(units, [id]).map((c) => [c.code, c])));
+    const changes = ids.map((_, k) => biggestChange([...each[k].values()])).filter(Boolean) as CityShare[];
+    const big = changes.sort((a, b) => Math.abs(b.share26 - b.share22!) - Math.abs(a.share26 - a.share22!))[0];
+    for (const ct of topCities(cityShares(units, ids), big)) {
+      card(L, y, CW, 190, ct.biggest ? P.blueHi : undefined);
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 42px ${body}`; ctx.fillText(ct.name, R - 36, y + 50);
+      if (ct.biggest) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText("השינוי הגדול ביותר", R - 36, y + 92); }
+      ids.forEach((id, k) => {
+        const c = each[k].get(ct.code); if (!c) return;
+        // שתי עמודות בצד השמאלי של הכרטיס: ש"ס, ולידה יהדות התורה
+        const cx = k === 0 ? L + 36 + 330 : L + 36;
+        ctx.textAlign = "left"; ctx.fillStyle = P.soft; ctx.font = `600 26px ${body}`; ctx.fillText(newName(id), cx, y + 46);
+        ctx.fillStyle = P.ink; ctx.font = `800 54px ${num}`; ctx.fillText(pct(c.share26), cx, y + 104);
+        if (c.share22 !== null) {
+          const d = c.share26 - c.share22; ctx.font = `700 24px ${num}`; ctx.fillStyle = d >= 0 ? P.blueHi : P.redHi;
+          ctx.fillText(ltrText(`${d >= 0 ? "▲" : "▼"} ${Math.abs(Math.round(d))}%  ·  2022: ${Math.round(c.share22)}%`), cx, y + 152);
+        }
+      });
+      y += 210;
+    }
+  } else if (spec.where === "top" && units) {
     for (const ct of topCities(cityShares(units, ids))) {
       card(L, y, CW, 140, ct.biggest ? P.blueHi : undefined);
       ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 42px ${body}`; ctx.fillText(ct.name, R - 36, y + 52);
@@ -159,11 +184,12 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
       const rows = flowsFor(spec.mode).lists.cameFrom.filter((r) => r.id !== "other" && r.id !== "abstain" && r.total > 0 && (results2026.seats[r.id] ?? 0) > 0)
         .map((r) => (matrix === flow.modes[spec.mode].flows ? r : { ...r, parts: cameFromGroup(matrix, [r.id]) }));
       grid(rows);
-    } else sources(cameFromGroup(matrix, ids));
+    } else if (spec.who === "haredi") ids.forEach((id) => sources(cameFromGroup(matrix, [id]), newName(id)));
+    else sources(cameFromGroup(matrix, ids));
   } else if (units && place) {
     // עיר עם מעט קלפיות: רק האחוזים, 2022 מול 2026
-    const keys = spec.who === "all" ? Object.keys(LETTER_OF).filter((id) => id !== "other").map((id) => [id]) : [ids];
-    const list = keys.map((k) => ({ s: cityShares({ ...units, places: { [place[0]]: place[1] } }, k)[0], n: spec.who === "all" ? newName(k[0]) : groupName }))
+    const keys = spec.who === "all" ? Object.keys(LETTER_OF).filter((id) => id !== "other").map((id) => [id]) : spec.who === "haredi" ? ids.map((id) => [id]) : [ids];
+    const list = keys.map((k) => ({ s: cityShares({ ...units, places: { [place[0]]: place[1] } }, k)[0], n: spec.who === "party" ? groupName : newName(k[0]) }))
       .filter(({ s }) => s.share26 >= 1).sort((a, b) => b.s.share26 - a.s.share26).slice(0, 6);
     card(L, y, CW, 50 + list.length * 84); y += 50;
     for (const { s, n } of list) {
@@ -202,6 +228,7 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, width: number): strin
   return line ? [...out, line] : out;
 }
 
+const HAREDI = ["shas", "utj"];
 const PARTIES = flow.new.filter((id) => id !== "other" && id !== "abstain");
 
 /** חלון השיתוף של "מה השתנה": מי, איפה, וגושים — ותמונה באותו עיצוב של שאר תמונות השיתוף */
