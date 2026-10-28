@@ -37,6 +37,8 @@ NEW = {"מחל": "likud", "דרך": "yashar", "ודם": "joint", "רק": "togeth
        "ב": "otzma", "שס": "shas", "ט": "rzp", "עם": "raam", "די": "reservists", "ך": "amcha",
        "נר": "code_black", "זך": "haredi_public", "ני": "noam"}
 ITERATIONS = 300
+# "מאיפה הגיעו" בעיר — רק כשיש בה לפחות כך יחידות השוואה; פחות מזה ההערכה לא יציבה
+MIN_CITY_UNITS = 30
 TIERS = ["sub", "ballot", "center", "city"]
 
 
@@ -113,18 +115,47 @@ def fit(pairs: list[tuple[list[float], list[int]]], I: int, J: int) -> list[list
     return P
 
 
+def unit_pair(tier: str, i22: list[int], i26: list[int], r22, r26, v22, v26) -> tuple[list[float], list[int]]:
+    x = [sum(v22[i][k] for i in i22) for k in range(len(v22[0]))]
+    y = [sum(v26[i][k] for i in i26) for k in range(len(v26[0]))]
+    if tier != "sub":
+        e22, e26 = sum(n(r22[i], "בזב") for i in i22), sum(n(r26[i], "בזב") for i in i26)
+        x = [v * e26 / e22 for v in x] if e22 else x
+    return x, y
+
+
+def cities(r22: list[dict], r26: list[dict]) -> dict:
+    """לכל עיר עם לפחות MIN_CITY_UNITS יחידות (במתג היישובים): מטריצת מעבר משלה"""
+    v22, v26 = [vector(r, OLD) for r in r22], [vector(r, list(NEW)) for r in r26]
+    by = defaultdict(list)
+    for u in match(r22, r26, True):
+        by[r26[u[2][0]]["סמל ישוב"]].append(unit_pair(*u, r22, r26, v22, v26))
+    out = {}
+    for code, pairs in by.items():
+        if len(pairs) < MIN_CITY_UNITS:
+            continue
+        I, J = len(OLD) + 2, len(NEW) + 2
+        P = fit(pairs, I, J)
+        base = [sum(x[i] for x, _ in pairs) for i in range(I)]
+        out[code] = {"units": len(pairs), "flows": [[round(base[i] * P[i][j]) for j in range(J)] for i in range(I)]}
+    return out
+
+
+def counted(r26: list[dict]) -> dict:
+    """"נתונים חלקיים X% מהמצביעים HH:MM": המצביעים בקלפיות שבקובץ מתוך כלל המצביעים (מפת ההצבעה), ושעת הקובץ"""
+    total = json.loads((ROOT / "public" / "turnout.json").read_text(encoding="utf-8"))["total"]["מצביעים"]
+    res = json.loads((ROOT / "raw" / "results-2026.json").read_text(encoding="utf-8"))
+    voters = sum(n(r, "מצביעים") for r in r26)
+    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1]}
+
+
 def mode(r22: list[dict], r26: list[dict], by_city: bool) -> dict:
     new = list(NEW)
     v22 = [vector(r, OLD) for r in r22]
     v26 = [vector(r, new) for r in r26]
     pairs, tiers = [], {t: {"units": 0, "valid": 0} for t in TIERS}
     for tier, i22, i26 in match(r22, r26, by_city):
-        x = [sum(v22[i][k] for i in i22) for k in range(len(OLD) + 2)]
-        y = [sum(v26[i][k] for i in i26) for k in range(len(new) + 2)]
-        if tier != "sub":
-            e22, e26 = sum(n(r22[i], "בזב") for i in i22), sum(n(r26[i], "בזב") for i in i26)
-            x = [v * e26 / e22 for v in x] if e22 else x
-        pairs.append((x, y))
+        pairs.append(unit_pair(tier, i22, i26, r22, r26, v22, v26))
         tiers[tier]["units"] += 1
         tiers[tier]["valid"] += sum(n(r26[i], "כשרים") for i in i26)
     I, J = len(OLD) + 2, len(new) + 2
@@ -158,7 +189,9 @@ def main() -> int:
         "letters26": NEW,
         "ballots2026": len(r26),
         "valid2026": sum(n(r, "כשרים") for r in r26),
+        "counted": counted(r26),
         "modes": {"ballots": mode(r22, r26, False), "localities": mode(r22, r26, True)},
+        "cities": cities(r22, r26),
     }
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     UNITS.write_text(json.dumps(units_file(r22, r26), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")

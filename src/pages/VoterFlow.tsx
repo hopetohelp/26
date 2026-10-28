@@ -1,11 +1,13 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
+import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Segmented } from "../components/Choice";
 import { Fold } from "../components/ui";
-import { coverage, flow, flowsFor, type FlowRow, type Mode } from "../lib/voterFlow";
+import { coverage, flow, flowsFor, partialLine, type FlowRow, type Mode } from "../lib/voterFlow";
 import { num, pctValue } from "../lib/format";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
+const FlowShare = lazy(() => import("../components/FlowShare"));
 
 type View = "from" | "to";
 const MODES: { id: Mode; label: string }[] = [
@@ -61,9 +63,12 @@ export default function VoterFlow() {
   const cov = { ballots: coverage("ballots"), localities: coverage("localities") };
   const data = flowsFor(mode);
   const lead = VIEWS.find((v) => v.id === view)!.lead;
+  const [sharing, setSharing] = useState(false);
+  useRegisterNavShare(useCallback(() => setSharing(true), []), false);
   return (
     <div>
       <h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
+      <p className="text-sm text-ink-soft">{partialLine()}</p>
       <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64 mt-4" />
       <p className="text-sm text-ink-soft mt-2">
         החלוקה לקלפיות השתנתה, ולכן קלפי מדויקת מכסה רק {pctValue(cov.ballots.ballot)}% מהקולות, ועם מיקום הקלפי {pctValue(cov.ballots.total)}%.
@@ -82,6 +87,7 @@ export default function VoterFlow() {
         <h2 className="text-xl font-display leading-tight mt-8">מעבר בין הגושים</h2>
         <Flows rows={data.blocs} view={view} />
       </Explained>
+      {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
       <Fold title="בדיקה לפי קלפי, מיקום או יישוב">
         <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
       </Fold>
