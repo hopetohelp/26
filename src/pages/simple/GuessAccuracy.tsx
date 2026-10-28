@@ -59,7 +59,7 @@ export default function GuessAccuracy() {
   const saved = session.me?.latest.seats?.payload as SeatsPayload | undefined;
   const mine: Seats | null = saved ? Object.fromEntries(IDS.map(id => [id, (seats.draft ?? saved).seats[id]?.v ?? 0])) : null;
   const [mode, setMode] = useState<"guesses" | "polls">("guesses");
-  const [who, setWho] = useState<"mine" | "all">("mine");
+  const [who, setWho] = useState<"mine" | "all">("all"); // ברירת המחדל במורחב: כל הניחושים (הכרעת בעלים 28.10.2026)
   const [firm, setFirm] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const openShare = useCallback(() => setSharing(true), []);
