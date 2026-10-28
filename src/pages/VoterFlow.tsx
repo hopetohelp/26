@@ -12,10 +12,13 @@ const VIEWS: { id: View; label: string }[] = [
 ];
 /** חלק קטן מ-3% מצטרף לשורה "אחרים" — כדי שכל כרטיס יישאר קריא */
 const MIN_SHARE = 3;
+/** רשימות שמוצגות תמיד בשורה נפרדת, גם מתחת ל-3% (הכרעת בעלים 28.10.2026) */
+const ALWAYS = new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]);
 
 function Row({ row, view }: { row: FlowRow; view: View }) {
-  const main = row.parts.filter((p) => p.share >= MIN_SHARE);
-  const rest = row.parts.filter((p) => p.share < MIN_SHARE).reduce((a, p) => a + p.share, 0);
+  const shown = (p: FlowRow["parts"][number]) => p.share >= MIN_SHARE || ALWAYS.has(p.id);
+  const main = row.parts.filter(shown);
+  const rest = row.parts.filter((p) => !shown(p)).reduce((a, p) => a + p.share, 0);
   return (
     <li className="border-t border-paper-line py-3">
       <h3 className="font-bold">{row.name}</h3>
