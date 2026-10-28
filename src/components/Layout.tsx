@@ -19,7 +19,7 @@ import { LOCK_AT } from "../pages/guess/model";
 import { useSession } from "../pages/guess/useCrowd";
 import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
-import { useHagzaraTheme } from "../pages/simple/hagzara";
+import { useHagzara, useHagzaraTheme } from "../pages/simple/hagzara";
 
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
@@ -84,7 +84,7 @@ function ModePicker() {
  * המתג מוסיף פקדים ופירוט באותו מסך; אינו מחליף מעטפת.
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
-function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean; onFit: (top: boolean) => void }) {
+function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: string | null; navTop: boolean; onFit: (top: boolean) => void }) {
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
   // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה.
@@ -124,7 +124,8 @@ function FocusBar({ member, navTop, onFit }: { member: boolean; navTop: boolean;
     return () => { ro.disconnect(); content.disconnect(); };
   }, [onFit, member, navTop]);
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
-    <NavLink to="/" className="f-logo">{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
+    {/* חברי הגזרה: סמל הגזרה בפס העליון (הכרעת בעלים 28/10) */}
+    <NavLink to="/" className="f-logo inline-flex items-center gap-2">{member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
     <FocusClock />
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
@@ -295,6 +296,7 @@ function LayoutBody() {
   const unread = useSupportUnread(pathname);
   const session = useSession();
   const hagzara = useHagzaraTheme(session);
+  const hagzaraLogo = useHagzara(session)?.logoUrl ?? null;
   useEffect(() => {
     // קישור לעוגן (למשל /method#model מהעוזר או מ"איך זה חושב?") — המסך מגלל לערך בעצמו; לא מחזירים לראש העמוד
     if (!hash) window.scrollTo(0, 0);
@@ -308,7 +310,7 @@ function LayoutBody() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
-      <header className="sticky top-0 z-40"><FocusBar member={hagzara} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
+      <header className="sticky top-0 z-40"><FocusBar member={hagzara} logo={hagzaraLogo} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
       <AccessCard />
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>

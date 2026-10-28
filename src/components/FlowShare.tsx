@@ -5,6 +5,9 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/sh
 import { BLOC_COLORS, THEMES } from "../lib/promoVideo";
 import { results2026 } from "../lib/guessAccuracyData";
 import { DEFAULT_LINEAGE } from "../lib/lineage";
+import { loadLogo } from "../pages/guess/communityShare";
+import { useHagzara } from "../pages/simple/hagzara";
+import { useSession } from "../pages/guess/useCrowd";
 import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow, type Mode } from "../lib/voterFlow";
 
 /** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
@@ -61,7 +64,7 @@ function topCities(all: CityShare[], n: number, change = biggestChange(all)): { 
   return top;
 }
 
-interface Spec { who: Who; party: string; where: Where; city: string; dir: Dir; blocs: boolean; mode: Mode }
+interface Spec { logo?: ImageBitmap | null; who: Who; party: string; where: Where; city: string; dir: Dir; blocs: boolean; mode: Mode }
 
 /** תמונת השיתוף בגווני הגזרה: רקע כהה עם הילות כחול ואדום, מסגרת מעוגלת, כרטיסים רכים; אחוזים בלבד */
 async function render(spec: Spec, units: Units | null): Promise<Blob> {
@@ -98,7 +101,9 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   pill(IMG_W / 2 - pw / 2, y - 22, pw, 44, P.faint); ctx.fillStyle = P.ink; ctx.fillText(pl, IMG_W / 2, y); y += 70;
 
   /** כרטיס מפלגה: שם ומנדטים, מאיפה הגיעו (חלק מרכזי) ולאן הלכו מצביעי הקודמת ב-2022 (חלק משני) */
-  const partyCard = (id: string, x: number, w: number, maxRows: number) => {
+  const partyRows = (id: string, maxRows: number) => cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows).length;
+  /** `slots`: מספר שורות "מאיפה הגיעו" שנשמר בכרטיס — בשני כרטיסים זה לצד זה, "לאן הלכו" מתחיל באותו קו בשניהם; `minH`: גובה אחיד */
+  const partyCard = (id: string, x: number, w: number, maxRows: number, slots = 0, minH = 0) => {
     const from = cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows);
     const prev = prevOf(id), to = prev.length ? wentToGroup(national, prev).filter((p) => p.share >= 1 || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, 3) : []; // עד 3 תגיות (הכרעת בעלים)
     const narrow = w < CW;
@@ -106,7 +111,8 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     ctx.font = `600 26px ${body}`;
     let tagRows = 0, rowW = 0;
     for (const p of to) { const tw = ctx.measureText(`${p.name} ${minor(p.share) ?? ""}%`).width + 44; if (narrow || !tagRows || rowW + tw > w - 72) { tagRows++; rowW = tw; } else rowW += tw; }
-    const h = 130 + from.length * 92 + (to.length ? 70 + tagRows * 58 : 0);
+    const fromN = Math.max(from.length, slots);
+    const h = Math.max(minH, 130 + fromN * 92 + (to.length ? 70 + tagRows * 58 : 0));
     card(x, y, w, h);
     const xr = x + w - 36, xl = x + 36;
     ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 40px ${display}`; ctx.fillText(newName(id), xr, y + 56);
@@ -121,7 +127,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
       yy += 92;
     }
     if (to.length) {
-      yy += 10; ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`;
+      yy = y + 128 + fromN * 92 + 10; ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`;
       ctx.fillText(fit(narrow ? "לאן הלכו מצביעי 2022" : `לאן הלכו מצביעי ${prev.map(oldName).join(" ו")} מ-2022`, w - 72), xr, yy);
       // תגיות קטנות: יעד ואחוז — בשורה אחת, או בעמודה בכרטיס צר
       ctx.font = `600 26px ${body}`; let xx = xr, ty = yy + 26;
@@ -223,13 +229,19 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     if (ids.length > 1) {
       // שתי מפלגות זו לצד זו
       const gap = 24, w = (CW - gap) / 2, top = y;
-      const ends = ids.map((id, k) => { y = top; return partyCard(id, R - (k + 1) * w - k * gap, w, 3); });
+      // "לאן הלכו" באותו קו בשני הכרטיסים, ושני הכרטיסים באותו גובה (הכרעת בעלים)
+      const slots = Math.max(...ids.map((id) => partyRows(id, 3)));
+      const heights = ids.map((id, k) => { y = top; return partyCard(id, R - (k + 1) * w - k * gap, w, 3, slots) - top; });
+      ctx.clearRect(0, top - 10, IMG_W, Math.max(...heights) + 20); // המעבר הראשון רק מדד גובה — מוחקים כדי שהכרטיסים לא יצוירו פעמיים
+      const ends = ids.map((id, k) => { y = top; return partyCard(id, R - (k + 1) * w - k * gap, w, 3, slots, Math.max(...heights)); });
       y = Math.max(...ends) + 30;
     } else y = partyCard(ids[0], L, CW, 5) + 30;
     if (spec.blocs) blocs(national);
     cities();
   }
 
+  // סמל הגזרה בקטן, בפינה העליונה (לחברי הגזרה; הכרעת בעלים 28/10)
+  if (spec.logo) { ctx.save(); ctx.beginPath(); ctx.arc(IMG_W - 92, 92, 34, 0, 2 * Math.PI); ctx.clip(); ctx.drawImage(spec.logo, IMG_W - 126, 58, 68, 68); ctx.restore(); }
   // תחתית: QR וכתובת האתר
   y += 20; drawQr(ctx, `${SITE_URL}#/changes`, L, y, QR_SIZE);
   ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 32px ${body}`; ctx.fillText("השוואת כל הקלפיות", R, y + 50);
@@ -271,6 +283,9 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
   const [file, setFile] = useState<File | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const box = useRef<HTMLDivElement>(null);
+  const logoUrl = useHagzara(useSession())?.logoUrl ?? null;
+  const [logo, setLogo] = useState<ImageBitmap | null>(null);
+  useEffect(() => { let live = true; void loadLogo(logoUrl).then((b) => live && setLogo(b)); return () => { live = false; }; }, [logoUrl]);
   useEffect(() => { box.current?.focus(); }, []);
   useEffect(() => { fetch(`${import.meta.env.BASE_URL}flow-units.json`).then((r) => (r.ok ? r.json() : Promise.reject())).then(setUnits).catch(() => setMsg("נתוני הערים לא נטענו.")); }, []);
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
@@ -280,11 +295,11 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
   useEffect(() => {
     if (!ready) return;
     let live = true;
-    render({ who, party, where, city, dir, blocs, mode }, units)
+    render({ logo, who, party, where, city, dir, blocs, mode }, units)
       .then((b) => { if (!live) return; setFile(new File([b], "elections26-changes.png", { type: "image/png" })); setUrl(URL.createObjectURL(b)); })
       .catch(() => live && setMsg("הכנת התמונה לא הצליחה."));
     return () => { live = false; };
-  }, [who, party, where, city, dir, blocs, mode, units, ready]);
+  }, [logo, who, party, where, city, dir, blocs, mode, units, ready]);
   const share = async () => {
     if (!file) return;
     const text = `מאיפה הגיעו המצביעים של כל מפלגה?\nהשוואה של כל הקלפיות, 2022 מול 2026\n${SITE_URL}#/changes`;
