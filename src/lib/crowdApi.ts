@@ -203,6 +203,8 @@ export interface Dashboard {
     hist?: Record<string, Record<string, number>>;
     /** כמה מהניחושים צדקו בכל הרשימות יחד מול תוצאות האמת (אין תוצאות — חסר) */
     exactAll?: number;
+    /** שלושת הניחושים המדויקים, בלי מזהים (worker/crowd/lib/results.js podium) */
+    podium?: { acc: number; exact: number; savedAt: string }[];
     /** רשימות שקיבלו לפחות ארבעה מנדטים באחת מגרסאות המשתתפים. */
     everPassedLists?: string[];
     /** "בקרב מי שקבעו ערך לרשימה" — לכל רשימה n משלה */
