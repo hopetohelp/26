@@ -6,6 +6,49 @@ import { pingEmbed } from "../lib/visits";
 import InfoTip from "./InfoTip";
 import { Segmented } from "./Choice";
 
+const CHANGES_MESSAGES = [
+  "חושבים שאתם יודעים מה השתנה מבחירות קודמות?",
+  "סקרנים לראות מי התחזק — ומאיפה הגיעו המצביעים?",
+  "מאיפה הגיעו מצביעי הציבור החרדי? בואו לגלות.",
+  "האם מצביעי ש״ס הצביעו למפלגות אחרות או נשארו בבית?",
+  "מי המפלגה שכן לקחה קולות מגוש הימין?",
+  "כמה אחוז ממצביעי עופר וינטר הגיעו מגוש הימין?",
+  "האם ג׳ התחזקה רק בקולות או גם באחוזים?",
+];
+
+/** גובה קבוע לפי המשפט הארוך ביותר; שם נגיש קבוע והחלפה שאפשר לעצור. */
+function ChangesPromo() {
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const sync = () => {
+      clearInterval(timer);
+      if (motion.matches) setCurrent(0);
+      else if (!paused && !hovered && !focused) timer = setInterval(() => setCurrent((i) => (i + 1) % CHANGES_MESSAGES.length), 6000);
+    };
+    sync();
+    motion.addEventListener("change", sync);
+    return () => { clearInterval(timer); motion.removeEventListener("change", sync); };
+  }, [paused, hovered, focused]);
+  return (
+    <div className="embed-cta relative mb-4 w-full" data-paused={paused} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
+      <a href={`${SITE_ORIGIN}/#/past?tab=changes`} target="_blank" rel="noopener" aria-label="מה השתנה מבחירות קודמות? גלו את ההתפלגות המלאה והמפורטת" className="block w-full rounded-theme border-2 border-signal bg-paper-card px-12 py-4 text-center text-ink">
+        <span aria-hidden="true" className="grid items-center text-base md:text-xl font-bold leading-snug">
+          {CHANGES_MESSAGES.map((message, i) => <span key={message} className="embed-cta-message" data-active={i === current}>{message}</span>)}
+        </span>
+        <span className="block mt-2 text-sm font-semibold text-signal underline underline-offset-4">גלו את ההתפלגות המלאה והמפורטת</span>
+      </a>
+      <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} title={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} className="absolute top-1 end-1 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-theme text-ink-soft motion-reduce:hidden">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">{paused ? <path d="M5 3L13 8L5 13Z" /> : <><rect x="4" y="3" width="3" height="10" rx="1" /><rect x="9" y="3" width="3" height="10" rx="1" /></>}</svg>
+      </button>
+    </div>
+  );
+}
+
 /** מסגרת מצומצמת להטמעה: תוכן, שורת מקור, דיווח גובה לאתר המארח, וקישורים פנימיים נפתחים באתר המלא בלשונית חדשה */
 export function EmbedFrame({ children }: { children: ReactNode }) {
   useMode();
@@ -47,11 +90,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   return (
     <div data-embed className="bg-paper text-ink">
       <main id="main" className="w-full px-3 md:px-4 py-4">
-        {pathname === "/results-2026" && <div className="mb-4">
-          <a href={`${SITE_ORIGIN}/#/past?tab=changes`} target="_blank" rel="noopener" className="inline-flex items-center justify-center min-h-[44px] rounded-theme border-2 border-signal bg-paper-card px-4 py-3 text-base font-bold text-ink">
-            מה השתנה מבחירות קודמות?
-          </a>
-        </div>}
+        {pathname === "/results-2026" && <ChangesPromo />}
         {children}
       </main>
       <p className="px-3 md:px-4 pb-3 text-xs text-ink-soft">
