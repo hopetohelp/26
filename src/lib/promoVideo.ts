@@ -39,7 +39,7 @@ const FLASH: [number, number][] = [[1.5, .9], [3.5, .5], [7.5, .7], [10.5, .35],
  * site — צבעי האתר (טוקני :root ב-index.css): רקע לבן, כחול כהה לטקסט, כחול לסקרים, כחול כהה לניחושים, זהב לניחוש שלי.
  * blue = צבע הסקרים, red = צבע הניחושים (שמות היסטוריים); onColor = טקסט על פרוסה או תווית צבעונית.
  */
-const THEMES = {
+export const THEMES = {
   hagzara: { bg: "#05070d", ink: "#ffffff", soft: "rgba(255,255,255,.62)", faint: "rgba(255,255,255,.1)", blue: "#2f74d8", blueHi: "#7fb0f2", red: "#e3262f", redHi: "#ff6b72", gold: "#b2781c", goldHi: "#e2b25c",
     onColor: "#ffffff", card: "rgba(255,255,255,.07)", track: "rgba(255,255,255,.12)", avatarBg: "#1a2030", avatarRing: "rgba(255,255,255,.25)", glowA: "47,116,216", glowB: "227,38,47", glowAlpha: .34, glowBAlpha: .28,
     beam: "255,255,255", beamAlpha: .055, vignette: "rgba(0,0,0,.55)", grain: .05, flash: "255,255,255", flashK: 1, punch: "227,38,47", blend: "lighter" as GlobalCompositeOperation, ringA: "227,38,47", ringB: "127,176,242", qrRing: "", pos: "#167846", neg: "#be2832", negRgb: "190,40,50", line: "rgba(255,255,255,.2)", sheen: "255,255,255" },

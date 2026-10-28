@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { SITE_URL } from "../lib/shareGuess";
 import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/shareImage";
+import { BLOC_COLORS, THEMES } from "../lib/promoVideo";
+import { results2026 } from "../lib/guessAccuracyData";
 import { DEFAULT_LINEAGE } from "../lib/lineage";
 import { BLOC_MEMBERS } from "../lib/simpleSources";
-import { BLOC_IDS, BLOC_NAMES, bloc2022, blocsOf, cameFromGroup, flow, flowsFor, newName, partialLine, type FlowPart, type FlowRow, type Mode } from "../lib/voterFlow";
+import { BLOC_IDS, BLOC_NAMES, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, partialLine, type FlowPart, type FlowRow, type Mode } from "../lib/voterFlow";
 
 /** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
 type Ballot = [string, string, number, number, ...number[]];
@@ -19,7 +21,6 @@ const MIN_SHARE = 3;
 /** "השינוי הגדול ביותר" — רק בעיר שיש בה לפחות 5% מהמצביעים של המפלגה (הכרעת בעלים 28.10.2026) */
 const MIN_CITY_SHARE = 0.05;
 const LETTER_OF = Object.fromEntries(Object.entries(flow.letters26).map(([l, id]) => [id, l]));
-const colorOf = (bloc: string) => { const k = ["netanyahu", "haredi", "arab", "eisenkot"].indexOf(bloc); return k < 0 ? "--bloc-miss" : `--bloc-${k + 1}`; };
 
 interface CityShare { code: string; name: string; votes: number; share26: number; share22: number | null }
 /** אחוז הקבוצה בכל יישוב: 2026 — הרשימות עצמן; 2022 — הרשימות שקדמו להן לפי השיוך של האתר (raw/lineage.json); בלי קודמת — אין השוואה */
@@ -49,109 +50,149 @@ function topCities(all: CityShare[]): (CityShare & { biggest?: boolean })[] {
 
 interface Spec { who: Who; party: string; where: Where; city: string; blocs: boolean; mode: Mode }
 
+/** תמונת השיתוף בגווני הגזרה (הכרעת בעלים 28.10.2026): רקע כהה עם הילות כחול ואדום, מסגרת מעוגלת, כרטיסים רכים; אחוזים בלבד */
 async function render(spec: Spec, units: Units | null): Promise<Blob> {
-  const { c, display, body, num } = await sharePalette();
-  const css = (n: string) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue(n).trim()})`;
-  const cv = document.createElement("canvas"); cv.width = IMG_W; cv.height = 3200;
+  const { display, body, num } = await sharePalette();
+  const P = THEMES.hagzara;
+  const blocColor = (b: string) => BLOC_COLORS[b] ?? "rgba(255,255,255,.28)";
+  const cv = document.createElement("canvas"); cv.width = IMG_W; cv.height = 3600;
   const ctx = cv.getContext("2d")!; ctx.direction = "rtl"; ctx.textBaseline = "middle";
-  ctx.fillStyle = c.bg; ctx.fillRect(0, 0, IMG_W, cv.height);
-  const R = IMG_W - 70, L = 70;
+  const R = IMG_W - 90, L = 90, CW = R - L;
   const ids = spec.who === "haredi" ? [...BLOC_MEMBERS.haredi] : spec.who === "party" ? [spec.party] : [];
   const groupName = spec.who === "haredi" ? "המפלגות החרדיות" : newName(spec.party);
   const place = spec.where === "city" && units ? Object.entries(units.places).find(([, p]) => p.name === spec.city.trim()) : undefined;
   const cityData = place ? (flow as unknown as { cities?: Record<string, { flows: number[][] }> }).cities?.[place[0]] : undefined;
   const matrix = cityData?.flows ?? (spec.where === "city" ? null : flow.modes[spec.mode].flows);
   const where = spec.where === "country" ? "כל הארץ" : spec.where === "top" ? "ערים בולטות" : place?.[1].name ?? spec.city;
+  const card = (x: number, yy: number, w: number, h: number, stroke?: string) => {
+    ctx.fillStyle = P.card; ctx.beginPath(); ctx.roundRect(x, yy, w, h, 28); ctx.fill();
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 4; ctx.stroke(); }
+  };
+  const pill = (x: number, yy: number, w: number, h: number, color: string) => { if (w < 1) return; ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, yy, w, h, h / 2); ctx.fill(); };
+  const pct = (v: number) => ltrText(`${Math.round(v)}%`);
 
   // כותרת
-  ctx.textAlign = "center"; ctx.fillStyle = c.ink; ctx.font = `800 58px ${display}`;
-  const title = spec.where === "top" ? `איפה ${groupName} ${spec.who === "party" ? "הכי חזקה" : "הכי חזקות"}?`
-    : spec.who === "all" ? "מאיפה הגיעו המצביעים?" : `מאיפה הגיעו המצביעים של ${groupName}?`;
-  let y = 100;
-  for (const line of wrap(ctx, title, IMG_W - 140)) { ctx.fillText(line, IMG_W / 2, y); y += 72; }
-  ctx.fillStyle = c.soft; ctx.font = `500 32px ${body}`; ctx.fillText(`${where} · 2022 מול 2026`, IMG_W / 2, y); y += 44;
-  ctx.font = `400 28px ${body}`; ctx.fillText(partialLine(), IMG_W / 2, y); y += 70;
+  let y = 120;
+  ctx.textAlign = "center"; ctx.fillStyle = P.ink; ctx.font = `800 62px ${display}`;
+  const title = spec.where === "top" ? (spec.who === "party" ? `איפה ${groupName} הכי חזקה?` : "איפה החרדים הכי חזקים?")
+    : spec.who === "all" ? "מי הגיע מאיפה?" : `מאיפה הגיעו המצביעים של ${groupName}?`;
+  for (const line of wrap(ctx, title, CW)) { ctx.fillText(line, IMG_W / 2, y); y += 76; }
+  ctx.fillStyle = P.soft; ctx.font = `500 32px ${body}`; ctx.fillText(`${where} · 2022 מול 2026`, IMG_W / 2, y); y += 56;
+  ctx.font = `500 26px ${body}`; const pl = partialLine(), pw = ctx.measureText(pl).width + 48;
+  pill(IMG_W / 2 - pw / 2, y - 22, pw, 44, P.faint); ctx.fillStyle = P.ink; ctx.fillText(pl, IMG_W / 2, y); y += 70;
 
-  const bar = (x: number, w: number, yy: number, h: number, color: string) => { ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, yy, Math.max(w, 2), h, 8); ctx.fill(); };
-  /** שורת מקור: שם, פס בצבע הגוש של 2022, אחוז גדול */
+  /** מאיפה הגיעו: כרטיס עם שורה לכל מקור — שם, פס בצבע הגוש של 2022 ואחוז גדול */
   const sources = (list: FlowPart[]) => {
-    for (const p of list.filter((x) => x.share >= MIN_SHARE).slice(0, 7)) {
-      ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `600 34px ${body}`; ctx.fillText(p.name, R, y + 26);
-      const x0 = L + 150, w = (R - 290 - x0) * p.share / 100;
-      bar(R - 290 - w, w, y + 6, 40, css(colorOf(bloc2022(p.id))));
-      ctx.textAlign = "left"; ctx.fillStyle = c.ink; ctx.font = `800 52px ${num}`; ctx.fillText(ltrText(`${Math.round(p.share)}%`), L, y + 26);
-      y += 78;
+    const rows = list.filter((x) => x.share >= MIN_SHARE).slice(0, 6), h = 60 + rows.length * 96;
+    card(L, y, CW, h); y += 48;
+    for (const p of rows) {
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 34px ${body}`; ctx.fillText(p.name, R - 36, y + 8);
+      ctx.textAlign = "left"; ctx.font = `800 54px ${num}`; ctx.fillText(pct(p.share), L + 36, y + 10);
+      // פס דק מתחת לשורה: המסלול המלא, והחלק בצבע הגוש של 2022
+      const x0 = L + 36, W = R - 36 - x0;
+      pill(x0, y + 44, W, 12, P.track);
+      pill(R - 36 - W * p.share / 100, y + 44, W * p.share / 100, 12, blocColor(bloc2022(p.id)));
+      y += 96;
     }
+    y += 20;
   };
-  /** פס מוערם לכל שורה: חלקי המקור בצבעי הגושים של 2022 */
-  const stacked = (rows: FlowRow[], blocOfPart: (id: string) => string) => {
+  /** כל המפלגות: רשת כרטיסים — לכל רשימה המקור העיקרי באחוז גדול, והמקור השני בקטן */
+  const grid = (rows: FlowRow[]) => {
+    const gap = 24, w = (CW - gap) / 2, h = 170;
+    rows.forEach((r, i) => {
+      const col = i % 2, x = R - (col + 1) * w - col * gap, yy = y + Math.floor(i / 2) * (h + gap);
+      const [a, b] = r.parts.filter((p) => p.id !== "abstain" && p.id !== "other");
+      card(x, yy, w, h);
+      pill(x + w - 30, yy + 28, 8, h - 56, blocColor(bloc2026(r.id)));
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 32px ${body}`;
+      let n = r.name; while (ctx.measureText(n).width > w - 70 && n.length > 3) n = n.slice(0, -2) + "…";
+      ctx.fillText(n, x + w - 52, yy + 44);
+      if (a) {
+        ctx.font = `800 52px ${num}`; ctx.fillText(pct(a.share), x + w - 52, yy + 104);
+        const nw = ctx.measureText(pct(a.share)).width;
+        ctx.fillStyle = P.soft; ctx.font = `500 26px ${body}`; ctx.fillText(`מ${a.name}`, x + w - 52 - nw - 14, yy + 108, w - nw - 90);
+      }
+      if (b) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(`${Math.round(b.share)}% מ${b.name}`, x + w - 52, yy + 146, w - 80); }
+    });
+    y += Math.ceil(rows.length / 2) * (h + gap) + 10;
+  };
+  /** מעבר בין הגושים: לכל גוש של 2026 פס מוערם בצבעי הגושים של 2022 */
+  const blocs = (rows: FlowRow[]) => {
+    ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 42px ${display}`; ctx.fillText("מעבר בין הגושים", R, y + 10); y += 60;
+    card(L, y, CW, 60 + rows.length * 100 + 70); y += 50;
     for (const r of rows) {
-      ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `600 30px ${body}`;
-      let n = r.name; while (ctx.measureText(n).width > 300 && n.length > 3) n = n.slice(0, -2) + "…";
-      ctx.fillText(n, R, y + 22);
-      let x = R - 330; const W = R - 330 - L;
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 30px ${body}`; ctx.fillText(r.name, R - 36, y);
+      let x = R - 36; const W = CW - 72;
       for (const p of r.parts) {
-        const w = W * p.share / 100; bar(x - w + 1, w - 2, y + 4, 36, css(colorOf(blocOfPart(p.id))));
-        // האחוז בתוך כל חלק שיש בו מקום
-        ctx.font = `700 24px ${num}`; const t = ltrText(`${Math.round(p.share)}%`);
-        if (w > ctx.measureText(t).width + 14) { ctx.textAlign = "center"; ctx.fillStyle = "#fff"; ctx.fillText(t, x - w / 2, y + 23); }
+        const w = W * p.share / 100; pill(x - w + 2, y + 28, w - 4, 40, blocColor(p.id === "abstain" || p.id === "other" ? "" : p.id));
+        ctx.font = `700 24px ${num}`; const t = pct(p.share);
+        if (w > ctx.measureText(t).width + 20) { ctx.textAlign = "center"; ctx.fillStyle = "#fff"; ctx.fillText(t, x - w / 2, y + 49); }
         x -= w;
       }
-      y += 62;
+      y += 100;
     }
-  };
-  const legend = () => {
-    ctx.font = `500 26px ${body}`; let x = R; y += 10;
+    // מקרא
+    ctx.font = `500 24px ${body}`; let x = R - 36;
     for (const b of [...BLOC_IDS.slice(0, 4), "abstain"]) {
-      const label = b === "abstain" ? "לא הצביעו" : BLOC_NAMES[b], w = ctx.measureText(label).width + 70;
-      if (x - w < L) { x = R; y += 44; }
-      ctx.fillStyle = css(colorOf(b)); ctx.fillRect(x - 24, y - 12, 24, 24);
-      ctx.textAlign = "right"; ctx.fillStyle = c.soft; ctx.fillText(label, x - 34, y); x -= w;
+      const label = b === "abstain" ? "לא הצביעו" : BLOC_NAMES[b], w = ctx.measureText(label).width + 56;
+      if (x - w < L + 36) { x = R - 36; y += 38; }
+      pill(x - 20, y - 10, 20, 20, blocColor(b === "abstain" ? "" : b)); ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.fillText(label, x - 30, y); x -= w;
     }
-    y += 54;
+    y += 60;
   };
 
   if (spec.where === "top" && units) {
     for (const ct of topCities(cityShares(units, ids))) {
-      ctx.fillStyle = c.card; ctx.strokeStyle = ct.biggest ? css("--signal") : c.line; ctx.lineWidth = ct.biggest ? 5 : 2;
-      ctx.beginPath(); ctx.roundRect(L, y, R - L, 130, 22); ctx.fill(); ctx.stroke();
-      ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `700 40px ${body}`; ctx.fillText(ct.name, R - 30, y + 50);
-      ctx.fillStyle = c.soft; ctx.font = `500 26px ${body}`; ctx.fillText([ct.share22 === null ? "" : `2022: ${Math.round(ct.share22)}%`, ct.biggest ? "השינוי הגדול ביותר" : ""].filter(Boolean).join(" · "), R - 30, y + 96);
-      ctx.textAlign = "left"; ctx.fillStyle = c.ink; ctx.font = `800 64px ${num}`; ctx.fillText(ltrText(`${Math.round(ct.share26)}%`), L + 30, y + 58);
-      if (ct.share22 !== null) { const d = ct.share26 - ct.share22; ctx.font = `700 28px ${num}`; ctx.fillStyle = c.soft; ctx.fillText(ltrText(`${d >= 0 ? "▲" : "▼"} ${Math.abs(Math.round(d))}%`), L + 30, y + 106); }
-      y += 150;
+      card(L, y, CW, 140, ct.biggest ? P.blueHi : undefined);
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 42px ${body}`; ctx.fillText(ct.name, R - 36, y + 52);
+      ctx.fillStyle = P.soft; ctx.font = `500 26px ${body}`;
+      ctx.fillText([ct.share22 === null ? "" : `2022: ${Math.round(ct.share22)}%`, ct.biggest ? "השינוי הגדול ביותר" : ""].filter(Boolean).join(" · "), R - 36, y + 102);
+      ctx.textAlign = "left"; ctx.fillStyle = P.ink; ctx.font = `800 66px ${num}`; ctx.fillText(pct(ct.share26), L + 36, y + 62);
+      if (ct.share22 !== null) {
+        const d = ct.share26 - ct.share22; ctx.font = `700 28px ${num}`; ctx.fillStyle = d >= 0 ? P.blueHi : P.redHi;
+        ctx.fillText(ltrText(`${d >= 0 ? "▲" : "▼"} ${Math.abs(Math.round(d))}%`), L + 36, y + 112);
+      }
+      y += 160;
     }
   } else if (matrix) {
     if (spec.who === "all") {
-      const rows = flowsFor(spec.mode).lists.cameFrom.filter((r) => r.id !== "other" && r.id !== "abstain" && r.total > 0);
-      const m = matrix === flow.modes[spec.mode].flows ? rows : rows.map((r) => ({ ...r, parts: cameFromGroup(matrix, [r.id]) }));
-      stacked(m, bloc2022); legend();
+      const rows = flowsFor(spec.mode).lists.cameFrom.filter((r) => r.id !== "other" && r.id !== "abstain" && r.total > 0 && (results2026.seats[r.id] ?? 0) > 0)
+        .map((r) => (matrix === flow.modes[spec.mode].flows ? r : { ...r, parts: cameFromGroup(matrix, [r.id]) }));
+      grid(rows);
     } else sources(cameFromGroup(matrix, ids));
   } else if (units && place) {
     // עיר עם מעט קלפיות: רק האחוזים, 2022 מול 2026
-    const list = (spec.who === "all" ? Object.keys(LETTER_OF).filter((id) => id !== "other") : [ids]).map((x) => cityShares({ ...units, places: { [place[0]]: place[1] } }, Array.isArray(x) ? x : [x])[0]);
-    const names = spec.who === "all" ? Object.keys(LETTER_OF).filter((id) => id !== "other") : [groupName];
-    list.map((s, i) => ({ s, n: spec.who === "all" ? newName(names[i]) : names[i] })).filter(({ s }) => s.share26 >= 1).sort((a, b) => b.s.share26 - a.s.share26).slice(0, 8).forEach(({ s, n }) => {
-      ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `600 34px ${body}`; ctx.fillText(n, R, y + 26);
-      ctx.textAlign = "left"; ctx.font = `800 48px ${num}`; ctx.fillText(ltrText(`${Math.round(s.share26)}%`), L, y + 26);
-      if (s.share22 !== null) { ctx.fillStyle = c.soft; ctx.font = `500 28px ${num}`; ctx.fillText(ltrText(`2022: ${Math.round(s.share22)}%`), L + 150, y + 28); }
-      y += 70;
-    });
-    ctx.textAlign = "center"; ctx.fillStyle = c.soft; ctx.font = `400 26px ${body}`; ctx.fillText("בעיר יש מעט קלפיות להשוואה, ולכן מוצגים רק האחוזים", IMG_W / 2, y + 10); y += 50;
+    const keys = spec.who === "all" ? Object.keys(LETTER_OF).filter((id) => id !== "other").map((id) => [id]) : [ids];
+    const list = keys.map((k) => ({ s: cityShares({ ...units, places: { [place[0]]: place[1] } }, k)[0], n: spec.who === "all" ? newName(k[0]) : groupName }))
+      .filter(({ s }) => s.share26 >= 1).sort((a, b) => b.s.share26 - a.s.share26).slice(0, 6);
+    card(L, y, CW, 50 + list.length * 84); y += 50;
+    for (const { s, n } of list) {
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 34px ${body}`; ctx.fillText(n, R - 36, y + 10);
+      ctx.textAlign = "left"; ctx.font = `800 50px ${num}`; ctx.fillText(pct(s.share26), L + 36, y + 10);
+      if (s.share22 !== null) { ctx.fillStyle = P.soft; ctx.font = `500 26px ${num}`; ctx.fillText(ltrText(`2022: ${Math.round(s.share22)}%`), L + 180, y + 12); }
+      y += 84;
+    }
+    ctx.textAlign = "center"; ctx.fillStyle = P.soft; ctx.font = `400 26px ${body}`; ctx.fillText("בעיר יש מעט קלפיות להשוואה, ולכן מוצגים רק האחוזים", IMG_W / 2, y + 20); y += 70;
   }
+  if (spec.blocs && (matrix || spec.where !== "city")) { y += 20; blocs(blocsOf(matrix ?? flow.modes[spec.mode].flows).cameFrom.filter((r) => BLOC_IDS.slice(0, 4).includes(r.id))); }
 
-  if (spec.blocs && (matrix || spec.where !== "city")) {
-    y += 30; ctx.textAlign = "right"; ctx.fillStyle = c.ink; ctx.font = `800 40px ${display}`; ctx.fillText("מעבר בין הגושים", R, y); y += 50;
-    const blocRows = blocsOf(matrix ?? flow.modes[spec.mode].flows).cameFrom.filter((r) => BLOC_IDS.slice(0, 4).includes(r.id));
-    stacked(blocRows, (id) => id); legend();
-  }
-  // תחתית: קוד QR וכתובת האתר
-  y += 30; drawQr(ctx, `${SITE_URL}#/changes`, L, y, QR_SIZE);
-  ctx.textAlign = "right"; ctx.fillStyle = c.soft; ctx.font = `400 30px ${body}`;
-  ctx.fillText(`השוואת כל הקלפיות באתר · ${ltrText(host)}`, R, y + QR_SIZE / 2, R - L - QR_SIZE - 30);
-  y += QR_SIZE + 60;
-  const out = document.createElement("canvas"); out.width = IMG_W; out.height = Math.max(y, 1080);
-  const o = out.getContext("2d")!; o.fillStyle = c.bg; o.fillRect(0, 0, IMG_W, out.height); o.drawImage(cv, 0, 0);
+  // תחתית: QR וכתובת האתר
+  y += 20; drawQr(ctx, `${SITE_URL}#/changes`, L, y, QR_SIZE);
+  ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 32px ${body}`; ctx.fillText("השוואת כל הקלפיות", R, y + 50);
+  ctx.fillStyle = P.soft; ctx.font = `400 30px ${body}`; ctx.fillText(ltrText(host), R, y + 96);
+  y += QR_SIZE + 80;
+
+  // הרקע, ההילות והמסגרת — מתחת לתוכן, בגובה הסופי
+  const H = Math.max(y, 1350);
+  const out = document.createElement("canvas"); out.width = IMG_W; out.height = H;
+  const o = out.getContext("2d")!;
+  o.fillStyle = P.bg; o.fillRect(0, 0, IMG_W, H);
+  const glow = (x: number, yy: number, r: number, rgb: string, a: number) => { const g = o.createRadialGradient(x, yy, 0, x, yy, r); g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`); o.fillStyle = g; o.fillRect(0, 0, IMG_W, H); };
+  glow(IMG_W * .85, 120, 700, P.glowA, P.glowAlpha); glow(IMG_W * .1, H - 160, 700, P.glowB, P.glowBAlpha);
+  const fr = o.createLinearGradient(0, 0, IMG_W, H); fr.addColorStop(0, P.blue); fr.addColorStop(1, P.red);
+  o.strokeStyle = fr; o.lineWidth = 10; o.beginPath(); o.roundRect(22, 22, IMG_W - 44, H - 44, 48); o.stroke();
+  // תמונה קצרה — התוכן ממורכז לגובה, בלי שטח ריק בתחתית
+  o.drawImage(cv, 0, 0, IMG_W, y, 0, Math.max(0, (H - y) / 2), IMG_W, y);
   return await new Promise<Blob>((res, rej) => out.toBlob((b) => (b ? res(b) : rej(new Error("image"))), "image/png"));
 }
 
