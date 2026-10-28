@@ -3,7 +3,7 @@ import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Segmented } from "../components/Choice";
 import { Fold } from "../components/ui";
-import { coverage, flow, flowsFor, partialLine, type FlowRow, type Mode } from "../lib/voterFlow";
+import { coverage, flow, flowsFor, partialLine, smallPct, type FlowRow, type Mode } from "../lib/voterFlow";
 import { num, pctValue } from "../lib/format";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
@@ -24,7 +24,8 @@ const MIN_SHARE = 3;
 const ALWAYS = new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]);
 
 function Row({ row, view }: { row: FlowRow; view: View }) {
-  const shown = (p: FlowRow["parts"][number]) => p.share >= MIN_SHARE || ALWAYS.has(p.id);
+  // הרשימות הקטנות — תמיד בשורה נפרדת, החל מ-0.1% (הכרעת בעלים 28.10.2026)
+  const shown = (p: FlowRow["parts"][number]) => p.share >= MIN_SHARE || (ALWAYS.has(p.id) && smallPct(p.share) !== null);
   const main = row.parts.filter(shown);
   const rest = row.parts.filter((p) => !shown(p)).reduce((a, p) => a + p.share, 0);
   return (
@@ -38,7 +39,7 @@ function Row({ row, view }: { row: FlowRow; view: View }) {
             <span className="h-3 flex justify-start rounded-sm bg-paper-line overflow-hidden" aria-hidden="true">
               <span className="block h-full bg-ink" style={{ width: `${p.share}%` }} />
             </span>
-            <span className="tabular-nums text-end">{pctValue(p.share)}%</span>
+            <span className="tabular-nums text-end">{ALWAYS.has(p.id) && p.share < MIN_SHARE ? smallPct(p.share) : pctValue(p.share)}%</span>
           </li>
         ))}
         {rest >= 0.5 && (

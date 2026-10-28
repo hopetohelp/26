@@ -5,7 +5,7 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/sh
 import { BLOC_COLORS, THEMES } from "../lib/promoVideo";
 import { results2026 } from "../lib/guessAccuracyData";
 import { DEFAULT_LINEAGE } from "../lib/lineage";
-import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, oldName, partialLine, wentToGroup, type FlowRow, type Mode } from "../lib/voterFlow";
+import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow, type Mode } from "../lib/voterFlow";
 
 /** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
 type Ballot = [string, string, number, number, ...number[]];
@@ -78,8 +78,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   };
   const pill = (x: number, yy: number, w: number, h: number, color: string) => { if (w < 1) return; ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, yy, w, h, h / 2); ctx.fill(); };
   const pct = (v: number) => ltrText(`${Math.round(v)}%`);
-  /** המקור המשני: אחוז עגול; מתחת ל-2% — עשירית האחוז; מתחת ל-0.1% — לא מוצג (הכרעת בעלים 28.10.2026) */
-  const minor = (v: number) => (v < 0.1 ? null : v < 2 ? (Math.round(v * 10) / 10).toFixed(1) : String(Math.round(v)));
+  const minor = smallPct;
   const fit = (t: string, w: number) => { let n = t; while (ctx.measureText(n).width > w && n.length > 3) n = n.slice(0, -2) + "…"; return n; };
   let y = 120;
   const heading = (t: string) => { ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 40px ${display}`; ctx.fillText(t, R, y + 10); y += 62; };

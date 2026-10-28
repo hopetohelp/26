@@ -88,3 +88,11 @@ export function wentToGroup(m: number[][], letters: string[]): FlowPart[] {
   const row = flow.new.map((_, j) => m.reduce((s, r, i) => (letters.includes(flow.old[i]) ? s + r[j] : s), 0));
   return parts(row, flow.new, newName);
 }
+
+/** אחוז קטן (הכרעת בעלים 28.10.2026): מתחת ל-0.1% — לא מוצג; מתחת ל-2% — עשירית האחוז (בדיוק אחוז ⇐ "1"); אחרת — אחוז עגול */
+export const smallPct = (v: number): string | null => {
+  if (v < 0.1) return null;
+  if (v >= 2) return String(Math.round(v));
+  const r = (Math.round(v * 10) / 10).toFixed(1);
+  return r.endsWith(".0") ? r.slice(0, -2) : r;
+};
