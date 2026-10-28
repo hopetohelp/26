@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import InfoTip from "../../components/InfoTip";
 import { THRESHOLD_PCT } from "../../engine/pctForSeats";
@@ -16,6 +16,7 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
+import { useRegisterNavShare } from "../../lib/navShare";
 
 const EMPTY = startSeats("zero");
 const avgOf = (xs: (number | null)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? ok.reduce((p, q) => p + q, 0) / ok.length : null; };
@@ -59,6 +60,7 @@ export default function GuessAccuracy() {
   const [who, setWho] = useState<"mine" | "all">("mine");
   const [firm, setFirm] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
+  const openShare = useCallback(() => setSharing(true), []);
   const d = crowd.dashboard;
   const hist = useMemo(() => histArrays(d?.seats?.hist), [d]);
   const crowdMean: Seats = useMemo(() => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, r.mean])), [d]);
@@ -68,6 +70,7 @@ export default function GuessAccuracy() {
   const nearest = useMemo(() => hasResults() ? closestPoll(finalPolls, actual) : null, [actual]);
   // לפני הספירה הראשונה: כל הנתונים הקיימים, ובטורים שתלויים בתוצאות — קו (הכרעת בעלים 27.10.2026)
   const ready = hasResults();
+  useRegisterNavShare(openShare, !d || !ready);
   // הגרף: הרשימות שעברו, ואחריהן — אחרי קו הפרדה — כל הרשימות שלא עברו, לפי אחוז הקולות (הכרעת בעלים 28.10.2026)
   // ברשימות שלא עברו — אחוז הקולות במקום 0 מנדטים (הכרעת בעלים 28.10.2026)
   const votePct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
@@ -148,8 +151,7 @@ export default function GuessAccuracy() {
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollMean[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> בממוצע כל הסקרים.</p>
     </div>}
-    {/* כפתור השיתוף צף בפינה השמאלית למטה (הכרעת בעלים 28.10.2026) */}
-    <button type="button" className="f-btn pri f-share-fab" onClick={() => setSharing(true)} disabled={!d || !ready}>שיתוף</button>
+    {/* כפתור השיתוף — בסרגל הניווט, מימין ל-AI (הכרעת בעלים 28.10.2026; src/lib/navShare.ts) */}
     <FocusFoot />
     {sharing && <AccuracyShare onClose={() => setSharing(false)} input={{ actual, ids, crowdMean, mine, pollMean, polls, pollLabels: finalPolls.map(p => p.label), hist, count: d?.seats?.n ?? 0, best: best ? best.keys.map(k => finalPolls.find(p => p.key === k)?.firm ?? k) : [], group: hagzara }} />}
   </div>;

@@ -877,9 +877,10 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-capnum.below { color:rgb(var(--heat-lo)); }
 .f-capnum.pct { font-size:12px; }
 .f-sep { border-top:2px solid rgb(var(--ink-soft));margin-top:10px; }
-/* כפתור השיתוף צף בפינה השמאלית למטה; בטלפון — מעל סרגל הניווט (הכרעת בעלים 28.10.2026) */
-.f-share-fab { position:fixed;z-index:44;left:16px;bottom:calc(20px + env(safe-area-inset-bottom));box-shadow:0 6px 18px rgb(var(--ink) / .25); }
-@media (max-width: 767px) { .f-share-fab { left:12px;bottom:calc(4px + var(--nav-h, 46px) + 10px + env(safe-area-inset-bottom)); } }
+/* כפתור השיתוף בסרגל הניווט, מימין ל-AI (הכרעת בעלים 28.10.2026) */
+.f-nav button.f-share { flex:none;padding:8px 14px;border-radius:999px;border:0;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;background:rgb(var(--signal) / .14);color:rgb(var(--signal)); }
+.f-nav button.f-share:disabled { opacity:.45;cursor:default; }
+@media (max-width: 767px) { .f-nav button.f-share { padding:8px 10px;font-size:13px; } }
 @media (max-width: 480px) { .has-mine .f-row, .has-mine .f-axis { grid-template-columns:96px minmax(0,1fr) 30px; } }
 .f-mine, .f-mine-h { text-align:center;font-weight:800;font-size:15px;color:rgb(var(--ink)); }
 .f-mine-h { font-size:12px;color:rgb(var(--ink-soft)); }
