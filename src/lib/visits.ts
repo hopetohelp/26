@@ -69,8 +69,8 @@ export function countJdnClick() {
   fetch(`${FEEDBACK_URL}/diag`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: "out-jdn" }), keepalive: true }).catch(() => {});
 }
 
-/** תמונה שנוצרה לשיתוף או להורדה (הכרעת בעלים 28.10.2026): מונה בלבד — guess = תמונת ניחוש, results = תמונת תוצאות */
-export function countImage(kind: "guess" | "results") {
+/** תמונה שנוצרה לשיתוף או להורדה (הכרעת בעלים 28.10.2026): מונה בלבד — guess = תמונת ניחוש, results = תמונת תוצאות, changes = תמונת "מה השתנה" */
+export function countImage(kind: "guess" | "results" | "changes") {
   if (!FEEDBACK_URL || isOwnerBrowser()) return;
   fetch(`${FEEDBACK_URL}/diag`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: `img-${kind}` }), keepalive: true }).catch(() => {});
 }

@@ -38,10 +38,10 @@ const PRIVATE_PER_DAY = 100;
 /** דיווח כשל חיבור אוטומטי (POST /autoreport, בלי אישור הגולש — הכרעת בעלים 8.10.2026): נשמר כהערה עם התחילית הזו, עד 3 ליום מכל מקור, ולא נספר במכסת ההערות. */
 const AUTO = "[כשל חיבור אוטומטי]";
 const AUTO_PER_DAY = 3;
-const DIAG_KINDS = new Set(["img-guess", "img-results", "all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved", "blind-sent", "out-jdn"]);
+const DIAG_KINDS = new Set(["img-guess", "img-results", "img-changes", "all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved", "blind-sent", "out-jdn"]);
 /** בדיקת עומק אחרי חסימה: לאן כן מגיעים (probe-<יעד>-<תוצאה>) — מונה ליום בלבד */
 /** מונים שנרשמים גם לפי שעה (UTC) לדשבורד הסטטיסטיקה: "diag:<kind>@YYYY-MM-DDTHH" */
-const HOURLY_DIAG = new Set(["all-blocked", "relay-saved", "blind-sent", "img-guess", "img-results"]);
+const HOURLY_DIAG = new Set(["all-blocked", "relay-saved", "blind-sent", "img-guess", "img-results", "img-changes"]);
 const PROBE_KIND = /^probe-(worker|crowd|site|gapi|gsi)-(ok|fail)$/;
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
 const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/google", "/prefs", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support", "/account/name", "/account/password", "/account/verify/send", "/account/verify/check", "/auth/verify-email", "/auth/forgot", "/auth/reset"]);

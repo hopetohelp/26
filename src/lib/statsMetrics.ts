@@ -5,7 +5,7 @@
 export type StatKey =
   | "pageHits" | "pageHitsUser" | "browsers" | "visitsUser"
   | "users" | "savers" | "guess" | "vote22" | "vote26" | "saveOps"
-  | "videoGuess" | "videoResults" | "imgGuess" | "imgResults"
+  | "videoGuess" | "videoResults" | "imgGuess" | "imgResults" | "imgChanges"
   | "failures" | "blocked" | "relaySaved" | "blindSaved";
 
 export interface StatSeries { key: StatKey; total: number; today: number; points: number[] }
@@ -34,6 +34,7 @@ export const STAT_METRICS: { key: StatKey; label: string; topic: StatTopic; help
   { key: "videoResults", label: "סרטון תוצאות", topic: "share", help: "סרטוני דיוק הניחושים שנוצרו במסך התוצאות." },
   { key: "imgGuess", label: "תמונת ניחוש", topic: "share", help: "תמונות ניחוש שהורדו או שותפו. נספר מ-28/10." },
   { key: "imgResults", label: "תמונת תוצאות", topic: "share", help: "תמונות דיוק הניחושים שנשמרו או שותפו. נספר מ-28/10." },
+  { key: "imgChanges", label: "תמונת מה השתנה", topic: "share", help: "תמונות מסך \"מה השתנה\" שנשמרו או שותפו. נספר מ-28/10 בערב." },
   { key: "failures", label: "נפילות", topic: "faults", help: "דיווחי כשל חיבור אוטומטיים." },
   { key: "blocked", label: "חסימה מלאה", topic: "faults", help: "בדיקות חיבור שבהן כל המסלולים נחסמו." },
   { key: "relaySaved", label: "נשמר בעקיפה", topic: "faults", help: "שמירות שעברו במסלול עוקף." },
