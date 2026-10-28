@@ -1,12 +1,13 @@
 import type { VideoStats as Stats } from "../lib/crowdApi";
 
 /** כרטיס סרטון הנתונים (הכרעת בעלים 26.10.2026) — למנהלי האתר והקבוצות. מצטבר בלבד, בלי מזהים */
-export default function VideoStats({ s, note, title = "סרטון הנתונים" }: { s: Stats; note?: string; title?: string }) {
-  const tiles: [string, number][] = [["יצרו סרטון", s.makers], ["הוסיפו את הניחוש שלהם", s.withGuess], ["כתבו שם", s.named], ["סרטונים שנוצרו", s.videos]];
+/** withoutCount = בלי "סרטונים שנוצרו" — כשהמספר כבר מופיע בדשבורד הסטטיסטיקה (לא כותבים אותו מידע פעמיים) */
+export default function VideoStats({ s, note, title = "סרטון הנתונים", withoutCount = false }: { s: Stats; note?: string; title?: string; withoutCount?: boolean }) {
+  const tiles: [string, number][] = [["יצרו סרטון", s.makers], ["הוסיפו את הניחוש שלהם", s.withGuess], ["כתבו שם", s.named], ...(withoutCount ? [] : [["סרטונים שנוצרו", s.videos] as [string, number]])];
   return (
     <div>
       <p className="text-sm font-bold mb-2">{title}</p>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className={`grid grid-cols-2 gap-3 ${withoutCount ? "sm:grid-cols-3" : "sm:grid-cols-4"}`}>
         {tiles.map(([label, n]) => (
           <div key={label} className="bg-paper-card border border-paper-line rounded-theme p-3">
             <p className="text-xs text-ink-soft">{label}</p>

@@ -13,7 +13,7 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../guess/shareIma
 import { loadLogo } from "../guess/communityShare";
 import { blocSlices } from "./shared";
 import { buildPromoData, guesserName } from "./PromoVideo";
-import { reportVideo } from "../../lib/visits";
+import { countImage, reportVideo } from "../../lib/visits";
 import { getToken } from "../../lib/crowdSession";
 
 export interface AccuracyShareInput {
@@ -145,16 +145,18 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
   const share = async () => {
     if (!file) return;
     setMsg(null);
+    if (format === "image") countImage("results");
     try {
       // טקסט נלווה לתמונה ולסרטון (הכרעת בעלים 28.10.2026)
       const text = `בואו לראות מה הנתונים המעודכנים\nומי צדק, ${input.polls.length} הסקרים או ${input.count.toLocaleString("he-IL")} הניחושים?\nשתפו בתמונה או סרטון כמה אתם צדקתם!\nhttps://26.hopetohelp.net/#/results-2026`;
       if (navigator.canShare?.({ files: [file], text })) await navigator.share({ files: [file], text });
       else if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file] });
-      else save();
+      else save(true);
     } catch (e) { if ((e as Error)?.name !== "AbortError") setMsg("השיתוף לא הצליח. אפשר לשמור ולשתף."); }
   };
-  const save = () => {
+  const save = (counted = false) => {
     if (!url || !file) return;
+    if (format === "image" && !counted) countImage("results");
     const a = document.createElement("a"); a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
   };
   return createPortal(<div className="f-modal" onClick={e => e.target === e.currentTarget && onClose()} onKeyDown={e => e.key === "Escape" && onClose()}>
@@ -173,7 +175,7 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
       {format === "image" ? (url ? <img src={url} alt="דיוק הניחושים" /> : <p className="text-sm text-ink-soft">מכינים את התמונה…</p>)
         : url ? <video src={url} controls playsInline className="w-full rounded-[14px] border border-line" style={{ aspectRatio: "9 / 16", maxHeight: "60vh" }} />
         : <button type="button" className="f-btn pri" onClick={makeVideo} disabled={busy !== null} aria-busy={busy !== null}>{busy !== null ? `יוצרים סרטון… ${Math.round(busy * 100)}%` : "יצירת הסרטון"}</button>}
-      {file && <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף</button><button type="button" className="f-btn flex-1" onClick={save}>שמירה</button></div>}
+      {file && <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף</button><button type="button" className="f-btn flex-1" onClick={() => save()}>שמירה</button></div>}
       <button type="button" className="f-btn" onClick={onClose}>סגירה</button>
       {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
     </div></div>, document.body);

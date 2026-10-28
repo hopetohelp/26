@@ -14,13 +14,13 @@ export const bucketLabel = (b: SeriesBucket) => {
 /**
  * קו מצטבר, נקודה לכל שעה מימין לשמאל. צבע אחד (ink) — זה לא נתון מפלגתי. null = אין עדיין ערך (לפני הרישום הראשון).
  */
-export default function GroupSeriesChart({ buckets, points, label }: { buckets: SeriesBucket[]; points: (number | null)[]; label: string }) {
+export default function GroupSeriesChart({ buckets, points, label, height = 72 }: { buckets: SeriesBucket[]; points: (number | null)[]; label: string; height?: number }) {
   const [hover, setHover] = useState<number | null>(null);
-  const W = 320, H = 72, P = 4;
+  const W = 320, H = height, P = 4;
   const n = points.length;
   const top = Math.max(1, ...points.map((v) => v ?? 0));
   // מדרגות בגובה (הכרעת בעלים 25.10.2026): קו בהיר בכל מדרגה עגולה (1, 2 או 5 כפול חזקת 10), כ-3–4 קווים
-  const raw = top / 4, pow = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 5, 10].map((m) => m * pow).find((x) => x >= raw) ?? pow * 10;
+  const raw = top / (height > 100 ? 5 : 4), pow = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 5, 10].map((m) => m * pow).find((x) => x >= raw) ?? pow * 10;
   const max = Math.max(top, step * Math.ceil(top / step));
   const levels = Array.from({ length: Math.floor(max / step) }, (_, i) => (i + 1) * step);
   // RTL: הזמן זורם מימין לשמאל, כמו הקריאה
@@ -41,10 +41,10 @@ export default function GroupSeriesChart({ buckets, points, label }: { buckets: 
     <figure className="space-y-1">
       <div className="flex items-stretch gap-1">
       {/* המספר של כל קו גובה — טקסט רגיל בגודל קריא ליד הגרף, לא בתוך הציור המוקטן (הכרעת בעלים 25.10.2026) */}
-      <div className="relative w-10 shrink-0 h-[72px]" aria-hidden="true">
+      <div className="relative w-10 shrink-0" style={{ height }} aria-hidden="true">
         {levels.map((v) => <span key={v} className="absolute end-0 -translate-y-1/2 text-xs font-num tabular text-ink-soft leading-none" style={{ top: `${(y(v) / H) * 100}%` }}>{v.toLocaleString("he-IL")}</span>)}
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="flex-1 min-w-0 h-[72px] text-ink touch-none" role="img" aria-label={`${label}: ${points[n - 1] ?? "אין עדיין"} עכשיו`} onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setHover(null); }}>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="flex-1 min-w-0 text-ink touch-none" style={{ height }} role="img" aria-label={`${label}: ${points[n - 1] ?? "אין עדיין"} עכשיו`} onPointerMove={onMove} onPointerDown={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setHover(null); }}>
         <line x1={P} x2={W - P} y1={H - P} y2={H - P} className="stroke-paper-line" strokeWidth="1" vectorEffect="non-scaling-stroke" />
         {levels.map((v) => <g key={v}>
           <line x1={P} x2={W - P} y1={y(v)} y2={y(v)} className="stroke-paper-line" strokeWidth="1" opacity=".7" vectorEffect="non-scaling-stroke" />

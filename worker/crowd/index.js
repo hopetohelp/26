@@ -28,6 +28,7 @@ import { LISTS_2026 } from "./lib/lists.js";
 import { readPayload, setClosedLists } from "./lib/closed.js";
 import { setActualResults } from "./lib/results.js";
 import { slugFromName, freeSlug } from "./lib/slug.js";
+import { SAVES_UNTIL_ISO, statsBuckets, series as statSeries } from "../shared/stats.js";
 import { AGENT_SESSION_MS, MAX_AGENTS, agentBodyAllowed, agentRoute, agentSession, clientLabel, connectionId, requestToken } from "./lib/agent.js";
 
 const IDS_2026_LIST = LISTS_2026.map((l) => l.id);
@@ -163,16 +164,55 @@ export function summarizeVideoEvents(rows, who) {
   return { makers: v.length, withGuess: v.filter((x) => x.mine).length, named: v.filter((x) => x.named).length, videos: rows.length };
 }
 
+/**
+ * דשבורד הסטטיסטיקה של מנהל האתר (הכרעת בעלים 28.10.2026): הנתונים שמקורם בשרת ההשתתפות, כאירועים בזמן.
+ * members = קבוצה (רק חבריה) או null לכל האתר. השמירות נספרות עד 27/10 22:00 (SAVES_UNTIL).
+ */
+export async function crowdStatEvents(env, members) {
+  const [people, saves, votes, vids, makers] = await env.DB.batch([
+    env.DB.prepare("SELECT id, created_at AS t FROM participants"),
+    env.DB.prepare("SELECT participant, unit, created_at AS t FROM versions WHERE created_at < ?").bind(SAVES_UNTIL_ISO),
+    env.DB.prepare("SELECT participant, payload, created_at AS t FROM versions WHERE unit = 'vote' AND created_at < ? ORDER BY created_at").bind(SAVES_UNTIL_ISO),
+    env.DB.prepare("SELECT participant, kind, at AS t FROM video_events"),
+    env.DB.prepare("SELECT participant, videos, first_at AS t FROM video_makers"),
+  ]);
+  let visits = [];
+  try { visits = (await env.DB.prepare("SELECT participant, at AS t FROM participant_visits").all()).results || []; } catch { /* בלי טבלה עדיין */ }
+  const mine = (p) => !members || members.has(p);
+  const at = (t) => [Date.parse(t), 1];
+  const first = (rows, ok = () => true) => { const m = new Map(); for (const r of rows) if (mine(r.participant) && ok(r) && (!m.has(r.participant) || r.t < m.get(r.participant))) m.set(r.participant, r.t); return m; };
+  const saveRows = saves.results || [];
+  const firstSeats = first(saveRows, (r) => r.unit === "seats");
+  const counted = await countedGuessers(env, members);
+  const vote = (y) => [...first(votes.results || [], (r) => { try { return JSON.parse(r.payload)?.[y] != null; } catch { return false; } }).values()].map(at);
+  // סרטונים: כל אירוע בזמנו; מה שנספר לפני טבלת האירועים (כולם סרטוני ניחוש) — בזמן הסרטון הראשון של היוצר
+  const vRows = (vids.results || []).filter((r) => mine(r.participant));
+  const perMaker = new Map();
+  for (const r of vRows) if (r.kind !== "results") perMaker.set(r.participant, (perMaker.get(r.participant) ?? 0) + 1);
+  const legacy = (makers.results || []).filter((r) => mine(r.participant)).map((r) => [Date.parse(r.t), Math.max(0, r.videos - (perMaker.get(r.participant) ?? 0))]).filter(([, w]) => w > 0);
+  return {
+    users: (people.results || []).filter((r) => mine(r.id)).map((r) => at(r.t)),
+    visitsUser: visits.filter((r) => mine(r.participant)).map((r) => at(r.t)),
+    savers: [...first(saveRows).values()].map(at),
+    guess: [...counted].filter((p) => firstSeats.has(p)).map((p) => at(firstSeats.get(p))),
+    vote22: vote("v2022"),
+    vote26: vote("v2026"),
+    saveOps: saveRows.filter((r) => mine(r.participant)).map((r) => at(r.t)),
+    videoGuess: [...vRows.filter((r) => r.kind !== "results").map((r) => at(r.t)), ...legacy],
+    videoResults: vRows.filter((r) => r.kind === "results").map((r) => at(r.t)),
+  };
+}
+
 /** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה, וסרטון הנתונים — רק מ-GROUP_MIN רשומים */
 async function groupStats(env, id, now) {
   const r = await env.DB.prepare(
     `WITH who AS (SELECT DISTINCT participant AS id FROM (${groupParticipants({ group: "?1" })}))
      SELECT COUNT(*) AS registered,
             SUM(CASE WHEN p.created_at >= ?2 THEN 1 ELSE 0 END) AS today,
-            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = who.id AND v.unit = 'seats')) AS seats,
-            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = who.id AND v.unit = 'vote')) AS vote
+            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = who.id AND v.unit = 'seats' AND v.created_at < ?3)) AS seats,
+            SUM(EXISTS(SELECT 1 FROM versions v WHERE v.participant = who.id AND v.unit = 'vote' AND v.created_at < ?3)) AS vote
      FROM who JOIN participants p ON p.id = who.id`,
-  ).bind(id, israelDayStart(now)).first();
+  ).bind(id, israelDayStart(now), SAVES_UNTIL_ISO).first();
   if ((r?.registered ?? 0) < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
   // "שמרו ניחוש" — מאותו מקור כמו בניהול הקבוצה ובממוצע הקבוצה: ניחושים שנספרים
   const members = await groupMemberSet(env, id);
@@ -242,7 +282,7 @@ export async function groupSeries(env, id, now) {
     env.DB.prepare("SELECT participant FROM group_link_first WHERE group_id = ?1").bind(id),
     env.DB.prepare("SELECT created_at, COALESCE((SELECT members FROM group_sizes WHERE group_id = ?1), 0) AS members FROM groups WHERE id = ?1").bind(id),
     env.DB.prepare("SELECT id, created_at AS t FROM participants"),
-    env.DB.prepare("SELECT participant, unit, MIN(created_at) AS t FROM versions WHERE unit IN ('seats', 'vote') GROUP BY participant, unit"),
+    env.DB.prepare("SELECT participant, unit, MIN(created_at) AS t FROM versions WHERE unit IN ('seats', 'vote') AND created_at < ? GROUP BY participant, unit").bind(SAVES_UNTIL_ISO),
   ]);
   let visitRows = [];
   try { visitRows = (await env.DB.prepare("SELECT participant, at FROM participant_visits WHERE at >= ?").bind(iso(SERIES_HOURLY_FROM)).all()).results || []; } catch { /* בלי טבלה עדיין */ }
@@ -1545,12 +1585,12 @@ const routes = {
   },
 
   // ---- ממשק ניהול (דרך שרת ההערות בלבד): שיחות תמיכה של משתתפים מאומתים ומספרים כלליים. מפתח בכותרת x-admin-key.
-  "GET /admin/support": async ({ env, request }) => {
+  "GET /admin/support": async ({ env, request, now }) => {
     await requireAdmin(env, request);
     const { results: threads } = await env.DB.prepare("SELECT participant, created_at, updated_at, status FROM support_threads ORDER BY updated_at DESC").all();
     const { results: msgs } = await env.DB.prepare("SELECT id, participant, author, text, created_at FROM support_messages ORDER BY id").all();
     const participants = await accountCount(env.DB);
-    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants WHERE created_at >= date('now')) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= date('now')) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= date('now')) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT e.participant) FROM emails e WHERE e.verified = 0 AND NOT EXISTS (SELECT 1 FROM emails x WHERE x.participant = e.participant AND x.verified = 1) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = e.participant AND c.kind = 'google')) AS unverifiedEmails, (SELECT COUNT(*) FROM email_verify) AS verifyMailsPending, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").first();
+    const stats = await env.DB.prepare("SELECT (SELECT COUNT(*) FROM participants WHERE created_at >= ?1) AS participantsToday, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at < ?2) AS savers, (SELECT COUNT(DISTINCT participant) FROM versions WHERE created_at >= ?1 AND created_at < ?2) AS saversToday, (SELECT COUNT(*) FROM versions WHERE created_at >= ?1 AND created_at < ?2) AS savesToday, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id AND c.kind = 'password')) AS accountsNoSave, (SELECT COUNT(*) FROM participants p WHERE NOT EXISTS (SELECT 1 FROM versions v WHERE v.participant = p.id) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = p.id)) AS emptyGuests, (SELECT COUNT(DISTINCT participant) FROM emails WHERE verified = 1 AND source <> 'google') AS verifiedEmails, (SELECT COUNT(DISTINCT e.participant) FROM emails e WHERE e.verified = 0 AND NOT EXISTS (SELECT 1 FROM emails x WHERE x.participant = e.participant AND x.verified = 1) AND NOT EXISTS (SELECT 1 FROM credentials c WHERE c.participant = e.participant AND c.kind = 'google')) AS unverifiedEmails, (SELECT COUNT(*) FROM email_verify) AS verifyMailsPending, (SELECT COUNT(DISTINCT participant) FROM credentials WHERE kind = 'google') AS googleAccounts").bind(israelDayStart(now), SAVES_UNTIL_ISO).first();
     const guesses = (await countedGuessers(env, null)).size;
     const hagzaraGuesses = (await countedGuessers(env, await groupMemberSet(env, HAGZARA_ID))).size;
     const videos = await videoStats(env, null);
@@ -1569,6 +1609,16 @@ const routes = {
     return { ok: true };
   },
   // שרת ההערות בודק כאן אם הסשן או המפתח שקיבל שייכים למנהל (חשבון מנהל נכנס לממשק הניהול בלי קישור)
+  // דשבורד הסטטיסטיקה (הכרעת בעלים 28.10.2026): האירועים של שרת ההשתתפות כסדרות שעתיות; שרת ההערות מוסיף את שלו
+  "GET /admin/series": async ({ env, request, now: clockNow, url }) => {
+    await requireAdmin(env, request);
+    // שרת ההערות שולח את השעה שלו, כדי ששתי הסדרות יחולקו לאותן שעות
+    const asked = Number(url.searchParams.get("now"));
+    const now = Number.isFinite(asked) && asked > 0 ? Math.min(asked, clockNow) : clockNow;
+    const buckets = statsBuckets(now);
+    const ev = await crowdStatEvents(env, null);
+    return { buckets, series: Object.entries(ev).map(([k, e]) => statSeries(k, e, buckets, now)) };
+  },
   "GET /admin/whoami": async ({ env, request, now }) => {
     await requireAdmin(env, request);
     // כניסת עוזר AI של מנהל ⇐ agent = שם העוזר: שרת ההערות מגביל אותה לפעולות השיחה שהבעלים התיר

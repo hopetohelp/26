@@ -1,3 +1,4 @@
+import { countImage } from "../../lib/visits";
 import { SNAPSHOT_ID, type Selection } from "../../lib/dataResolver";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -29,7 +30,8 @@ export default function Share({ values, pct, username, blocs, selection = { prod
   const [msg, setMsg] = useState<string | null>(null);
   const [kind, setKind] = useState<"parties" | "blocs">(blocs?.length ? "blocs" : "parties");
   const imageKind = blocs?.length ? kind : "parties";
-  const imageFile = async () => new File([await renderShareImage({ selection, values, pct, username: withName && username ? username : undefined, blocs, kind: imageKind })], imageKind === "blocs" ? "הגושים-שלי.png" : "הכנסת-שלי.png", { type: "image/png" });
+  // כל תמונה שנוצרה להורדה או לשיתוף נספרת בדשבורד הסטטיסטיקה ("תמונת ניחוש"; מונה בלבד)
+  const imageFile = async () => { const f = new File([await renderShareImage({ selection, values, pct, username: withName && username ? username : undefined, blocs, kind: imageKind })], imageKind === "blocs" ? "הגושים-שלי.png" : "הכנסת-שלי.png", { type: "image/png" }); countImage("guess"); return f; };
   const download = async () => {
     setBusy(true); setMsg(null);
     try {
