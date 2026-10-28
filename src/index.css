@@ -682,6 +682,7 @@
 .f-seg.fit { width:fit-content;max-width:100%; }
 .f-seg button { flex:none;display:flex;align-items:center;gap:7px;padding:9px 16px;border:0;border-radius:12px;background:transparent;font-size:14px;color:rgb(var(--ink-soft));white-space:nowrap;cursor:pointer;min-height:40px; }
 .f-seg button[aria-pressed=true] { background:rgb(var(--card));color:rgb(var(--ink));font-weight:700;box-shadow:0 1px 4px rgb(var(--ink) / .12); }
+.f-seg.sm { padding:2px;border-radius:12px;margin:0; } .f-seg.sm button { padding:4px 10px;font-size:12px;min-height:28px;border-radius:10px; }
 .f-seg img, .f-seg .f-ini { width:20px;height:20px;border-radius:5px;flex:none;object-fit:contain; }
 .f-seg .f-ini { display:grid;place-items:center;background:rgb(var(--accent-soft));font-size:10px;font-weight:700;color:rgb(var(--ink-soft)); }
 .f-grid { display:grid;gap:16px;grid-template-columns:minmax(0,1fr); }
