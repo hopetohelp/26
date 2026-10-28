@@ -8,6 +8,7 @@ import { Chips } from "../components/Choice";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { electionButtonLabel, results } from "../lib/data";
 import { k25Families } from "../lib/lineage";
+import { K26, Results2026 } from "./Results2026";
 import { num, pct } from "../lib/format";
 
 type Election = (typeof results)[number];
@@ -77,6 +78,8 @@ function Story({ e, a }: { e: Election; a: ReturnType<typeof analysis> }) {
 export default function Results() {
   const [params, setParams] = useSearchParams();
   const summary = params.get("view") === "summary" || params.get("tab") === "voters";
+  // ברירת המחדל — 2026 (הכרעת בעלים 28.10.2026)
+  const k26 = !summary && (params.get("election") ?? K26.id) === K26.id;
   const id = results.some(e => e.id === params.get("election")) ? params.get("election")! : results[results.length - 1].id;
   const e = results.find((x) => x.id === id)!;
   const short = (letters: string) => shortOf(e, letters);
@@ -86,6 +89,9 @@ export default function Results() {
   const wasted = a.withAll.wasted;
   const fmtDiff = (d: readonly (readonly [string, number])[]) => fmtDiffOf(e, d);
 
+  const chipOptions = [K26, ...[...results].reverse().map((x) => ({ id: x.id, label: <>{yearLabel(x)}<span className="sr-only"> — הכנסת ה-{x.knesset}</span></> })), { id: "summary", label: "סיכום" }];
+  const pick = (nextId: string) => { const next = new URLSearchParams(params); next.delete("tab"); if (nextId === "summary") next.set("view", "summary"); else { next.set("election", nextId); next.delete("view"); } setParams(next, { replace: true }); };
+  if (k26) return <Results2026 chips={<Chips label="מערכת בחירות" value={K26.id} onChange={pick} options={chipOptions} />} />;
   return (
     <>
 
@@ -94,8 +100,8 @@ export default function Results() {
         <Chips
           label="מערכת בחירות"
           value={summary ? "summary" : id}
-          onChange={(nextId) => { const next = new URLSearchParams(params); next.delete("tab"); if (nextId === "summary") next.set("view", "summary"); else { next.set("election", nextId); next.delete("view"); } setParams(next, { replace: true }); }}
-          options={[...[...results].reverse().map((x) => ({ id: x.id, label: <>{yearLabel(x)}<span className="sr-only"> — הכנסת ה-{x.knesset}</span></> })), { id: "summary", label: "סיכום" }]}
+          onChange={pick}
+          options={chipOptions}
         />
         {!summary && <>
         <h2 className="text-xl font-display leading-tight mt-4">
