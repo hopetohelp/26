@@ -18,6 +18,7 @@ import { FIXED_BLOCS, KNESSET_BLOCS, migrateBlocs, compositionKey } from "./bloc
 const RESULT_BLOCS = KNESSET_BLOCS.slice(0, 4).map((b) => ({ id: b.id.slice(2), lists: b.lists }));
 import { moderate } from "./moderation.js";
 import { derivePct } from "./derivePct.js";
+import { exactAllCount } from "./results.js";
 
 export const K_CELL = 1;
 export const K_ROW = 1;
@@ -137,6 +138,8 @@ export function computeSeats(seatVersions, history = seatVersions) {
     n,
     full: seatsStats(seatVersions),
     hist: seatsHist(seatVersions),
+    // כמה מהניחושים צדקו בכל הרשימות יחד, מול תוצאות האמת (רק כשיש תוצאות שלמות)
+    exactAll: exactAllCount(seatVersions.map((v) => v.payload), seatValue),
     everPassedLists: LISTS_2026.filter(l => history.some(v => seatValue(v.payload, l.id) >= 4)).map(l => l.id),
     manual,
     filledShare: r2(filled / (TOTAL * n)),
