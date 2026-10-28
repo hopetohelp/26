@@ -15,7 +15,7 @@ export default function Overview() {
   const hagzaraLogo = useHagzara(useSession())?.logoUrl ?? null;
   const crowd = Object.fromEntries((useCrowdDashboard().dashboard?.seats?.full ?? []).map(r => [r.list, r.mean]));
   const values = Object.fromEntries(IDS.map(id => [id, simpleValue(source.selection, [id])]));
-  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">תמונת מצב</h1><SourceBar source={source} />
+  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">הסקרים</h1><SourceBar source={source} />
     <div className="f-grid"><PartyChart selection={source.selection} lists={orderedLists(source.selection, [], crowd)} marks={id => [{ value: values[id], side: "up" }]} legend={<><LegendCapsule /><LegendLine label="ממוצע" /></>} />
       <div className="f-side"><BlocChart values={values} logo={hagzaraLogo} /></div></div>
     {advanced && <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SnapshotDetails selection={source.selection} values={values} /></Suspense>}

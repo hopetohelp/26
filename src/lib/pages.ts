@@ -35,12 +35,13 @@ export interface Screen {
   tabs?: ScreenTab[];
 }
 export const SCREENS: Screen[] = [
-  // בטלפון "בית" (הכרעת בעלים 25.10.2026)
-  { id: "home", to: "/", label: "תמונת מצב", short: "בית", icon: "home", nav: "core" },
+  // הלשונית הימנית; "תוצאות אמת", ובטלפון בניתוח מורחב (סרגל מלא) "תוצאות" (הכרעת בעלים 28.10.2026)
+  { id: "results2026", to: "/results-2026", label: "תוצאות אמת", short: "תוצאות", icon: "board", nav: "core" },
+  // "הסקרים" (הכרעת בעלים 28.10.2026; לפני כן "תמונת מצב" / "בית")
+  { id: "home", to: "/", label: "הסקרים", icon: "home", nav: "core" },
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
-  { id: "community", to: "/community", label: "ממוצע הניחושים", icon: "bars", nav: "core" },
-  // מוצג תמיד (הכרעת בעלים 27.10.2026)
-  { id: "results2026", to: "/results-2026", label: "תוצאות", icon: "board", nav: "core" },
+  // בסרגל רק בניתוח מורחב; המסך נשאר זמין בכתובת שלו (הכרעת בעלים 28.10.2026)
+  { id: "community", to: "/community", label: "ממוצע הניחושים", icon: "bars", nav: "core", advanced: true },
   // זמני עד שלב 3, שבו הסקרים עוברים ללשוניות תמונת מצב (השוואת מכונים · מגמות · ארכיון)
   { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
   { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
@@ -50,7 +51,7 @@ export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
 /** המסכים בסרגל: הליבה תמיד; הנוספים ("עוד" בטלפון, בשורה במחשב) — רק במתקדם */
 export function navScreens(advanced: boolean, now = Date.now()): Screen[] {
   // ב-21:58 "הניחוש שלי" יורד מהסרגל; "תוצאות" מוצג תמיד (הכרעות בעלים 27.10.2026)
-  return SCREENS.filter(s => (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now)));
+  return SCREENS.filter(s => (advanced || !s.advanced) && (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now)));
 }
 /** לשוניות מסך לפי המצב: במתקדם כולן, בממוקדת רק אלה שאינן מתקדמות */
 export function screenTabs(s: Screen, advanced: boolean): ScreenTab[] {
