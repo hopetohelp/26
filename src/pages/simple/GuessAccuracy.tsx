@@ -16,7 +16,6 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
-import { countJdnClick } from "../../lib/visits";
 
 const EMPTY = startSeats("zero");
 const avgOf = (xs: (number | null)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? ok.reduce((p, q) => p + q, 0) / ok.length : null; };
@@ -90,7 +89,6 @@ export default function GuessAccuracy() {
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
     <h1 className="sr-only">תוצאות</h1>
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
-    <JdnCard />
     <TurnoutCard />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
@@ -219,7 +217,7 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 }
 
 interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
-/** אחוז ההצבעה הארצי בשורה אחת, בעשירית האחוז: "אחוז הצבעה: X% בחירות קודמות: Y% נספרו: Z%" (הכרעת בעלים 27.10.2026; "נספרו" — raw/results-2026.json counted, כשידוע): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
+/** אחוז ההצבעה הארצי בשורה אחת, בעשירית האחוז: "אחוז הצבעה: X% בחירות קודמות: Y% נספרו: Z%" (הכרעת בעלים 27.10.2026; "נספרו" — raw/results-2026.json counted, הקולות שנספרו מתוך כלל בעלי זכות הבחירה, כשידוע): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
  * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים.
  * "בחירות קודמות" — אחוז ההצבעה הסופי ב-2022 מהתוצאות הרשמיות (previousTurnout). prev_percent של המפה הוא העדכון הקודם של הוועדה, לא הבחירות הקודמות */
 function TurnoutCard() {
@@ -237,15 +235,4 @@ function TurnoutCard() {
   return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
     אחוז הצבעה: <b className="font-num">{pct}%</b> בחירות קודמות: <b className="font-num">{prev}%</b>{counted != null && <> <span className="whitespace-nowrap">נספרו: <b className="font-num">{counted}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
   </p>;
-}
-
-/** כפתור קטן לאתר הבחירות של JDN בשורה אחת ובצבעי האתר (הכרעות בעלים 27.10.2026, הוקטן 28.10.2026): נפתח בחלון חדש, כל לחיצה נספרת (מסך הניהול, "לחצו על JDN") */
-function JdnCard() {
-  return <a href="https://elections.jdn.co.il/" target="_blank" rel="noopener noreferrer" onClick={countJdnClick}
-    className="f-card mb-4 !py-1 !px-2.5 inline-flex items-center gap-1.5 no-underline text-ink max-w-full">
-    <img src={`${import.meta.env.BASE_URL}jdn-icon.png`} alt="" width={18} height={18} className="rounded flex-none" />
-    <span className="font-bold text-xs truncate">הברומטר של JDN — תוצאות בזמן אמת</span>
-    <span className="text-ink-soft text-xs flex-none" aria-hidden="true">↗</span>
-    <span className="sr-only">(נפתח בחלון חדש)</span>
-  </a>;
 }

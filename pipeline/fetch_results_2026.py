@@ -9,7 +9,7 @@
          "counted": אחוז שנספר או null, "source": "...", "status": "partial" | "final"} — המנדטים לפי מנוע החוק, כמו מוויקיפדיה.
        python3 pipeline/fetch_results_2026.py --jdn [קובץ count-live.json]
          הקולות מאתר הברומטר של JDN (elections.jdn.co.il/data/count-live.json, מתוך תוצאות ועדת הבחירות לפי קלפי;
-         הכרעת בעלים 27.10.2026). "נספרו" = קלפיות שנספרו מתוך הקלפיות הצפויות. בלי קובץ — מוריד בעצמו.
+         הכרעת בעלים 27.10.2026). "נספרו" = הקולות שנספרו מתוך כלל בעלי זכות הבחירה. בלי קובץ — מוריד בעצמו.
 """
 import json
 import re
@@ -116,6 +116,8 @@ def from_jdn(d: dict) -> dict | None:
     ballots, total = counted.get("ballots") or 0, expected.get("ballots") or 0
     if ballots <= 0 or total <= 0:
         return None
+    voted = counted.get("voted") or (counted.get("valid") or 0) + (counted.get("invalid") or 0)
+    eligible = json.loads((ROOT / "src" / "data" / "registry.json").read_text(encoding="utf-8"))["k26"]["eligible"]
     votes: dict[str, int] = {}
     for p in d.get("parties", []):
         lid = JDN_IDS.get(p.get("id"))
@@ -125,7 +127,8 @@ def from_jdn(d: dict) -> dict | None:
     return {
         "votes": votes,
         "valid": counted.get("valid"),
-        "counted": round(min(ballots / total, 1) * 100, 1),
+        # "נספרו" = הקולות שנספרו (כשרים ופסולים) מתוך כלל בעלי זכות הבחירה (registry.k26; הכרעת בעלים 28.10.2026)
+        "counted": round(min(voted / eligible, 1) * 100, 1),
         "source": "ועדת הבחירות המרכזית דרך הברומטר של JDN (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר",
         "status": "final" if final else "partial",
     }

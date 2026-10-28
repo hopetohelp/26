@@ -117,6 +117,8 @@ if (handoffTicket) {
   link.textContent = "מעבר לאתר";
   root.appendChild(link);
 } else {
+// כניסה לאתר בלי מסך בכתובת ⇐ מסך "תוצאות" (הכרעת בעלים 28.10.2026); "בית" בסרגל נשאר מסך הבית
+if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/results-2026`);
 startOutbox();
 registerOffline();
 
