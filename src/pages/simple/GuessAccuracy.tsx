@@ -141,7 +141,8 @@ export default function GuessAccuracy() {
       <div><p className="text-sm font-bold mb-1">{mine ? "הניחוש שלי" : "ממוצע הניחושים"}</p><InlineBlocBar values={mine ?? crowdMean} /></div>
     </div>
     </>}
-    <BelowThreshold ready={ready} />
+    {/* במצב ממוקד הרשימות שלא עברו כבר בגרף (אחרי קו ההפרדה) — הכרטיס רק בניתוח מורחב (הכרעת בעלים 28.10.2026) */}
+    {advanced && <BelowThreshold ready={ready} />}
     {nearest && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
       <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · אחוז דיוק <span className="font-num font-bold">{Math.round(nearest.acc)}%</span></p>
