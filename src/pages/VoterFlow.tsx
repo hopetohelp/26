@@ -3,6 +3,7 @@ import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Segmented } from "../components/Choice";
 import { Fold } from "../components/ui";
+import InfoTip from "../components/InfoTip";
 import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, smallPct, type FlowRow, type Mode } from "../lib/voterFlow";
 import { PartyAvatar } from "../components/PartyAvatar";
 import { num, pctValue } from "../lib/format";
@@ -128,14 +129,18 @@ export default function VoterFlow() {
     <div>
       <h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
       <p className="text-sm text-ink-soft">{partialLine()}</p>
-      <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64 mt-4" />
-      <p className="text-sm text-ink-soft mt-2">
-        השיוך לפי קלפיות זהות מדויק יותר, אבל מכסה רק {pctValue(cov.ballots.total)}% מהקולות, ומניח שההתפלגות זהה בשאר הקולות.
-        השיוך לפי יישובים משייך את השארית לפי ההתפלגות בכל היישוב, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
-      </p>
+      <div className="flex items-center gap-2 mt-4">
+        <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64" />
+        <InfoTip label="מה ההבדל בין קלפיות ליישובים?">
+          השיוך לפי קלפיות זהות מדויק יותר, אבל מכסה רק {pctValue(cov.ballots.total)}% מהקולות, ומניח שההתפלגות זהה בשאר הקולות.
+          השיוך לפי יישובים משייך את השארית לפי ההתפלגות בכל היישוב, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
+        </InfoTip>
+      </div>
       <div className="md:hidden">
-        <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
-        <p className="text-sm mt-2" aria-live="polite">{lead}</p>
+        <div className="flex items-center gap-2 mt-4">
+          <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64" />
+          <InfoTip label="מה מוצג בכיוון הזה?">{lead}</InfoTip>
+        </div>
       </div>
       <Explained
         kind="השוואה"
