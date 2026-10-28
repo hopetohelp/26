@@ -46,7 +46,14 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   const full = `${SITE_ORIGIN}/#${pathname}${fullParams.size ? `?${fullParams}` : ""}`;
   return (
     <div data-embed className="bg-paper text-ink">
-      <main id="main" className="w-full px-3 md:px-4 py-4">{children}</main>
+      <main id="main" className="w-full px-3 md:px-4 py-4">
+        {pathname === "/results-2026" && <div className="mb-4">
+          <a href={`${SITE_ORIGIN}/#/past?tab=changes`} target="_blank" rel="noopener" className="inline-flex items-center justify-center min-h-[44px] rounded-theme border-2 border-signal bg-paper-card px-4 py-3 text-base font-bold text-ink">
+            מה השתנה מבחירות קודמות?
+          </a>
+        </div>}
+        {children}
+      </main>
       <p className="px-3 md:px-4 pb-3 text-xs text-ink-soft">
         מקור: <a href={full} target="_blank" rel="noopener" className="underline">בחירות 2026 — 26.hopetohelp.net</a>
       </p>
