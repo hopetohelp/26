@@ -147,7 +147,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<PollsTabs />} />
-          <Route path="changes" element={<Moved to="/past" tab="changes" />} />
+          <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />

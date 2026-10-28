@@ -134,7 +134,7 @@ def from_jdn(d: dict) -> dict | None:
     }
 
 
-def write(votes: dict, valid: int | None, source: str, counted: float | None, status: str = "partial") -> int:
+def write(votes: dict, valid: int | None, source: str, counted: float | None, status: str = "partial", as_of: str | None = None) -> int:
     """המנדטים לפי מנוע החוק ⇐ raw/results-2026.json. סך שאינו 120 — הקובץ לא שונה"""
     total = valid if valid and valid >= sum(votes.values()) else sum(votes.values())
     meta = json.loads((ROOT / "src" / "data" / "meta.json").read_text(encoding="utf-8"))
@@ -153,10 +153,14 @@ def write(votes: dict, valid: int | None, source: str, counted: float | None, st
     if data.get("status") == "final" and status != "final":
         print("התוצאות כבר סופיות — לא דורסים בספירה חלקית")
         return 0
+    if status != "final" and counted is not None and (data.get("counted") or 0) > counted:
+        # הספירה רק מתקדמת: מקור שספר פחות (למשל JDN שנעצר) לא דורס קובץ רשמי שספר יותר
+        print(f"נספרו {counted}% — פחות מהקיים ({data['counted']}%); הקובץ לא שונה")
+        return 0
     now = datetime.now(timezone(timedelta(hours=2)))
     data.update(
         status=status,
-        asOf=f"{now.day}/{now.month} {now:%H:%M}",
+        asOf=as_of or f"{now.day}/{now.month} {now:%H:%M}",
         source=source,
         seats={k: int(v) for k, v in seats.items()},
         pct={k: round(v / total * 100, 2) for k, v in votes.items()},
@@ -167,7 +171,28 @@ def write(votes: dict, valid: int | None, source: str, counted: float | None, st
     return 0
 
 
+def from_ballots(path: Path) -> dict:
+    """קובץ ועדת הבחירות לפי קלפי (expb.csv) ⇐ הקולות לכל רשימה; האותיות לפי pipeline/voter_flow.py"""
+    import csv
+    from voter_flow import NEW
+    with path.open(encoding="utf-8-sig") as f:
+        rows = list(csv.DictReader(f))
+    n = lambda r, k: int(float(r.get(k) or 0))
+    votes = {lid: sum(n(r, letter) for r in rows) for letter, lid in NEW.items()}
+    eligible = json.loads((ROOT / "src" / "data" / "registry.json").read_text(encoding="utf-8"))["k26"]["eligible"]
+    return {
+        "votes": {k: v for k, v in votes.items() if v > 0},
+        "valid": sum(n(r, "כשרים") for r in rows),
+        "counted": round(sum(n(r, "מצביעים") for r in rows) / eligible * 100, 1),
+        "source": "ועדת הבחירות המרכזית — קובץ התוצאות הרשמי לפי קלפי (אומת); המנדטים לפי מנוע החוק של האתר",
+    }
+
+
 def main() -> int:
+    if len(sys.argv) > 2 and sys.argv[1] == "--ballots":
+        # python3 pipeline/fetch_results_2026.py --ballots raw/ballots-2026.csv [שעת הקובץ, למשל "28/10 10:21"]
+        src = from_ballots(Path(sys.argv[2]))
+        return write(src["votes"], src["valid"], src["source"], src["counted"], "partial", sys.argv[3] if len(sys.argv) > 3 else None)
     if len(sys.argv) > 1 and sys.argv[1] == "--jdn":
         if len(sys.argv) > 2:
             raw = Path(sys.argv[2]).read_text(encoding="utf-8")
