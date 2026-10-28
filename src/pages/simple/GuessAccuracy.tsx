@@ -270,7 +270,9 @@ function TurnoutCard() {
   const counted = typeof results2026.counted === "number" ? results2026.counted : null;
   const time = results2026.asOf?.match(/\d{1,2}:\d{2}/)?.[0] ?? null;
   if (!t || pct == null || prev == null) return null;
+  // "נספרו מתוכם" (הכרעת בעלים 28/10): הקולות שנספרו מתוך המצביעים — counted (מתוך בעלי זכות הבחירה) חלקי אחוז ההצבעה; עד 100
+  const countedOfVoters = counted == null ? null : Math.min(100, Math.round(counted / pct * 1000) / 10);
   return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
-    אחוז הצבעה: <b className="font-num">{pct}%</b> בחירות קודמות: <b className="font-num">{prev}%</b>{counted != null && <> <span className="whitespace-nowrap">נספרו: <b className="font-num">{counted}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
+    בחירות קודמות: <b className="font-num">{prev}%</b> בחירות נוכחיות: <b className="font-num">{pct}%</b>{countedOfVoters != null && <> <span className="whitespace-nowrap">נספרו מתוכם: <b className="font-num">{countedOfVoters}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
   </p>;
 }
