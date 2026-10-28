@@ -119,7 +119,7 @@ export default function GuessAccuracy() {
   const passed = ready ? ids.filter(id => (actual[id] ?? 0) > 0) : [];
   const myExact = mine && ready ? exactLists(mine, actual) : null;
   const crowdExact = ready && hist && passed.every(id => hist[id]) ? passed.reduce((a, id) => { const h = hist[id]!; const n = h.reduce((x, y) => x + y, 0); return a + (n ? (h[actual[id]] ?? 0) / n : 0); }, 0) : null;
-  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? "בממוצע " : ""}${avg ? v.toFixed(1) : v} מפלגות`;
+  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? v.toFixed(1) : v} מפלגות`;
   const pollExact = ready ? exactLists(pollAvg, actual) : null;
   // בלי ניחוש אישי — שתי התיבות בגודל זהה (הכרעת בעלים 28.10.2026)
   const tiles: { label: string; v: number | null; big?: boolean; info?: boolean; sub?: string }[] = [
@@ -289,6 +289,8 @@ function TurnoutCard() {
   const countedOfVoters = counted == null ? null : Math.min(100, Math.round(counted / pct * 1000) / 10);
   return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
     בחירות קודמות: <b className="font-num">{prev}%</b> בחירות נוכחיות: <b className="font-num">{pct}%</b>{countedOfVoters != null && <> <span className="whitespace-nowrap">נספרו מתוכם: <b className="font-num">{countedOfVoters}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
+    {/* קישור לתוצאות הרשמיות של ועדת הבחירות (הכרעת בעלים 28/10) */}
+    <br /><a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="font-semibold underline">תוצאות רשמיות</a>
   </p>;
 }
 
