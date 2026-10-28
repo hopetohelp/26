@@ -129,4 +129,7 @@ it("דשבורד הסטטיסטיקה: כניסות עמוד, עם חשבון, �
   expect(by.imgGuess.total).toBe(1);
   expect(by.imgChanges.total).toBe(1);
   expect(by.pageHits.points.at(-1)).toBe(12);
+  // לכל מסך בנפרד: 10 ישנות (יומי) + 2 חדשות (שעתי), בלי כפילות
+  expect(by["screen:/"].total).toBe(12);
+  expect(by["screen:/"].today).toBe(2);
 });
