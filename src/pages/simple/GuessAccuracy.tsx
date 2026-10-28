@@ -59,7 +59,7 @@ export default function GuessAccuracy() {
   const saved = session.me?.latest.seats?.payload as SeatsPayload | undefined;
   const mine: Seats | null = saved ? Object.fromEntries(IDS.map(id => [id, (seats.draft ?? saved).seats[id]?.v ?? 0])) : null;
   const [mode, setMode] = useState<"guesses" | "polls">("guesses");
-  const [who, setWho] = useState<"mine" | "all">("mine");
+  const [who, setWho] = useState<"mine" | "all">("all"); // ברירת המחדל במורחב: כל הניחושים (הכרעת בעלים 28/10)
   const [firm, setFirm] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const openShare = useCallback(() => setSharing(true), []);
@@ -67,8 +67,15 @@ export default function GuessAccuracy() {
   const hist = useMemo(() => histArrays(d?.seats?.hist), [d]);
   // מתג חציון/ממוצע (הכרעת בעלים 28.10.2026): בחציון — כל מקום שמשתמש בממוצע הניחושים או הסקרים, כולל אחוז הדיוק והשיתוף
   // בניתוח המורחב המתג אינו מוצג (הטבלאות אינן משתמשות בממוצע) — תמיד ממוצע (הכרעת בעלים 28.10.2026)
-  const [statPick, setStat] = useState<"mean" | "median">("mean");
-  const stat = advanced ? "mean" : statPick;
+  // ברירת המחדל: מה שקרוב יותר לתוצאות האמת בניחושים — ממוצע או חציון (הכרעת בעלים 28.10.2026); בשוויון — ממוצע
+  const [statPick, setStat] = useState<"mean" | "median" | null>(null);
+  const autoStat = useMemo<"mean" | "median">(() => {
+    const rows = d?.seats?.full ?? [];
+    if (!rows.length || !hasResults()) return "mean";
+    const of = (k: "mean" | "median") => accuracyPct(Object.fromEntries(rows.map(r => [r.list, r[k]])), results2026.seats);
+    return of("median") > of("mean") ? "median" : "mean";
+  }, [d]);
+  const stat = advanced ? "mean" : statPick ?? autoStat;
   const crowdMean: Seats = useMemo(() => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, stat === "median" ? r.median : r.mean])), [d, stat]);
   const pollAvg = stat === "median" ? pollMedian : pollMean;
   const avgWord = stat === "median" ? "חציון" : "ממוצע";
@@ -263,7 +270,9 @@ function TurnoutCard() {
   const counted = typeof results2026.counted === "number" ? results2026.counted : null;
   const time = results2026.asOf?.match(/\d{1,2}:\d{2}/)?.[0] ?? null;
   if (!t || pct == null || prev == null) return null;
+  // "נספרו מתוכם" (הכרעת בעלים 28/10): הקולות שנספרו מתוך המצביעים — counted (מתוך בעלי זכות הבחירה) חלקי אחוז ההצבעה; עד 100
+  const countedOfVoters = counted == null ? null : Math.min(100, Math.round(counted / pct * 1000) / 10);
   return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
-    אחוז הצבעה: <b className="font-num">{pct}%</b> בחירות קודמות: <b className="font-num">{prev}%</b>{counted != null && <> <span className="whitespace-nowrap">נספרו: <b className="font-num">{counted}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
+    בחירות קודמות: <b className="font-num">{prev}%</b> בחירות נוכחיות: <b className="font-num">{pct}%</b>{countedOfVoters != null && <> <span className="whitespace-nowrap">נספרו מתוכם: <b className="font-num">{countedOfVoters}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
   </p>;
 }
