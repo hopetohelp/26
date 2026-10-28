@@ -13,6 +13,8 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../guess/shareIma
 import { loadLogo } from "../guess/communityShare";
 import { blocSlices } from "./shared";
 import { buildPromoData, guesserName } from "./PromoVideo";
+import { reportVideo } from "../../lib/visits";
+import { getToken } from "../../lib/crowdSession";
 
 export interface AccuracyShareInput {
   actual: Seats; ids: string[]; crowdMean: Seats; mine: Seats | null; pollMean: Seats; polls: Seats[]; pollLabels: string[];
@@ -137,6 +139,7 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
       const f = await renderVideo(input, mine, mine ? name : "", setBusy);
       if (!f) { setMsg("נתוני המשתתפים אינם זמינים כרגע."); return; }
       setFile(new File([f.blob], f.name, { type: f.type })); setUrl(URL.createObjectURL(f.blob));
+      reportVideo({ mine: !!mine, named: !!mine && !!guesserName(name), kind: "results" }, getToken());
     } catch { setMsg("יצירת הסרטון לא הצליחה בדפדפן הזה. נסו בכרום או בספארי עדכניים."); } finally { setBusy(null); }
   };
   const share = async () => {
