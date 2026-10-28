@@ -138,7 +138,8 @@ function FocusClock() {
   const [now, setNow] = useState(Date.now);
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 15_000); return () => clearInterval(t); }, []);
   const p = clockParts(wallClockLeft(LOCK_AT, now));
-  if (!p) return <span className="f-clock">המדגמים פורסמו</span>;
+  // אחרי המדגמים — בלי תגית (הכרעת בעלים 28.10.2026; קודם "המדגמים פורסמו")
+  if (!p) return null;
   // שעות בלבד (הכרעת בעלים 25.10.2026): "49 שעות" עד המדגמים
   const hours = p.days * 24 + p.hours;
   return <span className="f-clock" role="timer" aria-label={`עד המדגמים: ${hours} שעות`}><span aria-hidden="true">⏱</span><b className="font-num">{hours}</b> שעות</span>;
