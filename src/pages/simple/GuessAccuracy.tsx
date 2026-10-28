@@ -342,9 +342,11 @@ function PodiumPopup({ place, name: saved, token }: { place: number; name: strin
     <div role="dialog" aria-modal="true" aria-labelledby="podium-pop">
       <h2 id="podium-pop" className="text-lg font-bold">כרגע אתם במקום {word} בדיוק הניחושים</h2>
       <p className="text-sm">אתם יכולים לשתף עם חברים, או לכתוב את שמכם שיופיע במסך הכללי.</p>
-      <button type="button" className="f-btn pri !flex !flex-col !items-center !py-3" onClick={share}>
+      <button type="button" className="f-btn pri !flex !flex-col !items-center !py-3" onClick={share} aria-label={`שיתוף: מקום ${word}, ${basis}`}>
         <span className="text-xl font-bold">מקום {word}</span>
         <span className="text-xs font-normal opacity-80">{basis}</span>
+        {/* כפתור השיתוף של האתר, בתוך הכפתור (הכרעת בעלים 28.10.2026) */}
+        <span className="mt-2 rounded-full bg-paper-card text-accent px-4 py-1 text-sm font-extrabold">שיתוף</span>
       </button>
       <label className="grid gap-1 text-sm">שם שיוצג לכולם (עד 3 מילים)
         <input value={name} maxLength={30} onChange={e => setName(e.target.value)} className="bg-paper border border-line rounded-xl px-3 py-2 w-full text-base" />
