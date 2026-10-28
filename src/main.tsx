@@ -128,10 +128,12 @@ createRoot(document.getElementById("root")!).render(
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<ModeHome />} />
+          {/* מסך הבית עבר ללשונית "הסקרים" במסך "סקרים"; "/" ⇐ "תוצאות" (הכרעת בעלים 28.10.2026) */}
+          <Route index element={<Navigate to="/results-2026" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<Tabbed label="סקרים" tabs={[
+            { id: "overview", label: "הסקרים", element: <ModeHome /> },
             { id: "today", label: "היום", element: <Today /> },
             { id: "trends", label: "מגמות", element: <Trends /> },
             { id: "archive", label: "ארכיון", element: <Polls /> },

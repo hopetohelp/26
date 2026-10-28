@@ -37,13 +37,11 @@ export interface Screen {
 export const SCREENS: Screen[] = [
   // הלשונית הימנית; "תוצאות אמת", ובטלפון בניתוח מורחב (סרגל מלא) "תוצאות" (הכרעת בעלים 28.10.2026)
   { id: "results2026", to: "/results-2026", label: "תוצאות אמת", short: "תוצאות", icon: "board", nav: "core" },
-  // "הסקרים" (הכרעת בעלים 28.10.2026; לפני כן "תמונת מצב" / "בית")
-  { id: "home", to: "/", label: "הסקרים", icon: "home", nav: "core" },
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
   // בסרגל רק בניתוח מורחב; המסך נשאר זמין בכתובת שלו (הכרעת בעלים 28.10.2026)
   { id: "community", to: "/community", label: "ממוצע הניחושים", icon: "bars", nav: "core", advanced: true },
-  // זמני עד שלב 3, שבו הסקרים עוברים ללשוניות תמונת מצב (השוואת מכונים · מגמות · ארכיון)
-  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
+  // "הסקרים" (לשעבר מסך הבית "תמונת מצב") — הלשונית הראשונה של "סקרים" (הכרעת בעלים 28.10.2026)
+  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "overview", label: "הסקרים" }, { id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
   { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
   { id: "method", to: "/method", label: "מידע ומקורות", icon: "info", nav: "foot" },
 ];

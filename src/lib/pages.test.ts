@@ -3,12 +3,12 @@ import { SCREENS, navScreens, screen, screenTabs } from "./pages";
 
 describe("קטלוג הניווט האחד", () => {
   it("מסכי הליבה בסדר הקבוע, בכל מצב", () => {
-    expect(navScreens(false, 0).map(s => s.label)).toEqual(["תוצאות אמת", "הסקרים", "הניחוש שלי"]);
-    expect(navScreens(true, 0).slice(0, 3)).toEqual(navScreens(false, 0));
+    expect(navScreens(false, 0).map(s => s.label)).toEqual(["תוצאות אמת", "הניחוש שלי"]);
+    expect(navScreens(true, 0).slice(0, 2)).toEqual(navScreens(false, 0));
   });
   it("במתקדם נוסף ״עוד ← בחירות קודמות״; ״מידע ומקורות״ אינו בסרגל אבל זמין תמיד", () => {
-    expect(navScreens(true, 0).map(s => s.id)).toEqual(["results2026", "home", "guess", "community", "polls", "past"]);
-    expect(navScreens(false, Date.parse("2026-10-27T21:59:00+02:00")).map(s => s.id)).toEqual(["results2026", "home"]);
+    expect(navScreens(true, 0).map(s => s.id)).toEqual(["results2026", "guess", "community", "polls", "past"]);
+    expect(navScreens(false, Date.parse("2026-10-27T21:59:00+02:00")).map(s => s.id)).toEqual(["results2026"]);
     expect(navScreens(true, 0).filter(s => s.nav === "more").every(s => s.advanced)).toBe(true);
     expect(screen("method").nav).toBe("foot");
     expect(screen("method").advanced).toBeFalsy();
@@ -19,7 +19,7 @@ describe("קטלוג הניווט האחד", () => {
     for (const s of SCREENS) expect(new Set((s.tabs ?? []).map(t => t.id)).size).toBe((s.tabs ?? []).length);
   });
   it("לשונית מתקדמת מוסתרת בממוקדת", () => {
-    const s = { ...screen("home"), tabs: [{ id: "a", label: "א" }, { id: "b", label: "ב", advanced: true }] };
+    const s = { ...screen("results2026"), tabs: [{ id: "a", label: "א" }, { id: "b", label: "ב", advanced: true }] };
     expect(screenTabs(s, false).map(t => t.id)).toEqual(["a"]);
     expect(screenTabs(s, true).map(t => t.id)).toEqual(["a", "b"]);
   });
