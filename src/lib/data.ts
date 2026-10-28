@@ -235,3 +235,9 @@ export function rollingMean(id: string, from: string, to: string, days = POINT_W
   }
   return out;
 }
+
+/** תווית כפתור של מערכת בחירות: השנה בלבד; בשנה עם שתי מערכות (2019) — גם החודש (הכרעת בעלים 28.10.2026) */
+export const electionButtonLabel = (label: string) => {
+  const year = label.slice(-4);
+  return results.filter((e) => e.label.endsWith(year)).length > 1 ? label : year;
+};
