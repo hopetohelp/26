@@ -28,7 +28,7 @@ function ChangesPromo() {
     const sync = () => {
       clearInterval(timer);
       if (motion.matches) setCurrent(0);
-      else if (!paused && !hovered && !focused) timer = setInterval(() => setCurrent((i) => (i + 1) % CHANGES_MESSAGES.length), 6000);
+      else if (!paused && !hovered && !focused) timer = setInterval(() => setCurrent((i) => (i + 1) % CHANGES_MESSAGES.length), 2000);
     };
     sync();
     motion.addEventListener("change", sync);
@@ -36,13 +36,13 @@ function ChangesPromo() {
   }, [paused, hovered, focused]);
   return (
     <div className="embed-cta relative mb-4 w-full" data-paused={paused} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
-      <a href={`${SITE_ORIGIN}/#/past?tab=changes`} target="_blank" rel="noopener" aria-label="מה השתנה מבחירות קודמות? גלו את ההתפלגות המלאה והמפורטת" className="block w-full rounded-theme border-2 border-signal bg-paper-card px-12 py-4 text-center text-ink">
-        <span aria-hidden="true" className="grid items-center text-base md:text-xl font-bold leading-snug">
-          {CHANGES_MESSAGES.map((message, i) => <span key={message} className="embed-cta-message" data-active={i === current}>{message}</span>)}
+      <a href={`${SITE_ORIGIN}/#/past?tab=changes`} target="_blank" rel="noopener" aria-label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" className="block w-full rounded-theme border-2 border-signal bg-signal px-12 py-4 text-center text-signal-ink hover:brightness-110">
+        <span aria-hidden="true" className="embed-cta-words grid items-center text-base md:text-xl font-bold leading-snug">
+          {CHANGES_MESSAGES.map((message, i) => <span key={message} className="embed-cta-message" data-active={i === current} data-previous={i === (current + CHANGES_MESSAGES.length - 1) % CHANGES_MESSAGES.length}>{message}</span>)}
         </span>
-        <span className="block mt-2 text-sm font-semibold text-signal underline underline-offset-4">גלו את ההתפלגות המלאה והמפורטת</span>
+        <strong className="block mt-2 text-sm font-extrabold">כנסו וגלו את הסיפור מאחורי המנדטים!</strong>
       </a>
-      <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} title={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} className="absolute top-1 end-1 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-theme text-ink-soft motion-reduce:hidden">
+      <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} title={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} className="absolute top-1 end-1 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-theme text-signal-ink motion-reduce:hidden">
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">{paused ? <path d="M5 3L13 8L5 13Z" /> : <><rect x="4" y="3" width="3" height="10" rx="1" /><rect x="9" y="3" width="3" height="10" rx="1" /></>}</svg>
       </button>
     </div>
