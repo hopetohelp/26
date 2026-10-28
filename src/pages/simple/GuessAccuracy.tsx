@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import InfoTip from "../../components/InfoTip";
 import { THRESHOLD_PCT } from "../../engine/pctForSeats";
@@ -130,13 +130,21 @@ export default function GuessAccuracy() {
     { label: `דיוק ${finalPolls.length} הסקרים`, v: pollAccAvg, sub: exactLine(pollExact, true) },
   ];
 
+  // כרטיס "היית מדויק" — רק בתצוגה הממוקדת, למי שיש ניחוש
+  const showMine = !advanced && !!mine && ready;
+  const mineLead = <div className="text-center">
+    <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
+    <p className="text-sm text-ink-soft mt-1"><span className="font-num">{fmt(Math.round(myMisplaced))}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
+  </div>;
+
   return <div className="max-w-6xl mx-auto">
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
     <h1 className="sr-only">תוצאות</h1>
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     <TurnoutCard />
     {/* בראש המסך (הכרעת בעלים 28.10.2026) */}
-    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} /> : null}
+    {/* כרטיס "היית מדויק" והמגירה — כרטיס אחד עם קו דק ביניהם; בלי פודיום — הכרטיס לבדו (הכרעת בעלים 28/10) */}
+    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} lead={showMine ? mineLead : undefined} /> : showMine ? <div className="f-card mb-4">{mineLead}</div> : null}
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
     {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
@@ -160,10 +168,6 @@ export default function GuessAccuracy() {
       <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
     </div>
     </> : <>
-    {mine && ready && <div className="f-card mb-4 text-center">
-      <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
-      <p className="text-sm text-ink-soft mt-1"><span className="font-num">{ready ? fmt(Math.round(myMisplaced)) : "—"}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
-    </div>}
     <div className="grid gap-2 mb-4 items-center" style={{ gridTemplateColumns: tiles.map(t => t.big ? "minmax(0, 1.35fr)" : "minmax(0, 1fr)").join(" ") }}>
       {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
         <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.info && <InfoTip label="מה זה מנדטים מדויקים?" className="ms-1">מנדטים מדויקים = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה; מפלגות = כמה רשימות קיבלו בדיוק את מספר המנדטים שלהן.</InfoTip>}</p>
@@ -298,7 +302,7 @@ function TurnoutCard() {
 
 /** פודיום: שלושת הניחושים המדויקים (הכרעת בעלים 28/10) — אחוז דיוק, אחר כך מספר המפלגות המדויקות, ובשוויון — מי ששמר קודם.
  * מחושב בשרת הניחושים בכל טעינה, מול הספירה הנוכחית, בלי מזהים (worker/crowd/lib/results.js podium) */
-function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number }) {
+function Podium({ top, n, lead }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number; lead?: ReactNode }) {
   // שעון ישראל, בפורמט האתר: "27/10 19:28"
   const time = (iso: string) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(iso)).map(x => [x.type, x.value])); return `${p.day}/${p.month} ${p.hour}:${p.minute}`; };
   // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)
@@ -308,7 +312,9 @@ function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string
   const BLOCK = ["bg-accent text-paper-card", "bg-paper-card text-accent border-2 border-accent", "bg-[rgb(var(--podium-red))] text-paper-card"];
   // מגירה בעיצוב הכרטיסים (הכרעת בעלים 28.10.2026)
   // סגור — כרטיס נמוך (הכרעת בעלים 28/10)
-  return <details className="f-card !py-2 mb-4 group [&_summary::-webkit-details-marker]:hidden">
+  return <div className={`f-card mb-4 ${lead ? "" : "!py-2"}`}>
+    {lead && <><div className="pb-3">{lead}</div><hr className="border-t border-line m-0" /></>}
+    <details className={`group [&_summary::-webkit-details-marker]:hidden ${lead ? "pt-1" : ""}`}>
     <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[32px]">
       <h2 className="text-base font-bold leading-tight">שלושת הניחושים המדויקים</h2>
       <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
@@ -324,7 +330,8 @@ function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string
     </div>
     <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
   </div>
-  </details>;
+    </details>
+  </div>;
 }
 
 const PLACE = ["ראשון", "שני", "שלישי"];
