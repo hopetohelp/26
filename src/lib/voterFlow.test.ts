@@ -1,18 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { coverage, flowsFor } from "./voterFlow";
+import { coverage, flow, flowsFor } from "./voterFlow";
+import { results } from "./data";
+import { results2026 } from "./guessAccuracyData";
 
 describe("מעבר מצביעים לפי קלפי (src/data/flow2026.json)", () => {
   for (const mode of ["ballots", "localities"] as const) {
-    it(`${mode}: לכל שורה יש שם, האחוזים מסתכמים ב-100, והסכומים זהים בשני הכיוונים`, () => {
+    it(`${mode}: לכל שורה יש שם, האחוזים מסתכמים ב-100, ואף קול לא יוצא מהחשבון`, () => {
       const { lists, blocs } = flowsFor(mode);
       for (const g of [lists, blocs]) {
         for (const r of [...g.cameFrom, ...g.wentTo]) {
           expect(r.name).toMatch(/[א-ת]/);
           if (r.total) expect(r.parts.reduce((a, p) => a + p.share, 0)).toBeCloseTo(100, 5);
         }
-        expect(g.cameFrom.reduce((s, r) => s + r.total, 0)).toBe(g.wentTo.reduce((s, r) => s + r.total, 0));
       }
       expect(blocs.cameFrom.reduce((s, r) => s + r.total, 0)).toBe(lists.cameFrom.reduce((s, r) => s + r.total, 0));
+      expect(blocs.wentTo.reduce((s, r) => s + r.total, 0)).toBe(lists.wentTo.reduce((s, r) => s + r.total, 0));
+      // הכרעת בעלים 28.10.2026: הסכום של כל מפלגה = הספירה הרשמית, בשני הכיוונים
+      for (const [id, votes] of Object.entries(results2026.votes ?? {})) expect(lists.cameFrom.find((r) => r.id === id)?.total ?? 0).toBe(votes);
+      const k25 = results.find((e) => e.knesset === 25)!;
+      for (const l of flow.old.filter((x) => k25.lists.some((k) => k.letters === x))) expect(lists.wentTo.find((r) => r.id === l)?.total).toBe(k25.lists.find((k) => k.letters === l)!.votes);
     });
   }
   it("הכיסוי עולה מדרגה לדרגה, והיישובים מכסים יותר מהקלפיות", () => {

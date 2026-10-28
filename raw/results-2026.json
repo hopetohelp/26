@@ -1,6 +1,6 @@
 {
   "status": "partial",
-  "asOf": "28/10 14:32",
+  "asOf": "28/10 21:01",
   "source": "ועדת הבחירות המרכזית — קובץ התוצאות הרשמי לפי קלפי (אומת); המנדטים לפי מנוע החוק של האתר",
   "note": "status: none = עדיין אין תוצאות (המסך מוסתר) · partial = ספירה חלקית · final = תוצאות סופיות. seats: מזהה רשימה (src/data/meta.json lists2026) ⇐ מנדטים. pct: מזהה רשימה ⇐ אחוז מהקולות הכשרים (לטור תוצאות האמת בהתפלגות המצביעים). counted: הקולות שנספרו מתוך כלל בעלי זכות הבחירה, באחוזים (0–100), לפי ועדת הבחירות (דרך JDN) או ויקיפדיה; null = לא ידוע.",
   "seats": {
@@ -22,22 +22,40 @@
     "noam": 0
   },
   "pct": {
-    "likud": 20.74,
-    "yashar": 16.19,
+    "likud": 20.7,
+    "yashar": 16.21,
     "joint": 9.19,
-    "together": 8.99,
-    "democrats": 6.51,
-    "utj": 5.7,
-    "yb": 5.96,
-    "otzma": 5.55,
-    "shas": 5.31,
-    "rzp": 4.77,
-    "raam": 5.84,
+    "together": 9.03,
+    "democrats": 6.52,
+    "utj": 5.67,
+    "yb": 5.94,
+    "otzma": 5.54,
+    "shas": 5.32,
+    "rzp": 4.74,
+    "raam": 5.92,
     "reservists": 2.63,
     "amcha": 1.61,
     "code_black": 0.2,
-    "haredi_public": 0.19,
-    "noam": 0.16
+    "haredi_public": 0.18,
+    "noam": 0.15
   },
-  "counted": 66.5
+  "counted": 68.8,
+  "votes": {
+    "likud": 1040170,
+    "yashar": 814385,
+    "joint": 461963,
+    "together": 453607,
+    "democrats": 327457,
+    "utj": 284992,
+    "yb": 298575,
+    "otzma": 278623,
+    "shas": 267134,
+    "rzp": 238378,
+    "raam": 297366,
+    "reservists": 132400,
+    "amcha": 80775,
+    "code_black": 9831,
+    "haredi_public": 9201,
+    "noam": 7698
+  }
 }

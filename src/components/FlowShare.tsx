@@ -73,10 +73,11 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   const ctx = cv.getContext("2d")!; ctx.direction = "rtl"; ctx.textBaseline = "middle";
   const R = IMG_W - 90, L = 90, CW = R - L;
   const ids = spec.who === "haredi" ? HAREDI : spec.who === "party" ? [spec.party] : [];
-  const national = flow.modes[spec.mode].flows;
+  const national = flow.modes[spec.mode].flows, nationalTo = flow.modes[spec.mode].flowsTo;
   const place = spec.who === "all" && spec.where === "city" && units ? Object.entries(units.places).find(([, p]) => p.name === spec.city.trim()) : undefined;
-  const cityMatrix = place ? (flow as unknown as { cities?: Record<string, { flows: number[][] }> }).cities?.[place[0]]?.flows : undefined;
-  const matrix = spec.who === "all" && spec.where === "city" ? cityMatrix ?? null : national;
+  const cityData = place ? (flow as unknown as { cities?: Record<string, { flows: number[][]; flowsTo?: number[][] }> }).cities?.[place[0]] : undefined;
+  const matrix = spec.who === "all" && spec.where === "city" ? cityData?.flows ?? null : national;
+  const matrixTo = spec.who === "all" && spec.where === "city" ? cityData?.flowsTo ?? cityData?.flows ?? null : nationalTo;
   const card = (x: number, yy: number, w: number, h: number, stroke?: string) => {
     ctx.fillStyle = P.card; ctx.beginPath(); ctx.roundRect(x, yy, w, h, 28); ctx.fill();
     if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 4; ctx.stroke(); }
@@ -107,7 +108,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   /** `slots`: מספר שורות "מאיפה הגיעו" שנשמר בכרטיס — בשני כרטיסים זה לצד זה, "לאן הלכו" מתחיל באותו קו בשניהם; `minH`: גובה אחיד */
   const partyCard = (id: string, x: number, w: number, maxRows: number, slots = 0, minH = 0) => {
     const from = cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows);
-    const prev = prevOf(id), to = prev.length ? wentToGroup(national, prev).filter((p) => p.share >= 1 || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, 3) : []; // עד 3 תגיות (הכרעת בעלים)
+    const prev = prevOf(id), to = prev.length ? wentToGroup(nationalTo, prev).filter((p) => p.share >= 1 || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, 3) : []; // עד 3 תגיות (הכרעת בעלים)
     const narrow = w < CW;
     /** אותה מפלגה בשתי הבחירות (אותו שם; לא רשימה שהחליפה שם, כמו המחנה הממלכתי ⇐ ישר!) — בלי לחזור על השם */
     const same = (letters: string | undefined) => !!letters && prev.includes(letters) && oldName(letters) === newName(id);
@@ -169,13 +170,13 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   };
   const blocs = (m: number[][]) => {
     heading("מעבר בין הגושים");
-    const b = blocsOf(m), to = spec.who === "all" && spec.dir === "to";
+    const b = blocsOf(m, m === national ? nationalTo : matrixTo ?? m), to = spec.who === "all" && spec.dir === "to";
     grid((to ? b.wentTo : b.cameFrom).filter((r) => BLOC_IDS.slice(0, 4).includes(r.id)), (id) => id, to ? "ל" : "מ");
   };
   const signed = (d: number, unit = "%") => `${d >= 0 ? "▲ +" : "▼ −"}${unit === "%" ? smallPct(Math.abs(d)) ?? "0" : Math.round(Math.abs(d)).toLocaleString("he-IL")}${unit}`;
   /** השינוי בכל הארץ (חלק מרכזי): באחוז ובמספר הקולות, ומתחתיו אז והיום; העיר עם השינוי הגדול ביותר — חלק משני בתחתית הכרטיס (הכרעת בעלים 28/10) */
   const changeCard = (id: string, x: number, w: number) => {
-    const c = groupChange(national, [id], prevOf(id));
+    const c = groupChange(national, nationalTo, [id], prevOf(id));
     const city = units ? biggestChange(cityShares(units, [id])) : undefined;
     // כרטיס רחב (מפלגה אחת): השינוי בגדול מימין, הקולות ואז והיום משמאל; כרטיס צר (חרדים): הכול בטור
     const wide = w >= CW, top = 0, main = wide ? 120 : 210, h = top + main + (city?.share22 != null ? 96 : 0);
@@ -248,7 +249,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
         const rows = flowsFor(spec.mode).lists.cameFrom.filter((r) => r.id !== "other" && r.id !== "abstain" && seats(r.id) > 0)
           .map((r) => (matrix === national ? r : { ...r, parts: cameFromGroup(matrix, [r.id]) }));
         grid(rows, bloc2026, "מ", (r) => String(seats(r.id)));
-      } else grid(K25_PASSED.map((l) => ({ id: l, name: oldName(l), total: 0, parts: wentToGroup(matrix, [l]) })), bloc2022, "ל");
+      } else grid(K25_PASSED.map((l) => ({ id: l, name: oldName(l), total: 0, parts: wentToGroup(matrixTo ?? matrix, [l]) })), bloc2022, "ל");
     } else if (units && place) {
       // עיר עם מעט קלפיות: רק האחוזים ב-2026 מול 2022
       const list = Object.keys(LETTER_OF).filter((id) => id !== "other").map((id) => ({ id, s: cityShares({ ...units, places: { [place[0]]: place[1] } }, [id])[0] }))
