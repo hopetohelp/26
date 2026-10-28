@@ -169,7 +169,7 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {[...core, ...more.slice(0, inline)].map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short && advanced ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
+    {[...core, ...more.slice(0, inline)].map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
     {inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
