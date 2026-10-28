@@ -66,8 +66,11 @@ export function coverage(mode: Mode) {
 }
 
 /** שורה קצרה במסך ובתמונות השיתוף: "נתונים חלקיים X% מהמצביעים HH:MM" (הכרעת בעלים 28.10.2026) */
+const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string } }).counted;
+/** אחוז המצביעים שנספרו (עגול) — לשורת "נתונים חלקיים" ולחלון הפודיום; null = לא ידוע */
+export const countedPct = () => { const c = countedOf(); return c ? Math.round(c.pct) : null; };
 export const partialLine = () => {
-  const c = (flow as unknown as { counted?: { pct: number; time: string } }).counted;
+  const c = countedOf();
   return c ? `נתונים חלקיים ${Math.round(c.pct)}% מהמצביעים ${c.time}` : "";
 };
 

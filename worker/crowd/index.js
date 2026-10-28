@@ -976,11 +976,16 @@ const routes = {
     // ההשערה האחרונה ממתינה לאישור מנהל (חריגה) — הגולש רואה אותה כרגיל, עם הסבר
     const seatsPending = latest.seats ? (await dashboardState(env)).pending.has(latest.seats.id) : false;
     const consent = await env.DB.prepare("SELECT version FROM privacy_consents WHERE participant = ?").bind(participant).first();
+    const place = (await dashboardState(env)).podiumIds.indexOf(participant) + 1;
+    let podiumName = null;
+    if (place) try { podiumName = (await env.DB.prepare("SELECT name FROM podium_names WHERE participant = ?").bind(participant).first())?.name ?? null; } catch { /* בלי טבלה */ }
     return {
       participant: p.id, created_at: p.created_at, latest, username: pw?.username ?? null, google: !!g, guest: !pw && !g, prefs: { camps, lineage, dataSource }, seatsPending,
       emails, name: prof ? await open(env, prof.name_enc) : null, hasPassword: !!pw,
       // גרסת נוסח הפרטיות שהמשתמש אישר (null = טרם אישר) — האתר מבקש אישור כשהגרסה הנוכחית חדשה יותר
       privacy: consent?.version ?? null,
+      // מקום בפודיום הניחושים (1–3), והשם הציבורי שבחר; 0 — לא בפודיום
+      podium: place ? { place, name: podiumName } : null,
       // חשבון בלי מייל ובלי Google (אורח או שם משתמש ישן) — נדרש להוסיף בכניסה הבאה (הכרעת בעלים 9.10.2026)
       needsEmail: !emails.length && !g,
       // אימות מייל במייל: זמין כשמוגדר מפתח Firebase
@@ -1935,8 +1940,15 @@ export function resetDashboardCache() { dashboardCache = null; }
 const DASHBOARD_MAX_AGE_MS = 10 * 60_000;
 const SNAPSHOT_MEMORY_MS = 10_000;
 const minMs = (env) => (env.DASHBOARD_MIN_MS === undefined ? 60_000 : Number(env.DASHBOARD_MIN_MS));
-const packState = (d) => JSON.stringify({ dashboard: d.dashboard, pending: [...d.pending.keys()], groups: [...d.groups] });
-const unpackState = (s) => { const o = JSON.parse(s); return { dashboard: o.dashboard, pending: new Set(o.pending), groups: new Map(o.groups) }; };
+/** שם בפודיום: עד 3 מילים ו-30 תווים, אותיות (עברית/אנגלית), ספרות, גרש ומקף; ריק ⇐ "" (מחיקה); לא תקין ⇐ null */
+export function podiumName(raw) {
+  const t = String(raw ?? "").replace(/\s+/g, " ").trim();
+  if (!t) return "";
+  if (t.length > 30 || t.split(" ").length > 3 || !/^[\p{L}\p{N}'"׳״\- ]+$/u.test(t)) return null;
+  return t;
+}
+const packState = (d) => JSON.stringify({ dashboard: d.dashboard, pending: [...d.pending.keys()], groups: [...d.groups], podiumIds: d.podiumIds ?? [] });
+const unpackState = (s) => { const o = JSON.parse(s); return { dashboard: o.dashboard, pending: new Set(o.pending), groups: new Map(o.groups), podiumIds: o.podiumIds ?? [] }; };
 /** סימון שינוי — החישוב הבא (לא לפני דקה מהקודם) יכלול אותו */
 async function markDashboardChanged(env) {
   dashboardCache = null;
@@ -1986,7 +1998,15 @@ async function computeDashboard(env) {
   const versions = (data[1].results || []).map(r => ({ ...r, payload: readPayload(r) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
   const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
-  return { dashboard: res.dashboard, pending: res.pending, groups: await groupDashboards(env, { participants, versions, now, blocNames, decisions, mod: res.mod }) };
+  // הפודיום: מי במקום — נשאר בשרת (podiumIds, ל-/me); לדפדפן יוצאים רק הנתונים והשם הציבורי שבחר המשתתף (הכרעת בעלים 28.10.2026)
+  const top = res.dashboard.seats?.podium ?? [];
+  const podiumIds = top.map((t) => t.p);
+  if (res.dashboard.seats?.podium) {
+    let names = new Map();
+    try { names = new Map(((await env.DB.prepare("SELECT participant, name FROM podium_names").all()).results || []).map((r) => [r.participant, r.name])); } catch { /* בלי טבלה — בלי שמות */ }
+    res.dashboard.seats.podium = top.map(({ p, ...t }) => ({ ...t, name: names.get(p) ?? null }));
+  }
+  return { dashboard: res.dashboard, pending: res.pending, podiumIds, groups: await groupDashboards(env, { participants, versions, now, blocNames, decisions, mod: res.mod }) };
 }
 
 /**
@@ -2003,7 +2023,7 @@ async function groupDashboards(env, { participants, versions, now, blocNames, de
     const d = aggregate({ participants: sub, versions: versions.filter((v) => members.has(v.participant)), now, blocNames, decisions, moderation: mod, aggregationId: `live-${now}` }).dashboard;
     // מתחת לסף: בלי נתונים, רק הספירה (הכרעת בעלים 12.10.2026) — המסך מוצג עם אפסים והמונה עובד
     if (d.participants < GROUP_MIN) out.set(id, { group: id, belowMin: true, min: GROUP_MIN, participants: d.participants, publishedAt: now });
-    else out.set(id, { ...d, group: id, min: GROUP_MIN, pendingGuesses: undefined, underReview: null });
+    else out.set(id, { ...d, seats: d.seats && { ...d.seats, podium: undefined }, group: id, min: GROUP_MIN, pendingGuesses: undefined, underReview: null });
   }
   return out;
 }

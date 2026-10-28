@@ -435,3 +435,10 @@ CREATE TABLE IF NOT EXISTS video_makers (
 -- כל סרטון שנוצר, עם הסוג והשעה (הכרעת בעלים 28.10.2026): data = סרטון הנתונים · results = סרטון התוצאות. לכרטיסים "מאז 22:00"
 CREATE TABLE IF NOT EXISTS video_events (participant TEXT NOT NULL, kind TEXT NOT NULL, mine INTEGER NOT NULL, named INTEGER NOT NULL, at TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS video_events_at ON video_events (at);
+
+-- שם ציבורי בפודיום הניחושים (הכרעת בעלים 28.10.2026): רק מי שבשלושת המקומות, לבחירתו
+CREATE TABLE IF NOT EXISTS podium_names (
+  participant TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);

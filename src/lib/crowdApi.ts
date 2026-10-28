@@ -165,6 +165,8 @@ export interface Me {
   managedGroups?: GroupRef[];
   /** גרסת נוסח הפרטיות שאושרה (null = טרם אושר; חסר = שרת ישן) — src/lib/privacy.ts */
   privacy?: number | null;
+  /** מקום בפודיום הניחושים (1–3) והשם הציבורי שבחר; null — לא בפודיום (POST /podium/name) */
+  podium?: { place: number; name: string | null } | null;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */
