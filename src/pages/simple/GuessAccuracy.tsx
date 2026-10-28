@@ -217,7 +217,7 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 }
 
 interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
-/** אחוז ההצבעה הארצי בשורה אחת, בעשירית האחוז: "אחוז הצבעה: X% בחירות קודמות: Y% נספרו: Z%" (הכרעת בעלים 27.10.2026; "נספרו" — raw/results-2026.json counted, כשידוע): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
+/** אחוז ההצבעה הארצי בשורה אחת, בעשירית האחוז: "אחוז הצבעה: X% בחירות קודמות: Y% נספרו: Z%" (הכרעת בעלים 27.10.2026; "נספרו" — raw/results-2026.json counted, הקולות שנספרו מתוך כלל בעלי זכות הבחירה, כשידוע): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
  * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים.
  * "בחירות קודמות" — אחוז ההצבעה הסופי ב-2022 מהתוצאות הרשמיות (previousTurnout). prev_percent של המפה הוא העדכון הקודם של הוועדה, לא הבחירות הקודמות */
 function TurnoutCard() {
