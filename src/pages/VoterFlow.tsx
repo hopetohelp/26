@@ -114,13 +114,18 @@ function Flows({ rows, view, fromColor, toColor }: { rows: { cameFrom: FlowRow[]
   return <ul className="mt-2">{list.map((r) => <Row key={r.id} row={r} view={view} colorOf={view === "from" ? fromColor : toColor} />)}</ul>;
 }
 
+type Rows = { cameFrom: FlowRow[]; wentTo: FlowRow[] };
+/** בלי השורות שאינן אמינות (הכרעת בעלים 28.10.2026): "רשימות אחרות" — בהשוואה לקלפיות המצביעים של 2026 בהן יוצאים 100% "לא הצביעו" (חוסר יציבות בקבוצה זעירה); "לא הצביעו" בחלק המפלגות */
+const without = (r: Rows, ids: string[]): Rows => ({ cameFrom: r.cameFrom.filter((x) => !ids.includes(x.id)), wentTo: r.wentTo.filter((x) => !ids.includes(x.id)) });
+
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
 export default function VoterFlow() {
   // ברירת המחדל — לפי יישובים: אותן מדרגות מהמדויק לפחות מדויק, ובנוסף שאר הקלפיות (הכרעת בעלים 28.10.2026)
   const [mode, setMode] = useState<Mode>("localities");
   const [view, setView] = useState<View>("from");
   const cov = { ballots: coverage("ballots"), localities: coverage("localities") };
-  const data = flowsFor(mode);
+  const raw = flowsFor(mode);
+  const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
   const lead = VIEWS.find((v) => v.id === view)!.lead;
   const [sharing, setSharing] = useState(false);
   useRegisterNavShare(useCallback(() => setSharing(true), []), false);
