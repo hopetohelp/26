@@ -36,13 +36,6 @@ OLD = ["מחל", "פה", "ט", "כן", "שס", "ג", "ל", "עם", "ום", "אמ
 NEW = {"מחל": "likud", "דרך": "yashar", "ודם": "joint", "רק": "together", "אמת": "democrats", "ג": "utj", "ל": "yb",
        "ב": "otzma", "שס": "shas", "ט": "rzp", "עם": "raam", "די": "reservists", "ך": "amcha",
        "נר": "code_black", "זך": "haredi_public", "ני": "noam"}
-# ארבעת הגושים לפי החלוקה של הברומטר של JDN (R/H/L/A); רשימה שאינה באף גוש ⇐ "other"
-BLOCS = ["right", "haredi", "centerLeft", "arab"]
-BLOC_OLD = {"מחל": "right", "ט": "right", "ב": "right", "שס": "haredi", "ג": "haredi",
-            "פה": "centerLeft", "כן": "centerLeft", "ל": "centerLeft", "אמת": "centerLeft", "מרצ": "centerLeft",
-            "עם": "arab", "ום": "arab", "ד": "arab"}
-BLOC_NEW = {"likud": "right", "otzma": "right", "rzp": "right", "amcha": "right", "noam": "right", "shas": "haredi", "utj": "haredi",
-            "yashar": "centerLeft", "together": "centerLeft", "democrats": "centerLeft", "yb": "centerLeft", "joint": "arab", "raam": "arab"}
 ITERATIONS = 300
 TIERS = ["sub", "ballot", "center", "city"]
 
@@ -163,9 +156,6 @@ def main() -> int:
         "old": OLD + ["other", "abstain"],
         "new": list(NEW.values()) + ["other", "abstain"],
         "letters26": NEW,
-        "blocs": BLOCS,
-        "blocOld": BLOC_OLD,
-        "blocNew": BLOC_NEW,
         "ballots2026": len(r26),
         "valid2026": sum(n(r, "כשרים") for r in r26),
         "modes": {"ballots": mode(r22, r26, False), "localities": mode(r22, r26, True)},

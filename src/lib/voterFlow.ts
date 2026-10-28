@@ -1,5 +1,6 @@
 import flowFile from "../data/flow2026.json";
 import { listName, results } from "./data";
+import { defaultBlocs } from "../pages/guess/model";
 
 /** מעבר מצביעים 2022 ⇐ 2026 לפי השוואת קלפיות (pipeline/voter_flow.py). נקודת המקור היחידה למסך "מה השתנה". */
 export type Mode = "ballots" | "localities";
@@ -7,7 +8,6 @@ export type Tier = "sub" | "ballot" | "center" | "city";
 interface ModeData { flows: number[][]; tiers: Record<Tier, { units: number; valid: number }> }
 export const flow = flowFile as unknown as {
   asOf: string; old: string[]; new: string[]; letters26: Record<string, string>;
-  blocs: string[]; blocOld: Record<string, string>; blocNew: Record<string, string>;
   ballots2026: number; valid2026: number; modes: Record<Mode, ModeData>;
 };
 
@@ -15,8 +15,14 @@ const K25 = results.find((e) => e.knesset === 25)!;
 const SPECIAL: Record<string, string> = { other: "רשימות אחרות", abstain: "לא הצביעו" };
 export const oldName = (letters: string) => SPECIAL[letters] ?? K25.lists.find((l) => l.letters === letters)?.short ?? letters;
 export const newName = (id: string) => SPECIAL[id] ?? listName(id);
-/** ארבעת הגושים לפי החלוקה של הברומטר של JDN */
-export const BLOC_NAMES: Record<string, string> = { right: "ימין", haredi: "חרדים", centerLeft: "מרכז-שמאל", arab: "ערבים", ...SPECIAL };
+/** הגושים כמו בכל האתר (defaultBlocs: גוש נתניהו, גוש אייזנקוט, מפלגות ערביות; הכרעת בעלים 28.10.2026).
+ * 2022: גוש נתניהו = הרשימות שהרכיבו את ממשלה 37 (הליכוד, הציונות הדתית, ש"ס, יהדות התורה); מפלגות ערביות = רע"ם, חד"ש-תע"ל, בל"ד; השאר — גוש אייזנקוט */
+const SITE = Object.fromEntries(defaultBlocs().map((b) => [b.id, b]));
+const BLOC_IDS = ["gov", "rest", "arab", "other", "abstain"];
+export const BLOC_NAMES: Record<string, string> = { gov: SITE.gov.name, rest: SITE.rest.name, arab: SITE.arab.name, ...SPECIAL };
+const BLOC_2022: Record<string, string> = { "מחל": "gov", "ט": "gov", "שס": "gov", "ג": "gov", "עם": "arab", "ום": "arab", "ד": "arab", "פה": "rest", "כן": "rest", "ל": "rest", "אמת": "rest", "מרצ": "rest", "ב": "rest" };
+const bloc2026 = (id: string) => (id === "abstain" || id === "other" ? id : SITE.gov.lists.includes(id) ? "gov" : SITE.arab.lists.includes(id) ? "arab" : "rest");
+const bloc2022 = (id: string) => BLOC_2022[id] ?? id;
 
 export interface FlowPart { id: string; name: string; votes: number; share: number }
 export interface FlowRow { id: string; name: string; total: number; parts: FlowPart[] }
@@ -36,13 +42,11 @@ function rows(m: number[][], oldIds: string[], newIds: string[], on: (id: string
   return { cameFrom, wentTo };
 }
 
-const blocOf = (map: Record<string, string>) => (id: string) => (id === "abstain" ? "abstain" : map[id] ?? "other");
-const BLOC_IDS = [...flow.blocs, "other", "abstain"];
 
 /** המעברים בין הרשימות ובין הגושים לפי המתג (קלפיות / יישובים) */
 export function flowsFor(mode: Mode) {
   const m = flow.modes[mode].flows;
-  const bo = blocOf(flow.blocOld), bn = blocOf(flow.blocNew);
+  const bo = bloc2022, bn = bloc2026;
   // גושים = סכום המעברים של הרשימות שבהם, מאותה מטריצה
   const blocs = BLOC_IDS.map((a) => BLOC_IDS.map((b) =>
     m.reduce((s, row, i) => (bo(flow.old[i]) === a ? s + row.reduce((t, v, j) => (bn(flow.new[j]) === b ? t + v : t), 0) : s), 0)));
