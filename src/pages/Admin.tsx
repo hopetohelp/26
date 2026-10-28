@@ -272,8 +272,10 @@ export default function Admin() {
                       {t.id === "saves" && <li className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">ניחוש — הגזרה</p><p className="font-num tabular text-3xl leading-none mt-1">{num(data.support?.stats.hagzaraGuesses)}</p><p className="text-[11px] text-ink-soft mt-1">ניחושים שנספרים בממוצע של קבוצת הגזרה.</p></li>}
                     </ul>
                     {t.id === "entries" && screens.length > 0 && (
-                      <div>
-                        <p className="text-sm font-bold mb-2">כניסות עמוד לפי מסך</p>
+                      // תת-מגירה, סגורה בכניסה (הכרעת בעלים 28.10.2026)
+                      <details className="group/sc border border-paper-line rounded-theme px-3 [&_summary::-webkit-details-marker]:hidden">
+                        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[44px] text-sm font-bold">כניסות עמוד לפי מסך<span aria-hidden="true" className="text-ink-soft text-lg transition-transform group-open/sc:rotate-45">+</span></summary>
+                        <div className="pb-3">
                         <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           {screens.map((x) => (
                             <li key={x.key} className="bg-paper border border-paper-line rounded-theme p-3 min-w-0">
@@ -284,7 +286,8 @@ export default function Admin() {
                           ))}
                         </ul>
                         <p className="text-xs text-ink-soft mt-2">כל פתיחה של המסך; לשוניות בתוך מסך נספרות עם המסך. עד 28/10 — לפי יום, ומאז לפי שעה (גם בגרפים למעלה).</p>
-                      </div>
+                        </div>
+                      </details>
                     )}
                     {t.id === "saves" && (
                       <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3" aria-label="פירוט החשבונות">
