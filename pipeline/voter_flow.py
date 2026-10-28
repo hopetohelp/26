@@ -115,6 +115,22 @@ def fit(pairs: list[tuple[list[float], list[int]]], I: int, J: int) -> list[list
     return P
 
 
+def allocate(pairs: list[tuple[list[float], list[int]]], P: list[list[float]], I: int, J: int) -> list[list[int]]:
+    """הקולות האמיתיים של 2026 בכל יחידה ⇐ מקורותיהם ב-2022; סכום כל עמודה = הקולות שנספרו בפועל (לא הערכה)"""
+    out = [[0.0] * J for _ in range(I)]
+    for xs, ys in pairs:
+        for j in range(J):
+            w = [xs[i] * P[i][j] for i in range(I)]
+            tot = sum(w)
+            if not ys[j]:
+                continue
+            if tot <= 0:
+                w, tot = list(xs), sum(xs) or 1
+            for i in range(I):
+                out[i][j] += ys[j] * w[i] / tot
+    return [[round(v) for v in row] for row in out]
+
+
 def unit_pair(tier: str, i22: list[int], i26: list[int], r22, r26, v22, v26) -> tuple[list[float], list[int]]:
     x = [sum(v22[i][k] for i in i22) for k in range(len(v22[0]))]
     y = [sum(v26[i][k] for i in i26) for k in range(len(v26[0]))]
@@ -135,9 +151,7 @@ def cities(r22: list[dict], r26: list[dict]) -> dict:
         if len(pairs) < MIN_CITY_UNITS:
             continue
         I, J = len(OLD) + 2, len(NEW) + 2
-        P = fit(pairs, I, J)
-        base = [sum(x[i] for x, _ in pairs) for i in range(I)]
-        out[code] = {"units": len(pairs), "flows": [[round(base[i] * P[i][j]) for j in range(J)] for i in range(I)]}
+        out[code] = {"units": len(pairs), "flows": allocate(pairs, fit(pairs, I, J), I, J)}
     return out
 
 
@@ -159,9 +173,7 @@ def mode(r22: list[dict], r26: list[dict], by_city: bool) -> dict:
         tiers[tier]["units"] += 1
         tiers[tier]["valid"] += sum(n(r26[i], "כשרים") for i in i26)
     I, J = len(OLD) + 2, len(new) + 2
-    P = fit(pairs, I, J)
-    base = [sum(x[i] for x, _ in pairs) for i in range(I)]
-    return {"flows": [[round(base[i] * P[i][j]) for j in range(J)] for i in range(I)], "tiers": tiers}
+    return {"flows": allocate(pairs, fit(pairs, I, J), I, J), "tiers": tiers}
 
 
 def units_file(r22: list[dict], r26: list[dict]) -> dict:
