@@ -96,3 +96,13 @@ export const smallPct = (v: number): string | null => {
   const r = (Math.round(v * 10) / 10).toFixed(1);
   return r.endsWith(".0") ? r.slice(0, -2) : r;
 };
+
+/** השינוי בכל הארץ לקבוצת רשימות של 2026 מול הרשימות שקדמו לה ב-2022 — באותן קלפיות שנספרו (המטריצה של המתג), כדי שהספירה החלקית לא תיראה כירידה */
+export function groupChange(m: number[][], ids: string[], letters: string[]) {
+  const ab = flow.new.indexOf("abstain"), abOld = flow.old.indexOf("abstain");
+  const votes26 = m.reduce((s, row) => s + row.reduce((t, v, j) => (ids.includes(flow.new[j]) ? t + v : t), 0), 0);
+  const valid26 = m.reduce((s, row) => s + row.reduce((t, v, j) => (j === ab ? t : t + v), 0), 0);
+  const votes22 = m.reduce((s, row, i) => (letters.includes(flow.old[i]) ? s + row.reduce((t, v) => t + v, 0) : s), 0);
+  const valid22 = m.reduce((s, row, i) => (i === abOld ? s : s + row.reduce((t, v) => t + v, 0)), 0);
+  return { votes26, votes22: letters.length ? votes22 : null, share26: (votes26 / (valid26 || 1)) * 100, share22: letters.length ? (votes22 / (valid22 || 1)) * 100 : null };
+}
