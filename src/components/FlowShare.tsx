@@ -72,6 +72,8 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   };
   const pill = (x: number, yy: number, w: number, h: number, color: string) => { if (w < 1) return; ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, yy, w, h, h / 2); ctx.fill(); };
   const pct = (v: number) => ltrText(`${Math.round(v)}%`);
+  /** המקור המשני: אחוז עגול; מתחת ל-2% — עשירית האחוז; מתחת ל-0.1% — לא מוצג (הכרעת בעלים 28.10.2026) */
+  const minor = (v: number) => (v < 0.1 ? null : v < 2 ? (Math.round(v * 10) / 10).toFixed(1) : String(Math.round(v)));
 
   // כותרת
   let y = 120;
@@ -115,7 +117,8 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
         const nw = ctx.measureText(pct(a.share)).width;
         ctx.fillStyle = P.soft; ctx.font = `500 26px ${body}`; ctx.fillText(`מ${a.name}`, x + w - 52 - nw - 14, yy + 108, w - nw - 90);
       }
-      if (b && b.share >= 1) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(`${Math.round(b.share)}% מ${b.name}`, x + w - 52, yy + 146, w - 80); }
+      const bs = b ? minor(b.share) : null;
+      if (b && bs) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(`${bs}% מ${b.name}`, x + w - 52, yy + 146, w - 80); }
     });
     y += Math.ceil(rows.length / 2) * (h + gap) + 10;
   };
