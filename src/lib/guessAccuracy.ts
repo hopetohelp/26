@@ -78,6 +78,11 @@ export const correctSeats = (accPct: number) => Math.round(accPct * TOTAL / 100)
 export function exactLists(values: Seats, actual: Seats): number {
   return Object.keys(actual).filter(id => val(actual, id) > 0 && Math.round(val(values, id)) === val(actual, id)).length;
 }
+/** דיוק הסקרים (הכרעת בעלים 28/10): כל סקר בנפרד מול התוצאות, ואז ממוצע על הסקרים — אחוז הדיוק ומספר המפלגות המדויקות */
+export function pollsAccuracy(polls: Seats[], actual: Seats): { acc: number; exact: number } | null {
+  if (!polls.length) return null;
+  return { acc: polls.reduce((a, p) => a + accuracyPct(p, actual), 0) / polls.length, exact: polls.reduce((a, p) => a + exactLists(p, actual), 0) / polls.length };
+}
 /** השורה האחידה: "111 מנדטים · 5 מפלגות" */
 export const exactLine = (seats: number, lists: number | string) => `${seats} מנדטים · ${lists} מפלגות`;
 

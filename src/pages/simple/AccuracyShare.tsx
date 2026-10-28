@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
-import { accuracyPct, correctSeats, exactLists, biggestGap, closestPoll, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, correctSeats, exactLists, pollsAccuracy, biggestGap, closestPoll, type Seats } from "../../lib/guessAccuracy";
 import { crowdDashboardOnce } from "../../lib/sources";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 import type { PromoFile } from "../../lib/promoEncode";
@@ -47,12 +47,14 @@ async function renderImage(input: AccuracyShareInput, values: Seats, label: stri
   ctx.fillText("מי ניחש הכי טוב?", IMG_W / 2, 100);
   // אחוז הדיוק: הסקרים מול הניחושים
   // מנדטים מדויקים, ומתחת — מפלגות מדויקות (הכרעת בעלים 28.10.2026)
-  const tiles: [string, Seats][] = [["דיוק הסקרים", input.pollMean], [input.mine && values === input.mine ? label : "דיוק הניחושים", values]];
-  tiles.forEach(([t, v], i) => {
+  // הסקרים — כל סקר בנפרד ואז ממוצע (pollsAccuracy), כמו במסך
+  const pa = pollsAccuracy(input.polls, input.actual);
+  const tiles: [string, number, string][] = [["דיוק הסקרים", pa?.acc ?? 0, (pa?.exact ?? 0).toFixed(1)], [input.mine && values === input.mine ? label : "דיוק הניחושים", accuracyPct(values, input.actual), String(exactLists(values, input.actual))]];
+  tiles.forEach(([t, v, ex], i) => {
     const cx = IMG_W * (i ? .28 : .72);
     ctx.fillStyle = c.soft; ctx.font = `600 32px ${body}`; ctx.fillText(t, cx, 190);
-    ctx.fillStyle = c.ink; ctx.font = `800 96px ${num}`; ctx.fillText(ltrText(String(correctSeats(accuracyPct(v, input.actual)))), cx, 270);
-    ctx.fillStyle = c.soft; ctx.font = `600 28px ${body}`; ctx.fillText(`מנדטים · ${exactLists(v, input.actual)} מפלגות`, cx, 335);
+    ctx.fillStyle = c.ink; ctx.font = `800 96px ${num}`; ctx.fillText(ltrText(String(correctSeats(v))), cx, 270);
+    ctx.fillStyle = c.soft; ctx.font = `600 28px ${body}`; ctx.fillText(`מנדטים · ${ex} מפלגות`, cx, 335);
   });
   // כותרות הטורים
   const colA = 300, colB = 150;
@@ -109,7 +111,7 @@ async function renderVideo(input: AccuracyShareInput, mine: Seats | null, name: 
   const passPct = (id: string) => { const h = input.hist?.[id]; if (!h) return 0; const n = h.reduce((s, x) => s + x, 0); return n ? Math.round(h.reduce((s, x, k) => s + (k >= THRESHOLD_SEATS ? x : 0), 0) / n * 100) : 0; };
   data.edge = input.ids.filter(id => (a[id] ?? 0) <= 6 || (crowd[id] ?? 0) <= 6).sort((x, y) => Math.abs((a[x] ?? 0) - THRESHOLD_SEATS) - Math.abs((a[y] ?? 0) - THRESHOLD_SEATS)).slice(0, 2).map(id => ({ id, passing: passPct(id), n: 100 }));
   const mg = mine ? biggestGap(mine, a, input.ids) : null;
-  data.results = { pollAcc: accuracyPct(input.pollMean, a), crowdAcc: accuracyPct(crowd, a), closest: closestPollLabel(input), mineGap: mg ? { name: nameOf(mg.id), gap: mg.gap } : null };
+  data.results = { pollAcc: pollsAccuracy(input.polls, a)?.acc ?? 0, crowdAcc: accuracyPct(crowd, a), closest: closestPollLabel(input), mineGap: mg ? { name: nameOf(mg.id), gap: mg.gap } : null };
   const { renderPromoVideo } = await import("../../lib/promoEncode");
   return renderPromoVideo(data, onProgress);
 }
