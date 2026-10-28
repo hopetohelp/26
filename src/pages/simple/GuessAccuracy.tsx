@@ -132,6 +132,8 @@ export default function GuessAccuracy() {
     <h1 className="sr-only">תוצאות</h1>
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     <TurnoutCard />
+    {/* בראש המסך (הכרעת בעלים 28.10.2026) */}
+    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} /> : null}
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
     {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
@@ -189,7 +191,6 @@ export default function GuessAccuracy() {
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollAvg[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> ב{avgWord} כל הסקרים.</p>
     </div>}
     {ready && session.me?.podium && <PodiumPopup place={session.me.podium.place} name={session.me.podium.name} token={session.token} />}
-    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} /> : null}
     {/* כפתור השיתוף — בסרגל הניווט, מימין ל-AI (הכרעת בעלים 28.10.2026; src/lib/navShare.ts) */}
     <FocusFoot />
     {sharing && <AccuracyShare onClose={() => setSharing(false)} input={{ actual, ids, crowdMean, mine, pollMean: pollAvg, avgWord, polls, pollLabels: finalPolls.map(p => p.label), hist, count: d?.seats?.n ?? 0, best: best ? best.keys.map(k => finalPolls.find(p => p.key === k)?.firm ?? k) : [], group: hagzara }} />}
@@ -299,6 +300,8 @@ function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string
   // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)
   const order = [1, 0, 2].filter(i => top[i]);
   const H = ["h-28", "h-20", "h-14"];
+  // כחול · לבן · אדום: מקום 1 כחול, 2 לבן עם מסגרת כחולה, 3 אדום
+  const BLOCK = ["bg-accent text-paper-card", "bg-paper-card text-accent border-2 border-accent", "bg-[rgb(var(--podium-red))] text-paper-card"];
   return <Fold title="שלושת הניחושים המדויקים">
     <div className="grid grid-cols-3 gap-2 items-end max-w-xl mx-auto">
       {order.map(i => { const g = top[i]; return <div key={i} className="flex flex-col items-center text-center">
@@ -306,7 +309,7 @@ function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string
         {g.name && <p className="font-bold text-sm mt-1">{g.name}</p>}
         <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות מדויקות</p>
         <p className="text-xs text-ink-soft mb-2 font-num">{time(g.savedAt)}</p>
-        <div className={`${H[i]} w-full rounded-t-xl bg-ink text-paper-card flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
+        <div className={`${H[i]} ${BLOCK[i]} w-full rounded-t-xl flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
       </div>; })}
     </div>
     <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
