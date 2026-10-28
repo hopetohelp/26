@@ -287,8 +287,8 @@ export default function Admin() {
                       </div>
                     )}
                     {t.id === "saves" && (
-                      <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="פירוט החשבונות">
-                        {([["חשבון Google", "googleAccounts", "חשבונות שנכנסו עם Google."], ["מייל מאומת (בקישור)", "verifiedEmails", "חשבונות שלחצו על קישור האימות."], ["מייל לא מאומת", "unverifiedEmails", "מצב החשבון: יש מייל, הוא לא אומת ואין Google."], ["קישור אימות פתוח", "verifyMailsPending", "קישורי אימות שנשלחו ולא נלחצו. כל חשבון נספר פעם אחת, גם אם נשלח לו שוב."]] as const).map(([label, k, help]) => (
+                      <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3" aria-label="פירוט החשבונות">
+                        {([["חשבון Google", "googleAccounts", "חשבונות שנכנסו עם Google."], ["מייל מאומת (בקישור)", "verifiedEmails", "חשבונות שלחצו על קישור האימות."], ["מייל לא מאומת", "unverifiedEmails", "מצב החשבון: יש מייל, הוא לא אומת ואין Google."]] as const).map(([label, k, help]) => (
                           <li key={k} className="bg-paper border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">{label}</p><p className="font-num tabular text-2xl leading-none mt-1">{num(data.support?.stats[k])}</p><p className="text-[11px] text-ink-soft mt-1">{help}</p></li>
                         ))}
                       </ul>
