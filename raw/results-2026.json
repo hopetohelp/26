@@ -1,6 +1,6 @@
 {
   "status": "partial",
-  "asOf": "28/10 05:06",
+  "asOf": "28/10 05:34",
   "source": "ועדת הבחירות המרכזית דרך הברומטר של JDN (קולות) — לא אומת; המנדטים לפי מנוע החוק של האתר",
   "note": "status: none = עדיין אין תוצאות (המסך מוסתר) · partial = ספירה חלקית · final = תוצאות סופיות. seats: מזהה רשימה (src/data/meta.json lists2026) ⇐ מנדטים. pct: מזהה רשימה ⇐ אחוז מהקולות הכשרים (לטור תוצאות האמת בהתפלגות המצביעים). counted: הקולות שנספרו מתוך כלל בעלי זכות הבחירה, באחוזים (0–100), לפי ועדת הבחירות (דרך JDN) או ויקיפדיה; null = לא ידוע.",
   "seats": {
@@ -13,8 +13,8 @@
     "otzma": 7,
     "utj": 9,
     "shas": 7,
-    "raam": 4,
     "rzp": 7,
+    "raam": 4,
     "reservists": 0,
     "amcha": 0,
     "haredi_public": 0,
@@ -22,22 +22,22 @@
     "code_black": 0
   },
   "pct": {
-    "likud": 22.24,
-    "yashar": 15.41,
-    "joint": 8.28,
-    "together": 8.22,
-    "yb": 6.43,
+    "likud": 22.02,
+    "yashar": 15.46,
+    "joint": 8.57,
+    "together": 8.29,
+    "yb": 6.37,
     "democrats": 5.89,
-    "otzma": 6.02,
-    "utj": 6.74,
-    "shas": 5.74,
-    "raam": 3.67,
-    "rzp": 5.71,
+    "otzma": 5.95,
+    "utj": 6.71,
+    "shas": 5.79,
+    "rzp": 5.62,
+    "raam": 3.7,
     "reservists": 2.72,
-    "amcha": 1.79,
+    "amcha": 1.8,
     "haredi_public": 0.27,
     "noam": 0.2,
     "code_black": 0.19
   },
-  "counted": 21.9
+  "counted": 24.2
 }
