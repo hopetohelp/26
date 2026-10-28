@@ -84,7 +84,8 @@ export default function GuessAccuracy() {
   </div>;
   const actual = results2026.seats;
   const ids = useMemo(() => accuracyRows(actual, pollMean), [actual]);
-  const best = useMemo(() => hasResults() ? bestCombination(finalPolls, actual, ids) : null, [actual, ids]);
+  // השילוב הטוב ביותר — רק כשהוא קרוב יותר ממכון בודד (שילוב של שני מכונים ומעלה); אחרת הכרטיס לא מוצג (הכרעת בעלים 28/10)
+  const best = useMemo(() => { const b = hasResults() ? bestCombination(finalPolls, actual, ids) : null; return b && b.keys.length > 1 ? b : null; }, [actual, ids]);
   const nearest = useMemo(() => hasResults() ? closestPoll(finalPolls, actual) : null, [actual]);
   // לפני הספירה הראשונה: כל הנתונים הקיימים, ובטורים שתלויים בתוצאות — קו (הכרעת בעלים 27.10.2026)
   const ready = hasResults();
