@@ -69,11 +69,12 @@ export default function GuessAccuracy() {
   // לפני הספירה הראשונה: כל הנתונים הקיימים, ובטורים שתלויים בתוצאות — קו (הכרעת בעלים 27.10.2026)
   const ready = hasResults();
   // הגרף: הרשימות שעברו, ואחריהן — אחרי קו הפרדה — כל הרשימות שלא עברו, לפי אחוז הקולות (הכרעת בעלים 28.10.2026)
+  // ברשימות שלא עברו — אחוז הקולות במקום 0 מנדטים (הכרעת בעלים 28.10.2026)
+  const votePct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
   const belowIds = useMemo(() => {
     if (!ready) return [];
-    const pct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
-    return activeLists2026.map(l => l.id).filter(id => (actual[id] ?? 0) === 0).sort((a, b) => (pct[b] ?? 0) - (pct[a] ?? 0));
-  }, [actual, ready]);
+    return activeLists2026.map(l => l.id).filter(id => (actual[id] ?? 0) === 0).sort((a, b) => (votePct[b] ?? 0) - (votePct[a] ?? 0));
+  }, [actual, ready, votePct]);
   const chartIds = useMemo(() => ready ? [...ids.filter(id => (actual[id] ?? 0) > 0), ...belowIds] : ids, [ids, actual, ready, belowIds]);
 
   const view: View = mode === "polls" ? "polls" : who === "mine" && mine ? "mine" : "all";
@@ -127,7 +128,7 @@ export default function GuessAccuracy() {
         <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : `${Math.round(t.v)}%`}</p>
       </div>)}
     </div>
-    <PartyChart selection={SIMPLE_ALL} lists={chartIds} separatorBefore={belowIds[0]} capValue={ready ? id => actual[id] ?? 0 : undefined} spreadOf={id => { if (!ready) return null; const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
+    <PartyChart selection={SIMPLE_ALL} lists={chartIds} separatorBefore={belowIds[0]} capValue={ready ? id => (actual[id] ?? 0) > 0 ? actual[id] : `${(votePct[id] ?? 0).toFixed(1)}%` : undefined} spreadOf={id => { if (!ready) return null; const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
       marks={id => [...(mine ? [{ value: mine[id] ?? 0, side: "up" as const }] : []), { value: crowdMean[id], kind: "dash" as const, side: "down" as const }]}
       legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label="ממוצע הניחושים" /></>} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>

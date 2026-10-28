@@ -871,10 +871,11 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* ממוצע הניחושים במתקדם: טור "שלי" בסוף כל שורה */
 .has-mine .f-row, .has-mine .f-axis { grid-template-columns:150px minmax(0,1fr) 36px; }
 /* המספר שהקפסולה מייצגת, מימין לה ובצבעיה; קו הפרדה לפני הרשימות שלא עברו (הכרעת בעלים 28.10.2026) */
-.has-capnum .f-row, .has-capnum .f-axis { grid-template-columns:150px 30px minmax(0,1fr); }
-@media (max-width: 480px) { .has-capnum .f-row, .has-capnum .f-axis { grid-template-columns:96px 24px minmax(0,1fr); } }
+.has-capnum .f-row, .has-capnum .f-axis { grid-template-columns:150px 42px minmax(0,1fr); }
+@media (max-width: 480px) { .has-capnum .f-row, .has-capnum .f-axis { grid-template-columns:96px 36px minmax(0,1fr); } }
 .f-capnum { text-align:center;font-weight:800;font-size:15px;color:rgb(var(--heat-hi)); }
 .f-capnum.below { color:rgb(var(--heat-lo)); }
+.f-capnum.pct { font-size:12px; }
 .f-sep { border-top:2px solid rgb(var(--ink-soft));margin-top:10px; }
 /* כפתור השיתוף צף בפינה השמאלית למטה; בטלפון — מעל סרגל הניווט (הכרעת בעלים 28.10.2026) */
 .f-share-fab { position:fixed;z-index:44;left:16px;bottom:calc(20px + env(safe-area-inset-bottom));box-shadow:0 6px 18px rgb(var(--ink) / .25); }

@@ -82,8 +82,8 @@ export type Mark = { value: number | null | undefined; kind?: "solid" | "dash" |
 /** גרף המפלגות: קפסולה לסקרים ותגיות ערך לקווים */
 /** spreadOf = טווח אחר במקום טווח הסקרים (למשל טווח הניחושים של כל המשתתפים) */
 /** mine = טור "הניחוש שלי" בסוף כל שורה (במתקדם, בממוצע הניחושים; הכרעת בעלים 25.10.2026) */
-/** capValue = המספר שהקפסולה מייצגת, מימין לה ובצבעיה; separatorBefore = קו הפרדה לפני הרשימה הזאת (הכרעת בעלים 28.10.2026) */
-export function PartyChart({ selection, lists, marks, legend, spreadOf, mine, capValue, separatorBefore }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode; spreadOf?: (id: string) => [number, number, number, number, number, number] | null; mine?: (id: string) => number; capValue?: (id: string) => number | null; separatorBefore?: string }) {
+/** capValue = המספר שהקפסולה מייצגת, מימין לה ובצבעיה (טקסט — למשל אחוז הקולות של רשימה שלא עברה); separatorBefore = קו הפרדה לפני הרשימה הזאת (הכרעת בעלים 28.10.2026) */
+export function PartyChart({ selection, lists, marks, legend, spreadOf, mine, capValue, separatorBefore }: { selection: Selection; lists: string[]; marks: (id: string) => Mark[]; legend: ReactNode; spreadOf?: (id: string) => [number, number, number, number, number, number] | null; mine?: (id: string) => number; capValue?: (id: string) => number | string | null; separatorBefore?: string }) {
   const tall = lists.some(id => marks(id).some(m => m.side === "down"));
   return <div className={`f-card${mine ? " has-mine" : ""}${capValue ? " has-capnum" : ""}`}>
     <div className="f-legend">{legend}</div>
@@ -92,7 +92,7 @@ export function PartyChart({ selection, lists, marks, legend, spreadOf, mine, ca
       const spread = spreadOf ? spreadOf(id) : simpleSpread(selection, id);
       const cap = capValue?.(id);
       return <Fragment key={id}>{id === separatorBefore && <div className="f-sep" role="separator" />}<div className={`f-row ${tall ? "tall" : ""}`}><PartyName id={id} />
-        {capValue && <span className={`f-capnum font-num${cap != null && cap < THRESHOLD_SEATS ? " below" : ""}`}>{cap == null ? "—" : fmt(cap)}</span>}
+        {capValue && <span className={`f-capnum font-num${typeof cap === "string" ? " pct" : ""}${typeof cap === "string" || (cap != null && cap < THRESHOLD_SEATS) ? " below" : ""}`}>{cap == null ? "—" : typeof cap === "string" ? cap : fmt(cap)}</span>}
         <div className="f-track" role="img" aria-label={`${nameOf(id)}: ${marks(id).filter(m => m.value != null).map(m => fmt(m.value)).join(", ")}`}>
           {spread && <Capsule spread={spread} />}
           {marks(id).map((m, i) => m.value == null ? null : <span key={i} className={`f-mark ${m.kind === "dash" ? "dash" : m.kind === "soft" ? "soft" : ""}`} style={{ right: x(m.value) }}><span className={`f-tag ${m.side}`}>{fmt(m.value)}</span></span>)}
