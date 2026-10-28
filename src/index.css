@@ -251,7 +251,8 @@
 }
 
 /* הזמנה מתוך התוצאות המוטמעות: דפדוף כל שתי שניות, באותו שטח בלי להזיז את העמוד. */
-.embed-cta > a { text-decoration:none; }
+.embed-cta > a { text-decoration:none;box-shadow:0 6px 0 rgb(var(--band)),0 12px 20px rgb(var(--band) / .3),inset 0 2px 0 rgb(var(--signal-ink) / .22);transition:transform .15s ease,box-shadow .15s ease; }
+.embed-cta > a:active { transform:translateY(4px);box-shadow:0 2px 0 rgb(var(--band)),0 5px 10px rgb(var(--band) / .3),inset 0 2px 0 rgb(var(--signal-ink) / .22); }
 .embed-cta-words { perspective:800px; }
 .embed-cta-message { grid-area:1 / 1;min-width:0;opacity:0;backface-visibility:hidden;transform-origin:center;transform:rotateX(-90deg);transition:opacity .48s ease,transform .48s cubic-bezier(.4,0,.2,1); }
 .embed-cta-message[data-previous="true"] { transform:rotateX(90deg); }
