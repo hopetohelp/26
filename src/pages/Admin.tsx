@@ -4,6 +4,7 @@ import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
+import { HIDDEN_SCREENS, setScreenModes, type HiddenScreen, type ScreenMode } from "../lib/screenVisibility";
 import { dateTime } from "../lib/format";
 import { nextRun } from "../lib/runSchedule";
 import { getToken } from "../lib/crowdSession";
@@ -142,7 +143,7 @@ export default function Admin() {
   const [data, setData] = useState<Data | null>(() => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) ?? "null") as Data | null; } catch { return null; } });
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai" | "mcp";
+  type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai" | "mcp" | "screens";
   const [guessCounts, setGuessCounts] = useState<{ pending: number; rejected: number }>(() => { try { return JSON.parse(localStorage.getItem(`${CACHE_KEY}.guesses`) ?? "null") ?? { pending: 0, rejected: 0 }; } catch { return { pending: 0, rejected: 0 }; } });
   const pendingGuesses = guessCounts.pending;
   // פרסום אחרון של האתר ב-GitHub (ממשק ציבורי); בלי תשובה — "—"
@@ -306,6 +307,7 @@ export default function Admin() {
             <Drawer title="ניחושי הגולשים" open={open.has("guesses")} onToggle={() => toggle("guesses")} badge={pendingGuesses > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${pendingGuesses} ניחושים ממתינים לאישור`}>{pendingGuesses}</span> : undefined}><AdminGuesses api={api} onCounts={setGuessCounts} /></Drawer>
             <Drawer title="גושים שהוגדרו" open={open.has("blocs")} onToggle={() => toggle("blocs")}><AdminBlocs api={api} /></Drawer>
             <Drawer title="קבוצות" open={open.has("groups")} onToggle={() => toggle("groups")}><AdminGroups api={api} /></Drawer>
+            <Drawer title="מסכים מוסתרים" open={open.has("screens")} onToggle={() => toggle("screens")}><AdminScreens api={api} /></Drawer>
             <Drawer title="מפתח AI לתשובות" open={open.has("ai")} onToggle={() => toggle("ai")}><AiKey api={api} /></Drawer>
             <Drawer title="שרת העוזרים (MCP)" open={open.has("mcp")} onToggle={() => toggle("mcp")}><AdminMcp credential={credential} /></Drawer>
           </div>
@@ -334,6 +336,27 @@ function aiStatusLine(s: AiState): string {
  * שרת ההערות עונה לשאלות ותאוריות לפי נוהל ההערות: מפרסם רק כשהכול עומד בנוהל, וכל ספק הופך לטיוטה למעלה. "טיוטות בלבד" — מתג עצירה.
  * דרך נוספת למפתח: סוד AI_API_KEY בהגדרות הריפו ב-GitHub, שנפרס לשרת.
  */
+/** מסכים שהוסתרו (src/lib/screenVisibility): מוסתר · רק למנהלים · לכולם (הכרעת בעלים 28.10.2026) */
+function AdminScreens({ api }: { api: (path: string, body?: unknown) => Promise<{ screens: Partial<Record<HiddenScreen, ScreenMode>> }> }) {
+  const [modes, setModes] = useState<Partial<Record<HiddenScreen, ScreenMode>> | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+  useEffect(() => { api("/admin/screens").then(r => setModes(r.screens), () => setMsg("לא ניתן לטעון את ההגדרה.")); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const set = async (id: HiddenScreen, mode: ScreenMode) => {
+    setMsg(null);
+    try { const r = await api("/admin/screens", { screens: { ...modes, [id]: mode } }); setModes(r.screens); setScreenModes(r.screens); setMsg("נשמר."); } catch { setMsg("השמירה נכשלה."); }
+  };
+  if (!modes) return <p className="text-sm text-ink-soft">{msg ?? "טוען…"}</p>;
+  return <div className="space-y-3">
+    {HIDDEN_SCREENS.map(s => <div key={s.id}>
+      <p className="font-bold">{s.label} <span className="font-normal text-sm text-ink-soft">({s.where})</span></p>
+      <div className="f-seg fit" role="group" aria-label={s.label}>
+        {(["off", "admins", "all"] as const).map(m => <button key={m} type="button" aria-pressed={(modes[s.id] ?? "off") === m} onClick={() => void set(s.id, m)}>{{ off: "מוסתר", admins: "רק למנהלים", all: "לכולם" }[m]}</button>)}
+      </div>
+    </div>)}
+    {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
+  </div>;
+}
+
 function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<AiState> }) {
   const [state, setState] = useState<AiState | null>(null);
   const [value, setValue] = useState("");

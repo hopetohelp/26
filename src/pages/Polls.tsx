@@ -2,7 +2,7 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
-import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, fieldLabel, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
+import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, fieldLabel, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
@@ -190,6 +190,26 @@ export default function Polls() {
           העדכון האחרון: {date(polls[0]?.end ?? "")}.
         </Note>
       </Card>
+      {exitPolls.length > 0 && (
+        <Card>
+          <h2 className="font-bold text-lg">מדגמי יום הבחירות (22:00)</h2>
+          <p className="text-sm text-ink-soft mt-1">המדגמים שפורסמו עם סגירת הקלפיות, ב-27/10. הם מוצגים כאן, בנקודה נפרדת במגמות ובמסך "אחרונים", ואינם נכנסים לממוצעי הסקרים ולדיוק הסקרים.</p>
+          <ul className="divide-y divide-paper-line mt-2">
+            {exitPolls.map((p) => (
+              <li key={p.id} className="py-3 min-w-0">
+                <div className="flex flex-wrap gap-x-3 gap-y-1 items-baseline">
+                  <span className="font-bold">{p.publisherHe}</span>
+                  <span className="text-ink-soft text-sm">{p.firmHe}</span>
+                  <Badge>{p.verified ? "אומת" : "לא אומת"}</Badge>
+                </div>
+                <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
+                {p.note && <p className="text-sm text-ink-soft mt-1">{p.note}</p>}
+                <p className="text-sm mt-1 break-all">מקור:{" "}{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="me-2">{u}</a>)}</p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
       {subgroupPolls.length > 0 && (
         <Card>
           <h2 className="font-bold text-lg">סקרים על קבוצת אוכלוסייה מסוימת</h2>

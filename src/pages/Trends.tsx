@@ -12,6 +12,7 @@ import { Card, ChartWithTable, Note, Split } from "../components/ui";
 import { colorOf } from "../lib/colors";
 import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { date, dateRange, seatsFmt, signed } from "../lib/format";
+import { electionMarkers } from "../lib/electionMarkers";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
 const LINEAGE: Record<string, { parts: string[]; since: string; note: string }> = {
@@ -169,7 +170,7 @@ export default function Trends() {
                   chart={
                     labeled.length ? (
                       // הגרף האחיד: רשימה אחת — נרות; כמה רשימות — אותו רכיב בלי נרות, ולחיצה על נקודה בקו מציגה את החלון של הרשימה
-                      <CandleTrend title={labeled.length === 1 ? `מגמת המנדטים: ${labeled[0].name}` : "מגמת המנדטים לפי רשימה"} series={series} windowDays={days} />
+                      <CandleTrend title={labeled.length === 1 ? `מגמת המנדטים: ${labeled[0].name}` : "מגמת המנדטים לפי רשימה"} series={series} windowDays={days} markers={labeled.flatMap(x => electionMarkers([x.id], labeled.length === 1 ? undefined : x.id))} />
                     ) : (
                       <p className="text-ink-soft py-8 text-center">אין מספיק סקרים בתקופה ובמכון שנבחרו. בחרו תקופה ארוכה יותר או כל המכונים.</p>
                     )
