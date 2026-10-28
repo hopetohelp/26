@@ -141,7 +141,10 @@ export default function AccuracyShare({ input, onClose }: { input: AccuracyShare
     if (!file) return;
     setMsg(null);
     try {
-      if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file] });
+      // טקסט נלווה לתמונה ולסרטון (הכרעת בעלים 28.10.2026)
+      const text = `בואו לראות מה הנתונים המעודכנים\nומי צדק, ${input.polls.length} הסקרים או ${input.count.toLocaleString("he-IL")} הניחושים?\nשתפו בתמונה או סרטון כמה אתם צדקתם!\nhttps://26.hopetohelp.net/#/results-2026`;
+      if (navigator.canShare?.({ files: [file], text })) await navigator.share({ files: [file], text });
+      else if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file] });
       else save();
     } catch (e) { if ((e as Error)?.name !== "AbortError") setMsg("השיתוף לא הצליח. אפשר לשמור ולשתף."); }
   };
