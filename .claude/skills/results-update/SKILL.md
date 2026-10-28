@@ -53,6 +53,7 @@ curl --fail -s --max-time 60 "https://mapvotes.bechirot.gov.il/data/votes/latest
    ```
    - מריצים: `python3 pipeline/fetch_results_2026.py --votes /tmp/votes.json`
    - הדף חסום או לא נמצא (gov.il מחזיר 404 או 403 מחוץ לישראל) ⇐ לא עוקפים, עוברים לסעיף 2.
+1א. **קובץ ועדת הבחירות לפי קלפי** (expb.csv שהבעלים מעלה; הכרעת בעלים 28.10.2026): `cp <הקובץ> raw/ballots-2026.csv && python3 pipeline/fetch_results_2026.py --ballots raw/ballots-2026.csv "<תאריך ושעה>" && python3 pipeline/voter_flow.py`. מקור רשמי ("אומת"). מקור שספר פחות אינו דורס את הקובץ (הספירה רק מתקדמת).
 2. **הברומטר של JDN** (הכרעת בעלים 27.10.2026) — `https://elections.jdn.co.il/data/count-live.json`, נתוני ועדת הבחירות לפי קלפי:
    `python3 pipeline/fetch_results_2026.py --jdn`
    - הסקריפט ממפה את מזהי JDN למזהי האתר (`JDN_IDS`) ומשתמש בקולות הכשרים שנספרו לחישוב אחוז החסימה.

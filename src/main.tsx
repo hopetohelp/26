@@ -51,7 +51,7 @@ const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 /** "סקרים": "אחרונים" במקום "האחרונים" ו"היום" (הכרעת בעלים 28.10.2026); השניים מוצגים רק לפי המתג במסך הניהול */
 function PollsTabs() {
   const overview = useScreenShown("overview"), today = useScreenShown("today");
-  return <Tabbed label="סקרים" tabs={[
+  return <Tabbed label="הסקרים" tabs={[
     { id: "latest", label: "אחרונים", element: <Latest /> },
     ...(overview ? [{ id: "overview", label: "האחרונים", element: <SimpleOverview /> }] : []),
     ...(today ? [{ id: "today", label: "היום", element: <Today /> }] : []),
@@ -147,7 +147,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<PollsTabs />} />
-          <Route path="changes" element={<Moved to="/past" tab="changes" />} />
+          <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
@@ -156,7 +156,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route
             path="past"
-            element={<Tabbed label="בחירות קודמות" aliases={{ voters: "results" }} tabs={[
+            element={<Tabbed label="מה השתנה" aliases={{ voters: "results" }} tabs={[
               { id: "results", label: "תוצאות אמת", element: <Results /> },
               { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
               { id: "changes", label: "מה השתנה", element: <VoterFlow /> },

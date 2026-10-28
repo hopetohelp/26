@@ -31,7 +31,9 @@ export const SIMPLE_GUESS_HIDDEN = CLOSED_LISTS;
 export const BLOC_IDS = IDS.filter(id => !CLOSED_LISTS.includes(id));
 const eligible = (ids: string[]) => ids.filter(id => BLOC_IDS.includes(id));
 /** ארבעת הגושים של התצוגה הממוקדת (הכרעת בעלים 23.10.2026), בסדר התצוגה: מלמעלה בכיוון השעון. */
-const NETANYAHU = eligible(["likud", "otzma", "rzp", "amcha", "noam"]), HAREDI = eligible(["shas", "utj", "code_black", "haredi_public"]), ARAB = eligible(["joint", "raam"]);
+/** חברות מלאה בגושים (גם רשימות שלא עברו באף סקר) — למסך "מה השתנה", שבו כל רשימה שקיבלה קולות נספרת */
+export const BLOC_MEMBERS = { netanyahu: ["likud", "otzma", "rzp", "amcha", "noam"], haredi: ["shas", "utj", "code_black", "haredi_public"], arab: ["joint", "raam"] } as const;
+const NETANYAHU = eligible([...BLOC_MEMBERS.netanyahu]), HAREDI = eligible([...BLOC_MEMBERS.haredi]), ARAB = eligible([...BLOC_MEMBERS.arab]);
 export const SIMPLE_BLOCS = [
   { id: "netanyahu", name: "גוש נתניהו", short: "נתניהו", lists: NETANYAHU },
   { id: "haredi", name: "מפלגות חרדיות", short: "חרדים", lists: HAREDI },
