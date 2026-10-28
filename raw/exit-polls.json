@@ -1,0 +1,233 @@
+[
+  {
+    "id": "2026-10-27-exit-kan-11",
+    "firm": "Kantar",
+    "publisher": "Kan 11",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 25
+      },
+      "yashar": {
+        "s": 21
+      },
+      "together": {
+        "s": 14
+      },
+      "joint": {
+        "s": 10
+      },
+      "democrats": {
+        "s": 10
+      },
+      "yb": {
+        "s": 8
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.maariv.co.il/breaking-news/article-1382064"
+    ],
+    "verified": false,
+    "note": "מדגם כאן 11 של 22:00, מדיווח מעריב (22:03) — לא אומת מול הפרסום הראשוני. סך 120. שם המכון לפי סדרת סקרי כאן (קנטאר), לא מהדיווח. עדכונים מאוחרים יותר של המדגם אינם כאן."
+  },
+  {
+    "id": "2026-10-27-exit-channel-12",
+    "firm": "Midgam R&C",
+    "publisher": "Channel 12",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 24
+      },
+      "yashar": {
+        "s": 22
+      },
+      "together": {
+        "s": 12
+      },
+      "joint": {
+        "s": 11
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 9
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 8
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.maariv.co.il/breaking-news/article-1382061",
+      "https://www.israelnationalnews.com/news/435260"
+    ],
+    "verified": false,
+    "note": "מדגם חדשות 12 (מנו גבע) של 22:00, ממעריב (22:01) וערוץ 7 — לא אומת מול הפרסום הראשוני. במעריב יהדות התורה 7 (סך 121, בסתירה לגוש 50 שבאותה כתבה); נרשם 6 לפי ערוץ 7 (סך 120). העדכון המאוחר (02:28; הליכוד 27) אינו כאן."
+  },
+  {
+    "id": "2026-10-27-exit-channel-13",
+    "firm": "MP+TM+SN+A",
+    "publisher": "Channel 13",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 25
+      },
+      "yashar": {
+        "s": 23
+      },
+      "together": {
+        "s": 14
+      },
+      "joint": {
+        "s": 10
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 7
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.maariv.co.il/breaking-news/article-1382062"
+    ],
+    "verified": false,
+    "note": "מדגם חדשות 13 של 22:00, מדיווח מעריב (22:01) — לא אומת מול הפרסום הראשוני. סך 120; הגושים 50/53/17. שם המכון לפי סדרת סקרי הערוץ."
+  },
+  {
+    "id": "2026-10-27-exit-i24",
+    "firm": "Direct Polls",
+    "publisher": "i24 News",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 27
+      },
+      "yashar": {
+        "s": 20
+      },
+      "together": {
+        "s": 15
+      },
+      "joint": {
+        "s": 9
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 5
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 8
+      },
+      "utj": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.i24news.tv/en/news/israeli-elections/artc-i24news-exit-poll-likud-wins-27-seats-yashar-20-coalition-bloc-reaches-55-seats-opposition-49-and-arab-parties-16"
+    ],
+    "verified": true,
+    "note": "מדגם i24NEWS של 22:00, מהפרסום של i24 עצמו. סך 120; קואליציה 55. המכון (דיירקט פולס) לפי ערוץ 7."
+  },
+  {
+    "id": "2026-10-27-exit-channel-14",
+    "firm": "לא נמסר",
+    "publisher": "Channel 14",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 30
+      },
+      "yashar": {
+        "s": 19
+      },
+      "together": {
+        "s": 11
+      },
+      "joint": {
+        "s": 10
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 4
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 9
+      },
+      "utj": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 7
+      }
+    },
+    "urls": [
+      "https://www.israelnationalnews.com/news/435260"
+    ],
+    "verified": false,
+    "note": "מדגם ערוץ 14 של 22:00. מקור אחד (ערוץ 7), והשיוך לערוץ 14 לפי ההקשר בכתבה ותואם לדיווח i24 (הליכוד 30, ישר 19, ישראל ביתנו 4, קואליציה 60) — לא אומת. המכון לא נמסר."
+  }
+]

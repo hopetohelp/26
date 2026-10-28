@@ -41,7 +41,7 @@ export const SCREENS: Screen[] = [
   // בסרגל רק בניתוח מורחב; המסך נשאר זמין בכתובת שלו (הכרעת בעלים 28.10.2026)
   { id: "community", to: "/community", label: "הניחושים", icon: "bars", nav: "core", advanced: true },
   // "האחרונים" (לשעבר מסך הבית "תמונת מצב") — הלשונית הראשונה של "סקרים" (הכרעת בעלים 28.10.2026)
-  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "overview", label: "האחרונים" }, { id: "today", label: "היום" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
+  { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "latest", label: "אחרונים" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
   { id: "past", to: "/past", label: "בחירות קודמות", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
   { id: "method", to: "/method", label: "מידע ומקורות", icon: "info", nav: "foot" },
 ];

@@ -1,4 +1,3 @@
-import SimpleOverview from "./pages/simple/Overview";
 import SimpleComparison from "./pages/simple/Comparison";
 import { SHOW_MODEL } from "./lib/modelVisibility";
 import { useSearchParams as useCalculatorParams, Navigate as CalculatorRedirect } from "react-router-dom";
@@ -19,9 +18,9 @@ import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import RootErrorBoundary from "./components/RootErrorBoundary";
-const Today = lazy(page(() => import("./pages/Today")));
 const Polls = lazy(page(() => import("./pages/Polls")));
 const Trends = lazy(page(() => import("./pages/Trends")));
+const Latest = lazy(page(() => import("./pages/Latest")));
 const Results = lazy(page(() => import("./pages/Results")));
 const GuessAccuracy = lazy(page(() => import("./pages/simple/GuessAccuracy")));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
@@ -133,8 +132,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<Tabbed label="סקרים" tabs={[
-            { id: "overview", label: "האחרונים", element: <ModeHome /> },
-            { id: "today", label: "היום", element: <Today /> },
+            // "אחרונים" במקום "האחרונים" ו"היום" (הכרעת בעלים 28.10.2026); הכתובות הישנות מובילות אליו
+            { id: "latest", label: "אחרונים", element: <Latest /> },
             { id: "trends", label: "מגמות", element: <Trends /> },
             { id: "archive", label: "ארכיון", element: <Polls /> },
           ]} />} />
@@ -220,11 +219,6 @@ function LegacyToday() {
   const scenarios = ["scenarios", "forecast"].includes(next.get("tab") ?? "");
   next.delete("tab");
   return <CalculatorRedirect replace to={`${scenarios ? "/scenarios" : "/polls"}${next.size ? `?${next}` : ""}`} />;
-}
-
-/** תמונת מצב אחת לשני המצבים; המתקדם מוסיף פירוט באותו מסך (src/pages/simple/Overview) */
-function ModeHome() {
-  return <SimpleOverview />;
 }
 
 /** הכתובת הישנה #/support (גם בקישורים במיילים): ?groups ⇐ האזור האישי, אחרת ⇐ מסך AI (סבב 9) */

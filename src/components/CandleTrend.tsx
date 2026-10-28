@@ -36,7 +36,9 @@ export interface CandleTrendProps {
   /** "מנדטים" (ברירת מחדל) או "אחוזים" וכו' */
   unit?: string;
   /** התוצאה בפועל: קו חוצה מקווקו ותג, וקו מקווקו אליו מהנקודה האחרונה של הסדרה (`id` = מזהה הסדרה; בסדרה אחת אפשר בלעדיו) */
-  markers?: { t: number; v: number; id?: string }[];
+  markers?: { t: number; v: number; id?: string; label?: string; /** סימון כמו ממוצע (קו מלא) ולא כמו תוצאה */ asMean?: boolean }[];
+  /** ציר קבוע מאפס עם קווי עזר אלה בלבד (למשל 40, 50, 61 בגוש; 61 = הרוב) */
+  fixedLines?: number[];
   /** גובה בפיקסלים */
   height?: number;
   /** כותרת הגרף, בשורה אחת עם כפתור "מקרא" (כותרת מימין, מקרא משמאל) */
@@ -61,7 +63,7 @@ const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 
 interface Target { si: number; i: number; p: TrendPoint }
 
-export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading, meanNote }: CandleTrendProps) {
+export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading, meanNote, fixedLines }: CandleTrendProps) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const [seenRef, seen] = useSeen<HTMLDivElement>();
   const [width, setWidth] = useState(640);
@@ -109,13 +111,17 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     return vs;
   }, [series, candleMode, lineMain, markers]);
   const axis = useMemo(() => {
+    if (fixedLines) {
+      const hi = Math.ceil(Math.max(...allV, ...fixedLines) / 5) * 5;
+      return { lo: 0, hi, lines: fixedLines.map(v => ({ v, major: v === 61 })) };
+    }
     const a = trendAxis(allV, { step, majority });
     // רק קווים שיש ביניהם לסמוך להם נתונים: נר = טווח, נקודה בקו = ערך
     const spans: [number, number][] = [];
     series.forEach((s) => s.points.forEach((p) => spans.push(candleMode && !s.dashed ? [p.lo ?? p.v, p.hi ?? p.v] : [p.v, p.v])));
     lineMain.forEach((l) => spans.push([l.v, l.v]));
     return { ...a, lines: visibleLines(a.lines, spans) };
-  }, [allV, step, majority, series, candleMode, lineMain]);
+  }, [allV, step, majority, series, candleMode, lineMain, fixedLines]);
   // המספרים צמודים לקצה השמאלי, כמו הקווים לקצה הימני: אותו רווח משני הצדדים (הכרעת בעלים 11.10.2026)
   const numPx = Math.max(...axis.lines.map((l) => seatsFmt(l.v).length), 1) * 9 + 12;
   const X0 = (numPx / Math.max(width, 1)) * 100;
@@ -193,8 +199,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
     { kind: candleMode ? "mean" : "dot", text: `${candleMode ? "הממוצע בכל נקודה (נקודה כל 3 ימים)" : "נקודה על הקו, כל 3 ימים. לחיצה עליה מציגה את נתוני הרשימה"}${meanNote ? ` — ${meanNote}` : ""}` },
     { kind: multi ? "lineList" : "line", text: multi ? "הממוצע בכל נקודה, בצבע הרשימה (קו מקווקו = מרכיבי רשימה שאוחדה)" : "הקו מחבר את הממוצעים של הנקודות" },
     { kind: "dash", text: `קווים מקווקווים כל ${step} ${unit}, רק היכן שיש נתונים${majority !== undefined && axis.lines.some((l) => l.major) ? `; ${majority} = הרוב` : ""}` },
-    ...(markers.length ? [{ kind: "result" as const, text: "התוצאה בפועל" }] : []),
-    ...(links.length ? [{ kind: "dash" as const, text: "קו מקווקו: מהסקר האחרון אל התוצאה בפועל" }] : []),
+    ...[...new Map(markers.map(m => [m.label ?? "התוצאה בפועל", m.asMean])).entries()].map(([text, asMean]) => ({ kind: asMean ? "mean" as const : "result" as const, text })),
+    ...(links.length ? [{ kind: "dash" as const, text: `קו מקווקו: מהסקר האחרון אל ${markers.some(m => m.label) ? "המדגמים ותוצאות האמת" : "התוצאה בפועל"}` }] : []),
   ];
 
   // תוויות קצה לקווים (בהשוואה), מפוזרות כדי שלא יעלו זו על זו
@@ -248,12 +254,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         ))}
         {candleMode && act && <span aria-hidden="true" className="absolute top-0 bottom-0 -translate-x-1/2 w-8 bg-ink/[.07] rounded-[4px]" style={{ left: `${X(act.p.t)}%` }} />}
         {candleMode && shown.map((p, i) => (p.lo === undefined && !p.xs ? null : <ProfileCandleV key={`c${p.t}`} segs={profiles[i]} y={Y} left={`${X(p.t)}%`} delay={delayOf(p.t)} base={Math.max(0, axis.lo)} />))}
-        {candleMode && shown.map((p) => <CapsuleMarksV showLabels={false} key={`d${p.t}`} left={`${X(p.t)}%`} primary={{ value: p.v, label: 'ממוצע' }} secondary={markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id)) ? { value: markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id))!.v, label: 'תוצאה בפועל' } : undefined} y={Y} format={valueText} delay={delayOf(p.t)} />)}
+        {candleMode && shown.map((p) => <CapsuleMarksV showLabels={false} key={`d${p.t}`} left={`${X(p.t)}%`} primary={{ value: p.v, label: 'ממוצע' }} secondary={markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id)) ? { value: markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id))!.v, label: markers.find(m => m.t === p.t && (!m.id || m.id === candleSeries!.id))!.label ?? 'תוצאה בפועל' } : undefined} y={Y} format={valueText} delay={delayOf(p.t)} />)}
         {multi && series.map((s, si) => !s.dashed && sparseIndices(s.points.map((p) => (X(p.t) / 100) * width), 46).map((k) => (
           <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si], animationDelay: `${delayOf(s.points[k].t)}ms` }} />
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
-        {markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV showLabels={false} key={`m${i}`} left={`${X(m.t)}%`} secondary={{ value: m.v, label: "תוצאה בפועל" }} y={Y} format={valueText} />)}
+        {markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV showLabels={false} key={`m${i}`} left={`${X(m.t)}%`} {...(m.asMean ? { primary: { value: m.v, label: m.label ?? "" } } : { secondary: { value: m.v, label: m.label ?? "תוצאה בפועל" } })} y={Y} format={valueText} />)}
         {ends.map((e) => (
           <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + ${markers.length ? 20 : 10}px)`, maxWidth: labelPx - (markers.length ? 22 : 12), top: e.y, color: colors[e.si] }}>
             {endText(e.s.endLabel ?? `${e.s.name} ${valueText(e.last.v)}`)}
