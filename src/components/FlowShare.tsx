@@ -188,7 +188,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
         // השינוי בגדול, ומתחתיו אז והיום (הכרעת בעלים); בלי קודמת ב-2022 — האחוז של היום בגדול
         const now = `2026: ${smallPct(c.share26) ?? "0"}%`;
         let big: string, color: string = P.ink;
-        if (c.share22 !== null) { const d = c.share26 - c.share22; big = `${d >= 0 ? "▲" : "▼"} ${smallPct(Math.abs(d)) ?? "0"}%`; color = d >= 0 ? P.blueHi : P.redHi; }
+        if (c.share22 !== null) { const d = c.share26 - c.share22; big = `${d >= 0 ? "▲ +" : "▼ −"}${smallPct(Math.abs(d)) ?? "0"}%`; /* תמיד עם סימן +/− (הכרעת בעלים) */ color = d >= 0 ? P.blueHi : P.redHi; }
         else big = pct(c.share26);
         ctx.textAlign = "left"; ctx.fillStyle = color; ctx.font = `800 50px ${num}`; ctx.fillText(ltrText(big), L + 36, y + 50);
         ctx.fillStyle = P.soft; ctx.font = `600 24px ${num}`;
