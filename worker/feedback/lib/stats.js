@@ -19,7 +19,15 @@ export async function feedbackStatEvents(db, auto) {
   // סרטונים שנספרו לפני טבלת האירועים (כולם סרטוני ניחוש) — בתחילת יום הסרטון הראשון
   const legacy = (await all("SELECT vh, videos, first_day FROM video_anon")).map((r) => [Date.parse(r.first_day + "T00:00:00Z"), Math.max(0, r.videos - (per.get(r.vh) ?? 0))]).filter(([, w]) => w > 0);
   const at = (t) => [Date.parse(t), 1];
+  // כניסות לכל מסך בנפרד: היומי הישן לפי מסך + השעתי מ-28.10 ("screen:/polls")
+  const screens = {};
+  for (const { page } of await all("SELECT DISTINCT page FROM hits WHERE page NOT LIKE 'diag:%'"))
+    screens["screen:" + page] = mergeDailyHourly(
+      (await all("SELECT day, count AS c FROM hits WHERE page = ?", page)).map((r) => [r.day, r.c]),
+      await hourly(`diag:hp:${page}@`),
+    );
   return {
+    ...screens,
     pageHits: mergeDailyHourly((await all("SELECT day, SUM(count) AS c FROM hits WHERE page NOT LIKE 'diag:%' GROUP BY day")).map((r) => [r.day, r.c]), await hourly("diag:hit@")),
     pageHitsUser: mergeDailyHourly([], await hourly("diag:hit-u@")),
     browsers: mergeDailyHourly(

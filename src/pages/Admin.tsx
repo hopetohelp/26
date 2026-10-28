@@ -20,7 +20,7 @@ import AdminGroups from "./AdminGroups";
 import AdminBlocs from "./AdminBlocs";
 import AdminMcp from "./AdminMcp";
 import StatsCharts from "../components/StatsCharts";
-import { STAT_METRICS, STAT_TOPICS, type StatKey, type StatsData } from "../lib/statsMetrics";
+import { STAT_METRICS, STAT_TOPICS, screenName, type StatKey, type StatsData } from "../lib/statsMetrics";
 
 /**
  * ממשק ניהול: כל הפניות עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
@@ -212,6 +212,8 @@ export default function Admin() {
   );
   if (!credential || (claim === "signin" && !key)) return <div className="space-y-3"><PageTitle>ניהול</PageTitle>{claimNotice}{!credential && <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>}</div>;
   const stat = (k: StatKey) => stats?.series.find((x) => x.key === k);
+  // כניסות לכל מסך בנפרד (הכרעת בעלים 28.10.2026), מהמסך הנכנס ביותר
+  const screens = (stats?.series ?? []).filter((x) => x.key.startsWith("screen:")).sort((a, b) => b.total - a.total);
   const num = (v: number | undefined) => (v == null ? "—" : v.toLocaleString("he-IL"));
   const next = nextRun(Date.now());
   const waiting = (data?.feedback.filter((t) => t.waiting).length ?? 0) + (data?.support?.threads.filter((t) => t.status === "new").length ?? 0);
@@ -245,7 +247,8 @@ export default function Admin() {
 
           {/* שני חלונות גרף (הכרעת בעלים 28.10.2026): בוחרים בכל אחד כל נתון */}
           {stats && <StatsCharts storageKey={`${CACHE_KEY}.charts`} defaults={["browsers", "users"]} buckets={stats.buckets.map((t) => ({ t, hourly: true }))}
-            options={STAT_METRICS.filter((m) => stat(m.key)).map((m) => ({ key: m.key, label: m.label, total: stat(m.key)!.total, today: stat(m.key)!.today, points: stat(m.key)!.points }))} />}
+            options={[...STAT_METRICS.filter((m) => stat(m.key)).map((m) => ({ key: m.key, label: m.label, total: stat(m.key)!.total, today: stat(m.key)!.today, points: stat(m.key)!.points })),
+              ...screens.map((x) => ({ key: x.key, label: `כניסות: ${screenName(x.key)}`, total: x.total, today: x.today, points: x.points }))]} />}
           {stats && stats.crowd === false && <Notice tone="warn">נתוני החשבונות והשמירות אינם זמינים כרגע; מוצגים רק נתוני הכניסות והתקלות.</Notice>}
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
 
@@ -268,6 +271,21 @@ export default function Admin() {
                       ))}
                       {t.id === "saves" && <li className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">ניחוש — הגזרה</p><p className="font-num tabular text-3xl leading-none mt-1">{num(data.support?.stats.hagzaraGuesses)}</p><p className="text-[11px] text-ink-soft mt-1">ניחושים שנספרים בממוצע של קבוצת הגזרה.</p></li>}
                     </ul>
+                    {t.id === "entries" && screens.length > 0 && (
+                      <div>
+                        <p className="text-sm font-bold mb-2">כניסות עמוד לפי מסך</p>
+                        <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          {screens.map((x) => (
+                            <li key={x.key} className="bg-paper border border-paper-line rounded-theme p-3 min-w-0">
+                              <p className="text-xs text-ink-soft truncate">{screenName(x.key)}</p>
+                              <p className="font-num tabular text-2xl leading-none mt-1">{num(x.total)}</p>
+                              <p className="text-xs text-ink-soft font-num tabular mt-1">היום {num(x.today)}</p>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="text-xs text-ink-soft mt-2">כל פתיחה של המסך; לשוניות בתוך מסך נספרות עם המסך. עד 28/10 — לפי יום, ומאז לפי שעה (גם בגרפים למעלה).</p>
+                      </div>
+                    )}
                     {t.id === "saves" && (
                       <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="פירוט החשבונות">
                         {([["חשבון Google", "googleAccounts", "חשבונות שנכנסו עם Google."], ["מייל מאומת (בקישור)", "verifiedEmails", "חשבונות שלחצו על קישור האימות."], ["מייל לא מאומת", "unverifiedEmails", "מצב החשבון: יש מייל, הוא לא אומת ואין Google."], ["קישור אימות פתוח", "verifyMailsPending", "קישורי אימות שנשלחו ולא נלחצו. כל חשבון נספר פעם אחת, גם אם נשלח לו שוב."]] as const).map(([label, k, help]) => (

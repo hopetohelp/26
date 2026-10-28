@@ -635,6 +635,8 @@ export default {
         env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, page),
         env.DB.prepare("INSERT OR IGNORE INTO visitors (day, vid, page) VALUES (?, ?, ?)").bind(day, vid, page),
         env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:hit@" + hk),
+        // כניסות לכל מסך בנפרד, לפי שעה (הכרעת בעלים 28.10.2026): "diag:hp:<מסך>@<שעה>"
+        env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, `diag:hp:${page}@${hk}`),
       ];
       if (withAccount) stmts.push(env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:hit-u@" + hk));
       if (/^[A-Za-z0-9_-]{16,32}$/.test(v)) {
