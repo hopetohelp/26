@@ -8,7 +8,7 @@ import { deviation, finding } from "../lib/deviation";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Fold, Note, PageTitle, Columns } from "../components/ui";
 import historyFile from "../data/history.json";
-import { results } from "../lib/data";
+import { electionButtonLabel, results } from "../lib/data";
 import { dateRange, date, rng, seatsFmt, signed } from "../lib/format";
 import {
   EVE_DAYS,
@@ -105,7 +105,7 @@ export default function Accuracy() {
           value={id}
           onChange={setId}
           className="mb-4"
-          options={newestFirst.map((x) => ({ id: x.cycle.id, label: <>{x.cycle.label}<span className="sr-only"> — הכנסת ה-{x.cycle.knesset}</span></> }))}
+          options={newestFirst.map((x) => ({ id: x.cycle.id, label: <>{electionButtonLabel(x.cycle.label)}<span className="sr-only"> — הכנסת ה-{x.cycle.knesset}</span></> }))}
         />
 
         <h3 className="text-xl font-display leading-tight mb-1">{finding(dev.outside.length, dev.askedCount)}</h3>

@@ -42,7 +42,7 @@ import Tabbed, { Moved } from "./components/Tabbed";
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
 const Accuracy = lazy(page(() => import("./pages/Accuracy")));
 const Scenarios = lazy(page(() => import("./pages/Scenarios")));
-const Changes = lazy(page(() => import("./pages/Changes")));
+const VoterFlow = lazy(page(() => import("./pages/VoterFlow")));
 const Guess = lazy(page(() => import("./pages/Guess")));
 const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 
@@ -150,7 +150,7 @@ createRoot(document.getElementById("root")!).render(
             element={<Tabbed label="בחירות קודמות" aliases={{ voters: "results" }} tabs={[
               { id: "results", label: "תוצאות אמת", element: <Results /> },
               { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
-              { id: "changes", label: "מה השתנה", element: <Changes /> },
+              { id: "changes", label: "מה השתנה", element: <VoterFlow /> },
             ]} />}
           />
           <Route

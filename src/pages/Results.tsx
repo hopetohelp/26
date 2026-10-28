@@ -6,7 +6,7 @@ import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, Split } from "../components/ui";
 import { Chips } from "../components/Choice";
 import { allocate, type Agreement } from "../engine/baderOfer";
-import { results } from "../lib/data";
+import { electionButtonLabel, results } from "../lib/data";
 import { k25Families } from "../lib/lineage";
 import { num, pct } from "../lib/format";
 
@@ -29,7 +29,7 @@ function analysis(e: Election) {
 const shortOf = (e: Election, letters: string) => e.lists.find((l) => l.letters === letters)?.short ?? letters;
 const fmtDiffOf = (e: Election, d: readonly (readonly [string, number])[]) =>
   d.length ? d.map(([k, v]) => `${shortOf(e, k)} \u2066${v > 0 ? "+" : ""}${v}\u2069`).join(" · ") : "לא שינו דבר";
-const yearLabel = (e: Election) => e.label.replace("אפריל", "אפר׳").replace("ספטמבר", "ספט׳");
+const yearLabel = (e: Election) => electionButtonLabel(e.label).replace("אפריל", "אפר׳").replace("ספטמבר", "ספט׳");
 
 /** חישובי כל המערכות — לטבלת ההשוואה */
 const ALL = results.map((e) => ({ e, a: analysis(e) }));
