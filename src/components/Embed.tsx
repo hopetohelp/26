@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { embedCode, embeddableFor, embedTheme, SITE_ORIGIN } from "../lib/embed";
 import { pingEmbed } from "../lib/visits";
+import InfoTip from "./InfoTip";
 
 /** מסגרת מצומצמת להטמעה: תוכן, שורת מקור, דיווח גובה לאתר המארח, וקישורים פנימיים נפתחים באתר המלא בלשונית חדשה */
 export function EmbedFrame({ children }: { children: ReactNode }) {
@@ -62,14 +63,23 @@ export function EmbedButton() {
   if (!target) return null;
   const code = embedCode(target);
   return (
-    <details className="mt-8 text-sm" open={open} onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}>
-      <summary className="cursor-pointer text-ink-soft">הטמעה באתר אחר</summary>
-      <p className="mt-2 text-ink-soft">מעתיקים את הקוד ומדביקים בעמוד באתר שלכם. המסך יתעדכן אוטומטית ויתאים את גובהו.</p>
-      <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
-      <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
-        pingEmbed(target.path === "/past" ? "changes" : "results-2026", "copy");
-        void navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => {});
-      }}>{copied ? "הועתק" : "העתקת הקוד"}</button>
-    </details>
+    <div className="mt-8 text-sm">
+      <div className="flex items-center gap-2">
+        <button type="button" className="text-ink-soft underline" aria-expanded={open} aria-controls="embed-code" onClick={() => setOpen(!open)}>הטמעה באתר אחר</button>
+        <InfoTip label="הסבר: איך מטמיעים">
+          <strong>איך מטמיעים?</strong> מעתיקים את הקוד ומדביקים אותו בעמוד באתר, במקום שבו רוצים שהמסך יופיע.
+          בוורדפרס — בלוק "HTML מותאם אישית". בוויקס — "הטמעה" ← "קוד HTML". בגוגל סייטס — "הטמעה" ← "קוד הטמעה". בשאר המערכות — מצב עריכת HTML של העמוד.
+          המסך מתעדכן לבד ומתאים את גובהו. אם המערכת חוסמת את השורה השנייה (סקריפט), ההטמעה עדיין עובדת, אבל בגובה קבוע, ואפשר לשנות אותו ב-min-height.
+          ההטמעה חינמית ומותרת לכל אתר; בתחתית המסך מופיע קישור לאתר המלא.
+        </InfoTip>
+      </div>
+      {open && <div id="embed-code">
+        <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
+        <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
+          pingEmbed(target.path === "/past" ? "changes" : "results-2026", "copy");
+          void navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => {});
+        }}>{copied ? "הועתק" : "העתקת הקוד"}</button>
+      </div>}
+    </div>
   );
 }
