@@ -7,6 +7,8 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
 import { useGuessClosed } from "./lib/guessClosed";
+import { useScreenShown } from "./lib/screenVisibility";
+import SimpleOverview from "./pages/simple/Overview";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
   if (!shouldReload()) return;
@@ -20,6 +22,7 @@ import Layout from "./components/Layout";
 import RootErrorBoundary from "./components/RootErrorBoundary";
 const Polls = lazy(page(() => import("./pages/Polls")));
 const Trends = lazy(page(() => import("./pages/Trends")));
+const Today = lazy(page(() => import("./pages/Today")));
 const Latest = lazy(page(() => import("./pages/Latest")));
 const Results = lazy(page(() => import("./pages/Results")));
 const GuessAccuracy = lazy(page(() => import("./pages/simple/GuessAccuracy")));
@@ -45,9 +48,21 @@ const VoterFlow = lazy(page(() => import("./pages/VoterFlow")));
 const Guess = lazy(page(() => import("./pages/Guess")));
 const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
 
-/** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026) */
+/** "סקרים": "אחרונים" במקום "האחרונים" ו"היום" (הכרעת בעלים 28.10.2026); השניים מוצגים רק לפי המתג במסך הניהול */
+function PollsTabs() {
+  const overview = useScreenShown("overview"), today = useScreenShown("today");
+  return <Tabbed label="סקרים" tabs={[
+    { id: "latest", label: "אחרונים", element: <Latest /> },
+    ...(overview ? [{ id: "overview", label: "האחרונים", element: <SimpleOverview /> }] : []),
+    ...(today ? [{ id: "today", label: "היום", element: <Today /> }] : []),
+    { id: "trends", label: "מגמות", element: <Trends /> },
+    { id: "archive", label: "ארכיון", element: <Polls /> },
+  ]} />;
+}
+
+/** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026); מתג במסך הניהול יכול להציג אותו (השמירה חסומה בשרת) */
 function GuessGate({ children }: { children: React.ReactNode }) {
-  const closed = useGuessClosed();
+  const closed = useGuessClosed() && !useScreenShown("guess");
   return closed ? <PageTitle lead="התוצאות ודיוק הניחושים — במסך ״תוצאות״.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
 }
 
@@ -131,12 +146,7 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<Navigate to="/results-2026" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
-          <Route path="polls" element={<Tabbed label="סקרים" tabs={[
-            // "אחרונים" במקום "האחרונים" ו"היום" (הכרעת בעלים 28.10.2026); הכתובות הישנות מובילות אליו
-            { id: "latest", label: "אחרונים", element: <Latest /> },
-            { id: "trends", label: "מגמות", element: <Trends /> },
-            { id: "archive", label: "ארכיון", element: <Polls /> },
-          ]} />} />
+          <Route path="polls" element={<PollsTabs />} />
           <Route path="changes" element={<Moved to="/past" tab="changes" />} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />

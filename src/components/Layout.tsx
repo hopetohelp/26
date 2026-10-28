@@ -1,5 +1,6 @@
 import { InterfaceProvider, useInterface } from "../lib/interfaceMode";
 import { useGuessClosed } from "../lib/guessClosed";
+import { useScreenShown } from "../lib/screenVisibility";
 import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
@@ -153,7 +154,8 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const share = useNavShare();
   // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
   // בפס העליון (מחשב) — כל הלשוניות בשורה, בלי "עוד"; בסרגל התחתון — "עוד" (הכרעת בעלים 25.10.2026)
-  const screens = navScreens(advanced), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";
+  const guessShown = useScreenShown("guess");
+  const screens = navScreens(advanced, Date.now(), guessShown), core = screens.filter(s => s.nav === "core"), more = screens.filter(s => s.nav === "more"), top = className === "f-nav-top";
   // כל לשונית ברוחב המינימלי שלה; המסכים הנוספים נכנסים לסרגל כל עוד יש מקום, והשאר — ב"עוד" (הכרעת בעלים 25.10.2026)
   const navRef = useRef<HTMLElement>(null);
   const [inline, setInline] = useState(more.length);

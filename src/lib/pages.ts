@@ -47,9 +47,9 @@ export const SCREENS: Screen[] = [
 ];
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
 /** המסכים בסרגל: הליבה תמיד; הנוספים ("עוד" בטלפון, בשורה במחשב) — רק במתקדם */
-export function navScreens(advanced: boolean, now = Date.now()): Screen[] {
+export function navScreens(advanced: boolean, now = Date.now(), guessShown = false): Screen[] {
   // ב-21:58 "הניחוש שלי" יורד מהסרגל; "תוצאות" מוצג תמיד (הכרעות בעלים 27.10.2026)
-  return SCREENS.filter(s => (advanced || !s.advanced) && (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now)));
+  return SCREENS.filter(s => (advanced || !s.advanced) && (s.nav === "core" || (advanced && s.nav === "more")) && !(s.id === "guess" && guessClosed(now) && !guessShown));
 }
 /** לשוניות מסך לפי המצב: במתקדם כולן, בממוקדת רק אלה שאינן מתקדמות */
 export function screenTabs(s: Screen, advanced: boolean): ScreenTab[] {
