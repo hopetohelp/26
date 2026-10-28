@@ -49,21 +49,21 @@ export default function VoterFlow() {
       <h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
       <p className="mt-1">כל קלפי נמדדת מול אותה קלפי ב-2022. מכאן נקבע מאיפה הגיעו המצביעים של כל רשימה.</p>
       <p className="text-sm text-ink-soft mt-1">
-        {num(flow.ballots)} קלפיות זהות מתוך {num(flow.ballots2026)} שנספרו · {pctValue(coverage)}% מהקולות שנספרו
+        {num(flow.ballots)} קלפיות שהיו גם ב-2022, מתוך {num(flow.ballots2026)} שנספרו · {pctValue(coverage)}% מהקולות שנספרו
       </p>
       <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
       <Explained
         kind="השוואה"
         source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"
         asOf={flow.asOf}
-        assumption="קלפי זהה = אותו יישוב ואותו מספר קלפי, ובעלי זכות הבחירה בה השתנו בפחות מ-20%. שיעור המעבר נקבע כך שיתאים יחד לכל הקלפיות; אין שימוש בסקרים."
+        assumption="אותה קלפי = אותו יישוב ואותו מספר קלפי בשתי המערכות. שיעור המעבר נקבע כך שיתאים יחד לכל הקלפיות; אין שימוש בסקרים."
         methodAnchor="voter-flow"
       >
         <ul className="mt-4">{rows.map((r) => <Row key={r.id} row={r} view={view} />)}</ul>
       </Explained>
       <Fold title="מה לא נכלל">
         <Note>
-          לקלפי שמספרה או גבולותיה השתנו אין "אותה קלפי", ולכן היא לא נכללת. השיעורים הם הערכה אחת לכל הארץ, שמתאימה ביותר
+          קלפי של 2026 שאין לה מספר זהה ב-2022 (קלפי חדשה) לא נכללת. השיעורים הם הערכה אחת לכל הארץ, שמתאימה ביותר
           לתוצאות כל הקלפיות יחד; אין דרך לדעת איך הצביע אדם מסוים. "לא הצביעו" כולל גם מי שנוסף לרשימת הבוחרים או יצא ממנה.
         </Note>
       </Fold>

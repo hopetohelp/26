@@ -6,8 +6,8 @@
 פלט: src/data/flow2026.json.
 
 השיטה:
-1. קלפי "זהה" = אותו סמל יישוב ואותו מספר קלפי בשתי המערכות, ומספר בעלי זכות הבחירה בה השתנה בין 15%- ל-20%+.
-   קלפי שהמספור שלה השתנה או שגבולותיה זזו אינה נכללת. הנתונים של 2022 מוכפלים ביחס בעלי זכות הבחירה.
+1. אותה קלפי = אותו סמל יישוב ואותו מספר קלפי בשתי המערכות (הכרעת בעלים 28.10.2026: קלפי תמיד נשארת אותה קלפי,
+   בלי תנאי על מספר בעלי זכות הבחירה או אחוז ההצבעה).
 2. לכל קלפי: הקולות של כל רשימה ב-2022 (כולל "לא הצביעו") ושל כל רשימה ב-2026 (כולל "לא הצביעו").
 3. מטריצת מעבר אחת לכל הארץ: איזה חלק ממצביעי כל רשימה של 2022 הצביע לכל רשימה של 2026, כך שתחזית
    כל הקלפיות תהיה הקרובה ביותר לתוצאה בכל קלפי (עדכונים כפליים של מרחק KL; כל שורה מסתכמת ב-1).
@@ -29,7 +29,7 @@ OLD = ["מחל", "פה", "ט", "כן", "שס", "ג", "ל", "עם", "ום", "אמ
 # אותיות 2026 ⇐ מזהה ב-src/data/meta.json lists2026 (לפי מזהי JDN ב-fetch_results_2026.py)
 NEW = {"מחל": "likud", "דרך": "yashar", "ודם": "joint", "רק": "together", "אמת": "democrats", "ג": "utj", "ל": "yb",
        "ב": "otzma", "שס": "shas", "ט": "rzp", "עם": "raam", "די": "reservists", "ך": "amcha"}
-MIN_RATIO, MAX_RATIO, ITERATIONS = 0.85, 1.2, 400
+ITERATIONS = 400
 
 
 def read(path: Path) -> list[dict]:
@@ -57,12 +57,9 @@ def build() -> dict:
     pairs, matched_valid = [], 0
     for y in r26:
         x = by22.get(key(y))
-        if not x or not n(x, "בזב"):
+        if not x:
             continue
-        q = n(y, "בזב") / n(x, "בזב")
-        if not MIN_RATIO <= q <= MAX_RATIO:
-            continue
-        pairs.append(([v * q for v in vector(x, OLD)], vector(y, new)))
+        pairs.append((vector(x, OLD), vector(y, new)))
         matched_valid += n(y, "כשרים")
     I, J = len(OLD) + 2, len(new) + 2
     P = [[1 / J] * J for _ in range(I)]
@@ -99,7 +96,7 @@ def build() -> dict:
 def main() -> int:
     data = build()
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"נכתב {OUT.relative_to(ROOT)}: {data['ballots']} קלפיות זהות מתוך {data['ballots2026']}")
+    print(f"נכתב {OUT.relative_to(ROOT)}: {data['ballots']} קלפיות שהיו גם ב-2022, מתוך {data['ballots2026']}")
     return 0
 
 
