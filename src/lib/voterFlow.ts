@@ -82,3 +82,9 @@ export function cameFromGroup(m: number[][], ids: string[]): FlowPart[] {
   const col = m.map((row) => row.reduce((s, v, j) => (ids.includes(flow.new[j]) ? s + v : s), 0));
   return parts(col, flow.old, oldName);
 }
+
+/** לאן הלכו ב-2026 מצביעי קבוצת רשימות של 2022 (אותיות) */
+export function wentToGroup(m: number[][], letters: string[]): FlowPart[] {
+  const row = flow.new.map((_, j) => m.reduce((s, r, i) => (letters.includes(flow.old[i]) ? s + r[j] : s), 0));
+  return parts(row, flow.new, newName);
+}
