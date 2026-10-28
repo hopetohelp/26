@@ -648,6 +648,9 @@
 .mk-capsule-mark-v[data-kind=secondary]>.mk-capsule-cross { border-top-style:dashed; }
 
 /* תצוגה ממוקדת (הכרעות בעלים 23.10.2026): בלי כותרות מסך, סרגל ניווט צף, קפסולות סקרים וגושים כתרשים בלבד. מהטוקנים בלבד. */
+/* פודיום הניחושים — כחול לבן אדום (הכרעת בעלים 28.10.2026) */
+:root { --podium-red: 206 38 52; }
+[data-dark] { --podium-red: 255 120 128; }
 :root { --bloc-1: 59 74 143; --bloc-2: 138 116 64; --bloc-3: 138 79 125; --bloc-4: 38 118 118; --bloc-5: 104 122 66; --bloc-unity: 178 120 28; --bloc-miss: 185 191 208; --heat-lo: var(--mk-range); --heat-hi: var(--mk-range); }
 [data-dark] { --bloc-1: 143 158 230; --bloc-2: 210 187 125; --bloc-3: 212 150 198; --bloc-4: 111 207 207; --bloc-5: 176 200 128; --bloc-unity: 214 160 70; --bloc-miss: 74 82 114; }
 /* משתתפי הגזרה: צבעי סמל הקבוצה בכל האתר */

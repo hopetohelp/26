@@ -70,8 +70,6 @@ curl --fail -s --max-time 60 "https://mapvotes.bechirot.gov.il/data/votes/latest
    - `counted` בין 0 ל-100.
    - הסקריפט מסרב לכתוב כשהסך אינו 120. אחרי סירוב — לא מתקנים ידנית.
 
-5. **פודיום הניחושים** (הכרעת בעלים 28/10): קוראים לכלי `admin_get_guesses` (שרת 26); התשובה גדולה ונשמרת לקובץ ⇐ `python3 pipeline/guess_podium.py <הקובץ>` ⇐ `src/data/guessPodium.json`. בלי גישה לכלי — מדלגים ומציינים בסיכום.
-
 ## שלב 4 — אין שינוי ⇐ סיום
 `git status -s` ריק ⇐ אין PR. מסכמים בשורה אחת ("אין נתון חדש") ומסיימים.
 

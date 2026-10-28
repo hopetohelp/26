@@ -165,6 +165,8 @@ export interface Me {
   managedGroups?: GroupRef[];
   /** גרסת נוסח הפרטיות שאושרה (null = טרם אושר; חסר = שרת ישן) — src/lib/privacy.ts */
   privacy?: number | null;
+  /** מקום בפודיום הניחושים (1–3) והשם הציבורי שבחר; null — לא בפודיום (POST /podium/name) */
+  podium?: { place: number; name: string | null } | null;
 }
 
 /** מספר עם המונה והמכנה שלו. hidden = מתחת לסף */
@@ -203,6 +205,8 @@ export interface Dashboard {
     hist?: Record<string, Record<string, number>>;
     /** כמה מהניחושים צדקו בכל הרשימות יחד מול תוצאות האמת (אין תוצאות — חסר) */
     exactAll?: number;
+    /** שלושת הניחושים המדויקים, בלי מזהים (worker/crowd/lib/results.js podium) */
+    podium?: { acc: number; exact: number; savedAt: string }[];
     /** רשימות שקיבלו לפחות ארבעה מנדטים באחת מגרסאות המשתתפים. */
     everPassedLists?: string[];
     /** "בקרב מי שקבעו ערך לרשימה" — לכל רשימה n משלה */

@@ -16,8 +16,11 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
-import podium from "../../data/guessPodium.json";
 import { Fold } from "../../components/ui";
+import { createPortal } from "react-dom";
+import { call } from "../../lib/crowdApi";
+import { SITE_URL } from "../../lib/shareGuess";
+import { countedPct } from "../../lib/voterFlow";
 import { useRegisterNavShare } from "../../lib/navShare";
 
 const EMPTY = startSeats("zero");
@@ -113,9 +116,14 @@ export default function GuessAccuracy() {
   const nGuesses = d?.seats?.n;
   // כל הניחושים: בשורת "כל המפלגות" — אחוז המנחשים שצדקו בכל הרשימות יחד (מהשרת; הכרעת בעלים 28.10.2026)
   const exactAllShare = ready && d?.seats?.exactAll != null && d.seats.n ? d.seats.exactAll / d.seats.n : null;
-  const tiles: { label: string; v: number | null; big?: boolean }[] = [
-    ...(mine ? [{ label: "הניחוש שלי", v: acc(mine) }] : []),
-    { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: true },
+  // מפלגות מדויקות (הכרעת בעלים 28.10.2026): בניחוש שלי — כמה רשימות שעברו קיבלו בדיוק את מספר המנדטים; בכל הניחושים — הממוצע, מההתפלגות
+  const passed = ready ? ids.filter(id => (actual[id] ?? 0) > 0) : [];
+  const myExact = mine && ready ? passed.filter(id => (mine[id] ?? 0) === actual[id]).length : null;
+  const crowdExact = ready && hist && passed.every(id => hist[id]) ? passed.reduce((a, id) => { const h = hist[id]!; const n = h.reduce((x, y) => x + y, 0); return a + (n ? (h[actual[id]] ?? 0) / n : 0); }, 0) : null;
+  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? "בממוצע " : ""}${avg ? v.toFixed(1) : v} מפלגות מדויקות`;
+  const tiles: { label: string; v: number | null; big?: boolean; sub?: string }[] = [
+    ...(mine ? [{ label: "הניחוש שלי", v: acc(mine), sub: exactLine(myExact) }] : []),
+    { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: true, sub: exactLine(crowdExact, true) },
     { label: `דיוק ${finalPolls.length} הסקרים`, v: acc(pollAvg) },
   ];
 
@@ -124,6 +132,8 @@ export default function GuessAccuracy() {
     <h1 className="sr-only">תוצאות</h1>
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     <TurnoutCard />
+    {/* בראש המסך (הכרעת בעלים 28.10.2026) */}
+    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} /> : null}
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
     {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
@@ -156,6 +166,7 @@ export default function GuessAccuracy() {
       {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
         <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.big && <InfoTip label="מה זה אחוז הדיוק?" className="ms-1">אחוז הדיוק = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה.</InfoTip>}</p>
         <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : `${Math.round(t.v)}%`}</p>
+        {t.sub && <p className="text-xs text-ink-soft">{t.sub}</p>}
       </div>)}
     </div>
     <PartyChart selection={SIMPLE_ALL} lists={chartIds} separatorBefore={belowIds[0]} capValue={ready ? id => (actual[id] ?? 0) > 0 ? actual[id] : `${(votePct[id] ?? 0).toFixed(1)}%` : undefined} spreadOf={id => { if (!ready) return null; const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
@@ -179,7 +190,7 @@ export default function GuessAccuracy() {
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollAvg[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> ב{avgWord} כל הסקרים.</p>
     </div>}
-    {ready && <Podium />}
+    {ready && session.me?.podium && <PodiumPopup place={session.me.podium.place} name={session.me.podium.name} token={session.token} />}
     {/* כפתור השיתוף — בסרגל הניווט, מימין ל-AI (הכרעת בעלים 28.10.2026; src/lib/navShare.ts) */}
     <FocusFoot />
     {sharing && <AccuracyShare onClose={() => setSharing(false)} input={{ actual, ids, crowdMean, mine, pollMean: pollAvg, avgWord, polls, pollLabels: finalPolls.map(p => p.label), hist, count: d?.seats?.n ?? 0, best: best ? best.keys.map(k => finalPolls.find(p => p.key === k)?.firm ?? k) : [], group: hagzara }} />}
@@ -282,23 +293,66 @@ function TurnoutCard() {
 }
 
 /** פודיום: שלושת הניחושים המדויקים (הכרעת בעלים 28/10) — אחוז דיוק, אחר כך מספר המפלגות המדויקות, ובשוויון — מי ששמר קודם.
- * src/data/guessPodium.json: מחושב מהניחושים בלי מזהים, מול הספירה הנוכחית */
-function Podium() {
-  const top = podium.top;
+ * מחושב בשרת הניחושים בכל טעינה, מול הספירה הנוכחית, בלי מזהים (worker/crowd/lib/results.js podium) */
+function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number }) {
   // שעון ישראל, בפורמט האתר: "27/10 19:28"
   const time = (iso: string) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(iso)).map(x => [x.type, x.value])); return `${p.day}/${p.month} ${p.hour}:${p.minute}`; };
   // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)
   const order = [1, 0, 2].filter(i => top[i]);
   const H = ["h-28", "h-20", "h-14"];
+  // כחול · לבן · אדום: מקום 1 כחול, 2 לבן עם מסגרת כחולה, 3 אדום
+  const BLOCK = ["bg-accent text-paper-card", "bg-paper-card text-accent border-2 border-accent", "bg-[rgb(var(--podium-red))] text-paper-card"];
   return <Fold title="שלושת הניחושים המדויקים">
     <div className="grid grid-cols-3 gap-2 items-end max-w-xl mx-auto">
       {order.map(i => { const g = top[i]; return <div key={i} className="flex flex-col items-center text-center">
         <p><span className="font-num font-bold text-2xl">{g.acc}%</span> <span className="text-xs text-ink-soft">דיוק</span></p>
+        {g.name && <p className="font-bold text-sm mt-1">{g.name}</p>}
         <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות מדויקות</p>
         <p className="text-xs text-ink-soft mb-2 font-num">{time(g.savedAt)}</p>
-        <div className={`${H[i]} w-full rounded-t-xl bg-ink text-paper-card flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
+        <div className={`${H[i]} ${BLOCK[i]} w-full rounded-t-xl flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
       </div>; })}
     </div>
-    <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{podium.n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
+    <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
   </Fold>;
+}
+
+const PLACE = ["ראשון", "שני", "שלישי"];
+/** חלון למי שבשלושת המקומות (הכרעת בעלים 28.10.2026): שיתוף, ושם ציבורי לפודיום (עד 3 מילים). פעם אחת לכל מקום בכל ביקור */
+function PodiumPopup({ place, name: saved, token }: { place: number; name: string | null; token: string | null }) {
+  const key = `podium-seen-${place}`;
+  const [open, setOpen] = useState(() => { try { return !sessionStorage.getItem(key); } catch { return true; } });
+  const [name, setName] = useState(saved ?? "");
+  const [msg, setMsg] = useState<string | null>(null);
+  const close = useCallback(() => { try { sessionStorage.setItem(key, "1"); } catch { /* בלי אחסון — החלון ייסגר עד הטעינה הבאה */ } setOpen(false); }, [key]);
+  useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => e.key === "Escape" && close(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open, close]);
+  if (!open) return null;
+  const word = PLACE[place - 1], pct = countedPct();
+  const basis = pct != null ? `לפי ${pct}% מהקולות` : "לפי הספירה הנוכחית";
+  const share = async () => {
+    const text = `כרגע אני במקום ${word} בדיוק הניחושים לבחירות 2026 (${basis})\n${SITE_URL}#/results-2026`;
+    try { if (navigator.share) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); setMsg("הטקסט הועתק."); } }
+    catch (e) { if ((e as Error)?.name !== "AbortError") setMsg("השיתוף לא הצליח."); }
+  };
+  const words = name.trim() ? name.trim().split(/\s+/).length : 0;
+  const save = async () => {
+    try { await call("/podium/name", { token, body: { name } }); setMsg(name.trim() ? "השם נשמר ויופיע בפודיום." : "השם הוסר."); }
+    catch { setMsg("השם לא נשמר. אפשר אותיות וספרות, עד 3 מילים."); }
+  };
+  return createPortal(<div className="f-modal" onClick={e => e.target === e.currentTarget && close()}>
+    <div role="dialog" aria-modal="true" aria-labelledby="podium-pop">
+      <h2 id="podium-pop" className="text-lg font-bold">כרגע אתם במקום {word} בדיוק הניחושים</h2>
+      <p className="text-sm">אתם יכולים לשתף עם חברים, או לכתוב את שמכם שיופיע במסך הכללי.</p>
+      <button type="button" className="f-btn pri !flex !flex-col !items-center !py-3" onClick={share} aria-label={`שיתוף: מקום ${word}, ${basis}`}>
+        <span className="text-xl font-bold">מקום {word}</span>
+        <span className="text-xs font-normal opacity-80">{basis}</span>
+        {/* כפתור השיתוף של האתר, בתוך הכפתור (הכרעת בעלים 28.10.2026) */}
+        <span className="mt-2 rounded-full bg-paper-card text-accent px-4 py-1 text-sm font-extrabold">שיתוף</span>
+      </button>
+      <label className="grid gap-1 text-sm">שם שיוצג לכולם (עד 3 מילים)
+        <input value={name} maxLength={30} onChange={e => setName(e.target.value)} className="bg-paper border border-line rounded-xl px-3 py-2 w-full text-base" />
+      </label>
+      <button type="button" className="f-btn" disabled={words > 3} onClick={save}>שמירת השם</button>
+      <button type="button" className="f-btn" onClick={close}>סגירה</button>
+      {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
+    </div></div>, document.body);
 }
