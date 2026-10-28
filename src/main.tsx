@@ -8,6 +8,7 @@ import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
 import { useGuessClosed } from "./lib/guessClosed";
 import { useScreenShown } from "./lib/screenVisibility";
+import { useInterface } from "./lib/interfaceMode";
 import SimpleOverview from "./pages/simple/Overview";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
@@ -64,6 +65,12 @@ function PollsTabs() {
 function GuessGate({ children }: { children: React.ReactNode }) {
   const closed = useGuessClosed() && !useScreenShown("guess");
   return closed ? <PageTitle lead="התוצאות ודיוק הניחושים — במסך ״תוצאות״.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
+}
+
+/** "מה השתנה": בממוקדת מסך עצמאי; במורחב — הלשונית שבתוך "בחירות קודמות" (הכרעת בעלים 28.10.2026) */
+function ChangesScreen() {
+  const { advanced } = useInterface();
+  return advanced ? <Navigate to="/past?tab=changes" replace /> : <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>;
 }
 
 function NotFound() {
@@ -147,7 +154,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<PollsTabs />} />
-          <Route path="changes" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>} />
+          <Route path="changes" element={<ChangesScreen />} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
