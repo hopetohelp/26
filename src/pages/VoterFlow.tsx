@@ -52,6 +52,41 @@ function Row({ row, view }: { row: FlowRow; view: View }) {
   );
 }
 
+/** אותה מפלגה בשתי הבחירות (אותה רשימה ואותן אותיות) — לשורה משותפת במסך רחב */
+const SAME: Record<string, string> = { likud: "מחל", democrats: "אמת", utj: "ג", yb: "ל", shas: "שס", rzp: "ט", raam: "עם", other: "other", abstain: "abstain" };
+/** כחול לבן (בני גנץ) — התמודדה ב-2022 כמחנה הממלכתי ופרשה לפני ההצבעה ב-2026 */
+const RETIRED: Record<string, string> = { "כן": "כחול לבן" };
+
+function Empty({ name, text }: { name: string; text: string }) {
+  return (
+    <li className="border-t border-paper-line py-3">
+      <h3 className="font-bold">{name}</h3>
+      <p className="text-sm text-ink-soft mt-2">{text}</p>
+    </li>
+  );
+}
+
+/** מסך רחב: שני טורים — "מאיפה הגיעו" (2026) ו"לאן הלכו" (2022); אותה מפלגה באותה שורה; מפלגה שלא רצה — כרטיס ריק (הכרעת בעלים 28.10.2026) */
+function Paired({ rows, same }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] }; same: (id: string) => string | undefined }) {
+  const used = new Set<string>();
+  const pairs: [JSX.Element, JSX.Element][] = rows.cameFrom.map((r) => {
+    const o = same(r.id), old = o ? rows.wentTo.find((w) => w.id === o) : undefined;
+    if (old) used.add(old.id);
+    return [<Row key={r.id} row={r} view="from" />, old ? <Row key={old.id} row={old} view="to" /> : <Empty key={`e-${r.id}`} name={r.name} text="המפלגה לא רצה בבחירות אלו" />];
+  });
+  for (const w of rows.wentTo.filter((w) => !used.has(w.id))) {
+    const retired = RETIRED[w.id];
+    pairs.push([<Empty key={`e-${w.id}`} name={retired ?? w.name} text={retired ? "המפלגה פרשה לפני ההצבעה" : "המפלגה לא רצה בבחירות אלו"} />, <Row key={w.id} row={w} view="to" />]);
+  }
+  return (
+    <ul className="mt-2 grid grid-cols-2 gap-x-8">
+      <li className="font-bold text-ink-soft">{VIEWS[0].lead}</li>
+      <li className="font-bold text-ink-soft">{VIEWS[1].lead}</li>
+      {pairs.flat()}
+    </ul>
+  );
+}
+
 function Flows({ rows, view }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] }; view: View }) {
   const list = (view === "from" ? rows.cameFrom : rows.wentTo).filter((r) => r.id !== "abstain" || view === "from");
   return <ul className="mt-2">{list.map((r) => <Row key={r.id} row={r} view={view} />)}</ul>;
@@ -76,8 +111,10 @@ export default function VoterFlow() {
         השיוך לפי קלפיות זהות מדויק יותר, אבל מכסה רק {pctValue(cov.ballots.total)}% מהקולות, ומניח שההתפלגות זהה בשאר הקולות.
         השיוך לפי יישובים משייך את השארית לפי ההתפלגות בכל היישוב, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
       </p>
-      <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
-      <p className="text-sm mt-2" aria-live="polite">{lead}</p>
+      <div className="md:hidden">
+        <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
+        <p className="text-sm mt-2" aria-live="polite">{lead}</p>
+      </div>
       <Explained
         kind="השוואה"
         source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"
@@ -85,9 +122,11 @@ export default function VoterFlow() {
         assumption="כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי הקלפי השלמה, אחר כך לפי מיקום הקלפי, ובמתג היישובים — לפי היישוב. שיעור מעבר אחד לכל הארץ; אין שימוש בסקרים."
         methodAnchor="voter-flow"
       >
-        <Flows rows={data.lists} view={view} />
+        <div className="md:hidden"><Flows rows={data.lists} view={view} /></div>
+        <div className="hidden md:block"><Paired rows={data.lists} same={(id) => SAME[id]} /></div>
         <h2 className="text-xl font-display leading-tight mt-8">מעבר בין הגושים</h2>
-        <Flows rows={data.blocs} view={view} />
+        <div className="md:hidden"><Flows rows={data.blocs} view={view} /></div>
+        <div className="hidden md:block"><Paired rows={data.blocs} same={(id) => id} /></div>
       </Explained>
       {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
       <Fold title="בדיקה לפי קלפי, מיקום או יישוב">
