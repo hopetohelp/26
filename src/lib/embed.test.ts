@@ -14,6 +14,7 @@ describe("מצב הטמעה", () => {
   it("רק תוצאות ומה השתנה ניתנים להטמעה", () => {
     expect(embeddableFor("/results-2026", null)?.name).toBe("תוצאות");
     expect(embeddableFor("/past", "changes")?.name).toBe("מה השתנה");
+    expect(embeddableFor("/changes", null)).toBe(embeddableFor("/past", "changes"));
     expect(embeddableFor("/past", "results")).toBe(null);
     expect(embeddableFor("/polls", null)).toBe(null);
   });

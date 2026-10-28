@@ -30,6 +30,7 @@ export function embedTheme(hash = typeof location !== "undefined" ? location.has
 
 /** המסך הנוכחי ניתן להטמעה? */
 export function embeddableFor(pathname: string, tab: string | null) {
+  if (pathname === "/changes") return EMBEDDABLE.find((e) => e.path === "/past" && e.tab === "changes")!;
   return EMBEDDABLE.find((e) => e.path === pathname && (e.tab ?? null) === (e.tab ? tab : null)) ?? null;
 }
 

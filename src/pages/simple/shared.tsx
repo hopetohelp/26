@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { embeddableFor } from "../../lib/embed";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { nameOf, IDS } from "../guess/model";
 import { POLLSTER_LOGOS } from "../../lib/pollsterLogos";
@@ -308,6 +309,8 @@ export function GuessCount({ total, members }: { total?: number | null; members?
   return <div className="f-guesses"><p className="f-guesses-all"><b className="font-num">{total.toLocaleString("he-IL")}</b> ניחשו</p>{members != null && <p className="f-guesses-group"><span className="font-num">{members.toLocaleString("he-IL")}</span> חברי הגזרה</p>}</div>;
 }
 export function FocusFoot() {
+  const { pathname, search } = useLocation();
+  if (embeddableFor(pathname, new URLSearchParams(search).get("tab"))) return null;
   return <div className="f-foot"><Link to="/method" className="f-info" aria-label="מידע ומקורות">i</Link><Link to="/method">מידע ומקורות</Link></div>;
 }
 
