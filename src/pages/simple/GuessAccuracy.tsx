@@ -67,8 +67,15 @@ export default function GuessAccuracy() {
   const hist = useMemo(() => histArrays(d?.seats?.hist), [d]);
   // מתג חציון/ממוצע (הכרעת בעלים 28.10.2026): בחציון — כל מקום שמשתמש בממוצע הניחושים או הסקרים, כולל אחוז הדיוק והשיתוף
   // בניתוח המורחב המתג אינו מוצג (הטבלאות אינן משתמשות בממוצע) — תמיד ממוצע (הכרעת בעלים 28.10.2026)
-  const [statPick, setStat] = useState<"mean" | "median">("mean");
-  const stat = advanced ? "mean" : statPick;
+  // ברירת המחדל: מה שקרוב יותר לתוצאות האמת בניחושים — ממוצע או חציון (הכרעת בעלים 28.10.2026); בשוויון — ממוצע
+  const [statPick, setStat] = useState<"mean" | "median" | null>(null);
+  const autoStat = useMemo<"mean" | "median">(() => {
+    const rows = d?.seats?.full ?? [];
+    if (!rows.length || !hasResults()) return "mean";
+    const of = (k: "mean" | "median") => accuracyPct(Object.fromEntries(rows.map(r => [r.list, r[k]])), results2026.seats);
+    return of("median") > of("mean") ? "median" : "mean";
+  }, [d]);
+  const stat = advanced ? "mean" : statPick ?? autoStat;
   const crowdMean: Seats = useMemo(() => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, stat === "median" ? r.median : r.mean])), [d, stat]);
   const pollAvg = stat === "median" ? pollMedian : pollMean;
   const avgWord = stat === "median" ? "חציון" : "ממוצע";
