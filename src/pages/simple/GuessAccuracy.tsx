@@ -66,7 +66,9 @@ export default function GuessAccuracy() {
   const d = crowd.dashboard;
   const hist = useMemo(() => histArrays(d?.seats?.hist), [d]);
   // מתג חציון/ממוצע (הכרעת בעלים 28.10.2026): בחציון — כל מקום שמשתמש בממוצע הניחושים או הסקרים, כולל אחוז הדיוק והשיתוף
-  const [stat, setStat] = useState<"mean" | "median">("mean");
+  // בניתוח המורחב המתג אינו מוצג (הטבלאות אינן משתמשות בממוצע) — תמיד ממוצע (הכרעת בעלים 28.10.2026)
+  const [statPick, setStat] = useState<"mean" | "median">("mean");
+  const stat = advanced ? "mean" : statPick;
   const crowdMean: Seats = useMemo(() => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, stat === "median" ? r.median : r.mean])), [d, stat]);
   const pollAvg = stat === "median" ? pollMedian : pollMean;
   const avgWord = stat === "median" ? "חציון" : "ממוצע";
@@ -113,8 +115,9 @@ export default function GuessAccuracy() {
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     <TurnoutCard />
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
-    {statSwitch}
     {advanced ? <>
+    {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
+    <div className="f-seg-row">
     <div className="f-seg fit" role="group" aria-label="מה משווים">
       {(["guesses", "polls"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)}>{m === "guesses" ? "ניחושים" : "סקרים"}</button>)}
     </div>
@@ -124,6 +127,7 @@ export default function GuessAccuracy() {
     {mode === "polls" && <div className="f-seg" role="group" aria-label="מכון">
       {finalPolls.map(p => <button key={p.key} type="button" aria-pressed={chosen?.key === p.key} onClick={() => setFirm(p.key)}>{p.label}</button>)}
     </div>}
+    </div>
     <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <><PartyAvatar id={id} size={30} /><span className="sr-only">{nameOf(id)}</span></>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
     <AccuracyTable view={view} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={chosen ? blocs(chosen.values) : null} chosenLabel={chosen?.label} ready={ready} />
@@ -133,6 +137,7 @@ export default function GuessAccuracy() {
       <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
     </div>
     </> : <>
+    {statSwitch}
     {mine && ready && <div className="f-card mb-4 text-center">
       <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
       <p className="text-sm text-ink-soft mt-1"><span className="font-num">{ready ? fmt(Math.round(myMisplaced)) : "—"}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
