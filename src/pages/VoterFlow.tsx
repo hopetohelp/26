@@ -6,9 +6,9 @@ import { cameFrom, coverage, flow, wentTo, type FlowRow } from "../lib/voterFlow
 import { num, pctValue } from "../lib/format";
 
 type View = "from" | "to";
-const VIEWS: { id: View; label: string }[] = [
-  { id: "from", label: "מאיפה הגיעו" },
-  { id: "to", label: "לאן הלכו" },
+const VIEWS: { id: View; label: string; lead: string }[] = [
+  { id: "from", label: "מאיפה הגיעו", lead: "מאיפה הגיעו המצביעים לכל מפלגה בבחירות הנוכחיות" },
+  { id: "to", label: "לאן הלכו", lead: "לאן הלכו המצביעים לכל מפלגה בבחירות הקודמות" },
 ];
 /** חלק קטן מ-3% מצטרף לשורה "אחרים" — כדי שכל כרטיס יישאר קריא */
 const MIN_SHARE = 3;
@@ -55,6 +55,7 @@ export default function VoterFlow() {
         {num(flow.ballots)} קלפיות שהיו גם ב-2022, מתוך {num(flow.ballots2026)} שנספרו · {pctValue(coverage)}% מהקולות שנספרו
       </p>
       <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
+      <p className="text-sm mt-2" aria-live="polite">{VIEWS.find((v) => v.id === view)!.lead}</p>
       <Explained
         kind="השוואה"
         source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"
