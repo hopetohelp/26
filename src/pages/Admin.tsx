@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FEEDBACK_URL } from "../lib/feedback";
 import { HIDDEN_SCREENS, setScreenModes, type HiddenScreen, type ScreenMode } from "../lib/screenVisibility";
-import { dateTime } from "../lib/format";
+import { dateTime, num } from "../lib/format";
 import { nextRun } from "../lib/runSchedule";
 import { getToken } from "../lib/crowdSession";
 import { call } from "../lib/crowdApi";
@@ -39,7 +39,32 @@ export type Draft = { id: number; kind: "feedback" | "support"; target: string; 
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
 export type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
 /** videoAnon = סרטונים של גולשים לא מחוברים (שרת ההערות); support.stats.videos = מחוברים (שרת ההשתתפות) */
-type Data = { jdnHours?: { hour: string; clicks: number }[]; videoAnon?: VideoStatsT; videoAnonRecent?: Record<"data" | "results", VideoStatsT>; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type EmbedRow = { screen: string; kind: "view" | "copy"; host: string; n: number };
+
+/** הטמעות (הכרעת בעלים 28.10.2026): לכל מסך — צפיות והעתקות קוד, ורשימת האתרים המארחים לפי צפיות */
+function EmbedStats({ rows }: { rows: EmbedRow[] }) {
+  const screens = [["results-2026", "תוצאות"], ["changes", "מה השתנה"]] as const;
+  const sum = (f: (r: EmbedRow) => boolean) => rows.filter(f).reduce((a, r) => a + r.n, 0);
+  const hosts = [...rows.filter((r) => r.kind === "view").reduce((m, r) => m.set(r.host, (m.get(r.host) ?? 0) + r.n), new Map<string, number>())].sort((a, b) => b[1] - a[1]);
+  return (
+    <div>
+      <p className="text-sm font-bold mb-2">הטמעות באתרים אחרים</p>
+      <ul className="grid grid-cols-2 gap-3">
+        {screens.map(([id, label]) => (
+          <li key={id} className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0">
+            <p className="text-xs text-ink-soft">{label}</p>
+            <p className="font-num tabular text-3xl leading-none mt-1">{num(sum((r) => r.screen === id && r.kind === "view"))}</p>
+            <p className="text-xs text-ink-soft font-num tabular mt-1">צפיות · העתקות קוד {num(sum((r) => r.screen === id && r.kind === "copy"))}</p>
+          </li>
+        ))}
+      </ul>
+      {hosts.length > 0 && <ul className="mt-2 text-sm" aria-label="אתרים מארחים">{hosts.map(([h, n]) => <li key={h} className="flex justify-between gap-2"><span dir="ltr">{h === "unknown" ? "אתר לא ידוע" : h}</span><span className="font-num tabular">{num(n)}</span></li>)}</ul>}
+      <p className="text-xs text-ink-soft mt-2">צפייה = טעינת חלון מוטמע. נספר רק שם האתר המארח, בלי כתובת העמוד ובלי פרטי הגולש. נספר מ-28/10.</p>
+    </div>
+  );
+}
+
+type Data = { embeds?: EmbedRow[]; jdnHours?: { hour: string; clicks: number }[]; videoAnon?: VideoStatsT; videoAnonRecent?: Record<"data" | "results", VideoStatsT>; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 /** סרטון הנתונים לכל האתר: מחוברים + לא מחוברים (גולש שיצר לפני ההתחברות ואחריה עשוי להיספר פעמיים) */
@@ -310,6 +335,7 @@ export default function Admin() {
                         </ul>
                         <p className="text-xs text-ink-soft mt-2">כל תמונה שנשמרה או שותפה. נספרות מ-28/10 (מה השתנה — מהערב); תמונות מלפני כן לא נספרו.</p>
                       </div>
+                      <EmbedStats rows={data.embeds ?? []} />
                     </>}
                   </section>
                 ))}

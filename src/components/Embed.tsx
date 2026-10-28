@@ -1,10 +1,14 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { embedCode, embeddableFor, embedTheme, SITE_ORIGIN } from "../lib/embed";
+import { pingEmbed } from "../lib/visits";
 
 /** מסגרת מצומצמת להטמעה: תוכן, שורת מקור, דיווח גובה לאתר המארח, וקישורים פנימיים נפתחים באתר המלא בלשונית חדשה */
 export function EmbedFrame({ children }: { children: ReactNode }) {
   const { pathname, search } = useLocation();
+  useEffect(() => {
+    if (window.parent !== window) pingEmbed(pathname === "/past" ? "changes" : "results-2026", "view");
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const t = embedTheme();
     if (t === "dark") document.documentElement.dataset.dark = "";
@@ -63,6 +67,7 @@ export function EmbedButton() {
       <p className="mt-2 text-ink-soft">מעתיקים את הקוד ומדביקים בעמוד באתר שלכם. המסך יתעדכן אוטומטית ויתאים את גובהו.</p>
       <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
       <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
+        pingEmbed(target.path === "/past" ? "changes" : "results-2026", "copy");
         void navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => {});
       }}>{copied ? "הועתק" : "העתקת הקוד"}</button>
     </details>

@@ -133,3 +133,17 @@ it("דשבורד הסטטיסטיקה: כניסות עמוד, עם חשבון, �
   expect(by["screen:/"].total).toBe(12);
   expect(by["screen:/"].today).toBe(2);
 });
+
+it("הטמעות: נשמרים רק המסך, הסוג ושם האתר, ומוצגים בנתוני הניהול", async () => {
+  const hit = (b) => feedback.fetch(new Request("https://w.example/embed-hit", { method: "POST", headers: { origin: "https://26.hopetohelp.net" }, body: JSON.stringify(b) }), env);
+  expect((await hit({ screen: "results-2026", kind: "view", host: "www.News.co.il" })).status).toBe(200);
+  await hit({ screen: "results-2026", kind: "view", host: "news.co.il" });
+  await hit({ screen: "changes", kind: "copy", host: "<script>" });
+  expect((await hit({ screen: "polls", kind: "view" })).status).toBe(400);
+  const r = await data();
+  expect(r.embeds).toEqual(expect.arrayContaining([
+    { screen: "results-2026", kind: "view", host: "news.co.il", n: 2 },
+    { screen: "changes", kind: "copy", host: "unknown", n: 1 },
+  ]));
+  expect(r.totalVisits).toBe(0);
+});
