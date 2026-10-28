@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { accuracyPct, accuracyRows, closestPoll, pollAccuracyPct, bestCombination, biggestGap, closerShareHist, distance, histStats, pollStats } from "./guessAccuracy";
+import { medianSeats, accuracyPct, accuracyRows, closestPoll, pollAccuracyPct, bestCombination, biggestGap, closerShareHist, distance, histStats, pollStats } from "./guessAccuracy";
 
 describe("guessAccuracy", () => {
   it("מרחק במנדטים ובאחוזים; רשימה שלא עברה מול 4", () => {
@@ -60,5 +60,11 @@ describe("turnoutPct — אחוז הצבעה מבעלי הזכות הרשמיי�
   it("נתון לא תקין ⇐ null", () => {
     expect(turnoutPct(NaN, 7336553)).toBeNull();
     expect(turnoutPct(100, 0)).toBeNull();
+  });
+});
+
+describe("medianSeats", () => {
+  it("חציון לכל רשימה, בלי סקר שלא פרסם", () => {
+    expect(medianSeats([{ a: 1, b: 4 }, { a: 3 }, { a: 10, b: 6 }], ["a", "b", "c"])).toEqual({ a: 3, b: 5, c: 0 });
   });
 });

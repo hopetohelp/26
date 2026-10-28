@@ -2,7 +2,7 @@
 import resultsFile from "../../raw/results-2026.json";
 import { latestPerPollster, pollsterKey, pollsterLabel, registry, seatsIn, lists2026 } from "./data";
 import { SIMPLE_ALL, SIMPLE_DAYS, simpleValue } from "./simpleSources";
-import type { Seats } from "./guessAccuracy";
+import { medianSeats, type Seats } from "./guessAccuracy";
 
 export type ResultsStatus = "none" | "partial" | "final";
 export const results2026 = resultsFile as { status: ResultsStatus; asOf: string | null; source: string; seats: Seats; counted?: number | null };
@@ -23,6 +23,8 @@ export const finalPolls = latestPerPollster(ELECTION_DAY, SIMPLE_DAYS).map(p => 
 
 /** ממוצע הסקרים — אותו ממוצע של שאר האתר (polls.mean) */
 export const pollMean: Seats = Object.fromEntries(IDS.map(id => [id, simpleValue(SIMPLE_ALL, [id]) ?? 0]));
+/** חציון הסקרים — מאותם סקרים אחרונים (finalPolls); למתג חציון/ממוצע במסך התוצאות */
+export const pollMedian: Seats = medianSeats(finalPolls.map(p => p.values), IDS);
 
 /** התפלגות {מנדטים: כמה} ⇐ מערך לפי מנדטים */
 export function histArrays(hist: Record<string, Record<string, number>> | undefined): Record<string, number[]> | null {

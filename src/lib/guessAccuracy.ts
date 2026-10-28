@@ -22,6 +22,14 @@ export function meanSeats(list: Seats[], ids: string[]): Seats {
   return Object.fromEntries(ids.map(id => [id, list.length ? list.reduce((a, s) => a + val(s, id), 0) / list.length : 0]));
 }
 
+/** חציון לכל רשימה; ערך שחסר ברשומה (סקר שלא פרסם נתון) — אינו נכלל בה */
+export function medianSeats(list: Seats[], ids: string[]): Seats {
+  return Object.fromEntries(ids.map(id => {
+    const xs = list.filter(s => id in s).map(s => s[id]).sort((a, b) => a - b), n = xs.length;
+    return [id, !n ? 0 : n % 2 ? xs[(n - 1) / 2] : (xs[n / 2 - 1] + xs[n / 2]) / 2];
+  }));
+}
+
 /** הרשימות בטבלה: עברו בפועל, או שממוצע הסקרים נתן להן לפחות ROW_MIN_POLL_MEAN; מסודרות לפי האמת */
 export function accuracyRows(actual: Seats, pollMean: Seats): string[] {
   const ids = new Set([...Object.keys(actual), ...Object.keys(pollMean)]);
