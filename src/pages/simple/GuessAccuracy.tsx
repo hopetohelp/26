@@ -4,7 +4,7 @@ import InfoTip from "../../components/InfoTip";
 import { THRESHOLD_PCT } from "../../engine/pctForSeats";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
-import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, accuracyRows, correctSeats, exactLists, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
 import { finalPolls, hasResults, histArrays, pollMean, pollMedian, previousTurnout, results2026, turnoutPct } from "../../lib/guessAccuracyData";
@@ -118,13 +118,14 @@ export default function GuessAccuracy() {
   const exactAllShare = ready && d?.seats?.exactAll != null && d.seats.n ? d.seats.exactAll / d.seats.n : null;
   // מפלגות מדויקות (הכרעת בעלים 28.10.2026): בניחוש שלי — כמה רשימות שעברו קיבלו בדיוק את מספר המנדטים; בכל הניחושים — הממוצע, מההתפלגות
   const passed = ready ? ids.filter(id => (actual[id] ?? 0) > 0) : [];
-  const myExact = mine && ready ? passed.filter(id => (mine[id] ?? 0) === actual[id]).length : null;
+  const myExact = mine && ready ? exactLists(mine, actual) : null;
   const crowdExact = ready && hist && passed.every(id => hist[id]) ? passed.reduce((a, id) => { const h = hist[id]!; const n = h.reduce((x, y) => x + y, 0); return a + (n ? (h[actual[id]] ?? 0) / n : 0); }, 0) : null;
-  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? "בממוצע " : ""}${avg ? v.toFixed(1) : v} מפלגות מדויקות`;
+  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? "בממוצע " : ""}${avg ? v.toFixed(1) : v} מפלגות`;
+  const pollExact = ready ? exactLists(pollAvg, actual) : null;
   const tiles: { label: string; v: number | null; big?: boolean; sub?: string }[] = [
     ...(mine ? [{ label: "הניחוש שלי", v: acc(mine), sub: exactLine(myExact) }] : []),
     { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: true, sub: exactLine(crowdExact, true) },
-    { label: `דיוק ${finalPolls.length} הסקרים`, v: acc(pollAvg) },
+    { label: `דיוק ${finalPolls.length} הסקרים`, v: acc(pollAvg), sub: exactLine(pollExact) },
   ];
 
   return <div className="max-w-6xl mx-auto">
@@ -164,8 +165,8 @@ export default function GuessAccuracy() {
     </div>}
     <div className="grid gap-2 mb-4 items-center" style={{ gridTemplateColumns: tiles.map(t => t.big ? "minmax(0, 1.35fr)" : "minmax(0, 1fr)").join(" ") }}>
       {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
-        <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.big && <InfoTip label="מה זה אחוז הדיוק?" className="ms-1">אחוז הדיוק = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה.</InfoTip>}</p>
-        <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : `${Math.round(t.v)}%`}</p>
+        <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.big && <InfoTip label="מה זה מנדטים מדויקים?" className="ms-1">מנדטים מדויקים = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה; מפלגות = כמה רשימות קיבלו בדיוק את מספר המנדטים שלהן.</InfoTip>}</p>
+        <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : <span className="whitespace-nowrap">{correctSeats(t.v)} <span className="text-xs md:text-sm font-normal">מנדטים</span></span>}</p>
         {t.sub && <p className="text-xs text-ink-soft">{t.sub}</p>}
       </div>)}
     </div>
@@ -183,7 +184,7 @@ export default function GuessAccuracy() {
     {advanced && <BelowThreshold ready={ready} />}
     {nearest && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
-      <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · אחוז דיוק <span className="font-num font-bold">{Math.round(nearest.acc)}%</span></p>
+      <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · <span className="font-num font-bold">{correctSeats(nearest.acc)}</span> מנדטים · <span className="font-num font-bold">{exactLists(finalPolls.find(p => p.label === nearest.label)?.values ?? {}, actual)}</span> מפלגות</p>
     </div>}
     {advanced && best && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">השילוב הקרוב ביותר</h2>
@@ -305,9 +306,9 @@ function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string
   return <Fold title="שלושת הניחושים המדויקים">
     <div className="grid grid-cols-3 gap-2 items-end max-w-xl mx-auto">
       {order.map(i => { const g = top[i]; return <div key={i} className="flex flex-col items-center text-center">
-        <p><span className="font-num font-bold text-2xl">{g.acc}%</span> <span className="text-xs text-ink-soft">דיוק</span></p>
+        <p><span className="font-num font-bold text-2xl">{correctSeats(g.acc)}</span> <span className="text-xs text-ink-soft">מנדטים</span></p>
         {g.name && <p className="font-bold text-sm mt-1">{g.name}</p>}
-        <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות מדויקות</p>
+        <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות</p>
         <p className="text-xs text-ink-soft mb-2 font-num">{time(g.savedAt)}</p>
         <div className={`${H[i]} ${BLOCK[i]} w-full rounded-t-xl flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
       </div>; })}

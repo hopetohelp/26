@@ -72,6 +72,15 @@ export function accuracyPct(values: Seats, actual: Seats): number {
   return Math.max(0, 100 * (1 - sum / 2 / TOTAL));
 }
 
+/** מנדטים מדויקים (הכרעת בעלים 28.10.2026 — מחליף את אחוז הדיוק בתצוגה): 120 פחות המנדטים במקום הלא נכון, מעוגל */
+export const correctSeats = (accPct: number) => Math.round(accPct * TOTAL / 100);
+/** מפלגות מדויקות: רשימות שעברו בפועל וקיבלו בדיוק את מספר המנדטים שלהן */
+export function exactLists(values: Seats, actual: Seats): number {
+  return Object.keys(actual).filter(id => val(actual, id) > 0 && Math.round(val(values, id)) === val(actual, id)).length;
+}
+/** השורה האחידה: "111 מנדטים · 5 מפלגות" */
+export const exactLine = (seats: number, lists: number | string) => `${seats} מנדטים · ${lists} מפלגות`;
+
 /** אחוז דיוק של סקר: כמו accuracyPct, אבל רשימה שהסקר לא פרסם עליה נתון אינה נכללת (לא נחשבת טעות) */
 export function pollAccuracyPct(poll: Seats, actual: Seats): number {
   let sum = 0;

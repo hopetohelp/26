@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { PARTY_IMAGES } from "../../lib/partyImages";
 import { SITE_URL } from "../../lib/shareGuess";
 import { groupUrl } from "../../lib/groupLink";
-import { accuracyPct, biggestGap, closestPoll, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, correctSeats, exactLists, biggestGap, closestPoll, type Seats } from "../../lib/guessAccuracy";
 import { crowdDashboardOnce } from "../../lib/sources";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
 import type { PromoFile } from "../../lib/promoEncode";
@@ -46,11 +46,13 @@ async function renderImage(input: AccuracyShareInput, values: Seats, label: stri
   ctx.textBaseline = "middle"; ctx.textAlign = "center"; ctx.fillStyle = c.ink; ctx.font = `800 56px ${display}`;
   ctx.fillText("מי ניחש הכי טוב?", IMG_W / 2, 100);
   // אחוז הדיוק: הסקרים מול הניחושים
-  const tiles: [string, number][] = [["דיוק הסקרים", accuracyPct(input.pollMean, input.actual)], [input.mine && values === input.mine ? label : "דיוק הניחושים", accuracyPct(values, input.actual)]];
+  // מנדטים מדויקים, ומתחת — מפלגות מדויקות (הכרעת בעלים 28.10.2026)
+  const tiles: [string, Seats][] = [["דיוק הסקרים", input.pollMean], [input.mine && values === input.mine ? label : "דיוק הניחושים", values]];
   tiles.forEach(([t, v], i) => {
     const cx = IMG_W * (i ? .28 : .72);
-    ctx.fillStyle = c.soft; ctx.font = `600 32px ${body}`; ctx.fillText(t, cx, 200);
-    ctx.fillStyle = c.ink; ctx.font = `800 96px ${num}`; ctx.fillText(ltrText(`${Math.round(v)}%`), cx, 290);
+    ctx.fillStyle = c.soft; ctx.font = `600 32px ${body}`; ctx.fillText(t, cx, 190);
+    ctx.fillStyle = c.ink; ctx.font = `800 96px ${num}`; ctx.fillText(ltrText(String(correctSeats(accuracyPct(v, input.actual)))), cx, 270);
+    ctx.fillStyle = c.soft; ctx.font = `600 28px ${body}`; ctx.fillText(`מנדטים · ${exactLists(v, input.actual)} מפלגות`, cx, 335);
   });
   // כותרות הטורים
   const colA = 300, colB = 150;

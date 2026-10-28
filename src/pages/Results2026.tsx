@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import DeviationChart from "../components/deviationChart";
 import { Card } from "../components/ui";
 import { listName, registry } from "../lib/data";
-import { accuracyPct } from "../lib/guessAccuracy";
+import { accuracyPct, correctSeats, exactLists } from "../lib/guessAccuracy";
 import { finalPolls, pollMean, results2026 } from "../lib/guessAccuracyData";
 import { partialLine } from "../lib/voterFlow";
 import { num, pctValue } from "../lib/format";
@@ -48,7 +48,7 @@ export function Accuracy2026({ chips }: { chips: React.ReactNode }) {
     const values = finalPolls.map((p) => p.values[id]).filter((v): v is number => v !== undefined);
     return { id, name: listName(id), estimate: pollMean[id] ?? 0, min: Math.min(...values), max: Math.max(...values), actual: actual[id] ?? 0, n: values.length, values };
   });
-  const byPoll = finalPolls.map((p) => ({ label: p.label, end: p.end, acc: accuracyPct(p.values, actual) })).sort((a, b) => b.acc - a.acc);
+  const byPoll = finalPolls.map((p) => ({ label: p.label, end: p.end, acc: accuracyPct(p.values, actual), exact: exactLists(p.values, actual) })).sort((a, b) => b.acc - a.acc);
   return (
     <Card title="הסקרים מול התוצאות">
       {chips}
@@ -56,14 +56,14 @@ export function Accuracy2026({ chips }: { chips: React.ReactNode }) {
       <p className="text-sm text-ink-soft mb-3">{partialLine()} · {finalPolls.length} מכונים · מדגמי יום הבחירות אינם נכללים</p>
       <DeviationChart rows={rows} />
       <table className="w-full text-sm mt-4">
-        <caption className="sr-only">אחוז הדיוק של כל סדרת סקרים</caption>
-        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">מכון ומזמין</th><th scope="col" className="pe-3">הסקר האחרון</th><th scope="col">אחוז דיוק</th></tr></thead>
+        <caption className="sr-only">המנדטים והמפלגות המדויקים של כל סדרת סקרים</caption>
+        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">מכון ומזמין</th><th scope="col" className="pe-3">הסקר האחרון</th><th scope="col" className="pe-3">מנדטים מדויקים</th><th scope="col">מפלגות מדויקות</th></tr></thead>
         <tbody>
           {byPoll.map((p) => (
             <tr key={p.label} className="border-b border-paper-line">
               <th scope="row" className="py-1 pe-3 text-start font-medium">{p.label}</th>
               <td className="pe-3 tabular-nums">{p.end.slice(8, 10)}/{Number(p.end.slice(5, 7))}</td>
-              <td className="tabular-nums">{Math.round(p.acc)}%</td>
+              <td className="pe-3 tabular-nums">{correctSeats(p.acc)}</td><td className="tabular-nums">{p.exact}</td>
             </tr>
           ))}
         </tbody>
