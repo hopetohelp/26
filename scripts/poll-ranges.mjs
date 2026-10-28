@@ -45,7 +45,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const polls = JSON.parse(readFileSync(new URL("polls.json", root), "utf8")).polls;
   const model = JSON.parse(readFileSync(new URL("model.json", root), "utf8"));
   const meta = JSON.parse(readFileSync(new URL("meta.json", root), "utf8"));
-  const res = { ...pollRanges(polls, meta.lists2026.map((l) => l.id), model.asof), closed: closedLists(polls, meta.lists2026.filter((l) => !l.withdrawn).map((l) => l.id)) };
+  // תוצאות האמת (raw/results-2026.json) — לשרת, לספירת המנחשים שצדקו בכל הרשימות (הכרעת בעלים 28.10.2026)
+  const results2026 = JSON.parse(readFileSync(new URL("../raw/results-2026.json", import.meta.url), "utf8"));
+  const res = { ...pollRanges(polls, meta.lists2026.map((l) => l.id), model.asof), closed: closedLists(polls, meta.lists2026.filter((l) => !l.withdrawn).map((l) => l.id)),
+    results: results2026.status !== "none" && Object.keys(results2026.seats ?? {}).length ? results2026.seats : null };
   writeFileSync(new URL("../public/poll-ranges.json", import.meta.url), JSON.stringify(res) + "\n");
   console.log(`poll-ranges: ${Object.keys(res.ranges).length} lists from ${res.polls} polls (as of ${res.asOf})`);
 }

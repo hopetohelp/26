@@ -21,6 +21,8 @@ import { useRegisterNavShare } from "../../lib/navShare";
 const EMPTY = startSeats("zero");
 const avgOf = (xs: (number | null)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? ok.reduce((p, q) => p + q, 0) / ok.length : null; };
 const pc = (x: number | null | undefined) => x == null ? "—" : `${Math.round(x * 100)}%`;
+/** כמו pc, אבל חלק קטן מאחוז מוצג בעשירית (0.1%) ולא מתעגל ל-0% */
+const pcFine = (x: number | null | undefined) => x == null ? "—" : x > 0 && x < .01 ? `${(x * 100).toFixed(1)}%` : pc(x);
 type View = "mine" | "all" | "polls";
 /** מרחק במספר וביחס: "2 (20%)" */
 const Dist = ({ seats, actual }: { seats: number | null | undefined; actual: number }) =>
@@ -90,6 +92,8 @@ export default function GuessAccuracy() {
   const acc = (v: Seats | null) => v && ready ? accuracyPct(v, actual) : null;
   // תיבות הדיוק (הכרעת בעלים 27.10.2026): "דיוק N הניחושים" — הגדולה, באמצע — ו"דיוק N הסקרים"; ההסבר באייקון מידע
   const nGuesses = d?.seats?.n;
+  // כל הניחושים: בשורת "כל המפלגות" — אחוז המנחשים שצדקו בכל הרשימות יחד (מהשרת; הכרעת בעלים 28.10.2026)
+  const exactAllShare = ready && d?.seats?.exactAll != null && d.seats.n ? d.seats.exactAll / d.seats.n : null;
   const tiles: { label: string; v: number | null; big?: boolean }[] = [
     ...(mine ? [{ label: "הניחוש שלי", v: acc(mine) }] : []),
     { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: true },
@@ -112,12 +116,12 @@ export default function GuessAccuracy() {
     {mode === "polls" && <div className="f-seg" role="group" aria-label="מכון">
       {finalPolls.map(p => <button key={p.key} type="button" aria-pressed={chosen?.key === p.key} onClick={() => setFirm(p.key)}>{p.label}</button>)}
     </div>}
-    <AccuracyTable view={view} ids={ids} name={id => <PartyName id={id} />} short={id => <><PartyAvatar id={id} size={30} /><span className="sr-only">{nameOf(id)}</span></>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
+    <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <><PartyAvatar id={id} size={30} /><span className="sr-only">{nameOf(id)}</span></>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
     <AccuracyTable view={view} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={chosen ? blocs(chosen.values) : null} chosenLabel={chosen?.label} ready={ready} />
     <div className="f-card mt-4">
       <h2 className="font-bold mb-2">מה בכל טור</h2>
-      <ul className="text-sm space-y-1">{COLUMNS[view].map(([h, t]) => <li key={h}><b>{h}:</b> {t}</li>)}<li><b>כל המפלגות:</b> באחוזים — ממוצע של המפלגות, כל מפלגה במשקל שווה; במרחק — סך המנדטים, והיחס הממוצע של המפלגות.</li></ul>
+      <ul className="text-sm space-y-1">{COLUMNS[view].map(([h, t]) => <li key={h}><b>{h}:</b> {t}</li>)}<li><b>כל המפלגות:</b> {view === "all" ? <>ב"ניחושים מדויקים" — אחוז המנחשים שצדקו בכל הרשימות יחד</> : <>באחוזים — ממוצע של המפלגות, כל מפלגה במשקל שווה</>}; במרחק — סך המנדטים, והיחס הממוצע של המפלגות.</li></ul>
       <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
     </div>
     </> : <>
@@ -188,7 +192,9 @@ const blocs = (v: Seats): Seats => Object.fromEntries(SIMPLE_BLOCS.map(b => [b.i
 const blocHist = (h: Record<string, number[]> | null) => h && Object.fromEntries(BLOC_IDS4.flatMap(id => h[`bloc:${id}`] ? [[id, h[`bloc:${id}`]]] : []));
 
 /** טבלה אחת — לרשימות ולגושים, באותם טורים (הכרעות בעלים 27.10.2026) */
-function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chosen, chosenLabel, ready }: {
+function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chosen, chosenLabel, ready, allShare }: {
+  /** allShare — בתצוגת "כל הניחושים" בטבלת הרשימות: אחוז המנחשים שצדקו בכל הרשימות יחד, במקום ממוצע השורות */
+  allShare?: number | null;
   view: View; ids: string[]; name: (id: string) => React.ReactNode; short: (id: string) => React.ReactNode; actual: Seats; mine: Seats | null;
   hist: Record<string, number[]> | null; polls: Seats[]; chosen: Seats | null; chosenLabel?: string; ready: boolean;
 }) {
@@ -221,7 +227,7 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
       <tfoot><tr className="border-t-2 border-ink font-bold">
         <td className="py-2 pe-2">{ids === BLOC_IDS4 ? "כל הגושים" : "כל המפלגות"}</td><td className="px-1 md:px-2 font-num">{ready ? fmt(rows.reduce((t, r) => t + r.a, 0)) : "—"}</td>
         {view === "mine" && <td className="px-1 md:px-2 font-num">{fmt(rows.reduce((t, r) => t + (mine?.[r.id] ?? 0), 0))}</td>}
-        <td className="px-1 md:px-2 font-num">{pc(avgOf(rows.map(r => r.share)))}</td>
+        <td className="px-1 md:px-2 font-num">{view === "all" && allShare !== undefined ? pcFine(allShare) : pc(avgOf(rows.map(r => r.share)))}</td>
         {totals.map((t, i) => <td key={i} className="px-1 md:px-2 font-num whitespace-nowrap">{ready ? <bdi dir="ltr">{fmt(Math.round(t.seats * 10) / 10)} ({t.ratio == null ? "—" : `${Math.round(t.ratio * 100)}%`})</bdi> : "—"}</td>)}
       </tr></tfoot>
     </table>

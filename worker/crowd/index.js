@@ -26,6 +26,7 @@ import { normalizeEmail, normalizeName, emailHash, emailHasher, seal, open } fro
 import * as fb from "./lib/firebase.js";
 import { LISTS_2026 } from "./lib/lists.js";
 import { readPayload, setClosedLists } from "./lib/closed.js";
+import { setActualResults } from "./lib/results.js";
 import { slugFromName, freeSlug } from "./lib/slug.js";
 import { AGENT_SESSION_MS, MAX_AGENTS, agentBodyAllowed, agentRoute, agentSession, clientLabel, connectionId, requestToken } from "./lib/agent.js";
 
@@ -1888,17 +1889,18 @@ const routes = {
 // הסטטיסטיקות מחושבות כל הזמן: כל פתיחה מקבלת תמונה עדכנית. תוצאה אחת משרתת את כל הפניות בחצי הדקה
 // שאחריה (בכל עותק של השרת), כדי שרענון אוטומטי אצל גולשים רבים לא יקרא את כל המאגר בכל פעם. שמירה חדשה מבטלת אותה.
 
-/** טווח הסקרים מהאתר (public/poll-ranges.json) — מתעדכן עם כל רענון נתונים; נשמר 30 דקות. נכשל ⇐ נשאר הקודם או הגיבוי שבקוד */
+/** טווח הסקרים ותוצאות האמת מהאתר (public/poll-ranges.json) — מתעדכן עם כל רענון נתונים; נשמר 10 דקות. נכשל ⇐ נשאר הקודם או הגיבוי שבקוד */
 let rangesAt = 0;
 async function loadPollRanges(env) {
   const at = Date.now();
-  if (!env.POLL_RANGES_URL || at - rangesAt < 30 * 60_000) return;
+  // 10 דקות: הקובץ נושא גם את תוצאות האמת, שמתעדכנות כל רבע שעה בליל הספירה
+  if (!env.POLL_RANGES_URL || at - rangesAt < 10 * 60_000) return;
   rangesAt = at;
   try {
     const r = await fetch(env.POLL_RANGES_URL, { cf: { cacheTtl: 600 } });
     if (!r.ok) return;
     const data = await r.json();
-    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); setClosedLists(data.closed); await markDashboardChanged(env); }
+    if (data?.ranges && Object.keys(data.ranges).length) { setPollRanges(data.ranges); setClosedLists(data.closed); setActualResults(data.results); await markDashboardChanged(env); }
   } catch { /* נשאר הטווח הקודם */ }
 }
 

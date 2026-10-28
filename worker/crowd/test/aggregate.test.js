@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { aggregate, suppress, seatStat, computeMatrix, computeVote2026, computeByVote, computeTrend, latestByUnit, israelDay, computeSeats, computeBlocs } from "../lib/aggregate.js";
 import { GOV37 } from "../lib/lists.js";
 import { seats, ver, people, IDS } from "./helpers.js";
+import { setActualResults } from "../lib/results.js";
 
 const NOW = "2026-10-05T12:00:00Z";
 const run = (ps, vs, extra = {}) => aggregate({ participants: ps, versions: vs, now: NOW, aggregationId: "a", ...extra });
@@ -88,6 +89,20 @@ describe("seats section", () => {
     expect(Object.keys(s.hist).filter((k) => k.startsWith("bloc:")).sort()).toEqual(["bloc:arab", "bloc:eisenkot", "bloc:haredi", "bloc:netanyahu"]);
     // השערות בלי אחוזים — האחוזים מחושבים מהמנדטים, כך שממוצע האחוזים כולל את כולן
     expect(s.pctStats.find((x) => x.list === IDS[0]).n).toBe(21);
+  });
+  it("exactAll: guesses right on every list of the results; none without complete results", () => {
+    const vs = [...Array(3)].map((_, i) => ver("r" + i, "seats", seats(70))).concat([...Array(5)].map((_, i) => ver("w" + i, "seats", seats(60))));
+    setActualResults(null);
+    expect(computeSeats(vs).exactAll).toBeUndefined();
+    setActualResults({ [IDS[0]]: 70, [IDS[1]]: 50 });
+    expect(computeSeats(vs).exactAll).toBe(3);
+    // רשימה בתוצאות שאינה בניחוש נספרת 0 — ניחוש שלא נתן לה כלום צודק רק אם היא קיבלה 0
+    setActualResults({ [IDS[0]]: 70, [IDS[1]]: 46, [IDS[2]]: 4 });
+    expect(computeSeats(vs).exactAll).toBe(0);
+    // סך שאינו 120 — אין נתון
+    setActualResults({ [IDS[0]]: 70 });
+    expect(computeSeats(vs).exactAll).toBeUndefined();
+    setActualResults(null);
   });
   it("pct stats include every guess: saved percentages as is, missing ones derived from seats", () => {
     const base = [...Array(5)].map((_, i) => ver("s" + i, "seats", seats(50)));
