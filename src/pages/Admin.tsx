@@ -38,7 +38,7 @@ export type Draft = { id: number; kind: "feedback" | "support"; target: string; 
 type DraftActions = { approve: (id: number, text: string) => Promise<boolean>; remove: (id: number) => Promise<boolean>; release: (kind: Held["kind"], target: string) => Promise<boolean> };
 export type Held = { kind: "feedback" | "support"; target: string; reason?: string | null; created_at: string };
 /** videoAnon = סרטונים של גולשים לא מחוברים (שרת ההערות); support.stats.videos = מחוברים (שרת ההשתתפות) */
-type Data = { jdnHours?: { hour: string; clicks: number }[]; videoAnon?: VideoStatsT; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
+type Data = { jdnHours?: { hour: string; clicks: number }[]; videoAnon?: VideoStatsT; videoAnonRecent?: Record<"data" | "results", VideoStatsT>; agentLastRun?: string | null; held?: Held[]; drafts?: Draft[]; accountStatsAvailable?: boolean; days: Day[]; totalVisitors: number; totalVisits?: number; failures?: { since: string | null; total: number }; feedback: Thread[]; support: { stats: Record<string, number>; threads: SupportThread[] } | null };
 
 const when = (s: string) => dateTime(s);
 /** סרטון הנתונים לכל האתר: מחוברים + לא מחוברים (גולש שיצר לפני ההתחברות ואחריה עשוי להיספר פעמיים) */
@@ -281,7 +281,8 @@ export default function Admin() {
                   ["מייל לא מאומת", data.support?.stats.unverifiedEmails ?? "—"],
                   ["נשלח מייל אימות ולא נלחץ", data.support?.stats.verifyMailsPending ?? "—"],
                 ]} />
-                <VideoStats s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחוברים ולא מחוברים יחד; מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן. מאז 26/10." />
+                <VideoStats s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחוברים ולא מחוברים יחד; מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן. מאז 26/10. סרטון התוצאות אינו נכלל כאן." />
+                {(["data", "results"] as const).map(k => <VideoStats key={k} title={`${k === "data" ? "סרטון הנתונים" : "סרטון התוצאות"} — מאז 27/10 22:00`} s={sumVideos((data.support?.stats.videos as unknown as { recent?: Record<string, VideoStatsT> } | undefined)?.recent?.[k], data.videoAnonRecent?.[k])} note="מחוברים ולא מחוברים יחד. נספר מרגע עדכון השרת (28/10): סרטונים שנוצרו לפני כן אינם נכללים." />)}
                 <Tiles title="כרטיס JDN במסך תוצאות" note="לחיצות על הכרטיס (כל לחיצה נספרת). מאז 27/10 בערב." tiles={[
                   ["לחצו היום", today?.jdnClicks ?? 0],
                   ["לחצו סך הכול", data.days.reduce((t, d) => t + (d.jdnClicks ?? 0), 0)],

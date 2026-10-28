@@ -53,7 +53,8 @@ export function pingVisit(page: string) {
  * גם דפדפן הבעלים נספר (הכרעת בעלים 26/10): סימון "דפדפן הבעלים" נדלק בפתיחת מסך הניהול, ובלעדיו סרטון הבדיקה שלו לא היה נרשם.
  * ההחרגה נשארת רק במונה הכניסות; כל גולש נספר בכרטיס פעם אחת ממילא.
  */
-export function reportVideo(flags: { mine: boolean; named: boolean }, token: string | null | undefined) {
+/** kind: data = סרטון הנתונים (ברירת מחדל) · results = סרטון התוצאות (הכרעת בעלים 28.10.2026) */
+export function reportVideo(flags: { mine: boolean; named: boolean; kind?: "data" | "results" }, token: string | null | undefined) {
   if (token) { void call("/video/made", { method: "POST", body: flags, token }).catch(() => {}); return; }
   const v = visitorId();
   if (!FEEDBACK_URL || !v) return;

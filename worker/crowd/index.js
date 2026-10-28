@@ -145,7 +145,22 @@ export async function videoStats(env, members) {
   let rows = [];
   try { rows = (await env.DB.prepare("SELECT participant, videos, mine, named FROM video_makers").all()).results ?? []; } catch { /* בלי טבלה עדיין */ }
   if (members) rows = rows.filter((r) => members.has(r.participant));
-  return { makers: rows.length, withGuess: rows.filter((r) => r.mine).length, named: rows.filter((r) => r.named).length, videos: rows.reduce((a, r) => a + r.videos, 0) };
+  return { makers: rows.length, withGuess: rows.filter((r) => r.mine).length, named: rows.filter((r) => r.named).length, videos: rows.reduce((a, r) => a + r.videos, 0), recent: await recentVideos(env, members) };
+}
+/** מאז סגירת הקלפיות (27/10 22:00; הכרעת בעלים 28.10.2026): לכל סוג סרטון — יוצרים, עם ניחוש, עם שם וסרטונים */
+export const VIDEOS_SINCE = "2026-10-27T20:00:00.000Z";
+async function recentVideos(env, members) {
+  let rows = [];
+  try { rows = (await env.DB.prepare("SELECT participant, kind, mine, named FROM video_events WHERE at >= ?").bind(VIDEOS_SINCE).all()).results ?? []; } catch { /* בלי טבלה עדיין */ }
+  if (members) rows = rows.filter((r) => members.has(r.participant));
+  return Object.fromEntries(["data", "results"].map((k) => [k, summarizeVideoEvents(rows.filter((r) => r.kind === k), "participant")]));
+}
+/** אירועי סרטון ⇐ אותם ארבעה מספרים של הכרטיס: כל יוצר נספר פעם אחת, וסימון "עם ניחוש"/"עם שם" אם היה לפחות פעם */
+export function summarizeVideoEvents(rows, who) {
+  const by = new Map();
+  for (const r of rows) { const x = by.get(r[who]) ?? { mine: 0, named: 0 }; by.set(r[who], { mine: Math.max(x.mine, r.mine), named: Math.max(x.named, r.named) }); }
+  const v = [...by.values()];
+  return { makers: v.length, withGuess: v.filter((x) => x.mine).length, named: v.filter((x) => x.named).length, videos: rows.length };
 }
 
 /** מספרים מצטברים של קבוצה: נרשמו (סה"כ והיום), שמרו השערה, שמרו הצבעה, וסרטון הנתונים — רק מ-GROUP_MIN רשומים */
@@ -1117,7 +1132,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads", "video_makers"].map((t) =>
+          ["versions", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads", "video_makers", "video_events"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -1784,6 +1799,10 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     if (!(await hit(env, "vm:" + participant, 60, now))) throw new HttpError(429, "rate");
     const mine = body.mine === true ? 1 : 0, named = mine && body.named === true ? 1 : 0;
+    const kind = body.kind === "results" ? "results" : "data";
+    await env.DB.prepare("INSERT INTO video_events (participant, kind, mine, named, at) VALUES (?, ?, ?, ?, ?)").bind(participant, kind, mine, named, iso(now)).run();
+    // הכרטיס המצטבר (מאז 26/10) — סרטון הנתונים בלבד, כמו קודם
+    if (kind === "results") return { ok: true };
     await env.DB.prepare("INSERT INTO video_makers (participant, videos, mine, named, first_at, last_at) VALUES (?, 1, ?, ?, ?, ?) ON CONFLICT(participant) DO UPDATE SET videos = videos + 1, mine = MAX(mine, excluded.mine), named = MAX(named, excluded.named), last_at = excluded.last_at")
       .bind(participant, mine, named, iso(now), iso(now)).run();
     return { ok: true };

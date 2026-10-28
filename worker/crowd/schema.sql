@@ -431,3 +431,7 @@ CREATE TABLE IF NOT EXISTS video_makers (
   first_at TEXT NOT NULL,
   last_at TEXT NOT NULL
 );
+
+-- כל סרטון שנוצר, עם הסוג והשעה (הכרעת בעלים 28.10.2026): data = סרטון הנתונים · results = סרטון התוצאות. לכרטיסים "מאז 22:00"
+CREATE TABLE IF NOT EXISTS video_events (participant TEXT NOT NULL, kind TEXT NOT NULL, mine INTEGER NOT NULL, named INTEGER NOT NULL, at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS video_events_at ON video_events (at);

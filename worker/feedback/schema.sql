@@ -225,3 +225,7 @@ CREATE TABLE IF NOT EXISTS team_ai (
   message_id INTEGER NOT NULL,
   PRIMARY KEY (kind, message_id)
 );
+
+-- כל סרטון של גולש לא מחובר, עם הסוג והשעה (הכרעת בעלים 28.10.2026); vh = גיבוב מזהה הדפדפן
+CREATE TABLE IF NOT EXISTS video_anon_events (vh TEXT NOT NULL, kind TEXT NOT NULL, mine INTEGER NOT NULL, named INTEGER NOT NULL, at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS video_anon_events_at ON video_anon_events (at);

@@ -137,9 +137,19 @@ describe("group manager stats", () => {
     expect((await call("/video/made", { body: { mine: true } })).status).toBe(401);
     const s = (await call("/group/stats?group=gizra", { token: mgr })).data;
     // account() שומר השערת מנדטים לכל אחד; boss נספר גם הוא (ברשימה ומאומת)
-    expect(s).toEqual({ group: "gizra", min: GROUP_MIN, registered: GROUP_MIN + 1, today: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0, videos: { makers: 2, withGuess: 1, named: 1, videos: 3 } });
+    const none = { makers: 0, withGuess: 0, named: 0, videos: 0 };
+    expect(s).toEqual({ group: "gizra", min: GROUP_MIN, registered: GROUP_MIN + 1, today: GROUP_MIN + 1, seats: GROUP_MIN + 1, vote: 0, videos: { makers: 2, withGuess: 1, named: 1, videos: 3, recent: { data: none, results: none } } });
     // לכל האתר (מנהל האתר): גם מי שאינו בקבוצה
-    expect((await call("/admin/support", { admin: true })).data.stats.videos).toEqual({ makers: 3, withGuess: 2, named: 2, videos: 4 });
+    expect((await call("/admin/support", { admin: true })).data.stats.videos).toMatchObject({ makers: 3, withGuess: 2, named: 2, videos: 4 });
+    // מאז 27/10 22:00, לפי סוג; סרטון התוצאות אינו נכנס למונה המצטבר
+    const saved = t;
+    t = Date.parse("2026-10-28T08:00:00Z");
+    await call("/video/made", { token: m0, body: { mine: true, named: true, kind: "results" } });
+    await call("/video/made", { token: m0, body: { mine: false, kind: "results" } });
+    await call("/video/made", { token: other, body: { mine: false } });
+    const v = (await call("/admin/support", { admin: true })).data.stats.videos;
+    expect(v).toMatchObject({ makers: 3, videos: 5, recent: { results: { makers: 1, withGuess: 1, named: 1, videos: 2 }, data: { makers: 1, withGuess: 0, named: 0, videos: 1 } } });
+    t = saved;
     // מחיקת חשבון מוחקת גם את הרשומה
     await call("/delete", { token: other, body: { confirm: "מחק" } });
     expect((await call("/admin/support", { admin: true })).data.stats.videos.makers).toBe(2);
