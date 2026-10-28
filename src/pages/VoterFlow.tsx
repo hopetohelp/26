@@ -11,8 +11,8 @@ const FlowShare = lazy(() => import("../components/FlowShare"));
 
 type View = "from" | "to";
 const MODES: { id: Mode; label: string }[] = [
-  { id: "ballots", label: "לפי קלפיות" },
   { id: "localities", label: "לפי יישובים" },
+  { id: "ballots", label: "לפי קלפיות" },
 ];
 const VIEWS: { id: View; label: string; lead: string }[] = [
   { id: "from", label: "מאיפה הגיעו", lead: "מאיפה הגיעו המצביעים לכל מפלגה בבחירות הנוכחיות" },
@@ -59,7 +59,8 @@ function Flows({ rows, view }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] 
 
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
 export default function VoterFlow() {
-  const [mode, setMode] = useState<Mode>("ballots");
+  // ברירת המחדל — לפי יישובים: אותן מדרגות מהמדויק לפחות מדויק, ובנוסף שאר הקלפיות (הכרעת בעלים 28.10.2026)
+  const [mode, setMode] = useState<Mode>("localities");
   const [view, setView] = useState<View>("from");
   const cov = { ballots: coverage("ballots"), localities: coverage("localities") };
   const data = flowsFor(mode);
@@ -72,8 +73,8 @@ export default function VoterFlow() {
       <p className="text-sm text-ink-soft">{partialLine()}</p>
       <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64 mt-4" />
       <p className="text-sm text-ink-soft mt-2">
-        החלוקה לקלפיות השתנתה, ולכן קלפי מדויקת מכסה רק {pctValue(cov.ballots.ballot)}% מהקולות, ועם מיקום הקלפי {pctValue(cov.ballots.total)}%.
-        לפי יישובים — {pctValue(cov.localities.total)}%, אך פחות מדויק בערים גדולות ומעורבות. המעטפות הכפולות נמדדות כיישוב אחד.
+        השיוך לפי קלפי מדויקת ומיקום הקלפי מדויק יותר, אבל מכסה רק {pctValue(cov.ballots.total)}% מהקולות.
+        שאר הקלפיות משויכות לפי יישובים, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
       </p>
       <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64 mt-4" />
       <p className="text-sm mt-2" aria-live="polite">{lead}</p>

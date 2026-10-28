@@ -98,11 +98,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   /** כרטיס מפלגה: שם ומנדטים, מאיפה הגיעו (חלק מרכזי) ולאן הלכו מצביעי הקודמת ב-2022 (חלק משני) */
   const partyCard = (id: string, x: number, w: number, maxRows: number) => {
     const from = cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows);
-    const prev = prevOf(id), to = prev.length ? (() => {
-      // שלושת היעדים העיקריים, ובנוסף כל רשימה קטנה מ-0.1% ומעלה
-      const all = wentToGroup(national, prev), top = all.filter((p) => p.share >= 1).slice(0, 3);
-      return [...top, ...all.filter((p) => SMALL.has(p.id) && smallPct(p.share) !== null && !top.includes(p))];
-    })() : [];
+    const prev = prevOf(id), to = prev.length ? wentToGroup(national, prev).filter((p) => p.share >= 1 || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, 3) : []; // עד 3 תגיות (הכרעת בעלים 28.10.2026)
     const narrow = w < CW;
     // שורות התגיות: בכרטיס צר — תגית בשורה; ברחב — לפי הרוחב
     ctx.font = `600 26px ${body}`;
