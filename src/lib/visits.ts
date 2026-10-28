@@ -74,3 +74,16 @@ export function countImage(kind: "guess" | "results" | "changes") {
   if (!FEEDBACK_URL || isOwnerBrowser()) return;
   fetch(`${FEEDBACK_URL}/diag`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: `img-${kind}` }), keepalive: true }).catch(() => {});
 }
+
+/**
+ * הטמעות (הכרעת בעלים 28.10.2026): צפייה בחלון מוטמע (view) או העתקת קוד ההטמעה (copy).
+ * נשלחים רק המסך ושם האתר המארח (בלי כתובת העמוד ובלי מזהה גולש). דפדפן הבעלים אינו נספר.
+ */
+export function pingEmbed(screen: "results-2026" | "changes", kind: "view" | "copy") {
+  if (!FEEDBACK_URL || isOwnerBrowser()) return;
+  let host = "";
+  if (kind === "view") {
+    try { host = location.ancestorOrigins?.[0] ? new URL(location.ancestorOrigins[0]).hostname : document.referrer ? new URL(document.referrer).hostname : ""; } catch { /* לא ידוע */ }
+  }
+  fetch(`${FEEDBACK_URL}/embed-hit`, { method: "POST", body: JSON.stringify({ screen, kind, host }), keepalive: true }).catch(() => {});
+}
