@@ -1,20 +1,18 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { embedCode, embeddableFor, embedTheme, SITE_ORIGIN } from "../lib/embed";
+import { embedCode, embeddableFor, SITE_ORIGIN } from "../lib/embed";
+import { useMode } from "../lib/theme";
 import { pingEmbed } from "../lib/visits";
 import InfoTip from "./InfoTip";
+import { Segmented } from "./Choice";
 
 /** מסגרת מצומצמת להטמעה: תוכן, שורת מקור, דיווח גובה לאתר המארח, וקישורים פנימיים נפתחים באתר המלא בלשונית חדשה */
 export function EmbedFrame({ children }: { children: ReactNode }) {
+  useMode();
   const { pathname, search } = useLocation();
   useEffect(() => {
     if (window.parent !== window) pingEmbed(pathname === "/past" ? "changes" : "results-2026", "view");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    const t = embedTheme();
-    if (t === "dark") document.documentElement.dataset.dark = "";
-    else if (t === "light") delete document.documentElement.dataset.dark;
-  }, []);
   useEffect(() => {
     if (window.parent === window) return;
     let last = 0;
@@ -42,7 +40,10 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
     document.addEventListener("click", click, true);
     return () => document.removeEventListener("click", click, true);
   }, []);
-  const full = `${SITE_ORIGIN}/#${pathname}${search.replace(/[?&]embed=1|[?&]theme=(light|dark)/g, "").replace(/^&/, "?")}`;
+  const fullParams = new URLSearchParams(search);
+  fullParams.delete("embed");
+  fullParams.delete("theme");
+  const full = `${SITE_ORIGIN}/#${pathname}${fullParams.size ? `?${fullParams}` : ""}`;
   return (
     <div data-embed className="bg-paper text-ink">
       <main id="main" className="w-full px-3 md:px-4 py-4">{children}</main>
@@ -60,8 +61,9 @@ export function EmbedButton() {
   const target = embeddableFor(pathname, params.get("tab"));
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [theme, setTheme] = useState<"light" | "auto">("light");
   if (!target) return null;
-  const code = embedCode(target);
+  const code = embedCode(target, theme);
   return (
     <div className="mt-8 text-sm">
       <div className="flex items-center gap-2">
@@ -74,6 +76,11 @@ export function EmbedButton() {
         </InfoTip>
       </div>
       {open && <div id="embed-code">
+        <Segmented value={theme} onChange={(value) => { setTheme(value); setCopied(false); }} label="תצוגת ההטמעה" className="mt-2 w-fit" options={[
+          { id: "light", label: "בהיר" },
+          { id: "auto", label: "לפי העדפת המשתמש" },
+        ]} />
+        <p className="mt-2 text-ink-soft">לפי העדפת המשתמש: הבחירה השמורה באתר, ואם אין — לפי הגדרת המכשיר.</p>
         <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
         <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
           pingEmbed(target.path === "/past" ? "changes" : "results-2026", "copy");
