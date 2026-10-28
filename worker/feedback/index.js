@@ -22,6 +22,8 @@
  * - טיוטות תשובה (drafts) נכתבות בסקירה המתוזמנת ישירות במאגר, ואינן מוצגות לגולש עד אישור במסך הניהול (הכרעת בעלים 12.10.2026).
  */
 import { usageTotals } from "./lib/usage.js";
+import { feedbackStatEvents } from "./lib/stats.js";
+import { hourKey, statsBuckets, series as statSeries } from "../shared/stats.js";
 import { allowedOrigin } from "../shared/origins.js";
 import { sealChat, sealKey, sealPersonalKey, unsealChat, unsealPersonalKey } from "./lib/aiKey.js";
 import { runAutoReplies } from "./lib/autoReply.js";
@@ -36,8 +38,10 @@ const PRIVATE_PER_DAY = 100;
 /** דיווח כשל חיבור אוטומטי (POST /autoreport, בלי אישור הגולש — הכרעת בעלים 8.10.2026): נשמר כהערה עם התחילית הזו, עד 3 ליום מכל מקור, ולא נספר במכסת ההערות. */
 const AUTO = "[כשל חיבור אוטומטי]";
 const AUTO_PER_DAY = 3;
-const DIAG_KINDS = new Set(["all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved", "blind-sent", "out-jdn"]);
+const DIAG_KINDS = new Set(["img-guess", "img-results", "all-ok", "all-blocked", "feedback-only", "direct-only", "gateway-only", "post-blocked", "password-blocked", "fallback-saved", "relay-saved", "blind-sent", "out-jdn"]);
 /** בדיקת עומק אחרי חסימה: לאן כן מגיעים (probe-<יעד>-<תוצאה>) — מונה ליום בלבד */
+/** מונים שנרשמים גם לפי שעה (UTC) לדשבורד הסטטיסטיקה: "diag:<kind>@YYYY-MM-DDTHH" */
+const HOURLY_DIAG = new Set(["all-blocked", "relay-saved", "blind-sent", "img-guess", "img-results"]);
 const PROBE_KIND = /^probe-(worker|crowd|site|gapi|gsi)-(ok|fail)$/;
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
 const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/google", "/prefs", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support", "/account/name", "/account/password", "/account/verify/send", "/account/verify/check", "/auth/verify-email", "/auth/forgot", "/auth/reset"]);
@@ -422,6 +426,18 @@ export default {
       // מפתח ה-AI — רק במסך הניהול עצמו (סוד לא עובר בשיחה עם עוזר).
       if (agent && url.pathname === "/admin/ai-key" && request.method !== "GET") return reply({ ok: false, error: "assistant_not_allowed" }, 403);
       const crowd = (path, init = {}) => env.CROWD ? env.CROWD.fetch(new Request("https://crowd.internal" + path, { ...init, headers: { "x-admin-key": key, "content-type": "application/json" } })).then((r) => r.json()).catch(() => null) : Promise.resolve(null);
+      // דשבורד הסטטיסטיקה (הכרעת בעלים 28.10.2026): המונים של שרת ההערות + של שרת ההשתתפות, באותן שעות
+      if (request.method === "GET" && url.pathname === "/admin/series") {
+        const now = Date.now(), buckets = statsBuckets(now);
+        const mine = Object.entries(await feedbackStatEvents(env.DB, AUTO)).map(([k, e]) => statSeries(k, e, buckets, now));
+        const theirs = await crowd(`/admin/series?now=${now}`);
+        // סרטונים: חשבונות (שרת ההשתתפות) + דפדפנים לא מחוברים (כאן) — סדרה אחת
+        const by = new Map((theirs?.series || []).map((x) => [x.key, x]));
+        const add = (a, b) => (b ? { key: a.key, total: a.total + b.total, today: a.today + b.today, points: a.points.map((v, i) => v + (b.points[i] ?? b.points[b.points.length - 1] ?? 0)) } : a);
+        const merged = mine.map((x) => (x.key === "videoGuessAnon" ? add({ ...x, key: "videoGuess" }, by.get("videoGuess")) : x.key === "videoResultsAnon" ? add({ ...x, key: "videoResults" }, by.get("videoResults")) : x));
+        for (const [k, x] of by) if (k !== "videoGuess" && k !== "videoResults") merged.push(x);
+        return reply({ ok: true, buckets: buckets.map((t) => new Date(t).toISOString()), series: merged, crowd: !!theirs });
+      }
       if (request.method === "GET" && url.pathname === "/admin/data") {
         const since = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
         const { results: notes } = await env.DB.prepare("SELECT f.id, f.created_at, f.topic, f.text, f.page, f.status, COALESCE(ft.root_id, f.id) AS root FROM feedback f LEFT JOIN feedback_threads ft ON ft.feedback_id = f.id WHERE f.text NOT LIKE ?1 AND f.id NOT IN (SELECT feedback_id FROM feedback_adopted) ORDER BY f.created_at DESC LIMIT 300").bind(AUTO + "%").all();
@@ -571,6 +587,7 @@ export default {
       if (!DIAG_KINDS.has(kind) && !PROBE_KIND.test(kind)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
       await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:" + kind).run();
+      if (HOURLY_DIAG.has(kind)) await env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, `diag:${kind}@${hourKey(Date.now())}`).run();
       // לחיצות JDN גם לפי שעה בשעון ישראל (בקשת בעלים 27.10.2026): "diag:out-jdn@YYYY-MM-DD HH"
       if (kind === "out-jdn") {
         const hour = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Jerusalem", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).format(new Date());
@@ -600,8 +617,10 @@ export default {
     if (url.pathname === "/hit") {
       let page = "";
       let v = "";
+      let b0 = {};
       try {
         const b = await request.json();
+        b0 = b;
         page = String(b.page || "");
         v = String(b.v || "");
       } catch {
@@ -609,14 +628,20 @@ export default {
       }
       if (!HIT_PAGES.has(page)) return reply({ ok: false }, 400);
       const day = new Date().toISOString().slice(0, 10);
+      // דשבורד הסטטיסטיקה (28.10.2026): כניסות עמוד גם לפי שעה, ובנפרד — כניסות עם חשבון (u = יש בדפדפן חשבון באתר). מונה בלבד
+      const hk = hourKey(Date.now()), withAccount = b0.u === 1;
       const vid = await dayKey(env, `${request.headers.get("cf-connecting-ip") || "unknown"}|${request.headers.get("user-agent") || ""}`);
       const stmts = [
         env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, page),
         env.DB.prepare("INSERT OR IGNORE INTO visitors (day, vid, page) VALUES (?, ?, ?)").bind(day, vid, page),
+        env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:hit@" + hk),
       ];
+      if (withAccount) stmts.push(env.DB.prepare("INSERT INTO hits (day, page, count) VALUES (?, ?, 1) ON CONFLICT(day, page) DO UPDATE SET count = count + 1").bind(day, "diag:hit-u@" + hk));
       if (/^[A-Za-z0-9_-]{16,32}$/.test(v)) {
         const vh = (await sha256(`${v}|elections26-v`)).slice(0, 24);
         stmts.push(
+          // דפדפן חדש — גם בשעתו (לפני הרישום ב-visitors_all, כדי שדפדפן ותיק לא ייספר כחדש)
+          env.DB.prepare("INSERT OR IGNORE INTO browser_first (vh, at) SELECT ?1, ?2 WHERE NOT EXISTS (SELECT 1 FROM visitors_all WHERE vh = ?1)").bind(vh, new Date().toISOString()),
           env.DB.prepare("INSERT INTO visitors_all (vh, first_day, last_day) VALUES (?, ?, ?) ON CONFLICT(vh) DO UPDATE SET last_day = excluded.last_day")
             .bind(vh, day, day),
         );

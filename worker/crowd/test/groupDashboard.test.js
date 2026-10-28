@@ -377,3 +377,27 @@ describe("כניסות לאתר (הכרעת בעלים 25.10.2026)", () => {
     expect(visits()).toBe(2);
   });
 });
+
+describe("admin stats series", () => {
+  it("admin only; saves counted until 27/10 22:00 Israel time", async () => {
+    expect((await call("/admin/series")).status).toBe(401);
+    t = Date.parse("2026-10-27T10:00:00Z");
+    const tok = await account("a@x.com");
+    expect((await call("/save", { token: tok, body: { unit: "vote", op_id: "op-v-000001", registry: "r", payload: { v2026: IDS[0] } } })).status).toBe(200);
+    // יום ישראלי אחר (00:30 ב-28/10): השמירה של אותו יום נשמרת אחרונה בלבד, לכן הבדיקה ביום הבא
+    t = Date.parse("2026-10-27T22:30:00Z");
+    expect((await call("/save", { token: tok, body: { unit: "vote", op_id: "op-v-000002", registry: "r", payload: { v2026: IDS[1] } } })).status).toBe(200);
+    t = Date.parse("2026-10-28T09:00:00Z");
+    const r = await call("/admin/series", { admin: true });
+    expect(r.status).toBe(200);
+    const by = Object.fromEntries(r.data.series.map((x) => [x.key, x]));
+    expect(by.users.total).toBe(1);
+    expect(by.savers.total).toBe(1);
+    // ניחוש + הצבעה לפני 22:00; ההצבעה אחרי 22:00 אינה נספרת
+    expect(by.saveOps.total).toBe(2);
+    expect(by.saveOps.points.at(-1)).toBe(2);
+    expect(by.vote26.total).toBe(1);
+    expect(by.vote22.total).toBe(0);
+    expect(by.saveOps.today).toBe(0);
+  });
+});

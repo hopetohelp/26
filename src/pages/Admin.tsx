@@ -19,7 +19,8 @@ import AdminGuesses from "./AdminGuesses";
 import AdminGroups from "./AdminGroups";
 import AdminBlocs from "./AdminBlocs";
 import AdminMcp from "./AdminMcp";
-import { Tiles } from "../components/Tiles";
+import StatsCharts from "../components/StatsCharts";
+import { STAT_METRICS, STAT_TOPICS, type StatKey, type StatsData } from "../lib/statsMetrics";
 
 /**
  * ממשק ניהול: כל הפניות עם תשובה, וכניסות, משתמשים ונפילות לפי יום.
@@ -122,26 +123,14 @@ function Pair({ label, a, b, alert = false }: { label: string; a: [string, React
   );
 }
 
-function ByDay({ days }: { days: Day[] }) {
-  return (
-    <section className="space-y-2">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm tabular">
-          <thead><tr className="text-ink-soft text-start">{["יום", "כניסות", "משתמשים", "נכנסו לניחוש", "נכנסו לסטטיסטיקות", "לחצו על JDN", "נפילות (דיווח אוטומטי)", "חסימה מלאה", "נשמר בעקיפה", "נשמר בלי תשובה"].map((h) => <th key={h} className="text-start font-medium py-1 pe-3">{h}</th>)}</tr></thead>
-          <tbody>{days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td className="py-1 pe-3">{d.day}</td><td>{d.visits}</td><td>{d.users}</td><td>{d.guessUsers ?? "—"}</td><td>{d.communityUsers ?? "—"}</td><td>{d.jdnClicks ?? 0}</td><td>{d.autoFailures}</td><td>{d.blocked}</td><td>{d.relaySaved}</td><td>{d.blindSaved}</td></tr>)}</tbody>
-        </table>
-      </div>
-      <p className="text-xs text-ink-soft">ימים לפי שעון UTC. "נפילות" = דיווחי כשל חיבור אוטומטיים; "חסימה מלאה" = בדיקות חיבור שבהן כל המסלולים נחסמו. "שמרו" = אנשים ששמרו לפחות פעם אחת, כולם בדשבורד; "פעולות שמירה" = כל לחיצה על שמירה (מנדטים וגושים נספרים בנפרד, וכל שינוי נספר שוב). "מייל מאומת (בקישור)" = חשבונות שאימתו את המייל דרך הקישור שנשלח אליהם, בלי אלה ש-Google אימת; "חשבון Google" = חשבונות שנכנסו עם Google. "רשומות ריקות בלי משתמש" = ברובן כפילויות מהתקלה שיצרה 3 רשומות לכל ניסיון (תוקנה 8/10), ולא אנשים.</p>
-    </section>
-  );
-}
-
 export default function Admin() {
   const [params, setParams] = useSearchParams();
   const [key, setKey] = useState<string | null>(() => { try { return localStorage.getItem(KEY); } catch { return null; } });
   // העמוד עולה מיד מהנתונים האחרונים שנשמרו בדפדפן, והסנכרון עם השרת רץ ברקע (הכרעת בעלים 26.10.2026)
   const [data, setData] = useState<Data | null>(() => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) ?? "null") as Data | null; } catch { return null; } });
   const [syncing, setSyncing] = useState(false);
+  // דשבורד הסטטיסטיקה (הכרעת בעלים 28.10.2026): כל המספרים והגרפים מבקשה אחת; עולה מיד מהשמור בדפדפן
+  const [stats, setStats] = useState<StatsData | null>(() => { try { return JSON.parse(localStorage.getItem(`${CACHE_KEY}.series`) ?? "null") as StatsData | null; } catch { return null; } });
   const [error, setError] = useState<string | null>(null);
   type DrawerId = "dashboard" | "inquiries" | "guesses" | "blocs" | "groups" | "ai" | "mcp" | "screens";
   const [guessCounts, setGuessCounts] = useState<{ pending: number; rejected: number }>(() => { try { return JSON.parse(localStorage.getItem(`${CACHE_KEY}.guesses`) ?? "null") ?? { pending: 0, rejected: 0 }; } catch { return { pending: 0, rejected: 0 }; } });
@@ -192,6 +181,7 @@ export default function Admin() {
     // שתי הבקשות במקביל, כל אחת מעדכנת את המסך כשהיא חוזרת
     await Promise.all([
       api("/admin/data").then((d: Data) => { setData(d); setOwnerBrowser(true); try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch { /* בלי אחסון — בלי טעינה מיידית בפעם הבאה */ } }, (e) => setError((e as Error).message || "אין חיבור לשרת.")),
+      api("/admin/series").then((d: StatsData) => { setStats(d); try { localStorage.setItem(`${CACHE_KEY}.series`, JSON.stringify(d)); } catch { /* כנ"ל */ } }, () => { /* בלי סדרות — המסך נשאר עם השמור */ }),
       // מונה השערות ממתינות לתג על המגירה (המגירה עצמה נטענת רק כשפותחים אותה)
       api("/admin/guesses").then((r: { rows: { status: string }[] }) => { const c = { pending: r.rows.filter((x) => x.status === "pending").length, rejected: r.rows.filter((x) => x.status === "rejected").length }; setGuessCounts(c); try { localStorage.setItem(`${CACHE_KEY}.guesses`, JSON.stringify(c)); } catch { /* כנ"ל */ } }, () => { /* בלי מונה — בלי תג */ }),
     ]);
@@ -221,9 +211,8 @@ export default function Admin() {
     </Notice>
   );
   if (!credential || (claim === "signin" && !key)) return <div className="space-y-3"><PageTitle>ניהול</PageTitle>{claimNotice}{!credential && <Notice>הממשק זמין רק לחשבון מנהל (אחרי כניסה) או דרך קישור הניהול.</Notice>}</div>;
-  // "היום" לפי יום UTC, כמו בשרת: אם עוד לא נספרה כניסה היום — אפסים, ולא נתוני אתמול
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const today = data?.days.find((d) => d.day === todayKey);
+  const stat = (k: StatKey) => stats?.series.find((x) => x.key === k);
+  const num = (v: number | undefined) => (v == null ? "—" : v.toLocaleString("he-IL"));
   const next = nextRun(Date.now());
   const waiting = (data?.feedback.filter((t) => t.waiting).length ?? 0) + (data?.support?.threads.filter((t) => t.status === "new").length ?? 0);
   return (
@@ -243,63 +232,55 @@ export default function Admin() {
         <>
           {/* תיבות קטנות מאוחדות (הכרעת בעלים 12.10.2026); הדשבורד המלא — במגירה אחת */}
           <div className="flex flex-wrap gap-2" role="group" aria-label="סיכום">
-            <Pair label="משתמשים" a={["ס״ה", data.support?.stats.participants ?? "—"]} b={["היום", data.support?.stats.participantsToday ?? "—"]} />
+            <Pair label="משתמשים" a={["ס״ה", num(stat("users")?.total)]} b={["היום", num(stat("users")?.today)]} />
             <Pair label="ניחושים" a={["כולם", data.support?.stats.guesses ?? "—"]} b={["הגזרה", data.support?.stats.hagzaraGuesses ?? "—"]} />
-            <Pair label="נכנסו" a={["ס״ה", data.totalVisitors]} b={["היום", today?.users ?? 0]} />
+            <Pair label="כניסות דפדפן" a={["ס״ה", num(stat("browsers")?.total)]} b={["היום", num(stat("browsers")?.today)]} />
             <Pair label="ממתינים לתשובה וטיוטות" a={["ממתינים", waiting]} b={["טיוטות", data.drafts?.length ?? 0]} alert={waiting + (data.drafts?.length ?? 0) > 0} />
             <Pair label="ניחושים" a={["ממתינים", guessCounts.pending]} b={["נדחו", guessCounts.rejected]} alert={guessCounts.pending > 0} />
-            <Pair label="נפילות" a={["מאז האיפוס", data.failures?.total ?? "—"]} b={["היום", today?.autoFailures ?? 0]} alert={(data.failures?.total ?? 0) > 0} />
+            <Pair label="נפילות" a={["מאז האיפוס", num(stat("failures")?.total)]} b={["היום", num(stat("failures")?.today)]} alert={(stat("failures")?.today ?? 0) > 0} />
             {/* הרענון של GitHub והסשן המרוכז רצים באותה שעה (src/lib/runSchedule.ts); בשבת — מושבתים */}
             <Pair label="פרסום האתר (GitHub)" a={["אחרון", <Clock at={lastPublish} />]} b={["הבא", <Clock at={next} />]} />
             <Pair label="סוכן" a={["אחרון", <Clock at={data.agentLastRun} />]} b={["הבא", <Clock at={next} />]} />
           </div>
 
+          {/* שני חלונות גרף (הכרעת בעלים 28.10.2026): בוחרים בכל אחד כל נתון */}
+          {stats && <StatsCharts storageKey={`${CACHE_KEY}.charts`} defaults={["browsers", "users"]} buckets={stats.buckets.map((t) => ({ t, hourly: true }))}
+            options={STAT_METRICS.filter((m) => stat(m.key)).map((m) => ({ key: m.key, label: m.label, total: stat(m.key)!.total, today: stat(m.key)!.today, points: stat(m.key)!.points }))} />}
+          {stats && stats.crowd === false && <Notice tone="warn">נתוני החשבונות והשמירות אינם זמינים כרגע; מוצגים רק נתוני הכניסות והתקלות.</Notice>}
           {data.accountStatsAvailable === false && <Notice tone="warn">מספרי החשבונות והעברת שיחות ישנות אינם זמינים כרגע. השיחות שכבר נשמרו בשרת ההערות זמינות למענה.</Notice>}
 
           {/* הדשבורד המלא וכל מה שמעבר לו — במגירות (הכרעת בעלים 12.10.2026). תוכן מגירה נטען רק כשפותחים אותה. */}
           <div className="border-t border-paper-line">
-            <Drawer title="דשבורד מלא" open={open.has("dashboard")} onToggle={() => toggle("dashboard")}>
-              <div className="space-y-5">
-                <Tiles title="היום" note="לפי יום UTC" tiles={[
-                  ["כניסות היום", today?.visits ?? 0],
-                  ["משתמשים היום", today?.users ?? 0],
-                  ["נכנסו לניחוש היום", today?.guessUsers ?? 0],
-                  ["נכנסו לסטטיסטיקות היום", today?.communityUsers ?? 0],
-                  ["שמרו היום (אנשים)", data.support?.stats.saversToday ?? "—"],
-                  ["פעולות שמירה היום", data.support?.stats.savesToday ?? "—"],
-                  ["רשומות היום", data.support?.stats.participantsToday ?? "—"],
-                  ["ממתינים לתשובה", waiting],
-                  ["טיוטות לאישור", data.drafts?.length ?? 0],
-                ]} />
-                <Tiles title="סך הכול" note="מהתחלה (6/10)" tiles={[
-                  ["כניסות", data.totalVisits ?? "—"],
-                  ["משתמשים מצטבר", data.totalVisitors],
-                  ["שמרו (בדשבורד)", data.support?.stats.savers ?? "—"],
-                  ["רשומות במאגר", data.support?.stats.participants ?? "—"],
-                  ["חשבון Google", data.support?.stats.googleAccounts ?? "—"],
-                  ["מייל מאומת (בקישור)", data.support?.stats.verifiedEmails ?? "—"],
-                  ["מייל לא מאומת", data.support?.stats.unverifiedEmails ?? "—"],
-                  ["נשלח מייל אימות ולא נלחץ", data.support?.stats.verifyMailsPending ?? "—"],
-                ]} />
-                <VideoStats s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחוברים ולא מחוברים יחד; מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן. מאז 26/10. סרטון התוצאות אינו נכלל כאן." />
-                {(["data", "results"] as const).map(k => <VideoStats key={k} title={`${k === "data" ? "סרטון הנתונים" : "סרטון התוצאות"} — מאז 27/10 22:00`} s={sumVideos((data.support?.stats.videos as unknown as { recent?: Record<string, VideoStatsT> } | undefined)?.recent?.[k], data.videoAnonRecent?.[k])} note="מחוברים ולא מחוברים יחד. נספר מרגע עדכון השרת (28/10): סרטונים שנוצרו לפני כן אינם נכללים." />)}
-                <Tiles title="כרטיס JDN במסך תוצאות" note="לחיצות על הכרטיס (כל לחיצה נספרת). מאז 27/10 בערב." tiles={[
-                  ["לחצו היום", today?.jdnClicks ?? 0],
-                  ["לחצו סך הכול", data.days.reduce((t, d) => t + (d.jdnClicks ?? 0), 0)],
-                ]} />
-                <section className="space-y-1"><h3 className="font-display text-xl">לחיצות על JDN לפי שעה</h3>
-                  {data.jdnHours?.length ? <table className="text-sm tabular"><thead><tr className="text-ink-soft"><th className="text-start font-medium pe-4">שעה (שעון ישראל)</th><th className="text-start font-medium">לחיצות</th></tr></thead>
-                    <tbody>{data.jdnHours.map(h => <tr key={h.hour} className="border-t border-paper-line"><td className="pe-4">{h.hour.slice(8, 10)}/{h.hour.slice(5, 7)} {h.hour.slice(11)}:00</td><td>{h.clicks}</td></tr>)}</tbody></table>
-                    : <p className="text-sm text-ink-soft">עוד אין לחיצות.</p>}
-                </section>
-                <Tiles title="נפילות" note={data.failures?.since ? `נספרות מאז האיפוס: ${when(data.failures.since)}` : "נספרות מההתחלה"} tiles={[
-                  ["נפילות סך הכול", data.failures?.total ?? "—"],
-                  ["נפילות היום", today?.autoFailures ?? 0],
-                  ["חסימה מלאה היום", today?.blocked ?? 0],
-                  ["נשמר בעקיפה היום", today?.relaySaved ?? 0],
-                  ["נשמר בלי תשובה היום", today?.blindSaved ?? 0],
-                ]} />
-                <section className="space-y-2"><h3 className="font-display text-xl">לפי יום</h3><ByDay days={data.days} /></section>
+            <Drawer title="סטטיסטיקות מלאות" open={open.has("dashboard")} onToggle={() => toggle("dashboard")}>
+              <div className="space-y-6">
+                {!stats && <p className="text-sm text-ink-soft">טוען…</p>}
+                {stats && STAT_TOPICS.map((t) => (
+                  <section key={t.id} className="space-y-2" aria-label={t.label}>
+                    <h3 className="flex items-baseline gap-2 flex-wrap"><span className="font-display text-xl">{t.label}</span><span className="text-xs text-ink-soft">{t.id === "faults" && data.failures?.since ? `נפילות — מאז האיפוס ${when(data.failures.since)}` : t.note}</span></h3>
+                    <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {STAT_METRICS.filter((m) => m.topic === t.id && stat(m.key)).map((m) => (
+                        <li key={m.key} className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0">
+                          <p className="text-xs text-ink-soft">{m.label}</p>
+                          <p className="font-num tabular text-3xl leading-none mt-1">{num(stat(m.key)!.total)}</p>
+                          <p className="text-xs text-ink-soft font-num tabular mt-1">היום {num(stat(m.key)!.today)}</p>
+                          <p className="text-[11px] text-ink-soft mt-1">{m.help}</p>
+                        </li>
+                      ))}
+                      {t.id === "saves" && <li className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">ניחוש — הגזרה</p><p className="font-num tabular text-3xl leading-none mt-1">{num(data.support?.stats.hagzaraGuesses)}</p><p className="text-[11px] text-ink-soft mt-1">ניחושים שנספרים בממוצע של קבוצת הגזרה.</p></li>}
+                    </ul>
+                    {t.id === "saves" && (
+                      <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="פירוט החשבונות">
+                        {([["חשבון Google", "googleAccounts"], ["מייל מאומת (בקישור)", "verifiedEmails"], ["מייל לא מאומת", "unverifiedEmails"], ["נשלח מייל אימות ולא נלחץ", "verifyMailsPending"]] as const).map(([label, k]) => (
+                          <li key={k} className="bg-paper border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">{label}</p><p className="font-num tabular text-2xl leading-none mt-1">{num(data.support?.stats[k])}</p></li>
+                        ))}
+                      </ul>
+                    )}
+                    {t.id === "share" && <>
+                      <VideoStats withoutCount title="יוצרי סרטון ניחוש — מאז 26/10" s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן." />
+                      <VideoStats withoutCount title="יוצרי סרטון תוצאות" s={sumVideos((data.support?.stats.videos as unknown as { recent?: Record<string, VideoStatsT> } | undefined)?.recent?.results, data.videoAnonRecent?.results)} />
+                    </>}
+                  </section>
+                ))}
               </div>
             </Drawer>
             <Drawer title="פניות והודעות" open={open.has("inquiries")} onToggle={() => toggle("inquiries")} badge={waiting + (data.drafts?.length ?? 0) > 0 ? <span className="text-sm font-num tabular bg-warn text-paper rounded-full px-2" aria-label={`${waiting} ממתינים לתשובה, ${data.drafts?.length ?? 0} טיוטות`}>{waiting + (data.drafts?.length ?? 0)}</span> : undefined}>

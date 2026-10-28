@@ -1,5 +1,6 @@
 import { FEEDBACK_URL } from "./feedback";
 import { call } from "./crowdApi";
+import { getToken } from "./crowdSession";
 
 /**
  * מונה הכניסות: בכל מעבר עמוד נשלח לשרת ההערות שם העמוד ומזהה אקראי של הדפדפן.
@@ -43,7 +44,8 @@ export function isOwnerBrowser(search: string = typeof location === "undefined" 
 export function pingVisit(page: string) {
   if (!FEEDBACK_URL) return;
   if (isOwnerBrowser()) return;
-  fetch(`${FEEDBACK_URL}/hit`, { method: "POST", body: JSON.stringify({ page, v: visitorId() }), keepalive: true }).catch(() => {});
+  // u = יש בדפדפן חשבון באתר (דשבורד הסטטיסטיקה: "כניסות עמוד עם חשבון"); רק סימון, בלי זהות
+  fetch(`${FEEDBACK_URL}/hit`, { method: "POST", body: JSON.stringify({ page, v: visitorId(), u: getToken() ? 1 : 0 }), keepalive: true }).catch(() => {});
 }
 
 /**
@@ -65,4 +67,10 @@ export function reportVideo(flags: { mine: boolean; named: boolean; kind?: "data
 export function countJdnClick() {
   if (!FEEDBACK_URL) return;
   fetch(`${FEEDBACK_URL}/diag`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: "out-jdn" }), keepalive: true }).catch(() => {});
+}
+
+/** תמונה שנוצרה לשיתוף או להורדה (הכרעת בעלים 28.10.2026): מונה בלבד — guess = תמונת ניחוש, results = תמונת תוצאות */
+export function countImage(kind: "guess" | "results") {
+  if (!FEEDBACK_URL || isOwnerBrowser()) return;
+  fetch(`${FEEDBACK_URL}/diag`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: `img-${kind}` }), keepalive: true }).catch(() => {});
 }

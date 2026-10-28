@@ -109,3 +109,22 @@ it("סרטון הנתונים לגולש לא מחובר: גיבוב בלבד, �
   // המזהה עצמו לא נשמר
   expect(JSON.stringify(env.DB.raw.prepare("SELECT * FROM video_anon").all())).not.toContain(a);
 });
+
+it("דשבורד הסטטיסטיקה: כניסות עמוד, עם חשבון, דפדפנים חדשים ותמונות — בלי כפילות בין היומי לשעתי", async () => {
+  const post = (path, body) => feedback.fetch(new Request("https://w.example" + path, { method: "POST", headers: { origin, "content-type": "application/json" }, body: JSON.stringify(body) }), env);
+  env.DB.raw.prepare("INSERT INTO hits (day, page, count) VALUES ('2026-10-20', '/', 10)").run();
+  env.DB.raw.prepare("INSERT INTO visitors_all (vh, first_day, last_day) VALUES ('old', '2026-10-20', '2026-10-20')").run();
+  const v = "a".repeat(20);
+  await post("/hit", { page: "/", v, u: 1 });
+  await post("/hit", { page: "/", v, u: 0 });
+  await post("/diag", { kind: "img-guess" });
+  const r = await (await feedback.fetch(new Request("https://w.example/admin/series", { headers: { origin, authorization: `Bearer ${admin}` } }), env)).json();
+  const by = Object.fromEntries(r.series.map((x) => [x.key, x]));
+  expect(by.pageHits.total).toBe(12);
+  expect(by.pageHits.today).toBe(2);
+  expect(by.pageHitsUser.total).toBe(1);
+  expect(by.browsers.total).toBe(2);
+  expect(by.browsers.today).toBe(1);
+  expect(by.imgGuess.total).toBe(1);
+  expect(by.pageHits.points.at(-1)).toBe(12);
+});

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
 import VideoStats from "../components/VideoStats";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
+import StatsCharts from "../components/StatsCharts";
 import AdminGuesses from "./AdminGuesses";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
@@ -87,6 +88,9 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       <div className="space-y-3">
         {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
         <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
+          {/* שני חלונות גרף, כמו במסך הניהול (הכרעת בעלים 28.10.2026) */}
+          {series && <StatsCharts storageKey={`elections26.groupCharts.${id}`} defaults={["registered", "seats"]} buckets={series.buckets}
+            options={MEASURES.filter((m) => m.key !== "list").map((m) => { const x = series.series.find((y) => y.key === m.key); return { key: m.key, label: m.group === "outside" ? `מחוץ לרשימה: ${m.label}` : m.label, total: x?.total ?? null, points: x?.points ?? null }; })} />}
           <Measures data={series} failed={failed} flags={flags} setFlag={setFlag} />
           {series?.funnel && <Funnel f={series.funnel} />}
           {stats && !stats.belowMin && stats.videos && <div className="mt-4"><VideoStats s={stats.videos} /></div>}
