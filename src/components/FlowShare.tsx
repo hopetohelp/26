@@ -5,7 +5,7 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/sh
 import { BLOC_COLORS, THEMES } from "../lib/promoVideo";
 import { results2026 } from "../lib/guessAccuracyData";
 import { DEFAULT_LINEAGE } from "../lib/lineage";
-import { BLOC_IDS, BLOC_NAMES, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, partialLine, type FlowPart, type FlowRow, type Mode } from "../lib/voterFlow";
+import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, newName, partialLine, type FlowPart, type FlowRow, type Mode } from "../lib/voterFlow";
 
 /** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
 type Ballot = [string, string, number, number, ...number[]];
@@ -100,13 +100,13 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     y += 20;
   };
   /** כל המפלגות: רשת כרטיסים — לכל רשימה המקור העיקרי באחוז גדול, והמקור השני בקטן */
-  const grid = (rows: FlowRow[]) => {
+  const grid = (rows: FlowRow[], stripOf: (id: string) => string = bloc2026) => {
     const gap = 24, w = (CW - gap) / 2, h = 170;
     rows.forEach((r, i) => {
       const col = i % 2, x = R - (col + 1) * w - col * gap, yy = y + Math.floor(i / 2) * (h + gap);
       const [a, b] = r.parts.filter((p) => p.id !== "abstain" && p.id !== "other");
       card(x, yy, w, h);
-      pill(x + w - 30, yy + 28, 8, h - 56, blocColor(bloc2026(r.id)));
+      pill(x + w - 30, yy + 28, 8, h - 56, blocColor(stripOf(r.id)));
       ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 32px ${body}`;
       let n = r.name; while (ctx.measureText(n).width > w - 70 && n.length > 3) n = n.slice(0, -2) + "…";
       ctx.fillText(n, x + w - 52, yy + 44);
@@ -115,33 +115,14 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
         const nw = ctx.measureText(pct(a.share)).width;
         ctx.fillStyle = P.soft; ctx.font = `500 26px ${body}`; ctx.fillText(`מ${a.name}`, x + w - 52 - nw - 14, yy + 108, w - nw - 90);
       }
-      if (b) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(`${Math.round(b.share)}% מ${b.name}`, x + w - 52, yy + 146, w - 80); }
+      if (b && b.share >= 1) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(`${Math.round(b.share)}% מ${b.name}`, x + w - 52, yy + 146, w - 80); }
     });
     y += Math.ceil(rows.length / 2) * (h + gap) + 10;
   };
-  /** מעבר בין הגושים: לכל גוש של 2026 פס מוערם בצבעי הגושים של 2022 */
+  /** מעבר בין הגושים: אותם כרטיסים כמו המפלגות — 4 כרטיסים, 2 בשורה; בכל גוש המקור העיקרי והמשני (הכרעת בעלים 28.10.2026) */
   const blocs = (rows: FlowRow[]) => {
     ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 42px ${display}`; ctx.fillText("מעבר בין הגושים", R, y + 10); y += 60;
-    card(L, y, CW, 60 + rows.length * 100 + 70); y += 50;
-    for (const r of rows) {
-      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 30px ${body}`; ctx.fillText(r.name, R - 36, y);
-      let x = R - 36; const W = CW - 72;
-      for (const p of r.parts) {
-        const w = W * p.share / 100; pill(x - w + 2, y + 28, w - 4, 40, blocColor(p.id === "abstain" || p.id === "other" ? "" : p.id));
-        ctx.font = `700 24px ${num}`; const t = pct(p.share);
-        if (w > ctx.measureText(t).width + 20) { ctx.textAlign = "center"; ctx.fillStyle = "#fff"; ctx.fillText(t, x - w / 2, y + 49); }
-        x -= w;
-      }
-      y += 100;
-    }
-    // מקרא
-    ctx.font = `500 24px ${body}`; let x = R - 36;
-    for (const b of [...BLOC_IDS.slice(0, 4), "abstain"]) {
-      const label = b === "abstain" ? "לא הצביעו" : BLOC_NAMES[b], w = ctx.measureText(label).width + 56;
-      if (x - w < L + 36) { x = R - 36; y += 38; }
-      pill(x - 20, y - 10, 20, 20, blocColor(b === "abstain" ? "" : b)); ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.fillText(label, x - 30, y); x -= w;
-    }
-    y += 60;
+    grid(rows, (id) => id);
   };
 
   if (spec.where === "top" && units && spec.who === "haredi") {
