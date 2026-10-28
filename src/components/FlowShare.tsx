@@ -90,46 +90,52 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
 
   // כותרת
   ctx.textAlign = "center"; ctx.fillStyle = P.ink; ctx.font = `800 62px ${display}`;
-  const title = spec.who === "all" ? (spec.dir === "from" ? "מי הגיע מאיפה?" : "לאן הלכו המצביעים?") : `מאיפה הגיעו המצביעים של ${ids.map(newName).join(" ו")}?`;
+  const title = spec.who === "all" ? (spec.dir === "from" ? "מי הגיע מאיפה?" : "לאן הלכו המצביעים?") : spec.who === "haredi" ? "מאיפה הגיעו מצביעי המפלגות החרדיות?" : `מאיפה הגיעו המצביעים של ${newName(ids[0])}?`;
   for (const line of wrap(ctx, title, CW)) { ctx.fillText(line, IMG_W / 2, y); y += 76; }
   const where = spec.who === "all" && spec.where === "city" ? place?.[1].name ?? spec.city : "כל הארץ";
   ctx.fillStyle = P.soft; ctx.font = `500 32px ${body}`; ctx.fillText(`${where} · 2022 מול 2026`, IMG_W / 2, y); y += 56;
   ctx.font = `500 26px ${body}`; const pl = partialLine(), pw = ctx.measureText(pl).width + 48;
   pill(IMG_W / 2 - pw / 2, y - 22, pw, 44, P.faint); ctx.fillStyle = P.ink; ctx.fillText(pl, IMG_W / 2, y); y += 70;
 
-  /** כרטיס מפלגה: שם ומנדטים, מאיפה הגיעו (חלק מרכזי) ולאן הלכו מצביעי הקודמת ב-2022 (חלק משני) */
+  /** כרטיס מפלגה (שם המפלגה פעם אחת — בכותרת התמונה, או בכותרת הטור בחרדים; הכרעת בעלים 28/10): מנדטים, מאיפה הגיעו (חלק מרכזי) ולאן הלכו מצביעי הקודמת ב-2022 (חלק משני) */
+  const seatsAt = (id: string, x: number, yy: number) => {
+    ctx.textAlign = "left"; ctx.fillStyle = P.ink; ctx.font = `800 40px ${num}`; const st = ltrText(String(seats(id))); ctx.fillText(st, x, yy);
+    const sw = ctx.measureText(st).width; ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText("מנדטים", x + sw + 10, yy + 4);
+  };
   const partyRows = (id: string, maxRows: number) => cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows).length;
   /** `slots`: מספר שורות "מאיפה הגיעו" שנשמר בכרטיס — בשני כרטיסים זה לצד זה, "לאן הלכו" מתחיל באותו קו בשניהם; `minH`: גובה אחיד */
   const partyCard = (id: string, x: number, w: number, maxRows: number, slots = 0, minH = 0) => {
     const from = cameFromGroup(national, [id]).filter((p) => p.share >= (maxRows < 5 ? 1 : MIN_SHARE) || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, maxRows);
     const prev = prevOf(id), to = prev.length ? wentToGroup(national, prev).filter((p) => p.share >= 1 || (SMALL.has(p.id) && smallPct(p.share) !== null)).slice(0, 3) : []; // עד 3 תגיות (הכרעת בעלים)
     const narrow = w < CW;
+    /** אותה מפלגה בשתי הבחירות (אותו שם; לא רשימה שהחליפה שם, כמו המחנה הממלכתי ⇐ ישר!) — בלי לחזור על השם */
+    const same = (letters: string | undefined) => !!letters && prev.includes(letters) && oldName(letters) === newName(id);
     // שורות התגיות: בכרטיס צר — תגית בשורה; ברחב — לפי הרוחב
     ctx.font = `600 26px ${body}`;
     let tagRows = 0, rowW = 0;
-    for (const p of to) { const tw = ctx.measureText(`${p.name} ${minor(p.share) ?? ""}%`).width + 44; if (narrow || !tagRows || rowW + tw > w - 72) { tagRows++; rowW = tw; } else rowW += tw; }
+    for (const p of to) { const tw = ctx.measureText(`${p.id === id && same(prev[0]) ? "נשארו" : p.name} ${minor(p.share) ?? ""}%`).width + 44; if (narrow || !tagRows || rowW + tw > w - 72) { tagRows++; rowW = tw; } else rowW += tw; }
     const fromN = Math.max(from.length, slots);
-    const h = Math.max(minH, 130 + fromN * 92 + (to.length ? 70 + tagRows * 58 : 0));
+    const o = narrow ? 80 : 112; // בכרטיס הרחב יש שורת מנדטים מעל השורות
+    const h = Math.max(minH, o + 2 + fromN * 92 + (to.length ? 70 + tagRows * 58 : 0));
     card(x, y, w, h);
     const xr = x + w - 36, xl = x + 36;
-    ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 40px ${display}`; ctx.fillText(newName(id), xr, y + 56);
-    ctx.textAlign = "left"; ctx.font = `800 40px ${num}`; const st = ltrText(String(seats(id))); ctx.fillText(st, xl, y + 56);
-    const sw = ctx.measureText(st).width; ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText("מנדטים", xl + sw + 10, y + 60);
-    let yy = y + 128;
-    ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`; ctx.fillText("מאיפה הגיעו", xr, yy - 22);
+    // בכרטיס הרחב — המנדטים בשורת הכותרת; בטורים (חרדים) הם בכותרת הטור
+    if (!narrow) seatsAt(id, xl, y + 54);
+    let yy = y + o;
+    ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`; ctx.fillText("מאיפה הגיעו", xr, y + (narrow ? 50 : 86));
     for (const p of from) {
-      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 32px ${body}`; ctx.fillText(fit(p.name, w - 200), xr, yy + 20);
+      ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `600 32px ${body}`; ctx.fillText(fit(same(p.id) ? "אותה מפלגה" : p.name, w - 200), xr, yy + 20);
       ctx.textAlign = "left"; ctx.font = `800 46px ${num}`; ctx.fillText(pct(p.share), xl, yy + 22);
       const W = w - 72; pill(xl, yy + 56, W, 10, P.track); pill(xr - W * p.share / 100, yy + 56, W * p.share / 100, 10, blocColor(bloc2022(p.id)));
       yy += 92;
     }
     if (to.length) {
-      yy = y + 128 + fromN * 92 + 10; ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`;
-      ctx.fillText(fit(narrow ? "לאן הלכו מצביעי 2022" : `לאן הלכו מצביעי ${prev.map(oldName).join(" ו")} מ-2022`, w - 72), xr, yy);
+      yy = y + o + fromN * 92 + 10; ctx.textAlign = "right"; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`;
+      ctx.fillText("לאן הלכו מצביעי 2022", xr, yy);
       // תגיות קטנות: יעד ואחוז — בשורה אחת, או בעמודה בכרטיס צר
       ctx.font = `600 26px ${body}`; let xx = xr, ty = yy + 26;
       for (const p of to) {
-        const t = `${fit(p.name, w - 170)} ${minor(p.share) ?? ""}%`, tw = ctx.measureText(t).width + 32;
+        const t = `${fit(p.id === id && same(prev[0]) ? "נשארו" : p.name, w - 170)} ${minor(p.share) ?? ""}%`, tw = ctx.measureText(t).width + 32;
         if (narrow) { pill(xr - tw, ty, tw, 46, P.faint); ctx.fillStyle = P.ink; ctx.textAlign = "center"; ctx.fillText(t, xr - tw / 2, ty + 24); ty += 56; continue; }
         if (xx - tw < xl) { xx = xr; ty += 58; }
         pill(xx - tw, ty, tw, 48, P.faint); ctx.fillStyle = P.ink; ctx.textAlign = "center"; ctx.fillText(t, xx - tw / 2, ty + 25); xx -= tw + 12;
@@ -167,15 +173,14 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
   };
   const signed = (d: number, unit = "%") => `${d >= 0 ? "▲ +" : "▼ −"}${unit === "%" ? smallPct(Math.abs(d)) ?? "0" : Math.round(Math.abs(d)).toLocaleString("he-IL")}${unit}`;
   /** השינוי בכל הארץ (חלק מרכזי): באחוז ובמספר הקולות, ומתחתיו אז והיום; העיר עם השינוי הגדול ביותר — חלק משני בתחתית הכרטיס (הכרעת בעלים 28/10) */
-  const changeCard = (id: string, x: number, w: number, label?: string) => {
+  const changeCard = (id: string, x: number, w: number) => {
     const c = groupChange(national, [id], prevOf(id));
     const city = units ? biggestChange(cityShares(units, [id])) : undefined;
     // כרטיס רחב (מפלגה אחת): השינוי בגדול מימין, הקולות ואז והיום משמאל; כרטיס צר (חרדים): הכול בטור
-    const wide = !label, top = label ? 44 : 0, main = wide ? 120 : 210, h = top + main + (city?.share22 != null ? 96 : 0);
+    const wide = w >= CW, top = 0, main = wide ? 120 : 210, h = top + main + (city?.share22 != null ? 96 : 0);
     card(x, y, w, h);
     const xr = x + w - 36, xl = x + 36;
     ctx.textAlign = "right";
-    if (label) { ctx.fillStyle = P.soft; ctx.font = `600 26px ${body}`; ctx.fillText(label, xr, y + 40); }
     const y0 = y + top;
     /** טקסט משני: מספר ואחריו מילה (מימין לשמאל), מיושר לימין או לשמאל */
     const numWord = (n: string, word: string, yy: number, right: boolean) => {
@@ -209,7 +214,7 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     heading("השינוי בכל הארץ");
     if (ids.length > 1) {
       const gap = 24, w = (CW - gap) / 2, top = y;
-      const ends = ids.map((id, k) => { y = top; return changeCard(id, R - (k + 1) * w - k * gap, w, newName(id)); });
+      const ends = ids.map((id, k) => { y = top; return changeCard(id, R - (k + 1) * w - k * gap, w); });
       y = Math.max(...ends) + 30;
     } else y = changeCard(ids[0], L, CW) + 30;
   };
@@ -259,8 +264,11 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
     if (spec.blocs && matrix) { y += 20; blocs(matrix); }
   } else {
     if (ids.length > 1) {
-      // שתי מפלגות זו לצד זו
-      const gap = 24, w = (CW - gap) / 2, top = y;
+      // שתי מפלגות זו לצד זו; שם המפלגה והמנדטים פעם אחת — בכותרת הטור
+      const gap = 24, w = (CW - gap) / 2;
+      ids.forEach((id, k) => { const x = R - (k + 1) * w - k * gap; ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `800 44px ${display}`; ctx.fillText(newName(id), x + w - 12, y + 10); seatsAt(id, x + 12, y + 10); });
+      y += 66;
+      const top = y;
       // "לאן הלכו" באותו קו בשני הכרטיסים, ושני הכרטיסים באותו גובה (הכרעת בעלים)
       const slots = Math.max(...ids.map((id) => partyRows(id, 3)));
       const heights = ids.map((id, k) => { y = top; return partyCard(id, R - (k + 1) * w - k * gap, w, 3, slots) - top; });
