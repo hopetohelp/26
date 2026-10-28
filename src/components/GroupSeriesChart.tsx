@@ -4,6 +4,7 @@ import { useState } from "react";
 export type SeriesBucket = { t: string; hourly: boolean };
 
 const TZ = "Asia/Jerusalem";
+const dayFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem" });
 const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 /** תאריך כמו בכל האתר (יום/חודש), ובנקודה שעתית גם השעה בשעון ישראל */
 export const bucketLabel = (b: SeriesBucket) => {
@@ -26,6 +27,8 @@ export default function GroupSeriesChart({ buckets, points, label, height = 72 }
   // RTL: הזמן זורם מימין לשמאל, כמו הקריאה
   const x = (i: number) => (n <= 1 ? W / 2 : W - P - (i * (W - 2 * P)) / (n - 1));
   const y = (v: number) => H - P - (v / max) * (H - 2 * P);
+  // קו לגובה בסוף כל יום (הכרעת בעלים 28.10.2026): בין הנקודה האחרונה של יום (שעון ישראל) לראשונה של הבא
+  const dayEnds = buckets.slice(1, n).flatMap((b, k) => (dayFmt.format(new Date(b.t)) !== dayFmt.format(new Date(buckets[k].t)) ? [(x(k) + x(k + 1)) / 2] : []));
   let d = "";
   points.forEach((v, i) => { if (v !== null) d += `${d && points[i - 1] !== null ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; });
   const h = hover ?? n - 1;
@@ -49,6 +52,7 @@ export default function GroupSeriesChart({ buckets, points, label, height = 72 }
         {levels.map((v) => <g key={v}>
           <line x1={P} x2={W - P} y1={y(v)} y2={y(v)} className="stroke-paper-line" strokeWidth="1" opacity=".7" vectorEffect="non-scaling-stroke" />
         </g>)}
+        {dayEnds.map((dx) => <line key={dx} x1={dx} x2={dx} y1={P} y2={H - P} className="stroke-paper-line" strokeWidth="1" vectorEffect="non-scaling-stroke" />)}
         <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {/* נקודה לכל שעה או יום; הנבחרת גדולה יותר */}
         {/* הגרף נמתח לרוחב (preserveAspectRatio none) — נקודה = קו באורך 0 עם קצה עגול ועובי קבוע, כדי שתישאר עגולה */}

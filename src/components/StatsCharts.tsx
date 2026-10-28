@@ -25,6 +25,9 @@ export default function StatsCharts({ buckets, options, defaults, storageKey }: 
       {([0, 1] as const).map((i) => {
         const o = options.find((x) => x.key === picked[i]) ?? options[0];
         if (!o) return null;
+        // הגרף מתחיל מהשעה הראשונה שיש בה ערך מעל 0 (הכרעת בעלים 28.10.2026)
+        const from = Math.max(0, o.points?.findIndex((v) => (v ?? 0) > 0) ?? 0);
+        const pts = o.points && from >= 0 ? o.points.slice(from) : o.points;
         return (
           <section key={i} className="bg-paper-card border border-paper-line rounded-theme p-3 space-y-2 min-w-0" aria-label={`גרף ${i + 1}`}>
             <div className="flex items-start justify-between gap-3">
@@ -39,11 +42,11 @@ export default function StatsCharts({ buckets, options, defaults, storageKey }: 
                 {o.today != null && <span className="block text-xs text-ink-soft font-num tabular">היום {n(o.today)}</span>}
               </p>
             </div>
-            {o.points ? <GroupSeriesChart buckets={buckets} points={o.points} label={o.label} height={160} /> : <p className="text-sm text-ink-soft">אין עדיין גרף לנתון הזה.</p>}
+            {pts && pts.length ? <GroupSeriesChart buckets={buckets.slice(from)} points={pts} label={o.label} height={160} /> : <p className="text-sm text-ink-soft">אין עדיין גרף לנתון הזה.</p>}
           </section>
         );
       })}
-      {buckets[0] && <p className="md:col-span-2 text-xs text-ink-soft">נקודה לכל שעה מ-{bucketLabel(buckets[0])} (שעון ישראל). "היום" = מחצות בשעון ישראל.</p>}
+      {buckets[0] && <p className="md:col-span-2 text-xs text-ink-soft">נקודה לכל שעה (שעון ישראל), מהשעה הראשונה שיש בה נתון ולא לפני {bucketLabel(buckets[0])}; קו לגובה = סוף יום. "היום" = מחצות בשעון ישראל.</p>}
     </div>
   );
 }
