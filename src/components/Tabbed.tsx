@@ -1,4 +1,5 @@
 import { nextChoice } from "./Choice";
+import { isEmbed } from "../lib/embed";
 import { createContext, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useState, useId, useRef, type ReactNode } from "react";
 import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -81,7 +82,7 @@ export default function Tabbed({ label, tabs, aliases = {}, anchors = {} }: { la
   );
   return (
     <TabsSlot.Provider value={{ tabs: list, claim }}>
-      {!claimed && list}
+      {!claimed && !isEmbed() && list}
       <div role="tabpanel" id={`${tabId}-panel`} aria-labelledby={`${tabId}-${current.id}`}>
         <Suspense fallback={<p className="text-ink-soft">טוען…</p>}>{current.element}</Suspense>
       </div>
