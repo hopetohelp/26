@@ -171,7 +171,7 @@ export default function GuessAccuracy() {
     </div>
     <PartyChart selection={SIMPLE_ALL} lists={chartIds} separatorBefore={belowIds[0]} capValue={ready ? id => (actual[id] ?? 0) > 0 ? actual[id] : `${(votePct[id] ?? 0).toFixed(1)}%` : undefined} spreadOf={id => { if (!ready) return null; const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
       marks={id => [...(mine ? [{ value: mine[id] ?? 0, side: "up" as const }] : []), { value: crowdMean[id], kind: "dash" as const, side: "down" as const }]}
-      legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label={`${avgWord} הניחושים`} />{/* מתג חציון/ממוצע — בפינה השמאלית העליונה של טבלת המפלגות, קטן (הכרעת בעלים 28.10.2026) */}<span className="ms-auto">{statSwitch}</span></>} />
+      legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label={`${avgWord} הניחושים`} />{/* מתג חציון/ממוצע — בפינה השמאלית העליונה של טבלת המפלגות, קטן */}<span className="ms-auto">{statSwitch}</span></>} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
     <AccuracyTable view={mine ? "mine" : "all"} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={null} ready={ready} />
     <div className="f-card mt-4 grid gap-3">
