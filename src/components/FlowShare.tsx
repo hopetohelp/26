@@ -177,12 +177,15 @@ async function render(spec: Spec, units: Units | null): Promise<Blob> {
         const note = ct.biggest ? "השינוי הגדול ביותר" : ids.length > 1 && i === 0 ? `העיר הבולטת ב${newName(id)}` : "";
         ctx.textAlign = "right"; ctx.fillStyle = P.ink; ctx.font = `700 38px ${body}`; ctx.fillText(ct.name, R - 36, y + (note ? 46 : rowH / 2));
         if (note) { ctx.fillStyle = P.soft; ctx.font = `500 24px ${body}`; ctx.fillText(note, R - 36, y + 88); }
-        ctx.textAlign = "left"; ctx.fillStyle = P.ink; ctx.font = `800 50px ${num}`; ctx.fillText(pct(c.share26), L + 36, y + 50);
-        if (ids.length > 1) { const w = ctx.measureText(pct(c.share26)).width; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`; ctx.fillText(newName(id), L + 46 + w, y + 54); }
-        if (c.share22 !== null) {
-          const d = c.share26 - c.share22; ctx.font = `700 24px ${num}`; ctx.fillStyle = d >= 0 ? P.blueHi : P.redHi;
-          ctx.fillText(ltrText(`${d >= 0 ? "▲" : "▼"} ${smallPct(Math.abs(d)) ?? "0"}%  ·  2022: ${smallPct(c.share22) ?? "0"}%`), L + 36, y + 92);
-        }
+        // השינוי בגדול, ומתחתיו אז והיום (הכרעת בעלים); בלי קודמת ב-2022 — האחוז של היום בגדול
+        const now = `2026: ${smallPct(c.share26) ?? "0"}%`;
+        let big: string, color: string = P.ink;
+        if (c.share22 !== null) { const d = c.share26 - c.share22; big = `${d >= 0 ? "▲" : "▼"} ${smallPct(Math.abs(d)) ?? "0"}%`; color = d >= 0 ? P.blueHi : P.redHi; }
+        else big = pct(c.share26);
+        ctx.textAlign = "left"; ctx.fillStyle = color; ctx.font = `800 50px ${num}`; ctx.fillText(ltrText(big), L + 36, y + 50);
+        if (ids.length > 1) { const w = ctx.measureText(ltrText(big)).width; ctx.fillStyle = P.soft; ctx.font = `600 24px ${body}`; ctx.fillText(newName(id), L + 46 + w, y + 54); }
+        ctx.fillStyle = P.soft; ctx.font = `600 24px ${num}`;
+        ctx.fillText(ltrText(c.share22 !== null ? `2022: ${smallPct(c.share22) ?? "0"}%  ·  ${now}` : now), L + 36, y + 92);
         y += rowH + 16;
       });
     });
