@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { embedTheme } from "./embed";
 
 /** עיצוב אחד בלבד: מקצועי (הכרעת בעלים 9.10.2026; בורר העיצוב והעיצוב החדשותי הוסרו). נשארה רק התצורה: יום, לילה, לפי המכשיר. */
 
@@ -14,6 +15,8 @@ const MODE_KEY = "elections26.mode"; // אותו מפתח בסקריפט הקט�
 const dark = typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
 function readMode(): ModeId {
+  const embedded = embedTheme();
+  if (embedded === "light" || embedded === "dark") return embedded;
   try {
     const m = localStorage.getItem(MODE_KEY);
     if (MODES.some((x) => x.id === m)) return m as ModeId;
@@ -38,10 +41,15 @@ export function useMode(): [ModeId, (m: ModeId) => void] {
   useEffect(() => {
     modeListeners.add(setModeState);
     const onChange = () => applyMode(readMode());
+    onChange();
     dark?.addEventListener("change", onChange);
+    window.addEventListener("hashchange", onChange);
+    window.addEventListener("storage", onChange);
     return () => {
       modeListeners.delete(setModeState);
       dark?.removeEventListener("change", onChange);
+      window.removeEventListener("hashchange", onChange);
+      window.removeEventListener("storage", onChange);
     };
   }, []);
   const setMode = useCallback((m: ModeId) => {
