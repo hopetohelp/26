@@ -1,9 +1,10 @@
-import { lazy, Suspense, useCallback, useState } from "react";
+import { lazy, Suspense, useCallback, useId, useRef, useState } from "react";
 import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Segmented } from "../components/Choice";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
+import RotatingPromo from "../components/RotatingPromo";
 import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, partyNumbers, SAME, smallPct, type FlowRow, type Mode } from "../lib/voterFlow";
 import { PartyAvatar } from "../components/PartyAvatar";
 import { num, pctValue } from "../lib/format";
@@ -19,6 +20,11 @@ const MODES: { id: Mode; label: string }[] = [
 const VIEWS: { id: View; label: string; lead: string }[] = [
   { id: "from", label: "מאיפה הגיעו", lead: "מאיפה הגיעו המצביעים לכל מפלגה בבחירות הנוכחיות" },
   { id: "to", label: "לאן הלכו", lead: "לאן הלכו המצביעים לכל מפלגה בבחירות הקודמות" },
+];
+const SHARE_MESSAGES = [
+  "רוצים פוסט מעוצב על המפלגות החרדיות?",
+  "רוצים תמונה של השינוי בכל המפלגות?",
+  "או אולי תמונה על העיר שלכם?",
 ];
 /** חלק קטן מ-3% מצטרף לשורה "אחרים" — כדי שכל כרטיס יישאר קריא */
 const MIN_SHARE = 3;
@@ -88,6 +94,46 @@ function Row({ row, view, colorOf, stats }: { row: FlowRow; view: View; colorOf:
   );
 }
 
+/** כיוון אישי לכל מפלגה בטלפון: ימינה למקור המצביעים, שמאלה ליעד; גלילה אנכית נשארת טבעית. */
+function SwipePartyRow({ row, from, to, view, fromColor, toColor }: { row: FlowRow; from?: FlowRow; to?: FlowRow; view: View; fromColor: (id: string) => string; toColor: (id: string) => string }) {
+  const [selected, setSelected] = useState(view);
+  const start = useRef<{ x: number; y: number; pointer: number } | null>(null);
+  const panelId = useId();
+  return (
+    <li className="flow-swipe-card border-t border-paper-line py-3" data-party={row.id} data-direction={selected} style={{ touchAction: "pan-y pinch-zoom" }}
+      onPointerDown={(e) => {
+        if (e.pointerType !== "touch" || !e.isPrimary || (e.target as Element).closest("button,a,input")) return;
+        start.current = { x: e.clientX, y: e.clientY, pointer: e.pointerId };
+        e.currentTarget.setPointerCapture(e.pointerId);
+      }}
+      onPointerCancel={() => { start.current = null; }}
+      onPointerUp={(e) => {
+        const first = start.current; start.current = null;
+        if (!first || first.pointer !== e.pointerId) return;
+        const dx = e.clientX - first.x, dy = e.clientY - first.y;
+        if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.2) setSelected(dx > 0 ? "from" : "to");
+      }}>
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <h3 className="font-bold flex items-center gap-2"><PartyAvatar id={view === "from" ? row.id : IMG_2022[row.id] ?? ""} size={28} />{row.name}</h3>
+        <div className="flex items-center gap-1" role="group" aria-label={`כיוון ההשוואה של ${row.name}`}>
+          <button type="button" aria-label={`מאיפה הגיעו — ${row.name}`} aria-pressed={selected === "from"} aria-controls={`${panelId}-from`} onClick={() => setSelected("from")} className="min-h-[44px] min-w-[44px] rounded-theme border border-paper-line bg-paper-card text-ink">→</button>
+          <span className="text-xs text-ink-soft min-w-[4.5rem] text-center" aria-live="polite">{selected === "from" ? "מאיפה הגיעו" : "לאן הלכו"}</span>
+          <button type="button" aria-label={`לאן הלכו — ${row.name}`} aria-pressed={selected === "to"} aria-controls={`${panelId}-to`} onClick={() => setSelected("to")} className="min-h-[44px] min-w-[44px] rounded-theme border border-paper-line bg-paper-card text-ink">←</button>
+        </div>
+      </div>
+      <Stats id26={from?.id ?? null} letters22={to?.id ?? null} />
+      <div className="flow-swipe-panels">
+        {(["from", "to"] as const).map((direction) => {
+          const data = direction === "from" ? from : to;
+          return <div key={direction} id={`${panelId}-${direction}`} className="flow-swipe-panel" data-view={direction} data-active={selected === direction} aria-hidden={selected !== direction}>
+            {data ? <Body row={data} view={direction} colorOf={direction === "from" ? fromColor : toColor} total={false} /> : <p className="text-sm text-ink-soft">המפלגה לא רצה בבחירות אלו</p>}
+          </div>;
+        })}
+      </div>
+    </li>
+  );
+}
+
 /** אותה מפלגה בשתי הבחירות — לשורה משותפת במסך רחב (SAME מהספרייה, ו"אחרים"/"לא הצביעו" לעצמם) */
 const SAME_ROW: Record<string, string> = { ...SAME, other: "other", abstain: "abstain" };
 /** כחול לבן (בני גנץ) — התמודדה ב-2022 כמחנה הממלכתי ופרשה לפני ההצבעה ב-2026 */
@@ -132,9 +178,14 @@ function Paired({ rows, same, fromColor, toColor, stats = false }: { rows: { cam
   );
 }
 
-function Flows({ rows, view, fromColor, toColor, stats = false }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] }; view: View; fromColor: (id: string) => string; toColor: (id: string) => string; stats?: boolean }) {
+function Flows({ rows, view, fromColor, toColor, stats = false, resetKey = 0 }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] }; view: View; fromColor: (id: string) => string; toColor: (id: string) => string; stats?: boolean; resetKey?: number }) {
   const list = (view === "from" ? rows.cameFrom : rows.wentTo).filter((r) => r.id !== "abstain" || view === "from");
-  return <ul className="mt-2">{list.map((r) => <Row key={r.id} row={r} view={view} colorOf={view === "from" ? fromColor : toColor} stats={stats} />)}</ul>;
+  return <ul className="mt-2">{list.map((r) => {
+    if (!stats || !isParty(r.id)) return <Row key={r.id} row={r} view={view} colorOf={view === "from" ? fromColor : toColor} stats={stats} />;
+    const from = view === "from" ? r : rows.cameFrom.find((p) => SAME[p.id] === r.id);
+    const to = view === "to" ? r : rows.wentTo.find((p) => p.id === SAME[r.id]);
+    return <SwipePartyRow key={`${view}:${resetKey}:${r.id}`} row={r} from={from} to={to} view={view} fromColor={fromColor} toColor={toColor} />;
+  })}</ul>;
 }
 
 type Rows = { cameFrom: FlowRow[]; wentTo: FlowRow[] };
@@ -146,27 +197,30 @@ export default function VoterFlow() {
   // ברירת המחדל — לפי יישובים: אותן מדרגות מהמדויק לפחות מדויק, ובנוסף שאר הקלפיות (הכרעת בעלים 28.10.2026)
   const [mode, setMode] = useState<Mode>("localities");
   const [view, setView] = useState<View>("from");
+  const [viewRevision, setViewRevision] = useState(0);
   const cov = { ballots: coverage("ballots"), localities: coverage("localities") };
   const raw = flowsFor(mode);
   const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
   const lead = VIEWS.find((v) => v.id === view)!.lead;
   const [sharing, setSharing] = useState(false);
-  useRegisterNavShare(useCallback(() => setSharing(true), []), false);
+  const openSharing = useCallback(() => setSharing(true), []);
+  useRegisterNavShare(openSharing, false);
   return (
     <div>
+      <RotatingPromo messages={SHARE_MESSAGES} callToAction="לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
       <h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
       <p className="text-sm text-ink-soft">{partialLine()}</p>
-      <div className="flex items-center gap-2 mt-4">
-        <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64" />
-        <InfoTip label="מה ההבדל בין קלפיות ליישובים?">
-          השיוך לפי קלפיות זהות מדויק יותר, אבל מוצא מקבילה רק ל-{pctValue(cov.ballots.total)}% מהקולות; את השאר הוא משייך לפי השינוי באותו יישוב.
-          השיוך לפי יישובים משייך את השארית לפי ההתפלגות בכל היישוב, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
-          בשני המתגים כל קול נספר: הסכום של כל מפלגה הוא התוצאה הרשמית, וקולות ביישובים שלא היו בהם קלפיות ב-2022 מופיעים כ"יישובים חדשים".
-        </InfoTip>
-      </div>
-      <div className="md:hidden">
-        <div className="flex items-center gap-2 mt-4">
-          <Segmented label="כיוון ההשוואה" value={view} onChange={setView} options={VIEWS} className="w-64" />
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-4">
+        <div className="flex items-center gap-2">
+          <Segmented label="יחידת ההשוואה" value={mode} onChange={setMode} options={MODES} className="w-64" />
+          <InfoTip label="מה ההבדל בין קלפיות ליישובים?">
+            השיוך לפי קלפיות זהות מדויק יותר, אבל מוצא מקבילה רק ל-{pctValue(cov.ballots.total)}% מהקולות; את השאר הוא משייך לפי השינוי באותו יישוב.
+            השיוך לפי יישובים משייך את השארית לפי ההתפלגות בכל היישוב, אבל זה פחות מדויק בערים גדולות ומעורבות. (המעטפות הכפולות נמדדות כיישוב אחד)
+            בשני המתגים כל קול נספר: הסכום של כל מפלגה הוא התוצאה הרשמית, וקולות ביישובים שלא היו בהם קלפיות ב-2022 מופיעים כ"יישובים חדשים".
+          </InfoTip>
+        </div>
+        <div className="flex items-center gap-2 md:hidden">
+          <Segmented label="כיוון ההשוואה" value={view} onChange={(next) => { setView(next); setViewRevision((n) => n + 1); }} options={VIEWS} className="w-64" />
           <InfoTip label="מה מוצג בכיוון הזה?">{lead}</InfoTip>
         </div>
       </div>
@@ -177,7 +231,7 @@ export default function VoterFlow() {
         assumption="כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי הקלפי השלמה, אחר כך לפי מיקום הקלפי, ובמתג היישובים — לפי היישוב. הסכום של כל מפלגה הוא הספירה הרשמית; קלפיות שעדיין לא נספרו ב-2026 — לפי השינוי באותו יישוב; יישוב בלי קלפי ב-2022 — ״יישובים חדשים״. אין שימוש בסקרים."
         methodAnchor="voter-flow"
       >
-        <div className="md:hidden"><Flows rows={data.lists} stats view={view} fromColor={bloc2022} toColor={bloc2026} /></div>
+        <div className="md:hidden"><Flows rows={data.lists} stats view={view} resetKey={viewRevision} fromColor={bloc2022} toColor={bloc2026} /></div>
         <div className="hidden md:block"><Paired rows={data.lists} stats same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></div>
         <h2 className="text-xl font-display leading-tight mt-8">מעבר בין הגושים</h2>
         <div className="md:hidden"><Flows rows={data.blocs} view={view} fromColor={(id) => id} toColor={(id) => id} /></div>

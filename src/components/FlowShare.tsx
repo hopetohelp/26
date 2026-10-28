@@ -329,7 +329,11 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
   const logoUrl = useHagzara(useSession())?.logoUrl ?? null;
   const [logo, setLogo] = useState<ImageBitmap | null>(null);
   useEffect(() => { let live = true; void loadLogo(logoUrl).then((b) => live && setLogo(b)); return () => { live = false; }; }, [logoUrl]);
-  useEffect(() => { box.current?.focus(); }, []);
+  useEffect(() => {
+    const trigger = document.activeElement;
+    box.current?.focus();
+    return () => { if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus(); };
+  }, []);
   useEffect(() => { fetch(`${import.meta.env.BASE_URL}flow-units.json`).then((r) => (r.ok ? r.json() : Promise.reject())).then(setUnits).catch(() => setMsg("נתוני הערים לא נטענו.")); }, []);
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
   const names = useMemo(() => Object.entries(units?.places ?? {}).filter(([c]) => c !== ENVELOPES).map(([, p]) => p.name).sort(), [units]);

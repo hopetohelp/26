@@ -5,6 +5,8 @@ import { useMode } from "../lib/theme";
 import { pingEmbed } from "../lib/visits";
 import InfoTip from "./InfoTip";
 import { Segmented } from "./Choice";
+import RotatingPromo from "./RotatingPromo";
+import ScreenFooter from "./ScreenFooter";
 
 const CHANGES_MESSAGES = [
   "חושבים שאתם יודעים מה השתנה מבחירות קודמות?",
@@ -15,39 +17,6 @@ const CHANGES_MESSAGES = [
   "כמה אחוז ממצביעי עופר וינטר הגיעו מגוש הימין?",
   "האם ג׳ התחזקה רק בקולות או גם באחוזים?",
 ];
-
-/** גובה קבוע לפי המשפט הארוך ביותר; שם נגיש קבוע והחלפה שאפשר לעצור. */
-function ChangesPromo() {
-  const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let timer: ReturnType<typeof setInterval> | undefined;
-    const sync = () => {
-      clearInterval(timer);
-      if (motion.matches) setCurrent(0);
-      else if (!paused && !hovered && !focused) timer = setInterval(() => setCurrent((i) => (i + 1) % CHANGES_MESSAGES.length), 2000);
-    };
-    sync();
-    motion.addEventListener("change", sync);
-    return () => { clearInterval(timer); motion.removeEventListener("change", sync); };
-  }, [paused, hovered, focused]);
-  return (
-    <div className="embed-cta relative mb-4 w-full" data-paused={paused} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
-      <a href={`${SITE_ORIGIN}/#/past?tab=changes`} target="_blank" rel="noopener" aria-label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" className="block w-full rounded-theme border-2 border-signal bg-signal px-12 py-4 text-center text-signal-ink hover:brightness-110">
-        <span aria-hidden="true" className="embed-cta-words grid items-center text-base md:text-xl font-bold leading-snug">
-          {CHANGES_MESSAGES.map((message, i) => <span key={message} className="embed-cta-message" data-active={i === current} data-previous={i === (current + CHANGES_MESSAGES.length - 1) % CHANGES_MESSAGES.length}>{message}</span>)}
-        </span>
-        <strong className="block mt-2 text-sm font-extrabold">כנסו וגלו את הסיפור מאחורי המנדטים!</strong>
-      </a>
-      <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} title={paused ? "המשך החלפת המשפטים" : "עצירת החלפת המשפטים"} className="absolute top-1 end-1 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-theme text-signal-ink motion-reduce:hidden">
-        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">{paused ? <path d="M5 3L13 8L5 13Z" /> : <><rect x="4" y="3" width="3" height="10" rx="1" /><rect x="9" y="3" width="3" height="10" rx="1" /></>}</svg>
-      </button>
-    </div>
-  );
-}
 
 /** מסגרת מצומצמת להטמעה: תוכן, שורת מקור, דיווח גובה לאתר המארח, וקישורים פנימיים נפתחים באתר המלא בלשונית חדשה */
 export function EmbedFrame({ children }: { children: ReactNode }) {
@@ -73,7 +42,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   useEffect(() => {
     const click = (e: MouseEvent) => {
       const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
-      if (!a || a.target === "_blank") return;
+      if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
       const href = a.getAttribute("href") ?? "";
       if (href.startsWith("#") && !href.startsWith("#/")) return; // עוגן באותו מסך
       e.preventDefault();
@@ -90,12 +59,10 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   return (
     <div data-embed className="bg-paper text-ink">
       <main id="main" className="w-full px-3 md:px-4 py-4">
-        {pathname === "/results-2026" && <ChangesPromo />}
+        {pathname === "/results-2026" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/past?tab=changes`} />}
         {children}
+        <ScreenFooter sourceUrl={full}><EmbedButton /></ScreenFooter>
       </main>
-      <p className="px-3 md:px-4 pb-3 text-xs text-ink-soft">
-        מקור: <a href={full} target="_blank" rel="noopener" className="underline">בחירות 2026 — 26.hopetohelp.net</a>
-      </p>
     </div>
   );
 }
@@ -111,7 +78,7 @@ export function EmbedButton() {
   if (!target) return null;
   const code = embedCode(target, theme);
   return (
-    <div className="mt-8 text-sm">
+    <>
       <div className="flex items-center gap-2">
         <button type="button" className="text-ink-soft underline" aria-expanded={open} aria-controls="embed-code" onClick={() => setOpen(!open)}>הטמעה באתר אחר</button>
         <InfoTip label="הסבר: איך מטמיעים">
@@ -121,7 +88,7 @@ export function EmbedButton() {
           ההטמעה חינמית ומותרת לכל אתר; בתחתית המסך מופיע קישור לאתר המלא.
         </InfoTip>
       </div>
-      {open && <div id="embed-code">
+      {open && <div id="embed-code" className="order-last basis-full w-full text-ink">
         <Segmented value={theme} onChange={(value) => { setTheme(value); setCopied(false); }} label="תצוגת ההטמעה" className="mt-2 w-fit" options={[
           { id: "light", label: "בהיר" },
           { id: "auto", label: "לפי העדפת המשתמש" },
@@ -133,6 +100,6 @@ export function EmbedButton() {
           void navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => {});
         }}>{copied ? "הועתק" : "העתקת הקוד"}</button>
       </div>}
-    </div>
+    </>
   );
 }
