@@ -468,7 +468,8 @@ function sceneInvite(c: Ctx, t: number, d?: PromoData) {
     text(c, s, 540, y + size * (1 - k), size, { w: 900, color }); c.restore();
   };
   if (d?.results) {
-    const r = d.results, pct = (x: number) => `${Math.round(x)}%`;
+    // מנדטים מדויקים מתוך 120 (הכרעת בעלים 28.10.2026 — במקום אחוז דיוק)
+    const r = d.results, pct = (x: number) => `${Math.round(x * 1.2)} מנדטים`;
     line("דיוק הסקרים", 470, 72, PC.soft, 15.55);
     line(pct(r.pollAcc), 600, 150, PC.blueHi, 15.7);
     line("דיוק הניחושים", 800, 72, PC.soft, 15.95);

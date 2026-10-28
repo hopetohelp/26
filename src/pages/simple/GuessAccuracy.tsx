@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import InfoTip from "../../components/InfoTip";
 import { THRESHOLD_PCT } from "../../engine/pctForSeats";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
-import { accuracyPct, accuracyRows, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, accuracyRows, correctSeats, exactLists, pollsAccuracy, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
 import { finalPolls, hasResults, histArrays, pollMean, pollMedian, previousTurnout, results2026, turnoutPct } from "../../lib/guessAccuracyData";
@@ -16,7 +16,6 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
-import { Fold } from "../../components/ui";
 import { createPortal } from "react-dom";
 import { call } from "../../lib/crowdApi";
 import { SITE_URL } from "../../lib/shareGuess";
@@ -84,7 +83,7 @@ export default function GuessAccuracy() {
   const crowdMean: Seats = useMemo(() => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, stat === "median" ? r.median : r.mean])), [d, stat]);
   const pollAvg = stat === "median" ? pollMedian : pollMean;
   const avgWord = stat === "median" ? "חציון" : "ממוצע";
-  const statSwitch = <div className="f-seg fit" role="group" aria-label="חציון או ממוצע">
+  const statSwitch = <div className="f-seg fit sm" role="group" aria-label="חציון או ממוצע">
     {(["median", "mean"] as const).map(m => <button key={m} type="button" aria-pressed={stat === m} onClick={() => setStat(m)}>{m === "median" ? "חציון" : "ממוצע"}</button>)}
   </div>;
   const actual = results2026.seats;
@@ -118,14 +117,25 @@ export default function GuessAccuracy() {
   const exactAllShare = ready && d?.seats?.exactAll != null && d.seats.n ? d.seats.exactAll / d.seats.n : null;
   // מפלגות מדויקות (הכרעת בעלים 28.10.2026): בניחוש שלי — כמה רשימות שעברו קיבלו בדיוק את מספר המנדטים; בכל הניחושים — הממוצע, מההתפלגות
   const passed = ready ? ids.filter(id => (actual[id] ?? 0) > 0) : [];
-  const myExact = mine && ready ? passed.filter(id => (mine[id] ?? 0) === actual[id]).length : null;
+  const myExact = mine && ready ? exactLists(mine, actual) : null;
   const crowdExact = ready && hist && passed.every(id => hist[id]) ? passed.reduce((a, id) => { const h = hist[id]!; const n = h.reduce((x, y) => x + y, 0); return a + (n ? (h[actual[id]] ?? 0) / n : 0); }, 0) : null;
-  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? "בממוצע " : ""}${avg ? v.toFixed(1) : v} מפלגות מדויקות`;
-  const tiles: { label: string; v: number | null; big?: boolean; sub?: string }[] = [
+  const exactLine = (v: number | null, avg = false) => v == null ? undefined : `${avg ? v.toFixed(1) : v} מפלגות`;
+  // הסקרים: כל סקר בנפרד מול התוצאות, ואז ממוצע על הסקרים (לא דיוק של ממוצע הסקרים; הכרעת בעלים 28/10)
+  const pa = ready ? pollsAccuracy(finalPolls.map(p => p.values), actual) : null;
+  const pollAccAvg = pa?.acc ?? null, pollExact = pa?.exact ?? null;
+  // בלי ניחוש אישי — שתי התיבות בגודל זהה (הכרעת בעלים 28.10.2026)
+  const tiles: { label: string; v: number | null; big?: boolean; info?: boolean; sub?: string }[] = [
     ...(mine ? [{ label: "הניחוש שלי", v: acc(mine), sub: exactLine(myExact) }] : []),
-    { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: true, sub: exactLine(crowdExact, true) },
-    { label: `דיוק ${finalPolls.length} הסקרים`, v: acc(pollAvg) },
+    { label: nGuesses ? `דיוק ${nGuesses.toLocaleString("he-IL")} הניחושים` : "דיוק הניחושים", v: d ? acc(crowdMean) : null, big: !!mine, info: true, sub: exactLine(crowdExact, true) },
+    { label: `דיוק ${finalPolls.length} הסקרים`, v: pollAccAvg, sub: exactLine(pollExact, true) },
   ];
+
+  // כרטיס "היית מדויק" — רק בתצוגה הממוקדת, למי שיש ניחוש
+  const showMine = !advanced && !!mine && ready;
+  const mineLead = <div className="text-center">
+    <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
+    <p className="text-sm text-ink-soft mt-1"><span className="font-num">{fmt(Math.round(myMisplaced))}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
+  </div>;
 
   return <div className="max-w-6xl mx-auto">
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
@@ -133,7 +143,8 @@ export default function GuessAccuracy() {
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     <TurnoutCard />
     {/* בראש המסך (הכרעת בעלים 28.10.2026) */}
-    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} /> : null}
+    {/* כרטיס "היית מדויק" והמגירה — כרטיס אחד עם קו דק ביניהם; בלי פודיום — הכרטיס לבדו (הכרעת בעלים 28/10) */}
+    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} lead={showMine ? mineLead : undefined} /> : showMine ? <div className="f-card mb-4">{mineLead}</div> : null}
     {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
     {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
@@ -157,21 +168,16 @@ export default function GuessAccuracy() {
       <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
     </div>
     </> : <>
-    {statSwitch}
-    {mine && ready && <div className="f-card mb-4 text-center">
-      <p className="text-2xl font-bold">היית מדויק יותר מ־<span className="font-num">{pc(myBeat)}</span> מהמנחשים</p>
-      <p className="text-sm text-ink-soft mt-1"><span className="font-num">{ready ? fmt(Math.round(myMisplaced)) : "—"}</span> מנדטים בניחוש שלי הונחו ברשימה הלא נכונה</p>
-    </div>}
     <div className="grid gap-2 mb-4 items-center" style={{ gridTemplateColumns: tiles.map(t => t.big ? "minmax(0, 1.35fr)" : "minmax(0, 1fr)").join(" ") }}>
       {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
-        <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.big && <InfoTip label="מה זה אחוז הדיוק?" className="ms-1">אחוז הדיוק = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה.</InfoTip>}</p>
-        <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : `${Math.round(t.v)}%`}</p>
+        <p className={`${t.big ? "text-sm md:text-base" : "text-xs md:text-sm"} text-ink-soft`}>{t.label}{t.info && <InfoTip label="מה זה מנדטים מדויקים?" className="ms-1">מנדטים מדויקים = כמה מתוך 120 המנדטים הונחו ברשימה הנכונה; מפלגות = כמה רשימות קיבלו בדיוק את מספר המנדטים שלהן.</InfoTip>}</p>
+        <p className={`${t.big ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"} font-bold font-num`}>{t.v == null ? "—" : <span className="whitespace-nowrap">{correctSeats(t.v)} <span className="text-xs md:text-sm font-normal">מנדטים</span></span>}</p>
         {t.sub && <p className="text-xs text-ink-soft">{t.sub}</p>}
       </div>)}
     </div>
     <PartyChart selection={SIMPLE_ALL} lists={chartIds} separatorBefore={belowIds[0]} capValue={ready ? id => (actual[id] ?? 0) > 0 ? actual[id] : `${(votePct[id] ?? 0).toFixed(1)}%` : undefined} spreadOf={id => { if (!ready) return null; const v = actual[id] ?? 0; return [v, v, v, v, v, v]; }}
       marks={id => [...(mine ? [{ value: mine[id] ?? 0, side: "up" as const }] : []), { value: crowdMean[id], kind: "dash" as const, side: "down" as const }]}
-      legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label={`${avgWord} הניחושים`} /></>} />
+      legend={<><LegendCapsule label="תוצאות אמת" />{mine && <LegendBox label="הניחוש שלי" />}<LegendBox kind="dash" label={`${avgWord} הניחושים`} />{/* מתג חציון/ממוצע — בפינה השמאלית העליונה של טבלת המפלגות, קטן */}<span className="ms-auto">{statSwitch}</span></>} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
     <AccuracyTable view={mine ? "mine" : "all"} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={null} ready={ready} />
     <div className="f-card mt-4 grid gap-3">
@@ -183,7 +189,7 @@ export default function GuessAccuracy() {
     {advanced && <BelowThreshold ready={ready} />}
     {nearest && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
-      <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · אחוז דיוק <span className="font-num font-bold">{Math.round(nearest.acc)}%</span></p>
+      <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · <span className="font-num font-bold">{correctSeats(nearest.acc)}</span> מנדטים · <span className="font-num font-bold">{exactLists(finalPolls.find(p => p.label === nearest.label)?.values ?? {}, actual)}</span> מפלגות</p>
     </div>}
     {advanced && best && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">השילוב הקרוב ביותר</h2>
@@ -289,31 +295,43 @@ function TurnoutCard() {
   const countedOfVoters = counted == null ? null : Math.min(100, Math.round(counted / pct * 1000) / 10);
   return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
     בחירות קודמות: <b className="font-num">{prev}%</b> בחירות נוכחיות: <b className="font-num">{pct}%</b>{countedOfVoters != null && <> <span className="whitespace-nowrap">נספרו מתוכם: <b className="font-num">{countedOfVoters}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
+    {/* קישור לתוצאות הרשמיות של ועדת הבחירות (הכרעת בעלים 28/10) */}
+    <br /><a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="font-semibold underline">תוצאות רשמיות</a>
   </p>;
 }
 
 /** פודיום: שלושת הניחושים המדויקים (הכרעת בעלים 28/10) — אחוז דיוק, אחר כך מספר המפלגות המדויקות, ובשוויון — מי ששמר קודם.
  * מחושב בשרת הניחושים בכל טעינה, מול הספירה הנוכחית, בלי מזהים (worker/crowd/lib/results.js podium) */
-function Podium({ top, n }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number }) {
+function Podium({ top, n, lead }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number; lead?: ReactNode }) {
   // שעון ישראל, בפורמט האתר: "27/10 19:28"
   const time = (iso: string) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(iso)).map(x => [x.type, x.value])); return `${p.day}/${p.month} ${p.hour}:${p.minute}`; };
   // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)
   const order = [1, 0, 2].filter(i => top[i]);
-  const H = ["h-28", "h-20", "h-14"];
+  const H = ["h-32", "h-24", "h-20"];
   // כחול · לבן · אדום: מקום 1 כחול, 2 לבן עם מסגרת כחולה, 3 אדום
   const BLOCK = ["bg-accent text-paper-card", "bg-paper-card text-accent border-2 border-accent", "bg-[rgb(var(--podium-red))] text-paper-card"];
-  return <Fold title="שלושת הניחושים המדויקים">
+  // מגירה בעיצוב הכרטיסים (הכרעת בעלים 28.10.2026)
+  // סגור — כרטיס נמוך (הכרעת בעלים 28/10)
+  return <div className={`f-card mb-4 ${lead ? "" : "!py-2"}`}>
+    {lead && <><div className="pb-3">{lead}</div><hr className="border-t border-line m-0" /></>}
+    <details className={`group [&_summary::-webkit-details-marker]:hidden ${lead ? "pt-1" : ""}`}>
+    <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[32px]">
+      <h2 className="text-base font-bold leading-tight">שלושת הניחושים המדויקים</h2>
+      <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
+    </summary>
+    <div className="pt-3">
     <div className="grid grid-cols-3 gap-2 items-end max-w-xl mx-auto">
       {order.map(i => { const g = top[i]; return <div key={i} className="flex flex-col items-center text-center">
-        <p><span className="font-num font-bold text-2xl">{g.acc}%</span> <span className="text-xs text-ink-soft">דיוק</span></p>
-        {g.name && <p className="font-bold text-sm mt-1">{g.name}</p>}
-        <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות מדויקות</p>
+        <p><span className="font-num font-bold text-2xl">{correctSeats(g.acc)}</span> <span className="text-xs text-ink-soft">מנדטים</span></p>
+        <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות</p>
         <p className="text-xs text-ink-soft mb-2 font-num">{time(g.savedAt)}</p>
-        <div className={`${H[i]} ${BLOCK[i]} w-full rounded-t-xl flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
+        <div className={`${H[i]} ${BLOCK[i]} w-full rounded-t-xl flex flex-col items-center justify-start pt-1 px-1 overflow-hidden`}><span className="font-display font-bold text-2xl leading-tight">{i + 1}</span>{g.name && <span className="text-xs font-bold leading-tight text-center line-clamp-2">{g.name}</span>}</div>
       </div>; })}
     </div>
     <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
-  </Fold>;
+  </div>
+    </details>
+  </div>;
 }
 
 const PLACE = ["ראשון", "שני", "שלישי"];
