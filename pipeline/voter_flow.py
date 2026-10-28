@@ -17,6 +17,11 @@
 מטריצת מעבר אחת לכל הארץ: איזה חלק ממצביעי כל רשימה של 2022 (כולל "לא הצביעו") הצביע לכל רשימה של 2026,
 כך שתחזית כל היחידות תהיה הקרובה ביותר לתוצאה בכל יחידה (עדכונים כפליים של מרחק KL; כל שורה מסתכמת ב-1).
 אין שימוש בסקרים, בשיוך ידני או במודל.
+
+אף קול לא יוצא מהחשבון (הכרעת בעלים 28.10.2026): בכל יחידה הקולות האמיתיים של שתי השנים מחולקים לפי שיעורי המעבר —
+flows: כל קול של 2026 לפי מקורו (סכום עמודה = הקולות שנספרו; ביישוב בלי קלפי ב-2022 — שורת "new", "יישובים חדשים");
+flowsTo: כל קול של 2022 לפי יעדו (סכום שורה = התוצאה הרשמית). קלפי שעדיין אין לה מקבילה — לפי השינוי באותו יישוב,
+ואם אין בו עדיין קלפי שנספרה — לפי כל הארץ. העיגול בשארית הגדולה, כך שהסכומים מדויקים עד הקול.
 """
 from __future__ import annotations
 
@@ -124,20 +129,109 @@ def unit_pair(tier: str, i22: list[int], i26: list[int], r22, r26, v22, v26) -> 
     return x, y
 
 
+def apportion(values: list[float], total: int) -> list[int]:
+    """עיגול בשארית הגדולה: סכום השלמים = total בדיוק (אף קול לא נוסף ולא נגרע בעיגול)"""
+    base = [int(v) for v in values]
+    order = sorted(range(len(values)), key=lambda k: values[k] - base[k], reverse=True)
+    for k in order[: max(0, total - sum(base))]:
+        base[k] += 1
+    return base
+
+
+def exact(units, r22, r26, v22, v26, P, I: int, J: int, left: bool):
+    """הקולות האמיתיים ⇐ שני כיווני המעבר, בלי שאף קול ייצא מהחשבון (הכרעת בעלים 28.10.2026):
+    F — כל קול של 2026 משויך למקורו ב-2022 (שורה נוספת אחרונה: "יישובים חדשים", בלי קלפי ב-2022); סכום כל עמודה = הקולות שנספרו.
+    T — כל קול של 2022 משויך ליעדו ב-2026; סכום כל שורה = התוצאה הרשמית של 2022.
+    בכל יחידה מותאמת החלוקה לפי שיעורי המעבר P; קלפיות שעדיין אין להן מקבילה (left) — לפי השינוי באותו יישוב, ואם אין בו — לפי כל הארץ."""
+    F = [[0.0] * J for _ in range(I + 1)]
+    T = [[0.0] * J for _ in range(I)]
+    cF = defaultdict(lambda: [[0.0] * J for _ in range(I + 1)])
+    cT = defaultdict(lambda: [[0.0] * J for _ in range(I)])
+    used22, used26 = set(), set()
+    for tier, i22, i26 in units:
+        xs, ys = unit_pair(tier, i22, i26, r22, r26, v22, v26)
+        xs = [max(0.0, v) for v in xs]
+        xa = [sum(v22[i][k] for i in i22) for k in range(I)]
+        city = r26[i26[0]]["סמל ישוב"]
+        used22.update(i22)
+        used26.update(i26)
+        yhat = [sum(xs[i] * P[i][j] for i in range(I)) for j in range(J)]
+        for j in range(J):
+            if ys[j] <= 0:
+                continue
+            w = [xs[i] * P[i][j] for i in range(I)]
+            t = sum(w) or sum(xs)
+            w = w if sum(w) else list(xs)
+            for i in range(I):
+                F[i][j] += ys[j] * w[i] / t
+                cF[city][i][j] += ys[j] * w[i] / t
+        for i in range(I):
+            if xa[i] <= 0:
+                continue
+            w = [P[i][j] * (ys[j] / yhat[j] if yhat[j] > 0 else 0) for j in range(J)]
+            w = w if sum(w) else list(P[i])
+            t = sum(w)
+            for j in range(J):
+                T[i][j] += xa[i] * w[j] / t
+                cT[city][i][j] += xa[i] * w[j] / t
+    if left:
+        nF, nT = [row[:] for row in F], [row[:] for row in T]
+        codes22 = {r["סמל ישוב"] for r in r22}
+        g26, g22 = defaultdict(list), defaultdict(list)
+        for i in set(range(len(r26))) - used26:
+            g26[r26[i]["סמל ישוב"]].append(i)
+        for i in set(range(len(r22))) - used22:
+            g22[r22[i]["סמל ישוב"]].append(i)
+        for city, idx in g26.items():
+            y = [sum(v26[i][j] for i in idx) for j in range(J)]
+            for j in range(J):
+                if y[j] <= 0:
+                    continue
+                if city not in codes22:
+                    F[I][j] += y[j]
+                    continue
+                col = [cF[city][i][j] for i in range(I + 1)] if city in cF else []
+                if not sum(col):
+                    col = [nF[i][j] for i in range(I + 1)]
+                for i in range(I + 1):
+                    F[i][j] += y[j] * col[i] / (sum(col) or 1)
+        for city, idx in g22.items():
+            x = [sum(v22[i][k] for i in idx) for k in range(I)]
+            for i in range(I):
+                if x[i] <= 0:
+                    continue
+                row = cT[city][i] if city in cT and sum(cT[city][i]) else nT[i]
+                for j in range(J):
+                    T[i][j] += x[i] * row[j] / (sum(row) or 1)
+    # סכומי אמת: עמודות F = הקולות שנספרו ב-2026 בקלפיות האלה; שורות T = הקולות של 2022 בקלפיות האלה
+    rows26 = list(range(len(r26))) if left else sorted(used26)
+    rows22 = list(range(len(r22))) if left else sorted(used22)
+    col_tot = [max(0, sum(v26[i][j] for i in rows26)) for j in range(J)]
+    row_tot = [max(0, sum(v22[i][k] for i in rows22)) for k in range(I)]
+    Fi = [[0] * J for _ in range(I + 1)]
+    for j in range(J):
+        c = apportion([max(0.0, F[i][j]) for i in range(I + 1)], round(sum(max(0.0, F[i][j]) for i in range(I + 1))) if j == J - 1 else col_tot[j])
+        for i in range(I + 1):
+            Fi[i][j] = c[i]
+    Ti = [apportion([max(0.0, v) for v in T[i]], row_tot[i] if i < I - 1 else round(sum(max(0.0, v) for v in T[i]))) for i in range(I)]
+    Ti.append([0] * J)  # "יישובים חדשים" — אין להם 2022
+    return Fi, Ti
+
+
 def cities(r22: list[dict], r26: list[dict]) -> dict:
-    """לכל עיר עם לפחות MIN_CITY_UNITS יחידות (במתג היישובים): מטריצת מעבר משלה"""
+    """לכל עיר עם לפחות MIN_CITY_UNITS יחידות (במתג היישובים): מטריצת מעבר משלה, בסכומי אמת של העיר"""
     v22, v26 = [vector(r, OLD) for r in r22], [vector(r, list(NEW)) for r in r26]
     by = defaultdict(list)
     for u in match(r22, r26, True):
-        by[r26[u[2][0]]["סמל ישוב"]].append(unit_pair(*u, r22, r26, v22, v26))
+        by[r26[u[2][0]]["סמל ישוב"]].append(u)
     out = {}
-    for code, pairs in by.items():
-        if len(pairs) < MIN_CITY_UNITS:
+    I, J = len(OLD) + 2, len(NEW) + 2
+    for code, units in by.items():
+        if len(units) < MIN_CITY_UNITS:
             continue
-        I, J = len(OLD) + 2, len(NEW) + 2
-        P = fit(pairs, I, J)
-        base = [sum(x[i] for x, _ in pairs) for i in range(I)]
-        out[code] = {"units": len(pairs), "flows": [[round(base[i] * P[i][j]) for j in range(J)] for i in range(I)]}
+        P = fit([unit_pair(*u, r22, r26, v22, v26) for u in units], I, J)
+        Fi, Ti = exact(units, r22, r26, v22, v26, P, I, J, False)
+        out[code] = {"units": len(units), "flows": Fi, "flowsTo": Ti}
     return out
 
 
@@ -153,15 +247,15 @@ def mode(r22: list[dict], r26: list[dict], by_city: bool) -> dict:
     new = list(NEW)
     v22 = [vector(r, OLD) for r in r22]
     v26 = [vector(r, new) for r in r26]
+    units = match(r22, r26, by_city)
     pairs, tiers = [], {t: {"units": 0, "valid": 0} for t in TIERS}
-    for tier, i22, i26 in match(r22, r26, by_city):
+    for tier, i22, i26 in units:
         pairs.append(unit_pair(tier, i22, i26, r22, r26, v22, v26))
         tiers[tier]["units"] += 1
         tiers[tier]["valid"] += sum(n(r26[i], "כשרים") for i in i26)
     I, J = len(OLD) + 2, len(new) + 2
-    P = fit(pairs, I, J)
-    base = [sum(x[i] for x, _ in pairs) for i in range(I)]
-    return {"flows": [[round(base[i] * P[i][j]) for j in range(J)] for i in range(I)], "tiers": tiers}
+    Fi, Ti = exact(units, r22, r26, v22, v26, fit(pairs, I, J), I, J, True)
+    return {"flows": Fi, "flowsTo": Ti, "tiers": tiers}
 
 
 def units_file(r22: list[dict], r26: list[dict]) -> dict:
@@ -184,7 +278,7 @@ def main() -> int:
     now = datetime.now(timezone(timedelta(hours=2)))
     data = {
         "asOf": f"{now.day}/{now.month}/{now.year}",
-        "old": OLD + ["other", "abstain"],
+        "old": OLD + ["other", "abstain", "new"],
         "new": list(NEW.values()) + ["other", "abstain"],
         "letters26": NEW,
         "ballots2026": len(r26),
