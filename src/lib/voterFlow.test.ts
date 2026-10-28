@@ -23,3 +23,15 @@ describe("מעבר מצביעים לפי קלפי (src/data/flow2026.json)", () 
     expect(l.total).toBeLessThanOrEqual(100);
   });
 });
+
+describe("smallPct", () => {
+  it("מתחת ל-0.1 לא מוצג; מתחת ל-2 עשירית; בדיוק אחוז ⇐ 1; מעל — עגול", async () => {
+    const { smallPct } = await import("./voterFlow");
+    expect(smallPct(0.04)).toBeNull();
+    expect(smallPct(0.1)).toBe("0.1");
+    expect(smallPct(0.96)).toBe("1");
+    expect(smallPct(1.04)).toBe("1");
+    expect(smallPct(1.46)).toBe("1.5");
+    expect(smallPct(2.4)).toBe("2");
+  });
+});
