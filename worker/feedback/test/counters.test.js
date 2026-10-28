@@ -118,6 +118,7 @@ it("דשבורד הסטטיסטיקה: כניסות עמוד, עם חשבון, �
   await post("/hit", { page: "/", v, u: 1 });
   await post("/hit", { page: "/", v, u: 0 });
   await post("/diag", { kind: "img-guess" });
+  await post("/diag", { kind: "img-changes" });
   const r = await (await feedback.fetch(new Request("https://w.example/admin/series", { headers: { origin, authorization: `Bearer ${admin}` } }), env)).json();
   const by = Object.fromEntries(r.series.map((x) => [x.key, x]));
   expect(by.pageHits.total).toBe(12);
@@ -126,5 +127,6 @@ it("דשבורד הסטטיסטיקה: כניסות עמוד, עם חשבון, �
   expect(by.browsers.total).toBe(2);
   expect(by.browsers.today).toBe(1);
   expect(by.imgGuess.total).toBe(1);
+  expect(by.imgChanges.total).toBe(1);
   expect(by.pageHits.points.at(-1)).toBe(12);
 });

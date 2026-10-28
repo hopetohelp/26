@@ -8,6 +8,7 @@ import { DEFAULT_LINEAGE } from "../lib/lineage";
 import { loadLogo } from "../pages/guess/communityShare";
 import { useHagzara } from "../pages/simple/hagzara";
 import { useSession } from "../pages/guess/useCrowd";
+import { countImage } from "../lib/visits";
 import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, groupChange, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow, type Mode } from "../lib/voterFlow";
 
 /** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
@@ -343,14 +344,16 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
   }, [logo, who, party, where, city, dir, blocs, mode, units, ready]);
   const share = async () => {
     if (!file) return;
+    countImage("changes");
     const text = `מאיפה הגיעו המצביעים של כל מפלגה?\nהשוואה של כל הקלפיות, 2022 מול 2026\n${SITE_URL}#/changes`;
     try {
       if (navigator.canShare?.({ files: [file], text })) await navigator.share({ files: [file], text });
       else if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file] });
-      else save();
+      else save(true);
     } catch (e) { if ((e as Error)?.name !== "AbortError") setMsg("השיתוף לא הצליח. אפשר לשמור ולשתף."); }
   };
-  const save = () => { if (!url || !file) return; const a = document.createElement("a"); a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove(); };
+  // תמונה שנשמרה נספרת ("תמונת מה השתנה"); משיתוף שנפל לשמירה — כבר נספרה
+  const save = (counted = false) => { if (!url || !file) return; if (!counted) countImage("changes"); const a = document.createElement("a"); a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove(); };
   const seg = <T extends string>(label: string, value: T, set: (v: T) => void, opts: { id: T; label: string }[]) => (
     <div className="f-seg fit" role="group" aria-label={label}>
       {opts.map((o) => <button key={o.id} type="button" aria-pressed={value === o.id} onClick={() => set(o.id)}>{o.label}</button>)}
@@ -373,7 +376,7 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
       </>}
       <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={blocs} onChange={(e) => setBlocs(e.target.checked)} className="w-5 h-5" />להוסיף מעבר בין הגושים</label>
       {url && ready ? <img src={url} alt="תמונת שיתוף: מה השתנה" /> : <p className="text-sm text-ink-soft">{cityMode && units && !ready ? "בחרו עיר מהרשימה." : "מכינים את התמונה…"}</p>}
-      {file && ready && <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף</button><button type="button" className="f-btn flex-1" onClick={save}>שמירה</button></div>}
+      {file && ready && <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף</button><button type="button" className="f-btn flex-1" onClick={() => save()}>שמירה</button></div>}
       <button type="button" className="f-btn" onClick={onClose}>סגירה</button>
       {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
     </div></div>, document.body);

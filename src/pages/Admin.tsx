@@ -258,7 +258,7 @@ export default function Admin() {
                   <section key={t.id} className="space-y-2" aria-label={t.label}>
                     <h3 className="flex items-baseline gap-2 flex-wrap"><span className="font-display text-xl">{t.label}</span><span className="text-xs text-ink-soft">{t.id === "faults" && data.failures?.since ? `נפילות — מאז האיפוס ${when(data.failures.since)}` : t.note}</span></h3>
                     <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {STAT_METRICS.filter((m) => m.topic === t.id && stat(m.key)).map((m) => (
+                      {STAT_METRICS.filter((m) => m.topic === t.id && t.id !== "share" && stat(m.key)).map((m) => (
                         <li key={m.key} className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0">
                           <p className="text-xs text-ink-soft">{m.label}</p>
                           <p className="font-num tabular text-3xl leading-none mt-1">{num(stat(m.key)!.total)}</p>
@@ -270,14 +270,28 @@ export default function Admin() {
                     </ul>
                     {t.id === "saves" && (
                       <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="פירוט החשבונות">
-                        {([["חשבון Google", "googleAccounts"], ["מייל מאומת (בקישור)", "verifiedEmails"], ["מייל לא מאומת", "unverifiedEmails"], ["נשלח מייל אימות ולא נלחץ", "verifyMailsPending"]] as const).map(([label, k]) => (
-                          <li key={k} className="bg-paper border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">{label}</p><p className="font-num tabular text-2xl leading-none mt-1">{num(data.support?.stats[k])}</p></li>
+                        {([["חשבון Google", "googleAccounts", "חשבונות שנכנסו עם Google."], ["מייל מאומת (בקישור)", "verifiedEmails", "חשבונות שלחצו על קישור האימות."], ["מייל לא מאומת", "unverifiedEmails", "מצב החשבון: יש מייל, הוא לא אומת ואין Google."], ["קישור אימות פתוח", "verifyMailsPending", "קישורי אימות שנשלחו ולא נלחצו. כל חשבון נספר פעם אחת, גם אם נשלח לו שוב."]] as const).map(([label, k, help]) => (
+                          <li key={k} className="bg-paper border border-paper-line rounded-theme p-3 min-w-0"><p className="text-xs text-ink-soft">{label}</p><p className="font-num tabular text-2xl leading-none mt-1">{num(data.support?.stats[k])}</p><p className="text-[11px] text-ink-soft mt-1">{help}</p></li>
                         ))}
                       </ul>
                     )}
+                    {/* שיתוף (הכרעת בעלים 28.10.2026): שורה לכל סוג סרטון מהסרטון הראשון, ושורה אחת לתמונות השיתוף */}
                     {t.id === "share" && <>
-                      <VideoStats withoutCount title="יוצרי סרטון ניחוש — מאז 26/10" s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} note="מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן." />
-                      <VideoStats withoutCount title="יוצרי סרטון תוצאות" s={sumVideos((data.support?.stats.videos as unknown as { recent?: Record<string, VideoStatsT> } | undefined)?.recent?.results, data.videoAnonRecent?.results)} />
+                      <VideoStats title="סרטון ניחוש" s={sumVideos(data.support?.stats.videos as unknown as VideoStatsT | undefined, data.videoAnon)} />
+                      <VideoStats title="סרטון תוצאות" s={sumVideos((data.support?.stats.videos as unknown as { recent?: Record<string, VideoStatsT> } | undefined)?.recent?.results, data.videoAnonRecent?.results)} note="במסך &quot;מה השתנה&quot; אין סרטון — רק תמונה. מחובר נספר לפי חשבון, ולא מחובר לפי דפדפן." />
+                      <div>
+                        <p className="text-sm font-bold mb-2">תמונות שיתוף</p>
+                        <ul className="grid grid-cols-3 gap-3">
+                          {(["imgGuess", "imgResults", "imgChanges"] as const).map((k) => (
+                            <li key={k} className="bg-paper-card border border-paper-line rounded-theme p-3 min-w-0">
+                              <p className="text-xs text-ink-soft">{STAT_METRICS.find((m) => m.key === k)!.label.replace("תמונת ", "")}</p>
+                              <p className="font-num tabular text-3xl leading-none mt-1">{num(stat(k)?.total)}</p>
+                              <p className="text-xs text-ink-soft font-num tabular mt-1">היום {num(stat(k)?.today)}</p>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="text-xs text-ink-soft mt-2">כל תמונה שנשמרה או שותפה. נספרות מ-28/10 (מה השתנה — מהערב); תמונות מלפני כן לא נספרו.</p>
+                      </div>
                     </>}
                   </section>
                 ))}

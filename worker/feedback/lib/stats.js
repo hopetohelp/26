@@ -32,6 +32,7 @@ export async function feedbackStatEvents(db, auto) {
     blindSaved: await diag("blind-sent"),
     imgGuess: mergeDailyHourly([], await hourly("diag:img-guess@")),
     imgResults: mergeDailyHourly([], await hourly("diag:img-results@")),
+    imgChanges: mergeDailyHourly([], await hourly("diag:img-changes@")),
     videoGuessAnon: [...anon.filter((r) => r.kind !== "results").map((r) => at(r.at)), ...legacy],
     videoResultsAnon: anon.filter((r) => r.kind === "results").map((r) => at(r.at)),
   };
