@@ -16,6 +16,8 @@ import { Notice } from "../guess/ui";
 import { FocusFoot, InlineBlocBar, LegendBox, LegendCapsule, PartyChart, PartyName, fmt } from "./shared";
 import { useHagzara } from "./hagzara";
 import AccuracyShare from "./AccuracyShare";
+import podium from "../../data/guessPodium.json";
+import { Fold } from "../../components/ui";
 import { useRegisterNavShare } from "../../lib/navShare";
 
 const EMPTY = startSeats("zero");
@@ -177,6 +179,7 @@ export default function GuessAccuracy() {
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollAvg[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> ב{avgWord} כל הסקרים.</p>
     </div>}
+    {ready && <Podium />}
     {/* כפתור השיתוף — בסרגל הניווט, מימין ל-AI (הכרעת בעלים 28.10.2026; src/lib/navShare.ts) */}
     <FocusFoot />
     {sharing && <AccuracyShare onClose={() => setSharing(false)} input={{ actual, ids, crowdMean, mine, pollMean: pollAvg, avgWord, polls, pollLabels: finalPolls.map(p => p.label), hist, count: d?.seats?.n ?? 0, best: best ? best.keys.map(k => finalPolls.find(p => p.key === k)?.firm ?? k) : [], group: hagzara }} />}
@@ -276,4 +279,26 @@ function TurnoutCard() {
   return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
     בחירות קודמות: <b className="font-num">{prev}%</b> בחירות נוכחיות: <b className="font-num">{pct}%</b>{countedOfVoters != null && <> <span className="whitespace-nowrap">נספרו מתוכם: <b className="font-num">{countedOfVoters}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
   </p>;
+}
+
+/** פודיום: שלושת הניחושים המדויקים (הכרעת בעלים 28/10) — אחוז דיוק, אחר כך מספר המפלגות המדויקות, ובשוויון — מי ששמר קודם.
+ * src/data/guessPodium.json: מחושב מהניחושים בלי מזהים, מול הספירה הנוכחית */
+function Podium() {
+  const top = podium.top;
+  // שעון ישראל, בפורמט האתר: "27/10 19:28"
+  const time = (iso: string) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(iso)).map(x => [x.type, x.value])); return `${p.day}/${p.month} ${p.hour}:${p.minute}`; };
+  // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)
+  const order = [1, 0, 2].filter(i => top[i]);
+  const H = ["h-28", "h-20", "h-14"];
+  return <Fold title="שלושת הניחושים המדויקים">
+    <div className="grid grid-cols-3 gap-2 items-end max-w-xl mx-auto">
+      {order.map(i => { const g = top[i]; return <div key={i} className="flex flex-col items-center text-center">
+        <p><span className="font-num font-bold text-2xl">{g.acc}%</span> <span className="text-xs text-ink-soft">דיוק</span></p>
+        <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות מדויקות</p>
+        <p className="text-xs text-ink-soft mb-2 font-num">{time(g.savedAt)}</p>
+        <div className={`${H[i]} w-full rounded-t-xl bg-ink text-paper-card flex items-start justify-center pt-2`}><span className="font-display font-bold text-2xl">{i + 1}</span></div>
+      </div>; })}
+    </div>
+    <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{podium.n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
+  </Fold>;
 }
