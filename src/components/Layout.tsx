@@ -314,6 +314,7 @@ function LayoutBody() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
+      <p role="note" className="bg-warn-soft text-ink text-xs md:text-sm text-center px-4 py-1.5 border-b border-paper-line">האתר אינו אחראי לדיוק המידע; ייתכנו טעויות. מומלץ לאמת מול המקור.</p>
       <header className="sticky top-0 z-40"><FocusBar member={hagzara} logo={hagzaraLogo} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
       <AccessCard />
       <PrivacyCard />
