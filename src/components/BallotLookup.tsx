@@ -1,6 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { PartyAvatar } from "./PartyAvatar";
-import { PARTY_IMAGES } from "../lib/partyImages";
 import { num, pctValue } from "../lib/format";
 import { ballotOptions, ballotPartyRows, ballotShare, ballotSummary, comparisonBallots, matchingPlaces, subOptions, type BallotLocations, type BallotUnits } from "../lib/ballotLookup";
 
@@ -116,7 +115,7 @@ export default function BallotLookup() {
             const a = r.votes22 === null ? null : ballotShare(r.votes22, old.valid), b = r.votes26 === null ? null : ballotShare(r.votes26, now.valid);
             return <tr key={r.id} className="border-b border-paper-line">
               <th scope="row" className="py-3 pe-2 text-start font-normal"><span className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 break-words">
-                {PARTY_IMAGES[r.image] ? <PartyAvatar id={r.image} size={32} /> : <span aria-hidden="true" className="w-8 h-8 shrink-0 inline-flex items-center justify-center rounded-full bg-paper-line text-xs font-bold">{r.letters === "other" ? "…" : r.letters}</span>}
+                <PartyAvatar id={r.image} size={32} fallback={r.letters === "other" ? "…" : r.letters} />
                 <span>{r.name}{r.previousName && r.previousName !== r.name && <span className="block text-xs text-ink-soft">2022: {r.previousName}</span>}</span>
               </span></th>
               <td><Value votes={r.votes22} share={a} /></td><td><Value votes={r.votes26} share={b} /></td>
