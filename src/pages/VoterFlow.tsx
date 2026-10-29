@@ -200,32 +200,50 @@ function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind;
 }
 
 /**
- * הצעה (לא ממוזגת, 29.10.2026): פיצול או איחוד ודאי (raw/lineage.json) — שורה אחת לכל המשפחה.
- * כרטיס הנתונים: סכום הרשימות בכל שנה, ומתחתיו כל רשימה בנפרד. בצד עם רשימה אחת — כרטיס תנועה אחד בגובה כפול;
- * בצד עם שתי רשימות — כרטיס לכל רשימה.
+ * פיצול או איחוד ודאי (raw/lineage.json, "strict"; הכרעות בעלים 29.10.2026).
+ * איחוד: כרטיס נתונים מסוכם (סכום הרשימות בכל שנה, ומתחתיו כל רשימה של 2022); "מאיפה הגיעו" אחד בגובה כפול;
+ *   "לאן הלכו" לכל רשימה של 2022 — בטלפון זה לצד זה.
+ * פיצול: לכל רשימה של היום כרטיס נתונים משלה ו"מאיפה הגיעו" משלה, הגדולה ראשונה; "לאן הלכו" אחד לרשימה של 2022,
+ *   בגובה כפול במחשב. בטלפון: נתונים ומאיפה של הראשונה, נתונים ומאיפה של השנייה, ורק אז לאן הלכו.
  */
 function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Rows; fromColor: (id: string) => string; toColor: (id: string) => string }) {
   const from = group.ids26.map((id) => rows.cameFrom.find((r) => r.id === id)).filter((r): r is FlowRow => !!r);
   const to = group.letters22.map((l) => rows.wentTo.find((r) => r.id === l)).filter((r): r is FlowRow => !!r);
-  const names26 = from.map((r) => r.name).join(" + "), names22 = to.map((r) => r.name).join(" + ");
-  const split = from.length > 1;
+  const names22 = to.map((r) => r.name).join(" + ");
+  const titled = (r: FlowRow, view: View) => view === "from" ? `מאיפה הגיעו מצביעי ${r.name}` : `לאן הלכו מצביעי ${r.name}`;
+  if (from.length > 1) {
+    const ordered = [...from].sort((a, b) => b.total - a.total);
+    const cells = ordered.flatMap((r, i) => {
+      const line: PairedRow = { key: r.id, img: r.id, name: r.name, sub: undefined, id26: r.id, letters22: null, from: r };
+      const head = <div className="flex flex-col items-center text-center gap-0.5"><Head line={line} center /><span className="text-[10px] font-normal text-ink-soft leading-tight">פוצלה מ{names22} (2022)</span></div>;
+      const row = i === 0 ? "md:row-start-1" : "md:row-start-2";
+      return [
+        <div key={`s-${r.id}`} className={`min-w-0 md:col-start-1 ${row}`}><Stats years={{ y2022: null, y2026: partyYears(r.id, null).y2026 }} what={r.name} head={head} /></div>,
+        <FlowCard key={`f-${r.id}`} className={`md:col-start-2 ${row}`} title={titled(r, "from")} data={r} view="from" colorOf={fromColor} />,
+      ];
+    });
+    return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group="split">
+      {cells}
+      {to.map((r) => <FlowCard key={`t-${r.id}`} className="sm:col-span-2 md:col-span-1 md:col-start-3 md:row-start-1 md:row-span-2" title={TITLES.party.to} data={r} view="to" colorOf={toColor} />)}
+    </li>;
+  }
+  const r26 = from[0];
   const head = <div className="flex flex-col items-start gap-0.5">
-    <div className="flex gap-1">{group.ids26.map((id) => <PartyAvatar key={id} id={id} size={24} fallback={LETTER_2026[id] ?? "…"} />)}</div>
-    <h3 className="font-bold leading-tight text-[11px] md:text-xs">{names26}</h3>
-    <span className="text-[10px] font-normal text-ink-soft leading-tight">{split ? "פוצלה מ" : "איחוד של "}{names22} (2022)</span>
+    {r26 && <PartyAvatar id={r26.id} size={24} fallback={LETTER_2026[r26.id] ?? "…"} />}
+    <h3 className="font-bold leading-tight text-[11px] md:text-xs">{r26?.name}</h3>
+    <span className="text-[10px] font-normal text-ink-soft leading-tight">איחוד של {names22} (2022)</span>
   </div>;
-  const parts = split
-    ? from.map((r) => { const y = partyYears(r.id, null).y2026; return y ? `${r.name}: ${pctOne(y.ofValid)}, ${y.seats} מנדטים` : null; })
-    : to.map((r) => { const y = partyYears(null, r.id).y2022; return y ? `${r.name} (2022): ${pctOne(y.ofValid)}, ${y.seats} מנדטים` : null; });
-  const cards = (list: FlowRow[], view: View, color: (id: string) => string) => list.map((r) =>
-    <FlowCard key={r.id} className="sm:h-full" title={list.length > 1 ? (view === "from" ? `מאיפה הגיעו מצביעי ${r.name}` : `לאן הלכו מצביעי ${r.name}`) : TITLES.party[view]} data={r} view={view} colorOf={color} />);
-  return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group={split ? "split" : "merge"}>
+  const parts = to.map((r) => { const y = partyYears(null, r.id).y2022; return y ? `${r.name} (2022): ${pctOne(y.ofValid)}, ${y.seats} מנדטים` : null; });
+  return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group="merge">
     <div className="min-w-0 sm:col-span-2 md:col-span-1 flex flex-col gap-1">
-      <Stats years={groupYears(group.ids26, group.letters22)} what={names26} head={head} />
+      <Stats years={groupYears(group.ids26, group.letters22)} what={r26?.name ?? ""} head={head} />
       <p className="text-[11px] text-ink-soft leading-snug">{parts.filter(Boolean).join(" · ")}</p>
     </div>
-    <div className="min-w-0 grid gap-3 auto-rows-fr" data-side="from">{cards(from, "from", fromColor)}</div>
-    <div className="min-w-0 grid gap-3 auto-rows-fr" data-side="to">{cards(to, "to", toColor)}</div>
+    {r26 && <FlowCard className="sm:h-full" title={TITLES.party.from} data={r26} view="from" colorOf={fromColor} />}
+    {/* בטלפון "לאן הלכו" של שתי הרשימות זה לצד זה (הכרעת בעלים 29.10.2026) */}
+    <div className="min-w-0 grid grid-cols-2 sm:grid-cols-1 gap-3 auto-rows-fr" data-side="to">
+      {to.map((r) => <FlowCard key={r.id} narrow className="sm:h-full" title={titled(r, "to")} data={r} view="to" colorOf={toColor} />)}
+    </div>
   </li>;
 }
 
