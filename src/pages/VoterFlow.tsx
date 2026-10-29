@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useState, type ReactNode } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
 import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
@@ -93,6 +93,30 @@ function OverviewCards() {
       </dd>
     </div>)}
   </dl>;
+}
+
+/** חץ צף למעלה (הכרעת בעלים 29.10.2026): עולה לראש המגירה הפתוחה שבה הקורא נמצא; מופיע רק אחרי גלילה לתוכה */
+function DrawerTop() {
+  const [drawer, setDrawer] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const open = [...document.querySelectorAll<HTMLElement>("main details.c-fold[open]")];
+      setDrawer(open.find((d) => { const r = d.getBoundingClientRect(); return r.top < -240 && r.bottom > 160; }) ?? null);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  if (!drawer) return null;
+  const go = () => drawer.scrollIntoView({ behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  return <button type="button" onClick={go} aria-label={`חזרה לראש ״${drawer.querySelector("summary h2")?.textContent ?? ""}״`}
+    className="fixed left-3 z-30 w-11 h-11 rounded-full bg-accent text-paper-card shadow-lg grid place-items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent bottom-[calc(6rem+env(safe-area-inset-bottom))] lg:bottom-6">
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+  </button>;
 }
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
@@ -217,6 +241,7 @@ export default function VoterFlow() {
           <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
         </Fold>
       </Explained>
+      <DrawerTop />
       {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
     </div>
   );
