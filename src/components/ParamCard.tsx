@@ -24,7 +24,7 @@ export default function ParamCard({ rows, caption, compact = false, className = 
   const has22 = rows.some((r) => r.v22 !== null), has26 = rows.some((r) => r.v26 !== null), gap = has22 && has26;
   const show = (r: ParamRow, v: number | null) => v === null ? <span aria-label="אין נתון">—</span> : <bdi dir="ltr">{r.fmt(v)}</bdi>;
   return <div className={`rounded-theme border border-paper-line bg-paper-card shadow-sm overflow-hidden ${className}`}>
-    <table className={`w-full table-fixed border-collapse tabular-nums ${text}`}>
+    <table className={`w-full h-full table-fixed border-collapse tabular-nums ${text}`}>
       <caption className="sr-only">{caption}</caption>
       <colgroup><col className={compact ? "w-[27%]" : "w-[26%]"} />{has22 && <col />}{has26 && <col />}{gap && <col className="w-[26%]" />}</colgroup>
       <thead><tr className="text-accent font-bold">

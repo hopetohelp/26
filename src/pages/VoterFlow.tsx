@@ -65,7 +65,7 @@ function Stats({ years, what }: { years: { y2022: YearNumbers | null; y2026: Yea
   const row = (key: keyof typeof PARAM_NAMES, get: (y: YearNumbers) => number | null, fmt: (n: number) => string, kind: "count" | "pct"): ParamRow =>
     ({ key, label: PARAM_NAMES[key], v22: y2022 ? get(y2022) : null, v26: y2026 ? get(y2026) : null, fmt, kind });
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
-  return <ParamCard rows={rows} compact caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full" />;
+  return <ParamCard rows={rows} compact caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
 }
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
@@ -103,7 +103,7 @@ const BLOCS = new Set(["netanyahu", "haredi", "arab", "eisenkot"]);
 /** שם ותמונה מימין לטבלה; שם של כמה מילים — מילה בשורה */
 function Name({ line }: { line: PairedRow }) {
   const avatar = !!(line.id26 || line.letters22);
-  return <div className="flex flex-col items-start gap-1 shrink-0 max-w-[6.5rem]">
+  return <div className="flex flex-col items-start gap-1 shrink-0 max-w-[6.5rem] md:self-start">
     {avatar && <PartyAvatar id={line.img} size={40} fallback={line.letters22 ?? LETTER_2026[line.id26 ?? ""] ?? "…"} />}
     <h3 className="font-bold leading-tight">{line.name.split(" ").map((w, i) => <span key={i} className="block">{w}</span>)}</h3>
     {line.sub && <span className="text-xs text-ink-soft leading-tight">ב־2022: {line.sub}</span>}
@@ -112,7 +112,7 @@ function Name({ line }: { line: PairedRow }) {
 
 /** כרטיס תנועה: כותרת בשורה אחת (הגופן מתכווץ עם רוחב הכרטיס) והפסים */
 function FlowCard({ title, data, view, colorOf }: { title: string; data?: FlowRow; view: View; colorOf: (id: string) => string }) {
-  return <section className="min-w-0 rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
+  return <section className="min-w-0 md:h-full rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
     <h4 className="font-bold text-accent text-center whitespace-nowrap mb-2" style={{ fontSize: "clamp(9px, 4.6cqi, 13px)" }}>{title}</h4>
     {data ? <Body row={data} view={view} colorOf={colorOf} total={false} /> : <p className="text-sm text-ink-soft">לא רצה בבחירות אלו</p>}
   </section>;
@@ -124,10 +124,10 @@ function FlowCard({ title, data, view, colorOf }: { title: string; data?: FlowRo
  */
 function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind; fromColor: (id: string) => string; toColor: (id: string) => string }) {
   const years = kind === "party" ? (line.id26 || line.letters22 ? partyYears(line.id26, line.letters22) : null) : BLOCS.has(line.key) ? blocYears(line.key) : null;
-  return <li className="border-t border-paper-line py-4 grid gap-3 md:grid-cols-[6.5rem_minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-start" data-party={line.key}>
+  return <li className="border-t border-paper-line py-4 grid gap-3 md:grid-cols-[6.5rem_minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-stretch" data-party={line.key}>
     <div className="flex items-start gap-3 md:contents">
       <Name line={line} />
-      <div className="flex-1 min-w-0">{years && <Stats years={years} what={line.name} />}</div>
+      <div className="flex-1 min-w-0 md:h-full">{years && <Stats years={years} what={line.name} />}</div>
     </div>
     <FlowCard title={TITLES[kind].from} data={line.from} view="from" colorOf={fromColor} />
     <FlowCard title={TITLES[kind].to} data={line.to} view="to" colorOf={toColor} />
