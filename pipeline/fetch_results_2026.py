@@ -165,6 +165,7 @@ def write(votes: dict, valid: int | None, source: str, counted: float | None, st
         seats={k: int(v) for k, v in seats.items()},
         pct={k: round(v / total * 100, 2) for k, v in votes.items()},
         votes={k: int(v) for k, v in votes.items()},  # הקולות לכל רשימה — מקור אחד למסכי התוצאות ו"מה השתנה"
+        valid=int(total),  # הקולות הכשרים שעליהם חושבו האחוזים והמנדטים (לחישוב "כמה קולות לשינוי במנדטים")
         counted=counted if counted is not None else data.get("counted"),
     )
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
