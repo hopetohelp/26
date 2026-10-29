@@ -190,11 +190,12 @@ export default function VoterFlow() {
         {/* שלושה חלקים נפתחים (הכרעת בעלים 29.10.2026) */}
         <Fold title="מעבר בין מפלגות"><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></Fold>
         <Fold title="מעבר בין גושים"><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></Fold>
+        {/* ״איך זה חושב?״ בתחתית העמוד (הכרעת בעלים 29.10.2026) */}
+        <Fold title="חיפוש לפי עיר או קלפי">
+          <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
+        </Fold>
       </Explained>
       {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
-      <Fold title="חיפוש לפי עיר או קלפי">
-        <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
-      </Fold>
     </div>
   );
 }

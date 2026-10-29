@@ -23,7 +23,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   useMode();
   const { pathname, search } = useLocation();
   useEffect(() => {
-    if (window.parent !== window) pingEmbed(pathname === "/past" ? "changes" : "results-2026", "view");
+    if (window.parent !== window) pingEmbed(pathname === "/changes" ? "changes" : "results-2026", "view");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (window.parent === window) return;
@@ -59,7 +59,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   return (
     <div data-embed className="bg-paper text-ink">
       <main id="main" className="w-full px-3 md:px-4 py-4">
-        {pathname === "/results-2026" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/past?tab=changes`} />}
+        {pathname === "/results-2026" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/changes`} />}
         {children}
         <ScreenFooter sourceUrl={full}><EmbedButton /></ScreenFooter>
       </main>
@@ -96,7 +96,7 @@ export function EmbedButton() {
         <p className="mt-2 text-ink-soft">לפי העדפת המשתמש: הבחירה השמורה באתר, ואם אין — לפי הגדרת המכשיר.</p>
         <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
         <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
-          pingEmbed(target.path === "/past" ? "changes" : "results-2026", "copy");
+          pingEmbed(target.path === "/changes" ? "changes" : "results-2026", "copy");
           void navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => {});
         }}>{copied ? "הועתק" : "העתקת הקוד"}</button>
       </div>}

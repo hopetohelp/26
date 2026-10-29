@@ -1,6 +1,6 @@
 /**
  * מצב הטמעה (הכרעת בעלים 28.10.2026): "תוצאות" ו"מה השתנה" מוצגים בתוך אתרים אחרים ב-iframe.
- * הכתובת: #/results-2026?embed=1 או #/past?tab=changes&embed=1; ברירת מחדל בהירה, theme=auto לפי המשתמש; dark נשמר לתאימות.
+ * הכתובת: #/results-2026?embed=1 או #/changes?embed=1; ברירת מחדל בהירה, theme=auto לפי המשתמש; dark נשמר לתאימות.
  * במצב זה — בלי סרגל, תפריט וחשבון; שורת מקור בתחתית; הגובה נשלח לאתר המארח.
  */
 export const SITE_ORIGIN = "https://26.hopetohelp.net";
@@ -8,7 +8,7 @@ export const SITE_ORIGIN = "https://26.hopetohelp.net";
 /** המסכים שמותר להטמיע: נתיב ⇐ לשונית (אם יש) ושם */
 export const EMBEDDABLE: { path: string; tab?: string; name: string }[] = [
   { path: "/results-2026", name: "תוצאות" },
-  { path: "/past", tab: "changes", name: "מה השתנה" },
+  { path: "/changes", name: "מה השתנה" },
 ];
 
 function hashParams(hash: string): URLSearchParams {
@@ -30,7 +30,6 @@ export function embedTheme(hash = typeof location !== "undefined" ? location.has
 
 /** המסך הנוכחי ניתן להטמעה? */
 export function embeddableFor(pathname: string, tab: string | null) {
-  if (pathname === "/changes") return EMBEDDABLE.find((e) => e.path === "/past" && e.tab === "changes")!;
   return EMBEDDABLE.find((e) => e.path === pathname && (e.tab ?? null) === (e.tab ? tab : null)) ?? null;
 }
 

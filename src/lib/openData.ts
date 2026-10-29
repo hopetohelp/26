@@ -102,7 +102,7 @@ const pastResults = results as unknown as ElectionResult[];
 const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
 
 export const OPEN_FILES: OpenFile[] = [
-  { path: "ballot-locations.json", title: "מיקומי קלפיות", description: "מבנה וכתובת לכל קלפי בקובץ ועדת הבחירות ל־2026, וכתובות היסטוריות מ־2022; המפתח הוא סמל יישוב ומספר תת קלפי. קובצי המקור נשמרים בחומר הגלם.", methodAnchor: "voter-flow", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי מיקומים 2026 ו־2022, עותקים שמורים במאגרי בחירות פתוחים", screen: "/past?tab=changes", fields: "locations {סמל יישוב:קלפי: {venue, address, center, eligible}}, locations22 {סמל יישוב:קלפי: כתובת}, provenance", build: () => ({ locations: ballotLocationsFile.locations, locations22: ballotLocationsFile.locations22, provenance: ballotLocationsFile.about }) },
+  { path: "ballot-locations.json", title: "מיקומי קלפיות", description: "מבנה וכתובת לכל קלפי בקובץ ועדת הבחירות ל־2026, וכתובות היסטוריות מ־2022; המפתח הוא סמל יישוב ומספר תת קלפי. קובצי המקור נשמרים בחומר הגלם.", methodAnchor: "voter-flow", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי מיקומים 2026 ו־2022, עותקים שמורים במאגרי בחירות פתוחים", screen: "/changes", fields: "locations {סמל יישוב:קלפי: {venue, address, center, eligible}}, locations22 {סמל יישוב:קלפי: כתובת}, provenance", build: () => ({ locations: ballotLocationsFile.locations, locations22: ballotLocationsFile.locations22, provenance: ballotLocationsFile.about }) },
   { path: "data/usage.json", title: "משתמשים וכניסות לאתר", description: "עותק מוני השימוש המצטברים משרת ההערות. הבית קורא גם את /usage החי מדי דקה. משתמשים שהתחברו לפי חשבונות (כולל אורחים) וכניסות לפי דפדפנים ייחודיים, כמו בכרטיס ״נכנסו״ בניהול, ללא פרטים אישיים.", methodAnchor: "usage", kind: "נתוני שימוש באתר", source: "מוני שרתי החשבונות וההערות — אותם מקורות כמו ממשק הניהול", screen: "/", fields: "publishedAt, totalUsers (חשבונות, כולל אורחים), totalVisitors (דפדפנים ייחודיים)", build: null, optional: true },
   { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/past", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
   {
@@ -258,7 +258,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "changes",
     kind: "השוואה",
     source: `${SRC_CEC}; שיוך הרשימות: raw/lineage.json בריפו`,
-    screen: "/past?tab=changes",
+    screen: "/changes",
     fields: "lineage{rows[] (id, category, from, part, share2022, seats2022, shareNow, seatsNow), unassigned2022}, lists2022[], alternatives[]",
     build: () => ({ names: nameMap(), lineage: lineageRows(DEFAULT_LINEAGE), lists2022: K25_LISTS, alternatives: modelFile.changes.alternatives }),
   },
