@@ -4,7 +4,7 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
@@ -199,8 +199,52 @@ function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind;
   </li>;
 }
 
+/**
+ * הצעה (לא ממוזגת, 29.10.2026): פיצול או איחוד ודאי (raw/lineage.json) — שורה אחת לכל המשפחה.
+ * כרטיס הנתונים: סכום הרשימות בכל שנה, ומתחתיו כל רשימה בנפרד. בצד עם רשימה אחת — כרטיס תנועה אחד בגובה כפול;
+ * בצד עם שתי רשימות — כרטיס לכל רשימה.
+ */
+function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Rows; fromColor: (id: string) => string; toColor: (id: string) => string }) {
+  const from = group.ids26.map((id) => rows.cameFrom.find((r) => r.id === id)).filter((r): r is FlowRow => !!r);
+  const to = group.letters22.map((l) => rows.wentTo.find((r) => r.id === l)).filter((r): r is FlowRow => !!r);
+  const names26 = from.map((r) => r.name).join(" + "), names22 = to.map((r) => r.name).join(" + ");
+  const split = from.length > 1;
+  const head = <div className="flex flex-col items-start gap-0.5">
+    <div className="flex gap-1">{group.ids26.map((id) => <PartyAvatar key={id} id={id} size={24} fallback={LETTER_2026[id] ?? "…"} />)}</div>
+    <h3 className="font-bold leading-tight text-[11px] md:text-xs">{names26}</h3>
+    <span className="text-[10px] font-normal text-ink-soft leading-tight">{split ? "פוצלה מ" : "איחוד של "}{names22} (2022)</span>
+  </div>;
+  const parts = split
+    ? from.map((r) => { const y = partyYears(r.id, null).y2026; return y ? `${r.name}: ${pctOne(y.ofValid)}, ${y.seats} מנדטים` : null; })
+    : to.map((r) => { const y = partyYears(null, r.id).y2022; return y ? `${r.name} (2022): ${pctOne(y.ofValid)}, ${y.seats} מנדטים` : null; });
+  const cards = (list: FlowRow[], view: View, color: (id: string) => string) => list.map((r) =>
+    <FlowCard key={r.id} className="sm:h-full" title={list.length > 1 ? (view === "from" ? `מאיפה הגיעו מצביעי ${r.name}` : `לאן הלכו מצביעי ${r.name}`) : TITLES.party[view]} data={r} view={view} colorOf={color} />);
+  return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group={split ? "split" : "merge"}>
+    <div className="min-w-0 sm:col-span-2 md:col-span-1 flex flex-col gap-1">
+      <Stats years={groupYears(group.ids26, group.letters22)} what={names26} head={head} />
+      <p className="text-[11px] text-ink-soft leading-snug">{parts.filter(Boolean).join(" · ")}</p>
+    </div>
+    <div className="min-w-0 grid gap-3 auto-rows-fr" data-side="from">{cards(from, "from", fromColor)}</div>
+    <div className="min-w-0 grid gap-3 auto-rows-fr" data-side="to">{cards(to, "to", toColor)}</div>
+  </li>;
+}
+
 function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kind; same: (id: string) => string | undefined; fromColor: (id: string) => string; toColor: (id: string) => string }) {
-  return <ul className="mt-2">{pairedRows(rows, same, kind === "party").map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
+  if (kind !== "party") return <ul className="mt-2">{pairedRows(rows, same, false).map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
+  // משפחות של פיצול או איחוד — שורה אחת במקום הרשימה הראשונה שלהן; השאר כמו קודם
+  const group26 = new Map(GROUPS.flatMap((g) => g.ids26.map((id) => [id, g] as const)));
+  const letters = new Set(GROUPS.flatMap((g) => g.letters22));
+  const singles = new Map(pairedRows({ cameFrom: rows.cameFrom.filter((r) => !group26.has(r.id)), wentTo: rows.wentTo.filter((w) => !letters.has(w.id)) }, same, true).map((l) => [l.key, l]));
+  const out: ReactNode[] = [];
+  const seen = new Set<string>();
+  for (const r of rows.cameFrom) {
+    const g = group26.get(r.id);
+    if (g) { if (!seen.has(g.id)) { seen.add(g.id); out.push(<GroupLine key={g.id} group={g} rows={rows} fromColor={fromColor} toColor={toColor} />); } continue; }
+    const line = singles.get(r.id);
+    if (line) { out.push(<Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />); singles.delete(r.id); }
+  }
+  for (const line of singles.values()) out.push(<Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />);
+  return <ul className="mt-2">{out}</ul>;
 }
 
 /** בלי השורות שאינן אמינות (הכרעת בעלים 28.10.2026): "רשימות אחרות" — בהשוואה לקלפיות המצביעים של 2026 בהן יוצאים 100% "לא הצביעו" (חוסר יציבות בקבוצה זעירה); "לא הצביעו" בחלק המפלגות */
