@@ -9,6 +9,7 @@ import { flow, newName, type Mode } from "../lib/voterFlow";
 import type { BallotUnits as Units } from "../lib/ballotLookup";
 import { buildScene, type Who, type Where } from "../lib/flowShareData";
 import { drawScene, type ShareTheme } from "../lib/flowShareDraw";
+import { renderLegacy, type Dir } from "../lib/flowShareLegacy";
 import SearchField from "./SearchField";
 
 const ENVELOPES = "9999";
@@ -32,6 +33,8 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
   const [party, setParty] = useState(PARTIES[0]);
   const [where, setWhere] = useState<Where>("country");
   const [city, setCity] = useState("");
+  const [dir, setDir] = useState<Dir>("from");
+  const [blocs, setBlocs] = useState(false);
   const [theme, setTheme] = useState<ShareTheme>(readTheme);
   const [units, setUnits] = useState<Units | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -55,15 +58,18 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
     return [...hit.filter((n) => n.startsWith(q)), ...hit.filter((n) => !n.startsWith(q))].map((n) => ({ id: n, value: n, label: n }));
   }, [names, city]);
   const cityMode = where === "city";
-  const scene = useMemo(() => buildScene({ who, party, where, city, mode }, units), [who, party, where, city, mode, units]);
+  const allParties = who === "all";
+  // כל המפלגות — בעיצוב הקיים (src/lib/flowShareLegacy.ts); מפלגה וחרדים — בעיצוב החדש
+  const scene = useMemo(() => (allParties ? null : buildScene({ who, party, where, city, mode }, units)), [allParties, who, party, where, city, mode, units]);
+  const legacyReady = allParties && !!units && (!cityMode || names.includes(city.trim()));
   useEffect(() => {
-    if (!scene) { setFile(null); setUrl(null); return; }
+    if (!scene && !legacyReady) { setFile(null); setUrl(null); return; }
     let live = true;
-    drawScene(scene, { theme, logo })
+    (scene ? drawScene(scene, { theme, logo }) : renderLegacy({ logo, who: "all", party, where, city, dir, blocs, mode }, units))
       .then((b) => { if (!live) return; setMsg(null); setFile(new File([b], "elections26-changes.png", { type: "image/png" })); setUrl(URL.createObjectURL(b)); })
       .catch(() => live && setMsg("הכנת התמונה לא הצליחה."));
     return () => { live = false; };
-  }, [scene, theme, logo]);
+  }, [scene, theme, logo, legacyReady, party, where, city, dir, blocs, mode, units]);
   const pickTheme = () => {
     const next: ShareTheme = theme === "dark" ? "light" : "dark";
     setTheme(next);
@@ -86,22 +92,24 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
       {opts.map((o) => <button key={o.id} type="button" aria-pressed={value === o.id} onClick={() => set(o.id)}>{o.label}</button>)}
     </div>
   );
-  const ready = !!scene && !!url;
+  const ready = (!!scene || legacyReady) && !!url;
   return createPortal(<div className="f-modal" onClick={(e) => e.target === e.currentTarget && onClose()} onKeyDown={(e) => e.key === "Escape" && onClose()}>
     <div ref={box} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="f-flow-share" style={{ position: "relative" }}>
-      <button type="button" onClick={pickTheme} aria-label={`תצוגה: ${THEME_NAME[theme]}. בלחיצה: ${THEME_NAME[theme === "dark" ? "light" : "dark"]}`} title={`תצוגה: ${THEME_NAME[theme]}`}
+      {!allParties && <button type="button" onClick={pickTheme} aria-label={`תצוגה: ${THEME_NAME[theme]}. בלחיצה: ${THEME_NAME[theme === "dark" ? "light" : "dark"]}`} title={`תצוגה: ${THEME_NAME[theme]}`}
         className="absolute left-3 top-3 flex items-center justify-center rounded-full w-[36px] h-[36px] border border-current opacity-80 hover:opacity-100">
         <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{MODE_ICON[theme]}</svg>
-      </button>
+      </button>}
       <h2 id="f-flow-share" className="text-lg font-bold pe-12">שיתוף: מה השתנה</h2>
       {seg("מי", who, setWho, [{ id: "all", label: "כל המפלגות" }, { id: "haredi", label: "חרדים" }, { id: "party", label: "מפלגה" }])}
       {who === "party" && <label className="grid gap-1 text-sm">מפלגה
         <select value={party} onChange={(e) => setParty(e.target.value)} className="bg-paper border border-line rounded-xl px-3 py-2 w-full text-base">
           {PARTIES.map((id) => <option key={id} value={id}>{newName(id)}</option>)}
         </select></label>}
+      {allParties && seg("כיוון", dir, setDir, [{ id: "from", label: "מאיפה הגיעו" }, { id: "to", label: "לאן הלכו" }])}
       {seg("איפה", where, setWhere, [{ id: "country", label: "כל הארץ" }, { id: "city", label: "עיר" }])}
       {cityMode && <SearchField label="עיר" value={city} options={options} onChange={setCity} />}
-      {ready ? <img src={url!} alt={`תמונת שיתוף: ${scene!.title}`} /> : <p className="text-sm text-ink-soft">{cityMode && units && !scene ? "בחרו עיר מהרשימה." : "מכינים את התמונה…"}</p>}
+      {allParties && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={blocs} onChange={(e) => setBlocs(e.target.checked)} className="w-5 h-5" />להוסיף מעבר בין הגושים</label>}
+      {ready ? <img src={url!} alt={scene ? `תמונת שיתוף: ${scene.title}` : "תמונת שיתוף: מה השתנה"} /> : <p className="text-sm text-ink-soft">{cityMode && units && !scene && !legacyReady ? "בחרו עיר מהרשימה." : "מכינים את התמונה…"}</p>}
       {file && ready && <div className="flex gap-2"><button type="button" className="f-btn pri flex-1" onClick={share}>שיתוף</button><button type="button" className="f-btn flex-1" onClick={() => save()}>שמירה</button></div>}
       <button type="button" className="f-btn" onClick={onClose}>סגירה</button>
       {msg && <p role="status" className="text-sm font-bold">{msg}</p>}
