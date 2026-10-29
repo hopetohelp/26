@@ -447,7 +447,7 @@
 .c-page-title { padding-block:8px 18px;border-bottom:1px solid rgb(var(--line)); }
 .c-page-title h1 { font-size:clamp(30px,3.2vw,48px);line-height:1.15;max-width:28ch; }
 .c-page-title>p { max-width:76ch;font-size:15px; }
-.c-page-tabs { border-bottom:1px solid rgb(var(--line));gap:8px; }
+.c-page-tabs { border-bottom:1px solid rgb(var(--line));gap:8px;margin-top:-16px; } /* בלי ריפוד כפול מעל הלשוניות (הכרעת בעלים 29.10.2026) */
 .c-page-tabs>[role=tab] { background:transparent;border:0;border-radius:0;border-bottom:3px solid transparent;color:rgb(var(--ink-soft));padding:12px 18px; }
 .c-page-tabs>[aria-selected=true] { border-bottom-color:rgb(var(--accent));color:rgb(var(--accent)); }
 .c-segmented { background:rgb(var(--accent-soft));box-shadow:none;border:1px solid rgb(var(--line)); }
