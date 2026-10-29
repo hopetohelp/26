@@ -129,7 +129,7 @@ function DrawerTop() {
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
 const isParty = (id: string) => !["other", "abstain", "new"].includes(id);
 const SAME_ROW: Record<string, string> = { ...SAME, other: "other", abstain: "abstain" };
-const RETIRED: Record<string, string> = { "כן": "כחול לבן" };
+const RETIRED: Record<string, string> = {};
 type Rows = { cameFrom: FlowRow[]; wentTo: FlowRow[] };
 interface PairedRow { key: string; img: string; name: string; sub?: string; id26: string | null; letters22: string | null; from?: FlowRow; to?: FlowRow }
 
