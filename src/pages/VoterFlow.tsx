@@ -231,8 +231,12 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
       .map(([k, label, kind]) => ({ k, label, change: changeOf((g.y2026![k] as number) - (g.y2022![k] as number), kind) })) : [];
     const strip = <div className="sm:col-span-2 md:col-span-1 md:col-start-1 md:row-start-1 md:row-span-2 rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-sm p-2 flex flex-col justify-center gap-2 text-center">
       <p className="text-[11px] font-bold leading-tight">שתיהן יחד מול {names22} 2022</p>
-      {/* טור אחד מרווח: שם הפרמטר ומתחתיו השינוי (הכרעת בעלים 29.10.2026) */}
-      <ul className="flex flex-col gap-3 text-xs tabular-nums">{changes.map((c) => <li key={c.k} className="flex flex-col items-center gap-0.5 leading-tight">
+      {/* במחשב: טור אחד מרווח, שם הפרמטר ומתחתיו השינוי (הכרעת בעלים 29.10.2026) */}
+      {/* בטלפון ובטאבלט: שתי עמודות, השינוי ולידו השם (הכרעת בעלים 29.10.2026) */}
+      <ul className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs font-bold tabular-nums md:hidden">{changes.map((c) => <li key={c.k} className="leading-tight">
+        {c.change ? <><Delta change={c.change} /> <span className="text-ink-soft font-normal">{c.label}</span></> : <span className="text-ink-soft font-normal">{c.label} ללא שינוי</span>}
+      </li>)}</ul>
+      <ul className="hidden md:flex flex-col gap-3 text-xs tabular-nums">{changes.map((c) => <li key={c.k} className="flex flex-col items-center gap-0.5 leading-tight">
         <span className="text-ink-soft">{c.label}</span>
         <span className="font-bold">{c.change ? <Delta change={c.change} /> : "ללא שינוי"}</span>
       </li>)}</ul>
