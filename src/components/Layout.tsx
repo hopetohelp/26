@@ -9,7 +9,7 @@ import { EmbedButton, EmbedFrame } from "./Embed";
 import { embeddableFor, isEmbed } from "../lib/embed";
 import ScreenFooter from "./ScreenFooter";
 import { ScreenLegend } from "./ChartLegend";
-import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import AccessCard from "./AccessCard";
 import PrivacyCard from "./PrivacyConsent";
 import { useMode, type ModeId } from "../lib/theme";
@@ -165,9 +165,11 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const [inline, setInline] = useState(more.length);
   const [probe, setProbe] = useState(0);
   useEffect(() => { setInline(more.length); }, [more.length, probe]);
+  // מורחב בטלפון (הכרעת בעלים 29.10.2026): כל הלשוניות בשורה נגללת עם חיצים, בלי "עוד"
+  const scroll = useNarrow() && advanced && !top;
   useLayoutEffect(() => {
     const el = navRef.current;
-    if (el && inline > 0 && el.scrollWidth > el.clientWidth + 1) setInline(n => n - 1);
+    if (!scroll && el && inline > 0 && el.scrollWidth > el.clientWidth + 1) setInline(n => n - 1);
   });
   useEffect(() => {
     let w = window.innerWidth;
@@ -177,14 +179,53 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   }, []);
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
+  const tab = (t: Screen) => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {[...core, ...more.slice(0, inline)].map(t => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>)}
-    {inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}
+    {scroll
+      ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
+      : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     {share && <button type="button" className="f-share" onClick={share.onClick} disabled={share.disabled}>שיתוף</button>}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
+}
+/** רוחב טלפון (עד 767px) */
+function useNarrow() {
+  const [narrow, setNarrow] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
+  useEffect(() => {
+    const m = window.matchMedia("(max-width: 767px)");
+    const on = () => setNarrow(m.matches);
+    m.addEventListener("change", on);
+    return () => m.removeEventListener("change", on);
+  }, []);
+  return narrow;
+}
+/** שורת לשוניות נגללת לצד, עם חץ ימינה/שמאלה כשיש עוד לשוניות בכיוון הזה; הלשונית הפעילה נגללת לתצוגה */
+function NavScroll({ children }: { children: ReactNode }) {
+  const row = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
+  const [edge, setEdge] = useState({ right: false, left: false });
+  const update = useCallback(() => {
+    const el = row.current;
+    if (!el) return;
+    // RTL: scrollLeft מ-0 (ימין) לשלילי (שמאל)
+    const pos = Math.abs(el.scrollLeft), max = el.scrollWidth - el.clientWidth;
+    setEdge({ right: pos > 1, left: pos < max - 1 });
+  }, []);
+  useEffect(() => {
+    row.current?.querySelector<HTMLElement>("[aria-current=page]")?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    update();
+    const watch = new ResizeObserver(update);
+    if (row.current) watch.observe(row.current);
+    return () => watch.disconnect();
+  }, [pathname, update]);
+  const by = (dx: number) => row.current?.scrollBy({ left: dx * (row.current.clientWidth * 0.7), behavior: "smooth" });
+  return <div className="f-nav-scroll">
+    {edge.right && <button type="button" className="f-nav-arrow r" aria-label="לשוניות קודמות" onClick={() => by(1)}>›</button>}
+    <div ref={row} className="f-nav-row" onScroll={update}>{children}</div>
+    {edge.left && <button type="button" className="f-nav-arrow l" aria-label="לשוניות נוספות" onClick={() => by(-1)}>‹</button>}
+  </div>;
 }
 /** כפתור "לניתוח מורחב" (לשעבר מתג "מתקדם"; הכרעת בעלים 27.10.2026): אינו משנה כתובת, טיוטה או מקור; ההעדפה לביקור הנוכחי (sessionStorage). במורחב — "לתצוגה ממוקדת" לחזרה (הכרעת בעלים 28.10.2026) */
 function AdvancedSwitch() {

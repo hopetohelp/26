@@ -908,3 +908,12 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-nav-bottom { width:min(calc(100vw - 16px), 640px); }
 .f-nav-bottom > a:not(.f-me):not(.f-ai), .f-nav-bottom > .f-more, .f-nav-bottom > button.f-share { flex:1 0 auto;text-align:center; }
 .f-nav-bottom > .f-more > button { width:100%; }
+
+/* מורחב בטלפון: שורת לשוניות נגללת עם חיצים (הכרעת בעלים 29.10.2026) */
+.f-nav-scroll { position:relative;flex:1 1 auto;min-width:0;display:flex;align-items:center; }
+.f-nav-row { display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1;padding:2px; }
+.f-nav-row::-webkit-scrollbar { display:none; }
+.f-nav-row > a { flex:none;padding:8px 10px;border-radius:999px;font-size:13px;color:rgb(var(--ink-soft));text-decoration:none;white-space:nowrap;box-shadow:inset 0 0 0 1px rgb(var(--line)); }
+.f-nav-row > a[aria-current=page] { background:rgb(var(--signal));color:rgb(var(--signal-ink));font-weight:800;box-shadow:0 2px 8px rgb(var(--signal) / .35); }
+.f-nav-arrow { position:absolute;top:50%;transform:translateY(-50%);z-index:1;width:28px;height:28px;border-radius:50%;border:1px solid rgb(var(--line));background:rgb(var(--card));color:rgb(var(--ink));font-size:18px;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgb(var(--ink) / .15); }
+.f-nav-arrow.r { right:0; } .f-nav-arrow.l { left:0; }
