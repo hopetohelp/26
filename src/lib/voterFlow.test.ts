@@ -41,3 +41,26 @@ describe("smallPct", () => {
     expect(smallPct(2.4)).toBe("2");
   });
 });
+
+describe("partyYears: ארבעת הפרמטרים של מפלגה לכל שנה", () => {
+  it("הליכוד: מצביעים ומנדטים רשמיים, מזכות בחירה ומהכשרים בשתי השנים", async () => {
+    const { partyYears, eligible2026 } = await import("./voterFlow");
+    const k25 = results.find((e) => e.knesset === 25)!;
+    const { y2022, y2026 } = partyYears("likud", "מחל");
+    const l22 = k25.lists.find((l) => l.letters === "מחל")!;
+    expect(y2022!.votes).toBe(l22.votes);
+    expect(y2022!.ofEligible).toBeCloseTo((l22.votes / k25.eligible) * 100, 6);
+    expect(y2022!.ofValid).toBeCloseTo((l22.votes / k25.lists.reduce((s, l) => s + l.votes, 0)) * 100, 6);
+    expect(y2026!.votes).toBe(results2026.votes!.likud);
+    expect(y2026!.seats).toBe(results2026.seats.likud);
+    expect(eligible2026()).toBeGreaterThan(7_000_000);
+    expect(y2026!.ofEligible).toBeCloseTo((y2026!.votes / eligible2026()!) * 100, 6);
+    // מזכות בחירה קטן ממהכשרים, כי לא כל בעלי הזכות הצביעו
+    expect(y2026!.ofEligible!).toBeLessThan(y2026!.ofValid);
+  });
+  it("מפלגה חדשה: אין 2022; מפלגה שלא רצה ב-2026: אין 2026", async () => {
+    const { partyYears } = await import("./voterFlow");
+    expect(partyYears("noam", null).y2022).toBeNull();
+    expect(partyYears(null, "מחל").y2026).toBeNull();
+  });
+});

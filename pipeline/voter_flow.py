@@ -238,11 +238,12 @@ def cities(r22: list[dict], r26: list[dict]) -> dict:
 
 
 def counted(r26: list[dict]) -> dict:
-    """"נתונים חלקיים X% מהמצביעים HH:MM": המצביעים בקלפיות שבקובץ מתוך כלל המצביעים (מפת ההצבעה), ושעת הקובץ"""
+    """"נתונים חלקיים X% מהמצביעים HH:MM": המצביעים בקלפיות שבקובץ מתוך כלל המצביעים (מפת ההצבעה), ושעת הקובץ; eligible = בעלי זכות הבחירה באותן קלפיות (המכנה של "מזכות בחירה" ב-2026)"""
     total = json.loads((ROOT / "public" / "turnout.json").read_text(encoding="utf-8"))["total"]["מצביעים"]
     res = json.loads((ROOT / "raw" / "results-2026.json").read_text(encoding="utf-8"))
     voters = sum(n(r, "מצביעים") for r in r26)
-    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1]}
+    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1],
+            "eligible": sum(n(r, "בזב") for r in r26)}
 
 
 def mode(r22: list[dict], r26: list[dict], by_city: bool) -> dict:
