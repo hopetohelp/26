@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ballotOptions, ballotPartyRows, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotUnits } from "./ballotLookup";
+import { comparisonBallots, ballotComparisonStatus, ballotOptions, ballotPartyRows, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotUnits } from "./ballotLookup";
 
 // שתי ערים עם אותו מספר קלפי, קלפי שפוצלה, קלפי שנוספה וקלפי שטרם נספרה.
 const units: BallotUnits = {
@@ -62,4 +62,56 @@ it("מעדיף את מיקום הקלפי השלמה ב-2026 גם כשהחלוק
   expect(ballotOptions(p, "1", locations).find((b) => b.number === "1")?.location).toBe("מבנה א · רחוב א 1 / מבנה ב · רחוב ב 2");
   expect(ballotOptions(p, "1", locations, "2")[0].location).toBe("מבנה ב · רחוב ב 2");
   expect(ballotOptions(p, "12", locations)[0].location).toBe("רחוב ישן 4 (2022)");
+});
+
+it("רמת ההשוואה לפי השדות: תת קלפי זהה וקלפי שלמה זהה הן מדויקות", () => {
+  for (const sub of ["", "1"]) {
+    const filter = { city: "בית א", ballot: "1", sub };
+    const selected = comparisonBallots(units, filter);
+    expect(selected.status.level).toBe("exact");
+    expect(selected.status.label).toBe("מדויק");
+    expect(selected.estimated).toBe(false);
+    expect(selected.y22).toEqual(filterBallots(units, filter).y22);
+  }
+});
+
+it("תת קלפי חדשה נאמדת מהקלפי השלמה לפי בעלי הזכות, עם עיגול קולות ששומר את הסכום", () => {
+  const split = { ...units, places: { a: { ...units.places.a, y26: [...units.places.a.y26, ["1.3", "7", 50, 40, 20, 10, 5] as [string, string, number, number, ...number[]]] } } };
+  const selected = comparisonBallots(split, { city: "בית א", ballot: "1", sub: "3" });
+  expect(selected.status).toMatchObject({ level: "ballot", label: "לפי קלפי", reason: "תת קלפי חדשה" });
+  expect(selected.estimated).toBe(true);
+  expect(selected.y26).toEqual([["1.3", "7", 50, 40, 20, 10, 5]]);
+  // 2022 בקלפי השלמה: 200 בעלי זכות, 140 מצביעים, 130 כשרים. התאמה ל־50 בעלי זכות: רבע.
+  expect(selected.y22[0].slice(2)).toEqual([50, 35, 13, 18, 2]);
+  expect(ballotSummary(selected.y22, units.letters22)).toMatchObject({ eligible: 50, voters: 35, valid: 33 });
+  expect(ballotPartyRows(units, selected.y22, selected.y26).find((r) => r.id === "likud")).toMatchObject({ votes22: 13, votes26: 20 });
+});
+
+it("קלפי חדשה נאמדת מהעיר, ובתת קלפי חדשה בלי קלפי שלמה מקבילה מציינים את הסיבה", () => {
+  const selected = comparisonBallots(units, { city: "בית א", ballot: "15", sub: "" });
+  expect(selected.status).toMatchObject({ level: "city", label: "לפי עיר" });
+  // העיר ב־2022: 300 זכאים, 190 מצביעים, 170 כשרים. הקלפי החדשה: 100 זכאים — שליש.
+  expect(selected.y22[0].slice(2)).toEqual([100, 63, 20, 30, 7]);
+  expect(selected.y26).toEqual([["15", "8", 100, 50, 20, 10, 10]]);
+  const split = { ...units, places: { a: { ...units.places.a, y26: [["15.1", "8", 50, 35, 20, 5, 5] as [string, string, number, number, ...number[]]] } } };
+  const sub = comparisonBallots(split, { city: "בית א", ballot: "15", sub: "1" });
+  expect(sub.status).toMatchObject({ level: "city", reason: "תת קלפי וקלפי שלמה חדשות" });
+  expect(sub.y22[0].slice(2)).toEqual([50, 32, 10, 15, 3]);
+});
+
+it("בסינון עיר סופרים קלפיות שלמות בלי לספור תתי קלפי פעמיים ובלי לערבב מספרים בין ערים", () => {
+  const city = comparisonBallots(units, { city: "בית א", ballot: "", sub: "" });
+  expect(city.status).toMatchObject({ label: "1/2 קלפיות מדויקות", exactBallots: 1, totalBallots: 2 });
+  expect(city.y22).toEqual(units.places.a.y22);
+  expect(city.estimated).toBe(false);
+  expect(ballotComparisonStatus(units, { city: "", ballot: "", sub: "" })).toMatchObject({ exactBallots: 2, totalBallots: 3 });
+});
+
+it("אין אומדן בלי מקור 2022 או בלי בעלי זכות; אין השלמה של קלפי שעדיין לא נספרה ב־2026", () => {
+  const missing = { ...units, places: { a: { ...units.places.a, y22: [] } } };
+  const selected = comparisonBallots(missing, { city: "בית א", ballot: "15", sub: "" });
+  expect(selected.status.level).toBe("unavailable");
+  expect(selected.y22).toEqual([]);
+  expect(selected.y26).toEqual([["15", "8", 100, 50, 20, 10, 10]]);
+  expect(comparisonBallots(units, { city: "בית א", ballot: "12", sub: "" })).toMatchObject({ estimated: false, status: { level: "unavailable" }, y26: [] });
 });

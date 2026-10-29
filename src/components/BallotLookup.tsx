@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { PartyAvatar } from "./PartyAvatar";
 import { PARTY_IMAGES } from "../lib/partyImages";
 import { num, pctValue } from "../lib/format";
-import { ballotOptions, ballotPartyRows, ballotShare, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotLocations, type BallotUnits } from "../lib/ballotLookup";
+import { ballotOptions, ballotPartyRows, ballotShare, ballotSummary, comparisonBallots, matchingPlaces, subOptions, type BallotLocations, type BallotUnits } from "../lib/ballotLookup";
 
 interface Suggestion { id: string; value: string; label: string }
 
@@ -70,10 +70,10 @@ export default function BallotLookup() {
     .sort((a, b) => a[1].name.localeCompare(b[1].name, "he")).map(([code, p]) => ({ id: code, value: p.name, label: p.name })), [units, city]);
   const ballots = useMemo(() => ballotOptions(places, ballot, locations), [places, ballot, locations]);
   const subs = useMemo(() => subOptions(places, ballot).filter((s) => s.startsWith(sub.trim())).map((s) => ({ id: s, value: s, label: `${ballot}.${s}` })), [places, ballot, sub]);
-  const selected = useMemo(() => units ? filterBallots(units, { city, ballot, sub }) : { y22: [], y26: [] }, [units, city, ballot, sub]);
-  const rows = useMemo(() => units ? ballotPartyRows(units, selected.y22, selected.y26) : [], [units, selected]);
+  const selected = useMemo(() => units ? comparisonBallots(units, { city, ballot, sub }) : null, [units, city, ballot, sub]);
+  const rows = useMemo(() => units && selected ? ballotPartyRows(units, selected.y22, selected.y26) : [], [units, selected]);
   if (failed) return <p role="status">הנתונים לא נטענו.</p>;
-  if (!units || !locations) return <p role="status" className="text-ink-soft">טוען…</p>;
+  if (!units || !locations || !selected) return <p role="status" className="text-ink-soft">טוען…</p>;
   const old = ballotSummary(selected.y22, units.letters22), now = ballotSummary(selected.y26, units.letters26);
   const summary = [
     { label: "בעלי זכות בחירה", a: old.eligible, b: now.eligible, ap: undefined, bp: undefined },
@@ -96,7 +96,14 @@ export default function BallotLookup() {
       <table className="w-full table-fixed text-sm text-center">
         <caption className="sr-only">השוואת קולות לפי מפלגה בסינון הנבחר, 2022 מול 2026. הפער הוא 2026 פחות 2022; נ״א = נקודות אחוז.</caption>
         <colgroup><col className="w-[34%] sm:w-[40%]" /><col /><col /><col /></colgroup>
-        <thead><tr className="border-b border-paper-line"><th scope="col" className="text-start py-2">מפלגה</th><th scope="col">2022</th><th scope="col">2026</th><th scope="col">הפער</th></tr></thead>
+        <thead><tr className="border-b border-paper-line align-top">
+          <th scope="col" className="text-start py-2">מפלגה</th>
+          <th scope="col" className="py-2">2022{selected.estimated && <span className="block mt-1 text-xs font-normal text-ink-soft">אומדן מותאם</span>}</th>
+          <th scope="col" className="py-2">2026</th>
+          <th scope="col" className="py-2"><span className="flex flex-wrap items-baseline justify-center gap-x-2"><span>הפער</span><span className="text-xs">{selected.status.label}</span></span>
+            <span className="block mt-1 text-[10px] sm:text-xs font-normal text-ink-soft">({selected.status.reason})</span>
+          </th>
+        </tr></thead>
         <tbody>
           <tr className="bg-accent-soft font-bold border-b-2 border-paper-line align-top">
             <th scope="row" className="text-start py-3 pe-1">נתוני הצבעה<div className="mt-2 grid gap-3 text-xs font-normal">{summary.map((s) => <span key={s.label} className={s.ap !== undefined ? "min-h-[2.5rem]" : "min-h-[1.5rem]"}>{s.label}</span>)}</div></th>

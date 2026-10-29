@@ -1,4 +1,5 @@
 import { flow, newName, oldName, SAME } from "./voterFlow";
+import { largestRemainder } from "./fillAll";
 
 /** public/flow-units.json: מספר, מרכז קלפיות, בעלי זכות, מצביעים, קולות לפי letters. */
 export type Ballot = [string, string, number, number, ...number[]];
@@ -52,13 +53,95 @@ export function subOptions(places: [string, BallotPlace][], ballot: string): str
     .filter((r) => baseNumber(r[0]) === ballot.trim()).map((r) => subNumber(r[0])).filter(Boolean))].sort(numericOrder);
 }
 
-/** שדה ריק משאיר את רמת הסינון שמעליו. מספר שלם כולל את כל תתי הקלפי. */
-export function filterBallots(units: BallotUnits, filter: BallotFilter) {
+/** הסינון נקבע על פני כל היישובים המתאימים לפני פירוק ליישובים, גם בהקלדה חלקית. */
+function selectedPlaces(units: BallotUnits, filter: BallotFilter) {
   const places = matchingPlaces(units, filter.city), number = filter.ballot.trim(), sub = filter.sub.trim();
   const exact = places.some(([, p]) => [...p.y26, ...p.y22].some((r) => baseNumber(r[0]) === number));
   const match = (r: Ballot) => (!number || (exact ? baseNumber(r[0]) === number : baseNumber(r[0]).startsWith(number)))
     && (!sub || subNumber(r[0]) === sub);
-  return { y22: places.flatMap(([, p]) => p.y22.filter(match)), y26: places.flatMap(([, p]) => p.y26.filter(match)) };
+  return places.map(([code, p]) => ({ code, p, y22: p.y22.filter(match), y26: p.y26.filter(match) }));
+}
+
+/** שדה ריק משאיר את רמת הסינון שמעליו. מספר שלם כולל את כל תתי הקלפי. */
+export function filterBallots(units: BallotUnits, filter: BallotFilter) {
+  const places = selectedPlaces(units, filter);
+  return { y22: places.flatMap((p) => p.y22), y26: places.flatMap((p) => p.y26) };
+}
+
+type ComparisonLevel = "exact" | "ballot" | "city";
+interface ComparisonGroup { old: Ballot[]; current: Ballot[]; level: ComparisonLevel; estimated: boolean }
+
+/** יחידת ההשוואה הקטנה ביותר הזמינה: תת קלפי, קלפי שלמה, עיר — לפי בקשת הבעלים 29/10. */
+function comparisonGroups(units: BallotUnits, filter: BallotFilter): ComparisonGroup[] {
+  return selectedPlaces(units, filter).flatMap<ComparisonGroup>(({ p, y22, y26 }) => {
+    if (!filter.ballot.trim()) return [{ old: y22, current: y26, level: "city", estimated: false }];
+    const keys = [...new Set(y26.map((r) => filter.sub.trim() ? r[0] : baseNumber(r[0])))];
+    return keys.map<ComparisonGroup>((key) => {
+      const current = y26.filter((r) => (filter.sub.trim() ? r[0] : baseNumber(r[0])) === key);
+      const exact = p.y22.filter((r) => filter.sub.trim() ? Number(r[0]) === Number(key) : baseNumber(r[0]) === key);
+      if (exact.length) return { old: exact, current, level: "exact", estimated: false };
+      const parent = filter.sub.trim() ? p.y22.filter((r) => baseNumber(r[0]) === baseNumber(key)) : [];
+      return { old: parent.length ? parent : p.y22, current, level: parent.length ? "ballot" : "city", estimated: true };
+    });
+  });
+}
+
+export interface BallotComparisonStatus {
+  level: ComparisonLevel | "unavailable";
+  label: string;
+  reason: string;
+  exactBallots: number;
+  totalBallots: number;
+}
+
+/** "מדויק" הוא התאמת מספרי היחידה בתוך אותו יישוב, ולא ידיעה איך הצביע כל אדם. */
+export function ballotComparisonStatus(units: BallotUnits, filter: BallotFilter): BallotComparisonStatus {
+  const places = matchingPlaces(units, filter.city), selected = filterBallots(units, filter);
+  let totalBallots = 0, exactBallots = 0;
+  for (const [, p] of places) {
+    const old = new Set(p.y22.map((r) => baseNumber(r[0]))), current = new Set(p.y26.map((r) => baseNumber(r[0])));
+    totalBallots += current.size;
+    exactBallots += [...current].filter((n) => old.has(n)).length;
+  }
+  const counts = { totalBallots, exactBallots };
+  if (!selected.y26.length) return { ...counts, level: "unavailable", label: "אין השוואה", reason: "אין נתוני 2026 ליחידה שנבחרה בקובץ התוצאות" };
+  if (!filter.ballot.trim()) return { ...counts, level: "city", label: `${exactBallots}/${totalBallots} קלפיות מדויקות`,
+    reason: totalBallots === exactBallots ? "מספרי קלפי זהים" : "לפי מספר קלפי שלמה" };
+  const groups = comparisonGroups(units, filter);
+  if (groups.some((g) => g.estimated && !g.old.some((r) => r[2] > 0))) return { ...counts, level: "unavailable", label: "אין השוואה", reason: "אין נתוני בעלי זכות בחירה ב־2022 לחישוב אומדן" };
+  const hasSub = !!filter.sub.trim();
+  if (groups.some((g) => g.level === "city")) return { ...counts, level: "city", label: "לפי עיר", reason: hasSub ? "תת קלפי וקלפי שלמה חדשות" : "קלפי חדשה" };
+  if (groups.some((g) => g.level === "ballot")) return { ...counts, level: "ballot", label: "לפי קלפי", reason: "תת קלפי חדשה" };
+  return { ...counts, level: "exact", label: "מדויק", reason: hasSub ? "מספר תת קלפי זהה" : "מספר קלפי שלמה זהה" };
+}
+
+/** נתוני 2022 של ההורה מותאמים לבעלי הזכות ביחידה שנבחרה ב־2026; הקולות מעוגלים בשארית הגדולה. */
+function estimateBaseline(old: Ballot[], current: Ballot[], letters: string[]): Ballot | null {
+  const sourceEligible = old.reduce((s, r) => s + r[2], 0), eligible = current.reduce((s, r) => s + r[2], 0);
+  if (sourceEligible <= 0) return null;
+  const ratio = eligible / sourceEligible;
+  const voters = Math.round(old.reduce((s, r) => s + r[3], 0) * ratio);
+  const weights = Object.fromEntries(letters.map((l, k) => [l, sumBallotVotes(old, [k])]));
+  const valid = Math.round(Object.values(weights).reduce((s, v) => s + v, 0) * ratio);
+  const votes = largestRemainder(valid, weights);
+  return [current[0][0], current[0][1], eligible, voters, ...letters.map((l) => votes[l])];
+}
+
+export function comparisonBallots(units: BallotUnits, filter: BallotFilter) {
+  const selected = filterBallots(units, filter), status = ballotComparisonStatus(units, filter);
+  if (!filter.ballot.trim() || !selected.y26.length) return { ...selected, estimated: false, status };
+  const groups = comparisonGroups(units, filter);
+  const baseline: Ballot[] = [];
+  for (const g of groups) {
+    if (!g.estimated) baseline.push(...g.old);
+    else {
+      const row = estimateBaseline(g.old, g.current, units.letters22);
+      // אין להציג בסיס חלקי כבסיס של כל היחידות שנבחרו.
+      if (!row) return { y22: [], y26: selected.y26, estimated: false, status };
+      baseline.push(row);
+    }
+  }
+  return { y22: baseline, y26: selected.y26, estimated: groups.some((g) => g.estimated), status };
 }
 
 export const sumBallotVotes = (rows: Ballot[], indexes: number[]) => rows.reduce((sum, r) => sum + indexes.reduce((s, k) => s + (r[4 + k] as number), 0), 0);
