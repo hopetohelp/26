@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ARROW_DOWN, ARROW_UP, changeOf, PARAM_NAMES, type Change } from "../lib/changeMark";
 
 export { PARAM_NAMES };
@@ -18,7 +19,7 @@ export interface ParamRow { key: string; label: string; v22: number | null; v26:
  * כרטיס פרמטרים: שם הפרמטר פעם אחת מימין, אחריו 2022, 2026 והפער (מודגש). אין נתון — "—"; אין שינוי — לא מוצג כלום.
  * מקור אחד לכרטיס המפלגה במסך "מה השתנה" ולכרטיסי העיר והקלפי.
  */
-export default function ParamCard({ rows, caption, compact = false, className = "" }: { rows: ParamRow[]; caption: string; compact?: boolean; className?: string }) {
+export default function ParamCard({ rows, caption, compact = false, className = "", corner }: { rows: ParamRow[]; caption: string; compact?: boolean; className?: string; corner?: ReactNode }) {
   const text = compact ? "text-[11px]" : "text-xs";
   // מפלגה שרצה רק באחת מהמערכות: טור אחד של השנה שבה רצה, בלי טור פער (הכרעת בעלים 29.10.2026)
   const has22 = rows.some((r) => r.v22 !== null), has26 = rows.some((r) => r.v26 !== null), gap = has22 && has26;
@@ -28,8 +29,8 @@ export default function ParamCard({ rows, caption, compact = false, className = 
       <caption className="sr-only">{caption}</caption>
       <colgroup><col className={compact ? "w-[27%]" : "w-[26%]"} />{has22 && <col />}{has26 && <col />}{gap && <col className="w-[26%]" />}</colgroup>
       <thead><tr className="text-accent font-bold">
-        <td className="p-1" />{has22 && <th scope="col" className="p-1 font-bold">2022</th>}{has26 && <th scope="col" className="p-1 font-bold">2026</th>}
-        {gap && <th scope="col" className="p-1 font-bold bg-accent text-paper-card">הפער</th>}
+        {corner ? <th scope="col" className="p-1 align-top font-bold text-start text-ink leading-tight">{corner}</th> : <td className="p-1" />}{has22 && <th scope="col" className="p-1 font-bold text-center">2022</th>}{has26 && <th scope="col" className="p-1 font-bold text-center">2026</th>}
+        {gap && <th scope="col" className="p-1 font-bold text-center bg-accent text-paper-card">הפער</th>}
       </tr></thead>
       <tbody>
         {rows.map((r) => {
@@ -38,7 +39,7 @@ export default function ParamCard({ rows, caption, compact = false, className = 
             <th scope="row" className="p-1 text-start font-bold text-ink-soft leading-tight whitespace-nowrap">{r.label}</th>
             {has22 && <td className="p-1 font-semibold">{show(r, r.v22)}</td>}
             {has26 && <td className="p-1 font-semibold">{show(r, r.v26)}</td>}
-            {gap && <td className="p-1 bg-accent-soft font-bold"><Delta change={change} /></td>}
+            {gap && <td className={`p-1 bg-accent-soft font-bold ${compact ? "text-[10px] px-0.5" : ""}`}><Delta change={change} /></td>}
           </tr>;
         })}
       </tbody>

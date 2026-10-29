@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useState } from "react";
+import { lazy, Suspense, useCallback, useState, type ReactNode } from "react";
 import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
@@ -40,7 +40,7 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
       {total && <p className="text-xs text-ink-soft mb-2">{view === "from" ? "קולות ב-2026" : "קולות ב-2022"}: {num(row.total)}</p>}
       <ul className="space-y-1">
         {main.map((p) => (
-          <li key={p.id} className="grid grid-cols-[minmax(4.5rem,9rem)_1fr_3rem] items-center gap-2 text-sm">
+          <li key={p.id} className="grid grid-cols-[minmax(3.5rem,9rem)_minmax(0,1fr)_2.75rem] items-center gap-2 text-sm">
             <span className="truncate">{p.name}</span>
             <span className="h-3 flex justify-start rounded-sm bg-paper-line overflow-hidden" aria-hidden="true">
               <span className="block h-full" style={{ width: `${p.share}%`, background: blocFill(colorOf(p.id)) }} />
@@ -49,7 +49,7 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
           </li>
         ))}
         {rest >= 0.5 && (
-          <li className="grid grid-cols-[minmax(4.5rem,9rem)_1fr_3rem] items-center gap-2 text-sm text-ink-soft">
+          <li className="grid grid-cols-[minmax(3.5rem,9rem)_minmax(0,1fr)_2.75rem] items-center gap-2 text-sm text-ink-soft">
             <span>אחרים</span><span /><span className="tabular-nums text-end">{pctValue(rest)}%</span>
           </li>
         )}
@@ -59,13 +59,23 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
 }
 
 /** ארבעת הפרמטרים ככרטיס (מפלגה או גוש); ברצף: מצביעים, מזכות בחירה, מהכשרים, מנדטים. רצה רק באחת מהמערכות — טור אחד */
-function Stats({ years, what }: { years: { y2022: YearNumbers | null; y2026: YearNumbers | null }; what: string }) {
+function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y2026: YearNumbers | null }; what: string; head: ReactNode }) {
   const { y2022, y2026 } = years;
   if (!y2022 && !y2026) return null;
   const row = (key: keyof typeof PARAM_NAMES, get: (y: YearNumbers) => number | null, fmt: (n: number) => string, kind: "count" | "pct"): ParamRow =>
     ({ key, label: PARAM_NAMES[key], v22: y2022 ? get(y2022) : null, v26: y2026 ? get(y2026) : null, fmt, kind });
+  // רצה רק באחת מהמערכות: לא טבלה — טור אחד של הערך והשם (הכרעת בעלים 29.10.2026)
+  if (!y2022 || !y2026) {
+    const y = (y2022 ?? y2026)!;
+    const items: [string, string][] = [[num(y.votes), PARAM_NAMES.votes], ...(y.ofEligible === null ? [] : [[pctOne(y.ofEligible), PARAM_NAMES.ofEligible] as [string, string]]), [pctOne(y.ofValid), PARAM_NAMES.ofValid], [String(y.seats), PARAM_NAMES.seats]];
+    return <div className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 h-full flex flex-col justify-center gap-1 text-xs md:text-sm" aria-label={`${what}: ${y2022 ? "2022" : "2026"}`}>
+      {/* תמונה, שם ושנה (הכרעת בעלים 29.10.2026) */}
+      <div className="flex flex-col items-center text-center gap-0.5 mb-1">{head}<span className="text-xs font-bold text-accent">{y2022 ? "2022" : "2026"}</span></div>
+      {items.map(([v, l]) => <span key={l} className="whitespace-nowrap text-center"><bdi dir="ltr" className="font-bold tabular-nums">{v}</bdi> <span className="text-ink-soft">{l}</span></span>)}
+    </div>;
+  }
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
-  return <ParamCard rows={rows} compact caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
+  return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
 }
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
@@ -100,22 +110,23 @@ const TITLES: Record<Kind, Record<View, string>> = {
 };
 const BLOCS = new Set(["netanyahu", "haredi", "arab", "eisenkot"]);
 
-/** שם ותמונה מימין לטבלה; שם של כמה מילים — מילה בשורה */
-function Name({ line }: { line: PairedRow }) {
+/** תמונה ושם בפינה הימנית העליונה של טבלת הנתונים (הכרעת בעלים 29.10.2026); שם של כמה מילים — מילה בשורה */
+function Head({ line, center = false }: { line: PairedRow; center?: boolean }) {
   const avatar = !!(line.id26 || line.letters22);
-  return <div className="flex flex-col items-start gap-1 shrink-0 max-w-[6.5rem] md:self-start">
-    {avatar && <PartyAvatar id={line.img} size={40} fallback={line.letters22 ?? LETTER_2026[line.id26 ?? ""] ?? "…"} />}
-    <h3 className="font-bold leading-tight">{line.name.split(" ").map((w, i) => <span key={i} className="block">{w}</span>)}</h3>
-    {line.sub && <span className="text-xs text-ink-soft leading-tight">ב־2022: {line.sub}</span>}
+  return <div className={`flex flex-col gap-0.5 ${center ? "items-center" : "items-start"}`}>
+    {avatar && <PartyAvatar id={line.img} size={28} fallback={line.letters22 ?? LETTER_2026[line.id26 ?? ""] ?? "…"} />}
+    <h3 className="font-bold leading-tight text-[11px] md:text-xs">{line.name.split(" ").map((w, i) => <span key={i} className="block">{w}</span>)}</h3>
+    {line.sub && <span className="text-[10px] font-normal text-ink-soft leading-tight">ב־2022: {line.sub}</span>}
   </div>;
 }
 
 /** כרטיס תנועה: כותרת בשורה אחת (הגופן מתכווץ עם רוחב הכרטיס) והפסים */
-function FlowCard({ title, data, view, colorOf }: { title: string; data?: FlowRow; view: View; colorOf: (id: string) => string }) {
-  return <section className="min-w-0 md:h-full rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
-    <h4 className="font-bold text-accent text-center whitespace-nowrap mb-2" style={{ fontSize: "clamp(9px, 4.6cqi, 13px)" }}>{title}</h4>
-    {data ? <Body row={data} view={view} colorOf={colorOf} total={false} /> : <p className="text-sm text-ink-soft">לא רצה בבחירות אלו</p>}
-  </section>;
+function FlowCard({ title, data, view, colorOf, className = "", narrow = false }: { title: string; data?: FlowRow; view: View; colorOf: (id: string) => string; className?: string; narrow?: boolean }) {
+  return <section className={`min-w-0 md:h-full ${className}`} data-card="flow"><div className="h-full rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
+    {/* כותרת בשורה אחת; בכרטיס צר (לצד כרטיס הנתונים בטלפון) — בשתי שורות מאוזנות */}
+    <h4 className={`font-bold text-accent text-center mb-2 ${narrow ? "text-xs leading-snug [text-wrap:balance]" : "whitespace-nowrap"}`} style={narrow ? undefined : { fontSize: "clamp(9px, 4.6cqi, 13px)" }}>{title}</h4>
+    {data ? <Body row={data} view={view} colorOf={colorOf} total={false} /> : <p className="text-sm text-ink-soft text-center">לא רצה בבחירות אלו</p>}
+  </div></section>;
 }
 
 /**
@@ -123,14 +134,19 @@ function FlowCard({ title, data, view, colorOf }: { title: string; data?: FlowRo
  * בטלפון: השם והטבלה בשורה אחת, ומתחתם שני הכרטיסים; במחשב: ארבעה טורים, וטורי התנועה צרים יותר.
  */
 function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind; fromColor: (id: string) => string; toColor: (id: string) => string }) {
+  const one = !line.from || !line.to;
   const years = kind === "party" ? (line.id26 || line.letters22 ? partyYears(line.id26, line.letters22) : null) : BLOCS.has(line.key) ? blocYears(line.key) : null;
-  return <li className="border-t border-paper-line py-4 grid gap-3 md:grid-cols-[6.5rem_minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-stretch" data-party={line.key}>
-    <div className="flex items-start gap-3 md:contents">
-      <Name line={line} />
-      <div className="flex-1 min-w-0 md:h-full">{years && <Stats years={years} what={line.name} />}</div>
+  const stats = years
+    ? <Stats years={years} what={line.name} head={<Head line={line} center={one} />} />
+    : <div className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 h-full flex items-center justify-center"><Head line={line} center /></div>;
+  return <li className="border-t border-paper-line py-4 grid gap-3 md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-stretch" data-party={line.key}>
+    {/* רצה רק באחת מהמערכות: בטלפון כרטיס הנתונים וכרטיס התנועה היחיד באותה שורה, ובלי כרטיס לבחירות שלא רץ בהן */}
+    <div className={`min-w-0 md:h-full ${one ? "grid grid-cols-[auto_minmax(0,1fr)] gap-3 items-stretch md:block" : ""}`}>
+      {stats}
+      {one && <FlowCard narrow className="md:hidden" title={TITLES[kind][line.from ? "from" : "to"]} data={line.from ?? line.to} view={line.from ? "from" : "to"} colorOf={line.from ? fromColor : toColor} />}
     </div>
-    <FlowCard title={TITLES[kind].from} data={line.from} view="from" colorOf={fromColor} />
-    <FlowCard title={TITLES[kind].to} data={line.to} view="to" colorOf={toColor} />
+    <FlowCard className={one ? "hidden md:block" : ""} title={TITLES[kind].from} data={line.from} view="from" colorOf={fromColor} />
+    <FlowCard className={one ? "hidden md:block" : ""} title={TITLES[kind].to} data={line.to} view="to" colorOf={toColor} />
   </li>;
 }
 
@@ -171,12 +187,12 @@ export default function VoterFlow() {
         assumption="כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי הקלפי השלמה, אחר כך לפי מיקום הקלפי, ולבסוף לפי היישוב. הסכום של כל מפלגה הוא הספירה הרשמית; קלפיות שעדיין לא נספרו ב-2026 — לפי השינוי באותו יישוב; יישוב בלי קלפי ב-2022 — ״יישובים חדשים״. אין שימוש בסקרים."
         methodAnchor="voter-flow"
       >
-        <Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} />
-        <h2 className="text-xl font-display leading-tight mt-8">מעבר בין הגושים</h2>
-        <Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} />
+        {/* שלושה חלקים נפתחים (הכרעת בעלים 29.10.2026) */}
+        <Fold title="מעבר בין מפלגות"><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></Fold>
+        <Fold title="מעבר בין גושים"><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></Fold>
       </Explained>
       {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
-      <Fold title="בדיקה לפי קלפי">
+      <Fold title="חיפוש לפי עיר או קלפי">
         <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
       </Fold>
     </div>
