@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 /** `info`: קישור ״מידע ומקורות״; ב״מה השתנה״ בלעדיו (הכרעת בעלים 29.10.2026) */
 export default function ScreenFooter({ children, sourceUrl, info = true }: { children: ReactNode; sourceUrl?: string; info?: boolean }) {
   return (
-    <footer className="screen-footer mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-ink-soft">
+    <footer className={`screen-footer mt-6 flex flex-wrap items-center ${info ? "" : "justify-center"} gap-x-5 gap-y-3 text-sm text-ink-soft`}>
       {/* מקום ל״איך זה חושב?״ של המסך (Explained עם inFooter) */}
       <span data-footer-slot className="contents" />
       {children}

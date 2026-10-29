@@ -23,7 +23,7 @@ const backLabel = (prev: Fields) =>
 const Icon = ({ d, className = "w-5 h-5" }: { d: string; className?: string }) => (
   <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
 );
-const CHEVRON = "M15 5l-7 7 7 7", BACK = "M9 5l7 7-7 7", UP = "M12 19V5M5.5 11.5L12 5l6.5 6.5";
+const CHEVRON = "M15 5l-7 7 7 7", BACK = "M9 5l7 7-7 7";
 
 /** מפלגה מובילה בשורה קומפקטית: ברוחב — סמל, שם, אחוז ומנדטים; בצר — שם ומספר מנדטים בלבד, ומי שלא עברה — אחוז */
 function Lead({ lead, narrow }: { lead: LeadParty; narrow: boolean }) {
@@ -81,33 +81,6 @@ function ScopeList({ units, scopes, onOpen }: { units: BallotUnits; scopes: Look
     <ul className="space-y-2">{scopes.slice(0, visible).map((scope) => <ScopeRow key={scope.id} units={units} scope={scope} onOpen={onOpen} />)}</ul>
     {visible < scopes.length && <div ref={end} role="status" className="py-4 text-sm text-ink-soft">טוען המשך…</div>}
   </div>;
-}
-
-/** כפתור חץ צף לחזרה לראש המגירה; מופיע רק אחרי גלילה בתוך המגירה */
-function BackToTop({ target }: { target: React.RefObject<HTMLElement> }) {
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const r = target.current?.getBoundingClientRect();
-      setShown(!!r && r.height > 0 && r.top < -240 && r.bottom > 160);
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (raf) cancelAnimationFrame(raf); };
-  }, [target]);
-  if (!shown) return null;
-  const go = () => {
-    const calm = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    target.current?.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
-  };
-  return <button type="button" onClick={go} aria-label="חזרה לראש החיפוש לפי עיר או קלפי"
-    className="fixed left-3 z-30 w-11 h-11 rounded-full bg-accent text-paper-card shadow-lg grid place-items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent bottom-[calc(6rem+env(safe-area-inset-bottom))] lg:bottom-6">
-    <Icon d={UP} className="w-6 h-6" />
-  </button>;
 }
 
 export default function BallotLookup() {
@@ -175,6 +148,5 @@ export default function BallotLookup() {
     {nothing && <p role="status" className="rounded-theme border border-dashed border-paper-line p-6 text-center text-ink-soft">בחרו עיר, קלפי או תת קלפי.<span className="block text-sm">הנתונים הארציים של כל מפלגה מופיעים למעלה, בכרטיסי המפלגות.</span></p>}
     {level && <ScopeList key={`${level}:${filter.city}:${filter.ballot}:${filter.sub}:${sort}`} units={units} scopes={scopes} onOpen={open} />}
     {unit && <BallotCards units={units} filter={filter} label={[filter.city, filter.ballot && `קלפי ${filter.ballot}`, filter.sub && `תת קלפי ${filter.sub}`].filter(Boolean).join(" · ")} />}
-    <BackToTop target={top} />
   </div>;
 }
