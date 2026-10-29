@@ -131,6 +131,8 @@ def unit_pair(tier: str, i22: list[int], i26: list[int], r22, r26, v22, v26) -> 
 
 def apportion(values: list[float], total: int) -> list[int]:
     """עיגול בשארית הגדולה: סכום השלמים = total בדיוק (אף קול לא נוסף ולא נגרע בעיגול)"""
+    weight = sum(values)
+    values = [v * total / weight for v in values] if weight else [total / len(values)] * len(values)
     base = [int(v) for v in values]
     order = sorted(range(len(values)), key=lambda k: values[k] - base[k], reverse=True)
     for k in order[: max(0, total - sum(base))]:
