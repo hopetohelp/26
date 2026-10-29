@@ -57,8 +57,10 @@ def n(row: dict, k: str) -> int:
 
 
 def vector(row: dict, letters: list[str]) -> list[int]:
+    """קולות לכל רשימה, "אחרות" ו"לא הצביעו". אף ערך אינו שלילי: במעטפות החיצוניות אין בעלי זכות בקלפי (בזב 0),
+    ו"לא הצביעו" שלילי שם שיבש את כל המטריצה (29.10.2026, כשנספרו עוד מעטפות)"""
     v = [n(row, k) for k in letters]
-    return v + [n(row, "כשרים") - sum(v), n(row, "בזב") - n(row, "מצביעים")]
+    return v + [max(0, n(row, "כשרים") - sum(v)), max(0, n(row, "בזב") - n(row, "מצביעים"))]
 
 
 KEYS = {
