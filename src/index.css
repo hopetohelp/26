@@ -899,3 +899,12 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 
 /* טלפון (הכרעת בעלים 25.10.2026): מלמטה — סרגל הניווט, מעליו פס הכנסת, ומעליו פס האחדות (במתקדם) */
 @media (max-width: 767px) { .f-dock .f-stack-host { display:flex;flex-direction:column-reverse; } .f-dock .f-unity-line { margin-top:0;margin-bottom:3px; } }
+
+/* סרגל הניווט (הכרעת בעלים 29.10.2026): מסגרת דקה בהירה זהה לכל הלשוניות; פרופיל ו-AI נשארים מודגשים.
+   הסרגל התחתון ברוחב אופטימלי, ומתרחב כשיש מקום ברוחב */
+.f-nav > a:not(.f-me):not(.f-ai), .f-nav a.f-framed, .f-more > button, .f-nav button.f-share { box-shadow:inset 0 0 0 1px rgb(var(--line)); }
+.f-nav > a[aria-current=page]:not(.f-me):not(.f-ai) { box-shadow:0 2px 8px rgb(var(--signal) / .35); }
+.f-nav button.f-share { background:none;color:rgb(var(--ink-soft));font-weight:400; }
+.f-nav-bottom { width:min(calc(100vw - 16px), 640px); }
+.f-nav-bottom > a:not(.f-me):not(.f-ai), .f-nav-bottom > .f-more, .f-nav-bottom > button.f-share { flex:1 0 auto;text-align:center; }
+.f-nav-bottom > .f-more > button { width:100%; }
