@@ -23,10 +23,10 @@ function ShiftLine({ shift, up }: { shift: SeatShift | null; up: boolean }) {
   if (!shift) return null;
   const sign = up ? "+" : "\u2212";
   return (
-    <div className={up ? "text-pos" : "text-neg"}>
+    <div className={`whitespace-nowrap ${up ? "text-pos" : "text-neg"}`}>
       <span aria-hidden="true">{up ? "▲" : "▼"} </span>
       <span className="sr-only">{up ? "מנדט נוסף:" : "איבוד מנדט:"} </span>
-      {LTR(`${sign}${num(shift.votes)}`)} קולות{shift.pct !== null && shift.pct >= 0.1 && <> ({LTR(`${sign}${pctValue(shift.pct, 1)}%`)})</>}
+      {LTR(`${sign}${num(shift.votes)}`)}{shift.pct !== null && shift.pct >= 0.1 && <> ({LTR(`${sign}${shift.pct >= 100 ? num(shift.pct) : pctValue(shift.pct, 1)}%`)})</>}
     </div>
   );
 }
@@ -49,16 +49,16 @@ export function Results2026({ chips }: { chips: React.ReactNode }) {
         assumption="כמה קולות צריכים להתווסף לרשימה, או להיגרע ממנה, כדי שמספר המנדטים שלה ישתנה, כששאר הרשימות קבועות. האחוז הוא ביחס לקולות שיש לרשימה עכשיו."
         methodAnchor="seat-change"
       >
-      <table className="w-full text-sm mt-4">
+      <table className="w-[calc(100%+1.5rem)] -mx-3 text-sm mt-4">
         <caption className="sr-only">תוצאות 2026 — ספירה חלקית</caption>
-        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">רשימה</th><th scope="col" className="pe-3">אחוז מהקולות</th><th scope="col" className="pe-3">מנדטים</th>{changes && <th scope="col">השינוי הקרוב במנדטים</th>}</tr></thead>
+        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-2">רשימה</th><th scope="col" className="pe-2">אחוז מהקולות</th><th scope="col" className="pe-2">מנדטים</th>{changes && <th scope="col">השינוי הקרוב במנדטים</th>}</tr></thead>
         <tbody>
           {ids.map((id) => (
             <tr key={id} className="border-b border-paper-line">
-              <th scope="row" className="py-1 pe-3 text-start font-medium">{listName(id)}</th>
-              <td className="pe-3 tabular-nums">{pct[id] !== undefined ? `${pctValue(pct[id], 1)}%` : "—"}</td>
-              <td className="pe-3 tabular-nums">{actual[id] ?? 0}</td>
-              {changes && <td className="tabular-nums text-xs"><ShiftLine shift={changes[id]?.up ?? null} up /><ShiftLine shift={changes[id]?.down ?? null} up={false} /></td>}
+              <th scope="row" className="py-1 pe-2 text-start font-medium">{listName(id)}</th>
+              <td className="pe-2 tabular-nums">{pct[id] !== undefined ? `${pctValue(pct[id], 1)}%` : "—"}</td>
+              <td className="pe-2 tabular-nums">{actual[id] ?? 0}</td>
+              {changes && <td className="tabular-nums text-[11px]"><ShiftLine shift={changes[id]?.up ?? null} up /><ShiftLine shift={changes[id]?.down ?? null} up={false} /></td>}
             </tr>
           ))}
         </tbody>
