@@ -157,6 +157,8 @@ const TITLES: Record<Kind, Record<View, string>> = {
   bloc: { from: "מאיפה הגיעו מצביעי הגוש בבחירות הנוכחיות", to: "לאן הלכו מצביעי הגוש בבחירות הקודמות" },
 };
 const BLOCS = new Set(["netanyahu", "haredi", "arab", "eisenkot"]);
+/** "לאן הלכו" עם שם המפלגה (הכרעת בעלים 29.10.2026): "לאן הלכו מצביעי הליכוד בבחירות הקודמות"; בגושים — הכותרת הכללית */
+const toTitle = (kind: Kind, row?: FlowRow) => (kind === "party" && row ? `לאן הלכו מצביעי ${row.name} בבחירות הקודמות` : TITLES[kind].to);
 
 /** תמונה ושם בפינה הימנית העליונה של טבלת הנתונים (הכרעת בעלים 29.10.2026); שם של כמה מילים — מילה בשורה */
 function Head({ line, center = false }: { line: PairedRow; center?: boolean }) {
@@ -192,10 +194,10 @@ function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind;
     {/* טאבלט (הכרעת בעלים 29.10.2026): הטבלה ברוחב מלא, ומתחתיה ״מאיפה״ ו״לאן״ באותה שורה ובאותו גובה */}
     <div className={`min-w-0 sm:col-span-2 md:col-span-1 md:h-full ${one ? "grid grid-cols-[auto_minmax(0,1fr)] gap-3 items-stretch md:block" : ""}`}>
       {stats}
-      {one && <FlowCard narrow className="md:hidden" title={TITLES[kind][line.from ? "from" : "to"]} data={line.from ?? line.to} view={line.from ? "from" : "to"} colorOf={line.from ? fromColor : toColor} />}
+      {one && <FlowCard narrow className="md:hidden" title={line.from ? TITLES[kind].from : toTitle(kind, line.to)} data={line.from ?? line.to} view={line.from ? "from" : "to"} colorOf={line.from ? fromColor : toColor} />}
     </div>
     <FlowCard className={one ? "hidden md:block" : ""} title={TITLES[kind].from} data={line.from} view="from" colorOf={fromColor} />
-    <FlowCard className={one ? "hidden md:block" : ""} title={TITLES[kind].to} data={line.to} view="to" colorOf={toColor} />
+    <FlowCard className={one ? "hidden md:block" : ""} title={toTitle(kind, line.to)} data={line.to} view="to" colorOf={toColor} />
   </li>;
 }
 
@@ -210,7 +212,7 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
   const from = group.ids26.map((id) => rows.cameFrom.find((r) => r.id === id)).filter((r): r is FlowRow => !!r);
   const to = group.letters22.map((l) => rows.wentTo.find((r) => r.id === l)).filter((r): r is FlowRow => !!r);
   const names22 = to.map((r) => r.name).join(" + ");
-  const titled = (r: FlowRow, view: View) => view === "from" ? `מאיפה הגיעו מצביעי ${r.name}` : `לאן הלכו מצביעי ${r.name}`;
+  const titled = (r: FlowRow) => `מאיפה הגיעו מצביעי ${r.name}`;
   if (from.length > 1) {
     const ordered = [...from].sort((a, b) => b.total - a.total);
     const cells = ordered.flatMap((r, i) => {
@@ -219,12 +221,12 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
       const row = i === 0 ? "md:row-start-1" : "md:row-start-2";
       return [
         <div key={`s-${r.id}`} className={`min-w-0 md:col-start-1 ${row}`}><Stats years={{ y2022: null, y2026: partyYears(r.id, null).y2026 }} what={r.name} head={head} /></div>,
-        <FlowCard key={`f-${r.id}`} className={`md:col-start-2 ${row}`} title={titled(r, "from")} data={r} view="from" colorOf={fromColor} />,
+        <FlowCard key={`f-${r.id}`} className={`md:col-start-2 ${row}`} title={titled(r)} data={r} view="from" colorOf={fromColor} />,
       ];
     });
     return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group="split">
       {cells}
-      {to.map((r) => <FlowCard key={`t-${r.id}`} className="sm:col-span-2 md:col-span-1 md:col-start-3 md:row-start-1 md:row-span-2" title={TITLES.party.to} data={r} view="to" colorOf={toColor} />)}
+      {to.map((r) => <FlowCard key={`t-${r.id}`} className="sm:col-span-2 md:col-span-1 md:col-start-3 md:row-start-1 md:row-span-2" title={toTitle("party", r)} data={r} view="to" colorOf={toColor} />)}
     </li>;
   }
   const r26 = from[0];
@@ -242,7 +244,7 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
     {r26 && <FlowCard className="sm:h-full" title={TITLES.party.from} data={r26} view="from" colorOf={fromColor} />}
     {/* בטלפון "לאן הלכו" של שתי הרשימות זה לצד זה (הכרעת בעלים 29.10.2026) */}
     <div className="min-w-0 grid grid-cols-2 sm:grid-cols-1 gap-3 auto-rows-fr" data-side="to">
-      {to.map((r) => <FlowCard key={r.id} narrow className="sm:h-full" title={titled(r, "to")} data={r} view="to" colorOf={toColor} />)}
+      {to.map((r) => <FlowCard key={r.id} narrow className="sm:h-full" title={toTitle("party", r)} data={r} view="to" colorOf={toColor} />)}
     </div>
   </li>;
 }
