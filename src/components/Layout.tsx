@@ -4,7 +4,7 @@ import { useScreenShown } from "../lib/screenVisibility";
 import { PersonalBlocsProvider } from "./PersonalBlocs";
 import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { EmbedButton, EmbedFrame } from "./Embed";
 import { embeddableFor, isEmbed } from "../lib/embed";
 import ScreenFooter from "./ScreenFooter";
@@ -321,7 +321,13 @@ function LayoutBody() {
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
-        {embeddableFor(pathname, new URLSearchParams(search).get("tab")) && <ScreenFooter info={pathname !== "/changes"}><EmbedButton /></ScreenFooter>}
+        {embeddableFor(pathname, new URLSearchParams(search).get("tab")) && <ScreenFooter info={false}>
+          {/* ״תוצאות״ ו״מה השתנה״: שורה אחת ממורכזת — ״איך זה חושב?״ ו״הטמעה באתר אחר״ (הכרעת בעלים 29.10.2026) */}
+          {pathname === "/results-2026" && <Link to="/method#guess-accuracy" className="!text-ink-soft !font-normal underline">איך זה חושב?</Link>}
+          {/* ״תוצאות רשמיות״ — מכרטיס אחוז ההצבעה שהוסר, לשורת התחתית (הכרעת בעלים 29.10.2026) */}
+          {pathname === "/results-2026" && <a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="!text-ink-soft !font-normal underline">תוצאות רשמיות</a>}
+          <EmbedButton />
+        </ScreenFooter>}
       </main>
       {(!navTop || forceBottom) && <FocusNav className="f-nav-bottom" unread={unread} />}
     </div>

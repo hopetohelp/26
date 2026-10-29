@@ -36,7 +36,7 @@ export default function Explained({ asOf, methodAnchor, children, details, showM
   const [slot, setSlot] = useState<Element | null>(null);
   useEffect(() => { if (inFooter) setSlot(document.querySelector("[data-footer-slot]")); }, [inFooter]);
   if (bare) return <div>{children}</div>;
-  if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span><Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link></span>, slot)}</div>;
+  if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span><Link to={`/method#${methodAnchor}`} className="!text-ink-soft !font-normal underline">איך זה חושב?</Link></span>, slot)}</div>;
   return (
     <div>
       {children}
