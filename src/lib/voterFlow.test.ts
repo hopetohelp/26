@@ -23,8 +23,8 @@ describe("מעבר מצביעים לפי קלפי (src/data/flow2026.json)", () 
   }
   it("הכיסוי עולה מדרגה לדרגה, והיישובים מכסים יותר מהקלפיות", () => {
     const b = coverage("ballots"), l = coverage("localities");
-    expect(b.sub).toBeLessThanOrEqual(b.ballot);
-    expect(b.ballot).toBeLessThanOrEqual(b.total);
+    expect(b.sub).toBeLessThanOrEqual(b.center);
+    expect(b.center).toBeLessThanOrEqual(b.total);
     expect(l.total).toBeGreaterThanOrEqual(b.total);
     expect(l.total).toBeLessThanOrEqual(100);
   });
