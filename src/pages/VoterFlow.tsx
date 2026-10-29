@@ -238,7 +238,7 @@ export default function VoterFlow() {
         <div className="hidden md:block"><Paired rows={data.blocs} same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></div>
       </Explained>
       {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
-      <Fold title="בדיקה לפי קלפי, מיקום או יישוב">
+      <Fold title="בדיקה לפי קלפי">
         <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
       </Fold>
     </div>

@@ -37,6 +37,7 @@
 | `data/dictionary.json` | מילון המספרים בטקסט | `src/pages/Method.tsx` | המילון |
 
 ### שאר הריפו
+- `ballot-locations.json` — שמות מבנים וכתובות של 12,018 קלפיות 2026; `raw/ballot-locations-2026.xlsx` (קובץ ועדת הבחירות, עותק מקולות נודדים) ← `pipeline/ballot_locations.py`. מילון: `voter-flow`; הסינון וסיכומי בדיקת הקלפיות ב־`src/lib/ballotLookup.ts`.
 - `src/engine/baderOfer.ts` — מנוע המנדטים (חוק הבחירות); `src/engine/law.ts` — אחוזים ⇐ מנדטים וקולות כשרים; `src/engine/pctForSeats.ts` — מנדטים ⇐ אחוזים. משותף לאתר, לשרת ההשתתפות ולשרת ה-MCP — אין חישוב משוכפל.
 - `src/pages/` — המסכים (הרשימה: `src/lib/pages.ts`); `src/pages/Method.tsx` — מילון המספרים (`DICTIONARY`).
 - `worker/mcp/` — שרת ה-MCP (`/public` בלי התחברות, `/mcp` עם התחברות לחשבון האתר); קורא רק מהקבצים שלמעלה ומהמנוע, ופועל בהרשאות המשתמש דרך שרת ההשתתפות. המדריך: `worker/mcp/README.md`.

@@ -10,10 +10,8 @@ import { useHagzara } from "../pages/simple/hagzara";
 import { useSession } from "../pages/guess/useCrowd";
 import { countImage } from "../lib/visits";
 import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, groupChange, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow, type Mode } from "../lib/voterFlow";
+import { sumBallotVotes, validBallotVotes, type BallotUnits as Units } from "../lib/ballotLookup";
 
-/** public/flow-units.json: לכל יישוב — קלפיות 2022 ו-2026: [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות] */
-type Ballot = [string, string, number, number, ...number[]];
-interface Units { letters22: string[]; letters26: string[]; places: Record<string, { name: string; y22: Ballot[]; y26: Ballot[] }> }
 type Who = "all" | "haredi" | "party";
 type Where = "country" | "city";
 type Dir = "from" | "to";
@@ -41,11 +39,9 @@ interface CityShare { code: string; name: string; votes: number; share26: number
 function cityShares(u: Units, ids: string[]): CityShare[] {
   const l26 = ids.map((id) => u.letters26.indexOf(LETTER_OF[id])).filter((k) => k >= 0);
   const l22 = [...new Set(ids.flatMap(prevOf))].map((l) => u.letters22.indexOf(l)).filter((k) => k >= 0);
-  const sum = (rows: Ballot[], ks: number[]) => rows.reduce((a, r) => a + ks.reduce((s, k) => s + (r[4 + k] as number), 0), 0);
-  const valid = (rows: Ballot[], n: number) => rows.reduce((a, r) => a + (r.slice(4, 4 + n) as number[]).reduce((s, v) => s + v, 0), 0);
   return Object.entries(u.places).filter(([code, p]) => code !== ENVELOPES && p.y26.length).map(([code, p]) => {
-    const v26 = valid(p.y26, u.letters26.length), v22 = valid(p.y22, u.letters22.length), votes = sum(p.y26, l26);
-    return { code, name: p.name, votes, share26: v26 ? (votes / v26) * 100 : 0, share22: l22.length && v22 ? (sum(p.y22, l22) / v22) * 100 : null };
+    const v26 = validBallotVotes(p.y26, u.letters26.length), v22 = validBallotVotes(p.y22, u.letters22.length), votes = sumBallotVotes(p.y26, l26);
+    return { code, name: p.name, votes, share26: v26 ? (votes / v26) * 100 : 0, share22: l22.length && v22 ? (sumBallotVotes(p.y22, l22) / v22) * 100 : null };
   });
 }
 /** ערים עם לפחות 5% ממצביעי המפלגה; מפלגה שמצביעיה מפוזרים ואין לה עיר כזו (הליכוד) — חמש הערים עם הכי הרבה מצביעים שלה */
