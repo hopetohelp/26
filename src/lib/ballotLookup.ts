@@ -14,10 +14,10 @@ const baseNumber = (s: string) => s.split(".")[0];
 const subNumber = (s: string) => s.split(".")[1] ?? "";
 const numericOrder = (a: string, b: string) => a.localeCompare(b, "he", { numeric: true });
 
-export function matchingPlaces(units: BallotUnits, city: string): [string, BallotPlace][] {
+export function matchingPlaces(units: BallotUnits, city: string, preferExact = true): [string, BallotPlace][] {
   const all = Object.entries(units.places), query = normalize(city);
   const exact = all.filter(([, p]) => normalize(p.name) === query);
-  return exact.length ? exact : all.filter(([, p]) => normalize(p.name).includes(query));
+  return preferExact && exact.length ? exact : all.filter(([, p]) => normalize(p.name).includes(query));
 }
 
 /** רשימת ההצעות אינה נחתכת: גם כשיש התאמה מדויקת מציעים את כל ההמשכים. */
@@ -171,4 +171,66 @@ export function ballotPartyRows(units: BallotUnits, rows22: Ballot[], rows26: Ba
   }
   return result.filter((r) => (r.votes22 ?? 0) > 0 || (r.votes26 ?? 0) > 0)
     .sort((a, b) => (b.votes26 ?? 0) - (a.votes26 ?? 0) || (b.votes22 ?? 0) - (a.votes22 ?? 0));
+}
+
+export type LookupLevel = "city" | "ballot" | "sub";
+export type LookupSort = "name" | "voters" | "turnout";
+export interface SubBallotOption extends BallotOption { fullNumber: string; sub: string }
+export interface LookupScope {
+  id: string; code: string; city: string; ballot: string; sub: string; label: string; location: string;
+  voters: number | null; turnout: number | null;
+}
+
+/** כל תתי הקלפיות המתאימות, עם יישוב ומיקום כדי שמספר חוזר לא יתערבב בין ערים. */
+export function subBallotOptions(places: [string, BallotPlace][], ballot: string, query: string, locations?: BallotLocations): SubBallotOption[] {
+  const exactBase = places.some(([, p]) => [...p.y26, ...p.y22].some((r) => baseNumber(r[0]) === ballot.trim()));
+  return places.flatMap(([code, p]) => {
+    const rows = new Map<string, Ballot>();
+    for (const row of [...p.y22, ...p.y26]) {
+      const fullNumber = String(Number(row[0])), number = baseNumber(fullNumber), sub = subNumber(fullNumber);
+      if (!sub || !sub.startsWith(query.trim()) || (ballot.trim() && (exactBase ? number !== ballot.trim() : !number.startsWith(ballot.trim())))) continue;
+      rows.set(fullNumber, row);
+    }
+    return [...rows].map(([fullNumber, row]) => {
+      const address = locations?.locations[`${code}:${fullNumber}`], old = locations?.locations22?.[`${code}:${fullNumber}`];
+      return { id: `${code}:${fullNumber}`, code, place: p.name, number: baseNumber(fullNumber), fullNumber, sub: subNumber(fullNumber),
+        location: code === "9999" ? "מעטפות כפולות — ללא מיקום גאוגרפי" : address ? [address.venue, address.address].filter(Boolean).join(" · ") : old ? `${old} (2022)` : `מרכז קלפיות ${row[1]} (2022)` };
+    });
+  }).sort((a, b) => a.place.localeCompare(b.place, "he") || numericOrder(a.fullNumber, b.fullNumber));
+}
+
+/** בחירת ״הכל״ מייצרת רשומות נפרדות, ולא טבלת סכום משותפת של היחידות. */
+export function lookupScopes(units: BallotUnits, filter: BallotFilter, level: LookupLevel, locations?: BallotLocations): LookupScope[] {
+  const places = matchingPlaces(units, filter.city), byCode = new Map(places);
+  const summary = (rows: Ballot[]) => {
+    const s = ballotSummary(rows, units.letters26);
+    return { voters: s.present ? s.voters : null, turnout: s.turnout };
+  };
+  if (level === "city") return places.map(([code, p]) => ({ id: `city:${code}`, code, city: p.name, ballot: "", sub: "", label: p.name, location: "", ...summary(p.y26) }));
+  // אינדקס אחד לכל רמת מיון, כדי שרשימה ארצית לא תסרוק את כל הקלפיות לכל כרטיס.
+  const current = new Map<string, Ballot[]>();
+  for (const [code, p] of places) for (const row of p.y26) {
+    const key = `${code}:${level === "ballot" ? baseNumber(row[0]) : String(Number(row[0]))}`;
+    if (!current.has(key)) current.set(key, []);
+    current.get(key)!.push(row);
+  }
+  if (level === "ballot") return ballotOptions(places, filter.ballot, locations).map((o) => ({
+    id: `ballot:${o.id}`, code: o.code, city: o.place, ballot: o.number, sub: "", label: `${o.place} · קלפי ${o.number}`, location: o.location,
+    ...summary(current.get(o.id) ?? []),
+  }));
+  return subBallotOptions(places, filter.ballot, filter.sub, locations).filter((o) => byCode.has(o.code)).map((o) => ({
+    id: `sub:${o.id}`, code: o.code, city: o.place, ballot: o.number, sub: o.sub, label: `${o.place} · תת קלפי ${o.fullNumber}`, location: o.location,
+    ...summary(current.get(o.id) ?? []),
+  }));
+}
+
+/** מספר מצביעים ואחוז הצבעה לפי 2026, מהגבוה לנמוך; ללא נתון — בסוף. */
+export function sortLookupScopes(scopes: LookupScope[], sort: LookupSort): LookupScope[] {
+  const alpha = (a: LookupScope, b: LookupScope) => a.city.localeCompare(b.city, "he") || numericOrder(a.ballot, b.ballot) || numericOrder(a.sub, b.sub);
+  return [...scopes].sort((a, b) => {
+    if (sort === "name") return alpha(a, b);
+    const x = a[sort], y = b[sort];
+    if (x === null || y === null) return x === y ? alpha(a, b) : x === null ? 1 : -1;
+    return y - x || alpha(a, b);
+  });
 }

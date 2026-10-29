@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { comparisonBallots, ballotComparisonStatus, ballotOptions, ballotPartyRows, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotUnits } from "./ballotLookup";
+import { lookupScopes, sortLookupScopes, subBallotOptions, comparisonBallots, ballotComparisonStatus, ballotOptions, ballotPartyRows, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotUnits } from "./ballotLookup";
 
 // שתי ערים עם אותו מספר קלפי, קלפי שפוצלה, קלפי שנוספה וקלפי שטרם נספרה.
 const units: BallotUnits = {
@@ -114,4 +114,30 @@ it("אין אומדן בלי מקור 2022 או בלי בעלי זכות; אין
   expect(selected.y22).toEqual([]);
   expect(selected.y26).toEqual([["15", "8", 100, 50, 20, 10, 10]]);
   expect(comparisonBallots(units, { city: "בית א", ballot: "12", sub: "" })).toMatchObject({ estimated: false, status: { level: "unavailable" }, y26: [] });
+});
+
+it("הכל בעיר מחזיר ערים נפרדות; מיון מצביעים ומיון אחוז הצבעה נותנים סדר שונה", () => {
+  const scopes = lookupScopes(units, { city: "", ballot: "", sub: "" }, "city");
+  expect(scopes.map((s) => s.label)).toEqual(["בית א", "בית ב"]);
+  expect(sortLookupScopes(scopes, "voters").map((s) => s.city)).toEqual(["בית א", "בית ב"]);
+  expect(sortLookupScopes(scopes, "turnout").map((s) => s.city)).toEqual(["בית ב", "בית א"]);
+  expect(scopes.find((s) => s.code === "a")).toMatchObject({ voters: 190, turnout: 190 / 300 * 100 });
+});
+
+it("הכל בקלפי מפריד מספרים שחוזרים בערים שונות, ומוגבל לעיר שנכתבה", () => {
+  const all = lookupScopes(units, { city: "", ballot: "", sub: "" }, "ballot");
+  expect(all).toHaveLength(4);
+  expect(all.filter((s) => s.ballot === "1").map((s) => s.code)).toEqual(["a", "b"]);
+  const city = lookupScopes(units, { city: "בית א", ballot: "", sub: "" }, "ballot");
+  expect(city.map((s) => s.ballot)).toEqual(["1", "12", "15"]);
+  expect(sortLookupScopes(city, "voters").map((s) => s.ballot)).toEqual(["1", "15", "12"]);
+  expect(city.find((s) => s.ballot === "12")).toMatchObject({ voters: null, turnout: null });
+});
+
+it("הכל בתת קלפי מחזיר כל תת קלפי לחוד, עם הגבלת עיר וקלפי ותוצאות מסוננות בהקלדה", () => {
+  const scopes = lookupScopes(units, { city: "בית א", ballot: "1", sub: "" }, "sub");
+  expect(scopes.map((s) => s.id)).toEqual(["sub:a:1.1", "sub:a:1.2"]);
+  expect(scopes.map((s) => s.voters)).toEqual([100, 40]);
+  expect(subBallotOptions(matchingPlaces(units, "בית א"), "1", "2").map((s) => s.fullNumber)).toEqual(["1.2"]);
+  expect(lookupScopes(units, { city: "בית ב", ballot: "1", sub: "" }, "sub")).toEqual([]);
 });
