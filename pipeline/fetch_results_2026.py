@@ -134,7 +134,7 @@ def from_jdn(d: dict) -> dict | None:
     }
 
 
-def write(votes: dict, valid: int | None, source: str, counted: float | None, status: str = "partial", as_of: str | None = None) -> int:
+def write(votes: dict, valid: int | None, source: str, counted: float | None, status: str = "partial", as_of: str | None = None, ballots: bool = False) -> int:
     """המנדטים לפי מנוע החוק ⇐ raw/results-2026.json. סך שאינו 120 — הקובץ לא שונה"""
     total = valid if valid and valid >= sum(votes.values()) else sum(votes.values())
     meta = json.loads((ROOT / "src" / "data" / "meta.json").read_text(encoding="utf-8"))
@@ -142,6 +142,11 @@ def write(votes: dict, valid: int | None, source: str, counted: float | None, st
     seats = allocate(votes, total, agreements)["seats"]
     seats = {k: seats.get(k, 0) for k in votes}
     data = json.loads(OUT.read_text(encoding="utf-8"))
+    if not ballots and "לפי קלפי" in str(data.get("source")):
+        # קובץ הקלפיות הרשמי של הוועדה הוא מקור האמת, ו"מה השתנה" מחושב מאותו קובץ: מקור אחר (ויקיפדיה, JDN) לא דורס אותו,
+        # אחרת הקולות לא תואמים למעבר המצביעים והפרסום נחסם (29.10.2026)
+        print("התוצאות מקובץ הקלפיות הרשמי של ועדת הבחירות — מקור אחר לא דורס אותן; הקובץ לא שונה")
+        return 0
     if sum(seats.values()) != 120:
         # בספירה זעירה (מעט קלפיות) העיגול עלול לתת 119/121 — המנדטים לא משתנים, רק "נספרו"
         print(f"::warning::חישוב המנדטים אינו 120 ({sum(seats.values())}) — המנדטים לא שונו")
@@ -194,7 +199,7 @@ def main() -> int:
     if len(sys.argv) > 2 and sys.argv[1] == "--ballots":
         # python3 pipeline/fetch_results_2026.py --ballots raw/ballots-2026.csv [שעת הקובץ, למשל "28/10 10:21"]
         src = from_ballots(Path(sys.argv[2]))
-        return write(src["votes"], src["valid"], src["source"], src["counted"], "partial", sys.argv[3] if len(sys.argv) > 3 else None)
+        return write(src["votes"], src["valid"], src["source"], src["counted"], "partial", sys.argv[3] if len(sys.argv) > 3 else None, ballots=True)
     if len(sys.argv) > 1 and sys.argv[1] == "--jdn":
         if len(sys.argv) > 2:
             raw = Path(sys.argv[2]).read_text(encoding="utf-8")
