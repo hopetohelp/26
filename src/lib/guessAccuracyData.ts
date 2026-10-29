@@ -1,11 +1,19 @@
 /** נתוני מסך "דיוק הניחושים": תוצאות האמת, הסקר האחרון של כל סדרה וממוצע הסקרים — מהמקורות הקיימים באתר */
 import resultsFile from "../../raw/results-2026.json";
-import { latestPerPollster, pollsterKey, pollsterLabel, registry, seatsIn, lists2026 } from "./data";
+import type { Agreement } from "../engine/baderOfer";
+import { seatChanges, type SeatChange } from "../engine/seatChange";
+import { meta, latestPerPollster, pollsterKey, pollsterLabel, registry, seatsIn, lists2026 } from "./data";
 import { SIMPLE_ALL, SIMPLE_DAYS, simpleValue } from "./simpleSources";
 import { medianSeats, type Seats } from "./guessAccuracy";
 
 export type ResultsStatus = "none" | "partial" | "final";
-export const results2026 = resultsFile as { status: ResultsStatus; asOf: string | null; source: string; seats: Seats; votes?: Record<string, number>; counted?: number | null };
+export const results2026 = resultsFile as { status: ResultsStatus; asOf: string | null; source: string; seats: Seats; votes?: Record<string, number>; valid?: number; counted?: number | null };
+/** השינוי הקרוב במנדטים של כל רשימה בספירה הנוכחית — מנוע החוק עם הסכמי העודפים (src/engine/seatChange.ts); אין קולות או כשרים בקובץ ⇐ null */
+export const seatChanges2026 = (): Record<string, SeatChange> | null => {
+  const { votes, valid } = results2026;
+  if (!votes || !valid) return null;
+  return seatChanges(votes, valid, meta.agreements2026.map((a) => a.pair as unknown as Agreement));
+};
 export const hasResults = () => results2026.status !== "none" && Object.keys(results2026.seats).length > 0;
 
 /** יום הבחירות — חלון הסקרים נסגר בו */
