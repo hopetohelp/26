@@ -11,7 +11,8 @@ export interface PageInfo {
 export const PAGES: PageInfo[] = [
   { to: "/guess", label: "הניחוש שלי" },
   { to: "/polls", label: "הסקרים" },
-  { to: "/past", label: "מה השתנה" },
+  { to: "/changes", label: "מה השתנה" },
+  { to: "/past", label: "היסטוריה" },
   { to: "/method", label: "מידע" },
 ];
 
@@ -40,13 +41,14 @@ export const SCREENS: Screen[] = [
   // הלשונית הימנית, "תוצאות אמת" (הכרעת בעלים 28.10.2026)
   { id: "results2026", to: "/results-2026", label: "תוצאות אמת", icon: "board", nav: "core" },
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
-  // בתצוגה הממוקדת: לשונית גלויה עם מסך "מה השתנה" בלבד (הכרעת בעלים 28.10.2026)
-  { id: "changes", to: "/changes", label: "מה השתנה", icon: "board", nav: "core", simple: true },
+  // "מה השתנה" — מסך עצמאי בשתי התצוגות (הכרעת בעלים 29.10.2026)
+  { id: "changes", to: "/changes", label: "מה השתנה", icon: "board", nav: "core" },
   // בסרגל רק בניתוח מורחב; המסך נשאר זמין בכתובת שלו (הכרעת בעלים 28.10.2026)
   { id: "community", to: "/community", label: "הניחושים", icon: "bars", nav: "core", advanced: true },
   // "האחרונים" (לשעבר מסך הבית "תמונת מצב") — הלשונית הראשונה של "סקרים" (הכרעת בעלים 28.10.2026)
   { id: "polls", to: "/polls", label: "הסקרים", icon: "bars", nav: "more", advanced: true, tabs: [{ id: "latest", label: "אחרונים" }, { id: "trends", label: "מגמות" }, { id: "archive", label: "ארכיון" }] },
-  { id: "past", to: "/past", label: "מה השתנה", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }, { id: "changes", label: "מה השתנה" }] },
+  // "היסטוריה": תוצאות אמת ודיוק הסקרים (הכרעת בעלים 29.10.2026)
+  { id: "past", to: "/past", label: "היסטוריה", icon: "board", nav: "more", advanced: true, tabs: [{ id: "results", label: "תוצאות אמת" }, { id: "accuracy", label: "דיוק הסקרים" }] },
   { id: "method", to: "/method", label: "מידע ומקורות", icon: "info", nav: "foot" },
 ];
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;

@@ -25,9 +25,6 @@ export function InterfaceProvider({ children }: { children: ReactNode }) {
     setPreferred(next);
     try { sessionStorage.setItem(INTERFACE_KEY, next); } catch { /* הבחירה נשארת לביקור */ }
     if (next === "simple" && requiresAdvanced(location.pathname, location.search)) navigate(location.pathname === "/guess" ? "/guess?view=edit" : "/");
-    // "מה השתנה" בממוקדת הוא מסך עצמאי (/changes); במורחב — לשונית בתוך "בחירות קודמות", ובחזרה (הכרעת בעלים 28.10.2026)
-    if (next === "advanced" && location.pathname === "/changes") navigate("/past?tab=changes");
-    if (next === "simple" && location.pathname === "/past" && new URLSearchParams(location.search).get("tab") === "changes") navigate("/changes");
     requestAnimationFrame(() => document.getElementById("main")?.focus({ preventScroll: true }));
   };
   return <ModeContext.Provider value={{ advanced, toggle, landing, setLanding }}>{children}</ModeContext.Provider>;

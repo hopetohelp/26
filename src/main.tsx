@@ -8,7 +8,6 @@ import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
 import { useGuessClosed } from "./lib/guessClosed";
 import { useScreenShown } from "./lib/screenVisibility";
-import { useInterface } from "./lib/interfaceMode";
 import SimpleOverview from "./pages/simple/Overview";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
@@ -31,7 +30,7 @@ import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 const About = lazy(page(() => import("./pages/About")));
 import { PageTitle } from "./components/ui";
 import Support, { AiScreen } from "./pages/Support";
-import { useSearchParams, Navigate } from "react-router-dom";
+import { useSearchParams, Navigate, useLocation } from "react-router-dom";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import { setVerifyCode } from "./lib/verifyEmail";
@@ -67,10 +66,20 @@ function GuessGate({ children }: { children: React.ReactNode }) {
   return closed ? <PageTitle lead="התוצאות ודיוק הניחושים — במסך ״תוצאות״.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
 }
 
-/** "מה השתנה": בממוקדת מסך עצמאי; במורחב — הלשונית שבתוך "בחירות קודמות" (הכרעת בעלים 28.10.2026) */
+/** "מה השתנה": מסך עצמאי בשתי התצוגות (הכרעת בעלים 29.10.2026) */
 function ChangesScreen() {
-  const { advanced } = useInterface();
-  return advanced ? <Navigate to="/past?tab=changes" replace /> : <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>;
+  return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>;
+}
+
+/** "היסטוריה": תוצאות אמת ודיוק הסקרים; הכתובת הישנה של "מה השתנה" (כולל הטמעות) עוברת למסך העצמאי */
+function PastScreen() {
+  const { search } = useLocation();
+  const q = new URLSearchParams(search);
+  if (q.get("tab") === "changes") { q.delete("tab"); const rest = q.toString(); return <Navigate to={`/changes${rest ? `?${rest}` : ""}`} replace />; }
+  return <Tabbed label="היסטוריה" aliases={{ voters: "results" }} tabs={[
+    { id: "results", label: "תוצאות אמת", element: <Results /> },
+    { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
+  ]} />;
 }
 
 function NotFound() {
@@ -161,14 +170,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="score" element={<Navigate to="/results-2026" replace />} />
           <Route path="results-2026" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
-          <Route
-            path="past"
-            element={<Tabbed label="מה השתנה" aliases={{ voters: "results" }} tabs={[
-              { id: "results", label: "תוצאות אמת", element: <Results /> },
-              { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
-              { id: "changes", label: "מה השתנה", element: <VoterFlow /> },
-            ]} />}
-          />
+          <Route path="past" element={<PastScreen />} />
           <Route
             path="method"
             element={<Tabbed

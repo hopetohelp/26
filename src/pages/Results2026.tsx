@@ -49,7 +49,9 @@ export function Results2026({ chips }: { chips: React.ReactNode }) {
         assumption="כמה קולות צריכים להתווסף לרשימה, או להיגרע ממנה, כדי שמספר המנדטים שלה ישתנה, כששאר הרשימות קבועות. האחוז הוא ביחס לקולות שיש לרשימה עכשיו."
         methodAnchor="seat-change"
       >
-      <table className="w-[calc(100%+1.5rem)] -mx-3 text-sm mt-4">
+      {/* בטלפון הטבלה נגללת בתוך עצמה — לא כל העמוד (הכרעת בעלים 29.10.2026) */}
+      <div className="-mx-3 mt-4 overflow-x-auto" role="region" aria-label="תוצאות 2026 — גלילה אופקית" tabIndex={0}>
+      <table className="w-full text-sm">
         <caption className="sr-only">תוצאות 2026 — ספירה חלקית</caption>
         <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-2">רשימה</th><th scope="col" className="pe-2">אחוז מהקולות</th><th scope="col" className="pe-2">מנדטים</th>{changes && <th scope="col">השינוי הקרוב במנדטים</th>}</tr></thead>
         <tbody>
@@ -63,8 +65,9 @@ export function Results2026({ chips }: { chips: React.ReactNode }) {
           ))}
         </tbody>
       </table>
+      </div>
       </Explained>
-      <p className="text-sm mt-3"><Link to="/past?tab=changes" className="font-semibold">מאיפה הגיעו המצביעים של כל רשימה ⇐ מה השתנה</Link></p>
+      <p className="text-sm mt-3"><Link to="/changes" className="font-semibold">מאיפה הגיעו המצביעים של כל רשימה ⇐ מה השתנה</Link></p>
     </Card>
   );
 }

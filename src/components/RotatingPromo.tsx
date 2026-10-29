@@ -22,12 +22,15 @@ export default function RotatingPromo({ messages, callToAction, label, href, onC
     return () => { clearInterval(timer); motion.removeEventListener("change", sync); };
   }, [paused, hovered, focused, messages.length]);
   const content = <>
-    <span aria-hidden="true" className="embed-cta-words grid items-center text-base md:text-xl font-bold leading-snug">
+    {/* כשיש מקום ברוחב — המשפט והקריאה לפעולה בשורה אחת (הכרעת בעלים 29.10.2026) */}
+    <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-0.5">
+    <span aria-hidden="true" className="embed-cta-words grid items-center text-base md:text-lg font-bold leading-snug">
       {messages.map((message, i) => <span key={message} className="embed-cta-message" data-active={i === current} data-previous={i === (current + messages.length - 1) % messages.length}>{message}</span>)}
     </span>
-    <strong className="block mt-2 text-sm font-extrabold">{callToAction}</strong>
+    <strong className="block text-sm font-extrabold">{callToAction}</strong>
+    </span>
   </>;
-  const actionClass = "embed-cta-action block w-full rounded-theme border-2 border-signal bg-signal px-12 py-4 text-center text-signal-ink hover:brightness-110";
+  const actionClass = "embed-cta-action block w-full rounded-theme border-2 border-signal bg-signal px-12 py-2 text-center text-signal-ink hover:brightness-110";
   return (
     <div className="embed-cta relative mb-4 w-full" data-paused={paused} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
       {href

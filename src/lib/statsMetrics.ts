@@ -46,7 +46,7 @@ export const statLabel = (k: StatKey) => STAT_METRICS.find((m) => m.key === k)?.
 /** שמות המסכים לכניסות לפי מסך (כתובת ⇐ שם בסרגל); כתובת שאינה ברשימה מוצגת כמו שהיא */
 const SCREEN_NAMES: Record<string, string> = {
   "/": "כניסה בלי מסך", "/results-2026": "תוצאות אמת", "/guess": "הניחוש שלי", "/changes": "מה השתנה", "/community": "הניחושים",
-  "/polls": "הסקרים", "/past": "בחירות קודמות", "/method": "מידע ומקורות", "/ai": "עוזר AI", "/account": "אישי",
+  "/polls": "הסקרים", "/past": "היסטוריה", "/method": "מידע ומקורות", "/ai": "עוזר AI", "/account": "אישי",
   "/today": "היום (כתובת ישנה)", "/calculator": "מחשבון (כתובת ישנה)", "/trends": "מגמות (כתובת ישנה)", "/thread": "שיחה", "/support": "תמיכה (כתובת ישנה)", "/feedback": "הערות (כתובת ישנה)",
 };
 export const screenName = (key: string) => { const p = key.replace(/^screen:/, ""); return SCREEN_NAMES[p] ?? p; };
