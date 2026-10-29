@@ -78,8 +78,9 @@ curl --fail -s --max-time 60 "https://mapvotes.bechirot.gov.il/data/votes/latest
 python3 pipeline/build_data.py && python3 pipeline/test_model.py && python3 pipeline/test_forecast.py && python3 pipeline/test_quality.py
 npx tsc --noEmit -p tsconfig.json && npm test && npm run build
 git checkout -- src/data tsconfig.tsbuildinfo   # רק קובצי הנתונים של הסקיל נכנסים
-git fetch -q --depth=3000 origin main && python3 pipeline/results_log.py   # יומן העדכונים (הכרעת בעלים 29.10.2026)
-git add public/turnout.json raw/results-2026.json "docs/יומן-עדכוני-תוצאות-2026.md" && git commit -m "תוצאות 2026: עדכון <שעה> — נספרו X%"
+git add public/turnout.json raw/results-2026.json && git commit -m "תוצאות 2026: עדכון <שעה> — נספרו X%"
+# יומן העדכונים (הכרעת בעלים 29.10.2026) — אחרי ה-commit, כדי שהעדכון עצמו ייכנס ליומן
+git fetch -q --depth=3000 origin main && python3 pipeline/results_log.py && git add "docs/יומן-עדכוני-תוצאות-2026.md" && git commit -m "יומן עדכוני תוצאות"
 git push -u origin HEAD
 ```
 - פותחים PR ומחכים ל-CI ירוק.
