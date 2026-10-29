@@ -1,10 +1,10 @@
-import { lazy, Suspense, useCallback, useId, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
 import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { PartyAvatar } from "../components/PartyAvatar";
 import { num, pctOne, pctValue } from "../lib/format";
@@ -13,10 +13,6 @@ const BallotLookup = lazy(() => import("../components/BallotLookup"));
 const FlowShare = lazy(() => import("../components/FlowShare"));
 
 type View = "from" | "to";
-const VIEWS: { id: View; label: string; lead: string }[] = [
-  { id: "from", label: "מאיפה הגיעו", lead: "מאיפה הגיעו המצביעים לכל מפלגה בבחירות הנוכחיות" },
-  { id: "to", label: "לאן הלכו", lead: "לאן הלכו המצביעים לכל מפלגה בבחירות הקודמות" },
-];
 const SHARE_MESSAGES = [
   "רוצים פוסט מעוצב על המפלגות החרדיות?",
   "רוצים תמונה של השינוי בכל המפלגות?",
@@ -62,14 +58,14 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
   );
 }
 
-/** ארבעת הפרמטרים של המפלגה ככרטיס; ברצף: מצביעים, מזכות בחירה, מהכשרים, מנדטים */
-function Stats({ id26, letters22, compact = false }: { id26: string | null; letters22: string | null; compact?: boolean }) {
-  const { y2022, y2026 } = partyYears(id26, letters22);
-  if (!y2022 && !y2026) return <p className="text-xs text-ink-soft">לא רצה</p>;
+/** ארבעת הפרמטרים ככרטיס (מפלגה או גוש); ברצף: מצביעים, מזכות בחירה, מהכשרים, מנדטים. רצה רק באחת מהמערכות — טור אחד */
+function Stats({ years, what }: { years: { y2022: YearNumbers | null; y2026: YearNumbers | null }; what: string }) {
+  const { y2022, y2026 } = years;
+  if (!y2022 && !y2026) return null;
   const row = (key: keyof typeof PARAM_NAMES, get: (y: YearNumbers) => number | null, fmt: (n: number) => string, kind: "count" | "pct"): ParamRow =>
     ({ key, label: PARAM_NAMES[key], v22: y2022 ? get(y2022) : null, v26: y2026 ? get(y2026) : null, fmt, kind });
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
-  return <ParamCard rows={rows} compact={compact} caption="ארבעת הפרמטרים של המפלגה: 2022, 2026 והפער" className={compact ? "basis-full min-w-0" : "w-full mt-1"} />;
+  return <ParamCard rows={rows} compact caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full" />;
 }
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
@@ -97,77 +93,49 @@ function pairedRows(rows: Rows, same: (id: string) => string | undefined, stats:
   return lines;
 }
 
-/** כיוון אישי לכל מפלגה בטלפון: ימינה למקור המצביעים, שמאלה ליעד; גלילה אנכית נשארת טבעית. */
-function SwipePartyRow({ line, fromColor, toColor }: { line: PairedRow; fromColor: (id: string) => string; toColor: (id: string) => string }) {
-  const [selected, setSelected] = useState<View>(line.from ? "from" : "to");
-  const start = useRef<{ x: number; y: number; pointer: number } | null>(null);
-  const panelId = useId(), showStats = !!(line.id26 || line.letters22);
-  const label = selected === "from" ? "מאיפה הגיעו ל־2026" : "לאן הלכו מ־2022";
-  const nextLabel = selected === "from" ? "לאן הלכו מ־2022" : "מאיפה הגיעו ל־2026";
-  return <li className="flow-swipe-card border-t border-paper-line py-3" data-party={line.key} data-direction={selected} style={{ touchAction: "pan-y pinch-zoom" }}
-    onPointerDown={(e) => {
-      if (e.pointerType !== "touch" || !e.isPrimary || (e.target as Element).closest("button,a,input")) return;
-      start.current = { x: e.clientX, y: e.clientY, pointer: e.pointerId };
-      e.currentTarget.setPointerCapture(e.pointerId);
-    }}
-    onPointerCancel={() => { start.current = null; }}
-    onPointerUp={(e) => {
-      const first = start.current; start.current = null;
-      if (!first || first.pointer !== e.pointerId) return;
-      const dx = e.clientX - first.x, dy = e.clientY - first.y;
-      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.2) setSelected(dx > 0 ? "from" : "to");
-    }}>
-    <div className="flex flex-wrap items-start gap-x-3 gap-y-2 mb-2">
-      <div className="flex items-center gap-2 min-w-0 basis-24 grow">
-        {showStats && <PartyAvatar id={line.img} size={32} fallback={line.letters22 ?? LETTER_2026[line.id26 ?? ""] ?? "…"} />}
-        <div className="min-w-0"><h3 className="font-bold leading-tight break-words">{line.name}</h3>{line.sub && <p className="text-xs text-ink-soft">ב־2022: {line.sub}</p>}</div>
-      </div>
-      {showStats && <Stats id26={line.id26} letters22={line.letters22} compact />}
+type Kind = "party" | "bloc";
+const TITLES: Record<Kind, Record<View, string>> = {
+  party: { from: "מאיפה הגיעו מצביעי המפלגה בבחירות הנוכחיות", to: "לאן הלכו מצביעי המפלגה בבחירות הקודמות" },
+  bloc: { from: "מאיפה הגיעו מצביעי הגוש בבחירות הנוכחיות", to: "לאן הלכו מצביעי הגוש בבחירות הקודמות" },
+};
+const BLOCS = new Set(["netanyahu", "haredi", "arab", "eisenkot"]);
+
+/** שם ותמונה מימין לטבלה; שם של כמה מילים — מילה בשורה */
+function Name({ line }: { line: PairedRow }) {
+  const avatar = !!(line.id26 || line.letters22);
+  return <div className="flex flex-col items-start gap-1 shrink-0 max-w-[6.5rem]">
+    {avatar && <PartyAvatar id={line.img} size={40} fallback={line.letters22 ?? LETTER_2026[line.id26 ?? ""] ?? "…"} />}
+    <h3 className="font-bold leading-tight">{line.name.split(" ").map((w, i) => <span key={i} className="block">{w}</span>)}</h3>
+    {line.sub && <span className="text-xs text-ink-soft leading-tight">ב־2022: {line.sub}</span>}
+  </div>;
+}
+
+/** כרטיס תנועה: כותרת בשורה אחת (הגופן מתכווץ עם רוחב הכרטיס) והפסים */
+function FlowCard({ title, data, view, colorOf }: { title: string; data?: FlowRow; view: View; colorOf: (id: string) => string }) {
+  return <section className="min-w-0 rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
+    <h4 className="font-bold text-accent text-center whitespace-nowrap mb-2" style={{ fontSize: "clamp(9px, 4.6cqi, 13px)" }}>{title}</h4>
+    {data ? <Body row={data} view={view} colorOf={colorOf} total={false} /> : <p className="text-sm text-ink-soft">לא רצה בבחירות אלו</p>}
+  </section>;
+}
+
+/**
+ * שורה לכל מפלגה או גוש (הצעה א׳, הכרעת בעלים 29.10.2026): שם ותמונה מימין, טבלת הפרמטרים, ושני כרטיסי התנועה.
+ * בטלפון: השם והטבלה בשורה אחת, ומתחתם שני הכרטיסים; במחשב: ארבעה טורים, וטורי התנועה צרים יותר.
+ */
+function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind; fromColor: (id: string) => string; toColor: (id: string) => string }) {
+  const years = kind === "party" ? (line.id26 || line.letters22 ? partyYears(line.id26, line.letters22) : null) : BLOCS.has(line.key) ? blocYears(line.key) : null;
+  return <li className="border-t border-paper-line py-4 grid gap-3 md:grid-cols-[6.5rem_minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-start" data-party={line.key}>
+    <div className="flex items-start gap-3 md:contents">
+      <Name line={line} />
+      <div className="flex-1 min-w-0">{years && <Stats years={years} what={line.name} />}</div>
     </div>
-    <div className="flex justify-end mb-2">
-      <button type="button" aria-label={`${label} — ${line.name}; מעבר ל${nextLabel}`} aria-controls={`${panelId}-${selected}`}
-        onClick={() => setSelected((v) => v === "from" ? "to" : "from")}
-        className="min-h-[44px] px-3 inline-flex items-center gap-2 rounded-theme border border-paper-line bg-paper-card text-ink text-xs font-bold">
-        <span aria-hidden="true">{selected === "from" ? "→" : "←"}</span><span aria-live="polite">{label}</span>
-      </button>
-    </div>
-    <div className="flow-swipe-panels">
-      {(["from", "to"] as const).map((direction) => {
-        const data = direction === "from" ? line.from : line.to;
-        return <div key={direction} id={`${panelId}-${direction}`} className="flow-swipe-panel" data-view={direction} data-active={selected === direction} aria-hidden={selected !== direction}>
-          {data ? <Body row={data} view={direction} colorOf={direction === "from" ? fromColor : toColor} total={!showStats} /> : <p className="text-sm text-ink-soft">המפלגה לא רצה בבחירות אלו</p>}
-        </div>;
-      })}
-    </div>
+    <FlowCard title={TITLES[kind].from} data={line.from} view="from" colorOf={fromColor} />
+    <FlowCard title={TITLES[kind].to} data={line.to} view="to" colorOf={toColor} />
   </li>;
 }
 
-/** מסך רחב: שם ותמונה פעם אחת מימין (טור צר), ואחריהם שני טורים — "מאיפה הגיעו" (2026) ו"לאן הלכו" (2022); מפלגה שלא רצה — "המפלגה לא רצה בבחירות אלו" (הכרעת בעלים 28.10.2026) */
-function Paired({ rows, same, fromColor, toColor, stats = false }: { rows: { cameFrom: FlowRow[]; wentTo: FlowRow[] }; same: (id: string) => string | undefined; fromColor: (id: string) => string; toColor: (id: string) => string; stats?: boolean }) {
-  const lines = pairedRows(rows, same, stats);
-  const empty = (text: string) => <p className="text-sm text-ink-soft self-center">{text}</p>;
-  return (
-    <div className="mt-2 grid grid-cols-[minmax(20rem,1.2fr)_minmax(0,1.5fr)_minmax(0,1.5fr)] gap-x-6">
-      <span /><span className="font-bold text-ink-soft pb-2">{VIEWS[0].lead}</span><span className="font-bold text-ink-soft pb-2">{VIEWS[1].lead}</span>
-      {lines.map((l) => (
-        <div key={l.key} className="flow-paired-row contents" data-layout="paired" data-party={l.key}>
-          <div className="border-t border-paper-line py-3 flex flex-col items-start gap-1 min-w-0">
-            {(l.id26 || l.letters22) && <PartyAvatar id={l.img} size={44} fallback={l.letters22 ?? LETTER_2026[l.id26 ?? ""] ?? "…"} />}
-            <h3 className="font-bold leading-tight line-clamp-2">{l.name}</h3>
-            {l.sub && <span className="text-xs text-ink-soft leading-tight">ב-2022: {l.sub}</span>}
-            {(l.id26 || l.letters22) && <Stats id26={l.id26} letters22={l.letters22} />}
-          </div>
-          <div className="border-t border-paper-line py-3 flex">{l.from ? <Body row={l.from} view="from" colorOf={fromColor} total={!stats} /> : empty("המפלגה לא רצה בבחירות אלו")}</div>
-          <div className="border-t border-paper-line py-3 flex">{l.to ? <Body row={l.to} view="to" colorOf={toColor} total={!stats} /> : empty("המפלגה לא רצה בבחירות אלו")}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Flows({ rows, fromColor, toColor, stats = false }: { rows: Rows; fromColor: (id: string) => string; toColor: (id: string) => string; stats?: boolean }) {
-  const lines = pairedRows(rows, stats ? (id) => SAME_ROW[id] : (id) => id, stats);
-  return <ul className="mt-2">{lines.map((line) => <SwipePartyRow key={line.key} line={line} fromColor={fromColor} toColor={toColor} />)}</ul>;
+function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kind; same: (id: string) => string | undefined; fromColor: (id: string) => string; toColor: (id: string) => string }) {
+  return <ul className="mt-2">{pairedRows(rows, same, kind === "party").map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
 }
 
 /** בלי השורות שאינן אמינות (הכרעת בעלים 28.10.2026): "רשימות אחרות" — בהשוואה לקלפיות המצביעים של 2026 בהן יוצאים 100% "לא הצביעו" (חוסר יציבות בקבוצה זעירה); "לא הצביעו" בחלק המפלגות */
@@ -203,11 +171,9 @@ export default function VoterFlow() {
         assumption="כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי הקלפי השלמה, אחר כך לפי מיקום הקלפי, ולבסוף לפי היישוב. הסכום של כל מפלגה הוא הספירה הרשמית; קלפיות שעדיין לא נספרו ב-2026 — לפי השינוי באותו יישוב; יישוב בלי קלפי ב-2022 — ״יישובים חדשים״. אין שימוש בסקרים."
         methodAnchor="voter-flow"
       >
-        <div className="md:hidden"><Flows rows={data.lists} stats fromColor={bloc2022} toColor={bloc2026} /></div>
-        <div className="hidden md:block"><Paired rows={data.lists} stats same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></div>
+        <Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} />
         <h2 className="text-xl font-display leading-tight mt-8">מעבר בין הגושים</h2>
-        <div className="md:hidden"><Flows rows={data.blocs} fromColor={(id) => id} toColor={(id) => id} /></div>
-        <div className="hidden md:block"><Paired rows={data.blocs} same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></div>
+        <Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} />
       </Explained>
       {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
       <Fold title="בדיקה לפי קלפי">

@@ -34,8 +34,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 B22, B26 = ROOT / "raw" / "ballots-2022.csv", ROOT / "raw" / "ballots-2026.csv"
 OUT, UNITS = ROOT / "src" / "data" / "flow2026.json", ROOT / "public" / "flow-units.json"
-# בעלי זכות הבחירה בקלפיות שנספרו ב-2026 — המכנה של "מזכות בחירה" בכרטיסי "מה השתנה" ובתמונות השיתוף (קובץ נפרד מ-flow2026.json)
-ELIGIBLE = ROOT / "src" / "data" / "eligible2026.json"
 
 # הרשימות שעברו את אחוז החסימה ב-2022, ומרצ ובל"ד (מעל 2.5%); השאר ⇐ "other"
 OLD = ["מחל", "פה", "ט", "כן", "שס", "ג", "ל", "עם", "ום", "אמת", "מרצ", "ד", "ב"]
@@ -246,7 +244,8 @@ def counted(r26: list[dict]) -> dict:
     total = json.loads((ROOT / "public" / "turnout.json").read_text(encoding="utf-8"))["total"]["מצביעים"]
     res = json.loads((ROOT / "raw" / "results-2026.json").read_text(encoding="utf-8"))
     voters = sum(n(r, "מצביעים") for r in r26)
-    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1]}
+    # eligible — בעלי זכות הבחירה באותן קלפיות: המכנה של "מזכות בחירה" ב-2026 (כרטיסי "מה השתנה" ותמונות השיתוף)
+    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1], "eligible": sum(n(r, "בזב") for r in r26)}
 
 
 def mode(r22: list[dict], r26: list[dict], by_city: bool) -> dict:
@@ -295,7 +294,6 @@ def main() -> int:
     }
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     UNITS.write_text(json.dumps(units_file(r22, r26), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    ELIGIBLE.write_text(json.dumps({"eligible": sum(n(r, "בזב") for r in r26), "asOf": data["counted"]["time"]}, separators=(",", ":")) + "\n", encoding="utf-8")
     for k, m in data["modes"].items():
         print(k, {t: v["valid"] for t, v in m["tiers"].items()})
     return 0
