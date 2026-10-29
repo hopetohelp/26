@@ -1,4 +1,5 @@
 import flowFile from "../data/flow2026.json";
+import eligibleFile from "../data/eligible2026.json";
 import { listName, results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
@@ -69,9 +70,9 @@ export function coverage(mode: Mode) {
 }
 
 /** שורה קצרה במסך ובתמונות השיתוף: "נתונים חלקיים X% מהמצביעים HH:MM" (הכרעת בעלים 28.10.2026) */
-const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string; eligible?: number } }).counted;
-/** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"); null = לא ידוע */
-export const eligible2026 = () => countedOf()?.eligible ?? null;
+const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string } }).counted;
+/** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, src/data/eligible2026.json); null = לא ידוע */
+export const eligible2026 = (): number | null => (eligibleFile.eligible > 0 ? eligibleFile.eligible : null);
 /** אחוז המצביעים שנספרו (עגול) — לשורת "נתונים חלקיים" ולחלון הפודיום; null = לא ידוע */
 export const countedPct = () => { const c = countedOf(); return c ? Math.round(c.pct) : null; };
 export const partialLine = () => {
