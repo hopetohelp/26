@@ -321,7 +321,7 @@ function LayoutBody() {
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
-        {embeddableFor(pathname, new URLSearchParams(search).get("tab")) && <ScreenFooter><EmbedButton /></ScreenFooter>}
+        {embeddableFor(pathname, new URLSearchParams(search).get("tab")) && <ScreenFooter info={pathname !== "/changes"}><EmbedButton /></ScreenFooter>}
       </main>
       {(!navTop || forceBottom) && <FocusNav className="f-nav-bottom" unread={unread} />}
     </div>
