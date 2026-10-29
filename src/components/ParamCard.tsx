@@ -28,8 +28,8 @@ export default function ParamCard({ rows, caption, compact = false, className = 
       <caption className="sr-only">{caption}</caption>
       <colgroup><col className={compact ? "w-[27%]" : "w-[26%]"} />{has22 && <col />}{has26 && <col />}{gap && <col className="w-[26%]" />}</colgroup>
       <thead><tr className="text-accent font-bold">
-        <td className="p-1" />{has22 && <th scope="col" className="p-1 font-bold">2022</th>}{has26 && <th scope="col" className="p-1 font-bold">2026</th>}
-        {gap && <th scope="col" className="p-1 font-bold bg-accent text-paper-card">הפער</th>}
+        <td className="p-1" />{has22 && <th scope="col" className="p-1 font-bold text-center">2022</th>}{has26 && <th scope="col" className="p-1 font-bold text-center">2026</th>}
+        {gap && <th scope="col" className="p-1 font-bold text-center bg-accent text-paper-card">הפער</th>}
       </tr></thead>
       <tbody>
         {rows.map((r) => {
@@ -38,7 +38,7 @@ export default function ParamCard({ rows, caption, compact = false, className = 
             <th scope="row" className="p-1 text-start font-bold text-ink-soft leading-tight whitespace-nowrap">{r.label}</th>
             {has22 && <td className="p-1 font-semibold">{show(r, r.v22)}</td>}
             {has26 && <td className="p-1 font-semibold">{show(r, r.v26)}</td>}
-            {gap && <td className="p-1 bg-accent-soft font-bold"><Delta change={change} /></td>}
+            {gap && <td className={`p-1 bg-accent-soft font-bold ${compact ? "text-[10px] px-0.5" : ""}`}><Delta change={change} /></td>}
           </tr>;
         })}
       </tbody>
