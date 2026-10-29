@@ -104,7 +104,7 @@ function BackToTop({ target }: { target: React.RefObject<HTMLElement> }) {
     const calm = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     target.current?.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
   };
-  return <button type="button" onClick={go} aria-label="חזרה לראש הבדיקה לפי קלפי"
+  return <button type="button" onClick={go} aria-label="חזרה לראש החיפוש לפי עיר או קלפי"
     className="fixed left-3 z-30 w-11 h-11 rounded-full bg-accent text-paper-card shadow-lg grid place-items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent bottom-[calc(6rem+env(safe-area-inset-bottom))] lg:bottom-6">
     <Icon d={UP} className="w-6 h-6" />
   </button>;
