@@ -5,7 +5,8 @@ import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
 
 /** מעבר מצביעים 2022 ⇐ 2026 לפי השוואת קלפיות (pipeline/voter_flow.py). נקודת המקור היחידה למסך "מה השתנה". */
 export type Mode = "ballots" | "localities";
-export type Tier = "sub" | "ballot" | "center" | "city";
+/** דרגות ההצמדה (pipeline/voter_flow.py): תת קלפי מהימנה ⇐ יתרת מתחם ⇐ שכונה ⇐ יישוב ⇐ ועדה ⇐ ארצי */
+export type Tier = "sub" | "center" | "area" | "city" | "committee" | "national";
 /** flows — כל קול של 2026 לפי מקורו (סכום עמודה = הקולות שנספרו); flowsTo — כל קול של 2022 לפי יעדו (סכום שורה = התוצאה הרשמית) */
 interface ModeData { flows: number[][]; flowsTo: number[][]; tiers: Record<Tier, { units: number; valid: number }> }
 export const flow = flowFile as unknown as {
@@ -65,7 +66,7 @@ export function blocsOf(from: number[][], to: number[][] = from) {
 export function coverage(mode: Mode) {
   const t = flow.modes[mode].tiers;
   const pct = (v: number) => (v / flow.valid2026) * 100;
-  return { total: pct(Object.values(t).reduce((a, x) => a + x.valid, 0)), sub: pct(t.sub.valid), ballot: pct(t.sub.valid + t.ballot.valid) };
+  return { total: pct(Object.values(t).reduce((a, x) => a + x.valid, 0)), sub: pct(t.sub.valid), center: pct(t.sub.valid + t.center.valid) };
 }
 
 /** שורה קצרה במסך ובתמונות השיתוף: "נתונים חלקיים X% מהמצביעים HH:MM" (הכרעת בעלים 28.10.2026) */
