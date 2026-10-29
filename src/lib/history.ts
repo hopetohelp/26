@@ -305,7 +305,7 @@ export function campaignTrend(c: Cycle, letters: string, days = POINT_WINDOW, mi
 
 /** הסקר המאוחר ביותר של כל מכון במאגר לפני הבחירות, ללא חלון 14 יום.
  * בשוויון תאריכים נשמר כל פרסום, בלי למצע או לבחור שרירותית.
- * נקודות אחוז ממושבי הכנסת, לא אחוזי קולות ולא טעות יחסית. */
+ * % ממושבי הכנסת, לא אחוזי קולות ולא טעות יחסית. */
 export function lastPollErrors(c: Cycle, r: ElectionResult) {
   const ps = usable(c);
   const last = new Map<string, string>();

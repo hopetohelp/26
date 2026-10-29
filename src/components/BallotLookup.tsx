@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Segmented } from "./Choice";
+import InfoTip from "./InfoTip";
 import BallotComparisonTable from "./BallotComparisonTable";
 import { ballotOptions, lookupScopes, matchingPlaces, sortLookupScopes, subBallotOptions, type BallotFilter, type BallotLocations, type BallotUnits, type LookupLevel, type LookupScope, type LookupSort } from "../lib/ballotLookup";
 
@@ -114,8 +115,8 @@ export default function BallotLookup() {
       {filter.city || "כל היישובים"}{ballot && ` · ${ballot === ALL.value ? "כל הקלפיות" : `קלפי ${ballot}`}`}{sub && ` · ${sub === ALL.value ? "כל תתי הקלפי" : `תת קלפי ${sub}`}`}
       {!level && selectedLocations.length === 1 && <span className="block">{selectedLocations[0].location}</span>}
     </div>
-    {level && <div className="space-y-1"><Segmented label="מיון התוצאות" value={sort} onChange={setSort} options={SORTS} /><p className="text-xs text-ink-soft">מספר המצביעים ואחוז ההצבעה למיון לפי נתוני 2026.</p></div>}
-    <p className="text-xs text-ink-soft">מצביעים: אחוז מבעלי זכות הבחירה. כשרים: אחוז מהמצביעים. מפלגות: אחוז מהקולות הכשרים. הפער: 2026 פחות 2022; נ״א = נקודות אחוז. קו מסמן שאין נתון להשוואה.</p>
+    {level && <div className="flex items-center gap-2"><Segmented className="flex-1" label="מיון התוצאות" value={sort} onChange={setSort} options={SORTS} /><InfoTip label="מקור נתוני המיון">מספר המצביעים ואחוז ההצבעה למיון לפי נתוני 2026.</InfoTip></div>}
+    <div className="flex items-center gap-2"><span className="text-sm">נתוני ההשוואה</span><InfoTip label="הסבר נתוני ההשוואה">מצביעים: אחוז מבעלי זכות הבחירה. כשרים: אחוז מהמצביעים. מפלגות: אחוז מהקולות הכשרים. הפער: 2026 פחות 2022; קו מסמן שאין נתון להשוואה.</InfoTip></div>
     {level ? <ComparisonStream key={`${level}:${filter.city}:${filter.ballot}:${filter.sub}:${sort}`} units={units} scopes={scopes} /> : <BallotComparisonTable units={units} filter={filter} />}
   </div>;
 }
