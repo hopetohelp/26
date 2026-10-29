@@ -1,7 +1,6 @@
-import { ARROW_DOWN, ARROW_UP, changeOf, type Change } from "../lib/changeMark";
+import { ARROW_DOWN, ARROW_UP, changeOf, PARAM_NAMES, type Change } from "../lib/changeMark";
 
-/** שמות הפרמטרים (הכרעת בעלים 29.10.2026) — אותם שמות במסך ובתמונות השיתוף */
-export const PARAM_NAMES = { votes: "מצביעים", ofEligible: "מזכות בחירה", ofValid: "מהכשרים", seats: "מנדטים" } as const;
+export { PARAM_NAMES };
 
 /** שינוי: חץ ומספר בלי סימן, או כלום כשאין שינוי (src/lib/changeMark.ts) */
 export function Delta({ change }: { change: Change | null }) {

@@ -16,3 +16,6 @@ export function changeOf(delta: number, kind: "count" | "pct"): Change | null {
 }
 export const ARROW_UP = "▲", ARROW_DOWN = "▼";
 export const changeLabel = (c: Change | null) => (c ? `${c.up ? ARROW_UP : ARROW_DOWN} ${c.text}` : "");
+
+/** שמות ארבעת הפרמטרים (הכרעת בעלים 29.10.2026) — אותם שמות במסך ובתמונות השיתוף */
+export const PARAM_NAMES = { votes: "מצביעים", ofEligible: "מזכות בחירה", ofValid: "מהכשרים", seats: "מנדטים" } as const;
