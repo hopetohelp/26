@@ -22,7 +22,7 @@ export interface ExplainProps {
   details?: ReactNode;
   /** false = מציגים רק את הקישור "איך זה חושב?" (הכרעת בעלים 11.10.2026, כרטיס הגושים ב"הכנסת שלי"); הסוג והתאריך נשארים חובה בחוזה */
   showMeta?: boolean;
-  /** true = התאריך ו״איך זה חושב?״ בשורת ״מידע ומקורות״ בתחתית המסך (הכרעת בעלים 29.10.2026); בלי שורה כזו — במקום הרגיל */
+  /** true = ״איך זה חושב?״ בלבד, בלי התאריך, בשורת התחתית בתחתית המסך (הכרעת בעלים 29.10.2026); בלי שורה כזו — במקום הרגיל */
   inFooter?: boolean;
   /** טקסט קטן בשורה התחתונה, בצד ההתחלה; "איך זה חושב?" בצד הנגדי (בפינה התחתונה השמאלית) באותה שורה אם יש מקום (הכרעת בעלים 11.10.2026) */
   trailing?: ReactNode;
@@ -36,7 +36,7 @@ export default function Explained({ asOf, methodAnchor, children, details, showM
   const [slot, setSlot] = useState<Element | null>(null);
   useEffect(() => { if (inFooter) setSlot(document.querySelector("[data-footer-slot]")); }, [inFooter]);
   if (bare) return <div>{children}</div>;
-  if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span>{asOf} · <Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link></span>, slot)}</div>;
+  if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span><Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link></span>, slot)}</div>;
   return (
     <div>
       {children}
