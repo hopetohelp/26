@@ -166,3 +166,17 @@ export function overview(): { y2022: Overview; y2026: Overview | null } {
   const below = Object.entries(votes).filter(([id]) => !results2026.seats[id]).reduce((sum, [, v]) => sum + v, 0);
   return { y2022, y2026: { eligible: c.eligible, voted: c.voters, invalid: c.invalid, belowThreshold: below } };
 }
+
+/** האחוז שליד כל נתון כללי: הצביעו — מבעלי הזכות; נפסלו — מהמצביעים; לא עברו — מהכשרים (מצביעים פחות פסולים).
+ * לבעלי הזכות אין בסיס — האחוז שלהם הוא שינוי יחסי בלבד (overviewChangePct) */
+export function overviewShare(o: Overview, key: keyof Overview): number | null {
+  if (key === "voted") return (o.voted / o.eligible) * 100;
+  if (key === "invalid") return (o.invalid / o.voted) * 100;
+  if (key === "belowThreshold") return (o.belowThreshold / (o.voted - o.invalid)) * 100;
+  return null;
+}
+/** השינוי באחוזים: בנקודות האחוז של overviewShare, ולבעלי הזכות — שינוי יחסי מ־2022 */
+export function overviewChangePct(a: Overview, b: Overview, key: keyof Overview): number {
+  const sa = overviewShare(a, key), sb = overviewShare(b, key);
+  return sa === null || sb === null ? ((b[key] - a[key]) / a[key]) * 100 : sb - sa;
+}

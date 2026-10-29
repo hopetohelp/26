@@ -4,7 +4,7 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
@@ -79,19 +79,22 @@ function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y202
   return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
 }
 
-/** ארבעת הנתונים הכלליים, כרטיס לכל נתון: 2022, 2026 והשינוי (overview ב־voterFlow) */
+/** ארבעת הנתונים הכלליים, כרטיס לכל נתון (הכרעת בעלים 29.10.2026): הנתון הנוכחי במספר ובאחוזים, והשינוי במספר ובאחוזים — בלי ערכי 2022 */
 function OverviewCards() {
   const { y2022, y2026 } = overview();
+  if (!y2026) return null;
   const items = [["eligible", "בעלי זכות בחירה"], ["voted", "הצביעו"], ["invalid", "קולות שנפסלו"], ["belowThreshold", "לא עברו את אחוז החסימה"]] as const;
   return <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
-    {items.map(([key, label]) => <div key={key} className="rounded-theme border border-paper-line bg-paper p-2 text-center min-w-0">
-      <dt className="text-xs font-bold text-ink-soft leading-tight">{label}</dt>
-      <dd className="mt-1 text-xs tabular-nums leading-snug">
-        <span className="block"><span className="text-ink-soft">2022 </span><bdi dir="ltr" className="font-bold">{num(y2022[key])}</bdi></span>
-        {y2026 && <span className="block"><span className="text-ink-soft">2026 </span><bdi dir="ltr" className="font-bold">{num(y2026[key])}</bdi></span>}
-        {y2026 && <span className="block"><Delta change={changeOf(y2026[key] - y2022[key], "count")} /></span>}
-      </dd>
-    </div>)}
+    {items.map(([key, label]) => {
+      const share = overviewShare(y2026, key);
+      return <div key={key} className="rounded-theme border border-paper-line bg-paper p-2 text-center min-w-0">
+        <dt className="text-xs font-bold text-ink-soft leading-tight">{label}</dt>
+        <dd className="mt-1 tabular-nums leading-snug">
+          <span className="block text-base font-bold"><bdi dir="ltr">{num(y2026[key])}</bdi>{share !== null && <span className="text-xs font-normal text-ink-soft"> (<bdi dir="ltr">{pctOne(share)}</bdi>)</span>}</span>
+          <span className="flex justify-center gap-2 text-xs"><Delta change={changeOf(y2026[key] - y2022[key], "count")} /><Delta change={changeOf(overviewChangePct(y2022, y2026, key), "pct")} /></span>
+        </dd>
+      </div>;
+    })}
   </dl>;
 }
 
