@@ -37,6 +37,8 @@ jobs:
         run: python3 pipeline/test_direct_polls.py
       - name: אימות לפי שדה, סתירות ויומן תיקונים
         run: python3 pipeline/test_quality.py
+      - name: מיקומי קלפיות תואמים לקובץ המקור ולתוצאות הוועדה
+        run: python3 pipeline/test_ballot_locations.py
       - name: טיפוסים
         run: npx tsc --noEmit -p tsconfig.json
       - name: בדיקות המנוע

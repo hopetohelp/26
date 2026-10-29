@@ -2,12 +2,12 @@ import { PARTY_IMAGES } from "../lib/partyImages";
 
 /**
  * תמונת הרשימה: ראש הרשימה בעיגול, או הסמל שלם על רקע כרטיס. אין תמונה לרשימה ⇐ לא מוצג כלום (המקום נשמר, כדי שהשמות יישארו מיושרים).
- * מהטוקנים בלבד, בלי צבע קבוע ובלי מסגרת (הכרעת בעלים 11.10.2026). התמונה לקישוט: השם כבר כתוב לידה, ולכן alt ריק.
+ * מהטוקנים בלבד, בלי צבע קבוע ובלי מסגרת (הכרעת בעלים 11.10.2026). התמונה לקישוט: השם כבר כתוב לידה, ולכן alt ריק. fallback מציג אותיות פתק בעיגול ניטרלי רק כשאין תמונה.
  */
-export function PartyAvatar({ id, size = 36 }: { id: string; size?: number }) {
+export function PartyAvatar({ id, size = 36, fallback }: { id: string; size?: number; fallback?: string }) {
   const img = PARTY_IMAGES[id];
   const box = { width: size, height: size };
-  if (!img) return <span aria-hidden="true" className="shrink-0" style={box} />;
+  if (!img) return <span aria-hidden="true" className={fallback ? "shrink-0 inline-flex items-center justify-center rounded-full bg-paper-line text-xs font-bold" : "shrink-0"} style={box}>{fallback}</span>;
   const src = `${import.meta.env.BASE_URL}${img.file}`;
   return (
     <span

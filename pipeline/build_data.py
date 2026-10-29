@@ -843,6 +843,8 @@ def build_registry(results: list[dict]) -> dict:
 
 
 def main() -> None:
+    from ballot_locations import main as build_ballot_locations
+    build_ballot_locations()
     OUT.mkdir(parents=True, exist_ok=True)
     # BUILD_TIME מאפשר בנייה חוזרת זהה (בדיקת דטרמיניזם ב-CI) ובדיקות שעון מזויף להקפאה
     env_time = __import__("os").environ.get("BUILD_TIME")
