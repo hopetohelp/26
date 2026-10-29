@@ -257,11 +257,6 @@
 .embed-cta-message { grid-area:1 / 1;min-width:0;opacity:0;backface-visibility:hidden;transform:translateY(-110%) rotateX(20deg);transition:opacity .35s ease,transform .5s ease; }
 .embed-cta-message[data-previous="true"] { transform:translateY(110%) rotateX(-20deg);transition:opacity .35s ease-in,transform .35s ease-in; }
 .embed-cta-message[data-active="true"] { opacity:1;transform:translateY(0) rotateX(0);transition:opacity .25s ease .15s,transform .5s cubic-bezier(.2,.65,.35,1) .15s; }
-.flow-swipe-panels { display:grid;overflow:hidden; }
-.flow-swipe-panel { grid-area:1 / 1;min-width:0;opacity:0;transition:transform .25s ease,opacity .2s ease; }
-.flow-swipe-panel[data-view="from"] { transform:translateX(-105%); }
-.flow-swipe-panel[data-view="to"] { transform:translateX(105%); }
-.flow-swipe-panel[data-active="true"] { opacity:1;transform:translateX(0); }
 
 /* "ההשערה שלך": רגע אחד כשהכנסת מגיעה ל-120 (מכובה ב-prefers-reduced-motion למעלה) */
 @keyframes seat-pop {

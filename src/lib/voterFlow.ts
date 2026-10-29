@@ -1,5 +1,4 @@
 import flowFile from "../data/flow2026.json";
-import eligibleFile from "../data/eligible2026.json";
 import { listName, results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
@@ -70,9 +69,9 @@ export function coverage(mode: Mode) {
 }
 
 /** שורה קצרה במסך ובתמונות השיתוף: "נתונים חלקיים X% מהמצביעים HH:MM" (הכרעת בעלים 28.10.2026) */
-const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string } }).counted;
-/** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, src/data/eligible2026.json); null = לא ידוע */
-export const eligible2026 = (): number | null => (eligibleFile.eligible > 0 ? eligibleFile.eligible : null);
+const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string; eligible?: number } }).counted;
+/** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, השדה counted.eligible); null = לא ידוע */
+export const eligible2026 = (): number | null => countedOf()?.eligible || null;
 /** אחוז המצביעים שנספרו (עגול) — לשורת "נתונים חלקיים" ולחלון הפודיום; null = לא ידוע */
 export const countedPct = () => { const c = countedOf(); return c ? Math.round(c.pct) : null; };
 export const partialLine = () => {
@@ -130,6 +129,19 @@ export function partyYears(id26: string | null, letters22: string | null): { y20
   return {
     y2022: y2022 ? { ...y2022, ofEligible: K25.eligible ? (y2022.votes / K25.eligible) * 100 : null, ofValid: (y2022.votes / valid22) * 100 } : null,
     y2026: y2026 && valid26 ? { ...y2026, ofEligible: el26 ? (y2026.votes / el26) * 100 : null, ofValid: (y2026.votes / valid26) * 100 } : null,
+  };
+}
+
+/** ארבעת הפרמטרים של גוש לכל שנה (הכרעת בעלים 29.10.2026): סכום הרשימות שבגוש — 2026 לפי BLOC_MEMBERS, 2022 לפי שיוך הגושים של 2022 */
+export function blocYears(bloc: string): { y2022: YearNumbers | null; y2026: YearNumbers | null } {
+  const ids = Object.keys(results2026.votes ?? {}).filter((id) => bloc2026(id) === bloc);
+  const lists22 = K25.lists.filter((l) => BLOC_2022[l.letters] === bloc);
+  const valid22 = K25.lists.reduce((sum, l) => sum + l.votes, 0), valid26 = Object.values(results2026.votes ?? {}).reduce((sum, v) => sum + v, 0), el26 = eligible2026();
+  const v22 = lists22.reduce((s, l) => s + l.votes, 0), s22 = lists22.reduce((s, l) => s + l.seats, 0);
+  const v26 = ids.reduce((s, id) => s + (results2026.votes?.[id] ?? 0), 0), s26 = ids.reduce((s, id) => s + (results2026.seats?.[id] ?? 0), 0);
+  return {
+    y2022: lists22.length ? { votes: v22, seats: s22, ofEligible: K25.eligible ? (v22 / K25.eligible) * 100 : null, ofValid: (v22 / valid22) * 100 } : null,
+    y2026: ids.length && valid26 ? { votes: v26, seats: s26, ofEligible: el26 ? (v26 / el26) * 100 : null, ofValid: (v26 / valid26) * 100 } : null,
   };
 }
 
