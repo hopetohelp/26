@@ -7,8 +7,8 @@ import { useCrowdDashboard } from "../../lib/sources";
 import { accuracyPct, accuracyRows, correctSeats, exactLists, pollsAccuracy, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
-import { finalPolls, hasResults, histArrays, pollMean, pollMedian, previousTurnout, results2026, turnoutPct } from "../../lib/guessAccuracyData";
-import { activeLists2026, registry } from "../../lib/data";
+import { finalPolls, hasResults, histArrays, pollMean, pollMedian, results2026 } from "../../lib/guessAccuracyData";
+import { activeLists2026 } from "../../lib/data";
 import { IDS, nameOf, startSeats } from "../guess/model";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { useSession, useUnit } from "../guess/useCrowd";
@@ -141,7 +141,6 @@ export default function GuessAccuracy() {
     {/* בלי כותרת גלויה ובלי הודעת "ממתינים לתוצאות" (הכרעת בעלים 27.10.2026); הכותרת נשארת לקורא מסך */}
     <h1 className="sr-only">תוצאות</h1>
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
-    <TurnoutCard />
     {/* בראש המסך (הכרעת בעלים 28.10.2026) */}
     {/* כרטיס "היית מדויק" והמגירה — כרטיס אחד עם קו דק ביניהם; בלי פודיום — הכרטיס לבדו (הכרעת בעלים 28/10) */}
     {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} lead={showMine ? mineLead : undefined} /> : showMine ? <div className="f-card mb-4">{mineLead}</div> : null}
@@ -275,30 +274,6 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
   </div>;
 }
 
-interface Turnout { time: string; total: { percent: number; "בזב": number; "מצביעים": number; updated: string; prev_percent: number; delta: number } }
-/** אחוז ההצבעה הארצי בשורה אחת, בעשירית האחוז: "אחוז הצבעה: X% בחירות קודמות: Y% נספרו: Z%" (הכרעת בעלים 27.10.2026; "נספרו" — raw/results-2026.json counted, הקולות שנספרו מתוך כלל בעלי זכות הבחירה, כשידוע): המצביעים — ממפת ההצבעה של ועדת הבחירות (public/turnout.json, נשמר בכל פרסום);
- * בעלי זכות הבחירה — מהנתון הרשמי של האתר (registry.k26, הודעת יו"ר הוועדה), כמו בשאר המסכים.
- * "בחירות קודמות" — אחוז ההצבעה הסופי ב-2022 מהתוצאות הרשמיות (previousTurnout). prev_percent של המפה הוא העדכון הקודם של הוועדה, לא הבחירות הקודמות */
-function TurnoutCard() {
-  const [t, setT] = useState<Turnout | null>(null);
-  useEffect(() => {
-    let live = true;
-    fetch(`${import.meta.env.BASE_URL}turnout.json`, { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if (live && j?.total) setT(j); }).catch(() => {});
-    return () => { live = false; };
-  }, []);
-  const pct = t ? turnoutPct(t.total["מצביעים"], registry.k26.eligible) : null;
-  const prev = previousTurnout();
-  const counted = typeof results2026.counted === "number" ? results2026.counted : null;
-  const time = results2026.asOf?.match(/\d{1,2}:\d{2}/)?.[0] ?? null;
-  if (!t || pct == null || prev == null) return null;
-  // "נספרו מתוכם" (הכרעת בעלים 28/10): הקולות שנספרו מתוך המצביעים — counted (מתוך בעלי זכות הבחירה) חלקי אחוז ההצבעה; עד 100
-  const countedOfVoters = counted == null ? null : Math.min(100, Math.round(counted / pct * 1000) / 10);
-  return <p className="f-card mb-4 text-center text-[11px] sm:text-sm !py-2 !px-2">
-    בחירות קודמות: <b className="font-num">{prev}%</b> בחירות נוכחיות: <b className="font-num">{pct}%</b>{countedOfVoters != null && <> <span className="whitespace-nowrap">נספרו מתוכם: <b className="font-num">{countedOfVoters}%</b>{time && <> <span className="font-num font-normal">({time})</span></>}</span></>}
-    {/* קישור לתוצאות הרשמיות של ועדת הבחירות (הכרעת בעלים 28/10) */}
-    <br /><a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="font-semibold underline">תוצאות רשמיות</a>
-  </p>;
-}
 
 /** פודיום: שלושת הניחושים המדויקים (הכרעת בעלים 28/10) — אחוז דיוק, אחר כך מספר המפלגות המדויקות, ובשוויון — מי ששמר קודם.
  * מחושב בשרת הניחושים בכל טעינה, מול הספירה הנוכחית, בלי מזהים (worker/crowd/lib/results.js podium) */

@@ -4,8 +4,9 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
-import ParamCard, { PARAM_NAMES, type ParamRow } from "../components/ParamCard";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
+import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
 import { num, pctOne, pctValue } from "../lib/format";
 
@@ -76,6 +77,22 @@ function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y202
   }
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
   return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
+}
+
+/** ארבעת הנתונים הכלליים, כרטיס לכל נתון: 2022, 2026 והשינוי (overview ב־voterFlow) */
+function OverviewCards() {
+  const { y2022, y2026 } = overview();
+  const items = [["eligible", "בעלי זכות בחירה"], ["voted", "הצביעו"], ["invalid", "קולות שנפסלו"], ["belowThreshold", "לא עברו את אחוז החסימה"]] as const;
+  return <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
+    {items.map(([key, label]) => <div key={key} className="rounded-theme border border-paper-line bg-paper p-2 text-center min-w-0">
+      <dt className="text-xs font-bold text-ink-soft leading-tight">{label}</dt>
+      <dd className="mt-1 text-xs tabular-nums leading-snug">
+        <span className="block"><span className="text-ink-soft">2022 </span><bdi dir="ltr" className="font-bold">{num(y2022[key])}</bdi></span>
+        {y2026 && <span className="block"><span className="text-ink-soft">2026 </span><bdi dir="ltr" className="font-bold">{num(y2026[key])}</bdi></span>}
+        {y2026 && <span className="block"><Delta change={changeOf(y2026[key] - y2022[key], "count")} /></span>}
+      </dd>
+    </div>)}
+  </dl>;
 }
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
@@ -169,6 +186,8 @@ export default function VoterFlow() {
   return (
     <div>
       <RotatingPromo messages={SHARE_MESSAGES} callToAction="לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
+      {/* הכותרת ככרטיס עם ארבעת הנתונים הכלליים, כל אחד בכרטיס (הכרעת בעלים 29.10.2026) */}
+      <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
       <div className="flex items-center justify-between gap-2"><h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
 
       <div className="flex justify-end">
@@ -179,7 +198,9 @@ export default function VoterFlow() {
           בכרטיס המפלגה: ״מהכשרים״ — אחוז הקולות הכשרים, כמו בוועדת הבחירות; ״מזכות בחירה״ — אחוז מכלל בעלי זכות הבחירה (ב־2026: בקלפיות שנספרו).
         </InfoTip>
       </div>
-      </div><p className="text-sm text-ink-soft">{partialLine()}</p>
+      </div>
+      <OverviewCards />
+      </section>
       <Explained
         kind="השוואה"
         source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"

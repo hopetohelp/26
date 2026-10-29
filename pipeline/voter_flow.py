@@ -300,7 +300,9 @@ def counted(r26: list[dict]) -> dict:
     res = json.loads((ROOT / "raw" / "results-2026.json").read_text(encoding="utf-8"))
     voters = sum(n(r, "מצביעים") for r in r26)
     # eligible — בעלי זכות הבחירה באותן קלפיות: המכנה של "מזכות בחירה" ב-2026 (כרטיסי "מה השתנה" ותמונות השיתוף)
-    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1], "eligible": sum(n(r, "בזב") for r in r26)}
+    # voters ו-invalid — מאותן קלפיות: כרטיסי ההשוואה בראש "מה השתנה" (הכרעת בעלים 29.10.2026)
+    return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1], "eligible": sum(n(r, "בזב") for r in r26),
+            "voters": voters, "invalid": sum(n(r, "פסולים") for r in r26)}
 
 
 def mode(r22: list[dict], r26: list[dict], full: bool) -> tuple[dict, list, list]:
