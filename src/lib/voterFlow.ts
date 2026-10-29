@@ -1,4 +1,5 @@
 import flowFile from "../data/flow2026.json";
+import eligibleFile from "../data/eligible2026.json";
 import { listName, results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
@@ -70,6 +71,8 @@ export function coverage(mode: Mode) {
 
 /** שורה קצרה במסך ובתמונות השיתוף: "נתונים חלקיים X% מהמצביעים HH:MM" (הכרעת בעלים 28.10.2026) */
 const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string } }).counted;
+/** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, src/data/eligible2026.json); null = לא ידוע */
+export const eligible2026 = (): number | null => (eligibleFile.eligible > 0 ? eligibleFile.eligible : null);
 /** אחוז המצביעים שנספרו (עגול) — לשורת "נתונים חלקיים" ולחלון הפודיום; null = לא ידוע */
 export const countedPct = () => { const c = countedOf(); return c ? Math.round(c.pct) : null; };
 export const partialLine = () => {
@@ -115,6 +118,21 @@ export function groupChange(m: number[][], mTo: number[][], ids: string[], lette
 
 /** אותה מפלגה בשתי הבחירות (אותה רשימה ואותן אותיות): מזהה 2026 ⇐ אותיות 2022 */
 export const SAME: Record<string, string> = { likud: "מחל", democrats: "אמת", utj: "ג", yb: "ל", shas: "שס", rzp: "ט", raam: "עם" };
+/**
+ * ארבעת הפרמטרים של מפלגה לכל שנה — מקור אחד לכרטיסי המסך ולתמונות השיתוף (הכרעת בעלים 29.10.2026):
+ * מצביעים (קולות), מנדטים, "מזכות בחירה" (מבעלי זכות הבחירה) ו"מהכשרים" (מהקולות הכשרים — כך מודדת ועדת הבחירות).
+ * 2022: בעלי הזכות והכשרים מהתוצאות הרשמיות; 2026: הכשרים = סכום קולות הרשימות שנספרו, בעלי הזכות בקלפיות שנספרו (pipeline/voter_flow.py).
+ */
+export interface YearNumbers { votes: number; seats: number; ofEligible: number | null; ofValid: number }
+export function partyYears(id26: string | null, letters22: string | null): { y2022: YearNumbers | null; y2026: YearNumbers | null } {
+  const { y2022, y2026 } = partyNumbers(id26, letters22);
+  const valid22 = K25.lists.reduce((sum, l) => sum + l.votes, 0), valid26 = Object.values(results2026.votes ?? {}).reduce((sum, v) => sum + v, 0), el26 = eligible2026();
+  return {
+    y2022: y2022 ? { ...y2022, ofEligible: K25.eligible ? (y2022.votes / K25.eligible) * 100 : null, ofValid: (y2022.votes / valid22) * 100 } : null,
+    y2026: y2026 && valid26 ? { ...y2026, ofEligible: el26 ? (y2026.votes / el26) * 100 : null, ofValid: (y2026.votes / valid26) * 100 } : null,
+  };
+}
+
 /** הקולות והמנדטים הרשמיים של מפלגה (הכרעת בעלים 28.10.2026): 2026 — raw/results-2026.json (קובץ ועדת הבחירות, המנדטים לפי מנוע החוק); 2022 — התוצאות הרשמיות (results.json). null — לא רצה באותן בחירות */
 export function partyNumbers(id26: string | null, letters22: string | null) {
   const l22 = letters22 ? K25.lists.find((l) => l.letters === letters22) : undefined;

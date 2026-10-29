@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { lookupScopes, sortLookupScopes, subBallotOptions, comparisonBallots, ballotComparisonStatus, ballotOptions, ballotPartyRows, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotUnits } from "./ballotLookup";
+import { results2026 } from "./guessAccuracyData";
+import { ballotView, leadParty, partyParams, lookupScopes, sortLookupScopes, subBallotOptions, comparisonBallots, ballotComparisonStatus, ballotOptions, ballotPartyRows, ballotSummary, filterBallots, matchingPlaces, subOptions, type BallotUnits } from "./ballotLookup";
 
 // שתי ערים עם אותו מספר קלפי, קלפי שפוצלה, קלפי שנוספה וקלפי שטרם נספרה.
 const units: BallotUnits = {
@@ -140,4 +141,27 @@ it("הכל בתת קלפי מחזיר כל תת קלפי לחוד, עם הגבל
   expect(scopes.map((s) => s.voters)).toEqual([100, 40]);
   expect(subBallotOptions(matchingPlaces(units, "בית א"), "1", "2").map((s) => s.fullNumber)).toEqual(["1.2"]);
   expect(lookupScopes(units, { city: "בית ב", ballot: "1", sub: "" }, "sub")).toEqual([]);
+});
+
+describe("נתוני עיר וקלפי לכרטיסים", () => {
+  const view = ballotView(units, { city: "בית ב", ballot: "", sub: "" });
+  it("שלושת הפרמטרים: מצביעים, מזכות בחירה (מבעלי הזכות ביחידה) ומהכשרים", () => {
+    const likud = view.rows.find((r) => r.id === "likud")!;
+    const p = partyParams(view, likud);
+    expect(p.votes).toEqual({ v22: 100, v26: 110 });
+    expect(p.ofEligible.v22).toBeCloseTo(50, 9);
+    expect(p.ofEligible.v26).toBeCloseTo(55, 9);
+    expect(p.ofValid.v22).toBeCloseTo((100 / 145) * 100, 9);
+    expect(p.ofValid.v26).toBeCloseTo((110 / 155) * 100, 9);
+  });
+  it("המפלגה המובילה: שם, אחוז מהכשרים והמנדטים הארציים", () => {
+    const lead = leadParty(view)!;
+    expect(lead.id).toBe("likud");
+    expect(lead.name).toBe("הליכוד");
+    expect(lead.ofValid).toBeCloseTo((110 / 155) * 100, 9);
+    expect(lead.seats).toBe(results2026.seats.likud);
+  });
+  it("יחידה בלי נתוני 2026: אין מובילה", () => {
+    expect(leadParty(ballotView(units, { city: "לא קיימת", ballot: "", sub: "" }))).toBeNull();
+  });
 });

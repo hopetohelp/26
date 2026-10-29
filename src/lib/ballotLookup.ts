@@ -1,4 +1,5 @@
 import { flow, newName, oldName, SAME } from "./voterFlow";
+import { results2026 } from "./guessAccuracyData";
 import { largestRemainder } from "./fillAll";
 
 /** public/flow-units.json: מספר, מרכז קלפיות, בעלי זכות, מצביעים, קולות לפי letters. */
@@ -173,6 +174,33 @@ export function ballotPartyRows(units: BallotUnits, rows22: Ballot[], rows26: Ba
   }
   return result.filter((r) => (r.votes22 ?? 0) > 0 || (r.votes26 ?? 0) > 0)
     .sort((a, b) => (b.votes26 ?? 0) - (a.votes26 ?? 0) || (b.votes22 ?? 0) - (a.votes22 ?? 0));
+}
+
+type BallotSummary = ReturnType<typeof ballotSummary>;
+type PartyRow = ReturnType<typeof ballotPartyRows>[number];
+/** השוואת 2022 מול 2026 ליחידה אחת: הבסיס, הסיכומים ושורות המפלגות — מקור אחד לכרטיס העיר/הקלפי ולשורה הקומפקטית ברשימה */
+export interface BallotView { selected: ReturnType<typeof comparisonBallots>; old: BallotSummary; now: BallotSummary; rows: PartyRow[] }
+export function ballotView(units: BallotUnits, filter: BallotFilter): BallotView {
+  const selected = comparisonBallots(units, filter);
+  return { selected, old: ballotSummary(selected.y22, units.letters22), now: ballotSummary(selected.y26, units.letters26), rows: ballotPartyRows(units, selected.y22, selected.y26) };
+}
+
+/** שלושת הפרמטרים של מפלגה ביחידה (מנדטים אינם קיימים ברמת עיר וקלפי): מצביעים, מזכות בחירה (מבעלי זכות הבחירה ביחידה), מהכשרים */
+export function partyParams(view: BallotView, row: PartyRow) {
+  const of = (votes: number | null, base: number) => (votes !== null && base > 0 ? (votes / base) * 100 : null);
+  return {
+    votes: { v22: row.votes22, v26: row.votes26 },
+    ofEligible: { v22: of(row.votes22, view.old.eligible), v26: of(row.votes26, view.now.eligible) },
+    ofValid: { v22: of(row.votes22, view.old.valid), v26: of(row.votes26, view.now.valid) },
+  };
+}
+
+/** המפלגה המובילה ביחידה (הכרעת בעלים 29.10.2026): שם, אחוז מהכשרים והמנדטים הארציים שלה — מי שלא עברה (0 מנדטים) מוצגת באחוז */
+export interface LeadParty { id: string; name: string; ofValid: number; seats: number }
+export function leadParty(view: BallotView): LeadParty | null {
+  const top = view.rows.find((r) => (r.votes26 ?? 0) > 0 && r.id !== "other" && !r.id.startsWith("2022:"));
+  if (!top || !view.now.valid) return null;
+  return { id: top.id, name: top.name, ofValid: ((top.votes26 ?? 0) / view.now.valid) * 100, seats: results2026.seats[top.id] ?? 0 };
 }
 
 export type LookupLevel = "city" | "ballot" | "sub";

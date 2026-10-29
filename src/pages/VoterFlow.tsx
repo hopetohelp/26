@@ -4,11 +4,10 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, partyNumbers, SAME, smallPct, type FlowRow, type Mode } from "../lib/voterFlow";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import ParamCard, { PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { PartyAvatar } from "../components/PartyAvatar";
-import { results } from "../lib/data";
-import { results2026 } from "../lib/guessAccuracyData";
-import { num, pctValue } from "../lib/format";
+import { num, pctOne, pctValue } from "../lib/format";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
 const FlowShare = lazy(() => import("../components/FlowShare"));
@@ -63,21 +62,14 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
   );
 }
 
-/** נתוני שתי השנים תמיד בראש כרטיס המפלגה; בטלפון בשני טורים גמישים ובמחשב מתחת לשם. */
+/** ארבעת הפרמטרים של המפלגה ככרטיס; ברצף: מצביעים, מזכות בחירה, מהכשרים, מנדטים */
 function Stats({ id26, letters22, compact = false }: { id26: string | null; letters22: string | null; compact?: boolean }) {
-  const { y2022, y2026 } = partyNumbers(id26, letters22);
-  const total22 = results.find((e) => e.knesset === 25)!.lists.reduce((sum, l) => sum + l.votes, 0);
-  const total26 = Object.values(results2026.votes ?? {}).reduce((sum, v) => sum + v, 0);
-  const share22 = y2022 ? y2022.votes / total22 * 100 : null;
-  const share26 = y2026 && total26 ? y2026.votes / total26 * 100 : null;
-  const sign = (v: number, percent = false) => `${v < 0 ? "−" : v > 0 ? "+" : ""}${percent ? pctValue(Math.abs(v)) : num(Math.abs(v))}${percent ? "%" : ""}`;
-  return <div className={compact ? "grid grid-cols-3 gap-x-3 basis-full min-w-0" : "grid grid-cols-3 gap-3 mt-1 w-full"}>
-    {([["2022", y2022], ["2026", y2026]] as const).map(([year, v]) => <div key={year} className="text-xs text-ink-soft tabular-nums min-w-0">
-      <p className="font-bold text-ink">{year}</p>
-      {v ? <><p><bdi dir="ltr">{num(v.votes)}</bdi> <span className="text-[10px]">מצביעים</span></p><p><bdi dir="ltr">{pctValue((year === "2022" ? share22 : share26) ?? 0)}%</bdi></p><p><bdi dir="ltr">{v.seats}</bdi> מנדטים</p></> : <p>לא רצה</p>}
-    </div>)}
-    <div className="text-xs text-ink-soft"><p className="font-bold text-ink">הפער</p>{y2022 && y2026 && share22 !== null && share26 !== null ? <><p><bdi dir="ltr">{sign(y2026.votes - y2022.votes)}</bdi> מצביעים</p><p><bdi dir="ltr">{sign(share26 - share22, true)}</bdi></p></> : <p>—</p>}</div>
-  </div>;
+  const { y2022, y2026 } = partyYears(id26, letters22);
+  if (!y2022 && !y2026) return <p className="text-xs text-ink-soft">לא רצה</p>;
+  const row = (key: keyof typeof PARAM_NAMES, get: (y: YearNumbers) => number | null, fmt: (n: number) => string, kind: "count" | "pct"): ParamRow =>
+    ({ key, label: PARAM_NAMES[key], v22: y2022 ? get(y2022) : null, v26: y2026 ? get(y2026) : null, fmt, kind });
+  const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
+  return <ParamCard rows={rows} compact={compact} caption="ארבעת הפרמטרים של המפלגה: 2022, 2026 והפער" className={compact ? "basis-full min-w-0" : "w-full mt-1"} />;
 }
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
@@ -155,7 +147,7 @@ function Paired({ rows, same, fromColor, toColor, stats = false }: { rows: { cam
   const lines = pairedRows(rows, same, stats);
   const empty = (text: string) => <p className="text-sm text-ink-soft self-center">{text}</p>;
   return (
-    <div className="mt-2 grid grid-cols-[minmax(17rem,1fr)_minmax(0,1.5fr)_minmax(0,1.5fr)] gap-x-6">
+    <div className="mt-2 grid grid-cols-[minmax(20rem,1.2fr)_minmax(0,1.5fr)_minmax(0,1.5fr)] gap-x-6">
       <span /><span className="font-bold text-ink-soft pb-2">{VIEWS[0].lead}</span><span className="font-bold text-ink-soft pb-2">{VIEWS[1].lead}</span>
       {lines.map((l) => (
         <div key={l.key} className="flow-paired-row contents" data-layout="paired" data-party={l.key}>
@@ -200,6 +192,7 @@ export default function VoterFlow() {
           משווים תחילה את אותו מספר תת קלפי באותו יישוב, אחר כך את הקלפי השלמה ואת מרכז הקלפיות.
           יתרת הקלפיות משויכת לפי השינוי באותה עיר. כך נמצאה מקבילה ל־{pctValue(cov.total)}% מהקולות, וכל קול נשאר בחישוב.
           מעטפות כפולות נמדדות כיישוב אחד; יישוב ללא קלפי ב־2022 מופיע כ״יישובים חדשים״.
+          בכרטיס המפלגה: ״מהכשרים״ — אחוז הקולות הכשרים, כמו בוועדת הבחירות; ״מזכות בחירה״ — אחוז מכלל בעלי זכות הבחירה (ב־2026: בקלפיות שנספרו).
         </InfoTip>
       </div>
       </div><p className="text-sm text-ink-soft">{partialLine()}</p>
