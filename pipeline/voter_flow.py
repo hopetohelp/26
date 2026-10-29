@@ -3,7 +3,7 @@
     python3 pipeline/voter_flow.py
 
 קלט: raw/ballots-2022.csv (תוצאות האמת לפי קלפי) ו-raw/ballots-2026.csv (ועדת הבחירות, לפי קלפי);
-raw/statareas-2022.csv (קלפי 2022 ⇐ אזור סטטיסטי של הלמ"ס, "שכונה"); raw/lineage.json (השיוך הוודאי בין הרשימות).
+raw/lineage.json (השיוך הוודאי בין הרשימות).
 פלט: src/data/flow2026.json (המעברים) ו-public/flow-units.json (התוצאות לפי קלפי, לבדיקה במסך).
 
 המודל (docs/הצעה-מעבר-מצביעים-לפי-תת-קלפי-29-10-2026.md): בכל יחידה, קולות כל רשימה ב-2026 = סכום קולות 2022 של כל
@@ -12,10 +12,10 @@ raw/statareas-2022.csv (קלפי 2022 ⇐ אזור סטטיסטי של הלמ"ס
 הצמדת היחידות בין השנים — בדרגות, ובכל דרגה היתרה שלא הוצמדה עוברת לדרגה שמעליה (הכרעת בעלים 29.10.2026):
 1. תת קלפי מהימנה — אותו יישוב, אותו מספר, אותו מתחם, ובעלי הזכות בתוך 10% אחרי גידול היישוב. מספר תת קלפי לבדו
    אינו מספיק: הוועדה מעבירה בוחרים בין קלפיות המתחם לפי שם המשפחה (חוק הבחירות, סעיף 68(ג1)).
-2. יתרת המתחם (עמודת "ריכוז"). 3. יתרת השכונה (אזור סטטיסטי). 4. יתרת היישוב. 5. יתרת הוועדה האזורית. 6. יתרה ארצית.
-דרגות 4–6 רק במתג "לפי יישובים". מחוץ לדרגה 1 הנתונים של 2022 מותאמים למספר בעלי הזכות ב-2026.
+2. יתרת המתחם (עמודת "ריכוז"). 3. יתרת היישוב. 4. יתרת הוועדה האזורית. 5. יתרה ארצית.
+דרגות 3–5 רק במתג "לפי יישובים". בכל הדרגות נתוני 2022 מותאמים באחוזים למספר בעלי הזכות ב-2026 (הגידול באחוזים).
 
-טבלאות המעבר — מדורגות: ארצית ⇐ ועדה ⇐ יישוב ⇐ שכונה. כל טבלה נפתרת מהיחידות שלה, ונמשכת לטבלה שמעליה
+טבלאות המעבר — מדורגות: ארצית ⇐ ועדה ⇐ יישוב (שכונות נבדקו והוסרו: לא שיפרו את ההתאמה; הכרעת בעלים 29.10.2026). כל טבלה נפתרת מהיחידות שלה, ונמשכת לטבלה שמעליה
 בכוח של KAPPA קולות לכל מקור: מקום עם מעט קלפיות קרוב לטבלה שמעליו, ומקום גדול נקבע מהנתונים שלו.
 נקודת המוצא של הטבלה הארצית — השיוך הוודאי בלבד (raw/lineage.json, חלופת "strict"); השאר בלי הנחה.
 אין שימוש בסקרים. זו הסקה סטטיסטית מקולות מצרפיים, לא מעקב אחרי בוחרים.
@@ -37,7 +37,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent.parent
 B22, B26 = ROOT / "raw" / "ballots-2022.csv", ROOT / "raw" / "ballots-2026.csv"
 OUT, UNITS = ROOT / "src" / "data" / "flow2026.json", ROOT / "public" / "flow-units.json"
-AREAS, LINEAGE, RESULTS = ROOT / "raw" / "statareas-2022.csv", ROOT / "raw" / "lineage.json", ROOT / "src" / "data" / "results.json"
+LINEAGE, RESULTS = ROOT / "raw" / "lineage.json", ROOT / "src" / "data" / "results.json"
 
 # הרשימות שעברו את אחוז החסימה ב-2022, ומרצ ובל"ד (מעל 2.5%); השאר ⇐ "other"
 OLD = ["מחל", "פה", "ט", "כן", "שס", "ג", "ל", "עם", "ום", "אמת", "מרצ", "ד", "ב"]
@@ -50,7 +50,7 @@ ITERATIONS = 300
 KAPPA = 20
 # "מאיפה הגיעו" בעיר מוצג רק כשיש בה לפחות כך יחידות השוואה
 MIN_CITY_UNITS = 30
-TIERS = ["sub", "center", "area", "city", "committee", "national"]
+TIERS = ["sub", "center", "city", "committee", "national"]
 # תת קלפי מהימנה: בעלי הזכות ב-2026 מול 2022, אחרי גידול היישוב
 SUB_TOLERANCE = 0.10
 
@@ -71,19 +71,7 @@ def vector(row: dict, letters: list[str]) -> list[int]:
     return v + [max(0, n(row, "כשרים") - sum(v)), max(0, n(row, "בזב") - n(row, "מצביעים"))]
 
 
-def areas(r22: list[dict], r26: list[dict]) -> tuple[list[str | None], list[str | None]]:
-    """השכונה של כל קלפי: 2022 — מהקובץ; 2026 — דרך המתחם, רק כשכל המתחם ב-2022 היה בשכונה אחת"""
-    sa = {(r["semel"], float(r["ballot"])): r["stat22"].strip() for r in read(AREAS) if r["stat22"].strip()}
-    a22 = [sa.get((r["סמל ישוב"], float(r["קלפי"]))) for r in r22]
-    by_center = defaultdict(set)
-    for r, a in zip(r22, a22):
-        if a:
-            by_center[(r["סמל ישוב"], r["ריכוז"])].add(a)
-    a26 = [next(iter(s)) if len(s := by_center.get((r["סמל ישוב"], r["ריכוז"]), set())) == 1 else None for r in r26]
-    return a22, a26
-
-
-def match(r22: list[dict], r26: list[dict], full: bool, a22, a26) -> list[tuple[str, list[int], list[int]]]:
+def match(r22: list[dict], r26: list[dict], full: bool) -> list[tuple[str, list[int], list[int]]]:
     """יחידות מותאמות (דרגה, אינדקסים של 2022, אינדקסים של 2026); כל קלפי פעם אחת, והיתרה עולה דרגה"""
     left22, left26, units = set(range(len(r22))), set(range(len(r26))), []
     e22, e26 = defaultdict(int), defaultdict(int)
@@ -107,20 +95,15 @@ def match(r22: list[dict], r26: list[dict], full: bool, a22, a26) -> list[tuple[
             units.append(("sub", i22, i26))
             left22 -= set(i22)
             left26 -= set(i26)
-    keys = [
-        ("center", lambda r, a: (r["סמל ישוב"], r["ריכוז"])),
-        ("area", lambda r, a: (r["סמל ישוב"], a) if a else None),
-    ]
+    keys = [("center", lambda r: (r["סמל ישוב"], r["ריכוז"]))]
     if full:
-        keys += [("city", lambda r, a: (r["סמל ישוב"],)), ("committee", lambda r, a: (r["סמל ועדה"],)), ("national", lambda r, a: ())]
+        keys += [("city", lambda r: (r["סמל ישוב"],)), ("committee", lambda r: (r["סמל ועדה"],)), ("national", lambda r: ())]
     for tier, key in keys:
         g22, g26 = defaultdict(list), defaultdict(list)
         for i in left22:
-            if (k := key(r22[i], a22[i])) is not None:
-                g22[k].append(i)
+            g22[key(r22[i])].append(i)
         for i in left26:
-            if (k := key(r26[i], a26[i])) is not None:
-                g26[k].append(i)
+            g26[key(r26[i])].append(i)
         for k in g26.keys() if tier == "national" else g22.keys() & g26.keys():
             units.append((tier, sorted(g22.get(k, [])), sorted(g26[k])))
             left22 -= set(g22.get(k, []))
@@ -158,8 +141,8 @@ def fit(X: np.ndarray, Y: np.ndarray, base: np.ndarray, kappa: float) -> np.ndar
     return P
 
 
-def tables(units, pairs, r26, a26, I: int, J: int, kappa: float = KAPPA) -> list[np.ndarray]:
-    """טבלה לכל יחידה, מהמקום העמוק ביותר שלה: ארצי ⇐ ועדה ⇐ יישוב ⇐ שכונה"""
+def tables(units, pairs, r26, I: int, J: int, kappa: float = KAPPA) -> list[np.ndarray]:
+    """טבלה לכל יחידה, מהמקום העמוק ביותר שלה: ארצי ⇐ ועדה ⇐ יישוב"""
     def path(tier, i26):
         r = r26[i26[0]]
         p = [("nat",)]
@@ -169,9 +152,6 @@ def tables(units, pairs, r26, a26, I: int, J: int, kappa: float = KAPPA) -> list
         if tier == "committee":
             return p
         p.append(("city", r["סמל ישוב"]))
-        areas_ = {a26[i] for i in i26}
-        if tier in ("sub", "center", "area") and len(areas_) == 1 and None not in areas_:
-            p.append(("area", r["סמל ישוב"], next(iter(areas_))))
         return p
     paths = [path(t, b) if b else [("nat",)] for t, _, b in units]
     X = np.array([np.maximum(x, 0) for x, _ in pairs], float)
@@ -192,9 +172,11 @@ def tables(units, pairs, r26, a26, I: int, J: int, kappa: float = KAPPA) -> list
 def unit_pair(tier: str, i22: list[int], i26: list[int], r22, r26, v22, v26) -> tuple[list[float], list[int]]:
     x = [sum(v22[i][k] for i in i22) for k in range(len(v22[0]))]  # יתרה ארצית בלי קלפי 2022 ⇐ אפסים ("יישובים חדשים")
     y = [sum(v26[i][k] for i in i26) for k in range(len(v26[0]))]
-    if tier != "sub":
-        e22, e26 = sum(n(r22[i], "בזב") for i in i22), sum(n(r26[i], "בזב") for i in i26)
-        x = [v * e26 / e22 for v in x] if e22 else x
+    # גידול באחוזים (הכרעת בעלים 29.10.2026): נתוני 2022 של היחידה מוכפלים ביחס בעלי הזכות 2026/2022, כך שכל מקור
+    # הוא "החלק הזה מאוכלוסיית היחידה, כולל הגידול שלו". נבדק מול "הגידול ⇐ לא הצביעו" ו"הגידול ⇐ מקור נפרד":
+    # 7.41% קולות משויכים לא נכון, לעומת 8.54% ו-8.17%
+    e22, e26 = sum(n(r22[i], "בזב") for i in i22), sum(n(r26[i], "בזב") for i in i26)
+    x = [v * e26 / e22 for v in x] if e22 else x
     return x, y
 
 
@@ -299,7 +281,7 @@ def cities(r22: list[dict], r26: list[dict], units, Ps) -> dict:
     v22, v26 = [vector(r, OLD) for r in r22], [vector(r, list(NEW)) for r in r26]
     by = defaultdict(list)
     for u, P in zip(units, Ps):
-        if u[0] in ("sub", "center", "area", "city"):
+        if u[0] in ("sub", "center", "city"):
             by[r26[u[2][0]]["סמל ישוב"]].append((u, P))
     out = {}
     I, J = len(OLD) + 2, len(NEW) + 2
@@ -321,18 +303,18 @@ def counted(r26: list[dict]) -> dict:
     return {"pct": round(voters / total * 100, 1), "time": str(res.get("asOf") or "").split(" ")[-1], "eligible": sum(n(r, "בזב") for r in r26)}
 
 
-def mode(r22: list[dict], r26: list[dict], full: bool, a22, a26) -> tuple[dict, list, list]:
+def mode(r22: list[dict], r26: list[dict], full: bool) -> tuple[dict, list, list]:
     new = list(NEW)
     v22 = [vector(r, OLD) for r in r22]
     v26 = [vector(r, new) for r in r26]
-    units = match(r22, r26, full, a22, a26)
+    units = match(r22, r26, full)
     pairs, tiers = [], {t: {"units": 0, "valid": 0} for t in TIERS}
     for tier, i22, i26 in units:
         pairs.append(unit_pair(tier, i22, i26, r22, r26, v22, v26))
         tiers[tier]["units"] += 1
         tiers[tier]["valid"] += sum(n(r26[i], "כשרים") for i in i26)
     I, J = len(OLD) + 2, len(new) + 2
-    Ps = tables(units, pairs, r26, a26, I, J)
+    Ps = tables(units, pairs, r26, I, J)
     Fi, Ti = exact(units, r22, r26, v22, v26, Ps, I, J, True)
     return {"flows": Fi, "flowsTo": Ti, "tiers": tiers}, units, Ps
 
@@ -354,9 +336,8 @@ def units_file(r22: list[dict], r26: list[dict]) -> dict:
 
 def main() -> int:
     r22, r26 = read(B22), read(B26)
-    a22, a26 = areas(r22, r26)
-    ballots, _, _ = mode(r22, r26, False, a22, a26)
-    localities, units, Ps = mode(r22, r26, True, a22, a26)
+    ballots, _, _ = mode(r22, r26, False)
+    localities, units, Ps = mode(r22, r26, True)
     now = datetime.now(timezone(timedelta(hours=2)))
     data = {
         "asOf": f"{now.day}/{now.month}/{now.year}",

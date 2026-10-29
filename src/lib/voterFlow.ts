@@ -5,8 +5,8 @@ import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
 
 /** מעבר מצביעים 2022 ⇐ 2026 לפי השוואת קלפיות (pipeline/voter_flow.py). נקודת המקור היחידה למסך "מה השתנה". */
 export type Mode = "ballots" | "localities";
-/** דרגות ההצמדה (pipeline/voter_flow.py): תת קלפי מהימנה ⇐ יתרת מתחם ⇐ שכונה ⇐ יישוב ⇐ ועדה ⇐ ארצי */
-export type Tier = "sub" | "center" | "area" | "city" | "committee" | "national";
+/** דרגות ההצמדה (pipeline/voter_flow.py): תת קלפי מהימנה ⇐ יתרת מתחם ⇐ יישוב ⇐ ועדה ⇐ ארצי */
+export type Tier = "sub" | "center" | "city" | "committee" | "national";
 /** flows — כל קול של 2026 לפי מקורו (סכום עמודה = הקולות שנספרו); flowsTo — כל קול של 2022 לפי יעדו (סכום שורה = התוצאה הרשמית) */
 interface ModeData { flows: number[][]; flowsTo: number[][]; tiers: Record<Tier, { units: number; valid: number }> }
 export const flow = flowFile as unknown as {
