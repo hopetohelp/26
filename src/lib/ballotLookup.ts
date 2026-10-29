@@ -105,8 +105,10 @@ export function ballotComparisonStatus(units: BallotUnits, filter: BallotFilter)
   }
   const counts = { totalBallots, exactBallots };
   if (!selected.y26.length) return { ...counts, level: "unavailable", label: "אין השוואה", reason: "אין נתוני 2026 ליחידה שנבחרה בקובץ התוצאות" };
-  if (!filter.ballot.trim()) return { ...counts, level: "city", label: `${exactBallots}/${totalBallots} קלפיות מדויקות`,
-    reason: totalBallots === exactBallots ? "מספרי קלפי זהים" : "לפי מספר קלפי שלמה" };
+  if (!filter.ballot.trim()) {
+    const exactPercent = totalBallots ? Math.round(exactBallots / totalBallots * 100) : 0;
+    return { ...counts, level: "city", label: `(${exactPercent}% לפי הקלפי, ${100 - exactPercent}% לפי היישוב)`, reason: "" };
+  }
   const groups = comparisonGroups(units, filter);
   if (groups.some((g) => g.estimated && !g.old.some((r) => r[2] > 0))) return { ...counts, level: "unavailable", label: "אין השוואה", reason: "אין נתוני בעלי זכות בחירה ב־2022 לחישוב אומדן" };
   const hasSub = !!filter.sub.trim();

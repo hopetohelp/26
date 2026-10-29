@@ -43,8 +43,8 @@ export const NUMBER_KINDS = ["נתוני שימוש באתר", "נתון רשמ�
 
 export const PUBLIC_METRICS = {
   "official.locality.votes": { path: "data/localities.json", name: "קולות לפי יישוב", method: "results", unit: "קולות", kind: "נתון רשמי", screens: ["past", "method"] },
-  "accuracy.lastPoll.maxPartyPp": { path: "data/accuracy.json", name: "הפער המוחלט הגדול למפלגה בסקר האחרון", method: "accuracy", unit: "נקודות אחוז ממושבי הכנסת", kind: "השוואה", screens: ["past", "method"] },
-  "accuracy.lastPoll.blocPp": { path: "data/accuracy.json", name: "פער הגוש בסקר האחרון", method: "accuracy", unit: "נקודות אחוז ממושבי הכנסת", kind: "השוואה", screens: ["past", "method"] },
+  "accuracy.lastPoll.maxPartyPp": { path: "data/accuracy.json", name: "הפער המוחלט הגדול למפלגה בסקר האחרון", method: "accuracy", unit: "% ממושבי הכנסת", kind: "השוואה", screens: ["past", "method"] },
+  "accuracy.lastPoll.blocPp": { path: "data/accuracy.json", name: "פער הגוש בסקר האחרון", method: "accuracy", unit: "% ממושבי הכנסת", kind: "השוואה", screens: ["past", "method"] },
   "official.results.seats": { path: "data/results.json", name: "תוצאות רשמיות", method: "results", unit: "מנדטים", kind: "נתון רשמי", screens: ["past", "changes", "guess", "community", "method"] },
   "official.results.support": { path: "data/results.json", name: "תוצאות רשמיות", method: "results", unit: "אחוזים", kind: "נתון רשמי", screens: ["past", "changes", "guess", "community", "method"] },
   "scenario.model.seatsMean": { path: "data/scenarios.json", name: "ממוצע תרחישי המודל", method: "model", unit: "מנדטים", kind: "תרחיש", screens: ["scenarios", "home", "method"] },

@@ -76,12 +76,12 @@ export function dumbbellAxis(rows: DumbbellRow[], unit: DumbbellUnit = "pct"): {
   return { min, max, ticks };
 }
 
-/** השינוי בנקודות אחוז, מעוגל לעשירית (כמו שמוצג), כך שהסימן והמספר תמיד מתאימים */
+/** השינוי ב%, מעוגל לעשירית (כמו שמוצג), כך שהסימן והמספר תמיד מתאימים */
 export const change = (r: Pick<DumbbellRow, "before" | "now">) => Math.round((r.now - r.before) * 10) / 10;
 
 /** אחוז בספרה אחת אחרי הנקודה */
 export const r1 = (x: number) => (Math.round(x * 10) / 10).toLocaleString("he-IL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-/** שינוי בנקודות אחוז עם סימן (מינוס אמיתי, U+2212); 0 — "0.0" */
+/** שינוי ב% עם סימן (מינוס אמיתי, U+2212); 0 — "0.0" */
 export const diffText = (x: number) => {
   const v = Math.round(x * 10) / 10;
   return v === 0 ? "0.0" : `${v > 0 ? "+" : "−"}${r1(Math.abs(v))}`;

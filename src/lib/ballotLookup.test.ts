@@ -101,7 +101,7 @@ it("קלפי חדשה נאמדת מהעיר, ובתת קלפי חדשה בלי �
 
 it("בסינון עיר סופרים קלפיות שלמות בלי לספור תתי קלפי פעמיים ובלי לערבב מספרים בין ערים", () => {
   const city = comparisonBallots(units, { city: "בית א", ballot: "", sub: "" });
-  expect(city.status).toMatchObject({ label: "1/2 קלפיות מדויקות", exactBallots: 1, totalBallots: 2 });
+  expect(city.status).toMatchObject({ label: "(50% לפי הקלפי, 50% לפי היישוב)", exactBallots: 1, totalBallots: 2 });
   expect(city.y22).toEqual(units.places.a.y22);
   expect(city.estimated).toBe(false);
   expect(ballotComparisonStatus(units, { city: "", ballot: "", sub: "" })).toMatchObject({ exactBallots: 2, totalBallots: 3 });

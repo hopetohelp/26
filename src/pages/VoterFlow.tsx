@@ -6,6 +6,8 @@ import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
 import { bloc2022, bloc2026, coverage, flow, flowsFor, partialLine, partyNumbers, SAME, smallPct, type FlowRow, type Mode } from "../lib/voterFlow";
 import { PartyAvatar } from "../components/PartyAvatar";
+import { results } from "../lib/data";
+import { results2026 } from "../lib/guessAccuracyData";
 import { num, pctValue } from "../lib/format";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
@@ -64,11 +66,17 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
 /** נתוני שתי השנים תמיד בראש כרטיס המפלגה; בטלפון בשני טורים גמישים ובמחשב מתחת לשם. */
 function Stats({ id26, letters22, compact = false }: { id26: string | null; letters22: string | null; compact?: boolean }) {
   const { y2022, y2026 } = partyNumbers(id26, letters22);
-  return <div className={compact ? "grid grid-cols-2 gap-x-3 basis-44 grow-[2] min-w-0" : "space-y-2 mt-1"}>
+  const total22 = results.find((e) => e.knesset === 25)!.lists.reduce((sum, l) => sum + l.votes, 0);
+  const total26 = Object.values(results2026.votes ?? {}).reduce((sum, v) => sum + v, 0);
+  const share22 = y2022 ? y2022.votes / total22 * 100 : null;
+  const share26 = y2026 && total26 ? y2026.votes / total26 * 100 : null;
+  const sign = (v: number, percent = false) => `${v < 0 ? "−" : v > 0 ? "+" : ""}${percent ? pctValue(Math.abs(v)) : num(Math.abs(v))}${percent ? "%" : ""}`;
+  return <div className={compact ? "grid grid-cols-3 gap-x-3 basis-full min-w-0" : "grid grid-cols-3 gap-3 mt-1 w-full"}>
     {([["2022", y2022], ["2026", y2026]] as const).map(([year, v]) => <div key={year} className="text-xs text-ink-soft tabular-nums min-w-0">
       <p className="font-bold text-ink">{year}</p>
-      {v ? <><p><bdi dir="ltr">{num(v.votes)}</bdi> <span className="text-[10px]">מצביעים</span></p><p><bdi dir="ltr">{v.seats}</bdi> מנדטים</p></> : <p>לא רצה</p>}
+      {v ? <><p><bdi dir="ltr">{num(v.votes)}</bdi> <span className="text-[10px]">מצביעים</span></p><p><bdi dir="ltr">{pctValue((year === "2022" ? share22 : share26) ?? 0)}%</bdi></p><p><bdi dir="ltr">{v.seats}</bdi> מנדטים</p></> : <p>לא רצה</p>}
     </div>)}
+    <div className="text-xs text-ink-soft"><p className="font-bold text-ink">הפער</p>{y2022 && y2026 && share22 !== null && share26 !== null ? <><p><bdi dir="ltr">{sign(y2026.votes - y2022.votes)}</bdi> מצביעים</p><p><bdi dir="ltr">{sign(share26 - share22, true)}</bdi></p></> : <p>—</p>}</div>
   </div>;
 }
 
@@ -102,8 +110,8 @@ function SwipePartyRow({ line, fromColor, toColor }: { line: PairedRow; fromColo
   const [selected, setSelected] = useState<View>(line.from ? "from" : "to");
   const start = useRef<{ x: number; y: number; pointer: number } | null>(null);
   const panelId = useId(), showStats = !!(line.id26 || line.letters22);
-  const label = selected === "from" ? "מאיפה הגיעו" : "לאן הלכו";
-  const nextLabel = selected === "from" ? "לאן הלכו" : "מאיפה הגיעו";
+  const label = selected === "from" ? "מאיפה הגיעו ל־2026" : "לאן הלכו מ־2022";
+  const nextLabel = selected === "from" ? "לאן הלכו מ־2022" : "מאיפה הגיעו ל־2026";
   return <li className="flow-swipe-card border-t border-paper-line py-3" data-party={line.key} data-direction={selected} style={{ touchAction: "pan-y pinch-zoom" }}
     onPointerDown={(e) => {
       if (e.pointerType !== "touch" || !e.isPrimary || (e.target as Element).closest("button,a,input")) return;
@@ -147,11 +155,11 @@ function Paired({ rows, same, fromColor, toColor, stats = false }: { rows: { cam
   const lines = pairedRows(rows, same, stats);
   const empty = (text: string) => <p className="text-sm text-ink-soft self-center">{text}</p>;
   return (
-    <div className="mt-2 grid grid-cols-[max-content_1fr_1fr] gap-x-6">
+    <div className="mt-2 grid grid-cols-[minmax(17rem,1fr)_minmax(0,1.5fr)_minmax(0,1.5fr)] gap-x-6">
       <span /><span className="font-bold text-ink-soft pb-2">{VIEWS[0].lead}</span><span className="font-bold text-ink-soft pb-2">{VIEWS[1].lead}</span>
       {lines.map((l) => (
         <div key={l.key} className="flow-paired-row contents" data-layout="paired" data-party={l.key}>
-          <div className="border-t border-paper-line py-3 flex flex-col items-start gap-1 max-w-[13rem]">
+          <div className="border-t border-paper-line py-3 flex flex-col items-start gap-1 min-w-0">
             {(l.id26 || l.letters22) && <PartyAvatar id={l.img} size={44} fallback={l.letters22 ?? LETTER_2026[l.id26 ?? ""] ?? "…"} />}
             <h3 className="font-bold leading-tight line-clamp-2">{l.name}</h3>
             {l.sub && <span className="text-xs text-ink-soft leading-tight">ב-2022: {l.sub}</span>}
@@ -185,15 +193,16 @@ export default function VoterFlow() {
   return (
     <div>
       <RotatingPromo messages={SHARE_MESSAGES} callToAction="לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
-      <h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
-      <p className="text-sm text-ink-soft">{partialLine()}</p>
-      <div className="flex justify-end mt-2">
+      <div className="flex items-center justify-between gap-2"><h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
+
+      <div className="flex justify-end">
         <InfoTip label="איך מחושב מעבר המצביעים?">
           משווים תחילה את אותו מספר תת קלפי באותו יישוב, אחר כך את הקלפי השלמה ואת מרכז הקלפיות.
           יתרת הקלפיות משויכת לפי השינוי באותה עיר. כך נמצאה מקבילה ל־{pctValue(cov.total)}% מהקולות, וכל קול נשאר בחישוב.
           מעטפות כפולות נמדדות כיישוב אחד; יישוב ללא קלפי ב־2022 מופיע כ״יישובים חדשים״.
         </InfoTip>
       </div>
+      </div><p className="text-sm text-ink-soft">{partialLine()}</p>
       <Explained
         kind="השוואה"
         source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"
