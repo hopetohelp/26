@@ -236,25 +236,30 @@ function cityColumn(p: Pen, cities: CityLine[], x: number, w: number): Block {
   } };
 }
 
-/** כל המפלגות: כותרות עמודות ושורת כרטיס לכל רשימה, הנתון ומתחתיו השינוי */
+/** כל המפלגות: שני טורים של כרטיסים, כרטיס לכל רשימה — שם, ומתחתיו מצביעים ומהכשרים: המספר בגדול והשינוי בקטן */
 function tableBlock(p: Pen, headers: string[], rows: TableRow[]): Block {
-  const rowH = 54, gap = 4, head = 34;
-  return { min: rows.length, max: rows.length, height: () => head + rows.length * (rowH + gap), draw: (y) => {
-    const inner = CW - 28, nameW = inner * (2.1 / (2.1 + headers.length)), colW = (inner - nameW) / headers.length;
-    headers.forEach((hd, i) => text(p, hd, R - 14 - nameW - colW * (i + 0.5), y, 30, `700 25px ${p.f.display}`, p.look.accent, "center"));
+  const keep = ["מצביעים", "מהכשרים"].map((h) => headers.indexOf(h)), labels = ["מצביעים", "מהכשרים"];
+  const gap = 6, cols = 2, w = (CW - 14) / cols, h = 106, head = 30, per = Math.ceil(rows.length / cols);
+  return { min: rows.length, max: rows.length, height: () => head + per * h + (per - 1) * gap, draw: (y) => {
+    for (let c = 0; c < cols; c++) {
+      const x = R - w - c * (w + 14), half = (w - 28) / 2;
+      labels.forEach((lb, i) => text(p, lb, x + w - 14 - half * (i + 0.5), y, 28, `700 24px ${p.f.display}`, p.look.accent, "center"));
+    }
     rows.forEach((row, r) => {
-      const ry = y + head + r * (rowH + gap);
-      card(p, L, ry, CW, rowH, 22);
-      text(p, fit(p, row.name, `700 27px ${p.f.display}`, nameW - 8), R - 14, ry, rowH, `700 27px ${p.f.display}`, p.look.ink);
-      row.cells.forEach((c, i) => {
-        const cx = R - 14 - nameW - colW * (i + 0.5);
-        text(p, ltrText(c.value), cx, ry + 5, 28, `700 25px ${p.f.num}`, p.look.ink, "center");
-        const cw = changeWidth(p, c.change, 19);
-        if (c.change) drawChange(p, c.change, cx - cw / 2, ry + 5 + 28, 20, 19);
+      const c = r < per ? 0 : 1, i = c === 0 ? r : r - per, x = R - w - c * (w + 14), cy = y + head + i * (h + gap);
+      card(p, x, cy, w, h, 22);
+      text(p, fit(p, row.name, `700 28px ${p.f.display}`, w - 28), x + w - 14, cy + 8, 34, `700 28px ${p.f.display}`, p.look.ink);
+      keep.forEach((k, j) => {
+        const cell = row.cells[k]; if (!cell) return;
+        const cx = x + w - 14 - half(w) * (j + 0.5);
+        text(p, ltrText(cell.value), cx, cy + 8 + 34, 36, `800 32px ${p.f.num}`, p.look.ink, "center");
+        const cw = changeWidth(p, cell.change, 21);
+        if (cell.change) drawChange(p, cell.change, cx - cw / 2, cy + 8 + 34 + 36, 24, 21);
       });
     });
   } };
 }
+const half = (w: number) => (w - 28) / 2;
 
 /** כותרת התמונה: שם, ומתחתיו בקטן "94% מספירת הקולות" */
 function header(p: Pen, title: string, sub: string, maxW: number): number {
