@@ -116,8 +116,9 @@ export function groupChange(m: number[][], mTo: number[][], ids: string[], lette
   return { votes26, votes22: letters.length ? votes22 : null, share26: (votes26 / (valid26 || 1)) * 100, share22: letters.length ? (votes22 / (valid22 || 1)) * 100 : null };
 }
 
-/** אותה מפלגה בשתי הבחירות (אותה רשימה ואותן אותיות): מזהה 2026 ⇐ אותיות 2022 */
-export const SAME: Record<string, string> = { likud: "מחל", democrats: "אמת", utj: "ג", yb: "ל", shas: "שס", rzp: "ט", raam: "עם" };
+/** אותה מפלגה בשתי הבחירות: מזהה 2026 ⇐ אותיות 2022. אותה רשימה, או המשך באיחוד (הכרעת בעלים 29.10.2026):
+ * יש עתיד ⇐ ביחד, חד"ש-תע"ל ⇐ הרשימה המשותפת, המחנה הממלכתי ⇐ ישר! (כחול לבן לא רצה ב-2026 ואינה מקבלת שורה) */
+export const SAME: Record<string, string> = { likud: "מחל", democrats: "אמת", utj: "ג", yb: "ל", shas: "שס", rzp: "ט", raam: "עם", together: "פה", joint: "ום", yashar: "כן" };
 /**
  * ארבעת הפרמטרים של מפלגה לכל שנה — מקור אחד לכרטיסי המסך ולתמונות השיתוף (הכרעת בעלים 29.10.2026):
  * מצביעים (קולות), מנדטים, "מזכות בחירה" (מבעלי זכות הבחירה) ו"מהכשרים" (מהקולות הכשרים — כך מודדת ועדת הבחירות).
