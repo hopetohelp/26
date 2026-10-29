@@ -64,7 +64,7 @@ export function Results2026({ chips }: { chips: React.ReactNode }) {
         </tbody>
       </table>
       </Explained>
-      <p className="text-sm mt-3"><Link to="/past?tab=changes" className="font-semibold">מאיפה הגיעו המצביעים של כל רשימה ⇐ מה השתנה</Link></p>
+      <p className="text-sm mt-3"><Link to="/changes" className="font-semibold">מאיפה הגיעו המצביעים של כל רשימה ⇐ מה השתנה</Link></p>
     </Card>
   );
 }
