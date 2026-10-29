@@ -218,15 +218,27 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
     const cells = ordered.flatMap((r, i) => {
       const line: PairedRow = { key: r.id, img: r.id, name: r.name, sub: undefined, id26: r.id, letters22: null, from: r };
       const head = <div className="flex flex-col items-center text-center gap-0.5"><Head line={line} center /><span className="text-[10px] font-normal text-ink-soft leading-tight">פוצלה מ{names22} (2022)</span></div>;
-      const row = i === 0 ? "md:row-start-1" : "md:row-start-2";
+      const row = i === 0 ? "md:row-start-2" : "md:row-start-3";
       return [
         <div key={`s-${r.id}`} className={`min-w-0 md:col-start-1 ${row}`}><Stats years={{ y2022: null, y2026: partyYears(r.id, null).y2026 }} what={r.name} head={head} /></div>,
         <FlowCard key={`f-${r.id}`} className={`md:col-start-2 ${row}`} title={titled(r)} data={r} view="from" colorOf={fromColor} />,
       ];
     });
+    // הצעה: פס השוואה של שתי הרשימות יחד מול הרשימה של 2022, בראש המשפחה
+    const g = groupYears(group.ids26, group.letters22);
+    const items = g.y2022 && g.y2026 ? ([["votes", num, "count"], ["ofValid", pctOne, "pct"], ["seats", String, "count"]] as const).map(([k, fmt, kind]) => ({ k, label: PARAM_NAMES[k], a: fmt(g.y2022![k] as number), b: fmt(g.y2026![k] as number), d: changeOf((g.y2026![k] as number) - (g.y2022![k] as number), kind) })) : [];
+    const strip = <div className="sm:col-span-2 md:col-span-3 md:row-start-1 rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-sm p-3">
+      <p className="text-xs md:text-sm font-bold text-center mb-2">{ordered.map((r) => r.name).join(" + ")} <span className="text-ink-soft font-normal">יחד, מול</span> {names22} <span className="text-ink-soft font-normal">2022</span></p>
+      <dl className="grid grid-cols-3 gap-2 text-center tabular-nums">{items.map((it) => <div key={it.k} className="min-w-0">
+        <dt className="text-[11px] md:text-xs text-ink-soft">{it.label}</dt>
+        <dd className="text-xs md:text-sm font-bold"><bdi dir="ltr">{it.a}</bdi> ⇐ <bdi dir="ltr">{it.b}</bdi></dd>
+        <dd className="text-[11px] md:text-xs font-bold"><Delta change={it.d} /></dd>
+      </div>)}</dl>
+    </div>;
     return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group="split">
+      {strip}
       {cells}
-      {to.map((r) => <FlowCard key={`t-${r.id}`} className="sm:col-span-2 md:col-span-1 md:col-start-3 md:row-start-1 md:row-span-2" title={toTitle("party", r)} data={r} view="to" colorOf={toColor} />)}
+      {to.map((r) => <FlowCard key={`t-${r.id}`} className="sm:col-span-2 md:col-span-1 md:col-start-3 md:row-start-2 md:row-span-2" title={toTitle("party", r)} data={r} view="to" colorOf={toColor} />)}
     </li>;
   }
   const r26 = from[0];
