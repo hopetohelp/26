@@ -87,11 +87,15 @@ function OverviewCards() {
   return <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
     {items.map(([key, label]) => {
       const share = overviewShare(y2026, key);
-      return <div key={key} className="rounded-theme border border-paper-line bg-paper p-2 text-center min-w-0">
-        <dt className="text-xs font-bold text-ink-soft leading-tight">{label}</dt>
-        <dd className="mt-1 tabular-nums leading-snug">
-          <span className="block text-base font-bold"><bdi dir="ltr">{num(y2026[key])}</bdi>{share !== null && <span className="text-xs font-normal text-ink-soft"> (<bdi dir="ltr">{pctOne(share)}</bdi>)</span>}</span>
-          <span className="flex justify-center gap-2 text-xs"><Delta change={changeOf(y2026[key] - y2022[key], "count")} /><Delta change={changeOf(overviewChangePct(y2022, y2026, key), "pct")} /></span>
+      const count = changeOf(y2026[key] - y2022[key], "count"), rate = changeOf(overviewChangePct(y2022, y2026, key), "pct");
+      const tone = count?.up ? "bg-pos/10" : count ? "bg-neg/10" : "";
+      // עיצוב דרמטי (הכרעת בעלים 29.10.2026): מספר גדול, פס עליון בצבע ההדגשה, והשינוי בתג צבעוני
+      return <div key={key} className="rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-md px-2 py-3 text-center min-w-0 flex flex-col items-center gap-1.5">
+        <dt className="text-xs md:text-sm font-bold text-ink-soft leading-tight">{label}</dt>
+        <dd className="contents tabular-nums">
+          <bdi dir="ltr" className="block font-display font-extrabold text-xl md:text-3xl leading-none text-ink">{num(y2026[key])}</bdi>
+          {share !== null && <span className="text-xs md:text-sm font-bold text-accent leading-none"><bdi dir="ltr">{pctOne(share)}</bdi></span>}
+          {count && <span className={`inline-flex flex-wrap justify-center gap-x-1.5 md:gap-x-2 rounded-full px-1.5 md:px-2 py-0.5 text-[11px] md:text-sm font-bold ${tone}`}><Delta change={count} /><Delta change={rate} /></span>}
         </dd>
       </div>;
     })}
