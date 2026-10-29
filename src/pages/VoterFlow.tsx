@@ -83,7 +83,7 @@ function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y202
 function OverviewCards() {
   const { y2022, y2026 } = overview();
   if (!y2026) return null;
-  const items = [["eligible", "בעלי זכות בחירה"], ["voted", "הצביעו"], ["invalid", "קולות שנפסלו"], ["belowThreshold", "לא עברו את אחוז החסימה"]] as const;
+  const items = [["eligible", "בעלי זכות בחירה"], ["voted", "הצביעו"], ["inKnesset", "קולות לרשימות בכנסת"], ["belowThreshold", "לא עברו את אחוז החסימה"]] as const;
   return <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
     {items.map(([key, label]) => {
       const share = overviewShare(y2026, key);
