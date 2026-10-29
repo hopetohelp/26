@@ -1,4 +1,5 @@
 import flowFile from "../data/flow2026.json";
+import lineageFile from "../../raw/lineage.json";
 import { listName, results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
@@ -132,6 +133,25 @@ export function partyYears(id26: string | null, letters22: string | null): { y20
     y2022: y2022 ? { ...y2022, ofEligible: K25.eligible ? (y2022.votes / K25.eligible) * 100 : null, ofValid: (y2022.votes / valid22) * 100 } : null,
     y2026: y2026 && valid26 ? { ...y2026, ofEligible: el26 ? (y2026.votes / el26) * 100 : null, ofValid: (y2026.votes / valid26) * 100 } : null,
   };
+}
+
+/** פיצול או איחוד ודאי (raw/lineage.json, חלופת "strict"; הצעה, 29.10.2026): משפחה עם יותר מרשימה אחת באחת השנים */
+export interface Group { id: string; letters22: string[]; ids26: string[] }
+const LETTERS_BY_SHORT = Object.fromEntries(K25.lists.map((l) => [l.short, l.letters]));
+export const GROUPS: Group[] = (lineageFile as unknown as { families: { id: string; k25: string[]; k26: string[]; alts: string[] }[] }).families
+  .filter((f) => f.alts.includes("strict") && (f.k25.length > 1 || f.k26.length > 1))
+  .map((f) => ({ id: f.id, letters22: f.k25.map((n) => LETTERS_BY_SHORT[n]).filter(Boolean), ids26: f.k26 }));
+
+/** ארבעת הפרמטרים של קבוצת רשימות: 2022 — סכום הרשימות של אז; 2026 — סכום הרשימות של היום */
+export function groupYears(ids26: string[], letters22: string[]): { y2022: YearNumbers | null; y2026: YearNumbers | null } {
+  const parts = [...ids26.map((id) => partyYears(id, null).y2026), ...letters22.map((l) => partyYears(null, l).y2022)];
+  const sum = (ys: (YearNumbers | null)[]): YearNumbers | null => {
+    const v = ys.filter((y): y is YearNumbers => !!y);
+    if (!v.length) return null;
+    const total = (k: "votes" | "seats" | "ofValid") => v.reduce((a, y) => a + y[k], 0);
+    return { votes: total("votes"), seats: total("seats"), ofValid: total("ofValid"), ofEligible: v.some((y) => y.ofEligible === null) ? null : v.reduce((a, y) => a + (y.ofEligible ?? 0), 0) };
+  };
+  return { y2026: sum(parts.slice(0, ids26.length)), y2022: sum(parts.slice(ids26.length)) };
 }
 
 /** ארבעת הפרמטרים של גוש לכל שנה (הכרעת בעלים 29.10.2026): סכום הרשימות שבגוש — 2026 לפי BLOC_MEMBERS, 2022 לפי שיוך הגושים של 2022 */

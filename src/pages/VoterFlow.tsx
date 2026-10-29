@@ -4,7 +4,7 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, SAME, smallPct, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
@@ -157,6 +157,8 @@ const TITLES: Record<Kind, Record<View, string>> = {
   bloc: { from: "מאיפה הגיעו מצביעי הגוש בבחירות הנוכחיות", to: "לאן הלכו מצביעי הגוש בבחירות הקודמות" },
 };
 const BLOCS = new Set(["netanyahu", "haredi", "arab", "eisenkot"]);
+/** "לאן הלכו" עם שם המפלגה (הכרעת בעלים 29.10.2026): "לאן הלכו מצביעי הליכוד בבחירות הקודמות"; בגושים — הכותרת הכללית */
+const toTitle = (kind: Kind, row?: FlowRow) => (kind === "party" && row ? `לאן הלכו מצביעי ${row.name} בבחירות הקודמות` : TITLES[kind].to);
 
 /** תמונה ושם בפינה הימנית העליונה של טבלת הנתונים (הכרעת בעלים 29.10.2026); שם של כמה מילים — מילה בשורה */
 function Head({ line, center = false }: { line: PairedRow; center?: boolean }) {
@@ -192,15 +194,77 @@ function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind;
     {/* טאבלט (הכרעת בעלים 29.10.2026): הטבלה ברוחב מלא, ומתחתיה ״מאיפה״ ו״לאן״ באותה שורה ובאותו גובה */}
     <div className={`min-w-0 sm:col-span-2 md:col-span-1 md:h-full ${one ? "grid grid-cols-[auto_minmax(0,1fr)] gap-3 items-stretch md:block" : ""}`}>
       {stats}
-      {one && <FlowCard narrow className="md:hidden" title={TITLES[kind][line.from ? "from" : "to"]} data={line.from ?? line.to} view={line.from ? "from" : "to"} colorOf={line.from ? fromColor : toColor} />}
+      {one && <FlowCard narrow className="md:hidden" title={line.from ? TITLES[kind].from : toTitle(kind, line.to)} data={line.from ?? line.to} view={line.from ? "from" : "to"} colorOf={line.from ? fromColor : toColor} />}
     </div>
     <FlowCard className={one ? "hidden md:block" : ""} title={TITLES[kind].from} data={line.from} view="from" colorOf={fromColor} />
-    <FlowCard className={one ? "hidden md:block" : ""} title={TITLES[kind].to} data={line.to} view="to" colorOf={toColor} />
+    <FlowCard className={one ? "hidden md:block" : ""} title={toTitle(kind, line.to)} data={line.to} view="to" colorOf={toColor} />
+  </li>;
+}
+
+/**
+ * פיצול או איחוד ודאי (raw/lineage.json, "strict"; הכרעות בעלים 29.10.2026).
+ * איחוד: כרטיס נתונים מסוכם (סכום הרשימות בכל שנה, ומתחתיו כל רשימה של 2022); "מאיפה הגיעו" אחד בגובה כפול;
+ *   "לאן הלכו" לכל רשימה של 2022 — בטלפון זה לצד זה.
+ * פיצול: לכל רשימה של היום כרטיס נתונים משלה ו"מאיפה הגיעו" משלה, הגדולה ראשונה; "לאן הלכו" אחד לרשימה של 2022,
+ *   בגובה כפול במחשב. בטלפון: נתונים ומאיפה של הראשונה, נתונים ומאיפה של השנייה, ורק אז לאן הלכו.
+ */
+function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Rows; fromColor: (id: string) => string; toColor: (id: string) => string }) {
+  const from = group.ids26.map((id) => rows.cameFrom.find((r) => r.id === id)).filter((r): r is FlowRow => !!r);
+  const to = group.letters22.map((l) => rows.wentTo.find((r) => r.id === l)).filter((r): r is FlowRow => !!r);
+  const names22 = to.map((r) => r.name).join(" + ");
+  const titled = (r: FlowRow) => `מאיפה הגיעו מצביעי ${r.name}`;
+  if (from.length > 1) {
+    const ordered = [...from].sort((a, b) => b.total - a.total);
+    const cells = ordered.flatMap((r, i) => {
+      const line: PairedRow = { key: r.id, img: r.id, name: r.name, sub: undefined, id26: r.id, letters22: null, from: r };
+      const head = <div className="flex flex-col items-center text-center gap-0.5"><Head line={line} center /><span className="text-[10px] font-normal text-ink-soft leading-tight">פוצלה מ{names22} (2022)</span></div>;
+      const row = i === 0 ? "md:row-start-1" : "md:row-start-2";
+      return [
+        <div key={`s-${r.id}`} className={`min-w-0 md:col-start-1 ${row}`}><Stats years={{ y2022: null, y2026: partyYears(r.id, null).y2026 }} what={r.name} head={head} /></div>,
+        <FlowCard key={`f-${r.id}`} className={`md:col-start-2 ${row}`} title={titled(r)} data={r} view="from" colorOf={fromColor} />,
+      ];
+    });
+    return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group="split">
+      {cells}
+      {to.map((r) => <FlowCard key={`t-${r.id}`} className="sm:col-span-2 md:col-span-1 md:col-start-3 md:row-start-1 md:row-span-2" title={toTitle("party", r)} data={r} view="to" colorOf={toColor} />)}
+    </li>;
+  }
+  const r26 = from[0];
+  const head = <div className="flex flex-col items-start gap-0.5">
+    {r26 && <PartyAvatar id={r26.id} size={24} fallback={LETTER_2026[r26.id] ?? "…"} />}
+    <h3 className="font-bold leading-tight text-[11px] md:text-xs">{r26?.name}</h3>
+    <span className="text-[10px] font-normal text-ink-soft leading-tight">איחוד של {names22} (2022)</span>
+  </div>;
+  const parts = to.map((r) => { const y = partyYears(null, r.id).y2022; return y ? `${r.name} (2022): ${pctOne(y.ofValid)}, ${y.seats} מנדטים` : null; });
+  return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={group.id} data-group="merge">
+    <div className="min-w-0 sm:col-span-2 md:col-span-1 flex flex-col gap-1">
+      <Stats years={groupYears(group.ids26, group.letters22)} what={r26?.name ?? ""} head={head} />
+      <p className="text-[11px] text-ink-soft leading-snug">{parts.filter(Boolean).join(" · ")}</p>
+    </div>
+    {r26 && <FlowCard className="sm:h-full" title={TITLES.party.from} data={r26} view="from" colorOf={fromColor} />}
+    {/* בטלפון "לאן הלכו" של שתי הרשימות זה לצד זה (הכרעת בעלים 29.10.2026) */}
+    <div className="min-w-0 grid grid-cols-2 sm:grid-cols-1 gap-3 auto-rows-fr" data-side="to">
+      {to.map((r) => <FlowCard key={r.id} narrow className="sm:h-full" title={toTitle("party", r)} data={r} view="to" colorOf={toColor} />)}
+    </div>
   </li>;
 }
 
 function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kind; same: (id: string) => string | undefined; fromColor: (id: string) => string; toColor: (id: string) => string }) {
-  return <ul className="mt-2">{pairedRows(rows, same, kind === "party").map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
+  if (kind !== "party") return <ul className="mt-2">{pairedRows(rows, same, false).map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
+  // משפחות של פיצול או איחוד — שורה אחת במקום הרשימה הראשונה שלהן; השאר כמו קודם
+  const group26 = new Map(GROUPS.flatMap((g) => g.ids26.map((id) => [id, g] as const)));
+  const letters = new Set(GROUPS.flatMap((g) => g.letters22));
+  const singles = new Map(pairedRows({ cameFrom: rows.cameFrom.filter((r) => !group26.has(r.id)), wentTo: rows.wentTo.filter((w) => !letters.has(w.id)) }, same, true).map((l) => [l.key, l]));
+  const out: ReactNode[] = [];
+  const seen = new Set<string>();
+  for (const r of rows.cameFrom) {
+    const g = group26.get(r.id);
+    if (g) { if (!seen.has(g.id)) { seen.add(g.id); out.push(<GroupLine key={g.id} group={g} rows={rows} fromColor={fromColor} toColor={toColor} />); } continue; }
+    const line = singles.get(r.id);
+    if (line) { out.push(<Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />); singles.delete(r.id); }
+  }
+  for (const line of singles.values()) out.push(<Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />);
+  return <ul className="mt-2">{out}</ul>;
 }
 
 /** בלי השורות שאינן אמינות (הכרעת בעלים 28.10.2026): "רשימות אחרות" — בהשוואה לקלפיות המצביעים של 2026 בהן יוצאים 100% "לא הצביעו" (חוסר יציבות בקבוצה זעירה); "לא הצביעו" בחלק המפלגות */
