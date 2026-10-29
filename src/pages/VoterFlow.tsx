@@ -170,7 +170,7 @@ function Head({ line, center = false }: { line: PairedRow; center?: boolean }) {
 
 /** כרטיס תנועה: כותרת בשורה אחת (הגופן מתכווץ עם רוחב הכרטיס) והפסים */
 function FlowCard({ title, data, view, colorOf, className = "", narrow = false }: { title: string; data?: FlowRow; view: View; colorOf: (id: string) => string; className?: string; narrow?: boolean }) {
-  return <section className={`min-w-0 md:h-full ${className}`} data-card="flow"><div className="h-full rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
+  return <section className={`min-w-0 sm:h-full ${className}`} data-card="flow"><div className="h-full rounded-theme border border-paper-line bg-paper-card shadow-sm p-3" style={{ containerType: "inline-size" }} aria-label={title}>
     {/* כותרת בשורה אחת; בכרטיס צר (לצד כרטיס הנתונים בטלפון) — בשתי שורות מאוזנות */}
     <h4 className={`font-bold text-accent text-center mb-2 ${narrow ? "text-xs leading-snug [text-wrap:balance]" : "whitespace-nowrap"}`} style={narrow ? undefined : { fontSize: "clamp(9px, 4.6cqi, 13px)" }}>{title}</h4>
     {data ? <Body row={data} view={view} colorOf={colorOf} total={false} /> : <p className="text-sm text-ink-soft text-center">לא רצה בבחירות אלו</p>}
@@ -187,9 +187,10 @@ function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind;
   const stats = years
     ? <Stats years={years} what={line.name} head={<Head line={line} center={one} />} />
     : <div className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 h-full flex items-center justify-center"><Head line={line} center /></div>;
-  return <li className="border-t border-paper-line py-4 grid gap-3 md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-stretch" data-party={line.key}>
+  return <li className="border-t border-paper-line py-4 grid gap-3 sm:grid-cols-2 sm:items-stretch md:grid-cols-[minmax(19rem,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]" data-party={line.key}>
     {/* רצה רק באחת מהמערכות: בטלפון כרטיס הנתונים וכרטיס התנועה היחיד באותה שורה, ובלי כרטיס לבחירות שלא רץ בהן */}
-    <div className={`min-w-0 md:h-full ${one ? "grid grid-cols-[auto_minmax(0,1fr)] gap-3 items-stretch md:block" : ""}`}>
+    {/* טאבלט (הכרעת בעלים 29.10.2026): הטבלה ברוחב מלא, ומתחתיה ״מאיפה״ ו״לאן״ באותה שורה ובאותו גובה */}
+    <div className={`min-w-0 sm:col-span-2 md:col-span-1 md:h-full ${one ? "grid grid-cols-[auto_minmax(0,1fr)] gap-3 items-stretch md:block" : ""}`}>
       {stats}
       {one && <FlowCard narrow className="md:hidden" title={TITLES[kind][line.from ? "from" : "to"]} data={line.from ?? line.to} view={line.from ? "from" : "to"} colorOf={line.from ? fromColor : toColor} />}
     </div>
