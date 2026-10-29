@@ -18,7 +18,7 @@ const actual = results2026.seats;
 const changes = seatChanges2026();
 const ids = Object.keys(actual).sort((a, b) => (actual[b] ?? 0) - (actual[a] ?? 0) || (pct[b] ?? 0) - (pct[a] ?? 0));
 
-/** שורה אחת של השינוי הקרוב: כיוון (חץ וסימן, לא רק צבע), קולות, אחוז ביחס לקולות שיש לרשימה, והמנדטים אחרי השינוי */
+/** שורה אחת של השינוי הקרוב: כיוון (חץ וסימן, לא רק צבע), קולות ואחוז ביחס לקולות שיש לרשימה */
 function ShiftLine({ shift, up }: { shift: SeatShift | null; up: boolean }) {
   if (!shift) return null;
   const sign = up ? "+" : "\u2212";
@@ -26,7 +26,7 @@ function ShiftLine({ shift, up }: { shift: SeatShift | null; up: boolean }) {
     <div className={up ? "text-pos" : "text-neg"}>
       <span aria-hidden="true">{up ? "▲" : "▼"} </span>
       <span className="sr-only">{up ? "מנדט נוסף:" : "איבוד מנדט:"} </span>
-      {LTR(`${sign}${num(shift.votes)}`)} קולות{shift.pct !== null && <> ({LTR(`${sign}${pctValue(shift.pct, 1)}%`)})</>} ⇐ {shift.toSeats} מנדטים
+      {LTR(`${sign}${num(shift.votes)}`)} קולות{shift.pct !== null && <> ({LTR(`${sign}${pctValue(shift.pct, 1)}%`)})</>}
     </div>
   );
 }
