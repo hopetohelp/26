@@ -7,7 +7,7 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/sh
 import { BLOC_COLORS, THEMES } from "./promoVideo";
 import { results2026 } from "./guessAccuracyData";
 import { DEFAULT_LINEAGE } from "./lineage";
-import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, groupChange, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow, type Mode } from "./voterFlow";
+import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, groupChange, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow } from "./voterFlow";
 import { sumBallotVotes, validBallotVotes, type BallotUnits as Units } from "./ballotLookup";
 
 export type Who = "all" | "haredi" | "party";
@@ -56,7 +56,7 @@ function topCities(all: CityShare[], n: number): CityShare[] {
   return eligible(all).sort((a, b) => b.share26 - a.share26).slice(0, n);
 }
 
-export interface Spec { logo?: ImageBitmap | null; who: Who; party: string; where: Where; city: string; dir: Dir; blocs: boolean; mode: Mode }
+export interface Spec { logo?: ImageBitmap | null; who: Who; party: string; where: Where; city: string; dir: Dir; blocs: boolean }
 
 /** תמונת השיתוף בגווני הגזרה: רקע כהה עם הילות כחול ואדום, מסגרת מעוגלת, כרטיסים רכים; אחוזים בלבד */
 export async function renderLegacy(spec: Spec, units: Units | null): Promise<Blob> {
@@ -67,7 +67,7 @@ export async function renderLegacy(spec: Spec, units: Units | null): Promise<Blo
   const ctx = cv.getContext("2d")!; ctx.direction = "rtl"; ctx.textBaseline = "middle";
   const R = IMG_W - 90, L = 90, CW = R - L;
   const ids = spec.who === "haredi" ? HAREDI : spec.who === "party" ? [spec.party] : [];
-  const national = flow.modes[spec.mode].flows, nationalTo = flow.modes[spec.mode].flowsTo;
+  const national = flow.national.flows, nationalTo = flow.national.flowsTo;
   const place = spec.who === "all" && spec.where === "city" && units ? Object.entries(units.places).find(([, p]) => p.name === spec.city.trim()) : undefined;
   const cityData = place ? (flow as unknown as { cities?: Record<string, { flows: number[][]; flowsTo?: number[][] }> }).cities?.[place[0]] : undefined;
   const matrix = spec.who === "all" && spec.where === "city" ? cityData?.flows ?? null : national;
@@ -240,7 +240,7 @@ export async function renderLegacy(spec: Spec, units: Units | null): Promise<Blo
   if (spec.who === "all") {
     if (matrix) {
       if (spec.dir === "from") {
-        const rows = flowsFor(spec.mode).lists.cameFrom.filter((r) => r.id !== "other" && r.id !== "abstain" && seats(r.id) > 0)
+        const rows = flowsFor().lists.cameFrom.filter((r) => r.id !== "other" && r.id !== "abstain" && seats(r.id) > 0)
           .map((r) => (matrix === national ? r : { ...r, parts: cameFromGroup(matrix, [r.id]) }));
         grid(rows, bloc2026, "מ", (r) => String(seats(r.id)));
       } else grid(K25_PASSED.map((l) => ({ id: l, name: oldName(l), total: 0, parts: wentToGroup(matrixTo ?? matrix, [l]) })), bloc2022, "ל");

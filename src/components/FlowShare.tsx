@@ -5,7 +5,7 @@ import { loadLogo } from "../pages/guess/communityShare";
 import { useHagzara } from "../pages/simple/hagzara";
 import { useSession } from "../pages/guess/useCrowd";
 import { countImage } from "../lib/visits";
-import { flow, newName, type Mode } from "../lib/voterFlow";
+import { flow, newName } from "../lib/voterFlow";
 import type { BallotUnits as Units } from "../lib/ballotLookup";
 import { buildScene, type Who, type Where } from "../lib/flowShareData";
 import { drawScene, type ShareTheme } from "../lib/flowShareDraw";
@@ -28,7 +28,7 @@ const THEME_NAME: Record<ShareTheme, string> = { dark: "כהה", light: "בהי�
  * חלון השיתוף של "מה השתנה": מי (כל המפלגות, חרדים, מפלגה), איפה (כל הארץ או עיר — בכל בחירה) ותצוגה (כהה או בהירה, כפתור אייקון בפינה).
  * התמונה בגודל קבוע 1080×1350 עם מסגרת הגזרה (`src/lib/flowShareDraw.ts`); הנתונים מ-`src/lib/flowShareData.ts`.
  */
-export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () => void }) {
+export default function FlowShare({ onClose }: { onClose: () => void }) {
   const [who, setWho] = useState<Who>("party");
   const [party, setParty] = useState(PARTIES[0]);
   const [where, setWhere] = useState<Where>("country");
@@ -60,16 +60,16 @@ export default function FlowShare({ mode, onClose }: { mode: Mode; onClose: () =
   const cityMode = where === "city";
   const allParties = who === "all";
   // כל המפלגות — בעיצוב הקיים (src/lib/flowShareLegacy.ts); מפלגה וחרדים — בעיצוב החדש
-  const scene = useMemo(() => (allParties ? null : buildScene({ who, party, where, city, mode }, units)), [allParties, who, party, where, city, mode, units]);
+  const scene = useMemo(() => (allParties ? null : buildScene({ who, party, where, city }, units)), [allParties, who, party, where, city, units]);
   const legacyReady = allParties && !!units && (!cityMode || names.includes(city.trim()));
   useEffect(() => {
     if (!scene && !legacyReady) { setFile(null); setUrl(null); return; }
     let live = true;
-    (scene ? drawScene(scene, { theme, logo }) : renderLegacy({ logo, who: "all", party, where, city, dir, blocs, mode }, units))
+    (scene ? drawScene(scene, { theme, logo }) : renderLegacy({ logo, who: "all", party, where, city, dir, blocs }, units))
       .then((b) => { if (!live) return; setMsg(null); setFile(new File([b], "elections26-changes.png", { type: "image/png" })); setUrl(URL.createObjectURL(b)); })
       .catch(() => live && setMsg("הכנת התמונה לא הצליחה."));
     return () => { live = false; };
-  }, [scene, theme, logo, legacyReady, party, where, city, dir, blocs, mode, units]);
+  }, [scene, theme, logo, legacyReady, party, where, city, dir, blocs, units]);
   const pickTheme = () => {
     const next: ShareTheme = theme === "dark" ? "light" : "dark";
     setTheme(next);

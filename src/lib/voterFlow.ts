@@ -5,14 +5,13 @@ import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
 
 /** מעבר מצביעים 2022 ⇐ 2026 לפי השוואת קלפיות (pipeline/voter_flow.py). נקודת המקור היחידה למסך "מה השתנה". */
-export type Mode = "ballots" | "localities";
 /** דרגות ההצמדה (pipeline/voter_flow.py): תת קלפי מהימנה ⇐ יתרת מתחם ⇐ יישוב ⇐ ועדה ⇐ ארצי */
 export type Tier = "sub" | "center" | "city" | "committee" | "national";
 /** flows — כל קול של 2026 לפי מקורו (סכום עמודה = הקולות שנספרו); flowsTo — כל קול של 2022 לפי יעדו (סכום שורה = התוצאה הרשמית) */
-interface ModeData { flows: number[][]; flowsTo: number[][]; tiers: Record<Tier, { units: number; valid: number }> }
+interface FlowData { flows: number[][]; flowsTo: number[][]; tiers: Record<Tier, { units: number; valid: number }> }
 export const flow = flowFile as unknown as {
   asOf: string; old: string[]; new: string[]; letters26: Record<string, string>;
-  ballots2026: number; valid2026: number; modes: Record<Mode, ModeData>;
+  ballots2026: number; valid2026: number; national: FlowData;
 };
 
 const K25 = results.find((e) => e.knesset === 25)!;
@@ -47,9 +46,9 @@ function rows(from: number[][], to: number[][], oldIds: string[], newIds: string
 }
 
 
-/** המעברים בין הרשימות ובין הגושים לפי המתג (קלפיות / יישובים) */
-export function flowsFor(mode: Mode) {
-  const { flows, flowsTo } = flow.modes[mode];
+/** המעברים בין הרשימות ובין הגושים, ארצי */
+export function flowsFor() {
+  const { flows, flowsTo } = flow.national;
   return { lists: rows(flows, flowsTo, flow.old, flow.new, oldName, newName), blocs: blocsOf(flows, flowsTo) };
 }
 
@@ -64,8 +63,8 @@ export function blocsOf(from: number[][], to: number[][] = from) {
 }
 
 /** חלק הקולות הכשרים שנספרו ב-2026 שנכנסו לחישוב, בכל דרגה ובסך הכול */
-export function coverage(mode: Mode) {
-  const t = flow.modes[mode].tiers;
+export function coverage() {
+  const t = flow.national.tiers;
   const pct = (v: number) => (v / flow.valid2026) * 100;
   return { total: pct(Object.values(t).reduce((a, x) => a + x.valid, 0)), sub: pct(t.sub.valid), center: pct(t.sub.valid + t.center.valid) };
 }

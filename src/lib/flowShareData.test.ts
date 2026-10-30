@@ -5,7 +5,7 @@ import { results } from "./data";
 import type { BallotUnits } from "./ballotLookup";
 
 const k25seats = (letters: string) => results.find((e) => e.knesset === 25)!.lists.find((l) => l.letters === letters)!.seats;
-const country: ShareSpec = { who: "party", party: "likud", where: "country", city: "", mode: "localities" };
+const country: ShareSpec = { who: "party", party: "likud", where: "country", city: "" };
 
 // שתי ערים: בבית ב הליכוד מ-100 ל-110 מתוך 200 בעלי זכות בשתי הבחירות
 const units: BallotUnits = {

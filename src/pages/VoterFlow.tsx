@@ -4,7 +4,7 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type Mode, type YearNumbers } from "../lib/voterFlow";
+import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
@@ -12,6 +12,8 @@ import { num, pctOne, pctValue } from "../lib/format";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
 const FlowShare = lazy(() => import("../components/FlowShare"));
+const FlowSankey = lazy(() => import("../components/FlowSankey"));
+import FlowExplain from "../components/FlowExplain";
 
 type View = "from" | "to";
 const SHARE_MESSAGES = [
@@ -290,15 +292,17 @@ const without = (r: Rows, ids: string[]): Rows => ({ cameFrom: r.cameFrom.filter
 
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
 export default function VoterFlow() {
-  const mode: Mode = "localities"; // קבוע לפי בקשת הבעלים 29/10; יתרת הקלפיות משויכת לפי העיר.
-  const cov = coverage(mode);
-  const raw = flowsFor(mode);
+  const cov = coverage();
+  const raw = flowsFor();
   const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
   const [sharing, setSharing] = useState(false);
+  const [graph, setGraph] = useState(false);
   const openSharing = useCallback(() => setSharing(true), []);
   useRegisterNavShare(openSharing, false);
   return (
     <div>
+      {/* חלון ההסבר בראש המסך (הכרעת בעלים 30.10.2026) */}
+      <div className="mb-3"><FlowExplain /></div>
       <RotatingPromo messages={SHARE_MESSAGES} callToAction="לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
       {/* הכותרת ככרטיס עם ארבעת הנתונים הכלליים, כל אחד בכרטיס (הכרעת בעלים 29.10.2026) */}
       <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
@@ -324,7 +328,14 @@ export default function VoterFlow() {
         inFooter
       >
         {/* שלושה חלקים נפתחים (הכרעת בעלים 29.10.2026) */}
-        <Fold title="מעבר בין מפלגות"><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></Fold>
+        <Fold title="מעבר בין מפלגות">
+          {/* כפתור "הצגה בגרף" — גרף זרימה במקום הכרטיסים (הכרעת בעלים 30.10.2026) */}
+          <button type="button" aria-pressed={graph} onClick={() => setGraph((g) => !g)}
+            className={`rounded-full border border-signal px-4 min-h-[44px] font-bold ${graph ? "bg-signal text-signal-ink" : "text-signal"}`}>הצגה בגרף</button>
+          {graph
+            ? <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><FlowSankey /></Suspense>
+            : <Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} />}
+        </Fold>
         <Fold title="מעבר בין גושים"><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></Fold>
         {/* ״איך זה חושב?״ בתחתית העמוד (הכרעת בעלים 29.10.2026) */}
         <Fold title="חיפוש לפי עיר או קלפי">
@@ -332,7 +343,7 @@ export default function VoterFlow() {
         </Fold>
       </Explained>
       <DrawerTop />
-      {sharing && <Suspense fallback={null}><FlowShare mode={mode} onClose={() => setSharing(false)} /></Suspense>}
+      {sharing && <Suspense fallback={null}><FlowShare onClose={() => setSharing(false)} /></Suspense>}
     </div>
   );
 }

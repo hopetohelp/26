@@ -13,7 +13,7 @@ raw/lineage.json (השיוך הוודאי בין הרשימות).
 1. תת קלפי מהימנה — אותו יישוב, אותו מספר, אותו מתחם, ובעלי הזכות בתוך 10% אחרי גידול היישוב. מספר תת קלפי לבדו
    אינו מספיק: הוועדה מעבירה בוחרים בין קלפיות המתחם לפי שם המשפחה (חוק הבחירות, סעיף 68(ג1)).
 2. יתרת המתחם (עמודת "ריכוז"). 3. יתרת היישוב. 4. יתרת הוועדה האזורית. 5. יתרה ארצית.
-דרגות 3–5 רק במתג "לפי יישובים". בכל הדרגות נתוני 2022 מותאמים באחוזים למספר בעלי הזכות ב-2026 (הגידול באחוזים).
+כל חמש הדרגות פועלות תמיד (המתג "לפי יישובים" בוטל; הכרעת בעלים 30.10.2026). בכל הדרגות נתוני 2022 מותאמים באחוזים למספר בעלי הזכות ב-2026 (הגידול באחוזים).
 
 טבלאות המעבר — מדורגות: ארצית ⇐ ועדה ⇐ יישוב (שכונות נבדקו והוסרו: לא שיפרו את ההתאמה; הכרעת בעלים 29.10.2026). כל טבלה נפתרת מהיחידות שלה, ונמשכת לטבלה שמעליה
 בכוח של KAPPA קולות לכל מקור: מקום עם מעט קלפיות קרוב לטבלה שמעליו, ומקום גדול נקבע מהנתונים שלו.
@@ -71,7 +71,7 @@ def vector(row: dict, letters: list[str]) -> list[int]:
     return v + [max(0, n(row, "כשרים") - sum(v)), max(0, n(row, "בזב") - n(row, "מצביעים"))]
 
 
-def match(r22: list[dict], r26: list[dict], full: bool) -> list[tuple[str, list[int], list[int]]]:
+def match(r22: list[dict], r26: list[dict]) -> list[tuple[str, list[int], list[int]]]:
     """יחידות מותאמות (דרגה, אינדקסים של 2022, אינדקסים של 2026); כל קלפי פעם אחת, והיתרה עולה דרגה"""
     left22, left26, units = set(range(len(r22))), set(range(len(r26))), []
     e22, e26 = defaultdict(int), defaultdict(int)
@@ -95,9 +95,8 @@ def match(r22: list[dict], r26: list[dict], full: bool) -> list[tuple[str, list[
             units.append(("sub", i22, i26))
             left22 -= set(i22)
             left26 -= set(i26)
-    keys = [("center", lambda r: (r["סמל ישוב"], r["ריכוז"]))]
-    if full:
-        keys += [("city", lambda r: (r["סמל ישוב"],)), ("committee", lambda r: (r["סמל ועדה"],)), ("national", lambda r: ())]
+    keys = [("center", lambda r: (r["סמל ישוב"], r["ריכוז"])), ("city", lambda r: (r["סמל ישוב"],)),
+            ("committee", lambda r: (r["סמל ועדה"],)), ("national", lambda r: ())]
     for tier, key in keys:
         g22, g26 = defaultdict(list), defaultdict(list)
         for i in left22:
@@ -305,11 +304,11 @@ def counted(r26: list[dict]) -> dict:
             "voters": voters, "invalid": sum(n(r, "פסולים") for r in r26)}
 
 
-def mode(r22: list[dict], r26: list[dict], full: bool) -> tuple[dict, list, list]:
+def national(r22: list[dict], r26: list[dict]) -> tuple[dict, list, list]:
     new = list(NEW)
     v22 = [vector(r, OLD) for r in r22]
     v26 = [vector(r, new) for r in r26]
-    units = match(r22, r26, full)
+    units = match(r22, r26)
     pairs, tiers = [], {t: {"units": 0, "valid": 0} for t in TIERS}
     for tier, i22, i26 in units:
         pairs.append(unit_pair(tier, i22, i26, r22, r26, v22, v26))
@@ -338,8 +337,7 @@ def units_file(r22: list[dict], r26: list[dict]) -> dict:
 
 def main() -> int:
     r22, r26 = read(B22), read(B26)
-    ballots, _, _ = mode(r22, r26, False)
-    localities, units, Ps = mode(r22, r26, True)
+    nat, units, Ps = national(r22, r26)
     now = datetime.now(timezone(timedelta(hours=2)))
     data = {
         "asOf": f"{now.day}/{now.month}/{now.year}",
@@ -349,13 +347,12 @@ def main() -> int:
         "ballots2026": len(r26),
         "valid2026": sum(n(r, "כשרים") for r in r26),
         "counted": counted(r26),
-        "modes": {"ballots": ballots, "localities": localities},
+        "national": nat,
         "cities": cities(r22, r26, units, Ps),
     }
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     UNITS.write_text(json.dumps(units_file(r22, r26), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    for k, m in data["modes"].items():
-        print(k, {t: v["valid"] for t, v in m["tiers"].items()})
+    print({t: v["valid"] for t, v in nat["tiers"].items()})
     return 0
 
 

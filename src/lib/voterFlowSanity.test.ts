@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { flow, type Mode } from "./voterFlow";
+import { flow } from "./voterFlow";
 import { results2026 } from "./guessAccuracyData";
 
 /**
@@ -10,16 +10,16 @@ import { results2026 } from "./guessAccuracyData";
 const SAME_LIST: Record<string, string> = { likud: "מחל", utj: "ג", shas: "שס", raam: "עם", rzp: "ט", yb: "ל" };
 
 describe("מעבר המצביעים — תוצאות סבירות", () => {
-  for (const mode of ["ballots", "localities"] as Mode[]) {
-    const F = flow.modes[mode].flows;
+  {
+    const F = flow.national.flows;
     const col = (id: string) => F.map((row) => row[flow.new.indexOf(id)]);
     const share = (id: string, letters: string) => { const c = col(id); return c[flow.old.indexOf(letters)] / c.reduce((a, b) => a + b, 0); };
 
-    it(`${mode}: רשימה שרצה בשתי הבחירות — רוב קולותיה ממנה`, () => {
+    it(`רשימה שרצה בשתי הבחירות — רוב קולותיה ממנה`, () => {
       for (const [id, letters] of Object.entries(SAME_LIST)) expect(share(id, letters), `${id} ⇐ ${letters}`).toBeGreaterThan(0.5);
     });
 
-    it(`${mode}: אף רשימה לא מגיעה ברובה מ"לא הצביעו"`, () => {
+    it(`אף רשימה לא מגיעה ברובה מ"לא הצביעו"`, () => {
       for (const id of flow.new.filter((x) => x !== "abstain" && x !== "other")) {
         const c = col(id);
         const total = c.reduce((a, b) => a + b, 0);
@@ -27,7 +27,7 @@ describe("מעבר המצביעים — תוצאות סבירות", () => {
       }
     });
 
-    it(`${mode}: הקולות של כל רשימה = קובץ התוצאות`, () => {
+    it(`הקולות של כל רשימה = קובץ התוצאות`, () => {
       for (const [id, votes] of Object.entries(results2026.votes ?? {})) expect(col(id).reduce((a, b) => a + b, 0), id).toBe(votes);
     });
   }
