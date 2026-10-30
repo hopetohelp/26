@@ -4,7 +4,7 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
+import { BLOC_IDS, BLOC_NAMES, blocMatrix, bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
@@ -12,7 +12,7 @@ import { num, pctOne, pctValue } from "../lib/format";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
 const FlowShare = lazy(() => import("../components/FlowShare"));
-const FlowSankey = lazy(() => import("../components/FlowSankey"));
+import GraphSwitch from "../components/GraphSwitch";
 import FlowExplain from "../components/FlowExplain";
 
 type View = "from" | "to";
@@ -290,13 +290,15 @@ function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kin
 /** בלי השורות שאינן אמינות (הכרעת בעלים 28.10.2026): "רשימות אחרות" — בהשוואה לקלפיות המצביעים של 2026 בהן יוצאים 100% "לא הצביעו" (חוסר יציבות בקבוצה זעירה); "לא הצביעו" בחלק המפלגות */
 const without = (r: Rows, ids: string[]): Rows => ({ cameFrom: r.cameFrom.filter((x) => !ids.includes(x.id)), wentTo: r.wentTo.filter((x) => !ids.includes(x.id)) });
 
+/** גרף הגושים — מאותה מטריצה ארצית (blocMatrix) */
+const BLOC_GRAPH = { T: blocMatrix(flow.national.flowsTo), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] };
+
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
 export default function VoterFlow() {
   const cov = coverage();
   const raw = flowsFor();
   const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
   const [sharing, setSharing] = useState(false);
-  const [graph, setGraph] = useState(false);
   const openSharing = useCallback(() => setSharing(true), []);
   useRegisterNavShare(openSharing, false);
   return (
@@ -330,13 +332,11 @@ export default function VoterFlow() {
         {/* שלושה חלקים נפתחים (הכרעת בעלים 29.10.2026) */}
         <Fold title="מעבר בין מפלגות">
           {/* כפתור "הצגה בגרף" — גרף זרימה במקום הכרטיסים (הכרעת בעלים 30.10.2026) */}
-          <button type="button" aria-pressed={graph} onClick={() => setGraph((g) => !g)}
-            className={`rounded-full border border-signal px-4 min-h-[44px] font-bold ${graph ? "bg-signal text-signal-ink" : "text-signal"}`}>הצגה בגרף</button>
-          {graph
-            ? <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><FlowSankey /></Suspense>
-            : <Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} />}
+          <GraphSwitch graph={{}}><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></GraphSwitch>
         </Fold>
-        <Fold title="מעבר בין גושים"><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></Fold>
+        <Fold title="מעבר בין גושים">
+          <GraphSwitch graph={BLOC_GRAPH}><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></GraphSwitch>
+        </Fold>
         {/* ״איך זה חושב?״ בתחתית העמוד (הכרעת בעלים 29.10.2026) */}
         <Fold title="חיפוש לפי עיר או קלפי">
           <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>

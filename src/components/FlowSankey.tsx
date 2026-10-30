@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { flow, newName, oldName } from "../lib/voterFlow";
+import { flow, newName as listNew, oldName as listOld } from "../lib/voterFlow";
 import { num } from "../lib/format";
 
 /** רשימה מתחת לחלק הזה מהקולות מצטרפת לצומת "רשימות אחרות", כדי שהגרף יישאר קריא */
@@ -17,16 +17,21 @@ function groups(ids: string[], totals: number[]) {
 }
 
 /** גרף זרימה: 2022 מימין, 2026 משמאל; רוחב כל פס = הקולות שעברו (flowsTo — כל קול של 2022 לפי יעדו) */
-export default function FlowSankey() {
+export interface FlowSankeyProps {
+  /** flowsTo: שורה לכל מקור ב-2022, עמודה לכל יעד ב-2026 */
+  T?: number[][]; oldIds?: string[]; newIds?: string[];
+  oldName?: (id: string) => string; newName?: (id: string) => string;
+}
+
+export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.old, newIds = flow.new, oldName = listOld, newName = listNew }: FlowSankeyProps) {
   const m = useMemo(() => {
-    const T = flow.national.flowsTo;
     const rowT = T.map((r) => r.reduce((a, b) => a + b, 0));
-    const colT = flow.new.map((_, j) => T.reduce((s, r) => s + r[j], 0));
-    const A = groups(flow.old, rowT), B = groups(flow.new, colT);
+    const colT = newIds.map((_, j) => T.reduce((s, r) => s + r[j], 0));
+    const A = groups(oldIds, rowT), B = groups(newIds, colT);
     const M = A.keys.map(() => B.keys.map(() => 0));
     T.forEach((r, i) => r.forEach((v, j) => { M[A.of[i]][B.of[j]] += v; }));
     return { M, a: A.keys, b: B.keys };
-  }, []);
+  }, [T, oldIds, newIds]);
   const [sel, setSel] = useState<{ side: "a" | "b"; i: number }>({ side: "a", i: 0 });
   // רוחב אמיתי, כדי שהשמות יישארו בגודל קריא גם בטלפון
   const box = useRef<HTMLDivElement>(null);
@@ -37,7 +42,7 @@ export default function FlowSankey() {
     const ro = new ResizeObserver(() => setW(Math.max(340, Math.round(el.clientWidth))));
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [T, oldIds, newIds]);
 
   const nw = 10, gap = 5, lab = W < 520 ? 120 : 150, top = 26;
   const H = Math.max(m.a.length, m.b.length) * 36;
