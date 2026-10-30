@@ -2,6 +2,7 @@ import { NUMBER_KINDS } from "../lib/dataCatalog";
 import { useEffect, useId, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+import { isEmbed } from "../lib/embed";
 
 /**
  * חוזה ההסבר הצמוד לכל מספר מחושב (הכרעת בעלים 9.10.2026, החלטה 9). כל השדות חובה (הטיפוסים אוכפים זאת): סוג המספר, מקור,
@@ -36,6 +37,8 @@ export default function Explained({ asOf, methodAnchor, children, details, showM
   const [slot, setSlot] = useState<Element | null>(null);
   useEffect(() => { if (inFooter) setSlot(document.querySelector("[data-footer-slot]")); }, [inFooter]);
   if (bare) return <div>{children}</div>;
+  // בהטמעה אין "איך זה חושב?" ואין פירוט חישוב (הכרעת בעלים 30.10.2026); התאריך נשאר כשהוא מוצג
+  if (isEmbed()) return <div>{children}{!inFooter && (showMeta ? <p className="mt-2 text-sm text-ink-soft">{asOf}</p> : trailing ? <div className="mt-2 text-xs text-ink-soft space-y-1">{trailing}</div> : null)}</div>;
   if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span><Link to={`/method#${methodAnchor}`} className="!text-ink-soft !font-normal underline">איך זה חושב?</Link></span>, slot)}</div>;
   return (
     <div>

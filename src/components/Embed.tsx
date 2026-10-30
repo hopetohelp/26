@@ -98,9 +98,9 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
           {graphs && <div className="mt-4"><FlowExplain /></div>}
         </div>
         <ScreenFooter info={false}>
+          {/* בהטמעה בתחתית רק שני קישורים: בלי "איך זה חושב?" ובלי "הטמעה באתר אחר" (הכרעת בעלים 30.10.2026) */}
           <a href={`${SITE_ORIGIN}/#/method`} target="_blank" rel="noopener" className="underline">מידע ומקורות</a>
           <a href={OFFICIAL_RESULTS} target="_blank" rel="noopener noreferrer" className="underline">תוצאות רשמיות</a>
-          <EmbedButton />
         </ScreenFooter>
         {sharing && <Suspense fallback={null}><FlowShare onClose={() => setSharing(false)} /></Suspense>}
       </main>
