@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { coverage, flow } from "../lib/voterFlow";
 
 const TITLE = "מאיפה יודעים את הנתונים, ולמה הם יותר מדויקים?";
@@ -103,6 +104,12 @@ export default function FlowExplain() {
               <li>מעבר קטן, של כמה אחוזים, יכול להיות טעות.</li>
               <li>קשה להפריד בין שתי רשימות שחזקות באותם מקומות.</li>
             </Part>
+            {/* שורת סיום: חיבור עוזר AI לנתונים דרך MCP (הכרעת בעלים 30.10.2026) */}
+            <section className="mt-8 rounded-theme border border-paper-line bg-paper-card p-4 grid gap-3 justify-items-start">
+              <p className="font-bold">עדיין מבולבלים? תתחברו לנתונים עם הסוכן שלכם דרך MCP</p>
+              <Link to="/ai?assistants" onClick={() => setOpen(false)}
+                className="rounded-full bg-signal text-signal-ink px-4 min-h-[44px] inline-flex items-center font-bold">לחיבור הסוכן</Link>
+            </section>
           </div>
         </div>,
         document.body,
