@@ -135,7 +135,7 @@ export function EmbedButton() {
         {targets.length > 1 && <>
           <p className="mt-2 font-bold">מה להטמיע?</p>
           <Segmented value={String(pick)} onChange={(v) => { setPick(Number(v)); setCopied(false); }} label="מה להטמיע" className="mt-1 w-fit" options={targets.map((t, i) => ({ id: String(i), label: t.short ?? t.name }))} />
-          {pick > 0 && <p className="mt-1 text-ink-soft">הגרפים של מעבר בין מפלגות ומעבר בין גושים, עם השורה המפרטת מתחת לכל גרף. {pick === 1 ? "מתג בתוך ההטמעה מחליף ביניהם." : "שני הגרפים זה אחרי זה."}</p>}
+          {pick > 0 && <p className="mt-1 text-ink-soft">הגרפים של מעבר בין מפלגות ומעבר בין גושים, עם השורה המפרטת מתחת לכל גרף. מתג בתוך ההטמעה מחליף ביניהם.</p>}
         </>}
         <Segmented value={theme} onChange={(value) => { setTheme(value); setCopied(false); }} label="תצוגת ההטמעה" className="mt-2 w-fit" options={[
           { id: "light", label: "בהיר" },

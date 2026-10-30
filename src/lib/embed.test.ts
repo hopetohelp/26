@@ -23,11 +23,12 @@ describe("מצב הטמעה", () => {
     expect(embedCode(e, "auto")).toContain('src="https://26.hopetohelp.net/#/changes?embed=1&theme=auto"');
     expect(embedCode(e)).toContain('m.origin!=="https://26.hopetohelp.net"');
   });
-  it("במסך מה השתנה: המסך המלא ושתי תצוגות של גרפי המעבר בלבד", () => {
+  it("במסך מה השתנה: המסך המלא וגרפי המעבר בלבד", () => {
     const t = embedTargetsFor("/changes", null);
-    expect(t.map((x) => x.screen)).toEqual(["changes", "changes-graphs", "changes-graphs"]);
+    expect(t.map((x) => x.screen)).toEqual(["changes", "changes-graphs"]);
     expect(embedUrl(t[1])).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1&theme=light");
-    expect(embedUrl(t[2], "auto")).toBe("https://26.hopetohelp.net/#/flow-graphs?show=both&embed=1&theme=auto");
+    expect(embedUrl(t[1], "auto")).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1&theme=auto");
+    expect(t.some((x) => x.path === "/flow-graphs" && x.name.includes("ברצף"))).toBe(false);
     expect(embedTargetsFor("/results-2026", null)).toHaveLength(1);
     expect(embedTargetsFor("/flow-graphs", null)).toEqual([]);
     expect(embedScreenOf("/flow-graphs")).toBe("changes-graphs");
