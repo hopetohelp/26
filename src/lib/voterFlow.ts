@@ -64,6 +64,14 @@ export function blocMatrix(m: number[][]) {
     m.reduce((s, row, i) => (bloc2022(flow.old[i]) === a ? s + row.reduce((t, v, j) => (bloc2026(flow.new[j]) === b ? t + v : t), 0) : s), 0)));
 }
 
+/** משפטי ההזמנה ליצירת פוסט — במסך "מה השתנה" ובהטמעה */
+export const FLOW_SHARE_MESSAGES = [
+  "רוצים פוסט מעוצב על המפלגות החרדיות?",
+  "רוצים תמונה של השינוי בכל המפלגות?",
+  "או אולי תמונה על העיר שלכם?",
+];
+export const FLOW_SHARE_CTA = "לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!";
+
 /** גרף הגושים — מאותה מטריצה ארצית; משמש את מסך "מה השתנה" ואת הטמעת הגרפים */
 export const BLOC_GRAPH = { T: blocMatrix(flow.national.flowsTo), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] };
 

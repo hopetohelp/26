@@ -1,12 +1,17 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { embedCode, embedScreenOf, embedTargetsFor, SITE_ORIGIN } from "../lib/embed";
 import { useMode } from "../lib/theme";
 import { pingEmbed } from "../lib/visits";
+import { FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES } from "../lib/voterFlow";
 import InfoTip from "./InfoTip";
 import { Segmented } from "./Choice";
 import RotatingPromo from "./RotatingPromo";
 import ScreenFooter from "./ScreenFooter";
+
+const FlowShare = lazy(() => import("./FlowShare"));
+/** בזמן שחלון השיתוף פתוח החלון המוטמע מתקצר לגובה שנראה במלואו ואתר המארח גולל אליו */
+const SHARE_HEIGHT = 900;
 
 const CHANGES_MESSAGES = [
   "חושבים שאתם יודעים מה השתנה מבחירות קודמות?",
@@ -22,23 +27,30 @@ const CHANGES_MESSAGES = [
 export function EmbedFrame({ children }: { children: ReactNode }) {
   useMode();
   const { pathname, search } = useLocation();
+  // יצירת פוסט מתוך ההטמעה (הכרעת בעלים 30.10.2026): במסך "מה השתנה" ובגרפי המעבר, כחלון נפתח בלי לצאת מההטמעה
+  const shareable = pathname === "/changes" || pathname === "/flow-graphs";
+  const [sharing, setSharing] = useState(false);
   useEffect(() => {
     if (window.parent !== window) pingEmbed(embedScreenOf(pathname), "view");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (window.parent === window) return;
+    if (sharing) { window.parent.postMessage({ type: "elections26:height", height: SHARE_HEIGHT, scroll: true }, "*"); return; }
     let last = 0;
     const send = () => {
-      const h = Math.ceil(document.documentElement.scrollHeight);
+      // גובה התוכן עצמו — לא גובה המסמך, שאינו קטן מגובה החלון ולכן לא מאפשר להתקצר
+      const h = Math.ceil(document.querySelector("[data-embed]")?.getBoundingClientRect().height ?? document.documentElement.scrollHeight);
       if (h === last) return;
       last = h;
       window.parent.postMessage({ type: "elections26:height", height: h }, "*");
     };
     const ro = new ResizeObserver(send);
     ro.observe(document.body);
+    const box = document.querySelector("[data-embed]");
+    if (box) ro.observe(box);
     send();
     return () => ro.disconnect();
-  }, []);
+  }, [sharing]);
   useEffect(() => {
     const click = (e: MouseEvent) => {
       const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
@@ -63,7 +75,17 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
       <main id="main" className="w-full px-3 md:px-4 py-4">
         {pathname === "/results-2026" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/changes`} />}
         {children}
-        <ScreenFooter sourceUrl={full}><EmbedButton /></ScreenFooter>
+        <div className="mt-5">
+          {shareable && <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={() => setSharing(true)} />}
+          {/* במקום שורת המקור (הכרעת בעלים 30.10.2026): כפתור מעוצב כמו כפתור יצירת הפוסט */}
+          <div className="embed-cta relative w-full">
+            <div className="embed-cta-action relative flex items-center justify-center w-full min-h-[36px] rounded-theme border border-signal/40 bg-accent-soft px-3 py-0.5 text-accent text-sm md:text-base font-bold leading-snug hover:brightness-95">
+              <a href={full} target="_blank" rel="noopener" className="after:absolute after:inset-0 after:content-['']">לפירוט מורחב, כנסו לאתר</a>
+            </div>
+          </div>
+        </div>
+        <ScreenFooter info={false}><EmbedButton /></ScreenFooter>
+        {sharing && <Suspense fallback={null}><FlowShare onClose={() => setSharing(false)} /></Suspense>}
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Segmented } from "../components/Choice";
-import { BLOC_GRAPH, partialLine } from "../lib/voterFlow";
+import { BLOC_GRAPH } from "../lib/voterFlow";
 
 const FlowSankey = lazy(() => import("../components/FlowSankey"));
 
@@ -20,11 +20,10 @@ export default function FlowGraphs() {
   return (
     <div>
       <h1 className="text-xl md:text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
-      <p className="text-sm text-ink-soft">{partialLine()}</p>
       {both
         ? (["party", "bloc"] as const).map((k) => <section key={k} className="mt-5"><h2 className="font-bold text-lg">{TITLES[k]}</h2>{graph(k)}</section>)
         : <>
-            <Segmented<Which> value={which} onChange={setWhich} label="סוג המעבר" className="mt-3 w-64" options={[{ id: "party", label: TITLES.party }, { id: "bloc", label: TITLES.bloc }]} />
+            <Segmented<Which> value={which} onChange={setWhich} label="סוג המעבר" size="sm" tight className="mt-3 w-fit" options={[{ id: "party", label: "מפלגות" }, { id: "bloc", label: "גושים" }]} />
             {graph(which)}
           </>}
     </div>

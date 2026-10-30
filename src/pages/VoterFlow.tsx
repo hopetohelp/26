@@ -4,7 +4,7 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { BLOC_GRAPH, bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
+import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
@@ -16,11 +16,6 @@ import GraphSwitch from "../components/GraphSwitch";
 import FlowExplain from "../components/FlowExplain";
 
 type View = "from" | "to";
-const SHARE_MESSAGES = [
-  "רוצים פוסט מעוצב על המפלגות החרדיות?",
-  "רוצים תמונה של השינוי בכל המפלגות?",
-  "או אולי תמונה על העיר שלכם?",
-];
 /** חלק קטן מ-3% מצטרף לשורה "אחרים" — כדי שכל כרטיס יישאר קריא */
 const MIN_SHARE = 3;
 /** רשימות שמוצגות תמיד בשורה נפרדת, גם מתחת ל-3% (הכרעת בעלים 28.10.2026) */
@@ -302,7 +297,7 @@ export default function VoterFlow() {
     <div>
       {/* חלון ההסבר בראש המסך (הכרעת בעלים 30.10.2026) */}
       <div className="mb-3"><FlowExplain /></div>
-      <RotatingPromo messages={SHARE_MESSAGES} callToAction="לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
+      <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
       {/* הכותרת ככרטיס עם ארבעת הנתונים הכלליים, כל אחד בכרטיס (הכרעת בעלים 29.10.2026) */}
       <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
       <div className="flex items-center justify-between gap-2"><h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
