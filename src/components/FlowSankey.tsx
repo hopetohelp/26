@@ -79,6 +79,9 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
     return ids.map((id, i) => { const n = { id, name: id === OTHER ? "רשימות אחרות" : name(id), v: full[i], y, h: tot[i] * k }; y += n.h + gap; return n; });
   };
   const A = place(m.a, rowD, rowT, oldName), B = place(m.b, colD, colT, newName);
+  // שמות של צמתים דקים סמוכים לא נחתכים זה בזה: מרווח מינימלי בין שני שמות (הכרעת בעלים 30.10.2026, התאמה ל-361px)
+  const spread = (ns: Node[]) => ns.reduce<number[]>((out, n, i) => [...out, i ? Math.max(n.y + n.h / 2, out[i - 1] + 12) : n.y + n.h / 2], []);
+  const labA = spread(A), labB = spread(B);
   const xA = W - lab - nw, xB = lab, mid = (xA + xB + nw) / 2;
   const offA = A.map((n) => n.y), offB = B.map((n) => n.y);
   const links: { i: number; j: number; v: number; d: string }[] = [];
@@ -112,7 +115,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           aria-label={`${n.name} ${side === "a" ? 2022 : 2026}: ${num(n.v)} קולות`}
           className={`cursor-pointer outline-none focus-visible:stroke-signal ${on ? "fill-signal" : n.id === "abstain" ? "fill-ink-soft" : "fill-ink"}`}
           onClick={pick} onMouseEnter={pick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } }} />
-        <text x={side === "a" ? xA + nw + 6 : xB - 6} y={n.y + n.h / 2} dominantBaseline="middle" direction="rtl" textAnchor={side === "a" ? "end" : "start"}
+        <text x={side === "a" ? xA + nw + 6 : xB - 6} y={(side === "a" ? labA : labB)[i]} dominantBaseline="middle" direction="rtl" textAnchor={side === "a" ? "end" : "start"}
           className={`cursor-pointer ${W < 520 ? "text-[11px]" : "text-[13px]"} ${on ? "fill-ink font-bold" : "fill-ink"}`} onClick={pick}>{n.name}</text>
       </g>
     );
