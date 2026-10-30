@@ -65,9 +65,11 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
   const H = Math.max(m.a.length, m.b.length) * 36;
   const rowT = m.M.map((r) => r.reduce((x, y) => x + y, 0));
   const colT = m.b.map((_, j) => m.M.reduce((s, r) => s + r[j], 0));
-  // בגרף בלי "לא הצביעו ⇐ לא הצביעו": נשארים רק המעברים, וצמתי "לא הצביעו" מראים רק מי שעבר מהבית לקלפי או הפוך (הכרעת בעלים 30.10.2026)
+  // תצוגה בלבד (הכרעת בעלים 30.10.2026): "לא הצביעו ⇐ לא הצביעו" — פס דק אחד (1% מהגרף), כדי שיראו בעיקר את המעברים.
+  // הפירוט והאחוזים — מהמספרים האמיתיים
   const abA = m.a.indexOf("abstain"), abB = m.b.indexOf("abstain");
-  const D = m.M.map((r, i) => r.map((v, j) => (i === abA && j === abB ? 0 : v)));
+  const moved = m.M.reduce((s, r, i) => s + r.reduce((t2, v, j) => t2 + (i === abA && j === abB ? 0 : v), 0), 0);
+  const D = m.M.map((r, i) => r.map((v, j) => (i === abA && j === abB ? moved * 0.01 : v)));
   const rowD = D.map((r) => r.reduce((x, y) => x + y, 0));
   const colD = m.b.map((_, j) => D.reduce((s, r) => s + r[j], 0));
   const all = rowD.reduce((x, y) => x + y, 0);
@@ -87,7 +89,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
     offA[i] += ta; offB[j] += tb;
     if (v / all < 0.0005) return;
     const x1 = xA, x2 = xB + nw;
-    links.push({ i, j, v, d: `M${x1},${y1}C${mid},${y1} ${mid},${y2} ${x2},${y2}L${x2},${y2 + tb}C${mid},${y2 + tb} ${mid},${y1 + ta} ${x1},${y1 + ta}Z` });
+    links.push({ i, j, v: m.M[i][j], d: `M${x1},${y1}C${mid},${y1} ${mid},${y2} ${x2},${y2}L${x2},${y2 + tb}C${mid},${y2 + tb} ${mid},${y1 + ta} ${x1},${y1 + ta}Z` });
   }));
   const hit = (l: { i: number; j: number }) => (sel.kind === "link" ? l.i === sel.i && l.j === sel.j : sel.side === "a" ? l.i === sel.i : l.j === sel.i);
   // הפירוט — מהמטריצה המלאה, לפני קיבוץ הרשימות הקטנות
@@ -142,7 +144,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           {parts.map((p) => `${p.name} ${pct(p.s)}`).join(" · ")}
         </>}
       </figcaption>
-      {abA >= 0 && abB >= 0 && <p className="mt-1 text-xs text-ink-soft">מי שלא הצביע בשתי הבחירות אינו מוצג בגרף.</p>}
+      {abA >= 0 && abB >= 0 && <p className="mt-1 text-xs text-ink-soft">{`מי שלא הצביע בשתי הבחירות (${num(m.M[abA][abB])}) — פס דק, לא לפי גודלו.`}</p>}
     </figure>
   );
 }
