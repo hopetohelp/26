@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { embedCode, embeddableFor, embedTheme, embedUrl, isEmbed } from "./embed";
+import { embedCode, embeddableFor, embedScreenOf, embedTargetsFor, embedTheme, embedUrl, isEmbed } from "./embed";
 
 describe("מצב הטמעה", () => {
   it("מזהה embed=1 ותצורה בכתובת", () => {
@@ -22,5 +22,16 @@ describe("מצב הטמעה", () => {
     expect(embedUrl(e)).toBe("https://26.hopetohelp.net/#/changes?embed=1&theme=light");
     expect(embedCode(e, "auto")).toContain('src="https://26.hopetohelp.net/#/changes?embed=1&theme=auto"');
     expect(embedCode(e)).toContain('m.origin!=="https://26.hopetohelp.net"');
+  });
+  it("במסך מה השתנה: המסך המלא וגרפי המעבר בלבד", () => {
+    const t = embedTargetsFor("/changes", null);
+    expect(t.map((x) => x.screen)).toEqual(["changes", "changes-graphs"]);
+    expect(embedUrl(t[1])).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1&theme=light");
+    expect(embedUrl(t[1], "auto")).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1&theme=auto");
+    expect(t.some((x) => x.path === "/flow-graphs" && x.name.includes("ברצף"))).toBe(false);
+    expect(embedTargetsFor("/results-2026", null)).toHaveLength(1);
+    expect(embedTargetsFor("/flow-graphs", null)).toEqual([]);
+    expect(embedScreenOf("/flow-graphs")).toBe("changes-graphs");
+    expect(embedScreenOf("/changes")).toBe("changes");
   });
 });

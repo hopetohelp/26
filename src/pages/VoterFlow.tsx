@@ -4,8 +4,9 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { BLOC_IDS, BLOC_NAMES, blocMatrix, bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
+import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, coverage, flow, flowsFor, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
+import OverviewCards from "../components/OverviewCards";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
 import { num, pctOne, pctValue } from "../lib/format";
@@ -16,11 +17,6 @@ import GraphSwitch from "../components/GraphSwitch";
 import FlowExplain from "../components/FlowExplain";
 
 type View = "from" | "to";
-const SHARE_MESSAGES = [
-  "רוצים פוסט מעוצב על המפלגות החרדיות?",
-  "רוצים תמונה של השינוי בכל המפלגות?",
-  "או אולי תמונה על העיר שלכם?",
-];
 /** חלק קטן מ-3% מצטרף לשורה "אחרים" — כדי שכל כרטיס יישאר קריא */
 const MIN_SHARE = 3;
 /** רשימות שמוצגות תמיד בשורה נפרדת, גם מתחת ל-3% (הכרעת בעלים 28.10.2026) */
@@ -79,29 +75,6 @@ function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y202
   }
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
   return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
-}
-
-/** ארבעת הנתונים הכלליים, כרטיס לכל נתון (הכרעת בעלים 29.10.2026): הנתון הנוכחי במספר ובאחוזים, והשינוי במספר ובאחוזים — בלי ערכי 2022 */
-function OverviewCards() {
-  const { y2022, y2026 } = overview();
-  if (!y2026) return null;
-  const items = [["eligible", "בעלי זכות בחירה"], ["voted", "הצביעו"], ["inKnesset", "קולות לרשימות בכנסת"], ["belowThreshold", "לא עברו את אחוז החסימה"]] as const;
-  return <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
-    {items.map(([key, label]) => {
-      const share = overviewShare(y2026, key);
-      const count = changeOf(y2026[key] - y2022[key], "count"), rate = changeOf(overviewChangePct(y2022, y2026, key), "pct");
-      const tone = count?.up ? "bg-pos/10" : count ? "bg-neg/10" : "";
-      // עיצוב דרמטי (הכרעת בעלים 29.10.2026): מספר גדול, פס עליון בצבע ההדגשה, והשינוי בתג צבעוני
-      return <div key={key} className="rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-md px-2 py-3 text-center min-w-0 flex flex-col items-center gap-1.5">
-        <dt className="text-xs md:text-sm font-bold text-ink-soft leading-tight">{label}</dt>
-        <dd className="contents tabular-nums">
-          <bdi dir="ltr" className="block font-display font-extrabold text-xl md:text-3xl leading-none text-ink">{num(y2026[key])}</bdi>
-          {share !== null && <span className="text-xs md:text-sm font-bold text-accent leading-none"><bdi dir="ltr">{pctOne(share)}</bdi></span>}
-          {count && <span className={`inline-flex flex-wrap justify-center gap-x-1.5 md:gap-x-2 rounded-full px-1.5 md:px-2 py-0.5 text-[11px] md:text-sm font-bold ${tone}`}><Delta change={count} /><Delta change={rate} /></span>}
-        </dd>
-      </div>;
-    })}
-  </dl>;
 }
 
 /** חץ צף למעלה (הכרעת בעלים 29.10.2026): עולה לראש המגירה הפתוחה שבה הקורא נמצא; מופיע רק אחרי גלילה לתוכה */
@@ -290,9 +263,6 @@ function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kin
 /** בלי השורות שאינן אמינות (הכרעת בעלים 28.10.2026): "רשימות אחרות" — בהשוואה לקלפיות המצביעים של 2026 בהן יוצאים 100% "לא הצביעו" (חוסר יציבות בקבוצה זעירה); "לא הצביעו" בחלק המפלגות */
 const without = (r: Rows, ids: string[]): Rows => ({ cameFrom: r.cameFrom.filter((x) => !ids.includes(x.id)), wentTo: r.wentTo.filter((x) => !ids.includes(x.id)) });
 
-/** גרף הגושים — מאותה מטריצה ארצית (blocMatrix) */
-const BLOC_GRAPH = { T: blocMatrix(flow.national.flowsTo), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] };
-
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
 export default function VoterFlow() {
   const cov = coverage();
@@ -305,7 +275,7 @@ export default function VoterFlow() {
     <div>
       {/* חלון ההסבר בראש המסך (הכרעת בעלים 30.10.2026) */}
       <div className="mb-3"><FlowExplain /></div>
-      <RotatingPromo messages={SHARE_MESSAGES} callToAction="לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
+      <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
       {/* הכותרת ככרטיס עם ארבעת הנתונים הכלליים, כל אחד בכרטיס (הכרעת בעלים 29.10.2026) */}
       <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
       <div className="flex items-center justify-between gap-2"><h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>

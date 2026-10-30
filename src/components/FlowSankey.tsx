@@ -79,6 +79,9 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
     return ids.map((id, i) => { const n = { id, name: id === OTHER ? "רשימות אחרות" : name(id), v: full[i], y, h: tot[i] * k }; y += n.h + gap; return n; });
   };
   const A = place(m.a, rowD, rowT, oldName), B = place(m.b, colD, colT, newName);
+  // שמות של צמתים דקים סמוכים לא נחתכים זה בזה: מרווח מינימלי בין שני שמות (הכרעת בעלים 30.10.2026, התאמה ל-361px)
+  const spread = (ns: Node[]) => ns.reduce<number[]>((out, n, i) => [...out, i ? Math.max(n.y + n.h / 2, out[i - 1] + 12) : n.y + n.h / 2], []);
+  const labA = spread(A), labB = spread(B);
   const xA = W - lab - nw, xB = lab, mid = (xA + xB + nw) / 2;
   const offA = A.map((n) => n.y), offB = B.map((n) => n.y);
   const links: { i: number; j: number; v: number; d: string }[] = [];
@@ -114,7 +117,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           aria-label={`${n.name} ${side === "a" ? 2022 : 2026}: ${num(n.v)} קולות`}
           className={`cursor-pointer outline-none focus-visible:stroke-signal ${on ? "fill-signal" : n.id === "abstain" ? "fill-ink-soft" : "fill-ink"}`}
           onClick={pick} onMouseEnter={pick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } }} />
-        <text x={side === "a" ? xA + nw + 6 : xB - 6} y={n.y + n.h / 2} dominantBaseline="middle" direction="rtl" textAnchor={side === "a" ? "end" : "start"}
+        <text x={side === "a" ? xA + nw + 6 : xB - 6} y={(side === "a" ? labA : labB)[i]} dominantBaseline="middle" direction="rtl" textAnchor={side === "a" ? "end" : "start"}
           className={`cursor-pointer ${W < 520 ? "text-[11px]" : "text-[13px]"} ${on ? "fill-ink font-bold" : "fill-ink"}`} onClick={pick}>{n.name}</text>
       </g>
     );
@@ -135,14 +138,14 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           {B.map((n, j) => node(n, "b", j))}
         </svg>
       </div>
-      <figcaption className="mt-2 text-sm text-ink-soft min-h-[3em]" aria-live="polite">
+      <figcaption className="mt-3 rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-md px-3 py-2.5 text-sm text-ink-soft min-h-[4.5em] leading-relaxed" aria-live="polite">
         {sel.kind === "link" ? (() => {
           // לחיצה על פס — רק המעבר הזה (הכרעת בעלים 30.10.2026)
           const v = m.M[sel.i][sel.j];
           return <><b className="text-ink">{`${A[sel.i].name} 2022 ← ${B[sel.j].name} 2026: ${num(v)} קולות`}</b><br />
             {`${pct(v / rowT[sel.i])} ממצביעי ${A[sel.i].name} ב-2022 · ${pct(v / colT[sel.j])} מקולות ${B[sel.j].name} ב-2026`}</>;
         })() : <>
-          <b className="text-ink">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מתוך כל 100 קולות של ${B[sel.i].name} ב-2026:`}</b>{" "}
+          <b className="block text-ink mb-0.5">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מתוך כל 100 קולות של ${B[sel.i].name} ב-2026:`}</b>
           {parts.map((p) => `${p.name} ${of100(p.s)}`).join(" · ")}
         </>}
       </figcaption>

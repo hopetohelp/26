@@ -79,7 +79,7 @@ export function countImage(kind: "guess" | "results" | "changes") {
  * הטמעות (הכרעת בעלים 28.10.2026): צפייה בחלון מוטמע (view) או העתקת קוד ההטמעה (copy).
  * נשלחים רק המסך ושם האתר המארח (בלי כתובת העמוד ובלי מזהה גולש). דפדפן הבעלים אינו נספר.
  */
-export function pingEmbed(screen: "results-2026" | "changes", kind: "view" | "copy") {
+export function pingEmbed(screen: "results-2026" | "changes" | "changes-graphs", kind: "view" | "copy") {
   if (!FEEDBACK_URL || isOwnerBrowser()) return;
   let host = "";
   if (kind === "view") {
