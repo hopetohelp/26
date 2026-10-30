@@ -201,12 +201,12 @@ export function overview(): { y2022: Overview; y2026: Overview | null } {
   return { y2022, y2026: { eligible: c.eligible, voted: c.voters, invalid: c.invalid, belowThreshold: below, inKnesset: c.voters - c.invalid - below } };
 }
 
-/** האחוז שליד כל נתון כללי: הצביעו — מבעלי הזכות; נפסלו ולרשימות בכנסת — מהמצביעים; לא עברו — מהכשרים (מצביעים פחות פסולים).
+/** האחוז שליד כל נתון כללי: הצביעו ולרשימות בכנסת — מבעלי הזכות (לרשימות בכנסת: הכרעת בעלים 30.10.2026); נפסלו — מהמצביעים; לא עברו — מהכשרים (מצביעים פחות פסולים).
  * לבעלי הזכות אין בסיס — האחוז שלהם הוא שינוי יחסי בלבד (overviewChangePct) */
 export function overviewShare(o: Overview, key: keyof Overview): number | null {
   if (key === "voted") return (o.voted / o.eligible) * 100;
   if (key === "invalid") return (o.invalid / o.voted) * 100;
-  if (key === "inKnesset") return (o.inKnesset / o.voted) * 100;
+  if (key === "inKnesset") return (o.inKnesset / o.eligible) * 100;
   if (key === "belowThreshold") return (o.belowThreshold / (o.voted - o.invalid)) * 100;
   return null;
 }

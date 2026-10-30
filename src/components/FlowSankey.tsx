@@ -65,7 +65,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
   const H = Math.max(m.a.length, m.b.length) * 36;
   const rowT = m.M.map((r) => r.reduce((x, y) => x + y, 0));
   const colT = m.b.map((_, j) => m.M.reduce((s, r) => s + r[j], 0));
-  // תצוגה בלבד (הכרעת בעלים 30.10.2026): "לא הצביעו ⇐ לא הצביעו" — פס דק אחד (1% מהגרף), כדי שיראו בעיקר את המעברים.
+  // תצוגה בלבד; הכיתוב עליו — רק בלחיצה על "לא הצביעו" (הכרעות בעלים 30.10.2026): "לא הצביעו ⇐ לא הצביעו" — פס דק אחד (1% מהגרף), כדי שיראו בעיקר את המעברים.
   // הפירוט והאחוזים — מהמספרים האמיתיים
   const abA = m.a.indexOf("abstain"), abB = m.b.indexOf("abstain");
   const moved = m.M.reduce((s, r, i) => s + r.reduce((t2, v, j) => t2 + (i === abA && j === abB ? 0 : v), 0), 0);
@@ -147,7 +147,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           {parts.map((p) => `${p.name} ${pct(p.s)}`).join(" · ")}
         </>}
       </figcaption>
-      {abA >= 0 && abB >= 0 && <p className="mt-1 text-xs text-ink-soft">{`מי שלא הצביע בשתי הבחירות (${num(m.M[abA][abB])}) — פס דק, לא לפי גודלו.`}</p>}
+      {abA >= 0 && abB >= 0 && ((sel.kind === "node" && (sel.side === "a" ? sel.i === abA : sel.i === abB)) || (sel.kind === "link" && sel.i === abA && sel.j === abB)) && <p className="mt-1 text-xs text-ink-soft">{`מי שלא הצביע בשתי הבחירות (${num(m.M[abA][abB])}) — פס דק, לא לפי גודלו.`}</p>}
     </figure>
   );
 }
