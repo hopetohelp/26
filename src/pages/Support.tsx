@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 
 import MyData from "./guess/MyData";
+import GuessHistory from "./guess/GuessHistory";
 import Account from "./guess/Account";
 import { useServerBlocked } from "../components/FilterBlocked";
 import { Drawer } from "../components/Drawer";
@@ -216,7 +217,7 @@ function grow(el: HTMLTextAreaElement) {
   el.style.height = `${Math.min(el.scrollHeight + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth), line * 5 + extra)}px`;
 }
 
-type DrawerId = "details" | "data" | "assistants" | "blocs";
+type DrawerId = "details" | "history" | "data" | "assistants" | "blocs";
 
 export default function Support() {
   const session = useSession();
@@ -226,8 +227,10 @@ export default function Support() {
   const groupsLink = useSearchParams()[0].has("groups");
   // "עוגת המנדטים שלי" מהגרפים (?blocs) ⇐ המגירה של החלוקה פתוחה
   const blocsLink = useSearchParams()[0].has("blocs");
+  // ?history ⇐ מגירת "היסטוריית ניחושים" פתוחה (למחוברים)
+  const historyLink = useSearchParams()[0].has("history") && !!token;
   // קישור ישיר למנהל קבוצה (#/support?groups): מחובר ⇐ מסך "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
-  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(blocsLink ? ["blocs"] : groupsLink ? ["details"] : token || ask ? [] : ["details"]));
+  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(historyLink ? ["history"] : blocsLink ? ["blocs"] : groupsLink ? ["details"] : token || ask ? [] : ["details"]));
   const toggle = (id: DrawerId) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   useEffect(() => { if (me?.needsEmail) setOpen((s) => new Set(s).add("details")); }, [me?.needsEmail]);
   const blocked = useServerBlocked();
@@ -239,7 +242,7 @@ export default function Support() {
 
   // מסך רחב: תפריט מגירות מימין ותוכן המגירה שנבחרה משמאל; ברירת המחדל — השיחה עם צוות האתר
   const wide = useWide();
-  const [selected, setSelected] = useState<DrawerId>(blocsLink ? "blocs" : "details");
+  const [selected, setSelected] = useState<DrawerId>(historyLink ? "history" : blocsLink ? "blocs" : "details");
   useEffect(() => { if (me?.needsEmail || (token && !me && blocked)) setSelected("details"); }, [me?.needsEmail, token, me, blocked]);
   const badge = me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined;
   const details = (
@@ -273,6 +276,7 @@ export default function Support() {
   if (wide) {
     const items = [
       { id: "details", title: detailsTitle, badge, content: details },
+      ...(token ? [{ id: "history", title: "היסטוריית ניחושים", content: <GuessHistory session={session} /> }] : []),
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
       { id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> },
     ];
@@ -283,6 +287,7 @@ export default function Support() {
       <PageTitle>אזור אישי</PageTitle>
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
+        {token && <Drawer title="היסטוריית ניחושים" open={open.has("history")} onToggle={() => toggle("history")}><GuessHistory session={session} /></Drawer>}
         {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
         <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>
         {admin}
