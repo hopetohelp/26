@@ -4,9 +4,9 @@ import { results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 
 describe("מעבר מצביעים לפי קלפי (src/data/flow2026.json)", () => {
-  for (const mode of ["ballots", "localities"] as const) {
-    it(`${mode}: לכל שורה יש שם, האחוזים מסתכמים ב-100, ואף קול לא יוצא מהחשבון`, () => {
-      const { lists, blocs } = flowsFor(mode);
+  {
+    it(`לכל שורה יש שם, האחוזים מסתכמים ב-100, ואף קול לא יוצא מהחשבון`, () => {
+      const { lists, blocs } = flowsFor();
       for (const g of [lists, blocs]) {
         for (const r of [...g.cameFrom, ...g.wentTo]) {
           expect(r.name).toMatch(/[א-ת]/);
@@ -21,12 +21,11 @@ describe("מעבר מצביעים לפי קלפי (src/data/flow2026.json)", () 
       for (const l of flow.old.filter((x) => k25.lists.some((k) => k.letters === x))) expect(lists.wentTo.find((r) => r.id === l)?.total).toBe(k25.lists.find((k) => k.letters === l)!.votes);
     });
   }
-  it("הכיסוי עולה מדרגה לדרגה, והיישובים מכסים יותר מהקלפיות", () => {
-    const b = coverage("ballots"), l = coverage("localities");
-    expect(b.sub).toBeLessThanOrEqual(b.center);
-    expect(b.center).toBeLessThanOrEqual(b.total);
-    expect(l.total).toBeGreaterThanOrEqual(b.total);
-    expect(l.total).toBeLessThanOrEqual(100);
+  it("הכיסוי עולה מדרגה לדרגה, וכל חמש הדרגות יחד מכסות את כל הקולות", () => {
+    const c = coverage();
+    expect(c.sub).toBeLessThanOrEqual(c.center);
+    expect(c.center).toBeLessThanOrEqual(c.total);
+    expect(c.total).toBeCloseTo(100, 5);
   });
 });
 

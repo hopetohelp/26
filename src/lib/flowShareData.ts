@@ -2,7 +2,7 @@
  * הנתונים של תמונות השיתוף של "מה השתנה" (הכרעת בעלים 29.10.2026) — בלי ציור: מודל תמונה שהקנבס (`flowShareDraw.ts`) רק מצייר.
  * כל מספר נגזר מאותם מקורות כמו המסך: `partyYears` (ארבעת הפרמטרים), `cameFromGroup`/`wentToGroup` (תנועה) ו-`flow-units.json` (ערים).
  */
-import { cameFromGroup, countedPct, flow, newName, oldName, partyYears, SAME, smallPct, wentToGroup, type FlowPart, type Mode } from "./voterFlow";
+import { cameFromGroup, countedPct, flow, newName, oldName, partyYears, SAME, smallPct, wentToGroup, type FlowPart } from "./voterFlow";
 import { changeOf, PARAM_NAMES, type Change } from "./changeMark";
 import { DEFAULT_LINEAGE } from "./lineage";
 import { num, pctOne } from "./format";
@@ -10,7 +10,7 @@ import { sumBallotVotes, validBallotVotes, type BallotUnits } from "./ballotLook
 
 export type Who = "all" | "haredi" | "party";
 export type Where = "country" | "city";
-export interface ShareSpec { who: Who; party: string; where: Where; city: string; mode: Mode }
+export interface ShareSpec { who: Who; party: string; where: Where; city: string }
 
 /** "חרדים": ש"ס ויהדות התורה, כל אחת בנפרד (הכרעת בעלים 28.10.2026) */
 export const HAREDI = ["shas", "utj"];
@@ -128,7 +128,7 @@ function partyBlock(id: string, spec: ShareSpec, units: BallotUnits | null, nCit
       cities: [], from: m ? fromLines(m.flows, id) : [], to: m ? toLines(m.flowsTo ?? m.flows, id) : [],
     };
   }
-  const national = flow.modes[spec.mode];
+  const national = flow.national;
   return {
     name, params: countryParams(id),
     cities: units && nCities ? biggestChangeCities(cityStats(units, [id]), nCities) : [],
