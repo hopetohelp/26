@@ -32,6 +32,8 @@
 | `data/law.json` | חוק הבחירות: סף, הסכמי עודפים, בעלי זכות בחירה, ברירות המחדל של המחשבון | `src/engine/law.ts` · `meta.json` · `registry.json` | `engine` |
 | `data/accuracy.json` | דיוק הסקרים בעבר + כל סקרי המערכות הקודמות | `src/lib/history.ts` | `accuracy` |
 | `data/changes.json` | מה השתנה מאז 2022 (שיוך הרשימות) | `src/lib/lineage.ts` | `changes` |
+| `data/results-2026.json` | תוצאות הבחירות 2026 (קולות, מנדטים, נספרו) | `src/lib/guessAccuracyData.ts` | `results` |
+| `data/voter-flow.json` | מעבר המצביעים 2022 ⇐ 2026 (ארצי, גושים, ערים) | `src/lib/voterFlow.ts` | `voter-flow` |
 | `dashboard.json` | סטטיסטיקות הגולשים (עותק משרת ההשתתפות) | `pages.yml` + `wrapExternal` | `crowd` |
 | `data/party-images.json` | תמונות הרשימות והקרדיטים | `src/lib/partyImages.ts` | אודות |
 | `data/dictionary.json` | מילון המספרים בטקסט | `src/pages/Method.tsx` | המילון |

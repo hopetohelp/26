@@ -171,9 +171,33 @@ export const TOOLS = [
     title: "מה השתנה מאז 2022",
     audience: "public",
     kind: "read",
-    description: "How each 2026 list maps to 2022 lists (the site's default mapping), 2022 votes and seats against today's poll average, and the three alternative mappings with the reasoning for each row. A net comparison only — it cannot tell who moved where. " + ABOUT_NOTE,
+    description: "How each 2026 list maps to 2022 lists (the site's default mapping), 2022 votes and seats against today's poll average, and the three alternative mappings with the reasoning for each row. A net comparison only — for who moved where use get_voter_flow. " + ABOUT_NOTE,
     inputSchema: obj(),
     run: file("data/changes.json"),
+  },
+  {
+    name: "get_results_2026",
+    title: "תוצאות הבחירות 2026",
+    audience: "public",
+    kind: "read",
+    description: "Results of the 27.10.2026 election from the Central Elections Committee ballot file: votes per list, valid votes, the share counted, and seats by the site's law engine (threshold, surplus agreements, Bader-Ofer). status: none/partial/final. " + ABOUT_NOTE,
+    inputSchema: obj(),
+    run: file("data/results-2026.json"),
+  },
+  {
+    name: "get_voter_flow",
+    title: "מעבר המצביעים 2022 ⇐ 2026",
+    audience: "public",
+    kind: "read",
+    description: "Estimated voter flow from each 2022 list (and non-voters) to each 2026 list, from official ballot-by-ballot results (sub-ballot ⇐ polling centre ⇐ locality ⇐ regional committee ⇐ national). A statistical estimate, not a poll: small flows (a few percent) are within the error. flowsTo[i][j] = 2022 votes of old[i] that went to new[j] (row sums = official 2022 result); flows[i][j] = 2026 votes of new[j] that came from old[i] (column sums = 2026 count). blocs = the same by bloc. Pass city_code (a locality code, see get_locality_results) for that city's own table; only larger cities have one. " + ABOUT_NOTE,
+    inputSchema: obj({ city_code: str("Locality code, e.g. 5000 for Tel Aviv-Yafo") }),
+    async run(ctx, a) {
+      const d = await ctx.site("data/voter-flow.json");
+      const { cities, ...rest } = d;
+      if (!a.city_code) return { ...rest, cityCodes: Object.keys(cities ?? {}) };
+      const c = cities?.[String(a.city_code)];
+      return c ? { about: rest.about, asOf: rest.asOf, old: rest.old, new: rest.new, city: String(a.city_code), ...c } : { about: rest.about, error: "no_city_table", cityCodes: Object.keys(cities ?? {}) };
+    },
   },
   {
     name: "get_crowd_stats",
