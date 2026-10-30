@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { embedCode, embeddableFor, SITE_ORIGIN } from "../lib/embed";
+import { embedCode, embedScreenOf, embedTargetsFor, SITE_ORIGIN } from "../lib/embed";
 import { useMode } from "../lib/theme";
 import { pingEmbed } from "../lib/visits";
 import InfoTip from "./InfoTip";
@@ -23,7 +23,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   useMode();
   const { pathname, search } = useLocation();
   useEffect(() => {
-    if (window.parent !== window) pingEmbed(pathname === "/changes" ? "changes" : "results-2026", "view");
+    if (window.parent !== window) pingEmbed(embedScreenOf(pathname), "view");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (window.parent === window) return;
@@ -55,7 +55,9 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   const fullParams = new URLSearchParams(search);
   fullParams.delete("embed");
   fullParams.delete("theme");
-  const full = `${SITE_ORIGIN}/#${pathname}${fullParams.size ? `?${fullParams}` : ""}`;
+  fullParams.delete("show");
+  // גרפי המעבר הם תצוגה של מסך "מה השתנה" — הקישור חוזר אליו
+  const full = pathname === "/flow-graphs" ? `${SITE_ORIGIN}/#/changes` : `${SITE_ORIGIN}/#${pathname}${fullParams.size ? `?${fullParams}` : ""}`;
   return (
     <div data-embed className="bg-paper text-ink">
       <main id="main" className="w-full px-3 md:px-4 py-4">
@@ -71,7 +73,9 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
 export function EmbedButton() {
   const { pathname } = useLocation();
   const [params] = useSearchParams();
-  const target = embeddableFor(pathname, params.get("tab"));
+  const targets = embedTargetsFor(pathname, params.get("tab"));
+  const [pick, setPick] = useState(0);
+  const target = targets[pick] ?? targets[0];
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [theme, setTheme] = useState<"light" | "auto">("light");
@@ -89,6 +93,11 @@ export function EmbedButton() {
         </InfoTip>
       </div>
       {open && <div id="embed-code" className="order-last basis-full w-full text-ink">
+        {targets.length > 1 && <>
+          <p className="mt-2 font-bold">מה להטמיע?</p>
+          <Segmented value={String(pick)} onChange={(v) => { setPick(Number(v)); setCopied(false); }} label="מה להטמיע" className="mt-1 w-fit" options={targets.map((t, i) => ({ id: String(i), label: t.short ?? t.name }))} />
+          {pick > 0 && <p className="mt-1 text-ink-soft">הגרפים של מעבר בין מפלגות ומעבר בין גושים, עם השורה המפרטת מתחת לכל גרף. {pick === 1 ? "מתג בתוך ההטמעה מחליף ביניהם." : "שני הגרפים זה אחרי זה."}</p>}
+        </>}
         <Segmented value={theme} onChange={(value) => { setTheme(value); setCopied(false); }} label="תצוגת ההטמעה" className="mt-2 w-fit" options={[
           { id: "light", label: "בהיר" },
           { id: "auto", label: "לפי העדפת המשתמש" },
@@ -96,7 +105,7 @@ export function EmbedButton() {
         <p className="mt-2 text-ink-soft">לפי העדפת המשתמש: הבחירה השמורה באתר, ואם אין — לפי הגדרת המכשיר.</p>
         <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
         <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
-          pingEmbed(target.path === "/changes" ? "changes" : "results-2026", "copy");
+          pingEmbed(target.screen, "copy");
           void navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => {});
         }}>{copied ? "הועתק" : "העתקת הקוד"}</button>
       </div>}

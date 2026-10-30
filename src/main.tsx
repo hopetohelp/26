@@ -44,6 +44,7 @@ import Tabbed, { Moved } from "./components/Tabbed";
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
 const Accuracy = lazy(page(() => import("./pages/Accuracy")));
 const Scenarios = lazy(page(() => import("./pages/Scenarios")));
+const FlowGraphs = lazy(page(() => import("./pages/FlowGraphs")));
 const VoterFlow = lazy(page(() => import("./pages/VoterFlow")));
 const Guess = lazy(page(() => import("./pages/Guess")));
 const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
@@ -164,6 +165,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<PollsTabs />} />
           <Route path="changes" element={<ChangesScreen />} />
+          {/* גרפי המעבר בלבד — להטמעה (הכרעת בעלים 30.10.2026) */}
+          <Route path="flow-graphs" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><FlowGraphs /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />

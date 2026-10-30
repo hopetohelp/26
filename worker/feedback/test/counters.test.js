@@ -139,6 +139,7 @@ it("הטמעות: נשמרים רק המסך, הסוג ושם האתר, ומוצ
   expect((await hit({ screen: "results-2026", kind: "view", host: "www.News.co.il" })).status).toBe(200);
   await hit({ screen: "results-2026", kind: "view", host: "news.co.il" });
   await hit({ screen: "changes", kind: "copy", host: "<script>" });
+  expect((await hit({ screen: "changes-graphs", kind: "view", host: "news.co.il" })).status).toBe(200);
   expect((await hit({ screen: "polls", kind: "view" })).status).toBe(400);
   const r = await data();
   expect(r.embeds).toEqual(expect.arrayContaining([

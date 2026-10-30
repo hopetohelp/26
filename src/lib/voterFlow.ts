@@ -64,6 +64,9 @@ export function blocMatrix(m: number[][]) {
     m.reduce((s, row, i) => (bloc2022(flow.old[i]) === a ? s + row.reduce((t, v, j) => (bloc2026(flow.new[j]) === b ? t + v : t), 0) : s), 0)));
 }
 
+/** גרף הגושים — מאותה מטריצה ארצית; משמש את מסך "מה השתנה" ואת הטמעת הגרפים */
+export const BLOC_GRAPH = { T: blocMatrix(flow.national.flowsTo), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] };
+
 /** חלק הקולות הכשרים שנספרו ב-2026 שנכנסו לחישוב, בכל דרגה ובסך הכול */
 export function coverage() {
   const t = flow.national.tiers;

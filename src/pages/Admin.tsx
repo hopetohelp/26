@@ -43,7 +43,7 @@ type EmbedRow = { screen: string; kind: "view" | "copy"; host: string; n: number
 
 /** הטמעות (הכרעת בעלים 28.10.2026): לכל מסך — צפיות והעתקות קוד, ורשימת האתרים המארחים לפי צפיות */
 function EmbedStats({ rows }: { rows: EmbedRow[] }) {
-  const screens = [["results-2026", "תוצאות"], ["changes", "מה השתנה"]] as const;
+  const screens = [["results-2026", "תוצאות"], ["changes", "מה השתנה"], ["changes-graphs", "גרפי המעבר"]] as const;
   const sum = (f: (r: EmbedRow) => boolean) => rows.filter(f).reduce((a, r) => a + r.n, 0);
   const hosts = [...rows.filter((r) => r.kind === "view").reduce((m, r) => m.set(r.host, (m.get(r.host) ?? 0) + r.n), new Map<string, number>())].sort((a, b) => b[1] - a[1]);
   return (

@@ -45,7 +45,7 @@ const HOURLY_DIAG = new Set(["all-blocked", "relay-saved", "blind-sent", "img-gu
 const PROBE_KIND = /^probe-(worker|crowd|site|gapi|gsi)-(ok|fail)$/;
 /** נתיבי שרת ההשתתפות שמותר להעביר דרך הממסר (POST /relay) */
 const RELAY_PATHS = new Set(["/dashboard", "/log", "/save", "/me", "/history", "/export", "/delete", "/link/rotate", "/auth/register", "/auth/guest", "/auth/claim", "/auth/google", "/prefs", "/auth/login", "/auth/logout", "/auth/password", "/auth/link", "/auth/recover", "/support", "/account/name", "/account/password", "/account/verify/send", "/account/verify/check", "/auth/verify-email", "/auth/forgot", "/auth/reset"]);
-const EMBED_SCREENS = new Set(["results-2026", "changes"]);
+const EMBED_SCREENS = new Set(["results-2026", "changes", "changes-graphs"]);
 /** שם האתר המארח בלבד, באותיות קטנות; כל דבר אחר ⇐ "unknown" */
 export function embedHost(h) {
   const x = String(h || "").toLowerCase().replace(/^www\./, "");

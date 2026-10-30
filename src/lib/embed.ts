@@ -6,10 +6,19 @@
 export const SITE_ORIGIN = "https://26.hopetohelp.net";
 
 /** המסכים שמותר להטמיע: נתיב ⇐ לשונית (אם יש) ושם */
-export const EMBEDDABLE: { path: string; tab?: string; name: string }[] = [
-  { path: "/results-2026", name: "תוצאות" },
-  { path: "/changes", name: "מה השתנה" },
+export type EmbedScreen = "results-2026" | "changes" | "changes-graphs";
+export interface EmbedTarget { path: string; tab?: string; query?: string; name: string; short?: string; screen: EmbedScreen }
+export const EMBEDDABLE: EmbedTarget[] = [
+  { path: "/results-2026", name: "תוצאות", screen: "results-2026" },
+  { path: "/changes", name: "מה השתנה", short: "המסך המלא", screen: "changes" },
 ];
+/** תצוגות מצומצמות של אותו מסך (הכרעת בעלים 30.10.2026): גרפי המעבר בלבד — עם מתג בין מפלגות לגושים, או שניהם ברצף */
+const VARIANTS: Record<string, EmbedTarget[]> = {
+  "/changes": [
+    { path: "/flow-graphs", name: "מה השתנה — גרפי המעבר", short: "גרפים עם מתג", screen: "changes-graphs" },
+    { path: "/flow-graphs", query: "show=both", name: "מה השתנה — גרפי המעבר ברצף", short: "גרפים ברצף", screen: "changes-graphs" },
+  ],
+};
 
 function hashParams(hash: string): URLSearchParams {
   const q = hash.indexOf("?");
@@ -33,13 +42,24 @@ export function embeddableFor(pathname: string, tab: string | null) {
   return EMBEDDABLE.find((e) => e.path === pathname && (e.tab ?? null) === (e.tab ? tab : null)) ?? null;
 }
 
+/** כל אפשרויות ההטמעה של המסך הנוכחי: המסך עצמו, ואחריו התצוגות המצומצמות שלו */
+export function embedTargetsFor(pathname: string, tab: string | null): EmbedTarget[] {
+  const base = embeddableFor(pathname, tab);
+  return base ? [base, ...(VARIANTS[base.path] ?? [])] : [];
+}
+
 /** כתובת ההטמעה של מסך */
-export function embedUrl(e: { path: string; tab?: string }, theme: EmbedTheme = "light"): string {
-  return `${SITE_ORIGIN}/#${e.path}?${e.tab ? `tab=${e.tab}&` : ""}embed=1&theme=${theme}`;
+export function embedUrl(e: { path: string; tab?: string; query?: string }, theme: EmbedTheme = "light"): string {
+  return `${SITE_ORIGIN}/#${e.path}?${e.tab ? `tab=${e.tab}&` : ""}${e.query ? `${e.query}&` : ""}embed=1&theme=${theme}`;
+}
+
+/** המסך שנספר בסטטיסטיקת ההטמעות, לפי נתיב החלון המוטמע */
+export function embedScreenOf(pathname: string): EmbedScreen {
+  return pathname === "/flow-graphs" ? "changes-graphs" : pathname === "/changes" ? "changes" : "results-2026";
 }
 
 /** קוד ההטמעה להעתקה: iframe וסקריפט קצר להתאמת הגובה */
-export function embedCode(e: { path: string; tab?: string; name: string }, theme: EmbedTheme = "light"): string {
+export function embedCode(e: { path: string; tab?: string; query?: string; name: string }, theme: EmbedTheme = "light"): string {
   return `<iframe src="${embedUrl(e, theme)}" title="בחירות 2026 — ${e.name}" style="width:100%;border:0;min-height:600px" loading="lazy" data-elections26></iframe>
 <script>addEventListener("message",function(m){if(m.origin!=="${SITE_ORIGIN}"||!m.data||m.data.type!=="elections26:height")return;document.querySelectorAll("iframe[data-elections26]").forEach(function(f){if(f.contentWindow===m.source)f.style.height=m.data.height+"px"})});</script>`;
 }
