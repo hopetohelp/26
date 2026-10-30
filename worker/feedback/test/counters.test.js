@@ -148,3 +148,10 @@ it("הטמעות: נשמרים רק המסך, הסוג ושם האתר, ומוצ
   ]));
   expect(r.totalVisits).toBe(0);
 });
+
+it("עמוד גרפי המעבר נספר ככניסה למסך", async () => {
+  const hit = (page) => feedback.fetch(new Request("https://w.example/hit", { method: "POST", headers: { origin: "https://26.hopetohelp.net" }, body: JSON.stringify({ page }) }), env);
+  expect((await hit("/flow-graphs")).status).toBe(200);
+  expect((await hit("/not-a-screen")).status).toBe(400);
+  expect(env.DB.raw.prepare("SELECT count FROM hits WHERE page = '/flow-graphs'").get().count).toBe(1);
+});

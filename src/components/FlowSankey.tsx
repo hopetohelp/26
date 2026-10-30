@@ -105,7 +105,9 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
     return ids.map((id, k) => ({ id, name: name(id), s: vals[k] / total }))
       .filter((p) => p.s >= 0.03 || (ALWAYS.has(p.id) && p.s >= 0.001)).sort((x, y) => y.s - x.s);
   })();
-  const pct = (s: number) => (s >= 0.01 ? `${Math.round(100 * s)}%` : `${(100 * s).toFixed(1)}%`);
+  // "מתוך כל 100" — מספרים בלי סימן אחוז, כדי שהשורה תהיה אחידה (הכרעת בעלים 30.10.2026)
+  const of100 = (s: number) => (s >= 0.01 ? `${Math.round(100 * s)}` : (100 * s).toFixed(1));
+  const pct = (s: number) => `${of100(s)}%`;
   const node = (n: Node, side: "a" | "b", i: number) => {
     const on = sel.kind === "node" && sel.side === side && sel.i === i;
     const pick = () => setSel({ kind: "node", side, i });
@@ -143,8 +145,8 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           return <><b className="text-ink">{`${A[sel.i].name} 2022 ← ${B[sel.j].name} 2026: ${num(v)} קולות`}</b><br />
             {`${pct(v / rowT[sel.i])} ממצביעי ${A[sel.i].name} ב-2022 · ${pct(v / colT[sel.j])} מקולות ${B[sel.j].name} ב-2026`}</>;
         })() : <>
-          <b className="block text-ink mb-0.5">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מאיפה הגיעו קולות ${B[sel.i].name} ב-2026:`}</b>
-          {parts.map((p) => `${p.name} ${pct(p.s)}`).join(" · ")}
+          <b className="block text-ink mb-0.5">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מתוך כל 100 קולות של ${B[sel.i].name} ב-2026:`}</b>
+          {parts.map((p) => `${p.name} ${of100(p.s)}`).join(" · ")}
         </>}
       </figcaption>
       {abA >= 0 && abB >= 0 && ((sel.kind === "node" && (sel.side === "a" ? sel.i === abA : sel.i === abB)) || (sel.kind === "link" && sel.i === abA && sel.j === abB)) && <p className="mt-1 text-xs text-ink-soft">{`מי שלא הצביע בשתי הבחירות (${num(m.M[abA][abB])}) — פס דק, לא לפי גודלו.`}</p>}

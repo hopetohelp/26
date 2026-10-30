@@ -51,7 +51,7 @@ export function embedHost(h) {
   const x = String(h || "").toLowerCase().replace(/^www\./, "");
   return /^[a-z0-9.-]{1,100}$/.test(x) && x.includes(".") ? x : "unknown";
 }
-const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread", "/guess", "/community", "/trends", "/ai", "/account", "/support", "/feedback", "/results-2026"]);
+const HIT_PAGES = new Set(["/", "/today", "/polls", "/changes", "/calculator", "/past", "/method", "/thread", "/guess", "/community", "/trends", "/ai", "/account", "/support", "/feedback", "/results-2026", "/flow-graphs"]);
 
 function cors(env, origin) {
   return {
