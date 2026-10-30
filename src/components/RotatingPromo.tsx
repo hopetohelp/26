@@ -40,7 +40,7 @@ export default function RotatingPromo({ messages, callToAction, label, href, onC
   const actionClass = `flex items-center justify-center gap-x-2 gap-y-0.5 text-center min-w-0 max-w-full after:absolute after:inset-0 after:content-[''] ${narrow ? "flex-nowrap whitespace-nowrap" : "flex-wrap"}`;
   return (
     <div className="embed-cta relative mb-4 w-full" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
-      <div className="embed-cta-action relative flex items-center justify-center w-full min-h-[44px] rounded-theme border-2 border-signal bg-signal px-2 min-[380px]:px-3 py-1 text-signal-ink text-xs min-[380px]:text-sm md:text-base font-bold leading-snug hover:brightness-110">
+      <div className="embed-cta-action relative flex items-center justify-center w-full min-h-[36px] rounded-theme border border-signal/40 bg-accent-soft px-2 min-[380px]:px-3 py-0.5 text-accent text-xs min-[380px]:text-sm md:text-base font-bold leading-snug hover:brightness-95">
         {href
           ? <a href={href} target="_blank" rel="noopener" aria-label={label} className={actionClass}>{content}</a>
           : <button type="button" onClick={onClick} aria-haspopup="dialog" aria-label={label} className={actionClass}>{content}</button>}
