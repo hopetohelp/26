@@ -136,14 +136,14 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           {B.map((n, j) => node(n, "b", j))}
         </svg>
       </div>
-      <figcaption className="mt-2 text-sm text-ink-soft min-h-[3em]" aria-live="polite">
+      <figcaption className="mt-3 rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-md px-3 py-2.5 text-sm text-ink-soft min-h-[4.5em] leading-relaxed" aria-live="polite">
         {sel.kind === "link" ? (() => {
           // לחיצה על פס — רק המעבר הזה (הכרעת בעלים 30.10.2026)
           const v = m.M[sel.i][sel.j];
           return <><b className="text-ink">{`${A[sel.i].name} 2022 ← ${B[sel.j].name} 2026: ${num(v)} קולות`}</b><br />
             {`${pct(v / rowT[sel.i])} ממצביעי ${A[sel.i].name} ב-2022 · ${pct(v / colT[sel.j])} מקולות ${B[sel.j].name} ב-2026`}</>;
         })() : <>
-          <b className="text-ink">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מאיפה הגיעו קולות ${B[sel.i].name} ב-2026:`}</b>{" "}
+          <b className="block text-ink mb-0.5">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מאיפה הגיעו קולות ${B[sel.i].name} ב-2026:`}</b>
           {parts.map((p) => `${p.name} ${pct(p.s)}`).join(" · ")}
         </>}
       </figcaption>
