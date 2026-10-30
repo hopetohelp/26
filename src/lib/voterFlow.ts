@@ -54,12 +54,14 @@ export function flowsFor() {
 
 /** המעבר בין הגושים מכל מטריצה (ארצית או של עיר) */
 export function blocsOf(from: number[][], to: number[][] = from) {
-  const bo = bloc2022, bn = bloc2026;
-  // גושים = סכום המעברים של הרשימות שבהם, מאותה מטריצה
-  const sum = (m: number[][]) => BLOC_IDS.map((a) => BLOC_IDS.map((b) =>
-    m.reduce((s, row, i) => (bo(flow.old[i]) === a ? s + row.reduce((t, v, j) => (bn(flow.new[j]) === b ? t + v : t), 0) : s), 0)));
   const bloc = (id: string) => BLOC_NAMES[id];
-  return rows(sum(from), sum(to), BLOC_IDS, BLOC_IDS, bloc, bloc);
+  return rows(blocMatrix(from), blocMatrix(to), BLOC_IDS, BLOC_IDS, bloc, bloc);
+}
+
+/** גושים = סכום המעברים של הרשימות שבהם, מאותה מטריצה (BLOC_IDS × BLOC_IDS) */
+export function blocMatrix(m: number[][]) {
+  return BLOC_IDS.map((a) => BLOC_IDS.map((b) =>
+    m.reduce((s, row, i) => (bloc2022(flow.old[i]) === a ? s + row.reduce((t, v, j) => (bloc2026(flow.new[j]) === b ? t + v : t), 0) : s), 0)));
 }
 
 /** חלק הקולות הכשרים שנספרו ב-2026 שנכנסו לחישוב, בכל דרגה ובסך הכול */
@@ -83,7 +85,7 @@ export const partialLine = () => {
 /** "מאיפה הגיעו" בעיר — רק בעיר עם מספיק יחידות השוואה (pipeline: MIN_CITY_UNITS) */
 export function cityFlows(code: string) {
   const c = (flow as unknown as { cities?: Record<string, { units: number; flows: number[][]; flowsTo?: number[][] }> }).cities?.[code];
-  return c ? { units: c.units, lists: rows(c.flows, c.flowsTo ?? c.flows, flow.old, flow.new, oldName, newName) } : null;
+  return c ? { units: c.units, flowsTo: c.flowsTo ?? c.flows, lists: rows(c.flows, c.flowsTo ?? c.flows, flow.old, flow.new, oldName, newName) } : null;
 }
 
 /** המטריצה של המתג, מסוכמת לפי קבוצת רשימות של 2026 (מפלגה אחת או "חרדים") ⇐ מאיפה הגיעו המצביעים שלה */

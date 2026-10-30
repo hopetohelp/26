@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Segmented } from "./Choice";
 import InfoTip from "./InfoTip";
+import GraphSwitch from "./GraphSwitch";
+import { cityFlows } from "../lib/voterFlow";
 import BallotCards from "./BallotCards";
 import { Delta } from "./ParamCard";
 import { PartyAvatar } from "./PartyAvatar";
@@ -147,6 +149,12 @@ export default function BallotLookup() {
     {!nothing && <div className="flex items-center gap-2"><span className="text-sm">נתוני ההשוואה</span><InfoTip label="הסבר נתוני ההשוואה">אחוז הצבעה: המצביעים מבעלי זכות הבחירה. מזכות בחירה: אחוז הקולות של המפלגה מבעלי זכות הבחירה ביחידה. מהכשרים: אחוז הקולות הכשרים, כמו בוועדת הבחירות. הפער: 2026 פחות 2022, בחץ למעלה או למטה; כשאין שינוי לא מוצג כלום. המפלגה המובילה מוצגת עם מנדטיה הארציים, ומפלגה שלא עברה — באחוז.</InfoTip></div>}
     {nothing && <p role="status" className="rounded-theme border border-dashed border-paper-line p-6 text-center text-ink-soft">בחרו עיר, קלפי או תת קלפי.<span className="block text-sm">הנתונים הארציים של כל מפלגה מופיעים למעלה, בכרטיסי המפלגות.</span></p>}
     {level && <ScopeList key={`${level}:${filter.city}:${filter.ballot}:${filter.sub}:${sort}`} units={units} scopes={scopes} onOpen={open} />}
-    {unit && <BallotCards units={units} filter={filter} label={[filter.city, filter.ballot && `קלפי ${filter.ballot}`, filter.sub && `תת קלפי ${filter.sub}`].filter(Boolean).join(" · ")} />}
+    {unit && (() => {
+      const cards = <BallotCards units={units} filter={filter} label={[filter.city, filter.ballot && `קלפי ${filter.ballot}`, filter.sub && `תת קלפי ${filter.sub}`].filter(Boolean).join(" · ")} />;
+      // "הצגה בגרף" — בעיר שיש לה טבלת מעבר משלה (הכרעת בעלים 30.10.2026)
+      const code = !filter.ballot ? cities.find((c) => c.value === filter.city)?.id : undefined;
+      const cf = code ? cityFlows(code) : null;
+      return cf ? <GraphSwitch key={code} graph={{ T: cf.flowsTo }}>{cards}</GraphSwitch> : cards;
+    })()}
   </div>;
 }
