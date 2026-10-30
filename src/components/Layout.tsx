@@ -365,8 +365,8 @@ function LayoutBody() {
         {embeddableFor(pathname, new URLSearchParams(search).get("tab")) && <ScreenFooter info={false}>
           {/* ״תוצאות״ ו״מה השתנה״: שורה אחת ממורכזת — ״איך זה חושב?״ ו״הטמעה באתר אחר״ (הכרעת בעלים 29.10.2026) */}
           {pathname === "/results-2026" && <Link to="/method#guess-accuracy" className="!text-ink-soft !font-normal underline">איך זה חושב?</Link>}
-          {/* ״תוצאות רשמיות״ — מכרטיס אחוז ההצבעה שהוסר, לשורת התחתית (הכרעת בעלים 29.10.2026) */}
-          {pathname === "/results-2026" && <a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="!text-ink-soft !font-normal underline">תוצאות רשמיות</a>}
+          {/* ״תוצאות רשמיות״ בשורת התחתית של ״תוצאות״ ו״מה השתנה״ (הכרעות בעלים 29–30.10.2026) */}
+          {(pathname === "/results-2026" || pathname === "/changes") && <a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="!text-ink-soft !font-normal underline">תוצאות רשמיות</a>}
           <EmbedButton />
         </ScreenFooter>}
       </main>
