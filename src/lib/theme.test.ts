@@ -18,25 +18,19 @@ function startsDark(hash: string, saved: string | null, deviceDark: boolean, blo
 }
 
 describe("תצורת ההטמעה לפני ציור ראשון", () => {
-  for (const path of ["#/results-2026?", "#/past?tab=changes&"]) {
-    it(`${path} ברירת מחדל בהירה גם למשתמש ולמכשיר במצב לילה`, () => {
-      for (const suffix of ["", "&theme=light", "&theme=invalid"]) {
-        expect(startsDark(`${path}embed=1${suffix}`, "dark", true)).toBe(false);
+  for (const path of ["#/results-2026?", "#/past?tab=changes&", "#/flow-graphs?"]) {
+    it(`${path} תמיד לפי העדפת המכשיר, ואם אין — בהיר`, () => {
+      // גם בחירה שמורה באתר וגם פרמטר theme בכתובות ישנות — מתעלמים מהם
+      for (const suffix of ["", "&theme=light", "&theme=dark", "&theme=auto", "&theme=invalid"]) {
+        for (const saved of [null, "light", "dark", "auto", "invalid"]) {
+          expect(startsDark(`${path}embed=1${suffix}`, saved, true)).toBe(true);
+          expect(startsDark(`${path}embed=1${suffix}`, saved, false)).toBe(false);
+        }
       }
     });
-    it(`${path} לפי המשתמש מכבד בחירה שמורה ואז את המכשיר`, () => {
-      const hash = `${path}embed=1&theme=auto`;
-      expect(startsDark(hash, "dark", false)).toBe(true);
-      expect(startsDark(hash, "light", true)).toBe(false);
-      for (const saved of [null, "auto", "invalid"]) {
-        expect(startsDark(hash, saved, true)).toBe(true);
-        expect(startsDark(hash, saved, false)).toBe(false);
-      }
-    });
-    it(`${path} אחסון חסום אינו משבש תצורה מפורשת או זיהוי מכשיר`, () => {
-      expect(startsDark(`${path}embed=1`, null, true, true)).toBe(false);
-      expect(startsDark(`${path}embed=1&theme=dark`, null, false, true)).toBe(true);
-      expect(startsDark(`${path}embed=1&theme=auto`, null, true, true)).toBe(true);
+    it(`${path} אחסון חסום אינו משבש את זיהוי המכשיר`, () => {
+      expect(startsDark(`${path}embed=1`, null, true, true)).toBe(true);
+      expect(startsDark(`${path}embed=1`, null, false, true)).toBe(false);
     });
   }
   it("קישור רגיל משתמש בהעדפת האתר ומתעלם מפרמטר הצבע", () => {

@@ -1,6 +1,6 @@
 /**
  * מצב הטמעה (הכרעת בעלים 28.10.2026): "תוצאות" ו"מה השתנה" מוצגים בתוך אתרים אחרים ב-iframe.
- * הכתובת: #/results-2026?embed=1 או #/changes?embed=1; ברירת מחדל בהירה, theme=auto לפי המשתמש; dark נשמר לתאימות.
+ * הכתובת: #/results-2026?embed=1 או #/changes?embed=1. התצוגה בהטמעה תמיד לפי העדפת המכשיר, ואם אין — בהירה (פרמטר theme בכתובות ישנות מתעלמים ממנו).
  * במצב זה — בלי סרגל, תפריט וחשבון; שורת מקור בתחתית; הגובה נשלח לאתר המארח.
  */
 export const SITE_ORIGIN = "https://26.hopetohelp.net";
@@ -28,14 +28,6 @@ export function isEmbed(hash = typeof location !== "undefined" ? location.hash :
   return hashParams(hash).get("embed") === "1";
 }
 
-export type EmbedTheme = "light" | "dark" | "auto";
-
-export function embedTheme(hash = typeof location !== "undefined" ? location.hash : ""): EmbedTheme | null {
-  if (!isEmbed(hash)) return null;
-  const t = hashParams(hash).get("theme");
-  return t === "dark" || t === "auto" ? t : "light";
-}
-
 /** המסך הנוכחי ניתן להטמעה? */
 export function embeddableFor(pathname: string, tab: string | null) {
   return EMBEDDABLE.find((e) => e.path === pathname && (e.tab ?? null) === (e.tab ? tab : null)) ?? null;
@@ -48,8 +40,8 @@ export function embedTargetsFor(pathname: string, tab: string | null): EmbedTarg
 }
 
 /** כתובת ההטמעה של מסך */
-export function embedUrl(e: { path: string; tab?: string }, theme: EmbedTheme = "light"): string {
-  return `${SITE_ORIGIN}/#${e.path}?${e.tab ? `tab=${e.tab}&` : ""}embed=1&theme=${theme}`;
+export function embedUrl(e: { path: string; tab?: string }): string {
+  return `${SITE_ORIGIN}/#${e.path}?${e.tab ? `tab=${e.tab}&` : ""}embed=1`;
 }
 
 /** המסך שנספר בסטטיסטיקת ההטמעות, לפי נתיב החלון המוטמע */
@@ -58,7 +50,7 @@ export function embedScreenOf(pathname: string): EmbedScreen {
 }
 
 /** קוד ההטמעה להעתקה: iframe וסקריפט קצר להתאמת הגובה */
-export function embedCode(e: { path: string; tab?: string; name: string }, theme: EmbedTheme = "light"): string {
-  return `<iframe src="${embedUrl(e, theme)}" title="בחירות 2026 — ${e.name}" style="width:100%;border:0;min-height:600px" loading="lazy" allow="web-share" data-elections26></iframe>
+export function embedCode(e: { path: string; tab?: string; name: string }): string {
+  return `<iframe src="${embedUrl(e)}" title="בחירות 2026 — ${e.name}" style="width:100%;border:0;min-height:600px" loading="lazy" allow="web-share" data-elections26></iframe>
 <script>addEventListener("message",function(m){if(m.origin!=="${SITE_ORIGIN}"||!m.data||m.data.type!=="elections26:height")return;document.querySelectorAll("iframe[data-elections26]").forEach(function(f){if(f.contentWindow===m.source){f.style.height=m.data.height+"px";if(m.data.scroll)f.scrollIntoView({block:"start",behavior:"smooth"})}})});</script>`;
 }

@@ -117,9 +117,8 @@ export function EmbedButton() {
   const target = targets[pick] ?? targets[0];
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [theme, setTheme] = useState<"light" | "auto">("light");
   if (!target) return null;
-  const code = embedCode(target, theme);
+  const code = embedCode(target);
   return (
     <>
       <div className="flex items-center gap-2">
@@ -137,11 +136,6 @@ export function EmbedButton() {
           <Segmented value={String(pick)} onChange={(v) => { setPick(Number(v)); setCopied(false); }} label="מה להטמיע" className="mt-1 w-fit" options={targets.map((t, i) => ({ id: String(i), label: t.short ?? t.name }))} />
           {pick > 0 && <p className="mt-1 text-ink-soft">הגרפים של מעבר בין מפלגות ומעבר בין גושים, עם השורה המפרטת מתחת לכל גרף. מתג בתוך ההטמעה מחליף ביניהם.</p>}
         </>}
-        <Segmented value={theme} onChange={(value) => { setTheme(value); setCopied(false); }} label="תצוגת ההטמעה" className="mt-2 w-fit" options={[
-          { id: "light", label: "בהיר" },
-          { id: "auto", label: "לפי העדפת המשתמש" },
-        ]} />
-        <p className="mt-2 text-ink-soft">לפי העדפת המשתמש: הבחירה השמורה באתר, ואם אין — לפי הגדרת המכשיר.</p>
         <textarea readOnly dir="ltr" value={code} rows={5} className="mt-2 w-full font-mono text-xs bg-paper-card border border-frame rounded p-2" onFocus={(e) => e.currentTarget.select()} />
         <button type="button" className="mt-2 px-3 py-1.5 rounded border border-frame bg-paper-card" onClick={() => {
           pingEmbed(target.screen, "copy");
