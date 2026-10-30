@@ -65,18 +65,24 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
   const H = Math.max(m.a.length, m.b.length) * 36;
   const rowT = m.M.map((r) => r.reduce((x, y) => x + y, 0));
   const colT = m.b.map((_, j) => m.M.reduce((s, r) => s + r[j], 0));
-  const all = rowT.reduce((x, y) => x + y, 0);
-  const place = (ids: string[], tot: number[], name: (id: string) => string): Node[] => {
+  // בגרף בלי "לא הצביעו ⇐ לא הצביעו": נשארים רק המעברים, וצמתי "לא הצביעו" מראים רק מי שעבר מהבית לקלפי או הפוך (הכרעת בעלים 30.10.2026)
+  const abA = m.a.indexOf("abstain"), abB = m.b.indexOf("abstain");
+  const D = m.M.map((r, i) => r.map((v, j) => (i === abA && j === abB ? 0 : v)));
+  const rowD = D.map((r) => r.reduce((x, y) => x + y, 0));
+  const colD = m.b.map((_, j) => D.reduce((s, r) => s + r[j], 0));
+  const all = rowD.reduce((x, y) => x + y, 0);
+  const place = (ids: string[], tot: number[], full: number[], name: (id: string) => string): Node[] => {
     const k = (H - gap * (ids.length - 1)) / all;
     let y = top;
-    return ids.map((id, i) => { const n = { id, name: id === OTHER ? "רשימות אחרות" : name(id), v: tot[i], y, h: tot[i] * k }; y += n.h + gap; return n; });
+    return ids.map((id, i) => { const n = { id, name: id === OTHER ? "רשימות אחרות" : name(id), v: full[i], y, h: tot[i] * k }; y += n.h + gap; return n; });
   };
-  const A = place(m.a, rowT, oldName), B = place(m.b, colT, newName);
+  const A = place(m.a, rowD, rowT, oldName), B = place(m.b, colD, colT, newName);
   const xA = W - lab - nw, xB = lab, mid = (xA + xB + nw) / 2;
   const offA = A.map((n) => n.y), offB = B.map((n) => n.y);
   const links: { i: number; j: number; v: number; d: string }[] = [];
-  m.M.forEach((r, i) => r.forEach((v, j) => {
-    const ta = (v / rowT[i]) * A[i].h, tb = (v / colT[j]) * B[j].h;
+  D.forEach((r, i) => r.forEach((v, j) => {
+    if (!v) return;
+    const ta = (v / rowD[i]) * A[i].h, tb = (v / colD[j]) * B[j].h;
     const y1 = offA[i], y2 = offB[j];
     offA[i] += ta; offB[j] += tb;
     if (v / all < 0.0005) return;
@@ -92,7 +98,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
     const ids = sel.side === "a" ? newIds : oldIds, name = sel.side === "a" ? newName : oldName;
     const total = vals.reduce((a, b) => a + b, 0) || 1;
     return ids.map((id, k) => ({ id, name: name(id), s: vals[k] / total }))
-      .filter((p) => p.s >= 0.03 || (ALWAYS.has(p.id) && p.s >= 0.0005)).sort((x, y) => y.s - x.s);
+      .filter((p) => p.s >= 0.03 || (ALWAYS.has(p.id) && p.s >= 0.001)).sort((x, y) => y.s - x.s);
   })();
   const pct = (s: number) => (s >= 0.01 ? `${Math.round(100 * s)}%` : `${(100 * s).toFixed(1)}%`);
   const node = (n: Node, side: "a" | "b", i: number) => {
@@ -136,6 +142,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
           {parts.map((p) => `${p.name} ${pct(p.s)}`).join(" · ")}
         </>}
       </figcaption>
+      {abA >= 0 && abB >= 0 && <p className="mt-1 text-xs text-ink-soft">מי שלא הצביע בשתי הבחירות אינו מוצג בגרף.</p>}
     </figure>
   );
 }
