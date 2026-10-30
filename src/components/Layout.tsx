@@ -6,6 +6,7 @@ import { pingVisit } from "../lib/visits";
 import PageErrorBoundary from "./PageErrorBoundary";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { EmbedButton, EmbedFrame } from "./Embed";
+import DisclaimerBar from "./DisclaimerBar";
 import { embeddableFor, isEmbed } from "../lib/embed";
 import ScreenFooter from "./ScreenFooter";
 import { ScreenLegend } from "./ChartLegend";
@@ -355,7 +356,7 @@ function LayoutBody() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-ink text-paper-card px-3 py-2 rounded z-50">
         דילוג לתוכן
       </a>
-      <p role="note" className="bg-warn-soft text-ink text-xs md:text-sm text-center px-4 py-1.5 border-b border-paper-line">האתר אינו אחראי לדיוק המידע; ייתכנו טעויות. מומלץ לאמת מול המקור.</p>
+      <DisclaimerBar />
       {/* רק סרגל הניווט מרחף; בלי ניווט בכותרת (טלפון) הכותרת נגללת עם העמוד (הכרעת בעלים 29.10.2026) */}
       <header className={navTop && !forceBottom ? "sticky top-0 z-40" : "relative z-40"}><FocusBar member={hagzara} logo={hagzaraLogo} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
       <AccessCard />

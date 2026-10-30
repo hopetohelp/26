@@ -9,6 +9,7 @@ import { Segmented } from "./Choice";
 import RotatingPromo from "./RotatingPromo";
 import ScreenFooter from "./ScreenFooter";
 import FlowExplain from "./FlowExplain";
+import DisclaimerBar from "./DisclaimerBar";
 
 const FlowShare = lazy(() => import("./FlowShare"));
 const OFFICIAL_RESULTS = "https://votes26.bechirot.gov.il/nationalresults?lang=he";
@@ -84,6 +85,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   const full = pathname === "/flow-graphs" ? `${SITE_ORIGIN}/#/changes` : `${SITE_ORIGIN}/#${pathname}${fullParams.size ? `?${fullParams}` : ""}`;
   return (
     <div data-embed className="bg-paper text-ink">
+      <DisclaimerBar />
       <main id="main" className="w-full px-2 min-[400px]:px-3 md:px-4 py-4">
         {pathname === "/results-2026" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/changes`} />}
         {children}
