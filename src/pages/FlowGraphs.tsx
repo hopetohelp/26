@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Segmented } from "../components/Choice";
 import { BLOC_GRAPH } from "../lib/voterFlow";
+import OverviewCards from "../components/OverviewCards";
 
 const FlowSankey = lazy(() => import("../components/FlowSankey"));
 
@@ -20,6 +21,7 @@ export default function FlowGraphs() {
   return (
     <div>
       <h1 className="text-xl md:text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
+      <OverviewCards keys={["voted", "inKnesset"]} small />
       {both
         ? (["party", "bloc"] as const).map((k) => <section key={k} className="mt-5"><h2 className="font-bold text-lg">{TITLES[k]}</h2>{graph(k)}</section>)
         : <>

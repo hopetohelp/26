@@ -4,8 +4,9 @@ import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, coverage, flow, flowsFor, overview, overviewChangePct, overviewShare, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
+import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, coverage, flow, flowsFor, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
+import OverviewCards from "../components/OverviewCards";
 import { changeOf } from "../lib/changeMark";
 import { PartyAvatar } from "../components/PartyAvatar";
 import { num, pctOne, pctValue } from "../lib/format";
@@ -74,29 +75,6 @@ function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y202
   }
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
   return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
-}
-
-/** ארבעת הנתונים הכלליים, כרטיס לכל נתון (הכרעת בעלים 29.10.2026): הנתון הנוכחי במספר ובאחוזים, והשינוי במספר ובאחוזים — בלי ערכי 2022 */
-function OverviewCards() {
-  const { y2022, y2026 } = overview();
-  if (!y2026) return null;
-  const items = [["eligible", "בעלי זכות בחירה"], ["voted", "הצביעו"], ["inKnesset", "קולות לרשימות בכנסת"], ["belowThreshold", "לא עברו את אחוז החסימה"]] as const;
-  return <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
-    {items.map(([key, label]) => {
-      const share = overviewShare(y2026, key);
-      const count = changeOf(y2026[key] - y2022[key], "count"), rate = changeOf(overviewChangePct(y2022, y2026, key), "pct");
-      const tone = count?.up ? "bg-pos/10" : count ? "bg-neg/10" : "";
-      // עיצוב דרמטי (הכרעת בעלים 29.10.2026): מספר גדול, פס עליון בצבע ההדגשה, והשינוי בתג צבעוני
-      return <div key={key} className="rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-md px-2 py-3 text-center min-w-0 flex flex-col items-center gap-1.5">
-        <dt className="text-xs md:text-sm font-bold text-ink-soft leading-tight">{label}</dt>
-        <dd className="contents tabular-nums">
-          <bdi dir="ltr" className="block font-display font-extrabold text-xl md:text-3xl leading-none text-ink">{num(y2026[key])}</bdi>
-          {share !== null && <span className="text-xs md:text-sm font-bold text-accent leading-none"><bdi dir="ltr">{pctOne(share)}</bdi></span>}
-          {count && <span className={`inline-flex flex-wrap justify-center gap-x-1.5 md:gap-x-2 rounded-full px-1.5 md:px-2 py-0.5 text-[11px] md:text-sm font-bold ${tone}`}><Delta change={count} /><Delta change={rate} /></span>}
-        </dd>
-      </div>;
-    })}
-  </dl>;
 }
 
 /** חץ צף למעלה (הכרעת בעלים 29.10.2026): עולה לראש המגירה הפתוחה שבה הקורא נמצא; מופיע רק אחרי גלילה לתוכה */

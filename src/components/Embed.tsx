@@ -89,13 +89,13 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
         {children}
         <div className="mt-5">
           {graphs && <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={() => setSharing(true)} />}
-          {graphs && <div className="mb-4"><FlowExplain /></div>}
           {/* במקום שורת המקור (הכרעת בעלים 30.10.2026): כפתור מעוצב כמו כפתור יצירת הפוסט */}
           <div className="embed-cta relative w-full">
             <div className="embed-cta-action relative flex items-center justify-center w-full min-h-[36px] rounded-theme border border-signal/40 bg-accent-soft px-3 py-0.5 text-accent text-sm md:text-base font-bold leading-snug hover:brightness-95">
               <a href={full} target="_blank" rel="noopener" className="after:absolute after:inset-0 after:content-['']">לפירוט מורחב, כנסו לאתר</a>
             </div>
           </div>
+          {graphs && <div className="mt-4"><FlowExplain /></div>}
         </div>
         <ScreenFooter info={false}>
           <a href={`${SITE_ORIGIN}/#/method`} target="_blank" rel="noopener" className="underline">מידע ומקורות</a>
