@@ -131,10 +131,14 @@ def prior(I: int, J: int) -> np.ndarray:
 
 
 def fit(X: np.ndarray, Y: np.ndarray, base: np.ndarray, kappa: float) -> np.ndarray:
-    """הטבלה שמסבירה הכי טוב את כל היחידות (עדכונים כפליים של מרחק KL), נמשכת ל-base בכוח kappa קולות לכל מקור"""
+    """הטבלה שמסבירה הכי טוב את כל היחידות (עדכונים כפליים של מרחק KL), נמשכת ל-base בכוח kappa קולות לכל מקור.
+    משקל שווה לכל יחידה (הכרעת בעלים 30.10.2026): יחידה גדולה אינה מכתיבה את הטבלה לקטנות. מבחן ההחזקה
+    (pipeline/holdout_voter_flow.py): 9.1% ⇐ 8.7% קולות משובצים לא נכון; משקל לפי גודל^-0.5 או מתחם נוסף — פחות טוב."""
+    w = 1 / np.maximum(Y.sum(1, keepdims=True), 1)
+    w = w / w.mean()
     P = base.copy()
     for _ in range(ITERATIONS):
-        R = Y / np.maximum(X @ P, 1e-9)
+        R = w * Y / np.maximum(X @ P, 1e-9)
         C = P * (X.T @ R) + kappa * base
         P = C / np.maximum(C.sum(1, keepdims=True), 1e-12)
     return P
