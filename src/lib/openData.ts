@@ -30,6 +30,8 @@ import { DEFAULT_TURNOUT, INVALID_SHARE, validVotesFor } from "../engine/law";
 import { TOTAL } from "./fillAll";
 import { DICTIONARY, MethodNumbers } from "../pages/Method";
 import { PARALLEL_SITE_URL } from "./siteUrls";
+import { results2026 } from "./guessAccuracyData";
+import { BLOC_IDS, BLOC_NAMES, blocMatrix, coverage, flow, newName, oldName } from "./voterFlow";
 
 /** אותו מופע נתב כמו במסכים: תומך ביצירת קישורים גם בייצוא המילון. */
 const noNavigation = () => { throw new Error("Static dictionary rendering cannot navigate"); };
@@ -261,6 +263,36 @@ export const OPEN_FILES: OpenFile[] = [
     screen: "/changes",
     fields: "lineage{rows[] (id, category, from, part, share2022, seats2022, shareNow, seatsNow), unassigned2022}, lists2022[], alternatives[]",
     build: () => ({ names: nameMap(), lineage: lineageRows(DEFAULT_LINEAGE), lists2022: K25_LISTS, alternatives: modelFile.changes.alternatives }),
+  },
+  {
+    path: "data/results-2026.json",
+    title: "תוצאות הבחירות 2026",
+    description: "הקולות לכל רשימה, הקולות הכשרים, אחוז שנספר והמנדטים לפי מנוע החוק של האתר, מקובץ התוצאות של ועדת הבחירות לפי קלפי.",
+    methodAnchor: "results",
+    kind: "נתון רשמי",
+    source: results2026.source,
+    screen: "/results-2026",
+    fields: "status, asOf, counted, valid, votes{id}, seats{id}, names{id}",
+    build: () => ({ status: results2026.status, asOf: results2026.asOf, counted: results2026.counted ?? null, valid: results2026.valid ?? null, votes: results2026.votes ?? {}, seats: results2026.seats, names: Object.fromEntries(Object.keys(results2026.seats).map((id) => [id, listName(id)])) }),
+  },
+  {
+    path: "data/voter-flow.json",
+    title: "מעבר המצביעים 2022 ⇐ 2026",
+    description: "כמה מצביעים של כל רשימה ב-2022 הצביעו לכל רשימה ב-2026, לפי השוואת קלפיות (תת קלפי ⇐ מתחם ⇐ עיר ⇐ ועדה ⇐ ארצי). הערכה סטטיסטית מתוצאות רשמיות, לא סקר. ארצי, לפי גושים, ולכל עיר שיש לה טבלה משלה.",
+    methodAnchor: "voter-flow",
+    kind: "השוואה",
+    source: "תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית); pipeline/voter_flow.py",
+    screen: "/changes",
+    fields: "old[] ו-new[] (מזהים ושמות), flowsTo[old][new] (כל קול של 2022 לפי יעדו), flows[old][new] (כל קול של 2026 לפי מקורו), blocs{ids, names, flowsTo}, coverage, cities{סמל: {units, flowsTo}}",
+    build: () => ({
+      asOf: flow.asOf,
+      old: flow.old.map((id) => ({ id, name: oldName(id) })),
+      new: flow.new.map((id) => ({ id, name: newName(id) })),
+      flowsTo: flow.national.flowsTo, flows: flow.national.flows,
+      blocs: { ids: BLOC_IDS, names: BLOC_NAMES, flowsTo: blocMatrix(flow.national.flowsTo) },
+      coverage: coverage(),
+      cities: (flow as unknown as { cities?: Record<string, { units: number; flowsTo?: number[][]; flows: number[][] }> }).cities ?? {},
+    }),
   },
   {
     path: "dashboard.json",
