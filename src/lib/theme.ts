@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { embedTheme } from "./embed";
+import { isEmbed } from "./embed";
 
 /** עיצוב אחד בלבד: מקצועי (הכרעת בעלים 9.10.2026; בורר העיצוב והעיצוב החדשותי הוסרו). נשארה רק התצורה: יום, לילה, לפי המכשיר. */
 
@@ -15,8 +15,8 @@ const MODE_KEY = "elections26.mode"; // אותו מפתח בסקריפט הקט�
 const dark = typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
 function readMode(): ModeId {
-  const embedded = embedTheme();
-  if (embedded === "light" || embedded === "dark") return embedded;
+  // בהטמעה: תמיד לפי העדפת המכשיר, ואם אין — בהיר (הכרעת בעלים 30.10.2026)
+  if (isEmbed()) return "auto";
   try {
     const m = localStorage.getItem(MODE_KEY);
     if (MODES.some((x) => x.id === m)) return m as ModeId;

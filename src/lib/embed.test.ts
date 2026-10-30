@@ -1,15 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { embedCode, embeddableFor, embedScreenOf, embedTargetsFor, embedTheme, embedUrl, isEmbed } from "./embed";
+import { embedCode, embeddableFor, embedScreenOf, embedTargetsFor, embedUrl, isEmbed } from "./embed";
 
 describe("מצב הטמעה", () => {
-  it("מזהה embed=1 ותצורה בכתובת", () => {
+  it("מזהה embed=1 בכתובת", () => {
     expect(isEmbed("#/results-2026?embed=1")).toBe(true);
     expect(isEmbed("#/results-2026")).toBe(false);
-    expect(embedTheme("#/past?tab=changes&embed=1&theme=dark")).toBe("dark");
-    expect(embedTheme("#/past?embed=1&theme=x")).toBe("light");
-    expect(embedTheme("#/results-2026?embed=1")).toBe("light");
-    expect(embedTheme("#/past?embed=1&theme=auto")).toBe("auto");
-    expect(embedTheme("#/past?theme=dark")).toBe(null);
   });
   it("רק תוצאות ומה השתנה ניתנים להטמעה", () => {
     expect(embeddableFor("/results-2026", null)?.name).toBe("תוצאות");
@@ -19,15 +14,15 @@ describe("מצב הטמעה", () => {
   });
   it("קוד ההטמעה מכיל את הכתובת ובודק מקור", () => {
     const e = embeddableFor("/changes", null)!;
-    expect(embedUrl(e)).toBe("https://26.hopetohelp.net/#/changes?embed=1&theme=light");
-    expect(embedCode(e, "auto")).toContain('src="https://26.hopetohelp.net/#/changes?embed=1&theme=auto"');
+    expect(embedUrl(e)).toBe("https://26.hopetohelp.net/#/changes?embed=1");
+    expect(embedCode(e)).toContain('src="https://26.hopetohelp.net/#/changes?embed=1"');
+    expect(embedCode(e)).not.toContain("theme=");
     expect(embedCode(e)).toContain('m.origin!=="https://26.hopetohelp.net"');
   });
   it("במסך מה השתנה: המסך המלא וגרפי המעבר בלבד", () => {
     const t = embedTargetsFor("/changes", null);
     expect(t.map((x) => x.screen)).toEqual(["changes", "changes-graphs"]);
-    expect(embedUrl(t[1])).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1&theme=light");
-    expect(embedUrl(t[1], "auto")).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1&theme=auto");
+    expect(embedUrl(t[1])).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1");
     expect(t.some((x) => x.path === "/flow-graphs" && x.name.includes("ברצף"))).toBe(false);
     expect(embedTargetsFor("/results-2026", null)).toHaveLength(1);
     expect(embedTargetsFor("/flow-graphs", null)).toEqual([]);
