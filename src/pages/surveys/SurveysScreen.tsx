@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import { listSurveys, type Survey } from "../../lib/surveys";
 
@@ -8,7 +9,8 @@ const FILTERS: [Filter, string][] = [["open", "פתוחים"], ["closed", "נס�
 
 /** מסך "כל הסקרים" (הכרעת בעלים 01.11.2026): הסקר הראשון מודגש, השאר ברשימה; סימון "ענית ✓" למחובר */
 export default function SurveysScreen() {
-  const { token } = useSession();
+  const session = useSession();
+  const { token } = session;
   const [surveys, setSurveys] = useState<Survey[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [filter, setFilter] = useState<Filter>("open");
@@ -25,6 +27,12 @@ export default function SurveysScreen() {
       {failed && <p className="text-ink-soft">רשימת הסקרים אינה זמינה כרגע.</p>}
       {!failed && !surveys && <p className="text-ink-soft">טוען…</p>}
       {surveys && !shown.length && <p className="text-ink-soft">אין סקרים כאן כרגע.</p>}
+      {surveys && !token && (
+        <section className="f-card space-y-2">
+          <p className="text-sm">חברי הגזרה רואים את כל סקרי הגזרה אחרי כניסה עם Google.</p>
+          <GoogleButton session={session} onDone={() => void session.refresh()} />
+        </section>
+      )}
       {lead && (
         <Link to={`/s/${lead.id}`} className="block f-card !border-[1.5px] !border-signal no-underline text-ink">
           <div className="flex items-center gap-2 mb-1.5 text-xs">
@@ -33,7 +41,7 @@ export default function SurveysScreen() {
           </div>
           <div className="text-[22px] font-display mb-2">{lead.title}</div>
           <ul className="text-sm text-ink-soft list-disc pr-5 mb-3 space-y-0.5">{lead.questions.map((q) => <li key={q.id}>{q.title}</li>)}</ul>
-          <span className="f-btn pri">{lead.answered ? "לעדכן תשובות" : lead.status === "open" ? "להשתתף" : "לתוצאות"}</span>
+          <span className="f-btn pri">{lead.answered ? "לעדכן תשובות" : lead.status === "open" && lead.canAnswer ? "להשתתף" : "לצפייה"}</span>
           {lead.answered && <span className="text-sm text-ink-soft ms-3">ענית ✓</span>}
         </Link>
       )}

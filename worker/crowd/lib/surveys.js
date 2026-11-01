@@ -7,6 +7,8 @@
 export const SURVEY_ID = /^[a-z0-9-]{2,40}$/;
 const KEY = /^[a-z0-9_-]{1,40}$/;
 export const SURVEY_STATUS = new Set(["draft", "open", "closed"]);
+/** גישה למי שמחוץ לקבוצה: כלום / צפייה (סקר ותוצאות) / השתתפות */
+export const SURVEY_OUTSIDE = new Set(["none", "view", "answer"]);
 /** סף פרסום תוצאות לפי קבוצה — כמו בכל נתוני הקבוצות (GROUP_MIN) */
 export const SURVEY_MIN = 50;
 

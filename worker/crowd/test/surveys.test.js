@@ -28,6 +28,13 @@ async function account(email) {
   env.DB.raw.prepare("UPDATE emails SET verified = 1 WHERE participant = (SELECT participant FROM sessions WHERE token_hash = ?)").run(await sha256(r.data.token));
   return r.data.token;
 }
+/** חבר בגזרה — המייל המאומת ברשימת הקבוצה */
+async function member(email, group = G) {
+  const token = await account(email);
+  env.DB.raw.prepare("INSERT INTO group_members (group_id, email_hash) VALUES (?, ?)").run(group, await emailHash(env, email));
+  return token;
+}
+const setOutside = (outside) => call("/survey/manage", { admin: true, body: { group: G, id: "gov", outside } });
 async function manager(email, group = G) {
   const token = await account(email);
   env.DB.raw.prepare("INSERT INTO group_managers (group_id, email_hash, added_at) VALUES (?, ?, 't')").run(group, await emailHash(env, email));
@@ -70,16 +77,38 @@ describe("survey definitions and answers (pure)", () => {
 });
 
 describe("site surveys over the worker", () => {
-  it("lists the seeded government-formation survey to everyone", async () => {
-    const r = await call("/surveys");
-    expect(r.status).toBe(200);
+  it("lists the seeded survey to members, and to outsiders only when allowed", async () => {
+    // ברירת מחדל: מחוץ לגזרה — לא רואים
+    expect((await call("/surveys")).data.surveys).toEqual([]);
+    expect((await call("/survey?id=gov")).status).toBe(404);
+    const m = await member("in@x.co");
+    const r = await call("/surveys", { token: m });
     expect(r.data.surveys.map((s) => s.id)).toEqual(["gov"]);
+    expect(r.data.surveys[0].canAnswer).toBe(true);
     expect(r.data.surveys[0].questions.map((q) => q.id)).toEqual(["reelect", "first", "coalition"]);
     expect(r.data.surveys[0].questions[2].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
   });
 
+  it("outsiders: view shows survey and results without answering; answer lets them take part", async () => {
+    const out = await account("out@x.co");
+    expect((await answer(out, { reelect: "yes" })).status).toBe(403);
+    expect((await setOutside("view")).status).toBe(200);
+    const v = await call("/survey?id=gov", { token: out });
+    expect(v.data.access.canAnswer).toBe(false);
+    expect(v.data.results.all.hidden).toBe(true);
+    expect((await answer(out, { reelect: "yes" })).status).toBe(403);
+    expect((await call("/surveys")).data.surveys.map((s) => s.id)).toEqual(["gov"]);
+    await setOutside("answer");
+    expect((await call("/survey?id=gov", { token: out })).data.results).toBeNull();
+    expect((await answer(out, { reelect: "yes" })).status).toBe(200);
+    expect((await call("/survey?id=gov", { token: out })).data.results.all.n).toBe(1);
+    await setOutside("none");
+    expect((await call("/survey?id=gov", { token: out })).status).toBe(404);
+    expect((await setOutside("everyone")).status).toBe(400);
+  });
+
   it("keeps every answer as history and returns the latest as mine", async () => {
-    const token = await account("a@x.co");
+    const token = await member("a@x.co");
     expect((await answer(token, { reelect: "no" })).status).toBe(200);
     t += 60_000;
     expect((await answer(token, { reelect: "yes", first: "netanyahu", coalition: { likud: "coalition", raam: "abstain" } })).status).toBe(200);
@@ -92,7 +121,7 @@ describe("site surveys over the worker", () => {
   });
 
   it("does not duplicate a resent answer and rejects invalid ones", async () => {
-    const token = await account("b@x.co");
+    const token = await member("b@x.co");
     const body = { survey: "gov", op: "same-op-123", answers: { reelect: "yes" } };
     await call("/survey/answer", { token, body });
     await call("/survey/answer", { token, body });
@@ -103,10 +132,10 @@ describe("site surveys over the worker", () => {
   });
 
   it("hides results below the threshold and publishes them above it", async () => {
-    const one = await account("c@x.co");
+    const one = await member("c@x.co");
     // לפני שענית — אין תוצאות
     expect((await call("/survey?id=gov", { token: one })).data.results).toBeNull();
-    expect((await call("/survey?id=gov")).data.results).toBeNull();
+    expect((await call("/survey?id=gov")).status).toBe(404);
     await answer(one, { reelect: "yes" });
     let r = await call("/survey?id=gov", { token: one });
     expect(r.data.results.all).toEqual({ n: 1, min: SURVEY_MIN, hidden: true });
@@ -115,8 +144,8 @@ describe("site surveys over the worker", () => {
     r = await call("/survey?id=gov", { token: one });
     expect(r.data.results.all.n).toBe(SURVEY_MIN + 1);
     expect(r.data.results.all.questions.reelect.counts).toEqual({ yes: SURVEY_MIN / 2 + 1, no: SURVEY_MIN / 2 });
-    // משתתפי הקבוצה: אף אחד מהם אינו חבר ⇐ מתחת לסף
-    expect(r.data.results.group.hidden).toBe(true);
+    // משתתפי הקבוצה: רק חבר אחד ענה ⇐ מתחת לסף
+    expect(r.data.results.group).toEqual({ n: 1, min: SURVEY_MIN, hidden: true });
   });
 
   it("shows results to a group manager who did not answer", async () => {
@@ -130,13 +159,13 @@ describe("site surveys over the worker", () => {
     let r = await call("/survey/manage", { token: m, body: { group: G, id: "new-one", def } });
     expect(r.data.survey.status).toBe("draft");
     // טיוטה — גלויה רק למנהל
-    expect((await call("/surveys")).data.surveys.map((s) => s.id)).toEqual(["gov"]);
+    expect((await call("/surveys", { token: await member("g@x.co") })).data.surveys.map((s) => s.id)).toEqual(["gov"]);
     expect((await call("/surveys", { token: m })).data.surveys.map((s) => s.id)).toContain("new-one");
     r = await call("/survey/manage", { token: m, body: { group: G, id: "new-one", status: "open" } });
     expect(r.data.survey.status).toBe("open");
     // סגירה חוסמת תשובות
     await call("/survey/manage", { token: m, body: { group: G, id: "gov", status: "closed" } });
-    expect((await answer(await account("d@x.co"), { reelect: "yes" })).status).toBe(403);
+    expect((await answer(await member("d@x.co"), { reelect: "yes" })).status).toBe(403);
     // מחיקה מחייבת אישור
     expect((await call("/survey/manage", { token: m, body: { group: G, id: "new-one", delete: true } })).status).toBe(400);
     expect((await call("/survey/manage", { token: m, body: { group: G, id: "new-one", delete: true, confirm: "מחק" } })).status).toBe(200);
@@ -159,7 +188,7 @@ describe("site surveys over the worker", () => {
   });
 
   it("clearing history and deleting the account remove survey answers", async () => {
-    const token = await account("f@x.co");
+    const token = await member("f@x.co");
     await answer(token, { reelect: "yes" });
     expect((await call("/history/clear", { token, body: { confirm: "מחק" } })).status).toBe(200);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM survey_answers").get().n).toBe(0);

@@ -10,14 +10,17 @@ export interface SurveyOption { id: string; label: string; sub?: string; seats?:
 export type SurveyQuestion =
   | { id: string; kind: "single"; title: string; options: SurveyOption[] }
   | { id: string; kind: "assign"; title: string; items: SurveyOption[]; columns: SurveyOption[] };
-export interface Survey { id: string; group: string; status: "draft" | "open" | "closed"; position: number; updatedAt: string; title: string; questions: SurveyQuestion[]; answered?: boolean; manage?: boolean }
+/** מי מחוץ לקבוצה רשאי: כלום / צפייה בסקר ובתוצאות / השתתפות (הכרעת בעלים 01.11.2026; קובע מנהל הקבוצה) */
+export type SurveyOutside = "none" | "view" | "answer";
+export const OUTSIDE_LABELS: [SurveyOutside, string][] = [["none", "כלום"], ["view", "צפייה"], ["answer", "השתתפות"]];
+export interface Survey { id: string; group: string; status: "draft" | "open" | "closed"; position: number; updatedAt: string; title: string; questions: SurveyQuestion[]; answered?: boolean; manage?: boolean; canAnswer?: boolean; outside?: SurveyOutside }
 /** תשובה לפריט בשאלת שיוך: עמודה אחת לכל הסיעה, או פיצול {עמודה: מנדטים} (הכרעת בעלים 01.11.2026) */
 export type AssignValue = string | Record<string, number>;
 export type SurveyAnswers = Record<string, string | Record<string, AssignValue>>;
 export type QuestionResult = { n: number; counts: Record<string, number> } | { n: number; items: Record<string, Record<string, number>> };
 export type SurveyResults = { n: number; min: number; hidden: true } | { n: number; questions: Record<string, QuestionResult> };
 /** results = null עד שעונים (הכרעת בעלים 01.11.2026) */
-export interface SurveyDetail { survey: Survey; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null }
+export interface SurveyDetail { survey: Survey; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null; access: { member: boolean; canAnswer: boolean; manage: boolean; outside?: SurveyOutside } }
 export interface SurveyHistory { surveys: Survey[]; answers: { survey: string; at: string; answers: SurveyAnswers }[] }
 
 export const listSurveys = (token: string | null) => call<{ surveys: Survey[] }>("/surveys", { token });
@@ -27,6 +30,10 @@ export const surveyHistory = (token: string) => call<SurveyHistory>("/survey/his
 export const newOp = () => `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 export const answerSurvey = (token: string, survey: string, answers: SurveyAnswers, op = newOp()) =>
   call<{ ok: true; at: string }>("/survey/answer", { token, body: { survey, op, answers } });
+
+/** מנהל קבוצה: מי מחוץ לקבוצה רשאי לראות / להשתתף בסקר */
+export const setSurveyOutside = (token: string, group: string, survey: string, outside: SurveyOutside) =>
+  call<{ survey: Survey }>("/survey/manage", { token, body: { group, id: survey, outside } });
 
 /**
  * מנדטים של פריט בשאלת שיוך: אם יש תוצאות אמת באתר — מהן (מקור האמת היחיד למנדטים, results2026), ואחרת מההגדרה ששמורה בסקר.

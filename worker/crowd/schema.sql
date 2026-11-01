@@ -467,6 +467,12 @@ CREATE TABLE IF NOT EXISTS survey_answers (
 );
 CREATE INDEX IF NOT EXISTS survey_answers_participant ON survey_answers(participant, survey, id);
 CREATE INDEX IF NOT EXISTS survey_answers_survey ON survey_answers(survey, participant, id);
+-- מי מחוץ לקבוצה רשאי לראות / להשתתף בכל סקר (הכרעת בעלים 01.11.2026): none — לא רואה, view — רואה סקר ותוצאות, answer — משתתף.
+-- טבלה נפרדת (ולא עמודה) כי הקובץ רץ מחדש בכל פריסה. אין שורה ⇐ none.
+CREATE TABLE IF NOT EXISTS survey_access (
+  survey TEXT PRIMARY KEY,
+  outside TEXT NOT NULL CHECK (outside IN ('none', 'view', 'answer'))
+);
 -- הסקר הראשון: הרכבת הממשלה (הגזרה). המנדטים לפי הספירה של 30.10 — מנהל יכול לעדכן את ההגדרה.
 INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES ('gov', 'gy7lelpbo', 'open',
  '{"title":"הרכבת הממשלה","questions":[{"id":"reelect","kind":"single","title":"בחירות חוזרות?","options":[{"id":"yes","label":"כן"},{"id":"no","label":"לא"}]},{"id":"first","kind":"single","title":"על מי יטיל הנשיא את הרכבת הממשלה ראשון?","options":[{"id":"netanyahu","label":"בנימין נתניהו","sub":"הליכוד"},{"id":"eisenkot","label":"גדי איזנקוט","sub":"ישר!"}]},{"id":"coalition","kind":"assign","title":"מי בקואליציה, מי נמנע ומי באופוזיציה?","items":[{"id":"likud","label":"הליכוד","seats":27},{"id":"yashar","label":"ישר!","seats":21},{"id":"together","label":"ביחד","seats":12},{"id":"joint","label":"הרשימה המשותפת","seats":11},{"id":"democrats","label":"הדמוקרטים","seats":8},{"id":"raam","label":"רע\"ם","seats":8},{"id":"utj","label":"יהדות התורה","seats":7},{"id":"yb","label":"ישראל ביתנו","seats":7},{"id":"otzma","label":"עוצמה יהודית","seats":7},{"id":"shas","label":"ש\"ס","seats":6},{"id":"rzp","label":"הציונות הדתית","seats":6}],"columns":[{"id":"coalition","label":"קואליציה"},{"id":"abstain","label":"נמנעים"},{"id":"opposition","label":"אופוזיציה"}]}]}',

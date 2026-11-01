@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import { answerSurvey, brokenPromises, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, OUTSIDE_LABELS, setSurveyOutside, type SurveyOutside, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -172,7 +172,13 @@ export default function SurveyScreen() {
   useEffect(load, [load]);
 
   const survey = data?.survey;
-  const closed = survey?.status !== "open";
+  // סגור, או מחוץ לגזרה בלי הרשאת השתתפות ⇐ צפייה בלבד
+  const closed = survey?.status !== "open" || !data?.access.canAnswer;
+  const outsider = !!data && !data.access.member;
+  async function changeOutside(v: SurveyOutside) {
+    if (!token || !survey) return;
+    try { await setSurveyOutside(token, survey.group, survey.id, v); load(); } catch { setState("error"); }
+  }
   const changed = useMemo(() => JSON.stringify(draft) !== JSON.stringify(data?.mine?.answers ?? {}), [draft, data]);
   const empty = Object.keys(draft).length === 0;
 
@@ -182,7 +188,15 @@ export default function SurveyScreen() {
     try { await answerSurvey(token, survey.id, draft); setState("saved"); load(); } catch { setState("error"); }
   }
 
-  if (failed) return <main className="px-4 py-6"><p className="text-ink-soft">הסקר אינו זמין כרגע.</p><Link to="/surveys" className="text-accent">לכל הסקרים</Link></main>;
+  if (failed) return (
+    <main className="px-4 py-6 space-y-3 md:max-w-3xl md:mx-auto">
+      {token ? <p className="text-ink-soft">הסקר אינו זמין.</p> : <>
+        <p>סקרי הגזרה פתוחים לחברי הגזרה. כניסה עם Google:</p>
+        <GoogleButton session={session} onDone={() => void session.refresh()} />
+      </>}
+      <Link to="/surveys" className="text-accent">לכל הסקרים</Link>
+    </main>
+  );
   if (!survey) return <main className="px-4 py-6"><p className="text-ink-soft">טוען…</p></main>;
 
   return (
@@ -192,6 +206,15 @@ export default function SurveyScreen() {
         {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))] text-ink-soft">נסגר</span>}
       </div>
       <p className="text-sm text-ink-soft -mt-2">סקר משתתפים, אינו מייצג.</p>
+      {outsider && survey.status === "open" && !data.access.canAnswer && <p className="text-sm rounded-xl bg-accent-soft px-3 py-2">הסקר פתוח להשתתפות לחברי הגזרה. אפשר לצפות בשאלות ובתוצאות.</p>}
+      {data.access.manage && (
+        <section className="f-card !py-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <h2 className="text-sm font-bold">מי שמחוץ לגזרה:</h2>
+          <div className="f-seg sm" role="radiogroup" aria-label="גישה למי שמחוץ לגזרה">
+            {OUTSIDE_LABELS.map(([k, l]) => <button key={k} type="button" aria-pressed={(data.access.outside ?? "none") === k} onClick={() => void changeOutside(k)}>{l}</button>)}
+          </div>
+        </section>
+      )}
 
       {survey.questions.map((q, i) => (
         <section key={q.id} className="f-card">
@@ -208,7 +231,7 @@ export default function SurveyScreen() {
         </section>
       ))}
 
-      {!closed && (token ? (
+      {survey.status === "open" && (data.access.canAnswer || !token) && (token ? (
         <div className="space-y-2">
           <button type="button" onClick={() => void save()} disabled={empty || !changed || state === "saving"} className="f-btn pri w-full !min-h-[50px] !text-base disabled:opacity-50">
             {state === "saving" ? "שומר…" : data?.mine ? "עדכון התשובות" : "שמירת התשובות"}

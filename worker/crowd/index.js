@@ -16,7 +16,7 @@ import { allowedOrigin, returnSiteUrl } from "../shared/origins.js";
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
 import { verifyGoogle } from "./lib/google.js";
-import { SURVEY_ID, SURVEY_STATUS, SURVEY_MIN, cleanDefinition, cleanAnswers, tally } from "./lib/surveys.js";
+import { SURVEY_ID, SURVEY_STATUS, SURVEY_OUTSIDE, SURVEY_MIN, cleanDefinition, cleanAnswers, tally } from "./lib/surveys.js";
 import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
 import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
@@ -681,6 +681,18 @@ async function requireSurveyManager(env, request, now, raw) {
 function surveyId(v) {
   if (typeof v !== "string" || !SURVEY_ID.test(v)) throw bad("survey");
   return v;
+}
+/**
+ * הגישה של המשתמש לסקר: חבר בקבוצה ומנהל — תמיד; מחוץ לקבוצה — לפי הגדרת המנהל (survey_access: none / view / answer).
+ * התוצאות: מי שענה, מנהל, ומי שמחוץ לקבוצה עם הרשאת צפייה בלבד (אינו יכול לענות).
+ */
+async function surveyAccess(env, a, r) {
+  const outside = (await env.DB.prepare("SELECT outside FROM survey_access WHERE survey = ?").bind(r.id).first())?.outside ?? "none";
+  const manager = a ? (await managedGroups(env, a.participant)).some((g) => g.id === r.group_id) : false;
+  const member = manager || (a ? !!(await env.DB.prepare(`SELECT 1 AS x FROM (${groupParticipants({ participant: "?1", group: "?2" })}) LIMIT 1`).bind(a.participant, r.group_id).first()) : false);
+  const view = r.status === "draft" ? manager : member || outside !== "none";
+  const answer = r.status === "open" && (member || outside === "answer");
+  return { outside, manager, member, view, answer };
 }
 /** הסשן אם יש (בלי חובה) — רשימת הסקרים ותוצאותיהם פתוחות לכולם */
 async function optionalAuth(env, request, now) {
@@ -1971,10 +1983,15 @@ const routes = {
   // רשימת הסקרים: פתוחים וסגורים לכולם; טיוטות — רק למנהלי הקבוצה שלהן. למחובר — האם ענה.
   "GET /surveys": async ({ env, request, now }) => {
     const a = await optionalAuth(env, request, now);
-    const managed = a ? (await managedGroups(env, a.participant)).map((g) => g.id) : [];
     const { results } = await env.DB.prepare("SELECT * FROM surveys ORDER BY position, created_at DESC").all();
     const answered = a ? new Set(((await env.DB.prepare("SELECT DISTINCT survey FROM survey_answers WHERE participant = ?").bind(a.participant).all()).results || []).map((r) => r.survey)) : new Set();
-    return { surveys: (results || []).filter((r) => r.status !== "draft" || managed.includes(r.group_id)).map((r) => ({ ...surveyRow(r), answered: answered.has(r.id), manage: managed.includes(r.group_id) })) };
+    const out = [];
+    for (const r of results || []) {
+      const acc = await surveyAccess(env, a, r);
+      if (!acc.view) continue;
+      out.push({ ...surveyRow(r), answered: answered.has(r.id), manage: acc.manager, canAnswer: acc.answer, ...(acc.manager ? { outside: acc.outside } : {}) });
+    }
+    return { surveys: out };
   },
 
   // סקר אחד: ההגדרה, התוצאות (כל המשתתפים ומשתתפי הקבוצה, מעל הסף — רק למי שענה) והתשובה האחרונה שלי
@@ -1982,15 +1999,16 @@ const routes = {
     const id = surveyId(url.searchParams.get("id"));
     const r = await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first();
     const a = await optionalAuth(env, request, now);
-    if (!r || (r.status === "draft" && !(a && (await managedGroups(env, a.participant)).some((g) => g.id === r.group_id)))) throw new HttpError(404, "not_found");
+    const acc = r ? await surveyAccess(env, a, r) : null;
+    if (!r || !acc.view) throw new HttpError(404, "not_found");
     const survey = surveyRow(r);
     const mine = a ? await env.DB.prepare("SELECT payload, created_at FROM survey_answers WHERE participant = ? AND survey = ? ORDER BY id DESC LIMIT 1").bind(a.participant, id).first() : null;
-    // התוצאות — רק אחרי שענית (הכרעת בעלים 01.11.2026); מנהלי הקבוצה רואים תמיד
-    const manager = a && !mine ? (await managedGroups(env, a.participant)).some((g) => g.id === r.group_id) : false;
-    const results = mine || manager
+    // התוצאות — רק אחרי שענית (הכרעת בעלים 01.11.2026); מנהלי הקבוצה תמיד; מחוץ לקבוצה בהרשאת צפייה — תמיד (אינם יכולים לענות)
+    const viewOnly = !acc.member && acc.outside === "view";
+    const results = mine || acc.manager || viewOnly
       ? { all: surveyResults(survey, await latestSurveyAnswers(env, id, null)), group: surveyResults(survey, await latestSurveyAnswers(env, id, r.group_id)) }
       : null;
-    return { survey, results, mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null };
+    return { survey, results, mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null, access: { member: acc.member, canAnswer: acc.answer, manage: acc.manager, ...(acc.manager ? { outside: acc.outside } : {}) } };
   },
 
   // תשובה: שורה חדשה בכל שמירה (ההיסטוריה נשמרת). op = מזהה פעולה — שליחה חוזרת אינה יוצרת כפילות
@@ -1998,9 +2016,11 @@ const routes = {
     const { participant } = await requireAuth(env, request, now);
     const id = surveyId(body.survey);
     if (typeof body.op !== "string" || !/^[\w-]{8,64}$/.test(body.op)) throw bad("op");
-    const r = await env.DB.prepare("SELECT status, def FROM surveys WHERE id = ?").bind(id).first();
+    const r = await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first();
     if (!r) throw new HttpError(404, "not_found");
     if (r.status !== "open") throw new HttpError(403, "survey_closed");
+    // מחוץ לקבוצה — רק כשהמנהל התיר השתתפות
+    if (!(await surveyAccess(env, { participant }, r)).answer) throw new HttpError(403, "not_member");
     const answers = cleanAnswers(JSON.parse(r.def), body.answers);
     if (!answers) throw bad("answers");
     await env.DB.prepare("INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload) VALUES (?, ?, ?, ?, ?)").bind(id, participant, iso(now), body.op, JSON.stringify(answers)).run();
@@ -2025,7 +2045,7 @@ const routes = {
     if (body.delete === true) {
       if (!cur) throw new HttpError(404, "not_found");
       if (body.confirm !== "מחק") throw bad("confirm");
-      await env.DB.batch([env.DB.prepare("DELETE FROM survey_answers WHERE survey = ?").bind(id), env.DB.prepare("DELETE FROM surveys WHERE id = ?").bind(id)]);
+      await env.DB.batch([env.DB.prepare("DELETE FROM survey_answers WHERE survey = ?").bind(id), env.DB.prepare("DELETE FROM survey_access WHERE survey = ?").bind(id), env.DB.prepare("DELETE FROM surveys WHERE id = ?").bind(id)]);
       return { ok: true, deleted: id };
     }
     const def = body.def === undefined ? null : cleanDefinition(body.def);
@@ -2035,10 +2055,13 @@ const routes = {
     if (!SURVEY_STATUS.has(status)) throw bad("status");
     const position = body.position ?? cur?.position ?? 0;
     if (!Number.isInteger(position) || position < 0 || position > 9999) throw bad("position");
+    if (body.outside !== undefined && !SURVEY_OUTSIDE.has(body.outside)) throw bad("outside");
     const json = def ? JSON.stringify(def) : cur.def;
     if (cur) await env.DB.prepare("UPDATE surveys SET def = ?, status = ?, position = ?, updated_at = ? WHERE id = ?").bind(json, status, position, iso(now), id).run();
     else await env.DB.prepare("INSERT INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)").bind(id, group, status, json, position, iso(now), iso(now)).run();
-    return { survey: surveyRow(await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first()) };
+    if (body.outside !== undefined) await env.DB.prepare("INSERT INTO survey_access (survey, outside) VALUES (?, ?) ON CONFLICT(survey) DO UPDATE SET outside = excluded.outside").bind(id, body.outside).run();
+    const outside = (await env.DB.prepare("SELECT outside FROM survey_access WHERE survey = ?").bind(id).first())?.outside ?? "none";
+    return { survey: { ...surveyRow(await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first()), outside } };
   },
 
   "GET /support/access": async ({ env, request, now }) => {
