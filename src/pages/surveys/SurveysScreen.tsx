@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { getSurvey, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { closesLabel, getSurvey, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
@@ -33,6 +33,11 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
 
 type Filter = "open" | "closed" | "all";
 const FILTERS: [Filter, string][] = [["open", "פתוחים"], ["closed", "נסגרו"], ["all", "כולם"]];
+/** מתג סינון נוסף לצופים (הכרעת בעלים 01.11.2026): סקרים / ניחושים */
+type KindFilter = "all" | "survey" | "guess";
+const KIND_FILTERS: [KindFilter, string][] = [["all", "הכול"], ["survey", "סקרים"], ["guess", "ניחושים"]];
+/** תגית מצב / מועד סגירה על הכרטיס */
+const statusText = (s: Survey) => (s.status === "draft" ? "טיוטה" : s.status === "closed" ? "נסגר" : closesLabel(s) ? `פתוח עד ${closesLabel(s)}` : "פתוח");
 
 /** מסך "כל הסקרים" (הכרעת בעלים 01.11.2026): הסקר הראשון מודגש, השאר ברשימה; סימון "ענית ✓" למחובר */
 export default function SurveysScreen() {
@@ -41,6 +46,7 @@ export default function SurveysScreen() {
   const [surveys, setSurveys] = useState<Survey[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [filter, setFilter] = useState<Filter>("open");
+  const [kindFilter, setKindFilter] = useState<KindFilter>("all");
   useEffect(() => { listSurveys(token).then((r) => { setSurveys(r.surveys); setFailed(false); }).catch(() => setFailed(true)); }, [token]);
   // בתוך הטמעה: המעבר בין הסקרים נשאר בחלון המוטמע
   const embed = isEmbed();
@@ -52,14 +58,19 @@ export default function SurveysScreen() {
   }, [surveys, token]);
 
   // "הניחושים" — סקר שהסתיים (הכרעת בעלים 01.11.2026): הניחוש של 120 המנדטים, שנסגר עם סגירת הקלפיות
-  const guesses = filter !== "open";
-  const shown = (surveys ?? []).filter((s) => filter === "all" || (filter === "open" ? s.status !== "closed" : s.status === "closed"));
+  const guesses = filter !== "open" && kindFilter !== "survey";
+  const shown = (surveys ?? []).filter((s) => (filter === "all" || (filter === "open" ? s.status !== "closed" : s.status === "closed")) && (kindFilter === "all" || s.kind === kindFilter));
   const [lead, ...rest] = shown;
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
       <h1 className="text-[28px] font-display leading-tight pt-1">כל הסקרים</h1>
-      <div className="f-seg fit" role="radiogroup" aria-label="סינון">
-        {FILTERS.map(([k, l]) => <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}>{l}</button>)}
+      <div className="flex flex-wrap gap-2">
+        <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
+          {FILTERS.map(([k, l]) => <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}>{l}</button>)}
+        </div>
+        <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סוג">
+          {KIND_FILTERS.map(([k, l]) => <button key={k} type="button" aria-pressed={kindFilter === k} onClick={() => setKindFilter(k)}>{l}</button>)}
+        </div>
       </div>
       {failed && <p className="text-ink-soft">רשימת הסקרים אינה זמינה כרגע.</p>}
       {!failed && !surveys && <p className="text-ink-soft">טוען…</p>}
@@ -73,11 +84,11 @@ export default function SurveysScreen() {
       {lead && (
         <Link to={to(lead.id)} className="block f-card !border-[1.5px] !border-signal no-underline text-ink">
           <div className="flex items-center gap-2 mb-1.5 text-xs">
-            {lead.status === "draft" ? <span className="font-bold px-2 py-0.5 rounded-full bg-[rgb(var(--grid))] text-ink-soft">טיוטה</span> : lead.status === "closed" ? <span className="font-bold px-2 py-0.5 rounded-full bg-[rgb(var(--grid))] text-ink-soft">נסגר</span> : <span className="font-bold px-2 py-0.5 rounded-full bg-signal text-signal-ink">פתוח</span>}
-            <span className="text-ink-soft">{lead.questions.length} שאלות</span>
+            <span className={`font-bold px-2 py-0.5 rounded-full ${lead.status === "open" ? "bg-signal text-signal-ink" : "bg-[rgb(var(--grid))] text-ink-soft"}`}>{statusText(lead)}</span>
+            <span className="text-ink-soft">{lead.kind === "guess" ? "ניחוש" : "סקר"}{lead.questions.length > 1 ? ` · ${lead.questions.length} שאלות` : ""}</span>
           </div>
           <div className="text-[22px] font-display mb-2">{lead.title}</div>
-          <ul className="text-sm text-ink-soft list-disc pr-5 mb-3 space-y-0.5">{lead.questions.map((q) => <li key={q.id}>{q.title}</li>)}</ul>
+          {lead.questions.length > 1 && <ul className="text-sm text-ink-soft list-disc pr-5 mb-3 space-y-0.5">{lead.questions.map((q) => <li key={q.id}>{q.title}</li>)}</ul>}
           <span className="f-btn pri">{lead.answered ? "לעדכן תשובות" : lead.status === "open" && lead.canAnswer ? "להשתתף" : "לצפייה"}</span>
           {lead.answered && <span className="text-sm text-ink-soft ms-3">ענית ✓</span>}
           {details[lead.id] && <MiniResults detail={details[lead.id]} />}
@@ -100,7 +111,7 @@ export default function SurveysScreen() {
             <li key={s.id}>
               <Link to={to(s.id)} className="block px-4 py-3.5 no-underline text-ink">
                 <span className="flex items-center gap-3">
-                  <span className="flex-1 min-w-0"><span className="block font-bold">{s.title}</span><span className="block text-[12.5px] text-ink-soft">{s.questions.length} שאלות · {s.status === "open" ? "פתוח" : s.status === "closed" ? "נסגר" : "טיוטה"}</span></span>
+                  <span className="flex-1 min-w-0"><span className="block font-bold">{s.title}</span><span className="block text-[12.5px] text-ink-soft">{s.kind === "guess" ? "ניחוש" : "סקר"} · {statusText(s)}</span></span>
                   {s.answered && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-signal">ענית ✓</span>}
                 </span>
                 {details[s.id] && <MiniResults detail={details[s.id]} />}

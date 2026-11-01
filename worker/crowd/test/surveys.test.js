@@ -34,14 +34,15 @@ async function member(email, group = G) {
   env.DB.raw.prepare("INSERT INTO group_members (group_id, email_hash) VALUES (?, ?)").run(group, await emailHash(env, email));
   return token;
 }
-const setOutside = (outside) => call("/survey/manage", { admin: true, body: { group: G, id: "gov", outside } });
+const setOutside = (outside, id = "reelect") => call("/survey/manage", { admin: true, body: { group: G, id, outside } });
+const setSettings = (body, id = "reelect") => call("/survey/manage", { admin: true, body: { group: G, id, ...body } });
 async function manager(email, group = G) {
   const token = await account(email);
   env.DB.raw.prepare("INSERT INTO group_managers (group_id, email_hash, added_at) VALUES (?, ?, 't')").run(group, await emailHash(env, email));
   return token;
 }
 const op = () => `op-${String(++opN).padStart(6, "0")}`;
-const answer = (token, answers, survey = "gov") => call("/survey/answer", { token, body: { survey, op: op(), answers } });
+const answer = (token, answers, survey = "reelect") => call("/survey/answer", { token, body: { survey, op: op(), answers } });
 
 describe("survey definitions and answers (pure)", () => {
   const def = cleanDefinition({ title: "ס", questions: [
@@ -77,33 +78,30 @@ describe("survey definitions and answers (pure)", () => {
 });
 
 describe("site surveys over the worker", () => {
-  it("lists the seeded survey to members, and to outsiders only when allowed", async () => {
-    // ברירת מחדל: מחוץ לגזרה — לא רואים
+  it("the government survey is split into three; members see all, outsiders nothing by default", async () => {
     expect((await call("/surveys")).data.surveys).toEqual([]);
-    expect((await call("/survey?id=gov")).status).toBe(404);
+    expect((await call("/survey?id=reelect")).status).toBe(404);
     const m = await member("in@x.co");
     const r = await call("/surveys", { token: m });
-    expect(r.data.surveys.map((s) => s.id)).toEqual(["gov"]);
-    expect(r.data.surveys[0].canAnswer).toBe(true);
-    expect(r.data.surveys[0].questions.map((q) => q.id)).toEqual(["reelect", "first", "coalition"]);
-    expect(r.data.surveys[0].questions[2].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
+    expect(r.data.surveys.map((s) => s.id)).toEqual(["gov", "reelect", "president"]);
+    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["coalition"], ["reelect"], ["first"]]);
+    expect(r.data.surveys[0].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
+    expect(r.data.surveys[1]).toMatchObject({ canAnswer: true, kind: "survey", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
   });
 
-  it("outsiders: view shows survey and results without answering; answer lets them take part", async () => {
+  it("outsiders: view shows survey without answering; answer lets them take part", async () => {
     const out = await account("out@x.co");
     expect((await answer(out, { reelect: "yes" })).status).toBe(403);
     expect((await setOutside("view")).status).toBe(200);
-    const v = await call("/survey?id=gov", { token: out });
+    const v = await call("/survey?id=reelect", { token: out });
     expect(v.data.access.canAnswer).toBe(false);
-    expect(v.data.results.all.hidden).toBe(true);
     expect((await answer(out, { reelect: "yes" })).status).toBe(403);
-    expect((await call("/surveys")).data.surveys.map((s) => s.id)).toEqual(["gov"]);
     await setOutside("answer");
-    expect((await call("/survey?id=gov", { token: out })).data.results).toBeNull();
+    expect((await call("/survey?id=reelect", { token: out })).data.results).toBeNull();
     expect((await answer(out, { reelect: "yes" })).status).toBe(200);
-    expect((await call("/survey?id=gov", { token: out })).data.results.all.n).toBe(1);
+    expect((await call("/survey?id=reelect", { token: out })).data.results.all.n).toBe(1);
     await setOutside("none");
-    expect((await call("/survey?id=gov", { token: out })).status).toBe(404);
+    expect((await call("/survey?id=reelect", { token: out })).status).toBe(404);
     expect((await setOutside("everyone")).status).toBe(400);
   });
 
@@ -111,46 +109,99 @@ describe("site surveys over the worker", () => {
     const token = await member("a@x.co");
     expect((await answer(token, { reelect: "no" })).status).toBe(200);
     t += 60_000;
-    expect((await answer(token, { reelect: "yes", first: "netanyahu", coalition: { likud: "coalition", raam: "abstain" } })).status).toBe(200);
+    expect((await answer(token, { reelect: "yes" })).status).toBe(200);
+    expect((await answer(token, { coalition: { likud: "coalition", raam: { abstain: 3 } } }, "gov")).status).toBe(200);
     const h = await call("/survey/history", { token });
-    expect(h.data.answers.map((a) => a.answers.reelect)).toEqual(["yes", "no"]);
-    expect(h.data.surveys.map((s) => s.id)).toEqual(["gov"]);
-    const s = await call("/survey?id=gov", { token });
-    expect(s.data.mine.answers.first).toBe("netanyahu");
-    expect((await call("/surveys", { token })).data.surveys[0].answered).toBe(true);
+    expect(h.data.answers.filter((a) => a.survey === "reelect").map((a) => a.answers.reelect)).toEqual(["yes", "no"]);
+    expect((await call("/survey?id=reelect", { token })).data.mine.answers.reelect).toBe("yes");
   });
 
   it("does not duplicate a resent answer and rejects invalid ones", async () => {
     const token = await member("b@x.co");
-    const body = { survey: "gov", op: "same-op-123", answers: { reelect: "yes" } };
+    const body = { survey: "reelect", op: "same-op-123", answers: { reelect: "yes" } };
     await call("/survey/answer", { token, body });
     await call("/survey/answer", { token, body });
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM survey_answers").get().n).toBe(1);
     expect((await answer(token, { reelect: "maybe" })).status).toBe(400);
-    expect((await answer(token, { coalition: { likud: "king" } })).status).toBe(400);
-    expect((await call("/survey/answer", { body: { survey: "gov", op: op(), answers: { reelect: "yes" } } })).status).toBe(401);
+    expect((await answer(token, { coalition: { likud: "king" } }, "gov")).status).toBe(400);
+    expect((await call("/survey/answer", { body: { survey: "reelect", op: op(), answers: { reelect: "yes" } } })).status).toBe(401);
   });
 
-  it("hides results below the threshold and publishes them above it", async () => {
+  it("results threshold: default 50, and the manager can set another", async () => {
     const one = await member("c@x.co");
-    // לפני שענית — אין תוצאות
-    expect((await call("/survey?id=gov", { token: one })).data.results).toBeNull();
-    expect((await call("/survey?id=gov")).status).toBe(404);
+    expect((await call("/survey?id=reelect", { token: one })).data.results).toBeNull();
     await answer(one, { reelect: "yes" });
-    let r = await call("/survey?id=gov", { token: one });
+    let r = await call("/survey?id=reelect", { token: one });
     expect(r.data.results.all).toEqual({ n: 1, min: SURVEY_MIN, hidden: true });
-    for (let i = 0; i < SURVEY_MIN; i++) env.DB.raw.prepare("INSERT INTO participants (id, created_at) VALUES (?, 't')").run(`p${i}`);
-    for (let i = 0; i < SURVEY_MIN; i++) env.DB.raw.prepare("INSERT INTO survey_answers (survey, participant, created_at, op_id, payload) VALUES ('gov', ?, 't', ?, ?)").run(`p${i}`, `o${i}`, JSON.stringify({ reelect: i % 2 ? "yes" : "no" }));
-    r = await call("/survey?id=gov", { token: one });
-    expect(r.data.results.all.n).toBe(SURVEY_MIN + 1);
-    expect(r.data.results.all.questions.reelect.counts).toEqual({ yes: SURVEY_MIN / 2 + 1, no: SURVEY_MIN / 2 });
-    // משתתפי הקבוצה: רק חבר אחד ענה ⇐ מתחת לסף
-    expect(r.data.results.group).toEqual({ n: 1, min: SURVEY_MIN, hidden: true });
+    expect((await setSettings({ min_results: 1 })).status).toBe(200);
+    r = await call("/survey?id=reelect", { token: one });
+    expect(r.data.results.all.questions.reelect.counts).toEqual({ yes: 1, no: 0 });
+    expect((await setSettings({ min_results: 0 })).status).toBe(400);
+  });
+
+  it("visibility: everyone now / after close / only who answered", async () => {
+    const m = await member("v@x.co");
+    await setSettings({ min_results: 1 });
+    expect((await call("/survey?id=reelect", { token: m })).data.results).toBeNull();
+    await setSettings({ visibility: "now" });
+    expect((await call("/survey?id=reelect", { token: m })).data.results).not.toBeNull();
+    await setSettings({ visibility: "after_close" });
+    expect((await call("/survey?id=reelect", { token: m })).data.results).toBeNull();
+    await setSettings({ status: "closed" });
+    expect((await call("/survey?id=reelect", { token: m })).data.results).not.toBeNull();
+    expect((await setSettings({ visibility: "sometimes" })).status).toBe(400);
+  });
+
+  it("deadline: after it the survey counts as closed and refuses answers", async () => {
+    const m = await member("dl@x.co");
+    await setSettings({ closes_at: new Date(t + 3600_000).toISOString() });
+    expect((await answer(m, { reelect: "yes" })).status).toBe(200);
+    t += 2 * 3600_000;
+    expect((await answer(m, { reelect: "no" })).status).toBe(403);
+    expect((await call("/survey?id=reelect", { token: m })).data.survey.status).toBe("closed");
+    await setSettings({ closes_at: null });
+    expect((await answer(m, { reelect: "no" })).status).toBe(200);
+  });
+
+  it("guess: the manager sets the true result, shown to viewers", async () => {
+    const m = await member("g1@x.co");
+    await setSettings({ kind: "guess", truth: { reelect: "no" } });
+    const r = await call("/survey?id=reelect", { token: m });
+    expect(r.data.survey).toMatchObject({ kind: "guess", truth: { reelect: "no" } });
+    expect((await setSettings({ truth: { reelect: "maybe" } })).status).toBe(400);
+    expect((await setSettings({ truth: { coalition: {} } }, "gov")).status).toBe(400);
+  });
+
+  it("new surveys: options or range only — no list assignment", async () => {
+    const m = await manager("nm@x.co");
+    const rangeDef = { title: "כמה", questions: [{ id: "r", kind: "range", title: "מ-1 עד 10", min: 1, max: 10, minLabel: "בכלל לא", maxLabel: "מאוד" }] };
+    expect((await call("/survey/manage", { token: m, body: { group: G, id: "scale", def: rangeDef, status: "open" } })).status).toBe(200);
+    const mem = await member("rm@x.co");
+    expect((await answer(mem, { r: 7 }, "scale")).status).toBe(200);
+    expect((await answer(mem, { r: 11 }, "scale")).status).toBe(400);
+    const assignDef = { title: "שיוך", questions: [{ id: "c", kind: "assign", title: "t", items: [{ id: "a", label: "א" }, { id: "b", label: "ב" }], columns: [{ id: "x", label: "x" }, { id: "y", label: "y" }] }] };
+    expect((await call("/survey/manage", { token: m, body: { group: G, id: "assign-new", def: assignDef } })).data.error).toBe("assign_not_allowed");
+    // בסקר "הרכבת הממשלה" — עריכת שאלת השיוך הקיימת מותרת
+    const gov = (await call("/survey?id=gov", { token: m })).data.survey;
+    expect((await call("/survey/manage", { token: m, body: { group: G, id: "gov", def: { title: gov.title, questions: gov.questions } } })).status).toBe(200);
+  });
+
+  it("stats for managers: views, viewers, embed, saves, savers, members, changed", async () => {
+    const m = await manager("st@x.co");
+    const a = await member("s1@x.co");
+    await call("/survey/view", { token: a, body: { survey: "reelect" } });
+    await call("/survey/view", { token: a, body: { survey: "reelect" } });
+    await call("/survey/view", { body: { survey: "reelect", embed: true } });
+    await answer(a, { reelect: "yes" }); t += 1000; await answer(a, { reelect: "no" });
+    const s = await call("/survey/stats?id=reelect", { token: m });
+    expect(s.data).toMatchObject({ views: 3, viewers: 2, embedViews: 1, saves: 2, savers: 1, changed: 1, members: 1, outsiders: 0 });
+    expect(s.data.days.length).toBeGreaterThan(0);
+    expect((await call("/survey/stats?id=reelect", { token: a })).status).toBe(403);
   });
 
   it("shows results to a group manager who did not answer", async () => {
     const m = await manager("mr@x.co");
-    expect((await call("/survey?id=gov", { token: m })).data.results.all.hidden).toBe(true);
+    expect((await call("/survey?id=reelect", { token: m })).data.results.all.hidden).toBe(true);
   });
 
   it("gives group managers full control over their group's surveys only", async () => {
@@ -158,30 +209,24 @@ describe("site surveys over the worker", () => {
     const def = { title: "סקר חדש", questions: [{ id: "q", kind: "single", title: "שאלה", options: [{ id: "a", label: "א" }, { id: "b", label: "ב" }] }] };
     let r = await call("/survey/manage", { token: m, body: { group: G, id: "new-one", def } });
     expect(r.data.survey.status).toBe("draft");
-    // טיוטה — גלויה רק למנהל
-    expect((await call("/surveys", { token: await member("g@x.co") })).data.surveys.map((s) => s.id)).toEqual(["gov"]);
+    expect((await call("/surveys", { token: await member("g@x.co") })).data.surveys.map((s) => s.id)).not.toContain("new-one");
     expect((await call("/surveys", { token: m })).data.surveys.map((s) => s.id)).toContain("new-one");
     r = await call("/survey/manage", { token: m, body: { group: G, id: "new-one", status: "open" } });
     expect(r.data.survey.status).toBe("open");
-    // סגירה חוסמת תשובות
-    await call("/survey/manage", { token: m, body: { group: G, id: "gov", status: "closed" } });
+    await call("/survey/manage", { token: m, body: { group: G, id: "reelect", status: "closed" } });
     expect((await answer(await member("d@x.co"), { reelect: "yes" })).status).toBe(403);
-    // מחיקה מחייבת אישור
     expect((await call("/survey/manage", { token: m, body: { group: G, id: "new-one", delete: true } })).status).toBe(400);
     expect((await call("/survey/manage", { token: m, body: { group: G, id: "new-one", delete: true, confirm: "מחק" } })).status).toBe(200);
-    // מנהל של קבוצה אחרת, או משתמש רגיל — לא
     const other = await manager("o@x.co", "other");
     expect((await call("/survey/manage", { token: other, body: { group: "other", id: "gov", status: "open" } })).status).toBe(403);
     expect((await call("/survey/manage", { token: other, body: { group: G, id: "gov", status: "open" } })).status).toBe(403);
     expect((await call("/survey/manage", { token: await account("e@x.co"), body: { group: G, id: "gov", status: "open" } })).status).toBe(403);
-    // מנהל האתר — תמיד
     expect((await call("/survey/manage", { admin: true, body: { group: G, id: "gov", status: "open" } })).data.survey.status).toBe("open");
   });
 
   it("only the site admin can remove a group manager", async () => {
     const m = await manager("m2@x.co");
     const handle = await emailHash(env, "m2@x.co");
-    // אין נתיב שבו מנהל קבוצה מסיר מנהל; נתיב ההסרה דורש מנהל אתר
     expect((await call("/admin/groups/managers", { token: m, body: { group: G, remove: true, handle } })).status).toBe(401);
     expect((await call("/admin/groups/managers", { admin: true, body: { group: G, remove: true, handle } })).status).toBe(200);
     expect(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM group_managers WHERE group_id = ?").get(G).n).toBe(0);

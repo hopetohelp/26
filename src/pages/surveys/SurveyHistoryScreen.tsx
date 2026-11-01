@@ -24,7 +24,7 @@ export default function SurveyHistoryScreen() {
       <h1 className="text-[26px] font-display pt-1">היסטוריית הסקרים שלי</h1>
       {failed && <p className="text-ink-soft">ההיסטוריה אינה זמינה כרגע.</p>}
       {!failed && !data && <p className="text-ink-soft">טוען…</p>}
-      {data && !data.answers.length && <p className="text-ink-soft">עוד לא ענית על סקר. <Link to="/surveys" className="text-accent">לכל הסקרים</Link></p>}
+      {data && !data.answers.length && <div className="space-y-2"><p className="text-ink-soft">עוד לא ענית על סקר.</p><Link to="/surveys" className="f-btn">לכל הסקרים</Link></div>}
       {data?.surveys.map((s) => s.questions.map((q) => {
         // ציר הזמן של השאלה: רק השמירות שבהן נענתה, ורק כשהתשובה השתנתה מהשמירה הקודמת
         const rows = data.answers.filter((a) => a.survey === s.id && a.answers[q.id] !== undefined).reverse()
@@ -32,7 +32,7 @@ export default function SurveyHistoryScreen() {
         if (!rows.length) return null;
         return (
           <section key={`${s.id}-${q.id}`} className="f-card">
-            <div className="text-[11.5px] text-ink-soft"><Link to={`/s/${s.id}`} className="text-ink-soft">{s.title}</Link></div>
+            <div className="flex items-center justify-between gap-2"><span className="text-[11.5px] text-ink-soft">{s.title}</span><Link to={`/s/${s.id}`} className="f-btn !min-h-[32px] !text-xs">לסקר</Link></div>
             <h2 className="text-base font-bold mt-0.5 mb-2.5">{q.title}</h2>
             <ol className="list-none m-0 p-0 border-r-2 border-paper-line mr-1.5">
               {rows.map((a, i) => {
@@ -56,6 +56,7 @@ export default function SurveyHistoryScreen() {
 /** התשובה במילים: בחירה ⇐ שם האפשרות; שיוך ⇐ מנדטי העמודה הראשונה ושמות הרשימות בה */
 function describe(q: SurveyQuestion, v: unknown): { main: string; detail?: string } {
   if (q.kind === "single") return { main: q.options.find((o) => o.id === v)?.label ?? "—" };
+  if (q.kind === "range") return { main: String(v) };
   const ans = v as Record<string, AssignValue>;
   const first = q.columns[0];
   const seats = columnSeats(q, ans)[first.id] ?? 0;
