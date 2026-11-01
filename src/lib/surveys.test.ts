@@ -42,3 +42,19 @@ describe("party split and election promises", () => {
     expect(brokenPromises({ b: "coalition" }, "coalition", list)).toEqual([]);
   });
 });
+
+describe("promise kinds: with and topic", () => {
+  const base = { speaker: "ר", quote: "ק", date: "1.10.2026", source: "https://example.org", sourceName: "מקור" };
+  it("with — broken when the required partner is out", () => {
+    const list: ElectionPromise[] = [{ ...base, id: "w", party: "a", with: ["b"] }];
+    expect(brokenPromises({ a: "coalition" }, "coalition", list).map((p) => p.id)).toEqual(["w"]);
+    expect(brokenPromises({ a: "coalition", b: "coalition" }, "coalition", list)).toEqual([]);
+    expect(brokenPromises({ b: "coalition" }, "coalition", list)).toEqual([]);
+  });
+  it("topic — both sides break when opposite stances sit together", () => {
+    const list: ElectionPromise[] = [{ ...base, id: "x", party: "a", topic: "draft", side: "exempt" }, { ...base, id: "y", party: "b", topic: "draft", side: "serve" }, { ...base, id: "z", party: "c", topic: "draft", side: "serve" }];
+    expect(brokenPromises({ a: "coalition", b: "opposition" }, "coalition", list)).toEqual([]);
+    expect(brokenPromises({ b: "coalition", c: "coalition" }, "coalition", list)).toEqual([]);
+    expect(brokenPromises({ a: "coalition", b: "coalition" }, "coalition", list).map((p) => p.id)).toEqual(["x", "y"]);
+  });
+});

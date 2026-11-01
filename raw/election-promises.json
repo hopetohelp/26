@@ -1,4 +1,9 @@
 {
-  "about": "הבטחות בחירות 2026 לצירופים בהרכבת הממשלה (הכרעת בעלים 01.11.2026). כל רשומה — ציטוט מילולי עם מקור (כתבה ותאריך), באישור הבעלים לפני פרסום. never = מזהי הרשימות שהאומר הבטיח לא לשבת איתן בקואליציה.",
-  "promises": []
+  "about": "הבטחות בחירות 2026 לצירופים בהרכבת הממשלה (הכרעת בעלים 01.11.2026). כל רשומה — ציטוט מילולי עם מקור (כתבה ותאריך), באישור הבעלים לפני פרסום. never = רשימות שהאומר הבטיח לא לשבת איתן בקואליציה; with = רשימה שהבטיח לשבת איתה; topic/side = עמדה בנושא, נשברת מול עמדה נגדית באותה קואליציה. הסימון על הליכוד בהבטחות על נתניהו אישית — הכרעת בעלים: על כל צירוף עם הליכוד.",
+  "promises": [
+    { "id": "liberman-four", "party": "yb", "speaker": "אביגדור ליברמן", "role": "יו\"ר ישראל ביתנו", "quote": "לא נשב עם ביבי ולא עם טיבי, לא עם גולדקנופף ולא עם דרעי.", "date": "29.10.2026", "source": "https://ynet.co.il/news/elections2026/article/b1nl11ceazg", "sourceName": "ynet (פוסט בפייסבוק)", "never": ["likud", "joint", "utj", "shas"] },
+    { "id": "eisenkot-netanyahu", "party": "yashar", "speaker": "גדי איזנקוט", "role": "יו\"ר ישר!", "quote": "לא אשב תחת נתניהו גם לא ברוטציה", "date": "21.10.2026", "source": "https://www.davar1.co.il/702919/", "sourceName": "דבר (ראיון רדיו)", "never": ["likud"] },
+    { "id": "bennett-netanyahu", "party": "together", "speaker": "נפתלי בנט", "role": "יו\"ר ביחד", "quote": "ברור שלא. אני הולך להחליף אותו. חייבים להחליף את נתניהו.", "date": "3.7.2026", "source": "https://www.ynet.co.il/news/120andone/article/s100tqclqmg", "sourceName": "ynet, \"120 ואחת\"", "never": ["likud"] },
+    { "id": "golan-partners", "party": "democrats", "speaker": "יאיר גולן", "role": "יו\"ר הדמוקרטים", "quote": "עם נתניהו ושותפיו לא נשב. נקודה.", "date": "11.10.2026", "source": "https://www.srugim.co.il/101013182", "sourceName": "סרוגים", "never": ["likud", "shas", "utj", "otzma", "rzp"] }
+  ]
 }

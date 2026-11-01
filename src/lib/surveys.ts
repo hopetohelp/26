@@ -60,13 +60,21 @@ export const inColumn = (v: AssignValue | undefined, col: string) => typeof v ==
 
 /**
  * הבטחות בחירות (הכרעת בעלים 01.11.2026): צירוף שסותר הבטחה מפורשת מציג את האומר, הציטוט והמקור, וכפתור "להפר הבטחת בחירות".
- * רק ציטוט עם מקור מתועד, באישור הבעלים (raw/election-promises.json); אין ציטוט בלי מקור.
+ * רק ציטוט מילולי עם מקור מתועד, באישור הבעלים (raw/election-promises.json). שלושה סוגים:
+ * never — לא לשבת עם רשימות מסוימות; with — לשבת רק יחד עם רשימה מסוימת; topic — עמדה בנושא (למשל גיוס), שנשברת כשבקואליציה יושבת רשימה שהתחייבה לעמדה הנגדית.
  */
-export interface ElectionPromise { id: string; party: string; speaker: string; role?: string; quote: string; date: string; source: string; sourceName: string; never: string[] }
+export interface ElectionPromise { id: string; party: string; speaker: string; role?: string; quote: string; date: string; source: string; sourceName: string; never?: string[]; with?: string[]; topic?: string; side?: string }
 export const PROMISES = (promisesFile as { promises: ElectionPromise[] }).promises;
-/** ההבטחות שהשיוך מפר: הסיעה בעמודת הקואליציה יחד עם סיעה שהבטיחה לא לשבת איתה */
+/** ההבטחות שהשיוך מפר — רק של רשימות שבעמודת הקואליציה */
 export function brokenPromises(answer: Record<string, AssignValue> | undefined, coalition = "coalition", list: ElectionPromise[] = PROMISES): ElectionPromise[] {
-  return list.filter((p) => inColumn(answer?.[p.party], coalition) && p.never.some((x) => inColumn(answer?.[x], coalition)));
+  const inC = (id: string) => inColumn(answer?.[id], coalition);
+  return list.filter((p) => {
+    if (!inC(p.party)) return false;
+    if (p.never?.some(inC)) return true;
+    if (p.with?.some((x) => !inC(x))) return true;
+    if (p.topic) return list.some((q) => q.topic === p.topic && q.side !== p.side && q.party !== p.party && inC(q.party));
+    return false;
+  });
 }
 
 /** רוב בכנסת */
