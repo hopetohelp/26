@@ -442,3 +442,32 @@ CREATE TABLE IF NOT EXISTS podium_names (
   name TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+
+-- סקרי האתר (הכרעת בעלים 01.11.2026: האתר עורך סקרים; docs/תוכנית-אתר-סקרי-הגזרה-01-11-2026.md).
+-- סקר שייך לקבוצה; מנהלי הקבוצה ומנהל האתר יוצרים, עורכים, פותחים, סוגרים ומוחקים. def = הגדרת JSON (lib/surveys.js).
+CREATE TABLE IF NOT EXISTS surveys (
+  id TEXT PRIMARY KEY,
+  group_id TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('draft', 'open', 'closed')),
+  def TEXT NOT NULL,
+  position INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS surveys_group ON surveys(group_id, status);
+-- תשובות: הוספה בלבד — כל שמירה שורה חדשה, כדי שההיסטוריה האישית תציג כל שינוי
+CREATE TABLE IF NOT EXISTS survey_answers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  survey TEXT NOT NULL,
+  participant TEXT NOT NULL REFERENCES participants(id),
+  created_at TEXT NOT NULL,
+  op_id TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  UNIQUE (participant, survey, op_id)
+);
+CREATE INDEX IF NOT EXISTS survey_answers_participant ON survey_answers(participant, survey, id);
+CREATE INDEX IF NOT EXISTS survey_answers_survey ON survey_answers(survey, participant, id);
+-- הסקר הראשון: הרכבת הממשלה (הגזרה). המנדטים לפי הספירה של 30.10 — מנהל יכול לעדכן את ההגדרה.
+INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES ('gov', 'gy7lelpbo', 'open',
+ '{"title":"הרכבת הממשלה","questions":[{"id":"reelect","kind":"single","title":"בחירות חוזרות?","options":[{"id":"yes","label":"כן"},{"id":"no","label":"לא"}]},{"id":"first","kind":"single","title":"על מי יטיל הנשיא את הרכבת הממשלה ראשון?","options":[{"id":"netanyahu","label":"בנימין נתניהו","sub":"הליכוד"},{"id":"eisenkot","label":"גדי איזנקוט","sub":"ישר!"}]},{"id":"coalition","kind":"assign","title":"מי בקואליציה, מי נמנע ומי באופוזיציה?","items":[{"id":"likud","label":"הליכוד","seats":27},{"id":"yashar","label":"ישר!","seats":21},{"id":"together","label":"ביחד","seats":12},{"id":"joint","label":"הרשימה המשותפת","seats":11},{"id":"democrats","label":"הדמוקרטים","seats":8},{"id":"raam","label":"רע\"ם","seats":8},{"id":"utj","label":"יהדות התורה","seats":7},{"id":"yb","label":"ישראל ביתנו","seats":7},{"id":"otzma","label":"עוצמה יהודית","seats":7},{"id":"shas","label":"ש\"ס","seats":6},{"id":"rzp","label":"הציונות הדתית","seats":6}],"columns":[{"id":"coalition","label":"קואליציה"},{"id":"abstain","label":"נמנעים"},{"id":"opposition","label":"אופוזיציה"}]}]}',
+ 0, '2026-11-01T00:00:00Z', '2026-11-01T00:00:00Z');

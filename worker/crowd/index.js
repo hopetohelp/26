@@ -16,6 +16,7 @@ import { allowedOrigin, returnSiteUrl } from "../shared/origins.js";
  */
 import { randomToken, sha256, hmac, hashPassword, verifyPassword, PBKDF2_ITERATIONS } from "./lib/crypto.js";
 import { verifyGoogle } from "./lib/google.js";
+import { SURVEY_ID, SURVEY_STATUS, SURVEY_MIN, cleanDefinition, cleanAnswers, tally } from "./lib/surveys.js";
 import { bearer, authenticate, newSession, isClientToken, ipKeys, hit, waitMs, recordFail, clearFails, HOUR } from "./lib/auth.js";
 import { validateSave, validateCamps, validateLineage, UNITS, normalizeUsername, passwordProblem } from "./lib/validate.js";
 import { aggregate, HOURLY, DAILY, DASHBOARD_POLICY } from "./lib/aggregate.js";
@@ -671,6 +672,34 @@ async function requireManager(env, request, now, raw) {
   return id;
 }
 
+/** סקרי האתר: מי רשאי לנהל סקר של קבוצה — מנהל האתר (מפתח או חשבון מנהל) או מנהל הקבוצה (הכרעת בעלים 01.11.2026: שליטה מלאה למנהלי הקבוצה) */
+async function requireSurveyManager(env, request, now, raw) {
+  const id = groupId(raw);
+  if (request.headers.get("x-admin-key")) { await requireAdmin(env, request); return id; }
+  return requireManager(env, request, now, id);
+}
+function surveyId(v) {
+  if (typeof v !== "string" || !SURVEY_ID.test(v)) throw bad("survey");
+  return v;
+}
+/** הסשן אם יש (בלי חובה) — רשימת הסקרים ותוצאותיהם פתוחות לכולם */
+async function optionalAuth(env, request, now) {
+  const t = bearer(request);
+  return t ? authenticate(env, t, now) : null;
+}
+const surveyRow = (r) => ({ id: r.id, group: r.group_id, status: r.status, position: r.position, updatedAt: r.updated_at, ...JSON.parse(r.def) });
+/** התשובה האחרונה של כל משתתף בסקר, ולפי בקשה רק חברי קבוצה */
+async function latestSurveyAnswers(env, survey, group) {
+  const members = group ? `AND a.participant IN (SELECT participant FROM (${groupParticipants({ group: "?2" })}))` : "";
+  const stmt = env.DB.prepare(`SELECT a.payload FROM survey_answers a JOIN (SELECT participant, MAX(id) AS id FROM survey_answers WHERE survey = ?1 GROUP BY participant) m ON a.id = m.id WHERE 1 ${members}`);
+  const { results } = await (group ? stmt.bind(survey, group) : stmt.bind(survey)).all();
+  return (results || []).map((r) => JSON.parse(r.payload));
+}
+/** תוצאות מתחת לסף אינן מפורסמות — רק מספר המשתתפים */
+function surveyResults(def, latest) {
+  return latest.length < SURVEY_MIN ? { n: latest.length, min: SURVEY_MIN, hidden: true } : { n: latest.length, questions: tally(def, latest) };
+}
+
 /** הגבלת קצב לנתיבים הציבוריים של הקישור (לפי IP) */
 async function limitGroupPublic(env, request, now) {
   const [cur] = await ipKeys(env, request);
@@ -1132,6 +1161,8 @@ const routes = {
       env.DB.prepare("DELETE FROM version_accepted_v2 WHERE version_id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       env.DB.prepare("DELETE FROM versions WHERE participant = ?").bind(participant),
+      // גם תשובות סקרי האתר — "מחק הכל" מנקה את כל ההיסטוריה האישית
+      env.DB.prepare("DELETE FROM survey_answers WHERE participant = ?").bind(participant),
       env.DB.prepare("UPDATE participant_activity SET pruned = 0 WHERE participant = ?").bind(participant),
     ]);
     return { ok: true };
@@ -1177,7 +1208,7 @@ const routes = {
         env.DB.prepare("DELETE FROM bloc_migration_backup WHERE kind = 'version' AND id IN (SELECT id FROM versions WHERE participant = ?)").bind(participant),
       ]
         .concat(
-          ["versions", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads", "video_makers", "video_events"].map((t) =>
+          ["versions", "survey_answers", "participant_activity", "participant_visits", "credentials", "sessions", "agent_sessions", "prefs", "lineage_prefs", "data_source_prefs", "privacy_consents", "emails", "profile", "email_verify", "password_reset", "password_reset_email", "admins", "support_messages", "support_threads", "video_makers", "video_events"].map((t) =>
             env.DB.prepare(`DELETE FROM ${t} WHERE participant = ?`).bind(participant),
           ),
         )
@@ -1936,6 +1967,79 @@ const routes = {
   },
 
   // קריאה בלבד לצורך העברה לשרת ההערות; רק בעל הסשן מקבל את ההיסטוריה שלו.
+  // ===== סקרי האתר (הכרעת בעלים 01.11.2026) =====
+  // רשימת הסקרים: פתוחים וסגורים לכולם; טיוטות — רק למנהלי הקבוצה שלהן. למחובר — האם ענה.
+  "GET /surveys": async ({ env, request, now }) => {
+    const a = await optionalAuth(env, request, now);
+    const managed = a ? (await managedGroups(env, a.participant)).map((g) => g.id) : [];
+    const { results } = await env.DB.prepare("SELECT * FROM surveys ORDER BY position, created_at DESC").all();
+    const answered = a ? new Set(((await env.DB.prepare("SELECT DISTINCT survey FROM survey_answers WHERE participant = ?").bind(a.participant).all()).results || []).map((r) => r.survey)) : new Set();
+    return { surveys: (results || []).filter((r) => r.status !== "draft" || managed.includes(r.group_id)).map((r) => ({ ...surveyRow(r), answered: answered.has(r.id), manage: managed.includes(r.group_id) })) };
+  },
+
+  // סקר אחד: ההגדרה, התוצאות (כל המשתתפים ומשתתפי הקבוצה, מעל הסף) והתשובה האחרונה שלי
+  "GET /survey": async ({ env, request, now, url }) => {
+    const id = surveyId(url.searchParams.get("id"));
+    const r = await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first();
+    const a = await optionalAuth(env, request, now);
+    if (!r || (r.status === "draft" && !(a && (await managedGroups(env, a.participant)).some((g) => g.id === r.group_id)))) throw new HttpError(404, "not_found");
+    const survey = surveyRow(r);
+    const mine = a ? await env.DB.prepare("SELECT payload, created_at FROM survey_answers WHERE participant = ? AND survey = ? ORDER BY id DESC LIMIT 1").bind(a.participant, id).first() : null;
+    return {
+      survey,
+      results: { all: surveyResults(survey, await latestSurveyAnswers(env, id, null)), group: surveyResults(survey, await latestSurveyAnswers(env, id, r.group_id)) },
+      mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null,
+    };
+  },
+
+  // תשובה: שורה חדשה בכל שמירה (ההיסטוריה נשמרת). op = מזהה פעולה — שליחה חוזרת אינה יוצרת כפילות
+  "POST /survey/answer": async ({ env, request, now, body }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const id = surveyId(body.survey);
+    if (typeof body.op !== "string" || !/^[\w-]{8,64}$/.test(body.op)) throw bad("op");
+    const r = await env.DB.prepare("SELECT status, def FROM surveys WHERE id = ?").bind(id).first();
+    if (!r) throw new HttpError(404, "not_found");
+    if (r.status !== "open") throw new HttpError(403, "survey_closed");
+    const answers = cleanAnswers(JSON.parse(r.def), body.answers);
+    if (!answers) throw bad("answers");
+    await env.DB.prepare("INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload) VALUES (?, ?, ?, ?, ?)").bind(id, participant, iso(now), body.op, JSON.stringify(answers)).run();
+    return { ok: true, at: iso(now) };
+  },
+
+  // ההיסטוריה האישית: כל התשובות לכל הסקרים, מהחדשה לישנה, עם ההגדרות לתצוגה לפי שאלה
+  "GET /survey/history": async ({ env, request, now }) => {
+    const { participant } = await requireAuth(env, request, now);
+    const rows = (await env.DB.prepare("SELECT survey, payload, created_at FROM survey_answers WHERE participant = ? ORDER BY id DESC LIMIT 1000").bind(participant).all()).results || [];
+    const ids = [...new Set(rows.map((x) => x.survey))];
+    const defs = ids.length ? (await env.DB.prepare(`SELECT * FROM surveys WHERE id IN (${ids.map(() => "?").join(",")})`).bind(...ids).all()).results || [] : [];
+    return { surveys: defs.map(surveyRow), answers: rows.map((x) => ({ survey: x.survey, at: x.created_at, answers: JSON.parse(x.payload) })) };
+  },
+
+  // ניהול: יצירה, עריכה, פתיחה/סגירה, סדר ומחיקה — מנהלי הקבוצה ומנהל האתר
+  "POST /survey/manage": async ({ env, request, now, body }) => {
+    const group = await requireSurveyManager(env, request, now, body.group);
+    const id = surveyId(body.id);
+    const cur = await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first();
+    if (cur && cur.group_id !== group) throw new HttpError(403, "not_manager");
+    if (body.delete === true) {
+      if (!cur) throw new HttpError(404, "not_found");
+      if (body.confirm !== "מחק") throw bad("confirm");
+      await env.DB.batch([env.DB.prepare("DELETE FROM survey_answers WHERE survey = ?").bind(id), env.DB.prepare("DELETE FROM surveys WHERE id = ?").bind(id)]);
+      return { ok: true, deleted: id };
+    }
+    const def = body.def === undefined ? null : cleanDefinition(body.def);
+    if (body.def !== undefined && !def) throw bad("def");
+    if (!cur && !def) throw bad("def");
+    const status = body.status ?? cur?.status ?? "draft";
+    if (!SURVEY_STATUS.has(status)) throw bad("status");
+    const position = body.position ?? cur?.position ?? 0;
+    if (!Number.isInteger(position) || position < 0 || position > 9999) throw bad("position");
+    const json = def ? JSON.stringify(def) : cur.def;
+    if (cur) await env.DB.prepare("UPDATE surveys SET def = ?, status = ?, position = ?, updated_at = ? WHERE id = ?").bind(json, status, position, iso(now), id).run();
+    else await env.DB.prepare("INSERT INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)").bind(id, group, status, json, position, iso(now), iso(now)).run();
+    return { survey: surveyRow(await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first()) };
+  },
+
   "GET /support/access": async ({ env, request, now }) => {
     const { participant, agent, client } = await requireAuth(env, request, now);
     const thread = await env.DB.prepare("SELECT status, created_at, updated_at FROM support_threads WHERE participant = ?").bind(participant).first();
