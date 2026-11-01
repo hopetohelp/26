@@ -1,9 +1,202 @@
 {
-  "about": "הבטחות בחירות 2026 לצירופים בהרכבת הממשלה (הכרעת בעלים 01.11.2026). כל רשומה — ציטוט מילולי עם מקור (כתבה ותאריך), באישור הבעלים לפני פרסום. never = רשימות שהאומר הבטיח לא לשבת איתן בקואליציה; with = רשימה שהבטיח לשבת איתה; topic/side = עמדה בנושא, נשברת מול עמדה נגדית באותה קואליציה. הסימון על הליכוד בהבטחות על נתניהו אישית — הכרעת בעלים: על כל צירוף עם הליכוד.",
-  "promises": [
-    { "id": "liberman-four", "party": "yb", "speaker": "אביגדור ליברמן", "role": "יו\"ר ישראל ביתנו", "quote": "לא נשב עם ביבי ולא עם טיבי, לא עם גולדקנופף ולא עם דרעי.", "date": "29.10.2026", "source": "https://ynet.co.il/news/elections2026/article/b1nl11ceazg", "sourceName": "ynet (פוסט בפייסבוק)", "never": ["likud", "joint", "utj", "shas"] },
-    { "id": "eisenkot-netanyahu", "party": "yashar", "speaker": "גדי איזנקוט", "role": "יו\"ר ישר!", "quote": "לא אשב תחת נתניהו גם לא ברוטציה", "date": "21.10.2026", "source": "https://www.davar1.co.il/702919/", "sourceName": "דבר (ראיון רדיו)", "never": ["likud"] },
-    { "id": "bennett-netanyahu", "party": "together", "speaker": "נפתלי בנט", "role": "יו\"ר ביחד", "quote": "ברור שלא. אני הולך להחליף אותו. חייבים להחליף את נתניהו.", "date": "3.7.2026", "source": "https://www.ynet.co.il/news/120andone/article/s100tqclqmg", "sourceName": "ynet, \"120 ואחת\"", "never": ["likud"] },
-    { "id": "golan-partners", "party": "democrats", "speaker": "יאיר גולן", "role": "יו\"ר הדמוקרטים", "quote": "עם נתניהו ושותפיו לא נשב. נקודה.", "date": "11.10.2026", "source": "https://www.srugim.co.il/101013182", "sourceName": "סרוגים", "never": ["likud", "shas", "utj", "otzma", "rzp"] }
-  ]
+ "about": "הבטחות בחירות 2026 לצירופים בהרכבת הממשלה (הכרעת בעלים 01.11.2026). כל רשומה — ציטוט מילולי עם מקור (כתבה ותאריך), באישור הבעלים לפני פרסום. never = רשימות שהאומר הבטיח לא לשבת איתן בקואליציה; with = רשימה שהבטיח לשבת איתה; topic/side = עמדה בנושא, נשברת מול עמדה נגדית באותה קואליציה. הסימון על הליכוד בהבטחות על נתניהו אישית — הכרעת בעלים: על כל צירוף עם הליכוד. כל 15 הציטוטים אושרו (הבעלים, 01.11.2026). הבטחת 'רק עם' נבדקת בשמירה.",
+ "promises": [
+  {
+   "id": "liberman-four",
+   "party": "yb",
+   "speaker": "אביגדור ליברמן",
+   "role": "יו\"ר ישראל ביתנו",
+   "quote": "לא נשב עם ביבי ולא עם טיבי, לא עם גולדקנופף ולא עם דרעי.",
+   "date": "29.10.2026",
+   "source": "https://ynet.co.il/news/elections2026/article/b1nl11ceazg",
+   "sourceName": "ynet (פוסט בפייסבוק)",
+   "never": [
+    "likud",
+    "joint",
+    "utj",
+    "shas"
+   ]
+  },
+  {
+   "id": "eisenkot-netanyahu",
+   "party": "yashar",
+   "speaker": "גדי איזנקוט",
+   "role": "יו\"ר ישר!",
+   "quote": "לא אשב תחת נתניהו גם לא ברוטציה",
+   "date": "21.10.2026",
+   "source": "https://www.davar1.co.il/702919/",
+   "sourceName": "דבר (ראיון רדיו)",
+   "never": [
+    "likud"
+   ]
+  },
+  {
+   "id": "bennett-netanyahu",
+   "party": "together",
+   "speaker": "נפתלי בנט",
+   "role": "יו\"ר ביחד",
+   "quote": "ברור שלא. אני הולך להחליף אותו. חייבים להחליף את נתניהו.",
+   "date": "3.7.2026",
+   "source": "https://www.ynet.co.il/news/120andone/article/s100tqclqmg",
+   "sourceName": "ynet, \"120 ואחת\"",
+   "never": [
+    "likud"
+   ]
+  },
+  {
+   "id": "golan-partners",
+   "party": "democrats",
+   "speaker": "יאיר גולן",
+   "role": "יו\"ר הדמוקרטים",
+   "quote": "עם נתניהו ושותפיו לא נשב. נקודה.",
+   "date": "11.10.2026",
+   "source": "https://www.srugim.co.il/101013182",
+   "sourceName": "סרוגים",
+   "never": [
+    "likud",
+    "shas",
+    "utj",
+    "otzma",
+    "rzp"
+   ]
+  },
+  {
+   "id": "bennett-arabs",
+   "party": "together",
+   "speaker": "נפתלי בנט",
+   "role": "יו\"ר ביחד",
+   "quote": "המפלגות הערביות לא ציוניות ולא נסתמך עליהן",
+   "date": "26.4.2026",
+   "source": "https://www.ynet.co.il/news/article/bjev03jpwl",
+   "sourceName": "ynet (מסיבת עיתונאים עם לפיד)",
+   "never": [
+    "joint",
+    "raam"
+   ]
+  },
+  {
+   "id": "netanyahu-arabs",
+   "party": "likud",
+   "speaker": "בנימין נתניהו",
+   "role": "יו\"ר הליכוד",
+   "quote": "ממשלה עם הערבים? זו בושה",
+   "date": "28.10.2026",
+   "source": "https://www.ynet.co.il/news/elections2026/article/bjwj83r2zg",
+   "sourceName": "ynet (נאום בבנייני האומה)",
+   "never": [
+    "joint",
+    "raam"
+   ]
+  },
+  {
+   "id": "netanyahu-bengvir",
+   "party": "likud",
+   "speaker": "בנימין נתניהו",
+   "role": "יו\"ר הליכוד",
+   "quote": "אל תקנו את הספין – הוא יהיה שר בכיר אצלנו",
+   "date": "19.10.2026",
+   "source": "https://www.davar1.co.il/702657/",
+   "sourceName": "דבר (סיור בחירות; על בן גביר)",
+   "with": [
+    "otzma"
+   ]
+  },
+  {
+   "id": "bennett-bengvir",
+   "party": "together",
+   "speaker": "נפתלי בנט",
+   "role": "יו\"ר ביחד",
+   "quote": "היום בן גביר מפרק את מדינת ישראל, מפרק את המשטרה",
+   "date": "26.3.2026",
+   "source": "https://www.mako.co.il/news-politics/2026_q1/Article-c0bd7d39aab2d91026.htm",
+   "sourceName": "החדשות 12",
+   "never": [
+    "otzma"
+   ]
+  },
+  {
+   "id": "deri-draft",
+   "party": "shas",
+   "speaker": "אריה דרעי",
+   "role": "יו\"ר ש\"ס",
+   "quote": "ש\"ס לא תיכנס לממשלה ולא תאפשר להקים ממשלה בלי לחוקק תחילה את החוק להסדרת מעמדם של לומדי התורה",
+   "date": "7.10.2026",
+   "source": "https://www.kikar.co.il/haredim/deri-shas-government-draft-law-commitment",
+   "sourceName": "כיכר השבת (ביטאון ש\"ס)",
+   "topic": "draft",
+   "side": "exempt"
+  },
+  {
+   "id": "asher-draft",
+   "party": "utj",
+   "speaker": "יעקב אשר",
+   "role": "יהדות התורה",
+   "quote": "לא ניכנס לשום ממשלה שלא תעביר דה-פקטו את חוק הגיוס תחילה",
+   "date": "12.10.2026",
+   "source": "https://www.kikar.co.il/interviews/tms7su",
+   "sourceName": "כיכר השבת",
+   "topic": "draft",
+   "side": "exempt"
+  },
+  {
+   "id": "eisenkot-draft",
+   "party": "yashar",
+   "speaker": "גדי איזנקוט",
+   "role": "יו\"ר ישר!",
+   "quote": "להוקיר ולתגמל עד אין קץ את המשרתים ונוקטת סנקציות חמורות כלפי המשתמטים",
+   "date": "8.10.2026",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-4a2f820efe911a1027.htm",
+   "sourceName": "mako",
+   "topic": "draft",
+   "side": "serve"
+  },
+  {
+   "id": "bennett-draft",
+   "party": "together",
+   "speaker": "נפתלי בנט",
+   "role": "יו\"ר ביחד",
+   "quote": "נוביל חוק שירות לכולם ונפסיק לממן השתמטות אפילו בשקל אחד.",
+   "date": "26.4.2026",
+   "source": "https://www.ynet.co.il/news/article/bjev03jpwl",
+   "sourceName": "ynet",
+   "topic": "draft",
+   "side": "serve"
+  },
+  {
+   "id": "lapid-draft",
+   "party": "together",
+   "speaker": "יאיר לפיד",
+   "role": "ביחד",
+   "quote": "תילחם בשחיתות ותגייס את החרדים",
+   "date": "26.4.2026",
+   "source": "https://www.ynet.co.il/news/article/bjev03jpwl",
+   "sourceName": "ynet (על הממשלה הבאה)",
+   "topic": "draft",
+   "side": "serve"
+  },
+  {
+   "id": "golan-draft",
+   "party": "democrats",
+   "speaker": "יאיר גולן",
+   "role": "יו\"ר הדמוקרטים",
+   "quote": "בממשלה שלנו חוק יסוד: לימוד תורה יבוטל, החרדים יתגייסו ונדאג לשוויון אמיתי בנטל",
+   "date": "יולי 2026",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-4a2f820efe911a1027.htm",
+   "sourceName": "mako",
+   "topic": "draft",
+   "side": "serve"
+  },
+  {
+   "id": "yb-draft",
+   "party": "yb",
+   "speaker": "ישראל ביתנו",
+   "role": "חברי המפלגה",
+   "quote": "מי שלא מתגייס, לא מקבל. נקודה",
+   "date": "אפריל 2026",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-4a2f820efe911a1027.htm",
+   "sourceName": "mako",
+   "topic": "draft",
+   "side": "serve"
+  }
+ ]
 }
