@@ -1,8 +1,8 @@
-import { topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
+import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
 import { switchUser } from "../lib/switchUser";
 
-/** שני סוגי פנייה לצוות האתר (הכרעת בעלים 24.10.2026): שאלה או תאוריה · תקלה או שיפור (נשמר כ-data) */
-const SUPPORT_TOPICS = [{ id: "theory", label: "שאלה או תאוריה" }, { id: "data", label: "תקלה או שיפור" }] as const;
+/** שני סוגי פנייה לצוות האתר (הכרעת בעלים 01.11.2026): תקלה או טעות · שיפור או שאלה — מהמקור האחד ב-feedbackTopics */
+const SUPPORT_TOPICS = FEEDBACK_TOPICS;
 import Linkified from "../components/Linkified";
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
@@ -62,8 +62,8 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [closed, setClosed] = useState(false);
   const [text, setText] = useState("");
-  // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ שאלה או תאוריה, והסמן בשדה הכתיבה
-  const [topic, setTopic] = useState<FeedbackTopic>("theory");
+  // ברירת המחדל: הסוג הראשון (תקלה או טעות); כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ שיפור או שאלה, והסמן בשדה הכתיבה
+  const [topic, setTopic] = useState<FeedbackTopic>(ask ? "theory" : "data");
   useEffect(() => { if (ask) { setTopic("theory"); document.getElementById("support-message")?.focus(); } }, [ask]);
   const maxText = 2000 - topicMessage(topic, "").length;
   const [error, setError] = useState<string | null>(null);
@@ -152,9 +152,9 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
       ) : !closed ? (
         <form className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 z-20 -mx-4 px-4 md:mx-0 md:px-0 border-t border-paper-line bg-paper pt-3 pb-3 md:pb-4 space-y-2" onSubmit={(e) => { e.preventDefault(); void send(); }}>
           <Segmented label="סוג הפנייה" size="sm" value={topic} onChange={setTopic} disabled={busy} options={SUPPORT_TOPICS as unknown as { id: FeedbackTopic; label: string }[]} />
-          {/* בחלק הקבוע מעל שדה הכתיבה; כל מה שנוגע למפתח AI — רק בשאלה או תאוריה */}
+          {/* שורה אחת קבועה מתחת לסוגים (הכרעת בעלים 01.11.2026) */}
           <div className="c-support-guidance">
-            <p className="text-xs text-ink-soft">התשובות מתקבלות פעם בכמה שעות.{topic === "theory" && " שאלו שאלה או כתבו תאוריה על הבחירות. נענה על פי הנתונים ונסביר איך תוכלו לבדוק את זה בעצמכם באתר. אם אין באתר דרך לבדוק, נציע רעיון לשדרוג ונשמח לשמוע גם את שלכם."}</p>
+            <p className="text-xs text-ink-soft">התשובות אינן מיידיות, ייתכן מענה ע״י AI</p>
           </div>
           <div className="flex gap-2 items-end">
             <label htmlFor="support-message" className="sr-only">הודעה לצוות האתר</label>
@@ -183,12 +183,13 @@ export function AiScreen() {
   const [params] = useSearchParams();
   const ask = params.has("ask");
   // ?assistants — הפניה ממסך "ניהול קבוצה" ללשונית עוזרי AI
-  const [tab, setTab] = useState<AiTab>(() => (params.has("assistants") ? "assistants" : params.has("team") ? "team" : key ? "private" : "team"));
+  // ברירת המחדל: מפתח אישי (הכרעת בעלים 01.11.2026); הפניות ישירות (?team, ?assistants) נשארות
+  const [tab, setTab] = useState<AiTab>(() => (params.has("assistants") ? "assistants" : params.has("team") ? "team" : "private"));
   useEffect(() => { if (key && ask) setTab("private"); }, [key, ask]);
   return (
     <div className="flex flex-col min-h-[calc(100dvh-10.5rem)] max-w-3xl w-full mx-auto">
       <h1 className="sr-only">AI</h1>
-      <div className="pt-1 pb-2"><Segmented label="סוג השיחה" value={tab} onChange={setTab} options={[{ id: "private", label: "מפתח אישי" }, { id: "team", label: "צוות האתר" }, { id: "assistants", label: "עוזרי AI" }]} /></div>
+      <div className="pt-1 pb-2"><Segmented label="סוג השיחה" value={tab} onChange={setTab} options={[{ id: "private", label: "מפתח אישי" }, { id: "assistants", label: "עוזרי AI" }, { id: "team", label: "צוות האתר" }]} /></div>
       <div className={tab === "team" ? "flex-1 flex flex-col" : "hidden"}><Conversation session={session} ask={ask} /></div>
       <div className={tab === "private" ? "flex-1 flex flex-col" : "hidden"}>{key ? <div className="c-ai-chat flex-1 flex flex-col"><PrivateChat /></div> : <NoKey />}</div>
       {tab === "assistants" && <div className="pt-2"><Assistants session={session} /></div>}

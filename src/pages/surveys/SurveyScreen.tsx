@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Fold } from "../../components/ui";
+import { call } from "../../lib/crowdApi";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed, SITE_ORIGIN } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, OUTSIDE_LABELS, setSurveyOutside, type SurveyOutside, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, OUTSIDE_LABELS, type SurveyOutside, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -182,12 +184,20 @@ export default function SurveyScreen() {
   // סגור, או מחוץ לגזרה בלי הרשאת השתתפות ⇐ צפייה בלבד
   const closed = survey?.status !== "open" || !data?.access.canAnswer;
   const outsider = !!data && !data.access.member;
-  async function changeOutside(v: SurveyOutside) {
-    if (!token || !survey) return;
-    try { await setSurveyOutside(token, survey.group, survey.id, v); load(); } catch { setState("error"); }
-  }
   const changed = useMemo(() => JSON.stringify(draft) !== JSON.stringify(data?.mine?.answers ?? {}), [draft, data]);
   const empty = Object.keys(draft).length === 0;
+  const navigate = useNavigate();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  /** מגירת הניהול (הכרעת בעלים 01.11.2026): שינוי מצב / גישה מחוץ לגזרה / מחיקה — מתוך מסך הסקר */
+  async function manage(body: Record<string, unknown>) {
+    if (!token || !survey) return;
+    try { await call("/survey/manage", { token, body: { group: survey.group, id: survey.id, ...body } }); load(); } catch { setState("error"); }
+  }
+  const changeOutside = (v: SurveyOutside) => manage({ outside: v });
+  async function removeSurvey() {
+    if (!token || !survey) return;
+    try { await call("/survey/manage", { token, body: { group: survey.group, id: survey.id, delete: true, confirm: "מחק" } }); navigate("/surveys"); } catch { setState("error"); }
+  }
 
   async function save(confirmed = false) {
     if (!token || !survey) return;
@@ -218,14 +228,37 @@ export default function SurveyScreen() {
         {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))] text-ink-soft">נסגר</span>}
       </div>
       <p className="text-sm text-ink-soft -mt-2">סקר משתתפים, אינו מייצג.</p>
+      {embed && <Link to="/surveys?embed=1" className="inline-block text-sm text-accent">› לכל הסקרים</Link>}
       {outsider && survey.status === "open" && !data.access.canAnswer && <p className="text-sm rounded-xl bg-accent-soft px-3 py-2">הסקר פתוח להשתתפות לחברי הגזרה. אפשר לצפות בשאלות ובתוצאות.</p>}
       {data.access.manage && !embed && (
-        <section className="f-card !py-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <h2 className="text-sm font-bold">מי שמחוץ לגזרה:</h2>
-          <div className="f-seg sm" role="radiogroup" aria-label="גישה למי שמחוץ לגזרה">
-            {OUTSIDE_LABELS.map(([k, l]) => <button key={k} type="button" aria-pressed={(data.access.outside ?? "none") === k} onClick={() => void changeOutside(k)}>{l}</button>)}
-          </div>
+        <section>
+          <Fold title="ניהול הסקר">
+            <div className="space-y-3 py-2">
+              <p className="text-sm text-ink-soft">ענו עד עכשיו: <b className="font-num text-ink">{data.results?.all.n ?? 0}</b>{data.results && <> · מהגזרה: <b className="font-num text-ink">{data.results.group.n}</b></>}</p>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span className="text-sm font-bold">מצב:</span>
+                <div className="f-seg sm" role="radiogroup" aria-label="מצב הסקר">
+                  {([["draft", "טיוטה"], ["open", "פתוח"], ["closed", "נסגר"]] as const).map(([k, l]) => <button key={k} type="button" aria-pressed={survey.status === k} onClick={() => void manage({ status: k })}>{l}</button>)}
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span className="text-sm font-bold">מי שמחוץ לגזרה:</span>
+                <div className="f-seg sm" role="radiogroup" aria-label="גישה למי שמחוץ לגזרה">
+                  {OUTSIDE_LABELS.map(([k, l]) => <button key={k} type="button" aria-pressed={(data.access.outside ?? "none") === k} onClick={() => void changeOutside(k)}>{l}</button>)}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Link to={`/surveys/manage?edit=${survey.id}`} className="f-btn">עריכת הכותרת והשאלות</Link>
+                <button type="button" className="f-btn !text-warn" onClick={() => setConfirmDelete(true)}>מחיקת הסקר</button>
+              </div>
+            </div>
+          </Fold>
         </section>
+      )}
+      {confirmDelete && (
+        <ConfirmDialog title={`למחוק את "${survey.title}"?`} confirm="מחיקה" onConfirm={() => void removeSurvey()} onCancel={() => setConfirmDelete(false)}>
+          <p>הסקר וכל התשובות שנשמרו בו יימחקו. אי אפשר לשחזר.</p>
+        </ConfirmDialog>
       )}
 
       {survey.questions.map((q, i) => (

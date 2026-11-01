@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { slugFromName } from "../../../worker/crowd/lib/slug.js";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
@@ -15,8 +16,10 @@ const COLUMNS: SurveyOption[] = [{ id: "coalition", label: "קואליציה" },
 const knessetLists = (): SurveyOption[] => lists2026.filter((l) => (results2026.seats[l.id] ?? 0) > 0).map((l) => ({ id: l.id, label: l.name, seats: results2026.seats[l.id] }));
 const slug = (n: number) => `q${n}`;
 
-interface Draft { id: string; title: string; status: Status; outside: SurveyOutside; questions: SurveyQuestion[]; isNew: boolean }
-const empty = (group: string): Draft => ({ id: "", title: "", status: "draft", outside: "none", questions: [], isNew: true, ...{ group } });
+interface Draft { id: string; title: string; status: Status; outside: SurveyOutside; questions: SurveyQuestion[]; isNew: boolean; idTouched?: boolean }
+const empty = (): Draft => ({ id: "", title: "", status: "draft", outside: "none", questions: [], isNew: true });
+/** מזהה לטיני אוטומטי מהכותרת — אותו תעתיק כמו שמות הקבוצות (worker/crowd/lib/slug.js); המנהל יכול לשנות */
+const autoId = (title: string) => (slugFromName(title) ?? "").replace(/-group$/, "").slice(0, 40);
 
 /**
  * ניהול סקרים למנהלי הגזרה (הכרעת בעלים 01.11.2026: שליטה מלאה — יצירה, עריכה, פתיחה/סגירה, גישה מחוץ לגזרה ומחיקה).
@@ -34,6 +37,13 @@ export default function SurveyManageScreen() {
 
   const load = useCallback(() => { listSurveys(token).then((r) => setSurveys(r.surveys.filter((s) => s.manage))).catch(() => setMsg("רשימת הסקרים אינה זמינה כרגע.")); }, [token]);
   useEffect(load, [load]);
+  // פתיחה ישירה לעריכה ממגירת הניהול שבמסך הסקר: ?edit=<מזהה>
+  const [params, setParams] = useSearchParams();
+  const editId = params.get("edit");
+  useEffect(() => {
+    const s = editId && surveys?.find((x) => x.id === editId);
+    if (s) { setDraft({ id: s.id, title: s.title, status: s.status, outside: s.outside ?? "none", questions: s.questions, isNew: false }); setParams({}, { replace: true }); }
+  }, [editId, surveys, setParams]);
 
   if (!token) return <main className="px-4 md:px-6 pb-28 space-y-3 md:max-w-3xl md:mx-auto"><h1 className="text-[26px] font-display pt-1">ניהול סקרים</h1><p>כניסה עם Google:</p><GoogleButton session={session} onDone={() => void session.refresh()} /></main>;
   if (me && !groups.length) return <main className="px-4 md:px-6 pb-28 md:max-w-3xl md:mx-auto"><h1 className="text-[26px] font-display pt-1">ניהול סקרים</h1><p className="text-ink-soft">המסך הזה למנהלי קבוצה בלבד.</p></main>;
@@ -60,7 +70,7 @@ export default function SurveyManageScreen() {
       {msg && <p role="status" className="text-sm rounded-xl bg-accent-soft px-3 py-2">{msg}</p>}
 
       {!draft && <>
-        <button type="button" className="f-btn pri" onClick={() => setDraft(empty(group))}>סקר חדש</button>
+        <button type="button" className="f-btn pri" onClick={() => setDraft(empty())}>סקר חדש</button>
         <ul className="f-card !p-0 divide-y divide-paper-line">
           {(surveys ?? []).map((s) => (
             <li key={s.id} className="flex items-center gap-3 px-4 py-3">
@@ -76,9 +86,10 @@ export default function SurveyManageScreen() {
       {draft && (
         <section className="f-card space-y-3">
           <label className="block"><span className="text-sm font-bold">כותרת</span>
-            <input className="mt-1 w-full rounded-xl border border-paper-line bg-paper px-3 py-2" value={draft.title} onChange={(e) => set({ title: e.target.value })} /></label>
-          {draft.isNew && <label className="block"><span className="text-sm font-bold">מזהה לכתובת (אותיות לטיניות, ספרות ומקף)</span>
-            <input dir="ltr" className="mt-1 w-full rounded-xl border border-paper-line bg-paper px-3 py-2" value={draft.id} onChange={(e) => set({ id: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") })} placeholder="my-survey" /></label>}
+            <input className="mt-1 w-full rounded-xl border border-paper-line bg-paper px-3 py-2" value={draft.title} onChange={(e) => set({ title: e.target.value, ...(draft.isNew && !draft.idTouched ? { id: autoId(e.target.value) } : {}) })} /></label>
+          {draft.isNew && <label className="block"><span className="text-sm font-bold">מזהה לכתובת</span>
+            <input dir="ltr" className="mt-1 w-full rounded-xl border border-paper-line bg-paper px-3 py-2" value={draft.id} onChange={(e) => set({ id: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""), idTouched: true })} placeholder="נוצר אוטומטית מהכותרת" />
+            <span className="text-xs text-ink-soft">נוצר אוטומטית מהכותרת; אפשר לשנות. הכתובת: 26.hopetohelp.net/#/s/{draft.id || "…"}</span></label>}
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-bold">מצב:</span>
             <div className="f-seg sm" role="radiogroup" aria-label="מצב">{STATUS.map(([k, l]) => <button key={k} type="button" aria-pressed={draft.status === k} onClick={() => set({ status: k })}>{l}</button>)}</div>

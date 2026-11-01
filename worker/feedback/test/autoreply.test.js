@@ -95,6 +95,11 @@ it("נושאים שהנוהל מורה להתעלם מהם נעצרים בקוד
   expect(calls.some((u) => u.includes("generativelanguage"))).toBe(false);
 });
 
+it("גם השם החדש \"שיפור או שאלה\" נענה אוטומטית", async () => {
+  await ask("[שיפור או שאלה] כמה מנדטים לגוש?");
+  expect(await run(at())).toMatchObject({ ok: true, published: 1 });
+});
+
 it("פניות שאינן שאלה או תאוריה אינן נוגעות", async () => {
   await ask("יש שגיאת כתיב בעמוד", "data");
   expect(await run(at())).toMatchObject({ published: 0, drafted: 0 });
