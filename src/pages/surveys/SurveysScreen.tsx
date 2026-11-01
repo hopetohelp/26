@@ -51,6 +51,8 @@ export default function SurveysScreen() {
     for (const s of surveys ?? []) if (s.answered || s.manage) getSurvey(s.id, token).then((d) => setDetails((x) => ({ ...x, [s.id]: d })), () => {});
   }, [surveys, token]);
 
+  // "הניחושים" — סקר שהסתיים (הכרעת בעלים 01.11.2026): הניחוש של 120 המנדטים, שנסגר עם סגירת הקלפיות
+  const guesses = filter !== "open";
   const shown = (surveys ?? []).filter((s) => filter === "all" || (filter === "open" ? s.status !== "closed" : s.status === "closed"));
   const [lead, ...rest] = shown;
   return (
@@ -61,7 +63,7 @@ export default function SurveysScreen() {
       </div>
       {failed && <p className="text-ink-soft">רשימת הסקרים אינה זמינה כרגע.</p>}
       {!failed && !surveys && <p className="text-ink-soft">טוען…</p>}
-      {surveys && !shown.length && <p className="text-ink-soft">אין סקרים כאן כרגע.</p>}
+      {surveys && !shown.length && !guesses && <p className="text-ink-soft">אין סקרים כאן כרגע.</p>}
       {surveys && !token && (
         <section className="f-card space-y-2">
           <p className="text-sm">חברי הגזרה רואים את כל סקרי הגזרה אחרי כניסה עם Google.</p>
@@ -79,6 +81,17 @@ export default function SurveysScreen() {
           <span className="f-btn pri">{lead.answered ? "לעדכן תשובות" : lead.status === "open" && lead.canAnswer ? "להשתתף" : "לצפייה"}</span>
           {lead.answered && <span className="text-sm text-ink-soft ms-3">ענית ✓</span>}
           {details[lead.id] && <MiniResults detail={details[lead.id]} />}
+        </Link>
+      )}
+      {guesses && (
+        <Link to="/surveys/guesses" className="block f-card no-underline text-ink">
+          <span className="flex items-center gap-3">
+            <span className="flex-1 min-w-0">
+              <span className="block font-bold">הניחושים — 120 המנדטים</span>
+              <span className="block text-[12.5px] text-ink-soft">נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58 · ממוצע הניחושים מול התוצאות</span>
+            </span>
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))] text-ink-soft">נסגר</span>
+          </span>
         </Link>
       )}
       {rest.length > 0 && (

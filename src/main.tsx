@@ -206,6 +206,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="surveys" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveysScreen /></Suspense>} />
+          {/* "הניחושים" כסקר שהסתיים בחלק הסקרים (הכרעת בעלים 01.11.2026) — אותו מסך כמו /community */}
+          <Route path="surveys/guesses" element={<SimpleComparison />} />
           <Route path="surveys/me" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistoryScreen /></Suspense>} />
           <Route path="surveys/manage" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyManageScreen /></Suspense>} />
           <Route path="s/:id" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyScreen /></Suspense>} />
