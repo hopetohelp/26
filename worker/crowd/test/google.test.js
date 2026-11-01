@@ -31,6 +31,19 @@ const call = async (path, { body, token } = {}) => {
 };
 const tok = (c) => c.repeat(43);
 
+describe("כניסה אחת מאתר הגזרה (אסימון של אתר מארח)", () => {
+  it("מזהה לקוח של אתר אחר נדחה, אלא אם הוגדר במפורש — ואז זה אותו חשבון", async () => {
+    const host = "hagzara-client.apps.googleusercontent.com";
+    expect((await call("/auth/google", { body: { credential: await idToken({ aud: host }), token: tok("h") } })).status).toBe(401);
+    env.GOOGLE_EXTRA_CLIENT_IDS = host;
+    const a = await call("/auth/google", { body: { credential: await idToken({ aud: host }), token: tok("i") } });
+    expect(a.status).toBe(200);
+    const b = await call("/auth/google", { body: { credential: await idToken({}), token: tok("j") } });
+    const ma = await call("/me", { token: a.data.token }), mb = await call("/me", { token: b.data.token });
+    expect(ma.data.participant).toBe(mb.data.participant);
+  });
+});
+
 describe("כניסה עם Google", () => {
   it("אסימון תקף יוצר משתתף; כניסה חוזרת מגיעה לאותו משתתף; אסימון הדפדפן עובד בעיוורון", async () => {
     const first = await call("/auth/google", { body: { credential: await idToken({}), token: tok("a") } });

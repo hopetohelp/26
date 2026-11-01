@@ -25,6 +25,13 @@ import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzara, useHagzaraTheme } from "../pages/simple/hagzara";
 
+/**
+ * חלק "סקרי משתתפים" (הכרעת בעלים 01.11.2026: שני חלקים נפרדים — סקרי משתתפים | ניתוח בחירות).
+ * בשלב הראשון המסכים בלי קישור מאף מסך באתר (הכרעת בעלים 01.11.2026) — רק בכתובת ישירה, עד אישור הבעלים ומנהלי הגזרה.
+ */
+export const isSurveysPart = (pathname: string) => /^\/(surveys|s)(\/|$)/.test(pathname);
+const SURVEY_TABS = [{ to: "/surveys", label: "כל הסקרים", end: true }, { to: "/s/gov", label: "הרכבת הממשלה", end: false }];
+
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
 function useGroupTab() {
@@ -89,6 +96,7 @@ function ModePicker() {
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
 function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: string | null; navTop: boolean; onFit: (top: boolean) => void }) {
+  const surveys = isSurveysPart(useLocation().pathname);
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
   // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה.
@@ -129,11 +137,12 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
   }, [onFit, member, navTop]);
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     {/* חברי הגזרה: סמל הגזרה בפס העליון (הכרעת בעלים 28/10) */}
-    <NavLink to="/" className="f-logo inline-flex items-center gap-2">{member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}{member && <span className="f-gname">הגזרה ·</span>}בחירות 26</NavLink>
+    <NavLink to={surveys ? "/surveys" : "/"} className="f-logo inline-flex items-center gap-2">{member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}{member && <span className="f-gname">הגזרה ·</span>}{surveys ? "סקרים" : "בחירות 26"}</NavLink>
     <FocusClock />
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
-    <AdvancedSwitch />
+    {/* בחלק הסקרים: "בחירות" עובר לחלק הניתוח (במקום "לניתוח מורחב") */}
+    {surveys ? <Link to="/results-2026" className="f-btn">בחירות</Link> : <AdvancedSwitch />}
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
@@ -152,6 +161,7 @@ function FocusClock() {
 }
 function FocusNav({ className, unread }: { className: string; unread: boolean }) {
   const { pathname } = useLocation();
+  const surveysPart = isSurveysPart(pathname);
   const { advanced } = useInterface();
   const groupTab = useGroupTab();
   useGuessClosed(); // הסרגל מתרענן ברגע סגירת הניחושים (21:58)
@@ -182,11 +192,11 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
   const tab = (t: Screen) => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
-    <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {scroll
+    <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
+    {surveysPart ? SURVEY_TABS.map((t) => <NavLink key={t.to} to={t.to} end={t.end}>{t.label}</NavLink>) : scroll
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
-    {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
+    {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     {share && <button type="button" className="f-share" onClick={share.onClick} disabled={share.disabled}>שיתוף</button>}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;

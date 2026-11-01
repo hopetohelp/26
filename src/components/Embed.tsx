@@ -44,7 +44,8 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
     return () => mo.disconnect();
   }, []);
   useEffect(() => {
-    if (window.parent !== window) pingEmbed(embedScreenOf(pathname), "view");
+    // סקרי האתר אינם נספרים כאחד ממסכי ההטמעה הקיימים (השרת מכיר רק את שלושתם)
+    if (window.parent !== window && !/^\/s\//.test(pathname)) pingEmbed(embedScreenOf(pathname), "view");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (window.parent === window) return;
@@ -102,7 +103,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
         <ScreenFooter info={false}>
           {/* בהטמעה בתחתית רק שני קישורים: בלי "איך זה חושב?" ובלי "הטמעה באתר אחר" (הכרעת בעלים 30.10.2026) */}
           <a href={`${SITE_ORIGIN}/#/method`} target="_blank" rel="noopener" className="underline">מידע ומקורות</a>
-          <a href={OFFICIAL_RESULTS} target="_blank" rel="noopener noreferrer" className="underline">תוצאות רשמיות</a>
+          {!/^\/s\//.test(pathname) && <a href={OFFICIAL_RESULTS} target="_blank" rel="noopener noreferrer" className="underline">תוצאות רשמיות</a>}
         </ScreenFooter>
         {sharing && <Suspense fallback={null}><FlowShare onClose={() => setSharing(false)} /></Suspense>}
       </main>

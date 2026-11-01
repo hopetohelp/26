@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import { isEmbed, SITE_ORIGIN } from "../../lib/embed";
+import { useHostLogin } from "../../lib/embedLogin";
 import { answerSurvey, brokenPromises, OUTSIDE_LABELS, setSurveyOutside, type SurveyOutside, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
@@ -158,6 +160,10 @@ export default function SurveyScreen() {
   const { id = "" } = useParams();
   const session = useSession();
   const { token } = session;
+  const embed = isEmbed();
+  // בחלון מוטמע באתר הגזרה — כניסה אוטומטית עם החשבון של האתר המארח (src/lib/embedLogin.ts)
+  useHostLogin(session, embed);
+  const [copied, setCopied] = useState(false);
   const [data, setData] = useState<SurveyDetail | null>(null);
   const [failed, setFailed] = useState(false);
   const [draft, setDraft] = useState<SurveyAnswers>({});
@@ -213,7 +219,7 @@ export default function SurveyScreen() {
       </div>
       <p className="text-sm text-ink-soft -mt-2">סקר משתתפים, אינו מייצג.</p>
       {outsider && survey.status === "open" && !data.access.canAnswer && <p className="text-sm rounded-xl bg-accent-soft px-3 py-2">הסקר פתוח להשתתפות לחברי הגזרה. אפשר לצפות בשאלות ובתוצאות.</p>}
-      {data.access.manage && (
+      {data.access.manage && !embed && (
         <section className="f-card !py-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           <h2 className="text-sm font-bold">מי שמחוץ לגזרה:</h2>
           <div className="f-seg sm" role="radiogroup" aria-label="גישה למי שמחוץ לגזרה">
@@ -263,6 +269,15 @@ export default function SurveyScreen() {
         {data.results ? <Results survey={survey} results={data.results[scope]} /> : <p className="text-sm text-ink-soft">התוצאה העדכנית מוצגת אחרי ששומרים תשובה.</p>}
       </section>
 
+      {!embed && (
+        <section className="f-card space-y-2">
+          <h2 className="text-base font-bold">הטמעה באתר אחר</h2>
+          <p className="text-sm text-ink-soft">הסקר והתוצאות בחלון אחד. מי שמחובר עם Google באתר הגזרה — נכנס אוטומטית.</p>
+          <pre dir="ltr" className="text-[11px] whitespace-pre-wrap break-all rounded-xl bg-[rgb(var(--grid))] p-2">{surveyEmbedCode(survey.id, survey.title)}</pre>
+          <button type="button" className="f-btn pri" onClick={() => { void navigator.clipboard?.writeText(surveyEmbedCode(survey.id, survey.title)).then(() => setCopied(true)); }}>{copied ? "הועתק ✓" : "העתקת הקוד"}</button>
+        </section>
+      )}
+
       {pending && (
         <ConfirmDialog title="הצירוף הזה מפר הבטחת בחירות" confirm="להפר הבטחת בחירות"
           onConfirm={() => { const atSave = pending.atSave; setDraft(pending.next); setState("idle"); setPending(null); if (atSave) void save(true); }} onCancel={() => setPending(null)}>
@@ -276,4 +291,10 @@ export default function SurveyScreen() {
       )}
     </main>
   );
+}
+
+/** קוד ההטמעה של סקר: iframe ותסריט קצר להתאמת הגובה (כמו בשאר ההטמעות), עם הרשאת זהות לכניסה אחת */
+function surveyEmbedCode(id: string, title: string): string {
+  return `<iframe src="${SITE_ORIGIN}/#/s/${id}?embed=1" title="${title}" style="width:100%;border:0;min-height:700px" loading="lazy" allow="identity-credentials-get" data-elections26></iframe>
+<script>addEventListener("message",function(m){if(m.origin!=="${SITE_ORIGIN}"||!m.data||m.data.type!=="elections26:height")return;document.querySelectorAll("iframe[data-elections26]").forEach(function(f){if(f.contentWindow===m.source)f.style.height=m.data.height+"px"})});</script>`;
 }

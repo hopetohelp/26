@@ -39,7 +39,10 @@ export async function verifyGoogle(env, credential, now) {
   const key = await crypto.subtle.importKey("jwk", { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: "RS256", ext: true }, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
   const ok = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", key, b64u(parts[2]), new TextEncoder().encode(`${parts[0]}.${parts[1]}`));
   if (!ok) return null;
-  if (payload.aud !== clientId || !ISSUERS.has(payload.iss)) return null;
+  // כניסה אחת מאתר הגזרה בעמוד המוטמע (הכרעת בעלים 01.11.2026): גם אסימון שהונפק למזהה הלקוח של אתר מארח מאושר —
+  // רק מזהים שהוגדרו במפורש ב-GOOGLE_EXTRA_CLIENT_IDS. מזהה המשתמש ב-Google (sub) זהה בכל האתרים, ולכן זה אותו חשבון.
+  const audiences = [clientId, ...String(env.GOOGLE_EXTRA_CLIENT_IDS || "").split(",").map((x) => x.trim()).filter(Boolean)];
+  if (!audiences.includes(payload.aud) || !ISSUERS.has(payload.iss)) return null;
   if (typeof payload.exp !== "number" || payload.exp * 1000 < now - 60_000) return null;
   if (typeof payload.sub !== "string" || !payload.sub) return null;
   return { sub: payload.sub, email: typeof payload.email === "string" ? payload.email : null, emailVerified: payload.email_verified === true || payload.email_verified === "true" };
