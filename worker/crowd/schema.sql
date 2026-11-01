@@ -477,3 +477,41 @@ CREATE TABLE IF NOT EXISTS survey_access (
 INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES ('gov', 'gy7lelpbo', 'open',
  '{"title":"הרכבת הממשלה","questions":[{"id":"reelect","kind":"single","title":"בחירות חוזרות?","options":[{"id":"yes","label":"כן"},{"id":"no","label":"לא"}]},{"id":"first","kind":"single","title":"על מי יטיל הנשיא את הרכבת הממשלה ראשון?","options":[{"id":"netanyahu","label":"בנימין נתניהו","sub":"הליכוד"},{"id":"eisenkot","label":"גדי איזנקוט","sub":"ישר!"}]},{"id":"coalition","kind":"assign","title":"מי בקואליציה, מי נמנע ומי באופוזיציה?","items":[{"id":"likud","label":"הליכוד","seats":27},{"id":"yashar","label":"ישר!","seats":21},{"id":"together","label":"ביחד","seats":12},{"id":"joint","label":"הרשימה המשותפת","seats":11},{"id":"democrats","label":"הדמוקרטים","seats":8},{"id":"raam","label":"רע\"ם","seats":8},{"id":"utj","label":"יהדות התורה","seats":7},{"id":"yb","label":"ישראל ביתנו","seats":7},{"id":"otzma","label":"עוצמה יהודית","seats":7},{"id":"shas","label":"ש\"ס","seats":6},{"id":"rzp","label":"הציונות הדתית","seats":6}],"columns":[{"id":"coalition","label":"קואליציה"},{"id":"abstain","label":"נמנעים"},{"id":"opposition","label":"אופוזיציה"}]}]}',
  0, '2026-11-01T00:00:00Z', '2026-11-01T00:00:00Z');
+
+-- הגדרות לכל סקר (הכרעת בעלים 01.11.2026): סוג (סקר / ניחוש), מתי רואים תוצאות, סף משתתפים להצגה, מועד סגירה, ותוצאות אמת בניחוש.
+-- טבלה נפרדת (ולא עמודות) כי הקובץ רץ מחדש בכל פריסה. אין שורה ⇐ ברירות המחדל (סקר, רק מי שענה, 50, בלי מועד).
+CREATE TABLE IF NOT EXISTS survey_settings (
+  survey TEXT PRIMARY KEY,
+  kind TEXT NOT NULL DEFAULT 'survey' CHECK (kind IN ('survey', 'guess')),
+  visibility TEXT NOT NULL DEFAULT 'answered' CHECK (visibility IN ('now', 'after_close', 'answered')),
+  min_results INTEGER NOT NULL DEFAULT 50,
+  closes_at TEXT,
+  truth TEXT
+);
+-- כניסות לסקר לסטטיסטיקה למנהלים: ליום, לצופה (משתתף, או גיבוב כתובת למי שלא מחובר), ובנפרד מתוך הטמעה. בלי זהות גלויה.
+CREATE TABLE IF NOT EXISTS survey_views (
+  survey TEXT NOT NULL,
+  day TEXT NOT NULL,
+  viewer TEXT NOT NULL,
+  embed INTEGER NOT NULL DEFAULT 0,
+  n INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (survey, day, viewer, embed)
+);
+-- פיצול "הרכבת הממשלה" לשלושה סקרים נפרדים (הכרעת בעלים 01.11.2026): בחירות חוזרות · על מי יטיל הנשיא · הרכבת הממשלה (שיוך הרשימות).
+INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES ('reelect', 'gy7lelpbo', 'open',
+ '{"title":"בחירות חוזרות?","questions":[{"id":"reelect","kind":"single","title":"בחירות חוזרות?","options":[{"id":"yes","label":"כן"},{"id":"no","label":"לא"}]}]}',
+ 1, '2026-11-01T00:00:00Z', '2026-11-01T00:00:00Z');
+INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES ('president', 'gy7lelpbo', 'open',
+ '{"title":"על מי יטיל הנשיא את הרכבת הממשלה ראשון?","questions":[{"id":"first","kind":"single","title":"על מי יטיל הנשיא את הרכבת הממשלה ראשון?","options":[{"id":"netanyahu","label":"בנימין נתניהו","sub":"הליכוד"},{"id":"eisenkot","label":"גדי איזנקוט","sub":"ישר!"}]}]}',
+ 2, '2026-11-01T00:00:00Z', '2026-11-01T00:00:00Z');
+-- הגישה מחוץ לגזרה עוברת מהסקר המקורי לשניים החדשים (פעם אחת)
+INSERT OR IGNORE INTO survey_access (survey, outside) SELECT 'reelect', outside FROM survey_access WHERE survey = 'gov';
+INSERT OR IGNORE INTO survey_access (survey, outside) SELECT 'president', outside FROM survey_access WHERE survey = 'gov';
+-- תשובות קיימות לשתי השאלות עוברות לסקרים החדשים (אותו מועד; op_id ייחודי ⇐ פעם אחת בלבד)
+INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload)
+  SELECT 'reelect', participant, created_at, op_id || '~split', json_object('reelect', json_extract(payload, '$.reelect')) FROM survey_answers WHERE survey = 'gov' AND json_extract(payload, '$.reelect') IS NOT NULL;
+INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload)
+  SELECT 'president', participant, created_at, op_id || '~split', json_object('first', json_extract(payload, '$.first')) FROM survey_answers WHERE survey = 'gov' AND json_extract(payload, '$.first') IS NOT NULL;
+-- בסקר "הרכבת הממשלה" נשארת רק שאלת השיוך (רק אם עוד לא פוצל)
+UPDATE surveys SET def = json_set(def, '$.questions', json_array(json_extract(def, '$.questions[2]'))), updated_at = '2026-11-01T22:00:00Z'
+  WHERE id = 'gov' AND json_array_length(json_extract(def, '$.questions')) = 3 AND json_extract(def, '$.questions[2].kind') = 'assign';

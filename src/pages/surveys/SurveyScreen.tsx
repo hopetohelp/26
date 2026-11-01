@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Fold } from "../../components/ui";
-import { call } from "../../lib/crowdApi";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import SurveyAdmin from "./SurveyAdmin";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import { isEmbed, SITE_ORIGIN } from "../../lib/embed";
+import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, OUTSIDE_LABELS, type SurveyOutside, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -110,8 +109,21 @@ function Assign({ q, value, onChange, disabled }: { q: Extract<SurveyQuestion, {
   );
 }
 
+/** בחירה מטווח (הכרעת בעלים 01.11.2026): מחוון ומספר גדול; תוויות לשני הקצוות */
+function Range({ q, value, onPick, disabled }: { q: Extract<SurveyQuestion, { kind: "range" }>; value?: number; onPick: (v: number) => void; disabled: boolean }) {
+  const v = value ?? Math.round((q.min + q.max) / 2 / q.step) * q.step;
+  return (
+    <div className="space-y-1.5">
+      <div className="text-center"><b className="font-num text-3xl">{value ?? "—"}</b></div>
+      <input type="range" dir="ltr" min={q.min} max={q.max} step={q.step} value={v} disabled={disabled} aria-label={q.title}
+        onChange={(e) => onPick(Number(e.target.value))} className="w-full accent-[rgb(var(--signal))]" />
+      <div className="flex justify-between text-xs text-ink-soft" dir="ltr"><span>{q.min}{q.minLabel ? ` · ${q.minLabel}` : ""}</span><span>{q.max}{q.maxLabel ? ` · ${q.maxLabel}` : ""}</span></div>
+    </div>
+  );
+}
+
 /** תוצאות שאלה: אחוזים לכל אפשרות; בשיוך — לכל פריט פס מחולק לעמודות. מתחת לסף — רק מספר המשתתפים */
-function Results({ survey, results }: { survey: SurveyDetail["survey"]; results: SurveyResults }) {
+function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; results: SurveyResults; mine?: SurveyAnswers }) {
   if ("hidden" in results) return <p className="text-sm text-ink-soft">התוצאות יוצגו מ־{results.min} משתתפים. עד עכשיו: <b className="font-num text-ink">{results.n}</b>.</p>;
   return (
     <div className="space-y-4">
@@ -121,13 +133,32 @@ function Results({ survey, results }: { survey: SurveyDetail["survey"]; results:
         return (
           <section key={q.id}>
             <h3 className="text-[15px] font-bold mb-2">{q.title}</h3>
+            {/* ניחוש: תוצאת האמת שהזין המנהל, ומה ניחשת */}
+            {survey.kind === "guess" && survey.truth?.[q.id] !== undefined && (
+              <p className="text-sm rounded-xl bg-accent-soft px-3 py-1.5 mb-2">
+                בפועל: <b>{q.kind === "single" ? q.options.find((o) => o.id === survey.truth?.[q.id])?.label : String(survey.truth[q.id])}</b>
+                {mine?.[q.id] !== undefined && <> · {mine[q.id] === survey.truth[q.id] ? "צדקת ✓" : "ניחשת אחרת"}</>}
+              </p>
+            )}
+            {q.kind === "range" && "counts" in r && (
+              <div className="space-y-1">
+                <p className="text-sm">ממוצע: <b className="font-num">{r.mean ?? "—"}</b></p>
+                <div className="flex items-end gap-0.5 h-16" role="img" aria-label={Object.entries(r.counts).map(([v, n]) => `${v}: ${n}`).join(", ")}>
+                  {Array.from({ length: (q.max - q.min) / q.step + 1 }, (_, i) => q.min + i * q.step).map((v) => {
+                    const n = r.counts[v] ?? 0, top = Math.max(...Object.values(r.counts), 1);
+                    return <span key={v} className={`flex-1 rounded-t ${survey.truth?.[q.id] === v ? "bg-ink" : "bg-signal"}`} style={{ height: `${(n / top) * 100}%`, minHeight: n ? 3 : 1 }} title={`${v}: ${n}`} />;
+                  })}
+                </div>
+                <div className="flex justify-between text-xs text-ink-soft" dir="ltr"><span>{q.min}</span><span>{q.max}</span></div>
+              </div>
+            )}
             {q.kind === "single" && "counts" in r && (
               <ul className="space-y-1.5">
                 {q.options.map((o) => {
                   const pct = Math.round((r.counts[o.id] / r.n) * 100);
                   return (
                     <li key={o.id} className="grid grid-cols-[110px_minmax(0,1fr)_44px] items-center gap-2 text-sm">
-                      <span className="truncate">{o.label}</span>
+                      <span className="truncate">{survey.truth?.[q.id] === o.id ? "✓ " : ""}{o.label}</span>
                       <span className="h-3 rounded-full bg-[rgb(var(--grid))] overflow-hidden"><span className="block h-full bg-signal" style={{ width: `${pct}%` }} /></span>
                       <b className="font-num text-left">{pct}%</b>
                     </li>
@@ -157,7 +188,7 @@ function Results({ survey, results }: { survey: SurveyDetail["survey"]; results:
   );
 }
 
-/** מסך סקר אחד: השאלות, שמירה (היסטוריה מלאה בשרת) ותוצאות הגזרה / כל המשתתפים */
+/** מסך סקר אחד: השאלות, שמירה (היסטוריה מלאה בשרת) ותוצאות; למנהלים — כפתור "ניהול" שמחליף את הסקר במצב הניהול */
 export default function SurveyScreen() {
   const { id = "" } = useParams();
   const session = useSession();
@@ -165,7 +196,9 @@ export default function SurveyScreen() {
   const embed = isEmbed();
   // בחלון מוטמע באתר הגזרה — כניסה אוטומטית עם החשבון של האתר המארח (src/lib/embedLogin.ts)
   useHostLogin(session, embed);
-  const [copied, setCopied] = useState(false);
+  const [params, setParams] = useSearchParams();
+  const managing = params.has("manage") && !embed;
+  const navigate = useNavigate();
   const [data, setData] = useState<SurveyDetail | null>(null);
   const [failed, setFailed] = useState(false);
   const [draft, setDraft] = useState<SurveyAnswers>({});
@@ -179,6 +212,8 @@ export default function SurveyScreen() {
     getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine) setDraft(d.mine.answers); }).catch(() => setFailed(true));
   }, [id, token]);
   useEffect(load, [load]);
+  // כניסה לסקר — לסטטיסטיקה של המנהלים (פעם אחת לטעינה)
+  useEffect(() => { if (id) void viewSurvey(token, id, embed).catch(() => {}); }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const survey = data?.survey;
   // סגור, או מחוץ לגזרה בלי הרשאת השתתפות ⇐ צפייה בלבד
@@ -186,18 +221,7 @@ export default function SurveyScreen() {
   const outsider = !!data && !data.access.member;
   const changed = useMemo(() => JSON.stringify(draft) !== JSON.stringify(data?.mine?.answers ?? {}), [draft, data]);
   const empty = Object.keys(draft).length === 0;
-  const navigate = useNavigate();
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  /** מגירת הניהול (הכרעת בעלים 01.11.2026): שינוי מצב / גישה מחוץ לגזרה / מחיקה — מתוך מסך הסקר */
-  async function manage(body: Record<string, unknown>) {
-    if (!token || !survey) return;
-    try { await call("/survey/manage", { token, body: { group: survey.group, id: survey.id, ...body } }); load(); } catch { setState("error"); }
-  }
-  const changeOutside = (v: SurveyOutside) => manage({ outside: v });
-  async function removeSurvey() {
-    if (!token || !survey) return;
-    try { await call("/survey/manage", { token, body: { group: survey.group, id: survey.id, delete: true, confirm: "מחק" } }); navigate("/surveys"); } catch { setState("error"); }
-  }
+  const setManaging = (on: boolean) => { const p = new URLSearchParams(params); if (on) p.set("manage", "1"); else p.delete("manage"); setParams(p, { replace: true }); };
 
   async function save(confirmed = false) {
     if (!token || !survey) return;
@@ -209,6 +233,7 @@ export default function SurveyScreen() {
     setState("saving");
     try { await answerSurvey(token, survey.id, draft); setState("saved"); load(); } catch { setState("error"); }
   }
+  const allLink = embed ? "/surveys?embed=1" : "/surveys";
 
   if (failed) return (
     <main className="px-4 py-6 space-y-3 md:max-w-3xl md:mx-auto">
@@ -216,100 +241,74 @@ export default function SurveyScreen() {
         <p>סקרי הגזרה פתוחים לחברי הגזרה. כניסה עם Google:</p>
         <GoogleButton session={session} onDone={() => void session.refresh()} />
       </>}
-      <Link to="/surveys" className="text-accent">לכל הסקרים</Link>
+      <Link to={allLink} className="f-btn">לכל הסקרים</Link>
     </main>
   );
   if (!survey) return <main className="px-4 py-6"><p className="text-ink-soft">טוען…</p></main>;
+  const deadline = closesLabel(survey);
+  const noResults = survey.visibility === "after_close" ? "התוצאות יוצגו עם סגירת הסקר." : survey.visibility === "answered" ? "התוצאה העדכנית מוצגת אחרי ששומרים תשובה." : "אין עדיין תוצאות.";
 
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <div className="flex items-baseline justify-between gap-2 pt-1">
+      <div className="flex items-start justify-between gap-2 pt-1">
         <h1 className="text-[26px] font-display leading-tight">{survey.title}</h1>
-        {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))] text-ink-soft">נסגר</span>}
+        {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}
       </div>
-      <p className="text-sm text-ink-soft -mt-2">סקר משתתפים, אינו מייצג.</p>
-      {embed && <Link to="/surveys?embed=1" className="inline-block text-sm text-accent">› לכל הסקרים</Link>}
-      {outsider && survey.status === "open" && !data.access.canAnswer && <p className="text-sm rounded-xl bg-accent-soft px-3 py-2">הסקר פתוח להשתתפות לחברי הגזרה. אפשר לצפות בשאלות ובתוצאות.</p>}
-      {data.access.manage && !embed && (
-        <section>
-          <Fold title="ניהול הסקר">
-            <div className="space-y-3 py-2">
-              <p className="text-sm text-ink-soft">ענו עד עכשיו: <b className="font-num text-ink">{data.results?.all.n ?? 0}</b>{data.results && <> · מהגזרה: <b className="font-num text-ink">{data.results.group.n}</b></>}</p>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <span className="text-sm font-bold">מצב:</span>
-                <div className="f-seg sm" role="radiogroup" aria-label="מצב הסקר">
-                  {([["draft", "טיוטה"], ["open", "פתוח"], ["closed", "נסגר"]] as const).map(([k, l]) => <button key={k} type="button" aria-pressed={survey.status === k} onClick={() => void manage({ status: k })}>{l}</button>)}
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <span className="text-sm font-bold">מי שמחוץ לגזרה:</span>
-                <div className="f-seg sm" role="radiogroup" aria-label="גישה למי שמחוץ לגזרה">
-                  {OUTSIDE_LABELS.map(([k, l]) => <button key={k} type="button" aria-pressed={(data.access.outside ?? "none") === k} onClick={() => void changeOutside(k)}>{l}</button>)}
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Link to={`/surveys/manage?edit=${survey.id}`} className="f-btn">עריכת הכותרת והשאלות</Link>
-                <button type="button" className="f-btn !text-warn" onClick={() => setConfirmDelete(true)}>מחיקת הסקר</button>
-              </div>
-            </div>
-          </Fold>
-        </section>
-      )}
-      {confirmDelete && (
-        <ConfirmDialog title={`למחוק את "${survey.title}"?`} confirm="מחיקה" onConfirm={() => void removeSurvey()} onCancel={() => setConfirmDelete(false)}>
-          <p>הסקר וכל התשובות שנשמרו בו יימחקו. אי אפשר לשחזר.</p>
-        </ConfirmDialog>
-      )}
+      <div className="flex flex-wrap items-center gap-2 -mt-1.5 text-sm text-ink-soft">
+        <span>{survey.kind === "guess" ? "ניחוש משתתפים" : "סקר משתתפים, אינו מייצג"}</span>
+        {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))]">נסגר</span>}
+        {deadline && survey.status === "open" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-ink">פתוח עד {deadline}</span>}
+      </div>
+      {embed && <Link to={allLink} className="f-btn">› לכל הסקרים</Link>}
 
-      {survey.questions.map((q, i) => (
-        <section key={q.id} className="f-card">
-          <h2 className="text-base font-bold mb-2.5">{i + 1}. {q.title}</h2>
-          {q.kind === "single"
-            ? <Single q={q} value={draft[q.id] as string | undefined} disabled={closed} onPick={(v) => { setDraft({ ...draft, [q.id]: v }); setState("idle"); }} />
-            : <Assign q={q} value={(draft[q.id] as Record<string, AssignValue>) ?? {}} disabled={closed} onChange={(v) => {
-                const next = { ...draft }; if (Object.keys(v).length) next[q.id] = v; else delete next[q.id];
-                // צירוף חדש שמפר הבטחת בחירות ⇐ חלון עם האומר והציטוט
-                const before = new Set(brokenPromises(draft[q.id] as Record<string, AssignValue> | undefined, q.columns[0]?.id).map((p) => p.id));
-                const fresh = brokenPromises(v, q.columns[0]?.id).filter((p) => !before.has(p.id) && !p.with?.length);
-                if (fresh.length) setPending({ next, promises: fresh }); else { setDraft(next); setState("idle"); }
-              }} />}
-        </section>
-      ))}
+      {managing && token ? (
+        <SurveyAdmin survey={{ ...survey, outside: data.access.outside }} token={token} onDone={() => { setManaging(false); load(); }} onDeleted={() => navigate("/surveys")} />
+      ) : <>
+        {outsider && survey.status === "open" && !data.access.canAnswer && <p className="text-sm rounded-xl bg-accent-soft px-3 py-2">הסקר פתוח להשתתפות לחברי הגזרה. אפשר לצפות בשאלות.</p>}
 
-      {survey.status === "open" && (data.access.canAnswer || !token) && (token ? (
-        <div className="space-y-2">
-          <button type="button" onClick={() => void save()} disabled={empty || !changed || state === "saving"} className="f-btn pri w-full !min-h-[50px] !text-base disabled:opacity-50">
-            {state === "saving" ? "שומר…" : data?.mine ? "עדכון התשובות" : "שמירת התשובות"}
-          </button>
-          {state === "saved" && <p role="status" className="text-sm font-bold text-signal">התשובות נשמרו ✓ — הן מופיעות גם באזור האישי</p>}
-          {state === "error" && <p role="alert" className="text-sm text-warn">השמירה לא הצליחה. נסו שוב.</p>}
-        </div>
-      ) : (
-        <section className="f-card space-y-2">
-          <p className="text-sm">כדי לשמור את התשובות — כניסה עם Google.</p>
-          <GoogleButton session={session} onDone={() => void session.refresh()} />
-        </section>
-      ))}
+        {survey.questions.map((q, i) => (
+          <section key={q.id} className="f-card">
+            <h2 className="text-base font-bold mb-2.5">{survey.questions.length > 1 ? `${i + 1}. ` : ""}{q.title}</h2>
+            {q.kind === "single"
+              ? <Single q={q} value={draft[q.id] as string | undefined} disabled={closed} onPick={(v) => { setDraft({ ...draft, [q.id]: v }); setState("idle"); }} />
+              : q.kind === "range"
+              ? <Range q={q} value={draft[q.id] as number | undefined} disabled={closed} onPick={(v) => { setDraft({ ...draft, [q.id]: v }); setState("idle"); }} />
+              : <Assign q={q} value={(draft[q.id] as Record<string, AssignValue>) ?? {}} disabled={closed} onChange={(v) => {
+                  const next = { ...draft }; if (Object.keys(v).length) next[q.id] = v; else delete next[q.id];
+                  // צירוף חדש שמפר הבטחת בחירות ⇐ חלון עם האומר והציטוט
+                  const before = new Set(brokenPromises(draft[q.id] as Record<string, AssignValue> | undefined, q.columns[0]?.id).map((p) => p.id));
+                  const fresh = brokenPromises(v, q.columns[0]?.id).filter((p) => !before.has(p.id) && !p.with?.length);
+                  if (fresh.length) setPending({ next, promises: fresh }); else { setDraft(next); setState("idle"); }
+                }} />}
+          </section>
+        ))}
 
-      <section className="f-card space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-base font-bold">תוצאות</h2>
-          {data.results && <div className="f-seg sm" role="radiogroup" aria-label="מי נספר">
-            <button type="button" aria-pressed={scope === "group"} onClick={() => setScope("group")}>הגזרה</button>
-            <button type="button" aria-pressed={scope === "all"} onClick={() => setScope("all")}>כל המשתתפים</button>
-          </div>}
-        </div>
-        {data.results ? <Results survey={survey} results={data.results[scope]} /> : <p className="text-sm text-ink-soft">התוצאה העדכנית מוצגת אחרי ששומרים תשובה.</p>}
-      </section>
+        {survey.status === "open" && (data.access.canAnswer || !token) && (token ? (
+          <div className="space-y-2">
+            <button type="button" onClick={() => void save()} disabled={empty || !changed || state === "saving"} className="f-btn pri w-full !min-h-[50px] !text-base disabled:opacity-50">
+              {state === "saving" ? "שומר…" : data?.mine ? "עדכון התשובות" : "שמירת התשובות"}
+            </button>
+            {state === "saved" && <p role="status" className="text-sm font-bold text-signal">התשובות נשמרו ✓ — הן מופיעות גם באזור האישי</p>}
+            {state === "error" && <p role="alert" className="text-sm text-warn">השמירה לא הצליחה. נסו שוב.</p>}
+          </div>
+        ) : (
+          <section className="f-card space-y-2">
+            <p className="text-sm">כדי לשמור את התשובות — כניסה עם Google.</p>
+            <GoogleButton session={session} onDone={() => void session.refresh()} />
+          </section>
+        ))}
 
-      {!embed && (
-        <section className="f-card space-y-2">
-          <h2 className="text-base font-bold">הטמעה באתר אחר</h2>
-          <p className="text-sm text-ink-soft">הסקר והתוצאות בחלון אחד. מי שמחובר עם Google באתר הגזרה — נכנס אוטומטית.</p>
-          <pre dir="ltr" className="text-[11px] whitespace-pre-wrap break-all rounded-xl bg-[rgb(var(--grid))] p-2">{surveyEmbedCode(survey.id, survey.title)}</pre>
-          <button type="button" className="f-btn pri" onClick={() => { void navigator.clipboard?.writeText(surveyEmbedCode(survey.id, survey.title)).then(() => setCopied(true)); }}>{copied ? "הועתק ✓" : "העתקת הקוד"}</button>
+        <section className="f-card space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-base font-bold">תוצאות</h2>
+            {data.results && <div className="f-seg sm" role="radiogroup" aria-label="מי נספר">
+              <button type="button" aria-pressed={scope === "group"} onClick={() => setScope("group")}>הגזרה</button>
+              <button type="button" aria-pressed={scope === "all"} onClick={() => setScope("all")}>כל המשתתפים</button>
+            </div>}
+          </div>
+          {data.results ? <Results survey={survey} results={data.results[scope]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
         </section>
-      )}
+      </>}
 
       {pending && (
         <ConfirmDialog title="הצירוף הזה מפר הבטחת בחירות" confirm="להפר הבטחת בחירות"
@@ -317,6 +316,7 @@ export default function SurveyScreen() {
           {pending.promises.map((p) => (
             <figure key={p.id} className="border-r-4 border-paper-line pr-3 space-y-1">
               <blockquote className="text-base">״{p.quote}״</blockquote>
+              {/* קישור טקסט — חריג מוצדק: הפניה למקור הציטוט באתר חיצוני, בתוך שורת הקרדיט */}
               <figcaption className="text-ink-soft">{p.speaker}{p.role ? `, ${p.role}` : ""} · {p.date} · <a href={p.source} target="_blank" rel="noopener" className="text-accent">{p.sourceName}</a></figcaption>
             </figure>
           ))}
@@ -324,10 +324,4 @@ export default function SurveyScreen() {
       )}
     </main>
   );
-}
-
-/** קוד ההטמעה של סקר: iframe ותסריט קצר להתאמת הגובה (כמו בשאר ההטמעות), עם הרשאת זהות לכניסה אחת */
-function surveyEmbedCode(id: string, title: string): string {
-  return `<iframe src="${SITE_ORIGIN}/#/s/${id}?embed=1" title="${title}" style="width:100%;border:0;min-height:700px" loading="lazy" allow="identity-credentials-get" data-elections26></iframe>
-<script>addEventListener("message",function(m){if(m.origin!=="${SITE_ORIGIN}"||!m.data||m.data.type!=="elections26:height")return;document.querySelectorAll("iframe[data-elections26]").forEach(function(f){if(f.contentWindow===m.source)f.style.height=m.data.height+"px"})});</script>`;
 }

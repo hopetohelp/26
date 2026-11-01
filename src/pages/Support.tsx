@@ -62,8 +62,8 @@ function Conversation({ session, ask }: { session: ReturnType<typeof useSession>
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [closed, setClosed] = useState(false);
   const [text, setText] = useState("");
-  // ברירת המחדל: הסוג הראשון (תקלה או טעות); כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ שיפור או שאלה, והסמן בשדה הכתיבה
-  const [topic, setTopic] = useState<FeedbackTopic>(ask ? "theory" : "data");
+  // ברירת המחדל — מימין: שיפור או שאלה (הכרעת בעלים 01.11.2026); כניסה מ"שאלו את הצ׳ט החכם" (?ask) — גם הסמן בשדה הכתיבה
+  const [topic, setTopic] = useState<FeedbackTopic>(FEEDBACK_TOPICS[0].id);
   useEffect(() => { if (ask) { setTopic("theory"); document.getElementById("support-message")?.focus(); } }, [ask]);
   const maxText = 2000 - topicMessage(topic, "").length;
   const [error, setError] = useState<string | null>(null);
@@ -197,13 +197,21 @@ export function AiScreen() {
   );
 }
 
-/** בלי מפתח: הסבר קצר וחיבור */
+/** בלי מפתח: הסבר נרחב על היתרון בחיבור מפתח או סוכן (הכרעת בעלים 01.11.2026), וחיבור */
 function NoKey() {
   return (
-    <section className="c-ai rounded-theme border p-5 mt-2 space-y-3 text-center" aria-labelledby="nokey-title">
+    <section className="c-ai rounded-theme border p-5 mt-2 space-y-4" aria-labelledby="nokey-title">
       <p className="inline-flex items-center gap-2"><span className="c-ai-ico" aria-hidden="true">AI</span><span className="font-bold">העוזר האישי שלי</span><span className="text-xs rounded-full px-2 py-0.5 bg-paper-line/60 text-ink-soft">אין מפתח</span></p>
-      <h2 id="nokey-title" className="font-display text-2xl">אין מפתח מחובר</h2>
-      <p className="text-sm text-ink-soft">עם מפתח AI משלכם (Google Gemini או Anthropic) שואלים כל שאלה על נתוני האתר ומקבלים תשובה מיד. העלות אצל הספק שלכם, והמפתח לא מוצג לאף אחד.</p>
+      <h2 id="nokey-title" className="font-display text-2xl">חברו מפתח AI — וקבלו עוזר אישי לנתוני הבחירות והסקרים</h2>
+      <p className="text-sm">מפתח AI הוא קוד אישי מספק שירות (Google Gemini או Anthropic). כשמחברים אותו כאן, האתר מעמיד לרשותכם עוזר שעונה רק מתוך נתוני האתר עצמם — הסקרים, תוצאות הבחירות ומחשבון המנדטים.</p>
+      <ul className="text-sm space-y-2 list-disc pr-5">
+        <li><b>תשובה מיידית.</b> בלי לחכות לצוות האתר — שואלים ומקבלים תשובה תוך שניות.</li>
+        <li><b>שאלות המשך בלי הגבלה.</b> אפשר להעמיק, לבקש השוואה, חישוב או הסבר נוסף, באותה שיחה.</li>
+        <li><b>תשובה שנשענת על הנתונים.</b> העוזר מצטט מספרים מהאתר ומראה איך לבדוק אותם בעצמכם.</li>
+        <li><b>שלכם בלבד.</b> השיחה פרטית; המפתח נשמר במכשיר שלכם או מוצפן בחשבון, לא מוצג לאף אחד, ואפשר לנתק אותו בכל רגע.</li>
+        <li><b>העלות אצלכם.</b> החיוב (אם יש) אצל ספק המפתח לפי השימוש שלכם; האתר אינו גובה דבר.</li>
+      </ul>
+      <p className="text-sm"><b>יש לכם כבר עוזר AI (Claude, ChatGPT ועוד)?</b> בלשונית "עוזרי AI" מחברים אותו ישירות לנתוני האתר, בלי מפתח — והוא עונה מהנתונים בתוך השיחה שלכם שם.</p>
       <div className="text-start"><PrivateKeyEntry open /></div>
     </section>
   );

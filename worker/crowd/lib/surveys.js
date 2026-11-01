@@ -2,7 +2,8 @@
  * סקרי האתר (הכרעת בעלים 01.11.2026, docs/תוכנית-אתר-סקרי-הגזרה-01-11-2026.md): האתר עורך סקרים בעצמו.
  * סקר = הגדרה (כותרת ושאלות) של קבוצה; תשובה = שורה חדשה בכל שמירה (הוספה בלבד — ההיסטוריה המלאה נשמרת).
  * סוגי שאלות: single — בחירה אחת מתוך אפשרויות; assign — לכל פריט עמודה אחת (למשל קואליציה / נמנעים / אופוזיציה), או פיצול מנדטים בין עמודות.
- * התוצאות מוצגות רק למי שענה (הכרעת בעלים 01.11.2026), ולמנהלי הקבוצה.
+ * range — בחירה מטווח מספרים (הכרעת בעלים 01.11.2026; בסקר חדש: רשימת אפשרויות או טווח בלבד, בלי שיוך).
+ * הגדרות לכל סקר (survey_settings): סוג (סקר / ניחוש עם תוצאות אמת), מתי מוצגות התוצאות, סף משתתפים, מועד סגירה.
  */
 export const SURVEY_ID = /^[a-z0-9-]{2,40}$/;
 const KEY = /^[a-z0-9_-]{1,40}$/;
@@ -11,6 +12,11 @@ export const SURVEY_STATUS = new Set(["draft", "open", "closed"]);
 export const SURVEY_OUTSIDE = new Set(["none", "view", "answer"]);
 /** סף פרסום תוצאות לפי קבוצה — כמו בכל נתוני הקבוצות (GROUP_MIN) */
 export const SURVEY_MIN = 50;
+/** סוג: סקר, או ניחוש — שאליו המנהל מוסיף תוצאות אמת (הכרעת בעלים 01.11.2026) */
+export const SURVEY_KIND = new Set(["survey", "guess"]);
+/** מתי רואים תוצאות: כולם עכשיו / כולם אחרי הסגירה / רק מי שענה (הכרעת בעלים 01.11.2026) */
+export const SURVEY_VISIBILITY = new Set(["now", "after_close", "answered"]);
+export const DEFAULT_SETTINGS = { kind: "survey", visibility: "answered", min_results: SURVEY_MIN, closes_at: null, truth: null };
 
 const text = (v, max) => (typeof v === "string" && v.trim() && v.trim().length <= max ? v.trim() : null);
 
@@ -31,6 +37,17 @@ function options(list, max = 40) {
   return out;
 }
 
+/** טווח: מספרים שלמים, עד 100 צעדים; תוויות אופציונליות לשני הקצוות */
+function range(q) {
+  const { min, max } = q, step = q.step ?? 1;
+  if (![min, max, step].every(Number.isInteger) || min < -1000 || max > 1000 || step < 1 || max <= min || (max - min) % step || (max - min) / step > 100) return null;
+  const minLabel = q.minLabel === undefined || q.minLabel === "" ? undefined : text(q.minLabel, 40);
+  const maxLabel = q.maxLabel === undefined || q.maxLabel === "" ? undefined : text(q.maxLabel, 40);
+  if ((q.minLabel && !minLabel) || (q.maxLabel && !maxLabel)) return null;
+  return { min, max, step, ...(minLabel ? { minLabel } : {}), ...(maxLabel ? { maxLabel } : {}) };
+}
+const inRange = (q, v) => Number.isInteger(v) && v >= q.min && v <= q.max && (v - q.min) % q.step === 0;
+
 /** הגדרת סקר תקינה ⇐ עותק נקי, או null */
 export function cleanDefinition(def) {
   const title = text(def?.title, 120);
@@ -45,6 +62,10 @@ export function cleanDefinition(def) {
       const opts = options(q.options, 12);
       if (!opts) return null;
       questions.push({ id, kind: "single", title: qt, options: opts });
+    } else if (q.kind === "range") {
+      const r = range(q);
+      if (!r) return null;
+      questions.push({ id, kind: "range", title: qt, ...r });
     } else if (q.kind === "assign") {
       const items = options(q.items, 40), columns = options(q.columns, 6);
       if (!items || !columns) return null;
@@ -63,6 +84,9 @@ export function cleanAnswers(def, answers) {
     if (!q) return null;
     if (q.kind === "single") {
       if (!q.options.some((o) => o.id === v)) return null;
+      out[k] = v;
+    } else if (q.kind === "range") {
+      if (!inRange(q, v)) return null;
       out[k] = v;
     } else {
       if (!v || typeof v !== "object" || Array.isArray(v)) return null;
@@ -95,6 +119,7 @@ export function tally(def, latest) {
   const res = {};
   for (const q of def.questions) {
     if (q.kind === "single") res[q.id] = { n: 0, counts: Object.fromEntries(q.options.map((o) => [o.id, 0])) };
+    else if (q.kind === "range") res[q.id] = { n: 0, counts: {}, mean: null };
     else res[q.id] = { n: 0, items: Object.fromEntries(q.items.map((i) => [i.id, Object.fromEntries(q.columns.map((c) => [c.id, 0]))])) };
   }
   for (const a of latest) {
@@ -103,6 +128,7 @@ export function tally(def, latest) {
       if (v === undefined) continue;
       res[q.id].n++;
       if (q.kind === "single") { if (v in res[q.id].counts) res[q.id].counts[v]++; }
+      else if (q.kind === "range") { const c = res[q.id].counts; c[v] = (c[v] ?? 0) + 1; }
       else for (const [item, col] of Object.entries(v)) {
         const row = res[q.id].items[item];
         if (!row) continue;
@@ -113,5 +139,40 @@ export function tally(def, latest) {
       }
     }
   }
+  // ממוצע לשאלות טווח
+  for (const q of def.questions) if (q.kind === "range" && res[q.id].n) {
+    const c = res[q.id].counts;
+    res[q.id].mean = Math.round((Object.entries(c).reduce((t, [v, n]) => t + Number(v) * n, 0) / res[q.id].n) * 10) / 10;
+  }
   return res;
 }
+
+/**
+ * הגדרות סקר מבקשת המנהל, על בסיס הקיימות ⇐ עותק נקי, או { error }.
+ * truth — תוצאות האמת בניחוש: לכל שאלת בחירה מזהה אפשרות, לשאלת טווח מספר בטווח.
+ */
+export function cleanSettings(body, cur, def) {
+  const s = { ...cur };
+  if (body.kind !== undefined) { if (!SURVEY_KIND.has(body.kind)) return { error: "kind" }; s.kind = body.kind; }
+  if (body.visibility !== undefined) { if (!SURVEY_VISIBILITY.has(body.visibility)) return { error: "visibility" }; s.visibility = body.visibility; }
+  if (body.min_results !== undefined) { if (!Number.isInteger(body.min_results) || body.min_results < 1 || body.min_results > 10000) return { error: "min_results" }; s.min_results = body.min_results; }
+  if (body.closes_at !== undefined) {
+    if (body.closes_at === null || body.closes_at === "") s.closes_at = null;
+    else { const t = Date.parse(body.closes_at); if (!Number.isFinite(t)) return { error: "closes_at" }; s.closes_at = new Date(t).toISOString(); }
+  }
+  if (body.truth !== undefined) {
+    if (body.truth === null) s.truth = null;
+    else {
+      if (typeof body.truth !== "object" || Array.isArray(body.truth)) return { error: "truth" };
+      const t = {};
+      for (const [k, v] of Object.entries(body.truth)) {
+        const q = def.questions.find((x) => x.id === k);
+        if (!q || (q.kind === "single" && !q.options.some((o) => o.id === v)) || (q.kind === "range" && !inRange(q, v)) || q.kind === "assign") return { error: "truth" };
+        t[k] = v;
+      }
+      s.truth = Object.keys(t).length ? t : null;
+    }
+  }
+  return s;
+}
+
