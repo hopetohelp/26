@@ -37,6 +37,9 @@ import { setVerifyCode } from "./lib/verifyEmail";
 import { setResetSecret, SECRET_RE } from "./lib/resetPassword";
 const Admin = lazy(page(() => import("./pages/Admin")));
 const GroupAdmin = lazy(page(() => import("./pages/GroupAdmin")));
+// סקרי האתר (הכרעת בעלים 01.11.2026)
+const SurveysScreen = lazy(page(() => import("./pages/surveys/SurveysScreen")));
+const SurveyScreen = lazy(page(() => import("./pages/surveys/SurveyScreen")));
 const MyFeedback = lazy(page(() => import("./pages/MyFeedback")));
 const Connect = lazy(page(() => import("./pages/Connect")));
 import Tabbed, { Moved } from "./components/Tabbed";
@@ -200,6 +203,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="connect" element={<Connect />} />
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="surveys" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveysScreen /></Suspense>} />
+          <Route path="s/:id" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyScreen /></Suspense>} />
           <Route path="group-admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupAdmin /></Suspense>} />
           <Route path="admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Admin /></Suspense>} />
           <Route path="feedback" element={<Moved to="/ai" />} />
