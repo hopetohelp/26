@@ -77,6 +77,11 @@ export function brokenPromises(answer: Record<string, AssignValue> | undefined, 
   });
 }
 
+/** מועד תשובה בשעון ישראל: "1.11 14:05" */
+const AT = new Intl.DateTimeFormat("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
+export const formatAt = (iso: string) => AT.formatToParts(new Date(iso)).reduce((o, p) => ({ ...o, [p.type]: p.value }), {} as Record<string, string>) as Record<string, string>;
+export const answerTime = (iso: string) => { const p = formatAt(iso); return `${p.day}.${p.month} ${p.hour}:${p.minute}`; };
+
 /** רוב בכנסת */
 export const MAJORITY = 61;
 /** משפט הסכום: מחובר לנתון ("חסרים 8 לרוב"), לא עובדה כללית */
