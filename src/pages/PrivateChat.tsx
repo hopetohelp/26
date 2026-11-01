@@ -17,7 +17,7 @@ function Bubble({ turn }: { turn: PrivateTurn }) {
   </li>;
 }
 
-/** בסוג "שאלה או תאוריה": חיבור מפתח אישי. מוצג רק למי שעוד לא חיבר. */
+/** בלשונית "מפתח אישי": חיבור מפתח אישי. מוצג רק למי שעוד לא חיבר. */
 export function PrivateKeyEntry({ open: startOpen = false }: { open?: boolean } = {}) {
   const key = usePrivateKey();
   const [open, setOpen] = useState(startOpen);

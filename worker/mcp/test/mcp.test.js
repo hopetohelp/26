@@ -235,7 +235,7 @@ describe("שיחה עם צוות האתר (שלב 3)", () => {
     const sent = await call("/mcp", "send_message_to_team", { topic: "theory", text: "למה הממוצע שונה מהסקר האחרון?" }, access);
     expect(sent.data.result.isError).toBe(false);
     const conv = (await call("/mcp", "get_my_team_conversation", {}, access)).data.result.structuredContent;
-    expect(conv.thread.messages.at(-1).text).toBe("[שאלה או תאוריה] למה הממוצע שונה מהסקר האחרון?");
+    expect(conv.thread.messages.at(-1).text).toBe("[שיפור או שאלה] למה הממוצע שונה מהסקר האחרון?");
     // מסך הניהול: אותה שיחה, עם שם העוזר
     const KEY = "k".repeat(40);
     await feedbackEnv.DB.prepare("INSERT INTO admin_keys (hash, created_at) VALUES (?, ?)").bind(await sha256(KEY), "x").run();

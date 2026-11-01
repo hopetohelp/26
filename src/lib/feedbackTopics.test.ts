@@ -11,5 +11,10 @@ describe("סוג הפנייה שאלה או תאוריה", () => {
     for (const old of ["עיצוב ונוחות", "רעיון", "תקלה או שגיאה", "רעיון לשיפור", "אחר"]) expect(conversationTopic([{ author: "visitor", text: `[${old}] ישנה` }])).toBe("data");
     for (const topic of ["design", "idea", "other"]) expect(conversationTopic([{ author: "visitor", text: "בלי תיוג", topic }])).toBe("data");
     expect(conversationTopic([{ author: "visitor", text: "בלי תיוג" }])).toBe("data");
+    // הכרעת בעלים 01.11.2026: "תקלה או טעות" / "שיפור או שאלה"; שיחות עם השמות הקודמים ממשיכות להיות מזוהות
+    expect(topicMessage("data", "x")).toBe("[תקלה או טעות] x");
+    expect(topicMessage("theory", "x")).toBe("[שיפור או שאלה] x");
+    expect(conversationTopic([{ author: "visitor", text: "[שאלה או תאוריה] ישנה" }])).toBe("theory");
+    expect(conversationTopic([{ author: "visitor", text: "[תקלה או שיפור] ישנה" }])).toBe("data");
   });
 });

@@ -430,7 +430,7 @@ export const TOOLS = [
     title: "הודעה לצוות האתר",
     audience: "user",
     kind: "write",
-    description: "Sends a message from the user to the site team, in their own conversation — exactly like writing in the personal area. Only when the user asked to write to the team; show them the text first. topic: data = error or wrong number (תקלה או שגיאה), idea = improvement (רעיון לשיפור), theory = a question or theory about the elections (שאלה או תאוריה — answered from the site's data only), other. Hebrew, up to 2000 characters. The team answers later in the same conversation; the site marks the message as written through an AI assistant.",
+    description: "Sends a message from the user to the site team, in their own conversation — exactly like writing in the personal area. Only when the user asked to write to the team; show them the text first. topic: data = an error or a wrong number (תקלה או טעות); theory = an improvement or a question (שיפור או שאלה — may be answered by AI, from the site's data only). Legacy values idea and other are filed as data. Hebrew, up to 2000 characters. The team answers later in the same conversation; the site marks the message as written through an AI assistant.",
     inputSchema: obj({
       topic: { type: "string", enum: FEEDBACK_TOPICS.map((t) => t.id) },
       text: { type: "string", minLength: 1, maxLength: 1900 },

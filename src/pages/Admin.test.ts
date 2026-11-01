@@ -37,8 +37,8 @@ it('מציג סינון לפי נושא עם ספירה, וסינון ממתינ
   const { html } = render(data([thread(1, 'א', '2026-10-01T10:00:00Z', true, 'data'), thread(2, 'ב', '2026-10-02T10:00:00Z', false, 'idea'), thread(3, 'ג', '2026-10-03T10:00:00Z', true, 'idea')]));
   expect(html).toContain('הכול (3)');
   // פניות "רעיון" ישנות נספרות עם התקלות (הכרעת בעלים 25.10.2026)
-  expect(html).toContain('תקלה או שיפור (3)');
-  expect(html).toContain('שאלה או תאוריה (0)');
+  expect(html).toContain('תקלה או טעות (3)');
+  expect(html).toContain('שיפור או שאלה (0)');
   expect(html).toContain('ממתינות לתשובה (2)');
 });
 
