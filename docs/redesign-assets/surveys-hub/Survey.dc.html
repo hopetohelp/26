@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>סקר בודד — תוצאות והטמעה</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&amp;family=Roboto+Mono:wght@700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F5FB5}a:hover{color:#174a8c}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #FFF3F3; color: #5C1C24; font-family: Rubik, system-ui, sans-serif;">
+  <header style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; height: 60px; box-sizing: border-box;">
+    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 8px; color: #5C1C24; text-decoration: none; font-weight: 800; font-size: 17px;">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #1F5FB5; color: #FFFFFF; display: grid; place-items: center; font-size: 15px;">ה</span>
+      <span>הגזרה · <span style="color: #1F5FB5;">סקרים</span></span>
+    </a>
+    <span style="flex: 1;"></span>
+    <a href="Elections.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #EED0D2; background: #FFFAFA; color: #5C1C24; font-size: 13px; font-weight: 700; text-decoration: none;">בחירות</a>
+  </header>
+
+  <main style="height: 784px; overflow-y: auto; box-sizing: border-box; padding: 0 16px 110px; display: flex; flex-direction: column; gap: 12px;">
+    <a href="Main.dc.html" style="font-size: 13px; text-decoration: none;">› כל הסקרים</a>
+    <div>
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 800;">הרכבת הממשלה</h1>
+        <span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #FDE4E6; color: #84484E; white-space: nowrap;">נתוני דוגמה</span>
+      </div>
+      <div style="font-size: 12.5px; color: #84484E; margin-top: 4px;"><b style="font-family: 'Roboto Mono', monospace; color: #5C1C24;">[N]</b> משתתפים · סקר משתתפים, אינו מייצג</div>
+    </div>
+
+    <div role="radiogroup" aria-label="מי נספר" style="display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: #F6DEE0; width: fit-content;">
+      <button type="button" role="radio" aria-checked="true" style="border: 0; border-radius: 12px; padding: 6px 14px; min-height: 36px; background: #FFFAFA; color: #5C1C24; font: 700 13px Rubik, sans-serif;">הגזרה</button>
+      <button type="button" role="radio" aria-checked="false" style="border: 0; border-radius: 12px; padding: 6px 14px; min-height: 36px; background: transparent; color: #84484E; font: 13px Rubik, sans-serif;">כל המשתתפים</button>
+      <button type="button" role="radio" aria-checked="false" style="border: 0; border-radius: 12px; padding: 6px 14px; min-height: 36px; background: transparent; color: #84484E; font: 13px Rubik, sans-serif;">התשובה שלי</button>
+    </div>
+
+    <section style="background: #FFFAFA; border: 1px solid #EED0D2; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 10px; font-size: 15px; font-weight: 700;">בחירות חוזרות?</h2>
+      <div style="display: flex; height: 30px; border-radius: 10px; overflow: hidden; font: 700 13px Rubik, sans-serif;">
+        <span style="width: 38%; background: #1F5FB5; color: #FFFFFF; display: flex; align-items: center; padding: 0 10px;">כן <span style="font-family: 'Roboto Mono', monospace; margin-right: 6px;">[38]%</span></span>
+        <span style="width: 62%; background: #485462; color: #FFFFFF; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px;">לא <span style="font-family: 'Roboto Mono', monospace; margin-right: 6px;">[62]%</span></span>
+      </div>
+    </section>
+
+    <section style="background: #FFFAFA; border: 1px solid #EED0D2; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 10px; font-size: 15px; font-weight: 700;">על מי יטיל הנשיא ראשון?</h2>
+      <div style="display: flex; height: 30px; border-radius: 10px; overflow: hidden; font: 700 13px Rubik, sans-serif;">
+        <span style="width: 71%; background: #1F5FB5; color: #FFFFFF; display: flex; align-items: center; padding: 0 10px;">נתניהו <span style="font-family: 'Roboto Mono', monospace; margin-right: 6px;">[71]%</span></span>
+        <span style="width: 29%; background: #485462; color: #FFFFFF; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px;">איזנקוט</span>
+      </div>
+    </section>
+
+    <section style="background: #FFFAFA; border: 1px solid #EED0D2; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 4px; font-size: 15px; font-weight: 700;">כמה סימנו כל רשימה בקואליציה</h2>
+      <div style="display: flex; gap: 12px; font-size: 11.5px; color: #84484E; margin-bottom: 8px;">
+        <span style="display: flex; align-items: center; gap: 4px;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #1F5FB5;"></i>קואליציה</span>
+        <span style="display: flex; align-items: center; gap: 4px;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #F48085;"></i>נמנעים</span>
+        <span style="display: flex; align-items: center; gap: 4px;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #485462;"></i>אופוזיציה</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 6px 8px; align-items: center; font-size: 13px;">
+        <span>הליכוד</span><div style="display: flex; height: 12px; border-radius: 6px; overflow: hidden;"><i style="width: 80%; background: #1F5FB5;"></i><i style="width: 5%; background: #F48085;"></i><i style="width: 15%; background: #485462;"></i></div>
+        <span>ש״ס</span><div style="display: flex; height: 12px; border-radius: 6px; overflow: hidden;"><i style="width: 78%; background: #1F5FB5;"></i><i style="width: 6%; background: #F48085;"></i><i style="width: 16%; background: #485462;"></i></div>
+        <span>יהדות התורה</span><div style="display: flex; height: 12px; border-radius: 6px; overflow: hidden;"><i style="width: 76%; background: #1F5FB5;"></i><i style="width: 9%; background: #F48085;"></i><i style="width: 15%; background: #485462;"></i></div>
+        <span>ישר!</span><div style="display: flex; height: 12px; border-radius: 6px; overflow: hidden;"><i style="width: 22%; background: #1F5FB5;"></i><i style="width: 8%; background: #F48085;"></i><i style="width: 70%; background: #485462;"></i></div>
+        <span style="color: #805458;">ועוד 7 רשימות</span><span style="font-size: 12px; color: #805458;">בפתיחת הכרטיס</span>
+      </div>
+    </section>
+
+    <section style="background: #FFFAFA; border: 1.5px solid #1F5FB5; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 6px; font-size: 15px; font-weight: 700;">הטמעה באתר אחר</h2>
+      <p style="margin: 0 0 8px; font-size: 12.5px; color: #84484E;">הסקר והסטטיסטיקה שלו בחלון אחד. מי שמחובר באתר המארח עם Google נכנס אוטומטית.</p>
+      <div dir="ltr" style="font: 11px/1.5 'Roboto Mono', monospace; background: #F6DEE0; border-radius: 10px; padding: 8px 10px; color: #5C1C24; word-break: break-all;">&lt;iframe src="https://26.hopetohelp.net/#/s/gov?embed=1" …&gt;</div>
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <button type="button" style="flex: 1; min-height: 44px; border: 0; border-radius: 999px; background: #1F5FB5; color: #FFFFFF; font: 800 14px Rubik, sans-serif;">העתקת הקוד</button>
+        <a href="Embed.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #EED0D2; text-decoration: none; font-size: 13px; font-weight: 700;">תצוגה מקדימה</a>
+      </div>
+    </section>
+  </main>
+
+  <nav aria-label="ניווט ראשי" style="position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255,250,250,.95); border: 1px solid #EED0D2; box-shadow: 0 0 22px 3px rgba(31,95,181,.30), 0 8px 24px rgba(92,28,36,.12); white-space: nowrap;">
+    <a href="Personal.dc.html" aria-label="אזור אישי" style="width: 38px; height: 38px; border-radius: 50%; background: #FDE4E6; color: #5C1C24; display: grid; place-items: center; text-decoration: none; font-weight: 700;">מ</a>
+    <a href="Main.dc.html" aria-current="page" style="padding: 9px 16px; border-radius: 999px; background: #1F5FB5; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none;">כל הסקרים</a>
+    <a href="Gov.dc.html" style="padding: 9px 14px; border-radius: 999px; color: #84484E; font-size: 14px; text-decoration: none;">הרכבת הממשלה</a>
+    <a href="Main.dc.html" style="padding: 9px 12px; border-radius: 999px; color: #1F5FB5; font-size: 14px; font-weight: 800; text-decoration: none;">AI</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
