@@ -71,6 +71,8 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
       if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
       const href = a.getAttribute("href") ?? "";
       if (href.startsWith("#") && !href.startsWith("#/")) return; // עוגן באותו מסך
+      // סקרי האתר: מעבר בין סקר בודד לכל הסקרים נשאר בתוך החלון המוטמע (הכרעת בעלים 01.11.2026)
+      if (/^#\/(surveys|s\/)[^?]*\?(.*&)?embed=1/.test(href)) return;
       e.preventDefault();
       const url = href.startsWith("#/") ? `${SITE_ORIGIN}/${href}` : a.href;
       window.open(url, "_blank", "noopener");
