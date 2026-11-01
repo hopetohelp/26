@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { answerSurvey, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import { answerSurvey, brokenPromises, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -25,10 +26,35 @@ function Single({ q, value, onPick, disabled }: { q: Extract<SurveyQuestion, { k
   );
 }
 
-/** שיוך כל פריט לעמודה (קואליציה / נמנעים / אופוזיציה): לחיצה מסמנת, לחיצה נוספת מבטלת; הסכום מול 61 דביק בראש */
-function Assign({ q, value, onChange, disabled }: { q: Extract<SurveyQuestion, { kind: "assign" }>; value: Record<string, string>; onChange: (v: Record<string, string>) => void; disabled: boolean }) {
+/** פיצול סיעה בין העמודות (הכרעת בעלים 01.11.2026): מנדטים לכל עמודה, עד מספר המנדטים של הסיעה */
+function SplitEditor({ q, seats, value, onChange, disabled }: { q: Extract<SurveyQuestion, { kind: "assign" }>; seats: number; value: Record<string, number>; onChange: (v: Record<string, number> | null) => void; disabled: boolean }) {
+  const used = Object.values(value).reduce((x, y) => x + y, 0);
+  const set = (c: string, n: number) => { const next = { ...value, [c]: n }; if (!n) delete next[c]; onChange(Object.keys(next).length ? next : null); };
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pb-2 text-[13px]">
+      {q.columns.map((c, i) => {
+        const n = value[c.id] ?? 0;
+        return (
+          <span key={c.id} className="inline-flex items-center gap-1">
+            <i className={`w-2.5 h-2.5 rounded-sm ${COL_BAR[i] ?? "bg-ink-soft"}`} aria-hidden="true" />{c.label}
+            <button type="button" disabled={disabled || n === 0} onClick={() => set(c.id, n - 1)} aria-label={`פחות ל${c.label}`} className="w-8 h-8 rounded-full border border-paper-line disabled:opacity-40">−</button>
+            <b className="font-num w-5 text-center" aria-live="polite">{n}</b>
+            <button type="button" disabled={disabled || used >= seats} onClick={() => set(c.id, n + 1)} aria-label={`עוד ל${c.label}`} className="w-8 h-8 rounded-full border border-paper-line disabled:opacity-40">+</button>
+          </span>
+        );
+      })}
+      <span className="text-ink-soft">לא סומנו: <b className="font-num">{seats - used}</b></span>
+    </div>
+  );
+}
+
+/** שיוך כל פריט לעמודה (קואליציה / נמנעים / אופוזיציה): לחיצה מסמנת, לחיצה נוספת מבטלת; "חלק" מפצל את הסיעה; הסכום מול 61 דביק בראש */
+function Assign({ q, value, onChange, disabled }: { q: Extract<SurveyQuestion, { kind: "assign" }>; value: Record<string, AssignValue>; onChange: (v: Record<string, AssignValue>) => void; disabled: boolean }) {
   const sums = columnSeats(q, value);
   const first = q.columns[0];
+  const [open, setOpen] = useState<string | null>(null);
+  const broken = brokenPromises(value, first?.id);
+  const update = (item: string, v: AssignValue | null) => { const next = { ...value }; if (v === null) delete next[item]; else next[item] = v; onChange(next); };
   return (
     <div>
       <div className="sticky top-14 z-[2] bg-paper-card pt-1 pb-3">
@@ -43,26 +69,38 @@ function Assign({ q, value, onChange, disabled }: { q: Extract<SurveyQuestion, {
           <span className="absolute top-0.5 text-[10.5px] text-ink-soft translate-x-1/2" style={{ right: `${(MAJORITY - 1) / 120 * 100}%` }}>{MAJORITY}</span>
         </div>
         <p className="text-sm font-bold" aria-live="polite">{first ? majorityLine(sums[first.id]) : null}</p>
+        {broken.length > 0 && <p className="text-[13px] text-warn mt-1">הקואליציה הזו מפרה {broken.length === 1 ? "הבטחת בחירות אחת" : `${broken.length} הבטחות בחירות`}: {broken.map((p) => p.speaker).join(", ")}</p>}
       </div>
       <ul className="divide-y divide-paper-line border-t border-paper-line">
-        {q.items.map((item) => (
-          <li key={item.id} className="flex items-center gap-2 py-1.5">
-            <span className="flex-1 min-w-0 truncate text-[13.5px] font-medium">{item.label}</span>
-            <b className="font-num text-[13px] w-6 text-center">{itemSeats(item)}</b>
-            <div role="radiogroup" aria-label={item.label} className="flex gap-0.5 p-0.5 rounded-xl bg-[rgb(var(--grid))]">
-              {q.columns.map((c, i) => {
-                const on = value[item.id] === c.id;
-                return (
-                  <button key={c.id} type="button" role="radio" aria-checked={on} aria-label={c.label} disabled={disabled}
-                    onClick={() => { const next = { ...value }; if (on) delete next[item.id]; else next[item.id] = c.id; onChange(next); }}
-                    className={`min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${on ? COL_BG[i] ?? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>
-                    {c.label.length > 6 ? c.label.slice(0, 4) + "׳" : c.label}
-                  </button>
-                );
-              })}
-            </div>
-          </li>
-        ))}
+        {q.items.map((item) => {
+          const v = value[item.id], split = typeof v === "object";
+          return (
+            <li key={item.id}>
+              <div className="flex items-center gap-2 py-1.5">
+                <span className="flex-1 min-w-0 text-[13.5px] font-medium leading-tight">{item.label}</span>
+                <b className="font-num text-[13px] w-6 text-center">{itemSeats(item)}</b>
+                <div role="radiogroup" aria-label={item.label} className="flex gap-0.5 p-0.5 rounded-xl bg-[rgb(var(--grid))]">
+                  {q.columns.map((c, i) => {
+                    const on = v === c.id;
+                    return (
+                      <button key={c.id} type="button" role="radio" aria-checked={on} aria-label={c.label} disabled={disabled}
+                        onClick={() => { setOpen(null); update(item.id, on ? null : c.id); }}
+                        className={`min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${on ? COL_BG[i] ?? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>
+                        {c.label.length > 5 ? c.label.slice(0, 4) + "׳" : c.label}
+                      </button>
+                    );
+                  })}
+                  <button type="button" aria-pressed={split || open === item.id} aria-label={`חלק מ${item.label}`} disabled={disabled}
+                    onClick={() => setOpen(open === item.id ? null : item.id)}
+                    className={`min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${split ? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>חלק</button>
+                </div>
+              </div>
+              {(open === item.id || split) && (
+                <SplitEditor q={q} seats={itemSeats(item)} disabled={disabled} value={split ? v as Record<string, number> : {}} onChange={(nv) => update(item.id, nv)} />
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -125,6 +163,8 @@ export default function SurveyScreen() {
   const [draft, setDraft] = useState<SurveyAnswers>({});
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [scope, setScope] = useState<"group" | "all">("group");
+  /** שינוי שמפר הבטחת בחירות — ממתין לאישור "להפר הבטחת בחירות" או לביטול */
+  const [pending, setPending] = useState<{ next: SurveyAnswers; promises: ElectionPromise[] } | null>(null);
 
   const load = useCallback(() => {
     getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine) setDraft(d.mine.answers); }).catch(() => setFailed(true));
@@ -158,7 +198,13 @@ export default function SurveyScreen() {
           <h2 className="text-base font-bold mb-2.5">{i + 1}. {q.title}</h2>
           {q.kind === "single"
             ? <Single q={q} value={draft[q.id] as string | undefined} disabled={closed} onPick={(v) => { setDraft({ ...draft, [q.id]: v }); setState("idle"); }} />
-            : <Assign q={q} value={(draft[q.id] as Record<string, string>) ?? {}} disabled={closed} onChange={(v) => { const next = { ...draft }; if (Object.keys(v).length) next[q.id] = v; else delete next[q.id]; setDraft(next); setState("idle"); }} />}
+            : <Assign q={q} value={(draft[q.id] as Record<string, AssignValue>) ?? {}} disabled={closed} onChange={(v) => {
+                const next = { ...draft }; if (Object.keys(v).length) next[q.id] = v; else delete next[q.id];
+                // צירוף חדש שמפר הבטחת בחירות ⇐ חלון עם האומר והציטוט
+                const before = new Set(brokenPromises(draft[q.id] as Record<string, AssignValue> | undefined, q.columns[0]?.id).map((p) => p.id));
+                const fresh = brokenPromises(v, q.columns[0]?.id).filter((p) => !before.has(p.id));
+                if (fresh.length) setPending({ next, promises: fresh }); else { setDraft(next); setState("idle"); }
+              }} />}
         </section>
       ))}
 
@@ -180,13 +226,25 @@ export default function SurveyScreen() {
       <section className="f-card space-y-3">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-base font-bold">תוצאות</h2>
-          <div className="f-seg sm" role="radiogroup" aria-label="מי נספר">
+          {data.results && <div className="f-seg sm" role="radiogroup" aria-label="מי נספר">
             <button type="button" aria-pressed={scope === "group"} onClick={() => setScope("group")}>הגזרה</button>
             <button type="button" aria-pressed={scope === "all"} onClick={() => setScope("all")}>כל המשתתפים</button>
-          </div>
+          </div>}
         </div>
-        <Results survey={survey} results={data.results[scope]} />
+        {data.results ? <Results survey={survey} results={data.results[scope]} /> : <p className="text-sm text-ink-soft">התוצאה העדכנית מוצגת אחרי ששומרים תשובה.</p>}
       </section>
+
+      {pending && (
+        <ConfirmDialog title="הצירוף הזה מפר הבטחת בחירות" confirm="להפר הבטחת בחירות"
+          onConfirm={() => { setDraft(pending.next); setState("idle"); setPending(null); }} onCancel={() => setPending(null)}>
+          {pending.promises.map((p) => (
+            <figure key={p.id} className="border-r-4 border-paper-line pr-3 space-y-1">
+              <blockquote className="text-base">״{p.quote}״</blockquote>
+              <figcaption className="text-ink-soft">{p.speaker}{p.role ? `, ${p.role}` : ""} · {p.date} · <a href={p.source} target="_blank" rel="noopener" className="text-accent">{p.sourceName}</a></figcaption>
+            </figure>
+          ))}
+        </ConfirmDialog>
+      )}
     </main>
   );
 }

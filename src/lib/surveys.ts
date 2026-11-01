@@ -4,16 +4,20 @@
  */
 import { call } from "./crowdApi";
 import { results2026, hasResults } from "./guessAccuracyData";
+import promisesFile from "../../raw/election-promises.json";
 
 export interface SurveyOption { id: string; label: string; sub?: string; seats?: number }
 export type SurveyQuestion =
   | { id: string; kind: "single"; title: string; options: SurveyOption[] }
   | { id: string; kind: "assign"; title: string; items: SurveyOption[]; columns: SurveyOption[] };
 export interface Survey { id: string; group: string; status: "draft" | "open" | "closed"; position: number; updatedAt: string; title: string; questions: SurveyQuestion[]; answered?: boolean; manage?: boolean }
-export type SurveyAnswers = Record<string, string | Record<string, string>>;
+/** תשובה לפריט בשאלת שיוך: עמודה אחת לכל הסיעה, או פיצול {עמודה: מנדטים} (הכרעת בעלים 01.11.2026) */
+export type AssignValue = string | Record<string, number>;
+export type SurveyAnswers = Record<string, string | Record<string, AssignValue>>;
 export type QuestionResult = { n: number; counts: Record<string, number> } | { n: number; items: Record<string, Record<string, number>> };
 export type SurveyResults = { n: number; min: number; hidden: true } | { n: number; questions: Record<string, QuestionResult> };
-export interface SurveyDetail { survey: Survey; results: { all: SurveyResults; group: SurveyResults }; mine: { answers: SurveyAnswers; at: string } | null }
+/** results = null עד שעונים (הכרעת בעלים 01.11.2026) */
+export interface SurveyDetail { survey: Survey; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null }
 export interface SurveyHistory { surveys: Survey[]; answers: { survey: string; at: string; answers: SurveyAnswers }[] }
 
 export const listSurveys = (token: string | null) => call<{ surveys: Survey[] }>("/surveys", { token });
@@ -33,14 +37,29 @@ export function itemSeats(item: SurveyOption): number {
   return item.seats ?? 0;
 }
 
-/** סכום המנדטים בכל עמודה של שאלת שיוך */
-export function columnSeats(q: Extract<SurveyQuestion, { kind: "assign" }>, answer: Record<string, string> | undefined): Record<string, number> {
+/** סכום המנדטים בכל עמודה של שאלת שיוך; סיעה מפוצלת — לפי החלוקה שנבחרה */
+export function columnSeats(q: Extract<SurveyQuestion, { kind: "assign" }>, answer: Record<string, AssignValue> | undefined): Record<string, number> {
   const out = Object.fromEntries(q.columns.map((c) => [c.id, 0]));
   for (const item of q.items) {
-    const col = answer?.[item.id];
-    if (col && col in out) out[col] += itemSeats(item);
+    const v = answer?.[item.id];
+    if (typeof v === "string") { if (v in out) out[v] += itemSeats(item); }
+    else if (v) for (const [c, n] of Object.entries(v)) if (c in out) out[c] += n;
   }
   return out;
+}
+
+/** האם הסיעה (או חלק ממנה) בעמודה */
+export const inColumn = (v: AssignValue | undefined, col: string) => typeof v === "string" ? v === col : !!v && (v[col] ?? 0) > 0;
+
+/**
+ * הבטחות בחירות (הכרעת בעלים 01.11.2026): צירוף שסותר הבטחה מפורשת מציג את האומר, הציטוט והמקור, וכפתור "להפר הבטחת בחירות".
+ * רק ציטוט עם מקור מתועד, באישור הבעלים (raw/election-promises.json); אין ציטוט בלי מקור.
+ */
+export interface ElectionPromise { id: string; party: string; speaker: string; role?: string; quote: string; date: string; source: string; sourceName: string; never: string[] }
+export const PROMISES = (promisesFile as { promises: ElectionPromise[] }).promises;
+/** ההבטחות שהשיוך מפר: הסיעה בעמודת הקואליציה יחד עם סיעה שהבטיחה לא לשבת איתה */
+export function brokenPromises(answer: Record<string, AssignValue> | undefined, coalition = "coalition", list: ElectionPromise[] = PROMISES): ElectionPromise[] {
+  return list.filter((p) => inColumn(answer?.[p.party], coalition) && p.never.some((x) => inColumn(answer?.[x], coalition)));
 }
 
 /** רוב בכנסת */

@@ -53,12 +53,19 @@ describe("survey definitions and answers (pure)", () => {
     expect(cleanAnswers(def, { q2: { z: "c" } })).toBeNull();
     expect(cleanAnswers(def, { q3: "yes" })).toBeNull();
     expect(cleanAnswers(def, {})).toBeNull();
+    // פיצול סיעה
+    expect(cleanAnswers(def, { q2: { a: { c: 6, o: 4 } } })).toEqual({ q2: { a: { c: 6, o: 4 } } });
+    expect(cleanAnswers(def, { q2: { a: { c: 0, o: 3 } } })).toEqual({ q2: { a: { o: 3 } } });
+    expect(cleanAnswers(def, { q2: { a: { z: 2 } } })).toBeNull();
+    expect(cleanAnswers(def, { q2: { a: { c: 1.5 } } })).toBeNull();
+    expect(cleanAnswers(def, { q2: { a: { c: 0 } } })).toBeNull();
   });
   it("tallies the latest answers", () => {
     const r = tally(def, [{ q1: "yes", q2: { a: "c", b: "o" } }, { q1: "no" }, { q2: { a: "o" } }]);
     expect(r.q1).toEqual({ n: 2, counts: { yes: 1, no: 1 } });
     expect(r.q2.n).toBe(2);
     expect(r.q2.items.a).toEqual({ c: 1, o: 1 });
+    expect(tally(def, [{ q2: { a: { c: 3, o: 1 } } }]).q2.items.a).toEqual({ c: 0.75, o: 0.25 });
   });
 });
 
@@ -97,16 +104,24 @@ describe("site surveys over the worker", () => {
 
   it("hides results below the threshold and publishes them above it", async () => {
     const one = await account("c@x.co");
+    // לפני שענית — אין תוצאות
+    expect((await call("/survey?id=gov", { token: one })).data.results).toBeNull();
+    expect((await call("/survey?id=gov")).data.results).toBeNull();
     await answer(one, { reelect: "yes" });
-    let r = await call("/survey?id=gov");
+    let r = await call("/survey?id=gov", { token: one });
     expect(r.data.results.all).toEqual({ n: 1, min: SURVEY_MIN, hidden: true });
     for (let i = 0; i < SURVEY_MIN; i++) env.DB.raw.prepare("INSERT INTO participants (id, created_at) VALUES (?, 't')").run(`p${i}`);
     for (let i = 0; i < SURVEY_MIN; i++) env.DB.raw.prepare("INSERT INTO survey_answers (survey, participant, created_at, op_id, payload) VALUES ('gov', ?, 't', ?, ?)").run(`p${i}`, `o${i}`, JSON.stringify({ reelect: i % 2 ? "yes" : "no" }));
-    r = await call("/survey?id=gov");
+    r = await call("/survey?id=gov", { token: one });
     expect(r.data.results.all.n).toBe(SURVEY_MIN + 1);
     expect(r.data.results.all.questions.reelect.counts).toEqual({ yes: SURVEY_MIN / 2 + 1, no: SURVEY_MIN / 2 });
     // משתתפי הקבוצה: אף אחד מהם אינו חבר ⇐ מתחת לסף
     expect(r.data.results.group.hidden).toBe(true);
+  });
+
+  it("shows results to a group manager who did not answer", async () => {
+    const m = await manager("mr@x.co");
+    expect((await call("/survey?id=gov", { token: m })).data.results.all.hidden).toBe(true);
   });
 
   it("gives group managers full control over their group's surveys only", async () => {

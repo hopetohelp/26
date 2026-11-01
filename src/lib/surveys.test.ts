@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { columnSeats, itemSeats, majorityLine, type SurveyQuestion } from "./surveys";
+import { brokenPromises, columnSeats, inColumn, itemSeats, majorityLine, type ElectionPromise, type SurveyQuestion } from "./surveys";
 import { results2026, hasResults } from "./guessAccuracyData";
 
 const q: Extract<SurveyQuestion, { kind: "assign" }> = {
@@ -24,5 +24,21 @@ describe("site surveys — seats and majority", () => {
     expect(majorityLine(0)).toBe("סמנו רשימות כדי לראות את סכום הקואליציה");
     expect(majorityLine(53)).toBe("חסרים 8 מנדטים לרוב");
     expect(majorityLine(64)).toBe("רוב של 64 מנדטים");
+  });
+});
+
+describe("party split and election promises", () => {
+  it("sums a split party by its chosen parts", () => {
+    const s = columnSeats(q, { likud: { coalition: 3, opposition: 2 }, nolist: "coalition" });
+    expect(s).toEqual({ coalition: 8, abstain: 0, opposition: 2 });
+    expect(inColumn({ coalition: 1 }, "coalition")).toBe(true);
+    expect(inColumn({ opposition: 1 }, "coalition")).toBe(false);
+  });
+  it("flags a promise only when both lists (or parts of them) sit in the coalition", () => {
+    const list: ElectionPromise[] = [{ id: "p1", party: "a", speaker: "ר", quote: "ק", date: "1.10.2026", source: "https://example.org", sourceName: "מקור", never: ["b"] }];
+    expect(brokenPromises({ a: "coalition", b: "opposition" }, "coalition", list)).toEqual([]);
+    expect(brokenPromises({ a: "coalition", b: "coalition" }, "coalition", list).map((p) => p.id)).toEqual(["p1"]);
+    expect(brokenPromises({ a: "coalition", b: { coalition: 2, opposition: 4 } }, "coalition", list).map((p) => p.id)).toEqual(["p1"]);
+    expect(brokenPromises({ b: "coalition" }, "coalition", list)).toEqual([]);
   });
 });

@@ -1977,7 +1977,7 @@ const routes = {
     return { surveys: (results || []).filter((r) => r.status !== "draft" || managed.includes(r.group_id)).map((r) => ({ ...surveyRow(r), answered: answered.has(r.id), manage: managed.includes(r.group_id) })) };
   },
 
-  // סקר אחד: ההגדרה, התוצאות (כל המשתתפים ומשתתפי הקבוצה, מעל הסף) והתשובה האחרונה שלי
+  // סקר אחד: ההגדרה, התוצאות (כל המשתתפים ומשתתפי הקבוצה, מעל הסף — רק למי שענה) והתשובה האחרונה שלי
   "GET /survey": async ({ env, request, now, url }) => {
     const id = surveyId(url.searchParams.get("id"));
     const r = await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first();
@@ -1985,11 +1985,12 @@ const routes = {
     if (!r || (r.status === "draft" && !(a && (await managedGroups(env, a.participant)).some((g) => g.id === r.group_id)))) throw new HttpError(404, "not_found");
     const survey = surveyRow(r);
     const mine = a ? await env.DB.prepare("SELECT payload, created_at FROM survey_answers WHERE participant = ? AND survey = ? ORDER BY id DESC LIMIT 1").bind(a.participant, id).first() : null;
-    return {
-      survey,
-      results: { all: surveyResults(survey, await latestSurveyAnswers(env, id, null)), group: surveyResults(survey, await latestSurveyAnswers(env, id, r.group_id)) },
-      mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null,
-    };
+    // התוצאות — רק אחרי שענית (הכרעת בעלים 01.11.2026); מנהלי הקבוצה רואים תמיד
+    const manager = a && !mine ? (await managedGroups(env, a.participant)).some((g) => g.id === r.group_id) : false;
+    const results = mine || manager
+      ? { all: surveyResults(survey, await latestSurveyAnswers(env, id, null)), group: surveyResults(survey, await latestSurveyAnswers(env, id, r.group_id)) }
+      : null;
+    return { survey, results, mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null };
   },
 
   // תשובה: שורה חדשה בכל שמירה (ההיסטוריה נשמרת). op = מזהה פעולה — שליחה חוזרת אינה יוצרת כפילות
