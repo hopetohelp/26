@@ -164,7 +164,8 @@ export default function SurveyScreen() {
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [scope, setScope] = useState<"group" | "all">("group");
   /** שינוי שמפר הבטחת בחירות — ממתין לאישור "להפר הבטחת בחירות" או לביטול */
-  const [pending, setPending] = useState<{ next: SurveyAnswers; promises: ElectionPromise[] } | null>(null);
+  /** atSave — הבטחת "רק עם" נבדקת רק בשמירה (כדי שסימון הרשימה הראשונה לא יפתח חלון) */
+  const [pending, setPending] = useState<{ next: SurveyAnswers; promises: ElectionPromise[]; atSave?: boolean } | null>(null);
 
   const load = useCallback(() => {
     getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine) setDraft(d.mine.answers); }).catch(() => setFailed(true));
@@ -182,8 +183,13 @@ export default function SurveyScreen() {
   const changed = useMemo(() => JSON.stringify(draft) !== JSON.stringify(data?.mine?.answers ?? {}), [draft, data]);
   const empty = Object.keys(draft).length === 0;
 
-  async function save() {
+  async function save(confirmed = false) {
     if (!token || !survey) return;
+    // בשמירה: הבטחות "רק עם" שהקואליציה מפרה ⇐ חלון לפני השמירה
+    if (!confirmed) {
+      const atSave = survey.questions.flatMap((q) => q.kind === "assign" ? brokenPromises(draft[q.id] as Record<string, AssignValue> | undefined, q.columns[0]?.id).filter((p) => p.with?.length) : []);
+      if (atSave.length) { setPending({ next: draft, promises: atSave, atSave: true }); return; }
+    }
     setState("saving");
     try { await answerSurvey(token, survey.id, draft); setState("saved"); load(); } catch { setState("error"); }
   }
@@ -225,7 +231,7 @@ export default function SurveyScreen() {
                 const next = { ...draft }; if (Object.keys(v).length) next[q.id] = v; else delete next[q.id];
                 // צירוף חדש שמפר הבטחת בחירות ⇐ חלון עם האומר והציטוט
                 const before = new Set(brokenPromises(draft[q.id] as Record<string, AssignValue> | undefined, q.columns[0]?.id).map((p) => p.id));
-                const fresh = brokenPromises(v, q.columns[0]?.id).filter((p) => !before.has(p.id));
+                const fresh = brokenPromises(v, q.columns[0]?.id).filter((p) => !before.has(p.id) && !p.with?.length);
                 if (fresh.length) setPending({ next, promises: fresh }); else { setDraft(next); setState("idle"); }
               }} />}
         </section>
@@ -259,7 +265,7 @@ export default function SurveyScreen() {
 
       {pending && (
         <ConfirmDialog title="הצירוף הזה מפר הבטחת בחירות" confirm="להפר הבטחת בחירות"
-          onConfirm={() => { setDraft(pending.next); setState("idle"); setPending(null); }} onCancel={() => setPending(null)}>
+          onConfirm={() => { const atSave = pending.atSave; setDraft(pending.next); setState("idle"); setPending(null); if (atSave) void save(true); }} onCancel={() => setPending(null)}>
           {pending.promises.map((p) => (
             <figure key={p.id} className="border-r-4 border-paper-line pr-3 space-y-1">
               <blockquote className="text-base">״{p.quote}״</blockquote>
