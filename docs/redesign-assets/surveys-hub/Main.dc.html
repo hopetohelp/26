@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>כל הסקרים — טלפון</title>
+<title>סקרי הגזרה — אפליקציה</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -13,85 +13,395 @@
 <style>
 body{margin:0}
 a{color:#1F5FB5}a:hover{color:#174a8c}
+.scr{animation:dcIn .22s ease-out}
+@keyframes dcIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.scr{animation:none}}
 </style>
 </helmet>
-<div dir="rtl" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #FFF3F3; color: #5C1C24; font-family: Rubik, system-ui, sans-serif;">
+<div dir="rtl" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: {{t.paper}}; color: {{t.ink}}; font-family: Rubik, system-ui, sans-serif;">
+
+  <sc-if value="{{notEmbed}}" hint-placeholder-val="{{ true }}">
   <header style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; height: 60px; box-sizing: border-box;">
-    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 8px; color: #5C1C24; text-decoration: none; font-weight: 800; font-size: 17px;">
-      <span style="width: 32px; height: 32px; border-radius: 50%; background: #1F5FB5; color: #FFFFFF; display: grid; place-items: center; font-size: 15px;">ה</span>
-      <span>הגזרה · <span style="color: #1F5FB5;">סקרים</span></span>
-    </a>
-    <span style="flex: 1;"></span>
-    <a href="Elections.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #EED0D2; background: #FFFAFA; color: #5C1C24; font-size: 13px; font-weight: 700; text-decoration: none;">בחירות</a>
-    <button type="button" aria-label="תצורה: לפי המכשיר" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #5C1C24; background: transparent; color: #5C1C24; display: grid; place-items: center;">
-      <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"></path></svg>
+    <sc-if value="{{showBack}}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{back}}" aria-label="חזרה" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid {{t.line}}; background: {{t.card}}; color: {{t.ink}}; font-size: 20px; display: grid; place-items: center; cursor: pointer;">›</button>
+    </sc-if>
+    <button type="button" onClick="{{goHome}}" style="display: flex; align-items: center; gap: 8px; border: 0; background: transparent; color: {{t.ink}}; font: 800 17px Rubik, sans-serif; cursor: pointer; padding: 0;">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: {{t.signal}}; color: {{t.signalInk}}; display: grid; place-items: center; font-size: 15px;">ה</span>
+      <span>הגזרה · <span style="color: {{t.signal}};">{{brand}}</span></span>
     </button>
+    <span style="flex: 1;"></span>
+    <button type="button" onClick="{{toggleArea}}" style="min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{areaBtnLine}}; background: {{t.card}}; color: {{areaBtnInk}}; font: 700 13px Rubik, sans-serif; cursor: pointer;">{{areaBtn}}</button>
   </header>
+  </sc-if>
 
-  <main style="padding: 4px 16px 0; display: flex; flex-direction: column; gap: 14px;">
+  <!-- ===== כל הסקרים ===== -->
+  <sc-if value="{{is.home}}" hint-placeholder-val="{{ true }}">
+  <main class="scr" style="height: 784px; overflow-y: auto; box-sizing: border-box; padding: 4px 16px 110px; display: flex; flex-direction: column; gap: 14px;">
     <div style="display: flex; align-items: baseline; justify-content: space-between;">
-      <h1 style="margin: 0; font-size: 28px; font-weight: 800; line-height: 1.1;">כל הסקרים</h1>
-      <span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #FDE4E6; color: #84484E;">נתוני דוגמה</span>
+      <h1 style="margin: 0; font-size: 28px; font-weight: 800;">כל הסקרים</h1>
+      <span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: {{t.soft2}}; color: {{t.soft}};">נתוני דוגמה</span>
+    </div>
+    <div role="radiogroup" aria-label="סינון" style="display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: {{t.grid}}; width: fit-content;">
+      <sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+        <button type="button" role="radio" aria-checked="{{f.on}}" onClick="{{f.pick}}" style="border: 0; border-radius: 12px; padding: 8px 16px; min-height: 40px; background: {{f.bg}}; color: {{f.fg}}; font: {{f.font}}; cursor: pointer;">{{f.label}}</button>
+      </sc-for>
     </div>
 
-    <div role="radiogroup" aria-label="סינון" style="display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: #F6DEE0; width: fit-content;">
-      <button type="button" role="radio" aria-checked="true" style="border: 0; border-radius: 12px; padding: 8px 16px; min-height: 40px; background: #FFFAFA; color: #5C1C24; font: 700 14px Rubik, sans-serif; box-shadow: 0 1px 4px rgba(92,28,36,.12);">פתוחים</button>
-      <button type="button" role="radio" aria-checked="false" style="border: 0; border-radius: 12px; padding: 8px 16px; min-height: 40px; background: transparent; color: #84484E; font: 14px Rubik, sans-serif;">נסגרו</button>
-      <button type="button" role="radio" aria-checked="false" style="border: 0; border-radius: 12px; padding: 8px 16px; min-height: 40px; background: transparent; color: #84484E; font: 14px Rubik, sans-serif;">כולם</button>
-    </div>
-
-    <a href="Gov.dc.html" style="display: block; text-decoration: none; color: #5C1C24; background: #FFFAFA; border: 1.5px solid #1F5FB5; border-radius: 20px; padding: 16px; box-shadow: 0 0 22px 2px rgba(31,95,181,.18);">
+    <sc-if value="{{showGovCard}}" hint-placeholder-val="{{ true }}">
+    <button type="button" onClick="{{goGov}}" style="text-align: right; font-family: Rubik, sans-serif; color: {{t.ink}}; background: {{t.card}}; border: 1.5px solid {{t.signal}}; border-radius: 20px; padding: 16px; box-shadow: 0 0 22px 2px rgba(31,95,181,.18); cursor: pointer;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #1F5FB5; color: #FFFFFF;">חדש</span>
-        <span style="font-size: 12px; color: #84484E;">3 שאלות · כדקה</span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: {{t.signal}}; color: {{t.signalInk}};">חדש</span>
+        <span style="font-size: 12px; color: {{t.soft}};">3 שאלות · כדקה</span>
       </div>
       <div style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">הרכבת הממשלה</div>
-      <ul style="margin: 0 0 12px; padding: 0 18px 0 0; font-size: 14px; color: #84484E; line-height: 1.7;">
-        <li>בחירות חוזרות — כן או לא?</li>
-        <li>על מי יטיל הנשיא ראשון?</li>
-        <li>מי בקואליציה, מי נמנע ומי באופוזיציה?</li>
-      </ul>
+      <div style="font-size: 14px; color: {{t.soft}}; line-height: 1.7; margin-bottom: 12px;">בחירות חוזרות? · על מי יטיל הנשיא? · מי בקואליציה?</div>
       <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; background: #1F5FB5; color: #FFFFFF; font-weight: 800; font-size: 15px;">להשתתף</span>
-        <span style="font-size: 13px; color: #84484E;"><b style="font-family: 'Roboto Mono', monospace; color: #5C1C24;">[N]</b> השתתפו</span>
+        <span style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; background: {{t.signal}}; color: {{t.signalInk}}; font-weight: 800; font-size: 15px;">{{govCta}}</span>
+        <span style="font-size: 13px; color: {{t.soft}};">{{govStatus}}</span>
       </div>
-    </a>
+    </button>
+    </sc-if>
 
-    <div style="background: #FFFAFA; border: 1px solid #EED0D2; border-radius: 20px; overflow: hidden;">
-      <a href="Survey.dc.html" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; text-decoration: none; color: #5C1C24; border-bottom: 1px solid #EED0D2;">
-        <div style="flex: 1; min-width: 0;">
-          <div style="font-size: 16px; font-weight: 700;">למי הצבעת ב־2026?</div>
-          <div style="font-size: 12.5px; color: #84484E;">שאלה אחת · פתוח</div>
-        </div>
-        <span style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #E3ECF8; color: #1F5FB5;">ענית ✓</span>
-      </a>
-      <a href="Survey.dc.html" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; text-decoration: none; color: #5C1C24; border-bottom: 1px solid #EED0D2;">
-        <div style="flex: 1; min-width: 0;">
-          <div style="font-size: 16px; font-weight: 700;">הניחוש שלי — 120 מנדטים</div>
-          <div style="font-size: 12.5px; color: #84484E;">נסגר 27.10 בשעה 21:58 · לדיוק הניחושים</div>
-        </div>
-        <span style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F6DEE0; color: #84484E;">נסגר</span>
-      </a>
-      <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #805458;">
-        <div style="flex: 1; min-width: 0;">
-          <div style="font-size: 16px; font-weight: 700;">[הסקר הבא שיפורסם]</div>
-          <div style="font-size: 12.5px;">מנהל הקבוצה מוסיף סקר — הוא מופיע כאן</div>
-        </div>
-      </div>
+    <div style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; overflow: hidden;">
+      <sc-for list="{{surveyRows}}" as="r" hint-placeholder-count="2">
+        <button type="button" onClick="{{r.open}}" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 0; border-bottom: 1px solid {{t.line}}; background: transparent; color: {{t.ink}}; text-align: right; font-family: Rubik, sans-serif; cursor: pointer;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-size: 16px; font-weight: 700;">{{r.title}}</span>
+            <span style="display: block; font-size: 12.5px; color: {{t.soft}};">{{r.meta}}</span>
+          </span>
+          <span style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: {{r.chipBg}}; color: {{r.chipFg}};">{{r.chip}}</span>
+        </button>
+      </sc-for>
+      <div style="padding: 14px 16px; color: {{t.faint}}; font-size: 13px;">מנהלי הגזרה מוסיפים סקרים — הם מופיעים כאן</div>
     </div>
   </main>
+  </sc-if>
 
-  <nav aria-label="ניווט ראשי" style="position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255,250,250,.95); border: 1px solid #EED0D2; box-shadow: 0 0 0 1px rgba(31,95,181,.18), 0 0 22px 3px rgba(31,95,181,.30), 0 8px 24px rgba(92,28,36,.12); white-space: nowrap;">
-    <a href="Personal.dc.html" aria-label="אזור אישי" style="width: 38px; height: 38px; border-radius: 50%; background: #FDE4E6; color: #5C1C24; display: grid; place-items: center; text-decoration: none; font-weight: 700;">מ</a>
-    <a href="Main.dc.html" aria-current="page" style="padding: 9px 16px; border-radius: 999px; background: #1F5FB5; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none;">כל הסקרים</a>
-    <a href="Gov.dc.html" style="padding: 9px 14px; border-radius: 999px; color: #84484E; font-size: 14px; text-decoration: none;">הרכבת הממשלה</a>
-    <a href="Main.dc.html" style="padding: 9px 12px; border-radius: 999px; color: #1F5FB5; font-size: 14px; font-weight: 800; text-decoration: none;">AI</a>
+  <!-- ===== הרכבת הממשלה ===== -->
+  <sc-if value="{{is.gov}}" hint-placeholder-val="{{ false }}">
+  <main class="scr" style="height: 784px; overflow-y: auto; box-sizing: border-box; padding: 0 16px 110px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between;">
+      <h1 style="margin: 0; font-size: 26px; font-weight: 800;">הרכבת הממשלה</h1>
+      <span style="font-size: 11px; color: {{t.soft}};">מנדטים לפי הספירה, לא סופי</span>
+    </div>
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 10px; font-size: 16px; font-weight: 700;">1. בחירות חוזרות?</h2>
+      <div role="radiogroup" aria-label="בחירות חוזרות" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: {{t.grid}};">
+        <sc-for list="{{q1opts}}" as="o" hint-placeholder-count="2">
+          <button type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="border: 0; border-radius: 12px; min-height: 44px; font: 700 15px Rubik, sans-serif; background: {{o.bg}}; color: {{o.fg}}; cursor: pointer;">{{o.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 10px; font-size: 16px; font-weight: 700;">2. על מי יטיל הנשיא את הרכבת הממשלה ראשון?</h2>
+      <div role="radiogroup" aria-label="על מי יטיל הנשיא" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: {{t.grid}};">
+        <sc-for list="{{q2opts}}" as="o" hint-placeholder-count="2">
+          <button type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="border: 0; border-radius: 12px; min-height: 52px; font: 700 15px Rubik, sans-serif; background: {{o.bg}}; color: {{o.fg}}; cursor: pointer;">{{o.label}}<span style="display: block; font-size: 11px; font-weight: 400;">{{o.sub}}</span></button>
+        </sc-for>
+      </div>
+    </section>
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700;">3. מי בקואליציה, מי נמנע ומי באופוזיציה?</h2>
+      <p style="margin: 0 0 8px; font-size: 12.5px; color: {{t.soft}};">לחיצה על טור מסמנת; לחיצה נוספת מבטלת.</p>
+      <div style="position: sticky; top: 0; z-index: 2; background: {{t.card}}; padding: 6px 0 10px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+          <span><b style="font-family: 'Roboto Mono', monospace; font-size: 20px; color: {{t.signal}};">{{sum.coal}}</b> קואליציה</span>
+          <span><b style="font-family: 'Roboto Mono', monospace;">{{sum.abst}}</b> נמנעים</span>
+          <span><b style="font-family: 'Roboto Mono', monospace;">{{sum.opp}}</b> אופוזיציה</span>
+        </div>
+        <div style="height: 14px; border-radius: 999px; background: {{t.grid}}; overflow: hidden; display: flex;">
+          <span style="height: 100%; width: {{sum.coalW}}; background: {{t.signal}}; transition: width .25s;"></span>
+          <span style="height: 100%; width: {{sum.abstW}}; background: {{t.abst}}; transition: width .25s;"></span>
+          <span style="height: 100%; width: {{sum.oppW}}; background: {{t.opp}}; transition: width .25s;"></span>
+        </div>
+        <div style="position: relative; height: 16px;">
+          <span style="position: absolute; top: -18px; right: 50.83%; width: 2px; height: 20px; background: {{t.ink}};"></span>
+          <span style="position: absolute; top: 2px; right: 50.83%; transform: translateX(50%); font-size: 10.5px; color: {{t.soft}};">61</span>
+        </div>
+        <div style="font-size: 13px; font-weight: 700;">{{sum.msg}}</div>
+      </div>
+      <sc-for list="{{parties}}" as="p" hint-placeholder-count="11">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid {{t.line}};">
+          <span style="width: 30px; height: 30px; flex: none; border-radius: 50%; background: {{t.grid}}; color: {{t.soft}}; display: grid; place-items: center; font-size: 12px; font-weight: 700;">{{p.ini}}</span>
+          <span style="flex: 1; min-width: 0; font-size: 13.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.name}}</span>
+          <b style="font-family: 'Roboto Mono', monospace; font-size: 13px; width: 22px; text-align: center;">{{p.seats}}</b>
+          <div role="radiogroup" aria-label="{{p.name}}" style="display: flex; gap: 2px; padding: 2px; border-radius: 12px; background: {{t.grid}};">
+            <button type="button" role="radio" aria-checked="{{p.isC}}" onClick="{{p.setC}}" aria-label="קואליציה" style="border: 0; border-radius: 10px; min-width: 44px; min-height: 44px; font: 700 11.5px Rubik, sans-serif; background: {{p.cBg}}; color: {{p.cFg}}; cursor: pointer;">קואל׳</button>
+            <button type="button" role="radio" aria-checked="{{p.isA}}" onClick="{{p.setA}}" aria-label="נמנעים" style="border: 0; border-radius: 10px; min-width: 44px; min-height: 44px; font: 700 11.5px Rubik, sans-serif; background: {{p.aBg}}; color: {{p.aFg}}; cursor: pointer;">נמנע</button>
+            <button type="button" role="radio" aria-checked="{{p.isO}}" onClick="{{p.setO}}" aria-label="אופוזיציה" style="border: 0; border-radius: 10px; min-width: 44px; min-height: 44px; font: 700 11.5px Rubik, sans-serif; background: {{p.oBg}}; color: {{p.oFg}}; cursor: pointer;">אופו׳</button>
+          </div>
+        </div>
+      </sc-for>
+    </section>
+    <button type="button" onClick="{{save}}" style="min-height: 50px; border: 0; border-radius: 999px; background: {{t.signal}}; color: {{t.signalInk}}; font: 800 16px Rubik, sans-serif; cursor: pointer;">שמירת התשובות</button>
+  </main>
+  </sc-if>
+
+  <!-- ===== תוצאות סקר + הטמעה ===== -->
+  <sc-if value="{{is.survey}}" hint-placeholder-val="{{ false }}">
+  <main class="scr" style="height: 784px; overflow-y: auto; box-sizing: border-box; padding: 0 16px 110px; display: flex; flex-direction: column; gap: 12px;">
+    <sc-if value="{{justSaved}}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="padding: 10px 12px; border-radius: 12px; background: {{t.okBg}}; color: {{t.signal}}; font-weight: 700; font-size: 14px;">התשובות נשמרו ✓ — הן מופיעות גם באזור האישי</div>
+    </sc-if>
+    <div>
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 800;">הרכבת הממשלה — תוצאות</h1>
+        <span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: {{t.soft2}}; color: {{t.soft}}; white-space: nowrap;">דוגמה</span>
+      </div>
+      <div style="font-size: 12.5px; color: {{t.soft}}; margin-top: 4px;"><b style="font-family: 'Roboto Mono', monospace; color: {{t.ink}};">[N]</b> משתתפים · סקר משתתפים, אינו מייצג</div>
+    </div>
+    <div role="radiogroup" aria-label="מי נספר" style="display: flex; gap: 2px; padding: 4px; border-radius: 16px; background: {{t.grid}}; width: fit-content;">
+      <sc-for list="{{scopes}}" as="f" hint-placeholder-count="3">
+        <button type="button" role="radio" aria-checked="{{f.on}}" onClick="{{f.pick}}" style="border: 0; border-radius: 12px; padding: 6px 14px; min-height: 36px; background: {{f.bg}}; color: {{f.fg}}; font: {{f.font}}; cursor: pointer;">{{f.label}}</button>
+      </sc-for>
+    </div>
+    <sc-for list="{{results}}" as="q" hint-placeholder-count="2">
+      <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+        <h2 style="margin: 0 0 10px; font-size: 15px; font-weight: 700;">{{q.title}}</h2>
+        <div style="display: flex; height: 30px; border-radius: 10px; overflow: hidden; font: 700 13px Rubik, sans-serif;">
+          <span style="width: {{q.aW}}; background: {{t.signal}}; color: {{t.signalInk}}; display: flex; align-items: center; padding: 0 10px; white-space: nowrap; transition: width .3s;">{{q.aLabel}}</span>
+          <span style="width: {{q.bW}}; background: {{t.opp}}; color: {{t.oppInk}}; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; white-space: nowrap; transition: width .3s;">{{q.bLabel}}</span>
+        </div>
+        <div style="font-size: 12px; color: {{t.soft}}; margin-top: 6px;">{{q.mine}}</div>
+      </section>
+    </sc-for>
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 8px; font-size: 15px; font-weight: 700;">הקואליציה {{scopeWord}}</h2>
+      <div style="font-size: 14px;">{{coalSummary}}</div>
+    </section>
+    <section style="background: {{t.card}}; border: 1.5px solid {{t.signal}}; border-radius: 20px; padding: 14px 16px;">
+      <h2 style="margin: 0 0 6px; font-size: 15px; font-weight: 700;">הטמעה באתר אחר</h2>
+      <p style="margin: 0 0 8px; font-size: 12.5px; color: {{t.soft}};">הסקר והסטטיסטיקה בחלון אחד. מי שמחובר באתר הגזרה עם Google — נכנס אוטומטית.</p>
+      <div dir="ltr" style="font: 11px/1.5 'Roboto Mono', monospace; background: {{t.grid}}; border-radius: 10px; padding: 8px 10px; word-break: break-all;">&lt;iframe src="https://26.hopetohelp.net/#/s/gov?embed=1" …&gt;</div>
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <button type="button" onClick="{{copy}}" style="flex: 1; min-height: 44px; border: 0; border-radius: 999px; background: {{t.signal}}; color: {{t.signalInk}}; font: 800 14px Rubik, sans-serif; cursor: pointer;">{{copyLabel}}</button>
+        <button type="button" onClick="{{goEmbed}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{t.line}}; background: transparent; color: {{t.ink}}; font: 700 13px Rubik, sans-serif; cursor: pointer;">איך זה נראה אצלם</button>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ===== אזור אישי ===== -->
+  <sc-if value="{{is.personal}}" hint-placeholder-val="{{ false }}">
+  <main class="scr" style="height: 784px; overflow-y: auto; box-sizing: border-box; padding: 0 16px 110px; display: flex; flex-direction: column; gap: 12px;">
+    <div style="display: flex; align-items: center; gap: 12px; background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 12px 14px;">
+      <span style="width: 44px; height: 44px; border-radius: 50%; background: {{t.soft2}}; display: grid; place-items: center; font-weight: 800; font-size: 18px;">מ</span>
+      <span style="flex: 1; min-width: 0;">
+        <span style="display: block; font-weight: 700; font-size: 16px;">[השם המוצג]</span>
+        <span style="display: block; font-size: 12.5px; color: {{t.soft}};">מחובר עם Google · חבר בגזרה</span>
+      </span>
+    </div>
+    <h1 style="margin: 4px 0 0; font-size: 22px; font-weight: 800;">היסטוריית הסקרים שלי</h1>
+    <sc-for list="{{history}}" as="h" hint-placeholder-count="3">
+      <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+        <div style="font-size: 11.5px; color: {{t.soft}};">{{h.survey}}</div>
+        <h2 style="margin: 2px 0 10px; font-size: 16px; font-weight: 700;">{{h.q}}</h2>
+        <ol style="list-style: none; margin: 0 5px 0 0; padding: 0; border-right: 2px solid {{t.line}};">
+          <sc-for list="{{h.items}}" as="it" hint-placeholder-count="2">
+            <li style="position: relative; padding: 0 16px 10px 0; color: {{it.color}};">
+              <i style="position: absolute; right: -7px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: {{it.dot}};"></i>
+              <b style="font-weight: {{it.weight}};">{{it.a}}</b> <span style="font-size: 12px; color: {{t.soft}};">· {{it.when}}</span>
+              <span style="display: block; font-size: 12.5px; color: {{t.soft}};">{{it.detail}}</span>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+    </sc-for>
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+      <div style="font-size: 11.5px; color: {{t.soft}};">בחירות 2026 · נסגר</div>
+      <h2 style="margin: 2px 0 6px; font-size: 16px; font-weight: 700;">הניחוש שלי — 120 מנדטים</h2>
+      <div style="font-size: 13px; color: {{t.soft}};">מגירת הדיוק הקיימת נפתחת כאן</div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ===== אזור הבחירות ===== -->
+  <sc-if value="{{is.elections}}" hint-placeholder-val="{{ false }}">
+  <main class="scr" style="height: 784px; overflow-y: auto; box-sizing: border-box; padding: 0 16px 110px; display: flex; flex-direction: column; gap: 12px;">
+    <sc-if value="{{el.results}}" hint-placeholder-val="{{ true }}">
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 14px 16px;">
+      <h1 style="margin: 0 0 4px; font-size: 20px; font-weight: 800;">תוצאות אמת</h1>
+      <div style="font-size: 12px; color: {{t.soft}}; margin-bottom: 10px;">[שורת אחוז ההצבעה והספירה מהכרטיס הקיים]</div>
+      <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr) 26px; gap: 7px 8px; align-items: center; font-size: 13px;">
+        <sc-for list="{{seatRows}}" as="s" hint-placeholder-count="11">
+          <span>{{s.name}}</span><i style="height: 10px; border-radius: 5px; background: {{t.signal}}; width: {{s.w}};"></i><b style="font-family: 'Roboto Mono', monospace;">{{s.seats}}</b>
+        </sc-for>
+      </div>
+      <div style="font-size: 11.5px; color: {{t.soft}}; margin-top: 10px;">המנדטים מנתוני האתר (ספירה חלקית, 30.10)</div>
+    </section>
+    </sc-if>
+    <sc-if value="{{el.other}}" hint-placeholder-val="{{ false }}">
+    <section style="background: {{t.card}}; border: 1px solid {{t.line}}; border-radius: 20px; padding: 18px 16px;">
+      <h1 style="margin: 0 0 6px; font-size: 20px; font-weight: 800;">{{elTitle}}</h1>
+      <p style="margin: 0; font-size: 14px; color: {{t.soft}}; line-height: 1.6;">המסך הקיים באתר, בלי שינוי. כאן רק מראים שהסרגל של המורחב עובד באזור הבחירות.</p>
+    </section>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ===== עמוד מוטמע באתר הגזרה ===== -->
+  <sc-if value="{{is.embed}}" hint-placeholder-val="{{ false }}">
+  <div class="scr" style="height: 844px; background: #ECEEF1; color: #22262C; overflow-y: auto;">
+    <div style="height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 12px; background: #FFFFFF; border-bottom: 1px solid #D5D9DF;">
+      <button type="button" onClick="{{back}}" aria-label="חזרה לאפליקציה" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #D5D9DF; background: #FFFFFF; font-size: 20px; cursor: pointer;">›</button>
+      <span style="font-weight: 700; font-size: 15px;">[אתר הגזרה — האתר המארח]</span>
+    </div>
+    <div style="margin: 14px 10px; border: 2px dashed #8A93A0; border-radius: 16px; overflow: hidden; background: {{t.paper}}; color: {{t.ink}};">
+      <div style="font-size: 10.5px; padding: 3px 10px; background: #8A93A0; color: #FFFFFF;">חלון מוטמע מ־26.hopetohelp.net</div>
+      <div style="font-size: 11.5px; padding: 6px 12px; background: {{t.soft2}}; color: {{t.soft}};">האתר אינו אחראי לדיוק המידע; ייתכנו טעויות.</div>
+      <div style="padding: 12px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="padding: 8px 10px; border-radius: 12px; background: {{t.okBg}}; color: {{t.signal}}; font-size: 12.5px; font-weight: 700;">✓ מחובר כ־[השם] דרך Google של אתר הגזרה — בלי כניסה נוספת</div>
+        <h2 style="margin: 0; font-size: 19px; font-weight: 800;">הרכבת הממשלה</h2>
+        <div style="font-size: 14px; font-weight: 700;">בחירות חוזרות?</div>
+        <div role="radiogroup" aria-label="בחירות חוזרות" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: {{t.grid}};">
+          <sc-for list="{{q1opts}}" as="o" hint-placeholder-count="2">
+            <button type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="border: 0; border-radius: 10px; min-height: 44px; font: 700 14px Rubik, sans-serif; background: {{o.bg}}; color: {{o.fg}}; cursor: pointer;">{{o.label}}</button>
+          </sc-for>
+        </div>
+        <div style="font-size: 12.5px; color: {{t.soft}};">התשובה נשמרת לאותו חשבון כמו באתר — בחרו כאן, וחזרו לאפליקציה לראות שהיא שם.</div>
+        <div style="display: flex; height: 26px; border-radius: 8px; overflow: hidden; font: 700 12px Rubik, sans-serif;">
+          <span style="width: {{embedRes.aW}}; background: {{t.signal}}; color: {{t.signalInk}}; display: flex; align-items: center; padding: 0 8px; white-space: nowrap;">{{embedRes.aLabel}}</span>
+          <span style="width: {{embedRes.bW}}; background: {{t.opp}}; color: {{t.oppInk}}; display: flex; align-items: center; justify-content: flex-end; padding: 0 8px; white-space: nowrap;">{{embedRes.bLabel}}</span>
+        </div>
+        <div style="font-size: 12px;"><a href="#" onClick="{{back}}">לפירוט מורחב, כנסו לאתר</a></div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===== סרגל: בית הסקרים ===== -->
+  <sc-if value="{{navSurveys}}" hint-placeholder-val="{{ true }}">
+  <nav aria-label="ניווט ראשי" style="position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: {{t.card}}; border: 1px solid {{t.line}}; box-shadow: 0 0 22px 3px rgba(31,95,181,.30), 0 8px 24px rgba(0,0,0,.12); white-space: nowrap;">
+    <button type="button" onClick="{{goPersonal}}" aria-label="אזור אישי" style="width: 38px; height: 38px; border-radius: 50%; border: 0; background: {{meBg}}; color: {{meFg}}; font: 700 15px Rubik, sans-serif; cursor: pointer;">מ</button>
+    <sc-for list="{{navItems}}" as="n" hint-placeholder-count="3">
+      <button type="button" onClick="{{n.go}}" aria-current="{{n.cur}}" style="padding: 9px 14px; min-height: 38px; border: 0; border-radius: 999px; background: {{n.bg}}; color: {{n.fg}}; font: {{n.font}}; cursor: pointer;">{{n.label}}</button>
+    </sc-for>
   </nav>
+  </sc-if>
+
+  <!-- ===== סרגל: אזור הבחירות (כמו המורחב היום) ===== -->
+  <sc-if value="{{is.elections}}" hint-placeholder-val="{{ false }}">
+  <nav aria-label="ניווט ראשי — בחירות" style="position: absolute; bottom: 14px; left: 10px; right: 10px; display: flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: {{t.card}}; border: 1px solid {{t.line}}; box-shadow: 0 0 22px 3px rgba(31,95,181,.30), 0 8px 24px rgba(0,0,0,.12); white-space: nowrap;">
+    <button type="button" onClick="{{goPersonal}}" aria-label="אזור אישי" style="width: 38px; height: 38px; flex: none; border-radius: 50%; border: 0; background: {{t.grid}}; color: {{t.ink}}; font: 700 15px Rubik, sans-serif; cursor: pointer;">מ</button>
+    <div style="flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;">
+      <sc-for list="{{elTabs}}" as="n" hint-placeholder-count="5">
+        <button type="button" onClick="{{n.go}}" aria-current="{{n.cur}}" style="flex: none; padding: 9px 13px; min-height: 38px; border: 0; border-radius: 999px; background: {{n.bg}}; color: {{n.fg}}; font: {{n.font}}; cursor: pointer;">{{n.label}}</button>
+      </sc-for>
+    </div>
+    <span style="padding: 9px 10px; flex: none; color: {{t.signal}}; font-size: 14px; font-weight: 800;">AI</span>
+  </nav>
+  </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
-  renderVals() { return {}; }
+  constructor(props) {
+    super(props);
+    this.state = { screen: 'home', stack: [], filter: 'open', scope: 'group', q1: null, q2: null, as: {}, saves: [], justSaved: false, copied: false, elTab: 'results' };
+  }
+  go(screen) { this.setState({ stack: [...this.state.stack, this.state.screen], screen, justSaved: false, copied: false }); }
+  renderVals() {
+    const s = this.state, dark = this.props.dark ?? false;
+    const t = dark
+      ? { paper: '#1E1214', card: '#2C1B1E', line: '#503236', grid: '#40282B', soft2: '#3E2226', ink: '#FFE6E6', soft: '#E1BABC', faint: '#C49C9E', signal: '#6FA3EC', signalInk: '#101216', abst: '#FF969B', opp: '#CED6E0', oppInk: '#101216', okBg: '#1E2A3D' }
+      : { paper: '#FFF3F3', card: '#FFFAFA', line: '#EED0D2', grid: '#F6DEE0', soft2: '#FDE4E6', ink: '#5C1C24', soft: '#84484E', faint: '#805458', signal: '#1F5FB5', signalInk: '#FFFFFF', abst: '#F48085', opp: '#485462', oppInk: '#FFFFFF', okBg: '#E3ECF8' };
+    const sel = (on) => on ? { bg: t.signal, fg: t.signalInk } : { bg: 'transparent', fg: t.soft };
+    const seg = (on) => on ? { bg: t.card, fg: t.ink, font: '700 14px Rubik, sans-serif' } : { bg: 'transparent', fg: t.soft, font: '14px Rubik, sans-serif' };
+    const is = { home: s.screen === 'home', gov: s.screen === 'gov', survey: s.screen === 'survey', personal: s.screen === 'personal', elections: s.screen === 'elections', embed: s.screen === 'embed' };
+
+    // מפלגות — מנדטים מנתוני האתר (ספירה חלקית 30.10)
+    const list = [['likud','הליכוד',27],['yashar','ישר!',21],['together','ביחד',12],['joint','הרשימה המשותפת',11],['democrats','הדמוקרטים',8],['raam','רע״ם',8],['utj','יהדות התורה',7],['yb','ישראל ביתנו',7],['otzma','עוצמה יהודית',7],['shas','ש״ס',6],['rzp','הציונות הדתית',6]];
+    const setAs = (id, v) => () => this.setState({ as: { ...this.state.as, [id]: this.state.as[id] === v ? undefined : v } });
+    let coal = 0, abst = 0, opp = 0; const coalNames = [];
+    const parties = list.map(([id, name, seats]) => {
+      const v = s.as[id];
+      if (v === 'c') { coal += seats; coalNames.push(name); } else if (v === 'a') abst += seats; else if (v === 'o') opp += seats;
+      const c = sel(v === 'c'), a = v === 'a' ? { bg: t.abst, fg: '#2A0F12' } : { bg: 'transparent', fg: t.soft }, o = v === 'o' ? { bg: t.opp, fg: t.oppInk } : { bg: 'transparent', fg: t.soft };
+      return { name, seats, ini: name.replace(/[״"!]/g, '').slice(0, 2), isC: String(v === 'c'), isA: String(v === 'a'), isO: String(v === 'o'), cBg: c.bg, cFg: c.fg, aBg: a.bg, aFg: a.fg, oBg: o.bg, oFg: o.fg, setC: setAs(id, 'c'), setA: setAs(id, 'a'), setO: setAs(id, 'o') };
+    });
+    const pct = (n) => (n / 120 * 100).toFixed(2) + '%';
+    const msg = coal === 0 ? 'סמנו רשימות כדי לראות את סכום הקואליציה' : coal >= 61 ? 'רוב של ' + coal + ' מנדטים, ' + (coal - 60) + ' מעל 60' : 'חסרים לקואליציה ' + (61 - coal) + ' מנדטים לרוב';
+    const q1opts = [['yes','כן'],['no','לא']].map(([k, l]) => { const c = sel(s.q1 === k); return { label: l, on: String(s.q1 === k), bg: c.bg, fg: c.fg, pick: () => this.setState({ q1: k }) }; });
+    const q2opts = [['n','בנימין נתניהו','הליכוד'],['e','גדי איזנקוט','ישר!']].map(([k, l, sub]) => { const c = sel(s.q2 === k); return { label: l, sub, on: String(s.q2 === k), bg: c.bg, fg: c.fg, pick: () => this.setState({ q2: k }) }; });
+
+    const save = () => {
+      const now = new Date(); const when = now.getDate() + '.' + (now.getMonth() + 1) + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const entry = { when, q1: this.state.q1, q2: this.state.q2, coal, coalNames: coalNames.slice() };
+      this.setState({ saves: [entry, ...this.state.saves], stack: [...this.state.stack, 'gov'], screen: 'survey', justSaved: true });
+    };
+    const answered = s.saves.length > 0;
+
+    // תוצאות לדוגמה, משתנות לפי "מי נספר"
+    const base = { group: [38, 71], all: [44, 63] };
+    const mineWord = (k, m) => k ? ('התשובה שלך: ' + m[k]) : 'עוד לא ענית';
+    const last = s.saves[0];
+    const mk = (title, a, la, lb, mine) => ({ title, aW: a + '%', bW: (100 - a) + '%', aLabel: la + ' [' + a + ']%', bLabel: lb, mine });
+    let results, coalSummary, scopeWord;
+    if (s.scope === 'mine') {
+      results = [mk('בחירות חוזרות?', last && last.q1 === 'yes' ? 100 : 0, 'כן', 'לא', mineWord(last && last.q1, { yes: 'כן', no: 'לא' })), mk('על מי יטיל הנשיא ראשון?', last && last.q2 === 'n' ? 100 : 0, 'נתניהו', 'איזנקוט', mineWord(last && last.q2, { n: 'נתניהו', e: 'איזנקוט' }))];
+      coalSummary = last && last.coal ? (last.coal + ' מנדטים: ' + last.coalNames.join(', ')) : 'עוד לא סימנת קואליציה';
+      scopeWord = 'שלי';
+    } else {
+      const b = base[s.scope];
+      results = [mk('בחירות חוזרות?', b[0], 'כן', 'לא', mineWord(last && last.q1, { yes: 'כן', no: 'לא' })), mk('על מי יטיל הנשיא ראשון?', b[1], 'נתניהו', 'איזנקוט', mineWord(last && last.q2, { n: 'נתניהו', e: 'איזנקוט' }))];
+      coalSummary = 'הנפוצה ביותר: הליכוד, ש״ס, יהדות התורה, עוצמה יהודית, הציונות הדתית — 53 מנדטים [דוגמה]';
+      scopeWord = s.scope === 'group' ? 'בגזרה' : 'אצל כל המשתתפים';
+    }
+    const scopes = [['group','הגזרה'],['all','כל המשתתפים'],['mine','התשובה שלי']].map(([k, l]) => ({ label: l, on: String(s.scope === k), ...seg(s.scope === k), font: s.scope === k ? '700 13px Rubik, sans-serif' : '13px Rubik, sans-serif', pick: () => this.setState({ scope: k }) }));
+    const eA = s.q1 === 'yes' ? 39 : s.q1 === 'no' ? 37 : 38;
+    const embedRes = { aW: eA + '%', bW: (100 - eA) + '%', aLabel: 'כן [' + eA + ']%', bLabel: 'לא' };
+
+    // היסטוריה אישית — מתמלאת מהשמירות באפליקציה
+    const yn = { yes: 'כן', no: 'לא' }, pr = { n: 'בנימין נתניהו', e: 'גדי איזנקוט' };
+    const timeline = (pick, detail) => {
+      const items = s.saves.map((e, i) => ({ a: pick(e), when: e.when + (i === 0 ? ' · נוכחי' : ''), detail: detail ? detail(e) : '', dot: i === 0 ? t.signal : t.line, color: i === 0 ? t.ink : t.soft, weight: i === 0 ? '700' : '400' }));
+      return items.length ? items : [{ a: 'עוד לא ענית', when: 'הרכבת הממשלה', detail: '', dot: t.line, color: t.soft, weight: '400' }];
+    };
+    const history = [
+      { survey: 'הרכבת הממשלה', q: 'בחירות חוזרות?', items: timeline((e) => yn[e.q1] || 'לא נענה') },
+      { survey: 'הרכבת הממשלה', q: 'על מי יטיל הנשיא ראשון?', items: timeline((e) => pr[e.q2] || 'לא נענה') },
+      { survey: 'הרכבת הממשלה', q: 'הקואליציה שלי', items: timeline((e) => e.coal + ' מנדטים', (e) => e.coalNames.join(', ') || 'לא סומנו רשימות') }
+    ];
+
+    const filters = [['open','פתוחים'],['closed','נסגרו'],['all','כולם']].map(([k, l]) => ({ label: l, on: String(s.filter === k), ...seg(s.filter === k), pick: () => this.setState({ filter: k }) }));
+    const chip = (kind) => kind === 'done' ? { chipBg: t.okBg, chipFg: t.signal } : { chipBg: t.grid, chipFg: t.soft };
+    const rows = [
+      { kind: 'open', title: 'למי הצבעת ב־2026?', meta: 'שאלה אחת · פתוח', chip: 'ענית ✓', c: 'done', open: () => this.go('survey') },
+      { kind: 'closed', title: 'הניחוש שלי — 120 מנדטים', meta: 'נסגר 27.10 בשעה 21:58', chip: 'נסגר', c: 'closed', open: () => this.go('personal') }
+    ];
+    const surveyRows = rows.filter((r) => s.filter === 'all' || r.kind === s.filter).map((r) => ({ ...r, ...chip(r.c) }));
+
+    const topScreens = ['home', 'gov', 'personal'];
+    const navDefs = [['home','כל הסקרים'],['gov','הרכבת הממשלה'],['ai','AI']];
+    const navItems = navDefs.map(([k, l]) => {
+      const cur = s.screen === k || (k === 'home' && s.screen === 'survey');
+      if (k === 'ai') return { label: l, cur: 'false', bg: 'transparent', fg: t.signal, font: '800 14px Rubik, sans-serif', go: () => {} };
+      return { label: l, cur: cur ? 'page' : 'false', bg: cur ? t.signal : 'transparent', fg: cur ? t.signalInk : t.soft, font: cur ? '800 14px Rubik, sans-serif' : '14px Rubik, sans-serif', go: () => this.setState({ screen: k, stack: [], justSaved: false }) };
+    });
+    const elDefs = [['results','תוצאות אמת'],['changes','מה השתנה'],['guesses','הניחושים'],['polls','הסקרים'],['history','היסטוריה']];
+    const elTabs = elDefs.map(([k, l]) => { const cur = s.elTab === k; return { label: l, cur: cur ? 'page' : 'false', bg: cur ? t.signal : 'transparent', fg: cur ? t.signalInk : t.soft, font: cur ? '800 14px Rubik, sans-serif' : '14px Rubik, sans-serif', go: () => this.setState({ elTab: k }) }; });
+    const seatRows = list.map(([, name, seats]) => ({ name, seats, w: (seats / 27 * 100).toFixed(0) + '%' }));
+
+    const inEl = is.elections;
+    return {
+      t, is, parties, q1opts, q2opts, filters, surveyRows, scopes, results, coalSummary, scopeWord, history, navItems, elTabs, seatRows, embedRes,
+      sum: { coal, abst, opp, coalW: pct(coal), abstW: pct(abst), oppW: pct(opp), msg },
+      notEmbed: !is.embed, navSurveys: !inEl && !is.embed,
+      showBack: s.stack.length > 0 && !topScreens.includes(s.screen) && !inEl,
+      brand: inEl ? 'בחירות 26' : 'סקרים',
+      areaBtn: inEl ? '› סקרים' : 'בחירות', areaBtnLine: inEl ? t.signal : t.line, areaBtnInk: inEl ? t.signal : t.ink,
+      showGovCard: s.filter !== 'closed',
+      govCta: answered ? 'לעדכן תשובות' : 'להשתתף', govStatus: answered ? 'ענית ✓ · אפשר לשנות בכל עת' : '[N] השתתפו',
+      justSaved: s.justSaved, copyLabel: s.copied ? 'הועתק ✓' : 'העתקת הקוד',
+      meBg: is.personal ? t.signal : t.grid, meFg: is.personal ? t.signalInk : t.ink,
+      el: { results: s.elTab === 'results', other: s.elTab !== 'results' }, elTitle: (elDefs.find((d) => d[0] === s.elTab) || ['', ''])[1],
+      goHome: () => this.setState({ screen: 'home', stack: [], justSaved: false }),
+      goGov: () => this.go('gov'), goPersonal: () => this.setState({ screen: 'personal', stack: [], justSaved: false }), goEmbed: () => this.go('embed'),
+      toggleArea: () => this.setState(inEl ? { screen: 'home', stack: [] } : { screen: 'elections', stack: [], elTab: 'results' }),
+      back: (e) => { if (e && e.preventDefault) e.preventDefault(); const st = this.state.stack.slice(); const prev = st.pop() || 'home'; this.setState({ screen: prev, stack: st, justSaved: false }); },
+      copy: () => this.setState({ copied: true }), save
+    };
+  }
 }
 </script>
 </body>
