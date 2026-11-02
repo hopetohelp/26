@@ -263,7 +263,8 @@ function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kin
 const without = (r: Rows, ids: string[]): Rows => ({ cameFrom: r.cameFrom.filter((x) => !ids.includes(x.id)), wentTo: r.wentTo.filter((x) => !ids.includes(x.id)) });
 
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
-export default function VoterFlow() {
+/** afterHeader — מה שמוצג מתחת לכרטיס הכותרת, כמו בשאר המערכות (חלוקת הכנסת לגושים; הכרעת בעלים 02.11.2026) */
+export default function VoterFlow({ afterHeader }: { afterHeader?: ReactNode } = {}) {
   const raw = flowsFor();
   const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
   const [sharing, setSharing] = useState(false);
@@ -282,6 +283,7 @@ export default function VoterFlow() {
       </div>
       <OverviewCards />
       </section>
+      {afterHeader}
       <Explained
         kind="השוואה"
         source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"

@@ -17,7 +17,9 @@ const NETANYAHU = SIMPLE_BLOCS.find(b => b.id === "netanyahu")!;
 const FROM = "2026-01-01";
 
 /** "אחרונים" (הכרעת בעלים 28.10.2026): גרף הרשימות עם מתג המכונים, מגמת גוש נתניהו, השוואת המכונים, וטבלת גושים עם המדגמים ותוצאות האמת */
-export default function Latest() {
+/** part — חלק אחד מהמסך, לפי מגירות מסך "סקרים" (הכרעת בעלים 02.11.2026); בלי part — הכול, כמו קודם */
+export default function Latest({ part }: { part?: "chart" | "trend" | "grid" | "blocs" }) {
+  const show = (p: string) => !part || part === p;
   const source = useSimpleSource();
   const crowd = Object.fromEntries((useCrowdDashboard().dashboard?.seats?.full ?? []).map(r => [r.list, r.mean]));
   const values = Object.fromEntries(IDS.map(id => [id, simpleValue(source.selection, [id])]));
@@ -30,14 +32,14 @@ export default function Latest() {
     ...(hasResults() ? [{ key: "results", label: "תוצאות אמת", kind: `נספרו ${results2026.counted ?? "—"}%`, cells: SIMPLE_BLOCS.map(b => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)) }] : []),
   ];
   return <div className="max-w-6xl mx-auto space-y-5"><h1 className="sr-only">אחרונים</h1>
-    <div><SourceBar source={source} />
-      <PartyChart selection={source.selection} lists={orderedLists(source.selection, [], crowd)} marks={id => [{ value: values[id], side: "up" }]} legend={<><LegendCapsule /><LegendLine label="ממוצע" /></>} /></div>
-    {trend?.points.length ? <Card>
+    {show("chart") && <div><SourceBar source={source} />
+      <PartyChart selection={source.selection} lists={orderedLists(source.selection, [], crowd)} marks={id => [{ value: values[id], side: "up" }]} legend={<><LegendCapsule /><LegendLine label="ממוצע" /></>} /></div>}
+    {show("trend") && trend?.points.length ? <Card>
       <h2 className="font-bold mb-1">{NETANYAHU.name} לאורך זמן</h2>
       <CandleTrend title={`ממוצע מנדטים: ${NETANYAHU.name}`} series={[{ id: "netanyahu", name: NETANYAHU.name, points: trend.points }]} fixedLines={[40, 50, 61]} height={240} markers={electionMarkers([...NETANYAHU.lists])} />
     </Card> : null}
-    <Card><h2 className="font-bold mb-2">השוואה בין המכונים</h2><PollsterGrid polls={CURRENT_POLLS} parties={parties} /></Card>
-    <Card><h2 className="font-bold mb-2">לפי גושים: סקרים, מדגמים ותוצאות אמת</h2>
+    {show("grid") && <Card><h2 className="font-bold mb-2">השוואה בין המכונים</h2><PollsterGrid polls={CURRENT_POLLS} parties={parties} /></Card>}
+    {show("blocs") && <Card><h2 className="font-bold mb-2">לפי גושים: סקרים, מדגמים ותוצאות אמת</h2>
       <div className="overflow-x-auto"><table className="w-full text-xs md:text-sm">
         <thead><tr className="text-ink-soft text-right"><th className="py-2 pe-2">מקור</th>{SIMPLE_BLOCS.map(b => <th key={b.id} className="py-2 px-1 md:px-2 font-semibold"><span className="hidden md:inline">{b.name}</span><span className="md:hidden">{b.short}</span></th>)}</tr></thead>
         <tbody>{rows.map(r => <tr key={r.key} className={`border-t border-line ${r.key === "results" ? "font-bold border-t-2 border-ink" : ""}`}>
@@ -45,6 +47,6 @@ export default function Latest() {
           {r.cells.map((c, i) => <td key={i} className="px-1 md:px-2 font-num">{c == null ? "—" : seatsFmt(c)}</td>)}
         </tr>)}</tbody>
       </table></div>
-    </Card>
-    <FocusFoot /></div>;
+    </Card>}
+    {!part && <FocusFoot />}</div>;
 }
