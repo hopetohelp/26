@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { closesLabel, getSurvey, kindLabel, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { closesLabel, getSurvey, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
@@ -32,22 +32,25 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
   );
 }
 
-type Filter = "open" | "closed" | "all";
-const FILTERS: [Filter, string][] = [["open", "פתוחים"], ["closed", "נסגרו"], ["all", "כולם"]];
-/** מתג סינון לצופים (הכרעת בעלים 01.11.2026): סקרים / ניחושים */
-type KindFilter = "all" | "survey" | "guess";
-const KIND_FILTERS: [KindFilter, string][] = [["all", "הכול"], ["survey", "סקרים"], ["guess", "ניחושים"]];
+/**
+ * מבנה הרשימה (הכרעת בעלים 02.11.2026): "להשתתף · השתתפתי · נסגרו" (בלי חשבון: "פתוחים · נסגרו").
+ * בפתוחים — שני חלקים, ניחושים וסקרים, בלי מתג. בנסגרו — מתג ניחושים / סקרים, כי שם הרשימה מצטברת;
+ * בניחושים: קודם "ממתינים לתוצאה" (אין עדיין תוצאת אמת), אחר כך "יש תוצאה".
+ */
+type Tab = "todo" | "done" | "closed";
+type ClosedKind = "guess" | "survey";
 /** תגית מצב / מועד סגירה על הכרטיס */
-const statusText = (s: Survey) => (s.status === "draft" ? "טיוטה" : s.status === "closed" ? "נסגר" : closesLabel(s) ? `פתוח עד ${closesLabel(s)}` : "פתוח");
+const statusText = (s: Survey) => (s.status === "draft" ? "טיוטה" : s.status === "closed" ? (closesLabel(s) ? `נסגר ${closesLabel(s)}` : "נסגר") : closesLabel(s) ? `פתוח עד ${closesLabel(s)}` : "פתוח");
+const newest = (a: Survey, b: Survey) => b.updatedAt.localeCompare(a.updatedAt);
 
-/** מסך "כל הסקרים": כל הסקרים והניחושים באותה תצוגה (הכרעת בעלים 02.11.2026); סימון "ענית ✓" למחובר. הכניסה לכל סקר — רק מכאן */
+/** מסך "כל הסקרים" — הכניסה לכל סקר וניחוש רק מכאן */
 export default function SurveysScreen() {
   const session = useSession();
   const { token } = session;
   const [surveys, setSurveys] = useState<Survey[] | null>(null);
   const [failed, setFailed] = useState(false);
-  const [filter, setFilter] = useState<Filter>("open");
-  const [kindFilter, setKindFilter] = useState<KindFilter>("all");
+  const [tab, setTab] = useState<Tab | null>(null);
+  const [closedKind, setClosedKind] = useState<ClosedKind>("guess");
   useEffect(() => { listSurveys(token).then((r) => { setSurveys(r.surveys); setFailed(false); }).catch(() => setFailed(true)); }, [token]);
   // בתוך הטמעה: המעבר בין הסקרים נשאר בחלון המוטמע
   const embed = isEmbed();
@@ -58,53 +61,77 @@ export default function SurveysScreen() {
     for (const s of surveys ?? []) if (s.answered || s.manage) getSurvey(s.id, token).then((d) => setDetails((x) => ({ ...x, [s.id]: d })), () => {});
   }, [surveys, token]);
 
-  // "הניחושים" — סקר שהסתיים (הכרעת בעלים 01.11.2026): הניחוש של 120 המנדטים, שנסגר עם סגירת הקלפיות
-  const guesses = filter !== "open" && kindFilter !== "survey";
-  const shown = (surveys ?? []).filter((s) => (filter === "all" || (filter === "open" ? s.status !== "closed" : s.status === "closed")) && (kindFilter === "all" || s.kind === kindFilter));
+  const all = surveys ?? [];
+  const open = all.filter((s) => s.status !== "closed");
+  const closed = all.filter((s) => s.status === "closed").sort(newest);
+  const todo = token ? open.filter((s) => !s.answered) : open;
+  const done = token ? open.filter((s) => s.answered) : [];
+  const tabs: [Tab, string][] = token ? [["todo", "להשתתף"], ["done", "השתתפתי"], ["closed", "נסגרו"]] : [["todo", "פתוחים"], ["closed", "נסגרו"]];
+  // ברירת מחדל "להשתתף"; אם אין שם כלום — "השתתפתי"
+  const current: Tab = tab ?? (todo.length || !done.length ? "todo" : "done");
+
+  const row = (s: Survey) => (
+    <li key={s.id}>
+      <Link to={to(s.id)} className="block px-4 py-3.5 no-underline text-ink">
+        <span className="flex items-center gap-3">
+          <span className="flex-1 min-w-0"><span className="block font-bold">{s.title}</span><span className="block text-[12.5px] text-ink-soft">{statusText(s)}</span></span>
+          {s.answered && current !== "done" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-signal">השתתפת ✓</span>}
+          {current === "done" && <span className="f-btn sm">לעדכן</span>}
+        </span>
+        {details[s.id] && <MiniResults detail={details[s.id]} />}
+      </Link>
+    </li>
+  );
+  // "הניחושים — 120 המנדטים" (הכרעת בעלים 01.11.2026): ניחוש שנסגר ויש לו תוצאה
+  const legacy = (
+    <li key="guesses">
+      <Link to="/surveys/guesses" className="block px-4 py-3.5 no-underline text-ink">
+        <span className="block font-bold">הניחושים — 120 המנדטים</span>
+        <span className="block text-[12.5px] text-ink-soft">נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58</span>
+      </Link>
+    </li>
+  );
+  const section = (title: string, items: Survey[], extra?: JSX.Element) =>
+    items.length || extra ? (
+      <section key={title} className="space-y-2">
+        <h2 className="text-base font-bold">{title}</h2>
+        <ul className="f-card !p-0 divide-y divide-paper-line">{items.map(row)}{extra}</ul>
+      </section>
+    ) : null;
+
+  let content: (JSX.Element | null)[];
+  if (current === "closed") {
+    const guesses = closed.filter((s) => s.kind === "guess");
+    content = closedKind === "guess"
+      ? [section("ממתינים לתוצאה", guesses.filter((s) => !s.truth)), section("יש תוצאה", guesses.filter((s) => s.truth), legacy)]
+      : [section("סקרים", closed.filter((s) => s.kind === "survey"))];
+  } else {
+    const items = current === "todo" ? todo : done;
+    content = [section("ניחושים", items.filter((s) => s.kind === "guess")), section("סקרים", items.filter((s) => s.kind === "survey"))];
+  }
+  const empty = surveys && !content.some(Boolean);
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
       <h1 className="text-[28px] font-display leading-tight pt-1">כל הסקרים</h1>
-      <div className="flex flex-wrap gap-2">
-        <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
-          {FILTERS.map(([k, l]) => <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}>{l}</button>)}
-        </div>
-        <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סוג">
-          {KIND_FILTERS.map(([k, l]) => <button key={k} type="button" aria-pressed={kindFilter === k} onClick={() => setKindFilter(k)}>{l}</button>)}
-        </div>
+      <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
+        {tabs.map(([k, l]) => <button key={k} type="button" aria-pressed={current === k} onClick={() => setTab(k)}>{l}</button>)}
       </div>
+      {current === "closed" && (
+        <div className="f-seg fit sm !mb-0" role="radiogroup" aria-label="סוג">
+          <button type="button" aria-pressed={closedKind === "guess"} onClick={() => setClosedKind("guess")}>ניחושים</button>
+          <button type="button" aria-pressed={closedKind === "survey"} onClick={() => setClosedKind("survey")}>סקרים</button>
+        </div>
+      )}
       {failed && <p className="text-ink-soft">רשימת הסקרים אינה זמינה כרגע.</p>}
       {!failed && !surveys && <p className="text-ink-soft">טוען…</p>}
-      {surveys && !shown.length && !guesses && <p className="text-ink-soft">אין סקרים כאן כרגע.</p>}
+      {empty && <p className="text-ink-soft">{current === "todo" && token ? "השתתפת בכל מה שפתוח כרגע." : "אין כאן כרגע."}</p>}
       {surveys && !token && (
         <section className="f-card space-y-2">
           <p className="text-sm">חברי הגזרה רואים את כל סקרי הגזרה אחרי כניסה עם Google.</p>
           <GoogleButton session={session} onDone={() => void session.refresh()} />
         </section>
       )}
-      {(shown.length > 0 || guesses) && (
-        <ul className="f-card !p-0 divide-y divide-paper-line">
-          {shown.map((s) => (
-            <li key={s.id}>
-              <Link to={to(s.id)} className="block px-4 py-3.5 no-underline text-ink">
-                <span className="flex items-center gap-3">
-                  <span className="flex-1 min-w-0"><span className="block font-bold">{s.title}</span><span className="block text-[12.5px] text-ink-soft">{kindLabel(s.kind)} · {statusText(s)}</span></span>
-                  {s.answered && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-signal">ענית ✓</span>}
-                </span>
-                {details[s.id] && <MiniResults detail={details[s.id]} />}
-              </Link>
-            </li>
-          ))}
-          {guesses && (
-            <li>
-              <Link to="/surveys/guesses" className="block px-4 py-3.5 no-underline text-ink">
-                <span className="flex items-center gap-3">
-                  <span className="flex-1 min-w-0"><span className="block font-bold">הניחושים — 120 המנדטים</span><span className="block text-[12.5px] text-ink-soft">ניחוש · נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58</span></span>
-                </span>
-              </Link>
-            </li>
-          )}
-        </ul>
-      )}
+      {content}
     </main>
   );
 }
