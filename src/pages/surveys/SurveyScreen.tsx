@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
+import LeaveGuard from "../../components/LeaveGuard";
 import { useCrowdDashboard } from "../../lib/sources";
 import { VotingStats } from "../guess/Dashboard";
 
@@ -251,15 +252,15 @@ export default function SurveyScreen() {
   const empty = Object.keys(draft).length === 0;
   const setManaging = (on: boolean) => { const p = new URLSearchParams(params); if (on) p.set("manage", "1"); else p.delete("manage"); setParams(p, { replace: true }); };
 
-  async function save(confirmed = false) {
-    if (!token || !survey) return;
+  async function save(confirmed = false): Promise<boolean> {
+    if (!token || !survey) return false;
     // בשמירה: הבטחות "רק עם" שהקואליציה מפרה ⇐ חלון לפני השמירה
     if (!confirmed) {
       const atSave = survey.questions.flatMap((q) => q.kind === "assign" ? brokenPromises(draft[q.id] as Record<string, AssignValue> | undefined, q.columns[0]?.id).filter((p) => p.with?.length) : []);
-      if (atSave.length) { setPending({ next: draft, promises: atSave, atSave: true }); return; }
+      if (atSave.length) { setPending({ next: draft, promises: atSave, atSave: true }); return false; }
     }
     setState("saving");
-    try { await answerSurvey(token, survey.id, draft); setState("saved"); load(); } catch { setState("error"); }
+    try { await answerSurvey(token, survey.id, draft); setState("saved"); touched.current = false; load(); return true; } catch { setState("error"); return false; }
   }
   const allLink = embed ? "/surveys?embed=1" : "/surveys";
 
@@ -278,6 +279,8 @@ export default function SurveyScreen() {
   const noResults = survey.visibility === "after_close" ? "התוצאות יוצגו עם סגירת הסקר." : survey.visibility === "answered" ? "התוצאה העדכנית מוצגת אחרי ששומרים תשובה." : "אין עדיין תוצאות.";
 
   return (
+    <>
+    <LeaveGuard dirty={!!token && changed && !managing && state !== "saving"} onSave={() => save()} />
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
       <div className="flex items-start justify-between gap-2 pt-1">
         <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
@@ -354,5 +357,6 @@ export default function SurveyScreen() {
         </ConfirmDialog>
       )}
     </main>
+    </>
   );
 }
