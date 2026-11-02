@@ -13,8 +13,8 @@ describe("guess screen closes at 21:58 Israel time on election day", () => {
     expect(guessAreaTabs(GUESS_CLOSE_AT - 1).some(t => t.to === "/guess")).toBe(true);
     expect(guessAreaTabs(GUESS_CLOSE_AT).some(t => t.to === "/guess")).toBe(false);
     expect(guessAreaTabs(GUESS_CLOSE_AT, true).some(t => t.to === "/guess")).toBe(true);
-    // "דיוק הניחושים" ו"תוצאות" מוצגים תמיד
-    expect(guessAreaTabs(GUESS_CLOSE_AT).some(t => t.to === "/results-2026")).toBe(true);
+    // "כל הסקרים" ומסכי הבחירות מוצגים תמיד
+    expect(guessAreaTabs(GUESS_CLOSE_AT).some(t => t.to === "/surveys")).toBe(true);
     expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "results")).toBe(true);
   });
 });

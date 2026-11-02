@@ -19,7 +19,6 @@ import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import RootErrorBoundary from "./components/RootErrorBoundary";
-const GuessAccuracy = lazy(page(() => import("./pages/simple/GuessAccuracy")));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 const About = lazy(page(() => import("./pages/About")));
 import { PageTitle } from "./components/ui";
@@ -34,7 +33,6 @@ const GroupAdmin = lazy(page(() => import("./pages/GroupAdmin")));
 // סקרי האתר (הכרעת בעלים 01.11.2026)
 const SurveysScreen = lazy(page(() => import("./pages/surveys/SurveysScreen")));
 const SurveyScreen = lazy(page(() => import("./pages/surveys/SurveyScreen")));
-const SurveyHistoryScreen = lazy(page(() => import("./pages/surveys/SurveyHistoryScreen")));
 const SurveyManageScreen = lazy(page(() => import("./pages/surveys/SurveyManageScreen")));
 const MyFeedback = lazy(page(() => import("./pages/MyFeedback")));
 const Connect = lazy(page(() => import("./pages/Connect")));
@@ -136,8 +134,8 @@ if (handoffTicket) {
   link.textContent = "מעבר לאתר";
   root.appendChild(link);
 } else {
-// כניסה לאתר בלי מסך בכתובת ⇐ "תוצאות · 2026" (הכרעות בעלים 28.10.2026, 02.11.2026); "בית" בסרגל נשאר מסך הבית
-if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/results`);
+// כניסה לאתר בלי מסך בכתובת ⇐ "מה השתנה · 2026" (הכרעות בעלים 02.11.2026: דף ראשון "מה השתנה"; פתיחה ב-2026)
+if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/changes`);
 startOutbox();
 registerOffline();
 
@@ -148,7 +146,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<Layout />}>
           {/* מסך הבית עבר ללשונית "האחרונים" במסך "סקרים"; "/" ⇐ "תוצאות" (הכרעת בעלים 28.10.2026) */}
-          <Route index element={<Navigate to="/results" replace />} />
+          <Route index element={<Navigate to="/changes" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<Suspense fallback={wait}><PollsScreen /></Suspense>} />
@@ -159,8 +157,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
-          <Route path="score" element={<Navigate to="/results-2026" replace />} />
-          <Route path="results-2026" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>} />
+          <Route path="score" element={<Navigate to="/surveys/guesses" replace />} />
+          {/* "תוצאות אמת" עבר ל"מה יהיו תוצאות הבחירות?" בחלק הסקרים ול-#/community (הכרעת בעלים 02.11.2026) */}
+          <Route path="results-2026" element={<Navigate to="/surveys/guesses" replace />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route path="past" element={<PastRedirect />} />
           <Route
@@ -191,7 +190,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="surveys" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveysScreen /></Suspense>} />
           {/* "הניחושים" כסקר שהסתיים בחלק הסקרים (הכרעת בעלים 01.11.2026) — אותו מסך כמו /community */}
           <Route path="surveys/guesses" element={<SimpleComparison surveysPart />} />
-          <Route path="surveys/me" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistoryScreen /></Suspense>} />
+          <Route path="surveys/me" element={<Support surveysPart />} />
           <Route path="surveys/manage" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyManageScreen /></Suspense>} />
           <Route path="s/:id" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyScreen /></Suspense>} />
           <Route path="group-admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupAdmin /></Suspense>} />
@@ -205,6 +204,10 @@ createRoot(document.getElementById("root")!).render(
     </RootErrorBoundary>
   </StrictMode>,
 );
+  // טעינה מוקדמת של כל המסכים ברקע אחרי שהמסך הראשון מוצג (הכרעת בעלים 02.11.2026) — מעבר בין מסכים בלי "טוען…"
+  const warm = () => { for (const load of [() => import("./pages/surveys/SurveysScreen"), () => import("./pages/surveys/SurveyScreen"), () => import("./pages/surveys/SurveyHistoryScreen"), () => import("./pages/simple/GuessAccuracy"), () => import("./pages/Polls"), () => import("./pages/Trends"), () => import("./pages/Latest"), () => import("./pages/Results"), () => import("./pages/VoterFlow"), () => import("./pages/Guess"), () => import("./pages/Accuracy"), () => import("./pages/ElectionScreens")]) void load().catch(() => {}); };
+  const idle = (window as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
+  window.addEventListener("load", () => (idle ? idle(warm, { timeout: 4000 }) : setTimeout(warm, 2000)), { once: true });
 }
 
 function LegacyCalculator() {

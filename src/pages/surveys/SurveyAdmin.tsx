@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import CardDrawer from "../../components/CardDrawer";
+import GroupSeriesChart, { type SeriesBucket } from "../../components/GroupSeriesChart";
 import { SITE_ORIGIN } from "../../lib/embed";
 import {
   KIND_LABELS, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, VISIBILITY_LABELS,
@@ -66,7 +68,10 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
     try { await manageSurvey(token, { group: survey.group, id: survey.id, delete: true, confirm: "מחק" }); onDeleted(); } catch { setMsg("המחיקה לא הצליחה."); }
   }
   const code = surveyEmbedCode(survey.id, survey.title);
-  const conversion = stats && stats.viewers ? Math.round((stats.savers / stats.viewers) * 100) : null;
+  // שמרו מתוך הצופים — רק מתחילת ספירת הכניסות (הכרעת בעלים 02.11.2026)
+  const conversion = stats && stats.viewers ? Math.min(100, Math.round((stats.saversSinceViews / stats.viewers) * 100)) : null;
+  // הכרטיסים לפי גודל המספר, מהגדול לקטן (הכרעת בעלים 02.11.2026); שמירות ומשתתפים ששמרו — הוסרו, כי הפירוט בכרטיסים האחרים
+  const tiles: [string, number][] = stats ? ([["כניסות", stats.views], ["צופים שונים", stats.viewers], ["מתוך הטמעה", stats.embedViews], ["שמרו — מהגזרה", stats.members], ["שמרו — מחוץ לגזרה", stats.outsiders], ["עדכנו תשובה", stats.changed]] as [string, number][]).sort((a, b) => b[1] - a[1]) : [];
 
   return (
     <div className="space-y-3.5">
@@ -75,23 +80,11 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
         {statsFailed && <p className="text-sm text-ink-soft">הסטטיסטיקות אינן זמינות כרגע.</p>}
         {!stats && !statsFailed && <p className="text-sm text-ink-soft">טוען…</p>}
         {stats && <>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <Tile label="כניסות" value={stats.views} />
-            <Tile label="צופים שונים" value={stats.viewers} />
-            <Tile label="שמירות" value={stats.saves} />
-            <Tile label="משתמשים ששמרו" value={stats.savers} />
-            <Tile label="מתוך הטמעה" value={stats.embedViews} />
-            <Tile label="שמרו — מהגזרה" value={stats.members} />
-            <Tile label="שמרו — מחוץ לגזרה" value={stats.outsiders} />
-            <Tile label="שינו תשובה" value={stats.changed} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {tiles.map(([l, v]) => <Tile key={l} label={l} value={v} />)}
           </div>
-          {conversion !== null && <p className="text-sm text-ink-soft">שמרו מתוך הצופים: <b className="font-num text-ink">{conversion}%</b></p>}
-          {stats.days.length > 0 && (
-            <table className="w-full text-sm tabular">
-              <thead><tr className="text-ink-soft"><th className="text-start font-normal">יום</th><th className="font-normal">כניסות</th><th className="font-normal">שמירות</th></tr></thead>
-              <tbody>{stats.days.slice(0, 7).map((d) => <tr key={d.day} className="border-t border-paper-line"><td dir="ltr" className="text-start py-1">{d.day.split("-").reverse().slice(0, 2).join(".")}</td><td className="text-center font-num">{d.views}</td><td className="text-center font-num">{d.saves}</td></tr>)}</tbody>
-            </table>
-          )}
+          {conversion !== null && <p className="text-sm text-ink-soft">שמרו מתוך הצופים{stats.viewsSince ? ` (מ־${stats.viewsSince.split("-").reverse().slice(0, 2).join(".")})` : ""}: <b className="font-num text-ink">{conversion}%</b></p>}
+          <StatsDrawer stats={stats} />
         </>}
       </section>
 
@@ -131,7 +124,7 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
       )}
 
       <section className="f-card space-y-3">
-        <h2 className="text-base font-bold">כותרת ושאלות</h2>
+        <h2 className="text-base font-bold">כותרת ושאלה</h2>
         <SurveyEditor value={editor} onChange={setEditor} />
       </section>
 
@@ -162,4 +155,39 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
 export function surveyEmbedCode(id: string, title: string): string {
   return `<iframe src="${SITE_ORIGIN}/#/s/${id}?embed=1" title="${title}" style="width:100%;border:0;min-height:700px" loading="lazy" allow="identity-credentials-get" data-elections26></iframe>
 <script>addEventListener("message",function(m){if(m.origin!=="${SITE_ORIGIN}"||!m.data||m.data.type!=="elections26:height")return;document.querySelectorAll("iframe[data-elections26]").forEach(function(f){if(f.contentWindow===m.source)f.style.height=m.data.height+"px"})});</script>`;
+}
+
+/** לפי זמן — במגירה, עם מתג גרף / טבלה (הכרעת בעלים 02.11.2026). הגרף כמו בשאר האתר: לפי שעה, קווי מדרגה וקו בסוף כל יום */
+function StatsDrawer({ stats }: { stats: SurveyStats }) {
+  const [open, setOpen] = useState(false);
+  const [view, setView] = useState<"graph" | "table">("graph");
+  // שעות רצופות מהשעה הראשונה עם נתון ועד עכשיו (שעה בלי נתון = 0)
+  const byHour = new Map(stats.hours.map((h) => [h.hour, h]));
+  const buckets: SeriesBucket[] = [];
+  if (stats.hours.length) {
+    for (let t = Date.parse(stats.hours[0].hour + ":00:00Z"), end = Date.now(); t <= end; t += 36e5) buckets.push({ t: new Date(t).toISOString(), hourly: true });
+  }
+  const at = (b: SeriesBucket) => byHour.get(b.t.slice(0, 13));
+  // קו מצטבר, כמו שאר הגרפים באתר (הכרעת בעלים 02.11.2026) — לא קפיצות לפי שעה
+  const cum = (k: "views" | "saves") => { let t = 0; return buckets.map((b) => (t += at(b)?.[k] ?? 0)); };
+  if (!stats.days.length && !stats.hours.length) return null;
+  return (
+    <CardDrawer title="לפי זמן" open={open} onOpenChange={setOpen} className="mt-1">
+      <div className="f-seg fit sm mb-3" role="radiogroup" aria-label="תצוגה">
+        <button type="button" aria-pressed={view === "graph"} onClick={() => setView("graph")}>גרף</button>
+        <button type="button" aria-pressed={view === "table"} onClick={() => setView("table")}>טבלה</button>
+      </div>
+      {view === "graph" ? (
+        <div className="space-y-3">
+          <div><div className="text-sm font-bold mb-1">שמירות — מצטבר</div><GroupSeriesChart buckets={buckets} points={cum("saves")} label="שמירות מצטברות" height={110} /></div>
+          <div><div className="text-sm font-bold mb-1">כניסות — מצטבר</div><GroupSeriesChart buckets={buckets} points={cum("views")} label="כניסות מצטברות" height={110} /></div>
+        </div>
+      ) : (
+        <table className="w-full text-sm tabular">
+          <thead><tr className="text-ink-soft"><th className="text-start font-normal">יום</th><th className="font-normal">כניסות</th><th className="font-normal">שמירות</th></tr></thead>
+          <tbody>{stats.days.map((d) => <tr key={d.day} className="border-t border-paper-line"><td dir="ltr" className="text-start py-1">{d.day.split("-").reverse().slice(0, 2).join(".")}</td><td className="text-center font-num">{d.views}</td><td className="text-center font-num">{d.saves}</td></tr>)}</tbody>
+        </table>
+      )}
+    </CardDrawer>
+  );
 }

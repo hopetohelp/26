@@ -7,8 +7,9 @@
  * פניות לשרתים אחרים (השערות, הערות) אינן עוברות כאן; לשמירה בלי חיבור יש תור משלה (src/lib/outbox.ts).
  */
 const PAGES = "elections26-pages-v1";
+// קודם רשת לדפים; קובצי נתונים — מהעותק השמור ומתעדכנים ברקע
 const ASSETS = "elections26-assets-v2"; // v2: מוחק עותקי HTML שנשמרו בטעות כקובצי בנייה
-const TIMEOUT_MS = 4000;
+const TIMEOUT_MS = 1500; // דף: קודם רשת, ואם איטית — העותק השמור (הכרעת בעלים 02.11.2026: הצגה מהירה)
 const MAX_ASSETS = 60;
 
 self.addEventListener("install", (e) => {
@@ -52,10 +53,19 @@ async function cacheFirst(request) {
   return res;
 }
 
+/** קובצי נתונים (.json): העותק השמור מוצג מיד, והרשת מעדכנת אותו ברקע לפעם הבאה (הכרעת בעלים 02.11.2026) */
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(PAGES);
+  const saved = await cache.match(request);
+  const net = fetch(request).then((res) => { if (res.ok) cache.put(request, res.clone()); return res; });
+  if (saved) { net.catch(() => {}); return saved; }
+  return net;
+}
+
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
-  e.respondWith(url.pathname.includes("/assets/") ? cacheFirst(req) : networkFirst(req));
+  e.respondWith(url.pathname.includes("/assets/") ? cacheFirst(req) : url.pathname.endsWith(".json") ? staleWhileRevalidate(req) : networkFirst(req));
 });

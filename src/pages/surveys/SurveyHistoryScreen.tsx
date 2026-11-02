@@ -5,7 +5,8 @@ import { useSession } from "../guess/useCrowd";
 import { answerTime, columnSeats, surveyHistory, type AssignValue, type SurveyHistory, type SurveyQuestion } from "../../lib/surveys";
 
 /** אזור אישי בחלק הסקרים (הכרעת בעלים 01.11.2026): היסטוריה מלאה לפי שאלה — כל תשובה ושינוי, מהחדש לישן */
-export default function SurveyHistoryScreen() {
+/** embedded — בתוך מגירה באזור האישי: בלי מסגרת עמוד וכותרת */
+export default function SurveyHistoryScreen({ embedded = false }: { embedded?: boolean }) {
   const session = useSession();
   const { token } = session;
   const [data, setData] = useState<SurveyHistory | null>(null);
@@ -19,9 +20,10 @@ export default function SurveyHistoryScreen() {
       <GoogleButton session={session} onDone={() => void session.refresh()} />
     </main>
   );
+  const Wrap = embedded ? "div" : "main";
   return (
-    <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <h1 className="text-[26px] font-display pt-1">היסטוריית הסקרים שלי</h1>
+    <Wrap className={embedded ? "space-y-3.5" : "px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto"}>
+      {!embedded && <h1 className="text-[26px] font-display pt-1">היסטוריית הסקרים שלי</h1>}
       {failed && <p className="text-ink-soft">ההיסטוריה אינה זמינה כרגע.</p>}
       {!failed && !data && <p className="text-ink-soft">טוען…</p>}
       {data && !data.answers.length && <div className="space-y-2"><p className="text-ink-soft">עוד לא ענית על סקר.</p><Link to="/surveys" className="f-btn">לכל הסקרים</Link></div>}
@@ -49,7 +51,7 @@ export default function SurveyHistoryScreen() {
           </section>
         );
       }))}
-    </main>
+    </Wrap>
   );
 }
 

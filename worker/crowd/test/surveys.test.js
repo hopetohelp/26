@@ -83,11 +83,13 @@ describe("site surveys over the worker", () => {
     expect((await call("/survey?id=reelect")).status).toBe(404);
     const m = await member("in@x.co");
     const r = await call("/surveys", { token: m });
-    expect(r.data.surveys.map((s) => s.id)).toEqual(["gov", "reelect", "president", "vote", "vote2022"]);
-    expect(r.data.surveys.map((s) => s.kind)).toEqual(["guess", "guess", "guess", "survey", "survey"]);
-    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["coalition"], ["reelect"], ["first"], ["vote"], ["vote2022"]]);
-    expect(r.data.surveys[0].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
-    expect(r.data.surveys[1]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
+    expect(r.data.surveys.map((s) => s.id)).toEqual(["vote2022", "vote", "president", "reelect", "gov"]);
+    expect(r.data.surveys.map((s) => s.position)).toEqual([1, 3, 4, 5, 6]);
+    expect(r.data.surveys.map((s) => s.kind)).toEqual(["survey", "survey", "guess", "guess", "guess"]);
+    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["vote2022"], ["vote"], ["first"], ["reelect"], ["coalition"]]);
+    expect(r.data.surveys[0].questions[0].options.length).toBe(22);
+    expect(r.data.surveys[4].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
+    expect(r.data.surveys[3]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
   });
 
   it("outsiders: view shows survey without answering; answer lets them take part", async () => {
@@ -173,6 +175,19 @@ describe("site surveys over the worker", () => {
     expect((await setSettings({ truth: { coalition: {} } }, "gov")).status).toBe(400);
   });
 
+  it("editing the long vote surveys saves (many options, Hebrew list letters); a new survey gets the next number", async () => {
+    const m = await manager("ed@x.co");
+    for (const id of ["vote", "vote2022"]) {
+      const cur = (await call(`/survey?id=${id}`, { token: m })).data.survey;
+      const def = { title: cur.title + " ", questions: cur.questions };
+      const r = await call("/survey/manage", { token: m, body: { group: G, id, def } });
+      expect(r.status).toBe(200);
+      expect(r.data.survey.questions[0].options.length).toBe(cur.questions[0].options.length);
+    }
+    const r = await call("/survey/manage", { token: m, body: { group: G, id: "next", def: { title: "חדש", questions: [{ id: "q1", kind: "single", title: "?", options: [{ id: "a", label: "א" }, { id: "b", label: "ב" }] }] } } });
+    expect(r.data.survey.position).toBe(7);
+  });
+
   it("new surveys: options or range only — no list assignment", async () => {
     const m = await manager("nm@x.co");
     const rangeDef = { title: "כמה", questions: [{ id: "r", kind: "range", title: "מ-1 עד 10", min: 1, max: 10, minLabel: "בכלל לא", maxLabel: "מאוד" }] };
@@ -197,6 +212,10 @@ describe("site surveys over the worker", () => {
     const s = await call("/survey/stats?id=reelect", { token: m });
     expect(s.data).toMatchObject({ views: 3, viewers: 2, embedViews: 1, saves: 2, savers: 1, changed: 1, members: 1, outsiders: 0 });
     expect(s.data.days.length).toBeGreaterThan(0);
+    // לפי שעה: 3 כניסות ו-2 שמירות; שמרו מתוך הצופים — רק מיום תחילת ספירת הכניסות
+    expect(s.data.hours.reduce((n, h) => n + h.views, 0)).toBe(3);
+    expect(s.data.hours.reduce((n, h) => n + h.saves, 0)).toBe(2);
+    expect(s.data.saversSinceViews).toBe(1);
     expect((await call("/survey/stats?id=reelect", { token: a })).status).toBe(403);
   });
 

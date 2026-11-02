@@ -40,11 +40,12 @@ const initialsOf = (name: string) => name.split(/[\s+,]+/).filter(Boolean).slice
  * סרגל בחירה נגלל: ממוצע, 14 ו־i24, ומכונים (רק כשמותר).
  * ranges = השוואה לממוצע הניחושים (הכרעת בעלים 25.10.2026): בחירת טווח — כל הסקרים, 14 ו־i24, או הניחושים של כל המשתתפים.
  */
-export function SourceBar({ source, extra, ranges = false }: { source: SimpleSource; extra?: ReactNode; ranges?: boolean }) {
+/** crowdRange=false — בלי "טווח הניחושים" (ב-#/community נשארים רק טווחי הסקרים; הכרעת בעלים 02.11.2026) */
+export function SourceBar({ source, extra, ranges = false, crowdRange = true }: { source: SimpleSource; extra?: ReactNode; ranges?: boolean; crowdRange?: boolean }) {
   const options: [string, ReactNode, string][] = [
     ["all", <span className="f-ini" aria-hidden="true">∑</span>, ranges ? "טווח כל הסקרים" : "ממוצע הסקרים"],
     ["14-24", <><Logo id="Channel 14" initials="14" /><Logo id="i24 News" initials="24" /></>, ranges ? "טווח 14 ו־i24" : "ממוצע 14 ו־i24"],
-    ...(ranges ? [["crowd", <span className="f-ini" aria-hidden="true">✓</span>, "טווח הניחושים"] as [string, ReactNode, string]] : []),
+    ...(ranges && crowdRange ? [["crowd", <span className="f-ini" aria-hidden="true">✓</span>, "טווח הניחושים"] as [string, ReactNode, string]] : []),
     ...(source.averagesOnly ? [] : SIMPLE_FIRMS.map(f => [`firm:${f.id}`, <Logo id={f.id} initials={initialsOf(f.name)} />, f.name] as [string, ReactNode, string])),
   ];
   const seg = <div className={`f-seg ${source.averagesOnly ? "fit" : ""}`} role="group" aria-label="מקור הסקרים">{options.map(([key, icon, label]) =>
@@ -271,10 +272,11 @@ export function DoublePie({ values, missing = 0 }: { values: Record<string, numb
  * חלוקות הכנסת (הכרעת בעלים 25.10.2026): עוגה כפולה — הקבועה, ובתוכה האחדות (קבועה לכולם); קו העיגול הפנימי לכל אורך נתניהו ואייזנקוט.
  * העוגה האישית — רק במתקדם, ורק כשהמשתמש הפעיל אותה (במחשב בנוסף לכפולה, בטלפון במקומה). העריכה — באזור האישי.
  */
-export function BlocChart({ values, missing = 0, logo = null }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null }) {
+/** inline — העוגה גם בטלפון, בלי כפתור "עוגת המנדטים שלי" ובלי הפס הצף (חלק הסקרים; הכרעת בעלים 02.11.2026) */
+export function BlocChart({ values, missing = 0, logo = null, inline = false }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null; inline?: boolean }) {
   const personal = usePersonalBlocs();
   const { advanced } = useInterface();
-  const showMine = advanced && personal.show;
+  const showMine = !inline && advanced && personal.show;
   const fixed = blocSlices(values, missing), unity = unityOverlay(values);
   const rank = (id: string, order: string[]) => order.indexOf(id);
   const ring = [...fixed].sort((a, b) => rank(a.id, DOUBLE_ORDER) - rank(b.id, DOUBLE_ORDER));
@@ -284,13 +286,13 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
   const unityBar = { ...unity, start: blocTotal(values, SIMPLE_BLOCS[1].lists) + unity.start };
   const mine = showMine ? blocSlices(values, missing, personal.defs) : [];
   return <>
-    <div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
+    <div className={`f-pie-wrap${inline ? " is-inline" : ""}`}>{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
       <Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unity} inner={inner} parts={innerParts(values, ring)} />
       {showMine && <figure className="f-pie-mine"><figcaption>עוגת המנדטים שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
     </div>
     {/* כפתור אחד (הכרעת בעלים 25.10.2026): יצירת העוגה ואישור הצגתה — במסך אחד באזור האישי */}
-    {advanced && <div className="f-pie-tools"><Link to="/account?blocs" className="f-btn">עוגת המנדטים שלי</Link></div>}
-    <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>
+    {advanced && !inline && <div className="f-pie-tools"><Link to="/account?blocs" className="f-btn">עוגת המנדטים שלי</Link></div>}
+    {!inline && <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>}
   </>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
@@ -321,4 +323,23 @@ export function flashNotice(text: string) {
   el.className = "f-toast"; el.setAttribute("role", "status"); el.textContent = text;
   document.body.appendChild(el);
   window.setTimeout(() => el.remove(), 3500);
+}
+
+/**
+ * גרף הגושים — אותו מבנה כמו גרף המפלגות (הכרעת בעלים 02.11.2026): שורה לכל אחד מארבעת הגושים, קפסולה של טווח הניחושים
+ * (מינימום, רבעונים, מקסימום), ממוצע הניחושים (מקוטע) ותוצאת האמת (רציף). ציר עד 75 — גוש גדול מ-32 מנדטים.
+ */
+export function BlocRows({ rows, legend }: { rows: { id: string; name: string; spread: [number, number, number, number] | null; mean: number | null; actual: number | null; mine?: number | null }[]; legend: ReactNode }) {
+  const hasMine = rows.some(r => r.mine != null);
+  const MAX = 75, bx = (v: number) => `${Math.min(100, v / MAX * 100)}%`;
+  return <div className={`f-card${hasMine ? " has-mine" : ""}`}>
+    <div className="f-legend">{legend}</div>
+    <div className="f-axis" aria-hidden="true"><span /><div className="font-num"><span>0</span><span>25</span><span>50</span><span>75</span></div>{hasMine && <b className="f-mine-h">שלי</b>}</div>
+    {rows.map(r => <div key={r.id} className="f-row tall"><span className="f-pname font-semibold text-sm">{r.name}</span>
+      <div className="f-track" role="img" aria-label={`${r.name}: ${[r.actual, r.mean].filter(v => v != null).map(v => fmt(v!)).join(", ")}`}>
+        {r.spread && <span className="absolute top-1/2 -translate-y-1/2 h-3 rounded-full bg-signal/25" style={{ right: bx(r.spread[0]), width: `calc(${bx(r.spread[3])} - ${bx(r.spread[0])})` }}><span className="absolute inset-y-0 rounded-full bg-signal/45" style={{ right: `${(r.spread[1] - r.spread[0]) / Math.max(1, r.spread[3] - r.spread[0]) * 100}%`, width: `${(r.spread[2] - r.spread[1]) / Math.max(1, r.spread[3] - r.spread[0]) * 100}%` }} /></span>}
+        {r.actual != null && <span className="f-mark" style={{ right: bx(r.actual) }}><span className="f-tag up">{fmt(r.actual)}</span></span>}
+        {r.mean != null && <span className="f-mark dash" style={{ right: bx(r.mean) }}><span className="f-tag down">{fmt(r.mean)}</span></span>}
+      </div>{hasMine && <span className="f-mine font-num" aria-label={`הניחוש שלי: ${r.mine ?? "—"}`}>{r.mine ?? "—"}</span>}</div>)}
+  </div>;
 }

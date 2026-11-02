@@ -1,13 +1,28 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
+import { useCrowdDashboard } from "../../lib/sources";
+import { VotingStats } from "../guess/Dashboard";
+
+/** "התפלגות המצביעים" — במסך "מה הצבעתם בבחירות (2026)?", עם מעבר לסקר על 2022 (הכרעת בעלים 02.11.2026) */
+function VotersCard({ embed }: { embed: boolean }) {
+  const d = useCrowdDashboard().dashboard;
+  return (
+    <section className="f-card space-y-3">
+      <h2 className="text-base font-bold">התפלגות המצביעים</h2>
+      <p className="text-xs text-ink-soft">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p>
+      {d ? <VotingStats d={d} /> : <p className="text-sm text-ink-soft">טוען…</p>}
+      <Link to={`/s/vote2022${embed ? "?embed=1" : ""}`} className="f-btn">לסקר על הבחירות הקודמות (2022)</Link>
+    </section>
+  );
+}
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -209,9 +224,12 @@ export default function SurveyScreen() {
   const [params, setParams] = useSearchParams();
   const managing = params.has("manage") && !embed;
   const navigate = useNavigate();
-  const [data, setData] = useState<SurveyDetail | null>(null);
+  // הצגה מיידית מהעותק שבמכשיר; הגרסה מהשרת מחליפה אותה (בלי לדרוס תשובה שהמשתתף כבר התחיל לשנות)
+  const [data, setData] = useState<SurveyDetail | null>(() => cached<SurveyDetail>(surveyPath(id), token));
   const [failed, setFailed] = useState(false);
-  const [draft, setDraft] = useState<SurveyAnswers>({});
+  const [draft, setDraftRaw] = useState<SurveyAnswers>(() => cached<SurveyDetail>(surveyPath(id), token)?.mine?.answers ?? {});
+  const touched = useRef(false);
+  const setDraft: typeof setDraftRaw = (v) => { touched.current = true; setDraftRaw(v); };
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [scope, setScope] = useState<"group" | "all">("group");
   /** שינוי שמפר הבטחת בחירות — ממתין לאישור "להפר הבטחת בחירות" או לביטול */
@@ -219,7 +237,7 @@ export default function SurveyScreen() {
   const [pending, setPending] = useState<{ next: SurveyAnswers; promises: ElectionPromise[]; atSave?: boolean } | null>(null);
 
   const load = useCallback(() => {
-    getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine) setDraft(d.mine.answers); }).catch(() => setFailed(true));
+    getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine && !touched.current) setDraftRaw(d.mine.answers); }).catch(() => setFailed(true));
   }, [id, token]);
   useEffect(load, [load]);
   // כניסה לסקר — לסטטיסטיקה של המנהלים (פעם אחת לטעינה)
@@ -262,7 +280,7 @@ export default function SurveyScreen() {
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
       <div className="flex items-start justify-between gap-2 pt-1">
-        <h1 className="text-[26px] font-display leading-tight">{survey.title}</h1>
+        <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
         {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}
       </div>
       <div className="flex flex-wrap items-center gap-2 -mt-1.5 text-sm text-ink-soft">
@@ -320,6 +338,7 @@ export default function SurveyScreen() {
           </div>
           {data.results ? <Results survey={survey} results={data.results[bothScopes ? scope : "group"]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
         </section>
+        {survey.id === "vote" && <VotersCard embed={embed} />}
       </>}
 
       {pending && (

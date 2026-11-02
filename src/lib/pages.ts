@@ -14,8 +14,7 @@ export const PAGES: PageInfo[] = [
   { to: "/changes", label: "מה השתנה" },
   { to: "/polls", label: "סקרים" },
   { to: "/guess", label: "הניחוש שלי" },
-  { to: "/community", label: "הניחושים" },
-  { to: "/results-2026", label: "דיוק הניחושים" },
+  { to: "/surveys/guesses", label: "מה יהיו תוצאות הבחירות?" },
   { to: "/method", label: "מידע" },
 ];
 
@@ -42,7 +41,7 @@ export interface Screen {
 }
 export const SCREENS: Screen[] = [
   // שלושה מסכים אחידים לכל מערכת, לפי בורר המערכת שבפס העליון (הכרעות בעלים 02.11.2026, docs/תוכנית-לשוניות-ניתוח-אחיד-02-11-2026.md).
-  // הניחושים ("הניחוש שלי", "הניחושים", "דיוק הניחושים") עברו לאזור הניחושים (Layout, SURVEY_TABS).
+  // הניחושים עברו לאזור הניחושים (guessAreaTabs; "מה יהיו תוצאות הבחירות?" — #/surveys/guesses).
   { id: "results", to: "/results", label: "תוצאות", icon: "board", nav: "core" },
   { id: "changes", to: "/changes", label: "מה השתנה", icon: "board", nav: "core" },
   { id: "polls", to: "/polls", label: "סקרים", icon: "bars", nav: "core" },
@@ -51,13 +50,12 @@ export const SCREENS: Screen[] = [
 export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
 /**
  * לשוניות אזור הניחושים והסקרים (הכרעות בעלים 02.11.2026): כל מה שקשור לניחושים יצא מאזור הבחירות לכאן.
- * אין לשונית נפרדת לסקר או לניחוש — לכולם מגיעים דרך "כל הסקרים". ב-21:58 ביום הבחירות "הניחוש שלי" יורד (הכרעת בעלים 27.10.2026).
+ * אין לשונית נפרדת לסקר או לניחוש — לכולם מגיעים דרך "כל הסקרים" (שם גם "מה יהיו תוצאות הבחירות?", אותו מסך כמו /community).
+ * "הניחוש שלי" — רק כשהוא פתוח (נסגר ב-21:58 ביום הבחירות, הכרעת בעלים 27.10.2026), או כשהמתג במסך הניהול מציג אותו.
  */
 export const GUESS_AREA_TABS = [
   { to: "/surveys", label: "כל הסקרים" },
   { to: "/guess", label: "הניחוש שלי" },
-  { to: "/community", label: "הניחושים" },
-  { to: "/results-2026", label: "דיוק הניחושים" },
 ];
 export function guessAreaTabs(now = Date.now(), guessShown = false) {
   return GUESS_AREA_TABS.filter(t => t.to !== "/guess" || !guessClosed(now) || guessShown);
