@@ -25,6 +25,8 @@ import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzara, useHagzaraTheme } from "../pages/simple/hagzara";
 import ElectionPicker from "./ElectionPicker";
+import { groupImageUrl } from "../lib/groupLink";
+const HAGZARA_PUBLIC_LOGO = groupImageUrl({ slug: "hagzara" }, "1");
 import SiteShareButton from "./SiteShareButton";
 import { isElectionScreen } from "../lib/election";
 
@@ -141,7 +143,9 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     {/* חברי הגזרה: סמל הגזרה בפס העליון (הכרעת בעלים 28/10) */}
     {/* בחלק הבחירות בורר המערכת מחליף את שם האתר בימין הפס (הכרעת בעלים 02.11.2026); סמל הגזרה נשאר לחבריה */}
-    {member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}
+    {/* סמל הגזרה תמיד בפינה הימנית, בגובה הכפתורים בשורה (הכרעת בעלים 02.11.2026); לא חברים — הסמל הציבורי של הקבוצה */}
+    {/* לחיצה על הסמל ⇐ אתר הגזרה (הכרעת בעלים 02.11.2026); הסמל העגול במסגרת הוא הכפתור */}
+    {(logo ?? HAGZARA_PUBLIC_LOGO) && <a href="https://hagizra.news/" target="_blank" rel="noopener" aria-label="לאתר הגזרה" className="shrink-0"><img src={(logo ?? HAGZARA_PUBLIC_LOGO)!} alt="" className="f-glogo" onError={e => { e.currentTarget.style.display = "none"; }} /></a>}
     {surveys ? <NavLink to="/surveys" className="f-logo">סקרים</NavLink> : <ElectionPicker />}
     <FocusClock />
     {/* בורר המערכת — רק במסכי הבחירות (הכרעות בעלים 02.11.2026) */}
