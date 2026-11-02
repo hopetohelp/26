@@ -142,8 +142,8 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
     <FocusClock />
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
-    {/* בחלק הסקרים: "בחירות" עובר לחלק הניתוח (במקום "לניתוח מורחב") */}
-    {surveys ? <Link to="/results-2026" className="f-btn">בחירות</Link> : <AdvancedSwitch />}
+    {/* מעבר בין שני חלקי האתר (הכרעת בעלים 02.11.2026): בחלק הסקרים "בחירות" ⇐ ניתוח הבחירות; בחלק הניתוח "ניחושים" ⇐ סקרים וניחושים */}
+    {surveys ? <Link to="/results-2026" className="f-btn">בחירות</Link> : <><Link to="/surveys" className="f-btn">ניחושים</Link><AdvancedSwitch /></>}
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
