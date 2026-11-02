@@ -140,11 +140,12 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
   }, [onFit, member, navTop]);
   return <div ref={bar} className={`f-bar${member ? " member" : ""}`}>
     {/* חברי הגזרה: סמל הגזרה בפס העליון (הכרעת בעלים 28/10) */}
-    <NavLink to={surveys ? "/surveys" : "/"} className="f-logo inline-flex items-center gap-2">{member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}{member && <span className="f-gname">הגזרה ·</span>}{surveys ? "סקרים" : "בחירות 26"}</NavLink>
+    {/* בחלק הבחירות בורר המערכת מחליף את שם האתר בימין הפס (הכרעת בעלים 02.11.2026); סמל הגזרה נשאר לחבריה */}
+    {member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}
+    {surveys ? <NavLink to="/surveys" className="f-logo">סקרים</NavLink> : <ElectionPicker />}
     <FocusClock />
     {/* בורר המערכת — רק במסכי הבחירות (הכרעות בעלים 02.11.2026) */}
     {/* במרכז הפס (הכרעת בעלים 02.11.2026): בטלפון — באמצע בין שם האתר לכפתורים; במחשב — צמוד לסרגל שבמרכז */}
-    {!surveys && !navTop && isElectionScreen(pathname) && <ElectionPicker centered />}
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
     {/* מעבר בין שני חלקי האתר (הכרעת בעלים 02.11.2026): בחלק הסקרים "בחירות" ⇐ ניתוח הבחירות; בחלק הניתוח "ניחושים" ⇐ סקרים וניחושים */}
@@ -202,7 +203,6 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const tab = (t: Screen) => <NavLink key={t.to} to={election && isElectionScreen(t.to) ? `${t.to}?election=${encodeURIComponent(election)}` : t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     {/* במחשב הבורר בתוך הסרגל שבמרכז הפס, לפני הלשוניות (הכרעת בעלים 02.11.2026) */}
-    {top && !surveysPart && isElectionScreen(pathname) && <ElectionPicker />}
     <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
     {/* קבוצה — אייקון בלבד, משמאל לפרופיל (הכרעת בעלים 02.11.2026) */}
     {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /></NavLink>)}

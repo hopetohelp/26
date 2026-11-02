@@ -948,3 +948,5 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-nav a.f-grp { width:34px;height:34px;padding:0;justify-content:center;border-radius:50%; }
 .f-nav-bottom .f-nav-row > a { flex:1 0 auto;text-align:center; }
 .f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp) { text-align:center; }
+/* הבורר בימין הפס: הרשימה נפתחת מתחתיו, צמודה לימין */
+.f-bar > .f-election ul { inset-inline-start:0;transform:none; }
