@@ -221,6 +221,10 @@ createRoot(document.getElementById("root")!).render(
     </RootErrorBoundary>
   </StrictMode>,
 );
+  // טעינה מוקדמת של כל המסכים ברקע אחרי שהמסך הראשון מוצג (הכרעת בעלים 02.11.2026) — מעבר בין מסכים בלי "טוען…"
+  const warm = () => { for (const load of [() => import("./pages/surveys/SurveysScreen"), () => import("./pages/surveys/SurveyScreen"), () => import("./pages/surveys/SurveyHistoryScreen"), () => import("./pages/simple/GuessAccuracy"), () => import("./pages/Polls"), () => import("./pages/Trends"), () => import("./pages/Latest"), () => import("./pages/Results"), () => import("./pages/VoterFlow"), () => import("./pages/Guess"), () => import("./pages/Accuracy")]) void load().catch(() => {}); };
+  const idle = (window as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
+  window.addEventListener("load", () => (idle ? idle(warm, { timeout: 4000 }) : setTimeout(warm, 2000)), { once: true });
 }
 
 function LegacyCalculator() {

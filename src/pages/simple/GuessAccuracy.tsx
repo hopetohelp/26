@@ -279,9 +279,9 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 export function Podium({ top, n, lead }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number; lead?: ReactNode }) {
   // שעון ישראל, בפורמט האתר: "27/10 19:28"
   const time = (iso: string) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(iso)).map(x => [x.type, x.value])); return `${p.day}/${p.month} ${p.hour}:${p.minute}`; };
-  // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)
-  const order = [1, 0, 2].filter(i => top[i]);
-  const H = ["h-32", "h-24", "h-20"];
+  // עיצוב שטוח (הכרעת בעלים 02.11.2026): 1 · 2 · 3 מימין לשמאל, באותו גובה
+  const order = [0, 1, 2].filter(i => top[i]);
+  const H = ["h-12", "h-12", "h-12"];
   // כחול · לבן · אדום: מקום 1 כחול, 2 לבן עם מסגרת כחולה, 3 אדום
   const BLOCK = ["bg-accent text-paper-card", "bg-paper-card text-accent border-2 border-accent", "bg-[rgb(var(--podium-red))] text-paper-card"];
   // מגירה בעיצוב הכרטיסים (הכרעת בעלים 28.10.2026)
@@ -289,7 +289,7 @@ export function Podium({ top, n, lead }: { top: { acc: number; exact: number; sa
   return <div className={`f-card mb-4 ${lead ? "" : "!py-2"}`}>
     {lead && <><div className="pb-3">{lead}</div><hr className="border-t border-line m-0" /></>}
     <details className={`group [&_summary::-webkit-details-marker]:hidden ${lead ? "pt-1" : ""}`}>
-    <summary className="cursor-pointer list-none flex items-center justify-between gap-3 min-h-[32px]">
+    <summary className="cursor-pointer list-none flex items-center justify-center gap-2 min-h-[32px]">
       <h2 className="text-base font-bold leading-tight">שלושת הניחושים המדויקים</h2>
       <span aria-hidden="true" className="text-ink-soft text-xl transition-transform group-open:rotate-45">+</span>
     </summary>
@@ -299,7 +299,7 @@ export function Podium({ top, n, lead }: { top: { acc: number; exact: number; sa
         <p><span className="font-num font-bold text-2xl">{correctSeats(g.acc)}</span> <span className="text-xs text-ink-soft">מנדטים</span></p>
         <p className="text-sm mt-1"><span className="font-num font-bold">{g.exact}</span> מפלגות</p>
         <p className="text-xs text-ink-soft mb-2 font-num">{time(g.savedAt)}</p>
-        <div className={`${H[i]} ${BLOCK[i]} w-full rounded-t-xl flex flex-col items-center justify-start pt-1 px-1 overflow-hidden`}><span className="font-display font-bold text-2xl leading-tight">{i + 1}</span>{g.name && <span className="text-xs font-bold leading-tight text-center line-clamp-2">{g.name}</span>}</div>
+        <div className={`${H[i]} ${BLOCK[i]} w-full rounded-xl flex flex-col items-center justify-center px-1 overflow-hidden`}><span className="font-display font-bold text-xl leading-tight">{i + 1}</span>{g.name && <span className="text-xs font-bold leading-tight text-center line-clamp-2">{g.name}</span>}</div>
       </div>; })}
     </div>
     <p className="text-xs text-ink-soft mt-2">מתוך <span className="font-num">{n.toLocaleString("he-IL")}</span> ניחושים · בשוויון — מספר המפלגות המדויקות, ואחריו מי ששמר קודם</p>
