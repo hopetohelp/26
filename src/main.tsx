@@ -25,7 +25,6 @@ const Trends = lazy(page(() => import("./pages/Trends")));
 const Today = lazy(page(() => import("./pages/Today")));
 const Latest = lazy(page(() => import("./pages/Latest")));
 const Results = lazy(page(() => import("./pages/Results")));
-const GuessAccuracy = lazy(page(() => import("./pages/simple/GuessAccuracy")));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 const About = lazy(page(() => import("./pages/About")));
 import { PageTitle } from "./components/ui";
@@ -154,7 +153,7 @@ if (handoffTicket) {
   root.appendChild(link);
 } else {
 // כניסה לאתר בלי מסך בכתובת ⇐ מסך "תוצאות" (הכרעת בעלים 28.10.2026); "בית" בסרגל נשאר מסך הבית
-if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/results-2026`);
+if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/changes`);
 startOutbox();
 registerOffline();
 
@@ -165,7 +164,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<Layout />}>
           {/* מסך הבית עבר ללשונית "האחרונים" במסך "סקרים"; "/" ⇐ "תוצאות" (הכרעת בעלים 28.10.2026) */}
-          <Route index element={<Navigate to="/results-2026" replace />} />
+          <Route index element={<Navigate to="/changes" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<PollsTabs />} />
@@ -175,8 +174,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
           <Route path="community" element={<LegacyCommunity />} />
-          <Route path="score" element={<Navigate to="/results-2026" replace />} />
-          <Route path="results-2026" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy /></Suspense>} />
+          <Route path="score" element={<Navigate to="/surveys/guesses" replace />} />
+          {/* "תוצאות אמת" עבר ל"מה יהיו תוצאות הבחירות?" בחלק הסקרים ול-#/community (הכרעת בעלים 02.11.2026) */}
+          <Route path="results-2026" element={<Navigate to="/surveys/guesses" replace />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route path="past" element={<PastScreen />} />
           <Route

@@ -12,7 +12,8 @@ describe("guess screen closes at 21:58 Israel time on election day", () => {
     expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "guess")).toBe(true);
     expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "guess")).toBe(false);
     // "תוצאות" מוצג תמיד
-    expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "results2026")).toBe(true);
-    expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "results2026")).toBe(true);
+    // "תוצאות אמת" הוסרה מהסרגל (הכרעת בעלים 02.11.2026) — "מה השתנה" נשאר בכל זמן
+    expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "changes")).toBe(true);
+    expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "changes")).toBe(true);
   });
 });

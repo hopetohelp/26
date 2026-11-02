@@ -83,13 +83,13 @@ describe("site surveys over the worker", () => {
     expect((await call("/survey?id=reelect")).status).toBe(404);
     const m = await member("in@x.co");
     const r = await call("/surveys", { token: m });
-    expect(r.data.surveys.map((s) => s.id)).toEqual(["president", "reelect", "gov", "vote", "vote2022"]);
-    expect(r.data.surveys.map((s) => s.position)).toEqual([2, 3, 4, 5, 6]);
-    expect(r.data.surveys.map((s) => s.kind)).toEqual(["guess", "guess", "guess", "survey", "survey"]);
-    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["first"], ["reelect"], ["coalition"], ["vote"], ["vote2022"]]);
-    expect(r.data.surveys[4].questions[0].options.length).toBe(22);
-    expect(r.data.surveys[2].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
-    expect(r.data.surveys[1]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
+    expect(r.data.surveys.map((s) => s.id)).toEqual(["vote2022", "vote", "president", "reelect", "gov"]);
+    expect(r.data.surveys.map((s) => s.position)).toEqual([1, 3, 4, 5, 6]);
+    expect(r.data.surveys.map((s) => s.kind)).toEqual(["survey", "survey", "guess", "guess", "guess"]);
+    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["vote2022"], ["vote"], ["first"], ["reelect"], ["coalition"]]);
+    expect(r.data.surveys[0].questions[0].options.length).toBe(22);
+    expect(r.data.surveys[4].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
+    expect(r.data.surveys[3]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
   });
 
   it("outsiders: view shows survey without answering; answer lets them take part", async () => {

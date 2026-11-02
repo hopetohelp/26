@@ -2,6 +2,21 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
+import { useCrowdDashboard } from "../../lib/sources";
+import { VotingStats } from "../guess/Dashboard";
+
+/** "התפלגות המצביעים" — במסך "מה הצבעתם בבחירות (2026)?", עם מעבר לסקר על 2022 (הכרעת בעלים 02.11.2026) */
+function VotersCard({ embed }: { embed: boolean }) {
+  const d = useCrowdDashboard().dashboard;
+  return (
+    <section className="f-card space-y-3">
+      <h2 className="text-base font-bold">התפלגות המצביעים</h2>
+      <p className="text-xs text-ink-soft">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p>
+      {d ? <VotingStats d={d} /> : <p className="text-sm text-ink-soft">טוען…</p>}
+      <Link to={`/s/vote2022${embed ? "?embed=1" : ""}`} className="f-btn">לסקר על הבחירות הקודמות (2022)</Link>
+    </section>
+  );
+}
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
@@ -320,6 +335,7 @@ export default function SurveyScreen() {
           </div>
           {data.results ? <Results survey={survey} results={data.results[bothScopes ? scope : "group"]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
         </section>
+        {survey.id === "vote" && <VotersCard embed={embed} />}
       </>}
 
       {pending && (
