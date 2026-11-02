@@ -267,9 +267,10 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
         {token && <Btn className="ms-auto shrink-0" onClick={() => void switchUser()}>החלפת משתמש</Btn>}
       </header>
       <Account session={session} hideGroups />
+      {/* "הנתונים שלי" (ייצוא ומחיקה) אוחד לכאן (הכרעת בעלים 02.11.2026) */}
+      {token && <div className="mt-6 pt-4 border-t border-paper-line"><MyData session={session} part="data" /></div>}
     </>
   );
-  const data = token ? <MyData session={session} part="data" /> : null;
   // ניהול קבוצה וניהול האתר — מסכים נפרדים; כאן רק קישור בשורה אחת לכל אחד
   const goTo = (to: string, label: string) => <Link key={to} to={to} className="flex items-center justify-between gap-3 min-h-[52px] font-bold text-lg text-ink no-underline border-b border-paper-line">{label}<span aria-hidden="true" className="text-ink-soft">←</span></Link>;
   const links = [
@@ -288,7 +289,6 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
     const items = [
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "history", title: "היסטוריית ניחושים", content: <GuessHistory session={session} /> }] : []),
-      ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
       ...(surveysPart ? [] : [{ id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> }]),
       ...(surveysPart && token ? [{ id: "surveys", title: "היסטוריית סקרים", content: <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense> }] : []),
     ];
@@ -300,7 +300,6 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="היסטוריית ניחושים" open={open.has("history")} onToggle={() => toggle("history")}><GuessHistory session={session} /></Drawer>}
-        {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
         {!surveysPart && <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>}
         {surveysPart && token && <Drawer title="היסטוריית סקרים" open={open.has("surveys")} onToggle={() => toggle("surveys")}><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense></Drawer>}
         {admin}

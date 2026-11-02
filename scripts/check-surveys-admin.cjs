@@ -118,6 +118,14 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       await page.locator('select#q-vote').waitFor();
       await page.locator('select#q-vote').selectOption({ label: 'פתק לבן' });
       await noScroll('select');
+      // יציאה בלי שמירה ⇐ חלון "יוצאים בלי לשמור" (הכרעת בעלים 02.11.2026)
+      await page.goto('http://127.0.0.1:5177/#/s/reelect');
+      await page.getByRole('radio', { name: 'לא' }).first().click();
+      await page.getByRole('link', { name: 'כל הסקרים' }).first().click();
+      await page.getByRole('heading', { name: 'יוצאים בלי לשמור' }).waitFor();
+      await noScroll('leave');
+      await page.getByRole('button', { name: 'להישאר' }).click();
+      assert.match(page.url(), /#\/s\/reelect/, 'נשארים בסקר');
       // טווח בסקר
       await page.goto('http://127.0.0.1:5177/#/s/turnout');
       await page.getByText('אחוז ההצבעה').first().waitFor();

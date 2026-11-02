@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import LeaveGuard from "../../components/LeaveGuard";
 import CardDrawer from "../../components/CardDrawer";
 import GroupSeriesChart, { type SeriesBucket } from "../../components/GroupSeriesChart";
 import { SITE_ORIGIN } from "../../lib/embed";
@@ -52,7 +53,11 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
   const [del, setDel] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  async function save() {
+  // שינויים שלא נשמרו — חלון לפני יציאה (הכרעת בעלים 02.11.2026)
+  const snapshot = JSON.stringify([kind, status, closesAt, visibility, minResults, outside, truth, editor.title, editor.questions]);
+  const [initial] = useState(snapshot);
+  const dirty = snapshot !== initial && !busy;
+  async function save(): Promise<boolean> {
     setBusy(true); setMsg(null);
     try {
       await manageSurvey(token, {
@@ -61,7 +66,8 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
       });
       setMsg("נשמר ✓");
       onDone();
-    } catch (e) { setMsg(`השמירה לא הצליחה (${(e as { code?: string }).code ?? "שגיאה"}). בדקו שלכל שאלה נוסח ולפחות שתי אפשרויות.`); }
+      return true;
+    } catch (e) { setMsg(`השמירה לא הצליחה (${(e as { code?: string }).code ?? "שגיאה"}). בדקו שלכל שאלה נוסח ולפחות שתי אפשרויות.`); return false; }
     finally { setBusy(false); }
   }
   async function remove() {
@@ -75,6 +81,7 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
 
   return (
     <div className="space-y-3.5">
+      <LeaveGuard dirty={dirty} onSave={save} />
       <section className="f-card space-y-3">
         <h2 className="text-base font-bold">סטטיסטיקות</h2>
         {statsFailed && <p className="text-sm text-ink-soft">הסטטיסטיקות אינן זמינות כרגע.</p>}
