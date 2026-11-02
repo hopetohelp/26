@@ -143,7 +143,7 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
     {/* מעבר בין שני חלקי האתר (הכרעת בעלים 02.11.2026): בחלק הסקרים "בחירות" ⇐ ניתוח הבחירות; בחלק הניתוח "ניחושים" ⇐ סקרים וניחושים */}
-    {surveys ? <Link to="/results-2026" className="f-btn">בחירות</Link> : <><Link to="/surveys" className="f-btn">ניחושים</Link><AdvancedSwitch /></>}
+    {surveys ? <Link to="/results-2026" className="f-btn">בחירות</Link> : <Link to="/surveys" className="f-btn">ניחושים</Link>}
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
@@ -238,11 +238,6 @@ function NavScroll({ children }: { children: ReactNode }) {
     <div ref={row} className="f-nav-row" onScroll={update}>{children}</div>
     {edge.left && <button type="button" className="f-nav-arrow l" aria-label="לשוניות נוספות" onClick={() => by(-1)}>‹</button>}
   </div>;
-}
-/** כפתור "לניתוח מורחב" (לשעבר מתג "מתקדם"; הכרעת בעלים 27.10.2026): אינו משנה כתובת, טיוטה או מקור; ההעדפה לביקור הנוכחי (sessionStorage). במורחב — "לתצוגה ממוקדת" לחזרה (הכרעת בעלים 28.10.2026) */
-function AdvancedSwitch() {
-  const { advanced, toggle } = useInterface();
-  return <button type="button" onClick={toggle} className="f-btn">{advanced ? "לתצוגה ממוקדת" : "לניתוח מורחב"}</button>;
 }
 /** "עוד" בסרגל — המסכים הנוספים של המתקדם. נסגר בבחירה, בלחיצה בחוץ וב-Escape */
 function MoreMenu({ screens, up = false }: { screens: Screen[]; up?: boolean }) {
