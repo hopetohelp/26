@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { closesLabel, ELECTION_RESULTS_TITLE, getSurvey, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
@@ -47,7 +47,7 @@ const newest = (a: Survey, b: Survey) => b.updatedAt.localeCompare(a.updatedAt);
 export default function SurveysScreen() {
   const session = useSession();
   const { token } = session;
-  const [surveys, setSurveys] = useState<Survey[] | null>(null);
+  const [surveys, setSurveys] = useState<Survey[] | null>(() => cached<{ surveys: Survey[] }>(surveysPath, token)?.surveys ?? null);
   const [failed, setFailed] = useState(false);
   const [tab, setTab] = useState<Tab | null>(null);
   const [closedKind, setClosedKind] = useState<ClosedKind>("guess");
@@ -56,7 +56,7 @@ export default function SurveysScreen() {
   const embed = isEmbed();
   const to = (id: string) => `/s/${id}${embed ? "?embed=1" : ""}`;
   // תוצאות לכרטיסים של סקרים שכבר ענית עליהם (ולמנהלים)
-  const [details, setDetails] = useState<Record<string, SurveyDetail>>({});
+  const [details, setDetails] = useState<Record<string, SurveyDetail>>(() => Object.fromEntries((cached<{ surveys: Survey[] }>(surveysPath, token)?.surveys ?? []).flatMap((s) => { const d = cached<SurveyDetail>(surveyPath(s.id), token); return d ? [[s.id, d]] : []; })));
   useEffect(() => {
     for (const s of surveys ?? []) if (s.answered || s.manage) getSurvey(s.id, token).then((d) => setDetails((x) => ({ ...x, [s.id]: d })), () => {});
   }, [surveys, token]);

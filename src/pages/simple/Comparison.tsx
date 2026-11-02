@@ -114,7 +114,9 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
     const nz = h ? h.findIndex(v => v > 0) : -1;
     return { id: b.id, name: b.name, spread: h && nz >= 0 ? [nz, q(h, .25), q(h, .75), h.length - 1 - [...h].reverse().findIndex(v => v > 0)] as [number, number, number, number] : null,
       mean: Object.keys(crowdMeans).length ? Math.round(b.lists.reduce((t, id) => t + (crowdMeans[id] ?? 0), 0) * 10) / 10 : null,
-      actual: hasResults() ? b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0) : null };
+      actual: hasResults() ? b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0) : null,
+      // הניחוש שלי בגושים (הכרעת בעלים 02.11.2026) — רק למי ששמר ניחוש מלא
+      mine: unlocked ? b.lists.reduce((t, id) => t + (mine.seats[id]?.v ?? 0), 0) : null };
   });
   const toggle = surveysPart && <><h1 className="text-[26px] font-display leading-tight mb-2">{ELECTION_RESULTS_TITLE}</h1>
     <div className="f-seg fit mb-3" role="radiogroup" aria-label="תצוגה">
@@ -125,7 +127,8 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
   if (surveysPart && view === "table") return <div className="max-w-6xl mx-auto">{toggle}<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy part="guesses" /></Suspense>
     {sharing && <ShareCard heading="שיתוף ממוצע הניחושים" input={{ kind: "average", values: blocValues, group: hagzara, mine: Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0])) }} onClose={() => setSharing(false)} />}</div>;
   return <div className="max-w-6xl mx-auto">{surveysPart ? toggle : <h1 className="sr-only">ממוצע הניחושים</h1>}
-    {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
+    {/* בחלק הסקרים סמל הגזרה כבר בפס העליון (הכרעת בעלים 02.11.2026) */}
+    {hagzara?.logoUrl && !surveysPart && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
     <GuessCount total={all?.seats?.n} members={member ? groupCount : null} />
     {!surveysPart && <SourceBar source={ranges ? rangeSource : source} ranges={ranges} crowdRange={false} />}
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}

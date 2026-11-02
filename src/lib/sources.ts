@@ -16,12 +16,19 @@ export { MODEL_AVERAGE } from "./dataResolver";
 
 const LIVE_REFRESH_MS = 60_000;
 type CrowdState = { dashboard: Dashboard | null; failed: boolean };
-let state: CrowdState = { dashboard: null, failed: false };
+// הצגה מיידית (הכרעת בעלים 02.11.2026): העותק האחרון נשמר במכשיר ומוצג מיד בכניסה, והשרת מרענן ברקע
+const DASH_KEY = "elections26.dashboard.cache";
+const savedDash = (): Dashboard | null => { try { const x = localStorage.getItem(DASH_KEY); return x ? (JSON.parse(x) as Dashboard) : null; } catch { return null; } };
+let state: CrowdState = { dashboard: typeof window === "undefined" ? null : savedDash(), failed: false };
 const listeners = new Set<() => void>();
 let users = 0;
 let stop: (() => void) | null = null;
 const emit = () => listeners.forEach((l) => l());
-const show = (x: Dashboard) => { state = { dashboard: newerDashboard(state.dashboard, x), failed: false }; emit(); };
+const show = (x: Dashboard) => {
+  state = { dashboard: newerDashboard(state.dashboard, x), failed: false };
+  try { localStorage.setItem(DASH_KEY, JSON.stringify(state.dashboard)); } catch { /* אין אחסון — רק בזיכרון */ }
+  emit();
+};
 
 /** פעם אחת, בלי רענון קבוע (סרטון הנתונים): הנתונים שבדף כשמסך פעיל מרענן אותם, אחרת בקשה אחת (וגיבוי מהעותק שבאתר) */
 export async function crowdDashboardOnce(): Promise<Dashboard | null> {

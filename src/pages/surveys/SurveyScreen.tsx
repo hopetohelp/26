@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
@@ -22,7 +22,7 @@ import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -224,9 +224,12 @@ export default function SurveyScreen() {
   const [params, setParams] = useSearchParams();
   const managing = params.has("manage") && !embed;
   const navigate = useNavigate();
-  const [data, setData] = useState<SurveyDetail | null>(null);
+  // הצגה מיידית מהעותק שבמכשיר; הגרסה מהשרת מחליפה אותה (בלי לדרוס תשובה שהמשתתף כבר התחיל לשנות)
+  const [data, setData] = useState<SurveyDetail | null>(() => cached<SurveyDetail>(surveyPath(id), token));
   const [failed, setFailed] = useState(false);
-  const [draft, setDraft] = useState<SurveyAnswers>({});
+  const [draft, setDraftRaw] = useState<SurveyAnswers>(() => cached<SurveyDetail>(surveyPath(id), token)?.mine?.answers ?? {});
+  const touched = useRef(false);
+  const setDraft: typeof setDraftRaw = (v) => { touched.current = true; setDraftRaw(v); };
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [scope, setScope] = useState<"group" | "all">("group");
   /** שינוי שמפר הבטחת בחירות — ממתין לאישור "להפר הבטחת בחירות" או לביטול */
@@ -234,7 +237,7 @@ export default function SurveyScreen() {
   const [pending, setPending] = useState<{ next: SurveyAnswers; promises: ElectionPromise[]; atSave?: boolean } | null>(null);
 
   const load = useCallback(() => {
-    getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine) setDraft(d.mine.answers); }).catch(() => setFailed(true));
+    getSurvey(id, token).then((d) => { setData(d); setFailed(false); if (d.mine && !touched.current) setDraftRaw(d.mine.answers); }).catch(() => setFailed(true));
   }, [id, token]);
   useEffect(load, [load]);
   // כניסה לסקר — לסטטיסטיקה של המנהלים (פעם אחת לטעינה)

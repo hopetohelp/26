@@ -37,8 +37,24 @@ export type SurveyResults = { n: number; min: number; hidden: true } | { n: numb
 export interface SurveyDetail { survey: Survey; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null; access: { member: boolean; canAnswer: boolean; manage: boolean; outside?: SurveyOutside } }
 export interface SurveyHistory { surveys: Survey[]; answers: { survey: string; at: string; answers: SurveyAnswers }[] }
 
-export const listSurveys = (token: string | null) => call<{ surveys: Survey[] }>("/surveys", { token });
-export const getSurvey = (id: string, token: string | null) => call<SurveyDetail>(`/survey?id=${encodeURIComponent(id)}`, { token });
+/**
+ * הצגה מיידית (הכרעת בעלים 02.11.2026): כל תשובה מהשרת נשמרת במכשיר, לפי המשתמש; המסך מציג אותה מיד (cached)
+ * ומבקש מהשרת גרסה עדכנית ברקע. שמירה וניהול — תמיד ישירות לשרת.
+ */
+const CACHE = "elections26.surveys.cache:";
+const userKey = (token: string | null) => (token ? token.slice(-12) : "anon");
+export function cached<T>(path: string, token: string | null): T | null {
+  try { const x = localStorage.getItem(CACHE + userKey(token) + path); return x ? (JSON.parse(x) as T) : null; } catch { return null; }
+}
+async function fresh<T>(path: string, token: string | null): Promise<T> {
+  const r = await call<T>(path, { token });
+  try { localStorage.setItem(CACHE + userKey(token) + path, JSON.stringify(r)); } catch { /* אין אחסון */ }
+  return r;
+}
+export const surveysPath = "/surveys";
+export const surveyPath = (id: string) => `/survey?id=${encodeURIComponent(id)}`;
+export const listSurveys = (token: string | null) => fresh<{ surveys: Survey[] }>(surveysPath, token);
+export const getSurvey = (id: string, token: string | null) => fresh<SurveyDetail>(surveyPath(id), token);
 export const surveyHistory = (token: string) => call<SurveyHistory>("/survey/history", { token });
 /** מזהה פעולה לכל שמירה — שליחה חוזרת של אותה שמירה אינה יוצרת כפילות בשרת */
 export const newOp = () => `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
