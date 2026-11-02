@@ -113,15 +113,18 @@ export default function SurveysScreen() {
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
       <h1 className="text-[28px] font-display leading-tight pt-1">כל הסקרים</h1>
+      {/* שני המתגים באותו גודל ובאותה שורה (הכרעת בעלים 02.11.2026) */}
+      <div className="f-seg-pair">
       <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
         {tabs.map(([k, l]) => <button key={k} type="button" aria-pressed={current === k} onClick={() => setTab(k)}>{l}</button>)}
       </div>
       {current === "closed" && (
-        <div className="f-seg fit sm !mb-0" role="radiogroup" aria-label="סוג">
+        <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סוג">
           <button type="button" aria-pressed={closedKind === "guess"} onClick={() => setClosedKind("guess")}>ניחושים</button>
           <button type="button" aria-pressed={closedKind === "survey"} onClick={() => setClosedKind("survey")}>סקרים</button>
         </div>
       )}
+      </div>
       {failed && <p className="text-ink-soft">רשימת הסקרים אינה זמינה כרגע.</p>}
       {!failed && !surveys && <p className="text-ink-soft">טוען…</p>}
       {empty && <p className="text-ink-soft">{current === "todo" && token ? "השתתפת בכל מה שפתוח כרגע." : "אין כאן כרגע."}</p>}

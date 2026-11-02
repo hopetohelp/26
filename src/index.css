@@ -691,6 +691,9 @@
 .f-seg button { flex:none;display:flex;align-items:center;gap:7px;padding:9px 16px;border:0;border-radius:12px;background:transparent;font-size:14px;color:rgb(var(--ink-soft));white-space:nowrap;cursor:pointer;min-height:40px; }
 .f-seg button[aria-pressed=true] { background:rgb(var(--card));color:rgb(var(--ink));font-weight:700;box-shadow:0 1px 4px rgb(var(--ink) / .12); }
 .f-seg.sm { padding:2px;border-radius:12px;margin:0; } .f-seg.sm button { padding:4px 10px;font-size:12px;min-height:28px;border-radius:10px; }
+/* שני מתגים באותה שורה גם בטלפון (כל הסקרים: להשתתף/השתתפתי/נסגרו + ניחושים/סקרים; הכרעת בעלים 02.11.2026) */
+.f-seg-pair { display:flex;gap:6px;flex-wrap:nowrap; } .f-seg-pair .f-seg { flex:0 1 auto;min-width:0; }
+@media (max-width: 480px) { .f-seg-pair .f-seg button { padding:9px 9px;font-size:13.5px; } }
 .f-seg img, .f-seg .f-ini { width:20px;height:20px;border-radius:5px;flex:none;object-fit:contain; }
 .f-seg .f-ini { display:grid;place-items:center;background:rgb(var(--accent-soft));font-size:10px;font-weight:700;color:rgb(var(--ink-soft)); }
 .f-grid { display:grid;gap:16px;grid-template-columns:minmax(0,1fr); }

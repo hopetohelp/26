@@ -90,6 +90,11 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       await page.waitForTimeout(1500);
       assert.equal(await page.getByRole('button', { name: /טווח הניחושים/ }).count(), 0, 'בקהילה בלי טווח הניחושים');
       await noScroll('community');
+      // אזור אישי בחלק הסקרים: כמו בבחירות, בלי עוגת המנדטים שלי, עם היסטוריית סקרים
+      await page.goto('http://127.0.0.1:5177/#/surveys/me');
+      await page.getByText('היסטוריית סקרים').first().waitFor();
+      assert.equal(await page.getByText('עוגת המנדטים שלי').count() + await page.getByText('החלוקה שלי').count(), 0, 'בלי עוגת המנדטים שלי');
+      await noScroll('me');
       // מצב ניהול
       await page.goto('http://127.0.0.1:5177/#/s/reelect?manage=1');
       await page.getByRole('button', { name: 'ניהול', exact: true }).waitFor();
