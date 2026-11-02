@@ -229,7 +229,21 @@ function grow(el: HTMLTextAreaElement) {
 
 type DrawerId = "details" | "history" | "data" | "assistants" | "blocs" | "surveys";
 
-/** surveysPart — "אזור אישי" בחלק הסקרים (#/surveys/me): אותן מגירות כמו בחלק הבחירות, בלי "עוגת המנדטים שלי", ועם היסטוריית הסקרים (הכרעת בעלים 02.11.2026) */
+/** היסטוריה אחת עם מתג ניחושים / סקרים (הכרעת בעלים 02.11.2026); בחלק הסקרים — הסקרים קודם */
+function History({ session, surveysFirst }: { session: ReturnType<typeof useSession>; surveysFirst: boolean }) {
+  const [tab, setTab] = useState<"guesses" | "surveys">(surveysFirst ? "surveys" : "guesses");
+  return (
+    <div className="space-y-3">
+      <div className="f-seg fit !mb-0" role="radiogroup" aria-label="היסטוריה">
+        <button type="button" aria-pressed={tab === "guesses"} onClick={() => setTab("guesses")}>ניחושים</button>
+        <button type="button" aria-pressed={tab === "surveys"} onClick={() => setTab("surveys")}>סקרים</button>
+      </div>
+      {tab === "guesses" ? <GuessHistory session={session} /> : <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense>}
+    </div>
+  );
+}
+
+/** surveysPart — "אזור אישי" בחלק הסקרים (#/surveys/me): אותן מגירות כמו בחלק הבחירות, בלי "עוגת המנדטים שלי" (הכרעת בעלים 02.11.2026) */
 export default function Support({ surveysPart = false }: { surveysPart?: boolean }) {
   const session = useSession();
   const { me, token } = session;
@@ -288,9 +302,8 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
   if (wide) {
     const items = [
       { id: "details", title: detailsTitle, badge, content: details },
-      ...(token ? [{ id: "history", title: "היסטוריית ניחושים", content: <GuessHistory session={session} /> }] : []),
+      ...(token ? [{ id: "history", title: "היסטוריה", content: <History session={session} surveysFirst={surveysPart} /> }] : []),
       ...(surveysPart ? [] : [{ id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> }]),
-      ...(surveysPart && token ? [{ id: "surveys", title: "היסטוריית סקרים", content: <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense> }] : []),
     ];
     return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId)} after={admin} label="אזור אישי" />;
   }
@@ -299,9 +312,8 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
       <PageTitle>אזור אישי</PageTitle>
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
-        {token && <Drawer title="היסטוריית ניחושים" open={open.has("history")} onToggle={() => toggle("history")}><GuessHistory session={session} /></Drawer>}
+        {token && <Drawer title="היסטוריה" open={open.has("history")} onToggle={() => toggle("history")}><History session={session} surveysFirst={surveysPart} /></Drawer>}
         {!surveysPart && <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>}
-        {surveysPart && token && <Drawer title="היסטוריית סקרים" open={open.has("surveys")} onToggle={() => toggle("surveys")}><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense></Drawer>}
         {admin}
       </div>
     </div>

@@ -108,14 +108,22 @@ describe("site surveys over the worker", () => {
     expect((await setOutside("everyone")).status).toBe(400);
   });
 
-  it("keeps every answer as history and returns the latest as mine", async () => {
+  it("keeps the last answer of each day as history and returns the latest as mine", async () => {
     const token = await member("a@x.co");
+    expect((await answer(token, { reelect: "no" })).status).toBe(200);
+    // באותו יום — רק האחרונה נשמרת (הכרעת בעלים 02.11.2026)
+    t += 60_000;
+    expect((await answer(token, { reelect: "maybe-not-valid" })).status).toBe(400);
+    expect((await answer(token, { reelect: "yes" })).status).toBe(200);
+    expect((await call("/survey/history", { token })).data.answers.filter((a) => a.survey === "reelect").map((a) => a.answers.reelect)).toEqual(["yes"]);
+    // ביום הבא — שורה חדשה בהיסטוריה
+    t += 24 * 3600_000;
     expect((await answer(token, { reelect: "no" })).status).toBe(200);
     t += 60_000;
     expect((await answer(token, { reelect: "yes" })).status).toBe(200);
     expect((await answer(token, { coalition: { likud: "coalition", raam: { abstain: 3 } } }, "gov")).status).toBe(200);
     const h = await call("/survey/history", { token });
-    expect(h.data.answers.filter((a) => a.survey === "reelect").map((a) => a.answers.reelect)).toEqual(["yes", "no"]);
+    expect(h.data.answers.filter((a) => a.survey === "reelect").map((a) => a.answers.reelect)).toEqual(["yes", "yes"]);
     expect((await call("/survey?id=reelect", { token })).data.mine.answers.reelect).toBe("yes");
   });
 
@@ -208,7 +216,7 @@ describe("site surveys over the worker", () => {
     await call("/survey/view", { token: a, body: { survey: "reelect" } });
     await call("/survey/view", { token: a, body: { survey: "reelect" } });
     await call("/survey/view", { body: { survey: "reelect", embed: true } });
-    await answer(a, { reelect: "yes" }); t += 1000; await answer(a, { reelect: "no" });
+    await answer(a, { reelect: "yes" }); t += 24 * 3600_000; await answer(a, { reelect: "no" });
     const s = await call("/survey/stats?id=reelect", { token: m });
     expect(s.data).toMatchObject({ views: 3, viewers: 2, embedViews: 1, saves: 2, savers: 1, changed: 1, members: 1, outsiders: 0 });
     expect(s.data.days.length).toBeGreaterThan(0);
