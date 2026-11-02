@@ -246,6 +246,7 @@ export default function SurveyScreen() {
   );
   if (!survey) return <main className="px-4 py-6"><p className="text-ink-soft">טוען…</p></main>;
   const deadline = closesLabel(survey);
+  const bothScopes = data.access.outside === "answer";
   const noResults = survey.visibility === "after_close" ? "התוצאות יוצגו עם סגירת הסקר." : survey.visibility === "answered" ? "התוצאה העדכנית מוצגת אחרי ששומרים תשובה." : "אין עדיין תוצאות.";
 
   return (
@@ -301,12 +302,13 @@ export default function SurveyScreen() {
         <section className="f-card space-y-3">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-base font-bold">תוצאות</h2>
-            {data.results && <div className="f-seg sm" role="radiogroup" aria-label="מי נספר">
+            {/* מתג הגזרה / כל המשתתפים — רק כשמי שמחוץ לגזרה רשאי לענות (הכרעת בעלים 02.11.2026) */}
+            {data.results && bothScopes && <div className="f-seg sm" role="radiogroup" aria-label="מי נספר">
               <button type="button" aria-pressed={scope === "group"} onClick={() => setScope("group")}>הגזרה</button>
               <button type="button" aria-pressed={scope === "all"} onClick={() => setScope("all")}>כל המשתתפים</button>
             </div>}
           </div>
-          {data.results ? <Results survey={survey} results={data.results[scope]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
+          {data.results ? <Results survey={survey} results={data.results[bothScopes ? scope : "group"]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
         </section>
       </>}
 

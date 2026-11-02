@@ -30,7 +30,8 @@ import { useHagzara, useHagzaraTheme } from "../pages/simple/hagzara";
  * בשלב הראשון המסכים בלי קישור מאף מסך באתר (הכרעת בעלים 01.11.2026) — רק בכתובת ישירה, עד אישור הבעלים ומנהלי הגזרה.
  */
 export const isSurveysPart = (pathname: string) => /^\/(surveys|s)(\/|$)/.test(pathname);
-const SURVEY_TABS = [{ to: "/surveys", label: "כל הסקרים", end: true }, { to: "/s/gov", label: "הרכבת הממשלה", end: false }];
+/** אין לשונית נפרדת לסקר או לניחוש — לכולם מגיעים דרך "כל הסקרים" (הכרעת בעלים 02.11.2026) */
+const SURVEY_TABS = [{ to: "/surveys", label: "כל הסקרים", end: false }];
 
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
@@ -193,7 +194,7 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const tab = (t: Screen) => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {surveysPart ? SURVEY_TABS.map((t) => <NavLink key={t.to} to={t.to} end={t.end}>{t.label}</NavLink>) : scroll
+    {surveysPart ? SURVEY_TABS.map((t) => <NavLink key={t.to} to={t.to} end={t.end} aria-current={pathname.startsWith("/s/") ? "page" : undefined}>{t.label}</NavLink>) : scroll
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
     {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}

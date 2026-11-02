@@ -50,15 +50,25 @@ const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, 
       await page.getByText('בחירות חוזרות?').first().waitFor();
       const body = await page.innerText('main');
       assert.match(body, /פתוח עד/, '"פתוח עד" מופיע');
-      for (const l of ['הכול', 'סקרים', 'ניחושים']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `מתג: ${l}`);
+      assert.doesNotMatch(body, /יוצגו מ/, 'אין "ממתין ל־50" מבחוץ');
+      assert.equal(await page.getByRole('link', { name: 'הרכבת הממשלה' }).count(), 0, 'אין לשונית נפרדת לסקר');
+      for (const l of ['הכול', 'בחירות', 'ניחושים']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `מתג: ${l}`);
       await page.getByRole('button', { name: 'ניחושים', exact: true }).click();
       await page.waitForTimeout(200);
       assert.ok(!(await page.getByText('בחירות חוזרות?').count()), 'סינון ניחושים מסתיר סקר');
       assert.ok(await page.getByText('ניחוש: אחוז הצבעה').count(), 'סינון ניחושים משאיר ניחוש');
       await noScroll('list-guesses');
+      // הניחושים: גלוי לכולם ובלי סקרים
+      await page.goto('http://127.0.0.1:5177/#/surveys/guesses');
+      await page.waitForTimeout(1200);
+      const g = await page.innerText('main');
+      assert.doesNotMatch(g, /נפתח אחרי שמירת/, 'הניחושים לא נעולים');
+      assert.doesNotMatch(g, /ממוצע הסקרים/, 'בלי ממוצע הסקרים');
+      await noScroll('guesses');
       // מצב ניהול
       await page.goto('http://127.0.0.1:5177/#/s/reelect?manage=1');
       await page.getByRole('button', { name: 'ניהול', exact: true }).waitFor();
+      assert.equal(await page.getByRole('button', { name: 'כל המשתתפים' }).count(), 0, 'בלי מתג הגזרה/כולם כשלא אושר לכולם לענות');
       if ((await page.getByRole('button', { name: 'ניהול', exact: true }).getAttribute('aria-pressed')) !== 'true') await page.getByRole('button', { name: 'ניהול', exact: true }).click();
       await page.getByText('120').first().waitFor();
       await noScroll('manage');
