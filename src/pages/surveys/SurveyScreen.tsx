@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SurveyAdmin from "./SurveyAdmin";
+import Select from "../../components/Select";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
@@ -12,8 +13,17 @@ import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, get
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
 const COL_BAR = ["bg-signal", "bg-[rgb(var(--bloc-4))]", "bg-[rgb(var(--bloc-5))]"];
 
-/** בחירה אחת מתוך אפשרויות: מקטעים שווים בשורה (radiogroup) */
+/** מעל מספר זה של אפשרויות — תפריט בחירה נפתח במקום כפתורים (הכרעת בעלים 02.11.2026) */
+const SELECT_FROM = 7;
+/** בחירה אחת מתוך אפשרויות: מקטעים שווים בשורה (radiogroup), או תפריט בחירה נפתח לרשימה ארוכה */
 function Single({ q, value, onPick, disabled }: { q: Extract<SurveyQuestion, { kind: "single" }>; value?: string; onPick: (v: string) => void; disabled: boolean }) {
+  if (q.options.length >= SELECT_FROM)
+    return (
+      <Select id={`q-${q.id}`} label={q.title} inline value={value ?? ""} onChange={(v) => v && onPick(v)}>
+        <option value="" disabled>בחירה…</option>
+        {q.options.map((o) => <option key={o.id} value={o.id} disabled={disabled}>{o.label}{o.sub ? ` · ${o.sub}` : ""}</option>)}
+      </Select>
+    );
   return (
     <div role="radiogroup" aria-label={q.title} className="grid gap-1 p-1 rounded-2xl bg-[rgb(var(--grid))]" style={{ gridTemplateColumns: `repeat(${Math.min(q.options.length, 3)}, minmax(0, 1fr))` }}>
       {q.options.map((o) => {
