@@ -52,7 +52,7 @@ export const setSurveyOutside = (token: string, group: string, survey: string, o
 export const manageSurvey = (token: string, body: Record<string, unknown>) => call<{ survey: Survey }>("/survey/manage", { token, body });
 /** כניסה לסקר — לסטטיסטיקה של המנהלים */
 export const viewSurvey = (token: string | null, survey: string, embed: boolean) => call<{ ok: true }>("/survey/view", { token, body: { survey, embed } });
-export interface SurveyStats { views: number; viewers: number; embedViews: number; saves: number; savers: number; changed: number; members: number; outsiders: number; days: { day: string; views: number; saves: number }[] }
+export interface SurveyStats { views: number; viewers: number; embedViews: number; viewsSince: string | null; saves: number; savers: number; saversSinceViews: number; changed: number; members: number; outsiders: number; days: { day: string; views: number; saves: number }[]; hours: { hour: string; views: number; saves: number }[] }
 export const surveyStats = (token: string, survey: string) => call<SurveyStats>(`/survey/stats?id=${encodeURIComponent(survey)}`, { token });
 
 /** מועד סגירה לתצוגה ("3.11 22:00"), או null */
