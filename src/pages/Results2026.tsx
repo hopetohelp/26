@@ -3,7 +3,7 @@ import DeviationChart from "../components/deviationChart";
 import Explained from "../components/Explained";
 import { Card } from "../components/ui";
 import type { SeatShift } from "../engine/seatChange";
-import { listName, registry } from "../lib/data";
+import { listName } from "../lib/data";
 import { accuracyPct, correctSeats, exactLists } from "../lib/guessAccuracy";
 import { finalPolls, pollMean, results2026, seatChanges2026 } from "../lib/guessAccuracyData";
 import { partialLine } from "../lib/voterFlow";
@@ -33,15 +33,12 @@ function ShiftLine({ shift, up }: { shift: SeatShift | null; up: boolean }) {
 
 /** "תוצאות אמת" — 2026: הספירה הנוכחית, הקולות באחוזים והמנדטים לפי מנוע החוק */
 export function Results2026({ chips }: { chips?: React.ReactNode }) {
-  const eligible = (registry as { k26?: { eligible: number } }).k26?.eligible;
   return (
     <Card>
       {chips}
       <h2 className="text-xl font-display leading-tight mt-4">הכנסת ה-26 · 2026</h2>
       <p className="text-sm text-ink-soft">{partialLine()}</p>
-      {eligible && <dl className="c-result-stats grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">
-        <div><dt className="text-ink-soft">בעלי זכות בחירה</dt><dd className="text-xl font-bold tabular-nums">{num(eligible)}</dd></div>
-      </dl>}
+      {/* בעלי זכות הבחירה — רק במסך "מה השתנה" (כפילות ודאית; הכרעת בעלים 02.11.2026) */}
       <Explained
         kind="חישוב לפי החוק"
         source="הקולות הנספרים עד כה לכל רשימה, ומנוע החוק של האתר (אחוז חסימה, באדר-עופר והסכמי עודפים)"

@@ -51,14 +51,14 @@ import { previousTurnout, turnoutPct } from "./guessAccuracyData";
 import { registry } from "./data";
 describe("turnoutPct — אחוז הצבעה מבעלי הזכות הרשמיים", () => {
   it("מצביעים מתוך הנתון הרשמי, ספרה אחת אחרי הנקודה", () => {
-    expect(registry.k26.eligible).toBe(7336553);
+    expect(registry.k26.eligible).toBe(7331981);
     expect(turnoutPct(5449277, registry.k26.eligible)).toBe(74.3);
   });
   it("בחירות קודמות = אחוז ההצבעה הסופי ב-2022 מהתוצאות הרשמיות", () => {
     expect(previousTurnout()).toBe(70.6);
   });
   it("נתון לא תקין ⇐ null", () => {
-    expect(turnoutPct(NaN, 7336553)).toBeNull();
+    expect(turnoutPct(NaN, 7331981)).toBeNull();
     expect(turnoutPct(100, 0)).toBeNull();
   });
 });
