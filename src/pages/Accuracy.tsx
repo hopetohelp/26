@@ -2,14 +2,12 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import { useMemo, useState } from "react";
 import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
-import { Chips } from "../components/Choice";
 import DeviationChart from "../components/deviationChart";
 import { deviation, finding } from "../lib/deviation";
 import Explained from "../components/Explained";
 import { Card, ChartWithTable, Fold, Note, PageTitle, Columns } from "../components/ui";
 import historyFile from "../data/history.json";
-import { electionButtonLabel, results } from "../lib/data";
-import { Accuracy2026, K26 } from "./Results2026";
+import { results } from "../lib/data";
 import { dateRange, date, rng, seatsFmt, signed } from "../lib/format";
 import {
   EVE_DAYS,
@@ -58,21 +56,13 @@ const spread = cycles.map((c) => {
 });
 const r1 = (x: number) => seatsFmt(Math.round(x * 10) / 10);
 
-/** כפתור לכל מערכת: 2026 (ספירה חלקית) ואחריה המערכות שהסתיימו */
-const chipOptions = () => [K26, ...newestFirst.map((x) => ({ id: x.cycle.id, label: <>{electionButtonLabel(x.cycle.label)}<span className="sr-only"> — הכנסת ה-{x.cycle.knesset}</span></> }))];
 
-export default function Accuracy() {
-  const [id, setId] = useState(K26.id);
-  if (id === K26.id) return (
-    <Columns>
-      <PageTitle inColumns lead="הסקר האחרון של כל מכון לפני הבחירות, מול הספירה של 2026.">דיוק הסקרים</PageTitle>
-      <Accuracy2026 chips={<Chips label="מערכת בחירות" value={id} onChange={setId} className="mb-4" options={chipOptions()} />} />
-    </Columns>
-  );
-  return <AccuracyPast id={id} setId={setId} />;
+/** "סקרים" של מערכת שהסתיימה — לפי בורר המערכת שבפס העליון (הכרעות בעלים 02.11.2026); 2026 — Accuracy2026 במסך הסקרים */
+export default function Accuracy({ id }: { id: string }) {
+  return <AccuracyPast id={id} />;
 }
 
-function AccuracyPast({ id, setId }: { id: string; setId: (id: string) => void }) {
+function AccuracyPast({ id }: { id: string }) {
   const s = summaries.find((x) => x.cycle.id === id)!;
   const c = s.cycle;
   const lists = useMemo(() => comparedLists(c, s.result).sort((a, b) => b.seats - a.seats), [c, s.result]);
@@ -99,7 +89,6 @@ function AccuracyPast({ id, setId }: { id: string; setId: (id: string) => void }
     <>
       
       <Card title="הטעות בסקר האחרון של כל מכון">
-        <Chips label="מערכת לבדיקת הסקר האחרון" value={id} onChange={setId} options={[...cycles].reverse().map(c => ({ id: c.id, label: c.label }))} />
         <Explained kind="השוואה" source={SOURCE} asOf={c.date} assumption="הסקר האחרון שנמצא במאגר לכל מכון לפני הבחירות, שסכום המנדטים שלו 118–122. הפער הוא סקר פחות תוצאה, חלקי 120 כפול 100." methodAnchor="accuracy">
           <p className="text-sm my-3">הפערים ב% ממושבי הכנסת — לא באחוזי הצבעה. סימן חיובי: הסקר נתן יותר מהתוצאה. פרסומים מאותו תאריך מוצגים בנפרד.</p>
           <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">טעויות הסקר האחרון — {c.label}</caption><thead><tr>{['מכון ומזמין', 'תאריך במקור', 'הפער הגדול ביותר למפלגה', 'הממליצות על נתניהו', 'הרשימות הערביות', 'יתר הרשימות'].map(t => <th key={t} className="p-2 text-start">{t}</th>)}</tr></thead><tbody>{lastPollErrors(c, s.result).map(p => <tr className="border-t border-paper-line" key={p.pollId}><th className="p-2 text-start font-medium">{p.firmHe}<small className="block">{p.publisher}</small>{p.urls[0] && <a href={p.urls[0]} target="_blank" rel="noreferrer">לפרסום</a>}</th><td className="p-2 whitespace-nowrap">{date(p.date)}{p.dateBasis === 'publication' && <small className="block">תאריך פרסום</small>}</td><td className="p-2">{p.worstParties.map(l => <div key={l.letters}>{l.name}: <bdi>{signed(l.diffPp)} נק׳ אחוז</bdi><small className="block">{l.estimate} מול {l.actual} מנדטים</small></div>)}</td>{p.blocs.map(b => <td className="p-2" key={b.id}><bdi>{signed(b.diffPp)} נק׳ אחוז</bdi><small className="block">{b.estimate} מול {b.actual} מנדטים</small></td>)}</tr>)}</tbody></table></div>
@@ -114,14 +103,6 @@ function AccuracyPast({ id, setId }: { id: string; setId: (id: string) => void }
       </PageTitle>
 
       <Card title="הסקרים מול התוצאות">
-        <Chips
-          label="מערכת בחירות"
-          value={id}
-          onChange={setId}
-          className="mb-4"
-          options={chipOptions()}
-        />
-
         <h3 className="text-xl font-display leading-tight mb-1">{finding(dev.outside.length, dev.askedCount)}</h3>
         <p className="text-sm text-ink-soft mb-3">הכנסת ה-{c.knesset} ({c.label}) · {s.snapshot.length} מכונים · סך הפער {seatsFmt(s.gap)} מנדטים</p>
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
@@ -303,6 +284,15 @@ function AccuracyPast({ id, setId }: { id: string; setId: (id: string) => void }
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום ממוצעי המפלגות לפני ${c.label}`, asOf: eveText },
         { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
       ]} />
+      </Columns>
+    </>
+  );
+}
+
+/** ההשוואה בין המערכות — במסך "סיכום" של הבורר (הכרעות בעלים 02.11.2026) */
+export function AccuracyAcross() {
+  return (
+    <>
       <Fold title="חמש מערכות במבט אחד">
         <Explained
           kind="סיכום סקרים"
@@ -462,7 +452,6 @@ function AccuracyPast({ id, setId }: { id: string; setId: (id: string) => void }
           בטוחה מחמש מערכות.
         </Note>
       </Fold>
-      </Columns>
     </>
   );
 }

@@ -32,7 +32,7 @@ function ShiftLine({ shift, up }: { shift: SeatShift | null; up: boolean }) {
 }
 
 /** "תוצאות אמת" — 2026: הספירה הנוכחית, הקולות באחוזים והמנדטים לפי מנוע החוק */
-export function Results2026({ chips }: { chips: React.ReactNode }) {
+export function Results2026({ chips }: { chips?: React.ReactNode }) {
   const eligible = (registry as { k26?: { eligible: number } }).k26?.eligible;
   return (
     <Card>
@@ -73,7 +73,7 @@ export function Results2026({ chips }: { chips: React.ReactNode }) {
 }
 
 /** "דיוק הסקרים" — 2026: הסקר האחרון של כל סדרה לפני הבחירות מול הספירה הנוכחית (בלי המדגמים) */
-export function Accuracy2026({ chips }: { chips: React.ReactNode }) {
+export function Accuracy2026({ chips }: { chips?: React.ReactNode }) {
   const rows = ids.filter((id) => (actual[id] ?? 0) > 0 || (pollMean[id] ?? 0) >= 1).map((id) => {
     const values = finalPolls.map((p) => p.values[id]).filter((v): v is number => v !== undefined);
     return { id, name: listName(id), estimate: pollMean[id] ?? 0, min: Math.min(...values), max: Math.max(...values), actual: actual[id] ?? 0, n: values.length, values };

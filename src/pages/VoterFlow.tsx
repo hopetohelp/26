@@ -293,10 +293,10 @@ export default function VoterFlow() {
         {/* שלושה חלקים נפתחים (הכרעת בעלים 29.10.2026) */}
         <Fold title="מעבר בין מפלגות">
           {/* כפתור "הצגה בגרף" — גרף זרימה במקום הכרטיסים (הכרעת בעלים 30.10.2026) */}
-          <GraphSwitch graph={{}}><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></GraphSwitch>
+          <GraphSwitch defaultOn graph={{}}><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></GraphSwitch>
         </Fold>
         <Fold title="מעבר בין גושים">
-          <GraphSwitch graph={BLOC_GRAPH}><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></GraphSwitch>
+          <GraphSwitch defaultOn graph={BLOC_GRAPH}><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></GraphSwitch>
         </Fold>
         {/* ״איך זה חושב?״ בתחתית העמוד (הכרעת בעלים 29.10.2026) */}
         <Fold title="חיפוש לפי עיר או קלפי">

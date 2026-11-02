@@ -14,7 +14,7 @@ import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, ty
 import AccessCard from "./AccessCard";
 import PrivacyCard from "./PrivacyConsent";
 import { useMode, type ModeId } from "../lib/theme";
-import { navScreens, type Screen } from "../lib/pages";
+import { guessAreaTabs, navScreens, type Screen } from "../lib/pages";
 import { useNavShare } from "../lib/navShare";
 import { useSupportUnread } from "../lib/supportUnread";
 import { clockParts } from "./ExitPollClock";
@@ -24,14 +24,14 @@ import { useSession } from "../pages/guess/useCrowd";
 import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzara, useHagzaraTheme } from "../pages/simple/hagzara";
+import ElectionPicker from "./ElectionPicker";
+import { isElectionScreen } from "../lib/election";
 
 /**
  * חלק "סקרי משתתפים" (הכרעת בעלים 01.11.2026: שני חלקים נפרדים — סקרי משתתפים | ניתוח בחירות).
  * בשלב הראשון המסכים בלי קישור מאף מסך באתר (הכרעת בעלים 01.11.2026) — רק בכתובת ישירה, עד אישור הבעלים ומנהלי הגזרה.
  */
-export const isSurveysPart = (pathname: string) => /^\/(surveys|s)(\/|$)/.test(pathname);
-/** אין לשונית נפרדת לסקר או לניחוש — לכולם מגיעים דרך "כל הסקרים" (הכרעת בעלים 02.11.2026) */
-const SURVEY_TABS = [{ to: "/surveys", label: "כל הסקרים" }];
+export const isSurveysPart = (pathname: string) => /^\/(surveys|s|guess|community|results-2026|g)(\/|$)/.test(pathname);
 
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
@@ -97,7 +97,8 @@ function ModePicker() {
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
 function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: string | null; navTop: boolean; onFit: (top: boolean) => void }) {
-  const surveys = isSurveysPart(useLocation().pathname);
+  const { pathname } = useLocation();
+  const surveys = isSurveysPart(pathname);
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
   // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה.
@@ -140,10 +141,12 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
     {/* חברי הגזרה: סמל הגזרה בפס העליון (הכרעת בעלים 28/10) */}
     <NavLink to={surveys ? "/surveys" : "/"} className="f-logo inline-flex items-center gap-2">{member && logo && <img src={logo} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />}{member && <span className="f-gname">הגזרה ·</span>}{surveys ? "סקרים" : "בחירות 26"}</NavLink>
     <FocusClock />
+    {/* בורר המערכת — רק במסכי הבחירות (הכרעות בעלים 02.11.2026) */}
+    {!surveys && isElectionScreen(pathname) && <ElectionPicker />}
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
     <span className="flex-1" />
     {/* מעבר בין שני חלקי האתר (הכרעת בעלים 02.11.2026): בחלק הסקרים "בחירות" ⇐ ניתוח הבחירות; בחלק הניתוח "ניחושים" ⇐ סקרים וניחושים */}
-    {surveys ? <Link to="/results-2026" className="f-btn">בחירות</Link> : <Link to="/surveys" className="f-btn">ניחושים</Link>}
+    {surveys ? <Link to="/results" className="f-btn">בחירות</Link> : <Link to="/surveys" className="f-btn">ניחושים</Link>}
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
@@ -166,6 +169,8 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const { advanced } = useInterface();
   const groupTab = useGroupTab();
   useGuessClosed(); // הסרגל מתרענן ברגע סגירת הניחושים (21:58)
+  // המערכת שנבחרה עוברת עם המעבר בין מסכי הבחירות (הכרעות בעלים 02.11.2026)
+  const election = new URLSearchParams(useLocation().search).get("election");
   // כפתור השיתוף של המסך הפתוח (מסך התוצאות), מימין ל-AI (הכרעת בעלים 28.10.2026)
   const share = useNavShare();
   // שלושת מסכי הליבה תמיד; במתקדם — "עוד" (קטלוג הניווט, src/lib/pages.ts)
@@ -191,10 +196,10 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   }, []);
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
-  const tab = (t: Screen) => <NavLink key={t.to} to={t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
+  const tab = (t: Screen) => <NavLink key={t.to} to={election && isElectionScreen(t.to) ? `${t.to}?election=${encodeURIComponent(election)}` : t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
-    {surveysPart ? SURVEY_TABS.map((t) => <Link key={t.to} to={t.to} aria-current={pathname === "/surveys" || pathname.startsWith("/s/") ? "page" : undefined}>{t.label}</Link>) : scroll
+    {surveysPart ? guessAreaTabs(Date.now(), guessShown).map((t) => <Link key={t.to} to={t.to} aria-current={(t.to === "/surveys" ? pathname === "/surveys" || pathname.startsWith("/s/") : t.to === "/community" ? pathname === "/community" || pathname.startsWith("/g/") : pathname === t.to) ? "page" : undefined}>{t.label}</Link>) : scroll
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
     {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}

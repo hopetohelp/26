@@ -192,9 +192,14 @@ export function partyNumbers(id26: string | null, letters22: string | null) {
 /** הנתונים הכלליים בראש "מה השתנה" (הכרעת בעלים 29.10.2026): בעלי זכות, הצביעו, קולות לרשימות בכנסת (מצביעים פחות פסולים ופחות לא עברו), קולות לרשימות שלא עברו את אחוז החסימה.
  * 2022 — התוצאות הרשמיות; 2026 — אותו קובץ קלפיות של כרטיסי המפלגות (counted), והקולות לרשימות בלי מנדט — מתוצאות 2026 ומנוע החוק */
 export interface Overview { eligible: number; voted: number; invalid: number; belowThreshold: number; inKnesset: number }
+/** ארבעת הנתונים הכלליים של מערכת שהסתיימה, מהתוצאות הרשמיות — מקור אחד לכל מערכת (הכרעות בעלים 02.11.2026: "מה השתנה" לכל מערכת מול הקודמת) */
+export function overviewOf(e: { eligible: number; voted: number; valid: number; lists: { seats: number; votes: number }[] }): Overview {
+  const o: Overview = { eligible: e.eligible, voted: e.voted, invalid: e.voted - e.valid, belowThreshold: e.lists.filter((l) => l.seats === 0).reduce((sum, l) => sum + l.votes, 0), inKnesset: 0 };
+  o.inKnesset = o.voted - o.invalid - o.belowThreshold;
+  return o;
+}
 export function overview(): { y2022: Overview; y2026: Overview | null } {
-  const y2022: Overview = { eligible: K25.eligible, voted: K25.voted, invalid: K25.voted - K25.valid, belowThreshold: K25.lists.filter((l) => l.seats === 0).reduce((sum, l) => sum + l.votes, 0), inKnesset: 0 };
-  y2022.inKnesset = y2022.voted - y2022.invalid - y2022.belowThreshold;
+  const y2022 = overviewOf(K25);
   const c = countedOf(), votes = results2026.votes ?? {};
   if (!c?.eligible || c.voters === undefined || c.invalid === undefined) return { y2022, y2026: null };
   const below = Object.entries(votes).filter(([id]) => !results2026.seats[id]).reduce((sum, [, v]) => sum + v, 0);
