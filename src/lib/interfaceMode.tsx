@@ -18,7 +18,8 @@ export function InterfaceProvider({ children }: { children: ReactNode }) {
   // כל כניסה לאתר נפתחת בתצוגה הממוקדת (הכרעת בעלים 23.10.2026); "למחקר מתקדם" נשמר רק לביקור הנוכחי בלשונית
   const [preferred, setPreferred] = useState<InterfaceMode>(() => { try { localStorage.removeItem(INTERFACE_KEY); return sessionStorage.getItem(INTERFACE_KEY) === "advanced" ? "advanced" : "simple"; } catch { return "simple"; } });
   const [landing, setLanding] = useState<GroupPublic | null>(null);
-  const advanced = preferred === "advanced" || requiresAdvanced(location.pathname, location.search);
+  // הניתוח המורחב הוא ברירת המחדל והתצוגה היחידה; כפתור "לניתוח מורחב" בוטל (הכרעת בעלים 02.11.2026)
+  const advanced = true || preferred === "advanced" || requiresAdvanced(location.pathname, location.search);
   // "/changes" אינו מחייב מורחב: בממוקדת הוא מסך עצמאי
   const toggle = () => {
     const next = advanced ? "simple" : "advanced";

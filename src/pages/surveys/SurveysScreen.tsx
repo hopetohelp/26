@@ -34,9 +34,9 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
 
 type Filter = "open" | "closed" | "all";
 const FILTERS: [Filter, string][] = [["open", "פתוחים"], ["closed", "נסגרו"], ["all", "כולם"]];
-/** מתג סינון לצופים: בחירות / ניחושים — לא "סקרים", שלא יתבלבלו עם סקרי המכונים (הכרעות בעלים 01.11 ו־02.11.2026) */
+/** מתג סינון לצופים (הכרעת בעלים 01.11.2026): סקרים / ניחושים */
 type KindFilter = "all" | "survey" | "guess";
-const KIND_FILTERS: [KindFilter, string][] = [["all", "הכול"], ["survey", "בחירות"], ["guess", "ניחושים"]];
+const KIND_FILTERS: [KindFilter, string][] = [["all", "הכול"], ["survey", "סקרים"], ["guess", "ניחושים"]];
 /** תגית מצב / מועד סגירה על הכרטיס */
 const statusText = (s: Survey) => (s.status === "draft" ? "טיוטה" : s.status === "closed" ? "נסגר" : closesLabel(s) ? `פתוח עד ${closesLabel(s)}` : "פתוח");
 

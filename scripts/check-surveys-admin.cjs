@@ -11,6 +11,7 @@ const base = { group: 'g1', position: 0, updatedAt: '2026-11-01T10:00:00Z', visi
 const surveys = [
   { ...base, id: 'reelect', status: 'open', kind: 'survey', title: 'בחירות חוזרות?', closesAt: closes, questions: [{ id: 'q1', kind: 'single', title: 'יהיו בחירות חוזרות?', options: [{ id: 'yes', label: 'כן' }, { id: 'no', label: 'לא' }] }] },
   { ...base, id: 'turnout', status: 'open', kind: 'guess', title: 'ניחוש: אחוז הצבעה', questions: [{ id: 't', kind: 'range', title: 'אחוז ההצבעה', min: 60, max: 80, step: 1, minLabel: 'נמוך', maxLabel: 'גבוה' }] },
+  { ...base, id: 'vote', status: 'open', kind: 'survey', title: 'מה הצבעתם?', questions: [{ id: 'vote', kind: 'single', title: 'מה הצבעתם?', options: ['הליכוד', 'ישר!', 'ביחד', 'הרשימה המשותפת', 'הדמוקרטים', 'ישראל ביתנו', 'רע"ם', 'לא הייתה לי זכות הצבעה', 'בחרתי לא להצביע', 'פתק לבן'].map((label, i) => ({ id: `o${i}`, label })) }] },
 ];
 const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, changed: 5, members: 30, outsiders: 5, days: [{ day: '2026-11-01', views: 70, saves: 20 }, { day: '2026-11-02', views: 50, saves: 20 }] };
 (async () => {
@@ -52,12 +53,18 @@ const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, 
       assert.match(body, /פתוח עד/, '"פתוח עד" מופיע');
       assert.doesNotMatch(body, /יוצגו מ/, 'אין "ממתין ל־50" מבחוץ');
       assert.equal(await page.getByRole('link', { name: 'הרכבת הממשלה' }).count(), 0, 'אין לשונית נפרדת לסקר');
-      for (const l of ['הכול', 'בחירות', 'ניחושים']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `מתג: ${l}`);
+      for (const l of ['הכול', 'סקרים', 'ניחושים']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `מתג: ${l}`);
       await page.getByRole('button', { name: 'ניחושים', exact: true }).click();
       await page.waitForTimeout(200);
       assert.ok(!(await page.getByText('בחירות חוזרות?').count()), 'סינון ניחושים מסתיר סקר');
       assert.ok(await page.getByText('ניחוש: אחוז הצבעה').count(), 'סינון ניחושים משאיר ניחוש');
       await noScroll('list-guesses');
+      // מעבר בין החלקים: מהניתוח "ניחושים" ⇐ סקרים, ומהסקרים "בחירות" ⇐ ניתוח
+      assert.ok(await page.getByRole('link', { name: 'בחירות', exact: true }).count(), 'כפתור בחירות בחלק הסקרים');
+      await page.goto('http://127.0.0.1:5177/#/results-2026');
+      await page.getByRole('link', { name: 'ניחושים', exact: true }).first().click();
+      await page.getByRole('heading', { name: 'כל הסקרים' }).waitFor();
+      await noScroll('switch');
       // הניחושים: גלוי לכולם ובלי סקרים
       await page.goto('http://127.0.0.1:5177/#/surveys/guesses');
       await page.waitForTimeout(1200);
@@ -72,6 +79,11 @@ const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, 
       if ((await page.getByRole('button', { name: 'ניהול', exact: true }).getAttribute('aria-pressed')) !== 'true') await page.getByRole('button', { name: 'ניהול', exact: true }).click();
       await page.getByText('120').first().waitFor();
       await noScroll('manage');
+      // רשימה ארוכה ⇐ תפריט בחירה נפתח
+      await page.goto('http://127.0.0.1:5177/#/s/vote');
+      await page.locator('select#q-vote').waitFor();
+      await page.locator('select#q-vote').selectOption({ label: 'פתק לבן' });
+      await noScroll('select');
       // טווח בסקר
       await page.goto('http://127.0.0.1:5177/#/s/turnout');
       await page.getByText('אחוז ההצבעה').first().waitFor();
