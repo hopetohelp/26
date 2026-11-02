@@ -178,7 +178,7 @@ createRoot(document.getElementById("root")!).render(
             />}
           />
           <Route path="forecast" element={<Moved to="/today" tab="scenarios" />} />
-          <Route path="trends" element={<Navigate to="/polls" replace />} />
+          <Route path="trends" element={<Navigate to="/polls?tab=trends" replace />} />
                     <Route path="accuracy" element={<Navigate to="/polls" replace />} />
           <Route path="voters" element={<Navigate to="/results?election=summary" replace />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />

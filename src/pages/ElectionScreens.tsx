@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { useLocation } from "react-router-dom";
 import { Fold, PageTitle } from "../components/ui";
 import OverviewCards from "../components/OverviewCards";
 import { results } from "../lib/data";
@@ -78,17 +79,19 @@ export function ChangesScreen() {
 /** "סקרים" של 2026: אחרונים, הסקרים מול התוצאה, ומגירות "מגמות" ו"ארכיון" (הכרעת בעלים 02.11.2026: שלושה מסכים) */
 function Polls2026() {
   const overview = useScreenShown("overview"), today = useScreenShown("today");
+  // קישור ישן ללשונית (?tab=trends / archive / overview / today) פותח את המגירה שלה
+  const tab = new URLSearchParams(useLocation().search).get("tab");
   return <div className="space-y-5">
     <Latest />
     <Accuracy2026 />
     {/* דיוק הסקרים לכל רשימה וגוש, הסקר הקרוב והשילוב הקרוב — הועברו ממסך "תוצאות אמת" (הכרעות בעלים 02.11.2026) */}
     <Suspense fallback={loading}><GuessAccuracy part="polls" /></Suspense>
     <div>
-      <Fold title="מגמות"><Suspense fallback={loading}><Trends /></Suspense></Fold>
-      <Fold title="ארכיון"><Suspense fallback={loading}><Polls /></Suspense></Fold>
+      <Fold title="מגמות" open={tab === "trends"}><Suspense fallback={loading}><Trends /></Suspense></Fold>
+      <Fold title="ארכיון" open={tab === "archive"}><Suspense fallback={loading}><Polls /></Suspense></Fold>
       {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}
-      {overview && <Fold title="האחרונים"><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
-      {today && <Fold title="היום"><Suspense fallback={loading}><Today /></Suspense></Fold>}
+      {overview && <Fold title="האחרונים" open={tab === "overview"}><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
+      {today && <Fold title="היום" open={tab === "today"}><Suspense fallback={loading}><Today /></Suspense></Fold>}
     </div>
   </div>;
 }
