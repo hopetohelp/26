@@ -4,7 +4,8 @@ import { switchUser } from "../lib/switchUser";
 /** שני סוגי פנייה לצוות האתר (הכרעת בעלים 01.11.2026): תקלה או טעות · שיפור או שאלה — מהמקור האחד ב-feedbackTopics */
 const SUPPORT_TOPICS = FEEDBACK_TOPICS;
 import Linkified from "../components/Linkified";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+const SurveyHistory = lazy(() => import("./surveys/SurveyHistoryScreen"));
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 
 import MyData from "./guess/MyData";
@@ -226,9 +227,10 @@ function grow(el: HTMLTextAreaElement) {
   el.style.height = `${Math.min(el.scrollHeight + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth), line * 5 + extra)}px`;
 }
 
-type DrawerId = "details" | "history" | "data" | "assistants" | "blocs";
+type DrawerId = "details" | "history" | "data" | "assistants" | "blocs" | "surveys";
 
-export default function Support() {
+/** surveysPart — "אזור אישי" בחלק הסקרים (#/surveys/me): אותן מגירות כמו בחלק הבחירות, בלי "עוגת המנדטים שלי", ועם היסטוריית הסקרים (הכרעת בעלים 02.11.2026) */
+export default function Support({ surveysPart = false }: { surveysPart?: boolean }) {
   const session = useSession();
   const { me, token } = session;
     // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
@@ -287,7 +289,8 @@ export default function Support() {
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "history", title: "היסטוריית ניחושים", content: <GuessHistory session={session} /> }] : []),
       ...(token ? [{ id: "data", title: "הנתונים שלי", content: data }] : []),
-      { id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> },
+      ...(surveysPart ? [] : [{ id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> }]),
+      ...(surveysPart && token ? [{ id: "surveys", title: "היסטוריית סקרים", content: <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense> }] : []),
     ];
     return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId)} after={admin} label="אזור אישי" />;
   }
@@ -298,7 +301,8 @@ export default function Support() {
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="היסטוריית ניחושים" open={open.has("history")} onToggle={() => toggle("history")}><GuessHistory session={session} /></Drawer>}
         {token && <Drawer title="הנתונים שלי" open={open.has("data")} onToggle={() => toggle("data")}>{data}</Drawer>}
-        <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>
+        {!surveysPart && <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>}
+        {surveysPart && token && <Drawer title="היסטוריית סקרים" open={open.has("surveys")} onToggle={() => toggle("surveys")}><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyHistory embedded /></Suspense></Drawer>}
         {admin}
       </div>
     </div>
