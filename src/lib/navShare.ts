@@ -14,7 +14,8 @@ export function useNavShare(): NavShare {
   return v;
 }
 /** רישום כפתור השיתוף של המסך; מוסר ביציאה מהמסך */
-export function useRegisterNavShare(onClick: () => void, disabled: boolean) {
-  useEffect(() => { setNavShare({ onClick, disabled }); }, [onClick, disabled]);
-  useEffect(() => () => setNavShare(null), []);
+/** off: המסך אינו מציע שיתוף (למשל דיוק הסקרים במסך "סקרים") */
+export function useRegisterNavShare(onClick: () => void, disabled: boolean, off = false) {
+  useEffect(() => { if (!off) setNavShare({ onClick, disabled }); }, [onClick, disabled, off]);
+  useEffect(() => () => { if (!off) setNavShare(null); }, [off]);
 }

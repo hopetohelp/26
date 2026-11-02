@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { medianSeats, accuracyPct, accuracyRows, closestPoll, pollAccuracyPct, bestCombination, biggestGap, closerShareHist, distance, histStats, pollStats } from "./guessAccuracy";
+import { medianSeats, accuracyPct, accuracyRows, closestPoll, pollAccuracyPct, bestCombination, biggestGap, closerShareHist, distance, histStats, pollStats, seatTags } from "./guessAccuracy";
 
 describe("guessAccuracy", () => {
   it("מרחק במנדטים ובאחוזים; רשימה שלא עברה מול 4", () => {
@@ -66,5 +66,16 @@ describe("turnoutPct — אחוז הצבעה מבעלי הזכות הרשמיי�
 describe("medianSeats", () => {
   it("חציון לכל רשימה, בלי סקר שלא פרסם", () => {
     expect(medianSeats([{ a: 1, b: 4 }, { a: 3 }, { a: 10, b: 6 }], ["a", "b", "c"])).toEqual({ a: 3, b: 5, c: 0 });
+  });
+});
+
+describe("תגיות הדיוק על כל סקר (הכרעת בעלים 02.11.2026)", () => {
+  it("מנדטים, מפלגות וגושים מול התוצאה; רשימה שלא נסקרה נספרת 0", () => {
+    const actual = { a: 60, b: 40, c: 20 };
+    const poll = { a: 58, b: 42 };
+    const blocs = [{ lists: ["a"] }, { lists: ["b", "c"] }];
+    // במקום הלא נכון: (2+2+20)/2 = 12 ⇐ 108; מפלגות מדויקות: אף אחת; גושים: (2+18)/2 = 10 ⇐ 110
+    expect(seatTags(poll, actual, blocs)).toEqual({ seats: 108, exact: 0, blocs: 110 });
+    expect(seatTags(actual, actual, blocs)).toEqual({ seats: 120, exact: 3, blocs: 120 });
   });
 });

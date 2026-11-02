@@ -21,6 +21,7 @@ const Trends = lazy(() => import("./Trends"));
 const Polls = lazy(() => import("./Polls"));
 const Today = lazy(() => import("./Today"));
 const SimpleOverview = lazy(() => import("./simple/Overview"));
+const GuessAccuracy = lazy(() => import("./simple/GuessAccuracy"));
 const loading = <p className="text-ink-soft">טוען…</p>;
 
 /** "נתון חסר · נשלים בהמשך" (הכרעת בעלים 02.11.2026): החלק נשאר במקומו, כדי שהמבנה יהיה זהה בכל מערכת */
@@ -80,6 +81,8 @@ function Polls2026() {
   return <div className="space-y-5">
     <Latest />
     <Accuracy2026 />
+    {/* דיוק הסקרים לכל רשימה וגוש, הסקר הקרוב והשילוב הקרוב — הועברו ממסך "תוצאות אמת" (הכרעות בעלים 02.11.2026) */}
+    <Suspense fallback={loading}><GuessAccuracy part="polls" /></Suspense>
     <div>
       <Fold title="מגמות"><Suspense fallback={loading}><Trends /></Suspense></Fold>
       <Fold title="ארכיון"><Suspense fallback={loading}><Polls /></Suspense></Fold>

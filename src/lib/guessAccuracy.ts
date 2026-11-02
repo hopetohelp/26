@@ -130,3 +130,14 @@ export function biggestGap(values: Seats, actual: Seats, ids: string[]) {
   }
   return out;
 }
+
+/**
+ * תגיות הדיוק על כל סקר ומדגם (הכרעת בעלים 02.11.2026: "אין מסך דיוק — על כל סקר דיוק מנדטים, מפלגות, גושים"):
+ * מנדטים מדויקים (120 פחות המנדטים במקום הלא נכון), מפלגות מדויקות, ומנדטים מדויקים בחלוקה לגושים — מול תוצאת אותה מערכת.
+ * רשימה שלא נסקרה נספרת 0 (כלל 8). מקור אחד לכל המסכים.
+ */
+export interface SeatTags { seats: number; exact: number; blocs: number }
+export function seatTags(values: Seats, actual: Seats, blocs: readonly { lists: readonly string[] }[]): SeatTags {
+  const byBloc = (s: Seats): Seats => Object.fromEntries(blocs.map((b, i) => [String(i), b.lists.reduce((t, id) => t + val(s, id), 0)]));
+  return { seats: correctSeats(accuracyPct(values, actual)), exact: exactLists(values, actual), blocs: correctSeats(accuracyPct(byBloc(values), byBloc(actual))) };
+}
