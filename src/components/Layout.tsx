@@ -25,6 +25,7 @@ import { call } from "../lib/crowdApi";
 import { getPicture } from "../lib/crowdSession";
 import { useHagzara, useHagzaraTheme } from "../pages/simple/hagzara";
 import ElectionPicker from "./ElectionPicker";
+import SiteShareButton from "./SiteShareButton";
 import { isElectionScreen } from "../lib/election";
 
 /**
@@ -203,7 +204,8 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
     {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
-    {share && <button type="button" className="f-share" onClick={share.onClick} disabled={share.disabled}>שיתוף</button>}
+    {/* שיתוף תמיד בסרגל (הכרעת בעלים 02.11.2026): השיתוף של המסך, ואם אין — ניסוח וקישור לכל האתר לפי החלק */}
+    {share ? <button type="button" className="f-share" onClick={share.onClick} disabled={share.disabled}>שיתוף</button> : <SiteShareButton part={surveysPart ? "guesses" : "elections"} />}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
   </nav>;
 }
