@@ -144,7 +144,8 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
     {/* חברי הגזרה: סמל הגזרה בפס העליון (הכרעת בעלים 28/10) */}
     {/* בחלק הבחירות בורר המערכת מחליף את שם האתר בימין הפס (הכרעת בעלים 02.11.2026); סמל הגזרה נשאר לחבריה */}
     {/* סמל הגזרה תמיד בפינה הימנית, בגובה הכפתורים בשורה (הכרעת בעלים 02.11.2026); לא חברים — הסמל הציבורי של הקבוצה */}
-    {(logo ?? HAGZARA_PUBLIC_LOGO) && <img src={(logo ?? HAGZARA_PUBLIC_LOGO)!} alt="הגזרה" className="f-glogo" onError={e => { e.currentTarget.style.display = "none"; }} />}
+    {/* לחיצה על הסמל ⇐ אתר הגזרה (הכרעת בעלים 02.11.2026); הסמל העגול במסגרת הוא הכפתור */}
+    {(logo ?? HAGZARA_PUBLIC_LOGO) && <a href="https://hagizra.news/" target="_blank" rel="noopener" aria-label="לאתר הגזרה" className="shrink-0"><img src={(logo ?? HAGZARA_PUBLIC_LOGO)!} alt="" className="f-glogo" onError={e => { e.currentTarget.style.display = "none"; }} /></a>}
     {surveys ? <NavLink to="/surveys" className="f-logo">סקרים</NavLink> : <ElectionPicker />}
     <FocusClock />
     {/* בורר המערכת — רק במסכי הבחירות (הכרעות בעלים 02.11.2026) */}
