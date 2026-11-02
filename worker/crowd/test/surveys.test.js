@@ -212,6 +212,10 @@ describe("site surveys over the worker", () => {
     const s = await call("/survey/stats?id=reelect", { token: m });
     expect(s.data).toMatchObject({ views: 3, viewers: 2, embedViews: 1, saves: 2, savers: 1, changed: 1, members: 1, outsiders: 0 });
     expect(s.data.days.length).toBeGreaterThan(0);
+    // לפי שעה: 3 כניסות ו-2 שמירות; שמרו מתוך הצופים — רק מיום תחילת ספירת הכניסות
+    expect(s.data.hours.reduce((n, h) => n + h.views, 0)).toBe(3);
+    expect(s.data.hours.reduce((n, h) => n + h.saves, 0)).toBe(2);
+    expect(s.data.saversSinceViews).toBe(1);
     expect((await call("/survey/stats?id=reelect", { token: a })).status).toBe(403);
   });
 

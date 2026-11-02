@@ -2028,7 +2028,11 @@ const routes = {
     if (!(await env.DB.prepare("SELECT 1 AS x FROM surveys WHERE id = ?").bind(id).first())) throw new HttpError(404, "not_found");
     const a = await optionalAuth(env, request, now);
     const viewer = a ? "p:" + a.participant : "a:" + (await ipKeys(env, request))[0];
-    await env.DB.prepare("INSERT INTO survey_views (survey, day, viewer, embed, n) VALUES (?, ?, ?, ?, 1) ON CONFLICT(survey, day, viewer, embed) DO UPDATE SET n = n + 1").bind(id, ilDay(now), viewer, body.embed ? 1 : 0).run();
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO survey_views (survey, day, viewer, embed, n) VALUES (?, ?, ?, ?, 1) ON CONFLICT(survey, day, viewer, embed) DO UPDATE SET n = n + 1").bind(id, ilDay(now), viewer, body.embed ? 1 : 0),
+      // לפי שעה (UTC) — לגרף בניהול (הכרעת בעלים 02.11.2026)
+      env.DB.prepare("INSERT INTO survey_view_hours (survey, hour, n) VALUES (?, ?, 1) ON CONFLICT(survey, hour) DO UPDATE SET n = n + 1").bind(id, iso(now).slice(0, 13)),
+    ]);
     return { ok: true };
   },
 
@@ -2038,14 +2042,17 @@ const routes = {
     const r = await env.DB.prepare("SELECT * FROM surveys WHERE id = ?").bind(id).first();
     if (!r) throw new HttpError(404, "not_found");
     await requireSurveyManager(env, request, now, r.group_id);
-    const [v, sv, members, days] = await env.DB.batch([
-      env.DB.prepare("SELECT COALESCE(SUM(n), 0) AS views, COUNT(DISTINCT viewer) AS viewers, COALESCE(SUM(CASE WHEN embed = 1 THEN n END), 0) AS embed_views FROM survey_views WHERE survey = ?").bind(id),
-      env.DB.prepare("SELECT COUNT(*) AS saves, COUNT(DISTINCT participant) AS savers, (SELECT COUNT(*) FROM (SELECT participant FROM survey_answers WHERE survey = ?1 GROUP BY participant HAVING COUNT(*) > 1)) AS changed FROM survey_answers WHERE survey = ?1").bind(id),
+    const [v, sv, members, days, hours] = await env.DB.batch([
+      env.DB.prepare("SELECT COALESCE(SUM(n), 0) AS views, COUNT(DISTINCT viewer) AS viewers, COALESCE(SUM(CASE WHEN embed = 1 THEN n END), 0) AS embed_views, MIN(day) AS first_day FROM survey_views WHERE survey = ?").bind(id),
+      env.DB.prepare("SELECT COUNT(*) AS saves, COUNT(DISTINCT participant) AS savers, (SELECT COUNT(*) FROM (SELECT participant FROM survey_answers WHERE survey = ?1 GROUP BY participant HAVING COUNT(*) > 1)) AS changed, (SELECT COUNT(DISTINCT participant) FROM survey_answers WHERE survey = ?1 AND created_at >= COALESCE((SELECT MIN(day) FROM survey_views WHERE survey = ?1), '9999')) AS savers_since_views FROM survey_answers WHERE survey = ?1").bind(id),
       env.DB.prepare(`SELECT COUNT(DISTINCT participant) AS n FROM survey_answers WHERE survey = ?1 AND participant IN (SELECT participant FROM (${groupParticipants({ group: "?2" })}))`).bind(id, r.group_id),
       env.DB.prepare("SELECT day, SUM(views) AS views, SUM(saves) AS saves FROM (SELECT day, SUM(n) AS views, 0 AS saves FROM survey_views WHERE survey = ?1 GROUP BY day UNION ALL SELECT substr(created_at, 1, 10) AS day, 0, COUNT(*) FROM survey_answers WHERE survey = ?1 GROUP BY 1) GROUP BY day ORDER BY day DESC LIMIT 30").bind(id),
+      // לפי שעה, 14 הימים האחרונים (UTC; האתר מציג בשעון ישראל)
+      env.DB.prepare("SELECT hour, SUM(views) AS views, SUM(saves) AS saves FROM (SELECT hour, n AS views, 0 AS saves FROM survey_view_hours WHERE survey = ?1 AND hour >= ?2 UNION ALL SELECT substr(created_at, 1, 13) AS hour, 0, COUNT(*) FROM survey_answers WHERE survey = ?1 AND created_at >= ?2 GROUP BY 1) GROUP BY hour ORDER BY hour").bind(id, iso(now - 14 * 864e5).slice(0, 13)),
     ]);
     const a = v.results[0], b = sv.results[0];
-    return { survey: id, views: a.views, viewers: a.viewers, embedViews: a.embed_views, saves: b.saves, savers: b.savers, changed: b.changed, members: members.results[0].n, outsiders: b.savers - members.results[0].n, days: days.results || [] };
+    // "שמרו מתוך הצופים" — רק מהיום שבו התחילה ספירת הכניסות, כדי לא לחלק שמירות ישנות בכניסות חדשות
+    return { survey: id, views: a.views, viewers: a.viewers, embedViews: a.embed_views, viewsSince: a.first_day ?? null, saves: b.saves, savers: b.savers, saversSinceViews: b.savers_since_views, changed: b.changed, members: members.results[0].n, outsiders: b.savers - members.results[0].n, days: days.results || [], hours: hours.results || [] };
   },
 
   // תשובה: שורה חדשה בכל שמירה (ההיסטוריה נשמרת). op = מזהה פעולה — שליחה חוזרת אינה יוצרת כפילות

@@ -15,7 +15,8 @@ const surveys = [
   { ...base, id: 'done1', status: 'open', kind: 'survey', answered: true, title: 'סקר שעניתי', questions: [{ id: 'a', kind: 'single', title: 'א?', options: [{ id: 'y', label: 'כן' }, { id: 'n', label: 'לא' }] }] },
   { ...base, id: 'wait1', status: 'closed', kind: 'guess', title: 'ניחוש שנסגר', truth: null, questions: [{ id: 'a', kind: 'single', title: 'א?', options: [{ id: 'y', label: 'כן' }, { id: 'n', label: 'לא' }] }] },
 ];
-const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, changed: 5, members: 30, outsiders: 5, days: [{ day: '2026-11-01', views: 70, saves: 20 }, { day: '2026-11-02', views: 50, saves: 20 }] };
+const hours = Array.from({ length: 40 }, (_, i) => ({ hour: new Date(Date.now() - (40 - i) * 36e5).toISOString().slice(0, 13), views: (i * 7) % 13, saves: (i * 5) % 9 }));
+const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, changed: 5, members: 30, outsiders: 5, days: [{ day: '2026-11-01', views: 70, saves: 20 }, { day: '2026-11-02', views: 50, saves: 20 }] };
 (async () => {
   const { preview } = await import('vite');
   const server = await preview({ preview: { host: '127.0.0.1', port: 5177, strictPort: true } });
@@ -84,6 +85,12 @@ const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, 
       assert.equal(await page.getByRole('button', { name: 'כל המשתתפים' }).count(), 0, 'בלי מתג הגזרה/כולם כשלא אושר לכולם לענות');
       if ((await page.getByRole('button', { name: 'ניהול', exact: true }).getAttribute('aria-pressed')) !== 'true') await page.getByRole('button', { name: 'ניהול', exact: true }).click();
       await page.getByText('120').first().waitFor();
+      assert.equal(await page.getByText('משתמשים ששמרו', { exact: true }).count(), 0, 'בלי כרטיס משתמשים ששמרו');
+      await page.getByRole('button', { name: /לפי זמן/ }).click();
+      await page.getByText('שמירות לפי שעה').first().waitFor();
+      await noScroll('stats-graph');
+      await page.getByRole('button', { name: 'טבלה', exact: true }).click();
+      await page.locator('table').first().waitFor();
       assert.ok(await page.getByRole('button', { name: '+ אפשרות' }).count(), 'שדה לכל אפשרות ו"+ אפשרות"');
       assert.equal(await page.getByRole('button', { name: '+ רשימת אפשרויות' }).count(), 0, 'אין שאלה נוספת');
       const before = await page.getByLabel(/^אפשרות \d+$/).count();
