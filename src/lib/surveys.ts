@@ -16,7 +16,9 @@ export type SurveyQuestion =
 export type SurveyKind = "survey" | "guess";
 /** מתי רואים תוצאות: כולם עכשיו / כולם אחרי הסגירה / רק מי שענה */
 export type SurveyVisibility = "now" | "after_close" | "answered";
-export const KIND_LABELS: [SurveyKind, string][] = [["survey", "סקר"], ["guess", "ניחוש"]];
+/** "בחירה" ולא "סקר" — שלא יתבלבלו עם סקרי המכונים (הכרעת בעלים 02.11.2026) */
+export const KIND_LABELS: [SurveyKind, string][] = [["survey", "בחירה"], ["guess", "ניחוש"]];
+export const kindLabel = (k: SurveyKind) => KIND_LABELS.find(([x]) => x === k)![1];
 export const VISIBILITY_LABELS: [SurveyVisibility, string][] = [["now", "כולם, עכשיו"], ["after_close", "כולם, אחרי הסגירה"], ["answered", "רק מי שענה"]];
 export const STATUS_LABELS: [Survey["status"], string][] = [["draft", "טיוטה"], ["open", "פתוח"], ["closed", "נסגר"]];
 /** מי מחוץ לקבוצה רשאי: כלום / צפייה בסקר ובתוצאות / השתתפות (הכרעת בעלים 01.11.2026; קובע מנהל הקבוצה) */

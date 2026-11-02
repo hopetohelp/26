@@ -20,7 +20,10 @@ import { useHagzara } from "./hagzara";
 const meansOf = (d: Dashboard | null | undefined) => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, r.mean]));
 const EMPTY = startSeats("zero");
 /** הכנסת הממוצעת: נפתחת אחרי שמירת הכנסת שלך במלואה. ממוצע המשתתפים, ולחברי הגזרה — הגזרה במקום ממוצע הסקרים. */
-export default function Comparison(_props: { landing?: GroupPublic | null }) {
+/**
+ * surveysPart — "הניחושים" בחלק הסקרים (הכרעת בעלים 02.11.2026): גלוי לכולם, גם למי שלא ניחש, ובלי ממוצע הסקרים או בורר סקרים.
+ */
+export default function Comparison({ surveysPart = false }: { landing?: GroupPublic | null; surveysPart?: boolean }) {
   const session = useSession();
   const { setLanding } = useInterface();
   const source = useSimpleSource(true, true);
@@ -56,7 +59,7 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
     window.addEventListener(SAVED_EVENT, load);
     return () => { live = false; clearInterval(timer); window.removeEventListener("focus", focus); window.removeEventListener(SAVED_EVENT, load); };
   }, [allowed, session.token, session.refresh]);
-  if (!unlocked) {
+  if (!unlocked && !surveysPart) {
     const total = seatsSum(mine);
     return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
       <div className="f-card f-lock"><p className="text-3xl" aria-hidden="true">🔒</p><h2 className="text-lg font-bold my-2">ממוצע הניחושים נפתח אחרי שמירת הכנסת שלך</h2>
@@ -86,20 +89,20 @@ export default function Comparison(_props: { landing?: GroupPublic | null }) {
   const ranges = true;
   const rangeKey = !pickedRange ? "crowd" : source.key;
   const rangeSource = { ...source, key: rangeKey, setKey: (k: string) => { setPickedRange(true); source.setKey(k); } };
-  const crowdRange = ranges && rangeKey === "crowd";
+  const crowdRange = surveysPart || (ranges && rangeKey === "crowd");
   const crowdRows = new Map((all?.seats?.full ?? []).map(r => [r.list, r]));
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
     <GuessCount total={all?.seats?.n} members={member ? groupCount : null} />
-    <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />
+    {!surveysPart && <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />}
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
     <div className="f-grid">
       <PartyChart selection={source.selection} lists={lists} spreadOf={crowdRange ? crowdSpread : undefined}
-        marks={id => segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], kind: "dash", side: "down" }]}
-        mine={id => mine.seats[id]?.v ?? 0}
-        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{(!segmented || vsPolls) && <LegendBox kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox kind={segmented ? undefined : "dash"} label="ממוצע כל הניחושים" />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
+        marks={id => surveysPart ? [{ value: crowdMeans[id], kind: "dash", side: "down" }] : segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], kind: "dash", side: "down" }]}
+        mine={surveysPart && !unlocked ? undefined : id => mine.seats[id]?.v ?? 0}
+        legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{!surveysPart && (!segmented || vsPolls) && <LegendBox kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox kind={segmented ? undefined : "dash"} label="ממוצע כל הניחושים" />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
       <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
         {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><p className="text-xs text-ink-soft mb-3">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p><VotingStats d={voters} /></CardDrawer>}</div>
     </div>

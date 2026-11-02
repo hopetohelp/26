@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { KIND_LABELS, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, type Survey, type SurveyKind } from "../../lib/surveys";
+import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, type Survey, type SurveyKind } from "../../lib/surveys";
 import SurveyEditor, { type EditorValue } from "./SurveyEditor";
 
 /**
@@ -47,7 +47,7 @@ export default function SurveyManageScreen() {
           {(surveys ?? []).map((s) => (
             <li key={s.id} className="flex items-center gap-3 px-4 py-3">
               <span className="flex-1 min-w-0"><b className="block">{s.title}</b>
-                <span className="text-[12.5px] text-ink-soft">{s.kind === "guess" ? "ניחוש" : "סקר"} · {STATUS_LABELS.find((x) => x[0] === s.status)?.[1]} · מחוץ לגזרה: {OUTSIDE_LABELS.find((x) => x[0] === (s.outside ?? "none"))?.[1]}</span></span>
+                <span className="text-[12.5px] text-ink-soft">{kindLabel(s.kind)} · {STATUS_LABELS.find((x) => x[0] === s.status)?.[1]} · מחוץ לגזרה: {OUTSIDE_LABELS.find((x) => x[0] === (s.outside ?? "none"))?.[1]}</span></span>
               <Link to={`/s/${s.id}?manage=1`} className="f-btn">ניהול</Link>
             </li>
           ))}
