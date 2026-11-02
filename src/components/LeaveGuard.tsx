@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 
 /**
  * יציאה ממסך בלי שמירה (הכרעת בעלים 02.11.2026): יציאה אינה שומרת כלום; לפני יציאה עם שינויים שלא נשמרו — הודעה,
- * ושלוש אפשרויות: להישאר · לשמור ולצאת · לצאת בלי לשמור.
+ * ושלוש אפשרויות במילה אחת: להישאר · לשמור (ולצאת) · לצאת (בלי לשמור).
  * תופס מעבר דרך קישור או כפתור ניווט באתר (קישור עם href), וסגירה או רענון של הלשונית (חלון הדפדפן הרגיל).
  */
 export default function LeaveGuard({ dirty, onSave }: { dirty: boolean; onSave: () => Promise<boolean> }) {
@@ -38,8 +38,8 @@ export default function LeaveGuard({ dirty, onSave }: { dirty: boolean; onSave: 
         <p className="text-sm">השינויים במסך הזה לא נשמרו. ביציאה הם לא יישמרו.</p>
         <div className="flex flex-wrap gap-2 pt-1">
           <button type="button" className="f-btn pri" autoFocus disabled={busy} onClick={() => setTarget(null)}>להישאר</button>
-          <button type="button" className="f-btn" disabled={busy} onClick={async () => { setBusy(true); const ok = await onSave(); setBusy(false); if (ok) go(); }}>לשמור ולצאת</button>
-          <button type="button" className="f-btn !text-warn" disabled={busy} onClick={go}>לצאת בלי לשמור</button>
+          <button type="button" className="f-btn" disabled={busy} onClick={async () => { setBusy(true); const ok = await onSave(); setBusy(false); if (ok) go(); }}>לשמור</button>
+          <button type="button" className="f-btn !text-warn" disabled={busy} onClick={go}>לצאת</button>
         </div>
       </div>
     </div>,

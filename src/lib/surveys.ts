@@ -120,6 +120,11 @@ export function brokenPromises(answer: Record<string, AssignValue> | undefined, 
 const AT = new Intl.DateTimeFormat("he-IL", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
 export const formatAt = (iso: string) => AT.formatToParts(new Date(iso)).reduce((o, p) => ({ ...o, [p.type]: p.value }), {} as Record<string, string>) as Record<string, string>;
 export const answerTime = (iso: string) => { const p = formatAt(iso); return `${p.day}.${p.month} ${p.hour}:${p.minute}`; };
+/** "עודכן 2/11", ובאותו יום — "עודכן 12:34" (הכרעת בעלים 02.11.2026) */
+export function updatedLabel(iso: string, now = Date.now()): string {
+  const p = formatAt(iso), n = formatAt(new Date(now).toISOString());
+  return p.day === n.day && p.month === n.month ? `עודכן ${p.hour}:${p.minute}` : `עודכן ${p.day}/${p.month}`;
+}
 
 /** רוב בכנסת */
 export const MAJORITY = 61;

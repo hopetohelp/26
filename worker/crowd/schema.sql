@@ -566,3 +566,5 @@ UPDATE surveys SET position = 3, def = json_set(def, '$.title', 'מה הצבעת
 UPDATE surveys SET position = 4, def = json_set(def, '$.title', 'על מי הנשיא יטיל את הרכבת הממשלה?', '$.questions[0].title', 'על מי הנשיא יטיל את הרכבת הממשלה?') WHERE id = 'president' AND position = 2;
 UPDATE surveys SET position = 5 WHERE id = 'reelect' AND position = 3;
 UPDATE surveys SET position = 6 WHERE id = 'gov' AND position = 4;
+-- רק התשובה האחרונה בכל יום בכל סקר (הכרעת בעלים 02.11.2026): ניקוי חד-פעמי של שמירות קודמות באותו יום (שעון ישראל, +2 שעות; חוזר על עצמו בלי השפעה)
+DELETE FROM survey_answers WHERE EXISTS (SELECT 1 FROM survey_answers b WHERE b.participant = survey_answers.participant AND b.survey = survey_answers.survey AND date(b.created_at, '+2 hours') = date(survey_answers.created_at, '+2 hours') AND (b.created_at > survey_answers.created_at OR (b.created_at = survey_answers.created_at AND b.id > survey_answers.id)));

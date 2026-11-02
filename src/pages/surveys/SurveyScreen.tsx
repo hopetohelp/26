@@ -23,7 +23,7 @@ import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -321,6 +321,7 @@ export default function SurveyScreen() {
               {state === "saving" ? "שומר…" : data?.mine ? "עדכון התשובות" : "שמירת התשובות"}
             </button>
             {state === "saved" && <p role="status" className="text-sm font-bold text-signal">התשובות נשמרו ✓ — הן מופיעות גם באזור האישי</p>}
+            {state !== "saved" && data?.mine && <p className="text-sm text-ink-soft text-center">{updatedLabel(data.mine.at)}</p>}
             {state === "error" && <p role="alert" className="text-sm text-warn">השמירה לא הצליחה. נסו שוב.</p>}
           </div>
         ) : (

@@ -92,7 +92,7 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       await noScroll('community');
       // אזור אישי בחלק הסקרים: כמו בבחירות, בלי עוגת המנדטים שלי, עם היסטוריית סקרים
       await page.goto('http://127.0.0.1:5177/#/surveys/me');
-      await page.getByText('היסטוריית סקרים').first().waitFor();
+      await page.getByText('היסטוריה', { exact: true }).first().waitFor();
       assert.equal(await page.getByText('עוגת המנדטים שלי').count() + await page.getByText('החלוקה שלי').count(), 0, 'בלי עוגת המנדטים שלי');
       await noScroll('me');
       // מצב ניהול
@@ -124,6 +124,7 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       await page.getByRole('link', { name: 'כל הסקרים' }).first().click();
       await page.getByRole('heading', { name: 'יוצאים בלי לשמור' }).waitFor();
       await noScroll('leave');
+      for (const l of ['להישאר', 'לשמור', 'לצאת']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `כפתור ${l}`);
       await page.getByRole('button', { name: 'להישאר' }).click();
       assert.match(page.url(), /#\/s\/reelect/, 'נשארים בסקר');
       // טווח בסקר
