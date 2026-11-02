@@ -4,10 +4,18 @@ import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
+import { K26_RESULT } from "../lib/election2026";
+import { seatChanges } from "../engine/seatChange";
+import { partialLine } from "../lib/voterFlow";
+import { ShiftLine } from "./Results2026";
+import Missing from "../components/Missing";
+import { Link } from "react-router-dom";
 import { k25Families } from "../lib/lineage";
 import { num, pct } from "../lib/format";
 
-type Election = (typeof results)[number];
+type Election = Omit<(typeof results)[number], "lists"> & { lists: ((typeof results)[number]["lists"][number] & { ballot?: string })[] };
+/** כל המערכות, כולל 2026 — באותו מבנה (הכרעת בעלים 02.11.2026: מסך "תוצאות" זהה לכל מערכת) */
+const ELECTIONS: Election[] = [...results, K26_RESULT as unknown as Election];
 
 function analysis(e: Election) {
   const votes = Object.fromEntries(e.lists.map((l) => [l.letters, l.votes]));
@@ -28,7 +36,7 @@ const fmtDiffOf = (e: Election, d: readonly (readonly [string, number])[]) =>
   d.length ? d.map(([k, v]) => `${shortOf(e, k)} \u2066${v > 0 ? "+" : ""}${v}\u2069`).join(" · ") : "לא שינו דבר";
 
 /** חישובי כל המערכות — לטבלת ההשוואה */
-const ALL = results.map((e) => ({ e, a: analysis(e) }));
+const ALL = ELECTIONS.map((e) => ({ e, a: analysis(e) }));
 
 /** "בקצרה": אותו הסבר לכל מערכת, נגזר מהנתונים הרשמיים */
 function Story({ e, a }: { e: Election; a: ReturnType<typeof analysis> }) {
@@ -83,7 +91,9 @@ export function PastBlocs({ id }: { id: string }) {
  * בעלי הזכות, ההצבעה והגושים עברו ל"מה השתנה" (שם — הערך והשינוי מהקודמת); כאן — מה שאינו השוואה.
  */
 export default function Results({ id }: { id: string }) {
-  const e = results.find((x) => x.id === id)!;
+  const e = ELECTIONS.find((x) => x.id === id)!;
+  // השינוי הקרוב במנדטים — לכל מערכת, מאותו מנוע (src/engine/seatChange.ts)
+  const changes = seatChanges(Object.fromEntries(e.lists.map((l) => [l.letters, l.votes])), e.valid, e.agreements.map(([x, y]) => [x, y] as Agreement));
   const short = (letters: string) => shortOf(e, letters);
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
@@ -97,6 +107,7 @@ export default function Results({ id }: { id: string }) {
         <h2 className="text-xl font-display leading-tight">
           הכנסת ה-{e.knesset} · {e.label}
         </h2>
+        {e.id === "k26" && <p className="text-sm text-ink-soft">{partialLine()}</p>}
         <dl className="c-result-stats grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">
           <div><dt className="text-ink-soft">קולות כשרים</dt><dd className="text-xl font-bold tabular-nums">{num(e.valid)}</dd></div>
           <div><dt className="text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-xl font-bold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
@@ -144,21 +155,25 @@ export default function Results({ id }: { id: string }) {
                 <th scope="col">קולות</th>
                 <th scope="col">אחוז</th>
                 <th scope="col">מנדטים</th>
+                <th scope="col">השינוי הקרוב במנדטים</th>
               </tr>
             </thead>
             <tbody>
               {passing.map((l) => (
                 <tr key={l.letters} className="border-b border-paper-line/60">
                   <th scope="row" className="text-right py-1 font-medium" title={l.name}>{l.short}</th>
-                  <td>{l.letters}</td>
+                  <td>{l.ballot ?? l.letters}</td>
                   <td className="tabular-nums">{num(l.votes)}</td>
                   <td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td>
                   <td className="tabular-nums font-bold">{l.seats}</td>
+                  <td className="tabular-nums text-[11px]"><ShiftLine shift={changes?.[l.letters]?.up ?? null} up /><ShiftLine shift={changes?.[l.letters]?.down ?? null} up={false} /></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        {/* היה בטבלת 2026 בלבד — עכשיו בכל מערכת */}
+        <p className="text-sm mt-3"><Link to={e.id === "k26" ? "/changes" : `/changes?election=${e.id}`} className="f-btn">מאיפה הגיעו המצביעים של כל רשימה ⇐ מה השתנה</Link></p>
         <Fold title="פרטי חלוקת המנדטים">
           <p className="text-sm">המודד: {num(a.withAll.quota)} קולות למנדט שלם (סך הקולות של הרשימות שעברו, חלקי 120, החלק השלם — סעיף 81(ב) לחוק).</p>
           <ul className="text-sm mt-2">{passing.map((l) => <li key={l.letters}>{l.short}: {a.withAll.whole[l.letters]} מנדטים שלמים לפני חלוקת העודפים</li>)}</ul>
@@ -166,7 +181,7 @@ export default function Results({ id }: { id: string }) {
       </Card>
 
 
-      <LocalityResults key={e.id} electionId={e.id} />
+      {e.id === "k26" ? <Card title="כל הקולות לפי יישוב"><Missing what="תוצאות 2026 לפי יישוב" /><p className="text-sm mt-2"><Link to="/changes" className="f-btn">חיפוש לפי עיר או קלפי ⇐ מה השתנה</Link></p></Card> : <LocalityResults key={e.id} electionId={e.id} />}
       <Card title="מה הזיזו הסכמי העודפים">
         <ul className="text-sm space-y-1 mb-3">
           {e.agreements.map(([x, y]) => {
@@ -210,10 +225,10 @@ export function ElectionSummary() { return <>
       <Fold title="פרטי החישוב בכל מערכת">
         <ul className="text-sm space-y-1">{[...ALL].reverse().map(({ e: x, a: ax }) => <li key={x.id}>{x.label}: אחוז החסימה {num(ax.withAll.thresholdVotes)} קולות; מודד {num(ax.withAll.quota)} קולות למנדט שלם.</li>)}</ul>
       </Fold>
-      <Card title="כל המערכות מאז 2019, זו לצד זו">
+      <Card title="כל המערכות, זו לצד זו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <caption className="sr-only">השוואה בין מערכות הבחירות 2019–2022</caption>
+            <caption className="sr-only">השוואה בין מערכות הבחירות 2015–2026</caption>
             <thead>
               <tr className="text-right border-b border-paper-line">
                 <th scope="col" className="py-2 pe-3">מערכת</th>

@@ -842,9 +842,14 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* "עוד" בסרגל — רק במתקדם */
 /* בורר המערכת בפס העליון (הכרעות בעלים 02.11.2026): כחול במסגרת ל-2026, מלא למערכת אחרת */
 .f-election { position:relative; }
-.f-election-btn { border:2px solid rgb(var(--signal));color:rgb(var(--signal));gap:6px; }
+.f-bar { position:relative; }
+.f-election.centered { position:absolute;left:50%;transform:translateX(-50%); }
+.f-election-btn { border:2px solid rgb(var(--signal));color:rgb(var(--signal));gap:8px;font-size:17px;font-weight:800;min-height:44px;padding:0 16px; }
+/* מספר הכנסת — רק כשיש מקום (הכרעת בעלים 02.11.2026) */
+.f-election-k { font-size:13px;font-weight:500;opacity:.85; }
+@media (max-width: 430px) { .f-election-k { display:none; } }
 .f-election-btn.past { background:rgb(var(--signal));color:rgb(var(--signal-ink)); }
-.f-election ul { position:absolute;top:calc(100% + 8px);inset-inline-start:0;z-index:60;min-width:190px;margin:0;padding:6px;list-style:none;border-radius:14px;background:rgb(var(--card));border:1px solid rgb(var(--line));box-shadow:0 8px 24px rgb(var(--ink) / .16); }
+.f-election ul { position:absolute;top:calc(100% + 8px);inset-inline-start:50%;transform:translateX(50%);z-index:60;min-width:190px;margin:0;padding:6px;list-style:none;border-radius:14px;background:rgb(var(--card));border:1px solid rgb(var(--line));box-shadow:0 8px 24px rgb(var(--ink) / .16); }
 .f-election ul button { display:flex;width:100%;justify-content:space-between;gap:12px;align-items:center;padding:8px 12px;min-height:44px;border:0;border-radius:10px;background:none;color:rgb(var(--ink));font-size:14px;cursor:pointer;text-align:start; }
 .f-election ul button[aria-checked="true"] { background:rgb(var(--accent-soft));font-weight:800; }
 .f-election-sub { font-size:12px;color:rgb(var(--ink-soft));font-weight:400; }

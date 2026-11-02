@@ -1,12 +1,14 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import PollAccuracyTags from "../components/PollAccuracyTags";
+import Missing, { POLL_DRAWERS } from "../components/Missing";
+import { useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
 import DeviationChart from "../components/deviationChart";
 import { deviation, finding } from "../lib/deviation";
 import Explained from "../components/Explained";
-import { Card, ChartWithTable, Fold, Note, PageTitle, Columns } from "../components/ui";
+import { Card, ChartWithTable, Fold, Note } from "../components/ui";
 import historyFile from "../data/history.json";
 import { results } from "../lib/data";
 import { dateRange, date, rng, seatsFmt, signed } from "../lib/format";
@@ -64,6 +66,7 @@ export default function Accuracy({ id }: { id: string }) {
 }
 
 function AccuracyPast({ id }: { id: string }) {
+  const open = new URLSearchParams(useLocation().search).get("tab");
   const s = summaries.find((x) => x.cycle.id === id)!;
   const c = s.cycle;
   const lists = useMemo(() => comparedLists(c, s.result).sort((a, b) => b.seats - a.seats), [c, s.result]);
@@ -86,24 +89,13 @@ function AccuracyPast({ id }: { id: string }) {
   const dev = deviation(s.rows.map((r) => ({ id: r.letters, name: r.name, estimate: r.estimate, min: r.min, max: r.max, actual: r.actual, n: r.n, values: r.values })));
   const eveText = `הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני ${date(c.date)}`;
 
+  // חמש המגירות של מסך "סקרים", זהות לכל מערכת (הכרעת בעלים 02.11.2026). כל התוכן הקודם נשמר — רק חולק למגירות.
   return (
     <>
-      
-      <Card title="הטעות בסקר האחרון של כל מכון">
-        <Explained kind="השוואה" source={SOURCE} asOf={c.date} assumption="הסקר האחרון שנמצא במאגר לכל מכון לפני הבחירות, שסכום המנדטים שלו 118–122. הפער הוא סקר פחות תוצאה, חלקי 120 כפול 100." methodAnchor="accuracy">
-          <p className="text-sm my-3">הפערים ב% ממושבי הכנסת — לא באחוזי הצבעה. סימן חיובי: הסקר נתן יותר מהתוצאה. פרסומים מאותו תאריך מוצגים בנפרד.</p>
-          <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">טעויות הסקר האחרון — {c.label}</caption><thead><tr>{['מכון ומזמין', 'תאריך במקור', 'הפער הגדול ביותר למפלגה', 'הממליצות על נתניהו', 'הרשימות הערביות', 'יתר הרשימות'].map(t => <th key={t} className="p-2 text-start">{t}</th>)}</tr></thead><tbody>{lastPollErrors(c, s.result).map(p => <tr className="border-t border-paper-line" key={p.pollId}><th className="p-2 text-start font-medium">{p.firmHe}<small className="block">{p.publisher}</small>{p.urls[0] && <a href={p.urls[0]} target="_blank" rel="noreferrer">לפרסום</a>}<PollAccuracyTags tags={p.tags} className="flex mt-1" /></th><td className="p-2 whitespace-nowrap">{date(p.date)}{p.dateBasis === 'publication' && <small className="block">תאריך פרסום</small>}</td><td className="p-2">{p.worstParties.map(l => <div key={l.letters}>{l.name}: <bdi>{signed(l.diffPp)} נק׳ אחוז</bdi><small className="block">{l.estimate} מול {l.actual} מנדטים</small></div>)}</td>{p.blocs.map(b => <td className="p-2" key={b.id}><bdi>{signed(b.diffPp)} נק׳ אחוז</bdi><small className="block">{b.estimate} מול {b.actual} מנדטים</small></td>)}</tr>)}</tbody></table></div>
-          <Fold title="איך נבחר הסקר ומהם הגושים?"><p>נבחר התאריך האחרון הזמין לכל מכון, גם כשהוא מוקדם מ־14 יום לפני הבחירות. התאריך הוא כפי שנרשם במקור; כאשר לא ידוע מועד השטח ב־2015, מוצג תאריך הפרסום. מכון שלא זוהה נשאר ללא זיהוי. גוש הממליצות נקבע לפי ההמלצות לנשיא אחרי אותה מערכת, ולא לפי הרכב הממשלה שקמה. הרשימות הערביות הן משפחת הרשימות ההיסטורית; יתר הרשימות משלימות את החלוקה. רשימה שלא נסקרה נספרת כאפס.</p></Fold>
-        </Explained>
-      </Card>
-      <Columns>
-      <PageTitle inColumns
-        lead={`מה אמרו הסקרים ערב כל אחת משש מערכות הבחירות 2015–2022, ומה יצא בפועל. החישוב זהה לעמוד "המצב היום": הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני הבחירות, והממוצע ביניהם.`}
-      >
-        דיוק הסקרים בעבר
-      </PageTitle>
 
-      <Card title="הסקרים מול התוצאות">
+      <Fold title={POLL_DRAWERS.vs} open={open === "vs"}>
+        <Card>
+        <p className="text-sm text-ink-soft mb-3">{`מה אמרו הסקרים ערב הבחירות, ומה יצא בפועל: הסקר האחרון של כל מכון ב-${EVE_DAYS} הימים שלפני הבחירות, והממוצע ביניהם.`}</p>
         <h3 className="text-xl font-display leading-tight mb-1">{finding(dev.outside.length, dev.askedCount)}</h3>
         <p className="text-sm text-ink-soft mb-3">הכנסת ה-{c.knesset} ({c.label}) · {s.snapshot.length} מכונים · סך הפער {seatsFmt(s.gap)} מנדטים</p>
         <Explained kind="סיכום סקרים" source={SOURCE} asOf={eveText} assumption="רשימה מתחת לאחוז החסימה בסקר נספרת כאפס מנדטים." methodAnchor="accuracy">
@@ -139,7 +131,62 @@ function AccuracyPast({ id }: { id: string }) {
           />
         </Explained>
 
-        <h3 className="font-bold mt-6 mb-2">לאורך המערכה</h3>
+        </Card>
+      <PersonalBlocs title="חלוקת הכנסת: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: ממוצעי המפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
+        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום ממוצעי המפלגות לפני ${c.label}`, asOf: eveText },
+        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
+      ]} />
+      </Fold>
+      <Fold title={POLL_DRAWERS.firms} open={open === "firms"}>
+      <Card title="הטעות בסקר האחרון של כל מכון">
+        <Explained kind="השוואה" source={SOURCE} asOf={c.date} assumption="הסקר האחרון שנמצא במאגר לכל מכון לפני הבחירות, שסכום המנדטים שלו 118–122. הפער הוא סקר פחות תוצאה, חלקי 120 כפול 100." methodAnchor="accuracy">
+          <p className="text-sm my-3">הפערים ב% ממושבי הכנסת — לא באחוזי הצבעה. סימן חיובי: הסקר נתן יותר מהתוצאה. פרסומים מאותו תאריך מוצגים בנפרד.</p>
+          <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">טעויות הסקר האחרון — {c.label}</caption><thead><tr>{['מכון ומזמין', 'תאריך במקור', 'הפער הגדול ביותר למפלגה', 'הממליצות על נתניהו', 'הרשימות הערביות', 'יתר הרשימות'].map(t => <th key={t} className="p-2 text-start">{t}</th>)}</tr></thead><tbody>{lastPollErrors(c, s.result).map(p => <tr className="border-t border-paper-line" key={p.pollId}><th className="p-2 text-start font-medium">{p.firmHe}<small className="block">{p.publisher}</small>{p.urls[0] && <a href={p.urls[0]} target="_blank" rel="noreferrer">לפרסום</a>}<PollAccuracyTags tags={p.tags} className="flex mt-1" /></th><td className="p-2 whitespace-nowrap">{date(p.date)}{p.dateBasis === 'publication' && <small className="block">תאריך פרסום</small>}</td><td className="p-2">{p.worstParties.map(l => <div key={l.letters}>{l.name}: <bdi>{signed(l.diffPp)} נק׳ אחוז</bdi><small className="block">{l.estimate} מול {l.actual} מנדטים</small></div>)}</td>{p.blocs.map(b => <td className="p-2" key={b.id}><bdi>{signed(b.diffPp)} נק׳ אחוז</bdi><small className="block">{b.estimate} מול {b.actual} מנדטים</small></td>)}</tr>)}</tbody></table></div>
+          <Fold title="איך נבחר הסקר ומהם הגושים?"><p>נבחר התאריך האחרון הזמין לכל מכון, גם כשהוא מוקדם מ־14 יום לפני הבחירות. התאריך הוא כפי שנרשם במקור; כאשר לא ידוע מועד השטח ב־2015, מוצג תאריך הפרסום. מכון שלא זוהה נשאר ללא זיהוי. גוש הממליצות נקבע לפי ההמלצות לנשיא אחרי אותה מערכת, ולא לפי הרכב הממשלה שקמה. הרשימות הערביות הן משפחת הרשימות ההיסטורית; יתר הרשימות משלימות את החלוקה. רשימה שלא נסקרה נספרת כאפס.</p></Fold>
+        </Explained>
+      </Card>
+        <Card>
+        <h3 className="font-bold mt-6 mb-2">המכונים ערב הבחירות</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <caption className="sr-only">הסקר האחרון של כל מכון ומזמין, והפער שלו מהתוצאה</caption>
+            <thead>
+              <tr className="text-right border-b border-paper-line">
+                <th scope="col" className="py-2 pe-3">מכון · מזמין</th>
+                <th scope="col" className="pe-3">העבודה בשטח</th>
+                <th scope="col" className="pe-3">סך הפער</th>
+                <th scope="col" className="pe-3">הגוש בסקר (בפועל {s.bloc.actual})</th>
+                <th scope="col">פרסום</th>
+              </tr>
+            </thead>
+            <tbody>
+              {s.snapshot.map((p) => {
+                const g = pollGap(c, s.result, p);
+                return (
+                  <tr key={p.id} className="border-b border-paper-line/60">
+                    <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
+                      {p.firmHe}
+                      {p.publisherHe ? ` · ${p.publisherHe}` : ""}
+                    </th>
+                    <td className="pe-3 whitespace-nowrap">{dateRange(p.start, p.end)}</td>
+                    <td className="pe-3 tabular-nums">{seatsFmt(g.gap)}</td>
+                    <td className="pe-3 tabular-nums">
+                      {seatsFmt(g.bloc)} (<Signed n={g.bloc - s.bloc.actual} />)
+                    </td>
+                    <td>{p.urls[0] ? <a href={p.urls[0]} rel="noopener noreferrer">מקור</a> : "—"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        </Card>
+      </Fold>
+      <Fold title={POLL_DRAWERS.exit} open={open === "exit"}><Missing what="מדגמי 22:00 במערכת זו" /></Fold>
+      <Fold title={POLL_DRAWERS.trend} open={open === "trends"}>
+        <Card>
+        <h3 className="font-bold mb-2">לאורך המערכה</h3>
         <fieldset className="mb-3">
           <legend className="text-sm mb-1">רשימות בגרף</legend>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
@@ -192,43 +239,12 @@ function AccuracyPast({ id }: { id: string }) {
           />
         </Explained>
 
-        <h3 className="font-bold mt-6 mb-2">המכונים ערב הבחירות</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <caption className="sr-only">הסקר האחרון של כל מכון ומזמין, והפער שלו מהתוצאה</caption>
-            <thead>
-              <tr className="text-right border-b border-paper-line">
-                <th scope="col" className="py-2 pe-3">מכון · מזמין</th>
-                <th scope="col" className="pe-3">העבודה בשטח</th>
-                <th scope="col" className="pe-3">סך הפער</th>
-                <th scope="col" className="pe-3">הגוש בסקר (בפועל {s.bloc.actual})</th>
-                <th scope="col">פרסום</th>
-              </tr>
-            </thead>
-            <tbody>
-              {s.snapshot.map((p) => {
-                const g = pollGap(c, s.result, p);
-                return (
-                  <tr key={p.id} className="border-b border-paper-line/60">
-                    <th scope="row" className="py-2 pe-3 text-right font-medium whitespace-nowrap">
-                      {p.firmHe}
-                      {p.publisherHe ? ` · ${p.publisherHe}` : ""}
-                    </th>
-                    <td className="pe-3 whitespace-nowrap">{dateRange(p.start, p.end)}</td>
-                    <td className="pe-3 tabular-nums">{seatsFmt(g.gap)}</td>
-                    <td className="pe-3 tabular-nums">
-                      {seatsFmt(g.bloc)} (<Signed n={g.bloc - s.bloc.actual} />)
-                    </td>
-                    <td>{p.urls[0] ? <a href={p.urls[0]} rel="noopener noreferrer">מקור</a> : "—"}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <details className="mt-6">
-          <summary className="cursor-pointer font-bold">כל הסקרים מהמערכה ({c.polls.length})</summary>
+        </Card>
+      </Fold>
+      <Fold title={POLL_DRAWERS.archive} open={open === "archive"}>
+        <Card>
+        <div>
+          <h3 className="font-bold mb-2">כל הסקרים מהמערכה ({c.polls.length})</h3>
           <div className="overflow-x-auto mt-3">
             <table className="w-full text-sm">
               <caption className="sr-only">כל הסקרים שפורסמו מהגשת הרשימות ועד הבחירות</caption>
@@ -279,13 +295,9 @@ function AccuracyPast({ id }: { id: string }) {
             אחוז בתא = הרשימה מתחת לאחוז החסימה באותו סקר. "—" = לא נשאלה. שורה באפור = סכום המנדטים בה רחוק מ-120 (טעות העתקה או
             פרסום חלקי), ולכן אינה נכללת בחישובים. מקור הטבלה: "{c.source.page}" בוויקיפדיה האנגלית.
           </Note>
-        </details>
-      </Card>
-      <PersonalBlocs title="חלוקת הכנסת: סקרים ערב הבחירות מול תוצאות האמת" source="הגושים: ממוצעי המפלגות בסקרים מול תוצאות אמת" asOf={eveText} compare datasets={[
-        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.rows.map(r => [r.letters, r.estimate])), source: `סכום ממוצעי המפלגות לפני ${c.label}`, asOf: eveText },
-        { historical: true, mapping: id === "k25" ? undefined : {}, values: Object.fromEntries(s.result.lists.map(l => [l.letters, l.seats])), source: `תוצאות אמת ${c.label}`, asOf: "תוצאות סופיות" },
-      ]} />
-      </Columns>
+        </div>
+        </Card>
+      </Fold>
     </>
   );
 }

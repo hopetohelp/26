@@ -5,7 +5,7 @@ import { K26_ID, PICKER_OPTIONS, SUMMARY_ID, electionOption, useElection } from 
  * כפתור המערכת בפס העליון (הכרעות בעלים 02.11.2026): השנה כתובה תמיד על הכפתור, והוא מתמלא כשהמערכת אינה 2026.
  * בלחיצה — רשימת המערכות ו"סיכום". נסגר בבחירה, בלחיצה בחוץ וב-Escape.
  */
-export default function ElectionPicker() {
+export default function ElectionPicker({ centered = false }: { centered?: boolean }) {
   const [id, setId] = useElection();
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
@@ -17,10 +17,10 @@ export default function ElectionPicker() {
     return () => { document.removeEventListener("pointerdown", away); document.removeEventListener("keydown", esc); };
   }, [open]);
   const cur = electionOption(id);
-  return <div ref={box} className="f-election">
+  return <div ref={box} className={`f-election${centered ? " centered" : ""}`}>
     <button type="button" aria-haspopup="true" aria-expanded={open} aria-label={`מערכת בחירות: ${cur.label}. בחירת מערכת אחרת`}
       className={`f-btn f-election-btn${id !== K26_ID ? " past" : ""}`} onClick={() => setOpen((v) => !v)}>
-      {cur.label} <span aria-hidden="true">▾</span>
+      <span>{cur.label}</span>{cur.knesset && <span className="f-election-k">הכנסת ה־{cur.knesset}</span>}<span aria-hidden="true">▾</span>
     </button>
     {open && <ul role="menu" aria-label="מערכת בחירות">
       {PICKER_OPTIONS.map((o) => <li key={o.id} role="none">
