@@ -552,3 +552,4 @@ UPDATE surveys SET position = 3, def = json_set(def, '$.title', 'האם יהיו
 UPDATE surveys SET position = 4, def = json_set(def, '$.title', 'אם תקום ממשלה, איך היא תקום?'), updated_at = '2026-11-02T14:00:00Z' WHERE id = 'gov' AND json_extract(def, '$.title') = 'הרכבת הממשלה';
 UPDATE surveys SET position = 5 WHERE id = 'vote' AND position = 3;
 UPDATE surveys SET position = 6 WHERE id = 'vote2022' AND position = 4;
+UPDATE surveys SET def = json_set(def, '$.title', 'מה הצבעתם בבחירות (2026)?', '$.questions[0].title', 'מה הצבעתם בבחירות (2026)?'), updated_at = '2026-11-02T14:05:00Z' WHERE id = 'vote' AND json_extract(def, '$.title') = 'מה הצבעתם?';
