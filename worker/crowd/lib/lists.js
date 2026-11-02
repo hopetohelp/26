@@ -16,7 +16,7 @@ export const CLOSED_LISTS = ["haredi_public","noam","code_black"];
 /** ממוצע הסקרים (אחוזים) — לאחוז של רשימה עם 0 מנדטים כשהשערה נשמרה בלי אחוזים */
 export const POLL_SHARES = {"amcha":2.89,"bluewhite":1.12,"democrats":7.04,"haredi_public":0.67,"joint":6.78,"likud":16.43,"noam":0.56,"otzma":6.38,"raam":4.41,"reservists":3.03,"rzp":5.21,"shas":6.2,"together":10.15,"utj":5.95,"yashar":16.5,"yb":5.96};
 /** ברירות המחדל של החישוב באתר (src/pages/guess/pctSync.ts): בעלי זכות, הסכמי עודפים */
-export const ELIGIBLE = 7336553;
+export const ELIGIBLE = 7331981;
 export const AGREEMENTS = [["likud","rzp"],["together","yb"],["yashar","democrats"],["raam","joint"],["shas","utj"]];
 export const IDS_2026 = new Set(LISTS_2026.map((l) => l.id));
 export const IDS_2022 = new Set(LISTS_2022);

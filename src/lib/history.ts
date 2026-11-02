@@ -1,3 +1,4 @@
+import { seatTags } from "./guessAccuracy";
 import { bucketLatest, pointTimes, POINT_WINDOW } from "./data";
 /**
  * דיוק הסקרים בעבר: הסקרים של חמש המערכות 2019א–2022 מול התוצאות הרשמיות.
@@ -321,6 +322,8 @@ export function lastPollErrors(c: Cycle, r: ElectionResult) {
     const maxAbsPp = Math.max(...parties.map(l => Math.abs(l.diffPp)));
     return { pollId: p.id, firmKey: p.firmKey, firmHe: p.firmHe, publisher: p.publisherHe, date: p.end, dateBasis: p.dateBasis ?? 'source', urls: p.urls,
       maxAbsPp, worstParties: parties.filter(l => Math.abs(l.diffPp) === maxAbsPp),
+      // תגיות הדיוק על כל סקר (הכרעת בעלים 02.11.2026) — אותו חישוב של 2026 (seatTags), בגושי אותה מערכת
+      tags: seatTags(Object.fromEntries(parties.map(l => [l.letters, l.estimate])), Object.fromEntries(r.lists.map(l => [l.letters, l.seats])), blocs.map(b => ({ lists: b.letters }))),
       blocs: blocs.map(b => { const estimate = b.letters.reduce((a, l) => a + (seatsOf(p, l) ?? 0), 0); const actual = r.lists.filter(l => b.letters.includes(l.letters)).reduce((a, l) => a + l.seats, 0); return { ...b, estimate, actual, diffPp: (estimate - actual) / 120 * 100 }; }),
     };
   }).sort((a, b) => a.firmHe.localeCompare(b.firmHe, 'he') || a.pollId.localeCompare(b.pollId));

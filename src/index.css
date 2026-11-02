@@ -840,6 +840,15 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-switch:focus-visible { outline:2px solid rgb(var(--signal));outline-offset:2px; }
 @media (prefers-reduced-motion: reduce) { .f-switch-track, .f-switch-track span { transition:none; } }
 /* "עוד" בסרגל — רק במתקדם */
+/* בורר המערכת בפס העליון (הכרעות בעלים 02.11.2026): כחול במסגרת ל-2026, מלא למערכת אחרת */
+.f-election { position:relative; }
+.f-election-btn { border:2px solid rgb(var(--signal));color:rgb(var(--signal));gap:6px; }
+.f-election-btn.past { background:rgb(var(--signal));color:rgb(var(--signal-ink)); }
+.f-election ul { position:absolute;top:calc(100% + 8px);inset-inline-start:0;z-index:60;min-width:190px;margin:0;padding:6px;list-style:none;border-radius:14px;background:rgb(var(--card));border:1px solid rgb(var(--line));box-shadow:0 8px 24px rgb(var(--ink) / .16); }
+.f-election ul button { display:flex;width:100%;justify-content:space-between;gap:12px;align-items:center;padding:8px 12px;min-height:44px;border:0;border-radius:10px;background:none;color:rgb(var(--ink));font-size:14px;cursor:pointer;text-align:start; }
+.f-election ul button[aria-checked="true"] { background:rgb(var(--accent-soft));font-weight:800; }
+.f-election-sub { font-size:12px;color:rgb(var(--ink-soft));font-weight:400; }
+.f-election hr { border:0;border-top:1px solid rgb(var(--line));margin:4px 0; }
 .f-more { position:relative; }
 .f-more > button { padding:8px 14px;border-radius:999px;border:0;background:none;font-size:14px;color:rgb(var(--ink-soft));cursor:pointer;white-space:nowrap; }
 .f-more > button::after { content:"▾";margin-inline-start:4px;font-size:10px; }

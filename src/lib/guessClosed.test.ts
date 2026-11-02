@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GUESS_CLOSE_AT, guessClosed } from "./guessClosed";
-import { navScreens } from "./pages";
+import { guessAreaTabs, navScreens } from "./pages";
 
 describe("guess screen closes at 21:58 Israel time on election day", () => {
   it("open one minute before, closed at the minute", () => {
@@ -9,11 +9,12 @@ describe("guess screen closes at 21:58 Israel time on election day", () => {
     expect(guessClosed(GUESS_CLOSE_AT)).toBe(true);
   });
   it("the nav hides the guess screen after closing", () => {
-    expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "guess")).toBe(true);
-    expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "guess")).toBe(false);
-    // "תוצאות" מוצג תמיד
-    // "תוצאות אמת" הוסרה מהסרגל (הכרעת בעלים 02.11.2026) — "מה השתנה" נשאר בכל זמן
-    expect(navScreens(false, GUESS_CLOSE_AT - 1).some(s => s.id === "changes")).toBe(true);
-    expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "changes")).toBe(true);
+    // "הניחוש שלי" באזור הניחושים (הכרעות בעלים 02.11.2026)
+    expect(guessAreaTabs(GUESS_CLOSE_AT - 1).some(t => t.to === "/guess")).toBe(true);
+    expect(guessAreaTabs(GUESS_CLOSE_AT).some(t => t.to === "/guess")).toBe(false);
+    expect(guessAreaTabs(GUESS_CLOSE_AT, true).some(t => t.to === "/guess")).toBe(true);
+    // "כל הסקרים" ומסכי הבחירות מוצגים תמיד
+    expect(guessAreaTabs(GUESS_CLOSE_AT).some(t => t.to === "/surveys")).toBe(true);
+    expect(navScreens(false, GUESS_CLOSE_AT).some(s => s.id === "results")).toBe(true);
   });
 });

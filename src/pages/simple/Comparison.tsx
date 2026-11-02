@@ -76,8 +76,8 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
         <p className="text-ink-soft mb-4">ממלאים את כל 120 המנדטים, שומרים, ורואים איך כולם חושבים.</p>
         <InlineBlocBar values={Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0]))} missing={Math.max(0, 120 - total)} />
         <Link to="/guess" className="f-btn pri mt-5">{total === 120 ? "לשמירת הניחוש שלי" : "להשלמת הניחוש שלי"}</Link></div>
-      {/* דיוק הסקרים — גלוי גם בלי ניחוש (אינו ממוצע הניחושים) */}
-      <Suspense fallback={null}><div className="mt-6"><GuessAccuracy part="polls" /></div></Suspense><FocusFoot /></div>;
+      {/* דיוק הסקרים עבר למסך "סקרים" באזור הבחירות (הכרעות בעלים 02.11.2026: הדיוק בתוך הסקרים; הניחושים אינם קשורים לבחירות) */}
+      <FocusFoot /></div>;
   }
   const response = allowed && result?.token === session.token ? result : null;
   const raw = response?.data;

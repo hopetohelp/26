@@ -1,4 +1,5 @@
 import PersonalBlocs from "../components/PersonalBlocs";
+import PollAccuracyTags, { seatsOfValues } from "../components/PollAccuracyTags";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
@@ -101,6 +102,7 @@ export default function Polls() {
                   )}
                 </button>
                 <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
+                <PollAccuracyTags values={seatsOfValues(p.values)} className="mt-1" />
                 {isOpen && (
                   <dl className="mt-2 text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                     <dt className="font-bold">עורך הסקר</dt>
@@ -193,7 +195,7 @@ export default function Polls() {
       {exitPolls.length > 0 && (
         <Card>
           <h2 className="font-bold text-lg">מדגמי יום הבחירות (22:00)</h2>
-          <p className="text-sm text-ink-soft mt-1">המדגמים שפורסמו עם סגירת הקלפיות, ב-27/10. הם מוצגים כאן, בנקודה נפרדת במגמות ובמסך "אחרונים", ואינם נכנסים לממוצעי הסקרים ולדיוק הסקרים.</p>
+          <p className="text-sm text-ink-soft mt-1">המדגמים שפורסמו עם סגירת הקלפיות, ב-27/10. הם מוצגים כאן, בנקודה נפרדת במגמות ובמסך "אחרונים", ואינם נכנסים לממוצעי הסקרים. על כל מדגם — הדיוק שלו מול התוצאה.</p>
           <ul className="divide-y divide-paper-line mt-2">
             {exitPolls.map((p) => (
               <li key={p.id} className="py-3 min-w-0">
@@ -203,6 +205,7 @@ export default function Polls() {
                   <Badge>{p.verified ? "אומת" : "לא אומת"}</Badge>
                 </div>
                 <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
+                <PollAccuracyTags values={seatsOfValues(p.values)} className="mt-1" />
                 {p.note && <p className="text-sm text-ink-soft mt-1">{p.note}</p>}
                 <p className="text-sm mt-1 break-all">מקור:{" "}{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="me-2">{u}</a>)}</p>
               </li>

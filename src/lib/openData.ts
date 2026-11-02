@@ -106,7 +106,7 @@ const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
 export const OPEN_FILES: OpenFile[] = [
   { path: "ballot-locations.json", title: "מיקומי קלפיות", description: "מבנה וכתובת לכל קלפי בקובץ ועדת הבחירות ל־2026, וכתובות היסטוריות מ־2022; המפתח הוא סמל יישוב ומספר תת קלפי. קובצי המקור נשמרים בחומר הגלם.", methodAnchor: "voter-flow", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי מיקומים 2026 ו־2022, עותקים שמורים במאגרי בחירות פתוחים", screen: "/changes", fields: "locations {סמל יישוב:קלפי: {venue, address, center, eligible}}, locations22 {סמל יישוב:קלפי: כתובת}, provenance", build: () => ({ locations: ballotLocationsFile.locations, locations22: ballotLocationsFile.locations22, provenance: ballotLocationsFile.about }) },
   { path: "data/usage.json", title: "משתמשים וכניסות לאתר", description: "עותק מוני השימוש המצטברים משרת ההערות. הבית קורא גם את /usage החי מדי דקה. משתמשים שהתחברו לפי חשבונות (כולל אורחים) וכניסות לפי דפדפנים ייחודיים, כמו בכרטיס ״נכנסו״ בניהול, ללא פרטים אישיים.", methodAnchor: "usage", kind: "נתוני שימוש באתר", source: "מוני שרתי החשבונות וההערות — אותם מקורות כמו ממשק הניהול", screen: "/", fields: "publishedAt, totalUsers (חשבונות, כולל אורחים), totalVisitors (דפדפנים ייחודיים)", build: null, optional: true },
-  { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/past", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
+  { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/results", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
   {
     path: "data/polls.json",
     title: "סקרים",
@@ -197,7 +197,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "results",
     kind: "נתון רשמי",
     source: SRC_CEC,
-    screen: "/past",
+    screen: "/results",
     fields: "elections[] (id, knesset, date, label, valid, lists[] {letters, short, name, votes, seats}), turnout{series[], k26}",
     build: () => ({ elections: results, turnout: registry }),
   },
@@ -228,7 +228,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "accuracy",
     kind: "סיכום סקרים",
     source: "טבלאות הסקרים בוויקיפדיה האנגלית לכל מערכת (עם קישור לפרסום המקורי), והתוצאות הרשמיות של ועדת הבחירות",
-    screen: "/past?tab=accuracy",
+    screen: "/polls",
     fields: "cycles[] (id, label, date, gap, bloc{estimate, actual}, rows[] {letters, name, estimate, min, max, n, actual, diff, thresholdMiss}, snapshot[]), pollsters[], families[], pastPolls{cycleId: polls[]}",
     build: () => {
       const summaries = cycles.map((c) => summarizeCycle(c, pastResults.find((r) => r.id === c.id)!));

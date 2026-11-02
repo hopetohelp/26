@@ -8,7 +8,6 @@ import "./index.css";
 import { page, shouldReload } from "./lib/chunkReload";
 import { useGuessClosed } from "./lib/guessClosed";
 import { useScreenShown } from "./lib/screenVisibility";
-import SimpleOverview from "./pages/simple/Overview";
 // מסכי המחקר המתקדם נטענים רק כשנכנסים אליהם. אחרי פרסום גרסה חדשה קובץ ישן עלול לחסור — רענון טוען את הגרסה החדשה (lib/chunkReload).
 window.addEventListener("vite:preloadError", (e) => {
   if (!shouldReload()) return;
@@ -20,11 +19,6 @@ import { registerOffline } from "./lib/offline";
 import { completeLegacyHandoff, keepNewLegacyHandoff, receiveLegacyMigration } from "./lib/legacyMigration";
 import Layout from "./components/Layout";
 import RootErrorBoundary from "./components/RootErrorBoundary";
-const Polls = lazy(page(() => import("./pages/Polls")));
-const Trends = lazy(page(() => import("./pages/Trends")));
-const Today = lazy(page(() => import("./pages/Today")));
-const Latest = lazy(page(() => import("./pages/Latest")));
-const Results = lazy(page(() => import("./pages/Results")));
 import { MethodLaw, MethodNumbers, MethodSources } from "./pages/Method";
 const About = lazy(page(() => import("./pages/About")));
 import { PageTitle } from "./components/ui";
@@ -45,45 +39,34 @@ const Connect = lazy(page(() => import("./pages/Connect")));
 import Tabbed, { Moved } from "./components/Tabbed";
 
 // סקרי המערכות הקודמות נטענים רק בעמוד שמציג אותם
-const Accuracy = lazy(page(() => import("./pages/Accuracy")));
 const Scenarios = lazy(page(() => import("./pages/Scenarios")));
+// שלושת מסכי הבחירות לפי בורר המערכת (הכרעות בעלים 02.11.2026)
+const ResultsScreen = lazy(page(() => import("./pages/ElectionScreens").then(m => ({ default: m.ResultsScreen }))));
+const ChangesScreen = lazy(page(() => import("./pages/ElectionScreens").then(m => ({ default: m.ChangesScreen }))));
+const PollsScreen = lazy(page(() => import("./pages/ElectionScreens").then(m => ({ default: m.PollsScreen }))));
 const FlowGraphs = lazy(page(() => import("./pages/FlowGraphs")));
-const VoterFlow = lazy(page(() => import("./pages/VoterFlow")));
 const Guess = lazy(page(() => import("./pages/Guess")));
 const GroupLanding = lazy(page(() => import("./pages/GroupLanding")));
-
-/** "סקרים": "אחרונים" במקום "האחרונים" ו"היום" (הכרעת בעלים 28.10.2026); השניים מוצגים רק לפי המתג במסך הניהול */
-function PollsTabs() {
-  const overview = useScreenShown("overview"), today = useScreenShown("today");
-  return <Tabbed label="הסקרים" tabs={[
-    { id: "latest", label: "אחרונים", element: <Latest /> },
-    ...(overview ? [{ id: "overview", label: "האחרונים", element: <SimpleOverview /> }] : []),
-    ...(today ? [{ id: "today", label: "היום", element: <Today /> }] : []),
-    { id: "trends", label: "מגמות", element: <Trends /> },
-    { id: "archive", label: "ארכיון", element: <Polls /> },
-  ]} />;
-}
 
 /** מסך הניחוש נחסם ב-21:58 ביום הבחירות (הכרעת בעלים 27.10.2026); מתג במסך הניהול יכול להציג אותו (השמירה חסומה בשרת) */
 function GuessGate({ children }: { children: React.ReactNode }) {
   const closed = useGuessClosed() && !useScreenShown("guess");
-  return closed ? <PageTitle lead="התוצאות ודיוק הניחושים — במסך ״תוצאות״.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
+  return closed ? <PageTitle lead="דיוק הניחושים — במסך ״דיוק הניחושים״.">הניחושים נסגרו עם סגירת הקלפיות</PageTitle> : <>{children}</>;
 }
 
-/** "מה השתנה": מסך עצמאי בשתי התצוגות (הכרעת בעלים 29.10.2026) */
-function ChangesScreen() {
-  return <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><VoterFlow /></Suspense>;
-}
+const wait = <p className="text-ink-soft">טוען…</p>;
 
-/** "היסטוריה": תוצאות אמת ודיוק הסקרים; הכתובת הישנה של "מה השתנה" (כולל הטמעות) עוברת למסך העצמאי */
-function PastScreen() {
-  const { search } = useLocation();
-  const q = new URLSearchParams(search);
-  if (q.get("tab") === "changes") { q.delete("tab"); const rest = q.toString(); return <Navigate to={`/changes${rest ? `?${rest}` : ""}`} replace />; }
-  return <Tabbed label="היסטוריה" aliases={{ voters: "results" }} tabs={[
-    { id: "results", label: "תוצאות אמת", element: <Results /> },
-    { id: "accuracy", label: "דיוק הסקרים", element: <Accuracy /> },
-  ]} />;
+/**
+ * "היסטוריה" בוטלה כמסך (הכרעות בעלים 02.11.2026): תוצאות אמת ⇐ "תוצאות", דיוק הסקרים ⇐ "סקרים", סיכום ⇐ "סיכום" בבורר.
+ * קישורים ישנים (כולל ?election= ו-?tab=) עוברים למקום החדש עם אותה מערכת.
+ */
+function PastRedirect() {
+  const q = new URLSearchParams(useLocation().search);
+  const tab = q.get("tab"), view = q.get("view");
+  const election = view === "summary" || tab === "voters" ? "summary" : q.get("election");
+  if (tab === "changes") { q.delete("tab"); const rest = q.toString(); return <Navigate to={`/changes${rest ? `?${rest}` : ""}`} replace />; }
+  const to = tab === "accuracy" ? "/polls" : "/results";
+  return <Navigate to={`${to}${election && election !== "k26" ? `?election=${election}` : ""}`} replace />;
 }
 
 function NotFound() {
@@ -151,7 +134,7 @@ if (handoffTicket) {
   link.textContent = "מעבר לאתר";
   root.appendChild(link);
 } else {
-// כניסה לאתר בלי מסך בכתובת ⇐ מסך "תוצאות" (הכרעת בעלים 28.10.2026); "בית" בסרגל נשאר מסך הבית
+// כניסה לאתר בלי מסך בכתובת ⇐ "מה השתנה · 2026" (הכרעות בעלים 02.11.2026: דף ראשון "מה השתנה"; פתיחה ב-2026)
 if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/changes`);
 startOutbox();
 registerOffline();
@@ -166,8 +149,9 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<Navigate to="/changes" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
-          <Route path="polls" element={<PollsTabs />} />
-          <Route path="changes" element={<ChangesScreen />} />
+          <Route path="polls" element={<Suspense fallback={wait}><PollsScreen /></Suspense>} />
+          <Route path="changes" element={<Suspense fallback={wait}><ChangesScreen /></Suspense>} />
+          <Route path="results" element={<Suspense fallback={wait}><ResultsScreen /></Suspense>} />
           {/* גרפי המעבר בלבד — להטמעה (הכרעת בעלים 30.10.2026) */}
           <Route path="flow-graphs" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><FlowGraphs /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
@@ -177,7 +161,7 @@ createRoot(document.getElementById("root")!).render(
           {/* "תוצאות אמת" עבר ל"מה יהיו תוצאות הבחירות?" בחלק הסקרים ול-#/community (הכרעת בעלים 02.11.2026) */}
           <Route path="results-2026" element={<Navigate to="/surveys/guesses" replace />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
-          <Route path="past" element={<PastScreen />} />
+          <Route path="past" element={<PastRedirect />} />
           <Route
             path="method"
             element={<Tabbed
@@ -193,10 +177,9 @@ createRoot(document.getElementById("root")!).render(
             />}
           />
           <Route path="forecast" element={<Moved to="/today" tab="scenarios" />} />
-          <Route path="trends" element={<Moved to="/polls" tab="trends" />} />
-          <Route path="results" element={<Moved to="/past" tab="results" />} />
-          <Route path="accuracy" element={<Moved to="/past" tab="accuracy" />} />
-          <Route path="voters" element={<Moved to="/past" tab="voters" />} />
+          <Route path="trends" element={<Navigate to="/polls?tab=trends" replace />} />
+                    <Route path="accuracy" element={<Navigate to="/polls" replace />} />
+          <Route path="voters" element={<Navigate to="/results?election=summary" replace />} />
           <Route path="about" element={<Moved to="/method" tab="about" />} />
           <Route path="account" element={<Support />} />
           <Route path="ai" element={<AiScreen />} />
@@ -222,7 +205,7 @@ createRoot(document.getElementById("root")!).render(
   </StrictMode>,
 );
   // טעינה מוקדמת של כל המסכים ברקע אחרי שהמסך הראשון מוצג (הכרעת בעלים 02.11.2026) — מעבר בין מסכים בלי "טוען…"
-  const warm = () => { for (const load of [() => import("./pages/surveys/SurveysScreen"), () => import("./pages/surveys/SurveyScreen"), () => import("./pages/surveys/SurveyHistoryScreen"), () => import("./pages/simple/GuessAccuracy"), () => import("./pages/Polls"), () => import("./pages/Trends"), () => import("./pages/Latest"), () => import("./pages/Results"), () => import("./pages/VoterFlow"), () => import("./pages/Guess"), () => import("./pages/Accuracy")]) void load().catch(() => {}); };
+  const warm = () => { for (const load of [() => import("./pages/surveys/SurveysScreen"), () => import("./pages/surveys/SurveyScreen"), () => import("./pages/surveys/SurveyHistoryScreen"), () => import("./pages/simple/GuessAccuracy"), () => import("./pages/Polls"), () => import("./pages/Trends"), () => import("./pages/Latest"), () => import("./pages/Results"), () => import("./pages/VoterFlow"), () => import("./pages/Guess"), () => import("./pages/Accuracy"), () => import("./pages/ElectionScreens")]) void load().catch(() => {}); };
   const idle = (window as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
   window.addEventListener("load", () => (idle ? idle(warm, { timeout: 4000 }) : setTimeout(warm, 2000)), { once: true });
 }
