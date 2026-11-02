@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { call, CrowdError, type Dashboard, type GroupDashboard, type GroupPublic, type SeatsPayload } from "../../lib/crowdApi";
 import { seatsSum } from "../../lib/crowdValidate";
@@ -15,6 +15,9 @@ import CardDrawer from "../../components/CardDrawer";
 import { smartRange } from "../../components/ChartLegend";
 import { BlocChart, FocusFoot, GuessCount, InlineBlocBar, LegendCapsule, LegendBox, PartyChart, SourceBar, orderedLists, useSimpleSource } from "./shared";
 import ShareCard from "./ShareCard";
+import { useRegisterNavShare } from "../../lib/navShare";
+import { ELECTION_RESULTS_TITLE } from "../../lib/surveys";
+const GuessAccuracy = lazy(() => import("./GuessAccuracy"));
 import { useHagzara } from "./hagzara";
 
 const meansOf = (d: Dashboard | null | undefined) => Object.fromEntries((d?.seats?.full ?? []).map(r => [r.list, r.mean]));
@@ -35,6 +38,10 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
   const unlocked = comparisonUnlocked(seats, IDS);
   const [result, setResult] = useState<{ token: string; data: GroupDashboard | null; failed: boolean } | null>(null);
   const [sharing, setSharing] = useState(false);
+  // בחלק הסקרים (הכרעת בעלים 02.11.2026): מתג גרף / טבלה (הטבלה — מסך תוצאות האמת בלי סקרים); השיתוף בסרגל בלבד
+  const [view, setView] = useState<"graph" | "table">("graph");
+  const openShare = useCallback(() => setSharing(true), []);
+  useRegisterNavShare(openShare, false, surveysPart);
   const [votersOpen, setVotersOpen] = useState(false);
   const [pickedRange, setPickedRange] = useState(false);
   const allowed = !!member && !!session.token;
@@ -92,7 +99,14 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
   const crowdRange = surveysPart || (ranges && rangeKey === "crowd");
   const crowdRows = new Map((all?.seats?.full ?? []).map(r => [r.list, r]));
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
-  return <div className="max-w-6xl mx-auto"><h1 className="sr-only">ממוצע הניחושים</h1>
+  const toggle = surveysPart && <><h1 className="text-[26px] font-display leading-tight mb-2">{ELECTION_RESULTS_TITLE}</h1>
+    <div className="f-seg fit mb-3" role="radiogroup" aria-label="תצוגה">
+      <button type="button" aria-pressed={view === "graph"} onClick={() => setView("graph")}>גרף</button>
+      <button type="button" aria-pressed={view === "table"} onClick={() => setView("table")}>טבלה</button>
+    </div></>;
+  if (surveysPart && view === "table") return <div className="max-w-6xl mx-auto">{toggle}<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GuessAccuracy noPolls /></Suspense>
+    {sharing && <ShareCard heading="שיתוף ממוצע הניחושים" input={{ kind: "average", values: blocValues, group: hagzara, mine: Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0])) }} onClose={() => setSharing(false)} />}</div>;
+  return <div className="max-w-6xl mx-auto">{surveysPart ? toggle : <h1 className="sr-only">ממוצע הניחושים</h1>}
     {hagzara?.logoUrl && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
     <GuessCount total={all?.seats?.n} members={member ? groupCount : null} />
     {!surveysPart && <SourceBar source={ranges ? rangeSource : source} ranges={ranges} />}
@@ -103,10 +117,10 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
         marks={id => surveysPart ? [{ value: crowdMeans[id], kind: "dash", side: "down" }] : segmented && !vsPolls ? [{ value: crowdMeans[id], side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : segmented ? [{ value: polls(id), kind: "soft", side: "up" }, { value: groupMeans[id], kind: "dash", side: "down" }] : [{ value: polls(id), kind: "soft", side: "up" }, { value: crowdMeans[id], kind: "dash", side: "down" }]}
         mine={surveysPart && !unlocked ? undefined : id => mine.seats[id]?.v ?? 0}
         legend={<><LegendCapsule label={smartRange(crowdRange ? "הניחושים" : "הסקרים")} />{!surveysPart && (!segmented || vsPolls) && <LegendBox kind="soft" label="ממוצע הסקרים" />}{(!segmented || !vsPolls) && <LegendBox kind={segmented ? undefined : "dash"} label="ממוצע כל הניחושים" />}{segmented && <LegendBox kind="dash" label="ממוצע הגזרה" n={group?.seats?.n} />}</>} />
-      <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} />
-        {voters && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><p className="text-xs text-ink-soft mb-3">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p><VotingStats d={voters} /></CardDrawer>}</div>
+      <div className="f-side"><BlocChart values={blocValues} logo={hagzaraLogo} inline={surveysPart} />
+        {voters && !surveysPart && <CardDrawer title="התפלגות המצביעים" open={votersOpen} onOpenChange={setVotersOpen} seenId="voters" className="mt-5"><p className="text-xs text-ink-soft mb-3">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p><VotingStats d={voters} /></CardDrawer>}</div>
     </div>
-    <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף ממוצע הניחושים</button></div>
+    {!surveysPart && <div className="flex justify-center mt-5"><button type="button" className="f-btn pri" onClick={() => setSharing(true)} disabled={!Object.keys(blocValues).length}>שיתוף ממוצע הניחושים</button></div>}
     <FocusFoot />
     {sharing && <ShareCard heading="שיתוף ממוצע הניחושים" input={{ kind: "average", values: blocValues, group: hagzara, mine: Object.fromEntries(IDS.map(id => [id, mine.seats[id]?.v ?? 0])) }} onClose={() => setSharing(false)} />}
   </div>;

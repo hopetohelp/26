@@ -14,7 +14,7 @@ export function useNavShare(): NavShare {
   return v;
 }
 /** רישום כפתור השיתוף של המסך; מוסר ביציאה מהמסך */
-export function useRegisterNavShare(onClick: () => void, disabled: boolean) {
-  useEffect(() => { setNavShare({ onClick, disabled }); }, [onClick, disabled]);
+export function useRegisterNavShare(onClick: () => void, disabled: boolean, enabled = true) {
+  useEffect(() => { if (enabled) setNavShare({ onClick, disabled }); }, [onClick, disabled, enabled]);
   useEffect(() => () => setNavShare(null), []);
 }

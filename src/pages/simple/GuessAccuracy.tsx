@@ -54,7 +54,8 @@ const COLUMNS: Record<View, [string, string][]> = {
 };
 
 /** דיוק הניחושים והסקרים מול תוצאות האמת (docs/תוכנית-דיוק-הניחושים-27-10-2026.md) */
-export default function GuessAccuracy() {
+/** noPolls — בחלק הסקרים, בטבלה של "מה יהיו תוצאות הבחירות?": בלי סקרים ובלי שיתוף משלו (הכרעת בעלים 02.11.2026) */
+export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }) {
   const session = useSession();
   const { advanced } = useInterface();
   const crowd = useCrowdDashboard();
@@ -93,7 +94,7 @@ export default function GuessAccuracy() {
   const nearest = useMemo(() => hasResults() ? closestPoll(finalPolls, actual) : null, [actual]);
   // לפני הספירה הראשונה: כל הנתונים הקיימים, ובטורים שתלויים בתוצאות — קו (הכרעת בעלים 27.10.2026)
   const ready = hasResults();
-  useRegisterNavShare(openShare, !d || !ready);
+  useRegisterNavShare(openShare, !d || !ready, !noPolls);
   // הגרף: הרשימות שעברו, ואחריהן — אחרי קו הפרדה — כל הרשימות שלא עברו, לפי אחוז הקולות (הכרעת בעלים 28.10.2026)
   // ברשימות שלא עברו — אחוז הקולות במקום 0 מנדטים (הכרעת בעלים 28.10.2026)
   const votePct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
@@ -148,9 +149,9 @@ export default function GuessAccuracy() {
     {advanced ? <>
     {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
     <div className="f-seg-row">
-    <div className="f-seg fit" role="group" aria-label="מה משווים">
+    {!noPolls && <div className="f-seg fit" role="group" aria-label="מה משווים">
       {(["guesses", "polls"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)}>{m === "guesses" ? "ניחושים" : "סקרים"}</button>)}
-    </div>
+    </div>}
     {mode === "guesses" && mine && <div className="f-seg fit" role="group" aria-label="איזה ניחוש">
       {(["mine", "all"] as const).map(w => <button key={w} type="button" aria-pressed={who === w} onClick={() => setWho(w)}>{w === "mine" ? "הניחוש שלי" : "כל הניחושים"}</button>)}
     </div>}
@@ -186,11 +187,11 @@ export default function GuessAccuracy() {
     </>}
     {/* במצב ממוקד הרשימות שלא עברו כבר בגרף (אחרי קו ההפרדה) — הכרטיס רק בניתוח מורחב (הכרעת בעלים 28.10.2026) */}
     {advanced && <BelowThreshold ready={ready} />}
-    {nearest && <div className="f-card mt-4">
+    {nearest && !noPolls && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
       <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · <span className="font-num font-bold">{correctSeats(nearest.acc)}</span> מנדטים · <span className="font-num font-bold">{exactLists(finalPolls.find(p => p.label === nearest.label)?.values ?? {}, actual)}</span> מפלגות</p>
     </div>}
-    {advanced && best && <div className="f-card mt-4">
+    {advanced && best && !noPolls && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">השילוב הקרוב ביותר</h2>
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollAvg[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> ב{avgWord} כל הסקרים.</p>

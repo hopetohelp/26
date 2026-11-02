@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { closesLabel, ELECTION_RESULTS_NUMBER, getSurvey, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { closesLabel, ELECTION_RESULTS_TITLE, getSurvey, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
@@ -86,7 +86,7 @@ export default function SurveysScreen() {
   const legacy = (
     <li key="guesses">
       <Link to="/surveys/guesses" className="block px-4 py-3.5 no-underline text-ink">
-        <span className="block font-bold">{ELECTION_RESULTS_NUMBER}. תוצאות הבחירות</span>
+        <span className="block font-bold">{ELECTION_RESULTS_TITLE}</span>
         <span className="block text-[12.5px] text-ink-soft">נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58</span>
       </Link>
     </li>

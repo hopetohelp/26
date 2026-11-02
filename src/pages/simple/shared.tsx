@@ -271,10 +271,11 @@ export function DoublePie({ values, missing = 0 }: { values: Record<string, numb
  * חלוקות הכנסת (הכרעת בעלים 25.10.2026): עוגה כפולה — הקבועה, ובתוכה האחדות (קבועה לכולם); קו העיגול הפנימי לכל אורך נתניהו ואייזנקוט.
  * העוגה האישית — רק במתקדם, ורק כשהמשתמש הפעיל אותה (במחשב בנוסף לכפולה, בטלפון במקומה). העריכה — באזור האישי.
  */
-export function BlocChart({ values, missing = 0, logo = null }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null }) {
+/** inline — העוגה גם בטלפון, בלי כפתור "עוגת המנדטים שלי" ובלי הפס הצף (חלק הסקרים; הכרעת בעלים 02.11.2026) */
+export function BlocChart({ values, missing = 0, logo = null, inline = false }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null; inline?: boolean }) {
   const personal = usePersonalBlocs();
   const { advanced } = useInterface();
-  const showMine = advanced && personal.show;
+  const showMine = !inline && advanced && personal.show;
   const fixed = blocSlices(values, missing), unity = unityOverlay(values);
   const rank = (id: string, order: string[]) => order.indexOf(id);
   const ring = [...fixed].sort((a, b) => rank(a.id, DOUBLE_ORDER) - rank(b.id, DOUBLE_ORDER));
@@ -284,13 +285,13 @@ export function BlocChart({ values, missing = 0, logo = null }: { values: Record
   const unityBar = { ...unity, start: blocTotal(values, SIMPLE_BLOCS[1].lists) + unity.start };
   const mine = showMine ? blocSlices(values, missing, personal.defs) : [];
   return <>
-    <div className="f-pie-wrap">{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
+    <div className={`f-pie-wrap${inline ? " is-inline" : ""}`}>{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
       <Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unity} inner={inner} parts={innerParts(values, ring)} />
       {showMine && <figure className="f-pie-mine"><figcaption>עוגת המנדטים שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
     </div>
     {/* כפתור אחד (הכרעת בעלים 25.10.2026): יצירת העוגה ואישור הצגתה — במסך אחד באזור האישי */}
-    {advanced && <div className="f-pie-tools"><Link to="/account?blocs" className="f-btn">עוגת המנדטים שלי</Link></div>}
-    <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>
+    {advanced && !inline && <div className="f-pie-tools"><Link to="/account?blocs" className="f-btn">עוגת המנדטים שלי</Link></div>}
+    {!inline && <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>}
   </>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */
