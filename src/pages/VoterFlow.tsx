@@ -2,9 +2,8 @@ import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from
 import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
-import InfoTip from "../components/InfoTip";
 import RotatingPromo from "../components/RotatingPromo";
-import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, coverage, flow, flowsFor, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
+import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, flow, flowsFor, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import OverviewCards from "../components/OverviewCards";
 import { changeOf } from "../lib/changeMark";
@@ -265,7 +264,6 @@ const without = (r: Rows, ids: string[]): Rows => ({ cameFrom: r.cameFrom.filter
 
 /** מה השתנה: מעבר מצביעים אמיתי בין 2022 ל-2026, לפי השוואת קלפיות (הכרעות בעלים 28.10.2026) */
 export default function VoterFlow() {
-  const cov = coverage();
   const raw = flowsFor();
   const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
   const [sharing, setSharing] = useState(false);
@@ -280,14 +278,7 @@ export default function VoterFlow() {
       <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
       <div className="flex items-center justify-between gap-2"><h1 className="text-2xl font-display leading-tight">מה השתנה: 2022 מול 2026</h1>
 
-      <div className="flex justify-end">
-        <InfoTip label="איך מחושב מעבר המצביעים?">
-          משווים תחילה תת קלפי שלא השתנתה, ואחר כך את היתרה במתחם, ביישוב, בוועדה האזורית ובכל הארץ.
-          לכל מקום טבלת מעבר משלו, שנמשכת לטבלה שמעליו. כך נמצאה מקבילה ל־{pctValue(cov.total)}% מהקולות, וכל קול נשאר בחישוב.
-          מעטפות כפולות נמדדות כיישוב אחד; יישוב ללא קלפי ב־2022 מופיע כ״יישובים חדשים״.
-          בכרטיס המפלגה: ״מהכשרים״ — אחוז הקולות הכשרים, כמו בוועדת הבחירות; ״מזכות בחירה״ — אחוז מכלל בעלי זכות הבחירה (ב־2026: בקלפיות שנספרו).
-        </InfoTip>
-      </div>
+      {/* חלון ההסבר שבראש המסך הוא ההסבר היחיד; אייקון המידע ליד הכותרת הוסר כמיותר (הכרעת בעלים 02.11.2026) */}
       </div>
       <OverviewCards />
       </section>
