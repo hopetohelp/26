@@ -83,9 +83,9 @@ describe("site surveys over the worker", () => {
     expect((await call("/survey?id=reelect")).status).toBe(404);
     const m = await member("in@x.co");
     const r = await call("/surveys", { token: m });
-    expect(r.data.surveys.map((s) => s.id)).toEqual(["gov", "reelect", "president", "vote"]);
-    expect(r.data.surveys.map((s) => s.kind)).toEqual(["guess", "guess", "guess", "survey"]);
-    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["coalition"], ["reelect"], ["first"], ["vote"]]);
+    expect(r.data.surveys.map((s) => s.id)).toEqual(["gov", "reelect", "president", "vote", "vote2022"]);
+    expect(r.data.surveys.map((s) => s.kind)).toEqual(["guess", "guess", "guess", "survey", "survey"]);
+    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["coalition"], ["reelect"], ["first"], ["vote"], ["vote2022"]]);
     expect(r.data.surveys[0].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
     expect(r.data.surveys[1]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
   });
