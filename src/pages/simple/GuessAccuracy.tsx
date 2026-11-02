@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
 import InfoTip from "../../components/InfoTip";
 import { THRESHOLD_PCT } from "../../engine/pctForSeats";
 import type { SeatsPayload } from "../../lib/crowdApi";
@@ -54,8 +53,12 @@ const COLUMNS: Record<View, [string, string][]> = {
 };
 
 /** דיוק הניחושים והסקרים מול תוצאות האמת (docs/תוכנית-דיוק-הניחושים-27-10-2026.md) */
-/** noPolls — בחלק הסקרים, בטבלה של "מה יהיו תוצאות הבחירות?": בלי סקרים ובלי שיתוף משלו (הכרעת בעלים 02.11.2026) */
-export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }) {
+/**
+ * המסך התפצל (הכרעת בעלים 02.11.2026): part="guesses" — בטבלה של "מה יהיו תוצאות הבחירות?" בחלק הסקרים (פודיום וטבלאות הניחושים);
+ * part="polls" — ב-#/community (דיוק הסקרים, לא עברו, הסקר והשילוב הקרובים). "מה בכל טור" הוסר. השיתוף — בסרגל, של המסך המארח.
+ */
+export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
+  const noPolls = part === "guesses", pollsOnly = part === "polls";
   const session = useSession();
   const { advanced } = useInterface();
   const crowd = useCrowdDashboard();
@@ -63,7 +66,7 @@ export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }
   const seats = useUnit<SeatsPayload>("seats", EMPTY, session.me?.latest.seats?.payload as SeatsPayload | undefined, { exitSave: false });
   const saved = session.me?.latest.seats?.payload as SeatsPayload | undefined;
   const mine: Seats | null = saved ? Object.fromEntries(IDS.map(id => [id, (seats.draft ?? saved).seats[id]?.v ?? 0])) : null;
-  const [mode, setMode] = useState<"guesses" | "polls">("guesses");
+  const [mode, setMode] = useState<"guesses" | "polls">(part);
   const [who, setWho] = useState<"mine" | "all">("all"); // ברירת המחדל במורחב: כל הניחושים (הכרעת בעלים 28/10)
   const [firm, setFirm] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
@@ -94,7 +97,7 @@ export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }
   const nearest = useMemo(() => hasResults() ? closestPoll(finalPolls, actual) : null, [actual]);
   // לפני הספירה הראשונה: כל הנתונים הקיימים, ובטורים שתלויים בתוצאות — קו (הכרעת בעלים 27.10.2026)
   const ready = hasResults();
-  useRegisterNavShare(openShare, !d || !ready, !noPolls);
+  useRegisterNavShare(openShare, !d || !ready, false);
   // הגרף: הרשימות שעברו, ואחריהן — אחרי קו הפרדה — כל הרשימות שלא עברו, לפי אחוז הקולות (הכרעת בעלים 28.10.2026)
   // ברשימות שלא עברו — אחוז הקולות במקום 0 מנדטים (הכרעת בעלים 28.10.2026)
   const votePct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
@@ -144,12 +147,12 @@ export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }
     {/* בלי שורת המקור; שעת העדכון בסוגריים אחרי "נספרו" (הכרעת בעלים 28.10.2026) */}
     {/* בראש המסך (הכרעת בעלים 28.10.2026) */}
     {/* כרטיס "היית מדויק" והמגירה — כרטיס אחד עם קו דק ביניהם; בלי פודיום — הכרטיס לבדו (הכרעת בעלים 28/10) */}
-    {ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} lead={showMine ? mineLead : undefined} /> : showMine ? <div className="f-card mb-4">{mineLead}</div> : null}
-    {crowd.failed && !d && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
+    {pollsOnly ? null : ready && d?.seats?.podium?.length ? <Podium top={d.seats.podium} n={d.seats.n} lead={showMine ? mineLead : undefined} /> : showMine ? <div className="f-card mb-4">{mineLead}</div> : null}
+    {crowd.failed && !d && !pollsOnly && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {advanced ? <>
     {/* כל המתגים בשורה אחת כשיש רוחב (הכרעת בעלים 28.10.2026) */}
     <div className="f-seg-row">
-    {!noPolls && <div className="f-seg fit" role="group" aria-label="מה משווים">
+    {false && <div className="f-seg fit" role="group" aria-label="מה משווים">
       {(["guesses", "polls"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)}>{m === "guesses" ? "ניחושים" : "סקרים"}</button>)}
     </div>}
     {mode === "guesses" && mine && <div className="f-seg fit" role="group" aria-label="איזה ניחוש">
@@ -162,11 +165,6 @@ export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }
     <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <span className="inline-flex flex-col items-start gap-0.5"><PartyAvatar id={id} size={30} /><span className="text-xs leading-tight">{nameOf(id)}</span></span>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
     <AccuracyTable view={view} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={chosen ? blocs(chosen.values) : null} chosenLabel={chosen?.label} ready={ready} />
-    <div className="f-card mt-4">
-      <h2 className="font-bold mb-2">מה בכל טור</h2>
-      <ul className="text-sm space-y-1">{COLUMNS[view].map(([h, t]) => <li key={h}><b>{h}:</b> {t}</li>)}<li><b>כל המפלגות:</b> {view === "all" ? <>ב"ניחושים מדויקים" — אחוז המנחשים שצדקו בכל הרשימות יחד</> : <>באחוזים — ממוצע של המפלגות, כל מפלגה במשקל שווה</>}; במרחק — סך המנדטים, והיחס הממוצע של המפלגות.</li></ul>
-      <p className="text-sm mt-2"><Link to="/method#guess-accuracy" className="font-semibold">איך זה חושב?</Link></p>
-    </div>
     </> : <>
     <div className="grid gap-2 mb-4 items-center" style={{ gridTemplateColumns: tiles.map(t => t.big ? "minmax(0, 1.35fr)" : "minmax(0, 1fr)").join(" ") }}>
       {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
@@ -186,7 +184,7 @@ export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }
     </div>
     </>}
     {/* במצב ממוקד הרשימות שלא עברו כבר בגרף (אחרי קו ההפרדה) — הכרטיס רק בניתוח מורחב (הכרעת בעלים 28.10.2026) */}
-    {advanced && <BelowThreshold ready={ready} />}
+    {pollsOnly && <BelowThreshold ready={ready} />}
     {nearest && !noPolls && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
       <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · <span className="font-num font-bold">{correctSeats(nearest.acc)}</span> מנדטים · <span className="font-num font-bold">{exactLists(finalPolls.find(p => p.label === nearest.label)?.values ?? {}, actual)}</span> מפלגות</p>
@@ -196,9 +194,9 @@ export default function GuessAccuracy({ noPolls = false }: { noPolls?: boolean }
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
       <p className="text-sm text-ink-soft">טעות ממוצעת למפלגה <span className="font-num">{Math.round(best.error)}%</span>, מול <span className="font-num">{Math.round(ids.reduce((s, id) => s + distance(pollAvg[id] ?? 0, actual[id] ?? 0).pct, 0) / ids.length)}%</span> ב{avgWord} כל הסקרים.</p>
     </div>}
-    {ready && session.me?.podium && <PodiumPopup place={session.me.podium.place} name={session.me.podium.name} token={session.token} />}
+    {!pollsOnly && ready && session.me?.podium && <PodiumPopup place={session.me.podium.place} name={session.me.podium.name} token={session.token} />}
     {/* כפתור השיתוף — בסרגל הניווט, מימין ל-AI (הכרעת בעלים 28.10.2026; src/lib/navShare.ts) */}
-    <FocusFoot />
+    {!pollsOnly && <FocusFoot />}
     {sharing && <AccuracyShare onClose={() => setSharing(false)} input={{ actual, ids, crowdMean, mine, pollMean: pollAvg, avgWord, polls, pollLabels: finalPolls.map(p => p.label), hist, count: d?.seats?.n ?? 0, best: best ? best.keys.map(k => finalPolls.find(p => p.key === k)?.firm ?? k) : [], group: hagzara }} />}
   </div>;
 }
@@ -278,7 +276,7 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 
 /** פודיום: שלושת הניחושים המדויקים (הכרעת בעלים 28/10) — אחוז דיוק, אחר כך מספר המפלגות המדויקות, ובשוויון — מי ששמר קודם.
  * מחושב בשרת הניחושים בכל טעינה, מול הספירה הנוכחית, בלי מזהים (worker/crowd/lib/results.js podium) */
-function Podium({ top, n, lead }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number; lead?: ReactNode }) {
+export function Podium({ top, n, lead }: { top: { acc: number; exact: number; savedAt: string; name?: string | null }[]; n: number; lead?: ReactNode }) {
   // שעון ישראל, בפורמט האתר: "27/10 19:28"
   const time = (iso: string) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(iso)).map(x => [x.type, x.value])); return `${p.day}/${p.month} ${p.hour}:${p.minute}`; };
   // סדר הפודיום: 2 · 1 · 3 (מימין לשמאל: מקום 2 מימין)

@@ -38,8 +38,7 @@ export interface Screen {
   tabs?: ScreenTab[];
 }
 export const SCREENS: Screen[] = [
-  // הלשונית הימנית, "תוצאות אמת" (הכרעת בעלים 28.10.2026)
-  { id: "results2026", to: "/results-2026", label: "תוצאות אמת", icon: "board", nav: "core" },
+  // "תוצאות אמת" הוסרה מהסרגל (הכרעת בעלים 02.11.2026): התוכן עבר ל"מה יהיו תוצאות הבחירות?" (#/surveys/guesses) ול-#/community
   { id: "guess", to: "/guess", label: "הניחוש שלי", icon: "guess", nav: "core" },
   // "מה השתנה" — מסך עצמאי בשתי התצוגות (הכרעת בעלים 29.10.2026)
   { id: "changes", to: "/changes", label: "מה השתנה", icon: "board", nav: "core" },

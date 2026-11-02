@@ -68,7 +68,7 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       await noScroll('list-guesses');
       // מעבר בין החלקים: מהניתוח "ניחושים" ⇐ סקרים, ומהסקרים "בחירות" ⇐ ניתוח
       assert.ok(await page.getByRole('link', { name: 'בחירות', exact: true }).count(), 'כפתור בחירות בחלק הסקרים');
-      await page.goto('http://127.0.0.1:5177/#/results-2026');
+      await page.goto('http://127.0.0.1:5177/#/community');
       await page.getByRole('link', { name: 'ניחושים', exact: true }).first().click();
       await page.getByRole('heading', { name: 'כל הסקרים' }).waitFor();
       await noScroll('switch');
@@ -78,7 +78,18 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       const g = await page.innerText('main');
       assert.doesNotMatch(g, /נפתח אחרי שמירת/, 'הניחושים לא נעולים');
       assert.doesNotMatch(g, /ממוצע הסקרים/, 'בלי ממוצע הסקרים');
+      assert.equal(await page.getByRole('link', { name: 'עוגת המנדטים שלי' }).count(), 0, 'בלי עוגת המנדטים שלי');
+      assert.equal(await page.locator('.f-dock').count(), 0, 'בלי פס הגושים הצף');
+      assert.equal(await page.getByRole('button', { name: /שיתוף ממוצע/ }).count(), 0, 'שיתוף רק בסרגל');
       await noScroll('guesses');
+      await page.getByRole('button', { name: 'טבלה', exact: true }).click();
+      await page.waitForTimeout(1500);
+      assert.doesNotMatch(await page.innerText('main'), /מה בכל טור|סקרים מדויקים/, 'טבלה בלי סקרים');
+      await noScroll('guesses-table');
+      await page.goto('http://127.0.0.1:5177/#/community');
+      await page.waitForTimeout(1500);
+      assert.equal(await page.getByRole('button', { name: /טווח הניחושים/ }).count(), 0, 'בקהילה בלי טווח הניחושים');
+      await noScroll('community');
       // מצב ניהול
       await page.goto('http://127.0.0.1:5177/#/s/reelect?manage=1');
       await page.getByRole('button', { name: 'ניהול', exact: true }).waitFor();
