@@ -9,10 +9,13 @@ export interface PageInfo {
 
 /** הסדר כאן הוא סדר הסרגל במחשב (הכרעת בעלים 8.10.2026) */
 export const PAGES: PageInfo[] = [
-  { to: "/guess", label: "הניחוש שלי" },
-  { to: "/polls", label: "הסקרים" },
+  // שלושת מסכי הבחירות (בורר המערכת בפס העליון) ואזור הניחושים — הכרעות בעלים 02.11.2026
+  { to: "/results", label: "תוצאות" },
   { to: "/changes", label: "מה השתנה" },
-  { to: "/past", label: "היסטוריה" },
+  { to: "/polls", label: "סקרים" },
+  { to: "/guess", label: "הניחוש שלי" },
+  { to: "/community", label: "הניחושים" },
+  { to: "/results-2026", label: "דיוק הניחושים" },
   { to: "/method", label: "מידע" },
 ];
 
