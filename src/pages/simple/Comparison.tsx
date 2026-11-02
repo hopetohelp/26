@@ -17,7 +17,7 @@ import { BlocChart, FocusFoot, GuessCount, InlineBlocBar, LegendCapsule, LegendB
 import ShareCard from "./ShareCard";
 import { Podium } from "./GuessAccuracy";
 import { BlocRows } from "./shared";
-import { hasResults, results2026 } from "../../lib/guessAccuracyData";
+import { hasResults, histArrays, results2026 } from "../../lib/guessAccuracyData";
 import { useRegisterNavShare } from "../../lib/navShare";
 import { ELECTION_RESULTS_TITLE } from "../../lib/surveys";
 const GuessAccuracy = lazy(() => import("./GuessAccuracy"));
@@ -107,7 +107,8 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
   const crowdSpread = (id: string): [number, number, number, number, number, number] | null => { const r = crowdRows.get(id); return r ? [r.min, r.p25, r.p25, r.p75, r.p75, r.max] : null; };
   // גושים: טווח מההתפלגות שבשרת (bloc:<מזהה>), ממוצע = סכום ממוצעי הרשימות, תוצאות אמת = סכום מנדטי הרשימות
   const q = (h: number[], p: number) => { const n = h.reduce((a, b) => a + b, 0); let c = 0; for (let i = 0; i < h.length; i++) { c += h[i]; if (c >= p * n) return i; } return h.length - 1; };
-  const blocHist = (all?.seats as { hist?: Record<string, number[]> } | undefined)?.hist ?? {};
+  // ההתפלגות מגיעה מהשרת כמילון {מנדטים: מספר} — histArrays ממיר למערך (כמו במסך תוצאות אמת)
+  const blocHist = histArrays((all?.seats as { hist?: Record<string, Record<string, number>> } | undefined)?.hist) ?? {};
   const blocRows = SIMPLE_BLOCS.map(b => {
     const h = blocHist[`bloc:${b.id}`];
     const nz = h ? h.findIndex(v => v > 0) : -1;
