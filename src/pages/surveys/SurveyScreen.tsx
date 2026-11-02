@@ -7,7 +7,7 @@ import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -262,7 +262,7 @@ export default function SurveyScreen() {
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
       <div className="flex items-start justify-between gap-2 pt-1">
-        <h1 className="text-[26px] font-display leading-tight">{survey.title}</h1>
+        <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
         {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}
       </div>
       <div className="flex flex-wrap items-center gap-2 -mt-1.5 text-sm text-ink-soft">

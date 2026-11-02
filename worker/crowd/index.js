@@ -2097,7 +2097,8 @@ const routes = {
     if (!cur && !def) throw bad("def");
     const status = body.status ?? cur?.status ?? "draft";
     if (!SURVEY_STATUS.has(status)) throw bad("status");
-    const position = body.position ?? cur?.position ?? 0;
+    // מספר סידורי (הכרעת בעלים 02.11.2026): סקר חדש מקבל את המספר הבא
+    const position = body.position ?? cur?.position ?? (((await env.DB.prepare("SELECT MAX(position) AS m FROM surveys").first())?.m ?? 1) + 1);
     if (!Number.isInteger(position) || position < 0 || position > 9999) throw bad("position");
     if (body.outside !== undefined && !SURVEY_OUTSIDE.has(body.outside)) throw bad("outside");
     const json = def ? JSON.stringify(def) : cur.def;
