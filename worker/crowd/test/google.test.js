@@ -44,6 +44,36 @@ describe("כניסה אחת מאתר הגזרה (אסימון של אתר מאר
   });
 });
 
+describe("רישום אוטומטי לקבוצת הגזרה בכניסה דרך אתר הגזרה", () => {
+  const host = "hagzara-client.apps.googleusercontent.com";
+  beforeEach(() => { env.DB.raw.prepare("INSERT OR IGNORE INTO groups (id, name_enc, created_at) VALUES ('gy7lelpbo', 'x', '2026-10-08T00:00:00Z')").run(); });
+  const inGroup = () => env.DB.raw.prepare("SELECT COUNT(*) AS n FROM group_members WHERE group_id = 'gy7lelpbo'").get().n;
+  it("כניסה עם מייל מאומת דרך אסימון האתר המארח ⇐ נרשם; כניסה ישירה לאתר הבחירות ⇐ לא", async () => {
+    env.GOOGLE_EXTRA_CLIENT_IDS = host;
+    await call("/auth/google", { body: { credential: await idToken({ email_verified: true, email: "direct@example.com" }), token: tok("d") } });
+    expect(inGroup()).toBe(0);
+    await call("/auth/google", { body: { credential: await idToken({ aud: host, email_verified: true, email: "member@example.com", sub: "s2" }), token: tok("e") } });
+    expect(inGroup()).toBe(1);
+    // כניסה חוזרת — בלי כפילות
+    await call("/auth/google", { body: { credential: await idToken({ aud: host, email_verified: true, email: "member@example.com", sub: "s2" }), token: tok("f") } });
+    expect(inGroup()).toBe(1);
+  });
+  it("מייל לא מאומת אינו נרשם", async () => {
+    env.GOOGLE_EXTRA_CLIENT_IDS = host;
+    await call("/auth/google", { body: { credential: await idToken({ aud: host, email_verified: false, email: "nv@example.com", sub: "s3" }), token: tok("g") } });
+    expect(inGroup()).toBe(0);
+  });
+  it("חשבון שכבר פעיל באתר (ענה לפני) נספר רטרואקטיבית אחרי הרישום", async () => {
+    env.GOOGLE_EXTRA_CLIENT_IDS = host;
+    const first = await call("/auth/google", { body: { credential: await idToken({ email_verified: true, email: "old@example.com", sub: "s4" }), token: tok("h") } });
+    await call("/save", { token: first.data.token, body: { unit: "seats", op_id: "op-cccccccccc", registry: "r", payload: seats(60) } });
+    const member = () => env.DB.raw.prepare("SELECT COUNT(*) AS n FROM emails e JOIN group_members m ON m.email_hash = e.hash WHERE m.group_id = 'gy7lelpbo'").get().n;
+    expect(member()).toBe(0);
+    await call("/auth/google", { body: { credential: await idToken({ aud: host, email_verified: true, email: "old@example.com", sub: "s4" }), token: tok("i") } });
+    expect(member()).toBe(1);
+  });
+});
+
 describe("כניסה עם Google", () => {
   it("אסימון תקף יוצר משתתף; כניסה חוזרת מגיעה לאותו משתתף; אסימון הדפדפן עובד בעיוורון", async () => {
     const first = await call("/auth/google", { body: { credential: await idToken({}), token: tok("a") } });

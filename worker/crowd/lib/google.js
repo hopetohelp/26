@@ -45,5 +45,6 @@ export async function verifyGoogle(env, credential, now) {
   if (!audiences.includes(payload.aud) || !ISSUERS.has(payload.iss)) return null;
   if (typeof payload.exp !== "number" || payload.exp * 1000 < now - 60_000) return null;
   if (typeof payload.sub !== "string" || !payload.sub) return null;
-  return { sub: payload.sub, email: typeof payload.email === "string" ? payload.email : null, emailVerified: payload.email_verified === true || payload.email_verified === "true" };
+  // host = האסימון הונפק לאתר מארח (אתר הגזרה): מי שנכנס דרכו נרשם אוטומטית לקבוצת הגזרה (הכרעת בעלים 02.11.2026)
+  return { sub: payload.sub, email: typeof payload.email === "string" ? payload.email : null, emailVerified: payload.email_verified === true || payload.email_verified === "true", host: payload.aud !== clientId };
 }

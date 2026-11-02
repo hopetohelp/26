@@ -1323,6 +1323,9 @@ const routes = {
         else stmts.push(await emailRow(env, participant, eh, email.display, "google", 1, now));
       }
     }
+    // כניסה דרך אתר הגזרה (אסימון של מזהה הלקוח שלהם) ⇐ רישום אוטומטי לקבוצת הגזרה (הכרעת בעלים 02.11.2026).
+    // רק מייל מאומת של Google. הסטטיסטיקות מחושבות חי לפי המייל, ולכן גם הפעילות הקודמת של אותו חשבון נספרת (רטרואקטיבית).
+    if (g.host && eh) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO group_members (group_id, email_hash) VALUES (?, ?)").bind(HAGZARA_ID, eh));
     const [sess, token] = await newSession(env, participant, now, clientToken);
     await env.DB.batch([...stmts, sess]);
     await retireLegacy(env, participant, now);
