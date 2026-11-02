@@ -40,12 +40,6 @@ function Summary() {
   </>;
 }
 
-/** כותרת המערכת בראש כל מסך — כדי שתמיד יהיה ברור באיזו מערכת נמצאים */
-function ElectionLine({ id }: { id: string }) {
-  const o = electionOption(id);
-  return <p className="text-sm text-ink-soft mb-3">הכנסת ה־{o.knesset} · {o.full}</p>;
-}
-
 export function ResultsScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
@@ -105,6 +99,6 @@ export function PollsScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
   // אותה שורת מערכת ואותן חמש מגירות בכל מערכת
-  if (id === K26_ID) return <><h1 className="sr-only">סקרים</h1><ElectionLine id={id} /><Polls2026 /></>;
-  return <><h1 className="sr-only">סקרים</h1><ElectionLine id={id} /><Accuracy id={id} /></>;
+  if (id === K26_ID) return <><h1 className="sr-only">סקרים</h1><Polls2026 /></>;
+  return <><h1 className="sr-only">סקרים</h1><Accuracy id={id} /></>;
 }

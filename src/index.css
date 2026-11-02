@@ -934,3 +934,17 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-nav-row > a[aria-current=page] { background:rgb(var(--signal));color:rgb(var(--signal-ink));font-weight:800;box-shadow:0 2px 8px rgb(var(--signal) / .35); }
 .f-nav-arrow { position:absolute;top:50%;transform:translateY(-50%);z-index:1;width:28px;height:28px;border-radius:50%;border:1px solid rgb(var(--line));background:rgb(var(--card));color:rgb(var(--ink));font-size:18px;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgb(var(--ink) / .15); }
 .f-nav-arrow.r { right:0; } .f-nav-arrow.l { left:0; }
+/* פס עליון אחיד (הכרעת בעלים 02.11.2026): כל הכפתורים באותו גובה, גופן וגודל טקסט */
+.f-bar .f-btn, .f-bar .f-election-btn { min-height:40px;height:40px;padding:0 14px;font-size:15px;font-weight:700;border:1px solid rgb(var(--line));font-family:inherit; }
+.f-bar .f-election-btn { border-color:rgb(var(--signal));color:rgb(var(--signal)); gap:6px; }
+.f-bar .f-election-btn.past { color:rgb(var(--signal-ink)); }
+.f-bar .f-election-k { font-size:inherit;font-weight:inherit;opacity:1; }
+.f-bar .f-btn.f-mode-btn { width:40px;padding:0; }
+.f-logo { font-size:15px;font-weight:700;font-family:inherit; }
+@media (max-width: 767px) { .f-bar .f-btn, .f-bar .f-election-btn, .f-logo { font-size:13px; } .f-bar .f-btn, .f-bar .f-election-btn { padding:0 10px; } .f-bar .f-btn.f-mode-btn { padding:0; } }
+/* סרגל תחתון (הכרעת בעלים 02.11.2026): לשוניות ברוחב שווה על כל הסרגל; שיתוף, קבוצה, פרופיל ו-AI ברוחב המינימלי */
+.f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp), .f-nav-bottom > .f-more { flex:1 1 0;min-width:0; }
+.f-nav-bottom > button.f-share, .f-nav-bottom > a.f-grp { flex:none; }
+.f-nav a.f-grp { width:34px;height:34px;padding:0;justify-content:center;border-radius:50%; }
+.f-nav-bottom .f-nav-row > a { flex:1 0 auto;text-align:center; }
+.f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp) { text-align:center; }

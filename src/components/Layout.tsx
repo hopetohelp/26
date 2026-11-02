@@ -83,7 +83,7 @@ function ModePicker() {
       onClick={() => setMode(next)}
       aria-label={`תצורה: ${MODE_NAME[mode]}. בלחיצה: ${MODE_NAME[next]}`}
       title={`תצורה: ${MODE_NAME[mode]}`}
-      className="flex items-center justify-center rounded-full w-[44px] h-[44px] lg:w-[36px] lg:h-[36px] border border-current opacity-80 hover:opacity-100"
+      className="f-btn f-mode-btn"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         {MODE_ICON[mode]}
@@ -204,10 +204,11 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
     {/* במחשב הבורר בתוך הסרגל שבמרכז הפס, לפני הלשוניות (הכרעת בעלים 02.11.2026) */}
     {top && !surveysPart && isElectionScreen(pathname) && <ElectionPicker />}
     <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
+    {/* קבוצה — אייקון בלבד, משמאל לפרופיל (הכרעת בעלים 02.11.2026) */}
+    {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /></NavLink>)}
     {surveysPart ? guessAreaTabs(Date.now(), guessShown).map((t) => <Link key={t.to} to={t.to} aria-current={(t.to === "/surveys" ? pathname === "/surveys" || pathname.startsWith("/s/") : t.to === "/community" ? pathname === "/community" || pathname.startsWith("/g/") : pathname === t.to) ? "page" : undefined}>{t.label}</Link>) : scroll
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
-    {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /><span className="t">{t.short}</span></NavLink>)}
     {/* שיתוף תמיד בסרגל (הכרעת בעלים 02.11.2026): השיתוף של המסך, ואם אין — ניסוח וקישור לכל האתר לפי החלק */}
     {share ? <button type="button" className="f-share" onClick={share.onClick} disabled={share.disabled}>שיתוף</button> : <SiteShareButton part={surveysPart ? "guesses" : "elections"} />}
     <NavLink to="/ai" className="f-ai" aria-label={unread ? "AI — תשובה חדשה" : "AI"}>AI{unread && <span className="f-dot" aria-hidden="true" />}</NavLink>
