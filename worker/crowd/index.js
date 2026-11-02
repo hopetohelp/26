@@ -63,6 +63,12 @@ function cors(env, origin) {
 /** היום לפי שעון ישראל (YYYY-MM-DD) — גבול "ההשערה האחרונה של היום" */
 const IL_DAY = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jerusalem", year: "numeric", month: "2-digit", day: "2-digit" });
 const ilDay = (t) => IL_DAY.format(new Date(t));
+/** תחילת היום בשעון ישראל, כ-ISO (UTC) — לפי ההפרש בפועל ביום הזה (חורף/קיץ) */
+const ilDayStartIso = (t) => {
+  const day = ilDay(t);
+  for (const off of [2, 3]) { const start = Date.parse(`${day}T00:00:00Z`) - off * 36e5; if (ilDay(start) === day && ilDay(start - 1) !== day) return iso(start); }
+  return `${day}T00:00:00.000Z`;
+};
 /** סגירת הניחושים: 27.10.2026 21:58 שעון ישראל (19:58 UTC) */
 export const GUESS_CLOSE_AT = Date.parse("2026-10-27T19:58:00Z");
 const clock = (env) => (env.NOW ? env.NOW() : Date.now());
@@ -2069,7 +2075,13 @@ const routes = {
     if (!acc.answer) throw new HttpError(403, "not_member");
     const answers = cleanAnswers(JSON.parse(r.def), body.answers);
     if (!answers) throw bad("answers");
-    await env.DB.prepare("INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload) VALUES (?, ?, ?, ?, ?)").bind(id, participant, iso(now), body.op, JSON.stringify(answers)).run();
+    // רק התשובה האחרונה בכל יום (שעון ישראל) נשמרת בכל סקר (הכרעת בעלים 02.11.2026): שמירה חוזרת באותו יום מחליפה את הקודמת
+    const dayStart = ilDayStartIso(now);
+    const exists = await env.DB.prepare("SELECT 1 AS x FROM survey_answers WHERE participant = ? AND survey = ? AND op_id = ?").bind(participant, id, body.op).first();
+    if (!exists) await env.DB.batch([
+      env.DB.prepare("DELETE FROM survey_answers WHERE participant = ? AND survey = ? AND created_at >= ?").bind(participant, id, dayStart),
+      env.DB.prepare("INSERT INTO survey_answers (survey, participant, created_at, op_id, payload) VALUES (?, ?, ?, ?, ?)").bind(id, participant, iso(now), body.op, JSON.stringify(answers)),
+    ]);
     return { ok: true, at: iso(now) };
   },
 
