@@ -950,3 +950,4 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-nav-bottom > a:not(.f-me):not(.f-ai):not(.f-grp) { text-align:center; }
 /* הבורר בימין הפס: הרשימה נפתחת מתחתיו, צמודה לימין */
 .f-bar > .f-election ul { inset-inline-start:0;transform:none; }
+.f-glogo { width:40px;height:40px;flex:none;border-radius:50%;object-fit:cover;border:1px solid rgb(var(--line)); }
