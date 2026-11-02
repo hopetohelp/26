@@ -12,6 +12,8 @@ const surveys = [
   { ...base, id: 'reelect', status: 'open', kind: 'survey', title: 'בחירות חוזרות?', closesAt: closes, questions: [{ id: 'q1', kind: 'single', title: 'יהיו בחירות חוזרות?', options: [{ id: 'yes', label: 'כן' }, { id: 'no', label: 'לא' }] }] },
   { ...base, id: 'turnout', status: 'open', kind: 'guess', title: 'ניחוש: אחוז הצבעה', questions: [{ id: 't', kind: 'range', title: 'אחוז ההצבעה', min: 60, max: 80, step: 1, minLabel: 'נמוך', maxLabel: 'גבוה' }] },
   { ...base, id: 'vote', status: 'open', kind: 'survey', title: 'מה הצבעתם?', questions: [{ id: 'vote', kind: 'single', title: 'מה הצבעתם?', options: ['הליכוד', 'ישר!', 'ביחד', 'הרשימה המשותפת', 'הדמוקרטים', 'ישראל ביתנו', 'רע"ם', 'לא הייתה לי זכות הצבעה', 'בחרתי לא להצביע', 'פתק לבן'].map((label, i) => ({ id: `o${i}`, label })) }] },
+  { ...base, id: 'done1', status: 'open', kind: 'survey', answered: true, title: 'סקר שעניתי', questions: [{ id: 'a', kind: 'single', title: 'א?', options: [{ id: 'y', label: 'כן' }, { id: 'n', label: 'לא' }] }] },
+  { ...base, id: 'wait1', status: 'closed', kind: 'guess', title: 'ניחוש שנסגר', truth: null, questions: [{ id: 'a', kind: 'single', title: 'א?', options: [{ id: 'y', label: 'כן' }, { id: 'n', label: 'לא' }] }] },
 ];
 const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, changed: 5, members: 30, outsiders: 5, days: [{ day: '2026-11-01', views: 70, saves: 20 }, { day: '2026-11-02', views: 50, saves: 20 }] };
 (async () => {
@@ -53,11 +55,14 @@ const stats = { views: 120, viewers: 80, embedViews: 30, saves: 40, savers: 35, 
       assert.match(body, /פתוח עד/, '"פתוח עד" מופיע');
       assert.doesNotMatch(body, /יוצגו מ/, 'אין "ממתין ל־50" מבחוץ');
       assert.equal(await page.getByRole('link', { name: 'הרכבת הממשלה' }).count(), 0, 'אין לשונית נפרדת לסקר');
-      for (const l of ['הכול', 'סקרים', 'ניחושים']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `מתג: ${l}`);
-      await page.getByRole('button', { name: 'ניחושים', exact: true }).click();
-      await page.waitForTimeout(200);
-      assert.ok(!(await page.getByText('בחירות חוזרות?').count()), 'סינון ניחושים מסתיר סקר');
-      assert.ok(await page.getByText('ניחוש: אחוז הצבעה').count(), 'סינון ניחושים משאיר ניחוש');
+      for (const l of ['להשתתף', 'השתתפתי', 'נסגרו']) assert.ok(await page.getByRole('button', { name: l, exact: true }).count(), `מתג: ${l}`);
+      for (const h of ['ניחושים', 'סקרים']) assert.ok(await page.getByRole('heading', { name: h, exact: true }).count(), `חלק: ${h}`);
+      assert.equal(await page.getByText('סקר שעניתי').count(), 0, 'מה שעניתי לא ב"להשתתף"');
+      await page.getByRole('button', { name: 'השתתפתי', exact: true }).click();
+      await page.getByText('סקר שעניתי').waitFor();
+      await page.getByRole('button', { name: 'נסגרו', exact: true }).click();
+      await page.getByRole('heading', { name: 'ממתינים לתוצאה' }).waitFor();
+      assert.ok(await page.getByRole('heading', { name: 'יש תוצאה' }).count(), 'יש תוצאה');
       await noScroll('list-guesses');
       // מעבר בין החלקים: מהניתוח "ניחושים" ⇐ סקרים, ומהסקרים "בחירות" ⇐ ניתוח
       assert.ok(await page.getByRole('link', { name: 'בחירות', exact: true }).count(), 'כפתור בחירות בחלק הסקרים');
