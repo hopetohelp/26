@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { closesLabel, getSurvey, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { closesLabel, ELECTION_RESULTS_NUMBER, getSurvey, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
@@ -74,7 +74,7 @@ export default function SurveysScreen() {
     <li key={s.id}>
       <Link to={to(s.id)} className="block px-4 py-3.5 no-underline text-ink">
         <span className="flex items-center gap-3">
-          <span className="flex-1 min-w-0"><span className="block font-bold">{s.title}</span><span className="block text-[12.5px] text-ink-soft">{statusText(s)}</span></span>
+          <span className="flex-1 min-w-0"><span className="block font-bold">{numbered(s)}</span><span className="block text-[12.5px] text-ink-soft">{statusText(s)}</span></span>
           {s.answered && current !== "done" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-signal">השתתפת ✓</span>}
           {current === "done" && <span className="f-btn sm">לעדכן</span>}
         </span>
@@ -82,11 +82,11 @@ export default function SurveysScreen() {
       </Link>
     </li>
   );
-  // "הניחושים — 120 המנדטים" (הכרעת בעלים 01.11.2026): ניחוש שנסגר ויש לו תוצאה
+  // "תוצאות הבחירות" — ניחוש 120 המנדטים, מספר 1 (הכרעות בעלים 01.11 ו-02.11.2026): נסגר ויש לו תוצאה
   const legacy = (
     <li key="guesses">
       <Link to="/surveys/guesses" className="block px-4 py-3.5 no-underline text-ink">
-        <span className="block font-bold">הניחושים — 120 המנדטים</span>
+        <span className="block font-bold">{ELECTION_RESULTS_NUMBER}. תוצאות הבחירות</span>
         <span className="block text-[12.5px] text-ink-soft">נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58</span>
       </Link>
     </li>

@@ -131,7 +131,7 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
       )}
 
       <section className="f-card space-y-3">
-        <h2 className="text-base font-bold">כותרת ושאלות</h2>
+        <h2 className="text-base font-bold">כותרת ושאלה</h2>
         <SurveyEditor value={editor} onChange={setEditor} />
       </section>
 

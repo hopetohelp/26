@@ -1,7 +1,7 @@
 import { slugFromName } from "../../../worker/crowd/lib/slug.js";
 import type { SurveyQuestion } from "../../lib/surveys";
 
-/** כותרת ושאלות בעריכה. בסקר חדש: רשימת אפשרויות או בחירה מטווח (הכרעת בעלים 01.11.2026; שיוך רשימות — רק בסקר שכבר קיים) */
+/** כותרת ושאלה אחת בעריכה. בסקר חדש: רשימת אפשרויות או בחירה מטווח (הכרעת בעלים 01.11.2026; שיוך רשימות — רק בסקר שכבר קיים) */
 export interface EditorValue { id: string; title: string; questions: SurveyQuestion[]; isNew: boolean; idTouched?: boolean }
 /** מזהה לטיני אוטומטי מהכותרת — אותו תעתיק כמו שמות הקבוצות (worker/crowd/lib/slug.js); המנהל יכול לשנות */
 export const autoId = (title: string) => (slugFromName(title) ?? "").replace(/-group$/, "").slice(0, 40);
@@ -28,9 +28,17 @@ export default function SurveyEditor({ value, onChange }: { value: EditorValue; 
           </div>
           <input className={input} placeholder="נוסח השאלה" value={q.title} onChange={(e) => setQ(i, { ...q, title: e.target.value })} />
           {q.kind === "single" && (
-            <label className="block"><span className="text-xs text-ink-soft">אפשרויות — אחת בכל שורה</span>
-              <textarea rows={3} className={`mt-1 ${input}`} value={q.options.map((o) => o.label).join("\n")}
-                onChange={(e) => setQ(i, { ...q, options: e.target.value.split("\n").map((label, k) => ({ id: q.options[k]?.id ?? `o${k + 1}`, label })) })} /></label>
+            // כל אפשרות בשדה נפרד, ו"+ אפשרות" להוספה (הכרעת בעלים 02.11.2026). המזהה של אפשרות קיימת נשמר — התשובות שכבר נשמרו נשארות שלה
+            <div className="space-y-1.5">
+              <span className="text-xs text-ink-soft">אפשרויות</span>
+              {q.options.map((o, k) => (
+                <div key={o.id} className="flex gap-2">
+                  <input className={input} aria-label={`אפשרות ${k + 1}`} value={o.label} onChange={(e) => setQ(i, { ...q, options: q.options.map((x, j) => (j === k ? { ...x, label: e.target.value } : x)) })} />
+                  <button type="button" className="f-btn shrink-0 !min-h-[40px]" aria-label={`הסרת אפשרות ${k + 1}`} disabled={q.options.length <= 2} onClick={() => setQ(i, { ...q, options: q.options.filter((_, j) => j !== k) })}>✕</button>
+                </div>
+              ))}
+              <button type="button" className="f-btn" onClick={() => { let n = q.options.length + 1; while (q.options.some((o) => o.id === `o${n}`)) n++; setQ(i, { ...q, options: [...q.options, { id: `o${n}`, label: "" }] }); }}>+ אפשרות</button>
+            </div>
           )}
           {q.kind === "range" && (
             <div className="grid grid-cols-3 gap-2">
@@ -47,10 +55,13 @@ export default function SurveyEditor({ value, onChange }: { value: EditorValue; 
           {q.kind === "assign" && <p className="text-xs text-ink-soft">{q.items.length} רשימות; המנדטים במסך הסקר — מתוצאות האמת באתר.</p>}
         </div>
       ))}
-      <div className="flex flex-wrap gap-2">
-        <button type="button" className="f-btn" onClick={() => set({ questions: [...value.questions, { id: nextId(), kind: "single", title: "", options: [{ id: "yes", label: "כן" }, { id: "no", label: "לא" }] }] })}>+ רשימת אפשרויות</button>
-        <button type="button" className="f-btn" onClick={() => set({ questions: [...value.questions, { id: nextId(), kind: "range", title: "", min: 1, max: 10, step: 1 }] })}>+ בחירה מטווח</button>
-      </div>
+      {/* שאלה אחת בכל סקר או ניחוש (הכרעת בעלים 02.11.2026): בוחרים סוג רק כשאין עדיין שאלה */}
+      {!value.questions.length && (
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="f-btn" onClick={() => set({ questions: [{ id: nextId(), kind: "single", title: "", options: [{ id: "yes", label: "כן" }, { id: "no", label: "לא" }] }] })}>+ רשימת אפשרויות</button>
+          <button type="button" className="f-btn" onClick={() => set({ questions: [{ id: nextId(), kind: "range", title: "", min: 1, max: 10, step: 1 }] })}>+ בחירה מטווח</button>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,6 +7,8 @@
  */
 export const SURVEY_ID = /^[a-z0-9-]{2,40}$/;
 const KEY = /^[a-z0-9_-]{1,40}$/;
+/** מזהה אפשרות: גם אותיות עבריות — סימני הרשימות של 2022 ("מחל", "פה"…) בסקר "מה הצבעתם בבחירות הקודמות" */
+const OPTION_KEY = /^[a-z0-9_\u05d0-\u05ea-]{1,40}$/;
 export const SURVEY_STATUS = new Set(["draft", "open", "closed"]);
 /** גישה למי שמחוץ לקבוצה: כלום / צפייה (סקר ותוצאות) / השתתפות */
 export const SURVEY_OUTSIDE = new Set(["none", "view", "answer"]);
@@ -24,7 +26,7 @@ function options(list, max = 40) {
   if (!Array.isArray(list) || list.length < 2 || list.length > max) return null;
   const seen = new Set(), out = [];
   for (const o of list) {
-    const id = typeof o?.id === "string" && KEY.test(o.id) ? o.id : null;
+    const id = typeof o?.id === "string" && OPTION_KEY.test(o.id) ? o.id : null;
     const label = text(o?.label, 80);
     if (!id || !label || seen.has(id)) return null;
     seen.add(id);
@@ -59,7 +61,7 @@ export function cleanDefinition(def) {
     if (!id || !qt || seen.has(id)) return null;
     seen.add(id);
     if (q.kind === "single") {
-      const opts = options(q.options, 12);
+      const opts = options(q.options, 60); // עד 60: סקרי ההצבעה (הכרעת בעלים 02.11.2026)
       if (!opts) return null;
       questions.push({ id, kind: "single", title: qt, options: opts });
     } else if (q.kind === "range") {
