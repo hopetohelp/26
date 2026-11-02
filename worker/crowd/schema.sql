@@ -550,7 +550,7 @@ UPDATE survey_answers SET payload = json_set(payload, '$.vote2022', 'other') WHE
 UPDATE surveys SET position = 2, def = json_set(def, '$.title', 'על מי הנשיא יטיל את הרכבת הממשלה?', '$.questions[0].title', 'על מי הנשיא יטיל את הרכבת הממשלה?'), updated_at = '2026-11-02T14:00:00Z' WHERE id = 'president' AND json_extract(def, '$.title') = 'על מי יטיל הנשיא את הרכבת הממשלה ראשון?';
 UPDATE surveys SET position = 3, def = json_set(def, '$.title', 'האם יהיו בחירות חוזרות?', '$.questions[0].title', 'האם יהיו בחירות חוזרות?'), updated_at = '2026-11-02T14:00:00Z' WHERE id = 'reelect' AND json_extract(def, '$.title') = 'בחירות חוזרות?';
 UPDATE surveys SET position = 4, def = json_set(def, '$.title', 'אם תקום ממשלה, איך היא תקום?'), updated_at = '2026-11-02T14:00:00Z' WHERE id = 'gov' AND json_extract(def, '$.title') = 'הרכבת הממשלה';
-UPDATE surveys SET position = 5 WHERE id = 'vote' AND position = 3;
+-- (הוחלף: מיקום "מה הצבעתם" נקבע בשורת הסדר החדש למטה)
 UPDATE surveys SET position = 6 WHERE id = 'vote2022' AND position = 4;
 UPDATE surveys SET def = json_set(def, '$.title', 'מה הצבעתם בבחירות (2026)?', '$.questions[0].title', 'מה הצבעתם בבחירות (2026)?'), updated_at = '2026-11-02T14:05:00Z' WHERE id = 'vote' AND json_extract(def, '$.title') = 'מה הצבעתם?';
 -- כניסות לסקר לפי שעה (UTC) — לגרף בניהול (הכרעת בעלים 02.11.2026)
@@ -560,3 +560,9 @@ CREATE TABLE IF NOT EXISTS survey_view_hours (
   n INTEGER NOT NULL DEFAULT 1,
   PRIMARY KEY (survey, hour)
 );
+-- סדר ושמות חדשים (הכרעת בעלים 02.11.2026): 1 — 2022 · 2 — "מה יהיו תוצאות הבחירות?" (הניחוש שנסגר, מחוץ לטבלה) · 3 — 2026 · 4 — הנשיא · 5 — בחירות חוזרות · 6 — איך תקום ממשלה. פעם אחת — לפי השם הקודם
+UPDATE surveys SET position = 1, def = json_set(def, '$.title', 'מה הצבעתם בבחירות קודמות 2022?', '$.questions[0].title', 'מה הצבעתם בבחירות קודמות 2022?'), updated_at = '2026-11-02T15:00:00Z' WHERE id = 'vote2022' AND json_extract(def, '$.title') = 'מה הצבעתם בבחירות הקודמות (2022)?';
+UPDATE surveys SET position = 3, def = json_set(def, '$.title', 'מה הצבעתם בבחירות 2026?', '$.questions[0].title', 'מה הצבעתם בבחירות 2026?'), updated_at = '2026-11-02T15:00:00Z' WHERE id = 'vote' AND json_extract(def, '$.title') = 'מה הצבעתם בבחירות (2026)?';
+UPDATE surveys SET position = 4, def = json_set(def, '$.title', 'על מי הנשיא יטיל את הרכבת הממשלה?', '$.questions[0].title', 'על מי הנשיא יטיל את הרכבת הממשלה?') WHERE id = 'president' AND position = 2;
+UPDATE surveys SET position = 5 WHERE id = 'reelect' AND position = 3;
+UPDATE surveys SET position = 6 WHERE id = 'gov' AND position = 4;

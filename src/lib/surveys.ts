@@ -114,7 +114,7 @@ export function majorityLine(seats: number): string {
   return `חסרים ${MAJORITY - seats} מנדטים לרוב`;
 }
 
-/** מספר סידורי לכל סקר וניחוש (הכרעת בעלים 02.11.2026) = position; מספר 1 — "תוצאות הבחירות", הניחוש שנסגר ב-27.10 */
-export const ELECTION_RESULTS_NUMBER = 1;
-export const ELECTION_RESULTS_TITLE = "1. מה יהיו תוצאות הבחירות?";
+/** מספר סידורי לכל סקר וניחוש (הכרעת בעלים 02.11.2026) = position; מספר 2 — "מה יהיו תוצאות הבחירות?", הניחוש שנסגר ב-27.10 */
+export const ELECTION_RESULTS_NUMBER = 2;
+export const ELECTION_RESULTS_TITLE = "2. מה יהיו תוצאות הבחירות?";
 export const numbered = (s: Pick<Survey, "position" | "title">) => (s.position > 0 ? `${s.position}. ${s.title}` : s.title);
