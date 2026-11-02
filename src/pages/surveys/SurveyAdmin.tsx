@@ -168,6 +168,8 @@ function StatsDrawer({ stats }: { stats: SurveyStats }) {
     for (let t = Date.parse(stats.hours[0].hour + ":00:00Z"), end = Date.now(); t <= end; t += 36e5) buckets.push({ t: new Date(t).toISOString(), hourly: true });
   }
   const at = (b: SeriesBucket) => byHour.get(b.t.slice(0, 13));
+  // קו מצטבר, כמו שאר הגרפים באתר (הכרעת בעלים 02.11.2026) — לא קפיצות לפי שעה
+  const cum = (k: "views" | "saves") => { let t = 0; return buckets.map((b) => (t += at(b)?.[k] ?? 0)); };
   if (!stats.days.length && !stats.hours.length) return null;
   return (
     <CardDrawer title="לפי זמן" open={open} onOpenChange={setOpen} className="mt-1">
@@ -177,8 +179,8 @@ function StatsDrawer({ stats }: { stats: SurveyStats }) {
       </div>
       {view === "graph" ? (
         <div className="space-y-3">
-          <div><div className="text-sm font-bold mb-1">שמירות לפי שעה</div><GroupSeriesChart buckets={buckets} points={buckets.map((b) => at(b)?.saves ?? 0)} label="שמירות לפי שעה" height={110} /></div>
-          <div><div className="text-sm font-bold mb-1">כניסות לפי שעה</div><GroupSeriesChart buckets={buckets} points={buckets.map((b) => at(b)?.views ?? 0)} label="כניסות לפי שעה" height={110} /></div>
+          <div><div className="text-sm font-bold mb-1">שמירות — מצטבר</div><GroupSeriesChart buckets={buckets} points={cum("saves")} label="שמירות מצטברות" height={110} /></div>
+          <div><div className="text-sm font-bold mb-1">כניסות — מצטבר</div><GroupSeriesChart buckets={buckets} points={cum("views")} label="כניסות מצטברות" height={110} /></div>
         </div>
       ) : (
         <table className="w-full text-sm tabular">

@@ -153,7 +153,7 @@ if (handoffTicket) {
   root.appendChild(link);
 } else {
 // כניסה לאתר בלי מסך בכתובת ⇐ מסך "תוצאות" (הכרעת בעלים 28.10.2026); "בית" בסרגל נשאר מסך הבית
-if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/surveys/guesses`);
+if (location.hash === "" || location.hash === "#" || location.hash === "#/") history.replaceState(null, "", `${location.pathname}${location.search}#/changes`);
 startOutbox();
 registerOffline();
 
@@ -164,7 +164,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<Layout />}>
           {/* מסך הבית עבר ללשונית "האחרונים" במסך "סקרים"; "/" ⇐ "תוצאות" (הכרעת בעלים 28.10.2026) */}
-          <Route index element={<Navigate to="/surveys/guesses" replace />} />
+          <Route index element={<Navigate to="/changes" replace />} />
           <Route path="today" element={<LegacyToday />} />
           <Route path="scenarios" element={SHOW_MODEL ? <Suspense fallback={<p>טוען תרחישים…</p>}><Scenarios /></Suspense> : <Moved to="/polls" />} />
           <Route path="polls" element={<PollsTabs />} />

@@ -98,7 +98,7 @@ const stats = { hours, viewsSince: '2026-11-02', saversSinceViews: 30, views: 12
       await page.getByText('120').first().waitFor();
       assert.equal(await page.getByText('משתמשים ששמרו', { exact: true }).count(), 0, 'בלי כרטיס משתמשים ששמרו');
       await page.getByRole('button', { name: /לפי זמן/ }).click();
-      await page.getByText('שמירות לפי שעה').first().waitFor();
+      await page.getByText('שמירות — מצטבר').first().waitFor();
       await noScroll('stats-graph');
       await page.getByRole('button', { name: 'טבלה', exact: true }).click();
       await page.locator('table').first().waitFor();
