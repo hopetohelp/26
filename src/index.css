@@ -951,3 +951,7 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 /* הבורר בימין הפס: הרשימה נפתחת מתחתיו, צמודה לימין */
 .f-bar > .f-election ul { inset-inline-start:0;transform:none; }
 .f-glogo { width:40px;height:40px;flex:none;border-radius:50%;object-fit:cover;border:1px solid rgb(var(--line)); }
+/* כפתור הקבוצה תמיד עגול, בכל רוחב (הכרעת בעלים 02.11.2026) */
+.f-nav-bottom > a.f-grp:not(.f-me):not(.f-ai), .f-nav > a.f-grp:not(.f-me):not(.f-ai) { flex:none;width:34px;height:34px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center; }
+/* "ניחושים" בצבע הטקסט והמסגרת של כפתור המערכת (הכרעת בעלים 02.11.2026) */
+.f-bar > a.f-btn { border-color:rgb(var(--signal));color:rgb(var(--signal)); }
