@@ -517,9 +517,9 @@ UPDATE surveys SET def = json_set(def, '$.questions', json_array(json_extract(de
   WHERE id = 'gov' AND json_array_length(json_extract(def, '$.questions')) = 3 AND json_extract(def, '$.questions[2].kind') = 'assign';
 -- שלושת הסקרים הפתוחים הם ניחושים (הכרעת בעלים 02.11.2026). פעם אחת: רק אם עוד אין הגדרות (OR IGNORE)
 INSERT OR IGNORE INTO survey_settings (survey, kind) VALUES ('gov', 'guess'), ('reelect', 'guess'), ('president', 'guess');
--- סקר "למה הצבעתם" (הכרעת בעלים 02.11.2026): הרשימות שנכנסו לכנסת לפי גודל, רשימה אחרת, לא הצבעתי
+-- סקר "מה הצבעתם" (הכרעת בעלים 02.11.2026): הרשימות שנכנסו לכנסת לפי גודל, רשימה אחרת, לא הצבעתי
 INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at) VALUES ('vote', 'gy7lelpbo', 'open',
- '{"title":"למה הצבעתם?","questions":[{"id":"vote","kind":"single","title":"למה הצבעתם?","options":[{"id":"likud","label":"הליכוד"},{"id":"yashar","label":"ישר!"},{"id":"together","label":"ביחד"},{"id":"joint","label":"הרשימה המשותפת"},{"id":"democrats","label":"הדמוקרטים"},{"id":"raam","label":"רע\"ם"},{"id":"utj","label":"יהדות התורה"},{"id":"yb","label":"ישראל ביתנו"},{"id":"otzma","label":"עוצמה יהודית"},{"id":"shas","label":"ש\"ס"},{"id":"rzp","label":"הציונות הדתית"},{"id":"other","label":"רשימה אחרת"},{"id":"none","label":"לא הצבעתי"}]}]}',
+ '{"title":"מה הצבעתם?","questions":[{"id":"vote","kind":"single","title":"מה הצבעתם?","options":[{"id":"likud","label":"הליכוד"},{"id":"yashar","label":"ישר!"},{"id":"together","label":"ביחד"},{"id":"joint","label":"הרשימה המשותפת"},{"id":"democrats","label":"הדמוקרטים"},{"id":"raam","label":"רע\"ם"},{"id":"utj","label":"יהדות התורה"},{"id":"yb","label":"ישראל ביתנו"},{"id":"otzma","label":"עוצמה יהודית"},{"id":"shas","label":"ש\"ס"},{"id":"rzp","label":"הציונות הדתית"},{"id":"other","label":"רשימה אחרת"},{"id":"none","label":"לא הצבעתי"}]}]}',
  3, '2026-11-02T00:00:00Z', '2026-11-02T00:00:00Z');
 INSERT OR IGNORE INTO survey_settings (survey, kind) VALUES ('vote', 'survey');
 INSERT OR IGNORE INTO survey_access (survey, outside) SELECT 'vote', outside FROM survey_access WHERE survey = 'gov';
