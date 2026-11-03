@@ -568,3 +568,25 @@ UPDATE surveys SET position = 5 WHERE id = 'reelect' AND position = 3;
 UPDATE surveys SET position = 6 WHERE id = 'gov' AND position = 4;
 -- רק התשובה האחרונה בכל יום בכל סקר (הכרעת בעלים 02.11.2026): ניקוי חד-פעמי של שמירות קודמות באותו יום (שעון ישראל, +2 שעות; חוזר על עצמו בלי השפעה)
 DELETE FROM survey_answers WHERE EXISTS (SELECT 1 FROM survey_answers b WHERE b.participant = survey_answers.participant AND b.survey = survey_answers.survey AND date(b.created_at, '+2 hours') = date(survey_answers.created_at, '+2 hours') AND (b.created_at > survey_answers.created_at OR (b.created_at = survey_answers.created_at AND b.id > survey_answers.id)));
+
+-- סקר 2 חדש: "למי אתה מתכנן להצביע בבחירות 2026?" (הכרעת בעלים 03.11.2026) — סגור, עם התשובות שנשמרו לפני הבחירות ב"ההצבעה שלי" (v2026).
+-- כל השאר זזים מקום אחד: 3 — "מה יהיו תוצאות הבחירות?" (מחוץ לטבלה) · 4 — 2026 · 5 — הנשיא · 6 — בחירות חוזרות · 7 — איך תקום ממשלה. פעם אחת — רק כשהסקר עוד לא קיים
+UPDATE surveys SET position = position + 1 WHERE id IN ('vote', 'president', 'reelect', 'gov') AND NOT EXISTS (SELECT 1 FROM surveys WHERE id = 'plan2026');
+INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, updated_at)
+  SELECT 'plan2026', group_id, 'closed', json_set(json_set(def, '$.title', 'למי אתה מתכנן להצביע בבחירות 2026?'), '$.questions', json_array(json_object('id', 'plan2026', 'kind', 'single', 'title', 'למי אתה מתכנן להצביע בבחירות 2026?', 'options', (
+    SELECT json_group_array(json(value)) FROM (
+      SELECT value, 0 AS g, key AS k FROM json_each(json_extract(def, '$.questions[0].options')) WHERE json_extract(value, '$.id') NOT IN ('ineligible', 'none', 'blank', 'other', 'private')
+      UNION ALL SELECT json_object('id', 'other', 'label', 'רשימה אחרת'), 1, 0
+      UNION ALL SELECT json_object('id', 'undecided', 'label', 'עוד לא החלטתי'), 2, 0
+      UNION ALL SELECT json_object('id', 'none', 'label', 'לא אצביע'), 2, 1
+      UNION ALL SELECT json_object('id', 'ineligible', 'label', 'אין לי זכות הצבעה'), 2, 2
+      UNION ALL SELECT json_object('id', 'private', 'label', 'מעדיף/ה לא לומר'), 3, 0
+      ORDER BY g, k))))), 2, '2026-11-03T00:00:00Z', '2026-11-03T00:00:00Z'
+  FROM surveys WHERE id = 'vote';
+-- סקר סגור: כולם רואים את התוצאות
+INSERT OR IGNORE INTO survey_settings (survey, kind, visibility) VALUES ('plan2026', 'survey', 'now');
+INSERT OR IGNORE INTO survey_access (survey, outside) SELECT 'plan2026', outside FROM survey_access WHERE survey = 'vote';
+-- התשובות: כל שמירה של v2026 (op_id ייחודי ⇐ פעם אחת); רשימה שאינה באפשרויות ⇐ "רשימה אחרת"
+INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload)
+  SELECT 'plan2026', participant, created_at, op_id || '~plan', json_object('plan2026', CASE WHEN EXISTS (SELECT 1 FROM surveys s, json_each(json_extract(s.def, '$.questions[0].options')) o WHERE s.id = 'plan2026' AND json_extract(o.value, '$.id') = json_extract(v.payload, '$.v2026')) THEN json_extract(v.payload, '$.v2026') ELSE 'other' END)
+  FROM versions v WHERE unit = 'vote' AND json_extract(payload, '$.v2026') IS NOT NULL;

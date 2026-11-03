@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import BackButton from "../../components/BackButton";
 import { Link } from "react-router-dom";
 import { call, CrowdError, type Dashboard, type GroupDashboard, type GroupPublic, type SeatsPayload } from "../../lib/crowdApi";
 import { seatsSum } from "../../lib/crowdValidate";
@@ -118,7 +119,7 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
       // הניחוש שלי בגושים (הכרעת בעלים 02.11.2026) — רק למי ששמר ניחוש מלא
       mine: unlocked ? b.lists.reduce((t, id) => t + (mine.seats[id]?.v ?? 0), 0) : null };
   });
-  const toggle = surveysPart && <><h1 className="text-[26px] font-display leading-tight mb-2">{ELECTION_RESULTS_TITLE}</h1>
+  const toggle = surveysPart && <><div className="mb-2"><BackButton /></div><h1 className="text-[26px] font-display leading-tight mb-2">{ELECTION_RESULTS_TITLE}</h1>
     <div className="f-seg fit mb-3" role="radiogroup" aria-label="תצוגה">
       <button type="button" aria-pressed={view === "graph"} onClick={() => setView("graph")}>גרף</button>
       <button type="button" aria-pressed={view === "table"} onClick={() => setView("table")}>טבלה</button>

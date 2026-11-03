@@ -15,7 +15,7 @@ import { SAVED_EVENT } from "../../lib/outbox";
 import { date, pctValue, rng, seatsFmt } from "../../lib/format";
 import { DEFAULT_BLOCS, GOV_IDS, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 import { voteContinuity } from "./voteContinuity";
-import { HAS_ACTUAL_PCT, votingRows } from "./votingRows";
+import { groupSmallMatrix, groupSmallRows, HAS_ACTUAL_PCT, SMALL_KEY, smallLast, votingRows } from "./votingRows";
 import { Notice } from "./ui";
 import { candleProfiles, quantileSegs } from "../../lib/chartLanguage";
 import ChartLegend, { rangeLine } from "../../components/ChartLegend";
@@ -300,19 +300,19 @@ type Unit = "pct" | "num";
 /** עד שתי ספרות אחרי הנקודה, בלי אפסים מיותרים: 1.65, 3, 0.5 */
 const fmtNum = (v: number) => String(Math.round(v * 100) / 100);
 
-export function VotingStats({ d, blankLists }: { d: D; blankLists?: string[] }) {
+export function VotingStats({ d, blankLists, groupSmall }: { d: D; blankLists?: string[]; groupSmall?: boolean }) {
   const [unit, setUnit] = useState<Unit>("num");
   const count = d.sectionParticipants?.vote2026 ?? d.sectionParticipants?.vote2022;
   return <Card className="!border-t-0">
     <SectionTitle title="הצבעה אז והיום" count={count} toggle={<Segmented size="sm" tight value={unit} onChange={setUnit} label="יחידת התצוגה" options={[{ id: "pct", label: "אחוז" }, { id: "num", label: "מספר" }]} />} />
-    <VoteComparison d={d} unit={unit} participants={count ?? 0} blankLists={blankLists} />
+    <VoteComparison d={d} unit={unit} participants={count ?? 0} blankLists={blankLists} groupSmall={groupSmall} />
     {unit === "num" && <p className="text-xs text-ink-soft mt-2">המספר בבחירות קודמות{HAS_ACTUAL_PCT ? " ובתוצאות האמת" : ""} הוא התוצאה הרשמית באחוזים ביחס למשתתפים בסקר.</p>}
-    {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} /></section>}
+    {d.matrix && <section className="mt-6"><Matrix d={d} unit={unit} groupSmall={groupSmall} /></section>}
   </Card>;
 }
 
-export function VoteComparison({ d, unit, participants, blankLists }: { d: D; unit: Unit; participants: number; blankLists?: string[] }) {
-  const rows = votingRows(d, blankLists);
+export function VoteComparison({ d, unit, participants, blankLists, groupSmall }: { d: D; unit: Unit; participants: number; blankLists?: string[]; groupSmall?: boolean }) {
+  const rows = groupSmall ? groupSmallRows(votingRows(d, blankLists)) : votingRows(d, blankLists);
   const cell = (v: number | null, n: number | null) => v === null ? "—" : unit === "pct" ? `${pctValue(v)}%` : n === null ? "—" : fmtNum(n);
   return <div className="overflow-x-auto"><table className="w-full table-fixed text-xs sm:text-sm tabular">
     <thead><tr className="text-ink-soft"><th className="text-start w-[28%]">רשימה</th><th className="font-normal">בחירות קודמות<br />כלל המצביעים</th><th className="font-normal">בחירות קודמות<br />הצביעו מהמשתתפים</th><th className="font-normal">בחירות הבאות<br />מתכננים להצביע</th><th className="font-normal">תוצאות אמת<br />כלל המצביעים</th></tr></thead>
@@ -324,15 +324,17 @@ export function VoteComparison({ d, unit, participants, blankLists }: { d: D; un
   </table></div>;
 }
 
-export function Matrix({ d, unit }: { d: D; unit: Unit }) {
-  const m = d.matrix!;
-  const continuity = voteContinuity(m);
+export function Matrix({ d, unit, groupSmall }: { d: D; unit: Unit; groupSmall?: boolean }) {
+  const continuity = voteContinuity(d.matrix!);
   const show = (n: number) => unit === "pct" ? `${pctValue(n / continuity.total * 100)}%` : String(n);
   // סדר (הכרעת בעלים 12.10.2026): שורות לפי מספר המשתתפים שבחרו בתשובה בבחירות קודמות, וטורים לפי מספר אלה שבחרו בה לבחירות הבאות
-  const colTotal = (col: string) => d.vote2026?.all[col]?.n ?? Object.values(m.rows).reduce((a, r) => a + (r.cells[col]?.n ?? 0), 0);
-  const rowTotal = (key: string, n: number) => d.vote2022?.all[key]?.n ?? n;
-  const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))].sort((a, b) => colTotal(b) - colTotal(a));
-  const rowsSorted = Object.entries(m.rows).sort(([ka, a], [kb, b]) => rowTotal(kb, b.n) - rowTotal(ka, a.n));
+  const colTotalOf = (mm: typeof d.matrix & {}, col: string) => d.vote2026?.all[col]?.n ?? Object.values(mm.rows).reduce((a, r) => a + (r.cells[col]?.n ?? 0), 0);
+  const rowTotal = (key: string, n: number) => key === SMALL_KEY ? n : d.vote2022?.all[key]?.n ?? n;
+  // רשימות עם עד 5 קולות ⇐ "רשימות אחרות" גם בטבלת המעבר (הכרעת בעלים 03.11.2026); שורה/טור אחרונים, לפני מי שלא הצביע
+  const m = groupSmall ? groupSmallMatrix(d.matrix!, (k, n) => rowTotal(k, n), (c) => colTotalOf(d.matrix!, c)) : d.matrix!;
+  const colTotal = (col: string) => col === SMALL_KEY ? Object.values(m.rows).reduce((a, r) => a + (r.cells[col]?.n ?? 0), 0) : colTotalOf(m, col);
+  const cols = [...new Set(Object.values(m.rows).flatMap((r) => Object.keys(r.cells)))].sort((a, b) => smallLast(a, b) || colTotal(b) - colTotal(a));
+  const rowsSorted = Object.entries(m.rows).sort(([ka, a], [kb, b]) => smallLast(ka, kb) || rowTotal(kb, b.n) - rowTotal(ka, a.n));
   return <div>
     {continuity.total > 0 && <p className="text-base text-center mb-3"><strong>{unit === "pct" ? show(continuity.changed) : `${continuity.changed}/${continuity.total}`}</strong> מהמצביעים בבחירות קודמות עברו מפלגה</p>}
     <div className="overflow-x-auto">
@@ -345,12 +347,12 @@ export function Matrix({ d, unit }: { d: D; unit: Unit }) {
           <th colSpan={Math.max(cols.length, 1)} className="p-1 text-center font-bold">מתכננים להצביע בבחירות הקרובות למפלגה</th>
         </tr>
         <tr className="border-b border-paper-line">
-          {cols.map((col) => <th key={col} className="p-1 font-normal text-ink-soft whitespace-nowrap">{v2026Name(col)}</th>)}
+          {cols.map((col) => <th key={col} className="p-1 font-normal text-ink-soft whitespace-nowrap">{col === SMALL_KEY ? "רשימות אחרות" : v2026Name(col)}</th>)}
         </tr>
       </thead>
       <tbody>
         {rowsSorted.map(([key, row]) => <tr key={key} className="border-t border-paper-line">
-          <th className="text-center p-1 font-bold whitespace-nowrap sticky start-0 bg-paper-card border-e-2 border-e-ink-faint/60">{v2022Name(key)}</th>
+          <th className="text-center p-1 font-bold whitespace-nowrap sticky start-0 bg-paper-card border-e-2 border-e-ink-faint/60">{key === SMALL_KEY ? "רשימות אחרות" : v2022Name(key)}</th>
           {cols.map((col) => {
             const cell = row.cells[col];
             const hidden = row.hidden || !cell || cell.hidden;

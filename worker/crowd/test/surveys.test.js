@@ -85,13 +85,14 @@ describe("site surveys over the worker", () => {
     expect((await call("/survey?id=reelect")).status).toBe(404);
     const m = await member("in@x.co");
     const r = await call("/surveys", { token: m });
-    expect(r.data.surveys.map((s) => s.id)).toEqual(["vote2022", "vote", "president", "reelect", "gov"]);
-    expect(r.data.surveys.map((s) => s.position)).toEqual([1, 3, 4, 5, 6]);
-    expect(r.data.surveys.map((s) => s.kind)).toEqual(["survey", "survey", "guess", "guess", "guess"]);
-    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["vote2022"], ["vote"], ["first"], ["reelect"], ["coalition"]]);
+    expect(r.data.surveys.map((s) => s.id)).toEqual(["vote2022", "plan2026", "vote", "president", "reelect", "gov"]);
+    expect(r.data.surveys.map((s) => s.position)).toEqual([1, 2, 4, 5, 6, 7]);
+    expect(r.data.surveys.map((s) => s.kind)).toEqual(["survey", "survey", "survey", "guess", "guess", "guess"]);
+    expect(r.data.surveys.find((s) => s.id === "plan2026").status).toBe("closed");
+    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["vote2022"], ["plan2026"], ["vote"], ["first"], ["reelect"], ["coalition"]]);
     expect(r.data.surveys[0].questions[0].options.length).toBe(22);
-    expect(r.data.surveys[4].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
-    expect(r.data.surveys[3]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
+    expect(r.data.surveys[5].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
+    expect(r.data.surveys[4]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
   });
 
   it("outsiders: view shows survey without answering; answer lets them take part", async () => {
@@ -195,7 +196,7 @@ describe("site surveys over the worker", () => {
       expect(r.data.survey.questions[0].options.length).toBe(cur.questions[0].options.length);
     }
     const r = await call("/survey/manage", { token: m, body: { group: G, id: "next", def: { title: "חדש", questions: [{ id: "q1", kind: "single", title: "?", options: [{ id: "a", label: "א" }, { id: "b", label: "ב" }] }] } } });
-    expect(r.data.survey.position).toBe(7);
+    expect(r.data.survey.position).toBe(8);
   });
 
   it("new surveys: options or range only — no list assignment", async () => {
