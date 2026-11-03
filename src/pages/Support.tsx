@@ -24,7 +24,6 @@ import { getPicture } from "../lib/crowdSession";
 import { FEEDBACK_URL, accountSupport, getThread, mergeSavedThreads, replyToThread, saveThread, sendFeedback } from "../lib/feedback";
 import { OLD_WELCOME, WELCOME, markSupportSeen, useSupportUnread } from "../lib/supportUnread";
 import PrivateChat, { PrivateKeyEntry } from "./PrivateChat";
-import { PersonalBlocsEditor } from "./simple/shared";
 import { usePrivateKey } from "../lib/privateChat";
 
 /** מפתח ניהול שנשמר בדפדפן הזה (כניסה דרך קישור הניהול) — גם הוא מציג את הכפתור לממשק הניהול */
@@ -228,7 +227,7 @@ function grow(el: HTMLTextAreaElement) {
   el.style.height = `${Math.min(el.scrollHeight + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth), line * 5 + extra)}px`;
 }
 
-type DrawerId = "details" | "history" | "data" | "assistants" | "blocs" | "surveys";
+type DrawerId = "details" | "history" | "data" | "assistants" | "surveys";
 
 /** היסטוריה אחת עם מתג ניחושים / סקרים (הכרעת בעלים 02.11.2026); בחלק הסקרים — הסקרים קודם */
 function History({ session, surveysFirst }: { session: ReturnType<typeof useSession>; surveysFirst: boolean }) {
@@ -252,12 +251,10 @@ export default function Support() {
     // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
   const ask = useSearchParams()[0].has("ask");
   const groupsLink = useSearchParams()[0].has("groups");
-  // "עוגת המנדטים שלי" מהגרפים (?blocs) ⇐ המגירה של החלוקה פתוחה
-  const blocsLink = useSearchParams()[0].has("blocs");
   // ?history ⇐ מגירת "היסטוריית ניחושים" פתוחה (למחוברים)
   const historyLink = useSearchParams()[0].has("history") && !!token;
   // קישור ישיר למנהל קבוצה (#/support?groups): מחובר ⇐ מסך "ניהול קבוצה"; בלי כניסה — קודם את פרטי הכניסה
-  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(historyLink ? ["history"] : blocsLink ? ["blocs"] : groupsLink ? ["details"] : token || ask ? [] : ["details"]));
+  const [open, setOpen] = useState<Set<DrawerId>>(() => new Set<DrawerId>(historyLink ? ["history"] : groupsLink ? ["details"] : token || ask ? [] : ["details"]));
   const toggle = (id: DrawerId) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   useEffect(() => { if (me?.needsEmail) setOpen((s) => new Set(s).add("details")); }, [me?.needsEmail]);
   const blocked = useServerBlocked();
@@ -269,7 +266,7 @@ export default function Support() {
 
   // מסך רחב: תפריט מגירות מימין ותוכן המגירה שנבחרה משמאל; ברירת המחדל — השיחה עם צוות האתר
   const wide = useWide();
-  const [selected, setSelected] = useState<DrawerId>(historyLink ? "history" : blocsLink ? "blocs" : "details");
+  const [selected, setSelected] = useState<DrawerId>(historyLink ? "history" : "details");
   useEffect(() => { if (me?.needsEmail || (token && !me && blocked)) setSelected("details"); }, [me?.needsEmail, token, me, blocked]);
   const badge = me?.needsEmail || (me?.legacy && !me.verified) ? <span className="w-2.5 h-2.5 rounded-full bg-warn" aria-label="(נדרש אימות)" /> : undefined;
   const details = (
@@ -305,7 +302,6 @@ export default function Support() {
     const items = [
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "history", title: "היסטוריה", content: <History session={session} surveysFirst={surveysPart} /> }] : []),
-      ...([{ id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> }]),
     ];
     return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId)} after={admin} label="אזור אישי" />;
   }
@@ -315,7 +311,6 @@ export default function Support() {
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="היסטוריה" open={open.has("history")} onToggle={() => toggle("history")}><History session={session} surveysFirst={surveysPart} /></Drawer>}
-        {<Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>}
         {admin}
       </div>
     </div>
