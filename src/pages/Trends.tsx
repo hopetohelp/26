@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
 import { Segmented } from "../components/Choice";
@@ -11,7 +12,7 @@ import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean
 import { rollingBlocMean } from "../lib/blocTrend";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { ELECTION_DAY, results2026 } from "../lib/guessAccuracyData";
-import { date, dateRange, seatsFmt } from "../lib/format";
+import { date, seatsFmt } from "../lib/format";
 import { electionMarkers } from "../lib/electionMarkers";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -46,7 +47,6 @@ const FIRMS = [...new Map(usablePolls.map((p) => [p.firm, p.firmHe])).entries()]
 const SERIES = SOURCE_OPTIONS.filter((o) => o.seriesId);
 const pollFilter = (key: string) => (p: Poll) =>
   key === "all" || (key.startsWith("firm:") ? p.firm === key.slice(5) : pollsterKey(p) === key.slice(7));
-const pollLabel = (key: string) => (key === "all" ? undefined : key.startsWith("firm:") ? FIRMS.find(([f]) => f === key.slice(5))?.[1] : SERIES.find((o) => o.id === key)?.label);
 
 /** רשימות לפי תוצאות 2026: נכנסו (לפי מנדטים), התמודדו ולא נכנסו, וכל השאר */
 const seats26 = results2026.seats as Record<string, number>;
@@ -60,6 +60,13 @@ const withdrawnOf = (id: string) => lists2026.find((l) => l.id === id)?.withdraw
 const lastMeasuredTime = (id: string, ps: Poll[]) =>
   ps.reduce((acc, p) => (typeof seatsIn(p, id) === "number" ? Math.max(acc, toTime(p.end)) : acc), 0) || undefined;
 
+/** המקרא — פעם אחת, בגרף הראשון (הכרעת בעלים 03.11.2026) */
+const LEGEND = [
+  { kind: "candle" as const, text: "הטווח החכם - ככל שכמות הסקרים יורדת הצבע נחלש (סקרי המכונים ב-14 הימים האחרונים, בכל 3 ימים)" },
+  { kind: "line" as const, text: "הקו מחבר את הממוצעים של הנקודות" },
+  { kind: "diamond" as const, text: "מעוין בסוף הגרף לתוצאות אמת" },
+];
+
 type Group = { label: string; ids: string[] };
 type Item = { id: string; label: string };
 
@@ -71,8 +78,15 @@ function MultiPick({ label, groups, sections, value, onChange }: { label: string
   const named = groups.find((g) => g.ids.length === value.length && has(g.ids));
   const summary = named ? named.label : value.length === 1 ? sections.flat().find((i) => i.id === value[0])?.label : `${value.length} נבחרו`;
   const row = "flex items-center gap-2 min-h-[40px] px-3 cursor-pointer hover:bg-paper";
+  // לחיצה מחוץ לרשימה סוגרת אותה (הכרעת בעלים 03.11.2026)
+  const ref = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const off = (e: PointerEvent) => { if (ref.current?.open && !ref.current.contains(e.target as Node)) ref.current.open = false; };
+    document.addEventListener("pointerdown", off);
+    return () => document.removeEventListener("pointerdown", off);
+  }, []);
   return (
-    <details className="c-multipick relative">
+    <details ref={ref} className="c-multipick relative">
       <summary aria-label={label} className="flex items-center justify-between gap-2 h-[50px] px-3 rounded-theme bg-paper border-[1.5px] border-ink/[.35] text-sm font-semibold cursor-pointer list-none">
         <span className="truncate">{summary}</span>
         <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-ink-soft shrink-0"><path d="m6 9 6 6 6-6" /></svg>
@@ -102,7 +116,6 @@ export default function Trends() {
   const [blocIds, setBlocIds] = useState<string[]>(SIMPLE_BLOCS.map((b) => b.id));
 
   const from = PERIODS.find((p) => p.id === period)!.from;
-  const who = pollLabel(poll);
   const rawSource = useMemo(() => usablePolls.filter(pollFilter(poll)), [poll]);
   const source = useMemo(() => withLineage(rawSource), [rawSource]);
   const days = POINT_WINDOW;
@@ -127,7 +140,6 @@ export default function Trends() {
   const blocData = useMemo(() => rollingBlocMean(blocs, rawSource, from, to, days, 1), [blocs.map((b) => b.id).join(), rawSource, from, to, days]); // eslint-disable-line react-hooks/exhaustive-deps
   const blocSeries: Series[] = blocData.filter((b) => b.points.length).map((b) => ({ id: `bloc-${b.id}`, name: b.name, color: colorOf(b.id, SIMPLE_BLOCS.findIndex((x) => x.id === b.id)), points: b.points }));
 
-  const span = `${dateRange(from, to)}${who ? `, ${who}` : ", כל המכונים"}`;
   const empty = <p className="text-ink-soft py-8 text-center">אין סקרים בתקופה ובבחירה הזו.</p>;
   const assumption = "נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון ומזמין מ-14 הימים שמסתיימים בה. בכל המכונים ובבחירה אחת — קפסולה מ-0 עד הגבוה בין הסקרים בנקודה. ממוצע תיאורי, לא מודל.";
 
@@ -184,10 +196,9 @@ export default function Trends() {
             />
           </div>
         </div>
-        <Explained kind="סיכום סקרים" source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)" asOf={`הסקרים עד ${date(to)}`} assumption={assumption} methodAnchor="trends">
+        <Explained bare kind="סיכום סקרים" source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)" asOf={`הסקרים עד ${date(to)}`} assumption={assumption} methodAnchor="trends">
           <ChartWithTable
             asTable={asTable}
-            summary={`${labeled.length === 1 ? "רשימה אחת" : `${labeled.length} רשימות`}, ${span}.`}
             chart={labeled.length ? (
               <CandleTrend
                 title={labeled.length === 1 ? `מגמת המנדטים: ${labeled[0].name}` : "מגמת המנדטים לפי רשימה"}
@@ -196,6 +207,7 @@ export default function Trends() {
                 zeroBase={capsules(ids.length)}
                 windowDays={days}
                 resultDots
+                legendEntries={LEGEND}
                 markers={labeled.flatMap((x) => electionMarkers([x.id], labeled.length === 1 ? undefined : x.id).filter((m) => !m.asMean))}
               />
             ) : empty}
@@ -220,10 +232,9 @@ export default function Trends() {
             />
           </div>
         </div>
-        <Explained showMeta={false} kind="סיכום סקרים" source="הסקרים שנבחרו" asOf={date(to)} assumption="סוכמים בתוך כל סקר ורק אז מחשבים ממוצע. סקר שסקר לפחות מפלגה אחת מהגוש נכנס; מפלגה שלא נסקרה נספרת 0." methodAnchor="personal-blocs">
+        <Explained bare kind="סיכום סקרים" source="הסקרים שנבחרו" asOf={date(to)} assumption="סוכמים בתוך כל סקר ורק אז מחשבים ממוצע. סקר שסקר לפחות מפלגה אחת מהגוש נכנס; מפלגה שלא נסקרה נספרת 0." methodAnchor="personal-blocs">
           <ChartWithTable
             asTable={asTable}
-            summary={`${blocSeries.length === 1 ? "גוש אחד" : `${blocSeries.length} גושים`}, ${span}.`}
             chart={blocSeries.length ? (
               <CandleTrend
                 title={blocSeries.length === 1 ? `ממוצע מנדטים: ${blocSeries[0].name}` : "מגמת המנדטים לפי גוש"}
@@ -233,6 +244,7 @@ export default function Trends() {
                 zeroBase={capsules(blocSeries.length)}
                 windowDays={days}
                 resultDots
+                hideLegend
                 markers={blocSeries.flatMap((x) => electionMarkers(blocs.find((b) => `bloc-${b.id}` === x.id)?.lists ?? [], blocSeries.length === 1 ? undefined : x.id).filter((m) => !m.asMean))}
               />
             ) : empty}
@@ -240,6 +252,7 @@ export default function Trends() {
           />
         </Explained>
       </Card>
+      <p className="text-center text-sm"><Link to="/method#trends" className="font-semibold">איך זה חושב?</Link></p>
     </div>
   );
 }
