@@ -576,11 +576,7 @@ INSERT OR IGNORE INTO surveys (id, group_id, status, def, position, created_at, 
   SELECT 'plan2026', group_id, 'closed', json_set(json_set(def, '$.title', 'למי אתה מתכנן להצביע בבחירות 2026?'), '$.questions', json_array(json_object('id', 'plan2026', 'kind', 'single', 'title', 'למי אתה מתכנן להצביע בבחירות 2026?', 'options', (
     SELECT json_group_array(json(value)) FROM (
       SELECT value, 0 AS g, key AS k FROM json_each(json_extract(def, '$.questions[0].options')) WHERE json_extract(value, '$.id') NOT IN ('ineligible', 'none', 'blank', 'other', 'private')
-      UNION ALL SELECT json_object('id', 'other', 'label', 'רשימה אחרת'), 1, 0
-      UNION ALL SELECT json_object('id', 'undecided', 'label', 'עוד לא החלטתי'), 2, 0
-      UNION ALL SELECT json_object('id', 'none', 'label', 'לא אצביע'), 2, 1
-      UNION ALL SELECT json_object('id', 'ineligible', 'label', 'אין לי זכות הצבעה'), 2, 2
-      UNION ALL SELECT json_object('id', 'private', 'label', 'מעדיף/ה לא לומר'), 3, 0
+      UNION ALL SELECT value, 1, key FROM json_each('[{"id":"other","label":"רשימה אחרת"},{"id":"undecided","label":"עוד לא החלטתי"},{"id":"none","label":"לא אצביע"},{"id":"ineligible","label":"אין לי זכות הצבעה"},{"id":"private","label":"מעדיף/ה לא לומר"}]')
       ORDER BY g, k))))), 2, '2026-11-03T00:00:00Z', '2026-11-03T00:00:00Z'
   FROM surveys WHERE id = 'vote';
 -- סקר סגור: כולם רואים את התוצאות
