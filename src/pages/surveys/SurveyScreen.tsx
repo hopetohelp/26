@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
 import LeaveGuard from "../../components/LeaveGuard";
+import BackButton from "../../components/BackButton";
 import { useCrowdDashboard } from "../../lib/sources";
 import { VotingStats } from "../guess/Dashboard";
 import { realCount, REAL_SHARE_SURVEYS } from "../guess/votingRows";
@@ -14,7 +15,7 @@ function VotersCard({ embed }: { embed: boolean }) {
     <section className="f-card space-y-3">
       <h2 className="text-base font-bold">התפלגות המצביעים</h2>
       <p className="text-xs text-ink-soft">הנתונים אינם סקר עדכני אלא חישוב מצטבר מפתיחת האתר, לצורך השוואה של אמינות הניחושים.</p>
-      {d ? <VotingStats d={d} /> : <p className="text-sm text-ink-soft">טוען…</p>}
+      {d ? <VotingStats d={d} groupSmall /> : <p className="text-sm text-ink-soft">טוען…</p>}
       <Link to={`/s/vote2022${embed ? "?embed=1" : ""}`} className="f-btn">לסקר על הבחירות הקודמות (2022)</Link>
     </section>
   );
@@ -287,6 +288,7 @@ export default function SurveyScreen() {
     <>
     <LeaveGuard dirty={!!token && changed && !managing && state !== "saving"} onSave={() => save()} />
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
+      <div className="pt-2"><BackButton /></div>
       <div className="flex items-start justify-between gap-2 pt-1">
         <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
         {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}
