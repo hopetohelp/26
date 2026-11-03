@@ -112,24 +112,6 @@ function ModePicker() {
  * המתג מוסיף פקדים ופירוט באותו מסך; אינו מחליף מעטפת.
  * שם המסך נקרא מסרגל הניווט הצף: במחשב בפס העליון, בטלפון צף למטה.
  */
-// מסתיר את הכותרת בגלילה למטה ומחזיר אותה מיד בגלילה למעלה
-function useHideOnScrollDown(on: boolean) {
-  const [hidden, setHidden] = useState(false);
-  useEffect(() => {
-    if (!on) { setHidden(false); return; }
-    let last = window.scrollY;
-    const f = () => {
-      const y = window.scrollY, d = y - last;
-      if (Math.abs(d) < 6) return;
-      setHidden(d > 0 && y > 80);
-      last = y;
-    };
-    window.addEventListener("scroll", f, { passive: true });
-    return () => window.removeEventListener("scroll", f);
-  }, [on]);
-  return hidden;
-}
-
 function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: string | null; navTop: boolean; onFit: (top: boolean) => void }) {
   const { pathname } = useLocation();
   const surveys = useSurveysPart(pathname);
@@ -393,7 +375,6 @@ function LayoutBody() {
   // בטלפון ובטאבלט לגובה — הסרגל תמיד בתחתית, גם כשיש לו מקום למעלה (הכרעת בעלים 28.10.2026)
   const forceBottom = useForceBottomNav();
   useVerifyOnLoad();
-  const barHidden = useHideOnScrollDown(!(navTop && !forceBottom));
   const { advanced } = useInterface();
   const { pathname, hash, search } = useLocation();
   const unread = useSupportUnread(pathname);
@@ -415,8 +396,8 @@ function LayoutBody() {
       </a>
       <DisclaimerBar />
       {/* רק סרגל הניווט מרחף; בלי ניווט בכותרת (טלפון) הכותרת נגללת עם העמוד (הכרעת בעלים 29.10.2026) */}
-      {/* טלפון: הכותרת נגללת עם העמוד, וחוזרת מיד כשמתחילים לגלול למעלה (הכרעת בעלים 03.11.2026) */}
-      <header className={navTop && !forceBottom ? "sticky top-0 z-40" : `f-head-reveal sticky top-0 z-40${barHidden ? " is-hidden" : ""}`}><FocusBar member={hagzara} logo={hagzaraLogo} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
+      {/* הפס העליון קבוע ושקוף בכל המכשירים (הכרעת בעלים 03.11.2026) */}
+      <header className="sticky top-0 z-40"><FocusBar member={hagzara} logo={hagzaraLogo} navTop={navTop && !forceBottom} onFit={setNavTop} /></header>
       <AccessCard />
       <PrivacyCard />
       <main id="main" data-screen={pathname.split("/")[1] || "home"} tabIndex={-1} style={pathname === "/ai" || !bottomCover ? undefined : { paddingBottom: Math.max(bottomCover + 32, 96) }} className={`flex-1 w-full mx-auto px-4 md:px-6 py-6 outline-none ${pathname === "/ai" ? "pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0" : "pb-28 md:pb-24"}`}>
