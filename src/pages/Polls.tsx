@@ -15,14 +15,14 @@ const PAGE = 50;
 /** ארבעת הגושים בכל סקר — אחרי טורי הדיוק, עם קו הפרדה בסוף (הכרעת בעלים 03.11.2026); החישוב — groupSeatsIn / exitSeats (מקור אחד) */
 const blocCells = (vals: (number | null | undefined)[], tint?: (i: number, v: number) => CSSProperties | undefined) => <>{vals.map((v, i) => <td key={i} style={v == null || !tint ? undefined : tint(i, v)} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
 /**
- * סולם 9 צבעים (הכרעת בעלים 03.11.2026), כמו במפת המכונים: אדום (מתחת לתוצאה) ⇐ לבן (בדיוק) ⇐ ירוק (מעל).
- * המרחק מתוצאות האמת יחסית לסטייה הגדולה ביותר של הסקרים באותו טור: 4 דרגות לכל כיוון.
+ * סולם אחד לפי מרחק מהתוצאה (הכרעת בעלים 03.11.2026): לבן = בדיוק, ואדום מתחזק ב-4 דרגות ככל שהנתון רחוק יותר — בלי ירוק,
+ * כדי שלא ייראה "טוב יותר". המרחק יחסית לסטייה הגדולה ביותר באותו טור בטבלה.
  */
 const STEPS = [0, 0.12, 0.24, 0.36, 0.5];
 const scaleTint = (d: number, span: number): CSSProperties | undefined => {
   if (!span || d === 0) return undefined;
   const level = Math.min(4, Math.max(1, Math.round((Math.abs(d) / span) * 4)));
-  return { backgroundColor: `rgb(var(${d > 0 ? "--pos" : "--neg"}) / ${STEPS[level]})` };
+  return { backgroundColor: `rgb(var(--neg) / ${STEPS[level]})` };
 };
 const ACTUAL_BLOCS = SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0));
 /** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
