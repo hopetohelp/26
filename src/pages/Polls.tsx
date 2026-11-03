@@ -261,6 +261,12 @@ const gap = (v: number | null | undefined, actual: number | null) => {
   return d === 0 ? "0" : <Delta change={{ up: d > 0, text: String(Math.abs(d)) }} />;
 };
 
+/** אחוז הערכים שזהים לתוצאה, מתוך הערכים הקיימים; אין ערכים — "—" */
+const exactShare = (xs: (number | null | undefined)[], actual: number) => {
+  const ok = xs.filter((x): x is number => x != null);
+  return ok.length ? `${Math.round((ok.filter((x) => Math.round(x) === actual).length / ok.length) * 100)}%` : "—";
+};
+
 /** meanRows — השורות שעליהן מחושב הממוצע (ב"כל הסקרים": כל הסקרים בסינון, לא רק העמוד המוצג) */
 function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; meanRows?: ArchiveRow[]; meanLists?: string[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
   if (!rows.length) return null;
@@ -331,6 +337,13 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
               {meanBlocs.map((v, i) => <td key={i} className={`px-1 text-center tabular-nums${i === meanBlocs.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{gap(v, ready ? ACTUAL_BLOCS[i] : null)}</td>)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{gap(meanValues[id]?.s ?? (id in results2026.seats ? 0 : null), ready && id in results2026.seats ? results2026.seats[id] : null)}</td>)}
             </tr>
+            {/* "אחוז שדייקו" (הכרעת בעלים 03.11.2026): מתוך הסקרים בטבלה שפרסמו נתון לרשימה או לגוש — כמה נתנו בדיוק את התוצאה */}
+            {ready && <tr className="border-b-2 border-ink font-semibold align-top">
+              <th scope="row" className="py-2 pe-2 text-right">אחוז שדייקו</th>
+              <td className="px-1 text-center border-s-2 border-paper-line">—</td><td className="px-1 text-center">—</td><td className="px-1 text-center border-e-2 border-paper-line">—</td>
+              {SIMPLE_BLOCS.map((_, i) => <td key={i} className={`px-1 text-center tabular-nums${i === SIMPLE_BLOCS.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{exactShare(meanRows.map((r) => r.blocs[i]), ACTUAL_BLOCS[i])}</td>)}
+              {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{id in results2026.seats ? exactShare(meanRows.map((r) => r.values[id]?.s), results2026.seats[id]) : "—"}</td>)}
+            </tr>}
             {rows.map((r, k) => {
               const isOpen = open === r.id;
               const pctOnly = Object.values(r.values).every((v) => v.s === undefined);
