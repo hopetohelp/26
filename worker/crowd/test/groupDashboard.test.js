@@ -331,6 +331,26 @@ describe("group guess moderation", () => {
   });
 });
 
+describe("outlier filter switch (site-wide)", () => {
+  it("on by default; manager turns it off ⇐ a rejected guess is no longer rejected; back on restores it", async () => {
+    const mgr = await account("boss@x.co");
+    for (let i = 0; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const member = await account("x@x.co");
+    expect((await call("/group/outlier-filter", { token: member, body: { group: "gizra", on: false } })).status).toBe(403);
+    expect((await call("/group/outlier-filter?group=gizra", { token: mgr })).data).toEqual({ on: true });
+    const d = (await call("/group/guesses?group=gizra", { token: mgr })).data;
+    const flagged = d.rows.find((r) => r.status === "pending");
+    if (flagged) await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: d.salt, handle: flagged.handle, decision: "rejected" } });
+    expect((await call("/group/outlier-filter", { token: mgr, body: { group: "gizra", on: false } })).data).toEqual({ on: false });
+    const off = (await call("/group/guesses?group=gizra", { token: mgr })).data;
+    expect(off.rows.some((r) => r.status === "pending" || r.status === "rejected")).toBe(false);
+    await call("/group/outlier-filter", { token: mgr, body: { group: "gizra", on: true } });
+    if (flagged) expect((await call("/group/guesses?group=gizra", { token: mgr })).data.rows.some((r) => r.status === "rejected")).toBe(true);
+  });
+});
+
 describe("group comparison reference", () => {
   it("defaults to polls; only the manager changes it; members see it", async () => {
     const mgr = await account("boss@x.co");

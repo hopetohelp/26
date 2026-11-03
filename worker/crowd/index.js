@@ -868,6 +868,11 @@ function blocsOf(seatsPayload, definition) {
 }
 
 /** מצב הבדיקה של ההשערות: הגרסה האחרונה (מנדטים) של כל משתתף, ותוצאת הבדיקה מול שאר הגולשים */
+/** סינון חריגים בניחוש המנדטים — מתג אחד לכל האתר (הכרעת בעלים 03.11.2026). כבוי ⇐ אין סינון: כל ניחוש נספר, בלי ממתינים ובלי נדחים */
+export const NO_FILTER = { pending: new Map(), rejected: new Set(), isExcluded: () => false };
+async function outlierFilterOn(env) {
+  try { return ((await env.DB.prepare("SELECT value FROM site_settings WHERE key = 'outlier_filter'").first())?.value ?? "on") !== "off"; } catch { return true; }
+}
 async function moderationState(env) {
   const data = await env.DB.batch([
     env.DB.prepare(PARTICIPANTS_SQL),
@@ -885,7 +890,10 @@ async function moderationState(env) {
   // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
   const counted = latest.filter((v) => !review.has(v.participant));
   // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
-  const raw = moderate(counted, new Map()).pending;
+  const filterOn = await outlierFilterOn(env);
+  const raw = filterOn ? moderate(counted, new Map()).pending : new Map();
+  // כבוי: בלי כתיבות (אישור אוטומטי / ניקוי החלטות), כדי שהדלקה מחדש תחזיר את המצב הקודם
+  if (!filterOn) return { latest, review, verified, blocsBy, mod: { ...NO_FILTER, decisions, raw, manual: new Set() } };
   // השערה ממתינה שנכנסה לטווח, או תקינה שעוד לא סומנה ⇐ מאושרת אוטומטית, לצמיתות (הכרעת בעלים 12.10.2026)
   const fresh = counted.filter((v) => !decisions.has(v.id) && !raw.has(v.id)).map((v) => v.id);
   if (fresh.length) {
@@ -1748,6 +1756,17 @@ const routes = {
     if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
     return { group: id, min: GROUP_MIN, ...(await guessRows(env, members)) };
   },
+  // מתג סינון החריגים בניחוש המנדטים — לכל האתר; מנהל קבוצה או מנהל האתר (הכרעת בעלים 03.11.2026)
+  "GET /group/outlier-filter": async ({ env, request, now, url }) => {
+    await requireManager(env, request, now, url.searchParams.get("group"));
+    return { on: await outlierFilterOn(env) };
+  },
+  "POST /group/outlier-filter": async ({ env, request, now, body }) => {
+    await requireManager(env, request, now, body.group);
+    if (typeof body.on !== "boolean") throw bad("on");
+    await env.DB.prepare("INSERT INTO site_settings (key, value, updated_at) VALUES ('outlier_filter', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(body.on ? "on" : "off", iso(now)).run();
+    return { on: body.on };
+  },
   "POST /group/guesses/decide": async ({ env, request, now, body }) => {
     const id = await requireManager(env, request, now, body.group);
     const members = await groupMemberSet(env, id);
@@ -2267,7 +2286,7 @@ async function computeDashboard(env) {
   const decisions = new Map((data[3].results || []).map((r) => [r.version_id, r.decision]));
   const versions = (data[1].results || []).map(r => ({ ...r, payload: readPayload(r) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
-  const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
+  const res = aggregate({ participants, versions, now, blocNames, decisions, moderation: (await outlierFilterOn(env)) ? null : NO_FILTER, aggregationId: `live-${now}` });
   // הפודיום: מי במקום — נשאר בשרת (podiumIds, ל-/me); לדפדפן יוצאים רק הנתונים והשם הציבורי שבחר המשתתף (הכרעת בעלים 28.10.2026)
   const top = res.dashboard.seats?.podium ?? [];
   const podiumIds = top.map((t) => t.p);
@@ -2369,7 +2388,7 @@ export async function runAggregation(env, now) {
   const names = (await env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'").all()).results || [];
   const blocNames = Object.fromEntries(names.map(r => [r.composition,r.name]));
   const decisions = await loadDecisions(env);
-  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId, decisions });
+  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId, decisions, moderation: (await outlierFilterOn(env)) ? null : NO_FILTER });
   const ins = (section, json, publishedAt, contributors = 0, snapshot = null) =>
     env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json, contributors, snapshot) VALUES (?, ?, ?, ?, ?, ?)").bind(
       aggregationId,

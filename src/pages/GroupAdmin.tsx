@@ -96,8 +96,9 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         </Section>
         {/* ניחושים חריגים: כרטיס מצב לכל הניחושים, ורשימה עם סינון הכל/ממתין/אושר/נדחה (הכרעת בעלים 03.11.2026) */}
         <Section title="ניחושים חריגים">
+          <OutlierSwitch id={id} token={token} onChanged={() => setReload((r) => r + 1)} />
           {ins && !ins.belowMin && <Guesses ins={ins} />}
-          <AdminGuesses group={{
+          <AdminGuesses key={reload} group={{
             load: () => call(`/group/guesses?group=${q(id)}`, { token }),
             decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
           }} />
@@ -153,6 +154,24 @@ function SupportThreads({ id, token, stats }: { id: string; token: string; stats
   );
 }
 
+/** מתג סינון החריגים בניחוש המנדטים — לכל האתר; כבוי ⇐ אין סינון (הכרעת בעלים 03.11.2026) */
+function OutlierSwitch({ id, token, onChanged }: { id: string; token: string; onChanged: () => void }) {
+  const [on, setOn] = useState<boolean | null>(null);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { void call<{ on: boolean }>(`/group/outlier-filter?group=${q(id)}`, { token }).then((r) => setOn(r.on), () => setOn(null)); }, [id, token]);
+  if (on === null) return null;
+  const toggle = async () => {
+    setBusy(true);
+    try { setOn((await call<{ on: boolean }>("/group/outlier-filter", { token, body: { group: id, on: !on } })).on); onChanged(); } finally { setBusy(false); }
+  };
+  return (
+    <button type="button" role="switch" aria-checked={on} disabled={busy} onClick={() => void toggle()} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start">
+      <span className="font-bold">סינון חריגים בניחוש המנדטים (כל האתר)</span>
+      <span aria-hidden="true" className={`shrink-0 w-12 h-7 rounded-full border-2 border-ink p-0.5 flex ${on ? "bg-ink justify-end" : "bg-paper-card justify-start"}`}><span className={`w-5 h-5 rounded-full ${on ? "bg-paper-card" : "bg-ink"}`} /></span>
+    </button>
+  );
+}
+
 /** מגירה במסך (הכרעת בעלים 25.10.2026): כל חלק מקופל; open = פתוח בכניסה */
 function Section({ title, aside, lead, open = false, children }: { title: string; aside?: ReactNode; lead?: ReactNode; open?: boolean; children: ReactNode }) {
   return (
@@ -193,6 +212,7 @@ const MEASURES: { key: GroupSeriesKey; label: string; group: "list" | "outside" 
   { key: "seats", label: "שמרו ניחוש", group: "list" },
   { key: "survey", label: "שמרו סקר", group: "list" },
   { key: "visits", label: "נכנסו לאתר (לפחות חצי שעה בין לבין)", group: "list" },
+  { key: "outsideLink", label: "נכנסו דרך הקישור", group: "outside" },
   { key: "outsideFirst", label: "הקישור היה הכניסה הראשונה שלהם לאתר", group: "outside" },
 ];
 

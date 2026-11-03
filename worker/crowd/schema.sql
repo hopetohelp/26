@@ -599,3 +599,9 @@ UPDATE surveys SET position = 3 WHERE id = 'vote' AND position = 4;
 UPDATE surveys SET position = 2 WHERE id = 'president' AND position = 5;
 UPDATE surveys SET position = 3 WHERE id = 'reelect' AND position = 6;
 UPDATE surveys SET position = 4 WHERE id = 'gov' AND position = 7;
+-- הגדרות לכל האתר (מפתח ⇐ ערך). outlier_filter = on/off: סינון חריגים בניחוש המנדטים (הכרעת בעלים 03.11.2026)
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
