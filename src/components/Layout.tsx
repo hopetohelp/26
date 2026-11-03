@@ -229,7 +229,8 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
     {/* במחשב הבורר בתוך הסרגל שבמרכז הפס, לפני הלשוניות (הכרעת בעלים 02.11.2026) */}
     <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
     {/* קבוצה — אייקון בלבד, משמאל לפרופיל (הכרעת בעלים 02.11.2026) */}
-    {!surveysPart && groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /></NavLink>)}
+    {/* באזור הניחושים — אותו כפתור, למסך ניהול הסקרים והניחושים של הקבוצה (הכרעת בעלים 03.11.2026) */}
+    {groupTab.map(t => <NavLink key={t.to} to={surveysPart ? "/surveys/manage" : t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /></NavLink>)}
     {surveysPart ? guessAreaTabs(Date.now(), guessShown).map((t) => <Link key={t.to} to={t.to} aria-current={(t.to === "/surveys" ? pathname === "/surveys" || pathname.startsWith("/s/") : t.to === "/community" ? pathname === "/community" || pathname.startsWith("/g/") : pathname === t.to) ? "page" : undefined}>{t.label}</Link>) : scroll
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}

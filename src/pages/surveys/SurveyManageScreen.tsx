@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, type Survey, type SurveyKind } from "../../lib/surveys";
+import CardDrawer from "../../components/CardDrawer";
+import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, type Survey, type SurveyKind, type SurveyStats } from "../../lib/surveys";
 import SurveyEditor, { type EditorValue } from "./SurveyEditor";
 
 /**
@@ -21,6 +22,12 @@ export default function SurveyManageScreen() {
   const [msg, setMsg] = useState<string | null>(null);
   const load = useCallback(() => { listSurveys(token).then((r) => setSurveys(r.surveys.filter((s) => s.manage))).catch(() => setMsg("רשימת הסקרים אינה זמינה כרגע.")); }, [token]);
   useEffect(load, [load]);
+  // סטטיסטיקה לכל סקר/ניחוש — לסיכום המרוכז ולטבלה שבמגירה (הכרעת בעלים 03.11.2026)
+  const [stats, setStats] = useState<Record<string, SurveyStats | null>>({});
+  useEffect(() => {
+    if (!token || !surveys) return;
+    for (const s of surveys) surveyStats(token, s.id).then((r) => setStats((o) => ({ ...o, [s.id]: r })), () => setStats((o) => ({ ...o, [s.id]: null })));
+  }, [token, surveys]);
   // קישורים ישנים לעריכה (?edit=<מזהה>) ⇐ מצב הניהול שבמסך הסקר
   const edit = useSearchParams()[0].get("edit");
   if (edit) return <Navigate to={`/s/${edit}?manage=1`} replace />;
@@ -39,10 +46,19 @@ export default function SurveyManageScreen() {
 
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <h1 className="text-[26px] font-display pt-1">ניהול סקרים</h1>
+      <h1 className="text-[26px] font-display pt-1">ניהול קבוצה</h1>
       {msg && <p role="status" className="text-sm rounded-xl bg-accent-soft px-3 py-2">{msg}</p>}
       {!draft ? <>
-        <button type="button" className="f-btn pri" onClick={() => { setDraft({ id: "", title: "", questions: [], isNew: true }); setKind("survey"); }}>סקר חדש</button>
+        {/* 1. יצירה */}
+        <button type="button" className="f-btn pri" onClick={() => { setDraft({ id: "", title: "", questions: [], isNew: true }); setKind("survey"); }}>ניחוש/סקר חדש</button>
+        {/* 2. סטטיסטיקה מרוכזת על כל הסקרים והניחושים */}
+        <StatsSummary surveys={surveys ?? []} stats={stats} />
+        {/* 3. מגירה: טבלת סטטיסטיקה לכל סקר/ניחוש */}
+        <CardDrawer title="סטטיסטיקה לכל סקר וניחוש" className="">
+          <StatsTable surveys={surveys ?? []} stats={stats} />
+        </CardDrawer>
+        {/* 4. אזור ניהול */}
+        <h2 className="text-base font-bold pt-2">ניהול</h2>
         <ul className="f-card !p-0 divide-y divide-paper-line">
           {(surveys ?? []).map((s) => (
             <li key={s.id} className="flex items-center gap-3 px-4 py-3">
@@ -53,6 +69,7 @@ export default function SurveyManageScreen() {
           ))}
           {surveys && !surveys.length && <li className="px-4 py-3 text-ink-soft">אין עדיין סקרים.</li>}
         </ul>
+        <Link to="/group-admin" className="f-btn">ניהול הקבוצה</Link>
       </> : (
         <section className="f-card space-y-3">
           <h2 className="text-base font-bold">סקר חדש</h2>
@@ -69,5 +86,35 @@ export default function SurveyManageScreen() {
         </section>
       )}
     </main>
+  );
+}
+
+type StatKey = "views" | "viewers" | "members" | "outsiders" | "changed";
+const COLS: [StatKey, string][] = [["views", "כניסות"], ["viewers", "צופים שונים"], ["members", "שמרו — מהגזרה"], ["outsiders", "שמרו — מחוץ לגזרה"], ["changed", "עדכנו תשובה"]];
+
+/** סיכום מרוכז: סכום כל הסקרים והניחושים */
+function StatsSummary({ surveys, stats }: { surveys: Survey[]; stats: Record<string, SurveyStats | null> }) {
+  const got = surveys.map((s) => stats[s.id]).filter((x): x is SurveyStats => !!x);
+  if (!got.length) return null;
+  const sum = (k: StatKey) => got.reduce((a, x) => a + x[k], 0);
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="rounded-xl bg-[rgb(var(--grid))] px-3 py-2 text-center"><b className="block font-num text-xl">{surveys.length}</b><span className="text-xs text-ink-soft">סקרים וניחושים</span></div>
+      {COLS.map(([k, l]) => <div key={k} className="rounded-xl bg-[rgb(var(--grid))] px-3 py-2 text-center"><b className="block font-num text-xl">{sum(k)}</b><span className="text-xs text-ink-soft">{l}</span></div>)}
+    </div>
+  );
+}
+
+/** טבלה: שורה לכל סקר/ניחוש */
+function StatsTable({ surveys, stats }: { surveys: Survey[]; stats: Record<string, SurveyStats | null> }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead><tr className="text-ink-soft"><th className="text-start py-1">שם</th>{COLS.map(([k, l]) => <th key={k} className="text-center px-1">{l}</th>)}</tr></thead>
+        <tbody>{surveys.map((s) => { const x = stats[s.id]; return (
+          <tr key={s.id} className="border-t border-paper-line"><td className="py-1">{kindLabel(s.kind)}: {s.title}</td>{COLS.map(([k]) => <td key={k} className="text-center font-num">{x ? x[k] : "—"}</td>)}</tr>
+        ); })}</tbody>
+      </table>
+    </div>
   );
 }
