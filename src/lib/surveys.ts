@@ -137,10 +137,10 @@ export function majorityLine(seats: number): string {
 
 /** מספר סידורי לכל סקר וניחוש (הכרעת בעלים 02.11.2026) = position; מספר 2 — "מה יהיו תוצאות הבחירות?", הניחוש שנסגר ב-27.10 */
 export const ELECTION_RESULTS_NUMBER = 2;
-export const ELECTION_RESULTS_TITLE = "ניחוש: 3. מה יהיו תוצאות הבחירות?";
-/** בתחילת הכותרת — "ניחוש" או "סקר" (הכרעת בעלים 03.11.2026) */
+export const ELECTION_RESULTS_TITLE = "3. ניחוש: מה יהיו תוצאות הבחירות?";
+/** "ניחוש" או "סקר" אחרי המספר (הכרעת בעלים 03.11.2026) */
 export const kindPrefix = (kind: string) => (kind === "guess" ? "ניחוש: " : "סקר: ");
-export const numbered = (s: Pick<Survey, "position" | "title" | "kind">) => kindPrefix(s.kind) + (s.position > 0 ? `${s.position}. ${s.title}` : s.title);
+export const numbered = (s: Pick<Survey, "position" | "title" | "kind">) => (s.position > 0 ? `${s.position}. ` : "") + kindPrefix(s.kind) + s.title;
 
 /** "12 משתתפים", ובסקר שפתוח גם מחוץ לגזרה — "12 משתתפים - 8 מהגזרה" (הכרעת בעלים 03.11.2026) */
 export function participantsLabel(p: { all: number; group: number; outside: boolean }) {
