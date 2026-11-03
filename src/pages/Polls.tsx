@@ -32,10 +32,10 @@ const scaleTint = (d: number, span: number): CSSProperties | undefined => {
   return { backgroundColor: `rgb(var(--neg) / ${STEPS[level]})` };
 };
 const ACTUAL_BLOCS = SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0));
-/** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
+/** שלושת טורי הטעות (הכרעת בעלים 03.11.2026: טעו במנדטים / במפלגות / בגושים) — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
 const accCells = (t: SeatTags | null) => <>
-  <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t?.seats ?? "—"}</td>
-  <td className="px-1 text-center tabular-nums whitespace-nowrap"><bdi dir="ltr">{t ? `${t.exact}/${t.of}` : "—"}</bdi></td>
+  <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t ? 120 - t.seats : "—"}</td>
+  <td className="px-1 text-center tabular-nums">{t ? t.of - t.exact : "—"}</td>
   <td className="px-1 text-center tabular-nums border-e-2 border-paper-line">{t?.blocErr ?? "—"}</td>
 </>;
 /** הסקרים האחרונים של כל מכון לפני הבחירות — לתווית "סקר אחרון" */
@@ -301,8 +301,8 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
   const accTinted = (t: SeatTags | null) => {
     if (!t || !spans) return accCells(t);
     return <>
-      <td style={scaleTint(t.seats - 120, spans.seats)} className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t.seats}</td>
-      <td style={scaleTint(t.exact - t.of, spans.exact)} className="px-1 text-center tabular-nums whitespace-nowrap"><bdi dir="ltr">{t.exact}/{t.of}</bdi></td>
+      <td style={scaleTint(t.seats - 120, spans.seats)} className="px-1 text-center tabular-nums border-s-2 border-paper-line">{120 - t.seats}</td>
+      <td style={scaleTint(t.exact - t.of, spans.exact)} className="px-1 text-center tabular-nums">{t.of - t.exact}</td>
       <td style={scaleTint(-t.blocErr, spans.blocErr)} className="px-1 text-center tabular-nums border-e-2 border-paper-line">{t.blocErr}</td>
     </>;
   };
@@ -315,8 +315,8 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
           <thead>
             <tr className="text-right border-b border-paper-line">
               <th scope="col" className="py-2 pe-2 min-w-[11rem]">סקר</th>
-              <th scope="col" className="px-1 whitespace-nowrap border-s-2 border-paper-line">מנדטים מדויקים</th>
-              <th scope="col" className="px-1 whitespace-nowrap">מפלגות מדויקות</th>
+              <th scope="col" className="px-1 whitespace-nowrap border-s-2 border-paper-line">טעו במנדטים</th>
+              <th scope="col" className="px-1 whitespace-nowrap">טעו במפלגות</th>
               <th scope="col" className="px-1 whitespace-nowrap border-e-2 border-paper-line">טעות בגושים</th>
               {SIMPLE_BLOCS.map((b, i) => <th key={b.id} scope="col" className={`px-1 whitespace-nowrap${i === SIMPLE_BLOCS.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{b.short}</th>)}
               {listCols.map((id) => <th key={id} scope="col" className="px-1 font-medium whitespace-nowrap">{listName(id)}</th>)}
