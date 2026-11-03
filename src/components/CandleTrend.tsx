@@ -260,11 +260,11 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {axis.lines.map(({ v, major }) => (
           <line key={v} x1={X0} x2={candleMode ? 100 : X1 + 2} y1={Y(v)} y2={Y(v)} className={major ? "stroke-ink" : "stroke-ink-faint"} strokeWidth={major ? 1.5 : 1} strokeDasharray="5 4" {...ln} />
         ))}
-        {candleSeries && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="trend-line fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
+        {candleSeries && !resultDots && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="trend-line fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
         {multi && series.map((s, si) => (
           <path key={s.id} className="trend-line" d={smoothPath(s.points.map((p) => ({ x: X(p.t), y: Y(p.v) })))} fill="none" stroke={colors[si]} strokeWidth={2.4} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dashed ? "5 4" : undefined} {...ln} />
         ))}
-        {resultDots && links.map((l, i) => <line key={`k${i}`} className={candleMode ? "stroke-accent" : ""} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={candleMode ? 2.5 : 2.4} strokeLinecap="round" {...ln} />)}
+        {resultDots && !candleMode && links.map((l, i) => <line key={`k${i}`} className={candleMode ? "stroke-accent" : ""} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={candleMode ? 2.5 : 2.4} strokeLinecap="round" {...ln} />)}
         {!resultDots && links.map((l, i) => <line key={`k${i}`} className={`trend-pop ${candleMode ? "stroke-accent" : ""}`} style={{ animationDelay: "900ms" }} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={2} strokeDasharray="4 3" {...ln} />)}
       </svg>
       <div className="absolute left-0 top-0 w-full" style={{ height }}>
@@ -278,7 +278,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
           <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si], animationDelay: `${delayOf(s.points[k].t)}ms` }} />
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
-        {resultDots && candleMode && markers.map((m, i) => <span key={`rc${i}`} aria-hidden="true" className="mk-pv absolute rounded-full bg-ink/40" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%`, height: `${Y(Math.max(0, axis.lo)) - Y(m.v)}%` }} />)}
+        {resultDots && candleMode && markers.map((m, i) => <span key={`rc${i}`} aria-hidden="true" className="mk-pv absolute rounded-full bg-ink/25 border-2 border-ink box-border" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%`, height: `${Y(Math.max(0, axis.lo)) - Y(m.v)}%` }} />)}
         {resultDots && markers.map((m, i) => { const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : 0; const c = candleMode ? "rgb(var(--ink))" : colors[Math.max(0, si)]; return <span key={`r${i}`} aria-hidden="true" title={`${m.label ?? "תוצאות אמת"}: ${valueText(m.v)}`} className="absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[1px]" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%`, background: c }} />; })}
         {!resultDots && markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV showLabels={false} key={`m${i}`} left={`${X(m.t)}%`} {...(m.asMean ? { primary: { value: m.v, label: m.label ?? "" } } : { secondary: { value: m.v, label: m.label ?? "תוצאה בפועל" } })} y={Y} format={valueText} />)}
         {ends.map((e) => (
