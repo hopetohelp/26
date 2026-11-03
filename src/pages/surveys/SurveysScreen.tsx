@@ -65,7 +65,8 @@ export default function SurveysScreen() {
   const open = all.filter((s) => s.status !== "closed");
   const closed = all.filter((s) => s.status === "closed").sort(newest);
   const todo = token ? open.filter((s) => !s.answered) : open;
-  const done = token ? open.filter((s) => s.answered) : [];
+  // סקר שנסגר ושענית עליו מופיע גם ב"השתתפתי" (הכרעת בעלים 03.11.2026)
+  const done = token ? [...open.filter((s) => s.answered), ...closed.filter((s) => s.answered)].sort((a, b) => a.position - b.position) : [];
   const tabs: [Tab, string][] = token ? [["todo", "להשתתף"], ["done", "השתתפתי"], ["closed", "נסגרו"]] : [["todo", "פתוחים"], ["closed", "נסגרו"]];
   // ברירת מחדל "להשתתף"; אם אין שם כלום — "השתתפתי"
   const current: Tab = tab ?? (todo.length || !done.length ? "todo" : "done");
@@ -76,7 +77,7 @@ export default function SurveysScreen() {
         <span className="flex items-center gap-3">
           <span className="flex-1 min-w-0"><span className="block font-bold">{numbered(s)}</span><span className="block text-[12.5px] text-ink-soft">{statusText(s)}</span></span>
           {s.answered && current !== "done" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-signal">השתתפת ✓</span>}
-          {current === "done" && <span className="f-btn sm">לעדכן</span>}
+          {current === "done" && s.status !== "closed" && <span className="f-btn sm">לעדכן</span>}
         </span>
         {details[s.id] && <MiniResults detail={details[s.id]} />}
       </Link>
