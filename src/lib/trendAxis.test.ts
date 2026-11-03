@@ -6,7 +6,7 @@ describe("trendAxis", () => {
     const a = trendAxis([45, 51.5, 64]);
     expect(a.lo).toBe(45);
     expect(a.hi).toBe(65);
-    expect(a.lines.map((l) => l.v)).toEqual([45, 50, 55, 60, 65]);
+    expect(a.lines.map((l) => l.v)).toEqual([45, 50, 55, 61, 65]);
   });
   it("בגוש: 61 במקום 60, בשחור", () => {
     const a = trendAxis([45, 51.5, 64], { majority: 61 });
@@ -67,4 +67,7 @@ describe("visibleLines", () => {
     expect(visibleLines(lines, [[11, 29]]).map((l) => l.v)).toEqual([10, 15, 20, 25, 30]);
   });
   it("בלי נתונים — כל הקווים", () => expect(visibleLines(lines, [])).toHaveLength(6));
+  it("טווח מעל 30: קו כל 10, ו-61 במקום 60", () => {
+    expect(trendAxis([5, 54]).lines.map((l) => l.v)).toEqual([0, 10, 20, 30, 40, 50, 61]);
+  });
 });
