@@ -194,7 +194,8 @@ export default function Trends() {
                 forceLine={!capsules(ids.length)}
                 zeroBase={capsules(ids.length)}
                 windowDays={days}
-                markers={labeled.flatMap((x) => electionMarkers([x.id], labeled.length === 1 ? undefined : x.id))}
+                resultDots
+                markers={labeled.flatMap((x) => electionMarkers([x.id], labeled.length === 1 ? undefined : x.id).filter((m) => !m.asMean))}
               />
             ) : empty}
             table={table(labeled)}
@@ -230,7 +231,8 @@ export default function Trends() {
                 forceLine={!capsules(blocSeries.length)}
                 zeroBase={capsules(blocSeries.length)}
                 windowDays={days}
-                markers={blocSeries.length === 1 ? electionMarkers(blocs.find((b) => `bloc-${b.id}` === blocSeries[0].id)?.lists ?? []) : []}
+                resultDots
+                markers={blocSeries.flatMap((x) => electionMarkers(blocs.find((b) => `bloc-${b.id}` === x.id)?.lists ?? [], blocSeries.length === 1 ? undefined : x.id).filter((m) => !m.asMean))}
               />
             ) : empty}
             table={table(blocSeries)}
