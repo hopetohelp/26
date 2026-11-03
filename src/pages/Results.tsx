@@ -1,8 +1,12 @@
+import { Link } from "react-router-dom";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
+import { SIMPLE_BLOCS } from "../lib/simpleSources";
+import { bloc2022 } from "../lib/voterFlow";
+import { blocSlices, Stack } from "./simple/shared";
 import { results2026 } from "../lib/guessAccuracyData";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
@@ -59,7 +63,7 @@ export default function Results({ id }: { id: string }) {
   const fmtDiff = (d: readonly (readonly [string, number])[]) => fmtDiffOf(e, d);
   return (
     <>
-      <Split title={`הכנסת ה-${e.knesset} · ${e.label}`} lead="כמה קולות עולה מנדט, וכמה קולות חסרים לכל רשימה למנדט נוסף או לאיבוד מנדט." primary={<>
+      <Split primary={<>
       <Card>
         <Explained
           kind="חישוב לפי החוק"
@@ -67,6 +71,7 @@ export default function Results({ id }: { id: string }) {
           asOf="התוצאות הסופיות"
           assumption="המודד: סך הקולות של הרשימות שעברו את אחוז החסימה, חלקי 120, החלק השלם (סעיף 81(ב) לחוק). השינוי הקרוב — אותו מנוע, כולל הסכמי העודפים."
           methodAnchor="results"
+          bare
         >
           <dl className="grid grid-cols-2 gap-3 text-center">
             <div><dt className="text-sm text-ink-soft">מצביעים למנדט</dt><dd className="text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</dd></div>
@@ -75,7 +80,10 @@ export default function Results({ id }: { id: string }) {
         </Explained>
       </Card>
       {/* חלוקת הכנסת לגושים — הועברה ממסך "מה השתנה" (הכרעת בעלים 03.11.2026) */}
-      {e.id === "k26" ? <PersonalBlocs title="חלוקת הכנסת בתוצאות אוקטובר 2026" source="תוצאות אמת 2026" asOf="התוצאות הסופיות" datasets={[{ values: results2026.seats, source: "תוצאות אמת 2026", asOf: "התוצאות הסופיות" }]} /> : <PastBlocs id={e.id} />}
+      {/* כרטיס עם גרף שורה של ארבעת הגושים; לחיצה על גוש מציגה את הרשימות שבו (הכרעת בעלים 03.11.2026). 2015–2021 — אין שיוך לגושים, נשארת המגירה */}
+      {e.id === "k26" ? <BlocBarCard defs={SIMPLE_BLOCS} values={results2026.seats} />
+        : e.knesset === 25 ? <BlocBarCard defs={SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) }))} values={Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={(x) => shortOf(e, x)} />
+        : <PastBlocs id={e.id} />}
       </>} secondary={<>
       <Card title="כמה קולות חסרים למנדט הבא">
         <div className="overflow-x-auto">
@@ -87,37 +95,27 @@ export default function Results({ id }: { id: string }) {
                 <th scope="col">קולות</th>
                 <th scope="col">אחוז</th>
                 <th scope="col">מנדטים</th>
-                <th scope="col">מתוכם שלמים</th>
-                <th scope="col">למנדט נוסף / לאיבוד מנדט</th>
+                <th scope="col">מעודפים</th>
+                <th scope="col">פער לשינוי במנדט</th>
               </tr>
             </thead>
             <tbody>
-              {passing.map((l) => (
+              {/* כל הרשימות, כולל אלה שלא עברו את אחוז החסימה (הכרעת בעלים 03.11.2026) */}
+              {[...passing, ...failed].map((l) => (
                 <tr key={l.letters} className="border-b border-paper-line/60">
                   <th scope="row" className="text-right py-1 font-medium" title={l.name}>{l.short}</th>
                   <td className="tabular-nums">{num(l.votes)}</td>
                   <td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td>
                   <td className="tabular-nums font-bold">{l.seats}</td>
-                  <td className="tabular-nums">{a.withAll.whole[l.letters]}</td>
+                  <td className="tabular-nums">{l.seats - (a.withAll.whole[l.letters] ?? 0) > 0 && `\u2066+${l.seats - (a.withAll.whole[l.letters] ?? 0)}\u2069`}</td>
                   <td className="tabular-nums text-[11px]"><ShiftLine shift={changes?.[l.letters]?.up ?? null} up /><ShiftLine shift={changes?.[l.letters]?.down ?? null} up={false} /></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-ink-soft mt-2">"מתוכם שלמים" — מנדטים לפני חלוקת העודפים.</p>
       </Card>
 
-      {/* הועבר ממסך "סקרים" (הכרעת בעלים 03.11.2026): כל רשימה שלא עברה, בקולות ובאחוז מהכשרים */}
-      {failed.length > 0 && <Card title="לא עברו את אחוז החסימה">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <caption className="sr-only">הרשימות שלא עברו את אחוז החסימה</caption>
-            <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1">רשימה</th><th scope="col">קולות</th><th scope="col">מהכשרים</th></tr></thead>
-            <tbody>{failed.map((l) => <tr key={l.letters} className="border-b border-paper-line/60"><th scope="row" className="text-right py-1 font-medium" title={l.name}>{l.short}</th><td className="tabular-nums">{num(l.votes)}</td><td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td></tr>)}</tbody>
-          </table>
-        </div>
-      </Card>}
 
       {/* כרטיס אחד, טקסט ממורכז (הכרעת בעלים 03.11.2026): מה ההסכמים, ומה היה קורה בלי אף הסכם */}
       <Card title="הסכמי העודפים">
@@ -127,8 +125,9 @@ export default function Results({ id }: { id: string }) {
           asOf="התוצאות הסופיות"
           assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי אף הסכם. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת."
           methodAnchor="agreements"
+          bare
         >
-          <div className="text-center space-y-2">
+          <div className="f-card text-center space-y-2">
             <p>{e.agreements.map(([x, y]) => {
               const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
               return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
@@ -138,6 +137,8 @@ export default function Results({ id }: { id: string }) {
         </Explained>
       </Card>
       </>} />
+      {/* שורת המקור אחת, בסוף העמוד (הכרעת בעלים 03.11.2026); קישור-טקסט — חריג מותר בשורת המקור */}
+      <p className="mt-4 text-sm text-ink-soft">התוצאות הסופיות · <Link to="/method#results" className="!text-ink-soft !font-normal underline">איך זה חושב?</Link></p>
     </>
   );
 }
@@ -182,3 +183,8 @@ export function ElectionSummary() { return <>
       </Card>
 
 </>; }
+
+/** גרף שורה של ארבעת הגושים; לחיצה על גוש פותחת את חלון הפירוט הקיים של גרפי הגושים (Stack) */
+function BlocBarCard({ defs, values, nameOf }: { defs: Parameters<typeof blocSlices>[2]; values: Record<string, number>; nameOf?: (id: string) => string }) {
+  return <Card title="חלוקת הכנסת לגושים"><Stack slices={blocSlices(values, 0, defs)} values={values} label="חלוקת הכנסת לגושים" name={nameOf} /></Card>;
+}

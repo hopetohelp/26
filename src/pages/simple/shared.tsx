@@ -144,10 +144,11 @@ export function usePersonalBlocs() {
   };
 }
 
-function Pop({ slice, values, at }: { slice: Slice; values: Record<string, number | null | undefined>; at: { left: number; top?: number } }) {
+/** name — שם רשימה למזהים שאינם של 2026 (למשל אותיות 2022); אז בלי תמונה */
+function Pop({ slice, values, at, name }: { slice: Slice; values: Record<string, number | null | undefined>; at: { left: number; top?: number }; name?: (id: string) => string }) {
   const lists = slice.lists.filter(id => (values[id] ?? 0) > 0);
   return <div className="f-pop" style={{ left: at.left, top: at.top }}><strong>{slice.name} · <span className="font-num">{slice.shown}</span></strong>
-    {lists.length > 0 && <ul>{lists.map(id => <li key={id}><PartyAvatar id={id} size={20} />{nameOf(id)}</li>)}</ul>}</div>;
+    {lists.length > 0 && <ul>{lists.map(id => <li key={id}>{name ? <>{name(id)} · <span className="font-num">{values[id]}</span></> : <><PartyAvatar id={id} size={20} />{nameOf(id)}</>}</li>)}</ul>}</div>;
 }
 function usePop() {
   const [pop, setPop] = useState<{ i: number; left: number; top?: number } | null>(null);
@@ -239,7 +240,7 @@ function Pie({ slices, values, label, overlay, inner, parts = [] }: { slices: Sl
       return pop && picked ? <Pop slice={picked} values={values} at={pop} /> : null; })()}</div>;
 }
 /** פס גושים (טלפון, צמוד לתחתית): שם הגוש כשיש מקום, מילה אחת כשצר. `overlay` — קו צר מתחת לפס, במקום האחדות (רק במתקדם; בממוקד אין אחדות בטלפון — הכרעת בעלים 25.10.2026). */
-function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay }) {
+export function Stack({ slices, values, label, overlay, name }: { slices: Slice[]; values: Record<string, number | null | undefined>; label: string; overlay?: Overlay; name?: (id: string) => string }) {
   const { pop, host, handlers } = usePop();
   const total = slices.reduce((s, b) => s + b.value, 0);
   return <div className="f-stack-host" ref={host}><div className="f-stack" role="group" aria-label={label}>{slices.map((s, i) =>
@@ -247,7 +248,7 @@ function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Re
       {s.value >= 30 ? <span>{s.name}</span> : s.value >= 18 ? <span>{s.short}</span> : null}{s.shown}</button>)}
   </div>
     {overlay && overlay.value > 0 && <div className="f-unity-line"><span style={{ flex: overlay.start }} /><button type="button" className={pop?.i === slices.length ? "f-on" : undefined} aria-label={`אחדות ${overlay.shown}`} style={{ flex: overlay.value }} {...handlers(slices.length, false)}>אחדות {overlay.shown}</button><span style={{ flex: Math.max(0, total - overlay.start - overlay.value) }} /></div>}
-    {pop && (slices[pop.i] ?? (overlay && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
+    {pop && (slices[pop.i] ?? (overlay && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} name={name} />}</div>;
 }
 /** העוגה הכפולה לבדה (בלי פס הטלפון) — לתצוגות הגושים במתקדם */
 export function DoublePie({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
