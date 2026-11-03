@@ -7,6 +7,7 @@ import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from 
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
 import { largestRemainder } from "../lib/fillAll";
+import { Delta } from "../components/ParamCard";
 import { quality } from "../lib/quality";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, activeLists2026, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
@@ -253,6 +254,13 @@ interface ArchiveRow { id: string; values: Record<string, { s?: number; p?: numb
  * סולם 9 צבעים לכל הטורים, יחסית לסטייה הגדולה ביותר באותו טור בטבלה הזו בלבד (הכרעת בעלים 03.11.2026).
  * בטורי הדיוק — מרחק מהדיוק המלא (120 מנדטים, כל המפלגות, 0 טעות), ולכן רק אדום או לבן.
  */
+/** פער מהתוצאה בעשיריות, עם חץ וצבע (Delta); בדיוק — 0; אין תוצאה או אין ממוצע — "—" */
+const gap = (v: number | null | undefined, actual: number | null) => {
+  if (v == null || actual == null) return "—";
+  const d = Math.round((v - actual) * 10) / 10;
+  return d === 0 ? "0" : <Delta change={{ up: d > 0, text: String(Math.abs(d)) }} />;
+};
+
 /** meanRows — השורות שעליהן מחושב הממוצע (ב"כל הסקרים": כל הסקרים בסינון, לא רק העמוד המוצג) */
 function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; meanRows?: ArchiveRow[]; meanLists?: string[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
   if (!rows.length) return null;
@@ -316,11 +324,12 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
               {blocCells(ACTUAL_BLOCS)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
             </tr>}
+            {/* "מרחק ממוצע" (הכרעת בעלים 03.11.2026): הממוצע (אותה נוסחה, מנורמל ל-120) פחות התוצאה, עם חץ וצבע — רכיב Delta האחיד באתר */}
             <tr className="border-b-2 border-ink font-semibold align-top">
-              <th scope="row" className="py-2 pe-2 text-right">ממוצע</th>
+              <th scope="row" className="py-2 pe-2 text-right">מרחק ממוצע</th>
               {accCells(tagsOf(meanValues))}
-              {blocCells(meanBlocs)}
-              {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{meanValues[id]?.s ?? "—"}</td>)}
+              {meanBlocs.map((v, i) => <td key={i} className={`px-1 text-center tabular-nums${i === meanBlocs.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{gap(v, ready ? ACTUAL_BLOCS[i] : null)}</td>)}
+              {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{gap(meanValues[id]?.s ?? (id in results2026.seats ? 0 : null), ready && id in results2026.seats ? results2026.seats[id] : null)}</td>)}
             </tr>
             {rows.map((r, k) => {
               const isOpen = open === r.id;
