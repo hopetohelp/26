@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
 import { cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
+import { ShareBar, SurveyCard, type CardTag } from "./SurveyCard";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
 function MiniResults({ detail }: { detail: SurveyDetail }) {
@@ -19,12 +19,7 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
         return (
           <div key={q.id}>
             {q.title && <div className="text-[12px] text-ink-soft">{q.title}</div>}
-            <div className="flex h-5 rounded-md overflow-hidden text-[11px] font-bold" role="img" aria-label={q.options.map((o) => `${o.label} ${Math.round((qr.counts[o.id] / qr.n) * 100)}%`).join(", ")}>
-              {q.options.map((o, i) => {
-                const pct = Math.round((qr.counts[o.id] / qr.n) * 100);
-                return pct ? <span key={o.id} className={`${i % 2 ? "bg-[rgb(var(--bloc-5))] text-paper" : "bg-signal text-signal-ink"} flex items-center px-1.5 whitespace-nowrap overflow-hidden`} style={{ width: `${pct}%` }}>{o.label} {pct}%</span> : null;
-              })}
-            </div>
+            <ShareBar parts={q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0 }))} />
           </div>
         );
       })}
@@ -39,7 +34,8 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
  */
 type Tab = "todo" | "done" | "closed";
 /** תגית מצב / מועד סגירה על הכרטיס */
-const statusText = (s: Survey) => (s.status === "draft" ? "טיוטה" : s.status === "closed" ? (closesLabel(s) ? `נסגר ${closesLabel(s)}` : "נסגר") : closesLabel(s) ? `פתוח עד ${closesLabel(s)}` : "פתוח");
+/** שורה 2 בכרטיס: "נסגר ב…" / "ייסגר ב…" (הכרעת בעלים 03.11.2026) */
+const whenText = (s: Survey) => (s.status === "draft" ? "טיוטה" : closesLabel(s) ? `${s.status === "closed" ? "נסגר" : "ייסגר"} ב-${closesLabel(s)}` : null);
 const newest = (a: Survey, b: Survey) => b.updatedAt.localeCompare(a.updatedAt);
 
 /** מסך "כל הסקרים" — הכניסה לכל סקר וניחוש רק מכאן */
@@ -68,27 +64,15 @@ export default function SurveysScreen() {
   // ברירת מחדל "להשתתף"; אם אין שם כלום — "השתתפתי"
   const current: Tab = tab ?? (todo.length || !done.length ? "todo" : "done");
 
+  // תגית: פתוח — "להשתתף" / "לעדכן"; סגור — "השתתפת", ובלי השתתפות אין תגית (הכרעת בעלים 03.11.2026)
+  const tagOf = (s: Survey): CardTag => (s.status === "closed" ? (s.answered ? "joined" : null) : !token ? "join" : s.answered ? "update" : "join");
   const row = (s: Survey) => (
-    <li key={s.id} className="f-card !p-0">
-      <Link to={to(s.id)} className="block px-4 py-3.5 no-underline text-ink">
-        <span className="flex items-center gap-3">
-          <span className="flex-1 min-w-0"><span className="block font-bold">{numbered(s)}</span><span className="block text-[12.5px] text-ink-soft">{statusText(s)}</span></span>
-          {s.answered && current !== "done" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-signal">השתתפת ✓</span>}
-          {current === "done" && <span className="f-btn sm">לעדכן</span>}
-        </span>
-        {details[s.id] && <MiniResults detail={details[s.id]} />}
-      </Link>
-    </li>
+    <SurveyCard key={s.id} to={to(s.id)} title={numbered(s)} when={whenText(s)} tag={tagOf(s)}>
+      {details[s.id] && <MiniResults detail={details[s.id]} />}
+    </SurveyCard>
   );
-  // "תוצאות הבחירות" — ניחוש 120 המנדטים, מספר 1 (הכרעות בעלים 01.11 ו-02.11.2026): נסגר ויש לו תוצאה
-  const legacy = (
-    <li key="guesses" className="f-card !p-0">
-      <Link to="/surveys/guesses" className="block px-4 py-3.5 no-underline text-ink">
-        <span className="block font-bold">{ELECTION_RESULTS_TITLE}</span>
-        <span className="block text-[12.5px] text-ink-soft">נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58</span>
-      </Link>
-    </li>
-  );
+  // "תוצאות הבחירות" — ניחוש 120 המנדטים (הכרעות בעלים 01.11 ו-02.11.2026): נסגר ויש לו תוצאה
+  const legacy = <SurveyCard key="guesses" to="/surveys/guesses" title={ELECTION_RESULTS_TITLE} when="נסגר ב-27.10 21:58" tag={null} />;
   const section = (title: string, items: Survey[], extra?: JSX.Element) =>
     items.length || extra ? (
       <section key={title} className="space-y-2">
