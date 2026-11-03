@@ -85,14 +85,14 @@ describe("site surveys over the worker", () => {
     expect((await call("/survey?id=reelect")).status).toBe(404);
     const m = await member("in@x.co");
     const r = await call("/surveys", { token: m });
-    expect(r.data.surveys.map((s) => s.id)).toEqual(["vote2022", "plan2026", "vote", "president", "reelect", "gov"]);
-    expect(r.data.surveys.map((s) => s.position)).toEqual([1, 2, 4, 5, 6, 7]);
-    expect(r.data.surveys.map((s) => s.kind)).toEqual(["survey", "survey", "survey", "guess", "guess", "guess"]);
-    expect(r.data.surveys.find((s) => s.id === "plan2026").status).toBe("closed");
-    expect(r.data.surveys.map((s) => s.questions.map((q) => q.id))).toEqual([["vote2022"], ["plan2026"], ["vote"], ["first"], ["reelect"], ["coalition"]]);
-    expect(r.data.surveys[0].questions[0].options.length).toBe(22);
-    expect(r.data.surveys[5].questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
-    expect(r.data.surveys[4]).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
+    // מספור נפרד לסקרים ולניחושים (הכרעת בעלים 03.11.2026)
+    const by = Object.fromEntries(r.data.surveys.map((s) => [s.id, s]));
+    expect(Object.fromEntries(r.data.surveys.map((s) => [s.id, [s.kind, s.position]]))).toEqual({ vote2022: ["survey", 1], plan2026: ["survey", 2], vote: ["survey", 3], president: ["guess", 2], reelect: ["guess", 3], gov: ["guess", 4] });
+    expect(by.plan2026.status).toBe("closed");
+    expect(Object.fromEntries(r.data.surveys.map((s) => [s.id, s.questions.map((q) => q.id)]))).toEqual({ vote2022: ["vote2022"], plan2026: ["plan2026"], vote: ["vote"], president: ["first"], reelect: ["reelect"], gov: ["coalition"] });
+    expect(by.vote2022.questions[0].options.length).toBe(22);
+    expect(by.gov.questions[0].items.reduce((n, i) => n + i.seats, 0)).toBe(120);
+    expect(by.reelect).toMatchObject({ canAnswer: true, kind: "guess", visibility: "answered", minResults: SURVEY_MIN, closesAt: null });
   });
 
   it("outsiders: view shows survey without answering; answer lets them take part", async () => {
@@ -198,7 +198,9 @@ describe("site surveys over the worker", () => {
       expect(r.data.survey.questions[0].options.length).toBe(cur.questions[0].options.length);
     }
     const r = await call("/survey/manage", { token: m, body: { group: G, id: "next", def: { title: "חדש", questions: [{ id: "q1", kind: "single", title: "?", options: [{ id: "a", label: "א" }, { id: "b", label: "ב" }] }] } } });
-    expect(r.data.survey.position).toBe(8);
+    expect(r.data.survey.position).toBe(4);
+    const g = await call("/survey/manage", { token: m, body: { group: G, id: "nextg", kind: "guess", def: { title: "חדש", questions: [{ id: "q1", kind: "single", title: "?", options: [{ id: "a", label: "א" }, { id: "b", label: "ב" }] }] } } });
+    expect(g.data.survey.position).toBe(5);
   });
 
   it("new surveys: options or range only — no list assignment", async () => {

@@ -563,9 +563,9 @@ CREATE TABLE IF NOT EXISTS survey_view_hours (
 -- סדר ושמות חדשים (הכרעת בעלים 02.11.2026): 1 — 2022 · 2 — "מה יהיו תוצאות הבחירות?" (הניחוש שנסגר, מחוץ לטבלה) · 3 — 2026 · 4 — הנשיא · 5 — בחירות חוזרות · 6 — איך תקום ממשלה. פעם אחת — לפי השם הקודם
 UPDATE surveys SET position = 1, def = json_set(def, '$.title', 'מה הצבעתם בבחירות קודמות 2022?', '$.questions[0].title', 'מה הצבעתם בבחירות קודמות 2022?'), updated_at = '2026-11-02T15:00:00Z' WHERE id = 'vote2022' AND json_extract(def, '$.title') = 'מה הצבעתם בבחירות הקודמות (2022)?';
 UPDATE surveys SET position = 3, def = json_set(def, '$.title', 'מה הצבעתם בבחירות 2026?', '$.questions[0].title', 'מה הצבעתם בבחירות 2026?'), updated_at = '2026-11-02T15:00:00Z' WHERE id = 'vote' AND json_extract(def, '$.title') = 'מה הצבעתם בבחירות (2026)?';
-UPDATE surveys SET position = 4, def = json_set(def, '$.title', 'על מי הנשיא יטיל את הרכבת הממשלה?', '$.questions[0].title', 'על מי הנשיא יטיל את הרכבת הממשלה?') WHERE id = 'president' AND position = 2;
-UPDATE surveys SET position = 5 WHERE id = 'reelect' AND position = 3;
-UPDATE surveys SET position = 6 WHERE id = 'gov' AND position = 4;
+UPDATE surveys SET position = 4, def = json_set(def, '$.title', 'על מי הנשיא יטיל את הרכבת הממשלה?', '$.questions[0].title', 'על מי הנשיא יטיל את הרכבת הממשלה?') WHERE id = 'president' AND position = 2 AND NOT EXISTS (SELECT 1 FROM surveys WHERE id = 'plan2026');
+UPDATE surveys SET position = 5 WHERE id = 'reelect' AND position = 3 AND NOT EXISTS (SELECT 1 FROM surveys WHERE id = 'plan2026');
+UPDATE surveys SET position = 6 WHERE id = 'gov' AND position = 4 AND NOT EXISTS (SELECT 1 FROM surveys WHERE id = 'plan2026');
 -- רק התשובה האחרונה בכל יום בכל סקר (הכרעת בעלים 02.11.2026): ניקוי חד-פעמי של שמירות קודמות באותו יום (שעון ישראל, +2 שעות; חוזר על עצמו בלי השפעה)
 DELETE FROM survey_answers WHERE EXISTS (SELECT 1 FROM survey_answers b WHERE b.participant = survey_answers.participant AND b.survey = survey_answers.survey AND date(b.created_at, '+2 hours') = date(survey_answers.created_at, '+2 hours') AND (b.created_at > survey_answers.created_at OR (b.created_at = survey_answers.created_at AND b.id > survey_answers.id)));
 
@@ -593,3 +593,9 @@ CREATE TABLE IF NOT EXISTS survey_view_hours_group (
   n INTEGER NOT NULL DEFAULT 1,
   PRIMARY KEY (survey, hour)
 );
+
+-- מספור נפרד לסקרים ולניחושים (הכרעת בעלים 03.11.2026): סקרים 1–3 (2022, התכנון ל-2026, 2026); ניחושים 1 — "מה יהיו תוצאות הבחירות?" (מחוץ לטבלה), 2 — הנשיא, 3 — בחירות חוזרות, 4 — איך תקום ממשלה. פעם אחת — רק כשהמספר הישן עוד שם
+UPDATE surveys SET position = 3 WHERE id = 'vote' AND position = 4;
+UPDATE surveys SET position = 2 WHERE id = 'president' AND position = 5;
+UPDATE surveys SET position = 3 WHERE id = 'reelect' AND position = 6;
+UPDATE surveys SET position = 4 WHERE id = 'gov' AND position = 7;

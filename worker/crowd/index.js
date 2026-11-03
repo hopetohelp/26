@@ -2129,8 +2129,9 @@ const routes = {
     if (!cur && !def) throw bad("def");
     const status = body.status ?? cur?.status ?? "draft";
     if (!SURVEY_STATUS.has(status)) throw bad("status");
-    // מספר סידורי (הכרעת בעלים 02.11.2026): סקר חדש מקבל את המספר הבא
-    const position = body.position ?? cur?.position ?? (((await env.DB.prepare("SELECT MAX(position) AS m FROM surveys").first())?.m ?? 1) + 1);
+    // מספר סידורי נפרד לסקרים ולניחושים (הכרעות בעלים 02.11 ו-03.11.2026): חדש מקבל את המספר הבא באותו סוג; ניחוש 1 הוא "מה יהיו תוצאות הבחירות?"
+    const newKind = body.kind === "guess" ? "guess" : "survey";
+    const position = body.position ?? cur?.position ?? (Math.max(newKind === "guess" ? 1 : 0, (await env.DB.prepare("SELECT MAX(s.position) AS m FROM surveys s LEFT JOIN survey_settings x ON x.survey = s.id WHERE COALESCE(x.kind, 'survey') = ?").bind(newKind).first())?.m ?? 0) + 1);
     if (!Number.isInteger(position) || position < 0 || position > 9999) throw bad("position");
     if (body.outside !== undefined && !SURVEY_OUTSIDE.has(body.outside)) throw bad("outside");
     const json = def ? JSON.stringify(def) : cur.def;
