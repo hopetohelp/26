@@ -35,6 +35,17 @@ import { isElectionScreen } from "../lib/election";
  * בשלב הראשון המסכים בלי קישור מאף מסך באתר (הכרעת בעלים 01.11.2026) — רק בכתובת ישירה, עד אישור הבעלים ומנהלי הגזרה.
  */
 export const isSurveysPart = (pathname: string) => /^\/(surveys|s|guess|community|results-2026|g)(\/|$)/.test(pathname);
+/** מסכים משותפים לשני החלקים (אזור אישי, AI, קבוצה): נשארים בחלק שממנו נכנסו (הכרעת בעלים 03.11.2026) */
+const SHARED = /^\/(ai|group-admin|account)(\/|$)/;
+const PART_KEY = "elections26.part";
+function useSurveysPart(pathname: string) {
+  if (!SHARED.test(pathname)) {
+    const v = isSurveysPart(pathname);
+    try { sessionStorage.setItem(PART_KEY, v ? "surveys" : "elections"); } catch { /* בלי אחסון — לפי הכתובת */ }
+    return v;
+  }
+  try { return sessionStorage.getItem(PART_KEY) === "surveys"; } catch { return false; }
+}
 
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
@@ -119,7 +130,7 @@ function useHideOnScrollDown(on: boolean) {
 
 function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: string | null; navTop: boolean; onFit: (top: boolean) => void }) {
   const { pathname } = useLocation();
-  const surveys = isSurveysPart(pathname);
+  const surveys = useSurveysPart(pathname);
   // חברי הגזרה: בטלפון השם בכותרת; הסמל במסך עצמו, מעל גרף הגושים (הכרעת בעלים 23.10.2026)
   const bar = useRef<HTMLDivElement>(null), navW = useRef(0);
   // הסרגל עולה לפס העליון רק כשיש לו מקום באמת (לפי מדידה, לא לפי רוחב קבוע) — בטאבלט לאורך הוא יורד למטה.
@@ -193,7 +204,7 @@ function FocusClock() {
 }
 function FocusNav({ className, unread }: { className: string; unread: boolean }) {
   const { pathname } = useLocation();
-  const surveysPart = isSurveysPart(pathname);
+  const surveysPart = useSurveysPart(pathname);
   const { advanced } = useInterface();
   const groupTab = useGroupTab();
   useGuessClosed(); // הסרגל מתרענן ברגע סגירת הניחושים (21:58)
