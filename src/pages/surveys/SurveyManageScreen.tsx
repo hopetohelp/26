@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
+import StatsCharts from "../../components/StatsCharts";
+import type { SeriesBucket } from "../../components/GroupSeriesChart";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useSession } from "../guess/useCrowd";
 import CardDrawer from "../../components/CardDrawer";
@@ -15,7 +17,7 @@ export default function SurveyManageRedirect() {
  * ניהול סקרים למנהלי הגזרה (הכרעת בעלים 01.11.2026): רשימת הסקרים שלי ו"סקר חדש".
  * הניהול של סקר קיים — בתוך מסך הסקר, בכפתור "ניהול" (#/s/<מזהה>?manage=1). בשלב הראשון בלי קישור מאף מסך.
  */
-export function SurveysManage() {
+export function SurveysManage({ children }: { children?: ReactNode }) {
   const session = useSession();
   const { token, me } = session;
   const navigate = useNavigate();
@@ -54,6 +56,10 @@ export function SurveysManage() {
         <button type="button" className="f-btn pri" onClick={() => { setDraft({ id: "", title: "", questions: [], isNew: true }); setKind("survey"); }}>ניחוש/סקר חדש</button>
         {/* 2. סטטיסטיקה מרוכזת על כל הסקרים והניחושים */}
         <StatsSummary surveys={surveys ?? []} stats={stats} />
+        {/* גרפים מצטברים לפי שעה: כל הסקרים יחד ולכל סקר בנפרד (הכרעת בעלים 03.11.2026) */}
+        <SurveysCharts surveys={surveys ?? []} stats={stats} />
+        {/* ניחוש הבחירות (מצב הניחושים, אישור, השוואה) — מגיע ממסך ניהול הקבוצה */}
+        {children}
         {/* 3. מגירה: טבלת סטטיסטיקה לכל סקר/ניחוש */}
         <CardDrawer title="סטטיסטיקה לכל סקר וניחוש" className="">
           <StatsTable surveys={surveys ?? []} stats={stats} />
@@ -134,4 +140,29 @@ function SettingsTable({ surveys, onOpen }: { surveys: Survey[]; onOpen: (id: st
       </table>
     </div>
   );
+}
+
+/** גרף מצטבר לפי שעה, מהשעה הראשונה עם נתון בכל הסקרים ועד עכשיו; שני חלונות לבחירה (כמו בסטטיסטיקת הקבוצה) */
+function SurveysCharts({ surveys, stats }: { surveys: Survey[]; stats: Record<string, SurveyStats | null> }) {
+  const got = surveys.filter((s) => stats[s.id]).map((s) => ({ s, x: stats[s.id]! }));
+  const first = got.flatMap(({ x }) => x.hours.map((h) => h.hour)).sort()[0];
+  if (!first) return null;
+  const buckets: SeriesBucket[] = [];
+  for (let t = Date.parse(first + ":00:00Z"), end = Date.now(); t <= end; t += 36e5) buckets.push({ t: new Date(t).toISOString(), hourly: true });
+  const cum = (list: SurveyStats[], k: "views" | "saves") => {
+    const by = new Map<string, number>();
+    for (const x of list) for (const h of x.hours) by.set(h.hour, (by.get(h.hour) ?? 0) + h[k]);
+    let t = 0;
+    return buckets.map((b) => (t += by.get(b.t.slice(0, 13)) ?? 0));
+  };
+  const all = got.map(({ x }) => x);
+  const options = [
+    { key: "saves", label: "שמירות — כל הסקרים והניחושים", total: all.reduce((a, x) => a + x.saves, 0), points: cum(all, "saves") },
+    { key: "views", label: "כניסות — כל הסקרים והניחושים", total: all.reduce((a, x) => a + x.views, 0), points: cum(all, "views") },
+    ...got.flatMap(({ s, x }) => [
+      { key: `saves:${s.id}`, label: `שמירות — ${s.title}`, total: x.saves, points: cum([x], "saves") },
+      { key: `views:${s.id}`, label: `כניסות — ${s.title}`, total: x.views, points: cum([x], "views") },
+    ]),
+  ];
+  return <StatsCharts storageKey="elections26.surveysCharts" defaults={["saves", "views"]} buckets={buckets} options={options} />;
 }
