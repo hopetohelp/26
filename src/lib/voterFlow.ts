@@ -82,16 +82,10 @@ export function coverage() {
   return { total: pct(Object.values(t).reduce((a, x) => a + x.valid, 0)), sub: pct(t.sub.valid), center: pct(t.sub.valid + t.center.valid) };
 }
 
-/** שורה קצרה במסך ובתמונות השיתוף: "נתונים חלקיים X% מהמצביעים HH:MM" (הכרעת בעלים 28.10.2026) */
+/** נתוני הספירה מקובץ הקלפיות. שורת "נתונים חלקיים" ושעת העדכון הוסרו — התוצאות סופיות (הכרעת בעלים 03.11.2026) */
 const countedOf = () => (flow as unknown as { counted?: { pct: number; time: string; eligible?: number; voters?: number; invalid?: number } }).counted;
 /** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, השדה counted.eligible); null = לא ידוע */
 export const eligible2026 = (): number | null => countedOf()?.eligible || null;
-/** אחוז המצביעים שנספרו (עגול) — לשורת "נתונים חלקיים" ולחלון הפודיום; null = לא ידוע */
-export const countedPct = () => { const c = countedOf(); return c ? Math.round(c.pct) : null; };
-export const partialLine = () => {
-  const c = countedOf();
-  return c ? `נתונים חלקיים ${Math.round(c.pct)}% מהמצביעים ${c.time}` : "";
-};
 
 /** "מאיפה הגיעו" בעיר — רק בעיר עם מספיק יחידות השוואה (pipeline: MIN_CITY_UNITS) */
 export function cityFlows(code: string) {

@@ -2,7 +2,7 @@
  * הנתונים של תמונות השיתוף של "מה השתנה" (הכרעת בעלים 29.10.2026) — בלי ציור: מודל תמונה שהקנבס (`flowShareDraw.ts`) רק מצייר.
  * כל מספר נגזר מאותם מקורות כמו המסך: `partyYears` (ארבעת הפרמטרים), `cameFromGroup`/`wentToGroup` (תנועה) ו-`flow-units.json` (ערים).
  */
-import { cameFromGroup, countedPct, flow, newName, oldName, partyYears, SAME, smallPct, wentToGroup, type FlowPart } from "./voterFlow";
+import { cameFromGroup, flow, newName, oldName, partyYears, SAME, smallPct, wentToGroup, type FlowPart } from "./voterFlow";
 import { changeOf, PARAM_NAMES, type Change } from "./changeMark";
 import { DEFAULT_LINEAGE } from "./lineage";
 import { num, pctOne } from "./format";
@@ -43,7 +43,7 @@ export interface Scene {
 }
 
 const pctText = (v: number | null) => (v === null ? "—" : pctOne(v));
-const sub = () => { const c = countedPct(); return c === null ? "" : `${c}% מספירת הקולות`; };
+const sub = () => "";
 const diff = (a: number | null, b: number | null, kind: "count" | "pct") => (a === null || b === null ? null : changeOf(b - a, kind));
 
 /** ארבעת הפרמטרים בסדר הקבוע: מצביעים, מנדטים, מזכות בחירה, מהכשרים (מנדטים רק בכל הארץ) */

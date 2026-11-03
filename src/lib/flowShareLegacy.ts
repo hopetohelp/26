@@ -7,7 +7,7 @@ import { sharePalette, IMG_W, ltrText, drawQr, QR_SIZE } from "../pages/guess/sh
 import { BLOC_COLORS, THEMES } from "./promoVideo";
 import { results2026 } from "./guessAccuracyData";
 import { DEFAULT_LINEAGE } from "./lineage";
-import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, groupChange, newName, oldName, partialLine, smallPct, wentToGroup, type FlowRow } from "./voterFlow";
+import { BLOC_IDS, bloc2022, bloc2026, blocsOf, cameFromGroup, flow, flowsFor, groupChange, newName, oldName, smallPct, wentToGroup, type FlowRow } from "./voterFlow";
 import { sumBallotVotes, validBallotVotes, type BallotUnits as Units } from "./ballotLookup";
 
 export type Who = "all" | "haredi" | "party";
@@ -90,8 +90,6 @@ export async function renderLegacy(spec: Spec, units: Units | null): Promise<Blo
   for (const line of wrap(ctx, title, CW)) { ctx.fillText(line, IMG_W / 2, y); y += 76; }
   const where = spec.who === "all" && spec.where === "city" ? place?.[1].name ?? spec.city : "כל הארץ";
   ctx.fillStyle = P.soft; ctx.font = `500 32px ${body}`; ctx.fillText(`${where} · 2022 מול 2026`, IMG_W / 2, y); y += 56;
-  ctx.font = `500 26px ${body}`; const pl = partialLine(), pw = ctx.measureText(pl).width + 48;
-  pill(IMG_W / 2 - pw / 2, y - 22, pw, 44, P.faint); ctx.fillStyle = P.ink; ctx.fillText(pl, IMG_W / 2, y); y += 70;
 
   /** כרטיס מפלגה (שם המפלגה פעם אחת — בכותרת התמונה, או בכותרת הטור בחרדים; הכרעת בעלים 28/10): מנדטים, מאיפה הגיעו (חלק מרכזי) ולאן הלכו מצביעי הקודמת ב-2022 (חלק משני) */
   const seatsAt = (id: string, x: number, yy: number) => {

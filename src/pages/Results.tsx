@@ -1,4 +1,3 @@
-import LocalityResults from "../components/LocalityResults";
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import { Badge, Card, Fold, Note, Split } from "../components/ui";
@@ -6,10 +5,7 @@ import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
-import { partialLine } from "../lib/voterFlow";
 import { ShiftLine } from "./Results2026";
-import Missing from "../components/Missing";
-import { Link } from "react-router-dom";
 import { k25Families } from "../lib/lineage";
 import { num, pct } from "../lib/format";
 
@@ -38,46 +34,6 @@ const fmtDiffOf = (e: Election, d: readonly (readonly [string, number])[]) =>
 /** חישובי כל המערכות — לטבלת ההשוואה */
 const ALL = ELECTIONS.map((e) => ({ e, a: analysis(e) }));
 
-/** "בקצרה": אותו הסבר לכל מערכת, נגזר מהנתונים הרשמיים */
-function Story({ e, a }: { e: Election; a: ReturnType<typeof analysis> }) {
-  const passing = e.lists.filter((l) => l.seats > 0);
-  const failed = [...e.lists.filter((l) => l.seats === 0)].sort((x, y) => y.votes - x.votes);
-  const top = Math.max(...passing.map((l) => l.seats));
-  const biggest = passing.filter((l) => l.seats === top);
-  const thr = a.withAll.thresholdVotes;
-  const nearMiss = failed[0];
-  const lowestIn = [...passing].sort((x, y) => x.votes - y.votes)[0];
-  const notable = failed.filter((l) => l.votes >= e.valid * 0.01);
-  const active = e.agreements.length - a.withAll.inactiveAgreements.length;
-  return (
-    <ul className="space-y-2 text-base leading-relaxed">
-      <li>
-        הצביעו {pct((e.voted / e.eligible) * 100)} מבעלי זכות הבחירה ({num(e.voted)} מתוך {num(e.eligible)}). {passing.length} רשימות עברו את
-        אחוז החסימה, שעמד על {num(thr)} קולות.
-      </li>
-      <li>
-        {biggest.length === 1
-          ? `הרשימה הגדולה: ${biggest[0].short}, עם ${top} מנדטים (${pct((biggest[0].votes / e.valid) * 100)} מהקולות הכשרים).`
-          : `הרשימות הגדולות: ${biggest.map((l) => `${l.short} (${pct((l.votes / e.valid) * 100)})`).join(" ו")} — ${top} מנדטים כל אחת.`}
-      </li>
-      <li>
-        {num(a.withAll.wasted)} קולות ({pct((a.withAll.wasted / e.valid) * 100)}) הלכו לרשימות שלא עברו — כ-{(a.withAll.wasted / a.withAll.quota).toFixed(1)}{" "}
-        מנדטים.
-        {notable.length > 0 && ` הבולטות: ${notable.map((l) => `${l.short} (${pct((l.votes / e.valid) * 100)})`).join(", ")}.`}
-      </li>
-      {nearMiss && (
-        <li>
-          הכי קרוב לסף בלי לעבור: {nearMiss.short} — חסרו לה {num(Math.ceil(thr - nearMiss.votes))} קולות. הרשימה
-          הקטנה ביותר שעברה: {lowestIn.short}, {num(Math.floor(lowestIn.votes - thr))} קולות מעל הסף.
-        </li>
-      )}
-      <li>
-        הסכמי העודפים: {active} פעילים מתוך {e.agreements.length}. כולם יחד, לעומת אף הסכם: {fmtDiffOf(e, a.allVsNone)}.
-      </li>
-    </ul>
-  );
-}
-
 /** חלוקת הכנסת לגושים בתוצאות מערכת שהסתיימה — במסך "מה השתנה" (הכרעות בעלים 02.11.2026) */
 export function PastBlocs({ id }: { id: string }) {
   const e = results.find((x) => x.id === id)!;
@@ -87,8 +43,9 @@ export function PastBlocs({ id }: { id: string }) {
 }
 
 /**
- * "תוצאות" של מערכת שהסתיימה — לפי בורר המערכת שבפס העליון (הכרעות בעלים 02.11.2026).
- * בעלי הזכות, ההצבעה והגושים עברו ל"מה השתנה" (שם — הערך והשינוי מהקודמת); כאן — מה שאינו השוואה.
+ * "תוצאות" — לפי בורר המערכת שבפס העליון (הכרעות בעלים 02.11.2026; צומצם בהכרעת בעלים 03.11.2026):
+ * רק מה שאין במסכים אחרים — קולות למנדט, וכמה קולות חסרים לכל רשימה למנדט נוסף או לאיבוד מנדט.
+ * בעלי הזכות, ההצבעה והקולות שלא עברו — "מה השתנה" (OverviewCards); אחוז החסימה וההסכמים יחד — "סיכום"; לפי יישוב — "מה השתנה".
  */
 export default function Results({ id }: { id: string }) {
   const e = ELECTIONS.find((x) => x.id === id)!;
@@ -97,124 +54,79 @@ export default function Results({ id }: { id: string }) {
   const short = (letters: string) => shortOf(e, letters);
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
-  const failed = e.lists.filter((l) => l.seats === 0);
-  const wasted = a.withAll.wasted;
   const fmtDiff = (d: readonly (readonly [string, number])[]) => fmtDiffOf(e, d);
   return (
     <>
-      <Split title="איך נראתה הכנסת שנבחרה?" lead="תוצאות רשמיות וחלוקת המנדטים. המערכת נבחרת בכפתור שבפס העליון." primary={<>
+      <Split title={`הכנסת ה-${e.knesset} · ${e.label}`} lead="כמה קולות עולה מנדט, וכמה קולות חסרים לכל רשימה למנדט נוסף או לאיבוד מנדט." primary={<>
       <Card>
-        <h2 className="text-xl font-display leading-tight">
-          הכנסת ה-{e.knesset} · {e.label}
-        </h2>
-        {e.id === "k26" && <p className="text-sm text-ink-soft">{partialLine()}</p>}
-        <dl className="c-result-stats grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 mt-4 text-sm">
-          <div><dt className="text-ink-soft">קולות כשרים</dt><dd className="text-xl font-bold tabular-nums">{num(e.valid)}</dd></div>
-          <div><dt className="text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-xl font-bold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
-        </dl>
-      </Card>
-      </>} secondary={<>
-      <Card title="בקצרה">
         <Explained
-          kind="נתון רשמי"
+          kind="חישוב לפי החוק"
           source={`ועדת הבחירות המרכזית — votes${e.knesset}.bechirot.gov.il, ומנוע החוק של האתר`}
           asOf="התוצאות הסופיות"
-          assumption="כל המספרים מהתוצאות הרשמיות. 'מה הזיזו ההסכמים' — השוואה נגד-עובדתית על אותם קולות."
+          assumption="המודד: סך הקולות של הרשימות שעברו את אחוז החסימה, חלקי 120, החלק השלם (סעיף 81(ב) לחוק). השינוי הקרוב — אותו מנוע, כולל הסכמי העודפים."
           methodAnchor="results"
         >
-          <Story e={e} a={a} />
+          <p className="text-sm text-ink-soft">מצביעים למנדט</p>
+          <p className="text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</p>
         </Explained>
       </Card>
-
-      <Card title="הקולות שלא הומרו למנדטים">
-        <Explained
-          kind="נתון רשמי"
-          source={`ועדת הבחירות המרכזית — votes${e.knesset}.bechirot.gov.il`}
-          asOf="התוצאות הסופיות"
-          assumption="'לא הומרו' = קולות כשרים לרשימות שלא עברו את אחוז החסימה (בלי הפתקים הפסולים)."
-          methodAnchor="results"
-        >
-          <p className="text-3xl font-extrabold tabular-nums">
-            {num(wasted)} <span className="text-lg font-medium">קולות · {pct((wasted / e.valid) * 100)} מהכשרים · כ-{(wasted / a.withAll.quota).toFixed(1)} מנדטים</span>
-          </p>
-          <p className="text-sm text-ink-soft mt-1">
-            {failed.filter((l) => l.votes >= e.valid * 0.005).map((l) => `${l.short} ${num(l.votes)} (${pct((l.votes / e.valid) * 100)})`).join(" · ")}
-            {failed.filter((l) => l.votes < e.valid * 0.005).length > 0 && ` · ועוד ${failed.filter((l) => l.votes < e.valid * 0.005).length} רשימות קטנות`}
-          </p>
-        </Explained>
-      </Card>
-
-      <Card title="הרשימות שנכנסו לכנסת">
+      </>} secondary={<>
+      <Card title="כמה קולות חסרים למנדט הבא">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <caption className="sr-only">הרשימות שעברו את אחוז החסימה</caption>
+            <caption className="sr-only">לכל רשימה שנכנסה: מנדטים, וכמה קולות לשינוי הקרוב במנדטים</caption>
             <thead>
               <tr className="text-right border-b border-paper-line">
                 <th scope="col" className="py-1">רשימה</th>
-                <th scope="col">אותיות</th>
                 <th scope="col">קולות</th>
-                <th scope="col">אחוז</th>
                 <th scope="col">מנדטים</th>
-                <th scope="col">השינוי הקרוב במנדטים</th>
+                <th scope="col">מתוכם שלמים</th>
+                <th scope="col">למנדט נוסף / לאיבוד מנדט</th>
               </tr>
             </thead>
             <tbody>
               {passing.map((l) => (
                 <tr key={l.letters} className="border-b border-paper-line/60">
                   <th scope="row" className="text-right py-1 font-medium" title={l.name}>{l.short}</th>
-                  <td>{l.ballot ?? l.letters}</td>
                   <td className="tabular-nums">{num(l.votes)}</td>
-                  <td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td>
                   <td className="tabular-nums font-bold">{l.seats}</td>
+                  <td className="tabular-nums">{a.withAll.whole[l.letters]}</td>
                   <td className="tabular-nums text-[11px]"><ShiftLine shift={changes?.[l.letters]?.up ?? null} up /><ShiftLine shift={changes?.[l.letters]?.down ?? null} up={false} /></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {/* היה בטבלת 2026 בלבד — עכשיו בכל מערכת */}
-        <p className="text-sm mt-3"><Link to={e.id === "k26" ? "/changes" : `/changes?election=${e.id}`} className="f-btn">מאיפה הגיעו המצביעים של כל רשימה ⇐ מה השתנה</Link></p>
-        <Fold title="פרטי חלוקת המנדטים">
-          <p className="text-sm">המודד: {num(a.withAll.quota)} קולות למנדט שלם (סך הקולות של הרשימות שעברו, חלקי 120, החלק השלם — סעיף 81(ב) לחוק).</p>
-          <ul className="text-sm mt-2">{passing.map((l) => <li key={l.letters}>{l.short}: {a.withAll.whole[l.letters]} מנדטים שלמים לפני חלוקת העודפים</li>)}</ul>
-        </Fold>
+        <p className="text-xs text-ink-soft mt-2">"מתוכם שלמים" — מנדטים לפני חלוקת העודפים.</p>
       </Card>
 
-
-      {e.id === "k26" ? <Card title="כל הקולות לפי יישוב"><Missing what="תוצאות 2026 לפי יישוב" /><p className="text-sm mt-2"><Link to="/changes" className="f-btn">חיפוש לפי עיר או קלפי ⇐ מה השתנה</Link></p></Card> : <LocalityResults key={e.id} electionId={e.id} />}
-      <Card title="מה הזיזו הסכמי העודפים">
-        <ul className="text-sm space-y-1 mb-3">
-          {e.agreements.map(([x, y]) => {
-            const inactive = a.withAll.inactiveAgreements.find((i) => i.pair[0] === x && i.pair[1] === y);
-            return (
-              <li key={x + y}>
-                {short(x)} – {short(y)} {inactive ? <Badge tone="warn">לא פעיל: {short(inactive.pair.find((p) => !a.withAll.passing.includes(p)) ?? "")} לא עברה</Badge> : <Badge tone="ok">פעיל</Badge>}
-              </li>
-            );
-          })}
-        </ul>
+      <Fold title="מה הזיזו הסכמי העודפים">
         <Explained
           kind="חישוב לפי החוק"
           source="המנוע של האתר על הקולות הרשמיים"
           asOf="התוצאות הסופיות"
-          assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי ההסכמים. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת."
+          assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי ההסכם. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת. ההשפעה של הסכם תלויה בהסכמים האחרים."
           methodAnchor="agreements"
         >
-          <p className="font-bold">כל ההסכמים לעומת אף הסכם: {fmtDiff(a.allVsNone)}</p>
-          <p className="text-sm mt-2">כשמבטלים הסכם אחד בכל פעם (והשאר נשארים):</p>
-          <ul className="text-sm list-disc ps-5">
-            {a.single.map((s) => (
-              <li key={s.pair.join()}>
-                {short(s.pair[0])} – {short(s.pair[1])}: {fmtDiff(s.diff)}
-              </li>
-            ))}
-          </ul>
-          <Note>
-            שימו לב: ההשפעה של הסכם תלויה בהסכמים האחרים. לכן "מה עשה הסכם מסוים" אינו תמיד מספר אחד, ולפעמים ההסכמים מקזזים זה את זה.
-          </Note>
+          <table className="w-full text-sm">
+            <caption className="sr-only">הסכמי העודפים: מצב, ומה משתנה בביטול כל הסכם לבדו</caption>
+            <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1">הסכם</th><th scope="col">מצב</th><th scope="col">בלי ההסכם הזה</th></tr></thead>
+            <tbody>
+              {a.single.map((s) => {
+                const [x, y] = s.pair;
+                const inactive = a.withAll.inactiveAgreements.find((i) => i.pair[0] === x && i.pair[1] === y);
+                return (
+                  <tr key={x + y} className="border-b border-paper-line/60">
+                    <th scope="row" className="text-right py-1 font-medium">{short(x)} – {short(y)}</th>
+                    <td>{inactive ? <Badge tone="warn">לא פעיל</Badge> : <Badge tone="ok">פעיל</Badge>}</td>
+                    <td>{fmtDiff(s.diff)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </Explained>
-      </Card>
-
+      </Fold>
       </>} />
     </>
   );
@@ -222,9 +134,6 @@ export default function Results({ id }: { id: string }) {
 
 /** "סיכום" בבורר: ההשוואה בין המערכות (הכרעות בעלים 02.11.2026) */
 export function ElectionSummary() { return <>
-      <Fold title="פרטי החישוב בכל מערכת">
-        <ul className="text-sm space-y-1">{[...ALL].reverse().map(({ e: x, a: ax }) => <li key={x.id}>{x.label}: אחוז החסימה {num(ax.withAll.thresholdVotes)} קולות; מודד {num(ax.withAll.quota)} קולות למנדט שלם.</li>)}</ul>
-      </Fold>
       <Card title="כל המערכות, זו לצד זו">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -236,6 +145,7 @@ export function ElectionSummary() { return <>
                 <th scope="col" className="pe-3">הצבעה</th>
                 <th scope="col" className="pe-3">עברו</th>
                 <th scope="col" className="pe-3">נשרפו</th>
+                <th scope="col" className="pe-3">אחוז החסימה (קולות)</th>
                 <th scope="col">מה הזיזו ההסכמים</th>
               </tr>
             </thead>
@@ -251,6 +161,7 @@ export function ElectionSummary() { return <>
                   <td className="pe-3 tabular-nums whitespace-nowrap">
                     {pct((ax.withAll.wasted / x.valid) * 100)} <span className="text-ink-soft">(כ-{(ax.withAll.wasted / ax.withAll.quota).toFixed(1)} מנדטים)</span>
                   </td>
+                  <td className="pe-3 tabular-nums">{num(ax.withAll.thresholdVotes)}</td>
                   <td>{fmtDiffOf(x, ax.allVsNone)}</td>
                 </tr>
               ))}

@@ -20,7 +20,7 @@ describe("תמונות שיתוף: מודל הנתונים", () => {
   it("מפלגה בכל הארץ: ארבעה פרמטרים בסדר מצביעים, מנדטים, מזכות בחירה, מהכשרים — והשינוי בחץ", () => {
     const scene = buildScene(country, null)!;
     expect(scene.title).toBe("הליכוד • כל הארץ");
-    expect(scene.sub).toMatch(/^\d+% מספירת הקולות$/);
+    expect(scene.sub).toBe(""); // התוצאות סופיות — בלי שורת "נספרו" (הכרעת בעלים 03.11.2026)
     const [votes, seats, ofEligible, ofValid] = scene.blocks[0].params;
     expect([votes.key, seats.key, ofEligible.key, ofValid.key]).toEqual(["votes", "seats", "ofEligible", "ofValid"]);
     expect(seats.value).toBe(String(results2026.seats.likud));

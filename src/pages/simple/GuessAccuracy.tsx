@@ -18,7 +18,6 @@ import AccuracyShare from "./AccuracyShare";
 import { createPortal } from "react-dom";
 import { call } from "../../lib/crowdApi";
 import { SITE_URL } from "../../lib/shareGuess";
-import { countedPct } from "../../lib/voterFlow";
 import { useRegisterNavShare } from "../../lib/navShare";
 
 const EMPTY = startSeats("zero");
@@ -318,8 +317,8 @@ function PodiumPopup({ place, name: saved, token }: { place: number; name: strin
   const close = useCallback(() => { try { sessionStorage.setItem(key, "1"); } catch { /* בלי אחסון — החלון ייסגר עד הטעינה הבאה */ } setOpen(false); }, [key]);
   useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => e.key === "Escape" && close(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open, close]);
   if (!open) return null;
-  const word = PLACE[place - 1], pct = countedPct();
-  const basis = pct != null ? `לפי ${pct}% מהקולות` : "לפי הספירה הנוכחית";
+  const word = PLACE[place - 1];
+  const basis = "לפי התוצאות הסופיות";
   const share = async () => {
     const text = `כרגע אני במקום ${word} בדיוק הניחושים לבחירות 2026 (${basis})\n${SITE_URL}#/results-2026`;
     try { if (navigator.share) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); setMsg("הטקסט הועתק."); } }

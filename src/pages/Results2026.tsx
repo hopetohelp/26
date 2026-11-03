@@ -4,7 +4,6 @@ import type { SeatShift } from "../engine/seatChange";
 import { listName } from "../lib/data";
 import { accuracyPct, correctSeats, exactLists } from "../lib/guessAccuracy";
 import { finalPolls, pollMean, results2026 } from "../lib/guessAccuracyData";
-import { partialLine } from "../lib/voterFlow";
 import { num, pctValue } from "../lib/format";
 
 const LTR = (t: string) => `\u2066${t}\u2069`;
@@ -38,8 +37,8 @@ export function Accuracy2026({ chips }: { chips?: React.ReactNode }) {
   return (
     <Card title="הסקרים מול התוצאות">
       {chips}
-      <h3 className="text-xl font-display leading-tight mt-4 mb-1">2026 — הסקר האחרון של כל מכון מול הספירה</h3>
-      <p className="text-sm text-ink-soft mb-3">{partialLine()} · {finalPolls.length} מכונים · מדגמי יום הבחירות אינם נכללים</p>
+      <h3 className="text-xl font-display leading-tight mt-4 mb-1">2026 — הסקר האחרון של כל מכון מול התוצאות</h3>
+      <p className="text-sm text-ink-soft mb-3">{finalPolls.length} מכונים · מדגמי יום הבחירות אינם נכללים</p>
       <DeviationChart rows={rows} />
       <table className="w-full text-sm mt-4">
         <caption className="sr-only">המנדטים והמפלגות המדויקים של כל סדרת סקרים</caption>
