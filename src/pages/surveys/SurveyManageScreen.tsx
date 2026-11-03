@@ -209,3 +209,85 @@ function SettingsTable({ surveys, onOpen, onChange }: { surveys: Survey[]; onOpe
     </div>
   );
 }
+
+type StatKey = "views" | "viewers" | "members" | "outsiders" | "changed";
+const COLS: [StatKey, string][] = [["views", "כניסות"], ["viewers", "צופים שונים"], ["members", "שמרו — מהגזרה"], ["outsiders", "שמרו — מחוץ לגזרה"], ["changed", "עדכנו תשובה"]];
+
+/** סיכום מרוכז: סכום כל הסקרים והניחושים */
+function StatsSummary({ surveys, stats }: { surveys: Survey[]; stats: Record<string, SurveyStats | null> }) {
+  const got = surveys.map((s) => stats[s.id]).filter((x): x is SurveyStats => !!x);
+  if (!got.length) return null;
+  const sum = (k: StatKey) => got.reduce((a, x) => a + x[k], 0);
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="rounded-xl bg-[rgb(var(--grid))] px-3 py-2 text-center"><b className="block font-num text-xl">{surveys.length}</b><span className="text-xs text-ink-soft">סקרים וניחושים</span></div>
+      {COLS.map(([k, l]) => <div key={k} className="rounded-xl bg-[rgb(var(--grid))] px-3 py-2 text-center"><b className="block font-num text-xl">{sum(k)}</b><span className="text-xs text-ink-soft">{l}</span></div>)}
+    </div>
+  );
+}
+
+/** טבלה: שורה לכל סקר/ניחוש */
+function StatsTable({ surveys, stats }: { surveys: Survey[]; stats: Record<string, SurveyStats | null> }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead><tr className="text-ink-soft"><th className="text-start py-1">שם</th>{COLS.map(([k, l]) => <th key={k} className="text-center px-1">{l}</th>)}</tr></thead>
+        <tbody>{surveys.map((s) => { const x = stats[s.id]; return (
+          <tr key={s.id} className="border-t border-paper-line"><td className="py-1">{kindLabel(s.kind)}: {s.title}</td>{COLS.map(([k]) => <td key={k} className="text-center font-num">{x ? x[k] : "—"}</td>)}</tr>
+        ); })}</tbody>
+      </table>
+    </div>
+  );
+}
+
+const label = <T extends string>(list: [T, string][], v: T) => list.find((x) => x[0] === v)?.[1] ?? "";
+
+/** טבלת הניהול: שורה לכל סקר/ניחוש, טור לכל הגדרה; לחיצה (או Enter) פותחת את הניהול שלו */
+function SettingsTable({ surveys, onOpen }: { surveys: Survey[]; onOpen: (id: string) => void }) {
+  return (
+    <div className="f-card !p-0 overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead><tr className="text-ink-soft text-start">{["שם", "סוג", "מצב", "מי רואה תוצאות", "מחוץ לגזרה", "סגירה", "סף משתתפים"].map((h) => <th key={h} className="text-start px-3 py-2 whitespace-nowrap">{h}</th>)}</tr></thead>
+        <tbody>
+          {surveys.map((s) => (
+            <tr key={s.id} role="link" tabIndex={0} aria-label={`ניהול: ${s.title}`} onClick={() => onOpen(s.id)} onKeyDown={(e) => { if (e.key === "Enter") onOpen(s.id); }} className="border-t border-paper-line cursor-pointer hover:bg-[rgb(var(--grid))] focus-visible:bg-[rgb(var(--grid))] outline-none">
+              <td className="px-3 py-2 font-bold">{s.title}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{kindLabel(s.kind)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{label(STATUS_LABELS, s.status)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{label(VISIBILITY_LABELS, s.visibility)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{label(OUTSIDE_LABELS, s.outside ?? "none")}</td>
+              <td className="px-3 py-2 whitespace-nowrap font-num">{closesLabel(s) ?? "—"}</td>
+              <td className="px-3 py-2 font-num text-center">{s.minResults}</td>
+            </tr>
+          ))}
+          {!surveys.length && <tr><td colSpan={7} className="px-3 py-3 text-ink-soft">אין עדיין סקרים.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** גרף מצטבר לפי שעה, מהשעה הראשונה עם נתון בכל הסקרים ועד עכשיו; שני חלונות לבחירה (כמו בסטטיסטיקת הקבוצה) */
+function SurveysCharts({ surveys, stats }: { surveys: Survey[]; stats: Record<string, SurveyStats | null> }) {
+  const got = surveys.filter((s) => stats[s.id]).map((s) => ({ s, x: stats[s.id]! }));
+  const first = got.flatMap(({ x }) => x.hours.map((h) => h.hour)).sort()[0];
+  if (!first) return null;
+  const buckets: SeriesBucket[] = [];
+  for (let t = Date.parse(first + ":00:00Z"), end = Date.now(); t <= end; t += 36e5) buckets.push({ t: new Date(t).toISOString(), hourly: true });
+  const cum = (list: SurveyStats[], k: "views" | "saves") => {
+    const by = new Map<string, number>();
+    for (const x of list) for (const h of x.hours) by.set(h.hour, (by.get(h.hour) ?? 0) + h[k]);
+    let t = 0;
+    return buckets.map((b) => (t += by.get(b.t.slice(0, 13)) ?? 0));
+  };
+  const all = got.map(({ x }) => x);
+  const options = [
+    { key: "saves", label: "שמירות — כל הסקרים והניחושים", total: all.reduce((a, x) => a + x.saves, 0), points: cum(all, "saves") },
+    { key: "views", label: "כניסות — כל הסקרים והניחושים", total: all.reduce((a, x) => a + x.views, 0), points: cum(all, "views") },
+    ...got.flatMap(({ s, x }) => [
+      { key: `saves:${s.id}`, label: `שמירות — ${s.title}`, total: x.saves, points: cum([x], "saves") },
+      { key: `views:${s.id}`, label: `כניסות — ${s.title}`, total: x.views, points: cum([x], "views") },
+    ]),
+  ];
+  return <StatsCharts storageKey="elections26.surveysCharts" defaults={["saves", "views"]} buckets={buckets} options={options} />;
+}
