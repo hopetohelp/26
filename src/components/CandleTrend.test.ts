@@ -18,9 +18,9 @@ describe("גרף המגמה האחיד", () => {
     expect(h).toMatch(/<button[^>]*aria-expanded="false"[^>]*ms-auto[^>]*>/);
     expect(h).toContain("מקרא");
   });
-  it("קווים מקווקווים כל 5 מנדטים, בגוש 61 במקום 60", () => {
+  it("קווים מקווקווים כל 5 מנדטים, ו-61 במקום 60 בכל גרף", () => {
     const plain = html();
-    for (const v of [45, 50, 55, 60, 65]) expect(plain).toContain(`>${v}</span>`);
+    for (const v of [45, 50, 55, 61, 65]) expect(plain).toContain(`>${v}</span>`);
     const bloc = html({ majority: 61 });
     expect(bloc).toContain(">61</span>");
     expect(bloc).not.toContain(">60</span>");

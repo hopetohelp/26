@@ -30,6 +30,8 @@ export function trendAxis(values: number[], opts: { step?: number; majority?: nu
   const m = opts.majority;
   const useMajority = m !== undefined && max > MAJORITY_SHOWN_ABOVE;
   if (useMajority) max = Math.max(max, m!);
+  // טווח של יותר מ-30 מנדטים (למשל כמה גושים בגרף אחד): קו כל 10 (הכרעת בעלים 03.11.2026)
+  if (max - min > 30) step = Math.max(step, 10);
   let lo = Math.floor(min / step) * step;
   let hi = Math.ceil(max / step) * step;
   if (hi === lo) hi = lo + step;
@@ -40,6 +42,9 @@ export function trendAxis(values: number[], opts: { step?: number; majority?: nu
     const at = lines.reduce((best, l, i) => (Math.abs(l.v - m!) < Math.abs(lines[best].v - m!) ? i : best), 0);
     lines[at] = { v: m!, major: true };
   }
+  // במקום קו 60 — קו 61, הרוב (הכרעת בעלים 03.11.2026)
+  const sixty = lines.findIndex((l) => l.v === 60);
+  if (sixty >= 0) lines[sixty] = { v: 61, major: true };
   return { lo, hi, lines };
 }
 
