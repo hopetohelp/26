@@ -1,4 +1,3 @@
-import PollAccuracyTags, { seatsOfValues } from "./PollAccuracyTags";
 import { listName, mean, pollsterLabel, seatsIn, type Poll, type PartySummary } from "../lib/data";
 import { seatsFmt, signed } from "../lib/format";
 import { candleProfiles, valueSegs } from "../lib/chartLanguage";
@@ -110,13 +109,9 @@ export function PollsterGrid({ polls, parties }: { polls: Poll[]; parties: Party
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-paper-line font-bold">
-              <th scope="row" className="text-start py-2 pe-3">ממוצע המכונים</th>
-              {parties.map((s) => <td key={s.id} className="px-1.5 text-center tabular">{seatsFmt(Math.round(s.mean * 10) / 10)}</td>)}
-            </tr>
             {polls.map((p) => (
               <tr key={p.id} className="border-b border-paper-line/60">
-                <th scope="row" className="text-start py-2 pe-3 font-normal whitespace-nowrap">{pollsterLabel(p)}<PollAccuracyTags values={seatsOfValues(p.values)} className="flex mt-1 w-[10.5rem] whitespace-normal" /></th>
+                <th scope="row" className="text-start py-2 pe-3 font-normal whitespace-nowrap">{pollsterLabel(p)}</th>
                 {parties.map((s) => {
                   const v = seatsIn(p, s.id);
                   return (

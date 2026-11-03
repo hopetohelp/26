@@ -201,14 +201,13 @@ export default function Trends() {
                 />
               </Explained>
               {rows.length > 0 && (
-                <ul className="mt-4 grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3" aria-label="היום ושינוי מתחילת התקופה">
+                <ul className="mt-4 grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3" aria-label="שינוי מתחילת התקופה">
                   {rows.map(({ s, first, last }) => {
                     const d = Math.round((last.v - first.v) * 10) / 10;
                     return (
                       <li key={s.id} className="flex items-baseline gap-2 border-t border-paper-line py-1.5 text-sm">
                         <i className="size-2.5 rounded-full shrink-0 self-center" style={{ background: s.color }} />
                         <span className="grow font-semibold">{s.name}</span>
-                        <b className="font-num tabular text-lg">{seatsFmt(last.v)}</b>
                         <span className="font-num tabular text-ink-soft w-12 text-end"><bdi dir="ltr">{signed(d)}</bdi></span>
                       </li>
                     );

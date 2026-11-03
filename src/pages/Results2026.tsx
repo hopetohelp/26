@@ -2,7 +2,9 @@ import DeviationChart from "../components/deviationChart";
 import { Card } from "../components/ui";
 import type { SeatShift } from "../engine/seatChange";
 import { listName } from "../lib/data";
-import { accuracyPct, correctSeats, exactLists } from "../lib/guessAccuracy";
+import { seatTags } from "../lib/guessAccuracy";
+import { exitPolls } from "../lib/data";
+import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { finalPolls, pollMean, results2026 } from "../lib/guessAccuracyData";
 import { num, pctValue } from "../lib/format";
 
@@ -33,22 +35,26 @@ export function Accuracy2026({ chips }: { chips?: React.ReactNode }) {
     const values = finalPolls.map((p) => p.values[id]).filter((v): v is number => v !== undefined);
     return { id, name: listName(id), estimate: pollMean[id] ?? 0, min: Math.min(...values), max: Math.max(...values), actual: actual[id] ?? 0, n: values.length, values };
   });
-  const byPoll = finalPolls.map((p) => ({ label: p.label, end: p.end, acc: accuracyPct(p.values, actual), exact: exactLists(p.values, actual) })).sort((a, b) => b.acc - a.acc);
+  // דירוג אחד לכל הסקרים האחרונים ולמדגמי 22:00 — המקום היחיד של הדיוק לכל מכון (הכרעת בעלים 03.11.2026)
+  const byPoll = [
+    ...finalPolls.map((p) => ({ label: p.label, kind: "סקר אחרון", end: p.end, ...seatTags(p.values, actual, SIMPLE_BLOCS) })),
+    ...exitPolls.map((p) => ({ label: p.publisherHe, kind: "מדגם 22:00", end: p.publishedAt, ...seatTags(Object.fromEntries(Object.entries(p.values).map(([id, v]) => [id, v.s])), actual, SIMPLE_BLOCS) })),
+  ].sort((a, b) => b.seats - a.seats || b.exact - a.exact);
   return (
     <Card title="הסקרים מול התוצאות">
       {chips}
       <h3 className="text-xl font-display leading-tight mt-4 mb-1">2026 — הסקר האחרון של כל מכון מול התוצאות</h3>
-      <p className="text-sm text-ink-soft mb-3">{finalPolls.length} מכונים · מדגמי יום הבחירות אינם נכללים</p>
+      <p className="text-sm text-ink-soft mb-3">{finalPolls.length} מכונים</p>
       <DeviationChart rows={rows} />
       <table className="w-full text-sm mt-4">
-        <caption className="sr-only">המנדטים והמפלגות המדויקים של כל סדרת סקרים</caption>
-        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">מכון ומזמין</th><th scope="col" className="pe-3">הסקר האחרון</th><th scope="col" className="pe-3">מנדטים מדויקים</th><th scope="col">מפלגות מדויקות</th></tr></thead>
+        <caption className="sr-only">דירוג הסקרים האחרונים ומדגמי 22:00 לפי הדיוק</caption>
+        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">מכון ומזמין</th><th scope="col" className="pe-3">הסקר האחרון</th><th scope="col" className="pe-3">מנדטים מדויקים</th><th scope="col" className="pe-3">מפלגות מדויקות</th><th scope="col">גושים</th></tr></thead>
         <tbody>
           {byPoll.map((p) => (
-            <tr key={p.label} className="border-b border-paper-line">
-              <th scope="row" className="py-1 pe-3 text-start font-medium">{p.label}</th>
+            <tr key={p.kind + p.label} className="border-b border-paper-line">
+              <th scope="row" className="py-1 pe-3 text-start font-medium">{p.label} <span className="block text-xs text-ink-soft font-normal">{p.kind}</span></th>
               <td className="pe-3 tabular-nums">{p.end.slice(8, 10)}/{Number(p.end.slice(5, 7))}</td>
-              <td className="pe-3 tabular-nums">{correctSeats(p.acc)}</td><td className="tabular-nums">{p.exact}</td>
+              <td className="pe-3 tabular-nums">{p.seats}</td><td className="pe-3 tabular-nums">{p.exact}</td><td className="tabular-nums">{p.blocs}</td>
             </tr>
           ))}
         </tbody>

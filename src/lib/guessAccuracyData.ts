@@ -22,6 +22,7 @@ const IDS = lists2026.map(l => l.id);
 
 /** הסקר האחרון של כל סדרת מכון–מזמין בחלון של 14 הימים עד יום הבחירות; רשימה שהסקר לא פרסם עליה נתון — חסרה (אינה 0) */
 export const finalPolls = latestPerPollster(ELECTION_DAY, SIMPLE_DAYS).map(p => ({
+  id: p.id,
   key: pollsterKey(p),
   label: pollsterLabel(p),
   firm: p.firmHe,

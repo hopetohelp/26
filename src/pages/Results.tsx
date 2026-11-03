@@ -54,6 +54,7 @@ export default function Results({ id }: { id: string }) {
   const short = (letters: string) => shortOf(e, letters);
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
+  const failed = e.lists.filter((l) => l.seats === 0).sort((x, y) => y.votes - x.votes);
   const fmtDiff = (d: readonly (readonly [string, number])[]) => fmtDiffOf(e, d);
   return (
     <>
@@ -101,6 +102,17 @@ export default function Results({ id }: { id: string }) {
         </div>
         <p className="text-xs text-ink-soft mt-2">"מתוכם שלמים" — מנדטים לפני חלוקת העודפים.</p>
       </Card>
+
+      {/* הועבר ממסך "סקרים" (הכרעת בעלים 03.11.2026): כל רשימה שלא עברה, בקולות ובאחוז מהכשרים */}
+      {failed.length > 0 && <Card title="לא עברו את אחוז החסימה">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <caption className="sr-only">הרשימות שלא עברו את אחוז החסימה</caption>
+            <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1">רשימה</th><th scope="col">קולות</th><th scope="col">מהכשרים</th></tr></thead>
+            <tbody>{failed.map((l) => <tr key={l.letters} className="border-b border-paper-line/60"><th scope="row" className="text-right py-1 font-medium" title={l.name}>{l.short}</th><td className="tabular-nums">{num(l.votes)}</td><td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </Card>}
 
       <Fold title="מה הזיזו הסכמי העודפים">
         <Explained

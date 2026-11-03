@@ -29,7 +29,7 @@ export default function Latest({ part }: { part?: "chart" | "trend" | "grid" | "
   const rows: { key: string; label: string; kind: string; cells: (number | null)[] }[] = [
     ...CURRENT_POLLS.map(p => ({ key: p.id, label: pollsterLabel(p), kind: "סקר אחרון", cells: SIMPLE_BLOCS.map(b => groupSeatsIn(p, [...b.lists])) })),
     ...exitPolls.map(p => ({ key: p.id, label: p.publisherHe, kind: "מדגם 22:00", cells: SIMPLE_BLOCS.map(b => exitSeats(p, [...b.lists])) })),
-    ...(hasResults() ? [{ key: "results", label: "תוצאות אמת", kind: `נספרו ${results2026.counted ?? "—"}%`, cells: SIMPLE_BLOCS.map(b => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)) }] : []),
+    ...(hasResults() ? [{ key: "results", label: "תוצאות אמת", kind: "התוצאות הסופיות", cells: SIMPLE_BLOCS.map(b => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)) }] : []),
   ];
   return <div className="max-w-6xl mx-auto space-y-5"><h1 className="sr-only">אחרונים</h1>
     {show("chart") && <div><SourceBar source={source} />
