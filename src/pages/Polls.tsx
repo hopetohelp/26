@@ -7,12 +7,17 @@ import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from 
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
 import { largestRemainder } from "../lib/fillAll";
-import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll } from "../lib/data";
+import { quality } from "../lib/quality";
+import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, activeLists2026, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
 const PAGE = 50;
+/** היום האחרון להגשת רשימות המועמדים — מקור אחד: quality.coverage.listSubmission (pipeline/build_data.py) */
+const LIST_SUBMISSION = quality.coverage.listSubmission;
+/** הרשימות שלא פרשו — הממוצע בטבלת "מהגשת הרשימות" מחושב רק עליהן */
+const ACTIVE_IDS = activeLists2026.map((l) => l.id);
 /** ארבעת הגושים בכל סקר — אחרי טורי הדיוק, עם קו הפרדה בסוף (הכרעת בעלים 03.11.2026); החישוב — groupSeatsIn / exitSeats (מקור אחד) */
 const blocCells = (vals: (number | null | undefined)[], tint?: (i: number, v: number) => CSSProperties | undefined) => <>{vals.map((v, i) => <td key={i} style={v == null || !tint ? undefined : tint(i, v)} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
 /**
@@ -65,7 +70,10 @@ export default function Polls() {
   // שלושה קטעים, כל אחד מהחדש לישן, עם קו הפרדה לרוחב: מדגמי 22:00 · הסקרים האחרונים · כל השאר (הכרעת בעלים 03.11.2026)
   const byNewest = (a: Poll, b: Poll) => b.end.localeCompare(a.end) || b.start.localeCompare(a.start);
   const finalRows = filtered.filter((p) => finalPollIds.has(p.id)).sort(byNewest);
-  const restAll = filtered.filter((p) => !finalPollIds.has(p.id)).sort(byNewest);
+  // שתי טבלאות (הכרעת בעלים 03.11.2026): מהגשת הרשימות (סקר שהסתיים אחרי היום האחרון להגשה) · מבחירות 2022 ועד ההגשה
+  const rest = filtered.filter((p) => !finalPollIds.has(p.id)).sort(byNewest);
+  const sinceLists = rest.filter((p) => p.end > LIST_SUBMISSION);
+  const restAll = rest.filter((p) => p.end <= LIST_SUBMISSION);
   const restRows = restAll.slice(0, shown);
   return (
     <>
@@ -100,7 +108,7 @@ export default function Polls() {
       </>} secondary={<>
       {filtered.length === 0 && <p role="status" className="c-empty">אין סקרים בטווח שנבחר. <button type="button" className="underline min-h-11" onClick={() => { setWho(""); setFrom(""); setTo(""); setShown(PAGE); }}>איפוס המסננים</button></p>}
       {/* בלי סינון זה ממוצע הסקרים שבמגירה "הסקרים מול התוצאה" — מוצג רק כשיש סינון (הכרעת בעלים 03.11.2026) */}
-      {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
+      {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...sinceLists, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
       {/* ארבע טבלאות נפרדות, כל אחת עם כותרת וסולם צבעים משלה (הכרעת בעלים 03.11.2026) */}
       <ArchiveTable title="מדגמים" parties={parties} open={open} setOpen={setOpen} rows={exitRows.map((p) => ({
         id: p.id, values: p.values,
@@ -115,7 +123,8 @@ export default function Polls() {
         </dl>,
       }))} />
       <ArchiveTable title="סקר אחרון" parties={parties} open={open} setOpen={setOpen} rows={finalRows.map(pollRow)} />
-      <ArchiveTable title="כל הסקרים" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} meanRows={restAll.map(pollRow)} foot={<>
+      <ArchiveTable title="מהגשת הרשימות" parties={parties} open={open} setOpen={setOpen} rows={sinceLists.map(pollRow)} meanLists={ACTIVE_IDS} />
+      <ArchiveTable title="מבחירות 2022" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} meanRows={restAll.map(pollRow)} foot={<>
         {shown < restAll.length && (
           <button type="button" className="f-btn mt-3" onClick={() => setShown((s) => s + PAGE)}>
             עוד {Math.min(PAGE, restAll.length - shown)} סקרים
@@ -245,7 +254,7 @@ interface ArchiveRow { id: string; values: Record<string, { s?: number; p?: numb
  * בטורי הדיוק — מרחק מהדיוק המלא (120 מנדטים, כל המפלגות, 0 טעות), ולכן רק אדום או לבן.
  */
 /** meanRows — השורות שעליהן מחושב הממוצע (ב"כל הסקרים": כל הסקרים בסינון, לא רק העמוד המוצג) */
-function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; meanRows?: ArchiveRow[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
+function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; meanRows?: ArchiveRow[]; meanLists?: string[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
   if (!rows.length) return null;
   const ready = hasResults();
   const tags = rows.map((r) => tagsOf(r.values));
@@ -269,11 +278,12 @@ function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, fo
   const avg = (xs: (number | null | undefined)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? Math.round((ok.reduce((a, b) => a + b, 0) / ok.length) * 10) / 10 : null; };
   // תמיד 120 בדיוק (הכרעת בעלים 03.11.2026): הממוצעים מנורמלים ל-120 בשיטת השארית הגדולה, בעשיריות (largestRemainder, מקור אחד)
   const to120 = (w: Record<string, number>) => Object.fromEntries(Object.entries(largestRemainder(1200, w)).map(([k, v]) => [k, v / 10]));
-  const rawMeans = Object.fromEntries([...new Set(meanRows.flatMap((r) => Object.keys(r.values)))].flatMap((id) => { const m = avg(meanRows.map((r) => r.values[id]?.s)); return m == null ? [] : [[id, m]]; }));
+  const rawMeans = Object.fromEntries([...new Set(meanRows.flatMap((r) => Object.keys(r.values)))].filter((id) => !meanLists || meanLists.includes(id)).flatMap((id) => { const m = avg(meanRows.map((r) => r.values[id]?.s)); return m == null ? [] : [[id, m]]; }));
   const meanValues = Object.fromEntries(Object.entries(to120(rawMeans)).filter(([id]) => rawMeans[id] > 0).map(([id, v]) => [id, { s: v }])) as Record<string, { s: number }>;
   const rawBlocs = SIMPLE_BLOCS.map((_, i) => avg(meanRows.map((r) => r.blocs[i])));
   const blocs120 = rawBlocs.some((b) => b != null) ? to120(Object.fromEntries(rawBlocs.map((b, i) => [String(i), b ?? 0]))) : null;
-  const meanBlocs = rawBlocs.map((b, i) => b == null || !blocs120 ? null : blocs120[String(i)]);
+  // ברשימות שלא פרשו בלבד — הגוש הוא סכום הממוצעים של הרשימות שבו, כך שגם הוא מגיע ל-120
+  const meanBlocs = meanLists ? SIMPLE_BLOCS.map((b) => Math.round(b.lists.reduce((t, id) => t + (meanValues[id]?.s ?? 0), 0) * 10) / 10) : rawBlocs.map((b, i) => b == null || !blocs120 ? null : blocs120[String(i)]);
   const accTinted = (t: SeatTags | null) => {
     if (!t || !spans) return accCells(t);
     return <>
