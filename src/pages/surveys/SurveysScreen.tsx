@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { itemSeats, cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 import { ShareBar, SurveyCard, type CardTag } from "./SurveyCard";
 
@@ -17,15 +17,16 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
       {detail.survey.questions.map((q) => {
         const qr = r.questions[q.id];
         if (!qr || !qr.n) return null;
-        // שיוך רשימות (הכרעת בעלים 03.11.2026): פס אחד לפי ממוצע המנדטים בכל עמודה (קואליציה / נמנעים / אופוזיציה)
+        // שיוך רשימות (הכרעת בעלים 03.11.2026): רק מפלגות שסומנו בקואליציה, עם אחוז המשתתפים שסימנו אותן שם
+        const coalition = q.kind === "assign" ? q.columns[0]?.id : undefined;
         const parts = q.kind === "single" && "counts" in qr ? q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0 }))
-          : q.kind === "assign" && "items" in qr ? q.columns.map((c) => ({ id: c.id, label: c.label, n: q.items.reduce((t, item) => t + itemSeats(item) * (qr.items[item.id]?.[c.id] ?? 0) / qr.n, 0) }))
+          : q.kind === "assign" && "items" in qr && coalition ? q.items.map((item) => ({ id: item.id, label: item.label, n: qr.items[item.id]?.[coalition] ?? 0 }))
           : null;
         if (!parts) return null;
         return (
           <div key={q.id}>
             {q.title && <div className="text-[12px] text-ink-soft">{q.title}</div>}
-            <ShareBar parts={parts} />
+            <ShareBar parts={parts} pctOf={q.kind === "assign" ? qr.n : undefined} />
           </div>
         );
       })}
