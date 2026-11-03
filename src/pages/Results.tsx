@@ -78,7 +78,7 @@ export default function Results({ id }: { id: string }) {
             <div><dt className="text-sm text-ink-soft">הצביעו</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(e.voted)}</dd><dd className="text-sm text-ink-soft tabular-nums">{pct((e.voted / e.eligible) * 100)}</dd></div>
             <div><dt className="text-sm text-ink-soft">קולות שנשרפו</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.wasted)}</dd><dd className="text-sm text-ink-soft tabular-nums">{pct((a.withAll.wasted / e.valid) * 100)} מהכשרים</dd></div>
             <div><dt className="text-sm text-ink-soft">מצביעים למנדט</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</dd></div>
-            <div><dt className="text-sm text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
+            <div className="col-span-2 md:col-span-1"><dt className="text-sm text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
           </dl>
         </Explained>
       </Card>
