@@ -27,6 +27,8 @@ export interface Survey {
   id: string; group: string; status: "draft" | "open" | "closed"; position: number; updatedAt: string; title: string; questions: SurveyQuestion[];
   kind: SurveyKind; closesAt: string | null; visibility: SurveyVisibility; minResults: number; truth?: Record<string, string | number> | null;
   answered?: boolean; manage?: boolean; canAnswer?: boolean; outside?: SurveyOutside;
+  /** ברשימה (GET /surveys) — מספר המשתתפים בכרטיס */
+  participants?: { all: number; group: number; outside: boolean };
 }
 /** תשובה לפריט בשאלת שיוך: עמודה אחת לכל הסיעה, או פיצול {עמודה: מנדטים} (הכרעת בעלים 01.11.2026) */
 export type AssignValue = string | Record<string, number>;

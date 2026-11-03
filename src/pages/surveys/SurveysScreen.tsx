@@ -1,10 +1,11 @@
+import { useCrowdDashboard } from "../../lib/sources";
 import { letterOf } from "../../lib/election2026";
 import { results } from "../../lib/data";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, participantsLabel, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 import { ShareBar, SurveyCard, type CardTag } from "./SurveyCard";
 
@@ -72,6 +73,8 @@ export default function SurveysScreen() {
     for (const s of surveys ?? []) if (s.answered || s.manage) getSurvey(s.id, token).then((d) => setDetails((x) => ({ ...x, [s.id]: d })), () => {});
   }, [surveys, token]);
 
+  // מספר הניחושים — מאותו מקור כמו ראש מסך "מה יהיו תוצאות הבחירות?"
+  const guessCount = useCrowdDashboard().dashboard?.seats?.n ?? null;
   const all = surveys ?? [];
   const open = all.filter((s) => s.status !== "closed");
   const closed = all.filter((s) => s.status === "closed").sort(newest);
@@ -84,12 +87,12 @@ export default function SurveysScreen() {
   // תגית: פתוח — "להשתתף" / "לעדכן"; סגור — "השתתפת", ובלי השתתפות אין תגית (הכרעת בעלים 03.11.2026)
   const tagOf = (s: Survey): CardTag => (s.status === "closed" ? (s.answered ? "joined" : null) : !token ? "join" : s.answered ? "update" : "join");
   const row = (s: Survey) => (
-    <SurveyCard key={s.id} to={to(s.id)} title={numbered(s)} when={whenText(s)} tag={tagOf(s)}>
+    <SurveyCard key={s.id} to={to(s.id)} title={numbered(s)} when={whenText(s)} participants={s.participants ? participantsLabel(s.participants) : null} tag={tagOf(s)}>
       {details[s.id] && <MiniResults detail={details[s.id]} />}
     </SurveyCard>
   );
   // "תוצאות הבחירות" — ניחוש 120 המנדטים (הכרעות בעלים 01.11 ו-02.11.2026): נסגר ויש לו תוצאה
-  const legacy = <SurveyCard key="guesses" to="/surveys/guesses" title={ELECTION_RESULTS_TITLE} when="נסגר ב-27.10 21:58" tag={null} />;
+  const legacy = <SurveyCard key="guesses" to="/surveys/guesses" title={ELECTION_RESULTS_TITLE} when="נסגר ב-27.10 21:58" participants={guessCount ? participantsLabel({ all: guessCount, group: 0, outside: false }) : null} tag={null} />;
   const section = (title: string, items: Survey[], extra?: JSX.Element, first?: JSX.Element) =>
     items.length || extra || first ? (
       <section key={title} className="space-y-2">

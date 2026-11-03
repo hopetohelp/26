@@ -88,7 +88,8 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
   const full = pathname === "/flow-graphs" ? `${SITE_ORIGIN}/#/changes` : `${SITE_ORIGIN}/#${pathname}${fullParams.size ? `?${fullParams}` : ""}`;
   return (
     <div data-embed className="bg-paper text-ink">
-      <DisclaimerBar />
+      {/* סקרי האתר: בלי שורת "האתר אינו אחראי" (הכרעת בעלים 03.11.2026) — אלה תשובות המשתתפים, לא נתונים */}
+      {!/^\/(surveys|s)(\/|$)/.test(pathname) && <DisclaimerBar />}
       <main id="main" className="w-full px-2 min-[400px]:px-3 md:px-4 py-4">
         {pathname === "/surveys/guesses" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/changes`} />}
         {children}
