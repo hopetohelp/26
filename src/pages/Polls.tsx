@@ -50,6 +50,8 @@ export default function Polls() {
   const [to, setTo] = useState("");
   const [shown, setShown] = useState(PAGE);
   const [open, setOpen] = useState<string | null>(null);
+  // מתג "הצגת המפלגות" (הכרעת בעלים 03.11.2026): כבוי — בלי טורי הרשימות; ברירת המחדל — מוצגות
+  const [parties, setParties] = useState<"on" | "off">("on");
 
   const filtered = polls.filter(
     (p) => (!who || pollsterKey(p) === who) && (!from || p.end >= from) && (!to || p.end <= to),
@@ -62,8 +64,10 @@ export default function Polls() {
   const restAll = filtered.filter((p) => !finalPollIds.has(p.id)).sort(byNewest);
   const restRows = restAll.slice(0, shown);
   // עמודה לכל רשימה שמופיעה בשורות המוצגות, לפי הגודל בשורה הראשונה שבה הופיעה
-  const listCols = (() => {
+  const listCols = parties === "off" ? [] : (() => {
     const seen = new Map<string, number>();
+    // תוצאות האמת קובעות את סדר הטורים (השורה הראשונה)
+    if (hasResults()) for (const [id, v] of Object.entries(results2026.seats)) if (v > 0) seen.set(id, v);
     for (const p of [...exitRows, ...finalRows, ...restRows]) for (const [id, v] of Object.entries(p.values) as [string, { s?: number; p?: number }][]) if (!seen.has(id)) seen.set(id, v.s ?? -1);
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
   })();
@@ -71,7 +75,7 @@ export default function Polls() {
   return (
     <>
 
-      <Split title="ארכיון הסקרים" lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם." primary={<>
+      <Split title="ארכיון הסקרים" lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם. לחיצה על סקר מציגה את הנתונים המלאים שלו." primary={<>
       <Card>
         <form className="flex flex-wrap gap-3 items-end" onSubmit={(e) => e.preventDefault()}>
           <label className="flex flex-col text-sm w-full sm:w-auto min-w-0">
@@ -93,6 +97,8 @@ export default function Polls() {
             עד תאריך
             <input type="date" className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={to} onChange={(e) => { setTo(e.target.value); setShown(PAGE); }} />
           </label>
+          {/* כפתור אחד (הכרעת בעלים 03.11.2026): דולק — רגיל; כבוי — אפור */}
+          <button type="button" aria-pressed={parties === "on"} onClick={() => setParties(parties === "on" ? "off" : "on")} className={`f-btn min-h-11${parties === "on" ? "" : " opacity-60 grayscale text-ink-soft"}`}>הצגת מפלגות</button>
         </form>
       </Card>
 
@@ -102,7 +108,6 @@ export default function Polls() {
       {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
       <Card>
         {/* טבלה אחת לכל הסקרים, כולל הסקר האחרון של כל מכון ומדגמי 22:00, עם תווית (הכרעת בעלים 03.11.2026); שורת ההסבר — באישור הבעלים */}
-        <p className="text-sm text-ink-soft mb-2">לחיצה על סקר מציגה את הנתונים המלאים שלו.</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs md:text-sm">
             <caption className="sr-only">ארכיון הסקרים: שורה לכל סקר, עמודה לכל רשימה</caption>
@@ -117,6 +122,13 @@ export default function Polls() {
               </tr>
             </thead>
             <tbody>
+              {/* שורה ראשונה מודגשת: תוצאות האמת (הכרעת בעלים 03.11.2026) */}
+              {hasResults() && <tr className="border-b-2 border-ink font-bold align-top">
+                <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
+                {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
+                {blocCells(SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)))}
+                {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
+              </tr>}
               {exitRows.map((p) => {
                 const isOpen = open === p.id;
                 const t = tagsOf(p.values);
@@ -154,7 +166,7 @@ export default function Polls() {
                 const t = tagsOf(p.values);
                 return (
                   <Fragment key={p.id}>
-                    <tr className={`c-archive-row border-b border-paper-line/60 align-top${sectionStart ? " border-t-4 border-t-ink-soft" : ""}`}>
+                    <tr className={`c-archive-row border-b border-paper-line/60 align-top${sectionStart ? " [&>*]:border-t-4 [&>*]:border-t-ink-soft" : ""}`}>
                       <th scope="row" className="py-2 pe-2 text-right font-normal">
                         <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
                           <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
