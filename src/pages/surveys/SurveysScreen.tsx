@@ -25,7 +25,7 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
         // שיוך רשימות (הכרעת בעלים 03.11.2026): רק מפלגות שסומנו בקואליציה, עם אחוז המשתתפים שסימנו אותן שם
         const coalition = q.kind === "assign" ? q.columns[0]?.id : undefined;
         const parts = q.kind === "single" && "counts" in qr ? q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0, short: ballotOf(o.id) }))
-          : q.kind === "assign" && "items" in qr && coalition ? q.items.map((item) => ({ id: item.id, label: item.label, n: qr.items[item.id]?.[coalition] ?? 0, short: ballotOf(item.id) }))
+          : q.kind === "assign" && "items" in qr && coalition ? q.items.map((item) => ({ id: item.id, label: item.label, n: (qr.any ?? qr.items)[item.id]?.[coalition] ?? 0, short: ballotOf(item.id) }))
           : null;
         if (!parts) return null;
         return (

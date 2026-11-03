@@ -25,6 +25,8 @@ export function SurveyCard({ to, title, when, tag, children }: { to: string; tit
   );
 }
 
+/** צבעים מתחלפים בפס (הכרעת בעלים 03.11.2026): בלי חזרה צמודה על אותו צבע; ניטרליים, לא צבעי מפלגות */
+const BAR_COLORS = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-2))] text-paper", "bg-[rgb(var(--bloc-4))] text-paper", "bg-[rgb(var(--bloc-3))] text-paper", "bg-[rgb(var(--bloc-5))] text-paper"];
 const PAD = 12; // px-1.5 משני הצדדים
 
 /**
@@ -59,7 +61,7 @@ export function ShareBar({ parts, pctOf }: { parts: { id: string; label: string;
       {rows.map((p, i) => {
         const pct = `${p.pct}%`;
         const texts = p.short ? [`${p.label} ${pct}`, `${p.short} ${pct}`, p.short] : [`${p.label} ${pct}`, pct];
-        return <Segment key={p.id} texts={texts} width={`${(p.n / total) * 100}%`} className={`${i % 2 ? "bg-[rgb(var(--bloc-5))] text-paper" : "bg-signal text-signal-ink"} flex items-center justify-center whitespace-nowrap overflow-hidden min-w-0 shrink-0`} />;
+        return <Segment key={p.id} texts={texts} width={`${(p.n / total) * 100}%`} className={`${BAR_COLORS[i % BAR_COLORS.length]} flex items-center justify-center whitespace-nowrap overflow-hidden min-w-0 shrink-0`} />;
       })}
     </div>
   );

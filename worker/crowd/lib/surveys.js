@@ -124,7 +124,7 @@ export function tally(def, latest) {
   for (const q of def.questions) {
     if (q.kind === "single") res[q.id] = { n: 0, counts: Object.fromEntries(q.options.map((o) => [o.id, 0])) };
     else if (q.kind === "range") res[q.id] = { n: 0, counts: {}, mean: null };
-    else res[q.id] = { n: 0, items: Object.fromEntries(q.items.map((i) => [i.id, Object.fromEntries(q.columns.map((c) => [c.id, 0]))])) };
+    else res[q.id] = { n: 0, items: Object.fromEntries(q.items.map((i) => [i.id, Object.fromEntries(q.columns.map((c) => [c.id, 0]))])), any: Object.fromEntries(q.items.map((i) => [i.id, Object.fromEntries(q.columns.map((c) => [c.id, 0]))])) };
   }
   for (const a of latest) {
     for (const q of def.questions) {
@@ -136,7 +136,10 @@ export function tally(def, latest) {
       else for (const [item, col] of Object.entries(v)) {
         const row = res[q.id].items[item];
         if (!row) continue;
-        if (typeof col === "string") { if (row[col] !== undefined) row[col]++; continue; }
+        // any — כמה משתתפים שמו לפחות חלק מהסיעה בעמודה (פיצול נספר כמלא; הכרעת בעלים 03.11.2026)
+        const any = res[q.id].any[item];
+        if (typeof col === "string") { if (row[col] !== undefined) { row[col]++; any[col]++; } continue; }
+        for (const [c, n] of Object.entries(col)) if (any[c] !== undefined && n > 0) any[c]++;
         // סיעה מפוצלת נספרת כמשתתף אחד, מחולק לפי חלקי המנדטים
         const total = Object.values(col).reduce((x, y) => x + y, 0);
         for (const [c, n] of Object.entries(col)) if (row[c] !== undefined && total) row[c] = Math.round((row[c] + n / total) * 1000) / 1000;
