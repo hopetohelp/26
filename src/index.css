@@ -958,13 +958,7 @@ path.f-miss { stroke:rgb(var(--neg));stroke-width:3;animation:f-miss-blink 1.2s 
 .f-glink { display:flex;align-items:center;flex:none;align-self:center; } .f-barlogo { display:block;margin:0; }
 .f-bar > a.f-glink { height:40px;min-height:0;padding:0;margin:0; }
 
-/* טלפון: הכותרת חוזרת בגלילה למעלה (הכרעת בעלים 03.11.2026) */
-.f-head-reveal { transition:transform .25s ease; }
-.f-head-reveal.is-hidden { transform:translateY(-100%); }
-@media (prefers-reduced-motion: reduce) { .f-head-reveal { transition:none; } }
-/* מחשב: פס עליון שקוף, ולכל כפתור בו מסגרת הילה (הכרעת בעלים 03.11.2026) */
-@media (min-width: 1100px) {
-  .f-bar { background:transparent;backdrop-filter:none; }
-  .f-bar .f-btn, .f-bar .f-election-btn, .f-bar > a.f-glink { box-shadow:0 0 0 1px rgb(var(--signal) / .18), 0 0 22px 3px rgb(var(--signal) / .30), 0 8px 24px rgb(var(--ink) / .12); }
-  .f-bar > a.f-glink { border-radius:999px; }
-}
+/* פס עליון שקוף, ולכל כפתור בו מסגרת הילה — בכל המכשירים (הכרעות בעלים 03.11.2026) */
+.f-bar { background:transparent;backdrop-filter:none; }
+.f-bar .f-btn, .f-bar .f-election-btn, .f-bar > a.f-glink { box-shadow:0 0 0 1px rgb(var(--signal) / .18), 0 0 22px 3px rgb(var(--signal) / .30), 0 8px 24px rgb(var(--ink) / .12); }
+.f-bar > a.f-glink { border-radius:999px; }
