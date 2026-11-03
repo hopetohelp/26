@@ -75,7 +75,7 @@ describe("תגיות הדיוק על כל סקר (הכרעת בעלים 02.11.20
     const poll = { a: 58, b: 42 };
     const blocs = [{ lists: ["a"] }, { lists: ["b", "c"] }];
     // במקום הלא נכון: (2+2+20)/2 = 12 ⇐ 108; מפלגות מדויקות: אף אחת; גושים: (2+18)/2 = 10 ⇐ 110
-    expect(seatTags(poll, actual, blocs)).toEqual({ seats: 108, exact: 0, blocs: 110 });
-    expect(seatTags(actual, actual, blocs)).toEqual({ seats: 120, exact: 3, blocs: 120 });
+    expect(seatTags(poll, actual, blocs)).toEqual({ seats: 108, exact: 0, of: 3, blocs: 110, blocErr: 10 });
+    expect(seatTags(actual, actual, blocs)).toEqual({ seats: 120, exact: 3, of: 3, blocs: 120, blocErr: 0 });
   });
 });

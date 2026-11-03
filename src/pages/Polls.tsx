@@ -1,6 +1,6 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import { seatsOfValues } from "../components/PollAccuracyTags";
-import { seatTags } from "../lib/guessAccuracy";
+import { seatTags, type SeatTags } from "../lib/guessAccuracy";
 import { ELECTION_DAY, finalPolls, hasResults, results2026 } from "../lib/guessAccuracyData";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState } from "react";
@@ -12,6 +12,12 @@ import { date, dateRange, num } from "../lib/format";
 const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
 const PAGE = 50;
+/** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
+const accCells = (t: SeatTags | null) => <>
+  <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t?.seats ?? "—"}</td>
+  <td className="px-1 text-center tabular-nums whitespace-nowrap"><bdi dir="ltr">{t ? `${t.exact}/${t.of}` : "—"}</bdi></td>
+  <td className="px-1 text-center tabular-nums border-e-2 border-paper-line">{t?.blocErr ?? "—"}</td>
+</>;
 /** הסקרים האחרונים של כל מכון לפני הבחירות — לתווית "סקר אחרון" */
 const finalPollIds = new Set(finalPolls.map((p) => p.id));
 /** דיוק מול תוצאות 2026 (מנדטים, מפלגות, גושים) — מקור אחד: seatTags */
@@ -80,9 +86,6 @@ export default function Polls() {
             עד תאריך
             <input type="date" className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={to} onChange={(e) => { setTo(e.target.value); setShown(PAGE); }} />
           </label>
-          <p className="text-sm text-ink-soft" aria-live="polite">
-            {filtered.length} סקרים
-          </p>
         </form>
       </Card>
 
@@ -91,17 +94,18 @@ export default function Polls() {
       {/* בלי סינון זה ממוצע הסקרים שבמגירה "הסקרים מול התוצאה" — מוצג רק כשיש סינון (הכרעת בעלים 03.11.2026) */}
       {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={filtered.slice(0, shown).map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
       <Card>
-        {/* טבלה אחת לכל הסקרים, כולל הסקר האחרון של כל מכון ומדגמי 22:00, עם תווית (הכרעת בעלים 03.11.2026) */}
+        {/* טבלה אחת לכל הסקרים, כולל הסקר האחרון של כל מכון ומדגמי 22:00, עם תווית (הכרעת בעלים 03.11.2026); שורת ההסבר — באישור הבעלים */}
+        <p className="text-sm text-ink-soft mb-2">לחיצה על סקר מציגה את הנתונים המלאים שלו.</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs md:text-sm">
             <caption className="sr-only">ארכיון הסקרים: שורה לכל סקר, עמודה לכל רשימה</caption>
             <thead>
               <tr className="text-right border-b border-paper-line">
                 <th scope="col" className="py-2 pe-2 min-w-[11rem]">סקר</th>
-                {listCols.map((id) => <th key={id} scope="col" className="px-1 font-medium whitespace-nowrap">{listName(id)}</th>)}
-                <th scope="col" className="px-1 whitespace-nowrap">מנדטים מדויקים</th>
+                <th scope="col" className="px-1 whitespace-nowrap border-s-2 border-paper-line">מנדטים מדויקים</th>
                 <th scope="col" className="px-1 whitespace-nowrap">מפלגות מדויקות</th>
-                <th scope="col" className="px-1">גושים</th>
+                <th scope="col" className="px-1 whitespace-nowrap border-e-2 border-paper-line">טעות בגושים</th>
+                {listCols.map((id) => <th key={id} scope="col" className="px-1 font-medium whitespace-nowrap">{listName(id)}</th>)}
               </tr>
             </thead>
             <tbody>
@@ -118,8 +122,8 @@ export default function Polls() {
                         </button>
                         <span className="flex flex-wrap gap-1 mt-1"><Badge tone="ok">מדגם 22:00</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></span>
                       </th>
+                      {accCells(t)}
                       {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{p.values[id]?.s ?? "—"}</td>)}
-                      <td className="px-1 text-center tabular-nums">{t?.seats ?? "—"}</td><td className="px-1 text-center tabular-nums">{t?.exact ?? "—"}</td><td className="px-1 text-center tabular-nums">{t?.blocs ?? "—"}</td>
                     </tr>
                     {isOpen && <tr><td colSpan={listCols.length + 4} className="pb-3">
                       <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
@@ -153,8 +157,8 @@ export default function Polls() {
                           {p.verification ? <Badge tone={label!.tone === "ok" ? "ok" : label!.tone === "warn" ? "warn" : "neutral"}>{label!.text}</Badge> : <Badge>מקור: ויקיפדיה</Badge>}
                         </span>
                       </th>
+                      {accCells(t)}
                       {listCols.map((id) => { const v = p.values[id]; return <td key={id} className="px-1 text-center tabular-nums whitespace-nowrap">{!v ? "—" : v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}</td>; })}
-                      <td className="px-1 text-center tabular-nums">{t?.seats ?? "—"}</td><td className="px-1 text-center tabular-nums">{t?.exact ?? "—"}</td><td className="px-1 text-center tabular-nums">{t?.blocs ?? "—"}</td>
                     </tr>
                     {isOpen && <tr><td colSpan={listCols.length + 4} className="pb-3">
                   <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">

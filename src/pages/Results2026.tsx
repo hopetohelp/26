@@ -48,13 +48,13 @@ export function Accuracy2026({ chips }: { chips?: React.ReactNode }) {
       <DeviationChart rows={rows} />
       <table className="w-full text-sm mt-4">
         <caption className="sr-only">דירוג הסקרים האחרונים ומדגמי 22:00 לפי הדיוק</caption>
-        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">מכון ומזמין</th><th scope="col" className="pe-3">הסקר האחרון</th><th scope="col" className="pe-3">מנדטים מדויקים</th><th scope="col" className="pe-3">מפלגות מדויקות</th><th scope="col">גושים</th></tr></thead>
+        <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1 pe-3">מכון ומזמין</th><th scope="col" className="pe-3">הסקר האחרון</th><th scope="col" className="pe-3">מנדטים מדויקים</th><th scope="col" className="pe-3">מפלגות מדויקות</th><th scope="col">טעות בגושים</th></tr></thead>
         <tbody>
           {byPoll.map((p) => (
             <tr key={p.kind + p.label} className="border-b border-paper-line">
               <th scope="row" className="py-1 pe-3 text-start font-medium">{p.label} <span className="block text-xs text-ink-soft font-normal">{p.kind}</span></th>
               <td className="pe-3 tabular-nums">{p.end.slice(8, 10)}/{Number(p.end.slice(5, 7))}</td>
-              <td className="pe-3 tabular-nums">{p.seats}</td><td className="pe-3 tabular-nums">{p.exact}</td><td className="tabular-nums">{p.blocs}</td>
+              <td className="pe-3 tabular-nums">{p.seats}</td><td className="pe-3 tabular-nums"><bdi dir="ltr">{p.exact}/{p.of}</bdi></td><td className="tabular-nums">{p.blocErr}</td>
             </tr>
           ))}
         </tbody>
