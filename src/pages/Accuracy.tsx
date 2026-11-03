@@ -1,6 +1,6 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import PollAccuracyTags from "../components/PollAccuracyTags";
-import Missing, { POLL_DRAWERS } from "../components/Missing";
+import { POLL_DRAWERS } from "../components/Missing";
 import { useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { type Series } from "../components/charts";
@@ -183,7 +183,6 @@ function AccuracyPast({ id }: { id: string }) {
 
         </Card>
       </Fold>
-      <Fold title={POLL_DRAWERS.exit} open={open === "exit"}><Missing what="מדגמי 22:00 במערכת זו" /></Fold>
       <Fold title={POLL_DRAWERS.trend} open={open === "trends"}>
         <Card>
         <h3 className="font-bold mb-2">לאורך המערכה</h3>

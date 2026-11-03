@@ -24,7 +24,6 @@ import { results2026 } from "../lib/guessAccuracyData";
 const VoterFlow = lazy(() => import("./VoterFlow"));
 const Trends = lazy(() => import("./Trends"));
 const Polls = lazy(() => import("./Polls"));
-const ExitPollsCard = lazy(() => import("./Polls").then(m => ({ default: m.ExitPollsCard })));
 const Today = lazy(() => import("./Today"));
 const SimpleOverview = lazy(() => import("./simple/Overview"));
 const GuessAccuracy = lazy(() => import("./simple/GuessAccuracy"));
@@ -79,17 +78,16 @@ function Polls2026() {
   // חמש המגירות, זהות לכל מערכת (POLL_DRAWERS; הכרעת בעלים 02.11.2026). כל התוכן הקודם נשמר — רק חולק למגירות.
   return <div>
     <Fold title={POLL_DRAWERS.vs} open={tab === "vs" || tab === "latest"}>
-      <div className="space-y-5"><Latest part="chart" /><Accuracy2026 /><Latest part="blocs" /></div>
+      <div className="space-y-5"><Accuracy2026 /><Latest part="blocs" /></div>
     </Fold>
     <Fold title={POLL_DRAWERS.firms} open={tab === "firms"}>
       {/* דיוק הסקרים לכל רשימה וגוש, הסקר הקרוב והשילוב הקרוב — הועברו ממסך "תוצאות אמת" */}
       <div className="space-y-5"><Latest part="grid" /><Suspense fallback={loading}><GuessAccuracy part="polls" /></Suspense></div>
     </Fold>
-    <Fold title={POLL_DRAWERS.exit} open={tab === "exit"}><Suspense fallback={loading}><ExitPollsCard /></Suspense></Fold>
     <Fold title={POLL_DRAWERS.trend} open={tab === "trends"}>
       <div className="space-y-5"><Latest part="trend" /><Suspense fallback={loading}><Trends /></Suspense></div>
     </Fold>
-    <Fold title={POLL_DRAWERS.archive} open={tab === "archive"}><Suspense fallback={loading}><Polls /></Suspense></Fold>
+    <Fold title={POLL_DRAWERS.archive} open={tab === "archive" || tab === "exit"}><Suspense fallback={loading}><Polls /></Suspense></Fold>
     {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}
     {overview && <Fold title="האחרונים" open={tab === "overview"}><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
     {today && <Fold title="היום" open={tab === "today"}><Suspense fallback={loading}><Today /></Suspense></Fold>}

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import InfoTip from "../../components/InfoTip";
-import { THRESHOLD_PCT } from "../../engine/pctForSeats";
 import type { SeatsPayload } from "../../lib/crowdApi";
 import { useCrowdDashboard } from "../../lib/sources";
-import { accuracyPct, accuracyRows, correctSeats, exactLists, pollsAccuracy, bestCombination, closerShareHist, closestPoll, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
+import { accuracyPct, accuracyRows, correctSeats, exactLists, pollsAccuracy, bestCombination, closerShareHist, distance, histStats, pollStats, type Seats } from "../../lib/guessAccuracy";
 import { useInterface } from "../../lib/interfaceMode";
 import { SIMPLE_ALL, SIMPLE_BLOCS } from "../../lib/simpleSources";
 import { finalPolls, hasResults, histArrays, pollMean, pollMedian, results2026 } from "../../lib/guessAccuracyData";
@@ -44,10 +43,8 @@ const COLUMNS: Record<View, [string, string][]> = {
     ["המרחק של החציון", "החציון הוא הניחוש האמצעי (חצי ניחשו פחות וחצי יותר); כמה הוא רחוק מהתוצאה, במספר וביחס."],
   ],
   polls: [
-    ["תוצאות אמת", "המנדטים שהרשימה קיבלה בפועל, לפי ועדת הבחירות."],
     ["סקרים מדויקים", "אחוז הסקרים האחרונים (אחד לכל מכון) שנתנו לרשימה בדיוק את מספר המנדטים שקיבלה."],
     ["המרחק הממוצע", "בממוצע, בכמה מנדטים טעו הסקרים, וכמה זה ביחס לגודל הרשימה. סקר שלא פרסם נתון לרשימה אינו נכלל בה."],
-    ["המכון שנבחר", "בכמה מנדטים טעה המכון שנבחר במתג, וכמה זה ביחס לגודל הרשימה."],
   ],
 };
 
@@ -67,7 +64,6 @@ export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
   const mine: Seats | null = saved ? Object.fromEntries(IDS.map(id => [id, (seats.draft ?? saved).seats[id]?.v ?? 0])) : null;
   const [mode, setMode] = useState<"guesses" | "polls">(part);
   const [who, setWho] = useState<"mine" | "all">("all"); // ברירת המחדל במורחב: כל הניחושים (הכרעת בעלים 28/10)
-  const [firm, setFirm] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const openShare = useCallback(() => setSharing(true), []);
   const d = crowd.dashboard;
@@ -93,7 +89,6 @@ export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
   const ids = useMemo(() => accuracyRows(actual, pollMean), [actual]);
   // השילוב הטוב ביותר — רק כשהוא קרוב יותר ממכון בודד (שילוב של שני מכונים ומעלה); אחרת הכרטיס לא מוצג (הכרעת בעלים 28/10)
   const best = useMemo(() => { const b = hasResults() ? bestCombination(finalPolls, actual, ids) : null; return b && b.keys.length > 1 ? b : null; }, [actual, ids]);
-  const nearest = useMemo(() => hasResults() ? closestPoll(finalPolls, actual) : null, [actual]);
   // לפני הספירה הראשונה: כל הנתונים הקיימים, ובטורים שתלויים בתוצאות — קו (הכרעת בעלים 27.10.2026)
   const ready = hasResults();
   useRegisterNavShare(openShare, !d || !ready, false);
@@ -108,7 +103,6 @@ export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
 
   const view: View = mode === "polls" ? "polls" : who === "mine" && mine ? "mine" : "all";
   const pollList = finalPolls.map(p => p.values);
-  const chosen = finalPolls.find(p => p.key === firm) ?? finalPolls[0];
   const polls = pollList;
   // ממוקדת: כמה מהמנחשים היו רחוקים יותר ממני (ממוצע המפלגות), כמה מנדטים במקום הלא נכון, ושלוש תיבות אחוז הדיוק
   const myBeat = mine && ready ? avgOf(ids.map(id => { const h = hist?.[id]; if (!h) return null; const a = actual[id] ?? 0, err = Math.abs((mine[id] ?? 0) - a); const c = closerShareHist(err, h, a); const n = h.reduce((x, y) => x + y, 0); const tie = (h[a - err] ?? 0) + (err ? h[a + err] ?? 0 : 0); return c === null ? null : 1 - c - tie / n; })) : null;
@@ -157,13 +151,10 @@ export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
     {mode === "guesses" && mine && <div className="f-seg fit" role="group" aria-label="איזה ניחוש">
       {(["mine", "all"] as const).map(w => <button key={w} type="button" aria-pressed={who === w} onClick={() => setWho(w)}>{w === "mine" ? "הניחוש שלי" : "כל הניחושים"}</button>)}
     </div>}
-    {mode === "polls" && <div className="f-seg" role="group" aria-label="מכון">
-      {finalPolls.map(p => <button key={p.key} type="button" aria-pressed={chosen?.key === p.key} onClick={() => setFirm(p.key)}>{p.label}</button>)}
-    </div>}
     </div>
-    <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <span className="inline-flex flex-col items-start gap-0.5"><PartyAvatar id={id} size={30} /><span className="text-xs leading-tight">{nameOf(id)}</span></span>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={chosen?.values ?? null} chosenLabel={chosen?.label} ready={ready} />
+    <AccuracyTable view={view} ids={ids} allShare={exactAllShare} name={id => <PartyName id={id} />} short={id => <span className="inline-flex flex-col items-start gap-0.5"><PartyAvatar id={id} size={30} /><span className="text-xs leading-tight">{nameOf(id)}</span></span>} actual={actual} mine={mine} hist={hist} polls={pollList} chosen={null} ready={ready} />
     <h2 className="font-bold mt-5 mb-2">לפי ארבעת הגושים</h2>
-    <AccuracyTable view={view} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={chosen ? blocs(chosen.values) : null} chosenLabel={chosen?.label} ready={ready} />
+    <AccuracyTable view={view} ids={BLOC_IDS4} name={id => <span>{blocName(id)}</span>} short={id => <span>{blocShort(id)}</span>} actual={blocs(actual)} mine={mine && blocs(mine)} hist={blocHist(hist)} polls={pollList.map(blocs)} chosen={null} ready={ready} />
     </> : <>
     <div className="grid gap-2 mb-4 items-center" style={{ gridTemplateColumns: tiles.map(t => t.big ? "minmax(0, 1.35fr)" : "minmax(0, 1fr)").join(" ") }}>
       {tiles.map(t => <div key={t.label} className={`f-card text-center ${t.big ? "!py-4 !px-3" : "!p-3"}`}>
@@ -183,11 +174,7 @@ export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
     </div>
     </>}
     {/* במצב ממוקד הרשימות שלא עברו כבר בגרף (אחרי קו ההפרדה) — הכרטיס רק בניתוח מורחב (הכרעת בעלים 28.10.2026) */}
-    {pollsOnly && <BelowThreshold ready={ready} />}
-    {nearest && !noPolls && <div className="f-card mt-4">
-      <h2 className="font-bold mb-2">הסקר הקרוב ביותר</h2>
-      <p className="text-sm">{nearest.label} <span className="text-ink-soft">({nearest.end.split("-").reverse().slice(0, 2).map(Number).join("/")})</span> · <span className="font-num font-bold">{correctSeats(nearest.acc)}</span> מנדטים · <span className="font-num font-bold">{exactLists(finalPolls.find(p => p.label === nearest.label)?.values ?? {}, actual)}</span> מפלגות</p>
-    </div>}
+    {/* "לא עברו את אחוז החסימה" עבר למסך "תוצאות"; "הסקר הקרוב ביותר" — השורה הראשונה בדירוג שבמגירה "הסקרים מול התוצאה" (הכרעת בעלים 03.11.2026) */}
     {advanced && best && !noPolls && <div className="f-card mt-4">
       <h2 className="font-bold mb-2">השילוב הקרוב ביותר</h2>
       <p className="text-sm mb-2">{best.keys.map(k => finalPolls.find(p => p.key === k)?.label).join(" · ")}</p>
@@ -202,24 +189,6 @@ export default function GuessAccuracy({ part }: { part: "guesses" | "polls" }) {
 
 /** רשימות שלא עברו את אחוז החסימה (הכרעת בעלים 27.10.2026): כל רשימה פעילה בלי מנדטים, עם אחוז הקולות שלה (raw/results-2026.json pct).
  * לפני הספירה — הרשימות הקטנות, עם קו */
-function BelowThreshold({ ready }: { ready: boolean }) {
-  const pct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
-  // לפני הספירה: הרשימות שבממוצע הסקרים מתחת ל-4 מנדטים (המילואימניקים, עמך ישראל, נעם, הציבור החרדי, צבע שחור)
-  const rows = activeLists2026.map(l => l.id)
-    .filter(id => ready ? (results2026.seats[id] ?? 0) === 0 : (pollMean[id] ?? 0) < 4)
-    .sort((a, b) => (pct[b] ?? 0) - (pct[a] ?? 0));
-  if (!rows.length) return null;
-  return <div className="f-card mt-4">
-    <h2 className="font-bold mb-2">{ready ? `לא עברו את אחוז החסימה (${THRESHOLD_PCT}%)` : "רשימות נוספות"}</h2>
-    <table className="w-full text-sm"><tbody>
-      {rows.map(id => <tr key={id} className="border-t border-line first:border-t-0">
-        <td className="py-2"><PartyName id={id} /></td>
-        <td className="py-2 text-end font-num whitespace-nowrap">{ready && pct[id] != null ? `${pct[id].toFixed(1)}% מהקולות` : "—"}</td>
-      </tr>)}
-    </tbody></table>
-  </div>;
-}
-
 /** ארבעת הגושים — אותה הגדרה כמו בכל האתר (SIMPLE_BLOCS) */
 const BLOC_IDS4 = SIMPLE_BLOCS.map(b => b.id);
 const blocName = (id: string) => SIMPLE_BLOCS.find(b => b.id === id)?.name ?? id;
@@ -230,7 +199,7 @@ const blocs = (v: Seats): Seats => Object.fromEntries(SIMPLE_BLOCS.map(b => [b.i
 const blocHist = (h: Record<string, number[]> | null) => h && Object.fromEntries(BLOC_IDS4.flatMap(id => h[`bloc:${id}`] ? [[id, h[`bloc:${id}`]]] : []));
 
 /** טבלה אחת — לרשימות ולגושים, באותם טורים (הכרעות בעלים 27.10.2026) */
-function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chosen, chosenLabel, ready, allShare }: {
+function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, ready, allShare }: {
   /** allShare — בתצוגת "כל הניחושים" בטבלת הרשימות: אחוז המנחשים שצדקו בכל הרשימות יחד, במקום ממוצע השורות */
   allShare?: number | null;
   view: View; ids: string[]; name: (id: string) => React.ReactNode; short: (id: string) => React.ReactNode; actual: Seats; mine: Seats | null;
@@ -238,11 +207,12 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
 }) {
   const rows = ids.map(id => {
     const a = actual[id] ?? 0, h = hist?.[id];
-    if (!ready) return { id, a, cells: view === "mine" ? [fmt(mine?.[id] ?? 0), "—"] : ["—"], dist: (view === "mine" ? [null] : [null, null]) as (number | null)[], share: null };
+    if (!ready) return { id, a, cells: view === "mine" ? [fmt(mine?.[id] ?? 0), "—"] : ["—"], dist: (view === "all" ? [null, null] : [null]) as (number | null)[], share: null };
     if (view === "mine") { const g = mine?.[id] ?? 0, err = Math.abs(g - a); return { id, a, cells: [fmt(g), pc(h ? closerShareHist(err, h, a) : null)], dist: [err] as (number | null)[], share: h ? closerShareHist(err, h, a) : null }; }
     if (view === "all") { const st = h ? histStats(h, a) : null; return { id, a, cells: [pc(st?.exact)], dist: [st?.mean ?? null, st ? Math.abs(st.median - a) : null], share: st?.exact ?? null }; }
-    const st = pollStats(polls, id, a), f = chosen && id in chosen ? Math.abs(chosen[id] - a) : null;
-    return { id, a, cells: [pc(st?.exact)], dist: [st?.mean ?? null, f], share: st?.exact ?? null };
+    // בלי טור "תוצאות אמת" ובלי "המכון שנבחר": התוצאות בגרף "הסקרים מול התוצאה", ומספרי כל מכון במפת המכונים (הכרעת בעלים 03.11.2026)
+    const st = pollStats(polls, id, a);
+    return { id, a, cells: [pc(st?.exact)], dist: [st?.mean ?? null], share: st?.exact ?? null };
   });
   // שורת "כל המפלגות": אחוזים — ממוצע של השורות; מרחקים — סכום המנדטים, והיחס הממוצע
   const nDist = rows[0]?.dist.length ?? 0;
@@ -254,16 +224,16 @@ function AccuracyTable({ view, ids, name, short, actual, mine, hist, polls, chos
     <table className="w-full text-xs md:text-sm">
       <thead><tr className="text-ink-soft text-right">
         <th className="py-2 pe-2">{ids === BLOC_IDS4 ? "גוש" : "רשימה"}</th>
-        {COLUMNS[view].map(([h], i) => <th key={h} className="py-2 px-1 md:px-2 font-semibold">{view === "polls" && i === 3 ? chosenLabel ?? h : h}</th>)}
+        {COLUMNS[view].map(([h]) => <th key={h} className="py-2 px-1 md:px-2 font-semibold">{h}</th>)}
       </tr></thead>
       <tbody>{rows.map(r => <tr key={r.id} className="border-t border-line">
         <td className="py-2 pe-2"><span className="hidden md:inline">{name(r.id)}</span><span className="md:hidden">{short(r.id)}</span></td>
-        <td className="px-1 md:px-2 font-num">{ready ? fmt(r.a) : "—"}</td>
+        {view !== "polls" && <td className="px-1 md:px-2 font-num">{ready ? fmt(r.a) : "—"}</td>}
         {r.cells.map((c, i) => <td key={i} className="px-1 md:px-2 font-num whitespace-nowrap">{c}</td>)}
         {r.dist.map((x, i) => <td key={`d${i}`} className="px-1 md:px-2 font-num whitespace-nowrap"><Dist seats={x} actual={r.a} /></td>)}
       </tr>)}</tbody>
       <tfoot><tr className="border-t-2 border-ink font-bold">
-        <td className="py-2 pe-2">{ids === BLOC_IDS4 ? "כל הגושים" : "כל המפלגות"}</td><td className="px-1 md:px-2 font-num">{ready ? fmt(rows.reduce((t, r) => t + r.a, 0)) : "—"}</td>
+        <td className="py-2 pe-2">{ids === BLOC_IDS4 ? "כל הגושים" : "כל המפלגות"}</td>{view !== "polls" && <td className="px-1 md:px-2 font-num">{ready ? fmt(rows.reduce((t, r) => t + r.a, 0)) : "—"}</td>}
         {view === "mine" && <td className="px-1 md:px-2 font-num">{fmt(rows.reduce((t, r) => t + (mine?.[r.id] ?? 0), 0))}</td>}
         <td className="px-1 md:px-2 font-num">{view === "all" && allShare !== undefined ? pcFine(allShare) : pc(avgOf(rows.map(r => r.share)))}</td>
         {totals.map((t, i) => <td key={i} className="px-1 md:px-2 font-num whitespace-nowrap">{ready ? <bdi dir="ltr">{fmt(Math.round(t.seats * 10) / 10)} ({t.ratio == null ? "—" : `${Math.round(t.ratio * 100)}%`})</bdi> : "—"}</td>)}

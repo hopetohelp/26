@@ -7,7 +7,6 @@ export default function Missing({ what }: { what?: string }) {
 export const POLL_DRAWERS = {
   vs: "הסקרים מול התוצאה",
   firms: "הסקר האחרון של כל מכון",
-  exit: "מדגמי 22:00",
   trend: "מגמות",
   archive: "ארכיון",
 } as const;
