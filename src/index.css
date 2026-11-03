@@ -669,6 +669,7 @@
 [data-group="hagzara"][data-dark] { --signal: 111 163 236; --signal-ink: 16 18 22; --accent: 111 163 236; --mk-range: 111 163 236; --bloc-1: 111 163 236; --bloc-2: 154 168 184; --bloc-3: 93 107 124; --bloc-4: 255 140 145; --bloc-5: 206 214 224; --bloc-unity: 214 160 70; --heat-lo: 255 150 155; --heat-hi: 111 163 236; }
 .f-bar { position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgb(var(--paper) / .85);backdrop-filter:blur(12px); }
 .f-logo { font-family:var(--font-display);font-size:20px;white-space:nowrap;color:rgb(var(--ink));text-decoration:none;display:flex;align-items:center;gap:6px; }
+.f-bartitle { flex:1;justify-content:center;font-size:17px; }
 .f-logo img { width:28px;height:28px;border-radius:50%; }
 .f-clock { display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:rgb(var(--accent-soft));font-size:12.5px;white-space:nowrap; }
 .f-clock b { font-family:var(--font-num),monospace;color:rgb(var(--signal)); }
