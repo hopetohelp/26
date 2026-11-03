@@ -8,7 +8,6 @@ import { results } from "../lib/data";
 import { K26_ID, SUMMARY_ID, electionOption, previousElection, useElection } from "../lib/election";
 import { overviewOf } from "../lib/voterFlow";
 import { useScreenShown } from "../lib/screenVisibility";
-import { Accuracy2026 } from "./Results2026";
 import Results, { ElectionSummary, PastBlocs } from "./Results";
 import Accuracy, { AccuracyAcross } from "./Accuracy";
 import Voters from "./Voters";
@@ -77,12 +76,10 @@ function Polls2026() {
   const tab = new URLSearchParams(useLocation().search).get("tab");
   // חמש המגירות, זהות לכל מערכת (POLL_DRAWERS; הכרעת בעלים 02.11.2026). כל התוכן הקודם נשמר — רק חולק למגירות.
   return <div>
-    <Fold title={POLL_DRAWERS.vs} open={tab === "vs" || tab === "latest"}>
-      <div className="space-y-5"><Accuracy2026 /><Latest part="blocs" /></div>
-    </Fold>
-    <Fold title={POLL_DRAWERS.firms} open={tab === "firms"}>
+    {/* "הסקרים מול התוצאה" ומפת המכונים הוסרו — הנתונים בטבלאות הארכיון (הכרעת בעלים 03.11.2026) */}
+    <Fold title={POLL_DRAWERS.firms} open={tab === "firms" || tab === "vs" || tab === "latest"}>
       {/* דיוק הסקרים לכל רשימה וגוש, הסקר הקרוב והשילוב הקרוב — הועברו ממסך "תוצאות אמת" */}
-      <div className="space-y-5"><Latest part="grid" /><Suspense fallback={loading}><GuessAccuracy part="polls" /></Suspense></div>
+      <Suspense fallback={loading}><GuessAccuracy part="polls" /></Suspense>
     </Fold>
     <Fold title={POLL_DRAWERS.trend} open={tab === "trends"}>
       <div className="space-y-5"><Latest part="trend" /><Suspense fallback={loading}><Trends /></Suspense></div>
