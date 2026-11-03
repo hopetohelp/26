@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import GroupSeriesChart, { type SeriesBucket } from "../../components/GroupSeriesChart";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useSession } from "../guess/useCrowd";
-import { call } from "../../lib/crowdApi";
+import { call, keepCall } from "../../lib/crowdApi";
 import CardDrawer from "../../components/CardDrawer";
-import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, VISIBILITY_LABELS, type Survey, type SurveyKind, type SurveyStats } from "../../lib/surveys";
+import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, surveyStatsPath, surveysPath, cached, VISIBILITY_LABELS, type Survey, type SurveyKind, type SurveyStats } from "../../lib/surveys";
 import SurveyEditor, { type EditorValue } from "./SurveyEditor";
 
 /** הכתובת הישנה (#/surveys/manage) ⇐ מסך "ניהול קבוצה" המאוחד; ?edit=<מזהה> ⇐ ניהול הסקר */
@@ -26,21 +26,21 @@ export function SurveysManage({ children, election }: { children?: ReactNode; el
   const navigate = useNavigate();
   const groups = me?.managedGroups ?? [];
   const group = groups[0]?.id ?? "";
-  const [surveys, setSurveys] = useState<Survey[] | null>(null);
+  const [surveys, setSurveys] = useState<Survey[] | null>(() => cached<{ surveys: Survey[] }>(surveysPath, token)?.surveys.filter((s) => s.manage) ?? null);
   const [draft, setDraft] = useState<EditorValue | null>(null);
   const [kind, setKind] = useState<SurveyKind>("survey");
   const [msg, setMsg] = useState<string | null>(null);
   const load = useCallback(() => { listSurveys(token).then((r) => setSurveys(r.surveys.filter((s) => s.manage))).catch(() => setMsg("רשימת הסקרים אינה זמינה כרגע.")); }, [token]);
   useEffect(load, [load]);
-  const [stats, setStats] = useState<Record<string, SurveyStats | null>>({});
+  const [stats, setStats] = useState<Record<string, SurveyStats | null>>(() => Object.fromEntries((cached<{ surveys: Survey[] }>(surveysPath, token)?.surveys ?? []).map((s) => [s.id, cached<SurveyStats>(surveyStatsPath(s.id), token)]).filter(([, v]) => v)));
   useEffect(() => {
     if (!token || !surveys) return;
     for (const s of surveys) surveyStats(token, s.id).then((r) => setStats((o) => ({ ...o, [s.id]: r })), () => setStats((o) => ({ ...o, [s.id]: null })));
   }, [token, surveys]);
   const [scope, setScope] = useState<Scope>("group");
   // סינון חריגים — מתג לכל ניחוש בנפרד (הכרעת בעלים 03.11.2026); "seats" = ניחוש המנדטים
-  const [filters, setFilters] = useState<Record<string, boolean>>({});
-  useEffect(() => { if (token && group) void call<{ filters: Record<string, boolean> }>(`/group/outlier-filter?group=${encodeURIComponent(group)}`, { token }).then((r) => setFilters(r.filters), () => setFilters({})); }, [token, group]);
+  const [filters, setFilters] = useState<Record<string, boolean>>(() => cached<{ filters: Record<string, boolean> }>(`/group/outlier-filter?group=${encodeURIComponent(group)}`, token)?.filters ?? {});
+  useEffect(() => { if (token && group) void keepCall<{ filters: Record<string, boolean> }>(`/group/outlier-filter?group=${encodeURIComponent(group)}`, token).then((r) => setFilters(r.filters), () => setFilters({})); }, [token, group]);
   const setFilter = async (survey: string, on: boolean) => {
     try { await call("/group/outlier-filter", { token: token!, body: { group, survey, on } }); setFilters((f) => ({ ...f, [survey]: on })); } catch { setMsg("השינוי לא נשמר."); }
   };

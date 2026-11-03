@@ -90,7 +90,7 @@ export function EmbedFrame({ children }: { children: ReactNode }) {
     <div data-embed className="bg-paper text-ink">
       <DisclaimerBar />
       <main id="main" className="w-full px-2 min-[400px]:px-3 md:px-4 py-4">
-        {pathname === "/results-2026" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/changes`} />}
+        {pathname === "/surveys/guesses" && <RotatingPromo messages={CHANGES_MESSAGES} callToAction="כנסו וגלו את הסיפור מאחורי המנדטים!" label="מה השתנה מבחירות קודמות? כנסו וגלו את הסיפור מאחורי המנדטים!" href={`${SITE_ORIGIN}/#/changes`} />}
         {children}
         <div className="mt-5">
           {graphs && <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={() => setSharing(true)} />}

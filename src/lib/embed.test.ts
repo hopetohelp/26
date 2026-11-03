@@ -7,7 +7,7 @@ describe("מצב הטמעה", () => {
     expect(isEmbed("#/results-2026")).toBe(false);
   });
   it("רק תוצאות ומה השתנה ניתנים להטמעה", () => {
-    expect(embeddableFor("/results-2026", null)?.name).toBe("תוצאות");
+    expect(embeddableFor("/surveys/guesses", null)?.name).toBe("תוצאות");
     expect(embeddableFor("/changes", null)?.name).toBe("מה השתנה");
     expect(embeddableFor("/past", "results")).toBe(null);
     expect(embeddableFor("/polls", null)).toBe(null);
@@ -24,7 +24,7 @@ describe("מצב הטמעה", () => {
     expect(t.map((x) => x.screen)).toEqual(["changes", "changes-graphs"]);
     expect(embedUrl(t[1])).toBe("https://26.hopetohelp.net/#/flow-graphs?embed=1");
     expect(t.some((x) => x.path === "/flow-graphs" && x.name.includes("ברצף"))).toBe(false);
-    expect(embedTargetsFor("/results-2026", null)).toHaveLength(1);
+    expect(embedTargetsFor("/surveys/guesses", null)).toHaveLength(1);
     expect(embedTargetsFor("/flow-graphs", null)).toEqual([]);
     expect(embedScreenOf("/flow-graphs")).toBe("changes-graphs");
     expect(embedScreenOf("/changes")).toBe("changes");

@@ -3,8 +3,8 @@ import type { GroupStats as Stats } from "../lib/crowdApi";
 import VideoStats from "./VideoStats";
 
 /** מספרים לקבוצה (docs/פילוח-קבוצות-תכנון.md) — למנהל הקבוצה ולמנהל האתר: רק מצטבר, ורק מ-50 רשומים. load = הבקשה; refresh = מונה שמשתנה אחרי העלאה */
-export default function GroupStats({ load, refresh }: { load: () => Promise<Stats>; refresh: number }) {
-  const [s, setS] = useState<Stats | null>(null);
+export default function GroupStats({ load, refresh, initial = null }: { load: () => Promise<Stats>; refresh: number; initial?: Stats | null }) {
+  const [s, setS] = useState<Stats | null>(initial);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
@@ -13,7 +13,7 @@ export default function GroupStats({ load, refresh }: { load: () => Promise<Stat
       .catch(() => { if (live) setFailed(true); });
     return () => { live = false; };
   }, [refresh]); // eslint-disable-line react-hooks/exhaustive-deps
-  if (failed) return <p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p>;
+  if (failed && !s) return <p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p>;
   if (!s) return <p className="text-sm text-ink-soft">טוען…</p>;
   if (s.belowMin) return <p className="text-sm text-ink-soft">פחות מ-{s.min} חברים מהקבוצה רשומים באתר. המספרים יוצגו מ-{s.min} רשומים.</p>;
   const tiles: [string, number][] = [["נרשמו בסך הכול", s.registered], ["נרשמו היום", s.today], ["שמרו ניחוש מנדטים", s.seats], ["שמרו הצבעה", s.vote]];

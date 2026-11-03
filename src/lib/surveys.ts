@@ -2,7 +2,7 @@
  * סקרי האתר (הכרעת בעלים 01.11.2026: האתר עורך סקרים; docs/תוכנית-אתר-סקרי-הגזרה-01-11-2026.md).
  * הטיפוסים והקריאות לשרת המשתתפים (worker/crowd/lib/surveys.js), וחישוב סכום הקואליציה — מקור אחד לכל המסכים.
  */
-import { call } from "./crowdApi";
+import { call, keepCall } from "./crowdApi";
 import { results2026, hasResults } from "./guessAccuracyData";
 import promisesFile from "../../raw/election-promises.json";
 
@@ -41,21 +41,13 @@ export interface SurveyHistory { surveys: Survey[]; answers: { survey: string; a
  * הצגה מיידית (הכרעת בעלים 02.11.2026): כל תשובה מהשרת נשמרת במכשיר, לפי המשתמש; המסך מציג אותה מיד (cached)
  * ומבקש מהשרת גרסה עדכנית ברקע. שמירה וניהול — תמיד ישירות לשרת.
  */
-const CACHE = "elections26.surveys.cache:";
-const userKey = (token: string | null) => (token ? token.slice(-12) : "anon");
-export function cached<T>(path: string, token: string | null): T | null {
-  try { const x = localStorage.getItem(CACHE + userKey(token) + path); return x ? (JSON.parse(x) as T) : null; } catch { return null; }
-}
-async function fresh<T>(path: string, token: string | null): Promise<T> {
-  const r = await call<T>(path, { token });
-  try { localStorage.setItem(CACHE + userKey(token) + path, JSON.stringify(r)); } catch { /* אין אחסון */ }
-  return r;
-}
+export { peek as cached } from "./crowdApi";
+const fresh = <T,>(path: string, token: string | null) => keepCall<T>(path, token);
 export const surveysPath = "/surveys";
 export const surveyPath = (id: string) => `/survey?id=${encodeURIComponent(id)}`;
 export const listSurveys = (token: string | null) => fresh<{ surveys: Survey[] }>(surveysPath, token);
 export const getSurvey = (id: string, token: string | null) => fresh<SurveyDetail>(surveyPath(id), token);
-export const surveyHistory = (token: string) => call<SurveyHistory>("/survey/history", { token });
+export const surveyHistory = (token: string) => fresh<SurveyHistory>("/survey/history", token);
 /** מזהה פעולה לכל שמירה — שליחה חוזרת של אותה שמירה אינה יוצרת כפילות בשרת */
 export const newOp = () => `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 export const answerSurvey = (token: string, survey: string, answers: SurveyAnswers, op = newOp()) =>
@@ -69,7 +61,8 @@ export const manageSurvey = (token: string, body: Record<string, unknown>) => ca
 /** כניסה לסקר — לסטטיסטיקה של המנהלים */
 export const viewSurvey = (token: string | null, survey: string, embed: boolean) => call<{ ok: true }>("/survey/view", { token, body: { survey, embed } });
 export interface SurveyStats { views: number; viewers: number; embedViews: number; viewsSince: string | null; saves: number; savers: number; saversSinceViews: number; changed: number; members: number; outsiders: number; days: { day: string; views: number; saves: number }[]; hours: { hour: string; views: number; saves: number }[]; groupHours?: { hour: string; views: number; saves: number }[] }
-export const surveyStats = (token: string, survey: string) => call<SurveyStats>(`/survey/stats?id=${encodeURIComponent(survey)}`, { token });
+export const surveyStatsPath = (survey: string) => `/survey/stats?id=${encodeURIComponent(survey)}`;
+export const surveyStats = (token: string, survey: string) => fresh<SurveyStats>(surveyStatsPath(survey), token);
 
 /** מועד סגירה לתצוגה ("3.11 22:00"), או null */
 export const closesLabel = (s: Pick<Survey, "closesAt">) => (s.closesAt ? answerTime(s.closesAt) : null);

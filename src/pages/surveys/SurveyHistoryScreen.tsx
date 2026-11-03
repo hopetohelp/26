@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { answerTime, columnSeats, surveyHistory, type AssignValue, type SurveyHistory, type SurveyQuestion } from "../../lib/surveys";
+import { cached, answerTime, columnSeats, surveyHistory, type AssignValue, type SurveyHistory, type SurveyQuestion } from "../../lib/surveys";
 
 /** אזור אישי בחלק הסקרים (הכרעת בעלים 01.11.2026): היסטוריה מלאה לפי שאלה — כל תשובה ושינוי, מהחדש לישן */
 /** embedded — בתוך מגירה באזור האישי: בלי מסגרת עמוד וכותרת */
 export default function SurveyHistoryScreen({ embedded = false }: { embedded?: boolean }) {
   const session = useSession();
   const { token } = session;
-  const [data, setData] = useState<SurveyHistory | null>(null);
+  const [data, setData] = useState<SurveyHistory | null>(() => (token ? cached<SurveyHistory>("/survey/history", token) : null));
   const [failed, setFailed] = useState(false);
   useEffect(() => { if (token) surveyHistory(token).then(setData).catch(() => setFailed(true)); }, [token]);
 

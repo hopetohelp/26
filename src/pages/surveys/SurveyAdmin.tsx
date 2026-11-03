@@ -5,7 +5,7 @@ import CardDrawer from "../../components/CardDrawer";
 import GroupSeriesChart, { type SeriesBucket } from "../../components/GroupSeriesChart";
 import { SITE_ORIGIN } from "../../lib/embed";
 import {
-  KIND_LABELS, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, VISIBILITY_LABELS,
+  KIND_LABELS, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, surveyStatsPath, cached, VISIBILITY_LABELS,
   type Survey, type SurveyKind, type SurveyOutside, type SurveyStats, type SurveyVisibility,
 } from "../../lib/surveys";
 import SurveyEditor, { type EditorValue } from "./SurveyEditor";
@@ -36,7 +36,7 @@ const Tile = ({ label, value }: { label: string; value: string | number }) => (
  * ההגדרות (סוג, מצב, מי רואה תוצאות, מי שמחוץ לגזרה, מועד סגירה, סף משתתפים — בסדר הזה, הכרעת בעלים 03.11.2026), תוצאות האמת בניחוש, עריכת השאלות, ההטמעה והמחיקה.
  */
 export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { survey: Survey; token: string; onDone: () => void; onDeleted: () => void }) {
-  const [stats, setStats] = useState<SurveyStats | null>(null);
+  const [stats, setStats] = useState<SurveyStats | null>(() => cached<SurveyStats>(surveyStatsPath(survey.id), token));
   const [statsFailed, setStatsFailed] = useState(false);
   useEffect(() => { surveyStats(token, survey.id).then(setStats, () => setStatsFailed(true)); }, [token, survey.id]);
 

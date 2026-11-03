@@ -164,7 +164,7 @@ export function FeedbackSheet({ onClose, diagnostic }: { onClose: () => void; di
               השליחה תקבלו קישור אישי לתשובה.
             </p>
             {mine > 0 && (
-              <Link to="/feedback" onClick={onClose} className="text-sm font-bold">
+              <Link to="/ai" onClick={onClose} className="text-sm font-bold">
                 ההערות הקודמות שלי ({mine})
               </Link>
             )}

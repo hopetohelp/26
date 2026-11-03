@@ -408,6 +408,21 @@ function setBlocked(on: boolean) {
 /** הכתובות של השרת (שם המארח בלבד), לבקשת פתיחה מספק הסינון */
 export const SERVER_HOSTS = [...new Set([feedbackUrl, directUrl].filter((u): u is string => !!u).map((u) => { try { return new URL(u).host; } catch { return ""; } }).filter(Boolean))];
 
+/**
+ * הצגה מיידית (הכרעות בעלים 02.11.2026 ו-03.11.2026): כל קריאה לשרת שנעשית דרך keepCall נשמרת במכשיר לפי המשתמש,
+ * והמסך מציג אותה מיד (peek) ומרענן ברקע — גם במסכי הניהול והסטטיסטיקות. שמירה ופעולות — תמיד ישירות לשרת.
+ */
+const KEEP = "elections26.surveys.cache:";
+const keepUser = (token: string | null | undefined) => (token ? token.slice(-12) : "anon");
+export function peek<T>(path: string, token: string | null | undefined): T | null {
+  try { const x = localStorage.getItem(KEEP + keepUser(token) + path); return x ? (JSON.parse(x) as T) : null; } catch { return null; }
+}
+export async function keepCall<T>(path: string, token: string | null | undefined): Promise<T> {
+  const r = await call<T>(path, { token });
+  try { localStorage.setItem(KEEP + keepUser(token) + path, JSON.stringify(r)); } catch { /* אין אחסון או שהוא מלא */ }
+  return r;
+}
+
 export async function call<T>(path: string, opts: CallOptions = {}): Promise<T> {
   if (!BASES.length) throw new CrowdError(0, "offline");
   lastBlind = false;
