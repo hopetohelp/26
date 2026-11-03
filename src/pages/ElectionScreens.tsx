@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import { Fold, PageTitle } from "../components/ui";
 import Missing, { POLL_DRAWERS } from "../components/Missing";
+import LocalityResults from "../components/LocalityResults";
 import OverviewCards from "../components/OverviewCards";
 import { results } from "../lib/data";
 import { K26_ID, SUMMARY_ID, electionOption, previousElection, useElection } from "../lib/election";
@@ -59,14 +60,14 @@ function PastChanges({ id }: { id: string }) {
     <PastBlocs id={id} />
     <Fold title="מעבר בין מפלגות"><Missing what="מעבר המצביעים" /></Fold>
     <Fold title="מעבר בין גושים"><Missing what="המעבר בין גושים" /></Fold>
-    <Fold title="חיפוש לפי עיר או קלפי"><Missing what="החיפוש והמעבר ביישוב" /></Fold>
+    <Fold title="תוצאות לפי יישוב"><LocalityResults key={id} electionId={id} /></Fold>
   </div>;
 }
 
 export function ChangesScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
-  if (id === K26_ID) return <Suspense fallback={loading}><VoterFlow afterHeader={<PersonalBlocs title="חלוקת הכנסת בתוצאות אוקטובר 2026" source="תוצאות אמת 2026" asOf={results2026.asOf ? `נכון ל-${results2026.asOf}` : "הספירה"} datasets={[{ values: results2026.seats, source: "תוצאות אמת 2026", asOf: results2026.asOf ?? "הספירה" }]} />} /></Suspense>;
+  if (id === K26_ID) return <Suspense fallback={loading}><VoterFlow afterHeader={<PersonalBlocs title="חלוקת הכנסת בתוצאות אוקטובר 2026" source="תוצאות אמת 2026" asOf="התוצאות הסופיות" datasets={[{ values: results2026.seats, source: "תוצאות אמת 2026", asOf: "התוצאות הסופיות" }]} />} /></Suspense>;
   return <PastChanges id={id} />;
 }
 
