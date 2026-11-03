@@ -270,7 +270,7 @@ export const SERIES_HOURS = 72;
 /** תחילת הגרף השעתי: 24/10/2026 23:00 שעון ישראל (שעון קיץ, UTC+3) */
 export const SERIES_HOURLY_FROM = Date.parse("2026-10-24T20:00:00Z");
 /** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
-export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "visits", "outsideLink", "outsideFirst"];
+export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "survey", "visits", "outsideLink", "outsideFirst"];
 
 /**
  * סדרות זמן לקבוצה: לכל מדד — סך הכול ונקודות מצטברות, נקודה לכל שעה מ-24/10 23:00.
@@ -291,6 +291,9 @@ export async function groupSeries(env, id, now) {
     env.DB.prepare("SELECT id, created_at AS t FROM participants"),
     env.DB.prepare("SELECT participant, unit, MIN(created_at) AS t FROM versions WHERE unit IN ('seats', 'vote') AND created_at < ? GROUP BY participant, unit").bind(SAVES_UNTIL_ISO),
   ]);
+  // שמרו סקר: השמירה הראשונה של כל חבר בסקר כלשהו מסקרי האתר (הכרעת בעלים 03.11.2026)
+  let surveyRows = [];
+  try { surveyRows = (await env.DB.prepare("SELECT participant, MIN(created_at) AS t FROM survey_answers GROUP BY participant").all()).results || []; } catch { /* בלי טבלה עדיין */ }
   let visitRows = [];
   try { visitRows = (await env.DB.prepare("SELECT participant, at FROM participant_visits WHERE at >= ?").bind(iso(SERIES_HOURLY_FROM)).all()).results || []; } catch { /* בלי טבלה עדיין */ }
   const g = created.results?.[0];
@@ -311,6 +314,7 @@ export async function groupSeries(env, id, now) {
     registered: ts([...members].map((p) => createdAt.get(p))),
     seats: ts([...counted].map((p) => firstOf.seats.get(p))),
     vote: ts([...members].map((p) => firstOf.vote.get(p))),
+    survey: ts(surveyRows.filter((r) => members.has(r.participant)).map((r) => r.t)),
     // כניסות שונות של חברי הקבוצה (חצי שעה לפחות בין כניסות של אותו חשבון) — נרשמות מ-25.10.2026
     visits: ts(visitRows.filter((r) => members.has(r.participant)).map((r) => r.at)),
     outsideLink: ts(outside.map((p) => joinedAt.get(p))),

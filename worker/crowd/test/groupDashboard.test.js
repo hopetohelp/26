@@ -273,7 +273,7 @@ describe("group series", () => {
     expect((await call("/group/series?group=gizra", { token: outsider })).status).toBe(403);
     const d = (await call("/group/series?group=gizra", { token: mgr })).data;
     const by = Object.fromEntries(d.series.map((s) => [s.key, s]));
-    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "visits", "outsideLink", "outsideFirst"]);
+    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "survey", "visits", "outsideLink", "outsideFirst"]);
     expect(by.list.total).toBe(GROUP_MIN);
     // מנהל הקבוצה נספר כחבר — כמו בדשבורד הקבוצה (מקור אמת אחד)
     expect(by.registered.total).toBe(GROUP_MIN + 1);

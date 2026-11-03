@@ -1,9 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { call, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
-import VideoStats from "../components/VideoStats";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
-import StatsCharts from "../components/StatsCharts";
 import AdminGuesses from "./AdminGuesses";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
@@ -46,7 +44,7 @@ const q = (id: string) => encodeURIComponent(id);
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
   const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
-  const [stats, setStats] = useState<GroupStats | null>(null);
+  const [, setStats] = useState<GroupStats | null>(null);
   const [failed, setFailed] = useState(false);
   const [flags, setFlags] = useState<LinkMembersState | null>(null);
   const [reload, setReload] = useState(0);
@@ -91,12 +89,9 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       {/* כל חלק במגירה (הכרעת בעלים 25.10.2026): כל המספרים בסטטיסטיקה בראש המסך, כל נושא הניחושים במגירה אחת — בלי נתון כפול */}
       <div className="space-y-3">
         {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
-        <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
-          {/* שני חלונות גרף, כמו במסך הניהול (הכרעת בעלים 28.10.2026) */}
-          {series && <StatsCharts storageKey={`elections26.groupCharts.${id}`} defaults={["registered", "visits"]} buckets={series.buckets}
-            options={MEASURES.filter((m) => m.key !== "list").map((m) => { const x = series.series.find((y) => y.key === m.key); return { key: m.key, label: m.group === "outside" ? `מחוץ לרשימה: ${m.label}` : m.label, total: x?.total ?? null, points: x?.points ?? null }; })} />}
-          <Measures data={series} failed={failed} flags={flags} setFlag={setFlag} />
-          {stats && !stats.belowMin && stats.videos && <div className="mt-4"><VideoStats s={stats.videos} /></div>}
+        {/* רק סטטיסטיקות של כל הקבוצה, ארבעה מדדים (הכרעת בעלים 03.11.2026) */}
+        <Section title="כמה מחברי הקבוצה:" aside={series ? hourlyNote(series) : undefined}>
+          <Measures part="list" data={series} failed={failed} flags={flags} setFlag={setFlag} />
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
         </Section>
         {/* ניחושים חריגים: כרטיס מצב לכל הניחושים, ורשימה עם סינון הכל/ממתין/אושר/נדחה (הכרעת בעלים 03.11.2026) */}
@@ -112,6 +107,8 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         <SupportThreads id={id} token={token} stats={ins && !ins.belowMin ? <Questions q={ins.questions} /> : null} />
         <Section title="כלי ניהול">
           <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
+          {/* מי שנכנס דרך הקישור מחוץ לרשימה — עם המתגים שמצרפים אותם לקבוצה */}
+          <Measures part="outside" data={series} failed={failed} flags={flags} setFlag={setFlag} />
         </Section>
       </div>
     </>
@@ -190,11 +187,10 @@ function Tile({ label, value, sub }: { label: string; value: string; sub?: strin
 /** שבעת המדדים (הכרעת בעלים 24.10.2026), בסדר הזה. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת המיילים של הקבוצה */
 const MEASURES: { key: GroupSeriesKey; label: string; group: "list" | "outside" }[] = [
   { key: "list", label: "מיילים ברשימה", group: "list" },
-  { key: "linkFirst", label: "נכנסו דרך הקישור", group: "list" },
   { key: "registered", label: "נרשמו לאתר", group: "list" },
   { key: "seats", label: "שמרו ניחוש", group: "list" },
-  { key: "vote", label: "שמרו הצבעה", group: "list" },
-  { key: "visits", label: "כניסות לאתר (חצי שעה לפחות בין כניסות)", group: "list" },
+  { key: "survey", label: "שמרו סקר", group: "list" },
+  { key: "visits", label: "נכנסו לאתר (לפחות חצי שעה בין לבין)", group: "list" },
   { key: "outsideLink", label: "נכנסו דרך הקישור", group: "outside" },
   { key: "outsideFirst", label: "הקישור היה הכניסה הראשונה שלהם לאתר", group: "outside" },
 ];
@@ -212,7 +208,7 @@ function FlagSwitch({ on, onToggle }: { on: boolean; onToggle: () => Promise<voi
   );
 }
 
-function Measures({ data, failed, flags, setFlag }: { data: GroupSeries | null; failed: boolean; flags: LinkMembersState | null; setFlag: (flag: "all" | "first", on: boolean) => Promise<void> }) {
+function Measures({ part, data, failed, flags, setFlag }: { part: "list" | "outside"; data: GroupSeries | null; failed: boolean; flags: LinkMembersState | null; setFlag: (flag: "all" | "first", on: boolean) => Promise<void> }) {
   if (!data) return failed ? null : <p className="text-sm text-ink-soft">טוען…</p>;
   const by = new Map(data.series.map((s) => [s.key, s]));
   const list = by.get("list")?.total ?? 0;
@@ -230,18 +226,12 @@ function Measures({ data, failed, flags, setFlag }: { data: GroupSeries | null; 
       </li>
     );
   };
+  if (part === "list") return <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m, i) => card(m, i + 1))}</ul>;
   return (
-    <>
-      <Sub title="חברי הקבוצה (מרשימת המיילים)">
-        <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-        {/* מקור אמת אחד: אותם חברים ואותם ניחושים כמו בממוצע הקבוצה במסך "ממוצע הניחושים" */}
-        <p className="text-xs text-ink-soft">חבר = מייל ברשימה, גם אם עוד לא אומת (או מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = הניחושים שנספרים בממוצע הקבוצה — אותו מספר כמו במסך "ממוצע הניחושים".</p>
-      </Sub>
-      <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
-        <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-        <p className="text-xs text-ink-soft">מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
-      </Sub>
-    </>
+    <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
+      <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m, i) => card(m, i + 1))}</ul>
+      <p className="text-xs text-ink-soft">מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
+    </Sub>
   );
 }
 
