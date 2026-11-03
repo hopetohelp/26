@@ -39,7 +39,7 @@ export function ScreenLegend({ children }: { children: ReactNode }) {
 }
 const entryKey = (e: LegendEntry) => `${e.kind}|${typeof e.text === "string" ? e.text : ""}`;
 
-export type LegendKind = MarkKind | "line" | "lineList" | "dash" | "pass" | "seatGov" | "seatMiss" | "seatOther";
+export type LegendKind = MarkKind | "diamond" | "line" | "lineList" | "dash" | "pass" | "seatGov" | "seatMiss" | "seatOther";
 
 export interface LegendEntry {
   kind: LegendKind;
@@ -79,6 +79,8 @@ function LegendSwatch({ kind }: { kind: LegendKind }) {
           <i className="bg-pos w-2/3" />
         </span>
       );
+    case "diamond":
+      return <i aria-hidden="true" className="inline-block size-[7px] mx-[5px] rotate-45 rounded-[1px] bg-ink" />;
     case "seatGov":
       return <i aria-hidden="true" className="mk-sw size-[.9rem] rounded-full sw-a" />;
     case "seatMiss":

@@ -34,6 +34,8 @@ export interface CandleTrendProps {
   zeroBase?: boolean;
   /** תוצאות האמת כמעוין בצבע הסדרה, בלי קווים שחורים ובלי קו מקווקו (הכרעת בעלים 03.11.2026) */
   resultDots?: boolean;
+  /** בלי כפתור מקרא (כשהמקרא כבר מופיע בגרף אחר באותו מסך) */
+  hideLegend?: boolean;
   /** קו הרוב (61) בגרפים של גושים: מחליף את קו 60, רק אם הגוש עבר 55 */
   majority?: number;
   /** כל כמה יחידות קו מקווקו (ברירת מחדל 5) */
@@ -69,7 +71,7 @@ const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 
 interface Target { si: number; i: number; p: TrendPoint }
 
-export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading, meanNote, fixedLines, forceLine = false, zeroBase = false, resultDots = false }: CandleTrendProps) {
+export default function CandleTrend({ title, series, majority, step = 5, windowDays = POINT_WINDOW, unit = "מנדטים", markers = [], height = 160, popup, legendEntries, popupWidth = 140, heading, meanNote, fixedLines, forceLine = false, zeroBase = false, resultDots = false, hideLegend = false }: CandleTrendProps) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const [seenRef, seen] = useSeen<HTMLDivElement>();
   const [width, setWidth] = useState(640);
@@ -165,6 +167,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const dateTicks = candleMode ? shown.map((p) => p.t) : [...new Set(series.flatMap((s) => s.points.map((p) => p.t)))].sort((a, b) => a - b);
   const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 46)));
   const lastT = dateTicks[dateTicks.length - 1];
+  // על ציר הזמן: רק היום בחודש, והחודש רק בתווית הראשונה ובכל מעבר חודש, בצורה 2/10 (הכרעת בעלים 03.11.2026)
+  const dateLabel = (i: number) => {
+    const k = lab.indexOf(i), cur = iso(dateTicks[i]).slice(0, 7);
+    const prev = k > 0 ? iso(dateTicks[lab[k - 1]]).slice(0, 7) : null;
+    return prev === cur ? String(Number(iso(dateTicks[i]).slice(8, 10))) : dayMonth(iso(dateTicks[i]));
+  };
 
   // הסמן: בנרות — הנר הקרוב לאורך הציר; בהשוואה — הנקודה הקרובה ביותר בקו (עד 28px)
   const at = (clientX: number, clientY: number): Target | null => {
@@ -252,11 +260,11 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {axis.lines.map(({ v, major }) => (
           <line key={v} x1={X0} x2={candleMode ? 100 : X1 + 2} y1={Y(v)} y2={Y(v)} className={major ? "stroke-ink" : "stroke-ink-faint"} strokeWidth={major ? 1.5 : 1} strokeDasharray="5 4" {...ln} />
         ))}
-        {candleSeries && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="trend-line fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
+        {candleSeries && !resultDots && <path d={smoothPath(lineMain.map((l) => ({ x: X(l.t), y: Y(l.v) })))} className="trend-line fill-none stroke-accent" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" {...ln} />}
         {multi && series.map((s, si) => (
           <path key={s.id} className="trend-line" d={smoothPath(s.points.map((p) => ({ x: X(p.t), y: Y(p.v) })))} fill="none" stroke={colors[si]} strokeWidth={2.4} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dashed ? "5 4" : undefined} {...ln} />
         ))}
-        {resultDots && links.map((l, i) => <line key={`k${i}`} className={candleMode ? "stroke-accent" : ""} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={candleMode ? 2.5 : 2.4} strokeLinecap="round" {...ln} />)}
+        {resultDots && !candleMode && links.map((l, i) => <line key={`k${i}`} className={candleMode ? "stroke-accent" : ""} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={candleMode ? 2.5 : 2.4} strokeLinecap="round" {...ln} />)}
         {!resultDots && links.map((l, i) => <line key={`k${i}`} className={`trend-pop ${candleMode ? "stroke-accent" : ""}`} style={{ animationDelay: "900ms" }} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={2} strokeDasharray="4 3" {...ln} />)}
       </svg>
       <div className="absolute left-0 top-0 w-full" style={{ height }}>
@@ -270,7 +278,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
           <span key={`${s.id}-${k}`} aria-hidden="true" className="mk mk-dot trend-pop" style={{ left: `${X(s.points[k].t)}%`, top: `${Y(s.points[k].v)}%`, borderColor: colors[si], animationDelay: `${delayOf(s.points[k].t)}ms` }} />
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
-        {resultDots && markers.map((m, i) => { const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : 0; const c = candleMode ? "rgb(var(--ink))" : colors[Math.max(0, si)]; return <span key={`r${i}`} aria-hidden="true" title={`${m.label ?? "תוצאות אמת"}: ${valueText(m.v)}`} className="absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[1px]" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%`, background: c }} />; })}
+        {resultDots && candleMode && markers.map((m, i) => <span key={`rc${i}`} aria-hidden="true" className="mk-pv absolute rounded-full box-border" style={{ background: "rgb(var(--mk-range) / .88)", border: "2px solid rgb(var(--mk-result-frame))", left: `${X(m.t)}%`, top: `${Y(m.v)}%`, height: `${Y(Math.max(0, axis.lo)) - Y(m.v)}%` }} />)}
+        {resultDots && !candleMode && markers.map((m, i) => { const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : 0; const c = candleMode ? "rgb(var(--ink))" : colors[Math.max(0, si)]; return <span key={`r${i}`} aria-hidden="true" title={`${m.label ?? "תוצאות אמת"}: ${valueText(m.v)}`} className="absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[1px]" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%`, background: c }} />; })}
         {!resultDots && markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV showLabels={false} key={`m${i}`} left={`${X(m.t)}%`} {...(m.asMean ? { primary: { value: m.v, label: m.label ?? "" } } : { secondary: { value: m.v, label: m.label ?? "תוצאה בפועל" } })} y={Y} format={valueText} />)}
         {ends.map((e) => (
           <span key={e.s.id} aria-hidden="true" className="absolute flex -translate-y-1/2 gap-1 whitespace-nowrap text-[11px] font-bold leading-none" dir="rtl" style={{ left: `calc(${X1}% + ${markers.length ? 20 : 10}px)`, maxWidth: labelPx - (markers.length ? 22 : 12), top: e.y, color: colors[e.si] }}>
@@ -317,7 +326,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {lab.map((i) => {
           const isLast = dateTicks[i] === lastT;
           return (
-            <span key={dateTicks[i]} className="absolute whitespace-nowrap" style={isLast && !multi && X(dateTicks[i]) >= X1 - 0.5 ? { right: 0 } : { left: `${X(dateTicks[i])}%`, transform: "translateX(-50%)" }}>{dayMonth(iso(dateTicks[i]))}</span>
+            <span key={dateTicks[i]} className="absolute whitespace-nowrap" style={isLast && !multi && X(dateTicks[i]) >= X1 - 0.5 ? { right: 0 } : { left: `${X(dateTicks[i])}%`, transform: "translateX(-50%)" }}>{dateLabel(i)}</span>
           );
         })}
       </div>
@@ -331,7 +340,7 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   return (
     <div>
       {/* תמיד בפינה השמאלית העליונה של הגרף */}
-      <ChartLegend entries={legend} heading={heading} className="mb-1" />
+      {!hideLegend && <ChartLegend entries={legend} heading={heading} className="mb-1" />}
       {Inner}
     </div>
   );
