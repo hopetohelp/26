@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 /**
@@ -25,39 +25,41 @@ export function SurveyCard({ to, title, when, tag, children }: { to: string; tit
   );
 }
 
-let canvas: HTMLCanvasElement | null = null;
-const textWidth = (t: string) => {
-  canvas ??= document.createElement("canvas");
-  const c = canvas.getContext("2d");
-  if (!c) return t.length * 7;
-  c.font = `700 11px ${getComputedStyle(document.body).fontFamily}`;
-  return c.measureText(t).width;
-};
 const PAD = 12; // px-1.5 משני הצדדים
 
-/** פס התשובות: מהגדולה לקטנה; בכל חלק — האחוז אם יש מקום, והשם לפניו אם יש עוד מקום */
-/** pctOf — כשהאחוז נמדד מול מספר אחר (למשל משתתפים) ולא מול סכום החלקים */
-export function ShareBar({ parts, pctOf }: { parts: { id: string; label: string; n: number }[]; pctOf?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [w, setW] = useState(0);
+/**
+ * חלק אחד בפס (הכרעות בעלים 03.11.2026): מנסים לפי הסדר — שם ואחוז; ברשימה: אות הפתק ואחוז, ואז רק האות; אחרת רק האחוז; ואם אין מקום — כלום.
+ * המדידה היא על הטקסט האמיתי במסך (גלישה מהחלק ⇐ הצעה הבאה), כך שהכיתוב לא עולה על החלק שלידו.
+ */
+function Segment({ texts, width, className }: { texts: string[]; width: string; className: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [level, setLevel] = useState(0);
+  useLayoutEffect(() => { setLevel(0); }, [width, texts.join("|")]);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el && level < texts.length && el.scrollWidth > el.clientWidth + 0.5) setLevel(level + 1);
+  });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setW(el.clientWidth));
+    const ro = new ResizeObserver(() => setLevel(0));
     ro.observe(el);
-    setW(el.clientWidth);
     return () => ro.disconnect();
   }, []);
+  return <span ref={ref} className={className} style={{ width, paddingInline: PAD / 2 }}>{texts[level] ?? ""}</span>;
+}
+
+/** פס התשובות: מהגדולה לקטנה. short — אות הפתק לרשימה */
+export function ShareBar({ parts, pctOf }: { parts: { id: string; label: string; n: number; short?: string }[]; pctOf?: number }) {
   const total = parts.reduce((a, p) => a + p.n, 0);
   if (!total) return null;
   const rows = parts.filter((p) => p.n > 0).sort((a, b) => b.n - a.n).map((p) => ({ ...p, pct: Math.round((p.n / (pctOf || total)) * 100) }));
   return (
-    <div ref={ref} className="flex h-5 rounded-md overflow-hidden text-[11px] font-bold" role="img" aria-label={rows.map((p) => `${p.label} ${p.pct}%`).join(", ")}>
+    <div className="flex h-5 rounded-md overflow-hidden text-[11px] font-bold" role="img" aria-label={rows.map((p) => `${p.label} ${p.pct}%`).join(", ")}>
       {rows.map((p, i) => {
-        const room = (p.n / total) * w - PAD;
-        const pct = `${p.pct}%`, full = `${p.label} ${pct}`;
-        const text = w && room >= textWidth(full) ? full : w && room >= textWidth(pct) ? pct : "";
-        return <span key={p.id} className={`${i % 2 ? "bg-[rgb(var(--bloc-5))] text-paper" : "bg-signal text-signal-ink"} flex items-center justify-center px-1.5 whitespace-nowrap overflow-hidden`} style={{ width: `${(p.n / total) * 100}%` }}>{text}</span>;
+        const pct = `${p.pct}%`;
+        const texts = p.short ? [`${p.label} ${pct}`, `${p.short} ${pct}`, p.short] : [`${p.label} ${pct}`, pct];
+        return <Segment key={p.id} texts={texts} width={`${(p.n / total) * 100}%`} className={`${i % 2 ? "bg-[rgb(var(--bloc-5))] text-paper" : "bg-signal text-signal-ink"} flex items-center justify-center whitespace-nowrap overflow-hidden min-w-0 shrink-0`} />;
       })}
     </div>
   );

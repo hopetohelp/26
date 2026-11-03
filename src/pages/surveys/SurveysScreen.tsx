@@ -1,3 +1,5 @@
+import { letterOf } from "../../lib/election2026";
+import { results } from "../../lib/data";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoogleButton from "../guess/GoogleButton";
@@ -7,6 +9,9 @@ import { isEmbed } from "../../lib/embed";
 import { ShareBar, SurveyCard, type CardTag } from "./SurveyCard";
 
 /** גרף תשובות קטן על הכרטיס, לסקר שהמשתתף כבר ענה עליו (הכרעת בעלים 01.11.2026): שאלות הבחירה, לפי הגזרה */
+/** אות הפתק של רשימה: ב-2026 לפי המזהה; ב-2022 המזהה הוא האות עצמה */
+const LETTERS_2022 = new Set(results.find((r) => r.id === "k25")!.lists.map((l) => l.letters));
+const ballotOf = (id: string) => letterOf[id] ?? (LETTERS_2022.has(id) ? id : undefined);
 function MiniResults({ detail }: { detail: SurveyDetail }) {
   const r = detail.results?.group;
   if (!r) return null;
@@ -19,8 +24,8 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
         if (!qr || !qr.n) return null;
         // שיוך רשימות (הכרעת בעלים 03.11.2026): רק מפלגות שסומנו בקואליציה, עם אחוז המשתתפים שסימנו אותן שם
         const coalition = q.kind === "assign" ? q.columns[0]?.id : undefined;
-        const parts = q.kind === "single" && "counts" in qr ? q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0 }))
-          : q.kind === "assign" && "items" in qr && coalition ? q.items.map((item) => ({ id: item.id, label: item.label, n: qr.items[item.id]?.[coalition] ?? 0 }))
+        const parts = q.kind === "single" && "counts" in qr ? q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0, short: ballotOf(o.id) }))
+          : q.kind === "assign" && "items" in qr && coalition ? q.items.map((item) => ({ id: item.id, label: item.label, n: qr.items[item.id]?.[coalition] ?? 0, short: ballotOf(item.id) }))
           : null;
         if (!parts) return null;
         return (
