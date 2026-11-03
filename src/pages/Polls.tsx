@@ -3,17 +3,28 @@ import { seatsOfValues } from "../components/PollAccuracyTags";
 import { seatTags, type SeatTags } from "../lib/guessAccuracy";
 import { ELECTION_DAY, finalPolls, hasResults, results2026 } from "../lib/guessAccuracyData";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
-import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
+import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
 const PAGE = 50;
 /** ארבעת הגושים בכל סקר — אחרי טורי הדיוק, עם קו הפרדה בסוף (הכרעת בעלים 03.11.2026); החישוב — groupSeatsIn / exitSeats (מקור אחד) */
-const blocCells = (vals: (number | null | undefined)[]) => <>{vals.map((v, i) => <td key={i} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
+const blocCells = (vals: (number | null | undefined)[], tint?: (i: number, v: number) => CSSProperties | undefined) => <>{vals.map((v, i) => <td key={i} style={v == null || !tint ? undefined : tint(i, v)} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
+/**
+ * סולם 9 צבעים (הכרעת בעלים 03.11.2026), כמו במפת המכונים: אדום (מתחת לתוצאה) ⇐ לבן (בדיוק) ⇐ ירוק (מעל).
+ * המרחק מתוצאות האמת יחסית לסטייה הגדולה ביותר של הסקרים באותו טור: 4 דרגות לכל כיוון.
+ */
+const STEPS = [0, 0.12, 0.24, 0.36, 0.5];
+const scaleTint = (d: number, span: number): CSSProperties | undefined => {
+  if (!span || d === 0) return undefined;
+  const level = Math.min(4, Math.max(1, Math.round((Math.abs(d) / span) * 4)));
+  return { backgroundColor: `rgb(var(${d > 0 ? "--pos" : "--neg"}) / ${STEPS[level]})` };
+};
+const ACTUAL_BLOCS = SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0));
 /** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
 const accCells = (t: SeatTags | null) => <>
   <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t?.seats ?? "—"}</td>
@@ -25,14 +36,6 @@ const finalPollIds = new Set(finalPolls.map((p) => p.id));
 /** דיוק מול תוצאות 2026 (מנדטים, מפלגות, גושים) — מקור אחד: seatTags */
 const tagsOf = (values: Record<string, { s?: number }>) => hasResults() ? seatTags(seatsOfValues(values), results2026.seats, SIMPLE_BLOCS) : null;
 
-function valuesText(p: Pick<Poll, "values"> | SubgroupPoll) {
-  // סקר שהמכון לא המיר למנדטים (רק אחוזים): מציגים אחוז רגיל; הסוגריים שמורים ל"מתחת לאחוז החסימה" בסקר עם מנדטים
-  const pctOnly = Object.values(p.values).every((v) => v.s === undefined);
-  return Object.entries(p.values)
-    .sort(([, a], [, b]) => (b.s ?? b.p ?? -1) - (a.s ?? a.p ?? -1))
-    .map(([id, v]) => `${listName(id)} ${v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}`)
-    .join(" · ");
-}
 
 export default function Polls() {
   const pollsters = useMemo(() => {
@@ -63,15 +66,6 @@ export default function Polls() {
   const finalRows = filtered.filter((p) => finalPollIds.has(p.id)).sort(byNewest);
   const restAll = filtered.filter((p) => !finalPollIds.has(p.id)).sort(byNewest);
   const restRows = restAll.slice(0, shown);
-  // עמודה לכל רשימה שמופיעה בשורות המוצגות, לפי הגודל בשורה הראשונה שבה הופיעה
-  const listCols = parties === "off" ? [] : (() => {
-    const seen = new Map<string, number>();
-    // תוצאות האמת קובעות את סדר הטורים (השורה הראשונה)
-    if (hasResults()) for (const [id, v] of Object.entries(results2026.seats)) if (v > 0) seen.set(id, v);
-    for (const p of [...exitRows, ...finalRows, ...restRows]) for (const [id, v] of Object.entries(p.values) as [string, { s?: number; p?: number }][]) if (!seen.has(id)) seen.set(id, v.s ?? -1);
-    return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
-  })();
-
   return (
     <>
 
@@ -106,79 +100,58 @@ export default function Polls() {
       {filtered.length === 0 && <p role="status" className="c-empty">אין סקרים בטווח שנבחר. <button type="button" className="underline min-h-11" onClick={() => { setWho(""); setFrom(""); setTo(""); setShown(PAGE); }}>איפוס המסננים</button></p>}
       {/* בלי סינון זה ממוצע הסקרים שבמגירה "הסקרים מול התוצאה" — מוצג רק כשיש סינון (הכרעת בעלים 03.11.2026) */}
       {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
-      <Card>
-        {/* טבלה אחת לכל הסקרים, כולל הסקר האחרון של כל מכון ומדגמי 22:00, עם תווית (הכרעת בעלים 03.11.2026); שורת ההסבר — באישור הבעלים */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs md:text-sm">
-            <caption className="sr-only">ארכיון הסקרים: שורה לכל סקר, עמודה לכל רשימה</caption>
-            <thead>
-              <tr className="text-right border-b border-paper-line">
-                <th scope="col" className="py-2 pe-2 min-w-[11rem]">סקר</th>
-                <th scope="col" className="px-1 whitespace-nowrap border-s-2 border-paper-line">מנדטים מדויקים</th>
-                <th scope="col" className="px-1 whitespace-nowrap">מפלגות מדויקות</th>
-                <th scope="col" className="px-1 whitespace-nowrap border-e-2 border-paper-line">טעות בגושים</th>
-                {SIMPLE_BLOCS.map((b, i) => <th key={b.id} scope="col" className={`px-1 whitespace-nowrap${i === SIMPLE_BLOCS.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{b.short}</th>)}
-                {listCols.map((id) => <th key={id} scope="col" className="px-1 font-medium whitespace-nowrap">{listName(id)}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {/* שורה ראשונה מודגשת: תוצאות האמת (הכרעת בעלים 03.11.2026) */}
-              {hasResults() && <tr className="border-b-2 border-ink font-bold align-top">
-                <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
-                {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
-                {blocCells(SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)))}
-                {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
-              </tr>}
-              {exitRows.map((p) => {
-                const isOpen = open === p.id;
-                const t = tagsOf(p.values);
-                return (
-                  <Fragment key={p.id}>
-                    <tr className="border-b border-paper-line/60 align-top">
-                      <th scope="row" className="py-2 pe-2 text-right font-normal">
-                        <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
-                          <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
-                          <span className="font-bold">{date(ELECTION_DAY)}</span> {p.firmHe} · {p.publisherHe}
-                        </button>
-                      </th>
-                      {accCells(t)}
-                      {blocCells(SIMPLE_BLOCS.map((b) => exitSeats(p, [...b.lists])))}
-                      {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{p.values[id]?.s ?? "—"}</td>)}
-                    </tr>
-                    {isOpen && <tr><td colSpan={listCols.length + 4 + SIMPLE_BLOCS.length} className="pb-3">
-                      <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-                        <dt className="font-bold">סוג</dt><dd className="flex flex-wrap gap-1"><Badge tone="ok">מדגם 22:00</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></dd>
-                        <dt className="font-bold">עורך המדגם</dt><dd>{p.firmHe}</dd>
-                        {p.note && <><dt className="font-bold">הערה</dt><dd>{p.note}</dd></>}
-                        <dt className="font-bold">פרסום מקורי</dt>
-                        <dd className="break-all">{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="block">{u}</a>)}</dd>
-                      </dl>
-                    </td></tr>}
-                  </Fragment>
-                );
-              })}
-              {[...finalRows, ...restRows].map((p, k) => {
-                // קו הפרדה לרוחב בתחילת כל קטע
-                const sectionStart = (k === 0 && exitRows.length > 0) || (k === finalRows.length && finalRows.length > 0);
-                const isOpen = open === p.id;
-                const label = p.verification ? verificationLabel(p.verification.status) : null;
-                const pctOnly = Object.values(p.values).every((v) => v.s === undefined);
-                const t = tagsOf(p.values);
-                return (
-                  <Fragment key={p.id}>
-                    <tr className={`c-archive-row border-b border-paper-line/60 align-top${sectionStart ? " [&>*]:border-t-4 [&>*]:border-t-ink-soft" : ""}`}>
-                      <th scope="row" className="py-2 pe-2 text-right font-normal">
-                        <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
-                          <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
-                          <span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span> {pollsterLabel(p)}
-                        </button>
-                      </th>
-                      {accCells(t)}
-                      {blocCells(SIMPLE_BLOCS.map((b) => groupSeatsIn(p, [...b.lists])))}
-                      {listCols.map((id) => { const v = p.values[id]; return <td key={id} className="px-1 text-center tabular-nums whitespace-nowrap">{!v ? "—" : v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}</td>; })}
-                    </tr>
-                    {isOpen && <tr><td colSpan={listCols.length + 4 + SIMPLE_BLOCS.length} className="pb-3">
-                  <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+      {/* ארבע טבלאות נפרדות, כל אחת עם כותרת וסולם צבעים משלה (הכרעת בעלים 03.11.2026) */}
+      <ArchiveTable title="מדגמים" parties={parties} open={open} setOpen={setOpen} rows={exitRows.map((p) => ({
+        id: p.id, values: p.values,
+        head: <><span className="font-bold">{date(ELECTION_DAY)}</span> {p.firmHe} · {p.publisherHe}</>,
+        blocs: SIMPLE_BLOCS.map((b) => exitSeats(p, [...b.lists])),
+        details: <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+          <dt className="font-bold">סוג</dt><dd className="flex flex-wrap gap-1"><Badge tone="ok">מדגם 22:00</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></dd>
+          <dt className="font-bold">עורך המדגם</dt><dd>{p.firmHe}</dd>
+          {p.note && <><dt className="font-bold">הערה</dt><dd>{p.note}</dd></>}
+          <dt className="font-bold">פרסום מקורי</dt>
+          <dd className="break-all">{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="block">{u}</a>)}</dd>
+        </dl>,
+      }))} />
+      <ArchiveTable title="סקר אחרון" parties={parties} open={open} setOpen={setOpen} rows={finalRows.map(pollRow)} />
+      <ArchiveTable title="כל הסקרים" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} foot={<>
+        {shown < restAll.length && (
+          <button type="button" className="f-btn mt-3" onClick={() => setShown((s) => s + PAGE)}>
+            עוד {Math.min(PAGE, restAll.length - shown)} סקרים
+          </button>
+        )}
+        <Note>
+          אחוז בסוגריים = הרשימה מתחת לאחוז החסימה באותו סקר. "אומת" = הסקר הושווה לפרסום המקורי (מצב הבדיקה של כל שדה — בכרטיס הסקר). "תוקן לפי המקור" = נמצא
+          הבדל מטבלת ויקיפדיה, והאתר מציג את מה שבפרסום המקורי (הפירוט בכרטיס הסקר). "מקור: ויקיפדיה" = טרם הושווה לפרסום המקורי.
+          העדכון האחרון: {date(polls[0]?.end ?? "")}.
+        </Note>
+      </>} />
+      <ArchiveTable title="קבוצות אוכלוסייה" parties={parties} open={open} setOpen={setOpen} rows={subgroupPolls.map((p) => ({
+        id: p.id, values: p.values,
+        head: <><span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span> {p.firmHe} · {p.publisherHe}</>,
+        blocs: SIMPLE_BLOCS.map((b) => sumSeats(p.values, [...b.lists])),
+        details: <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+          <dt className="font-bold">סוג</dt><dd><Badge>לא נכנס לסטטיסטיקות של כלל הציבור</Badge></dd>
+          <dt className="font-bold">האוכלוסייה</dt><dd>{p.population}</dd>
+          <dt className="font-bold">גודל המדגם</dt><dd>{num(p.sample)}</dd>
+          {p.note && <><dt className="font-bold">הערה</dt><dd>{p.note}</dd></>}
+          <dt className="font-bold">פרסום מקורי</dt>
+          <dd className="break-all">{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="block">{u}</a>)}</dd>
+        </dl>,
+      }))} />
+      </>} />
+    </>
+  );
+}
+
+/** שורת סקר בטבלאות "סקר אחרון" ו"כל הסקרים": במצב סגור — תאריך, מכון ומזמין; השאר בנתונים המלאים */
+function pollRow(p: Poll): ArchiveRow {
+  const label = p.verification ? verificationLabel(p.verification.status) : null;
+  return {
+    id: p.id, values: p.values,
+    head: <><span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span> {pollsterLabel(p)}</>,
+    blocs: SIMPLE_BLOCS.map((b) => groupSeatsIn(p, [...b.lists])),
+    details: <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                     <dt className="font-bold">סוג</dt>
                     <dd className="flex flex-wrap gap-1">
                       {finalPollIds.has(p.id) && <Badge tone="ok">סקר אחרון</Badge>}
@@ -256,56 +229,99 @@ export default function Polls() {
                     <dd>
                       ויקיפדיה האנגלית, "{p.source.page}" (שורה {p.source.tableLine} בטקסט המקור)
                     </dd>
-                  </dl>
-                    </td></tr>}
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        {shown < restAll.length && (
-          <button type="button" className="mt-3 border border-paper-line rounded px-3 py-2" onClick={() => setShown((s) => s + PAGE)}>
-            עוד {Math.min(PAGE, restAll.length - shown)} סקרים
-          </button>
-        )}
-        <Note>
-          אחוז בסוגריים = הרשימה מתחת לאחוז החסימה באותו סקר. "אומת" = הסקר הושווה לפרסום המקורי (מצב הבדיקה של כל שדה — בכרטיס הסקר). "תוקן לפי המקור" = נמצא
-          הבדל מטבלת ויקיפדיה, והאתר מציג את מה שבפרסום המקורי (הפירוט בכרטיס הסקר). "מקור: ויקיפדיה" = טרם הושווה לפרסום המקורי.
-          העדכון האחרון: {date(polls[0]?.end ?? "")}.
-        </Note>
-      </Card>
-      {/* מדגמי 22:00 — מגירה נפרדת במסך "סקרים" (הכרעת בעלים 02.11.2026) */}
-      {subgroupPolls.length > 0 && (
-        <Card>
-          <h2 className="font-bold text-lg">סקרים על קבוצת אוכלוסייה מסוימת</h2>
-          <p className="text-sm text-ink-soft mt-1">
-            סקרים שנשאלה בהם רק קבוצה אחת (למשל צעירים, ליברלים או הציבור הערבי), ולכן אינם מייצגים את כלל הציבור. הם מוצגים כאן לעיון בלבד, ואינם נכנסים לממוצעים ולחישובים. סקר שהמכון לא המיר למנדטים מוצג באחוזים.
-          </p>
-          <ul className="divide-y divide-paper-line mt-2">
-            {subgroupPolls.map((p) => (
-              <li key={p.id} className="py-3 min-w-0">
-                <div className="flex flex-wrap gap-x-3 gap-y-1 items-baseline">
-                  <span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span>
-                  <span>{p.firmHe} · {p.publisherHe}</span>
-                  <span className="text-ink-soft text-sm">מדגם {num(p.sample)}</span>
-                  <Badge>לא נכנס לסטטיסטיקות של כלל הציבור</Badge>
-                </div>
-                <p className="text-sm mt-1"><span className="font-bold">האוכלוסייה:</span> {p.population}</p>
-                <p className="text-sm text-ink-soft mt-1">{valuesText(p)}</p>
-                {p.note && <p className="text-sm text-ink-soft mt-1">{p.note}</p>}
-                <p className="text-sm mt-1 break-all">
-                  פרסום מקורי:{" "}
-                  {p.urls.map((u) => (
-                    <a key={u} href={u} rel="noopener noreferrer">{u}</a>
-                  ))}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
-      </>} />
-    </>
+                  </dl>,
+  };
+}
+
+/** סכום המנדטים של קבוצת רשימות בסקר אוכלוסייה; סקר באחוזים בלבד — אין גוש */
+const sumSeats = (values: Record<string, { s?: number }>, ids: string[]) => ids.some((id) => values[id]?.s !== undefined) ? ids.reduce((t, id) => t + (values[id]?.s ?? 0), 0) : null;
+
+interface ArchiveRow { id: string; values: Record<string, { s?: number; p?: number }>; head: ReactNode; blocs: (number | null)[]; details: ReactNode }
+
+/**
+ * טבלת ארכיון אחת: שורת "תוצאות אמת" מודגשת, טורי דיוק, ארבעה גושים וטור לכל רשימה.
+ * סולם 9 צבעים לכל הטורים, יחסית לסטייה הגדולה ביותר באותו טור בטבלה הזו בלבד (הכרעת בעלים 03.11.2026).
+ * בטורי הדיוק — מרחק מהדיוק המלא (120 מנדטים, כל המפלגות, 0 טעות), ולכן רק אדום או לבן.
+ */
+function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
+  if (!rows.length) return null;
+  const ready = hasResults();
+  const tags = rows.map((r) => tagsOf(r.values));
+  const listCols = parties === "off" ? [] : (() => {
+    const seen = new Map<string, number>();
+    if (ready) for (const [id, v] of Object.entries(results2026.seats)) if (v > 0) seen.set(id, v);
+    for (const r of rows) for (const [id, v] of Object.entries(r.values)) if (!seen.has(id)) seen.set(id, v.s ?? -1);
+    return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
+  })();
+  const maxAbs = (xs: (number | null | undefined)[]) => xs.reduce<number>((m, x) => x == null ? m : Math.max(m, Math.abs(x)), 0);
+  const listSpan = (id: string) => id in results2026.seats ? maxAbs(rows.map((r) => r.values[id]?.s === undefined ? null : r.values[id].s! - results2026.seats[id])) : 0;
+  const spans = ready ? {
+    seats: maxAbs(tags.map((t) => t && 120 - t.seats)),
+    exact: maxAbs(tags.map((t) => t && t.of - t.exact)),
+    blocErr: maxAbs(tags.map((t) => t?.blocErr)),
+    blocs: SIMPLE_BLOCS.map((_, i) => maxAbs(rows.map((r) => r.blocs[i] == null ? null : r.blocs[i]! - ACTUAL_BLOCS[i]))),
+    lists: Object.fromEntries(listCols.map((id) => [id, listSpan(id)])),
+  } : null;
+  const cols = listCols.length + 4 + SIMPLE_BLOCS.length;
+  const accTinted = (t: SeatTags | null) => {
+    if (!t || !spans) return accCells(t);
+    return <>
+      <td style={scaleTint(t.seats - 120, spans.seats)} className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t.seats}</td>
+      <td style={scaleTint(t.exact - t.of, spans.exact)} className="px-1 text-center tabular-nums whitespace-nowrap"><bdi dir="ltr">{t.exact}/{t.of}</bdi></td>
+      <td style={scaleTint(-t.blocErr, spans.blocErr)} className="px-1 text-center tabular-nums border-e-2 border-paper-line">{t.blocErr}</td>
+    </>;
+  };
+  return (
+    <Card>
+      <h2 className="font-bold text-lg mb-2">{title}</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs md:text-sm">
+          <caption className="sr-only">{title}: שורה לכל סקר, עמודה לכל רשימה</caption>
+          <thead>
+            <tr className="text-right border-b border-paper-line">
+              <th scope="col" className="py-2 pe-2 min-w-[11rem]">סקר</th>
+              <th scope="col" className="px-1 whitespace-nowrap border-s-2 border-paper-line">מנדטים מדויקים</th>
+              <th scope="col" className="px-1 whitespace-nowrap">מפלגות מדויקות</th>
+              <th scope="col" className="px-1 whitespace-nowrap border-e-2 border-paper-line">טעות בגושים</th>
+              {SIMPLE_BLOCS.map((b, i) => <th key={b.id} scope="col" className={`px-1 whitespace-nowrap${i === SIMPLE_BLOCS.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{b.short}</th>)}
+              {listCols.map((id) => <th key={id} scope="col" className="px-1 font-medium whitespace-nowrap">{listName(id)}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {ready && <tr className="border-b-2 border-ink font-bold align-top">
+              <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
+              {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
+              {blocCells(ACTUAL_BLOCS)}
+              {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
+            </tr>}
+            {rows.map((r, k) => {
+              const isOpen = open === r.id;
+              const pctOnly = Object.values(r.values).every((v) => v.s === undefined);
+              return (
+                <Fragment key={r.id}>
+                  <tr className="c-archive-row border-b border-paper-line/60 align-top">
+                    <th scope="row" className="py-2 pe-2 text-right font-normal">
+                      <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : r.id)}>
+                        <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
+                        {r.head}
+                      </button>
+                    </th>
+                    {accTinted(tags[k])}
+                    {blocCells(r.blocs, spans ? (i, v) => scaleTint(v - ACTUAL_BLOCS[i], spans.blocs[i]) : undefined)}
+                    {listCols.map((id) => {
+                      const v = r.values[id];
+                      const tint = spans && v?.s !== undefined && id in results2026.seats ? scaleTint(v.s - results2026.seats[id], spans.lists[id]) : undefined;
+                      return <td key={id} style={tint} className="px-1 text-center tabular-nums whitespace-nowrap">{!v ? "—" : v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}</td>;
+                    })}
+                  </tr>
+                  {isOpen && <tr><td colSpan={cols} className="pb-3">{r.details}</td></tr>}
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      {foot}
+    </Card>
   );
 }
