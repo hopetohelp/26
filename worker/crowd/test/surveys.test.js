@@ -104,6 +104,8 @@ describe("site surveys over the worker", () => {
     expect((await answer(out, { reelect: "yes" })).status).toBe(403);
     await setOutside("answer");
     expect((await call("/survey?id=reelect", { token: out })).data.results).toBeNull();
+    // מספר המשתתפים מוחזר תמיד, גם לפני שעונים (הכרעת בעלים 03.11.2026)
+    expect((await call("/survey?id=reelect", { token: out })).data.participants).toMatchObject({ all: expect.any(Number), group: expect.any(Number), outside: expect.any(Boolean) });
     expect((await answer(out, { reelect: "yes" })).status).toBe(200);
     expect((await call("/survey?id=reelect", { token: out })).data.results.all.n).toBe(1);
     await setOutside("none");

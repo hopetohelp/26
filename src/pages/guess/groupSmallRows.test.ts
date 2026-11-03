@@ -25,3 +25,17 @@ describe("רשימות אחרות בטבלת המעבר", () => {
     expect(out.rows[SMALL_KEY].cells[SMALL_KEY].n).toBe(3);
   });
 });
+import { realLabel } from "./votingRows";
+describe("הטור האחרון בסקרי ההצבעה", () => {
+  it("אחוז ולא מספר; לא הצביעו ב-2022 — מבעלי זכות הבחירה", () => {
+    expect(realLabel("2022", "מחל")).toMatch(/^\d+(\.\d)?%$/);
+    expect(realLabel("2022", "none")).toBe("29.4%");
+  });
+});
+import { participantsLabel } from "../../lib/surveys";
+describe("מספר המשתתפים בכותרת", () => {
+  it("רק בגזרה / גם מחוץ לגזרה", () => {
+    expect(participantsLabel({ all: 12, group: 8, outside: false })).toBe("12 משתתפים");
+    expect(participantsLabel({ all: 12, group: 8, outside: true })).toBe("12 משתתפים - 8 מהגזרה");
+  });
+});

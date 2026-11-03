@@ -34,7 +34,7 @@ export type SurveyAnswers = Record<string, string | number | Record<string, Assi
 export type QuestionResult = { n: number; counts: Record<string, number>; mean?: number | null } | { n: number; items: Record<string, Record<string, number>> };
 export type SurveyResults = { n: number; min: number; hidden: true } | { n: number; questions: Record<string, QuestionResult> };
 /** results = null עד שעונים (הכרעת בעלים 01.11.2026) */
-export interface SurveyDetail { survey: Survey; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null; access: { member: boolean; canAnswer: boolean; manage: boolean; outside?: SurveyOutside } }
+export interface SurveyDetail { survey: Survey; participants?: { all: number; group: number; outside: boolean }; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null; access: { member: boolean; canAnswer: boolean; manage: boolean; outside?: SurveyOutside } }
 export interface SurveyHistory { surveys: Survey[]; answers: { survey: string; at: string; answers: SurveyAnswers }[] }
 
 /**
@@ -139,3 +139,9 @@ export function majorityLine(seats: number): string {
 export const ELECTION_RESULTS_NUMBER = 2;
 export const ELECTION_RESULTS_TITLE = "3. מה יהיו תוצאות הבחירות?";
 export const numbered = (s: Pick<Survey, "position" | "title">) => (s.position > 0 ? `${s.position}. ${s.title}` : s.title);
+
+/** "12 משתתפים", ובסקר שפתוח גם מחוץ לגזרה — "12 משתתפים - 8 מהגזרה" (הכרעת בעלים 03.11.2026) */
+export function participantsLabel(p: { all: number; group: number; outside: boolean }) {
+  const n = (k: number) => (k === 1 ? "משתתף אחד" : `${k.toLocaleString("he-IL")} משתתפים`);
+  return p.outside ? `${n(p.all)} - ${p.group.toLocaleString("he-IL")} מהגזרה` : n(p.all);
+}
