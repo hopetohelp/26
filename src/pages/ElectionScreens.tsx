@@ -8,12 +8,10 @@ import { results } from "../lib/data";
 import { K26_ID, SUMMARY_ID, electionOption, previousElection, useElection } from "../lib/election";
 import { overviewOf } from "../lib/voterFlow";
 import { useScreenShown } from "../lib/screenVisibility";
-import Results, { ElectionSummary, PastBlocs } from "./Results";
+import Results, { ElectionSummary } from "./Results";
 import Accuracy, { AccuracyAcross } from "./Accuracy";
 import Voters from "./Voters";
 import Latest from "./Latest";
-import PersonalBlocs from "../components/PersonalBlocs";
-import { results2026 } from "../lib/guessAccuracyData";
 
 /**
  * שלושת מסכי הבחירות, אחידים לכל מערכת (הכרעות בעלים 02.11.2026, docs/תוכנית-לשוניות-ניתוח-אחיד-02-11-2026.md):
@@ -54,7 +52,6 @@ function PastChanges({ id }: { id: string }) {
       <h1 className="text-2xl font-display leading-tight">מה השתנה: {prevOpt?.label ?? "2013"} מול {electionOption(id).label}</h1>
       <OverviewCards pair={{ prev: prev ? overviewOf(prev) : null, cur: overviewOf(e) }} />
     </section>
-    <PastBlocs id={id} />
     <Fold title="מעבר בין מפלגות"><Missing what="מעבר המצביעים" /></Fold>
     <Fold title="מעבר בין גושים"><Missing what="המעבר בין גושים" /></Fold>
     <Fold title="תוצאות לפי יישוב"><LocalityResults key={id} electionId={id} /></Fold>
@@ -64,7 +61,7 @@ function PastChanges({ id }: { id: string }) {
 export function ChangesScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
-  if (id === K26_ID) return <Suspense fallback={loading}><VoterFlow afterHeader={<PersonalBlocs title="חלוקת הכנסת בתוצאות אוקטובר 2026" source="תוצאות אמת 2026" asOf="התוצאות הסופיות" datasets={[{ values: results2026.seats, source: "תוצאות אמת 2026", asOf: "התוצאות הסופיות" }]} />} /></Suspense>;
+  if (id === K26_ID) return <Suspense fallback={loading}><VoterFlow /></Suspense>;
   return <PastChanges id={id} />;
 }
 
