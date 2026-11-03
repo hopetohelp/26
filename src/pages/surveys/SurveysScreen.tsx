@@ -32,7 +32,7 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
  * בפתוחים — שני חלקים, ניחושים וסקרים, בלי מתג. בנסגרו — הכול יחד, בלי מתג (הכרעת בעלים 03.11.2026);
  * בניחושים: קודם "ממתינים לתוצאה" (אין עדיין תוצאת אמת), אחר כך "יש תוצאה".
  */
-type Tab = "todo" | "done" | "closed";
+type Tab = "todo" | "done" | "closed" | "all";
 /** תגית מצב / מועד סגירה על הכרטיס */
 /** שורה 2 בכרטיס: "נסגר ב…" / "ייסגר ב…" (הכרעת בעלים 03.11.2026) */
 const whenText = (s: Survey) => (s.status === "draft" ? "טיוטה" : closesLabel(s) ? `${s.status === "closed" ? "נסגר" : "ייסגר"} ב-${closesLabel(s)}` : null);
@@ -60,7 +60,7 @@ export default function SurveysScreen() {
   const closed = all.filter((s) => s.status === "closed").sort(newest);
   const todo = token ? open.filter((s) => !s.answered) : open;
   const done = token ? open.filter((s) => s.answered) : [];
-  const tabs: [Tab, string][] = token ? [["todo", "להשתתף"], ["done", "לעדכן"], ["closed", "סגור"]] : [["todo", "להשתתף"], ["closed", "סגור"]];
+  const tabs: [Tab, string][] = token ? [["todo", "להשתתף"], ["done", "לעדכן"], ["closed", "סגור"], ["all", "הכל"]] : [["todo", "להשתתף"], ["closed", "סגור"], ["all", "הכל"]];
   // ברירת מחדל "להשתתף"; אם אין שם כלום — "השתתפתי"
   const current: Tab = tab ?? (todo.length || !done.length ? "todo" : "done");
 
@@ -73,16 +73,20 @@ export default function SurveysScreen() {
   );
   // "תוצאות הבחירות" — ניחוש 120 המנדטים (הכרעות בעלים 01.11 ו-02.11.2026): נסגר ויש לו תוצאה
   const legacy = <SurveyCard key="guesses" to="/surveys/guesses" title={ELECTION_RESULTS_TITLE} when="נסגר ב-27.10 21:58" tag={null} />;
-  const section = (title: string, items: Survey[], extra?: JSX.Element) =>
-    items.length || extra ? (
+  const section = (title: string, items: Survey[], extra?: JSX.Element, first?: JSX.Element) =>
+    items.length || extra || first ? (
       <section key={title} className="space-y-2">
         <h2 className="text-base font-bold">{title}</h2>
-        <ul className="space-y-2">{items.map(row)}{extra}</ul>
+        <ul className="space-y-2">{first}{items.map(row)}{extra}</ul>
       </section>
     ) : null;
 
   let content: (JSX.Element | null)[];
-  if (current === "closed") {
+  if (current === "all") {
+    // "הכל" (הכרעת בעלים 03.11.2026): כל הניחושים והסקרים, לפי המספר
+    const byPos = [...all].sort((a, b) => a.position - b.position);
+    content = [section("ניחושים", byPos.filter((s) => s.kind === "guess"), undefined, legacy), section("סקרים", byPos.filter((s) => s.kind === "survey"))];
+  } else if (current === "closed") {
     const guesses = closed.filter((s) => s.kind === "guess");
     // בלי מתג ניחושים / סקרים (הכרעת בעלים 03.11.2026): כל מה שנסגר באותו מסך
     content = [section("ממתינים לתוצאה", guesses.filter((s) => !s.truth)), section("יש תוצאה", guesses.filter((s) => s.truth), legacy), section("סקרים", closed.filter((s) => s.kind === "survey"))];
