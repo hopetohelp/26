@@ -34,11 +34,10 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
 
 /**
  * מבנה הרשימה (הכרעת בעלים 02.11.2026): "להשתתף · השתתפתי · נסגרו" (בלי חשבון: "פתוחים · נסגרו").
- * בפתוחים — שני חלקים, ניחושים וסקרים, בלי מתג. בנסגרו — מתג ניחושים / סקרים, כי שם הרשימה מצטברת;
+ * בפתוחים — שני חלקים, ניחושים וסקרים, בלי מתג. בנסגרו — הכול יחד, בלי מתג (הכרעת בעלים 03.11.2026);
  * בניחושים: קודם "ממתינים לתוצאה" (אין עדיין תוצאת אמת), אחר כך "יש תוצאה".
  */
 type Tab = "todo" | "done" | "closed";
-type ClosedKind = "guess" | "survey";
 /** תגית מצב / מועד סגירה על הכרטיס */
 const statusText = (s: Survey) => (s.status === "draft" ? "טיוטה" : s.status === "closed" ? (closesLabel(s) ? `נסגר ${closesLabel(s)}` : "נסגר") : closesLabel(s) ? `פתוח עד ${closesLabel(s)}` : "פתוח");
 const newest = (a: Survey, b: Survey) => b.updatedAt.localeCompare(a.updatedAt);
@@ -50,7 +49,6 @@ export default function SurveysScreen() {
   const [surveys, setSurveys] = useState<Survey[] | null>(() => cached<{ surveys: Survey[] }>(surveysPath, token)?.surveys ?? null);
   const [failed, setFailed] = useState(false);
   const [tab, setTab] = useState<Tab | null>(null);
-  const [closedKind, setClosedKind] = useState<ClosedKind>("guess");
   useEffect(() => { listSurveys(token).then((r) => { setSurveys(r.surveys); setFailed(false); }).catch(() => setFailed(true)); }, [token]);
   // בתוך הטמעה: המעבר בין הסקרים נשאר בחלון המוטמע
   const embed = isEmbed();
@@ -71,7 +69,7 @@ export default function SurveysScreen() {
   const current: Tab = tab ?? (todo.length || !done.length ? "todo" : "done");
 
   const row = (s: Survey) => (
-    <li key={s.id}>
+    <li key={s.id} className="f-card !p-0">
       <Link to={to(s.id)} className="block px-4 py-3.5 no-underline text-ink">
         <span className="flex items-center gap-3">
           <span className="flex-1 min-w-0"><span className="block font-bold">{numbered(s)}</span><span className="block text-[12.5px] text-ink-soft">{statusText(s)}</span></span>
@@ -84,7 +82,7 @@ export default function SurveysScreen() {
   );
   // "תוצאות הבחירות" — ניחוש 120 המנדטים, מספר 1 (הכרעות בעלים 01.11 ו-02.11.2026): נסגר ויש לו תוצאה
   const legacy = (
-    <li key="guesses">
+    <li key="guesses" className="f-card !p-0">
       <Link to="/surveys/guesses" className="block px-4 py-3.5 no-underline text-ink">
         <span className="block font-bold">{ELECTION_RESULTS_TITLE}</span>
         <span className="block text-[12.5px] text-ink-soft">נסגר עם סגירת הקלפיות, 27.10 בשעה 21:58</span>
@@ -95,16 +93,15 @@ export default function SurveysScreen() {
     items.length || extra ? (
       <section key={title} className="space-y-2">
         <h2 className="text-base font-bold">{title}</h2>
-        <ul className="f-card !p-0 divide-y divide-paper-line">{items.map(row)}{extra}</ul>
+        <ul className="space-y-2">{items.map(row)}{extra}</ul>
       </section>
     ) : null;
 
   let content: (JSX.Element | null)[];
   if (current === "closed") {
     const guesses = closed.filter((s) => s.kind === "guess");
-    content = closedKind === "guess"
-      ? [section("ממתינים לתוצאה", guesses.filter((s) => !s.truth)), section("יש תוצאה", guesses.filter((s) => s.truth), legacy)]
-      : [section("סקרים", closed.filter((s) => s.kind === "survey"))];
+    // בלי מתג ניחושים / סקרים (הכרעת בעלים 03.11.2026): כל מה שנסגר באותו מסך
+    content = [section("ממתינים לתוצאה", guesses.filter((s) => !s.truth)), section("יש תוצאה", guesses.filter((s) => s.truth), legacy), section("סקרים", closed.filter((s) => s.kind === "survey"))];
   } else {
     const items = current === "todo" ? todo : done;
     content = [section("ניחושים", items.filter((s) => s.kind === "guess")), section("סקרים", items.filter((s) => s.kind === "survey"))];
@@ -118,12 +115,6 @@ export default function SurveysScreen() {
       <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
         {tabs.map(([k, l]) => <button key={k} type="button" aria-pressed={current === k} onClick={() => setTab(k)}>{l}</button>)}
       </div>
-      {current === "closed" && (
-        <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סוג">
-          <button type="button" aria-pressed={closedKind === "guess"} onClick={() => setClosedKind("guess")}>ניחושים</button>
-          <button type="button" aria-pressed={closedKind === "survey"} onClick={() => setClosedKind("survey")}>סקרים</button>
-        </div>
-      )}
       </div>
       {failed && <p className="text-ink-soft">רשימת הסקרים אינה זמינה כרגע.</p>}
       {!failed && !surveys && <p className="text-ink-soft">טוען…</p>}
