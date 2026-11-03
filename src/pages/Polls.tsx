@@ -6,12 +6,14 @@ import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
-import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, fieldLabel, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
+import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
 const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
 const PAGE = 50;
+/** ארבעת הגושים בכל סקר — אחרי טורי הדיוק, עם קו הפרדה בסוף (הכרעת בעלים 03.11.2026); החישוב — groupSeatsIn / exitSeats (מקור אחד) */
+const blocCells = (vals: (number | null | undefined)[]) => <>{vals.map((v, i) => <td key={i} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
 /** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
 const accCells = (t: SeatTags | null) => <>
   <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t?.seats ?? "—"}</td>
@@ -53,11 +55,16 @@ export default function Polls() {
     (p) => (!who || pollsterKey(p) === who) && (!from || p.end >= from) && (!to || p.end <= to),
   );
   // מדגמי 22:00 — בראש הארכיון, כשהמסננים כוללים את יום הבחירות ולא נבחר מכון
-  const exitRows = !who && (!from || ELECTION_DAY >= from) && (!to || ELECTION_DAY <= to) ? exitPolls : [];
+  const exitRows = (!who && (!from || ELECTION_DAY >= from) && (!to || ELECTION_DAY <= to) ? [...exitPolls] : []).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  // שלושה קטעים, כל אחד מהחדש לישן, עם קו הפרדה לרוחב: מדגמי 22:00 · הסקרים האחרונים · כל השאר (הכרעת בעלים 03.11.2026)
+  const byNewest = (a: Poll, b: Poll) => b.end.localeCompare(a.end) || b.start.localeCompare(a.start);
+  const finalRows = filtered.filter((p) => finalPollIds.has(p.id)).sort(byNewest);
+  const restAll = filtered.filter((p) => !finalPollIds.has(p.id)).sort(byNewest);
+  const restRows = restAll.slice(0, shown);
   // עמודה לכל רשימה שמופיעה בשורות המוצגות, לפי הגודל בשורה הראשונה שבה הופיעה
   const listCols = (() => {
     const seen = new Map<string, number>();
-    for (const p of [...exitRows, ...filtered.slice(0, shown)]) for (const [id, v] of Object.entries(p.values) as [string, { s?: number; p?: number }][]) if (!seen.has(id)) seen.set(id, v.s ?? -1);
+    for (const p of [...exitRows, ...finalRows, ...restRows]) for (const [id, v] of Object.entries(p.values) as [string, { s?: number; p?: number }][]) if (!seen.has(id)) seen.set(id, v.s ?? -1);
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
   })();
 
@@ -92,7 +99,7 @@ export default function Polls() {
       </>} secondary={<>
       {filtered.length === 0 && <p role="status" className="c-empty">אין סקרים בטווח שנבחר. <button type="button" className="underline min-h-11" onClick={() => { setWho(""); setFrom(""); setTo(""); setShown(PAGE); }}>איפוס המסננים</button></p>}
       {/* בלי סינון זה ממוצע הסקרים שבמגירה "הסקרים מול התוצאה" — מוצג רק כשיש סינון (הכרעת בעלים 03.11.2026) */}
-      {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={filtered.slice(0, shown).map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
+      {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
       <Card>
         {/* טבלה אחת לכל הסקרים, כולל הסקר האחרון של כל מכון ומדגמי 22:00, עם תווית (הכרעת בעלים 03.11.2026); שורת ההסבר — באישור הבעלים */}
         <p className="text-sm text-ink-soft mb-2">לחיצה על סקר מציגה את הנתונים המלאים שלו.</p>
@@ -105,6 +112,7 @@ export default function Polls() {
                 <th scope="col" className="px-1 whitespace-nowrap border-s-2 border-paper-line">מנדטים מדויקים</th>
                 <th scope="col" className="px-1 whitespace-nowrap">מפלגות מדויקות</th>
                 <th scope="col" className="px-1 whitespace-nowrap border-e-2 border-paper-line">טעות בגושים</th>
+                {SIMPLE_BLOCS.map((b, i) => <th key={b.id} scope="col" className={`px-1 whitespace-nowrap${i === SIMPLE_BLOCS.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{b.short}</th>)}
                 {listCols.map((id) => <th key={id} scope="col" className="px-1 font-medium whitespace-nowrap">{listName(id)}</th>)}
               </tr>
             </thead>
@@ -118,15 +126,16 @@ export default function Polls() {
                       <th scope="row" className="py-2 pe-2 text-right font-normal">
                         <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
                           <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
-                          <span className="font-bold">{date(ELECTION_DAY)}</span> {p.publisherHe}
+                          <span className="font-bold">{date(ELECTION_DAY)}</span> {p.firmHe} · {p.publisherHe}
                         </button>
-                        <span className="flex flex-wrap gap-1 mt-1"><Badge tone="ok">מדגם 22:00</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></span>
                       </th>
                       {accCells(t)}
+                      {blocCells(SIMPLE_BLOCS.map((b) => exitSeats(p, [...b.lists])))}
                       {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{p.values[id]?.s ?? "—"}</td>)}
                     </tr>
-                    {isOpen && <tr><td colSpan={listCols.length + 4} className="pb-3">
+                    {isOpen && <tr><td colSpan={listCols.length + 4 + SIMPLE_BLOCS.length} className="pb-3">
                       <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+                        <dt className="font-bold">סוג</dt><dd className="flex flex-wrap gap-1"><Badge tone="ok">מדגם 22:00</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></dd>
                         <dt className="font-bold">עורך המדגם</dt><dd>{p.firmHe}</dd>
                         {p.note && <><dt className="font-bold">הערה</dt><dd>{p.note}</dd></>}
                         <dt className="font-bold">פרסום מקורי</dt>
@@ -136,32 +145,35 @@ export default function Polls() {
                   </Fragment>
                 );
               })}
-              {filtered.slice(0, shown).map((p) => {
+              {[...finalRows, ...restRows].map((p, k) => {
+                // קו הפרדה לרוחב בתחילת כל קטע
+                const sectionStart = (k === 0 && exitRows.length > 0) || (k === finalRows.length && finalRows.length > 0);
                 const isOpen = open === p.id;
                 const label = p.verification ? verificationLabel(p.verification.status) : null;
                 const pctOnly = Object.values(p.values).every((v) => v.s === undefined);
                 const t = tagsOf(p.values);
                 return (
                   <Fragment key={p.id}>
-                    <tr className="c-archive-row border-b border-paper-line/60 align-top">
+                    <tr className={`c-archive-row border-b border-paper-line/60 align-top${sectionStart ? " border-t-4 border-t-ink-soft" : ""}`}>
                       <th scope="row" className="py-2 pe-2 text-right font-normal">
                         <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
                           <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
                           <span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span> {pollsterLabel(p)}
-                          {p.sample && <span className="text-ink-soft"> · מדגם {num(p.sample)}</span>}
                         </button>
-                        <span className="flex flex-wrap gap-1 mt-1">
-                          {finalPollIds.has(p.id) && <Badge tone="ok">סקר אחרון</Badge>}
-                          {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
-                          {p.erroneous && <Badge tone="warn">סומן כשגוי — לא נכנס לחישובים</Badge>}
-                          {p.verification ? <Badge tone={label!.tone === "ok" ? "ok" : label!.tone === "warn" ? "warn" : "neutral"}>{label!.text}</Badge> : <Badge>מקור: ויקיפדיה</Badge>}
-                        </span>
                       </th>
                       {accCells(t)}
+                      {blocCells(SIMPLE_BLOCS.map((b) => groupSeatsIn(p, [...b.lists])))}
                       {listCols.map((id) => { const v = p.values[id]; return <td key={id} className="px-1 text-center tabular-nums whitespace-nowrap">{!v ? "—" : v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}</td>; })}
                     </tr>
-                    {isOpen && <tr><td colSpan={listCols.length + 4} className="pb-3">
+                    {isOpen && <tr><td colSpan={listCols.length + 4 + SIMPLE_BLOCS.length} className="pb-3">
                   <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+                    <dt className="font-bold">סוג</dt>
+                    <dd className="flex flex-wrap gap-1">
+                      {finalPollIds.has(p.id) && <Badge tone="ok">סקר אחרון</Badge>}
+                      {!p.consistent && <Badge tone="warn">סכום המנדטים אינו 120</Badge>}
+                      {p.erroneous && <Badge tone="warn">סומן כשגוי — לא נכנס לחישובים</Badge>}
+                      {p.verification ? <Badge tone={label!.tone === "ok" ? "ok" : label!.tone === "warn" ? "warn" : "neutral"}>{label!.text}</Badge> : <Badge>מקור: ויקיפדיה</Badge>}
+                    </dd>
                     <dt className="font-bold">עורך הסקר</dt>
                     <dd>{p.firmHe}</dd>
                     <dt className="font-bold">המזמין</dt>
@@ -240,9 +252,9 @@ export default function Polls() {
             </tbody>
           </table>
         </div>
-        {shown < filtered.length && (
+        {shown < restAll.length && (
           <button type="button" className="mt-3 border border-paper-line rounded px-3 py-2" onClick={() => setShown((s) => s + PAGE)}>
-            עוד {Math.min(PAGE, filtered.length - shown)} סקרים
+            עוד {Math.min(PAGE, restAll.length - shown)} סקרים
           </button>
         )}
         <Note>
