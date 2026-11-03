@@ -96,7 +96,6 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         </Section>
         {/* ניחושים חריגים: כרטיס מצב לכל הניחושים, ורשימה עם סינון הכל/ממתין/אושר/נדחה (הכרעת בעלים 03.11.2026) */}
         <Section title="ניחושים חריגים">
-          <OutlierSwitch id={id} token={token} onChanged={() => setReload((r) => r + 1)} />
           {ins && !ins.belowMin && <Guesses ins={ins} />}
           <AdminGuesses key={reload} group={{
             load: () => call(`/group/guesses?group=${q(id)}`, { token }),
@@ -151,24 +150,6 @@ function SupportThreads({ id, token, stats }: { id: string; token: string; stats
             release: (_kind, handle) => act(handle, { action: "release" }),
           }} />}
     </Section>
-  );
-}
-
-/** מתג סינון החריגים בניחוש המנדטים — לכל האתר; כבוי ⇐ אין סינון (הכרעת בעלים 03.11.2026) */
-function OutlierSwitch({ id, token, onChanged }: { id: string; token: string; onChanged: () => void }) {
-  const [on, setOn] = useState<boolean | null>(null);
-  const [busy, setBusy] = useState(false);
-  useEffect(() => { void call<{ on: boolean }>(`/group/outlier-filter?group=${q(id)}`, { token }).then((r) => setOn(r.on), () => setOn(null)); }, [id, token]);
-  if (on === null) return null;
-  const toggle = async () => {
-    setBusy(true);
-    try { setOn((await call<{ on: boolean }>("/group/outlier-filter", { token, body: { group: id, on: !on } })).on); onChanged(); } finally { setBusy(false); }
-  };
-  return (
-    <button type="button" role="switch" aria-checked={on} disabled={busy} onClick={() => void toggle()} className="w-full flex items-center justify-between gap-3 min-h-[44px] text-sm text-start">
-      <span className="font-bold">סינון חריגים בניחוש המנדטים (כל האתר)</span>
-      <span aria-hidden="true" className={`shrink-0 w-12 h-7 rounded-full border-2 border-ink p-0.5 flex ${on ? "bg-ink justify-end" : "bg-paper-card justify-start"}`}><span className={`w-5 h-5 rounded-full ${on ? "bg-paper-card" : "bg-ink"}`} /></span>
-    </button>
   );
 }
 

@@ -1756,16 +1756,22 @@ const routes = {
     if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
     return { group: id, min: GROUP_MIN, ...(await guessRows(env, members)) };
   },
-  // מתג סינון החריגים בניחוש המנדטים — לכל האתר; מנהל קבוצה או מנהל האתר (הכרעת בעלים 03.11.2026)
+  // מתג סינון חריגים לכל ניחוש בנפרד (הכרעת בעלים 03.11.2026). "seats" = ניחוש המנדטים (כרגע הניחוש היחיד שיש בו סינון); אחר = מזהה הסקר.
+  // לכל האתר; מנהל קבוצה. כבוי ⇐ אין סינון
   "GET /group/outlier-filter": async ({ env, request, now, url }) => {
     await requireManager(env, request, now, url.searchParams.get("group"));
-    return { on: await outlierFilterOn(env) };
+    const rows = (await env.DB.prepare("SELECT key, value FROM site_settings WHERE key LIKE 'outlier_filter%'").all()).results || [];
+    const filters = { seats: true };
+    for (const r of rows) filters[r.key === "outlier_filter" ? "seats" : r.key.slice("outlier_filter:".length)] = r.value !== "off";
+    return { on: filters.seats, filters };
   },
   "POST /group/outlier-filter": async ({ env, request, now, body }) => {
     await requireManager(env, request, now, body.group);
     if (typeof body.on !== "boolean") throw bad("on");
-    await env.DB.prepare("INSERT INTO site_settings (key, value, updated_at) VALUES ('outlier_filter', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(body.on ? "on" : "off", iso(now)).run();
-    return { on: body.on };
+    const target = body.survey === undefined || body.survey === "seats" ? "seats" : surveyId(body.survey);
+    const key = target === "seats" ? "outlier_filter" : `outlier_filter:${target}`;
+    await env.DB.prepare("INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(key, body.on ? "on" : "off", iso(now)).run();
+    return { on: body.on, survey: target };
   },
   "POST /group/guesses/decide": async ({ env, request, now, body }) => {
     const id = await requireManager(env, request, now, body.group);

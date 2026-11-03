@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import GroupSeriesChart, { type SeriesBucket } from "../../components/GroupSeriesChart";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useSession } from "../guess/useCrowd";
+import { call } from "../../lib/crowdApi";
 import CardDrawer from "../../components/CardDrawer";
 import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, VISIBILITY_LABELS, type Survey, type SurveyKind, type SurveyStats } from "../../lib/surveys";
 import SurveyEditor, { type EditorValue } from "./SurveyEditor";
@@ -37,6 +38,12 @@ export function SurveysManage({ children, election }: { children?: ReactNode; el
     for (const s of surveys) surveyStats(token, s.id).then((r) => setStats((o) => ({ ...o, [s.id]: r })), () => setStats((o) => ({ ...o, [s.id]: null })));
   }, [token, surveys]);
   const [scope, setScope] = useState<Scope>("group");
+  // סינון חריגים — מתג לכל ניחוש בנפרד (הכרעת בעלים 03.11.2026); "seats" = ניחוש המנדטים
+  const [filters, setFilters] = useState<Record<string, boolean>>({});
+  useEffect(() => { if (token && group) void call<{ filters: Record<string, boolean> }>(`/group/outlier-filter?group=${encodeURIComponent(group)}`, { token }).then((r) => setFilters(r.filters), () => setFilters({})); }, [token, group]);
+  const setFilter = async (survey: string, on: boolean) => {
+    try { await call("/group/outlier-filter", { token: token!, body: { group, survey, on } }); setFilters((f) => ({ ...f, [survey]: on })); } catch { setMsg("השינוי לא נשמר."); }
+  };
 
   if (!token || !groups.length) return null;
 
@@ -75,7 +82,7 @@ export function SurveysManage({ children, election }: { children?: ReactNode; el
           {children}
         </CardDrawer>
         <CardDrawer title="ניהול סקרים" className="">
-          <SettingsTable surveys={list} onOpen={(id) => navigate(`/s/${id}?manage=1&from=admin`)} onChange={update} />
+          <SettingsTable surveys={list} onOpen={(id) => navigate(`/s/${id}?manage=1&from=admin`)} onChange={update} filters={filters} onFilter={(id, on) => void setFilter(id, on)} onOpenElection={() => navigate("/surveys/guesses")} />
         </CardDrawer>
       </> : (
         <section className="f-card space-y-3">
@@ -184,12 +191,20 @@ const toLocal = (iso: string | null) => { if (!iso) return ""; const d = new Dat
 const Cycle = ({ label, onClick }: { label: string; onClick: () => void }) => <button type="button" className="f-btn !min-h-[34px] !text-[13px] whitespace-nowrap" onClick={onClick}>{label}</button>;
 
 /** טבלת ניהול הסקרים: כל תא ניתן לשינוי בלחיצה; רק לחיצה על השם פותחת את מסך הניהול של הסקר */
-function SettingsTable({ surveys, onOpen, onChange }: { surveys: Survey[]; onOpen: (id: string) => void; onChange: (s: Survey, patch: Record<string, unknown>) => Promise<void> }) {
+function SettingsTable({ surveys, onOpen, onChange, filters, onFilter, onOpenElection }: { surveys: Survey[]; onOpen: (id: string) => void; onChange: (s: Survey, patch: Record<string, unknown>) => Promise<void>; filters: Record<string, boolean>; onFilter: (id: string, on: boolean) => void; onOpenElection: () => void }) {
+  const flt = (id: string) => { const on = filters[id] ?? true; return <Cycle label={on ? "פועל" : "כבוי"} onClick={() => onFilter(id, !on)} />; };
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead><tr className="text-ink-soft">{["שם", "סוג", "מצב", "מי רואה תוצאות", "מחוץ לגזרה", "סגירה", "סף משתתפים"].map((h) => <th key={h} className="text-start px-2 py-2 whitespace-nowrap">{h}</th>)}</tr></thead>
+        <thead><tr className="text-ink-soft">{["שם", "סוג", "מצב", "מי רואה תוצאות", "מחוץ לגזרה", "סגירה", "סף משתתפים", "סינון חריגים"].map((h) => <th key={h} className="text-start px-2 py-2 whitespace-nowrap">{h}</th>)}</tr></thead>
         <tbody>
+          {/* ניחוש המנדטים — שורה קבועה; כרגע הניחוש היחיד שהסינון פועל בו */}
+          <tr className="border-t border-paper-line">
+            <td className="px-2 py-2"><button type="button" className="f-btn !min-h-[34px] !text-[13px] font-bold text-start" onClick={onOpenElection}>מה יהיו תוצאות הבחירות?</button></td>
+            <td className="px-2 py-2">ניחוש</td>
+            <td className="px-2 py-2 text-ink-soft" colSpan={5}>—</td>
+            <td className="px-2 py-2">{flt("seats")}</td>
+          </tr>
           {surveys.map((s) => (
             <tr key={s.id} className="border-t border-paper-line">
               <td className="px-2 py-2"><button type="button" className="f-btn !min-h-[34px] !text-[13px] font-bold text-start" onClick={() => onOpen(s.id)}>{s.title}</button></td>
@@ -201,9 +216,10 @@ function SettingsTable({ surveys, onOpen, onChange }: { surveys: Survey[]; onOpe
                 onBlur={(e) => { const v = e.target.value ? new Date(e.target.value).toISOString() : null; if (v !== s.closesAt) void onChange(s, { closes_at: v }); }} /></td>
               <td className="px-2 py-2"><input type="number" min={0} aria-label={`סף משתתפים: ${s.title}`} defaultValue={s.minResults} className="w-20 min-h-[34px] rounded-theme border border-paper-line bg-paper text-ink px-2 font-num text-center"
                 onBlur={(e) => { const v = Number(e.target.value); if (Number.isInteger(v) && v >= 0 && v !== s.minResults) void onChange(s, { min_results: v }); }} /></td>
+              <td className="px-2 py-2">{s.kind === "guess" ? flt(s.id) : <span className="text-ink-soft">—</span>}</td>
             </tr>
           ))}
-          {!surveys.length && <tr><td colSpan={7} className="px-2 py-3 text-ink-soft">אין עדיין סקרים.</td></tr>}
+          {!surveys.length && <tr><td colSpan={8} className="px-2 py-3 text-ink-soft">אין עדיין סקרים.</td></tr>}
         </tbody>
       </table>
     </div>
