@@ -229,6 +229,9 @@ describe("site surveys over the worker", () => {
     expect(s.data.hours.reduce((n, h) => n + h.views, 0)).toBe(3);
     expect(s.data.hours.reduce((n, h) => n + h.saves, 0)).toBe(2);
     expect(s.data.saversSinceViews).toBe(1);
+    // הגזרה בלבד: 2 כניסות של החבר (לא של האורח) ו-2 שמירות
+    expect(s.data.groupHours.reduce((n, h) => n + h.views, 0)).toBe(2);
+    expect(s.data.groupHours.reduce((n, h) => n + h.saves, 0)).toBe(2);
     expect((await call("/survey/stats?id=reelect", { token: a })).status).toBe(403);
   });
 

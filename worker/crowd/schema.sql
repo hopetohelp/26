@@ -586,3 +586,10 @@ INSERT OR IGNORE INTO survey_access (survey, outside) SELECT 'plan2026', outside
 INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload)
   SELECT 'plan2026', participant, created_at, op_id || '~plan', json_object('plan2026', CASE WHEN EXISTS (SELECT 1 FROM surveys s, json_each(json_extract(s.def, '$.questions[0].options')) o WHERE s.id = 'plan2026' AND json_extract(o.value, '$.id') = json_extract(v.payload, '$.v2026')) THEN json_extract(v.payload, '$.v2026') ELSE 'other' END)
   FROM versions v WHERE unit = 'vote' AND json_extract(payload, '$.v2026') IS NOT NULL;
+-- כניסות חברי הגזרה לסקר לפי שעה (UTC) — מתג הגזרה/כולם בגרפים בניהול (הכרעת בעלים 03.11.2026)
+CREATE TABLE IF NOT EXISTS survey_view_hours_group (
+  survey TEXT NOT NULL,
+  hour TEXT NOT NULL,
+  n INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (survey, hour)
+);
