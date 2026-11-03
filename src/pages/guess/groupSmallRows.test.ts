@@ -32,3 +32,10 @@ describe("הטור האחרון בסקרי ההצבעה", () => {
     expect(realLabel("2022", "none")).toBe("29.4%");
   });
 });
+import { participantsLabel } from "../../lib/surveys";
+describe("מספר המשתתפים בכותרת", () => {
+  it("רק בגזרה / גם מחוץ לגזרה", () => {
+    expect(participantsLabel({ all: 12, group: 8, outside: false })).toBe("12 משתתפים");
+    expect(participantsLabel({ all: 12, group: 8, outside: true })).toBe("12 משתתפים - 8 מהגזרה");
+  });
+});

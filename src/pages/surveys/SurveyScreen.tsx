@@ -25,7 +25,7 @@ import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { participantsLabel, answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -295,6 +295,8 @@ export default function SurveyScreen() {
       </div>
       <div className="flex flex-wrap items-center gap-2 -mt-1.5 text-sm text-ink-soft">
         <span>{survey.kind === "guess" ? "ניחוש משתתפים" : "סקר משתתפים, אינו מייצג"}</span>
+        {/* מספר המשתתפים (הכרעת בעלים 03.11.2026); כשפתוח גם מחוץ לגזרה — כמה מהם מהגזרה */}
+        {data.participants && <span className="font-num tabular">{participantsLabel(data.participants)}</span>}
         {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))]">נסגר</span>}
         {deadline && survey.status === "open" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-ink">פתוח עד {deadline}</span>}
       </div>

@@ -2027,8 +2027,11 @@ const routes = {
     const vis = acc.settings.visibility;
     const show = acc.manager || vis === "now" || (vis === "after_close" && acc.status === "closed") || (vis === "answered" && !!mine);
     const min = acc.settings.min_results;
-    const results = show ? { all: surveyResults(survey, await latestSurveyAnswers(env, id, null), min), group: surveyResults(survey, await latestSurveyAnswers(env, id, r.group_id), min) } : null;
-    return { survey, results, mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null, access: { member: acc.member, canAnswer: acc.answer, manage: acc.manager, ...(acc.manager ? { outside: acc.outside } : {}) } };
+    const allAns = await latestSurveyAnswers(env, id, null), groupAns = await latestSurveyAnswers(env, id, r.group_id);
+    const results = show ? { all: surveyResults(survey, allAns, min), group: surveyResults(survey, groupAns, min) } : null;
+    // מספר המשתתפים בשורת הכותרת — תמיד, גם לפני שעונים (הכרעת בעלים 03.11.2026); outside = פתוח להשתתפות מחוץ לגזרה
+    const participants = { all: allAns.length, group: groupAns.length, outside: acc.outside === "answer" };
+    return { survey, results, participants, mine: mine ? { answers: JSON.parse(mine.payload), at: mine.created_at } : null, access: { member: acc.member, canAnswer: acc.answer, manage: acc.manager, ...(acc.manager ? { outside: acc.outside } : {}) } };
   },
 
   // כניסה לסקר — לסטטיסטיקה למנהלים (ליום ולצופה; בלי זהות גלויה). embed = מתוך עמוד מוטמע
