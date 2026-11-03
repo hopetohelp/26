@@ -6,6 +6,7 @@ import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
+import { largestRemainder } from "../lib/fillAll";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
@@ -251,7 +252,7 @@ function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, fo
   const listCols = parties === "off" ? [] : (() => {
     const seen = new Map<string, number>();
     if (ready) for (const [id, v] of Object.entries(results2026.seats)) if (v > 0) seen.set(id, v);
-    for (const r of rows) for (const [id, v] of Object.entries(r.values)) if (!seen.has(id)) seen.set(id, v.s ?? -1);
+    for (const r of [...rows, ...meanRows]) for (const [id, v] of Object.entries(r.values)) if (!seen.has(id)) seen.set(id, v.s ?? -1);
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
   })();
   const maxAbs = (xs: (number | null | undefined)[]) => xs.reduce<number>((m, x) => x == null ? m : Math.max(m, Math.abs(x)), 0);
@@ -266,8 +267,13 @@ function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, fo
   const cols = listCols.length + 4 + SIMPLE_BLOCS.length;
   // שורת הממוצע (הכרעת בעלים 03.11.2026): לכל רשימה — ממוצע הסקרים שפרסמו לה מנדטים; לכל גוש — ממוצע הסקרים שבהם יש לגוש ערך
   const avg = (xs: (number | null | undefined)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? Math.round((ok.reduce((a, b) => a + b, 0) / ok.length) * 10) / 10 : null; };
-  const meanValues = Object.fromEntries([...new Set(meanRows.flatMap((r) => Object.keys(r.values)))].flatMap((id) => { const m = avg(meanRows.map((r) => r.values[id]?.s)); return m == null ? [] : [[id, { s: m }]]; })) as Record<string, { s: number }>;
-  const meanBlocs = SIMPLE_BLOCS.map((_, i) => avg(meanRows.map((r) => r.blocs[i])));
+  // תמיד 120 בדיוק (הכרעת בעלים 03.11.2026): הממוצעים מנורמלים ל-120 בשיטת השארית הגדולה, בעשיריות (largestRemainder, מקור אחד)
+  const to120 = (w: Record<string, number>) => Object.fromEntries(Object.entries(largestRemainder(1200, w)).map(([k, v]) => [k, v / 10]));
+  const rawMeans = Object.fromEntries([...new Set(meanRows.flatMap((r) => Object.keys(r.values)))].flatMap((id) => { const m = avg(meanRows.map((r) => r.values[id]?.s)); return m == null ? [] : [[id, m]]; }));
+  const meanValues = Object.fromEntries(Object.entries(to120(rawMeans)).filter(([id]) => rawMeans[id] > 0).map(([id, v]) => [id, { s: v }])) as Record<string, { s: number }>;
+  const rawBlocs = SIMPLE_BLOCS.map((_, i) => avg(meanRows.map((r) => r.blocs[i])));
+  const blocs120 = rawBlocs.some((b) => b != null) ? to120(Object.fromEntries(rawBlocs.map((b, i) => [String(i), b ?? 0]))) : null;
+  const meanBlocs = rawBlocs.map((b, i) => b == null || !blocs120 ? null : blocs120[String(i)]);
   const accTinted = (t: SeatTags | null) => {
     if (!t || !spans) return accCells(t);
     return <>
@@ -293,8 +299,9 @@ function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, fo
             </tr>
           </thead>
           <tbody>
-            {ready && <tr className="border-b-2 border-ink font-bold align-top">
-              <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
+            {/* תוצאות אמת — בולטת ומופרדת מהסקרים (הכרעת בעלים 03.11.2026) */}
+            {ready && <tr className="bg-accent-soft text-sm md:text-base font-extrabold align-top [&>*]:border-b-4 [&>*]:border-b-ink">
+              <th scope="row" className="py-2.5 pe-2 text-right">תוצאות אמת</th>
               {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
               {blocCells(ACTUAL_BLOCS)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
