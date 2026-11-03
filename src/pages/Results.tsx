@@ -45,7 +45,7 @@ export function PastBlocs({ id }: { id: string }) {
 /**
  * "תוצאות" — לפי בורר המערכת שבפס העליון (הכרעות בעלים 02.11.2026; צומצם בהכרעת בעלים 03.11.2026):
  * רק מה שאין במסכים אחרים — קולות למנדט, וכמה קולות חסרים לכל רשימה למנדט נוסף או לאיבוד מנדט.
- * בעלי הזכות, ההצבעה והקולות שלא עברו — "מה השתנה" (OverviewCards); אחוז החסימה וההסכמים יחד — "סיכום"; לפי יישוב — "מה השתנה".
+ * בעלי הזכות, ההצבעה והקולות שלא עברו — "מה השתנה" (OverviewCards); ההסכמים יחד — "סיכום"; לפי יישוב — "מה השתנה".
  */
 export default function Results({ id }: { id: string }) {
   const e = ELECTIONS.find((x) => x.id === id)!;
@@ -66,8 +66,10 @@ export default function Results({ id }: { id: string }) {
           assumption="המודד: סך הקולות של הרשימות שעברו את אחוז החסימה, חלקי 120, החלק השלם (סעיף 81(ב) לחוק). השינוי הקרוב — אותו מנוע, כולל הסכמי העודפים."
           methodAnchor="results"
         >
-          <p className="text-sm text-ink-soft">מצביעים למנדט</p>
-          <p className="text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</p>
+          <dl className="grid grid-cols-2 gap-3 text-center">
+            <div><dt className="text-sm text-ink-soft">מצביעים למנדט</dt><dd className="text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</dd></div>
+            <div><dt className="text-sm text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-3xl font-extrabold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
+          </dl>
         </Explained>
       </Card>
       </>} secondary={<>
@@ -145,7 +147,6 @@ export function ElectionSummary() { return <>
                 <th scope="col" className="pe-3">הצבעה</th>
                 <th scope="col" className="pe-3">עברו</th>
                 <th scope="col" className="pe-3">נשרפו</th>
-                <th scope="col" className="pe-3">אחוז החסימה (קולות)</th>
                 <th scope="col">מה הזיזו ההסכמים</th>
               </tr>
             </thead>
@@ -161,7 +162,6 @@ export function ElectionSummary() { return <>
                   <td className="pe-3 tabular-nums whitespace-nowrap">
                     {pct((ax.withAll.wasted / x.valid) * 100)} <span className="text-ink-soft">(כ-{(ax.withAll.wasted / ax.withAll.quota).toFixed(1)} מנדטים)</span>
                   </td>
-                  <td className="pe-3 tabular-nums">{num(ax.withAll.thresholdVotes)}</td>
                   <td>{fmtDiffOf(x, ax.allVsNone)}</td>
                 </tr>
               ))}
