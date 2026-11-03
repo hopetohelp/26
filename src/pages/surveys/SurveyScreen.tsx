@@ -6,7 +6,7 @@ import LeaveGuard from "../../components/LeaveGuard";
 import BackButton from "../../components/BackButton";
 import { useCrowdDashboard } from "../../lib/sources";
 import { VotingStats } from "../guess/Dashboard";
-import { realCount, REAL_SHARE_SURVEYS } from "../guess/votingRows";
+import { NOT_VOTED, realLabel, REAL_SHARE_SURVEYS } from "../guess/votingRows";
 
 /** "התפלגות המצביעים" — במסך "למי אתה מתכנן להצביע בבחירות 2026?" (הועבר 03.11.2026), עם מעבר לסקר על 2022 (הכרעת בעלים 02.11.2026) */
 function VotersCard({ embed }: { embed: boolean }) {
@@ -183,16 +183,16 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
             )}
             {q.kind === "single" && "counts" in r && (
               <ul className="space-y-1.5">
-                {real && <li className="text-xs text-ink-soft">בטור האחרון: {real === "2022" ? "התוצאה הרשמית ב-2022" : "תוצאות האמת 2026"} באחוזים, ביחס ל-{r.n.toLocaleString("he-IL")} המשתתפים בסקר (כמו בטבלת ההתפלגות)</li>}
-                {/* רק אפשרויות שקיבלו תשובה, מהגבוהה לנמוכה (הכרעת בעלים 03.11.2026) */}
-                {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
+                {real && <li className="text-xs text-ink-soft">בטור האחרון: {real === "2022" ? "התוצאה הרשמית ב-2022" : "תוצאות האמת 2026"} — אחוז הקולות של כל רשימה, ובשורת "לא הצביעו" — מתוך בעלי זכות הבחירה</li>}
+                {/* רק אפשרויות שקיבלו תשובה, מהגבוהה לנמוכה; בסקרי ההצבעה — שורת "לא הצביעו" תמיד, עם האחוז האמיתי (הכרעות בעלים 03.11.2026) */}
+                {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0 || (real && o.id === NOT_VOTED)).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
                   const pct = Math.round((r.counts[o.id] / r.n) * 100);
                   return (
-                    <li key={o.id} className={`grid ${real ? "grid-cols-[110px_minmax(0,1fr)_44px_44px]" : "grid-cols-[110px_minmax(0,1fr)_44px]"} items-center gap-2 text-sm`}>
+                    <li key={o.id} className={`grid ${real ? "grid-cols-[110px_minmax(0,1fr)_44px_52px]" : "grid-cols-[110px_minmax(0,1fr)_44px]"} items-center gap-2 text-sm`}>
                       <span className="truncate">{survey.truth?.[q.id] === o.id ? "✓ " : ""}{o.label}</span>
                       <span className="h-3 rounded-full bg-[rgb(var(--grid))] overflow-hidden"><span className="block h-full bg-signal" style={{ width: `${pct}%` }} /></span>
                       <b className="font-num text-left">{pct}%</b>
-                      {real && <span className="font-num tabular text-left text-ink-soft">{realCount(real, o.id, r.n)}</span>}
+                      {real && <span className="font-num tabular text-left text-ink-soft">{realLabel(real, o.id)}</span>}
                     </li>
                   );
                 })}

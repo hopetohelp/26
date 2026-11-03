@@ -1,6 +1,7 @@
 import results2026 from "../../../raw/results-2026.json";
 import type { Cell, Dashboard } from "../../lib/crowdApi";
 import { results } from "../../lib/data";
+import { previousTurnout } from "../../lib/guessAccuracyData";
 import { IDS, VOTE_MAP, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 const percent = (cells: Record<string, Cell> | undefined, key: string): number | null => {
   if (!cells || !Object.values(cells).some(c => c.of > 0)) return null;
@@ -47,18 +48,24 @@ export function votingRows(d: Dashboard, blank?: string[]) {
  * אותו חישוב כמו טור "כלל המצביעים" בטבלת ההתפלגות: אחוז הקולות × מספר המשתתפים בסקר.
  */
 export const REAL_SHARE_SURVEYS: Record<string, "2022" | "2026"> = { vote2022: "2022", plan2026: "2026", vote: "2026" };
+/** בטור האחרון: אחוז הקולות הרשמי של הרשימה; ובשורת "לא הצביעו" — מי שלא הצביע מתוך בעלי זכות הבחירה (הכרעת בעלים 03.11.2026) */
+export const NOT_VOTED = "none";
 export function realPct(year: "2022" | "2026", option: string): number | null {
+  if (option === NOT_VOTED) {
+    if (year === "2022") { const t = previousTurnout(); return t === null ? null : Math.round((100 - t) * 10) / 10; }
+    // ב-2026: הקולות שנספרו מתוך כלל בעלי זכות הבחירה (raw/results-2026.json, counted)
+    const c = (results2026 as { counted?: number | null }).counted;
+    return typeof c === "number" ? Math.round((100 - c) * 10) / 10 : null;
+  }
   if (year === "2026") return HAS_ACTUAL_PCT && option in ACTUAL_PCT ? ACTUAL_PCT[option] : null;
   const previous = results.find(r => r.id === "k25")!;
   const l = previous.lists.find(x => x.letters === option);
   return l ? l.votes / previous.valid * 100 : null;
 }
-export const realCount = (year: "2022" | "2026", option: string, participants: number) => {
+export const realLabel = (year: "2022" | "2026", option: string) => {
   const p = realPct(year, option);
-  return p === null ? "" : fmtCount(p * participants / 100);
+  return p === null ? "" : `${(Math.round(p * 10) / 10).toLocaleString("he-IL")}%`;
 };
-// אותו עיגול כמו בטבלת ההתפלגות (fmtNum ב-Dashboard)
-const fmtCount = (n: number) => String(Math.round(n * 100) / 100);
 
 /** רשימות שקיבלו עד 5 קולות מהמשתתפים (בשני הטורים) ⇐ שורה אחת "רשימות אחרות" בסוף רשימות המפלגות (הכרעת בעלים 03.11.2026) */
 export const SMALL_VOTES = 5;
