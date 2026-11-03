@@ -158,7 +158,7 @@ export default function Polls() {
                 const t = tagsOf(p.values);
                 return (
                   <Fragment key={p.id}>
-                    <tr className={`c-archive-row border-b border-paper-line/60 align-top${sectionStart ? " border-t-4 border-t-ink-soft" : ""}`}>
+                    <tr className={`c-archive-row border-b border-paper-line/60 align-top${sectionStart ? " [&>*]:border-t-4 [&>*]:border-t-ink-soft" : ""}`}>
                       <th scope="row" className="py-2 pe-2 text-right font-normal">
                         <button type="button" className="min-h-11 text-right" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
                           <span aria-hidden="true" className="text-accent font-bold me-1">{isOpen ? "−" : "+"}</span>
