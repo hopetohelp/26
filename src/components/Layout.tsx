@@ -146,13 +146,13 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
     {/* סמל הגזרה תמיד בפינה הימנית, בגובה הכפתורים בשורה (הכרעת בעלים 02.11.2026); לא חברים — הסמל הציבורי של הקבוצה */}
     {/* לחיצה על הסמל ⇐ אתר הגזרה (הכרעת בעלים 02.11.2026); הסמל העגול במסגרת הוא הכפתור */}
     {(logo ?? HAGZARA_PUBLIC_LOGO) && <a href="https://hagizra.news/" target="_blank" rel="noopener" aria-label="לאתר הגזרה" className="f-glink"><img src={(logo ?? HAGZARA_PUBLIC_LOGO)!} alt="" className="f-barlogo" onError={e => { e.currentTarget.style.display = "none"; }} /></a>}
-    {/* בחלק הסקרים: בלי "סקרים" ליד הסמל; בטלפון — "סקרים וניחושים" במרכז הפס, במחשב — בלי כותרת, כי הלשונית בסרגל אומרת זאת (הכרעות בעלים 03.11.2026) */}
-    {surveys ? (navTop ? null : <NavLink to="/surveys" className="f-logo f-bartitle">סקרים וניחושים</NavLink>) : <ElectionPicker />}
+    {/* בחלק הסקרים אין כותרת בפס (הכרעות בעלים 03.11.2026) */}
+    {!surveys && <ElectionPicker />}
     <FocusClock />
     {/* בורר המערכת — רק במסכי הבחירות (הכרעות בעלים 02.11.2026) */}
     {/* במרכז הפס (הכרעת בעלים 02.11.2026): בטלפון — באמצע בין שם האתר לכפתורים; במחשב — צמוד לסרגל שבמרכז */}
     {navTop && <FocusNav className="f-nav-top" unread={false} />}
-    {!(surveys && !navTop) && <span className="flex-1" />}
+    <span className="flex-1" />
     {/* מעבר בין שני חלקי האתר (הכרעת בעלים 02.11.2026): בחלק הסקרים "בחירות" ⇐ ניתוח הבחירות; בחלק הניתוח "ניחושים" ⇐ סקרים וניחושים */}
     {/* "בחירות" ⇐ מסך הפתיחה של הבחירות, "מה השתנה" (הכרעת בעלים 02.11.2026) */}
     {/* שמות הכפתור (הכרעת בעלים 03.11.2026) */}
