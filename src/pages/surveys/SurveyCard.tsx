@@ -36,7 +36,8 @@ const textWidth = (t: string) => {
 const PAD = 12; // px-1.5 משני הצדדים
 
 /** פס התשובות: מהגדולה לקטנה; בכל חלק — האחוז אם יש מקום, והשם לפניו אם יש עוד מקום */
-export function ShareBar({ parts }: { parts: { id: string; label: string; n: number }[] }) {
+/** pctOf — כשהאחוז נמדד מול מספר אחר (למשל משתתפים) ולא מול סכום החלקים */
+export function ShareBar({ parts, pctOf }: { parts: { id: string; label: string; n: number }[]; pctOf?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(0);
   useEffect(() => {
@@ -49,7 +50,7 @@ export function ShareBar({ parts }: { parts: { id: string; label: string; n: num
   }, []);
   const total = parts.reduce((a, p) => a + p.n, 0);
   if (!total) return null;
-  const rows = parts.filter((p) => p.n > 0).sort((a, b) => b.n - a.n).map((p) => ({ ...p, pct: Math.round((p.n / total) * 100) }));
+  const rows = parts.filter((p) => p.n > 0).sort((a, b) => b.n - a.n).map((p) => ({ ...p, pct: Math.round((p.n / (pctOf || total)) * 100) }));
   return (
     <div ref={ref} className="flex h-5 rounded-md overflow-hidden text-[11px] font-bold" role="img" aria-label={rows.map((p) => `${p.label} ${p.pct}%`).join(", ")}>
       {rows.map((p, i) => {

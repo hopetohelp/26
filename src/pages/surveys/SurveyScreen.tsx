@@ -107,23 +107,25 @@ function Assign({ q, value, onChange, disabled }: { q: Extract<SurveyQuestion, {
           const v = value[item.id], split = typeof v === "object";
           return (
             <li key={item.id}>
-              <div className="flex items-center gap-2 py-1.5">
+              {/* שמות מלאים בכפתורים ⇐ בטלפון הכפתורים בשורה מתחת לשם הרשימה */}
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 py-1.5">
                 <span className="flex-1 min-w-0 text-[13.5px] font-medium leading-tight">{item.label}</span>
                 <b className="font-num text-[13px] w-6 text-center">{itemSeats(item)}</b>
-                <div role="radiogroup" aria-label={item.label} className="flex gap-0.5 p-0.5 rounded-xl bg-[rgb(var(--grid))]">
+                <div role="radiogroup" aria-label={item.label} className="flex gap-0.5 p-0.5 rounded-xl bg-[rgb(var(--grid))] w-full sm:w-auto">
                   {q.columns.map((c, i) => {
                     const on = v === c.id;
                     return (
                       <button key={c.id} type="button" role="radio" aria-checked={on} aria-label={c.label} disabled={disabled}
                         onClick={() => { setOpen(null); update(item.id, on ? null : c.id); }}
-                        className={`min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${on ? COL_BG[i] ?? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>
-                        {c.label.length > 5 ? c.label.slice(0, 4) + "׳" : c.label}
+                        className={`flex-1 sm:flex-none min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${on ? COL_BG[i] ?? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>
+                        {/* שמות מלאים, בלי קיצורים (הכרעת בעלים 03.11.2026) */}
+                        {c.label}
                       </button>
                     );
                   })}
-                  <button type="button" aria-pressed={split || open === item.id} aria-label={`חלק מ${item.label}`} disabled={disabled}
+                  <button type="button" aria-pressed={split || open === item.id} aria-label={`פיצול ${item.label}`} disabled={disabled}
                     onClick={() => setOpen(open === item.id ? null : item.id)}
-                    className={`min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${split ? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>חלק</button>
+                    className={`flex-1 sm:flex-none min-w-[44px] min-h-[44px] rounded-[10px] px-1.5 text-[11.5px] font-bold ${split ? "bg-ink text-paper" : "text-ink-soft"} disabled:opacity-60`}>פיצול</button>
                 </div>
               </div>
               {(open === item.id || split) && (
