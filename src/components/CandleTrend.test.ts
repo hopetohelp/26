@@ -20,7 +20,8 @@ describe("גרף המגמה האחיד", () => {
   });
   it("קווים מקווקווים כל 5 מנדטים, ו-61 במקום 60 בכל גרף", () => {
     const plain = html();
-    for (const v of [45, 50, 55, 61, 65]) expect(plain).toContain(`>${v}</span>`);
+    for (const v of [45, 50, 55, 61]) expect(plain).toContain(`>${v}</span>`);
+    expect(plain).not.toContain(">65</span>"); // הקו העליון רק כשהוא 61
     const bloc = html({ majority: 61 });
     expect(bloc).toContain(">61</span>");
     expect(bloc).not.toContain(">60</span>");
