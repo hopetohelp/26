@@ -6,9 +6,9 @@
  * כדי שהדף יתרענן לגרסה החדשה (src/lib/chunkReload.ts) במקום לקרוס על "text/html is not a valid JavaScript MIME type".
  * פניות לשרתים אחרים (השערות, הערות) אינן עוברות כאן; לשמירה בלי חיבור יש תור משלה (src/lib/outbox.ts).
  */
-const PAGES = "elections26-pages-v1";
+const PAGES = "elections26-pages-v2"; // v2 (03.11.2026): מחיקת כל הגרסאות השמורות אצל כולם
 // קודם רשת לדפים; קובצי נתונים — מהעותק השמור ומתעדכנים ברקע
-const ASSETS = "elections26-assets-v2"; // v2: מוחק עותקי HTML שנשמרו בטעות כקובצי בנייה
+const ASSETS = "elections26-assets-v3"; // v2: מוחק עותקי HTML שנשמרו בטעות כקובצי בנייה
 const TIMEOUT_MS = 1500; // דף: קודם רשת, ואם איטית — העותק השמור (הכרעת בעלים 02.11.2026: הצגה מהירה)
 const MAX_ASSETS = 60;
 
