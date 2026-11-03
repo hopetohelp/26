@@ -35,7 +35,7 @@ export default function SurveyHistoryScreen({ embedded = false }: { embedded?: b
         return (
           <section key={`${s.id}-${q.id}`} className="f-card">
             <div className="flex items-center justify-between gap-2"><span className="text-[11.5px] text-ink-soft">{s.title}</span><Link to={`/s/${s.id}`} className="f-btn !min-h-[32px] !text-xs">לסקר</Link></div>
-            <h2 className="text-base font-bold mt-0.5 mb-2.5">{q.title}</h2>
+            {q.title && <h2 className="text-base font-bold mt-0.5 mb-2.5">{q.title}</h2>}
             <ol className="list-none m-0 p-0 border-r-2 border-paper-line mr-1.5">
               {rows.map((a, i) => {
                 const { main, detail } = describe(q, a.answers[q.id]);

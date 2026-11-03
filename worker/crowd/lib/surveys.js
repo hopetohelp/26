@@ -57,8 +57,10 @@ export function cleanDefinition(def) {
   const seen = new Set(), questions = [];
   for (const q of def.questions) {
     const id = typeof q?.id === "string" && KEY.test(q.id) ? q.id : null;
-    const qt = text(q?.title, 200);
-    if (!id || !qt || seen.has(id)) return null;
+    // נוסח השאלה לא חובה — מספיקה כותרת הסקר (הכרעת בעלים 03.11.2026)
+    if (typeof q?.title === "string" && q.title.trim().length > 200) return null;
+    const qt = text(q?.title, 200) ?? "";
+    if (!id || seen.has(id)) return null;
     seen.add(id);
     if (q.kind === "single") {
       const opts = options(q.options, 60); // עד 60: סקרי ההצבעה (הכרעת בעלים 02.11.2026)

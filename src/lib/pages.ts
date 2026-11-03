@@ -54,7 +54,7 @@ export const screen = (id: string): Screen => SCREENS.find(s => s.id === id)!;
  * "הניחוש שלי" — רק כשהוא פתוח (נסגר ב-21:58 ביום הבחירות, הכרעת בעלים 27.10.2026), או כשהמתג במסך הניהול מציג אותו.
  */
 export const GUESS_AREA_TABS = [
-  { to: "/surveys", label: "כל הסקרים" },
+  { to: "/surveys", label: "כל הסקרים והניחושים" },
   { to: "/guess", label: "הניחוש שלי" },
 ];
 export function guessAreaTabs(now = Date.now(), guessShown = false) {

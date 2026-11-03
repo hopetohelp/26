@@ -33,7 +33,7 @@ const Tile = ({ label, value }: { label: string; value: string | number }) => (
 
 /**
  * מצב ניהול בתוך מסך הסקר (הכרעת בעלים 01.11.2026): מנהל נכנס לסקר כרגיל, ורק אחרי "ניהול" נפתחים — במקום הסקר — הסטטיסטיקות,
- * ההגדרות (סוג, מצב, מועד סגירה, מתי רואים תוצאות, סף משתתפים, גישה מחוץ לגזרה), תוצאות האמת בניחוש, עריכת השאלות, ההטמעה והמחיקה.
+ * ההגדרות (סוג, מצב, מי רואה תוצאות, מי שמחוץ לגזרה, מועד סגירה, סף משתתפים — בסדר הזה, הכרעת בעלים 03.11.2026), תוצאות האמת בניחוש, עריכת השאלות, ההטמעה והמחיקה.
  */
 export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { survey: Survey; token: string; onDone: () => void; onDeleted: () => void }) {
   const [stats, setStats] = useState<SurveyStats | null>(null);
@@ -99,18 +99,18 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
         <h2 className="text-base font-bold">הגדרות</h2>
         <Seg label="סוג" value={kind} options={KIND_LABELS} onChange={setKind} />
         <Seg label="מצב" value={status} options={STATUS_LABELS} onChange={setStatus} />
+        <Seg label="מי רואה תוצאות" value={visibility} options={VISIBILITY_LABELS} onChange={setVisibility} />
+        <Seg label="מי שמחוץ לגזרה" value={outside} options={OUTSIDE_LABELS} onChange={setOutside} />
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <label htmlFor="closes-at" className="text-sm font-bold min-w-[8.5rem]">מועד סגירה</label>
           <input id="closes-at" type="datetime-local" dir="ltr" className="rounded-xl border border-paper-line bg-paper px-3 py-2" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} />
           {closesAt && <button type="button" className="f-btn !min-h-[36px]" onClick={() => setClosesAt("")}>בלי מועד</button>}
         </div>
-        <Seg label="מי רואה תוצאות" value={visibility} options={VISIBILITY_LABELS} onChange={setVisibility} />
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <label htmlFor="min-results" className="text-sm font-bold min-w-[8.5rem]">תוצאות מ־</label>
           <input id="min-results" type="number" min={1} dir="ltr" className="w-24 rounded-xl border border-paper-line bg-paper px-3 py-2" value={minResults} onChange={(e) => setMinResults(Math.max(1, Number(e.target.value) || 1))} />
           <span className="text-sm text-ink-soft">משתתפים (מתחת לזה — רק המספר)</span>
         </div>
-        <Seg label="מי שמחוץ לגזרה" value={outside} options={OUTSIDE_LABELS} onChange={setOutside} />
       </section>
 
       {kind === "guess" && (
@@ -118,11 +118,11 @@ export default function SurveyAdmin({ survey, token, onDone, onDeleted }: { surv
           <h2 className="text-base font-bold">תוצאות אמת</h2>
           <p className="text-sm text-ink-soft">מה קרה בפועל. מוצג לצופים ליד התוצאות, עם סימון מי שצדק.</p>
           {editor.questions.map((q) => q.kind === "single" ? (
-            <Seg key={q.id} label={q.title} value={String(truth[q.id] ?? "")} options={[["", "עוד לא ידוע"], ...q.options.map((o) => [o.id, o.label] as [string, string])]}
+            <Seg key={q.id} label={q.title || "תוצאת האמת"} value={String(truth[q.id] ?? "")} options={[["", "עוד לא ידוע"], ...q.options.map((o) => [o.id, o.label] as [string, string])]}
               onChange={(v) => { const t = { ...truth }; if (v) t[q.id] = v; else delete t[q.id]; setTruth(t); }} />
           ) : q.kind === "range" ? (
             <div key={q.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-              <label htmlFor={`truth-${q.id}`} className="text-sm font-bold min-w-[8.5rem]">{q.title}</label>
+              <label htmlFor={`truth-${q.id}`} className="text-sm font-bold min-w-[8.5rem]">{q.title || "תוצאת האמת"}</label>
               <input id={`truth-${q.id}`} type="number" dir="ltr" min={q.min} max={q.max} step={q.step} className="w-24 rounded-xl border border-paper-line bg-paper px-3 py-2" value={truth[q.id] ?? ""}
                 onChange={(e) => { const t = { ...truth }; if (e.target.value === "") delete t[q.id]; else t[q.id] = Number(e.target.value); setTruth(t); }} />
             </div>

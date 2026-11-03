@@ -52,6 +52,8 @@ describe("survey definitions and answers (pure)", () => {
   it("rejects bad definitions", () => {
     expect(def).not.toBeNull();
     expect(cleanDefinition({ title: "x", questions: [] })).toBeNull();
+    // נוסח שאלה לא חובה (הכרעת בעלים 03.11.2026)
+    expect(cleanDefinition({ title: "x", questions: [{ id: "q1", kind: "single", title: "", options: [{ id: "a", label: "א" }, { id: "b", label: "ב" }] }] })?.questions[0].title).toBe("");
     expect(cleanDefinition({ title: "x", questions: [{ id: "q", kind: "single", title: "t", options: [{ id: "a", label: "א" }] }] })).toBeNull();
     expect(cleanDefinition({ title: "x", questions: [{ id: "q", kind: "poll", title: "t", options: [] }] })).toBeNull();
   });

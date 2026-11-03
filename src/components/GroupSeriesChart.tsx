@@ -62,7 +62,7 @@ export default function GroupSeriesChart({ buckets, points, label, height = 72 }
       </div>
       {/* התאריך או השעה והשינוי — רק במעבר או בלחיצה על נקודה, לא בכל גרף כל הזמן (הכרעת בעלים 24.10.2026, 25.10.2026) */}
       <figcaption className={`text-xs text-ink-soft min-h-[1rem] ${hover === null ? "invisible" : ""}`}>
-        <span className="font-num tabular text-ink">{bucketLabel(buckets[h])}: {points[h] ?? "—"}</span>
+        <span className="font-num tabular text-ink">{bucketLabel(buckets[h])} — {points[h] ?? "—"}</span>
         {delta(h) !== null && <span className="font-num tabular"> ({delta(h)! > 0 ? "+" : ""}{delta(h)} בשעה הזו)</span>}
       </figcaption>
     </figure>
