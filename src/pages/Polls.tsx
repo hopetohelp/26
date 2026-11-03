@@ -35,7 +35,7 @@ const ACTUAL_BLOCS = SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (resu
 /** שלושת טורי הטעות (הכרעת בעלים 03.11.2026: טעו במנדטים / במפלגות / בגושים) — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
 const accCells = (t: SeatTags | null) => <>
   <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t ? 120 - t.seats : "—"}</td>
-  <td className="px-1 text-center tabular-nums">{t ? t.of - t.exact : "—"}</td>
+  <td className="px-1 text-center tabular-nums whitespace-nowrap"><bdi dir="ltr">{t ? `${t.of - t.exact}/${t.of}` : "—"}</bdi></td>
   <td className="px-1 text-center tabular-nums border-e-2 border-paper-line">{t?.blocErr ?? "—"}</td>
 </>;
 /** הסקרים האחרונים של כל מכון לפני הבחירות — לתווית "סקר אחרון" */
@@ -302,7 +302,7 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
     if (!t || !spans) return accCells(t);
     return <>
       <td style={scaleTint(t.seats - 120, spans.seats)} className="px-1 text-center tabular-nums border-s-2 border-paper-line">{120 - t.seats}</td>
-      <td style={scaleTint(t.exact - t.of, spans.exact)} className="px-1 text-center tabular-nums">{t.of - t.exact}</td>
+      <td style={scaleTint(t.exact - t.of, spans.exact)} className="px-1 text-center tabular-nums whitespace-nowrap"><bdi dir="ltr">{t.of - t.exact}/{t.of}</bdi></td>
       <td style={scaleTint(-t.blocErr, spans.blocErr)} className="px-1 text-center tabular-nums border-e-2 border-paper-line">{t.blocErr}</td>
     </>;
   };
