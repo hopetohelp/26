@@ -1,6 +1,6 @@
 /**
  * שמירת האתר במכשיר: האתר נפתח גם בלי רשת או ברשת חלשה. נרשם מ-src/lib/offline.ts.
- * דפים ונתונים (כולל dashboard.json) — קודם מהרשת, ואם היא לא עונה תוך 4 שניות — העותק השמור.
+ * דפים — תמיד מהרשת, והעותק השמור רק כשאין רשת (הכרעת בעלים 03.11.2026). קובצי נתונים (.json) — מהעותק השמור, ומתעדכנים ברקע.
  * קבצי הבנייה (assets/, שמם משתנה בכל בנייה) — מהעותק השמור, ונשמרים ב-60 האחרונים בלבד.
  * קובץ בנייה שכבר לא קיים (אחרי פרסום חדש) — השרת מחזיר במקומו את דף הבית (HTML). זה לא נשמר ומוחזר כ-404,
  * כדי שהדף יתרענן לגרסה החדשה (src/lib/chunkReload.ts) במקום לקרוס על "text/html is not a valid JavaScript MIME type".
@@ -9,7 +9,6 @@
 const PAGES = "elections26-pages-v2"; // v2 (03.11.2026): מחיקת כל הגרסאות השמורות אצל כולם
 // קודם רשת לדפים; קובצי נתונים — מהעותק השמור ומתעדכנים ברקע
 const ASSETS = "elections26-assets-v3"; // v2: מוחק עותקי HTML שנשמרו בטעות כקובצי בנייה
-const TIMEOUT_MS = 1500; // דף: קודם רשת, ואם איטית — העותק השמור (הכרעת בעלים 02.11.2026: הצגה מהירה)
 const MAX_ASSETS = 60;
 
 self.addEventListener("install", (e) => {
@@ -27,20 +26,19 @@ async function trim(cache) {
   await Promise.all(keys.slice(0, Math.max(0, keys.length - MAX_ASSETS)).map((k) => cache.delete(k)));
 }
 
+/** דפים: תמיד מהרשת; העותק השמור רק כשאין רשת בכלל (הכרעת בעלים 03.11.2026 — במקום הצגה מהירה של עותק ישן אחרי עדכון) */
 async function networkFirst(request) {
   const cache = await caches.open(PAGES);
-  const net = fetch(request).then((res) => {
+  try {
+    const res = await fetch(request);
     if (res.ok) cache.put(request, res.clone());
     return res;
-  });
-  const timeout = new Promise((resolve) => setTimeout(resolve, TIMEOUT_MS));
-  try {
-    const fast = await Promise.race([net, timeout]);
-    if (fast) return fast;
-  } catch { /* אין רשת ⇐ העותק השמור */ }
-  const saved = await cache.match(request, { ignoreSearch: true })
-    ?? (request.mode === "navigate" ? await cache.match("./index.html") : undefined);
-  return saved ?? net;
+  } catch {
+    const saved = await cache.match(request, { ignoreSearch: true })
+      ?? (request.mode === "navigate" ? await cache.match("./index.html") : undefined);
+    if (saved) return saved;
+    throw new Error("offline");
+  }
 }
 
 async function cacheFirst(request) {
