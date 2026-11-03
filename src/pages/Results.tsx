@@ -60,7 +60,6 @@ export default function Results({ id }: { id: string }) {
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
   const failed = e.lists.filter((l) => l.seats === 0).sort((x, y) => y.votes - x.votes);
-  const fmtDiff = (d: readonly (readonly [string, number])[]) => fmtDiffOf(e, d);
   return (
     <>
       <Split primary={<>
@@ -118,7 +117,8 @@ export default function Results({ id }: { id: string }) {
 
 
       {/* כרטיס אחד, טקסט ממורכז (הכרעת בעלים 03.11.2026): מה ההסכמים, ומה היה קורה בלי אף הסכם */}
-      <Card title="הסכמי העודפים">
+      {/* הכותרת בתוך הכרטיס, בשורה ממורכזת למעלה יחד עם "בלי אף הסכם" (הכרעת בעלים 03.11.2026) */}
+      <Card>
         <Explained
           kind="חישוב לפי החוק"
           source="המנוע של האתר על הקולות הרשמיים"
@@ -128,17 +128,17 @@ export default function Results({ id }: { id: string }) {
           bare
         >
           <div className="f-card text-center space-y-2">
+            <p><b className="text-lg">הסכמי העודפים</b> · <b>בלי אף הסכם: {a.allVsNone.length ? a.allVsNone.map(([k, d], i) => <span key={k}>{i ? ", " : ""}{short(k)} <bdi dir="ltr">{-d > 0 ? "+" : "−"}{Math.abs(d)}</bdi></span>) : "לא שינו דבר"}</b></p>
             <p>{e.agreements.map(([x, y]) => {
               const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
               return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
             }).join(" · ")}</p>
-            <p className="font-bold">בלי אף הסכם: {fmtDiff(a.allVsNone.map(([k, d]) => [k, -d] as const))}</p>
           </div>
         </Explained>
       </Card>
       </>} />
       {/* שורת המקור אחת, בסוף העמוד (הכרעת בעלים 03.11.2026); קישור-טקסט — חריג מותר בשורת המקור */}
-      <p className="mt-4 text-sm text-ink-soft">התוצאות הסופיות · <Link to="/method#results" className="!text-ink-soft !font-normal underline">איך זה חושב?</Link></p>
+      <p className="mt-4 text-sm text-ink-soft"><Link to="/method#results" className="!text-ink-soft !font-normal underline">מידע ומקורות</Link></p>
     </>
   );
 }

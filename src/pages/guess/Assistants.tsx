@@ -30,7 +30,7 @@ export function AssistantsHowTo({ signedIn, admin = false }: { signedIn: boolean
   if (!MCP_ADDRESSES) return <p className="text-sm text-ink-soft">החיבור לעוזרי AI עוד לא פעיל באתר.</p>;
   return (
     <div className="space-y-3 text-sm">
-      <p>אפשר לחבר לאתר עוזר AI (למשל Claude או ChatGPT) ולשאול אותו על הסקרים, התרחישים והתוצאות. העוזר עונה רק מנתוני האתר, בכרטיס בעיצוב האתר, ועם "איך זה חושב?" לכל מספר.</p>
+      <p>אפשר לחבר לאתר עוזר AI (למשל Claude או ChatGPT) ולשאול אותו על הסקרים, התרחישים והתוצאות. העוזר עונה רק מנתוני האתר, בכרטיס בעיצוב האתר, ועם "מידע ומקורות" לכל מספר.</p>
       <Address label="הכתובת לחיבור — עם התחברות לחשבון באתר" url={MCP_ADDRESSES.withLogin} />
       {admin && <Address label="למנהל האתר בלבד: בלי התחברות (נתוני האתר ומחשבון המנדטים; לא מפורסמת)" url={MCP_ADDRESSES.public} />}
       <div>
