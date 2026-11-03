@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
-import { cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
+import { itemSeats, cached, closesLabel, ELECTION_RESULTS_TITLE, getSurvey, surveyPath, surveysPath, numbered, listSurveys, type Survey, type SurveyDetail } from "../../lib/surveys";
 import { isEmbed } from "../../lib/embed";
 import { ShareBar, SurveyCard, type CardTag } from "./SurveyCard";
 
@@ -16,11 +16,16 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
     <div className="mt-2 space-y-1.5" aria-label="תוצאות הגזרה">
       {detail.survey.questions.map((q) => {
         const qr = r.questions[q.id];
-        if (q.kind !== "single" || !qr || !("counts" in qr) || !qr.n) return null;
+        if (!qr || !qr.n) return null;
+        // שיוך רשימות (הכרעת בעלים 03.11.2026): פס אחד לפי ממוצע המנדטים בכל עמודה (קואליציה / נמנעים / אופוזיציה)
+        const parts = q.kind === "single" && "counts" in qr ? q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0 }))
+          : q.kind === "assign" && "items" in qr ? q.columns.map((c) => ({ id: c.id, label: c.label, n: q.items.reduce((t, item) => t + itemSeats(item) * (qr.items[item.id]?.[c.id] ?? 0) / qr.n, 0) }))
+          : null;
+        if (!parts) return null;
         return (
           <div key={q.id}>
             {q.title && <div className="text-[12px] text-ink-soft">{q.title}</div>}
-            <ShareBar parts={q.options.map((o) => ({ id: o.id, label: o.label, n: qr.counts[o.id] ?? 0 }))} />
+            <ShareBar parts={parts} />
           </div>
         );
       })}
