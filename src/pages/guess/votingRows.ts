@@ -41,3 +41,34 @@ export function votingRows(d: Dashboard, blank?: string[]) {
     return (old && (d.vote2022?.all[old]?.n ?? 0) > 0) || (d.vote2026?.all[row.key]?.n ?? 0) > 0;
   }).sort((a, b) => (b.nextN ?? -Infinity) - (a.nextN ?? -Infinity));
 }
+
+/**
+ * ליד כל מפלגה בתוצאות סקרי ההצבעה: כמה מהמשתתפים היו מצביעים לה לפי התוצאה האמיתית (הכרעת בעלים 03.11.2026) —
+ * אותו חישוב כמו טור "כלל המצביעים" בטבלת ההתפלגות: אחוז הקולות × מספר המשתתפים בסקר.
+ */
+export const REAL_SHARE_SURVEYS: Record<string, "2022" | "2026"> = { vote2022: "2022", plan2026: "2026", vote: "2026" };
+export function realPct(year: "2022" | "2026", option: string): number | null {
+  if (year === "2026") return HAS_ACTUAL_PCT && option in ACTUAL_PCT ? ACTUAL_PCT[option] : null;
+  const previous = results.find(r => r.id === "k25")!;
+  const l = previous.lists.find(x => x.letters === option);
+  return l ? l.votes / previous.valid * 100 : null;
+}
+export const realCount = (year: "2022" | "2026", option: string, participants: number) => {
+  const p = realPct(year, option);
+  return p === null ? "" : fmtCount(p * participants / 100);
+};
+// אותו עיגול כמו בטבלת ההתפלגות (fmtNum ב-Dashboard)
+const fmtCount = (n: number) => String(Math.round(n * 100) / 100);
+
+/** רשימות שקיבלו עד 5 קולות מהמשתתפים (בשני הטורים) ⇐ שורה אחת "רשימות אחרות" בסוף רשימות המפלגות (הכרעת בעלים 03.11.2026) */
+export const SMALL_VOTES = 5;
+type Row = ReturnType<typeof votingRows>[number];
+export function groupSmallRows(rows: Row[]): Row[] {
+  const small = rows.filter(r => !r.key.startsWith("answer:") && (r.previousN ?? 0) <= SMALL_VOTES && (r.nextN ?? 0) <= SMALL_VOTES);
+  if (small.length < 2) return rows;
+  const sum = (k: "actual" | "official" | "previous" | "next" | "previousN" | "nextN") => small.some(r => r[k] !== null) ? small.reduce((a, r) => a + (r[k] ?? 0), 0) : null;
+  const round = (v: number | null) => v === null ? null : Math.round(v * 100) / 100;
+  const other: Row = { key: "small", name: "רשימות אחרות", actual: round(sum("actual")), official: round(sum("official")), previous: sum("previous"), next: sum("next"), previousN: sum("previousN"), nextN: sum("nextN") };
+  const rest = rows.filter(r => !small.includes(r)), at = rest.findIndex(r => r.key.startsWith("answer:"));
+  return at < 0 ? [...rest, other] : [...rest.slice(0, at), other, ...rest.slice(at)];
+}
