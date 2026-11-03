@@ -6,7 +6,6 @@ import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
-import { Segmented } from "../components/Choice";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
@@ -96,10 +95,8 @@ export default function Polls() {
             עד תאריך
             <input type="date" className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={to} onChange={(e) => { setTo(e.target.value); setShown(PAGE); }} />
           </label>
-          <div className="flex flex-col text-sm min-w-0">
-            הצגת המפלגות
-            <Segmented size="sm" label="הצגת המפלגות" value={parties} onChange={setParties} options={[{ id: "on", label: "מוצגות" }, { id: "off", label: "מוסתרות" }]} className="mt-1 w-44" />
-          </div>
+          {/* כפתור אחד (הכרעת בעלים 03.11.2026): דולק — רגיל; כבוי — אפור */}
+          <button type="button" aria-pressed={parties === "on"} onClick={() => setParties(parties === "on" ? "off" : "on")} className={`f-btn min-h-11${parties === "on" ? "" : " opacity-60 grayscale text-ink-soft"}`}>הצגת מפלגות</button>
         </form>
       </Card>
 
