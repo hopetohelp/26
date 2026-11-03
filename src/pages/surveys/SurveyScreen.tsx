@@ -3,10 +3,10 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
 import LeaveGuard from "../../components/LeaveGuard";
-import BackButton from "../../components/BackButton";
+import SurveyHeader from "./SurveyHeader";
 import { useCrowdDashboard } from "../../lib/sources";
 import { VotingStats } from "../guess/Dashboard";
-import { NOT_VOTED, realLabel, REAL_SHARE_SURVEYS } from "../guess/votingRows";
+import { realLabel, REAL_SHARE_SURVEYS } from "../guess/votingRows";
 
 /** "התפלגות המצביעים" — במסך "למי אתה מתכנן להצביע בבחירות 2026?" (הועבר 03.11.2026), עם מעבר לסקר על 2022 (הכרעת בעלים 02.11.2026) */
 function VotersCard({ embed }: { embed: boolean }) {
@@ -25,7 +25,7 @@ import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { participantsLabel, answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -183,8 +183,8 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
             )}
             {q.kind === "single" && "counts" in r && (
               <ul className="space-y-1.5">
-                {/* רק אפשרויות שקיבלו תשובה, מהגבוהה לנמוכה; בסקרי ההצבעה — שורת "לא הצביעו" תמיד, עם האחוז האמיתי (הכרעות בעלים 03.11.2026) */}
-                {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0 || (real && o.id === NOT_VOTED)).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
+                {/* תמיד מהגבוהה לנמוכה, ובלי אפשרות שלא קיבלה תשובה (הכרעת בעלים 03.11.2026) */}
+                {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
                   const pct = Math.round((r.counts[o.id] / r.n) * 100);
                   return (
                     <li key={o.id} className={`grid ${real ? "grid-cols-[110px_minmax(0,1fr)_44px_52px]" : "grid-cols-[110px_minmax(0,1fr)_44px]"} items-center gap-2 text-sm`}>
@@ -199,8 +199,7 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
             )}
             {q.kind === "assign" && "items" in r && (
               <ul className="space-y-1.5">
-                {q.items.map((item) => {
-                  const row = r.items[item.id], total = q.columns.reduce((n, c) => n + (row?.[c.id] ?? 0), 0);
+                {q.items.map((item) => ({ item, row: r.items[item.id], total: q.columns.reduce((n, c) => n + (r.items[item.id]?.[c.id] ?? 0), 0) })).filter((x) => x.total > 0).sort((a, b) => b.total - a.total).map(({ item, row, total }) => {
                   return (
                     <li key={item.id} className="grid grid-cols-[110px_minmax(0,1fr)] items-center gap-2 text-sm">
                       <span className="truncate">{item.label}</span>
@@ -281,25 +280,16 @@ export default function SurveyScreen() {
   if (!survey) return <main className="px-4 py-6"><p className="text-ink-soft">טוען…</p></main>;
   const deadline = closesLabel(survey);
   const bothScopes = data.access.outside === "answer";
-  const noResults = survey.visibility === "after_close" ? "התוצאות יוצגו עם סגירת הסקר." : survey.visibility === "answered" ? "התוצאה העדכנית מוצגת אחרי ששומרים תשובה." : "אין עדיין תוצאות.";
 
   return (
     <>
     <LeaveGuard dirty={!!token && changed && !managing && state !== "saving"} onSave={() => save()} />
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      {/* נכנסו מטבלת הניהול ⇐ "חזרה לניהול" במקום "חזרה" (הכרעת בעלים 03.11.2026) */}
-      <div className="pt-2">{params.get("from") === "admin" ? <Link to="/group-admin" className="f-btn !min-h-[36px]">→ חזרה לניהול</Link> : <BackButton />}</div>
-      <div className="flex items-start justify-between gap-2 pt-1">
-        <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
-        {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}
-      </div>
-      <div className="flex flex-wrap items-center gap-2 -mt-1.5 text-sm text-ink-soft">
-        <span>{survey.kind === "guess" ? "ניחוש משתתפים" : "סקר משתתפים, אינו מייצג"}</span>
-        {/* מספר המשתתפים (הכרעת בעלים 03.11.2026); כשפתוח גם מחוץ לגזרה — כמה מהם מהגזרה */}
-        {data.participants && <span className="font-num tabular">{participantsLabel(data.participants)}</span>}
+      <SurveyHeader title={numbered(survey)} participants={data.participants} backToAdmin={params.get("from") === "admin"}
+        aside={data.access.manage && !embed && token ? <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button> : null}>
         {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))]">נסגר</span>}
         {deadline && survey.status === "open" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-ink">פתוח עד {deadline}</span>}
-      </div>
+      </SurveyHeader>
       {embed && <Link to={allLink} className="f-btn">› לכל הסקרים</Link>}
 
       {managing && token ? (
@@ -327,10 +317,10 @@ export default function SurveyScreen() {
         {survey.status === "open" && (data.access.canAnswer || !token) && (token ? (
           <div className="space-y-2">
             <button type="button" onClick={() => void save()} disabled={empty || !changed || state === "saving"} className="f-btn pri w-full !min-h-[50px] !text-base disabled:opacity-50">
-              {state === "saving" ? "שומר…" : data?.mine ? "עדכון התשובות" : "שמירת התשובות"}
+              {/* "עדכון התשובות (עודכן 12:34)" — שעה באותו יום, אחרת תאריך (הכרעת בעלים 03.11.2026) */}
+              {state === "saving" ? "שומר…" : data?.mine ? `עדכון התשובות (${updatedLabel(data.mine.at)})` : "שמירת התשובות"}
             </button>
             {state === "saved" && <p role="status" className="text-sm font-bold text-signal">התשובות נשמרו ✓ — הן מופיעות גם באזור האישי</p>}
-            {state !== "saved" && data?.mine && <p className="text-sm text-ink-soft text-center">{updatedLabel(data.mine.at)}</p>}
             {state === "error" && <p role="alert" className="text-sm text-warn">השמירה לא הצליחה. נסו שוב.</p>}
           </div>
         ) : (
@@ -340,7 +330,8 @@ export default function SurveyScreen() {
           </section>
         ))}
 
-        <section className="f-card space-y-3">
+        {/* תוצאות — רק כשהגדרות הניהול מאפשרות לצפות בהן (הכרעת בעלים 03.11.2026) */}
+        {data.results && <section className="f-card space-y-3">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-base font-bold">תוצאות</h2>
             {/* מתג הגזרה / כל המשתתפים — רק כשמי שמחוץ לגזרה רשאי לענות (הכרעת בעלים 02.11.2026) */}
@@ -349,8 +340,8 @@ export default function SurveyScreen() {
               <button type="button" aria-pressed={scope === "all"} onClick={() => setScope("all")}>כל המשתתפים</button>
             </div>}
           </div>
-          {data.results ? <Results survey={survey} results={data.results[bothScopes ? scope : "group"]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
-        </section>
+          <Results survey={survey} results={data.results[bothScopes ? scope : "group"]} mine={data.mine?.answers} />
+        </section>}
         {survey.id === "plan2026" && <VotersCard embed={embed} />}
       </>}
 

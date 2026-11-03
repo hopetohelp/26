@@ -6,6 +6,7 @@ import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
+import { largestRemainder } from "../lib/fillAll";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
@@ -15,14 +16,14 @@ const PAGE = 50;
 /** ארבעת הגושים בכל סקר — אחרי טורי הדיוק, עם קו הפרדה בסוף (הכרעת בעלים 03.11.2026); החישוב — groupSeatsIn / exitSeats (מקור אחד) */
 const blocCells = (vals: (number | null | undefined)[], tint?: (i: number, v: number) => CSSProperties | undefined) => <>{vals.map((v, i) => <td key={i} style={v == null || !tint ? undefined : tint(i, v)} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
 /**
- * סולם 9 צבעים (הכרעת בעלים 03.11.2026), כמו במפת המכונים: אדום (מתחת לתוצאה) ⇐ לבן (בדיוק) ⇐ ירוק (מעל).
- * המרחק מתוצאות האמת יחסית לסטייה הגדולה ביותר של הסקרים באותו טור: 4 דרגות לכל כיוון.
+ * סולם אחד לפי מרחק מהתוצאה (הכרעת בעלים 03.11.2026): לבן = בדיוק, ואדום מתחזק ב-4 דרגות ככל שהנתון רחוק יותר — בלי ירוק,
+ * כדי שלא ייראה "טוב יותר". המרחק יחסית לסטייה הגדולה ביותר באותו טור בטבלה.
  */
 const STEPS = [0, 0.12, 0.24, 0.36, 0.5];
 const scaleTint = (d: number, span: number): CSSProperties | undefined => {
   if (!span || d === 0) return undefined;
   const level = Math.min(4, Math.max(1, Math.round((Math.abs(d) / span) * 4)));
-  return { backgroundColor: `rgb(var(${d > 0 ? "--pos" : "--neg"}) / ${STEPS[level]})` };
+  return { backgroundColor: `rgb(var(--neg) / ${STEPS[level]})` };
 };
 const ACTUAL_BLOCS = SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0));
 /** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
@@ -114,7 +115,7 @@ export default function Polls() {
         </dl>,
       }))} />
       <ArchiveTable title="סקר אחרון" parties={parties} open={open} setOpen={setOpen} rows={finalRows.map(pollRow)} />
-      <ArchiveTable title="כל הסקרים" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} foot={<>
+      <ArchiveTable title="כל הסקרים" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} meanRows={restAll.map(pollRow)} foot={<>
         {shown < restAll.length && (
           <button type="button" className="f-btn mt-3" onClick={() => setShown((s) => s + PAGE)}>
             עוד {Math.min(PAGE, restAll.length - shown)} סקרים
@@ -243,14 +244,15 @@ interface ArchiveRow { id: string; values: Record<string, { s?: number; p?: numb
  * סולם 9 צבעים לכל הטורים, יחסית לסטייה הגדולה ביותר באותו טור בטבלה הזו בלבד (הכרעת בעלים 03.11.2026).
  * בטורי הדיוק — מרחק מהדיוק המלא (120 מנדטים, כל המפלגות, 0 טעות), ולכן רק אדום או לבן.
  */
-function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
+/** meanRows — השורות שעליהן מחושב הממוצע (ב"כל הסקרים": כל הסקרים בסינון, לא רק העמוד המוצג) */
+function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; meanRows?: ArchiveRow[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
   if (!rows.length) return null;
   const ready = hasResults();
   const tags = rows.map((r) => tagsOf(r.values));
   const listCols = parties === "off" ? [] : (() => {
     const seen = new Map<string, number>();
     if (ready) for (const [id, v] of Object.entries(results2026.seats)) if (v > 0) seen.set(id, v);
-    for (const r of rows) for (const [id, v] of Object.entries(r.values)) if (!seen.has(id)) seen.set(id, v.s ?? -1);
+    for (const r of [...rows, ...meanRows]) for (const [id, v] of Object.entries(r.values)) if (!seen.has(id)) seen.set(id, v.s ?? -1);
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
   })();
   const maxAbs = (xs: (number | null | undefined)[]) => xs.reduce<number>((m, x) => x == null ? m : Math.max(m, Math.abs(x)), 0);
@@ -263,6 +265,15 @@ function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: st
     lists: Object.fromEntries(listCols.map((id) => [id, listSpan(id)])),
   } : null;
   const cols = listCols.length + 4 + SIMPLE_BLOCS.length;
+  // שורת הממוצע (הכרעת בעלים 03.11.2026): לכל רשימה — ממוצע הסקרים שפרסמו לה מנדטים; לכל גוש — ממוצע הסקרים שבהם יש לגוש ערך
+  const avg = (xs: (number | null | undefined)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? Math.round((ok.reduce((a, b) => a + b, 0) / ok.length) * 10) / 10 : null; };
+  // תמיד 120 בדיוק (הכרעת בעלים 03.11.2026): הממוצעים מנורמלים ל-120 בשיטת השארית הגדולה, בעשיריות (largestRemainder, מקור אחד)
+  const to120 = (w: Record<string, number>) => Object.fromEntries(Object.entries(largestRemainder(1200, w)).map(([k, v]) => [k, v / 10]));
+  const rawMeans = Object.fromEntries([...new Set(meanRows.flatMap((r) => Object.keys(r.values)))].flatMap((id) => { const m = avg(meanRows.map((r) => r.values[id]?.s)); return m == null ? [] : [[id, m]]; }));
+  const meanValues = Object.fromEntries(Object.entries(to120(rawMeans)).filter(([id]) => rawMeans[id] > 0).map(([id, v]) => [id, { s: v }])) as Record<string, { s: number }>;
+  const rawBlocs = SIMPLE_BLOCS.map((_, i) => avg(meanRows.map((r) => r.blocs[i])));
+  const blocs120 = rawBlocs.some((b) => b != null) ? to120(Object.fromEntries(rawBlocs.map((b, i) => [String(i), b ?? 0]))) : null;
+  const meanBlocs = rawBlocs.map((b, i) => b == null || !blocs120 ? null : blocs120[String(i)]);
   const accTinted = (t: SeatTags | null) => {
     if (!t || !spans) return accCells(t);
     return <>
@@ -288,12 +299,19 @@ function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: st
             </tr>
           </thead>
           <tbody>
-            {ready && <tr className="border-b-2 border-ink font-bold align-top">
-              <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
+            {/* תוצאות אמת — בולטת ומופרדת מהסקרים (הכרעת בעלים 03.11.2026) */}
+            {ready && <tr className="bg-accent-soft text-sm md:text-base font-extrabold align-top [&>*]:border-b-4 [&>*]:border-b-ink">
+              <th scope="row" className="py-2.5 pe-2 text-right">תוצאות אמת</th>
               {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
               {blocCells(ACTUAL_BLOCS)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
             </tr>}
+            <tr className="border-b-2 border-ink font-semibold align-top">
+              <th scope="row" className="py-2 pe-2 text-right">ממוצע</th>
+              {accCells(tagsOf(meanValues))}
+              {blocCells(meanBlocs)}
+              {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{meanValues[id]?.s ?? "—"}</td>)}
+            </tr>
             {rows.map((r, k) => {
               const isOpen = open === r.id;
               const pctOnly = Object.values(r.values).every((v) => v.s === undefined);
