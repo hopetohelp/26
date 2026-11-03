@@ -66,6 +66,8 @@ export default function Polls() {
   // עמודה לכל רשימה שמופיעה בשורות המוצגות, לפי הגודל בשורה הראשונה שבה הופיעה
   const listCols = parties === "off" ? [] : (() => {
     const seen = new Map<string, number>();
+    // תוצאות האמת קובעות את סדר הטורים (השורה הראשונה)
+    if (hasResults()) for (const [id, v] of Object.entries(results2026.seats)) if (v > 0) seen.set(id, v);
     for (const p of [...exitRows, ...finalRows, ...restRows]) for (const [id, v] of Object.entries(p.values) as [string, { s?: number; p?: number }][]) if (!seen.has(id)) seen.set(id, v.s ?? -1);
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
   })();
@@ -120,6 +122,13 @@ export default function Polls() {
               </tr>
             </thead>
             <tbody>
+              {/* שורה ראשונה מודגשת: תוצאות האמת (הכרעת בעלים 03.11.2026) */}
+              {hasResults() && <tr className="border-b-2 border-ink font-bold align-top">
+                <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
+                {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
+                {blocCells(SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)))}
+                {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
+              </tr>}
               {exitRows.map((p) => {
                 const isOpen = open === p.id;
                 const t = tagsOf(p.values);
