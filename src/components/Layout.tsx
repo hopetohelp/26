@@ -404,7 +404,7 @@ function LayoutBody() {
         <PersonalBlocsProvider><PageErrorBoundary><ScreenLegend><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><Outlet /></Suspense></ScreenLegend></PageErrorBoundary></PersonalBlocsProvider>
         {embeddableFor(pathname, new URLSearchParams(search).get("tab")) && <ScreenFooter info={false}>
           {/* ״תוצאות״ ו״מה השתנה״: שורה אחת ממורכזת — ״איך זה חושב?״ ו״הטמעה באתר אחר״ (הכרעת בעלים 29.10.2026) */}
-          {pathname === "/surveys/guesses" && <Link to="/method#guess-accuracy" className="!text-ink-soft !font-normal underline">איך זה חושב?</Link>}
+          {pathname === "/surveys/guesses" && <Link to="/method#guess-accuracy" className="!text-ink-soft !font-normal underline">מידע ומקורות</Link>}
           {/* ״תוצאות רשמיות״ בשורת התחתית של ״תוצאות״ ו״מה השתנה״ (הכרעות בעלים 29–30.10.2026) */}
           {(pathname === "/surveys/guesses" || pathname === "/changes") && <a href="https://votes26.bechirot.gov.il/nationalresults?lang=he" target="_blank" rel="noopener noreferrer" className="!text-ink-soft !font-normal underline">תוצאות רשמיות</a>}
           <EmbedButton />

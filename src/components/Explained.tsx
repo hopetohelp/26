@@ -39,14 +39,14 @@ export default function Explained({ asOf, methodAnchor, children, details, showM
   if (bare) return <div>{children}</div>;
   // בהטמעה אין "איך זה חושב?" ואין פירוט חישוב (הכרעת בעלים 30.10.2026); התאריך נשאר כשהוא מוצג
   if (isEmbed()) return <div>{children}{!inFooter && (showMeta ? <p className="mt-2 text-sm text-ink-soft">{asOf}</p> : trailing ? <div className="mt-2 text-xs text-ink-soft space-y-1">{trailing}</div> : null)}</div>;
-  if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span><Link to={`/method#${methodAnchor}`} className="!text-ink-soft !font-normal underline">איך זה חושב?</Link></span>, slot)}</div>;
+  if (inFooter && slot && !details && showMeta) return <div>{children}{createPortal(<span><Link to={`/method#${methodAnchor}`} className="!text-ink-soft !font-normal underline">מידע ומקורות</Link></span>, slot)}</div>;
   return (
     <div>
       {children}
       <div className={`mt-2 text-sm text-ink-soft ${showMeta ? "" : "flex flex-wrap items-end justify-between gap-x-4 gap-y-1"}`}>
         {!showMeta && <div className="min-w-0 flex-1 basis-56 space-y-1 text-xs">{trailing}</div>}
         <p>
-        {showMeta && <>{asOf} · </>}<Link to={`/method#${methodAnchor}`} className="font-semibold">איך זה חושב?</Link>
+        {showMeta && <>{asOf} · </>}<Link to={`/method#${methodAnchor}`} className="font-semibold">מידע ומקורות</Link>
         {details && (
           <>
             {" · "}

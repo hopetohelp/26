@@ -22,7 +22,7 @@ it("כפתור נגיש: תווית לקורא מסך, aria-expanded ו-aria-con
 it("בלי `methodAnchor` אין קישור (כשבמסך כבר יש \"איך זה חושב?\" לאותו ערך)", () => {
   const html = render(createElement(InfoTip, { label: "הסבר", children: "טקסט" }));
   expect(html).not.toContain("/method#");
-  expect(html).not.toContain("איך זה חושב?");
+  expect(html).not.toContain("מידע ומקורות");
 });
 
 it("נתוני המודל: כל נוסח אומר שהנתון אינו ישיר מהסקרים, ומספר התרחישים נלקח מ-model.json", () => {

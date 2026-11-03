@@ -17,7 +17,7 @@ it("בגרף: התאריך וקישור לערך במילון; הסוג, המק�
   expect(html).not.toContain("חישוב לפי החוק");
   expect(html).toContain("היום");
   expect(html).toContain('href="/method#engine"');
-  expect(html).toContain("איך זה חושב?");
+  expect(html).toContain("מידע ומקורות");
   expect(html).not.toContain("מקור ארוך");
   expect(html).not.toContain("הנחה ארוכה");
 });

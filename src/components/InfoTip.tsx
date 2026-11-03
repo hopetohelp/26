@@ -82,7 +82,7 @@ export default function InfoTip({ label, children, methodAnchor, className = "" 
         <span className="block">{children}</span>
         {methodAnchor && (
           <Link to={`/method#${methodAnchor}`} className="mt-2 inline-flex min-h-[32px] items-center font-semibold text-paper underline underline-offset-2 hover:text-paper">
-            איך זה חושב?
+            מידע ומקורות
           </Link>
         )}
       </span>
