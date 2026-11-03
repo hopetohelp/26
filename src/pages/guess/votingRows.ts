@@ -41,3 +41,21 @@ export function votingRows(d: Dashboard, blank?: string[]) {
     return (old && (d.vote2022?.all[old]?.n ?? 0) > 0) || (d.vote2026?.all[row.key]?.n ?? 0) > 0;
   }).sort((a, b) => (b.nextN ?? -Infinity) - (a.nextN ?? -Infinity));
 }
+
+/**
+ * ליד כל מפלגה בתוצאות סקרי ההצבעה: כמה מהמשתתפים היו מצביעים לה לפי התוצאה האמיתית (הכרעת בעלים 03.11.2026) —
+ * אותו חישוב כמו טור "כלל המצביעים" בטבלת ההתפלגות: אחוז הקולות × מספר המשתתפים בסקר.
+ */
+export const REAL_SHARE_SURVEYS: Record<string, "2022" | "2026"> = { vote2022: "2022", plan2026: "2026", vote: "2026" };
+export function realPct(year: "2022" | "2026", option: string): number | null {
+  if (year === "2026") return HAS_ACTUAL_PCT && option in ACTUAL_PCT ? ACTUAL_PCT[option] : null;
+  const previous = results.find(r => r.id === "k25")!;
+  const l = previous.lists.find(x => x.letters === option);
+  return l ? l.votes / previous.valid * 100 : null;
+}
+export const realCount = (year: "2022" | "2026", option: string, participants: number) => {
+  const p = realPct(year, option);
+  return p === null ? "" : fmtCount(p * participants / 100);
+};
+// אותו עיגול כמו בטבלת ההתפלגות (fmtNum ב-Dashboard)
+const fmtCount = (n: number) => String(Math.round(n * 100) / 100);

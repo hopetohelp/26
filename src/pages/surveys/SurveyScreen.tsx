@@ -5,8 +5,9 @@ import Select from "../../components/Select";
 import LeaveGuard from "../../components/LeaveGuard";
 import { useCrowdDashboard } from "../../lib/sources";
 import { VotingStats } from "../guess/Dashboard";
+import { realCount, REAL_SHARE_SURVEYS } from "../guess/votingRows";
 
-/** "התפלגות המצביעים" — במסך "מה הצבעתם בבחירות (2026)?", עם מעבר לסקר על 2022 (הכרעת בעלים 02.11.2026) */
+/** "התפלגות המצביעים" — במסך "למי אתה מתכנן להצביע בבחירות 2026?" (הועבר 03.11.2026), עם מעבר לסקר על 2022 (הכרעת בעלים 02.11.2026) */
 function VotersCard({ embed }: { embed: boolean }) {
   const d = useCrowdDashboard().dashboard;
   return (
@@ -156,6 +157,7 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
       {survey.questions.map((q) => {
         const r = results.questions[q.id];
         if (!r || r.n === 0) return null;
+        const real = REAL_SHARE_SURVEYS[survey.id];
         return (
           <section key={q.id}>
             {q.title && <h3 className="text-[15px] font-bold mb-2">{q.title}</h3>}
@@ -180,14 +182,16 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
             )}
             {q.kind === "single" && "counts" in r && (
               <ul className="space-y-1.5">
+                {real && <li className="text-xs text-ink-soft">בטור האחרון: {real === "2022" ? "התוצאה הרשמית ב-2022" : "תוצאות האמת 2026"} באחוזים, ביחס ל-{r.n.toLocaleString("he-IL")} המשתתפים בסקר (כמו בטבלת ההתפלגות)</li>}
                 {/* רק אפשרויות שקיבלו תשובה, מהגבוהה לנמוכה (הכרעת בעלים 03.11.2026) */}
                 {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
                   const pct = Math.round((r.counts[o.id] / r.n) * 100);
                   return (
-                    <li key={o.id} className="grid grid-cols-[110px_minmax(0,1fr)_44px] items-center gap-2 text-sm">
+                    <li key={o.id} className={`grid ${real ? "grid-cols-[110px_minmax(0,1fr)_44px_44px]" : "grid-cols-[110px_minmax(0,1fr)_44px]"} items-center gap-2 text-sm`}>
                       <span className="truncate">{survey.truth?.[q.id] === o.id ? "✓ " : ""}{o.label}</span>
                       <span className="h-3 rounded-full bg-[rgb(var(--grid))] overflow-hidden"><span className="block h-full bg-signal" style={{ width: `${pct}%` }} /></span>
                       <b className="font-num text-left">{pct}%</b>
+                      {real && <span className="font-num tabular text-left text-ink-soft">{realCount(real, o.id, r.n)}</span>}
                     </li>
                   );
                 })}
@@ -343,7 +347,7 @@ export default function SurveyScreen() {
           </div>
           {data.results ? <Results survey={survey} results={data.results[bothScopes ? scope : "group"]} mine={data.mine?.answers} /> : <p className="text-sm text-ink-soft">{noResults}</p>}
         </section>
-        {survey.id === "vote" && <VotersCard embed={embed} />}
+        {survey.id === "plan2026" && <VotersCard embed={embed} />}
       </>}
 
       {pending && (
