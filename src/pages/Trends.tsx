@@ -10,7 +10,7 @@ import { colorOf } from "../lib/colors";
 import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
 import { rollingBlocMean } from "../lib/blocTrend";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
-import { results2026 } from "../lib/guessAccuracyData";
+import { ELECTION_DAY, results2026 } from "../lib/guessAccuracyData";
 import { date, dateRange, seatsFmt } from "../lib/format";
 import { electionMarkers } from "../lib/electionMarkers";
 
@@ -93,7 +93,8 @@ function MultiPick({ label, groups, sections, value, onChange }: { label: string
 }
 
 export default function Trends() {
-  const to = MODEL_AVERAGE.asOf;
+  // הסקרים עד יום הבחירות; תוצאות האמת יומיים אחריו (electionMarkers)
+  const to = MODEL_AVERAGE.asOf < ELECTION_DAY ? MODEL_AVERAGE.asOf : ELECTION_DAY;
   const [period, setPeriod] = useState<PeriodId>("lists");
   const [poll, setPoll] = useState("all");
   const [asTable, setAsTable] = useState(false);

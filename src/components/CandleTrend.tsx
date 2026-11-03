@@ -147,15 +147,15 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   const dateTop = Math.round((height * YB) / 100) + 8;
   const Y = (v: number) => YB - ((YB - YT) * (v - axis.lo)) / (axis.hi - axis.lo);
   // קו מקווקו מהסקר האחרון אל התוצאה בפועל: מתחיל בקצה העיגול הקטן ונגמר בקצה העיגול הריק (בפיקסלים, ואז חזרה לאחוזים)
-  const links = resultDots ? [] : markers.flatMap((m) => {
+  const links = markers.flatMap((m) => {
     const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : series.length === 1 ? 0 : -1;
     const last = si >= 0 ? series[si].points[series[si].points.length - 1] : undefined;
     if (!last) return [];
     const [ax, ay, bx, by] = [(X(last.t) / 100) * width, (Y(last.v) / 100) * height, (X(m.t) / 100) * width, (Y(m.v) / 100) * height];
     const len = Math.hypot(bx - ax, by - ay);
-    if (len < 16) return [];
+    if (len < (resultDots ? 1 : 16)) return [];
     const [ux, uy] = [(bx - ax) / len, (by - ay) / len];
-    const [r1, r2] = [6, 11];
+    const [r1, r2] = resultDots ? [0, 6] : [6, 11];
     return [{ si, x1: ((ax + ux * r1) / width) * 100, y1: ((ay + uy * r1) / height) * 100, x2: ((bx - ux * r2) / width) * 100, y2: ((by - uy * r2) / height) * 100 }];
   });
   const ln = { vectorEffect: "non-scaling-stroke" as const };
@@ -253,7 +253,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         {multi && series.map((s, si) => (
           <path key={s.id} className="trend-line" d={smoothPath(s.points.map((p) => ({ x: X(p.t), y: Y(p.v) })))} fill="none" stroke={colors[si]} strokeWidth={2.4} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dashed ? "5 4" : undefined} {...ln} />
         ))}
-        {links.map((l, i) => <line key={`k${i}`} className={`trend-pop ${candleMode ? "stroke-accent" : ""}`} style={{ animationDelay: "900ms" }} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={2} strokeDasharray="4 3" {...ln} />)}
+        {resultDots && links.map((l, i) => <line key={`k${i}`} className={candleMode ? "stroke-accent" : ""} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={candleMode ? 2.5 : 2.4} strokeLinecap="round" {...ln} />)}
+        {!resultDots && links.map((l, i) => <line key={`k${i}`} className={`trend-pop ${candleMode ? "stroke-accent" : ""}`} style={{ animationDelay: "900ms" }} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={candleMode ? undefined : colors[l.si]} strokeWidth={2} strokeDasharray="4 3" {...ln} />)}
       </svg>
       <div className="absolute left-0 top-0 w-full" style={{ height }}>
         {axis.lines.map(({ v, major }) => (
