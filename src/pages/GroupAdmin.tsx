@@ -11,6 +11,7 @@ import { PageTitle } from "../components/ui";
 import { Segmented } from "../components/Choice";
 import { ManagedGroup, type LinkMembersState } from "./guess/Account";
 import { useSession } from "./guess/useCrowd";
+import { SurveysManage } from "./surveys/SurveyManageScreen";
 
 /**
  * מסך "ניהול קבוצה" — לשונית בסרגל רק למנהלי קבוצה. בראש: תמונת מצב (רשומים, השערות, כניסות דרך הקישור);
@@ -79,6 +80,24 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
           <p className="text-sm text-ink-soft">{listTotal != null && <><strong className="font-num tabular text-ink">{n(listTotal)}</strong> ברשימת המיילים · </>}{slug ? <a href={groupUrl(slug)} dir="ltr" className="underline">{groupUrl(slug).replace(/^https?:\/\//, "")}</a> : "אין עדיין קישור לקבוצה"}</p>
         </div>
       </header>
+      {/* מסך אחד לשני חלקי האתר (הכרעת בעלים 03.11.2026): קודם הסקרים והניחושים — כולל כל מה שקשור לניחוש הבחירות — ואחריו ניהול הקבוצה */}
+      <SurveysManage>
+        <Section title="ניחוש הבחירות">
+          {/* גרפים: שמרו ניחוש / שמרו הצבעה (אותם מדדים כמו בסטטיסטיקת הקבוצה) */}
+          {series && <StatsCharts storageKey={`elections26.groupGuessCharts.${id}`} defaults={["seats", "vote"]} buckets={series.buckets}
+            options={MEASURES.filter((m) => m.key === "seats" || m.key === "vote").map((m) => { const x = series.series.find((y) => y.key === m.key); return { key: m.key, label: m.label, total: x?.total ?? null, points: x?.points ?? null }; })} />}
+          {ins && !ins.belowMin && <Guesses ins={ins} />}
+          {series?.funnel && <Funnel f={series.funnel} />}
+          <CompareSwitch id={id} token={token} />
+          <Sub title="אישור ניחושים">
+            <AdminGuesses group={{
+              load: () => call(`/group/guesses?group=${q(id)}`, { token }),
+              decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
+            }} />
+          </Sub>
+        </Section>
+      </SurveysManage>
+      <h2 className="text-lg font-bold">ניהול הקבוצה</h2>
       {/* המלצה לחבר עוזר AI — אותו מסך דרך Claude או ChatGPT (כלי group_* בשרת ה-MCP, משימה 25.10.2026) */}
       <p className="text-sm border border-paper-line rounded-theme bg-paper-card px-4 py-3">
         <strong>מומלץ: חברו עוזר AI.</strong> עם Claude או ChatGPT מחובר אפשר לבקש בשפה חופשית את כל מה שבמסך הזה — לסכם את פניות החברים ולנסח תשובה, לעבור על ניחושים שממתינים לאישור או לשאול מה השתנה בגרפים. באותם כללים כמו כאן: רק חברי הקבוצה, מ-50 חברים ובלי שמות; העוזר משנה נתונים רק כשתבקשו. <Link to="/ai?assistants" className="text-accent underline">לחיבור עוזר AI</Link>
@@ -89,22 +108,11 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
         <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
           {/* שני חלונות גרף, כמו במסך הניהול (הכרעת בעלים 28.10.2026) */}
-          {series && <StatsCharts storageKey={`elections26.groupCharts.${id}`} defaults={["registered", "seats"]} buckets={series.buckets}
+          {series && <StatsCharts storageKey={`elections26.groupCharts.${id}`} defaults={["registered", "visits"]} buckets={series.buckets}
             options={MEASURES.filter((m) => m.key !== "list").map((m) => { const x = series.series.find((y) => y.key === m.key); return { key: m.key, label: m.group === "outside" ? `מחוץ לרשימה: ${m.label}` : m.label, total: x?.total ?? null, points: x?.points ?? null }; })} />}
           <Measures data={series} failed={failed} flags={flags} setFlag={setFlag} />
-          {series?.funnel && <Funnel f={series.funnel} />}
           {stats && !stats.belowMin && stats.videos && <div className="mt-4"><VideoStats s={stats.videos} /></div>}
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
-        </Section>
-        <Section title="ניחושים">
-          {ins && !ins.belowMin && <Guesses ins={ins} />}
-          <CompareSwitch id={id} token={token} />
-          <Sub title="אישור ניחושים">
-            <AdminGuesses group={{
-              load: () => call(`/group/guesses?group=${q(id)}`, { token }),
-              decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
-            }} />
-          </Sub>
         </Section>
         <SupportThreads id={id} token={token} stats={ins && !ins.belowMin ? <Questions q={ins.questions} /> : null} />
         <Section title="כלי ניהול">

@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import BackButton from "../../components/BackButton";
 import { participantsLabel } from "../../lib/surveys";
 
 /** ראש אחיד לכל מסך סקר וניחוש (הכרעת בעלים 03.11.2026): חזרה, כותרת, ושורת המשתתפים */
-export default function SurveyHeader({ title, participants, aside, children }: { title: string; participants?: { all: number; group: number; outside: boolean } | null; aside?: ReactNode; children?: ReactNode }) {
+export default function SurveyHeader({ title, participants, aside, backToAdmin, children }: { title: string; backToAdmin?: boolean; participants?: { all: number; group: number; outside: boolean } | null; aside?: ReactNode; children?: ReactNode }) {
   return <>
-    <div className="pt-2"><BackButton /></div>
+    {/* נכנסו מטבלת הניהול ⇐ "חזרה לניהול" במקום "חזרה" (הכרעת בעלים 03.11.2026) */}
+    <div className="pt-2">{backToAdmin ? <Link to="/group-admin" className="f-btn !min-h-[36px]">→ חזרה לניהול</Link> : <BackButton />}</div>
     <div className="flex items-start justify-between gap-2 pt-1">
       <h1 className="text-[26px] font-display leading-tight">{title}</h1>
       {aside}

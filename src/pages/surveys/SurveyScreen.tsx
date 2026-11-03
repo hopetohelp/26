@@ -285,7 +285,7 @@ export default function SurveyScreen() {
     <>
     <LeaveGuard dirty={!!token && changed && !managing && state !== "saving"} onSave={() => save()} />
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <SurveyHeader title={numbered(survey)} participants={data.participants}
+      <SurveyHeader title={numbered(survey)} participants={data.participants} backToAdmin={params.get("from") === "admin"}
         aside={data.access.manage && !embed && token ? <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button> : null}>
         {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))]">נסגר</span>}
         {deadline && survey.status === "open" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-ink">פתוח עד {deadline}</span>}
