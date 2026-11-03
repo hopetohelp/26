@@ -114,7 +114,7 @@ export default function Polls() {
         </dl>,
       }))} />
       <ArchiveTable title="סקר אחרון" parties={parties} open={open} setOpen={setOpen} rows={finalRows.map(pollRow)} />
-      <ArchiveTable title="כל הסקרים" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} foot={<>
+      <ArchiveTable title="כל הסקרים" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} meanRows={restAll.map(pollRow)} foot={<>
         {shown < restAll.length && (
           <button type="button" className="f-btn mt-3" onClick={() => setShown((s) => s + PAGE)}>
             עוד {Math.min(PAGE, restAll.length - shown)} סקרים
@@ -243,7 +243,8 @@ interface ArchiveRow { id: string; values: Record<string, { s?: number; p?: numb
  * סולם 9 צבעים לכל הטורים, יחסית לסטייה הגדולה ביותר באותו טור בטבלה הזו בלבד (הכרעת בעלים 03.11.2026).
  * בטורי הדיוק — מרחק מהדיוק המלא (120 מנדטים, כל המפלגות, 0 טעות), ולכן רק אדום או לבן.
  */
-function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
+/** meanRows — השורות שעליהן מחושב הממוצע (ב"כל הסקרים": כל הסקרים בסינון, לא רק העמוד המוצג) */
+function ArchiveTable({ title, rows, meanRows = rows, parties, open, setOpen, foot }: { title: string; rows: ArchiveRow[]; meanRows?: ArchiveRow[]; parties: "on" | "off"; open: string | null; setOpen: (id: string | null) => void; foot?: ReactNode }) {
   if (!rows.length) return null;
   const ready = hasResults();
   const tags = rows.map((r) => tagsOf(r.values));
@@ -263,6 +264,10 @@ function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: st
     lists: Object.fromEntries(listCols.map((id) => [id, listSpan(id)])),
   } : null;
   const cols = listCols.length + 4 + SIMPLE_BLOCS.length;
+  // שורת הממוצע (הכרעת בעלים 03.11.2026): לכל רשימה — ממוצע הסקרים שפרסמו לה מנדטים; לכל גוש — ממוצע הסקרים שבהם יש לגוש ערך
+  const avg = (xs: (number | null | undefined)[]) => { const ok = xs.filter((x): x is number => x != null); return ok.length ? Math.round((ok.reduce((a, b) => a + b, 0) / ok.length) * 10) / 10 : null; };
+  const meanValues = Object.fromEntries([...new Set(meanRows.flatMap((r) => Object.keys(r.values)))].flatMap((id) => { const m = avg(meanRows.map((r) => r.values[id]?.s)); return m == null ? [] : [[id, { s: m }]]; })) as Record<string, { s: number }>;
+  const meanBlocs = SIMPLE_BLOCS.map((_, i) => avg(meanRows.map((r) => r.blocs[i])));
   const accTinted = (t: SeatTags | null) => {
     if (!t || !spans) return accCells(t);
     return <>
@@ -294,6 +299,12 @@ function ArchiveTable({ title, rows, parties, open, setOpen, foot }: { title: st
               {blocCells(ACTUAL_BLOCS)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
             </tr>}
+            <tr className="border-b-2 border-ink font-semibold align-top">
+              <th scope="row" className="py-2 pe-2 text-right">ממוצע</th>
+              {accCells(tagsOf(meanValues))}
+              {blocCells(meanBlocs)}
+              {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{meanValues[id]?.s ?? "—"}</td>)}
+            </tr>
             {rows.map((r, k) => {
               const isOpen = open === r.id;
               const pctOnly = Object.values(r.values).every((v) => v.s === undefined);
