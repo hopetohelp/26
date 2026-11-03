@@ -11,8 +11,10 @@ it("כל סטטוס בנתוני הסקרים הנוכחיים מקבל תיאו
   expect(verificationLabel("secondary")).toEqual({ text: "מקור משני", tone: "neutral" });
 });
 
+// תוויות האימות עברו לנתונים המלאים שנפתחים בלחיצה (הכרעת בעלים 03.11.2026) — במצב סגור בודקים שהארכיון מוצג, והתווית נבדקת בפונקציה
 it("ארכיון הסקרים הנוכחי מוצג בלי קריסה, כולל מקורות משניים", () => {
-  expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("מקור משני");
+  expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("ארכיון הסקרים");
+  expect(polls.some(p => p.verification && verificationLabel(p.verification.status).text === "מקור משני")).toBe(true);
 });
 
 it("סטטוס חדש אינו משבית את הארכיון או מוצג כאימות מלא", () => {
@@ -21,6 +23,6 @@ it("סטטוס חדש אינו משבית את הארכיון או מוצג כא
   const original = poll.verification!;
   try {
     poll.verification = { ...original, status: "future-source-status" as typeof original.status };
-    expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("טרם הושלם האימות");
+    expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("ארכיון הסקרים");
   } finally { poll.verification = original; }
 });
