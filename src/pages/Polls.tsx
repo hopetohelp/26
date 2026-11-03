@@ -6,6 +6,7 @@ import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
+import { Segmented } from "../components/Choice";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
 import { date, dateRange, num } from "../lib/format";
 
@@ -50,6 +51,8 @@ export default function Polls() {
   const [to, setTo] = useState("");
   const [shown, setShown] = useState(PAGE);
   const [open, setOpen] = useState<string | null>(null);
+  // מתג "הצגת המפלגות" (הכרעת בעלים 03.11.2026): כבוי — בלי טורי הרשימות; ברירת המחדל — מוצגות
+  const [parties, setParties] = useState<"on" | "off">("on");
 
   const filtered = polls.filter(
     (p) => (!who || pollsterKey(p) === who) && (!from || p.end >= from) && (!to || p.end <= to),
@@ -62,7 +65,7 @@ export default function Polls() {
   const restAll = filtered.filter((p) => !finalPollIds.has(p.id)).sort(byNewest);
   const restRows = restAll.slice(0, shown);
   // עמודה לכל רשימה שמופיעה בשורות המוצגות, לפי הגודל בשורה הראשונה שבה הופיעה
-  const listCols = (() => {
+  const listCols = parties === "off" ? [] : (() => {
     const seen = new Map<string, number>();
     for (const p of [...exitRows, ...finalRows, ...restRows]) for (const [id, v] of Object.entries(p.values) as [string, { s?: number; p?: number }][]) if (!seen.has(id)) seen.set(id, v.s ?? -1);
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
@@ -93,6 +96,10 @@ export default function Polls() {
             עד תאריך
             <input type="date" className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={to} onChange={(e) => { setTo(e.target.value); setShown(PAGE); }} />
           </label>
+          <div className="flex flex-col text-sm min-w-0">
+            הצגת המפלגות
+            <Segmented size="sm" label="הצגת המפלגות" value={parties} onChange={setParties} options={[{ id: "on", label: "מוצגות" }, { id: "off", label: "מוסתרות" }]} className="mt-1 w-44" />
+          </div>
         </form>
       </Card>
 
