@@ -61,7 +61,8 @@ export default function Polls() {
   const [shown, setShown] = useState(PAGE);
   const [open, setOpen] = useState<string | null>(null);
   // מתג "הצגת המפלגות" (הכרעת בעלים 03.11.2026): כבוי — בלי טורי הרשימות; ברירת המחדל — מוצגות
-  const [parties, setParties] = useState<"on" | "off">("on");
+  // ברירת המחדל (הכרעת בעלים 03.11.2026): בטלפון ובטאבלט צר (עד 1023px) — כבוי; במסך רחב — דולק
+  const [parties, setParties] = useState<"on" | "off">(() => (typeof window !== "undefined" && window.matchMedia?.("(max-width: 1023px)").matches ? "off" : "on"));
 
   const filtered = polls.filter(
     (p) => (!who || pollsterKey(p) === who) && (!from || p.end >= from) && (!to || p.end <= to),
