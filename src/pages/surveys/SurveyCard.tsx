@@ -6,14 +6,15 @@ import { Link } from "react-router-dom";
  * שורה 1 — מספר, סוג וכותרת; שורה 2 — "נסגר ב…" / "ייסגר ב…"; בצד שמאל תגית; מתחת — גרף התשובות.
  */
 export type CardTag = "join" | "update" | "joined" | null;
-export function SurveyCard({ to, title, when, tag, children }: { to: string; title: string; when?: string | null; tag: CardTag; children?: ReactNode }) {
+/** participants — שורת המשתתפים בכרטיס, באותו נוסח כמו בראש מסך הסקר (הכרעת בעלים 03.11.2026) */
+export function SurveyCard({ to, title, when, participants, tag, children }: { to: string; title: string; when?: string | null; participants?: string | null; tag: CardTag; children?: ReactNode }) {
   return (
     <li className="f-card !p-0">
       <Link to={to} className="block px-4 py-3.5 no-underline text-ink">
         <span className="flex items-center gap-3">
           <span className="flex-1 min-w-0">
             <span className="block font-bold">{title}</span>
-            {when && <span className="block text-[12.5px] text-ink-soft">{when}</span>}
+            {(when || participants) && <span className="block text-[12.5px] text-ink-soft">{[participants && <span key="p" className="font-num tabular">{participants}</span>, when && <span key="w">{when}</span>].filter(Boolean).reduce<ReactNode[]>((a, x, i) => (i ? [...a, " · ", x] : [x]), [])}</span>}
           </span>
           {tag === "join" && <span className="f-btn sm shrink-0">להשתתף</span>}
           {tag === "update" && <span className="f-btn sm shrink-0">לעדכן</span>}

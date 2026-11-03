@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { call, CrowdError, type GroupImportResult, type GroupLinkStats, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
+import { call, keepCall, peek, CrowdError, type GroupImportResult, type GroupLinkStats, type GroupStats as GroupStatsData } from "../../lib/crowdApi";
 import GroupUpload from "../../components/GroupUpload";
 import type { UploadState } from "../../lib/groupUpload";
 import GroupStats from "../../components/GroupStats";
@@ -518,7 +518,7 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
       <GroupFold title="קישור הקבוצה">
         <GroupLinkPanel
           slug={slug}
-          loadStats={tools ? undefined : () => call<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, { token })}
+          loadStats={tools ? undefined : () => keepCall<GroupLinkStats>(`/group/link-stats?group=${encodeURIComponent(id)}`, token)}
           bare
         />
       </GroupFold>
@@ -533,8 +533,8 @@ export function ManagedGroup({ id, name, slug, image, members, token, className,
       </GroupFold>
       {/* במסך "ניהול קבוצה" המתגים בכרטיסי הסטטיסטיקה של הכניסות דרך הקישור (הכרעת בעלים 25.10.2026) */}
       {!tools && <GroupFold title="מספרים">
-        <GroupStats load={() => call<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, { token })} refresh={refresh} />
-        <LinkMembersToggle load={() => call<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, { token })} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} />
+        <GroupStats load={() => keepCall<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, token)} initial={peek<GroupStatsData>(`/group/stats?group=${encodeURIComponent(id)}`, token)} refresh={refresh} />
+        <LinkMembersToggle load={() => keepCall<LinkMembersState>(`/group/link-members?group=${encodeURIComponent(id)}`, token)} set={(flag, on) => call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })} onChanged={changed} />
       </GroupFold>}
       <GroupFold title="תמונת הקבוצה">
         <GroupImagePanel

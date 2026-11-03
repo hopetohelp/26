@@ -125,7 +125,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "means",
     kind: "סיכום סקרים",
     source: SRC_POLLS,
-    screen: "/today",
+    screen: "/polls",
     fields: "average (seats, shares, asOf, lastPoll, polls, pollsters), latestPerPollster{asOf, polls[], summary[] (id, mean, min, max, n, passing)}, house[] (מכון ⇐ מנדטים), trend[] (date, seats, shares), government{lists, seats, series, candles}",
     build: () => ({
       names: nameMap(),
@@ -165,7 +165,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "model",
     kind: "תרחיש",
     source: "מודל האתר על בסיס הסקרים שפורסמו (טבלאות הסקרים בוויקיפדיה) וחוק הבחירות",
-    screen: "/today?tab=scenarios",
+    screen: "/polls",
     fields: "scenarios (count, lists{id:{pass, seats[10%,50%,90%], seatsMean, seatsHist}}, bloc, agreementsMoveSeat), groups{safe, edge, below, scenarioEdge}, blocs{coalition, arab, opposition}, backtest (summary, horizons, rows)",
     build: () => ({
       names: nameMap(),
@@ -271,7 +271,7 @@ export const OPEN_FILES: OpenFile[] = [
     methodAnchor: "results",
     kind: "נתון רשמי",
     source: results2026.source,
-    screen: "/results-2026",
+    screen: "/surveys/guesses",
     fields: "status, asOf, counted, valid, votes{id}, seats{id}, names{id}",
     build: () => ({ status: results2026.status, asOf: results2026.asOf, counted: results2026.counted ?? null, valid: results2026.valid ?? null, votes: results2026.votes ?? {}, seats: results2026.seats, names: Object.fromEntries(Object.keys(results2026.seats).map((id) => [id, listName(id)])) }),
   },

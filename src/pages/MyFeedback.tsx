@@ -107,7 +107,7 @@ function ThreadView({ token, embedded = false }: { token: string; embedded?: boo
       {!embedded && thread.status !== "closed" && <p className="text-sm text-ink-soft">כדי להמשיך לכתוב לצוות האתר מתחברים לחשבון: <Link to="/account" className="underline font-bold">להרשמה או כניסה</Link>.</p>}
       <Note>
         הקישור האישי לשיחה: <span className="break-all" dir="ltr">{threadLink(token)}</span>. מי שמחזיק בו יכול לקרוא את השיחה — אל תפרסמו
-        אותו. <Link to="/feedback">כל ההערות שלי</Link>
+        אותו. <Link to="/ai">כל ההערות שלי</Link>
       </Note>
     </>
   );

@@ -2038,7 +2038,9 @@ const routes = {
     for (const r of results || []) {
       const acc = await surveyAccess(env, a, r, now);
       if (!acc.view) continue;
-      out.push({ ...surveyRow(r), status: acc.status, ...publicSettings(acc.settings), answered: answered.has(r.id), manage: acc.manager, canAnswer: acc.answer, ...(acc.manager ? { outside: acc.outside } : {}) });
+      // מספר המשתתפים בכרטיס ברשימה (הכרעת בעלים 03.11.2026) — אותה ספירה כמו בראש מסך הסקר
+      const participants = { all: (await latestSurveyAnswers(env, r.id, null)).length, group: (await latestSurveyAnswers(env, r.id, r.group_id)).length, outside: acc.outside === "answer" };
+      out.push({ ...surveyRow(r), status: acc.status, ...publicSettings(acc.settings), answered: answered.has(r.id), manage: acc.manager, canAnswer: acc.answer, participants, ...(acc.manager ? { outside: acc.outside } : {}) });
     }
     return { surveys: out };
   },

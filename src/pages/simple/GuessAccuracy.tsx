@@ -290,7 +290,7 @@ function PodiumPopup({ place, name: saved, token }: { place: number; name: strin
   const word = PLACE[place - 1];
   const basis = "לפי התוצאות הסופיות";
   const share = async () => {
-    const text = `כרגע אני במקום ${word} בדיוק הניחושים לבחירות 2026 (${basis})\n${SITE_URL}#/results-2026`;
+    const text = `כרגע אני במקום ${word} בדיוק הניחושים לבחירות 2026 (${basis})\n${SITE_URL}#/surveys/guesses`;
     try { if (navigator.share) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); setMsg("הטקסט הועתק."); } }
     catch (e) { if ((e as Error)?.name !== "AbortError") setMsg("השיתוף לא הצליח."); }
   };

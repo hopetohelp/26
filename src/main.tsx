@@ -156,10 +156,10 @@ createRoot(document.getElementById("root")!).render(
           <Route path="flow-graphs" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><FlowGraphs /></Suspense>} />
           <Route path="calculator" element={<LegacyCalculator />} />
           <Route path="guess" element={<GuessGate><Suspense fallback={<p className="text-ink-soft">טוען…</p>}><LegacyGuess /></Suspense></GuessGate>} />
-          <Route path="community" element={<LegacyCommunity />} />
-          <Route path="score" element={<Navigate to="/surveys/guesses" replace />} />
+          <Route path="community" element={<KeepQuery to="/surveys/guesses" />} />
+          <Route path="score" element={<KeepQuery to="/surveys/guesses" />} />
           {/* "תוצאות אמת" עבר ל"מה יהיו תוצאות הבחירות?" בחלק הסקרים ול-#/community (הכרעת בעלים 02.11.2026) */}
-          <Route path="results-2026" element={<Navigate to="/surveys/guesses" replace />} />
+          <Route path="results-2026" element={<KeepQuery to="/surveys/guesses" />} />
           <Route path="g/:slug" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupLanding /></Suspense>} />
           <Route path="past" element={<PastRedirect />} />
           <Route
@@ -205,8 +205,8 @@ createRoot(document.getElementById("root")!).render(
     </RootErrorBoundary>
   </StrictMode>,
 );
-  // טעינה מוקדמת של כל המסכים ברקע אחרי שהמסך הראשון מוצג (הכרעת בעלים 02.11.2026) — מעבר בין מסכים בלי "טוען…"
-  const warm = () => { for (const load of [() => import("./pages/surveys/SurveysScreen"), () => import("./pages/surveys/SurveyScreen"), () => import("./pages/surveys/SurveyHistoryScreen"), () => import("./pages/simple/GuessAccuracy"), () => import("./pages/Polls"), () => import("./pages/Trends"), () => import("./pages/Latest"), () => import("./pages/Results"), () => import("./pages/VoterFlow"), () => import("./pages/Guess"), () => import("./pages/Accuracy"), () => import("./pages/ElectionScreens")]) void load().catch(() => {}); };
+  // טעינה מוקדמת של כל המסכים ברקע אחרי שהמסך הראשון מוצג (הכרעות בעלים 02.11.2026 ו-03.11.2026: כולל מסכי הניהול והסטטיסטיקות) — מעבר בין מסכים בלי "טוען…"
+  const warm = () => { for (const load of [() => import("./pages/surveys/SurveysScreen"), () => import("./pages/surveys/SurveyScreen"), () => import("./pages/surveys/SurveyHistoryScreen"), () => import("./pages/simple/GuessAccuracy"), () => import("./pages/Polls"), () => import("./pages/Trends"), () => import("./pages/Latest"), () => import("./pages/Results"), () => import("./pages/VoterFlow"), () => import("./pages/Guess"), () => import("./pages/Accuracy"), () => import("./pages/ElectionScreens"), () => import("./pages/GroupAdmin"), () => import("./pages/Admin"), () => import("./pages/surveys/SurveyManageScreen"), () => import("./pages/FlowGraphs"), () => import("./pages/About"), () => import("./pages/GroupLanding"), () => import("./pages/MyFeedback"), () => import("./pages/Connect"), () => import("./pages/Scenarios")]) void load().catch(() => {}); };
   const idle = (window as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
   window.addEventListener("load", () => (idle ? idle(warm, { timeout: 4000 }) : setTimeout(warm, 2000)), { once: true });
 }
@@ -228,9 +228,13 @@ function LegacyGuess() {
   return <Guess />;
 }
 
-/** ממוצע הניחושים — אותו מסך בשני המצבים (הכרעת בעלים 25.10.2026) */
-function LegacyCommunity() {
-  return <SimpleComparison />;
+/**
+ * כתובת אחת לכל מסך (הכרעת בעלים 03.11.2026): כתובות ישנות (#/community, #/results-2026, #/score) עוברות לכתובת היחידה
+ * #/surveys/guesses, עם הפרמטרים שלהן — כך שגם חלון מוטמע ישן (?embed=1) נשאר מוטמע. קישורים באתר מפנים ישירות לכתובת החדשה.
+ */
+function KeepQuery({ to }: { to: string }) {
+  const { search } = useLocation();
+  return <Navigate to={`${to}${search}`} replace />;
 }
 
 function LegacyToday() {

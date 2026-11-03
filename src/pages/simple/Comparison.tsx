@@ -1,3 +1,4 @@
+import { isEmbed } from "../../lib/embed";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import SurveyHeader from "../surveys/SurveyHeader";
 import { Link } from "react-router-dom";
@@ -120,7 +121,7 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
       mine: unlocked ? b.lists.reduce((t, id) => t + (mine.seats[id]?.v ?? 0), 0) : null };
   });
   // כותרת ושורת המשתתפים מהרכיב האחיד של מסכי הסקרים (הכרעת בעלים 03.11.2026); הניחוש היה פתוח גם מחוץ לגזרה
-  const toggle = surveysPart && <><div className="space-y-3.5 mb-3"><SurveyHeader title={ELECTION_RESULTS_TITLE} participants={all?.seats?.n ? { all: all.seats.n, group: groupCount ?? 0, outside: groupCount != null } : null} /></div>
+  const toggle = surveysPart && <><div className="space-y-3.5 mb-3"><SurveyHeader embed={isEmbed()} title={ELECTION_RESULTS_TITLE} participants={all?.seats?.n ? { all: all.seats.n, group: groupCount ?? 0, outside: groupCount != null } : null} /></div>
     <div className="f-seg fit mb-3" role="radiogroup" aria-label="תצוגה">
       <button type="button" aria-pressed={view === "graph"} onClick={() => setView("graph")}>גרף</button>
       <button type="button" aria-pressed={view === "table"} onClick={() => setView("table")}>טבלה</button>

@@ -14,6 +14,7 @@ import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, ty
 import AccessCard from "./AccessCard";
 import PrivacyCard from "./PrivacyConsent";
 import { useMode, type ModeId } from "../lib/theme";
+import { prefetchManager } from "../lib/prefetch";
 import { guessAreaTabs, navScreens, type Screen } from "../lib/pages";
 import { useNavShare } from "../lib/navShare";
 import { useSupportUnread } from "../lib/supportUnread";
@@ -53,6 +54,13 @@ function useSurveysPart(pathname: string) {
 const GROUP_TAB = { to: "/group-admin", label: "ניהול קבוצה", short: "קבוצה", icon: "group" };
 function useGroupTab() {
   const { me, token } = useSession();
+  // מנהל קבוצה: נתוני מסך הניהול והסטטיסטיקות נטענים ברקע ונשמרים במכשיר, כך שהמסך נפתח מיד (הכרעת בעלים 03.11.2026)
+  const managed = (me?.managedGroups ?? []).map((g) => g.id).join(",");
+  useEffect(() => {
+    if (!token || !managed) return;
+    const t = setTimeout(() => void prefetchManager(token, managed.split(",")), 3000);
+    return () => clearTimeout(t);
+  }, [token, managed]);
   return token && (me?.managedGroups?.length ?? 0) > 0 ? [GROUP_TAB] : [];
 }
 
@@ -219,14 +227,14 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   }, []);
   // סבב 9 (הכרעת בעלים 24.10.2026): מימין פרופיל ⇐ האזור האישי, משמאל "AI" ⇐ מסך ה-AI עם נקודה לתשובה חדשה
   // קישור הגזרה (#/g/hagzara) פותח את הכנסת הממוצעת — מסומן כך בסרגל
-  const tab = (t: Screen) => <NavLink key={t.to} to={election && isElectionScreen(t.to) ? `${t.to}?election=${encodeURIComponent(election)}` : t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
+  const tab = (t: Screen) => <NavLink key={t.to} to={election && isElectionScreen(t.to) ? `${t.to}?election=${encodeURIComponent(election)}` : t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/surveys/guesses" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     {/* במחשב הבורר בתוך הסרגל שבמרכז הפס, לפני הלשוניות (הכרעת בעלים 02.11.2026) */}
     <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
     {/* קבוצה — אייקון בלבד, משמאל לפרופיל (הכרעת בעלים 02.11.2026) */}
     {/* כפתור קבוצה אחד בשני האזורים, למסך "ניהול קבוצה" המאוחד (הכרעת בעלים 03.11.2026) */}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /></NavLink>)}
-    {surveysPart ? guessAreaTabs(Date.now(), guessShown).map((t) => <Link key={t.to} to={t.to} aria-current={(t.to === "/surveys" ? pathname === "/surveys" || pathname.startsWith("/s/") : t.to === "/community" ? pathname === "/community" || pathname.startsWith("/g/") : pathname === t.to) ? "page" : undefined}>{t.label}</Link>) : scroll
+    {surveysPart ? guessAreaTabs(Date.now(), guessShown).map((t) => <Link key={t.to} to={t.to} aria-current={(t.to === "/surveys" ? pathname === "/surveys" || pathname.startsWith("/s/") : t.to === "/surveys/guesses" ? pathname === "/surveys/guesses" || pathname.startsWith("/g/") : pathname === t.to) ? "page" : undefined}>{t.label}</Link>) : scroll
       ? <NavScroll>{[...core, ...more].map(tab)}</NavScroll>
       : <>{[...core, ...more.slice(0, inline)].map(tab)}{inline < more.length && <MoreMenu screens={more.slice(inline)} up={!top} />}</>}
     {/* שיתוף תמיד בסרגל (הכרעת בעלים 02.11.2026): השיתוף של המסך, ואם אין — ניסוח וקישור לכל האתר לפי החלק */}

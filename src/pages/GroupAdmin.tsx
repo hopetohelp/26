@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
+import { call, keepCall, peek, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
 import AdminGuesses from "./AdminGuesses";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
@@ -42,21 +42,21 @@ const n = (v: number) => v.toLocaleString("he-IL");
 const q = (id: string) => encodeURIComponent(id);
 
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
-  const [series, setSeries] = useState<GroupSeries | null>(null);
-  const [ins, setIns] = useState<GroupInsights | null>(null);
-  const [, setStats] = useState<GroupStats | null>(null);
+  const [series, setSeries] = useState<GroupSeries | null>(() => peek(`/group/series?group=${q(id)}`, token));
+  const [ins, setIns] = useState<GroupInsights | null>(() => peek(`/group/insights?group=${q(id)}`, token));
+  const [, setStats] = useState<GroupStats | null>(() => peek(`/group/stats?group=${q(id)}`, token));
   const [failed, setFailed] = useState(false);
-  const [flags, setFlags] = useState<LinkMembersState | null>(null);
+  const [flags, setFlags] = useState<LinkMembersState | null>(() => peek(`/group/link-members?group=${q(id)}`, token));
   const [reload, setReload] = useState(0);
-  useEffect(() => { void call<LinkMembersState>(`/group/link-members?group=${q(id)}`, { token }).then(setFlags, () => setFlags(null)); }, [id, token]);
+  useEffect(() => { void keepCall<LinkMembersState>(`/group/link-members?group=${q(id)}`, token).then(setFlags, () => setFlags(null)); }, [id, token]);
   // מתג פעיל משנה את מי שנספר בקבוצה — טוענים מחדש את המספרים
   const setFlag = async (flag: "all" | "first", on: boolean) => { setFlags(await call<LinkMembersState>("/group/link-members", { token, body: { group: id, flag, on } })); setReload((r) => r + 1); onChanged(); };
   useEffect(() => {
     let live = true;
     void Promise.allSettled([
-      call<GroupSeries>(`/group/series?group=${q(id)}`, { token }),
-      call<GroupInsights>(`/group/insights?group=${q(id)}`, { token }),
-      call<GroupStats>(`/group/stats?group=${q(id)}`, { token }),
+      keepCall<GroupSeries>(`/group/series?group=${q(id)}`, token),
+      keepCall<GroupInsights>(`/group/insights?group=${q(id)}`, token),
+      keepCall<GroupStats>(`/group/stats?group=${q(id)}`, token),
     ]).then(([s, i, st]) => {
       if (!live) return;
       if (st.status === "fulfilled") setStats(st.value);

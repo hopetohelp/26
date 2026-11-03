@@ -11,7 +11,7 @@ import { IDS } from "./model";
 import { renderShareImage, sharePalette, drawLogo, IMG_W, LOGO_BOX, ltrText, drawQr, QR_SIZE } from "./shareImage";
 import { votingRows } from "./votingRows";
 
-export const COMMUNITY_URL = `${SITE_URL}#/community`;
+export const COMMUNITY_URL = `${SITE_URL}#/surveys/guesses`;
 
 /**
  * שיתוף במסך קבוצה (הכרעת בעלים 12.10.2026): אותם כפתורים, ובתמונות — שם הקבוצה והלוגו שלה, וכתובת הקבוצה בתחתית.

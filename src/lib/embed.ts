@@ -1,6 +1,6 @@
 /**
  * מצב הטמעה (הכרעת בעלים 28.10.2026): "תוצאות" ו"מה השתנה" מוצגים בתוך אתרים אחרים ב-iframe.
- * הכתובת: #/results-2026?embed=1 או #/changes?embed=1. התצוגה בהטמעה תמיד לפי העדפת המכשיר, ואם אין — בהירה (פרמטר theme בכתובות ישנות מתעלמים ממנו).
+ * הכתובת: #/surveys/guesses?embed=1 (הכתובת הישנה #/results-2026 עוברת אליה) או #/changes?embed=1. התצוגה בהטמעה תמיד לפי העדפת המכשיר, ואם אין — בהירה (פרמטר theme בכתובות ישנות מתעלמים ממנו).
  * במצב זה — בלי סרגל, תפריט וחשבון; שורת מקור בתחתית; הגובה נשלח לאתר המארח.
  */
 export const SITE_ORIGIN = "https://26.hopetohelp.net";
@@ -9,7 +9,7 @@ export const SITE_ORIGIN = "https://26.hopetohelp.net";
 export type EmbedScreen = "results-2026" | "changes" | "changes-graphs";
 export interface EmbedTarget { path: string; tab?: string; name: string; short?: string; screen: EmbedScreen }
 export const EMBEDDABLE: EmbedTarget[] = [
-  { path: "/results-2026", name: "תוצאות", screen: "results-2026" },
+  { path: "/surveys/guesses", name: "תוצאות", screen: "results-2026" },
   { path: "/changes", name: "מה השתנה", short: "המסך המלא", screen: "changes" },
 ];
 /** תצוגות מצומצמות של אותו מסך (הכרעת בעלים 30.10.2026): גרפי המעבר בלבד, עם מתג בין מפלגות לגושים */
