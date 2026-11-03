@@ -12,7 +12,7 @@ import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
 import { ShiftLine } from "./Results2026";
 import { k25Families } from "../lib/lineage";
-import { num, pct } from "../lib/format";
+import { num, pct, pctOne } from "../lib/format";
 
 type Election = Omit<(typeof results)[number], "lists"> & { lists: ((typeof results)[number]["lists"][number] & { ballot?: string })[] };
 /** כל המערכות, כולל 2026 — באותו מבנה (הכרעת בעלים 02.11.2026: מסך "תוצאות" זהה לכל מערכת) */
@@ -73,12 +73,13 @@ export default function Results({ id }: { id: string }) {
           bare
         >
           {/* נתוני ההצבעה בראש המסך (הכרעת בעלים 03.11.2026) — בלי השוואה למערכת הקודמת */}
-          <dl className="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
-            <div><dt className="text-sm text-ink-soft">בעלי זכות בחירה</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(e.eligible)}</dd></div>
-            <div><dt className="text-sm text-ink-soft">הצביעו</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(e.voted)}</dd><dd className="text-sm text-ink-soft tabular-nums">{pct((e.voted / e.eligible) * 100)}</dd></div>
-            <div><dt className="text-sm text-ink-soft">קולות שנשרפו</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.wasted)}</dd><dd className="text-sm text-ink-soft tabular-nums">{pct((a.withAll.wasted / e.valid) * 100)} מהכשרים</dd></div>
-            <div><dt className="text-sm text-ink-soft">מצביעים למנדט</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</dd></div>
-            <div className="col-span-2 md:col-span-1"><dt className="text-sm text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
+          {/* כרטיסים בעיצוב של "מה השתנה" (OverviewCards), בלי שינוי מהמערכת הקודמת (הכרעת בעלים 03.11.2026) */}
+          <dl className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-1">
+            <StatCard label="בעלי זכות בחירה" value={e.eligible} />
+            <StatCard label="הצביעו" value={e.voted} share={(e.voted / e.eligible) * 100} />
+            <StatCard label="קולות שנשרפו" value={a.withAll.wasted} share={(a.withAll.wasted / e.valid) * 100} />
+            <StatCard label="מצביעים למנדט" value={a.withAll.quota} />
+            <StatCard label="אחוז החסימה בקולות" value={a.withAll.thresholdVotes} className="col-span-2 md:col-span-1" />
           </dl>
         </Explained>
       </Card>
@@ -191,4 +192,15 @@ export function ElectionSummary() { return <>
 /** גרף שורה של ארבעת הגושים; לחיצה על גוש פותחת את חלון הפירוט הקיים של גרפי הגושים (Stack) */
 function BlocBarCard({ defs, values, nameOf }: { defs: Parameters<typeof blocSlices>[2]; values: Record<string, number>; nameOf?: (id: string) => string }) {
   return <Card title="חלוקת הכנסת לגושים"><Stack slices={blocSlices(values, 0, defs)} values={values} label="חלוקת הכנסת לגושים" name={nameOf} /></Card>;
+}
+
+/** כרטיס נתון — אותו עיצוב כמו בכרטיסי "מה השתנה" (OverviewCards): מספר גדול, פס עליון בצבע ההדגשה, ואחוז מתחת */
+function StatCard({ label, value, share, className = "" }: { label: string; value: number; share?: number; className?: string }) {
+  return <div className={`rounded-theme border border-paper-line border-t-4 border-t-accent bg-paper-card shadow-md text-center min-w-0 flex flex-col items-center px-2 py-3 gap-1.5 ${className}`}>
+    <dt className="font-bold text-ink-soft leading-tight text-xs md:text-sm">{label}</dt>
+    <dd className="contents tabular-nums">
+      <bdi dir="ltr" className="block font-display font-extrabold leading-none text-ink text-xl md:text-3xl">{num(value)}</bdi>
+      {share != null && <span className="font-bold text-accent leading-none text-xs md:text-sm"><bdi dir="ltr">{pctOne(share)}</bdi></span>}
+    </dd>
+  </div>;
 }
