@@ -33,7 +33,7 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
 }
 
 /**
- * מבנה הרשימה (הכרעת בעלים 02.11.2026): "להשתתף · השתתפתי · נסגרו" (בלי חשבון: "פתוחים · נסגרו").
+ * מבנה הרשימה (הכרעת בעלים 03.11.2026): "להשתתף · לעדכן · סגור" (בלי חשבון: "להשתתף · סגור").
  * בפתוחים — שני חלקים, ניחושים וסקרים, בלי מתג. בנסגרו — הכול יחד, בלי מתג (הכרעת בעלים 03.11.2026);
  * בניחושים: קודם "ממתינים לתוצאה" (אין עדיין תוצאת אמת), אחר כך "יש תוצאה".
  */
@@ -64,7 +64,7 @@ export default function SurveysScreen() {
   const closed = all.filter((s) => s.status === "closed").sort(newest);
   const todo = token ? open.filter((s) => !s.answered) : open;
   const done = token ? open.filter((s) => s.answered) : [];
-  const tabs: [Tab, string][] = token ? [["todo", "להשתתף"], ["done", "השתתפתי"], ["closed", "נסגרו"]] : [["todo", "פתוחים"], ["closed", "נסגרו"]];
+  const tabs: [Tab, string][] = token ? [["todo", "להשתתף"], ["done", "לעדכן"], ["closed", "סגור"]] : [["todo", "להשתתף"], ["closed", "סגור"]];
   // ברירת מחדל "להשתתף"; אם אין שם כלום — "השתתפתי"
   const current: Tab = tab ?? (todo.length || !done.length ? "todo" : "done");
 
@@ -109,7 +109,7 @@ export default function SurveysScreen() {
   const empty = surveys && !content.some(Boolean);
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <h1 className="text-[28px] font-display leading-tight pt-1">כל הסקרים והניחושים</h1>
+      <h1 className="sr-only">סקרים וניחושים</h1>
       {/* שני המתגים באותו גודל ובאותה שורה (הכרעת בעלים 02.11.2026) */}
       <div className="f-seg-pair">
       <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
