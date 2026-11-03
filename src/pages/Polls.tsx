@@ -5,7 +5,7 @@ import { ELECTION_DAY, finalPolls, hasResults, results2026 } from "../lib/guessA
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Card, Note, Split } from "../components/ui";
+import { Badge, Card, Fold, Note } from "../components/ui";
 import { largestRemainder } from "../lib/fillAll";
 import { Delta } from "../components/ParamCard";
 import { quality } from "../lib/quality";
@@ -44,7 +44,8 @@ const finalPollIds = new Set(finalPolls.map((p) => p.id));
 const tagsOf = (values: Record<string, { s?: number }>) => hasResults() ? seatTags(seatsOfValues(values), results2026.seats, SIMPLE_BLOCS) : null;
 
 
-export default function Polls() {
+/** מסך "סקרים" (הכרעת בעלים 03.11.2026): כותרת "כל הסקרים", שורת מסננים אחת, ומתחת מגירות — מדגמים (פתוחה), סקר אחרון, מהגשת הרשימות, מבחירות 2022, קבוצות אוכלוסייה, ובסוף `trailing` (מגמות) */
+export default function Polls({ trailing }: { trailing?: ReactNode } = {}) {
   const pollsters = useMemo(() => {
     const m = new Map<string, { label: string; n: number }>();
     for (const p of polls) {
@@ -80,39 +81,36 @@ export default function Polls() {
   return (
     <>
 
-      <Split title="ארכיון הסקרים" lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם. לחיצה על סקר מציגה את הנתונים המלאים שלו." primary={<>
-      <Card>
-        <form className="flex flex-wrap gap-3 items-end" onSubmit={(e) => e.preventDefault()}>
-          <label className="flex flex-col text-sm w-full sm:w-auto min-w-0">
-            מכון ומזמין
-            <select className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={who} onChange={(e) => { setWho(e.target.value); setShown(PAGE); }}>
-              <option value="">כולם ({polls.length})</option>
-              {pollsters.map(([k, v]) => (
-                <option key={k} value={k}>
-                  {v.label} ({v.n})
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex flex-col text-sm w-full sm:w-auto min-w-0">
-            מתאריך
-            <input type="date" className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={from} onChange={(e) => { setFrom(e.target.value); setShown(PAGE); }} />
-          </label>
-          <label className="flex flex-col text-sm w-full sm:w-auto min-w-0">
-            עד תאריך
-            <input type="date" className="border border-paper-line rounded px-2 py-1 mt-1 w-full sm:w-auto max-w-full" value={to} onChange={(e) => { setTo(e.target.value); setShown(PAGE); }} />
-          </label>
-          {/* כפתור אחד (הכרעת בעלים 03.11.2026): דולק — רגיל; כבוי — אפור */}
-          <button type="button" aria-pressed={parties === "on"} onClick={() => setParties(parties === "on" ? "off" : "on")} className={`f-btn min-h-11${parties === "on" ? "" : " opacity-60 grayscale text-ink-soft"}`}>הצגת מפלגות</button>
-        </form>
-      </Card>
-
-      </>} secondary={<>
+      <h2 className="text-2xl font-extrabold mb-3">כל הסקרים</h2>
+      {/* שורה אחת במחשב; בטלפון — שורה לכל שם ושדה. השם והשדה באותה שורה */}
+      <form className="c-poll-filters flex flex-col md:flex-row md:flex-wrap md:items-center gap-x-4 gap-y-2 mb-4" onSubmit={(e) => e.preventDefault()}>
+        <label className="flex items-center gap-2 text-sm min-w-0">
+          <span className="shrink-0 w-20 md:w-auto">מכון ומזמין</span>
+          <select className="border border-paper-line rounded px-2 min-h-[40px] bg-paper-card min-w-0 flex-1 md:flex-none md:w-52" value={who} onChange={(e) => { setWho(e.target.value); setShown(PAGE); }}>
+            <option value="">כולם ({polls.length})</option>
+            {pollsters.map(([k, v]) => (
+              <option key={k} value={k}>
+                {v.label} ({v.n})
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-sm min-w-0">
+          <span className="shrink-0 w-20 md:w-auto">מתאריך</span>
+          <input type="date" className="border border-paper-line rounded px-2 min-h-[40px] bg-paper-card min-w-0 flex-1 md:flex-none md:w-36" value={from} onChange={(e) => { setFrom(e.target.value); setShown(PAGE); }} />
+        </label>
+        <label className="flex items-center gap-2 text-sm min-w-0">
+          <span className="shrink-0 w-20 md:w-auto">עד תאריך</span>
+          <input type="date" className="border border-paper-line rounded px-2 min-h-[40px] bg-paper-card min-w-0 flex-1 md:flex-none md:w-36" value={to} onChange={(e) => { setTo(e.target.value); setShown(PAGE); }} />
+        </label>
+        {/* כפתור אחד (הכרעת בעלים 03.11.2026): דולק — רגיל; כבוי — אפור */}
+        <button type="button" aria-pressed={parties === "on"} onClick={() => setParties(parties === "on" ? "off" : "on")} className={`f-btn min-h-[40px] self-start md:self-auto${parties === "on" ? "" : " opacity-60 grayscale text-ink-soft"}`}>הצגת מפלגות</button>
+      </form>
       {filtered.length === 0 && <p role="status" className="c-empty">אין סקרים בטווח שנבחר. <button type="button" className="underline min-h-11" onClick={() => { setWho(""); setFrom(""); setTo(""); setShown(PAGE); }}>איפוס המסננים</button></p>}
       {/* בלי סינון זה ממוצע הסקרים שבמגירה "הסקרים מול התוצאה" — מוצג רק כשיש סינון (הכרעת בעלים 03.11.2026) */}
       {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...sinceLists, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
       {/* ארבע טבלאות נפרדות, כל אחת עם כותרת וסולם צבעים משלה (הכרעת בעלים 03.11.2026) */}
-      <ArchiveTable title="מדגמים" parties={parties} open={open} setOpen={setOpen} rows={exitRows.map((p) => ({
+      <Fold title="מדגמים" open><ArchiveTable title="מדגמים" parties={parties} open={open} setOpen={setOpen} rows={exitRows.map((p) => ({
         id: p.id, values: p.values,
         head: <><span className="font-bold">{date(ELECTION_DAY)}</span> {p.firmHe} · {p.publisherHe}</>,
         blocs: SIMPLE_BLOCS.map((b) => exitSeats(p, [...b.lists])),
@@ -123,10 +121,10 @@ export default function Polls() {
           <dt className="font-bold">פרסום מקורי</dt>
           <dd className="break-all">{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="block">{u}</a>)}</dd>
         </dl>,
-      }))} />
-      <ArchiveTable title="סקר אחרון" parties={parties} open={open} setOpen={setOpen} rows={finalRows.map(pollRow)} />
-      <ArchiveTable title="מהגשת הרשימות" parties={parties} open={open} setOpen={setOpen} rows={sinceLists.map(pollRow)} meanLists={ACTIVE_IDS} />
-      <ArchiveTable title="מבחירות 2022" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} meanRows={restAll.map(pollRow)} foot={<>
+      }))} /></Fold>
+      <Fold title="סקר אחרון"><ArchiveTable title="סקר אחרון" parties={parties} open={open} setOpen={setOpen} rows={finalRows.map(pollRow)} /></Fold>
+      <Fold title="מהגשת הרשימות"><ArchiveTable title="מהגשת הרשימות" parties={parties} open={open} setOpen={setOpen} rows={sinceLists.map(pollRow)} meanLists={ACTIVE_IDS} /></Fold>
+      <Fold title="מבחירות 2022"><ArchiveTable title="מבחירות 2022" parties={parties} open={open} setOpen={setOpen} rows={restRows.map(pollRow)} meanRows={restAll.map(pollRow)} foot={<>
         {shown < restAll.length && (
           <button type="button" className="f-btn mt-3" onClick={() => setShown((s) => s + PAGE)}>
             עוד {Math.min(PAGE, restAll.length - shown)} סקרים
@@ -137,8 +135,8 @@ export default function Polls() {
           הבדל מטבלת ויקיפדיה, והאתר מציג את מה שבפרסום המקורי (הפירוט בכרטיס הסקר). "מקור: ויקיפדיה" = טרם הושווה לפרסום המקורי.
           העדכון האחרון: {date(polls[0]?.end ?? "")}.
         </Note>
-      </>} />
-      <ArchiveTable title="קבוצות אוכלוסייה" parties={parties} open={open} setOpen={setOpen} rows={subgroupPolls.map((p) => ({
+      </>} /></Fold>
+      <Fold title="קבוצות אוכלוסייה"><ArchiveTable title="קבוצות אוכלוסייה" parties={parties} open={open} setOpen={setOpen} rows={subgroupPolls.map((p) => ({
         id: p.id, values: p.values,
         head: <><span className="font-bold whitespace-nowrap">{dateRange(p.start, p.end)}</span> {p.firmHe} · {p.publisherHe}</>,
         blocs: SIMPLE_BLOCS.map((b) => sumSeats(p.values, [...b.lists])),
@@ -150,8 +148,8 @@ export default function Polls() {
           <dt className="font-bold">פרסום מקורי</dt>
           <dd className="break-all">{p.urls.map((u) => <a key={u} href={u} rel="noopener noreferrer" className="block">{u}</a>)}</dd>
         </dl>,
-      }))} />
-      </>} />
+      }))} /></Fold>
+      {trailing}
     </>
   );
 }
@@ -309,7 +307,7 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
   };
   return (
     <Card>
-      <h2 className="font-bold text-lg mb-2">{title}</h2>
+      <h3 className="sr-only">{title}</h3>
       <div className="overflow-x-auto">
         <table className="w-full text-xs md:text-sm">
           <caption className="sr-only">{title}: שורה לכל סקר, עמודה לכל רשימה</caption>

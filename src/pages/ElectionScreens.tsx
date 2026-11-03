@@ -73,11 +73,8 @@ function Polls2026() {
   return <div>
     {/* "הסקרים מול התוצאה" ומפת המכונים הוסרו — הנתונים בטבלאות הארכיון (הכרעת בעלים 03.11.2026) */}
     {/* מגירת "הסקר האחרון של כל מכון" הוסרה (הכרעת בעלים 03.11.2026) — הנתונים בטבלאות הארכיון */}
-    <Fold title={POLL_DRAWERS.trend} open={tab === "trends"}>
-      {/* גרף "גוש נתניהו לאורך זמן" הוסר מהמגירה (הכרעת בעלים 03.11.2026) */}
-      <Suspense fallback={loading}><Trends /></Suspense>
-    </Fold>
-    <Fold title={POLL_DRAWERS.archive} open={["archive", "exit", "firms", "vs", "latest"].includes(tab ?? "")}><Suspense fallback={loading}><Polls /></Suspense></Fold>
+    {/* "כל הסקרים": מסננים ומגירות, ובסוף מגירת "מגמות" (הכרעת בעלים 03.11.2026) */}
+    <Suspense fallback={loading}><Polls trailing={<Fold title={POLL_DRAWERS.trend} open={tab === "trends"}><Suspense fallback={loading}><Trends /></Suspense></Fold>} /></Suspense>
     {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}
     {overview && <Fold title="האחרונים" open={tab === "overview"}><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
     {today && <Fold title="היום" open={tab === "today"}><Suspense fallback={loading}><Today /></Suspense></Fold>}
