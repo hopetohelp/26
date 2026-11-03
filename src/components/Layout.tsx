@@ -155,7 +155,7 @@ function FocusBar({ member, logo, navTop, onFit }: { member: boolean; logo?: str
     {/* מעבר בין שני חלקי האתר (הכרעת בעלים 02.11.2026): בחלק הסקרים "בחירות" ⇐ ניתוח הבחירות; בחלק הניתוח "ניחושים" ⇐ סקרים וניחושים */}
     {/* "בחירות" ⇐ מסך הפתיחה של הבחירות, "מה השתנה" (הכרעת בעלים 02.11.2026) */}
     {/* שמות הכפתור (הכרעת בעלים 03.11.2026) */}
-    {surveys ? <Link to="/changes" className="f-btn">אזור הבחירות</Link> : <Link to="/surveys" className="f-btn">אזור הניחושים</Link>}
+    {surveys ? <Link to="/changes" className="f-btn">לניתוח בחירות</Link> : <Link to="/surveys" className="f-btn">לניחושים וסקרים</Link>}
     <span className="f-mode"><ModePicker /></span>
   </div>;
 }
