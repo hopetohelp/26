@@ -3,7 +3,7 @@ import { seatsOfValues } from "../components/PollAccuracyTags";
 import { seatTags, type SeatTags } from "../lib/guessAccuracy";
 import { ELECTION_DAY, finalPolls, hasResults, results2026 } from "../lib/guessAccuracyData";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, Note, Split } from "../components/ui";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, listName, polls, pollsterKey, pollsterLabel, subgroupPolls, exitPolls, verificationLabel, type Poll, type SubgroupPoll } from "../lib/data";
@@ -13,7 +13,18 @@ const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
 const PAGE = 50;
 /** ארבעת הגושים בכל סקר — אחרי טורי הדיוק, עם קו הפרדה בסוף (הכרעת בעלים 03.11.2026); החישוב — groupSeatsIn / exitSeats (מקור אחד) */
-const blocCells = (vals: (number | null | undefined)[]) => <>{vals.map((v, i) => <td key={i} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
+const blocCells = (vals: (number | null | undefined)[], tint?: (i: number, v: number) => CSSProperties | undefined) => <>{vals.map((v, i) => <td key={i} style={v == null || !tint ? undefined : tint(i, v)} className={`px-1 text-center tabular-nums${i === vals.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{v == null ? "—" : v}</td>)}</>;
+/**
+ * סולם 9 צבעים (הכרעת בעלים 03.11.2026), כמו במפת המכונים: אדום (מתחת לתוצאה) ⇐ לבן (בדיוק) ⇐ ירוק (מעל).
+ * המרחק מתוצאות האמת יחסית לסטייה הגדולה ביותר של הסקרים באותו טור: 4 דרגות לכל כיוון.
+ */
+const STEPS = [0, 0.12, 0.24, 0.36, 0.5];
+const scaleTint = (d: number, span: number): CSSProperties | undefined => {
+  if (!span || d === 0) return undefined;
+  const level = Math.min(4, Math.max(1, Math.round((Math.abs(d) / span) * 4)));
+  return { backgroundColor: `rgb(var(${d > 0 ? "--pos" : "--neg"}) / ${STEPS[level]})` };
+};
+const ACTUAL_BLOCS = SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0));
 /** שלושת טורי הדיוק — ראשונים בשורה, עם קו הפרדה משני הצדדים (הכרעת בעלים 03.11.2026) */
 const accCells = (t: SeatTags | null) => <>
   <td className="px-1 text-center tabular-nums border-s-2 border-paper-line">{t?.seats ?? "—"}</td>
@@ -72,6 +83,24 @@ export default function Polls() {
     return [...seen.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id);
   })();
 
+  // הסטייה הגדולה ביותר מהתוצאה בכל טור (רשימה או גוש), בכל הסקרים והמדגמים שבסינון — המכנה של סולם הצבעים
+  const spans = useMemo(() => {
+    const lists: Record<string, number> = {};
+    const blocs = SIMPLE_BLOCS.map(() => 0);
+    if (!hasResults()) return { lists, blocs };
+    const rows: { s: (id: string) => number | undefined; b: (i: number) => number | null }[] = [
+      ...exitRows.map((p) => ({ s: (id: string) => p.values[id]?.s, b: (i: number) => exitSeats(p, [...SIMPLE_BLOCS[i].lists]) })),
+      ...filtered.map((p) => ({ s: (id: string) => p.values[id]?.s, b: (i: number) => groupSeatsIn(p, [...SIMPLE_BLOCS[i].lists]) })),
+    ];
+    for (const row of rows) {
+      for (const id of Object.keys(results2026.seats)) { const v = row.s(id); if (v !== undefined) lists[id] = Math.max(lists[id] ?? 0, Math.abs(v - results2026.seats[id])); }
+      SIMPLE_BLOCS.forEach((_, i) => { const v = row.b(i); if (v != null) blocs[i] = Math.max(blocs[i], Math.abs(v - ACTUAL_BLOCS[i])); });
+    }
+    return { lists, blocs };
+  }, [exitRows, filtered]);
+  const listTint = (id: string, v: number | undefined) => v === undefined || !(id in results2026.seats) ? undefined : scaleTint(v - results2026.seats[id], spans.lists[id] ?? 0);
+  const blocTint = (i: number, v: number) => scaleTint(v - ACTUAL_BLOCS[i], spans.blocs[i]);
+
   return (
     <>
 
@@ -126,7 +155,7 @@ export default function Polls() {
               {hasResults() && <tr className="border-b-2 border-ink font-bold align-top">
                 <th scope="row" className="py-2 pe-2 text-right">תוצאות אמת</th>
                 {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
-                {blocCells(SIMPLE_BLOCS.map((b) => b.lists.reduce((t, id) => t + (results2026.seats[id] ?? 0), 0)))}
+                {blocCells(ACTUAL_BLOCS)}
                 {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
               </tr>}
               {exitRows.map((p) => {
@@ -142,8 +171,8 @@ export default function Polls() {
                         </button>
                       </th>
                       {accCells(t)}
-                      {blocCells(SIMPLE_BLOCS.map((b) => exitSeats(p, [...b.lists])))}
-                      {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{p.values[id]?.s ?? "—"}</td>)}
+                      {blocCells(SIMPLE_BLOCS.map((b) => exitSeats(p, [...b.lists])), blocTint)}
+                      {listCols.map((id) => <td key={id} style={listTint(id, p.values[id]?.s)} className="px-1 text-center tabular-nums">{p.values[id]?.s ?? "—"}</td>)}
                     </tr>
                     {isOpen && <tr><td colSpan={listCols.length + 4 + SIMPLE_BLOCS.length} className="pb-3">
                       <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
@@ -174,8 +203,8 @@ export default function Polls() {
                         </button>
                       </th>
                       {accCells(t)}
-                      {blocCells(SIMPLE_BLOCS.map((b) => groupSeatsIn(p, [...b.lists])))}
-                      {listCols.map((id) => { const v = p.values[id]; return <td key={id} className="px-1 text-center tabular-nums whitespace-nowrap">{!v ? "—" : v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}</td>; })}
+                      {blocCells(SIMPLE_BLOCS.map((b) => groupSeatsIn(p, [...b.lists])), blocTint)}
+                      {listCols.map((id) => { const v = p.values[id]; return <td key={id} style={listTint(id, v?.s)} className="px-1 text-center tabular-nums whitespace-nowrap">{!v ? "—" : v.s ?? (pctOnly ? `${v.p}%` : `(${v.p}%)`)}</td>; })}
                     </tr>
                     {isOpen && <tr><td colSpan={listCols.length + 4 + SIMPLE_BLOCS.length} className="pb-3">
                   <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
