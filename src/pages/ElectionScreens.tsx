@@ -11,7 +11,6 @@ import { useScreenShown } from "../lib/screenVisibility";
 import Results, { ElectionSummary } from "./Results";
 import Accuracy, { AccuracyAcross } from "./Accuracy";
 import Voters from "./Voters";
-import Latest from "./Latest";
 
 /**
  * שלושת מסכי הבחירות, אחידים לכל מערכת (הכרעות בעלים 02.11.2026, docs/תוכנית-לשוניות-ניתוח-אחיד-02-11-2026.md):
@@ -75,7 +74,8 @@ function Polls2026() {
     {/* "הסקרים מול התוצאה" ומפת המכונים הוסרו — הנתונים בטבלאות הארכיון (הכרעת בעלים 03.11.2026) */}
     {/* מגירת "הסקר האחרון של כל מכון" הוסרה (הכרעת בעלים 03.11.2026) — הנתונים בטבלאות הארכיון */}
     <Fold title={POLL_DRAWERS.trend} open={tab === "trends"}>
-      <div className="space-y-5"><Latest part="trend" /><Suspense fallback={loading}><Trends /></Suspense></div>
+      {/* גרף "גוש נתניהו לאורך זמן" הוסר מהמגירה (הכרעת בעלים 03.11.2026) */}
+      <Suspense fallback={loading}><Trends /></Suspense>
     </Fold>
     <Fold title={POLL_DRAWERS.archive} open={["archive", "exit", "firms", "vs", "latest"].includes(tab ?? "")}><Suspense fallback={loading}><Polls /></Suspense></Fold>
     {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}

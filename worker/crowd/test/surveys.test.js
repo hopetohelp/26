@@ -76,6 +76,8 @@ describe("survey definitions and answers (pure)", () => {
     expect(r.q2.n).toBe(2);
     expect(r.q2.items.a).toEqual({ c: 1, o: 1 });
     expect(tally(def, [{ q2: { a: { c: 3, o: 1 } } }]).q2.items.a).toEqual({ c: 0.75, o: 0.25 });
+    // פיצול נספר כמלא בכל עמודה שיש בה חלק (הכרעת בעלים 03.11.2026)
+    expect(tally(def, [{ q2: { a: { c: 3, o: 1 } } }]).q2.any.a).toEqual({ c: 1, o: 1 });
   });
 });
 

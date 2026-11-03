@@ -9,7 +9,8 @@ import { ELECTION_DAY, results2026 } from "./guessAccuracyData";
  * אותיות הפתק — flow2026.letters26; הסכמי העודפים — meta.agreements2026. מנוע החוק משחזר מהם בדיוק את המנדטים (נבדק בבדיקה).
  */
 const counted = (flow as { counted?: { voters?: number; invalid?: number } }).counted ?? {};
-const letterOf = Object.fromEntries(Object.entries((flow as { letters26: Record<string, string> }).letters26).map(([letters, id]) => [id, letters]));
+/** אות הפתק של רשימה ב-2026 (לפי מזהה) */
+export const letterOf: Record<string, string> = Object.fromEntries(Object.entries((flow as { letters26: Record<string, string> }).letters26).map(([letters, id]) => [id, letters]));
 const votes = results2026.votes ?? {};
 
 export const K26_RESULT = {

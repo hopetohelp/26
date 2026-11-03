@@ -31,7 +31,7 @@ export interface Survey {
 /** תשובה לפריט בשאלת שיוך: עמודה אחת לכל הסיעה, או פיצול {עמודה: מנדטים} (הכרעת בעלים 01.11.2026) */
 export type AssignValue = string | Record<string, number>;
 export type SurveyAnswers = Record<string, string | number | Record<string, AssignValue>>;
-export type QuestionResult = { n: number; counts: Record<string, number>; mean?: number | null } | { n: number; items: Record<string, Record<string, number>> };
+export type QuestionResult = { n: number; counts: Record<string, number>; mean?: number | null } | { n: number; items: Record<string, Record<string, number>>; any?: Record<string, Record<string, number>> };
 export type SurveyResults = { n: number; min: number; hidden: true } | { n: number; questions: Record<string, QuestionResult> };
 /** results = null עד שעונים (הכרעת בעלים 01.11.2026) */
 export interface SurveyDetail { survey: Survey; participants?: { all: number; group: number; outside: boolean }; results: { all: SurveyResults; group: SurveyResults } | null; mine: { answers: SurveyAnswers; at: string } | null; access: { member: boolean; canAnswer: boolean; manage: boolean; outside?: SurveyOutside } }

@@ -18,9 +18,10 @@ describe("גרף המגמה האחיד", () => {
     expect(h).toMatch(/<button[^>]*aria-expanded="false"[^>]*ms-auto[^>]*>/);
     expect(h).toContain("מקרא");
   });
-  it("קווים מקווקווים כל 5 מנדטים, בגוש 61 במקום 60", () => {
+  it("קווים מקווקווים כל 5 מנדטים, ו-61 במקום 60 בכל גרף", () => {
     const plain = html();
-    for (const v of [45, 50, 55, 60, 65]) expect(plain).toContain(`>${v}</span>`);
+    for (const v of [45, 50, 55, 61]) expect(plain).toContain(`>${v}</span>`);
+    expect(plain).not.toContain(">65</span>"); // הקו העליון רק כשהוא 61
     const bloc = html({ majority: 61 });
     expect(bloc).toContain(">61</span>");
     expect(bloc).not.toContain(">60</span>");
@@ -57,12 +58,17 @@ describe("גרף המגמה האחיד", () => {
     expect(h).toContain("מקרא");
     expect(h).not.toContain("mk-pv");
   });
-  it("הקו עובר דרך הממוצע של כל נקודה: כל קו חוצה יושב על קו המגמה", () => {
+  it("הקו עובר דרך הממוצע של כל נקודה, ובלי קו חוצה בתוך הקפסולה (הכרעת בעלים 03.11.2026)", () => {
     const h = html();
     const d = /<path d="M([\d.]+)[ ,]([\d.]+)[^"]*" class="trend-line fill-none stroke-accent"/.exec(h);
     expect(d).not.toBeNull();
-    expect(h).toContain('data-kind="primary"');
+    expect(h).not.toContain('data-kind="primary"');
     expect(h).not.toContain('class="mk-capsule-tag"');
+  });
+  it("קו רגיל לסדרה אחת וציר מ-0", () => {
+    const line = html({ forceLine: true });
+    expect(line).not.toContain("mk-pv");
+    expect(html({ zeroBase: true })).toContain(">0</span>");
   });
   it("תוצאה בפועל: קו מקווקו מהסקר האחרון אל התוצאה, בכל סדרה לפי מזהה", () => {
     const m = [{ id: "b", t: points[9].t + 6 * DAY, v: 25 }];
