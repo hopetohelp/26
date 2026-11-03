@@ -287,7 +287,8 @@ export default function SurveyScreen() {
     <>
     <LeaveGuard dirty={!!token && changed && !managing && state !== "saving"} onSave={() => save()} />
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <div className="pt-2"><BackButton /></div>
+      {/* נכנסו מטבלת הניהול ⇐ "חזרה לניהול" במקום "חזרה" (הכרעת בעלים 03.11.2026) */}
+      <div className="pt-2">{params.get("from") === "admin" ? <Link to="/group-admin" className="f-btn !min-h-[36px]">→ חזרה לניהול</Link> : <BackButton />}</div>
       <div className="flex items-start justify-between gap-2 pt-1">
         <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
         {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}

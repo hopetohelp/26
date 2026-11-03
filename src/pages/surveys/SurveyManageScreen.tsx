@@ -1,16 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import GoogleButton from "../guess/GoogleButton";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useSession } from "../guess/useCrowd";
 import CardDrawer from "../../components/CardDrawer";
-import { KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, type Survey, type SurveyKind, type SurveyStats } from "../../lib/surveys";
+import { closesLabel, KIND_LABELS, kindLabel, listSurveys, manageSurvey, OUTSIDE_LABELS, STATUS_LABELS, surveyStats, VISIBILITY_LABELS, type Survey, type SurveyKind, type SurveyStats } from "../../lib/surveys";
 import SurveyEditor, { type EditorValue } from "./SurveyEditor";
+
+/** הכתובת הישנה (#/surveys/manage) ⇐ מסך "ניהול קבוצה" המאוחד; ?edit=<מזהה> ⇐ ניהול הסקר */
+export default function SurveyManageRedirect() {
+  const edit = useSearchParams()[0].get("edit");
+  return <Navigate to={edit ? `/s/${edit}?manage=1&from=admin` : "/group-admin"} replace />;
+}
 
 /**
  * ניהול סקרים למנהלי הגזרה (הכרעת בעלים 01.11.2026): רשימת הסקרים שלי ו"סקר חדש".
  * הניהול של סקר קיים — בתוך מסך הסקר, בכפתור "ניהול" (#/s/<מזהה>?manage=1). בשלב הראשון בלי קישור מאף מסך.
  */
-export default function SurveyManageScreen() {
+export function SurveysManage() {
   const session = useSession();
   const { token, me } = session;
   const navigate = useNavigate();
@@ -28,25 +33,21 @@ export default function SurveyManageScreen() {
     if (!token || !surveys) return;
     for (const s of surveys) surveyStats(token, s.id).then((r) => setStats((o) => ({ ...o, [s.id]: r })), () => setStats((o) => ({ ...o, [s.id]: null })));
   }, [token, surveys]);
-  // קישורים ישנים לעריכה (?edit=<מזהה>) ⇐ מצב הניהול שבמסך הסקר
-  const edit = useSearchParams()[0].get("edit");
-  if (edit) return <Navigate to={`/s/${edit}?manage=1`} replace />;
 
-  if (!token) return <main className="px-4 md:px-6 pb-28 space-y-3 md:max-w-3xl md:mx-auto"><h1 className="text-[26px] font-display pt-1">ניהול סקרים</h1><p>כניסה עם Google:</p><GoogleButton session={session} onDone={() => void session.refresh()} /></main>;
-  if (me && !groups.length) return <main className="px-4 md:px-6 pb-28 md:max-w-3xl md:mx-auto"><h1 className="text-[26px] font-display pt-1">ניהול סקרים</h1><p className="text-ink-soft">המסך הזה למנהלי קבוצה בלבד.</p></main>;
+  if (!token || !groups.length) return null;
 
   async function create() {
     if (!draft) return;
     setMsg(null);
     try {
       await manageSurvey(token!, { group, id: draft.id.trim(), status: "draft", kind, def: { title: draft.title.trim(), questions: draft.questions } });
-      navigate(`/s/${draft.id.trim()}?manage=1`);
+      navigate(`/s/${draft.id.trim()}?manage=1&from=admin`);
     } catch (e) { setMsg(`היצירה לא הצליחה (${(e as { code?: string }).code ?? "שגיאה"}). בדקו כותרת, מזהה באותיות לטיניות, ולכל שאלה לפחות שתי אפשרויות.`); }
   }
 
   return (
-    <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <h1 className="text-[26px] font-display pt-1">ניהול קבוצה</h1>
+    <section className="space-y-3.5">
+      <h2 className="text-lg font-bold">סקרים וניחושים</h2>
       {msg && <p role="status" className="text-sm rounded-xl bg-accent-soft px-3 py-2">{msg}</p>}
       {!draft ? <>
         {/* 1. יצירה */}
@@ -57,19 +58,8 @@ export default function SurveyManageScreen() {
         <CardDrawer title="סטטיסטיקה לכל סקר וניחוש" className="">
           <StatsTable surveys={surveys ?? []} stats={stats} />
         </CardDrawer>
-        {/* 4. אזור ניהול */}
-        <h2 className="text-base font-bold pt-2">ניהול</h2>
-        <ul className="f-card !p-0 divide-y divide-paper-line">
-          {(surveys ?? []).map((s) => (
-            <li key={s.id} className="flex items-center gap-3 px-4 py-3">
-              <span className="flex-1 min-w-0"><b className="block">{s.title}</b>
-                <span className="text-[12.5px] text-ink-soft">{kindLabel(s.kind)} · {STATUS_LABELS.find((x) => x[0] === s.status)?.[1]} · מחוץ לגזרה: {OUTSIDE_LABELS.find((x) => x[0] === (s.outside ?? "none"))?.[1]}</span></span>
-              <Link to={`/s/${s.id}?manage=1`} className="f-btn">ניהול</Link>
-            </li>
-          ))}
-          {surveys && !surveys.length && <li className="px-4 py-3 text-ink-soft">אין עדיין סקרים.</li>}
-        </ul>
-        <Link to="/group-admin" className="f-btn">ניהול הקבוצה</Link>
+        {/* 4. אזור ניהול: טבלה עם ההגדרות של כל סקר/ניחוש; לחיצה על שורה ⇐ הניהול שלו (הכרעת בעלים 03.11.2026) */}
+        <SettingsTable surveys={surveys ?? []} onOpen={(id) => navigate(`/s/${id}?manage=1&from=admin`)} />
       </> : (
         <section className="f-card space-y-3">
           <h2 className="text-base font-bold">סקר חדש</h2>
@@ -85,7 +75,7 @@ export default function SurveyManageScreen() {
           </div>
         </section>
       )}
-    </main>
+    </section>
   );
 }
 
@@ -114,6 +104,33 @@ function StatsTable({ surveys, stats }: { surveys: Survey[]; stats: Record<strin
         <tbody>{surveys.map((s) => { const x = stats[s.id]; return (
           <tr key={s.id} className="border-t border-paper-line"><td className="py-1">{kindLabel(s.kind)}: {s.title}</td>{COLS.map(([k]) => <td key={k} className="text-center font-num">{x ? x[k] : "—"}</td>)}</tr>
         ); })}</tbody>
+      </table>
+    </div>
+  );
+}
+
+const label = <T extends string>(list: [T, string][], v: T) => list.find((x) => x[0] === v)?.[1] ?? "";
+
+/** טבלת הניהול: שורה לכל סקר/ניחוש, טור לכל הגדרה; לחיצה (או Enter) פותחת את הניהול שלו */
+function SettingsTable({ surveys, onOpen }: { surveys: Survey[]; onOpen: (id: string) => void }) {
+  return (
+    <div className="f-card !p-0 overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead><tr className="text-ink-soft text-start">{["שם", "סוג", "מצב", "מי רואה תוצאות", "מחוץ לגזרה", "סגירה", "סף משתתפים"].map((h) => <th key={h} className="text-start px-3 py-2 whitespace-nowrap">{h}</th>)}</tr></thead>
+        <tbody>
+          {surveys.map((s) => (
+            <tr key={s.id} role="link" tabIndex={0} aria-label={`ניהול: ${s.title}`} onClick={() => onOpen(s.id)} onKeyDown={(e) => { if (e.key === "Enter") onOpen(s.id); }} className="border-t border-paper-line cursor-pointer hover:bg-[rgb(var(--grid))] focus-visible:bg-[rgb(var(--grid))] outline-none">
+              <td className="px-3 py-2 font-bold">{s.title}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{kindLabel(s.kind)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{label(STATUS_LABELS, s.status)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{label(VISIBILITY_LABELS, s.visibility)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{label(OUTSIDE_LABELS, s.outside ?? "none")}</td>
+              <td className="px-3 py-2 whitespace-nowrap font-num">{closesLabel(s) ?? "—"}</td>
+              <td className="px-3 py-2 font-num text-center">{s.minResults}</td>
+            </tr>
+          ))}
+          {!surveys.length && <tr><td colSpan={7} className="px-3 py-3 text-ink-soft">אין עדיין סקרים.</td></tr>}
+        </tbody>
       </table>
     </div>
   );

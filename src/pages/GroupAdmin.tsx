@@ -11,6 +11,7 @@ import { PageTitle } from "../components/ui";
 import { Segmented } from "../components/Choice";
 import { ManagedGroup, type LinkMembersState } from "./guess/Account";
 import { useSession } from "./guess/useCrowd";
+import { SurveysManage } from "./surveys/SurveyManageScreen";
 
 /**
  * מסך "ניהול קבוצה" — לשונית בסרגל רק למנהלי קבוצה. בראש: תמונת מצב (רשומים, השערות, כניסות דרך הקישור);
@@ -30,6 +31,9 @@ export default function GroupAdmin() {
     <div className="space-y-6 max-w-5xl">
       <PageTitle>ניהול קבוצה</PageTitle>
       {groups.length > 1 && <Segmented label="הקבוצה" value={g.id} onChange={(id: string) => setPicked(id)} options={groups.map((x) => ({ id: x.id, label: x.name ?? x.id }))} />}
+      {/* מסך אחד לשני חלקי האתר (הכרעת בעלים 03.11.2026): ניהול הסקרים והניחושים, ואחריו כל ניהול הקבוצה */}
+      <SurveysManage />
+      <h2 className="text-lg font-bold">ניהול הקבוצה</h2>
       <GroupView key={g.id} id={g.id} name={g.name ?? g.id} slug={g.slug} image={g.image} members={g.members} token={token} onChanged={() => void session.refresh()} />
     </div>
   );
