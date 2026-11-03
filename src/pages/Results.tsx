@@ -1,8 +1,9 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
-import { Badge, Card, Fold, Note, Split } from "../components/ui";
+import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
+import { results2026 } from "../lib/guessAccuracyData";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
 import { ShiftLine } from "./Results2026";
@@ -73,6 +74,8 @@ export default function Results({ id }: { id: string }) {
           </dl>
         </Explained>
       </Card>
+      {/* חלוקת הכנסת לגושים — הועברה ממסך "מה השתנה" (הכרעת בעלים 03.11.2026) */}
+      {e.id === "k26" ? <PersonalBlocs title="חלוקת הכנסת בתוצאות אוקטובר 2026" source="תוצאות אמת 2026" asOf="התוצאות הסופיות" datasets={[{ values: results2026.seats, source: "תוצאות אמת 2026", asOf: "התוצאות הסופיות" }]} /> : <PastBlocs id={e.id} />}
       </>} secondary={<>
       <Card title="כמה קולות חסרים למנדט הבא">
         <div className="overflow-x-auto">
@@ -82,6 +85,7 @@ export default function Results({ id }: { id: string }) {
               <tr className="text-right border-b border-paper-line">
                 <th scope="col" className="py-1">רשימה</th>
                 <th scope="col">קולות</th>
+                <th scope="col">אחוז</th>
                 <th scope="col">מנדטים</th>
                 <th scope="col">מתוכם שלמים</th>
                 <th scope="col">למנדט נוסף / לאיבוד מנדט</th>
@@ -92,6 +96,7 @@ export default function Results({ id }: { id: string }) {
                 <tr key={l.letters} className="border-b border-paper-line/60">
                   <th scope="row" className="text-right py-1 font-medium" title={l.name}>{l.short}</th>
                   <td className="tabular-nums">{num(l.votes)}</td>
+                  <td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td>
                   <td className="tabular-nums font-bold">{l.seats}</td>
                   <td className="tabular-nums">{a.withAll.whole[l.letters]}</td>
                   <td className="tabular-nums text-[11px]"><ShiftLine shift={changes?.[l.letters]?.up ?? null} up /><ShiftLine shift={changes?.[l.letters]?.down ?? null} up={false} /></td>
@@ -114,33 +119,24 @@ export default function Results({ id }: { id: string }) {
         </div>
       </Card>}
 
-      <Fold title="מה הזיזו הסכמי העודפים">
+      {/* כרטיס אחד, טקסט ממורכז (הכרעת בעלים 03.11.2026): מה ההסכמים, ומה היה קורה בלי אף הסכם */}
+      <Card title="הסכמי העודפים">
         <Explained
           kind="חישוב לפי החוק"
           source="המנוע של האתר על הקולות הרשמיים"
           asOf="התוצאות הסופיות"
-          assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי ההסכם. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת. ההשפעה של הסכם תלויה בהסכמים האחרים."
+          assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי אף הסכם. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת."
           methodAnchor="agreements"
         >
-          <table className="w-full text-sm">
-            <caption className="sr-only">הסכמי העודפים: מצב, ומה משתנה בביטול כל הסכם לבדו</caption>
-            <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1">הסכם</th><th scope="col">מצב</th><th scope="col">בלי ההסכם הזה</th></tr></thead>
-            <tbody>
-              {a.single.map((s) => {
-                const [x, y] = s.pair;
-                const inactive = a.withAll.inactiveAgreements.find((i) => i.pair[0] === x && i.pair[1] === y);
-                return (
-                  <tr key={x + y} className="border-b border-paper-line/60">
-                    <th scope="row" className="text-right py-1 font-medium">{short(x)} – {short(y)}</th>
-                    <td>{inactive ? <Badge tone="warn">לא פעיל</Badge> : <Badge tone="ok">פעיל</Badge>}</td>
-                    <td>{fmtDiff(s.diff)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="text-center space-y-2">
+            <p>{e.agreements.map(([x, y]) => {
+              const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
+              return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
+            }).join(" · ")}</p>
+            <p className="font-bold">בלי אף הסכם: {fmtDiff(a.allVsNone.map(([k, d]) => [k, -d] as const))}</p>
+          </div>
         </Explained>
-      </Fold>
+      </Card>
       </>} />
     </>
   );
