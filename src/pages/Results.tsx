@@ -72,9 +72,13 @@ export default function Results({ id }: { id: string }) {
           methodAnchor="results"
           bare
         >
-          <dl className="grid grid-cols-2 gap-3 text-center">
-            <div><dt className="text-sm text-ink-soft">מצביעים למנדט</dt><dd className="text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</dd></div>
-            <div><dt className="text-sm text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-3xl font-extrabold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
+          {/* נתוני ההצבעה בראש המסך (הכרעת בעלים 03.11.2026) — בלי השוואה למערכת הקודמת */}
+          <dl className="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+            <div><dt className="text-sm text-ink-soft">בעלי זכות בחירה</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(e.eligible)}</dd></div>
+            <div><dt className="text-sm text-ink-soft">הצביעו</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(e.voted)}</dd><dd className="text-sm text-ink-soft tabular-nums">{pct((e.voted / e.eligible) * 100)}</dd></div>
+            <div><dt className="text-sm text-ink-soft">קולות שנשרפו</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.wasted)}</dd><dd className="text-sm text-ink-soft tabular-nums">{pct((a.withAll.wasted / e.valid) * 100)} מהכשרים</dd></div>
+            <div><dt className="text-sm text-ink-soft">מצביעים למנדט</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.quota)}</dd></div>
+            <div><dt className="text-sm text-ink-soft">אחוז החסימה בקולות</dt><dd className="text-2xl md:text-3xl font-extrabold tabular-nums">{num(a.withAll.thresholdVotes)}</dd></div>
           </dl>
         </Explained>
       </Card>
@@ -127,8 +131,8 @@ export default function Results({ id }: { id: string }) {
           methodAnchor="agreements"
           bare
         >
-          <div className="f-card text-center space-y-2">
-            <p><b className="text-lg">הסכמי העודפים</b> · <b>בלי אף הסכם: {a.allVsNone.length ? a.allVsNone.map(([k, d], i) => <span key={k}>{i ? ", " : ""}{short(k)} <bdi dir="ltr">{-d > 0 ? "+" : "−"}{Math.abs(d)}</bdi></span>) : "לא שינו דבר"}</b></p>
+          <div className="f-card text-center space-y-1.5 text-sm">
+            <p><b>הסכמי העודפים</b> · <b>בלי אף הסכם: {a.allVsNone.length ? a.allVsNone.map(([k, d], i) => <span key={k}>{i ? ", " : ""}{short(k)} <bdi dir="ltr">{-d > 0 ? "+" : "−"}{Math.abs(d)}</bdi></span>) : "לא שינו דבר"}</b></p>
             <p>{e.agreements.map(([x, y]) => {
               const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
               return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
