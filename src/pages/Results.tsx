@@ -128,7 +128,7 @@ export default function Results({ id }: { id: string }) {
           bare
         >
           <div className="f-card text-center space-y-2">
-            <p><b className="text-lg">הסכמי העודפים</b> · <b>בלי אף הסכם: {a.allVsNone.length ? a.allVsNone.map(([k, d], i) => <span key={k}>{i ? " · " : ""}{short(k)} <bdi dir="ltr">{-d > 0 ? "+" : "−"}{Math.abs(d)}</bdi></span>) : "לא שינו דבר"}</b></p>
+            <p><b className="text-lg">הסכמי העודפים</b> · <b>בלי אף הסכם: {a.allVsNone.length ? a.allVsNone.map(([k, d], i) => <span key={k}>{i ? ", " : ""}{short(k)} <bdi dir="ltr">{-d > 0 ? "+" : "−"}{Math.abs(d)}</bdi></span>) : "לא שינו דבר"}</b></p>
             <p>{e.agreements.map(([x, y]) => {
               const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
               return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
