@@ -1,9 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { call, type GroupCompare, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
-import VideoStats from "../components/VideoStats";
+import { call, type GroupInsights, type GroupSeries, type GroupSeriesKey, type GroupStats } from "../lib/crowdApi";
 import GroupSeriesChart, { bucketLabel } from "../components/GroupSeriesChart";
-import StatsCharts from "../components/StatsCharts";
 import AdminGuesses from "./AdminGuesses";
 import { InquirySections, type Draft, type Held, type SupportThread } from "./Admin";
 import { groupImageUrl, groupUrl } from "../lib/groupLink";
@@ -46,7 +44,7 @@ const q = (id: string) => encodeURIComponent(id);
 function GroupView({ id, name, slug, image, members, token, onChanged }: { id: string; name: string; slug?: string | null; image?: string | null; members?: number; token: string; onChanged: () => void }) {
   const [series, setSeries] = useState<GroupSeries | null>(null);
   const [ins, setIns] = useState<GroupInsights | null>(null);
-  const [stats, setStats] = useState<GroupStats | null>(null);
+  const [, setStats] = useState<GroupStats | null>(null);
   const [failed, setFailed] = useState(false);
   const [flags, setFlags] = useState<LinkMembersState | null>(null);
   const [reload, setReload] = useState(0);
@@ -81,21 +79,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         </div>
       </header>
       {/* מסך אחד לשני חלקי האתר (הכרעת בעלים 03.11.2026): קודם הסקרים והניחושים — כולל כל מה שקשור לניחוש הבחירות — ואחריו ניהול הקבוצה */}
-      <SurveysManage election={series ? (() => { const x = series.series.find((y) => y.key === "seats"); return { buckets: series.buckets, points: x?.points ?? null, total: x?.total ?? null }; })() : null}>
-        {/* ניחוש מנדטי הבחירות — בתוך מגירת הסטטיסטיקה של הסקרים והניחושים (הכרעת בעלים 03.11.2026) */}
-        <div className="space-y-4 pt-3">
-          <h3 className="font-bold">ניחוש מנדטי הבחירות</h3>
-          {ins && !ins.belowMin && <Guesses ins={ins} />}
-          {series?.funnel && <Funnel f={series.funnel} />}
-          <CompareSwitch id={id} token={token} />
-          <Sub title="אישור ניחושים">
-            <AdminGuesses group={{
-              load: () => call(`/group/guesses?group=${q(id)}`, { token }),
-              decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
-            }} />
-          </Sub>
-        </div>
-      </SurveysManage>
+      <SurveysManage election={series ? (() => { const x = series.series.find((y) => y.key === "seats"); return { buckets: series.buckets, points: x?.points ?? null, total: x?.total ?? null }; })() : null} />
       <h2 className="text-lg font-bold">ניהול הקבוצה</h2>
       {/* המלצה לחבר עוזר AI — אותו מסך דרך Claude או ChatGPT (כלי group_* בשרת ה-MCP, משימה 25.10.2026) */}
       <p className="text-sm border border-paper-line rounded-theme bg-paper-card px-4 py-3">
@@ -105,14 +89,25 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
       {/* כל חלק במגירה (הכרעת בעלים 25.10.2026): כל המספרים בסטטיסטיקה בראש המסך, כל נושא הניחושים במגירה אחת — בלי נתון כפול */}
       <div className="space-y-3">
         {/* בכניסה כל המגירות סגורות (הכרעת בעלים 25.10.2026) */}
-        <Section title="סטטיסטיקה" aside={series ? hourlyNote(series) : undefined}>
-          {/* שני חלונות גרף, כמו במסך הניהול (הכרעת בעלים 28.10.2026) */}
-          {series && <StatsCharts storageKey={`elections26.groupCharts.${id}`} defaults={["registered", "visits"]} buckets={series.buckets}
-            options={MEASURES.filter((m) => m.key !== "list").map((m) => { const x = series.series.find((y) => y.key === m.key); return { key: m.key, label: m.group === "outside" ? `מחוץ לרשימה: ${m.label}` : m.label, total: x?.total ?? null, points: x?.points ?? null }; })} />}
-          <Measures data={series} failed={failed} flags={flags} setFlag={setFlag} />
-          {stats && !stats.belowMin && stats.videos && <div className="mt-4"><VideoStats s={stats.videos} /></div>}
+        {/* רק סטטיסטיקות של כל הקבוצה, ארבעה מדדים (הכרעת בעלים 03.11.2026) */}
+        <Section title="כמה מחברי הקבוצה:" aside={series ? hourlyNote(series) : undefined}>
+          <Measures part="list" data={series} failed={failed} flags={flags} setFlag={setFlag} />
           {ins?.belowMin && <p className="text-sm text-ink-soft">פחות מ-{ins.min} חברים מהקבוצה רשומים באתר. מצב הניחושים והפניות יוצגו מ-{ins.min} רשומים, כדי שלא יתגלה מה עשה חבר מסוים.</p>}
         </Section>
+        {/* ניחושים חריגים: כרטיס מצב לכל הניחושים, ורשימה עם סינון הכל/ממתין/אושר/נדחה (הכרעת בעלים 03.11.2026) */}
+        <Section title="ניחושים חריגים">
+          {ins && !ins.belowMin && <Guesses ins={ins} />}
+          <AdminGuesses key={reload} group={{
+            load: () => call(`/group/guesses?group=${q(id)}`, { token }),
+            decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
+          }} />
+        </Section>
+        {/* משפך הקישור — מגירה נפרדת (הכרעת בעלים 03.11.2026) */}
+        {series && <Section title="משפך הקישור" lead="מודד רק את הכניסות מהקישור לסקר המנדטים.">
+          {series.funnel && <Funnel f={series.funnel} />}
+          {/* מחוץ לרשימה — בתוך משפך הקישור, עם המתג שמצרף אותם לקבוצה (הכרעת בעלים 03.11.2026) */}
+          <Measures part="outside" data={series} failed={failed} flags={flags} setFlag={setFlag} />
+        </Section>}
         <SupportThreads id={id} token={token} stats={ins && !ins.belowMin ? <Questions q={ins.questions} /> : null} />
         <Section title="כלי ניהול">
           <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
@@ -144,36 +139,17 @@ function SupportThreads({ id, token, stats }: { id: string; token: string; stats
   };
   const target = (draftId: number) => (d && !("belowMin" in d && d.belowMin) ? (d as SupportData).drafts?.find((x) => x.id === draftId)?.target : undefined) ?? "";
   return (
-    <Section title="פניות החברים לצוות האתר" lead="כל 4 שעות Claude סורק את הפניות ועונה לפי מדיניות האתר. תשובה שאינה עומדת במדיניות נשמרת כטיוטה לאישור — כאן או אצל מנהל האתר. אפשר גם לענות בעצמכם; התשובה מוצגת לחבר כתשובת צוות האתר.">
+    <Section title="שיחות עם משתמשים">
       {stats}
       {error && <p className="text-sm text-warn">{error}</p>}
       {!d ? (!error && <p className="text-sm text-ink-soft">טוען…</p>)
         : "belowMin" in d && d.belowMin ? <p className="text-sm text-ink-soft">השיחות יוצגו מ-{d.min} חברים רשומים.</p>
-        : <InquirySections data={d as SupportData} reply={(_kind, handle) => (text) => act(String(handle), { action: "reply", text })} draftActions={{
+        : <InquirySections compact data={d as SupportData} reply={(_kind, handle) => (text) => act(String(handle), { action: "reply", text })} draftActions={{
             approve: (draftId, text) => act(target(draftId), { action: "approve", draft: draftId, text }),
             remove: (draftId) => act(target(draftId), { action: "delete", draft: draftId }),
             release: (_kind, handle) => act(handle, { action: "release" }),
           }} />}
     </Section>
-  );
-}
-
-/** למה משווים את ממוצע הניחושים של הקבוצה במסך "ממוצע הניחושים" של החברים (הכרעת בעלים 24.10.2026) */
-function CompareSwitch({ id, token }: { id: string; token: string }) {
-  const [value, setValue] = useState<GroupCompare | null>(null);
-  const [busy, setBusy] = useState(false);
-  useEffect(() => { void call<{ compare: GroupCompare }>(`/group/compare?group=${q(id)}`, { token }).then((r) => setValue(r.compare), () => setValue(null)); }, [id, token]);
-  if (!value) return null;
-  const change = async (next: GroupCompare) => {
-    if (next === value) return;
-    setBusy(true);
-    try { setValue((await call<{ compare: GroupCompare }>("/group/compare", { token, body: { group: id, compare: next } })).compare); } finally { setBusy(false); }
-  };
-  return (
-    <Sub title="השוואה בממוצע הניחושים">
-      <p className="text-sm text-ink-soft">חברי הקבוצה רואים את ממוצע הניחושים של הקבוצה לצד:</p>
-      <Segmented label="השוואת ממוצע הקבוצה" value={value} disabled={busy} onChange={(v: GroupCompare) => void change(v)} options={[{ id: "polls", label: "ממוצע הסקרים" }, { id: "crowd", label: "ממוצע כל המשתתפים" }]} />
-    </Sub>
   );
 }
 
@@ -213,11 +189,10 @@ function Tile({ label, value, sub }: { label: string; value: string; sub?: strin
 /** שבעת המדדים (הכרעת בעלים 24.10.2026), בסדר הזה. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת המיילים של הקבוצה */
 const MEASURES: { key: GroupSeriesKey; label: string; group: "list" | "outside" }[] = [
   { key: "list", label: "מיילים ברשימה", group: "list" },
-  { key: "linkFirst", label: "נכנסו דרך הקישור", group: "list" },
   { key: "registered", label: "נרשמו לאתר", group: "list" },
   { key: "seats", label: "שמרו ניחוש", group: "list" },
-  { key: "vote", label: "שמרו הצבעה", group: "list" },
-  { key: "visits", label: "כניסות לאתר (חצי שעה לפחות בין כניסות)", group: "list" },
+  { key: "survey", label: "שמרו סקר", group: "list" },
+  { key: "visits", label: "נכנסו לאתר (לפחות חצי שעה בין לבין)", group: "list" },
   { key: "outsideLink", label: "נכנסו דרך הקישור", group: "outside" },
   { key: "outsideFirst", label: "הקישור היה הכניסה הראשונה שלהם לאתר", group: "outside" },
 ];
@@ -235,7 +210,7 @@ function FlagSwitch({ on, onToggle }: { on: boolean; onToggle: () => Promise<voi
   );
 }
 
-function Measures({ data, failed, flags, setFlag }: { data: GroupSeries | null; failed: boolean; flags: LinkMembersState | null; setFlag: (flag: "all" | "first", on: boolean) => Promise<void> }) {
+function Measures({ part, data, failed, flags, setFlag }: { part: "list" | "outside"; data: GroupSeries | null; failed: boolean; flags: LinkMembersState | null; setFlag: (flag: "all" | "first", on: boolean) => Promise<void> }) {
   if (!data) return failed ? null : <p className="text-sm text-ink-soft">טוען…</p>;
   const by = new Map(data.series.map((s) => [s.key, s]));
   const list = by.get("list")?.total ?? 0;
@@ -253,18 +228,12 @@ function Measures({ data, failed, flags, setFlag }: { data: GroupSeries | null; 
       </li>
     );
   };
+  if (part === "list") return <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m, i) => card(m, i + 1))}</ul>;
   return (
-    <>
-      <Sub title="חברי הקבוצה (מרשימת המיילים)">
-        <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-        {/* מקור אמת אחד: אותם חברים ואותם ניחושים כמו בממוצע הקבוצה במסך "ממוצע הניחושים" */}
-        <p className="text-xs text-ink-soft">חבר = מייל ברשימה, גם אם עוד לא אומת (או מנהל, או מי שנכנס בקישור כשהמתג פעיל). "שמרו ניחוש" = הניחושים שנספרים בממוצע הקבוצה — אותו מספר כמו במסך "ממוצע הניחושים".</p>
-      </Sub>
-      <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
-        <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m) => card(m, MEASURES.indexOf(m)))}</ul>
-        <p className="text-xs text-ink-soft">מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
-      </Sub>
-    </>
+    <Sub title="מחוץ לרשימה">
+      <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m, i) => card(m, i + 1))}</ul>
+      <p className="text-xs text-ink-soft">מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
+    </Sub>
   );
 }
 
@@ -273,7 +242,7 @@ function Funnel({ f }: { f: NonNullable<GroupSeries["funnel"]> }) {
   const pct = (a: number, b: number) => (b ? `${Math.round((100 * a) / b)}%` : "—");
   const day = (d: string) => d.slice(8, 10) + "." + Number(d.slice(5, 7));
   return (
-    <Sub title="משפך הקישור">
+    <div className="space-y-2">
       <div className="grid grid-cols-3 gap-3">
         <Tile label="פתחו את הקישור לראשונה" value={n(f.total.fresh)} />
         <Tile label="נרשמו" value={n(f.total.registered)} sub={`${pct(f.total.registered, f.total.fresh)} מהפותחים`} />
@@ -286,7 +255,7 @@ function Funnel({ f }: { f: NonNullable<GroupSeries["funnel"]> }) {
         </table>
       </div>
       <p className="text-xs text-ink-soft">"פתחו לראשונה" = דפדפן שהקישור היה הכניסה הראשונה שלו לאתר. "נרשמו" ו"שמרו ניחוש" = מתוכם, לפי יום פתיחת הקישור (לפני 26.10 — לפי יום ההרשמה); ניחוש = הניחוש שנספר בממוצע. מי שנכנס משני מכשירים נספר פעמיים.</p>
-    </Sub>
+    </div>
   );
 }
 
@@ -313,17 +282,13 @@ function Guesses({ ins }: { ins: Extract<GroupInsights, { belowMin?: undefined }
 }
 
 
-/** פניות החברים לצוות האתר: כמה פנו, כמה הודעות (ובשבוע האחרון), לפי נושא, וכמה השתמשו בצ׳אט החכם. בלי תוכן */
+/** שיחות עם משתמשים: כרטיס אחד צר — שיחות והודעות (הכרעת בעלים 03.11.2026) */
 function Questions({ q: d }: { q: Extract<GroupInsights, { belowMin?: undefined }>["questions"] }) {
-  if (!d) return <Sub title="שאלות ופניות"><p className="text-sm text-ink-soft">המספרים אינם זמינים כרגע.</p></Sub>;
+  if (!d) return null;
   return (
-    <Sub title="שאלות ופניות לצוות האתר">
-      {/* בלי פירוט לפי סוג — הוא כבר במתג הסוג שבראש רשימת הפניות (הכרעת בעלים 25.10.2026) */}
-      <div className="grid sm:grid-cols-3 gap-3">
-        <Tile label="שיחות" value={n(d.askers)} sub="חברים שכתבו לצוות האתר. כל חבר הוא שיחה אחת, גם אם כתב כמה פעמים." />
-        <Tile label="הודעות" value={n(d.messages)} sub={`כל ההודעות שהחברים כתבו בשיחות האלה; ${n(d.week)} מהן בשבוע האחרון.`} />
-        <Tile label="שיחות בצ׳אט חכם אישי" value={n(d.aiUsers)} sub="שיחות של חברים עם הצ׳אט החכם במפתח AI אישי שלהם. התוכן אינו מגיע לצוות האתר ואינו מוצג כאן." />
-      </div>
-    </Sub>
+    <div className="inline-flex items-baseline gap-4 bg-paper border border-paper-line rounded-theme px-4 py-2">
+      <span className="text-sm text-ink-soft">שיחות <strong className="font-num tabular text-xl text-ink">{n(d.askers)}</strong></span>
+      <span className="text-sm text-ink-soft">הודעות <strong className="font-num tabular text-xl text-ink">{n(d.messages)}</strong></span>
+    </div>
   );
 }

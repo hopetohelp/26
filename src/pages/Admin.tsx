@@ -447,7 +447,8 @@ function AiKey({ api }: { api: (path: string, body?: unknown) => Promise<AiState
  * כל הפניות ברשימה אחת לפי סדר קבלתן — לפי ההודעה הראשונה בכל שיחה (הכרעת בעלים 9.10.2026) — עם סינון לפי נושא ולפי "ממתינות לתשובה".
  * שני מקורות השמירה מוצגים יחד; נתיב התשובה המקורי נשמר לכל שיחה.
  */
-export function InquirySections({ data, reply, draftActions }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean>; draftActions?: DraftActions }) {
+/** compact — מסך "ניהול קבוצה" (הכרעת בעלים 03.11.2026): בלי מתג סוג (הסוג על כל שיחה), ומתג אחד: ממתינות · הכול · טיוטה */
+export function InquirySections({ data, reply, draftActions, compact = false }: { data: Data; reply: (kind: "feedback" | "support", id: number | string) => (text: string) => Promise<boolean>; draftActions?: DraftActions; compact?: boolean }) {
   const [topic, setTopic] = useState<"all" | (typeof FEEDBACK_TOPICS)[number]["id"]>("all");
   const [filter, setFilter] = useState<Filter>("waiting");
   const drafts = data.drafts ?? [];
@@ -462,12 +463,12 @@ export function InquirySections({ data, reply, draftActions }: { data: Data; rep
     .filter(c => (topic === "all" || c.topic === topic) && (filter === "all" || (filter === "waiting" ? c.waiting : c.drafts.length > 0 || !!c.held)))
     // תמיד מהחדשה לישנה (הכרעת בעלים 25.10.2026)
     .sort((a, b) => b.received.localeCompare(a.received));
-  return <section className="space-y-3" aria-labelledby="inquiries-title">
-    <h3 id="inquiries-title" className="font-bold text-lg">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h3>
-    <div className="grid sm:grid-cols-2 gap-2">
+  return <section className="space-y-3" aria-labelledby={compact ? undefined : "inquiries-title"} aria-label={compact ? "שיחות" : undefined}>
+    {!compact && <h3 id="inquiries-title" className="font-bold text-lg">פניות ({shown.length}{shown.length !== all.length ? ` מתוך ${all.length}` : ""})</h3>}
+    {compact ? <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "waiting", label: `ממתינות (${count(c => c.waiting)})` }, { id: "all", label: `הכול (${all.length})` }, { id: "drafts", label: `טיוטה (${count(c => c.drafts.length > 0 || !!c.held)})` }]} /> : <div className="grid sm:grid-cols-2 gap-2">
       <Segmented label="סוג" value={topic} onChange={setTopic} options={[{ id: "all", label: `הכול (${all.length})` }, ...FEEDBACK_TOPICS.map(t => ({ id: t.id, label: `${t.label} (${count(c => c.topic === t.id)})` }))]} />
       <Segmented label="סינון לפי מצב" value={filter} onChange={setFilter} options={[{ id: "all", label: "הכול" }, { id: "waiting", label: `ממתינות לתשובה (${count(c => c.waiting)})` }, { id: "drafts", label: `טיוטות והשהיות (${count(c => c.drafts.length > 0 || !!c.held)})` }]} />
-    </div>
-    {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: _t, ...conversation }) => <Conversation key={key} {...conversation} draftActions={draftActions} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
+    </div>}
+    {shown.length ? <ul className="space-y-2">{shown.map(({ key, received: _r, topic: t, ...conversation }) => <Conversation key={key} {...conversation} title={compact ? `${conversation.title} · ${FEEDBACK_TOPICS.find(x => x.id === t)?.label ?? ""}` : conversation.title} draftActions={draftActions} />)}</ul> : <p className="text-sm text-ink-soft">אין פניות שמתאימות לסינון.</p>}
   </section>;
 }

@@ -270,7 +270,7 @@ export const SERIES_HOURS = 72;
 /** תחילת הגרף השעתי: 24/10/2026 23:00 שעון ישראל (שעון קיץ, UTC+3) */
 export const SERIES_HOURLY_FROM = Date.parse("2026-10-24T20:00:00Z");
 /** המדדים של מסך ניהול קבוצה, לפי הסדר שקבע הבעלים. "מהרשימה" = חשבון שמייל מאומת שלו ברשימת הקבוצה */
-export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "visits", "outsideLink", "outsideFirst"];
+export const SERIES_KEYS = ["list", "linkFirst", "registered", "seats", "vote", "survey", "visits", "outsideLink", "outsideFirst"];
 
 /**
  * סדרות זמן לקבוצה: לכל מדד — סך הכול ונקודות מצטברות, נקודה לכל שעה מ-24/10 23:00.
@@ -291,6 +291,9 @@ export async function groupSeries(env, id, now) {
     env.DB.prepare("SELECT id, created_at AS t FROM participants"),
     env.DB.prepare("SELECT participant, unit, MIN(created_at) AS t FROM versions WHERE unit IN ('seats', 'vote') AND created_at < ? GROUP BY participant, unit").bind(SAVES_UNTIL_ISO),
   ]);
+  // שמרו סקר: השמירה הראשונה של כל חבר בסקר כלשהו מסקרי האתר (הכרעת בעלים 03.11.2026)
+  let surveyRows = [];
+  try { surveyRows = (await env.DB.prepare("SELECT participant, MIN(created_at) AS t FROM survey_answers GROUP BY participant").all()).results || []; } catch { /* בלי טבלה עדיין */ }
   let visitRows = [];
   try { visitRows = (await env.DB.prepare("SELECT participant, at FROM participant_visits WHERE at >= ?").bind(iso(SERIES_HOURLY_FROM)).all()).results || []; } catch { /* בלי טבלה עדיין */ }
   const g = created.results?.[0];
@@ -311,6 +314,7 @@ export async function groupSeries(env, id, now) {
     registered: ts([...members].map((p) => createdAt.get(p))),
     seats: ts([...counted].map((p) => firstOf.seats.get(p))),
     vote: ts([...members].map((p) => firstOf.vote.get(p))),
+    survey: ts(surveyRows.filter((r) => members.has(r.participant)).map((r) => r.t)),
     // כניסות שונות של חברי הקבוצה (חצי שעה לפחות בין כניסות של אותו חשבון) — נרשמות מ-25.10.2026
     visits: ts(visitRows.filter((r) => members.has(r.participant)).map((r) => r.at)),
     outsideLink: ts(outside.map((p) => joinedAt.get(p))),
@@ -864,6 +868,11 @@ function blocsOf(seatsPayload, definition) {
 }
 
 /** מצב הבדיקה של ההשערות: הגרסה האחרונה (מנדטים) של כל משתתף, ותוצאת הבדיקה מול שאר הגולשים */
+/** סינון חריגים בניחוש המנדטים — מתג אחד לכל האתר (הכרעת בעלים 03.11.2026). כבוי ⇐ אין סינון: כל ניחוש נספר, בלי ממתינים ובלי נדחים */
+export const NO_FILTER = { pending: new Map(), rejected: new Set(), isExcluded: () => false };
+async function outlierFilterOn(env) {
+  try { return ((await env.DB.prepare("SELECT value FROM site_settings WHERE key = 'outlier_filter'").first())?.value ?? "on") !== "off"; } catch { return true; }
+}
 async function moderationState(env) {
   const data = await env.DB.batch([
     env.DB.prepare(PARTICIPANTS_SQL),
@@ -881,7 +890,10 @@ async function moderationState(env) {
   // הבדיקה מול כל המשתתפים שנספרים (לא "בבדיקה"); מאומתים ולא מאומתים נספרים באותה צורה
   const counted = latest.filter((v) => !review.has(v.participant));
   // הסיבות לחריגה גם להשערות שכבר הוכרעו (לתצוגה בלבד)
-  const raw = moderate(counted, new Map()).pending;
+  const filterOn = await outlierFilterOn(env);
+  const raw = filterOn ? moderate(counted, new Map()).pending : new Map();
+  // כבוי: בלי כתיבות (אישור אוטומטי / ניקוי החלטות), כדי שהדלקה מחדש תחזיר את המצב הקודם
+  if (!filterOn) return { latest, review, verified, blocsBy, mod: { ...NO_FILTER, decisions, raw, manual: new Set() } };
   // השערה ממתינה שנכנסה לטווח, או תקינה שעוד לא סומנה ⇐ מאושרת אוטומטית, לצמיתות (הכרעת בעלים 12.10.2026)
   const fresh = counted.filter((v) => !decisions.has(v.id) && !raw.has(v.id)).map((v) => v.id);
   if (fresh.length) {
@@ -1744,6 +1756,23 @@ const routes = {
     if (members.size < GROUP_MIN) return { group: id, belowMin: true, min: GROUP_MIN };
     return { group: id, min: GROUP_MIN, ...(await guessRows(env, members)) };
   },
+  // מתג סינון חריגים לכל ניחוש בנפרד (הכרעת בעלים 03.11.2026). "seats" = ניחוש המנדטים (כרגע הניחוש היחיד שיש בו סינון); אחר = מזהה הסקר.
+  // לכל האתר; מנהל קבוצה. כבוי ⇐ אין סינון
+  "GET /group/outlier-filter": async ({ env, request, now, url }) => {
+    await requireManager(env, request, now, url.searchParams.get("group"));
+    const rows = (await env.DB.prepare("SELECT key, value FROM site_settings WHERE key LIKE 'outlier_filter%'").all()).results || [];
+    const filters = { seats: true };
+    for (const r of rows) filters[r.key === "outlier_filter" ? "seats" : r.key.slice("outlier_filter:".length)] = r.value !== "off";
+    return { on: filters.seats, filters };
+  },
+  "POST /group/outlier-filter": async ({ env, request, now, body }) => {
+    await requireManager(env, request, now, body.group);
+    if (typeof body.on !== "boolean") throw bad("on");
+    const target = body.survey === undefined || body.survey === "seats" ? "seats" : surveyId(body.survey);
+    const key = target === "seats" ? "outlier_filter" : `outlier_filter:${target}`;
+    await env.DB.prepare("INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(key, body.on ? "on" : "off", iso(now)).run();
+    return { on: body.on, survey: target };
+  },
   "POST /group/guesses/decide": async ({ env, request, now, body }) => {
     const id = await requireManager(env, request, now, body.group);
     const members = await groupMemberSet(env, id);
@@ -2263,7 +2292,7 @@ async function computeDashboard(env) {
   const decisions = new Map((data[3].results || []).map((r) => [r.version_id, r.decision]));
   const versions = (data[1].results || []).map(r => ({ ...r, payload: readPayload(r) }));
   const blocNames = Object.fromEntries((data[2].results || []).map(r => [r.composition, r.name]));
-  const res = aggregate({ participants, versions, now, blocNames, decisions, aggregationId: `live-${now}` });
+  const res = aggregate({ participants, versions, now, blocNames, decisions, moderation: (await outlierFilterOn(env)) ? null : NO_FILTER, aggregationId: `live-${now}` });
   // הפודיום: מי במקום — נשאר בשרת (podiumIds, ל-/me); לדפדפן יוצאים רק הנתונים והשם הציבורי שבחר המשתתף (הכרעת בעלים 28.10.2026)
   const top = res.dashboard.seats?.podium ?? [];
   const podiumIds = top.map((t) => t.p);
@@ -2365,7 +2394,7 @@ export async function runAggregation(env, now) {
   const names = (await env.DB.prepare("SELECT composition, name FROM bloc_display_names WHERE status = 'approved'").all()).results || [];
   const blocNames = Object.fromEntries(names.map(r => [r.composition,r.name]));
   const decisions = await loadDecisions(env);
-  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId, decisions });
+  const res = aggregate({ blocNames, wasOpen, participants, versions, now: iso(now), previous, lastDailyDay: dailyRow ? JSON.parse(dailyRow.json).day : null, aggregationId, decisions, moderation: (await outlierFilterOn(env)) ? null : NO_FILTER });
   const ins = (section, json, publishedAt, contributors = 0, snapshot = null) =>
     env.DB.prepare("INSERT INTO aggregates (aggregation_id, published_at, section, json, contributors, snapshot) VALUES (?, ?, ?, ?, ?, ?)").bind(
       aggregationId,

@@ -273,7 +273,7 @@ describe("group series", () => {
     expect((await call("/group/series?group=gizra", { token: outsider })).status).toBe(403);
     const d = (await call("/group/series?group=gizra", { token: mgr })).data;
     const by = Object.fromEntries(d.series.map((s) => [s.key, s]));
-    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "visits", "outsideLink", "outsideFirst"]);
+    expect(d.series.map((s) => s.key)).toEqual(["list", "linkFirst", "registered", "seats", "vote", "survey", "visits", "outsideLink", "outsideFirst"]);
     expect(by.list.total).toBe(GROUP_MIN);
     // מנהל הקבוצה נספר כחבר — כמו בדשבורד הקבוצה (מקור אמת אחד)
     expect(by.registered.total).toBe(GROUP_MIN + 1);
@@ -328,6 +328,29 @@ describe("group guess moderation", () => {
     expect((await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: d.salt, handle: row.handle, decision: "rejected" } })).data).toEqual({ ok: true });
     const member = await account("x@x.co");
     expect((await call("/group/guesses?group=gizra", { token: member })).status).toBe(403);
+  });
+});
+
+describe("outlier filter switch per guess (site-wide)", () => {
+  it("on by default; manager turns it off ⇐ a rejected guess is no longer rejected; back on restores it", async () => {
+    const mgr = await account("boss@x.co");
+    for (let i = 0; i < GROUP_MIN; i++) await account(`m${i}@x.co`, true, 70);
+    await load(Array.from({ length: GROUP_MIN }, (_, i) => `m${i}@x.co`));
+    await call("/admin/groups/managers", { admin: true, body: { group: "gizra", email: "boss@x.co" } });
+    const member = await account("x@x.co");
+    expect((await call("/group/outlier-filter", { token: member, body: { group: "gizra", on: false } })).status).toBe(403);
+    expect((await call("/group/outlier-filter?group=gizra", { token: mgr })).data).toEqual({ on: true, filters: { seats: true } });
+    // מתג לכל ניחוש בנפרד: כיבוי בניחוש אחר אינו משפיע על ניחוש המנדטים
+    expect((await call("/group/outlier-filter", { token: mgr, body: { group: "gizra", survey: "president", on: false } })).data).toEqual({ on: false, survey: "president" });
+    expect((await call("/group/outlier-filter?group=gizra", { token: mgr })).data.filters).toEqual({ seats: true, president: false });
+    const d = (await call("/group/guesses?group=gizra", { token: mgr })).data;
+    const flagged = d.rows.find((r) => r.status === "pending");
+    if (flagged) await call("/group/guesses/decide", { token: mgr, body: { group: "gizra", salt: d.salt, handle: flagged.handle, decision: "rejected" } });
+    expect((await call("/group/outlier-filter", { token: mgr, body: { group: "gizra", on: false } })).data).toEqual({ on: false, survey: "seats" });
+    const off = (await call("/group/guesses?group=gizra", { token: mgr })).data;
+    expect(off.rows.some((r) => r.status === "pending" || r.status === "rejected")).toBe(false);
+    await call("/group/outlier-filter", { token: mgr, body: { group: "gizra", on: true } });
+    if (flagged) expect((await call("/group/guesses?group=gizra", { token: mgr })).data.rows.some((r) => r.status === "rejected")).toBe(true);
   });
 });
 
