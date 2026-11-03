@@ -25,7 +25,6 @@ const Trends = lazy(() => import("./Trends"));
 const Polls = lazy(() => import("./Polls"));
 const Today = lazy(() => import("./Today"));
 const SimpleOverview = lazy(() => import("./simple/Overview"));
-const GuessAccuracy = lazy(() => import("./simple/GuessAccuracy"));
 const loading = <p className="text-ink-soft">טוען…</p>;
 
 
@@ -77,14 +76,11 @@ function Polls2026() {
   // חמש המגירות, זהות לכל מערכת (POLL_DRAWERS; הכרעת בעלים 02.11.2026). כל התוכן הקודם נשמר — רק חולק למגירות.
   return <div>
     {/* "הסקרים מול התוצאה" ומפת המכונים הוסרו — הנתונים בטבלאות הארכיון (הכרעת בעלים 03.11.2026) */}
-    <Fold title={POLL_DRAWERS.firms} open={tab === "firms" || tab === "vs" || tab === "latest"}>
-      {/* דיוק הסקרים לכל רשימה וגוש, הסקר הקרוב והשילוב הקרוב — הועברו ממסך "תוצאות אמת" */}
-      <Suspense fallback={loading}><GuessAccuracy part="polls" /></Suspense>
-    </Fold>
+    {/* מגירת "הסקר האחרון של כל מכון" הוסרה (הכרעת בעלים 03.11.2026) — הנתונים בטבלאות הארכיון */}
     <Fold title={POLL_DRAWERS.trend} open={tab === "trends"}>
       <div className="space-y-5"><Latest part="trend" /><Suspense fallback={loading}><Trends /></Suspense></div>
     </Fold>
-    <Fold title={POLL_DRAWERS.archive} open={tab === "archive" || tab === "exit"}><Suspense fallback={loading}><Polls /></Suspense></Fold>
+    <Fold title={POLL_DRAWERS.archive} open={["archive", "exit", "firms", "vs", "latest"].includes(tab ?? "")}><Suspense fallback={loading}><Polls /></Suspense></Fold>
     {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}
     {overview && <Fold title="האחרונים" open={tab === "overview"}><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
     {today && <Fold title="היום" open={tab === "today"}><Suspense fallback={loading}><Today /></Suspense></Fold>}
