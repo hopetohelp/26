@@ -46,6 +46,14 @@ export default function GoogleButton({ session, onDone, disabled }: { session: R
   const done = useRef(onDone);
   done.current = onDone;
 
+  // בלילה — כפתור Google כהה, כדי שיתאים לאתר (הכרעת בעלים 03.11.2026); מתחלף עם התצורה
+  const [isDark, setIsDark] = useState(() => typeof document !== "undefined" && "dark" in document.documentElement.dataset);
+  useEffect(() => {
+    const el = document.documentElement;
+    const mo = new MutationObserver(() => setIsDark("dark" in el.dataset));
+    mo.observe(el, { attributes: true, attributeFilter: ["data-dark"] });
+    return () => mo.disconnect();
+  }, []);
   useEffect(() => {
     if (disabled) return;
     let live = true;
@@ -70,16 +78,17 @@ export default function GoogleButton({ session, onDone, disabled }: { session: R
           }
         },
       });
-      g.accounts.id.renderButton(box.current, { type: "standard", theme: "outline", size: "large", text: "continue_with", shape: "pill", locale: "he", width: Math.min(box.current.clientWidth || 320, 400) });
+      box.current.innerHTML = "";
+      g.accounts.id.renderButton(box.current, { type: "standard", theme: isDark ? "filled_black" : "outline", size: "large", text: "continue_with", shape: "pill", locale: "he", width: Math.min(box.current.clientWidth || 320, 400) });
       setState("ready");
     }).catch(() => live && setState("unavailable"));
     return () => { live = false; };
-  }, [disabled, session]);
+  }, [disabled, session, isDark]);
 
   if (disabled) return null;
   return (
     <div className="space-y-2">
-      <div ref={box} className="min-h-[44px] w-full flex justify-center" aria-busy={state === "loading" || state === "busy"} />
+      <div ref={box} className="f-gsi min-h-[44px] w-full flex justify-center" aria-busy={state === "loading" || state === "busy"} />
       {state === "busy" && <p role="status" className="text-sm">מתחברים…</p>}
       {state === "unavailable" && <p className="text-xs text-ink">הכניסה עם Google לא נטענה אצלכם. אפשר להירשם או להיכנס במייל.</p>}
       {err && <ErrorReport error={err.text} errorLog={err.log} />}
