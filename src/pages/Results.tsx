@@ -3,11 +3,10 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
-import { listName, results } from "../lib/data";
+import { results } from "../lib/data";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { bloc2022 } from "../lib/voterFlow";
-import { blocSlices } from "./simple/shared";
-import { useState } from "react";
+import { blocSlices, Stack } from "./simple/shared";
 import { results2026 } from "../lib/guessAccuracyData";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
@@ -82,7 +81,7 @@ export default function Results({ id }: { id: string }) {
       </Card>
       {/* חלוקת הכנסת לגושים — הועברה ממסך "מה השתנה" (הכרעת בעלים 03.11.2026) */}
       {/* כרטיס עם גרף שורה של ארבעת הגושים; לחיצה על גוש מציגה את הרשימות שבו (הכרעת בעלים 03.11.2026). 2015–2021 — אין שיוך לגושים, נשארת המגירה */}
-      {e.id === "k26" ? <BlocBarCard defs={SIMPLE_BLOCS} values={results2026.seats} nameOf={listName} />
+      {e.id === "k26" ? <BlocBarCard defs={SIMPLE_BLOCS} values={results2026.seats} />
         : e.knesset === 25 ? <BlocBarCard defs={SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) }))} values={Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={(x) => shortOf(e, x)} />
         : <PastBlocs id={e.id} />}
       </>} secondary={<>
@@ -185,20 +184,7 @@ export function ElectionSummary() { return <>
 
 </>; }
 
-/** גרף שורה של ארבעת הגושים; כל חלק הוא כפתור שמציג מתחת את הרשימות שבגוש ואת המנדטים שלהן */
-function BlocBarCard({ defs, values, nameOf }: { defs: Parameters<typeof blocSlices>[2]; values: Record<string, number>; nameOf: (id: string) => string }) {
-  const [sel, setSel] = useState<string | null>(null);
-  const slices = blocSlices(values, 0, defs);
-  const cur = slices.find((x) => x.id === sel);
-  return (
-    <Card title="חלוקת הכנסת לגושים">
-      <div className="f-stack">
-        {slices.map((x) => <button key={x.id} type="button" aria-pressed={sel === x.id} aria-label={`${x.name} ${x.shown}`} onClick={() => setSel(sel === x.id ? null : x.id)} style={{ flex: x.value, background: x.color }}>{x.value >= 18 && <span>{x.short}</span>}{x.shown}</button>)}
-      </div>
-      {cur && <ul className="mt-3 text-sm grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-x-4 gap-y-1">
-        <li className="col-span-full font-bold">{cur.name}: {cur.shown}</li>
-        {[...cur.lists].filter((id) => (values[id] ?? 0) > 0).sort((x, y) => values[y] - values[x]).map((id) => <li key={id} className="flex justify-between gap-2"><span>{nameOf(id)}</span><b className="tabular-nums">{values[id]}</b></li>)}
-      </ul>}
-    </Card>
-  );
+/** גרף שורה של ארבעת הגושים; לחיצה על גוש פותחת את חלון הפירוט הקיים של גרפי הגושים (Stack) */
+function BlocBarCard({ defs, values, nameOf }: { defs: Parameters<typeof blocSlices>[2]; values: Record<string, number>; nameOf?: (id: string) => string }) {
+  return <Card title="חלוקת הכנסת לגושים"><Stack slices={blocSlices(values, 0, defs)} values={values} label="חלוקת הכנסת לגושים" name={nameOf} /></Card>;
 }
