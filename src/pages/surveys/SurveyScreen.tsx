@@ -35,13 +35,13 @@ const SELECT_FROM = 7;
 function Single({ q, value, onPick, disabled }: { q: Extract<SurveyQuestion, { kind: "single" }>; value?: string; onPick: (v: string) => void; disabled: boolean }) {
   if (q.options.length >= SELECT_FROM)
     return (
-      <Select id={`q-${q.id}`} label={q.title} inline value={value ?? ""} onChange={(v) => v && onPick(v)}>
+      <Select id={`q-${q.id}`} label={q.title || "בחירה"} inline value={value ?? ""} onChange={(v) => v && onPick(v)}>
         <option value="" disabled>בחירה…</option>
         {q.options.map((o) => <option key={o.id} value={o.id} disabled={disabled}>{o.label}{o.sub ? ` · ${o.sub}` : ""}</option>)}
       </Select>
     );
   return (
-    <div role="radiogroup" aria-label={q.title} className="grid gap-1 p-1 rounded-2xl bg-[rgb(var(--grid))]" style={{ gridTemplateColumns: `repeat(${Math.min(q.options.length, 3)}, minmax(0, 1fr))` }}>
+    <div role="radiogroup" aria-label={q.title || "בחירה"} className="grid gap-1 p-1 rounded-2xl bg-[rgb(var(--grid))]" style={{ gridTemplateColumns: `repeat(${Math.min(q.options.length, 3)}, minmax(0, 1fr))` }}>
       {q.options.map((o) => {
         const on = value === o.id;
         return (
@@ -141,7 +141,7 @@ function Range({ q, value, onPick, disabled }: { q: Extract<SurveyQuestion, { ki
   return (
     <div className="space-y-1.5">
       <div className="text-center"><b className="font-num text-3xl">{value ?? "—"}</b></div>
-      <input type="range" dir="ltr" min={q.min} max={q.max} step={q.step} value={v} disabled={disabled} aria-label={q.title}
+      <input type="range" dir="ltr" min={q.min} max={q.max} step={q.step} value={v} disabled={disabled} aria-label={q.title || "בחירה"}
         onChange={(e) => onPick(Number(e.target.value))} className="w-full accent-[rgb(var(--signal))]" />
       <div className="flex justify-between text-xs text-ink-soft" dir="ltr"><span>{q.min}{q.minLabel ? ` · ${q.minLabel}` : ""}</span><span>{q.max}{q.maxLabel ? ` · ${q.maxLabel}` : ""}</span></div>
     </div>
@@ -158,7 +158,7 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
         if (!r || r.n === 0) return null;
         return (
           <section key={q.id}>
-            <h3 className="text-[15px] font-bold mb-2">{q.title}</h3>
+            {q.title && <h3 className="text-[15px] font-bold mb-2">{q.title}</h3>}
             {/* ניחוש: תוצאת האמת שהזין המנהל, ומה ניחשת */}
             {survey.kind === "guess" && survey.truth?.[q.id] !== undefined && (
               <p className="text-sm rounded-xl bg-accent-soft px-3 py-1.5 mb-2">
@@ -180,7 +180,8 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
             )}
             {q.kind === "single" && "counts" in r && (
               <ul className="space-y-1.5">
-                {q.options.map((o) => {
+                {/* רק אפשרויות שקיבלו תשובה, מהגבוהה לנמוכה (הכרעת בעלים 03.11.2026) */}
+                {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
                   const pct = Math.round((r.counts[o.id] / r.n) * 100);
                   return (
                     <li key={o.id} className="grid grid-cols-[110px_minmax(0,1fr)_44px] items-center gap-2 text-sm">
@@ -300,7 +301,7 @@ export default function SurveyScreen() {
 
         {survey.questions.map((q, i) => (
           <section key={q.id} className="f-card">
-            <h2 className="text-base font-bold mb-2.5">{survey.questions.length > 1 ? `${i + 1}. ` : ""}{q.title}</h2>
+            {q.title && <h2 className="text-base font-bold mb-2.5">{survey.questions.length > 1 ? `${i + 1}. ` : ""}{q.title}</h2>}
             {q.kind === "single"
               ? <Single q={q} value={draft[q.id] as string | undefined} disabled={closed} onPick={(v) => { setDraft({ ...draft, [q.id]: v }); setState("idle"); }} />
               : q.kind === "range"

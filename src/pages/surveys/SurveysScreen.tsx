@@ -18,7 +18,7 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
         if (q.kind !== "single" || !qr || !("counts" in qr) || !qr.n) return null;
         return (
           <div key={q.id}>
-            <div className="text-[12px] text-ink-soft">{q.title}</div>
+            {q.title && <div className="text-[12px] text-ink-soft">{q.title}</div>}
             <div className="flex h-5 rounded-md overflow-hidden text-[11px] font-bold" role="img" aria-label={q.options.map((o) => `${o.label} ${Math.round((qr.counts[o.id] / qr.n) * 100)}%`).join(", ")}>
               {q.options.map((o, i) => {
                 const pct = Math.round((qr.counts[o.id] / qr.n) * 100);
@@ -112,7 +112,7 @@ export default function SurveysScreen() {
   const empty = surveys && !content.some(Boolean);
   return (
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <h1 className="text-[28px] font-display leading-tight pt-1">כל הסקרים</h1>
+      <h1 className="text-[28px] font-display leading-tight pt-1">כל הסקרים והניחושים</h1>
       {/* שני המתגים באותו גודל ובאותה שורה (הכרעת בעלים 02.11.2026) */}
       <div className="f-seg-pair">
       <div className="f-seg fit !mb-0" role="radiogroup" aria-label="סינון">
