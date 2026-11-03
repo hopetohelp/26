@@ -79,7 +79,7 @@ export default function GoogleButton({ session, onDone, disabled }: { session: R
   if (disabled) return null;
   return (
     <div className="space-y-2">
-      <div ref={box} className="min-h-[44px] w-full flex justify-center" aria-busy={state === "loading" || state === "busy"} />
+      <div ref={box} className="f-gsi min-h-[44px] w-full flex justify-center" aria-busy={state === "loading" || state === "busy"} />
       {state === "busy" && <p role="status" className="text-sm">מתחברים…</p>}
       {state === "unavailable" && <p className="text-xs text-ink">הכניסה עם Google לא נטענה אצלכם. אפשר להירשם או להיכנס במייל.</p>}
       {err && <ErrorReport error={err.text} errorLog={err.log} />}
