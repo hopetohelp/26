@@ -103,12 +103,14 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
           }} />
         </Section>
         {/* משפך הקישור — מגירה נפרדת (הכרעת בעלים 03.11.2026) */}
-        {series?.funnel && <Section title="משפך הקישור" lead="מודד רק את הכניסות מהקישור לסקר המנדטים."><Funnel f={series.funnel} /></Section>}
+        {series && <Section title="משפך הקישור" lead="מודד רק את הכניסות מהקישור לסקר המנדטים.">
+          {series.funnel && <Funnel f={series.funnel} />}
+          {/* מחוץ לרשימה — בתוך משפך הקישור, עם המתג שמצרף אותם לקבוצה (הכרעת בעלים 03.11.2026) */}
+          <Measures part="outside" data={series} failed={failed} flags={flags} setFlag={setFlag} />
+        </Section>}
         <SupportThreads id={id} token={token} stats={ins && !ins.belowMin ? <Questions q={ins.questions} /> : null} />
         <Section title="כלי ניהול">
           <ManagedGroup id={id} name={name} slug={slug} image={image} members={members} token={token} className="space-y-0" onChanged={onChanged} tools />
-          {/* מי שנכנס דרך הקישור מחוץ לרשימה — עם המתגים שמצרפים אותם לקבוצה */}
-          <Measures part="outside" data={series} failed={failed} flags={flags} setFlag={setFlag} />
         </Section>
       </div>
     </>
@@ -191,7 +193,6 @@ const MEASURES: { key: GroupSeriesKey; label: string; group: "list" | "outside" 
   { key: "seats", label: "שמרו ניחוש", group: "list" },
   { key: "survey", label: "שמרו סקר", group: "list" },
   { key: "visits", label: "נכנסו לאתר (לפחות חצי שעה בין לבין)", group: "list" },
-  { key: "outsideLink", label: "נכנסו דרך הקישור", group: "outside" },
   { key: "outsideFirst", label: "הקישור היה הכניסה הראשונה שלהם לאתר", group: "outside" },
 ];
 
@@ -228,7 +229,7 @@ function Measures({ part, data, failed, flags, setFlag }: { part: "list" | "outs
   };
   if (part === "list") return <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "list" && m.key !== "list").map((m, i) => card(m, i + 1))}</ul>;
   return (
-    <Sub title="מחוץ לרשימה (נכנסו דרך הקישור)">
+    <Sub title="מחוץ לרשימה">
       <ul className="grid sm:grid-cols-2 gap-3">{MEASURES.filter((m) => m.group === "outside").map((m, i) => card(m, i + 1))}</ul>
       <p className="text-xs text-ink-soft">מתג פעיל מצרף אותם לקבוצה (גם מי שנכנסו לפני ההפעלה), בנוסף לרשימת המיילים. כל מי שיש לו את הקישור יכול להיכנס — כדאי להפעיל כשהקישור מופץ בתוך הקבוצה בלבד.</p>
     </Sub>
