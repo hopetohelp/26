@@ -324,21 +324,22 @@ function ArchiveTable({ title, rows, meanRows = rows, meanLists, parties, open, 
           </thead>
           <tbody>
             {/* תוצאות אמת — בולטת ומופרדת מהסקרים (הכרעת בעלים 03.11.2026) */}
-            {ready && <tr className="bg-accent-soft text-sm md:text-base font-extrabold align-top [&>*]:border-b-4 [&>*]:border-b-ink">
+            {ready && <tr className="bg-accent-soft text-sm md:text-base font-extrabold align-top border-b border-paper-line">
               <th scope="row" className="py-2.5 pe-2 text-right">תוצאות אמת</th>
               {accCells(tagsOf(Object.fromEntries(Object.entries(results2026.seats).map(([id, v]) => [id, { s: v }]))))}
               {blocCells(ACTUAL_BLOCS)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{results2026.seats[id] ?? "—"}</td>)}
             </tr>}
             {/* "מרחק ממוצע" (הכרעת בעלים 03.11.2026): הממוצע (אותה נוסחה, מנורמל ל-120) פחות התוצאה, עם חץ וצבע — רכיב Delta האחיד באתר */}
-            <tr className="border-b-2 border-ink font-semibold align-top">
+            <tr className="border-b border-paper-line font-semibold align-top">
               <th scope="row" className="py-2 pe-2 text-right">מרחק ממוצע</th>
               {accCells(tagsOf(meanValues))}
               {meanBlocs.map((v, i) => <td key={i} className={`px-1 text-center tabular-nums${i === meanBlocs.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{gap(v, ready ? ACTUAL_BLOCS[i] : null)}</td>)}
               {listCols.map((id) => <td key={id} className="px-1 text-center tabular-nums">{gap(meanValues[id]?.s ?? (id in results2026.seats ? 0 : null), ready && id in results2026.seats ? results2026.seats[id] : null)}</td>)}
             </tr>
             {/* "אחוז שדייקו" (הכרעת בעלים 03.11.2026): מתוך הסקרים בטבלה שפרסמו נתון לרשימה או לגוש — כמה נתנו בדיוק את התוצאה */}
-            {ready && <tr className="border-b-2 border-ink font-semibold align-top">
+            {/* קו דק בין שלוש שורות הסיכום, וקו עבה בינן לבין הסקרים (הכרעת בעלים 03.11.2026) */}
+            {ready && <tr className="font-semibold align-top [&>*]:border-b-4 [&>*]:border-b-ink">
               <th scope="row" className="py-2 pe-2 text-right">אחוז שדייקו</th>
               <td className="px-1 text-center border-s-2 border-paper-line">—</td><td className="px-1 text-center">—</td><td className="px-1 text-center border-e-2 border-paper-line">—</td>
               {SIMPLE_BLOCS.map((_, i) => <td key={i} className={`px-1 text-center tabular-nums${i === SIMPLE_BLOCS.length - 1 ? " border-e-2 border-paper-line" : ""}`}>{exactShare(meanRows.map((r) => r.blocs[i]), ACTUAL_BLOCS[i])}</td>)}
