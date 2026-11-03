@@ -72,3 +72,40 @@ export function groupSmallRows(rows: Row[]): Row[] {
   const rest = rows.filter(r => !small.includes(r)), at = rest.findIndex(r => r.key.startsWith("answer:"));
   return at < 0 ? [...rest, other] : [...rest.slice(0, at), other, ...rest.slice(at)];
 }
+
+/** אותו איחוד בטבלת המעבר (הכרעת בעלים 03.11.2026): שורות (2022) וטורים (2026) של רשימות עם עד 5 קולות ⇐ "רשימות אחרות"; תא מוסתר נשאר מוסתר אם כל מרכיביו מוסתרים */
+export const SMALL_KEY = "small";
+type M = NonNullable<Dashboard["matrix"]>;
+const PARTY_2022 = (k: string) => !(k in V2022_LABEL), PARTY_2026 = (k: string) => !(k in V2026_LABEL);
+/** "רשימות אחרות" אחרי המפלגות ולפני מי שלא הצביע */
+export const smallLast = (a: string, b: string) => {
+  const rank = (k: string) => k === SMALL_KEY ? 1 : (k in V2022_LABEL || k in V2026_LABEL) ? 2 : 0;
+  return rank(a) - rank(b);
+};
+export function groupSmallMatrix(m: M, rowTotal: (k: string, n: number) => number, colTotal: (c: string) => number): M {
+  const smallRows = Object.entries(m.rows).filter(([k, r]) => PARTY_2022(k) && rowTotal(k, r.n) <= SMALL_VOTES).map(([k]) => k);
+  const allCols = [...new Set(Object.values(m.rows).flatMap(r => Object.keys(r.cells)))];
+  const smallCols = new Set(allCols.filter(c => PARTY_2026(c) && colTotal(c) <= SMALL_VOTES));
+  const useCols = smallCols.size >= 2, useRows = smallRows.length >= 2;
+  const merge = (cells: Cell[]): Cell & { hidden?: boolean } => {
+    const shown = cells.filter(c => !c.hidden);
+    return { ...cells[0], n: shown.reduce((a, c) => a + c.n, 0), hidden: shown.length === 0 };
+  };
+  const foldCols = (cells: Record<string, Cell>) => {
+    if (!useCols) return cells;
+    const out: Record<string, Cell> = {}, small: Cell[] = [];
+    for (const [c, cell] of Object.entries(cells)) (smallCols.has(c) ? small.push(cell) : (out[c] = cell));
+    if (small.length) out[SMALL_KEY] = merge(small);
+    return out;
+  };
+  const rows: M["rows"] = {};
+  for (const [k, r] of Object.entries(m.rows)) if (!useRows || !smallRows.includes(k)) rows[k] = { ...r, cells: foldCols(r.cells) };
+  if (useRows) {
+    const parts = smallRows.map(k => m.rows[k]), n = parts.reduce((a, r) => a + r.n, 0);
+    const cols = new Set(parts.flatMap(r => Object.keys(r.cells)));
+    const cells: Record<string, Cell> = {};
+    for (const c of cols) { const list = parts.map(r => r.cells[c]).filter(Boolean); if (list.length) cells[c] = { ...merge(list), of: n }; }
+    rows[SMALL_KEY] = { n, hidden: parts.every(r => r.hidden), cells: foldCols(cells) };
+  }
+  return { ...m, rows };
+}
