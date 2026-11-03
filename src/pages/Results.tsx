@@ -1,6 +1,6 @@
 import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
-import { Badge, Card, Fold, Note, Split } from "../components/ui";
+import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
 import { results2026 } from "../lib/guessAccuracyData";
@@ -119,33 +119,24 @@ export default function Results({ id }: { id: string }) {
         </div>
       </Card>}
 
-      <Fold title="מה הזיזו הסכמי העודפים">
+      {/* כרטיס אחד, טקסט ממורכז (הכרעת בעלים 03.11.2026): מה ההסכמים, ומה היה קורה בלי אף הסכם */}
+      <Card title="הסכמי העודפים">
         <Explained
           kind="חישוב לפי החוק"
           source="המנוע של האתר על הקולות הרשמיים"
           asOf="התוצאות הסופיות"
-          assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי ההסכם. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת. ההשפעה של הסכם תלויה בהסכמים האחרים."
+          assumption="השוואה נגד-עובדתית: אותם קולות בדיוק, בלי אף הסכם. בפועל בוחרים ומפלגות היו אולי מתנהגים אחרת."
           methodAnchor="agreements"
         >
-          <table className="w-full text-sm">
-            <caption className="sr-only">הסכמי העודפים: מצב, ומה משתנה בביטול כל הסכם לבדו</caption>
-            <thead><tr className="text-right border-b border-paper-line"><th scope="col" className="py-1">הסכם</th><th scope="col">מצב</th><th scope="col">בלי ההסכם הזה</th></tr></thead>
-            <tbody>
-              {a.single.map((s) => {
-                const [x, y] = s.pair;
-                const inactive = a.withAll.inactiveAgreements.find((i) => i.pair[0] === x && i.pair[1] === y);
-                return (
-                  <tr key={x + y} className="border-b border-paper-line/60">
-                    <th scope="row" className="text-right py-1 font-medium">{short(x)} – {short(y)}</th>
-                    <td>{inactive ? <Badge tone="warn">לא פעיל</Badge> : <Badge tone="ok">פעיל</Badge>}</td>
-                    <td>{fmtDiff(s.diff)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="text-center space-y-2">
+            <p>{e.agreements.map(([x, y]) => {
+              const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
+              return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
+            }).join(" · ")}</p>
+            <p className="font-bold">בלי אף הסכם: {fmtDiff(a.allVsNone.map(([k, d]) => [k, -d] as const))}</p>
+          </div>
         </Explained>
-      </Fold>
+      </Card>
       </>} />
     </>
   );
