@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoogleButton from "../guess/GoogleButton";
 import { useSession } from "../guess/useCrowd";
@@ -44,7 +45,11 @@ export default function SurveysScreen() {
   const { token } = session;
   const [surveys, setSurveys] = useState<Survey[] | null>(() => cached<{ surveys: Survey[] }>(surveysPath, token)?.surveys ?? null);
   const [failed, setFailed] = useState(false);
-  const [tab, setTab] = useState<Tab | null>(null);
+  // הלשונית נשמרת בכתובת (?tab=), כך ש"חזרה" ממסך סקר חוזרת אליה (הכרעת בעלים 03.11.2026)
+  const [params, setParams] = useSearchParams();
+  const urlTab = params.get("tab");
+  const tab: Tab | null = urlTab === "todo" || urlTab === "done" || urlTab === "closed" || urlTab === "all" ? urlTab : null;
+  const setTab = (t: Tab) => { const p = new URLSearchParams(params); p.set("tab", t); setParams(p, { replace: true }); };
   useEffect(() => { listSurveys(token).then((r) => { setSurveys(r.surveys); setFailed(false); }).catch(() => setFailed(true)); }, [token]);
   // בתוך הטמעה: המעבר בין הסקרים נשאר בחלון המוטמע
   const embed = isEmbed();
