@@ -1,3 +1,4 @@
+import { rememberedSurveysPart } from "../components/Layout";
 import { FEEDBACK_TOPICS, topicMessage, type FeedbackTopic } from "../lib/feedbackTopics";
 import { switchUser } from "../lib/switchUser";
 
@@ -243,8 +244,9 @@ function History({ session, surveysFirst }: { session: ReturnType<typeof useSess
   );
 }
 
-/** surveysPart — "אזור אישי" בחלק הסקרים (#/surveys/me): אותן מגירות כמו בחלק הבחירות, בלי "עוגת המנדטים שלי" (הכרעת בעלים 02.11.2026) */
-export default function Support({ surveysPart = false }: { surveysPart?: boolean }) {
+/** אזור אישי אחד לשני החלקים (הכרעת בעלים 03.11.2026); בהיסטוריה — קודם הסקרים כשנכנסו מחלק הניחושים */
+export default function Support() {
+  const surveysPart = rememberedSurveysPart();
   const session = useSession();
   const { me, token } = session;
     // כניסה מ"שאלו את הצ׳ט החכם" (?ask) ⇐ המגירות סגורות, כדי שהשיחה תהיה בעין
@@ -303,7 +305,7 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
     const items = [
       { id: "details", title: detailsTitle, badge, content: details },
       ...(token ? [{ id: "history", title: "היסטוריה", content: <History session={session} surveysFirst={surveysPart} /> }] : []),
-      ...(surveysPart ? [] : [{ id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> }]),
+      ...([{ id: "blocs", title: "החלוקה שלי", content: <PersonalBlocsEditor /> }]),
     ];
     return <DrawerMenu title={<PageTitle>אזור אישי</PageTitle>} items={items} selected={selected} onSelect={(id) => setSelected(id as DrawerId)} after={admin} label="אזור אישי" />;
   }
@@ -313,7 +315,7 @@ export default function Support({ surveysPart = false }: { surveysPart?: boolean
       <div className="border-t border-paper-line [&>*]:min-w-0">
         <Drawer title={detailsTitle} open={open.has("details")} onToggle={() => toggle("details")} badge={badge}>{details}</Drawer>
         {token && <Drawer title="היסטוריה" open={open.has("history")} onToggle={() => toggle("history")}><History session={session} surveysFirst={surveysPart} /></Drawer>}
-        {!surveysPart && <Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>}
+        {<Drawer title="עוגת המנדטים שלי" open={open.has("blocs")} onToggle={() => toggle("blocs")}><PersonalBlocsEditor /></Drawer>}
         {admin}
       </div>
     </div>

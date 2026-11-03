@@ -35,16 +35,18 @@ import { isElectionScreen } from "../lib/election";
  * בשלב הראשון המסכים בלי קישור מאף מסך באתר (הכרעת בעלים 01.11.2026) — רק בכתובת ישירה, עד אישור הבעלים ומנהלי הגזרה.
  */
 export const isSurveysPart = (pathname: string) => /^\/(surveys|s|guess|community|results-2026|g)(\/|$)/.test(pathname);
-/** מסכים משותפים לשני החלקים (אזור אישי, AI, קבוצה): נשארים בחלק שממנו נכנסו (הכרעת בעלים 03.11.2026) */
+/** מסכים משותפים לשני החלקים (אזור אישי אחד, AI, קבוצה): נשארים בחלק שממנו נכנסו (הכרעת בעלים 03.11.2026) */
 const SHARED = /^\/(ai|group-admin|account)(\/|$)/;
 const PART_KEY = "elections26.part";
+/** החלק האחרון שבו היו (למסכים המשותפים) */
+export function rememberedSurveysPart() { try { return sessionStorage.getItem(PART_KEY) === "surveys"; } catch { return false; } }
 function useSurveysPart(pathname: string) {
   if (!SHARED.test(pathname)) {
     const v = isSurveysPart(pathname);
     try { sessionStorage.setItem(PART_KEY, v ? "surveys" : "elections"); } catch { /* בלי אחסון — לפי הכתובת */ }
     return v;
   }
-  try { return sessionStorage.getItem(PART_KEY) === "surveys"; } catch { return false; }
+  return rememberedSurveysPart();
 }
 
 /** לשונית "ניהול קבוצה" — רק למי שמנהל קבוצה (מייל מאומת ברשימת המנהלים) */
@@ -238,7 +240,7 @@ function FocusNav({ className, unread }: { className: string; unread: boolean })
   const tab = (t: Screen) => <NavLink key={t.to} to={election && isElectionScreen(t.to) ? `${t.to}?election=${encodeURIComponent(election)}` : t.to} end={t.to === "/"} className={t.id === "results2026" ? "f-framed" : undefined} aria-current={t.to === "/community" && pathname.startsWith("/g/") ? "page" : undefined}>{t.short ? <><span className="f-long">{t.label}</span><span className="f-short">{t.short}</span></> : t.label}</NavLink>;
   return <nav ref={navRef} aria-label="ניווט ראשי" className={`f-nav ${className}`}>
     {/* במחשב הבורר בתוך הסרגל שבמרכז הפס, לפני הלשוניות (הכרעת בעלים 02.11.2026) */}
-    <NavLink to={surveysPart ? "/surveys/me" : "/account"} className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
+    <NavLink to="/account" className="f-me" aria-label="אזור אישי"><ProfileFace /></NavLink>
     {/* קבוצה — אייקון בלבד, משמאל לפרופיל (הכרעת בעלים 02.11.2026) */}
     {/* כפתור קבוצה אחד בשני האזורים, למסך "ניהול קבוצה" המאוחד (הכרעת בעלים 03.11.2026) */}
     {groupTab.map(t => <NavLink key={t.to} to={t.to} className="f-grp" aria-label={t.label} title={t.label}><Icon name={t.icon} /></NavLink>)}
