@@ -3,7 +3,11 @@ import PersonalBlocs from "../components/PersonalBlocs";
 import Explained from "../components/Explained";
 import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
-import { results } from "../lib/data";
+import { listName, results } from "../lib/data";
+import { SIMPLE_BLOCS } from "../lib/simpleSources";
+import { bloc2022 } from "../lib/voterFlow";
+import { blocSlices } from "./simple/shared";
+import { useState } from "react";
 import { results2026 } from "../lib/guessAccuracyData";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
@@ -77,7 +81,10 @@ export default function Results({ id }: { id: string }) {
         </Explained>
       </Card>
       {/* חלוקת הכנסת לגושים — הועברה ממסך "מה השתנה" (הכרעת בעלים 03.11.2026) */}
-      {e.id === "k26" ? <PersonalBlocs title="חלוקת הכנסת בתוצאות אוקטובר 2026" source="תוצאות אמת 2026" asOf="התוצאות הסופיות" datasets={[{ values: results2026.seats, source: "תוצאות אמת 2026", asOf: "התוצאות הסופיות" }]} /> : <PastBlocs id={e.id} />}
+      {/* כרטיס עם גרף שורה של ארבעת הגושים; לחיצה על גוש מציגה את הרשימות שבו (הכרעת בעלים 03.11.2026). 2015–2021 — אין שיוך לגושים, נשארת המגירה */}
+      {e.id === "k26" ? <BlocBarCard defs={SIMPLE_BLOCS} values={results2026.seats} nameOf={listName} />
+        : e.knesset === 25 ? <BlocBarCard defs={SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) }))} values={Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={(x) => shortOf(e, x)} />
+        : <PastBlocs id={e.id} />}
       </>} secondary={<>
       <Card title="כמה קולות חסרים למנדט הבא">
         <div className="overflow-x-auto">
@@ -89,7 +96,7 @@ export default function Results({ id }: { id: string }) {
                 <th scope="col">קולות</th>
                 <th scope="col">אחוז</th>
                 <th scope="col">מנדטים</th>
-                <th scope="col">מחלוקת עודפים</th>
+                <th scope="col">מעודפים</th>
                 <th scope="col">פער לשינוי במנדט</th>
               </tr>
             </thead>
@@ -101,7 +108,7 @@ export default function Results({ id }: { id: string }) {
                   <td className="tabular-nums">{num(l.votes)}</td>
                   <td className="tabular-nums">{pct((l.votes / e.valid) * 100)}</td>
                   <td className="tabular-nums font-bold">{l.seats}</td>
-                  <td className="tabular-nums">{l.seats - (a.withAll.whole[l.letters] ?? 0) > 0 && <bdi dir="ltr">+{l.seats - (a.withAll.whole[l.letters] ?? 0)}</bdi>}</td>
+                  <td className="tabular-nums">{l.seats - (a.withAll.whole[l.letters] ?? 0) > 0 && `\u2066+${l.seats - (a.withAll.whole[l.letters] ?? 0)}\u2069`}</td>
                   <td className="tabular-nums text-[11px]"><ShiftLine shift={changes?.[l.letters]?.up ?? null} up /><ShiftLine shift={changes?.[l.letters]?.down ?? null} up={false} /></td>
                 </tr>
               ))}
@@ -121,7 +128,7 @@ export default function Results({ id }: { id: string }) {
           methodAnchor="agreements"
           bare
         >
-          <div className="text-center space-y-2">
+          <div className="f-card text-center space-y-2">
             <p>{e.agreements.map(([x, y]) => {
               const inactive = a.withAll.inactiveAgreements.some((i) => i.pair[0] === x && i.pair[1] === y);
               return `${short(x)} – ${short(y)}${inactive ? " (לא פעיל)" : ""}`;
@@ -177,3 +184,21 @@ export function ElectionSummary() { return <>
       </Card>
 
 </>; }
+
+/** גרף שורה של ארבעת הגושים; כל חלק הוא כפתור שמציג מתחת את הרשימות שבגוש ואת המנדטים שלהן */
+function BlocBarCard({ defs, values, nameOf }: { defs: Parameters<typeof blocSlices>[2]; values: Record<string, number>; nameOf: (id: string) => string }) {
+  const [sel, setSel] = useState<string | null>(null);
+  const slices = blocSlices(values, 0, defs);
+  const cur = slices.find((x) => x.id === sel);
+  return (
+    <Card title="חלוקת הכנסת לגושים">
+      <div className="f-stack">
+        {slices.map((x) => <button key={x.id} type="button" aria-pressed={sel === x.id} aria-label={`${x.name} ${x.shown}`} onClick={() => setSel(sel === x.id ? null : x.id)} style={{ flex: x.value, background: x.color }}>{x.value >= 18 && <span>{x.short}</span>}{x.shown}</button>)}
+      </div>
+      {cur && <ul className="mt-3 text-sm grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-x-4 gap-y-1">
+        <li className="col-span-full font-bold">{cur.name}: {cur.shown}</li>
+        {[...cur.lists].filter((id) => (values[id] ?? 0) > 0).sort((x, y) => values[y] - values[x]).map((id) => <li key={id} className="flex justify-between gap-2"><span>{nameOf(id)}</span><b className="tabular-nums">{values[id]}</b></li>)}
+      </ul>}
+    </Card>
+  );
+}
