@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SurveyAdmin from "./SurveyAdmin";
 import Select from "../../components/Select";
 import LeaveGuard from "../../components/LeaveGuard";
-import BackButton from "../../components/BackButton";
+import SurveyHeader from "./SurveyHeader";
 import { useCrowdDashboard } from "../../lib/sources";
 import { VotingStats } from "../guess/Dashboard";
 import { realLabel, REAL_SHARE_SURVEYS } from "../guess/votingRows";
@@ -25,7 +25,7 @@ import { useSession } from "../guess/useCrowd";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { isEmbed } from "../../lib/embed";
 import { useHostLogin } from "../../lib/embedLogin";
-import { participantsLabel, answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
+import { answerSurvey, brokenPromises, closesLabel, viewSurvey, columnSeats, getSurvey, itemSeats, numbered, cached, surveyPath, updatedLabel, majorityLine, MAJORITY, type AssignValue, type ElectionPromise, type SurveyAnswers, type SurveyDetail, type SurveyQuestion, type SurveyResults } from "../../lib/surveys";
 
 /** צבעי שלוש העמודות בשאלת שיוך — מהטוקנים בלבד (קואליציה = signal, נמנעים ואופוזיציה = צבעי גוש ניטרליים) */
 const COL_BG = ["bg-signal text-signal-ink", "bg-[rgb(var(--bloc-4))] text-ink", "bg-[rgb(var(--bloc-5))] text-paper"];
@@ -285,17 +285,11 @@ export default function SurveyScreen() {
     <>
     <LeaveGuard dirty={!!token && changed && !managing && state !== "saving"} onSave={() => save()} />
     <main className="px-4 md:px-6 pb-28 space-y-3.5 md:max-w-3xl md:mx-auto">
-      <div className="pt-2"><BackButton /></div>
-      <div className="flex items-start justify-between gap-2 pt-1">
-        <h1 className="text-[26px] font-display leading-tight">{numbered(survey)}</h1>
-        {data.access.manage && !embed && token && <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button>}
-      </div>
-      <div className="flex flex-wrap items-center gap-2 -mt-1.5 text-sm text-ink-soft">
-        {/* מספר המשתתפים (הכרעת בעלים 03.11.2026); כשפתוח גם מחוץ לגזרה — כמה מהם מהגזרה */}
-        {data.participants && <span className="font-num tabular">{participantsLabel(data.participants)}</span>}
+      <SurveyHeader title={numbered(survey)} participants={data.participants}
+        aside={data.access.manage && !embed && token ? <button type="button" className={`f-btn shrink-0 ${managing ? "pri" : ""}`} aria-pressed={managing} onClick={() => setManaging(!managing)}>ניהול</button> : null}>
         {closed && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[rgb(var(--grid))]">נסגר</span>}
         {deadline && survey.status === "open" && <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-accent-soft text-ink">פתוח עד {deadline}</span>}
-      </div>
+      </SurveyHeader>
       {embed && <Link to={allLink} className="f-btn">› לכל הסקרים</Link>}
 
       {managing && token ? (

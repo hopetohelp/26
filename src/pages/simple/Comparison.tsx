@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import BackButton from "../../components/BackButton";
+import SurveyHeader from "../surveys/SurveyHeader";
 import { Link } from "react-router-dom";
 import { call, CrowdError, type Dashboard, type GroupDashboard, type GroupPublic, type SeatsPayload } from "../../lib/crowdApi";
 import { seatsSum } from "../../lib/crowdValidate";
@@ -119,7 +119,8 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
       // הניחוש שלי בגושים (הכרעת בעלים 02.11.2026) — רק למי ששמר ניחוש מלא
       mine: unlocked ? b.lists.reduce((t, id) => t + (mine.seats[id]?.v ?? 0), 0) : null };
   });
-  const toggle = surveysPart && <><div className="mb-2"><BackButton /></div><h1 className="text-[26px] font-display leading-tight mb-2">{ELECTION_RESULTS_TITLE}</h1>
+  // כותרת ושורת המשתתפים מהרכיב האחיד של מסכי הסקרים (הכרעת בעלים 03.11.2026); הניחוש היה פתוח גם מחוץ לגזרה
+  const toggle = surveysPart && <><div className="space-y-3.5 mb-3"><SurveyHeader title={ELECTION_RESULTS_TITLE} participants={all?.seats?.n ? { all: all.seats.n, group: groupCount ?? 0, outside: groupCount != null } : null} /></div>
     <div className="f-seg fit mb-3" role="radiogroup" aria-label="תצוגה">
       <button type="button" aria-pressed={view === "graph"} onClick={() => setView("graph")}>גרף</button>
       <button type="button" aria-pressed={view === "table"} onClick={() => setView("table")}>טבלה</button>
@@ -130,7 +131,7 @@ export default function Comparison({ surveysPart = false }: { landing?: GroupPub
   return <div className="max-w-6xl mx-auto">{surveysPart ? toggle : <h1 className="sr-only">ממוצע הניחושים</h1>}
     {/* בחלק הסקרים סמל הגזרה כבר בפס העליון (הכרעת בעלים 02.11.2026) */}
     {hagzara?.logoUrl && !surveysPart && <img src={hagzara.logoUrl} alt="הגזרה" className="f-gphone" />}
-    <GuessCount total={all?.seats?.n} members={member ? groupCount : null} />
+    {!surveysPart && <GuessCount total={all?.seats?.n} members={member ? groupCount : null} />}
     {!surveysPart && <SourceBar source={ranges ? rangeSource : source} ranges={ranges} crowdRange={false} />}
     {crowd.failed && !all && <Notice>נתוני המשתתפים אינם זמינים כרגע. אפשר לנסות שוב בהמשך.</Notice>}
     {response?.failed && <Notice>נתוני הגזרה אינם זמינים כרגע.</Notice>}
