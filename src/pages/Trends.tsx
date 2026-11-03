@@ -1,17 +1,17 @@
-import SourcePicker from "../components/SourcePicker";
-import { useSourcePreference } from "../lib/sourcePreference";
-import { SOURCE_OPTIONS, type Selection } from "../lib/dataResolver";
-import PersonalBlocTrends from "../components/PersonalBlocTrends";
 import { useMemo, useState } from "react";
 import { type Series } from "../components/charts";
 import CandleTrend from "../components/CandleTrend";
 import { Segmented } from "../components/Choice";
+import Select from "../components/Select";
 import Explained from "../components/Explained";
-import { MODEL_AVERAGE } from "../lib/sources";
-import { Card, ChartWithTable, Note, Split } from "../components/ui";
+import { MODEL_AVERAGE, SOURCE_OPTIONS } from "../lib/dataResolver";
+import { Card, ChartWithTable, Note } from "../components/ui";
 import { colorOf } from "../lib/colors";
 import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
-import { date, dateRange, seatsFmt, signed } from "../lib/format";
+import { rollingBlocMean } from "../lib/blocTrend";
+import { SIMPLE_BLOCS } from "../lib/simpleSources";
+import { results2026 } from "../lib/guessAccuracyData";
+import { date, dateRange, seatsFmt } from "../lib/format";
 import { electionMarkers } from "../lib/electionMarkers";
 
 /** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
@@ -33,196 +33,210 @@ function withLineage(ps: Poll[]): Poll[] {
   });
 }
 
+/** תקופות (הכרעת בעלים 03.11.2026): הגשת הרשימות — quality.listSubmission; פיזור הכנסת — 17.7.2026 (ויקיפדיה, טבלת הסקרים) */
 const PERIODS = [
-  { id: "2026", label: "מינואר 2026", from: "2026-01-01" },
-  { id: "cycle", label: "מאז בחירות 2022", from: "2022-11-15" },
-  { id: "90", label: "3 חודשים", from: "" },
+  { id: "lists", label: "מהגשת הרשימות", from: "2026-09-08" },
+  { id: "dissolution", label: "מפיזור הכנסת", from: "2026-07-17" },
+  { id: "k25", label: "מבחירות 22", from: "2022-11-01" },
 ] as const;
 type PeriodId = (typeof PERIODS)[number]["id"];
 
-const DEFAULT_IDS = ["likud", "yashar", "together", "democrats", "yb", "shas", "utj", "otzma"];
-const GOV_LISTS = lists2026.filter((l) => l.gov37).map((l) => l.id);
+/** מכונים בלבד, ואחרי קו הפרדה — כל צירוף מכון ומזמין */
+const FIRMS = [...new Map(usablePolls.map((p) => [p.firm, p.firmHe])).entries()].sort((a, b) => a[1].localeCompare(b[1], "he"));
+const SERIES = SOURCE_OPTIONS.filter((o) => o.seriesId);
+const pollFilter = (key: string) => (p: Poll) =>
+  key === "all" || (key.startsWith("firm:") ? p.firm === key.slice(5) : pollsterKey(p) === key.slice(7));
+const pollLabel = (key: string) => (key === "all" ? undefined : key.startsWith("firm:") ? FIRMS.find(([f]) => f === key.slice(5))?.[1] : SERIES.find((o) => o.id === key)?.label);
 
+/** רשימות לפי תוצאות 2026: נכנסו (לפי מנדטים), התמודדו ולא נכנסו, וכל השאר */
+const seats26 = results2026.seats as Record<string, number>;
+const ENTERED = Object.keys(seats26).filter((id) => seats26[id] > 0).sort((a, b) => seats26[b] - seats26[a]);
+const RAN_OUT = Object.keys(results2026.votes ?? seats26).filter((id) => !seats26[id]);
+const OTHERS = lists2026.map((l) => l.id).filter((id) => !ENTERED.includes(id) && !RAN_OUT.includes(id));
+const ALL_LISTS = [...ENTERED, ...RAN_OUT, ...OTHERS];
+
+const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
 const withdrawnOf = (id: string) => lists2026.find((l) => l.id === id)?.withdrawn;
-/** מועד סיום הסקר האחרון שבו נמדדה הרשימה (מנדטים או אחוז) */
 const lastMeasuredTime = (id: string, ps: Poll[]) =>
   ps.reduce((acc, p) => (typeof seatsIn(p, id) === "number" ? Math.max(acc, toTime(p.end)) : acc), 0) || undefined;
 
-/** צבע קבוע לכל רשימה (לפי מקומה ברשימת הרשימות), כך שהמתג, המקרא והקו תמיד באותו צבע */
-const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
+type Group = { label: string; ids: string[] };
+type Item = { id: string; label: string };
+
+/** בחירה מרובה ברשימה נפתחת: קבוצות (מסמנות/מבטלות את כולן) ואחריהן פריטים בודדים */
+function MultiPick({ label, groups, sections, value, onChange }: { label: string; groups: Group[]; sections: Item[][]; value: string[]; onChange: (ids: string[]) => void }) {
+  const has = (ids: string[]) => ids.length > 0 && ids.every((id) => value.includes(id));
+  const toggleGroup = (ids: string[]) => onChange(has(ids) ? value.filter((x) => !ids.includes(x)) : [...new Set([...value, ...ids])]);
+  const toggle = (id: string) => onChange(value.includes(id) ? value.filter((x) => x !== id) : [...value, id]);
+  const named = groups.find((g) => g.ids.length === value.length && has(g.ids));
+  const summary = named ? named.label : value.length === 1 ? sections.flat().find((i) => i.id === value[0])?.label : `${value.length} נבחרו`;
+  const row = "flex items-center gap-2 min-h-[40px] px-3 cursor-pointer hover:bg-paper";
+  return (
+    <details className="c-multipick relative">
+      <summary aria-label={label} className="flex items-center justify-between gap-2 h-[50px] px-3 rounded-theme bg-paper border-[1.5px] border-ink/[.35] text-sm font-semibold cursor-pointer list-none">
+        <span className="truncate">{summary}</span>
+        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-ink-soft shrink-0"><path d="m6 9 6 6 6-6" /></svg>
+      </summary>
+      <fieldset className="absolute z-20 mt-1 w-full min-w-[220px] max-h-[60vh] overflow-y-auto rounded-theme bg-paper-card border border-paper-line shadow-lg py-1 text-sm">
+        <legend className="sr-only">{label}</legend>
+        {groups.map((g) => (
+          <label key={g.label} className={`${row} font-bold`}><input type="checkbox" checked={has(g.ids)} onChange={() => toggleGroup(g.ids)} />{g.label}</label>
+        ))}
+        {sections.map((items, si) => items.length > 0 && (
+          <div key={si} className="border-t border-paper-line">
+            {items.map((i) => <label key={i.id} className={row}><input type="checkbox" checked={value.includes(i.id)} onChange={() => toggle(i.id)} />{i.label}</label>)}
+          </div>
+        ))}
+      </fieldset>
+    </details>
+  );
+}
 
 export default function Trends() {
   const to = MODEL_AVERAGE.asOf;
-  const [period, setPeriod] = useState<PeriodId>("2026");
-  const preference = useSourcePreference("trends");
-  const [temporary, setTemporary] = useState<Selection | null>(null);
-  const selection = temporary ?? preference.selection;
-  const option = SOURCE_OPTIONS.find(o => o.id === selection.source);
-  const [ids, setIds] = useState<string[]>(DEFAULT_IDS);
+  const [period, setPeriod] = useState<PeriodId>("lists");
+  const [poll, setPoll] = useState("all");
+  const [asTable, setAsTable] = useState(false);
+  const [ids, setIds] = useState<string[]>(ENTERED);
+  const [blocIds, setBlocIds] = useState<string[]>(SIMPLE_BLOCS.map((b) => b.id));
 
-  const p0 = PERIODS.find((p) => p.id === period)!;
-  const from = p0.from || new Date(toTime(to) - 90 * 86_400_000).toISOString().slice(0, 10);
-  const rawSource = useMemo(() => usablePolls.filter((p) => selection.product !== "poll.single" || !!option && p.firm === option.firmId && (!option.seriesId || pollsterKey(p) === option.seriesId)), [selection.product, option]);
+  const from = PERIODS.find((p) => p.id === period)!.from;
+  const who = pollLabel(poll);
+  const rawSource = useMemo(() => usablePolls.filter(pollFilter(poll)), [poll]);
   const source = useMemo(() => withLineage(rawSource), [rawSource]);
-  // נקודה = 3 ימים בכל האתר, סקר אחד לכל מכון בנקודה (הכרעת בעלים 11.10.2026)
   const days = POINT_WINDOW;
-  const minN = 1;
+  // קפסולות רק בכל המכונים ובבחירה אחת; אחרת — קו מגמה רגיל
+  const capsules = (n: number) => poll === "all" && n === 1;
 
   const series: Series[] = [];
   for (const id of ids) {
     const color = colorOf(id, colorIndex(id));
-    // רשימה שפרשה מהמרוץ: הקו נגמר בסקר האחרון שבו נמדדה, ומסומן בשם (הכרעת בעלים 20.10.2026)
     const lastMeasured = withdrawnOf(id) ? lastMeasuredTime(id, source) : undefined;
-    const solid = rollingMean(id, from, to, days, POINT_DAYS, source).filter((x) => x.n >= minN && (lastMeasured === undefined || x.t <= lastMeasured));
+    const solid = rollingMean(id, from, to, days, POINT_DAYS, source).filter((x) => x.n >= 1 && (lastMeasured === undefined || x.t <= lastMeasured));
     const lin = LINEAGE[id];
-    if (lin && from < lin.since) {
-      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, POINT_DAYS, source).filter((x) => x.n >= minN);
+    if (lin && from < lin.since && !capsules(ids.length)) {
+      const dashed = rollingMean(`${id}__lineage`, from, lin.since, days, POINT_DAYS, source).filter((x) => x.n >= 1);
       if (dashed.length) series.push({ id: `${id}__lineage`, colorId: id, color, name: `${listName(id)} (מרכיבים)`, points: dashed, dashed: true });
     }
     if (solid.length) series.push({ id, color, name: lastMeasured === undefined ? listName(id) : `${listName(id)} (פרשה, הסקר האחרון ${date(new Date(lastMeasured).toISOString())})`, points: solid });
   }
-  // תוויות קצה רק לקו המלא של כל רשימה
   const labeled = series.filter((s) => !s.dashed);
 
-  const toggle = (id: string) => setIds((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
-  const rows = labeled
-    .map((s) => ({ s, first: s.points[0], last: s.points[s.points.length - 1] }))
-    .sort((a, b) => b.last.v - a.last.v);
-  const nowOf = (id: string) => rows.find((r) => r.s.id === id)?.last.v;
-  const who0 = selection.product === "poll.single" ? option?.label : undefined;
+  const blocs = SIMPLE_BLOCS.filter((b) => blocIds.includes(b.id)).map((b) => ({ id: b.id, name: b.name, lists: [...b.lists], target: null }));
+  const blocData = useMemo(() => rollingBlocMean(blocs, rawSource, from, to, days, 1), [blocs.map((b) => b.id).join(), rawSource, from, to, days]); // eslint-disable-line react-hooks/exhaustive-deps
+  const blocSeries: Series[] = blocData.filter((b) => b.points.length).map((b) => ({ id: `bloc-${b.id}`, name: b.name, color: colorOf(b.id, SIMPLE_BLOCS.findIndex((x) => x.id === b.id)), points: b.points }));
 
-  const PRESETS: { label: string; ids: string[] }[] = [
-    { label: "הגדולות", ids: DEFAULT_IDS },
-    { label: "הממשלה היוצאת", ids: GOV_LISTS },
-    { label: "כל הרשימות", ids: lists2026.map((l) => l.id) },
-    { label: "ניקוי", ids: [] },
-  ];
-  const sameSet = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
+  const span = `${dateRange(from, to)}${who ? `, ${who}` : ", כל המכונים"}`;
+  const empty = <p className="text-ink-soft py-8 text-center">אין סקרים בתקופה ובבחירה הזו.</p>;
+  const assumption = "נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון ומזמין מ-14 הימים שמסתיימים בה. בכל המכונים ובבחירה אחת — קפסולה מ-0 עד הגבוה בין הסקרים בנקודה. ממוצע תיאורי, לא מודל.";
+
+  const table = (rows: Series[]) => (
+    <table className="text-sm w-full">
+      <thead>
+        <tr className="text-right border-b border-paper-line">
+          <th scope="col" className="py-1">שם</th>
+          <th scope="col">בתחילת התקופה</th>
+          <th scope="col">בסוף</th>
+          <th scope="col">הנמוך והגבוה בסוף</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((s) => {
+          const first = s.points[0], last = s.points[s.points.length - 1];
+          return (
+            <tr key={s.id} className="border-b border-paper-line/60">
+              <th scope="row" className="text-right py-1 font-medium">{s.name}</th>
+              <td className="tabular-nums">{seatsFmt(first.v)} ({date(new Date(first.t).toISOString())})</td>
+              <td className="tabular-nums">{seatsFmt(last.v)} ({date(new Date(last.t).toISOString())})</td>
+              <td className="tabular-nums">{last.lo !== undefined && last.hi !== undefined ? (last.lo === last.hi ? seatsFmt(last.lo) : `${seatsFmt(last.lo)}–${seatsFmt(last.hi)}`) : "—"}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 
   return (
-    <>
-      <Split
-        title="איך השתנו הסקרים לאורך הזמן?"
-        lead="בחרו תקופה ורשימות להשוואה. כל נקודה מסכמת את הסקר האחרון של כל מכון ומזמין ב-14 הימים שקדמו לה."
-        primary={
-          <Card>
-            <div className="c-trend-controls space-y-4">
-              <div>
-                <div id="trend-period" className="text-sm font-bold mb-1.5">תקופה</div>
-                <Segmented label="תקופה" value={period} onChange={setPeriod} options={PERIODS.map((p) => ({ id: p.id, label: p.label }))} />
-              </div>
-              <SourcePicker screen="trends" selection={selection} onChange={setTemporary} notice={preference.notice} />
-              <details className="c-trend-parties"><summary>בחירת רשימות להשוואה · {ids.length} נבחרו</summary><fieldset>
-                <legend className="text-sm font-bold mb-1.5">רשימות ({ids.length})</legend>
-                <div className="flex flex-wrap gap-1.5 mb-2.5" role="group" aria-label="קיצורי בחירה">
-                  {PRESETS.map((p) => (
-                    <button
-                      key={p.label}
-                      type="button"
-                      onClick={() => setIds(p.ids)}
-                      aria-pressed={sameSet(ids, p.ids) && p.ids.length > 0}
-                      className={`min-h-[34px] px-3 rounded-full text-sm ${sameSet(ids, p.ids) && p.ids.length > 0 ? "bg-ink text-paper-card font-bold" : "ring-[1.5px] ring-inset ring-ink/[.35] font-semibold"}`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {lists2026.map((l) => {
-                    const on = ids.includes(l.id);
-                    const now = nowOf(l.id);
-                    return (
-                      <button
-                        key={l.id}
-                        type="button"
-                        onClick={() => toggle(l.id)}
-                        aria-pressed={on}
-                        className={`inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-full text-sm ${on ? "bg-paper-card font-bold ring-2 ring-inset ring-ink" : "ring-[1.5px] ring-inset ring-ink/[.35] text-ink-soft"}`}
-                      >
-                        <i className="size-2.5 rounded-full" style={{ background: on ? colorOf(l.id, colorIndex(l.id)) : "transparent", boxShadow: on ? undefined : `inset 0 0 0 1.5px ${colorOf(l.id, colorIndex(l.id))}` }} />
-                        {l.name}
-                        {l.withdrawn && <span className="text-xs text-ink-soft">פרשה</span>}
-                        {on && now !== undefined && <span className="font-num tabular text-xs text-ink-soft">{seatsFmt(now)}</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              </fieldset></details>
-            </div>
-          </Card>
-        }
-        secondary={
-          <>
-            <Card>
-              <Explained
-                kind="סיכום סקרים"
-                source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)"
-                asOf={`הסקרים עד ${date(to)}`}
-                assumption={
-                  who0
-                    ? "מכון בודד: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה. בלי סקר של המכון ב-14 הימים האלה — אין נקודה."
-                    : "כל המכונים: נקודה כל 3 ימים: ממוצע הסקר האחרון של כל מכון מ-14 הימים שמסתיימים בה. הנר הוא הנמוך והגבוה בין הסקרים בנקודה (טווח מלא), והעובי לפי כמות הסקרים. ממוצע תיאורי . לא מודל."
-                }
-                methodAnchor="trends"
-              >
-                <ChartWithTable
-                  summary={`${labeled.length} רשימות, ${dateRange(from, to)}${who0 ? `, ${who0}` : ", כל המכונים"}.`}
-                  chart={
-                    labeled.length ? (
-                      // הגרף האחיד: רשימה אחת — נרות; כמה רשימות — אותו רכיב בלי נרות, ולחיצה על נקודה בקו מציגה את החלון של הרשימה
-                      <CandleTrend title={labeled.length === 1 ? `מגמת המנדטים: ${labeled[0].name}` : "מגמת המנדטים לפי רשימה"} series={series} windowDays={days} markers={labeled.flatMap(x => electionMarkers([x.id], labeled.length === 1 ? undefined : x.id))} />
-                    ) : (
-                      <p className="text-ink-soft py-8 text-center">אין מספיק סקרים בתקופה ובמכון שנבחרו. בחרו תקופה ארוכה יותר או כל המכונים.</p>
-                    )
-                  }
-                  table={
-                    <table className="text-sm w-full">
-                      <caption className="sr-only">ערך התחלה, סוף ושינוי לכל רשימה בתקופה</caption>
-                      <thead>
-                        <tr className="text-right border-b border-paper-line">
-                          <th scope="col" className="py-1">רשימה</th>
-                          <th scope="col">בתחילת התקופה</th>
-                          <th scope="col">היום</th>
-                          <th scope="col">הנמוך והגבוה בחלון האחרון</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {rows.map(({ s, first, last }) => (
-                          <tr key={s.id} className="border-b border-paper-line/60">
-                            <th scope="row" className="text-right py-1 font-medium">{s.name}</th>
-                            <td className="tabular-nums">{seatsFmt(first.v)} ({date(new Date(first.t).toISOString())})</td>
-                            <td className="tabular-nums">{seatsFmt(last.v)} ({date(new Date(last.t).toISOString())})</td>
-                            <td className="tabular-nums">{last.lo !== undefined && last.hi !== undefined ? (last.lo === last.hi ? seatsFmt(last.lo) : `${seatsFmt(last.lo)}–${seatsFmt(last.hi)}`) : "—"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  }
-                />
-              </Explained>
-              {rows.length > 0 && (
-                <ul className="mt-4 grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3" aria-label="שינוי מתחילת התקופה">
-                  {rows.map(({ s, first, last }) => {
-                    const d = Math.round((last.v - first.v) * 10) / 10;
-                    return (
-                      <li key={s.id} className="flex items-baseline gap-2 border-t border-paper-line py-1.5 text-sm">
-                        <i className="size-2.5 rounded-full shrink-0 self-center" style={{ background: s.color }} />
-                        <span className="grow font-semibold">{s.name}</span>
-                        <span className="font-num tabular text-ink-soft w-12 text-end"><bdi dir="ltr">{signed(d)}</bdi></span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-              <Note>
-                השינוי הוא מתחילת התקופה שנבחרה. קו מקווקו: לפני שהרשימה התאחדה — סכום המנדטים של מרכיביה ({Object.values(LINEAGE).map((l) => l.note).join(" · ")}). זה סכום של שתי
-                רשימות נפרדות, לא תמיכה ברשימה המאוחדת.
-              </Note>
-            </Card>
-            <PersonalBlocTrends source={rawSource} from={from} to={to} days={days} minN={minN} />
-          </>
-        }
-      />
-    </>
+    <div className="space-y-5">
+      <Card>
+        <div className="c-trend-bar flex flex-wrap gap-2 items-center" role="group" aria-label="הגדרות המגמות">
+          <Segmented className="grow basis-[280px]" label="תקופה" value={period} onChange={setPeriod} options={PERIODS.map((p) => ({ id: p.id, label: p.label }))} />
+          <Select inline id="trend-poll" label="סקר" value={poll} onChange={setPoll} className="grow basis-[160px]">
+            <option value="all">ממוצע</option>
+            <optgroup label="מכונים">{FIRMS.map(([f, he]) => <option key={f} value={`firm:${f}`}>{he}</option>)}</optgroup>
+            <optgroup label="מכון ומזמין">{SERIES.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</optgroup>
+          </Select>
+          <Segmented className="basis-[140px]" label="תצוגה" value={asTable ? "table" : "chart"} onChange={(v) => setAsTable(v === "table")} options={[{ id: "chart", label: "גרף" }, { id: "table", label: "טבלה" }]} />
+        </div>
+      </Card>
+
+      <Card>
+        <div className="flex items-center gap-3 mb-3">
+          <h3 className="font-bold grow">מפלגות</h3>
+          <div className="basis-[200px]">
+            <MultiPick
+              label="מפלגות"
+              groups={[{ label: "כולם", ids: ALL_LISTS }, { label: "נכנסו לכנסת", ids: ENTERED }, ...(OTHERS.length ? [{ label: "כל השאר", ids: OTHERS }] : [])]}
+              sections={[ENTERED.map((id) => ({ id, label: listName(id) })), RAN_OUT.map((id) => ({ id, label: listName(id) }))]}
+              value={ids}
+              onChange={setIds}
+            />
+          </div>
+        </div>
+        <Explained kind="סיכום סקרים" source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)" asOf={`הסקרים עד ${date(to)}`} assumption={assumption} methodAnchor="trends">
+          <ChartWithTable
+            asTable={asTable}
+            summary={`${labeled.length === 1 ? "רשימה אחת" : `${labeled.length} רשימות`}, ${span}.`}
+            chart={labeled.length ? (
+              <CandleTrend
+                title={labeled.length === 1 ? `מגמת המנדטים: ${labeled[0].name}` : "מגמת המנדטים לפי רשימה"}
+                series={capsules(ids.length) ? labeled : series}
+                forceLine={!capsules(ids.length)}
+                zeroBase={capsules(ids.length)}
+                windowDays={days}
+                markers={labeled.flatMap((x) => electionMarkers([x.id], labeled.length === 1 ? undefined : x.id))}
+              />
+            ) : empty}
+            table={table(labeled)}
+          />
+        </Explained>
+        {series.some((s) => s.dashed) && (
+          <Note>קו מקווקו: לפני שהרשימה התאחדה — סכום המנדטים של מרכיביה ({Object.values(LINEAGE).map((l) => l.note).join(" · ")}).</Note>
+        )}
+      </Card>
+
+      <Card>
+        <div className="flex items-center gap-3 mb-3">
+          <h3 className="font-bold grow">גושים</h3>
+          <div className="basis-[200px]">
+            <MultiPick
+              label="גושים"
+              groups={[{ label: "כולם", ids: SIMPLE_BLOCS.map((b) => b.id) }]}
+              sections={[SIMPLE_BLOCS.map((b) => ({ id: b.id, label: b.name }))]}
+              value={blocIds}
+              onChange={setBlocIds}
+            />
+          </div>
+        </div>
+        <Explained showMeta={false} kind="סיכום סקרים" source="הסקרים שנבחרו" asOf={date(to)} assumption="סוכמים בתוך כל סקר ורק אז מחשבים ממוצע. סקר שסקר לפחות מפלגה אחת מהגוש נכנס; מפלגה שלא נסקרה נספרת 0." methodAnchor="personal-blocs">
+          <ChartWithTable
+            asTable={asTable}
+            summary={`${blocSeries.length === 1 ? "גוש אחד" : `${blocSeries.length} גושים`}, ${span}.`}
+            chart={blocSeries.length ? (
+              <CandleTrend
+                title={blocSeries.length === 1 ? `ממוצע מנדטים: ${blocSeries[0].name}` : "מגמת המנדטים לפי גוש"}
+                series={blocSeries}
+                majority={61}
+                forceLine={!capsules(blocSeries.length)}
+                zeroBase={capsules(blocSeries.length)}
+                windowDays={days}
+                markers={blocSeries.length === 1 ? electionMarkers(blocs.find((b) => `bloc-${b.id}` === blocSeries[0].id)?.lists ?? []) : []}
+              />
+            ) : empty}
+            table={table(blocSeries)}
+          />
+        </Explained>
+      </Card>
+    </div>
   );
 }
