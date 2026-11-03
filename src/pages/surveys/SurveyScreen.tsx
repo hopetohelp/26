@@ -183,7 +183,6 @@ function Results({ survey, results, mine }: { survey: SurveyDetail["survey"]; re
             )}
             {q.kind === "single" && "counts" in r && (
               <ul className="space-y-1.5">
-                {real && <li className="text-xs text-ink-soft">בטור האחרון: {real === "2022" ? "התוצאה הרשמית ב-2022" : "תוצאות האמת 2026"} — אחוז הקולות של כל רשימה, ובשורת "לא הצביעו" — מתוך בעלי זכות הבחירה</li>}
                 {/* רק אפשרויות שקיבלו תשובה, מהגבוהה לנמוכה; בסקרי ההצבעה — שורת "לא הצביעו" תמיד, עם האחוז האמיתי (הכרעות בעלים 03.11.2026) */}
                 {q.options.filter((o) => (r.counts[o.id] ?? 0) > 0 || (real && o.id === NOT_VOTED)).sort((a, b) => r.counts[b.id] - r.counts[a.id]).map((o) => {
                   const pct = Math.round((r.counts[o.id] / r.n) * 100);

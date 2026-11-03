@@ -1,6 +1,6 @@
 import results2026 from "../../../raw/results-2026.json";
 import type { Cell, Dashboard } from "../../lib/crowdApi";
-import { results } from "../../lib/data";
+import { registry, results } from "../../lib/data";
 import { previousTurnout } from "../../lib/guessAccuracyData";
 import { IDS, VOTE_MAP, k25VoteName, nameOf, V2022_LABEL, V2026_LABEL } from "./model";
 const percent = (cells: Record<string, Cell> | undefined, key: string): number | null => {
@@ -48,7 +48,7 @@ export function votingRows(d: Dashboard, blank?: string[]) {
  * אותו חישוב כמו טור "כלל המצביעים" בטבלת ההתפלגות: אחוז הקולות × מספר המשתתפים בסקר.
  */
 export const REAL_SHARE_SURVEYS: Record<string, "2022" | "2026"> = { vote2022: "2022", plan2026: "2026", vote: "2026" };
-/** בטור האחרון: אחוז הקולות הרשמי של הרשימה; ובשורת "לא הצביעו" — מי שלא הצביע מתוך בעלי זכות הבחירה (הכרעת בעלים 03.11.2026) */
+/** בטור האחרון: אחוז הרשימה ואחוז מי שלא הצביע — שניהם מתוך בעלי זכות הבחירה (הכרעת בעלים 03.11.2026) */
 export const NOT_VOTED = "none";
 export function realPct(year: "2022" | "2026", option: string): number | null {
   if (option === NOT_VOTED) {
@@ -57,10 +57,11 @@ export function realPct(year: "2022" | "2026", option: string): number | null {
     const c = (results2026 as { counted?: number | null }).counted;
     return typeof c === "number" ? Math.round((100 - c) * 10) / 10 : null;
   }
-  if (year === "2026") return HAS_ACTUAL_PCT && option in ACTUAL_PCT ? ACTUAL_PCT[option] : null;
+  // שני הנתונים מתוך בעלי זכות הבחירה (הכרעת בעלים 03.11.2026)
+  if (year === "2026") { const v = (results2026 as { votes?: Record<string, number> }).votes?.[option]; return typeof v === "number" ? v / registry.k26.eligible * 100 : null; }
   const previous = results.find(r => r.id === "k25")!;
   const l = previous.lists.find(x => x.letters === option);
-  return l ? l.votes / previous.valid * 100 : null;
+  return l ? l.votes / previous.eligible * 100 : null;
 }
 export const realLabel = (year: "2022" | "2026", option: string) => {
   const p = realPct(year, option);

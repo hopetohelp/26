@@ -26,7 +26,7 @@ export default function SurveyEditor({ value, onChange }: { value: EditorValue; 
             <b className="text-sm flex-1">שאלה {i + 1} · {q.kind === "single" ? "רשימת אפשרויות" : q.kind === "range" ? "בחירה מטווח" : "שיוך רשימות (קיים)"}</b>
             <button type="button" className="f-btn !min-h-[36px] !text-warn" onClick={() => set({ questions: value.questions.filter((_, j) => j !== i) })}>הסרה</button>
           </div>
-          <input className={input} placeholder="נוסח השאלה (לא חובה — מספיקה הכותרת)" value={q.title} onChange={(e) => setQ(i, { ...q, title: e.target.value })} />
+          <input className={input} placeholder="נוסח השאלה" value={q.title} onChange={(e) => setQ(i, { ...q, title: e.target.value })} />
           {q.kind === "single" && (
             // כל אפשרות בשדה נפרד, ו"+ אפשרות" להוספה (הכרעת בעלים 02.11.2026). המזהה של אפשרות קיימת נשמר — התשובות שכבר נשמרו נשארות שלה
             <div className="space-y-1.5">
