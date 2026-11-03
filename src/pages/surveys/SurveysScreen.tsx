@@ -30,7 +30,8 @@ function MiniResults({ detail }: { detail: SurveyDetail }) {
         if (!parts) return null;
         return (
           <div key={q.id}>
-            {q.title && <div className="text-[12px] text-ink-soft">{q.title}</div>}
+            {/* בשיוך — "מי בקואליציה?", כי בפס רק הקואליציה (הכרעת בעלים 03.11.2026) */}
+            {(q.kind === "assign" ? "מי בקואליציה?" : q.title) && <div className="text-[12px] text-ink-soft">{q.kind === "assign" ? "מי בקואליציה?" : q.title}</div>}
             <ShareBar parts={parts} pctOf={q.kind === "assign" ? qr.n : undefined} />
           </div>
         );
