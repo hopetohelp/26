@@ -73,7 +73,7 @@ export default function Polls() {
   return (
     <>
 
-      <Split title="ארכיון הסקרים" lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם." primary={<>
+      <Split title="ארכיון הסקרים" lead="כל סקרי המנדטים מאז הבחירות לכנסת ה-25 (נובמבר 2022), מהחדש לישן. ההרכב של המפלגות השתנה במהלך המחזור — כל סקר מוצג כפי שפורסם. לחיצה על סקר מציגה את הנתונים המלאים שלו." primary={<>
       <Card>
         <form className="flex flex-wrap gap-3 items-end" onSubmit={(e) => e.preventDefault()}>
           <label className="flex flex-col text-sm w-full sm:w-auto min-w-0">
@@ -106,7 +106,6 @@ export default function Polls() {
       {(who || from || to) && <PersonalBlocs title="חלוקת הכנסת בסקרים המסוננים בארכיון" source="סיכום הגושים בסקרים המוצגים לפי המסננים" asOf={`${from || "תחילת הארכיון"} — ${to || "הסקר האחרון"}`} datasets={[...finalRows, ...restRows].map(p => ({ poll: p, values: Object.fromEntries(Object.keys(p.values).map(id => [id, p.values[id].s ?? (p.values[id].p !== undefined && p.values[id].p! < 3.25 ? 0 : undefined)])), source: `סקר ${pollsterLabel(p)}`, asOf: date(p.end) }))} />}
       <Card>
         {/* טבלה אחת לכל הסקרים, כולל הסקר האחרון של כל מכון ומדגמי 22:00, עם תווית (הכרעת בעלים 03.11.2026); שורת ההסבר — באישור הבעלים */}
-        <p className="text-sm text-ink-soft mb-2">לחיצה על סקר מציגה את הנתונים המלאים שלו.</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs md:text-sm">
             <caption className="sr-only">ארכיון הסקרים: שורה לכל סקר, עמודה לכל רשימה</caption>
