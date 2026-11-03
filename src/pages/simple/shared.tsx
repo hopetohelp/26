@@ -4,7 +4,7 @@ import { embeddableFor } from "../../lib/embed";
 import { PartyAvatar } from "../../components/PartyAvatar";
 import { nameOf, IDS } from "../guess/model";
 import { POLLSTER_LOGOS } from "../../lib/pollsterLogos";
-import { BLOC_IDS, PERSONAL_CELLS, SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, UNITY_LISTS, defaultCell, personalBlocs, type BlocDef, simpleSelection, simpleSpread, simpleValue } from "../../lib/simpleSources";
+import { SIMPLE_BLOCS, SIMPLE_FIRMS, blocTotal, UNITY_LISTS, defaultCell, personalBlocs, type BlocDef, simpleSelection, simpleSpread, simpleValue } from "../../lib/simpleSources";
 import type { Selection } from "../../lib/dataResolver";
 import { seatsFmt } from "../../lib/format";
 import { THRESHOLD_SEATS } from "../../lib/crowdValidate";
@@ -249,18 +249,6 @@ function Stack({ slices, values, label, overlay }: { slices: Slice[]; values: Re
     {overlay && overlay.value > 0 && <div className="f-unity-line"><span style={{ flex: overlay.start }} /><button type="button" className={pop?.i === slices.length ? "f-on" : undefined} aria-label={`אחדות ${overlay.shown}`} style={{ flex: overlay.value }} {...handlers(slices.length, false)}>אחדות {overlay.shown}</button><span style={{ flex: Math.max(0, total - overlay.start - overlay.value) }} /></div>}
     {pop && (slices[pop.i] ?? (overlay && pop.i === slices.length ? overlay : null)) && <Pop slice={slices[pop.i] ?? overlay!} values={values} at={pop} />}</div>;
 }
-/** עריכת החלוקה האישית — במקום אחד בלבד, באזור האישי. לכל רשימה בוחרים תא; אינה משנה מנדטים. */
-export function PersonalBlocsEditor() {
-  const personal = usePersonalBlocs();
-  const cellOf = (id: string) => personal.defs.find(b => b.lists.includes(id))?.id ?? "unity";
-  return <div className="f-blocedit">
-    <label className="f-blocedit-show"><input type="checkbox" role="switch" checked={personal.show} aria-checked={personal.show} onChange={e => personal.setShow(e.target.checked)} />הצגת עוגת המנדטים שלי (במצב מתקדם)</label>
-    <p>בחרו לכל רשימה לאיזה חלק היא שייכת. זה משנה רק את התצוגה, לא את המנדטים.</p>
-    <ul>{BLOC_IDS.map(id => <li key={id}><PartyAvatar id={id} size={22} /><span className="f-blocedit-name">{nameOf(id)}</span>
-      <select aria-label={`החלק של ${nameOf(id)}`} value={cellOf(id)} onChange={e => personal.move(id, e.target.value)}>{PERSONAL_CELLS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></li>)}</ul>
-    <button type="button" className="f-blocedit-reset" onClick={personal.reset}>חזרה לחלוקה המקורית</button>
-  </div>;
-}
 /** העוגה הכפולה לבדה (בלי פס הטלפון) — לתצוגות הגושים במתקדם */
 export function DoublePie({ values, missing = 0 }: { values: Record<string, number | null | undefined>; missing?: number }) {
   const fixed = blocSlices(values, missing);
@@ -272,11 +260,10 @@ export function DoublePie({ values, missing = 0 }: { values: Record<string, numb
  * חלוקות הכנסת (הכרעת בעלים 25.10.2026): עוגה כפולה — הקבועה, ובתוכה האחדות (קבועה לכולם); קו העיגול הפנימי לכל אורך נתניהו ואייזנקוט.
  * העוגה האישית — רק במתקדם, ורק כשהמשתמש הפעיל אותה (במחשב בנוסף לכפולה, בטלפון במקומה). העריכה — באזור האישי.
  */
-/** inline — העוגה גם בטלפון, בלי כפתור "עוגת המנדטים שלי" ובלי הפס הצף (חלק הסקרים; הכרעת בעלים 02.11.2026) */
+/** inline — העוגה גם בטלפון ובלי הפס הצף (חלק הסקרים; הכרעת בעלים 02.11.2026) */
 export function BlocChart({ values, missing = 0, logo = null, inline = false }: { values: Record<string, number | null | undefined>; missing?: number; logo?: string | null; inline?: boolean }) {
-  const personal = usePersonalBlocs();
+  // "עוגת המנדטים שלי" נמחקה מכל האתר (הכרעת בעלים 03.11.2026)
   const { advanced } = useInterface();
-  const showMine = !inline && advanced && personal.show;
   const fixed = blocSlices(values, missing), unity = unityOverlay(values);
   const rank = (id: string, order: string[]) => order.indexOf(id);
   const ring = [...fixed].sort((a, b) => rank(a.id, DOUBLE_ORDER) - rank(b.id, DOUBLE_ORDER));
@@ -284,15 +271,11 @@ export function BlocChart({ values, missing = 0, logo = null, inline = false }: 
   const bar = [...fixed].sort((a, b) => rank(a.id, BAR) - rank(b.id, BAR));
   const inner: [number, number] = [0, blocTotal(values, SIMPLE_BLOCS[0].lists) + blocTotal(values, SIMPLE_BLOCS[3].lists)];
   const unityBar = { ...unity, start: blocTotal(values, SIMPLE_BLOCS[1].lists) + unity.start };
-  const mine = showMine ? blocSlices(values, missing, personal.defs) : [];
   return <>
     <div className={`f-pie-wrap${inline ? " is-inline" : ""}`}>{logo && <img src={logo} alt="הגזרה" className="f-glogo" />}
       <Pie slices={ring} values={values} label="החלוקה הקבועה והאחדות" overlay={unity} inner={inner} parts={innerParts(values, ring)} />
-      {showMine && <figure className="f-pie-mine"><figcaption>עוגת המנדטים שלי</figcaption><Pie slices={mine} values={values} label="החלוקה שלי" /></figure>}
     </div>
-    {/* כפתור אחד (הכרעת בעלים 25.10.2026): יצירת העוגה ואישור הצגתה — במסך אחד באזור האישי */}
-    {advanced && !inline && <div className="f-pie-tools"><Link to="/account?blocs" className="f-btn">עוגת המנדטים שלי</Link></div>}
-    {!inline && <div className="f-dock floating">{showMine ? <Stack slices={mine} values={values} label="החלוקה שלי" /> : <Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} />}</div>}
+    {!inline && <div className="f-dock floating"><Stack slices={bar} values={values} label="החלוקה הקבועה" overlay={advanced ? unityBar : undefined} /></div>}
   </>;
 }
 /** פס הגושים בתוך התוכן (למשל במסך הנעול) */

@@ -81,11 +81,10 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
         </div>
       </header>
       {/* מסך אחד לשני חלקי האתר (הכרעת בעלים 03.11.2026): קודם הסקרים והניחושים — כולל כל מה שקשור לניחוש הבחירות — ואחריו ניהול הקבוצה */}
-      <SurveysManage>
-        <Section title="ניחוש הבחירות">
-          {/* גרפים: שמרו ניחוש / שמרו הצבעה (אותם מדדים כמו בסטטיסטיקת הקבוצה) */}
-          {series && <StatsCharts storageKey={`elections26.groupGuessCharts.${id}`} defaults={["seats", "vote"]} buckets={series.buckets}
-            options={MEASURES.filter((m) => m.key === "seats" || m.key === "vote").map((m) => { const x = series.series.find((y) => y.key === m.key); return { key: m.key, label: m.label, total: x?.total ?? null, points: x?.points ?? null }; })} />}
+      <SurveysManage election={series ? (() => { const x = series.series.find((y) => y.key === "seats"); return { buckets: series.buckets, points: x?.points ?? null, total: x?.total ?? null }; })() : null}>
+        {/* ניחוש מנדטי הבחירות — בתוך מגירת הסטטיסטיקה של הסקרים והניחושים (הכרעת בעלים 03.11.2026) */}
+        <div className="space-y-4 pt-3">
+          <h3 className="font-bold">ניחוש מנדטי הבחירות</h3>
           {ins && !ins.belowMin && <Guesses ins={ins} />}
           {series?.funnel && <Funnel f={series.funnel} />}
           <CompareSwitch id={id} token={token} />
@@ -95,7 +94,7 @@ function GroupView({ id, name, slug, image, members, token, onChanged }: { id: s
               decide: (body) => call("/group/guesses/decide", { token, body: { group: id, ...body } }),
             }} />
           </Sub>
-        </Section>
+        </div>
       </SurveysManage>
       <h2 className="text-lg font-bold">ניהול הקבוצה</h2>
       {/* המלצה לחבר עוזר AI — אותו מסך דרך Claude או ChatGPT (כלי group_* בשרת ה-MCP, משימה 25.10.2026) */}

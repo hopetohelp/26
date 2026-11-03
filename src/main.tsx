@@ -190,7 +190,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="surveys" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveysScreen /></Suspense>} />
           {/* "הניחושים" כסקר שהסתיים בחלק הסקרים (הכרעת בעלים 01.11.2026) — אותו מסך כמו /community */}
           <Route path="surveys/guesses" element={<SimpleComparison surveysPart />} />
-          <Route path="surveys/me" element={<Support surveysPart />} />
+          {/* אזור אישי אחד לשני החלקים (הכרעת בעלים 03.11.2026) */}
+          <Route path="surveys/me" element={<Navigate to="/account" replace />} />
           <Route path="surveys/manage" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyManageScreen /></Suspense>} />
           <Route path="s/:id" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><SurveyScreen /></Suspense>} />
           <Route path="group-admin" element={<Suspense fallback={<p className="text-ink-soft">טוען…</p>}><GroupAdmin /></Suspense>} />
