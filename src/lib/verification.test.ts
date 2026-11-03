@@ -13,7 +13,7 @@ it("כל סטטוס בנתוני הסקרים הנוכחיים מקבל תיאו
 
 // תוויות האימות עברו לנתונים המלאים שנפתחים בלחיצה (הכרעת בעלים 03.11.2026) — במצב סגור בודקים שהארכיון מוצג, והתווית נבדקת בפונקציה
 it("ארכיון הסקרים הנוכחי מוצג בלי קריסה, כולל מקורות משניים", () => {
-  expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("ארכיון הסקרים");
+  expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("כל הסקרים");
   expect(polls.some(p => p.verification && verificationLabel(p.verification.status).text === "מקור משני")).toBe(true);
 });
 
@@ -23,6 +23,6 @@ it("סטטוס חדש אינו משבית את הארכיון או מוצג כא
   const original = poll.verification!;
   try {
     poll.verification = { ...original, status: "future-source-status" as typeof original.status };
-    expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("ארכיון הסקרים");
+    expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("כל הסקרים");
   } finally { poll.verification = original; }
 });
