@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { IDS, POLL_RANGES, POLL_SHARES } from "./model";
+import { IDS, POLLS, POLL_RANGES, POLL_SHARES } from "./model";
 import { pctForListSeats } from "./pctSync";
 
 describe("pctForListSeats", () => {
@@ -13,6 +13,7 @@ describe("pctForListSeats", () => {
     }
   });
   it("רשימה גדולה: האחוז קרוב לממוצע הסקרים", () => {
-    expect(Math.abs(pctForListSeats("likud", 23)! - POLL_SHARES.likud)).toBeLessThan(1.5);
+    // מנדטי הממוצע עצמו (ולא מספר קבוע), כדי שהבדיקה לא תיכשל כשהסקרים מתעדכנים ברענון האוטומטי
+    expect(Math.abs(pctForListSeats("likud", Math.round(POLLS.likud))! - POLL_SHARES.likud)).toBeLessThan(1.5);
   });
 });
