@@ -50,29 +50,30 @@ def national_2013():
 
 
 def previous_2009(sha256):
-    """2009 (הכנסת ה-18) — רק ארבעת הנתונים הכלליים ל"מה השתנה" של 2013 (2009 אינה בבורר), מקובץ הקלפיות הרשמי.
+    """2009 (הכנסת ה-18) — הנתונים הכלליים ל"מה השתנה" של 2013 והרשימות למעבר המצביעים 2009⇐2013 (2009 אינה בבורר),
+    מקובץ הקלפיות הרשמי (pipeline/ballots.py). שמות ומנדטים — k18_metadata.json (המכון הישראלי לדמוקרטיה, הוצלב).
     בעלי זכות הבחירה = סכום הקלפיות בלי שורת המעטפות הכפולות (בה בז"ב = מספר המצביעים); אחוז החסימה אז 2%."""
-    import csv as _csv
-    path = RAW / 'cec' / 'k18_expb.csv'
-    rows = list(_csv.DictReader(path.read_text(encoding='utf-8-sig').splitlines()))
-    meta = {'סמל ישוב', 'שם ישוב', 'סמל קלפי', 'ת. עדכון', "בז''ב", 'מצביעים', 'כשרים', 'פסולים'}
-    num = lambda v: int(float(v or 0))  # noqa: E731
+    import ballots
+    rows = ballots.read(18)
+    ballots.check_rows(18, rows)
+    external = [r for r in rows if r['external']]
+    assert len(external) == 1 and external[0]['eligible'] == external[0]['voted'], 'k18 external envelopes row'
+    metadata = json.loads((RAW / 'cec' / 'k18_metadata.json').read_text(encoding='utf-8'))
     votes = {}
     for r in rows:
-        assert sum(num(v) for k, v in r.items() if k not in meta) == num(r['כשרים']), ('k18', r['סמל ישוב'], r['סמל קלפי'])
-        assert num(r['מצביעים']) == num(r['כשרים']) + num(r['פסולים']), ('k18', r['סמל ישוב'], r['סמל קלפי'])
-        for k, v in r.items():
-            if k not in meta:
-                votes[k] = votes.get(k, 0) + num(v)
-    external = [r for r in rows if r['סמל ישוב'].strip() == '0']
-    assert len(external) == 1 and num(external[0]["בז''ב"]) == num(external[0]['מצביעים']), 'k18 external envelopes row'
-    valid = sum(num(r['כשרים']) for r in rows)
+        for k, v in r['votes'].items():
+            votes[k] = votes.get(k, 0) + v
+    valid = sum(r['valid'] for r in rows)
     below = sum(v for v in votes.values() if 100 * v < 2 * valid)
+    lists = sorted(({'letters': k, 'name': metadata['names'][k], 'short': metadata['names'][k], 'votes': v,
+                     'seats': metadata['seats'].get(k, 0)} for k, v in votes.items() if v), key=lambda l: -l['votes'])
+    assert sum(l['seats'] for l in lists) == 120, 'k18 seats'
     out = {'knesset': 18, 'label': '2009', 'full': 'פברואר 2009', 'date': '2009-02-10',
-           'eligible': sum(num(r["בז''ב"]) for r in rows if r not in external),
-           'voted': sum(num(r['מצביעים']) for r in rows), 'valid': valid, 'invalid': sum(num(r['פסולים']) for r in rows),
-           'belowThreshold': below, 'thresholdMilli': 2000,
-           'source': 'https://data.gov.il/dataset/votes-knesset (משאב 840edb33-90ac-4176-8ad9-4cdcb8e5caa5)', 'sha256': sha256(path)}
+           'eligible': sum(r['eligible'] for r in rows if not r['external']),
+           'voted': sum(r['voted'] for r in rows), 'valid': valid, 'invalid': sum(r['invalid'] for r in rows),
+           'belowThreshold': below, 'thresholdMilli': 2000, 'lists': lists,
+           'namesAndSeatsSource': metadata['namesAndSeatsSource'], 'status': metadata['status'],
+           'source': ballots.SOURCES[18], 'sha256': sha256(ballots.FILES[18])}
     # הסיכום הרשמי (ועדת הבחירות; המכון הישראלי לדמוקרטיה): 5,278,985 · 3,416,587 · 3,373,490 · 43,097
     assert (out['eligible'], out['voted'], out['valid'], out['invalid']) == (5278985, 3416587, 3373490, 43097), out
     return out

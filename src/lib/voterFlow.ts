@@ -4,7 +4,7 @@ import { listName, results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
 import { blocAssignment } from "./electionBlocs";
-import { K26_ID, electionOption } from "./election";
+import { K26_ID, electionOption, previousElection } from "./election";
 
 /** מעבר מצביעים 2022 ⇐ 2026 לפי השוואת קלפיות (pipeline/voter_flow.py). נקודת המקור היחידה למסך "מה השתנה". */
 /** דרגות ההצמדה (pipeline/voter_flow.py): תת קלפי מהימנה ⇐ יתרת מתחם ⇐ יישוב ⇐ ועדה ⇐ ארצי */
@@ -61,7 +61,7 @@ export function blocsOf(from: number[][], to: number[][] = from, c: FlowCtx = fl
 
 /** שם הגוש באותה מערכת — על שם ראש הרשימה הגדולה בגוש (electionBlocs, הכרעת בעלים 04.11.2026); שורות מיוחדות — כמו שהן */
 export const blocNameIn = (electionId: string) => (id: string) => blocAssignment(electionId)?.find((b) => b.id === id)?.name ?? BLOC_NAMES[id];
-const prevIdOf = (c: FlowCtx) => c.id === K26_ID ? "k25" : (results as unknown as { id: string; knesset: number }[]).find((e) => e.knesset === c.file.prev)?.id ?? "";
+const prevIdOf = (c: FlowCtx) => c.id === K26_ID ? "k25" : `k${c.file.prev}`;
 
 /** גושים = סכום המעברים של הרשימות שבהם, מאותה מטריצה (BLOC_IDS × BLOC_IDS) */
 export function blocMatrix(m: number[][], c?: FlowCtx) {
@@ -269,16 +269,25 @@ const blocBy = (e: Res) => {
   return { has: !!a, of: (l: string) => (SPECIAL[l] ? l : a?.find((b) => (b.lists as readonly string[]).includes(l))?.id ?? "eisenkot"), lists: (bloc: string) => e.lists.filter((l) => (a?.find((b) => (b.lists as readonly string[]).includes(l.letters))?.id ?? "eisenkot") === bloc).map((l) => l.letters) };
 };
 
+/** תוצאות המערכת הקודמת: מהבורר, ו-2009 (אינה בבורר) — מ-previous של 2013 (results.json; pipeline/historical_data.py) */
+function prevResOf(file: FlowFile): Res {
+  const all = results as unknown as (Res & { previous?: Omit<Res, "id"> })[];
+  const inPicker = all.find((e) => e.knesset === file.prev);
+  if (inPicker) return inPicker;
+  const p = all.find((e) => e.previous?.knesset === file.prev)!.previous!;
+  return { ...p, id: `k${p.knesset}` };
+}
+
 /** מערכת קודמת: מהקובץ שנטען (src/lib/flowFiles.ts) ומהתוצאות הרשמיות של שתי המערכות */
 export function flowCtxFrom(file: FlowFile): FlowCtx {
   const all = results as unknown as Res[];
-  const cur = all.find((e) => e.knesset === file.knesset)!, prev = all.find((e) => e.knesset === file.prev)!;
+  const cur = all.find((e) => e.knesset === file.knesset)!, prev = prevResOf(file);
   const short = (e: Res) => (l: string) => SPECIAL[l] ?? e.lists.find((x) => x.letters === l)?.short ?? l;
   const oldN = short(prev), newN = short(cur);
   // אותה מפלגה: אותן אותיות ואותו שם בשתי המערכות (בלי שיוך ודאי מתועד — לא מצמידים רשימות שונות)
   const same = Object.fromEntries(file.new.filter((l) => file.old.includes(l) && oldN(l) === newN(l)).map((l) => [l, l]));
   const bp = blocBy(prev), bc = blocBy(cur);
-  return { id: cur.id, prevLabel: electionOption(prev.id).label, curLabel: electionOption(cur.id).label, file, oldName: oldN, newName: newN,
+  return { id: cur.id, prevLabel: previousElection(cur.id)?.label ?? electionOption(prev.id).label, curLabel: electionOption(cur.id).label, file, oldName: oldN, newName: newN,
     blocOld: bp.of, blocNew: bc.of, hasBlocs: bp.has && bc.has, same, groups: [],
     partyYears: (idNew, lettersOld) => ({ y2022: lettersOld ? yearOf(prev, [lettersOld]) : null, y2026: idNew ? yearOf(cur, [idNew]) : null }),
     blocYears: (bloc) => ({ y2022: yearOf(prev, bp.lists(bloc)), y2026: yearOf(cur, bc.lists(bloc)) }),

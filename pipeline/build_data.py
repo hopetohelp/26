@@ -100,6 +100,16 @@ def parse_national(n: int) -> dict:
             "invalid": num(totals[4]), "lists": lists, "sha256": sha256(path)}
 
 
+def previous_with_blocs() -> dict:
+    """2009 (אינה בבורר): התוצאה מ-historical_data, והשיוך לגושים (raw/blocs.json "18") למעבר בין גושים 2009⇐2013"""
+    prev = __import__("historical_data").previous_2009(sha256)
+    seats = {l["letters"]: l["seats"] for l in prev["lists"] if l["seats"]}
+    rep = BLOCS_RAW["18"]["reportedTotal"]
+    if sum(seats.get(x, 0) for x in BLOCS_RAW["18"]["recommendedNetanyahu"]) != rep:
+        raise SystemExit(f"K18: raw/blocs.json — מנדטי הממליצים על נתניהו אינם {rep} שדווחו")
+    return {**prev, "blocs": election_blocs(18, prev["lists"])}
+
+
 def build_results() -> list[dict]:
     out = []
     for n, meta in ELECTIONS.items():
@@ -121,7 +131,7 @@ def build_results() -> list[dict]:
             **({"blocs": bl} if (bl := election_blocs(n, r["lists"])) else {}),
             **({"predecessorBlocs": pb} if (pb := predecessor_blocs(n)) else {}),
             # המערכת שקדמה, כשאינה בבורר (2013 ⇐ 2009): ארבעת הנתונים הכלליים ל"מה השתנה"
-            **({"previous": __import__("historical_data").previous_2009(sha256)} if n == 19 else {}),
+            **({"previous": previous_with_blocs()} if n == 19 else {}),
             "source": {"url": r.get("url", f"https://votes{n}.bechirot.gov.il/nationalresults"), "sha256": r["sha256"],
                        "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-%d, פרק הסכמי עודפים" % n},
         })

@@ -11,6 +11,17 @@
   "note": "N12/Mako 22.12.20 (Midgam/Mano Geva with iPanel for Channel 12 News; field 22/12/2020): Likud 29, New Hope 18, Yesh Atid-Telem 16, Yamina 13, Joint List 11, Shas 8, UTJ 8, Yisrael Beytenu 7, Meretz 5, Blue&White 5 - all seats match. 'Labor, Gesher and Jewish Home do not pass the threshold' - their percentages (Wikipedia 1.7/0.2/0.1) are not given in the source. Arutz 7 confirms the seats. 575 respondents (incl. Arab boost), ±4.2%."
  },
  {
+  "id": "k24-2020-12-22-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://news.walla.co.il/item/3406797 (kan.org.il/item/?itemId=81731 returned 403; web.archive.org blocked by egress policy)",
+  "differences": [],
+  "fieldEndSource": "2020-12-22",
+  "sample": null,
+  "moe": null,
+  "note": "Walla 22.12.20 reporting the Kan 11 poll published that evening (Tuesday): Likud 28, New Hope 20, Yamina 15, Yesh Atid 13, Joint List 11, Shas 8, UTJ 7, Yisrael Beytenu 6, Meretz 6, Blue&White 6 - all match. Pollster (Kantar), sample and MoE not stated in the report."
+ },
+ {
   "id": "k24-2020-12-23-panels-politics-103fm",
   "status": "partial",
   "sourceLevel": "primary",
@@ -66,6 +77,28 @@
   "note": "N12/Mako 30.12.20 (Midgam/Mano Geva with iPanel; field 30/12/2020): Likud 28, New Hope 17, Yesh Atid-Telem 13, Yamina 12, Joint List 11, Shas 8, UTJ 8, The Israelis 8, Yisrael Beytenu 6, Meretz 5, Blue&White 4; Labor 1.2%, Shelah party (Tnufa) 0.8%, Jewish Home 0.4%, Gesher 0% - all match. 505 respondents, ±4.4%."
  },
  {
+  "id": "k24-2020-12-30-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/flashes/527247 ; https://www.israelnationalnews.com/news/294013 (kan.org.il/item/?itemId=97363 returned 403)",
+  "differences": [],
+  "fieldEndSource": "2020-12-30",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (English) 30.12.20, two reports of the Kan News poll published Wednesday night: Likud 28, New Hope 18, Yamina 14, Yesh Atid-Telem 13, Joint List 11, Huldai's party 8, Shas 8, UTJ 7, Yisrael Beytenu 5, Blue&White 4, Meretz 4 - all match. A web-search snippet (unopened source) gave 563 respondents, ±4.4%, field 30.12.2020 for Kan/Kantar - not verified, so sample/MoE left null."
+ },
+ {
+  "id": "k24-2020-12-30-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/flashes/527250 (13news/13tv returned 403)",
+  "differences": [],
+  "fieldEndSource": "2020-12-30",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (English) 30.12.20: Camil Fuchs poll for Channel 13 News: Likud 29, New Hope 17, Yamina 12, Yesh Atid-Telem 11, Joint List 10, The Israelis 9, Shas 8, UTJ 8, Yisrael Beytenu 6, Blue&White 5, Meretz 5 - all match."
+ },
+ {
   "id": "k24-2020-12-31-panels-politics-maariv",
   "status": "partial",
   "sourceLevel": "primary",
@@ -110,6 +143,17 @@
   "note": "Maariv 08.01.21 (Panels Politics/Lazar for Maariv-Sofhashavua, 'conducted yesterday'): Likud 28, New Hope 18, Yesh Atid 14, Yamina 13, Joint List 10, Shas 8, UTJ 7, Yisrael Beytenu 7, The Israelis 6, Blue&White 4, Meretz 5; Labor 1.9%, Otzma Yehudit 1.7%, New Economic 1.3%, Tnufa 1.3%, Gesher 0.3%, Jewish Home 0.3% - all match. 527 Panel4All, max error 4.3%."
  },
  {
+  "id": "k24-2021-01-08-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/294553 (13tv returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (English) 08.01.21 (poll published on Channel 13 News on Friday): Likud 31, New Hope 16, Yesh Atid 16, Yamina 13, Joint List 10, Shas 7, UTJ 7, Yisrael Beytenu 6, Huldai's party 5, Meretz 5, Blue&White 4; below threshold Labor 1.1%, Tnufa 0.9%, New Economic 1.3%, Gesher 0.4%, Jewish Home 1.2% - all match. Field date not stated (published 8 Jan)."
+ },
+ {
   "id": "k24-2021-01-10-panels-politics-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -143,6 +187,28 @@
   "note": "Maariv 15.01.21 (Panels Politics/Lazar for Maariv-Sofhashavua, 'conducted yesterday'): Likud 32, New Hope 17, Yesh Atid 14, Yamina 12, Joint List 11, UTJ 8, Shas 8, Yisrael Beytenu 7, Meretz 6, Blue&White 5; Religious Zionism 2.6%, The Israelis 2.5%, Otzma Yehudit 1.9%, New Economic 1.9%, Labor 0.9%, Tnufa 0.7%, Gesher 0.5%, Telem 0.4% - all match. Sample not stated, max error 4.4%."
  },
  {
+  "id": "k24-2021-01-14-maagar-mochot-channel-20",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.20il.co.il/סקר-מנדטים-ערוץ-20-כל-הפרטים-ומי-לא-עובר-א/ (404) ; web.archive.org (blocked by egress policy) ; web searches (ice, inn, srugim, kikar)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Original Channel 20 page returns 404 and the Wayback Machine is not reachable from this environment; no press report of this 14.01.21 Maagar Mochot/Channel 20 poll found. Only Wikipedia (aggregator) has the numbers."
+ },
+ {
+  "id": "k24-2021-01-18-panels-politics-103fm",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFDIHK&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2021-01-18",
+  "sample": 509,
+  "moe": "4.4%",
+  "note": "103FM 19.01.21 ('Sheva Tesha'; Panels Politics/Lazar, conducted 'last night (Mon)'): Likud 30, New Hope 17, Yesh Atid 14, Yamina 11, Joint List 10, Shas 8, Yisrael Beytenu 7, UTJ 6, Meretz 5, The Israelis 4, Blue&White 4, Religious Zionism 4; Otzma Yehudit 2.6%, Telem 0.3%, Labor 0.7%, Tnufa 0.2% - all match. Not in source: New Economic 2.3%, Gesher 0.4%, Jewish Home 0.4% (Wikipedia). 509 Panel4All, max error 4.4%."
+ },
+ {
   "id": "k24-2021-01-19-midgam-channel-12",
   "status": "match",
   "sourceLevel": "primary",
@@ -165,16 +231,26 @@
   "note": "Maariv 22.01.21 (Panels Politics/Lazar for Maariv-Sofhashavua, 'conducted yesterday'): Likud 31, Yesh Atid 16, New Hope 16, Yamina 11, Joint List 10, UTJ 8, Shas 8, Yisrael Beytenu 7, Meretz 5, Blue&White 4, The Israelis 4; New Economic 2.1%, Religious Zionism 2%, Otzma Yehudit 1.4%, Labor 0.7% - all match. 522 Panel4All, max error 4.4%."
  },
  {
-  "id": "k24-2021-01-31-midgam-x",
+  "id": "k24-2021-01-24-panels-politics-103fm",
   "status": "partial",
   "sourceLevel": "primary",
-  "source": "https://www.mako.co.il/news-politics/2021_q1/Article-9ebff0e4d995771026.htm",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IFEFDD&c41t4nzVQ=GJL",
   "differences": [],
-  "fieldEndSource": "2021-01-31",
-  "sample": 505,
+  "fieldEndSource": "2021-01-24",
+  "sample": 517,
   "moe": "4.4%",
-  "note": "SCENARIO row. N12/Mako 31.01.21 (Midgam/Mano Geva for Channel 12 News; field 31/1/2021). The Wikipedia row is the hypothetical 'if Ra'am runs separately from the Joint List' question: Likud 30, Yesh Atid 17, New Hope 14, Yamina 13, Joint List (Hadash, Ta'al, Balad) 9, Shas 8, UTJ 8, Yisrael Beytenu 7, Labor 6, Meretz 4, Blue&White 4 - all seats match; Ra'am's % (Wikipedia 1.8%) is not given in the source. Main question was Likud 30, YA 17, NH 14, Yamina 13, Joint List 10, Shas 8, UTJ 8, YB 7, Labor 5, Meretz 4, B&W 4 (New Economic 2.9%, RZ 2.1%, Israelis 1.2%, Otzma 1.2% ...). Publisher is Channel 12 News (Wikipedia: none).",
-  "scenario": true
+  "note": "103FM ('Sheva Tesha'; Panels Politics/Lazar, conducted 'last night (Sun)'): Likud 31, Yesh Atid 16, New Hope 14, Yamina 11, Joint List 10, Shas 7, UTJ 7, Yisrael Beytenu 7, Meretz 5, Blue&White 4, Religious Zionism 4, The Israelis 4; New Economic 2.6%, Labor 2.4%, Otzma Yehudit 1.8%, Telem 0.2% - all match. Not in source: Gesher 0.6%, Tnufa 0.7% (Wikipedia). 517 Panel4All, max error 4.4%."
+ },
+ {
+  "id": "k24-2021-01-24-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/295516 (13news/13tv returned 403)",
+  "differences": [],
+  "fieldEndSource": "2021-01-24",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (English) 24.01.21 (Prof. Camil Fuchs poll, Channel 13): Likud 32, Yesh Atid 18, New Hope 14, Yamina 10, Joint List 10, UTJ 7, Yisrael Beytenu 6, Shas 6, Meretz 5, Labor 4, The Israelis 4, Blue&White 4; Religious Zionism 2.6%, New Economic 2.8%, Jewish Home 0.3%, Telem 0.4%, Tnufa 0.5% - all match."
  },
  {
   "id": "k24-2021-01-26-midgam-channel-12",
@@ -199,6 +275,29 @@
   "note": "Maariv 29.01.21 (Panels Politics/Lazar for Maariv-Sofhashavua, 'conducted yesterday'): text gives Likud 30, Yesh Atid 18, New Hope 14, Yamina 12, Joint List 10, Shas 8, UTJ 8, Yisrael Beytenu 7, Meretz 6, Blue&White 4, Labor 4 - which sums to 121. The article's own blocs (Netanyahu bloc 46, 'not Netanyahu' 62, Yamina 12 = 120) imply Meretz 5, as in Wikipedia. Below threshold: Religious Zionism 2.8%, The Israelis 2.6%, New Economic 2.2%, Otzma Yehudit 1.9%, Telem 0.4%, Jewish Home 0.2% - all match Wikipedia. All other seats match; only Meretz (text 6 vs implied 5) is self-contradictory. 536 Panel4All, max error 4.4%."
  },
  {
+  "id": "k24-2021-01-28-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-news/elections-poll-places-likud-in-lead-left-struggling-for-seats-657162 (israelhayom.co.il and israelhayom.com returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 504,
+  "moe": null,
+  "note": "Jerusalem Post 29.01.21 citing the Israel Hayom / Maagar Mochot poll published Friday (504 respondents): Likud 28, Yesh Atid 15, New Hope 13, Yamina 11, Joint List 11, Shas 9, UTJ 7, Yisrael Beytenu 6, Meretz 6, Labor 5, Blue&White 5, New Economic 4; The Israelis below threshold - all seats match. Below-threshold percentages in Wikipedia (Israelis 0.6, RZ 2.0, Jewish Home 1.2, Tnufa 0.5, Otzma 0.3, Telem 0.0) not given. Field date not stated."
+ },
+ {
+  "id": "k24-2021-01-31-midgam-x",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2021_q1/Article-9ebff0e4d995771026.htm",
+  "differences": [],
+  "fieldEndSource": "2021-01-31",
+  "sample": 505,
+  "moe": "4.4%",
+  "note": "SCENARIO row. N12/Mako 31.01.21 (Midgam/Mano Geva for Channel 12 News; field 31/1/2021). The Wikipedia row is the hypothetical 'if Ra'am runs separately from the Joint List' question: Likud 30, Yesh Atid 17, New Hope 14, Yamina 13, Joint List (Hadash, Ta'al, Balad) 9, Shas 8, UTJ 8, Yisrael Beytenu 7, Labor 6, Meretz 4, Blue&White 4 - all seats match; Ra'am's % (Wikipedia 1.8%) is not given in the source. Main question was Likud 30, YA 17, NH 14, Yamina 13, Joint List 10, Shas 8, UTJ 8, YB 7, Labor 5, Meretz 4, B&W 4 (New Economic 2.9%, RZ 2.1%, Israelis 1.2%, Otzma 1.2% ...). Publisher is Channel 12 News (Wikipedia: none).",
+  "scenario": true
+ },
+ {
   "id": "k24-2021-02-01-panels-politics-103fm",
   "status": "match",
   "sourceLevel": "press",
@@ -210,6 +309,17 @@
   "note": "Kipa 02.02.21 citing the Panels Politics (Lazar) poll for 103FM, conducted 'last night (Mon)': Likud 32, Yesh Atid 19, New Hope 14, Yamina 13, Joint List 10, UTJ 8, Shas 8, Yisrael Beytenu 7, Labor 5, Meretz 4; Blue&White 2.8%, Religious Zionism 2.2%, Otzma Yehudit-Noam 2.2%, The Israelis 1.6%, New Economic 1.6% - all match. 512 Panel4All, max error 4.4%."
  },
  {
+  "id": "k24-2021-02-01-maagar-mochot-channel-20",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.ice.co.il/hotnews/news/article/807403 (20il.co.il page 404)",
+  "differences": [],
+  "fieldEndSource": "2021-02-01",
+  "sample": null,
+  "moe": null,
+  "note": "Ice 01.02.21 21:12 reporting the Maagar Mochot poll aired that evening (Monday) on Channel 20: Likud 31, Yesh Atid 17, New Hope 14, Yamina 12, Joint List 11, Shas 8, UTJ 8, Yisrael Beytenu 7, Labor 4, Meretz 4, Blue&White 4 - all seats match. The Israelis, New Economic, Religious Zionism, Jewish Home and Otzma-Noam below threshold without % (Wikipedia: NEP 2.0, Israelis 1.1, Otzma-Noam 0.8, RZ 0.7)."
+ },
+ {
   "id": "k24-2021-02-02-panels-politics-walla",
   "status": "match",
   "sourceLevel": "primary",
@@ -219,6 +329,17 @@
   "sample": 510,
   "moe": "4.4%",
   "note": "Walla 03.02.21 (Walla! NEWS & Panels Politics/Lazar, conducted 'last night'): Likud 31, Yesh Atid 18, New Hope 15, Yamina 12, Joint List 10, Shas 8, UTJ 8, Yisrael Beytenu 7, Labor 6, Meretz 5; Religious Zionism 2%, Otzma Yehudit-Noam 2.2%, Jewish Home 0.4%, Blue&White 1.9%, The Israelis 0.9%, New Economic 0.8% - all match. 510 respondents, max error 4.4%."
+ },
+ {
+  "id": "k24-2021-02-02-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/296105 (13news/13tv returned 403)",
+  "differences": [],
+  "fieldEndSource": "2021-02-02",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (English) 02.02.21 (Channel 13 / Prof. Camil Fuchs poll published tonight): Likud 29, Yesh Atid 16, New Hope 16, Yamina 10, Joint List 10, Labor 8, UTJ 8, Shas 7, Yisrael Beytenu 7, Meretz 5, Blue&White 4; New Economic 2.7%, Religious Zionism 2%, Otzma Yehudit 2%, The Israelis 0.9% - all match."
  },
  {
   "id": "k24-2021-02-03-panels-politics-103fm",

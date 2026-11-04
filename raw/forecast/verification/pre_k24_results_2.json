@@ -99,6 +99,17 @@
   "note": "Maariv 20/08/2020 (Panels Politics/Lazar; 'conducted yesterday'; Panel4All 527): Likud 29, Yesh Atid-Telem 20, Yamina 19, Joint List 14, Blue&White 9, Yisrael Beytenu 9, Shas 8, UTJ 7, Meretz 5; Labor 2.1%, Otzma Yehudit 1.9%, Gesher 0.3%, Jewish Home 0.2%, Derekh Eretz 0.2% - all match."
  },
  {
+  "id": "k24-2020-08-20-direct-polls-israel-hayom",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.israelhayom.co.il/article/793165 (403, blocked - not bypassed); israelhayom.com English (403); INN/Arutz Sheva news IDs 285340-285690 (Aug 16-21 2020) scanned; srugim posts 482350-482800 (Aug 20-21) scanned; web searches",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No accessible source with this Direct Polls/Israel Hayom poll's numbers was found. Israel Hayom blocks access (403); web.archive.org unreachable from this environment. Not verified."
+ },
+ {
   "id": "k24-2020-08-21-maagar-mochot-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -231,6 +242,17 @@
   "note": "ice 6/10/2020: Direct Polls graphic 'המפה הפוליטית 2020': Likud 31, Yamina 20, Yesh Atid-Telem 18, Joint List 13, Shas 9, Yisrael Beytenu 9, Blue&White 7, UTJ 7, Meretz 6; Derekh Eretz 2.5%, Labor 0.7%, Otzma Yehudit 0.6%, Jewish Home 0.3%, Gesher 0.2% - all match. Article text says Likud 30 (typo: text sums to 119 and its right-haredi bloc of 67 implies 31, as in the graphic)."
  },
  {
+  "id": "k24-2020-10-07-maagar-mochot-channel-20",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.20il.co.il/סקר-ערוץ-20-הליכוד-ממשיכה-לרדת-אייזנקוט/ (404); https://www.srugim.co.il/496268",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 7 Oct 2020 evening, Maagar Mochot poll aired on Channel 20: Likud 28, Yamina 21, Joint List 16, Yesh Atid-Telem 15, Shas 9, UTJ 9, Blue and White 9, Yisrael Beytenu 7, Meretz 6 - all match. Below threshold: Labor 1.5, Otzma Yehudit 0.8, Derekh Eretz 0.6, Gesher 0.5 (not listed in Wikipedia entry). Huldai-Eisenkot scenario reported separately."
+ },
+ {
   "id": "k24-2020-10-08-panels-politics-maariv",
   "status": "match",
   "sourceLevel": "primary",
@@ -251,6 +273,17 @@
   "sample": 1033,
   "moe": "3.1%",
   "note": "Maariv 16/10/2020 (Panels Politics/Lazar; conducted 11-12 Oct 2020; panel4all 1,033): Likud 28, Yamina 21, Yesh Atid-Telem 17, Joint List 14, Blue&White 9, Yisrael Beytenu 9, Shas 9, UTJ 7, Meretz 6 - all match."
+ },
+ {
+  "id": "k24-2020-10-15-maagar-mochot-103fm",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IDMIIK&c41t4nzVQ=EL (+ image SEKER-161020-2.jpg); maariv.co.il articles 795800-796250 scanned; INN Oct 15-19 scanned; srugim Oct 15-17 scanned",
+  "differences": [],
+  "fieldEndSource": "2020-10-15",
+  "sample": 501,
+  "moe": "4.4%",
+  "note": "103FM page 16/10/2020 (Maagar Mochot, Prof. Yitzhak Katz; field 14-15 Oct 2020, 501 respondents, 4.4%) gives only a Huldai-Eisenkot party at 10 seats, Mandelblit and Netanyahu-performance questions; its only graphic is the Netanyahu-performance table. No full seat table found anywhere. Note: the Wikipedia row (Likud 28, Yamina 21, JL 16, YA 15, Shas 9, UTJ 9, B&W 9, YB 7, Meretz 6) is identical to the Maagar Mochot/Channel 20 poll of 7 Oct (verified via Srugim) - possibly a copied row; worth flagging."
  },
  {
   "id": "k24-2020-10-18-midgam-channel-12",
