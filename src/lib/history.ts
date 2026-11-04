@@ -304,6 +304,16 @@ export function campaignTrend(c: Cycle, letters: string, days = POINT_WINDOW, mi
   return out;
 }
 
+/** הגושים ההיסטוריים של מערכת: הממליצות על נתניהו לנשיא אחרי אותה מערכת · משפחת הרשימות הערביות · יתר הרשימות (מקור אחד — גם לטבלאות מסך "סקרים") */
+export function historyBlocs(c: Cycle, r: ElectionResult) {
+  const arab = FAMILIES.find(f => f.id === "arab")?.byKnesset[c.knesset] ?? [];
+  return [
+    { id: 'recommended', name: 'הממליצות על נתניהו', short: 'ממליצות על נתניהו', letters: c.recommendedNetanyahu },
+    { id: 'arab', name: 'הרשימות הערביות', short: 'ערביות', letters: arab },
+    { id: 'rest', name: 'יתר הרשימות', short: 'יתר', letters: r.lists.map(l => l.letters).filter(l => !c.recommendedNetanyahu.includes(l) && !arab.includes(l)) },
+  ];
+}
+
 /** הסקר המאוחר ביותר של כל מכון במאגר לפני הבחירות, ללא חלון 14 יום.
  * בשוויון תאריכים נשמר כל פרסום, בלי למצע או לבחור שרירותית.
  * % ממושבי הכנסת, לא אחוזי קולות ולא טעות יחסית. */
@@ -311,12 +321,7 @@ export function lastPollErrors(c: Cycle, r: ElectionResult) {
   const ps = usable(c);
   const last = new Map<string, string>();
   for (const p of ps) if (p.end > (last.get(p.firmKey) ?? "")) last.set(p.firmKey, p.end);
-  const arab = FAMILIES.find(f => f.id === "arab")?.byKnesset[c.knesset] ?? [];
-  const blocs = [
-    { id: 'recommended', name: 'הממליצות על נתניהו', letters: c.recommendedNetanyahu },
-    { id: 'arab', name: 'הרשימות הערביות', letters: arab },
-    { id: 'rest', name: 'יתר הרשימות', letters: r.lists.map(l => l.letters).filter(l => !c.recommendedNetanyahu.includes(l) && !arab.includes(l)) },
-  ];
+  const blocs = historyBlocs(c, r);
   return ps.filter(p => p.end === last.get(p.firmKey)).map(p => {
     const parties = comparedLists(c, r).map(l => ({ letters: l.letters, name: l.short, estimate: seatsOf(p, l.letters) ?? 0, actual: l.seats, diffPp: ((seatsOf(p, l.letters) ?? 0) - l.seats) / 120 * 100 }));
     const maxAbsPp = Math.max(...parties.map(l => Math.abs(l.diffPp)));

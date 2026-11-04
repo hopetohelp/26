@@ -5,17 +5,16 @@ import CandleTrend from "../components/CandleTrend";
 import { Segmented } from "../components/Choice";
 import Select from "../components/Select";
 import Explained from "../components/Explained";
-import { MODEL_AVERAGE, SOURCE_OPTIONS } from "../lib/dataResolver";
 import { Card, ChartWithTable, Note } from "../components/ui";
 import { colorOf } from "../lib/colors";
-import { lists2026, listName, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, seatsIn, toTime, usablePolls, type Poll } from "../lib/data";
+import { lists2026, POINT_DAYS, POINT_WINDOW, pollsterKey, rollingMean, groupSeatsIn, seatsIn, toTime, type Poll } from "../lib/data";
 import { rollingBlocMean } from "../lib/blocTrend";
-import { SIMPLE_BLOCS } from "../lib/simpleSources";
-import { ELECTION_DAY, results2026 } from "../lib/guessAccuracyData";
+import { electionData, type ElectionData } from "../lib/electionData";
+import { K26_ID } from "../lib/election";
 import { date, seatsFmt } from "../lib/format";
-import { electionMarkers } from "../lib/electionMarkers";
+import { electionMarkersOf } from "../lib/electionMarkers";
 
-/** רשימות שנוצרו מאיחוד: לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו */
+/** רשימות שנוצרו מאיחוד (2026): לפני מועד האיחוד מוצג סכום המרכיבים בקו מקווקו. במערכת שאין בה המרכיבים — אין קו */
 const LINEAGE: Record<string, { parts: string[]; since: string; note: string }> = {
   together: { parts: ["yesh_atid", "bennett"], since: "2026-04-27", note: "לפני 27/4: יש עתיד + בנט 2026" },
   democrats: { parts: ["labor", "meretz"], since: "2024-06-30", note: "לפני 30/6/2024: העבודה + מרצ" },
@@ -34,28 +33,17 @@ function withLineage(ps: Poll[]): Poll[] {
   });
 }
 
-/** תקופות (הכרעת בעלים 03.11.2026): הגשת הרשימות — quality.listSubmission; פיזור הכנסת — 17.7.2026 (ויקיפדיה, טבלת הסקרים) */
-const PERIODS = [
-  { id: "lists", label: "מהגשת הרשימות", from: "2026-09-08" },
-  { id: "dissolution", label: "מפיזור הכנסת", from: "2026-07-17" },
-  { id: "k25", label: "מבחירות 22", from: "2022-11-01" },
-] as const;
-type PeriodId = (typeof PERIODS)[number]["id"];
-
-/** מכונים בלבד, ואחרי קו הפרדה — כל צירוף מכון ומזמין */
-const FIRMS = [...new Map(usablePolls.map((p) => [p.firm, p.firmHe])).entries()].sort((a, b) => a[1].localeCompare(b[1], "he"));
-const SERIES = SOURCE_OPTIONS.filter((o) => o.seriesId);
 const pollFilter = (key: string) => (p: Poll) =>
   key === "all" || (key.startsWith("firm:") ? p.firm === key.slice(5) : pollsterKey(p) === key.slice(7));
 
-/** רשימות לפי תוצאות 2026: נכנסו (לפי מנדטים), התמודדו ולא נכנסו, וכל השאר */
-const seats26 = results2026.seats as Record<string, number>;
-const ENTERED = Object.keys(seats26).filter((id) => seats26[id] > 0).sort((a, b) => seats26[b] - seats26[a]);
-const RAN_OUT = Object.keys(results2026.votes ?? seats26).filter((id) => !seats26[id]);
-const OTHERS = lists2026.map((l) => l.id).filter((id) => !ENTERED.includes(id) && !RAN_OUT.includes(id));
-const ALL_LISTS = [...ENTERED, ...RAN_OUT, ...OTHERS];
-
-const colorIndex = (id: string) => Math.max(0, lists2026.findIndex((l) => l.id === id));
+/** רשימות לפי תוצאות המערכת: נכנסו (לפי מנדטים), התמודדו ולא נכנסו, וכל השאר; אין תוצאות — כולן ב"כל השאר" */
+function listGroups(d: ElectionData) {
+  const seats = d.result?.seats ?? {};
+  const entered = Object.keys(seats).filter((id) => seats[id] > 0).sort((a, b) => seats[b] - seats[a]);
+  const ranOut = Object.keys(seats).filter((id) => !seats[id]);
+  const others = d.listOrder.filter((id) => !entered.includes(id) && !ranOut.includes(id));
+  return { entered, ranOut, others, all: [...entered, ...ranOut, ...others] };
+}
 const withdrawnOf = (id: string) => lists2026.find((l) => l.id === id)?.withdrawn;
 const lastMeasuredTime = (id: string, ps: Poll[]) =>
   ps.reduce((acc, p) => (typeof seatsIn(p, id) === "number" ? Math.max(acc, toTime(p.end)) : acc), 0) || undefined;
@@ -106,17 +94,28 @@ function MultiPick({ label, groups, sections, value, onChange }: { label: string
   );
 }
 
-export default function Trends() {
-  // הסקרים עד יום הבחירות; תוצאות האמת יומיים אחריו (electionMarkers)
-  const to = MODEL_AVERAGE.asOf < ELECTION_DAY ? MODEL_AVERAGE.asOf : ELECTION_DAY;
-  const [period, setPeriod] = useState<PeriodId>("lists");
+/** מגירת "מגמות" — אותו רכיב לכל מערכת; הנתונים מ־electionData(id) (הכרעת בעלים 04.11.2026) */
+export default function Trends({ id = K26_ID }: { id?: string } = {}) {
+  const d = electionData(id);
+  return <TrendsOf key={d.id} d={d} />;
+}
+
+function TrendsOf({ d }: { d: ElectionData }) {
+  // הסקרים עד יום הבחירות; תוצאות האמת יומיים אחריו (electionMarkersOf)
+  const to = d.trendTo;
+  const PERIODS = d.periods, SIMPLE_BLOCS = d.blocs, listName = d.listName;
+  const FIRMS = useMemo(() => [...new Map(d.usable.map((p) => [p.firm, p.firmHe])).entries()].sort((a, b) => a[1].localeCompare(b[1], "he")), [d]);
+  const { entered: ENTERED, ranOut: RAN_OUT, others: OTHERS, all: ALL_LISTS } = useMemo(() => listGroups(d), [d]);
+  const colorIndex = (id: string) => Math.max(0, d.listOrder.indexOf(id));
+  const electionMarkers = (ids: string[], id?: string) => electionMarkersOf(d, ids, id);
+  const [period, setPeriod] = useState<string>(PERIODS[0].id);
   const [poll, setPoll] = useState("all");
   const [asTable, setAsTable] = useState(false);
   const [ids, setIds] = useState<string[]>(ENTERED);
   const [blocIds, setBlocIds] = useState<string[]>(SIMPLE_BLOCS.map((b) => b.id));
 
   const from = PERIODS.find((p) => p.id === period)!.from;
-  const rawSource = useMemo(() => usablePolls.filter(pollFilter(poll)), [poll]);
+  const rawSource = useMemo(() => d.usable.filter(pollFilter(poll)), [d, poll]);
   const source = useMemo(() => withLineage(rawSource), [rawSource]);
   const days = POINT_WINDOW;
   // קפסולות רק בכל המכונים ובבחירה אחת; אחרת — קו מגמה רגיל
@@ -177,7 +176,7 @@ export default function Trends() {
           <Select inline id="trend-poll" label="סקר" value={poll} onChange={setPoll} className="grow basis-[160px]">
             <option value="all">ממוצע</option>
             <optgroup label="מכונים">{FIRMS.map(([f, he]) => <option key={f} value={`firm:${f}`}>{he}</option>)}</optgroup>
-            <optgroup label="מכון ומזמין">{SERIES.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</optgroup>
+            <optgroup label="מכון ומזמין">{d.seriesOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</optgroup>
           </Select>
           <Segmented className="basis-[140px]" label="תצוגה" value={asTable ? "table" : "chart"} onChange={(v) => setAsTable(v === "table")} options={[{ id: "chart", label: "גרף" }, { id: "table", label: "טבלה" }]} />
         </div>
@@ -196,7 +195,7 @@ export default function Trends() {
             />
           </div>
         </div>
-        <Explained bare kind="סיכום סקרים" source="טבלאות הסקרים בוויקיפדיה האנגלית (עם קישור למקור של כל סקר)" asOf={`הסקרים עד ${date(to)}`} assumption={assumption} methodAnchor="trends">
+        <Explained bare kind="סיכום סקרים" source={d.sourceNote} asOf={`הסקרים עד ${date(to)}`} assumption={assumption} methodAnchor="trends">
           <ChartWithTable
             asTable={asTable}
             chart={labeled.length ? (
