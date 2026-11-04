@@ -1,0 +1,1400 @@
+[
+ {
+  "id": "2024-04-07-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2024-04-07",
+  "end": "2024-04-07",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 19
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 32
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "shas": {
+    "s": 11
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 11
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2024_q2/Article-2ca5b638779be81027.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-04-07-kantar-kan-11",
+  "firm": "Kantar",
+  "firmHe": "קנטר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "start": "2024-04-07",
+  "end": "2024-04-07",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.4
+   },
+   "likud": {
+    "s": 21
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 30
+   },
+   "new_hope": {
+    "s": 4
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.7
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.kan.org.il/content/kan-news/politic/734896/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-04-03-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-04-03",
+  "end": "2024-04-03",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.4
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 3.0
+   },
+   "likud": {
+    "s": 17
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 32
+   },
+   "new_hope": {
+    "s": 4
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 11
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1089501"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-31-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2024-03-31",
+  "end": "2024-03-31",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.7
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "labor": {
+    "s": 5
+   },
+   "likud": {
+    "s": 24
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 22
+   },
+   "new_hope": {
+    "p": 3.0
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 13
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-28-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-03-27",
+  "end": "2024-03-28",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.0
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.4
+   },
+   "likud": {
+    "s": 19
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 33
+   },
+   "new_hope": {
+    "s": 4
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.9
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1087651"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-21-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-03-20",
+  "end": "2024-03-21",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.4
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.9
+   },
+   "likud": {
+    "s": 17
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 35
+   },
+   "new_hope": {
+    "p": 2.7
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1085814"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-14-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-03-13",
+  "end": "2024-03-14",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.9
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.8
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 36
+   },
+   "new_hope": {
+    "s": 4
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 11
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1083952"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-13-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2024-03-13",
+  "end": "2024-03-13",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.8
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "labor": {
+    "p": 1.9
+   },
+   "likud": {
+    "s": 25
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 22
+   },
+   "new_hope": {
+    "s": 6
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/אחרי-הפרידה-מגנץ-כמה-מנדטים-מקבל-הימין/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-13-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2024-03-13",
+  "end": "2024-03-13",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.7
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.8
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 33
+   },
+   "new_hope": {
+    "s": 5
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.9
+   },
+   "shas": {
+    "s": 11
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 11
+   },
+   "yesh_atid": {
+    "s": 13
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2024_q1/Article-ed2ad3cc6b83e81027.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-13-kantar-kan-11",
+  "firm": "Kantar",
+  "firmHe": "קנטר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "start": "2024-03-13",
+  "end": "2024-03-13",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.9
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.8
+   },
+   "likud": {
+    "s": 21
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 30
+   },
+   "new_hope": {
+    "s": 5
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.8
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 11
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.kan.org.il/content/kan-news/politic/722543/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-12-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2024-03-12",
+  "end": "2024-03-12",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.0
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.7
+   },
+   "likud": {
+    "s": 19
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 35
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.9
+   },
+   "shas": {
+    "s": 11
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2024_q1/Article-e633fb704833e81026.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-07-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-03-06",
+  "end": "2024-03-07",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.9
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 40
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 10
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1082104"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-03-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2024-03-03",
+  "end": "2024-03-03",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 17
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 39
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/survey-903958942/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-29-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-02-28",
+  "end": "2024-02-29",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.7
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 41
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "p": 2.8
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/israel/Article-1080267"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-27-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2024-02-27",
+  "end": "2024-02-27",
+  "sample": null,
+  "values": {
+   "balad": {
+    "s": 4
+   },
+   "hadash_taal": {
+    "p": 3.1
+   },
+   "labor": {
+    "p": 1.9
+   },
+   "likud": {
+    "s": 24
+   },
+   "meretz": {
+    "s": 6
+   },
+   "national_unity": {
+    "s": 27
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 11
+   },
+   "yesh_atid": {
+    "s": 10
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/סקר-מנדטים-ענק-לפיד-ממשיך-לצלול-ליברמן/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-22-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-02-21",
+  "end": "2024-02-22",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.6
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 39
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "p": 2.9
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 13
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1078520"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-15-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-02-14",
+  "end": "2024-02-15",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.4
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.0
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 40
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.9
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1076685"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-13-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2024-02-13",
+  "end": "2024-02-13",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.2
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "labor": {
+    "p": 2.3
+   },
+   "likud": {
+    "s": 28
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 26
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/סקר-מנדטים-גוש-הימין-מתחזק-לפיד-ממשיך/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-11-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2024-02-11",
+  "end": "2024-02-11",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.3
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.4
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 37
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "p": 2.3
+   },
+   "shas": {
+    "s": 11
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2024_q1/Article-92762bb37e89d81026.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-11-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2024-02-11",
+  "end": "2024-02-11",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 37
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 13
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/zyd3x-903930533/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-08-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-02-07",
+  "end": "2024-02-08",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.4
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.4
+   },
+   "likud": {
+    "s": 17
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 36
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1074831"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-02-01-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-01-31",
+  "end": "2024-02-01",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.5
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.2
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 38
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1073006"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-01-30-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2024-01-30",
+  "end": "2024-01-30",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.3
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.6
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 37
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2024_q1/Article-10f9b5ce83b5d81027.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-01-25-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2024-01-24",
+  "end": "2024-01-25",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.4
+   },
+   "likud": {
+    "s": 16
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 40
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 13
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1071131"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-01-21-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2024-01-21",
+  "end": "2024-01-21",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 16
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 37
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/survey-903902650/"
+  ],
+  "prevStatus": null
+ }
+]
