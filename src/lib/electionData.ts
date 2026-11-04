@@ -73,7 +73,8 @@ export function fromHistory(c: Cycle, p: HistPoll & { verificationStatus?: strin
   return {
     id: p.id, start: p.start, end: p.end,
     firm: p.firmKey, firmHe: p.firmHe, publisher: p.publisherHe, publisherHe: p.publisherHe,
-    sample: null, values: p.values, gov: null,
+    // מפלגות־קודמות (unmapped) נקראות בשמן לצד אותיות הקלפי, כדי שהגושים יספרו אותן (electionBlocs); הערכים כפי שבמקור
+    sample: null, values: p.unmapped ? { ...p.values, ...p.unmapped } : p.values, gov: null,
     consistent: p.consistent, eligibleToShow: p.consistent,
     urls: p.urls,
     verified: status === "match" || status === "corrected",

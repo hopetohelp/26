@@ -119,6 +119,7 @@ def build_results() -> list[dict]:
             "lists": sorted(r["lists"], key=lambda l: -l["votes"]),
             "agreements": AGREEMENTS[n], "thresholdMilli": thr,
             **({"blocs": bl} if (bl := election_blocs(n, r["lists"])) else {}),
+            **({"predecessorBlocs": pb} if (pb := predecessor_blocs(n)) else {}),
             # המערכת שקדמה, כשאינה בבורר (2013 ⇐ 2009): ארבעת הנתונים הכלליים ל"מה השתנה"
             **({"previous": __import__("historical_data").previous_2009(sha256)} if n == 19 else {}),
             "source": {"url": r.get("url", f"https://votes{n}.bechirot.gov.il/nationalresults"), "sha256": r["sha256"],
@@ -643,6 +644,36 @@ def election_blocs(n: int, lists: list[dict]) -> dict | None:
             raise SystemExit(f"K{n}: raw/blocs.json {k} — אותיות שאינן רשימה שנבחרה: {missing}")
     return out
 
+def predecessor_blocs(n: int) -> dict | None:
+    """מפלגות־קודמות לפי גוש (raw/blocs.json, "predecessors"; הכרעת בעלים 04.11.2026): רק bloc שאינו null."""
+    pre = BLOCS_RAW.get(str(n), {}).get("predecessors") or {}
+    out: dict[str, list[str]] = {}
+    for name, v in sorted(pre.items()):
+        if v["bloc"]:
+            out.setdefault(v["bloc"], []).append(name)
+    return out or None
+
+
+def check_predecessors(n: int, cycle: dict, election: dict) -> None:
+    """כל שם ב-unmapped מתועד ב-raw/blocs.json; והגוש שנרשם = הגוש המשותף לכל הרשימות הממשיכות (כשיש שיוך במערכת)."""
+    pre = BLOCS_RAW.get(str(n), {}).get("predecessors") or {}
+    names = {k for p in cycle["polls"] for k in p.get("unmapped", {})}
+    if names - set(pre):
+        raise SystemExit(f"K{n}: מפלגה־קודמת בלי שיוך ב-raw/blocs.json predecessors: {sorted(names - set(pre))}")
+    letters = {l["letters"] for l in election["lists"]}
+    of = {x: b for b, xs in (election.get("blocs") or {}).items() for x in xs}
+    for name, v in pre.items():
+        if set(v["successors"]) - letters:
+            raise SystemExit(f"K{n}: {name}: אותיות ממשיכות שאינן בקלפי {set(v['successors']) - letters}")
+        if v["bloc"] not in (None, "netanyahu", "haredi", "arab", "eisenkot") or not v.get("source") or not v.get("why"):
+            raise SystemExit(f"K{n}: {name}: bloc/why/source לא תקינים")
+        if of:
+            common = {of.get(x) for x in v["successors"]}
+            expect = common.pop() if len(common) == 1 and None not in common and v["successors"] else None
+            if v["bloc"] != expect:
+                raise SystemExit(f"K{n}: {name}: הגוש {v['bloc']} אינו הגוש המשותף לממשיכות ({expect})")
+
+
 # שמות המכונים והמזמינים בטבלאות הישנות — לפי צורה מנורמלת (אותיות קטנות, בלי פיסוק). מפתח המכון משותף לכל
 # המערכות, כדי שאפשר יהיה להשוות מכון לאורך זמן. שם שאינו כאן מפיל את הבנייה (אין שם באנגלית בממשק).
 HIST_FIRMS = {
@@ -799,6 +830,8 @@ def build_history(results: list[dict]) -> dict:
             "source": {"page": cfg["page"].replace("en__", "").replace(".wiki", "").replace("_", " "),
                        "sha256": sha256(path), "tableLine": text[:pos].count("\n") + 1},
         })
+    for c in cycles:
+        check_predecessors(c["knesset"], c, by_n[c["knesset"]])
     from exit_polls import load as load_exit_polls  # מדגמי ליל הבחירות (raw/exit-polls-history.json)
     exits = load_exit_polls(results)
     for c in cycles:
