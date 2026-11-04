@@ -3,7 +3,7 @@ import { ELECTIONS, previousElection, previousSummary } from "./election";
 
 describe("בורר המערכות והמערכת הקודמת", () => {
   it("2013 בבורר, הוותיקה ביותר; 2015 מושווית ל־2013", () => {
-    expect(ELECTIONS.at(-1)?.id).toBe("k19");
+    expect(ELECTIONS[ELECTIONS.length - 1].id).toBe("k19");
     expect(previousElection("k20")?.id).toBe("k19");
   });
 
