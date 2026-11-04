@@ -10,7 +10,7 @@ import { Badge, Card, Fold, Note } from "../components/ui";
 import { largestRemainder } from "../lib/fillAll";
 import { Delta } from "../components/ParamCard";
 import { FIELD_GROUP_LABEL, FIELD_STATUS_LABEL, exitSeats, fieldLabel, groupSeatsIn, pollsterKey, pollsterLabel, verificationLabel, type Poll } from "../lib/data";
-import { date, dateRange, num } from "../lib/format";
+import { date, dateRange, dateTime, num, time } from "../lib/format";
 
 const FIELD_GROUPS = ["seats", "pct", "sample", "dates"] as const;
 
@@ -118,10 +118,10 @@ function PollsOf({ d, trailing }: { d: ElectionData; trailing?: ReactNode }) {
       {/* ארבע טבלאות נפרדות, כל אחת עם כותרת וסולם צבעים משלה (הכרעת בעלים 03.11.2026) */}
       <Fold title="מדגמים" open><ArchiveTable d={d} title="מדגמים" missing={exitPolls.length ? undefined : "מדגמי 22:00"} parties={parties} open={open} setOpen={setOpen} rows={exitRows.map((p) => ({
         id: p.id, values: p.values,
-        head: <><span className="font-bold">{date(day)}</span> {p.firmHe} · {p.publisherHe}</>,
+        head: <><span className="font-bold">{dateTime(p.publishedAt)}</span> {p.firmHe} · {p.publisherHe}</>,
         blocs: d.blocs.map((b) => exitSeats(p, [...b.lists])),
         details: <dl className="text-sm bg-paper rounded p-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-          <dt className="font-bold">סוג</dt><dd className="flex flex-wrap gap-1"><Badge tone="ok">מדגם 22:00</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></dd>
+          <dt className="font-bold">סוג</dt><dd className="flex flex-wrap gap-1"><Badge tone="ok">{time(p.publishedAt) === "22:00" ? "מדגם 22:00" : "עדכון מדגם"}</Badge><Badge>{p.verified ? "אומת" : "לא אומת"}</Badge></dd>
           <dt className="font-bold">עורך המדגם</dt><dd>{p.firmHe}</dd>
           {p.note && <><dt className="font-bold">הערה</dt><dd>{p.note}</dd></>}
           <dt className="font-bold">פרסום מקורי</dt>

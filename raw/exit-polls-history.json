@@ -1,5 +1,561 @@
 [
  {
+  "id": "k20-2015-03-17-2200-channel-1",
+  "knesset": 20,
+  "firm": "Unknown (not identified)",
+  "firmHe": "מכון לא אותר",
+  "publisher": "Channel 1 (IBA)",
+  "publisherHe": "ערוץ 1 (רשות השידור)",
+  "publishedAt": "2015-03-17T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 27
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 12
+   },
+   "כ": {
+    "s": 10
+   },
+   "טב": {
+    "s": 9
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.kikar.co.il/316/166514",
+   "https://www.bizportal.co.il/general/news/article/404650",
+   "https://www.ynet.co.il/articles/0,7340,L-4638084,00.html",
+   "https://www.jpost.com/Israel-Elections/First-exit-polls-show-tight-race-between-Herzog-and-Netanyahu-394224"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של ערוץ 1. המפה המלאה בכיכר השבת (17.03.15); ביזפורטל (22:54) זהה אך ש\"ס 8 (סכום 121 — טעות). ynet (22:51) ו-JPost (22:06) מאשרים שוויון 27:27. יחד מתחת לחסימה. חברת הסקרים לא אותרה. בוויקיפדיה האנגלית מופיעה הגרסה המעודכנת (27:26) ולא זו."
+ },
+ {
+  "id": "k20-2015-03-17-2200-channel-10",
+  "knesset": 20,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 10 News",
+  "publisherHe": "חדשות 10",
+  "publishedAt": "2015-03-17T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 27
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 10
+   },
+   "טב": {
+    "s": 8
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/breaking-news/article-468524",
+   "https://www.bizportal.co.il/general/news/article/404650",
+   "https://www.kikar.co.il/316/166514"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 10 (קמיל פוקס). מעריב (22:00), ביזפורטל (22:54), כיכר השבת וכיפה זהים. יחד מתחת לחסימה. תואם לוויקיפדיה האנגלית."
+ },
+ {
+  "id": "k20-2015-03-17-2200-channel-2",
+  "knesset": 20,
+  "firm": "Midgam (Mina Tzemach, Mano Geva)",
+  "firmHe": "מדגם (מינה צמח ומנו גבע)",
+  "publisher": "Channel 2 News",
+  "publisherHe": "חדשות 2",
+  "publishedAt": "2015-03-17T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 28
+   },
+   "אמת": {
+    "s": 27
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 12
+   },
+   "כ": {
+    "s": 9
+   },
+   "טב": {
+    "s": 8
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.kipa.co.il/חדשות/%d7%94%d7%9e%d7%93%d7%92%d7%9e%d7%99%d7%9d-%d7%a0%d7%aa%d7%a0%d7%99%d7%94%d7%95-%d7%9e%d7%a0%d7%a6%d7%97-%d7%94%d7%91%d7%99%d7%aa-%d7%94%d7%99%d7%94%d7%95%d7%93%d7%99-%d7%a2%d7%9d-8-%d7%9e%d7%a0/",
+   "https://www.bizportal.co.il/general/news/article/404650",
+   "https://www.ynet.co.il/articles/0,7340,L-4638084,00.html"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 2. כיפה (22:04) וביזפורטל (22:54) זהים: יש עתיד 12, כולנו 9. דף mako (עודכן 23:18) וכלכליסט (01:34) מציגים יש עתיד 11, כולנו 10 — גרסה מאוחרת יותר (ראו רשומת העדכון); ויקיפדיה האנגלית מציגה את הגרסה המאוחרת. יחד מתחת לחסימה."
+ },
+ {
+  "id": "k20-2015-03-17-2252-channel-1",
+  "knesset": 20,
+  "firm": "Unknown (not identified)",
+  "firmHe": "מכון לא אותר",
+  "publisher": "Channel 1 (IBA)",
+  "publisherHe": "ערוץ 1 (רשות השידור)",
+  "publishedAt": "2015-03-17T22:52:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 26
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 9
+   },
+   "טב": {
+    "s": 8
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "קץ": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.israelnationalnews.com/news/192787",
+   "https://www.israelnationalnews.com/news/192792",
+   "https://www.kikar.co.il/316/166538",
+   "https://www.calcalist.co.il/local/articles/0,7340,L-3654859,00.html"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של ערוץ 1 (יחד עוברת עם 4). המפה המלאה ב-INN (כתבה 192787, חותמת 22:04 אך עודכנה; תת-הכותרת עוד אומרת הבית היהודי 9); כיכר השבת מאשרת 27/26 והבית היהודי 8; כלכליסט (01:34) מאשר משותפת 12, כולנו 9, יחד 4. שעת השידור לא אותרה; השעה היא דיווח INN 192792 (22:52) שערוץ 1 'כעת' מכניס את יחד. ynet (עודכן 00:58) מייחס לערוץ 1 משותפת 11, יש עתיד 9, ישראל ביתנו 6 (סכום 118) — לא אומץ. תואם לוויקיפדיה האנגלית."
+ },
+ {
+  "id": "k20-2015-03-17-2318-channel-2",
+  "knesset": 20,
+  "firm": "Midgam (Mina Tzemach, Mano Geva)",
+  "firmHe": "מדגם (מינה צמח ומנו גבע)",
+  "publisher": "Channel 2 News",
+  "publisherHe": "חדשות 2",
+  "publishedAt": "2015-03-17T23:18:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 28
+   },
+   "אמת": {
+    "s": 27
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 10
+   },
+   "טב": {
+    "s": 8
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-military/politics-q1_2015/Article-fd69215b6292c41004.htm",
+   "https://www.calcalist.co.il/local/articles/0,7340,L-3654859,00.html"
+  ],
+  "status": "match",
+  "sourceLevel": "primary",
+  "note": "גרסה מעודכנת של מדגם חדשות 2 (יש עתיד 11, כולנו 10 במקום 12/9). המפה המלאה ב-mako (פורסם 21:25, עודכן 23:18); כלכליסט (01:34) מאשר יש עתיד 11 וכולנו 10 בערוץ 2. שעת השידור המדויקת של העדכון לא אותרה; השעה היא חותמת העדכון של mako. תואם לוויקיפדיה האנגלית."
+ },
+ {
+  "id": "k20-2015-03-18-0058-channel-10",
+  "knesset": 20,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 10 News",
+  "publisherHe": "חדשות 10",
+  "publishedAt": "2015-03-18T00:58:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 27
+   },
+   "אמת": {
+    "s": 26
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "פה": {
+    "s": 11
+   },
+   "כ": {
+    "s": 10
+   },
+   "טב": {
+    "s": 8
+   },
+   "שס": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.ynet.co.il/articles/0,7340,L-4638055,00.html",
+   "https://www.calcalist.co.il/local/articles/0,7340,L-3654859,00.html"
+  ],
+  "status": "partial",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של חדשות 10 (27:26). לפי ynet (עודכן 00:58) הסכום 119 — מנדט אחד חסר. כלכליסט (01:34) נותן טווחים (יהדות התורה 6–7, ישראל ביתנו 5–6) שמרמזים על ישראל ביתנו 6 בערוץ 10, אך לא במפורש. ynet וכלכליסט: יחד לא עוברת בערוץ 10; INN (22:52) טען שערוץ 10 מכניס את יחד — סתירה לא מוכרעת. שעת השידור לא אותרה; השעה היא חותמת ynet. אין שורה בוויקיפדיה."
+ },
+ {
+  "id": "k21-2019-04-09-2200-channel-12",
+  "knesset": 21,
+  "firm": "Midgam (Mano Geva, Mina Tzemach)",
+  "firmHe": "מדגם (מנו גבע ומינה צמח)",
+  "publisher": "Channel 12 (Keshet)",
+  "publisherHe": "חדשות 12 (קשת)",
+  "publishedAt": "2019-04-09T22:00:00+03:00",
+  "values": {
+   "פה": {
+    "s": 37
+   },
+   "מחל": {
+    "s": 33
+   },
+   "ג": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 6
+   },
+   "שס": {
+    "s": 6
+   },
+   "ום": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "טב": {
+    "s": 5
+   },
+   "ל": {
+    "s": 5
+   },
+   "כ": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://elections.walla.co.il/item/3229277",
+   "https://www.israelnationalnews.com/news/261636",
+   "https://www.timesofisrael.com/liveblog_entry/channel-12-exit-poll-has-gantz-leading-netanyahu-37-33/",
+   "https://www.algemeiner.com/2019/04/09/israel-votes-exit-polls-show-dead-heat-between-netanyahu-and-main-challenger-benny-gantz/",
+   "https://www.maariv.co.il/elections2019/news/article-693573"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 12. המספרים המלאים אושרו בוואלה, ב-INN ובאלגמיינר; ToI (22:03) מאשר 37/33 וגושים 60:60. מעריב (22:04) כתב חד\"ש-תע\"ל 7 ורע\"מ-בל\"ד 5 (בלי ש\"ס) — חריג מול שאר המקורות, לא אומץ. הימין החדש, זהות וגשר מתחת לחסימה. תואם לוויקיפדיה. דף mako המקורי עודכן בהמשך הלילה למדגם המעודכן."
+ },
+ {
+  "id": "k21-2019-04-09-2200-channel-13",
+  "knesset": 21,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13 (Reshet)",
+  "publisherHe": "חדשות 13 (רשת)",
+  "publishedAt": "2019-04-09T22:00:00+03:00",
+  "values": {
+   "מחל": {
+    "s": 36
+   },
+   "פה": {
+    "s": 36
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ום": {
+    "s": 7
+   },
+   "שס": {
+    "s": 7
+   },
+   "טב": {
+    "s": 4
+   },
+   "נ": {
+    "s": 4
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/breaking-news/article-693590",
+   "https://www.timesofisrael.com/liveblog_entry/channel-13-exit-poll-has-blue-and-white-and-likud-tied-at-36/",
+   "https://www.algemeiner.com/2019/04/09/israel-votes-exit-polls-show-dead-heat-between-netanyahu-and-main-challenger-benny-gantz/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 13. המספרים המלאים במעריב (22:05) ובאלגמיינר; ToI (22:08) מאשר 36/36 וגושים 66:54. רע\"מ-בל\"ד, זהות וגשר מתחת לחסימה. תואם לוויקיפדיה."
+ },
+ {
+  "id": "k21-2019-04-09-2200-kan-11",
+  "knesset": 21,
+  "firm": "Kantar (KANTAR TNS)",
+  "firmHe": "קנטאר (KANTAR TNS)",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2019-04-09T22:00:00+03:00",
+  "values": {
+   "פה": {
+    "s": 37
+   },
+   "מחל": {
+    "s": 36
+   },
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "שס": {
+    "s": 7
+   },
+   "ום": {
+    "s": 6
+   },
+   "טב": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "כ": {
+    "s": 5
+   },
+   "ל": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q2_2019/Article-424962317830a61004.htm",
+   "https://elections.walla.co.il/item/3229277",
+   "https://www.israelnationalnews.com/news/261636",
+   "https://www.timesofisrael.com/liveblog_entry/kan-exit-poll-blue-and-white-leads-by-one-seat-but-right-wing-bloc-stronger/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של כאן (קנטאר). המספרים המלאים אושרו ב-N12/mako (פורסם 09.04.19 22:20), בוואלה (23:08) וב-INN (01:47); ToI ב-22:13 מאשר 37/36 וגושים 64:56. רע\"מ-בל\"ד, הימין החדש, זהות וגשר מתחת לחסימה. תואם לוויקיפדיה. לא נמצא מדגם מעודכן של כאן באותו לילה (באתר כאן 403)."
+ },
+ {
+  "id": "k21-2019-04-10-0147-channel-13",
+  "knesset": 21,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13 (Reshet)",
+  "publisherHe": "חדשות 13 (רשת)",
+  "publishedAt": "2019-04-10T01:47:00+03:00",
+  "values": {
+   "מחל": {
+    "s": 35
+   },
+   "פה": {
+    "s": 34
+   },
+   "שס": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 6
+   },
+   "ום": {
+    "s": 6
+   },
+   "ל": {
+    "s": 6
+   },
+   "טב": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "כ": {
+    "s": 4
+   },
+   "דעם": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q2_2019/Article-424962317830a61004.htm",
+   "https://www.israelnationalnews.com/news/261636",
+   "https://www.timesofisrael.com/liveblog_entry/updated-exit-polls-indicate-netanyahu-headed-for-victory/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של חדשות 13. שעת השידור המדויקת לא אותרה; השעה היא חותמת הדיווח הראשון שנמצא (INN 01:47; ToI 01:58). mako (עודכן 02:34): ליכוד 35, כחול לבן 34, ש\"ס 8, יהדות התורה 7, העבודה 6, חד\"ש-תע\"ל 6, איחוד הימין 5, מרצ 5, כולנו 4, (רע\"מ-)בל\"ד 4, גושים 65:55. INN: ישראל ביתנו 6 (ומרצ 4, בלי כולנו — לא מסתכם). השילוב תואם לגושים 65:55 ומסתכם ל-120. הימין החדש מתחת לחסימה (ToI). אין שורה בוויקיפדיה."
+ },
+ {
+  "id": "k21-2019-04-10-0158-channel-12",
+  "knesset": 21,
+  "firm": "Midgam (Mano Geva, Mina Tzemach)",
+  "firmHe": "מדגם (מנו גבע ומינה צמח)",
+  "publisher": "Channel 12 (Keshet)",
+  "publisherHe": "חדשות 12 (קשת)",
+  "publishedAt": "2019-04-10T01:58:00+03:00",
+  "values": {
+   "מחל": {
+    "s": 35
+   },
+   "פה": {
+    "s": 34
+   },
+   "שס": {
+    "s": 8
+   },
+   "ג": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 6
+   },
+   "ום": {
+    "s": 6
+   },
+   "דעם": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "טב": {
+    "s": 5
+   },
+   "כ": {
+    "s": 4
+   },
+   "ל": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q2_2019/Article-260bbbe4c430a61004.htm",
+   "https://www.timesofisrael.com/liveblog_entry/updated-exit-polls-indicate-netanyahu-headed-for-victory/"
+  ],
+  "status": "match",
+  "sourceLevel": "primary",
+  "note": "מדגם מעודכן של חדשות 12; המפה המלאה ב-mako (עודכן 10.04.19 02:34), גושים 63:57; הימין החדש 2.51%, זהות 2.42%, גשר 1.73%. שעת השידור המדויקת לא אותרה: ב-INN 01:47 עוד מופיע המדגם הראשון, וב-ToI 01:58 כבר המעודכן — השעה היא חותמת ToI. בכתבת mako נוספת נכתב איחוד הימין 6 (טעות — לא מסתכם ולא תואם לגוש 63). אין שורה בוויקיפדיה."
+ },
+ {
   "id": "k22-2019-09-17-2200-channel-12",
   "knesset": 22,
   "firm": "Midgam (Mano Geva)",

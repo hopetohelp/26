@@ -1,4 +1,4 @@
-import { exitPolls, exitSeats, toTime, type ExitPoll } from "./data";
+import { exitPolls, exitSeats, firstExitPolls, toTime, type ExitPoll } from "./data";
 import { hasResults, results2026, ELECTION_DAY } from "./guessAccuracyData";
 
 const DAY = 86_400_000;
@@ -12,7 +12,8 @@ export interface MarkerSource { day: string; exitPolls: ExitPoll[]; result: { se
 /** שתי הנקודות בגרף מגמה של מערכת, לרשימה או לקבוצת רשימות (סכום); `id` = מזהה הסדרה בגרף של כמה סדרות */
 export function electionMarkersOf(src: MarkerSource, ids: string[], id?: string) {
   const exitT = toTime(src.day);
-  const exit = src.exitPolls.length ? src.exitPolls.reduce((t, p) => t + exitSeats(p, ids), 0) / src.exitPolls.length : null;
+  const first = firstExitPolls(src.exitPolls);  // רק 22:00 — בלי עדכוני הלילה
+  const exit = first.length ? first.reduce((t, p) => t + exitSeats(p, ids), 0) / first.length : null;
   return [
     ...(exit == null ? [] : [{ t: exitT, v: Math.round(exit * 10) / 10, id, label: "ממוצע המדגמים", asMean: true }]),
     ...(src.result ? [{ t: exitT + 2 * DAY, v: ids.reduce((t, x) => t + (src.result!.seats[x] ?? 0), 0), id, label: "תוצאות אמת" }] : []),
