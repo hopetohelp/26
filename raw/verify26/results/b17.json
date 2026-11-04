@@ -821,5 +821,174 @@
   ],
   "note": "מנדטי כל הרשימות זהים לכתבה (הציונות הדתית 2.9%, בל\"ד 2.2%). שטח 17.3.2025, 504 משיבים, טעות 4.4%.",
   "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-04-24-sf-dp-channel-14",
+  "status": "unreachable",
+  "source": "https://www.srugim.co.il/1118939",
+  "access": [
+   "none"
+  ],
+  "published": "2025-04-24T21:00:00+03:00",
+  "fields": {},
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). דיווח יחיד בסרוגים (24.4.2025) סותר את עצמו: הדמוקרטים גם 16 וגם 17; יהדות התורה 10 (בנתונים 8, והסכום יוצא 122); בל\"ד 2.3% (בנתונים 2.4); הציונות הדתית בלי מספר. שאר הרשימות תואמות (ליכוד 34, ישראל ביתנו 16, ממלכתי 9, יש עתיד 5, ש\"ס 10, עוצמה 6, רע\"ם 5, חד\"ש-תע\"ל 5). לא נמצא דיווח שני — לא נרשמו פערים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-04-20-kantar-kan-11-b",
+  "status": "unreachable",
+  "source": "",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "scenarioOf": "2025-04-20-kantar-kan-11",
+  "note": "תרחיש בנט של סקר כאן 20.4.2025. כאן ובחדרי חרדים חסומים (403); בחיפוש לא נמצא דיווח עצמאי קריא עם מספרי התרחיש.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-04-20-kantar-kan-11",
+  "status": "unreachable",
+  "source": "https://www.kan.org.il/content/kan-news/politic/887890/",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כאן חסום (403). דיווח בחדרי חרדים (news/1692068, 21.4.2025) חסום גם הוא; לפי תקציר החיפוש בלבד: ליכוד 24, ממלכתי 16, ישראל ביתנו 16, הדמוקרטים 14, שטח 20.4, 602 משיבים, טעות 4.0% — לא נקרא ישירות ולא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-04-10-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1202284-0/",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-04-10T21:41:27+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1202284-0/"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). מנדטי כל הרשימות זהים ל\"סקר המלא\" בכיפה (10.4.2025 21:41; סכום 120). אחוז בל\"ד לא מופיע. עורך הסקר, מדגם ומועדי שטח לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-03-27-sf-dp-channel-14",
+  "status": "unreachable",
+  "source": "https://www.c14.co.il/article/1162416",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403); בחיפוש (כיפה, סרוגים, ערוץ 7, חרדים10 ועוד) לא נמצא דיווח עצמאי של הסקר מ-27.3.2025.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-03-17-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.inn.co.il/news/664094",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-03-17T21:55:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/664094"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). ערוץ 7 (סיכום ארבעה סקרים, 17.3.2025) מביא את ערוץ 14 לכל רשימה — כולן זהות (סכום 120); בל\"ד לא עוברת, בלי אחוז. עורך, מדגם ומועדים לא צוינו.",
+  "checkedAt": "2026-11-04"
  }
 ]
