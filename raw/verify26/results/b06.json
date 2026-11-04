@@ -311,7 +311,7 @@
  },
  {
   "id": "2026-05-21-lri-p4a-maariv",
-  "status": "mismatch",
+  "status": "secondary",
   "source": "https://www.maariv.co.il/news/politics/article-1323941",
   "access": [
    "primary"
@@ -349,28 +349,10 @@
    "population": true,
    "questions": false
   },
-  "diffs": [
-   {
-    "field": "start",
-    "from": "2026-05-21",
-    "to": "2026-05-19",
-    "source": "https://www.maariv.co.il/news/politics/article-1323941"
-   },
-   {
-    "field": "end",
-    "from": "2026-05-21",
-    "to": "2026-05-20",
-    "source": "https://www.maariv.co.il/news/politics/article-1323941"
-   },
-   {
-    "field": "sample",
-    "from": null,
-    "to": 500,
-    "source": "https://www.maariv.co.il/news/politics/article-1323941"
-   }
-  ],
-  "note": "כפילות של 2026-05-20-lri-p4a-maariv: הקישור (ערוץ 7 באנגלית, 21.5) מדווח על סקר מעריב שפורסם בבוקר 21.5 — אותם מנדטים בדיוק, זהים גם לפרסום המקורי. 21.5 הוא יום הפרסום; השטח 19–20.5, 500 משיבים. הטבלה בתרשים infogram המשובץ בכתבה (e.infogram.com/_/zslryeeSRa95GQZOeiBm).",
-  "checkedAt": "2026-11-04"
+  "diffs": [],
+  "note": "כפילות של 2026-05-20-lri-p4a-maariv: הקישור (ערוץ 7 באנגלית, 21.5) מדווח על סקר מעריב שפורסם בבוקר 21.5 (שדה 19–20.5, 500 משיבים); המנדטים זהים.",
+  "checkedAt": "2026-11-04",
+  "duplicateOf": "2026-05-20-lri-p4a-maariv"
  },
  {
   "id": "2026-05-13-lri-p4a-maariv",
@@ -717,6 +699,253 @@
   },
   "diffs": [],
   "note": "כתבת חדשות 13 (WebFetch; curl נחסם): מנדטי כל 11 הרשימות זהים. אחוזי בל\"ד, המילואימניקים וכחול לבן לא פורסמו (רק 'מתחת לחסימה'); מדגם, טעות ומועד שטח לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-28-sf-nd-channel-14",
+  "status": "secondary",
+  "source": "https://www.inn.co.il/news/697857",
+  "access": [
+   "secondary"
+  ],
+  "published": "2026-05-28T20:58:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/697857"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 14",
+   "pollster": "שלמה פילבר (ניתוח)"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403/Cloudflare). שני דיווחים עצמאיים תואמים — ערוץ 7 (inn 697857) וסרוגים (1305572), שניהם 28.5 בערב: מנדטי כל 11 הרשימות ובל\"ד 2.1%, כחול לבן 1.2% — זהים. מדגם 615 ומועד שטח לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-07-sf-nd-channel-14",
+  "status": "secondary",
+  "source": "https://www.inn.co.il/news/696380",
+  "access": [
+   "secondary"
+  ],
+  "published": "2026-05-07T21:05:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/696380"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.inn.co.il/news/696380",
+  "note": "רשומה בלי קישור. נמצא דיווח בערוץ 7 (inn 696380, 7.5 בערב) על סקר חדשות 14: מנדטי כל 11 הרשימות ובל\"ד 2.1%, כחול לבן 1.8% — זהים. ערוץ 14 עצמו חוסם; מדגם 721 ומועד שטח לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-14-sf-nd-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חוסם (403/Cloudflare) ב-curl וב-WebFetch; לא נמצא דיווח עצמאי עם מנדטי הסקר. JDN (2653203, 18.5, מצטט את הארץ) מזכיר שהסקר האחרון של חברת הסקרים של ערוץ 14 נערך על 436 נדגמים — תואם את המדגם ברשומה, אך אינו אימות.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-20-kantar-kan-11",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il חוסם (403/Cloudflare) ב-curl וב-WebFetch; לא נמצא דיווח עצמאי קריא עם מנדטי הסקר (חיפושים בערוץ 7, סרוגים, JDN, טיימס אוף ישראל).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-20-kantar-kan-11-b",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "scenarioOf": "2026-05-20-kantar-kan-11",
+  "note": "תרחיש רשימה ערבית משותפת עם רע\"ם של סקר כאן 20.5. kan.org.il חוסם (403); לא נמצא דיווח עצמאי קריא.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-12-kantar-kan-11",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il חוסם (403/Cloudflare) ב-curl וב-WebFetch; לא נמצא דיווח עצמאי קריא עם מנדטי הסקר.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-05-13-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "israelhayom.co.il מחזיר Access Denied (403) ב-curl וב-WebFetch; לא נמצא דיווח עצמאי קריא עם מנדטי הסקר.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-30-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "israelhayom.co.il מחזיר Access Denied (403) ב-curl וב-WebFetch; לא נמצא דיווח עצמאי קריא עם מנדטי הסקר.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-27-lri-p4a-walla",
+  "status": "partial",
+  "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-894294",
+  "access": [
+   "secondary"
+  ],
+  "published": "2026-04-27T16:48:47+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-894294"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-894294"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "pollster": "לזר מחקרים",
+   "commissioner": "וואלה"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ג'רוזלם פוסט (דיווח על סקר וואלה): ביחד 27, הליכוד 28, ישר 15 — זהים; גושים 59/51/10 עקביים עם הרשומה. שאר הרשימות לא פורטו; 500 משיבים, טעות 4.4%. כתבת וואלה המקורית לא נמצאה.",
   "checkedAt": "2026-11-04"
  }
 ]

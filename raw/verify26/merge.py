@@ -41,6 +41,8 @@ def main() -> None:
     polls = {p["id"]: p for p in load(ROOT / "src" / "data" / "polls.json")["polls"]}
     ver = load(RAW / "verification.json")
     cor = load(RAW / "corrections.json")
+    err = load(RAW / "erroneous-polls.json")
+    err_ids = {e["id"] for e in err}
     ver_by = {v["id"]: i for i, v in enumerate(ver)}
     cor_keys = {(c["id"], c["field"]) for c in cor}
     stats = {"new": 0, "replaced": 0, "kept": 0, "corrections": 0, "urls": 0, "skipped_diff": 0, "unknown": 0}
@@ -59,6 +61,11 @@ def main() -> None:
                 for k in parts[:-1]:
                     h = h.setdefault(k, {})
                 h[parts[-1]] = c["from"]
+            if r.get("duplicateOf") and pid not in err_ids:
+                err.append({"id": pid, "reason": f"כפילות של {r['duplicateOf']} — אותו סקר, שנקלט פעמיים מדיווחים שונים",
+                            "source": r.get("source"), "markedAt": "2026-11-04"})
+                err_ids.add(pid)
+                stats["duplicates"] = stats.get("duplicates", 0) + 1
             status = r["status"]
             src = r.get("source")
             applied = 0
@@ -116,6 +123,7 @@ def main() -> None:
     if not dry:
         dump(RAW / "verification.json", ver)
         dump(RAW / "corrections.json", cor)
+        (RAW / "erroneous-polls.json").write_text("[\n" + ",\n".join("  " + json.dumps(e, ensure_ascii=False) for e in err) + "\n]\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
