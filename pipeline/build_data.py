@@ -116,6 +116,8 @@ def build_results() -> list[dict]:
             "lists": sorted(r["lists"], key=lambda l: -l["votes"]),
             "agreements": AGREEMENTS[n], "thresholdMilli": thr,
             **({"blocs": bl} if (bl := election_blocs(n, r["lists"])) else {}),
+            # המערכת שקדמה, כשאינה בבורר (2013 ⇐ 2009): ארבעת הנתונים הכלליים ל"מה השתנה"
+            **({"previous": __import__("historical_data").previous_2009(sha256)} if n == 19 else {}),
             "source": {"url": r.get("url", f"https://votes{n}.bechirot.gov.il/nationalresults"), "sha256": r["sha256"],
                        "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-%d, פרק הסכמי עודפים" % n},
         })

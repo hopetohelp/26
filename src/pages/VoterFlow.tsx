@@ -12,7 +12,7 @@ import { num, pctOne, pctValue } from "../lib/format";
 import Missing from "../components/Missing";
 import LocalityResults from "../components/LocalityResults";
 import { results } from "../lib/data";
-import { K26_ID, electionOption, previousElection } from "../lib/election";
+import { K26_ID, electionOption, previousElection, previousSummary } from "../lib/election";
 import { hasVoterFlow } from "../lib/electionData";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
@@ -272,7 +272,10 @@ function overviewPair(id: string) {
   if (id === K26_ID) { const o = overview(); return o.y2026 ? { prev: o.y2022, cur: o.y2026 } : undefined; }
   const e = results.find((x) => x.id === id);
   const prevId = previousElection(id)?.id, prev = prevId ? results.find((x) => x.id === prevId) : undefined;
-  return e ? { prev: prev ? overviewOf(prev) : null, cur: overviewOf(e) } : undefined;
+  const before = previousSummary(id);
+  const prevOverview = prev ? overviewOf(prev)
+    : before ? { eligible: before.eligible, voted: before.voted, invalid: before.invalid, belowThreshold: before.belowThreshold, inKnesset: before.valid - before.belowThreshold } : null;
+  return e ? { prev: prevOverview, cur: overviewOf(e) } : undefined;
 }
 
 /**

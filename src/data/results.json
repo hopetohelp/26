@@ -280,6 +280,20 @@
     "votes": 461
    }
   ],
+  "previous": {
+   "belowThreshold": 103904,
+   "date": "2009-02-10",
+   "eligible": 5278985,
+   "full": "פברואר 2009",
+   "invalid": 43097,
+   "knesset": 18,
+   "label": "2009",
+   "sha256": "c7682265581b25d1ca24f74fc633911f53211e27e1f23f8a8da449fb542d1169",
+   "source": "https://data.gov.il/dataset/votes-knesset (משאב 840edb33-90ac-4176-8ad9-4cdcb8e5caa5)",
+   "thresholdMilli": 2000,
+   "valid": 3373490,
+   "voted": 3416587
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-19, פרק הסכמי עודפים",
    "sha256": "a4e8d7d0dada7e0cded47bde85da7f3cd60072564bc1e019c8e7791b26e48c0c",
