@@ -116,6 +116,16 @@ export interface ExitPoll {
   note?: string;
 }
 export const exitPolls = ((pollsFile as { exitPolls?: unknown }).exitPolls ?? []) as ExitPoll[];
+/** מדגמי 22:00: הפרסום הראשון של כל ערוץ. עדכוני הלילה (שורות נוספות של אותו ערוץ) מוצגים בארכיון בלבד,
+ *  ואינם נכנסים לממוצע המדגמים, לנקודת המדגמים במגמות ולהשוואה לתוצאות. */
+export const firstExitPolls = (polls: ExitPoll[]) => {
+  const first = new Map<string, ExitPoll>();
+  for (const p of polls) {
+    const cur = first.get(p.publisher);
+    if (!cur || p.publishedAt < cur.publishedAt) first.set(p.publisher, p);
+  }
+  return polls.filter((p) => first.get(p.publisher) === p);
+};
 /** המנדטים של רשימה (או סכום קבוצת רשימות) במדגם; רשימה שלא הופיעה — 0 */
 export const exitSeats = (p: ExitPoll, ids: string[]) => ids.reduce((t, id) => t + (p.values[id]?.s ?? 0), 0);
 export const meta = metaFile as unknown as {
