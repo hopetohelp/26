@@ -5,9 +5,12 @@ import results from "../data/results.json";
 const files = import.meta.glob<{ default: { knesset: number; prev: number; old: string[]; new: string[]; national: { flows: number[][]; flowsTo: number[][] } } }>("../data/flows/k*.json", { eager: true });
 
 it("בכל זוג מערכות: עמודות המעבר = התוצאה הרשמית החדשה, שורות = הקודמת", () => {
-  expect(Object.keys(files).length).toBeGreaterThanOrEqual(5);
+  expect(Object.keys(files).length).toBeGreaterThanOrEqual(7);
   for (const { default: f } of Object.values(files)) {
-    const cur = results.find((e) => e.knesset === f.knesset)!, prev = results.find((e) => e.knesset === f.prev)!;
+    // 2009 אינה בבורר: התוצאה שלה ב-previous של 2013
+    type L = { lists: { letters: string; votes: number }[] };
+    const cur = results.find((e) => e.knesset === f.knesset)!;
+    const prev: L = results.find((e) => e.knesset === f.prev) ?? (results.find((e) => (e as { previous?: { knesset: number } }).previous?.knesset === f.prev) as unknown as { previous: L }).previous;
     f.new.slice(0, -2).forEach((l, j) => expect(f.national.flows.reduce((a, r) => a + r[j], 0), `${f.knesset} ${l}`).toBe(cur.lists.find((x) => x.letters === l)!.votes));
     f.old.slice(0, -3).forEach((l, i) => expect(f.national.flowsTo[i].reduce((a, v) => a + v, 0), `${f.prev} ${l}`).toBe(prev.lists.find((x) => x.letters === l)!.votes));
     expect(f.national.flows.flat().reduce((a, v) => a + v, 0) - f.national.flows.reduce((a, r) => a + r[f.new.length - 1], 0)).toBe(cur.valid);
@@ -42,4 +45,12 @@ it("חיפוש לפי עיר בכל מערכת קודמת: שתי השנים, ש
     const lead = leadParty(view, c)!;
     expect(lead.seats, `${c.id} ${lead.name}`).toBe(results.find((e) => e.id === c.id)!.lists.find((l) => l.letters === lead.id)!.seats);
   }
+});
+
+it("2009⇐2013: קובץ k19 קיים, המערכת הקודמת 2009", () => {
+  const f = Object.values(files).find(({ default: x }) => x.knesset === 19)!.default;
+  const c = flowCtxFrom(f as unknown as FlowFile);
+  expect(f.prev).toBe(18);
+  expect(c.prevLabel).toBe("2009");
+  expect(c.oldName("כן")).toBe("קדימה");
 });
