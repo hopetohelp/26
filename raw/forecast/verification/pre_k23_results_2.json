@@ -1,5 +1,38 @@
 [
  {
+  "id": "k23-2019-12-15-kantar-kan-11-b",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273188 ; https://jpost.com/breaking-news/in-new-poll-611032 ; https://en.globes.co.il/en/article-1001311120",
+  "differences": [
+   {
+    "key": "ג (יהדות התורה)",
+    "wikipedia": 7,
+    "source": 8
+   },
+   {
+    "key": "[קודמת] New Right (Israel)",
+    "wikipedia": 8,
+    "source": 7
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kan 11/Kantar 15.12.2019, Sa'ar-led Likud scenario. JPost: 'Blue and White will drop to 34 seats while the Likud will drop to 27 ... Joint List with 13 seats, followed by Shas with 10 seats, UTJ with 8 seats, Yisrael Beytenu and the New Right with 7 seats each, Labor-Gesher and the Democratic Union with 5 seats each, and the United Right Parties with 4 seats' (sum 120). INN independently: 'Shas would rise to ten, and UTJ to eight', YB 7, Jewish Home-National Union 4. Wikipedia has UTJ 7 and New Right 8 (sum also 120) — press sources give UTJ 8, New Right 7."
+ },
+ {
+  "id": "k23-2019-12-15-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273188 ; https://jpost.com/breaking-news/in-new-poll-611032 ; https://en.globes.co.il/en/article-1001311120",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kan 11/Kantar poll aired Sunday 15.12.2019, as reported by INN (15.12), JPost (15.12) and Globes (16.12), Netanyahu-led Likud: Blue and White 35, Likud 31, Joint List 13, Shas 9, Yisrael Beytenu 8, UTJ 7, New Right 6, Labor-Gesher 6, Democratic Union 5; United Right and Otzma below threshold. All match. Kan original not located; sample/MoE not reported."
+ },
+ {
   "id": "k23-2019-12-19-smith-103fm-b",
   "status": "match",
   "sourceLevel": "press",
@@ -20,6 +53,17 @@
   "sample": null,
   "moe": null,
   "note": "Israel National News 20.12.2019 citing weekly Radio 103FM poll by Smith Institute, Likud headed by Netanyahu: Blue and White 35, Likud 32, Joint List 13, Shas 8, UTJ 7, Yisrael Beytenu 7, New Right 5, Labor-Gesher 5, United Right (JH+NU+Otzma) 4, Democratic Union 4. All match. Sample/MoE not given."
+ },
+ {
+  "id": "k23-2019-12-29-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273822",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 30.12.2019 on the Channel 12 News poll published Sunday evening (29.12): Likud 32, Blue and White 34, Joint List 13, Yisrael Beytenu 8, Shas 8, UTJ 7, New Right 5, Labor-Gesher 5, Democratic Union 4, United Right (Jewish Home+Otzma, with National Union) 4. All match. Pollster/sample not stated in this report; Channel 12/mako original not located."
  },
  {
   "id": "k23-2020-01-01-panels-politics-maariv",
@@ -75,6 +119,83 @@
   "sample": 500,
   "moe": "4.4%",
   "note": "Arutz 7 9.1.2020 (Midgam, 500, ±4.4%): for the scenario where האיחוד הלאומי runs with הבית היהודי+עוצמה they get 4 and הימין החדש 6 — both match. The article gives no other party numbers for this scenario (the 32/34/8/8/13/5/7/4 figures belong to the NR+NU scenario; Wikipedia's UTJ 7 here differs from the 8 printed for that scenario), so the remaining numbers could not be verified."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-e",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.israelnationalnews.com/news/274363 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; https://www.bhol.co.il/news/1067012 (403 - blocked, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Scenario with Yisrael Beytenu 11 / Blue and White 39 (no Labor/DU listed) not found in any readable source. JPost mentions a Blue and White+Labor-Gesher+Meretz joint run getting 39 'in total', which may be this scenario, but gives no other numbers for it; Israel Hayom original 403."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-d",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.israelnationalnews.com/news/274363 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; https://www.bhol.co.il/news/1067012 (403 - blocked, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost 11.1.2020 (Israel Hayom/Maagar Mochot): 'a hypothetical coalition between Meretz and Labor-Gesher was predicted to reach 11 seats' — matches. INN: left union weakens center-left bloc to 57 vs right 56 — consistent with Wikipedia row (33+11+13=57; 30+7+7+6+6=56). Other individual numbers not reported."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-c",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.israelnationalnews.com/news/274363 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; https://www.bhol.co.il/news/1067012 (403 - blocked, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Partial-union scenario (Peretz-Smotrich-Ben Gvir list 8, New Right 5) not in the JPost/INN reports. A search-engine snippet of a BHOL report (page itself 403, not opened) mentions 'הימין החדש יזכה ב־5 מנדטים, ומפלגת פרץ-סמוטריץ'-בן גביר תקבל 8' — consistent with Wikipedia, but not verified from a readable page; other numbers not found."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-b",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.israelnationalnews.com/news/274363 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; https://www.bhol.co.il/news/1067012 (403 - blocked, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost 11.1.2020 (Israel Hayom/Maagar Mochot), unified-right scenario: 'Likud's support would drop, giving the party 29 seats, while the new union would secure 11' — matches. INN (Maagar Mochot) for the full right union: right bloc 55, other bloc 58 — consistent with Wikipedia row (29+11+7+8=55; 34+5+5+14=58). Other individual numbers not reported."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.israelnationalnews.com/news/274363 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; https://www.bhol.co.il/news/1067012 (403 - blocked, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost 11.1.2020 on the Israel Hayom/Maagar Mochot poll: Blue and White 34, Likud 30, Joint List 15, UTJ 8, Shas 7, Yisrael Beytenu 7, Jewish Home+Otzma 5, New Right 4, Labor-Gesher 5 — all match. Democratic Union not named (5 implied by the 120 total); National Union 1.0% and Green 0.2% not reported. INN 10.1.2020 reports a Maagar Mochot poll (attributed to 103FM) with the same blocs (right 54, center-left+Joint 59, YB 7). Israel Hayom original and the CEC filing (seker_israel_today_9_1.pdf) not reachable."
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12-b",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/274501",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 13.1.2020 (Channel 12 poll): 'if all the smaller right-wing parties ran together, the combined list would receive ten seats while the Likud would receive an additional seat' => united right 10, Likud 32, others unchanged (B&W 34, Joint 13, Labor-Meretz 9, Shas 8, UTJ 7, YB 7). Matches Wikipedia; Green 0.4% not reported."
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/274501",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 13.1.2020 on Channel 12 News poll released Monday evening: Blue and White 34, Likud 31, Joint List 13, Labor-Meretz 9, Shas 8, UTJ 7, Yisrael Beytenu 7, New Right 6, United Right 5. All seat numbers match; Green Movement 0.4% not in the report (only seat numbers checked). Pollster/sample not stated."
  },
  {
   "id": "k23-2020-01-14-direct-polls-arutz-sheva",

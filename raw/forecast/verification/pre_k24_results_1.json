@@ -1,0 +1,101 @@
+[
+ {
+  "id": "k24-2020-05-26-panels-politics-103fm",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HMIDFK&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2020-05-26",
+  "sample": 527,
+  "moe": "4.4%",
+  "note": "103FM 27/05/2020 (Panels Politics/Menachem Lazar for 'Sheva Tesha'; conducted 'yesterday (Tue)'): Likud 41, Joint List 15, Yesh Atid-Telem 14, Blue&White 12, Yamina 9, Shas 9, UTJ 8, Yisrael Beytenu 6, Meretz 6; Labor 1.5% — all match. Otzma Yehudit and Gesher only 'also do not pass the threshold' (no percentages; Wikipedia 1.3%/0.9% unverified). 527 respondents Panel4All, MoE 4.4%."
+ },
+ {
+  "id": "k24-2020-06-11-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HMJJEM&c41t4nzVQ=EL",
+  "differences": [],
+  "fieldEndSource": "2020-06-11",
+  "sample": 503,
+  "moe": "4.4%",
+  "note": "103FM 12/06/2020 (Maagar Mochot/Prof. Yitzhak Katz for Nissim Mishal; fieldwork Wed–Thu this week): Likud 41, Yesh Atid-Telem 16, Joint List 15, Blue&White 13, Shas 9, UTJ 8, Yisrael Beytenu 7, Yamina 6, Meretz 5 — all match. Also: Labor '2 seats only — below threshold' (not in Wikipedia row). 503 respondents, error 4.4%."
+ },
+ {
+  "id": "k24-2020-06-17-smith-the-jerusalem-post",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/israel-news/post-poll-blue-and-white-in-freefall-only-27-percent-back-a-july-annexation-631707",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost (Gil Hoffman, June 17 2020, Smith Research, 'new Jerusalem Post poll on Tuesday'): Likud 41, Joint List 16, Yesh Atid-Telem 15, Blue and White 10, Shas 9, Yisrael Beytenu 8, Yamina 8, UTJ 7, Meretz 6 — all seat numbers match. Below-threshold percentages not given: article says Labor, Otzma Yehudit, Gesher, Derech Eretz fail threshold; Derech Eretz 'approximately two and a half seats', Labor 'about 3 seats', Gesher 'less than one' (in seat terms, roughly differing from Wikipedia's 1.5%/2.2%). Jewish Home not mentioned. No sample/MoE in text."
+ },
+ {
+  "id": "k24-2020-07-03-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=HMMDDI&c41t4nzVQ=EL",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "103FM 03/07/2020 (Maagar Mochot/Prof. Yitzhak Katz for Nissim Mishal): Likud 38, Yesh Atid-Telem 17, Joint List 15, Blue&White 10, Yamina 9, Shas 9, UTJ 8, Yisrael Beytenu 8, Meretz 6; Labor below threshold — all match. Fieldwork dates/sample not stated."
+ },
+ {
+  "id": "k24-2020-07-09-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-776671",
+  "differences": [],
+  "fieldEndSource": "2020-07-09",
+  "sample": 532,
+  "moe": "4.4%",
+  "note": "Maariv 10/07/2020 (poll conducted 'yesterday', Panels Politics/Menachem Lazar for Maariv-Sofhashavua): Likud 36, Yesh Atid-Telem 16, Joint List 15, Yamina 12, Blue&White 10, Shas 9, Yisrael Beytenu 9, UTJ 7, Meretz 6; 'all the rest below threshold'. 532 respondents Panel4All, max sampling error 4.4%."
+ },
+ {
+  "id": "k24-2020-07-14-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/item/סקר-מנדטים-ניהול-משבר-הקורונה.aspx?gntVQ=IDL",
+  "differences": [],
+  "fieldEndSource": "2020-07-14",
+  "sample": 543,
+  "moe": "4.4%",
+  "note": "103FM 15/07/2020 (Panels Politics/Menachem Lazar, conducted 14 July): Likud 34, Yesh Atid-Telem 16, Joint List 15 ('one more than Yamina'), Yamina 14, Blue&White 9, Shas 9, Yisrael Beytenu 9, Meretz 7, UTJ 7 — all match. Below threshold (no %): Otzma Yehudit, Gesher, Jewish Home, Derekh Eretz, Labor. 543 respondents, error 4.4%."
+ },
+ {
+  "id": "k24-2020-07-23-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-779590",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv 24/07/2020 (Panels Politics/Menachem Lazar for Maariv-Sofhashavua): Likud 32, Yesh Atid-Telem 18, Joint List 15, Yamina 12, Shas 10, Blue&White 9, Yisrael Beytenu 9, UTJ 8, Meretz 7; below threshold: Otzma Yehudit 1.8%, Labor 1.2%, Jewish Home 0.8%, Derekh Eretz 0.5%. Field date not stated; no sample/MoE in article text."
+ },
+ {
+  "id": "k24-2020-07-28-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IDEMFL&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2020-07-28",
+  "sample": 525,
+  "moe": "4.4%",
+  "note": "103FM 29/07/2020 (Panels Politics/Menachem Lazar for 'Sheva Tesha'; conducted 'yesterday (Tue)'): Likud 31, Yesh Atid-Telem 19, Joint List 16, Yamina 13, Blue&White 10, Shas 9, Yisrael Beytenu 8, UTJ 7, Meretz 7 — all match. Below threshold (no %): Labor, Otzma Yehudit, Derekh Eretz, Gesher, Jewish Home. 525 respondents Panel4All, MoE 4.4%."
+ },
+ {
+  "id": "k24-2020-08-06-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IDGDHH&c41t4nzVQ=EL",
+  "differences": [],
+  "fieldEndSource": "2020-08-06",
+  "sample": 501,
+  "moe": "4.4%",
+  "note": "103FM 07/08/2020 (Maagar Mochot/Prof. Yitzhak Katz for Nissim Mishal; conducted 5–6 August): Likud 32, Yesh Atid-Telem 18, Joint List 16, Yamina 12, Blue&White 11, Shas 10, UTJ 8, Yisrael Beytenu 8, Meretz 5 — all match; Labor below threshold. 501 respondents, error 4.4%."
+ }
+]

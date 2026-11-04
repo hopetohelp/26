@@ -154,6 +154,17 @@
   "note": "Times of Israel (12 Jul 2022), Kan poll by Kantar broadcast Monday: Likud 34, Yesh Atid 23, B&W-New Hope 14, RZ 10, Shas 8, UTJ 7, Joint List 6, YB 5, Labor 5, Ra'am 4, Meretz 4; Yamina below threshold (no % given). All seat figures match; Zionist Spirit/Yamina 1.9% not stated in source."
  },
  {
+  "id": "k25-2022-07-12-direct-polls-channel-14",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.c14.co.il/article/666650 (Channel 14's own article 'סקר חדשות 14: לגוש הימין יש 61, שקד מתרסקת מתחת לאחוז החסימה'; page returns 403 to direct fetch, not bypassed - figures read only from the search-engine index excerpt); now14.co.il URL also 403; INN/Arutz 7 searched for 12-13 Jul without result",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Search-index excerpt of the Channel 14 article (Direct Polls, '111 days before the election' = 12 Jul 2022): right bloc 61; Likud 36, Yesh Atid 20, B&W-New Hope 14, Ra'am 5, Meretz 4; Shaked's Yamina 1.9% (below threshold). All quoted figures match Wikipedia; RZ, Shas, UTJ, Labor, YB, Joint List not seen. Low confidence: full page text could not be read."
+ },
+ {
   "id": "k25-2022-07-15-panels-politics-maariv",
   "status": "match",
   "sourceLevel": "press",
@@ -228,7 +239,7 @@
   "fieldEndSource": null,
   "sample": null,
   "moe": null,
-  "note": "INN/Arutz 7 and JDN (both 31 Jul 2022, 'published this evening (Sunday)' on Channel 14): Direct Polls: Likud 34, Yesh Atid 21, B&W-New Hope 13, RZ 11, Shas 9, UTJ 7, YB 6, Ra'am 5, Joint List 5, Labor 5, Meretz 4; Zionist Spirit 2.4% (below threshold). All match. Note: publication date per sources is Sunday 31 Jul 2022, not 28 Jul as in Wikipedia; fieldwork dates not stated."
+  "note": "INN/Arutz 7 and JDN (both 31 Jul 2022, 'published this evening (Sunday)' on Channel 14): Direct Polls: Likud 34, Yesh Atid 21, B&W-New Hope 13, RZ 11, Shas 9, UTJ 7, YB 6, Ra'am 5, Joint List 5, Labor 5, Meretz 4; Zionist Spirit 2.4% (below threshold). All match. Note: publication date per sources is Sunday 31 Jul 2022, not 28 Jul as in Wikipedia; fieldwork dates not stated. A search-index excerpt of Channel 14's own article (c14.co.il/article/674155, 403 to direct fetch) states fieldwork by Direct Polls on 30 July 2022 with Zionist Spirit 2.4% - not independently read."
  },
  {
   "id": "k25-2022-07-31-maagar-mochot-jerusalem-net",
