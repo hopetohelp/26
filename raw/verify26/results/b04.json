@@ -110,26 +110,26 @@
  },
  {
   "id": "2026-07-21-mp-tm-sn-a-channel-13",
-  "status": "secondary",
-  "source": "https://www.haaretz.com/israel-news/elections/2026-07-22/ty-article/israel-election-poll-the-democrats-hold-steady-as-arab-parties-gain-ground/0000019f-86d5-ded0-abdf-a6d5fe220000",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/dnxub-905274776/",
   "access": [
-   "secondary"
+   "primary"
   ],
-  "published": null,
+  "published": "2026-07-21T20:35:00+03:00",
   "fields": {
    "seats": {
     "status": "match",
-    "source": "https://www.haaretz.com/israel-news/elections/2026-07-22/ty-article/israel-election-poll-the-democrats-hold-steady-as-arab-parties-gain-ground/0000019f-86d5-ded0-abdf-a6d5fe220000"
+    "source": "https://13tv.co.il/item/news/politics/politics/dnxub-905274776/"
    },
    "sample": {
     "status": "match",
-    "source": "https://www.haaretz.com/israel-news/elections/2026-07-22/ty-article/israel-election-poll-the-democrats-hold-steady-as-arab-parties-gain-ground/0000019f-86d5-ded0-abdf-a6d5fe220000"
+    "source": "https://13tv.co.il/item/news/politics/politics/dnxub-905274776/"
    }
   },
   "details": {
    "sample_respondents": 988,
    "moe": "3.5%",
-   "pollster": "המדד (שמואל רוזנר ונועה סלפקוב) בשיתוף פרויקט מדגם (ד\"ר אריאל איילון), אסקריה (דודי דרור) וסטטנט (יוסף מקלדה)",
+   "pollster": "המדד (שמואל רוזנר, נח סלפקוב) עם סטט-נט, פרויקט המדגם ואסקריה; נתונים נוספים Hive",
    "commissioner": "חדשות 13"
   },
   "law16E": {
@@ -143,38 +143,51 @@
    "questions": false
   },
   "diffs": [],
-  "note": "13tv חסום (403). הארץ באנגלית: מנדטי כל 12 הרשימות זהים (בית ציוני 4 = המילואימניקים); בל\"ד 1.9%, כחול לבן 1%, מקום לכולנו 0.5% — תואמים. מועד העבודה לא צוין.",
+  "note": "curl נחסם (403); הכתבה נקראה דרך WebFetch. מנדטי כל 12 הרשימות זהים (טרופר-הנדל 4 = המילואימניקים). אחוזים: הארץ באנגלית — בל\"ד 1.9%, כחול לבן 1%, מקום לכולנו 0.5% תואמים. מועד העבודה לא צוין.",
   "checkedAt": "2026-11-04"
  },
  {
   "id": "2026-07-20-midgam-r-c-hahadashot-12",
-  "status": "secondary",
-  "source": "https://www.israelnationalnews.com/news/430486",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2026_q3/Article-4f6f15b9d308f91027.htm",
   "access": [
-   "secondary"
+   "primary"
   ],
-  "published": "2026-07-20T21:51:23+03:00",
+  "published": "2026-07-20T21:13:00+03:00",
   "fields": {
    "seats": {
     "status": "match",
-    "source": "https://www.israelnationalnews.com/news/430486"
+    "source": "https://www.mako.co.il/news-politics/2026_q3/Article-4f6f15b9d308f91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2026_q3/Article-4f6f15b9d308f91027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2026_q3/Article-4f6f15b9d308f91027.htm"
    }
   },
   "details": {
+   "sample_respondents": 507,
+   "moe": "±4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל מגיל 18 ומעלה",
+   "fieldwork": "2026-07-20..2026-07-20",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
    "commissioner": "חדשות 12"
   },
   "law16E": {
-   "pollster": false,
+   "pollster": true,
    "commissioner": true,
-   "dates": false,
-   "n_participated": false,
+   "dates": true,
+   "n_participated": true,
    "n_asked": false,
-   "moe": false,
-   "population": false,
-   "questions": false
+   "moe": true,
+   "population": true,
+   "questions": true
   },
   "diffs": [],
-  "note": "mako חסום (403). ערוץ 7 באנגלית (21.7.26): מנדטי כל 11 הרשימות זהים; זמן ישראל live/706010 (20.7 21:51) מאשר ישר 24, ליכוד 23, ביחד 15. אחוזים ומדגם לא אומתו.",
+  "note": "curl נחסם (403); נקרא דרך WebFetch. מנדטי כל 11 הרשימות זהים; בית ציוני-המילואימניקים 2.7%, בל\"ד 1.7%, כחול לבן 1.3% תואמים. גם ערוץ 7 (news/430486) תואם.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -301,23 +314,24 @@
  },
  {
   "id": "2026-07-15-mp-tm-sn-a-channel-13",
-  "status": "secondary",
-  "source": "https://www.israelnationalnews.com/news/430247",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/p2sii-905266560/",
   "access": [
-   "secondary"
+   "primary"
   ],
-  "published": null,
+  "published": "2026-07-15T20:48:00+03:00",
   "fields": {
    "seats": {
     "status": "match",
-    "source": "https://www.israelnationalnews.com/news/430247"
+    "source": "https://13tv.co.il/item/news/politics/politics/p2sii-905266560/"
    }
   },
   "details": {
+   "pollster": "המדד (שמואל רוזנר, נח סלפקוב) עם סטט-נט, פרויקט המדגם ואסקריה",
    "commissioner": "חדשות 13"
   },
   "law16E": {
-   "pollster": false,
+   "pollster": true,
    "commissioner": true,
    "dates": false,
    "n_participated": false,
@@ -327,7 +341,52 @@
    "questions": false
   },
   "diffs": [],
-  "note": "13tv חסום (403). ערוץ 7 באנגלית (16.7.26): מנדטי כל 12 הרשימות זהים (הנדל-טרופר 4 = המילואימניקים); בל\"ד וכחול לבן מתחת לחסימה בלי אחוזים. מדגם לא אומת.",
+  "note": "נקרא דרך WebFetch. מנדטי 11 רשימות זהים; הנדל-טרופר 'עוברת' בלי מספר בכתבה — 4 לפי ערוץ 7 (news/430247), תואם. 'מקום לכולנו' 0.8% בכתבה; לכחול לבן אין אחוז בכתבה — ערך 0.8 לכחול לבן בחבילה לא אומת (ייתכן שהוא בעצם של מקום לכולנו). מדגם לא צוין.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-07-13-midgam-r-c-hahadashot-12",
+  "status": "partial",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-5ef5c111dfb5f91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-07-13T21:14:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-5ef5c111dfb5f91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-5ef5c111dfb5f91027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-5ef5c111dfb5f91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "moe": "±4.4%",
+   "population": "בגירים בישראל 18+",
+   "method": "אינטרנט וטלפון, דגימה שכבתית",
+   "fieldwork": "2026-07-13..2026-07-13",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch. 10 רשימות זהות; טרופר-הנדל 2.9%, כחול לבן 1.4%, בל\"ד 0.9% תואמים. עוצמה יהודית: בטקסט 'זוכה ב-9 מנדטים' (בחבילה 8) — אבל אז הסכום 121 והקואליציה 52, בעוד הכתבה עצמה כותבת קואליציה 51. סתירה פנימית בפרסום; לא נרשם פער. לבדוק בטבלה/דוח.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -441,23 +500,24 @@
  },
  {
   "id": "2026-07-08-mp-tm-sn-a-channel-13",
-  "status": "secondary",
-  "source": "https://www.israelnationalnews.com/news/429870",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905256094/",
   "access": [
-   "secondary"
+   "primary"
   ],
-  "published": null,
+  "published": "2026-07-08T20:30:00+03:00",
   "fields": {
    "seats": {
     "status": "match",
-    "source": "https://www.israelnationalnews.com/news/429870"
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-905256094/"
    }
   },
   "details": {
+   "pollster": "המדד (שמואל רוזנר, נח סלפקוב) ושותפים",
    "commissioner": "חדשות 13"
   },
   "law16E": {
-   "pollster": false,
+   "pollster": true,
    "commissioner": true,
    "dates": false,
    "n_participated": false,
@@ -467,7 +527,7 @@
    "questions": false
   },
   "diffs": [],
-  "note": "13tv חסום. ערוץ 7 באנגלית (9.7.26) וטיימס אוף ישראל (liveblog 9.7) — שני דיווחים תואמים: מנדטי כל 11 הרשימות זהים. אחוזים ומדגם לא אומתו.",
+  "note": "נקרא דרך WebFetch; מנדטי כל 11 הרשימות זהים (גם ערוץ 7 וטיימס אוף ישראל). טרופר-הנדל 2.2%, כחול לבן 2.1% תואמים; בל\"ד 1.7% בכתבה — חסר בחבילה. מדגם לא צוין.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -589,6 +649,38 @@
   },
   "diffs": [],
   "note": "מנדטי כל 11 הרשימות העוברות זהים לטקסט; 606 משיבים, 1–2 ביולי תואם. אחוזי רשימות מתחת לחסימה לא בטקסט — לא אומתו. תרחיש נתניהו במפלגה נפרדת לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-07-01-mp-tm-sn-a-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/avnex-905246247/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-07-01T20:35:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/avnex-905246247/"
+   }
+  },
+  "details": {
+   "pollster": "המדד (שמואל רוזנר, נח סלפקוב) בשיתוף סטט-נט ושותפים",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch; מנדטי כל 11 הרשימות זהים. כחול לבן, בל\"ד והמילואימניקים מתחת לחסימה בלי אחוזים. מדגם 1108 לא צוין בטקסט שנקרא (דף המדד חסום 403).",
   "checkedAt": "2026-11-04"
  },
  {
