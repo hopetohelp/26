@@ -4,13 +4,13 @@ import Explained from "../components/Explained";
 import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
-import { SIMPLE_BLOCS } from "../lib/simpleSources";
-import { bloc2022 } from "../lib/voterFlow";
 import { blocSlices, Stack } from "./simple/shared";
 import { results2026 } from "../lib/guessAccuracyData";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
-import { ShiftLine } from "./Results2026";
+import ShiftLine from "../components/ShiftLine";
+import { blocAssignment } from "../lib/electionBlocs";
+import { K26_ID } from "../lib/election";
 import { k25Families } from "../lib/lineage";
 import { num, pct, pctOne } from "../lib/format";
 
@@ -60,6 +60,7 @@ export default function Results({ id }: { id: string }) {
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
   const failed = e.lists.filter((l) => l.seats === 0).sort((x, y) => y.votes - x.votes);
+  const blocs = blocAssignment(e.id);
   return (
     <>
       <Split primary={<>
@@ -85,8 +86,8 @@ export default function Results({ id }: { id: string }) {
       </Card>
       {/* חלוקת הכנסת לגושים — הועברה ממסך "מה השתנה" (הכרעת בעלים 03.11.2026) */}
       {/* כרטיס עם גרף שורה של ארבעת הגושים; לחיצה על גוש מציגה את הרשימות שבו (הכרעת בעלים 03.11.2026). 2015–2021 — אין שיוך לגושים, נשארת המגירה */}
-      {e.id === "k26" ? <BlocBarCard defs={SIMPLE_BLOCS} values={results2026.seats} />
-        : e.knesset === 25 ? <BlocBarCard defs={SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) }))} values={Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={(x) => shortOf(e, x)} />
+      {/* לכל מערכת עם שיוך גושים (blocAssignment) — אותו כרטיס; בלי שיוך — המגירה ההיסטורית, עד שסשן ד ישלים (הכרעת בעלים 04.11.2026) */}
+      {blocs ? <BlocBarCard defs={blocs} values={e.id === K26_ID ? results2026.seats : Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={e.id === K26_ID ? undefined : (x) => shortOf(e, x)} />
         : <PastBlocs id={e.id} />}
       </>} secondary={<>
       <Card title="כמה קולות חסרים למנדט הבא">
