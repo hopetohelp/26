@@ -1,0 +1,1326 @@
+[
+ {
+  "id": "k22-2019-09-17-2200-channel-12",
+  "knesset": 22,
+  "firm": "Midgam (Mano Geva)",
+  "firmHe": "מדגם (מנו גבע)",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2019-09-17T22:00:00+03:00",
+  "values": {
+   "פה": {
+    "s": 34
+   },
+   "מחל": {
+    "s": 33
+   },
+   "ודעם": {
+    "s": 11
+   },
+   "שס": {
+    "s": 8
+   },
+   "ל": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "טב": {
+    "s": 8
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://en.globes.co.il/en/article-tv-exit-polls-see-netanyahu-failing-to-win-majority-1001301075",
+   "https://www.israelnationalnews.com/news/269047",
+   "https://www.maariv.co.il/elections2019/news/Article-719711"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 12 לפי גלובס (22:39) וערוץ 7 (22:13), כל הרשימות זהות; עוצמה יהודית מתחת לאחוז החסימה. אינדקס ויקיפדיה מציג את המדגם המעודכן ולא את מדגם 22:00."
+ },
+ {
+  "id": "k22-2019-09-17-2200-channel-13",
+  "knesset": 22,
+  "firm": "Panel Project HaMidgam",
+  "firmHe": "פאנל פרויקט המדגם",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2019-09-17T22:00:00+03:00",
+  "values": {
+   "פה": {
+    "s": 33
+   },
+   "מחל": {
+    "s": 31
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "טב": {
+    "s": 6
+   },
+   "אמת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://en.globes.co.il/en/article-tv-exit-polls-see-netanyahu-failing-to-win-majority-1001301075",
+   "https://13tv.co.il/item/news/politics/politics/update_survey_election-403924/",
+   "https://www.israelnationalnews.com/news/269047"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 13 לפי גלובס (22:39); אתר חדשות 13 מאשר כחול לבן 33, ליכוד 31, משותפת 13, ישראל ביתנו 8 ושאר הרשימות ללא שינוי במדגם המעודכן; ערוץ 7: גושים 58–54. חברת הסקרים לפי ויקיפדיה בלבד – לא אומתה. אינדקס ויקיפדיה מציג את המדגם המעודכן ולא את מדגם 22:00."
+ },
+ {
+  "id": "k22-2019-09-17-2200-kan-11",
+  "knesset": 22,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2019-09-17T22:00:00+03:00",
+  "values": {
+   "פה": {
+    "s": 32
+   },
+   "מחל": {
+    "s": 32
+   },
+   "ודעם": {
+    "s": 12
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 10
+   },
+   "ג": {
+    "s": 8
+   },
+   "טב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://en.globes.co.il/en/article-tv-exit-polls-see-netanyahu-failing-to-win-majority-1001301075",
+   "https://www.israelnationalnews.com/news/269047",
+   "https://13tv.co.il/item/news/politics/politics/update_survey_election-403924/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של כאן 11 לפי גלובס (22:39) – כל הרשימות; ערוץ 7 (22:13) מאשר תיקו 32–32; חדשות 13 מאשר משותפת 12 וישראל ביתנו 10 במדגם הראשון. עוצמה יהודית מתחת לאחוז החסימה. אינדקס ויקיפדיה מציג את המדגם המעודכן ולא את מדגם 22:00."
+ },
+ {
+  "id": "k22-2019-09-18-0124-channel-13",
+  "knesset": 22,
+  "firm": "Panel Project HaMidgam",
+  "firmHe": "פאנל פרויקט המדגם",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2019-09-18T01:24:00+03:00",
+  "values": {
+   "פה": {
+    "s": 32
+   },
+   "מחל": {
+    "s": 30
+   },
+   "ודעם": {
+    "s": 15
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 8
+   },
+   "ג": {
+    "s": 8
+   },
+   "טב": {
+    "s": 6
+   },
+   "אמת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/update_survey_election-403924/",
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-41bfb96aa204d61026.htm",
+   "https://www.maariv.co.il/elections2019/news/Article-719711"
+  ],
+  "status": "match",
+  "sourceLevel": "primary",
+  "note": "מדגם מעודכן של חדשות 13 באתר הערוץ (תאריך בלבד) ובמאקו; שעת הפרסום המדויקת לא נמצאה – 01:24 היא שעת כתבת מעריב שכבר מצטטת אותו (גבול עליון). תואם לאינדקס ויקיפדיה."
+ },
+ {
+  "id": "k22-2019-09-18-0153-kan-11",
+  "knesset": 22,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2019-09-18T01:53:00+03:00",
+  "values": {
+   "פה": {
+    "s": 32
+   },
+   "מחל": {
+    "s": 31
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 9
+   },
+   "ג": {
+    "s": 8
+   },
+   "טב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.israelnationalnews.com/news/269066",
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-41bfb96aa204d61026.htm",
+   "https://13tv.co.il/item/news/politics/politics/update_survey_election-403924/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של כאן 11 לפי ערוץ 7 (פורסם 01:53, גבול עליון; מעריב ב-01:24 עדיין מצטט את מדגם 22:00) ולפי מאקו וחדשות 13. תואם לאינדקס ויקיפדיה."
+ },
+ {
+  "id": "k22-2019-09-18-0518-channel-12",
+  "knesset": 22,
+  "firm": "Midgam (Mano Geva)",
+  "firmHe": "מדגם (מנו גבע)",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2019-09-18T05:18:00+03:00",
+  "values": {
+   "פה": {
+    "s": 32
+   },
+   "מחל": {
+    "s": 32
+   },
+   "ודעם": {
+    "s": 13
+   },
+   "שס": {
+    "s": 9
+   },
+   "ל": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "טב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-41bfb96aa204d61026.htm",
+   "https://13tv.co.il/item/news/politics/politics/update_survey_election-403924/",
+   "https://www.timesofisrael.com/updated-exit-polls-boost-center-left-joint-list-putting-likud-in-deeper-hole/"
+  ],
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "note": "מדגם מעודכן של חדשות 12 באתר מאקו (\"עדכון מדגם חדשות 12 שפורסם הלילה\"); חדשות 13 מאשר גושים 56–55. שעת הפרסום המדויקת לא נמצאה: אחרי 01:24 (מעריב עוד מצטט את מדגם 22:00) ולפני 05:18 (טיימס אוף ישראל) – נרשם הגבול העליון. תיקון: בוויקיפדיה יהדות התורה 8 (סכום 121), במקור 7."
+ },
+ {
+  "id": "k23-2020-03-02-2200-channel-12",
+  "knesset": 23,
+  "firm": "Midgam (Mano Geva) / iPanel",
+  "firmHe": "מדגם (מנו גבע) / iPanel",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2020-03-02T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 37
+   },
+   "פה": {
+    "s": 33
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "שס": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ל": {
+    "s": 6
+   },
+   "טב": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog-march-2-2020/",
+   "https://www.algemeiner.com/2020/03/02/israeli-exit-polls-show-advantage-but-not-outright-majority-for-netanyahu-and-right-wing-bloc/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 12 לפי הבלוג החי של טיימס אוף ישראל (רשומה 22:01) ולפי אלגמיינר; תואם לאינדקס ויקיפדיה."
+ },
+ {
+  "id": "k23-2020-03-02-2200-channel-13",
+  "knesset": 23,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2020-03-02T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 37
+   },
+   "פה": {
+    "s": 32
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "שס": {
+    "s": 9
+   },
+   "ג": {
+    "s": 8
+   },
+   "אמת": {
+    "s": 6
+   },
+   "ל": {
+    "s": 8
+   },
+   "טב": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/voting-sample-1018501/",
+   "https://www.timesofisrael.com/liveblog-march-2-2020/",
+   "https://www.algemeiner.com/2020/03/02/israeli-exit-polls-show-advantage-but-not-outright-majority-for-netanyahu-and-right-wing-bloc/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של חדשות 13 באתר הערוץ (ללא שעה בדף), מאומת בבלוג החי של טיימס אוף ישראל (רשומה 22:06) ובאלגמיינר; תואם לאינדקס ויקיפדיה."
+ },
+ {
+  "id": "k23-2020-03-02-2200-kan-11",
+  "knesset": 23,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2020-03-02T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 36
+   },
+   "פה": {
+    "s": 33
+   },
+   "ודעם": {
+    "s": 15
+   },
+   "שס": {
+    "s": 9
+   },
+   "ג": {
+    "s": 8
+   },
+   "אמת": {
+    "s": 6
+   },
+   "ל": {
+    "s": 6
+   },
+   "טב": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog-march-2-2020/",
+   "https://www.algemeiner.com/2020/03/02/israeli-exit-polls-show-advantage-but-not-outright-majority-for-netanyahu-and-right-wing-bloc/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 של כאן 11 לפי הבלוג החי של טיימס אוף ישראל (רשומה 22:04) ולפי אלגמיינר; תואם לאינדקס ויקיפדיה."
+ },
+ {
+  "id": "k23-2020-03-03-0100-channel-13",
+  "knesset": 23,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2020-03-03T01:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 37
+   },
+   "פה": {
+    "s": 34
+   },
+   "ודעם": {
+    "s": 14
+   },
+   "שס": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ל": {
+    "s": 6
+   },
+   "טב": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://www.calcalist.co.il/articles/0,7340,L-3798074,00.html",
+   "https://www.timesofisrael.com/liveblog-march-2-2020/",
+   "https://www.timesofisrael.com/revised-polls-see-right-wing-bloc-drop-to-59-tempering-high-hopes-for-likud/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של חדשות 13: כלכליסט מציין פרסום \"סמוך ל-01:00\"; המספרים זהים בבלוג החי של טיימס אוף ישראל (רשומה 01:11)."
+ },
+ {
+  "id": "k23-2020-03-03-0111-channel-12",
+  "knesset": 23,
+  "firm": "Midgam (Mano Geva) / iPanel",
+  "firmHe": "מדגם (מנו גבע) / iPanel",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2020-03-03T01:11:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 37
+   },
+   "פה": {
+    "s": 32
+   },
+   "ודעם": {
+    "s": 15
+   },
+   "שס": {
+    "s": 9
+   },
+   "ג": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "טב": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog-march-2-2020/",
+   "https://www.calcalist.co.il/articles/0,7340,L-3798074,00.html",
+   "https://www.timesofisrael.com/revised-polls-see-right-wing-bloc-drop-to-59-tempering-high-hopes-for-likud/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של חדשות 12; שעת הפרסום המדויקת לא נמצאה – השעה היא שעת הדיווח בבלוג החי של טיימס אוף ישראל (01:11), כנראה סמוך לכך. המספרים זהים בכלכליסט."
+ },
+ {
+  "id": "k23-2020-03-03-0200-kan-11",
+  "knesset": 23,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2020-03-03T02:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 36
+   },
+   "פה": {
+    "s": 33
+   },
+   "ודעם": {
+    "s": 15
+   },
+   "שס": {
+    "s": 9
+   },
+   "ג": {
+    "s": 8
+   },
+   "אמת": {
+    "s": 6
+   },
+   "ל": {
+    "s": 7
+   },
+   "טב": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog-march-2-2020/",
+   "https://www.calcalist.co.il/articles/0,7340,L-3798074,00.html",
+   "https://www.algemeiner.com/2020/03/02/israeli-exit-polls-show-advantage-but-not-outright-majority-for-netanyahu-and-right-wing-bloc/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם מעודכן של כאן 11: כלכליסט \"סמוך ל-02:00\", בלוג טיימס אוף ישראל 02:00 (ללא ישראל ביתנו), ישראל ביתנו 7 לפי כלכליסט ואלגמיינר."
+ },
+ {
+  "id": "k24-2021-03-23-2200-channel-12",
+  "knesset": 24,
+  "firm": "Midgam (Mano Geva) / iPanel",
+  "firmHe": "מדגם (מנו גבע) / iPanel",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2021-03-23T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 31
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 9
+   },
+   "כן": {
+    "s": 7
+   },
+   "ב": {
+    "s": 8
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 6
+   },
+   "ל": {
+    "s": 6
+   },
+   "ט": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://en.globes.co.il/en/article-1001365137",
+   "https://www.ice.co.il/media/news/article/814960",
+   "https://www.timesofisrael.com/exit-polls-put-netanyahu-in-reach-of-thin-majority-but-only-with-yaminas-help/"
+  ],
+  "status": "corrected",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 לפי גלובס, ice ו-Times of Israel (גוש 53, ימינה 8). אינדקס ויקיפדיה הציג את עדכון הלילה (הליכוד 30, ימינה 7, עבודה 8, ישראל ביתנו 7, מרצ 7 – סכום 121)."
+ },
+ {
+  "id": "k24-2021-03-23-2200-channel-13",
+  "knesset": 24,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2021-03-23T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 33
+   },
+   "פה": {
+    "s": 16
+   },
+   "שס": {
+    "s": 8
+   },
+   "כן": {
+    "s": 8
+   },
+   "ב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 8
+   },
+   "ט": {
+    "s": 6
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://en.globes.co.il/en/article-1001365137",
+   "https://www.ice.co.il/media/news/article/814960",
+   "https://www.timesofisrael.com/exit-polls-put-netanyahu-in-reach-of-thin-majority-but-only-with-yaminas-help/"
+  ],
+  "status": "corrected",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 לפי גלובס, ice ו-Times of Israel (גוש 54). אינדקס ויקיפדיה הציג את עדכון 23:00: הליכוד 33←32, הציונות הדתית 6←7."
+ },
+ {
+  "id": "k24-2021-03-23-2200-kan-11",
+  "knesset": 24,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2021-03-23T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 31
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 9
+   },
+   "כן": {
+    "s": 7
+   },
+   "ב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "ט": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://en.globes.co.il/en/article-1001365137",
+   "https://www.ice.co.il/media/news/article/814960",
+   "https://www.timesofisrael.com/exit-polls-put-netanyahu-in-reach-of-thin-majority-but-only-with-yaminas-help/"
+  ],
+  "status": "corrected",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 לפי גלובס (22:48) ו-ice (21:28, ימינה חסרה שם) ו-Times of Israel (גוש 54, ימינה 7). אינדקס ויקיפדיה הציג את העדכון המאוחר: הליכוד 30←31, כחול לבן 8←7. רע\"ם והכלכלית מתחת לחסימה."
+ },
+ {
+  "id": "k24-2021-03-23-2300-channel-13",
+  "knesset": 24,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2021-03-23T23:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 32
+   },
+   "פה": {
+    "s": 16
+   },
+   "שס": {
+    "s": 8
+   },
+   "כן": {
+    "s": 8
+   },
+   "ב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 8
+   },
+   "ט": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.ice.co.il/media/news/article/814960"
+  ],
+  "status": "partial",
+  "sourceLevel": "press",
+  "note": "עדכון 23:00 לפי ice: הליכוד 32, הציונות הדתית 7, מרצ 7; שאר המספרים מאינדקס ויקיפדיה ותואמים ל-22:00 בתוספת השינוי. — סומן partial: הרשימה המלאה שוחזרה ממדגם 22:00 ומהשינויים שדווחו, ולא פורסמה במלואה."
+ },
+ {
+  "id": "k24-2021-03-24-0119-channel-12",
+  "knesset": 24,
+  "firm": "Midgam (Mano Geva) / iPanel",
+  "firmHe": "מדגם (מנו גבע) / iPanel",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2021-03-24T01:19:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 30
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 9
+   },
+   "כן": {
+    "s": 7
+   },
+   "ב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 8
+   },
+   "ג": {
+    "s": 6
+   },
+   "ל": {
+    "s": 7
+   },
+   "ט": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 9
+   },
+   "ת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/2021/Article-440530d85bf5871027.htm",
+   "https://www.kikar.co.il/388263.html"
+  ],
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "note": "עדכון הלילה לפי mako (עודכן 24.03 01:19, \"לקראת 01:30\"; יהדות התורה חסרה שם) וכיכר השבת (יהדות התורה 6, גושים 61-59). ויקיפדיה: מרצ 7 (סכום 121) ← 6. השעה 01:19 היא חותמת העדכון בדף, לא שעת שידור מדויקת."
+ },
+ {
+  "id": "k24-2021-03-24-0119-channel-13",
+  "knesset": 24,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2021-03-24T01:19:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 31
+   },
+   "פה": {
+    "s": 17
+   },
+   "שס": {
+    "s": 9
+   },
+   "כן": {
+    "s": 8
+   },
+   "ב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "ט": {
+    "s": 6
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.kikar.co.il/388263.html",
+   "https://www.mako.co.il/news-israel-elections/2021/Article-440530d85bf5871027.htm",
+   "https://en.jdn.co.il/latest-news/8648/amp/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "עדכון לילה מאוחר (אחרי 23:00) לפי כיכר השבת, בלי שעה; JDN: גוש הליכוד 53 (ירד מ-54); mako (01:19): תיקו 60-60. שעת הפרסום המדויקת לא נמצאה – 01:19 גבול עליון."
+ },
+ {
+  "id": "k24-2021-03-24-0119-kan-11",
+  "knesset": 24,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2021-03-24T01:19:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 30
+   },
+   "פה": {
+    "s": 18
+   },
+   "שס": {
+    "s": 9
+   },
+   "כן": {
+    "s": 8
+   },
+   "ב": {
+    "s": 7
+   },
+   "אמת": {
+    "s": 7
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 7
+   },
+   "ט": {
+    "s": 7
+   },
+   "ודעם": {
+    "s": 8
+   },
+   "ת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://www.kikar.co.il/388263.html",
+   "https://www.mako.co.il/news-israel-elections/2021/Article-440530d85bf5871027.htm"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "עדכון לילה לפי כיכר השבת (\"מתעדכן\", בלי שעה); mako (עודכן 01:19) מציין תיקו 60-60 בשני הערוצים האחרים. תואם לאינדקס ויקיפדיה. שעת הפרסום המדויקת לא נמצאה – 01:19 גבול עליון."
+ },
+ {
+  "id": "k25-2022-11-01-2200-channel-12",
+  "knesset": 25,
+  "firm": "Midgam (Mano Geva)",
+  "firmHe": "מדגם (מנו גבע)",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2022-11-01T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 30
+   },
+   "פה": {
+    "s": 24
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 11
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 4
+   },
+   "אמת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1144562-0/",
+   "https://www.srugim.co.il/725675-%D7%9E%D7%93%D7%92%D7%9E%D7%99-%D7%94%D7%98%D7%9C%D7%95%D7%95%D7%99%D7%96%D7%99%D7%94-%D7%A6%D7%95%D7%A4%D7%99%D7%9D-%D7%A0%D7%99%D7%A6%D7%97%D7%95%D7%9F-%D7%A2%D7%A6%D7%95%D7%9D-%D7%9C%D7%92%D7%95",
+   "https://www.jns.org/israel-elections-2022-exit-polls-show-netanyahus-bloc-winning-parliamentary-majority/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 אומת בכיפה ובסרוגים (וב-JNS: עבודה 6, מרצ 5, חד\"ש-תע\"ל 4); תואם לאינדקס ויקיפדיה. דף mako מציג כעת רק את עדכון 01:30."
+ },
+ {
+  "id": "k25-2022-11-01-2200-channel-13",
+  "knesset": 25,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2022-11-01T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 31
+   },
+   "פה": {
+    "s": 24
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 12
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 4
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1144562-0/",
+   "https://www.srugim.co.il/725675-%D7%9E%D7%93%D7%92%D7%9E%D7%99-%D7%94%D7%98%D7%9C%D7%95%D7%95%D7%99%D7%96%D7%99%D7%94-%D7%A6%D7%95%D7%A4%D7%99%D7%9D-%D7%A0%D7%99%D7%A6%D7%97%D7%95%D7%9F-%D7%A2%D7%A6%D7%95%D7%9D-%D7%9C%D7%92%D7%95"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 אומת בכיפה ובסרוגים; תואם לאינדקס ויקיפדיה."
+ },
+ {
+  "id": "k25-2022-11-01-2200-channel-14",
+  "knesset": 25,
+  "firm": "Direct Polls",
+  "firmHe": "דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "publishedAt": "2022-11-01T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 31
+   },
+   "פה": {
+    "s": 23
+   },
+   "ט": {
+    "s": 12
+   },
+   "כן": {
+    "s": 11
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 8
+   },
+   "ל": {
+    "s": 6
+   },
+   "אמת": {
+    "s": 6
+   },
+   "מרצ": {
+    "s": 5
+   },
+   "עם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1144562-0/",
+   "https://www.srugim.co.il/725675-%D7%9E%D7%93%D7%92%D7%9E%D7%99-%D7%94%D7%98%D7%9C%D7%95%D7%95%D7%99%D7%96%D7%99%D7%94-%D7%A6%D7%95%D7%A4%D7%99%D7%9D-%D7%A0%D7%99%D7%A6%D7%97%D7%95%D7%9F-%D7%A2%D7%A6%D7%95%D7%9D-%D7%9C%D7%92%D7%95"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 אומת בכיפה ובסרוגים; תואם לאינדקס ויקיפדיה. לא נמצא עדכון לילה של ערוץ 14."
+ },
+ {
+  "id": "k25-2022-11-01-2200-kan-11",
+  "knesset": 25,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2022-11-01T22:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 30
+   },
+   "פה": {
+    "s": 22
+   },
+   "ט": {
+    "s": 15
+   },
+   "כן": {
+    "s": 13
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.kan.org.il/item/?itemid=137154",
+   "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1144562-0/",
+   "https://www.srugim.co.il/725675-%D7%9E%D7%93%D7%92%D7%9E%D7%99-%D7%94%D7%98%D7%9C%D7%95%D7%95%D7%99%D7%96%D7%99%D7%94-%D7%A6%D7%95%D7%A4%D7%99%D7%9D-%D7%A0%D7%99%D7%A6%D7%97%D7%95%D7%9F-%D7%A2%D7%A6%D7%95%D7%9D-%D7%9C%D7%92%D7%95"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "מדגם 22:00 אומת בכיפה (פורסם 01.11.22 22:00) ובסרוגים; תואם לאינדקס ויקיפדיה. דף כאן המקורי לא נבדק ישירות."
+ },
+ {
+  "id": "k25-2022-11-02-0030-kan-11",
+  "knesset": 25,
+  "firm": "Kantar",
+  "firmHe": "קנטאר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "publishedAt": "2022-11-02T00:30:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 30
+   },
+   "פה": {
+    "s": 23
+   },
+   "ט": {
+    "s": 15
+   },
+   "כן": {
+    "s": 12
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/election_2022/Article-a5858c5b6243481026.htm",
+   "https://www.jdn.co.il/news/politics/1850443/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "עדכון 00:30 של כאן 11 לפי mako (\"נכון ל-00:30\"): יש עתיד 22←23, המחנה הממלכתי 13←12. אצל JDN מופיעים עדיין מספרי 22:00 תחת כאן."
+ },
+ {
+  "id": "k25-2022-11-02-0100-channel-13",
+  "knesset": 25,
+  "firm": "Camil Fuchs",
+  "firmHe": "קמיל פוקס",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "publishedAt": "2022-11-02T01:00:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 32
+   },
+   "פה": {
+    "s": 23
+   },
+   "ט": {
+    "s": 13
+   },
+   "כן": {
+    "s": 11
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 6
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 4
+   },
+   "ום": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/election_2022/Article-a5858c5b6243481026.htm",
+   "https://www.jdn.co.il/news/politics/1850443/"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "עדכון 01:00 של חדשות 13 לפי mako (\"נכון ל-01:00\") ו-JDN (\"מעודכן 1:00\")."
+ },
+ {
+  "id": "k25-2022-11-02-0120-channel-12",
+  "knesset": 25,
+  "firm": "Midgam (Mano Geva)",
+  "firmHe": "מדגם (מנו גבע)",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2022-11-02T01:20:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 30
+   },
+   "פה": {
+    "s": 24
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 11
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.jdn.co.il/news/politics/1850443/",
+   "https://www.calcalist.co.il/local_news/article/by91qkkhj"
+  ],
+  "status": "match",
+  "sourceLevel": "press",
+  "note": "עדכון ביניים של חדשות 12 (גוש 61) לפי JDN; שעת הפרסום המדויקת לא נמצאה – בין 22:00 ל-01:30; 01:20 היא הגבול העליון לפי טווחי כלכליסט (01:20) שתואמים לו. השעה אינה מאומתת."
+ },
+ {
+  "id": "k25-2022-11-02-0130-channel-12",
+  "knesset": 25,
+  "firm": "Midgam (Mano Geva)",
+  "firmHe": "מדגם (מנו גבע)",
+  "publisher": "Channel 12",
+  "publisherHe": "חדשות 12",
+  "publishedAt": "2022-11-02T01:30:00+02:00",
+  "values": {
+   "מחל": {
+    "s": 31
+   },
+   "פה": {
+    "s": 23
+   },
+   "ט": {
+    "s": 14
+   },
+   "כן": {
+    "s": 11
+   },
+   "שס": {
+    "s": 10
+   },
+   "ג": {
+    "s": 7
+   },
+   "ל": {
+    "s": 5
+   },
+   "אמת": {
+    "s": 5
+   },
+   "מרצ": {
+    "s": 4
+   },
+   "עם": {
+    "s": 5
+   },
+   "ום": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/election_2022/Article-a5858c5b6243481026.htm",
+   "https://www.jdn.co.il/news/politics/1850443/",
+   "https://timesofisrael.com/liveblog_entry/pro-netanyahu-bloc-now-at-62-seats-in-all-the-exit-polls/"
+  ],
+  "status": "match",
+  "sourceLevel": "primary",
+  "note": "עדכון 01:30 לפי mako (\"נכון ל-01:30\", עודכן 01:47); JDN ו-Times of Israel (01:54: הליכוד עולה מנדט על חשבון יש עתיד, גוש 62)."
+ }
+]
