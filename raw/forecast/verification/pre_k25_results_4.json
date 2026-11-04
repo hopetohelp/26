@@ -1,0 +1,57 @@
+[
+ {
+  "id": "k25-2022-08-08-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/generalpage/survey25/he/survey_kan11_seker-8-8.pdf (the knesset25-elections-info path in urls returns 404; kan.org.il item returns 403)",
+  "differences": [],
+  "fieldEndSource": "2022-08-08",
+  "sample": 642,
+  "moe": "3.9%",
+  "note": "Kantar report to the Elections Committee, fieldwork 8.8.2022 10:00-16:15: הליכוד 33, יש עתיד 23, כחול לבן-התקווה החדשה 12, הציונות הדתית 11, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 6, המשותפת 6, העבודה 5, מרצ 5, רע\"מ 4; הרוח הציונית 2.1% (raw). All match."
+ },
+ {
+  "id": "k25-2022-08-08-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/u7frt-903213210/ (read via page-fetch tool)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 702,
+  "moe": "3.7%",
+  "note": "Channel 13 article 08.08.2022: ליכוד 34, יש עתיד 22, הציונות הדתית 11, גנץ-סער 11, ש\"ס 7, יהדות התורה 7, המשותפת 6, העבודה 5, ישראל ביתנו 5, רע\"ם 4, מרצ 4, הרוח הציונית 4. All match. Fieldwork date not stated (aired 8.8)."
+ },
+ {
+  "id": "k25-2022-08-11-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections-2022/Article-938364",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 717,
+  "moe": "4.2%",
+  "note": "Maariv 12.08.2022: הליכוד 33, יש עתיד 25, כחול לבן-התקווה החדשה 10, הציונות הדתית 10, ש\"ס 9, יהדות התורה 7, העבודה 7, מרצ 2.9% (below threshold), המשותפת 6, ישראל ביתנו 5, רע\"ם 4, הרוח הציונית 4. All match. Fieldwork date not stated."
+ },
+ {
+  "id": "k25-2022-08-14-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.gov.il/BlobFolder/guide/knesset25-elections-info/he/survey_hadashut_hadshut12-14-8.pdf ; https://www.mako.co.il/news-israel-elections/election_2022/Article-856bf22e61d9281027.htm",
+  "differences": [],
+  "fieldEndSource": "2022-08-14",
+  "sample": 507,
+  "moe": "4.4%",
+  "note": "Committee report (data collection 14/8/2022): הליכוד 34, יש עתיד 23, המחנה הממלכתי 14, הציונות הדתית 10, ש\"ס 8, יהדות התורה 7, המשותפת 6, ישראל ביתנו 5, העבודה 5, מרצ 4, רע\"ם 4; הרוח הציונית 1.2%. All match (mako article identical)."
+ },
+ {
+  "id": "k25-2022-08-14-kantar-kan-11",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/flashes/883069 (kan.org.il item 132762 returns 403; no committee PDF found under gov.il survey25 name patterns)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 flash 14.08.2022 (Dudi Hasid for Kan News): ליכוד 35, יש עתיד 22, המחנה הממלכתי 14, הציונות הדתית 9, ש\"ס 8, יהדות התורה 7, המשותפת 6, העבודה 5, ישראל ביתנו 5, רע\"מ 6, מרצ 4; הרוח הציונית below threshold (no %). All match Wikipedia except רע\"מ 6 vs 5 — but the flash's numbers sum to 121, so its 6 looks like a typo; not recorded as a correction. Zionist Spirit % not given."
+ }
+]
