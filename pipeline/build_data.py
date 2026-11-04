@@ -730,7 +730,19 @@ def build_history(results: list[dict]) -> dict:
     exits = load_exit_polls(results)
     for c in cycles:
         c["exitPolls"] = exits.get(c["knesset"], [])
+    attach_verification(cycles)
     return {"cycles": cycles}
+
+
+def attach_verification(cycles: list[dict]) -> None:
+    """סטטוס האימות ורמת המקור של כל סקר עבר — מ-raw/forecast/polls.json (מקור אמת אחד, כלל ברזל 9).
+    סקר שאין לו רשומת אימות מקבל "unverified", כך שכל סקר בכל מחזור נושא את השדה (חוזה הנתונים, 04.11.2026)."""
+    rows = {r["id"]: r for r in json.loads((RAW / "forecast" / "polls.json").read_text(encoding="utf-8"))}
+    for c in cycles:
+        for p in c["polls"]:
+            r = rows.get(p["id"])
+            p["verificationStatus"] = r["status"] if r else "unverified"
+            p["sourceLevel"] = r.get("sourceLevel", "primary") if r else "aggregator"
 
 # ---------------------------------------------------------------- המודל ותרחישי יום הבחירות
 
