@@ -52,7 +52,7 @@ def read(n: int) -> list[dict]:
         external = code in ("0", "9999") or "מעטפות" in r["שם ישוב"]
         out.append({"committee": r["סמל ועדה"].strip() if "סמל ועדה" in r else None,
                     "code": code, "name": EXTERNAL if external else r["שם ישוב"].strip(), "external": external,
-                    "ballot": (r.get("קלפי") or r.get("מספר קלפי") or "").strip(),
+                    "ballot": (r.get("קלפי") or r.get("מספר קלפי") or "").strip(), "center": (r.get("ריכוז") or "").strip(),
                     "eligible": _int(r["בזב"]), "voted": _int(r["מצביעים"]), "valid": _int(r["כשרים"]), "invalid": _int(r["פסולים"]),
                     "votes": {k: _int(v) for k, v in r.items() if k not in META and k is not None}})
     return out

@@ -6,7 +6,8 @@ import { results2026 } from "./guessAccuracyData";
 describe("מעבר מצביעים לפי קלפי (src/data/flow2026.json)", () => {
   {
     it(`לכל שורה יש שם, האחוזים מסתכמים ב-100, ואף קול לא יוצא מהחשבון`, () => {
-      const { lists, blocs } = flowsFor();
+      const { lists, blocs: b } = flowsFor();
+      const blocs = b!;
       for (const g of [lists, blocs]) {
         for (const r of [...g.cameFrom, ...g.wentTo]) {
           expect(r.name).toMatch(/[א-ת]/);

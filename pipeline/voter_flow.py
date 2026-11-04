@@ -77,6 +77,7 @@ def match(r22: list[dict], r26: list[dict]) -> list[tuple[str, list[int], list[i
         e22[r["סמל ישוב"]] += n(r, "בזב")
     for r in r26:
         e26[r["סמל ישוב"]] += n(r, "בזב")
+    centers = all(r.get("ריכוז") for r in r22 if n(r, "בזב") > 0) and all(r.get("ריכוז") for r in r26 if n(r, "בזב") > 0)
     g22, g26 = defaultdict(list), defaultdict(list)
     for i, r in enumerate(r22):
         if n(r, "בזב") > 0:
@@ -88,14 +89,15 @@ def match(r22: list[dict], r26: list[dict]) -> list[tuple[str, list[int], list[i
         i22, i26 = g22[k], g26[k]
         growth = e26[k[0]] / e22[k[0]] if e22[k[0]] else 1
         b22, b26 = sum(n(r22[i], "בזב") for i in i22), sum(n(r26[i], "בזב") for i in i26)
-        same = {r22[i]["ריכוז"] for i in i22} == {r26[i]["ריכוז"] for i in i26}
+        # קובץ בלי עמודת "ריכוז" (2013–אפר׳ 2019, pipeline/voter_flows.py) — אין מתחם להשוות; רק בעלי הזכות
+        same = not centers or {r22[i]["ריכוז"] for i in i22} == {r26[i]["ריכוז"] for i in i26}
         if same and abs(b26 / (b22 * growth) - 1) <= SUB_TOLERANCE:
             units.append(("sub", i22, i26))
             left22 -= set(i22)
             left26 -= set(i26)
     keys = [("center", lambda r: (r["סמל ישוב"], r["ריכוז"])), ("city", lambda r: (r["סמל ישוב"],)),
             ("committee", lambda r: (r["סמל ועדה"],)), ("national", lambda r: ())]
-    for tier, key in keys:
+    for tier, key in keys if centers else keys[1:]:
         g22, g26 = defaultdict(list), defaultdict(list)
         for i in left22:
             g22[key(r22[i])].append(i)
@@ -142,7 +144,7 @@ def fit(X: np.ndarray, Y: np.ndarray, base: np.ndarray, kappa: float) -> np.ndar
     return P
 
 
-def tables(units, pairs, r26, I: int, J: int, kappa: float = KAPPA) -> list[np.ndarray]:
+def tables(units, pairs, r26, I: int, J: int, kappa: float = KAPPA, base: np.ndarray | None = None) -> list[np.ndarray]:
     """טבלה לכל יחידה, מהמקום העמוק ביותר שלה: ארצי ⇐ ועדה ⇐ יישוב"""
     def path(tier, i26):
         r = r26[i26[0]]
@@ -161,7 +163,7 @@ def tables(units, pairs, r26, I: int, J: int, kappa: float = KAPPA) -> list[np.n
     for u, p in enumerate(paths):
         for depth in range(len(p)):
             members[tuple(p[: depth + 1])].append(u)
-    solved = {(("nat",),): fit(X, Y, prior(I, J), kappa)}
+    solved = {(("nat",),): fit(X, Y, prior(I, J) if base is None else base, kappa)}
     for node in sorted(members, key=len):
         if node in solved:
             continue
@@ -277,15 +279,16 @@ def exact(units, r22, r26, v22, v26, Ps, I: int, J: int, left: bool):
     return Fi, Ti
 
 
-def cities(r22: list[dict], r26: list[dict], units, Ps) -> dict:
+def cities(r22: list[dict], r26: list[dict], units, Ps, old: list[str] = OLD, new: list[str] | None = None) -> dict:
     """לכל עיר עם לפחות MIN_CITY_UNITS יחידות (במתג היישובים): המעברים בסכומי אמת של העיר, לפי הטבלאות המדורגות"""
-    v22, v26 = [vector(r, OLD) for r in r22], [vector(r, list(NEW)) for r in r26]
+    new = list(NEW) if new is None else new
+    v22, v26 = [vector(r, old) for r in r22], [vector(r, new) for r in r26]
     by = defaultdict(list)
     for u, P in zip(units, Ps):
         if u[0] in ("sub", "center", "city"):
             by[r26[u[2][0]]["סמל ישוב"]].append((u, P))
     out = {}
-    I, J = len(OLD) + 2, len(NEW) + 2
+    I, J = len(old) + 2, len(new) + 2
     for code, items in by.items():
         if len(items) < MIN_CITY_UNITS:
             continue
@@ -306,9 +309,10 @@ def counted(r26: list[dict]) -> dict:
             "voters": voters, "invalid": sum(n(r, "פסולים") for r in r26)}
 
 
-def national(r22: list[dict], r26: list[dict]) -> tuple[dict, list, list]:
-    new = list(NEW)
-    v22 = [vector(r, OLD) for r in r22]
+def national(r22: list[dict], r26: list[dict], old: list[str] = OLD, new: list[str] | None = None, uniform: bool = False) -> tuple[dict, list, list]:
+    """uniform: נקודת מוצא אחידה (בלי שיוך ודאי) — לזוגות מערכות שאין להם raw/lineage.json (pipeline/voter_flows.py)"""
+    new = list(NEW) if new is None else new
+    v22 = [vector(r, old) for r in r22]
     v26 = [vector(r, new) for r in r26]
     units = match(r22, r26)
     pairs, tiers = [], {t: {"units": 0, "valid": 0} for t in TIERS}
@@ -316,16 +320,17 @@ def national(r22: list[dict], r26: list[dict]) -> tuple[dict, list, list]:
         pairs.append(unit_pair(tier, i22, i26, r22, r26, v22, v26))
         tiers[tier]["units"] += 1
         tiers[tier]["valid"] += sum(n(r26[i], "כשרים") for i in i26)
-    I, J = len(OLD) + 2, len(new) + 2
-    Ps = tables(units, pairs, r26, I, J)
+    I, J = len(old) + 2, len(new) + 2
+    Ps = tables(units, pairs, r26, I, J, base=np.full((I, J), 1 / J) if uniform else None)
     Fi, Ti = exact(units, r22, r26, v22, v26, Ps, I, J, True)
     return {"flows": Fi, "flowsTo": Ti, "tiers": tiers}, units, Ps
 
 
-def units_file(r22: list[dict], r26: list[dict]) -> dict:
+def units_file(r22: list[dict], r26: list[dict], old: list[str] = OLD, new: list[str] | None = None) -> dict:
     """התוצאות לפי קלפי לשתי השנים, לבדיקה במסך: יישוב ⇐ [מספר, ריכוז, בעלי זכות, מצביעים, ...קולות]"""
-    names, out = {}, {"letters22": OLD + ["other"], "letters26": list(NEW) + ["other"], "places": {}}
-    for year, rows, letters in (("y22", r22, OLD), ("y26", r26, list(NEW))):
+    new = list(NEW) if new is None else new
+    names, out = {}, {"letters22": old + ["other"], "letters26": new + ["other"], "places": {}}
+    for year, rows, letters in (("y22", r22, old), ("y26", r26, new)):
         for r in rows:
             code = r["סמל ישוב"]
             names[code] = r["שם ישוב"].strip()

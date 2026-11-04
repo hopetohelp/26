@@ -27,9 +27,11 @@ export interface FlowSankeyProps {
   /** flowsTo: שורה לכל מקור ב-2022, עמודה לכל יעד ב-2026 */
   T?: number[][]; oldIds?: string[]; newIds?: string[];
   oldName?: (id: string) => string; newName?: (id: string) => string;
+  /** שמות שתי המערכות (ברירת המחדל 2022 ו-2026) */
+  years?: [string, string];
 }
 
-export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.old, newIds = flow.new, oldName = listOld, newName = listNew }: FlowSankeyProps) {
+export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.old, newIds = flow.new, oldName = listOld, newName = listNew, years = ["2022", "2026"] }: FlowSankeyProps) {
   const m = useMemo(() => {
     const rowT = T.map((r) => r.reduce((a, b) => a + b, 0));
     const colT = newIds.map((_, j) => T.reduce((s, r) => s + r[j], 0));
@@ -114,7 +116,7 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
     return (
       <g key={`${side}${n.id}`}>
         <rect x={side === "a" ? xA : xB} y={n.y} width={nw} height={Math.max(n.h, 1)} rx={2} tabIndex={0} role="button" aria-pressed={on}
-          aria-label={`${n.name} ${side === "a" ? 2022 : 2026}: ${num(n.v)} קולות`}
+          aria-label={`${n.name} ${side === "a" ? years[0] : years[1]}: ${num(n.v)} קולות`}
           className={`cursor-pointer outline-none focus-visible:stroke-signal ${on ? "fill-signal" : n.id === "abstain" ? "fill-ink-soft" : "fill-ink"}`}
           onClick={pick} onMouseEnter={pick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } }} />
         <text x={side === "a" ? xA + nw + 6 : xB - 6} y={(side === "a" ? labA : labB)[i]} dominantBaseline="middle" direction="rtl" textAnchor={side === "a" ? "end" : "start"}
@@ -125,9 +127,9 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
   return (
     <figure className="mt-3">
       <div ref={box} className="overflow-x-auto">
-        <svg viewBox={`0 0 ${W} ${H + top + 8}`} width={W} height={H + top + 8} className="block" style={{ direction: "ltr" }} role="img" aria-label="גרף מעבר המצביעים בין 2022 ל-2026">
-          <text x={W - 4} y={14} textAnchor="end" className="fill-ink-soft text-[13px] font-bold">2022</text>
-          <text x={4} y={14} textAnchor="start" className="fill-ink-soft text-[13px] font-bold">2026</text>
+        <svg viewBox={`0 0 ${W} ${H + top + 8}`} width={W} height={H + top + 8} className="block" style={{ direction: "ltr" }} role="img" aria-label={`גרף מעבר המצביעים בין ${years[0]} ל-${years[1]}`}>
+          <text x={W - 4} y={14} textAnchor="end" className="fill-ink-soft text-[13px] font-bold">{years[0]}</text>
+          <text x={4} y={14} textAnchor="start" className="fill-ink-soft text-[13px] font-bold">{years[1]}</text>
           {links.map((l) => (
             <path key={`${l.i}-${l.j}`} d={l.d} onClick={() => setSel({ kind: "link", i: l.i, j: l.j })}
               className={`cursor-pointer transition-[fill] motion-reduce:transition-none ${hit(l) ? "fill-signal/55" : "fill-ink/[.06]"}`}>
@@ -142,10 +144,10 @@ export default function FlowSankey({ T = flow.national.flowsTo, oldIds = flow.ol
         {sel.kind === "link" ? (() => {
           // לחיצה על פס — רק המעבר הזה (הכרעת בעלים 30.10.2026)
           const v = m.M[sel.i][sel.j];
-          return <><b className="text-ink">{`${A[sel.i].name} 2022 ← ${B[sel.j].name} 2026: ${num(v)} קולות`}</b><br />
-            {`${pct(v / rowT[sel.i])} ממצביעי ${A[sel.i].name} ב-2022 · ${pct(v / colT[sel.j])} מקולות ${B[sel.j].name} ב-2026`}</>;
+          return <><b className="text-ink">{`${A[sel.i].name} ${years[0]} ← ${B[sel.j].name} ${years[1]}: ${num(v)} קולות`}</b><br />
+            {`${pct(v / rowT[sel.i])} ממצביעי ${A[sel.i].name} ב-${years[0]} · ${pct(v / colT[sel.j])} מקולות ${B[sel.j].name} ב-${years[1]}`}</>;
         })() : <>
-          <b className="block text-ink mb-0.5">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-2022:` : `מתוך כל 100 קולות של ${B[sel.i].name} ב-2026:`}</b>
+          <b className="block text-ink mb-0.5">{sel.side === "a" ? `מתוך כל 100 מצביעי ${A[sel.i].name} ב-${years[0]}:` : `מתוך כל 100 קולות של ${B[sel.i].name} ב-${years[1]}:`}</b>
           {parts.map((p) => `${p.name} ${of100(p.s)}`).join(" · ")}
         </>}
       </figcaption>
