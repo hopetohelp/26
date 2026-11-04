@@ -1,82 +1,36 @@
 [
   {
-    "id": "2026-10-27-exit-kan-11",
-    "firm": "Kantar",
-    "publisher": "Kan 11",
-    "publishedAt": "2026-10-27T22:00:00+02:00",
-    "values": {
-      "likud": {
-        "s": 25
-      },
-      "yashar": {
-        "s": 21
-      },
-      "together": {
-        "s": 14
-      },
-      "joint": {
-        "s": 10
-      },
-      "democrats": {
-        "s": 10
-      },
-      "yb": {
-        "s": 8
-      },
-      "raam": {
-        "s": 7
-      },
-      "otzma": {
-        "s": 7
-      },
-      "shas": {
-        "s": 6
-      },
-      "utj": {
-        "s": 6
-      },
-      "rzp": {
-        "s": 6
-      }
-    },
-    "urls": [
-      "https://www.maariv.co.il/breaking-news/article-1382064"
-    ],
-    "verified": false,
-    "note": "מדגם כאן 11 של 22:00, מדיווח מעריב (22:03) — לא אומת מול הפרסום הראשוני. סך 120. שם המכון לפי סדרת סקרי כאן (קנטאר), לא מהדיווח. עדכונים מאוחרים יותר של המדגם אינם כאן. כל חמשת המדגמים תואמים לצילום המסך של הבעלים."
-  },
-  {
     "id": "2026-10-27-exit-channel-12",
     "firm": "Midgam R&C",
     "publisher": "Channel 12",
     "publishedAt": "2026-10-27T22:00:00+02:00",
     "values": {
       "likud": {
-        "s": 25
+        "s": 24
       },
       "yashar": {
-        "s": 21
+        "s": 22
       },
       "together": {
-        "s": 14
+        "s": 12
       },
       "joint": {
-        "s": 10
+        "s": 11
       },
       "democrats": {
-        "s": 10
+        "s": 9
       },
       "yb": {
-        "s": 8
+        "s": 9
       },
       "raam": {
         "s": 7
       },
       "otzma": {
-        "s": 7
+        "s": 6
       },
       "shas": {
-        "s": 6
+        "s": 8
       },
       "utj": {
         "s": 6
@@ -86,11 +40,15 @@
       }
     },
     "urls": [
+      "https://www.israelnationalnews.com/news/435260",
       "https://www.maariv.co.il/breaking-news/article-1382061",
-      "https://www.israelnationalnews.com/news/435260"
+      "https://www.timesofisrael.com/liveblog_entry/channel-12-exit-poll-shows-no-clear-victor-netanyahus-likud-is-largest-party-but-his-opponents-have-bigger-bloc/",
+      "https://www.mako.co.il/news-israel-elections/2026/liveblog-c84cc98a6ce71a1027.htm"
     ],
-    "verified": false,
-    "note": "מדגם חדשות 12 של 22:00, לפי צילום מסך של טבלת המדגמים בזמן אמת שהעביר הבעלים (28.10). דיווחי מעריב וערוץ 7 (הליכוד 24, ישר 22) לא תאמו לצילום ולכן הוחלפו. העדכון המאוחר (02:28; הליכוד 27) אינו כאן. כל חמשת המדגמים תואמים לצילום המסך של הבעלים."
+    "verified": true,
+    "status": "corrected",
+    "sourceLevel": "press",
+    "note": "תוקן: ברשומה הקיימת (לפי צילום מסך) ערכי כאן 11 (הליכוד 25, ישר 21, ביחד 14, המשותפת 10, הדמוקרטים 10, ישראל ביתנו 8, ש\"ס 6, עוצמה 7). לפי ערוץ 7 (22:12), מעריב (22:01) ו-ToI (22:03): הליכוד 24, ישר 22, ביחד 12, המשותפת 11, הדמוקרטים 9, ישראל ביתנו 9, ש\"ס 8, רע\"ם 7, עוצמה/יהדות התורה/הציונות הדתית 6; גושים 50/52/18. mako (22:43) מאשר דמוקרטים 9 וישראל ביתנו 9 לפני העדכון. במעריב יהדות התורה 7 (סכום 121) — שגוי. ערך קודם (raw/exit-polls.json, לפי צילום מסך): likud 25, yashar 21, together 14, joint 10, democrats 10, yb 8, raam 7, otzma 7, shas 6, utj 6, rzp 6."
   },
   {
     "id": "2026-10-27-exit-channel-13",
@@ -133,10 +91,161 @@
       }
     },
     "urls": [
-      "https://www.maariv.co.il/breaking-news/article-1382062"
+      "https://www.maariv.co.il/breaking-news/article-1382062",
+      "https://www.israelnationalnews.com/news/435260",
+      "https://www.timesofisrael.com/liveblog_entry/channel-13-exit-poll-eisenkot-led-bloc-in-lead-likud-as-largest-party-but-neither-camp-gets-majority-amid-record-arab-showing/"
     ],
-    "verified": false,
-    "note": "מדגם חדשות 13 של 22:00, מדיווח מעריב (22:01) — לא אומת מול הפרסום הראשוני. סך 120; הגושים 50/53/17. שם המכון לפי סדרת סקרי הערוץ. כל חמשת המדגמים תואמים לצילום המסך של הבעלים."
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "press",
+    "note": "מדגם חדשות 13 של 22:00: רשימה מלאה במעריב (22:01) ובערוץ 7 (22:12), זהה; גושים 50/53/17. ערוץ 7 מייחס את המדגם למכון 'המדד'. אתר חדשות 13 מציג כיום את העדכון. תואם לרשומה הקיימת."
+  },
+  {
+    "id": "2026-10-27-exit-channel-14",
+    "firm": "Filber",
+    "publisher": "Channel 14",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 30
+      },
+      "yashar": {
+        "s": 19
+      },
+      "together": {
+        "s": 11
+      },
+      "joint": {
+        "s": 10
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 4
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 9
+      },
+      "utj": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 7
+      }
+    },
+    "urls": [
+      "https://www.israelnationalnews.com/news/435260",
+      "https://www.walla.co.il/news/politics/383959154"
+    ],
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "press",
+    "note": "מדגם ערוץ 14 של 22:00: רשימה מלאה בערוץ 7 (22:12), שמייחס במפורש לערוץ 14; גושים 60/43/17 תואמים גם לוואלה (23:57). אתר ערוץ 14 חסום (403). הסוקר שלמה פילבר לפי ynet ו-JPost. תואם לרשומה הקיימת."
+  },
+  {
+    "id": "2026-10-27-exit-channel-16",
+    "firm": "Maagar Mochot",
+    "publisher": "Channel 16",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 25
+      },
+      "yashar": {
+        "s": 22
+      },
+      "together": {
+        "s": 13
+      },
+      "joint": {
+        "s": 11
+      },
+      "democrats": {
+        "s": 10
+      },
+      "yb": {
+        "s": 6
+      },
+      "raam": {
+        "s": 5
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 7
+      },
+      "utj": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 7
+      }
+    },
+    "urls": [
+      "https://www.ynet.co.il/news/article/s1zayyc2ml",
+      "https://www.walla.co.il/news/politics/383959154"
+    ],
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "press",
+    "note": "מדגם חסר — נוסף. ynet (22:13): הליכוד 25, ישר 22, ביחד 13, המשותפת 11, הדמוקרטים 10, עוצמה/יהדות התורה/ש\"ס/הציונות הדתית 7, ישראל ביתנו 6, רע\"ם 5; גושים 53/51/16 (גם בוואלה). המכון (מאגר מוחות, פרופ' יצחק כ\"ץ) לפי JPost ותקצירי חיפוש, לא מהדיווח עצמו. לא נמצא עדכון מפורט."
+  },
+  {
+    "id": "2026-10-27-exit-kan-11",
+    "firm": "Kantar",
+    "publisher": "Kan 11",
+    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 25
+      },
+      "yashar": {
+        "s": 21
+      },
+      "together": {
+        "s": 14
+      },
+      "joint": {
+        "s": 10
+      },
+      "democrats": {
+        "s": 10
+      },
+      "yb": {
+        "s": 8
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.maariv.co.il/breaking-news/article-1382064",
+      "https://www.timesofisrael.com/liveblog_entry/kan-exit-poll-shows-no-clear-victor-as-netanyahus-likud-is-largest-party-but-opponents-have-larger-bloc/"
+    ],
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "press",
+    "note": "מדגם כאן 11 של 22:00: רשימה מלאה במעריב (22:03), גושים 50/53/17; ToI מאשר הליכוד 25, ישר 21. אתר כאן חסום (403). המכון (קנטאר, דודי חסיד) לפי ערוץ 7. תואם לרשומה הקיימת."
   },
   {
     "id": "2026-10-27-exit-i24",
@@ -179,34 +288,134 @@
       }
     },
     "urls": [
+      "https://www.i24news.tv/he/news/israel-elections-2026/artc-2dc735ed",
       "https://www.i24news.tv/en/news/israeli-elections/artc-i24news-exit-poll-likud-wins-27-seats-yashar-20-coalition-bloc-reaches-55-seats-opposition-49-and-arab-parties-16"
     ],
     "verified": true,
-    "note": "מדגם i24NEWS של 22:00, מהפרסום של i24 עצמו. סך 120; קואליציה 55. המכון (דיירקט פולס) לפי ערוץ 7. כל חמשת המדגמים תואמים לצילום המסך של הבעלים."
+    "status": "match",
+    "sourceLevel": "primary",
+    "note": "מדגם i24NEWS ודיירקט פולס של 22:00, מהפרסום של i24 עצמו (רשימה מלאה); גושים 55/49/16. לפי ערוץ 7 (inn.co.il/news/709547) המכון לא שינה אף מנדט במהלך הלילה — אין עדכון. תואם לרשומה הקיימת."
   },
   {
-    "id": "2026-10-27-exit-channel-14",
-    "firm": "לא נמסר",
-    "publisher": "Channel 14",
-    "publishedAt": "2026-10-27T22:00:00+02:00",
+    "id": "2026-10-27-exit-channel-12-2243",
+    "firm": "Midgam R&C",
+    "publisher": "Channel 12",
+    "publishedAt": "2026-10-27T22:43:00+02:00",
     "values": {
       "likud": {
-        "s": 30
+        "s": 24
       },
       "yashar": {
-        "s": 19
+        "s": 22
       },
       "together": {
-        "s": 11
+        "s": 12
       },
       "joint": {
+        "s": 11
+      },
+      "democrats": {
         "s": 10
+      },
+      "yb": {
+        "s": 8
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 8
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.mako.co.il/news-israel-elections/2026/liveblog-c84cc98a6ce71a1027.htm",
+      "https://www.timesofisrael.com/liveblog_entry/channel-12-updates-exit-poll-pro-netanyahu-bloc-rises-to-52-seats/"
+    ],
+    "verified": false,
+    "status": "partial",
+    "sourceLevel": "primary",
+    "note": "עדכון ראשון של חדשות 12 (mako 22:43): הדמוקרטים 10 (מ-9), ישראל ביתנו 8 (מ-9), הגושים ללא שינוי (50/52/18). ToI מתאר את המדגם הקודם 'של 22:40' עם אותם ערכים. שאר הרשימות כמו ב-22:00. — סומן partial: הרשימה המלאה שוחזרה ממדגם 22:00 ומהשינויים שדווחו, ולא פורסמה במלואה."
+  },
+  {
+    "id": "2026-10-27-exit-channel-13-2257",
+    "firm": "MP+TM+SN+A",
+    "publisher": "Channel 13",
+    "publishedAt": "2026-10-27T22:57:00+02:00",
+    "values": {
+      "likud": {
+        "s": 25
+      },
+      "yashar": {
+        "s": 23
+      },
+      "together": {
+        "s": 13
+      },
+      "joint": {
+        "s": 11
       },
       "democrats": {
         "s": 9
       },
       "yb": {
-        "s": 4
+        "s": 7
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 7
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.timesofisrael.com/liveblog_entry/updated-channel-13-exit-poll-arab-parties-gain-a-seat-now-at-18-zionist-opposition-bloc-down-1-to-52/"
+    ],
+    "verified": false,
+    "status": "partial",
+    "sourceLevel": "press",
+    "note": "עדכון ראשון של חדשות 13 (ToI 22:57): ביחד 13 (מ-14), המשותפת 11 (מ-10); גושים 50/52/18. שאר הרשימות כמו ב-22:00 (נגזר, ותואם לעדכון הבא). שעת השידור המדויקת לא נמסרה. — סומן partial: הרשימה המלאה שוחזרה ממדגם 22:00 ומהשינויים שדווחו, ולא פורסמה במלואה."
+  },
+  {
+    "id": "2026-10-27-exit-kan-11-2304",
+    "firm": "Kantar",
+    "publisher": "Kan 11",
+    "publishedAt": "2026-10-27T23:04:00+02:00",
+    "values": {
+      "likud": {
+        "s": 25
+      },
+      "yashar": {
+        "s": 21
+      },
+      "together": {
+        "s": 13
+      },
+      "joint": {
+        "s": 11
+      },
+      "democrats": {
+        "s": 10
+      },
+      "yb": {
+        "s": 8
       },
       "raam": {
         "s": 7
@@ -215,7 +424,52 @@
         "s": 7
       },
       "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.timesofisrael.com/liveblog_entry/kan-updates-its-exit-poll-with-all-3-main-channels-now-projecting-52-seats-for-eisenkot-led-bloc-50-for-pms/"
+    ],
+    "verified": false,
+    "status": "partial",
+    "sourceLevel": "press",
+    "note": "עדכון ראשון של כאן (ToI, 23:11; שעת המדגם 23:04 לפי רשומת ToI של 01:49): ביחד 13 (מ-14), המשותפת 11 (מ-10); גושים 50/52/18. שאר הרשימות ללא שינוי מ-22:00 (נגזר, ותואם לשינויים שדווחו בעדכון הבא). — סומן partial: הרשימה המלאה שוחזרה ממדגם 22:00 ומהשינויים שדווחו, ולא פורסמה במלואה."
+  },
+  {
+    "id": "2026-10-27-exit-channel-14-0041",
+    "firm": "Filber",
+    "publisher": "Channel 14",
+    "publishedAt": "2026-10-28T00:41:00+02:00",
+    "values": {
+      "likud": {
+        "s": 31
+      },
+      "yashar": {
+        "s": 20
+      },
+      "together": {
+        "s": 11
+      },
+      "joint": {
+        "s": 11
+      },
+      "democrats": {
         "s": 9
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 7
+      },
+      "shas": {
+        "s": 10
       },
       "utj": {
         "s": 7
@@ -225,9 +479,165 @@
       }
     },
     "urls": [
-      "https://www.israelnationalnews.com/news/435260"
+      "https://www.ynet.co.il/news/article/h1nq00srhme",
+      "https://beitar24.co.il/22042/",
+      "https://www.israelnationalnews.com/news/435257",
+      "https://www.ice.co.il/local-news/news/article/1135417"
     ],
-    "verified": false,
-    "note": "מדגם ערוץ 14 של 22:00. מקור אחד (ערוץ 7), והשיוך לערוץ 14 לפי ההקשר בכתבה ותואם לדיווח i24 (הליכוד 30, ישר 19, ישראל ביתנו 4, קואליציה 60) — לא אומת. המכון לא נמסר. כל חמשת המדגמים תואמים לצילום המסך של הבעלים."
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "press",
+    "note": "עדכון ערוץ 14: ynet (00:41) — הליכוד 31, ש\"ס 10, ישראל ביתנו מתחת לחסימה, גוש נתניהו 62; רשימה מלאה בביתר 24 (00:52) ובערוץ 7: ישר 20, ביחד 11, המשותפת 11, הדמוקרטים 9, 7 לכל אחת מהשאר; גושים 62/40/18. לפי ice היה לפני כן עדכון ביניים (61/41/18) שפירוטו לא נמצא — לא נרשם."
+  },
+  {
+    "id": "2026-10-27-exit-channel-13-0100",
+    "firm": "MP+TM+SN+A",
+    "publisher": "Channel 13",
+    "publishedAt": "2026-10-28T01:00:00+02:00",
+    "values": {
+      "likud": {
+        "s": 27
+      },
+      "yashar": {
+        "s": 22
+      },
+      "together": {
+        "s": 13
+      },
+      "joint": {
+        "s": 11
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 7
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://13tv.co.il/item/news/politics/politics/midgam-905425191/",
+      "https://www.israelnationalnews.com/flashes/696230",
+      "https://www.timesofisrael.com/liveblog_entry/pro-netanyahu-bloc-rises-to-51-seats-in-updated-channel-13-exit-poll-pulling-even-with-anti-netanyahu-bloc/"
+    ],
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "primary",
+    "note": "עדכון שני של חדשות 13: באתר הערוץ 'מעודכן ל-01:00' — הליכוד 27, ישר 22, ביחד 13, המשותפת 11, הדמוקרטים 9, ישראל ביתנו 7, רע\"ם 7, השאר 6; גושים 51/51/18. ערוץ 7 (01:02) ו-ToI (01:11) מאשרים (יהדות התורה 6 מ-7). מעריב (02:19) כתב המשותפת 12 — סכום 121, שגוי."
+  },
+  {
+    "id": "2026-10-27-exit-kan-11-0143",
+    "firm": "Kantar",
+    "publisher": "Kan 11",
+    "publishedAt": "2026-10-28T01:43:00+02:00",
+    "values": {
+      "likud": {
+        "s": 27
+      },
+      "yashar": {
+        "s": 21
+      },
+      "together": {
+        "s": 13
+      },
+      "joint": {
+        "s": 11
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 8
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 6
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.israelnationalnews.com/flashes/696234",
+      "https://www.israelnationalnews.com/news/435257",
+      "https://www.timesofisrael.com/liveblog_entry/kan-11-updates-exit-poll-pro-netanyahu-bloc-pulls-even-with-opposition/",
+      "https://13tv.co.il/item/news/politics/politics/midgam-905425191/"
+    ],
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "press",
+    "note": "עדכון שני של כאן: מבזק ערוץ 7 (01:43), ToI (01:49): הליכוד 27 (מ-25), הדמוקרטים 9 (מ-10), עוצמה 6 (מ-7); גושים 51/51/18. רשימה מלאה בערוץ 7 ובאתר חדשות 13. במעריב (02:19) עוצמה 7 — סכום 121, שגוי."
+  },
+  {
+    "id": "2026-10-27-exit-channel-12-0215",
+    "firm": "Midgam R&C",
+    "publisher": "Channel 12",
+    "publishedAt": "2026-10-28T02:15:00+02:00",
+    "values": {
+      "likud": {
+        "s": 27
+      },
+      "yashar": {
+        "s": 21
+      },
+      "together": {
+        "s": 12
+      },
+      "joint": {
+        "s": 12
+      },
+      "democrats": {
+        "s": 9
+      },
+      "yb": {
+        "s": 7
+      },
+      "raam": {
+        "s": 7
+      },
+      "otzma": {
+        "s": 6
+      },
+      "shas": {
+        "s": 7
+      },
+      "utj": {
+        "s": 6
+      },
+      "rzp": {
+        "s": 6
+      }
+    },
+    "urls": [
+      "https://www.mako.co.il/news-israel-elections/2026/liveblog-c84cc98a6ce71a1027.htm",
+      "https://www.timesofisrael.com/liveblog_entry/channel-12-updates-exit-poll-pro-netanyahu-bloc-rises-to-52-seats/",
+      "https://www.israelnationalnews.com/news/435257"
+    ],
+    "verified": true,
+    "status": "match",
+    "sourceLevel": "primary",
+    "note": "עדכון מאוחר של חדשות 12 (mako 02:15; ToI 02:17; ידוע גם כ'עדכון 02:28'): הליכוד 27, ישר 21, המשותפת 12, ישראל ביתנו 7, ש\"ס 7, הדמוקרטים 9; רשימה מלאה בערוץ 7; גושים 52/49/19. מעריב (02:19) כתב דמוקרטים 10, וחדשות 13/ice כתבו המשותפת 11 וישראל ביתנו 8 — אינם מסתכמים בגושים; לא אומצו."
   }
 ]
