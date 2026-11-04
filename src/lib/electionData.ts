@@ -11,7 +11,7 @@ import { exitPolls as exitPolls2026, listName as listName2026, lists2026, active
 import { finalPolls, hasResults, results2026, ELECTION_DAY } from "./guessAccuracyData";
 import { SIMPLE_BLOCS, type BlocDef } from "./simpleSources";
 import { quality } from "./quality";
-import { bloc2022 } from "./voterFlow";
+import { blocAssignment } from "./electionBlocs";
 import { MODEL_AVERAGE, SOURCE_OPTIONS } from "./dataResolver";
 import { K26_ID, previousElection } from "./election";
 import { eveSnapshot, historyBlocs, type Cycle, type ElectionResult, type HistPoll } from "./history";
@@ -117,10 +117,9 @@ function buildPast(id: string): ElectionData | null {
   const usable = polls.filter((p) => p.consistent && p.end < c.date);
   const first = usable.reduce((a, p) => (p.end < a ? p.end : a), usable[0]?.end ?? c.date);
   const names = new Map(r.lists.map((l) => [l.letters, l.short]));
-  // 2022 — ארבעת הגושים של האתר לפי השיוך של "מה השתנה" (bloc2022); שאר המערכות — הגושים ההיסטוריים (ממליצות על נתניהו · ערביות · יתר), עד שיוך מלא
-  const blocs: readonly BlocDef[] = c.knesset === 25
-    ? SIMPLE_BLOCS.map((b) => ({ ...b, lists: r.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) }))
-    : historyBlocs(c, r).map((b) => ({ id: b.id, name: b.name, short: b.short, lists: b.letters }));
+  // ארבעת הגושים של האתר כשיש שיוך (blocAssignment, מקור אחד); אחרת — הגושים ההיסטוריים (ממליצות על נתניהו · ערביות · יתר), עד שיוך מלא
+  const blocs: readonly BlocDef[] = blocAssignment(id)
+    ?? historyBlocs(c, r).map((b) => ({ id: b.id, name: b.name, short: b.short, lists: b.letters }));
   const pollsterSeries = [...new Map(usable.map((p) => [pollsterKey(p), pollsterLabel(p)])).entries()].sort((a, b) => a[1].localeCompare(b[1], "he"));
   return {
     id, day: c.date, prevLabel: previousElection(id)?.label ?? null,
