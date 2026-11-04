@@ -3,6 +3,7 @@ import { Card } from "./ui";
 import Explained from "./Explained";
 import { localityCsv, queryLocalities, type LocalityElection } from "../lib/localities";
 import { num, pct } from "../lib/format";
+import Missing from "./Missing";
 
 export default function LocalityResults({ electionId }: { electionId: string }) {
   const [data, setData] = useState<LocalityElection[] | null>(null);
@@ -11,6 +12,8 @@ export default function LocalityResults({ electionId }: { electionId: string }) 
   const [offset, setOffset] = useState(0);
   useEffect(() => { let live = true; import('../data/localities.json').then(d => { if (live) setData(d.default.elections as LocalityElection[]); }).catch(() => { if (live) setError(true); }); return () => { live = false; }; }, []);
   const e = data?.find(e => e.id === electionId);
+  // נטען ואין יישובים למערכת הזו — "נתון חסר" באותו מקום (הכרעת בעלים 02.11.2026)
+  if (data && !e) return <Missing what="תוצאות לפי יישוב" />;
   if (!e) return <p role="status">{error ? 'טעינת תוצאות היישובים נכשלה. רעננו כדי לנסות שוב.' : 'טוען תוצאות לפי יישוב…'}</p>;
   const page = queryLocalities(e, query, offset);
   const download = () => { const url = URL.createObjectURL(new Blob([localityCsv(e)], { type: 'text/csv;charset=utf-8' })); const a = document.createElement('a'); a.href = url; a.download = `${electionId}-localities.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); };

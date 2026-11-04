@@ -1,15 +1,11 @@
 import { lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import { Fold, PageTitle } from "../components/ui";
-import Missing, { POLL_DRAWERS } from "../components/Missing";
-import LocalityResults from "../components/LocalityResults";
-import OverviewCards from "../components/OverviewCards";
-import { results } from "../lib/data";
-import { K26_ID, SUMMARY_ID, electionOption, previousElection, useElection } from "../lib/election";
-import { overviewOf } from "../lib/voterFlow";
+import { POLL_DRAWERS } from "../components/Missing";
+import { SUMMARY_ID, useElection } from "../lib/election";
 import { useScreenShown } from "../lib/screenVisibility";
 import Results, { ElectionSummary } from "./Results";
-import Accuracy, { AccuracyAcross } from "./Accuracy";
+import { AccuracyAcross } from "./Accuracy";
 import Voters from "./Voters";
 
 /**
@@ -42,30 +38,19 @@ export function ResultsScreen() {
   return <><h1 className="sr-only">תוצאות</h1><Results id={id} /></>;
 }
 
-/** "מה השתנה" של מערכת שהסתיימה: הערך והשינוי מהקודמת, הגושים, ומגירות המעבר (עדיין חסרות למערכות האלה) */
-function PastChanges({ id }: { id: string }) {
-  const e = results.find((x) => x.id === id)!;
-  const prevOpt = previousElection(id), prev = prevOpt ? results.find((x) => x.id === prevOpt.id) : undefined;
-  return <div>
-    <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
-      <h1 className="text-2xl font-display leading-tight">מה השתנה: {prevOpt?.label ?? "2013"} מול {electionOption(id).label}</h1>
-      <OverviewCards pair={{ prev: prev ? overviewOf(prev) : null, cur: overviewOf(e) }} />
-    </section>
-    <Fold title="מעבר בין מפלגות"><Missing what="מעבר המצביעים" /></Fold>
-    <Fold title="מעבר בין גושים"><Missing what="המעבר בין גושים" /></Fold>
-    <Fold title="תוצאות לפי יישוב"><LocalityResults key={id} electionId={id} /></Fold>
-  </div>;
-}
-
 export function ChangesScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
-  if (id === K26_ID) return <Suspense fallback={loading}><VoterFlow /></Suspense>;
-  return <PastChanges id={id} />;
+  // אותו מסך לכל מערכת, כולל 2026 (הכרעת בעלים 04.11.2026); מה שאין לו נתון — "נתון חסר" באותו מקום
+  return <Suspense fallback={loading}><VoterFlow key={id} id={id} /></Suspense>;
 }
 
-/** "סקרים" של 2026: אחרונים, הסקרים מול התוצאה, ומגירות "מגמות" ו"ארכיון" (הכרעת בעלים 02.11.2026: שלושה מסכים) */
-function Polls2026() {
+/**
+ * "סקרים" — אותו מסך לכל מערכת, כולל 2026 (הכרעת בעלים 04.11.2026: "המסך אותו מסך של הגרסה המעודכנת של 26, השינוי רק הנתונים").
+ * תוכן "סקרים" הישן של 2015–2022 (מול התוצאה, הסקר האחרון של כל מכון, לאורך המערכה, כל הסקרים מהמערכה) עבר לטבלאות הארכיון,
+ * לתגיות הדיוק ולמגירת "מגמות" — כמו שהוכרע ל־2026 ב־03.11.2026; ההשוואה בין המערכות — ב"סיכום".
+ */
+function PollsOf({ id }: { id: string }) {
   const overview = useScreenShown("overview"), today = useScreenShown("today");
   // קישור ישן ללשונית (?tab=trends / archive / overview / today) פותח את המגירה שלה
   const tab = new URLSearchParams(useLocation().search).get("tab");
@@ -74,8 +59,8 @@ function Polls2026() {
     {/* "הסקרים מול התוצאה" ומפת המכונים הוסרו — הנתונים בטבלאות הארכיון (הכרעת בעלים 03.11.2026) */}
     {/* מגירת "הסקר האחרון של כל מכון" הוסרה (הכרעת בעלים 03.11.2026) — הנתונים בטבלאות הארכיון */}
     {/* "כל הסקרים": מסננים ומגירות, ובסוף מגירת "מגמות" (הכרעת בעלים 03.11.2026) */}
-    <Suspense fallback={loading}><Polls trailing={<Fold title={POLL_DRAWERS.trend} open={tab === "trends"}><Suspense fallback={loading}><Trends /></Suspense></Fold>} /></Suspense>
-    {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}
+    <Suspense fallback={loading}><Polls id={id} trailing={<Fold title={POLL_DRAWERS.trend} open={tab === "trends"}><Suspense fallback={loading}><Trends id={id} /></Suspense></Fold>} /></Suspense>
+    {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם. תמונת המצב של היום, לא של מערכת — ולכן אינם תלויים בבורר */}
     {overview && <Fold title="האחרונים" open={tab === "overview"}><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
     {today && <Fold title="היום" open={tab === "today"}><Suspense fallback={loading}><Today /></Suspense></Fold>}
   </div>;
@@ -84,7 +69,5 @@ function Polls2026() {
 export function PollsScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
-  // אותה שורת מערכת ואותן חמש מגירות בכל מערכת
-  if (id === K26_ID) return <><h1 className="sr-only">סקרים</h1><Polls2026 /></>;
-  return <><h1 className="sr-only">סקרים</h1><Accuracy id={id} /></>;
+  return <><h1 className="sr-only">סקרים</h1><PollsOf id={id} /></>;
 }
