@@ -72,6 +72,17 @@
   "note": "Arutz 7 12.04.2020 (published Sunday) reporting Direct Polls: Likud 38, Hosen L'Yisrael-Labor 16, Joint List 15, Yesh Atid 14, Shas 9, UTJ 8, Lieberman 8, Yamina 7, Meretz 5, Gesher 0.93%, Otzma Yehudit 0.60% — all match. Derekh Eretz (Wikipedia 2.85%) not mentioned in source. No fieldwork date/sample given."
  },
  {
+  "id": "k24-2020-04-13-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/433899",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 13.04.2020 reporting the Midgam poll broadcast on Channel 12 that evening: Likud 40, Blue&White 19, Joint List 15, Yesh Atid-Telem 10, Shas 9, Yamina 8, UTJ 7, Yisrael Beytenu 7, Meretz 5 — all seats match. Labor, Gesher, Derekh Eretz, Otzma Yehudit 'did not pass the threshold' with no percentages (Wikipedia 1.1/1.4/1.4/1.9% unverified)."
+ },
+ {
   "id": "k24-2020-04-23-smith-x",
   "status": "partial",
   "sourceLevel": "press",
