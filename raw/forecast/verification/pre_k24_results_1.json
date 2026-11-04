@@ -88,6 +88,17 @@
   "note": "103FM 29/07/2020 (Panels Politics/Menachem Lazar for 'Sheva Tesha'; conducted 'yesterday (Tue)'): Likud 31, Yesh Atid-Telem 19, Joint List 16, Yamina 13, Blue&White 10, Shas 9, Yisrael Beytenu 8, UTJ 7, Meretz 7 — all match. Below threshold (no %): Labor, Otzma Yehudit, Derekh Eretz, Gesher, Jewish Home. 525 respondents Panel4All, MoE 4.4%."
  },
  {
+  "id": "k24-2020-08-04-direct-polls-srugim",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.srugim.co.il/476613-סקר-נתניהו-מתאושש-בנט-מכפיל-את-כוחו",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 04.08.20 ('new seats poll by Direct Polls'): Likud 35, Yesh Atid-Telem 18, Joint List 16, Yamina 12, Shas 10, Blue&White 9, Yisrael Beytenu 8, UTJ 7, Meretz 5; Jewish Home, Gesher, Labor, Derekh Eretz below threshold — all match. No fieldwork date/sample stated."
+ },
+ {
   "id": "k24-2020-08-06-maagar-mochot-103fm",
   "status": "match",
   "sourceLevel": "primary",
