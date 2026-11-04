@@ -1,33 +1,21 @@
+/**
+ * לא בשימוש (בדיקת סשן ה, 04.11.2026): "דיוק הסקרים 2026" הישן (גרף הסטייה), שהוסר מהתצוגה בהכרעת הבעלים מ־03.11.2026 —
+ * הנתונים בטבלאות הארכיון. אינו זהה לרכיב קיים, ולכן נשאר לפי כלל "אין מחיקה" עד הכרעה. ShiftLine עבר ל־src/components/ShiftLine.tsx.
+ */
 import DeviationChart from "../components/deviationChart";
 import { Card } from "../components/ui";
-import type { SeatShift } from "../engine/seatChange";
 import { listName } from "../lib/data";
 import { seatTags } from "../lib/guessAccuracy";
 import { exitPolls } from "../lib/data";
 import { SIMPLE_BLOCS } from "../lib/simpleSources";
 import { finalPolls, pollMean, results2026 } from "../lib/guessAccuracyData";
-import { num, pctValue } from "../lib/format";
 
-const LTR = (t: string) => `\u2066${t}\u2069`;
 
 /** כפתור 2026 בלשוניות "תוצאות אמת" ו"דיוק הסקרים" (הכרעת בעלים 28.10.2026): מאותם נתונים של מסך "תוצאות" — raw/results-2026.json והסקרים האחרונים */
 export const K26 = { id: "k26", label: "2026" };
 const pct = (results2026 as { pct?: Record<string, number> }).pct ?? {};
 const actual = results2026.seats;
 const ids = Object.keys(actual).sort((a, b) => (actual[b] ?? 0) - (actual[a] ?? 0) || (pct[b] ?? 0) - (pct[a] ?? 0));
-
-/** שורה אחת של השינוי הקרוב: כיוון (חץ וסימן, לא רק צבע), קולות ואחוז ביחס לקולות שיש לרשימה (אחוז מתחת ל-0.1% לא מוצג) */
-export function ShiftLine({ shift, up }: { shift: SeatShift | null; up: boolean }) {
-  if (!shift) return null;
-  const sign = up ? "+" : "\u2212";
-  return (
-    <div className={`whitespace-nowrap ${up ? "text-pos" : "text-neg"}`}>
-      <span aria-hidden="true">{up ? "▲" : "▼"} </span>
-      <span className="sr-only">{up ? "מנדט נוסף:" : "איבוד מנדט:"} </span>
-      {LTR(`${sign}${num(shift.votes)}`)}{shift.pct !== null && shift.pct >= 0.1 && <> ({LTR(`${sign}${shift.pct >= 100 ? num(shift.pct) : pctValue(shift.pct, 1)}%`)})</>}
-    </div>
-  );
-}
 
 /** "דיוק הסקרים" — 2026: הסקר האחרון של כל סדרה לפני הבחירות מול הספירה הנוכחית (בלי המדגמים) */
 export function Accuracy2026({ chips }: { chips?: React.ReactNode }) {

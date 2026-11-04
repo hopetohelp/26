@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { electionData } from "./electionData";
 import { ELECTIONS, K26_ID } from "./election";
+import { blocAssignment } from "./electionBlocs";
 
 /**
  * מסך אחד לכל מערכת (הכרעת בעלים 04.11.2026: "בכל מערכות הבחירות המסך אותו מסך של הגרסה המעודכנת של 26, השינוי רק הנתונים.
@@ -53,5 +54,17 @@ describe("מסך אחד לכל מערכת", () => {
   it("סטטוס האימות של סקרי העבר מגיע לאתר כשהוא קיים (2015)", () => {
     const d = electionData("k20");
     expect(d.polls.filter((p) => p.verified).length).toBeGreaterThan(0);
+  });
+  it("רכיבי שלושת המסכים אינם מייבאים קובץ מיוחד לשנה", () => {
+    for (const f of ["Results", "Polls", "Trends", "VoterFlow"]) {
+      const text = readFileSync(`src/pages/${f}.tsx`, "utf8");
+      expect(text, f).not.toMatch(/from\s+["']\.\/\w*20\d\d\w*["']/);
+    }
+  });
+  it("שיוך גושים אחד לכרטיס התוצאות ולטבלאות הסקרים", () => {
+    expect(blocAssignment(K26_ID)?.length).toBe(4);
+    const k25 = blocAssignment("k25")!;
+    expect(k25.map((b) => b.id)).toEqual(["netanyahu", "haredi", "arab", "eisenkot"]);
+    expect(electionData("k25").blocs).toEqual(k25);
   });
 });
