@@ -1,4 +1,4 @@
-"""מעבר מצביעים לכל זוג מערכות עוקבות 2013⇐2015 … 2021⇐2022 (תוכנית הנתונים המלאים 04.11.2026, סשן ג).
+"""מעבר מצביעים לכל זוג מערכות עוקבות 2009⇐2013, 2013⇐2015 … 2021⇐2022 (תוכנית הנתונים המלאים 04.11.2026, סשן ג).
 
     python3 pipeline/voter_flows.py            — כותב src/data/flows/kNN.json ו-public/flows/kNN-units.json (NN = הכנסת החדשה)
     python3 pipeline/voter_flows.py --holdout  — מבחן החזקה לכל זוג (כמו pipeline/holdout_voter_flow.py), בלי לכתוב
@@ -6,7 +6,7 @@
 אותה שיטה בדיוק של pipeline/voter_flow.py (2022⇐2026), על קובצי הקלפיות הרשמיים (pipeline/ballots.py), במבנה של
 src/data/flow2026.json. ההבדלים, כי אין להם נתון:
   * נקודת המוצא של הטבלה הארצית אחידה — יש שיוך ודאי בין רשימות (raw/lineage.json) רק ל-2022⇐2026; כאן אין שום הנחה.
-  * בקובצי 2013–אפר׳ 2019 אין "ריכוז" ו"סמל ועדה": דרגות המתחם והוועדה ריקות, והיתרה עולה ליישוב ולארץ.
+  * בקובצי 2009–אפר׳ 2019 אין "ריכוז" ו"סמל ועדה": דרגות המתחם והוועדה ריקות, והיתרה עולה ליישוב ולארץ.
   * המעטפות החיצוניות (סמל ישוב 875 / 99999 / 9999) מאוחדות לסמל אחד, כדי שיותאמו זו לזו.
 רשימות: ב"לפני" — שעברו את אחוז החסימה או קיבלו לפחות 2.5% (כמו ב-2022); ב"אחרי" — שעברו או קיבלו לפחות 1%; השאר ⇐ "other".
 המפתחות כמו ב-flow2026.json (letters26, ballots2026, valid2026 — של המערכת החדשה); new = אותיות הרשימות, names = שמותיהן.
@@ -26,7 +26,7 @@ import voter_flow as vf  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT, UNITS = ROOT / "src" / "data" / "flows", ROOT / "public" / "flows"
-PAIRS = [(19, 20), (20, 21), (21, 22), (22, 23), (23, 24), (24, 25)]
+PAIRS = [(18, 19), (19, 20), (20, 21), (21, 22), (22, 23), (23, 24), (24, 25)]
 OLD_MIN, NEW_MIN = 2.5, 1.0
 
 
@@ -45,7 +45,12 @@ def lists(e: dict, minimum: float) -> list[str]:
 
 
 def results() -> dict[int, dict]:
-    return {e["knesset"]: e for e in json.loads(vf.RESULTS.read_text(encoding="utf-8"))}
+    """המערכות שבבורר, ו-2009 מתוך previous של 2013 (אינה בבורר; pipeline/historical_data.py previous_2009)"""
+    res = {e["knesset"]: e for e in json.loads(vf.RESULTS.read_text(encoding="utf-8"))}
+    for e in list(res.values()):
+        if e.get("previous", {}).get("lists"):
+            res[e["previous"]["knesset"]] = e["previous"]
+    return res
 
 
 def build(a: int, b: int, res: dict[int, dict]) -> tuple[dict, dict]:

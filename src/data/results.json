@@ -282,14 +282,271 @@
   ],
   "previous": {
    "belowThreshold": 103904,
+   "blocs": {
+    "arab": [
+     "עם",
+     "ו",
+     "ד"
+    ],
+    "eisenkot": [
+     "כן",
+     "אמת",
+     "מרצ"
+    ],
+    "haredi": [
+     "שס",
+     "ג"
+    ],
+    "netanyahu": [
+     "מחל",
+     "ל",
+     "ט",
+     "ב"
+    ]
+   },
    "date": "2009-02-10",
    "eligible": 5278985,
    "full": "פברואר 2009",
    "invalid": 43097,
    "knesset": 18,
    "label": "2009",
+   "lists": [
+    {
+     "letters": "כן",
+     "name": "קדימה",
+     "seats": 28,
+     "short": "קדימה",
+     "votes": 758032
+    },
+    {
+     "letters": "מחל",
+     "name": "הליכוד",
+     "seats": 27,
+     "short": "הליכוד",
+     "votes": 729054
+    },
+    {
+     "letters": "ל",
+     "name": "ישראל ביתנו",
+     "seats": 15,
+     "short": "ישראל ביתנו",
+     "votes": 394577
+    },
+    {
+     "letters": "אמת",
+     "name": "מפלגת העבודה",
+     "seats": 13,
+     "short": "מפלגת העבודה",
+     "votes": 334900
+    },
+    {
+     "letters": "שס",
+     "name": "ש\"ס",
+     "seats": 11,
+     "short": "ש\"ס",
+     "votes": 286300
+    },
+    {
+     "letters": "ג",
+     "name": "יהדות התורה",
+     "seats": 5,
+     "short": "יהדות התורה",
+     "votes": 147954
+    },
+    {
+     "letters": "עם",
+     "name": "רע\"מ-תע\"ל",
+     "seats": 4,
+     "short": "רע\"מ-תע\"ל",
+     "votes": 113954
+    },
+    {
+     "letters": "ט",
+     "name": "האיחוד הלאומי",
+     "seats": 4,
+     "short": "האיחוד הלאומי",
+     "votes": 112570
+    },
+    {
+     "letters": "ו",
+     "name": "חד\"ש",
+     "seats": 4,
+     "short": "חד\"ש",
+     "votes": 112130
+    },
+    {
+     "letters": "מרצ",
+     "name": "מרצ",
+     "seats": 3,
+     "short": "מרצ",
+     "votes": 99611
+    },
+    {
+     "letters": "ב",
+     "name": "הבית היהודי",
+     "seats": 3,
+     "short": "הבית היהודי",
+     "votes": 96765
+    },
+    {
+     "letters": "ד",
+     "name": "בל\"ד",
+     "seats": 3,
+     "short": "בל\"ד",
+     "votes": 83739
+    },
+    {
+     "letters": "ה",
+     "name": "התנועה הירוקה-מימד",
+     "seats": 0,
+     "short": "התנועה הירוקה-מימד",
+     "votes": 27737
+    },
+    {
+     "letters": "זך",
+     "name": "גיל",
+     "seats": 0,
+     "short": "גיל",
+     "votes": 17571
+    },
+    {
+     "letters": "קנ",
+     "name": "עלה ירוק",
+     "seats": 0,
+     "short": "עלה ירוק",
+     "votes": 13132
+    },
+    {
+     "letters": "רק",
+     "name": "הירוקים",
+     "seats": 0,
+     "short": "הירוקים",
+     "votes": 12378
+    },
+    {
+     "letters": "חי",
+     "name": "ישראל חזקה",
+     "seats": 0,
+     "short": "ישראל חזקה",
+     "votes": 6722
+    },
+    {
+     "letters": "צי",
+     "name": "צבר",
+     "seats": 0,
+     "short": "צבר",
+     "votes": 4752
+    },
+    {
+     "letters": "פ",
+     "name": "כוח להשפיע",
+     "seats": 0,
+     "short": "כוח להשפיע",
+     "votes": 3696
+    },
+    {
+     "letters": "ק",
+     "name": "דעם",
+     "seats": 0,
+     "short": "דעם",
+     "votes": 2645
+    },
+    {
+     "letters": "נ",
+     "name": "ישראל המתחדשת",
+     "seats": 0,
+     "short": "ישראל המתחדשת",
+     "votes": 2572
+    },
+    {
+     "letters": "יק",
+     "name": "ניצולי השואה-בוגרי עלה ירוק",
+     "seats": 0,
+     "short": "ניצולי השואה-בוגרי עלה ירוק",
+     "votes": 2346
+    },
+    {
+     "letters": "קץ",
+     "name": "לידר",
+     "seats": 0,
+     "short": "לידר",
+     "votes": 1887
+    },
+    {
+     "letters": "ץ",
+     "name": "צומת",
+     "seats": 0,
+     "short": "צומת",
+     "votes": 1520
+    },
+    {
+     "letters": "קפ",
+     "name": "כוח הכסף",
+     "seats": 0,
+     "short": "כוח הכסף",
+     "votes": 1008
+    },
+    {
+     "letters": "פק",
+     "name": "רע\"ש-זכויות הגבר",
+     "seats": 0,
+     "short": "רע\"ש-זכויות הגבר",
+     "votes": 921
+    },
+    {
+     "letters": "ים",
+     "name": "הישראלים",
+     "seats": 0,
+     "short": "הישראלים",
+     "votes": 856
+    },
+    {
+     "letters": "אר",
+     "name": "אור",
+     "seats": 0,
+     "short": "אור",
+     "votes": 815
+    },
+    {
+     "letters": "נפ",
+     "name": "אחריות",
+     "seats": 0,
+     "short": "אחריות",
+     "votes": 802
+    },
+    {
+     "letters": "פי",
+     "name": "ברית עולם",
+     "seats": 0,
+     "short": "ברית עולם",
+     "votes": 678
+    },
+    {
+     "letters": "ינ",
+     "name": "לב",
+     "seats": 0,
+     "short": "לב",
+     "votes": 632
+    },
+    {
+     "letters": "נץ",
+     "name": "לזוז",
+     "seats": 0,
+     "short": "לזוז",
+     "votes": 623
+    },
+    {
+     "letters": "נר",
+     "name": "לוחמי חברה מאוחדים",
+     "seats": 0,
+     "short": "לוחמי חברה מאוחדים",
+     "votes": 611
+    }
+   ],
+   "namesAndSeatsSource": "https://www.idi.org.il/policy/parties-and-elections/elections/2009/",
    "sha256": "c7682265581b25d1ca24f74fc633911f53211e27e1f23f8a8da449fb542d1169",
    "source": "https://data.gov.il/dataset/votes-knesset (משאב 840edb33-90ac-4176-8ad9-4cdcb8e5caa5)",
+   "status": "cross_checked",
    "thresholdMilli": 2000,
    "valid": 3373490,
    "voted": 3416587

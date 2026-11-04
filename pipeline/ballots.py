@@ -13,8 +13,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "raw"
-FILES = {n: RAW / "cec" / f"k{n}_expb.csv" for n in range(19, 25)} | {25: RAW / "ballots-2022.csv", 26: RAW / "ballots-2026.csv"}
+FILES = {n: RAW / "cec" / f"k{n}_expb.csv" for n in range(18, 25)} | {25: RAW / "ballots-2022.csv", 26: RAW / "ballots-2026.csv"}
 SOURCES = {
+    18: "https://data.gov.il/dataset/votes-knesset (משאב 840edb33-90ac-4176-8ad9-4cdcb8e5caa5)",
     19: "https://data.gov.il/dataset/votes-knesset (משאב 432d3185-545a-41d9-8c72-d10ee515919c)",
     20: "https://data.gov.il/dataset/votes-knesset (משאב c3db5581-f48d-45fc-b221-e7635e940c41)",
     **{n: f"https://media{n}.bechirot.gov.il/files/expb.csv" for n in (21, 22, 23, 24)},
@@ -22,8 +23,9 @@ SOURCES = {
     # אתר התוצאות הרשמי של ועדת הבחירות (אותה כתובת של src/lib/election2026.ts); עותק הקובץ: raw/ballots-2026.csv
     26: "https://votes26.bechirot.gov.il/nationalresults",
 }
-META = {"סמל ועדה", "ברזל", "שם ישוב", "סמל ישוב", "קלפי", "מספר קלפי", "ריכוז", "שופט", "בזב", "מצביעים", "פסולים", "כשרים",
-        "חיצוניות", "קלפי אחרת", ""}
+# 2009 (k18): "סמל קלפי", "בז''ב" ו"ת. עדכון" (שעת עדכון השורה) במקום "קלפי" ו"בזב"
+META = {"סמל ועדה", "ברזל", "שם ישוב", "סמל ישוב", "קלפי", "מספר קלפי", "סמל קלפי", "ריכוז", "שופט", "בזב", "בז''ב", "מצביעים",
+        "פסולים", "כשרים", "חיצוניות", "קלפי אחרת", "ת. עדכון", ""}
 EXTERNAL = "מעטפות חיצוניות"
 # אותיות 2026 ⇐ מזהה ב-src/data/meta.json lists2026 (לפי מזהי JDN ב-fetch_results_2026.py). מקור אחד: גם מעבר המצביעים
 # (pipeline/voter_flow.py, NEW) קורא מכאן. כאן ולא שם — כי הבנייה (build_data.py) רצה בלי numpy
@@ -52,8 +54,8 @@ def read(n: int) -> list[dict]:
         external = code in ("0", "9999") or "מעטפות" in r["שם ישוב"]
         out.append({"committee": r["סמל ועדה"].strip() if "סמל ועדה" in r else None,
                     "code": code, "name": EXTERNAL if external else r["שם ישוב"].strip(), "external": external,
-                    "ballot": (r.get("קלפי") or r.get("מספר קלפי") or "").strip(), "center": (r.get("ריכוז") or "").strip(),
-                    "eligible": _int(r["בזב"]), "voted": _int(r["מצביעים"]), "valid": _int(r["כשרים"]), "invalid": _int(r["פסולים"]),
+                    "ballot": (r.get("קלפי") or r.get("מספר קלפי") or r.get("סמל קלפי") or "").strip(), "center": (r.get("ריכוז") or "").strip(),
+                    "eligible": _int(r["בזב"] if "בזב" in r else r["בז''ב"]), "voted": _int(r["מצביעים"]), "valid": _int(r["כשרים"]), "invalid": _int(r["פסולים"]),
                     "votes": {k: _int(v) for k, v in r.items() if k not in META and k is not None}})
     return out
 
@@ -124,7 +126,8 @@ def committees(results: list[dict], sha256) -> dict:
     national = {e["knesset"]: e for e in results}
     elections = []
     for n in sorted(FILES):
-        if not FILES[n].exists():
+        # 2009 אינה בבורר (רק מעבר המצביעים של 2013, pipeline/voter_flows.py); בקובץ שלה אין סמל ועדה
+        if n == 18 or not FILES[n].exists():
             continue
         rows = read(n)
         if n == 26:

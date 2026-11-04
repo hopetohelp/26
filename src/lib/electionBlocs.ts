@@ -27,7 +27,10 @@ function named(e: WithBlocs, blocs: BlocDef[]): BlocDef[] {
 export function blocAssignment(id: string): readonly BlocDef[] | null {
   // 2026: ראשי הרשימות הגדולות — הליכוד (נתניהו) ו"ישר!" (אייזנקוט), כבר בשמות של SIMPLE_BLOCS
   if (id === K26_ID) return SIMPLE_BLOCS;
-  const e = (results as unknown as WithBlocs[]).find((x) => x.id === id);
+  // 2009 (אינה בבורר) — previous של 2013, למעבר בין גושים 2009⇐2013
+  const all = results as unknown as (WithBlocs & { previous?: Omit<WithBlocs, "id"> })[];
+  const p = all.find((x) => x.previous && `k${x.previous.knesset}` === id)?.previous;
+  const e = all.find((x) => x.id === id) ?? (p ? { ...p, id } : undefined);
   if (!e) return null;
   // מפלגות־קודמות מהסקרים שלפני הגשת הרשימות (raw/blocs.json, "predecessors"; הכרעת בעלים 04.11.2026) — בשמן, באותו גוש
   const pre = (id: string) => e.predecessorBlocs?.[id] ?? [];
