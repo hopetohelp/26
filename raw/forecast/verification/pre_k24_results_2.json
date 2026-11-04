@@ -253,6 +253,28 @@
   "note": "Maariv 16/10/2020 (Panels Politics/Lazar; conducted 11-12 Oct 2020; panel4all 1,033): Likud 28, Yamina 21, Yesh Atid-Telem 17, Joint List 14, Blue&White 9, Yisrael Beytenu 9, Shas 9, UTJ 7, Meretz 6 - all match."
  },
  {
+  "id": "k24-2020-10-18-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2020_q4/Article-8fe6c45f45c3571026.htm (first attempt hit a bot check; plain refetch succeeded); also https://www.israelnationalnews.com/news/289342",
+  "differences": [],
+  "fieldEndSource": "2020-10-18",
+  "sample": 510,
+  "moe": null,
+  "note": "N12 18.10.20 (Midgam/Mano Geva with iPanel; field 18/10/2020; 510 respondents): Likud 27, Yamina 22, Yesh Atid-Telem 17, Joint List 15, Blue&White 10, Shas 9, Yisrael Beytenu 7, UTJ 7, Meretz 6; Labor 2%, Jewish Home 0.6%, Derekh Eretz 0.5%, Gesher 0.3% - all match."
+ },
+ {
+  "id": "k24-2020-10-18-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-1143795/ (403, blocked); https://www.israelnationalnews.com/news/289342",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 18 Oct 2020 'Poll: Likud 27, Yamina 24' (Prof. Camil Fuchs for Channel 13): Likud 27, Yamina 24, Blue and White 8, Yesh Atid-Telem 21, Shas 8, UTJ 7, Meretz 6, Yisrael Beytenu 8, Joint List 11 - all match."
+ },
+ {
   "id": "k24-2020-10-22-panels-politics-maariv",
   "status": "match",
   "sourceLevel": "primary",

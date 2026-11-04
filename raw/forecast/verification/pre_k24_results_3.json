@@ -22,6 +22,17 @@
   "note": "103FM 03/11/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted yesterday Mon): Likud 29, Yamina 22, Yesh Atid-Telem 19, Joint List 12, Blue&White 9, Shas 8, Yisrael Beytenu 8, UTJ 7, Meretz 6 — all match. 534 Panel4All respondents, max error 4.4%."
  },
  {
+  "id": "k24-2020-11-07-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1102123-סקר-מנדטים-הליכוד-וימינה-ממשיכות-להוביל--בנט-נצמד-לנתניהו/ (mako original blocked by bot check; web.archive.org unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 07/11/20 citing Channel 12 / Mano Geva (Midgam) poll aired that evening: Likud 28, Yamina 22, Yesh Atid 17, Joint List 13, Blue&White 11, Shas 8, UTJ 8, Yisrael Beytenu 7, Meretz 6 — all seats match. Below threshold listed without %: Derekh Eretz, Labor, Otzma Yehudit, Jewish Home, Gesher; Wikipedia percentages (Labor 1.8, Derekh Eretz 0.6, Jewish Home 0.4, Gesher 0.2) not verified."
+ },
+ {
   "id": "k24-2020-11-10-direct-polls-x",
   "status": "match",
   "sourceLevel": "press",
@@ -138,6 +149,17 @@
   "note": "Maariv 27/11/2020 (Panels Politics/Menachem Lazar): Likud 29, Yamina 23, Yesh Atid-Telem 19, Joint List 11, Blue&White 9, Shas 8, Yisrael Beytenu 8, UTJ 7, Meretz 6; Labor, Otzma Yehudit, Jewish Home, Gesher below threshold — all match. 548 panel members, max error 4.3%. Field date not stated."
  },
  {
+  "id": "k24-2020-11-27-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103126-סקר-מנדטים-הליכוד-פותחת-פער-ימינה-ויש-עתיד-צמודות/ (mako original blocked)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 28/11/20 citing Midgam (Mano Geva) poll for Channel 12: Likud 30, Yamina 20, Yesh Atid 18, Joint List 13, Blue&White 9, Shas 8, UTJ 8, Lieberman 8, Meretz 6 — all match. Fieldwork date not stated (Kipa article dated 28/11)."
+ },
+ {
   "id": "k24-2020-12-01-panels-politics-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -147,6 +169,28 @@
   "sample": 523,
   "moe": "4.4%",
   "note": "103FM 02/12/2020 (Panels Politics/Menachem Lazar, conducted last night Tue): Likud 29, Yamina 23, Yesh Atid-Telem 18, Joint List 12, Blue&White 10, Shas 8, Yisrael Beytenu 8, UTJ 7, Meretz 5; Labor below threshold — all match. 523 respondents, error 4.4%."
+ },
+ {
+  "id": "k24-2020-12-02-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/1103332-סקר-מנדטים-הליכוד-מתחזק-ימינה-נחלשים-מעט/ (13news original returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 02/12/20 citing Channel 13/Camil Fuchs poll aired that evening (Wed): Likud 29, Yamina 22, Yesh Atid-Telem 19, Joint List 11, Blue&White 10, Yisrael Beytenu 8, Shas 7, UTJ 7, Meretz 7; Labor, Gesher, Derekh Eretz, Jewish Home below threshold — all match."
+ },
+ {
+  "id": "k24-2020-12-03-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103388-סקר-מנדטים-ימינה-יציבה-יש-עתיד-נחלשת/ (mako original blocked)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 03/12/20 citing Mano Geva poll on Channel 12 aired that evening (Thu): Likud 30, Yamina 21, Yesh Atid 17, Joint List 12, Blue&White 10, Shas 8, UTJ 8, Yisrael Beytenu 7, Meretz 7 — all match."
  },
  {
   "id": "k24-2020-12-08-panels-politics-103fm",
@@ -160,6 +204,50 @@
   "note": "103FM 09/12/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted after Saar announcement on Tue night): Likud 25, Yamina 19, New Hope (Saar) 17, Yesh Atid-Telem 14, Joint List 11, Shas 9, Yisrael Beytenu 7, UTJ 7, Blue&White 6, Meretz 5 — all match. Article says once \"אמש (ג׳)\" and once \"אמש (ד׳)\"; Tue 8.12 is consistent with publication 09/12. Sample size not stated; max error 4.4%."
  },
  {
+  "id": "k24-2020-12-09-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103643-סקר-מנדטים-שינוי-המפה-הפוליטית-בעקבות-פרישת-גדעון-סער/ (mako original blocked)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 09/12/20 listing Channel 12 poll aired that evening: Likud 26, Yamina 18, Saar 16, Yesh Atid-Telem 15, Joint List 11, Shas 8, UTJ 8, Blue&White 6, Yisrael Beytenu 6, Meretz 6 — all match."
+ },
+ {
+  "id": "k24-2020-12-09-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103643-סקר-מנדטים-שינוי-המפה-הפוליטית-בעקבות-פרישת-גדעון-סער/ (kan.org.il original returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 09/12/20 listing Kan 11 poll aired that evening: Likud 25, Saar 18, Yamina 17, Yesh Atid-Telem 15, Joint List 11, Shas 8, Blue&White 7, UTJ 7, Yisrael Beytenu 6, Meretz 6 — all match."
+ },
+ {
+  "id": "k24-2020-12-09-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://t.me/amitsegal/9081 (via https://t.me/s/amitsegal?before=9100; Direct Polls results graphic)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Amit Segal Telegram 10.12.2020 posting Direct Polls graphic (\"הטלטלה הפוליטית – תמונת מצב ראשונית\"): Likud 28, New Hope 16, Yamina 16, Yesh Atid-Telem 13, Joint List 11, Shas 10, Yisrael Beytenu 8, UTJ 8, Blue&White 6, Meretz 4; Labor, Otzma, Gesher, Jewish Home 0 — all match. Fieldwork dates/sample not shown."
+ },
+ {
+  "id": "k24-2020-12-09-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103643-סקר-מנדטים-שינוי-המפה-הפוליטית-בעקבות-פרישת-גדעון-סער/ (13news original returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 09/12/20 listing Channel 13 poll aired that evening: Likud 28, Yamina 16, Yesh Atid-Telem 16, Saar 15, Joint List 11, Shas 7, Meretz 7, UTJ 7, Yisrael Beytenu 7, Blue&White 6 — all match."
+ },
+ {
   "id": "k24-2020-12-10-panels-politics-maariv",
   "status": "match",
   "sourceLevel": "primary",
@@ -171,6 +259,17 @@
   "note": "Maariv 11/12/2020 (Panels Politics/Menachem Lazar; fieldwork 9-10 Dec). Wikipedia seats = scenario without Eisenkot/Shasha-Biton: Saar 16, Likud 27, Yamina 16 (\"ישתווה לימינה\"), Yesh Atid-Telem 13, Joint List 12, Shas 9, Yisrael Beytenu 8, UTJ 7, Blue&White 7, Meretz 5 — all match. The below-threshold % (Labor 1.0%, Otzma 0.7%, Gesher 0.7%, Jewish Home 0.6%) are stated in the article under the main scenario (Saar+Eisenkot+Shasha-Biton = 21; Likud 27, Yamina 15, Joint List 12, Yesh Atid 11, Blue&White 6); they match Wikipedia. 539 respondents, max error 4.3%."
  },
  {
+  "id": "k24-2020-12-11-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103726-סקר-מנדטים-סער-מוסיף-לטפס-ימינה-מתרסקת/ (israelhayom.co.il original returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 11/12/20 citing Israel Hayom/Maagar Mochot poll: Likud 28, Saar 20, Joint List 13, Yesh Atid-Telem 12, Yamina 12, Shas 9, Blue&White 7, UTJ 7, Yisrael Beytenu 6, Meretz 6 — all seats match. Below-threshold percentages (Labor 1.3, Otzma 0.5, Gesher 0.1) not given in the source."
+ },
+ {
   "id": "k24-2020-12-15-panels-politics-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -180,6 +279,17 @@
   "sample": 521,
   "moe": "4.4%",
   "note": "103FM 16/12/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted last night Tue): Likud 27, New Hope 20, Yesh Atid-Telem 15, Yamina 14, Joint List 11, UTJ 8, Shas 8, Yisrael Beytenu 7, Blue&White 5, Meretz 5 — all match. 521 Panel4All respondents, error 4.4%."
+ },
+ {
+  "id": "k24-2020-12-15-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103936-סקר-מנדטים-סער-מזנק---ימינה-מתרסקת/ (mako original blocked)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 15/12/20 citing Channel 12 poll aired that evening: Likud 27, Saar & Shasha-Biton 21, Yesh Atid 14, Yamina 13, Joint List 11, UTJ 8, Shas 8, Meretz 6, Yisrael Beytenu 6, Blue&White 6 — all seats match. Below-threshold percentages (Labor 2.1, Jewish Home 0.5, Gesher 0.4) not given in the source."
  },
  {
   "id": "k24-2020-12-16-maagar-mochot-103fm",
@@ -213,6 +323,17 @@
   "sample": 541,
   "moe": "4.3%",
   "note": "Maariv 18/12/2020 (Panels Politics/Menachem Lazar, conducted yesterday Thu): Likud 29, New Hope 19, Yamina 13, Yesh Atid-Telem 13, Joint List 11, Shas 8, UTJ 8, Blue&White 7, Yisrael Beytenu 7, Meretz 5 — all match. 541 respondents, max error 4.3%."
+ },
+ {
+  "id": "k24-2020-12-20-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1104109-סקר-מנדטים-לפיד-מתחזק-ובנט-לא-מתאושש/ (13news original returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 20/12/20 citing Camil Fuchs poll on Channel 13 aired that evening (Sun): Likud 28, New Hope 19, Yesh Atid 16, Yamina 14, Joint List 11, Shas 7, UTJ 7, Meretz 7, Yisrael Beytenu 6, Blue&White 5; Labor, Gesher, Jewish Home 0 — all match."
  },
  {
   "id": "k24-2020-12-21-panels-politics-knesset-channel",
