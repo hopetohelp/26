@@ -28,6 +28,10 @@ export interface HistPoll {
   seatSum: number;
   consistent: boolean;
   urls: string[];
+  /** סטטוס האימות מול הפרסום המקורי (raw/forecast/polls.json); "unverified" כשאין רשומת אימות */
+  verificationStatus?: string;
+  /** primary = אתר הגוף המפרסם · press = כלי תקשורת שציטט · aggregator = ויקיפדיה וכד׳ */
+  sourceLevel?: "primary" | "press" | "aggregator";
 }
 
 export interface Cycle {
