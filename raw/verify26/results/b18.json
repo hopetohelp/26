@@ -874,7 +874,7 @@
   "details": {},
   "law16E": {},
   "diffs": [],
-  "note": "ישראל היום חוסם (403). לא נמצא דיווח עצמאי בחיפוש. ייתכן שהתאריך שגוי: ישר! והמילואימניקים מופיעים בנתונים בפברואר 2025.",
+  "note": "ישראל היום חוסם (403). לא נמצא דיווח עצמאי בחיפוש (כולל באנגלית). כדאי לבדוק את התאריך: בנתונים מופיעות ישר! והמילואימניקים.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -891,6 +891,181 @@
   "diffs": [],
   "scenarioOf": "2025-02-11-kantar-israel-hayom",
   "note": "תרחיש (חד\"ש-תע\"ל ורע\"ם בנפרד) מאותו סקר; ישראל היום חוסם ולא נמצא דיווח עצמאי.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-02-05-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל 11 הרשימות זהות. בל\"ד וסער מתחת לחסימה בלי אחוזים — האחוזים לא אומתו. בכתבה אין מועד שדה, מדגם וטעות דגימה; פורסם 05.02.2025 בערב (שעה לא צוינה).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-02-05-mm-sn-channel-13-b",
+  "status": "partial",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://13tv.co.il/item/news/politics/politics/survey-904449424/",
+  "scenarioOf": "2025-02-05-mm-sn-channel-13",
+  "note": "תרחיש בנט מאותו סקר. במפורש: בנט 29, הליכוד 24, יש עתיד 5, המחנה הממלכתי וישראל ביתנו 9; הדמוקרטים, עוצמה, יהדות התורה, חד\"ש-תע\"ל ורע\"ם \"מאבדים מנדט\" — תואם לנתונים (11, 8, 6, 5, 4). ש\"ס לא צוינה בתרחיש ולא אומתה; הציונות הדתית מתחת לחסימה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-03-06-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1199896-0/",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-03-06T21:12:51+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1199896-0/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403). דיווח כיפה (06.03.2025 21:12) — כל 11 הרשימות זהות, סכום 120. בל\"ד 2.6% לא אומת. השעה היא של דיווח כיפה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-02-13-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.inn.co.il/news/661456",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/661456"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403). דיווח ערוץ 7 (14.02.2025 08:08) — כל 11 הרשימות זהות, סכום 120; בל\"ד מתחת לחסימה בלי אחוז (2.3% לא אומת).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-02-06-sf-dp-channel-14",
+  "status": "partial",
+  "source": "https://www.inn.co.il/news/661456",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/661456"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 וחדרי חרדים חוסמים (403). אומת בעקיפין מדיווח ערוץ 7 על הסקר שאחריו (13.02), שמציין את ערכי \"הסקר הקודם\": הליכוד 33, עוצמה 5, הדמוקרטים 16, ישראל ביתנו 15, ש\"ס 11, המחנה הממלכתי 10, יהדות התורה 8, הציונות הדתית 6, יש עתיד 6 — כולם זהים. רע\"ם, חד\"ש-תע\"ל ובל\"ד לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-02-27-sf-dp-channel-14",
+  "status": "unreachable",
+  "source": "https://www.c14.co.il/article/1132632",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403); לא נמצא דיווח עצמאי בחיפושים (כיפה, ערוץ 7, אייס, חרדים10).",
   "checkedAt": "2026-11-04"
  }
 ]
