@@ -24,8 +24,11 @@ SOURCES = {
 META = {"סמל ועדה", "ברזל", "שם ישוב", "סמל ישוב", "קלפי", "מספר קלפי", "ריכוז", "שופט", "בזב", "מצביעים", "פסולים", "כשרים",
         "חיצוניות", "קלפי אחרת", ""}
 EXTERNAL = "מעטפות חיצוניות"
-# אותיות 2026 ⇐ מזהה רשימה (src/data/meta.json lists2026); אותו מיפוי של מעבר המצביעים
-from voter_flow import NEW as LETTERS_2026  # noqa: E402
+# אותיות 2026 ⇐ מזהה ב-src/data/meta.json lists2026 (לפי מזהי JDN ב-fetch_results_2026.py). מקור אחד: גם מעבר המצביעים
+# (pipeline/voter_flow.py, NEW) קורא מכאן. כאן ולא שם — כי הבנייה (build_data.py) רצה בלי numpy
+LETTERS_2026 = {"מחל": "likud", "דרך": "yashar", "ודם": "joint", "רק": "together", "אמת": "democrats", "ג": "utj", "ל": "yb",
+                "ב": "otzma", "שס": "shas", "ט": "rzp", "עם": "raam", "די": "reservists", "ך": "amcha",
+                "נר": "code_black", "זך": "haredi_public", "ני": "noam"}
 
 
 def _text(path: Path) -> str:
