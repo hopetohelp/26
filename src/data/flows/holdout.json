@@ -2,6 +2,13 @@
  "method": "pipeline/voter_flows.py --holdout: מסתירים 20% מתתי הקלפי המהימנות (3 זרעים), מתאימים על השאר וחוזים את קולות המערכת החדשה. misassigned = אחוז הקולות הכשרים ששובצו לא נכון; nationalOnly = אותו מדד עם טבלה ארצית אחת; subShare = אחוז הקולות ביחידות תת קלפי",
  "pairs": [
   {
+   "pair": "k19⇐k20",
+   "misassigned": 9.47,
+   "nationalOnly": 13.1,
+   "heldOutSubs": 1707,
+   "subShare": 79.4
+  },
+  {
    "pair": "k20⇐k21",
    "misassigned": 9.01,
    "nationalOnly": 11.31,
