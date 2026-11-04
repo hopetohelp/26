@@ -24,7 +24,7 @@ const loading = <p className="text-ink-soft">טוען…</p>;
 /** "סיכום" בבורר: כל המערכות זו לצד זו, בעלי הזכות ושיעור ההצבעה, ודיוק הסקרים לאורך המערכות */
 function Summary() {
   return <>
-    <PageTitle lead="כל מערכות הבחירות מאז 2015, זו לצד זו.">סיכום</PageTitle>
+    <PageTitle lead="כל מערכות הבחירות מאז 2013, זו לצד זו.">סיכום</PageTitle>
     <ElectionSummary />
     <Voters embedded />
     <AccuracyAcross />

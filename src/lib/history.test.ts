@@ -31,8 +31,8 @@ function perfectPoll(c: Cycle): HistPoll {
 }
 
 describe("נתוני המערכות הקודמות", () => {
-  it("שש מערכות, לכל אחת תוצאה רשמית וסקרים", () => {
-    expect(cycles.map((c) => c.id)).toEqual(["k20", "k21", "k22", "k23", "k24", "k25"]);
+  it("שבע מערכות, לכל אחת תוצאה רשמית וסקרים", () => {
+    expect(cycles.map((c) => c.id)).toEqual(["k19", "k20", "k21", "k22", "k23", "k24", "k25"]);
     for (const c of cycles) {
       expect(resultOf(c)).toBeDefined();
       expect(c.polls.length).toBeGreaterThan(30);
@@ -47,9 +47,9 @@ describe("נתוני המערכות הקודמות", () => {
     }
   });
 
-  it("גוש ההמלצה על נתניהו תואם את מספר הממליצים שדווח (65 · 55 · 58 · 52 · 64)", () => {
+  it("גוש ההמלצה על נתניהו תואם את מספר הממליצים שדווח (82 · 67 · 65 · 55 · 58 · 52 · 64)", () => {
     const seats = cycles.map((c) => c.recommendedNetanyahu.reduce((a, x) => a + resultOf(c).lists.find((l) => l.letters === x)!.seats, 0));
-    expect(seats).toEqual([67, 65, 55, 58, 52, 64]);
+    expect(seats).toEqual([82, 67, 65, 55, 58, 52, 64]);
   });
 
   it("אין סקר מיום הבחירות או אחריו (מדגמי הקלפיות אינם סקר)", () => {
