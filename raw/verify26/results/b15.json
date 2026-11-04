@@ -826,5 +826,310 @@
    }
   ],
   "note": "כל המנדטים תואמים לטבלה בכתבת זמן ישראל (צ\"ד 2.72%, בל\"ד 1.24% — לא בנתונים). נערך 23–24 ביוני, 404 משיבים."
+ },
+ {
+  "id": "2025-07-10-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1073990",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1073990"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). תרחיש 'בנט מתמודד' בדיווח אייס (10.7.2025, 21:16) — כל המנדטים תואמים (סכום 120). אחוז בל\"ד לא צוין. בכתבה גם תרחיש בלי בנט (ליכוד 34) שאינו בחבילה. מדגם ותאריכי שדה לא צוינו."
+ },
+ {
+  "id": "2025-07-03-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1072872",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1072872"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.ice.co.il/research/news/article/1072872",
+  "note": "קישור ערוץ 14 חסום (403). תרחיש 'בנט מתמודד' בדיווח אייס (3.7.2025) — כל המנדטים תואמים (סכום 120). אחוז בל\"ד לא צוין. מדגם ותאריכי שדה לא צוינו."
+ },
+ {
+  "id": "2025-07-03-filber-channel-14-b",
+  "scenarioOf": "2025-07-03-filber-channel-14",
+  "status": "partial",
+  "source": "https://www.ice.co.il/research/news/article/1072872",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1072872"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.ice.co.il/research/news/article/1072872",
+  "note": "תרחיש 'בנט לא מתמודד' מאותו סקר, לפי דיווח אייס: ליכוד 35, הדמוקרטים 17, ישראל ביתנו 14, ש\"ס 11, יהדות התורה 8, כחול לבן/עוצמה/רע\"מ 6, חד\"ש-תע\"ל/צ\"ד 5 — תואם. יש עתיד (7) לא צוינה בכתבה; בל\"ד 'לא עוברת' בלי אחוז. סכום הגושים בכתבה (65/44/10) אינו עקבי."
+ },
+ {
+  "id": "2025-06-26-filber-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/992730/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/992730/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/992730/"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://ch10.co.il/news/992730/"
+   }
+  },
+  "details": {
+   "sample_respondents": 458,
+   "population": "אזרחי ישראל",
+   "fieldwork": "2025-06-26..2025-06-26",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). תרחיש 'בנט 2026' בדיווח חרדים10 — כל המנדטים תואמים (סכום 120); אחוז בל\"ד לא צוין. 458 נדגמים, 26.6.2025 (מדגם חסר בנתונים; דיווח משני יחיד — לא נרשם פער). באייס (1071794) המחנה הממלכתי 5 — סכום 119, שגוי."
+ },
+ {
+  "id": "2025-06-26-filber-channel-14-b",
+  "scenarioOf": "2025-06-26-filber-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/992730/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/992730/"
+   }
+  },
+  "details": {
+   "sample_respondents": 458,
+   "fieldwork": "2025-06-26..2025-06-26",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "תרחיש בלי בנט מאותו סקר; כל המנדטים תואמים לחרדים10 (סכום 120). אחוז בל\"ד בכתבה 2.1% (בנתונים 2.4%) — דיווח משני יחיד, לא נרשם פער. באייס (1071794) 'הדמוקרטים 16' — סכום 122, שגוי; הגושים שם תואמים ל-14.",
+  "foundUrl": "https://ch10.co.il/news/992730/"
+ },
+ {
+  "id": "2025-06-19-filber-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/990676/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/990676/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/990676/"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://ch10.co.il/news/990676/"
+   }
+  },
+  "details": {
+   "sample_respondents": 758,
+   "moe": "4.3%",
+   "population": "אזרחי ישראל",
+   "fieldwork": "2025-06-19..2025-06-19",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). תרחיש 'בנט 2026' בחרדים10: כל הרשימות תואמות פרט לישראל ביתנו — בכתבה 9 (בנתונים 8), אך עם 9 הסכום 121 — הכתבה סותרת את עצמה, לא נרשם פער. 758 נדגמים, טעות 4.3%, 19.6.2025."
+ },
+ {
+  "id": "2025-06-19-filber-channel-14-b",
+  "scenarioOf": "2025-06-19-filber-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/990676/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/990676/"
+   }
+  },
+  "details": {
+   "sample_respondents": 758,
+   "moe": "4.3%",
+   "fieldwork": "2025-06-19..2025-06-19",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://ch10.co.il/news/990676/",
+  "note": "תרחיש בלי בנט מאותו סקר; כל המנדטים ובל\"ד 2.4% תואמים לחרדים10 (סכום 120)."
+ },
+ {
+  "id": "2025-06-25-kantar-kan-11",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כאן חסום (403) גם ב-WebFetch. לא נמצא דיווח עצמאי עם כל המנדטים (חיפוש בעברית ובאנגלית; ג'רוזלם פוסט וה-National מ-25.6 מתייחסים לסקר אחר). תקציר חיפוש מייחס ליכוד 28 / בנט 24 / ישראל ביתנו 10 לסקר כאן-קנטר מאמצע יוני — התאריך לא אומת."
+ },
+ {
+  "id": "2025-06-25-kantar-kan-11-b",
+  "scenarioOf": "2025-06-25-kantar-kan-11",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "תרחיש בלי בנט מאותו סקר. כאן חסום (403); לא נמצא דיווח עצמאי עם כל המנדטים (ליכוד 31, ישראל ביתנו 15 מוזכרים בתקציר חיפוש בלבד)."
  }
 ]
