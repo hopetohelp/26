@@ -17,20 +17,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: npm ci
-      - name: בניית הנתונים
+      - name: מחיקת פריסות התצוגה של preview-pr-748 (סיום הבדיקה)
         run: |
-          AS_OF=$(python3 -c "import json;print(json.load(open('src/data/meta.json'))['dataAsOf'])")
-          BUILD_TIME="$AS_OF" python3 pipeline/build_data.py
-      - run: npm run build
-        env:
-          VITE_FEEDBACK_URL: https://elections26-feedback.hopetohelp-il.workers.dev
-          VITE_CROWD_URL: https://elections26-crowd.hopetohelp-il.workers.dev
-          VITE_MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
-          MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
-      - run: test -f dist/index.html
-      - name: פרסום לענף תצוגה preview-pr-748
-        run: npx --yes wrangler@4 pages deploy dist --project-name elections26 --branch preview-pr-748
+          npx --yes wrangler@4 pages deployment list --project-name elections26 --environment preview --json > /tmp/d.json
+          for id in $(node -e 'const d=JSON.parse(require("fs").readFileSync("/tmp/d.json","utf8"));for(const x of d){const b=x.Branch||x.branch||(x.deployment_trigger&&x.deployment_trigger.metadata&&x.deployment_trigger.metadata.branch);if(b==="preview-pr-748")console.log(x.Id||x.id)}'); do
+            echo "deleting $id"; npx --yes wrangler@4 pages deployment delete "$id" --project-name elections26 --force
+          done
