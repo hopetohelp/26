@@ -1,0 +1,278 @@
+[
+ {
+  "id": "2025-12-18-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1263869",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-19T06:01:08+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1263869"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1263869"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "fieldwork": "2025-12-17..2025-12-18",
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "מנדטים ואחוזים מתחת לחסימה זהים לטבלת האינפוגרם בכתבת מעריב; 500 משיבים, 17–18.12. גודל המדגם לא מוזן בנתונים (sample=null).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-17-direct-polls-i24-news",
+  "status": "partial",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-d7c438d5",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-19T20:56:44+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-d7c438d5"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-d7c438d5"
+   }
+  },
+  "details": {
+   "sample_respondents": 544,
+   "moe": "4.1%",
+   "population": "מדגם מייצג של האוכלוסייה הכללית בישראל 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-12-17..2025-12-17",
+   "pollster": "דיירקט פולס",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "בטקסט הכתבה כל המנדטים זהים (ליכוד 35, בנט 20, ש\"ס 10, ישראל ביתנו 9, דמוקרטים 9, עוצמה 8, רע\"ם 6, חד\"ש-תע\"ל 5, ישר 5, ציונות דתית 4); יהדות התורה לא נכתבה (9 משלים ל-120); אחוזי הרשימות מתחת לחסימה לא פורסמו בטקסט. פורסם 19.12 בקבינט שישי.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-11-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1261548",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-12T06:00:07+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1261548"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1261548"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "fieldwork": "2025-12-10..2025-12-11",
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות (כולל האחוזים מתחת לחסימה) זהות לאינפוגרם בכתבת מעריב; 500 משיבים, 10–11.12.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-04-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1259054",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-05T06:01:05+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1259054"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1259054"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "fieldwork": "2025-12-03..2025-12-04",
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות זהות לאינפוגרם בכתבת מעריב; 500 משיבים, 3–4.12.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-30-direct-polls-i24-news",
+  "status": "partial",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-5f4b2765",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-01T21:01:21+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-5f4b2765"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-5f4b2765"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הכללית בישראל 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-11-30..2025-11-30",
+   "pollster": "דיירקט פולס",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "זהים בטקסט: ליכוד 35, ש\"ס 11, ישראל ביתנו 10, דמוקרטים 10, יהדות התורה 9, עוצמה 7, ציונות דתית 5, ישר 4, חד\"ש-תע\"ל 5, רע\"ם 5. לבנט כתוב '9 מנדטים' אך היא 'המפלגה השנייה בגודלה' והסכום משלים ל-19 — טעות הקלדה בכתבה, לא נרשם פער. אחוזים מתחת לחסימה לא פורסמו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-27-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1256636",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-28T06:01:04+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1256636"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1256636",
+  "note": "wrong url: הקישור בנתונים (article-1254155) הוא סקר 19–20.11 (שייך ל-2025-11-20-lri-p4a-maariv). בכתבה הנכונה (28.11) כל הרשימות זהות לאינפוגרם 'סקר מנדטים 27-11-25'; ימי שטח ומדגם לא צוינו בטקסט.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-20-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1254155",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-21T06:01:02+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1254155"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1254155"
+   }
+  },
+  "details": {
+   "sample_respondents": 504,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "fieldwork": "2025-11-19..2025-11-20",
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1254155",
+  "note": "נמצא קישור (חסר בנתונים; הוצמד בטעות לסקר 27.11). כל הרשימות זהות לאינפוגרם 'סקר מנדטים 20-11-25'; 504 משיבים, 19–20.11.",
+  "checkedAt": "2026-11-04"
+ }
+]

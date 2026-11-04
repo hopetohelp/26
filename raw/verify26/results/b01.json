@@ -101,6 +101,39 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-08-30-kantar-kan-11-b",
+  "scenarioOf": "2026-08-30-kantar-kan-11",
+  "status": "partial",
+  "source": "https://news.walla.co.il/item/3864342",
+  "access": [
+   "secondary"
+  ],
+  "published": "2026-08-30T20:39:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3864342"
+   }
+  },
+  "details": {
+   "commissioner": "כאן חדשות"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://news.walla.co.il/item/3864342",
+  "note": "תרחיש איחוד סמוטריץ'-פייגלין בסקר כאן חדשות מ-30.8 (דיווח וואלה): הציונות הדתית 7 ועמך ישראל מתחת לחסימה — תואם. שאר מספרי התרחיש (ליכוד 21, ישר 24, עוצמה 7, רע\"ם 5, משותפת 8) ואחוז עמך ישראל 3.0 לא מופיעים בדיווח. kan.org.il לא נבדק (חסום בדרך כלל).",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2026-08-27-yossi-tatika-zman-yisrael",
   "status": "mismatch",
   "source": "https://www.zman.co.il/718546/",
@@ -328,6 +361,31 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-08-20-kantar-israel-hayom-b",
+  "scenarioOf": "2026-08-20-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כתבת ישראל היום (21242587) מחזירה 403 גם ב-WebFetch; ארכיון האינטרנט לא נגיש מהסביבה; לא נמצא דיווח עצמאי על תרחיש וינטר בסקר קנטר 19-20.8.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2026-07-17-lazar-maariv",
   "status": "secondary",
   "source": "https://www.israelnationalnews.com/news/430327",
@@ -391,6 +449,54 @@
   },
   "diffs": [],
   "note": "כל 11 הרשימות זהות לדיווח ערוץ 7 (באנגלית) על סקר חדשות 13. הכתבה המקורית ב-13tv לא נקראה; שם המכון ומדגם לא מופיעים בדיווח.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-26-filber-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "אין קישור בנתונים; שני חיפושים (עברית/אנגלית) לא מצאו פרסום של סקר ערוץ 14 מ-26.4.2026 (ליכוד 34, ביחד 20, ישר 9). c14.co.il חסום (403).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-02-06-trendzone-x",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "הקישור הוא פרק פודקאסט בספוטיפיי ('ברייקינג | סקר בנט הגדול') — שמע בלבד, בלי טקסט או טבלה; המספרים לא נבדקו. לא חיפשתי מקור טקסטואלי נוסף.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -482,6 +588,57 @@
    }
   ],
   "note": "כל 13 הרשימות זהות לכתבת זמן ישראל (נקראה ב-WebFetch; curl קיבל 403). גודל המדגם 500 חסר בנתונים. בל\"ד וכחול לבן מתחת לחסימה בלי אחוזים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-05-sf-dp-channel-14-b",
+  "scenarioOf": "2025-06-05-sf-dp-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "תרחיש בנט בסקר ערוץ 14 מ-5.6.2025: c14.co.il חסום (403); בחיפוש נמצא רק דיווח אמס על סקר אחר עם תרחיש בנט (22.5.2025) — לא אותו סקר. לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-01-22-smith-consulting-the-truth-machine",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "commissioner": "מכונת האמת (דמוקרט TV)"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "הקישור הוא סרטון יוטיוב ('מכונת האמת - פרק 4 - סקר מנדטים ראשון מאז העסקה', ערוץ 'מכונת האמת - מבית דמוקרט') — אין תיאור/טקסט עם המספרים, והתמונה הממוזערת בלי טבלה. המספרים לא נבדקו.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -705,6 +862,30 @@
    }
   ],
   "note": "הנתונים = התרחיש 'השמרני' (המפלגות הקיימות, העבודה בראשות גולן) בכתבת JPost: כל 12 הרשימות, מרצ 2.9% ובל\"ד 1.8% זהים. גודל המדגם 515 חסר בנתונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-27-maagar-mochot-israel-hayom",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "israelhayom.co.il מחזיר 403 (גם ב-WebFetch); ארכיון האינטרנט לא נגיש מהסביבה; שני חיפושים לא מצאו דיווח עצמאי על סקר מאגר מוחות לישראל היום מ-26-27.7.2023.",
   "checkedAt": "2026-11-04"
  },
  {
