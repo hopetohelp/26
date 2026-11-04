@@ -41,10 +41,8 @@ LINEAGE, RESULTS = ROOT / "raw" / "lineage.json", ROOT / "src" / "data" / "resul
 
 # הרשימות שעברו את אחוז החסימה ב-2022, ומרצ ובל"ד (מעל 2.5%); השאר ⇐ "other"
 OLD = ["מחל", "פה", "ט", "כן", "שס", "ג", "ל", "עם", "ום", "אמת", "מרצ", "ד", "ב"]
-# אותיות 2026 ⇐ מזהה ב-src/data/meta.json lists2026 (לפי מזהי JDN ב-fetch_results_2026.py)
-NEW = {"מחל": "likud", "דרך": "yashar", "ודם": "joint", "רק": "together", "אמת": "democrats", "ג": "utj", "ל": "yb",
-       "ב": "otzma", "שס": "shas", "ט": "rzp", "עם": "raam", "די": "reservists", "ך": "amcha",
-       "נר": "code_black", "זך": "haredi_public", "ני": "noam"}
+# אותיות 2026 ⇐ מזהה ב-src/data/meta.json lists2026 — מקור אחד ב-pipeline/ballots.py
+from ballots import LETTERS_2026 as NEW  # noqa: E402
 ITERATIONS = 300
 # כוח המשיכה לטבלה שמעליה, בקולות לכל מקור (נבחר בבדיקת התאמה על קלפיות שהוסתרו; ראו מסמך ההצעה)
 KAPPA = 20
