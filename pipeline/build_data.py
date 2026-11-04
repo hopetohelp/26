@@ -106,6 +106,9 @@ def build_results() -> list[dict]:
         r = parse_national(n)
         votes = {l["letters"]: l["votes"] for l in r["lists"]}
         official = {l["letters"]: l["seats"] for l in r["lists"] if l["seats"]}
+        rep = BLOCS_RAW.get(str(n), {}).get("reportedTotal")
+        if rep is not None and sum(official.get(x, 0) for x in RECOMMENDED_NETANYAHU[n]) != rep:
+            raise SystemExit(f"K{n}: raw/blocs.json — מנדטי הממליצים על נתניהו אינם {rep} שדווחו")
         thr = THRESHOLD_MILLI.get(n, 3250)
         calc = allocate(votes, r["valid"], [tuple(a) for a in AGREEMENTS[n]], threshold=Fraction(thr, 100000))
         if calc["seats"] != official:
