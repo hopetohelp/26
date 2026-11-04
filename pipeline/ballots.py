@@ -19,7 +19,8 @@ SOURCES = {
     20: "https://data.gov.il/dataset/votes-knesset (משאב c3db5581-f48d-45fc-b221-e7635e940c41)",
     **{n: f"https://media{n}.bechirot.gov.il/files/expb.csv" for n in (21, 22, 23, 24)},
     25: "https://data.gov.il/dataset/votes-knesset (משאב cc223336-07bc-485d-b160-62df92967c0a)",
-    26: "ועדת הבחירות המרכזית — קובץ התוצאות הרשמי לפי קלפי (raw/ballots-2026.csv)",
+    # אתר התוצאות הרשמי של ועדת הבחירות (אותה כתובת של src/lib/election2026.ts); עותק הקובץ: raw/ballots-2026.csv
+    26: "https://votes26.bechirot.gov.il/nationalresults",
 }
 META = {"סמל ועדה", "ברזל", "שם ישוב", "סמל ישוב", "קלפי", "מספר קלפי", "ריכוז", "שופט", "בזב", "מצביעים", "פסולים", "כשרים",
         "חיצוניות", "קלפי אחרת", ""}

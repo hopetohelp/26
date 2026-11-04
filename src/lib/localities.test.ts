@@ -16,6 +16,7 @@ it('כל קולות היישובים תואמים לתוצאה הארצית בכ
     const national = results.find(r => r.id === e.id) ?? { lists: [] };
     for (const l of national.lists) expect(e.rows.reduce((a, r) => a + (r.votes[l.letters] ?? 0), 0)).toBe(l.votes);
     expect(e.rows.some(r => r.external && r.name === 'מעטפות חיצוניות')).toBe(true);
+    expect(e.source, e.id).toMatch(/^https:\/\//); // הקישור "המקור הרשמי" במסך
     expect(queryLocalities(e, 'ירושלים').rows.some(r => r.name === 'ירושלים')).toBe(true);
     expect(queryLocalities(e, '', 0, 1000).rows).toHaveLength(100);
     expect(localityCsv(e).split('\r\n')).toHaveLength(e.rows.length + 1);
