@@ -1,5 +1,5 @@
-# תהליך זמני לתצוגה מקדימה של PR 746 בלבד (CLAUDE.md, "בדיקה בתצוגה מקדימה לפני מיזוג"); יוסר לפני המיזוג
-name: preview-pr-746
+# תהליך זמני לתצוגה מקדימה של PR 747 בלבד (CLAUDE.md, "בדיקה בתצוגה מקדימה לפני מיזוג"); יוסר לפני המיזוג
+name: preview-pr-747
 on:
   push:
     branches: [claude/election-analysis-area-c8e0ya]
@@ -29,4 +29,4 @@ jobs:
           MCP_URL: https://elections26-mcp.hopetohelp-il.workers.dev
       - run: test -f dist/index.html
       - name: פרסום תצוגה מקדימה
-        run: npx --yes wrangler@4 pages deploy dist --project-name elections26 --branch preview-pr-746
+        run: npx --yes wrangler@4 pages deploy dist --project-name elections26 --branch preview-pr-747
