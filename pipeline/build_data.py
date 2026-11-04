@@ -12,6 +12,7 @@ import json
 import re
 import sys
 from datetime import datetime, timedelta, timezone
+from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,6 +34,7 @@ def sha256(path: Path) -> str:
 ELECTION_DAY_2026 = "2026-10-27"
 
 ELECTIONS = {
+    19: {"date": "2013-01-22", "label": "ינואר 2013"},
     20: {"date": "2015-03-17", "label": "מרץ 2015"},
     21: {"date": "2019-04-09", "label": "אפריל 2019"},
     22: {"date": "2019-09-17", "label": "ספטמבר 2019"},
@@ -60,6 +62,7 @@ SHORT = {
 
 # הסכמי עודפים (מקור: ויקיפדיה העברית, ערכי הבחירות; לכנסת 21 — הודעת ועדת הבחירות דרך ארכיון האינטרנט)
 AGREEMENTS = {
+    19: [["אמת", "פה"], ["מחל", "טב"], ["ו", "ד"], ["ג", "שס"], ["כן", "ץ"], ["צפ", "מרץ"]],
     20: [["אמת", "מרצ"], ["מחל", "טב"], ["ג", "שס"], ["ל", "כ"]],
     21: [["אמת", "מרצ"], ["נ", "ל"], ["דעם", "ום"], ["מחל", "טב"], ["שס", "ג"]],
     22: [["פה", "ל"], ["מחל", "טב"], ["אמת", "מרצ"], ["ג", "שס"]],
@@ -69,7 +72,14 @@ AGREEMENTS = {
 }
 
 
+# אחוז החסימה לפי החוק בכל מערכת, באלפיות האחוז (כמו thresholdMilli במנוע האתר): 2% עד הכנסת ה-19, 3.25% מאז
+THRESHOLD_MILLI = {19: 2000}
+
+
 def parse_national(n: int) -> dict:
+    if n == 19:
+        from historical_data import national_2013
+        return {**national_2013(), "sha256": sha256(RAW / "cec" / "k19_expb.csv")}
     if n == 20:
         from historical_data import national_2015
         return {**national_2015(), "sha256": sha256(RAW / "cec" / "k20_expc.csv")}
@@ -96,14 +106,18 @@ def build_results() -> list[dict]:
         r = parse_national(n)
         votes = {l["letters"]: l["votes"] for l in r["lists"]}
         official = {l["letters"]: l["seats"] for l in r["lists"] if l["seats"]}
-        calc = allocate(votes, r["valid"], [tuple(a) for a in AGREEMENTS[n]])
+        thr = THRESHOLD_MILLI.get(n, 3250)
+        calc = allocate(votes, r["valid"], [tuple(a) for a in AGREEMENTS[n]], threshold=Fraction(thr, 100000))
         if calc["seats"] != official:
             raise SystemExit(f"K{n}: המנוע אינו משחזר את התוצאה הרשמית: {calc['seats']} מול {official}")
         out.append({
             "id": f"k{n}", "knesset": n, "date": meta["date"], "label": meta["label"],
             "eligible": r["eligible"], "voted": r["voted"], "valid": r["valid"], "invalid": r["invalid"],
             "lists": sorted(r["lists"], key=lambda l: -l["votes"]),
-            "agreements": AGREEMENTS[n],
+            "agreements": AGREEMENTS[n], "thresholdMilli": thr,
+            **({"blocs": bl} if (bl := election_blocs(n, r["lists"])) else {}),
+            # המערכת שקדמה, כשאינה בבורר (2013 ⇐ 2009): ארבעת הנתונים הכלליים ל"מה השתנה"
+            **({"previous": __import__("historical_data").previous_2009(sha256)} if n == 19 else {}),
             "source": {"url": r.get("url", f"https://votes{n}.bechirot.gov.il/nationalresults"), "sha256": r["sha256"],
                        "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-%d, פרק הסכמי עודפים" % n},
         })
@@ -580,13 +594,25 @@ HISTORY = {
 }
 # הרשימות שהמליצו על בנימין נתניהו לנשיא המדינה בהתייעצויות שאחרי כל מערכת — עובדה, לא סיווג אידאולוגי.
 # 21: 65 ח"כים · 22: 55 · 23: 58 · 24: 52 · 25: 64 (ויקיפדיה העברית, ערכי הבחירות; דיווחי התקשורת על ההתייעצויות)
-RECOMMENDED_NETANYAHU = {
-    21: ["מחל", "שס", "ג", "ל", "טב", "כ"],
-    22: ["מחל", "שס", "ג", "טב"],
-    23: ["מחל", "שס", "ג", "טב"],
-    24: ["מחל", "שס", "ג", "ט"],
-    25: ["מחל", "ט", "שס", "ג"],
-}
+# הרשימות שהמליצו לנשיא על נתניהו אחרי כל מערכת, וחלוקת הגושים — raw/blocs.json (מקור אחד)
+BLOCS_RAW = json.loads((RAW / "blocs.json").read_text(encoding="utf-8"))["elections"]
+RECOMMENDED_NETANYAHU = {int(n): b["recommendedNetanyahu"] for n, b in BLOCS_RAW.items()}
+
+
+def election_blocs(n: int, lists: list[dict]) -> dict | None:
+    """ארבעת הגושים של האתר (src/lib/electionBlocs.ts) באותיות של המערכת; 2022 ⇐ None (השיוך שבקוד)."""
+    b = BLOCS_RAW.get(str(n))
+    if not b or "haredi" not in b:
+        return None
+    seated = [l["letters"] for l in sorted(lists, key=lambda l: -l["votes"]) if l["seats"]]
+    out = {"haredi": [x for x in seated if x in b["haredi"]], "arab": [x for x in seated if x in b["arab"]]}
+    out["netanyahu"] = [x for x in seated if x in b["recommendedNetanyahu"] and x not in out["haredi"] + out["arab"]]
+    out["eisenkot"] = [x for x in seated if x not in out["haredi"] + out["arab"] + out["netanyahu"]]
+    for k in ("recommendedNetanyahu", "haredi", "arab"):
+        missing = set(b[k]) - set(seated)
+        if missing:
+            raise SystemExit(f"K{n}: raw/blocs.json {k} — אותיות שאינן רשימה שנבחרה: {missing}")
+    return out
 
 # שמות המכונים והמזמינים בטבלאות הישנות — לפי צורה מנורמלת (אותיות קטנות, בלי פיסוק). מפתח המכון משותף לכל
 # המערכות, כדי שאפשר יהיה להשוות מכון לאורך זמן. שם שאינו כאן מפיל את הבנייה (אין שם באנגלית בממשק).
@@ -644,8 +670,9 @@ def hist_firm_pub(firm: str, pub: str | None, combined: bool) -> tuple[str, str,
 
 def build_history(results: list[dict]) -> dict:
     by_n = {r["knesset"]: r for r in results}
-    from historical_data import history_2015
-    cycles = [history_2015(by_n[20], sha256)]
+    from historical_data import history_cycle
+    rec = lambda n: {"letters": RECOMMENDED_NETANYAHU[n], "source": BLOCS_RAW[str(n)].get("source")}  # noqa: E731
+    cycles = [history_cycle(by_n[19], sha256, rec(19)), history_cycle(by_n[20], sha256, rec(20))]
     for n, cfg in HISTORY.items():
         election = by_n[n]
         path = RAW / "wikipedia" / cfg["page"]

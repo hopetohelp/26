@@ -32,10 +32,17 @@ export function parseElection(raw: string | null): ElectionId {
 }
 export const electionOption = (id: ElectionId): ElectionOption => PICKER_OPTIONS.find((o) => o.id === id) ?? ELECTIONS[0];
 
-/** המערכת שקדמה לזו שנבחרה ("מה השתנה" מציג תמיד מול הקודמת); null כשהקודמת אינה בנתוני האתר */
+/** סיכום המערכת שקדמה לראשונה בבורר (2013 ⇐ 2009; results.json, שדה previous): ארבעת הנתונים הכלליים בלבד, לא בבורר */
+export interface PreviousSummary { knesset: number; label: string; full: string; eligible: number; voted: number; valid: number; invalid: number; belowThreshold: number }
+export const previousSummary = (id: ElectionId): PreviousSummary | null =>
+  (results as unknown as { id: string; previous?: PreviousSummary }[]).find((e) => e.id === id)?.previous ?? null;
+
+/** המערכת שקדמה לזו שנבחרה ("מה השתנה" מציג תמיד מול הקודמת); הראשונה בבורר — לפי previous; null כשאין */
 export function previousElection(id: ElectionId): ElectionOption | null {
   const i = ELECTIONS.findIndex((o) => o.id === id);
-  return i >= 0 && i < ELECTIONS.length - 1 ? ELECTIONS[i + 1] : null;
+  if (i >= 0 && i < ELECTIONS.length - 1) return ELECTIONS[i + 1];
+  const p = previousSummary(id);
+  return p ? { id: `k${p.knesset}`, label: p.label, knesset: p.knesset, full: p.full } : null;
 }
 
 /** המערכת שנבחרה, ופונקציה להחלפתה (שומרת על המסך ומוחקת לשונית פנימית שאינה קיימת בכל מערכת) */

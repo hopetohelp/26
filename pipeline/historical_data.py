@@ -33,11 +33,63 @@ def national_2015():
                        'votes': v, 'seats': metadata['seats'].get(k, 0)} for k, v in votes.items() if v],
             'url': metadata['source']}
 
+def national_2013():
+    """2013: הסיכום הארצי מקובץ הקלפיות הרשמי (כולל המעטפות החיצוניות); שמות ומנדטים — k19_metadata.json."""
+    import ballots
+    rows = ballots.read(19)
+    ballots.check_rows(19, rows)
+    metadata = json.loads((RAW / 'cec' / 'k19_metadata.json').read_text())
+    votes = {}
+    for r in rows:
+        for k, v in r['votes'].items():
+            votes[k] = votes.get(k, 0) + v
+    return {**{k: sum(r[k] for r in rows) for k in ('eligible', 'voted', 'valid', 'invalid')},
+            'lists': [{'letters': k, 'name': metadata['names'][k], 'short': metadata['names'][k],
+                       'votes': v, 'seats': metadata['seats'].get(k, 0)} for k, v in votes.items() if v],
+            'url': metadata['source']}
+
+
+def previous_2009(sha256):
+    """2009 (הכנסת ה-18) — רק ארבעת הנתונים הכלליים ל"מה השתנה" של 2013 (2009 אינה בבורר), מקובץ הקלפיות הרשמי.
+    בעלי זכות הבחירה = סכום הקלפיות בלי שורת המעטפות הכפולות (בה בז"ב = מספר המצביעים); אחוז החסימה אז 2%."""
+    import csv as _csv
+    path = RAW / 'cec' / 'k18_expb.csv'
+    rows = list(_csv.DictReader(path.read_text(encoding='utf-8-sig').splitlines()))
+    meta = {'סמל ישוב', 'שם ישוב', 'סמל קלפי', 'ת. עדכון', "בז''ב", 'מצביעים', 'כשרים', 'פסולים'}
+    num = lambda v: int(float(v or 0))  # noqa: E731
+    votes = {}
+    for r in rows:
+        assert sum(num(v) for k, v in r.items() if k not in meta) == num(r['כשרים']), ('k18', r['סמל ישוב'], r['סמל קלפי'])
+        assert num(r['מצביעים']) == num(r['כשרים']) + num(r['פסולים']), ('k18', r['סמל ישוב'], r['סמל קלפי'])
+        for k, v in r.items():
+            if k not in meta:
+                votes[k] = votes.get(k, 0) + num(v)
+    external = [r for r in rows if r['סמל ישוב'].strip() == '0']
+    assert len(external) == 1 and num(external[0]["בז''ב"]) == num(external[0]['מצביעים']), 'k18 external envelopes row'
+    valid = sum(num(r['כשרים']) for r in rows)
+    below = sum(v for v in votes.values() if 100 * v < 2 * valid)
+    out = {'knesset': 18, 'label': '2009', 'full': 'פברואר 2009', 'date': '2009-02-10',
+           'eligible': sum(num(r["בז''ב"]) for r in rows if r not in external),
+           'voted': sum(num(r['מצביעים']) for r in rows), 'valid': valid, 'invalid': sum(num(r['פסולים']) for r in rows),
+           'belowThreshold': below, 'thresholdMilli': 2000,
+           'source': 'https://data.gov.il/dataset/votes-knesset (משאב 840edb33-90ac-4176-8ad9-4cdcb8e5caa5)', 'sha256': sha256(path)}
+    # הסיכום הרשמי (ועדת הבחירות; המכון הישראלי לדמוקרטיה): 5,278,985 · 3,416,587 · 3,373,490 · 43,097
+    assert (out['eligible'], out['voted'], out['valid'], out['invalid']) == (5278985, 3416587, 3373490, 43097), out
+    return out
+
+
+def locality_rows_2013():
+    """2013: קובץ היישובים הרשמי חסר את המעטפות החיצוניות ⇐ סיכום קובץ הקלפיות לפי סמל יישוב (pipeline/ballots.py)."""
+    import ballots
+    return [{'code': g['code'], 'name': g['name'], 'external': g['external'], 'eligible': g['eligible'], 'voted': g['voted'],
+             'valid': g['valid'], 'invalid': g['invalid'], 'votes': g['votes']} for g in ballots.summarize(ballots.read(19), 'code')]
+
+
 def build_localities(results, sha256):
     elections = []
     for e in results:
         n = e['knesset']
-        rows = locality_rows(n)
+        rows = locality_rows_2013() if n == 19 else locality_rows(n)
         for row in rows:
             assert sum(row['votes'].values()) == row['valid'], (n, row['code'], 'valid')
             assert row['voted'] == row['valid'] + row['invalid'], (n, row['code'], 'voted')
@@ -47,39 +99,74 @@ def build_localities(results, sha256):
             assert sum(r['votes'].get(l['letters'], 0) for r in rows) == l['votes'], (n, l['letters'])
         assert len({r['code'] for r in rows}) == len(rows), (n, 'duplicate locality')
         elections.append({'id': e['id'], 'label': e['label'], 'date': e['date'],
-                          'source': e['source']['url'] if n == 20 else f'https://media{n}.bechirot.gov.il/files/expc.csv',
-                          'sha256': sha256(RAW / 'cec' / f'k{n}_expc.csv'),
+                          'source': e['source']['url'] if n in (19, 20) else f'https://media{n}.bechirot.gov.il/files/expc.csv',
+                          'sha256': sha256(RAW / 'cec' / ('k19_expb.csv' if n == 19 else f'k{n}_expc.csv')),
                           'eligibleInLocalityFile': sum(r['eligible'] for r in rows),
                           'eligibleNational': e['eligible'],
                           'lists': [{'letters': l['letters'], 'name': l['short']} for l in e['lists']],
                           'rows': sorted(rows, key=lambda r: (r['external'], r['name']))})
     return {'elections': elections}
 
-def history_2015(election, sha256):
-    """אותם תמלולים מתועדים המשמשים למחקר; בלי לפרש שוב טבלת ויקי עם תאים מאוחדים."""
+# שמות המכונים בעברית (סדרת המכון ב-raw/forecast/polls.json ⇐ שם); סדרה לא מזוהה ⇐ לפי שם המכון ברשומת האימות
+HIST_FIRM_NAMES = {'panels_politics': 'פאנלס פוליטיקס', 'kantar': 'טלסקר (קנטר)', 'smith': 'סמית׳',
+                   'midgam': 'מדגם מחקר וייעוץ', 'dialog': 'דיאלוג', 'geocartography': 'גאוקרטוגרפיה',
+                   'maagar_mochot': 'מאגר מוחות', 'tri': 'טרי', 'midgam_project': 'פרויקט מדגם', 'new_wave': 'הגל החדש',
+                   'dahaf': 'דחף', '202_strategies': '202 סטרטג׳יז'}
+UNKNOWN_FIRMS = [('sarid', 'sarid', 'מכון שריד'), ('shvakim', 'shvakim_panorama', 'שווקים פנורמה')]
+# גוף מזמין: מחרוזת בשם האנגלי ברשומת האימות ⇐ שם בעברית. 2015 — ההתאמה הראשונה ברשימה (כמו קודם);
+# 2013 — ההופעה המוקדמת ביותר בשם (שמות כמו "Globes / Jerusalem Post": הגוף הראשון שצוין)
+PUBLISHERS = {
+    20: [('army radio', 'גלי צה״ל'), ('bizportal', 'ביזפורטל'), ('channel 10', 'חדשות 10'),
+         ('nana 10', 'נענע 10 / חדשות 10'), ('channel 1', 'ערוץ 1'), ('channel 2', 'חדשות 2'),
+         ('globes', 'גלובס'), ('haaretz', 'הארץ'), ('maariv', 'מעריב / ג׳רוזלם פוסט'),
+         ('knesset channel', 'ערוץ הכנסת'), ('kol barama', 'קול ברמה'), ('makor rishon', 'מקור ראשון / אנרג׳י'),
+         ('reshet bet', 'רשת ב׳'), ('times of israel', 'טיימס אוף ישראל'), ('walla', 'וואלה'),
+         ('yedioth', 'ידיעות אחרונות / וויינט'), ('yisrael hayom', 'ישראל היום'), ('i24news', 'i24NEWS')],
+    19: [('reshet bet', 'רשת ב׳'), ('kol israel', 'רשת ב׳'), ('israel radio', 'רשת ב׳'), ('radio outlet', 'רדיו (לא צוין)'),
+         ('channel 10', 'חדשות 10'), ('channel 1', 'ערוץ 1'), ('mako', 'חדשות 2'), ('channel 2', 'חדשות 2'),
+         ('knesset channel', 'ערוץ הכנסת'), ('maariv', 'מעריב'), ('haaretz', 'הארץ'), ('yedioth', 'ידיעות אחרונות'),
+         ('walla', 'וואלה'), ('israel hayom', 'ישראל היום'), ('yisrael hayom', 'ישראל היום'),
+         ('yisrael post', 'ישראל פוסט / סוף השבוע'), ('israel post', 'ישראל פוסט / סוף השבוע'), ('globes', 'גלובס'),
+         ('jerusalem post', 'ג׳רוזלם פוסט'), ('jpost', 'ג׳רוזלם פוסט'), ('times of israel', 'טיימס אוף ישראל'),
+         ('makor rishon', 'מקור ראשון')],
+}
+CYCLE_PAGE = {20: 'Opinion polling for the 2015 Israeli legislative election',
+              19: 'Opinion polling for the 2013 Israeli legislative election'}
+
+
+def publisher_he(n, publisher):
+    text = (publisher or '').lower()
+    hits = [(text.find(key), i, he) for i, (key, he) in enumerate(PUBLISHERS[n]) if key in text]
+    if not hits:
+        return None
+    return (min(hits, key=lambda h: h[1]) if n == 20 else min(hits))[2]
+
+
+def history_cycle(election, sha256, recommended):
+    """מחזור סקרים (2013/2015) מתמלולי הפרסומים ב-raw/forecast/verification — בלי לפרש שוב טבלת ויקי עם תאים מאוחדים.
+    recommended: הרשימות שהמליצו לנשיא על נתניהו אחרי הבחירות, ומקור (raw/blocs.json)."""
+    n = election['knesset']
     records = {}
     for path in sorted((RAW / 'forecast' / 'verification').glob('k19_k20_*_results.json')):
-        records.update({r['id']: r for r in json.loads(path.read_text()) if r['id'].startswith('k20-')})
-    names = {'panels_politics': 'פאנלס פוליטיקס', 'kantar': 'טלסקר (קנטר)', 'smith': 'סמית׳',
-             'midgam': 'מדגם מחקר וייעוץ', 'dialog': 'דיאלוג', 'geocartography': 'גאוקרטוגרפיה',
-             'maagar_mochot': 'מאגר מוחות', 'tri': 'טרי', 'midgam_project': 'פרויקט מדגם', 'new_wave': 'הגל החדש'}
-    publishers = [('army radio', 'גלי צה״ל'), ('bizportal', 'ביזפורטל'), ('channel 10', 'חדשות 10'),
-                  ('nana 10', 'נענע 10 / חדשות 10'), ('channel 1', 'ערוץ 1'), ('channel 2', 'חדשות 2'),
-                  ('globes', 'גלובס'), ('haaretz', 'הארץ'), ('maariv', 'מעריב / ג׳רוזלם פוסט'),
-                  ('knesset channel', 'ערוץ הכנסת'), ('kol barama', 'קול ברמה'), ('makor rishon', 'מקור ראשון / אנרג׳י'),
-                  ('reshet bet', 'רשת ב׳'), ('times of israel', 'טיימס אוף ישראל'), ('walla', 'וואלה'),
-                  ('yedioth', 'ידיעות אחרונות / וויינט'), ('yisrael hayom', 'ישראל היום'), ('i24news', 'i24NEWS')]
+        records.update({r['id']: r for r in json.loads(path.read_text()) if r['id'].startswith(f'k{n}-')})
     path = RAW / 'forecast' / 'polls.json'
     polls = []
     for p in json.loads(path.read_text()):
-        if p['knesset'] != 20:
+        if p['knesset'] != n:
             continue
         r = records[p['id']]
-        firm_key = '202_strategies' if (r.get('firm') or '').startswith('202 Strategies') else p['series']
-        names['202_strategies'] = '202 סטרטג׳יז'
-        pub = next((he for key, he in publishers if key in (r.get('publisher') or '').lower()), None)
+        firm = r.get('firm') or ''
+        firm_key, firm_he = p['series'], HIST_FIRM_NAMES.get(p['series'])
+        if firm.startswith('202 Strategies'):
+            firm_key, firm_he = '202_strategies', HIST_FIRM_NAMES['202_strategies']
+        for pat, key, he in UNKNOWN_FIRMS:
+            if firm_he is None and pat in firm.lower():
+                firm_key, firm_he = key, he
+        pub = publisher_he(n, r.get('publisher'))
         if r.get('publisher') and not pub:
             raise ValueError(r['publisher'])
+        if n == 19 and not p['values']:
+            continue  # 2013: רשומה בלי ערכים (מחוץ לחלון, לא הושלמה) — אין מה להציג
         # התאריך במזהה הוא תאריך הפרסום בטבלת המקור; לא ממציאים יום עבודת שטח.
         published = p['id'][4:14]
         end = r.get('fieldEnd') or published
@@ -88,13 +175,12 @@ def history_2015(election, sha256):
         total = sum(v.get('s', 0) for v in p['values'].values())
         polls.append({'id': p['id'], 'start': r.get('fieldStart') or end, 'end': end,
                       'dateBasis': 'fieldwork' if r.get('fieldEnd') else 'publication', 'published': published,
-                      'firmKey': firm_key, 'firmHe': names.get(firm_key, 'מכון לא צוין'), 'publisherHe': pub,
+                      'firmKey': firm_key, 'firmHe': firm_he or 'מכון לא צוין', 'publisherHe': pub,
                       'values': p['values'], 'seatSum': total, 'consistent': 118 <= total <= 122,
                       'verificationStatus': p['status'],
                       'urls': __import__('re').findall(r'https?://[^\s;()]+', p.get('source') or '')[:3]})
-    return {'id': 'k20', 'knesset': 20, 'date': election['date'], 'label': election['label'],
-            'recommendedNetanyahu': ['מחל', 'כ', 'טב', 'שס', 'ל', 'ג'],
-            'recommendedSource': 'https://www.mako.co.il/news-military/politics-q1_2015/Article-025660aad454c41004.htm',
+    return {'id': f'k{n}', 'knesset': n, 'date': election['date'], 'label': election['label'],
+            'recommendedNetanyahu': recommended['letters'], 'recommendedSource': recommended['source'],
             'polls': sorted(polls, key=lambda p: (p['end'], p['id']), reverse=True),
-            'source': {'page': 'Opinion polling for the 2015 Israeli legislative election; תמלולי הפרסומים ב-raw/forecast/verification',
+            'source': {'page': f'{CYCLE_PAGE[n]}; תמלולי הפרסומים ב-raw/forecast/verification',
                        'sha256': sha256(path), 'tableLine': 1}}

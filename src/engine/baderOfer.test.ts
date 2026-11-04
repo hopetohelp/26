@@ -12,12 +12,19 @@ const agreementsOf = (e: Election) => e.agreements.map(([a, b]) => [a, b] as Agr
 describe("שחזור התוצאות הרשמיות של ועדת הבחירות", () => {
   for (const e of results) {
     it(`הכנסת ה-${e.knesset} (${e.label})`, () => {
-      const r = allocate(votesOf(e), e.valid, agreementsOf(e));
+      const r = allocate(votesOf(e), e.valid, agreementsOf(e), { thresholdMilli: e.thresholdMilli });
       expect(r.status).toBe("ok");
       expect(r.seats).toEqual(officialOf(e));
       expect(Object.values(r.seats).reduce((a, b) => a + b, 0)).toBe(120);
     });
   }
+
+  it("2013: אחוז החסימה 2% (החוק אז) — קדימה עוברת; ב־3.25% הייתה נשרפת", () => {
+    const e = results.find((x) => x.knesset === 19)!;
+    expect(e.thresholdMilli).toBe(2000);
+    expect(allocate(votesOf(e), e.valid, agreementsOf(e), { thresholdMilli: 2000 }).seats["כן"]).toBe(2);
+    expect(allocate(votesOf(e), e.valid, agreementsOf(e)).seats["כן"] ?? 0).toBe(0);
+  });
 
   it("2022: בלי אף הסכם — הליכוד 31 והעבודה 5", () => {
     const e = results.find((x) => x.knesset === 25)!;

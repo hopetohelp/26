@@ -15,13 +15,13 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_official_results():
-    """חמש המערכות 2019–2022: המנוע המהיר משחזר את התוצאה הרשמית."""
+    """כל המערכות ב-results.json (2013–2022): המנוע המהיר משחזר את התוצאה הרשמית, באחוז החסימה של אותה מערכת."""
     for r in json.loads((ROOT / "src" / "data" / "results.json").read_text(encoding="utf-8")):
         names = [l["letters"] for l in r["lists"]]
         votes = [l["votes"] for l in r["lists"]]
         idx = {k: i for i, k in enumerate(names)}
         pairs = [(idx[a], idx[b]) for a, b in r["agreements"]]
-        got = fast_seats(votes, r["valid"], pairs)
+        got = fast_seats(votes, r["valid"], pairs, threshold=(r["thresholdMilli"], 100000))
         assert got == [l["seats"] for l in r["lists"]], r["id"]
 
 
