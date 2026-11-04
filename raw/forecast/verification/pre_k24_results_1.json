@@ -1,5 +1,77 @@
 [
  {
+  "id": "k24-2020-03-16-direct-polls-x",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/430650 ; https://www.srugim.co.il/430831 ; https://www.kikar.co.il/political-news/351613",
+  "differences": [
+   {
+    "key": "[קודמת] Otzma Yehudit",
+    "wikipedia": 0.34,
+    "source": 0.36
+   }
+  ],
+  "fieldEndSource": "2020-03-16",
+  "sample": null,
+  "moe": "4.1%",
+  "note": "Arutz 7 17.03.2020 reporting the Direct Polls poll (Filber & Sharon): Likud 39, Blue&White 30, Joint List 16, Shas 8, UTJ 8, 'Labor-Meretz' 7 (Wikipedia key: Israeli Labor Party), Yamina 6, Yisrael Beytenu 6; Gesher 1.75%, Otzma Yehudit 0.36% (Wikipedia/knessetjeremy 0.34%). Conducted 14 and 16 March 2020 with 821 and 779 respondents respectively, MoE ±4.1%. Srugim and Kikar confirm seats. Original Direct Polls post (X) not accessed."
+ },
+ {
+  "id": "k24-2020-03-19-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/431132 ; https://www.srugim.co.il/432102",
+  "differences": [],
+  "fieldEndSource": "2020-03-19",
+  "sample": 602,
+  "moe": "4.2%",
+  "note": "Arutz 7 20.03.2020 reporting Direct Polls: Likud 40, Blue&White 30, Joint List 15, Shas 8, Yamina 7, UTJ 7, Yisrael Beytenu 7, Labor-Meretz 6; Gesher 0.41%, Otzma Yehudit 0.3% — all match. Conducted 19 March 2020, 602 respondents, ±4.2%. (Srugim's article lists Yisrael Beytenu 6 — a typo, its own bloc total 58 implies 7.)"
+ },
+ {
+  "id": "k24-2020-03-27-direct-polls-arutz-sheva",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/434418",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 28.03.20 reporting Direct Polls (first poll after the Blue&White split): Likud 38, Yesh Atid 16, Joint List 15, Hosen L'Yisrael 15, Shas 8, Labor-Meretz 8, UTJ 7, Yamina 7, Lieberman 6; Gesher 1.3%, Otzma Yehudit 0.65% — all match. Arutz 7 original not located. No fieldwork date/sample in text."
+ },
+ {
+  "id": "k24-2020-04-07-smith-the-jerusalem-post",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/post-poll-shows-labor-dead-netanyahu-soar-623963",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost 07.04.2020 (Smith Research for The Jerusalem Post): Likud 42, Blue and White (Gantz) 18, Joint List 16, Yesh Atid-Telem 9, Shas 8, Yamina 7, UTJ 7, Meretz 7, Yisrael Beytenu 6; Labor 2.2% — all match. Gesher 'wiped out' (no %); Derekh Eretz and Otzma Yehudit percentages (Wikipedia 0.3%/0.9%/0.9%) not in source. No sample/field date."
+ },
+ {
+  "id": "k24-2020-04-12-direct-polls-x",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/433751",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 12.04.2020 (published Sunday) reporting Direct Polls: Likud 38, Hosen L'Yisrael-Labor 16, Joint List 15, Yesh Atid 14, Shas 9, UTJ 8, Lieberman 8, Yamina 7, Meretz 5, Gesher 0.93%, Otzma Yehudit 0.60% — all match. Derekh Eretz (Wikipedia 2.85%) not mentioned in source. No fieldwork date/sample given."
+ },
+ {
+  "id": "k24-2020-04-30-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/443848",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 01.05.20 reporting Direct Polls: Likud 41, Blue&White-Labor 16, Joint List 15, Yesh Atid-Telem 11, Shas 9, UTJ 8, Yamina 7, Meretz 5, Yisrael Beytenu 8 (bloc line); Derekh Eretz 2%, Gesher 1.8%, Otzma Yehudit 0.8% — all match. No fieldwork date/sample."
+ },
+ {
   "id": "k24-2020-05-26-panels-politics-103fm",
   "status": "partial",
   "sourceLevel": "primary",
@@ -33,6 +105,17 @@
   "note": "JPost (Gil Hoffman, June 17 2020, Smith Research, 'new Jerusalem Post poll on Tuesday'): Likud 41, Joint List 16, Yesh Atid-Telem 15, Blue and White 10, Shas 9, Yisrael Beytenu 8, Yamina 8, UTJ 7, Meretz 6 — all seat numbers match. Below-threshold percentages not given: article says Labor, Otzma Yehudit, Gesher, Derech Eretz fail threshold; Derech Eretz 'approximately two and a half seats', Labor 'about 3 seats', Gesher 'less than one' (in seat terms, roughly differing from Wikipedia's 1.5%/2.2%). Jewish Home not mentioned. No sample/MoE in text."
  },
  {
+  "id": "k24-2020-06-17-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/440599",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 17.06.2020 reporting Direct Polls: Likud 41, Joint List 16, Yesh Atid-Telem 15, Blue&White 11, Shas 10, Yisrael Beytenu 8, Yamina 7, UTJ 7, Meretz 5; below threshold Derekh Eretz 1.6%, Labor 1.1%, Otzma Yehudit 0.5%, Gesher 0.2% — all match. Jewish Home (0.0% on Wikipedia) not mentioned. No fieldwork date/sample in text."
+ },
+ {
   "id": "k24-2020-07-03-maagar-mochot-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -42,6 +125,17 @@
   "sample": null,
   "moe": null,
   "note": "103FM 03/07/2020 (Maagar Mochot/Prof. Yitzhak Katz for Nissim Mishal): Likud 38, Yesh Atid-Telem 17, Joint List 15, Blue&White 10, Yamina 9, Shas 9, UTJ 8, Yisrael Beytenu 8, Meretz 6; Labor below threshold — all match. Fieldwork dates/sample not stated."
+ },
+ {
+  "id": "k24-2020-07-08-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/443103",
+  "differences": [],
+  "fieldEndSource": "2020-07-08",
+  "sample": 876,
+  "moe": "4.2%",
+  "note": "Arutz 7 10.07.2020 reporting Direct Polls (conducted 8 July 2020 evening, 876 respondents, ±4.2%): Likud 36, Yesh Atid-Telem 17, Joint List 16, Yamina 11, Shas 10, Blue&White 9, Yisrael Beytenu 8, UTJ 7, Meretz 6; Derekh Eretz 2.4, Labor 1.7, Otzma 0.6, Gesher 0.6, Jewish Home 0.5 — all match."
  },
  {
   "id": "k24-2020-07-09-panels-politics-maariv",
