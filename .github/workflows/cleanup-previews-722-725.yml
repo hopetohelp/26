@@ -1,0 +1,29 @@
+# תהליך זמני: מחיקת פריסות התצוגה המקדימה של PR 722, 724, 725 ב-Cloudflare (CLAUDE.md, שלב 6); יוסר מיד אחרי הריצה
+name: cleanup-previews-722-725
+on:
+  push:
+    branches: [claude/one-screen-all-elections]
+permissions:
+  contents: read
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      ACCOUNT: a64716cf8cec4b4885a5eb06e9a3ee9a
+    steps:
+      - name: מחיקת הפריסות
+        run: |
+          set -euo pipefail
+          api="https://api.cloudflare.com/client/v4/accounts/$ACCOUNT/pages/projects/elections26/deployments"
+          deleted=0
+          for page in 1 2 3 4 5; do
+            curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$api?env=preview&page=$page&per_page=25" -o list.json
+            ids=$(jq -r '.result[] | select(.deployment_trigger.metadata.branch|test("^preview-pr-72[245]$")) | .id' list.json)
+            for id in $ids; do
+              curl -fsS -X DELETE -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$api/$id?force=true" -o /dev/null && deleted=$((deleted+1)) && echo "deleted $id"
+            done
+            [ "$(jq '.result|length' list.json)" -lt 25 ] && break
+          done
+          echo "deleted=$deleted"
+          [ "$deleted" -ge 3 ]
