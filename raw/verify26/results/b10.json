@@ -1,5 +1,46 @@
 [
  {
+  "id": "2025-12-18-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/649499/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-18T17:35:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/649499/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/649499/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (סטיית תקן)",
+   "population": "יהודים וערבים",
+   "method": "פאנל אדג'נדה",
+   "fieldwork": "2025-12-17..2025-12-18",
+   "pollster": "יוסי טאטיקה (טאטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 17–18.12; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-12-18-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1263869",
@@ -81,6 +122,47 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-12-11-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/647708/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-11T18:09:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/647708/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/647708/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (סטיית תקן)",
+   "population": "יהודים וערבים",
+   "method": "פאנל אדג'נדה",
+   "fieldwork": "2025-12-10..2025-12-11",
+   "pollster": "יוסי טאטיקה (טאטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 10–11.12; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-12-11-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1261548",
@@ -118,6 +200,47 @@
   },
   "diffs": [],
   "note": "כל הרשימות (כולל האחוזים מתחת לחסימה) זהות לאינפוגרם בכתבת מעריב; 500 משיבים, 10–11.12.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-04-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/645981/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-04T18:05:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/645981/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/645981/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (סטיית תקן)",
+   "population": "יהודים וערבים",
+   "method": "פאנל אדג'נדה",
+   "fieldwork": "2025-12-03..2025-12-04",
+   "pollster": "יוסי טאטיקה (טאטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 3–4.12; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -202,6 +325,47 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-11-27-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/644092/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-27T16:49:33+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/644092/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/644092/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (סטיית תקן)",
+   "population": "יהודים וערבים",
+   "method": "פאנל אדג'נדה",
+   "fieldwork": "2025-11-26..2025-11-27",
+   "pollster": "יוסי טאטיקה (טאטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 26–27.11; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-11-27-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1256636",
@@ -232,6 +396,47 @@
   "diffs": [],
   "foundUrl": "https://www.maariv.co.il/news/politics/article-1256636",
   "note": "wrong url: הקישור בנתונים (article-1254155) הוא סקר 19–20.11 (שייך ל-2025-11-20-lri-p4a-maariv). בכתבה הנכונה (28.11) כל הרשימות זהות לאינפוגרם 'סקר מנדטים 27-11-25'; ימי שטח ומדגם לא צוינו בטקסט.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-20-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/642270/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-20T17:35:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/642270/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/642270/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (סטיית תקן)",
+   "population": "יהודים וערבים",
+   "method": "פאנל אדג'נדה",
+   "fieldwork": "2025-11-19..2025-11-20",
+   "pollster": "יוסי טאטיקה (טאטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 19–20.11; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -273,6 +478,47 @@
   "diffs": [],
   "foundUrl": "https://www.maariv.co.il/news/politics/article-1254155",
   "note": "נמצא קישור (חסר בנתונים; הוצמד בטעות לסקר 27.11). כל הרשימות זהות לאינפוגרם 'סקר מנדטים 20-11-25'; 504 משיבים, 19–20.11.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-13-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/640527/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-13T17:39:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/640527/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/640527/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (סטיית תקן)",
+   "population": "יהודים וערבים",
+   "method": "פאנל אדג'נדה",
+   "fieldwork": "2025-11-12..2025-11-13",
+   "pollster": "יוסי טאטיקה (טאטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 12–13.11; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch. בכתבה גם תרחישי איחודים — לא נבדקו כאן.",
   "checkedAt": "2026-11-04"
  }
 ]
