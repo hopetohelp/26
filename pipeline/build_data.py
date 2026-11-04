@@ -593,7 +593,17 @@ HISTORY = {
                   "The Jewish Home": "ב", "Israeli Labor Party": "אמת", "United Torah Judaism": "ג",
                   "Yisrael Beiteinu": "ל", "Religious Zionist Party": "ט", "Hadash–Ta'al": "ום", "Meretz": "מרצ",
                   "United Arab List": "עם", "Balad (political party)": "ד"},
-         "ignore": {"Others", "Gov.", "Opp."}},
+         "ignore": {"Others", "Gov.", "Opp."},
+         # מהבחירות 2021 ועד הגשת הרשימות (15.9.2022). הטבלאות שאחריהן בדף — תרחישים, לא סקרים רגילים.
+         # זהות בלבד: "המחנה הממלכתי" מ-10.7.2022 (NUP/B&W–NH); "הציונות הדתית" — הרשימה המשותפת עם עוצמה יהודית
+         # ונעם כמו ב-2021 (בטבלת 18–25.8.2022 הן נסקרו בנפרד ⇐ unmapped); הבית היהודי בטבלת 11–15.9.
+         # הרשימה המשותפת לפני הפיצול, ימינה/הרוח הציונית, כחול לבן ותקווה חדשה לפני האיחוד ⇐ unmapped.
+         "pre": {"tables": [1, 2, 3, 4, 5], "separate": {3: {"Religious Zionist Party"}},
+                 "cols": {"Likud": "מחל", "Yesh Atid": "פה", "National Unity Party (Israel)": "כן", "NUP/B&W– NH": "כן",
+                          "Shas": "שס", "The Jewish Home": "ב", "Israeli Labor Party": "אמת", "United Torah Judaism": "ג",
+                          "Yisrael Beiteinu": "ל", "Religious Zionist Party": "ט", "Religious Zionist Party+Otzma Yehudit": "ט",
+                          "Meretz": "מרצ", "United Arab List": "עם"},
+                 "ignore": {"Others", "Gov.", "Opp."}}},
 }
 # הרשימות שהמליצו על בנימין נתניהו לנשיא המדינה בהתייעצויות שאחרי כל מערכת — עובדה, לא סיווג אידאולוגי.
 # 21: 65 ח"כים · 22: 55 · 23: 58 · 24: 52 · 25: 64 (ויקיפדיה העברית, ערכי הבחירות; דיווחי התקשורת על ההתייעצויות)
@@ -647,6 +657,7 @@ HIST_PUBS = {
     "arutz sheva": "ערוץ 7", "mako": "מאקו", "galei israel": "גלי ישראל", "mako knesset channel": "מאקו וערוץ הכנסת",
     "channel 14": "ערוץ 14", "maariv the jerusalem post": "מעריב וג'רוזלם פוסט",
     "the jerusalem post maariv": "מעריב וג'רוזלם פוסט",
+    "jerusalem net": "ירושלים נט", "kikar hashabbat": "כיכר השבת", "srugim": "סרוגים",
 }
 
 
@@ -680,34 +691,46 @@ def build_history(results: list[dict]) -> dict:
         election = by_n[n]
         path = RAW / "wikipedia" / cfg["page"]
         text = path.read_text(encoding="utf-8")
-        pos, table = wt.tables(text)[0]  # הטבלה הראשונה בדף = מהגשת הרשימות ועד יום הבחירות
-        res = wt.parse_table(table)
+        all_tables = wt.tables(text)
+        pos = all_tables[0][0]  # הטבלה הראשונה בדף = מהגשת הרשימות ועד יום הבחירות
         letters_on_ballot = {l["letters"] for l in election["lists"]}
-        for letters in cfg["cols"].values():
+        pre = cfg.get("pre", {"tables": [], "cols": {}, "ignore": set()})
+        for letters in [*cfg["cols"].values(), *pre["cols"].values()]:
             if letters not in letters_on_ballot:
                 raise SystemExit(f"K{n}: האותיות {letters} אינן בתוצאות הרשמיות")
+        # הטבלאות הקודמות בדף (מהבחירות הקודמות ועד הגשת הרשימות): מפלגה זהה לרשימה בקלפי ⇐ אותיותיה;
+        # מפלגה־קודמת שאינה זהה (לפני איחוד או פיצול) ⇐ unmapped, בלי שיוך ובלי סכום מומצא.
+        sources = [(all_tables[0][1], cfg["cols"], cfg["ignore"], False)] + \
+                  [(all_tables[i][1], {k: v for k, v in pre["cols"].items() if k not in pre.get("separate", {}).get(i, set())},
+                    pre["ignore"], True) for i in pre["tables"]]
         polls, seen = [], {}
-        for d in res[1]:
+        rows = [(d, cols, ignore, lenient) for table, cols, ignore, lenient in sources
+                for d in wt.parse_table(table)[1]]
+        for d, cols, ignore, lenient in rows:
             if d["type"] != "poll" or is_not_a_poll(d.get("firm")):
                 continue
             if not d.get("date"):
                 raise SystemExit(f"K{n}: שורת סקר בלי תאריך: {d.get('firm')!r}")
             if d["date"]["end"] >= election["date"]:
                 continue  # מדגמי הקלפיות של ערב הבחירות אינם סקר מוקדם
-            values = {}
+            values, unmapped = {}, {}
             for k, v in d["values"].items():
                 parts = k.split("+")
-                if all(p in cfg["ignore"] for p in parts):
+                if all(p in ignore for p in parts):
                     continue
-                if len(parts) != 1 or k not in cfg["cols"]:
-                    raise SystemExit(f"K{n}: עמודה לא ממופה {k!r} בסקר {d['date']['end']} {d.get('firm')!r}")
-                if "seats" in v:
-                    values[cfg["cols"][k]] = {"s": v["seats"]}
-                elif "pct" in v:
-                    values[cfg["cols"][k]] = {"p": v["pct"], **({"pMax": v["pctMax"]} if "pctMax" in v else {})}
+                entry = {"s": v["seats"]} if "seats" in v else \
+                    {"p": v["pct"], **({"pMax": v["pctMax"]} if "pctMax" in v else {})} if "pct" in v else None
+                if k not in cols:
+                    if not lenient:
+                        raise SystemExit(f"K{n}: עמודה לא ממופה {k!r} בסקר {d['date']['end']} {d.get('firm')!r}")
+                    if entry:
+                        unmapped[k] = entry
+                    continue
+                if entry:
+                    values[cols[k]] = entry
             firm_key, firm_he, pub_key, pub_he = hist_firm_pub(clean_firm(d.get("firm")), clean_publisher(d.get("publisher")),
                                                                cfg.get("combined", False))
-            seat_sum = sum(e.get("s", 0) for e in values.values())
+            seat_sum = sum(e.get("s", 0) for e in [*values.values(), *unmapped.values()])
             base = f"k{n}-{d['date']['end']}-{slug(firm_key)}-{slug(pub_key)}"
             i = seen.get(base, 0)
             seen[base] = i + 1
@@ -716,6 +739,8 @@ def build_history(results: list[dict]) -> dict:
                 "start": d["date"]["start"], "end": d["date"]["end"],
                 "firmKey": firm_key, "firmHe": firm_he, "publisherHe": pub_he,
                 "values": values, "seatSum": seat_sum, "consistent": 118 <= seat_sum <= 122,
+                **({"unmapped": unmapped} if unmapped else {}),
+                **({"preLists": True} if lenient else {}),
                 "urls": d["urls"][:3],
             })
         polls.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
