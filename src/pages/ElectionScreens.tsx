@@ -4,6 +4,7 @@ import { Fold, PageTitle } from "../components/ui";
 import { POLL_DRAWERS } from "../components/Missing";
 import { SUMMARY_ID, useElection } from "../lib/election";
 import { useScreenShown } from "../lib/screenVisibility";
+import { hasLineage } from "../lib/electionData";
 import Results, { ElectionSummary } from "./Results";
 import { AccuracyAcross } from "./Accuracy";
 import Voters from "./Voters";
@@ -14,6 +15,7 @@ import Voters from "./Voters";
  * 🔴 אין מחיקה: כל תצוגה שהייתה ב"היסטוריה", ב"דיוק הסקרים" וב"הסקרים" עברה לכאן כמו שהיא.
  */
 const VoterFlow = lazy(() => import("./VoterFlow"));
+const LineageChanges = lazy(() => import("./Changes"));
 const Trends = lazy(() => import("./Trends"));
 const Polls = lazy(() => import("./Polls"));
 const Today = lazy(() => import("./Today"));
@@ -24,7 +26,7 @@ const loading = <p className="text-ink-soft">טוען…</p>;
 /** "סיכום" בבורר: כל המערכות זו לצד זו, בעלי הזכות ושיעור ההצבעה, ודיוק הסקרים לאורך המערכות */
 function Summary() {
   return <>
-    <PageTitle lead="כל מערכות הבחירות מאז 2015, זו לצד זו.">סיכום</PageTitle>
+    <PageTitle lead="כל מערכות הבחירות מאז 2013, זו לצד זו.">סיכום</PageTitle>
     <ElectionSummary />
     <Voters embedded />
     <AccuracyAcross />
@@ -42,7 +44,12 @@ export function ChangesScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
   // אותו מסך לכל מערכת, כולל 2026 (הכרעת בעלים 04.11.2026); מה שאין לו נתון — "נתון חסר" באותו מקום
-  return <Suspense fallback={loading}><VoterFlow key={id} id={id} /></Suspense>;
+  const lineage = useScreenShown("lineage") && hasLineage(id);
+  return <>
+    <Suspense fallback={loading}><VoterFlow key={id} id={id} /></Suspense>
+    {/* "מה השתנה" הישן — לפי שיוך הרשימות; רק לפי המתג במסך הניהול (הכרעת בעלים 04.11.2026: מסך ישן נמחק או מוצג לפי מתג הניהול) */}
+    {lineage && <Fold title="לפי שיוך הרשימות"><Suspense fallback={loading}><LineageChanges /></Suspense></Fold>}
+  </>;
 }
 
 /**

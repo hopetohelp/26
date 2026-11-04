@@ -151,5 +151,11 @@ export function electionData(id: string): ElectionData {
 /** מעבר מצביעים מוכן להצגה למערכת: 2026 (flow2026.json) וכל מערכת שיש לה src/data/flows/kNN.json (src/lib/flowFiles.ts) */
 export const hasVoterFlow = hasFlowFile;
 
+/**
+ * שיוך רשימות בין מערכות (raw/lineage.json): קיים רק ל־2022 ⇐ 2026. משמש את "מה השתנה" הישן (Changes.tsx) —
+ * רלוונטי במהלך מערכה שבה השיוך לרשימות המתמודדות אינו ודאי (הכרעת בעלים 04.11.2026); מוצג לפי מתג "lineage" במסך הניהול.
+ */
+export const hasLineage = (id: string) => id === K26_ID;
+
 /** סכום הגוש בתוצאת האמת */
 export const resultBloc = (d: ElectionData, lists: readonly string[]) => d.result ? lists.reduce((t, x) => t + (d.result!.seats[x] ?? 0), 0) : null;

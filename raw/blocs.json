@@ -1,0 +1,32 @@
+{
+  "rule": "שיוך הרשימות לארבעת הגושים של האתר (נתניהו · חרדים · ערבים · אייזנקוט) בכל מערכת, באותה הגדרה של 2022: חרדים — ש\"ס ויהדות התורה; ערבים — הרשימות הערביות; נתניהו — יתר הרשימות שהמליצו לנשיא על נתניהו בסבב ההתייעצויות שאחרי הבחירות; אייזנקוט — יתר הרשימות שנבחרו לכנסת. רשימה שלא עברה את אחוז החסימה אינה משויכת (אין לה המלצה לנשיא). 2022 — השיוך שבקוד (הכרעת בעלים 28.10.2026, src/lib/voterFlow.ts), ולכן אין לה blocs כאן.",
+  "elections": {
+    "19": {
+      "recommendedNetanyahu": ["מחל", "פה", "טב", "שס", "ג", "כן"],
+      "haredi": ["שס", "ג"],
+      "arab": ["עם", "ו", "ד"],
+      "source": "https://embassies.gov.il/yaounde/NewsAndEvents/Pages/Netanyahu-to-form-new-government.aspx",
+      "sourceNote": "הודעת משרד החוץ על הטלת ההרכבה (2.2.2013): 82 חברי כנסת משש סיעות. העמוד לא נטען ב-04.11.2026 (503) — הרשימה אומתה בהצלבה בלבד",
+      "crossCheck": ["https://en.wikipedia.org/wiki/Presidency_of_Shimon_Peres", "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=301728"],
+      "status": "cross_checked"
+    },
+    "20": {
+      "recommendedNetanyahu": ["מחל", "כ", "טב", "שס", "ל", "ג"],
+      "haredi": ["שס", "ג"],
+      "arab": ["ודעם"],
+      "source": "https://www.mako.co.il/news-military/politics-q1_2015/Article-025660aad454c41004.htm",
+      "status": "existing"
+    },
+    "21": {"recommendedNetanyahu": ["מחל", "שס", "ג", "ל", "טב", "כ"], "haredi": ["שס", "ג"], "arab": ["ום", "דעם"], "source": null, "status": "existing"},
+    "22": {"recommendedNetanyahu": ["מחל", "שס", "ג", "טב"], "haredi": ["שס", "ג"], "arab": ["ודעם"], "source": null, "status": "existing"},
+    "23": {"recommendedNetanyahu": ["מחל", "שס", "ג", "טב"], "haredi": ["שס", "ג"], "arab": ["ודעם"], "source": null, "status": "existing"},
+    "24": {"recommendedNetanyahu": ["מחל", "שס", "ג", "ט"], "haredi": ["שס", "ג"], "arab": ["ודעם", "עם"], "source": null, "status": "existing"},
+    "25": {
+      "recommendedNetanyahu": ["מחל", "ט", "שס", "ג"],
+      "source": null,
+      "crossCheck": ["https://he.wikipedia.org/wiki/הבחירות_לכנסת_העשרים_וחמש"],
+      "status": "cross_checked"
+    }
+  },
+  "statusNote": "existing = הרשימה שהייתה בקוד (pipeline/build_data.py) לפני 04.11.2026, טרם אומתה מול הודעת בית הנשיא; cross_checked = אומת מול מקור משני בלבד"
+}

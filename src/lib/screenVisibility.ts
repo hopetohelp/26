@@ -7,6 +7,7 @@ export type ScreenMode = "off" | "admins" | "all";
 export const HIDDEN_SCREENS = [
   { id: "overview", label: "האחרונים (תמונת המצב הקודמת)", where: "לשונית בסקרים" },
   { id: "today", label: "היום", where: "לשונית בסקרים" },
+  { id: "lineage", label: "מה השתנה לפי שיוך הרשימות (2022 מול 2026)", where: "מגירה ב\"מה השתנה\", במערכת שיש לה שיוך רשימות" },
   { id: "guess", label: "הניחוש שלי", where: "בסרגל; צפייה בלבד — השמירה נשארת חסומה בשרת" },
 ] as const;
 export type HiddenScreen = (typeof HIDDEN_SCREENS)[number]["id"];

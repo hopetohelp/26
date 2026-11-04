@@ -18,16 +18,20 @@ type Election = Omit<(typeof results)[number], "lists"> & { lists: ((typeof resu
 /** כל המערכות, כולל 2026 — באותו מבנה (הכרעת בעלים 02.11.2026: מסך "תוצאות" זהה לכל מערכת) */
 const ELECTIONS: Election[] = [...results, K26_RESULT as unknown as Election];
 
+/** אחוז החסימה לפי החוק באותה מערכת (results.json: 2% ב־2013, 3.25% מאז) */
+const lawOf = (e: Election) => ({ thresholdMilli: (e as { thresholdMilli?: number }).thresholdMilli ?? 3250 });
+
 function analysis(e: Election) {
   const votes = Object.fromEntries(e.lists.map((l) => [l.letters, l.votes]));
   const ag = e.agreements.map(([a, b]) => [a, b] as Agreement);
-  const withAll = allocate(votes, e.valid, ag);
-  const none = allocate(votes, e.valid, []);
+  const law = lawOf(e);
+  const withAll = allocate(votes, e.valid, ag, law);
+  const none = allocate(votes, e.valid, [], law);
   const diff = (a: Record<string, number>, b: Record<string, number>) =>
     Object.keys(votes).map((k) => [k, (a[k] ?? 0) - (b[k] ?? 0)] as const).filter(([, d]) => d !== 0);
   const single = ag.map((pair) => {
     const rest = ag.filter((x) => x !== pair);
-    return { pair, diff: diff(withAll.seats, allocate(votes, e.valid, rest).seats) };
+    return { pair, diff: diff(withAll.seats, allocate(votes, e.valid, rest, law).seats) };
   });
   return { votes, withAll, allVsNone: diff(withAll.seats, none.seats), single };
 }
@@ -55,7 +59,7 @@ export function PastBlocs({ id }: { id: string }) {
 export default function Results({ id }: { id: string }) {
   const e = ELECTIONS.find((x) => x.id === id)!;
   // השינוי הקרוב במנדטים — לכל מערכת, מאותו מנוע (src/engine/seatChange.ts)
-  const changes = seatChanges(Object.fromEntries(e.lists.map((l) => [l.letters, l.votes])), e.valid, e.agreements.map(([x, y]) => [x, y] as Agreement));
+  const changes = seatChanges(Object.fromEntries(e.lists.map((l) => [l.letters, l.votes])), e.valid, e.agreements.map(([x, y]) => [x, y] as Agreement), lawOf(e));
   const short = (letters: string) => shortOf(e, letters);
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
