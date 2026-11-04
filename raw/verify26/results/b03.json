@@ -1,0 +1,277 @@
+[
+ {
+  "id": "2026-08-13-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1355736",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-14T06:01:04+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1355736"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1355736"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1355736"
+   }
+  },
+  "details": {
+   "sample_respondents": 506,
+   "asked_to_participate": 3112,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2026-08-12..2026-08-13",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "values.unity.p",
+    "from": 1.9,
+    "to": 1.7,
+    "source": "https://www.maariv.co.il/news/politics/article-1355736"
+   }
+  ],
+  "note": "מנדטי כל 12 הרשימות זהים לטבלת Infogram בכתבה; כחול לבן 1.9% ובל\"ד 1.5% תואמים. האחדות (ארדן) בפרסום 1.7% (בטקסט ובטבלה) ולא 1.9%. בכתבה גם תרחיש איחוד מפלגות ערביות — לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-13-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-26c56d10",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-13T19:37:53+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-26c56d10"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-26c56d10"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-26c56d10"
+   }
+  },
+  "details": {
+   "sample_respondents": 512,
+   "moe": "±4.2% (95%)",
+   "population": "בוגרים 18+, מדגם מייצג של האוכלוסייה",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2026-08-13..2026-08-13",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "גוף הכתבה (נקרא דרך ה-API של האתר) מונה את מנדטי כל 11 הרשימות העוברות — זהים. אחוזי הרשימות מתחת לחסימה לא מופיעים בטקסט ולא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-06-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1353206",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-07T06:00:59+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1353206"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1353206"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "asked_to_participate": 3514,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2026-08-05..2026-08-06",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "מנדטי כל 12 הרשימות, בל\"ד 1.4% וכחול לבן 1.2% זהים לטבלת Infogram בכתבה. בכתבה נכתב \"6-5 ביולי\" — טעות דפוס (פורסם 7.8), לכן תאריכים לא סומנו כנבדקים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-06-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-432a427d",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-06T19:26:56+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-432a427d"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-432a427d"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-432a427d"
+   }
+  },
+  "details": {
+   "sample_respondents": 535,
+   "moe": "±4.2% (95%)",
+   "population": "בוגרים 18+, מדגם מייצג של האוכלוסייה הכללית",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2026-08-06..2026-08-06",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "גוף הכתבה מונה מנדטי כל 11 הרשימות העוברות (משותפת 8) — זהים. אחוזי הרשימות מתחת לחסימה לא מופיעים בטקסט.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-07-30-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1350647",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-07-31T06:00:48+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1350647"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1350647"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1350647"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2026-07-29..2026-07-30",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "הטקסט בכתבה מונה את כל 12 הרשימות (בית ציוני 4) ובל\"ד 1.8%, כחול לבן 1.2% — זהים. תרחיש מפלגת גנץ-שקד-אדלשטיין לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-07-27-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-02214cba",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-07-27T20:15:34+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-02214cba"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-02214cba"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-02214cba"
+   }
+  },
+  "details": {
+   "sample_respondents": 525,
+   "moe": "±4.2% (95%)",
+   "population": "בוגרים 18+, מדגם מייצג של האוכלוסייה הכללית",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2026-07-27..2026-07-27",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "גוף הכתבה מונה מנדטי כל 11 הרשימות (משותפת 7) — זהים.",
+  "checkedAt": "2026-11-04"
+ }
+]

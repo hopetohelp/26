@@ -1,0 +1,122 @@
+[
+ {
+  "id": "2023-06-12-smith-consulting-amit-segal",
+  "status": "unreachable",
+  "source": "https://t.me/amitsegal/24972",
+  "access": [
+   "none"
+  ],
+  "published": "2023-06-14T09:54:01+03:00",
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "הקישור הוא קובץ docx בטלגרם ('ממצאי סקר פוליטי_14.6.docx', פורסם 14.6.2023) שלא ניתן לקרוא בלי האפליקציה. בפוסט הצמוד (24971): 'סקר רפי סמית: הקואליציה 54' — תואם לסכום הקואליציה בחבילה (26+10+7+6+5), אך מנדטים לפי רשימה לא אומתו. תאריך הפרסום 14.6 מאוחר מימי השטח בחבילה (11–12.6) — לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-01-midgam-r-c-arutz-sheva",
+  "status": "mismatch",
+  "source": "https://www.inn.co.il/news/603387",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-01T21:11:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.inn.co.il/news/603387"
+   }
+  },
+  "details": {
+   "pollster": "מנו גבע ומכון מדגם",
+   "commissioner": "ערוץ 7",
+   "sample_respondents": null,
+   "note_sample": "כאלף נשאלים"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.hadash_taal.s",
+    "from": 5,
+    "to": 4,
+    "source": "https://www.inn.co.il/news/603387"
+   },
+   {
+    "field": "values.otzma.s",
+    "from": 5,
+    "to": 6,
+    "source": "https://www.inn.co.il/news/603387"
+   },
+   {
+    "field": "values.rzp.s",
+    "from": 6,
+    "to": 5,
+    "source": "https://www.inn.co.il/news/603387"
+   },
+   {
+    "field": "values.yb.s",
+    "from": 5,
+    "to": 6,
+    "source": "https://www.inn.co.il/news/603387"
+   }
+  ],
+  "note": "נבדק מול התרשימים בכתבת ערוץ 7 (עמודות 'מצב קיים'): המחנה הממלכתי 28, הליכוד 26, יש עתיד 18, ש\"ס 10, יהדות התורה 7, ישראל ביתנו 6, רע\"מ 6, עוצמה 6, הצ\"ד 5, חד\"ש-תע\"ל 4, מרצ 4. ארבעה פערים (נראה כהחלפת ערכים). המדגם 'כאלף נשאלים' — בחבילה אין מספר; ימי שטח לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-20-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1358140",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-21T06:01:10+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1358140"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1358140"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1358140"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "asked_to_participate": 3916,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי Panel4All",
+   "fieldwork": "2026-08-19..2026-08-20",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות זהות לטבלת Infogram בכתבת מעריב (כולל האחוזים מתחת לחסימה; 'אחרים' 1.7% = הכלכלית בראשות זליכה).",
+  "checkedAt": "2026-11-04"
+ }
+]
