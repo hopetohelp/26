@@ -94,6 +94,8 @@ def main() -> None:
                 "sourceDetails": {k: (r.get("published") if k == "published" else det.get(k)) for k in DETAILS},
                 "status": status,
             }
+            if r.get("scenarioOf"):
+                entry["scenarioOf"] = r["scenarioOf"]
             if r.get("fields"):
                 entry["fields"] = {g: v for g, v in r["fields"].items() if v and v.get("status")}
                 for g, v in entry["fields"].items():
