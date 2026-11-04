@@ -1,5 +1,37 @@
 [
  {
+  "id": "2025-12-23-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/dom8r-904901346/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/dom8r-904901346/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) + סטט-נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "מנדטי כל 12 הרשימות שעברו זהים לכתבת חדשות 13 (23.12, 'הערב (שלישי)'); כחול לבן, בל\"ד והמילואימניקים מתחת לחסימה — האחוזים שבנתונים לא פורסמו בכתבה ולא אומתו. ימי שטח ומדגם לא צוינו. נקרא דרך WebFetch (curl חסום).",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-12-18-yossi-tatika-zman-israel",
   "status": "match",
   "source": "https://www.zman.co.il/649499/",
@@ -163,6 +195,45 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-12-11-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-87b74b5bd3e0b91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-11T22:01:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-87b74b5bd3e0b91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-87b74b5bd3e0b91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 503,
+   "moe": "4.4%",
+   "fieldwork": "2025-12-11..2025-12-11",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות והאחוזים מתחת לחסימה זהים לכתבת N12; 503 משיבים, 11.12.2025. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-12-11-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1261548",
@@ -241,6 +312,77 @@
   },
   "diffs": [],
   "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 3–4.12; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-04-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904878803/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904878803/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) + סטט-נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות זהות לכתבת חדשות 13, כולל כחול לבן 2.5% ובל\"ד 2.1% (התרחיש הבסיסי, לא תרחיש הרשימה הערבית המשותפת). הכתבה מ-05.12 (תוכנית 'שישי'); ימי שטח ומדגם לא צוינו, לכן תאריך 4.12 בנתונים לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-04-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-b1f65121d5aea91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-12-04T20:55:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-b1f65121d5aea91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-b1f65121d5aea91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "fieldwork": "2025-12-04..2025-12-04",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות והאחוזים מתחת לחסימה זהים לכתבת N12; 500 משיבים, 04.12.2025. נקרא דרך WebFetch.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -366,6 +508,45 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-11-27-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-5bc090e1b46ca91026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-27T19:21:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-5bc090e1b46ca91026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-5bc090e1b46ca91026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "fieldwork": "2025-11-27..2025-11-27",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות והאחוזים מתחת לחסימה זהים לכתבת N12; 501 משיבים, 27.11.2025, אינטרנטי + טלפוני. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-11-27-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1256636",
@@ -437,6 +618,64 @@
   },
   "diffs": [],
   "note": "כל הרשימות בטבלת התרחיש הבסיסי (כל המפלגות בנפרד) זהות לפרסום בזמן ישראל; 500 משיבים יהודים וערבים, 19–20.11; 'סטיית תקן 4.4%'. טאטיקה מחקרים ומדיה + פאנל אדג'נדה. אחוזים מתחת לחסימה לא פורסמו. נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-20-midgam-r-c-hahadashot-12",
+  "status": "mismatch",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-20T20:42:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "fieldwork": "2025-11-20..2025-11-20",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.democrats.s",
+    "from": 11,
+    "to": 10,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm"
+   },
+   {
+    "field": "values.utj.s",
+    "from": 7,
+    "to": 8,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm"
+   },
+   {
+    "field": "values.bluewhite.p",
+    "from": 2.2,
+    "to": 1.8,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm"
+   }
+  ],
+  "note": "בכתבת N12: 'הדמוקרטים ... עם 10 מנדטים', יהדות התורה 8 ('התחזקה במנדט אחד'), כחול לבן 1.8% מהקולות (צוטט מילולית). שאר הרשימות והאחוזים זהים; הסכום בפרסום 120. 501 משיבים, 20.11.2025.",
   "checkedAt": "2026-11-04"
  },
  {
