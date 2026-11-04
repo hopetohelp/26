@@ -744,5 +744,129 @@
   "scenarioOf": "2025-05-29-sf-dp-channel-14",
   "note": "תרחיש 'עם בנט' באותו סקר: 12 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין.",
   "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-22-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1066066",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-05-22T21:20:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1066066"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1066066"
+   }
+  },
+  "details": {
+   "sample_respondents": 620,
+   "population": "נדגמים בוגרים מכלל האוכלוסייה",
+   "fieldwork": "2025-05-22..2025-05-22",
+   "pollster": "שלמה פילבר, באמצעות דיירקט פולס בע\"מ",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). תרחיש 'בלי בנט': 11 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין. מדגם: ice 620, ולפי תקציר חיפוש של ch10 — 630; סותר, לא נרשם פער.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-22-sf-dp-channel-14-b",
+  "status": "partial",
+  "source": "https://www.ice.co.il/research/news/article/1066066",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-05-22T21:20:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1066066"
+   }
+  },
+  "details": {
+   "fieldwork": "2025-05-22..2025-05-22",
+   "pollster": "שלמה פילבר, באמצעות דיירקט פולס בע\"מ",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.ice.co.il/research/news/article/1066066",
+  "scenarioOf": "2025-05-22-sf-dp-channel-14",
+  "note": "תרחיש 'עם בנט'. 11 רשימות זהות לדיווח ice; הליכוד ב-ice 33 (סכום 121 — הדיווח סותר את עצמו), ובדיווח JNS (https://www.jns.org/israel-news/netanyahu-bests-bennett-in-head-to-head-race-new-poll-suggests) הליכוד 32 ובנט 13 עם גושים 62+48+10=120 — תואם לנתונים. לא נרשם פער. ערוץ 14 חסום.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-15-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/en/?p=982263",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-05-15T22:01:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/en/?p=982263"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/en/?p=982263"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://ch10.co.il/en/?p=982263"
+   }
+  },
+  "details": {
+   "sample_respondents": 589,
+   "population": "בני 18 ומעלה",
+   "fieldwork": "2025-05-15..2025-05-15",
+   "pollster": "Direct Polls בע\"מ (שלמה פילבר)",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 589,
+    "source": "https://ch10.co.il/en/?p=982263"
+   }
+  ],
+  "note": "ערוץ 14 חסום (403). 11 הרשימות ובל\"ד 2.51% (בנתונים 2.5) זהים לדיווח ch10; ice (https://www.ice.co.il/research/news/article/1064922, 15.5.2025 22:01) מאשר ליכוד 34, ישראל ביתנו 17, יש עתיד 5 ומדגם 589 — שני דיווחים תואמים למדגם. הזמן לפי ice.",
+  "checkedAt": "2026-11-04"
  }
 ]
