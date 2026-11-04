@@ -1,0 +1,998 @@
+[
+ {
+  "id": "2025-11-13-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-898b89bc12e7a91026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-13T21:18:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-898b89bc12e7a91026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-898b89bc12e7a91026.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-898b89bc12e7a91026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "fieldwork": "2025-11-13..2025-11-13",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 501,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-898b89bc12e7a91026.htm"
+   }
+  ],
+  "note": "כל 11 הרשימות שעברו ו-4 האחוזים מתחת לחסימה (כחול לבן 2.9, ציונות דתית 2.5, בל\"ד 1.6, המילואימניקים 1.2) זהים לכתבת N12 (WebFetch). נערך 13.11.2025, 501 משיבים, טעות 4.4%. המדגם חסר בנתונים ונוסף.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-13-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1251795",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-14T06:01:03+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1251795"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל 11 הרשימות שעברו ו-4 האחוזים (כחול לבן 2.9, בל\"ד 2.4, הנדל 2.3, ציונות דתית 1.3) זהים לטבלת infogram בכתבה (e.infogram.com/_/1zzKSwy4zdv4m0QB4m5s). מועדי השדה ומדגם לא צוינו בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-13-filber-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il מחזיר 403 (curl ו-WebFetch). לא נמצא דיווח עצמאי (אמס, ערוץ 7, כיפה, סרוגים, אייס) על סקר זה. תקציר מנוע חיפוש (לא אימות) מזכיר 602 משיבים ו-13.11.2025.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-11-trendzone-x",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1090647",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-11-11T19:18:17+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1090647"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1090647"
+   }
+  },
+  "details": {
+   "fieldwork": "2025-11-11..2025-11-11",
+   "pollster": "טרנדזון"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": false,
+   "dates": true,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל 11 הרשימות ו-4 האחוזים (המילואימניקים 3.12, בל\"ד 2.64, ציונות דתית 2.40, כחול לבן 2.04) זהים לדיווח אייס; 'ערכו היום (שלישי)' = 11.11. אייס אינו מזמין הסקר; מדגם לא צוין.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-06-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/638571/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-06T17:27:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/638571/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/638571/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/638571/"
+   }
+  },
+  "details": {
+   "sample_respondents": 505,
+   "moe": "4.4% (מוצג כ'סטיית התקן')",
+   "population": "משיבים יהודים וערבים",
+   "fieldwork": "2025-11-05..2025-11-06",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 505,
+    "source": "https://www.zman.co.il/638571/"
+   }
+  ],
+  "note": "כל 12 הרשימות זהות לכתבת זמן ישראל (WebFetch); ציונות דתית, בל\"ד והמילואימניקים 0. 'התקיים בימים 5 ו-6 בנובמבר 2025', 505 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-06-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c84b7dad90a5a91026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-06T21:21:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c84b7dad90a5a91026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c84b7dad90a5a91026.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c84b7dad90a5a91026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "fieldwork": "2025-11-06..2025-11-06",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c84b7dad90a5a91026.htm"
+   }
+  ],
+  "note": "כל 11 הרשימות שעברו זהות לכתבת N12 (WebFetch). האחוזים מתחת לחסימה לא מופיעים בטקסט — לא אומתו. נערך 6.11.2025, 500 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-06-filber-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il מחזיר 403 (curl ו-WebFetch). לא נמצא דיווח עצמאי (אמס, ערוץ 7, כיפה, סרוגים, אייס) על סקר זה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-05-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1249254",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-11-07T06:00:58+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1249254"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1249254",
+  "note": "לסקר לא היה קישור; נמצאה כתבת מעריב 7.11.2025. כל 11 הרשימות (בטקסט ובטבלת infogram v9Uw0k35HhbVCb3hDxwt) ו-4 האחוזים (הנדל 2.9, ציונות דתית 2.8, כחול לבן 2.3, בל\"ד 2.0) זהים. מועדי השדה ומדגם לא צוינו בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-30-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/636695/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-30T16:32:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/636695/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/636695/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/636695/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4% (מוצג כ'סטיית התקן')",
+   "population": "משיבים יהודים וערבים",
+   "fieldwork": "2025-10-29..2025-10-30",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.zman.co.il/636695/"
+   }
+  ],
+  "note": "כל 12 הרשימות זהות לכתבת זמן ישראל (WebFetch). 'התקיים בימים 29 ו-30 באוקטובר 2025', 500 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-30-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c70ecefa6e53a91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-30T21:26:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c70ecefa6e53a91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c70ecefa6e53a91027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c70ecefa6e53a91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 504,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "fieldwork": "2025-10-30..2025-10-30",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 504,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c70ecefa6e53a91027.htm"
+   }
+  ],
+  "note": "כל 11 הרשימות שעברו זהות לכתבת N12 (WebFetch). האחוזים מתחת לחסימה לא מופיעים בטקסט. נערך 30.10.2025, 504 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-30-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1246943",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-31T06:00:56+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1246943"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל 11 הרשימות ו-4 האחוזים (ציונות דתית 2.2, בל\"ד 2.0, כחול לבן 1.9, המילואימניקים 1.9) זהים לטקסט הכתבה ולטבלת infogram. מועדי השדה ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-30-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.emess.co.il/radio/1776741",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-10-30T21:03:17+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.emess.co.il/radio/1776741"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il מחזיר 403 (curl ו-WebFetch). כל 12 הרשימות זהות לדיווח אמס (30.10.2025). אבל באמס: כחול לבן 2.4%, בל\"ד 1.7% — בנתונים הפוך (בל\"ד 2.4, כחול לבן 1.7); מקור משני יחיד, לכן לא נרשם פער. מועד ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-29-mm-sn-channel-13",
+  "status": "partial",
+  "source": "https://13tv.co.il/item/news/politics/politics/v7l06-904824916/?pid=7&refc=902992383",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://13tv.co.il/item/news/politics/politics/v7l06-904824916/?pid=7&refc=902992383"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) וסטט-נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "8 רשימות זהות (ליכוד 27, בנט 23, יש עתיד 10, ש\"ס 10, ישראל ביתנו 9, עוצמה 9, הדמוקרטים 8, יהדות התורה 7). טקסט הכתבה (WebFetch) נותן רע\"ם 4, חד\"ש-תע\"ל 5, ישר 5, ציונות דתית 5 — סכום 122 ולא תואם לגושים שבאותה כתבה (57/54/9), בעוד שבנתונים (רע\"ם 5, חד\"ש 4, ישר 4, צ\"ד 4) הסכום 120 והגושים תואמים. הטקסט כנראה שגוי; לא נרשמו פערים. לא נמצא דיווח עצמאי. מועד ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-23-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/634822/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-23T17:33:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/634822/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/634822/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/634822/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8% (מוצג כ'סטיית התקן')",
+   "population": "משיבים יהודים וערבים",
+   "fieldwork": "2025-10-22..2025-10-23",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/634822/"
+   }
+  ],
+  "note": "כל 13 הרשימות זהות לכתבת זמן ישראל (WebFetch). 'התקיים בימים 22 ו-23 באוקטובר 2025', 404 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-23-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-fce9955a8c11a91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-23T21:13:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-fce9955a8c11a91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-fce9955a8c11a91027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-fce9955a8c11a91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "fieldwork": "2025-10-23..2025-10-23",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 501,
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-fce9955a8c11a91027.htm"
+   }
+  ],
+  "note": "כל 11 הרשימות שעברו זהות לכתבת N12 (WebFetch). האחוזים מתחת לחסימה לא מופיעים בטקסט. נערך 23.10.2025, 501 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-23-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1244504",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-24T06:00:54+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1244504"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1244504"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1244504"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב",
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "fieldwork": "2025-10-22..2025-10-23"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1244504"
+   }
+  ],
+  "note": "כל 11 הרשימות ו-4 האחוזים (כחול לבן 2.9, ציונות דתית 2.6, בל\"ד 2.2, המילואימניקים 2.1) זהים לטבלת infogram (התרחיש הראשי; בכתבה גם תרחיש רשימה ערבית מאוחדת — לא נבדק). 'שהתקיים ב־22־23 באוקטובר', 500 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-23-filber-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il מחזיר 403 (curl ו-WebFetch). לא נמצא דיווח עצמאי (אמס, ערוץ 7, כיפה, סרוגים, אייס) על סקר זה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-19-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-b5043639",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-19T20:51:25+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-b5043639"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-b5043639"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-b5043639"
+   }
+  },
+  "details": {
+   "sample_respondents": 519,
+   "moe": "±4.4% (95%)",
+   "population": "בני 18+, מדגם מייצג של האוכלוסייה הכללית בישראל",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-10-19..2025-10-19",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 519,
+    "source": "https://api.i24news.tv/v2/he/contents/artc-b5043639"
+   }
+  ],
+  "note": "כל 12 הרשימות זהות לגוף הכתבה (API של i24). אחוזים מתחת לחסימה לא מופיעים. נערך 19.10.2025, 519 נשאלים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-17-lri-p4a-maariv",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": "2025-10-17T05:59:53+03:00",
+  "fields": {},
+  "details": {
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כתבת מעריב (article-1242291) נגישה, אך בטקסט ובמוטמע ה-infogram יש רק גושים: קואליציה 52, אופוזיציה+בנט+איזנקוט+הנדל 58, ערביות 10 — אין מנדטים לפי רשימה. לא נמצא דיווח עצמאי. שים לב: בנתונים סכום המנדטים 119 וגוש האופוזיציה 57 (מול 58 בכתבה) — כנראה חסר מנדט לרשימה אחת באופוזיציה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-16-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/632948/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-16T17:05:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/632948/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/632948/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/632948/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8% (מוצג כ'סטיית התקן')",
+   "population": "משיבים יהודים וערבים",
+   "fieldwork": "2025-10-15..2025-10-16",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/632948/"
+   }
+  ],
+  "note": "כל 13 הרשימות זהות לכתבת זמן ישראל (WebFetch). 'התקיים בימים 15 ו-16 באוקטובר 2025', 404 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-16-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-e85a72bf5ade991026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-16T21:20:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q4/Article-e85a72bf5ade991026.htm"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל 11 הרשימות שעברו זהות לכתבת N12 (ש\"ס וישראל ביתנו 9 — 'בדומה ל...' אחרי יש עתיד 9; סכום 120). בכתבה אין שם מכון, מועד, מדגם או טעות דגימה; אחוזים מתחת לחסימה לא מופיעים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-15-trendzone-x",
+  "status": "secondary",
+  "source": "https://www.emess.co.il/radio/1770705",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-10-15T21:00:51+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.emess.co.il/radio/1770705"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.emess.co.il/radio/1770705"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.emess.co.il/radio/1770705"
+   }
+  },
+  "details": {
+   "sample_respondents": 1791,
+   "moe": "2.3%",
+   "fieldwork": "2025-10-15..2025-10-15",
+   "pollster": "TrendZone"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": false,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 1791,
+    "source": "https://www.emess.co.il/radio/1770705"
+   }
+  ],
+  "note": "כל 11 הרשימות זהות לדיווח אמס ('שנערך היום (רביעי)' = 15.10, 1,791 נשאלים, טעות 2.3%). אמס אינו בהכרח המזמין — סווג כמשני.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-15-filber-channel-14",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il מחזיר 403 (curl ו-WebFetch). לא נמצא דיווח עצמאי (אמס, ערוץ 7, כיפה, סרוגים, אייס) על סקר זה. תקציר מנוע חיפוש (לא אימות) מזכיר 486 משיבים ו-15.10.2025.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-10-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1240149",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-10T06:00:50+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1240149"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1240149"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) בשיתוף Panel4All",
+   "commissioner": "מעריב",
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1240149"
+   }
+  ],
+  "note": "כל 12 הרשימות שעברו (כולל המילואימניקים 5) ו-3 האחוזים (כחול לבן 2.3, ציונות דתית 2.3, בל\"ד 1.6) זהים לטבלת infogram. 500 משיבים, טעות 4.4%; מועדי השדה לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-10-09-mm-sn-channel-13",
+  "status": "mismatch",
+  "source": "https://13tv.co.il/item/news/politics/politics/s81tg-904794798/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://13tv.co.il/item/news/politics/politics/s81tg-904794798/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) וחברת סטט נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.raam.s",
+    "from": 5,
+    "to": 6,
+    "source": "https://13tv.co.il/item/news/politics/politics/s81tg-904794798/"
+   }
+  ],
+  "note": "בכתבה: 'יש עתיד, ישראל ביתנו ורע\"ם עם 6 מנדטים כל אחת' — בנתונים רע\"ם 5. חד\"ש-תע\"ל אינה מוזכרת בטקסט; גוש המפלגות הערביות בכתבה 11, כך שחד\"ש-תע\"ל כנראה 5 ולא 6 כבנתונים (לא נרשם כפער כי אינו כתוב במפורש). שאר 11 הרשימות זהות (ליכוד 27, בנט 23, הדמוקרטים 10, עוצמה 9, ש\"ס 9, יהדות התורה 7, יש עתיד 6, ישראל ביתנו 6, ישר 4, המחנה הממלכתי 4 (במפתח bluewhite), צ\"ד 4). מועד ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ }
+]

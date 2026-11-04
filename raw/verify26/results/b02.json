@@ -1,0 +1,965 @@
+[
+ {
+  "id": "2023-06-12-smith-consulting-amit-segal",
+  "status": "unreachable",
+  "source": "https://t.me/amitsegal/24972",
+  "access": [
+   "none"
+  ],
+  "published": "2023-06-14T09:54:01+03:00",
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "הקישור הוא קובץ docx בטלגרם ('ממצאי סקר פוליטי_14.6.docx', פורסם 14.6.2023) שלא ניתן לקרוא בלי האפליקציה. בפוסט הצמוד (24971): 'סקר רפי סמית: הקואליציה 54' — תואם לסכום הקואליציה בחבילה (26+10+7+6+5), אך מנדטים לפי רשימה לא אומתו. תאריך הפרסום 14.6 מאוחר מימי השטח בחבילה (11–12.6) — לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-01-midgam-r-c-arutz-sheva",
+  "status": "match",
+  "source": "https://www.inn.co.il/news/603387",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-01T21:11:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/603387"
+   }
+  },
+  "details": {
+   "pollster": "מנו גבע ומכון מדגם",
+   "commissioner": "ערוץ 7",
+   "sample_respondents": null,
+   "note_sample": "כאלף נשאלים"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נבדק מול התרשימים בכתבת ערוץ 7 (עמודות 'מצב קיים'): המחנה הממלכתי 28, הליכוד 26, יש עתיד 18, ש\"ס 10, יהדות התורה 7, ישראל ביתנו 6, רע\"מ 6, עוצמה 6, הצ\"ד 5, חד\"ש-תע\"ל 4, מרצ 4. ארבעה פערים (נראה כהחלפת ערכים). המדגם 'כאלף נשאלים' — בחבילה אין מספר; ימי שטח לא צוינו. (בדיקה חוזרת: הערכים בנתונים — חד\"ש-תע\"ל 4, עוצמה 6, ציונות דתית 5, ישראל ביתנו 6 — זהים לגרפים; הפער שנרשם קודם הוחלף בטעות בכיוון.)",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-10-21-sf-nd-channel-14",
+  "status": "match",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election129/he/Survey_4240.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election129/he/Survey_4240.pdf"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election129/he/Survey_4240.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election129/he/Survey_4240.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 1954,
+   "asked_to_participate": 30030,
+   "moe": "2.2%",
+   "population": "בוגרים 18+ מדגם מייצג של אזרחי ישראל הרשאים לבחור",
+   "method": "מערכת איסוף דיגיטלית אינטרנטית",
+   "fieldwork": "2026-10-21..2026-10-21",
+   "pollster": "Next Data",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "דוח לוועדה (Next Data, 21.10.2026 10:12–15:02). כל 11 הרשימות זהות; מתחת לחסימה הנדל-זליכה 2.2, וינטר 1.7, הציבור החרדי 0.3 זהים; נעם 0.6+אח\"י 0.2 = 'אחרים' 0.8. הכתבה בערוץ 14 חסומה (403). שים לב: בסרוגים דווח סקר אחר של ערוץ 14 מ-20.10 עם מספרים שונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-09-09-maagar-mochot-channel-16",
+  "status": "unreachable",
+  "source": "",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "הקישור הוא סרטון מהדורה בערוץ 16 (ללא טקסט). לא נמצא דיווח עצמאי ולא נמצא דוח לוועדה ב-gov.il. לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-09-02-maagar-mochot-channel-16",
+  "status": "mismatch",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election48/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%203.9.2026%204117.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election48/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%203.9.2026%204117.pdf"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election48/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%203.9.2026%204117.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election48/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%203.9.2026%204117.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 552,
+   "asked_to_participate": 966,
+   "moe": "4.2%",
+   "population": "האוכלוסייה הישראלית הבוגרת 18+",
+   "method": "משולב: פאנל אינטרנטי ועיבוי טלפוני",
+   "fieldwork": "2026-09-01..2026-09-02",
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "ערוץ 16"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-09-02",
+    "to": "2026-09-01",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election48/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%203.9.2026%204117.pdf"
+   }
+  ],
+  "note": "דוח לוועדה (1.9 16:00 – 2.9 15:00). כל 13 הרשימות שעברו זהות (כולל עמך ישראל 5). אחוזים בדוח: בית ציוני 3 (בחבילה 2.0), האחדות 1.4 (בחבילה 1.0), כחול לבן 1 זהה, זליכה 2.7, הציבור החרדי 1 — לא נרשם פער באחוזים מדוח בלבד. הקישור בחבילה מוביל לשידור 26.08 — שגוי.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-30-sf-nd-channel-14",
+  "status": "unreachable",
+  "source": "https://www.c14.co.il/article/1683992",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "אתר ערוץ 14 חסום (403); לא נמצא דיווח עצמאי (סרוגים, כיפה, ערוץ 7) ולא נמצא דוח לוועדה בבדיקת קבצים ב-gov.il. לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-30-kantar-kan-11",
+  "status": "mismatch",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election46/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2031.8.2026%204112.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election46/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2031.8.2026%204112.pdf"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election46/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2031.8.2026%204112.pdf"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election46/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2031.8.2026%204112.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 551,
+   "asked_to_participate": 2370,
+   "moe": "4.2%",
+   "population": "מדגם ארצי ומייצג 18+ (יהודים וערבים)",
+   "method": "אינטרנטי, פאנל משיבים",
+   "fieldwork": "2026-08-30..2026-08-30",
+   "pollster": "קנטאר ישראל",
+   "commissioner": "כאן"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": 552,
+    "to": 551,
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election46/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2031.8.2026%204112.pdf"
+   }
+  ],
+  "note": "אין קישור בחבילה. דוח לוועדה (30.8 11:30–16:20): כל 12 הרשימות זהות, ואחוזי כחול לבן 1.5, בית ציוני 2.4, האחדות 0.7 זהים. משתתפים בפועל 551 (בחבילה 552). גם דיווח סרוגים 101009860 תואם במנדטים.",
+  "checkedAt": "2026-11-04",
+  "foundUrl": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election46/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2031.8.2026%204112.pdf"
+ },
+ {
+  "id": "2026-08-27-sf-nd-channel-14",
+  "status": "secondary",
+  "source": "https://www.srugim.co.il/101009704",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.srugim.co.il/101009704"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "אתר ערוץ 14 חסום (403). נבדק מול דיווח בסרוגים (27.8 ערב): כל 12 הרשימות שעברו זהות, וגם האחוזים: זהות 1.7, בית ציוני 1.1, כחול לבן 0.4, האחדות 0.3 (נעם 0.3 = 'אחרים'). מדגם 981 לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-26-maagar-mochot-channel-16",
+  "status": "unreachable",
+  "source": "",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "הקישור הוא סרטון מהדורה בערוץ 16 (ללא טקסט). לא נמצא דיווח עצמאי ולא נמצא דוח לוועדה ב-gov.il. לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-24-sf-nd-channel-14",
+  "status": "mismatch",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election37/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2025.8.2026%204102.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election37/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2025.8.2026%204102.pdf"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election37/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2025.8.2026%204102.pdf"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election37/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2025.8.2026%204102.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 484,
+   "asked_to_participate": 5002,
+   "moe": "4.6%",
+   "population": "בוגרים 18+ אזרחי ישראל הרשאים לבחור",
+   "method": "מערכת איסוף דיגיטלית אינטרנטית",
+   "fieldwork": "2026-08-24..2026-08-24",
+   "pollster": "Next Data",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": 486,
+    "to": 484,
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election37/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2025.8.2026%204102.pdf"
+   }
+  ],
+  "note": "דוח לוועדה. כל 11 הרשימות זהות; וינטר 2.1 וכחול לבן 1.0 זהים. אחוזים גולמיים בדוח: בית ציוני 1.4 (בחבילה 1.3), האחדות 0.4 (בחבילה 0.2) — לא נרשם פער באחוזים מדוח בלבד. מספר המשיבים בדוח 484 (בחבילה 486).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-24-midgam-r-c-hahadashot-12-b",
+  "status": "partial",
+  "source": "https://www.srugim.co.il/101009375",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.srugim.co.il/101009375"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "תרחיש 'מפלגת וינטר מתמודדת' באותו סקר. בדיווח בסרוגים מפורשים רק: ישר! 24, הליכוד 21, ביחד 16, וינטר 4, הציונות הדתית 2.4% — זהים לחבילה; גושים אופוזיציה 60 / קואליציה 49 תואמים. שאר הרשימות לא פורטו.",
+  "checkedAt": "2026-11-04",
+  "foundUrl": "https://www.srugim.co.il/101009375",
+  "scenarioOf": "2026-08-24-midgam-r-c-hahadashot-12"
+ },
+ {
+  "id": "2026-08-24-midgam-r-c-hahadashot-12",
+  "status": "secondary",
+  "source": "https://www.srugim.co.il/101009375",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.srugim.co.il/101009375"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "אין קישור בחבילה. נבדק מול דיווח בסרוגים (24.8 ערב) על סקר חדשות 12: כל 11 הרשימות שעברו זהות, וגם האחוזים: בית ציוני 2.9, האחדות 0.8, כחול לבן 0.4. כתבת N12 המקורית לא אותרה; מדגם 500 לא אומת.",
+  "checkedAt": "2026-11-04",
+  "foundUrl": "https://www.srugim.co.il/101009375"
+ },
+ {
+  "id": "2026-08-23-kantar-kan-11",
+  "status": "partial",
+  "source": "https://www.srugim.co.il/101009274",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.srugim.co.il/101009274"
+   }
+  },
+  "details": {
+   "commissioner": "כאן חדשות"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "אתר כאן חסום (403). בדיווח בסרוגים (23.8 ערב) מפורשים רק: ישר! 24, הליכוד 22, ביחד 14, ואחוזים: בית ציוני 2.8, כחול לבן 1.8, האחדות 1.6, וינטר לבד 2.5 — כולם זהים. גושים: נתניהו 51, ערבים 12, איזנקוט 57 — תואמים לסכומי החבילה. שאר הרשימות לא פורטו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-20-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.timesofisrael.com/toi-poll-shows-bennett-gaining-ground-at-eisenkots-expense-but-deadlock-persists/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-21T02:38:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.timesofisrael.com/toi-poll-shows-bennett-gaining-ground-at-eisenkots-expense-but-deadlock-persists/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.timesofisrael.com/toi-poll-shows-bennett-gaining-ground-at-eisenkots-expense-but-deadlock-persists/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.timesofisrael.com/toi-poll-shows-bennett-gaining-ground-at-eisenkots-expense-but-deadlock-persists/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "fieldwork": "2026-08-19..2026-08-20",
+   "pollster": "יוסי טטיקה",
+   "commissioner": "זמן ישראל / טיימס אוף ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נבדק בכתבת טיימס אוף ישראל (אתר האחות של זמן ישראל, אותו פרסום). כל המנדטים זהים; מתחת לחסימה: בית ציוני 3%, כחול לבן 2.4%, האחדות 0.8% — זהים. curl נחסם (403); נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-20-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1358140",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-21T06:01:10+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1358140"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1358140"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1358140"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "asked_to_participate": 3916,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי Panel4All",
+   "fieldwork": "2026-08-19..2026-08-20",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל הרשימות זהות לטבלת Infogram בכתבת מעריב (כולל האחוזים מתחת לחסימה; 'אחרים' 1.7% = הכלכלית בראשות זליכה).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-20-kantar-israel-hayom",
+  "status": "match",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election33/he/4091-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election33/he/4091-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election33/he/4091-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election33/he/4091-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 553,
+   "asked_to_participate": 2193,
+   "moe": "4.2%",
+   "population": "מדגם ארצי ומייצג 18+ (יהודים וערבים)",
+   "method": "אינטרנטי, פאנל משיבים",
+   "fieldwork": "2026-08-19..2026-08-20",
+   "pollster": "קנטאר ישראל",
+   "commissioner": "ישראל היום"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "דוח לוועדה (19.8 14:30 – 20.8 08:15). כל 11 הרשימות זהות (חד\"ש-תע\"ל-בל\"ד 8), וגם אחוזי בית ציוני 2.5, כחול לבן 2.1, האחדות 1.7. גם דיווח סרוגים 101009132 תואם. אתר ישראל היום חסום (403).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-19-mp-tm-sn-a-channel-13",
+  "status": "mismatch",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-19T20:30:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628"
+   }
+  },
+  "details": {
+   "sample_respondents": 1247,
+   "moe": "3.8%",
+   "pollster": "המדד (שמואל רוזנר ונועה ספלקוב), סטטנט, פרויקט המדגם ואסקריה; עיבוד Hive; ייעוץ סטטיסטי פרופ' דוד שטיינברג",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.balad.p",
+    "from": 1.0,
+    "to": 1.9,
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-905319423/?pid=106628"
+   }
+  ],
+  "note": "כל המנדטים זהים לכתבת חדשות 13; מתחת לחסימה: טרופר-הנדל 1.6, האחדות 1.2, כחול לבן 1.8 — זהים; בל\"ד בפרסום '1.9$' (כנראה 1.9%) ובחבילה 1.0. מועד העבודה בשטח לא צוין בכתבה. curl נחסם (403); נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-19-maagar-mochot-channel-16",
+  "status": "mismatch",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 551,
+   "asked_to_participate": 893,
+   "moe": "4.2%",
+   "population": "האוכלוסייה הישראלית הבוגרת גילי 18 ומעלה",
+   "method": "משולב: פאנל אינטרנטי ועיבוי טלפוני",
+   "fieldwork": "2026-08-18..2026-08-19",
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "ערוץ 16"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-08-19",
+    "to": "2026-08-18",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   }
+  ],
+  "note": "דוח לוועדה (סעיף 16ה), מסמך מ-19/08/2026. אין קישור בחבילה. כל 11 הרשימות שעברו זהות. ימי השטח בדוח 18–19.8.26 (בחבילה מתחיל 19.8). אחוזי הרשימות מתחת לחסימה בדוח (כחול לבן 1.2, בל\"ד 3, הבית הציוני 3, ארדן 2, זהות 1.7, זליכה 0.8) אינם בחבילה — לא נרשם פער באחוזים.",
+  "checkedAt": "2026-11-04",
+  "foundUrl": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+ },
+ {
+  "id": "2026-08-19-kantar-kan-11",
+  "status": "unreachable",
+  "source": "https://www.kan.org.il/content/kan-news/politic/1090501/",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "אתר כאן חסום (403). לא נמצא דיווח עצמאי (בסרוגים אין סקר כאן בתאריך זה) ולא נמצא דוח לוועדה ב-gov.il. לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-18-sf-nd-channel-14",
+  "status": "match",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election27/he/4085-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2019.8.2026.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election27/he/4085-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2019.8.2026.pdf"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election27/he/4085-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2019.8.2026.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election27/he/4085-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2019.8.2026.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 636,
+   "moe": "4.6%",
+   "population": "בוגרים 18+",
+   "method": "מערכת איסוף דיגיטלית אינטרנטית",
+   "fieldwork": "2026-08-18..2026-08-18",
+   "pollster": "Next Data",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "דוח לוועדה (18.8 9:45–15:30). כל 12 הרשימות זהות, וגם אחוזי בית ציוני 1.2, וינטר 0.9, כחול לבן 0.4, האחדות 0.1. בדוח הרשימה של 5 המנדטים נקראת 'חד\"ש-תע\"ל-בל\"ד' ובל\"ד לא מופיע בנפרד, בעוד שבסרוגים 101008933: חד\"ש-תע\"ל 5 ובל\"ד 2.1% (כמו בחבילה) — כדאי לבדוק.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-18-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/i24news-shows/%D7%94%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94-%D7%94%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA/artc-e0e93683",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-18T20:35:06+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/i24news-shows/%D7%94%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94-%D7%94%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA/artc-e0e93683"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/i24news-shows/%D7%94%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94-%D7%94%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA/artc-e0e93683"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/i24news-shows/%D7%94%D7%9E%D7%94%D7%93%D7%95%D7%A8%D7%94-%D7%94%D7%9E%D7%A8%D7%9B%D7%96%D7%99%D7%AA/artc-e0e93683"
+   }
+  },
+  "details": {
+   "sample_respondents": 522,
+   "moe": "4.2%",
+   "population": "בוגרים 18+ מדגם מייצג של האוכלוסייה בישראל",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2026-08-18..2026-08-18",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "גוף הכתבה נקרא דרך ה-API הציבורי של i24 (הדף דורש JavaScript). כל 11 הרשימות שעברו את החסימה זהות. האחוזים מתחת לחסימה (בל\"ד 1.4, מילואימניקים 1.1) אינם מופיעים בכתבה — רק שמות המפלגות שלא עברו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-17-midgam-r-c-hahadashot-12-b",
+  "status": "mismatch",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-17T21:00:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "asked_to_participate": 2523,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18",
+   "method": "דגימה שכבתית, אינטרנט וטלפון",
+   "fieldwork": "2026-08-17..2026-08-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.reservists.p",
+    "from": 1.5,
+    "to": 1.1,
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   },
+   {
+    "field": "values.unity.p",
+    "from": 1.1,
+    "to": 1.5,
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   }
+  ],
+  "note": "זו גרסת התרחיש 'מפלגה בראשות עופר וינטר' מאותו סקר (amcha=מפלגת וינטר 2.5%). כל המנדטים זהים; האחוזים מתחת לחסימה מוחלפים: בפרסום בית ציוני המילואימניקים 1.1% והאחדות 1.5% (בחבילה הפוך).",
+  "checkedAt": "2026-11-04",
+  "scenarioOf": "2026-08-17-midgam-r-c-hahadashot-12"
+ },
+ {
+  "id": "2026-08-17-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-17T21:00:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-a1d50f8465010a1026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "asked_to_participate": 2523,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18",
+   "method": "דגימה שכבתית, אינטרנט וטלפון",
+   "fieldwork": "2026-08-17..2026-08-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "סקר הבסיס בכתבת N12: כל המנדטים והאחוזים מתחת לחסימה (בל\"ד 1.8, האחדות 1.7, בית ציוני 1.5, כחול לבן 1.4) זהים. curl נחסם (403); נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-16-kantar-kan-11",
+  "status": "match",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election23/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2017.8.2026.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election23/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2017.8.2026.pdf"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election23/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2017.8.2026.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election23/he/%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2017.8.2026.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 1103,
+   "asked_to_participate": 4526,
+   "moe": "2.9%",
+   "population": "מדגם ארצי ומייצג 18+ (יהודים וערבים)",
+   "method": "אינטרנטי, פאנל משיבים",
+   "fieldwork": "2026-08-13..2026-08-16",
+   "pollster": "קנטאר ישראל",
+   "commissioner": "כאן"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "דוח לוועדה (13.8 12:50 – 16.8 16:00). כל 11 הרשימות זהות, וגם אחוזי בית ציוני 3.0, כחול לבן 1.4, האחדות 1.3, בל\"ד 1.9. גם דיווח סרוגים 101008694 תואם. אתר כאן חסום (403).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-08-13-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.zman.co.il/712748/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-08-13T17:00:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/712748/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/712748/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/712748/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "יהודים וערבים",
+   "method": "פאנל Adgenda",
+   "fieldwork": "2026-08-12..2026-08-13",
+   "pollster": "יוסי טטיקה (טטיקה מחקר ומדיה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים זהים לכתבת זמן ישראל; מתחת לחסימה: בית ציוני 3%, כחול לבן 2%, האחדות 1% — זהים. curl נחסם (403); נקרא דרך WebFetch.",
+  "checkedAt": "2026-11-04"
+ }
+]

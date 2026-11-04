@@ -1,0 +1,1323 @@
+[
+ {
+  "id": "2023-07-25-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-07-25",
+  "end": "2023-07-25",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 25
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 30
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/13-survey-903637889/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-24-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2023-07-24",
+  "end": "2023-07-24",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.6
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 31
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 7
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/סקר-חדשות-14-אחרי-העברת-החוק-לצמצום-עילת/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-23-kantar-kan-11",
+  "firm": "Kantar",
+  "firmHe": "קנטר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "start": "2023-07-23",
+  "end": "2023-07-23",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 3.1
+   },
+   "likud": {
+    "s": 27
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 30
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp_otzma": {
+    "s": 10
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.kan.org.il/content/kan-news/local/458234/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-20-lazar-maariv",
+  "firm": "Lazar",
+  "firmHe": "לזר מחקרים",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-07-19",
+  "end": "2023-07-20",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.1
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 28
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 29
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1024200"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-20-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-07-20",
+  "end": "2023-07-20",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 26
+   },
+   "national_unity": {
+    "s": 29
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 21
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/fe5zo-903628386/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-13-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2023-07-13",
+  "end": "2023-07-13",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.7
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 30
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 6
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 7
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/ברקע-חידוש-החקיקה-והמחאות-נתניהו-והלי/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-13-lazar-maariv",
+  "firm": "Lazar",
+  "firmHe": "לזר מחקרים",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-07-13",
+  "end": "2023-07-13",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.9
+   },
+   "hadash_taal": {
+    "s": 6
+   },
+   "labor": {
+    "p": 1.8
+   },
+   "likud": {
+    "s": 28
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 26
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 18
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1022468"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-13-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-07-13",
+  "end": "2023-07-13",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 25
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 27
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 7
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 21
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/news-poll-903615615/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-09-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2023-07-09",
+  "end": "2023-07-09",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.6
+   },
+   "likud": {
+    "s": 28
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 26
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp_otzma": {
+    "s": 9
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 20
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2023_q3/Article-10ec290027b3981027.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-09-kantar-kan-11",
+  "firm": "Kantar",
+  "firmHe": "קנטר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "start": "2023-07-09",
+  "end": "2023-07-09",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 28
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 29
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp_otzma": {
+    "s": 9
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.kan.org.il/content/kan-news/politic/439662/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-05-lazar-maariv",
+  "firm": "Lazar",
+  "firmHe": "לזר מחקרים",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-07-05",
+  "end": "2023-07-05",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.1
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.4
+   },
+   "likud": {
+    "s": 29
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 26
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 20
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1020798"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-05-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-07-05",
+  "end": "2023-07-05",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 26
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 26
+   },
+   "otzma": {
+    "s": 6
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 7
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 18
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/13-survey-903602517"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-29-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2023-06-29",
+  "end": "2023-06-29",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 3.0
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 30
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/סקר-חדשות-14-הליכוד-מתחזק-נתניהו-מוביל-ב/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-25-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2023-06-25",
+  "end": "2023-06-25",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.9
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "labor": {
+    "p": 1.6
+   },
+   "likud": {
+    "s": 27
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp_otzma": {
+    "s": 10
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 18
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2023_q2/Article-16c825c9263f881026.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-25-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-06-25",
+  "end": "2023-06-25",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 24
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 20
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/knesset-poll-903584746/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-22-panels-politics-maariv",
+  "firm": "Panels Politics",
+  "firmHe": "פאנלס פוליטיקס",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-06-21",
+  "end": "2023-06-22",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.0
+   },
+   "hadash_taal": {
+    "s": 6
+   },
+   "labor": {
+    "p": 2.2
+   },
+   "likud": {
+    "s": 26
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 30
+   },
+   "otzma": {
+    "s": 4
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1017322"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-15-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2023-06-15",
+  "end": "2023-06-15",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.6
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 28
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 6
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/סקר-מנדטים-דרמטי-לראשונה-שוויון-בין-ה/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-15-panels-politics-maariv",
+  "firm": "Panels Politics",
+  "firmHe": "פאנלס פוליטיקס",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-06-15",
+  "end": "2023-06-15",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.5
+   },
+   "hadash_taal": {
+    "s": 6
+   },
+   "labor": {
+    "p": 1.7
+   },
+   "likud": {
+    "s": 24
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 32
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1015547"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-15-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2023-06-15",
+  "end": "2023-06-15",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.7
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.8
+   },
+   "likud": {
+    "s": 27
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 27
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp_otzma": {
+    "s": 10
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 18
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.mako.co.il/news-politics/2023_q2/Article-3762dd484afb881027.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-15-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-06-15",
+  "end": "2023-06-15",
+  "sample": null,
+  "values": {
+   "balad": {
+    "s": 4
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 24
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/13-survey-903569276/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-11-cf-mp-sn-channel-13-b",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-06-11",
+  "end": "2023-06-11",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 6
+   },
+   "labor_meretz": {
+    "s": 7
+   },
+   "likud": {
+    "s": 24
+   },
+   "national_unity": {
+    "s": 27
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 17
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-11-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2023-06-11",
+  "end": "2023-06-11",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 6
+   },
+   "likud": {
+    "s": 24
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 19
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/13-survey-903562406/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-08-sf-dp-channel-14",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2023-06-08",
+  "end": "2023-06-08",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.6
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 1.8
+   },
+   "likud": {
+    "s": 31
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 26
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 7
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.now14.co.il/סקר-חדשות-14-גנץ-גובר-על-נתניהו-במידת-ההת/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-08-panels-politics-maariv",
+  "firm": "Panels Politics",
+  "firmHe": "פאנלס פוליטיקס",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-06-07",
+  "end": "2023-06-08",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.0
+   },
+   "likud": {
+    "s": 26
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 31
+   },
+   "otzma": {
+    "s": 4
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 18
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1013759"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-01-panels-politics-maariv-b",
+  "firm": "Panels Politics",
+  "firmHe": "פאנלס פוליטיקס",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-05-31",
+  "end": "2023-06-01",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.2
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor_meretz": {
+    "s": 8
+   },
+   "likud": {
+    "s": 26
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 6
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ }
+]

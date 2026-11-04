@@ -1,0 +1,1022 @@
+[
+ {
+  "id": "2026-04-27-kantar-kan-11",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1111186",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1111186"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1111186"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1111186"
+   }
+  },
+  "details": {
+   "sample_respondents": 555,
+   "asked_to_participate": 2487,
+   "moe": "4.2%",
+   "population": "מדגם אינטרנטי מייצג של האוכלוסייה בישראל מגיל 18 ומעלה, כולל המגזר הערבי",
+   "fieldwork": "2026-04-27..2026-04-27",
+   "pollster": "קנטאר",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il חסום (403 גם ב-WebFetch). נבדק מול דיווח אייס (28.4): מנדטי כל 10 הרשימות זהים; 27.4, 555 משיבים מתוך 2,487 פונים, 4.2% תואמים. כחול לבן, הצ\"ד, המילואימניקים ובל\"ד מתחת לחסימה בלי אחוזים — לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-27-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-b1f07345",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-27T20:30:05+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-b1f07345"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-b1f07345"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-b1f07345"
+   }
+  },
+  "details": {
+   "sample_respondents": 578,
+   "moe": "4.0%",
+   "population": "האוכלוסייה הכללית בישראל, בוגרים 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2026-04-26..2026-04-27",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "גוף הכתבה (דרך ה-API של i24) מונה מנדטי כל 11 הרשימות — זהים; 26–27.4, 578 נדגמים תואמים. תרחיש ביחד+ישר לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-24-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1313295",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-24T06:00:43+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1313295"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1313295"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1313295"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "fieldwork": "2026-04-23..2026-04-23",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "end",
+    "from": "2026-04-24",
+    "to": "2026-04-23",
+    "source": "https://www.maariv.co.il/news/politics/article-1313295"
+   }
+  ],
+  "note": "מנדטי כל 11 הרשימות והאחוזים מתחת לחסימה (הצ\"ד 2.8, המילואימניקים 2.0, כחול לבן 1.7, בל\"ד 1.4) זהים לטבלת Infogram בכתבה; 502 משיבים תואם. בכתבה: הסקר נערך ב-23 באפריל (בחבילה מסתיים 24.4 — יום הפרסום).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-23-midgam-r-c-hahadashot-12-b",
+  "status": "mismatch",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-23T21:05:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm"
+   }
+  },
+  "details": {
+   "pollster": "מדגם",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.yb.s",
+    "from": 7,
+    "to": 8,
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm"
+   },
+   {
+    "field": "values.yesh_atid.s",
+    "from": 6,
+    "to": 7,
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm"
+   }
+  ],
+  "scenarioOf": "2026-04-23-midgam-r-c-hahadashot-12",
+  "note": "תרחיש איחוד המפלגות הערביות מאותו סקר. בכתבת N12: ישראל ביתנו 8 ויש עתיד 7 (בחבילה 7 ו-6, סכום 118; כך גם בערוץ 7 באנגלית — שגוי). הפרסום מסתכם ל-120 ותואם לגושים (אופוזיציה 71, קואליציה 49). שאר 8 הרשימות זהות.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-23-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-23T21:05:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm"
+   }
+  },
+  "details": {
+   "pollster": "מדגם",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 11 הרשימות והאחוזים (הצ\"ד 2.7, המילואימניקים 1.3, כחול לבן 0.8, בל\"ד 0.4) זהים. מועד ומדגם לא בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-23-filber-channel-14",
+  "status": "partial",
+  "source": "https://www.ice.co.il/research/news/article/1110674",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1110674"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1110674"
+   }
+  },
+  "details": {
+   "sample_respondents": 958,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). אייס: 10 רשימות זהות וכחול לבן 1.2%, 958 נשאלים — אבל ישראל ביתנו 8 (סכום 119); לפי הגושים באייס (ימין 66, שינוי 43) ישראל ביתנו 9 ועוצמה 8 כבחבילה. ערוץ 7 באנגלית (https://www.israelnationalnews.com/news/426001): ישראל ביתנו 9 אך עוצמה 9 (סכום 121). אין פרסום ראשוני — לא נרשם פער.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-17-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1310919",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-17T06:00:44+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1310919"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1310919"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1310919"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "fieldwork": "2026-04-15..2026-04-16",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-04-17",
+    "to": "2026-04-15",
+    "source": "https://www.maariv.co.il/news/politics/article-1310919"
+   },
+   {
+    "field": "end",
+    "from": "2026-04-17",
+    "to": "2026-04-16",
+    "source": "https://www.maariv.co.il/news/politics/article-1310919"
+   }
+  ],
+  "note": "מנדטי כל 11 הרשימות (טקסט וטבלת Infogram) והאחוזים (הצ\"ד 2.3, המילואימניקים 2.3, כחול לבן 2.1, בל\"ד 2.0) זהים; 500 משיבים תואם. בכתבה: הסקר התקיים ב-15–16 באפריל (בחבילה 17.4 — יום הפרסום).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-16-yossi-tatika-zman-yisrael",
+  "status": "mismatch",
+  "source": "https://www.zman.co.il/680631/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-16T17:01:42+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/680631/"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.zman.co.il/680631/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/680631/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "יהודים וערבים",
+   "fieldwork": "2026-04-15..2026-04-16",
+   "pollster": "יוסי טטיקה בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-04-16",
+    "to": "2026-04-15",
+    "source": "https://www.zman.co.il/680631/"
+   }
+  ],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 12 הרשימות בתרחיש 'ללא איחוד' זהים (כחול לבן 4); 500 משיבים תואם. הסקר התקיים ב-15 וב-16 באפריל (בחבילה מתחיל 16.4). תרחיש איחוד איזנקוט+בנט+לפיד לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-16-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-675e05b95f69d91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-16T21:30:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-675e05b95f69d91027.htm"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 11 הרשימות והאחוזים (הצ\"ד 2.8, המילואימניקים 2.8, כחול לבן 2, בל\"ד 1.4) זהים. מועד, מדגם ועורך לא בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-16-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": "https://www.israelhayom.co.il/news/politics/article/20343507",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "israelhayom.co.il חסום (403 ב-curl וב-WebFetch). לא נמצא דיווח עצמאי (חיפוש בעברית, סריקת אייס 16–17.4); לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-16-filber-channel-14",
+  "status": "partial",
+  "source": "https://www.ice.co.il/research/news/article/1109906",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1109906"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1109906"
+   }
+  },
+  "details": {
+   "sample_respondents": 511,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). אייס (16.4): 9 רשימות זהות, יש עתיד 2.9% וכחול לבן 1.2%, 511 נשאלים — תואם. ברשימה באייס יהדות התורה 9 וישראל ביתנו 8 (בחבילה 8 ו-9), אך הגושים באייס (ימין 65, שמאל 43) מתאימים לחבילה. דיווח יחיד וסותר — לא נרשם פער.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-10-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1307063",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-10T06:00:43+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1307063"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1307063"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1307063"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "fieldwork": "2026-04-09..2026-04-09",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-04-10",
+    "to": "2026-04-09",
+    "source": "https://www.maariv.co.il/news/politics/article-1307063"
+   },
+   {
+    "field": "end",
+    "from": "2026-04-10",
+    "to": "2026-04-09",
+    "source": "https://www.maariv.co.il/news/politics/article-1307063"
+   }
+  ],
+  "note": "מנדטי כל 11 הרשימות והאחוזים (כחול לבן 2.5, הצ\"ד 1.8, המילואימניקים 1.6, בל\"ד 1.4) זהים לטבלת Infogram; 500 משיבים תואם. בכתבה: הסקר התקיים ב-9 באפריל (בחבילה 10.4 — יום הפרסום).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-09-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/poll-election-905081030/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-09T21:00:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/poll-election-905081030/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (יצחק כץ) וסטט נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 12 הרשימות זהים (הצ\"ד 5). כחול לבן, המילואימניקים ובל\"ד מתחת לחסימה בלי אחוזים. מועד ומדגם לא בכתבה. תרחיש רשימה ערבית משותפת לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-09-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2026_q2/Article-761e60048f27d91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-09T21:14:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2026_q2/Article-761e60048f27d91027.htm"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 11 הרשימות והאחוזים (הצ\"ד 2.9, כחול לבן 1.5, בל\"ד 0.9, המילואימניקים 0.9) זהים. מועד, מדגם ועורך לא בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-09-kantar-kan-11",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1109055",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1109055"
+   }
+  },
+  "details": {
+   "pollster": "קנטאר",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il חסום (403). נבדק מול דיווח אייס (9.4 21:17): מנדטי כל 11 הרשימות והאחוזים (המילואימניקים 2.7, הצ\"ד 2.4, בל\"ד 1.8, כחול לבן 1.7) זהים. מועד ומדגם לא בדיווח.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-04-09-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1109052",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1109052"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1109052"
+   }
+  },
+  "details": {
+   "sample_respondents": 951,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). נבדק מול דיווח אייס (9.4 21:03): מנדטי כל 11 הרשימות וכחול לבן 1.8% זהים (סכום 120, תואם לגושים 65/44/11); 951 נשאלים תואם.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-31-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1304482",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-03T05:59:52+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1304482"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1304482"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1304482"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "fieldwork": "2026-03-30..2026-03-31",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "מנדטי כל 11 הרשימות זהים לטבלת Infogram; כחול לבן 1.4, המילואימניקים 1.4, בל\"ד 1.2 זהים; הצ\"ד בטבלה '2.%' (בחבילה 2.0). 30–31 במרץ ו-500 משיבים תואמים. הכתבה פורסמה 3.4.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-29-kantar-kan-11",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1107905",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1107905"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1107905"
+   }
+  },
+  "details": {
+   "sample_respondents": 553,
+   "pollster": "קנטאר (דודי חסיד)",
+   "commissioner": "כאן חדשות"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il חסום (403). נבדק מול דיווח אייס (29.3 21:41): מנדטי כל 11 הרשימות זהים; 553 נשאלים תואם. הצ\"ד וכחול לבן מתחת לחסימה בלי אחוזים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-26-yossi-tatika-zman-yisrael",
+  "status": "mismatch",
+  "source": "https://www.zman.co.il/675323/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-03-26T17:00:25+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/675323/"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.zman.co.il/675323/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/675323/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "יהודים וערבים",
+   "fieldwork": "2026-03-25..2026-03-26",
+   "pollster": "יוסי טטיקה בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-03-26",
+    "to": "2026-03-25",
+    "source": "https://www.zman.co.il/675323/"
+   }
+  ],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 11 הרשימות זהים (כחול לבן מתחת לחסימה); 500 משיבים תואם. הסקר התקיים ב-25 וב-26 במרץ (בחבילה מתחיל 26.3).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-26-lri-p4a-maariv",
+  "status": "secondary",
+  "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-891392",
+  "access": [
+   "secondary"
+  ],
+  "published": "2026-03-27T11:13:38+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-891392"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-891392"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-891392"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "fieldwork": "2026-03-25..2026-03-26",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "נבדק מול כתבת ג'רוזלם פוסט (סקר מעריב): מנדטי כל 11 הרשימות והאחוזים (הצ\"ד 2.3, כחול לבן 2.8, המילואימניקים 1.6, בל\"ד 1.3) זהים; 25–26.3 ו-500 משיבים תואמים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-26-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1107629",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1107629"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.ice.co.il/research/news/article/1107629"
+   }
+  },
+  "details": {
+   "sample_respondents": 703,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). נבדק מול דיווח אייס (26.3 21:05): מנדטי כל 11 הרשימות זהים (סכום 120, גושים 65/43/12); כחול לבן מתחת לחסימה בלי אחוז. באייס 703 נשאלים ובחבילה 754 — דיווח משני יחיד, לא נרשם פער.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-20-lri-p4a-maariv",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1106898",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1106898"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "הכתבה במעריב לא נקראה. שני דיווחים תואמים — אייס (20.3) וערוץ 7 באנגלית (https://www.israelnationalnews.com/news/424280): מנדטי כל 11 הרשימות זהים. באייס גם אחוזים שחסרים בחבילה: הצ\"ד 2.9, כחול לבן 2.9, המילואימניקים 2.0, בל\"ד 1.9. מדגם ומועד לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-19-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.zman.co.il/673201/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-03-19T17:01:59+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/673201/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/673201/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/673201/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "יהודים וערבים",
+   "fieldwork": "2026-03-18..2026-03-19",
+   "pollster": "יוסי טטיקה (טאטיקה מחקרים ומדיה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch (curl נחסם 403). מנדטי כל 12 הרשימות זהים (כחול לבן 4); 18–19.3 ו-500 משיבים תואמים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-19-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-ffb1bce75e60d91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-03-19T21:26:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-ffb1bce75e60d91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-ffb1bce75e60d91027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-ffb1bce75e60d91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 503,
+   "moe": "4.4%",
+   "fieldwork": "2026-03-19..2026-03-19",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "נקרא דרך WebFetch. מנדטי כל 11 הרשימות זהים; 19.3, 503 משיבים, 4.4% תואמים. בכתבה גם אחוזים שחסרים בחבילה: הצ\"ד 2.3, כחול לבן 1.7, המילואימניקים 1.7, בל\"ד 0.7. תרחיש רשימה ערבית משותפת לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-03-13-lri-p4a-maariv",
+  "status": "secondary",
+  "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-889852",
+  "access": [
+   "secondary"
+  ],
+  "published": "2026-03-13T11:01:16+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-889852"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/article-889852"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "נבדק מול כתבת ג'רוזלם פוסט (סקר מעריב): מנדטי כל 11 הרשימות והאחוזים (הצ\"ד 3, המילואימניקים 2.8, בל\"ד 1.4, כחול לבן 1.3; צומת 2.4 = 'אחרים') זהים; 500 משיבים תואם. מועד העבודה לא מצוין.",
+  "checkedAt": "2026-11-04"
+ }
+]
