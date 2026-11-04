@@ -854,12 +854,18 @@ def attach_verification(cycles: list[dict]) -> None:
             r = rows.get(p["id"])
             if r:
                 p["verificationStatus"], p["sourceLevel"] = r["status"], r.get("sourceLevel", "primary")
+                if r["status"] == "match" and p["sourceLevel"] != "primary":
+                    p["verificationStatus"] = "cross_checked"  # הכרעת בעלים 05.11.2026 (גם לרשומות האימות הקודמות)
                 continue
             v = pre.get(p["id"]) if p.get("preLists") else None
             if not v:
                 p["verificationStatus"], p["sourceLevel"] = "unverified", "aggregator"
                 continue
             p["verificationStatus"], p["sourceLevel"] = v["status"], v.get("sourceLevel") or "aggregator"
+            if v["status"] == "match" and p["sourceLevel"] != "primary":
+                p["verificationStatus"] = "cross_checked"  # הכרעת בעלים 05.11.2026: תואם רק במקור חלופי ⇐ "הוצלב"
+            if v["status"] == "unavailable":
+                p["verificationStatus"], p["sourceLevel"] = "unverified", "aggregator"  # נמצא רק בוויקיפדיה ⇐ "לא אומת"
             for d in (v.get("differences") or []) if v["status"] == "corrected" else []:  # רק תיקון ודאי; חלקי — תיעוד בלבד
                 key, val = d["key"], d["source"]
                 if not isinstance(val, (int, float)) or isinstance(val, bool):

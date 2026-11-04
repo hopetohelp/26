@@ -253,6 +253,28 @@
   "note": "CEC filing (Maariv/Panels Politics, 03.08 16:00-04.08 15:00, 700 respondents, ±4.2%): Likud 34, Yesh Atid 23, B&W-New Hope 11, RZ 9, Shas 8, UTJ 7, Joint List 6, Labor 5, YB 5, Meretz 4, Zionist Spirit 4, Ra'am 4. All match."
  },
  {
+  "id": "k25-2022-08-04-direct-polls-channel-14",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/573416 (now14.co.il URL returns 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (4 Aug 2022), Direct Polls for Channel 14 published Thursday evening: Likud 34, Yesh Atid 23, B&W-New Hope 12, RZ 11, Shas 9, UTJ 7, Labor 5, YB 5, Joint List 5, Ra'am 5, Meretz 4; Zionist Spirit below threshold. All seat figures match; Zionist Spirit 2.2% not stated in source."
+ },
+ {
+  "id": "k25-2022-08-04-camil-fuchs-channel-13",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.timesofisrael.com/liveblog-august-4-2022/ ; https://www.inn.co.il/news/573416 (13tv.co.il URL returns 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 701,
+  "moe": "3.7%",
+  "note": "Times of Israel liveblog and Arutz 7 (both 4 Aug 2022), Channel 13 poll by Prof. Camil Fuchs, 701 respondents, MoE 3.7%: Likud 35, Yesh Atid 21, B&W-New Hope 12, RZ 12, Shas 8, UTJ 7, Joint List 6, Labor 6, YB 5, Meretz 4, Ra'am 4; Zionist Spirit (and Israel Free) below threshold. All seat figures match; Zionist Spirit 2.8% not stated in either source."
+ },
+ {
   "id": "k25-2022-08-08-midgam-hahadashot-12",
   "status": "match",
   "sourceLevel": "primary",

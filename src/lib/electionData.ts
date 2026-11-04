@@ -64,7 +64,7 @@ const pastResults = results as unknown as ElectionResult[];
 /** מצבי הבדיקה של הסקרים הישנים (raw/forecast/verification) ⇐ מצבי הבדיקה של האתר (verificationLabel) */
 const STATUS: Record<string, NonNullable<Poll["verification"]>["status"]> = {
   match: "match", corrected: "corrected", partial: "partial", unavailable: "unreachable", inconsistent: "mismatch",
-  out_of_window: "out_of_window", not_a_poll: "not_a_poll",
+  out_of_window: "out_of_window", not_a_poll: "not_a_poll", cross_checked: "cross_checked", unverified: "unverified",
 };
 
 /** סקר מ־history.json ⇐ אותו מבנה של polls.json */
