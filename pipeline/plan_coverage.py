@@ -27,8 +27,10 @@ def load(p: Path, default=None):
 
 def poll_status() -> dict[int, collections.Counter]:
     out: dict[int, collections.Counter] = collections.defaultdict(collections.Counter)
-    for p in load(RAW / "forecast" / "polls.json", []):
-        out[p["knesset"]][p["status"]] += 1
+    # מה שהאתר מציג: מחזורי history.json (כולל סקרים שנוספו מעבר לקלט המודל ב-raw/forecast/polls.json)
+    for c in (load(DATA / "history.json", {}) or {}).get("cycles", []):
+        for p in c["polls"]:
+            out[int(c["knesset"])][p.get("verificationStatus") or "unverified"] += 1
     for p in (load(DATA / "polls.json", {}) or {}).get("polls", []):
         out[26]["match" if p.get("verified") else "unverified"] += 1
         if not p.get("urls"):
