@@ -1,4 +1,5 @@
 import localitiesFile from "../data/localities.json";
+import committeesFile from "../data/committees.json";
 import ballotLocationsFile from "../../public/ballot-locations.json";
 import { compareMethods } from "./methodComparison";
 import { PUBLIC_METRICS } from "./publicMetricResolver";
@@ -106,7 +107,8 @@ const nameMap = () => Object.fromEntries(lists2026.map((l) => [l.id, l.name]));
 export const OPEN_FILES: OpenFile[] = [
   { path: "ballot-locations.json", title: "מיקומי קלפיות", description: "מבנה וכתובת לכל קלפי בקובץ ועדת הבחירות ל־2026, וכתובות היסטוריות מ־2022; המפתח הוא סמל יישוב ומספר תת קלפי. קובצי המקור נשמרים בחומר הגלם.", methodAnchor: "voter-flow", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי מיקומים 2026 ו־2022, עותקים שמורים במאגרי בחירות פתוחים", screen: "/changes", fields: "locations {סמל יישוב:קלפי: {venue, address, center, eligible}}, locations22 {סמל יישוב:קלפי: כתובת}, provenance", build: () => ({ locations: ballotLocationsFile.locations, locations22: ballotLocationsFile.locations22, provenance: ballotLocationsFile.about }) },
   { path: "data/usage.json", title: "משתמשים וכניסות לאתר", description: "עותק מוני השימוש המצטברים משרת ההערות. הבית קורא גם את /usage החי מדי דקה. משתמשים שהתחברו לפי חשבונות (כולל אורחים) וכניסות לפי דפדפנים ייחודיים, כמו בכרטיס ״נכנסו״ בניהול, ללא פרטים אישיים.", methodAnchor: "usage", kind: "נתוני שימוש באתר", source: "מוני שרתי החשבונות וההערות — אותם מקורות כמו ממשק הניהול", screen: "/", fields: "publishedAt, totalUsers (חשבונות, כולל אורחים), totalVisitors (דפדפנים ייחודיים)", build: null, optional: true },
-  { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2022; מעטפות חיצוניות בנפרד. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים", screen: "/results", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
+  { path: "data/localities.json", title: "תוצאות מלאות לפי יישוב", description: "כל היישובים והרשימות בבחירות 2015–2026; מעטפות חיצוניות בנפרד. 2026 — סיכום קובץ הקלפיות הרשמי. קובצי המקור וסכומיהם נשמרים.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי היישובים, ול־2026 קובץ הקלפיות", screen: "/results", fields: "elections[] {id, date, lists[], rows[] {code, name, external, eligible, voted, valid, invalid, votes}, source, sha256}", build: () => localitiesFile },
+  { path: "data/committees.json", title: "תוצאות לפי ועדת בחירות אזורית", description: "סיכום קובצי הקלפיות הרשמיים לפי סמל ועדה, בכל מערכת שבה הקובץ כולל את השדה (ספטמבר 2019 ואילך); מעטפות חיצוניות בנפרד. במערכות בלי השדה — רשום שאין מקור רשמי.", methodAnchor: "results", kind: "נתון רשמי", source: "ועדת הבחירות המרכזית — קובצי התוצאות לפי קלפי", screen: "/results", fields: "elections[] {id, knesset, source, sha256, ballots, externalBallots, committees[] {code, external, ballots, localities, largest[], eligible, voted, valid, invalid, votes} | null, note}", build: () => committeesFile },
   {
     path: "data/polls.json",
     title: "סקרים",
@@ -193,7 +195,7 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/results.json",
     title: "תוצאות עבר",
-    description: "התוצאות הרשמיות של מערכות הבחירות 2015–2022 (כנסות 20–25): קולות ומנדטים לכל רשימה, ובעלי זכות בחירה, מצביעים ופסולים בכל מערכת, ובעלי זכות הבחירה ב-2026.",
+    description: "התוצאות הרשמיות של מערכות הבחירות 2013–2022 (כנסות 19–25): קולות ומנדטים לכל רשימה, ובעלי זכות בחירה, מצביעים ופסולים בכל מערכת, ובעלי זכות הבחירה ב-2026.",
     methodAnchor: "results",
     kind: "נתון רשמי",
     source: SRC_CEC,
@@ -224,7 +226,7 @@ export const OPEN_FILES: OpenFile[] = [
   {
     path: "data/accuracy.json",
     title: "דיוק הסקרים",
-    description: "סקרי ערב הבחירות (14 הימים האחרונים) בכל מערכת 2015–2022 מול התוצאה: לכל רשימה הממוצע, הטווח וההפרש; סך הפער; גוש הממליצים על נתניהו; מכונים לאורך המערכות; משפחות רשימות. וגם כל סקרי המערכות הקודמות.",
+    description: "סקרי ערב הבחירות (14 הימים האחרונים) בכל מערכת 2013–2022 מול התוצאה: לכל רשימה הממוצע, הטווח וההפרש; סך הפער; גוש הממליצים על נתניהו; מכונים לאורך המערכות; משפחות רשימות. וגם כל סקרי המערכות הקודמות.",
     methodAnchor: "accuracy",
     kind: "סיכום סקרים",
     source: "טבלאות הסקרים בוויקיפדיה האנגלית לכל מערכת (עם קישור לפרסום המקורי), והתוצאות הרשמיות של ועדת הבחירות",
@@ -426,7 +428,7 @@ export function buildIndex(mcpUrl: string | null) {
 export function buildLlmsTxt(mcpUrl: string | null): string {
   const lines: string[] = [];
   lines.push("# בחירות 2026", "");
-  lines.push(`> אתר עצמאי לבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2015–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
+  lines.push(`> אתר עצמאי לבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2013–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
   lines.push(`הנתונים נכונים ל-${meta.dataAsOf} ומתעדכנים אוטומטית כל 4 שעות (חוץ משבת: מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל אין רענון).`, "");
   lines.push("## כללים לכל מי שמשתמש בנתונים", "");
   for (const r of Object.values(RULES)) lines.push(`- ${r}`);

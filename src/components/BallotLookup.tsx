@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Segmented } from "./Choice";
 import InfoTip from "./InfoTip";
 import GraphSwitch from "./GraphSwitch";
-import { cityFlows } from "../lib/voterFlow";
+import { cityFlows, flowCtx2026, type FlowCtx } from "../lib/voterFlow";
 import BallotCards from "./BallotCards";
 import { Delta } from "./ParamCard";
 import { PartyAvatar } from "./PartyAvatar";
@@ -39,10 +39,10 @@ function Lead({ lead, narrow }: { lead: LeadParty; narrow: boolean }) {
 }
 
 /** שורה קומפקטית ליחידה ברשימה: שם, מצביעים ואחוז הצבעה ב־2026 והפער מ־2022, והמפלגה המובילה; לחיצה פותחת את כרטיסי היחידה */
-function ScopeRow({ units, scope, onOpen }: { units: BallotUnits; scope: LookupScope; onOpen: (scope: LookupScope) => void }) {
+function ScopeRow({ units, scope, onOpen, ctx }: { units: BallotUnits; scope: LookupScope; onOpen: (scope: LookupScope) => void; ctx: FlowCtx }) {
   const scopedUnits = useMemo(() => ({ ...units, places: { [scope.code]: units.places[scope.code] } }), [units, scope.code]);
-  const view = useMemo(() => ballotView(scopedUnits, { city: "", ballot: scope.ballot, sub: scope.sub }), [scopedUnits, scope.ballot, scope.sub]);
-  const lead = useMemo(() => leadParty(view), [view]);
+  const view = useMemo(() => ballotView(scopedUnits, { city: "", ballot: scope.ballot, sub: scope.sub }, ctx), [scopedUnits, scope.ballot, scope.sub, ctx]);
+  const lead = useMemo(() => leadParty(view, ctx), [view, ctx]);
   const { old, now } = view;
   const both = old.present && now.present;
   const dVoters = both ? changeOf(now.voters - old.voters, "count") : null;
@@ -67,7 +67,7 @@ function ScopeRow({ units, scope, onOpen }: { units: BallotUnits; scope: LookupS
 }
 
 /** כל הרשומות נגישות בגלילה רציפה; השורות מתווספות בהדרגה כדי לא להקפיא רשימה ארצית. */
-function ScopeList({ units, scopes, onOpen }: { units: BallotUnits; scopes: LookupScope[]; onOpen: (scope: LookupScope) => void }) {
+function ScopeList({ units, scopes, onOpen, ctx }: { units: BallotUnits; scopes: LookupScope[]; onOpen: (scope: LookupScope) => void; ctx: FlowCtx }) {
   const [visible, setVisible] = useState(24);
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -80,12 +80,14 @@ function ScopeList({ units, scopes, onOpen }: { units: BallotUnits; scopes: Look
   }, [visible, scopes.length]);
   if (!scopes.length) return <p role="status">לא נמצאו יחידות מתאימות.</p>;
   return <div className="space-y-2">
-    <ul className="space-y-2">{scopes.slice(0, visible).map((scope) => <ScopeRow key={scope.id} units={units} scope={scope} onOpen={onOpen} />)}</ul>
+    <ul className="space-y-2">{scopes.slice(0, visible).map((scope) => <ScopeRow key={scope.id} units={units} scope={scope} onOpen={onOpen} ctx={ctx} />)}</ul>
     {visible < scopes.length && <div ref={end} role="status" className="py-4 text-sm text-ink-soft">טוען המשך…</div>}
   </div>;
 }
 
-export default function BallotLookup() {
+/** ctx — המערכת (src/lib/voterFlow.ts, FlowCtx); ברירת המחדל 2026. קובץ המיקומים (כתובות) קיים רק ל־2026 */
+export default function BallotLookup({ ctx = flowCtx2026() }: { ctx?: FlowCtx } = {}) {
+  const withLocations = ctx.id === flowCtx2026().id;
   const [units, setUnits] = useState<BallotUnits | null>(null), [failed, setFailed] = useState(false);
   const [locations, setLocations] = useState<BallotLocations>();
   const [city, setCity] = useState(""), [ballot, setBallot] = useState(""), [sub, setSub] = useState("");
@@ -94,14 +96,14 @@ export default function BallotLookup() {
   const top = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${import.meta.env.BASE_URL}flow-units.json`, { signal: controller.signal })
+    fetch(`${import.meta.env.BASE_URL}${ctx.unitsPath}`, { signal: controller.signal })
       .then((r) => r.ok ? r.json() : Promise.reject(new Error("fetch"))).then(setUnits)
       .catch((e) => { if (e.name !== "AbortError") setFailed(true); });
-    fetch(`${import.meta.env.BASE_URL}ballot-locations.json`, { signal: controller.signal })
+    if (withLocations) fetch(`${import.meta.env.BASE_URL}ballot-locations.json`, { signal: controller.signal })
       .then((r) => r.ok ? r.json() : Promise.reject(new Error("fetch"))).then(setLocations)
       .catch((e) => { if (e.name !== "AbortError") setFailed(true); });
     return () => controller.abort();
-  }, []);
+  }, [ctx.unitsPath, withLocations]);
   const filter = useMemo<BallotFilter>(() => ({ city: query(city), ballot: query(ballot), sub: query(sub) }), [city, ballot, sub]);
   const hasAll = [city, ballot, sub].includes(ALL.value);
   const level: LookupLevel | null = !hasAll ? null : sub === ALL.value || filter.sub ? "sub" : ballot === ALL.value || filter.ballot ? "ballot" : "city";
@@ -112,7 +114,7 @@ export default function BallotLookup() {
   const subs = useMemo(() => subBallotOptions(places, filter.ballot, filter.sub, locations), [places, filter.ballot, filter.sub, locations]);
   const scopes = useMemo(() => units && level ? sortLookupScopes(lookupScopes(units, filter, level, locations), sort) : [], [units, locations, filter, level, sort]);
   if (failed) return <p role="status">הנתונים לא נטענו.</p>;
-  if (!units || !locations) return <p role="status" className="text-ink-soft">טוען…</p>;
+  if (!units || (withLocations && !locations)) return <p role="status" className="text-ink-soft">טוען…</p>;
 
   const here: Fields = { city, ballot, sub };
   /** כניסה ליחידה או לרשימה, ושמירת המקום הקודם לכפתור החזרה */
@@ -145,16 +147,17 @@ export default function BallotLookup() {
       {filter.city || "כל היישובים"}{ballot && ` · ${ballot === ALL.value ? "כל הקלפיות" : `קלפי ${ballot}`}`}{sub && ` · ${sub === ALL.value ? "כל תתי הקלפי" : `תת קלפי ${sub}`}`}
       {!level && selectedLocations.length === 1 && <span className="block">{selectedLocations[0].location}</span>}
     </div>
-    {level && <div className="flex items-center gap-2"><Segmented className="flex-1" label="מיון התוצאות" value={sort} onChange={setSort} options={SORTS} /><InfoTip label="מקור נתוני המיון">מספר המצביעים ואחוז ההצבעה למיון לפי נתוני 2026.</InfoTip></div>}
-    {!nothing && <div className="flex items-center gap-2"><span className="text-sm">נתוני ההשוואה</span><InfoTip label="הסבר נתוני ההשוואה">אחוז הצבעה: המצביעים מבעלי זכות הבחירה. מזכות בחירה: אחוז הקולות של המפלגה מבעלי זכות הבחירה ביחידה. מהכשרים: אחוז הקולות הכשרים, כמו בוועדת הבחירות. הפער: 2026 פחות 2022, בחץ למעלה או למטה; כשאין שינוי לא מוצג כלום. המפלגה המובילה מוצגת עם מנדטיה הארציים, ומפלגה שלא עברה — באחוז.</InfoTip></div>}
+    {level && <div className="flex items-center gap-2"><Segmented className="flex-1" label="מיון התוצאות" value={sort} onChange={setSort} options={SORTS} /><InfoTip label="מקור נתוני המיון">מספר המצביעים ואחוז ההצבעה למיון לפי נתוני {ctx.curLabel}.</InfoTip></div>}
+    {!nothing && <div className="flex items-center gap-2"><span className="text-sm">נתוני ההשוואה</span><InfoTip label="הסבר נתוני ההשוואה">אחוז הצבעה: המצביעים מבעלי זכות הבחירה. מזכות בחירה: אחוז הקולות של המפלגה מבעלי זכות הבחירה ביחידה. מהכשרים: אחוז הקולות הכשרים, כמו בוועדת הבחירות. הפער: {ctx.curLabel} פחות {ctx.prevLabel}, בחץ למעלה או למטה; כשאין שינוי לא מוצג כלום. המפלגה המובילה מוצגת עם מנדטיה הארציים, ומפלגה שלא עברה — באחוז.</InfoTip></div>}
     {nothing && <p role="status" className="rounded-theme border border-dashed border-paper-line p-6 text-center text-ink-soft">בחרו עיר, קלפי או תת קלפי.<span className="block text-sm">הנתונים הארציים של כל מפלגה מופיעים למעלה, בכרטיסי המפלגות.</span></p>}
-    {level && <ScopeList key={`${level}:${filter.city}:${filter.ballot}:${filter.sub}:${sort}`} units={units} scopes={scopes} onOpen={open} />}
+    {level && <ScopeList key={`${level}:${filter.city}:${filter.ballot}:${filter.sub}:${sort}`} units={units} scopes={scopes} onOpen={open} ctx={ctx} />}
     {unit && (() => {
-      const cards = <BallotCards units={units} filter={filter} label={[filter.city, filter.ballot && `קלפי ${filter.ballot}`, filter.sub && `תת קלפי ${filter.sub}`].filter(Boolean).join(" · ")} />;
+      const cards = <BallotCards units={units} filter={filter} ctx={ctx} label={[filter.city, filter.ballot && `קלפי ${filter.ballot}`, filter.sub && `תת קלפי ${filter.sub}`].filter(Boolean).join(" · ")} />;
       // "הצגה בגרף" — בעיר שיש לה טבלת מעבר משלה (הכרעת בעלים 30.10.2026)
       const code = !filter.ballot ? cities.find((c) => c.value === filter.city)?.id : undefined;
-      const cf = code ? cityFlows(code) : null;
-      return cf ? <GraphSwitch key={code} graph={{ T: cf.flowsTo }}>{cards}</GraphSwitch> : cards;
+      const cf = code ? cityFlows(code, ctx) : null;
+      const names = withLocations ? {} : { oldIds: ctx.file.old, newIds: ctx.file.new, oldName: ctx.oldName, newName: ctx.newName, years: [ctx.prevLabel, ctx.curLabel] as [string, string] };
+      return cf ? <GraphSwitch key={code} graph={{ T: cf.flowsTo, ...names }}>{cards}</GraphSwitch> : cards;
     })()}
   </div>;
 }

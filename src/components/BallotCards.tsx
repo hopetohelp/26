@@ -4,13 +4,15 @@ import ParamCard, { PARAM_NAMES, type ParamRow } from "./ParamCard";
 import { PartyAvatar } from "./PartyAvatar";
 import { num, pctOne } from "../lib/format";
 import { ballotView, partyParams, type BallotFilter, type BallotUnits } from "../lib/ballotLookup";
+import { flowCtx2026, type FlowCtx } from "../lib/voterFlow";
 
 /**
  * השוואת 2022 מול 2026 ליחידה אחת (עיר, קלפי או תת קלפי) בכרטיסים באותו עיצוב כמו כרטיס המפלגה (הכרעת בעלים 29.10.2026):
  * כרטיס "נתוני הצבעה" וכרטיס לכל מפלגה עם שלושה פרמטרים. מנדטים אינם קיימים ברמה הזאת.
  */
-export default function BallotCards({ units, filter, label }: { units: BallotUnits; filter: BallotFilter; label?: string }) {
-  const view = useMemo(() => ballotView(units, filter), [units, filter]);
+export default function BallotCards({ units, filter, label, ctx = flowCtx2026() }: { units: BallotUnits; filter: BallotFilter; label?: string; ctx?: FlowCtx }) {
+  const view = useMemo(() => ballotView(units, filter, ctx), [units, filter, ctx]);
+  const [y0, y1] = [ctx.prevLabel, ctx.curLabel];
   const { old, now, rows, selected } = view;
   if (!old.present && !now.present) return <p role="status">לא נמצאו קלפיות מתאימות.</p>;
   const pick = <T,>(present: boolean, v: T) => (present ? v : null);
@@ -22,12 +24,12 @@ export default function BallotCards({ units, filter, label }: { units: BallotUni
   const { status } = selected;
   return <div className="space-y-3">
     <p className="flex flex-wrap items-baseline gap-x-2 text-sm text-ink-soft">
-      <span>השוואה: <b className="text-ink">{status.label}</b>{selected.estimated && " · 2022 באומדן מותאם"}</span>
+      <span>השוואה: <b className="text-ink">{status.label}</b>{selected.estimated && ` · ${y0} באומדן מותאם`}</span>
       {status.reason.length > 35 ? <InfoTip label="הסבר רמת ההשוואה">{status.reason}</InfoTip> : status.reason && <span className="text-xs">({status.reason})</span>}
     </p>
     <section aria-label={`נתוני הצבעה ל־${label || "הסינון הנבחר"}`}>
       <h3 className="font-bold mb-1">נתוני הצבעה</h3>
-      <ParamCard rows={summary} caption="נתוני הצבעה: 2022, 2026 והפער" />
+      <ParamCard rows={summary} caption={`נתוני הצבעה: ${y0}, ${y1} והפער`} years={[y0, y1]} />
     </section>
     <div className="grid gap-3 md:grid-cols-2">
       {rows.map((r) => {
@@ -36,9 +38,9 @@ export default function BallotCards({ units, filter, label }: { units: BallotUni
         return <section key={r.id} aria-label={r.name} className="min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <PartyAvatar id={r.image} size={32} fallback={r.letters === "other" ? "…" : r.letters} />
-            <h3 className="font-bold leading-tight break-words">{r.name}{r.previousName && r.previousName !== r.name && <span className="block text-xs font-normal text-ink-soft">2022: {r.previousName}</span>}</h3>
+            <h3 className="font-bold leading-tight break-words">{r.name}{r.previousName && r.previousName !== r.name && <span className="block text-xs font-normal text-ink-soft">{y0}: {r.previousName}</span>}</h3>
           </div>
-          <ParamCard compact caption={`${r.name}: מצביעים, מזכות בחירה ומהכשרים ב־2022 וב־2026 והפער`}
+          <ParamCard compact caption={`${r.name}: מצביעים, מזכות בחירה ומהכשרים ב־${y0} וב־${y1} והפער`} years={[y0, y1]}
             rows={[pr("votes", p.votes, num, "count"), pr("ofEligible", p.ofEligible, pctOne, "pct"), pr("ofValid", p.ofValid, pctOne, "pct")]} />
         </section>;
       })}

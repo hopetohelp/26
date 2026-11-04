@@ -279,6 +279,12 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
         )))}
         {multi && act && <span aria-hidden="true" className="mk mk-dot" style={{ left: `${X(act.p.t)}%`, top: `${Y(act.p.v)}%`, borderColor: actColor, background: actColor, width: 13, height: 13 }} />}
         {resultDots && candleMode && markers.map((m, i) => <span key={`rc${i}`} aria-hidden="true" className="mk-pv absolute rounded-full box-border" style={{ background: "rgb(var(--mk-range) / .88)", border: "2px solid rgb(var(--mk-result-frame))", left: `${X(m.t)}%`, top: `${Y(m.v)}%`, height: `${Y(Math.max(0, axis.lo)) - Y(m.v)}%` }} />)}
+        {/* תווית תוצאות האמת מעל טווח הסקרים (הצעת בעלים 04.11.2026): המספר בלבד — "תוצאות אמת" כבר במקרא; מעל הגבוה מבין התוצאה וטווח הסקר האחרון */}
+        {resultDots && candleMode && markers.map((m, i) => {
+          const last = [...shown].reverse().find((p) => p.t <= m.t);
+          const top = Math.max(m.v, last?.hi ?? last?.v ?? m.v);
+          return <span key={`rl${i}`} aria-hidden="true" className="absolute -translate-x-1/2 -translate-y-full pb-1 whitespace-nowrap font-num text-xs font-extrabold leading-none text-ink" style={{ left: `${X(m.t)}%`, top: `${Y(top)}%` }}>{valueText(m.v)}</span>;
+        })}
         {resultDots && !candleMode && markers.map((m, i) => { const si = m.id !== undefined ? series.findIndex((x) => x.id === m.id) : 0; const c = candleMode ? "rgb(var(--ink))" : colors[Math.max(0, si)]; return <span key={`r${i}`} aria-hidden="true" title={`${m.label ?? "תוצאות אמת"}: ${valueText(m.v)}`} className="absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[1px]" style={{ left: `${X(m.t)}%`, top: `${Y(m.v)}%`, background: c }} />; })}
         {!resultDots && markers.filter(m => !candleMode || !shown.some(p => p.t === m.t && (!m.id || m.id === candleSeries!.id))).map((m, i) => <CapsuleMarksV showLabels={false} key={`m${i}`} left={`${X(m.t)}%`} {...(m.asMean ? { primary: { value: m.v, label: m.label ?? "" } } : { secondary: { value: m.v, label: m.label ?? "תוצאה בפועל" } })} y={Y} format={valueText} />)}
         {ends.map((e) => (

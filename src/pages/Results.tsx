@@ -4,13 +4,13 @@ import Explained from "../components/Explained";
 import { Card, Note, Split } from "../components/ui";
 import { allocate, type Agreement } from "../engine/baderOfer";
 import { results } from "../lib/data";
-import { SIMPLE_BLOCS } from "../lib/simpleSources";
-import { bloc2022 } from "../lib/voterFlow";
 import { blocSlices, Stack } from "./simple/shared";
 import { results2026 } from "../lib/guessAccuracyData";
 import { K26_RESULT } from "../lib/election2026";
 import { seatChanges } from "../engine/seatChange";
-import { ShiftLine } from "./Results2026";
+import ShiftLine from "../components/ShiftLine";
+import { blocAssignment } from "../lib/electionBlocs";
+import { K26_ID } from "../lib/election";
 import { k25Families } from "../lib/lineage";
 import { num, pct, pctOne } from "../lib/format";
 
@@ -18,16 +18,20 @@ type Election = Omit<(typeof results)[number], "lists"> & { lists: ((typeof resu
 /** כל המערכות, כולל 2026 — באותו מבנה (הכרעת בעלים 02.11.2026: מסך "תוצאות" זהה לכל מערכת) */
 const ELECTIONS: Election[] = [...results, K26_RESULT as unknown as Election];
 
+/** אחוז החסימה לפי החוק באותה מערכת (results.json: 2% ב־2013, 3.25% מאז) */
+const lawOf = (e: Election) => ({ thresholdMilli: (e as { thresholdMilli?: number }).thresholdMilli ?? 3250 });
+
 function analysis(e: Election) {
   const votes = Object.fromEntries(e.lists.map((l) => [l.letters, l.votes]));
   const ag = e.agreements.map(([a, b]) => [a, b] as Agreement);
-  const withAll = allocate(votes, e.valid, ag);
-  const none = allocate(votes, e.valid, []);
+  const law = lawOf(e);
+  const withAll = allocate(votes, e.valid, ag, law);
+  const none = allocate(votes, e.valid, [], law);
   const diff = (a: Record<string, number>, b: Record<string, number>) =>
     Object.keys(votes).map((k) => [k, (a[k] ?? 0) - (b[k] ?? 0)] as const).filter(([, d]) => d !== 0);
   const single = ag.map((pair) => {
     const rest = ag.filter((x) => x !== pair);
-    return { pair, diff: diff(withAll.seats, allocate(votes, e.valid, rest).seats) };
+    return { pair, diff: diff(withAll.seats, allocate(votes, e.valid, rest, law).seats) };
   });
   return { votes, withAll, allVsNone: diff(withAll.seats, none.seats), single };
 }
@@ -55,11 +59,12 @@ export function PastBlocs({ id }: { id: string }) {
 export default function Results({ id }: { id: string }) {
   const e = ELECTIONS.find((x) => x.id === id)!;
   // השינוי הקרוב במנדטים — לכל מערכת, מאותו מנוע (src/engine/seatChange.ts)
-  const changes = seatChanges(Object.fromEntries(e.lists.map((l) => [l.letters, l.votes])), e.valid, e.agreements.map(([x, y]) => [x, y] as Agreement));
+  const changes = seatChanges(Object.fromEntries(e.lists.map((l) => [l.letters, l.votes])), e.valid, e.agreements.map(([x, y]) => [x, y] as Agreement), lawOf(e));
   const short = (letters: string) => shortOf(e, letters);
   const a = ALL.find((x) => x.e.id === id)!.a;
   const passing = e.lists.filter((l) => l.seats > 0);
   const failed = e.lists.filter((l) => l.seats === 0).sort((x, y) => y.votes - x.votes);
+  const blocs = blocAssignment(e.id);
   return (
     <>
       <Split primary={<>
@@ -85,8 +90,8 @@ export default function Results({ id }: { id: string }) {
       </Card>
       {/* חלוקת הכנסת לגושים — הועברה ממסך "מה השתנה" (הכרעת בעלים 03.11.2026) */}
       {/* כרטיס עם גרף שורה של ארבעת הגושים; לחיצה על גוש מציגה את הרשימות שבו (הכרעת בעלים 03.11.2026). 2015–2021 — אין שיוך לגושים, נשארת המגירה */}
-      {e.id === "k26" ? <BlocBarCard defs={SIMPLE_BLOCS} values={results2026.seats} />
-        : e.knesset === 25 ? <BlocBarCard defs={SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) }))} values={Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={(x) => shortOf(e, x)} />
+      {/* לכל מערכת עם שיוך גושים (blocAssignment) — אותו כרטיס; בלי שיוך — המגירה ההיסטורית, עד שסשן ד ישלים (הכרעת בעלים 04.11.2026) */}
+      {blocs ? <BlocBarCard defs={blocs} values={e.id === K26_ID ? results2026.seats : Object.fromEntries(e.lists.map((l) => [l.letters, l.seats]))} nameOf={e.id === K26_ID ? undefined : (x) => shortOf(e, x)} />
         : <PastBlocs id={e.id} />}
       </>} secondary={<>
       <Card title="כמה קולות חסרים למנדט הבא">

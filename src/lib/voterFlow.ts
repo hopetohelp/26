@@ -3,6 +3,8 @@ import lineageFile from "../../raw/lineage.json";
 import { listName, results } from "./data";
 import { results2026 } from "./guessAccuracyData";
 import { BLOC_MEMBERS, SIMPLE_BLOCS } from "./simpleSources";
+import { blocAssignment } from "./electionBlocs";
+import { K26_ID, electionOption } from "./election";
 
 /** מעבר מצביעים 2022 ⇐ 2026 לפי השוואת קלפיות (pipeline/voter_flow.py). נקודת המקור היחידה למסך "מה השתנה". */
 /** דרגות ההצמדה (pipeline/voter_flow.py): תת קלפי מהימנה ⇐ יתרת מתחם ⇐ יישוב ⇐ ועדה ⇐ ארצי */
@@ -46,22 +48,23 @@ function rows(from: number[][], to: number[][], oldIds: string[], newIds: string
 }
 
 
-/** המעברים בין הרשימות ובין הגושים, ארצי */
-export function flowsFor() {
-  const { flows, flowsTo } = flow.national;
-  return { lists: rows(flows, flowsTo, flow.old, flow.new, oldName, newName), blocs: blocsOf(flows, flowsTo) };
+/** המעברים בין הרשימות ובין הגושים, ארצי — לכל מערכת (ctx; ברירת המחדל 2026) */
+export function flowsFor(c: FlowCtx = flowCtx2026()) {
+  const { flows, flowsTo } = c.file.national;
+  return { lists: rows(flows, flowsTo, c.file.old, c.file.new, c.oldName, c.newName), blocs: c.hasBlocs ? blocsOf(flows, flowsTo, c) : null };
 }
 
 /** המעבר בין הגושים מכל מטריצה (ארצית או של עיר) */
-export function blocsOf(from: number[][], to: number[][] = from) {
+export function blocsOf(from: number[][], to: number[][] = from, c: FlowCtx = flowCtx2026()) {
   const bloc = (id: string) => BLOC_NAMES[id];
-  return rows(blocMatrix(from), blocMatrix(to), BLOC_IDS, BLOC_IDS, bloc, bloc);
+  return rows(blocMatrix(from, c), blocMatrix(to, c), BLOC_IDS, BLOC_IDS, bloc, bloc);
 }
 
 /** גושים = סכום המעברים של הרשימות שבהם, מאותה מטריצה (BLOC_IDS × BLOC_IDS) */
-export function blocMatrix(m: number[][]) {
+export function blocMatrix(m: number[][], c?: FlowCtx) {
+  const old = c?.file.old ?? flow.old, nw = c?.file.new ?? flow.new, bo = c?.blocOld ?? bloc2022, bn = c?.blocNew ?? bloc2026;
   return BLOC_IDS.map((a) => BLOC_IDS.map((b) =>
-    m.reduce((s, row, i) => (bloc2022(flow.old[i]) === a ? s + row.reduce((t, v, j) => (bloc2026(flow.new[j]) === b ? t + v : t), 0) : s), 0)));
+    m.reduce((s, row, i) => (bo(old[i]) === a ? s + row.reduce((t, v, j) => (bn(nw[j]) === b ? t + v : t), 0) : s), 0)));
 }
 
 /** משפטי ההזמנה ליצירת פוסט — במסך "מה השתנה" ובהטמעה */
@@ -87,10 +90,11 @@ const countedOf = () => (flow as unknown as { counted?: { pct: number; time: str
 /** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, השדה counted.eligible); null = לא ידוע */
 export const eligible2026 = (): number | null => countedOf()?.eligible || null;
 
-/** "מאיפה הגיעו" בעיר — רק בעיר עם מספיק יחידות השוואה (pipeline: MIN_CITY_UNITS) */
-export function cityFlows(code: string) {
-  const c = (flow as unknown as { cities?: Record<string, { units: number; flows: number[][]; flowsTo?: number[][] }> }).cities?.[code];
-  return c ? { units: c.units, flowsTo: c.flowsTo ?? c.flows, lists: rows(c.flows, c.flowsTo ?? c.flows, flow.old, flow.new, oldName, newName) } : null;
+/** "מאיפה הגיעו" בעיר — רק בעיר עם מספיק יחידות השוואה (pipeline: MIN_CITY_UNITS); ctx — המערכת (ברירת המחדל 2026) */
+export function cityFlows(code: string, ctx?: FlowCtx) {
+  const f = ctx?.file ?? (flow as FlowFile), on = ctx?.oldName ?? oldName, nn = ctx?.newName ?? newName;
+  const c = f.cities?.[code];
+  return c ? { units: c.units, flowsTo: c.flowsTo ?? c.flows, lists: rows(c.flows, c.flowsTo ?? c.flows, f.old, f.new, on, nn) } : null;
 }
 
 /** המטריצה של המתג, מסוכמת לפי קבוצת רשימות של 2026 (מפלגה אחת או "חרדים") ⇐ מאיפה הגיעו המצביעים שלה */
@@ -214,3 +218,69 @@ export function overviewChangePct(a: Overview, b: Overview, key: keyof Overview)
   const sa = overviewShare(a, key), sb = overviewShare(b, key);
   return sa === null || sb === null ? ((b[key] - a[key]) / a[key]) * 100 : sb - sa;
 }
+
+/**
+ * מעבר המצביעים של מערכת אחת, מוכן למסך "מה השתנה" (אותו מסך לכל מערכת; הכרעת בעלים 04.11.2026).
+ * 2026 — הפונקציות הקיימות (flow2026.json, raw/results-2026.json, השיוך הוודאי); מערכת קודמת — src/data/flows/kNN.json
+ * והתוצאות הרשמיות של שתי המערכות (results.json). השדות y2022/y2026 של YearNumbers = הקודמת/הנוכחית.
+ */
+export type FlowFile = typeof flow & { knesset?: number; prev?: number; cities?: Record<string, { units: number; flows: number[][]; flowsTo?: number[][] }> };
+type Years = { y2022: YearNumbers | null; y2026: YearNumbers | null };
+export interface FlowCtx {
+  id: string; prevLabel: string; curLabel: string; file: FlowFile;
+  oldName: (letters: string) => string; newName: (id: string) => string;
+  /** השיוך לגושים בשתי המערכות; hasBlocs = יש שיוך לשתיהן (src/lib/electionBlocs.ts) */
+  blocOld: (letters: string) => string; blocNew: (id: string) => string; hasBlocs: boolean;
+  /** אותה מפלגה בשתי המערכות: מזהה חדש ⇐ אותיות קודמות */
+  same: Record<string, string>; groups: Group[];
+  partyYears: (idNew: string | null, lettersOld: string | null) => Years; blocYears: (bloc: string) => Years;
+  /** תמונת הרשימה (מזהה של partyImages; "" = האותיות) */
+  img: (idNew: string) => string; letterOf: (idNew: string) => string; always: Set<string>;
+  /** המנדטים הארציים של רשימה במערכת הנוכחית (למפלגה המובילה בחיפוש הקלפי) */
+  seatsOf: (idNew: string) => number;
+  /** קובץ התוצאות לפי קלפי של שתי המערכות (public/) לחיפוש לפי עיר או קלפי */
+  unitsPath: string;
+}
+
+let ctx26: FlowCtx | null = null;
+const LETTERS_OF_2026 = () => Object.fromEntries(Object.entries(flow.letters26).map(([letters, id]) => [id, letters]));
+export function flowCtx2026(): FlowCtx {
+  if (ctx26) return ctx26;
+  const letters = LETTERS_OF_2026();
+  ctx26 = { id: K26_ID, prevLabel: "2022", curLabel: "2026", file: flow as FlowFile, oldName, newName, blocOld: bloc2022, blocNew: bloc2026, hasBlocs: true,
+    same: SAME, groups: GROUPS, partyYears, blocYears, img: (id) => id, letterOf: (id) => letters[id] ?? "…",
+    always: new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]), seatsOf: (id) => results2026.seats?.[id] ?? 0, unitsPath: "flow-units.json" };
+  return ctx26;
+}
+
+type Res = { id: string; knesset: number; eligible: number; lists: { letters: string; short: string; votes: number; seats: number }[] };
+const yearOf = (e: Res, letters: string[]): YearNumbers | null => {
+  const ls = e.lists.filter((l) => letters.includes(l.letters));
+  if (!ls.length) return null;
+  const votes = ls.reduce((a, l) => a + l.votes, 0), valid = e.lists.reduce((a, l) => a + l.votes, 0);
+  return { votes, seats: ls.reduce((a, l) => a + l.seats, 0), ofEligible: e.eligible ? (votes / e.eligible) * 100 : null, ofValid: (votes / valid) * 100 };
+};
+/** שיוך לגוש לפי electionBlocs; רשימה בלי שיוך — אייזנקוט (כמו bloc2026); שורות מיוחדות — כמו שהן */
+const blocBy = (e: Res) => {
+  const a = blocAssignment(e.id);
+  return { has: !!a, of: (l: string) => (SPECIAL[l] ? l : a?.find((b) => (b.lists as readonly string[]).includes(l))?.id ?? "eisenkot"), lists: (bloc: string) => e.lists.filter((l) => (a?.find((b) => (b.lists as readonly string[]).includes(l.letters))?.id ?? "eisenkot") === bloc).map((l) => l.letters) };
+};
+
+/** מערכת קודמת: מהקובץ שנטען (src/lib/flowFiles.ts) ומהתוצאות הרשמיות של שתי המערכות */
+export function flowCtxFrom(file: FlowFile): FlowCtx {
+  const all = results as unknown as Res[];
+  const cur = all.find((e) => e.knesset === file.knesset)!, prev = all.find((e) => e.knesset === file.prev)!;
+  const short = (e: Res) => (l: string) => SPECIAL[l] ?? e.lists.find((x) => x.letters === l)?.short ?? l;
+  const oldN = short(prev), newN = short(cur);
+  // אותה מפלגה: אותן אותיות ואותו שם בשתי המערכות (בלי שיוך ודאי מתועד — לא מצמידים רשימות שונות)
+  const same = Object.fromEntries(file.new.filter((l) => file.old.includes(l) && oldN(l) === newN(l)).map((l) => [l, l]));
+  const bp = blocBy(prev), bc = blocBy(cur);
+  return { id: cur.id, prevLabel: electionOption(prev.id).label, curLabel: electionOption(cur.id).label, file, oldName: oldN, newName: newN,
+    blocOld: bp.of, blocNew: bc.of, hasBlocs: bp.has && bc.has, same, groups: [],
+    partyYears: (idNew, lettersOld) => ({ y2022: lettersOld ? yearOf(prev, [lettersOld]) : null, y2026: idNew ? yearOf(cur, [idNew]) : null }),
+    blocYears: (bloc) => ({ y2022: yearOf(prev, bp.lists(bloc)), y2026: yearOf(cur, bc.lists(bloc)) }),
+    img: () => "", letterOf: (l) => l, always: new Set(), seatsOf: (l) => cur.lists.find((x) => x.letters === l)?.seats ?? 0, unitsPath: `flows/${cur.id}-units.json` };
+}
+
+/** גרף הגושים של מערכת */
+export const blocGraph = (c: FlowCtx) => ({ T: blocMatrix(c.file.national.flowsTo, c), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] });

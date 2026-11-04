@@ -3,6 +3,310 @@
   "agreements": [
    [
     "אמת",
+    "פה"
+   ],
+   [
+    "מחל",
+    "טב"
+   ],
+   [
+    "ו",
+    "ד"
+   ],
+   [
+    "ג",
+    "שס"
+   ],
+   [
+    "כן",
+    "ץ"
+   ],
+   [
+    "צפ",
+    "מרץ"
+   ]
+  ],
+  "blocs": {
+   "arab": [
+    "עם",
+    "ו",
+    "ד"
+   ],
+   "eisenkot": [
+    "אמת",
+    "צפ",
+    "מרץ"
+   ],
+   "haredi": [
+    "שס",
+    "ג"
+   ],
+   "netanyahu": [
+    "מחל",
+    "פה",
+    "טב",
+    "כן"
+   ]
+  },
+  "date": "2013-01-22",
+  "eligible": 5656705,
+  "id": "k19",
+  "invalid": 40904,
+  "knesset": 19,
+  "label": "ינואר 2013",
+  "lists": [
+   {
+    "letters": "מחל",
+    "name": "הליכוד ביתנו",
+    "seats": 31,
+    "short": "הליכוד ביתנו",
+    "votes": 885163
+   },
+   {
+    "letters": "פה",
+    "name": "יש עתיד",
+    "seats": 19,
+    "short": "יש עתיד",
+    "votes": 543458
+   },
+   {
+    "letters": "אמת",
+    "name": "העבודה",
+    "seats": 15,
+    "short": "העבודה",
+    "votes": 432118
+   },
+   {
+    "letters": "טב",
+    "name": "הבית היהודי",
+    "seats": 12,
+    "short": "הבית היהודי",
+    "votes": 345985
+   },
+   {
+    "letters": "שס",
+    "name": "ש\"ס",
+    "seats": 11,
+    "short": "ש\"ס",
+    "votes": 331868
+   },
+   {
+    "letters": "ג",
+    "name": "יהדות התורה",
+    "seats": 7,
+    "short": "יהדות התורה",
+    "votes": 195892
+   },
+   {
+    "letters": "צפ",
+    "name": "התנועה",
+    "seats": 6,
+    "short": "התנועה",
+    "votes": 189167
+   },
+   {
+    "letters": "מרץ",
+    "name": "מרצ",
+    "seats": 6,
+    "short": "מרצ",
+    "votes": 172403
+   },
+   {
+    "letters": "עם",
+    "name": "רע\"מ-תע\"ל",
+    "seats": 4,
+    "short": "רע\"מ-תע\"ל",
+    "votes": 138450
+   },
+   {
+    "letters": "ו",
+    "name": "חד\"ש",
+    "seats": 4,
+    "short": "חד\"ש",
+    "votes": 113439
+   },
+   {
+    "letters": "ד",
+    "name": "בל\"ד",
+    "seats": 3,
+    "short": "בל\"ד",
+    "votes": 97030
+   },
+   {
+    "letters": "כן",
+    "name": "קדימה",
+    "seats": 2,
+    "short": "קדימה",
+    "votes": 78974
+   },
+   {
+    "letters": "נץ",
+    "name": "עוצמה לישראל",
+    "seats": 0,
+    "short": "עוצמה לישראל",
+    "votes": 66775
+   },
+   {
+    "letters": "ץ",
+    "name": "עם שלם",
+    "seats": 0,
+    "short": "עם שלם",
+    "votes": 45690
+   },
+   {
+    "letters": "קנ",
+    "name": "עלה ירוק",
+    "seats": 0,
+    "short": "עלה ירוק",
+    "votes": 43734
+   },
+   {
+    "letters": "ז",
+    "name": "ארץ חדשה",
+    "seats": 0,
+    "short": "ארץ חדשה",
+    "votes": 28080
+   },
+   {
+    "letters": "פז",
+    "name": "כוח להשפיע",
+    "seats": 0,
+    "short": "כוח להשפיע",
+    "votes": 28049
+   },
+   {
+    "letters": "יק",
+    "name": "הישראלים",
+    "seats": 0,
+    "short": "הישראלים",
+    "votes": 18939
+   },
+   {
+    "letters": "רק",
+    "name": "הירוקים",
+    "seats": 0,
+    "short": "הירוקים",
+    "votes": 8117
+   },
+   {
+    "letters": "זך",
+    "name": "דור בוני הארץ",
+    "seats": 0,
+    "short": "דור בוני הארץ",
+    "votes": 5975
+   },
+   {
+    "letters": "הפ",
+    "name": "חיים בכבוד",
+    "seats": 0,
+    "short": "חיים בכבוד",
+    "votes": 3640
+   },
+   {
+    "letters": "ק",
+    "name": "דעם",
+    "seats": 0,
+    "short": "דעם",
+    "votes": 3546
+   },
+   {
+    "letters": "פנ",
+    "name": "אחים אנחנו",
+    "seats": 0,
+    "short": "אחים אנחנו",
+    "votes": 2899
+   },
+   {
+    "letters": "צק",
+    "name": "צדק חברתי",
+    "seats": 0,
+    "short": "צדק חברתי",
+    "votes": 2877
+   },
+   {
+    "letters": "פץ",
+    "name": "כולנו חברים",
+    "seats": 0,
+    "short": "כולנו חברים",
+    "votes": 2176
+   },
+   {
+    "letters": "פ",
+    "name": "הפיראטים",
+    "seats": 0,
+    "short": "הפיראטים",
+    "votes": 2076
+   },
+   {
+    "letters": "פי",
+    "name": "מפלגת כלכלה",
+    "seats": 0,
+    "short": "מפלגת כלכלה",
+    "votes": 1972
+   },
+   {
+    "letters": "נק",
+    "name": "מתקדמת ליברלית דמוקרטית",
+    "seats": 0,
+    "short": "מתקדמת ליברלית דמוקרטית",
+    "votes": 1352
+   },
+   {
+    "letters": "ני",
+    "name": "אור",
+    "seats": 0,
+    "short": "אור",
+    "votes": 1027
+   },
+   {
+    "letters": "נ",
+    "name": "ברית עולם",
+    "seats": 0,
+    "short": "ברית עולם",
+    "votes": 761
+   },
+   {
+    "letters": "הק",
+    "name": "התקווה לשינוי",
+    "seats": 0,
+    "short": "התקווה לשינוי",
+    "votes": 649
+   },
+   {
+    "letters": "הי",
+    "name": "מורשת אבות",
+    "seats": 0,
+    "short": "מורשת אבות",
+    "votes": 461
+   }
+  ],
+  "previous": {
+   "belowThreshold": 103904,
+   "date": "2009-02-10",
+   "eligible": 5278985,
+   "full": "פברואר 2009",
+   "invalid": 43097,
+   "knesset": 18,
+   "label": "2009",
+   "sha256": "c7682265581b25d1ca24f74fc633911f53211e27e1f23f8a8da449fb542d1169",
+   "source": "https://data.gov.il/dataset/votes-knesset (משאב 840edb33-90ac-4176-8ad9-4cdcb8e5caa5)",
+   "thresholdMilli": 2000,
+   "valid": 3373490,
+   "voted": 3416587
+  },
+  "source": {
+   "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-19, פרק הסכמי עודפים",
+   "sha256": "a4e8d7d0dada7e0cded47bde85da7f3cd60072564bc1e019c8e7791b26e48c0c",
+   "url": "https://data.gov.il/he/datasets/central-election-committee/votes-knesset/"
+  },
+  "thresholdMilli": 2000,
+  "valid": 3792742,
+  "voted": 3833646
+ },
+ {
+  "agreements": [
+   [
+    "אמת",
     "מרצ"
    ],
    [
@@ -18,6 +322,26 @@
     "כ"
    ]
   ],
+  "blocs": {
+   "arab": [
+    "ודעם"
+   ],
+   "eisenkot": [
+    "אמת",
+    "פה",
+    "מרצ"
+   ],
+   "haredi": [
+    "שס",
+    "ג"
+   ],
+   "netanyahu": [
+    "מחל",
+    "כ",
+    "טב",
+    "ל"
+   ]
+  },
   "date": "2015-03-17",
   "eligible": 5881696,
   "id": "k20",
@@ -206,6 +530,7 @@
    "sha256": "52c7d113e95ab501ccb2edb6a5e49978c8eb8e25ccf4ed17b51bf353276fd28e",
    "url": "https://data.gov.il/he/datasets/central-election-committee/votes-knesset/"
   },
+  "thresholdMilli": 3250,
   "valid": 4210884,
   "voted": 4254738
  },
@@ -232,6 +557,27 @@
     "ג"
    ]
   ],
+  "blocs": {
+   "arab": [
+    "ום",
+    "דעם"
+   ],
+   "eisenkot": [
+    "פה",
+    "אמת",
+    "מרצ"
+   ],
+   "haredi": [
+    "שס",
+    "ג"
+   ],
+   "netanyahu": [
+    "מחל",
+    "ל",
+    "טב",
+    "כ"
+   ]
+  },
   "date": "2019-04-09",
   "eligible": 6339729,
   "id": "k21",
@@ -546,6 +892,7 @@
    "sha256": "b67688faca4fb74588b673f4c75aa148cd702112b01309a990e034b26d0ba02b",
    "url": "https://votes21.bechirot.gov.il/nationalresults"
   },
+  "thresholdMilli": 3250,
   "valid": 4309270,
   "voted": 4340253
  },
@@ -568,6 +915,25 @@
     "שס"
    ]
   ],
+  "blocs": {
+   "arab": [
+    "ודעם"
+   ],
+   "eisenkot": [
+    "פה",
+    "ל",
+    "אמת",
+    "מרצ"
+   ],
+   "haredi": [
+    "שס",
+    "ג"
+   ],
+   "netanyahu": [
+    "מחל",
+    "טב"
+   ]
+  },
   "date": "2019-09-17",
   "eligible": 6394030,
   "id": "k22",
@@ -805,6 +1171,7 @@
    "sha256": "369c635c788210a1507aba2bd80437a9ed36714c83950a1eb00c53c475ada5c7",
    "url": "https://votes22.bechirot.gov.il/nationalresults"
   },
+  "thresholdMilli": 3250,
   "valid": 4436806,
   "voted": 4465168
  },
@@ -823,6 +1190,24 @@
     "שס"
    ]
   ],
+  "blocs": {
+   "arab": [
+    "ודעם"
+   ],
+   "eisenkot": [
+    "פה",
+    "אמת",
+    "ל"
+   ],
+   "haredi": [
+    "שס",
+    "ג"
+   ],
+   "netanyahu": [
+    "מחל",
+    "טב"
+   ]
+  },
   "date": "2020-03-02",
   "eligible": 6453255,
   "id": "k23",
@@ -1046,6 +1431,7 @@
    "sha256": "d4ad7c1167d142f94af4301f824a50e691fdddab3bbef9ac73c95b295636da60",
    "url": "https://votes23.bechirot.gov.il/nationalresults"
   },
+  "thresholdMilli": 3250,
   "valid": 4590062,
   "voted": 4615135
  },
@@ -1076,6 +1462,29 @@
     "ג"
    ]
   ],
+  "blocs": {
+   "arab": [
+    "ודעם",
+    "עם"
+   ],
+   "eisenkot": [
+    "פה",
+    "כן",
+    "ב",
+    "אמת",
+    "ל",
+    "ת",
+    "מרצ"
+   ],
+   "haredi": [
+    "שס",
+    "ג"
+   ],
+   "netanyahu": [
+    "מחל",
+    "ט"
+   ]
+  },
   "date": "2021-03-23",
   "eligible": 6578084,
   "id": "k24",
@@ -1362,6 +1771,7 @@
    "sha256": "948d4d40701c0c39cd0a942d598133b7ea21cb07ccd8e111eec47be65bc56283",
    "url": "https://votes24.bechirot.gov.il/nationalresults"
   },
+  "thresholdMilli": 3250,
   "valid": 4410052,
   "voted": 4436365
  },
@@ -1677,6 +2087,7 @@
    "sha256": "7c69c1b2137a171f0e07b6ee99511dbae5252bdeb103ade8ffd2829a18803759",
    "url": "https://votes25.bechirot.gov.il/nationalresults"
   },
+  "thresholdMilli": 3250,
   "valid": 4764742,
   "voted": 4794593
  }
