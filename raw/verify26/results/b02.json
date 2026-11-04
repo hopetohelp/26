@@ -167,7 +167,8 @@
   "diffs": [],
   "note": "תרחיש 'מפלגת וינטר מתמודדת' באותו סקר. בדיווח בסרוגים מפורשים רק: ישר! 24, הליכוד 21, ביחד 16, וינטר 4, הציונות הדתית 2.4% — זהים לחבילה; גושים אופוזיציה 60 / קואליציה 49 תואמים. שאר הרשימות לא פורטו.",
   "checkedAt": "2026-11-04",
-  "foundUrl": "https://www.srugim.co.il/101009375"
+  "foundUrl": "https://www.srugim.co.il/101009375",
+  "scenarioOf": "2026-08-24-midgam-r-c-hahadashot-12"
  },
  {
   "id": "2026-08-24-midgam-r-c-hahadashot-12",
@@ -398,6 +399,60 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-08-19-maagar-mochot-channel-16",
+  "status": "match",
+  "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf",
+  "access": [
+   "official"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   }
+  },
+  "details": {
+   "sample_respondents": 551,
+   "asked_to_participate": 893,
+   "moe": "4.2%",
+   "population": "האוכלוסייה הישראלית הבוגרת גילי 18 ומעלה",
+   "method": "משולב: פאנל אינטרנטי ועיבוי טלפוני",
+   "fieldwork": "2026-08-18..2026-08-19",
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "ערוץ 16"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": true,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2026-08-19",
+    "to": "2026-08-18",
+    "source": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+   }
+  ],
+  "note": "דוח לוועדה (סעיף 16ה), מסמך מ-19/08/2026. כל 11 הרשימות שעברו זהות. ימי השטח בדוח 18–19.8.26 (בחבילה מתחיל 19.8). אחוזי הרשימות מתחת לחסימה בדוח (כחול לבן 1.2, בל\"ד 3, הבית הציוני 3, ארדן 2, זהות 1.7, זליכה 0.8) אינם בחבילה — לא נרשם פער באחוזים.",
+  "checkedAt": "2026-11-04",
+  "foundUrl": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/knesset_election28/he/4089-%D7%A1%D7%A7%D7%A8%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%AA%20%D7%9E%D7%99%D7%95%D7%9D%2023.8.2026.pdf"
+ },
+ {
   "id": "2026-08-18-sf-nd-channel-14",
   "status": "secondary",
   "source": "https://www.srugim.co.il/101008933",
@@ -530,7 +585,8 @@
    }
   ],
   "note": "זו גרסת התרחיש 'מפלגה בראשות עופר וינטר' מאותו סקר (amcha=מפלגת וינטר 2.5%). כל המנדטים זהים; האחוזים מתחת לחסימה מוחלפים: בפרסום בית ציוני המילואימניקים 1.1% והאחדות 1.5% (בחבילה הפוך).",
-  "checkedAt": "2026-11-04"
+  "checkedAt": "2026-11-04",
+  "scenarioOf": "2026-08-17-midgam-r-c-hahadashot-12"
  },
  {
   "id": "2026-08-17-midgam-r-c-hahadashot-12",

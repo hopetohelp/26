@@ -897,5 +897,109 @@
   "diffs": [],
   "note": "רק דיווח עצמאי אחד: חרדים 10 בדיווח על סקר כאן 16.6 מציג בסוגריים את תוצאות \"הסקר הקודם מ-4 ביוני\" — כל 11 הרשימות זהות. אתר כאן חוסם (403), עותק הארכיון של הארץ לא נגיש. אחוזים מתחת לחסימה, מדגם (551) ומועד לא אומתו.",
   "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-06-25-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": "",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "ישראל היום"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ישראל היום (עברית ואנגלית) חוסם 403; לא נמצא דיווח עצמאי עם המפה (ערוץ 7 באנגלית, חרדים 10 וחיפושים). אין דוח 16ה לוועדה — הדוחות בגוב.il מתחילים באוגוסט 2026.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-06-25-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-af744e64",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-06-25T20:18:28+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-af744e64"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-af744e64"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://api.i24news.tv/v2/he/contents/artc-af744e64"
+   }
+  },
+  "details": {
+   "sample_respondents": 530,
+   "moe": "4.2%",
+   "population": "בוגרים 18+, מדגם מייצג של האוכלוסייה הכללית",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2026-06-25..2026-06-25",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "הכתבה המקורית ב-i24NEWS (נקראה דרך ממשק התוכן הציבורי של האתר): כל 11 הרשימות זהות, מדגם 530 ומועד 25.6 זהים. האחוזים מתחת לחסימה ו'אחרים' (3.8) לא פורטו. תרחיש פיצול נתניהו בכתבה לא הושווה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-06-05-sf-nd-channel-14",
+  "status": "partial",
+  "source": "https://ch10.co.il/en/news/1078308/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/en/news/1078308/"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר + NEXT DATA",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "לא נמצא דיווח ישיר על הסקר (ערוץ 14 חוסם 403). הדיווח על סקר ערוץ 14 מ-11.6 (חרדים 10) מציין את ערכי 'הסקר הקודם': ליכוד 32, ישר 16, ביחד 14, ש\"ס 10, עוצמה 9, הדמוקרטים 9, ישראל ביתנו 8, יהדות התורה 7 — 8 רשימות זהות; חד\"ש-תע\"ל, רע\"ם, הצ\"ד והאחוזים לא אומתו. גם תאריך 5.6 לא אומת.",
+  "checkedAt": "2026-11-04"
  }
 ]
