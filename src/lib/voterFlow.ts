@@ -56,9 +56,12 @@ export function flowsFor(c: FlowCtx = flowCtx2026()) {
 
 /** המעבר בין הגושים מכל מטריצה (ארצית או של עיר) */
 export function blocsOf(from: number[][], to: number[][] = from, c: FlowCtx = flowCtx2026()) {
-  const bloc = (id: string) => BLOC_NAMES[id];
-  return rows(blocMatrix(from, c), blocMatrix(to, c), BLOC_IDS, BLOC_IDS, bloc, bloc);
+  return rows(blocMatrix(from, c), blocMatrix(to, c), BLOC_IDS, BLOC_IDS, blocNameIn(prevIdOf(c)), blocNameIn(c.id));
 }
+
+/** שם הגוש באותה מערכת — על שם ראש הרשימה הגדולה בגוש (electionBlocs, הכרעת בעלים 04.11.2026); שורות מיוחדות — כמו שהן */
+export const blocNameIn = (electionId: string) => (id: string) => blocAssignment(electionId)?.find((b) => b.id === id)?.name ?? BLOC_NAMES[id];
+const prevIdOf = (c: FlowCtx) => c.id === K26_ID ? "k25" : (results as unknown as { id: string; knesset: number }[]).find((e) => e.knesset === c.file.prev)?.id ?? "";
 
 /** גושים = סכום המעברים של הרשימות שבהם, מאותה מטריצה (BLOC_IDS × BLOC_IDS) */
 export function blocMatrix(m: number[][], c?: FlowCtx) {
@@ -76,7 +79,7 @@ export const FLOW_SHARE_MESSAGES = [
 export const FLOW_SHARE_CTA = "לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!";
 
 /** גרף הגושים — מאותה מטריצה ארצית; משמש את מסך "מה השתנה" ואת הטמעת הגרפים */
-export const BLOC_GRAPH = { T: blocMatrix(flow.national.flowsTo), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] };
+export const BLOC_GRAPH = { T: blocMatrix(flow.national.flowsTo), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: blocNameIn("k25"), newName: blocNameIn(K26_ID) };
 
 /** חלק הקולות הכשרים שנספרו ב-2026 שנכנסו לחישוב, בכל דרגה ובסך הכול */
 export function coverage() {
@@ -283,4 +286,4 @@ export function flowCtxFrom(file: FlowFile): FlowCtx {
 }
 
 /** גרף הגושים של מערכת */
-export const blocGraph = (c: FlowCtx) => ({ T: blocMatrix(c.file.national.flowsTo, c), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: (id: string) => BLOC_NAMES[id], newName: (id: string) => BLOC_NAMES[id] });
+export const blocGraph = (c: FlowCtx) => ({ T: blocMatrix(c.file.national.flowsTo, c), oldIds: BLOC_IDS, newIds: BLOC_IDS, oldName: blocNameIn(prevIdOf(c)), newName: blocNameIn(c.id) });
