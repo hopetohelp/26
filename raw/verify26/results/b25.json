@@ -1,0 +1,641 @@
+[
+ {
+  "id": "2024-01-18-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1069268",
+  "access": [
+   "primary"
+  ],
+  "published": "2024-01-19T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1069268"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1069268"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1069268"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 512,
+   "moe": "4.3%",
+   "fieldwork": "2024-01-17..2024-01-18"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים (בל\"ד 1.8%, העבודה 1.4%) תואמים לטקסט הכתבה במעריב (סכום 120); שדה 17–18 בינואר, 512 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2024-01-11-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://e.infogram.com/_/Li442qxbfrVfcTd6ggeT",
+  "access": [
+   "primary"
+  ],
+  "published": "2024-01-12T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://e.infogram.com/_/Li442qxbfrVfcTd6ggeT"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1067289"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1067289"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 515,
+   "moe": "4.3%",
+   "fieldwork": "2024-01-10..2024-01-11"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "המנדטים תואמים לתרשים infogram המוטמע בכתבה (\"סקר מנדטים 11.1.24\", סכום 120); הכתבה עצמה מציינת שדה 10–11 בינואר, 515 משיבים. אחוזי העבודה/בל\"ד בתרשים משובשים ואינם בנתונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2024-01-04-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://e.infogram.com/_/uvbPEGlkyCjqMZVHOgno",
+  "access": [
+   "primary"
+  ],
+  "published": "2024-01-05T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://e.infogram.com/_/uvbPEGlkyCjqMZVHOgno"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1065435"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1065435"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 519,
+   "moe": "4.3%",
+   "fieldwork": "2024-01-03..2024-01-04"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "המנדטים והאחוזים תואמים לתרשים infogram בכתבה (\"סקר מנדטים 4.1.24\", סכום 120) ולטקסט (הליכוד 19, קואליציה 46); שדה 3–4 בינואר, 519 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-12-28-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://e.infogram.com/_/Pd3EYdkTz1DzSigkL3Be",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-12-29T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://e.infogram.com/_/Pd3EYdkTz1DzSigkL3Be"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "המנדטים והאחוזים תואמים לתרשים infogram בכתבה (\"סקר מנדטים 28.12.23\", סכום 120) ולטקסט (קואליציה 44, אופוזיציה 71). גוף הכתבה לא נטען במלואו — מועדי השדה וגודל המדגם לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-12-21-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1061726",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-12-22T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1061726"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1061726"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1061726"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 502,
+   "moe": "4.3%",
+   "fieldwork": "2023-12-20..2023-12-21"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120); שדה 20–21 בדצמבר, 502 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-12-14-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1059892",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-12-15T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1059892"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1059892"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1059892"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 510,
+   "moe": "4.3%",
+   "fieldwork": "2023-12-13..2023-12-14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120); שדה 13–14 בדצמבר, 510 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-12-07-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://images.maariv.co.il/image/upload/880944",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-12-08T06:00:46+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://images.maariv.co.il/image/upload/880944"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "המנדטים והאחוזים (העבודה 1.4%, בל\"ד 1.4%) תואמים לתמונת התרשים בכתבה (\"סקר מנדטים 8.12.23\", סכום 120) ולמספרי \"הסקר הקודם\" בכתבת 15.12. גוף הכתבה לא נטען — מועדי שדה ומדגם לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-12-01-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1056342",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-12-01T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1056342"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1056342"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 603,
+   "moe": "3.7%"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120); 603 משיבים, טעות 3.7%. מועדי השדה אינם מצוינים בכתבה (תרשים כתבת 8.12 מתארך את הסקר הקודם 30/11/23), לכן לא נבדקו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-11-23-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1054587",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-11-24T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1054587"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1054587"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 500,
+   "moe": "4.3%"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120). הכתבה כותבת \"נערך בין 15–16 בנובמבר\" ו-500 משיבים — זהה לסקר הקודם ונראה כהעתקה שגויה (הכתבה מציינת שנערך אחרי אישור עסקת החטופים, 22.11); לא נרשם פער תאריכים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-11-16-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1052890",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-11-17T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1052890"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1052890"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1052890"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 500,
+   "moe": "4.3%",
+   "fieldwork": "2023-11-15..2023-11-16"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120); 500 משיבים. בכתבה נכתב \"15–16 באוקטובר\" — טעות דפוס ברורה לנובמבר.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-11-09-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1051161",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-11-10T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1051161"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1051161"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1051161"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 515,
+   "moe": "4.3%",
+   "fieldwork": "2023-11-08..2023-11-09"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120); שדה 8–9 בנובמבר, 515 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-11-02-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/Article-1049515",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-11-03T06:00:45+02:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/Article-1049515"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1049515"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1049515"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 515,
+   "moe": "4.3%",
+   "fieldwork": "2023-11-01..2023-11-02"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "values.labor.p",
+    "from": 1.4,
+    "to": 1.3,
+    "source": "https://www.maariv.co.il/news/politics/Article-1049515"
+   }
+  ],
+  "note": "כל המנדטים תואמים לטקסט הכתבה (סכום 120); פער באחוז העבודה: בכתבה 1.3% (בנתונים 1.4%). בל\"ד 1% תואם. שדה 1–2 בנובמבר, 515 משיבים. בכתבה גם תרחיש בנט (לא בחבילה).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-10-26-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://e.infogram.com/3634e180-1923-4816-b0d8-a7caaab1a4c7",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-10-27T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://e.infogram.com/3634e180-1923-4816-b0d8-a7caaab1a4c7"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1047872"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1047872"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 522,
+   "moe": "4.3%",
+   "fieldwork": "2023-10-25..2023-10-26"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "המנדטים והאחוזים תואמים לתרשים infogram בכתבה (\"סקר מנדטים 26.10.23\", סכום 120) ולטקסט; שדה 25–26 באוקטובר, 522 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-10-19-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://e.infogram.com/684d73f4-8660-495b-9d2c-e727c22521a7",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-10-20T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://e.infogram.com/684d73f4-8660-495b-9d2c-e727c22521a7"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "המנדטים והאחוזים (העבודה 2%, בל\"ד 1.8%) תואמים לתרשים infogram בכתבה (\"סקר מנדטים 19.10.23\", סכום 120). שורת מועדי השדה/מדגם לא נמצאה בגוף הכתבה שנטען.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-10-12-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1044603",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-10-13T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1044603"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1044603"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1044603"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "sample_respondents": 600,
+   "moe": "4%",
+   "fieldwork": "2023-10-11..2023-10-12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים תואמים לטקסט הכתבה (סכום 120); שדה 11–12 באוקטובר, 600 משיבים, טעות 4%.",
+  "checkedAt": "2026-11-04"
+ }
+]
