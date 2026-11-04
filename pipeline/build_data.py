@@ -726,6 +726,10 @@ def build_history(results: list[dict]) -> dict:
             "source": {"page": cfg["page"].replace("en__", "").replace(".wiki", "").replace("_", " "),
                        "sha256": sha256(path), "tableLine": text[:pos].count("\n") + 1},
         })
+    from exit_polls import load as load_exit_polls  # מדגמי ליל הבחירות (raw/exit-polls-history.json)
+    exits = load_exit_polls(results)
+    for c in cycles:
+        c["exitPolls"] = exits.get(c["knesset"], [])
     return {"cycles": cycles}
 
 # ---------------------------------------------------------------- המודל ותרחישי יום הבחירות
