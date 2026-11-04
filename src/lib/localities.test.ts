@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest';
 import data from '../data/localities.json';
 import results from '../data/results.json';
+import results2026 from '../../raw/results-2026.json';
 import { queryLocalities, localityCsv, type LocalityElection } from './localities';
 import history from '../data/history.json';
 import { lastPollErrors, type Cycle } from './history';
@@ -11,13 +12,21 @@ it('2015 נשענת על התוצאה הרשמית העצמאית', () => {
 });
 it('כל קולות היישובים תואמים לתוצאה הארצית בכל מערכת', () => {
   for (const e of data.elections as LocalityElection[]) {
-    const national = results.find(r => r.id === e.id)!;
+    // 2026: התוצאה הארצית ב-raw/results-2026.json (לפי מזהה רשימה) — נבדקת בבנייה (pipeline/ballots.py)
+    const national = results.find(r => r.id === e.id) ?? { lists: [] };
     for (const l of national.lists) expect(e.rows.reduce((a, r) => a + (r.votes[l.letters] ?? 0), 0)).toBe(l.votes);
     expect(e.rows.some(r => r.external && r.name === 'מעטפות חיצוניות')).toBe(true);
     expect(queryLocalities(e, 'ירושלים').rows.some(r => r.name === 'ירושלים')).toBe(true);
     expect(queryLocalities(e, '', 0, 1000).rows).toHaveLength(100);
     expect(localityCsv(e).split('\r\n')).toHaveLength(e.rows.length + 1);
   }
+});
+it('2026 מקובץ הקלפיות: הכשרים ובעלי הזכות כמו בתוצאה הרשמית, והמעטפות החיצוניות בנפרד', () => {
+  const e = (data.elections as LocalityElection[]).find(e => e.id === 'k26')!;
+  expect(e.rows.reduce((a, r) => a + r.valid, 0)).toBe(results2026.valid);
+  expect(e.rows.reduce((a, r) => a + (r.votes['מחל'] ?? 0), 0)).toBe(results2026.votes.likud);
+  expect(e.eligibleInLocalityFile).toBe(7331981);
+  expect(e.rows.filter(r => r.external)).toHaveLength(1);
 });
 it('הטעות הגדולה בפרסום חדשות 2 האחרון ב-2015: הליכוד 22 מול 30, כלומר 6⅔ נקודות אחוז', () => {
   const c = history.cycles.find(c => c.id === 'k20') as Cycle;

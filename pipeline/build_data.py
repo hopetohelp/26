@@ -852,7 +852,12 @@ def main() -> None:
     build_time = datetime.fromisoformat(env_time) if env_time else datetime.now(ISRAEL_TZ).replace(microsecond=0)
     results = build_results()
     from historical_data import build_localities
-    (OUT / "localities.json").write_text(json.dumps(build_localities(results, sha256), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    localities = build_localities(results, sha256)
+    # 2026 ו"לפי ועדה": מקובצי הקלפיות הרשמיים, עם בדיקת הסכום מול התוצאה הארצית (pipeline/ballots.py)
+    import ballots
+    localities["elections"].append(ballots.localities_2026(sha256, LISTS_2026, build_registry(results)["k26"]["eligible"]))
+    (OUT / "localities.json").write_text(json.dumps(localities, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    (OUT / "committees.json").write_text(json.dumps(ballots.committees(results, sha256), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     polls = build_polls(build_time)
     registry = build_registry(results)
     apply_corrections(polls["polls"], build_time)
