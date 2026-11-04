@@ -9,7 +9,7 @@ import { K26_ID, SUMMARY_ID, electionOption, previousElection, useElection } fro
 import { overviewOf } from "../lib/voterFlow";
 import { useScreenShown } from "../lib/screenVisibility";
 import Results, { ElectionSummary } from "./Results";
-import Accuracy, { AccuracyAcross } from "./Accuracy";
+import { AccuracyAcross } from "./Accuracy";
 import Voters from "./Voters";
 
 /**
@@ -64,8 +64,12 @@ export function ChangesScreen() {
   return <PastChanges id={id} />;
 }
 
-/** "סקרים" של 2026: אחרונים, הסקרים מול התוצאה, ומגירות "מגמות" ו"ארכיון" (הכרעת בעלים 02.11.2026: שלושה מסכים) */
-function Polls2026() {
+/**
+ * "סקרים" — אותו מסך לכל מערכת, כולל 2026 (הכרעת בעלים 04.11.2026: "המסך אותו מסך של הגרסה המעודכנת של 26, השינוי רק הנתונים").
+ * תוכן "סקרים" הישן של 2015–2022 (מול התוצאה, הסקר האחרון של כל מכון, לאורך המערכה, כל הסקרים מהמערכה) עבר לטבלאות הארכיון,
+ * לתגיות הדיוק ולמגירת "מגמות" — כמו שהוכרע ל־2026 ב־03.11.2026; ההשוואה בין המערכות — ב"סיכום".
+ */
+function PollsOf({ id }: { id: string }) {
   const overview = useScreenShown("overview"), today = useScreenShown("today");
   // קישור ישן ללשונית (?tab=trends / archive / overview / today) פותח את המגירה שלה
   const tab = new URLSearchParams(useLocation().search).get("tab");
@@ -74,8 +78,8 @@ function Polls2026() {
     {/* "הסקרים מול התוצאה" ומפת המכונים הוסרו — הנתונים בטבלאות הארכיון (הכרעת בעלים 03.11.2026) */}
     {/* מגירת "הסקר האחרון של כל מכון" הוסרה (הכרעת בעלים 03.11.2026) — הנתונים בטבלאות הארכיון */}
     {/* "כל הסקרים": מסננים ומגירות, ובסוף מגירת "מגמות" (הכרעת בעלים 03.11.2026) */}
-    <Suspense fallback={loading}><Polls trailing={<Fold title={POLL_DRAWERS.trend} open={tab === "trends"}><Suspense fallback={loading}><Trends /></Suspense></Fold>} /></Suspense>
-    {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם */}
+    <Suspense fallback={loading}><Polls id={id} trailing={<Fold title={POLL_DRAWERS.trend} open={tab === "trends"}><Suspense fallback={loading}><Trends id={id} /></Suspense></Fold>} /></Suspense>
+    {/* המסכים הישנים — רק לפי המתג במסך הניהול, כמו קודם. תמונת המצב של היום, לא של מערכת — ולכן אינם תלויים בבורר */}
     {overview && <Fold title="האחרונים" open={tab === "overview"}><Suspense fallback={loading}><SimpleOverview /></Suspense></Fold>}
     {today && <Fold title="היום" open={tab === "today"}><Suspense fallback={loading}><Today /></Suspense></Fold>}
   </div>;
@@ -84,7 +88,5 @@ function Polls2026() {
 export function PollsScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
-  // אותה שורת מערכת ואותן חמש מגירות בכל מערכת
-  if (id === K26_ID) return <><h1 className="sr-only">סקרים</h1><Polls2026 /></>;
-  return <><h1 className="sr-only">סקרים</h1><Accuracy id={id} /></>;
+  return <><h1 className="sr-only">סקרים</h1><PollsOf id={id} /></>;
 }

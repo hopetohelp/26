@@ -31,7 +31,7 @@ export interface Poll {
   urls: string[];
   verified: boolean;
   verification?: {
-    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch" | "secondary";
+    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch" | "secondary" | "out_of_window" | "not_a_poll";
     checkedAt: string;
     source: string | null;
     details: { published?: string | null; population?: string | null; moe?: string | number | null; method?: string | null; sample_respondents?: number | null };
@@ -61,6 +61,9 @@ export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "wa
   partial: { text: "אומת חלקית", tone: "neutral" },
   unreachable: { text: "המקור אינו נגיש", tone: "warn" },
   mismatch: { text: "לא תואם למקור", tone: "warn" },
+  // מצבי הבדיקה של סקרי 2013–2022 (raw/forecast/verification)
+  out_of_window: { text: "לא נמצא במקור שנבדק", tone: "neutral" },
+  not_a_poll: { text: "לפי המקור — אינו סקר", tone: "warn" },
 };
 
 export function verificationLabel(status: string) {
@@ -115,8 +118,6 @@ export interface ExitPoll {
 export const exitPolls = ((pollsFile as { exitPolls?: unknown }).exitPolls ?? []) as ExitPoll[];
 /** המנדטים של רשימה (או סכום קבוצת רשימות) במדגם; רשימה שלא הופיעה — 0 */
 export const exitSeats = (p: ExitPoll, ids: string[]) => ids.reduce((t, id) => t + (p.values[id]?.s ?? 0), 0);
-/** ממוצע המדגמים לרשימה או לקבוצה — מקור אחד למגמות ולמסך "אחרונים" */
-export const exitMean = (ids: string[]) => exitPolls.length ? exitPolls.reduce((t, p) => t + exitSeats(p, ids), 0) / exitPolls.length : null;
 export const meta = metaFile as unknown as {
   dataAsOf: string;
   electionDay: string;
