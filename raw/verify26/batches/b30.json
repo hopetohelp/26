@@ -1,0 +1,52 @@
+[
+ {
+  "id": "2022-12-23-panels-politics-maariv",
+  "firm": "Panels Politics",
+  "firmHe": "פאנלס פוליטיקס",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2022-12-23",
+  "end": "2022-12-23",
+  "sample": null,
+  "values": {
+   "balad": {
+    "s": 4
+   },
+   "labor": {
+    "s": 4
+   },
+   "likud": {
+    "s": 35
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 10
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp_otzma": {
+    "s": 12
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 4
+   },
+   "yesh_atid": {
+    "s": 26
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-967331"
+  ],
+  "prevStatus": null
+ }
+]

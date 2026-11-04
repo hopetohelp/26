@@ -1,0 +1,1384 @@
+[
+ {
+  "id": "2026-10-22-sf-nd-channel-14",
+  "firm": "SF+ND",
+  "firmHe": "שלמה פילבר + NEXT DATA",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2026-10-22",
+  "end": "2026-10-22",
+  "sample": 7937,
+  "values": {
+   "amcha": {
+    "p": 1.5
+   },
+   "democrats": {
+    "s": 8
+   },
+   "haredi_public": {
+    "p": 0.3
+   },
+   "joint": {
+    "s": 8
+   },
+   "likud": {
+    "s": 30
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 6
+   },
+   "reservists": {
+    "p": 1.9
+   },
+   "rzp": {
+    "s": 7
+   },
+   "shas": {
+    "s": 9
+   },
+   "together": {
+    "s": 11
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 20
+   },
+   "yb": {
+    "s": 5
+   }
+  },
+  "others": {
+   "pct": 0.8
+  },
+  "urls": [
+   "https://www.c14.co.il/article/1750553"
+  ],
+  "prevStatus": "unreachable"
+ },
+ {
+  "id": "2026-10-20-maagar-mochot-channel-16",
+  "firm": "Maagar Mochot",
+  "firmHe": "מאגר מוחות",
+  "publisher": "Channel 16",
+  "publisherHe": "ערוץ 16",
+  "start": "2026-10-20",
+  "end": "2026-10-20",
+  "sample": 2026,
+  "values": {
+   "amcha": {
+    "s": 4
+   },
+   "democrats": {
+    "s": 9
+   },
+   "haredi_public": {
+    "p": 0.6
+   },
+   "joint": {
+    "s": 9
+   },
+   "likud": {
+    "s": 18
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 6
+   },
+   "together": {
+    "s": 15
+   },
+   "utj": {
+    "s": 7
+   },
+   "yashar": {
+    "s": 21
+   },
+   "yb": {
+    "s": 7
+   }
+  },
+  "others": {
+   "pct": 0.2
+  },
+  "urls": [
+   "https://www.ch16.co.il/player/episode/6ad7c75c42b177b76126222c"
+  ],
+  "prevStatus": "unreachable"
+ },
+ {
+  "id": "2026-08-31-midgam-r-c-hahadashot-12",
+  "firm": "Midgam R&C",
+  "firmHe": "מדגם מחקר וייעוץ",
+  "publisher": "HaHadashot 12",
+  "publisherHe": "חדשות 12",
+  "start": "2026-08-31",
+  "end": "2026-08-31",
+  "sample": 506,
+  "values": {
+   "amcha": {
+    "s": 4
+   },
+   "bluewhite": {
+    "p": 0.9
+   },
+   "democrats": {
+    "s": 11
+   },
+   "joint": {
+    "s": 7
+   },
+   "likud": {
+    "s": 23
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 4
+   },
+   "reservists": {
+    "p": 2.6
+   },
+   "rzp": {
+    "p": 2.6
+   },
+   "shas": {
+    "s": 7
+   },
+   "together": {
+    "s": 15
+   },
+   "unity": {
+    "p": 0.5
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 24
+   },
+   "yb": {
+    "s": 9
+   },
+   "zehut": {
+    "p": 2.1
+   }
+  },
+  "others": {
+   "pct": 2.2
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/2026/Article-15cb223b69850a1026.htm"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-30-kantar-kan-11-b",
+  "firm": "Kantar",
+  "firmHe": "קנטר",
+  "publisher": "Kan 11",
+  "publisherHe": "כאן 11",
+  "start": "2026-08-30",
+  "end": "2026-08-30",
+  "sample": 552,
+  "values": {
+   "amcha": {
+    "p": 3.0
+   },
+   "joint": {
+    "s": 8
+   },
+   "likud": {
+    "s": 21
+   },
+   "otzma": {
+    "s": 7
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 7
+   },
+   "yashar": {
+    "s": 24
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-27-yossi-tatika-zman-yisrael",
+  "firm": "Yossi Tatika",
+  "firmHe": "יוסי טטיקה",
+  "publisher": "Zman Yisrael",
+  "publisherHe": "זמן ישראל",
+  "start": "2026-08-26",
+  "end": "2026-08-27",
+  "sample": 500,
+  "values": {
+   "amcha": {
+    "s": 6
+   },
+   "bluewhite": {
+    "p": 2.4
+   },
+   "democrats": {
+    "s": 8
+   },
+   "joint": {
+    "s": 6
+   },
+   "likud": {
+    "s": 22
+   },
+   "otzma": {
+    "s": 6
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "p": 2.4
+   },
+   "rzp": {
+    "p": 2.8
+   },
+   "shas": {
+    "s": 9
+   },
+   "together": {
+    "s": 14
+   },
+   "unity": {
+    "p": 0.8
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 26
+   },
+   "yb": {
+    "s": 10
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.zman.co.il/718546/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-27-lri-p4a-maariv",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2026-08-26",
+  "end": "2026-08-27",
+  "sample": 506,
+  "values": {
+   "amcha": {
+    "s": 5
+   },
+   "bluewhite": {
+    "p": 0.6
+   },
+   "democrats": {
+    "s": 10
+   },
+   "joint": {
+    "s": 8
+   },
+   "likud": {
+    "s": 20
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "p": 2.0
+   },
+   "rzp": {
+    "p": 3.0
+   },
+   "shas": {
+    "s": 7
+   },
+   "together": {
+    "s": 15
+   },
+   "unity": {
+    "p": 0.6
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 25
+   },
+   "yb": {
+    "s": 9
+   }
+  },
+  "others": {
+   "pct": 1.9
+  },
+  "urls": [
+   "https://www.maariv.co.il/news/politics/article-1360437"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-26-mp-tm-sn-a-channel-13",
+  "firm": "MP+TM+SN+A",
+  "firmHe": "מדגם, המדד, סטטנט ואסקריה",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2026-08-26",
+  "end": "2026-08-26",
+  "sample": 1407,
+  "values": {
+   "amcha": {
+    "p": 2.2
+   },
+   "bluewhite": {
+    "p": 1.8
+   },
+   "democrats": {
+    "s": 11
+   },
+   "joint": {
+    "s": 10
+   },
+   "likud": {
+    "s": 19
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "p": 2.0
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 8
+   },
+   "together": {
+    "s": 13
+   },
+   "unity": {
+    "p": 0.8
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 24
+   },
+   "yb": {
+    "s": 9
+   },
+   "zehut": {
+    "p": 1.1
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/ykep2-905329839/?pid=519"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-26-lri-p4a-walla",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "Walla",
+  "publisherHe": "וואלה",
+  "start": "2026-08-26",
+  "end": "2026-08-26",
+  "sample": 500,
+  "values": {
+   "amcha": {
+    "s": 6
+   },
+   "bluewhite": {
+    "p": 1.2
+   },
+   "democrats": {
+    "s": 10
+   },
+   "joint": {
+    "s": 7
+   },
+   "likud": {
+    "s": 21
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "p": 2.1
+   },
+   "rzp": {
+    "p": 2.6
+   },
+   "shas": {
+    "s": 7
+   },
+   "together": {
+    "s": 15
+   },
+   "unity": {
+    "p": 0.3
+   },
+   "utj": {
+    "s": 7
+   },
+   "yashar": {
+    "s": 25
+   },
+   "yb": {
+    "s": 9
+   }
+  },
+  "others": {
+   "pct": 1.5
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3863376"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-26-direct-polls-i24-news",
+  "firm": "Direct Polls",
+  "firmHe": "דיירקט פולס",
+  "publisher": "i24 News",
+  "publisherHe": "i24NEWS",
+  "start": "2026-08-26",
+  "end": "2026-08-26",
+  "sample": 532,
+  "values": {
+   "amcha": {
+    "s": 8
+   },
+   "democrats": {
+    "s": 10
+   },
+   "joint": {
+    "s": 6
+   },
+   "likud": {
+    "s": 26
+   },
+   "otzma": {
+    "s": 6
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 8
+   },
+   "together": {
+    "s": 8
+   },
+   "utj": {
+    "s": 7
+   },
+   "yashar": {
+    "s": 23
+   },
+   "yb": {
+    "s": 8
+   },
+   "zehut": {
+    "p": 1.3
+   }
+  },
+  "others": {
+   "raw": ">1.1%"
+  },
+  "urls": [
+   "https://www.i24news.tv/he/news/israel-elections-2026/polls/artc-a44c587c"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-08-20-kantar-israel-hayom-b",
+  "firm": "Kantar",
+  "firmHe": "קנטר",
+  "publisher": "Israel Hayom",
+  "publisherHe": "ישראל היום",
+  "start": "2026-08-19",
+  "end": "2026-08-20",
+  "sample": 553,
+  "values": {
+   "amcha": {
+    "s": 4
+   },
+   "bluewhite": {
+    "p": 1.3
+   },
+   "democrats": {
+    "s": 10
+   },
+   "joint": {
+    "s": 8
+   },
+   "likud": {
+    "s": 21
+   },
+   "otzma": {
+    "s": 7
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "p": 1.5
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 7
+   },
+   "together": {
+    "s": 13
+   },
+   "unity": {
+    "p": 1.2
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 23
+   },
+   "yb": {
+    "s": 10
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-07-17-lazar-maariv",
+  "firm": "Lazar",
+  "firmHe": "לזר מחקרים",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2026-07-17",
+  "end": "2026-07-17",
+  "sample": 500,
+  "values": {
+   "balad": {
+    "p": 2.0
+   },
+   "bluewhite": {
+    "p": 1.7
+   },
+   "democrats": {
+    "s": 11
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 22
+   },
+   "otzma": {
+    "s": 7
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 7
+   },
+   "together": {
+    "s": 16
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 22
+   },
+   "yb": {
+    "s": 9
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.israelnationalnews.com/news/430327",
+   "https://www.jpost.com/israel-news/politics-and-diplomacy/article-902821"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-05-13-mm-sn-channel-13",
+  "firm": "MM+SN",
+  "firmHe": "מאגר מוחות + סטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2026-05-13",
+  "end": "2026-05-13",
+  "sample": null,
+  "values": {
+   "democrats": {
+    "s": 9
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 25
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "together": {
+    "s": 26
+   },
+   "utj": {
+    "s": 7
+   },
+   "yashar": {
+    "s": 12
+   },
+   "yb": {
+    "s": 7
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.israelnationalnews.com/news/427034"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-04-26-filber-channel-14",
+  "firm": "Filber",
+  "firmHe": "שלמה פילבר",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2026-04-26",
+  "end": "2026-04-26",
+  "sample": 932,
+  "values": {
+   "bluewhite": {
+    "p": 0.7
+   },
+   "democrats": {
+    "s": 8
+   },
+   "joint_with_raam": {
+    "s": 11
+   },
+   "likud": {
+    "s": 34
+   },
+   "otzma": {
+    "s": 7
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 11
+   },
+   "together": {
+    "s": 20
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 9
+   },
+   "yb": {
+    "s": 8
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-02-06-trendzone-x",
+  "firm": "TrendZone",
+  "firmHe": "טרנדזון",
+  "publisher": null,
+  "publisherHe": null,
+  "start": "2026-02-06",
+  "end": "2026-02-06",
+  "sample": null,
+  "values": {
+   "bennett": {
+    "s": 20
+   },
+   "democrats": {
+    "s": 9
+   },
+   "joint_with_raam": {
+    "s": 15
+   },
+   "likud": {
+    "s": 33
+   },
+   "otzma": {
+    "s": 8
+   },
+   "shas": {
+    "s": 7
+   },
+   "utj": {
+    "s": 7
+   },
+   "yashar": {
+    "s": 8
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 5
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://open.spotify.com/episode/5A6czZFDgKuhevAUxPlesl?si=YnsB8setQ3S1lPD3WA2bow&context=spotify%3Ashow%3A6d4Ga5o7kzDhjHQu0BQrQu&nd=1&dlsi=b01a6efb9b364add"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2026-02-05-yossi-tatika-the-times-of-israel",
+  "firm": "Yossi Tatika",
+  "firmHe": "יוסי טטיקה",
+  "publisher": "The Times of Israel",
+  "publisherHe": "טיימס אוף ישראל",
+  "start": "2026-02-05",
+  "end": "2026-02-05",
+  "sample": 500,
+  "values": {
+   "bennett": {
+    "s": 18
+   },
+   "bluewhite": {
+    "s": 4
+   },
+   "democrats": {
+    "s": 8
+   },
+   "joint_with_raam": {
+    "s": 14
+   },
+   "likud": {
+    "s": 27
+   },
+   "otzma": {
+    "s": 7
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 6
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 8
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.timesofisrael.com/poll-arab-joint-list-wins-14-seats-maintaining-deadlock-between-pms-bloc-and-rivals/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2025-12-25-yossi-tatika-zman-israel",
+  "firm": "Yossi Tatika",
+  "firmHe": "יוסי טטיקה",
+  "publisher": "Zman Israel",
+  "publisherHe": "זמן ישראל",
+  "start": "2025-12-24",
+  "end": "2025-12-25",
+  "sample": null,
+  "values": {
+   "bennett": {
+    "s": 20
+   },
+   "democrats": {
+    "s": 10
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 25
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "reservists": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 8
+   },
+   "yashar": {
+    "s": 5
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 9
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.zman.co.il/650951"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2025-06-05-sf-dp-channel-14-b",
+  "firm": "SF+DP",
+  "firmHe": "שלמה פילבר + דיירקט פולס",
+  "publisher": "Channel 14",
+  "publisherHe": "ערוץ 14",
+  "start": "2025-06-05",
+  "end": "2025-06-05",
+  "sample": null,
+  "values": {
+   "bennett": {
+    "s": 14
+   },
+   "democrats": {
+    "s": 14
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 32
+   },
+   "national_unity": {
+    "s": 6
+   },
+   "otzma": {
+    "s": 7
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 5
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2025-01-22-smith-consulting-the-truth-machine",
+  "firm": "Smith Consulting",
+  "firmHe": "סמית'",
+  "publisher": "The Truth Machine",
+  "publisherHe": "מכונת האמת",
+  "start": "2025-01-22",
+  "end": "2025-01-22",
+  "sample": null,
+  "values": {
+   "democrats": {
+    "s": 11
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 26
+   },
+   "national_unity": {
+    "s": 16
+   },
+   "otzma": {
+    "s": 8
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 16
+   },
+   "yesh_atid": {
+    "s": 12
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.youtube.com/watch?v=auk3R6Ar0QE"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-11-06-mm-sn-i24-news-b",
+  "firm": "MM+SN",
+  "firmHe": "מאגר מוחות + סטטנט",
+  "publisher": "i24 News",
+  "publisherHe": "i24NEWS",
+  "start": "2024-11-06",
+  "end": "2024-11-06",
+  "sample": null,
+  "values": {
+   "bennett": {
+    "s": 27
+   },
+   "democrats": {
+    "s": 8
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 23
+   },
+   "national_unity": {
+    "s": 12
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 8
+   }
+  },
+  "others": null,
+  "urls": [],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-07-09-timor-group-i24-news",
+  "firm": "Timor Group",
+  "firmHe": "קבוצת טימור",
+  "publisher": "i24 News",
+  "publisherHe": "i24NEWS",
+  "start": "2024-07-09",
+  "end": "2024-07-09",
+  "sample": null,
+  "values": {
+   "democrats": {
+    "s": 8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "likud": {
+    "s": 21
+   },
+   "national_unity": {
+    "s": 22
+   },
+   "otzma": {
+    "s": 10
+   },
+   "raam": {
+    "s": 6
+   },
+   "shas": {
+    "s": 11
+   },
+   "utj": {
+    "s": 8
+   },
+   "yb": {
+    "s": 14
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.i24news.tv/he/news/news/politics/artc-0fdc0476"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-05-07-midgam-project-stat-net-channel-13",
+  "firm": "Midgam Project & Stat Net",
+  "firmHe": "פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2024-05-07",
+  "end": "2024-05-07",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.9
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "p": 2.5
+   },
+   "likud": {
+    "s": 19
+   },
+   "meretz": {
+    "p": 2.1
+   },
+   "national_unity": {
+    "s": 30
+   },
+   "new_hope": {
+    "p": 1.5
+   },
+   "otzma": {
+    "s": 12
+   },
+   "raam": {
+    "s": 6
+   },
+   "rzp": {
+    "s": 6
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 10
+   },
+   "yesh_atid": {
+    "s": 15
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/pdwl9-904047095/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-13-cf-mp-sn-channel-13",
+  "firm": "CF+MP+SN",
+  "firmHe": "קמיל פוקס, פרויקט מדגם וסטטנט",
+  "publisher": "Channel 13",
+  "publisherHe": "חדשות 13",
+  "start": "2024-03-13",
+  "end": "2024-03-13",
+  "sample": null,
+  "values": {
+   "hadash_taal": {
+    "s": 4
+   },
+   "likud": {
+    "s": 17
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 34
+   },
+   "new_hope": {
+    "s": 6
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 8
+   },
+   "yesh_atid": {
+    "s": 14
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://13tv.co.il/item/news/politics/politics/13-poll-903974537/"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2024-03-07-lri-p4a-the-jerusalem-post",
+  "firm": "LRI+P4A",
+  "firmHe": "לזר מחקרים + Panel4All",
+  "publisher": "The Jerusalem Post",
+  "publisherHe": "ג'רוזלם פוסט",
+  "start": "2024-03-07",
+  "end": "2024-03-07",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.8
+   },
+   "hadash_taal": {
+    "s": 5
+   },
+   "labor": {
+    "s": 4
+   },
+   "likud": {
+    "s": 18
+   },
+   "meretz": {
+    "p": 2.9
+   },
+   "national_unity": {
+    "s": 41
+   },
+   "otzma": {
+    "s": 9
+   },
+   "raam": {
+    "s": 4
+   },
+   "rzp": {
+    "s": 4
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 6
+   },
+   "yb": {
+    "s": 9
+   },
+   "yesh_atid": {
+    "s": 10
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.jpost.com/israel-news/article-790754"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-07-27-maagar-mochot-israel-hayom",
+  "firm": "Maagar Mochot",
+  "firmHe": "מאגר מוחות",
+  "publisher": "Israel Hayom",
+  "publisherHe": "ישראל היום",
+  "start": "2023-07-26",
+  "end": "2023-07-27",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 2.17
+   },
+   "hadash_taal": {
+    "s": 4
+   },
+   "labor": {
+    "p": 2.75
+   },
+   "likud": {
+    "s": 27
+   },
+   "meretz": {
+    "s": 5
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp_otzma": {
+    "s": 9
+   },
+   "shas": {
+    "s": 10
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 4
+   },
+   "yesh_atid": {
+    "s": 21
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.israelhayom.co.il/news/politics/article/14438817"
+  ],
+  "prevStatus": null
+ },
+ {
+  "id": "2023-06-29-panels-politics-maariv",
+  "firm": "Panels Politics",
+  "firmHe": "פאנלס פוליטיקס",
+  "publisher": "Maariv",
+  "publisherHe": "מעריב",
+  "start": "2023-06-28",
+  "end": "2023-06-29",
+  "sample": null,
+  "values": {
+   "balad": {
+    "p": 1.95
+   },
+   "hadash_taal": {
+    "s": 6
+   },
+   "labor": {
+    "p": 1.7
+   },
+   "likud": {
+    "s": 27
+   },
+   "meretz": {
+    "s": 4
+   },
+   "national_unity": {
+    "s": 28
+   },
+   "otzma": {
+    "s": 5
+   },
+   "raam": {
+    "s": 5
+   },
+   "rzp": {
+    "s": 5
+   },
+   "shas": {
+    "s": 9
+   },
+   "utj": {
+    "s": 7
+   },
+   "yb": {
+    "s": 5
+   },
+   "yesh_atid": {
+    "s": 19
+   }
+  },
+  "others": null,
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-1019055"
+  ],
+  "prevStatus": null
+ }
+]

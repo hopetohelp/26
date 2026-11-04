@@ -1,0 +1,453 @@
+[
+ {
+  "id": "2025-06-05-lri-p4a-maariv-c",
+  "status": "match",
+  "source": "https://www.inn.co.il/news/670769",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-06T10:33:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/670769"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר",
+   "commissioner": "ערוץ 7 (לפי ניסוח הכתבה)"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "foundUrl": "https://www.inn.co.il/news/670769",
+  "scenarioOf": "2025-06-05-lri-p4a-maariv",
+  "note": "תרחיש מילואימניקים בראשות הנדל + בנט: כל 12 הרשימות זהות לכתבת ערוץ 7 (סקר לזר, \"הצבנו\" – נראה שערוץ 7 שאל את השאלה ולא מעריב; התרחיש לא מופיע בכתבת מעריב). מועדים ומדגם לא צוינו בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-05-lri-p4a-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1202984",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-06T05:58:35+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   }
+  },
+  "details": {
+   "sample_respondents": 506,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "fieldwork": "2025-06-04..2025-06-05",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 506,
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1202984",
+  "scenarioOf": "2025-06-05-lri-p4a-maariv",
+  "note": "תרחיש מפלגה בראשות בנט: כל 11 הרשימות שעברו, בל\"ד 1.7% והציונות הדתית 2.6% זהים לכתבת מעריב. 4-5 ביוני, 506 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-05-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1202984",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-06T05:58:35+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   }
+  },
+  "details": {
+   "sample_respondents": 506,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "fieldwork": "2025-06-04..2025-06-05",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 506,
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   }
+  ],
+  "note": "כל 10 הרשימות שעברו, הציונות הדתית 2.8% ובל\"ד 1.9% זהים לכתבת מעריב. נערך 4-5 ביוני 2025, 506 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-29-lri-p4a-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1201196",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-30T05:59:56+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "fieldwork": "2025-05-28..2025-05-29",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1201196",
+  "scenarioOf": "2025-05-29-lri-p4a-maariv",
+  "note": "תרחיש מפלגה בראשות בנט: כל 11 הרשימות שעברו, בל\"ד 2.1% והציונות הדתית 1.8% זהים לכתבת מעריב. 28-29 במאי, 500 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-29-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1201196",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-30T05:59:56+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "fieldwork": "2025-05-28..2025-05-29",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   }
+  ],
+  "note": "כל 10 הרשימות שעברו, בל\"ד 2.4% והציונות הדתית 2.1% זהים לכתבת מעריב. נערך 28-29 במאי, 500 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-22-lri-p4a-maariv-b",
+  "status": "secondary",
+  "source": "https://www.jpost.com/israel-news/article-855165",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-05-23T06:00:16+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/article-855165"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "fieldwork": "2025-05-21..2025-05-22",
+   "pollster": "Lazar Research",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.jpost.com/israel-news/article-855165",
+  "scenarioOf": "2025-05-22-lri-p4a-maariv",
+  "note": "תרחיש בנט: כל 11 הרשימות זהות לדיווח ג'רוזלם פוסט; בכתבת מעריב (article-1199115) רק סיכומי הגושים (44/66/10), תואמים. המספרים בסוגריים בסקר מעריב של 29.5 נותנים למחנה הממלכתי 7 (סכום 118 – טעות שם), לכן אין פער.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-22-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1199115",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-23T06:00:16+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1199115"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/article-855165"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "fieldwork": "2025-05-21..2025-05-22",
+   "pollster": "לזר מחקרים",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל 10 הרשימות שעברו, בל\"ד 2% והציונות הדתית 1.9% זהים לכתבת מעריב. בכתבת מעריב אין שורת מועדים/מדגם; לפי ג'רוזלם פוסט נערך 21-22 במאי, 509 משיבים (מקור משני יחיד – לא נרשם פער מדגם).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-07-lri-p4a-maariv-b",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1194952",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-09T05:59:43+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "fieldwork": "2025-05-07..2025-05-08",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2025-05-06",
+    "to": "2025-05-07",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   {
+    "field": "end",
+    "from": "2025-05-07",
+    "to": "2025-05-08",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1194952",
+  "scenarioOf": "2025-05-07-lri-p4a-maariv",
+  "note": "תרחיש בנט: כל 11 הרשימות, בל\"ד 2% והציונות הדתית 1.8% זהים לכתבת מעריב. פער רק במועדים: \"התקיים ב־8־7 במאי\" (לא 6-7).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-07-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1194952",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-09T05:59:43+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "fieldwork": "2025-05-07..2025-05-08",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "start",
+    "from": "2025-05-06",
+    "to": "2025-05-07",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   {
+    "field": "end",
+    "from": "2025-05-07",
+    "to": "2025-05-08",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1194952",
+  "note": "כל 10 הרשימות שעברו, בל\"ד 1.9% והציונות הדתית 2.3% זהים לכתבת מעריב (וגם לג'רוזלם פוסט). פער במועדים: \"התקיים ב־8־7 במאי\" ולא 6-7. 500 משיבים, טעות 4.4%. הקישור בנתונים (ג'רוזלם פוסט) הוא דיווח משני.",
+  "checkedAt": "2026-11-04"
+ }
+]
