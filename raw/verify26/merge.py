@@ -88,6 +88,12 @@ def main() -> None:
                             "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"})
                 cor_keys.add((pid, "urls"))
                 stats["urls"] += 1
+            elif (r.get("foundUrl") and poll.get("urls") and r["foundUrl"] not in poll["urls"] and (pid, "urls") not in cor_keys
+                  and any(w in (r.get("note") or "") for w in ("wrong url", "קישור שגוי", "הקישור שגוי", "קישור שגוי בנתונים"))):
+                cor.append({"field": "urls", "from": raw_poll["urls"], "id": pid, "source": r["foundUrl"], "to": [r["foundUrl"]],
+                            "reason": "הקישור בנתוני המקור (ויקיפדיה) מוביל לפרסום אחר; הוחלף בקישור לפרסום של הסקר הזה"})
+                cor_keys.add((pid, "urls"))
+                stats["urls_fixed"] = stats.get("urls_fixed", 0) + 1
             if status == "mismatch" and applied and len(applied_diffs := r.get("diffs") or []) == applied:
                 status = "corrected"
             det = r.get("details") or {}

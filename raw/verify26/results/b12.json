@@ -1,0 +1,556 @@
+[
+ {
+  "id": "2025-10-09-filber-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/1018225/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/1018225/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/1018225/"
+   }
+  },
+  "details": {
+   "sample_respondents": 510,
+   "population": "בוגרים מכלל האוכלוסייה",
+   "fieldwork": "2025-10-09..2025-10-09",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "דיווח עצמאי בערוץ 10 (ch10, \"מדור פרסומי\") מצטט את סקר ערוץ 14: מנדטי כל 11 הרשימות ואחוזי כחול לבן 2.7, יש עתיד 2.6, בל\"ד 2.4 זהים. \"510 בוגרים, נערך 9 באוקטובר 2025\". המדגם (510) לא נרשם כפער כי מקור משני יחיד. אתר ערוץ 14 לא נבדק (חסום בדרך כלל).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-30-lri-p4a-walla",
+  "status": "partial",
+  "source": "https://news.walla.co.il/item/3784389",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-30T15:09:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3784389"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3784389"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3784389"
+   }
+  },
+  "details": {
+   "sample_respondents": 503,
+   "moe": "4.3%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "פאנל אינטרנטי Panel4All",
+   "fieldwork": "2025-09-30..2025-09-30",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "וואלה"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 503,
+    "source": "https://news.walla.co.il/item/3784389"
+   }
+  ],
+  "note": "בטקסט כתבת וואלה: הליכוד 24, בנט 23, ישראל ביתנו 11, הדמוקרטים 9, עוצמה 9, יש עתיד 7, ישר 7, המילואימניקים 5 — זהים; כחול לבן והציונות הדתית מתחת לחסימה. ש\"ס, יהדות התורה, רע\"מ וחד\"ש-תע\"ל רק בתמונה — לא נקראו. 503 משיבים, 30.9, טעות 4.3%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-30-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1238010",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-10-03T06:00:48+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1238010"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1238010"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1238010"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2025-09-30..2025-09-30",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1238010"
+   }
+  ],
+  "note": "מנדטי כל 12 הרשימות ואחוזי הציונות הדתית 2.3, בל\"ד 2, כחול לבן 3 זהים לכתבת מעריב (פורסמה 3.10). \"בסקר, שהתקיים ב־30 בספטמבר, השתתפו 500 משיבים\"; טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-30-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-ca89394f",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-30T20:33:08+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ca89394f"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ca89394f"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ca89394f"
+   }
+  },
+  "details": {
+   "sample_respondents": 507,
+   "moe": "4.4% (95%)",
+   "population": "האוכלוסייה הכללית בישראל 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-09-30..2025-09-30",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 507,
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ca89394f"
+   }
+  ],
+  "note": "מנדטי כל 12 הרשימות ואחוזי המילואימניקים 3.0, בל\"ד 2.7, כחול לבן 2.7 זהים לכתבת i24NEWS (נקראה דרך api.i24news.tv). 507 נדגמים, 30.9.2025.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-25-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/israel/article-1236218",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-26T06:00:46+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1236218"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1236218"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1236218"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2025-09-25..2025-09-25",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 502,
+    "source": "https://www.maariv.co.il/news/israel/article-1236218"
+   }
+  ],
+  "note": "מנדטי כל 12 הרשימות ואחוזי כחול לבן 2.9, הציונות הדתית 2.5, בל\"ד 2.4 זהים לטבלת האינפוגרם בכתבת מעריב. \"שהתקיים ב־25 בספטמבר, השתתפו 502 משיבים\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-18-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1234359",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-19T06:00:44+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1234359"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1234359"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1234359"
+   }
+  },
+  "details": {
+   "sample_respondents": 506,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2025-09-17..2025-09-18",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 506,
+    "source": "https://www.maariv.co.il/news/politics/article-1234359"
+   }
+  ],
+  "note": "התרחיש הבסיסי (טבלת אינפוגרם) — מנדטי כל 13 הרשימות ואחוזי הציונות הדתית 2.4, בל\"ד 1.9 זהים. בכתבה גם תרחישי איחוד (בנט+איזנקוט, איזנקוט+ליברמן, איזנקוט+לפיד) שאינם בנתונים. \"התקיים ב־17־18 בספטמבר, 506 משיבים\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-17-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-24d53f18",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-17T20:37:15+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-24d53f18"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-24d53f18"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-24d53f18"
+   }
+  },
+  "details": {
+   "sample_respondents": 515,
+   "moe": "4.4% (95%)",
+   "population": "האוכלוסייה הכללית בישראל 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-09-17..2025-09-17",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 515,
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-24d53f18"
+   }
+  ],
+  "note": "מנדטי כל 12 הרשימות זהים לכתבת i24NEWS; בל\"ד וכחול לבן \"לא עוברות\" — האחוזים שבנתונים (2.7, 1.9) לא פורסמו ולא אומתו. 515 נשאלים, 17.9.2025.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-11-lri-p4a-maariv",
+  "status": "match",
+  "source": "http://maariv.co.il/news/politics/article-1232229",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-12T06:00:44+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "http://maariv.co.il/news/politics/article-1232229"
+   },
+   "dates": {
+    "status": "match",
+    "source": "http://maariv.co.il/news/politics/article-1232229"
+   },
+   "sample": {
+    "status": "match",
+    "source": "http://maariv.co.il/news/politics/article-1232229"
+   }
+  },
+  "details": {
+   "sample_respondents": 506,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "Panel4All",
+   "fieldwork": "2025-09-10..2025-09-11",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 506,
+    "source": "http://maariv.co.il/news/politics/article-1232229"
+   }
+  ],
+  "note": "התרחיש הבסיסי (אינפוגרם) — מנדטי כל 12 הרשימות ואחוזי כחול לבן 2.4, בל\"ד 2.1 זהים. תרחיש נוסף עם הנדל ויוסי כהן אינו בנתונים. \"שנערך ב־10־11 בספטמבר, 506 משיבים\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-08-lri-p4a-walla",
+  "status": "partial",
+  "source": "https://news.walla.co.il/item/3779188",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-09T12:26:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3779188"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3779188"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3779188"
+   }
+  },
+  "details": {
+   "sample_respondents": 504,
+   "moe": "4.3%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "פאנל אינטרנטי Panel4All",
+   "fieldwork": "2025-09-08..2025-09-08",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "וואלה"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 504,
+    "source": "https://news.walla.co.il/item/3779188"
+   }
+  ],
+  "note": "בטקסט וואלה לתרחיש הנפרד: בנט 23, ישראל ביתנו 11, ישר 8 — זהים; כחול לבן לא עוברת (תואם להיעדרה). הליכוד 25 בטקסט מתייחס לתרחיש הרשימה המאוחדת; שאר המנדטים רק בתמונות — לא נקראו. 504 משיבים, 8.9.2025, טעות 4.3%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-05-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1230200",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-05T05:59:42+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1230200"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1230200"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "method": "Panel4All",
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר) + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1230200"
+   }
+  ],
+  "note": "התרחיש הבסיסי (אינפוגרם) — מנדטי כל 13 הרשימות ואחוזי הציונות הדתית 1.9, בל\"ד 1.9 זהים. תרחיש עם יוסי כהן אינו בנתונים. 500 משיבים; ימי השטח לא צוינו בכתבה (פורסמה 5.9 06:00) — התאריך 5.9 שבנתונים לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-09-03-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-6d7e5b77",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-09-03T20:37:21+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-6d7e5b77"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-6d7e5b77"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-6d7e5b77"
+   }
+  },
+  "details": {
+   "sample_respondents": 513,
+   "moe": "4.4%",
+   "population": "בני 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-09-03..2025-09-03",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 513,
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-6d7e5b77"
+   }
+  ],
+  "note": "התרחיש הראשון (בלי ישר) — מנדטי כל 12 הרשימות זהים לכתבת i24NEWS; כחול לבן ובל\"ד \"לא עברו\" (האחוזים שבנתונים לא פורסמו). תרחיש האיחוד בנט-ליברמן-איזנקוט אינו בנתונים. 513 נשאלים, 3.9.2025.",
+  "checkedAt": "2026-11-04"
+ }
+]

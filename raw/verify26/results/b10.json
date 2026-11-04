@@ -113,6 +113,40 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-12-18-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1096192",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-12-18T21:08:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1096192"
+   }
+  },
+  "details": {
+   "sample_respondents": 491,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403). אומת מול דיווח עצמאי באייס (ice.co.il) מאותו ערב: ליכוד 36, דמוקרטים/ש\"ס/בנט 11, ישראל ביתנו 10, יהדות התורה 8, ישר 8, עוצמה 7, רע\"ם 5, חד\"ש-תע\"ל 5, יש עתיד 4, ציונות דתית 4, בל\"ד 2.4%, כחול לבן 1.7% — זהים. 491 נשאלים. ימי שטח לא צוינו (שודר במהדורה המרכזית). גודל המדגם לא מוזן בנתונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-12-17-direct-polls-i24-news",
   "status": "partial",
   "source": "https://www.i24news.tv/he/news/news/politics/artc-d7c438d5",
@@ -274,6 +308,40 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-12-11-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1095110",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-12-11T21:13:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1095110"
+   }
+  },
+  "details": {
+   "sample_respondents": 657,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403). אומת מול דיווח עצמאי באייס (ice.co.il) מאותו ערב: כל הרשימות והאחוזים (בל\"ד 2.5%, כחול לבן 1.2%) זהים. 657 נשאלים. ימי שטח לא צוינו (שודר במהדורה המרכזית). גודל המדגם לא מוזן בנתונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-12-04-yossi-tatika-zman-israel",
   "status": "match",
   "source": "https://www.zman.co.il/645981/",
@@ -423,6 +491,55 @@
   },
   "diffs": [],
   "note": "כל הרשימות זהות לאינפוגרם בכתבת מעריב; 500 משיבים, 3–4.12.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-04-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": "https://www.israelhayom.co.il/news/politics/article/19390489",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "ישראל היום חוסם (Access Denied). כותרת הכתבה לפי מנוע חיפוש: 'סקר מנדטים: מפלגה מפתיעה עוברת - ולבנט יש ממשלה ללא הערבים'. לא נמצא דיווח עצמאי עם טבלה מלאה — לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-12-04-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1094209",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-12-04T21:59:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1094209"
+   }
+  },
+  "details": {
+   "sample_respondents": 1119,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403). אומת מול דיווח עצמאי באייס (ice.co.il) מאותו ערב: כל הרשימות והאחוזים (בל\"ד 2.3%, כחול לבן 1.9%) זהים. 1119 נשאלים. ימי שטח לא צוינו (שודר במהדורה המרכזית). גודל המדגם לא מוזן בנתונים.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -580,6 +697,40 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-11-27-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1093119",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-11-27T21:01:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1093119"
+   }
+  },
+  "details": {
+   "sample_respondents": 467,
+   "population": "מדגם מייצג של כלל האוכלוסייה",
+   "pollster": "שלמה פילבר",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403). אומת מול דיווח עצמאי באייס (ice.co.il) מאותו ערב: כל מנדטי הרשימות זהים; האחוזים של כחול לבן ובל\"ד (מתחת לחסימה) לא פורסמו בדיווח. 467 נשאלים. ימי שטח לא צוינו (שודר במהדורה המרכזית). גודל המדגם לא מוזן בנתונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-11-20-yossi-tatika-zman-israel",
   "status": "match",
   "source": "https://www.zman.co.il/642270/",
@@ -717,6 +868,21 @@
   "diffs": [],
   "foundUrl": "https://www.maariv.co.il/news/politics/article-1254155",
   "note": "נמצא קישור (חסר בנתונים; הוצמד בטעות לסקר 27.11). כל הרשימות זהות לאינפוגרם 'סקר מנדטים 20-11-25'; 504 משיבים, 19–20.11.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-11-20-filber-channel-14",
+  "status": "unreachable",
+  "source": "https://www.c14.co.il/article/1378922",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {},
+  "diffs": [],
+  "note": "ערוץ 14 חוסם (403 גם ב-WebFetch). לא נמצא דיווח עצמאי מתוארך ל-20.11.2025 (חיפוש באייס, אמס) — לא אומת.",
   "checkedAt": "2026-11-04"
  },
  {
