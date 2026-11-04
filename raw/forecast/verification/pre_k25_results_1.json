@@ -1,0 +1,101 @@
+[
+ {
+  "id": "k25-2021-04-05-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/299705",
+  "differences": [],
+  "fieldEndSource": "2021-04-05",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva: Panels Politics poll for 103FM conducted Monday 5.4.2021: Likud 29, Yesh Atid 21, Yamina 10, Shas 9, UTJ 7, Blue&White 7, Labor 7, Yisrael Beytenu 6, New Hope 5, Meretz 5, Joint List 5, RZP 5, Ra'am 4. All match."
+ },
+ {
+  "id": "k25-2021-04-22-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2021_q2/Article-de74d1d97140971027.htm",
+  "differences": [],
+  "fieldEndSource": "2021-04-22",
+  "sample": 504,
+  "moe": "4.4%",
+  "note": "N12/mako: Midgam (Mano Geva) for Hadashot, fieldwork 22/4/2021, 504 respondents, MoE 4.4%: Likud 30, YA 19, Shas 9, Labor 8, Yamina 7, YB 7, B&W 7, UTJ 7, Joint 6, RZ 6, New Hope 5, Meretz 5, Ra'am 4. All match."
+ },
+ {
+  "id": "k25-2021-04-22-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IGDJGJ&c41t4nzVQ=EL",
+  "differences": [],
+  "fieldEndSource": "2021-04-22",
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "103FM/Maariv: Maagar Mochot (Prof. Yitzhak Katz), fieldwork Thursday night 22.4, 500 panel respondents (Panel4All), MoE 4.4%: Likud 30, YA 20, Yamina 9, Shas 8, UTJ 8, B&W 7, Labor 7, RZ 6, Joint 6, YB 5, Meretz 5, Ra'am 5, New Hope 4. All match."
+ },
+ {
+  "id": "k25-2021-05-04-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-bennet-lapid-1246076/ (-> 13tv.co.il)",
+  "differences": [],
+  "fieldEndSource": "2021-05-04",
+  "sample": 699,
+  "moe": "3.8%",
+  "note": "Channel 13 site, 04.05.2021, Prof. Camil Fuchs: Likud 28, YA 21, Yamina 11, B&W 8, Shas 7, UTJ 7, Labor 7, New Hope 6, Joint 6, YB 5, Meretz 5, RZ 5, Ra'am 4. All match. Sample stated as 600 Jewish + 99 Arab (page summary said 669; 600+99=699)."
+ },
+ {
+  "id": "k25-2021-06-10-maagar-mochot-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/307871",
+  "differences": [],
+  "fieldEndSource": "2021-06-10",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva on Maagar Mochot poll for Channel 20, 10.6.2021: Likud 30, YA 23, RZ 9, Shas 9, UTJ 7, Labor 7, B&W 6, Meretz 6, YB 6, Joint 5, Yamina 4, New Hope 4, Ra'am 4. All match."
+ },
+ {
+  "id": "k25-2021-06-13-smith-kikar-hashabbat",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.kikar.co.il/political-news/394126",
+  "differences": [],
+  "fieldEndSource": "2021-06-13",
+  "sample": null,
+  "moe": null,
+  "note": "Kikar HaShabbat 13.06.21, Smith Institute for Kikar: Likud 31, YA 23, Shas 9, UTJ 7, B&W 7, RZ 7, Labor 6, Joint 6, YB 5, Yamina 5, New Hope 5, Ra'am 5, Meretz 4. All match."
+ },
+ {
+  "id": "k25-2021-08-20-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2021_q3/Article-f5a6e7a49546b71026.htm",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "N12/mako 20.08.21, Midgam (Mano Geva) for Ulpan Shishi, Netanyahu-led Likud scenario: Likud 32, YA 20, Shas 9, B&W 8, Labor 8, UTJ 7, Yamina 6, Joint 6, YB 6, RZ 6, New Hope 4, Meretz 4, Ra'am 4. All match. Fieldwork date not stated."
+ },
+ {
+  "id": "k25-2021-09-01-smith-galei-israel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/400459.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar 02.09.21, Smith for Galei Israel: Likud 33, YA 18, B&W 10, Shas 9, UTJ 7, YB 7, RZ 7, Yamina 6, Joint 6, Labor 6, Meretz 6, Ra'am 5; New Hope below threshold. All match. Fieldwork date not stated."
+ },
+ {
+  "id": "k25-2021-11-01-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/530332",
+  "differences": [],
+  "fieldEndSource": "2021-11-01",
+  "sample": 701,
+  "moe": "3.8%",
+  "note": "Arutz 7 1.11.21 on Channel 13 poll by Prof. Camil Fuchs (701 respondents, MoE 3.8%): Likud 36, YA 20, Labor 10, Joint 8, B&W 7, Shas 7, UTJ 7, Yamina 6, RZ 6, Meretz 5, YB 4, Ra'am 4, New Hope 2.6% (below threshold). All match."
+ }
+]
