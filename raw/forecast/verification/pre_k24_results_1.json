@@ -39,6 +39,17 @@
   "note": "Srugim 28.03.20 reporting Direct Polls (first poll after the Blue&White split): Likud 38, Yesh Atid 16, Joint List 15, Hosen L'Yisrael 15, Shas 8, Labor-Meretz 8, UTJ 7, Yamina 7, Lieberman 6; Gesher 1.3%, Otzma Yehudit 0.65% — all match. Arutz 7 original not located. No fieldwork date/sample in text."
  },
  {
+  "id": "k24-2020-03-30-smith-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/435284 (c14.co.il Smith article returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 31.03.20 reporting a Smith Institute poll published on Amit Segal's Telegram: Likud 40, Joint List 16, Blue&White 15, Yesh Atid-Telem 11, Labor-Meretz 9, Shas 9, UTJ 7, Yamina 7, Yisrael Beytenu 6; Gesher and Otzma below threshold — all match. No sample/field date in text."
+ },
+ {
   "id": "k24-2020-04-07-smith-the-jerusalem-post",
   "status": "partial",
   "sourceLevel": "primary",
