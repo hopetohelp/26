@@ -1,0 +1,16 @@
+[
+ {
+  "id": "2022-12-23-panels-politics-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-967331",
+  "access": ["primary"],
+  "published": "2022-12-23T06:00:45+02:00",
+  "fields": {
+   "seats": {"status": "match", "source": "https://www.maariv.co.il/news/politics/Article-967331"}
+  },
+  "details": {"pollster": "פאנלס פוליטיקס (ד\"ר מנחם לזר)", "commissioner": "מעריב־סופהשבוע"},
+  "law16E": {"pollster": true, "commissioner": true, "dates": false, "n_participated": false, "n_asked": false, "moe": false, "population": false, "questions": true},
+  "diffs": [],
+  "note": "מנדטי כל 11 הרשימות זהים לטקסט הכתבה במעריב (סכום 120, קואליציה 64 מול 56 כמצוין בכתבה). ימי השדה, המדגם וטעות הדגימה לא מופיעים בכתבה הנגישה ולא נבדקו. בדף מופיעים 09:50 בתצוגה ו-06:00 בנתוני המטא; נרשם זמן המטא."
+ }
+]

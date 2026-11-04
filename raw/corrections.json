@@ -717,5 +717,717 @@
    "https://www.maariv.co.il/news/politics/article-1254155"
   ],
   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-11-13-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-898b89bc12e7a91026.htm",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-11-06-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/638571/",
+  "to": 505,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-11-06-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c84b7dad90a5a91026.htm",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-11-05-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1249254",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1249254"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-30-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/636695/",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-30-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-c70ecefa6e53a91027.htm",
+  "to": 504,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-23-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/634822/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-23-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q4/Article-fce9955a8c11a91027.htm",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-23-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1244504",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-19-direct-polls-i24-news",
+  "source": "https://api.i24news.tv/v2/he/contents/artc-b5043639",
+  "to": 519,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-16-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/632948/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-15-trendzone-x",
+  "source": "https://www.emess.co.il/radio/1770705",
+  "to": 1791,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-10-10-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1240149",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-30-lri-p4a-walla",
+  "source": "https://news.walla.co.il/item/3784389",
+  "to": 503,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-30-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1238010",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-30-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-ca89394f",
+  "to": 507,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-25-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-a4e2e68d6f18991027.htm",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-25-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/israel/article-1236218",
+  "to": 502,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-18-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-f389bf87abd5991027.htm",
+  "to": 505,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-18-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1234359",
+  "to": 506,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-17-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/625691/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-17-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-24d53f18",
+  "to": 515,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-09-11-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-28f916583b93991027.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2025_q3/Article-28f916583b93991027.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "values.utj.s",
+  "from": 7,
+  "id": "2025-09-11-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-28f916583b93991027.htm",
+  "to": 8,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-11-lri-p4a-maariv",
+  "source": "http://maariv.co.il/news/politics/article-1232229",
+  "to": 506,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-10-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/623948/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-08-lri-p4a-walla",
+  "source": "https://news.walla.co.il/item/3779188",
+  "to": 504,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-05-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1230200",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-04-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-3b9f2df4d951991027.htm",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-03-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/621850/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-03-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-6d7e5b77",
+  "to": 513,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-09-02-mm-sn-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/vq2ud-904743805/",
+  "to": 558,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-29-trendzone-x",
+  "source": "https://www.srugim.co.il/1243028",
+  "to": 802,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-08-28-trendzone-x",
+  "source": "https://www.srugim.co.il/1243028",
+  "to": [
+   "https://www.srugim.co.il/1243028"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-28-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm",
+  "to": 509,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-08-28-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1228187",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1228187"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "values.hadash_taal.s",
+  "from": 6,
+  "id": "2025-08-26-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/619389/",
+  "to": 4,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.raam.s",
+  "from": 4,
+  "id": "2025-08-26-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/619389/",
+  "to": 6,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-26-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/619389/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-21-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/618089/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-21-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "to": 509,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-08-21-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1226216"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-21-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "to": 509,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-08-21-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1226216"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-21-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "to": 509,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-21-filber-channel-14",
+  "source": "https://www.ice.co.il/research/news/article/1080688",
+  "to": 524,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-20-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-e5ee512d",
+  "to": 542,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-08-17-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-17-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm",
+  "to": 505,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.likud.s",
+  "from": 21,
+  "id": "2025-08-14-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1224152",
+  "to": 23,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.bennett.s",
+  "from": 23,
+  "id": "2025-08-14-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1224152",
+  "to": 21,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-14-lri-p4a-maariv-b",
+  "source": "https://news.walla.co.il/item/3773276",
+  "to": 502,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-08-14-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1224152",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1224152"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-14-lri-p4a-maariv",
+  "source": "https://news.walla.co.il/item/3773276",
+  "to": 502,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-14-filber-channel-14",
+  "source": "https://www.ice.co.il/research/news/article/1079642",
+  "to": 639,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-13-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/615863/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-07-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1222088",
+  "to": 504,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-06-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/613653/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-08-03-mm-sn-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/poll-904698606/",
+  "to": 568,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-31-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1220025",
+  "to": 511,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-31-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1220025",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1220025"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-31-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1220025",
+  "to": 511,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-31-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1220025",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1220025"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-31-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1220025",
+  "to": 511,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-30-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/611892/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-24-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1217942",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-24-lri-p4a-maariv-c",
+  "source": "https://www.maariv.co.il/news/politics/article-1217942",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1217942"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-24-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1217942",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-24-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1217942",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1217942"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-24-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1217942",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-24-direct-polls-i24-news-b",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-63d950f5",
+  "to": 633,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-24-direct-polls-i24-news-b",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-63d950f5",
+  "to": [
+   "https://www.i24news.tv/he/news/news/politics/artc-63d950f5"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-24-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-63d950f5",
+  "to": 633,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-23-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/609912/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-17-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/608018/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-17-lri-p4a-maariv-b",
+  "source": "https://news.walla.co.il/item/3766118",
+  "to": 506,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-17-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1215864",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1215864"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-17-lri-p4a-maariv",
+  "source": "https://news.walla.co.il/item/3766118",
+  "to": 506,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-16-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-8ed81669b341891026.htm",
+  "to": 503,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-16-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-8ed81669b341891026.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2025_q3/Article-8ed81669b341891026.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-16-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-8ed81669b341891026.htm",
+  "to": 503,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-13-direct-polls-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-81445ace",
+  "to": 525,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-10-yossi-tatika-zman-israel",
+  "source": "https://www.zman.co.il/606044/",
+  "to": 404,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-07-10-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1213656",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-07-10-filber-channel-14-b",
+  "source": "https://www.ice.co.il/research/news/article/1073990",
+  "to": [
+   "https://www.ice.co.il/research/news/article/1073990"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
  }
 ]

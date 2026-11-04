@@ -112,6 +112,70 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2024-06-02-kantar-kan-11",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1015004",
+  "access": [
+   "secondary"
+  ],
+  "published": "2024-06-02T21:41:28+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1015004"
+   }
+  },
+  "details": {
+   "pollster": "קנטר (דודי חסיד)",
+   "commissioner": "כאן 11"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il מחזיר 403. דיווח אייס על סקר כאן 11 (קנטר): מנדטי כל הרשימות (סכום 120) זהים לנתונים. זמן הפרסום הוא של אייס; מועדי שטח ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2024-05-30-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1014709",
+  "access": [
+   "secondary"
+  ],
+  "published": "2024-05-30T21:23:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1014709"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר וצוריאל שרון / דיירקט פולס",
+   "commissioner": "עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "now14.co.il מחזיר 403. דיווח אייס: מנדטי כל הרשימות (סכום 120) זהים לנתונים. אחוזי בל\"ד, מרצ והימין הממלכתי לא צוינו. שורת הפרטים באייס (16.5.2024, 925 משיבים) מועתקת מהסקר הקודם — לא שימשה לאימות תאריכים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2024-05-30-lri-p4a-maariv-b",
   "status": "match",
   "source": "https://www.maariv.co.il/journalists/Article-1103361",
@@ -281,6 +345,71 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2024-05-23-kantar-kan-11",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il מחזיר 403 (curl ו-WebFetch). לא נמצא דיווח עצמאי על סקר כאן 11 מ-23.5.2024 (חיפוש באייס, כיפה, סרוגים, JDN, ch10) — לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2024-05-16-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/905588/",
+  "access": [
+   "secondary"
+  ],
+  "published": "2024-05-16T21:10:52+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/905588/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/905588/"
+   }
+  },
+  "details": {
+   "sample_respondents": 925,
+   "moe": "4.0%",
+   "population": "בוגרים (18+), מדגם מייצג של האוכלוסייה הכללית",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2024-05-16..2024-05-16",
+   "pollster": "שלמה פילבר וצוריאל שרון / דיירקט פולס",
+   "commissioner": "עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "now14.co.il מחזיר 403. דיווח ch10 (חדשות 10): מנדטי כל הרשימות (סכום 120) זהים לנתונים. נערך 16.5.2024, 925 משיבים, טעות 4.0%. אחוזי בל\"ד והימין הממלכתי לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2024-05-16-midgam-r-c-hahadashot-12-b",
   "status": "partial",
   "source": "https://www.mako.co.il/news-politics/2024_q2/Article-cc4205ed6428f81027.htm",
@@ -437,6 +566,38 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2024-05-09-sf-dp-channel-14",
+  "status": "partial",
+  "source": "https://ch10.co.il/news/904118/",
+  "access": [
+   "secondary"
+  ],
+  "published": "2024-05-09T21:28:01+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/904118/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "now14.co.il מחזיר 403. דיווח ch10 סותר את עצמו: העבודה 4 בטקסט (סכום 119), אבל גוש המרכז-שמאל 53 מתאים להעבודה 5 כבנתונים — לא נרשם פער. שאר הרשימות זהות. מועד שטח ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2024-05-02-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/Article-1096225",
@@ -545,7 +706,7 @@
    "questions": false
   },
   "diffs": [],
-  "note": "kan.org.il מחזיר 403. דיווח אייס על סקר כאן 11: מנדטי כל הרשימות (סכום 120) ואחוזי הימין הממלכתי 2.5%, העבודה 2.1%, בל\"ד 1.9% זהים לנתונים. זמן הפרסום הוא של אייס; מועדי השטח והמדגם לא צוינו.",
+  "note": "kan.org.il מחזיר 403. דיווח אייס על סקר כאן 11: מנדטי כל הרשימות (סכום 120) ואחוזי הימין הממלכתי 2.5%, העבודה 2.1%, בל\"ד 1.9% זהים לנתונים. זמן הפרסום הוא של אייס; מועדי השטח והמדגם לא צוינו. בסרוגים (926292) העבודה 2.5% ותקווה חדשה 2.5% — סתירה בין הדיווחים באחוזי העבודה, לא נרשם פער.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -650,6 +811,48 @@
   },
   "diffs": [],
   "note": "מנדטי כל הרשימות ואחוזי העבודה (2.1%), הימין הממלכתי (2%) ובל\"ד (1.8%) זהים לטקסט הכתבה. הסקר נערך 17–18 באפריל, 500 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2024-04-14-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/899665/",
+  "access": [
+   "secondary"
+  ],
+  "published": "2024-04-15T22:00:09+03:00",
+  "foundUrl": "https://ch10.co.il/news/899665/",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/899665/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/899665/"
+   }
+  },
+  "details": {
+   "sample_respondents": 816,
+   "moe": "4.1%",
+   "population": "בוגרים (18+), מדגם מייצג של האוכלוסייה הכללית",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2024-04-14..2024-04-14",
+   "pollster": "שלמה פילבר וצוריאל שרון / דיירקט פולס",
+   "commissioner": "עכשיו 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "now14 חסום. דיווח ch10 (חדשות 10): מנדטי כל הרשימות (סכום 120) זהים לנתונים. נערך 14.4.2024, 816 משיבים, טעות 4.1%; שודר במהדורה ביום שני 15.4. אחוזי בל\"ד והימין הממלכתי לא צוינו.",
   "checkedAt": "2026-11-04"
  },
  {
