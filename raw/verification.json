@@ -16709,5 +16709,4062 @@
     "source": "https://www.ice.co.il/research/news/article/1073990"
    }
   }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-03-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש 'עם אייזנקוט' מאותו סקר; כל המנדטים והאחוזים (צ\"ד 2.9%, בל\"ד 2.0%) תואמים לטבלת infogram בכתבת מעריב (tSMMaqIUQZWnuDw9WRi7). 'המחנה הממלכתי' בטבלה = כחול לבן. נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1211519",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-07-04T05:59:41+03:00",
+   "sample_respondents": 511,
+   "fieldwork": "2025-07-02..2025-07-03",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-07-03-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-03-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל המנדטים תואמים לטקסט הכתבה ולטבלת infogram (צ\"ד 2.6%, בל\"ד 1.9%); הסקר נערך 2–3 ביולי, 511 משיבים. נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1211519",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-07-04T05:59:41+03:00",
+   "sample_respondents": 511,
+   "fieldwork": "2025-07-02..2025-07-03",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-26-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט + מילואימניקים מאותו סקר; כל המנדטים והאחוזים תואמים לטבלת infogram בכתבה (DuSpFCnH6sgYu5SHxUBs). נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1209304",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-27T06:00:10+03:00",
+   "sample_respondents": 501,
+   "fieldwork": "2025-06-25..2025-06-26",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-06-26-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-26-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל המנדטים והאחוזים תואמים לטבלת infogram בכתבה (6QGdTX8uLJQNGWEvtg0N); נערך 25–26 ביוני, 501 משיבים. נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1209304",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-27T06:00:10+03:00",
+   "sample_respondents": 501,
+   "fieldwork": "2025-06-25..2025-06-26",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-20-lri-p4a-maariv-c",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט + מילואימניקים מאותו סקר; כל המנדטים והאחוזים תואמים לטקסט הכתבה. פער: הסקר נערך 18–19 ביוני (לא 20). נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1207193",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-20T05:59:39+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-06-18..2025-06-19",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "scenarioOf": "2025-06-20-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "dates": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-20-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש 'מפלגה בראשות בנט' מאותו סקר; כל המנדטים והאחוזים תואמים לטקסט הכתבה. פער: הסקר נערך 18–19 ביוני. נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1207193",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-20T05:59:39+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-06-18..2025-06-19",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "scenarioOf": "2025-06-20-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "dates": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-20-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל המנדטים והאחוזים (צ\"ד 2.7%, בל\"ד 1.9%) תואמים לטקסט הכתבה. פער: הסקר נערך 18–19 ביוני (לא 20). נוסף מספר המשיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1207193",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-20T05:59:39+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-06-18..2025-06-19",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "dates": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-25-lri-p4a-walla",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרשים המנדטים בכתבת וואלה והטקסט: הדמוקרטים 12 (בנתונים 11; עם 12 הסכום 120, עם 11 — 119). שאר הרשימות תואמות. 583 משיבים, טעות 4.3%.",
+  "source": "https://news.walla.co.il/item/3760280",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי",
+   "moe": "4.3%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-25T12:17:00+03:00",
+   "sample_respondents": 583,
+   "fieldwork": "2025-06-24..2025-06-25",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "וואלה"
+  },
+  "status": "corrected",
+  "fields": {
+   "seats": {
+    "status": "corrected",
+    "source": "https://news.walla.co.il/item/3760280"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3760280"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://news.walla.co.il/item/3760280"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-26-direct-polls-i24-news",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל המנדטים תואמים לכתבת i24NEWS. בכתבה 'עוצמה יהודית' מופיעה פעמיים (6 ו-4) — ה-4 הוא הציונות הדתית (טעות הקלדה; הסכום 120). 513 נדגמים.",
+  "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "moe": "4.4%",
+   "population": "בוגרים 18+, האוכלוסייה הכללית בישראל",
+   "published": "2025-06-26T21:16:53+03:00",
+   "sample_respondents": 513,
+   "fieldwork": "2025-06-26..2025-06-26",
+   "pollster": "דיירקט פולס",
+   "commissioner": "i24NEWS"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-01-midgam-r-c-hahadashot-12-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש 'איזנקוט בראש מפלגה חדשה' מאותו סקר. בכתבה: איזנקוט 8, הליכוד 26, בנט 22, הדמוקרטים 10, יש עתיד 7; גנץ וליברמן 'מאבדים מנדט כל אחד' (5 ו-9) — תואם. שאר הרשימות ואחוזי צ\"ד/בל\"ד אינם מפורטים בכתבה.",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "published": "2025-07-01T21:05:00+03:00",
+   "sample_respondents": 502,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "partial",
+  "scenarioOf": "2025-07-01-midgam-r-c-hahadashot-12",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-01-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות תואמים לכתבת mako (סכום 120). אחוזי צ\"ד ובל\"ד לא פורסמו ('מתחת לאחוז החסימה') — לא אומתו. 502 משיבים, איסוף 1.7.2025.",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "published": "2025-07-01T21:05:00+03:00",
+   "sample_respondents": 502,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-24-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות תואמים לכתבת mako (סכום 120). 502 משיבים, איסוף 24.6.2025.",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "published": "2025-06-24T21:45:00+03:00",
+   "sample_respondents": 502,
+   "fieldwork": "2025-06-24..2025-06-24",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-01-mm-sn-channel-13-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": true
+  },
+  "note": "תרחיש 'איזנקוט רץ עצמאית' — זה התרחיש שבתרשים כתבת חדשות 13; כל המנדטים תואמים (סכום 120). כחול לבן מתחת לחסימה '(2.4%)' בכתבה. גודל מדגם, תאריכי שדה וטעות דגימה לא צוינו.",
+  "source": "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-07-01",
+   "sample_respondents": null,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מאגר מוחות (יצחק כ\"ץ) + סטט-נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "scenarioOf": "2025-07-01-mm-sn-channel-13",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-01-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": true
+  },
+  "note": "הקישור בנתונים מוביל לכתבה שמפרטת רק שלושה תרחישי איזנקוט (עצמאי — תואם לסקר -b; עם בנט; עם לפיד). התרחיש הבסיסי בלי איזנקוט (בנט 23, ישראל ביתנו 12, כחול לבן 4) אינו מופיע בה, ולא נמצא דיווח אחר.",
+  "source": null,
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-07-01",
+   "sample_respondents": null,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מאגר מוחות + סטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-01-yossi-tatika-zman-israel",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": true
+  },
+  "note": "הנתונים תואמים לתרחיש 'איזנקוט בראש מפלגה חדשה' בכתבת זמן ישראל (בכתבה גם תרחישי איזנקוט עם בנט ובראש יש עתיד). כל המנדטים תואמים; 'המחנה הממלכתי' 4 = כחול לבן. 404 משיבים, 'סטיית תקן' 4.8%.",
+  "source": "https://www.zman.co.il/603517/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.8%",
+   "population": "יהודים וערבים",
+   "published": "2025-07-01T18:30:30+03:00",
+   "sample_respondents": 404,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "יוסי טטיקה (טטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/603517/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/603517/"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.zman.co.il/603517/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-24-yossi-tatika-zman-israel",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": false,
+   "questions": true
+  },
+  "note": "כל המנדטים תואמים לטבלה בכתבת זמן ישראל (צ\"ד 2.72%, בל\"ד 1.24% — לא בנתונים). נערך 23–24 ביוני, 404 משיבים.",
+  "source": "https://www.zman.co.il/602275/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.8%",
+   "population": "יהודים וערבים",
+   "published": "2025-06-26T17:01:24+03:00",
+   "sample_respondents": 404,
+   "fieldwork": "2025-06-23..2025-06-24",
+   "pollster": "יוסי טטיקה (טטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/602275/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/602275/"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.zman.co.il/602275/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-10-filber-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). תרחיש 'בנט מתמודד' בדיווח אייס (10.7.2025, 21:16) — כל המנדטים תואמים (סכום 120). אחוז בל\"ד לא צוין. בכתבה גם תרחיש בלי בנט (ליכוד 34) שאינו בחבילה. מדגם ותאריכי שדה לא צוינו.",
+  "source": "https://www.ice.co.il/research/news/article/1073990",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1073990"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-03-filber-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "קישור ערוץ 14 חסום (403). תרחיש 'בנט מתמודד' בדיווח אייס (3.7.2025) — כל המנדטים תואמים (סכום 120). אחוז בל\"ד לא צוין. מדגם ותאריכי שדה לא צוינו.",
+  "source": "https://www.ice.co.il/research/news/article/1072872",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1072872"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-07-03-filber-channel-14-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש 'בנט לא מתמודד' מאותו סקר, לפי דיווח אייס: ליכוד 35, הדמוקרטים 17, ישראל ביתנו 14, ש\"ס 11, יהדות התורה 8, כחול לבן/עוצמה/רע\"מ 6, חד\"ש-תע\"ל/צ\"ד 5 — תואם. יש עתיד (7) לא צוינה בכתבה; בל\"ד 'לא עוברת' בלי אחוז. סכום הגושים בכתבה (65/44/10) אינו עקבי.",
+  "source": "https://www.ice.co.il/research/news/article/1072872",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "partial",
+  "scenarioOf": "2025-07-03-filber-channel-14",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1072872"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-26-filber-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). תרחיש 'בנט 2026' בדיווח חרדים10 — כל המנדטים תואמים (סכום 120); אחוז בל\"ד לא צוין. 458 נדגמים, 26.6.2025 (מדגם חסר בנתונים; דיווח משני יחיד — לא נרשם פער). באייס (1071794) המחנה הממלכתי 5 — סכום 119, שגוי.",
+  "source": "https://ch10.co.il/news/992730/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "אזרחי ישראל",
+   "published": null,
+   "sample_respondents": 458,
+   "fieldwork": "2025-06-26..2025-06-26",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/992730/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/992730/"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://ch10.co.il/news/992730/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-26-filber-channel-14-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש בלי בנט מאותו סקר; כל המנדטים תואמים לחרדים10 (סכום 120). אחוז בל\"ד בכתבה 2.1% (בנתונים 2.4%) — דיווח משני יחיד, לא נרשם פער. באייס (1071794) 'הדמוקרטים 16' — סכום 122, שגוי; הגושים שם תואמים ל-14.",
+  "source": "https://ch10.co.il/news/992730/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": 458,
+   "fieldwork": "2025-06-26..2025-06-26",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "scenarioOf": "2025-06-26-filber-channel-14",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/992730/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-19-filber-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). תרחיש 'בנט 2026' בחרדים10: כל הרשימות תואמות פרט לישראל ביתנו — בכתבה 9 (בנתונים 8), אך עם 9 הסכום 121 — הכתבה סותרת את עצמה, לא נרשם פער. 758 נדגמים, טעות 4.3%, 19.6.2025.",
+  "source": "https://ch10.co.il/news/990676/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.3%",
+   "population": "אזרחי ישראל",
+   "published": null,
+   "sample_respondents": 758,
+   "fieldwork": "2025-06-19..2025-06-19",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/990676/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/990676/"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://ch10.co.il/news/990676/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-19-filber-channel-14-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש בלי בנט מאותו סקר; כל המנדטים ובל\"ד 2.4% תואמים לחרדים10 (סכום 120).",
+  "source": "https://ch10.co.il/news/990676/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.3%",
+   "population": null,
+   "published": null,
+   "sample_respondents": 758,
+   "fieldwork": "2025-06-19..2025-06-19",
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ עכשיו 14"
+  },
+  "status": "secondary",
+  "scenarioOf": "2025-06-19-filber-channel-14",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/990676/"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-25-kantar-kan-11",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "כאן חסום (403) גם ב-WebFetch. לא נמצא דיווח עצמאי עם כל המנדטים (חיפוש בעברית ובאנגלית; ג'רוזלם פוסט וה-National מ-25.6 מתייחסים לסקר אחר). תקציר חיפוש מייחס ליכוד 28 / בנט 24 / ישראל ביתנו 10 לסקר כאן-קנטר מאמצע יוני — התאריך לא אומת.",
+  "source": null,
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-25-kantar-kan-11-b",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש בלי בנט מאותו סקר. כאן חסום (403); לא נמצא דיווח עצמאי עם כל המנדטים (ליכוד 31, ישראל ביתנו 15 מוזכרים בתקציר חיפוש בלבד).",
+  "source": null,
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "status": "unreachable",
+  "scenarioOf": "2025-06-25-kantar-kan-11"
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-05-lri-p4a-maariv-c",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": true
+  },
+  "note": "תרחיש מילואימניקים בראשות הנדל + בנט: כל 12 הרשימות זהות לכתבת ערוץ 7 (סקר לזר, \"הצבנו\" – נראה שערוץ 7 שאל את השאלה ולא מעריב; התרחיש לא מופיע בכתבת מעריב). מועדים ומדגם לא צוינו בכתבה.",
+  "source": "https://www.inn.co.il/news/670769",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-06-06T10:33:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר",
+   "commissioner": "ערוץ 7 (לפי ניסוח הכתבה)"
+  },
+  "status": "match",
+  "scenarioOf": "2025-06-05-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/670769"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-05-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש מפלגה בראשות בנט: כל 11 הרשימות שעברו, בל\"ד 1.7% והציונות הדתית 2.6% זהים לכתבת מעריב. 4-5 ביוני, 506 משיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1202984",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-06T05:58:35+03:00",
+   "sample_respondents": 506,
+   "fieldwork": "2025-06-04..2025-06-05",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-06-05-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-05-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל 10 הרשימות שעברו, הציונות הדתית 2.8% ובל\"ד 1.9% זהים לכתבת מעריב. נערך 4-5 ביוני 2025, 506 משיבים, טעות 4.4%.",
+  "source": "https://www.maariv.co.il/news/politics/article-1202984",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-06-06T05:58:35+03:00",
+   "sample_respondents": 506,
+   "fieldwork": "2025-06-04..2025-06-05",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1202984"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-29-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש מפלגה בראשות בנט: כל 11 הרשימות שעברו, בל\"ד 2.1% והציונות הדתית 1.8% זהים לכתבת מעריב. 28-29 במאי, 500 משיבים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1201196",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-05-30T05:59:56+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-05-28..2025-05-29",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-05-29-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-29-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל 10 הרשימות שעברו, בל\"ד 2.4% והציונות הדתית 2.1% זהים לכתבת מעריב. נערך 28-29 במאי, 500 משיבים, טעות 4.4%.",
+  "source": "https://www.maariv.co.il/news/politics/article-1201196",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-05-30T05:59:56+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-05-28..2025-05-29",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1201196"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-22-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש בנט: כל 11 הרשימות זהות לדיווח ג'רוזלם פוסט; בכתבת מעריב (article-1199115) רק סיכומי הגושים (44/66/10), תואמים. המספרים בסוגריים בסקר מעריב של 29.5 נותנים למחנה הממלכתי 7 (סכום 118 – טעות שם), לכן אין פער.",
+  "source": "https://www.jpost.com/israel-news/article-855165",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-05-23T06:00:16+03:00",
+   "sample_respondents": 509,
+   "fieldwork": "2025-05-21..2025-05-22",
+   "pollster": "Lazar Research",
+   "commissioner": "מעריב"
+  },
+  "status": "secondary",
+  "scenarioOf": "2025-05-22-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/article-855165"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-22-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": true
+  },
+  "note": "כל 10 הרשימות שעברו, בל\"ד 2% והציונות הדתית 1.9% זהים לכתבת מעריב. בכתבת מעריב אין שורת מועדים/מדגם; לפי ג'רוזלם פוסט נערך 21-22 במאי, 509 משיבים (מקור משני יחיד – לא נרשם פער מדגם).",
+  "source": "https://www.maariv.co.il/news/politics/article-1199115",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-05-23T06:00:16+03:00",
+   "sample_respondents": 509,
+   "fieldwork": "2025-05-21..2025-05-22",
+   "pollster": "לזר מחקרים",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1199115"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.jpost.com/israel-news/article-855165"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-07-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט: כל 11 הרשימות, בל\"ד 2% והציונות הדתית 1.8% זהים לכתבת מעריב. פער רק במועדים: \"התקיים ב־8־7 במאי\" (לא 6-7).",
+  "source": "https://www.maariv.co.il/news/politics/article-1194952",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-05-09T05:59:43+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-05-07..2025-05-08",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "scenarioOf": "2025-05-07-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "dates": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-07-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל 10 הרשימות שעברו, בל\"ד 1.9% והציונות הדתית 2.3% זהים לכתבת מעריב (וגם לג'רוזלם פוסט). פער במועדים: \"התקיים ב־8־7 במאי\" ולא 6-7. 500 משיבים, טעות 4.4%. הקישור בנתונים (ג'רוזלם פוסט) הוא דיווח משני.",
+  "source": "https://www.maariv.co.il/news/politics/article-1194952",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "פאנל אינטרנטי (Panel4All)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-05-09T05:59:43+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-05-07..2025-05-08",
+   "pollster": "לזר מחקרים בראשות ד\"ר מנחם לזר בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "dates": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1194952"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-18-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "11 רשימות זהות לכתבת חדשות 13 (18.06.2025, מהדורה מרכזית; שעה מדויקת לא צוינה). יהדות התורה 7 נגזר מגוש נתניהו 50 (27+10+6+7) והסכום 120. אחוזי בל\"ד והציונות הדתית לא צוינו (רק 'לא עוברות'). מדגם ומועדי שטח לא צוינו.",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904631476/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "3.9%",
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) בשיתוף סטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904631476/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-11-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "11 רשימות זהות לתרחיש הראשי בכתבה (11.06.2025). בפרסום גם הציונות הדתית 3.1% ובל\"ד 1.5% מתחת לחסימה — חסרים בנתונים (לא פער מנדטים). בכתבה גם תרחיש הנדל (לא בחבילה). מדגם, טעות ומועדים לא צוינו.",
+  "source": "https://13tv.co.il/item/news/politics/politics/kaees-904620925/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ); המגזר הערבי — סטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/kaees-904620925/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-04-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "11 רשימות זהות, וגם בל\"ד 2.6% והציונות הדתית 2.4% זהים (04.06.2025, מהדורה מרכזית). מדגם, טעות ומועדים לא צוינו.",
+  "source": "https://13tv.co.il/item/news/politics/politics/xscbo-904610728/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/xscbo-904610728/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-20-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "11 רשימות זהות במפורש; הציונות הדתית 4 לפי הניסוח 'רע\"מ נחלשת ל-4... כמו גם הציונות הדתית' ותואם לקואליציה 50 ולסכום 120. בל\"ד 'לא עוברת' — האחוז 1.8 לא צוין. שם המכון לא צוין בכתבה.",
+  "source": "https://13tv.co.il/item/news/politics/politics/polls-904590986/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/polls-904590986/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-12-filber-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). 13 הרשימות (תרחיש עם בנט) זהות לדיווח ice מ-12.6.2025 (סכום 120; בל\"ד 'לא עוברת', האחוז לא צוין). המכון בדיווח: דיירקט פולס של פילבר.",
+  "source": "https://www.ice.co.il/research/news/article/1069366",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-06-12T21:28:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "שלמה פילבר — דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1069366"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-12-filber-channel-14-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש 'בלי בנט' באותו סקר. 10 רשימות זהות לדיווח ice; עוצמה יהודית (6 בנתונים) לא הוזכרה בתרחיש — סכום המוזכרות 114. ערוץ 14 חסום (403).",
+  "source": "https://www.ice.co.il/research/news/article/1069366",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-06-12T21:28:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "שלמה פילבר — דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "partial",
+  "scenarioOf": "2025-06-12-filber-channel-14",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1069366"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-05-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). 12 הרשימות ובל\"ד 2.3% זהים לדיווח ice מ-5.6.2025 (סכום 120). המכון לא צוין בדיווח.",
+  "source": "https://www.ice.co.il/research/news/article/1068120",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-06-05T21:30:32+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1068120"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-29-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). תרחיש 'ללא בנט': 11 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין. מדגם 672 לפי ice (חסר בנתונים; מקור משני יחיד — לא נרשם פער).",
+  "source": "https://www.ice.co.il/research/news/article/1067216",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל",
+   "published": "2025-05-29T22:26:00+03:00",
+   "sample_respondents": 672,
+   "fieldwork": null,
+   "pollster": "Direct Polls",
+   "commissioner": "חדשות 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1067216"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-29-sf-dp-channel-14-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש 'עם בנט' באותו סקר: 12 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין.",
+  "source": "https://www.ice.co.il/research/news/article/1067216",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל",
+   "published": "2025-05-29T22:26:00+03:00",
+   "sample_respondents": 672,
+   "fieldwork": null,
+   "pollster": "Direct Polls",
+   "commissioner": "חדשות 14"
+  },
+  "status": "secondary",
+  "scenarioOf": "2025-05-29-sf-dp-channel-14",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1067216"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-22-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). תרחיש 'בלי בנט': 11 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין. מדגם: ice 620, ולפי תקציר חיפוש של ch10 — 630; סותר, לא נרשם פער.",
+  "source": "https://www.ice.co.il/research/news/article/1066066",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "נדגמים בוגרים מכלל האוכלוסייה",
+   "published": "2025-05-22T21:20:00+03:00",
+   "sample_respondents": 620,
+   "fieldwork": "2025-05-22..2025-05-22",
+   "pollster": "שלמה פילבר, באמצעות דיירקט פולס בע\"מ",
+   "commissioner": "חדשות 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1066066"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1066066"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-22-sf-dp-channel-14-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש 'עם בנט'. 11 רשימות זהות לדיווח ice; הליכוד ב-ice 33 (סכום 121 — הדיווח סותר את עצמו), ובדיווח JNS (https://www.jns.org/israel-news/netanyahu-bests-bennett-in-head-to-head-race-new-poll-suggests) הליכוד 32 ובנט 13 עם גושים 62+48+10=120 — תואם לנתונים. לא נרשם פער. ערוץ 14 חסום.",
+  "source": "https://www.ice.co.il/research/news/article/1066066",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-05-22T21:20:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": "2025-05-22..2025-05-22",
+   "pollster": "שלמה פילבר, באמצעות דיירקט פולס בע\"מ",
+   "commissioner": "חדשות 14"
+  },
+  "status": "partial",
+  "scenarioOf": "2025-05-22-sf-dp-channel-14",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1066066"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-15-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). 11 הרשימות ובל\"ד 2.51% (בנתונים 2.5) זהים לדיווח ch10; ice (https://www.ice.co.il/research/news/article/1064922, 15.5.2025 22:01) מאשר ליכוד 34, ישראל ביתנו 17, יש עתיד 5 ומדגם 589 — שני דיווחים תואמים למדגם. הזמן לפי ice.",
+  "source": "https://ch10.co.il/en/?p=982263",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": "בני 18 ומעלה",
+   "published": "2025-05-15T22:01:00+03:00",
+   "sample_respondents": 589,
+   "fieldwork": "2025-05-15..2025-05-15",
+   "pollster": "Direct Polls בע\"מ (שלמה פילבר)",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/en/?p=982263"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/en/?p=982263"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-06-04-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": true
+  },
+  "note": "11 הרשימות, הציונות הדתית 2.8% ובל\"ד 1.2% זהים לכתבת mako (פורסם 04.06.25 20:35). פרטי מכון/מדגם/טעות לא הופיעו בטקסט שנקרא.",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-0da9a4258ab3791027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-06-04T20:35:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-0da9a4258ab3791027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-25-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "בנתונים הסכום 118. בכתבה: יש עתיד 9 'ועוצמה יהודית שזוכה גם היא ל-9'; 'המחנה הממלכתי ויהדות התורה זוכות ל-8 מנדטים כל אחת'; בל\"ד 'כ-1.6%'. עם התיקון הסכום 120. שאר הרשימות והציונות הדתית 2.6% זהים.",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "published": "2025-05-25T20:50:00+03:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-05-25..2025-05-25",
+   "pollster": "מדגם ייעוץ ומחקר בראשות מנו גבע",
+   "commissioner": "חדשות 12"
+  },
+  "status": "corrected",
+  "fields": {
+   "seats": {
+    "status": "corrected",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-07-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "11 הרשימות, הציונות הדתית 2.3% ובל\"ד 2.9% זהים לכתבת mako (פורסם 07.05.25 21:02). המדגם 504 חסר בנתונים.",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "published": "2025-05-07T21:02:00+03:00",
+   "sample_respondents": 504,
+   "fieldwork": "2025-05-07..2025-05-07",
+   "pollster": "מדגם ייעוץ ומחקר בראשות מנו גבע",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-05-mm-sn-channel-13-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש 'בנט מתמודד' באותה כתבה (5.5.2025): 11 הרשימות זהות (סכום 120; גושים 48/60/12). הציונות הדתית 'לא עוברת' — האחוז 2.5 לא צוין.",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "scenarioOf": "2025-05-05-mm-sn-channel-13",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-30-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט מאותו סקר; מנדטי כל הרשימות זהים לטבלת האינפוגרם ולטקסט (בל\"ד 1.6%, הציונות הדתית 2.8% באינפוגרם).",
+  "source": "https://www.maariv.co.il/news/israel/article-1193016",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-05-02T05:59:57+03:00",
+   "sample_respondents": 510,
+   "fieldwork": "2025-04-29..2025-04-30",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-04-30-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1193016"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1193016"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1193016"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-30-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות זהים לאינפוגרם ולטקסט. בל\"ד: האינפוגרם 1.8% (כמו בנתונים) והטקסט 1.6% — סתירה פנימית בכתבה, לא נרשם פער. ימי שטח 29–30.4, 510 משיבים, טעות 4.4%.",
+  "source": "https://www.maariv.co.il/news/israel/article-1193016",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-05-02T05:59:57+03:00",
+   "sample_respondents": 510,
+   "fieldwork": "2025-04-29..2025-04-30",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1193016"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1193016"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1193016"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-17-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט; מנדטים זהים לאינפוגרם ולטקסט. בל\"ד: אינפוגרם 1.8% (כבנתונים), טקסט 1.6% — סתירה פנימית בכתבה.",
+  "source": "https://www.maariv.co.il/news/politics/article-1189251",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-04-18T06:00:24+03:00",
+   "sample_respondents": 508,
+   "fieldwork": "2025-04-16..2025-04-17",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-04-17-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1189251"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1189251"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1189251"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-17-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות זהים לאינפוגרם בכתבה (בל\"ד 1.9%, הציונות הדתית 2.9%). ימי שטח 16–17.4, 508 משיבים, טעות 4.4%.",
+  "source": "https://www.maariv.co.il/news/politics/article-1189251",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-04-18T06:00:24+03:00",
+   "sample_respondents": 508,
+   "fieldwork": "2025-04-16..2025-04-17",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1189251"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1189251"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1189251"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-04-lri-p4a-maariv-c",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש בנט+הנדל לא מופיע בכתבת מעריב (רק תרחיש ראשי ותרחיש בנט) ולא נמצא פרסום ראשוני. דיווח עצמאי יחיד (ערוץ 7 באנגלית, https://www.israelnationalnews.com/news/406404) נותן רע\"ם 4 (בנתונים 5) ומפלגות ערביות 9; בנתונים הסכום 121 — לבדוק. כל שאר הרשימות שם זהות.",
+  "source": null,
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": null
+  },
+  "status": "unreachable",
+  "scenarioOf": "2025-04-04-lri-p4a-maariv"
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-04-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": true
+  },
+  "note": "תרחיש בנט; מנדטי כל הרשימות זהים לאינפוגרם בכתבה (הציונות הדתית 2.1%, בל\"ד 1.4%). ימי השטח והמדגם לא צוינו בכתבה.",
+  "source": "https://www.maariv.co.il/news/politics/article-1185682",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-04-04T05:59:47+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "לזר מחקרים",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-04-04-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1185682"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-04-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות זהים לאינפוגרם בכתבה (בל\"ד 1.9%); גם ערוץ 7 באנגלית תואם. ימי השטח והמדגם לא צוינו בכתבה; התאריך בנתונים (4.4) הוא יום הפרסום.",
+  "source": "https://www.maariv.co.il/news/politics/article-1185682",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-04-04T05:59:47+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "לזר מחקרים",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1185682"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-20-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט; מנדטי כל הרשימות זהים לאינפוגרם (בל\"ד 2.0%).",
+  "source": "https://www.maariv.co.il/news/politics/article-1181890",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-03-21T06:00:15+02:00",
+   "sample_respondents": 501,
+   "fieldwork": "2025-03-19..2025-03-20",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-03-20-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1181890"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1181890"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1181890"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-20-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות זהים לאינפוגרם (בל\"ד 1.8%). ימי שטח 19–20.3, 501 משיבים, טעות 4.4%.",
+  "source": "https://www.maariv.co.il/news/politics/article-1181890",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-03-21T06:00:15+02:00",
+   "sample_respondents": 501,
+   "fieldwork": "2025-03-19..2025-03-20",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1181890"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1181890"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1181890"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-19-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": true
+  },
+  "note": "תרחיש בנט; מנדטי כל הרשימות זהים לאינפוגרם (הציונות הדתית 2.4%, בל\"ד 1.6%). הכתבה פורסמה 28.3.2025; התאריכים 18–19.3 בנתונים הם ימי סקר אחר שבכתבה (גיאוקרטוגרפיה למרכז להגינות, 1,004 איש). ימי השטח של סקר מעריב לא צוינו — לא נרשם פער.",
+  "source": "https://www.maariv.co.il/news/politics/article-1183836",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-03-28T06:00:01+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-03-19-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1183836"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1183836"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-19-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות זהים לאינפוגרם (הציונות הדתית 2.6%, בל\"ד 2.0%). הכתבה פורסמה 28.3.2025 (סקר השבוע שאחרי 19–20.3); התאריכים 18–19.3 בנתונים לקוחים מסקר אחר שבכתבה (גיאוקרטוגרפיה למרכז להגינות). ימי השטח של סקר מעריב לא צוינו — לא נרשם פער, אך תאריך הסקר בנתונים כנראה שגוי.",
+  "source": "https://www.maariv.co.il/news/politics/article-1183836",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-03-28T06:00:01+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1183836"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1183836"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-13-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט; מנדטי כל הרשימות זהים לטקסט הכתבה.",
+  "source": "https://www.maariv.co.il/news/politics/article-1180076",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-03-14T06:08:58+02:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-03-12..2025-03-13",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-03-13-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1180076"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1180076"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1180076"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-13-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "מנדטי כל הרשימות זהים לאינפוגרם (בל\"ד 1.2%, תקווה חדשה/סער 1.4%). ימי שטח 12–13.3, 500 משיבים, טעות 4.4%.",
+  "source": "https://www.maariv.co.il/news/politics/article-1180076",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי (פאנל)",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "published": "2025-03-14T06:08:58+02:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-03-12..2025-03-13",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1180076"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1180076"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1180076"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-05-05-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "מנדטי כל הרשימות בסקר הראשי זהים לכתבה (שודר 5.5.2025 במהדורה המרכזית); בל\"ד מתחת לחסימה בלי אחוז. ימי שטח, מדגם וטעות לא צוינו בכתבה.",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-11-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "מנדטי כל הרשימות זהים לכתבה (שודר 11.3.2025); בל\"ד 2.3%, הימין הממלכתי של סער 0.7% — זהים. ימי שטח, מדגם וטעות לא צוינו.",
+  "source": "https://13tv.co.il/item/news/politics/politics/t1837-904498893/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ); איסוף: פאנל פרויקט המדגם וסטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/t1837-904498893/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-06-midgam-r-c-hahadashot-12-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש \"בנט 2026\"; מנדטי כל הרשימות זהים לכתבה. אחוזים מתחת לחסימה לא צוינו.",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-585bb5d3dbb0691027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-04-06T21:00:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מדגם",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "scenarioOf": "2025-04-06-midgam-r-c-hahadashot-12",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-585bb5d3dbb0691027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-06-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "מנדטי כל הרשימות זהים לכתבה (פורסם 6.4.2025 21:00); הציונות הדתית מתחת לחסימה בלי אחוז. שורת המתודולוגיה לא נקראה בדף.",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-585bb5d3dbb0691027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-04-06T21:00:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מדגם",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-585bb5d3dbb0691027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-17-midgam-r-c-hahadashot-12-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש בנט: בכתבה הליכוד 22 (שוויון עם מפלגת בנט 22); בנתונים 24 והסכום 122. שאר הרשימות זהות.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי + טלפוני",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "published": "2025-03-17T21:00:00+02:00",
+   "sample_respondents": 504,
+   "fieldwork": "2025-03-17..2025-03-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "corrected",
+  "scenarioOf": "2025-03-17-midgam-r-c-hahadashot-12",
+  "fields": {
+   "seats": {
+    "status": "corrected",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-17-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "מנדטי כל הרשימות זהים לכתבה (הציונות הדתית 2.9%, בל\"ד 2.2%). שטח 17.3.2025, 504 משיבים, טעות 4.4%.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי + טלפוני",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "published": "2025-03-17T21:00:00+02:00",
+   "sample_respondents": 504,
+   "fieldwork": "2025-03-17..2025-03-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-24-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). דיווח יחיד בסרוגים (24.4.2025) סותר את עצמו: הדמוקרטים גם 16 וגם 17; יהדות התורה 10 (בנתונים 8, והסכום יוצא 122); בל\"ד 2.3% (בנתונים 2.4); הציונות הדתית בלי מספר. שאר הרשימות תואמות (ליכוד 34, ישראל ביתנו 16, ממלכתי 9, יש עתיד 5, ש\"ס 10, עוצמה 6, רע\"ם 5, חד\"ש-תע\"ל 5). לא נמצא דיווח שני — לא נרשמו פערים.",
+  "source": "https://www.srugim.co.il/1118939",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-04-24T21:00:00+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-20-kantar-kan-11-b",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש בנט של סקר כאן 20.4.2025. כאן ובחדרי חרדים חסומים (403); בחיפוש לא נמצא דיווח עצמאי קריא עם מספרי התרחיש.",
+  "source": "",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "status": "unreachable",
+  "scenarioOf": "2025-04-20-kantar-kan-11"
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-20-kantar-kan-11",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "כאן חסום (403). דיווח בחדרי חרדים (news/1692068, 21.4.2025) חסום גם הוא; לפי תקציר החיפוש בלבד: ליכוד 24, ממלכתי 16, ישראל ביתנו 16, הדמוקרטים 14, שטח 20.4, 602 משיבים, טעות 4.0% — לא נקרא ישירות ולא אומת.",
+  "source": "https://www.kan.org.il/content/kan-news/politic/887890/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "קנטר",
+   "commissioner": "כאן 11"
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-04-10-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). מנדטי כל הרשימות זהים ל\"סקר המלא\" בכיפה (10.4.2025 21:41; סכום 120). אחוז בל\"ד לא מופיע. עורך הסקר, מדגם ומועדי שטח לא צוינו.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1202284-0/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-04-10T21:41:27+03:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1202284-0/"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-27-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403); בחיפוש (כיפה, סרוגים, ערוץ 7, חרדים10 ועוד) לא נמצא דיווח עצמאי של הסקר מ-27.3.2025.",
+  "source": "https://www.c14.co.il/article/1162416",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-17-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חסום (403). ערוץ 7 (סיכום ארבעה סקרים, 17.3.2025) מביא את ערוץ 14 לכל רשימה — כולן זהות (סכום 120); בל\"ד לא עוברת, בלי אחוז. עורך, מדגם ומועדים לא צוינו.",
+  "source": "https://www.inn.co.il/news/664094",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-03-17T21:55:00+02:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/664094"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-06-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל הרשימות זהות לטבלת המנדטים (אינפוגרם) בכתבת מעריב, כולל בל\"ד ותקווה חדשה 1.4%. נערך 5–6 במרץ, 500 משיבים; המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1178230",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-03-07T05:59:46+02:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-03-05..2025-03-06",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1178230"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1178230"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1178230"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-27-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל הרשימות זהות לטקסט ולאינפוגרם בכתבת מעריב (בל\"ד 1%, סער 1.1%). נערך 26–27 בפברואר, 511 משיבים; המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1176425",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-02-28T06:00:09+02:00",
+   "sample_respondents": 511,
+   "fieldwork": "2025-02-26..2025-02-27",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1176425"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1176425"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1176425"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-27-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט מאותו סקר; כל הרשימות זהות לטקסט ולאינפוגרם (בל\"ד 1.0%, סער 0.8%). המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1176425",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-02-28T06:00:09+02:00",
+   "sample_respondents": 511,
+   "fieldwork": "2025-02-26..2025-02-27",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-02-27-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1176425"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1176425"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1176425"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-20-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל הרשימות זהות לטקסט ולאינפוגרם בכתבת מעריב (בל\"ד וסער 0 בלי אחוז). נערך 19–20 בפברואר, 509 משיבים; המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/israel/article-1174604",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-02-21T06:00:33+02:00",
+   "sample_respondents": 509,
+   "fieldwork": "2025-02-19..2025-02-20",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1174604"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1174604"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/israel/article-1174604"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-20-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט מאותו סקר. כל הרשימות שבנתונים זהות; הציונות הדתית חסרה בנתונים (סכום 116) — בטקסט הכתבת \"הציונות הדתית 4\", תואם לסכום 120 ולגוש בנט־אופוזיציה 62; באינפוגרם מופיע 0 (טעות באינפוגרם). המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/israel/article-1174604",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-02-21T06:00:33+02:00",
+   "sample_respondents": 509,
+   "fieldwork": "2025-02-19..2025-02-20",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "scenarioOf": "2025-02-20-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1174604"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1174604"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/israel/article-1174604"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-06-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל הרשימות זהות לאינפוגרם בכתבת מעריב (סער 0.9%, בל\"ד 1.2%). נערך 5–6 בפברואר, 503 משיבים; המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/article-1170813",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-02-07T06:00:09+02:00",
+   "sample_respondents": 503,
+   "fieldwork": "2025-02-05..2025-02-06",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/article-1170813"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/article-1170813"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/article-1170813"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-06-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט מאותו סקר; כל הרשימות זהות לאינפוגרם (הציונות הדתית 2.8%, סער 0.5%). המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/article-1170813",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-02-07T06:00:09+02:00",
+   "sample_respondents": 503,
+   "fieldwork": "2025-02-05..2025-02-06",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-02-06-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/article-1170813"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/article-1170813"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/article-1170813"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-01-30-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל הרשימות זהות לאינפוגרם בכתבת מעריב (סער 1.5%, בל\"ד 1.4%). נערך 29–30 בינואר, 517 משיבים; המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/israel/article-1168791",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-01-31T06:00:31+02:00",
+   "sample_respondents": 517,
+   "fieldwork": "2025-01-29..2025-01-30",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1168791"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1168791"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/israel/article-1168791"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-01-30-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט מאותו סקר; כל הרשימות זהות לאינפוגרם (הציונות הדתית 2.6%, סער 0.5%). המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/israel/article-1168791",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-01-31T06:00:31+02:00",
+   "sample_respondents": 517,
+   "fieldwork": "2025-01-29..2025-01-30",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "scenarioOf": "2025-01-30-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1168791"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/israel/article-1168791"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/israel/article-1168791"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-01-23-lri-p4a-maariv",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "כל הרשימות זהות לאינפוגרם בכתבת מעריב (סער 2%, בל\"ד 1.8%). נערך 22–23 בינואר 2025, 517 משיבים; המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1166831",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-01-24T05:59:51+02:00",
+   "sample_respondents": 517,
+   "fieldwork": "2025-01-22..2025-01-23",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1166831"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1166831"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1166831"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-01-23-lri-p4a-maariv-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": true
+  },
+  "note": "תרחיש בנט מאותו סקר. באינפוגרם יש עתיד 9 (בנתונים 10, סכום 121); שאר הרשימות זהות (הציונות הדתית 2.1%, סער 1.6%). המדגם חסר בנתונים.",
+  "source": "https://www.maariv.co.il/news/politics/article-1166831",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל 18+, יהודים וערבים",
+   "published": "2025-01-24T05:59:51+02:00",
+   "sample_respondents": 517,
+   "fieldwork": "2025-01-22..2025-01-23",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "status": "corrected",
+  "scenarioOf": "2025-01-23-lri-p4a-maariv",
+  "fields": {
+   "seats": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1166831"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1166831"
+   },
+   "sample": {
+    "status": "corrected",
+    "source": "https://www.maariv.co.il/news/politics/article-1166831"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-05-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "11 רשימות זהות בכתבת mako; ישראל ביתנו (12) אינה בטקסט mako ואומתה בבלוג טיימס אוף ישראל (12). בל\"ד וסער מתחת לחסימה בלי אחוזים — האחוזים לא אומתו.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "published": "2025-03-05T21:19:00+02:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-03-05..2025-03-05",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-05-midgam-r-c-hahadashot-12-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש בנט מאותו סקר; כל הרשימות זהות (mako וטיימס אוף ישראל). בכתבה יש גם תרחיש בנט+איזנקוט שאינו בנתונים.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": null,
+   "published": "2025-03-05T21:19:00+02:00",
+   "sample_respondents": 500,
+   "fieldwork": "2025-03-05..2025-03-05",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "scenarioOf": "2025-03-05-midgam-r-c-hahadashot-12",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-17-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "כל הרשימות זהות, כולל בל\"ד 1.4% וסער 1.3%.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": "אינטרנטי וטלפוני",
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "published": "2025-02-17T21:09:00+02:00",
+   "sample_respondents": 501,
+   "fieldwork": "2025-02-17..2025-02-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-17-midgam-r-c-hahadashot-12-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש א' (בנט) מאותו סקר; כל המנדטים זהים. בתרחיש אין אחוזים לבל\"ד ולסער — האחוזים בנתונים (1.4%, 1.0%) לא אומתו.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": null,
+   "published": "2025-02-17T21:09:00+02:00",
+   "sample_respondents": 501,
+   "fieldwork": "2025-02-17..2025-02-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "match",
+  "scenarioOf": "2025-02-17-midgam-r-c-hahadashot-12",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-01-23-midgam-r-c-hahadashot-12",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "בכתבה: \"הציונות הדתית וחד\"ש-תע\"ל עם 4 מנדטים כל אחת\" (בנתונים חד\"ש-תע\"ל 5, סכום 121; לפי הכתבה 120). שאר הרשימות זהות, בל\"ד 2.4%, סער 1.1%.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "published": "2025-01-23T21:08:00+02:00",
+   "sample_respondents": 505,
+   "fieldwork": "2025-01-23..2025-01-23",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "corrected",
+  "fields": {
+   "seats": {
+    "status": "corrected",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-01-23-midgam-r-c-hahadashot-12-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": true,
+   "moe": true,
+   "n_asked": false,
+   "n_participated": true,
+   "pollster": true,
+   "population": true,
+   "questions": false
+  },
+  "note": "תרחיש בנט מאותו סקר. 10 רשימות זהות; ש\"ס אינה מופיעה בפסקת התרחיש (בנתונים 9) ולא אומתה. סכום הנתונים 119. בל\"ד, הציונות הדתית וסער מתחת לחסימה בלי אחוזים.",
+  "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": "4.4%",
+   "population": null,
+   "published": "2025-01-23T21:08:00+02:00",
+   "sample_respondents": 505,
+   "fieldwork": "2025-01-23..2025-01-23",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "status": "partial",
+  "scenarioOf": "2025-01-23-midgam-r-c-hahadashot-12",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-11-kantar-israel-hayom",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ישראל היום חוסם (403). לא נמצא דיווח עצמאי בחיפוש (כולל באנגלית). כדאי לבדוק את התאריך: בנתונים מופיעות ישר! והמילואימניקים.",
+  "source": "https://www.israelhayom.co.il/news/politics/article/19887915",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": null
+  },
+  "status": "unreachable"
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-11-kantar-israel-hayom-b",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש (חד\"ש-תע\"ל ורע\"ם בנפרד) מאותו סקר; ישראל היום חוסם ולא נמצא דיווח עצמאי.",
+  "source": null,
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": null
+  },
+  "status": "unreachable",
+  "scenarioOf": "2025-02-11-kantar-israel-hayom"
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-05-mm-sn-channel-13",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "כל 11 הרשימות זהות. בל\"ד וסער מתחת לחסימה בלי אחוזים — האחוזים לא אומתו. בכתבה אין מועד שדה, מדגם וטעות דגימה; פורסם 05.02.2025 בערב (שעה לא צוינה).",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "status": "match",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/"
+   }
+  }
+ },
+ {
+  "access": [
+   "primary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-05-mm-sn-channel-13-b",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "תרחיש בנט מאותו סקר. במפורש: בנט 29, הליכוד 24, יש עתיד 5, המחנה הממלכתי וישראל ביתנו 9; הדמוקרטים, עוצמה, יהדות התורה, חד\"ש-תע\"ל ורע\"ם \"מאבדים מנדט\" — תואם לנתונים (11, 8, 6, 5, 4). ש\"ס לא צוינה בתרחיש ולא אומתה; הציונות הדתית מתחת לחסימה.",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "status": "partial",
+  "scenarioOf": "2025-02-05-mm-sn-channel-13",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-03-06-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": true,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חוסם (403). דיווח כיפה (06.03.2025 21:12) — כל 11 הרשימות זהות, סכום 120. בל\"ד 2.6% לא אומת. השעה היא של דיווח כיפה.",
+  "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1199896-0/",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": "2025-03-06T21:12:51+02:00",
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": "דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.kipa.co.il/%D7%97%D7%93%D7%A9%D7%95%D7%AA/1199896-0/"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-13-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חוסם (403). דיווח ערוץ 7 (14.02.2025 08:08) — כל 11 הרשימות זהות, סכום 120; בל\"ד מתחת לחסימה בלי אחוז (2.3% לא אומת).",
+  "source": "https://www.inn.co.il/news/661456",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "secondary",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/661456"
+   }
+  }
+ },
+ {
+  "access": [
+   "secondary"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-06-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": true,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 וחדרי חרדים חוסמים (403). אומת בעקיפין מדיווח ערוץ 7 על הסקר שאחריו (13.02), שמציין את ערכי \"הסקר הקודם\": הליכוד 33, עוצמה 5, הדמוקרטים 16, ישראל ביתנו 15, ש\"ס 11, המחנה הממלכתי 10, יהדות התורה 8, הציונות הדתית 6, יש עתיד 6 — כולם זהים. רע\"ם, חד\"ש-תע\"ל ובל\"ד לא אומתו.",
+  "source": "https://www.inn.co.il/news/661456",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": "ערוץ 14"
+  },
+  "status": "partial",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.inn.co.il/news/661456"
+   }
+  }
+ },
+ {
+  "access": [
+   "none"
+  ],
+  "checkedAt": "2026-11-04",
+  "id": "2025-02-27-sf-dp-channel-14",
+  "law16E": {
+   "commissioner": false,
+   "dates": false,
+   "moe": false,
+   "n_asked": false,
+   "n_participated": false,
+   "pollster": false,
+   "population": false,
+   "questions": false
+  },
+  "note": "ערוץ 14 חוסם (403); לא נמצא דיווח עצמאי בחיפושים (כיפה, ערוץ 7, אייס, חרדים10).",
+  "source": "https://www.c14.co.il/article/1132632",
+  "sourceDetails": {
+   "asked_to_participate": null,
+   "method": null,
+   "moe": null,
+   "population": null,
+   "published": null,
+   "sample_respondents": null,
+   "fieldwork": null,
+   "pollster": null,
+   "commissioner": null
+  },
+  "status": "unreachable"
  }
 ]

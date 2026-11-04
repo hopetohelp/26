@@ -74,13 +74,40 @@
    "source": "https://13tv.co.il/item/news/politics/politics/s81tg-904794798/"
   },
   {
-   "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
-   "end": "2025-02-20",
+   "detail": "סתירה בין השדה הראשי לפרטי האימות",
+   "end": "2025-06-26",
+   "firmHe": "שלמה פילבר",
+   "group": "sample",
+   "id": "2025-06-26-filber-channel-14",
+   "publisherHe": "ערוץ 14",
+   "source": "https://ch10.co.il/news/992730/"
+  },
+  {
+   "detail": "סתירה בין השדה הראשי לפרטי האימות",
+   "end": "2025-06-19",
+   "firmHe": "שלמה פילבר",
+   "group": "sample",
+   "id": "2025-06-19-filber-channel-14",
+   "publisherHe": "ערוץ 14",
+   "source": "https://ch10.co.il/news/990676/"
+  },
+  {
+   "detail": "סתירה בין השדה הראשי לפרטי האימות",
+   "end": "2025-03-19",
    "firmHe": "לזר מחקרים + Panel4All",
-   "group": "seats",
-   "id": "2025-02-20-lri-p4a-maariv-b",
+   "group": "dates",
+   "id": "2025-03-19-lri-p4a-maariv-b",
    "publisherHe": "מעריב",
-   "source": null
+   "source": "https://www.maariv.co.il/news/politics/article-1183836"
+  },
+  {
+   "detail": "סתירה בין השדה הראשי לפרטי האימות",
+   "end": "2025-03-19",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "group": "dates",
+   "id": "2025-03-19-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "source": "https://www.maariv.co.il/news/politics/article-1183836"
   },
   {
    "detail": "סכום המנדטים 91 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
@@ -2788,6 +2815,1528 @@
    "affects": [
     "ארכיון הסקרים"
    ],
+   "end": "2025-07-03",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-07-03-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1211519",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1211519"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-03",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-07-03-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1211519",
+   "to": 511
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-03",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-07-03-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1211519",
+   "to": 511
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-03",
+   "field": "urls",
+   "firmHe": "שלמה פילבר",
+   "from": [],
+   "group": "other",
+   "id": "2025-07-03-filber-channel-14-b",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.ice.co.il/research/news/article/1072872",
+   "to": [
+    "https://www.ice.co.il/research/news/article/1072872"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-01",
+   "field": "sample",
+   "firmHe": "יוסי טטיקה",
+   "from": null,
+   "group": "sample",
+   "id": "2025-07-01-yossi-tatika-zman-israel",
+   "publisherHe": "זמן ישראל",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.zman.co.il/603517/",
+   "to": 404
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-01",
+   "field": "urls",
+   "firmHe": "מאגר מוחות + סטטנט",
+   "from": [],
+   "group": "other",
+   "id": "2025-07-01-mm-sn-channel-13-b",
+   "publisherHe": "חדשות 13",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/",
+   "to": [
+    "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-01",
+   "field": "urls",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": [],
+   "group": "other",
+   "id": "2025-07-01-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+   "to": [
+    "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-01",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-07-01-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+   "to": 502
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-07-01",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-07-01-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+   "to": 502
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-26",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-26-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1209304",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1209304"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-26",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-26-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1209304",
+   "to": 501
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-26",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-26-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1209304",
+   "to": 501
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-26",
+   "field": "urls",
+   "firmHe": "שלמה פילבר",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-26-filber-channel-14-b",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://ch10.co.il/news/992730/",
+   "to": [
+    "https://ch10.co.il/news/992730/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-26",
+   "field": "sample",
+   "firmHe": "דיירקט פולס",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-26-direct-polls-i24-news",
+   "publisherHe": "i24NEWS",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a",
+   "to": 513
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-06-25",
+   "field": "values.democrats.s",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": 11,
+   "group": "seats",
+   "id": "2025-06-25-lri-p4a-walla",
+   "publisherHe": "וואלה",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://news.walla.co.il/item/3760280",
+   "to": 12
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-25",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-25-lri-p4a-walla",
+   "publisherHe": "וואלה",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://news.walla.co.il/item/3760280",
+   "to": 583
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-24",
+   "field": "sample",
+   "firmHe": "יוסי טטיקה",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-24-yossi-tatika-zman-israel",
+   "publisherHe": "זמן ישראל",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.zman.co.il/602275/",
+   "to": 404
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-24",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-24-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm",
+   "to": 502
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-19",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-20-lri-p4a-maariv-c",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1207193"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-06-19",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-06-20",
+   "group": "dates",
+   "id": "2025-06-20-lri-p4a-maariv-c",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": "2025-06-18"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-19",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-20-lri-p4a-maariv-c",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-06-19",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-06-20",
+   "group": "dates",
+   "id": "2025-06-20-lri-p4a-maariv-c",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": "2025-06-19"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-19",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1207193"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-06-19",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-06-20",
+   "group": "dates",
+   "id": "2025-06-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": "2025-06-18"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-19",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-06-19",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-06-20",
+   "group": "dates",
+   "id": "2025-06-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": "2025-06-19"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-06-19",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-06-20",
+   "group": "dates",
+   "id": "2025-06-20-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": "2025-06-18"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-19",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-20-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-06-19",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-06-20",
+   "group": "dates",
+   "id": "2025-06-20-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1207193",
+   "to": "2025-06-19"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-19",
+   "field": "urls",
+   "firmHe": "שלמה פילבר",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-19-filber-channel-14-b",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://ch10.co.il/news/990676/",
+   "to": [
+    "https://ch10.co.il/news/990676/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-12",
+   "field": "urls",
+   "firmHe": "שלמה פילבר",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-12-filber-channel-14-b",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.ice.co.il/research/news/article/1069366",
+   "to": [
+    "https://www.ice.co.il/research/news/article/1069366"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-05",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-05-lri-p4a-maariv-c",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.inn.co.il/news/670769",
+   "to": [
+    "https://www.inn.co.il/news/670769"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-05",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-06-05-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1202984",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1202984"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-05",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-05-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1202984",
+   "to": 506
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-06-05",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-06-05-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1202984",
+   "to": 506
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-29",
+   "field": "urls",
+   "firmHe": "שלמה פילבר + דיירקט פולס",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-29-sf-dp-channel-14-b",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.ice.co.il/research/news/article/1067216",
+   "to": [
+    "https://www.ice.co.il/research/news/article/1067216"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-29",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-29-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1201196",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1201196"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-29",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-29-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1201196",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-29",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-29-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1201196",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-05-25",
+   "field": "values.utj.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 7,
+   "group": "seats",
+   "id": "2025-05-25-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm",
+   "to": 8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-05-25",
+   "field": "values.otzma.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 8,
+   "group": "seats",
+   "id": "2025-05-25-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm",
+   "to": 9
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-05-25",
+   "field": "values.balad.p",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 1.4,
+   "group": "pct",
+   "id": "2025-05-25-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm",
+   "to": 1.6
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-25",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-25-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-22",
+   "field": "urls",
+   "firmHe": "שלמה פילבר + דיירקט פולס",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-22-sf-dp-channel-14-b",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.ice.co.il/research/news/article/1066066",
+   "to": [
+    "https://www.ice.co.il/research/news/article/1066066"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-22",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-22-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.jpost.com/israel-news/article-855165",
+   "to": [
+    "https://www.jpost.com/israel-news/article-855165"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-15",
+   "field": "sample",
+   "firmHe": "שלמה פילבר + דיירקט פולס",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-15-sf-dp-channel-14",
+   "publisherHe": "ערוץ 14",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://ch10.co.il/en/?p=982263",
+   "to": 589
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-08",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-07-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1194952"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-05-08",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-05-06",
+   "group": "dates",
+   "id": "2025-05-07-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": "2025-05-07"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-08",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-07-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-05-08",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-05-07",
+   "group": "dates",
+   "id": "2025-05-07-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": "2025-05-08"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-05-08",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-05-06",
+   "group": "dates",
+   "id": "2025-05-07-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": "2025-05-07"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-08",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-07-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2025-05-08",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2025-05-07",
+   "group": "dates",
+   "id": "2025-05-07-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1194952",
+   "to": "2025-05-08"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-07",
+   "field": "urls",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-07-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm",
+   "to": [
+    "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-07",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-05-07-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm",
+   "to": 504
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-05-05",
+   "field": "urls",
+   "firmHe": "מאגר מוחות + סטטנט",
+   "from": [],
+   "group": "other",
+   "id": "2025-05-05-mm-sn-channel-13-b",
+   "publisherHe": "חדשות 13",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/",
+   "to": [
+    "https://13tv.co.il/item/news/politics/politics/survey-904568833/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-04-30",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-04-30-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1193016",
+   "to": 510
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-04-30",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-04-30-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1193016",
+   "to": 510
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-04-17",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-04-17-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1189251",
+   "to": 508
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-04-17",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-04-17-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1189251",
+   "to": 508
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-20",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1181890",
+   "to": 501
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-20",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-20-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1181890",
+   "to": 501
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-03-17",
+   "field": "values.likud.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 24,
+   "group": "seats",
+   "id": "2025-03-17-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm",
+   "to": 22
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-17",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-17-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm",
+   "to": 504
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-17",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-17-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-235206c86f4a591027.htm",
+   "to": 504
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-13",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-13-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1180076",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-13",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-13-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1180076",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-06",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-06-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1178230",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-05",
+   "field": "urls",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": [],
+   "group": "other",
+   "id": "2025-03-05-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm",
+   "to": [
+    "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-05",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-05-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-03-05",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-03-05-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-59c7309d4476591027.htm",
+   "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-27",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-02-27-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1176425",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1176425"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-27",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-27-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1176425",
+   "to": 511
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-27",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-27-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1176425",
+   "to": 511
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-02-20",
+   "field": "values.rzp.s",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "seats",
+   "id": "2025-02-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1174604",
+   "to": 4
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-20",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-02-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/israel/article-1174604",
+   "to": [
+    "https://www.maariv.co.il/news/israel/article-1174604"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-20",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-20-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1174604",
+   "to": 509
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-20",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-20-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1174604",
+   "to": 509
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-17",
+   "field": "urls",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": [],
+   "group": "other",
+   "id": "2025-02-17-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm",
+   "to": [
+    "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-17",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-17-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm",
+   "to": 501
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-17",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-17-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-b9a04f405441591027.htm",
+   "to": 501
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-06",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-02-06-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/article-1170813",
+   "to": [
+    "https://www.maariv.co.il/news/article-1170813"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-06",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-06-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/article-1170813",
+   "to": 503
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-06",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-02-06-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/article-1170813",
+   "to": 503
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-02-05",
+   "field": "urls",
+   "firmHe": "מאגר מוחות + סטטנט",
+   "from": [],
+   "group": "other",
+   "id": "2025-02-05-mm-sn-channel-13-b",
+   "publisherHe": "חדשות 13",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://13tv.co.il/item/news/politics/politics/survey-904449424/",
+   "to": [
+    "https://13tv.co.il/item/news/politics/politics/survey-904449424/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-30",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-01-30-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/israel/article-1168791",
+   "to": [
+    "https://www.maariv.co.il/news/israel/article-1168791"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-30",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-01-30-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1168791",
+   "to": 517
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-30",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-01-30-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/israel/article-1168791",
+   "to": 517
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-23",
+   "field": "urls",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": [],
+   "group": "other",
+   "id": "2025-01-23-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm",
+   "to": [
+    "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-23",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-01-23-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm",
+   "to": 505
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-01-23",
+   "field": "values.hadash_taal.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 5,
+   "group": "seats",
+   "id": "2025-01-23-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm",
+   "to": 4
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-23",
+   "field": "sample",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": null,
+   "group": "sample",
+   "id": "2025-01-23-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q1/Article-40aacea57f39491027.htm",
+   "to": 505
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-01-23",
+   "field": "values.yesh_atid.s",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": 10,
+   "group": "seats",
+   "id": "2025-01-23-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1166831",
+   "to": 9
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-23",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-01-23-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1166831",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1166831"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-23",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-01-23-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1166831",
+   "to": 517
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-01-23",
+   "field": "sample",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": null,
+   "group": "sample",
+   "id": "2025-01-23-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1166831",
+   "to": 517
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
    "end": "2024-11-06",
    "field": "sample",
    "firmHe": "מאגר מוחות + סטטנט",
@@ -2871,6 +4420,6 @@
   },
   "sinceListSubmission": 77,
   "total": 811,
-  "usable": 797
+  "usable": 800
  }
 }
