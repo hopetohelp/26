@@ -109,6 +109,33 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-07-23-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": "https://www.israelhayom.co.il/news/politics/article/21046119",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "ישראל היום"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "israelhayom.co.il חסום (403, גם ב-WebFetch); לא נמצא דיווח עצמאי (חיפוש + סריקת ערוץ 7 ואמס).",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2026-07-21-mp-tm-sn-a-channel-13",
   "status": "match",
   "source": "https://13tv.co.il/item/news/politics/politics/dnxub-905274776/",
@@ -268,6 +295,37 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-07-16-sf-nd-channel-14",
+  "status": "secondary",
+  "source": "https://www.emess.co.il/radio/1902167",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.emess.co.il/radio/1902167"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). אמס (16.7.26): מנדטי כל 11 הרשימות זהים. אחוזים, 'אחרים' ומדגם לא אומתו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2026-07-16-direct-polls-i24-news",
   "status": "match",
   "source": "https://www.i24news.tv/he/news/israel-elections-2026/artc-34cc4bf9",
@@ -422,6 +480,32 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-07-09-sf-nd-channel-14",
+  "status": "unreachable",
+  "source": "https://www.c14.co.il/article/1614743",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403); לא נמצא דיווח עצמאי מלא (נסרקו ערוץ 7 ואמס). רק עקיף: אמס 16.7 מציין שהליכוד ירד במנדט מהסקר הקודם (33) — תואם לליכוד 33 בחבילה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2026-07-09-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1342801",
@@ -451,6 +535,33 @@
   },
   "diffs": [],
   "note": "מנדטי כל 11 הרשימות העוברות זהים לטקסט הכתבה. אחוזי הרשימות מתחת לחסימה, מועדים ומדגם לא מופיעים בטקסט (אולי בטבלה גרפית) — לא אומתו. בכתבה גם תרחישי איחוד — לא הושוו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-07-09-kantar-israel-hayom",
+  "status": "unreachable",
+  "source": "https://www.israelhayom.co.il/news/politics/article/20948594",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "קנטר",
+   "commissioner": "ישראל היום"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "israelhayom.co.il חסום (403); לא נמצא דיווח עצמאי.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -531,6 +642,50 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2026-07-06-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-israel-elections/2026/Article-773dc6853083f91027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-07-06T21:03:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-773dc6853083f91027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-773dc6853083f91027.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-773dc6853083f91027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 503,
+   "moe": "±4.4%",
+   "population": "מדגם מייצג של בגירים בישראל 18+",
+   "fieldwork": "2026-07-06..2026-07-06",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "curl נחסם (403); נקרא דרך WebFetch. מנדטי כל 11 הרשימות זהים (סכום 120); כחול לבן 1%, המילואימניקים 1%, בל\"ד 0.7% תואמים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2026-07-05-kantar-kan-11",
   "status": "secondary",
   "source": "https://www.israelnationalnews.com/flashes/689092",
@@ -606,6 +761,37 @@
   },
   "diffs": [],
   "note": "מנדטי כל 11 הרשימות זהים; כחול לבן, המילואימניקים ובל\"ד מתחת לחסימה בלי אחוזים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-07-02-sf-nd-channel-14",
+  "status": "secondary",
+  "source": "https://www.emess.co.il/radio/1894897",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.emess.co.il/radio/1894897"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). אמס (2.7.26): מנדטי כל 11 הרשימות זהים (משותפת 6); כחול לבן מתחת לחסימה. מדגם לא אומת.",
   "checkedAt": "2026-11-04"
  },
  {
