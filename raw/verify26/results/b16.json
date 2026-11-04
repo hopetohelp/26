@@ -835,10 +835,6 @@
    "dates": {
     "status": "match",
     "source": "https://ch10.co.il/en/?p=982263"
-   },
-   "sample": {
-    "status": "conflict",
-    "source": "https://ch10.co.il/en/?p=982263"
    }
   },
   "details": {
@@ -867,6 +863,184 @@
    }
   ],
   "note": "ערוץ 14 חסום (403). 11 הרשימות ובל\"ד 2.51% (בנתונים 2.5) זהים לדיווח ch10; ice (https://www.ice.co.il/research/news/article/1064922, 15.5.2025 22:01) מאשר ליכוד 34, ישראל ביתנו 17, יש עתיד 5 ומדגם 589 — שני דיווחים תואמים למדגם. הזמן לפי ice.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-04-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-0da9a4258ab3791027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-04T20:35:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-0da9a4258ab3791027.htm"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "11 הרשימות, הציונות הדתית 2.8% ובל\"ד 1.2% זהים לכתבת mako (פורסם 04.06.25 20:35). פרטי מכון/מדגם/טעות לא הופיעו בטקסט שנקרא.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-25-midgam-r-c-hahadashot-12",
+  "status": "mismatch",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-25T20:50:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "fieldwork": "2025-05-25..2025-05-25",
+   "pollster": "מדגם ייעוץ ומחקר בראשות מנו גבע",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.otzma.s",
+    "from": 8,
+    "to": 9,
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   },
+   {
+    "field": "values.utj.s",
+    "from": 7,
+    "to": 8,
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   },
+   {
+    "field": "values.balad.p",
+    "from": 1.4,
+    "to": 1.6,
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   },
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-2e765d42d380791026.htm"
+   }
+  ],
+  "note": "בנתונים הסכום 118. בכתבה: יש עתיד 9 'ועוצמה יהודית שזוכה גם היא ל-9'; 'המחנה הממלכתי ויהדות התורה זוכות ל-8 מנדטים כל אחת'; בל\"ד 'כ-1.6%'. עם התיקון הסכום 120. שאר הרשימות והציונות הדתית 2.6% זהים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-07-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-05-07T21:02:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 504,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגיל 18 ומעלה",
+   "fieldwork": "2025-05-07..2025-05-07",
+   "pollster": "מדגם ייעוץ ומחקר בראשות מנו גבע",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 504,
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm"
+   }
+  ],
+  "foundUrl": "https://www.mako.co.il/news-politics/2025_q2/Article-ec60863b3aba691026.htm",
+  "note": "11 הרשימות, הציונות הדתית 2.3% ובל\"ד 2.9% זהים לכתבת mako (פורסם 07.05.25 21:02). המדגם 504 חסר בנתונים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-05-mm-sn-channel-13-b",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904568833/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://13tv.co.il/item/news/politics/politics/survey-904568833/",
+  "scenarioOf": "2025-05-05-mm-sn-channel-13",
+  "note": "תרחיש 'בנט מתמודד' באותה כתבה (5.5.2025): 11 הרשימות זהות (סכום 120; גושים 48/60/12). הציונות הדתית 'לא עוברת' — האחוז 2.5 לא צוין.",
   "checkedAt": "2026-11-04"
  }
 ]
